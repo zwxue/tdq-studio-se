@@ -60,7 +60,6 @@ public final class EcosystemProxyAdapter {
             proxyData = proxyService.getProxyData(IProxyData.HTTP_PROXY_TYPE);
         }
 
-        // FIXME & operator will cause a NPE.
         if (proxyData != null & StringUtils.isNotEmpty(proxyData.getHost())) {
             // use proxy to connect
             ProxyHost host = new ProxyHost(proxyData.getHost(), proxyData.getPort());

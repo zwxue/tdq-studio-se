@@ -14,7 +14,7 @@ public class BookmarksHelpView extends HelpView {
     }
 
     public BookmarksHelpView() {
-        // TODO Auto-generated constructor stub
+
     }
 
 }

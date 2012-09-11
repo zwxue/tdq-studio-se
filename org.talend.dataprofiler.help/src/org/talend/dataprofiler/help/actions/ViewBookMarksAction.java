@@ -18,12 +18,10 @@ public class ViewBookMarksAction implements IWorkbenchWindowActionDelegate {
     protected static Logger log = Logger.getLogger(ViewBookMarksAction.class);
 
     public void dispose() {
-        // TODO Auto-generated method stub
 
     }
 
     public void init(IWorkbenchWindow window) {
-        // TODO Auto-generated method stub
 
     }
 
@@ -49,13 +47,11 @@ public class ViewBookMarksAction implements IWorkbenchWindowActionDelegate {
             }
 
         } catch (Exception e) {
-            // TODO Auto-generated catch block
             log.error(e, e);
         }
     }
 
     public void selectionChanged(IAction action, ISelection selection) {
-        // TODO Auto-generated method stub
 
     }
 

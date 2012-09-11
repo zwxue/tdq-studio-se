@@ -15,7 +15,6 @@ package org.talend.dataquality.helpers;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.log4j.Logger;
 import org.talend.commons.bridge.ReponsitoryContextBridge;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.commons.utils.VersionUtils;
@@ -43,10 +42,6 @@ import orgomg.cwm.objectmodel.core.TaggedValue;
  * This class is a helper for handling data quality metadata.
  */
 public final class MetadataHelper {
-
-    private static Logger log = Logger.getLogger(MetadataHelper.class);
-
-    private final static String PROJECT_FILE = "talend.project";
 
     // MOD klliu 2010-10-09 feature 15821
     /**
