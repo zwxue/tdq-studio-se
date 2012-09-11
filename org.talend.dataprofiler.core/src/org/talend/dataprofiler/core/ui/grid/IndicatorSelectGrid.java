@@ -79,16 +79,6 @@ public class IndicatorSelectGrid extends Grid {
                     getColumn(j).getHeaderRenderer().setSelected(false);
                 }
 
-                for (int i = 0; i < getItems().length; i++) {
-                    GridItem item = getItem(i);
-                    for (int j = 1; j < getColumns().length; j++) {
-                        if (item.getImage(j) != null) {
-                            item.setBackground(j, blue);
-                        } else {
-                            item.setBackground(j, null);
-                        }
-                    }
-                }
             }
 
             public void mouseHover(MouseEvent e) {
@@ -180,8 +170,13 @@ public class IndicatorSelectGrid extends Grid {
     private void onMouseMove(MouseEvent e) {
         Point cell = getCell(new Point(e.x, e.y));
         if (cell != null && cell.x != 0) {
-            for (int i = 0; i < getItems().length; i++) {
-                GridItem item = getItem(i);
+            GridVisibleRange range = getVisibleRange();
+            for (GridItem item : range.getItems()) {
+                int i = indexOf(item);
+                // FIXME fix the bug in nebula grid, so that we can use visible columns instead of all the columns to
+                // improve hover performance.
+                // for (GridColumn column : range.getColumns()) {
+                // int x = indexOf(column);
                 if (i == cell.y) {
                     item.setBackground(0, yellow);
                 } else {
