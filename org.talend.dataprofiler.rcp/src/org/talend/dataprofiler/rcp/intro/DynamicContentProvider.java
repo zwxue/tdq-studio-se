@@ -22,22 +22,25 @@ import org.eclipse.ui.intro.config.IIntroXHTMLContentProvider;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-
-//
-
 /**
  * DOC rli class global comment. Detailled comment <br/>
  * 
  */
 public class DynamicContentProvider implements IIntroXHTMLContentProvider {
 
+    @Override
     public void init(IIntroContentProviderSite site) {
+        // needn't to do anything???
     }
 
+    @Override
     public void createContent(String id, PrintWriter out) {
+        // needn't to do anything???
     }
 
+    @Override
     public void createContent(String id, Composite parent, FormToolkit toolkit) {
+        // needn't to do anything???
     }
 
     private String getCurrentTimeString() {
@@ -47,6 +50,7 @@ public class DynamicContentProvider implements IIntroXHTMLContentProvider {
         return content.toString();
     }
 
+    @Override
     public void createContent(String id, Element parent) {
         Document dom = parent.getOwnerDocument();
         Element para = dom.createElement("p"); //$NON-NLS-1$
@@ -56,8 +60,8 @@ public class DynamicContentProvider implements IIntroXHTMLContentProvider {
 
     }
 
+    @Override
     public void dispose() {
-
+        // needn't to do anything???
     }
-
 }

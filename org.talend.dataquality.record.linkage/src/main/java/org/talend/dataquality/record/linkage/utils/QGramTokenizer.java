@@ -22,11 +22,11 @@ import java.util.List;
  */
 public class QGramTokenizer {
 
-    private static final String TWO_CHARS = "##";
+    private static final String TWO_CHARS = "##"; //$NON-NLS-1$
 
-    private static final String THREE_CHARS = "###";
+    private static final String THREE_CHARS = "###"; //$NON-NLS-1$
 
-    private static final String FOUR_CHARS = "####";
+    private static final String FOUR_CHARS = "####"; //$NON-NLS-1$
 
     /**
      * Method "tokenizeToArrayList".
@@ -56,24 +56,24 @@ public class QGramTokenizer {
     private String pad(String input, int q) {
         switch (q) {
         case 2:
-            return new StringBuffer("#").append(input).append("#").toString();
+            return new StringBuffer("#").append(input).append("#").toString(); //$NON-NLS-1$ //$NON-NLS-2$
         case 3:
             return new StringBuffer(TWO_CHARS).append(input).append(TWO_CHARS).toString();
         case 4:
             return new StringBuffer(THREE_CHARS).append(input).append(THREE_CHARS).toString();
         case 5:
             return new StringBuffer(FOUR_CHARS).append(input).append(FOUR_CHARS).toString();
-        default: 
-            return calDefaultPad('#',q,input);
+        default:
+            return calDefaultPad('#', q, input);
         }
     }
-    
-	private String calDefaultPad(char charac, int repeat,String input) {
-		StringBuffer buf = new StringBuffer();
-		for (int i = 0; i < repeat; i++) {
-			buf.append('#');
-		}
-		return 	buf.append(input).append(buf.toString()).toString();
-	}
+
+    private String calDefaultPad(char charac, int repeat, String input) {
+        StringBuffer buf = new StringBuffer();
+        for (int i = 0; i < repeat; i++) {
+            buf.append('#');
+        }
+        return buf.append(input).append(buf.toString()).toString();
+    }
 
 }

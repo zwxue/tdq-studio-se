@@ -74,7 +74,6 @@ import orgomg.cwm.resource.relational.ColumnSet;
 import orgomg.cwm.resource.relational.Schema;
 
 /**
- * 
  * DOC mzhao class global comment. Detailled comment
  */
 public class RenameComparedElementAction extends Action {
@@ -126,18 +125,6 @@ public class RenameComparedElementAction extends Action {
             theSelectedElement.setNamespace(originCompareElement);
             checkedElement.setNamespace(originCompareElement);
         }
-        // Check if the sub structure is the same.
-        // MOD mzhao Do not need to check substructure.
-        // if (theSelectedElement instanceof ColumnSet) {
-        // List<DiffElement> diffElementList = checkSubStructure((ColumnSet) checkedElement);
-        // if (diffElementList != null && diffElementList.size() != 0) {
-        // if (!MessageDialog.openConfirm(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), "",
-        // "The substructure changed, Propagate or not?")) {
-        // refreshEditor();
-        // return;
-        // }
-        // }
-        // }
         if (originCompareElement instanceof Package) {
             originCompareElement.getOwnedElement().remove(theSelectedElement);
             originCompareElement.getOwnedElement().remove(checkedElement);
@@ -190,6 +177,7 @@ public class RenameComparedElementAction extends Action {
      * @param checkedColumnSet
      * @return
      */
+    @Deprecated
     @SuppressWarnings("unused")
     private List<DiffElement> checkSubStructure(ColumnSet checkedColumnSet) {
         MatchModel match = null;
@@ -229,16 +217,7 @@ public class RenameComparedElementAction extends Action {
         List<TdColumn> columnList = new ArrayList<TdColumn>();
         columnList.addAll(ColumnSetHelper.getColumns(findMatchedColumnSet));
 
-        // URI uri =
-        // URI.createPlatformResourceURI(copyedFile.getFullPath().toString(),
-        // false);
         Resource leftResource = copyedDataProvider.eResource();
-        // leftResource = EMFSharedResources.getInstance().getResource(uri,
-        // true);
-        // if (leftResource == null) {
-        // throw new
-        // ReloadCompareException("No factory has been found for URI: " + uri);
-        // }
 
         leftResource.getContents().clear();
         for (TdColumn column : columnList) {
@@ -252,13 +231,11 @@ public class RenameComparedElementAction extends Action {
     @SuppressWarnings("deprecation")
     private Connection createCopyedProvider() {
         Package catalogOrSchema = getTopLevelPackage();
-        IFile selectedFile = PrvResourceFileHelper.getInstance().findCorrespondingFile(
-                (Connection) catalogOrSchema.getDataManager().get(0));
+        IFile selectedFile = PrvResourceFileHelper.getInstance().findCorrespondingFile(catalogOrSchema.getDataManager().get(0));
         IFile createNeedReloadElementsFile = DQStructureComparer.getNeedReloadElementsFile();
         IFile copyedFile = DQStructureComparer.copyedToDestinationFile(selectedFile, createNeedReloadElementsFile);
         TypedReturnCode<Connection> returnValue = DqRepositoryViewService.readFromFile(copyedFile);
         return returnValue.getObject();
-
     }
 
     private Package getTopLevelPackage() {
@@ -357,11 +334,13 @@ public class RenameComparedElementAction extends Action {
         /*
          * @see org.eclipse.jface.window.Window#configureShell(org.eclipse.swt.widgets .Shell)
          */
+        @Override
         protected void configureShell(Shell newShell) {
             super.configureShell(newShell);
             newShell.setText(Messages.getString("RenameComparedElementAction.NewNameOfElement")); //$NON-NLS-1$
         }
 
+        @Override
         protected Point getInitialSize() {
             return new Point(455, 340);
         }
@@ -390,11 +369,12 @@ public class RenameComparedElementAction extends Action {
                 }
 
                 public void dispose() {
+                    // needn't to do anyting ???
                 }
 
                 public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
+                    // needn't to do anyting ???
                 }
-
             });
 
             tableViewer.setLabelProvider(new ILabelProvider() {
@@ -409,10 +389,11 @@ public class RenameComparedElementAction extends Action {
                 }
 
                 public void addListener(ILabelProviderListener listener) {
-
+                    // needn't to do anyting ???
                 }
 
                 public void dispose() {
+                    // needn't to do anyting ???
                 }
 
                 public boolean isLabelProperty(Object element, String property) {
@@ -420,7 +401,7 @@ public class RenameComparedElementAction extends Action {
                 }
 
                 public void removeListener(ILabelProviderListener listener) {
-
+                    // needn't to do anyting ???
                 }
             });
             tableViewer.setInput(newAddedColumnSet);
@@ -436,5 +417,4 @@ public class RenameComparedElementAction extends Action {
             return composite;
         }
     }
-
 }

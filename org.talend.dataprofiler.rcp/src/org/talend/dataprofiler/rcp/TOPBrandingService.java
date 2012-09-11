@@ -39,6 +39,7 @@ public class TOPBrandingService implements IBrandingService {
      * 
      * @see org.talend.core.ui.branding.IBrandingService#getBrandingConfiguration()
      */
+    @Override
     public IBrandingConfiguration getBrandingConfiguration() {
         if (brandingConfigure == null) {
             brandingConfigure = new TOPConfiguration();
@@ -51,6 +52,7 @@ public class TOPBrandingService implements IBrandingService {
      * 
      * @see org.talend.core.ui.branding.IBrandingService#getLoginHImage()
      */
+    @Override
     public ImageDescriptor getLoginHImage() {
         return null;
     }
@@ -60,6 +62,7 @@ public class TOPBrandingService implements IBrandingService {
      * 
      * @see org.talend.core.ui.branding.IBrandingService#getLoginVImage()
      */
+    @Override
     public ImageDescriptor getLoginVImage() {
         return null;
     }
@@ -69,14 +72,17 @@ public class TOPBrandingService implements IBrandingService {
      * 
      * @see org.talend.core.ui.branding.IBrandingService#isPoweredbyTalend()
      */
+    @Override
     public boolean isPoweredbyTalend() {
         return true;
     }
 
+    @Override
     public boolean isPoweredOnlyCamel() {
         return false;
     }
 
+    @Override
     public URL getLicenseFile() throws IOException {
         final Bundle b = Platform.getBundle(Activator.PLUGIN_ID);
         final URL url = FileLocator.toFileURL(FileLocator.find(b, new Path("resources/license.txt"), null)); //$NON-NLS-1$
@@ -88,6 +94,7 @@ public class TOPBrandingService implements IBrandingService {
      * 
      * @see org.talend.dataprofiler.core.service.IBrandingService#getCorporationName()
      */
+    @Override
     public String getCorporationName() {
         return "Talend"; //$NON-NLS-1$
     }
@@ -97,22 +104,27 @@ public class TOPBrandingService implements IBrandingService {
      * 
      * @see org.talend.dataprofiler.core.service.IBrandingService#getShortProductName()
      */
+    @Override
     public String getShortProductName() {
         return "T.O.P"; //$NON-NLS-1$
     }
 
+    @Override
     public String getAcronym() {
         return "top";//$NON-NLS-1$
     }
 
+    @Override
     public String getProductName() {
         return "Talend Open Studio"; //$NON-NLS-1$
     }
 
+    @Override
     public String getOptionName() {
         return "for Data Quality"; //$NON-NLS-1$
     }
 
+    @Override
     public String getFullProductName() {
         return getProductName() + " " + getOptionName(); //$NON-NLS-1$
     }
@@ -120,6 +132,6 @@ public class TOPBrandingService implements IBrandingService {
     @Override
     public String getStartingBrowserId() {
         // default is StartingBrowser implement in org.talend.rcp
-        return "org.talend.rcp.intro.starting.StartingBrowser";
+        return "org.talend.rcp.intro.starting.StartingBrowser"; //$NON-NLS-1$
     }
 }

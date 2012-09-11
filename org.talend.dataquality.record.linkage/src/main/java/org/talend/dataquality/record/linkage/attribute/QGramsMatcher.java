@@ -49,6 +49,7 @@ public class QGramsMatcher extends AbstractAttributeMatcher {
      * @see org.talend.dataquality.record.linkage.attribute.AbstractAttributeMatcher#getWeight(java.lang.String,
      * java.lang.String)
      */
+    @Override
     public double getWeight(String string1, String string2) {
         final List<String> str1Tokens = tokenizer.tokenizeToArrayList(string1, q);
         final List<String> str2Tokens = tokenizer.tokenizeToArrayList(string2, q);
@@ -59,7 +60,7 @@ public class QGramsMatcher extends AbstractAttributeMatcher {
         if (maxQGramsMatching == 0) {
             return 0.0f;
         } else {
-            return (maxQGramsMatching - getUnNormalisedSimilarity(str1Tokens, str2Tokens)) / (float) maxQGramsMatching;
+            return (maxQGramsMatching - getUnNormalisedSimilarity(str1Tokens, str2Tokens)) / maxQGramsMatching;
         }
     }
 

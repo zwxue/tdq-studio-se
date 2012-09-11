@@ -41,24 +41,21 @@ public class SelectedComparisonAction extends Action {
     public SelectedComparisonAction(String menuText) {
         super(menuText);
         setImageDescriptor(ImageLib.getImageDescriptor(ImageLib.COMPARE_IMAGE));
-
     }
 
     /**
-     * 
      * DOC mzhao Refrech selected object when selection changed.
      * 
-     * @param selectedObj1
-     * @param selectedObj2
+     * @param mSelectedObj1
+     * @param mSelectedObj2
      */
-    public void refreshSelectedObj(Object selectedObj1, Object selectedObj2) {
-        this.selectedObj1 = selectedObj1;
-        this.selectedObj2 = selectedObj2;
+    public void refreshSelectedObj(Object mSelectedObj1, Object mSelectedObj2) {
+        this.selectedObj1 = mSelectedObj1;
+        this.selectedObj2 = mSelectedObj2;
     }
 
     @Override
     public void run() {
-
         IRunnableWithProgress op = new IRunnableWithProgress() {
 
             public void run(IProgressMonitor monitor) throws InvocationTargetException {
@@ -88,7 +85,5 @@ public class SelectedComparisonAction extends Action {
         } catch (InterruptedException e) {
             log.error(e, e);
         }
-
     }
-
 }

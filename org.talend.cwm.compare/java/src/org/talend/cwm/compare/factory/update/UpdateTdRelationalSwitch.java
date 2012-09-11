@@ -41,10 +41,9 @@ public class UpdateTdRelationalSwitch extends RelationalSwitch<Boolean> {
         this.updateRelationalSwitch.setLeftElement(rightElement);
 
     }
-    
+
     @Override
     public Boolean caseDataType(DataType object) {
-        // TODO Auto-generated method stub
         return super.caseDataType(object);
     }
 
@@ -53,6 +52,7 @@ public class UpdateTdRelationalSwitch extends RelationalSwitch<Boolean> {
      * @param object
      * @return
      */
+    @Deprecated
     public Boolean casePackage(Package object) {
         if (recentElement instanceof Package) {
             Package pkg = (Package) recentElement;

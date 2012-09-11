@@ -40,7 +40,6 @@ import orgomg.cwm.resource.relational.Catalog;
 import orgomg.cwm.resource.relational.Schema;
 
 /**
- * 
  * DOC mzhao class global comment. Compare selected model elements.
  */
 public class SelectedCompareUIProvider extends AbstractCommonActionProvider {
@@ -51,7 +50,6 @@ public class SelectedCompareUIProvider extends AbstractCommonActionProvider {
 
     public SelectedCompareUIProvider() {
         selectionCompareAction = new SelectedComparisonAction(COMPARISON_MENUTEXT);
-
     }
 
     @Override
@@ -86,7 +84,6 @@ public class SelectedCompareUIProvider extends AbstractCommonActionProvider {
             return;
         }
 
-        // List<IRepositoryViewObject> objects = new ArrayList<IRepositoryViewObject>();
         List<Object> objects = new ArrayList<Object>();
         for (Object obj : selectedObj) {
             RepositoryNode node = (RepositoryNode) obj;
@@ -108,10 +105,6 @@ public class SelectedCompareUIProvider extends AbstractCommonActionProvider {
                 TdColumn tdColumn = ((DBColumnRepNode) node).getTdColumn();
                 objects.add(tdColumn);
             }
-            // code clean by gdbu 2011-4-18 : fileDelimited no comparison function
-            // else if (node instanceof DFColumnRepNode) {
-            // TODO implement flat file node, yyi 2011-03-22 17871
-            // }
         }
 
         // MOD yyi 2011-03-22 17871:hide compare action for flat file column
@@ -119,6 +112,5 @@ public class SelectedCompareUIProvider extends AbstractCommonActionProvider {
             selectionCompareAction.refreshSelectedObj(objects.get(0), objects.get(1));
             menu.add(selectionCompareAction);
         }
-
     }
 }

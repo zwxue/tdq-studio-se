@@ -34,7 +34,7 @@ import org.talend.dataprofiler.rcp.Activator;
  * @author xtan
  * 
  */
-@SuppressWarnings("restriction") //$NON-NLS-1$
+@SuppressWarnings("restriction")
 public class Workbench3xImplementation4CoolBar extends Workbench3xImplementation {
 
     public static final String COOLITEM_LINKS_ID = Activator.PLUGIN_ID + ".CoolItemLinks"; //$NON-NLS-1$
@@ -48,10 +48,6 @@ public class Workbench3xImplementation4CoolBar extends Workbench3xImplementation
      * DOC xtan, add Links ToolItem on postStartup, because need to keep it at last position.
      */
     public static void createLinksToolbarItem(ICoolBarManager coolBarManager2) {
-//        IBrandingService service = (IBrandingService) GlobalServiceRegister.getDefault().getService(IBrandingService.class);
-
-//        boolean isPoweredbyTalend = service.isPoweredbyTalend();
-
         // for talend product
         // true, it is TOP.
         if (true) {
@@ -72,7 +68,7 @@ public class Workbench3xImplementation4CoolBar extends Workbench3xImplementation
  * @see WorkbenchWindow.
  * 
  */
-@SuppressWarnings("restriction")  //$NON-NLS-1$
+@SuppressWarnings("restriction")
 class WorkbenchWindow4CoolBar extends WorkbenchWindow {
 
     @Override
@@ -91,7 +87,7 @@ class WorkbenchWindow4CoolBar extends WorkbenchWindow {
  * @see DefaultActionBarPresentationFactory.
  * 
  */
-@SuppressWarnings("restriction")  //$NON-NLS-1$
+@SuppressWarnings("restriction")
 class DefaultActionBarPresentationFactory4CoolBar extends DefaultActionBarPresentationFactory {
 
     @Override
@@ -106,7 +102,7 @@ class DefaultActionBarPresentationFactory4CoolBar extends DefaultActionBarPresen
  * @see CoolBarManager2.
  * 
  */
-@SuppressWarnings("restriction")  //$NON-NLS-1$
+@SuppressWarnings("restriction")
 class CoolBarManager3 extends CoolBarManager2 {
 
     public CoolBarManager3(int style) {

@@ -36,7 +36,6 @@ import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.resource.relational.Catalog;
 
 /**
- * 
  * DOC mzhao class global comment. Detailled comment
  */
 public class ModelElementCompareEditorLauncher implements IEditorLauncher {
@@ -101,11 +100,11 @@ public class ModelElementCompareEditorLauncher implements IEditorLauncher {
                     }
 
                     public void addListener(ILabelProviderListener listener) {
-
+                        // needn't to do anything ???
                     }
 
                     public void dispose() {
-
+                        // needn't to do anything ???
                     }
 
                     public boolean isLabelProperty(Object element, String property) {
@@ -113,7 +112,7 @@ public class ModelElementCompareEditorLauncher implements IEditorLauncher {
                     }
 
                     public void removeListener(ILabelProviderListener listener) {
-
+                        // needn't to do anything ???
                     }
 
                 });
@@ -146,5 +145,4 @@ public class ModelElementCompareEditorLauncher implements IEditorLauncher {
             assert false;
         }
     }
-
 }

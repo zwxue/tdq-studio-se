@@ -55,7 +55,7 @@ public class IndexBuilder {
     }
 
     public IndexBuilder() {
-        // TODO Auto-generated constructor stub
+        // needn't to do anything
     }
 
     public boolean initializeIndex(String csvFileToIndex, int[] columnsToBeIndexed) throws IOException {
@@ -93,7 +93,7 @@ public class IndexBuilder {
     }
 
     private static void addDoc(IndexWriter w, String name, String country, String gender, String count) throws IOException {
-        if (!country.equals("") && !gender.equals("")) {//$NON-NLS-1$ $NON-NLS-2$
+        if (!country.equals("") && !gender.equals("")) {//$NON-NLS-1$ //$NON-NLS-2$
             Document doc = new Document();
             Field field = new Field("name", name, Field.Store.YES, Field.Index.ANALYZED, TermVector.YES);//$NON-NLS-1$
             doc.add(field);
@@ -155,7 +155,7 @@ public class IndexBuilder {
 
     private static void createSynonymIndex(String indexPath, String sourceFile) {
         File dirFile = new File("data/indexes/" + indexPath);//$NON-NLS-1$
-        if ( ! (dirFile.exists())  &&   ! (dirFile.isDirectory())) {
+        if (!(dirFile.exists()) && !(dirFile.isDirectory())) {
             dirFile.mkdirs();
         }
 
@@ -164,7 +164,6 @@ public class IndexBuilder {
         try {
             ib.initializeSynonymIndex("data/indexes/" + sourceFile, columnsToIndex);//$NON-NLS-1$
         } catch (IOException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
     }
@@ -180,17 +179,14 @@ public class IndexBuilder {
         try {
             ib.initializeSynonymIndex("data/indexes/" + sourceFile, columnsToIndex);//$NON-NLS-1$
         } catch (IOException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
     }
 
     public static void main(String[] args) throws IOException {
-
-        createSynonymIndex("Salutory", "SalutorySynonyms.csv");//$NON-NLS-1$ $NON-NLS-2$
-        createSynonymIndex("Address", "AddressSynonyms.csv");//$NON-NLS-1$ $NON-NLS-2$
-        createSingleIndex("Company", "CompanySynonyms.csv");//$NON-NLS-1$ $NON-NLS-2$
-        createSynonymIndex("StreetType", "StreetTypeSynonyms.csv");//$NON-NLS-1$ $NON-NLS-2$
+        createSynonymIndex("Salutory", "SalutorySynonyms.csv");//$NON-NLS-1$ //$NON-NLS-2$
+        createSynonymIndex("Address", "AddressSynonyms.csv");//$NON-NLS-1$ //$NON-NLS-2$
+        createSingleIndex("Company", "CompanySynonyms.csv");//$NON-NLS-1$ //$NON-NLS-2$
+        createSynonymIndex("StreetType", "StreetTypeSynonyms.csv");//$NON-NLS-1$ //$NON-NLS-2$
     }
-
 }

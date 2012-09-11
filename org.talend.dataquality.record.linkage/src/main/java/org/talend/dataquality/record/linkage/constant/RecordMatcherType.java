@@ -18,8 +18,8 @@ package org.talend.dataquality.record.linkage.constant;
  * The names of the available record matchers.
  */
 public enum RecordMatcherType {
-    simpleVSRMatcher("Simple VSR Matcher");
-    
+    simpleVSRMatcher("Simple VSR Matcher"); //$NON-NLS-1$
+
     private final String label;
 
     RecordMatcherType(String label) {
@@ -44,6 +44,5 @@ public enum RecordMatcherType {
     public String toString() {
         return label;
     }
-    
-    
+
 }

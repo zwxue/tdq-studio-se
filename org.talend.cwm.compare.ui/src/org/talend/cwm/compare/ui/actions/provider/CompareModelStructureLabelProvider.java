@@ -13,7 +13,6 @@
 
 package org.talend.cwm.compare.ui.actions.provider;
 
-
 import org.eclipse.core.resources.IFile;
 import org.eclipse.emf.compare.diff.metamodel.AbstractDiffExtension;
 import org.eclipse.emf.compare.diff.metamodel.DiffGroup;
@@ -30,7 +29,6 @@ import org.talend.cwm.compare.i18n.Messages;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
- * 
  * DOC mzhao 2009-03-10 class global comment. Detailled comment
  */
 public class CompareModelStructureLabelProvider extends LabelProvider {
@@ -38,14 +36,13 @@ public class CompareModelStructureLabelProvider extends LabelProvider {
     /**
      * We use this generic label provider, but we want to customize some aspects that's why we choose to aggregate it.
      */
-    /* package */AdapterFactoryLabelProvider adapterProvider;
+    AdapterFactoryLabelProvider adapterProvider;
 
     /**
      * Default constructor.
      */
     public CompareModelStructureLabelProvider() {
         adapterProvider = new AdapterFactoryLabelProvider(AdapterUtils.getAdapterFactory());
-
     }
 
     /**
@@ -94,10 +91,9 @@ public class CompareModelStructureLabelProvider extends LabelProvider {
                     int subChanges = diffGroup.getSubchanges();
                     text = Messages.getString("CompareModelStructureLabelProvider.ChangeInModel", subChanges); //$NON-NLS-1$
                     if (diffGroup.getRightParent() != null && diffGroup.getRightParent() instanceof ModelElement) {
-                        text += ":\"" + ((ModelElement) diffGroup.getRightParent()).getName() + "\"";//$NON-NLS-1$ $NON-NLS-2$
+                        text += ":\"" + ((ModelElement) diffGroup.getRightParent()).getName() + "\"";//$NON-NLS-1$ //$NON-NLS-2$
                     }
                 } else if (object instanceof ModelElementChangeRightTarget) {
-
                     ModelElementChangeRightTarget addModelElement = (ModelElementChangeRightTarget) object;
 
                     String modelName = ""; //$NON-NLS-1$
@@ -122,7 +118,6 @@ public class CompareModelStructureLabelProvider extends LabelProvider {
                 } else {
                     text = adapterProvider.getText(object);
                 }
-
             }
         }
         return text;

@@ -15,12 +15,15 @@ package org.talend.dataquality.record.linkage.record;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.talend.dataquality.record.linkage.attribute.IAttributeMatcher;
 
 /**
  * DOC scorreia class global comment. Detailled comment
  */
 abstract class AbstractRecordMatcher implements IRecordMatcher {
+
+    private static Logger log = Logger.getLogger(AbstractRecordMatcher.class);
 
     protected int recordSize = 0;
 
@@ -72,8 +75,7 @@ abstract class AbstractRecordMatcher implements IRecordMatcher {
             return false;
         }
         boolean atLeastOneGroup = false;
-        for (int i = 0; i < groups.length; i++) {
-            int[] g = groups[i];
+        for (int[] g : groups) {
             if (g == null || g.length == 0) {
                 continue;
             }
@@ -163,8 +165,7 @@ abstract class AbstractRecordMatcher implements IRecordMatcher {
     protected double internalScalarProduct(double[] v1, double[] v2) {
         assert usedIndices != null;
         double result = 0;
-        for (int i = 0; i < usedIndices.length; i++) {
-            int idx = usedIndices[i];
+        for (int idx : usedIndices) {
             result += v1[idx] * v2[idx];
         }
         return result;
@@ -176,10 +177,9 @@ abstract class AbstractRecordMatcher implements IRecordMatcher {
      * @see org.talend.dataquality.record.linkage.record.IRecordMatcher#setBlockingAttributeMatchers(int[])
      */
     public boolean setBlockingAttributeMatchers(int[] attrMatcherIndices) {
-        for (int i = 0; i < attrMatcherIndices.length; i++) {
-            int idx = attrMatcherIndices[i];
+        for (int idx : attrMatcherIndices) {
             if (idx < 0 || idx >= recordSize) {
-                // TODO log an error: the index must be between 0 and the size of the records
+                log.error("the index must be between 0 and the size of the records"); //$NON-NLS-1$
                 return false;
             }
         }
@@ -191,12 +191,10 @@ abstract class AbstractRecordMatcher implements IRecordMatcher {
 
         if (usedIndicesNotblocked == null) {
             List<Integer> indices = new ArrayList<Integer>();
-            for (int i = 0; i < usedIndices.length; i++) {
+            for (int usedIdx : usedIndices) {
                 boolean isBlocked = false;
-                int usedIdx = usedIndices[i];
                 if (blockedIndices != null) {
-                    for (int j = 0; j < blockedIndices.length; j++) {
-                        int blockedIdx = blockedIndices[j];
+                    for (int blockedIdx : blockedIndices) {
                         if (blockedIdx == usedIdx) {
                             isBlocked = true;
                             break;

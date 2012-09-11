@@ -57,8 +57,6 @@ import org.talend.cwm.compare.i18n.Messages;
 import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.SchemaHelper;
 import org.talend.cwm.management.api.FolderProvider;
-import org.talend.cwm.relational.TdTable;
-import org.talend.cwm.relational.TdView;
 import org.talend.dataquality.helpers.MetadataHelper;
 import org.talend.dq.analysis.parameters.DBConnectionParameter;
 import org.talend.dq.helper.ParameterUtil;
@@ -98,19 +96,7 @@ public class RefreshActionDelegate implements IObjectActionDelegate {
     }
 
     public void run(IAction action) {
-        // DQStructureComparer.copyCurrentResourceFile(m_SelectedFileObject);
-
-        // code clean by gdbu 2011-4-18 : This class is not being used ， those who extends this class, also not been
-        // used.
-        if (selectedObject instanceof Connection) {
-        } else if (selectedObject instanceof Catalog) {
-        } else if (selectedObject instanceof Schema) {
-        } else if (selectedObject instanceof TdTable) {
-        } else if (selectedObject instanceof TdView) {
-        }
-
         synchronize();
-        // DQStructureComparer.deleteCopiedResourceFile();
     }
 
     @SuppressWarnings("unused")
@@ -119,16 +105,9 @@ public class RefreshActionDelegate implements IObjectActionDelegate {
         ResourceSet resourceSet = util.getResourceSet();
         URI uri = URI.createPlatformResourceURI(selectedFileObject.getFullPath().toString(), false);
         final Resource resource = resourceSet.createResource(uri);
-        boolean ok;
-
         Collection<? extends ModelElement> schemata = ConnectionHelper.getSchema(selectedDataProvider);
         if (CAT_WITH_PRV) {
-            // FIXME ok is never used.
-            ok = resource.getContents().addAll(schemata);
-        } else {
-            // ok = addElementsToOwnResources(schemata,
-            // folderProvider.getFolderResource(), util);
-            // util.save();
+            resource.getContents().addAll(schemata);
         }
     }
 
@@ -137,7 +116,6 @@ public class RefreshActionDelegate implements IObjectActionDelegate {
         // Creates the resourceSet where we'll load the models
         final ResourceSet resourceSet = new ResourceSetImpl();
         try {
-
             final EObject alreadySavedModel = ModelUtils.load(selectedFileObject.toString(), resourceSet);
 
             Connection connection = null;
@@ -183,7 +161,8 @@ public class RefreshActionDelegate implements IObjectActionDelegate {
                 newConn = MetadataFillFactory.getDBInstance().fillUIConnParams(metadataConnection, null);
             }
             if (newConn == null) {
-                log.error(Messages.getString("RefreshActionDelegate.errorUnableCreateNewCon", connection.getName()));//$NON-NLS-1$
+                log.error(Messages.getString(
+                        "RefreshActionDelegate.errorUnableCreateNewCon", connection == null ? "" : connection.getName()));//$NON-NLS-1$ //$NON-NLS-2$
                 return;
             }
             // System.out.println(alreadySavedModel.toString());
@@ -203,28 +182,14 @@ public class RefreshActionDelegate implements IObjectActionDelegate {
             final MatchModel match = MatchService.doMatch(alreadySavedModel, model2, options);
             final DiffModel diff = DiffService.doDiff(match, false);
 
-            // MODSCA 2008-03-31 play around with the elements
-            // EList matchedElements = match.getMatchedElements();
-            // for (Object m : matchedElements) {
-            // MatchElement elt = (MatchElement) m;
-            //
-            // }
             EList<UnmatchElement> unMatchedElements = match.getUnmatchedElements();
             for (Object object : unMatchedElements) {
                 UnmatchElement unMatched = (UnmatchElement) object;
                 ModelElement modelElt = (ModelElement) unMatched.getElement();
                 System.out.println("Unmatched elt= " + modelElt.getName()); //$NON-NLS-1$
             }
-            //System.out.println("LEFT MODEL=" + match.getLeftModel()); //$NON-NLS-1$
             @SuppressWarnings("unused")
-            // FIXME ownedElements is never used.
             EList<DiffElement> ownedElements = diff.getOwnedElements();
-            // for (DiffElement oe : ownedElements) {
-            // // System.out.println(oe.g);
-            // }
-            // if (true) {
-            // return;
-            // }
 
             // Prints the results
             try {
@@ -243,7 +208,7 @@ public class RefreshActionDelegate implements IObjectActionDelegate {
             snapshot.setMatch(match);
             snapshot.setDiff(diff);
             // MOD scorreia 2010-01-29: we may need to set the file.encoding property here.
-            ModelUtils.save(snapshot, outputFile); //$NON-NLS-1$
+            ModelUtils.save(snapshot, outputFile);
 
         } catch (IOException e) {
             System.out.print(e.getMessage());
@@ -255,7 +220,6 @@ public class RefreshActionDelegate implements IObjectActionDelegate {
     }
 
     private IFile loadDataProviderAndStructureInMemory(Connection dataProvider, FolderProvider folderProvider) {
-
         IPath folderPath = ((folderProvider != null) && folderProvider.getFolder() != null) ? folderProvider.getFolderResource()
                 .getFullPath() : null;
         if (folderPath == null) { // do not serialize data
@@ -268,9 +232,9 @@ public class RefreshActionDelegate implements IObjectActionDelegate {
         ResourceSet resourceSet = util.getResourceSet();
 
         String fileName = ".refresh.prv"; //$NON-NLS-1$
-        IFile file = folderProvider.getFolderResource().getFile(fileName);
+        IFile file = folderProvider == null ? null : folderProvider.getFolderResource().getFile(fileName);
         // File file = new File(dataproviderFilename);
-        if (file.exists()) {
+        if (file != null && file.exists()) {
             try {
                 file.delete(true, null);
             } catch (CoreException e) {

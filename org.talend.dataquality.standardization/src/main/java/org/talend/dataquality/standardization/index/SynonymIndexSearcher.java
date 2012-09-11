@@ -87,11 +87,6 @@ public class SynonymIndexSearcher {
         this.searcher = indexSearcher;
     }
 
-    // public void initIndexInRAM() throws IOException {
-    // // indexDir = new RAMDirectory();
-    // // FIXME this method is not tested and cannot work because the IndexSearcher is only a FS IndexSearcher.
-    // }
-
     /**
      * Method "openIndexInFS" opens a FS folder index.
      * 
@@ -119,13 +114,13 @@ public class SynonymIndexSearcher {
         if (word == null) {
             return null;
         }
-        word = word.trim();
-        if (word.equals("")) {
+        String tempWord = word.trim();
+        if (tempWord.equals("")) { //$NON-NLS-1$
             return null;
         }
         TopDocs docs = null;
         try {
-            Query query = createWordQueryFor(word);
+            Query query = createWordQueryFor(tempWord);
             docs = this.searcher.search(query, topDocLimit);
         } catch (IOException e) {
             e.printStackTrace();

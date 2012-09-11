@@ -162,7 +162,7 @@ public class FirstNameStandardize {
     private TopDocsCollector<?> createTopDocsCollector() throws IOException {
         // TODO the goal is to sort the result in descending order according to the "count" field
         if (SORT_WITH_COUNT) { // TODO enable this when it works correctly
-            SortField sortfield = new SortField(PluginConstant.FIRST_NAME_STANDARDIZE_COUNT, SortField.INT); // TODO do
+            SortField sortfield = new SortField(PluginConstant.FIRST_NAME_STANDARDIZE_COUNT, SortField.INT);
             Sort sort = new Sort(sortfield);
             // results are sorted according to a score and then to the count value
             return TopFieldCollector.create(sort, hitsPerPage, false, false, false, false);
@@ -187,7 +187,7 @@ public class FirstNameStandardize {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return (results == null || results.length == 0) ? "" : searcher.doc(results[0].doc).get("name");//$NON-NLS-1$ $NON-NLS-2$
+        return (results == null || results.length == 0) ? "" : searcher.doc(results[0].doc).get("name");//$NON-NLS-1$ //$NON-NLS-2$
     }
 
     public String replaceNameWithCountryGenderInfo(String inputName, String inputCountry, String inputGender, boolean fuzzyQuery)
@@ -196,14 +196,14 @@ public class FirstNameStandardize {
         indexFields.put("country", inputCountry);//$NON-NLS-1$
         indexFields.put("gender", inputGender);//$NON-NLS-1$
         ScoreDoc[] results = standardize(inputName, indexFields, fuzzyQuery);
-        return results.length == 0 ? "" : searcher.doc(results[0].doc).get("name");//$NON-NLS-1$ $NON-NLS-2$
+        return results.length == 0 ? "" : searcher.doc(results[0].doc).get("name");//$NON-NLS-1$ //$NON-NLS-2$
     }
 
     public String replaceNameWithCountryInfo(String inputName, String inputCountry, boolean fuzzyQuery) throws Exception {
         Map<String, String> indexFields = new HashMap<String, String>();
         indexFields.put("country", inputCountry);//$NON-NLS-1$
         ScoreDoc[] results = standardize(inputName, indexFields, fuzzyQuery);
-        return results.length == 0 ? "" : searcher.doc(results[0].doc).get("name");//$NON-NLS-1$ $NON-NLS-2$
+        return results.length == 0 ? "" : searcher.doc(results[0].doc).get("name");//$NON-NLS-1$ //$NON-NLS-2$
     }
 
     public String replaceNameWithGenderInfo(String inputName, String inputGender, boolean fuzzyQuery) throws Exception {
@@ -213,6 +213,6 @@ public class FirstNameStandardize {
 
         results = standardize(inputName, indexFields, fuzzyQuery);
 
-        return results.length == 0 ? "" : searcher.doc(results[0].doc).get("name");//$NON-NLS-1$ $NON-NLS-2$
+        return results.length == 0 ? "" : searcher.doc(results[0].doc).get("name");//$NON-NLS-1$ //$NON-NLS-2$
     }
 }

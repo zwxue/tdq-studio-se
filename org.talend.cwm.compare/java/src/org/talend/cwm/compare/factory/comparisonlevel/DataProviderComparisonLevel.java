@@ -60,6 +60,7 @@ public class DataProviderComparisonLevel extends AbstractComparisonLevel {
         super(selectedObj);
     }
 
+    @Override
     protected boolean isValid() {
         return selectedObj instanceof Connection || ((IFile) selectedObj).getFileExtension().equalsIgnoreCase(FactoriesUtil.PROV);
     }
@@ -92,8 +93,7 @@ public class DataProviderComparisonLevel extends AbstractComparisonLevel {
                 // reSet the neweast url value for context mode,this url in item is used by tdq
                 if (con.isContextMode()) {
                     if (item != null && con instanceof DatabaseConnection) {
-                        DatabaseConnection dbConn = (DatabaseConnection) ConnectionUtils
-                                .getOriginalDatabaseConnection((DatabaseConnection) con);
+                        DatabaseConnection dbConn = ConnectionUtils.getOriginalDatabaseConnection((DatabaseConnection) con);
                         String urlStr = DatabaseConnStrUtil.getURLString(dbConn);
                         if (urlStr != null) {
                             // mzhao 2012-06-25 bug TDI-21552 , in case of generic JDBC connection, we must not change
@@ -130,9 +130,6 @@ public class DataProviderComparisonLevel extends AbstractComparisonLevel {
         } catch (PersistenceException e) {
             log.error(e, e);
         }
-        // ElementWriterFactory.getInstance().createDataProviderWriter().save(item);
-        // ElementWriterFactory.getInstance().createDataProviderWriter().save(oldDataProvider);
-        // ProxyRepositoryViewObject.save(oldDataProvider);
     }
 
     /*
@@ -140,6 +137,7 @@ public class DataProviderComparisonLevel extends AbstractComparisonLevel {
      * 
      * @see org.talend.cwm.compare.factory.comparisonlevel.AbstractComparisonLevel #getSavedReloadObject()
      */
+    @Override
     protected EObject getSavedReloadObject() throws ReloadCompareException {
         return this.tempReloadProvider;
     }
@@ -150,27 +148,13 @@ public class DataProviderComparisonLevel extends AbstractComparisonLevel {
         List<Package> packages = new ArrayList<Package>();
         packages.addAll(ConnectionHelper.getCatalogs(copyedDataProvider));
         packages.addAll(ConnectionHelper.getSchema(copyedDataProvider));
-        // URI uri =
-        // URI.createPlatformResourceURI(copyedFile.getFullPath().toString(),
-        // false);
         Resource leftResource = null;
         leftResource = copyedDataProvider.eResource();
-        // if (tdCatalogs.size() != 0) {
-        // leftResource =
-        // EMFSharedResources.getInstance().getResource(copyedDataProvider
-        // .eResource().getURI(),
-        // true);
-        // if (leftResource == null) {
-        // throw new
-        // ReloadCompareException("No factory has been found for URI: " +
-        // copyedDataProvider.eResource().getURI());
-        // }
         leftResource.getContents().clear();
         for (Package catalog : packages) {
             catalog.getDataManager().clear();
             leftResource.getContents().add(catalog);
         }
-        // }
         EMFSharedResources.getInstance().saveResource(leftResource);
         return upperCaseResource(leftResource);
     }
@@ -180,22 +164,13 @@ public class DataProviderComparisonLevel extends AbstractComparisonLevel {
         List<Package> packages = new ArrayList<Package>();
         packages.addAll(ConnectionHelper.getCatalogs(tempReloadProvider));
         packages.addAll(ConnectionHelper.getSchema(tempReloadProvider));
-        // URI uri = tempReloadProvider.eResource().getURI();
         Resource reloadResource = null;
         reloadResource = tempReloadProvider.eResource();
-        // if (tdCatalogs.size() != 0) {
-        // reloadResource = EMFSharedResources.getInstance().getResource(uri,
-        // true);
-        // if (reloadResource == null) {
-        // throw new
-        // ReloadCompareException("No factory has been found for URI: " + uri);
-        // }
         reloadResource.getContents().clear();
         for (Package catalog : packages) {
             catalog.getDataManager().clear();
             reloadResource.getContents().add(catalog);
         }
-        // }
         EMFSharedResources.getInstance().saveResource(reloadResource);
         return upperCaseResource(reloadResource);
     }
@@ -259,7 +234,5 @@ public class DataProviderComparisonLevel extends AbstractComparisonLevel {
         }
         oldDataProvider.getDataPackage().remove(removePackage);
         oldDataProvider.eResource().getContents().remove(removePackage);
-
     }
-
 }

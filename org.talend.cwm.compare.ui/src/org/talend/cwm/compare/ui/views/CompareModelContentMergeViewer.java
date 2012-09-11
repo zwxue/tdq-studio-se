@@ -84,7 +84,6 @@ import orgomg.cwm.objectmodel.core.Package;
 import orgomg.cwm.resource.relational.ColumnSet;
 
 /**
- * 
  * DOC mzhao class global comment. Detailled comment
  */
 @SuppressWarnings("restriction")
@@ -115,9 +114,8 @@ public class CompareModelContentMergeViewer extends ModelContentMergeViewer {
     }
 
     public void hookContextMenu(boolean compareEachOther) {
-
         if (!compareEachOther) {
-            MenuManager menuMgr = new MenuManager("#PopupMenu", "contextMenu");//$NON-NLS-1$ $NON-NLS-2$
+            MenuManager menuMgr = new MenuManager("#PopupMenu", "contextMenu");//$NON-NLS-1$ //$NON-NLS-2$
             menuMgr.setRemoveAllWhenShown(true);
             menuMgr.addMenuListener(new IMenuListener() {
 
@@ -269,10 +267,10 @@ public class CompareModelContentMergeViewer extends ModelContentMergeViewer {
             default:
                 break;
             }
-
         }
 
         public void keyReleased(KeyEvent e) {
+            // needn't to do anything ???
         }
     }
 
@@ -294,13 +292,12 @@ public class CompareModelContentMergeViewer extends ModelContentMergeViewer {
         }
 
         public void mouseDown(MouseEvent e) {
-
+            // needn't to do anything ???
         }
 
         public void mouseUp(MouseEvent e) {
-
+            // needn't to do anything ???
         }
-
     }
 
     private void performCompareAction(EObject selectedElement, int tableOrViewCompare) {
@@ -310,12 +307,10 @@ public class CompareModelContentMergeViewer extends ModelContentMergeViewer {
                 if (((UpdateAttribute) diffEle).getLeftElement() == selectedElement) {
                     return;
                 }
-
             } else if (diffEle instanceof ModelElementChangeLeftTarget) {
                 if (((ModelElementChangeLeftTarget) diffEle).getLeftElement() == selectedElement) {
                     return;
                 }
-
             }
         }
 
@@ -333,7 +328,6 @@ public class CompareModelContentMergeViewer extends ModelContentMergeViewer {
         if (subEleCompColumnAction != null) {
             subEleCompColumnAction.run();
         }
-
     }
 
     private void getDiffElements(DiffElement diffEle, List<DiffElement> diffElementList) {
@@ -396,7 +390,6 @@ public class CompareModelContentMergeViewer extends ModelContentMergeViewer {
         }
         tbm.update(true);
         // ~
-
     }
 
     @Override
@@ -410,21 +403,18 @@ public class CompareModelContentMergeViewer extends ModelContentMergeViewer {
         } else if (selectedOjbect instanceof IRepositoryViewObject) {
             // MOD klliu 2010-10-08 bug 16173: get changes in "database compare" editor
             modelElement = PropertyHelper.getModelElement(((IRepositoryViewObject) selectedOjbect).getProperty());
-
         } else {
             // Folder
             // MOD msjian 2011-5-20 20875:Change to model element
             IRepositoryNode parentNode = DBTableRepNode.getParentPackageNode((IRepositoryNode) selectedOjbect);
-            Package ctatlogSwtich = parentNode instanceof DBCatalogRepNode ? ((DBCatalogRepNode) parentNode)
-                    .getCatalog() : null;
+            Package ctatlogSwtich = parentNode instanceof DBCatalogRepNode ? ((DBCatalogRepNode) parentNode).getCatalog() : null;
             // ~
             if (ctatlogSwtich != null) {
                 resourceFile = PrvResourceFileHelper.getInstance().findCorrespondingFile(
                         ConnectionHelper.getTdDataProvider(ctatlogSwtich));
                 modelElement = ConnectionHelper.getTdDataProvider(ctatlogSwtich);
             }
-            ColumnSet columnSet = parentNode instanceof DBTableRepNode ? ((DBTableRepNode) parentNode).getTdTable()
-                    : null;
+            ColumnSet columnSet = parentNode instanceof DBTableRepNode ? ((DBTableRepNode) parentNode).getTdTable() : null;
             if (columnSet != null) {
                 resourceFile = PrvResourceFileHelper.getInstance().findCorrespondingFile(
                         ConnectionHelper.getDataProvider(columnSet));
@@ -472,15 +462,12 @@ public class CompareModelContentMergeViewer extends ModelContentMergeViewer {
                     new ReloadDatabaseAction(selectedOjbect, null).run();
                 }
             }
-
         } catch (Throwable e) {
             log.error(e.getMessage(), e);
         }
-
     }
 
     private static final String COPY_LEFT_TO_RIGHT_ID = "org.eclipse.compare.copyAllLeftToRight"; //$NON-NLS-1$
 
     private static final String COPY_RIGHT_TO_LEFT_ID = "org.eclipse.compare.copyAllRightToLeft"; //$NON-NLS-1$
-
 }

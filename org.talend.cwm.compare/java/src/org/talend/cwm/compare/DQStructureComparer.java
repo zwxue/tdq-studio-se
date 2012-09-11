@@ -279,7 +279,7 @@ public final class DQStructureComparer {
             MetadataFillFactory.getMDMInstance().fillSchemas(conn, null, null);
             // returnProvider.setObject(TalendCwmFactory.createMdmTdDataProvider(connectionParameters));
         } else {
-        	// FIXME why do we use MetadataFillFactory.getMDMInstance()
+            // FIXME why do we use MetadataFillFactory.getMDMInstance()
             TypedReturnCode<?> trc = (TypedReturnCode<?>) MetadataFillFactory.getDBInstance().checkConnection(metadataConnection);
             Object sqlConnObject = trc.getObject();
             DatabaseMetaData dbJDBCMetadata = null;
@@ -538,7 +538,7 @@ public final class DQStructureComparer {
         if (leftResource.getContents() == null || leftResource.getContents().size() == 0) {
             // Could not merge this.
             MessageDialog.openError(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
-                    DefaultMessagesImpl.getString("DQStructureComparer.errorDialog1"),
+                    DefaultMessagesImpl.getString("DQStructureComparer.errorDialog1"), //$NON-NLS-1$
                     DefaultMessagesImpl.getString("DQStructureComparer.errorDialog2"));//$NON-NLS-1$ $NON-NLS-2$
             return null;
         }
@@ -589,11 +589,12 @@ public final class DQStructureComparer {
     }
 
     private static Resource cleanUpResource(Resource resource, boolean isTos) {
+        boolean isTosTemp = isTos;
         EList<EObject> contents = resource.getContents();
         for (EObject content : contents) {
             if (content instanceof TdTable) {
                 TdTable tdTable = (TdTable) content;
-                isTos = tdTable.getId() != null;
+                isTosTemp = tdTable.getId() != null;
                 tdTable.setId(null);
                 tdTable.setComment(null);
             } else if (content instanceof TdView) {
@@ -603,7 +604,7 @@ public final class DQStructureComparer {
             } else if (content instanceof TdColumn) {
                 TdColumn tdColumn = (TdColumn) content;
                 tdColumn.setSourceType(null);
-                if (isTos) {
+                if (isTosTemp) {
                     tdColumn.setLength(10);
                     tdColumn.setPrecision(4);
                     if (tdColumn.getInitialValue() != null) {

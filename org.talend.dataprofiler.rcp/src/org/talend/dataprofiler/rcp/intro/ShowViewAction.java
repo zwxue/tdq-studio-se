@@ -32,7 +32,7 @@ import org.talend.dataprofiler.rcp.i18n.Messages;
  * $Id: ShowViewAction.java,v 1.1 2007/03/07 05:08:59 pub Exp $
  * 
  */
-@SuppressWarnings("restriction") //$NON-NLS-1$
+@SuppressWarnings("restriction")
 public class ShowViewAction extends Action {
 
     /**

@@ -74,7 +74,7 @@ public class SynonymRecordSearcher {
          */
         @Override
         public String toString() {
-            return "WordResult=" + this.input + "->" + this.word + "; score=" + score;//$NON-NLS-1$ $NON-NLS-2$ $NON-NLS-3$
+            return "WordResult=" + this.input + "->" + this.word + "; score=" + score;//$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
         }
 
     } // EOC WordResult
@@ -164,7 +164,7 @@ public class SynonymRecordSearcher {
             return outputRec;
 
         }
-        
+
         private static void updateOutputRec(OutputRecord outputRec, int idx, WordResult wordResult) {
             outputRec.record[idx] = wordResult.word;
             outputRec.score += wordResult.score; // TODO add multiplicative weight here if needed
@@ -173,7 +173,6 @@ public class SynonymRecordSearcher {
                 outputRec.nbMatch++;
             }
         }
-
     }
 
     /**
@@ -194,32 +193,32 @@ public class SynonymRecordSearcher {
         for (int i = 0; i < record.length; i++) {
             List<WordResult> wResults = new ArrayList<WordResult>();
             String field = record[i];
-            
+
             // if input value is empty, create an empty record
             if (field == null || "".equals(field.trim())) {//$NON-NLS-1$
-            	wResults.add(createEmptyWordResult(field));
+                wResults.add(createEmptyWordResult(field));
             } else {
-	            // search this field in one index
-	            SynonymIndexSearcher searcher = searchers[i];
-	            TopDocs docs = searcher.searchDocumentBySynonym(field);
-	            
-	            int nbDocs = Math.min(searcher.getTopDocLimit(), docs.totalHits);
-	
-	            // store all found words in a list of results for this field
-	            for (int j = 0; j < nbDocs; j++) {
-	                ScoreDoc scoreDoc = docs.scoreDocs[j];
-	                String foundWord = searcher.getWordByDocNumber(scoreDoc.doc);
-	                WordResult wordRes = new WordResult();
-	                wordRes.input = field;
-	                wordRes.word = foundWord;
-	                wordRes.score = scoreDoc.score;
-	                wResults.add(wordRes);
-	            }
-	            // handle case when nothing is found in the index
-	            if (nbDocs == 0) {
-	                WordResult wordRes = createEmptyWordResult(field);
-	                wResults.add(wordRes);
-	            }
+                // search this field in one index
+                SynonymIndexSearcher searcher = searchers[i];
+                TopDocs docs = searcher.searchDocumentBySynonym(field);
+
+                int nbDocs = Math.min(searcher.getTopDocLimit(), docs.totalHits);
+
+                // store all found words in a list of results for this field
+                for (int j = 0; j < nbDocs; j++) {
+                    ScoreDoc scoreDoc = docs.scoreDocs[j];
+                    String foundWord = searcher.getWordByDocNumber(scoreDoc.doc);
+                    WordResult wordRes = new WordResult();
+                    wordRes.input = field;
+                    wordRes.word = foundWord;
+                    wordRes.score = scoreDoc.score;
+                    wResults.add(wordRes);
+                }
+                // handle case when nothing is found in the index
+                if (nbDocs == 0) {
+                    WordResult wordRes = createEmptyWordResult(field);
+                    wResults.add(wordRes);
+                }
             }
 
             // create
@@ -228,8 +227,8 @@ public class SynonymRecordSearcher {
         }
         List<OutputRecord> outputRecords = recRes.computeOutputRows();
         Collections.sort(outputRecords);
-        maxNbOutputResults = Math.min(outputRecords.isEmpty() ? 0 : outputRecords.size(), maxNbOutputResults);
-        return outputRecords.subList(0, maxNbOutputResults);
+        int tempMaxNbOutputResults = Math.min(outputRecords.isEmpty() ? 0 : outputRecords.size(), maxNbOutputResults);
+        return outputRecords.subList(0, tempMaxNbOutputResults);
     }
 
     /**
@@ -263,5 +262,4 @@ public class SynonymRecordSearcher {
         emptyWordResult.word = null;
         return emptyWordResult;
     }
-
 }

@@ -65,9 +65,6 @@ public class TableViewComparisonLevel extends AbstractComparisonLevel {
 
     protected static Logger log = Logger.getLogger(TableViewComparisonLevel.class);
 
-    /**
-     * 
-     */
     private static final List<TdColumn> EMPTY_COLUMN_LIST = Collections.emptyList();
 
     public TableViewComparisonLevel(DBColumnFolderRepNode dbFolderNode) {
@@ -80,6 +77,7 @@ public class TableViewComparisonLevel extends AbstractComparisonLevel {
 
     }
 
+    @Override
     protected void createTempConnectionFile() throws ReloadCompareException {
         // MOD klliu bug 15822 201-09-30
         if (oldDataProvider != null && oldDataProvider.eIsProxy()) {
@@ -115,7 +113,6 @@ public class TableViewComparisonLevel extends AbstractComparisonLevel {
 
     @Override
     protected boolean compareWithReloadObject() throws ReloadCompareException {
-
         // add option for ignoring some elements
         MatchModel match = null;
         try {
@@ -128,12 +125,13 @@ public class TableViewComparisonLevel extends AbstractComparisonLevel {
         DiffModel diff = null;
         try {
             diff = DiffService.doDiff(match, false);
+            EList<DiffElement> ownedElements = diff.getOwnedElements();
+            for (DiffElement de : ownedElements) {
+                handleSubDiffElement(de);
+            }
         } catch (Exception e) {
             log.error(e.getMessage(), e);
-        }
-        EList<DiffElement> ownedElements = diff.getOwnedElements();
-        for (DiffElement de : ownedElements) {
-            handleSubDiffElement(de);
+            return false;
         }
         return true;
     }
@@ -257,8 +255,7 @@ public class TableViewComparisonLevel extends AbstractComparisonLevel {
         Resource rightResource = null;
         rightResource = EMFSharedResources.getInstance().getResource(uri, true);
         if (rightResource == null) {
-            throw new ReloadCompareException(DefaultMessagesImpl.getString("TableViewComparisonLevel.NoFactoryFoundForURI", uri));
-            //$NON-NLS-1$
+            throw new ReloadCompareException(DefaultMessagesImpl.getString("TableViewComparisonLevel.NoFactoryFoundForURI", uri)); //$NON-NLS-1$
         }
         rightResource.getContents().clear();
         for (TdColumn column : columns) {

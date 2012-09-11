@@ -173,7 +173,6 @@ public class SelectedLocalComparison implements IComparisonLevel {
     }
 
     /**
-     * 
      * DOC mzhao Interface that do instanceof converter to provider common object to client.
      * 
      * FIXME the class should be made static.
@@ -225,7 +224,7 @@ public class SelectedLocalComparison implements IComparisonLevel {
             } else if (element instanceof IRepositoryViewObject) {
                 rootElement = tdProvider.eResource();
             } else if (element instanceof Connection) {
-                Resource eResource = ((Connection) tdProvider).eResource();
+                Resource eResource = tdProvider.eResource();
                 EList<Package> contents = ((Connection) element).getDataPackage();// eResource().getContents();
                 eResource.getContents().clear();
                 List<EObject> objects = new ArrayList<EObject>();
@@ -235,8 +234,6 @@ public class SelectedLocalComparison implements IComparisonLevel {
                     }
                 }
                 eResource.getContents().addAll(objects);
-                // ((Connection) element).getComponent().eResource().delete(options)
-                // eResource.
                 rootElement = eResource;
 
             } else {
@@ -246,35 +243,26 @@ public class SelectedLocalComparison implements IComparisonLevel {
                     Package findMatchPackage = DQStructureComparer.findMatchedPackage((Package) element, tdProvider);
                     findMatchPackage.getDataManager().clear();
                     rootElement = findMatchPackage;
-                    // meList.addAll(PackageHelper.getTables(findMatchPackage));
-                    // meList.addAll(PackageHelper.getViews(findMatchPackage));
                 } else {
                     ColumnSet columnSet1 = SwitchHelpers.COLUMN_SET_SWITCH.doSwitch((ModelElement) element);
                     if (columnSet1 != null) {
                         ColumnSet findMatchedColumnSet = DQStructureComparer.findMatchedColumnSet(columnSet1, tdProvider);
                         rootElement = findMatchedColumnSet;
-                        // meList.addAll(ColumnSetHelper
-                        // .getColumns(findMatchedColumnSet));
                     } else {
                         TdColumn column1 = SwitchHelpers.COLUMN_SWITCH.doSwitch((TdColumn) element);
                         if (column1 != null) {
                             TdColumn findMathedColumn = DQStructureComparer.findMatchedColumn(column1, tdProvider);
                             rootElement = findMathedColumn;
 
-                            // FIXME instanceof always return true.
-                            if (findMathedColumn instanceof TdColumn) {
-                                ((TdColumn) rootElement).getTaggedValue().clear();
-                                // ~MOD 2009-04-21 Clear primary key as well. If
-                                // not clear, it
-                                // will cause exception: not contained in
-                                // a resource
-                                ((TdColumn) rootElement).getUniqueKey().clear();
+                            ((TdColumn) rootElement).getTaggedValue().clear();
+                            // ~MOD 2009-04-21 Clear primary key as well. If
+                            // not clear, it
+                            // will cause exception: not contained in
+                            // a resource
+                            ((TdColumn) rootElement).getUniqueKey().clear();
 
-                                // ~MOD 2009-04-21 Clear foreign key.
-                                ((TdColumn) rootElement).getKeyRelationship().clear();
-                            }
-
-                            // meList.add(findMathedColumn);
+                            // ~MOD 2009-04-21 Clear foreign key.
+                            ((TdColumn) rootElement).getKeyRelationship().clear();
                         }
                     }
 
@@ -287,7 +275,6 @@ public class SelectedLocalComparison implements IComparisonLevel {
     }
 
     public Connection reloadCurrentLevelElement() throws ReloadCompareException {
-        // TODO Auto-generated method stub
-        return null;
+        throw new UnsupportedOperationException();
     }
 }

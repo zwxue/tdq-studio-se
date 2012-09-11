@@ -22,7 +22,6 @@ import org.apache.log4j.Logger;
 import org.talend.dataquality.matching.i18n.Messages;
 
 /**
- * 
  * @author Hallam mohamed amine
  * @date 17/08/2009
  */
@@ -30,19 +29,20 @@ public final class Main {
 
     private Main() {
     }
+
     private static Logger logger = Logger.getLogger(DatePatternRetriever.class);
-	
-     /**
+
+    /**
      * @param fileDates : parse dates stored on external file
      */
-    public static void parseFile(File fileDates,DatePatternRetriever patt ) {
+    public static void parseFile(File fileDates, DatePatternRetriever patt) {
         try {
             FileReader fr = new FileReader(fileDates);
             BufferedReader br = new BufferedReader(fr);
             String line;
             try {
                 while ((line = br.readLine()) != null) {
-                    patt.handle(line.replace("\"", ""));//$NON-NLS-1$ $NON-NLS-2$
+                    patt.handle(line.replace("\"", ""));//$NON-NLS-1$ //$NON-NLS-2$
                 }
             } finally {
                 br.close();
@@ -53,16 +53,15 @@ public final class Main {
             logger.warn(Messages.getString("DatePatternRetriever.warn2"));//$NON-NLS-1$
         }
     }
-    
+
     public static void main(String[] args) {
-    	
+
         DatePatternRetriever patt = new DatePatternRetriever();
         File file = new File("PatternsNameAndRegularExpressions.txt");//$NON-NLS-1$
         File filedates = new File("dates.txt");//$NON-NLS-1$
         patt.initModel2Regex(file);
-        parseFile(filedates,patt);
+        parseFile(filedates, patt);
         patt.showResults();
-        
-   
+
     }
 }

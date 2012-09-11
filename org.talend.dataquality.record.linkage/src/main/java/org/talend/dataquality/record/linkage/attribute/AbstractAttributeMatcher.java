@@ -24,14 +24,14 @@ public abstract class AbstractAttributeMatcher implements IAttributeMatcher {
      * java.lang.String)
      */
     public double getMatchingWeight(String str1, String str2) {
-        if ("".equals(str1)) {
-            if ("".equals(str2)) {
+        if ("".equals(str1)) { //$NON-NLS-1$
+            if ("".equals(str2)) { //$NON-NLS-1$
                 return 1.0;
             } else {
                 return 0.0;
             }
         } else {
-            if ("".equals(str2)) {
+            if ("".equals(str2)) { //$NON-NLS-1$
                 return 0.0;
             }
         }

@@ -25,13 +25,13 @@ import orgomg.cwm.resource.relational.PrimaryKey;
 import orgomg.cwm.resource.relational.Table;
 
 /**
- * 
  * DOC mzhao class global comment. Detailled comment
  */
 public class AddTdRelationalSwitch extends UpdateRelationalSwitch {
 
     private EObject leftElement = null;
 
+    @Override
     public void setLeftElement(EObject leftElement) {
         this.leftElement = leftElement;
     }
@@ -52,14 +52,15 @@ public class AddTdRelationalSwitch extends UpdateRelationalSwitch {
         foreignKey.setName(fkName);
         if (columnSet instanceof Table) {
             foreignKey = TableHelper.addForeignKey((TdTable) columnSet, foreignKey);
-            tdColumn.getKeyRelationship().add(foreignKey);
+            if (tdColumn != null) {
+                tdColumn.getKeyRelationship().add(foreignKey);
+            }
         }
         return Boolean.TRUE;
     }
 
     @Override
     public Boolean caseKeyRelationship(KeyRelationship object) {
-        // TODO Auto-generated method stub
         return super.caseKeyRelationship(object);
     }
 
@@ -79,15 +80,15 @@ public class AddTdRelationalSwitch extends UpdateRelationalSwitch {
         primaryKey.setName(pkName);
         if (columnSet instanceof Table) {
             primaryKey = TableHelper.addPrimaryKey((TdTable) columnSet, primaryKey);
-            tdColumn.getUniqueKey().add(primaryKey);
+            if (tdColumn != null) {
+                tdColumn.getUniqueKey().add(primaryKey);
+            }
         }
         return Boolean.TRUE;
     }
 
     @Override
     public Boolean caseUniqueKey(UniqueKey object) {
-        // TODO Auto-generated method stub
         return super.caseUniqueKey(object);
     }
-
 }

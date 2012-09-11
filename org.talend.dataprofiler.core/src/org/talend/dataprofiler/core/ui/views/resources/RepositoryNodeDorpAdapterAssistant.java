@@ -136,8 +136,8 @@ public class RepositoryNodeDorpAdapterAssistant extends CommonDropAdapterAssista
     private boolean allowDND(IRepositoryNode sourceNode, IRepositoryNode targetNode) {
         // MOD klliu Bug TDQ-4330 if targetCount's lenth is 1,that means targetNode is the root and system node.
         // so there is not any operations on it,then the operation of DND is not allowed.
-        IPath sourcePath = WorkbenchUtils.getPath((RepositoryNode) sourceNode);
-        IPath targetPath = WorkbenchUtils.getPath((RepositoryNode) targetNode);
+        IPath sourcePath = WorkbenchUtils.getPath(sourceNode);
+        IPath targetPath = WorkbenchUtils.getPath(targetNode);
         int sourceCount = sourcePath.segmentCount();
         int targetCount = targetPath.segmentCount();
         if (sourceCount == 1 || targetCount == 1) {
@@ -231,8 +231,7 @@ public class RepositoryNodeDorpAdapterAssistant extends CommonDropAdapterAssista
      * @param targetNode
      * @throws PersistenceException
      */
-    public void moveRepositoryNodes(IRepositoryNode[] repositoryNodes, IRepositoryNode targetNode)
-            throws PersistenceException {
+    public void moveRepositoryNodes(IRepositoryNode[] repositoryNodes, IRepositoryNode targetNode) throws PersistenceException {
         if (repositoryNodes != null) {
             for (IRepositoryNode sourceNode : repositoryNodes) {
                 if (targetNode == sourceNode.getParent()) {
@@ -295,7 +294,6 @@ public class RepositoryNodeDorpAdapterAssistant extends CommonDropAdapterAssista
         } else {
             // move the source file item
             IRepositoryViewObject objectToMove = sourceNode.getObject();
-            ERepositoryObjectType targetObjectType = targetNode.getContentType();
             IPath fullPath = ResourceManager.getSourceFileFolder().getFullPath();
             IPath makeRelativeTo = fullPath.makeRelativeTo(ResourceManager.getRootProject().getFullPath());
             ENodeType type = targetNode.getType();
@@ -469,8 +467,6 @@ public class RepositoryNodeDorpAdapterAssistant extends CommonDropAdapterAssista
     /**
      * MOD bu gdbu 2011-4-2 bug : 19537
      * 
-     * DOC gdbu Comment method "canMoveNode".
-     * 
      * Add the restrictions when Move the folder.
      * 
      * @param sourceNode
@@ -549,8 +545,8 @@ public class RepositoryNodeDorpAdapterAssistant extends CommonDropAdapterAssista
 
         RepositoryNodeBuilder instance = RepositoryNodeBuilder.getInstance();
         FolderHelper folderHelper = instance.getFolderHelper();
-        IPath sourcePath = WorkbenchUtils.getPath((RepositoryNode) sourceNode);
-        IPath targetPath = WorkbenchUtils.getPath((RepositoryNode) targetNode);
+        IPath sourcePath = WorkbenchUtils.getPath(sourceNode);
+        IPath targetPath = WorkbenchUtils.getPath(targetNode);
         ERepositoryObjectType objectType = targetNode.getContentType();
         IPath nodeFullPath = this.getNodeFullPath(objectType);
         IPath makeRelativeTo = nodeFullPath.makeRelativeTo(ResourceManager.getRootProject().getFullPath());
@@ -619,6 +615,7 @@ public class RepositoryNodeDorpAdapterAssistant extends CommonDropAdapterAssista
      * @throws PersistenceException
      * @deprecated use ProxyRepositoryFactory.getInstance().renameFolder() instead
      */
+    @Deprecated
     public void renameFolderRepNode(IRepositoryNode folderNode, String label) throws PersistenceException {
         if (folderNode == null || label == null || "".equals(label)) { //$NON-NLS-1$
             return;
@@ -654,7 +651,7 @@ public class RepositoryNodeDorpAdapterAssistant extends CommonDropAdapterAssista
         // refresh the dq view (if the rename folder havs sub folders, must to refresh before move these sub folders)
         CorePlugin.getDefault().refreshDQView(parentNode);
 
-        IPath sourcePath = WorkbenchUtils.getPath((RepositoryNode) folderNode);
+        IPath sourcePath = WorkbenchUtils.getPath(folderNode);
 
         // move children from source folder to target folder
         List<IRepositoryNode> children = folderNode.getChildren();
@@ -705,8 +702,8 @@ public class RepositoryNodeDorpAdapterAssistant extends CommonDropAdapterAssista
 
     private boolean isSameType(IRepositoryNode sourceNode, IRepositoryNode targetNode) {
         // check root node
-        IPath sourcePath = WorkbenchUtils.getPath((RepositoryNode) sourceNode);
-        IPath targetPath = WorkbenchUtils.getPath((RepositoryNode) targetNode);
+        IPath sourcePath = WorkbenchUtils.getPath(sourceNode);
+        IPath targetPath = WorkbenchUtils.getPath(targetNode);
         int sourceCount = sourcePath.segmentCount();
         int targetCount = targetPath.segmentCount();
         String sourceString = sourcePath.removeLastSegments(sourceCount - 2).toOSString();
@@ -775,7 +772,7 @@ public class RepositoryNodeDorpAdapterAssistant extends CommonDropAdapterAssista
      */
     public void moveObject(IRepositoryViewObject objectToMove, IRepositoryNode sourceNode, IRepositoryNode targetNode,
             IPath basePath) {
-        IPath targetPath = WorkbenchUtils.getPath((RepositoryNode) targetNode);
+        IPath targetPath = WorkbenchUtils.getPath(targetNode);
         try {
             IPath makeRelativeTo = Path.EMPTY;
             if (!basePath.isEmpty()) {
@@ -860,7 +857,6 @@ public class RepositoryNodeDorpAdapterAssistant extends CommonDropAdapterAssista
     }
 
     /**
-     * 
      * forbid some nodes to drag.
      * 
      * @param sourceNode

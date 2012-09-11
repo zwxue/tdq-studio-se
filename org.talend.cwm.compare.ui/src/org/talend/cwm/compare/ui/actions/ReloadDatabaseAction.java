@@ -32,7 +32,6 @@ import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ui.progress.ProgressUI;
 import org.talend.dataprofiler.core.ui.utils.MessageUI;
 import org.talend.dataprofiler.core.ui.utils.WorkbenchUtils;
-
 import orgomg.cwm.foundation.softwaredeployment.DataProvider;
 
 /**
@@ -41,8 +40,6 @@ import orgomg.cwm.foundation.softwaredeployment.DataProvider;
 public class ReloadDatabaseAction extends Action {
 
     private static Logger log = Logger.getLogger(ReloadDatabaseAction.class);
-
-    private static final String ANALYSIS_EDITOR_ID = "org.talend.dataprofiler.core.ui.editor.analysis.AnalysisEditor"; //$NON-NLS-1$
 
     private Object selectedObject;
 
@@ -60,7 +57,7 @@ public class ReloadDatabaseAction extends Action {
     @Override
     public void run() {
         // MOD klliu 2011-06-13 bug unified the confirm message TOP with TDQ
-        String confirmMessage = PluginChecker.isOnlyTopLoaded() ? Messages.getString("ReloadDatabaseAction.ConfirmMessage1") : Messages.getString("ReloadDatabaseAction.ConfirmMessage0"); //$NON-NLS-1$
+        String confirmMessage = PluginChecker.isOnlyTopLoaded() ? Messages.getString("ReloadDatabaseAction.ConfirmMessage1") : Messages.getString("ReloadDatabaseAction.ConfirmMessage0"); //$NON-NLS-1$ //$NON-NLS-2$
         boolean openConfirm = MessageDialog.openConfirm(PlatformUI.getWorkbench().getDisplay().getActiveShell(),
                 Messages.getString("ReloadDatabaseAction.ConfirmMessageTitle"), //$NON-NLS-1$
                 confirmMessage);
@@ -76,9 +73,7 @@ public class ReloadDatabaseAction extends Action {
 
                     public void run() {
                         try {
-
                             DataProvider oldDataProvider = creatComparisonLevel.reloadCurrentLevelElement();
-
                             // MOD mzhao 2009-07-13 bug 7454 Impact existing
                             // analysis.
                             // MOD qiongli 2011-9-8,move method 'impactExistingAnalyses(...)' to class WorkbenchUtils
@@ -92,7 +87,6 @@ public class ReloadDatabaseAction extends Action {
                     }
                 });
             }
-
         };
         try {
             ProgressUI.popProgressDialog(op);
@@ -103,7 +97,5 @@ public class ReloadDatabaseAction extends Action {
         } catch (InterruptedException e) {
             log.error(e, e);
         }
-
     }
-
 }

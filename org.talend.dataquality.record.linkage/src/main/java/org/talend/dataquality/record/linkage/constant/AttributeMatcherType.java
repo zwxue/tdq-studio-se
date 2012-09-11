@@ -18,21 +18,20 @@ package org.talend.dataquality.record.linkage.constant;
  * Enumeration of all available attribute matcher algorithms.
  */
 public enum AttributeMatcherType {
-    exact("Exact"),
-    exactIgnoreCase("Exact - ignore case"),
-    soundex("Soundex"),
-    soundexFR("Soundex FR"),
-    levenshtein("Levenshtein"),
-    metaphone("Metaphone"),
-    doubleMetaphone("Double Metaphone"),
-    jaro("Jaro"),
-    jaroWinkler("Jaro-Winkler"),
-    qgrams("q-grams"),
-    dummy("Dummy"),
-    custom("Custom");
+    exact("Exact"), //$NON-NLS-1$
+    exactIgnoreCase("Exact - ignore case"), //$NON-NLS-1$
+    soundex("Soundex"), //$NON-NLS-1$
+    soundexFR("Soundex FR"), //$NON-NLS-1$
+    levenshtein("Levenshtein"), //$NON-NLS-1$
+    metaphone("Metaphone"), //$NON-NLS-1$
+    doubleMetaphone("Double Metaphone"), //$NON-NLS-1$
+    jaro("Jaro"), //$NON-NLS-1$
+    jaroWinkler("Jaro-Winkler"), //$NON-NLS-1$
+    qgrams("q-grams"), //$NON-NLS-1$
+    dummy("Dummy"), //$NON-NLS-1$
+    custom("Custom"); //$NON-NLS-1$
 
     private final String label;
-
 
     AttributeMatcherType(String label) {
         this.label = label;

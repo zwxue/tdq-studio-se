@@ -15,6 +15,7 @@ package org.talend.dataquality.record.linkage.attribute;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.talend.dataquality.record.linkage.constant.AttributeMatcherType;
 
 /**
@@ -23,6 +24,8 @@ import org.talend.dataquality.record.linkage.constant.AttributeMatcherType;
  * Factory that helps to create attribute matchers from their label or type.
  */
 public final class AttributeMatcherFactory {
+
+    private static Logger log = Logger.getLogger(AttributeMatcherFactory.class);
 
     private static List<String> labels = new ArrayList<String>();
 
@@ -44,7 +47,7 @@ public final class AttributeMatcherFactory {
                 return createMatcher(type);
             }
         }
-        // TODO log matcher not found
+        log.warn("matcher not found: [matcherLabel=" + matcherLabel + "]"); //$NON-NLS-1$ //$NON-NLS-2$
         return null;
     }
 
@@ -70,7 +73,7 @@ public final class AttributeMatcherFactory {
                 return createMatcher(type);
             }
         }
-        // TODO : log no matcher found
+        log.warn("matcher not found: [type=" + type + "][className=" + className + "]"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
         return null;
     }
 
@@ -110,7 +113,7 @@ public final class AttributeMatcherFactory {
             }
         }
         // else
-        // TODO : log no matcher found
+        log.warn("matcher not found: [type=" + type + "]"); //$NON-NLS-1$ //$NON-NLS-2$
         return null;
     }
 
@@ -124,5 +127,4 @@ public final class AttributeMatcherFactory {
         }
         return labels;
     }
-
 }

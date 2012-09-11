@@ -29,7 +29,6 @@ public class OutputRecord implements Comparable<OutputRecord> {
      * the score of the matched record.
      */
     float score = 0;
-    
 
     /**
      * the score details of each index, combine by "|"
@@ -48,7 +47,7 @@ public class OutputRecord implements Comparable<OutputRecord> {
      */
     public OutputRecord(int size) {
         this.record = new String[size];
-        this.scores = "";
+        this.scores = ""; //$NON-NLS-1$
     }
 
     /*
@@ -59,12 +58,12 @@ public class OutputRecord implements Comparable<OutputRecord> {
     @Override
     public String toString() {
         StringBuffer buf = new StringBuffer();
-        for (int i = 0; i < record.length; i++) {
-            buf.append(record[i]).append(" ; ");//$NON-NLS-1$
+        for (String element : record) {
+            buf.append(element).append(" ; ");//$NON-NLS-1$
         }
         buf.deleteCharAt(buf.length() - 2);
         buf.append(" | score= " + score);//$NON-NLS-1$
-        buf.append(" ->" + scores).append("| nb match=").append(nbMatch).append("/").append(record.length);//$NON-NLS-1$ $NON-NLS-2$ //$NON-NLS-3$
+        buf.append(" ->" + scores).append("| nb match=").append(nbMatch).append("/").append(record.length);//$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
         return buf.toString();
     }
@@ -125,13 +124,14 @@ public class OutputRecord implements Comparable<OutputRecord> {
         assert index >= 0 && index < record.length;
         return this.record[index];
     }
-    
+
     /**
      * Getter for nbMatch
+     * 
      * @return the nbMatch
      */
-    public int getNbMatch(){
-    	return this.nbMatch;
+    public int getNbMatch() {
+        return this.nbMatch;
     }
 
     /**
@@ -150,8 +150,8 @@ public class OutputRecord implements Comparable<OutputRecord> {
      */
     public String getScores() {
         if (scores != null && scores.startsWith("|")) {//$NON-NLS-1$
-    		scores = scores.substring(1);
-    	}
+            scores = scores.substring(1);
+        }
         return this.scores;
     }
 
@@ -162,6 +162,7 @@ public class OutputRecord implements Comparable<OutputRecord> {
      * 
      * @see java.lang.Comparable#compareTo(java.lang.Object)
      */
+    @Override
     public int compareTo(OutputRecord o) {
         return -(int) (100 * (this.score - o.score));
     }

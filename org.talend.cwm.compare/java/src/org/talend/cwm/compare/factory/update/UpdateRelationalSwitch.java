@@ -28,21 +28,21 @@ import orgomg.cwm.resource.relational.ForeignKey;
 import orgomg.cwm.resource.relational.PrimaryKey;
 import orgomg.cwm.resource.relational.util.RelationalSwitch;
 
-
 /**
- * DOC scorreia  class global comment. Detailled comment
+ * DOC scorreia class global comment. Detailled comment
  */
 class UpdateRelationalSwitch extends RelationalSwitch<Boolean> {
+
     private static Logger log = Logger.getLogger(UpdateRelationalSwitch.class);
-    
+
     private UpdateCoreSwitch updateCoreSwitch = new UpdateCoreSwitch();
-    
+
     private EObject recentElement;
 
     private EObject leftElement;
 
     private EObject rightElement;
-    
+
     public void setRightElement(EObject rightElement) {
         // MOD klliu add recentElement getter/setter
         this.setRecentElement(rightElement);
@@ -53,8 +53,7 @@ class UpdateRelationalSwitch extends RelationalSwitch<Boolean> {
     public void setLeftElement(EObject leftElement) {
         this.leftElement = leftElement;
     }
-    
-    
+
     @Override
     public Boolean caseForeignKey(ForeignKey object) {
         ColumnSet columnSet = (ColumnSet) object.eContainer();
@@ -86,22 +85,18 @@ class UpdateRelationalSwitch extends RelationalSwitch<Boolean> {
     @Override
     public Boolean caseKeyRelationship(KeyRelationship object) {
         log.error(DefaultMessagesImpl.getString("UpdateRelationalSwitch.errorUpdateOfObj", object));//$NON-NLS-1$
-        // TODO Auto-generated method stub
         return super.caseKeyRelationship(object);
     }
+
     @Override
     public Boolean casePrimaryKey(PrimaryKey object) {
         log.error(DefaultMessagesImpl.getString("UpdateRelationalSwitch.errorUpdateOfObj", object));//$NON-NLS-1$
-        // TODO Auto-generated method stub
         return super.casePrimaryKey(object);
     }
-
-
 
     @Override
     public Boolean caseUniqueKey(UniqueKey object) {
         log.error(DefaultMessagesImpl.getString("UpdateRelationalSwitch.errorUpdateOfObj", object));//$NON-NLS-1$
-        // TODO Auto-generated method stub
         return super.caseUniqueKey(object);
     }
 
@@ -117,5 +112,4 @@ class UpdateRelationalSwitch extends RelationalSwitch<Boolean> {
     public EObject getRecentElement() {
         return recentElement;
     }
-
 }

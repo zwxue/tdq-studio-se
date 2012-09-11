@@ -36,5 +36,4 @@ public interface IAttributeMatcher {
      */
     AttributeMatcherType getMatchType();
     // TODO handle other types of data
-
 }

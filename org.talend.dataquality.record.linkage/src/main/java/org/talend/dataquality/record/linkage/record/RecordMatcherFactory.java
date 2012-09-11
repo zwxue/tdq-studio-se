@@ -15,6 +15,7 @@ package org.talend.dataquality.record.linkage.record;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.talend.dataquality.record.linkage.constant.RecordMatcherType;
 
 /**
@@ -24,9 +25,10 @@ import org.talend.dataquality.record.linkage.constant.RecordMatcherType;
  */
 public final class RecordMatcherFactory {
 
+    private static Logger log = Logger.getLogger(RecordMatcherFactory.class);
+
     private static List<String> labels = new ArrayList<String>();
 
-    
     /**
      * private RecordMatcherFactory constructor.
      */
@@ -39,7 +41,7 @@ public final class RecordMatcherFactory {
                 return createMatcher(type);
             }
         }
-        // TODO log matcher not found
+        log.warn("matcher not found: [matcherLabel=" + matcherLabel + "]"); //$NON-NLS-1$ //$NON-NLS-2$
         return null;
     }
 

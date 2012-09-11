@@ -44,7 +44,7 @@ import org.talend.dataprofiler.rcp.intro.linksbar.Workbench3xImplementation4Cool
  * DOC rli class global comment. Detailled comment <br/>
  * 
  */
-@SuppressWarnings("restriction") //$NON-NLS-1$
+@SuppressWarnings("restriction")
 public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
 
     private IWorkbenchAction exitAction;
@@ -75,41 +75,43 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         super(configurer);
     }
 
-    protected void makeActions(IWorkbenchWindow window) {
-        this.window = window;
-        exitAction = ActionFactory.QUIT.create(window);
+    @Override
+    protected void makeActions(IWorkbenchWindow workbenchWindow) {
+        this.window = workbenchWindow;
+        exitAction = ActionFactory.QUIT.create(workbenchWindow);
         register(exitAction);
 
-        colseAction = ActionFactory.CLOSE.create(window);
-        colseAllAction = ActionFactory.CLOSE_ALL.create(window);
+        colseAction = ActionFactory.CLOSE.create(workbenchWindow);
+        colseAllAction = ActionFactory.CLOSE_ALL.create(workbenchWindow);
 
-        saveAction = ActionFactory.SAVE.create(window);
+        saveAction = ActionFactory.SAVE.create(workbenchWindow);
         register(saveAction);
 
-        saveAllAction = ActionFactory.SAVE_ALL.create(window);
+        saveAllAction = ActionFactory.SAVE_ALL.create(workbenchWindow);
         register(saveAllAction);
 
-        register(ActionFactory.DELETE.create(window));
+        register(ActionFactory.DELETE.create(workbenchWindow));
 
-        preferenceAction = ActionFactory.PREFERENCES.create(window);
+        preferenceAction = ActionFactory.PREFERENCES.create(workbenchWindow);
         register(preferenceAction);
 
-        welcomeAction = ActionFactory.INTRO.create(window);
+        welcomeAction = ActionFactory.INTRO.create(workbenchWindow);
         register(welcomeAction);
 
-        helpAction = ActionFactory.HELP_CONTENTS.create(window);
+        helpAction = ActionFactory.HELP_CONTENTS.create(workbenchWindow);
         register(helpAction);
 
-        aboutAction = ActionFactory.ABOUT.create(window);
+        aboutAction = ActionFactory.ABOUT.create(workbenchWindow);
         register(aboutAction);
 
-        resetPerspectiveAction = ActionFactory.RESET_PERSPECTIVE.create(window);
+        resetPerspectiveAction = ActionFactory.RESET_PERSPECTIVE.create(workbenchWindow);
         register(resetPerspectiveAction);
 
-        savePerspectiveAsAction = ActionFactory.SAVE_PERSPECTIVE.create(window);
+        savePerspectiveAsAction = ActionFactory.SAVE_PERSPECTIVE.create(workbenchWindow);
         register(resetPerspectiveAction);
     }
 
+    @Override
     protected void fillMenuBar(IMenuManager menuBar) {
         this.beforefillMenuBar();
         MenuManager fileMenu = new MenuManager(
@@ -173,10 +175,10 @@ public class ApplicationActionBarAdvisor extends ActionBarAdvisor {
         ActionSetRegistry reg = WorkbenchPlugin.getDefault().getActionSetRegistry();
         IActionSetDescriptor[] actionSets = reg.getActionSets();
         List<String> list = Arrays.asList(ACTIONSETID);
-        for (int i = 0; i < actionSets.length; i++) {
-            if (list.contains(actionSets[i].getId())) {
-                IExtension ext = actionSets[i].getConfigurationElement().getDeclaringExtension();
-                reg.removeExtension(ext, new Object[] { actionSets[i] });
+        for (IActionSetDescriptor actionSet : actionSets) {
+            if (list.contains(actionSet.getId())) {
+                IExtension ext = actionSet.getConfigurationElement().getDeclaringExtension();
+                reg.removeExtension(ext, new Object[] { actionSet });
             }
         }
 

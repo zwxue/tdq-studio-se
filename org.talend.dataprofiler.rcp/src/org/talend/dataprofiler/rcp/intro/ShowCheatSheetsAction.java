@@ -31,7 +31,7 @@ import org.eclipse.ui.intro.config.IIntroAction;
  * $Id: talend.epf 1 2006-09-29 17:06:40Z qzhang $
  * 
  */
-@SuppressWarnings("restriction") //$NON-NLS-1$
+@SuppressWarnings("restriction")
 public class ShowCheatSheetsAction extends Action implements IIntroAction {
 
     private static final String PERSPECTIVE_ID = "org.talend.dataprofiler.DataProfilingPerspective"; //$NON-NLS-1$
@@ -41,9 +41,10 @@ public class ShowCheatSheetsAction extends Action implements IIntroAction {
      * 
      * @see org.eclipse.ui.intro.config.IIntroAction#run(org.eclipse.ui.intro.IIntroSite, java.util.Properties)
      */
+    @Override
     public void run(IIntroSite site, Properties params) {
-        IPerspectiveDescriptor persDescription1 = PlatformUI.getWorkbench().getPerspectiveRegistry().findPerspectiveWithId(
-                PERSPECTIVE_ID);
+        IPerspectiveDescriptor persDescription1 = PlatformUI.getWorkbench().getPerspectiveRegistry()
+                .findPerspectiveWithId(PERSPECTIVE_ID);
         PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().setPerspective(persDescription1);
         String property = params.getProperty("id"); //$NON-NLS-1$
         OpenCheatSheetAction action = new OpenCheatSheetAction(property);

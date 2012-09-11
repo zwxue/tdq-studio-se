@@ -42,7 +42,7 @@ import org.talend.utils.sugars.ReturnCode;
 /**
  * This class controls all aspects of the application's execution.
  */
-@SuppressWarnings("restriction")//$NON-NLS-1$
+@SuppressWarnings("restriction")
 public class Application implements IApplication {
 
     protected static Logger log = Logger.getLogger(Application.class);
@@ -52,6 +52,7 @@ public class Application implements IApplication {
      * 
      * @see org.eclipse.equinox.app.IApplication#start(org.eclipse.equinox.app.IApplicationContext)
      */
+    @Override
     public Object start(IApplicationContext context) {
         Display display = PlatformUI.createDisplay();
         Shell shell = new Shell(display, SWT.ON_TOP);
@@ -132,6 +133,7 @@ public class Application implements IApplication {
      * 
      * @see org.eclipse.equinox.app.IApplication#stop()
      */
+    @Override
     public void stop() {
         final IWorkbench workbench = PlatformUI.getWorkbench();
         if (workbench == null) {
@@ -140,6 +142,7 @@ public class Application implements IApplication {
         final Display display = workbench.getDisplay();
         display.syncExec(new Runnable() {
 
+            @Override
             public void run() {
                 if (!display.isDisposed()) {
                     workbench.close();

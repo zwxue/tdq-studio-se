@@ -59,27 +59,8 @@ public final class ComparisonLevelFactory {
             comparisonLevel = new TableViewComparisonLevel(dbFolderNode);
         } else if (selectedObject instanceof Connection) {
             // MOD qiongli 2011-9-5 feature TDQ-3317.
-            comparisonLevel = new DataProviderComparisonLevel((Connection) selectedObject);
-        }
-
-        // code clean by gdbu 2011-4-18 : selectedObject is RepositoryNode type , so the following code is invalid.
-        // else if (selectedObject instanceof IFile) {
-        // comparisonLevel = new DataProviderComparisonLevel(selectedObject);
-        // }else if (selectedObject instanceof Connection) {
-        // // MOD qiongli 2010-12-2.bug 16881.
-        // IRepositoryViewObject resObject = ProxyRepositoryViewObject.getRepositoryViewObject((Connection)
-        // selectedObject);
-        // comparisonLevel = new RepositoryObjectComparisonLevel(resObject);
-        // }
-        // else if (selectedObject instanceof Catalog) {
-        // // MOD mzhao 2009-08-12 If compare the schemas of one catalog for MS
-        // // SQL Server.
-        // comparisonLevel = new CatalogComparisonLevel((Catalog) selectedObject);
-        // } else if (selectedObject instanceof IRepositoryViewObject) {
-        // // never should be IRepositoryViewObject, it has been instead by DBConnectionRepNode
-        // comparisonLevel = new RepositoryObjectComparisonLevel(selectedObject);
-        // }
-        else {
+            comparisonLevel = new DataProviderComparisonLevel(selectedObject);
+        } else {
             comparisonLevel = null;
         }
 
@@ -98,5 +79,4 @@ public final class ComparisonLevelFactory {
         IComparisonLevel comparisonLevel = new SelectedLocalComparison(selectedObject1, selectedObject2);
         return comparisonLevel;
     }
-
 }
