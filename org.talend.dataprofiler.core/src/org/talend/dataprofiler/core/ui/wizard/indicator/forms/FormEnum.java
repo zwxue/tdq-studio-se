@@ -247,7 +247,6 @@ public enum FormEnum {
 
         case BinFrequencyIndicatorEnum:
         case BinLowFrequencyIndicatorEnum:
-        case BenfordLawFrequencyIndicatorEnum:
             if (Java2SqlType.isNumbericInSQL(sqlType)) {
 
                 forms = new FormEnum[] { FreqBinsDesignerForm };
