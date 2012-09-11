@@ -47,7 +47,7 @@ public class TdColumnHeaderRenderer extends GridHeaderRenderer {
     private TextLayout textLayout;
 
     /** rotation of the header text. */
-    protected int _rotation = 40;
+    protected int _rotation = 35;
 
     /** Transformations for rotated text. */
     protected Transform _transform;
