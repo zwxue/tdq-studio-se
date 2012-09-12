@@ -120,6 +120,11 @@ public class IndicatorSelectGrid extends Grid {
             } else if (cell.x > 1) {
                 tickCell(cell, checked);
             }
+            GridItem parent = getItem(cell.y);
+            while (parent.getParentItem() != null) {
+                parent = parent.getParentItem();
+            }
+            _dialog.processNodeSelection(this, null, parent);
         } else {
             GridItem item = getItem(new Point(e.x, e.y));
             if (e.button == 1 && item != null) {

@@ -319,7 +319,7 @@ public class IndicatorSelectDialog2 extends TrayDialog {
      * @param parentItem
      * @param currentItem
      */
-    private void processNodeSelection(IndicatorSelectGrid grid, GridItem parentItem, GridItem currentItem) {
+    void processNodeSelection(IndicatorSelectGrid grid, GridItem parentItem, GridItem currentItem) {
         if (currentItem.hasChildren()) {
             // declare and initialize variables
             Boolean allCheckedInColumn[] = new Boolean[grid.getColumnCount()];
@@ -350,9 +350,8 @@ public class IndicatorSelectDialog2 extends TrayDialog {
                         }
                     }
                 }
-                if (hasCheckedInRow && allCheckedInRow) {
-                    childItem.setChecked(1, true);
-                }
+                childItem.setChecked(1, hasCheckedInRow && allCheckedInRow);
+
                 if (expanded) {
                     currentItem.setExpanded(true);
                     if (parentItem != null) {
