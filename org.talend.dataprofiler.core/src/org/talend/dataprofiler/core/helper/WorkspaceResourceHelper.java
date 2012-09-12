@@ -56,8 +56,6 @@ import orgomg.cwm.objectmodel.core.ModelElement;
  */
 public final class WorkspaceResourceHelper {
 
-    private static final String ANALYSIS_EDITOR_ID = "org.talend.dataprofiler.core.ui.editor.analysis.AnalysisEditor"; //$NON-NLS-1$
-
     public static final String COMMA = ", "; //$NON-NLS-1$
 
     private WorkspaceResourceHelper() {
@@ -114,7 +112,7 @@ public final class WorkspaceResourceHelper {
         Enumeration<String> paths = plugin.getBundle().getEntryPaths(srcPath);
 
         while (paths != null && paths.hasMoreElements()) {
-            String nextElement = (String) paths.nextElement();
+            String nextElement = paths.nextElement();
             String currentPath = "/" + nextElement; //$NON-NLS-1$
             URL resourceURL = plugin.getBundle().getEntry(currentPath);
             URL fileURL = null;
@@ -147,7 +145,7 @@ public final class WorkspaceResourceHelper {
             }
 
             // MOD msjian TDQ-4608 2012-3-6: deal with the *.jasper file
-            if (suffix != null && !suffix.contains(FileUtils.getExtension(file))) { //$NON-NLS-1$
+            if (suffix != null && !suffix.contains(FileUtils.getExtension(file))) {
                 continue;
             }
 
@@ -262,13 +260,14 @@ public final class WorkspaceResourceHelper {
         if (openSourceFileNames == null || openSourceFileNames.trim().length() == 0) {
             return;
         }
-        if (openSourceFileNames.endsWith(COMMA)) {
-            openSourceFileNames = openSourceFileNames.substring(0, openSourceFileNames.lastIndexOf(COMMA));
+        String sourcFileNames = openSourceFileNames;
+        if (sourcFileNames.endsWith(COMMA)) {
+            sourcFileNames = openSourceFileNames.substring(0, openSourceFileNames.lastIndexOf(COMMA));
         }
         String msgTag = "SourceFileAction.sourceFileOpening"; //$NON-NLS-1$
-        if (openSourceFileNames.indexOf(COMMA) > -1) {
+        if (sourcFileNames.indexOf(COMMA) > -1) {
             msgTag = "SourceFileAction.sourceFilesOpening"; //$NON-NLS-1$
         }
-        MessageUI.openWarning(DefaultMessagesImpl.getString(msgTag, openSourceFileNames));
+        MessageUI.openWarning(DefaultMessagesImpl.getString(msgTag, sourcFileNames));
     }
 }

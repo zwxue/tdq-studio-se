@@ -20,10 +20,10 @@ import org.talend.resource.EResourceConstant;
  */
 public enum EEcosCategory {
 
-    SQL("SQL", EResourceConstant.PATTERN_SQL),
-    REGEX("Regex", EResourceConstant.PATTERN_REGEX),
-    INDICATOR("Indicator", EResourceConstant.USER_DEFINED_INDICATORS),
-    RULES("ParserRule", EResourceConstant.RULES_PARSER);
+    SQL("SQL", EResourceConstant.PATTERN_SQL), //$NON-NLS-1$
+    REGEX("Regex", EResourceConstant.PATTERN_REGEX), //$NON-NLS-1$
+    INDICATOR("Indicator", EResourceConstant.USER_DEFINED_INDICATORS), //$NON-NLS-1$
+    RULES("ParserRule", EResourceConstant.RULES_PARSER); //$NON-NLS-1$
 
     private String name;
 

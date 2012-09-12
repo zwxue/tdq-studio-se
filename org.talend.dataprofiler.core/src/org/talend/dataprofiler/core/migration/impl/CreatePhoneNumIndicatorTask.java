@@ -14,8 +14,6 @@ package org.talend.dataprofiler.core.migration.impl;
 
 import java.util.Date;
 
-import org.apache.log4j.Logger;
-
 /**
  * DOC qiongli class global comment. Detailled comment <br/>
  * 
@@ -24,14 +22,14 @@ import org.apache.log4j.Logger;
  */
 public class CreatePhoneNumIndicatorTask extends CreateSystemIndicatorTask {
 
-    String phoneNumStr = " <categories xmi:id=\"_Ohyz4bEEEeCVE-ofo1XCug\" name=\"Phone Number Statistics\" label=\"Phone Number Statistics\">\r\n"
-            + "    <taggedValue xmi:id=\"_ZSFGoLEEEeCVE-ofo1XCug\" tag=\"Description\" value=\"do some phone number statistics by several counting methods\"/>\r\n"
-            + "    <taggedValue xmi:id=\"_rEFIoLEEEeCVE-ofo1XCug\" tag=\"Purpose\" value=\"evaluate different phone number of records\"/>\r\n"
-            + "  </categories>";
+    String phoneNumStr = " <categories xmi:id=\"_Ohyz4bEEEeCVE-ofo1XCug\" name=\"Phone Number Statistics\" label=\"Phone Number Statistics\">\r\n" //$NON-NLS-1$
+            + "    <taggedValue xmi:id=\"_ZSFGoLEEEeCVE-ofo1XCug\" tag=\"Description\" value=\"do some phone number statistics by several counting methods\"/>\r\n" //$NON-NLS-1$
+            + "    <taggedValue xmi:id=\"_rEFIoLEEEeCVE-ofo1XCug\" tag=\"Purpose\" value=\"evaluate different phone number of records\"/>\r\n" //$NON-NLS-1$
+            + "  </categories>"; //$NON-NLS-1$
 
-    private static Logger log = Logger.getLogger(CreatePhoneNumIndicatorTask.class);
-
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.talend.dataprofiler.migration.IMigrationTask#getOrder()
      */
     public Date getOrder() {
@@ -45,7 +43,7 @@ public class CreatePhoneNumIndicatorTask extends CreateSystemIndicatorTask {
      */
     @Override
     protected String getFoldername() {
-        return "Phone Number Statistics";
+        return "Phone Number Statistics"; //$NON-NLS-1$
     }
 
     /*

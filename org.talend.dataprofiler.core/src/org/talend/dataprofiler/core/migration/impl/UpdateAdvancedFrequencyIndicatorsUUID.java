@@ -68,35 +68,35 @@ public class UpdateAdvancedFrequencyIndicatorsUUID extends AbstractWorksapceUpda
 
         Map<String, String> replaceStringMap = new HashMap<String, String>();
 
-        replaceStringMap.put("xmi:id=\"_ccIR4hF2Ed2PKb6nEJEvhw\" name=\"Date Frequency Table\"",
-                "xmi:id=\"_hraIkTE2EeGvsfvHpG2Eqg\" name=\"Date Frequency Table\"");
+        replaceStringMap.put("xmi:id=\"_ccIR4hF2Ed2PKb6nEJEvhw\" name=\"Date Frequency Table\"", //$NON-NLS-1$
+                "xmi:id=\"_hraIkTE2EeGvsfvHpG2Eqg\" name=\"Date Frequency Table\""); //$NON-NLS-1$
 
-        replaceStringMap.put("xmi:id=\"_-0C00JOtEd2Iyo0dtkB9pA\" name=\"Date Low Frequency Table\"",
-                "xmi:id=\"_hraIljE2EeGvsfvHpG2Eqg\" name=\"Date Low Frequency Table\"");
+        replaceStringMap.put("xmi:id=\"_-0C00JOtEd2Iyo0dtkB9pA\" name=\"Date Low Frequency Table\"", //$NON-NLS-1$
+                "xmi:id=\"_hraIljE2EeGvsfvHpG2Eqg\" name=\"Date Low Frequency Table\""); //$NON-NLS-1$
 
-        replaceStringMap.put("xmi:id=\"_ccIR4hF2Ed2PKb6nEJEvhw\" name=\"Month Frequency Table\"",
-                "xmi:id=\"_hraIkjE2EeGvsfvHpG2Eqg\" name=\"Month Frequency Table\"");
+        replaceStringMap.put("xmi:id=\"_ccIR4hF2Ed2PKb6nEJEvhw\" name=\"Month Frequency Table\"", //$NON-NLS-1$
+                "xmi:id=\"_hraIkjE2EeGvsfvHpG2Eqg\" name=\"Month Frequency Table\""); //$NON-NLS-1$
 
-        replaceStringMap.put("xmi:id=\"_-0C00JOtEd2Iyo0dtkB9pA\" name=\"Month Low Frequency Table\"",
-                "xmi:id=\"_hraIlzE2EeGvsfvHpG2Eqg\" name=\"Month Low Frequency Table\"");
+        replaceStringMap.put("xmi:id=\"_-0C00JOtEd2Iyo0dtkB9pA\" name=\"Month Low Frequency Table\"", //$NON-NLS-1$
+                "xmi:id=\"_hraIlzE2EeGvsfvHpG2Eqg\" name=\"Month Low Frequency Table\""); //$NON-NLS-1$
 
-        replaceStringMap.put("xmi:id=\"_ccIR4hF2Ed2PKb6nEJEvhw\" name=\"Quarter Frequency Table\"",
-                "xmi:id=\"_hraIkzE2EeGvsfvHpG2Eqg\" name=\"Quarter Frequency Table\"");
+        replaceStringMap.put("xmi:id=\"_ccIR4hF2Ed2PKb6nEJEvhw\" name=\"Quarter Frequency Table\"", //$NON-NLS-1$
+                "xmi:id=\"_hraIkzE2EeGvsfvHpG2Eqg\" name=\"Quarter Frequency Table\""); //$NON-NLS-1$
 
-        replaceStringMap.put("xmi:id=\"_-0C00JOtEd2Iyo0dtkB9pA\" name=\"Quarter Low Frequency Table\"",
-                "xmi:id=\"_hraImDE2EeGvsfvHpG2Eqg\" name=\"Quarter Low Frequency Table\"");
+        replaceStringMap.put("xmi:id=\"_-0C00JOtEd2Iyo0dtkB9pA\" name=\"Quarter Low Frequency Table\"", //$NON-NLS-1$
+                "xmi:id=\"_hraImDE2EeGvsfvHpG2Eqg\" name=\"Quarter Low Frequency Table\""); //$NON-NLS-1$
 
-        replaceStringMap.put("xmi:id=\"_ccIR4hF2Ed2PKb6nEJEvhw\" name=\"Week Frequency Table\"",
-                "xmi:id=\"_hraIlDE2EeGvsfvHpG2Eqg\" name=\"Week Frequency Table\"");
+        replaceStringMap.put("xmi:id=\"_ccIR4hF2Ed2PKb6nEJEvhw\" name=\"Week Frequency Table\"", //$NON-NLS-1$
+                "xmi:id=\"_hraIlDE2EeGvsfvHpG2Eqg\" name=\"Week Frequency Table\""); //$NON-NLS-1$
 
-        replaceStringMap.put("xmi:id=\"_-0C00JOtEd2Iyo0dtkB9pA\" name=\"Week Low Frequency Table\"",
-                "xmi:id=\"_hraImTE2EeGvsfvHpG2Eqg\" name=\"Week Low Frequency Table\"");
+        replaceStringMap.put("xmi:id=\"_-0C00JOtEd2Iyo0dtkB9pA\" name=\"Week Low Frequency Table\"", //$NON-NLS-1$
+                "xmi:id=\"_hraImTE2EeGvsfvHpG2Eqg\" name=\"Week Low Frequency Table\""); //$NON-NLS-1$
 
-        replaceStringMap.put("xmi:id=\"_ccIR4hF2Ed2PKb6nEJEvhw\" name=\"Year Frequency Table\"",
-                "xmi:id=\"_hraIlTE2EeGvsfvHpG2Eqg\" name=\"Year Frequency Table\"");
+        replaceStringMap.put("xmi:id=\"_ccIR4hF2Ed2PKb6nEJEvhw\" name=\"Year Frequency Table\"", //$NON-NLS-1$
+                "xmi:id=\"_hraIlTE2EeGvsfvHpG2Eqg\" name=\"Year Frequency Table\""); //$NON-NLS-1$
 
-        replaceStringMap.put("xmi:id=\"_-0C00JOtEd2Iyo0dtkB9pA\" name=\"Year Low Frequency Table\"",
-                "xmi:id=\"_hraImjE2EeGvsfvHpG2Eqg\" name=\"Year Low Frequency Table\"");
+        replaceStringMap.put("xmi:id=\"_-0C00JOtEd2Iyo0dtkB9pA\" name=\"Year Low Frequency Table\"", //$NON-NLS-1$
+                "xmi:id=\"_hraImjE2EeGvsfvHpG2Eqg\" name=\"Year Low Frequency Table\""); //$NON-NLS-1$
 
         return replaceStringMap;
     }
@@ -104,27 +104,27 @@ public class UpdateAdvancedFrequencyIndicatorsUUID extends AbstractWorksapceUpda
     private Map<String, String> initAnaReplaceMap() {
         Map<String, String> replaceStringMap = new HashMap<String, String>();
 
-        replaceStringMap.put("Date_Low_Frequency_Table_0.1.definition#_-0C00JOtEd2Iyo0dtkB9pA",
-                "Date_Low_Frequency_Table_0.1.definition#_hraIljE2EeGvsfvHpG2Eqg");
-        replaceStringMap.put("Month_Low_Frequency_Table_0.1.definition#_-0C00JOtEd2Iyo0dtkB9pA",
-                "Month_Low_Frequency_Table_0.1.definition#_hraIlzE2EeGvsfvHpG2Eqg");
-        replaceStringMap.put("Quarter_Low_Frequency_Table_0.1.definition#_-0C00JOtEd2Iyo0dtkB9pA",
-                "Quarter_Low_Frequency_Table_0.1.definition#_hraImDE2EeGvsfvHpG2Eqg");
-        replaceStringMap.put("Week_Low_Frequency_Table_0.1.definition#_-0C00JOtEd2Iyo0dtkB9pA",
-                "Week_Low_Frequency_Table_0.1.definition#_hraImTE2EeGvsfvHpG2Eqg");
-        replaceStringMap.put("Year_Low_Frequency_Table_0.1.definition#_-0C00JOtEd2Iyo0dtkB9pA",
-                "Year_Low_Frequency_Table_0.1.definition#_hraImjE2EeGvsfvHpG2Eqg");
+        replaceStringMap.put("Date_Low_Frequency_Table_0.1.definition#_-0C00JOtEd2Iyo0dtkB9pA", //$NON-NLS-1$
+                "Date_Low_Frequency_Table_0.1.definition#_hraIljE2EeGvsfvHpG2Eqg"); //$NON-NLS-1$
+        replaceStringMap.put("Month_Low_Frequency_Table_0.1.definition#_-0C00JOtEd2Iyo0dtkB9pA", //$NON-NLS-1$
+                "Month_Low_Frequency_Table_0.1.definition#_hraIlzE2EeGvsfvHpG2Eqg"); //$NON-NLS-1$
+        replaceStringMap.put("Quarter_Low_Frequency_Table_0.1.definition#_-0C00JOtEd2Iyo0dtkB9pA", //$NON-NLS-1$
+                "Quarter_Low_Frequency_Table_0.1.definition#_hraImDE2EeGvsfvHpG2Eqg"); //$NON-NLS-1$
+        replaceStringMap.put("Week_Low_Frequency_Table_0.1.definition#_-0C00JOtEd2Iyo0dtkB9pA", //$NON-NLS-1$
+                "Week_Low_Frequency_Table_0.1.definition#_hraImTE2EeGvsfvHpG2Eqg"); //$NON-NLS-1$
+        replaceStringMap.put("Year_Low_Frequency_Table_0.1.definition#_-0C00JOtEd2Iyo0dtkB9pA", //$NON-NLS-1$
+                "Year_Low_Frequency_Table_0.1.definition#_hraImjE2EeGvsfvHpG2Eqg"); //$NON-NLS-1$
 
-        replaceStringMap.put("Date_Frequency_Table_0.1.definition#_ccIR4hF2Ed2PKb6nEJEvhw",
-                "Date_Frequency_Table_0.1.definition#_hraIkTE2EeGvsfvHpG2Eqg");
-        replaceStringMap.put("Month_Frequency_Table_0.1.definition#_ccIR4hF2Ed2PKb6nEJEvhw",
-                "Month_Frequency_Table_0.1.definition#_hraIkjE2EeGvsfvHpG2Eqg");
-        replaceStringMap.put("Quarter_Frequency_Table_0.1.definition#_ccIR4hF2Ed2PKb6nEJEvhw",
-                "Quarter_Frequency_Table_0.1.definition#_hraIkzE2EeGvsfvHpG2Eqg");
-        replaceStringMap.put("Week_Frequency_Table_0.1.definition#_ccIR4hF2Ed2PKb6nEJEvhw",
-                "Week_Frequency_Table_0.1.definition#_hraIlDE2EeGvsfvHpG2Eqg");
-        replaceStringMap.put("Year_Frequency_Table_0.1.definition#_ccIR4hF2Ed2PKb6nEJEvhw",
-                "Year_Frequency_Table_0.1.definition#_hraIlTE2EeGvsfvHpG2Eqg");
+        replaceStringMap.put("Date_Frequency_Table_0.1.definition#_ccIR4hF2Ed2PKb6nEJEvhw", //$NON-NLS-1$
+                "Date_Frequency_Table_0.1.definition#_hraIkTE2EeGvsfvHpG2Eqg"); //$NON-NLS-1$
+        replaceStringMap.put("Month_Frequency_Table_0.1.definition#_ccIR4hF2Ed2PKb6nEJEvhw", //$NON-NLS-1$
+                "Month_Frequency_Table_0.1.definition#_hraIkjE2EeGvsfvHpG2Eqg"); //$NON-NLS-1$
+        replaceStringMap.put("Quarter_Frequency_Table_0.1.definition#_ccIR4hF2Ed2PKb6nEJEvhw", //$NON-NLS-1$
+                "Quarter_Frequency_Table_0.1.definition#_hraIkzE2EeGvsfvHpG2Eqg"); //$NON-NLS-1$
+        replaceStringMap.put("Week_Frequency_Table_0.1.definition#_ccIR4hF2Ed2PKb6nEJEvhw", //$NON-NLS-1$
+                "Week_Frequency_Table_0.1.definition#_hraIlDE2EeGvsfvHpG2Eqg"); //$NON-NLS-1$
+        replaceStringMap.put("Year_Frequency_Table_0.1.definition#_ccIR4hF2Ed2PKb6nEJEvhw", //$NON-NLS-1$
+                "Year_Frequency_Table_0.1.definition#_hraIlTE2EeGvsfvHpG2Eqg"); //$NON-NLS-1$
 
         return replaceStringMap;
     }

@@ -14,7 +14,6 @@ package org.talend.dataprofiler.core.pattern;
 
 import java.util.HashMap;
 
-import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -34,8 +33,6 @@ import org.talend.resource.ResourceManager;
 
 public class CreatePatternWizardPage1 extends MetadataWizardPage {
 
-    protected static Logger log = Logger.getLogger(CreatePatternWizardPage1.class);
-
     protected HashMap<String, String> metadata;
 
     private String purpose;
@@ -53,6 +50,7 @@ public class CreatePatternWizardPage1 extends MetadataWizardPage {
      * 
      * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets .Composite)
      */
+    @Override
     public void createControl(Composite parent) {
 
         super.createControl(parent);
@@ -90,7 +88,7 @@ public class CreatePatternWizardPage1 extends MetadataWizardPage {
      */
     @Override
     protected void createExtendedControl(Composite container) {
-
+        throw new UnsupportedOperationException();
     }
 
     /**

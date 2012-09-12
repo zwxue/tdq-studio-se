@@ -39,10 +39,10 @@ public abstract class NamedColumnSetFolderNode<COLSET extends NamedColumnSet> ex
 
     private static Logger log = Logger.getLogger(NamedColumnSetFolderNode.class);
 
-    public static final int TABLE_VIEW_MAX = 2000; //$NON-NLS-1$
+    public static final int TABLE_VIEW_MAX = 2000;
 
-    private static final boolean FILTER_FLAG = CWMPlugin.getDefault().getPluginPreferences().getBoolean(
-            PluginConstant.FILTER_TABLE_VIEW_COLUMN);
+    private static final boolean FILTER_FLAG = CWMPlugin.getDefault().getPluginPreferences()
+            .getBoolean(PluginConstant.FILTER_TABLE_VIEW_COLUMN);
 
     /**
      * @param name

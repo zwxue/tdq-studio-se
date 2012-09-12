@@ -19,7 +19,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.emf.common.util.URI;
@@ -36,8 +35,6 @@ import org.talend.resource.ResourceManager;
  * DOC bZhou class global comment. Detailled comment
  */
 public abstract class AbstractWorksapceUpdateTask extends AWorkspaceTask {
-
-    private static Logger log = Logger.getLogger(AbstractWorksapceUpdateTask.class);
 
     public static final String OLD_MEATADATA_FOLDER_NAME = "TDQ_Metadata"; //$NON-NLS-1$
 

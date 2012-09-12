@@ -151,7 +151,7 @@ public class UpdateMDMConnectionXSDPathTask extends AbstractWorksapceUpdateTask 
                     log.info(isDeleted ? DefaultMessagesImpl.getString(
                             "UpdateMDMConnectionXSDPathTask_MigInfo5", sample.getAbsolutePath()) : DefaultMessagesImpl.getString("UpdateMDMConnectionXSDPathTask_MigInfo6", sample.getAbsolutePath())); //$NON-NLS-1$ //$NON-NLS-2$
                     String fullPath = sample.getAbsolutePath() + MIGRATION_FILE_EXT;
-                    boolean isrenamed = new File(fullPath).renameTo(sample); //$NON-NLS-1$
+                    boolean isrenamed = new File(fullPath).renameTo(sample); 
                     log.info(isrenamed ? DefaultMessagesImpl.getString("UpdateMDMConnectionXSDPathTask_MigInfo7", fullPath) //$NON-NLS-1$
                             : DefaultMessagesImpl.getString("UpdateMDMConnectionXSDPathTask_MigInfo8", fullPath)); //$NON-NLS-1$
                 }

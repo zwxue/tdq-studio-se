@@ -26,7 +26,6 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.DirectoryDialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.FileDialog;
@@ -183,8 +182,7 @@ public class ExportPatternsWizardPage extends WizardPage {
             log.error(e1, e1);
         }
 
-        // FIXME buttonComposite never used.
-        Control buttonComposite = createSelectionButtons(container);
+        createSelectionButtons(container);
         Composite monitorComp = new Composite(container, SWT.NONE);
         monitorComp.setLayout(new GridLayout());
         monitorComp.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
@@ -230,6 +228,7 @@ public class ExportPatternsWizardPage extends WizardPage {
     protected void addSelectionButtonListener(Button selectButton, Button deselectButton) {
         SelectionListener listener = new SelectionAdapter() {
 
+            @Override
             public void widgetSelected(SelectionEvent e) {
                 // MOD msjian 2012-1-17 TDQ-4066: set the checked elememts correctly
                 selectedPatternsTree.setCheckedElements(((ResourceViewContentProvider) selectedPatternsTree.getContentProvider())
@@ -241,6 +240,7 @@ public class ExportPatternsWizardPage extends WizardPage {
 
         listener = new SelectionAdapter() {
 
+            @Override
             public void widgetSelected(SelectionEvent e) {
                 selectedPatternsTree.setCheckedElements(new Object[0]);
                 selectedPatternsTree.updateWizardStatus();

@@ -14,22 +14,19 @@ package org.talend.dataprofiler.core.migration.impl;
 
 import java.util.Date;
 
-import org.apache.log4j.Logger;
-
-
 /**
- * DOC yyin  class global comment. Detailled comment
+ * DOC yyin class global comment. Detailled comment
  */
 public class CreateBenforLawIndicatorTask extends CreateSystemIndicatorTask {
 
-    String fraudStr = " <categories xmi:id=\"_2aGLUOzJEeG0fbygDv6UrQ\" name=\"Fraud Detection\" label=\"Fraud Detection\">\r\n"
-            + "    <taggedValue xmi:id=\"_I31R8OzKEeG0fbygDv6UrQ\" tag=\"Description\" value=\"contains fraud detection indicators\"/>\r\n"
-            + "    <taggedValue xmi:id=\"_LHMsgOzKEeG0fbygDv6UrQ\" tag=\"Purpose\" value=\"detect possible instances of fraud\"/>\r\n"
-            + "  </categories>";
+    String fraudStr = " <categories xmi:id=\"_2aGLUOzJEeG0fbygDv6UrQ\" name=\"Fraud Detection\" label=\"Fraud Detection\">\r\n" //$NON-NLS-1$
+            + "    <taggedValue xmi:id=\"_I31R8OzKEeG0fbygDv6UrQ\" tag=\"Description\" value=\"contains fraud detection indicators\"/>\r\n" //$NON-NLS-1$
+            + "    <taggedValue xmi:id=\"_LHMsgOzKEeG0fbygDv6UrQ\" tag=\"Purpose\" value=\"detect possible instances of fraud\"/>\r\n" //$NON-NLS-1$
+            + "  </categories>"; //$NON-NLS-1$
 
-    private static Logger log = Logger.getLogger(CreateBenforLawIndicatorTask.class);
-
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.talend.dataprofiler.migration.IMigrationTask#getOrder()
      */
     public Date getOrder() {
@@ -43,11 +40,10 @@ public class CreateBenforLawIndicatorTask extends CreateSystemIndicatorTask {
      */
     @Override
     protected String getFoldername() {
-        return "Fraud Detection";
+        return "Fraud Detection"; //$NON-NLS-1$
     }
 
-
-        /*
+    /*
      * (non-Javadoc)
      * 
      * @see org.talend.dataprofiler.core.migration.impl.CreateSystemIndicatorTask#getCategoryString()

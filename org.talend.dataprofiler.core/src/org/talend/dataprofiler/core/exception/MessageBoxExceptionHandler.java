@@ -45,32 +45,33 @@ public final class MessageBoxExceptionHandler {
 
     public static void process(Throwable ex, Shell shell) {
         ExceptionHandler.process(ex);
-
-        if (shell == null) {
+        Shell messageShell = shell;
+        if (messageShell == null) {
             try {
-                shell = new Shell();
+                messageShell = new Shell();
             } catch (Exception e) {
                 // ignore me
             }
         }
 
-        if (shell != null) {
-            showMessage(ex, shell);
+        if (messageShell != null) {
+            showMessage(ex, messageShell);
         }
     }
 
     public static void process(Throwable ex, Shell shell, String exceptionType) {
         ExceptionHandler.process(ex);
-
-        if (shell == null) {
+        Shell messageShell = shell;
+        if (messageShell == null) {
             try {
-                shell = new Shell();
+                messageShell = new Shell();
             } catch (Exception e) {
+                // ignore me
             }
         }
 
-        if (shell != null) {
-            showMessage(ex, shell, exceptionType);
+        if (messageShell != null) {
+            showMessage(ex, messageShell, exceptionType);
         }
     }
 

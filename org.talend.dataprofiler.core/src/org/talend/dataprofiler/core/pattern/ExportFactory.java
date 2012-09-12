@@ -86,16 +86,19 @@ public final class ExportFactory {
 
                 PatternToExcelEnum[] values = PatternToExcelEnum.values();
                 String[] temp = new String[values.length];
-            	Map<PatternToExcelEnum, String> relatedValueMap = null;
+                Map<PatternToExcelEnum, String> relatedValueMap = null;
 
                 for (int i = 0; i < patterns.length + 1; i++) {
                     if (i != 0) {
-                    	relatedValueMap = getRelatedValueFromPattern(patterns[i - 1], folder);
+                        relatedValueMap = getRelatedValueFromPattern(patterns[i - 1], folder);
                     }
                     for (int j = 0; j < values.length; j++) {
                         if (i == 0) {
                             temp[j] = values[j].getLiteral();
                         } else {
+                            if (relatedValueMap == null) {
+                                throw new NullPointerException(DefaultMessagesImpl.getString("ExportFactory.RelatedValueMapNull")); //$NON-NLS-1$
+                            }
                             temp[j] = relatedValueMap.get(values[j]);
                         }
                     }
@@ -241,9 +244,9 @@ public final class ExportFactory {
         if (temps == null) {
             return PluginConstant.EMPTY_STRING;
         }
-        boolean contains = temps.contains("\r");
+        boolean contains = temps.contains("\r"); //$NON-NLS-1$
         if (contains) {
-            return temps.replace("\r", "");
+            return temps.replace("\r", ""); //$NON-NLS-1$//$NON-NLS-2$
         }
         return temps;
     }
@@ -339,7 +342,7 @@ public final class ExportFactory {
 
         if (folder != null) {
             IFile file = ResourceFileMap.findCorrespondingFile(pattern);
-            // MOD sizhaoliu 2012-5-28 TDQ-5481 
+            // MOD sizhaoliu 2012-5-28 TDQ-5481
             URI parentURI = ResourceManager.getPatternFolder().getLocationURI();
             String relativePath = parentURI.relativize(file.getParent().getLocationURI()).toString();
             relativePath = relativePath.substring(relativePath.indexOf('/') + 1); // remove Regex or SQL prefix

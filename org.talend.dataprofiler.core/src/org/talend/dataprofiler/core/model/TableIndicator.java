@@ -209,16 +209,17 @@ public class TableIndicator {
     }
 
     private TableIndicatorUnit createIndicatorUnit(IFile fe, IndicatorEnum indicatorEnum, Indicator indicator) {
+        Indicator indicatorNew = indicator;
         if (indicator == null) {
             IndicatorsFactory factory = IndicatorsFactory.eINSTANCE;
-            indicator = (Indicator) factory.create(indicatorEnum.getIndicatorType());
-            indicator.setAnalyzedElement(getColumnSet());
+            indicatorNew = (Indicator) factory.create(indicatorEnum.getIndicatorType());
+            indicatorNew.setAnalyzedElement(getColumnSet());
 
         }
         if (!DefinitionHandler.getInstance().setDefaultIndicatorDefinition(indicator)) {
-            log.error(DefaultMessagesImpl.getString("TableIndicator.couldnotSetDef") + indicator.getName()); //$NON-NLS-1$
+            log.error(DefaultMessagesImpl.getString("TableIndicator.couldnotSetDef") + indicatorNew.getName()); //$NON-NLS-1$
         }
-        TableIndicatorUnit indicatorUnit = new TableIndicatorUnit(indicatorEnum, indicator, this);
+        TableIndicatorUnit indicatorUnit = new TableIndicatorUnit(indicatorEnum, indicatorNew, this);
         this.indicatorUnitMap.put(indicatorEnum, indicatorUnit);
         return indicatorUnit;
 
@@ -244,12 +245,13 @@ public class TableIndicator {
     }
 
     private TableIndicatorUnit createSpecialIndicatorUnit(IFile fe, IndicatorEnum indicatorEnum, Indicator indicator) {
-        if (indicator == null) {
+        Indicator indicatorNew = indicator;
+        if (indicatorNew == null) {
             IndicatorSqlFactory factory = IndicatorSqlFactory.eINSTANCE;
-            indicator = (Indicator) factory.create(indicatorEnum.getIndicatorType());
-            if (fe != null && indicator instanceof WhereRuleIndicator) {
-                indicator.setAnalyzedElement(getColumnSet());
-                indicator.setIndicatorDefinition(DQRuleResourceFileHelper.getInstance().findWhereRule(fe));
+            indicatorNew = (Indicator) factory.create(indicatorEnum.getIndicatorType());
+            if (fe != null && indicatorNew instanceof WhereRuleIndicator) {
+                indicatorNew.setAnalyzedElement(getColumnSet());
+                indicatorNew.setIndicatorDefinition(DQRuleResourceFileHelper.getInstance().findWhereRule(fe));
             }
         }
         if (!indicatorEnumList.contains(indicatorEnum)) {
@@ -258,7 +260,7 @@ public class TableIndicator {
         if (this.specialIndicatorUnitList == null) {
             this.specialIndicatorUnitList = new ArrayList<TableIndicatorUnit>();
         }
-        TableIndicatorUnit indicatorUnit = new TableIndicatorUnit(indicatorEnum, indicator, this);
+        TableIndicatorUnit indicatorUnit = new TableIndicatorUnit(indicatorEnum, indicatorNew, this);
         specialIndicatorUnitList.add(indicatorUnit);
         return indicatorUnit;
     }

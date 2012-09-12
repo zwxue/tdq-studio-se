@@ -116,7 +116,7 @@ public class ModelIndicatorTdColumnToModelElementTask extends AbstractWorksapceU
             for (File sample : fileList) {
                 boolean isDeleted = sample.delete();
                 log.info(sample.getAbsolutePath() + (isDeleted ? " is deleted." : " failed to delete.")); //$NON-NLS-1$ //$NON-NLS-2$
-                boolean isrenamed = new File(sample.getAbsolutePath() + MIGRATION_FILE_EXT).renameTo(sample); //$NON-NLS-1$
+                boolean isrenamed = new File(sample.getAbsolutePath() + MIGRATION_FILE_EXT).renameTo(sample); 
                 log.info(sample.getAbsolutePath() + MIGRATION_FILE_EXT + (isrenamed ? " is renamed." : " failed to rename.")); //$NON-NLS-1$ //$NON-NLS-2$
             }
         }
@@ -138,7 +138,7 @@ public class ModelIndicatorTdColumnToModelElementTask extends AbstractWorksapceU
         while (fileReader.ready()) {
             String line = fileReader.readLine();
             if (StringUtils.contains(line, TO_BE_RPLACED_STRING_PREFIX) && !StringUtils.contains(line, REPLACED_STRING)) {
-                line = StringUtils.replace(line, TO_BE_RPLACED_STRING_PREFIX, TO_BE_RPLACED_STRING_PREFIX + REPLACED_STRING); //$NON-NLS-1$ //$NON-NLS-2$
+                line = StringUtils.replace(line, TO_BE_RPLACED_STRING_PREFIX, TO_BE_RPLACED_STRING_PREFIX + REPLACED_STRING); 
                 log.debug(line);
             }
             fileWriter.append(line);

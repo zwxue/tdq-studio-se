@@ -42,8 +42,6 @@ import org.eclipse.ui.dialogs.ISelectionStatusValidator;
 import org.eclipse.ui.model.WorkbenchContentProvider;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.core.model.metadata.builder.connection.Connection;
-import org.talend.core.model.metadata.builder.connection.DelimitedFileConnection;
-import org.talend.core.model.metadata.builder.connection.MDMConnection;
 import org.talend.core.model.metadata.builder.database.JavaSqlFactory;
 import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.dependencies.DependenciesHandler;
@@ -206,7 +204,7 @@ public final class PatternUtilities {
                             PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
                             DefaultMessagesImpl.getString("PatternUtilities.Warning"), DefaultMessagesImpl.getString("PatternUtilities.NoExpression", executeType, pattern.getName())); //$NON-NLS-1$ //$NON-NLS-2$
             if (openPattern) {
-                RepositoryNode node = (RepositoryNode) RepositoryNodeHelper.recursiveFind(pattern);
+                RepositoryNode node = RepositoryNodeHelper.recursiveFind(pattern);
                 if (RepositoryNodeHelper.canOpenEditor(node)) {
                     new OpenItemEditorAction(node).run();
                 }
@@ -215,11 +213,6 @@ public final class PatternUtilities {
             return result;
         }
 
-        // FIXME javaRexex never used.
-        String javaRexex = DomainHelper.getJavaRegexp(pattern);
-        if (javaRexex == null) {
-
-        }
         // a regular expression for the analyzed
         // database, but we probably test also whether the analyzed database
         // support the regular expressions (=> check
@@ -234,9 +227,9 @@ public final class PatternUtilities {
             if (trc != null) {
                 java.sql.Connection conn = trc.getObject();
                 if (isDelimitedFileConnection) {
-                    dbmsLanguage = DbmsLanguageFactory.createDbmsLanguage((DelimitedFileConnection) dm);
+                    dbmsLanguage = DbmsLanguageFactory.createDbmsLanguage(dm);
                 } else if (isMdmConnection) {
-                    dbmsLanguage = DbmsLanguageFactory.createDbmsLanguage((MDMConnection) dm);
+                    dbmsLanguage = DbmsLanguageFactory.createDbmsLanguage(dm);
                 } else {
                     try {
                         // SoftwareSystem softwareSystem = DatabaseContentRetriever.getSoftwareSystem(conn);
@@ -304,6 +297,7 @@ public final class PatternUtilities {
     // return false;
     // }
 
+    @Deprecated
     public static Set<String> getAllPatternNames(IFolder folder) {
 
         Set<String> list = new HashSet<String>();
@@ -339,6 +333,7 @@ public final class PatternUtilities {
      * @return
      * @deprecated since repository nodes are used instead of IFiles
      */
+    @Deprecated
     public static IFile[] getPatternFileByIndicator(ColumnIndicator clmIndicator) {
         Indicator[] patternIndicators = clmIndicator.getPatternIndicators();
         List<IFile> existedPatternFiles = new ArrayList<IFile>();
@@ -421,6 +416,7 @@ public final class PatternUtilities {
      * @return
      * @deprecated
      */
+    @Deprecated
     public static CheckedTreeSelectionDialog createPatternCheckedTreeSelectionDialog(IFolder libProject) {
         CheckedTreeSelectionDialog dialog = new CheckedTreeSelectionDialog(null, new PatternLabelProvider(),
                 new WorkbenchContentProvider());
@@ -513,6 +509,7 @@ public final class PatternUtilities {
  * 
  * @deprecated use DQRepositoryViewLabelProvider instead of
  */
+@Deprecated
 class PatternLabelProvider extends LabelProvider {
 
     @Override

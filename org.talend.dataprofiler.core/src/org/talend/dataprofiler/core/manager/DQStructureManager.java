@@ -157,8 +157,8 @@ public final class DQStructureManager {
             }
             if (!ReponsitoryContextBridge.isDefautProject()) {
                 if (!project.getFolder(EResourceConstant.REPORTS.getPath()).exists()) {
-                    Folder reportFoler = ProxyRepositoryFactory.getInstance().createFolder(
-                            ERepositoryObjectType.TDQ_DATA_PROFILING, Path.EMPTY, EResourceConstant.REPORTS.getName());
+                    ProxyRepositoryFactory.getInstance().createFolder(ERepositoryObjectType.TDQ_DATA_PROFILING, Path.EMPTY,
+                            EResourceConstant.REPORTS.getName());
                 }
             }
             if (!project.getFolder(EResourceConstant.PATTERNS.getPath()).exists()) {
@@ -301,7 +301,7 @@ public final class DQStructureManager {
         }
 
         IProject project = ResourceManager.getRootProject();
-        Enumeration paths = null;
+        Enumeration<?> paths = null;
         paths = plugin.getBundle().getEntryPaths(srcPath);
         if (paths == null) {
             return;
@@ -330,10 +330,10 @@ public final class DQStructureManager {
 
                         if (folderItem == null) {
                             sourcefolder = ProxyRepositoryFactory.getInstance().createFolder(type, Path.EMPTY, file.getName());
-                            String subSourceFolder = type.getFolder().concat("/").concat(file.getName());
+                            String subSourceFolder = type.getFolder().concat("/").concat(file.getName()); //$NON-NLS-1$
                             sourcefolder.getProperty().getItem().getState().setPath(subSourceFolder);
                         } else {
-                            String subSourceFolder = type.getFolder().concat("/").concat(file.getName());
+                            String subSourceFolder = type.getFolder().concat("/").concat(file.getName()); //$NON-NLS-1$
                             sourcefolder = new Folder(folderItem.getProperty(), type);
                             sourcefolder.getProperty().getItem().getState().setPath(subSourceFolder);
                         }
@@ -415,7 +415,7 @@ public final class DQStructureManager {
     public TDQSourceFileItem createSourceFileItem(File initFile, IPath path, String label, String extension) {
         Property property = PropertiesFactory.eINSTANCE.createProperty();
         property.setVersion(VersionUtils.DEFAULT_VERSION);
-        property.setStatusCode(PluginConstant.EMPTY_STRING); //$NON-NLS-1$
+        property.setStatusCode(PluginConstant.EMPTY_STRING);
         property.setLabel(label);
 
         TDQSourceFileItem sourceFileItem = org.talend.dataquality.properties.PropertiesFactory.eINSTANCE
@@ -454,7 +454,7 @@ public final class DQStructureManager {
     public TDQSourceFileItem createSourceFileItem(String content, IPath path, String label, String extension) {
         Property property = PropertiesFactory.eINSTANCE.createProperty();
         property.setVersion(VersionUtils.DEFAULT_VERSION);
-        property.setStatusCode(PluginConstant.EMPTY_STRING); //$NON-NLS-1$
+        property.setStatusCode(PluginConstant.EMPTY_STRING);
         property.setLabel(label);
 
         TDQSourceFileItem sourceFileItem = org.talend.dataquality.properties.PropertiesFactory.eINSTANCE
@@ -465,7 +465,7 @@ public final class DQStructureManager {
 
         ByteArray byteArray = PropertiesFactory.eINSTANCE.createByteArray();
         // MOD sizhaoliu 2012-04-02 for TDQ-5070 Encoding issue with saving generated sql query action
-        byteArray.setInnerContent(content.getBytes(Charset.forName("UTF-8")));
+        byteArray.setInnerContent(content.getBytes(Charset.forName("UTF-8"))); //$NON-NLS-1$
         sourceFileItem.setContent(byteArray);
         IProxyRepositoryFactory repositoryFactory = ProxyRepositoryFactory.getInstance();
         try {
@@ -483,7 +483,8 @@ public final class DQStructureManager {
      * @return true if need to create new resource structure.
      */
     public boolean isNeedCreateStructure() {
-        // MOD zshen when use commandLine application maybe there don't should have a project, so before there should create a new project firstly.
+        // MOD zshen when use commandLine application maybe there don't should have a project, so before there should
+        // create a new project firstly.
         if (!ResourceManager.getRootProject().exists()) {
             return false;
         }
@@ -576,6 +577,7 @@ public final class DQStructureManager {
      * @throws CoreException
      * @deprecated
      */
+    @Deprecated
     public IFolder createNewFolder(IContainer parent, EResourceConstant constant) throws CoreException {
         return createNewFolder(parent, constant.getName());
     }
@@ -589,6 +591,7 @@ public final class DQStructureManager {
      * @throws CoreException
      * @deprecated
      */
+    @Deprecated
     public IFolder createNewFolder(IContainer parent, String folderName) throws CoreException {
         IFolder desFolder = null;
 
@@ -599,7 +602,7 @@ public final class DQStructureManager {
         }
         assert desFolder != null;
 
-        if (!desFolder.exists()) {
+        if (desFolder != null && !desFolder.exists()) {
             desFolder.create(false, true, null);
         }
         return desFolder;
@@ -617,14 +620,13 @@ public final class DQStructureManager {
      * @throws IOException
      * @throws CoreException
      */
-    @SuppressWarnings("unchecked")
     public void copyFilesToFolder(Plugin plugin, String srcPath, boolean recurse, IFolder desFolder, String suffix,
             boolean... isImportItem) throws IOException, CoreException {
         if (plugin == null) {
             return;
         }
 
-        Enumeration paths = null;
+        Enumeration<?> paths = null;
         paths = plugin.getBundle().getEntryPaths(srcPath);
         if (paths == null) {
             return;

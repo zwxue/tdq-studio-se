@@ -28,32 +28,32 @@ public enum PatternLanguageType {
           1,
           SupportDBUrlType.MYSQLDEFAULTURL.getLanguage(),
           SupportDBUrlType.MYSQLDEFAULTURL.getLanguage(),
-          PatternToExcelEnum.MySQLRegexp), //$NON-NLS-1$
+          PatternToExcelEnum.MySQLRegexp),
     ORACLE(
            2,
            SupportDBUrlType.ORACLEWITHSIDDEFAULTURL.getLanguage(),
            SupportDBUrlType.ORACLEWITHSIDDEFAULTURL.getLanguage(),
-           PatternToExcelEnum.OracleRegexp), //$NON-NLS-1$
+           PatternToExcelEnum.OracleRegexp),
     SQLSERVER(
               3,
               SupportDBUrlType.MSSQLDEFAULTURL.getLanguage(),
               SupportDBUrlType.MSSQLDEFAULTURL.getLanguage(),
-              PatternToExcelEnum.SQLServerRegexp), //$NON-NLS-1$
+              PatternToExcelEnum.SQLServerRegexp),
     DB2(
         4,
         SupportDBUrlType.DB2DEFAULTURL.getLanguage(),
         SupportDBUrlType.DB2DEFAULTURL.getLanguage(),
-        PatternToExcelEnum.DB2Regexp), //$NON-NLS-1$
+        PatternToExcelEnum.DB2Regexp),
     POSTGRESQL(
                5,
                SupportDBUrlType.POSTGRESQLEFAULTURL.getLanguage(),
                SupportDBUrlType.POSTGRESQLEFAULTURL.getLanguage(),
-               PatternToExcelEnum.PostgreSQLRegexp), //$NON-NLS-1$
+               PatternToExcelEnum.PostgreSQLRegexp),
     SYBASE(
            6,
            SupportDBUrlType.SYBASEDEFAULTURL.getLanguage(),
            SupportDBUrlType.SYBASEDEFAULTURL.getLanguage(),
-           PatternToExcelEnum.SybaseRegexp), //$NON-NLS-1$
+           PatternToExcelEnum.SybaseRegexp),
     INGRES(
            7,
            SupportDBUrlType.INGRESDEFAULTURL.getLanguage(),
@@ -175,8 +175,9 @@ public enum PatternLanguageType {
             set.add(oneType.getName());
         }
 
-        if (!hasJava)
+        if (!hasJava) {
             set.remove(SupportDBUrlType.JAVADEFAULTURL.getLanguage());
+        }
 
         return set.toArray(new String[set.size()]);
     }

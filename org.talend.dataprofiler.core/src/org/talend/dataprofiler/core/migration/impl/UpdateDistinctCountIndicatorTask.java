@@ -47,7 +47,7 @@ public class UpdateDistinctCountIndicatorTask extends AbstractWorksapceUpdateTas
     @Override
     protected boolean doExecute() throws Exception {
         IndicatorDefinition indiDefinition = IndicatorDefinitionFileHelper.getSystemIndicatorByName(indicatorLabel);
-        String defLanguage = "SQL";
+        String defLanguage = "SQL"; //$NON-NLS-1$
         // update sql expression for default language(the updated also adapt AceessDB),remove sql expression for Access.
         if (indiDefinition != null && IndicatorDefinitionFileHelper.removeSqlExpression(indiDefinition, defLanguage)) {
             IndicatorDefinitionFileHelper.removeSqlExpression(indiDefinition, SupportDBUrlType.ACCESS.getLanguage());
@@ -56,7 +56,7 @@ public class UpdateDistinctCountIndicatorTask extends AbstractWorksapceUpdateTas
             indiDefinition.getSqlGenericExpression().clear();
             IndicatorDefinitionFileHelper
                     .addSqlExpression(indiDefinition, defLanguage,
-                            "SELECT COUNT(*) FROM (SELECT DISTINCT <%=__COLUMN_NAMES__%> FROM <%=__TABLE_NAME__%> <%=__WHERE_CLAUSE__%>) A");
+                            "SELECT COUNT(*) FROM (SELECT DISTINCT <%=__COLUMN_NAMES__%> FROM <%=__TABLE_NAME__%> <%=__WHERE_CLAUSE__%>) A"); //$NON-NLS-1$
             indiDefinition.getSqlGenericExpression().addAll(remainExpLs);
             boolean save = IndicatorDefinitionFileHelper.save(indiDefinition);
             DefinitionHandler.getInstance().reloadIndicatorsDefinitions();

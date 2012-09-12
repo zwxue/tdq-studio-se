@@ -18,9 +18,8 @@ import org.talend.dataprofiler.core.model.XmlElementIndicator;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.utils.sql.TalendTypeConvert;
 
-
 /**
- * DOC xqliu  class global comment. Detailled comment
+ * DOC xqliu class global comment. Detailled comment
  */
 public class XmlElementIndicatorImpl extends ModelElementIndicatorImpl implements XmlElementIndicator {
 
@@ -30,10 +29,10 @@ public class XmlElementIndicatorImpl extends ModelElementIndicatorImpl implement
     }
 
     public TdXmlElementType getXmlElementType() {
-        return (TdXmlElementType) ((MetadataXmlElementTypeRepositoryObject) this.getModelElementRepositoryNode().getObject())
-                .getTdXmlElementType();
+        return ((MetadataXmlElementTypeRepositoryObject) this.getModelElementRepositoryNode().getObject()).getTdXmlElementType();
     }
 
+    @Override
     public int getJavaType() {
 
         return TalendTypeConvert.convertToJDBCType(getXmlElementType().getJavaType());

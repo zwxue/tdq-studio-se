@@ -90,7 +90,7 @@ public class SqlSourceFileUpdateTask extends AbstractWorksapceUpdateTask {
             getAllFilesFromFolder(rawFile, fileList, new FilenameFilter() {
 
                 public boolean accept(File dir, String name) {
-                    if (name.endsWith(SQL_EXT)) { //$NON-NLS-1$
+                    if (name.endsWith(SQL_EXT)) { 
                         return true;
                     }
                     return false;

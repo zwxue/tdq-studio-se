@@ -86,8 +86,7 @@ public class LicenseWizardPage extends WizardPage {
     private String getLicense() {
         String license = ""; //$NON-NLS-1$
         try {
-            IBrandingService brandingService = (IBrandingService) GlobalServiceRegister.getDefault().getBrandingService(
-                    IBrandingService.class);
+            IBrandingService brandingService = GlobalServiceRegister.getDefault().getBrandingService(IBrandingService.class);
             final URL url = brandingService.getLicenseFile();
 
             FileReader fileReader = new FileReader(new File(url.getPath()));

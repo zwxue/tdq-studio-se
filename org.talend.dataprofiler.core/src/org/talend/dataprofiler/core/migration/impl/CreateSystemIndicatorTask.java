@@ -49,10 +49,10 @@ public abstract class CreateSystemIndicatorTask extends AbstractWorksapceUpdateT
     @Override
     protected boolean doExecute() throws Exception {
         TalendDefinitionFileUpdate talendDefinitionFileUpdate = new TalendDefinitionFileUpdate();
-        if (-1 == talendDefinitionFileUpdate.indexOf("name=\"" + getFoldername() + "\"")) {
+        if (-1 == talendDefinitionFileUpdate.indexOf("name=\"" + getFoldername() + "\"")) { //$NON-NLS-1$ //$NON-NLS-2$
             talendDefinitionFileUpdate.add(endLine, getCategoryString() + separator + endLine);
             talendDefinitionFileUpdate.replace(this.getClass().getName());
-            IPath definitionPath = ResourceManager.getLibrariesFolder().getFullPath().append(".Talend.definition");
+            IPath definitionPath = ResourceManager.getLibrariesFolder().getFullPath().append(".Talend.definition"); //$NON-NLS-1$
             URI uri = URI.createPlatformResourceURI(definitionPath.toString(), false);
             EMFSharedResources.getInstance().reloadResource(uri);
             IFolder folder = ResourceManager.getSystemIndicatorFolder().getFolder(getFoldername());
@@ -88,11 +88,11 @@ public abstract class CreateSystemIndicatorTask extends AbstractWorksapceUpdateT
         try {
             DQStructureManager manager = DQStructureManager.getInstance();
             folder.create(false, true, null);
-            manager.copyFilesToFolder(CorePlugin.getDefault(), new Path("/indicators/" + getFoldername()).toString(), false,
+            manager.copyFilesToFolder(CorePlugin.getDefault(), new Path("/indicators/" + getFoldername()).toString(), false, //$NON-NLS-1$
                     folder, null);
 
         } catch (Exception e1) {
-            log.error("do migration for " + getFoldername() + " failed:", e1);
+            log.error("do migration for " + getFoldername() + " failed:", e1); //$NON-NLS-1$ //$NON-NLS-2$
         }
     }
 

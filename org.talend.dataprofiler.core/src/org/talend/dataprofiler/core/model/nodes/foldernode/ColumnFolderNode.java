@@ -40,7 +40,7 @@ import orgomg.cwm.resource.relational.ColumnSet;
  */
 public class ColumnFolderNode extends AbstractDatabaseFolderNode {
 
-    public static final int COLUMN_MAX = 2500; //$NON-NLS-1$
+    public static final int COLUMN_MAX = 2500;
 
     /**
      * @param name
@@ -49,8 +49,8 @@ public class ColumnFolderNode extends AbstractDatabaseFolderNode {
         super(DefaultMessagesImpl.getString("ColumnFolderNode.columns")); //$NON-NLS-1$
     }
 
-    private static final boolean FILTER_FLAG = CWMPlugin.getDefault().getPluginPreferences().getBoolean(
-            PluginConstant.FILTER_TABLE_VIEW_COLUMN);
+    private static final boolean FILTER_FLAG = CWMPlugin.getDefault().getPluginPreferences()
+            .getBoolean(PluginConstant.FILTER_TABLE_VIEW_COLUMN);
 
     /*
      * (non-Javadoc)
@@ -86,16 +86,15 @@ public class ColumnFolderNode extends AbstractDatabaseFolderNode {
                     }
                 }
             }
-			if (columnSet.eIsProxy()) {
-				// resolve the proxy object.
-				columnSet = (ColumnSet) EObjectHelper.resolveObject(columnSet);
-			}
+            if (columnSet.eIsProxy()) {
+                // resolve the proxy object.
+                columnSet = (ColumnSet) EObjectHelper.resolveObject(columnSet);
+            }
             Package parentCatalogOrSchema = ColumnSetHelper.getParentCatalogOrSchema(columnSet);
             if (parentCatalogOrSchema == null) {
                 return;
             }
-			Connection conn = ConnectionHelper
-					.getTdDataProvider(parentCatalogOrSchema);
+            Connection conn = ConnectionHelper.getTdDataProvider(parentCatalogOrSchema);
             if (conn == null) {
                 return;
             }
@@ -119,6 +118,7 @@ public class ColumnFolderNode extends AbstractDatabaseFolderNode {
         // ~
     }
 
+    @Override
     public int getFolderNodeType() {
         return COLUMNFOLDER_NODE_TYPE;
     }

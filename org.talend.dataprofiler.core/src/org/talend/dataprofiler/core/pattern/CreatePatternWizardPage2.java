@@ -86,6 +86,7 @@ public class CreatePatternWizardPage2 extends AbstractWizardPage {
             switch (type) {
             case SQL_LIKE:
                 s = "SQL Like expression:"; //$NON-NLS-1$
+                //$FALL-THROUGH$
             default:
             }
         }

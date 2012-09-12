@@ -204,7 +204,7 @@ public class MergeMetadataTask extends AbstractWorksapceUpdateTask {
             for (File sample : fileList) {
                 boolean isDeleted = sample.delete();
                 log.info(sample.getAbsolutePath() + (isDeleted ? " is deleted." : " failed to delete.")); //$NON-NLS-1$ //$NON-NLS-2$
-                boolean isrenamed = new File(sample.getAbsolutePath() + MIGRATION_FILE_EXT).renameTo(sample); //$NON-NLS-1$
+                boolean isrenamed = new File(sample.getAbsolutePath() + MIGRATION_FILE_EXT).renameTo(sample); 
                 log.info(sample.getAbsolutePath() + MIGRATION_FILE_EXT + (isrenamed ? " is renamed." : " failed to rename.")); //$NON-NLS-1$ //$NON-NLS-2$
             }
         }
@@ -266,7 +266,7 @@ public class MergeMetadataTask extends AbstractWorksapceUpdateTask {
             for (File sample : fileList) {
                 boolean isDeleted = sample.delete();
                 log.info(sample.getAbsolutePath() + (isDeleted ? " is deleted." : " failed to delete.")); //$NON-NLS-1$ //$NON-NLS-2$
-                boolean isrenamed = new File(sample.getAbsolutePath() + MIGRATION_FILE_EXT).renameTo(sample); //$NON-NLS-1$
+                boolean isrenamed = new File(sample.getAbsolutePath() + MIGRATION_FILE_EXT).renameTo(sample); 
                 log.info(sample.getAbsolutePath() + MIGRATION_FILE_EXT + (isrenamed ? " is renamed." : " failed to rename.")); //$NON-NLS-1$ //$NON-NLS-2$
             }
         }
@@ -321,7 +321,7 @@ public class MergeMetadataTask extends AbstractWorksapceUpdateTask {
             IMigrateDIMetadataItemService service = (IMigrateDIMetadataItemService) GlobalServiceRegister.getDefault()
                     .getService(IMigrateDIMetadataItemService.class);
 
-            File parentFolder = getWorkspacePath().append("metadata").toFile();
+            File parentFolder = getWorkspacePath().append("metadata").toFile(); //$NON-NLS-1$
             if (parentFolder.exists()) {
                 for (File propFile : getPropertyFiles(parentFolder)) {
                     Property property = PropertyHelper.getProperty(propFile);

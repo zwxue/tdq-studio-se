@@ -25,10 +25,10 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.talend.commons.bridge.ReponsitoryContextBridge;
@@ -68,8 +68,6 @@ public class UpdateFileAfterMergeConnectionTask extends AbstractWorksapceUpdateT
     private static Logger log = Logger.getLogger(UpdateFileAfterMergeConnectionTask.class);
 
     private Map<String, String> replaceStringMap;
-
-    private ResourceSet resourceSet;
 
     private FilenameFilter nonPropertyFileFilter = new FilenameFilter() {
 
@@ -112,7 +110,7 @@ public class UpdateFileAfterMergeConnectionTask extends AbstractWorksapceUpdateT
         File tarMdmXsdFolder = getWorkspacePath().append(
                 ERepositoryObjectType.getFolderName(ERepositoryObjectType.METADATA_MDMCONNECTION) + IPath.SEPARATOR + ".xsd")//$NON-NLS-1$
                 .toFile();
-        FilesUtils.copyFolder(srcMdmXsdFolder, tarMdmXsdFolder, true, null, null, true, null);
+        FilesUtils.copyFolder(srcMdmXsdFolder, tarMdmXsdFolder, true, null, null, true, new NullProgressMonitor());
         // update MDMConnection XSDPath
         File mdmConnectionFolder = new File(ResourceManager.getMDMConnectionFolder().getRawLocationURI());
         final String[] metadataFileExtentionNames = { ".item" };//$NON-NLS-1$
@@ -169,7 +167,7 @@ public class UpdateFileAfterMergeConnectionTask extends AbstractWorksapceUpdateT
      * fill connection's name or label if they are null.
      */
     private void fillConnectionNameLabel() {
-        File connectionFolder = getWorkspacePath().append("metadata").toFile();
+        File connectionFolder = getWorkspacePath().append("metadata").toFile(); //$NON-NLS-1$
         ArrayList<File> fileList = new ArrayList<File>();
         FilesUtils.getAllFilesFromFolder(connectionFolder, fileList, new FilenameFilter() {
 
@@ -338,7 +336,7 @@ public class UpdateFileAfterMergeConnectionTask extends AbstractWorksapceUpdateT
     }
 
     private void tansferFile(File parentFolder, Map<File, File> folderMap) throws Exception {
-        resourceSet = new ResourceSetImpl();
+        new ResourceSetImpl();
 
         if (!parentFolder.exists()) {
             return;
@@ -522,8 +520,8 @@ public class UpdateFileAfterMergeConnectionTask extends AbstractWorksapceUpdateT
                         .append(new Path(destPropFile.getPath()).makeRelativeTo(this.getWorkspacePath())).toOSString();
                 MetadataHelper.setPropertyPath(relationPropPath, conn);
                 connectionItem.setConnection(conn);
+                EMFUtil.saveResource(conn.eResource());
             }
-            EMFUtil.saveResource(conn.eResource());
 
             Resource propResource = getResource(destPropFile);
 

@@ -26,6 +26,7 @@ import net.sourceforge.sqlexplorer.plugin.SQLExplorerPlugin;
 import net.sourceforge.sqlexplorer.plugin.actions.OpenPasswordConnectDialogAction;
 import net.sourceforge.sqlexplorer.plugin.views.DatabaseStructureView;
 
+import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.widgets.Shell;
@@ -46,11 +47,12 @@ import orgomg.cwm.resource.relational.Catalog;
  */
 public final class SqlExplorerBridge {
 
+    private static Logger log = Logger.getLogger(SqlExplorerBridge.class);
+
     private SqlExplorerBridge() {
 
     }
 
-    @SuppressWarnings("unchecked")
     public static TypedReturnCode<TableNode> findSqlExplorerTableNode(Connection providerConnection,
             Package parentPackageElement, String tableName, String activeTabName) {
         // Open data explore perspective.
@@ -116,6 +118,9 @@ public final class SqlExplorerBridge {
             }
         }
         // find the table folder node.
+        if (catalogOrSchemaNode == null) {
+            throw new NullPointerException(DefaultMessagesImpl.getString("SqlExplorerBridge.CATORSCHMISNULL")); //$NON-NLS-1$
+        }
         INode[] childNodes = catalogOrSchemaNode.getChildNodes();
         TableFolderNode tableFolderNode = null;
         for (INode node : childNodes) {
@@ -124,20 +129,24 @@ public final class SqlExplorerBridge {
                 break;
             }
         }
-        INode[] tableNodes = tableFolderNode.getChildNodes();
-        for (INode node : tableNodes) {
-            if (tableName.equalsIgnoreCase(node.getName())) {
-                TypedReturnCode<TableNode> typedReturnCode = new TypedReturnCode<TableNode>(null, true);
-                typedReturnCode.setObject((TableNode) node);
+        if (tableFolderNode == null) {
+            log.fatal(DefaultMessagesImpl.getString("SqlExplorerBridge.TABLE_FOLDER_NULL0")); //$NON-NLS-1$
+        } else {
+            INode[] tableNodes = tableFolderNode.getChildNodes();
+            for (INode node : tableNodes) {
+                if (tableName.equalsIgnoreCase(node.getName())) {
+                    TypedReturnCode<TableNode> typedReturnCode = new TypedReturnCode<TableNode>(null, true);
+                    typedReturnCode.setObject((TableNode) node);
 
-                DetailTabManager.setActiveTabName(activeTabName);
-                DatabaseStructureView dsView = SQLExplorerPlugin.getDefault().getDatabaseStructureView();
-                dsView.setSessionSelectionNode(currentUser.getMetaDataSession(), new StructuredSelection(node));
-                // MOD qiongli bug 13093,2010-7-2
-                SQLExplorerPlugin.getDefault().getConnectionsView().getTreeViewer()
-                        .setSelection(new StructuredSelection(currentUser));
+                    DetailTabManager.setActiveTabName(activeTabName);
+                    DatabaseStructureView dsView = SQLExplorerPlugin.getDefault().getDatabaseStructureView();
+                    dsView.setSessionSelectionNode(currentUser.getMetaDataSession(), new StructuredSelection(node));
+                    // MOD qiongli bug 13093,2010-7-2
+                    SQLExplorerPlugin.getDefault().getConnectionsView().getTreeViewer()
+                            .setSelection(new StructuredSelection(currentUser));
 
-                return typedReturnCode;
+                    return typedReturnCode;
+                }
             }
         }
         MessageDialog.openWarning(shell, DefaultMessagesImpl.getString("SqlExplorerBridge.Warning"), //$NON-NLS-1$
@@ -146,5 +155,4 @@ public final class SqlExplorerBridge {
                 "SqlExplorerBridge.NotFindCorrespondTableObject", tableName), //$NON-NLS-1$
                 false);
     }
-
 }

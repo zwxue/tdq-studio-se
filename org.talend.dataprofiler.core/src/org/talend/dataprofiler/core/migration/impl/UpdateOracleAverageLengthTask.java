@@ -55,12 +55,12 @@ public class UpdateOracleAverageLengthTask extends AbstractWorksapceUpdateTask {
      */
     @Override
     protected boolean doExecute() throws Exception {
-        IndicatorDefinition aveWithBlank = IndicatorDefinitionFileHelper.getSystemIndicatorByName("Average Length With Blank");
-        IndicatorDefinition aveWithNull = IndicatorDefinitionFileHelper.getSystemIndicatorByName("Average Length With Null");
+        IndicatorDefinition aveWithBlank = IndicatorDefinitionFileHelper.getSystemIndicatorByName("Average Length With Blank"); //$NON-NLS-1$
+        IndicatorDefinition aveWithNull = IndicatorDefinitionFileHelper.getSystemIndicatorByName("Average Length With Null"); //$NON-NLS-1$
         IndicatorDefinition aveWithBlankNull = IndicatorDefinitionFileHelper
-                .getSystemIndicatorByName("Average Length With Blank and Null");
+                .getSystemIndicatorByName("Average Length With Blank and Null"); //$NON-NLS-1$
 
-        String newExpWithBlank = "SELECT SUM(LENGTH(<%=__COLUMN_NAMES__%>)), COUNT(*) FROM <%=__TABLE_NAME__%> <%=__WHERE_CLAUSE__%>";
+        String newExpWithBlank = "SELECT SUM(LENGTH(<%=__COLUMN_NAMES__%>)), COUNT(*) FROM <%=__TABLE_NAME__%> <%=__WHERE_CLAUSE__%>"; //$NON-NLS-1$
         setNewExpression(aveWithBlank, newExpWithBlank);
         setNewExpression(aveWithNull, newExpWithBlank);
         setNewExpression(aveWithBlankNull, newExpWithBlank);

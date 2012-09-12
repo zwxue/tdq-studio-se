@@ -77,7 +77,7 @@ public class UpdateDatabaseTypeTask extends AbstractWorksapceUpdateTask {
 
                 ProxyRepositoryFactory.getInstance().save(item);
             } else {
-                log.warn("Database " + object.getProperty().getLabel() + " Ignored: It's not a Database Connection!");
+                log.warn("Database " + object.getProperty().getLabel() + " Ignored: It's not a Database Connection!"); //$NON-NLS-1$ //$NON-NLS-2$
             }
         }
 
