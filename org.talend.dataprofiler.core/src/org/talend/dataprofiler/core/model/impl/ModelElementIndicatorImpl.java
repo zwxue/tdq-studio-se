@@ -673,10 +673,10 @@ public abstract class ModelElementIndicatorImpl implements ModelElementIndicator
     private IndicatorUnit createPlainIndicatorUnit(IndicatorEnum indicatorEnum, Indicator indicator) {
         if (indicator == null) {
             IndicatorsFactory factory = IndicatorsFactory.eINSTANCE;
-            Indicator indicatorNew = (Indicator) factory.create(indicatorEnum.getIndicatorType());
+            indicator = (Indicator) factory.create(indicatorEnum.getIndicatorType());
             // MOD scorreia 2008-09-18: bug 5131 fixed: set indicator's definition when the indicator is created.
-            if (!DefinitionHandler.getInstance().setDefaultIndicatorDefinition(indicatorNew)) {
-                log.error("Could not set the definition of the given indicator :" + indicatorNew.getName()); //$NON-NLS-1$
+            if (!DefinitionHandler.getInstance().setDefaultIndicatorDefinition(indicator)) {
+                log.error("Could not set the definition of the given indicator :" + indicator.getName()); //$NON-NLS-1$
             }
 
             // for 4225, the frequency indicator need be initialized
@@ -719,10 +719,10 @@ public abstract class ModelElementIndicatorImpl implements ModelElementIndicator
     private IndicatorUnit createSpecialIndicatorUnit(IndicatorEnum indicatorEnum, Indicator indicator) {
         if (indicator == null) {
             IndicatorsFactory factory = IndicatorsFactory.eINSTANCE;
-            Indicator indicatorNew = (Indicator) factory.create(indicatorEnum.getIndicatorType());
+            indicator = (Indicator) factory.create(indicatorEnum.getIndicatorType());
             // MOD scorreia 2008-09-18: bug 5131 fixed: set indicator's definition when the indicator is created.
-            if (!DefinitionHandler.getInstance().setDefaultIndicatorDefinition(indicatorNew)) {
-                log.error(DefaultMessagesImpl.getString("ModelElementIndicatorImpl_COULDNOTSETDEF_GIVEN_IND0") + indicatorNew.getName()); //$NON-NLS-1$
+            if (!DefinitionHandler.getInstance().setDefaultIndicatorDefinition(indicator)) {
+                log.error(DefaultMessagesImpl.getString("ModelElementIndicatorImpl_COULDNOTSETDEF_GIVEN_IND0") + indicator.getName()); //$NON-NLS-1$
             }
         }
         if (!flatIndicatorEnumList.contains(indicatorEnum)) {
