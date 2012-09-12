@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.EList;
@@ -63,6 +64,7 @@ import org.talend.dataquality.indicators.WellFormNationalPhoneCountIndicator;
 import org.talend.dataquality.indicators.sql.WhereRuleIndicator;
 import org.talend.dataquality.indicators.sql.util.IndicatorSqlSwitch;
 import org.talend.dataquality.indicators.util.IndicatorsSwitch;
+import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
  * @author scorreia
@@ -818,5 +820,43 @@ public final class IndicatorHelper {
      */
     public static boolean hasPercentThreshold(Indicator indicator) {
         return getIndicatorThresholdInPercent(indicator) != null;
+    }
+
+    /**
+     * DOC scorreia Comment method "getRowCountIndicator".
+     * 
+     * @param modelElement
+     * @param elementToIndicator
+     * @return
+     */
+    public static RowCountIndicator getRowCountIndicator(ModelElement modelElement,
+            Map<ModelElement, List<Indicator>> elementToIndicator) {
+        List<Indicator> list = elementToIndicator.get(modelElement);
+        RowCountIndicator rowCountIndicator = null;
+        if (list == null) {
+            return rowCountIndicator;
+        }
+        for (Indicator indicator : list) {
+            if (IndicatorsPackage.eINSTANCE.getRowCountIndicator().equals(indicator.eClass())) {
+                rowCountIndicator = (RowCountIndicator) indicator;
+                break;
+            }
+        }
+        return rowCountIndicator;
+    }
+
+    public static NullCountIndicator getNullCountIndicator(ModelElement modelElement,
+            Map<ModelElement, List<Indicator>> elementToIndicator) {
+        List<Indicator> list = elementToIndicator.get(modelElement);
+        NullCountIndicator nullCountIndicator = null;
+        if (list == null) {
+            return nullCountIndicator;
+        }
+        for (Indicator indicator : list) {
+            if (IndicatorsPackage.eINSTANCE.getNullCountIndicator().equals(indicator.eClass())) {
+                nullCountIndicator = (NullCountIndicator) indicator;
+            }
+        }
+        return nullCountIndicator;
     }
 }

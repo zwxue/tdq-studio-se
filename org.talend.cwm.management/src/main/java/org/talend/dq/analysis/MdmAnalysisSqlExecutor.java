@@ -18,6 +18,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -41,8 +42,11 @@ import org.talend.dataquality.helpers.IndicatorHelper;
 import org.talend.dataquality.indicators.CompositeIndicator;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.IndicatorsPackage;
+import org.talend.dataquality.indicators.NullCountIndicator;
+import org.talend.dataquality.indicators.RowCountIndicator;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
+import org.talend.dq.nodes.indicator.type.IndicatorEnum;
 import org.talend.utils.collections.MultiMapHelper;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.objectmodel.core.Expression;
@@ -261,6 +265,38 @@ public class MdmAnalysisSqlExecutor extends MdmAnalysisExecutor {
      * @param elementToIndicator
      */
     protected void setRowCountAndNullCount(Map<ModelElement, List<Indicator>> elementToIndicator) {
+        Set<ModelElement> analyzedElements = elementToIndicator.keySet();
+        for (ModelElement modelElement : analyzedElements) {
+            // get row count indicator
+            RowCountIndicator rowCount = IndicatorHelper.getRowCountIndicator(modelElement, elementToIndicator);
+            // get null count indicator
+            NullCountIndicator nullCount = IndicatorHelper.getNullCountIndicator(modelElement, elementToIndicator);
+
+            List<Indicator> list = elementToIndicator.get(modelElement);
+            for (Indicator ind : list) {
+                // set row count value to each indicator
+                if (rowCount != null && needPercentage(ind)) {
+                    ind.setCount(rowCount.getCount());
+                }
+                // set null count value to each indicator
+                if (nullCount != null) {
+                    ind.setNullCount(nullCount.getNullCount());
+                }
+            }
+        }
+    }
+
+    /**
+     * DOC bZhou Comment method "needPercentage".
+     * 
+     * @param ind
+     * @return
+     */
+    private boolean needPercentage(Indicator ind) {
+        IndicatorEnum indType = IndicatorEnum.findIndicatorEnum(ind.eClass());
+
+        return indType != IndicatorEnum.ModeIndicatorEnum && !indType.isAChildOf(IndicatorEnum.TextIndicatorEnum)
+                && !indType.isAChildOf(IndicatorEnum.BoxIIndicatorEnum);
     }
 
     /**
