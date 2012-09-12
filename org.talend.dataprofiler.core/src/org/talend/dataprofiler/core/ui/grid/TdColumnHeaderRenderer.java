@@ -112,7 +112,7 @@ public class TdColumnHeaderRenderer extends GridHeaderRenderer {
      */
     public void paint(GC gc, Object value) {
 
-        float[] original = { (float) getBounds().x - 3, (float) getBounds().y + (float) getBounds().height - 3 };
+        float[] original = { (float) getBounds().x - 2, (float) getBounds().y + (float) getBounds().height - 2 };
         gc.setTransform(_transform);
         GridColumn column = (GridColumn) value;
 

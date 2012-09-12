@@ -13,8 +13,10 @@
 package org.talend.dataprofiler.core.ui.grid;
 
 import org.eclipse.nebula.widgets.grid.Grid;
+import org.eclipse.nebula.widgets.grid.GridColumn;
 import org.eclipse.nebula.widgets.grid.GridItem;
 import org.eclipse.nebula.widgets.grid.IInternalWidget;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.events.MouseMoveListener;
@@ -26,14 +28,18 @@ import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.talend.dataprofiler.core.ImageLib;
+import org.talend.dataprofiler.core.helper.ModelElementIndicatorHelper;
 import org.talend.dataprofiler.core.model.ModelElementIndicator;
 import org.talend.dq.nodes.indicator.IIndicatorNode;
+import org.talend.dq.nodes.indicator.IndicatorTreeModelBuilder;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
 
 /**
- * created by root on 6 juil. 2012 Detailled comment
+ * this customized nebula grid is used for indicator selection.
  */
 public class IndicatorSelectGrid extends Grid {
+
+    private ModelElementIndicator[] _modelElementIndicators;
 
     private IndicatorSelectDialog2 _dialog;
 
@@ -49,16 +55,93 @@ public class IndicatorSelectGrid extends Grid {
 
     static final Image tickImage = ImageLib.getImage(ImageLib.TICK_IMAGE);
 
+    static final int COLUMN_WIDTH = 50;
+
     /**
-     * DOC root IndicatorSelectionGrid constructor comment.
+     * IndicatorSelectionGrid constructor.
      * 
      * @param parent
      * @param style
+     * @param modelElementIndicators
+     * @param modelElementIndicators
      */
-    public IndicatorSelectGrid(IndicatorSelectDialog2 dialog, Composite parent, int style) {
+    public IndicatorSelectGrid(IndicatorSelectDialog2 dialog, Composite parent, int style,
+            ModelElementIndicator[] modelElementIndicators) {
         super(parent, style);
         _dialog = dialog;
+        _modelElementIndicators = modelElementIndicators;
         addExtraListeners();
+        initializeGrid();
+    }
+
+    private void initializeGrid() {
+
+        // first column is for indicator labels, it is hided from the cells but shown as row header.
+        GridColumn indicatorLabelColumn = new GridColumn(this, SWT.NONE);
+        indicatorLabelColumn.setTree(true);
+        indicatorLabelColumn.setWidth(200);
+        getColumn(0).setVisible(false);
+
+        // select all column
+        GridColumn rowSelectCol = new GridColumn(this, SWT.CHECK);
+        rowSelectCol.setHeaderRenderer(new TdColumnHeaderRenderer());
+        rowSelectCol.setCellRenderer(new TdCellRenderer());
+        rowSelectCol.setText("Select All");
+        rowSelectCol.setWidth(COLUMN_WIDTH);
+        rowSelectCol.setWordWrap(true);
+        rowSelectCol.setResizeable(true);
+        rowSelectCol.setCellSelectionEnabled(true);
+
+        // database columns
+        for (int i = 0; i < _modelElementIndicators.length; i++) {
+            GridColumn newCol = new GridColumn(this, SWT.CHECK);
+            newCol.setHeaderRenderer(new TdColumnHeaderRenderer());
+            newCol.setCellRenderer(new TdCellRenderer());
+            newCol.setText(ModelElementIndicatorHelper.getModelElementDisplayName(_modelElementIndicators[i]));
+            newCol.setWidth(COLUMN_WIDTH);
+            newCol.setData(_modelElementIndicators[i]);
+            newCol.setMoveable(true);
+            newCol.setResizeable(false);
+        }
+
+        IIndicatorNode[] branchNodes = IndicatorTreeModelBuilder.buildIndicatorCategory();
+        for (int i = 0; i < branchNodes.length; i++) {
+            // indicator category row
+            IIndicatorNode indicatorNode = branchNodes[i];
+
+            GridItem item = new GridItem(this, SWT.NONE);
+            item.setText(indicatorNode.getLabel());
+            item.setData(indicatorNode);
+            createChildNodes(null, item, indicatorNode);
+            processNodeSelection(null, item);
+        }
+
+        // show fixed column header
+        setHeaderVisible(true);
+        // setCellHeaderSelectionBackground(IndicatorSelectGrid.standardYellow);
+
+        setEmptyColumnHeaderRenderer(new TdEmptyColumnHeaderRenderer());
+        setEmptyRowHeaderRenderer(new TdEmptyCellRenderer());
+        setEmptyCellRenderer(new TdEmptyCellRenderer());
+
+        // show fixed row header
+        setRowHeaderRenderer(new TdRowHeaderRenderer());
+        setRowHeaderVisible(true);
+        ((TdRowHeaderRenderer) getRowHeaderRenderer()).setTree(true);
+
+        setLinesVisible(true);
+        setColumnScrolling(true);
+        setSelectionEnabled(false);
+        setCellSelectionEnabled(false);
+
+        setRowsResizeable(false);
+        setItemHeight(20);
+        setLineColor(IndicatorSelectGrid.lightBlue);
+        setFocusRenderer(null);
+
+        for (GridItem gridItem : getItems()) {
+            gridItem.setBackground(0, IndicatorSelectGrid.gray);
+        }
     }
 
     /**
@@ -124,7 +207,7 @@ public class IndicatorSelectGrid extends Grid {
             while (parent.getParentItem() != null) {
                 parent = parent.getParentItem();
             }
-            _dialog.processNodeSelection(this, null, parent);
+            processNodeSelection(null, parent);
         } else {
             GridItem item = getItem(new Point(e.x, e.y));
             if (e.button == 1 && item != null) {
@@ -203,4 +286,149 @@ public class IndicatorSelectGrid extends Grid {
 
         }
     }
+
+    /**
+     * recursively create tree nodes and checked the existing indicators.
+     * 
+     * @param grid
+     * @param currentItem
+     * @param indicatorNode
+     */
+    void createChildNodes(GridItem parentItem, GridItem currentItem, IIndicatorNode indicatorNode) {
+
+        Boolean hasCheckableInColumn[] = new Boolean[getColumnCount()];
+
+        for (int j = 1; j < getColumnCount(); j++) {
+            hasCheckableInColumn[j] = false;
+        }
+
+        for (int i = 0; i < indicatorNode.getChildren().length; i++) {
+            IIndicatorNode childNode = indicatorNode.getChildren()[i];
+            GridItem childItem = new GridItem(currentItem, SWT.NONE);
+            if (childNode.hasChildren()) {
+                createChildNodes(currentItem, childItem, childNode);
+            }
+
+            childItem.setText(childNode.getLabel());
+            childItem.setData(childNode);
+            if (parentItem == null) {
+                childItem.setExpanded(true);
+            }
+
+            boolean hasCheckableInRow = false;
+
+            for (int j = 0; j < getColumnCount(); j++) {
+
+                IndicatorEnum indicatorEnum = childNode.getIndicatorEnum();
+                if (j == 0) {
+                    // Indicator title column
+                    continue;
+                } else if (j == 1/* && grid.getColumnCount() > 2 */) {
+                    // "Select All" column
+                } else {
+
+                    // DB columns
+                    ModelElementIndicator meIndicator = null;
+                    if (j - 2 < _modelElementIndicators.length) {
+                        meIndicator = _modelElementIndicators[j - 2];
+                    } else {
+                        meIndicator = _modelElementIndicators[0];
+                    }
+
+                    // Enable/disable the check box
+                    boolean isMatch = _dialog.isMatchCurrentIndicator(meIndicator, childNode);
+                    childItem.setCheckable(j, isMatch);
+
+                    if (isMatch) {
+                        hasCheckableInRow = true;
+                        hasCheckableInColumn[j] = true;
+                        // Check the box if it is already selected
+                        if (meIndicator != null && meIndicator.tempContains(indicatorEnum)) {
+                            childItem.setChecked(j, true);
+                        }
+                    }
+                }
+            }
+
+            childItem.setCheckable(1, hasCheckableInRow);
+        }
+
+        boolean entireCategoryCheckable = false;
+        for (int j = 2; j < getColumnCount(); j++) {
+            if (hasCheckableInColumn[j]) {
+                entireCategoryCheckable = true;
+            } else {
+                currentItem.setCheckable(j, false);
+            }
+        }
+        currentItem.setCheckable(1, entireCategoryCheckable);
+    }
+
+    /**
+     * recursively check if a entire row/column is selected/
+     * 
+     * @param grid
+     * @param parentItem
+     * @param currentItem
+     */
+    void processNodeSelection(GridItem parentItem, GridItem currentItem) {
+        if (currentItem.hasChildren()) {
+            // declare and initialize variables
+            Boolean allCheckedInColumn[] = new Boolean[getColumnCount()];
+            Boolean hasCheckedInColumn[] = new Boolean[getColumnCount()];
+            for (int j = 1; j < getColumnCount(); j++) {
+                allCheckedInColumn[j] = true;
+                hasCheckedInColumn[j] = false;
+            }
+
+            for (int i = 0; i < currentItem.getItemCount(); i++) {
+                GridItem childItem = currentItem.getItem(i);
+                // process the children of current item, this must be done before handling the current item
+                processNodeSelection(currentItem, childItem);
+
+                boolean allCheckedInRow = true;
+                boolean hasCheckedInRow = false;
+                boolean expanded = false;
+
+                for (int j = 2; j < getColumnCount(); j++) {
+                    if (childItem.getChecked(j)) {
+                        hasCheckedInRow = true;
+                        hasCheckedInColumn[j] = true;
+                        expanded = true;
+                    } else {
+                        if (childItem.getCheckable(j)) {
+                            allCheckedInRow = false;
+                            allCheckedInColumn[j] = false;
+                        }
+                    }
+                }
+                childItem.setChecked(1, hasCheckedInRow && allCheckedInRow);
+
+                if (expanded) {
+                    currentItem.setExpanded(true);
+                    if (parentItem != null) {
+                        parentItem.setExpanded(true);
+                    }
+                }
+
+            }
+
+            // process the selections of indicator category row
+            boolean entireCategoryChecked = true;
+            for (int j = 2; j < getColumnCount(); j++) {
+                if (currentItem.getCheckable(j)) {
+                    if (allCheckedInColumn[j]) {
+                        currentItem.setChecked(j, true);
+                    } else {
+                        currentItem.setChecked(j, false);
+                        entireCategoryChecked = false;
+                    }
+                }
+            }
+            if (currentItem.getCheckable(1)) {
+                currentItem.setChecked(1, entireCategoryChecked);
+            }
+        }
+    }
+
 }
