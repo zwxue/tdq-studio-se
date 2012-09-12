@@ -1,7 +1,6 @@
 package org.talend.cwm.compare.factory.comparisonlevel;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -24,6 +23,10 @@ import orgomg.cwm.resource.relational.ColumnSet;
 import orgomg.cwm.resource.relational.ForeignKey;
 import orgomg.cwm.resource.relational.PrimaryKey;
 
+/**
+ * FIXME implement the empty methods.
+ * 
+ */
 @PrepareForTest({ EMFSharedResources.class })
 public class TableViewComparisonLevelTest {
 
@@ -31,41 +34,49 @@ public class TableViewComparisonLevelTest {
     public PowerMockRule powerMockRule = new PowerMockRule();
 
     @Test
+    @Ignore
     public void testReloadCurrentLevelElement() {
 
     }
 
     @Test
+    @Ignore
     public void testCreateTempConnectionFile() {
 
     }
 
     @Test
+    @Ignore
     public void testGetSavedReloadObject() {
 
     }
 
     @Test
+    @Ignore
     public void testGetRightResource() {
 
     }
 
     @Test
-    public void testFindDataProvider() {
+     @Ignore
+   public void testFindDataProvider() {
 
     }
 
     @Test
+    @Ignore
     public void testCompareWithReloadObject() {
 
     }
 
     @Test
+    @Ignore
     public void testGetLeftResource() {
 
     }
 
     @Test
+    @Ignore
     public void testHandleRemoveElement() {
 
     }
@@ -178,11 +189,13 @@ public class TableViewComparisonLevelTest {
     }
 
     @Test
+    @Ignore
     public void testTableViewComparisonLevelDBColumnFolderRepNode() {
 
     }
 
     @Test
+    @Ignore
     public void testTableViewComparisonLevelColumnSet() {
 
     }

@@ -21,6 +21,8 @@ import org.talend.core.model.repository.IRepositoryViewObject;
  */
 public class TDQResourceChangeHandlerTest {
 
+    // FIXME there is nothing here
+
     private List<IRepositoryViewObject> repsList = null;
 
 

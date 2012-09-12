@@ -42,6 +42,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeColumn;
@@ -873,7 +874,11 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
             @Override
             public void widgetSelected(SelectionEvent e) {
                 TreeItem item = (TreeItem) e.item;
-                if (DATA_PARAM.equals(item.getData(DATA_PARAM))) {
+                if (item == null || DATA_PARAM.equals(item.getData(DATA_PARAM))) {
+                    Menu m = tree.getMenu();
+                    if (m != null && !m.isDisposed()) {
+                        m.dispose();
+                    }
                     tree.setMenu(null);
                 } else {
                     new AnalysisColumnColumnMenuProvider(tree).createTreeMenu(Boolean.FALSE);

@@ -40,7 +40,7 @@ public class ConnectionService {
     public static TypedReturnCode<Connection> createConnection(DBConnectionParameter parameter) {
         TypedReturnCode<Connection> tReturnCode = new TypedReturnCode<Connection>(false);
         MetadataFillFactory instance = null;
-        if (parameter.getSqlTypeName().equals(SupportDBUrlType.MDM.getDBKey())) {
+        if (SupportDBUrlType.MDM.getDBKey().equals(parameter.getSqlTypeName())) {
             instance = MetadataFillFactory.getMDMInstance();
         } else {
             instance = MetadataFillFactory.getDBInstance();

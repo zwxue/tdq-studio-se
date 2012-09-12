@@ -142,7 +142,7 @@ public class IndicatorEvaluator extends Evaluator<String> {
                 try {
                     object = resultSet.getObject(col);
                 } catch (SQLException e) {
-                    if (resultSet.getString(col).equals("0000-00-00 00:00:00"))//$NON-NLS-1$  
+                    if ("0000-00-00 00:00:00".equals(resultSet.getString(col)))//$NON-NLS-1$  
                         object = null;
 
                 }
@@ -191,7 +191,7 @@ public class IndicatorEvaluator extends Evaluator<String> {
                             try {
                                 newobject = resultSet.getObject(newcol);
                             } catch (SQLException e) {
-                                if (resultSet.getString(newcol).equals("0000-00-00 00:00:00"))//$NON-NLS-1$  
+                                if ("0000-00-00 00:00:00".equals(resultSet.getString(newcol)))//$NON-NLS-1$  
                                     newobject = null;
 
                             }

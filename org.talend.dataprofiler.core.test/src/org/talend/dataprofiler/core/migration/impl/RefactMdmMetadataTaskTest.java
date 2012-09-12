@@ -27,6 +27,8 @@ public class RefactMdmMetadataTaskTest {
         try {
             RefactMdmMetadataTask refactMdmMetadataTask = new RefactMdmMetadataTask();
             refactMdmMetadataTask.doExecute();
+            // FIXME there is no assert here
+
         } catch (Exception e) {
             e.printStackTrace();
         }

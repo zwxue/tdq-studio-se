@@ -27,6 +27,7 @@ public class SplitSysIndicatorTaskTest {
         try {
             SplitSysIndicatorTask splitSysIndicatorTask = new SplitSysIndicatorTask();
             splitSysIndicatorTask.doExecute();
+            // FIXME there is no assert here
         } catch (Exception e) {
             e.printStackTrace();
         }

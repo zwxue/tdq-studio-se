@@ -432,6 +432,7 @@ public final class DependenciesHandler {
         return returnList;
     }
 
+    // FIXME this method must not be static
     /**
      * get Indicator Dependency.
      * 
@@ -464,6 +465,7 @@ public final class DependenciesHandler {
         return listAnalysisViewObject;
     }
 
+    // FIXME this method must not be static
     /**
      * get Analysis Dependency (for indicator only).
      * 
@@ -545,7 +547,5 @@ public final class DependenciesHandler {
         return hasFind;
 
     }
-
-
 
 }
