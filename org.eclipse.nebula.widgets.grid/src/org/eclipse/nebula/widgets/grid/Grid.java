@@ -7741,6 +7741,9 @@ public class Grid extends Canvas
         scrollValuesObsolete = true;
         topIndex = -1;
         bottomIndex = -1;
+        // MOD sizhaoliu TDQ-6010 init visible column index so that they are recalculated
+        startColumnIndex = -1;
+        endColumnIndex = -1;
     }
 
     /**
@@ -7750,6 +7753,9 @@ public class Grid extends Canvas
     {
         topIndex = -1;
         bottomIndex = -1;
+        // MOD sizhaoliu TDQ-6010 init visible column index so that they are recalculated
+        startColumnIndex = -1;
+        endColumnIndex = -1;
         refreshHoverState();
         redraw(getClientArea().x, getClientArea().y, getClientArea().width, getClientArea().height,
                false);

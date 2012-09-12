@@ -261,16 +261,14 @@ public class IndicatorSelectGrid extends Grid {
             GridVisibleRange range = getVisibleRange();
             for (GridItem item : range.getItems()) {
                 int i = indexOf(item);
-                // FIXME fix the bug in nebula grid, so that we can use visible columns instead of all the columns to
-                // improve hover performance.
-                // for (GridColumn column : range.getColumns()) {
-                // int x = indexOf(column);
                 if (i == cell.y) {
                     item.setBackground(0, yellow);
                 } else {
                     item.setBackground(0, gray);
                 }
-                for (int j = 1; j < getColumns().length; j++) {
+
+                for (GridColumn column : range.getColumns()) {
+                    int j = indexOf(column);
                     if (i == cell.y && j == cell.x) {
                         item.setBackground(j, yellow);
                     } else if (i == cell.y && j < cell.x || j == cell.x && i < cell.y) {
