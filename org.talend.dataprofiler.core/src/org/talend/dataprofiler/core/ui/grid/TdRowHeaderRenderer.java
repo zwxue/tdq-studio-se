@@ -42,7 +42,7 @@ public class TdRowHeaderRenderer extends GridCellRenderer {
 
     int bottomMargin = 0;
 
-    int textTopMargin = 1;
+    int textTopMargin = 4;
 
     int textBottomMargin = 2;
 

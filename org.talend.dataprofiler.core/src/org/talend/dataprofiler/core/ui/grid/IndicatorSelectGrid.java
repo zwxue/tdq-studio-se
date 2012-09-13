@@ -118,6 +118,7 @@ public class IndicatorSelectGrid extends Grid {
 
         // show fixed column header
         setHeaderVisible(true);
+        setTopLeftRenderer(new TdTopLeftRenderer());
         // setCellHeaderSelectionBackground(IndicatorSelectGrid.standardYellow);
 
         setEmptyColumnHeaderRenderer(new TdEmptyColumnHeaderRenderer());
@@ -135,7 +136,7 @@ public class IndicatorSelectGrid extends Grid {
         setCellSelectionEnabled(false);
 
         setRowsResizeable(false);
-        setItemHeight(20);
+        setItemHeight(25);
         setLineColor(IndicatorSelectGrid.lightBlue);
         setFocusRenderer(null);
 
@@ -437,7 +438,10 @@ public class IndicatorSelectGrid extends Grid {
     public void setAllIndicators(boolean select) {
         for (int i = 0; i < getItemCount(); i++) {
             for (int j = 1; j < getColumnCount(); j++) {
-                tickCell(new Point(j, i), select);
+                if (getItem(i).getParentItem() == null) {
+                    tickCell(new Point(j, i), select);
+                    getItem(i).setExpanded(select);
+                }
             }
         }
     }

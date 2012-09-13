@@ -42,6 +42,8 @@ public class TdColumnHeaderRenderer extends GridHeaderRenderer {
 
     int imageSpacing = 3;
 
+    int textOffset = 15;
+
     private SortArrowRenderer arrowRenderer = new SortArrowRenderer();
 
     private TextLayout textLayout;
@@ -123,7 +125,7 @@ public class TdColumnHeaderRenderer extends GridHeaderRenderer {
 
         boolean drawSelected = ((isMouseDown() && isHover()));
 
-        gc.setBackground(getDisplay().getSystemColor(SWT.COLOR_WHITE));
+        gc.setBackground(getDisplay().getSystemColor(SWT.COLOR_WIDGET_LIGHT_SHADOW));
 
         if (isSelected()) {
             gc.setBackground(getDisplay().getSystemColor(SWT.COLOR_YELLOW));
@@ -185,11 +187,11 @@ public class TdColumnHeaderRenderer extends GridHeaderRenderer {
             }
         }
 
-        float[] cords = { (float) (getBounds().x + width / 2), (float) (getBounds().y + (float) getBounds().height) - 10 };
+        float[] cords = { (float) (getBounds().x + width / 2), (float) (getBounds().y + (float) getBounds().height - 6) };
         _transformInv.transform(cords);
 
         if (!isWordWrap()) {
-            gc.drawString(text, (int) cords[0], (int) cords[1]);
+            gc.drawString(text, (int) cords[0] + textOffset, (int) cords[1]);
         } else {
             getTextLayout(gc, column);
             textLayout.setWidth(width < 1 ? 1 : width);

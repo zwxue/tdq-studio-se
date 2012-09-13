@@ -5680,8 +5680,10 @@ public class Grid extends Canvas
         if (rowHeaderVisible)
         {
             // paint left corner
+            // MOD sizhaoliu TDQ-6140
+            topLeftRenderer.setBounds(0, y, getBounds().width, headerHeight);
             // topLeftRenderer.setBounds(0, y, rowHeaderWidth, headerHeight);
-            // topLeftRenderer.paint(gc, null);
+            topLeftRenderer.paint(gc, null);
             x += rowHeaderWidth;
         }
 
