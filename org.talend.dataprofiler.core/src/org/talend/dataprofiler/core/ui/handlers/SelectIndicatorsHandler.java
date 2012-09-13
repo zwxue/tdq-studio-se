@@ -18,6 +18,7 @@ import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.handlers.HandlerUtil;
 import org.talend.dataprofiler.core.ui.dialog.IndicatorSelectDialog;
+import org.talend.dataprofiler.core.ui.grid.IndicatorSelectDialog2;
 
 /**
  * DOC yyi class global comment. Detailled comment
@@ -33,10 +34,20 @@ public class SelectIndicatorsHandler extends AbstractHandler {
 
         Shell activeShell = HandlerUtil.getActiveShell(event);
         if (null != activeShell) {
+            // MOD sizhaoliu TDQ-6075 Enable keyboard shortcut to select all the indicators
+            boolean select;
+            if (event.getCommand().getId().equals("org.talend.dataprofiler.core.selectAllIndicators")) {//$NON-NLS-1$
+                select = true;
+            } else if (event.getCommand().getId().equals("org.talend.dataprofiler.core.deselectAllIndicators")) {//$NON-NLS-1$
+                select = false;
+            } else {
+                return null;
+            }
             Object dialog = activeShell.getData();
             if (dialog instanceof IndicatorSelectDialog) {
-                ((IndicatorSelectDialog) dialog).selectAllIndicators(event.getCommand().getId().equals(
-"org.talend.dataprofiler.core.selectAllIndicators"));//$NON-NLS-1$ 
+                ((IndicatorSelectDialog) dialog).selectAllIndicators(select);
+            } else if (dialog instanceof IndicatorSelectDialog2) {
+                ((IndicatorSelectDialog2) dialog).selectAllIndicators(select);
             }
         }
         return null;

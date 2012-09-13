@@ -58,6 +58,8 @@ public class IndicatorSelectDialog2 extends TrayDialog {
 
     private Label descriptionLabel;
 
+    private IndicatorSelectGrid grid;
+
     /**
      * IndicatorSelectDialog2 constructor.
      * 
@@ -119,7 +121,7 @@ public class IndicatorSelectDialog2 extends TrayDialog {
         style |= SWT.BORDER;
         style |= SWT.SINGLE;
 
-        IndicatorSelectGrid grid = new IndicatorSelectGrid(this, comp, style, modelElementIndicators);
+        grid = new IndicatorSelectGrid(this, comp, style, modelElementIndicators);
         GridData controlGridData = new GridData();
         controlGridData.minimumWidth = 600;
         controlGridData.heightHint = 600;
@@ -189,6 +191,15 @@ public class IndicatorSelectDialog2 extends TrayDialog {
         }
         purposeLabel.setText(PURPOSE + " " + item.getText());
         descriptionLabel.setText(DESCRIPTION + " " + item.getText());
+    }
+
+    /**
+     * select/deselect all enabled indicators when Ctrl+Shift+[A|N] is down.
+     * 
+     * @param selected
+     */
+    public void selectAllIndicators(boolean selected) {
+        grid.setAllIndicators(selected);
     }
 
 }

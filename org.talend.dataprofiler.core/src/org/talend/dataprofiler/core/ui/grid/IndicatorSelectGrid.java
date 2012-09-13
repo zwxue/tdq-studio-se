@@ -429,4 +429,16 @@ public class IndicatorSelectGrid extends Grid {
         }
     }
 
+    /**
+     * select/deselect all enabled indicators when Ctrl+Shift+[A|N] is down.
+     * 
+     * @param select
+     */
+    public void setAllIndicators(boolean select) {
+        for (int i = 0; i < getItemCount(); i++) {
+            for (int j = 1; j < getColumnCount(); j++) {
+                tickCell(new Point(j, i), select);
+            }
+        }
+    }
 }
