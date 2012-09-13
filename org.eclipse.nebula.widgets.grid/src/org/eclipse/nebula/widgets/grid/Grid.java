@@ -10577,7 +10577,6 @@ public class Grid extends Canvas
     	int bottomIndex = getBottomIndex();
     	int startColumnIndex = getStartColumnIndex();
     	int endColumnIndex = getEndColumnIndex();
-
     	GridVisibleRange range = new GridVisibleRange();
     	range.items = new GridItem[0];
     	range.columns = new GridColumn[0];
@@ -10638,13 +10637,14 @@ public class Grid extends Canvas
     		endColumnIndex = getStartColumnIndex();
     	} else {
     		int x = 0;
-            x -= getHScrollSelectionInPixels();
+    		// MOD sizhaoliu TDQ-6010 remove the following lines to correctly calculate the endColumnIndex
+            // x -= getHScrollSelectionInPixels();
 
-            if (rowHeaderVisible)
-            {
-                //row header is actually painted later
-                x += rowHeaderWidth;
-            }
+            // if (rowHeaderVisible)
+            // {
+            //     //row header is actually painted later
+            //     x += rowHeaderWidth;
+            // }
 
             int startIndex = getStartColumnIndex();
             GridColumn[] columns = new GridColumn[displayOrderedColumns.size()];
