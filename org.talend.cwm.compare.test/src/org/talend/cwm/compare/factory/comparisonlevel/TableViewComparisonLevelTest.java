@@ -8,6 +8,7 @@ import java.util.Set;
 import org.eclipse.emf.compare.diff.metamodel.ModelElementChangeRightTarget;
 import org.eclipse.emf.compare.diff.metamodel.impl.DiffFactoryImpl;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -58,8 +59,8 @@ public class TableViewComparisonLevelTest {
     }
 
     @Test
-     @Ignore
-   public void testFindDataProvider() {
+    @Ignore
+    public void testFindDataProvider() {
 
     }
 
