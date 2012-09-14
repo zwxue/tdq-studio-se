@@ -27,6 +27,8 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CCombo;
 import org.eclipse.swt.custom.TreeEditor;
+import org.eclipse.swt.events.HelpEvent;
+import org.eclipse.swt.events.HelpListener;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -750,6 +752,14 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
                     @Override
                     public void shellActivated(ShellEvent e) {
                         dialog.getShell().setFocus();
+                        IContext context = HelpSystem.getContext(HelpPlugin.getDefault().getIndicatorSelectorHelpContextID());
+                        PlatformUI.getWorkbench().getHelpSystem().displayHelp(context);
+                    }
+                });
+
+                dialog.getShell().addHelpListener(new HelpListener() {
+
+                    public void helpRequested(HelpEvent e) {
                         IContext context = HelpSystem.getContext(HelpPlugin.getDefault().getIndicatorSelectorHelpContextID());
                         PlatformUI.getWorkbench().getHelpSystem().displayHelp(context);
                     }

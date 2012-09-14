@@ -80,7 +80,7 @@ public class IndicatorSelectGrid extends Grid {
         GridColumn indicatorLabelColumn = new GridColumn(this, SWT.NONE);
         indicatorLabelColumn.setTree(true);
         indicatorLabelColumn.setWidth(200);
-        getColumn(0).setVisible(false);
+        getColumn(0).setVisible(false); // hide the label column, but it is actually visible in the fixed column
 
         // select all column
         GridColumn rowSelectCol = new GridColumn(this, SWT.CHECK);
@@ -91,6 +91,7 @@ public class IndicatorSelectGrid extends Grid {
         rowSelectCol.setWordWrap(true);
         rowSelectCol.setResizeable(true);
         rowSelectCol.setCellSelectionEnabled(true);
+        rowSelectCol.setVisible(false); // hide the row select column, it is also visible in the fixed column.
 
         // database columns
         for (int i = 0; i < _modelElementIndicators.length; i++) {
@@ -104,6 +105,7 @@ public class IndicatorSelectGrid extends Grid {
             newCol.setResizeable(false);
         }
 
+        // initialize grid contents
         IIndicatorNode[] branchNodes = IndicatorTreeModelBuilder.buildIndicatorCategory();
         for (int i = 0; i < branchNodes.length; i++) {
             // indicator category row
@@ -197,13 +199,7 @@ public class IndicatorSelectGrid extends Grid {
         Point cell = getCell(new Point(e.x, e.y));
         if (cell != null) {
             boolean checked = getItem(cell.y).getChecked(cell.x);
-            if (cell.x == 1) {
-                for (int i = 1; i < getColumnCount(); i++) { // select all columns
-                    tickCell(new Point(i, cell.y), checked);
-                }
-            } else if (cell.x > 1) {
-                tickCell(cell, checked);
-            }
+            tickCell(cell, checked);
             GridItem parent = getItem(cell.y);
             while (parent.getParentItem() != null) {
                 parent = parent.getParentItem();
@@ -212,10 +208,20 @@ public class IndicatorSelectGrid extends Grid {
         } else {
             GridItem item = getItem(new Point(e.x, e.y));
             if (e.button == 1 && item != null) {
+                if (overRowSelect(item, new Point(e.x, e.y))) {
+                    boolean rowChecked = item.getChecked(1);
+                    tickCell(new Point(1, getIndexOfItem(item)), !rowChecked);
+                    GridItem parent = item;
+                    while (parent.getParentItem() != null) {
+                        parent = parent.getParentItem();
+                    }
+                    processNodeSelection(null, parent);
+                    return;
+                }
                 TdRowHeaderRenderer renderer = ((TdRowHeaderRenderer) getRowHeaderRenderer());
                 renderer.setBounds(getRowHeaderBounds(item));
                 renderer.notify(IInternalWidget.LeftMouseButtonDown, new Point(e.x, e.y), item);
-                e.x = renderer.getSize().x + 1;
+                e.x = renderer.getSize().x - 1; // Move into row select cell
                 onMouseMove(e);
                 _dialog.updateIndicatorInfo(item);
 
@@ -223,15 +229,103 @@ public class IndicatorSelectGrid extends Grid {
         }
     }
 
+    private void onMouseMove(MouseEvent e) {
+        Point cell = getCell(new Point(e.x, e.y));
+        if (cell != null && cell.x != 0) { // any cell except the row select cells
+            GridVisibleRange range = getVisibleRange();
+            for (GridItem item : range.getItems()) {
+                int i = indexOf(item);
+                // set background for
+                if (i == cell.y) {
+                    item.setBackground(0, yellow);
+                    item.setBackground(1, lightYellow);
+                } else {
+                    item.setBackground(0, gray);
+                    item.setBackground(1, getDisplay().getSystemColor(SWT.COLOR_LIST_BACKGROUND));
+                    if (item.getCheckable(1)) {
+                        item.setBackground(yellow);
+                    }
+                }
+
+                for (GridColumn column : range.getColumns()) {
+                    int j = indexOf(column);
+                    if (i == cell.y && j == cell.x) {
+                        item.setBackground(j, yellow);
+                    } else if (i == cell.y && j < cell.x || j == cell.x && i < cell.y) {
+                        item.setBackground(j, lightYellow);
+                    } else {
+                        item.setBackground(j, null);
+                    }
+                }
+            }
+
+            for (int j = 0; j < getColumnCount(); j++) {
+                getColumn(j).getHeaderRenderer().setSelected(j == cell.x);
+            }
+
+        } else { // row select cells
+            GridItem currentItem = getItem(new Point(e.x, e.y));
+            if (currentItem != null) {
+                if (overRowSelect(currentItem, new Point(e.x, e.y))) { // handle hover event of row select cell
+                    GridVisibleRange range = getVisibleRange();
+                    for (GridItem item : range.getItems()) {
+                        int i = indexOf(item);
+                        if (item.getCheckable(0)) {
+                            if (i == indexOf(currentItem)) {
+                                item.setBackground(0, yellow);
+                                item.setBackground(1, yellow);
+                            } else {
+                                item.setBackground(0, gray);
+                                item.setBackground(1, getDisplay().getSystemColor(SWT.COLOR_LIST_BACKGROUND));
+                            }
+                        }
+
+                        for (GridColumn column : range.getColumns()) {
+                            int j = indexOf(column);
+                            if (i == indexOf(currentItem)) {
+                                item.setBackground(j, lightYellow);
+                            } else {
+                                item.setBackground(j, getDisplay().getSystemColor(SWT.COLOR_LIST_BACKGROUND));
+                            }
+                        }
+                    }
+                    for (int j = 0; j < getColumnCount(); j++) {
+                        getColumn(j).getHeaderRenderer().setSelected(false);
+                    }
+                    return;
+                }
+            }
+        }
+    }
+
+    private boolean overRowSelect(GridItem item, Point point) {
+
+        point = new Point(point.x, point.y);
+        point.y -= item.getBounds(0).y;
+
+        int x = getRowHeaderWidth();
+        if (point.x > x - 50 && point.x < x) {
+            if (point.y > 0 && point.y < getItemHeight()) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     private Rectangle getRowHeaderBounds(GridItem item) {
-        if (!isRowHeaderVisible())
-            return new Rectangle(-1000, -1000, 0, 0);
         return new Rectangle(0, item.getBounds(0).y, getRowHeaderWidth(), getItemHeight());
     }
 
     private void tickCell(Point cell, boolean tick) {
         if (!getItem(cell.y).getCheckable(cell.x)) {
             return;
+        }
+
+        if (cell.x == 1) {
+            for (int i = 2; i < getColumnCount(); i++) {
+                tickCell(new Point(i, cell.y), tick);
+            }
         }
 
         getItem(cell.y).setChecked(cell.x, tick);
@@ -253,36 +347,6 @@ public class IndicatorSelectGrid extends Grid {
             for (GridItem child : getItem(cell.y).getItems()) {
                 tickCell(new Point(cell.x, indexOf(child)), tick);
             }
-        }
-    }
-
-    private void onMouseMove(MouseEvent e) {
-        Point cell = getCell(new Point(e.x, e.y));
-        if (cell != null && cell.x != 0) {
-            GridVisibleRange range = getVisibleRange();
-            for (GridItem item : range.getItems()) {
-                int i = indexOf(item);
-                if (i == cell.y) {
-                    item.setBackground(0, yellow);
-                } else {
-                    item.setBackground(0, gray);
-                }
-
-                for (GridColumn column : range.getColumns()) {
-                    int j = indexOf(column);
-                    if (i == cell.y && j == cell.x) {
-                        item.setBackground(j, yellow);
-                    } else if (i == cell.y && j < cell.x || j == cell.x && i < cell.y) {
-                        item.setBackground(j, lightYellow);
-                    } else {
-                        item.setBackground(j, null);
-                    }
-                }
-            }
-            for (int j = 0; j < getColumnCount(); j++) {
-                getColumn(j).getHeaderRenderer().setSelected(j == cell.x);
-            }
-
         }
     }
 

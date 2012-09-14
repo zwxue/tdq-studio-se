@@ -201,6 +201,25 @@ public class TdRowHeaderRenderer extends GridCellRenderer {
             textLayout.draw(gc, getBounds().x + x, getBounds().y + textTopMargin + topMargin);
         }
 
+        // show row select cells
+        if (item.getCheckable(1)) {
+            if (item.getBackground(1) != null) {
+                gc.setBackground(item.getBackground(1));
+            }
+            gc.fillRectangle(getBounds().x + getBounds().width - 51, getBounds().y, 50, getBounds().height);
+            if (item.getChecked(1)) {
+                Image rowSelectImage = IndicatorSelectGrid.tickImage;
+                int y = getBounds().y;
+                y += (getBounds().height - rowSelectImage.getBounds().height) / 2;
+                gc.setBackground(IndicatorSelectGrid.blue);
+                gc.fillRectangle(getBounds().x + getBounds().width - 51, getBounds().y, 50, getBounds().height);
+                gc.drawImage(rowSelectImage, getBounds().x + 4 + getBounds().width - 50, y);
+            }
+        } else {
+            gc.setBackground(IndicatorSelectGrid.gray);
+            gc.fillRectangle(getBounds().x + getBounds().width - 51, getBounds().y, 50, getBounds().height);
+        }
+
         if (item.getParent().getLinesVisible()) {
             if (isCellSelected()) {
                 // XXX: should be user definable?
@@ -210,6 +229,9 @@ public class TdRowHeaderRenderer extends GridCellRenderer {
             }
             gc.drawLine(getBounds().x, getBounds().y + getBounds().height, getBounds().x + getBounds().width - 1, getBounds().y
                     + getBounds().height);
+            gc.drawLine(getBounds().x + getBounds().width - 51, getBounds().y, getBounds().x + getBounds().width - 51,
+                    getBounds().y + getBounds().height);
+            gc.setForeground(getDisplay().getSystemColor(SWT.COLOR_WIDGET_DARK_SHADOW));
             gc.drawLine(getBounds().x + getBounds().width - 1, getBounds().y, getBounds().x + getBounds().width - 1,
                     getBounds().y + getBounds().height);
         }

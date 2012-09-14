@@ -532,9 +532,10 @@ public class GridItem extends Item {
 			return new Rectangle(-1000, -1000, 0, 0);
 
 		Point origin = parent.getOrigin(parent.getColumn(columnIndex), this);
-
-		if (origin.x < 0 && parent.isRowHeaderVisible())
-			return new Rectangle(-1000, -1000, 0, 0);
+		
+		// MOD sizhaoliu TDQ-6010 fix row header bound issue
+		// if (origin.x < 0 && parent.isRowHeaderVisible())
+		//	return new Rectangle(-1000, -1000, 0, 0);
 
 		Point cellSize = this.getCellSize(columnIndex);
 
