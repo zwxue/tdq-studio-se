@@ -41,7 +41,6 @@ import org.talend.dataquality.indicators.sql.UserDefIndicator;
 import org.talend.dataquality.indicators.sql.util.IndicatorSqlSwitch;
 import org.talend.dq.helper.resourcehelper.IndicatorResourceFileHelper;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
-import org.talend.resource.EResourceConstant;
 import org.talend.resource.ResourceManager;
 import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.objectmodel.core.Expression;
@@ -275,11 +274,11 @@ public final class UDIHelper {
             String userJavaClassName = null;
             String jarPath = null;
             for (TaggedValue tv : taggedValues) {
-                if (tv.getTag().equals(PluginConstant.CLASS_NAME_TEXT)) {
+                if (tv.getTag().equals(TaggedValueHelper.CLASS_NAME_TEXT)) {
                     userJavaClassName = tv.getValue();
                     continue;
                 }
-                if (tv.getTag().equals(PluginConstant.JAR_FILE_PATH)) {
+                if (tv.getTag().equals(TaggedValueHelper.JAR_FILE_PATH)) {
                     jarPath = tv.getValue();
                 }
             }
@@ -289,26 +288,26 @@ public final class UDIHelper {
                 for (IFile file : getContainJarFile(jarPath)) {
                     jarUrls.add(file.getLocationURI().toURL());
                 }
-                    TalendURLClassLoader cl;
+                TalendURLClassLoader cl;
                 cl = new TalendURLClassLoader(jarUrls.toArray(new URL[jarUrls.size()]));// new URL[] {
                                                                                         // file.getLocation().toFile().toURI().toURL()
                                                                                         // });
-                    Class<?> clazz = null;
+                Class<?> clazz = null;
                 clazz = cl.findClass(userJavaClassName);
-                    if (clazz != null) {
-                        UserDefIndicator judi = (UserDefIndicator) clazz.newInstance();
-                        judi.setIndicatorDefinition(indicator.getIndicatorDefinition());
+                if (clazz != null) {
+                    UserDefIndicator judi = (UserDefIndicator) clazz.newInstance();
+                    judi.setIndicatorDefinition(indicator.getIndicatorDefinition());
                     if (indicator instanceof JavaUserDefIndicator
                             && ((JavaUserDefIndicator) indicator).getJavaUserDefObject() == null) {
-                            ((JavaUserDefIndicator) indicator).setJavaUserDefObject(judi);
-                        } else {
-                            JavaUserDefIndicator judiTemplate = IndicatorSqlFactory.eINSTANCE.createJavaUserDefIndicator();
-                            judiTemplate.setJavaUserDefObject(judi);
-                            judiTemplate.setIndicatorDefinition(indicator.getIndicatorDefinition());
-                            judiTemplate.setAnalyzedElement(indicator.getAnalyzedElement());
-                            adaptedUDI = judiTemplate;
-                        }
+                        ((JavaUserDefIndicator) indicator).setJavaUserDefObject(judi);
+                    } else {
+                        JavaUserDefIndicator judiTemplate = IndicatorSqlFactory.eINSTANCE.createJavaUserDefIndicator();
+                        judiTemplate.setJavaUserDefObject(judi);
+                        judiTemplate.setIndicatorDefinition(indicator.getIndicatorDefinition());
+                        judiTemplate.setAnalyzedElement(indicator.getAnalyzedElement());
+                        adaptedUDI = judiTemplate;
                     }
+                }
 
             }
         }
@@ -325,8 +324,14 @@ public final class UDIHelper {
 
     private static boolean containsJavaUDI(IndicatorDefinition definition) {
         EList<TaggedValue> tvs = definition.getTaggedValue();
+        int findCount = 0;
         for (TaggedValue tv : tvs) {
-            if (tv.getTag().equals(PluginConstant.CLASS_NAME_TEXT)) {
+            if (tv.getTag().equals(TaggedValueHelper.CLASS_NAME_TEXT)) {
+                findCount++;
+            } else if (tv.getTag().equals(TaggedValueHelper.JAR_FILE_PATH)) {
+                findCount++;
+            }
+            if (findCount == 2) {
                 return true;
             }
         }
@@ -341,10 +346,9 @@ public final class UDIHelper {
      */
     public static boolean isJavaUDI(Indicator indicator) {
         IndicatorDefinition definition = indicator.getIndicatorDefinition();
-        boolean systemIndicator = definition != null && definition.eResource() != null
-                && definition.eResource().getURI().toString().contains(EResourceConstant.SYSTEM_INDICATORS.getName());
-        return systemIndicator;
+        return containsJavaUDI(definition);
     }
+
     /**
      * 
      * zshen Comment method "getLibJarFileList".

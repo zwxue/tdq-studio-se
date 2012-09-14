@@ -15,7 +15,6 @@ package org.talend.dataprofiler.core.ui.wizard.indicator;
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.emf.common.util.EList;
-import org.talend.core.model.metadata.builder.database.PluginConstant;
 import org.talend.core.model.properties.Item;
 import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.relational.RelationalFactory;
@@ -80,8 +79,8 @@ public class NewUDIndicatorWizard extends AbstractWizard {
         if (!getParameter().getLanguage().equals(PatternLanguageType.JAVA.getName())) {
             indicatorDefinition.getSqlGenericExpression().add(getExpression());
         } else {
-            TaggedValue classNameTV = TaggedValueHelper.createTaggedValue(PluginConstant.CLASS_NAME_TEXT, ""); //$NON-NLS-1$
-            TaggedValue jarPathTV = TaggedValueHelper.createTaggedValue(PluginConstant.JAR_FILE_PATH, ""); //$NON-NLS-1$
+            TaggedValue classNameTV = TaggedValueHelper.createTaggedValue(TaggedValueHelper.CLASS_NAME_TEXT, ""); //$NON-NLS-1$
+            TaggedValue jarPathTV = TaggedValueHelper.createTaggedValue(TaggedValueHelper.JAR_FILE_PATH, ""); //$NON-NLS-1$
             indicatorDefinition.getTaggedValue().add(classNameTV);
             indicatorDefinition.getTaggedValue().add(jarPathTV);
         }
