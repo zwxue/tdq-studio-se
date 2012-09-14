@@ -183,7 +183,11 @@ public class IndicatorSelectDialog2 extends TrayDialog {
             Indicator indicator = indicatorNode.getIndicatorInstance();
             if (indicator != null) {
                 IndicatorDefinition indicatorDefinition = indicator.getIndicatorDefinition();
-                purposeLabel.setText(PURPOSE + " " + MetadataHelper.getPurpose(indicatorDefinition));
+                if ("".equals(MetadataHelper.getPurpose(indicatorDefinition))) {
+                    purposeLabel.setText(PURPOSE + " " + indicator.getName());
+                } else {
+                    purposeLabel.setText(PURPOSE + " " + MetadataHelper.getPurpose(indicatorDefinition));
+                }
                 String description = DESCRIPTION + " " + MetadataHelper.getDescription(indicatorDefinition);
                 descriptionLabel.setText(description);
                 return;

@@ -15,7 +15,6 @@ package org.talend.dataprofiler.core.ui.grid;
 import org.eclipse.nebula.widgets.grid.Grid;
 import org.eclipse.nebula.widgets.grid.GridColumn;
 import org.eclipse.nebula.widgets.grid.GridItem;
-import org.eclipse.nebula.widgets.grid.IInternalWidget;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
@@ -24,7 +23,6 @@ import org.eclipse.swt.events.MouseTrackListener;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
-import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.talend.dataprofiler.core.ImageLib;
@@ -54,6 +52,8 @@ public class IndicatorSelectGrid extends Grid {
     static final Color lightBlue = new Color(Display.getCurrent(), 200, 220, 240);
 
     static final Image tickImage = ImageLib.getImage(ImageLib.TICK_IMAGE);
+
+    static final Image indImage = ImageLib.getImage(ImageLib.IND_DEFINITION);
 
     static final int COLUMN_WIDTH = 50;
 
@@ -128,9 +128,11 @@ public class IndicatorSelectGrid extends Grid {
         setEmptyCellRenderer(new TdEmptyCellRenderer());
 
         // show fixed row header
-        setRowHeaderRenderer(new TdRowHeaderRenderer());
+        TdRowHeaderRenderer rowHeaderRenderer = new TdRowHeaderRenderer();
+        setRowHeaderRenderer(rowHeaderRenderer);
+        rowHeaderRenderer.setTree(true);
+        rowHeaderRenderer.setWordWrap(false);
         setRowHeaderVisible(true);
-        ((TdRowHeaderRenderer) getRowHeaderRenderer()).setTree(true);
 
         setLinesVisible(true);
         setColumnScrolling(true);
@@ -216,15 +218,15 @@ public class IndicatorSelectGrid extends Grid {
                         parent = parent.getParentItem();
                     }
                     processNodeSelection(null, parent);
-                    return;
+                } else {
+                    if (item.hasChildren() && item.getParentItem() == null) {
+                        item.setExpanded(!item.isExpanded());
+                    }
+                    TdRowHeaderRenderer renderer = ((TdRowHeaderRenderer) getRowHeaderRenderer());
+                    e.x = renderer.getSize().x - 1; // Move into row select cell
+                    onMouseMove(e);
+                    _dialog.updateIndicatorInfo(item);
                 }
-                TdRowHeaderRenderer renderer = ((TdRowHeaderRenderer) getRowHeaderRenderer());
-                renderer.setBounds(getRowHeaderBounds(item));
-                renderer.notify(IInternalWidget.LeftMouseButtonDown, new Point(e.x, e.y), item);
-                e.x = renderer.getSize().x - 1; // Move into row select cell
-                onMouseMove(e);
-                _dialog.updateIndicatorInfo(item);
-
             }
         }
     }
@@ -313,10 +315,6 @@ public class IndicatorSelectGrid extends Grid {
         return false;
     }
 
-    private Rectangle getRowHeaderBounds(GridItem item) {
-        return new Rectangle(0, item.getBounds(0).y, getRowHeaderWidth(), getItemHeight());
-    }
-
     private void tickCell(Point cell, boolean tick) {
         if (!getItem(cell.y).getCheckable(cell.x)) {
             return;
@@ -368,6 +366,8 @@ public class IndicatorSelectGrid extends Grid {
         for (int i = 0; i < indicatorNode.getChildren().length; i++) {
             IIndicatorNode childNode = indicatorNode.getChildren()[i];
             GridItem childItem = new GridItem(currentItem, SWT.NONE);
+            childItem.setImage(indImage);
+
             if (childNode.hasChildren()) {
                 createChildNodes(currentItem, childItem, childNode);
             }
