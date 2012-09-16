@@ -14,7 +14,6 @@ package org.talend.dataprofiler.core.ui.grid;
 
 import org.eclipse.nebula.widgets.grid.GridColumn;
 import org.eclipse.nebula.widgets.grid.GridHeaderRenderer;
-import org.eclipse.nebula.widgets.grid.internal.SortArrowRenderer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
@@ -38,13 +37,7 @@ public class TdColumnHeaderRenderer extends GridHeaderRenderer {
 
     int bottomMargin = 3;
 
-    int arrowMargin = 6;
-
-    int imageSpacing = 3;
-
-    int textOffset = 15;
-
-    private SortArrowRenderer arrowRenderer = new SortArrowRenderer();
+    int imageSpacing;
 
     private TextLayout textLayout;
 
@@ -57,12 +50,16 @@ public class TdColumnHeaderRenderer extends GridHeaderRenderer {
     /** inverse transformation to reset gc. */
     protected Transform _transformInv;
 
+    private double sinRotation;
+
     public TdColumnHeaderRenderer() {
         _transform = new Transform(Display.getCurrent());
         _transformInv = new Transform(Display.getCurrent());
         _transform.rotate(-_rotation);
         _transformInv.rotate(-_rotation);
         _transformInv.invert();
+        sinRotation = Math.sin(_rotation * Math.PI / 180);
+        imageSpacing = (int) (10 / sinRotation);
     }
 
     /**
@@ -78,12 +75,11 @@ public class TdColumnHeaderRenderer extends GridHeaderRenderer {
 
         if (column.getImage() != null) {
             x += column.getImage().getBounds().width + imageSpacing;
-
             y = Math.max(y, topMargin + column.getImage().getBounds().height + bottomMargin);
         }
         if (!isWordWrap()) {
             x += gc.stringExtent(column.getText()).x + rightMargin;
-            y += gc.stringExtent(column.getText()).x * Math.sin(_rotation * Math.PI / 180);
+            y += gc.stringExtent(column.getText()).x * sinRotation;
         } else {
             int plainTextWidth;
             if (wHint == SWT.DEFAULT)
@@ -114,66 +110,41 @@ public class TdColumnHeaderRenderer extends GridHeaderRenderer {
      */
     public void paint(GC gc, Object value) {
 
-        float[] original = { (float) getBounds().x - 2, (float) getBounds().y + (float) getBounds().height - 2 };
         gc.setTransform(_transform);
+
+        float[] original = { (float) getBounds().x - 1, (float) getBounds().y + (float) getBounds().height - 2 };
+        _transformInv.transform(original);
+
         GridColumn column = (GridColumn) value;
 
         // set the font to be used to display the text.
         gc.setFont(column.getHeaderFont());
 
-        boolean flat = (column.getParent().getCellSelectionEnabled() && !column.getMoveable());
-
-        boolean drawSelected = ((isMouseDown() && isHover()));
-
         gc.setBackground(getDisplay().getSystemColor(SWT.COLOR_WIDGET_LIGHT_SHADOW));
 
         if (isSelected()) {
             gc.setBackground(getDisplay().getSystemColor(SWT.COLOR_YELLOW));
-        }
-
-        if (flat && isSelected()) {
-            gc.setBackground(column.getParent().getCellHeaderSelectionBackground());
+            gc.fillRectangle((int) original[0], (int) original[1] + 2, (int) (getBounds().height / sinRotation)
+                    + getBounds().width, (int) (getBounds().width * sinRotation));
         }
 
         int x = leftMargin;
+        int width = getBounds().width - x;
+        width -= rightMargin;
+
+        float[] cords = { (float) (getBounds().x + width / 2 - leftMargin),
+                (float) (getBounds().y + (float) getBounds().height - topMargin) };
+
+        _transformInv.transform(cords);
 
         if (column.getImage() != null) {
-            int y = bottomMargin;
-
-            if (column.getHeaderControl() == null) {
-                y = getBounds().y /* + pushedDrawingOffset */+ getBounds().height - bottomMargin
-                        - column.getImage().getBounds().height;
-            }
-
-            gc.drawImage(column.getImage(), getBounds().x + x /* + pushedDrawingOffset */, y);
-            x += column.getImage().getBounds().width + imageSpacing;
-        }
-
-        int width = getBounds().width - x;
-
-        if (column.getSort() == SWT.NONE) {
-            width -= rightMargin;
-        } else {
-            width -= arrowMargin + arrowRenderer.getSize().x + arrowMargin;
+            gc.drawImage(column.getImage(), (int) cords[0] + leftMargin + imageSpacing, (int) cords[1]);
+            x += column.getImage().getBounds().width;
         }
 
         gc.setForeground(getDisplay().getSystemColor(SWT.COLOR_WIDGET_FOREGROUND));
 
-        int y = bottomMargin;
-
-        if (column.getHeaderControl() == null) {
-            y = getBounds().y + getBounds().height - bottomMargin - gc.getFontMetrics().getHeight();
-        } else {
-            y = getBounds().y + getBounds().height - bottomMargin - gc.getFontMetrics().getHeight()
-                    - computeControlSize(column).y;
-        }
-
         String text = column.getText();
-
-        if (!isWordWrap()) {
-            // text = TextUtils.getShortString(gc, text, width);
-            // y -= gc.getFontMetrics().getHeight();
-        }
 
         if (column.getAlignment() == SWT.RIGHT) {
             int len = gc.stringExtent(text).x;
@@ -187,95 +158,17 @@ public class TdColumnHeaderRenderer extends GridHeaderRenderer {
             }
         }
 
-        float[] cords = { (float) (getBounds().x + width / 2), (float) (getBounds().y + (float) getBounds().height - 6) };
-        _transformInv.transform(cords);
+        gc.drawString(text, (int) cords[0] + x + imageSpacing, (int) cords[1] + topMargin);
 
-        if (!isWordWrap()) {
-            gc.drawString(text, (int) cords[0] + textOffset, (int) cords[1]);
-        } else {
-            getTextLayout(gc, column);
-            textLayout.setWidth(width < 1 ? 1 : width);
-            textLayout.setText(text);
-            y -= textLayout.getBounds().height;
-
-            // remove the first line shift
-            y += gc.getFontMetrics().getHeight();
-
-            if (column.getParent().isAutoHeight()) {
-                column.getParent().recalculateHeader();
-            }
-
-            textLayout.draw(gc, getBounds().x + x /* + pushedDrawingOffset */, y /* + pushedDrawingOffset */);
-        }
-        _transformInv.transform(original);
         gc.setForeground(getDisplay().getSystemColor(SWT.COLOR_WIDGET_NORMAL_SHADOW));
-        gc.drawLine((int) original[0], (int) original[1], (int) original[0] + getBounds().height, (int) original[1]);
+        gc.drawLine((int) (original[0]), (int) (original[1]),
+                (int) (original[0] + getBounds().height / sinRotation - imageSpacing), (int) (original[1]));
 
         gc.setTransform(null);
 
-        if (!flat) {
-
-            if (drawSelected) {
-                gc.setForeground(getDisplay().getSystemColor(SWT.COLOR_WIDGET_NORMAL_SHADOW));
-            } else {
-                gc.setForeground(getDisplay().getSystemColor(SWT.COLOR_WIDGET_HIGHLIGHT_SHADOW));
-            }
-
-            // gc.drawLine(getBounds().x, getBounds().y, getBounds().x
-            // + getBounds().width - 1, getBounds().y);
-            // gc.drawLine(getBounds().x, getBounds().y, getBounds().x,
-            // getBounds().y + getBounds().height - 1);
-
-            if (!drawSelected) {
-                gc.setForeground(getDisplay().getSystemColor(SWT.COLOR_WIDGET_LIGHT_SHADOW));
-                // gc.drawLine(getBounds().x + 1, getBounds().y + 1,
-                // getBounds().x
-                // + getBounds().width - 2, getBounds().y + 1);
-                // gc.drawLine(getBounds().x + 1, getBounds().y + 1,
-                // getBounds().x + 1, getBounds().y + getBounds().height
-                // - 2);
-            }
-
-            if (drawSelected) {
-                gc.setForeground(getDisplay().getSystemColor(SWT.COLOR_WIDGET_NORMAL_SHADOW));
-            } else {
-                gc.setForeground(getDisplay().getSystemColor(SWT.COLOR_WIDGET_DARK_SHADOW));
-            }
-            // gc.drawLine(getBounds().x + getBounds().width - 1, getBounds().y,
-            // getBounds().x + getBounds().width - 1, getBounds().y
-            // + getBounds().height - 1);
-            gc.drawLine(getBounds().x, getBounds().y + getBounds().height - 1, getBounds().x + getBounds().width - 1,
-                    getBounds().y + getBounds().height - 1);
-
-            // if (!drawSelected) {
-            // gc.setForeground(getDisplay().getSystemColor(
-            // SWT.COLOR_WIDGET_NORMAL_SHADOW));
-            // gc.drawLine(getBounds().x + getBounds().width - 2,
-            // getBounds().y + 1, getBounds().x + getBounds().width
-            // - 2, getBounds().y + getBounds().height - 2);
-            // gc.drawLine(getBounds().x + 1, getBounds().y
-            // + getBounds().height - 2, getBounds().x
-            // + getBounds().width - 2, getBounds().y
-            // + getBounds().height - 2);
-            // }
-
-        } else {
-            gc.setForeground(getDisplay().getSystemColor(SWT.COLOR_WIDGET_DARK_SHADOW));
-
-            gc.drawLine(getBounds().x + getBounds().width - 1, getBounds().y, getBounds().x + getBounds().width - 1,
-                    getBounds().y + getBounds().height - 1);
-            gc.drawLine(getBounds().x, getBounds().y + getBounds().height - 1, getBounds().x + getBounds().width - 1,
-                    getBounds().y + getBounds().height - 1);
-        }
-
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public void setDisplay(Display display) {
-        super.setDisplay(display);
-        arrowRenderer.setDisplay(display);
+        gc.setForeground(getDisplay().getSystemColor(SWT.COLOR_WIDGET_FOREGROUND));
+        gc.drawLine(getBounds().x, getBounds().y + getBounds().height - 1, getBounds().x + getBounds().width, getBounds().y
+                + getBounds().height - 1);
     }
 
     /**
@@ -311,11 +204,7 @@ public class TdColumnHeaderRenderer extends GridHeaderRenderer {
             bounds.width = p.x;
         } else {
             int width = getBounds().width - x;
-            if (column.getSort() == SWT.NONE) {
-                width -= rightMargin;
-            } else {
-                width -= arrowMargin + arrowRenderer.getSize().x + arrowMargin;
-            }
+            width -= rightMargin;
             bounds.width = width;
         }
 
@@ -368,15 +257,17 @@ public class TdColumnHeaderRenderer extends GridHeaderRenderer {
         if (rotation < 0 || rotation > 90) {
             throw new IllegalArgumentException("Rotation range 0..90");
         }
-        // if (_rotation != rotation) {
-        disposeTransformations();
-        _rotation = rotation;
-        _transform = new Transform(Display.getCurrent());
-        _transformInv = new Transform(Display.getCurrent());
-        _transform.rotate(-rotation);
-        _transformInv.rotate(-rotation);
-        _transformInv.invert();
-        // }
+        if (_rotation != rotation) {
+            disposeTransformations();
+            _rotation = rotation;
+            _transform = new Transform(Display.getCurrent());
+            _transformInv = new Transform(Display.getCurrent());
+            _transform.rotate(-rotation);
+            _transformInv.rotate(-rotation);
+            _transformInv.invert();
+            sinRotation = Math.sin(_rotation * Math.PI / 180);
+            imageSpacing = (int) (10 / sinRotation);
+        }
     }
 
     /**

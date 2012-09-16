@@ -28,9 +28,11 @@ import org.eclipse.swt.widgets.Display;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.helper.ModelElementIndicatorHelper;
 import org.talend.dataprofiler.core.model.ModelElementIndicator;
+import org.talend.dq.nodes.DBColumnRepNode;
 import org.talend.dq.nodes.indicator.IIndicatorNode;
 import org.talend.dq.nodes.indicator.IndicatorTreeModelBuilder;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
+import org.talend.repository.model.IRepositoryNode;
 
 /**
  * this customized nebula grid is used for indicator selection.
@@ -54,6 +56,8 @@ public class IndicatorSelectGrid extends Grid {
     static final Image tickImage = ImageLib.getImage(ImageLib.TICK_IMAGE);
 
     static final Image indImage = ImageLib.getImage(ImageLib.IND_DEFINITION);
+
+    static final Image pkImage = ImageLib.getImage(ImageLib.PK_ICON);
 
     static final int COLUMN_WIDTH = 50;
 
@@ -80,6 +84,7 @@ public class IndicatorSelectGrid extends Grid {
         GridColumn indicatorLabelColumn = new GridColumn(this, SWT.NONE);
         indicatorLabelColumn.setTree(true);
         indicatorLabelColumn.setWidth(200);
+        indicatorLabelColumn.setText("Indicators");
         getColumn(0).setVisible(false); // hide the label column, but it is actually visible in the fixed column
 
         // select all column
@@ -89,7 +94,7 @@ public class IndicatorSelectGrid extends Grid {
         rowSelectCol.setText("Select All");
         rowSelectCol.setWidth(COLUMN_WIDTH);
         rowSelectCol.setWordWrap(true);
-        rowSelectCol.setResizeable(true);
+        rowSelectCol.setResizeable(false);
         rowSelectCol.setCellSelectionEnabled(true);
         rowSelectCol.setVisible(false); // hide the row select column, it is also visible in the fixed column.
 
@@ -103,7 +108,12 @@ public class IndicatorSelectGrid extends Grid {
             newCol.setData(_modelElementIndicators[i]);
             newCol.setMoveable(true);
             newCol.setResizeable(false);
+            IRepositoryNode repNode = _modelElementIndicators[i].getModelElementRepositoryNode();
+            if (repNode instanceof DBColumnRepNode && ((DBColumnRepNode) repNode).isKey()) {
+                newCol.setImage(pkImage);
+            }
         }
+        recalculateHeader();
 
         // initialize grid contents
         IIndicatorNode[] branchNodes = IndicatorTreeModelBuilder.buildIndicatorCategory();
@@ -218,6 +228,9 @@ public class IndicatorSelectGrid extends Grid {
                         parent = parent.getParentItem();
                     }
                     processNodeSelection(null, parent);
+                    if (item.getParentItem() == null && rowChecked) {
+                        item.setExpanded(false);
+                    }
                 } else {
                     if (item.hasChildren() && item.getParentItem() == null) {
                         item.setExpanded(!item.isExpanded());
