@@ -122,16 +122,11 @@ public class IndicatorSelectDialog2 extends TrayDialog {
         style |= SWT.SINGLE;
 
         grid = new IndicatorSelectGrid(this, comp, style, modelElementIndicators);
-        GridData controlGridData = new GridData();
+        GridData controlGridData = new GridData(SWT.FILL, SWT.FILL, true, true);
         controlGridData.minimumWidth = 650;
         controlGridData.heightHint = 570;
-        controlGridData.widthHint = Math.min(IndicatorSelectGrid.COLUMN_WIDTH * modelElementIndicators.length + 400, 800);
-
-        controlGridData.verticalAlignment = SWT.FILL;
-        controlGridData.grabExcessVerticalSpace = true;
-
-        controlGridData.horizontalAlignment = SWT.FILL;
-        controlGridData.grabExcessHorizontalSpace = true;
+        controlGridData.widthHint = Math.min(IndicatorSelectGrid.COLUMN_WIDTH * modelElementIndicators.length + 400,
+                getParentShell().getClientArea().width - 350);
 
         grid.setLayoutData(controlGridData);
 
