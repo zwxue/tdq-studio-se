@@ -464,7 +464,15 @@ public class Grid extends Canvas
     /**
      * Are we currently dragging a column header?
      */
-    private boolean draggingColumn = false;
+    boolean draggingColumn = false;
+
+    /**
+     * Getter for draggingColumn.
+     * @return the draggingColumn
+     */
+    public boolean isDraggingColumn() {
+        return draggingColumn;
+    }
 
     private GridColumn dragDropBeforeColumn = null;
 
@@ -4779,7 +4787,7 @@ public class Grid extends Canvas
      * @param y mouse y
      * @return true if this event has been consumed.
      */
-    private boolean handleColumnHeaderHoverWhilePushing(int x, int y)
+    boolean handleColumnHeaderHoverWhilePushing(int x, int y)
     {
         GridColumn overThis = overColumnHeader(x, y);
 
@@ -4809,11 +4817,21 @@ public class Grid extends Canvas
                 dragDropBeforeColumn = null;
                 dragDropPointValid = true;
 
-                handleColumnDragging(x);
+                handleColumnDragging(x, y);
             }
         }
 
         return true;
+    }
+
+    /**
+     * handle column dragging.
+     * @param x
+     * @param y
+     * @return true if this event has been consumed.
+     */
+    protected boolean handleColumnDragging(int x, int y) {
+        return handleColumnDragging(x);
     }
 
     /**
@@ -5819,36 +5837,46 @@ public class Grid extends Canvas
 
         if (draggingColumn)
         {
-
-            gc.setAlpha(COLUMN_DRAG_ALPHA);
-
-            columnBeingPushed.getHeaderRenderer().setSelected(false);
-
-            int height = 0;
-
-            if (columnBeingPushed.getColumnGroup() != null)
-            {
-                height = headerHeight - groupHeaderHeight;
-                y = groupHeaderHeight;
-            }
-            else
-            {
-                height = headerHeight;
-                y = 0;
-            }
-
-            columnBeingPushed.getHeaderRenderer()
-                .setBounds(
-                           getColumnHeaderXPosition(columnBeingPushed)
-                               + (currentHeaderDragX - startHeaderDragX), y,
-                           columnBeingPushed.getWidth(), height);
-            columnBeingPushed.getHeaderRenderer().paint(gc, columnBeingPushed);
-            columnBeingPushed.getHeaderRenderer().setSelected(false);
-
-            gc.setAlpha(-1);
-            gc.setAdvanced(false);
+            paintDraggingColumn(gc, getColumnHeaderXPosition(columnBeingPushed) - startHeaderDragX, COLUMN_DRAG_ALPHA);
         }
 
+    }
+
+    /**
+     * paint dragging column.
+     * MOD sizhaoliu TDQ-6010 extract this method so that it can be customized.
+     * @param gc
+     * @param offset 
+     * @param alpha 
+     */
+    protected void paintDraggingColumn(GC gc, int offset, int alpha) {
+        int y = 0;
+        gc.setAlpha(alpha);
+
+        columnBeingPushed.getHeaderRenderer().setSelected(true);
+
+        int height = 0;
+
+        if (columnBeingPushed.getColumnGroup() != null)
+        {
+            height = headerHeight - groupHeaderHeight;
+            y = groupHeaderHeight;
+        }
+        else
+        {
+            height = headerHeight;
+            y = 0;
+        }
+
+        columnBeingPushed.getHeaderRenderer()
+            .setBounds(currentHeaderDragX - columnBeingPushed.getWidth()/2 + offset , y,
+                       columnBeingPushed.getWidth(), height);
+        columnBeingPushed.getHeaderRenderer().paint(gc, columnBeingPushed);
+        columnBeingPushed.getHeaderRenderer().setSelected(false);
+
+        gc.setAlpha(-1);
+        gc.setAdvanced(false);
+        
     }
 
     private void paintFooter(GC gc) {
@@ -7068,7 +7096,7 @@ public class Grid extends Canvas
         {
             if (draggingColumn)
             {
-                handleColumnDragging(e.x);
+                handleColumnDragging(e.x, e.y);
                 return;
             }
 

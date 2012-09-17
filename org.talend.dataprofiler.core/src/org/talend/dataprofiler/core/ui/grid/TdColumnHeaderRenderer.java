@@ -42,7 +42,7 @@ public class TdColumnHeaderRenderer extends GridHeaderRenderer {
     private TextLayout textLayout;
 
     /** rotation of the header text. */
-    protected int _rotation = 35;
+    protected int _rotation;
 
     /** Transformations for rotated text. */
     protected Transform _transform;
@@ -52,6 +52,8 @@ public class TdColumnHeaderRenderer extends GridHeaderRenderer {
 
     private double sinRotation;
 
+    private double cosRotation;
+
     public TdColumnHeaderRenderer() {
         _transform = new Transform(Display.getCurrent());
         _transformInv = new Transform(Display.getCurrent());
@@ -59,6 +61,7 @@ public class TdColumnHeaderRenderer extends GridHeaderRenderer {
         _transformInv.rotate(-_rotation);
         _transformInv.invert();
         sinRotation = Math.sin(_rotation * Math.PI / 180);
+        cosRotation = Math.cos(_rotation * Math.PI / 180);
         imageSpacing = (int) (10 / sinRotation);
     }
 
@@ -112,7 +115,7 @@ public class TdColumnHeaderRenderer extends GridHeaderRenderer {
 
         gc.setTransform(_transform);
 
-        float[] original = { (float) getBounds().x - 1, (float) getBounds().y + (float) getBounds().height - 2 };
+        float[] original = { (float) getBounds().x - 2, (float) getBounds().y + (float) getBounds().height - 2 };
         _transformInv.transform(original);
 
         GridColumn column = (GridColumn) value;
@@ -163,6 +166,9 @@ public class TdColumnHeaderRenderer extends GridHeaderRenderer {
         gc.setForeground(getDisplay().getSystemColor(SWT.COLOR_WIDGET_NORMAL_SHADOW));
         gc.drawLine((int) (original[0]), (int) (original[1]),
                 (int) (original[0] + getBounds().height / sinRotation - imageSpacing), (int) (original[1]));
+        gc.drawLine((int) (original[0]), (int) (original[1] + getBounds().width * sinRotation), (int) (original[0]
+                + getBounds().height / sinRotation + getBounds().width * cosRotation - imageSpacing - leftMargin),
+                (int) (original[1] + getBounds().width * sinRotation));
 
         gc.setTransform(null);
 

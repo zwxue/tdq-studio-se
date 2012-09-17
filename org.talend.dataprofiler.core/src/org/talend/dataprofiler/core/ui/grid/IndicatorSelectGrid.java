@@ -21,6 +21,7 @@ import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.events.MouseMoveListener;
 import org.eclipse.swt.events.MouseTrackListener;
 import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Composite;
@@ -61,6 +62,10 @@ public class IndicatorSelectGrid extends Grid {
 
     static final int COLUMN_WIDTH = 50;
 
+    static final int COLUMN_HEADER_ROTATION = 35;
+
+    private double tanRotation;
+
     /**
      * IndicatorSelectionGrid constructor.
      * 
@@ -76,6 +81,7 @@ public class IndicatorSelectGrid extends Grid {
         _modelElementIndicators = modelElementIndicators;
         addExtraListeners();
         initializeGrid();
+        tanRotation = Math.tan(Math.PI * COLUMN_HEADER_ROTATION / 180);
     }
 
     private void initializeGrid() {
@@ -85,7 +91,7 @@ public class IndicatorSelectGrid extends Grid {
         indicatorLabelColumn.setTree(true);
         indicatorLabelColumn.setWidth(200);
         indicatorLabelColumn.setText("Indicators");
-        getColumn(0).setVisible(false); // hide the label column, but it is actually visible in the fixed column
+        indicatorLabelColumn.setVisible(false); // hide the label column, but it is actually visible in the fixed column
 
         // select all column
         GridColumn rowSelectCol = new GridColumn(this, SWT.CHECK);
@@ -94,14 +100,15 @@ public class IndicatorSelectGrid extends Grid {
         rowSelectCol.setText("Select All");
         rowSelectCol.setWidth(COLUMN_WIDTH);
         rowSelectCol.setWordWrap(true);
-        rowSelectCol.setResizeable(false);
         rowSelectCol.setCellSelectionEnabled(true);
         rowSelectCol.setVisible(false); // hide the row select column, it is also visible in the fixed column.
 
         // database columns
         for (int i = 0; i < _modelElementIndicators.length; i++) {
             GridColumn newCol = new GridColumn(this, SWT.CHECK);
-            newCol.setHeaderRenderer(new TdColumnHeaderRenderer());
+            TdColumnHeaderRenderer headerRenderer = new TdColumnHeaderRenderer();
+            headerRenderer.setRotation(COLUMN_HEADER_ROTATION);
+            newCol.setHeaderRenderer(headerRenderer);
             newCol.setCellRenderer(new TdCellRenderer());
             newCol.setText(ModelElementIndicatorHelper.getModelElementDisplayName(_modelElementIndicators[i]));
             newCol.setWidth(COLUMN_WIDTH);
@@ -150,7 +157,7 @@ public class IndicatorSelectGrid extends Grid {
         setCellSelectionEnabled(false);
 
         setRowsResizeable(false);
-        setItemHeight(25);
+        setItemHeight(23);
         setLineColor(IndicatorSelectGrid.lightBlue);
         setFocusRenderer(null);
 
@@ -173,8 +180,9 @@ public class IndicatorSelectGrid extends Grid {
                 if (e != null) {
                     return;
                 }
-                for (int j = 1; j < getColumns().length; j++) {
-                    getColumn(j).getHeaderRenderer().setSelected(false);
+
+                for (GridColumn column : getVisibleRange().getColumns()) {
+                    column.getHeaderRenderer().setSelected(false);
                 }
 
             }
@@ -278,11 +286,11 @@ public class IndicatorSelectGrid extends Grid {
                 getColumn(j).getHeaderRenderer().setSelected(j == cell.x);
             }
 
-        } else { // row select cells
+        } else { // handle row header/column header hovering
             GridItem currentItem = getItem(new Point(e.x, e.y));
-            if (currentItem != null) {
+            GridVisibleRange range = getVisibleRange();
+            if (currentItem != null) { // row header
                 if (overRowSelect(currentItem, new Point(e.x, e.y))) { // handle hover event of row select cell
-                    GridVisibleRange range = getVisibleRange();
                     for (GridItem item : range.getItems()) {
                         int i = indexOf(item);
                         if (item.getCheckable(0)) {
@@ -304,10 +312,33 @@ public class IndicatorSelectGrid extends Grid {
                             }
                         }
                     }
-                    for (int j = 0; j < getColumnCount(); j++) {
-                        getColumn(j).getHeaderRenderer().setSelected(false);
+                    for (GridColumn column : range.getColumns()) {
+                        column.getHeaderRenderer().setSelected(false);
                     }
                     return;
+                }
+            } else { // column header
+                GridColumn currentColumn = getColumn(new Point(e.x, e.y));
+                if (currentColumn != null && !isDraggingColumn()) {
+                    int currentColumnIndex = indexOf(currentColumn);
+
+                    for (GridItem item : range.getItems()) {
+                        for (GridColumn column : range.getColumns()) {
+                            int j = indexOf(column);
+                            if (j == currentColumnIndex) {
+                                item.setBackground(j, lightYellow);
+                            } else {
+                                item.setBackground(j, getDisplay().getSystemColor(SWT.COLOR_LIST_BACKGROUND));
+                            }
+                        }
+                        item.setBackground(0, IndicatorSelectGrid.gray);
+                        item.setBackground(1, null);
+                    }
+
+                    for (GridColumn column : range.getColumns()) {
+                        int j = indexOf(column);
+                        column.getHeaderRenderer().setSelected(j == currentColumnIndex);
+                    }
                 }
             }
         }
@@ -515,4 +546,28 @@ public class IndicatorSelectGrid extends Grid {
             }
         }
     }
+
+    @Override
+    public GridColumn getColumn(Point point) {
+        if (point.y < getHeaderHeight()) {
+            return super.getColumn(new Point(point.x - (int) ((getHeaderHeight() - point.y) / tanRotation), point.y));
+        } else {
+            return super.getColumn(point);
+        }
+    }
+
+    @Override
+    protected boolean handleColumnDragging(int x, int y) {
+        if (y < getHeaderHeight()) {
+            return super.handleColumnDragging(x - (int) ((getHeaderHeight() - y) / tanRotation), y);
+        } else {
+            return super.handleColumnDragging(x, y);
+        }
+    }
+
+    @Override
+    protected void paintDraggingColumn(GC gc, int offset, int alpha) {
+        super.paintDraggingColumn(gc, 0, 180);
+    }
+
 }

@@ -85,7 +85,7 @@ public class TdCellRenderer extends GridCellRenderer {
                 if (back != null) {
                     gc.setBackground(back);
                 } else {
-                    drawBackground = false;
+                    gc.setBackground(getDisplay().getSystemColor(SWT.COLOR_LIST_BACKGROUND));
                 }
             } else {
                 gc.setBackground(getDisplay().getSystemColor(SWT.COLOR_WIDGET_BACKGROUND));
