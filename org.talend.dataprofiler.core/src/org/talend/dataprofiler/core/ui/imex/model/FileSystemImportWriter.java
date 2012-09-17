@@ -45,6 +45,7 @@ import org.talend.core.model.properties.Property;
 import org.talend.core.model.properties.User;
 import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.model.repository.IRepositoryViewObject;
+import org.talend.core.repository.constants.FileConstants;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.cwm.dependencies.DependenciesHandler;
 import org.talend.cwm.helper.ConnectionHelper;
@@ -685,7 +686,7 @@ public class FileSystemImportWriter implements IImportWriter {
             }
 
             IPath tempBasePath = new Path(tempFolder.getAbsolutePath());
-            IPath projPath = tempBasePath.append("talend.project");//$NON-NLS-1$
+            IPath projPath = tempBasePath.append(FileConstants.LOCAL_PROJECT_FILENAME);
             setBasePath(tempBasePath);
             if (projPath.toFile().exists()) {
                 Object projOBJ = EObjectHelper.retrieveEObject(projPath, PropertiesPackage.eINSTANCE.getProject());

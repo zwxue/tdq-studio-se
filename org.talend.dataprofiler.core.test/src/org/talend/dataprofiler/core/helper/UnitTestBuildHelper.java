@@ -12,12 +12,6 @@
 // ============================================================================
 package org.talend.dataprofiler.core.helper;
 
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-import static org.powermock.api.support.membermodification.MemberMatcher.method;
-import static org.powermock.api.support.membermodification.MemberModifier.stub;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -84,7 +78,7 @@ import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.nodes.ReportFolderRepNode;
 import org.talend.dq.nodes.ReportRepNode;
 import org.talend.dq.nodes.ReportSubFolderRepNode;
-import org.talend.repository.model.IProxyRepositoryFactory;
+import org.talend.repository.ProjectManager;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.IRepositoryNode.ENodeType;
 import org.talend.repository.model.RepositoryConstants;
@@ -93,6 +87,11 @@ import org.talend.resource.EResourceConstant;
 import orgomg.cwmx.analysis.informationreporting.Report;
 
 import common.Logger;
+
+import static org.mockito.Matchers.*;
+import static org.mockito.Mockito.*;
+import static org.powermock.api.support.membermodification.MemberMatcher.*;
+import static org.powermock.api.support.membermodification.MemberModifier.*;
 
 /**
  * created by yyin on 2012-8-22 Detailled comment: include some structure methods which can be used for any tests who
@@ -330,13 +329,14 @@ public class UnitTestBuildHelper {
 
     private static void initRepositoryContext(Project project) {
         RepositoryContext repositoryContext = new RepositoryContext();
+        Context ctx = CoreRuntimePlugin.getInstance().getContext();
+        ctx.putProperty(Context.REPOSITORY_CONTEXT_KEY, repositoryContext);
         repositoryContext.setUser(project.getAuthor());
         repositoryContext.setClearPassword(project.getLabel());
         repositoryContext.setProject(project);
         repositoryContext.setFields(new HashMap<String, String>());
-        repositoryContext.getFields().put(IProxyRepositoryFactory.BRANCH_SELECTION + "_" + project.getTechnicalLabel(), ""); //$NON-NLS-1$ //$NON-NLS-2$
-        Context ctx = CoreRuntimePlugin.getInstance().getContext();
-        ctx.putProperty(Context.REPOSITORY_CONTEXT_KEY, repositoryContext);
+        //        repositoryContext.getFields().put(IProxyRepositoryFactory.BRANCH_SELECTION + "_" + project.getTechnicalLabel(), ""); //$NON-NLS-1$ //$NON-NLS-2$
+        ProjectManager.getInstance().setMainProjectBranch(project, null);
 
         ReponsitoryContextBridge.initialized(project.getEmfProject(), project.getAuthor());
         // MOD zshen for bug tdq-4757 remove this init from corePlugin.start() to here because the initLocal command of

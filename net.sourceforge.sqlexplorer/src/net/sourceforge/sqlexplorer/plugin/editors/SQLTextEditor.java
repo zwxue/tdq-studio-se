@@ -80,6 +80,7 @@ import org.eclipse.ui.texteditor.ITextEditorActionDefinitionIds;
 import org.eclipse.ui.views.navigator.ResourceComparator;
 import org.talend.commons.bridge.ReponsitoryContextBridge;
 import org.talend.core.model.properties.Item;
+import org.talend.utils.io.FilesUtils;
 
 /**
  * TextEditor specialisation; encapsulates functionality specific to editing SQL.
@@ -109,8 +110,6 @@ public class SQLTextEditor extends TextEditor {
             .getBoolean(IConstants.SQL_ASSIST);
 
     private IPreferenceStore store;
-
-    private static final String SVN_FOLDER_NAME = ".svn";
 
     // ADD xqliu 2010-03-23 feature 10675
     private static final String DEFAULT_FILE_EXTENSION = ".sql";
@@ -198,7 +197,7 @@ public class SQLTextEditor extends TextEditor {
                         return true;
                     } else {
                         return defaultValidFolder.getFullPath().isPrefixOf(folder.getFullPath())
-                                && !folder.getName().endsWith(SVN_FOLDER_NAME);
+                                && !FilesUtils.isSVNFolder(folder.getName());
                     }
                 }
                 return false;

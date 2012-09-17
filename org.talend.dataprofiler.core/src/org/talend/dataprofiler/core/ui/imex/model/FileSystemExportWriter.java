@@ -33,6 +33,7 @@ import org.talend.commons.utils.io.FilesUtils;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.properties.Property;
+import org.talend.core.repository.constants.FileConstants;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.xml.TdXmlSchema;
@@ -180,7 +181,7 @@ public class FileSystemExportWriter implements IExportWriter {
      * [])
      */
     public void finish(ItemRecord[] records) throws IOException, CoreException {
-        IFile projFile = ResourceManager.getRootProject().getFile("talend.project");//$NON-NLS-1$ 
+        IFile projFile = ResourceManager.getRootProject().getFile(FileConstants.LOCAL_PROJECT_FILENAME);
         writeSysFile(projFile);
 
         IFile definitonFile = DefinitionHandler.getTalendDefinitionFile();

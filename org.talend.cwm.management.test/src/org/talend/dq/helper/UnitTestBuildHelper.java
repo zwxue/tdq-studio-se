@@ -55,7 +55,7 @@ import org.talend.core.repository.utils.ProjectHelper;
 import org.talend.core.repository.utils.XmiResourceManager;
 import org.talend.core.runtime.CoreRuntimePlugin;
 import org.talend.repository.ProjectManager;
-import org.talend.repository.model.IProxyRepositoryFactory;
+import org.talend.repository.ProjectManager;
 import org.talend.repository.model.IRepositoryNode.ENodeType;
 import org.talend.repository.model.RepositoryConstants;
 import org.talend.repository.model.RepositoryNode;
@@ -345,13 +345,15 @@ public class UnitTestBuildHelper {
      */
     private static void initRepositoryContext(Project project) {
         RepositoryContext repositoryContext = new RepositoryContext();
+        Context ctx = CoreRuntimePlugin.getInstance().getContext();
+        ctx.putProperty(Context.REPOSITORY_CONTEXT_KEY, repositoryContext);
+
         repositoryContext.setUser(project.getAuthor());
         repositoryContext.setClearPassword(project.getLabel());
         repositoryContext.setProject(project);
         repositoryContext.setFields(new HashMap<String, String>());
-        repositoryContext.getFields().put(IProxyRepositoryFactory.BRANCH_SELECTION + "_" + project.getTechnicalLabel(), ""); //$NON-NLS-1$ //$NON-NLS-2$
-        Context ctx = CoreRuntimePlugin.getInstance().getContext();
-        ctx.putProperty(Context.REPOSITORY_CONTEXT_KEY, repositoryContext);
+        //        repositoryContext.getFields().put(IProxyRepositoryFactory.BRANCH_SELECTION + "_" + project.getTechnicalLabel(), ""); //$NON-NLS-1$ //$NON-NLS-2$
+        ProjectManager.getInstance().setMainProjectBranch(project, null);
 
         ReponsitoryContextBridge.initialized(project.getEmfProject(), project.getAuthor());
         SQLExplorerPlugin.getDefault().setRootProject(ReponsitoryContextBridge.getRootProject());
