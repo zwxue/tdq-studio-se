@@ -32,6 +32,7 @@ public class MigrationPlugin implements BundleActivator {
      * 
      * @see org.osgi.framework.BundleActivator#start(org.osgi.framework.BundleContext)
      */
+    @Override
     public void start(BundleContext context) throws Exception {
         this.bundle = context.getBundle();
         plugin = this;
@@ -42,6 +43,7 @@ public class MigrationPlugin implements BundleActivator {
      * 
      * @see org.osgi.framework.BundleActivator#stop(org.osgi.framework.BundleContext)
      */
+    @Override
     public void stop(BundleContext context) throws Exception {
         this.bundle = null;
         plugin = null;
@@ -62,7 +64,7 @@ public class MigrationPlugin implements BundleActivator {
      * @return
      */
     public ProductVersion getProductVersion() {
-        String version = System.getProperty("talend.studio.version"); //$NON-NLS-1$
+        String version = System.getProperty("studio.version"); //$NON-NLS-1$
         if (version == null || "".equals(version.trim())) { //$NON-NLS-1$
             version = (String) bundle.getHeaders().get(org.osgi.framework.Constants.BUNDLE_VERSION);
         }
