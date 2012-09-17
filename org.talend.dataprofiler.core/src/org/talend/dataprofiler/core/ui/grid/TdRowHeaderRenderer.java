@@ -205,6 +205,8 @@ public class TdRowHeaderRenderer extends GridCellRenderer {
         if (item.getCheckable(1)) {
             if (item.getBackground(1) != null) {
                 gc.setBackground(item.getBackground(1));
+            } else {
+                gc.setBackground(getDisplay().getSystemColor(SWT.COLOR_LIST_BACKGROUND));
             }
             gc.fillRectangle(getBounds().x + getBounds().width - 51, getBounds().y, 50, getBounds().height);
             if (item.getChecked(1)) {

@@ -179,41 +179,6 @@ public class TdColumnHeaderRenderer extends GridHeaderRenderer {
     }
 
     /**
-     * {@inheritDoc}
-     */
-    public Rectangle getTextBounds(Object value, boolean preferred) {
-        GridColumn column = (GridColumn) value;
-
-        int x = leftMargin;
-
-        if (column.getImage() != null) {
-            x += column.getImage().getBounds().width + imageSpacing;
-        }
-
-        GC gc = new GC(column.getParent());
-        gc.setFont(column.getParent().getFont());
-        int y = getBounds().height - bottomMargin - gc.getFontMetrics().getHeight();
-
-        Rectangle bounds = new Rectangle(x, y, 0, 0);
-
-        Point p = gc.stringExtent(column.getText());
-
-        bounds.height = p.y;
-
-        if (preferred) {
-            bounds.width = p.x;
-        } else {
-            int width = getBounds().width - x;
-            width -= rightMargin;
-            bounds.width = width;
-        }
-
-        gc.dispose();
-
-        return bounds;
-    }
-
-    /**
      * @return the bounds reserved for the control
      */
     protected Rectangle getControlBounds(Object value, boolean preferred) {

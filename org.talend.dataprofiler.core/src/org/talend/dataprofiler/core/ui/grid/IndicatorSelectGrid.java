@@ -393,35 +393,28 @@ public class IndicatorSelectGrid extends Grid {
 
             boolean hasCheckableInRow = false;
 
-            for (int j = 0; j < getColumnCount(); j++) {
+            for (int j = 2; j < getColumnCount(); j++) { // ignore indicator label column and row select column
 
                 IndicatorEnum indicatorEnum = childNode.getIndicatorEnum();
-                if (j == 0) {
-                    // Indicator title column
-                    continue;
-                } else if (j == 1/* && grid.getColumnCount() > 2 */) {
-                    // "Select All" column
+
+                // DB columns
+                ModelElementIndicator meIndicator = null;
+                if (j - 2 < _modelElementIndicators.length) {
+                    meIndicator = _modelElementIndicators[j - 2];
                 } else {
+                    meIndicator = _modelElementIndicators[0];
+                }
 
-                    // DB columns
-                    ModelElementIndicator meIndicator = null;
-                    if (j - 2 < _modelElementIndicators.length) {
-                        meIndicator = _modelElementIndicators[j - 2];
-                    } else {
-                        meIndicator = _modelElementIndicators[0];
-                    }
+                // Enable/disable the check box
+                boolean isMatch = _dialog.isMatchCurrentIndicator(meIndicator, childNode);
+                childItem.setCheckable(j, isMatch);
 
-                    // Enable/disable the check box
-                    boolean isMatch = _dialog.isMatchCurrentIndicator(meIndicator, childNode);
-                    childItem.setCheckable(j, isMatch);
-
-                    if (isMatch) {
-                        hasCheckableInRow = true;
-                        hasCheckableInColumn[j] = true;
-                        // Check the box if it is already selected
-                        if (meIndicator != null && meIndicator.tempContains(indicatorEnum)) {
-                            childItem.setChecked(j, true);
-                        }
+                if (isMatch) {
+                    hasCheckableInRow = true;
+                    hasCheckableInColumn[j] = true;
+                    // Check the box if it is already selected
+                    if (meIndicator != null && meIndicator.tempContains(indicatorEnum)) {
+                        childItem.setChecked(j, true);
                     }
                 }
             }
