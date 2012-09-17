@@ -57,6 +57,7 @@ import org.talend.dataprofiler.core.ui.imex.model.IImportWriter;
 import org.talend.dataprofiler.core.ui.imex.model.ImportWriterFactory;
 import org.talend.dataprofiler.core.ui.imex.model.ItemRecord;
 import org.talend.dataprofiler.core.ui.progress.ProgressUI;
+import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.helper.ReportUtils;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
@@ -351,8 +352,9 @@ public class ImportWizardPage extends WizardPage {
                 ModelElement element = record.getDependencyMap().get(depFile);
 
                 ItemRecord findRecord = ItemRecord.findRecord(depFile);
-
-                String dptLabel = element != null ? element.getName() : depFile.getName();
+                // MOD msjian TDQ-5909: modify to display label name
+                String dptLabel = element != null ? PropertyHelper.getProperty(element).getLabel() : depFile.getName();
+                // TDQ-5909~
                 if (findRecord == null || !repositoryTree.getChecked(findRecord)) {
                     dErrors.add("\"" + record.getName() + "\" miss dependency :" + dptLabel);
                 }

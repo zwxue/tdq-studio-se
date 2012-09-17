@@ -29,6 +29,7 @@ import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dq.factory.ModelElementFileFactory;
 import org.talend.dq.helper.EObjectHelper;
+import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.repository.model.IRepositoryNode;
 import orgomg.cwm.objectmodel.core.Dependency;
@@ -437,11 +438,14 @@ public class DeleteModelElementConfirmDialog {
                     } else if (obj instanceof IFile) {
                         IFile file = (IFile) obj;
                         ModelElement modelElement = ModelElementFileFactory.getModelElement(file);
-
-                        String name = modelElement != null ? modelElement.getName() : file.getName();
+                        // MOD msjian TDQ-5909: modify to display label name
+                        String name = modelElement != null ? PropertyHelper.getProperty((ModelElement) obj).getLabel()
+                                : file.getName();
                         return REQUIRES + PluginConstant.SPACE_STRING + "<<" + name + ">>";//$NON-NLS-1$ //$NON-NLS-2$
                     }
-                    return REQUIRES + PluginConstant.SPACE_STRING + "<<" + ((ModelElement) obj).getName() + ">>"; //$NON-NLS-1$ //$NON-NLS-2$
+                    return REQUIRES + PluginConstant.SPACE_STRING
+                            + "<<" + PropertyHelper.getProperty((ModelElement) obj).getLabel() + ">>"; //$NON-NLS-1$ //$NON-NLS-2$
+                    // TDQ-5909~
                 }
             };
         }

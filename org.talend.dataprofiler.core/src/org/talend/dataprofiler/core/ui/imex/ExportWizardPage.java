@@ -49,6 +49,7 @@ import org.talend.dataprofiler.core.ui.imex.model.EImexType;
 import org.talend.dataprofiler.core.ui.imex.model.ExportWriterFactory;
 import org.talend.dataprofiler.core.ui.imex.model.IExportWriter;
 import org.talend.dataprofiler.core.ui.imex.model.ItemRecord;
+import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.helper.ReportUtils;
 import org.talend.resource.ResourceManager;
 import orgomg.cwm.objectmodel.core.ModelElement;
@@ -321,7 +322,9 @@ public class ExportWizardPage extends WizardPage {
             for (File depFile : dependencyMap.keySet()) {
                 if (!repositoryTree.getChecked(ItemRecord.findRecord(depFile))) {
                     ModelElement element = dependencyMap.get(depFile);
-                    String fileName = element != null ? element.getName() : depFile.getName();
+                    // MOD msjian TDQ-5909: modify to display label name
+                    String fileName = element != null ? PropertyHelper.getProperty(element).getLabel() : depFile.getName();
+                    // TDQ-5909~
                     errors.add("\"" + record.getName() + "\" miss dependency : " + fileName);//$NON-NLS-1$ //$NON-NLS-2$ 
                 }
             }
