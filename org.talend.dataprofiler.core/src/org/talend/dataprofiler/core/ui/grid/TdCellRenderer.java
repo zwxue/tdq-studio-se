@@ -168,6 +168,13 @@ public class TdCellRenderer extends GridCellRenderer {
                 gc.drawRectangle(focusRect);
             }
         }
+
+        if (item.getGrayed(getColumn())) {
+            gc.setBackground(getDisplay().getSystemColor(SWT.COLOR_LIST_BACKGROUND));
+            gc.setAlpha(128);
+            gc.fillRectangle(getBounds().x, getBounds().y, getBounds().width, getBounds().height);
+            gc.setAlpha(-1);
+        }
     }
 
     /**

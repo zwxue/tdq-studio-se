@@ -217,6 +217,13 @@ public class TdRowHeaderRenderer extends GridCellRenderer {
                 gc.fillRectangle(getBounds().x + getBounds().width - 51, getBounds().y, 50, getBounds().height);
                 gc.drawImage(rowSelectImage, getBounds().x + 4 + getBounds().width - 50, y);
             }
+
+            if (item.getGrayed(1)) {
+                gc.setBackground(getDisplay().getSystemColor(SWT.COLOR_LIST_BACKGROUND));
+                gc.setAlpha(128);
+                gc.fillRectangle(getBounds().x + getBounds().width - 51, getBounds().y, 50, getBounds().height);
+                gc.setAlpha(-1);
+            }
         } else {
             gc.setBackground(IndicatorSelectGrid.gray);
             gc.fillRectangle(getBounds().x + getBounds().width - 51, getBounds().y, 50, getBounds().height);

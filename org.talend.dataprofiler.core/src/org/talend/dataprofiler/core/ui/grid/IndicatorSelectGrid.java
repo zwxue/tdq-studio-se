@@ -219,7 +219,10 @@ public class IndicatorSelectGrid extends Grid {
         Point cell = getCell(new Point(e.x, e.y));
         if (cell != null) {
             boolean checked = getItem(cell.y).getChecked(cell.x);
-            tickCell(cell, checked);
+            boolean grayed = getItem(cell.y).getGrayed(cell.x);
+            // Note: the "checked" value here is the opposite of the actual one because the mouse down event has been
+            // handled once by the listener of the super class. That's why we don't use "!checked" here.
+            tickCell(cell, checked || grayed);
             GridItem parent = getItem(cell.y);
             while (parent.getParentItem() != null) {
                 parent = parent.getParentItem();
@@ -230,13 +233,14 @@ public class IndicatorSelectGrid extends Grid {
             if (e.button == 1 && item != null) {
                 if (overRowSelect(item, new Point(e.x, e.y))) {
                     boolean rowChecked = item.getChecked(1);
-                    tickCell(new Point(1, getIndexOfItem(item)), !rowChecked);
+                    boolean rowGrayed = item.getGrayed(1);
+                    tickCell(new Point(1, getIndexOfItem(item)), !rowChecked || rowGrayed);
                     GridItem parent = item;
                     while (parent.getParentItem() != null) {
                         parent = parent.getParentItem();
                     }
                     processNodeSelection(null, parent);
-                    if (item.getParentItem() == null && rowChecked) {
+                    if (item.getParentItem() == null && rowChecked && !rowGrayed) {
                         item.setExpanded(false);
                     }
                 } else {
@@ -495,6 +499,10 @@ public class IndicatorSelectGrid extends Grid {
                         hasCheckedInRow = true;
                         hasCheckedInColumn[j] = true;
                         expanded = true;
+                        if (childItem.getGrayed(j)) {
+                            allCheckedInRow = false;
+                            allCheckedInColumn[j] = false;
+                        }
                     } else {
                         if (childItem.getCheckable(j)) {
                             allCheckedInRow = false;
@@ -502,7 +510,8 @@ public class IndicatorSelectGrid extends Grid {
                         }
                     }
                 }
-                childItem.setChecked(1, hasCheckedInRow && allCheckedInRow);
+                childItem.setChecked(1, hasCheckedInRow);
+                childItem.setGrayed(1, hasCheckedInRow && !allCheckedInRow);
 
                 if (expanded) {
                     currentItem.setExpanded(true);
@@ -517,16 +526,23 @@ public class IndicatorSelectGrid extends Grid {
             boolean entireCategoryChecked = true;
             for (int j = 2; j < getColumnCount(); j++) {
                 if (currentItem.getCheckable(j)) {
-                    if (allCheckedInColumn[j]) {
+                    if(hasCheckedInColumn[j]){
+                        hasCheckedInColumn[1] = true;
                         currentItem.setChecked(j, true);
-                    } else {
+                    }else{
                         currentItem.setChecked(j, false);
+                    }
+                    if (allCheckedInColumn[j]) {
+                        currentItem.setGrayed(j, false);
+                    } else {
+                        currentItem.setGrayed(j, true);
                         entireCategoryChecked = false;
                     }
                 }
             }
             if (currentItem.getCheckable(1)) {
-                currentItem.setChecked(1, entireCategoryChecked);
+                currentItem.setChecked(1, hasCheckedInColumn[1]);
+                currentItem.setGrayed(1, !entireCategoryChecked);
             }
         }
     }
