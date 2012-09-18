@@ -43,7 +43,6 @@ import org.eclipse.ui.model.WorkbenchContentProvider;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.commons.ui.runtime.exception.ExceptionHandler;
 import org.talend.commons.utils.WorkspaceUtils;
-import org.talend.core.model.metadata.builder.database.PluginConstant;
 import org.talend.core.model.properties.Item;
 import org.talend.cwm.dependencies.DependenciesHandler;
 import org.talend.cwm.helper.TaggedValueHelper;
@@ -158,7 +157,7 @@ public final class UDIUtils {
 
                 // LocalRepositoryFactory.getInstance().getLastVersion(ProjectManager.getInstance().getCurrentProject(),
                 // EcoreUtil.getID(udi));
-                RepositoryNode node = (RepositoryNode) RepositoryNodeHelper.recursiveFind(udid);
+                RepositoryNode node = RepositoryNodeHelper.recursiveFind(udid);
                 if (RepositoryNodeHelper.canOpenEditor(node)) {
                     new OpenItemEditorAction(node).run();
                 }
@@ -470,7 +469,7 @@ public final class UDIUtils {
             }
             // ADD end
 
-            TaggedValue tv = TaggedValueHelper.getTaggedValue(PluginConstant.JAR_FILE_PATH, indiDef.getTaggedValue());
+            TaggedValue tv = TaggedValueHelper.getTaggedValue(TaggedValueHelper.JAR_FILE_PATH, indiDef.getTaggedValue());
             if (tv == null) {
                 continue;
             }

@@ -371,7 +371,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
     private boolean checkJavaUDIBeforeOpen() {
         EList<TaggedValue> tvs = definition.getTaggedValue();
         for (TaggedValue tv : tvs) {
-            if (tv.getTag().equals(PluginConstant.CLASS_NAME_TEXT) || tv.getTag().equals(PluginConstant.JAR_FILE_PATH)) {
+            if (tv.getTag().equals(TaggedValueHelper.CLASS_NAME_TEXT) || tv.getTag().equals(TaggedValueHelper.JAR_FILE_PATH)) {
                 return true;
             }
         }
@@ -682,6 +682,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
         addButton.setLayoutData(labelGd);
         addButton.addSelectionListener(new SelectionAdapter() {
 
+            @Override
             public void widgetSelected(SelectionEvent e) {
                 remainDBTypeListCM.clear();
                 remainDBTypeListCM.addAll(allDBTypeList);
@@ -739,6 +740,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
         }
         combo.addSelectionListener(new SelectionAdapter() {
 
+            @Override
             public void widgetSelected(SelectionEvent e) {
                 String lang = combo.getText();
                 charactersMapping.setLanguage(PatternLanguageType.findLanguageByName(lang));
@@ -917,6 +919,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
         }
         combo.addSelectionListener(new SelectionAdapter() {
 
+            @Override
             public void widgetSelected(SelectionEvent e) {
                 String lang = combo.getText();
                 aggregateDateExpression.setLanguage(PatternLanguageType.findLanguageByName(lang));
@@ -1056,6 +1059,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
         addButton.setLayoutData(labelGd);
         addButton.addSelectionListener(new SelectionAdapter() {
 
+            @Override
             public void widgetSelected(SelectionEvent e) {
                 remainDBTypeListAF.clear();
                 remainDBTypeListAF.addAll(allDBTypeList);
@@ -1289,11 +1293,11 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
         String classNameStr = null;
         String jarPathStr = "";//$NON-NLS-1$
         for (TaggedValue tv : tvs) {
-            if (tv.getTag().equals(PluginConstant.CLASS_NAME_TEXT)) {
+            if (tv.getTag().equals(TaggedValueHelper.CLASS_NAME_TEXT)) {
                 classNameStr = tv.getValue();
                 continue;
             }
-            if (tv.getTag().equals(PluginConstant.JAR_FILE_PATH)) {
+            if (tv.getTag().equals(TaggedValueHelper.JAR_FILE_PATH)) {
                 jarPathStr = tv.getValue();
             }
         }
@@ -1337,6 +1341,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
         button.addSelectionListener(new SelectionAdapter() {
 
             // MOD by zshen for bug 18724 2011.02.23
+            @Override
             public void widgetSelected(SelectionEvent e) {
                 // MOD msjian 2011-8-9 TDQ-3199 fixed: define a new method use the exsit sourse, because there are two
                 // places used the same sourse
@@ -1354,8 +1359,8 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
             }
 
         });
-        javaCombo.setData(PluginConstant.CLASS_NAME_TEXT, classNameText);
-        javaCombo.setData(PluginConstant.JAR_FILE_PATH, jarPathText);
+        javaCombo.setData(TaggedValueHelper.CLASS_NAME_TEXT, classNameText);
+        javaCombo.setData(TaggedValueHelper.JAR_FILE_PATH, jarPathText);
 
         createExpressionDelButton(detailComp, javaCombo);
 
@@ -1589,6 +1594,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
      */
     private class LangCombSelectionListener extends SelectionAdapter {
 
+        @Override
         public void widgetSelected(SelectionEvent e) {
             CCombo combo = (CCombo) e.getSource();
             String lang = combo.getText();
@@ -1745,6 +1751,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
         button.addSelectionListener(new SelectionAdapter() {
 
             // MOD by zshen for bug 18724 2011.02.23
+            @Override
             public void widgetSelected(SelectionEvent e) {
                 // MOD msjian 2011-8-9 TDQ-3199 fixed: define a new method use the exsit sourse, because there are two
                 // places used the same sourse
@@ -1761,8 +1768,8 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
 
             }
         });
-        javaCombo.setData(PluginConstant.CLASS_NAME_TEXT, classNameText);
-        javaCombo.setData(PluginConstant.JAR_FILE_PATH, jarPathText);
+        javaCombo.setData(TaggedValueHelper.CLASS_NAME_TEXT, classNameText);
+        javaCombo.setData(TaggedValueHelper.JAR_FILE_PATH, jarPathText);
         createExpressionDelButton(detailComp, javaCombo);
         GridDataFactory.fillDefaults().align(SWT.FILL, SWT.FILL).grab(true, false).applyTo(detailComp);
         detailComp.getParent().layout();
@@ -1942,6 +1949,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
         addButton.addSelectionListener(new SelectionAdapter() {
 
             // MOD mzhao feature 11128 Be able to add Java UDI, 2010-01-27
+            @Override
             public void widgetSelected(SelectionEvent e) {
                 // MOD xqliu 2010-03-23 feature 11201
                 // rebuildRemainDBTypeList();
@@ -2070,20 +2078,20 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
             if (javaUIDCombo != null) {
                 boolean isNewTaggedValue = true;
                 for (TaggedValue tv : tvs) {
-                    if (tv.getTag().equals(PluginConstant.CLASS_NAME_TEXT)) {
-                        tv.setValue(((Text) javaUIDCombo.getData(PluginConstant.CLASS_NAME_TEXT)).getText());
+                    if (tv.getTag().equals(TaggedValueHelper.CLASS_NAME_TEXT)) {
+                        tv.setValue(((Text) javaUIDCombo.getData(TaggedValueHelper.CLASS_NAME_TEXT)).getText());
                         isNewTaggedValue = false;
                         continue;
                     }
-                    if (tv.getTag().equals(PluginConstant.JAR_FILE_PATH)) {
-                        tv.setValue(((Text) javaUIDCombo.getData(PluginConstant.JAR_FILE_PATH)).getText());
+                    if (tv.getTag().equals(TaggedValueHelper.JAR_FILE_PATH)) {
+                        tv.setValue(((Text) javaUIDCombo.getData(TaggedValueHelper.JAR_FILE_PATH)).getText());
                     }
                 }
                 if (isNewTaggedValue) {
-                    TaggedValue classNameTV = TaggedValueHelper.createTaggedValue(PluginConstant.CLASS_NAME_TEXT,
-                            ((Text) javaUIDCombo.getData(PluginConstant.CLASS_NAME_TEXT)).getText());
-                    TaggedValue jarPathTV = TaggedValueHelper.createTaggedValue(PluginConstant.JAR_FILE_PATH,
-                            ((Text) javaUIDCombo.getData(PluginConstant.JAR_FILE_PATH)).getText());
+                    TaggedValue classNameTV = TaggedValueHelper.createTaggedValue(TaggedValueHelper.CLASS_NAME_TEXT,
+                            ((Text) javaUIDCombo.getData(TaggedValueHelper.CLASS_NAME_TEXT)).getText());
+                    TaggedValue jarPathTV = TaggedValueHelper.createTaggedValue(TaggedValueHelper.JAR_FILE_PATH,
+                            ((Text) javaUIDCombo.getData(TaggedValueHelper.JAR_FILE_PATH)).getText());
                     definition.getTaggedValue().add(classNameTV);
                     definition.getTaggedValue().add(jarPathTV);
                 }
@@ -2092,11 +2100,11 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
                 TaggedValue tvCN = null;
                 TaggedValue tvJARP = null;
                 for (TaggedValue tv : tvs) {
-                    if (tv.getTag().equals(PluginConstant.CLASS_NAME_TEXT)) {
+                    if (tv.getTag().equals(TaggedValueHelper.CLASS_NAME_TEXT)) {
                         tvCN = tv;
                         continue;
                     }
-                    if (tv.getTag().equals(PluginConstant.JAR_FILE_PATH)) {
+                    if (tv.getTag().equals(TaggedValueHelper.JAR_FILE_PATH)) {
                         tvJARP = tv;
                     }
                 }
@@ -2152,18 +2160,9 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
             rc = UDIHelper.validate(definition);
         }
 
-        // MOD by zshen for bug 18724 2011.02.23
-        // EMFUtil.saveSingleResource(definition.eResource());
-        // CorePlugin.getDefault().refreshDQView(RepositoryNodeHelper.getLibrariesFolderNode(EResourceConstant.INDICATORS));
-        // RepositoryNode indicatorNode = RepositoryNodeHelper.recursiveFind(definition);
-        // if (indicatorNode != null) {
-        // ((TDQIndicatorDefinitionItem) indicatorNode.getObject().getProperty().getItem())
-        // .setIndicatorDefinition(definition);
-        // }
         if (this.definitionItem != null) {
             this.definitionItem.setIndicatorDefinition(definition);
         }
-        // IndicatorResourceFileHelper.getInstance().save(definition);
         ElementWriterFactory.getInstance().createIndicatorDefinitionWriter().save(definitionItem);
         this.isDirty = false;
         if (!rc.isOk()) {
@@ -2227,7 +2226,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
         // TODO Auto-generated method stub
         EList<TaggedValue> tvs = definition.getTaggedValue();
         for (TaggedValue tv : tvs) {
-            if (tv.getTag().equals(PluginConstant.CLASS_NAME_TEXT)) {
+            if (tv.getTag().equals(TaggedValueHelper.CLASS_NAME_TEXT)) {
                 return true;
             }
         }
@@ -2306,14 +2305,13 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
      * @param jarPath
      */
     private void volidateNameAndPath(String className, String jarPath, EList<TaggedValue> tvs) {
-        // TODO Auto-generated method stub
         if (className == null || jarPath == null) {
             for (TaggedValue tv : tvs) {
-                if (tv.getTag().equals(PluginConstant.CLASS_NAME_TEXT)) {
+                if (tv.getTag().equals(TaggedValueHelper.CLASS_NAME_TEXT)) {
                     this.setClassNameForSave(tv.getValue());
                     continue;
                 }
-                if (tv.getTag().equals(PluginConstant.JAR_FILE_PATH)) {
+                if (tv.getTag().equals(TaggedValueHelper.JAR_FILE_PATH)) {
                     this.setJarPathForSave(tv.getValue());
                 }
             }
@@ -2608,6 +2606,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
             return false;
         }
 
+        @Override
         public int hashCode() {
             return this.getLanguage().concat(this.getBody()).hashCode();
         }
@@ -2845,6 +2844,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
             return false;
         }
 
+        @Override
         public int hashCode() {
             return this.getLanguage().concat(this.getBody()).hashCode();
         }
