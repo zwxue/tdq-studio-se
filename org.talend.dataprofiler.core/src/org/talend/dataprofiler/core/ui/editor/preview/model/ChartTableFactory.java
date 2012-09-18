@@ -54,6 +54,7 @@ import org.talend.dataquality.analysis.AnalysisType;
 import org.talend.dataquality.analysis.AnalyzedDataSet;
 import org.talend.dataquality.analysis.ExecutionLanguage;
 import org.talend.dataquality.domain.pattern.ExpressionType;
+import org.talend.dataquality.helpers.IndicatorHelper;
 import org.talend.dataquality.indicators.DatePatternFreqIndicator;
 import org.talend.dataquality.indicators.DistinctCountIndicator;
 import org.talend.dataquality.indicators.DuplicateCountIndicator;
@@ -150,7 +151,7 @@ public final class ChartTableFactory {
 
                                 // ADD msjian 2012-2-9 TDQ-4470: add the create column analysis menu using the join
                                 // condition columns
-                                if (indicator instanceof WhereRuleIndicator) {
+                                if (IndicatorHelper.isWhereRuleIndicatorNotAide(indicator)) {
                                     WhereRuleIndicator ind = (WhereRuleIndicator) indicator;
                                     if (rowCount.doubleValue() < ind.getUserCount().doubleValue()) {
                                         showExtraMenu = true;
@@ -458,7 +459,7 @@ public final class ChartTableFactory {
         String query = itemEntity.getQuery();
 
         if (analysis.getParameters().getExecutionLanguage().compareTo(ExecutionLanguage.SQL) == 0) {
-            query = query.substring(query.indexOf('=') + 3, query.lastIndexOf(')') - 1);//$NON-NLS-1$ //$NON-NLS-2$
+            query = query.substring(query.indexOf('=') + 3, query.lastIndexOf(')') - 1);
         }
         String regex = pattTransformer.getRegexp(query);
         IFolder folder = ResourceManager.getPatternRegexFolder();
@@ -491,14 +492,17 @@ public final class ChartTableFactory {
     public static boolean isDUDIndicator(Indicator indicator) {
         IndicatorsSwitch<Indicator> iSwitch = new IndicatorsSwitch<Indicator>() {
 
+            @Override
             public Indicator caseDuplicateCountIndicator(DuplicateCountIndicator object) {
                 return object;
             };
 
+            @Override
             public Indicator caseUniqueCountIndicator(UniqueCountIndicator object) {
                 return object;
             };
 
+            @Override
             public Indicator caseDistinctCountIndicator(DistinctCountIndicator object) {
                 return object;
             };

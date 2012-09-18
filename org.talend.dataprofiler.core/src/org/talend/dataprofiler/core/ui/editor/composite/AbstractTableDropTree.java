@@ -22,7 +22,7 @@ import org.talend.dataprofiler.core.model.ModelElementIndicator;
 import org.talend.dataprofiler.core.ui.editor.preview.TableIndicatorUnit;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.indicators.Indicator;
-import org.talend.dataquality.indicators.sql.impl.WhereRuleIndicatorImpl;
+import org.talend.dataquality.indicators.sql.WhereRuleIndicator;
 import org.talend.repository.model.IRepositoryNode;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.resource.relational.NamedColumnSet;
@@ -89,7 +89,7 @@ public abstract class AbstractTableDropTree extends AbstractColumnDropTree {
     protected void removeDependency(Analysis analysis, TableIndicatorUnit unit) {
         List<ModelElement> reomveElements = new ArrayList<ModelElement>();
         Indicator indicator = unit.getIndicator();
-        if (indicator instanceof WhereRuleIndicatorImpl) {
+        if (indicator instanceof WhereRuleIndicator) {
             reomveElements.add(indicator.getIndicatorDefinition());
         }
         DependenciesHandler.getInstance().removeDependenciesBetweenModels(analysis, reomveElements);
