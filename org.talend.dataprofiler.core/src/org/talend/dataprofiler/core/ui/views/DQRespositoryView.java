@@ -25,9 +25,7 @@ import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspace;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -98,10 +96,10 @@ import org.talend.core.model.metadata.builder.database.PluginConstant;
 import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.properties.DatabaseConnectionItem;
 import org.talend.core.model.properties.FolderItem;
+import org.talend.core.model.properties.Item;
 import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
-import org.talend.cwm.compare.DQStructureComparer;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
@@ -246,11 +244,13 @@ public class DQRespositoryView extends CommonNavigator {
         // initialized drivers in sql explorer.
         SQLExplorerPlugin.getDefault().initAllDrivers();
         try {
-            for (ConnectionItem item : ProxyRepositoryFactory.getInstance().getMetadataConnectionsItem()) {
-                if (item == null || !(item instanceof DatabaseConnectionItem)) {
+            for (IRepositoryViewObject viewObject : ProxyRepositoryFactory.getInstance().getAll(
+                    ERepositoryObjectType.METADATA_CONNECTIONS, true)) {
+                Item item = viewObject.getProperty().getItem();
+                if (viewObject == null || !(item instanceof DatabaseConnectionItem)) {
                     continue;
                 }
-                CWMPlugin.getDefault().addConnetionAliasToSQLPlugin(item.getConnection());
+                CWMPlugin.getDefault().addConnetionAliasToSQLPlugin(((ConnectionItem) item).getConnection());
             }
         } catch (PersistenceException e) {
             log.error(e, e);
@@ -290,17 +290,15 @@ public class DQRespositoryView extends CommonNavigator {
                 // "Metadata/"
                 IFolder folder = ResourceManager.getConnectionFolder();
                 try {
-                    IResource[] resources = folder.members(true);
-                    for (IResource resource : resources) {
-                        if (resource instanceof IFile) {
-                            if (resource.getFileExtension().equalsIgnoreCase(DQStructureComparer.COMPARE_FILE_EXTENSION)
-                                    || resource.getFileExtension().equalsIgnoreCase(
-                                            DQStructureComparer.RESULT_EMFDIFF_FILE_EXTENSION)) {
-                                resource.delete(true, null);
-                            }
+                    for (IRepositoryViewObject viewObject : ProxyRepositoryFactory.getInstance().getAll(
+                            ERepositoryObjectType.METADATA_CONNECTIONS, true)) {
+                        if (viewObject == null || !(viewObject.getProperty().getItem() instanceof DatabaseConnectionItem)) {
+                            continue;
                         }
+                        CWMPlugin.getDefault().addConnetionAliasToSQLPlugin(
+                                ((ConnectionItem) viewObject.getProperty().getItem()).getConnection());
                     }
-                } catch (CoreException e) {
+                } catch (PersistenceException e) {
                     log.error(e, e);
                 }
                 return true;
@@ -509,7 +507,8 @@ public class DQRespositoryView extends CommonNavigator {
                 // return;
                 // }
                 // ADD xwang 2011-08-30
-                // MOD sizhaoliu 2012-09-10 TDQ-5612 remove the following part to reduce operation latency with remote connection.
+                // MOD sizhaoliu 2012-09-10 TDQ-5612 remove the following part to reduce operation latency with remote
+                // connection.
                 // if (PluginChecker.isSVNProviderPluginLoaded()) {
                 // RepositoryWorkUnit<Object> workUnit = new RepositoryWorkUnit<Object>("Open editor") {
                 //
@@ -657,7 +656,7 @@ public class DQRespositoryView extends CommonNavigator {
                         IRepositoryNode previousFilteredNode = RepositoryNodeHelper.getPreviouFilteredNode(filteredNode);
                         if (null != previousFilteredNode) {
                             RepositoryNodeHelper.setFilteredNode(previousFilteredNode);
-                            showSelectedElements((RepositoryNode) previousFilteredNode);
+                            showSelectedElements(previousFilteredNode);
                         }
                     } else {
                         TreeItem selectionTreeItem = selectionNode[(selectionNode.length - 1)];
@@ -667,7 +666,7 @@ public class DQRespositoryView extends CommonNavigator {
                             RepositoryNodeHelper.setFilteredNode(previousFilteredNode);
                             // showSelectedElements((RepositoryNode) previousFilteredNode);
                             DQRepositoryNode.setOnDisplayNextOrPreviousNode(true);
-                            StructuredSelection structSel = new StructuredSelection((RepositoryNode) previousFilteredNode);
+                            StructuredSelection structSel = new StructuredSelection(previousFilteredNode);
                             getCommonViewer().setSelection(structSel);
                             DQRepositoryNode.setOnDisplayNextOrPreviousNode(false);
                         }
@@ -692,7 +691,7 @@ public class DQRespositoryView extends CommonNavigator {
                         IRepositoryNode nextFilteredNode = RepositoryNodeHelper.getNextFilteredNode(filteredNode);
                         if (null != nextFilteredNode) {
                             RepositoryNodeHelper.setFilteredNode(nextFilteredNode);
-                            showSelectedElements((RepositoryNode) nextFilteredNode);
+                            showSelectedElements(nextFilteredNode);
                         }
                     } else {
                         TreeItem selectionTreeItem = selectionNode[(selectionNode.length - 1)];
@@ -703,7 +702,7 @@ public class DQRespositoryView extends CommonNavigator {
                             // showSelectedElements((RepositoryNode) nextFilteredNode);
                             DQRepositoryNode.setOnDisplayNextOrPreviousNode(true);
                             getCommonViewer().expandToLevel(nextFilteredNode, 1);
-                            StructuredSelection structSel = new StructuredSelection((RepositoryNode) nextFilteredNode);
+                            StructuredSelection structSel = new StructuredSelection(nextFilteredNode);
                             getCommonViewer().setSelection(structSel);
                             DQRepositoryNode.setOnDisplayNextOrPreviousNode(false);
                         }
@@ -755,6 +754,7 @@ public class DQRespositoryView extends CommonNavigator {
                         if (isFilterTextEmpty(filterText)) {
                             new UIJob(PluginConstant.EMPTY_STRING) {
 
+                                @Override
                                 public IStatus runInUIThread(IProgressMonitor monitor) {
                                     if (isFilterTextEmpty(filterText)) {
                                         closeFilterStatus(filterText);
@@ -833,7 +833,7 @@ public class DQRespositoryView extends CommonNavigator {
                                 if (null != firstFilteredNode) {
                                     RepositoryNodeHelper.setFilteredNode(firstFilteredNode);
                                     monitor.worked(1);
-                                    showSelectedElements((RepositoryNode) firstFilteredNode);
+                                    showSelectedElements(firstFilteredNode);
                                     monitor.worked(1);
                                 }
                                 monitor.done();

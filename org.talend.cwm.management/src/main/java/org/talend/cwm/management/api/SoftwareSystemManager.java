@@ -13,15 +13,22 @@
 package org.talend.cwm.management.api;
 
 import java.sql.SQLException;
+import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.resource.Resource;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.database.JavaSqlFactory;
 import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.helper.ConnectionHelper;
+import org.talend.cwm.helper.ResourceHelper;
 import org.talend.cwm.softwaredeployment.TdSoftwareSystem;
 import org.talend.dq.writer.EMFSharedResources;
 import org.talend.utils.sugars.TypedReturnCode;
+import orgomg.cwm.foundation.softwaredeployment.Component;
+import orgomg.cwm.foundation.softwaredeployment.DeployedComponent;
+import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
  * @author scorreia
@@ -86,6 +93,49 @@ public final class SoftwareSystemManager {
                     + dataProvider.getName());
         }
         return softwareSystem;
+    }
+
+    /**
+     * 
+     * Find the TdSoftwareSystem instance from EMF model, if it does not exist, will NOT reload from database.
+     * 
+     * @param dataProvider
+     * @return
+     */
+    public TdSoftwareSystem getSoftwareSystemFromModel(Connection dataProvider) {
+        if (dataProvider == null) {
+            return null;
+        }
+        Resource softwareSystemResource = EMFSharedResources.getInstance().getSoftwareDeploymentResource();
+        if (softwareSystemResource != null) {
+            List<EObject> softwareSystems = softwareSystemResource.getContents();
+            // Loop the software system from .softwaresystem.softwaredeployment file.
+            if (softwareSystems != null && softwareSystems.size() > 0) {
+                for (EObject softwareSystem : softwareSystems) {
+                    if (softwareSystem instanceof TdSoftwareSystem) {
+                        List<ModelElement> ownedELements = ((TdSoftwareSystem) softwareSystem).getOwnedElement();
+                        // Loop owned element.
+                        for (ModelElement me : ownedELements) {
+                            if (me == null || !(me instanceof Component)) {
+                                continue;
+                            }
+                            List<DeployedComponent> deployComponents = ((Component) me).getDeployment();
+                            if (deployComponents != null && deployComponents.size() > 0) {
+                                if (ResourceHelper.areSame(deployComponents.get(0), dataProvider)) {
+                                    // Find the software system by data provider.
+                                    return (TdSoftwareSystem) softwareSystem;
+                                }
+
+                            }
+                        }
+
+                    }
+
+                }
+
+            }
+        }
+        return null;
     }
 
     /**

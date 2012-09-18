@@ -93,9 +93,20 @@ public final class WorkspaceUtils {
      * @return File this element links.
      */
     public static IFile getModelElementResource(ModelElement me) {
-        IFile resourceFile = null;
         URI uri = me.eResource().getURI();
         uri = me.eResource().getResourceSet().getURIConverter().normalize(uri);
+        return getModelElementResource(uri);
+    }
+
+    /**
+     * 
+     * convert emf resource to workspace resource.
+     * 
+     * @param uri ,URI of EObject
+     * @return File this element links.
+     */
+    public static IFile getModelElementResource(URI uri) {
+        IFile resourceFile = null;
         String scheme = uri.scheme();
         if ("platform".equals(scheme) && uri.segmentCount() > 1 && "resource".equals(uri.segment(0))) { //$NON-NLS-1$ //$NON-NLS-2$
             StringBuffer platformResourcePath = new StringBuffer();

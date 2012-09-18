@@ -26,6 +26,7 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.talend.commons.emf.EMFUtil;
 import org.talend.commons.exception.PersistenceException;
+import org.talend.commons.utils.WorkspaceUtils;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.core.repository.utils.XmiResourceManager;
 import org.talend.cwm.softwaredeployment.SoftwaredeploymentPackage;
@@ -197,6 +198,7 @@ public final class EMFSharedResources {
      * @deprecated do not use directly EMFUtil.
      * 
      */
+    @Deprecated
     public static EMFUtil getSharedEmfUtil() {
         return getInstance().emfUtil;
     }
@@ -271,15 +273,16 @@ public final class EMFSharedResources {
         // MOD mzhao 2009-03-23,Feature 6066
         String softwareFile = ".softwaresystem." + SoftwaredeploymentPackage.eNAME; //$NON-NLS-1$
         String softwarePath = ResourceManager.getLibrariesFolder().getFullPath().append(softwareFile).toString();
-        URI sUri = URI.createPlatformResourceURI(softwarePath, false); //$NON-NLS-1$
+        URI sUri = URI.createPlatformResourceURI(softwarePath, false);
         Resource resource = resourceSet.getResource(sUri, false);
-
-        if (resource == null) {
+        IFile softwareDeploymentFile = WorkspaceUtils.getModelElementResource(sUri);
+        if (!softwareDeploymentFile.exists()) {
             resource = resourceSet.createResource(sUri);
         }
-
+        if (resource == null) {
+            resource = EMFSharedResources.getInstance().reloadResource(sUri);
+        }
         return resource;
-
     }
 
     public void changeUri(Resource resource, URI destinationUri) {

@@ -57,7 +57,6 @@ import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.db.connection.MdmWebserviceConnection;
 import org.talend.cwm.helper.ColumnHelper;
-import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.ResourceHelper;
 import org.talend.cwm.helper.TableHelper;
 import org.talend.cwm.helper.TaggedValueHelper;
@@ -204,7 +203,7 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
                 createTechnicalDetail(pattern);
             } else if (item instanceof TDQReportItem) {
                 Report report = ((TDQReportItem) item).getReport();
-                createTechnicalDetail((TdReport) report);
+                createTechnicalDetail(report);
             }
         }
     }
@@ -324,7 +323,7 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
             } else if (fe instanceof ExchangeComponentRepNode) {
                 // MOD klliu 2001-02-28 bug 19154
                 IEcosComponent ecosComponent = ((ExchangeComponentRepNode) fe).getEcosComponent();
-                IEcosComponent component = (IEcosComponent) ecosComponent;
+                IEcosComponent component = ecosComponent;
                 createEcosComponent(component);
                 is = false;
 
@@ -649,7 +648,7 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
         }
 
         // MOD sizhaoliu TDQ-5408 retrieve DB version info from software system.
-        TdSoftwareSystem softwareSystem = ConnectionHelper.getSoftwareSystem(dataProvider);
+        TdSoftwareSystem softwareSystem = SoftwareSystemManager.getInstance().getSoftwareSystemFromModel(dataProvider);
         if (softwareSystem == null) { // software system info not present in
                                       // "TDQ_Libraries/.softwaresystem.softwaredeployment" file
             softwareSystem = SoftwareSystemManager.getInstance().getSoftwareSystem(dataProvider);
