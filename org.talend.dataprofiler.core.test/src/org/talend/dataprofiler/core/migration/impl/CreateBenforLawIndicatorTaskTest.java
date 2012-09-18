@@ -72,7 +72,8 @@ public class CreateBenforLawIndicatorTaskTest {
         try {
             Assert.assertTrue(benTask.doExecute());
         } catch (Exception e) {
-            Assert.fail("Create BenfordLaw indicator migration task failed.");
+            Assert.fail("Create BenfordLaw indicator migration task failed." + e.getMessage());
+            e.printStackTrace();
         }
 
     }
