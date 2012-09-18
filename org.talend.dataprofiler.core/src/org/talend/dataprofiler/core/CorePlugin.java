@@ -130,6 +130,8 @@ public class CorePlugin extends AbstractUIPlugin {
      * 
      * @see org.eclipse.ui.plugin.AbstractUIPlugin#start(org.osgi.framework.BundleContext )
      */
+    @SuppressWarnings("restriction")
+    @Override
     public void start(BundleContext context) throws Exception {
         super.start(context);
         plugin = this;
@@ -143,9 +145,6 @@ public class CorePlugin extends AbstractUIPlugin {
         } catch (Exception e) {
             log.error(e, e);
         }
-
-        // repositoryInitialized = this.initProxyRepository().isOk();
-        // SQLExplorerPlugin.getDefault().setRootProject(ReponsitoryContextBridge.getRootProject());
     }
 
     /*
@@ -153,10 +152,10 @@ public class CorePlugin extends AbstractUIPlugin {
      * 
      * @see org.eclipse.ui.plugin.AbstractUIPlugin#stop(org.osgi.framework.BundleContext )
      */
+    @Override
     public void stop(BundleContext context) throws Exception {
         plugin = null;
         super.stop(context);
-        // save();
     }
 
     /**
@@ -168,10 +167,6 @@ public class CorePlugin extends AbstractUIPlugin {
         return plugin;
     }
 
-    // public void save() {
-    // NeedSaveDataProviderHelper.saveAllDataProvider();
-    // }
-
     /**
      * Returns an image descriptor for the image file at the given plug-in relative path.
      * 
@@ -181,22 +176,6 @@ public class CorePlugin extends AbstractUIPlugin {
     public static ImageDescriptor getImageDescriptor(String path) {
         return imageDescriptorFromPlugin(PLUGIN_ID, path);
     }
-
-    // public void loadExternalDriver(String driverPaths, String driverName,
-    // String url) {
-    // String[] driverJarPath = driverPaths.split(";");
-    // LinkedList<String> driverFile = new LinkedList<String>();
-    // for (String driverpath : driverJarPath) {
-    // driverFile.add(driverpath);
-    // }
-    // ManagedDriver driver = new
-    // ManagedDriver(SQLExplorerPlugin.getDefault().getDriverModel
-    // ().createUniqueId());
-    // driver.setJars(driverFile);
-    // driver.setDriverClassName(driverName);
-    // driver.setUrl(url);
-    // SQLExplorerPlugin.getDefault().getDriverModel().addDriver(driver);
-    // }
 
     /**
      * DOC Zqin Comment method "getCurrentActiveEditor".
@@ -229,16 +208,17 @@ public class CorePlugin extends AbstractUIPlugin {
      * @return the specified sql editor.
      */
     public SQLEditor openInSqlEditor(Connection tdDataProvider, String query, String editorName) {
-        if (editorName == null) {
-            editorName = String.valueOf(SQLExplorerPlugin.getDefault().getEditorSerialNo());
+        String lEditorName = editorName;
+        if (lEditorName == null) {
+            lEditorName = String.valueOf(SQLExplorerPlugin.getDefault().getEditorSerialNo());
         }
 
-		String username = JavaSqlFactory.getUsername(tdDataProvider);
-		if (username == null || "".equals(username)) { //$NON-NLS-1$
-			MessageUI.openWarning(DefaultMessagesImpl.getString("CorePlugin.cantPreview")); //$NON-NLS-1$
-			return null;
-		}
-		
+        String username = JavaSqlFactory.getUsername(tdDataProvider);
+        if (username == null || "".equals(username)) { //$NON-NLS-1$
+            MessageUI.openWarning(DefaultMessagesImpl.getString("CorePlugin.cantPreview")); //$NON-NLS-1$
+            return null;
+        }
+
         SQLExplorerPlugin sqlPlugin = SQLExplorerPlugin.getDefault();
         AliasManager aliasManager = sqlPlugin.getAliasManager();
 
@@ -263,7 +243,7 @@ public class CorePlugin extends AbstractUIPlugin {
                 if (dataProvider.getName().equals(tdDataProvider.getName())) {
                     // ~ 15756
                     CWMPlugin.getDefault().addConnetionAliasToSQLPlugin(dataProvider);
-                    openInSqlEditor(tdDataProvider, query, editorName);
+                    openInSqlEditor(tdDataProvider, query, lEditorName);
                 }
             }
         } else {
@@ -271,10 +251,10 @@ public class CorePlugin extends AbstractUIPlugin {
                 Connection connection = SwitchHelpers.CONNECTION_SWITCH.doSwitch(tdDataProvider);
                 if (connection != null) {
                     String userName = JavaSqlFactory.getUsername(connection);
-                    SQLEditorInput input = new SQLEditorInput("SQL Editor (" + alias.getName() + "." + editorName + ").sql"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                    SQLEditorInput input = new SQLEditorInput("SQL Editor (" + alias.getName() + "." + lEditorName + ").sql"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
                     input.setUser(alias.getUser(userName));
                     IWorkbenchPage page = SQLExplorerPlugin.getDefault().getActivePage();
-                    SQLEditor editorPart = (SQLEditor) page.openEditor((IEditorInput) input, SQLEditor.class.getName());
+                    SQLEditor editorPart = (SQLEditor) page.openEditor(input, SQLEditor.class.getName());
                     editorPart.setText(query);
                     return editorPart;
                 }
@@ -294,9 +274,9 @@ public class CorePlugin extends AbstractUIPlugin {
      * @return
      * @deprecated
      */
+    @Deprecated
     public IEditorPart openEditor(IFile file, String editorId) {
         FileEditorInput input = new FileEditorInput(file);
-        // input.setUser(alias.getDefaultUser());
         try {
 
             return this.getWorkbench().getActiveWorkbenchWindow().getActivePage().openEditor(input, editorId);
@@ -307,7 +287,6 @@ public class CorePlugin extends AbstractUIPlugin {
     }
 
     /**
-     * 
      * DOC mzhao open editor with editor input.
      * 
      * @param editorInput
@@ -346,13 +325,20 @@ public class CorePlugin extends AbstractUIPlugin {
     public void refreshWorkSpace() {
         if (refreshAction == null) {
             refreshAction = new RefreshAction(PlatformUI.getWorkbench().getActiveWorkbenchWindow());
-
         }
         refreshAction.run();
     }
 
+    /**
+     * refresh the whole DQReposirotyView.
+     */
     public void refreshDQView() {
-        getRepositoryView().getCommonViewer().refresh();
+        DQRespositoryView repositoryView = getRepositoryView();
+        if (repositoryView != null && repositoryView.getCommonViewer() != null) {
+            repositoryView.getCommonViewer().refresh();
+        } else {
+            log.error(DefaultMessagesImpl.getString("CorePlugin.nullViewWhenRefresh")); //$NON-NLS-1$
+        }
     }
 
     public IRepositoryNode getCurrentSelectionNode() {
@@ -366,11 +352,21 @@ public class CorePlugin extends AbstractUIPlugin {
 
     }
 
+    /**
+     * refresh the object of DQReposirotyView.
+     * 
+     * @param object
+     */
     public void refreshDQView(Object object) {
         if (object == null) {
             refreshDQView();
         } else {
-            getRepositoryView().getCommonViewer().refresh(object);
+            DQRespositoryView repositoryView = getRepositoryView();
+            if (repositoryView != null && repositoryView.getCommonViewer() != null) {
+                repositoryView.getCommonViewer().refresh(object);
+            } else {
+                log.error(DefaultMessagesImpl.getString("CorePlugin.nullViewWhenRefresh")); //$NON-NLS-1$
+            }
         }
     }
 
@@ -390,6 +386,28 @@ public class CorePlugin extends AbstractUIPlugin {
      * @param fileRes
      */
     public void closeEditorIfOpened(Item item) {
+        itemIsOpening(item, true);
+    }
+
+    /**
+     * check the item's editor is opening or not.
+     * 
+     * @param item
+     * @return
+     */
+    public boolean itemIsOpening(Item item) {
+        return itemIsOpening(item, false);
+    }
+
+    /**
+     * check the item's editor is opening or not.
+     * 
+     * @param item
+     * @param closeEditor close the editor if it is opening
+     * @return
+     */
+    public boolean itemIsOpening(Item item, boolean closeEditor) {
+        boolean opening = false;
         IWorkbenchPage activePage = CorePlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getActivePage();
         IEditorReference[] editorReferences = activePage.getEditorReferences();
         IEditorInput editorInput = null;
@@ -402,10 +420,11 @@ public class CorePlugin extends AbstractUIPlugin {
 
                     if (property.eResource() != null) {
                         IPath itemPath = PropertyHelper.getItemPath(property);
-                        // IPath propPath = new Path(property.eResource().getURI().lastSegment()).removeFileExtension();
-                        // IPath filePath = new Path(fileInput.getFile().getName()).removeFileExtension();
                         if (itemPath != null && itemPath.equals(fileInput.getFile().getFullPath())) {
-                            activePage.closeEditor(reference.getEditor(false), false);
+                            opening = true;
+                            if (closeEditor) {
+                                activePage.closeEditor(reference.getEditor(false), false);
+                            }
                             break;
                         }
                     }
@@ -414,23 +433,36 @@ public class CorePlugin extends AbstractUIPlugin {
                     // MOD qiongli 2010-11-26 bug 17009
                     if (sqlEditorInput.getUser() == null) {
                         if (sqlEditorInput.getName().equals(property.getLabel())) {
-                            activePage.closeEditor(reference.getEditor(false), false);
+                            opening = true;
+                            if (closeEditor) {
+                                activePage.closeEditor(reference.getEditor(false), false);
+                            }
+                            break;
                         }
                     } else if (sqlEditorInput.getUser().getAlias().getName().equals(property.getLabel())) {
-                        activePage.closeEditor(reference.getEditor(false), false);
+                        opening = true;
+                        if (closeEditor) {
+                            activePage.closeEditor(reference.getEditor(false), false);
+                        }
+                        break;
                     }
 
                 } else if (editorInput instanceof AbstractItemEditorInput) {
                     AbstractItemEditorInput input = (AbstractItemEditorInput) editorInput;
                     Item it = input.getItem();
                     if (it != null && item.equals(it)) {
-                        activePage.closeEditor(reference.getEditor(false), false);
+                        opening = true;
+                        if (closeEditor) {
+                            activePage.closeEditor(reference.getEditor(false), false);
+                        }
+                        break;
                     }
                 }
             } catch (PartInitException e) {
                 e.printStackTrace();
             }
         }
+        return opening;
     }
 
     public List<AnalysisEditor> getCurrentOpenAnalysisEditor() {
@@ -448,9 +480,7 @@ public class CorePlugin extends AbstractUIPlugin {
     }
 
     /**
-     * 
      * DOC zshen Comment method "initProxyRepository".
-     * 
      */
     public ReturnCode initProxyRepository() {
         ReturnCode rc = new ReturnCode();
@@ -531,7 +561,6 @@ public class CorePlugin extends AbstractUIPlugin {
     }
 
     private void initRepositoryContext(Project project) {
-
         RepositoryContext repositoryContext = new RepositoryContext();
         repositoryContext.setUser(project.getAuthor());
         repositoryContext.setClearPassword(project.getLabel());
@@ -548,13 +577,10 @@ public class CorePlugin extends AbstractUIPlugin {
     }
 
     /**
-     * 
-     * DOC zshen Comment method "checkFileName".
+     * copy the method from ProxyRepositoryFactory to avoid tos migeration.
      * 
      * @param fileName
      * @param pattern
-     * 
-     * copy the method from ProxyRepositoryFactory to avoid tos migeration.
      */
     private void checkFileName(String fileName, String pattern) {
         if (!Pattern.matches(pattern, fileName)) {
@@ -562,5 +588,4 @@ public class CorePlugin extends AbstractUIPlugin {
                     "ProxyRepositoryFactory.illegalArgumentException.labelNotMatchPattern", new Object[] { fileName, pattern })); //$NON-NLS-1$
         }
     }
-
 }
