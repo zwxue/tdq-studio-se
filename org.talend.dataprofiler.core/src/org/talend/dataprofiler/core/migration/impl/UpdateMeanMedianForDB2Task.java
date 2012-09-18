@@ -83,7 +83,7 @@ public class UpdateMeanMedianForDB2Task extends AbstractWorksapceUpdateTask {
             medianDefinition.getSqlGenericExpression().clear();
             IndicatorDefinitionFileHelper
                     .addSqlExpression(medianDefinition, DB2,
-                            "SELECT AVG(double(<%=__COLUMN_NAMES__%>)) FROM ( SELECT <%=__COLUMN_NAMES__%>, COUNT(*) OVER( ) total, CAST(COUNT(*) OVER( ) AS DECIMAL)/2 mid, CEIL(CAST(COUNT(*) OVER( ) AS DECIMAL)/2) next, ROW_NUMBER() OVER ( ORDER BY <%=__COLUMN_NAMES__%>) rn FROM <%=__TABLE_NAME__%> WHERE <%=__COLUMN_NAMES__%> IS NOT NULL <%=__AND_WHERE_CLAUSE__%>) x WHERE ( MOD(total,2) = 0&#x9; AND rn IN ( mid, mid+1 ) ) OR ( MOD(total,2) = 1 AND rn = next )"); //$NON-NLS-1$
+                            "SELECT AVG(double(<%=__COLUMN_NAMES__%>)) FROM ( SELECT <%=__COLUMN_NAMES__%>, COUNT(*) OVER( ) total, CAST(COUNT(*) OVER( ) AS DECIMAL)/2 mid, CEIL(CAST(COUNT(*) OVER( ) AS DECIMAL)/2) next, ROW_NUMBER() OVER ( ORDER BY <%=__COLUMN_NAMES__%>) rn FROM <%=__TABLE_NAME__%> WHERE <%=__COLUMN_NAMES__%> IS NOT NULL <%=__AND_WHERE_CLAUSE__%>) x WHERE ( MOD(total,2) = 0 AND rn IN ( mid, mid+1 ) ) OR ( MOD(total,2) = 1 AND rn = next )"); //$NON-NLS-1$
             medianDefinition.getSqlGenericExpression().addAll(remainExpLs);
             isMedianUpdated = IndicatorDefinitionFileHelper.save(medianDefinition);
         }
