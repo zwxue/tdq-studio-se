@@ -26,7 +26,11 @@ public class OpenResourceProvider extends AbstractCommonActionProvider {
 
     private OpenItemEditorAction openFileAction;
 
+    @Override
     public void fillContextMenu(IMenuManager aMenu) {
+        if (!isSelectionSameType()) {
+            return;
+        }
         // DOC MOD klliu 2010-12-09 feature15750
         Object obj = ((TreeSelection) this.getContext().getSelection()).getFirstElement();
         RepositoryNode node = (RepositoryNode) obj;
