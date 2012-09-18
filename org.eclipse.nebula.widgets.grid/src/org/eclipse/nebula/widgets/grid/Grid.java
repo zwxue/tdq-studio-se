@@ -464,7 +464,7 @@ public class Grid extends Canvas
     /**
      * Are we currently dragging a column header?
      */
-    boolean draggingColumn = false;
+    private boolean draggingColumn = false;
 
     /**
      * Getter for draggingColumn.
@@ -5872,7 +5872,7 @@ public class Grid extends Canvas
             .setBounds(currentHeaderDragX - columnBeingPushed.getWidth()/2 + offset , y,
                        columnBeingPushed.getWidth(), height);
         columnBeingPushed.getHeaderRenderer().paint(gc, columnBeingPushed);
-        columnBeingPushed.getHeaderRenderer().setSelected(false);
+        // columnBeingPushed.getHeaderRenderer().setSelected(false);
 
         gc.setAlpha(-1);
         gc.setAdvanced(false);

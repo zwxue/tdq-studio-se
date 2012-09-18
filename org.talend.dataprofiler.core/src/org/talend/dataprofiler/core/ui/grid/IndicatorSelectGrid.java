@@ -12,6 +12,9 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.grid;
 
+import java.util.Arrays;
+import java.util.List;
+
 import org.eclipse.nebula.widgets.grid.Grid;
 import org.eclipse.nebula.widgets.grid.GridColumn;
 import org.eclipse.nebula.widgets.grid.GridItem;
@@ -260,9 +263,12 @@ public class IndicatorSelectGrid extends Grid {
         Point cell = getCell(new Point(e.x, e.y));
         if (cell != null && cell.x != 0) { // any cell except the row select cells
             GridVisibleRange range = getVisibleRange();
+            List<GridColumn> columnList = Arrays.asList(range.getColumns());
+            // replace cell.x with the current position in case the column has been moved.
+            cell.x = columnList.indexOf(getColumn(cell.x)) + 2;
             for (GridItem item : range.getItems()) {
                 int i = indexOf(item);
-                // set background for
+                // set background for row headers
                 if (i == cell.y) {
                     item.setBackground(0, yellow);
                     item.setBackground(1, lightYellow);
@@ -274,22 +280,24 @@ public class IndicatorSelectGrid extends Grid {
                     }
                 }
 
+                // set background for cells
                 for (GridColumn column : range.getColumns()) {
-                    int j = indexOf(column);
-                    if (i == cell.y && j == cell.x) {
+                    int realIdx = columnList.indexOf(column) + 2; // real index in current visible range.
+                    int j = indexOf(column); // the original index to be colored.
+                    if (i == cell.y && realIdx == cell.x) {
                         item.setBackground(j, yellow);
-                    } else if (i == cell.y && j < cell.x || j == cell.x && i < cell.y) {
+                    } else if (i == cell.y && realIdx < cell.x || realIdx == cell.x && i < cell.y) {
                         item.setBackground(j, lightYellow);
                     } else {
                         item.setBackground(j, null);
                     }
                 }
             }
-
-            for (int j = 0; j < getColumnCount(); j++) {
-                getColumn(j).getHeaderRenderer().setSelected(j == cell.x);
+            // set background for column headers
+            for (GridColumn column : range.getColumns()) {
+                int realIdx = columnList.indexOf(column) + 2; // real index in current visible range.
+                column.getHeaderRenderer().setSelected(realIdx == cell.x);
             }
-
         } else { // handle row header/column header hovering
             GridItem currentItem = getItem(new Point(e.x, e.y));
             GridVisibleRange range = getVisibleRange();
@@ -524,25 +532,25 @@ public class IndicatorSelectGrid extends Grid {
 
             // process the selections of indicator category row
             boolean entireCategoryChecked = true;
-            for (int j = 2; j < getColumnCount(); j++) {
+            for (int j = 1; j < getColumnCount(); j++) {
                 if (currentItem.getCheckable(j)) {
-                    if(hasCheckedInColumn[j]){
+                    if (hasCheckedInColumn[j]) {
                         hasCheckedInColumn[1] = true;
                         currentItem.setChecked(j, true);
-                    }else{
+                    } else {
                         currentItem.setChecked(j, false);
                     }
-                    if (allCheckedInColumn[j]) {
-                        currentItem.setGrayed(j, false);
-                    } else {
-                        currentItem.setGrayed(j, true);
+                    if (!allCheckedInColumn[j]) {
+                        currentItem.setGrayed(j, hasCheckedInColumn[j]);
                         entireCategoryChecked = false;
+                    } else {
+                        currentItem.setGrayed(j, false);
                     }
                 }
             }
             if (currentItem.getCheckable(1)) {
                 currentItem.setChecked(1, hasCheckedInColumn[1]);
-                currentItem.setGrayed(1, !entireCategoryChecked);
+                currentItem.setGrayed(1, hasCheckedInColumn[1] && !entireCategoryChecked);
             }
         }
     }
