@@ -29,7 +29,6 @@ import net.sourceforge.sqlexplorer.plugin.editors.SQLEditorInput;
 import net.sourceforge.sqlexplorer.util.ImageUtil;
 
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IWorkbenchPage;
 
 /**
@@ -51,9 +50,7 @@ public class GenerateSelectSQLAction extends AbstractDBTreeContextAction {
         String sep = "";//$NON-NLS-1$
         String table = "";//$NON-NLS-1$
 
-        for (int i = 0; i < _selectedNodes.length; i++) {
-
-            INode node = _selectedNodes[i];
+        for (INode node : _selectedNodes) {
 
             if (node instanceof ColumnNode) {
 
@@ -111,6 +108,7 @@ public class GenerateSelectSQLAction extends AbstractDBTreeContextAction {
      * 
      * @see org.eclipse.jface.action.IAction#getImageDescriptor()
      */
+    @Override
     public ImageDescriptor getImageDescriptor() {
 
         return _image;
@@ -121,6 +119,7 @@ public class GenerateSelectSQLAction extends AbstractDBTreeContextAction {
      * 
      * @see org.eclipse.jface.action.IAction#getText()
      */
+    @Override
     public String getText() {
 
         return Messages.getString("DatabaseStructureView.Actions.GenerateSelectSQL");
@@ -131,6 +130,7 @@ public class GenerateSelectSQLAction extends AbstractDBTreeContextAction {
      * 
      * @see net.sourceforge.sqlexplorer.dbstructure.actions.AbstractDBTreeContextAction#isAvailable()
      */
+    @Override
     public boolean isAvailable() {
 
         if (_selectedNodes.length == 0) {
@@ -153,6 +153,7 @@ public class GenerateSelectSQLAction extends AbstractDBTreeContextAction {
      * 
      * @see org.eclipse.jface.action.IAction#run()
      */
+    @Override
     public void run() {
 
         try {
@@ -176,7 +177,7 @@ public class GenerateSelectSQLAction extends AbstractDBTreeContextAction {
             input.setUser(_selectedNodes[0].getSession().getUser());
             IWorkbenchPage page = SQLExplorerPlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getActivePage();
 
-            SQLEditor editorPart = (SQLEditor) page.openEditor((IEditorInput) input, SQLEditor.class.getName());
+            SQLEditor editorPart = (SQLEditor) page.openEditor(input, SQLEditor.class.getName());
             editorPart.setText(query);
 
         } catch (Throwable e) {
@@ -223,13 +224,15 @@ public class GenerateSelectSQLAction extends AbstractDBTreeContextAction {
     protected String fixTableName(String qualifiedName) {
         INode node = _selectedNodes[0];
         try {
-            if ("Adaptive Server Enterprise".equals(node.getSession().getDatabaseProductName())) {//$NON-NLS-1$
-                return qualifiedName.replaceAll("\"", "");//$NON-NLS-1$//$NON-NLS-2$
+            String sybase1 = "Adaptive Server Enterprise"; //$NON-NLS-1$
+            String sybase2 = "Adaptive Server Enterprise | Sybase Adaptive Server IQ"; //$NON-NLS-1$
+            String databaseProductName = node.getSession().getDatabaseProductName();
+            if (sybase1.equals(databaseProductName) || sybase2.equals(databaseProductName)) {
+                return qualifiedName.replaceAll("\"", ""); //$NON-NLS-1$ //$NON-NLS-2$
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return qualifiedName;
-
     }
 }

@@ -1473,6 +1473,12 @@
            name="Update Mean Median For DB2 Task"
            version="5.1.2">
      </workspacetask> 
+     <workspacetask
+           class="org.talend.dataprofiler.core.migration.impl.UpdateSybaseLanguageNameForMedianIndicatorTask"
+           id="org.talend.dataprofiler.core.migration.impl.UpdateSybaseLanguageNameForMedianIndicatorTask"
+           name="Update Sybase Language Name For Median Indicator Task"
+           version="5.1.3">
+     </workspacetask>  
   </extension>
   <extension
         point="org.eclipse.ui.actionSets">
