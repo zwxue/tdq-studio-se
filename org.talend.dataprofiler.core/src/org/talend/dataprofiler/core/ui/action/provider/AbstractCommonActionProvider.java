@@ -17,9 +17,12 @@ import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.ui.navigator.CommonActionProvider;
+import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.dataprofiler.core.service.AbstractSvnRepositoryService;
 import org.talend.dataprofiler.core.service.GlobalServiceRegister;
+import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.repository.model.IRepositoryNode;
+import org.talend.repository.model.RepositoryNode;
 
 /**
  * 
@@ -33,9 +36,10 @@ public class AbstractCommonActionProvider extends CommonActionProvider {
         // MOD mzhao user readonly role on svn repository mode.
         AbstractSvnRepositoryService svnReposService = GlobalServiceRegister.getDefault().getSvnRepositoryService(
                 AbstractSvnRepositoryService.class);
-        if (svnReposService != null && svnReposService.isReadonly()) {
+        if (svnReposService != null && svnReposService.isReadonly() || !isSelectionSameType()) {
             return false;
         }
+
         return true;
     }
 
@@ -56,7 +60,7 @@ public class AbstractCommonActionProvider extends CommonActionProvider {
 
         return null;
     }
-    
+
     /**
      * 
      * MOD bzhou 2011-4-1 bug 20051
@@ -85,5 +89,40 @@ public class AbstractCommonActionProvider extends CommonActionProvider {
         }
 
         return null;
+    }
+
+    /**
+     * 
+     * judge if all selections are the same type nodes.
+     * 
+     * @return
+     */
+    protected boolean isSelectionSameType() {
+        TreeSelection currentSelections = ((TreeSelection) getContext().getSelection());
+        Object[] selectionArrays = currentSelections.toArray();
+        // TDQ-5186 MOD qiongli.pop the context menus just when these selections are the same type.
+        if (selectionArrays.length > 1) {
+            RepositoryNode firstNode = null;
+            ERepositoryObjectType firstContentType = null;
+            for (Object obj : selectionArrays) {
+                if (obj instanceof RepositoryNode) {
+                    if (firstNode == null) {
+                        firstNode = (RepositoryNode) obj;
+                        firstContentType = firstNode.getContentType();
+                        continue;
+                    }
+                    RepositoryNode node = (RepositoryNode) obj;
+                    ERepositoryObjectType contentType = node.getContentType();
+                    // return false when the content type is different or a node is in recycle bin and another is not
+                    // in.
+                    if ((firstContentType != null && contentType != null && !contentType.getType().equals(
+                            firstContentType.getType()))
+                            || (RepositoryNodeHelper.isStateDeleted(node) != RepositoryNodeHelper.isStateDeleted(firstNode))) {
+                        return false;
+                    }
+                }
+            }
+        }
+        return true;
     }
 }

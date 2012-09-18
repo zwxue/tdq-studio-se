@@ -26,11 +26,15 @@ public class OpenItemEditorProvider extends AbstractCommonActionProvider {
     public OpenItemEditorProvider() {
     }
 
+    @Override
     public void fillContextMenu(IMenuManager menu) {
 
+        if (!isSelectionSameType()) {
+            return;
+        }
         Object obj = ((TreeSelection) this.getContext().getSelection()).getFirstElement();
         if (obj instanceof IRepositoryViewObject) {
-                OpenItemEditorAction openItemEditorAction = new OpenItemEditorAction((IRepositoryViewObject)obj);
+            OpenItemEditorAction openItemEditorAction = new OpenItemEditorAction((IRepositoryViewObject) obj);
             menu.add(openItemEditorAction);
         }
     }
