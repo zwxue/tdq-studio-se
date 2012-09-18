@@ -61,6 +61,7 @@ import org.talend.dataquality.indicators.ValueIndicator;
 import org.talend.dataquality.indicators.WellFormE164PhoneCountIndicator;
 import org.talend.dataquality.indicators.WellFormIntePhoneCountIndicator;
 import org.talend.dataquality.indicators.WellFormNationalPhoneCountIndicator;
+import org.talend.dataquality.indicators.sql.WhereRuleAideIndicator;
 import org.talend.dataquality.indicators.sql.WhereRuleIndicator;
 import org.talend.dataquality.indicators.sql.util.IndicatorSqlSwitch;
 import org.talend.dataquality.indicators.util.IndicatorsSwitch;
@@ -858,5 +859,19 @@ public final class IndicatorHelper {
             }
         }
         return nullCountIndicator;
+    }
+
+    /**
+     * 
+     * it is WhereRuleIndicator and not WhereRuleAideIndicator.
+     * 
+     * @param indicator
+     * @return
+     */
+    public static boolean isWhereRuleIndicatorNotAide(Indicator indicator) {
+        if (indicator == null) {
+            return false;
+        }
+        return (indicator instanceof WhereRuleIndicator && !(indicator instanceof WhereRuleAideIndicator));
     }
 }

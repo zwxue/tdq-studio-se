@@ -88,6 +88,7 @@ import org.talend.dataprofiler.core.ui.wizard.indicator.TableIndicatorOptionsWiz
 import org.talend.dataprofiler.core.ui.wizard.indicator.forms.FormEnum;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.domain.Domain;
+import org.talend.dataquality.helpers.IndicatorHelper;
 import org.talend.dataquality.indicators.CompositeIndicator;
 import org.talend.dataquality.indicators.DateParameters;
 import org.talend.dataquality.indicators.FrequencyIndicator;
@@ -112,7 +113,6 @@ import org.talend.dq.nodes.indicator.type.IndicatorEnum;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.resource.ResourceManager;
 import org.talend.resource.ResourceService;
-
 import orgomg.cwm.objectmodel.core.Expression;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.resource.relational.NamedColumnSet;
@@ -190,6 +190,7 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
                 }
             }
 
+            @Override
             protected String getItemTooltipText(TreeItem item) {
                 String expCont = isExpressionNull(item);
                 if (expCont == null) {
@@ -329,10 +330,8 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
     }
 
     private void addItemElements(final TableIndicator[] elements) {
-        for (int i = 0; i < elements.length; i++) {
+        for (final TableIndicator tableIndicator : elements) {
             final TreeItem treeItem = new TreeItem(tree, SWT.NONE);
-            final TableIndicator tableIndicator = elements[i];
-
             if (tableIndicator.isTable()) {
                 treeItem.setImage(ImageLib.getImage(ImageLib.TABLE));
             } else if (tableIndicator.isView()) {
@@ -565,10 +564,12 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
         ArrayList<IFile> ret = new ArrayList<IFile>();
         Indicator[] indicators = tableIndicator.getIndicators();
         for (Indicator indicator : indicators) {
-            Object obj = indicator.getIndicatorDefinition();
-            if (obj != null && obj instanceof WhereRule) {
-                WhereRule wr = (WhereRule) obj;
-                ret.add(ResourceFileMap.findCorrespondingFile(wr));
+            if (IndicatorHelper.isWhereRuleIndicatorNotAide(indicator)) {
+                Object obj = indicator.getIndicatorDefinition();
+                if (obj != null && obj instanceof WhereRule) {
+                    WhereRule wr = (WhereRule) obj;
+                    ret.add(ResourceFileMap.findCorrespondingFile(wr));
+                }
             }
         }
         return ret.toArray();
@@ -662,6 +663,7 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
         this.indicatorTreeItemMap.put(unit, indicatorItem);
     }
 
+    @Override
     public void openIndicatorOptionDialog(Shell shell, TreeItem indicatorItem) {
         if (isDirty()) {
             masterPage.doSave(null);
@@ -678,7 +680,7 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
             }
         } else {
             MessageDialogWithToggle.openInformation(null, DefaultMessagesImpl.getString("AnalysisTableTreeViewer.information"), //$NON-NLS-1$
-                    DefaultMessagesImpl.getString("AnalysisTableTreeViewer.nooption")); //$NON-NLS-1$ //$NON-NLS-2$
+                    DefaultMessagesImpl.getString("AnalysisTableTreeViewer.nooption")); //$NON-NLS-1$ 
         }
     }
 
@@ -741,7 +743,7 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
 
             TreeItem subParamItem = new TreeItem(iParamItem, SWT.NONE);
             subParamItem.setText(DefaultMessagesImpl.getString(
-                    "AnalysisColumnTreeViewer.aggregationType", dParameters.getDateAggregationType().getName())); //$NON-NLS-1$ //$NON-NLS-2$
+                    "AnalysisColumnTreeViewer.aggregationType", dParameters.getDateAggregationType().getName())); //$NON-NLS-1$ 
             subParamItem.setImage(0, ImageLib.getImage(ImageLib.OPTION));
             subParamItem.setData(DATA_PARAM, DATA_PARAM);
         }
@@ -771,12 +773,16 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
         }
     }
 
+    @Override
     protected void removeItemBranch(TreeItem item) {
+        if (item == null) {
+            return;
+        }
         TreeEditor[] editors = (TreeEditor[]) item.getData(ITEM_EDITOR_KEY);
         if (editors != null) {
-            for (int j = 0; j < editors.length; j++) {
-                editors[j].getEditor().dispose();
-                editors[j].dispose();
+            for (TreeEditor editor : editors) {
+                editor.getEditor().dispose();
+                editor.dispose();
             }
         }
         if (item.getItemCount() == 0) {
@@ -785,9 +791,9 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
             return;
         }
         TreeItem[] items = item.getItems();
-        for (int i = 0; i < items.length; i++) {
-            removeItemBranch(items[i]);
-            removeTreeItem(items[i]);
+        for (TreeItem item2 : items) {
+            removeItemBranch(item2);
+            removeTreeItem(item2);
         }
         item.dispose();
         this.setDirty(true);
@@ -835,6 +841,7 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
      * 
      * @param objs
      */
+    @Override
     public void setInput(Object[] objs) {
         List<DBTableRepNode> tableNodeList = RepositoryNodeHelper.getTableNodeList(objs);
         List<TableIndicator> tableIndicatorList = new ArrayList<TableIndicator>();
@@ -851,8 +858,9 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
         Connection tdProvider = null;
 
         for (DBTableRepNode tableNode : tableNodeList) {
-            if (tdProvider == null)
+            if (tdProvider == null) {
                 tdProvider = DataProviderHelper.getTdDataProvider(TableHelper.getParentCatalogOrSchema(tableNode.getTdTable()));
+            }
 
             if (tdProvider == null) {
                 MessageUI.openError(DefaultMessagesImpl.getString(
@@ -866,8 +874,9 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
             }
         }
         for (DBViewRepNode tableNode : viewNodeList) {
-            if (tdProvider == null)
+            if (tdProvider == null) {
                 tdProvider = DataProviderHelper.getTdDataProvider(TableHelper.getParentCatalogOrSchema(tableNode.getTdView()));
+            }
             if (tdProvider == null) {
                 MessageUI.openError(DefaultMessagesImpl.getString(
                         "AnalysisTableTreeViewer.TableProviderIsNull", tableNode.getLabel())); //$NON-NLS-1$
@@ -967,7 +976,7 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
         TableIndicator[] tIndicators = new TableIndicator[size];
         for (int i = 0; i < size; i++) {
             NamedColumnSet set = sets.get(i);
-            TableIndicator tableIndicator = TableIndicator.createTableIndicatorWithRowCountIndicator((NamedColumnSet) set);
+            TableIndicator tableIndicator = TableIndicator.createTableIndicatorWithRowCountIndicator(set);
             tIndicators[i] = tableIndicator;
         }
         this.addElements(tIndicators);
@@ -1051,9 +1060,10 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
         // remove dependency
         removeDependency(masterPage.getAnalysis(), inidicatorUnit);
     }
-/**
- * delete all TableIndicatorUnit which contain in the tableIndicator.
- */
+
+    /**
+     * delete all TableIndicatorUnit which contain in the tableIndicator.
+     */
     private void deleteIndicatorItems(TableIndicator tableIndicator) {
         for (TableIndicatorUnit indiUnit : tableIndicator.getIndicatorUnits()) {
             deleteIndicatorAideItems(tableIndicator, indiUnit);
