@@ -27,10 +27,10 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.talend.commons.emf.EMFUtil;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.commons.exception.PersistenceException;
-import org.talend.core.model.metadata.builder.database.PluginConstant;
 import org.talend.core.model.properties.PropertiesPackage;
 import org.talend.core.model.properties.Property;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
+import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.migration.AbstractWorksapceUpdateTask;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
@@ -112,7 +112,6 @@ public class UpdateJUDITask extends AbstractWorksapceUpdateTask {
                 Property newProperty = (Property) EcoreUtil.getObjectByType(propResource.getContents(),
                         PropertiesPackage.eINSTANCE.getProperty());
                 try {
-                    // ProxyRepositoryFactory.getInstance().getAll(ERepositoryObjectType.TDQ_USERDEFINE_INDICATORS);
                     newProperty = ProxyRepositoryFactory.getInstance().getLastVersion(newProperty.getId()).getProperty();
                 } catch (PersistenceException e) {
                     log.error(e, e);
@@ -123,11 +122,11 @@ public class UpdateJUDITask extends AbstractWorksapceUpdateTask {
                 EList<TaggedValue> taggedValues = uDIindicatorDefinition.getTaggedValue();
                 String jarPath = null;
                 for (TaggedValue tv : taggedValues) {
-                    if (tv.getTag().equals(PluginConstant.CLASS_NAME_TEXT)) {
+                    if (tv.getTag().equals(TaggedValueHelper.CLASS_NAME_TEXT)) {
                         returnCode ^= false;
                         continue;
                     }
-                    if (tv.getTag().equals(PluginConstant.JAR_FILE_PATH)) {
+                    if (tv.getTag().equals(TaggedValueHelper.JAR_FILE_PATH)) {
                         jarPath = tv.getValue();
                         tv.setValue(new Path(jarPath).lastSegment());
                         ((TDQIndicatorDefinitionItemImpl) newProperty.getItem()).setIndicatorDefinition(uDIindicatorDefinition);
@@ -135,10 +134,6 @@ public class UpdateJUDITask extends AbstractWorksapceUpdateTask {
                                 .addFileExtension(FactoriesUtil.DEFINITION).toOSString());
                         EMFUtil.saveResource(itemResource);
                         newProperty.setItem(newProperty.getItem());
-                        // String propertyPath = String.valueOf(Path.SEPARATOR)
-                        // + (new
-                        // Path(destPropFile.getPath()).makeRelativeTo(this.getWorkspacePath().removeLastSegments(1)).toString());
-                        // MetadataHelper.setPropertyPath(propertyPath, connectionItem.getConnection());
                         newProperty.getItem().setProperty(newProperty);
 
                         propResource.getContents().clear();
@@ -148,28 +143,6 @@ public class UpdateJUDITask extends AbstractWorksapceUpdateTask {
                         propResource.getContents().add(newProperty.getItem().getState());
                         EMFUtil.saveResource(propResource);
                         returnCode ^= false;
-                        // FolderItem folderItem = ProxyRepositoryFactory.getInstance().getFolderItem(
-                        // ProjectManager.getInstance().getCurrentProject(),
-                        // ERepositoryObjectType.TDQ_USERDEFINE_INDICATORS, new Path(""));
-                        //
-                        // folderItem.getChildren().clear();
-                        //
-
-                        // //
-                        // ElementWriterFactory.getInstance().createIndicatorDefinitionWriter().save(newProperty.getItem());
-                        //
-                        // try {
-                        // ProxyRepositoryFactory.getInstance().getLastVersion(folderItem.getProperty().getId(), null,
-                        // ERepositoryObjectType.TDQ_USERDEFINE_INDICATORS);
-                        // } catch (PersistenceException e) {
-                        // log.error(e, e);
-                        // }
-                       
-                        // for (Object obj : folderItem.getChildren()) {
-                        // ((TDQIndicatorDefinitionItem) obj).getIndicatorDefinition();
-                        // }
-
-                        // IndicatorResourceFileHelper.getInstance().save(uDIindicatorDefinition);
                     }
                 }
                 if (jarPath != null) {
@@ -186,7 +159,6 @@ public class UpdateJUDITask extends AbstractWorksapceUpdateTask {
                         log.error(DefaultMessagesImpl.getString("UpdateJUDITask_CanNotFoundJarFile", jarPath));//$NON-NLS-1$
                     }
                 }
-
 
             }
 
