@@ -91,6 +91,7 @@ public class DuplicateCountIndicatorImpl extends IndicatorImpl implements Duplic
      * 
      * @generated NOT
      */
+    @Override
     public Set<Object> getDuplicateValues() {
         return this.duplicateObjects;
     }
@@ -172,6 +173,7 @@ public class DuplicateCountIndicatorImpl extends IndicatorImpl implements Duplic
      * 
      * @generated
      */
+    @Override
     public Long getDuplicateValueCount() {
         // = countof(list.size >1) in the duplicateMap
         return duplicateValueCount;
@@ -182,6 +184,7 @@ public class DuplicateCountIndicatorImpl extends IndicatorImpl implements Duplic
      * 
      * @generated
      */
+    @Override
     public void setDuplicateValueCount(Long newDuplicateValueCount) {
         Long oldDuplicateValueCount = duplicateValueCount;
         duplicateValueCount = newDuplicateValueCount;
@@ -267,8 +270,10 @@ public class DuplicateCountIndicatorImpl extends IndicatorImpl implements Duplic
      * 
      * @see org.talend.dataquality.indicators.DuplicateCountIndicator#handle(java.lang.Object, java.sql.ResultSet, int)
      */
+    @Override
     public void handle(Object colValue, ResultSet resultSet, int columnSize) throws SQLException {
         this.mustStoreRow = false;
+        super.handle(colValue);
         // first get the whole row from resultset
         Object[] valueObject = new Object[columnSize];
 
@@ -291,6 +296,7 @@ public class DuplicateCountIndicatorImpl extends IndicatorImpl implements Duplic
      * 
      * @see org.talend.dataquality.indicators.DuplicateCountIndicator#getDuplicateMap()
      */
+    @Override
     public Map<Object, List<Object[]>> getDuplicateMap() {
 
         return this.duplicateMap;
@@ -301,7 +307,9 @@ public class DuplicateCountIndicatorImpl extends IndicatorImpl implements Duplic
      * 
      * @see org.talend.dataquality.indicators.DuplicateCountIndicator#handle(java.lang.Object, java.lang.String[])
      */
+    @Override
     public void handle(Object object, String[] rowValues) {
+        super.handle(object);
         if (duplicateMap.containsKey(object)) {
             duplicateMap.get(object).add(rowValues);
         } else {
