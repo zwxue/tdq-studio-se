@@ -58,6 +58,7 @@ import org.talend.dataquality.analysis.AnalysisType;
 import org.talend.dataquality.analysis.AnalyzedDataSet;
 import org.talend.dataquality.analysis.ExecutionLanguage;
 import org.talend.dataquality.domain.pattern.ExpressionType;
+import org.talend.dataquality.helpers.IndicatorHelper;
 import org.talend.dataquality.indicators.DatePatternFreqIndicator;
 import org.talend.dataquality.indicators.DistinctCountIndicator;
 import org.talend.dataquality.indicators.DuplicateCountIndicator;
@@ -155,7 +156,7 @@ public final class ChartTableFactory {
 
                                 // ADD msjian 2012-2-9 TDQ-4470: add the create column analysis menu using the join
                                 // condition columns
-                                if (indicator instanceof WhereRuleIndicator) {
+                                if (IndicatorHelper.isWhereRuleIndicatorNotAide(indicator)) {
                                     WhereRuleIndicator ind = (WhereRuleIndicator) indicator;
                                     if (rowCount.doubleValue() < ind.getUserCount().doubleValue()) {
                                         showExtraMenu = true;

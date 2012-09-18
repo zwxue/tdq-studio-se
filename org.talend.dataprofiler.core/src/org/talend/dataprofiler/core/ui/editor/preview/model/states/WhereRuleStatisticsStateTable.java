@@ -44,6 +44,7 @@ import org.talend.dataprofiler.core.ui.editor.preview.model.states.ChartTablePro
 import org.talend.dataprofiler.core.ui.editor.preview.model.states.ChartTableProviderClassSet.CommonContenteProvider;
 import org.talend.dataprofiler.core.ui.editor.preview.model.states.ChartTableProviderClassSet.PatternLabelProvider;
 import org.talend.dataprofiler.core.ui.pref.EditorPreferencePage;
+import org.talend.dataquality.helpers.IndicatorHelper;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.RowCountIndicator;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
@@ -215,23 +216,15 @@ public class WhereRuleStatisticsStateTable extends AbstractChartTypeStatesTable 
                 JFreeChart barChart = TopChartFactory.createBarChart(
                         DefaultMessagesImpl.getString("SimpleStatisticsState.SimpleStatistics"), dataset, false); //$NON-NLS-1$
                 ChartDecorator.decorate(barChart, null);
-                ret.add(barChart); //$NON-NLS-1$
+                ret.add(barChart);
             } else {
                 JFreeChart stackChart = TopChartFactory.createStackedBarChart(
                         DefaultMessagesImpl.getString("WhereRuleStatisticsStateTable.WhereRuleStatistics"), dataset, true); //$NON-NLS-1$
                 ChartDecorator.decorate(stackChart, null);
-                ret.add(stackChart); //$NON-NLS-1$
+                ret.add(stackChart);
             }
             i++;
         }
-        // ~ TDQ-5057
-        // if (false) { // show line chart only in TDQ!!!
-        // JFreeChart lineChart = TopChartFactory.createLineChart(DefaultMessagesImpl
-        //                            .getString("WhereRuleStatisticsStateTable.WhereRuleStatistics"), getXYDataset(), false); //$NON-NLS-1$
-        // ChartDecorator.decorate(lineChart);
-        //                    ret.add(lineChart); //$NON-NLS-1$
-        // }
-        // ~10834
         return ret;
     }
 
@@ -349,7 +342,7 @@ public class WhereRuleStatisticsStateTable extends AbstractChartTypeStatesTable 
             double valueCount = unitValue != null ? Double.parseDouble(unitValue.toString()) : Double.NaN;
             String label = unit.getIndicatorName();
 
-            customerDataset.addValue(valueCount, label, label); //$NON-NLS-1$
+            customerDataset.addValue(valueCount, label, label);
 
             ChartDataEntity entityCount = new ChartDataEntity();
             entityCount.setIndicator(unit.getIndicator());
@@ -435,7 +428,7 @@ public class WhereRuleStatisticsStateTable extends AbstractChartTypeStatesTable 
 
                 Indicator indicator = ((WhereRuleChartDataEntity) element).getIndicator();
 
-                if (indicator instanceof WhereRuleIndicator) {
+                if (IndicatorHelper.isWhereRuleIndicatorNotAide(indicator)) {
                     largeThanRowCount = getRowCount() < ((WhereRuleIndicator) indicator).getUserCount();
                 }
 
@@ -456,7 +449,7 @@ public class WhereRuleStatisticsStateTable extends AbstractChartTypeStatesTable 
 
                 Indicator indicator = ((WhereRuleChartDataEntity) element).getIndicator();
 
-                if (indicator instanceof WhereRuleIndicator) {
+                if (IndicatorHelper.isWhereRuleIndicatorNotAide(indicator)) {
                     largeThanRowCount = getRowCount() < ((WhereRuleIndicator) indicator).getUserCount();
                 }
 
