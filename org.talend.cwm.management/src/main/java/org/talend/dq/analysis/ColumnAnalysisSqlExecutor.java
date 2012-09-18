@@ -1249,9 +1249,9 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
         Set<ModelElement> analyzedElements = elementToIndicator.keySet();
         for (ModelElement modelElement : analyzedElements) {
             // get row count indicator
-            RowCountIndicator rowCount = getRowCountIndicator(modelElement, elementToIndicator);
+            RowCountIndicator rowCount = IndicatorHelper.getRowCountIndicator(modelElement, elementToIndicator);
             // get null count indicator
-            NullCountIndicator nullCount = getNullCountIndicator(modelElement, elementToIndicator);
+            NullCountIndicator nullCount = IndicatorHelper.getNullCountIndicator(modelElement, elementToIndicator);
 
             List<Indicator> list = elementToIndicator.get(modelElement);
             for (Indicator ind : list) {
@@ -1278,43 +1278,6 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
 
         return indType != IndicatorEnum.ModeIndicatorEnum && !indType.isAChildOf(IndicatorEnum.TextIndicatorEnum)
                 && !indType.isAChildOf(IndicatorEnum.BoxIIndicatorEnum);
-    }
-
-    /**
-     * DOC scorreia Comment method "getRowCountIndicator".
-     * 
-     * @param modelElement
-     * @param elementToIndicator
-     * @return
-     */
-    private RowCountIndicator getRowCountIndicator(ModelElement modelElement,
-            Map<ModelElement, List<Indicator>> elementToIndicator) {
-        List<Indicator> list = elementToIndicator.get(modelElement);
-        RowCountIndicator rowCountIndicator = null;
-        if (list == null) {
-            return rowCountIndicator;
-        }
-        for (Indicator indicator : list) {
-            if (IndicatorsPackage.eINSTANCE.getRowCountIndicator().equals(indicator.eClass())) {
-                rowCountIndicator = (RowCountIndicator) indicator;
-            }
-        }
-        return rowCountIndicator;
-    }
-
-    private NullCountIndicator getNullCountIndicator(ModelElement modelElement,
-            Map<ModelElement, List<Indicator>> elementToIndicator) {
-        List<Indicator> list = elementToIndicator.get(modelElement);
-        NullCountIndicator nullCountIndicator = null;
-        if (list == null) {
-            return nullCountIndicator;
-        }
-        for (Indicator indicator : list) {
-            if (IndicatorsPackage.eINSTANCE.getNullCountIndicator().equals(indicator.eClass())) {
-                nullCountIndicator = (NullCountIndicator) indicator;
-            }
-        }
-        return nullCountIndicator;
     }
 
     /**

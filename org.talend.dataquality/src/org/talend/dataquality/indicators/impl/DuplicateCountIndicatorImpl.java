@@ -273,6 +273,7 @@ public class DuplicateCountIndicatorImpl extends IndicatorImpl implements Duplic
     @Override
     public void handle(Object colValue, ResultSet resultSet, int columnSize) throws SQLException {
         this.mustStoreRow = false;
+        super.handle(colValue);
         // first get the whole row from resultset
         Object[] valueObject = new Object[columnSize];
 
@@ -308,6 +309,7 @@ public class DuplicateCountIndicatorImpl extends IndicatorImpl implements Duplic
      */
     @Override
     public void handle(Object object, String[] rowValues) {
+        super.handle(object);
         if (duplicateMap.containsKey(object)) {
             duplicateMap.get(object).add(rowValues);
         } else {
