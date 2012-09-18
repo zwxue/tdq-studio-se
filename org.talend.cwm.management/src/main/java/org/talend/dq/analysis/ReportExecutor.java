@@ -16,8 +16,7 @@ import java.util.Date;
 
 import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.EList;
-import org.eclipse.jface.dialogs.MessageDialogWithToggle;
-import org.eclipse.swt.widgets.Display;
+import org.talend.cwm.exception.AnalysisExecutionException;
 import org.talend.cwm.management.i18n.Messages;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.ExecutionInformations;
@@ -43,7 +42,7 @@ public class ReportExecutor implements IReportExecutor {
      * 
      * @see org.talend.dq.analysis.IReportExecutor#execute(org.talend.dataquality.reports.TdReport)
      */
-    public ReturnCode execute(TdReport report) {
+    public ReturnCode execute(TdReport report) throws AnalysisExecutionException {
         atLeastOneFailure = false;
         long startTime = System.currentTimeMillis();
         EList<AnalysisMap> analysisMaps = report.getAnalysisMap();
@@ -58,22 +57,13 @@ public class ReportExecutor implements IReportExecutor {
                 }
                 ReturnCode executeRc = AnalysisExecutorSelector.executeAnalysis(analysis);
 
+                if (executeRc.getMessage() != null) {
+                    throw new AnalysisExecutionException(Messages.getString("ReportExecutor.failRunAnalysis", analysis.getName(),
+                            executeRc.getMessage()));
+                }
                 // ADD msjian TDQ-5952: we should close connections always
                 TdqAnalysisConnectionHelper.closeConnectionPool(analysis);
                 // TDQ-5952~
-                if (executeRc.getMessage() != null) {
-                    final Analysis finalAnalysis = analysis;
-                    final ReturnCode finalExecuteRc = executeRc;
-                    Display.getDefault().syncExec(new Runnable() {
-
-                        public void run() {
-                            MessageDialogWithToggle.openError(
-                                    null,
-                                    Messages.getString("ReportExecutor.runAnalysis"), Messages.getString("ReportExecutor.failRunAnalysis", finalAnalysis.getName(), finalExecuteRc.getMessage())); //$NON-NLS-1$ //$NON-NLS-2$
-                        }
-                    });
-                }
-
                 if (!executeRc.isOk()) {
                     log.error("Failed to execute analysis " + analysis.getName() + ". Reason: " + executeRc.getMessage());
                     atLeastOneFailure = true;

@@ -12,11 +12,17 @@
 // ============================================================================
 package org.talend.dataprofiler.core.helper;
 
+import static org.mockito.Matchers.*;
+import static org.mockito.Mockito.*;
+import static org.powermock.api.support.membermodification.MemberMatcher.*;
+import static org.powermock.api.support.membermodification.MemberModifier.*;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.ResourceBundle;
 
+import junit.framework.Assert;
 import net.sourceforge.sqlexplorer.plugin.SQLExplorerPlugin;
 
 import org.eclipse.core.resources.IFolder;
@@ -59,7 +65,6 @@ import org.talend.core.runtime.CoreRuntimePlugin;
 import org.talend.cwm.relational.RelationalFactory;
 import org.talend.cwm.relational.TdExpression;
 import org.talend.dataprofiler.core.CorePlugin;
-import org.talend.dataprofiler.core.exception.ExceptionHandler;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.ui.views.provider.RepositoryNodeBuilder;
@@ -87,11 +92,6 @@ import org.talend.resource.EResourceConstant;
 import orgomg.cwmx.analysis.informationreporting.Report;
 
 import common.Logger;
-
-import static org.mockito.Matchers.*;
-import static org.mockito.Mockito.*;
-import static org.powermock.api.support.membermodification.MemberMatcher.*;
-import static org.powermock.api.support.membermodification.MemberModifier.*;
 
 /**
  * created by yyin on 2012-8-22 Detailled comment: include some structure methods which can be used for any tests who
@@ -227,8 +227,7 @@ public class UnitTestBuildHelper {
             }
 
         } catch (PersistenceException e) {
-            ExceptionHandler.process(e);
-            log.error(e, e);
+            Assert.fail(e.getMessage());
         }
     }
 
@@ -259,8 +258,7 @@ public class UnitTestBuildHelper {
         try {
             ProxyRepositoryFactory.getInstance().create(item1, createPath, false);
         } catch (PersistenceException e) {
-            ExceptionHandler.process(e);
-            log.error(e, e);
+            Assert.fail(e.getMessage());
         }
         return report1;
     }
@@ -286,8 +284,7 @@ public class UnitTestBuildHelper {
         try {
             ProxyRepositoryFactory.getInstance().create(item1, createPath, false);
         } catch (PersistenceException e) {
-            ExceptionHandler.process(e);
-            log.error(e, e);
+            Assert.fail(e.getMessage());
         }
         return analysis1;
     }
@@ -305,8 +302,7 @@ public class UnitTestBuildHelper {
             try {
                 currFolder.create(true, true, null);
             } catch (CoreException e) {
-                ExceptionHandler.process(e);
-                log.error(e, e);
+                Assert.fail(e.getMessage());
             }
         }
         return currFolder;
@@ -322,6 +318,8 @@ public class UnitTestBuildHelper {
      */
     private static void checkFileName(String fileName, String pattern) {
         if (!java.util.regex.Pattern.matches(pattern, fileName)) {
+            Assert.fail(DefaultMessagesImpl.getString("ProxyRepositoryFactory.illegalArgumentException.labelNotMatchPattern", //$NON-NLS-1$
+                    new Object[] { fileName, pattern }));
             throw new IllegalArgumentException(DefaultMessagesImpl.getString(
                     "ProxyRepositoryFactory.illegalArgumentException.labelNotMatchPattern", new Object[] { fileName, pattern })); //$NON-NLS-1$
         }
@@ -385,8 +383,7 @@ public class UnitTestBuildHelper {
             node = (ReportFolderRepNode) instance.createRepositoryNodeSystemFolder(instance.getFolderHelper(), parentNode,
                     EResourceConstant.REPORTS);
         } catch (PersistenceException e) {
-            ExceptionHandler.process(e);
-            log.error(e, e);
+            Assert.fail(e.getMessage());
         }
         return node;
     }
@@ -460,8 +457,7 @@ public class UnitTestBuildHelper {
             IRepositoryViewObject reportViewObject = new RepositoryViewObject(reportProperty);
             reportRepNode = new ReportRepNode(reportViewObject, parentNode, ENodeType.REPOSITORY_ELEMENT);
         } catch (PersistenceException e) {
-            ExceptionHandler.process(e);
-            log.error(e, e);
+            Assert.fail(e.getMessage());
         }
 
         return reportRepNode;

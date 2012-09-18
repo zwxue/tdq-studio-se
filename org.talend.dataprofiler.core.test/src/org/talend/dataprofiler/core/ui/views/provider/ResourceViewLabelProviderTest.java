@@ -17,6 +17,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.regex.Pattern;
 
+import junit.framework.Assert;
 import net.sourceforge.sqlexplorer.plugin.SQLExplorerPlugin;
 
 import org.apache.log4j.Logger;
@@ -110,6 +111,7 @@ public class ResourceViewLabelProviderTest {
                 rootProject.delete(true, true, null);
             } catch (CoreException e) {
                 log.error(e, e);
+                Assert.fail(e.getMessage());
             }
         }
 
@@ -137,7 +139,7 @@ public class ResourceViewLabelProviderTest {
                 aa.create(true, true, null);
             } catch (CoreException e) {
                 Log.error(e, e);
-                e.printStackTrace();
+                Assert.fail(e.getMessage());
             }
         }
 
@@ -217,6 +219,7 @@ public class ResourceViewLabelProviderTest {
         } catch (PersistenceException e) {
             ExceptionHandler.process(e);
             log.error(e, e);
+            Assert.fail(e.getMessage());
         }
 
     }
@@ -251,6 +254,8 @@ public class ResourceViewLabelProviderTest {
      */
     private void checkFileName(String fileName, String pattern) {
         if (!Pattern.matches(pattern, fileName)) {
+            Assert.fail(DefaultMessagesImpl.getString("ProxyRepositoryFactory.illegalArgumentException.labelNotMatchPattern", //$NON-NLS-1$
+                    new Object[] { fileName, pattern }));
             throw new IllegalArgumentException(DefaultMessagesImpl.getString(
                     "ProxyRepositoryFactory.illegalArgumentException.labelNotMatchPattern", new Object[] { fileName, pattern })); //$NON-NLS-1$
         }
@@ -277,7 +282,7 @@ public class ResourceViewLabelProviderTest {
             ProxyRepositoryFactory.getInstance().create(item1, createPath, false);
         } catch (PersistenceException e) {
             Log.error(e, e);
-            e.printStackTrace();
+            Assert.fail(e.getMessage());
         }
 
     }
@@ -304,7 +309,7 @@ public class ResourceViewLabelProviderTest {
             ProxyRepositoryFactory.getInstance().create(item1, createPath, false);
         } catch (PersistenceException e) {
             Log.error(e, e);
-            e.printStackTrace();
+            Assert.fail(e.getMessage());
         }
     }
 
@@ -323,7 +328,7 @@ public class ResourceViewLabelProviderTest {
                 currFolder.create(true, true, null);
             } catch (CoreException e) {
                 Log.error(e, e);
-                e.printStackTrace();
+                Assert.fail(e.getMessage());
             }
         }
         return currFolder;
@@ -347,7 +352,7 @@ public class ResourceViewLabelProviderTest {
                 file.create(resourceAsStream, true, null);
             } catch (CoreException e) {
                 Log.error(e, e);
-                e.printStackTrace();
+                Assert.fail(e.getMessage());
             }
         }
         return file;

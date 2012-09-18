@@ -12,6 +12,7 @@
 // ============================================================================
 package org.talend.dq.analysis;
 
+import org.talend.cwm.exception.AnalysisExecutionException;
 import org.talend.dataquality.reports.TdReport;
 import org.talend.utils.sugars.ReturnCode;
 
@@ -27,6 +28,7 @@ public interface IReportExecutor {
      * 
      * @param report the report to execute
      * @return a return code with an error message in case when something went bad
+     * @throws AnalysisExecutionException
      */
-    public abstract ReturnCode execute(final TdReport report);
+    public abstract ReturnCode execute(final TdReport report) throws AnalysisExecutionException;
 }

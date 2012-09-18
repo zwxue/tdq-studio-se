@@ -115,8 +115,8 @@ public abstract class AnalysisExecutor implements IAnalysisExecutor {
 
         // ADD msjian 2011-5-30 17479: Excel Odbc connection can not run well on the correlation analysis
         // note: this feature is not supported now, if support, delete this
-        if (errorMessage != null && !errorMessage.equals("")) {
-            if ("EXCEL".equals(dbms().getDbmsName())) {
+        if (errorMessage != null && !errorMessage.equals("")) { //$NON-NLS-1$
+            if ("EXCEL".equals(dbms().getDbmsName())) { //$NON-NLS-1$
                 return getReturnCode(true);
             }
         }
