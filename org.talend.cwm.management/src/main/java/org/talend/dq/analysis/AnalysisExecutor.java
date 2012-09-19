@@ -35,9 +35,7 @@ import org.talend.dataquality.analysis.ExecutionInformations;
 import org.talend.dataquality.helpers.IndicatorHelper;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.ValueIndicator;
-import org.talend.dq.analysis.connpool.TdqAnalysisConnectionHelper;
 import org.talend.dq.analysis.connpool.TdqAnalysisConnectionPool;
-import org.talend.dq.analysis.connpool.TdqAnalysisConnectionPoolMap;
 import org.talend.dq.analysis.memory.AnalysisThreadMemoryChangeNotifier;
 import org.talend.dq.dbms.DbmsLanguage;
 import org.talend.dq.dbms.DbmsLanguageFactory;
@@ -133,7 +131,10 @@ public abstract class AnalysisExecutor implements IAnalysisExecutor {
         } finally {
             // ADD msjian TDQ-5952: we should close connections always.
             // after run analysis, close connection at once when don't need it
-            TdqAnalysisConnectionHelper.closeConnectionPool(analysis);
+            TdqAnalysisConnectionPool connectionPool = TdqAnalysisConnectionPool.getConnectionPool(analysis);
+            if (connectionPool != null) {
+                connectionPool.closeConnectionPool();
+            }
             // TDQ-5952~
         }
 
@@ -310,67 +311,20 @@ public abstract class AnalysisExecutor implements IAnalysisExecutor {
 
     }
 
-    /**
-     * DOC xqliu Comment method "getPooledConnection".
-     * 
-     * @param analysis
-     * @return
-     */
-    protected TypedReturnCode<java.sql.Connection> getPooledConnection(Analysis analysis) {
-        TypedReturnCode<java.sql.Connection> rc = new TypedReturnCode<java.sql.Connection>();
-
-        DataManager datamanager = analysis.getContext().getConnection();
-        if (datamanager == null) {
-            rc.setReturnCode(Messages.getString("AnalysisExecutor.DataManagerNull", analysis.getName()), false); //$NON-NLS-1$
-            return rc;
-        }
-        if (datamanager != null && datamanager.eIsProxy()) {
-            datamanager = (DataManager) EObjectHelper.resolveObject(datamanager);
-        }
-        Connection dataprovider = SwitchHelpers.CONNECTION_SWITCH.doSwitch(datamanager);
-        if (dataprovider == null) {
-            rc.setReturnCode(Messages.getString("AnalysisExecutor.DataProviderNull", datamanager.getName(), //$NON-NLS-1$
-                    analysis.getName()), false);
-            return rc;
-        }
-
-        // else ok
-        java.sql.Connection pooledConnection = null;
-
-        try {
-            pooledConnection = getConnectionPool(analysis, dataprovider).getConnection();
-        } catch (Exception e) {
-            log.debug(e, e);
-        }
-
-        if (pooledConnection == null) {
-            rc.setReturnCode("Can't get any useable connection!", false); //$NON-NLS-1$
-            return rc;
-        }
-
-        // else ok
-        rc.setObject(pooledConnection);
-        return rc;
-    }
 
     /**
-     * DOC xqliu Comment method "resetConnectionPool".
+     * Reset connection pool.
      * 
      * @param analysis
      * @param analysisDataProvider
      */
-    protected void resetConnectionPool(Analysis analysis, Connection analysisDataProvider) {
-        this.getConnectionPool(analysis, analysisDataProvider).closeConnectionPool();
+    protected void resetConnectionPool(Analysis analysis) {
+        TdqAnalysisConnectionPool connectionPool = TdqAnalysisConnectionPool.getConnectionPool(analysis);
+        if (connectionPool != null) {
+            connectionPool.closeConnectionPool();
+        }
     }
 
-    /**
-     * DOC xqliu Comment method "resetConnectionPool".
-     * 
-     * @param analysis
-     */
-    protected void resetConnectionPool(Analysis analysis) {
-        this.getConnectionPool(analysis).closeConnectionPool();
-    }
 
     /**
      * DOC xqliu Comment method "resetConnectionPool".
@@ -386,15 +340,12 @@ public abstract class AnalysisExecutor implements IAnalysisExecutor {
      * @param dataProvider
      * @return
      */
-    protected TypedReturnCode<java.sql.Connection> getPooledConnection(Analysis analysis, Connection dataProvider) {
+    protected TypedReturnCode<java.sql.Connection> getPooledConnection(Analysis analysis) {
         TypedReturnCode<java.sql.Connection> rc = new TypedReturnCode<java.sql.Connection>();
-        if (dataProvider == null) {
-            return rc;
-        }
         java.sql.Connection pooledConnection = null;
 
         try {
-            pooledConnection = getConnectionPool(analysis, dataProvider).getConnection();
+            pooledConnection = TdqAnalysisConnectionPool.getConnectionPool(analysis).getConnection();
         } catch (Exception e) {
             log.debug(e, e);
         }
@@ -409,17 +360,6 @@ public abstract class AnalysisExecutor implements IAnalysisExecutor {
         return rc;
     }
 
-    /**
-     * DOC xqliu Comment method "getConnectionPool".
-     * 
-     * @param analysis
-     * @param dataProvider
-     * @return
-     */
-    protected TdqAnalysisConnectionPool getConnectionPool(Analysis analysis, Connection dataProvider) {
-        return TdqAnalysisConnectionPoolMap.getInstance(analysis).getConnectionPool(dataProvider,
-                AnalysisHandler.createHandler(analysis).getNumberOfConnectionsPerAnalysis());
-    }
 
     /**
      * DOC xqliu Comment method "releasePooledConnection".
@@ -436,7 +376,7 @@ public abstract class AnalysisExecutor implements IAnalysisExecutor {
         if (dataProvider == null) {
             return;
         }
-        TdqAnalysisConnectionPool connectionPool = getConnectionPool(analysis, dataProvider);
+        TdqAnalysisConnectionPool connectionPool = TdqAnalysisConnectionPool.getConnectionPool(analysis);
         connectionPool.returnConnection(connection);
         if (closeConn) {
             connectionPool.closeConnection(connection);
@@ -482,22 +422,7 @@ public abstract class AnalysisExecutor implements IAnalysisExecutor {
      * @return
      */
     protected TdqAnalysisConnectionPool getConnectionPool() {
-        return getConnectionPool(cachedAnalysis);
-    }
-
-    /**
-     * DOC xqliu Comment method "getConnectionPool".
-     * 
-     * @param analysis
-     * @return
-     */
-    protected TdqAnalysisConnectionPool getConnectionPool(Analysis analysis) {
-        Connection analysisDataProvider = getAnalysisDataProvider(analysis);
-        if (analysisDataProvider != null) {
-            return getConnectionPool(analysis, analysisDataProvider);
-        } else {
-            return null;
-        }
+        return TdqAnalysisConnectionPool.getConnectionPool(cachedAnalysis);
     }
 
     /**

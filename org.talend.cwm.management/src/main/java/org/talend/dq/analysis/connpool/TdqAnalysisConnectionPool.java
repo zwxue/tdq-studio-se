@@ -15,12 +15,21 @@ package org.talend.dq.analysis.connpool;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
+import java.util.Collections;
 import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Vector;
 
 import org.apache.log4j.Logger;
 import org.talend.core.model.metadata.builder.database.JavaSqlFactory;
+import org.talend.cwm.helper.SwitchHelpers;
+import org.talend.cwm.management.i18n.Messages;
+import org.talend.dataquality.analysis.Analysis;
+import org.talend.dq.analysis.AnalysisHandler;
+import org.talend.dq.helper.EObjectHelper;
 import org.talend.utils.sugars.TypedReturnCode;
+import orgomg.cwm.foundation.softwaredeployment.DataManager;
 
 /**
  * DOC xqliu class global comment. Detailled comment
@@ -39,9 +48,19 @@ public class TdqAnalysisConnectionPool {
 
     private static final boolean SHOW_CONNECTIONS_INFO = Boolean.FALSE;
 
+    /**
+     * Keep a reference to analysis because the connection information from this analysis is required when create a
+     * java.sql.connection.
+     */
+    private Analysis analysis = null;
+
     private static Logger log = Logger.getLogger(TdqAnalysisConnectionPool.class);
 
-    private org.talend.core.model.metadata.builder.connection.Connection tConnection;
+    /**
+     * Map where key is the analysis and value is the connection pool of this analysis.
+     */
+    private static final Map<Analysis, TdqAnalysisConnectionPool> INSTANCE_ANA_TO_POOL_MAP = Collections
+            .synchronizedMap(new HashMap<Analysis, TdqAnalysisConnectionPool>());
 
     private Vector<PooledTdqAnalysisConnection> pConnections;
 
@@ -50,6 +69,23 @@ public class TdqAnalysisConnectionPool {
     private String synchronizedFlag = ""; //$NON-NLS-1$\
 
     private int maxConnections = CONNECTIONS_PER_ANALYSIS_DEFAULT_LENGTH;
+
+    /**
+     * 
+     * Look up the conn pool from instance map.
+     * 
+     * @param analysis
+     * @return the specific connection pool by analylsis.
+     */
+    public static TdqAnalysisConnectionPool getConnectionPool(Analysis analysis) {
+        TdqAnalysisConnectionPool connPoolTemp = INSTANCE_ANA_TO_POOL_MAP.get(analysis);
+        if (connPoolTemp == null) {
+            int maxConnNumberPerAnalysis = AnalysisHandler.createHandler(analysis).getNumberOfConnectionsPerAnalysis();
+            connPoolTemp = new TdqAnalysisConnectionPool(analysis, maxConnNumberPerAnalysis);
+            INSTANCE_ANA_TO_POOL_MAP.put(analysis, connPoolTemp);
+        }
+        return connPoolTemp;
+    }
 
     public int getMaxConnections() {
         return this.maxConnections;
@@ -76,28 +112,12 @@ public class TdqAnalysisConnectionPool {
      * 
      * @param tConnection
      */
-    public TdqAnalysisConnectionPool(org.talend.core.model.metadata.builder.connection.Connection tConnection, int maxConnections) {
-        this.setTConnection(tConnection);
+    public TdqAnalysisConnectionPool(Analysis analysis, int maxConnections) {
+        this.analysis = analysis;
         this.setMaxConnections(maxConnections);
     }
 
-    /**
-     * DOC xqliu Comment method "getTConnection".
-     * 
-     * @return
-     */
-    public org.talend.core.model.metadata.builder.connection.Connection getTConnection() {
-        return this.tConnection;
-    }
 
-    /**
-     * DOC xqliu Comment method "setTConnection".
-     * 
-     * @param tConnection
-     */
-    public void setTConnection(org.talend.core.model.metadata.builder.connection.Connection tConnection) {
-        this.tConnection = tConnection;
-    }
 
     /**
      * DOC xqliu Comment method "getPConnections".
@@ -149,9 +169,19 @@ public class TdqAnalysisConnectionPool {
         if (isFull()) {
             return conn;
         }
-
         try {
-            TypedReturnCode<Connection> trcConn = JavaSqlFactory.createConnection(this.getTConnection());
+            DataManager datamanager = analysis.getContext().getConnection();
+            if (datamanager == null) {
+                log.error(Messages.getString("AnalysisExecutor.DataManagerNull", analysis.getName())); //$NON-NLS-1$
+                return null;
+            }
+            if (datamanager != null && datamanager.eIsProxy()) {
+                datamanager = (DataManager) EObjectHelper.resolveObject(datamanager);
+            }
+            org.talend.core.model.metadata.builder.connection.Connection dataprovider = SwitchHelpers.CONNECTION_SWITCH
+                    .doSwitch(datamanager);
+
+            TypedReturnCode<Connection> trcConn = JavaSqlFactory.createConnection(dataprovider);
             if (trcConn.isOk()) {
                 conn = trcConn.getObject();
                 synchronized (this.synchronizedFlag) {

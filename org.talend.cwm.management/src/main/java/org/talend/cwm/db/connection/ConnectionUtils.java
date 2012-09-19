@@ -86,6 +86,7 @@ import org.talend.dataquality.helpers.MetadataHelper;
 import org.talend.designer.core.model.utils.emf.talendfile.ContextType;
 import org.talend.dq.CWMPlugin;
 import org.talend.dq.analysis.parameters.DBConnectionParameter;
+import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.nodes.DQRepositoryNode;
 import org.talend.dq.writer.impl.ElementWriterFactory;
@@ -94,6 +95,7 @@ import org.talend.repository.ui.utils.DBConnectionContextUtils;
 import org.talend.repository.ui.utils.FileConnectionContextUtils;
 import org.talend.utils.sql.metadata.constants.GetColumn;
 import org.talend.utils.sugars.ReturnCode;
+import orgomg.cwm.foundation.softwaredeployment.DataManager;
 import orgomg.cwm.foundation.softwaredeployment.DataProvider;
 import orgomg.cwm.foundation.softwaredeployment.ProviderConnection;
 import orgomg.cwm.objectmodel.core.ModelElement;
@@ -1804,5 +1806,21 @@ public final class ConnectionUtils {
                 ConnectionHelper.setUsername(connection, JavaSqlFactory.DEFAULT_USERNAME);
             }
         }
+    }
+
+    /**
+     * 
+     * Get connection from data manager.
+     * 
+     * @param datamanager
+     * @return
+     */
+    public static Connection getConnectionFromDatamanager(DataManager datamanager) {
+        if (datamanager != null && datamanager.eIsProxy()) {
+            datamanager = (DataManager) EObjectHelper.resolveObject(datamanager);
+        }
+        Connection analysisDataProvider = SwitchHelpers.CONNECTION_SWITCH.doSwitch(datamanager);
+        return analysisDataProvider;
+
     }
 }

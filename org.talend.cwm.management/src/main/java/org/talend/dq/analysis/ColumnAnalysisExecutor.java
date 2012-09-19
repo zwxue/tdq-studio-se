@@ -94,15 +94,12 @@ public class ColumnAnalysisExecutor extends AnalysisExecutor {
             eval.storeIndicator(columnName, indicator);
         }
 
-        // get the dataprovider of the analysis
-        org.talend.core.model.metadata.builder.connection.Connection analysisDataProvider = getAnalysisDataProvider(analysis);
-
         // open a connection
         TypedReturnCode<java.sql.Connection> connection = null;
         if (POOLED_CONNECTION) {
             // reset the connection pool before run this analysis
-            resetConnectionPool(analysis, analysisDataProvider);
-            connection = getPooledConnection(analysis, analysisDataProvider);
+            resetConnectionPool(analysis);
+            connection = getPooledConnection(analysis);
         } else {
             connection = getConnection(analysis);
         }

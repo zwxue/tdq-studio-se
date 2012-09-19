@@ -51,7 +51,7 @@ import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisType;
 import org.talend.dataquality.helpers.AnalysisHelper;
 import org.talend.dataquality.properties.TDQAnalysisItem;
-import org.talend.dq.analysis.connpool.TdqAnalysisConnectionHelper;
+import org.talend.dq.analysis.connpool.TdqAnalysisConnectionPool;
 import org.talend.dq.helper.ProxyRepositoryManager;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
@@ -59,6 +59,7 @@ import org.talend.dq.nodes.AnalysisRepNode;
 import org.talend.repository.model.ERepositoryStatus;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.utils.sugars.ReturnCode;
+import orgomg.cwm.foundation.softwaredeployment.DataManager;
 
 /**
  * DOC zqin class global comment. Detailled comment <br/>
@@ -219,7 +220,9 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
             return;
         }
         // MOD klliu bug 4546 check connectiong is connected well.
-        Connection analysisDataProvider = TdqAnalysisConnectionHelper.getAnalysisDataProvider(analysis);
+        DataManager datamanager = analysis.getContext().getConnection();
+        Connection analysisDataProvider = ConnectionUtils.getConnectionFromDatamanager(datamanager);
+
         // MOD klliu bug 4584 Filtering the file connection when checking connection is successful,before real running
         // analysis.
         ReturnCode connectionAvailable = ConnectionUtils.isConnectionAvailable(analysisDataProvider);
@@ -284,7 +287,10 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
                     }
                     if (monitor.isCanceled()) {
                         thread.interrupt();
-                        TdqAnalysisConnectionHelper.closeConnectionPool(analysis);
+                        TdqAnalysisConnectionPool connectionPool = TdqAnalysisConnectionPool.getConnectionPool(analysis);
+                        if (connectionPool != null) {
+                            connectionPool.closeConnectionPool();
+                        }
                         executed = new ReturnCode(DefaultMessagesImpl.getString("RunAnalysisAction.TaskCancel"), false); //$NON-NLS-1$
                         break;
                     }
