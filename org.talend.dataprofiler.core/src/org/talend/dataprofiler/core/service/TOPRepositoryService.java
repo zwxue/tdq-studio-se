@@ -36,7 +36,6 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.talend.commons.exception.PersistenceException;
 import org.talend.core.ITDQRepositoryService;
-import org.talend.core.model.context.ContextUtils;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
 import org.talend.core.model.metadata.builder.connection.DelimitedFileConnection;
@@ -44,7 +43,6 @@ import org.talend.core.model.metadata.builder.connection.MDMConnection;
 import org.talend.core.model.metadata.builder.database.JavaSqlFactory;
 import org.talend.core.model.metadata.builder.util.MetadataConnectionUtils;
 import org.talend.core.model.properties.ConnectionItem;
-import org.talend.core.model.properties.ContextItem;
 import org.talend.core.model.properties.Item;
 import org.talend.core.model.properties.Property;
 import org.talend.core.model.repository.ERepositoryObjectType;
@@ -79,7 +77,6 @@ import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.dq.nodes.SourceFileRepNode;
 import org.talend.dq.nodes.SourceFileSubFolderNode;
 import org.talend.dq.writer.impl.ElementWriterFactory;
-import org.talend.repository.model.IProxyRepositoryFactory;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.resource.EResourceConstant;
@@ -270,45 +267,6 @@ public class TOPRepositoryService implements ITDQRepositoryService {
         return ruleValues;
     }
 
-    /*
-     * Add qiongli TDQ-3317 when context is changed,should retrive the related database info(schema,catalog) and sql
-     * exploer.
-     * 
-     * @see org.talend.core.ITDQRepositoryService#reloadDatabase(org.talend.core.model.properties.ConnectionItem)
-     */
-    public void reloadDatabase(ContextItem contextItem) {
-        if (contextItem == null) {
-            return;
-        }
-        IProxyRepositoryFactory factory = ProxyRepositoryFactory.getInstance();
-        try {
-            List<IRepositoryViewObject> dbConnList = factory.getAll(ERepositoryObjectType.METADATA_CONNECTIONS, true);
-            for (IRepositoryViewObject obj : dbConnList) {
-                Item item = obj.getProperty().getItem();
-                if (item instanceof ConnectionItem) {
-                    ConnectionItem connectionItem = ((ConnectionItem) item);
-                    Connection conn = connectionItem.getConnection();
-                    if (conn.isContextMode()) {
-                        ContextItem cItem = ContextUtils.getContextItemById2(conn.getContextId());
-
-                        if (cItem == contextItem) {
-                            reloadDatabase(connectionItem);
-                        }
-                    }
-                }
-            }
-            // List<IRepositoryViewObject> fileConnList = factory.getAll(ERepositoryObjectType.METADATA_FILE_DELIMITED,
-            // true);
-            // for (IRepositoryViewObject obj : fileConnList) {
-            // Item item = obj.getProperty().getItem();
-            // if (item instanceof ConnectionItem) {
-            // // TODO reload struct for DelimitedFile connection
-            // }
-            // }
-        } catch (PersistenceException e) {
-            log.error(e, e);
-        }
-    }
 
     /**
      * 

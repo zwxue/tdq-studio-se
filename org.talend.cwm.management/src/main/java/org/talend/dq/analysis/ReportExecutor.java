@@ -24,7 +24,7 @@ import org.talend.dataquality.analysis.ExecutionInformations;
 import org.talend.dataquality.helpers.ReportHelper;
 import org.talend.dataquality.reports.AnalysisMap;
 import org.talend.dataquality.reports.TdReport;
-import org.talend.dq.analysis.connpool.TdqAnalysisConnectionHelper;
+import org.talend.dq.analysis.connpool.TdqAnalysisConnectionPool;
 import org.talend.utils.sugars.ReturnCode;
 
 /**
@@ -59,7 +59,11 @@ public class ReportExecutor implements IReportExecutor {
                 ReturnCode executeRc = AnalysisExecutorSelector.executeAnalysis(analysis);
 
                 // ADD msjian TDQ-5952: we should close connections always
-                TdqAnalysisConnectionHelper.closeConnectionPool(analysis);
+                // MOD yyin TDQ-5362
+                TdqAnalysisConnectionPool connectionPool = TdqAnalysisConnectionPool.getConnectionPool(analysis);
+                if (connectionPool != null) {
+                    connectionPool.closeConnectionPool();
+                }
                 // TDQ-5952~
                 if (executeRc.getMessage() != null) {
                     final Analysis finalAnalysis = analysis;

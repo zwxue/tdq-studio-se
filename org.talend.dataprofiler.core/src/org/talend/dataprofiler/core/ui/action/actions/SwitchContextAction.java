@@ -14,9 +14,6 @@ package org.talend.dataprofiler.core.ui.action.actions;
 
 import org.apache.log4j.Logger;
 import org.eclipse.jface.action.Action;
-import org.talend.core.GlobalServiceRegister;
-import org.talend.core.ITDQRepositoryService;
-import org.talend.core.model.context.ContextUtils;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.properties.Item;
@@ -60,7 +57,6 @@ public class SwitchContextAction extends Action {
 
                 // get contextid and file name
                 String fileStr = PluginConstant.EMPTY_STRING;
-                String contextId = PluginConstant.EMPTY_STRING;
                 Connection dbcon = null;
                 if (conRepNode instanceof DBConnectionRepNode) {
                     dbcon = ((DBConnectionRepNode) conRepNode).getDatabaseConnection();
@@ -71,21 +67,11 @@ public class SwitchContextAction extends Action {
                 }
                 if (dbcon != null) {
                     fileStr = dbcon.eResource().getURI().toFileString();
-                    contextId = dbcon.getContextId();
                 }
                 
                 if (isUpdated) {
                     if (log.isDebugEnabled()) {
                         log.debug(DefaultMessagesImpl.getString("SwitchContextAction.saveMessage", fileStr, "successful"));//$NON-NLS-1$ //$NON-NLS-2$
-                    }
-
-                    ITDQRepositoryService tdqRepService = null;
-                    if (GlobalServiceRegister.getDefault().isServiceRegistered(ITDQRepositoryService.class)) {
-                        tdqRepService = (ITDQRepositoryService) GlobalServiceRegister.getDefault().getService(
-                                ITDQRepositoryService.class);
-                    }
-                    if (tdqRepService != null) {
-                        tdqRepService.reloadDatabase(ContextUtils.getContextItemById2(contextId));
                     }
                 } else {
                     log.error(DefaultMessagesImpl.getString("SwitchContextAction.saveMessage", fileStr, "failed"));//$NON-NLS-1$ //$NON-NLS-2$

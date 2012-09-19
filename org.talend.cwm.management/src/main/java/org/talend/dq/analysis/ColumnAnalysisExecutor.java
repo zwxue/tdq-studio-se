@@ -101,8 +101,8 @@ public class ColumnAnalysisExecutor extends AnalysisExecutor {
         TypedReturnCode<java.sql.Connection> connection = null;
         if (POOLED_CONNECTION) {
             // reset the connection pool before run this analysis
-            resetConnectionPool(analysis, analysisDataProvider);
-            connection = getPooledConnection(analysis, analysisDataProvider);
+            resetConnectionPool(analysis);
+            connection = getPooledConnection(analysis);
         } else {
             connection = getConnection(analysis);
         }

@@ -64,6 +64,7 @@ public class DelimitedFileAnalysisExecutor extends AnalysisExecutor {
             eval.storeIndicator(columnName, indicator);
         }
         eval.setDelimitedFileconnection(con);
+
         ReturnCode rc = eval.evaluateIndicators(sqlStatement, true);
         if (!rc.isOk()) {
             log.warn(rc.getMessage());
