@@ -12,7 +12,6 @@
 // ============================================================================
 package org.talend.dataprofiler.rcp;
 
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -57,6 +56,7 @@ public class TopService implements ICoreService {
      * 
      * @see org.talend.core.ICoreService#addWorkspaceTaskDone(java.lang.String)
      */
+    @Override
     public void addWorkspaceTaskDone(String task) {
         // TODO Auto-generated method stub
 
@@ -67,6 +67,7 @@ public class TopService implements ICoreService {
      * 
      * @see org.talend.core.ICoreService#checkJob(java.lang.String)
      */
+    @Override
     public boolean checkJob(String name) throws BusinessException {
         // TODO Auto-generated method stub
         return false;
@@ -77,6 +78,7 @@ public class TopService implements ICoreService {
      * 
      * @see org.talend.core.ICoreService#componentsReset()
      */
+    @Override
     public void componentsReset() {
         // TODO Auto-generated method stub
 
@@ -87,6 +89,7 @@ public class TopService implements ICoreService {
      * 
      * @see org.talend.core.ICoreService#createStatsLogAndImplicitParamter(org.talend.core.model.general.Project)
      */
+    @Override
     public void createStatsLogAndImplicitParamter(Project project) {
         // TODO Auto-generated method stub
 
@@ -97,6 +100,7 @@ public class TopService implements ICoreService {
      * 
      * @see org.talend.core.ICoreService#deleteAllJobs(boolean)
      */
+    @Override
     public void deleteAllJobs(boolean fromPluginModel) {
         // TODO Auto-generated method stub
 
@@ -107,6 +111,7 @@ public class TopService implements ICoreService {
      * 
      * @see org.talend.core.ICoreService#deleteRoutinefile(org.talend.core.model.repository.IRepositoryViewObject)
      */
+    @Override
     public void deleteRoutinefile(IRepositoryViewObject objToDelete) {
         // TODO Auto-generated method stub
 
@@ -117,6 +122,7 @@ public class TopService implements ICoreService {
      * 
      * @see org.talend.core.ICoreService#filterSpecialChar(java.lang.String)
      */
+    @Override
     public String filterSpecialChar(String input) {
         // TODO Auto-generated method stub
         return null;
@@ -128,6 +134,7 @@ public class TopService implements ICoreService {
      * @see org.talend.core.ICoreService#getColumnNameChanged(org.talend.core.model.metadata.IMetadataTable,
      * org.talend.core.model.metadata.IMetadataTable)
      */
+    @Override
     public List<ColumnNameChanged> getColumnNameChanged(IMetadataTable oldTable, IMetadataTable newTable) {
         // TODO Auto-generated method stub
         return null;
@@ -139,6 +146,7 @@ public class TopService implements ICoreService {
      * @see org.talend.core.ICoreService#getContextFileNameForPerl(java.lang.String, java.lang.String, java.lang.String,
      * java.lang.String)
      */
+    @Override
     public String getContextFileNameForPerl(String projectName, String jobName, String version, String context) {
         // TODO Auto-generated method stub
         return null;
@@ -149,6 +157,7 @@ public class TopService implements ICoreService {
      * 
      * @see org.talend.core.ICoreService#getContextFlagFromQueryUtils()
      */
+    @Override
     public boolean getContextFlagFromQueryUtils() {
         // TODO Auto-generated method stub
         return false;
@@ -159,6 +168,7 @@ public class TopService implements ICoreService {
      * 
      * @see org.talend.core.ICoreService#getImageWithDocExt(java.lang.String)
      */
+    @Override
     public Image getImageWithDocExt(String extension) {
         // TODO Auto-generated method stub
         return null;
@@ -169,6 +179,7 @@ public class TopService implements ICoreService {
      * 
      * @see org.talend.core.ICoreService#getImageWithSpecial(org.eclipse.swt.graphics.Image)
      */
+    @Override
     public ImageDescriptor getImageWithSpecial(Image source) {
         // TODO Auto-generated method stub
         return null;
@@ -179,6 +190,7 @@ public class TopService implements ICoreService {
      * 
      * @see org.talend.core.ICoreService#getJavaJobFolderName(java.lang.String, java.lang.String)
      */
+    @Override
     public String getJavaJobFolderName(String jobName, String version) {
         // TODO Auto-generated method stub
         return null;
@@ -189,6 +201,7 @@ public class TopService implements ICoreService {
      * 
      * @see org.talend.core.ICoreService#getJavaProjectFolderName(org.talend.core.model.properties.Item)
      */
+    @Override
     public String getJavaProjectFolderName(Item item) {
         // TODO Auto-generated method stub
         return null;
@@ -199,6 +212,7 @@ public class TopService implements ICoreService {
      * 
      * @see org.talend.core.ICoreService#getLanTypeString()
      */
+    @Override
     public String getLanTypeString() {
         // TODO Auto-generated method stub
         return null;
@@ -209,6 +223,7 @@ public class TopService implements ICoreService {
      * 
      * @see org.talend.core.ICoreService#getLastUser()
      */
+    @Override
     public String getLastUser() {
         // TODO Auto-generated method stub
         return null;
@@ -220,6 +235,7 @@ public class TopService implements ICoreService {
      * @see org.talend.core.ICoreService#getNewMetadataColumns(org.talend.core.model.metadata.IMetadataTable,
      * org.talend.core.model.metadata.IMetadataTable)
      */
+    @Override
     public List<ColumnNameChanged> getNewMetadataColumns(IMetadataTable oldTable, IMetadataTable newTable) {
         // TODO Auto-generated method stub
         return null;
@@ -231,6 +247,7 @@ public class TopService implements ICoreService {
      * @see
      * org.talend.core.ICoreService#getParameterUNIQUENAME(org.talend.designer.core.model.utils.emf.talendfile.NodeType)
      */
+    @Override
     public String getParameterUNIQUENAME(NodeType node) {
         // TODO Auto-generated method stub
         return null;
@@ -242,6 +259,7 @@ public class TopService implements ICoreService {
      * @see org.talend.core.ICoreService#getRemoveMetadataColumns(org.talend.core.model.metadata.IMetadataTable,
      * org.talend.core.model.metadata.IMetadataTable)
      */
+    @Override
     public List<ColumnNameChanged> getRemoveMetadataColumns(IMetadataTable oldTable, IMetadataTable newTable) {
         // TODO Auto-generated method stub
         return null;
@@ -252,6 +270,7 @@ public class TopService implements ICoreService {
      * 
      * @see org.talend.core.ICoreService#getRootProjectNameForPerl(org.talend.core.model.properties.Item)
      */
+    @Override
     public String getRootProjectNameForPerl(Item item) {
         // TODO Auto-generated method stub
         return null;
@@ -262,7 +281,8 @@ public class TopService implements ICoreService {
      * 
      * @see org.talend.core.ICoreService#getRoutineAndJars()
      */
-    public Map<String, List<URI>> getRoutineAndJars() {
+    @Override
+    public Map<String, List<String>> getRoutineAndJars() {
         // TODO Auto-generated method stub
         return null;
     }
@@ -272,6 +292,7 @@ public class TopService implements ICoreService {
      * 
      * @see org.talend.core.ICoreService#getSpecificResourceInJavaProject(org.eclipse.core.runtime.IPath)
      */
+    @Override
     public IResource getSpecificResourceInJavaProject(IPath path) throws CoreException {
         // TODO Auto-generated method stub
         return null;
@@ -282,6 +303,7 @@ public class TopService implements ICoreService {
      * 
      * @see org.talend.core.ICoreService#getSpecificResourceInPerlProject(org.eclipse.core.runtime.IPath)
      */
+    @Override
     public IResource getSpecificResourceInPerlProject(IPath path) throws CoreException {
         // TODO Auto-generated method stub
         return null;
@@ -292,6 +314,7 @@ public class TopService implements ICoreService {
      * 
      * @see org.talend.core.ICoreService#getTemplateString()
      */
+    @Override
     public String getTemplateString() {
         // TODO Auto-generated method stub
         return null;
@@ -302,6 +325,7 @@ public class TopService implements ICoreService {
      * 
      * @see org.talend.core.ICoreService#initializeComponents(org.eclipse.core.runtime.IProgressMonitor)
      */
+    @Override
     public void initializeComponents(IProgressMonitor monitor) {
         // TODO Auto-generated method stub
 
@@ -312,6 +336,7 @@ public class TopService implements ICoreService {
      * 
      * @see org.talend.core.ICoreService#initializeForTalendStartupJob()
      */
+    @Override
     public void initializeForTalendStartupJob() {
         // TODO Auto-generated method stub
 
@@ -322,6 +347,7 @@ public class TopService implements ICoreService {
      * 
      * @see org.talend.core.ICoreService#initializeTemplates()
      */
+    @Override
     public Job initializeTemplates() {
         // TODO Auto-generated method stub
         return null;
@@ -332,6 +358,7 @@ public class TopService implements ICoreService {
      * 
      * @see org.talend.core.ICoreService#isAlreadyBuilt(org.talend.core.model.general.Project)
      */
+    @Override
     public boolean isAlreadyBuilt(Project project) {
         // TODO Auto-generated method stub
         return false;
@@ -342,6 +369,7 @@ public class TopService implements ICoreService {
      * 
      * @see org.talend.core.ICoreService#isContainContextParam(java.lang.String)
      */
+    @Override
     public boolean isContainContextParam(String code) {
         // TODO Auto-generated method stub
         return false;
@@ -352,6 +380,7 @@ public class TopService implements ICoreService {
      * 
      * @see org.talend.core.ICoreService#isKeyword(java.lang.String)
      */
+    @Override
     public boolean isKeyword(String word) {
         // TODO Auto-generated method stub
         return false;
@@ -362,6 +391,7 @@ public class TopService implements ICoreService {
      * 
      * @see org.talend.core.ICoreService#readWorkspaceTasksDone()
      */
+    @Override
     public List<String> readWorkspaceTasksDone() {
         // TODO Auto-generated method stub
         return new ArrayList<String>();
@@ -372,6 +402,7 @@ public class TopService implements ICoreService {
      * 
      * @see org.talend.core.ICoreService#removeItemRelations(org.talend.core.model.properties.Item)
      */
+    @Override
     public void removeItemRelations(Item item) {
         // TODO Auto-generated method stub
 
@@ -382,6 +413,7 @@ public class TopService implements ICoreService {
      * 
      * @see org.talend.core.ICoreService#removeJobLaunch(org.talend.core.model.repository.IRepositoryViewObject)
      */
+    @Override
     public void removeJobLaunch(IRepositoryViewObject objToDelete) {
         // TODO Auto-generated method stub
 
@@ -392,6 +424,7 @@ public class TopService implements ICoreService {
      * 
      * @see org.talend.core.ICoreService#setFlagForQueryUtils(boolean)
      */
+    @Override
     public void setFlagForQueryUtils(boolean flag) {
         // TODO Auto-generated method stub
 
@@ -402,6 +435,7 @@ public class TopService implements ICoreService {
      * 
      * @see org.talend.core.ICoreService#syncAllRoutines()
      */
+    @Override
     public void syncAllRoutines() throws SystemException {
         // TODO Auto-generated method stub
 
@@ -412,6 +446,7 @@ public class TopService implements ICoreService {
      * 
      * @see org.talend.core.ICoreService#syncAllRules()
      */
+    @Override
     public void syncAllRules() {
         // TODO Auto-generated method stub
 
@@ -422,6 +457,7 @@ public class TopService implements ICoreService {
      * 
      * @see org.talend.core.ICoreService#syncLibraries(org.eclipse.core.runtime.IProgressMonitor[])
      */
+    @Override
     public void syncLibraries(IProgressMonitor... monitorWrap) {
         // TODO Auto-generated method stub
 
@@ -432,6 +468,7 @@ public class TopService implements ICoreService {
      * 
      * @see org.talend.core.ICoreService#validateValueForDBType(java.lang.String)
      */
+    @Override
     public String validateValueForDBType(String columnName) {
         // TODO Auto-generated method stub
         return null;
@@ -442,20 +479,24 @@ public class TopService implements ICoreService {
      * 
      * @see org.talend.core.ICoreService#synchronizeMapptingXML()
      */
+    @Override
     public void synchronizeMapptingXML() {
         // I do not know what the method is supposed to be doing to I do nothing.
     }
 
+    @Override
     public void synchronizeSapLib() {
         // TODO Auto-generated method stub
 
     }
 
+    @Override
     public IPreferenceStore getPreferenceStore() {
         // MOD qiongli 2011-4-11.bug 20115.
         return CorePlugin.getDefault().getPreferenceStore();
     }
 
+    @Override
     public boolean isOpenedItemInEditor(IRepositoryViewObject object) {
         // TODO Auto-generated method stub
         return false;
@@ -466,6 +507,7 @@ public class TopService implements ICoreService {
      * 
      * @see org.talend.core.ICoreService#updatePalette()
      */
+    @Override
     public void updatePalette() {
         // TODO Auto-generated method stub
 
@@ -476,6 +518,7 @@ public class TopService implements ICoreService {
      * 
      * @see org.talend.core.ICoreService#resetUniservLibraries()
      */
+    @Override
     public void resetUniservLibraries() {
         // TODO Auto-generated method stub
 
@@ -486,6 +529,7 @@ public class TopService implements ICoreService {
      * 
      * @see org.talend.core.ICoreService#deleteBeanfile(org.talend.core.model.repository.IRepositoryViewObject)
      */
+    @Override
     public void deleteBeanfile(IRepositoryViewObject objToDelete) {
         // TODO Auto-generated method stub
 
@@ -496,6 +540,7 @@ public class TopService implements ICoreService {
      * 
      * @see org.talend.core.ICoreService#syncAllBeans()
      */
+    @Override
     public void syncAllBeans() throws SystemException {
         // TODO Auto-generated method stub
 
@@ -506,11 +551,13 @@ public class TopService implements ICoreService {
      * 
      * @see org.talend.core.ICoreService#convert(org.talend.core.model.metadata.builder.connection.MetadataTable)
      */
+    @Override
     public IMetadataTable convert(MetadataTable originalTable) {
         // TODO Auto-generated method stub
         return null;
     }
 
+    @Override
     public MenuManager[] getRepositoryContextualsActionGroups() {
         return null;
     }
