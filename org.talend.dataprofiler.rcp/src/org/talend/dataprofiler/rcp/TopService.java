@@ -12,7 +12,6 @@
 // ============================================================================
 package org.talend.dataprofiler.rcp;
 
-import java.net.URI;
 import java.util.List;
 import java.util.Map;
 
@@ -262,7 +261,7 @@ public class TopService implements ICoreService {
      * @see org.talend.core.ICoreService#getRoutineAndJars()
      */
     @Override
-    public Map<String, List<URI>> getRoutineAndJars() {
+    public Map<String, List<String>> getRoutineAndJars() {
         throw new UnsupportedOperationException();
     }
 
