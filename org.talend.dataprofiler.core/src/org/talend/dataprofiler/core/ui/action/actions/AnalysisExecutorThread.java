@@ -13,10 +13,8 @@
 package org.talend.dataprofiler.core.ui.action.actions;
 
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.swt.widgets.Display;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dq.analysis.AnalysisExecutorSelector;
-import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
 import org.talend.utils.sugars.ReturnCode;
 
 /**
@@ -84,11 +82,6 @@ public class AnalysisExecutorThread implements Runnable {
     public void run() {
 
         setExecuted(AnalysisExecutorSelector.executeAnalysis(getAnalysis(), getMonitor()));
-        Display.getDefault().asyncExec(new Runnable() {
-            public void run() {
-                AnaResourceFileHelper.getInstance().save(getAnalysis());
-            }
-        });
     }
 
 }

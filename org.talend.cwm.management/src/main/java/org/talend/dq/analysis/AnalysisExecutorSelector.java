@@ -14,12 +14,14 @@ package org.talend.dq.analysis;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.swt.widgets.Display;
 import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.management.i18n.Messages;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisType;
 import org.talend.dataquality.analysis.ExecutionLanguage;
 import org.talend.dataquality.helpers.AnalysisHelper;
+import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
 import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.foundation.softwaredeployment.DataProvider;
 
@@ -146,12 +148,22 @@ public final class AnalysisExecutorSelector {
      * @param monitor
      * @return
      */
-    public static ReturnCode executeAnalysis(Analysis analysis, IProgressMonitor monitor) {
+    public static ReturnCode executeAnalysis(final Analysis analysis, IProgressMonitor monitor) {
         IAnalysisExecutor analysisExecutor = getAnalysisExecutor(analysis);
         if (analysisExecutor != null) {
             // MOD xqliu 2009-02-09 bug 6237
             analysisExecutor.setMonitor(monitor);
-            return analysisExecutor.execute(analysis);
+            ReturnCode execute = analysisExecutor.execute(analysis);
+
+            // save analysis.
+            Display.getDefault().asyncExec(new Runnable() {
+
+                public void run() {
+                    AnaResourceFileHelper.getInstance().save(analysis);
+                }
+            });
+
+            return execute;
         }
         // else
         return new ReturnCode(Messages.getString("AnalysisExecutorSelector.NotFindHowExecute", analysis.getName()), false); //$NON-NLS-1$
