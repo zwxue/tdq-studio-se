@@ -348,7 +348,8 @@ public final class TopChartFactory {
     }
 
     /**
-     * DOC Zqin Comment method "create3DBarChart".
+     * 
+     * mzhao create bar chart with default bar render class.
      * 
      * @param titile
      * @param dataset
@@ -363,7 +364,19 @@ public final class TopChartFactory {
         JFreeChart chart = ChartFactory.createBarChart(null, titile,
                 DefaultMessagesImpl.getString("TopChartFactory.Value"), dataset, PlotOrientation.VERTICAL, showLegend, //$NON-NLS-1$
                 true, false);
+        decorateBarChart(chart);
+        return chart;
+    }
 
+    /**
+     * create bar chart with customized bar render class which can be adapted in JFreeChart class.
+     * 
+     * @param titile
+     * @param dataset
+     * @param showLegend
+     * @return
+     */
+    public static void decorateBarChart(JFreeChart chart) {
         CategoryPlot plot = chart.getCategoryPlot();
         plot.getRangeAxis().setUpperMargin(0.08);
         // plot.getRangeAxis().setLowerBound(-0.08);
@@ -392,7 +405,6 @@ public final class TopChartFactory {
         // CategoryAxis domainAxis = plot.getDomainAxis();
         // domainAxis.setCategoryLabelPositions(CategoryLabelPositions.createUpRotationLabelPositions(Math.PI / 6.0));
 
-        return chart;
     }
 
     /**
@@ -406,8 +418,8 @@ public final class TopChartFactory {
         // ADD msjian TDQ-5112 2012-4-10: after upgrate to jfreechart-1.0.12.jar, change the default chart wallPaint
         ChartFactory.setChartTheme(StandardChartTheme.createLegacyTheme());
         // TDQ-5112~
-        JFreeChart createBarChart = ChartFactory.createBarChart(null, titile, DefaultMessagesImpl
-                .getString("TopChartFactory.Value"), dataset, PlotOrientation.HORIZONTAL, false, false, false); //$NON-NLS-1$
+        JFreeChart createBarChart = ChartFactory.createBarChart(null, titile,
+                DefaultMessagesImpl.getString("TopChartFactory.Value"), dataset, PlotOrientation.HORIZONTAL, false, false, false); //$NON-NLS-1$
 
         CategoryPlot plot = createBarChart.getCategoryPlot();
 
@@ -434,8 +446,8 @@ public final class TopChartFactory {
         // ADD msjian TDQ-5112 2012-4-10: after upgrate to jfreechart-1.0.12.jar, change the default chart wallPaint
         ChartFactory.setChartTheme(StandardChartTheme.createLegacyTheme());
         // TDQ-5112~
-        JFreeChart chart = ChartFactory.createBoxAndWhiskerChart(null, title, DefaultMessagesImpl
-                .getString("TopChartFactory.Value"), dataset, false); //$NON-NLS-1$
+        JFreeChart chart = ChartFactory.createBoxAndWhiskerChart(null, title,
+                DefaultMessagesImpl.getString("TopChartFactory.Value"), dataset, false); //$NON-NLS-1$
         CategoryPlot plot = chart.getCategoryPlot();
 
         NumberAxis rangeAxis = (NumberAxis) plot.getRangeAxis();
@@ -547,8 +559,8 @@ public final class TopChartFactory {
         // ADD msjian TDQ-5112 2012-4-10: after upgrate to jfreechart-1.0.12.jar, change the default chart wallPaint
         ChartFactory.setChartTheme(StandardChartTheme.createLegacyTheme());
         // TDQ-5112~
-        final JFreeChart chart = ChartFactory.createXYLineChart(null, title, DefaultMessagesImpl
-                .getString("TopChartFactory.Percent"), dataset, PlotOrientation.VERTICAL, //$NON-NLS-1$
+        final JFreeChart chart = ChartFactory.createXYLineChart(null, title,
+                DefaultMessagesImpl.getString("TopChartFactory.Percent"), dataset, PlotOrientation.VERTICAL, //$NON-NLS-1$
                 showLegend, false, false);
 
         final XYPlot plot = chart.getXYPlot();
@@ -575,8 +587,7 @@ public final class TopChartFactory {
      * @param urls
      * @return
      */
-    public static JFreeChart createPieChart(String title, PieDataset dataset, boolean showLegend, boolean toolTips,
-            boolean urls) {
+    public static JFreeChart createPieChart(String title, PieDataset dataset, boolean showLegend, boolean toolTips, boolean urls) {
         // ADD msjian TDQ-5112 2012-4-10: after upgrate to jfreechart-1.0.12.jar, change the default chart wallPaint
         ChartFactory.setChartTheme(StandardChartTheme.createLegacyTheme());
         // TDQ-5112~

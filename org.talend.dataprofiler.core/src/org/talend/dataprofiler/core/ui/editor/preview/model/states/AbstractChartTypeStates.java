@@ -91,9 +91,9 @@ public abstract class AbstractChartTypeStates implements IChartTypeStates {
     }
 
     public CategoryDataset getDataset() {
-        // TODO Auto-generated method stub
-        if (getCustomerDataset() != null) {
-            return (CategoryDataset) getCustomerDataset();
+        ICustomerDataset customerDataset = getCustomerDataset();
+        if (customerDataset != null) {
+            return (CategoryDataset) customerDataset;
         }
 
         return null;
