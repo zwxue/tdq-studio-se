@@ -462,4 +462,19 @@ public class UnitTestBuildHelper {
 
         return reportRepNode;
     }
+
+    /**
+     * delete the project which has been login else will effect the result of junit.
+     */
+    public static void deleteCurrentProject() {
+        IProject rootProject = ReponsitoryContextBridge.getRootProject();
+        if (rootProject.exists()) {
+            try {
+                rootProject.delete(true, true, null);
+            } catch (CoreException e) {
+                log.error(e, e);
+                Assert.fail(e.getMessage());
+            }
+        }
+    }
 }
