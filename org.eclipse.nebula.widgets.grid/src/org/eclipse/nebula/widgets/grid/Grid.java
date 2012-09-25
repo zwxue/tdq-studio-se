@@ -4697,7 +4697,7 @@ public class Grid extends Canvas
     /**
      * Handles the moving of columns after a column is dropped.
      */
-    private void handleColumnDrop()
+    protected void handleColumnDrop()
     {
         draggingColumn = false;
 

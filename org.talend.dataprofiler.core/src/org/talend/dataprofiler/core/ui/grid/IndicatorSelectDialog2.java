@@ -97,7 +97,7 @@ public class IndicatorSelectDialog2 extends TrayDialog {
         }
         // ~
 
-        for (ModelElementIndicator modelElementIndicator : getResult()) {
+        for (ModelElementIndicator modelElementIndicator : modelElementIndicators) {
             modelElementIndicator.copyOldIndicatorEnum();
         }
     }
@@ -170,7 +170,7 @@ public class IndicatorSelectDialog2 extends TrayDialog {
     }
 
     public ModelElementIndicator[] getResult() {
-        return modelElementIndicators;
+        return grid.getResult();
     }
 
     public void updateIndicatorInfo(GridItem item) {

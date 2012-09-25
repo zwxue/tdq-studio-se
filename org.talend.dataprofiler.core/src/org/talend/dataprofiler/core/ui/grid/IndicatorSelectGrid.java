@@ -69,6 +69,8 @@ public class IndicatorSelectGrid extends Grid {
 
     private double tanRotation;
 
+    private ModelElementIndicator[] result;
+
     /**
      * IndicatorSelectionGrid constructor.
      * 
@@ -523,16 +525,13 @@ public class IndicatorSelectGrid extends Grid {
 
                 if (expanded) {
                     currentItem.setExpanded(true);
-                    if (parentItem != null) {
-                        parentItem.setExpanded(true);
-                    }
                 }
 
             }
 
             // process the selections of indicator category row
             boolean entireCategoryChecked = true;
-            for (int j = 1; j < getColumnCount(); j++) {
+            for (int j = 2; j < getColumnCount(); j++) {
                 if (currentItem.getCheckable(j)) {
                     if (hasCheckedInColumn[j]) {
                         hasCheckedInColumn[1] = true;
@@ -590,8 +589,32 @@ public class IndicatorSelectGrid extends Grid {
     }
 
     @Override
+    protected void handleColumnDrop() {
+        super.handleColumnDrop();
+        if (result == null) {
+            result = new ModelElementIndicator[getColumnCount() - 2];
+        }
+        int[] order = getColumnOrder();
+        int j = 0;
+        for (int i = 0; i < order.length; i++) {
+            int columnIndex = order[i];
+            if (columnIndex > 1) {
+                result[j] = _modelElementIndicators[columnIndex - 2]; // indicator selection starts from the 3rd column
+                j++;
+            }
+        }
+    }
+
+    @Override
     protected void paintDraggingColumn(GC gc, int offset, int alpha) {
         super.paintDraggingColumn(gc, 0, 180);
+    }
+
+    public ModelElementIndicator[] getResult() {
+        if (result == null) {
+            return _modelElementIndicators;
+        }
+        return result;
     }
 
 }
