@@ -807,7 +807,7 @@ public class FileSystemImportWriter implements IImportWriter {
      */
     private void removeInvalidDependency() {
         for (File file : allCopiedFiles) {
-            if (!file.exists()) {
+            if (!file.exists() || !file.isFile()) {
                 continue;
             }
             Property property = PropertyHelper.getProperty(file);
