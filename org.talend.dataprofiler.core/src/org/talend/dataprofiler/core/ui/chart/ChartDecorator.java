@@ -14,6 +14,8 @@ package org.talend.dataprofiler.core.ui.chart;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.Paint;
+import java.awt.geom.Rectangle2D;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -22,9 +24,15 @@ import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.CategoryAxis;
+import org.jfree.chart.axis.NumberAxis;
 import org.jfree.chart.axis.ValueAxis;
+import org.jfree.chart.labels.ItemLabelAnchor;
+import org.jfree.chart.labels.ItemLabelPosition;
+import org.jfree.chart.labels.StandardCategoryItemLabelGenerator;
+import org.jfree.chart.labels.StandardCategoryToolTipGenerator;
 import org.jfree.chart.labels.StandardPieSectionLabelGenerator;
 import org.jfree.chart.plot.CategoryPlot;
 import org.jfree.chart.plot.PiePlot;
@@ -33,9 +41,13 @@ import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.chart.plot.XYPlot;
 import org.jfree.chart.renderer.category.BarRenderer;
 import org.jfree.chart.renderer.category.CategoryItemRenderer;
+import org.jfree.chart.renderer.category.LineAndShapeRenderer;
 import org.jfree.chart.renderer.xy.XYItemRenderer;
 import org.jfree.chart.title.LegendTitle;
 import org.jfree.chart.title.TextTitle;
+import org.jfree.data.category.CategoryDataset;
+import org.jfree.data.category.DefaultCategoryDataset;
+import org.jfree.ui.TextAnchor;
 
 /**
  * DOC bzhou class global comment. Detailled comment
@@ -51,6 +63,11 @@ public final class ChartDecorator {
     private static final int BASE_LEGEND_LABEL_SIZE = 10;
 
     private static final int BASE_TITLE_LABEL_SIZE = 14;
+
+    /**
+     * New format string. ADD yyi 2009-09-24 9243
+     * */
+    public static final String NEW_TOOL_TIP_FORMAT_STRING = "{0} = {2}"; //$NON-NLS-1$
 
     /**
      * DOC bZhou ChartDecorator constructor comment.
@@ -179,8 +196,9 @@ public final class ChartDecorator {
         if (render instanceof BarRenderer) {
 
             int rowCount = chart.getCategoryPlot().getDataset().getRowCount();
-            if (!isContainsChineseColumn(chart))
+            if (!isContainsChineseColumn(chart)) {
                 domainAxis.setTickLabelFont(new Font("Tahoma", Font.PLAIN, 10));//$NON-NLS-1$
+            }
             domainAxis.setUpperMargin(0.1);
             // MOD klliu bug 14570: Label size too long in Text statistics graph 2010-08-09
             domainAxis.setMaximumCategoryLabelLines(10);
@@ -271,6 +289,120 @@ public final class ChartDecorator {
         plot.setOutlineVisible(false);
         plot.setMaximumLabelWidth(0.2D);
         plot.setCircular(false);
+    }
+
+    /**
+     * create bar chart with customized bar render class which can be adapted in JFreeChart class.
+     * 
+     * @param chart
+     */
+    public static void decorateBarChart(JFreeChart chart) {
+        CategoryPlot plot = chart.getCategoryPlot();
+        plot.getRangeAxis().setUpperMargin(0.08);
+        // plot.getRangeAxis().setLowerBound(-0.08);
+
+        plot.setRangeGridlinesVisible(true);
+
+        BarRenderer renderer = (BarRenderer) plot.getRenderer();
+        renderer.setBaseItemLabelsVisible(true);
+        renderer.setBaseItemLabelGenerator(new StandardCategoryItemLabelGenerator());
+        renderer.setBasePositiveItemLabelPosition(new ItemLabelPosition(ItemLabelAnchor.OUTSIDE12, TextAnchor.BASELINE_LEFT));
+        renderer.setBaseNegativeItemLabelPosition(new ItemLabelPosition(ItemLabelAnchor.OUTSIDE12, TextAnchor.BASELINE_LEFT));
+        // MOD klliu 2010-09-25 bug15514: The chart of summary statistic indicators not beautiful
+        renderer.setMaximumBarWidth(0.1);
+        // renderer.setItemMargin(0.000000005);
+        // renderer.setBase(0.04);
+        // ADD yyi 2009-09-24 9243
+        renderer.setBaseToolTipGenerator(new StandardCategoryToolTipGenerator(NEW_TOOL_TIP_FORMAT_STRING, NumberFormat
+                .getInstance()));
+
+        // ADD TDQ-5251 msjian 2012-7-31: do not display the shadow
+        renderer.setShadowVisible(false);
+        // TDQ-5251~
+
+        // plot.setForegroundAlpha(0.50f);
+
+        // CategoryAxis domainAxis = plot.getDomainAxis();
+        // domainAxis.setCategoryLabelPositions(CategoryLabelPositions.createUpRotationLabelPositions(Math.PI / 6.0));
+
+    }
+
+    /**
+     * Decorate the benford law chart. in this method the line chart will be overlay on top of bar chart.
+     * 
+     * @param dataset
+     * @param barChart
+     * @param title
+     * @param categoryAxisLabel
+     * @param dotChartLabels
+     * @param formalValues
+     * @return JFreeChart
+     */
+    public static JFreeChart decorateBenfordLawChart(CategoryDataset dataset, JFreeChart barChart, String title,
+            String categoryAxisLabel, List<String> dotChartLabels, double[] formalValues) {
+        CategoryPlot barplot = barChart.getCategoryPlot();
+        barplot.setRenderer(new BenfordLawLineAndShapeRenderer());
+        decorateBarChart(barChart);
+        // display percentage on top of the bar
+        DecimalFormat df = new DecimalFormat("0.0%"); //$NON-NLS-1$
+        barplot.getRenderer().setBaseItemLabelGenerator(new StandardCategoryItemLabelGenerator("{2}", df)); //$NON-NLS-1$
+        barplot.getRenderer().setBasePositiveItemLabelPosition(
+                new ItemLabelPosition(ItemLabelAnchor.OUTSIDE12, TextAnchor.BASELINE_CENTER));
+
+        CategoryDataset lineDataset = getLineDataset(dotChartLabels, formalValues);
+        JFreeChart lineChart = ChartFactory.createLineChart(null, title, categoryAxisLabel, lineDataset,
+                PlotOrientation.VERTICAL, false, false, false);
+        CategoryPlot plot = lineChart.getCategoryPlot();
+        // show the value on the right axis of the chart(keep the comment)
+        // NumberAxis numberaxis = new NumberAxis(DefaultMessagesImpl.getString("TopChartFactory.Value"));
+        // plot.setRangeAxis(10, numberaxis);
+
+        NumberAxis vn = (NumberAxis) plot.getRangeAxis();
+        vn.setNumberFormatOverride(df);
+        // set points format
+        LineAndShapeRenderer renderer = (LineAndShapeRenderer) plot.getRenderer();
+        renderer.setPaint(Color.BLUE);
+        renderer.setSeriesShape(1, new Rectangle2D.Double(-1.5, -1.5, 3, 3));
+        renderer.setShapesVisible(true); // show the point shape
+        renderer.setBaseLinesVisible(false);// do not show the line
+
+        // add the bar chart into the line chart
+        CategoryItemRenderer barChartRender = barplot.getRenderer();
+        barplot.setDataset(0, lineDataset);
+        barplot.setRenderer(0, plot.getRenderer());
+        barplot.setDataset(1, dataset);
+        barplot.setRenderer(1, barChartRender);
+        return barChart;
+    }
+
+    /**
+     * 
+     * created by mzhao on 2012-9-21 The customer render to paint bar color.
+     * 
+     */
+    private static class BenfordLawLineAndShapeRenderer extends BarRenderer {
+
+        private static final long serialVersionUID = 1L;
+
+        @Override
+        public Paint getItemPaint(final int row, final int column) {
+            return (column > 8) ? Color.RED : new Color(193, 216, 047);
+        }
+    }
+
+    /**
+     * get the dataset of standard points.
+     * 
+     * @param dotChartLabels
+     * @param formalValues
+     * @return CategoryDataset
+     */
+    private static CategoryDataset getLineDataset(List<String> dotChartLabels, double[] formalValues) {
+        DefaultCategoryDataset linedataset = new DefaultCategoryDataset();
+        for (int i = 0; i < dotChartLabels.size(); i++) {
+            linedataset.addValue(formalValues[i], "Expected(%)", dotChartLabels.get(i)); //$NON-NLS-1$
+        }
+        return linedataset;
     }
 
     private static final Color COLOR_0 = new Color(244, 147, 32);

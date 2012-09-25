@@ -30,8 +30,6 @@ import org.jfree.chart.axis.ValueAxis;
 import org.jfree.chart.entity.EntityCollection;
 import org.jfree.chart.labels.ItemLabelAnchor;
 import org.jfree.chart.labels.ItemLabelPosition;
-import org.jfree.chart.labels.StandardCategoryItemLabelGenerator;
-import org.jfree.chart.labels.StandardCategoryToolTipGenerator;
 import org.jfree.chart.labels.StandardXYZToolTipGenerator;
 import org.jfree.chart.plot.CategoryPlot;
 import org.jfree.chart.plot.CrosshairState;
@@ -59,6 +57,7 @@ import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.chart.ChartDatasetUtils;
 import org.talend.dataprofiler.core.ui.chart.ChartDatasetUtils.DateValueAggregate;
 import org.talend.dataprofiler.core.ui.chart.ChartDatasetUtils.ValueAggregator;
+import org.talend.dataprofiler.core.ui.chart.ChartDecorator;
 import org.talend.dataquality.indicators.columnset.ColumnSetMultiValueIndicator;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
@@ -68,11 +67,6 @@ import orgomg.cwm.objectmodel.core.ModelElement;
  * Chart factory adapted for TOP.
  */
 public final class TopChartFactory {
-
-    /**
-     * New format string. ADD yyi 2009-09-24 9243
-     * */
-    public static final String NEW_TOOL_TIP_FORMAT_STRING = "{0} = {2}"; //$NON-NLS-1$
 
     private TopChartFactory() {
     }
@@ -111,6 +105,7 @@ public final class TopChartFactory {
 
         XYItemRenderer renderer = new XYBubbleRenderer(XYBubbleRenderer.SCALE_ON_RANGE_AXIS) {
 
+            @Override
             public void drawItem(Graphics2D g2, XYItemRendererState state, Rectangle2D dataArea, PlotRenderingInfo info,
                     XYPlot plot, ValueAxis domainAxis, ValueAxis rangeAxis, XYDataset dataset, int series, int item,
                     CrosshairState crosshairState, int pass) {
@@ -364,51 +359,12 @@ public final class TopChartFactory {
         JFreeChart chart = ChartFactory.createBarChart(null, titile,
                 DefaultMessagesImpl.getString("TopChartFactory.Value"), dataset, PlotOrientation.VERTICAL, showLegend, //$NON-NLS-1$
                 true, false);
-        decorateBarChart(chart);
+        ChartDecorator.decorateBarChart(chart);
         return chart;
     }
 
     /**
-     * create bar chart with customized bar render class which can be adapted in JFreeChart class.
-     * 
-     * @param titile
-     * @param dataset
-     * @param showLegend
-     * @return
-     */
-    public static void decorateBarChart(JFreeChart chart) {
-        CategoryPlot plot = chart.getCategoryPlot();
-        plot.getRangeAxis().setUpperMargin(0.08);
-        // plot.getRangeAxis().setLowerBound(-0.08);
-
-        plot.setRangeGridlinesVisible(true);
-
-        BarRenderer renderer = (BarRenderer) plot.getRenderer();
-        renderer.setBaseItemLabelsVisible(true);
-        renderer.setBaseItemLabelGenerator(new StandardCategoryItemLabelGenerator());
-        renderer.setBasePositiveItemLabelPosition(new ItemLabelPosition(ItemLabelAnchor.OUTSIDE12, TextAnchor.BASELINE_LEFT));
-        renderer.setBaseNegativeItemLabelPosition(new ItemLabelPosition(ItemLabelAnchor.OUTSIDE12, TextAnchor.BASELINE_LEFT));
-        // MOD klliu 2010-09-25 bug15514: The chart of summary statistic indicators not beautiful
-        renderer.setMaximumBarWidth(0.1);
-        // renderer.setItemMargin(0.000000005);
-        // renderer.setBase(0.04);
-        // ADD yyi 2009-09-24 9243
-        renderer.setBaseToolTipGenerator(new StandardCategoryToolTipGenerator(NEW_TOOL_TIP_FORMAT_STRING, NumberFormat
-                .getInstance()));
-
-        // ADD TDQ-5251 msjian 2012-7-31: do not display the shadow
-        renderer.setShadowVisible(false);
-        // TDQ-5251~
-
-        // plot.setForegroundAlpha(0.50f);
-
-        // CategoryAxis domainAxis = plot.getDomainAxis();
-        // domainAxis.setCategoryLabelPositions(CategoryLabelPositions.createUpRotationLabelPositions(Math.PI / 6.0));
-
-    }
-
-    /**
-     * DOC Zqin Comment method "createBarChart".
+     * create bar chart.
      * 
      * @param titile
      * @param dataset
@@ -532,7 +488,8 @@ public final class TopChartFactory {
         sbr.setBaseItemLabelGenerator(new DQRuleItemLabelGenerator("{3}", NumberFormat.getIntegerInstance())); //$NON-NLS-1$
         sbr.setBasePositiveItemLabelPosition(new ItemLabelPosition(ItemLabelAnchor.CENTER, TextAnchor.CENTER));
         // ADD xqliu 2010-03-10 feature 10834
-        sbr.setBaseToolTipGenerator(new DQRuleToolTipGenerator(NEW_TOOL_TIP_FORMAT_STRING, NumberFormat.getInstance()));
+        sbr.setBaseToolTipGenerator(new DQRuleToolTipGenerator(ChartDecorator.NEW_TOOL_TIP_FORMAT_STRING, NumberFormat
+                .getInstance()));
         // ~10834
 
         // ADD TDQ-5251 msjian 2012-7-31: do not display the shadow

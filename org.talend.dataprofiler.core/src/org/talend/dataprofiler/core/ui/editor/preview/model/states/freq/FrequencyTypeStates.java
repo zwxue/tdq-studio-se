@@ -48,8 +48,7 @@ public abstract class FrequencyTypeStates extends AbstractChartTypeStates {
     }
 
     public JFreeChart getChart() {
-        // TODO Auto-generated method stub
-        return TopChartFactory.createBarChart(getTitle(), getDataset()); //$NON-NLS-1$
+        return TopChartFactory.createBarChart(getTitle(), getDataset());
     }
 
     public ICustomerDataset getCustomerDataset() {
@@ -111,34 +110,29 @@ public abstract class FrequencyTypeStates extends AbstractChartTypeStates {
     }
 
     public JFreeChart getExampleChart() {
-        // TODO Auto-generated method stub
         return null;
     }
 
     public String getReferenceLink() {
-        // TODO Auto-generated method stub
         return null;
     }
 
     @Override
     protected TableStructureEntity getTableStructure() {
         TableStructureEntity entity = new TableStructureEntity();
-        entity
-                .setFieldNames(new String[] {
-                        DefaultMessagesImpl.getString("FrequencyTypeStates.value"), DefaultMessagesImpl.getString("FrequencyTypeStates.count"), "%" }); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+        entity.setFieldNames(new String[] {
+                DefaultMessagesImpl.getString("FrequencyTypeStates.value"), DefaultMessagesImpl.getString("FrequencyTypeStates.count"), "%" }); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
         entity.setFieldWidths(new Integer[] { 200, 150, 150 });
         return entity;
     }
 
     @Override
     protected ITableLabelProvider getLabelProvider() {
-        // TODO Auto-generated method stub
         return new FrequencyLabelProvider();
     }
 
     @Override
     protected IStructuredContentProvider getContentProvider() {
-        // TODO Auto-generated method stub
         return new CommonContenteProvider();
     }
 
