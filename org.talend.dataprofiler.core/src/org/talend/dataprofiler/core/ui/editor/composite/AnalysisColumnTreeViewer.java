@@ -316,6 +316,7 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
                     selectElement(tree.getItems(), data);
                 }
             }
+            masterPage.synNagivatorStat();
         }
     }
 
@@ -814,6 +815,8 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
         }
         if (branchIndicatorExist) {
             setElements(modelElementIndicators);
+        } else {
+            masterPage.synNagivatorStat();
         }
         // MOD mzhao 2009-05-5, bug 6587.
         // MOD mzhao 2009-06-8, bug 5887.
