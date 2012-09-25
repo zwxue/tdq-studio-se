@@ -79,6 +79,21 @@ public final class EMFSharedResources {
     }
 
     /**
+     * DOC bZhou Comment method "reloadResource".
+     * 
+     * @param uri
+     */
+    public synchronized Resource reloadsoftwareDeploymentResource() {
+        if (softwareDeploymentResource == null) {
+            return this.getSoftwareDeploymentResource();
+        }
+        URI uri = softwareDeploymentResource.getURI();
+        unloadResource(uri.toString());
+        softwareDeploymentResource = getResource(uri, true);
+        return softwareDeploymentResource;
+    }
+
+    /**
      * Method "unloadResources" unloads and removes all the resources from the resource set.
      */
     public synchronized void unloadResources() {

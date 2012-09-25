@@ -13,12 +13,15 @@
 package org.talend.cwm.management.api;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.talend.commons.utils.WorkspaceUtils;
 import org.talend.core.model.metadata.builder.connection.Connection;
+import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
 import org.talend.core.model.metadata.builder.database.JavaSqlFactory;
 import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.helper.ConnectionHelper;
@@ -78,6 +81,7 @@ public final class SoftwareSystemManager {
                     if (softwareSystem != null /* && softwareSystem.eResource() != null */) { // store it
                         if (ConnectionHelper.setSoftwareSystem(dataProvider, softwareSystem)) {
                             saveSoftwareSystem(softwareSystem);
+                            cleanSoftWareSystem();
                         }
                     }
                 }
@@ -107,33 +111,36 @@ public final class SoftwareSystemManager {
             return null;
         }
         Resource softwareSystemResource = EMFSharedResources.getInstance().getSoftwareDeploymentResource();
+        if (WorkspaceUtils.getModelElementResource(softwareSystemResource.getURI()).exists()) {
+            softwareSystemResource = EMFSharedResources.getInstance().reloadsoftwareDeploymentResource();
+        }
         if (softwareSystemResource != null) {
             List<EObject> softwareSystems = softwareSystemResource.getContents();
             // Loop the software system from .softwaresystem.softwaredeployment file.
-            if (softwareSystems != null && softwareSystems.size() > 0) {
-                for (EObject softwareSystem : softwareSystems) {
-                    if (softwareSystem instanceof TdSoftwareSystem) {
-                        List<ModelElement> ownedELements = ((TdSoftwareSystem) softwareSystem).getOwnedElement();
-                        // Loop owned element.
-                        for (ModelElement me : ownedELements) {
-                            if (me == null || !(me instanceof Component)) {
-                                continue;
-                            }
-                            List<DeployedComponent> deployComponents = ((Component) me).getDeployment();
-                            if (deployComponents != null && deployComponents.size() > 0) {
-                                if (ResourceHelper.areSame(deployComponents.get(0), dataProvider)) {
-                                    // Find the software system by data provider.
-                                    return (TdSoftwareSystem) softwareSystem;
-                                }
+            for (EObject softwareSystem : softwareSystems) {
 
-                            }
+                if (softwareSystem instanceof TdSoftwareSystem) {
+                    List<ModelElement> ownedELements = ((TdSoftwareSystem) softwareSystem).getOwnedElement();
+                    // Loop owned element.
+                    for (ModelElement me : ownedELements) {
+                        if (me == null || !(me instanceof Component)) {
+                            continue;
                         }
+                        List<DeployedComponent> deployComponents = ((Component) me).getDeployment();
+                        // deployComponents != null is true any time
+                        if (deployComponents.size() > 0) {
+                            if (ResourceHelper.areSame(deployComponents.get(0), dataProvider)) {
+                                // Find the software system by data provider.
+                                return (TdSoftwareSystem) softwareSystem;
+                            }
 
+                        }
                     }
 
                 }
 
             }
+
         }
         return null;
     }
@@ -147,6 +154,65 @@ public final class SoftwareSystemManager {
     public static boolean saveSoftwareSystem(TdSoftwareSystem softwareSystem) {
         EMFSharedResources util = EMFSharedResources.getInstance();
         return util.saveSoftwareDeploymentResource(softwareSystem);
+    }
+
+    /**
+     * 
+     * remove the softWareSystem which have relation about dataprovider and any softWareSystem which don't contain any
+     * one.
+     * 
+     * @param dataProvider
+     * @return
+     */
+    public boolean cleanSoftWareSystem(Connection dataProvider) {
+        if (dataProvider == null) {
+            return false;
+        }
+        Resource softwareSystemResource = EMFSharedResources.getInstance().getSoftwareDeploymentResource();
+        if (WorkspaceUtils.getModelElementResource(softwareSystemResource.getURI()).exists()) {
+            softwareSystemResource = EMFSharedResources.getInstance().reloadsoftwareDeploymentResource();
+        }
+        if (softwareSystemResource != null) {
+            List<EObject> softwareSystems = softwareSystemResource.getContents();
+            // Loop the software system from .softwaresystem.softwaredeployment file.
+            List<EObject> needToRemoves = new ArrayList<EObject>();
+            for (EObject softwareSystem : softwareSystems) {
+                if (softwareSystem instanceof TdSoftwareSystem) {
+                    List<ModelElement> ownedELements = ((TdSoftwareSystem) softwareSystem).getOwnedElement();
+                    // Loop owned element.
+                    for (ModelElement me : ownedELements) {
+                        if (me == null || !(me instanceof Component)) {
+                            continue;
+                        }
+                        List<DeployedComponent> deployComponents = ((Component) me).getDeployment();
+                        if (deployComponents.size() > 0) {
+                            if (ResourceHelper.areSame(deployComponents.get(0), dataProvider)) {
+                                needToRemoves.add(softwareSystem);
+                                break;
+                            }
+                        } else {
+                            needToRemoves.add(softwareSystem);
+                        }
+                    }
+                    if (ownedELements.size() <= 0) {
+                        needToRemoves.add(softwareSystem);
+                    }
+                }
+            }
+            if (needToRemoves.size() > 0) {
+                softwareSystems.removeAll(needToRemoves);
+                EMFSharedResources.getInstance().saveSoftwareDeploymentResource();
+                return true;
+            }
+        }
+        return false;
+
+    }
+
+    public boolean cleanSoftWareSystem() {
+        DatabaseConnection createDatabaseConnection = org.talend.core.model.metadata.builder.connection.ConnectionFactory.eINSTANCE
+                .createDatabaseConnection();
+        return cleanSoftWareSystem(createDatabaseConnection);
     }
 
 }

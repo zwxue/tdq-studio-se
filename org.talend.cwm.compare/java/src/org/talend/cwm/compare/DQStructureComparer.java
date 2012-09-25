@@ -279,7 +279,6 @@ public final class DQStructureComparer {
             MetadataFillFactory.getMDMInstance().fillSchemas(conn, null, null);
             // returnProvider.setObject(TalendCwmFactory.createMdmTdDataProvider(connectionParameters));
         } else {
-            // FIXME why do we use MetadataFillFactory.getMDMInstance()
             TypedReturnCode<?> trc = (TypedReturnCode<?>) MetadataFillFactory.getDBInstance().checkConnection(metadataConnection);
             Object sqlConnObject = trc.getObject();
             DatabaseMetaData dbJDBCMetadata = null;
@@ -290,14 +289,16 @@ public final class DQStructureComparer {
                     // dbJDBCMetadata = org.talend.utils.sql.ConnectionUtils.getConnectionMetadata(sqlConn);
                     dbJDBCMetadata = ExtractMetaDataUtils.getConnectionMetadata(sqlConn);
                     packageFilter = MetadataConnectionUtils.getPackageFilter(prevDataProvider, dbJDBCMetadata, true);
+
+                    conn = MetadataFillFactory.getDBInstance().fillUIConnParams(metadataConnection, null);
+                    MetadataFillFactory.getDBInstance().fillCatalogs(conn, dbJDBCMetadata, packageFilter);
+                    MetadataFillFactory.getDBInstance().fillSchemas(conn, dbJDBCMetadata, packageFilter);
                 } catch (SQLException e) {
                     log.error(e, e);
+                } finally {
+                    ConnectionUtils.closeConnection(sqlConn);
                 }
             }
-            conn = MetadataFillFactory.getDBInstance().fillUIConnParams(metadataConnection, null);
-            MetadataFillFactory.getDBInstance().fillCatalogs(conn, dbJDBCMetadata, packageFilter);
-            MetadataFillFactory.getDBInstance().fillSchemas(conn, dbJDBCMetadata, packageFilter);
-            // returnProvider = ConnectionService.createConnection(connectionParameters);
         }
         if (conn == null) {
             returnProvider.setOk(false);

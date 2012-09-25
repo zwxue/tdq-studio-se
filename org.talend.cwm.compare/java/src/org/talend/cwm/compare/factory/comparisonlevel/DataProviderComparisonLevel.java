@@ -12,6 +12,7 @@
 // ============================================================================
 package org.talend.cwm.compare.factory.comparisonlevel;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,6 +27,9 @@ import org.talend.commons.exception.PersistenceException;
 import org.talend.core.database.EDatabaseTypeName;
 import org.talend.core.database.conn.DatabaseConnStrUtil;
 import org.talend.core.model.general.Project;
+import org.talend.core.model.metadata.IMetadataConnection;
+import org.talend.core.model.metadata.MetadataFillFactory;
+import org.talend.core.model.metadata.builder.ConvertionHelper;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
 import org.talend.core.model.properties.ConnectionItem;
@@ -39,12 +43,16 @@ import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.helper.CatalogHelper;
 import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.SwitchHelpers;
+import org.talend.cwm.management.api.SoftwareSystemManager;
+import org.talend.cwm.softwaredeployment.TdSoftwareSystem;
 import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.helper.resourcehelper.PrvResourceFileHelper;
 import org.talend.dq.writer.EMFSharedResources;
 import org.talend.repository.ProjectManager;
 import org.talend.repository.model.RepositoryNode;
+import org.talend.utils.sugars.ReturnCode;
+import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.objectmodel.core.Package;
 import orgomg.cwm.resource.relational.Catalog;
 import orgomg.cwm.resource.relational.Schema;
@@ -127,9 +135,34 @@ public class DataProviderComparisonLevel extends AbstractComparisonLevel {
         // save here, it will be handled later.
         try {
             ProxyRepositoryFactory.getInstance().save(currentProject, item);
+            updateAndSaveSoftWareSystem(item);
         } catch (PersistenceException e) {
             log.error(e, e);
         }
+    }
+
+    /**
+     * update connection then should need to update softwareSystem too which save real version for database
+     * 
+     * @param item the item of connection
+     */
+    private boolean updateAndSaveSoftWareSystem(Item item) {
+        TdSoftwareSystem softwareSystem = null;
+        boolean returnCode = SoftwareSystemManager.getInstance().cleanSoftWareSystem(oldDataProvider);
+        Connection newConn = ((ConnectionItem) item).getConnection();
+        IMetadataConnection metadataConnection = ConvertionHelper.convert(newConn);
+        ReturnCode rc = MetadataFillFactory.getDBInstance().checkConnection(metadataConnection);
+        if (rc.isOk() && returnCode) {
+            try {
+                softwareSystem = ConnectionHelper.getSoftwareSystem((java.sql.Connection) ((TypedReturnCode<?>) rc).getObject());
+                ConnectionHelper.setSoftwareSystem(newConn, softwareSystem);
+                returnCode = SoftwareSystemManager.saveSoftwareSystem(softwareSystem);
+            } catch (SQLException e) {
+                log.error(e, e);
+                returnCode = false;
+            }
+        }
+        return returnCode;
     }
 
     /*
