@@ -21,6 +21,7 @@ import java.util.Map;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.CheckboxTreeViewer;
@@ -49,6 +50,7 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.dialogs.ContainerCheckedTreeViewer;
 import org.talend.commons.emf.FactoriesUtil;
+import org.talend.commons.utils.WorkspaceUtils;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.exception.ExceptionHandler;
@@ -57,6 +59,7 @@ import org.talend.dataprofiler.core.ui.imex.model.IImportWriter;
 import org.talend.dataprofiler.core.ui.imex.model.ImportWriterFactory;
 import org.talend.dataprofiler.core.ui.imex.model.ItemRecord;
 import org.talend.dataprofiler.core.ui.progress.ProgressUI;
+import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.helper.ReportUtils;
 import orgomg.cwm.objectmodel.core.ModelElement;
@@ -211,12 +214,24 @@ public class ImportWizardPage extends WizardPage {
                 ItemRecord record = (ItemRecord) item.getData();
 
                 if (record.getFile().isFile()) {
-                    for (File file : record.getDependencyMap().keySet()) {
-                        ItemRecord findRecord = ItemRecord.findRecord(file);
-                        if (findRecord != null) {
-                            repositoryTree.setChecked(findRecord, item.getChecked());
+                    // MOD qiongli TDQ-5368 only uncheck the client dependecy when uncheck an item,not supplier
+                    // dependency.
+                    boolean checked = item.getChecked();
+                    if (checked) {
+                        for (File file : record.getDependencyMap().keySet()) {
+                            ItemRecord findRecord = ItemRecord.findRecord(file);
+                            if (findRecord != null) {
+                                repositoryTree.setChecked(findRecord, item.getChecked());
+                            }
+                        }
+                    } else {
+                        ModelElement element = record.getElement();
+                        if (element != null) {
+                            List<ModelElement> dependencyClients = EObjectHelper.getDependencyClients(element);
+                            iterateUncheckClientDependency(dependencyClients);
                         }
                     }
+
                 }
 
                 populateElement();
@@ -354,8 +369,17 @@ public class ImportWizardPage extends WizardPage {
                 ItemRecord findRecord = ItemRecord.findRecord(depFile);
                 // MOD msjian TDQ-5909: modify to displayName
                 String dptLabel = element != null ? PropertyHelper.getProperty(element).getDisplayName() : depFile.getName();
+                // if (findRecord == null) {
+                // String absolutePath = depFile.getAbsolutePath();
+                // if (absolutePath != null) {
+                // dptLabel = new Path(absolutePath).lastSegment();
+                // }
+                // }
                 // TDQ-5909~
                 if (findRecord == null || !repositoryTree.getChecked(findRecord)) {
+                    if (record.getName().equals("columnJTxml")) {
+                        System.out.println("aaaaaaa");
+                    }
                     dErrors.add("\"" + record.getName() + "\" miss dependency :" + dptLabel);
                 }
             }
@@ -640,6 +664,31 @@ public class ImportWizardPage extends WizardPage {
                     }
                 }
             }
+        }
+    }
+
+    /**
+     * 
+     * when uncheck an item,should uncheck related client depenedences.
+     * 
+     * @param dependencyClients
+     */
+    private void iterateUncheckClientDependency(List<ModelElement> dependencyClients) {
+        for (ModelElement dependency : dependencyClients) {
+            List<ModelElement> iterdependencyClients = EObjectHelper.getDependencyClients(dependency);
+            if (!iterdependencyClients.isEmpty()) {
+                iterateUncheckClientDependency(iterdependencyClients);
+            }
+            URI uri = EObjectHelper.getURI(dependency);
+            if (uri != null) {
+                String uriString = WorkspaceUtils.toFile(uri);
+                File depFile = new File(uriString);
+                ItemRecord findRecord = ItemRecord.findRecord(depFile);
+                if (findRecord != null) {
+                    repositoryTree.setChecked(findRecord, false);
+                }
+            }
+
         }
     }
 }

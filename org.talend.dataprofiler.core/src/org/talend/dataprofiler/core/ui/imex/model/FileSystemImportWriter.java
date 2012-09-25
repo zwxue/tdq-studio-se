@@ -16,6 +16,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -32,9 +33,11 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.InternalEObject;
+import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.talend.commons.bridge.ReponsitoryContextBridge;
+import org.talend.commons.emf.EMFUtil;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.commons.utils.io.FilesUtils;
 import org.talend.core.model.metadata.builder.connection.Connection;
@@ -76,6 +79,7 @@ import org.talend.resource.EResourceConstant;
 import org.talend.resource.ResourceManager;
 import org.talend.resource.ResourceService;
 import org.talend.utils.ProductVersion;
+import orgomg.cwm.objectmodel.core.Dependency;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
@@ -100,6 +104,8 @@ public class FileSystemImportWriter implements IImportWriter {
     private IPath basePath;
 
     private String projectName;
+
+    private List<File> allCopiedFiles = new ArrayList<File>();
 
     /*
      * check the dependency and conflict; when the record is a indicator(system or user): if overwrite should not add
@@ -428,6 +434,7 @@ public class FileSystemImportWriter implements IImportWriter {
                                             .getRepositoryFactoryFromProvider().getResourceManager().resourceSet;
                                     synchronized (resourceSet) {
                                         write(resPath, desPath);
+                                        allCopiedFiles.add(desPath.toFile());
                                     }
                                 }
                             }
@@ -595,6 +602,8 @@ public class FileSystemImportWriter implements IImportWriter {
         ItemRecord.clear();
 
         handleDefinitionFile();
+
+        removeInvalidDependency();
 
         doMigration(monitor);
 
@@ -790,6 +799,42 @@ public class FileSystemImportWriter implements IImportWriter {
 
     private boolean checkTempPath() {
         return tempFolder != null && tempFolder.exists();
+    }
+
+    /**
+     * 
+     * remove invalid client depenedences before migration.
+     */
+    private void removeInvalidDependency() {
+        for (File file : allCopiedFiles) {
+            if (!file.exists()) {
+                continue;
+            }
+            Property property = PropertyHelper.getProperty(file);
+            if (property == null) {
+                continue;
+            }
+            ModelElement modelElement = PropertyHelper.getModelElement(property);
+            if (modelElement != null) {
+                // remove invalid client depenedences,e.g,remove some invalid analyses in connection file .
+                EList<Dependency> clientDependencys = modelElement.getSupplierDependency();
+                for (Dependency dependency : clientDependencys) {
+                    EList<ModelElement> clients = dependency.getClient();
+                    Iterator<ModelElement> dependencyIterator = clients.iterator();
+                    while (dependencyIterator.hasNext()) {
+                        ModelElement client = dependencyIterator.next();
+                        if (client == null || client.eIsProxy()) {
+                            dependencyIterator.remove();
+                        }
+                    }
+                }
+                Resource modEResource = modelElement.eResource();
+                if (!clientDependencys.isEmpty() && modEResource != null) {
+                    EMFUtil.saveSingleResource(modEResource);
+                }
+            }
+        }
+
     }
 
 }
