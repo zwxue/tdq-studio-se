@@ -17,11 +17,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
@@ -47,9 +45,7 @@ import org.talend.core.model.metadata.IMetadataConnection;
 import org.talend.core.model.metadata.MetadataFillFactory;
 import org.talend.core.model.metadata.builder.ConvertionHelper;
 import org.talend.core.model.metadata.builder.connection.Connection;
-import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
 import org.talend.core.model.metadata.builder.database.ExtractMetaDataUtils;
-import org.talend.core.model.metadata.builder.database.JavaSqlFactory;
 import org.talend.core.model.metadata.builder.database.PluginConstant;
 import org.talend.core.model.metadata.builder.util.MetadataConnectionUtils;
 import org.talend.cwm.compare.exception.ReloadCompareException;
@@ -62,13 +58,9 @@ import org.talend.cwm.helper.ColumnSetHelper;
 import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.PackageHelper;
 import org.talend.cwm.helper.SwitchHelpers;
-import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.relational.TdTable;
 import org.talend.cwm.relational.TdView;
-import org.talend.dataquality.helpers.MetadataHelper;
-import org.talend.dq.analysis.parameters.DBConnectionParameter;
-import org.talend.dq.helper.ParameterUtil;
 import org.talend.dq.writer.EMFSharedResources;
 import org.talend.resource.ResourceManager;
 import org.talend.utils.sugars.TypedReturnCode;
@@ -275,12 +267,13 @@ public final class DQStructureComparer {
         // ADD xqliu 2010-03-29 bug 11951
         TypedReturnCode<Connection> returnProvider = new TypedReturnCode<Connection>();
         boolean mdm = ConnectionUtils.isMdmConnection(prevDataProvider);
-        List<String> packageFilter=null;
+        List<String> packageFilter = null;
         // ~11951
-       
-        //MOD by zshen 2012-07-05 for bug 5074 remove convert about DatabaseParameter instead Connection->DatabaseParameter->ImetadataConnection into Connection->ImetadataConnection
+
+        // MOD by zshen 2012-07-05 for bug 5074 remove convert about DatabaseParameter instead
+        // Connection->DatabaseParameter->ImetadataConnection into Connection->ImetadataConnection
         IMetadataConnection metadataConnection = ConvertionHelper.convert(prevDataProvider);
-        
+
         Connection conn = null;
         if (mdm) {
             conn = MetadataFillFactory.getMDMInstance().fillUIConnParams(metadataConnection, null);
@@ -290,23 +283,24 @@ public final class DQStructureComparer {
             TypedReturnCode<?> trc = (TypedReturnCode<?>) MetadataFillFactory.getDBInstance().checkConnection(metadataConnection);
             Object sqlConnObject = trc.getObject();
             DatabaseMetaData dbJDBCMetadata = null;
-            
+
             if (trc.isOk() && sqlConnObject instanceof java.sql.Connection) {
                 java.sql.Connection sqlConn = (java.sql.Connection) sqlConnObject;
                 try {
                     // MOD sizhaoliu 2012-5-21 TDQ-4884 reload structure issue
                     // dbJDBCMetadata = org.talend.utils.sql.ConnectionUtils.getConnectionMetadata(sqlConn);
                     dbJDBCMetadata = ExtractMetaDataUtils.getConnectionMetadata(sqlConn);
-                    packageFilter=MetadataConnectionUtils.getPackageFilter(prevDataProvider, dbJDBCMetadata, true);
+                    packageFilter = MetadataConnectionUtils.getPackageFilter(prevDataProvider, dbJDBCMetadata, true);
+
+                    conn = MetadataFillFactory.getDBInstance().fillUIConnParams(metadataConnection, null);
+                    MetadataFillFactory.getDBInstance().fillCatalogs(conn, dbJDBCMetadata, packageFilter);
+                    MetadataFillFactory.getDBInstance().fillSchemas(conn, dbJDBCMetadata, packageFilter);
                 } catch (SQLException e) {
                     log.error(e, e);
+                } finally {
+                    ConnectionUtils.closeConnection(sqlConn);
                 }
             }
-            conn = MetadataFillFactory.getDBInstance().fillUIConnParams(metadataConnection, null);
-            // bug: 4622 incase of Ingres, informix and DB2, database parameters
-            // on conn wizard should not used as a filter.
-            MetadataFillFactory.getDBInstance().fillCatalogs(conn, dbJDBCMetadata, packageFilter);
-            MetadataFillFactory.getDBInstance().fillSchemas(conn, dbJDBCMetadata, packageFilter);
         }
         if (conn == null) {
             returnProvider.setOk(false);
