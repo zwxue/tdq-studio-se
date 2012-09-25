@@ -78,6 +78,20 @@ public final class EMFSharedResources {
     }
 
     /**
+     * reload resource of softwareDeployment
+     * 
+     * @param uri
+     */
+    public synchronized Resource reloadsoftwareDeploymentResource() {
+        if (softwareDeploymentResource == null) {
+            return this.getSoftwareDeploymentResource();
+        }
+        URI uri = softwareDeploymentResource.getURI();
+        softwareDeploymentResource = reloadResource(uri);
+        return softwareDeploymentResource;
+    }
+
+    /**
      * Method "unloadResources" unloads and removes all the resources from the resource set.
      */
     public synchronized void unloadResources() {
@@ -200,6 +214,7 @@ public final class EMFSharedResources {
      * 
      * TODO rli create other methods in this class when needed.
      */
+    @Deprecated
     public static EMFUtil getSharedEmfUtil() {
         return getInstance().emfUtil;
     }
@@ -274,7 +289,7 @@ public final class EMFSharedResources {
         // MOD mzhao 2009-03-23,Feature 6066
         String softwareFile = ".softwaresystem." + SoftwaredeploymentPackage.eNAME; //$NON-NLS-1$
         String softwarePath = ResourceManager.getLibrariesFolder().getFullPath().append(softwareFile).toString();
-        URI sUri = URI.createPlatformResourceURI(softwarePath, false); //$NON-NLS-1$
+        URI sUri = URI.createPlatformResourceURI(softwarePath, false);
         Resource resource = resourceSet.getResource(sUri, false);
 
         if (resource == null) {

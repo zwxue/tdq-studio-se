@@ -30,6 +30,7 @@ import org.talend.core.model.repository.RepositoryViewObject;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.cwm.helper.ModelElementHelper;
 import org.talend.cwm.helper.ResourceHelper;
+import org.talend.cwm.management.api.SoftwareSystemManager;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.domain.pattern.Pattern;
 import org.talend.dataquality.helpers.IndicatorHelper;
@@ -92,21 +93,11 @@ public final class DependenciesHandler {
         List<Resource> modifiedResources = new ArrayList<Resource>();
         Iterator<Dependency> it = clientDependencies.iterator();
         while (it.hasNext()) {
-            Dependency dependency = (Dependency) it.next();
+            Dependency dependency = it.next();
             // MOD qiongli bug 15587.if dependcy is Proxy,reload it and remove the client element
             if (dependency.eIsProxy()) {
                 dependency = (Dependency) EObjectHelper.resolveObject(dependency);
-                // EList<ModelElement> client = dependency.getClient();
-                // Iterator<ModelElement> iterator = client.iterator();
-                // while (iterator.hasNext()) {
-                // ModelElement modelElement = iterator.next();
-                // if (modelElement.getName().equals(elementToDelete.getName())) {
-                // iterator.remove();
-                // }
-                // }
-                //
-                // if (client.size() == 0)
-                // it.remove();
+
             }// ~
             Resource dependencyResource = dependency.eResource();
             if (dependencyResource != null) {
@@ -135,6 +126,10 @@ public final class DependenciesHandler {
             // (objects that requires the
             // elementToDelete)
             client.clear();
+        }
+        // MOD zshen :softwareSystem don't belong to dependency but need to remove together.
+        if (elementToDelete instanceof Connection) {
+            SoftwareSystemManager.getInstance().cleanSoftWareSystem((Connection) elementToDelete);
         }
         return modifiedResources;
     }
@@ -173,7 +168,7 @@ public final class DependenciesHandler {
         }
         return modifiedResources;
     }
-    
+
     /**
      * 
      * Comment method "removeDependenciesBetweenModel".

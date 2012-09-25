@@ -81,6 +81,7 @@ public final class EObjectHelper {
      * 
      * @deprecated it's probably better to use {@link ConnectionHelper#getTdDataProvider(TdColumn)}
      */
+    @Deprecated
     public static Connection getTdDataProvider(TdColumn column) {
         ColumnSet columnSetOwner = ColumnHelper.getColumnSetOwner(column);
         Package parentCatalogOrSchema = ColumnSetHelper.getParentCatalogOrSchema(columnSetOwner);
@@ -207,20 +208,6 @@ public final class EObjectHelper {
         return supplierList;
     }
 
-    // public static List<ModelElement> getDependencyClients(IRepositoryViewObject repositoryObject) {
-    // ModelElement findElement = getModelElement(repositoryObject);
-    // EList<Dependency> clientDependencys = findElement.getSupplierDependency();
-    // // locate resource of each Dependency object
-    // List<ModelElement> supplierList = new ArrayList<ModelElement>();
-    // for (Dependency dependency : clientDependencys) {
-    // EList<ModelElement> client = dependency.getClient();
-    // if (client != null) {
-    // supplierList.addAll(client);
-    // }
-    // }
-    // return supplierList;
-    // }
-
     public static void addDependenciesForFile(IFile file, List<ModelElement> modelElements) {
         ModelElement findElement = getModelElement(file);
         for (int i = 0; i < modelElements.size(); i++) {
@@ -280,7 +267,7 @@ public final class EObjectHelper {
                     .getResourceManager();
             if (xmiRes != null) {
                 ResourceSet resourceSet = xmiRes.resourceSet;
-                proxy = (EObject) EcoreUtil.resolve(proxy, resourceSet);
+                proxy = EcoreUtil.resolve(proxy, resourceSet);
             }
         }
         return proxy;

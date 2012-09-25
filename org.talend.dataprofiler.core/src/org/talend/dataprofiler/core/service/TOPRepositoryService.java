@@ -55,6 +55,7 @@ import org.talend.cwm.compare.factory.ComparisonLevelFactory;
 import org.talend.cwm.compare.factory.IComparisonLevel;
 import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.helper.TaggedValueHelper;
+import org.talend.cwm.management.api.SoftwareSystemManager;
 import org.talend.cwm.relational.TdExpression;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.helper.WorkspaceResourceHelper;
@@ -433,36 +434,33 @@ public class TOPRepositoryService implements ITDQRepositoryService {
         Shell parentShell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
         String dialogTitle = DefaultMessagesImpl.getString("TOPRepositoryService.InputDialog.Title");//$NON-NLS-1$
         String dialogMessage = DefaultMessagesImpl.getString("TOPRepositoryService.InputDialog.Message");//$NON-NLS-1$
-        final InputDialog inputDialog = new InputDialog(parentShell, dialogTitle,
-                dialogMessage,//$NON-NLS-1$//$NON-NLS-2$
-                newItem.getProperty().getLabel() + DateUtils.formatTimeStamp(DateUtils.PATTERN_6, System.currentTimeMillis()),
-                new IInputValidator() {
+        final InputDialog inputDialog = new InputDialog(parentShell, dialogTitle, dialogMessage, newItem.getProperty().getLabel()
+                + DateUtils.formatTimeStamp(DateUtils.PATTERN_6, System.currentTimeMillis()), new IInputValidator() {
 
-                    public String isValid(String newText) {
-                        String returnStr = null;
-                        Item item = newItem;
-                        ERepositoryObjectType type = ERepositoryObjectType.getItemType(item);
-                        // String pattern = RepositoryConstants.getPattern(type);
-                        String pattern = "[_A-Za-z0-9-][a-zA-Z0-9\\\\.\\\\-_(), ]*"; //$NON-NLS-1$
-                        boolean matches = Pattern.matches(pattern, newText);
-                        boolean nameAvailable = false;
-                        try {
-                            List<IRepositoryViewObject> listExistingObjects = ProxyRepositoryFactory.getInstance().getAll(type,
-                                    true, false);
-                            nameAvailable = ProxyRepositoryFactory.getInstance().isNameAvailable(item, newText,
-                                    listExistingObjects);
-                        } catch (PersistenceException e) {
-                            log.error(e, e);
-                            return e.getMessage();
-                        }
-                        if (!matches) {
-                            returnStr = DefaultMessagesImpl.getString("TOPRepositoryService.InputDialog.ErrorMessage1");//$NON-NLS-1$
-                        } else if (!nameAvailable) {
-                            returnStr = DefaultMessagesImpl.getString("TOPRepositoryService.InputDialog.ErrorMessage2");//$NON-NLS-1$
-                        }
-                        return returnStr;
-                    }
-                });
+            public String isValid(String newText) {
+                String returnStr = null;
+                Item item = newItem;
+                ERepositoryObjectType type = ERepositoryObjectType.getItemType(item);
+                // String pattern = RepositoryConstants.getPattern(type);
+                String pattern = "[_A-Za-z0-9-][a-zA-Z0-9\\\\.\\\\-_(), ]*"; //$NON-NLS-1$
+                boolean matches = Pattern.matches(pattern, newText);
+                boolean nameAvailable = false;
+                try {
+                    List<IRepositoryViewObject> listExistingObjects = ProxyRepositoryFactory.getInstance().getAll(type, true,
+                            false);
+                    nameAvailable = ProxyRepositoryFactory.getInstance().isNameAvailable(item, newText, listExistingObjects);
+                } catch (PersistenceException e) {
+                    log.error(e, e);
+                    return e.getMessage();
+                }
+                if (!matches) {
+                    returnStr = DefaultMessagesImpl.getString("TOPRepositoryService.InputDialog.ErrorMessage1");//$NON-NLS-1$
+                } else if (!nameAvailable) {
+                    returnStr = DefaultMessagesImpl.getString("TOPRepositoryService.InputDialog.ErrorMessage2");//$NON-NLS-1$
+                }
+                return returnStr;
+            }
+        });
         return inputDialog;
     }
 
@@ -495,5 +493,18 @@ public class TOPRepositoryService implements ITDQRepositoryService {
             result = WorkspaceResourceHelper.checkSourceFileSubFolderNodeOpening(folderNode).isOk();
         }
         return result;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.core.ITDQRepositoryService#removeSoftWareSystem(org.talend.repository.model.IRepositoryNode)
+     */
+    public boolean removeSoftWareSystem(IRepositoryNode children) {
+        Item item = children.getObject().getProperty().getItem();
+        if (item != null && item instanceof ConnectionItem) {
+            return SoftwareSystemManager.getInstance().cleanSoftWareSystem(((ConnectionItem) item).getConnection());
+        }
+        return false;
     }
 }
