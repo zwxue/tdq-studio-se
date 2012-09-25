@@ -79,7 +79,7 @@ public final class EMFSharedResources {
     }
 
     /**
-     * DOC bZhou Comment method "reloadResource".
+     * reload resource of softwareDeployment
      * 
      * @param uri
      */
@@ -88,8 +88,7 @@ public final class EMFSharedResources {
             return this.getSoftwareDeploymentResource();
         }
         URI uri = softwareDeploymentResource.getURI();
-        unloadResource(uri.toString());
-        softwareDeploymentResource = getResource(uri, true);
+        softwareDeploymentResource = reloadResource(uri);
         return softwareDeploymentResource;
     }
 
