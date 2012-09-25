@@ -369,18 +369,9 @@ public class ImportWizardPage extends WizardPage {
                 ItemRecord findRecord = ItemRecord.findRecord(depFile);
                 // MOD msjian TDQ-5909: modify to displayName
                 String dptLabel = element != null ? PropertyHelper.getProperty(element).getDisplayName() : depFile.getName();
-                // if (findRecord == null) {
-                // String absolutePath = depFile.getAbsolutePath();
-                // if (absolutePath != null) {
-                // dptLabel = new Path(absolutePath).lastSegment();
-                // }
-                // }
                 // TDQ-5909~
                 if (findRecord == null || !repositoryTree.getChecked(findRecord)) {
-                    if (record.getName().equals("columnJTxml")) {
-                        System.out.println("aaaaaaa");
-                    }
-                    dErrors.add("\"" + record.getName() + "\" miss dependency :" + dptLabel);
+                    dErrors.add("\"" + record.getName() + "\" miss dependency :" + dptLabel); //$NON-NLS-1$ //$NON-NLS-2$
                 }
             }
         }
