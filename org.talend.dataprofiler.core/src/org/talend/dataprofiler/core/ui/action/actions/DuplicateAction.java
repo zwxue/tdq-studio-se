@@ -12,7 +12,6 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.action.actions;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.resources.IFile;
@@ -51,7 +50,6 @@ import org.talend.dq.nodes.AnalysisRepNode;
 import org.talend.dq.nodes.AnalysisSubFolderRepNode;
 import org.talend.dq.nodes.ReportRepNode;
 import org.talend.dq.nodes.ReportSubFolderRepNode;
-import org.talend.dq.nodes.SourceFileRepNode;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.resource.EResourceConstant;
@@ -219,10 +217,11 @@ public class DuplicateAction extends Action {
             } else {
                 CorePlugin.getDefault().refreshDQView(recursiveFind.getParent());
             }
-        }
-        if (activePart instanceof ISetSelectionTarget) {
-            ISelection selection = new StructuredSelection(recursiveFind);
-            ((ISetSelectionTarget) activePart).selectReveal(selection);
+            // MOD qiongli TDQ-5391 Avoid 'recursiveFind' to casue NPE .
+            if (activePart instanceof ISetSelectionTarget) {
+                ISelection selection = new StructuredSelection(recursiveFind);
+                ((ISetSelectionTarget) activePart).selectReveal(selection);
+            }
         }
 
     }
@@ -244,21 +243,23 @@ public class DuplicateAction extends Action {
             Item item = itemProperty.getItem();
             String uuid = ResourceHelper.getUUID(item);
             IRepositoryNode librariesFolderNode = null;
+            // MOD qiongli TDQ-5391 should consider both source file and jrxml file.
+            List<? extends RepositoryNode> childrenList = null;
             if (item instanceof TDQSourceFileItem) {
                 librariesFolderNode = RepositoryNodeHelper.getLibrariesFolderNode(EResourceConstant.SOURCE_FILES);
+                childrenList = RepositoryNodeHelper.getSourceFileRepNodes(librariesFolderNode, true);
 
             } else if (item instanceof TDQJrxmlItem) {
                 librariesFolderNode = RepositoryNodeHelper.getLibrariesFolderNode(EResourceConstant.JRXML_TEMPLATE);
+                childrenList = RepositoryNodeHelper.getJrxmlFileRepNodes(librariesFolderNode, true);
             }
             // MOD msjian TDQ-4830 2012-5-25: fixed a NPE and should consider the subfolder
-            List<SourceFileRepNode> sourceNodeList = new ArrayList<SourceFileRepNode>();
-            sourceNodeList = RepositoryNodeHelper.getSourceFileRepNodes(librariesFolderNode, true);
-            if (sourceNodeList != null && sourceNodeList.size() > 0) {
-                for (SourceFileRepNode node : sourceNodeList) {
+            if (childrenList != null && childrenList.size() > 0) {
+                for (RepositoryNode node : childrenList) {
                     Item sourceIitem = node.getObject().getProperty().getItem();
                     String uuid2 = ResourceHelper.getUUID(sourceIitem);
                     if (uuid2 != null && uuid2.equals(uuid)) {
-                        recursiveFind = (RepositoryNode) node;
+                        recursiveFind = node;
                         break;
                     }
                 }
