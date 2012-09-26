@@ -20,6 +20,7 @@ import org.talend.core.model.context.ContextUtils;
 import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
 import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.properties.Item;
+import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dq.nodes.DBConnectionRepNode;
@@ -52,6 +53,10 @@ public class SwitchContextAction extends Action {
             Item item = dbConnectionRepNode.getObject().getProperty().getItem();
             if (item instanceof ConnectionItem) {
                 ConnectionItem connItem = (ConnectionItem) item;
+                // Added yyin 20120925 TDQ-5668, check this connection's editor is open or not, if open, close.
+                CorePlugin.getDefault().closeEditorIfOpened(connItem);
+                // ~
+
                 boolean isUpdated = SwitchContextGroupNameImpl.getInstance().updateContextGroup(connItem);
                 DatabaseConnection dbcon = dbConnectionRepNode.getDatabaseConnection();
                 String fileStr = dbcon.eResource().getURI().toFileString();
