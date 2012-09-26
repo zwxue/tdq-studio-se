@@ -19,6 +19,8 @@ import org.eclipse.nebula.widgets.grid.Grid;
 import org.eclipse.nebula.widgets.grid.GridColumn;
 import org.eclipse.nebula.widgets.grid.GridItem;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.DisposeEvent;
+import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.events.MouseMoveListener;
@@ -29,6 +31,7 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.ScrollBar;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.helper.ModelElementIndicatorHelper;
 import org.talend.dataprofiler.core.model.ModelElementIndicator;
@@ -218,6 +221,16 @@ public class IndicatorSelectGrid extends Grid {
             }
 
         });
+
+        addDisposeListener(new DisposeListener() {
+
+            public void widgetDisposed(DisposeEvent e) {
+                if (isScrolling) {
+                    isScrolling = false;
+                    Display.getDefault().timerExec(-1, thread); // interrupt the thread
+                }
+            }
+        });
     }
 
     private void onMouseDown(MouseEvent e) {
@@ -286,12 +299,15 @@ public class IndicatorSelectGrid extends Grid {
 
         int accelaration = 0;
 
-        public HoverScrollThread(int step) {
+        private ScrollBar _hScrollBar;
+
+        public HoverScrollThread(int step, ScrollBar hScrollBar) {
             _step = step;
+            _hScrollBar = hScrollBar;
         }
 
         public void run() {
-            getHorizontalBar().setSelection(getHorizontalBar().getSelection() + _step);
+            _hScrollBar.setSelection(_hScrollBar.getSelection() + _step);
             redraw();
             Display.getDefault().timerExec(delay - accelaration * 2, this);
         }
@@ -303,13 +319,15 @@ public class IndicatorSelectGrid extends Grid {
 
     private boolean handleMouseScroll(MouseEvent e) {
         if (e.x > getRowHeaderWidth() && e.x < getRowHeaderWidth() + 150) {
-            if (getHorizontalBar().getSelection() == getHorizontalBar().getMinimum()) {
+            ScrollBar hScrollBar = getHorizontalBar();
+            if (hScrollBar.getSelection() == hScrollBar.getMinimum()) {
                 return false;
             }
-            if (!isScrolling && e.x < getRowHeaderWidth() + 50) {
+            if (!isScrolling && e.x < getRowHeaderWidth() + 100) {
                 isScrolling = true;
-                thread = new HoverScrollThread(-1);
+                thread = new HoverScrollThread(-1, hScrollBar);
                 Display.getDefault().timerExec(200, thread);
+                handleCellHighlight(e, getVisibleRange());
             }
             if (isScrolling) {
                 thread.setAccelaration(getRowHeaderWidth() + 150 - e.x);
@@ -318,13 +336,15 @@ public class IndicatorSelectGrid extends Grid {
                 return true;
             }
         } else if (e.x > getBounds().width - 150 && e.x < getBounds().width) {
-            if (getHorizontalBar().getSelection() == getHorizontalBar().getMaximum()) {
+            ScrollBar hScrollBar = getHorizontalBar();
+            if (hScrollBar.getSelection() == hScrollBar.getMaximum()) {
                 return false;
             }
-            if (!isScrolling && e.x > getBounds().width - 50) {
+            if (!isScrolling && e.x > getBounds().width - 100) {
                 isScrolling = true;
-                thread = new HoverScrollThread(1);
+                thread = new HoverScrollThread(1, hScrollBar);
                 Display.getDefault().timerExec(200, thread);
+                handleCellHighlight(e, getVisibleRange());
             }
             if (isScrolling) {
                 thread.setAccelaration(e.x + 150 - getBounds().width);
