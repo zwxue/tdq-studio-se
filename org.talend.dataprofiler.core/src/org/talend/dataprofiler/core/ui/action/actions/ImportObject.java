@@ -59,8 +59,7 @@ public class ImportObject {
             File componentFileFolder = ComponentInstaller.unzip(componet.getInstalledLocation(), targetFolder);
 
             // get obj files(csv)
-            List<File> objFiles = new ArrayList<File>();
-            FilesUtils.getAllFilesFromFolder(componentFileFolder, objFiles, new FilenameFilter() {
+            List<File> objFiles = FilesUtils.getAllFilesFromFolder(componentFileFolder, new FilenameFilter() {
 
                 public boolean accept(File dir, String name) {
                     return !FilesUtils.isSVNFolder(dir) && name.endsWith("csv"); //$NON-NLS-1$
@@ -70,8 +69,7 @@ public class ImportObject {
                 information.add(new ReturnCode("No valid exchange extension file(CSV) found in " + componet.getName(), false)); //$NON-NLS-1$
             } else {
                 // get jar files
-                List<File> jarFiles = new ArrayList<File>();
-                FilesUtils.getAllFilesFromFolder(componentFileFolder, jarFiles, new FilenameFilter() {
+                List<File> jarFiles = FilesUtils.getAllFilesFromFolder(componentFileFolder, new FilenameFilter() {
 
                     public boolean accept(File dir, String name) {
                         return !FilesUtils.isSVNFolder(dir) && name.endsWith("jar"); //$NON-NLS-1$
