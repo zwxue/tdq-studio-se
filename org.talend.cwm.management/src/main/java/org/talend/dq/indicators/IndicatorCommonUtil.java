@@ -359,8 +359,13 @@ public final class IndicatorCommonUtil {
         Object tempObject;
         PatternMatchingExt patternExt = new PatternMatchingExt();
         if (UDIHelper.isUDI(indicator)) {
-            patternExt.setMatchingValueCount(((UserDefIndicator) indicator).getMatchingValueCount());
-            patternExt.setNotMatchingValueCount(((UserDefIndicator) indicator).getNotMatchingValueCount());
+            UserDefIndicator udi = (UserDefIndicator) indicator;
+            if (udi.getMatchingValueCount() != null) {
+                patternExt.setMatchingValueCount(udi.getMatchingValueCount());
+            }
+            if (udi.getNotMatchingValueCount() != null) {
+                patternExt.setNotMatchingValueCount(udi.getNotMatchingValueCount());
+            }
         } else {
             patternExt.setMatchingValueCount(((PatternMatchingIndicator) indicator).getMatchingValueCount());
             patternExt.setNotMatchingValueCount(((PatternMatchingIndicator) indicator).getNotMatchingValueCount());

@@ -44,6 +44,7 @@ import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.relational.TdExpression;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
+import org.talend.dataprofiler.core.ui.action.actions.ImportObject;
 import org.talend.dataprofiler.core.ui.action.provider.NewSourcePatternActionProvider;
 import org.talend.dataprofiler.core.ui.wizard.parserrule.ParserRuleToExcelEnum;
 import org.talend.dataquality.domain.pattern.ExpressionType;
@@ -91,9 +92,11 @@ public final class ImportFactory {
      * @param resourceType
      * @param importFile
      * @return
+     * @deprecated
      */
+    @Deprecated
     public static List<ReturnCode> doImport(EResourceConstant resourceType, File importFile) {
-        return doImport(resourceType, importFile, null);
+        return doImport(resourceType, ImportObject.createImportObject(importFile, null), null);
     }
 
     /**
@@ -103,9 +106,23 @@ public final class ImportFactory {
      * @param importFile
      * @param importItemName
      * @return
+     * @deprecated use doImport(EResourceConstant, ImportObject, importItemName) instead of
      */
+    @Deprecated
     public static List<ReturnCode> doImport(EResourceConstant resourceType, File importFile, String importItemName) {
-        return doImport(resourceType, importFile, true, true, importItemName);
+        return doImport(resourceType, ImportObject.createImportObject(importFile, null), true, true, importItemName);
+    }
+
+    /**
+     * DOC xqliu Comment method "doImport".
+     * 
+     * @param resourceType
+     * @param importObject
+     * @param importItemName
+     * @return
+     */
+    public static List<ReturnCode> doImport(EResourceConstant resourceType, ImportObject importObject, String importItemName) {
+        return doImport(resourceType, importObject, true, true, importItemName);
     }
 
     /**
@@ -114,9 +131,11 @@ public final class ImportFactory {
      * @param category
      * @param importFile
      * @return
+     * @deprecated
      */
+    @Deprecated
     public static List<ReturnCode> doImport(EResourceConstant resourceType, File importFile, boolean skip, boolean rename) {
-        return doImport(resourceType, importFile, skip, rename, null);
+        return doImport(resourceType, ImportObject.createImportObject(importFile, null), skip, rename, null);
     }
 
     /**
@@ -128,7 +147,9 @@ public final class ImportFactory {
      * @param rename
      * @param importItemName
      * @return
+     * @deprecated use doImport(EResourceConstant, ImportObject, boolean, boolean, String) instead of
      */
+    @Deprecated
     public static List<ReturnCode> doImport(EResourceConstant resourceType, File importFile, boolean skip, boolean rename,
             String importItemName) {
         assert resourceType != null;
@@ -149,6 +170,48 @@ public final class ImportFactory {
         }
     }
 
+    /**
+     * DOC xqliu Comment method "doImport".
+     * 
+     * @param resourceType
+     * @param importObject
+     * @param skip
+     * @param rename
+     * @param importItemName
+     * @return
+     */
+    public static List<ReturnCode> doImport(EResourceConstant resourceType, ImportObject importObject, boolean skip,
+            boolean rename, String importItemName) {
+        assert resourceType != null;
+
+        IFolder restoreFolder = ResourceManager.getOneFolder(resourceType);
+
+        switch (resourceType) {
+        case PATTERN_REGEX:
+            return importToStucture(importObject, restoreFolder, ExpressionType.REGEXP, skip, rename, importItemName);
+        case PATTERN_SQL:
+            return importToStucture(importObject, restoreFolder, ExpressionType.SQL_LIKE, skip, rename, importItemName);
+        case USER_DEFINED_INDICATORS:
+            return importIndicatorToStucture(importObject, restoreFolder, skip, rename, importItemName);
+        case RULES_PARSER:
+            return importParserRuleToStucture(importObject, restoreFolder, skip, rename, importItemName);
+        default:
+            return null;
+        }
+    }
+
+    /**
+     * DOC xqliu Comment method "importToStucture".
+     * 
+     * @param importFile
+     * @param selectionFolder
+     * @param type
+     * @param skip
+     * @param rename
+     * @return
+     * @deprecated
+     */
+    @Deprecated
     public static List<ReturnCode> importToStucture(File importFile, IFolder selectionFolder, ExpressionType type, boolean skip,
             boolean rename) {
         return importToStucture(importFile, selectionFolder, type, skip, rename, null);
@@ -164,13 +227,34 @@ public final class ImportFactory {
      * @param rename
      * @param importItemName
      * @return
+     * @deprecated
      */
+    @Deprecated
     public static List<ReturnCode> importToStucture(File importFile, IFolder selectionFolder, ExpressionType type, boolean skip,
             boolean rename, String importItemName) {
+        return importToStucture(ImportObject.createImportObject(importFile, null), selectionFolder, type, skip, rename,
+                importItemName);
+    }
+
+    /**
+     * DOC xqliu Comment method "importToStucture".
+     * 
+     * @param importObject
+     * @param selectionFolder
+     * @param type
+     * @param skip
+     * @param rename
+     * @param importItemName
+     * @return
+     */
+    public static List<ReturnCode> importToStucture(ImportObject importObject, IFolder selectionFolder, ExpressionType type,
+            boolean skip, boolean rename, String importItemName) {
 
         List<ReturnCode> importEvent = new ArrayList<ReturnCode>();
 
         Set<String> names = PatternUtilities.getNestFolderPatternNames(new HashSet<String>(), selectionFolder);
+
+        File importFile = importObject.getObjFile();
 
         String fileExtName = getFileExtName(importFile);
 
@@ -297,6 +381,8 @@ public final class ImportFactory {
             }
         }
 
+        importObject.copyJarFiles();
+
         // ADD xqliu 2012-04-27 TDQ-5149
         checkImportEvent(importItemName, importEvent);
         // ~ TDQ-5149
@@ -317,50 +403,6 @@ public final class ImportFactory {
             }
         }
     }
-
-    /**
-     * DOC yyi Comment method "varifyImportFile".
-     * 
-     * @param importFile
-     */
-    // private static ReturnCode verifyImportFile(File importFile) {
-    //
-    // ReturnCode rc = new ReturnCode(true);
-    // CsvReader reader;
-    //
-    // try {
-    // reader = new CsvReader(new FileReader(importFile), CURRENT_SEPARATOR);
-    // reader.setEscapeMode(ESCAPE_MODE_BACKSLASH);
-    // reader.setTextQualifier(TEXT_QUAL);
-    // reader.setUseTextQualifier(true);
-    //
-    // reader.readHeaders();
-    // if (!checkFileHeader(reader.getHeaders())) {
-    // rc.setReturnCode(DefaultMessagesImpl.getString("ImportFactory.noHeader"), false);
-    // return rc;
-    // }
-    // reader.setUseTextQualifier(false);
-    // while (reader.readRecord()) {
-    // if (!checkQuotes(reader.getValues())) {
-    // rc.setReturnCode(DefaultMessagesImpl.getString("ImportFactory.invalidFormat"), false);
-    // return rc;
-    // }
-    // }
-    // reader.close();
-    //
-    // } catch (Exception e) {
-    // e.printStackTrace();
-    // }
-    // return rc;
-    // }
-
-    // private static boolean checkQuotes(String[] values) {
-    // for (String value : values) {
-    // if (!checkQuotationMarks(value))
-    // return false;
-    // }
-    // return true;
-    // }
 
     private static String createAndStorePattern(PatternParameters parameters, IFolder selectionFolder, ExpressionType type) {
 
@@ -460,7 +502,6 @@ public final class ImportFactory {
         Map<String, String> regex;
 
         public PatternParameters() {
-
             name = ""; //$NON-NLS-1$
             auther = ""; //$NON-NLS-1$
             description = ""; //$NON-NLS-1$
@@ -471,7 +512,6 @@ public final class ImportFactory {
             javaJarPath = "";//$NON-NLS-1$
             regex = new HashMap<String, String>();
         }
-
     }
 
     /**
@@ -485,7 +525,6 @@ public final class ImportFactory {
             super();
             category = ""; //$NON-NLS-1$
         }
-
     }
 
     /**
@@ -496,7 +535,9 @@ public final class ImportFactory {
      * @param skip
      * @param rename
      * @return
+     * @deprecated
      */
+    @Deprecated
     public static List<ReturnCode> importIndicatorToStucture(File importFile, IFolder selectionFolder, boolean skip,
             boolean rename) {
         return importIndicatorToStucture(importFile, selectionFolder, skip, rename, null);
@@ -511,13 +552,33 @@ public final class ImportFactory {
      * @param rename
      * @param importItemName
      * @return
+     * @deprecated
      */
+    @Deprecated
     public static List<ReturnCode> importIndicatorToStucture(File importFile, IFolder selectionFolder, boolean skip,
+            boolean rename, String importItemName) {
+        return importIndicatorToStucture(ImportObject.createImportObject(importFile, null), selectionFolder, skip, rename,
+                importItemName);
+    }
+
+    /**
+     * DOC xqliu Comment method "importIndicatorToStucture".
+     * 
+     * @param importObject
+     * @param selectionFolder
+     * @param skip
+     * @param rename
+     * @param importItemName
+     * @return
+     */
+    public static List<ReturnCode> importIndicatorToStucture(ImportObject importObject, IFolder selectionFolder, boolean skip,
             boolean rename, String importItemName) {
 
         List<ReturnCode> information = new ArrayList<ReturnCode>();
 
         Set<String> names = UDIHelper.getAllIndicatorNames(selectionFolder);
+
+        File importFile = importObject.getObjFile();
 
         String fileExtName = getFileExtName(importFile);
 
@@ -562,14 +623,7 @@ public final class ImportFactory {
                     for (int i = 0; i < headers.length; i++) {
                         record.put(headers[i], columnsValue[i]);
                     }
-                    // String cellStr = "\"\"";
                     for (PatternLanguageType languagetype : PatternLanguageType.values()) {
-                        // int index = languagetype.getExcelEnum().getIndex();
-                        // if (charArray.length < reader.getColumnCount()) {
-                        // cellStr = reader.get(languagetype.getExcelEnum().getLiteral());
-                        // } else {
-                        // cellStr = String.valueOf(charArray[index]);
-                        // }
                         String cellStr = record.get(languagetype.getExcelEnum().getLiteral());
                         if (cellStr != null && !cellStr.equals("\"\"")) { //$NON-NLS-1$
                             udiParameters.regex.put(languagetype.getLiteral(), trimQuote(cellStr));
@@ -699,6 +753,8 @@ public final class ImportFactory {
             }
         }
 
+        importObject.copyJarFiles();
+
         // ADD xqliu 2012-04-27 TDQ-5149
         checkImportEvent(importItemName, information);
         // ~ TDQ-5149
@@ -706,8 +762,9 @@ public final class ImportFactory {
     }
 
     private static String trimQuote(String text) {
-        if (text.length() < 2)
+        if (text.length() < 2) {
             return text;
+        }
 
         int beginLen = 0;
         int endLen = text.length();
@@ -718,37 +775,6 @@ public final class ImportFactory {
 
         return text;
     }
-
-    // private static boolean checkFileHeader(String[] headers) {
-    //
-    // List<String> patternEnum = new ArrayList<String>();
-    // for (PatternToExcelEnum tmpEnum : PatternToExcelEnum.values()) {
-    // patternEnum.add(tmpEnum.getLiteral());
-    // }
-    //
-    // for (String header : headers) {
-    // if (!patternEnum.contains(header))
-    // return false;
-    // }
-    // return true;
-    // }
-    //
-    // private static boolean checkQuotationMarks(String text) {
-    // if (0 == text.length())
-    // return true;
-    //
-    // int beginLen = 0;
-    // int endLen = text.length();
-    //
-    // while ('\"' == text.charAt(beginLen)) {
-    // beginLen++;
-    // }
-    // while ('\"' == text.charAt(endLen - 1)) {
-    // endLen--;
-    // }
-    // // System.out.println(text + "|" + beginLen + "|" + (text.length() - endLen));
-    // return beginLen == text.length() - endLen;
-    // }
 
     /**
      * DOC xqliu Comment method "createAndStoreUDI".
@@ -812,7 +838,6 @@ public final class ImportFactory {
     }
 
     /**
-     * 
      * The method is used for importing a parser rule from file.
      * 
      * @param importFile
@@ -820,7 +845,9 @@ public final class ImportFactory {
      * @param skip
      * @param rename
      * @return
+     * @deprecated
      */
+    @Deprecated
     public static List<ReturnCode> importParserRuleToStucture(File importFile, IFolder selectionFolder, boolean skip,
             boolean rename) {
         return importParserRuleToStucture(importFile, selectionFolder, skip, rename, null);
@@ -835,13 +862,32 @@ public final class ImportFactory {
      * @param rename
      * @param importItemName
      * @return
+     * @deprecated
      */
+    @Deprecated
     public static List<ReturnCode> importParserRuleToStucture(File importFile, IFolder selectionFolder, boolean skip,
+            boolean rename, String importItemName) {
+        return importParserRuleToStucture(ImportObject.createImportObject(importFile, null), selectionFolder, skip, rename,
+                importItemName);
+    }
+
+    /**
+     * DOC xqliu Comment method "importParserRuleToStucture".
+     * 
+     * @param importObject
+     * @param selectionFolder
+     * @param skip
+     * @param rename
+     * @param importItemName
+     * @return
+     */
+    public static List<ReturnCode> importParserRuleToStucture(ImportObject importObject, IFolder selectionFolder, boolean skip,
             boolean rename, String importItemName) {
         List<ReturnCode> information = new ArrayList<ReturnCode>();
 
         Set<String> names = DQRuleResourceFileHelper.getInstance().getAllParserRlueNames(selectionFolder);
         ParserRuleParameters prParameters = new ImportFactory().new ParserRuleParameters();
+        File importFile = importObject.getObjFile();
         String fileExtName = getFileExtName(importFile);
 
         if ("csv".equalsIgnoreCase(fileExtName)) { //$NON-NLS-1$
@@ -905,6 +951,9 @@ public final class ImportFactory {
                         DefaultMessagesImpl.getString("ImportFactory.importedParserRuleFailed", name), false)); //$NON-NLS-1$
             }
         }
+
+        importObject.copyJarFiles();
+
         // ADD xqliu 2012-04-27 TDQ-5149
         checkImportEvent(importItemName, information);
         // ~ TDQ-5149
@@ -945,7 +994,6 @@ public final class ImportFactory {
             }
             ElementWriterFactory.getInstance().createdRuleWriter().create(parserRule, selectionFolder);
         }
-
     }
 
     /**
@@ -996,5 +1044,4 @@ public final class ImportFactory {
             value = ""; //$NON-NLS-1$
         }
     }
-
 }

@@ -13,7 +13,8 @@
 package org.talend.dataprofiler.core.ui.action.actions;
 
 import java.io.File;
-import java.io.FilenameFilter;
+import java.io.IOException;
+import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,9 +28,20 @@ import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.jface.action.Action;
+import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.window.Window;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.CCombo;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
-import org.talend.commons.utils.io.FilesUtils;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.exception.ExceptionHandler;
@@ -39,9 +51,9 @@ import org.talend.dataprofiler.core.pattern.ImportFactory;
 import org.talend.dataprofiler.core.ui.dialog.message.ImportInfoDialog;
 import org.talend.dataprofiler.ecos.EcosConstants;
 import org.talend.dataprofiler.ecos.jobs.ComponentDownloader;
-import org.talend.dataprofiler.ecos.jobs.ComponentInstaller;
 import org.talend.dataprofiler.ecos.jobs.DownloadListener;
 import org.talend.dataprofiler.ecos.model.IEcosComponent;
+import org.talend.dataprofiler.ecos.model.IRevision;
 import org.talend.dataprofiler.ecos.service.JobService;
 import org.talend.resource.EResourceConstant;
 import org.talend.resource.ResourceManager;
@@ -85,7 +97,7 @@ public class ImportRemotePatternAction extends Action {
                     Display.getDefault().asyncExec(new Runnable() {
 
                         public void run() {
-                            updateUI(event);
+                            doImportAfterDownload(event);
                         }
                     });
                 }
@@ -97,24 +109,24 @@ public class ImportRemotePatternAction extends Action {
         }
     }
 
-    private void updateUI(IJobChangeEvent event) {
+    private void doImportAfterDownload(IJobChangeEvent event) {
 
         final List<ReturnCode> information = new ArrayList<ReturnCode>();
 
         setEnabled(true);
         if (fExtensionDownloaded > 0) {
             for (IEcosComponent componet : fInstalledComponents) {
-                List<File> validFiles = extractFiles(componet, information);
+                List<ImportObject> validImportObject = ImportObject.extractImportObject(componet, information);
 
-                if (!validFiles.isEmpty()) {
+                if (!validImportObject.isEmpty()) {
                     String categoryName = componet.getCategry().getName();
 
                     EEcosCategory ecosCategory = EEcosCategory.getEcosCategory(categoryName);
 
                     if (ecosCategory != null) {
                         EResourceConstant resourceType = ecosCategory.getResource();
-                        for (File oneFile : validFiles) {
-                            information.addAll(ImportFactory.doImport(resourceType, oneFile, componet.getName()));
+                        for (ImportObject importObject : validImportObject) {
+                            information.addAll(ImportFactory.doImport(resourceType, importObject, componet.getName()));
                         }
                     }
                 }
@@ -125,49 +137,11 @@ public class ImportRemotePatternAction extends Action {
                 information.add(new ReturnCode(DefaultMessagesImpl.getString("ImportRemotePatternAction.NothingImport"), false)); //$NON-NLS-1$
             }
             ImportInfoDialog
-                    .openImportInformation(
-                            PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
-                            DefaultMessagesImpl.getString("ImportRemotePatternAction.ImportFinish"), (ReturnCode[]) information.toArray(new ReturnCode[0])); //$NON-NLS-1$
+                    .openImportInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), DefaultMessagesImpl
+                            .getString("ImportRemotePatternAction.ImportFinish"), information.toArray(new ReturnCode[0])); //$NON-NLS-1$
 
             CorePlugin.getDefault().refreshDQView();
         }
-    }
-
-    /**
-     * DOC bZhou Comment method "extractFiles".
-     * 
-     * @param componet
-     * @param information
-     * @return
-     */
-    private List<File> extractFiles(IEcosComponent componet, List<ReturnCode> information) {
-        List<File> files = new ArrayList<File>();
-
-        try {
-            String categoryName = componet.getCategry().getName();
-            // MOD msjian 2012-2-22 TDQ-4603: change the unzip folder to system temp folder, else there is no svn info
-            // files for the old targetFolder
-            // String targetFolder = ResourceManager.getExchangeFolder().getLocation().append(categoryName).toString();
-            String targetFolder = System.getProperty("java.io.tmpdir"); //$NON-NLS-1$
-            // TDQ-4603 ~
-            File componentFileFolder = ComponentInstaller.unzip(componet.getInstalledLocation(), targetFolder);
-
-            FilesUtils.getAllFilesFromFolder(componentFileFolder, files, new FilenameFilter() {
-
-                public boolean accept(File dir, String name) {
-                    return !FilesUtils.isSVNFolder(dir) && name.endsWith("csv"); //$NON-NLS-1$
-                }
-            });
-
-            if (files.isEmpty()) {
-                information.add(new ReturnCode("No valid exchange extension file(CSV) found in " + componet.getName(), false)); //$NON-NLS-1$
-            }
-
-        } catch (Exception e) {
-            ExceptionHandler.process(e);
-        }
-
-        return files;
     }
 
     /**
@@ -214,31 +188,42 @@ public class ImportRemotePatternAction extends Action {
             return Status.OK_STATUS;
         }
 
-        private void downloadExtension(IEcosComponent extension, IProgressMonitor monitor) {
-
-            // get the latest revision url
-            String componentUrl = extension.getLatestRevision().getUrl();
-            monitor.setTaskName(EcosConstants.DOWNLOAD_TASK_NAME + componentUrl);
-            String targetFolder = ResourceManager.getExchangeFolder().getLocation().toOSString();
+        private void downloadExtension(final IEcosComponent extension, final IProgressMonitor monitor) {
+            // get the revision
             try {
-                String fileName = extension.getLatestRevision().getFileName();
-                // fileName = extension.getLatestRevision().getFileName();
+                IRevision revision = getRevision(extension);
+                if (revision == null) {
+                    return;
+                }
+                String componentUrl = revision.getUrl();
+                monitor.setTaskName(EcosConstants.DOWNLOAD_TASK_NAME + componentUrl);
+                String targetFolder = ResourceManager.getExchangeFolder().getLocation().toOSString();
+                String fileName = revision.getFileName();
                 File localZipFile = new File(targetFolder, fileName);
 
                 if (extension.getInstalledLocation() != null && extension.getInstalledRevision() != null) {
                     // if already install the latest revision, ignore
-                    if (extension.getInstalledRevision().getName().equals(extension.getLatestRevision().getName())) {
+                    if (extension.getInstalledRevision().getName().equals(revision.getName())) {
                         if (localZipFile.exists() && checkIfExisted(extension.getInstalledLocation())) {
-                            monitor.done();
-
-                            extensionDownloadCompleted(extension);
-
-                            return;
+                            // if the file size is same, this means the file has been downloaded already
+                            if (isSameSize(localZipFile, componentUrl)) {
+                                monitor.done();
+                                extensionDownloadCompleted(extension);
+                                return;
+                            }
                         }
                     } else {
                         // before installing the new revision, delete the older
                         // revision that has been installed
-                        FileUtils.deleteDirectory(new File(extension.getInstalledLocation()));
+                        File installedFile = new File(extension.getInstalledLocation());
+                        if (installedFile.exists()) {
+                            if (installedFile.isDirectory()) {
+                                FileUtils.deleteDirectory(installedFile);
+                            } else if (installedFile.isFile()) {
+                                installedFile.delete();
+                            }
+                        }
+
                         extension.setInstalledLocation(null);
                         extension.setInstalledRevision(null);
                     }
@@ -248,22 +233,61 @@ public class ImportRemotePatternAction extends Action {
 
                 monitor.setTaskName(EcosConstants.DOWNLOAD_TASK_NAME + url.toString());
                 ComponentDownloader downloader = new ComponentDownloader();
-                downloader.addDownloadListener(this);
+                downloader.addDownloadListener(DownloadJob.this);
                 // block until download complete
                 downloader.download(url, localZipFile);
 
                 // check if the job is cancelled
                 if (!monitor.isCanceled()) {
                     // update extesion status
-                    extension.setInstalledRevision(extension.getLatestRevision());
+                    extension.setInstalledRevision(revision);
                     extension.setInstalledLocation(localZipFile.getAbsolutePath());
                     monitor.done();
                     extensionDownloadCompleted(extension);
                 }
-
             } catch (Exception e) {
                 ExceptionHandler.process(e);
             }
+        }
+
+        /**
+         * DOC xqliu Comment method "isSameSize".
+         * 
+         * @param localFile local file
+         * @param urlFile url file
+         * @throws IOException
+         */
+        private boolean isSameSize(File localFile, String urlFile) throws IOException {
+            boolean sameSize = false;
+            if (localFile.exists() && localFile.isFile()) {
+                HttpURLConnection httpConnection = (HttpURLConnection) new URL(urlFile).openConnection();
+                if (localFile.length() == httpConnection.getContentLength()) {
+                    sameSize = true;
+                }
+            }
+            return sameSize;
+        }
+
+        /**
+         * get the revision of the IEcosComponent, if there exist more than one, show a dialog for user to select.
+         * 
+         * @param extension
+         * @return
+         * @throws InterruptedException
+         */
+        private IRevision getRevision(IEcosComponent extension) throws InterruptedException {
+            IRevision revision = null;
+            final List<IRevision> revisions = extension.getRevisions();
+            if (revisions != null && !revisions.isEmpty()) {
+                if (revisions.size() == 1) {
+                    revision = revisions.get(0);
+                } else {
+                    SelectRevisionDialogThread thread = new SelectRevisionDialogThread(new SelectRevisionDialog(null, revisions));
+                    Display.getDefault().syncExec(thread);
+                    revision = thread.getRevision();
+                }
+            }
+            return revision;
         }
 
         /**
@@ -306,6 +330,122 @@ public class ImportRemotePatternAction extends Action {
 
         private String toKbFormat(int size) {
             return String.format("%1$s KB", size >> 10); //$NON-NLS-1$
+        }
+    }
+
+    /**
+     * created by xqliu on Sep 25, 2012 Detailled comment
+     */
+    class SelectRevisionDialogThread extends Thread {
+
+        private SelectRevisionDialog selectRevisionDialog;
+
+        private IRevision revision;
+
+        public IRevision getRevision() {
+            return this.revision;
+        }
+
+        public SelectRevisionDialogThread(SelectRevisionDialog selectRevisionDialog) {
+            this.selectRevisionDialog = selectRevisionDialog;
+        }
+
+        @Override
+        public void run() {
+            if (this.selectRevisionDialog != null) {
+                if (this.selectRevisionDialog.open() == Window.OK) {
+                    this.revision = this.selectRevisionDialog.getRevision();
+                }
+            }
+        }
+    }
+
+    /**
+     * created by xqliu on Sep 25, 2012 Detailled comment
+     */
+    class SelectRevisionDialog extends Dialog {
+
+        private List<IRevision> revisions;
+
+        public List<IRevision> getRevisions() {
+            if (this.revisions == null) {
+                this.revisions = new ArrayList<IRevision>();
+            }
+            return this.revisions;
+        }
+
+        public void setRevisions(List<IRevision> revisions) {
+            this.revisions = revisions;
+        }
+
+        private IRevision revision;
+
+        public IRevision getRevision() {
+            return this.revision;
+        }
+
+        public void setRevision(IRevision revision) {
+            this.revision = revision;
+        }
+
+        /**
+         * DOC xqliu SelectRevisionDialog constructor comment.
+         * 
+         * @param parentShell
+         * @param revisions
+         */
+        protected SelectRevisionDialog(Shell parentShell, List<IRevision> revisions) {
+            super(parentShell);
+            this.setRevisions(revisions);
+        }
+
+        @Override
+        protected void configureShell(Shell newShell) {
+            super.configureShell(newShell);
+            newShell.setText(DefaultMessagesImpl.getString("SelectRevisionDialog.title")); //$NON-NLS-1$
+        }
+
+        @Override
+        protected Control createDialogArea(Composite parent) {
+            Composite comp = new Composite(parent, SWT.NONE);
+            comp.setLayout(new GridLayout(2, true));
+            comp.setLayoutData(new GridData(GridData.FILL_BOTH));
+
+            Label label = new Label(comp, SWT.NONE);
+            label.setText(DefaultMessagesImpl.getString("SelectRevisionDialog.revisions")); //$NON-NLS-1$
+
+            final CCombo revisionsCombo = new CCombo(comp, SWT.BORDER);
+            revisionsCombo.setEditable(false);
+            revisionsCombo.setItems(getRevisionItems());
+            revisionsCombo.addModifyListener(new ModifyListener() {
+
+                public void modifyText(ModifyEvent e) {
+                    String revisionName = revisionsCombo.getText();
+                    for (IRevision rev : getRevisions()) {
+                        if (revisionName.equals(rev.getName())) {
+                            setRevision(rev);
+                            break;
+                        }
+                    }
+                }
+
+            });
+
+            if (revisionsCombo.getItemCount() > 0) {
+                revisionsCombo.select(0);
+            }
+
+            return comp;
+        }
+
+        private String[] getRevisionItems() {
+            String[] items = new String[this.getRevisions().size()];
+            int i = 0;
+            for (IRevision rev : this.getRevisions()) {
+                items[i] = rev.getName();
+                i++;
+            }
+            return items;
         }
     }
 }

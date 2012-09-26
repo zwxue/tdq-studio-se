@@ -19,6 +19,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -201,26 +202,45 @@ public final class UDIHelper {
      * yyi 2009-09-22 To check the expression is null, empty or less than 16 characters Feature : 8866.
      */
     public static boolean isUDIValid(IndicatorDefinition indicatorDefinition) {
+        boolean valid = true;
 
-        if (0 == indicatorDefinition.getSqlGenericExpression().size()) {
-            return false;
-        }
-
-        if ("".equals(indicatorDefinition.getName())) {
-            return false;
+        if ("".equals(indicatorDefinition.getName())) { //$NON-NLS-1$
+            valid = false;
         }
 
         if ('\'' == indicatorDefinition.getName().charAt(0)) {
-            return false;
+            valid = false;
         }
 
-        for (Expression exp : indicatorDefinition.getSqlGenericExpression()) {
-            if (null == exp.getBody() || exp.getBody().length() + 1 < MIN_EXPRESSION_LENGTH) {
-                return false;
+        if (!isJUDIValid(indicatorDefinition)) {
+            if (0 == indicatorDefinition.getSqlGenericExpression().size() && !isJUDIValid(indicatorDefinition)) {
+                valid = false;
+            }
+
+            for (Expression exp : indicatorDefinition.getSqlGenericExpression()) {
+                if (null == exp.getBody() || exp.getBody().length() + 1 < MIN_EXPRESSION_LENGTH) {
+                    valid = false;
+                }
             }
         }
 
-        return true;
+        return valid;
+    }
+
+    /**
+     * if the config information if valid for Java Engine return true, else return false.
+     * 
+     * @param indicatorDefinition
+     * @return
+     */
+    public static boolean isJUDIValid(IndicatorDefinition indicatorDefinition) {
+        boolean valid = true;
+        String classNameText = TaggedValueHelper.getClassNameText(indicatorDefinition);
+        String jarFilePath = TaggedValueHelper.getJarFilePath(indicatorDefinition);
+        if (StringUtils.isBlank(classNameText) || StringUtils.isBlank(jarFilePath)) {
+            valid = false;
+        }
+        return valid;
     }
 
     public static ReturnCode validate(IndicatorDefinition indicatorDefinition) {
