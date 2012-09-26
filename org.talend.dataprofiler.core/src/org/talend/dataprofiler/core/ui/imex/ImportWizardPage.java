@@ -21,7 +21,6 @@ import java.util.Map;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.emf.common.util.URI;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.CheckboxTreeViewer;
@@ -50,7 +49,6 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.dialogs.ContainerCheckedTreeViewer;
 import org.talend.commons.emf.FactoriesUtil;
-import org.talend.commons.utils.WorkspaceUtils;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.exception.ExceptionHandler;
@@ -59,6 +57,7 @@ import org.talend.dataprofiler.core.ui.imex.model.IImportWriter;
 import org.talend.dataprofiler.core.ui.imex.model.ImportWriterFactory;
 import org.talend.dataprofiler.core.ui.imex.model.ItemRecord;
 import org.talend.dataprofiler.core.ui.progress.ProgressUI;
+import org.talend.dataprofiler.core.ui.utils.ImportAndExportUtils;
 import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.helper.ReportUtils;
@@ -221,14 +220,14 @@ public class ImportWizardPage extends WizardPage {
                         for (File file : record.getDependencyMap().keySet()) {
                             ItemRecord findRecord = ItemRecord.findRecord(file);
                             if (findRecord != null) {
-                                repositoryTree.setChecked(findRecord, item.getChecked());
+                                repositoryTree.setChecked(findRecord, checked);
                             }
                         }
                     } else {
                         ModelElement element = record.getElement();
                         if (element != null) {
                             List<ModelElement> dependencyClients = EObjectHelper.getDependencyClients(element);
-                            iterateUncheckClientDependency(dependencyClients);
+                            ImportAndExportUtils.iterateUncheckClientDependency(dependencyClients, repositoryTree);
                         }
                     }
 
@@ -658,28 +657,4 @@ public class ImportWizardPage extends WizardPage {
         }
     }
 
-    /**
-     * 
-     * when uncheck an item,should uncheck related client depenedences.
-     * 
-     * @param dependencyClients
-     */
-    private void iterateUncheckClientDependency(List<ModelElement> dependencyClients) {
-        for (ModelElement dependency : dependencyClients) {
-            List<ModelElement> iterdependencyClients = EObjectHelper.getDependencyClients(dependency);
-            if (!iterdependencyClients.isEmpty()) {
-                iterateUncheckClientDependency(iterdependencyClients);
-            }
-            URI uri = EObjectHelper.getURI(dependency);
-            if (uri != null) {
-                String uriString = WorkspaceUtils.toFile(uri);
-                File depFile = new File(uriString);
-                ItemRecord findRecord = ItemRecord.findRecord(depFile);
-                if (findRecord != null) {
-                    repositoryTree.setChecked(findRecord, false);
-                }
-            }
-
-        }
-    }
 }
