@@ -705,7 +705,7 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
 
     public ModelElementIndicator[] openIndicatorSelectDialog(Shell shell) {
         String oldgrid = System.getProperty("talend.profiler.oldgrid");
-        if ("true".equals(oldgrid) || getAnalysis().getName().endsWith("oldgrid")) {
+        if ("true".equals(oldgrid)) {
 
             final IndicatorSelectDialog dialog = new IndicatorSelectDialog(
                     shell,

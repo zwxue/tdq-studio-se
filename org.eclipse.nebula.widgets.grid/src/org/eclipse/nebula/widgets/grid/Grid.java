@@ -632,12 +632,12 @@ public class Grid extends Canvas
     /**
      * Index of the first visible column. A value of -1 indicates that the value is old and will be recomputed.
      */
-    int startColumnIndex = -1;
+    protected int startColumnIndex = -1;
 
     /**
      * Index of the the last visible column. A value of -1 indicates that the value is old and will be recomputed.
      */
-    int endColumnIndex = -1;
+    protected int endColumnIndex = -1;
 
     /**
      * True if the last visible item is completely visible.  The value must never be read directly.  It is cached and

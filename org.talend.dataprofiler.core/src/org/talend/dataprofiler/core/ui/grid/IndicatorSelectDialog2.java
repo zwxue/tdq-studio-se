@@ -67,26 +67,13 @@ public class IndicatorSelectDialog2 extends TrayDialog {
      * @param title
      * @param modelElementIndicators
      */
-    public IndicatorSelectDialog2(Shell parentShell, String title, ModelElementIndicator[] modelElementIndicators,
-            ExecutionLanguage language) {
+    public IndicatorSelectDialog2(Shell parentShell, String title, ModelElementIndicator[] modelElementIndicators) {
         super(parentShell);
         this.title = title;
         this.modelElementIndicators = modelElementIndicators;
-        this.language = language;
-        int shellStyle = getShellStyle();
-        setShellStyle(shellStyle | SWT.MAX | SWT.RESIZE);
-    }
 
-    /**
-     * IndicatorSelectDialog2 constructor.
-     * 
-     * @param parentShell
-     * @param title
-     * @param modelElementIndicators
-     */
-    public IndicatorSelectDialog2(Shell parentShell, String title, ModelElementIndicator[] modelElementIndicators) {
-        this(parentShell, title, modelElementIndicators, null);
-        // MOD zshen: obtain language.
+        int shellStyle = getShellStyle();
+        setShellStyle(shellStyle | SWT.MAX | SWT.RESIZE);// MOD zshen: obtain language.
         Object editorPart = CorePlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
         if (editorPart instanceof AnalysisEditor) {
             AnalysisEditor analyEditor = (AnalysisEditor) editorPart;

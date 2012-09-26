@@ -71,6 +71,10 @@ public class IndicatorSelectGrid extends Grid {
 
     private ModelElementIndicator[] result;
 
+    private HoverScrollThread thread;
+
+    private boolean isScrolling;
+
     /**
      * IndicatorSelectionGrid constructor.
      * 
@@ -182,14 +186,10 @@ public class IndicatorSelectGrid extends Grid {
             }
 
             public void mouseExit(MouseEvent e) {
-                if (e != null) {
-                    return;
+                if (isScrolling) {
+                    isScrolling = false;
+                    Display.getDefault().timerExec(-1, thread); // interrupt the thread
                 }
-
-                for (GridColumn column : getVisibleRange().getColumns()) {
-                    column.getHeaderRenderer().setSelected(false);
-                }
-
             }
 
             public void mouseHover(MouseEvent e) {
@@ -262,9 +262,88 @@ public class IndicatorSelectGrid extends Grid {
     }
 
     private void onMouseMove(MouseEvent e) {
+        if (handleMouseScroll(e)) { // when the grid is scrolling, do not handle mouse move highlight.
+            return;
+        }
+
+        GridVisibleRange range = getVisibleRange();
+        if (handleCellHighlight(e, range)) {
+            return;
+        }
+
+        if (handleRowHeaderHighlight(e, range)) {
+            return;
+        }
+
+        handleColumnHeaderHighlight(e, range);
+    }
+
+    private class HoverScrollThread extends Thread {
+
+        int _step = 0;
+
+        int delay = 350;
+
+        int accelaration = 0;
+
+        public HoverScrollThread(int step) {
+            _step = step;
+        }
+
+        public void run() {
+            getHorizontalBar().setSelection(getHorizontalBar().getSelection() + _step);
+            redraw();
+            Display.getDefault().timerExec(delay - accelaration * 2, this);
+        }
+
+        public void setAccelaration(int x) {
+            accelaration = x;
+        }
+    }
+
+    private boolean handleMouseScroll(MouseEvent e) {
+        if (e.x > getRowHeaderWidth() && e.x < getRowHeaderWidth() + 150) {
+            if (getHorizontalBar().getSelection() == getHorizontalBar().getMinimum()) {
+                return false;
+            }
+            if (!isScrolling && e.x < getRowHeaderWidth() + 50) {
+                isScrolling = true;
+                thread = new HoverScrollThread(-1);
+                Display.getDefault().timerExec(200, thread);
+            }
+            if (isScrolling) {
+                thread.setAccelaration(getRowHeaderWidth() + 150 - e.x);
+                startColumnIndex = -1;
+                endColumnIndex = -1;
+                return true;
+            }
+        } else if (e.x > getBounds().width - 150 && e.x < getBounds().width) {
+            if (getHorizontalBar().getSelection() == getHorizontalBar().getMaximum()) {
+                return false;
+            }
+            if (!isScrolling && e.x > getBounds().width - 50) {
+                isScrolling = true;
+                thread = new HoverScrollThread(1);
+                Display.getDefault().timerExec(200, thread);
+            }
+            if (isScrolling) {
+                thread.setAccelaration(e.x + 150 - getBounds().width);
+                startColumnIndex = -1;
+                endColumnIndex = -1;
+                return true;
+            }
+        } else {
+            if (isScrolling) {
+                isScrolling = false;
+                Display.getDefault().timerExec(-1, thread); // interrupt the thread
+            }
+        }
+        return false;
+    }
+
+    private boolean handleCellHighlight(MouseEvent e, GridVisibleRange range) {
         Point cell = getCell(new Point(e.x, e.y));
-        if (cell != null && cell.x != 0) { // any cell except the row select cells
-            GridVisibleRange range = getVisibleRange();
+        if (cell != null) { // any cell except the row select cells
             List<GridColumn> columnList = Arrays.asList(range.getColumns());
             // replace cell.x with the current position in case the column has been moved.
             cell.x = columnList.indexOf(getColumn(cell.x)) + 2;
@@ -300,60 +379,66 @@ public class IndicatorSelectGrid extends Grid {
                 int realIdx = columnList.indexOf(column) + 2; // real index in current visible range.
                 column.getHeaderRenderer().setSelected(realIdx == cell.x);
             }
-        } else { // handle row header/column header hovering
-            GridItem currentItem = getItem(new Point(e.x, e.y));
-            GridVisibleRange range = getVisibleRange();
-            if (currentItem != null) { // row header
-                if (overRowSelect(currentItem, new Point(e.x, e.y))) { // handle hover event of row select cell
-                    for (GridItem item : range.getItems()) {
-                        int i = indexOf(item);
-                        if (item.getCheckable(0)) {
-                            if (i == indexOf(currentItem)) {
-                                item.setBackground(0, yellow);
-                                item.setBackground(1, yellow);
-                            } else {
-                                item.setBackground(0, gray);
-                                item.setBackground(1, getDisplay().getSystemColor(SWT.COLOR_LIST_BACKGROUND));
-                            }
-                        }
+            return true;
+        }
+        return false;
+    }
 
-                        for (GridColumn column : range.getColumns()) {
-                            int j = indexOf(column);
-                            if (i == indexOf(currentItem)) {
-                                item.setBackground(j, lightYellow);
-                            } else {
-                                item.setBackground(j, getDisplay().getSystemColor(SWT.COLOR_LIST_BACKGROUND));
-                            }
+    private boolean handleRowHeaderHighlight(MouseEvent e, GridVisibleRange range) {
+        GridItem currentItem = getItem(new Point(e.x, e.y));
+        if (currentItem != null) { // row header
+            if (overRowSelect(currentItem, new Point(e.x, e.y))) { // handle hover event of row select cell
+                for (GridItem item : range.getItems()) {
+                    int i = indexOf(item);
+                    if (item.getCheckable(0)) {
+                        if (i == indexOf(currentItem)) {
+                            item.setBackground(0, yellow);
+                            item.setBackground(1, yellow);
+                        } else {
+                            item.setBackground(0, gray);
+                            item.setBackground(1, getDisplay().getSystemColor(SWT.COLOR_LIST_BACKGROUND));
                         }
-                    }
-                    for (GridColumn column : range.getColumns()) {
-                        column.getHeaderRenderer().setSelected(false);
-                    }
-                    return;
-                }
-            } else { // column header
-                GridColumn currentColumn = getColumn(new Point(e.x, e.y));
-                if (currentColumn != null && !isDraggingColumn()) {
-                    int currentColumnIndex = indexOf(currentColumn);
-
-                    for (GridItem item : range.getItems()) {
-                        for (GridColumn column : range.getColumns()) {
-                            int j = indexOf(column);
-                            if (j == currentColumnIndex) {
-                                item.setBackground(j, lightYellow);
-                            } else {
-                                item.setBackground(j, getDisplay().getSystemColor(SWT.COLOR_LIST_BACKGROUND));
-                            }
-                        }
-                        item.setBackground(0, IndicatorSelectGrid.gray);
-                        item.setBackground(1, null);
                     }
 
                     for (GridColumn column : range.getColumns()) {
                         int j = indexOf(column);
-                        column.getHeaderRenderer().setSelected(j == currentColumnIndex);
+                        if (i == indexOf(currentItem)) {
+                            item.setBackground(j, lightYellow);
+                        } else {
+                            item.setBackground(j, getDisplay().getSystemColor(SWT.COLOR_LIST_BACKGROUND));
+                        }
                     }
                 }
+                for (GridColumn column : range.getColumns()) {
+                    column.getHeaderRenderer().setSelected(false);
+                }
+            }
+            return true;
+        }
+        return false;
+    }
+
+    private void handleColumnHeaderHighlight(MouseEvent e, GridVisibleRange range) {
+        GridColumn currentColumn = getColumn(new Point(e.x, e.y));
+        if (currentColumn != null && !isDraggingColumn()) {
+            int currentColumnIndex = indexOf(currentColumn);
+
+            for (GridItem item : range.getItems()) {
+                for (GridColumn column : range.getColumns()) {
+                    int j = indexOf(column);
+                    if (j == currentColumnIndex) {
+                        item.setBackground(j, lightYellow);
+                    } else {
+                        item.setBackground(j, getDisplay().getSystemColor(SWT.COLOR_LIST_BACKGROUND));
+                    }
+                }
+                item.setBackground(0, IndicatorSelectGrid.gray);
+                item.setBackground(1, null);
+            }
+
+            for (GridColumn column : range.getColumns()) {
+                int j = indexOf(column);
+                column.getHeaderRenderer().setSelected(j == currentColumnIndex);
             }
         }
     }
