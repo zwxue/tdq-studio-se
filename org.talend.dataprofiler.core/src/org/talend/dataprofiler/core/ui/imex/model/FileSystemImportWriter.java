@@ -603,11 +603,32 @@ public class FileSystemImportWriter implements IImportWriter {
 
         handleDefinitionFile();
 
-        removeInvalidDependency();
+        checkImportItems();
 
         doMigration(monitor);
 
         deleteTempProjectFolder();
+
+    }
+
+    /**
+     * DOC talend Comment method "checkImportItems".
+     */
+    private void checkImportItems() {
+        for (File file : allCopiedFiles) {
+            if (!file.exists()) {
+                continue;
+            }
+            Property property = PropertyHelper.getProperty(file);
+            if (property == null) {
+                continue;
+            }
+
+            removeInvalidDependency(property);
+
+            // restoreCorruptedConn(property);
+
+        }
 
     }
 
@@ -805,36 +826,26 @@ public class FileSystemImportWriter implements IImportWriter {
      * 
      * remove invalid client depenedences before migration.
      */
-    private void removeInvalidDependency() {
-        for (File file : allCopiedFiles) {
-            if (!file.exists() || !file.isFile()) {
-                continue;
-            }
-            Property property = PropertyHelper.getProperty(file);
-            if (property == null) {
-                continue;
-            }
-            ModelElement modelElement = PropertyHelper.getModelElement(property);
-            if (modelElement != null) {
-                // remove invalid client depenedences,e.g,remove some invalid analyses in connection file .
-                EList<Dependency> clientDependencys = modelElement.getSupplierDependency();
-                for (Dependency dependency : clientDependencys) {
-                    EList<ModelElement> clients = dependency.getClient();
-                    Iterator<ModelElement> dependencyIterator = clients.iterator();
-                    while (dependencyIterator.hasNext()) {
-                        ModelElement client = dependencyIterator.next();
-                        if (client == null || client.eIsProxy()) {
-                            dependencyIterator.remove();
-                        }
+    private void removeInvalidDependency(Property property) {
+        ModelElement modelElement = PropertyHelper.getModelElement(property);
+        if (modelElement != null) {
+            // remove invalid client depenedences,e.g,remove some invalid analyses in connection file .
+            EList<Dependency> clientDependencys = modelElement.getSupplierDependency();
+            for (Dependency dependency : clientDependencys) {
+                EList<ModelElement> clients = dependency.getClient();
+                Iterator<ModelElement> dependencyIterator = clients.iterator();
+                while (dependencyIterator.hasNext()) {
+                    ModelElement client = dependencyIterator.next();
+                    if (client == null || client.eIsProxy()) {
+                        dependencyIterator.remove();
                     }
                 }
-                Resource modEResource = modelElement.eResource();
-                if (!clientDependencys.isEmpty() && modEResource != null) {
-                    EMFUtil.saveSingleResource(modEResource);
-                }
+            }
+            Resource modEResource = modelElement.eResource();
+            if (!clientDependencys.isEmpty() && modEResource != null) {
+                EMFUtil.saveSingleResource(modEResource);
             }
         }
 
     }
-
 }

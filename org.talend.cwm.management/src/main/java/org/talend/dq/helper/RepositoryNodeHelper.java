@@ -17,6 +17,7 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IWorkspaceRoot;
@@ -38,12 +39,15 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.navigator.CommonNavigator;
 import org.eclipse.ui.navigator.CommonViewer;
 import org.talend.commons.emf.FactoriesUtil;
+import org.talend.commons.exception.PersistenceException;
 import org.talend.core.model.general.Project;
+import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
 import org.talend.core.model.metadata.builder.connection.DelimitedFileConnection;
 import org.talend.core.model.metadata.builder.connection.MDMConnection;
 import org.talend.core.model.metadata.builder.connection.MetadataColumn;
 import org.talend.core.model.metadata.builder.connection.MetadataTable;
+import org.talend.core.model.metadata.builder.connection.impl.ConnectionImpl;
 import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.properties.FolderItem;
 import org.talend.core.model.properties.Item;
@@ -53,6 +57,7 @@ import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.model.repository.Folder;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.core.model.repository.RepositoryViewObject;
+import org.talend.core.model.repository.helper.RepositoryObjectTypeHelper;
 import org.talend.core.repository.model.ISubRepositoryObject;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.cwm.helper.CatalogHelper;
@@ -132,6 +137,7 @@ import org.talend.dq.nodes.SysIndicatorDefinitionRepNode;
 import org.talend.dq.nodes.SysIndicatorFolderRepNode;
 import org.talend.dq.nodes.UserDefIndicatorFolderRepNode;
 import org.talend.dq.nodes.UserDefIndicatorSubFolderRepNode;
+import org.talend.dq.writer.EMFSharedResources;
 import org.talend.repository.ProjectManager;
 import org.talend.repository.model.ERepositoryStatus;
 import org.talend.repository.model.IProxyRepositoryFactory;
@@ -151,6 +157,8 @@ import orgomg.cwmx.analysis.informationreporting.Report;
  * Helper class for RepositoryNode.
  */
 public final class RepositoryNodeHelper {
+
+    private static Logger log = Logger.getLogger(RepositoryNodeHelper.class);
 
     public static final String DQRESPOSITORYVIEW = "org.talend.dataprofiler.core.ui.views.DQRespositoryView"; //$NON-NLS-1$
 
@@ -195,7 +203,7 @@ public final class RepositoryNodeHelper {
             return null;
         }
         if (node.isBin()) {
-            return new Path(PluginConstant.EMPTY_STRING); //$NON-NLS-1$
+            return new Path(PluginConstant.EMPTY_STRING);
         }
         if (node.getType() == null) {
             return null;
@@ -207,7 +215,7 @@ public final class RepositoryNodeHelper {
                 Item item = node.getObject().getProperty().getItem();
                 contentType = ERepositoryObjectType.getItemType(item);
             }
-            return new Path(ERepositoryObjectType.getFolderName(contentType)); //$NON-NLS-1$
+            return new Path(ERepositoryObjectType.getFolderName(contentType));
         case SIMPLE_FOLDER:
             String label = PluginConstant.EMPTY_STRING;
             if (node.getObject() != null) {
@@ -2103,6 +2111,7 @@ public final class RepositoryNodeHelper {
      * @return a RepositoryNode or null
      * @deprecated use recursiveFind(ModelElement) instead
      */
+    @Deprecated
     public static RepositoryNode recursiveFind2(ModelElement modelElement) {
         return recursiveFind(modelElement);
         // String uuid = ResourceHelper.getUUID(modelElement);
@@ -2138,6 +2147,7 @@ public final class RepositoryNodeHelper {
      * @deprecated this method is too slow, please use recursiveFindByUuid(String uuid, List<IRepositoryNode> nodes)
      * instead
      */
+    @Deprecated
     public static RepositoryNode recursiveFindByUuid(String uuid) {
         return recursiveFind(uuid, getTdqRootNodes());
     }
@@ -2324,7 +2334,7 @@ public final class RepositoryNodeHelper {
                 result.add((JrxmlTempleteRepNode) node);
             } else if (node instanceof JrxmlTempFolderRepNode || node instanceof JrxmlTempSubFolderNode) {
                 if (recursive) {
-                    result.addAll(getJrxmlFileRepNodes((JrxmlTempFolderRepNode) node, recursive));
+                    result.addAll(getJrxmlFileRepNodes(node, recursive));
                 }
             }
         }
@@ -2346,7 +2356,7 @@ public final class RepositoryNodeHelper {
                 result.add((SourceFileRepNode) node);
             } else if (node instanceof SourceFileFolderRepNode || node instanceof SourceFileSubFolderNode) {
                 if (recursive) {
-                    result.addAll(getSourceFileRepNodes((SourceFileFolderRepNode) node, recursive));
+                    result.addAll(getSourceFileRepNodes(node, recursive));
                 }
             }
         }
@@ -2556,7 +2566,7 @@ public final class RepositoryNodeHelper {
         List<TdColumn> filterMatchingColumnSets = filterMatchingColumns(columns, patterns);
         List<TdColumn> filterColumns = new ArrayList<TdColumn>();
         for (TdColumn column : filterMatchingColumnSets) {
-            TdColumn table = (TdColumn) column;
+            TdColumn table = column;
             filterColumns.add(table);
         }
         return filterColumns;
@@ -3058,5 +3068,71 @@ public final class RepositoryNodeHelper {
             result = FactoriesUtil.JRXML;
         }
         return result;
+    }
+
+    /**
+     * restore Connection which is corrupted.
+     * 
+     * @param property
+     */
+    public static void restoreCorruptedConn(Property property) {
+        if (!(property.getItem() instanceof ConnectionItem)) {
+            return;
+        }
+        ConnectionItem connItem = (ConnectionItem) property.getItem();
+        ERepositoryObjectType itemType = ERepositoryObjectType.getItemType(connItem);
+        // connection
+        Connection createConnection = RepositoryObjectTypeHelper.CreateConnectionFromType(itemType);
+
+        if (!(ConnectionImpl.class == connItem.getConnection().getClass())) {
+            return;
+        }
+        connItem.setConnection(createConnection);
+        try {
+
+            FolderItem folderItem = ProxyRepositoryFactory.getInstance().getFolderItem(
+                    ProjectManager.getInstance().getCurrentProject(), itemType, Path.EMPTY);
+            Object refreshFolderItem = refreshFolderItem(folderItem, property);
+            if (refreshFolderItem == null) {
+                log.debug("Can not replace the connection from it's FolderItem : " + connItem.eResource().getURI()); //$NON-NLS-1$
+            }
+            ProxyRepositoryFactory.getInstance().save(connItem);
+            EMFSharedResources.getInstance().reloadResource(connItem.eResource().getURI());
+        } catch (PersistenceException e) {
+            log.error(e, e);
+        }
+
+    }
+
+    /**
+     * replace old Connection which contain in it.
+     * 
+     * @param folderItem
+     * @param property
+     * @return which should be remove object. null mean that replace is faile.
+     */
+    private static Object refreshFolderItem(FolderItem folderItem, Property property) {
+        if (folderItem == null) {
+            return null;
+        }
+        EList<Object> children = folderItem.getChildren();
+        Object removeOne = null;
+        for (Object item : children) {
+            if (item instanceof ConnectionItem) {
+                if (((ConnectionItem) item).getProperty().getId().equals(property.getId())) {
+                    removeOne = item;
+                    break;
+                }
+            } else if (item instanceof FolderItem) {
+                removeOne = refreshFolderItem(folderItem, property);
+                if (removeOne != null) {
+                    return removeOne;
+                }
+            }
+
+        }
+        children.remove(removeOne);
+        children.add(property.getItem());
+        return removeOne;
     }
 }

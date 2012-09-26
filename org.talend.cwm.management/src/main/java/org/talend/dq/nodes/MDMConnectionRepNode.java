@@ -23,6 +23,7 @@ import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.core.repository.model.repositoryObject.MetadataXmlSchemaRepositoryObject;
 import org.talend.cwm.xml.impl.TdXmlSchemaImpl;
+import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
 import orgomg.cwm.objectmodel.core.Package;
@@ -47,6 +48,7 @@ public class MDMConnectionRepNode extends ConnectionRepNode {
      */
     public MDMConnectionRepNode(IRepositoryViewObject object, RepositoryNode parent, ENodeType type) {
         super(object, parent, type);
+        RepositoryNodeHelper.restoreCorruptedConn(object.getProperty());
         if (object != null && object.getProperty() != null) {
             Item item = object.getProperty().getItem();
             if (item != null && item instanceof MDMConnectionItem) {
@@ -77,8 +79,7 @@ public class MDMConnectionRepNode extends ConnectionRepNode {
         for (Package pack : dataPackage) {
             MetadataXmlSchemaRepositoryObject metadataXmlSchema = new MetadataXmlSchemaRepositoryObject(object,
                     (TdXmlSchemaImpl) pack);
-            MDMSchemaRepNode xmlSchemaNode = new MDMSchemaRepNode(metadataXmlSchema, this,
-                    ENodeType.TDQ_REPOSITORY_ELEMENT);
+            MDMSchemaRepNode xmlSchemaNode = new MDMSchemaRepNode(metadataXmlSchema, this, ENodeType.TDQ_REPOSITORY_ELEMENT);
             xmlSchemaNode.setProperties(EProperties.LABEL, ERepositoryObjectType.MDM_SCHEMA);
             xmlSchemaNode.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.METADATA_CON_CATALOG);
             metadataXmlSchema.setRepositoryNode(xmlSchemaNode);
