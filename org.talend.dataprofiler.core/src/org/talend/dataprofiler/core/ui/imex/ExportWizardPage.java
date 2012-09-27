@@ -49,6 +49,8 @@ import org.talend.dataprofiler.core.ui.imex.model.EImexType;
 import org.talend.dataprofiler.core.ui.imex.model.ExportWriterFactory;
 import org.talend.dataprofiler.core.ui.imex.model.IExportWriter;
 import org.talend.dataprofiler.core.ui.imex.model.ItemRecord;
+import org.talend.dataprofiler.core.ui.utils.ImportAndExportUtils;
+import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.helper.ReportUtils;
 import org.talend.resource.ResourceManager;
@@ -279,13 +281,25 @@ public class ExportWizardPage extends WizardPage {
                 ItemRecord record = (ItemRecord) item.getData();
 
                 if (record.getFile().isFile()) {
-                    for (File file : record.getDependencyMap().keySet()) {
-                        ItemRecord findRecord = ItemRecord.findRecord(file);
-                        if (findRecord != null) {
-                            repositoryTree.setChecked(findRecord, item.getChecked());
-                        } else {
-                            log.error("Can't find the file: " + file.getAbsolutePath());//$NON-NLS-1$ 
+                    // MOD qiongli TDQ-5368 only uncheck the client dependecy when uncheck an item,not supplier
+                    // dependency.
+                    boolean checked = item.getChecked();
+                    if (checked) {
+                        for (File file : record.getDependencyMap().keySet()) {
+                            ItemRecord findRecord = ItemRecord.findRecord(file);
+                            if (findRecord != null) {
+                                repositoryTree.setChecked(findRecord, checked);
+                            } else {
+                                log.error("Can't find the file: " + file.getAbsolutePath());//$NON-NLS-1$ 
+                            }
                         }
+                    } else {
+                        ModelElement element = record.getElement();
+                        if (element != null) {
+                            List<ModelElement> dependencyClients = EObjectHelper.getDependencyClients(element);
+                            ImportAndExportUtils.iterateUncheckClientDependency(dependencyClients, repositoryTree);
+                        }
+
                     }
 
                     repositoryTree.refresh();
