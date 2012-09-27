@@ -26,6 +26,7 @@ import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.core.repository.model.repositoryObject.MetadataTableRepositoryObject;
 import org.talend.cwm.helper.ConnectionHelper;
+import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
 import orgomg.cwm.objectmodel.core.Package;
@@ -41,6 +42,7 @@ public class DFConnectionRepNode extends ConnectionRepNode {
     public DelimitedFileConnection getDfConnection() {
         return this.dfConnection;
     }
+
     /**
      * DOC qiongli DelimitedFileConnectionRepNode constructor comment.
      * 
@@ -50,6 +52,7 @@ public class DFConnectionRepNode extends ConnectionRepNode {
      */
     public DFConnectionRepNode(IRepositoryViewObject object, RepositoryNode parent, ENodeType type) {
         super(object, parent, type);
+        RepositoryNodeHelper.restoreCorruptedConn(object.getProperty());
         if (object != null && object.getProperty() != null) {
             Item item = object.getProperty().getItem();
             if (item != null && item instanceof DelimitedFileConnectionItem) {

@@ -25,6 +25,7 @@ import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.core.repository.model.repositoryObject.MetadataCatalogRepositoryObject;
 import org.talend.core.repository.model.repositoryObject.MetadataSchemaRepositoryObject;
+import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
 import orgomg.cwm.objectmodel.core.Package;
@@ -51,6 +52,7 @@ public class DBConnectionRepNode extends ConnectionRepNode {
      */
     public DBConnectionRepNode(IRepositoryViewObject object, RepositoryNode parent, ENodeType type) {
         super(object, parent, type);
+        RepositoryNodeHelper.restoreCorruptedConn(object.getProperty());
         if (object != null && object.getProperty() != null) {
             Item item = object.getProperty().getItem();
             if (item != null && item instanceof DatabaseConnectionItem) {
@@ -99,8 +101,7 @@ public class DBConnectionRepNode extends ConnectionRepNode {
         // getObject().getProperty().getItem()).getConnection().getDataPackage();
         for (Package pack : dataPackage) {
             MetadataSchemaRepositoryObject metadataSchema = new MetadataSchemaRepositoryObject(getObject(), (Schema) pack);
-            RepositoryNode schemaNode = new DBSchemaRepNode((IRepositoryViewObject) metadataSchema, this,
-                    ENodeType.TDQ_REPOSITORY_ELEMENT);
+            RepositoryNode schemaNode = new DBSchemaRepNode(metadataSchema, this, ENodeType.TDQ_REPOSITORY_ELEMENT);
             schemaNode.setProperties(EProperties.LABEL, ERepositoryObjectType.METADATA_CON_SCHEMA);
             schemaNode.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.METADATA_CON_SCHEMA);
             metadataSchema.setRepositoryNode(schemaNode);
@@ -123,8 +124,7 @@ public class DBConnectionRepNode extends ConnectionRepNode {
         for (Package pack : dataPackage) {
             if (pack instanceof Catalog) {
                 MetadataCatalogRepositoryObject metadataCatalog = new MetadataCatalogRepositoryObject(getObject(), (Catalog) pack);
-                RepositoryNode catalogNode = new DBCatalogRepNode((IRepositoryViewObject) metadataCatalog, this,
-                        ENodeType.TDQ_REPOSITORY_ELEMENT);
+                RepositoryNode catalogNode = new DBCatalogRepNode(metadataCatalog, this, ENodeType.TDQ_REPOSITORY_ELEMENT);
                 catalogNode.setProperties(EProperties.LABEL, ERepositoryObjectType.METADATA_CON_CATALOG);
                 catalogNode.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.METADATA_CON_CATALOG);
                 metadataCatalog.setRepositoryNode(catalogNode);
