@@ -1,10 +1,15 @@
-/*******************************************************************************
- * Copyright (c) 2006 IBM Corporation and others. All rights reserved. This program and the accompanying materials are
- * made available under the terms of the Eclipse Public License v1.0 which accompanies this distribution, and is
- * available at http://www.eclipse.org/legal/epl-v10.html
- * 
- * Contributors: chris.gross@us.ibm.com - initial API and implementation
- *******************************************************************************/
+// ============================================================================
+//
+// Copyright (C) 2006-2012 Talend Inc. - www.talend.com
+//
+// This source code is available under agreement available at
+// %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
+//
+// You should have received a copy of the agreement
+// along with this program; if not, write to Talend SA
+// 9 rue Pages 92150 Suresnes, France
+//
+// ============================================================================
 package org.talend.dataprofiler.core.ui.grid;
 
 import org.eclipse.nebula.widgets.grid.AbstractRenderer;
@@ -14,9 +19,6 @@ import org.eclipse.swt.graphics.Point;
 
 /**
  * The renderer for the empty top left area when both column and row headers are visible.
- * 
- * @author chris.gross@us.ibm.com
- * @since 2.0.0
  */
 public class TdTopLeftRenderer extends AbstractRenderer {
 

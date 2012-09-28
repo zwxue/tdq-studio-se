@@ -4498,7 +4498,7 @@ public class Grid extends Canvas
      *
      * @return the horizontal scroll selection in pixels
      */
-    private int getHScrollSelectionInPixels()
+    protected int getHScrollSelectionInPixels()
     {
         int selection = hScroll.getSelection();
         if (columnScrolling)

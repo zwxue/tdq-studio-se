@@ -337,9 +337,6 @@ public class IndicatorSelectGrid extends Grid {
             }
         } else if (e.x > getBounds().width - 150 && e.x < getBounds().width) {
             ScrollBar hScrollBar = getHorizontalBar();
-            if (hScrollBar.getSelection() == hScrollBar.getMaximum()) {
-                return false;
-            }
             if (!isScrolling && e.x > getBounds().width - 100) {
                 isScrolling = true;
                 thread = new HoverScrollThread(1, hScrollBar);
@@ -713,6 +710,17 @@ public class IndicatorSelectGrid extends Grid {
     @Override
     protected void paintDraggingColumn(GC gc, int offset, int alpha) {
         super.paintDraggingColumn(gc, 0, 180);
+    }
+
+    @Override
+    protected int getHScrollSelectionInPixels() {
+        ScrollBar hScrollBar = getHorizontalBar();
+        int res = hScrollBar.getSelection() * COLUMN_WIDTH;
+        int max = hScrollBar.getMaximum();
+        if (max > 1 && hScrollBar.getSelection() >= max - 3) {
+            return res + 100;
+        }
+        return res;
     }
 
     public ModelElementIndicator[] getResult() {
