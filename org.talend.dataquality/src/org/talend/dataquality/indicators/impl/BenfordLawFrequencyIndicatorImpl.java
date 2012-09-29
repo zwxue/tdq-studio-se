@@ -27,6 +27,7 @@ import org.talend.dataquality.indicators.IndicatorsPackage;
 public class BenfordLawFrequencyIndicatorImpl extends FrequencyIndicatorImpl implements BenfordLawFrequencyIndicator {
 
     private boolean isChecked = false;
+
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
      * 
@@ -60,8 +61,9 @@ public class BenfordLawFrequencyIndicatorImpl extends FrequencyIndicatorImpl imp
      * 1~9, all counted into "invalid" one.
      */
     private void checkValues() {
-        if (isChecked && valueToFreq.size() < 1)
+        if (isChecked && valueToFreq.size() < 1) {
             return;
+        }
 
         // check for invalid
         long counted = 0L;
@@ -99,7 +101,13 @@ public class BenfordLawFrequencyIndicatorImpl extends FrequencyIndicatorImpl imp
      * @return
      */
     private int isInvalid(Object val) {
-        char lead = String.valueOf(val).charAt(0);
+        // MOD msjian TDQ-6123: fix a IndexOutOfBoundsException
+        String strValue = String.valueOf(val);
+        if (strValue.length() < 1) {
+            return -1;
+        }
+        char lead = strValue.charAt(0);
+        // TDQ-6123~
         if (Character.isDigit(lead)) {
             if ('0' == lead) {
                 return 0;
