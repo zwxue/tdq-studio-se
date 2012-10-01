@@ -54,11 +54,11 @@ public class IndicatorSelectGrid extends Grid {
 
     static final Color yellow = new Color(Display.getCurrent(), 255, 255, 40);
 
-    static final Color lightYellow = new Color(Display.getCurrent(), 255, 255, 200);
+    static final Color lightYellow = new Color(Display.getCurrent(), 255, 255, 160);
 
-    static final Color blue = new Color(Display.getCurrent(), 51, 204, 255);
+    static final Color blue = new Color(Display.getCurrent(), 90, 184, 235);
 
-    static final Color lightBlue = new Color(Display.getCurrent(), 200, 220, 240);
+    static final Color lightBlue = new Color(Display.getCurrent(), 180, 200, 220);
 
     static final Image tickImage = ImageLib.getImage(ImageLib.TICK_IMAGE);
 
@@ -115,13 +115,14 @@ public class IndicatorSelectGrid extends Grid {
         rowSelectCol.setCellSelectionEnabled(true);
         rowSelectCol.setVisible(false); // hide the row select column, it is also visible in the fixed column.
 
+        TdCellRenderer cellRenderer = new TdCellRenderer();
         // database columns
         for (int i = 0; i < _modelElementIndicators.length; i++) {
             GridColumn newCol = new GridColumn(this, SWT.CHECK);
             TdColumnHeaderRenderer headerRenderer = new TdColumnHeaderRenderer();
             headerRenderer.setRotation(COLUMN_HEADER_ROTATION);
             newCol.setHeaderRenderer(headerRenderer);
-            newCol.setCellRenderer(new TdCellRenderer());
+            newCol.setCellRenderer(cellRenderer);
             newCol.setText(ModelElementIndicatorHelper.getModelElementDisplayName(_modelElementIndicators[i]));
             newCol.setWidth(COLUMN_WIDTH);
             newCol.setData(_modelElementIndicators[i]);
@@ -169,7 +170,7 @@ public class IndicatorSelectGrid extends Grid {
         setCellSelectionEnabled(false);
 
         setRowsResizeable(false);
-        setItemHeight(23);
+        setItemHeight(21);
         setLineColor(IndicatorSelectGrid.lightBlue);
         setFocusRenderer(null);
 
@@ -238,9 +239,7 @@ public class IndicatorSelectGrid extends Grid {
         if (cell != null) {
             boolean checked = getItem(cell.y).getChecked(cell.x);
             boolean grayed = getItem(cell.y).getGrayed(cell.x);
-            // Note: the "checked" value here is the opposite of the actual one because the mouse down event has been
-            // handled once by the listener of the super class. That's why we don't use "!checked" here.
-            tickCell(cell, checked || grayed);
+            tickCell(cell, !checked || grayed);
             GridItem parent = getItem(cell.y);
             while (parent.getParentItem() != null) {
                 parent = parent.getParentItem();
@@ -487,6 +486,7 @@ public class IndicatorSelectGrid extends Grid {
         }
 
         getItem(cell.y).setChecked(cell.x, tick);
+        getItem(cell.y).setGrayed(cell.x, false);
 
         IIndicatorNode indicatorNode = (IIndicatorNode) getItem(cell.y).getData();
         IndicatorEnum indicatorEnum = indicatorNode.getIndicatorEnum();

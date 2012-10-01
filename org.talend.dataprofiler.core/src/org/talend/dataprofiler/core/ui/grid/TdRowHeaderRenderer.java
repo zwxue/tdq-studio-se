@@ -48,7 +48,7 @@ public class TdRowHeaderRenderer extends GridCellRenderer {
 
     private int insideMargin = 3;
 
-    int treeIndent = 20;
+    int treeIndent = 15;
 
     private TdToggleRenderer toggleRenderer;
 
@@ -64,35 +64,18 @@ public class TdRowHeaderRenderer extends GridCellRenderer {
 
         gc.setFont(item.getFont(getColumn()));
 
-        boolean drawAsSelected = isSelected();
+        if (item.getParent().isEnabled()) {
+            Color back = item.getBackground(getColumn());
 
-        boolean drawBackground = true;
-
-        if (isCellSelected()) {
-            drawAsSelected = true;// (!isCellFocus());
-        }
-
-        if (drawAsSelected) {
-            gc.setBackground(getDisplay().getSystemColor(SWT.COLOR_LIST_SELECTION));
-            gc.setForeground(getDisplay().getSystemColor(SWT.COLOR_LIST_SELECTION_TEXT));
-        } else {
-            if (item.getParent().isEnabled()) {
-                Color back = item.getBackground(getColumn());
-
-                if (back != null) {
-                    gc.setBackground(back);
-                } else {
-                    drawBackground = false;
-                }
-            } else {
-                gc.setBackground(getDisplay().getSystemColor(SWT.COLOR_WIDGET_BACKGROUND));
+            if (back != null) {
+                gc.setBackground(back);
             }
-            gc.setForeground(item.getForeground(getColumn()));
+        } else {
+            gc.setBackground(getDisplay().getSystemColor(SWT.COLOR_WIDGET_BACKGROUND));
         }
+        gc.setForeground(item.getForeground(getColumn()));
 
-        Rectangle bounds = getBounds();
-        if (drawBackground)
-            gc.fillRectangle(getBounds().x, getBounds().y, getBounds().width, getBounds().height);
+        gc.fillRectangle(getBounds());
 
         int x = leftMargin;
 
@@ -140,11 +123,7 @@ public class TdRowHeaderRenderer extends GridCellRenderer {
 
         int width = getBounds().width - x - rightMargin;
 
-        if (drawAsSelected) {
-            gc.setForeground(getDisplay().getSystemColor(SWT.COLOR_LIST_SELECTION_TEXT));
-        } else {
-            gc.setForeground(item.getForeground(getColumn()));
-        }
+        gc.setForeground(item.getForeground(getColumn()));
 
         if (!isWordWrap()) {
             String text = TextUtils.getShortString(gc, item.getText(getColumn()), width);
@@ -201,41 +180,78 @@ public class TdRowHeaderRenderer extends GridCellRenderer {
             textLayout.draw(gc, getBounds().x + x, getBounds().y + textTopMargin + topMargin);
         }
 
-        // show row select cells
-        if (item.getCheckable(1)) {
-            if (item.getBackground(1) != null) {
-                gc.setBackground(item.getBackground(1));
-            } else {
-                gc.setBackground(getDisplay().getSystemColor(SWT.COLOR_LIST_BACKGROUND));
+        boolean checkable = item.getCheckable(1);
+        boolean checked = item.getChecked(1);
+
+        Color backColor = null;
+        if (checkable) {
+            if (checked) {
+                backColor = IndicatorSelectGrid.blue;
             }
-            gc.fillRectangle(getBounds().x + getBounds().width - 51, getBounds().y, 50, getBounds().height);
-            if (item.getChecked(1)) {
-                Image rowSelectImage = IndicatorSelectGrid.tickImage;
-                int y = getBounds().y;
-                y += (getBounds().height - rowSelectImage.getBounds().height) / 2;
-                gc.setBackground(IndicatorSelectGrid.blue);
-                gc.fillRectangle(getBounds().x + getBounds().width - 51, getBounds().y, 50, getBounds().height);
-                gc.drawImage(rowSelectImage, getBounds().x + 4 + getBounds().width - 50, y);
+        } else {
+            backColor = IndicatorSelectGrid.gray;
+        }
+
+        Color systemBackColor = getDisplay().getSystemColor(SWT.COLOR_LIST_BACKGROUND);
+        if (backColor != null) {
+            gc.setBackground(backColor);
+        } else {
+            gc.setBackground(systemBackColor);
+        }
+
+        gc.fillRectangle(getBounds().x + getBounds().width - 51, getBounds().y, 50, getBounds().height);
+
+        // show row select cells
+        if (checkable) {
+            Color highlight = item.getBackground(1);
+            if (highlight == null) {
+                highlight = systemBackColor;
+            }
+            gc.setBackground(highlight);
+            if (checked) {
+                backColor = IndicatorSelectGrid.blue;
+            }
+
+            int originX = getBounds().x + getBounds().width - 50;
+            if (highlight == IndicatorSelectGrid.yellow) {
+                gc.setBackground(highlight);
+                if (checked) {
+                    gc.setAlpha(128);
+                }
+                gc.fillRectangle(originX, getBounds().y, 50, getBounds().height);
+                gc.setAlpha(-1);
+            } else if (highlight == IndicatorSelectGrid.lightYellow) {
+                gc.setBackground(highlight);
+                if (checked) {
+                    gc.setBackground(IndicatorSelectGrid.yellow);
+                    gc.setAlpha(64);
+                }
+                gc.fillRectangle(originX, getBounds().y, 50, getBounds().height);
+                gc.setAlpha(-1);
             }
 
             if (item.getGrayed(1)) {
-                gc.setBackground(getDisplay().getSystemColor(SWT.COLOR_LIST_BACKGROUND));
-                gc.setAlpha(128);
-                gc.fillRectangle(getBounds().x + getBounds().width - 51, getBounds().y, 50, getBounds().height);
+                gc.setBackground(getDisplay().getSystemColor(SWT.COLOR_WHITE));
+                gc.setAlpha(160);
+                gc.fillRectangle(originX, getBounds().y, 50, getBounds().height);
                 gc.setAlpha(-1);
             }
+
+            if (checked) {
+                gc.setForeground(highlight);
+                gc.setLineWidth(3);
+                gc.drawLine(originX + 13, getBounds().y + 10, originX + 20, getBounds().y + 18);
+                gc.drawLine(originX + 19, getBounds().y + 18, originX + 34, getBounds().y + 3);
+                gc.setLineWidth(1);
+            }
+
         } else {
             gc.setBackground(IndicatorSelectGrid.gray);
             gc.fillRectangle(getBounds().x + getBounds().width - 51, getBounds().y, 50, getBounds().height);
         }
 
         if (item.getParent().getLinesVisible()) {
-            if (isCellSelected()) {
-                // XXX: should be user definable?
-                gc.setForeground(getDisplay().getSystemColor(SWT.COLOR_WIDGET_DARK_SHADOW));
-            } else {
-                gc.setForeground(item.getParent().getLineColor());
-            }
+            gc.setForeground(item.getParent().getLineColor());
             gc.drawLine(getBounds().x, getBounds().y + getBounds().height, getBounds().x + getBounds().width - 1, getBounds().y
                     + getBounds().height);
             gc.drawLine(getBounds().x + getBounds().width - 51, getBounds().y, getBounds().x + getBounds().width - 51,
@@ -243,22 +259,6 @@ public class TdRowHeaderRenderer extends GridCellRenderer {
             gc.setForeground(getDisplay().getSystemColor(SWT.COLOR_WIDGET_DARK_SHADOW));
             gc.drawLine(getBounds().x + getBounds().width - 1, getBounds().y, getBounds().x + getBounds().width - 1,
                     getBounds().y + getBounds().height);
-        }
-
-        if (isCellFocus()) {
-            Rectangle focusRect = new Rectangle(getBounds().x, getBounds().y, getBounds().width - 1, getBounds().height);
-
-            gc.setForeground(getDisplay().getSystemColor(SWT.COLOR_LIST_FOREGROUND));
-            gc.drawRectangle(focusRect);
-
-            if (isFocus()) {
-                focusRect.x++;
-                focusRect.width -= 2;
-                focusRect.y++;
-                focusRect.height -= 2;
-
-                gc.drawRectangle(focusRect);
-            }
         }
     }
 

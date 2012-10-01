@@ -126,7 +126,7 @@ public class TdColumnHeaderRenderer extends GridHeaderRenderer {
         gc.setBackground(getDisplay().getSystemColor(SWT.COLOR_WIDGET_LIGHT_SHADOW));
 
         if (isSelected()) {
-            gc.setBackground(getDisplay().getSystemColor(SWT.COLOR_YELLOW));
+            gc.setBackground(IndicatorSelectGrid.yellow);
             gc.fillRectangle((int) original[0], (int) original[1] + 2, (int) (getBounds().height / sinRotation)
                     + getBounds().width, (int) (getBounds().width * sinRotation));
         }
