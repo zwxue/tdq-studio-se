@@ -240,8 +240,8 @@ public class TdRowHeaderRenderer extends GridCellRenderer {
             if (checked) {
                 gc.setForeground(highlight);
                 gc.setLineWidth(3);
-                gc.drawLine(originX + 13, getBounds().y + 10, originX + 20, getBounds().y + 18);
-                gc.drawLine(originX + 19, getBounds().y + 18, originX + 34, getBounds().y + 3);
+                gc.drawLine(originX + 14, getBounds().y + 11, originX + 21, getBounds().y + 18);
+                gc.drawLine(originX + 19, getBounds().y + 18, originX + 35, getBounds().y + 2);
                 gc.setLineWidth(1);
             }
 

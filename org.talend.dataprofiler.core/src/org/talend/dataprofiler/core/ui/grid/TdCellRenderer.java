@@ -97,8 +97,8 @@ public class TdCellRenderer extends GridCellRenderer {
             if (checked) {
                 gc.setForeground(highlight);
                 gc.setLineWidth(3);
-                gc.drawLine(getBounds().x + 13, getBounds().y + 10, getBounds().x + 20, getBounds().y + 18);
-                gc.drawLine(getBounds().x + 19, getBounds().y + 18, getBounds().x + 34, getBounds().y + 3);
+                gc.drawLine(getBounds().x + 14, getBounds().y + 11, getBounds().x + 21, getBounds().y + 18);
+                gc.drawLine(getBounds().x + 19, getBounds().y + 18, getBounds().x + 35, getBounds().y + 2);
                 gc.setLineWidth(1);
             }
         }
