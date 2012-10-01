@@ -26,6 +26,7 @@ import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.events.MouseMoveListener;
 import org.eclipse.swt.events.MouseTrackListener;
 import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.Point;
@@ -128,6 +129,7 @@ public class IndicatorSelectGrid extends Grid {
             newCol.setData(_modelElementIndicators[i]);
             newCol.setMoveable(true);
             newCol.setResizeable(false);
+            newCol.setHeaderFont(new Font(getDisplay(), "tahoma", 10, SWT.NONE));
             IRepositoryNode repNode = _modelElementIndicators[i].getModelElementRepositoryNode();
             if (repNode instanceof DBColumnRepNode && ((DBColumnRepNode) repNode).isKey()) {
                 newCol.setImage(pkImage);
