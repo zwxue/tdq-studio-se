@@ -673,6 +673,9 @@ public final class ReportUtils {
         for (File file : listFiles) {
             if (file.isDirectory()) {
                 if (file.getName().startsWith(".")) { //$NON-NLS-1$
+                    if (file.getName().equals(".svn")) {
+                        continue;
+                    }
                     FilesUtils.copyDirectory(file, tarFolder);
                 } else {
                     moveHiddenFolders(file, getTargetFile(file, srcFolder, tarFolder));
