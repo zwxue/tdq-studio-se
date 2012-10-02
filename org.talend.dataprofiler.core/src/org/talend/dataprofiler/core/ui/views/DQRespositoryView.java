@@ -22,14 +22,11 @@ import java.util.Map;
 import net.sourceforge.sqlexplorer.plugin.SQLExplorerPlugin;
 
 import org.apache.log4j.Logger;
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspace;
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
@@ -74,12 +71,10 @@ import org.eclipse.swt.widgets.ToolItem;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.swt.widgets.TreeItem;
-import org.eclipse.ui.IEditorRegistry;
 import org.eclipse.ui.IMemento;
 import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchListener;
-import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.ActionContext;
@@ -87,7 +82,6 @@ import org.eclipse.ui.actions.RefreshAction;
 import org.eclipse.ui.contexts.IContextService;
 import org.eclipse.ui.model.IContributionService;
 import org.eclipse.ui.navigator.CommonNavigator;
-import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.progress.UIJob;
 import org.talend.commons.exception.PersistenceException;
 import org.talend.commons.ui.swt.dialogs.ProgressDialog;
@@ -436,21 +430,7 @@ public class DQRespositoryView extends CommonNavigator {
                     }
                     if (obj instanceof DQRepositoryNode) {
                         if (obj instanceof ReportFileRepNode) {
-                            superDoubleClick = false;
-                            ReportFileRepNode reportFileNode = (ReportFileRepNode) obj;
-                            IPath location = Path.fromOSString(reportFileNode.getResource().getRawLocation().toOSString());
-                            // TDQ-5458 sizhaoliu 2012-07-17 add "." before the full name to make sure it is ignored by
-                            // SVN.
-                            IFile latestRepIFile = ResourceManager.getRootProject().getFile("." + location.lastSegment()); //$NON-NLS-1$
-                            try {
-                                // TDQ-5458 sizhaoliu 2012-07-17 the link creation should be after report generation,
-                                // but not at the openning.
-                                // latestRepIFile.createLink(location, IResource.REPLACE, null);
-                                IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-                                page.openEditor(new FileEditorInput(latestRepIFile), IEditorRegistry.SYSTEM_EXTERNAL_EDITOR_ID);
-                            } catch (PartInitException e1) {
-                                log.error(e1, e1);
-                            }
+                            new OpenItemEditorAction((IRepositoryNode) obj).run();
                         } else if (obj instanceof DFConnectionRepNode) { // MOD gdbu 2011-4-1 bug 20051
                             new EditFileDelimitedAction((IRepositoryNode) obj).run();
                         } else if (obj instanceof DFTableRepNode) {// MOD qiongli 2011-10-21 bug TDQ-3797
