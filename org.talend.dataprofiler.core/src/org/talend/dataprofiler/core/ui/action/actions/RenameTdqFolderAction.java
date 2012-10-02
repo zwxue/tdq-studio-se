@@ -20,39 +20,42 @@ import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.jface.dialogs.IInputValidator;
-import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.ui.PlatformUI;
-import org.talend.commons.exception.PersistenceException;
+import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.IWorkbenchPart;
 import org.talend.commons.utils.WorkspaceUtils;
 import org.talend.commons.utils.io.FilesUtils;
-import org.talend.core.repository.model.ProxyRepositoryFactory;
+import org.talend.core.model.repository.ERepositoryObjectType;
+import org.talend.core.repository.i18n.Messages;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.helper.WorkspaceResourceHelper;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.utils.MessageUI;
-import org.talend.dataprofiler.core.ui.utils.RepNodeUtils;
-import org.talend.dataprofiler.core.ui.utils.WorkbenchUtils;
-import org.talend.dq.helper.ReportUtils;
+import org.talend.dataprofiler.core.ui.views.DQRespositoryView;
+import org.talend.dataprofiler.core.ui.wizard.folder.TdqFolderWizard;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.nodes.JrxmlTempSubFolderNode;
 import org.talend.dq.nodes.ReportSubFolderRepNode;
 import org.talend.dq.nodes.SourceFileSubFolderNode;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.IRepositoryNode.ENodeType;
+import org.talend.repository.model.IRepositoryNode.EProperties;
 import org.talend.repository.model.RepositoryNode;
-import org.talend.repository.ui.actions.AContextualAction;
+import org.talend.repository.model.RepositoryNodeUtilities;
+import org.talend.repository.ui.actions.RenameFolderAction;
+import org.talend.repository.ui.wizards.folder.FolderWizard;
 import org.talend.utils.string.StringUtilities;
 import org.talend.utils.sugars.ReturnCode;
 
 /**
  * rename tdq folder action.
  */
-public class RenameTdqFolderAction extends AContextualAction {
+public class RenameTdqFolderAction extends RenameFolderAction {
 
     protected static Logger log = Logger.getLogger(RenameTdqFolderAction.class);
 
@@ -88,61 +91,60 @@ public class RenameTdqFolderAction extends AContextualAction {
             }
         }// ~
 
-        InputDialog dialog = new InputDialog(Display.getDefault().getActiveShell(),
-                DefaultMessagesImpl.getString("RenameTdqFolderAction.renameFolderName"), //$NON-NLS-1$
-                DefaultMessagesImpl.getString("RenameTdqFolderAction.inputNewFolderName"), null, new IInputValidator() { //$NON-NLS-1$
+        // deal with ReportSubFolderRepNode
+        boolean isReportSubFolderRepNode = this.repositoryNode instanceof ReportSubFolderRepNode;
+        IFolder folder = null; // source folder
+        File tarFile = null; // temp folder
+        if (isReportSubFolderRepNode) {
+            String tempFolderName = StringUtilities.getRandomString(8);
+            folder = RepositoryNodeHelper.getIFolder(this.repositoryNode);
+            File srcFile = WorkspaceUtils.ifolderToFile(folder);
+            tarFile = WorkspaceUtils.ifolderToFile(folder.getParent().getFolder(new Path(tempFolderName)));
+            if (!tarFile.exists()) {
+                tarFile.mkdirs();
+            }
+            if (srcFile.exists() && tarFile.exists()) {
+                FilesUtils.copyDirectory(srcFile, tarFile);
+            }
+        }
 
-                    public String isValid(String newText) {
-                        return null;
-                    }
+        ISelection selection = getSelection();
+        Object obj = ((IStructuredSelection) selection).getFirstElement();
+        RepositoryNode node = (RepositoryNode) obj;
 
-                });
-        if (dialog.open() == InputDialog.OK) {
-            String value2 = dialog.getValue();
-            try {
-                // close opend editors
-                List<IRepositoryNode> openRepNodes = getOpenRepNodeForReName(this.repositoryNode, true);
-                RepNodeUtils.closeModelElementEditor(openRepNodes, true);
+        // Check if some jobs in the folder are currently opened:
+        String firstChildOpen = getFirstOpenedChild(node);
+        if (firstChildOpen != null) {
+            MessageDialog.openWarning(new Shell(), Messages.getString("RenameFolderAction.warning.editorOpen.title"), Messages //$NON-NLS-1$
+                    .getString("RenameFolderAction.warning.editorOpen.message", firstChildOpen, node //$NON-NLS-1$
+                            .getProperties(EProperties.LABEL)));
+            return;
+        }
 
-                // deal with ReportSubFolderRepNode
-                boolean isReportSubFolderRepNode = this.repositoryNode instanceof ReportSubFolderRepNode;
-                IFolder folder = null; // source folder
-                File tarFile = null; // temp folder
-                if (isReportSubFolderRepNode) {
-                    String tempFolderName = StringUtilities.getRandomString(8);
-                    folder = RepositoryNodeHelper.getIFolder(this.repositoryNode);
-                    File srcFile = WorkspaceUtils.ifolderToFile(folder);
-                    tarFile = WorkspaceUtils.ifolderToFile(folder.getParent().getFolder(new Path(tempFolderName)));
-                    if (!tarFile.exists()) {
-                        tarFile.mkdirs();
-                    }
-                    if (srcFile.exists() && tarFile.exists()) {
-                        FilesUtils.copyDirectory(srcFile, tarFile);
-                    }
-                }
+        ERepositoryObjectType objectType = null;
+        IPath path = null;
 
-                // MOD sizhaoliu TDQ-5613 When rename a folder containing a locked analysis, the analysis disappears
-                // RepositoryNodeDorpAdapterAssistant dndAsistant = new RepositoryNodeDorpAdapterAssistant();
-                // dndAsistant.renameFolderRepNode(node, value2);
-                IPath path = WorkbenchUtils.getPath(this.repositoryNode);
-                ProxyRepositoryFactory.getInstance().renameFolder(this.repositoryNode.getObjectType(), path, value2);
-                // ~ TDQ-5613
+        path = RepositoryNodeUtilities.getPath(node);
+        objectType = (ERepositoryObjectType) node.getProperties(EProperties.CONTENT_TYPE);
 
-                if (isReportSubFolderRepNode && folder != null && tarFile != null) {
-                    ReportUtils.copyAndUpdateRepGenDocFileInfo(folder.getParent().getFolder(new Path(value2)), tarFile,
-                            folder.getName());
-                }
+        if (objectType != null) {
+            FolderWizard processWizard = new TdqFolderWizard(path, objectType, node, tarFile);
+            Shell activeShell = Display.getCurrent().getActiveShell();
+            WizardDialog dialog = new WizardDialog(activeShell, processWizard);
+            dialog.setPageSize(400, 60);
+            dialog.create();
+            dialog.open();
 
-                // refresh the dq repository view
-                if (this.repositoryNode != null && this.repositoryNode.getParent() != null) {
-                    CorePlugin.getDefault().refreshDQView(this.repositoryNode.getParent());
-                }
-            } catch (PersistenceException e) {
-                log.error(e.getMessage());
+            // String value2 = processWizard.getMainPage().getName();
+            //
+            // if (isReportSubFolderRepNode && folder != null && tarFile != null) {
+            // ReportUtils.copyAndUpdateRepGenDocFileInfo(folder.getParent().getFolder(new Path(value2)), tarFile,
+            // folder.getName());
+            // }
+
+            // refresh the dq repository view
+            if (this.repositoryNode != null && this.repositoryNode.getParent() != null) {
                 CorePlugin.getDefault().refreshDQView(this.repositoryNode.getParent());
-                MessageDialog.openError(PlatformUI.getWorkbench().getDisplay().getActiveShell(),
-                        DefaultMessagesImpl.getString("RepositoyNodeDropAdapterAssistant.error.renameError"), e.getMessage()); //$NON-NLS-1$
-
             }
         }
     }
@@ -171,5 +173,14 @@ public class RenameTdqFolderAction extends AContextualAction {
      * org.eclipse.jface.viewers.IStructuredSelection)
      */
     public void init(TreeViewer viewer, IStructuredSelection selection) {
+    }
+
+    @Override
+    public ISelection getSelection() {
+        IWorkbenchPart activePart = getActivePage().getActivePart();
+        if (activePart instanceof DQRespositoryView) {
+            return ((DQRespositoryView) activePart).getCommonViewer().getSelection();
+        }
+        return null;
     }
 }

@@ -36,6 +36,8 @@ import org.talend.resource.ResourceManager;
 
 /**
  * This class is a wizard to create a folder on workspace.
+ * 
+ * @deprecated use org.talend.repository.ui.wizards.folder.FolderWizard instead.
  */
 public class FolderWizard extends Wizard {
 
