@@ -17,6 +17,7 @@ import java.io.File;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
+import org.talend.commons.utils.io.FilesUtils;
 import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.dq.helper.ReportUtils;
 import org.talend.dq.helper.RepositoryNodeHelper;
@@ -46,13 +47,18 @@ public class TdqFolderWizard extends org.talend.repository.ui.wizards.folder.Fol
     @Override
     public boolean performFinish() {
         boolean rc = super.performFinish();
-
         if (_node instanceof ReportSubFolderRepNode) {
-            String value2 = getMainPage().getName();
-            IFolder folder = RepositoryNodeHelper.getIFolder(this._node);
-            if (folder != null && _tarFile != null) {
-                ReportUtils.copyAndUpdateRepGenDocFileInfo(folder.getParent().getFolder(new Path(value2)), _tarFile,
-                        folder.getName());
+            if (rc) {
+                String value2 = getMainPage().getName();
+                IFolder folder = RepositoryNodeHelper.getIFolder(this._node);
+                if (folder != null && _tarFile != null) {
+                    ReportUtils.copyAndUpdateRepGenDocFileInfo(folder.getParent().getFolder(new Path(value2)), _tarFile,
+                            folder.getName());
+                }
+            } else {
+                // delete temporary files
+                FilesUtils.deleteFile(_tarFile, Boolean.TRUE);
+                rc = true;
             }
         }
 

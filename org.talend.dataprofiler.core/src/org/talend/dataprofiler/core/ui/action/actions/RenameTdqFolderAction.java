@@ -44,9 +44,7 @@ import org.talend.dq.nodes.ReportSubFolderRepNode;
 import org.talend.dq.nodes.SourceFileSubFolderNode;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.IRepositoryNode.ENodeType;
-import org.talend.repository.model.IRepositoryNode.EProperties;
 import org.talend.repository.model.RepositoryNode;
-import org.talend.repository.model.RepositoryNodeUtilities;
 import org.talend.repository.ui.actions.RenameFolderAction;
 import org.talend.repository.ui.wizards.folder.FolderWizard;
 import org.talend.utils.string.StringUtilities;
@@ -91,11 +89,20 @@ public class RenameTdqFolderAction extends RenameFolderAction {
             }
         }// ~
 
+        super.doRun();
+    }
+
+    protected void openFolderWizard(RepositoryNode node, ERepositoryObjectType objectType, IPath path) {
         // deal with ReportSubFolderRepNode
-        boolean isReportSubFolderRepNode = this.repositoryNode instanceof ReportSubFolderRepNode;
-        IFolder folder = null; // source folder
         File tarFile = null; // temp folder
-        if (isReportSubFolderRepNode) {
+        if (repositoryNode instanceof ReportSubFolderRepNode) {
+            if (repositoryNode.getObject().isDeleted()) {
+                MessageDialog.openWarning(new Shell(),
+                        Messages.getString("RenameFolderAction.warning.cannotFind.title"), Messages //$NON-NLS-1$
+                                .getString("RenameFolderAction.warning.cannotFind.message")); //$NON-NLS-1$
+                return;
+            }
+            IFolder folder = null; // source folder
             String tempFolderName = StringUtilities.getRandomString(8);
             folder = RepositoryNodeHelper.getIFolder(this.repositoryNode);
             File srcFile = WorkspaceUtils.ifolderToFile(folder);
@@ -108,25 +115,6 @@ public class RenameTdqFolderAction extends RenameFolderAction {
             }
         }
 
-        ISelection selection = getSelection();
-        Object obj = ((IStructuredSelection) selection).getFirstElement();
-        RepositoryNode node = (RepositoryNode) obj;
-
-        // Check if some jobs in the folder are currently opened:
-        String firstChildOpen = getFirstOpenedChild(node);
-        if (firstChildOpen != null) {
-            MessageDialog.openWarning(new Shell(), Messages.getString("RenameFolderAction.warning.editorOpen.title"), Messages //$NON-NLS-1$
-                    .getString("RenameFolderAction.warning.editorOpen.message", firstChildOpen, node //$NON-NLS-1$
-                            .getProperties(EProperties.LABEL)));
-            return;
-        }
-
-        ERepositoryObjectType objectType = null;
-        IPath path = null;
-
-        path = RepositoryNodeUtilities.getPath(node);
-        objectType = (ERepositoryObjectType) node.getProperties(EProperties.CONTENT_TYPE);
-
         if (objectType != null) {
             FolderWizard processWizard = new TdqFolderWizard(path, objectType, node, tarFile);
             Shell activeShell = Display.getCurrent().getActiveShell();
@@ -134,13 +122,6 @@ public class RenameTdqFolderAction extends RenameFolderAction {
             dialog.setPageSize(400, 60);
             dialog.create();
             dialog.open();
-
-            // String value2 = processWizard.getMainPage().getName();
-            //
-            // if (isReportSubFolderRepNode && folder != null && tarFile != null) {
-            // ReportUtils.copyAndUpdateRepGenDocFileInfo(folder.getParent().getFolder(new Path(value2)), tarFile,
-            // folder.getName());
-            // }
 
             // refresh the dq repository view
             if (this.repositoryNode != null && this.repositoryNode.getParent() != null) {
