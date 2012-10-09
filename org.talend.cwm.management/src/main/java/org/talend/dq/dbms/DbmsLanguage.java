@@ -461,7 +461,7 @@ public class DbmsLanguage {
      * @return the n first row of the given query
      */
     public String getTopNQuery(String query, int n) {
-        return null;
+        return query;
     }
 
     /**
