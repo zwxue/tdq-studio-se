@@ -28,7 +28,7 @@ import org.apache.lucene.store.MMapDirectory;
 import org.apache.lucene.util.Version;
 import org.talend.dataquality.standardization.i18n.Messages;
 
-import com.csvreader.CsvReader;
+import com.talend.csv.CSVReader;
 
 /**
  * DOC scorreia class global comment. Detailed comment
@@ -72,13 +72,12 @@ public class IndexBuilder {
         IndexWriter w = new IndexWriter(index, analyzer, true, IndexWriter.MaxFieldLength.UNLIMITED);
         // read the data (this will be the input data of a component called
         // tFirstNameStandardize)
-        CsvReader csvReader = new CsvReader(new java.io.BufferedReader(new java.io.InputStreamReader(new java.io.FileInputStream(
+        CSVReader csvReader = new CSVReader(new java.io.BufferedReader(new java.io.InputStreamReader(new java.io.FileInputStream(
                 csvFileToIndex.toString()), "windows-1252")), ',');//$NON-NLS-1$
-        csvReader.setTextQualifier('"');
-        csvReader.setUseTextQualifier(true);
+        csvReader.setQuoteChar('"');
 
-        csvReader.readHeaders();
-        while (csvReader.readRecord()) {
+        csvReader.readNext();//skip header
+        while (csvReader.readNext()) {
             String name = csvReader.get(columnsToBeIndexed[0]);
             String country = csvReader.get(columnsToBeIndexed[1]);
             String gender = csvReader.get(columnsToBeIndexed[2]);
@@ -120,14 +119,13 @@ public class IndexBuilder {
         IndexWriter w = new IndexWriter(index, analyzer, true, IndexWriter.MaxFieldLength.UNLIMITED);
         // read the data (this will be the input data of a component called
         // tFirstNameStandardize)
-        CsvReader csvReader = new CsvReader(new java.io.BufferedReader(new java.io.InputStreamReader(new java.io.FileInputStream(
+        CSVReader csvReader = new CSVReader(new java.io.BufferedReader(new java.io.InputStreamReader(new java.io.FileInputStream(
                 csvFileToIndex.toString()), "windows-1252")), ';');//$NON-NLS-1$
-        csvReader.setTextQualifier('"');
-        csvReader.setUseTextQualifier(true);
+        csvReader.setQuoteChar('"');
 
-        csvReader.readHeaders();
+        csvReader.readNext();//skip header
 
-        while (csvReader.readRecord()) {
+        while (csvReader.readNext()) {
 
             Document doc = new Document();
             String word = csvReader.get(columnsToBeIndexed[0]);
