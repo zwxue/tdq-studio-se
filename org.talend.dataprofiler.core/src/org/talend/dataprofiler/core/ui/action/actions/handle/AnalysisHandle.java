@@ -12,9 +12,12 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.action.actions.handle;
 
+import org.eclipse.emf.common.util.EList;
 import org.talend.core.model.properties.Property;
 import org.talend.dataquality.analysis.Analysis;
+import org.talend.dataquality.domain.Domain;
 import org.talend.dataquality.helpers.AnalysisHelper;
+import org.talend.dataquality.helpers.DomainHelper;
 import org.talend.repository.model.IRepositoryNode;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
@@ -46,6 +49,15 @@ public class AnalysisHandle extends EMFResourceHandle {
     @Override
     protected ModelElement update(ModelElement oldObject, ModelElement newObject) {
         newObject = super.update(oldObject, newObject);
+
+        // Added yyin 2012-10-10 TDQ-6236, create a new domain instead of using the domain in the original object
+        EList<Domain> dataFilters = ((Analysis) newObject).getParameters().getDataFilter();
+        if (!dataFilters.isEmpty()) {// if the old already be copied into the duplicated one, replace it with a new one
+            Domain domain = DomainHelper.createDomain(((Analysis) newObject).getName());
+            dataFilters.remove(0);
+            dataFilters.add(domain);
+        }
+        // ~6236
 
         AnalysisHelper.setStringDataFilter((Analysis) newObject, AnalysisHelper.getStringDataFilter((Analysis) oldObject));
 
