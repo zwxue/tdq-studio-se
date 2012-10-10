@@ -55,7 +55,7 @@ public enum EDriverName {
     MSSQLDEFAULTURL("MSSQL", //$NON-NLS-1$
                     "net.sourceforge.jtds.jdbc.Driver", //$NON-NLS-1$
                     "-11", "lib/jtds-1.2.jar"), //$NON-NLS-1$
-   //After 5.1.1,the sqljdbc jar of MSSQL2008URL will not be used because of license
+    // After 5.1.1,the sqljdbc jar of MSSQL2008URL will not be used because of license
     MSSQL2008URL("MSSQL2008", //$NON-NLS-1$
                  "com.microsoft.sqlserver.jdbc.SQLServerDriver", //$NON-NLS-1$
                  "-52", isAboveJDK15() ? "lib/sqljdbc4.jar" : "lib/sqljdbc.jar"), //$NON-NLS-1$
@@ -100,7 +100,7 @@ public enum EDriverName {
     SQLITE3DEFAULTURL("SQLite", "org.sqlite.JDBC", "-30", "lib/sqlitejdbc-v056.jar"),
     AS400DEFAULTURL("AS400", "com.ibm.as400.access.AS400JDBCDriver", "-51", "lib/jt400_V5R3.jar"),
     // MOD klliu bug 14791 add ingres database url and modify default_driver.xml
-    INGRESDEFAULTURL("Ingres", "com.ingres.jdbc.IngresDriver", "-88", "lib/iijdbc.jar"),
+    INGRESDEFAULTURL("Ingres", "ca.ingres.jdbc.IngresDriver", "-88", "lib/iijdbc.jar"),
     NETEZZADEFAULTURL("Netezza", "org.netezza.Driver", "-66", "lib/nzjdbc.jar") //$NON-NLS-1$
     ;
 
