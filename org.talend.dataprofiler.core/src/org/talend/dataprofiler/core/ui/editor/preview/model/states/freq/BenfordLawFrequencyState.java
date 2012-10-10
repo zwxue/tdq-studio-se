@@ -48,7 +48,6 @@ public class BenfordLawFrequencyState extends FrequencyTypeStates {
      */
     public BenfordLawFrequencyState(List<IndicatorUnit> units) {
         super(units);
-        // TODO Auto-generated constructor stub
     }
 
     /*

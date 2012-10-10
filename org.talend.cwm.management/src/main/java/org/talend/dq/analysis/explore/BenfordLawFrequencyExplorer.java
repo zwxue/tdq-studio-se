@@ -44,16 +44,63 @@ public class BenfordLawFrequencyExplorer extends FrequencyStatisticsExplorer {
         String value = " not REGEXP '^[0-9]'";
         if (isSybase()) {
             return columnName
-                    + " = null or left(convert(char(15)," + this.columnName + "),1) not " + dbmsLanguage.like() + "'%[0-9]%'";//$NON-NLS-1$ //$NON-NLS-2$
+                    + " is null or left(convert(char(15)," + this.columnName + "),1) not " + dbmsLanguage.like() + "'%[0-9]%'";//$NON-NLS-1$ //$NON-NLS-2$
         } else if (isPostGreSQL()) {
-            return columnName + " = null or LEFT(CAST(" + columnName + " as text),1)  ~ '[^0-9]'";//$NON-NLS-1$ //$NON-NLS-2$
+            return columnName + " is null or LEFT(CAST(" + columnName + " as text),1)  ~ '[^0-9]'";//$NON-NLS-1$ //$NON-NLS-2$
         } else if (isTeradata()) {
-            return columnName + " is null or cast(" + columnName + " as char(1)) not in ('1','2','3','4','5','6','7','8','9')";//$NON-NLS-1$ //$NON-NLS-2$
+            return columnName
+                    + " is null or cast(" + columnName + " as char(1)) not in ('0','1','2','3','4','5','6','7','8','9')";//$NON-NLS-1$ //$NON-NLS-2$
         } else if (isOracle()) {
+            return columnName + " is null or " + "  regexp_like(" + columnName + ",'^[^[:digit:]]+$')";//$NON-NLS-1$ //$NON-NLS-2$
+        } else if (isDB2()) {
+            value = " not in ('0','1','2','3','4','5','6','7','8','9')";//$NON-NLS-1$ //$NON-NLS-2$
+        } else if (isSqlServer()) {
+            value = " not" + dbmsLanguage.like() + "'%[0-9]%'";//$NON-NLS-1$ //$NON-NLS-2$
+        } else if (isInformix()) {
             value = " not" + dbmsLanguage.like() + "'%[0-9]%'";//$NON-NLS-1$ //$NON-NLS-2$
         }
 
-        return columnName + " = null or " + columnName + value;
+        return columnName + " is null or " + columnName + value;
+    }
+
+    /**
+     * DOC yyin Comment method "isInformix".
+     * 
+     * @return
+     */
+    private boolean isInformix() {
+        if (SupportDBUrlType.INFORMIXDEFAULTURL.getLanguage().equals(dbmsLanguage.getDbmsName())) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * DOC yyin Comment method "isSqlServer".
+     * 
+     * @return
+     */
+    private boolean isSqlServer() {
+        if (SupportDBUrlType.MSSQLDEFAULTURL.getLanguage().equals(dbmsLanguage.getDbmsName())) {
+            return true;
+        } else if (SupportDBUrlType.MSSQL2008URL.getLanguage().equals(dbmsLanguage.getDbmsName())) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * DOC yyin Comment method "isDB2".
+     * 
+     * @return
+     */
+    private boolean isDB2() {
+        if (SupportDBUrlType.DB2DEFAULTURL.getLanguage().equals(dbmsLanguage.getDbmsName())) {
+            return true;
+        } else if (dbmsLanguage.getDbmsName().startsWith(SupportDBUrlType.DB2DEFAULTURL.getLanguage())) {
+            return true;
+        }
+        return false;
     }
 
     /**

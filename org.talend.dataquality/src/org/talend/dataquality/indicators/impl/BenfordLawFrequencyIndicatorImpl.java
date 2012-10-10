@@ -11,6 +11,8 @@ import java.util.List;
 
 import org.eclipse.emf.ecore.EClass;
 import org.talend.dataquality.indicators.BenfordLawFrequencyIndicator;
+import org.talend.dataquality.indicators.IndicatorParameters;
+import org.talend.dataquality.indicators.IndicatorsFactory;
 import org.talend.dataquality.indicators.IndicatorsPackage;
 
 /**
@@ -68,12 +70,16 @@ public class BenfordLawFrequencyIndicatorImpl extends FrequencyIndicatorImpl imp
         // check for invalid
         long counted = 0L;
         List<Object> invalid = new ArrayList<Object>();
+        List<Object> lengthMore = new ArrayList<Object>();
         for (Object val : valueToFreq.keySet()) {
             if (isInvalid(val) < 0) {
                 invalid.add(val);
                 Long freq = this.valueToFreq.get(val);
                 counted = (freq == null) ? counted : counted + freq;
+            } else if (String.valueOf(val).length() > 1) { // check the length, should only = 1, if >1, cut it
+                lengthMore.add(val);
             }
+
         }
         // combine all invalid into one <"invalid",counted>
         if (invalid.size() > 0) {
@@ -81,6 +87,16 @@ public class BenfordLawFrequencyIndicatorImpl extends FrequencyIndicatorImpl imp
                 valueToFreq.remove(val);
             }
             valueToFreq.put("invalid", counted);
+        }
+
+        // check the length, should only = 1, if >1, cut it
+        if (lengthMore.size() > 0) {
+            for (Object val : lengthMore) {
+                String k = String.valueOf(val).substring(0, 1);
+                Long freq = this.valueToFreq.get(val);
+                valueToFreq.remove(val);
+                valueToFreq.put(k, freq);
+            }
         }
 
         // check from 1~9, if miss, add it as <number, 0L>
@@ -162,6 +178,18 @@ public class BenfordLawFrequencyIndicatorImpl extends FrequencyIndicatorImpl imp
             c++;
             this.valueToFreq.put(key, c);
         }
+    }
+
+    /**
+     * Added yyin 20121008, TDQ-6233, the default limit=10, change it to 50 (0-9, a-z,null)
+     */
+    @Override
+    public IndicatorParameters getParameters() {
+        if (parameters == null) {
+            parameters = IndicatorsFactory.eINSTANCE.createIndicatorParameters();
+            parameters.setTopN(50);
+        }
+        return parameters;
     }
 
 } // BenfordLawFrequencyIndicatorImpl
