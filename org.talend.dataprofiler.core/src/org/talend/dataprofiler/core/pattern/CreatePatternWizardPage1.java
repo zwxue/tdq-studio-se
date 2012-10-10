@@ -88,7 +88,7 @@ public class CreatePatternWizardPage1 extends MetadataWizardPage {
      */
     @Override
     protected void createExtendedControl(Composite container) {
-        throw new UnsupportedOperationException();
+        // do nothing at here
     }
 
     /**
