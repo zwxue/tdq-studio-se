@@ -165,4 +165,42 @@ public class BenfordLawFrequencyIndicatorImplTest {
         Assert.assertTrue(valueMap.get("9") == 1L);
         Assert.assertTrue(valueMap.get("invalid") == 9L);
     }
+
+    /**
+     * test for key length>1
+     */
+    @Test
+    public void testCheckValues_6() {
+        values.add(new Object[] { "8     ", 3L });
+        values.add(new Object[] { "9                     ", 1L });
+
+        benIndicator.storeSqlResults(values);
+        HashMap<Object, Long> valueMap = benIndicator.getValueToFreq();
+        Assert.assertEquals(valueMap.size(), 9);
+        assertinternal(valueMap);
+        Assert.assertTrue(valueMap.get("8") == 3L);
+        Assert.assertTrue(valueMap.get("9") == 1L);
+        Assert.assertTrue(valueMap.get("8     ") == null);
+    }
+
+    /**
+     * test for key length>1, with some invalid(length>1) which should not be effected
+     */
+    @Test
+    public void testCheckValues_7() {
+        values.add(new Object[] { "8     ", 3L });
+        values.add(new Object[] { "9                     ", 1L });
+        values.add(new Object[] { "null", 3L });
+        values.add(new Object[] { "a", 3L });
+
+        benIndicator.storeSqlResults(values);
+        HashMap<Object, Long> valueMap = benIndicator.getValueToFreq();
+        Assert.assertEquals(valueMap.size(), 10);
+        assertinternal(valueMap);
+        Assert.assertTrue(valueMap.get("8") == 3L);
+        Assert.assertTrue(valueMap.get("9") == 1L);
+        Assert.assertTrue(valueMap.get("8     ") == null);
+        Assert.assertTrue(valueMap.get("invalid") == 6L);
+
+    }
 }
