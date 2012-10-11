@@ -274,7 +274,8 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
         connCombo.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_LIST_BACKGROUND));
         // TDQ-5184~
         GridDataFactory.fillDefaults().align(SWT.FILL, SWT.TOP).applyTo(labelButtonClient);
-        reloadDataproviderAndFillConnCombo();
+        // MOD sizhaoliu the following instruction is redundant, it will be called later
+        // reloadDataproviderAndFillConnCombo();
         // ~
         createConnVersionText(labelButtonClient);
         createConnDeletedLabel(labelButtonClient);
@@ -409,7 +410,11 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
             ti.setText(new String[] { property.getDisplayName(), RepositoryNodeHelper.getConnectionType(repNode) });
             // connCombo.add(property.getDisplayName(), index);
             // String prvFileName = PrvResourceFileHelper.getInstance().findCorrespondingFile(prov).getName();
-            connCombo.setData(property.getDisplayName() + RepositoryNodeHelper.getConnectionType(repNode), index);
+
+            // MOD sizhaoliu TDQ-6286 fix the migration problem (the table combo shows the first item in case the label
+            // of imported analysis does not equal to the file name. )
+            // connCombo.setData(property.getDisplayName() + RepositoryNodeHelper.getConnectionType(repNode), index);
+            connCombo.setData(modelElement.getName() + RepositoryNodeHelper.getConnectionType(repNode), index);
             connCombo.setData(index + "", repNode); //$NON-NLS-1$
             index++;
         }
