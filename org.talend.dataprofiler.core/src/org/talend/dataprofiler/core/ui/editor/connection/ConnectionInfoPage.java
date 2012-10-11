@@ -498,15 +498,20 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
         // }
 
         try {
-            saveConnectionInfo();
-
             this.initialize(this.getEditor());
 
             if (checkDBConnection) {
                 reloadDataProvider();
             }
 
+            // MOD sizhaoliu TDQ-6296 open an analysis after renaming the connection on which it depends, connection
+            // field is empty and all the indicators are lost.
+            // the following instruction should be called after reloadDataProvider()
+            saveConnectionInfo();
+
             this.isUrlChanged = false;
+            this.isLoginChanged = false;
+            this.isPassWordChanged = false;
             this.isDirty = false;
         } catch (DataprofilerCoreException e) {
             ExceptionHandler.process(e, Level.ERROR);
