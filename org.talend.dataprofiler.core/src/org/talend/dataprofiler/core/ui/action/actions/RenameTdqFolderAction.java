@@ -36,7 +36,6 @@ import org.talend.dataprofiler.core.helper.WorkspaceResourceHelper;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.utils.MessageUI;
 import org.talend.dataprofiler.core.ui.utils.RepNodeUtils;
-import org.talend.dataprofiler.core.ui.utils.WorkbenchUtils;
 import org.talend.dq.helper.ReportUtils;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.nodes.JrxmlTempSubFolderNode;
@@ -45,6 +44,7 @@ import org.talend.dq.nodes.SourceFileSubFolderNode;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.IRepositoryNode.ENodeType;
 import org.talend.repository.model.RepositoryNode;
+import org.talend.repository.model.RepositoryNodeUtilities;
 import org.talend.repository.ui.actions.AContextualAction;
 import org.talend.utils.string.StringUtilities;
 import org.talend.utils.sugars.ReturnCode;
@@ -124,8 +124,9 @@ public class RenameTdqFolderAction extends AContextualAction {
                 // MOD sizhaoliu TDQ-5613 When rename a folder containing a locked analysis, the analysis disappears
                 // RepositoryNodeDorpAdapterAssistant dndAsistant = new RepositoryNodeDorpAdapterAssistant();
                 // dndAsistant.renameFolderRepNode(node, value2);
-                IPath path = WorkbenchUtils.getPath(this.repositoryNode);
-                ProxyRepositoryFactory.getInstance().renameFolder(this.repositoryNode.getObjectType(), path, value2);
+                // MOD qiongli TDQ-6237. Using relative path; replace 'getObjectType()' with 'getContentType()'.
+                IPath path = RepositoryNodeUtilities.getPath(repositoryNode);
+                ProxyRepositoryFactory.getInstance().renameFolder(this.repositoryNode.getContentType(), path, value2);
                 // ~ TDQ-5613
 
                 if (isReportSubFolderRepNode && folder != null && tarFile != null) {
