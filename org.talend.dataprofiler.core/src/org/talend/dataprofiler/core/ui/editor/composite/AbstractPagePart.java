@@ -117,14 +117,7 @@ public abstract class AbstractPagePart {
         // ArrayList<TdDataProvider>();
         Connection tdProvider = null;
         if (indicators != null && indicators.length != 0) {
-            DataManager connection = masterPage.getAnalysis().getContext().getConnection();
-            if (connection != null) {
-                tdProvider = SwitchHelpers.CONNECTION_SWITCH.doSwitch(connection);
-            }
-            if (tdProvider == null) {
-                tdProvider = ConnectionHelper.getDataProvider(SwitchHelpers.COLUMN_SET_SWITCH.doSwitch(indicators[0]
-                        .getColumnSet()));
-            }
+            tdProvider = ConnectionHelper.getDataProvider(SwitchHelpers.COLUMN_SET_SWITCH.doSwitch(indicators[0].getColumnSet()));
             setConnectionState(masterPage, tdProvider);
         }
         // }
