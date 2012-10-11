@@ -12,6 +12,7 @@
 // ============================================================================
 package org.talend.dq.indicators;
 
+import java.lang.management.ManagementFactory;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -32,8 +33,6 @@ import org.talend.dq.analysis.memory.AnalysisThreadMemoryChangeNotifier;
 import org.talend.dq.analysis.memory.IMemoryChangeListener;
 import org.talend.utils.collections.MultiMapHelper;
 import org.talend.utils.sugars.ReturnCode;
-
-import sun.management.ManagementFactory;
 
 /**
  * @author scorreia

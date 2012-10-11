@@ -12,6 +12,7 @@
 // ============================================================================
 package org.talend.dq.analysis;
 
+import java.lang.management.ManagementFactory;
 import java.util.Date;
 import java.util.List;
 
@@ -50,8 +51,6 @@ import orgomg.cwm.foundation.softwaredeployment.SoftwaredeploymentPackage;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.resource.relational.Catalog;
 import orgomg.cwm.resource.relational.Schema;
-
-import sun.management.ManagementFactory;
 
 /**
  * DOC scorreia class global comment. Detailled comment
@@ -311,7 +310,6 @@ public abstract class AnalysisExecutor implements IAnalysisExecutor {
 
     }
 
-
     /**
      * Reset connection pool.
      * 
@@ -324,7 +322,6 @@ public abstract class AnalysisExecutor implements IAnalysisExecutor {
             connectionPool.closeConnectionPool();
         }
     }
-
 
     /**
      * DOC xqliu Comment method "resetConnectionPool".
@@ -359,7 +356,6 @@ public abstract class AnalysisExecutor implements IAnalysisExecutor {
         rc.setObject(pooledConnection);
         return rc;
     }
-
 
     /**
      * DOC xqliu Comment method "releasePooledConnection".
