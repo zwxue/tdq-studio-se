@@ -31,6 +31,10 @@ public class BenfordLawFrequencyExplorer extends FrequencyStatisticsExplorer {
 
         String clause = entity.isLabelNull() ? getColumnName() + dbmsLanguage.isNull() : getColumnName() + dbmsLanguage.like()
                 + value;
+
+        if (isInformix()) {
+            return " SUBSTR( " + getColumnName() + " ,0,1)" + dbmsLanguage.like() + value;
+        }
         return clause;
     }
 
@@ -51,13 +55,13 @@ public class BenfordLawFrequencyExplorer extends FrequencyStatisticsExplorer {
             return columnName
                     + " is null or cast(" + columnName + " as char(1)) not in ('0','1','2','3','4','5','6','7','8','9')";//$NON-NLS-1$ //$NON-NLS-2$
         } else if (isOracle()) {
-            return columnName + " is null or " + "  regexp_like(" + columnName + ",'^[^[:digit:]]+$')";//$NON-NLS-1$ //$NON-NLS-2$
+            return columnName + " is null or " + "  regexp_like(SUBSTR(" + columnName + ",0,1),'^[^[:digit:]]+$')";//$NON-NLS-1$ //$NON-NLS-2$
         } else if (isDB2()) {
             return columnName + " is null or LEFT(" + columnName + ",1)" + " not in ('0','1','2','3','4','5','6','7','8','9')";//$NON-NLS-1$ //$NON-NLS-2$
         } else if (isSqlServer()) {
-            value = " not" + dbmsLanguage.like() + "'%[0-9]%'";//$NON-NLS-1$ //$NON-NLS-2$
+            return columnName + " is null or LEFT(" + columnName + ",1) not" + dbmsLanguage.like() + "'%[0-9]%'";//$NON-NLS-1$ //$NON-NLS-2$
         } else if (isInformix()) {
-            value = " not" + dbmsLanguage.like() + "'%[0-9]%'";//$NON-NLS-1$ //$NON-NLS-2$
+            return columnName + " is null or SUBSTR(" + columnName + ",0,1) not in ('0','1','2','3','4','5','6','7','8','9')";//$NON-NLS-1$ //$NON-NLS-2$
         }
 
         return columnName + " is null or " + columnName + value;
@@ -69,7 +73,7 @@ public class BenfordLawFrequencyExplorer extends FrequencyStatisticsExplorer {
      * @return
      */
     private boolean isInformix() {
-        if (SupportDBUrlType.INFORMIXDEFAULTURL.getLanguage().equals(dbmsLanguage.getDbmsName())) {
+        if (dbmsLanguage.getDbmsName().startsWith(SupportDBUrlType.INFORMIXDEFAULTURL.getLanguage())) {
             return true;
         }
         return false;
