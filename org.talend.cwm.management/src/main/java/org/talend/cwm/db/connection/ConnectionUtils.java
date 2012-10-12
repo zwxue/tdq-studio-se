@@ -87,6 +87,7 @@ import org.talend.dataquality.helpers.MetadataHelper;
 import org.talend.designer.core.model.utils.emf.talendfile.ContextType;
 import org.talend.dq.CWMPlugin;
 import org.talend.dq.analysis.parameters.DBConnectionParameter;
+import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.nodes.DQRepositoryNode;
 import org.talend.dq.writer.impl.ElementWriterFactory;
@@ -95,6 +96,7 @@ import org.talend.repository.ui.utils.DBConnectionContextUtils;
 import org.talend.repository.ui.utils.FileConnectionContextUtils;
 import org.talend.utils.sql.metadata.constants.GetColumn;
 import org.talend.utils.sugars.ReturnCode;
+import orgomg.cwm.foundation.softwaredeployment.DataManager;
 import orgomg.cwm.foundation.softwaredeployment.DataProvider;
 import orgomg.cwm.foundation.softwaredeployment.ProviderConnection;
 import orgomg.cwm.objectmodel.core.ModelElement;
@@ -352,7 +354,7 @@ public final class ConnectionUtils {
                 cc = null;
             }
         } else {
-        	 // MOD klliu TDQ-4660 sso could not check passed.2012-02-21
+            // MOD klliu TDQ-4660 sso could not check passed.2012-02-21
             try {
                 ret = org.talend.utils.sql.ConnectionUtils.createConnection(url, driver, props);
             } catch (InstantiationException e) {
@@ -559,7 +561,7 @@ public final class ConnectionUtils {
         }
         return false;
     }
-    
+
     /**
      * mzhao bug: TDQ-4622 Is the connection is an ingres connection?
      * 
@@ -603,13 +605,12 @@ public final class ConnectionUtils {
         if (dbConn != null) {
             String databaseType = dbConn.getDatabaseType() == null ? org.talend.dataquality.PluginConstant.EMPTY_STRING : dbConn
                     .getDatabaseType();
-            //databaseType: IBM DB2, but DBKey is DB2
+            // databaseType: IBM DB2, but DBKey is DB2
             return databaseType.contains(EDriverName.DB2DEFAULTURL.getDBKey());
         }
         return false;
     }
 
-    
     /**
      * 
      * Comment method "isDB2".
@@ -625,6 +626,7 @@ public final class ConnectionUtils {
         }
         return false;
     }
+
     /**
      * DOC xqliu Comment method "isMssql".
      * 
@@ -695,7 +697,7 @@ public final class ConnectionUtils {
         if (object != null) {
             if (object instanceof ProviderConnection) {
                 // FIXME it will cause stack overflow.
-                return isMdmConnection((ProviderConnection) object);
+                return isMdmConnection(object);
             } else if (object instanceof DataProvider) {
                 return isMdmConnection((DataProvider) object);
             } else if (object instanceof IRepositoryViewObject) {
@@ -783,7 +785,7 @@ public final class ConnectionUtils {
         DatabaseConnection dbConn = SwitchHelpers.DATABASECONNECTION_SWITCH.doSwitch(connection);
         if (dbConn != null) {
             String databaseType = dbConn.getDatabaseType() == null ? org.talend.dataquality.PluginConstant.EMPTY_STRING : dbConn
-                    .getDatabaseType(); //$NON-NLS-1$
+                    .getDatabaseType();
             return EDriverName.POSTGRESQLEFAULTURL.getDBKey().equalsIgnoreCase(databaseType)
                     || EDatabaseTypeName.PSQL.getDisplayName().equalsIgnoreCase(databaseType);
         }
@@ -1101,6 +1103,7 @@ public final class ConnectionUtils {
      * @param conn
      * @return
      */
+    @Deprecated
     public static Connection fillConnectionInformation(Connection conn) {
         boolean saveFlag = false;
         // fill metadata of connection
@@ -1161,6 +1164,7 @@ public final class ConnectionUtils {
      * @return
      * @deprecated Is Replaced By DBConnectionFiller.fillUIConnParams
      */
+    @Deprecated
     public static List<Connection> fillConnectionInformation(List<Connection> conns) {
         List<Connection> results = new ArrayList<Connection>();
         for (Connection conn : conns) {
@@ -1196,6 +1200,7 @@ public final class ConnectionUtils {
      * @param dbConn
      * @return
      */
+    @Deprecated
     public static DatabaseConnection fillDbConnectionInformation(DatabaseConnection dbConn) {
         // fill database structure
         if (DatabaseConstant.XML_EXIST_DRIVER_NAME.equals(dbConn.getDriverClass())) { // xmldb(e.g eXist)
@@ -1216,18 +1221,19 @@ public final class ConnectionUtils {
             try {
                 if (noStructureExists) { // do no override existing catalogs or
                                          // schemas
-//                    Map<String, String> paramMap = ParameterUtil.toMap(ConnectionUtils.createConnectionParam(dbConn));
+                                         // Map<String, String> paramMap =
+                                         // ParameterUtil.toMap(ConnectionUtils.createConnectionParam(dbConn));
                     IMetadataConnection metaConnection = ConvertionHelper.convert(dbConn);
                     dbConn = (DatabaseConnection) MetadataFillFactory.getDBInstance().fillUIConnParams(metaConnection, dbConn);
-                    sqlConn = (java.sql.Connection) MetadataConnectionUtils.checkConnection(metaConnection).getObject();
+                    sqlConn = MetadataConnectionUtils.checkConnection(metaConnection).getObject();
 
                     if (sqlConn != null) {
-//                    	String databaseType = metaConnection.getDbType();
-//                    	EDatabaseTypeName dbType = EDatabaseTypeName.getTypeFromDbType(databaseType);
-//                    	if (dbType == EDatabaseTypeName.TERADATA) {
-//                                ExtractMetaDataUtils.metadataCon = metaConnection;
-//                            }
-                        DatabaseMetaData dm = ExtractMetaDataUtils.getDatabaseMetaData(sqlConn, dbConn,false);
+                        // String databaseType = metaConnection.getDbType();
+                        // EDatabaseTypeName dbType = EDatabaseTypeName.getTypeFromDbType(databaseType);
+                        // if (dbType == EDatabaseTypeName.TERADATA) {
+                        // ExtractMetaDataUtils.metadataCon = metaConnection;
+                        // }
+                        DatabaseMetaData dm = ExtractMetaDataUtils.getDatabaseMetaData(sqlConn, dbConn, false);
                         MetadataFillFactory.getDBInstance().fillCatalogs(dbConn, dm,
                                 MetadataConnectionUtils.getPackageFilter(dbConn, dm, true));
                         MetadataFillFactory.getDBInstance().fillSchemas(dbConn, dm,
@@ -1362,7 +1368,7 @@ public final class ConnectionUtils {
     public static void retrieveColumn(MetadataTable tdTable) {
         List<TdColumn> columnList = ColumnSetHelper.getColumns((ColumnSet) tdTable);
         if (columnList != null && columnList.size() > 0) {
-            TdColumn tempColumn = ((TdColumn) columnList.get(0));
+            TdColumn tempColumn = columnList.get(0);
             if (tempColumn.getSqlDataType() == null || "NULL".equalsIgnoreCase(tempColumn.getSqlDataType().getName())//$NON-NLS-1$
                     && 0 == tempColumn.getSqlDataType().getJavaDataType()) {
 
@@ -1380,8 +1386,7 @@ public final class ConnectionUtils {
                                 List<TdSqlDataType> newDataTypeList = getDataType(
                                         ConnectionUtils.getName(CatalogHelper.getParentCatalog(tdTable)),
                                         ConnectionUtils.getName(SchemaHelper.getParentSchema(tdTable)), tdTable.getName(),
-                                        tdColumn.getName(),
-                                        connection);
+                                        tdColumn.getName(), connection);
                                 if (newDataTypeList.size() > 0) {
                                     tdColumn.setSqlDataType(newDataTypeList.get(0));
                                 }
@@ -1416,6 +1421,7 @@ public final class ConnectionUtils {
      * @deprecated the method will be deleted when the connection fetch from
      * IRepositoryViewObject.getProperty().getItem().getConnection
      */
+    @Deprecated
     public static void fillAttributeBetweenConnection(Connection target, Connection source) {
         if (target == null || source == null) {
             return;
@@ -1684,8 +1690,8 @@ public final class ConnectionUtils {
      * @return
      */
     public static String getOriginalConntextValue(Connection connection, String rawValue) {
-        if(rawValue==null){
-        	return PluginConstant.EMPTY_STRING;
+        if (rawValue == null) {
+            return PluginConstant.EMPTY_STRING;
         }
         String origValu = null;
         if (connection != null && connection.isContextMode()) {
@@ -1698,7 +1704,7 @@ public final class ConnectionUtils {
             }
 
             origValu = ConnectionContextHelper.getOriginalValue(contextType, rawValue);
-        }        
+        }
         return origValu == null ? rawValue : origValu;
     }
 
@@ -1718,13 +1724,12 @@ public final class ConnectionUtils {
             if (contextName == null) {
                 return DBConnectionContextUtils.cloneOriginalValueConnection(connection, true, null);
             }
-            return DBConnectionContextUtils.cloneOriginalValueConnection((DatabaseConnection) connection, false, contextName);
+            return DBConnectionContextUtils.cloneOriginalValueConnection(connection, false, contextName);
         }
         return connection;
     }
 
     /**
-     * 
      * Get the original FileConnection for context mode.
      * 
      * @param fileConn
@@ -1748,4 +1753,31 @@ public final class ConnectionUtils {
         return fileConn;
     }
 
+    /**
+     * if sqlite connection don't set username, set it with a default username.
+     * 
+     * @param connection
+     */
+    public static void checkUsernameBeforeSaveConnection4Sqlite(Connection connection) {
+        if (ConnectionUtils.isSqlite(connection)) {
+            String username = JavaSqlFactory.getUsername(connection);
+            if (username == null || "".equals(username)) { //$NON-NLS-1$
+                ConnectionHelper.setUsername(connection, JavaSqlFactory.DEFAULT_USERNAME);
+            }
+        }
+    }
+
+    /**
+     * Get connection from data manager.
+     * 
+     * @param datamanager
+     * @return
+     */
+    public static Connection getConnectionFromDatamanager(DataManager datamanager) {
+        if (datamanager != null && datamanager.eIsProxy()) {
+            datamanager = (DataManager) EObjectHelper.resolveObject(datamanager);
+        }
+        Connection analysisDataProvider = SwitchHelpers.CONNECTION_SWITCH.doSwitch(datamanager);
+        return analysisDataProvider;
+    }
 }
