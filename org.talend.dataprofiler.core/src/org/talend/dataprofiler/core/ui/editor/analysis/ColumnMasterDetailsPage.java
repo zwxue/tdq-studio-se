@@ -694,14 +694,6 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
             public void modifyText(ModifyEvent e) {
                 // MOD xqliu 2009-08-24 bug 8776
                 execLang = execCombo.getText();
-                // MOD mzhao feature 11128, 2010-01-29. Java Engine is applicable to Java UDI. Set the Java UDI the
-                // right language.
-                EList<Indicator> inds = analysis.getResults().getIndicators();
-                for (Indicator ind : inds) {
-                    if (javaUserDefIndSwitch.doSwitch(ind) != null) {
-                        ((JavaUserDefIndicator) ind).setExecuteEngine(ExecutionLanguage.get(execLang));
-                    }
-                }
 
                 // MOD zshen 11104 2010-01-27: when have a datePatternFreqIndicator in the
                 // "analyzed Columns",ExecutionLanguage only is Java.
