@@ -183,7 +183,7 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
                             null,
                             DefaultMessagesImpl.getString("ConnectionInfoPage.checkConnections"), DefaultMessagesImpl.getString("ConnectionInfoPage.checkConnectionSuccessful")); //$NON-NLS-1$ //$NON-NLS-2$
                 } else {
-                    MessageDialog.openInformation(
+                    MessageDialog.openWarning(
                             null,
                             DefaultMessagesImpl.getString("ConnectionInfoPage.checkConnection"), DefaultMessagesImpl.getString("ConnectionInfoPage.CheckConnectionFailure", code.getMessage())); //$NON-NLS-1$ //$NON-NLS-2$ 
                 }
@@ -423,9 +423,12 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
             props.put(TaggedValueHelper.DBNAME, dbConn.getSID());
         }
 
-        ReturnCode returnCode = ConnectionUtils.isMdmConnection(connection) ? new MdmWebserviceConnection(
-                JavaSqlFactory.getURL(connection), props).checkDatabaseConnection() : ConnectionUtils.checkConnection(url,
-                driverClassName, props);
+        ReturnCode returnCode = null;
+        if (ConnectionUtils.isMdmConnection(connection)) {
+            returnCode = new MdmWebserviceConnection(JavaSqlFactory.getURL(connection), props).checkDatabaseConnection();
+        } else {
+            returnCode = ConnectionUtils.checkConnection(url, driverClassName, props);
+        }
         // ~
 
         return returnCode;
