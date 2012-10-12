@@ -53,7 +53,7 @@ public class BenfordLawFrequencyExplorer extends FrequencyStatisticsExplorer {
         } else if (isOracle()) {
             return columnName + " is null or " + "  regexp_like(" + columnName + ",'^[^[:digit:]]+$')";//$NON-NLS-1$ //$NON-NLS-2$
         } else if (isDB2()) {
-            value = " not in ('0','1','2','3','4','5','6','7','8','9')";//$NON-NLS-1$ //$NON-NLS-2$
+            return columnName + " is null or LEFT(" + columnName + ",1)" + " not in ('0','1','2','3','4','5','6','7','8','9')";//$NON-NLS-1$ //$NON-NLS-2$
         } else if (isSqlServer()) {
             value = " not" + dbmsLanguage.like() + "'%[0-9]%'";//$NON-NLS-1$ //$NON-NLS-2$
         } else if (isInformix()) {
