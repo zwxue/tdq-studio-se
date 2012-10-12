@@ -36,8 +36,6 @@ import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.definition.DefinitionFactory;
 import org.talend.dataquality.indicators.definition.IndicatorCategory;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
-import org.talend.dataquality.indicators.sql.IndicatorSqlFactory;
-import org.talend.dataquality.indicators.sql.JavaUserDefIndicator;
 import org.talend.dataquality.indicators.sql.UserDefIndicator;
 import org.talend.dataquality.indicators.sql.util.IndicatorSqlSwitch;
 import org.talend.dq.helper.resourcehelper.IndicatorResourceFileHelper;
@@ -315,18 +313,11 @@ public final class UDIHelper {
                 Class<?> clazz = null;
                 clazz = cl.findClass(userJavaClassName);
                 if (clazz != null) {
+                    // MOD yyin 20121012 TDQ-6259
                     UserDefIndicator judi = (UserDefIndicator) clazz.newInstance();
                     judi.setIndicatorDefinition(indicator.getIndicatorDefinition());
-                    if (indicator instanceof JavaUserDefIndicator
-                            && ((JavaUserDefIndicator) indicator).getJavaUserDefObject() == null) {
-                        ((JavaUserDefIndicator) indicator).setJavaUserDefObject(judi);
-                    } else {
-                        JavaUserDefIndicator judiTemplate = IndicatorSqlFactory.eINSTANCE.createJavaUserDefIndicator();
-                        judiTemplate.setJavaUserDefObject(judi);
-                        judiTemplate.setIndicatorDefinition(indicator.getIndicatorDefinition());
-                        judiTemplate.setAnalyzedElement(indicator.getAnalyzedElement());
-                        adaptedUDI = judiTemplate;
-                    }
+                    judi.setAnalyzedElement(indicator.getAnalyzedElement());
+                    adaptedUDI = judi;
                 }
 
             }

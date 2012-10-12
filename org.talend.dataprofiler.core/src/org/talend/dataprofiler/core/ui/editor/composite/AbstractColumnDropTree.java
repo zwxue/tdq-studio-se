@@ -57,7 +57,6 @@ import org.talend.dataquality.indicators.IndicatorParameters;
 import org.talend.dataquality.indicators.IndicatorsPackage;
 import org.talend.dataquality.indicators.PatternMatchingIndicator;
 import org.talend.dataquality.indicators.TextParameters;
-import org.talend.dataquality.indicators.sql.JavaUserDefIndicator;
 import org.talend.dataquality.indicators.sql.UserDefIndicator;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.helper.UDIHelper;
@@ -71,7 +70,6 @@ import org.talend.dq.nodes.MDMXmlElementRepNode;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
-
 import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
@@ -221,12 +219,6 @@ public abstract class AbstractColumnDropTree extends AbstractPagePart {
                 log.error(e, e);
                 MessageDialog.openError(tree.getShell(),
                         DefaultMessagesImpl.getString("ColumnsComparisonMasterDetailsPage.error"), e.getMessage());//$NON-NLS-1$
-            }
-            if (judi != null) {
-                ((JavaUserDefIndicator) indicatorUnit.getIndicator()).setExecuteEngine(absMasterPage.getAnalysis()
-                        .getParameters().getExecutionLanguage());
-                // ((JavaUserDefIndicator) judi)
-                // .setExecuteEngine(absMasterPage.getAnalysis().getParameters().getExecutionLanguage());
             }
         }
     }

@@ -68,7 +68,6 @@ import org.talend.dataquality.indicators.IndicatorsFactory;
 import org.talend.dataquality.indicators.definition.IndicatorCategory;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dataquality.indicators.definition.IndicatorDefinitionParameter;
-import org.talend.dataquality.indicators.sql.JavaUserDefIndicator;
 import org.talend.dataquality.indicators.sql.UserDefIndicator;
 import org.talend.dataquality.properties.TDQIndicatorDefinitionItem;
 import org.talend.dq.dbms.DbmsLanguage;
@@ -132,7 +131,6 @@ public final class UDIUtils {
         // MOD mzhao feature 11128, Handle Java User Defined Indicator.
         Indicator judi = UDIHelper.adaptToJavaUDI(udi);
         if (judi != null) {
-            ((JavaUserDefIndicator) judi).setExecuteEngine(analysis.getParameters().getExecutionLanguage());
             udi = judi;
         }
         IEditorPart activeEditor = CorePlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getActivePage()
