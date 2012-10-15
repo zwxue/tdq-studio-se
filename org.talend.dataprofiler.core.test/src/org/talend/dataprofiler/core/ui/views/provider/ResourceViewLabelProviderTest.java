@@ -12,6 +12,8 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.views.provider;
 
+import static org.junit.Assert.*;
+
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.List;
@@ -67,8 +69,6 @@ import org.talend.resource.EResourceConstant;
 import org.talend.resource.ResourceManager;
 import orgomg.cwmx.analysis.informationreporting.Report;
 
-import static org.junit.Assert.*;
-
 /**
  * DOC zshen class global comment. Test the method
  * org.talend.dataprofiler.core.ui.views.provider.ResourceViewLabelProvider#getFileCount
@@ -102,7 +102,7 @@ public class ResourceViewLabelProviderTest {
     }
 
     /**
-     * DOC talend Comment method "deleteCurrentProject".
+     * delete the project which has been login else will effect the result of junit.
      */
     private void deleteCurrentProject() {
         IProject rootProject = ReponsitoryContextBridge.getRootProject();

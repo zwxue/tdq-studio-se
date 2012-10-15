@@ -142,6 +142,7 @@ public abstract class AbstractComparisonLevel implements IComparisonLevel {
 
         updateModelSwitch = new DiffSwitch<UpdateModelElement>() {
 
+            @Override
             public UpdateModelElement caseUpdateModelElement(UpdateModelElement object) {
                 return object;
             }
@@ -157,12 +158,14 @@ public abstract class AbstractComparisonLevel implements IComparisonLevel {
 
         packageSwitch = new CoreSwitch<Package>() {
 
+            @Override
             public Package casePackage(Package object) {
                 return object;
             }
         };
         diffGroupSwitch = new DiffSwitch<DiffGroup>() {
 
+            @Override
             public DiffGroup caseDiffGroup(DiffGroup object) {
                 return object;
             };

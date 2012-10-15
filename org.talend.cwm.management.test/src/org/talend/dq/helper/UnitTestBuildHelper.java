@@ -18,6 +18,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
+import junit.framework.Assert;
 import net.sourceforge.sqlexplorer.plugin.SQLExplorerPlugin;
 
 import org.apache.log4j.Logger;
@@ -464,5 +465,20 @@ public class UnitTestBuildHelper {
         property.setVersion("0.1"); //$NON-NLS-1$
 
         return new Folder(property, type);
+    }
+
+    /**
+     * delete the project which has been login else will effect the result of junit.
+     */
+    public static void deleteCurrentProject() {
+        IProject rootProject = ReponsitoryContextBridge.getRootProject();
+        if (rootProject.exists()) {
+            try {
+                rootProject.delete(true, true, null);
+            } catch (CoreException e) {
+                log.error(e, e);
+                Assert.fail(e.getMessage());
+            }
+        }
     }
 }

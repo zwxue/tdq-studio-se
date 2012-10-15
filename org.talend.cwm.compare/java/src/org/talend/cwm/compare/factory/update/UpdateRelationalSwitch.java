@@ -22,6 +22,7 @@ import org.talend.cwm.compare.i18n.DefaultMessagesImpl;
 import orgomg.cwm.foundation.keysindexes.KeyRelationship;
 import orgomg.cwm.foundation.keysindexes.UniqueKey;
 import orgomg.cwm.objectmodel.core.Feature;
+import orgomg.cwm.objectmodel.core.Package;
 import orgomg.cwm.objectmodel.core.StructuralFeature;
 import orgomg.cwm.resource.relational.ColumnSet;
 import orgomg.cwm.resource.relational.ForeignKey;
@@ -112,4 +113,20 @@ class UpdateRelationalSwitch extends RelationalSwitch<Boolean> {
     public EObject getRecentElement() {
         return recentElement;
     }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see orgomg.cwm.resource.relational.util.RelationalSwitch#casePackage(orgomg.cwm.objectmodel.core.Package)
+     */
+    @Override
+    public Boolean casePackage(Package object) {
+        if (recentElement instanceof Package) {
+            Package pkg = (Package) recentElement;
+            object.setName(pkg.getName());
+            return true;
+        }
+        return false;
+    }
+
 }
