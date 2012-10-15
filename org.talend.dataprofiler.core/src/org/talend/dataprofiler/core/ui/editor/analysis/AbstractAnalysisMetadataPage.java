@@ -274,8 +274,7 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
         connCombo.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_LIST_BACKGROUND));
         // TDQ-5184~
         GridDataFactory.fillDefaults().align(SWT.FILL, SWT.TOP).applyTo(labelButtonClient);
-        // MOD sizhaoliu the following instruction is redundant, it will be called later
-        // reloadDataproviderAndFillConnCombo();
+        reloadDataproviderAndFillConnCombo();
         // ~
         createConnVersionText(labelButtonClient);
         createConnDeletedLabel(labelButtonClient);
