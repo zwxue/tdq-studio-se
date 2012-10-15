@@ -1457,6 +1457,12 @@
            id="org.talend.dataprofiler.core.migration.impl.UpdateMeanMedianForDB2Task"
            name="Update Mean Median For DB2 Task"
            version="5.0.4">
+     </workspacetask>
+     <workspacetask
+           class="org.talend.dataprofiler.core.migration.impl.UpdateBlankIndicator4SybaseTask"
+           id="org.talend.dataprofiler.core.migration.impl.UpdateBlankIndicator4SybaseTask"
+           name="Update Blank Indicator for Sybase Task"
+           version="5.0.4">
      </workspacetask> 
   </extension>
   <extension
