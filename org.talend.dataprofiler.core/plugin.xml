@@ -1497,6 +1497,12 @@
            id="org.talend.dataprofiler.core.migration.impl.UpdateSybaseLanguageNameForMedianIndicatorTask"
            name="Update Sybase Language Name For Median Indicator Task"
            version="5.2.0">
+     </workspacetask>
+     <workspacetask
+           class="org.talend.dataprofiler.core.migration.impl.UpdateBlankIndicator4SybaseTask"
+           id="org.talend.dataprofiler.core.migration.impl.UpdateBlankIndicator4SybaseTask"
+           name="Update Blank Indicator for Sybase Task"
+           version="5.2.0">
      </workspacetask>  
      
   </extension>
