@@ -78,6 +78,7 @@ import org.talend.dataquality.helpers.BooleanExpressionHelper;
 import org.talend.dq.dbms.DbmsLanguage;
 import org.talend.dq.dbms.DbmsLanguageFactory;
 import org.talend.dq.helper.RepositoryNodeHelper;
+import org.talend.dq.nodes.DBConnectionRepNode;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.utils.sugars.TypedReturnCode;
 
@@ -199,7 +200,7 @@ public class PatternTestView extends ViewPart {
                 functionNameText.setEnabled(true);
             }
 
-        });//$NON-NLS-1$
+        });
         buttonSql.setSelection(true);
         buttonSql.setEnabled(!isJavaEngine);
         buttonSql.setLayoutData(data);
@@ -312,6 +313,7 @@ public class PatternTestView extends ViewPart {
         sqlButton.setLayoutData(data);
         sqlButton.addSelectionListener(new SelectionAdapter() {
 
+            @Override
             public void widgetSelected(SelectionEvent e) {
                 openSQLEditor();
             }
@@ -325,6 +327,7 @@ public class PatternTestView extends ViewPart {
         createPatternButton.setLayoutData(data);
         createPatternButton.addSelectionListener(new SelectionAdapter() {
 
+            @Override
             public void widgetSelected(SelectionEvent e) {
                 String language = null;
                 if (regularExpression != null) {
@@ -366,6 +369,7 @@ public class PatternTestView extends ViewPart {
         saveButton.setLayoutData(data);
         saveButton.addSelectionListener(new SelectionAdapter() {
 
+            @Override
             public void widgetSelected(SelectionEvent e) {
                 savePattern();
             }
@@ -378,6 +382,7 @@ public class PatternTestView extends ViewPart {
         testButton.setLayoutData(data);
         testButton.addSelectionListener(new SelectionAdapter() {
 
+            @Override
             public void widgetSelected(SelectionEvent e) {
                 testRegularText();
             }
@@ -671,7 +676,14 @@ public class PatternTestView extends ViewPart {
         listTdDataProviders = RepositoryNodeHelper.getDBConnectionRepositoryNodes(true);
         List<String> items = new ArrayList<String>();
         for (IRepositoryNode tdDataProvider : listTdDataProviders) {
-            items.add(tdDataProvider.getLabel());
+            // MOD msjian TDQ-6186 2012-10-12: hiden the Hive database
+            if (tdDataProvider instanceof DBConnectionRepNode) {
+                String dbType = ((DBConnectionRepNode) tdDataProvider).getDatabaseConnection().getDatabaseType();
+                if (!dbType.equals(SupportDBUrlType.HIVEDEFAULTURL.getLanguage())) {
+                    items.add(tdDataProvider.getLabel());
+                }
+            }
+            // TDQ-6186~
         }
         if (!items.isEmpty()) {
             dbCombo.setItems(items.toArray(new String[0]));
