@@ -650,6 +650,27 @@
                <instanceof
                      value="org.talend.dq.nodes.DFConnectionRepNode">
                </instanceof>
+               <instanceof
+                     value="org.talend.dq.nodes.DBCatalogRepNode">
+               </instanceof>
+               <instanceof
+                     value="org.talend.dq.nodes.DBSchemaRepNode">
+               </instanceof>
+               <instanceof
+                     value="org.talend.dq.nodes.DBTableRepNode">
+               </instanceof>
+               <instanceof
+                     value="org.talend.dq.nodes.DBViewRepNode">
+               </instanceof>
+               <instanceof
+                     value="org.talend.dq.nodes.DFTableRepNode">
+               </instanceof>
+               <instanceof
+                     value="org.talend.dq.nodes.DBColumnRepNode">
+               </instanceof>
+               <instanceof
+                     value="org.talend.dq.nodes.DFColumnRepNode">
+               </instanceof>
             </or>
          </enablement>
       </actionProvider>
