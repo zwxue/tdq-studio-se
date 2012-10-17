@@ -14,6 +14,7 @@ package org.talend.dataprofiler.core.ui.action.actions;
 
 import org.apache.log4j.Logger;
 import org.eclipse.jface.action.Action;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.properties.Item;
 import org.talend.dataprofiler.core.CorePlugin;
@@ -21,6 +22,7 @@ import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dq.nodes.ConnectionRepNode;
 import org.talend.repository.ui.utils.SwitchContextGroupNameImpl;
+
 /**
  * DOC msjian class global comment. Detailled comment
  */
@@ -53,19 +55,22 @@ public class SwitchContextAction extends Action {
                 // Added yyin 20120925 TDQ-5668, check this connection's editor is open or not, if open, close.
                 CorePlugin.getDefault().closeEditorIfOpened(connItem);
                 // ~
-                
+
                 boolean isUpdated = SwitchContextGroupNameImpl.getInstance().updateContextGroup(connItem);
 
                 if (isUpdated) {
 
                     if (log.isDebugEnabled()) {
-                        log.debug(DefaultMessagesImpl.getString("SwitchContextAction.saveMessage", "", "successful"));//$NON-NLS-1$ //$NON-NLS-2$
+                        log.debug(DefaultMessagesImpl.getString("SwitchContextAction.saveMessage", "", "successful"));//$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
                     }
+                    CorePlugin.getDefault().refreshDQView(selectedObject);
                 } else {
-                    log.error(DefaultMessagesImpl.getString("SwitchContextAction.saveMessage", "", "failed"));//$NON-NLS-1$ //$NON-NLS-2$
+                    MessageDialog.openWarning(CorePlugin.getDefault().getWorkbench().getDisplay().getActiveShell(), "", //$NON-NLS-1$
+                            DefaultMessagesImpl.getString("SwitchContextAction.nullParameterError")); //$NON-NLS-1$
+                    log.error(DefaultMessagesImpl.getString("SwitchContextAction.saveMessage", "", "failed"));//$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
                 }
             }
         }
-     // TDQ-4559~
+        // TDQ-4559~
     }
 }

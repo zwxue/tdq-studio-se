@@ -50,7 +50,7 @@ public class SwitchContextProvider extends AbstractCommonActionProvider {
         Object obj = ((TreeSelection) this.getContext().getSelection()).getFirstElement();
         if (obj instanceof RepositoryNode) {
             RepositoryNode node = (RepositoryNode) obj;
-            if (shouldShowReloadMenu(node)) {
+            if (shouldShowSwitchMenu(node)) {
                 menu.add(new SwitchContextAction(node, SWITCHCONTEXT));
             }
         }
@@ -63,7 +63,7 @@ public class SwitchContextProvider extends AbstractCommonActionProvider {
      * @return
      */
     @SuppressWarnings("unchecked")
-    private boolean shouldShowReloadMenu(RepositoryNode node) {
+    private boolean shouldShowSwitchMenu(RepositoryNode node) {
         ENodeType type = node.getType();
         // MOD msjian 2012-2-13 TDQ-4559: make it support file/mdm connection
         if ((ENodeType.REPOSITORY_ELEMENT.equals(type) || ENodeType.TDQ_REPOSITORY_ELEMENT.equals(type))
