@@ -671,6 +671,9 @@
                <instanceof
                      value="org.talend.dq.nodes.DFColumnRepNode">
                </instanceof>
+               <instanceof
+                     value="org.talend.dq.nodes.ReportAnalysisRepNode">
+               </instanceof>
             </or>
          </enablement>
       </actionProvider>

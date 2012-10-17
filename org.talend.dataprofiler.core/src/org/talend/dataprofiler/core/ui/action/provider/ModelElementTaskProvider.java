@@ -27,6 +27,7 @@ import org.talend.dq.nodes.DFColumnRepNode;
 import org.talend.dq.nodes.DFConnectionRepNode;
 import org.talend.dq.nodes.DFTableRepNode;
 import org.talend.dq.nodes.MDMConnectionRepNode;
+import org.talend.dq.nodes.ReportAnalysisRepNode;
 import org.talend.dq.nodes.ReportRepNode;
 import org.talend.repository.model.RepositoryNode;
 
@@ -101,6 +102,6 @@ public class ModelElementTaskProvider extends AbstractCommonActionProvider {
                 || node instanceof DBConnectionRepNode || node instanceof DFConnectionRepNode
                 || node instanceof DBConnectionRepNode || node instanceof DBCatalogRepNode || node instanceof DBSchemaRepNode
                 || node instanceof DBTableRepNode || node instanceof DBViewRepNode || node instanceof DBColumnRepNode
-                || node instanceof DFColumnRepNode || node instanceof DFTableRepNode);
+                || node instanceof DFColumnRepNode || node instanceof DFTableRepNode || node instanceof ReportAnalysisRepNode);
     }
 }
