@@ -275,6 +275,7 @@ public class SelectedLocalComparison implements IComparisonLevel {
     }
 
     public Connection reloadCurrentLevelElement() throws ReloadCompareException {
-        throw new UnsupportedOperationException();
+        // FIXME implement this method
+        return null;
     }
 }

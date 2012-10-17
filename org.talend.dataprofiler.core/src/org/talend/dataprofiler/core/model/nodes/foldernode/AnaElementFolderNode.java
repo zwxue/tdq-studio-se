@@ -42,6 +42,6 @@ public class AnaElementFolderNode extends AbstractFolderNode {
      */
     @Override
     public void loadChildren() {
-        throw new UnsupportedOperationException();
+        // do nothing here ???
     }
 }
