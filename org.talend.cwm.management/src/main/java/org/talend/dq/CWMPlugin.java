@@ -210,6 +210,7 @@ public class CWMPlugin extends Plugin {
         SQLExplorerPlugin sqlPlugin = SQLExplorerPlugin.getDefault();
         AliasManager aliasManager = sqlPlugin.getAliasManager();
 
+        DatabaseStructureView dsView = sqlPlugin.getDatabaseStructureView();
         for (DataProvider dataProvider : dataproviders) {
             try {
                 aliasManager.loadAliases();
@@ -221,6 +222,10 @@ public class CWMPlugin extends Plugin {
                 if (alias != null) {
                     aliasManager.removeAlias(aliasName);
                     aliasManager.saveAliases();
+                }
+                // if the ctabItem is open,close it.
+                if (dsView != null) {
+                    dsView.closeCurrentCabItem(aliasName);
                 }
             } catch (Exception e) {
                 log.error(e, e);

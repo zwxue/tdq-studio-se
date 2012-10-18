@@ -17,8 +17,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import net.sourceforge.sqlexplorer.plugin.SQLExplorerPlugin;
-
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.CoreException;
@@ -48,7 +46,6 @@ import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.helper.ReportUtils;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.nodes.AnalysisSubFolderRepNode;
-import org.talend.dq.nodes.DBConnectionRepNode;
 import org.talend.dq.nodes.DQRepositoryNode;
 import org.talend.dq.nodes.JrxmlTempSubFolderNode;
 import org.talend.dq.nodes.JrxmlTempleteRepNode;
@@ -74,8 +71,6 @@ public class DQDeleteAction extends DeleteAction {
     private static Logger log = Logger.getLogger(DQDeleteAction.class);
 
     private List<RepositoryNode> selectedNodes;
-
-    private boolean hasDBConnLogicalDeleted = false;
 
     public DQDeleteAction() {
         super();
@@ -128,10 +123,6 @@ public class DQDeleteAction extends DeleteAction {
         for (Object obj : deleteElements) {
             if (obj instanceof RepositoryNode) {
                 selectedNodes.add((RepositoryNode) obj);
-                if (!hasDBConnLogicalDeleted && obj instanceof DBConnectionRepNode
-                        && !RepositoryNodeHelper.isStateDeleted((RepositoryNode) obj)) {
-                    hasDBConnLogicalDeleted = true;
-                }
             }
         }
         if (DQRepositoryNode.isOnFilterring()) {
@@ -213,7 +204,7 @@ public class DQDeleteAction extends DeleteAction {
             } else {
                 hasDependency = RepositoryNodeHelper.hasDependencyClients(node);
                 if (!hasDependency || hasDependency && handleDependencies(node)) {
-                    excuteSuperRun((RepositoryNode) node, parent);
+                    excuteSuperRun(node, parent);
                 }
             }
             // }
@@ -226,10 +217,6 @@ public class DQDeleteAction extends DeleteAction {
         // the deleteReportFile() mothed have refresh the workspace and dqview
         CorePlugin.getDefault().refreshWorkSpace();
         CorePlugin.getDefault().refreshDQView(RepositoryNodeHelper.getRecycleBinRepNode());
-        // refresh connectionView to hide this dbconnection after logical delete.
-        if (hasDBConnLogicalDeleted) {
-            SQLExplorerPlugin.getDefault().getConnectionsView().refresh();
-        }
     }
 
     /**
