@@ -476,10 +476,11 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
         if (!canSave().isOk()) {
             return;
         }
+
         boolean checkDBConnection = checkDBConnectionWithProgress().isOk();
         if (!checkDBConnection) {
             String dialogMessage = DefaultMessagesImpl.getString("ConnectionInfoPage.checkDBConnection");//$NON-NLS-1$
-            String dialogTitle = DefaultMessagesImpl.getString("ConnectionInfoPage.urlChanged");//$NON-NLS-1$
+            String dialogTitle = DefaultMessagesImpl.getString("ConnectionInfoPage.warningTitle");//$NON-NLS-1$
             if (Window.CANCEL == DeleteModelElementConfirmDialog.showElementImpactConfirmDialog(null,
                     new ModelElement[] { connection }, dialogTitle, dialogMessage)) {
                 return;
@@ -501,16 +502,18 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
         // }
 
         try {
-            this.initialize(this.getEditor());
-
-            if (checkDBConnection) {
-                reloadDataProvider();
-            }
+            // MOD sizhaoliu TDQ-6296 no need to reload data provider because modifications of
+            // username/passwd/connection will not affect the data provider《
+            // if (checkDBConnection) {
+            // reloadDataProvider();
+            // }
 
             // MOD sizhaoliu TDQ-6296 open an analysis after renaming the connection on which it depends, connection
             // field is empty and all the indicators are lost.
             // the following instruction should be called after reloadDataProvider()
             saveConnectionInfo();
+
+            this.initialize(this.getEditor());
 
             this.isUrlChanged = false;
             this.isLoginChanged = false;
@@ -529,7 +532,7 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
 
         ReturnCode rc = new ReturnCode();
         String dialogMessage = DefaultMessagesImpl.getString("ConnectionInfoPage.impactAnalyses");//$NON-NLS-1$
-        String dialogTitle = DefaultMessagesImpl.getString("ConnectionInfoPage.urlChanged");//$NON-NLS-1$
+        String dialogTitle = DefaultMessagesImpl.getString("ConnectionInfoPage.warningTitle");//$NON-NLS-1$
         // MOD klliu 2010-07-06 bug 14095: unnecessary wizard
         if (this.isUrlChanged || this.isLoginChanged || this.isPassWordChanged) {
             rc.setOk(Window.OK == DeleteModelElementConfirmDialog.showElementImpactConfirmDialog(null,

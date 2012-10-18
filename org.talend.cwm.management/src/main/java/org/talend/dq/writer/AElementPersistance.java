@@ -553,7 +553,9 @@ public abstract class AElementPersistance {
             if (re == null) {
                 continue;
             }
-            // EcoreUtil.resolveAll(re);
+            // MOD sizhaoliu TDQ-6296 the resource should be resolved before saving the item to make sure the references
+            // are updated.
+            EcoreUtil.resolveAll(re);
             needSaves.add(re);
         }
 
@@ -569,7 +571,6 @@ public abstract class AElementPersistance {
                 AbstractResourceChangesService.class);
         if (resChangeService != null) {
             for (Resource toSave : needSaves) {
-                EcoreUtil.resolveAll(toSave);
                 resChangeService.saveResourceByEMFShared(toSave);
             }
         }
