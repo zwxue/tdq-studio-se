@@ -149,7 +149,7 @@ public class BenfordLawFrequencyExplorerTest {
         when(mockDbLanguage.getDbmsName()).thenReturn("Informix");
 
         String clause = benExp.getInstantiatedClause();
-        Assert.assertEquals(" like '1%'", clause);
+        Assert.assertEquals(" SUBSTR(  ,0,1) like '1%'", clause);
     }
 
 }
