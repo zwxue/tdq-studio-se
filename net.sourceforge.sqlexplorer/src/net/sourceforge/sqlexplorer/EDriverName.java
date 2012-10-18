@@ -20,6 +20,10 @@ import java.util.LinkedList;
 import java.util.Map;
 import java.util.Set;
 
+import net.sourceforge.sqlexplorer.dbproduct.DriverManager;
+import net.sourceforge.sqlexplorer.dbproduct.ManagedDriver;
+import net.sourceforge.sqlexplorer.plugin.SQLExplorerPlugin;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.NumberUtils;
 import org.eclipse.core.runtime.FileLocator;
@@ -289,6 +293,16 @@ public enum EDriverName {
                 }
             }
         }
+
+        // Added yin 20121018 TDQ-6167
+        // find the driver from the added (unsupported) database
+        DriverManager driverModel = SQLExplorerPlugin.getDefault().getDriverModel();
+        for (ManagedDriver mdriver : driverModel.getDrivers()) {
+            if (driver.equalsIgnoreCase(mdriver.getDriverClassName())) {
+                return mdriver.getId();
+            }
+        }// ~
+
         return "";
     }
 
