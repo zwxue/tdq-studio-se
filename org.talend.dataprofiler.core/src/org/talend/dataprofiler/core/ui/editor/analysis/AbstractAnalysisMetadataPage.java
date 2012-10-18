@@ -412,8 +412,9 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
 
             // MOD sizhaoliu TDQ-6286 fix the migration problem (the table combo shows the first item in case the label
             // of imported analysis does not equal to the file name. )
-            // connCombo.setData(property.getDisplayName() + RepositoryNodeHelper.getConnectionType(repNode), index);
-            connCombo.setData(modelElement.getName() + RepositoryNodeHelper.getConnectionType(repNode), index);
+            // MOD sizhaoliu TDQ-6286 revert this change to avoid the side effect for delimited file connection.
+            connCombo.setData(property.getDisplayName() + RepositoryNodeHelper.getConnectionType(repNode), index);
+            // connCombo.setData(modelElement.getName() + RepositoryNodeHelper.getConnectionType(repNode), index);
             connCombo.setData(index + "", repNode); //$NON-NLS-1$
             index++;
         }
