@@ -12,6 +12,11 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.editor.composite;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.events.MouseAdapter;
@@ -28,6 +33,7 @@ import org.talend.dataprofiler.core.ui.utils.MessageUI;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisType;
 import org.talend.dataquality.analysis.ExecutionLanguage;
+import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.PatternMatchingIndicator;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.nodes.PatternRepNode;
@@ -108,27 +114,44 @@ public class PatternMouseAdapter extends MouseAdapter {
 
         if (dialog.open() == Window.OK) {
 
+            // MOD qiongli 2012-10-17 TDQ-5923,just remove some deselected indicatorUnit,just create new indicatorUnit
+            // for some new added pattern nodes.
+            List<PatternRepNode> allSelectedPatternNodes = new ArrayList<PatternRepNode>();
+            Set<String> allSelectedNodeNames = new HashSet<String>();
+            for (Object obj : dialog.getResult()) {
+                if (obj instanceof PatternRepNode) {
+                    PatternRepNode patternNode = (PatternRepNode) obj;
+                    allSelectedPatternNodes.add(patternNode);
+                    allSelectedNodeNames.add(patternNode.getLabel());
+                }
+            }
+            Set<String> oldSelectedNodeNames = new HashSet<String>();
             for (IndicatorUnit indicatorUnit : meIndicator.getIndicatorUnits()) {
-                if (indicatorUnit.getIndicator() instanceof PatternMatchingIndicator) {
-                    meIndicator.removeIndicatorUnit(indicatorUnit);
+                Indicator indicator = indicatorUnit.getIndicator();
+                if (indicator instanceof PatternMatchingIndicator) {
+                    if (!allSelectedNodeNames.contains(indicator.getName())) {
+                        meIndicator.removeIndicatorUnit(indicatorUnit);
+                    } else {
+                        oldSelectedNodeNames.add(indicator.getName());
+                    }
                 }
             }
             treeItem.removeAll();
 
-            for (Object obj : dialog.getResult()) {
-                if (obj instanceof PatternRepNode) {
-                    PatternRepNode patternNode = (PatternRepNode) obj;
-                    TypedReturnCode<IndicatorUnit> trc = PatternUtilities.createIndicatorUnit(patternNode.getPattern(),
-                            meIndicator, analysis);
-                    if (trc.isOk()) {
-                        columnDropTree.createOneUnit(treeItem, trc.getObject());
-                        columnDropTree.setDirty(true);
-                    } else if (trc.getMessage() != null && !trc.getMessage().trim().equals("")) {//$NON-NLS-1$
-                        // Pattern pattern = PatternResourceFileHelper.getInstance().findPattern(file);
-                        // MessageUI.openError(DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.IndicatorSelected") //$NON-NLS-1$
-                        // + pattern.getName());
-                        // MessageUI.openError(trc.getMessage());
-                    }
+            for (PatternRepNode patternNode : allSelectedPatternNodes) {
+                if (oldSelectedNodeNames.contains(patternNode.getLabel())) {
+                    continue;
+                }
+                TypedReturnCode<IndicatorUnit> trc = PatternUtilities.createIndicatorUnit(patternNode.getPattern(), meIndicator,
+                        analysis);
+                if (trc.isOk()) {
+                    columnDropTree.createOneUnit(treeItem, trc.getObject());
+                    columnDropTree.setDirty(true);
+                } else if (trc.getMessage() != null && !trc.getMessage().trim().equals("")) {//$NON-NLS-1$
+                    // Pattern pattern = PatternResourceFileHelper.getInstance().findPattern(file);
+                    // MessageUI.openError(DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.IndicatorSelected") //$NON-NLS-1$
+                    // + pattern.getName());
+                    // MessageUI.openError(trc.getMessage());
                 }
             }
 
