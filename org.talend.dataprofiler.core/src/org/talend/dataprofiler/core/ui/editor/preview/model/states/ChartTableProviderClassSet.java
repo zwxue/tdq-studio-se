@@ -26,6 +26,7 @@ import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.ui.editor.preview.model.ChartWithData;
 import org.talend.dataquality.helpers.IndicatorHelper;
+import org.talend.dataquality.indicators.BenfordLawFrequencyIndicator;
 import org.talend.dataquality.indicators.FrequencyIndicator;
 import org.talend.dq.indicators.preview.table.ChartDataEntity;
 import org.talend.dq.indicators.preview.table.PatternChartDataEntity;
@@ -108,6 +109,7 @@ public class ChartTableProviderClassSet {
      */
     public static class SummaryLabelProvider extends BaseChartTableLabelProvider {
 
+        @Override
         public String getColumnText(Object element, int columnIndex) {
             ChartDataEntity entity = (ChartDataEntity) element;
 
@@ -159,6 +161,15 @@ public class ChartTableProviderClassSet {
         public Color getForeground(Object element, int columnIndex) {
             ChartDataEntity entity = (ChartDataEntity) element;
             String label = entity.getLabel();
+            // ADD msjian TDQ-6235 2012-10-19: when Benford law indicator, some values make the color as red 
+            if (entity.getIndicator() instanceof BenfordLawFrequencyIndicator) {
+                if (SpecialValueDisplay.ZREO_FIELD.equals(label) || SpecialValueDisplay.INVALID_FIELD.equals(label)) {
+                    if (columnIndex == 2) {
+                        return Display.getDefault().getSystemColor(SWT.COLOR_RED);
+                    }
+                }
+            }
+            // TDQ-6235~
             switch (columnIndex) {
             case 0:
                 if (SpecialValueDisplay.NULL_FIELD.equals(label) || SpecialValueDisplay.EMPTY_FIELD.equals(label)) {
@@ -220,6 +231,7 @@ public class ChartTableProviderClassSet {
      */
     public static class PatternLabelProvider extends BaseChartTableLabelProvider {
 
+        @Override
         public String getColumnText(Object element, int columnIndex) {
             PatternChartDataEntity entity = (PatternChartDataEntity) element;
 
