@@ -39,6 +39,8 @@ import org.talend.dataquality.properties.TDQPatternItem;
 import org.talend.dataquality.properties.TDQReportItem;
 import org.talend.dataquality.properties.TDQSourceFileItem;
 import org.talend.dataquality.properties.util.PropertiesSwitch;
+import org.talend.dataquality.rules.DQRule;
+import org.talend.dataquality.rules.ParserRule;
 import org.talend.dataquality.rules.WhereRule;
 import orgomg.cwm.foundation.softwaredeployment.DataProvider;
 import orgomg.cwm.objectmodel.core.ModelElement;
@@ -290,6 +292,10 @@ public enum EResourceConstant {
 
                 @Override
                 public Object caseTDQBusinessRuleItem(TDQBusinessRuleItem object) {
+                    DQRule rule = object.getDqrule();
+                    if (rule != null && rule instanceof ParserRule) { // dqrule
+                        return RULES_PARSER;
+                    }
                     return RULES_SQL;
                 }
 
