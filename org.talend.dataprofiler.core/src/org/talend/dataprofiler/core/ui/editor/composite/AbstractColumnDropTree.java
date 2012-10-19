@@ -17,7 +17,6 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.eclipse.emf.ecore.EClass;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
@@ -211,24 +210,15 @@ public abstract class AbstractColumnDropTree extends AbstractPagePart {
     protected void createIndicatorItems(final TreeItem treeItem, IndicatorUnit[] indicatorUnits) {
         for (IndicatorUnit indicatorUnit : indicatorUnits) {
             createOneUnit(treeItem, indicatorUnit);
-            // MOD mzhao feature 11128, Handle Java User Defined Indicator.
-            Indicator judi = null;
-            try {
-                judi = UDIHelper.adaptToJavaUDI(indicatorUnit.getIndicator());
-            } catch (Throwable e) {
-                log.error(e, e);
-                MessageDialog.openError(tree.getShell(),
-                        DefaultMessagesImpl.getString("ColumnsComparisonMasterDetailsPage.error"), e.getMessage());//$NON-NLS-1$
-            }
         }
     }
 
     protected void removeItemBranch(TreeItem item) {
         TreeEditor[] editors = (TreeEditor[]) item.getData(ITEM_EDITOR_KEY);
         if (editors != null) {
-            for (int j = 0; j < editors.length; j++) {
-                editors[j].getEditor().dispose();
-                editors[j].dispose();
+            for (TreeEditor editor : editors) {
+                editor.getEditor().dispose();
+                editor.dispose();
             }
         }
 
@@ -238,8 +228,8 @@ public abstract class AbstractColumnDropTree extends AbstractPagePart {
             return;
         }
         TreeItem[] items = item.getItems();
-        for (int i = 0; i < items.length; i++) {
-            removeItemBranch(items[i]);
+        for (TreeItem item2 : items) {
+            removeItemBranch(item2);
         }
         item.dispose();
         this.setDirty(true);
@@ -316,7 +306,7 @@ public abstract class AbstractColumnDropTree extends AbstractPagePart {
             }
         } else {
             MessageDialogWithToggle.openInformation(null, DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.information"), //$NON-NLS-1$
-                    DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.nooption")); //$NON-NLS-1$ //$NON-NLS-2$
+                    DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.nooption")); //$NON-NLS-1$ 
         }
     }
 
@@ -438,7 +428,7 @@ public abstract class AbstractColumnDropTree extends AbstractPagePart {
 
             TreeItem subParamItem = new TreeItem(iParamItem, SWT.NONE);
             subParamItem.setText(DefaultMessagesImpl.getString(
-                    "AnalysisColumnTreeViewer.aggregationType", dParameters.getDateAggregationType().getName())); //$NON-NLS-1$ //$NON-NLS-2$
+                    "AnalysisColumnTreeViewer.aggregationType", dParameters.getDateAggregationType().getName())); //$NON-NLS-1$ 
             subParamItem.setImage(0, ImageLib.getImage(ImageLib.OPTION));
             subParamItem.setData(DATA_PARAM, DATA_PARAM);
         }

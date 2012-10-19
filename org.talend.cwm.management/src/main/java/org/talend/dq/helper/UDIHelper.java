@@ -15,10 +15,13 @@ package org.talend.dq.helper;
 import java.io.File;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
@@ -49,6 +52,8 @@ import orgomg.cwm.objectmodel.core.TaggedValue;
  * DOC xqliu class global comment. Detailled comment
  */
 public final class UDIHelper {
+
+    private static final Map<Indicator, Indicator> javaUDIMap = new HashMap<Indicator, Indicator>();
 
     public static final String JAREXTENSIONG = "jar";//$NON-NLS-1$
 
@@ -286,6 +291,14 @@ public final class UDIHelper {
      * @throws Exception
      */
     public static Indicator adaptToJavaUDI(Indicator indicator) throws Throwable {
+        // If the JUDI already been initiatated
+        if (javaUDIMap.get(indicator) != null) {
+            return javaUDIMap.get(indicator);
+        }
+        // indicator itself already be a java user define indicator.
+        if (javaUDIMap.values().contains(indicator)) {
+            return indicator;
+        }
         UserDefIndicator adaptedUDI = null;
         if (userDefIndSwitch.doSwitch(indicator) != null) {
             EList<TaggedValue> taggedValues = indicator.getIndicatorDefinition().getTaggedValue();
@@ -315,9 +328,11 @@ public final class UDIHelper {
                 if (clazz != null) {
                     // MOD yyin 20121012 TDQ-6259
                     UserDefIndicator judi = (UserDefIndicator) clazz.newInstance();
-                    judi.setIndicatorDefinition(indicator.getIndicatorDefinition());
-                    judi.setAnalyzedElement(indicator.getAnalyzedElement());
+                    // judi.setIndicatorDefinition(indicator.getIndicatorDefinition());
+                    PropertyUtils.copyProperties(judi, indicator);
+                    // judi.setAnalyzedElement(indicator.getAnalyzedElement());
                     adaptedUDI = judi;
+                    javaUDIMap.put(indicator, adaptedUDI);
                 }
 
             }

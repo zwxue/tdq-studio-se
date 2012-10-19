@@ -92,6 +92,7 @@ import org.talend.dataquality.properties.TDQAnalysisItem;
 import org.talend.dq.analysis.ModelElementAnalysisHandler;
 import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.RepositoryNodeHelper;
+import org.talend.dq.helper.UDIHelper;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
 import org.talend.dq.writer.impl.ElementWriterFactory;
 import org.talend.repository.model.IRepositoryNode;
@@ -170,6 +171,7 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
         currentEditor = (AnalysisEditor) editor;
     }
 
+    @Override
     public void initialize(FormEditor editor) {
         super.initialize(editor);
         recomputeIndicators();
@@ -178,6 +180,23 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
     public void recomputeIndicators() {
         analysisHandler = new ModelElementAnalysisHandler();
         analysisHandler.setAnalysis((Analysis) this.currentModelElement);
+        // Handle JUDIs
+        EList<Indicator> allIndics = analysis.getResults().getIndicators();
+        List<Indicator> updatedIndWithJUDI = new ArrayList<Indicator>();
+        for (Indicator indicator : allIndics) {
+            if (UDIHelper.isJUDIValid(indicator.getIndicatorDefinition())) {
+                try {
+                    indicator = UDIHelper.adaptToJavaUDI(indicator);
+                    updatedIndWithJUDI.add(indicator);
+                } catch (Throwable e) {
+                    log.error(e);
+                }
+            }
+            updatedIndWithJUDI.add(indicator);
+        }
+        allIndics.clear();
+        allIndics.addAll(updatedIndWithJUDI);
+
         stringDataFilter = analysisHandler.getStringDataFilter();
         EList<ModelElement> analyzedColumns = analysisHandler.getAnalyzedColumns();
         List<ModelElementIndicator> meIndicatorList = new ArrayList<ModelElementIndicator>();
@@ -278,6 +297,7 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
         GridDataFactory.fillDefaults().align(SWT.FILL, SWT.TOP).applyTo(clmnBtn);
         clmnBtn.addHyperlinkListener(new HyperlinkAdapter() {
 
+            @Override
             public void linkActivated(HyperlinkEvent e) {
                 openColumnsSelectionDialog();
             }
@@ -289,6 +309,7 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
         GridDataFactory.fillDefaults().align(SWT.FILL, SWT.TOP).applyTo(indcBtn);
         indcBtn.addHyperlinkListener(new HyperlinkAdapter() {
 
+            @Override
             public void linkActivated(HyperlinkEvent e) {
                 ModelElementIndicator[] result = treeViewer.openIndicatorSelectDialog(null);
                 if (result.length > 0) {
@@ -313,6 +334,7 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
         collapseAllImageLink.setImage(ImageLib.getImage(ImageLib.COLLAPSE_ALL));
         collapseAllImageLink.addHyperlinkListener(new HyperlinkAdapter() {
 
+            @Override
             public void linkActivated(HyperlinkEvent e) {
                 TreeItem[] items = treeViewer.getTree().getItems();
                 expandTreeItems(items, false);
@@ -325,6 +347,7 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
         expandAllImageLink.setImage(ImageLib.getImage(ImageLib.EXPAND_ALL));
         expandAllImageLink.addHyperlinkListener(new HyperlinkAdapter() {
 
+            @Override
             public void linkActivated(HyperlinkEvent e) {
                 TreeItem[] items = treeViewer.getTree().getItems();
                 expandTreeItems(items, true);
@@ -486,6 +509,7 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
         collapseAllImageLink.setImage(ImageLib.getImage(ImageLib.COLLAPSE_ALL));
         collapseAllImageLink.addHyperlinkListener(new HyperlinkAdapter() {
 
+            @Override
             public void linkActivated(HyperlinkEvent e) {
                 if (previewChartList != null && !previewChartList.isEmpty()) {
                     for (ExpandableComposite comp : previewChartList) {
@@ -501,6 +525,7 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
         expandAllImageLink.setImage(ImageLib.getImage(ImageLib.EXPAND_ALL));
         expandAllImageLink.addHyperlinkListener(new HyperlinkAdapter() {
 
+            @Override
             public void linkActivated(HyperlinkEvent e) {
                 if (previewChartList != null && !previewChartList.isEmpty()) {
                     for (ExpandableComposite comp : previewChartList) {
@@ -529,6 +554,7 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
 
         refreshBtn.addHyperlinkListener(new HyperlinkAdapter() {
 
+            @Override
             public void linkActivated(HyperlinkEvent e) {
 
                 for (Control control : chartComposite.getChildren()) {
@@ -581,8 +607,9 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
     public void refresh() {
         if (EditorPreferencePage.isHideGraphics()) {
             if (sForm.getChildren().length > 1) {
-                if (null != sForm.getChildren()[1] && !sForm.getChildren()[1].isDisposed())
+                if (null != sForm.getChildren()[1] && !sForm.getChildren()[1].isDisposed()) {
                     sForm.getChildren()[1].dispose();
+                }
                 topComp.getParent().layout();
                 topComp.layout();
             }
@@ -605,6 +632,7 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
                 previewComp.setLayout(new GridLayout());
                 previewComp.addControlListener(new ControlAdapter() {
 
+                    @Override
                     public void controlResized(ControlEvent e) {
                         super.controlResized(e);
                         sForm.redraw();
@@ -800,6 +828,7 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
      * @param outputFolder
      * @throws DataprofilerCoreException
      */
+    @Override
     public void saveAnalysis() throws DataprofilerCoreException {
 
         IRepositoryViewObject reposObject = null;
