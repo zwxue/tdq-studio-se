@@ -23,13 +23,12 @@ import org.talend.dataquality.indicators.sql.impl.UserDefIndicatorImpl;
  */
 public class MyNotNullUDI extends UserDefIndicatorImpl {
 
-    private long myCount = 0;
-
     /*
      * (non-Javadoc)
      * 
      * @see org.talend.dataquality.indicators.Indicator#finalizeComputation()
      */
+    @Override
     public boolean finalizeComputation() {
         // nothing to do
         return true;
@@ -40,9 +39,10 @@ public class MyNotNullUDI extends UserDefIndicatorImpl {
      * 
      * @see org.talend.dataquality.indicators.Indicator#handle(java.lang.Object)
      */
+    @Override
     public boolean handle(Object data) {
         if (data != null) {
-            this.myCount++;
+            this.userCount++;
         }
         return true;
     }
@@ -52,19 +52,10 @@ public class MyNotNullUDI extends UserDefIndicatorImpl {
      * 
      * @see org.talend.dataquality.indicators.Indicator#reset()
      */
-    public boolean reset() {
-        this.myCount = 0;
-        return true;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.talend.dataquality.indicators.sql.impl.UserDefIndicatorImpl#getUserCount()
-     */
     @Override
-    public Long getUserCount() {
-        return this.myCount;
+    public boolean reset() {
+        this.userCount = 0l;
+        return true;
     }
 
 }
