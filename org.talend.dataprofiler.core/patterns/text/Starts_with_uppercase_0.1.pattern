@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xmi:XMI xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:dataquality.analysis="http://dataquality.analysis" xmlns:dataquality.domain.pattern="http://dataquality.domain.pattern" xmlns:orgomg.cwm.objectmodel.core="http:///orgomg/cwm/objectmodel/core.ecore">
-  <dataquality.domain.pattern:Pattern xmi:id="_53rX8AMvEeKk6OZDw5mXOQ" name="Starts with uppercase">
+  <dataquality.domain.pattern:Pattern xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:dataquality.analysis="http://dataquality.analysis" xmlns:dataquality.domain.pattern="http://dataquality.domain.pattern" xmlns:orgomg.cwm.objectmodel.core="http:///orgomg/cwm/objectmodel/core.ecore" xmi:id="_53rX8AMvEeKk6OZDw5mXOQ" name="Starts with uppercase">
     <taggedValue xmi:id="_53rX8QMvEeKk6OZDw5mXOQ" tag="Author" value="scorreia@talend.com"/>
     <taggedValue xmi:id="_53rX8gMvEeKk6OZDw5mXOQ" tag="Description" value="Will match when the first character of a text is an uppercase letter. For example, &quot;Axel&quot;, &quot;Street&quot; will match.&#xA;But &quot;31&quot;, &quot;john doe&quot;, &quot;3RD FLOOR&quot;, &quot;street&quot; will not match."/>
     <taggedValue xmi:id="_53rX8wMvEeKk6OZDw5mXOQ" tag="Purpose" value="identify words in uppercase"/>
@@ -10,4 +9,4 @@
       <expression xmi:id="_53rX9wMvEeKk6OZDw5mXOQ" body="'^[A-Z]+'" language="SQL" modificationDate="2012-09-20 16:31:53"/>
     </components>
   </dataquality.domain.pattern:Pattern>
-</xmi:XMI>
+  
