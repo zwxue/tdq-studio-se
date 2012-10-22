@@ -135,7 +135,7 @@ public class DataProviderComparisonLevel extends AbstractComparisonLevel {
         // save here, it will be handled later.
         try {
             ProxyRepositoryFactory.getInstance().save(currentProject, item);
-            updateAndSaveSoftWareSystem(item);
+            // updateAndSaveSoftWareSystem(item);
         } catch (PersistenceException e) {
             log.error(e, e);
         }
@@ -145,6 +145,7 @@ public class DataProviderComparisonLevel extends AbstractComparisonLevel {
      * update connection then should need to update softwareSystem too which save real version for database
      * 
      * @param item the item of connection
+     * @deprecated
      */
     private boolean updateAndSaveSoftWareSystem(Item item) {
         TdSoftwareSystem softwareSystem = null;

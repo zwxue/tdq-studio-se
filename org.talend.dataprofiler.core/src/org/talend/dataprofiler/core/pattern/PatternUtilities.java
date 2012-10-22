@@ -12,7 +12,6 @@
 // ============================================================================
 package org.talend.dataprofiler.core.pattern;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -45,7 +44,6 @@ import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.database.JavaSqlFactory;
 import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.dependencies.DependenciesHandler;
-import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
@@ -87,7 +85,6 @@ import org.talend.resource.ResourceService;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.foundation.softwaredeployment.DataManager;
 import orgomg.cwm.foundation.softwaredeployment.DataProvider;
-import orgomg.cwm.foundation.softwaredeployment.SoftwareSystem;
 import orgomg.cwm.objectmodel.core.Expression;
 
 /**
@@ -231,15 +228,10 @@ public final class PatternUtilities {
                 } else if (isMdmConnection) {
                     dbmsLanguage = DbmsLanguageFactory.createDbmsLanguage(dm);
                 } else {
-                    try {
-                        // SoftwareSystem softwareSystem = DatabaseContentRetriever.getSoftwareSystem(conn);
-                        SoftwareSystem softwareSystem = ConnectionHelper.getSoftwareSystem(conn);
-                        dbmsLanguage = DbmsLanguageFactory.createDbmsLanguage(softwareSystem);
-                    } catch (SQLException e) {
-                        log.error(e, e);
-                    } finally {
-                        ConnectionUtils.closeConnection(conn);
-                    }
+                    // SoftwareSystem softwareSystem = DatabaseContentRetriever.getSoftwareSystem(conn);
+                    // MOD sizhaoliu TDQ-6316
+                    // SoftwareSystem softwareSystem = ConnectionHelper.getSoftwareSystem(conn);
+                    dbmsLanguage = DbmsLanguageFactory.createDbmsLanguage(dm);
                 }
             }
 

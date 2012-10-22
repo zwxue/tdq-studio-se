@@ -45,6 +45,8 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.common.util.EList;
+import org.talend.commons.exception.PersistenceException;
+import org.talend.commons.ui.runtime.exception.ExceptionHandler;
 import org.talend.core.database.EDatabaseTypeName;
 import org.talend.core.database.conn.version.EDatabaseVersion4Drivers;
 import org.talend.core.model.metadata.IMetadataConnection;
@@ -64,10 +66,12 @@ import org.talend.core.model.metadata.builder.database.XMLSchemaBuilder;
 import org.talend.core.model.metadata.builder.database.dburl.SupportDBUrlType;
 import org.talend.core.model.metadata.builder.util.DatabaseConstant;
 import org.talend.core.model.metadata.builder.util.MetadataConnectionUtils;
+import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.properties.Item;
 import org.talend.core.model.properties.MDMConnectionItem;
 import org.talend.core.model.properties.Property;
 import org.talend.core.model.repository.IRepositoryViewObject;
+import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.cwm.constants.DevelopmentStatus;
 import org.talend.cwm.helper.CatalogHelper;
 import org.talend.cwm.helper.ColumnSetHelper;
@@ -219,16 +223,16 @@ public final class ConnectionUtils {
                 }
             }
         } catch (SQLException e) {
-            log.error(e, e);
+            log.error(e.getMessage());
             rc.setReturnCode(e.getMessage(), false);
         } catch (InstantiationException e) {
-            log.error(e, e);
+            log.error(e.getMessage(), e);
             rc.setReturnCode(e.getMessage(), false);
         } catch (IllegalAccessException e) {
-            log.error(e, e);
+            log.error(e.getMessage(), e);
             rc.setReturnCode(e.getMessage(), false);
         } catch (ClassNotFoundException e) {
-            log.error(e, e);
+            log.error(e.getMessage(), e);
             rc.setReturnCode(Messages.getString("ConnectionService.DriverNotFound", e.getMessage()), false); //$NON-NLS-1$
         } finally {
             if (connection != null) {
@@ -408,11 +412,11 @@ public final class ConnectionUtils {
             try {
                 ret = org.talend.utils.sql.ConnectionUtils.createConnection(url, driver, props);
             } catch (InstantiationException e) {
-                log.error(e, e);
+                log.error(e.getMessage(), e);
             } catch (IllegalAccessException e) {
-                log.error(e, e);
+                log.error(e.getMessage(), e);
             } catch (ClassNotFoundException e) {
-                log.error(e, e);
+                log.error(e.getMessage(), e);
             }
         }
         return ret;
@@ -1822,5 +1826,29 @@ public final class ConnectionUtils {
         Connection analysisDataProvider = SwitchHelpers.CONNECTION_SWITCH.doSwitch(datamanager);
         return analysisDataProvider;
 
+    }
+
+    /**
+     * Updata DB_PRODUCT tagged values for connection item in case they are not present in current file.
+     * 
+     * @throws SQLException
+     */
+    public static void updataTaggedValueForConnectionItem(ConnectionItem connectionItem) {
+        Connection dataProvider = connectionItem.getConnection();
+        if (dataProvider instanceof DatabaseConnection) {
+            DatabaseConnection dbConn = (DatabaseConnection) dataProvider;
+            if (TaggedValueHelper.getValueString(TaggedValueHelper.DB_PRODUCT_NAME, dataProvider).equals(
+                    PluginConstant.EMPTY_STRING)) {
+                IMetadataConnection metaConnection = ConvertionHelper.convert(dbConn);
+                dbConn = (DatabaseConnection) MetadataFillFactory.getDBInstance().fillUIConnParams(metaConnection, dbConn);
+                if (dbConn != null) {
+                    try {
+                        ProxyRepositoryFactory.getInstance().save(connectionItem);
+                    } catch (PersistenceException e) {
+                        ExceptionHandler.process(e);
+                    }
+                }
+            }
+        }
     }
 }

@@ -40,14 +40,12 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.part.ViewPart;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.commons.utils.platform.PluginChecker;
-import org.talend.core.database.conn.template.EDatabaseConnTemplate;
 import org.talend.core.model.context.ContextUtils;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
 import org.talend.core.model.metadata.builder.connection.DelimitedFileConnection;
 import org.talend.core.model.metadata.builder.connection.FileConnection;
 import org.talend.core.model.metadata.builder.connection.MDMConnection;
-import org.talend.core.model.metadata.builder.database.ExtractMetaDataUtils;
 import org.talend.core.model.metadata.builder.database.JavaSqlFactory;
 import org.talend.core.model.metadata.builder.database.dburl.SupportDBUrlType;
 import org.talend.core.model.properties.ConnectionItem;
@@ -60,10 +58,8 @@ import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.helper.ResourceHelper;
 import org.talend.cwm.helper.TableHelper;
 import org.talend.cwm.helper.TaggedValueHelper;
-import org.talend.cwm.management.api.SoftwareSystemManager;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.relational.TdTable;
-import org.talend.cwm.softwaredeployment.TdSoftwareSystem;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.editor.CommonFormEditor;
@@ -264,8 +260,10 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
                 is = createFileDetail(is, (IRepositoryViewObject) fe);
             } else if (fe instanceof DBConnectionRepNode) {
                 DBConnectionRepNode connNode = (DBConnectionRepNode) fe;
-                DatabaseConnection databaseConnection = connNode.getDatabaseConnection();
-                createDataProviderDetail(databaseConnection);
+                // MOD sizhaoliu TDQ-6316
+                // DatabaseConnection databaseConnection = connNode.getDatabaseConnection();
+                ConnectionItem connectionItem = (ConnectionItem) connNode.getObject().getProperty().getItem();
+                createDataProviderDetail(connectionItem);
                 is = false;
             } else if (fe instanceof DBCatalogRepNode) {
                 DBCatalogRepNode catalogNode = (DBCatalogRepNode) fe;
@@ -621,7 +619,8 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
         createName(catalog);
     }
 
-    private void createDataProviderDetail(Connection dataProvider) {
+    private void createDataProviderDetail(ConnectionItem connectionItem) {
+        Connection dataProvider = connectionItem.getConnection();
         boolean isDelimitedFile = ConnectionUtils.isDelimitedFileConnection(dataProvider);
         // MOD qiongli 2011-9-21 TDQ-3317
         Connection origValueConn = null;
@@ -647,41 +646,37 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
             newLabelAndText(gContainer, DefaultMessagesImpl.getString("RespositoryDetailView.URL"), connectionString); //$NON-NLS-1$
         }
 
-        // MOD sizhaoliu TDQ-5408 retrieve DB version info from software system.
-        TdSoftwareSystem softwareSystem = SoftwareSystemManager.getInstance().getSoftwareSystemFromModel(dataProvider);
-        if (softwareSystem == null) { // software system info not present in
-                                      // "TDQ_Libraries/.softwaresystem.softwaredeployment" file
-            softwareSystem = SoftwareSystemManager.getInstance().getSoftwareSystem(dataProvider);
-        }
-
         // MOD gdbu 2011-9-16 TDQ-3337
         String subtype = PluginConstant.EMPTY_STRING;
         String version = PluginConstant.EMPTY_STRING;
-        if (softwareSystem == null) {
-            if (dataProvider instanceof DatabaseConnection) {
-                subtype = ((DatabaseConnection) dataProvider).getDatabaseType();
-                // do not retrieve DB version here because the format (ex: MYSQL_5) is different from softwareSystem.
-                if (EDatabaseConnTemplate.GENERAL_JDBC.getDBDisplayName().equals(subtype)) {
-                    String dbTypeFromMetaData = ExtractMetaDataUtils.getDbTypeByClassNameAndDriverJar(
-                            ((DatabaseConnection) dataProvider).getDriverClass(),
-                            ((DatabaseConnection) dataProvider).getDriverJarPath());
-                    subtype = PluginConstant.EMPTY_STRING.equals(dbTypeFromMetaData) ? subtype : dbTypeFromMetaData;
+
+        if (dataProvider instanceof DatabaseConnection) {
+            subtype = TaggedValueHelper.getValueString(TaggedValueHelper.DB_PRODUCT_NAME, dataProvider);
+            if (PluginConstant.EMPTY_STRING.equals(subtype)) { // tagged values not present in local connection file.
+                ConnectionUtils.updataTaggedValueForConnectionItem(connectionItem);
+                subtype = TaggedValueHelper.getValueString(TaggedValueHelper.DB_PRODUCT_NAME, dataProvider);
+                if (!PluginConstant.EMPTY_STRING.equals(subtype)) {
+                    version = TaggedValueHelper.getValueString(TaggedValueHelper.DB_PRODUCT_VERSION, dataProvider);
                 }
             } else {
-                boolean isMdm = ConnectionUtils.isMdmConnection(dataProvider);
-                subtype = isMdm ? SupportDBUrlType.MDM.getLanguage() : isDelimitedFile ? SupportDBUrlType.DELIMITEDFILE
-                        .getLanguage() : PluginConstant.EMPTY_STRING;
-                if (!DQRepositoryNode.isOnFilterring()) {
-                    version = isMdm ? getMDMVersion((MDMConnection) dataProvider) : PluginConstant.EMPTY_STRING;
-                }
+                version = TaggedValueHelper.getValueString(TaggedValueHelper.DB_PRODUCT_VERSION, dataProvider);
             }
         } else {
-            subtype = softwareSystem.getSubtype();
-            version = softwareSystem.getVersion();
+            boolean isMdm = ConnectionUtils.isMdmConnection(dataProvider);
+            subtype = isMdm ? SupportDBUrlType.MDM.getLanguage() : isDelimitedFile ? SupportDBUrlType.DELIMITEDFILE.getLanguage()
+                    : PluginConstant.EMPTY_STRING;
+            if (!DQRepositoryNode.isOnFilterring()) {
+                version = isMdm ? getMDMVersion((MDMConnection) dataProvider) : PluginConstant.EMPTY_STRING;
+            }
         }
+
         // ~TDQ-3337
         newLabelAndText(gContainer, DefaultMessagesImpl.getString("RespositoryDetailView.type2"), subtype); //$NON-NLS-1$
         newLabelAndText(gContainer, "Version: ", version); //$NON-NLS-1$
+
+    }
+
+    private void createDataProviderDetail(Connection dataProvider) {
     }
 
     private void createDescription(ModelElement dataProvider) {

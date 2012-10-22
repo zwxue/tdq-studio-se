@@ -30,7 +30,6 @@ import org.talend.core.model.repository.RepositoryViewObject;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.cwm.helper.ModelElementHelper;
 import org.talend.cwm.helper.ResourceHelper;
-import org.talend.cwm.management.api.SoftwareSystemManager;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.domain.pattern.Pattern;
 import org.talend.dataquality.helpers.IndicatorHelper;
@@ -128,9 +127,10 @@ public final class DependenciesHandler {
             client.clear();
         }
         // MOD zshen :softwareSystem don't belong to dependency but need to remove together.
-        if (elementToDelete instanceof Connection) {
-            SoftwareSystemManager.getInstance().cleanSoftWareSystem((Connection) elementToDelete);
-        }
+        // MOD sizhaoliu TDQ-6316
+        // if (elementToDelete instanceof Connection) {
+        // SoftwareSystemManager.getInstance().cleanSoftWareSystem((Connection) elementToDelete);
+        // }
         return modifiedResources;
     }
 

@@ -87,6 +87,7 @@ public class DataProviderWriter extends AElementPersistance {
      * @see org.talend.dq.writer.AElementPersistance#addDependencies(orgomg.cwm.objectmodel.core.ModelElement)
      */
     @Override
+    @Deprecated
     protected void addDependencies(ModelElement element) {
         TdSoftwareSystem softwareSystem = ConnectionHelper.getSoftwareSystem((Connection) element);
         if (softwareSystem != null) {

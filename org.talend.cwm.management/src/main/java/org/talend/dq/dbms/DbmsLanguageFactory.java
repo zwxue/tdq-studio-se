@@ -23,9 +23,8 @@ import org.talend.core.model.metadata.builder.util.DatabaseConstant;
 import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.SwitchHelpers;
-import org.talend.cwm.management.api.SoftwareSystemManager;
+import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.management.i18n.Messages;
-import org.talend.cwm.softwaredeployment.TdSoftwareSystem;
 import org.talend.dataquality.PluginConstant;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisContext;
@@ -63,17 +62,20 @@ public final class DbmsLanguageFactory {
             return dbmsLanguage;
         }
 
-        TdSoftwareSystem softwareSystem = SoftwareSystemManager.getInstance().getSoftwareSystem(dataprovider);
+        // MOD sizhaoliu TDQ-6316 deprecate software system
+        // TdSoftwareSystem softwareSystem = SoftwareSystemManager.getInstance().getSoftwareSystem(dataprovider);
         boolean isMdm = ConnectionUtils.isMdmConnection(dataprovider);
         // MOD qiongli 2011-1-11 feature 16796.handle the delimited file
         boolean isDelimitedFile = ConnectionUtils.isDelimitedFileConnection(dataprovider);
-        if (softwareSystem != null || isMdm) {
-            final String dbmsSubtype = isMdm ? DbmsLanguage.MDM : softwareSystem.getSubtype();
+        if (dataprovider != null || isMdm) {
+            String productSubtype = TaggedValueHelper.getValueString(TaggedValueHelper.DB_PRODUCT_NAME, dataprovider);
+            String productVersion = TaggedValueHelper.getValueString(TaggedValueHelper.DB_PRODUCT_VERSION, dataprovider);
+            final String dbmsSubtype = isMdm ? DbmsLanguage.MDM : productSubtype;
             if (log.isDebugEnabled()) {
                 log.debug("Software system subtype (Database type): " + dbmsSubtype); //$NON-NLS-1$
             }
             if (StringUtils.isNotBlank(dbmsSubtype)) {
-                String version = isMdm ? DatabaseConstant.MDM_VERSION : softwareSystem.getVersion();
+                String version = isMdm ? DatabaseConstant.MDM_VERSION : productVersion;
                 dbmsLanguage = createDbmsLanguage(dbmsSubtype, version);
             }
         } else if (isDelimitedFile) {
@@ -318,6 +320,7 @@ public final class DbmsLanguageFactory {
         return new DbmsLanguage();
     }
 
+    @Deprecated
     public static DbmsLanguage createDbmsLanguage(SoftwareSystem softwareSystem) {
         if (softwareSystem != null) {
             return createDbmsLanguage(softwareSystem.getName(), softwareSystem.getVersion());

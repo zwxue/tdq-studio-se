@@ -469,6 +469,7 @@ public class TOPRepositoryService implements ITDQRepositoryService {
      * 
      * @see org.talend.core.ITDQRepositoryService#removeSoftWareSystem(org.talend.repository.model.IRepositoryNode)
      */
+    @Deprecated
     public boolean removeSoftWareSystem(IRepositoryNode children) {
         Item item = children.getObject().getProperty().getItem();
         if (item != null && item instanceof ConnectionItem) {

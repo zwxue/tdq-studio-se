@@ -356,7 +356,8 @@ public abstract class AElementPersistance {
     public ReturnCode save(ModelElement element, boolean withProperty) {
         ReturnCode rc = new ReturnCode();
 
-        addDependencies(element);
+        // MOD sizhaoliu TDQ-6316 deprecate software system
+        // addDependencies(element);
 
         addResourceContent(element);
 
@@ -543,7 +544,8 @@ public abstract class AElementPersistance {
     protected ReturnCode saveWithDependencies(Item item, ModelElement element) {
         ReturnCode rc = new ReturnCode();
 
-        addDependencies(element);
+        // MOD sizhaoliu TDQ-6316 deprecate software system
+        // addDependencies(element);
         addResourceContent(element.eResource(), element);
 
         Map<EObject, Collection<Setting>> find = EcoreUtil.ExternalCrossReferencer.find(element.eResource());
@@ -586,7 +588,8 @@ public abstract class AElementPersistance {
     protected ReturnCode saveWithoutDependencies(Item item, ModelElement element) {
         ReturnCode rc = new ReturnCode();
 
-        addDependencies(element);
+        // MOD sizhaoliu TDQ-6316 deprecate software system
+        // addDependencies(element);
         addResourceContent(element.eResource(), element);
 
         try {

@@ -60,6 +60,7 @@ public final class SoftwareSystemManager {
      * 
      * @param dataProvider
      * @return the software system that is referenced by the data provider.
+     * @deprecated
      */
     public TdSoftwareSystem getSoftwareSystem(Connection dataProvider) {
         TdSoftwareSystem softwareSystem = ConnectionHelper.getSoftwareSystem(dataProvider);
@@ -105,6 +106,7 @@ public final class SoftwareSystemManager {
      * 
      * @param dataProvider
      * @return
+     * @deprecated
      */
     public TdSoftwareSystem getSoftwareSystemFromModel(Connection dataProvider) {
         if (dataProvider == null) {
@@ -150,6 +152,7 @@ public final class SoftwareSystemManager {
      * 
      * @param util
      * @param softwareSystem
+     * @deprecated
      */
     public static boolean saveSoftwareSystem(TdSoftwareSystem softwareSystem) {
         EMFSharedResources util = EMFSharedResources.getInstance();
@@ -163,6 +166,7 @@ public final class SoftwareSystemManager {
      * 
      * @param dataProvider
      * @return
+     * @deprecated
      */
     public boolean cleanSoftWareSystem(Connection dataProvider) {
         if (dataProvider == null) {
