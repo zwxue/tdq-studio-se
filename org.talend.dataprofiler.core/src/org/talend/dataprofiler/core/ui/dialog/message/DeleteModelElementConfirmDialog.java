@@ -204,10 +204,11 @@ public class DeleteModelElementConfirmDialog {
         }
 
         public void dispose() {
-
+            // do nothing here ???
         }
 
         public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
+            // do nothing here ???
         }
     }
 
@@ -450,8 +451,8 @@ public class DeleteModelElementConfirmDialog {
                         IFile file = (IFile) obj;
                         ModelElement modelElement = ModelElementFileFactory.getModelElement(file);
                         // MOD msjian TDQ-5909: modify to displayName
-                        String name = modelElement != null ? PropertyHelper.getProperty((ModelElement) obj).getDisplayName()
-                                : file.getName();
+                        String name = modelElement != null ? PropertyHelper.getProperty(modelElement).getDisplayName() : file
+                                .getName();
                         return REQUIRES + PluginConstant.SPACE_STRING + "<<" + name + ">>";//$NON-NLS-1$ //$NON-NLS-2$
                     }
                     return REQUIRES + PluginConstant.SPACE_STRING
