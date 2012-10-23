@@ -42,6 +42,7 @@ import org.eclipse.ui.navigator.CommonDropAdapter;
 import org.eclipse.ui.navigator.CommonDropAdapterAssistant;
 import org.jfree.util.Log;
 import org.talend.commons.exception.BusinessException;
+import org.talend.commons.exception.LoginException;
 import org.talend.commons.exception.PersistenceException;
 import org.talend.commons.utils.WorkspaceUtils;
 import org.talend.commons.utils.io.FilesUtils;
@@ -50,6 +51,7 @@ import org.talend.core.model.repository.Folder;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.core.repository.model.FolderHelper;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
+import org.talend.core.runtime.CoreRuntimePlugin;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.helper.WorkspaceResourceHelper;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
@@ -84,6 +86,7 @@ import org.talend.dq.nodes.ReportSubFolderRepNode;
 import org.talend.dq.nodes.SourceFileRepNode;
 import org.talend.dq.nodes.SourceFileSubFolderNode;
 import org.talend.dq.nodes.SysIndicatorDefinitionRepNode;
+import org.talend.repository.RepositoryWorkUnit;
 import org.talend.repository.model.IProxyRepositoryFactory;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.IRepositoryNode.ENodeType;
@@ -195,7 +198,6 @@ public class RepositoryNodeDorpAdapterAssistant extends CommonDropAdapterAssista
             if (log.isInfoEnabled()) {
                 // e.printStackTrace();
                 log.info(e.toString());
-
             }
 
         }
@@ -293,7 +295,6 @@ public class RepositoryNodeDorpAdapterAssistant extends CommonDropAdapterAssista
         } else {
             // move the source file item
             IRepositoryViewObject objectToMove = sourceNode.getObject();
-            ERepositoryObjectType targetObjectType = targetNode.getContentType();
             IPath fullPath = ResourceManager.getSourceFileFolder().getFullPath();
             IPath makeRelativeTo = fullPath.makeRelativeTo(ResourceManager.getRootProject().getFullPath());
             ENodeType type = targetNode.getType();
@@ -761,10 +762,20 @@ public class RepositoryNodeDorpAdapterAssistant extends CommonDropAdapterAssista
     }
 
     private void computePath(FolderHelper folderHelper, IPath sourcePath, IPath targetPath, IPath makeRelativeTo,
-            ERepositoryObjectType type, IRepositoryNode sourceNode, IRepositoryNode targetNode) throws PersistenceException {
-        IPath sourceMakeRelativeTo = sourcePath.makeRelativeTo(makeRelativeTo);
-        IPath targetMakeRelativeTo = targetPath.makeRelativeTo(makeRelativeTo);
-        factory.moveFolder(type, sourceMakeRelativeTo, targetMakeRelativeTo);
+            final ERepositoryObjectType type, IRepositoryNode sourceNode, IRepositoryNode targetNode) throws PersistenceException {
+        final IPath sourceMakeRelativeTo = sourcePath.makeRelativeTo(makeRelativeTo);
+        final IPath targetMakeRelativeTo = targetPath.makeRelativeTo(makeRelativeTo);
+
+        RepositoryWorkUnit<Object> repositoryWorkUnit = new RepositoryWorkUnit<Object>("Move", this) { //$NON-NLS-1$
+
+            @Override
+            protected void run() throws LoginException, PersistenceException {
+                factory.moveFolder(type, sourceMakeRelativeTo, targetMakeRelativeTo);
+            }
+        };
+        repositoryWorkUnit.setAvoidUnloadResources(true);
+        CoreRuntimePlugin.getInstance().getProxyRepositoryFactory().executeRepositoryWorkUnit(repositoryWorkUnit);
+
         RepositoryNode sourceParent = sourceNode.getParent();
         RepositoryNode targetParent = targetNode.getParent();
         CorePlugin.getDefault().refreshDQView(sourceParent);
@@ -874,7 +885,6 @@ public class RepositoryNodeDorpAdapterAssistant extends CommonDropAdapterAssista
     }
 
     /**
-     * 
      * forbid some nodes to drag.
      * 
      * @param sourceNode

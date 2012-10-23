@@ -69,6 +69,7 @@ public class DeleteModelElementConfirmDialog {
             return children.toArray(new Object[children.size()]);
         }
 
+        @Override
         public String toString() {
             return nodeElement.getName();
         }
@@ -127,8 +128,8 @@ public class DeleteModelElementConfirmDialog {
     }
 
     static void addDenpendencyElements(ModelElement[] children) {
-        for (int i = 0; i < children.length; i++) {
-            EList<Dependency> supplierDependencies = children[i].getSupplierDependency();
+        for (ModelElement element : children) {
+            EList<Dependency> supplierDependencies = element.getSupplierDependency();
             ImpactNode impactNode;
             for (Dependency dependency : supplierDependencies) {
                 EList<ModelElement> clients = dependency.getClient();
@@ -142,11 +143,11 @@ public class DeleteModelElementConfirmDialog {
                         impactNode = new ImpactNode(client);
                         int index = impactNodes.indexOf(impactNode);
                         if (index == -1) {
-                            impactNode.addRequireModelElement(children[i]);
+                            impactNode.addRequireModelElement(element);
                             impactNodes.add(impactNode);
                         } else {
                             ImpactNode existNode = impactNodes.get(index);
-                            existNode.addRequireModelElement(children[i]);
+                            existNode.addRequireModelElement(element);
                         }
                     }
                 }
@@ -193,10 +194,11 @@ public class DeleteModelElementConfirmDialog {
         }
 
         public void dispose() {
-
+            // do nothing here ???
         }
 
         public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
+            // do nothing here ???
         }
     }
 
@@ -303,7 +305,7 @@ public class DeleteModelElementConfirmDialog {
 
         ImpactNode[] impactElements = getImpactNodes();
         if (impactElements.length > 0) {
-            TreeMessageInfoDialog dialog = new TreeMessageInfoDialog(parentShell, dialogTitle, null, dialogMessage, //$NON-NLS-1$
+            TreeMessageInfoDialog dialog = new TreeMessageInfoDialog(parentShell, dialogTitle, null, dialogMessage,
                     MessageDialog.WARNING, new String[] { IDialogConstants.OK_LABEL, IDialogConstants.CANCEL_LABEL }, 0);
             dialog.setContentProvider(new DialogContentProvider(impactElements));
             dialog.setLabelProvider(getLabelProvider());
@@ -356,7 +358,7 @@ public class DeleteModelElementConfirmDialog {
         addDenpendencyElements(modelElements);
         ImpactNode[] impactElements = getImpactNodes();
         if (impactElements.length > 0) {
-            TreeMessageInfoDialog dialog = new TreeMessageInfoDialog(parentShell, dialogTitle, null, dialogMessage, //$NON-NLS-1$
+            TreeMessageInfoDialog dialog = new TreeMessageInfoDialog(parentShell, dialogTitle, null, dialogMessage,
                     MessageDialog.WARNING, new String[] { IDialogConstants.OK_LABEL }, 0);
             dialog.setContentProvider(new DialogContentProvider(impactElements));
             dialog.setLabelProvider(getLabelProvider());
@@ -374,7 +376,7 @@ public class DeleteModelElementConfirmDialog {
         addDenpendencyElements(modelElements);
         ImpactNode[] impactElements = getImpactNodes();
         if (impactElements.length > 0) {
-            TreeMessageInfoDialog dialog = new TreeMessageInfoDialog(parentShell, dialogTitle, null, dialogMessage, //$NON-NLS-1$
+            TreeMessageInfoDialog dialog = new TreeMessageInfoDialog(parentShell, dialogTitle, null, dialogMessage,
                     MessageDialog.WARNING, new String[] { IDialogConstants.OK_LABEL, IDialogConstants.CANCEL_LABEL }, 0);
             dialog.setContentProvider(new DialogContentProvider(impactElements));
             dialog.setLabelProvider(getLabelProvider());
@@ -399,39 +401,17 @@ public class DeleteModelElementConfirmDialog {
         } else {
             messageDialog = new MessageDialog(
                     null,
-                    DefaultMessagesImpl.getString("DeleteModelElementConfirmDialog.confirmResourcesDelete"), null, DefaultMessagesImpl.getString("DeleteModelElementConfirmDialog.areYouDelele", modelElements[0].getName()) //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-                    , MessageDialog.WARNING, new String[] { //$NON-NLS-1$
-                    IDialogConstants.OK_LABEL, IDialogConstants.CANCEL_LABEL }, 0);
+                    DefaultMessagesImpl.getString("DeleteModelElementConfirmDialog.confirmResourcesDelete"), null, DefaultMessagesImpl.getString("DeleteModelElementConfirmDialog.areYouDelele", modelElements[0].getName()) //$NON-NLS-1$ //$NON-NLS-2$ 
+                    , MessageDialog.WARNING, new String[] { IDialogConstants.OK_LABEL, IDialogConstants.CANCEL_LABEL }, 0);
         }
         return messageDialog.open();
     }
-
-    // private static void removeReportComponent(ImpactNode[] impactNodes) {
-    // ReportsSwitch<TdReport> mySwitch = new ReportsSwitch<TdReport>() {
-    //
-    // public TdReport caseTdReport(TdReport object) {
-    // return object;
-    // }
-    // };
-    // TdReport report = null;
-    // for (ImpactNode node : impactNodes) {
-    // report = mySwitch.doSwitch(node.getNodeElement());
-    // if (report != null && node.getChildren().length > 0) {
-    // List<Analysis> anaList = new ArrayList<Analysis>();
-    // for (ModelElement element : node.getChildren()) {
-    // anaList.add((Analysis) element);
-    // }
-    // ReportHelper.removeAnalyses(report, anaList);
-    // // remove dependencies
-    // DependenciesHandler.getInstance().removeDependenciesBetweenModels(report, anaList);
-    // }
-    // }
-    // }
 
     protected static LabelProvider getLabelProvider() {
         if (fLabelProvider == null) {
             fLabelProvider = new LabelProvider() {
 
+                @Override
                 public String getText(Object obj) {
                     if (obj instanceof ImpactNode) {
                         return ((ImpactNode) obj).toString();
@@ -439,8 +419,7 @@ public class DeleteModelElementConfirmDialog {
                         IFile file = (IFile) obj;
                         ModelElement modelElement = ModelElementFileFactory.getModelElement(file);
                         // MOD msjian TDQ-5909: modify to display label name
-                        String name = modelElement != null ? PropertyHelper.getProperty((ModelElement) obj).getLabel()
-                                : file.getName();
+                        String name = modelElement != null ? PropertyHelper.getProperty(modelElement).getLabel() : file.getName();
                         return REQUIRES + PluginConstant.SPACE_STRING + "<<" + name + ">>";//$NON-NLS-1$ //$NON-NLS-2$
                     }
                     return REQUIRES + PluginConstant.SPACE_STRING
@@ -451,5 +430,4 @@ public class DeleteModelElementConfirmDialog {
         }
         return fLabelProvider;
     }
-
 }
