@@ -273,11 +273,6 @@ public enum IndicatorEnum {
                              IndicatorSqlPackage.Literals.USER_DEF_INDICATOR,
                              "User Defined Indicator", //$NON-NLS-1$
                              null),
-    JavaUserDefinedIndicatorEnum(
-                                 IndicatorSqlPackage.JAVA_USER_DEF_INDICATOR,
-                                 IndicatorSqlPackage.Literals.JAVA_USER_DEF_INDICATOR,
-                                 "Java User Defined Indicator", //$NON-NLS-1$
-                                 null),
     ColumnDependencyIndicatorEnum(
                                   ColumnsetPackage.COLUMN_DEPENDENCY_INDICATOR,
                                   ColumnsetPackage.Literals.COLUMN_DEPENDENCY_INDICATOR,
@@ -551,8 +546,6 @@ public enum IndicatorEnum {
             returnEnum = DefValueCountIndicatorEnum;
         } else if (indicatorType == UserDefinedIndicatorEnum.getIndicatorType()) {
             returnEnum = UserDefinedIndicatorEnum;
-        } else if (indicatorType == JavaUserDefinedIndicatorEnum.getIndicatorType()) {
-            returnEnum = JavaUserDefinedIndicatorEnum;
         } else if (indicatorType == ColumnDependencyIndicatorEnum.getIndicatorType()) {
             returnEnum = ColumnDependencyIndicatorEnum;
         } else if (indicatorType == AllMatchIndicatorEnum.getIndicatorType()) {
@@ -586,7 +579,7 @@ public enum IndicatorEnum {
     public static boolean isPlainIndicatorEnum(IndicatorEnum indicatorEnumn) {
         return indicatorEnumn != RegexpMatchingIndicatorEnum && indicatorEnumn != SqlPatternMatchingIndicatorEnum
                 && indicatorEnumn != WhereRuleIndicatorEnum && indicatorEnumn != WhereRuleAideIndicatorEnum
-                && indicatorEnumn != UserDefinedIndicatorEnum && indicatorEnumn != JavaUserDefinedIndicatorEnum;
+                && indicatorEnumn != UserDefinedIndicatorEnum;
     }
 
     public boolean isAChildOf(IndicatorEnum parent) {
