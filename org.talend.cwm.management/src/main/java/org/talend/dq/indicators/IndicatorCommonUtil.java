@@ -232,7 +232,6 @@ public final class IndicatorCommonUtil {
                         break;
 
                     case UserDefinedIndicatorEnum:
-                    case JavaUserDefinedIndicatorEnum:
                         value = handleUDIValue(indicator);
                         break;
 

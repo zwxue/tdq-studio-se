@@ -291,7 +291,6 @@ public final class CompositeIndicator {
                 break;
 
             case UserDefinedIndicatorEnum:
-            case JavaUserDefinedIndicatorEnum:
                 IndicatorCategory ic = UDIUtils.getUDICategory(one);
                 if (DefinitionHandler.getInstance().getUserDefinedCountIndicatorCategory().equals(ic)) {
                     udiCountList.add(one);
