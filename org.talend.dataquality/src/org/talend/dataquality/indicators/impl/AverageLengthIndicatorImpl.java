@@ -13,6 +13,7 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.talend.dataquality.helpers.IndicatorHelper;
 import org.talend.dataquality.indicators.AverageLengthIndicator;
 import org.talend.dataquality.indicators.IndicatorParameters;
+import org.talend.dataquality.indicators.IndicatorValueType;
 import org.talend.dataquality.indicators.IndicatorsPackage;
 
 /**
@@ -235,6 +236,18 @@ public class AverageLengthIndicatorImpl extends LengthIndicatorImpl implements A
         // ~12772
     }
 
+    // Added yyin TDQ-6070
+    @Override
+    public IndicatorValueType getValueType() {
+        return IndicatorValueType.REAL_VALUE;
+    }
+
+    @Override
+    public Double getRealValue() {
+        return getAverageLength();
+    }
+
+    // ~
     @Override
     public boolean finalizeComputation() {
         return super.finalizeComputation();
