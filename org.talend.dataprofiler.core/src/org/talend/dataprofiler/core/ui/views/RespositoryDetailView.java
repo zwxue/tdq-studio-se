@@ -68,6 +68,7 @@ import org.talend.dataprofiler.core.ui.utils.WorkbenchUtils;
 import org.talend.dataprofiler.ecos.model.IEcosComponent;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisContext;
+import org.talend.dataquality.analysis.AnalysisParameters;
 import org.talend.dataquality.domain.pattern.Pattern;
 import org.talend.dataquality.domain.pattern.PatternComponent;
 import org.talend.dataquality.domain.pattern.RegularExpression;
@@ -504,15 +505,16 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
         createPurpose(ana);
         createDescription(ana);
 
-        String description = ana.getParameters().getAnalysisType().getLiteral();
+        AnalysisParameters parameters = ana.getParameters();
+        String description = parameters == null ? null : parameters.getAnalysisType().getLiteral();
         newLabelAndText(gContainer, DefaultMessagesImpl.getString("RespositoryDetailView.otherType"), description); //$NON-NLS-1$
 
         AnalysisContext context = ana.getContext();
-        int numn = context.getAnalysedElements().size();
+        int numn = context == null ? 0 : context.getAnalysedElements().size();
         newLabelAndText(gContainer,
                 DefaultMessagesImpl.getString("RespositoryDetailView.numberOfAnalyzedElements"), String.valueOf(numn)); //$NON-NLS-1$
 
-        DataManager connection = context.getConnection();
+        DataManager connection = context == null ? null : context.getConnection();
         if (connection == null) {
             description = null;
         } else {

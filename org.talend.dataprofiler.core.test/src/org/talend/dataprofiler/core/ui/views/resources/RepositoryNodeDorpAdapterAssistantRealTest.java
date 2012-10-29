@@ -90,7 +90,7 @@ public class RepositoryNodeDorpAdapterAssistantRealTest {
             ReportSubFolderRepNode realReportSubFolderRepNode = UnitTestBuildHelper.createRealReportSubFolderRepNode(
                     realReportFolderRepNode, folderName);
 
-            RepositoryNodeDorpAdapterAssistant repNodeDropAssistant = new RepositoryNodeDorpAdapterAssistant();
+            LocalRepositoryObjectCRUD repNodeDropAssistant = new LocalRepositoryObjectCRUD();
             try {
                 repNodeDropAssistant.moveRepositoryNodes(new IRepositoryNode[] { realReportNode }, realReportSubFolderRepNode);
 

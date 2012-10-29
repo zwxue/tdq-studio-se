@@ -84,7 +84,7 @@ public class RepositoryNodeDorpAdapterAssistantTest {
             when(proxFactoryMock.getNextId()).thenReturn("abcd1").thenReturn("abcd2"); //$NON-NLS-1$ //$NON-NLS-2$
             stub(method(ProxyRepositoryFactory.class, "getInstance")).toReturn(proxFactoryMock); //$NON-NLS-1$
 
-            RepositoryNodeDorpAdapterAssistant assistant = new RepositoryNodeDorpAdapterAssistant();
+            LocalRepositoryObjectCRUD assistant = new LocalRepositoryObjectCRUD();
             IRepositoryNode sourceNodeMock = mock(IRepositoryNode.class);
             IRepositoryNode targetNodeMock = mock(IRepositoryNode.class);
             assistant.moveJrxmlFileRepNode(sourceNodeMock, targetNodeMock);
@@ -119,7 +119,7 @@ public class RepositoryNodeDorpAdapterAssistantTest {
             when(proxFactoryMock.getNextId()).thenReturn("abcd1").thenReturn("abcd2"); //$NON-NLS-1$ //$NON-NLS-2$
             stub(method(ProxyRepositoryFactory.class, "getInstance")).toReturn(proxFactoryMock); //$NON-NLS-1$
 
-            RepositoryNodeDorpAdapterAssistant assistant = new RepositoryNodeDorpAdapterAssistant();
+            LocalRepositoryObjectCRUD assistant = new LocalRepositoryObjectCRUD();
             IRepositoryNode sourceNodeMock = mock(IRepositoryNode.class);
             IRepositoryNode targetNodeMock = mock(IRepositoryNode.class);
 
@@ -144,7 +144,7 @@ public class RepositoryNodeDorpAdapterAssistantTest {
             CorePlugin cpMock = mock(CorePlugin.class);
             PowerMockito.mockStatic(CorePlugin.class);
             when(CorePlugin.getDefault()).thenReturn(cpMock);
-            method(CorePlugin.class, "refreshDQView", Object.class);
+            method(CorePlugin.class, "refreshDQView", Object.class); //$NON-NLS-1$
 
             ResourceBundle rb = mock(ResourceBundle.class);
             stub(method(ResourceBundle.class, "getBundle", String.class)).toReturn(rb); //$NON-NLS-1$
@@ -183,7 +183,7 @@ public class RepositoryNodeDorpAdapterAssistantTest {
 
             when(targetNodeMock.getType()).thenReturn(ENodeType.SYSTEM_FOLDER);
 
-            RepositoryNodeDorpAdapterAssistant spyAssistant = spy(new RepositoryNodeDorpAdapterAssistant());
+            LocalRepositoryObjectCRUD spyAssistant = spy(new LocalRepositoryObjectCRUD());
             doNothing().when(spyAssistant).moveObject((IRepositoryViewObject) any(), (IRepositoryNode) any(),
                     (IRepositoryNode) any(), (IPath) any());
 
@@ -195,7 +195,7 @@ public class RepositoryNodeDorpAdapterAssistantTest {
 
             Resource resourceMock = mock(Resource.class);
             when(fileItem.eResource()).thenReturn(resourceMock);
-            URI uri = URI.createPlatformResourceURI("org.talend.dataprofiler.core.test/cc_0.1.properties", false);
+            URI uri = URI.createPlatformResourceURI("org.talend.dataprofiler.core.test/cc_0.1.properties", false); //$NON-NLS-1$
             when(resourceMock.getURI()).thenReturn(uri);
             when(ResourceManager.getRootFolderLocation()).thenReturn(folderPath);
             // ~
