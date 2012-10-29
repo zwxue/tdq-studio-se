@@ -13,7 +13,9 @@
 package org.talend.dataprofiler.core.ui.editor.composite;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
@@ -90,10 +92,12 @@ import org.talend.dataquality.helpers.MetadataHelper;
 import org.talend.dataquality.indicators.CompositeIndicator;
 import org.talend.dataquality.indicators.DataminingType;
 import org.talend.dataquality.indicators.Indicator;
+import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dataquality.indicators.sql.UserDefIndicator;
 import org.talend.dq.dbms.DbmsLanguage;
 import org.talend.dq.dbms.DbmsLanguageFactory;
 import org.talend.dq.helper.RepositoryNodeHelper;
+import org.talend.dq.helper.resourcehelper.IndicatorResourceFileHelper;
 import org.talend.dq.nodes.AnalysisRepNode;
 import org.talend.dq.nodes.MDMXmlElementRepNode;
 import org.talend.repository.model.IRepositoryNode;
@@ -172,6 +176,7 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
                 }
             }
 
+            @Override
             protected String getItemTooltipText(TreeItem item) {
                 String expCont = isExpressionNull(item);
                 if (expCont == null) {
@@ -244,6 +249,7 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
 
         delButton.addSelectionListener(new SelectionAdapter() {
 
+            @Override
             public void widgetSelected(SelectionEvent e) {
                 removeSelectedElements(tree);
             }
@@ -251,6 +257,7 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
 
         moveUpButton.addSelectionListener(new SelectionAdapter() {
 
+            @Override
             public void widgetSelected(SelectionEvent e) {
                 moveSelectedElements(tree, -1);
             }
@@ -258,6 +265,7 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
 
         moveDownButton.addSelectionListener(new SelectionAdapter() {
 
+            @Override
             public void widgetSelected(SelectionEvent e) {
                 moveSelectedElements(tree, 1);
             }
@@ -384,6 +392,7 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
         return code;
     }
 
+    @Override
     public void setElements(ModelElementIndicator[] elements) {
         setElements(elements, true);
     }
@@ -393,12 +402,12 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
         this.tree = createTree(this.parentComp);
         tree.setData(VIEWER_KEY, this);
         this.modelElementIndicators = elements;
-        addItemElements((ModelElementIndicator[]) elements);
+        addItemElements(elements);
 
         if (isNavigator) {
             this.setDirty(true);
         }
-        initializedConnection((ModelElementIndicator[]) elements);
+        initializedConnection(elements);
         // MOD mzhao 2009-05-5, bug 6587.
         updateBindConnection(masterPage, modelElementIndicators, tree);
 
@@ -416,6 +425,7 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
         // setElements(modelElementIndicators);
     }
 
+    @Override
     public void addElements(final ModelElementIndicator[] elements) {
         ModelElementIndicator[] newsArray = new ModelElementIndicator[this.modelElementIndicators.length + elements.length];
         System.arraycopy(this.modelElementIndicators, 0, newsArray, 0, this.modelElementIndicators.length);
@@ -496,12 +506,12 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
     }
 
     private void addItemElements(final ModelElementIndicator[] elements) {
-        for (int i = 0; i < elements.length; i++) {
+        for (ModelElementIndicator element : elements) {
             final TreeItem treeItem = new TreeItem(tree, SWT.NONE);
-            treeItem.setImage(getColumnElementImage(elements[i]));
+            treeItem.setImage(getColumnElementImage(element));
 
-            final ModelElementIndicator meIndicator = (ModelElementIndicator) elements[i];
-            treeItem.setText(0, getModelElemetnDisplayName(meIndicator)); //$NON-NLS-1$
+            final ModelElementIndicator meIndicator = element;
+            treeItem.setText(0, getModelElemetnDisplayName(meIndicator));
             treeItem.setData(MODELELEMENT_INDICATOR_KEY, meIndicator);
 
             TreeEditor comboEditor = new TreeEditor(tree);
@@ -526,6 +536,7 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
             }
             combo.addSelectionListener(new SelectionAdapter() {
 
+                @Override
                 public void widgetSelected(SelectionEvent e) {
                     MetadataHelper.setDataminingType(DataminingType.get(combo.getText()), modelElement);
                     setDirty(true);
@@ -644,37 +655,59 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
                 CheckedTreeSelectionDialog dialog = UDIUtils.createUdiCheckedTreeSelectionDialog(udiProject, meIndicator);
 
                 if (dialog.open() == Window.OK) {
-
+                    // MOD qiongli 2012-10-24 TDQ-6308,just remove some deselected indicatorUnit then set dirty to
+                    // true,just create new indicatorUnit for some new added UDI then set dirty to true.
+                    List<IFile> allSelectedFiles = new ArrayList<IFile>();
+                    Set<String> allSelectedIndNames = new HashSet<String>();
+                    for (Object obj : dialog.getResult()) {
+                        if (obj instanceof IFile) {
+                            allSelectedFiles.add((IFile) obj);
+                            IndicatorDefinition udid = IndicatorResourceFileHelper.getInstance().findIndDefinition((IFile) obj);
+                            if (udid != null) {
+                                allSelectedIndNames.add(udid.getName());
+                            }
+                        }
+                    }
+                    Set<String> oldSelectedIndNames = new HashSet<String>();
                     for (IndicatorUnit indicatorUnit : meIndicator.getIndicatorUnits()) {
-                        if (indicatorUnit.getIndicator() instanceof UserDefIndicator) {
-                            meIndicator.removeIndicatorUnit(indicatorUnit);
+                        Indicator indicator = indicatorUnit.getIndicator();
+                        if (indicator instanceof UserDefIndicator) {
+                            if (allSelectedIndNames.contains(indicator.getName())) {
+                                oldSelectedIndNames.add(indicator.getName());
+                            } else {
+                                meIndicator.removeIndicatorUnit(indicatorUnit);
+                                if (!isDirty()) {
+                                    setDirty(true);
+                                }
+                            }
+
                         }
                     }
                     treeItem.removeAll();
 
-                    for (Object obj : dialog.getResult()) {
-                        if (obj instanceof IFile) {
-                            IFile file = (IFile) obj;
-                            IndicatorUnit[] addIndicatorUnits = null;
-                            try {
-                                addIndicatorUnits = UDIUtils.createIndicatorUnit(file, meIndicator, getAnalysis());
-                            } catch (Throwable e1) {
-                                log.warn(e1, e1);
+                    for (IFile file : allSelectedFiles) {
+                        IndicatorDefinition udid = IndicatorResourceFileHelper.getInstance().findIndDefinition(file);
+                        if (udid != null && oldSelectedIndNames.contains(udid.getName())) {
+                            continue;
+                        }
+                        IndicatorUnit[] addIndicatorUnits = null;
+                        try {
+                            addIndicatorUnits = UDIUtils.createIndicatorUnit(file, meIndicator, getAnalysis());
+                        } catch (Throwable e1) {
+                            log.warn(e1, e1);
+                        }
+                        if (addIndicatorUnits != null && addIndicatorUnits.length > 0) {
+                            for (IndicatorUnit unit : addIndicatorUnits) {
+                                createOneUnit(treeItem, unit);
                             }
-                            if (addIndicatorUnits != null && addIndicatorUnits.length > 0) {
-                                for (IndicatorUnit unit : addIndicatorUnits) {
-                                    createOneUnit(treeItem, unit);
-                                }
+                            if (!isDirty()) {
                                 setDirty(true);
                             }
                         }
                     }
 
                     treeItem.setExpanded(true);
-                    if (masterPage instanceof ColumnMasterDetailsPage) {
-                        ColumnMasterDetailsPage page = (ColumnMasterDetailsPage) masterPage;
-                        page.refreshTheTree(page.getCurrentModelElementIndicators());
-                    }
+                    masterPage.refreshTheTree(masterPage.getCurrentModelElementIndicators());
                 }
             }
         });
@@ -848,7 +881,7 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
             IRepositoryNode parentNodeForColumnNode = RepositoryNodeHelper.getParentNodeForColumnNode(meIndicator
                     .getModelElementRepositoryNode());
             expressContent = DefaultMessagesImpl.getString(
-                    "AnalysisColumnTreeViewer.columnParent", parentNodeForColumnNode.getObject().getLabel()); //$NON-NLS-1$ //$NON-NLS-2$;
+                    "AnalysisColumnTreeViewer.columnParent", parentNodeForColumnNode.getObject().getLabel()); //$NON-NLS-1$ //;
         }
 
         return expressContent;
