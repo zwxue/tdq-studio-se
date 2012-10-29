@@ -186,14 +186,18 @@ public abstract class AbstractPagePart {
             // ~TDQ-3213
 
             // MOD yyin 201204 TDQ-4977
-            Object value = masterPage.getConnCombo().getData(
-                    dataManager.getName() + RepositoryNodeHelper.getConnectionType(dataManager));
+            Object value = null;
+            // masterPage.getConnCombo().getData(
+            // dataManager.getName() + RepositoryNodeHelper.getConnectionType(dataManager));
+            // use property.getLabel() instead of dataManager.getDisplayName() because of we set it use first one for
+            // TDQ-6286.
 
             // MOD qiongli 2011-1-7 delimitedFile connection dosen't use 'dataManager.getName()'.
 
-            Property prop = PropertyHelper.getProperty((Connection) dataManager);
-            if (SwitchHelpers.DELIMITEDFILECONNECTION_SWITCH.doSwitch(dataManager) != null) {
-                value = masterPage.getConnCombo().getData(prop.getLabel() + RepositoryNodeHelper.getConnectionType(dataManager));
+            Property prop = PropertyHelper.getProperty(dataManager);
+            if (SwitchHelpers.CONNECTION_SWITCH.doSwitch(dataManager) != null) {
+                value = masterPage.getConnCombo().getData(
+                        prop.getDisplayName() + RepositoryNodeHelper.getConnectionType(dataManager));
             }
             Integer index = 0;
             if (value != null && value instanceof Integer) {
