@@ -53,8 +53,6 @@ public class DBTableFolderRepNode extends DQRepositoryNode {
 
     private Schema schema;
 
-    // private List<IRepositoryNode> children;
-
     public Catalog getCatalog() {
         return this.catalog;
     }
@@ -80,7 +78,6 @@ public class DBTableFolderRepNode extends DQRepositoryNode {
      */
     public DBTableFolderRepNode(IRepositoryViewObject object, RepositoryNode parent, ENodeType type) {
         super(object, parent, type);
-        // children = new ArrayList<IRepositoryNode>();
     }
 
     @Override
@@ -101,10 +98,10 @@ public class DBTableFolderRepNode extends DQRepositoryNode {
     /**
      * Create TableFolderNodeRepositoryNode.
      * 
-     * @param node parent RepositoryNode
+     * @param nodes parent RepositoryNode
      * @param metadataObject parent CatalogViewObject or SchemaViewObject
      */
-    private void createRepositoryNodeTableFolderNode(List<IRepositoryNode> node, IRepositoryViewObject metadataObject) {
+    private void createRepositoryNodeTableFolderNode(List<IRepositoryNode> nodes, IRepositoryViewObject metadataObject) {
         List<TdTable> tables = new ArrayList<TdTable>();
         String filterCharacter = null;
         try {
@@ -134,7 +131,7 @@ public class DBTableFolderRepNode extends DQRepositoryNode {
                 filterCharacter = RepositoryNodeHelper.getTableFilter(catalog, schema);
                 RepositoryNode parent = metadataObject.getRepositoryNode().getParent();
                 IRepositoryViewObject object = parent.getObject();
-                if (object instanceof MetadataCatalogRepositoryObject && filterCharacter.equals("")) {
+                if (object instanceof MetadataCatalogRepositoryObject && filterCharacter.equals("")) { //$NON-NLS-1$
                     filterCharacter = RepositoryNodeHelper.getTableFilter(
                             ((MetadataCatalogRepositoryObject) object).getCatalog(), null);
                 }
@@ -150,25 +147,16 @@ public class DBTableFolderRepNode extends DQRepositoryNode {
                 }
             }
 
-            // MOD klliu&yyin 2012-03-15, TDQ-2391, no need to save here when running analyze
-            // if (tables.size() > 0) {
-            // // MOD qiongli 2011-6-28 bug 22019,only need to save connection in this place.
-            // if (!DQRepositoryNode.isOnFilterring()) {
-            // Project currentProject = ProjectManager.getInstance().getCurrentProject();
-            // ProxyRepositoryFactory.getInstance().save(currentProject, item);
-            // }
-            // }
-
             ConnectionUtils.retrieveColumn(tables);
 
-            if (filterCharacter != null && !filterCharacter.equals("")) {
+            if (filterCharacter != null && !filterCharacter.equals("")) { //$NON-NLS-1$
                 tables = RepositoryNodeHelper.filterTables(tables, filterCharacter);
             }
 
         } catch (Exception e) {
             log.error(e, e);
         }
-        createTableRepositoryNode(tables, node);
+        createTableRepositoryNode(tables, nodes);
     }
 
     /**
@@ -216,6 +204,7 @@ public class DBTableFolderRepNode extends DQRepositoryNode {
         return tables.size();
     }
 
+    @Override
     public boolean hasChildren() {
         // MOD gdbu 2011-9-1 TDQ-3457
         if (!hasChildrenInFile()) {
@@ -254,9 +243,7 @@ public class DBTableFolderRepNode extends DQRepositoryNode {
     }
 
     private boolean hasChildrenInDataBase() {
-
         boolean hasChildrenInDB = false;
-
         IRepositoryViewObject object = this.getParent().getObject();
         if (object instanceof MetadataCatalogRepositoryObject) {
             viewObject = ((MetadataCatalogRepositoryObject) object).getViewObject();
