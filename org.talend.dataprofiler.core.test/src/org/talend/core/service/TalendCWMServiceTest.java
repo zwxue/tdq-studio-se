@@ -29,7 +29,6 @@ import org.talend.core.model.properties.Property;
 import org.talend.core.model.utils.ContextParameterUtils;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.core.runtime.CoreRuntimePlugin;
-import org.talend.cwm.mip.service.CWMService;
 import org.talend.dataprofiler.core.helper.UnitTestBuildHelper;
 import org.talend.designer.core.model.utils.emf.talendfile.ContextParameterType;
 import org.talend.designer.core.model.utils.emf.talendfile.ContextType;
@@ -155,10 +154,7 @@ public class TalendCWMServiceTest {
         // ~DatabaseConnection
 
         String readableName = null;
-        if (CWMService.getDefault().isServiceRegistered(CWMService.class)) {
-            CWMService cwmService = CWMService.getDefault().getService(CWMService.class);
-            readableName = cwmService.getReadableName(createDatabaseConnection, contextCatalogName);
-        }
+        readableName = TalendCWMService.getReadableName(createDatabaseConnection, contextCatalogName);
         assert (catalogName.equals(readableName));
     }
 
@@ -220,10 +216,7 @@ public class TalendCWMServiceTest {
         // ~DatabaseConnection
 
         String readableName = null;
-        if (CWMService.getDefault().isServiceRegistered(CWMService.class)) {
-            CWMService cwmService = CWMService.getDefault().getService(CWMService.class);
-            readableName = cwmService.getReadableName(createDatabaseConnection, contextCatalogName);
-        }
+        readableName = TalendCWMService.getReadableName(createDatabaseConnection, contextCatalogName);
         assert (catalogName.equals(readableName));
     }
 
