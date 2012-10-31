@@ -187,8 +187,7 @@ public abstract class AbstractPagePart {
 
             // MOD yyin 201204 TDQ-4977
             Object value = null;
-            // masterPage.getConnCombo().getData(
-            // dataManager.getName() + RepositoryNodeHelper.getConnectionType(dataManager));
+
             // use property.getLabel() instead of dataManager.getDisplayName() because of we set it use first one for
             // TDQ-6286.
 

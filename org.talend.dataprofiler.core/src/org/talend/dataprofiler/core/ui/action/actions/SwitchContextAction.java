@@ -15,13 +15,18 @@ package org.talend.dataprofiler.core.ui.action.actions;
 import org.apache.log4j.Logger;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.window.Window;
+import org.talend.core.model.context.ContextUtils;
+import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.properties.ConnectionItem;
+import org.talend.core.model.properties.ContextItem;
 import org.talend.core.model.properties.Item;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dq.nodes.ConnectionRepNode;
 import org.talend.repository.ui.utils.SwitchContextGroupNameImpl;
+import org.talend.repository.ui.wizards.metadata.ContextSetsSelectionDialog;
 
 /**
  * DOC msjian class global comment. Detailled comment
@@ -55,8 +60,9 @@ public class SwitchContextAction extends Action {
                 // Added yyin 20120925 TDQ-5668, check this connection's editor is open or not, if open, close.
                 CorePlugin.getDefault().closeEditorIfOpened(connItem);
                 // ~
+                String chooseContext = chooseContext(connItem.getConnection());
 
-                boolean isUpdated = SwitchContextGroupNameImpl.getInstance().updateContextGroup(connItem);
+                boolean isUpdated = SwitchContextGroupNameImpl.getInstance().updateContextGroup(connItem, chooseContext);
 
                 if (isUpdated) {
 
@@ -72,6 +78,25 @@ public class SwitchContextAction extends Action {
             }
         }
         // TDQ-4559~
+    }
+
+    /**
+     * DOC talend Comment method "chooseContext".
+     */
+    private String chooseContext(Connection conn) {
+        String selectedContext = null;
+        if (conn != null) {
+            String contextId = conn.getContextId();
+            ContextItem contextItem = ContextUtils.getContextItemById2(contextId);
+            selectedContext = contextItem.getDefaultContext();
+            if (contextItem.getContext().size() > 1) {
+                ContextSetsSelectionDialog setsDialog = new ContextSetsSelectionDialog(contextItem);
+                if (setsDialog.open() == Window.OK) {
+                    selectedContext = setsDialog.getSelectedContext();
+                }
+            }
+        }
+        return selectedContext;
     }
 
 }
