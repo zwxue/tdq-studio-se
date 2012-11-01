@@ -13,8 +13,6 @@
 package org.talend.dataprofiler.core.ui.action.actions;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFolder;
@@ -22,33 +20,26 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.IViewReference;
 import org.talend.commons.utils.WorkspaceUtils;
 import org.talend.commons.utils.io.FilesUtils;
 import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.repository.i18n.Messages;
 import org.talend.dataprofiler.core.CorePlugin;
-import org.talend.dataprofiler.core.helper.WorkspaceResourceHelper;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
-import org.talend.dataprofiler.core.ui.utils.MessageUI;
+import org.talend.dataprofiler.core.ui.utils.RepNodeUtils;
 import org.talend.dataprofiler.core.ui.views.DQRespositoryView;
+import org.talend.dataprofiler.core.ui.views.resources.IRepositoryObjectCRUD;
 import org.talend.dataprofiler.core.ui.wizard.folder.TdqFolderWizard;
 import org.talend.dq.helper.RepositoryNodeHelper;
-import org.talend.dq.nodes.JrxmlTempSubFolderNode;
 import org.talend.dq.nodes.ReportSubFolderRepNode;
-import org.talend.dq.nodes.SourceFileSubFolderNode;
-import org.talend.repository.model.IRepositoryNode;
-import org.talend.repository.model.IRepositoryNode.ENodeType;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.repository.ui.actions.RenameFolderAction;
 import org.talend.repository.ui.wizards.folder.FolderWizard;
 import org.talend.utils.string.StringUtilities;
-import org.talend.utils.sugars.ReturnCode;
 
 /**
  * rename tdq folder action.
@@ -57,7 +48,7 @@ public class RenameTdqFolderAction extends RenameFolderAction {
 
     protected static Logger log = Logger.getLogger(RenameTdqFolderAction.class);
 
-    private RepositoryNode repositoryNode;
+    private IRepositoryObjectCRUD repositoryObjectCRUD = RepNodeUtils.getRepositoryObjectCRUD();
 
     /**
      * @param node a folder
@@ -74,24 +65,12 @@ public class RenameTdqFolderAction extends RenameFolderAction {
      */
     @Override
     protected void doRun() {
-        // ADD xqliu 2012-05-24 TDQ-4831
-        if (this.repositoryNode instanceof JrxmlTempSubFolderNode) {
-            MessageUI.openWarning(DefaultMessagesImpl.getString("JrxmlFileAction.forbiddenOperation")); //$NON-NLS-1$
-            return;
-        }
-        // ~ TDQ-4831
-        // Added yyin 20120712 TDQ-5721 when rename the sql file folder with file opening, should inform
-        if (this.repositoryNode instanceof SourceFileSubFolderNode) {
-            ReturnCode rc = WorkspaceResourceHelper.checkSourceFileSubFolderNodeOpening((SourceFileSubFolderNode) repositoryNode);
-            if (rc.isOk()) {
-                WorkspaceResourceHelper.showSourceFilesOpeningWarnMessages(rc.getMessage());
-                return;
-            }
-        }// ~
-
+        repositoryObjectCRUD.handleRenameFolder(repositoryNode);
         super.doRun();
+
     }
 
+    @Override
     protected void openFolderWizard(RepositoryNode node, ERepositoryObjectType objectType, IPath path) {
         // deal with ReportSubFolderRepNode
         File tarFile = null; // temp folder
@@ -130,38 +109,30 @@ public class RenameTdqFolderAction extends RenameFolderAction {
         }
     }
 
-    private List<IRepositoryNode> getOpenRepNodeForReName(IRepositoryNode parentNode, boolean recursive) {
-        List<IRepositoryNode> result = new ArrayList<IRepositoryNode>();
-        List<IRepositoryNode> children = parentNode.getChildren();
-
-        for (IRepositoryNode node : children) {
-            ENodeType type = node.getType();
-            if (type.equals(ENodeType.SIMPLE_FOLDER)) {
-                if (recursive) {
-                    result.addAll(getOpenRepNodeForReName(node, recursive));
-                }
-            } else {
-                result.add(node);
-            }
-        }
-        return result;
+    @Override
+    public ISelection getSelection() {
+        return repositoryObjectCRUD.getUISelection();
     }
 
     /*
      * (non-Javadoc)
      * 
-     * @see org.talend.commons.ui.swt.actions.ITreeContextualAction#init(org.eclipse.jface.viewers.TreeViewer,
-     * org.eclipse.jface.viewers.IStructuredSelection)
+     * @see org.talend.repository.ui.actions.AContextualAction#getRepositorySelection()
      */
-    public void init(TreeViewer viewer, IStructuredSelection selection) {
-    }
-
     @Override
-    public ISelection getSelection() {
-        IWorkbenchPart activePart = getActivePage().getActivePart();
-        if (activePart instanceof DQRespositoryView) {
-            return ((DQRespositoryView) activePart).getCommonViewer().getSelection();
+    protected ISelection getRepositorySelection() {
+        DQRespositoryView repositoryViewPart = null;
+        for (IViewReference viewRef : getActivePage().getViewReferences()) {
+            if (viewRef.getView(false) instanceof DQRespositoryView) {
+                repositoryViewPart = (DQRespositoryView) viewRef.getView(false);
+                break;
+            }
         }
-        return null;
+
+        if (repositoryViewPart == null) {
+            return null;
+        }
+        ISelection selection = repositoryViewPart.getCommonViewer().getSelection();
+        return selection;
     }
 }

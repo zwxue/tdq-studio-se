@@ -23,6 +23,10 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.FileEditorInput;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ui.editor.AbstractItemEditorInput;
+import org.talend.dataprofiler.core.ui.views.resources.IRepositoryObjectCRUD;
+import org.talend.dataprofiler.core.ui.views.resources.LocalRepositoryObjectCRUD;
+import org.talend.dataprofiler.core.ui.views.resources.RemoteRepositoryObjectCRUD;
+import org.talend.dq.helper.ProxyRepositoryManager;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.repository.model.IRepositoryNode;
 
@@ -115,6 +119,20 @@ public final class RepNodeUtils {
             CorePlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getActivePage()
                     .closeEditors(need2CloseEditorRefs.toArray(new IEditorReference[need2CloseEditorRefs.size()]), save);
 
+        }
+    }
+
+    /**
+     * 
+     * Get repostiroy object CRUD class according to project type.
+     * 
+     * @return
+     */
+    public static IRepositoryObjectCRUD getRepositoryObjectCRUD() {
+        if (ProxyRepositoryManager.getInstance().isLocalProject()) {
+            return new LocalRepositoryObjectCRUD();
+        } else {
+            return new RemoteRepositoryObjectCRUD();
         }
     }
 }

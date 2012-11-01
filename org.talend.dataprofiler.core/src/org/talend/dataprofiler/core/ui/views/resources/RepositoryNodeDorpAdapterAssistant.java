@@ -20,7 +20,7 @@ import org.eclipse.swt.dnd.DropTargetEvent;
 import org.eclipse.swt.dnd.TransferData;
 import org.eclipse.ui.navigator.CommonDropAdapter;
 import org.eclipse.ui.navigator.CommonDropAdapterAssistant;
-import org.talend.dq.helper.ProxyRepositoryManager;
+import org.talend.dataprofiler.core.ui.utils.RepNodeUtils;
 import org.talend.repository.model.IRepositoryNode;
 
 /**
@@ -30,14 +30,9 @@ public class RepositoryNodeDorpAdapterAssistant extends CommonDropAdapterAssista
 
     protected static Logger log = Logger.getLogger(RepositoryNodeDorpAdapterAssistant.class);
 
-    private IRepositoryObjectCRUD repositoryObjectCRUD = null;
+    private IRepositoryObjectCRUD repositoryObjectCRUD = RepNodeUtils.getRepositoryObjectCRUD();
 
     public RepositoryNodeDorpAdapterAssistant() {
-        if (ProxyRepositoryManager.getInstance().isLocalProject()) {
-            repositoryObjectCRUD = new LocalRepositoryObjectCRUD();
-        } else {
-            repositoryObjectCRUD = new RemoteRepositoryObjectCRUD();
-        }
     }
 
     @Override

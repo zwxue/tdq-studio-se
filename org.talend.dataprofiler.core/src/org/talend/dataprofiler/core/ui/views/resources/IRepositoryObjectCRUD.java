@@ -12,6 +12,7 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.views.resources;
 
+import org.eclipse.jface.viewers.ISelection;
 import org.talend.repository.model.IRepositoryNode;
 
 /**
@@ -24,5 +25,16 @@ public interface IRepositoryObjectCRUD {
     public Boolean validateDrop(IRepositoryNode targetNode);
 
     public Boolean handleDrop(IRepositoryNode targetNode);
+
+    public Boolean handleRenameFolder(IRepositoryNode targetNode);
+
+    /**
+     * 
+     * The UI selection will be vary when the project varies (e.g remote project will refresh the tree when get
+     * selection on UI, but local project won't)
+     * 
+     * @return
+     */
+    public ISelection getUISelection();
 
 }

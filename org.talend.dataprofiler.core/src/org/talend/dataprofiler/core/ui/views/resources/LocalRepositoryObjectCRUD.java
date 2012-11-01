@@ -32,6 +32,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.jfree.util.Log;
@@ -52,6 +53,7 @@ import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.editor.AbstractItemEditorInput;
 import org.talend.dataprofiler.core.ui.utils.MessageUI;
 import org.talend.dataprofiler.core.ui.utils.WorkbenchUtils;
+import org.talend.dataprofiler.core.ui.views.DQRespositoryView;
 import org.talend.dataprofiler.core.ui.views.provider.RepositoryNodeBuilder;
 import org.talend.dataquality.helpers.ReportHelper;
 import org.talend.dataquality.helpers.ReportHelper.ReportType;
@@ -930,4 +932,42 @@ public class LocalRepositoryObjectCRUD implements IRepositoryObjectCRUD {
         }
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * org.talend.dataprofiler.core.ui.views.resources.IRepositoryObjectCRUD#handleRenameFolder(org.talend.repository
+     * .model.IRepositoryNode, org.talend.repository.ui.actions.RenameFolderAction)
+     */
+    public Boolean handleRenameFolder(IRepositoryNode repositoryNode) {
+        // ADD xqliu 2012-05-24 TDQ-4831
+        if (repositoryNode instanceof JrxmlTempSubFolderNode) {
+            MessageUI.openWarning(DefaultMessagesImpl.getString("JrxmlFileAction.forbiddenOperation")); //$NON-NLS-1$
+            return Boolean.TRUE;
+        }
+        // ~ TDQ-4831
+        // Added yyin 20120712 TDQ-5721 when rename the sql file folder with file opening, should inform
+        if (repositoryNode instanceof SourceFileSubFolderNode) {
+            ReturnCode rc = WorkspaceResourceHelper.checkSourceFileSubFolderNodeOpening((SourceFileSubFolderNode) repositoryNode);
+            if (rc.isOk()) {
+                WorkspaceResourceHelper.showSourceFilesOpeningWarnMessages(rc.getMessage());
+                return Boolean.TRUE;
+            }
+        }// ~
+
+        return Boolean.TRUE;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataprofiler.core.ui.views.resources.IRepositoryObjectCRUD#getUISelection()
+     */
+    public ISelection getUISelection() {
+        IWorkbenchPart activePart = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActivePart();
+        if (activePart instanceof DQRespositoryView) {
+            return ((DQRespositoryView) activePart).getCommonViewer().getSelection();
+        }
+        return null;
+    }
 }

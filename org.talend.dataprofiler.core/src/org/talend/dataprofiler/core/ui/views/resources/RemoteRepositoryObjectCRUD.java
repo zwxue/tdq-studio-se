@@ -12,7 +12,10 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.views.resources;
 
-import org.talend.repository.model.IRepositoryNode;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.PlatformUI;
+import org.talend.dataprofiler.core.ui.views.DQRespositoryView;
 
 /**
  * Remote Repository Object CRUD. only when the project is remote use this.
@@ -23,13 +26,13 @@ public class RemoteRepositoryObjectCRUD extends LocalRepositoryObjectCRUD {
     /*
      * (non-Javadoc)
      * 
-     * @see
-     * org.talend.dataprofiler.core.ui.views.resources.LocalRepositoryObjectCRUD#handleDrop(org.talend.repository.model
-     * .IRepositoryNode)
+     * @see org.talend.dataprofiler.core.ui.views.resources.LocalRepositoryObjectCRUD#getUISelection()
      */
     @Override
-    public Boolean handleDrop(IRepositoryNode targetNode) {
-        return super.handleDrop(targetNode);
+    public ISelection getUISelection() {
+        IWorkbenchPart activePart = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActivePart();
+        ((DQRespositoryView) activePart).refresh();
+        return super.getUISelection();
     }
 
 }

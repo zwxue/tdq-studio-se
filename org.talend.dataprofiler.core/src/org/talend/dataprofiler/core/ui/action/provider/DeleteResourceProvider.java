@@ -62,6 +62,7 @@ public class DeleteResourceProvider extends AbstractCommonActionProvider {
     /**
      * Adds a submenu to the given menu with the name "New Component".
      */
+    @Override
     public void fillContextMenu(IMenuManager menu) {
         // MOD mzhao user readonly role on svn repository mode.
         if (!isShowMenu()) {
