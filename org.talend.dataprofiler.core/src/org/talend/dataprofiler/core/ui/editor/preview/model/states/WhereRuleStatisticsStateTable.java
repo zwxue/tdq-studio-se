@@ -449,16 +449,18 @@ public class WhereRuleStatisticsStateTable extends AbstractChartTypeStatesTable 
 
                 Indicator indicator = ((WhereRuleChartDataEntity) element).getIndicator();
 
+                // MOD yyin 20121031 TDQ-6194, when: match+no match>row count, highlight
                 if (IndicatorHelper.isWhereRuleIndicatorNotAide(indicator)) {
-                    largeThanRowCount = getRowCount() < ((WhereRuleIndicator) indicator).getUserCount();
+                    largeThanRowCount = getRowCount() < ((WhereRuleIndicator) indicator).getCount();
                 }
 
-                if (3 == columnIndex && largeThanRowCount) {
+                if ((3 == columnIndex || 4 == columnIndex) && largeThanRowCount) {
                     result = Display.getDefault().getSystemColor(SWT.COLOR_RED);
                 }
             }
 
             return result;
         }
+
     }
 }

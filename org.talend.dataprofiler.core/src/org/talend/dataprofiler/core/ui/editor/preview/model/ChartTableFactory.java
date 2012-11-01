@@ -135,7 +135,7 @@ public final class ChartTableFactory {
                         table.setMenu(menu);
 
                         MenuItemEntity[] itemEntities = ChartTableMenuGenerator.generate(explorer, analysis, dataEntity);
-                        Long rowCount = getRowCount(analysis, dataEntity.getIndicator().getAnalyzedElement());
+                        // Long rowCount = getRowCount(analysis, dataEntity.getIndicator().getAnalyzedElement());
 
                         if (!isJAVALanguage) {
                             boolean showExtraMenu = false;
@@ -157,10 +157,8 @@ public final class ChartTableFactory {
                                 // ADD msjian 2012-2-9 TDQ-4470: add the create column analysis menu using the join
                                 // condition columns
                                 if (IndicatorHelper.isWhereRuleIndicatorNotAide(indicator)) {
-                                    WhereRuleIndicator ind = (WhereRuleIndicator) indicator;
-                                    if (rowCount.doubleValue() < ind.getUserCount().doubleValue()) {
+                                    // MOD TDQ-6194 yyin 20121030, show the menu always
                                         showExtraMenu = true;
-                                    }
                                 }
                                 // TDQ-4470~
 
