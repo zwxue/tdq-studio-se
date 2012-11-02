@@ -1713,17 +1713,23 @@ public final class RepositoryNodeHelper {
         return patternsNodes;
     }
 
+    /**
+     * 
+     * get all of UDI
+     * 
+     * @param withDeleted care about which move into recycle bin
+     * @return the list of UDI
+     */
     public static List<IRepositoryNode> getUdisRepositoryNodes(boolean withDeleted) {
         RepositoryNode node = getRootNode(ERepositoryObjectType.TDQ_LIBRARIES);// EResourceConstant.LIBRARIES.getName());
         List<IRepositoryNode> udisNodes = new ArrayList<IRepositoryNode>();
         if (node != null) {
             List<IRepositoryNode> childrens = node.getChildren();
             for (IRepositoryNode subNode : childrens) {
-                if (EResourceConstant.INDICATORS.getName().equals((subNode.getObject().getLabel()))
-                        || EResourceConstant.RULES.getName().equals((subNode.getObject().getLabel()))) {
+                if (EResourceConstant.INDICATORS.getName().equals((subNode.getObject().getLabel()))) {
                     List<IRepositoryNode> subChildren = subNode.getChildren();
                     for (IRepositoryNode udisNode : subChildren) {
-                        if (udisNode instanceof UserDefIndicatorFolderRepNode || udisNode instanceof RulesSQLFolderRepNode) {
+                        if (udisNode instanceof UserDefIndicatorFolderRepNode) {
                             udisNodes.addAll(getModelElementFromFolder(udisNode, withDeleted));
                         }
                     }
