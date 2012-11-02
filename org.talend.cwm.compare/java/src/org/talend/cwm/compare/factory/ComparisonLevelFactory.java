@@ -20,6 +20,7 @@ import org.talend.cwm.compare.factory.comparisonlevel.RepositoryObjectComparison
 import org.talend.cwm.compare.factory.comparisonlevel.SelectedLocalComparison;
 import org.talend.cwm.compare.factory.comparisonlevel.TableViewComparisonLevel;
 import org.talend.dq.nodes.DBColumnFolderRepNode;
+import org.talend.dq.nodes.DBConnectionFolderRepNode;
 import org.talend.dq.nodes.DBConnectionRepNode;
 import org.talend.dq.nodes.DBTableFolderRepNode;
 import org.talend.dq.nodes.DBViewFolderRepNode;
@@ -46,7 +47,10 @@ public final class ComparisonLevelFactory {
             DBTableFolderRepNode dbFolderNode = (DBTableFolderRepNode) selectedObject;
             comparisonLevel = new CatalogSchemaComparisonLevel(dbFolderNode);
         } else if (selectedObject instanceof DBViewFolderRepNode) {
-            if (null == ((DBViewFolderRepNode) selectedObject).getCatalog()) {
+            // TODO tested for bug :TDQ-1533, but can't enter this if anymore, so this if maybe can be deleted.
+            // MOC yyin 20121101, TDQ-6092, add a condition for the db which donot have catalog, like oracle.
+            if ((null == ((DBViewFolderRepNode) selectedObject).getCatalog())
+                    && (((DBViewFolderRepNode) selectedObject).getParent() instanceof DBConnectionFolderRepNode)) {
                 // MOD yyi 2011-07-14 21512:the selected obj is db connection in this case
                 IRepositoryViewObject resObject = ((DBViewFolderRepNode) selectedObject).getParent().getObject();
                 comparisonLevel = new RepositoryObjectComparisonLevel(resObject);
