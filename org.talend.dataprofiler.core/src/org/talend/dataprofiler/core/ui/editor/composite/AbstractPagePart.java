@@ -193,7 +193,8 @@ public abstract class AbstractPagePart {
 
             Property prop = PropertyHelper.getProperty(dataManager);
             if (SwitchHelpers.CONNECTION_SWITCH.doSwitch(dataManager) != null) {
-                value = masterPage.getConnCombo().getData(prop.getLabel() + RepositoryNodeHelper.getConnectionType(dataManager));
+                value = masterPage.getConnCombo().getData(
+                        prop.getDisplayName() + RepositoryNodeHelper.getConnectionType(dataManager));
             }
             Integer index = 0;
             if (value != null && value instanceof Integer) {
