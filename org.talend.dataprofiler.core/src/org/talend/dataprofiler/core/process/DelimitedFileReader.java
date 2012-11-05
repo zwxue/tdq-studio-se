@@ -114,10 +114,6 @@ public class DelimitedFileReader {
             } else if (streamBuffer.isStartRecordDelimited()) {
                 endColumn();
                 endRecord();
-                if (!streamBuffer.hasMoreData()) {
-                    streamBuffer.fileEndWithRecordDelimiter = true;
-                }
-
             } else {
 
                 streamBuffer.currentPosition++;
@@ -135,11 +131,7 @@ public class DelimitedFileReader {
         }
 
         if (!hasReadRecord) {
-            if (!StaticSettings.IGNOREFILEENDWITHONERECORDDELIMITER && streamBuffer.fileEndWithRecordDelimiter) {// aaa;bbb#111;222#
-                streamBuffer.fileEndWithRecordDelimiter = false;
-                endColumn();
-                endRecord();
-            } else if (in) {// aaa;bbb#111;222
+            if (in) {// aaa;bbb#111;222
                 endColumn();
                 endRecord();
             }
@@ -174,9 +166,6 @@ public class DelimitedFileReader {
             if (streamBuffer.isStartRecordDelimited()) {
                 endColumn();
                 endRecord();
-                if (!streamBuffer.hasMoreData()) {
-                    streamBuffer.fileEndWithRecordDelimiter = true;
-                }
 
             } else if (streamBuffer.isStartFieldDelimited()) {
                 endColumn();
@@ -198,11 +187,7 @@ public class DelimitedFileReader {
         }
 
         if (!hasReadRecord) {
-            if (!StaticSettings.IGNOREFILEENDWITHONERECORDDELIMITER && streamBuffer.fileEndWithRecordDelimiter) {// aaa;bbb#111;222#
-                streamBuffer.fileEndWithRecordDelimiter = false;
-                endColumn();
-                endRecord();
-            } else if (in) {// aaa;bbb#111;222
+            if (in) {// aaa;bbb#111;222
                 endColumn();
                 endRecord();
             }
@@ -534,9 +519,6 @@ public class DelimitedFileReader {
 
         private char[] recordDelimiter;
 
-        // aaa;bbb#111;222#
-        private boolean fileEndWithRecordDelimiter = false;
-
         /*--------------2------------------- */
 
         private boolean lineFeedAll = false;
@@ -570,10 +552,6 @@ public class DelimitedFileReader {
                     // notice: here we set it "\r\n", neither "\n" nor "\r", becase there want max length
                     recordDelimiter = "\r\n".toCharArray(); //$NON-NLS-1$
                     lineFeedAll = true;
-                } else if (StaticSettings.LINEMODE == LineMode.LINEFEED_JRE) {
-                    String lineSeparator = (String) java.security.AccessController
-                            .doPrivileged(new sun.security.action.GetPropertyAction("line.separator")); //$NON-NLS-1$
-                    recordDelimiter = lineSeparator.toCharArray();
                 } else {
                     recordDelimiter = recordDelimiterPara.toCharArray();
                 }
@@ -708,17 +686,6 @@ public class DelimitedFileReader {
     }
 
     /**
-     * 
-     * DOC Administrator DelimitedFileReader class global comment. Detailled comment
-     */
-    private enum SplitWay {
-
-        FIRSTSPLIT_RECORDSEPARATOR,
-
-        FIRSTSPLIT_FIELDSEPARATOR;
-    }
-
-    /**
      * StaticSettings for the DelimitedDataReader. they can be changed in unit test.
      */
     private static class StaticSettings {
@@ -735,12 +702,6 @@ public class DelimitedFileReader {
 
         // how do we process the "\n" as recordDelimiter
         public static final LineMode LINEMODE = LineMode.LINEFEED_ALL;
-
-        // 1. how do we process the case, file end with one recordDelimiter, like the following case, 2 records or 3
-        // records?aaa;bbb#111;222#
-        // 2. notice: there only process the last one recordDelimiter, if this case: aaa;bbb#111;222####, we still focus
-        // on the last recordDelimiter
-        public static final boolean IGNOREFILEENDWITHONERECORDDELIMITER = true;
 
         // public static final boolean autoReallocateForHuge = true;
     }
