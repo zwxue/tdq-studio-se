@@ -185,7 +185,9 @@ public class ImportPatternsWizardPage extends WizardPage {
                 setPageComplete(false);
                 return;
             }
-            if (csvViewer.isQuotesError()) {
+            if (csvViewer.isEmptyDefinition()) {
+                setMessage(DefaultMessagesImpl.getString("ImportPatternsWizardPage.EmptyError"), IMessageProvider.WARNING); //$NON-NLS-1$
+            } else if (csvViewer.isQuotesError()) {
                 setMessage(DefaultMessagesImpl.getString("ImportPatternsWizardPage.QuoteError"), IMessageProvider.WARNING); //$NON-NLS-1$
             } else {
                 setMessage(null);

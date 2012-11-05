@@ -38,6 +38,7 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.CoreException;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.commons.utils.io.FilesUtils;
+import org.talend.core.exception.TalendInternalPersistenceException;
 import org.talend.core.model.metadata.builder.database.DqRepositoryViewService;
 import org.talend.cwm.constants.DevelopmentStatus;
 import org.talend.cwm.helper.TaggedValueHelper;
@@ -65,6 +66,7 @@ import org.talend.dq.writer.impl.ElementWriterFactory;
 import org.talend.resource.EResourceConstant;
 import org.talend.resource.ResourceManager;
 import org.talend.utils.sugars.ReturnCode;
+import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
 import com.csvreader.CsvReader;
@@ -378,6 +380,9 @@ public final class ImportFactory {
             } catch (IOException e) {
                 log.error(e, e);
                 importEvent.add(new ReturnCode(DefaultMessagesImpl.getString("ImportFactory.importFailed"), false)); //$NON-NLS-1$
+            } catch (TalendInternalPersistenceException e) {
+                log.error(e, e);
+                importEvent.add(new ReturnCode(DefaultMessagesImpl.getString("ImportFactory.importFailed"), false)); //$NON-NLS-1$
             }
         }
 
@@ -404,7 +409,8 @@ public final class ImportFactory {
         }
     }
 
-    private static String createAndStorePattern(PatternParameters parameters, IFolder selectionFolder, ExpressionType type) {
+    private static String createAndStorePattern(PatternParameters parameters, IFolder selectionFolder, ExpressionType type)
+            throws TalendInternalPersistenceException {
 
         Pattern pattern = createPattern(parameters.name, parameters.auther, parameters.description, parameters.purpose,
                 parameters.status);
@@ -438,9 +444,13 @@ public final class ImportFactory {
 
         IFile pfile = selectionFolder.getFile(fname);
 
-        ElementWriterFactory.getInstance().createPatternWriter().create(pattern, selectionFolder);
-
-        return ResourceManager.getPatternFolder().getLocationURI().relativize(selectionFolder.getLocationURI()).toString();
+        TypedReturnCode<Object> create = ElementWriterFactory.getInstance().createPatternWriter()
+                .create(pattern, selectionFolder);
+        if (create.isOk()) {
+            return ResourceManager.getPatternFolder().getLocationURI().relativize(selectionFolder.getLocationURI()).toString();
+        } else {
+            throw new TalendInternalPersistenceException(create.getMessage());
+        }
     }
 
     /**
@@ -586,7 +596,7 @@ public final class ImportFactory {
             String name = PluginConstant.EMPTY_STRING;
             try {
                 CsvReader reader = new CsvReader(new FileReader(importFile), CURRENT_SEPARATOR);
-                reader.setEscapeMode(CsvReader.ESCAPE_MODE_BACKSLASH);
+              //MOD zshen EscapeMode default is CsvReader.ESCAPE_MODE_DOUBLED
                 reader.setTextQualifier(TEXT_QUAL);
                 reader.setUseTextQualifier(USE_TEXT_QUAL);
                 reader.readHeaders();
@@ -615,10 +625,8 @@ public final class ImportFactory {
                     udiParameters.category = reader.get(PatternToExcelEnum.Category.getLiteral());
                     udiParameters.javaClassName = reader.get(PatternToExcelEnum.JavaClassName.getLiteral());
                     udiParameters.javaJarPath = reader.get(PatternToExcelEnum.JavaJarPath.getLiteral());
-                    char delimiter = reader.getDelimiter();
-                    String rawRecord = reader.getRawRecord();
                     String[] headers = reader.getHeaders();
-                    String[] columnsValue = rawRecord.split(String.valueOf(delimiter));
+                    String[] columnsValue = reader.getValues();
                     HashMap<String, String> record = new HashMap<String, String>();
                     for (int i = 0; i < headers.length; i++) {
                         record.put(headers[i], columnsValue[i]);

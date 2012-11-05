@@ -51,7 +51,7 @@ public class ImportUDIWizard extends Wizard {
     public boolean performFinish() {
         if (IMessageProvider.WARNING == page.getMessageType()) {
             if (!MessageDialog.openConfirm(null, DefaultMessagesImpl.getString("ImportPatternsWizard.Warning"), //$NON-NLS-1$
-                    DefaultMessagesImpl.getString("ImportPatternsWizard.ConfirmImport"))) { //$NON-NLS-1$
+                    DefaultMessagesImpl.getString("ImportPatternsWizard.ConfirmImport", page.getMessage()))) { //$NON-NLS-1$
                 return false;
             }
         }
@@ -65,9 +65,8 @@ public class ImportUDIWizard extends Wizard {
         Display.getDefault().asyncExec(new Runnable() {
 
             public void run() {
-                ImportInfoDialog.openImportInformation(
-                        getShell(),
-                        DefaultMessagesImpl.getString("ImportInfoDialog.INFO_TSK"), (ReturnCode[]) information.toArray(new ReturnCode[0])); //$NON-NLS-1$
+                ImportInfoDialog.openImportInformation(getShell(),
+                        DefaultMessagesImpl.getString("ImportInfoDialog.INFO_TSK"), information.toArray(new ReturnCode[0])); //$NON-NLS-1$
             }
 
         });

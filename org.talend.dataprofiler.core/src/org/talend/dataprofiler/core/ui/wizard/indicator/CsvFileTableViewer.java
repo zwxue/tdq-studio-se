@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
@@ -40,6 +41,8 @@ import com.csvreader.CsvReader;
  */
 public class CsvFileTableViewer extends Composite {
 
+    private Logger log = Logger.getLogger(CsvFileTableViewer.class);
+
     private static final char CURRENT_SEPARATOR = '\t';
 
     private boolean useTextQualifier = true;
@@ -52,6 +55,10 @@ public class CsvFileTableViewer extends Composite {
 
     private boolean quotesError = false;
 
+    private boolean emptyError = true;
+
+    private boolean hasEmptyRow = false;
+
     private boolean hasPatternHeaders = false;
 
     /**
@@ -62,6 +69,8 @@ public class CsvFileTableViewer extends Composite {
     class ViewContentProvider implements IStructuredContentProvider {
 
         public void inputChanged(Viewer v, Object oldInput, Object newInput) {
+            hasEmptyRow = false;
+            emptyError = true;
         }
 
         public void dispose() {
@@ -75,15 +84,10 @@ public class CsvFileTableViewer extends Composite {
 
             try {
                 while (csvReader.readRecord()) {
-                    char delimiter = reader.getDelimiter();
-                    String rawRecord = reader.getRawRecord();
-
-                    String[] columnsValue = rawRecord.split(String.valueOf(delimiter));
-                    rows.add(columnsValue);
-                    // rows.add(csvReader.getValues());
+                    rows.add(csvReader.getValues());
                 }
             } catch (IOException e) {
-                e.printStackTrace();
+                log.error(e, e);
             }
 
             return rows.toArray(new Object[rows.size()]);
@@ -97,16 +101,77 @@ public class CsvFileTableViewer extends Composite {
 
         public String getColumnText(Object obj, int index) {
             String[] values = (String[]) obj;
+            checkEmptyError(values);
             return index < values.length ? values[index] : null;
+        }
+
+        /**
+         * DOC talend Comment method "checkEmptyError".
+         * 
+         * @param obj
+         * @param index
+         */
+        private void checkEmptyError(String[] values) {
+            if (hasEmptyRow) {
+                return;
+            }
+
+            try {
+                String[] headers = reader.getHeaders();
+                for (int index = 0; index < headers.length; index++) {
+                    String header = headers[index];
+                    String value = values[index];
+                    if (isNotEmpty(value)) {
+                        if (isRegEx(index)) {
+                            emptyError = false;
+                        } else if (PatternToExcelEnum.Category.getLiteral().equalsIgnoreCase(header)) {
+                            emptyError = false;
+                        } else if (PatternToExcelEnum.JavaClassName.getLiteral().equalsIgnoreCase(header)) {
+                            emptyError = false;
+                        } else if (PatternToExcelEnum.JavaJarPath.getLiteral().equalsIgnoreCase(header)) {
+                            emptyError = false;
+                        }
+                    }
+                    if (isLastOne(index, headers.length)) {
+                        if (emptyError) {
+                            hasEmptyRow = true;
+                        }
+                    }
+                }
+            } catch (IOException e) {
+                log.error(e, e);
+            }
+
+        }
+
+        /**
+         * judge the method whether is empty
+         * 
+         * @param input
+         * @return true when input is null or length is 0 after remove quote
+         */
+        private boolean isNotEmpty(String input) {
+            String value = trimQuote(input);
+            return value != null && !(value.isEmpty());
+        }
+
+        /**
+         * DOC talend Comment method "isLastOne".
+         * 
+         * @return
+         */
+        private boolean isLastOne(int index, int length) {
+            return index == (length - 1);
+
         }
 
         public Image getColumnImage(Object obj, int index) {
             String[] values = (String[]) obj;
-            return index < values.length ? getImage(values[index]) : null;
+            return index < values.length ? getImage(values[index], index) : null;
         }
 
-        public Image getImage(Object obj) {
-            if (!checkQuoteMarks(obj.toString())) {
+        public Image getImage(Object obj, int index) {
+            if (!checkQuoteMarks(obj.toString(), index)) {
                 quotesError = true;
                 return WARN_IMG;
             } else {
@@ -146,16 +211,78 @@ public class CsvFileTableViewer extends Composite {
         viewer.getTable().setLinesVisible(true);
     }
 
-    private boolean checkQuoteMarks(String text) {
-        if (0 == text.length())
+    private boolean checkQuoteMarks(String text, int index) {
+        if (0 == text.length()) {
             return true;
+        }
+        if (isRegEx(index)) {
+            String trimQuote = trimQuote(text);
+            if (0 == trimQuote.length()) {
+                return true;
+            } else if ('\'' == trimQuote.charAt(0) && '\'' == trimQuote.charAt(trimQuote.length() - 1)) {
+                return true;
+            } else {
+                return false;
+            }
+        }
 
-        if ('\"' == text.charAt(0) && '\"' == text.charAt(text.length() - 1))
+        if ('\"' == text.charAt(0) && '\"' == text.charAt(text.length() - 1)) {
             return true;
+        }
 
-        if ('\"' != text.charAt(0) && '\"' != text.charAt(text.length() - 1))
+        if ('\"' != text.charAt(0) && '\"' != text.charAt(text.length() - 1)) {
             return true;
+        }
 
+        return false;
+    }
+
+    /**
+     * the column which index is "index" is a register expression
+     * 
+     * @param index
+     * @return
+     */
+    private boolean isRegEx(int index) {
+        try {
+            String[] headers = reader.getHeaders();
+            String header = headers[index];
+            if (PatternToExcelEnum.DB2Regexp.getLiteral().equalsIgnoreCase(header)) {
+                return true;
+            } else if (PatternToExcelEnum.MySQLRegexp.getLiteral().equalsIgnoreCase(header)) {
+                return true;
+            } else if (PatternToExcelEnum.OracleRegexp.getLiteral().equalsIgnoreCase(header)) {
+                return true;
+            } else if (PatternToExcelEnum.PostgreSQLRegexp.getLiteral().equalsIgnoreCase(header)) {
+                return true;
+            } else if (PatternToExcelEnum.SQLServerRegexp.getLiteral().equalsIgnoreCase(header)) {
+                return true;
+            } else if (PatternToExcelEnum.SybaseRegexp.getLiteral().equalsIgnoreCase(header)) {
+                return true;
+            } else if (PatternToExcelEnum.IngresRegexp.getLiteral().equalsIgnoreCase(header)) {
+                return true;
+            } else if (PatternToExcelEnum.InformixRegexp.getLiteral().equalsIgnoreCase(header)) {
+                return true;
+            } else if (PatternToExcelEnum.MDMRegexp.getLiteral().equalsIgnoreCase(header)) {
+                return true;
+            } else if (PatternToExcelEnum.SQLite3Regexp.getLiteral().equalsIgnoreCase(header)) {
+                return true;
+            } else if (PatternToExcelEnum.Teradata.getLiteral().equalsIgnoreCase(header)) {
+                return true;
+            } else if (PatternToExcelEnum.JavaRegexp.getLiteral().equalsIgnoreCase(header)) {
+                return true;
+            } else if (PatternToExcelEnum.Access.getLiteral().equalsIgnoreCase(header)) {
+                return true;
+            } else if (PatternToExcelEnum.AS400.getLiteral().equalsIgnoreCase(header)) {
+                return true;
+            } else if (PatternToExcelEnum.Hive.getLiteral().equalsIgnoreCase(header)) {
+                return true;
+            } else if (PatternToExcelEnum.AllDBRegexp.getLiteral().equalsIgnoreCase(header)) {
+                return true;
+            }
+        } catch (IOException e) {
+            log.error(e, e);
+        }
         return false;
     }
 
@@ -167,15 +294,17 @@ public class CsvFileTableViewer extends Composite {
         }
 
         for (String header : headers) {
-            if (!patternEnum.contains(trimQuote(header)))
+            if (!patternEnum.contains(trimQuote(header))) {
                 return false;
+            }
         }
         return true;
     }
 
     private String trimQuote(String text) {
-        if (text.length() < 2)
+        if (text.length() < 2) {
             return text;
+        }
 
         int beginLen = 0;
         int endLen = text.length();
@@ -202,7 +331,7 @@ public class CsvFileTableViewer extends Composite {
             e1.printStackTrace();
             return false;
         }
-        reader.setEscapeMode(CsvReader.ESCAPE_MODE_BACKSLASH);
+        //MOD zshen EscapeMode default is CsvReader.ESCAPE_MODE_DOUBLED
         reader.setUseTextQualifier(useTextQualifier);
         try {
             reader.readHeaders();
@@ -252,4 +381,9 @@ public class CsvFileTableViewer extends Composite {
     public boolean isQuotesError() {
         return quotesError;
     }
+
+    public boolean isEmptyDefinition() {
+        return this.hasEmptyRow;
+    }
+
 }
