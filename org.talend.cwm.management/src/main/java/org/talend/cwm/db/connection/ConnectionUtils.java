@@ -45,6 +45,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.common.util.EList;
+import org.talend.commons.ui.runtime.exception.ExceptionHandler;
 import org.talend.core.database.EDatabaseTypeName;
 import org.talend.core.database.conn.version.EDatabaseVersion4Drivers;
 import org.talend.core.model.metadata.IMetadataConnection;
@@ -94,6 +95,7 @@ import org.talend.dq.writer.impl.ElementWriterFactory;
 import org.talend.repository.ui.utils.ConnectionContextHelper;
 import org.talend.repository.ui.utils.DBConnectionContextUtils;
 import org.talend.repository.ui.utils.FileConnectionContextUtils;
+import org.talend.utils.ProductVersion;
 import org.talend.utils.sql.metadata.constants.GetColumn;
 import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.foundation.softwaredeployment.DataManager;
@@ -1814,5 +1816,53 @@ public final class ConnectionUtils {
         Connection analysisDataProvider = SwitchHelpers.CONNECTION_SWITCH.doSwitch(datamanager);
         return analysisDataProvider;
 
+    }
+
+    /**
+     * get the database product version.
+     * 
+     * @param connection
+     * @return
+     */
+    public static ProductVersion getDatabaseVersion(IMetadataConnection connection) {
+        ProductVersion version = null;
+
+        Connection conn = (Connection) connection.getCurrentConnection();
+        Properties props = new Properties();
+        String userName = JavaSqlFactory.getUsername(conn);
+        String password = JavaSqlFactory.getPassword(conn);
+        props.put(TaggedValueHelper.USER, userName);
+        props.put(TaggedValueHelper.PASSWORD, password);
+        String url = JavaSqlFactory.getURL(conn);
+        String driverClass = JavaSqlFactory.getDriverClass(conn);
+
+        try {
+            java.sql.Connection createConnection = createConnection(url, driverClass, props);
+            if (createConnection.getMetaData() != null) {
+                String temp = createConnection.getMetaData().getDatabaseProductVersion();
+                if (temp != null) {
+                    version = ProductVersion.fromString(temp);
+                }
+
+                if (version == null) {
+                    version = ProductVersion.fromString(createConnection.getMetaData().getDatabaseMajorVersion() + "." //$NON-NLS-1$
+                            + createConnection.getMetaData().getDatabaseMinorVersion() + ".0"); //$NON-NLS-1$
+                }
+            }
+        } catch (SQLException e) {
+            ExceptionHandler.process(e);
+        } catch (InstantiationException e) {
+            ExceptionHandler.process(e);
+        } catch (IllegalAccessException e) {
+            ExceptionHandler.process(e);
+        } catch (ClassNotFoundException e) {
+            ExceptionHandler.process(e);
+        }
+
+        if (version == null) {
+            version = ProductVersion.fromString("0.0.0"); //$NON-NLS-1$
+        }
+
+        return version;
     }
 }
