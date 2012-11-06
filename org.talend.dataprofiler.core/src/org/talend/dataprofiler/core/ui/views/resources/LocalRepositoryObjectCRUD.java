@@ -26,7 +26,6 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.util.LocalSelectionTransfer;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IEditorInput;
@@ -161,7 +160,16 @@ public class LocalRepositoryObjectCRUD implements IRepositoryObjectCRUD {
     }
 
     protected IRepositoryNode[] getSelectedRepositoryNodes() {
-        ISelection selection = LocalSelectionTransfer.getTransfer().getSelection();
+        ISelection selection = getUISelection();
+        Object obj = ((IStructuredSelection) selection).getFirstElement();
+        if (obj == null) {
+            MessageDialog
+                    .openWarning(
+                            PlatformUI.getWorkbench().getDisplay().getActiveShell(),
+                            DefaultMessagesImpl.getString("RepositoyNodeDropAdapterAssistant.moveHintTitle"), DefaultMessagesImpl.getString("RepositoyNodeDropAdapterAssistant.moveHintContent")); //$NON-NLS-1$ //$NON-NLS-2$  
+            return NO_RESOURCES;
+        }
+
         if (selection instanceof IStructuredSelection) {
             return getSelectedRepositoryNodes((IStructuredSelection) selection);
         }
@@ -189,13 +197,9 @@ public class LocalRepositoryObjectCRUD implements IRepositoryObjectCRUD {
             } else {
                 if (MoveObjectAction.getInstance().isLock((RepositoryNode) sourceNode)) {
                     MessageDialog
-                            .openError(
+                            .openWarning(
                                     PlatformUI.getWorkbench().getDisplay().getActiveShell(),
                                     DefaultMessagesImpl.getString("RepositoyNodeDropAdapterAssistant.error.moveError"), DefaultMessagesImpl.getString("RepositoyNodeDropAdapterAssistant.error.moveIsLocked")); //$NON-NLS-1$ //$NON-NLS-2$
-                    if (!ProxyRepositoryManager.getInstance().isLocalProject()) {
-                        CorePlugin.getDefault().refreshDQView(sourceNode.getParent());
-                        CorePlugin.getDefault().refreshWorkSpace();
-                    }
                     return true;
                 }
             }
