@@ -30,10 +30,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Enumeration;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.Properties;
 
 import net.sourceforge.sqlexplorer.EDriverName;
@@ -125,7 +123,7 @@ public final class ConnectionUtils {
     private static Boolean timeout = null;
 
     // MOD mzhao 2009-06-05 Bug 7571
-    private static final Map<String, Driver> DRIVER_CACHE = new HashMap<String, Driver>();
+    // private static final Map<String, Driver> DRIVER_CACHE = new HashMap<String, Driver>();
 
     public static boolean isTimeout() {
         if (timeout == null) {
@@ -305,6 +303,7 @@ public final class ConnectionUtils {
                 return rcJdbc;
             }
         }
+        // returnCode = MetadataConnectionUtils.checkConnection((DatabaseConnection)analysisDataProvider);
         returnCode = ConnectionUtils.checkConnection(url, JavaSqlFactory.getDriverClass(analysisDataProvider), props);
         return returnCode;
     }
@@ -436,7 +435,8 @@ public final class ConnectionUtils {
             ClassNotFoundException {
         // MOD mzhao 2009-06-05,Bug 7571 Get driver from catch first, if not
         // exist then get a new instance.
-        Driver driver = DRIVER_CACHE.get(driverClassName);
+        Driver driver = MetadataConnectionUtils.getDriverCache().get(driverClassName);
+        // Driver driver = DRIVER_CACHE.get(driverClassName);
         if (driver != null) {
             return driver;
         }
@@ -465,7 +465,7 @@ public final class ConnectionUtils {
                                 // MOD mzhao 2009-06-05,Bug 7571 Get driver from
                                 // catch first, if not
                                 // exist then get a new instance.
-                                DRIVER_CACHE.put(driverClassName, driver);
+                                MetadataConnectionUtils.getDriverCache().put(driverClassName, driver);
                                 return driver; // driver is found
                             }
                         } catch (ClassNotFoundException e) {
@@ -483,7 +483,7 @@ public final class ConnectionUtils {
         }
         // MOD mzhao 2009-06-05,Bug 7571 Get driver from catch first, if not
         // exist then get a new instance.
-        DRIVER_CACHE.put(driverClassName, driver);
+        MetadataConnectionUtils.getDriverCache().put(driverClassName, driver);
         return driver;
     }
 

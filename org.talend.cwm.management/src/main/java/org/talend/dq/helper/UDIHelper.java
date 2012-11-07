@@ -53,7 +53,7 @@ import orgomg.cwm.objectmodel.core.TaggedValue;
  */
 public final class UDIHelper {
 
-    private static final Map<Indicator, Indicator> javaUDIMap = new HashMap<Indicator, Indicator>();
+    private static final Map<Indicator, Indicator> JAVAUDIMAP = new HashMap<Indicator, Indicator>();
 
     public static final String JAREXTENSIONG = "jar";//$NON-NLS-1$
 
@@ -292,11 +292,11 @@ public final class UDIHelper {
      */
     public static Indicator adaptToJavaUDI(Indicator indicator) throws Throwable {
         // If the JUDI already been initiatated
-        if (javaUDIMap.get(indicator) != null) {
-            return javaUDIMap.get(indicator);
+        if (JAVAUDIMAP.get(indicator) != null) {
+            return JAVAUDIMAP.get(indicator);
         }
         // indicator itself already be a java user define indicator.
-        if (javaUDIMap.values().contains(indicator)) {
+        if (JAVAUDIMAP.values().contains(indicator)) {
             return indicator;
         }
         UserDefIndicator adaptedUDI = null;
@@ -332,7 +332,7 @@ public final class UDIHelper {
                     PropertyUtils.copyProperties(judi, indicator);
                     // judi.setAnalyzedElement(indicator.getAnalyzedElement());
                     adaptedUDI = judi;
-                    javaUDIMap.put(indicator, adaptedUDI);
+                    JAVAUDIMAP.put(indicator, adaptedUDI);
                 }
 
             }
