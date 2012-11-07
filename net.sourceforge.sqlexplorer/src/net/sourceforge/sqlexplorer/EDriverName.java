@@ -58,7 +58,7 @@ public enum EDriverName {
                      "lib/ojdbc14.jar"),
     MSSQLDEFAULTURL("MSSQL", //$NON-NLS-1$
                     "net.sourceforge.jtds.jdbc.Driver", //$NON-NLS-1$
-                    "-11", "lib/jtds-1.2.jar"), //$NON-NLS-1$
+                    "-11", "lib/jtds-1.2.5.jar"), //$NON-NLS-1$
     MSSQL2008URL("MSSQL2008", //$NON-NLS-1$
                  "com.microsoft.sqlserver.jdbc.SQLServerDriver", //$NON-NLS-1$
                  "-52", isAboveJDK15() ? "lib/sqljdbc4.jar" : "lib/sqljdbc.jar"), //$NON-NLS-1$
