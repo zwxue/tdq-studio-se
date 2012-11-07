@@ -13,7 +13,6 @@
 package org.talend.dq.analysis.explore;
 
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
 import static org.powermock.api.support.membermodification.MemberMatcher.method;
 import static org.powermock.api.support.membermodification.MemberModifier.stub;
@@ -52,7 +51,6 @@ public class BenfordLawFrequencyExplorerTest {
      */
     @Before
     public void setUp() throws Exception {
-        // stub(method(Messages.class, "getString", String.class)).toReturn("mock test");
         DataExplorerTestHelper.initDataExplorer();
         benExp = new BenfordLawFrequencyExplorer();
 
@@ -68,9 +66,6 @@ public class BenfordLawFrequencyExplorerTest {
         when(entity.getIndicator()).thenReturn(indicator);
         PowerMockito.mockStatic(IndicatorEnum.class);
         when(IndicatorEnum.findIndicatorEnum(indicator.eClass())).thenReturn(IndicatorEnum.BenfordLawFrequencyIndicatorEnum);
-
-        BenfordLawFrequencyExplorer spyBen = spy(benExp);
-        // when(spyBen.getAnalyzedElementName(indicator)).thenReturn("id");
 
         benExp.setEnitty(entity);
         when(entity.getKey()).thenReturn("1");
