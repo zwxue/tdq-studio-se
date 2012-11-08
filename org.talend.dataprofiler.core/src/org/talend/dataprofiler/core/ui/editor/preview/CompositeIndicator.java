@@ -161,14 +161,15 @@ public final class CompositeIndicator {
 
     private IndicatorUnit[] initChildIndicatorUnits(List<IndicatorUnit> tempList, IndicatorUnit[] indicatorUnits) {
         for (IndicatorUnit unit : indicatorUnits) {
-            // MOD gdbu TDQ-4262 2011-12-30 : Here we should only add the indicator,needn't to add the indicator's
+            // MOD msjian TDQ-6211 2012-11-8:revert TDQ-4261
+            // MOD gdbu TDQ-4261 2011-12-21 : Here we should only add the indicator,needn't to add the indicator's
             // classification.
+            tempList.add(unit);
             if (unit.getChildren() != null) {
                 initChildIndicatorUnits(tempList, unit.getChildren());
-            } else {
-                tempList.add(unit);
             }
-            // ~TDQ-4262
+            // ~TDQ-4261
+            // TDQ-6211~
         }
 
         return tempList.toArray(new IndicatorUnit[tempList.size()]);

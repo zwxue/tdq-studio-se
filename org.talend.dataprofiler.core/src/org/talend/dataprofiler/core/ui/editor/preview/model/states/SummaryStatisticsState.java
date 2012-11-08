@@ -46,7 +46,8 @@ public class SummaryStatisticsState extends AbstractChartTypeStates {
 
     private static Logger log = Logger.getLogger(SummaryStatisticsState.class);
 
-    public static final int FULL_FLAG = 6;
+    // when all the summary indicators is selected, include the catalog, the number should be 8
+    public static final int FULL_FLAG = 8;
 
     private int sqltype;
 
