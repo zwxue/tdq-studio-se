@@ -45,70 +45,57 @@ public class TdCellRenderer extends GridCellRenderer {
         boolean checkable = item.getCheckable(column);
         boolean checked = item.getChecked(column);
 
-        Color backColor = null;
-        if (checkable) {
-            if (checked) {
-                backColor = IndicatorSelectGrid.blue;
-            }
-        } else {
-            backColor = IndicatorSelectGrid.gray;
-        }
-
+        // fill background rectangle
         Color systemBackColor = getDisplay().getSystemColor(SWT.COLOR_LIST_BACKGROUND);
-        if (backColor != null) {
-            gc.setBackground(backColor);
+        if (checkable) {
+            gc.setBackground(getDisplay().getSystemColor(SWT.COLOR_LIST_BACKGROUND));
         } else {
-            gc.setBackground(systemBackColor);
+            gc.setBackground(IndicatorSelectGrid.gray);
         }
 
-        gc.fillRectangle(getBounds().x, getBounds().y, getBounds().width, getBounds().height);
+        int originX = getBounds().x;
+        gc.fillRectangle(originX, getBounds().y, getBounds().width, getBounds().height);
 
         if (checkable) {
-
+            // draw highlight color as background
             Color highlight = item.getBackground(column);
-            if (highlight == null) {
-                highlight = systemBackColor;
-            }
-
-            if (highlight == IndicatorSelectGrid.yellow) {
+            if (highlight != null) {
                 gc.setBackground(highlight);
-                if (checked) {
-                    gc.setAlpha(128);
-                }
-                gc.fillRectangle(getBounds().x, getBounds().y, getBounds().width, getBounds().height);
-                gc.setAlpha(-1);
-            } else if (highlight == IndicatorSelectGrid.lightYellow) {
-                gc.setBackground(highlight);
-                if (checked) {
-                    gc.setBackground(IndicatorSelectGrid.yellow);
-                    gc.setAlpha(64);
-                }
-                gc.fillRectangle(getBounds().x, getBounds().y, getBounds().width, getBounds().height);
-                gc.setAlpha(-1);
-            }
-
-            if (item.getGrayed(column)) {
-                gc.setBackground(systemBackColor);
-                gc.setAlpha(160);
-                gc.fillRectangle(getBounds().x, getBounds().y, getBounds().width - 1, getBounds().height);
-                gc.setAlpha(-1);
+                gc.fillRectangle(originX, getBounds().y, getBounds().width, getBounds().height);
             }
 
             if (checked) {
-                gc.setForeground(highlight);
+                // draw background oval
+                int offset = (getBounds().width - getBounds().height);
+                gc.setBackground(IndicatorSelectGrid.blue);
+                gc.fillOval(originX + offset / 2, getBounds().y, getBounds().width - offset, getBounds().height);
+
+                // draw a white oval for partially selected cells
+                if (item.getGrayed(column)) {
+                    gc.setBackground(systemBackColor);
+                    gc.setAlpha(160);
+                    gc.fillOval(originX + offset / 2, getBounds().y, getBounds().width - offset, getBounds().height);
+                    gc.setAlpha(-1);
+                }
+
+                // draw tick image
+                if (highlight != null) {
+                    gc.setForeground(highlight);
+                } else {
+                    gc.setForeground(systemBackColor);
+                }
                 gc.setLineWidth(3);
-                gc.drawLine(getBounds().x + 14, getBounds().y + 11, getBounds().x + 21, getBounds().y + 18);
-                gc.drawLine(getBounds().x + 19, getBounds().y + 18, getBounds().x + 35, getBounds().y + 2);
+                gc.drawLine(originX + 16, getBounds().y + 11, originX + 22, getBounds().y + 17);
+                gc.drawLine(originX + 20, getBounds().y + 17, originX + 32, getBounds().y + 5);
                 gc.setLineWidth(1);
             }
         }
-
         if (item.getParent().getLinesVisible()) {
             gc.setForeground(item.getParent().getLineColor());
-            gc.drawLine(getBounds().x, getBounds().y + getBounds().height, getBounds().x + getBounds().width - 1, getBounds().y
+            gc.drawLine(originX, getBounds().y + getBounds().height, originX + getBounds().width - 1, getBounds().y
                     + getBounds().height);
-            gc.drawLine(getBounds().x + getBounds().width - 1, getBounds().y, getBounds().x + getBounds().width - 1,
-                    getBounds().y + getBounds().height);
+            gc.drawLine(originX + getBounds().width - 1, getBounds().y, originX + getBounds().width - 1, getBounds().y
+                    + getBounds().height);
         }
     }
 

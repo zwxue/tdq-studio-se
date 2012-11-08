@@ -183,71 +183,53 @@ public class TdRowHeaderRenderer extends GridCellRenderer {
         boolean checkable = item.getCheckable(1);
         boolean checked = item.getChecked(1);
 
-        Color backColor = null;
-        if (checkable) {
-            if (checked) {
-                backColor = IndicatorSelectGrid.blue;
-            }
-        } else {
-            backColor = IndicatorSelectGrid.gray;
-        }
-
+        // fill background rectangle
         Color systemBackColor = getDisplay().getSystemColor(SWT.COLOR_LIST_BACKGROUND);
-        if (backColor != null) {
-            gc.setBackground(backColor);
+        if (checkable) {
+            gc.setBackground(getDisplay().getSystemColor(SWT.COLOR_LIST_BACKGROUND));
         } else {
-            gc.setBackground(systemBackColor);
+            gc.setBackground(IndicatorSelectGrid.gray);
         }
 
-        gc.fillRectangle(getBounds().x + getBounds().width - 51, getBounds().y, 50, getBounds().height);
+        int originX = getBounds().x + getBounds().width - 50;
+        gc.fillRectangle(originX, getBounds().y, 50, getBounds().height);
 
         // show row select cells
         if (checkable) {
+
+            // draw highlight color as background
             Color highlight = item.getBackground(1);
-            if (highlight == null) {
-                highlight = systemBackColor;
-            }
-            gc.setBackground(highlight);
-            if (checked) {
-                backColor = IndicatorSelectGrid.blue;
-            }
-
-            int originX = getBounds().x + getBounds().width - 50;
-            if (highlight == IndicatorSelectGrid.yellow) {
+            if (highlight != null) {
                 gc.setBackground(highlight);
-                if (checked) {
-                    gc.setAlpha(128);
-                }
                 gc.fillRectangle(originX, getBounds().y, 50, getBounds().height);
-                gc.setAlpha(-1);
-            } else if (highlight == IndicatorSelectGrid.lightYellow) {
-                gc.setBackground(highlight);
-                if (checked) {
-                    gc.setBackground(IndicatorSelectGrid.yellow);
-                    gc.setAlpha(64);
-                }
-                gc.fillRectangle(originX, getBounds().y, 50, getBounds().height);
-                gc.setAlpha(-1);
-            }
-
-            if (item.getGrayed(1)) {
-                gc.setBackground(getDisplay().getSystemColor(SWT.COLOR_WHITE));
-                gc.setAlpha(160);
-                gc.fillRectangle(originX, getBounds().y, 50, getBounds().height);
-                gc.setAlpha(-1);
             }
 
             if (checked) {
-                gc.setForeground(highlight);
+                // draw background oval
+                int offset = 50 - getBounds().height;
+                gc.setBackground(IndicatorSelectGrid.blue);
+                gc.fillOval(originX + offset / 2, getBounds().y, 50 - offset, getBounds().height);
+
+                // draw a white oval for partially selected cells
+                if (item.getGrayed(1)) {
+                    gc.setBackground(systemBackColor);
+                    gc.setAlpha(160);
+                    gc.fillOval(originX + offset / 2, getBounds().y, 50 - offset, getBounds().height);
+                    gc.setAlpha(-1);
+                }
+
+                // draw tick image
+                if (highlight != null) {
+                    gc.setForeground(highlight);
+                } else {
+                    gc.setForeground(systemBackColor);
+                }
                 gc.setLineWidth(3);
-                gc.drawLine(originX + 14, getBounds().y + 11, originX + 21, getBounds().y + 18);
-                gc.drawLine(originX + 19, getBounds().y + 18, originX + 35, getBounds().y + 2);
+                gc.drawLine(originX + 16, getBounds().y + 11, originX + 22, getBounds().y + 17);
+                gc.drawLine(originX + 20, getBounds().y + 17, originX + 32, getBounds().y + 5);
                 gc.setLineWidth(1);
             }
 
-        } else {
-            gc.setBackground(IndicatorSelectGrid.gray);
-            gc.fillRectangle(getBounds().x + getBounds().width - 51, getBounds().y, 50, getBounds().height);
         }
 
         if (item.getParent().getLinesVisible()) {
