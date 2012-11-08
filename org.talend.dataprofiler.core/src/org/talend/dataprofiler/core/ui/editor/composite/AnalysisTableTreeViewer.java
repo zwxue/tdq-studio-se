@@ -805,7 +805,7 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
      * @param treeItem
      */
     private void removeTreeItem(TreeItem treeItem) {
-        ArrayList removeList = new ArrayList();
+        ArrayList<Object> removeList = new ArrayList<Object>();
         Iterator<Object> iterator = this.indicatorTreeItemMap.keySet().iterator();
         while (iterator.hasNext()) {
             Object obj = iterator.next();

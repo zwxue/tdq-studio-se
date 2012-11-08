@@ -158,7 +158,7 @@ public final class ChartTableFactory {
                                 // condition columns
                                 if (IndicatorHelper.isWhereRuleIndicatorNotAide(indicator)) {
                                     // MOD TDQ-6194 yyin 20121030, show the menu always
-                                        showExtraMenu = true;
+                                    showExtraMenu = true;
                                 }
                                 // TDQ-4470~
 
@@ -398,10 +398,10 @@ public final class ChartTableFactory {
                                     item.setText(DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.generateJob"));//$NON-NLS-1$ 
                                 } else if (isAllMatchIndicator(indicator)) {
                                     item = new MenuItem(menu, SWT.PUSH);
-                                    item.setText("Generate an ETL job to handle rows");//$NON-NLS-1$ 
+                                    item.setText(DefaultMessagesImpl.getString("ChartTableFactory.gen_etl_job_row")); //$NON-NLS-1$
                                 } else if (isPhonseNumberIndicator(indicator)) {
                                     item = new MenuItem(menu, SWT.PUSH);
-                                    item.setText("Generate a standardization phone number job");
+                                    item.setText(DefaultMessagesImpl.getString("ChartTableFactory.gen_std_phone_job")); //$NON-NLS-1$
                                 } else if (isDqRule(indicator)) {
                                     item = new MenuItem(menu, SWT.PUSH);
                                     item.setText(DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.generateJob"));//$NON-NLS-1$ 
