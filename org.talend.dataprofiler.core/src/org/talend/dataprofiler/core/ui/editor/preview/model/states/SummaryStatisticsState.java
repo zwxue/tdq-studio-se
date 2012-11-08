@@ -46,7 +46,8 @@ public class SummaryStatisticsState extends AbstractChartTypeStates {
 
     private static Logger log = Logger.getLogger(SummaryStatisticsState.class);
 
-    public static final int FULL_FLAG = 6;
+    // when all the summary indicators is selected, include the catalog, the number should be 8
+    public static final int FULL_FLAG = 8;
 
     private int sqltype;
 
@@ -65,8 +66,8 @@ public class SummaryStatisticsState extends AbstractChartTypeStates {
         } else {
             if (isIntact()) {
                 BoxAndWhiskerCategoryDataset dataset = (BoxAndWhiskerCategoryDataset) getDataset();
-                return TopChartFactory.createBoxAndWhiskerChart(DefaultMessagesImpl
-                        .getString("SummaryStatisticsState.SummaryStatistics"), dataset); //$NON-NLS-1$
+                return TopChartFactory.createBoxAndWhiskerChart(
+                        DefaultMessagesImpl.getString("SummaryStatisticsState.SummaryStatistics"), dataset); //$NON-NLS-1$
             } else {
                 return TopChartFactory.createBarChart(
                         DefaultMessagesImpl.getString("SummaryStatisticsState.Summary_Statistics"), getDataset(), false); //$NON-NLS-1$
@@ -100,10 +101,10 @@ public class SummaryStatisticsState extends AbstractChartTypeStates {
 
         if (isIntact()) {
             CustomerDefaultBAWDataset dataset = new CustomerDefaultBAWDataset();
-            BoxAndWhiskerItem item = ChartDatasetUtils.createBoxAndWhiskerItem(map.get(IndicatorEnum.MeanIndicatorEnum), map
-                    .get(IndicatorEnum.MedianIndicatorEnum), map.get(IndicatorEnum.LowerQuartileIndicatorEnum), map
-                    .get(IndicatorEnum.UpperQuartileIndicatorEnum), map.get(IndicatorEnum.MinValueIndicatorEnum), map
-                    .get(IndicatorEnum.MaxValueIndicatorEnum), null);
+            BoxAndWhiskerItem item = ChartDatasetUtils.createBoxAndWhiskerItem(map.get(IndicatorEnum.MeanIndicatorEnum),
+                    map.get(IndicatorEnum.MedianIndicatorEnum), map.get(IndicatorEnum.LowerQuartileIndicatorEnum),
+                    map.get(IndicatorEnum.UpperQuartileIndicatorEnum), map.get(IndicatorEnum.MinValueIndicatorEnum),
+                    map.get(IndicatorEnum.MaxValueIndicatorEnum), null);
 
             dataset.add(item, "0", ""); //$NON-NLS-1$ //$NON-NLS-2$
 
@@ -144,9 +145,8 @@ public class SummaryStatisticsState extends AbstractChartTypeStates {
     @Override
     protected TableStructureEntity getTableStructure() {
         TableStructureEntity entity = new TableStructureEntity();
-        entity
-                .setFieldNames(new String[] {
-                        DefaultMessagesImpl.getString("SummaryStatisticsState.Label"), DefaultMessagesImpl.getString("SummaryStatisticsState.Count") }); //$NON-NLS-1$ //$NON-NLS-2$
+        entity.setFieldNames(new String[] {
+                DefaultMessagesImpl.getString("SummaryStatisticsState.Label"), DefaultMessagesImpl.getString("SummaryStatisticsState.Count") }); //$NON-NLS-1$ //$NON-NLS-2$
         entity.setFieldWidths(new Integer[] { 200, 300 });
         return entity;
     }

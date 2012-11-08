@@ -405,6 +405,7 @@ public abstract class ModelElementIndicatorImpl implements ModelElementIndicator
 
     public void removeTempIndicatorEnum(IndicatorEnum indicatorEnum) {
         tempIndicatorEnums.remove(indicatorEnum);
+        tempIndicatorEnums.remove(indicatorEnum.getParent());
     }
 
     public void copyOldIndicatorEnum() {
