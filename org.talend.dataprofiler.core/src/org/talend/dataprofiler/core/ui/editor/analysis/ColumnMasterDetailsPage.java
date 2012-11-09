@@ -170,6 +170,7 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
         currentEditor = (AnalysisEditor) editor;
     }
 
+    @Override
     public void initialize(FormEditor editor) {
         super.initialize(editor);
         recomputeIndicators();
@@ -279,6 +280,7 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
         GridDataFactory.fillDefaults().align(SWT.FILL, SWT.TOP).applyTo(clmnBtn);
         clmnBtn.addHyperlinkListener(new HyperlinkAdapter() {
 
+            @Override
             public void linkActivated(HyperlinkEvent e) {
                 openColumnsSelectionDialog();
             }
@@ -290,6 +292,7 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
         GridDataFactory.fillDefaults().align(SWT.FILL, SWT.TOP).applyTo(indcBtn);
         indcBtn.addHyperlinkListener(new HyperlinkAdapter() {
 
+            @Override
             public void linkActivated(HyperlinkEvent e) {
                 ModelElementIndicator[] result = treeViewer.openIndicatorSelectDialog(null);
                 if (result.length > 0) {
@@ -314,6 +317,7 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
         collapseAllImageLink.setImage(ImageLib.getImage(ImageLib.COLLAPSE_ALL));
         collapseAllImageLink.addHyperlinkListener(new HyperlinkAdapter() {
 
+            @Override
             public void linkActivated(HyperlinkEvent e) {
                 TreeItem[] items = treeViewer.getTree().getItems();
                 expandTreeItems(items, false);
@@ -326,6 +330,7 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
         expandAllImageLink.setImage(ImageLib.getImage(ImageLib.EXPAND_ALL));
         expandAllImageLink.addHyperlinkListener(new HyperlinkAdapter() {
 
+            @Override
             public void linkActivated(HyperlinkEvent e) {
                 TreeItem[] items = treeViewer.getTree().getItems();
                 expandTreeItems(items, true);
@@ -366,15 +371,19 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
      * DOC zshen Comment method "computePagination".
      */
     private void computePagination() {
+        if (chartComposite != null) {
+            for (Control control : chartComposite.getChildren()) {
+                control.dispose();
+            }
+        }
+
         if (uiPagination == null) {
             uiPagination = new UIPagination(toolkit);
             uiPagination.setComposite(navigationComposite);
         } else {
             uiPagination.reset();
         }
-        // if (previewChartList == null) {
-        // previewChartList = new ArrayList<ExpandableComposite>();
-        // }
+
         final ModelElementIndicator[] modelElementIndicatorArrary = this.getCurrentModelElementIndicators();
         int pageSize = IndicatorPaginationInfo.getPageSize();
         int totalPages = modelElementIndicatorArrary.length / pageSize;
@@ -454,12 +463,6 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
         if (dialog.open() == Window.OK) {
             Object[] modelElements = dialog.getResult();
             setTreeViewInput(modelElements);
-            // ModelElementIndicator[] filterInputData = treeViewer.filterInputData(modelElements);
-            // if (filterInputData == null) {
-            // return;
-            // }
-            // refreshTheTree(treeViewer.getModelElementIndicator());
-            // this.setDirty(true);
         }
     }
 
@@ -497,6 +500,7 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
         collapseAllImageLink.setImage(ImageLib.getImage(ImageLib.COLLAPSE_ALL));
         collapseAllImageLink.addHyperlinkListener(new HyperlinkAdapter() {
 
+            @Override
             public void linkActivated(HyperlinkEvent e) {
                 if (previewChartList != null && !previewChartList.isEmpty()) {
                     for (ExpandableComposite comp : previewChartList) {
@@ -512,6 +516,7 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
         expandAllImageLink.setImage(ImageLib.getImage(ImageLib.EXPAND_ALL));
         expandAllImageLink.addHyperlinkListener(new HyperlinkAdapter() {
 
+            @Override
             public void linkActivated(HyperlinkEvent e) {
                 if (previewChartList != null && !previewChartList.isEmpty()) {
                     for (ExpandableComposite comp : previewChartList) {
@@ -540,6 +545,7 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
 
         refreshBtn.addHyperlinkListener(new HyperlinkAdapter() {
 
+            @Override
             public void linkActivated(HyperlinkEvent e) {
 
                 for (Control control : chartComposite.getChildren()) {
@@ -576,37 +582,8 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
     }
 
     public void createPreviewCharts(final ScrolledForm form, final Composite composite, final boolean isCreate) {
-        // previewChartList = new ArrayList<ExpandableComposite>();
         uiPagination.setChartComposite(composite);
-        // final ModelElementIndicator[] modelElementIndicatores = this.getCurrentModelElementIndicators();
-        // uiPagination = new UIPagination(toolkit, navigationComposite, composite);
-        // int pageSize = IndicatorPaginationInfo.getPageSize();
-        // int totalPages = modelElementIndicatores.length / pageSize;
-        // List<ModelElementIndicator> modelElementIndicators = null;
-        // for (int index = 0; index < totalPages; index++) {
-        // modelElementIndicators = new ArrayList<ModelElementIndicator>();
-        // for (int idx = 0; idx < pageSize; idx++) {
-        // modelElementIndicators.add(modelElementIndicatores[index * pageSize + idx]);
-        // }
-        // // IndicatorPaginationInfo pginfo = new MasterPaginationInfo(form, previewChartList, modelElementIndicators,
-        // // uiPagination);
-        // // uiPagination.addPage(pginfo);
-        //
-        // }
-        // int left = modelElementIndicatores.length % pageSize;
-        // if (left != 0) {
-        // modelElementIndicators = new ArrayList<ModelElementIndicator>();
-        // for (int leftIdx = 0; leftIdx < left; leftIdx++) {
-        // modelElementIndicators.add(modelElementIndicatores[totalPages * pageSize + leftIdx]);
-        // }
-        // IndicatorPaginationInfo pginfo = new MasterPaginationInfo(form, previewChartList, modelElementIndicators,
-        // uiPagination);
-        // uiPagination.addPage(pginfo);
-        // // FIXME totalPages won't used anymore.
-        // totalPages++;
-        // }
         uiPagination.init();
-        // ~
 
         for (ExpandableComposite comp : previewChartList) {
             registerSection(comp);
@@ -619,23 +596,11 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
 
     @Override
     public void refresh() {
-        // if (chartComposite != null) {
-        // try {
-        // for (Control control : chartComposite.getChildren()) {
-        // control.dispose();
-        // }
-        //
-        // createPreviewCharts(form, chartComposite, true);
-        // chartComposite.getParent().layout();
-        // chartComposite.layout();
-        // } catch (Exception ex) {
-        // log.error(ex, ex);
-        // }
-        // }
         if (EditorPreferencePage.isHideGraphics()) {
             if (sForm.getChildren().length > 1) {
-                if (null != sForm.getChildren()[1] && !sForm.getChildren()[1].isDisposed())
+                if (null != sForm.getChildren()[1] && !sForm.getChildren()[1].isDisposed()) {
                     sForm.getChildren()[1].dispose();
+                }
                 topComp.getParent().layout();
                 topComp.layout();
             }
@@ -658,6 +623,7 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
                 previewComp.setLayout(new GridLayout());
                 previewComp.addControlListener(new ControlAdapter() {
 
+                    @Override
                     public void controlResized(ControlEvent e) {
                         super.controlResized(e);
                         sForm.redraw();
@@ -828,12 +794,7 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
         });
         GridDataFactory.fillDefaults().grab(true, false).applyTo(maxNumText);
         GridDataFactory.fillDefaults().align(SWT.BEGINNING, SWT.BEGINNING).applyTo(maxNumLabel);
-        // ((GridData) maxNumText.getLayoutData()).widthHint = 200;
         GridDataFactory.fillDefaults().grab(true, false).align(SWT.FILL, SWT.BEGINNING).applyTo(drillDownCheck);
-        // GridData data1 = new GridData();
-        // data1.horizontalSpan = 2;
-        // drillDownCheck.setLayoutData(data1);
-        // maxNumLabel.setLayoutData(data1);
         return javaEnginSection;
     }
 
@@ -859,25 +820,18 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
      * @param outputFolder
      * @throws DataprofilerCoreException
      */
+    @Override
     public void saveAnalysis() throws DataprofilerCoreException {
 
         IRepositoryViewObject reposObject = null;
         analysisHandler.clearAnalysis();
         ModelElementIndicator[] modelElementIndicators = this.getCurrentModelElementIndicators();
-        // List<TdDataProvider> providerList = new ArrayList<TdDataProvider>();
         Connection tdProvider = null;
         Analysis analysis = analysisHandler.getAnalysis();
-
-        // ADD gdbu 2011-3-3 bug 19179
-
-        // remove the space from analysis name
-        //        this.analysis.setName(this.analysis.getName().replace(" ", ""));//$NON-NLS-1$ //$NON-NLS-2$
 
         for (Domain domain : this.analysis.getParameters().getDataFilter()) {
             domain.setName(this.analysis.getName());
         }
-
-        // ~
 
         analysis.getParameters().setExecutionLanguage(ExecutionLanguage.get(execLang));
         // MOD zshen feature 12919 to save analysisParameter.
@@ -934,19 +888,8 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
             // MOD yyi 2012-02-08 TDQ-4621:Explicitly set true for updating dependencies.
             saved = ElementWriterFactory.getInstance().createAnalysisWrite().save(tdqAnalysisItem, true);
         }
-        // MOD yyi 2012-02-03 TDQ-3602:Avoid to rewriting all analyzes after saving, no reason to update all analyzes
-        // which is depended in the referred connection.
-        // Extract saving log function.
-        // @see org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisMetadataPage#logSaved(ReturnCode)
         logSaved(saved);
 
-        // Domain dataFilter = getDataFilter(dataManager, (Column) column); //
-        // CAST here for test
-        // analysisBuilder.addFilterOnData(dataFilter);
-        //
-        // FolderProvider folderProvider = new FolderProvider();
-        // folderProvider.setFolder(new File(outputFolder));
-        // DqRepositoryViewService.saveDomain(dataFilter, folderProvider);
         treeViewer.setDirty(false);
         dataFilterComp.setDirty(false);
     }
@@ -982,16 +925,9 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
      * @param indicator
      */
     protected void expandChart(ModelElementIndicator indicator) {
-        // int columnIndex = indexOfSelectedItem(indicator);
-        // MOD klliu bug 22407 check the uiPagination is null.
         if (uiPagination == null) {
             return;
         }
-        // if (-1 != columnIndex) {
-        // int pageIndex = (columnIndex % IndicatorPaginationInfo.getPageSize() > 0 ? columnIndex
-        // / IndicatorPaginationInfo.getPageSize() + 1 : columnIndex / IndicatorPaginationInfo.getPageSize());
-        //
-        // uiPagination.setCurrentPage(pageIndex);
 
         if (previewChartList != null && !previewChartList.isEmpty()) {
             for (ExpandableComposite comp : previewChartList) {
@@ -1001,16 +937,7 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
                 }
             }
         }
-        // }
     }
-
-    // public void setDirty(boolean isDirty) {
-    // if (this.isDirty != isDirty) {
-    // this.isDirty = isDirty;
-    // ((AnalysisEditor)
-    // this.getEditor()).firePropertyChange(IEditorPart.PROP_DIRTY);
-    // }
-    // }
 
     /**
      * DOC yyi 2011-06-02 16929:get index of the column selected in the tree viewer.
@@ -1116,12 +1043,6 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
         }
         // ~19179
 
-        // ADD xqliu 2010-01-22 bug 11200
-        // ReturnCode checkMdmExecutionEngine = checkMdmExecutionEngine();
-        // if (!checkMdmExecutionEngine.isOk()) {
-        // // such judgment?
-        // return checkMdmExecutionEngine;
-        // }
         // MOD klliu 2011-04-18 code cleaning.
         ModelElementIndicator[] modelElementIndicators = treeViewer.getModelElementIndicator();
         if (modelElementIndicators != null && modelElementIndicators.length != 0) {
@@ -1154,10 +1075,6 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
         if (modelElementIndicators != null && modelElementIndicators.length != 0) {
             analysis.getContext().setConnection(ModelElementIndicatorHelper.getTdDataProvider(modelElementIndicators[0]));
         }
-        // feature 13573 add the support to java engine
-        // if (analysisHandler.isMdmConnection() && ExecutionLanguage.JAVA.getLiteral().equals(this.execLang)) {
-        //            return new ReturnCode(DefaultMessagesImpl.getString("ColumnMasterDetailsPage.mdmSQL"), false); //$NON-NLS-1$
-        // }
         return new ReturnCode(true);
     }
 
