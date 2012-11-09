@@ -388,12 +388,19 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
      * DOC zshen Comment method "computePagination".
      */
     private void computePagination() {
+        if (chartComposite != null) {
+            for (Control control : chartComposite.getChildren()) {
+                control.dispose();
+            }
+        }
+
         if (uiPagination == null) {
             uiPagination = new UIPagination(toolkit);
             uiPagination.setComposite(navigationComposite);
         } else {
             uiPagination.reset();
         }
+
         final ModelElementIndicator[] modelElementIndicatorArrary = this.getCurrentModelElementIndicators();
         int pageSize = IndicatorPaginationInfo.getPageSize();
         int totalPages = modelElementIndicatorArrary.length / pageSize;
@@ -407,7 +414,6 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
             IndicatorPaginationInfo pginfo = new MasterPaginationInfo(form, previewChartList, modelElementIndicatorList,
                     uiPagination, treeViewer);
             uiPagination.addPage(pginfo);
-
         }
 
         int left = modelElementIndicatorArrary.length % pageSize;
@@ -423,7 +429,6 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
             totalPages++;
         }
         uiPagination.init();
-
     }
 
     /**
@@ -484,7 +489,6 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
     }
 
     public void refreshTheTree(ModelElementIndicator[] modelElements) {
-
         this.currentModelElementIndicators = modelElements;
         this.computePagination();
     }
@@ -556,7 +560,6 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
 
             @Override
             public void linkActivated(HyperlinkEvent e) {
-
                 for (Control control : chartComposite.getChildren()) {
                     control.dispose();
                 }

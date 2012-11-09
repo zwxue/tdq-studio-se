@@ -738,8 +738,8 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
     }
 
     public ModelElementIndicator[] openIndicatorSelectDialog(Shell shell) {
-        String oldgrid = System.getProperty("talend.profiler.oldgrid");
-        if ("true".equals(oldgrid)) {
+        String oldgrid = System.getProperty("talend.profiler.oldgrid"); //$NON-NLS-1$
+        if ("true".equals(oldgrid)) { //$NON-NLS-1$
 
             final IndicatorSelectDialog dialog = new IndicatorSelectDialog(
                     shell,

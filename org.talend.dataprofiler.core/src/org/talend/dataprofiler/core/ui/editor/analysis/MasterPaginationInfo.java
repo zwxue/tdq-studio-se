@@ -39,7 +39,6 @@ import org.talend.dataprofiler.core.ui.utils.pagination.UIPagination;
 import org.talend.dq.indicators.preview.EIndicatorChartType;
 
 /**
- * 
  * DOC mzhao UIPagination class global comment. Detailled comment
  */
 public class MasterPaginationInfo extends IndicatorPaginationInfo {
@@ -51,19 +50,15 @@ public class MasterPaginationInfo extends IndicatorPaginationInfo {
     public MasterPaginationInfo(ScrolledForm form, List<ExpandableComposite> previewChartList,
             List<? extends ModelElementIndicator> modelElementIndicators, UIPagination uiPagination) {
         this(form, previewChartList, modelElementIndicators, uiPagination, null);
-
     }
 
     public MasterPaginationInfo(ScrolledForm form, List<ExpandableComposite> previewChartList,
-            List<? extends ModelElementIndicator> modelElementIndicators,
-            UIPagination uiPagination, AnalysisColumnTreeViewer treeViewer) {
+            List<? extends ModelElementIndicator> modelElementIndicators, UIPagination uiPagination,
+            AnalysisColumnTreeViewer treeViewer) {
         super(form, modelElementIndicators, uiPagination);
         this.previewChartList = previewChartList;
         if (treeViewer != null) {
             this.treeViewer = treeViewer;
-            // treeViewer.setElements(modelElementIndicators.toArray(new
-            // ModelElementIndicator[modelElementIndicators.size()]),
-            // false);
         }
     }
 
@@ -74,7 +69,7 @@ public class MasterPaginationInfo extends IndicatorPaginationInfo {
             treeViewer.setElements(modelElementIndicators.toArray(new ModelElementIndicator[modelElementIndicators.size()]),
                     false);
         }
-        //chart composite don't display So need't consider it.
+        // chart composite don't display So need't consider it.
         if (previewChartList == null || uiPagination.getChartComposite() == null) {
             return;
         }
@@ -109,7 +104,7 @@ public class MasterPaginationInfo extends IndicatorPaginationInfo {
                     }
                 }
             }
-//
+
             exComp.addExpansionListener(new ExpansionAdapter() {
 
                 @Override
@@ -123,7 +118,6 @@ public class MasterPaginationInfo extends IndicatorPaginationInfo {
             exComp.setClient(comp);
             uiPagination.getChartComposite().layout();
         }
-
     }
 
     /**
