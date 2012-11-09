@@ -1801,8 +1801,9 @@ public final class ConnectionUtils {
         String url = JavaSqlFactory.getURL(conn);
         String driverClass = JavaSqlFactory.getDriverClass(conn);
 
+        java.sql.Connection createConnection = null;
         try {
-            java.sql.Connection createConnection = createConnection(url, driverClass, props);
+            createConnection = createConnection(url, driverClass, props);
             if (createConnection.getMetaData() != null) {
                 String temp = createConnection.getMetaData().getDatabaseProductVersion();
                 if (temp != null) {
@@ -1822,6 +1823,14 @@ public final class ConnectionUtils {
             ExceptionHandler.process(e);
         } catch (ClassNotFoundException e) {
             ExceptionHandler.process(e);
+        } finally {
+            if (createConnection != null) {
+                try {
+                    createConnection.close();
+                } catch (SQLException e) {
+                    ExceptionHandler.process(e);
+                }
+            }
         }
 
         if (version == null) {
