@@ -596,7 +596,7 @@ public final class ImportFactory {
             String name = PluginConstant.EMPTY_STRING;
             try {
                 CsvReader reader = new CsvReader(new FileReader(importFile), CURRENT_SEPARATOR);
-              //MOD zshen EscapeMode default is CsvReader.ESCAPE_MODE_DOUBLED
+                // MOD zshen EscapeMode default is CsvReader.ESCAPE_MODE_DOUBLED
                 reader.setTextQualifier(TEXT_QUAL);
                 reader.setUseTextQualifier(USE_TEXT_QUAL);
                 reader.readHeaders();
@@ -629,7 +629,9 @@ public final class ImportFactory {
                     String[] columnsValue = reader.getValues();
                     HashMap<String, String> record = new HashMap<String, String>();
                     for (int i = 0; i < headers.length; i++) {
-                        record.put(headers[i], columnsValue[i]);
+                        if (columnsValue[i] != null && columnsValue[i].length() > 0) {
+                            record.put(headers[i], columnsValue[i]);
+                        }
                     }
                     for (PatternLanguageType languagetype : PatternLanguageType.values()) {
                         String cellStr = record.get(languagetype.getExcelEnum().getLiteral());

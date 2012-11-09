@@ -118,6 +118,14 @@ public class CsvFileTableViewer extends Composite {
 
             try {
                 String[] headers = reader.getHeaders();
+                if (values.length < headers.length) {
+                    String errorRow = "";
+                    for (String value : values) {
+                        errorRow += value;
+                    }
+                    log.error("The size of values is less than size of headers.When check the row for: " + errorRow); //$NON-NLS-1$
+                    return;
+                }
                 for (int index = 0; index < headers.length; index++) {
                     String header = headers[index];
                     String value = values[index];
@@ -331,7 +339,7 @@ public class CsvFileTableViewer extends Composite {
             e1.printStackTrace();
             return false;
         }
-        //MOD zshen EscapeMode default is CsvReader.ESCAPE_MODE_DOUBLED
+        // MOD zshen EscapeMode default is CsvReader.ESCAPE_MODE_DOUBLED
         reader.setUseTextQualifier(useTextQualifier);
         try {
             reader.readHeaders();
