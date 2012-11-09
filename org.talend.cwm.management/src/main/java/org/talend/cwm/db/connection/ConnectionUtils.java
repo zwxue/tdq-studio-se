@@ -766,7 +766,7 @@ public final class ConnectionUtils {
         if (object != null) {
             if (object instanceof ProviderConnection) {
                 // FIXME it will cause stack overflow.
-                return isMdmConnection((ProviderConnection) object);
+                return isMdmConnection(object);
             } else if (object instanceof DataProvider) {
                 return isMdmConnection((DataProvider) object);
             } else if (object instanceof IRepositoryViewObject) {
@@ -854,7 +854,7 @@ public final class ConnectionUtils {
         DatabaseConnection dbConn = SwitchHelpers.DATABASECONNECTION_SWITCH.doSwitch(connection);
         if (dbConn != null) {
             String databaseType = dbConn.getDatabaseType() == null ? org.talend.dataquality.PluginConstant.EMPTY_STRING : dbConn
-                    .getDatabaseType(); //$NON-NLS-1$
+                    .getDatabaseType();
             return EDriverName.POSTGRESQLEFAULTURL.getDBKey().equalsIgnoreCase(databaseType)
                     || EDatabaseTypeName.PSQL.getDisplayName().equalsIgnoreCase(databaseType);
         }
@@ -1168,6 +1168,7 @@ public final class ConnectionUtils {
      * @param conn
      * @return
      */
+    @Deprecated
     public static Connection fillConnectionInformation(Connection conn) {
         boolean saveFlag = false;
         // fill metadata of connection
@@ -1227,6 +1228,7 @@ public final class ConnectionUtils {
      * @return
      * @deprecated Is Replaced By DBConnectionFiller.fillUIConnParams
      */
+    @Deprecated
     public static List<Connection> fillConnectionInformation(List<Connection> conns) {
         List<Connection> results = new ArrayList<Connection>();
         for (Connection conn : conns) {
@@ -1262,6 +1264,7 @@ public final class ConnectionUtils {
      * @param dbConn
      * @return
      */
+    @Deprecated
     public static DatabaseConnection fillDbConnectionInformation(DatabaseConnection dbConn) {
         // fill database structure
         if (DatabaseConstant.XML_EXIST_DRIVER_NAME.equals(dbConn.getDriverClass())) { // xmldb(e.g eXist)
@@ -1278,7 +1281,7 @@ public final class ConnectionUtils {
                                          // ParameterUtil.toMap(ConnectionUtils.createConnectionParam(dbConn));
                     IMetadataConnection metaConnection = ConvertionHelper.convert(dbConn);
                     dbConn = (DatabaseConnection) MetadataFillFactory.getDBInstance().fillUIConnParams(metaConnection, dbConn);
-                    sqlConn = (java.sql.Connection) MetadataConnectionUtils.checkConnection(metaConnection).getObject();
+                    sqlConn = MetadataConnectionUtils.checkConnection(metaConnection).getObject();
 
                     if (sqlConn != null) {
                         DatabaseMetaData dm = ExtractMetaDataUtils.getDatabaseMetaData(sqlConn, dbConn, false);
@@ -1413,7 +1416,7 @@ public final class ConnectionUtils {
     public static void retrieveColumn(MetadataTable tdTable) {
         List<TdColumn> columnList = ColumnSetHelper.getColumns((ColumnSet) tdTable);
         if (columnList != null && columnList.size() > 0) {
-            TdColumn tempColumn = ((TdColumn) columnList.get(0));
+            TdColumn tempColumn = columnList.get(0);
             if (tempColumn.getSqlDataType() == null || "NULL".equalsIgnoreCase(tempColumn.getSqlDataType().getName())//$NON-NLS-1$
                     && 0 == tempColumn.getSqlDataType().getJavaDataType()) {
 
@@ -1466,6 +1469,7 @@ public final class ConnectionUtils {
      * @deprecated the method will be deleted when the connection fetch from
      * IRepositoryViewObject.getProperty().getItem().getConnection
      */
+    @Deprecated
     public static void fillAttributeBetweenConnection(Connection target, Connection source) {
         if (target == null || source == null) {
             return;
@@ -1501,6 +1505,7 @@ public final class ConnectionUtils {
      * filter again don't needed this method. And have all kinds of filter can be use in the repository view when the
      * tree be display not fill connection.
      */
+    @Deprecated
     public static List<String> getPackageFilter(DBConnectionParameter connectionParam) {
         List<String> packageFilter = null;
         if (connectionParam.getSqlTypeName().equals(SupportDBUrlType.MDM.getDBKey())) {
@@ -1759,7 +1764,7 @@ public final class ConnectionUtils {
             if (contextName == null) {
                 return DBConnectionContextUtils.cloneOriginalValueConnection(connection, true, null);
             }
-            return DBConnectionContextUtils.cloneOriginalValueConnection((DatabaseConnection) connection, false, contextName);
+            return DBConnectionContextUtils.cloneOriginalValueConnection(connection, false, contextName);
         }
         return connection;
     }
@@ -1836,8 +1841,9 @@ public final class ConnectionUtils {
         String url = JavaSqlFactory.getURL(conn);
         String driverClass = JavaSqlFactory.getDriverClass(conn);
 
+        java.sql.Connection createConnection = null;
         try {
-            java.sql.Connection createConnection = createConnection(url, driverClass, props);
+            createConnection = createConnection(url, driverClass, props);
             if (createConnection.getMetaData() != null) {
                 String temp = createConnection.getMetaData().getDatabaseProductVersion();
                 if (temp != null) {
@@ -1857,6 +1863,14 @@ public final class ConnectionUtils {
             ExceptionHandler.process(e);
         } catch (ClassNotFoundException e) {
             ExceptionHandler.process(e);
+        } finally {
+            if (createConnection != null) {
+                try {
+                    createConnection.close();
+                } catch (SQLException e) {
+                    ExceptionHandler.process(e);
+                }
+            }
         }
 
         if (version == null) {
