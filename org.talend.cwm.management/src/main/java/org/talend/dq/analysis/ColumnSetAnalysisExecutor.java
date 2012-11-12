@@ -188,8 +188,7 @@ public class ColumnSetAnalysisExecutor extends AnalysisExecutor {
                 }
                 TdXmlElementType parentXmlElement = SwitchHelpers.XMLELEMENTTYPE_SWITCH.doSwitch(parentElement);
                 if (parentXmlElement == null) {
-                    this.errorMessage = Messages.getString(
-"ColumnAnalysisExecutor.NoContainerFound", parentElement.getName()); //$NON-NLS-1$
+                    this.errorMessage = Messages.getString("ColumnAnalysisExecutor.NoContainerFound", parentElement.getName()); //$NON-NLS-1$
                     return null;
                 }
                 sql.append(parentXmlElement.getName());
@@ -246,7 +245,7 @@ public class ColumnSetAnalysisExecutor extends AnalysisExecutor {
                 sql.append(this.quote(col.getName()));
                 // append comma if more columns exist
                 if (iterator.hasNext()) {
-                    sql.append(',');//$NON-NLS-1$
+                    sql.append(',');
                 }
             }
             // add from
@@ -270,7 +269,7 @@ public class ColumnSetAnalysisExecutor extends AnalysisExecutor {
                 sql.append(this.quote(column.getName()));
                 // append comma if more columns exist
                 if (iter.hasNext()) {
-                    sql.append(',');//$NON-NLS-1$
+                    sql.append(',');
                 }
             }
         }
@@ -291,7 +290,7 @@ public class ColumnSetAnalysisExecutor extends AnalysisExecutor {
         } else if (parentRelation instanceof Catalog) {
             String ownerUser = null;
             if (ConnectionUtils.isSybaseeDBProducts(dbms().getDbmsName())) {
-                ownerUser = ColumnSetHelper.getTableOwner((ModelElement) element);
+                ownerUser = ColumnSetHelper.getTableOwner(element);
             }
             sql.append(dbms().toQualifiedName(parentRelation.getName(), ownerUser, element.getName()));
         }
@@ -332,10 +331,10 @@ public class ColumnSetAnalysisExecutor extends AnalysisExecutor {
         EList<RegexpMatchingIndicator> indicators = indicator.getCompositeRegexMatchingIndicators();
         String patternNames = PluginConstant.EMPTY_STRING;
         for (RegexpMatchingIndicator rmi : indicators) {
-            if (null == rmi.getRegex()) {
+            if (null == rmi.getJavaRegex()) {
 
                 patternNames += System.getProperty("line.separator") + "\"" + rmi.getName() + "\"";//$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
-            } else if (rmi.getRegex().equals(rmi.getName())) {
+            } else if (rmi.getJavaRegex().equals(rmi.getName())) {
                 patternNames += System.getProperty("line.separator") + "\"" + rmi.getName() + "\"";//$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
             }
         }

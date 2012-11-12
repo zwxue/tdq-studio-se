@@ -28,7 +28,7 @@ import org.talend.i18n.Messages;
  * end-user-doc -->
  * <p>
  * </p>
- *
+ * 
  * @generated
  */
 public class RegexpMatchingIndicatorImpl extends PatternMatchingIndicatorImpl implements RegexpMatchingIndicator {
@@ -48,6 +48,7 @@ public class RegexpMatchingIndicatorImpl extends PatternMatchingIndicatorImpl im
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     protected RegexpMatchingIndicatorImpl() {
@@ -56,6 +57,7 @@ public class RegexpMatchingIndicatorImpl extends PatternMatchingIndicatorImpl im
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
@@ -74,7 +76,7 @@ public class RegexpMatchingIndicatorImpl extends PatternMatchingIndicatorImpl im
      */
     @Override
     public boolean prepare() {
-        this.regex = getRegex();
+        this.regex = getJavaRegex();
         if (regex == null) {
             return false;
         }
@@ -92,9 +94,13 @@ public class RegexpMatchingIndicatorImpl extends PatternMatchingIndicatorImpl im
     /**
      * DOC scorreia Comment method "getRegex".
      * 
+     * this mehtod only for job Action
+     * 
      * @return
      */
+    @Override
     public String getRegex() {
+
         // MOD klliu 2010-06-12 bug 13695
         if (this.parameters != null) {
             final Domain dataValidDomain = parameters.getDataValidDomain();
@@ -123,7 +129,7 @@ public class RegexpMatchingIndicatorImpl extends PatternMatchingIndicatorImpl im
                                     }
 
                                     r = DomainHelper.getRegexp(p, dbType);
-                                    //MOD klliu 2010-07-08 bug 13695 give detail message
+                                    // MOD klliu 2010-07-08 bug 13695 give detail message
                                     if (r == null) {
                                         r = p.getName();
                                         this.setJavaPatternMessage(r);
@@ -140,6 +146,35 @@ public class RegexpMatchingIndicatorImpl extends PatternMatchingIndicatorImpl im
                             }
                             return r;
                         }
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
+    /**
+     * 
+     * 
+     * this mehtod only return java expression
+     * 
+     * @return
+     */
+
+    @Override
+    public String getJavaRegex() {
+        // MOD zshen TDQ-5645 there will be use with java engin so don't consider ohter case, others
+        // will use in DBMSLanugae mode
+        if (this.parameters != null) {
+            final Domain dataValidDomain = parameters.getDataValidDomain();
+            if (dataValidDomain != null) {
+                final EList<Pattern> patterns = dataValidDomain.getPatterns();
+                for (Pattern p : patterns) {
+                    if (p != null) {
+                        // MOD zshen TDQ-5645 there will be use with java engin so don't consider ohter case, others
+                        // will use in DBMSLanugae mode
+                        return DomainHelper.getJavaRegexp(p);
+
                     }
                 }
             }

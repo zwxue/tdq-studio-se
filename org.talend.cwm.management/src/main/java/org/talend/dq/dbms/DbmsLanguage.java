@@ -36,6 +36,7 @@ import org.talend.dataquality.domain.pattern.PatternComponent;
 import org.talend.dataquality.domain.pattern.PatternPackage;
 import org.talend.dataquality.domain.pattern.RegularExpression;
 import org.talend.dataquality.domain.sql.SqlPredicate;
+import org.talend.dataquality.helpers.DomainHelper;
 import org.talend.dataquality.indicators.DateGrain;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.IndicatorParameters;
@@ -338,6 +339,7 @@ public class DbmsLanguage {
      * @return a default SQL expression which can be used as pattern finder or null
      * @deprecated use {@link #getPatternFinderFunction(String, String, String)} instead
      */
+    @Deprecated
     public String getPatternFinderDefaultFunction(String expression) {
         return null;
     }
@@ -487,7 +489,7 @@ public class DbmsLanguage {
     }
 
     public String selectColumnsFromTable(List<String> columns, String table) {
-        return " SELECT " + StringUtils.join(columns.iterator(), ',') + from() + table; //$NON-NLS-1$ //$NON-NLS-2$ 
+        return " SELECT " + StringUtils.join(columns.iterator(), ',') + from() + table; //$NON-NLS-1$ 
     }
 
     public String in() {
@@ -823,23 +825,60 @@ public class DbmsLanguage {
         // MOD by zhsne for bug 17172 2010.12.10
         Expression expression = null;
         EList<PatternComponent> components = pattern.getComponents();
+        expression = getFullMatchingExpr(components, isJavaEngin);
+        if (expression == null) {
+            expression = getDefaultMatchingExpr(components, isJavaEngin);
+        }
+        return expression;
+    }
+
+    /**
+     * get default one for all of expression
+     * 
+     * @param components
+     * @param isJavaEngin
+     * @return
+     */
+    private Expression getDefaultMatchingExpr(EList<PatternComponent> components, boolean isJavaEngin) {
+        Expression returnExpr = null;
         for (PatternComponent patternComponent : components) {
-            if (patternComponent != null) {
-                expression = this.getExpression(patternComponent);
-                if (expression != null
-                        && (!(isJavaEngin ^ DbmsLanguageFactory.compareDbmsLanguage(ExecutionLanguage.JAVA.getName(),
-                                expression.getLanguage())) || DbmsLanguageFactory.compareDbmsLanguage(
-                                ExecutionLanguage.SQL.getName(), expression.getLanguage()))) {
-                    return expression;
-                }
+            if (isJavaEngin) {
+                returnExpr = DomainHelper.getExpression(patternComponent, ExecutionLanguage.JAVA.getName());
+            } else {
+                returnExpr = DomainHelper.getExpression(patternComponent, ExecutionLanguage.SQL.getName());
+            }
+            if (returnExpr != null) {
+                break;
             }
         }
-        return null;
+        return returnExpr;
+    }
+
+    /**
+     * get best one for all of expression
+     * 
+     * @param components
+     * @return
+     */
+    private Expression getFullMatchingExpr(EList<PatternComponent> components, boolean isJavaEngin) {
+        Expression returnExpr = null;
+        for (PatternComponent patternComponent : components) {
+            if (isJavaEngin) {
+                returnExpr = DomainHelper.getExpression(patternComponent, ExecutionLanguage.JAVA.getName());
+            } else {
+                returnExpr = DomainHelper.getExpression(patternComponent, this.getDbmsName());
+            }
+            if (returnExpr != null) {
+                break;
+            }
+        }
+        return returnExpr;
     }
 
     public Expression getExpression(ModelElement element, boolean isJavaEngin) {
-        if (element == null)
+        if (element == null) {
             return null;
+        }
         Expression expression = null;
         if (element instanceof Pattern) {
             expression = getRegexp(((Pattern) element), isJavaEngin);
@@ -1278,7 +1317,7 @@ public class DbmsLanguage {
                 if (ConnectionUtils.isSybaseeDBProducts(getDbmsName())) {
                     // MOD by klliu bug 20926 #c82152
                     // schemaName = ColumnSetHelper.getTableOwner(colA);
-                    ColumnSet columnOwnerAsColumnSet = ColumnHelper.getColumnOwnerAsColumnSet((TdColumn) colA);
+                    ColumnSet columnOwnerAsColumnSet = ColumnHelper.getColumnOwnerAsColumnSet(colA);
                     schemaName = ColumnSetHelper.getTableOwner(columnOwnerAsColumnSet);
                 }
                 // ~11934
@@ -1291,7 +1330,7 @@ public class DbmsLanguage {
                 // MOD by zshen: change schemaName of sybase database to Table's owner.
                 if (ConnectionUtils.isSybaseeDBProducts(getDbmsName())) {
                     // MOD by klliu bug 20926 #c82152
-                    ColumnSet columnOwnerAsColumnSet = ColumnHelper.getColumnOwnerAsColumnSet((TdColumn) colB);
+                    ColumnSet columnOwnerAsColumnSet = ColumnHelper.getColumnOwnerAsColumnSet(colB);
                     schemaName = ColumnSetHelper.getTableOwner(columnOwnerAsColumnSet);
                 }
                 // ~11934

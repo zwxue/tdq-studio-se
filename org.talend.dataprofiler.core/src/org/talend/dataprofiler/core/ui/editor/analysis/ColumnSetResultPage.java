@@ -134,10 +134,11 @@ public class ColumnSetResultPage extends AbstractAnalysisResultPage implements P
         return this.masterPage.getColumnSetAnalysisHandler();
     }
 
+    @Override
     protected void createResultSection(Composite parent) {
         executeData = getAnalysisHandler().getExecuteData();
-        graphicsAndTableSection = this.createSection(form, parent, DefaultMessagesImpl
-                .getString("ColumnSetResultPage.AnalysisResult"), null); //$NON-NLS-1$
+        graphicsAndTableSection = this.createSection(form, parent,
+                DefaultMessagesImpl.getString("ColumnSetResultPage.AnalysisResult"), null); //$NON-NLS-1$
         Composite sectionClient = toolkit.createComposite(graphicsAndTableSection);
         sectionClient.setLayout(new GridLayout());
         sectionClient.setLayoutData(new GridData(GridData.FILL_BOTH));
@@ -177,7 +178,7 @@ public class ColumnSetResultPage extends AbstractAnalysisResultPage implements P
     }
 
     private Section createAllMatchPart(Composite parentComp, String title, AllMatchIndicator matchIndicator) {
-        Section section = createSection(form, parentComp, title, null); //$NON-NLS-1$
+        Section section = createSection(form, parentComp, title, null);
         section.setLayoutData(new GridData(GridData.FILL_BOTH));
 
         Composite sectionClient = toolkit.createComposite(section);
@@ -219,7 +220,7 @@ public class ColumnSetResultPage extends AbstractAnalysisResultPage implements P
 
     private Section createSimpleStatisticsPart(Composite parentComp, String title, SimpleStatIndicator simpleStatIndicator) {
         // MOD sgandon 15/03/2010 bug 11769 : made descriotion null to remove empty space.
-        Section section = createSection(form, parentComp, title, null); //$NON-NLS-1$
+        Section section = createSection(form, parentComp, title, null);
         section.setLayoutData(new GridData(GridData.FILL_BOTH));
 
         Composite sectionClient = toolkit.createComposite(section);
@@ -315,9 +316,8 @@ public class ColumnSetResultPage extends AbstractAnalysisResultPage implements P
                     wizard.setContainer(dialog);
                     wizard.setWindowTitle(DefaultMessagesImpl.getString("SelectPatternsWizard.title"));//$NON-NLS-1$
                     if (WizardDialog.OK == dialog.open()) {
-                        ColumnSetResultPage.this.tableFilterResult = ((SelectPatternsWizard) wizard).getPatternSelectPage()
-                                .getTableInputList();
-                        filterType = ((SelectPatternsWizard) wizard).getPatternSelectPage().getFilterType();
+                        ColumnSetResultPage.this.tableFilterResult = wizard.getPatternSelectPage().getTableInputList();
+                        filterType = wizard.getPatternSelectPage().getFilterType();
                         columnsElementViewer.refresh();
                     }
                 }
@@ -468,15 +468,16 @@ public class ColumnSetResultPage extends AbstractAnalysisResultPage implements P
             if (DataFilterType.ALL_DATA.equals(filterType)) {
                 return true;
             }
-                if (tableFilterResult != null) {
+            if (tableFilterResult != null) {
                 for (Map<Integer, RegexpMatchingIndicator> tableItem : ColumnSetResultPage.this.tableFilterResult) {
                     if (element instanceof Object[]) {
                         for (int index = 0; index < ((Object[]) element).length; index++) {
                             RegexpMatchingIndicator regMatIndicator = tableItem.get(index);
-                        if (regMatIndicator == null)
-                            continue;
-                        String regex = regMatIndicator.getRegex();
-                        Pattern p = java.util.regex.Pattern.compile(regex);
+                            if (regMatIndicator == null) {
+                                continue;
+                            }
+                            String regex = regMatIndicator.getJavaRegex();
+                            Pattern p = java.util.regex.Pattern.compile(regex);
 
                             Object theElement = ((Object[]) element)[index];
                             if (theElement == null) {
@@ -488,8 +489,8 @@ public class ColumnSetResultPage extends AbstractAnalysisResultPage implements P
                             }
                         }
                     }
-                    }
                 }
+            }
             return true;
         }
 
@@ -556,6 +557,7 @@ public class ColumnSetResultPage extends AbstractAnalysisResultPage implements P
         }
         return false;
     }
+
     @Override
     public void dispose() {
         if (bg != null) {
@@ -590,9 +592,10 @@ public class ColumnSetResultPage extends AbstractAnalysisResultPage implements P
         if (tableFilterResult != null) {
             for (Map<Integer, RegexpMatchingIndicator> tableItem : this.tableFilterResult) {
                 RegexpMatchingIndicator regMatIndicator = tableItem.get(columnIndex);
-                if (regMatIndicator == null)
+                if (regMatIndicator == null) {
                     continue;
-                String regex = regMatIndicator.getRegex();
+                }
+                String regex = regMatIndicator.getJavaRegex();
                 Pattern p = java.util.regex.Pattern.compile(regex);
                 if (element instanceof Object[]) {
                     Object theElement = ((Object[]) element)[columnIndex];
@@ -609,7 +612,6 @@ public class ColumnSetResultPage extends AbstractAnalysisResultPage implements P
         }
         return new Color(null, 0, 0, 0);
     }
-
 
     public List<Map<Integer, RegexpMatchingIndicator>> getTableFilterResult() {
         return tableFilterResult;
