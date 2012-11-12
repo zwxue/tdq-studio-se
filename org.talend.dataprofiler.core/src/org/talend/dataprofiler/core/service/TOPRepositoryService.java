@@ -18,6 +18,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 
+import net.sourceforge.sqlexplorer.plugin.SQLExplorerPlugin;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
@@ -43,6 +45,7 @@ import org.talend.core.model.metadata.builder.connection.MDMConnection;
 import org.talend.core.model.metadata.builder.database.JavaSqlFactory;
 import org.talend.core.model.metadata.builder.util.MetadataConnectionUtils;
 import org.talend.core.model.properties.ConnectionItem;
+import org.talend.core.model.properties.DatabaseConnectionItem;
 import org.talend.core.model.properties.Item;
 import org.talend.core.model.properties.Property;
 import org.talend.core.model.repository.ERepositoryObjectType;
@@ -195,12 +198,7 @@ public class TOPRepositoryService implements ITDQRepositoryService {
             Connection connection = ((ConnectionItem) item).getConnection();
             if (connection instanceof DatabaseConnection || connection instanceof DelimitedFileConnection
                     || connection instanceof MDMConnection) {
-                List<ModelElement> dependencyClients = EObjectHelper.getDependencyClients(connection);
-                if (!(dependencyClients == null || dependencyClients.isEmpty())) {
-                    hasDependencyItem = false;
-                } else {
-                    CWMPlugin.getDefault().removeAliasInSQLExplorer(connection);
-                }
+                CWMPlugin.getDefault().removeAliasInSQLExplorer(connection);
             }
         }
 
@@ -476,5 +474,29 @@ public class TOPRepositoryService implements ITDQRepositoryService {
             return SoftwareSystemManager.getInstance().cleanSoftWareSystem(((ConnectionItem) item).getConnection());
         }
         return false;
+    }
+
+    /**
+     * TDQ-6166,Add this function for init all connections in DataExplorer perspective.
+     */
+    public void initAllConnectionsToSQLExplorer() {
+        try {
+            if (!SQLExplorerPlugin.getDefault().isInitedAllConnToSQLExpl()) {
+                for (IRepositoryViewObject viewObject : ProxyRepositoryFactory.getInstance().getAll(
+                        ERepositoryObjectType.METADATA_CONNECTIONS, true)) {
+                    if (viewObject == null || viewObject.getProperty() == null) {
+                        continue;
+                    }
+                    Item item = viewObject.getProperty().getItem();
+                    if (item != null && (item instanceof DatabaseConnectionItem)) {
+                        CWMPlugin.getDefault().addConnetionAliasToSQLPlugin(((DatabaseConnectionItem) item).getConnection());
+                    }
+
+                }
+                SQLExplorerPlugin.getDefault().setInitedAllConnToSQLExpl(true);
+            }
+        } catch (Exception e) {
+            log.error(e, e);
+        }
     }
 }

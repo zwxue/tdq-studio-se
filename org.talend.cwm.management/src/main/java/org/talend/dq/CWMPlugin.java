@@ -12,6 +12,8 @@
 // ============================================================================
 package org.talend.dq;
 
+import java.util.Collection;
+
 import net.sourceforge.sqlexplorer.EDriverName;
 import net.sourceforge.sqlexplorer.dbproduct.Alias;
 import net.sourceforge.sqlexplorer.dbproduct.AliasManager;
@@ -96,46 +98,55 @@ public class CWMPlugin extends Plugin {
                 // MOD bug mzhao filter the other connections except database connection.
                 if (connection != null && connection instanceof DatabaseConnection) {
 
-                    Alias alias = new Alias(dataProvider.getName());
+                    // only new Alias when it is not in aliasManager
+                    Alias alias = aliasManager.getAlias(dataProvider.getName());
+                    if (alias == null) {
+                        alias = new Alias(dataProvider.getName());
 
-                    String user = JavaSqlFactory.getUsername(connection);
-                    // MOD gdbu 2011-3-17 bug 19539
-                    String password = JavaSqlFactory.getPassword(connection);
-                    // ~19539
+                        String user = JavaSqlFactory.getUsername(connection);
+                        // MOD gdbu 2011-3-17 bug 19539
+                        String password = JavaSqlFactory.getPassword(connection);
+                        // ~19539
 
-                    // password should not be null
-                    password = password == null ? "" : password; //$NON-NLS-1$
+                        // password should not be null
+                        password = password == null ? "" : password; //$NON-NLS-1$
 
-                    // MOD scorreia 2010-07-24 set empty string instead of null password so that database xml file is
-                    // serialized correctly.
-                    assert password != null;
+                        // MOD scorreia 2010-07-24 set empty string instead of null password so that database xml file
+                        // is serialized correctly.
+                        assert password != null;
 
-                    // password should not null when serialized
-                    password = password != null ? password : ""; //$NON-NLS-1$
+                        // password should not null when serialized
+                        password = password != null ? password : ""; //$NON-NLS-1$
 
-                    String url = JavaSqlFactory.getURL(connection);
+                        String url = JavaSqlFactory.getURL(connection);
 
-                    User previousUser = new User(user, password);
-                    alias.setDefaultUser(previousUser);
+                        User previousUser = new User(user, password);
+                        alias.setDefaultUser(previousUser);
 
-                    alias.setAutoLogon(false);
-                    alias.setConnectAtStartup(true);
-                    alias.setUrl(url);
+                        alias.setAutoLogon(false);
+                        alias.setConnectAtStartup(true);
+                        alias.setUrl(url);
 
-                    ManagedDriver manDr = driverManager.getDriver(EDriverName.getId(JavaSqlFactory.getDriverClass(connection)));
+                        ManagedDriver manDr = driverManager
+                                .getDriver(EDriverName.getId(JavaSqlFactory.getDriverClass(connection)));
 
-                    if (manDr != null) {
-                        addJars(connection, manDr);
+                        if (manDr != null) {
+                            addJars(connection, manDr);
 
-                        alias.setDriver(manDr);
+                            alias.setDriver(manDr);
+                        }
                     }
-
                     if (!aliasManager.contains(alias) && alias.getName() != null) {
                         aliasManager.addAlias(alias);
-                        // Add yyi 2010-09-15 14549: hide connections in SQL Explorer when a connection is moved to the
-                        // trash bin
+                    }
+
+                    // Add yyi 2010-09-15 14549: hide connections in SQL Explorer when a connection is moved to the
+                    // trash bin.
+                    // MOD Qiongli TDQ-6166 just put once for every Alias
+                    if (sqlPlugin.getPropertyFile().get(alias) == null) {
                         sqlPlugin.getPropertyFile().put(alias, PropertyHelper.getPropertyFile(dataProvider));
                     }
+
                 }
             } catch (Exception e) { // MOD scorreia 2010-07-24 catch all exceptions
                 log.error(e, e);
@@ -211,15 +222,21 @@ public class CWMPlugin extends Plugin {
         AliasManager aliasManager = sqlPlugin.getAliasManager();
 
         DatabaseStructureView dsView = sqlPlugin.getDatabaseStructureView();
-        for (DataProvider dataProvider : dataproviders) {
-            try {
+        // MOD qiongli 2012-11-12 TDQ-6166,only load aliases from file when AliasManager'Aliases is empty.should remove
+        // alias from propertyFile map at the same time.
+        try {
+            Collection<Alias> aliases = aliasManager.getAliases();
+            if (aliases.isEmpty()) {
                 aliasManager.loadAliases();
+            }
+            for (DataProvider dataProvider : dataproviders) {
                 String aliasName = dataProvider.getName();
                 if (null == aliasName) {
                     continue;
                 }
                 Alias alias = aliasManager.getAlias(aliasName);
                 if (alias != null) {
+                    sqlPlugin.getPropertyFile().remove(alias);
                     aliasManager.removeAlias(aliasName);
                     aliasManager.saveAliases();
                 }
@@ -227,9 +244,9 @@ public class CWMPlugin extends Plugin {
                 if (dsView != null) {
                     dsView.closeCurrentCabItem(aliasName);
                 }
-            } catch (Exception e) {
-                log.error(e, e);
             }
+        } catch (Exception e) {
+            log.error(e, e);
         }
         aliasManager.modelChanged();
     }
@@ -246,7 +263,10 @@ public class CWMPlugin extends Plugin {
         SQLExplorerPlugin sqlPlugin = SQLExplorerPlugin.getDefault();
         AliasManager aliasManager = sqlPlugin.getAliasManager();
         try {
-            aliasManager.loadAliases();
+            Collection<Alias> aliases = aliasManager.getAliases();
+            if (aliases.isEmpty()) {
+                aliasManager.loadAliases();
+            }
             Alias alias = aliasManager.getAlias(oldDataproviderName);
             if (alias != null) {
                 alias.setName(newDataproviderName);

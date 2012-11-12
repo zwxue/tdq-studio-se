@@ -92,6 +92,8 @@ public class SQLExplorerPlugin extends AbstractUIPlugin {
     // Add yyi 2010-09-15 14549: hide connections in SQL Explorer when a connection is moved to the trash bin
     private static HashMap<Alias, IFile> propertyFile = new HashMap<Alias, IFile>();
 
+    private boolean isInitedAllConnToSQLExpl = false;
+
     /**
      * The constructor. Moved previous logic to the start method.
      */
@@ -103,6 +105,7 @@ public class SQLExplorerPlugin extends AbstractUIPlugin {
     /**
      * Initialises the Plugin
      */
+    @Override
     public void start(BundleContext context) throws Exception {
         super.start(context);
 
@@ -171,8 +174,9 @@ public class SQLExplorerPlugin extends AbstractUIPlugin {
      */
     public void startDefaultConnections(ConnectionsView connectionsView) {
         this.connectionsView = connectionsView;
-        if (_defaultConnectionsStarted)
+        if (_defaultConnectionsStarted) {
             return;
+        }
 
         String fontDesc = getPluginPreferences().getString(IConstants.FONT);
         FontData fontData = null;
@@ -193,12 +197,13 @@ public class SQLExplorerPlugin extends AbstractUIPlugin {
         // because it may not have an active page yet
         DatabaseStructureView dbView = null;
         IWorkbenchSite site = connectionsView.getSite();
-        if (site.getPage() != null)
+        if (site.getPage() != null) {
             dbView = (DatabaseStructureView) site.getPage().findView(DatabaseStructureView.class.getName());
+        }
 
         for (Alias alias : aliasManager.getAliases()) {
             if (alias.isConnectAtStartup() && alias.isAutoLogon() && alias.getDefaultUser() != null) {
-                if (dbView != null)
+                if (dbView != null) {
                     try {
                         dbView.addUser(alias.getDefaultUser());
                     } catch (SQLCannotConnectException e) {
@@ -206,6 +211,7 @@ public class SQLExplorerPlugin extends AbstractUIPlugin {
                         // problem will
                         // be apparent as soon as the user tries to use the connection
                     }
+                }
 
                 if (openEditor) {
                     SQLEditorInput input = new SQLEditorInput(SQL_EDITOR + SQLExplorerPlugin.getDefault().getEditorSerialNo()
@@ -228,6 +234,7 @@ public class SQLExplorerPlugin extends AbstractUIPlugin {
      * 
      * @see org.osgi.framework.BundleActivator#stop(org.osgi.framework.BundleContext)
      */
+    @Override
     public void stop(BundleContext context) throws Exception {
         driverManager.saveDrivers();
         aliasManager.saveAliases();
@@ -319,9 +326,9 @@ public class SQLExplorerPlugin extends AbstractUIPlugin {
      * @param t
      */
     public static void error(String message, Throwable t) {
-        if (t instanceof SQLCannotConnectException)
+        if (t instanceof SQLCannotConnectException) {
             getDefault().getLog().log(new Status(IStatus.ERROR, PLUGIN_ID, IStatus.ERROR, String.valueOf(message), null));
-        else {
+        } else {
             getDefault().getLog().log(new Status(IStatus.ERROR, PLUGIN_ID, IStatus.ERROR, String.valueOf(message), t));
             _logger.error(message, t);
         }
@@ -364,8 +371,9 @@ public class SQLExplorerPlugin extends AbstractUIPlugin {
      * @return the current actived page.
      */
     public IWorkbenchPage getActivePage() {
-        if (getWorkbench() != null && getWorkbench().getActiveWorkbenchWindow() != null)
+        if (getWorkbench() != null && getWorkbench().getActiveWorkbenchWindow() != null) {
             return getWorkbench().getActiveWorkbenchWindow().getActivePage();
+        }
         return null;
     }
 
@@ -374,12 +382,13 @@ public class SQLExplorerPlugin extends AbstractUIPlugin {
             IWorkbenchPage page = getActivePage();
             if (page != null) {
                 connectionsView = (ConnectionsView) page.findView(ConnectionsView.class.getName());
-                if (connectionsView == null)
+                if (connectionsView == null) {
                     try {
                         connectionsView = (ConnectionsView) page.showView(ConnectionsView.class.getName());
                     } catch (PartInitException e) {
                         error(e);
                     }
+                }
             }
         }
 
@@ -395,12 +404,13 @@ public class SQLExplorerPlugin extends AbstractUIPlugin {
             IWorkbenchPage page = getActivePage();
             if (page != null) {
                 databaseStructureView = (DatabaseStructureView) page.findView(DatabaseStructureView.class.getName());
-                if (databaseStructureView == null)
+                if (databaseStructureView == null) {
                     try {
                         databaseStructureView = (DatabaseStructureView) page.showView(DatabaseStructureView.class.getName());
                     } catch (PartInitException e) {
                         error(e);
                     }
+                }
             }
         }
         return databaseStructureView;
@@ -411,8 +421,9 @@ public class SQLExplorerPlugin extends AbstractUIPlugin {
     }
 
     public IWorkbenchSite getSite() {
-        if (getConnectionsView() == null)
+        if (getConnectionsView() == null) {
             return null;
+        }
         return connectionsView.getSite();
     }
 
@@ -450,4 +461,13 @@ public class SQLExplorerPlugin extends AbstractUIPlugin {
     public HashMap<Alias, IFile> getPropertyFile() {
         return propertyFile;
     }
+
+    public boolean isInitedAllConnToSQLExpl() {
+        return this.isInitedAllConnToSQLExpl;
+    }
+
+    public void setInitedAllConnToSQLExpl(boolean isInitedAllConnToSQLExpl) {
+        this.isInitedAllConnToSQLExpl = isInitedAllConnToSQLExpl;
+    }
+
 }

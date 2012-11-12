@@ -111,3 +111,8 @@ The method in class of "net.sourceforge.sqlexplorer.plugin.views.DatabaseStructu
 2.  modified class EDriverName  : Add driver information for Hive.
 3.  modified class ExecutionResultImpl  : modified line 107,HivePreparedStatement dosenot support method 'getResultSet()'.
 4.  modified fiel MANIFEST.MF  : add plugin dependencies with 'org.talend.libraries.apache.hive'.
+
+2012-11-12 qiongli TDQ-6166 Deleted connections still show up in Connections view
+1.modified class User : line 288. Avoid ConcurrentModificationException,repalce for with Iterator while
+2.modified fiel MANIFEST.MF : add plugin dependencies with 'org.talend.core.runtime'.
+3.modified class SQLExplorerPlugin : Add a variable 'isInitedAllConnToSQLExpl' to judge if init all connections for SQLExploere.
