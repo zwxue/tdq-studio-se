@@ -67,13 +67,13 @@ public class SwitchContextAction extends Action {
                 if (isUpdated) {
 
                     if (log.isDebugEnabled()) {
-                        log.debug(DefaultMessagesImpl.getString("SwitchContextAction.saveMessage", "", "successful"));//$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                        log.debug(DefaultMessagesImpl.getString("SwitchContextAction.saveMessage", chooseContext, "successful"));//$NON-NLS-1$ //$NON-NLS-2$ 
                     }
                     CorePlugin.getDefault().refreshDQView(selectedObject);
                 } else {
                     MessageDialog.openWarning(CorePlugin.getDefault().getWorkbench().getDisplay().getActiveShell(), "", //$NON-NLS-1$
                             DefaultMessagesImpl.getString("SwitchContextAction.nullParameterError")); //$NON-NLS-1$
-                    log.error(DefaultMessagesImpl.getString("SwitchContextAction.saveMessage", "", "failed"));//$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                    log.error(DefaultMessagesImpl.getString("SwitchContextAction.saveMessage", chooseContext, "failed"));//$NON-NLS-1$ //$NON-NLS-2$ 
                 }
             }
         }
