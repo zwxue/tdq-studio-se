@@ -29,6 +29,7 @@ import org.talend.commons.exception.BusinessException;
 import org.talend.commons.exception.SystemException;
 import org.talend.commons.ui.swt.actions.ITreeContextualAction;
 import org.talend.core.ICoreService;
+import org.talend.core.model.general.LibraryInfo;
 import org.talend.core.model.general.Project;
 import org.talend.core.model.metadata.ColumnNameChanged;
 import org.talend.core.model.metadata.IMetadataTable;
@@ -282,7 +283,7 @@ public class TopService implements ICoreService {
      * @see org.talend.core.ICoreService#getRoutineAndJars()
      */
     @Override
-    public Map<String, List<String>> getRoutineAndJars() {
+    public Map<String, List<LibraryInfo>> getRoutineAndJars() {
         // TODO Auto-generated method stub
         return null;
     }
