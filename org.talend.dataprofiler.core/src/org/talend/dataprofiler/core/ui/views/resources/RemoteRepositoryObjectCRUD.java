@@ -13,16 +13,12 @@
 package org.talend.dataprofiler.core.ui.views.resources;
 
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
 import org.talend.commons.exception.LoginException;
 import org.talend.commons.exception.PersistenceException;
 import org.talend.core.runtime.CoreRuntimePlugin;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
-import org.talend.dataprofiler.core.ui.views.DQRespositoryView;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.repository.RepositoryWorkUnit;
 import org.talend.repository.model.IRepositoryNode;
@@ -32,18 +28,6 @@ import org.talend.repository.model.IRepositoryNode;
  * 
  */
 public class RemoteRepositoryObjectCRUD extends LocalRepositoryObjectCRUD {
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.talend.dataprofiler.core.ui.views.resources.LocalRepositoryObjectCRUD#getUISelection()
-     */
-    @Override
-    public ISelection getUISelection() {
-        IWorkbenchPart activePart = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActivePart();
-        ((DQRespositoryView) activePart).refresh();
-        return super.getUISelection();
-    }
 
     /*
      * (non-Javadoc)
@@ -65,7 +49,7 @@ public class RemoteRepositoryObjectCRUD extends LocalRepositoryObjectCRUD {
             if (!pathBeforeRefresh[i].equals(pathAfterRefresh[i])) {
                 MessageDialog
                         .openInformation(
-                                new Shell(),
+                                PlatformUI.getWorkbench().getDisplay().getActiveShell(),
                                 DefaultMessagesImpl.getString("RepositoyNodeDropAdapterAssistant.moveHintTitle"), DefaultMessagesImpl.getString("RepositoyNodeDropAdapterAssistant.moveHintContent")); //$NON-NLS-1$ //$NON-NLS-2$  
                 return Boolean.FALSE;
             }
@@ -77,8 +61,7 @@ public class RemoteRepositoryObjectCRUD extends LocalRepositoryObjectCRUD {
      * refresh DQ View First.
      */
     public void refreshDQView() {
-        RepositoryWorkUnit<Object> repositoryWorkUnit = new RepositoryWorkUnit<Object>(
-                "Updating from the SVN server first, please wait...") { //$NON-NLS-1$
+        RepositoryWorkUnit<Object> repositoryWorkUnit = new RepositoryWorkUnit<Object>("update from the SVN server") { //$NON-NLS-1$
 
             @Override
             protected void run() throws LoginException, PersistenceException {

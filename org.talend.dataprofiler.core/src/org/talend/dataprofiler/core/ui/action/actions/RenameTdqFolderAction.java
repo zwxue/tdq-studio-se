@@ -24,6 +24,8 @@ import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IViewReference;
+import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.PlatformUI;
 import org.talend.commons.utils.WorkspaceUtils;
 import org.talend.commons.utils.io.FilesUtils;
 import org.talend.core.model.repository.ERepositoryObjectType;
@@ -111,6 +113,8 @@ public class RenameTdqFolderAction extends RenameFolderAction {
 
     @Override
     public ISelection getSelection() {
+        IWorkbenchPart activePart = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActivePart();
+        ((DQRespositoryView) activePart).refresh();
         return repositoryObjectCRUD.getUISelection();
     }
 

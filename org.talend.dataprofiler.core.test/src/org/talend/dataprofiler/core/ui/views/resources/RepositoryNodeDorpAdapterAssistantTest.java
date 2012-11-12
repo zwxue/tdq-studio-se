@@ -32,7 +32,6 @@ import org.junit.Test;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.rule.PowerMockRule;
-import org.talend.commons.exception.PersistenceException;
 import org.talend.core.model.properties.Property;
 import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.model.repository.IRepositoryViewObject;
@@ -126,7 +125,8 @@ public class RepositoryNodeDorpAdapterAssistantTest {
             PowerMockito.mockStatic(WorkspaceResourceHelper.class);
             when(WorkspaceResourceHelper.sourceFileHasBeenOpened(sourceNodeMock)).thenReturn(Boolean.TRUE);
 
-            assistant.moveSourceFileRepNode(sourceNodeMock, targetNodeMock);
+            IPath ipath = mock(IPath.class);
+            assistant.moveOthersNode(sourceNodeMock, targetNodeMock, ipath);
         } catch (Exception e) {
             fail(e.getMessage());
         }
@@ -139,70 +139,64 @@ public class RepositoryNodeDorpAdapterAssistantTest {
      */
     @Test
     public void testMoveSourceFileRepNode2() {
-        // test the source file node which hasn't been opened
-        try {
-            CorePlugin cpMock = mock(CorePlugin.class);
-            PowerMockito.mockStatic(CorePlugin.class);
-            when(CorePlugin.getDefault()).thenReturn(cpMock);
-            method(CorePlugin.class, "refreshDQView", Object.class); //$NON-NLS-1$
+        CorePlugin cpMock = mock(CorePlugin.class);
+        PowerMockito.mockStatic(CorePlugin.class);
+        when(CorePlugin.getDefault()).thenReturn(cpMock);
+        method(CorePlugin.class, "refreshDQView", Object.class); //$NON-NLS-1$
 
-            ResourceBundle rb = mock(ResourceBundle.class);
-            stub(method(ResourceBundle.class, "getBundle", String.class)).toReturn(rb); //$NON-NLS-1$
+        ResourceBundle rb = mock(ResourceBundle.class);
+        stub(method(ResourceBundle.class, "getBundle", String.class)).toReturn(rb); //$NON-NLS-1$
 
-            PowerMockito.mockStatic(DefaultMessagesImpl.class);
-            when(DefaultMessagesImpl.getString(anyString())).thenReturn("anyString()"); //$NON-NLS-1$
+        PowerMockito.mockStatic(DefaultMessagesImpl.class);
+        when(DefaultMessagesImpl.getString(anyString())).thenReturn("anyString()"); //$NON-NLS-1$
 
-            ProxyRepositoryFactory proxFactoryMock = mock(ProxyRepositoryFactory.class);
-            when(proxFactoryMock.getNextId()).thenReturn("abcd1").thenReturn("abcd2"); //$NON-NLS-1$ //$NON-NLS-2$
-            stub(method(ProxyRepositoryFactory.class, "getInstance")).toReturn(proxFactoryMock); //$NON-NLS-1$
+        ProxyRepositoryFactory proxFactoryMock = mock(ProxyRepositoryFactory.class);
+        when(proxFactoryMock.getNextId()).thenReturn("abcd1").thenReturn("abcd2"); //$NON-NLS-1$ //$NON-NLS-2$
+        stub(method(ProxyRepositoryFactory.class, "getInstance")).toReturn(proxFactoryMock); //$NON-NLS-1$
 
-            IRepositoryNode sourceNodeMock = mock(IRepositoryNode.class);
-            IRepositoryNode targetNodeMock = mock(IRepositoryNode.class);
+        IRepositoryNode sourceNodeMock = mock(IRepositoryNode.class);
+        IRepositoryNode targetNodeMock = mock(IRepositoryNode.class);
 
-            PowerMockito.mockStatic(WorkspaceResourceHelper.class);
-            when(WorkspaceResourceHelper.sourceFileHasBeenOpened(sourceNodeMock)).thenReturn(Boolean.FALSE);
+        PowerMockito.mockStatic(WorkspaceResourceHelper.class);
+        when(WorkspaceResourceHelper.sourceFileHasBeenOpened(sourceNodeMock)).thenReturn(Boolean.FALSE);
 
-            IRepositoryViewObject repViewObjMock = mock(IRepositoryViewObject.class);
-            when(sourceNodeMock.getObject()).thenReturn(repViewObjMock);
+        IRepositoryViewObject repViewObjMock = mock(IRepositoryViewObject.class);
+        when(sourceNodeMock.getObject()).thenReturn(repViewObjMock);
 
-            when(targetNodeMock.getContentType()).thenReturn(ERepositoryObjectType.TDQ_SOURCE_FILE_ELEMENT);
+        when(targetNodeMock.getContentType()).thenReturn(ERepositoryObjectType.TDQ_SOURCE_FILE_ELEMENT);
 
-            PowerMockito.mockStatic(ResourceManager.class);
+        PowerMockito.mockStatic(ResourceManager.class);
 
-            IFolder folerMock = mock(IFolder.class);
-            when(ResourceManager.getSourceFileFolder()).thenReturn(folerMock);
+        IFolder folerMock = mock(IFolder.class);
+        when(ResourceManager.getSourceFileFolder()).thenReturn(folerMock);
 
-            IPath folderPath = Path.fromOSString("/"); //$NON-NLS-1$
-            when(folerMock.getFullPath()).thenReturn(folderPath);
+        IPath folderPath = Path.fromOSString("/"); //$NON-NLS-1$
+        when(folerMock.getFullPath()).thenReturn(folderPath);
 
-            IProject projectMock = mock(IProject.class);
-            when(ResourceManager.getRootProject()).thenReturn(projectMock);
+        IProject projectMock = mock(IProject.class);
+        when(ResourceManager.getRootProject()).thenReturn(projectMock);
 
-            IPath projectPath = Path.fromOSString("/"); //$NON-NLS-1$
-            when(projectMock.getFullPath()).thenReturn(projectPath);
+        IPath projectPath = Path.fromOSString("/"); //$NON-NLS-1$
+        when(projectMock.getFullPath()).thenReturn(projectPath);
 
-            when(targetNodeMock.getType()).thenReturn(ENodeType.SYSTEM_FOLDER);
+        when(targetNodeMock.getType()).thenReturn(ENodeType.SYSTEM_FOLDER);
 
-            LocalRepositoryObjectCRUD spyAssistant = spy(new LocalRepositoryObjectCRUD());
-            doNothing().when(spyAssistant).moveObject((IRepositoryViewObject) any(), (IRepositoryNode) any(),
-                    (IRepositoryNode) any(), (IPath) any());
+        LocalRepositoryObjectCRUD spyAssistant = spy(new LocalRepositoryObjectCRUD());
+        doNothing().when(spyAssistant).moveObject((IRepositoryNode) any(), (IRepositoryNode) any(), (IPath) any());
 
-            // added by yyin, 20120626, for TDQ-5468 modifications
-            TDQSourceFileItem fileItem = mock(TDQSourceFileItem.class);
-            Property propertyMock = mock(Property.class);
-            when(repViewObjMock.getProperty()).thenReturn(propertyMock);
-            when(propertyMock.getItem()).thenReturn(fileItem);
+        // added by yyin, 20120626, for TDQ-5468 modifications
+        TDQSourceFileItem fileItem = mock(TDQSourceFileItem.class);
+        Property propertyMock = mock(Property.class);
+        when(repViewObjMock.getProperty()).thenReturn(propertyMock);
+        when(propertyMock.getItem()).thenReturn(fileItem);
 
-            Resource resourceMock = mock(Resource.class);
-            when(fileItem.eResource()).thenReturn(resourceMock);
-            URI uri = URI.createPlatformResourceURI("org.talend.dataprofiler.core.test/cc_0.1.properties", false); //$NON-NLS-1$
-            when(resourceMock.getURI()).thenReturn(uri);
-            when(ResourceManager.getRootFolderLocation()).thenReturn(folderPath);
-            // ~
-
-            spyAssistant.moveSourceFileRepNode(sourceNodeMock, targetNodeMock);
-        } catch (PersistenceException e) {
-            fail(e.getMessage());
-        }
+        Resource resourceMock = mock(Resource.class);
+        when(fileItem.eResource()).thenReturn(resourceMock);
+        URI uri = URI.createPlatformResourceURI("org.talend.dataprofiler.core.test/cc_0.1.properties", false); //$NON-NLS-1$
+        when(resourceMock.getURI()).thenReturn(uri);
+        when(ResourceManager.getRootFolderLocation()).thenReturn(folderPath);
+        // ~
+        IPath ipath = mock(IPath.class);
+        spyAssistant.moveOthersNode(sourceNodeMock, targetNodeMock, ipath);
     }
 }
