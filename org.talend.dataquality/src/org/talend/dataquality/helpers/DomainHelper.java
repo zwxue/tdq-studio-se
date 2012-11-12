@@ -124,7 +124,7 @@ public final class DomainHelper {
         EList<PatternComponent> components = pattern.getComponents();
         for (PatternComponent patternComponent : components) {
             if (patternComponent != null) {
-                Expression expression = getExpression(patternComponent, language); //$NON-NLS-1$
+                Expression expression = getExpression(patternComponent, language);
                 if (expression != null) {
                     return expression.getBody();
                 }
@@ -144,7 +144,7 @@ public final class DomainHelper {
         if (patternComponent != null && patternComponent.eClass().equals(PatternPackage.eINSTANCE.getRegularExpression())) {
             RegularExpression regExp = (RegularExpression) patternComponent;
             Expression expr = regExp.getExpression();
-            if (language.equalsIgnoreCase(regExp.getExpression().getLanguage())) {
+            if (expr != null && language.equalsIgnoreCase(regExp.getExpression().getLanguage())) {
                 return expr;
             }
         }
