@@ -134,4 +134,14 @@ public class TOPBrandingService implements IBrandingService {
         // default is StartingBrowser implement in org.talend.rcp
         return "org.talend.rcp.intro.starting.StartingBrowser"; //$NON-NLS-1$
     }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.core.ui.branding.IBrandingService#getUserManuals()
+     */
+    @Override
+    public String getUserManuals() {
+        return "DQ"; //$NON-NLS-1$
+    }
 }
