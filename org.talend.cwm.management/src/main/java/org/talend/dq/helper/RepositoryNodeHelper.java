@@ -254,8 +254,6 @@ public final class RepositoryNodeHelper {
             return ERepositoryObjectType.SYSTEM_INDICATORS_CORRELATION;
         } else if (EResourceConstant.SYSTEM_INDICATORS_FUNCTIONAL_DEPENDENCY.getPath().equals(path)) {
             return ERepositoryObjectType.SYSTEM_INDICATORS_FUNCTIONAL_DEPENDENCY;
-        } else if (EResourceConstant.SYSTEM_INDICATORS_OVERVIEW.getPath().equals(path)) {
-            return ERepositoryObjectType.SYSTEM_INDICATORS_OVERVIEW;
         } else if (EResourceConstant.SYSTEM_INDICATORS_PATTERN_FINDER.getPath().equals(path)) {
             return ERepositoryObjectType.SYSTEM_INDICATORS_PATTERN_FINDER;
         } else if (EResourceConstant.SYSTEM_INDICATORS_PATTERN_MATCHING.getPath().equals(path)) {
