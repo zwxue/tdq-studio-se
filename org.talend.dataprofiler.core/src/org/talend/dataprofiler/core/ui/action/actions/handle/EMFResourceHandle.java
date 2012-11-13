@@ -20,11 +20,13 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.talend.commons.bridge.ReponsitoryContextBridge;
 import org.talend.core.model.metadata.builder.connection.AbstractMetadataObject;
+import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
 import org.talend.core.model.properties.Property;
 import org.talend.cwm.dependencies.DependenciesHandler;
 import org.talend.dataprofiler.core.ui.utils.WorkbenchUtils;
@@ -43,6 +45,7 @@ import org.talend.utils.sugars.ReturnCode;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.objectmodel.core.Dependency;
 import orgomg.cwm.objectmodel.core.ModelElement;
+import orgomg.cwm.objectmodel.core.Package;
 
 /**
  * DOC bZhou class global comment. Detailled comment
@@ -97,6 +100,19 @@ public class EMFResourceHandle implements IDuplicateHandle {
             }
             // ~ TDQ-4853
 
+            // ADD msjian TDQ-5962 2012-11-13: when copy a database connection, should copy its datapackage.
+            if (modelElement instanceof DatabaseConnection) {
+                DatabaseConnection dbcon = (DatabaseConnection) modelElement;
+                EList<Package> dataPackages = dbcon.getDataPackage();
+                if (dataPackages != null) {
+                    for (Package oldDataPackage : dataPackages) {
+                        EList<Package> newDataPackages = ((DatabaseConnection) newObject).getDataPackage();
+                        newDataPackages.add(oldDataPackage);
+                    }
+                }
+            }
+            // TDQ-5962~
+
             IFolder folder = extractFolder(modelElement);
 
             if (folder != null) {
@@ -129,7 +145,6 @@ public class EMFResourceHandle implements IDuplicateHandle {
 
         return null;
     }
-
 
     /*
      * (non-Javadoc)
@@ -181,7 +196,6 @@ public class EMFResourceHandle implements IDuplicateHandle {
     public Property getProperty() {
         return this.property;
     }
-
 
     /*
      * (non-Javadoc)
