@@ -41,7 +41,10 @@ import org.talend.commons.emf.EMFUtil;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.commons.utils.io.FilesUtils;
 import org.talend.core.model.metadata.builder.connection.Connection;
+import org.talend.core.model.metadata.builder.database.JavaSqlFactory;
 import org.talend.core.model.properties.ConnectionItem;
+import org.talend.core.model.properties.DatabaseConnectionItem;
+import org.talend.core.model.properties.Item;
 import org.talend.core.model.properties.Project;
 import org.talend.core.model.properties.PropertiesPackage;
 import org.talend.core.model.properties.Property;
@@ -58,6 +61,7 @@ import org.talend.dataprofiler.core.migration.helper.WorkspaceVersionHelper;
 import org.talend.dataprofiler.migration.IMigrationTask;
 import org.talend.dataprofiler.migration.IWorkspaceMigrationTask.MigrationTaskType;
 import org.talend.dataprofiler.migration.manager.MigrationTaskManager;
+import org.talend.dq.CWMPlugin;
 import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
@@ -411,6 +415,8 @@ public class FileSystemImportWriter implements IImportWriter {
         doMigration(monitor);
 
         deleteTempProjectFolder();
+        // MOD qiongli 2012-11-8 TDQ-6166.
+        notifySQLExplorerForConnection();
 
     }
 
@@ -638,6 +644,32 @@ public class FileSystemImportWriter implements IImportWriter {
             }
         }
 
+    }
+
+    /***
+     * 
+     * need to notify sql explorer when import a connection.
+     */
+    private void notifySQLExplorerForConnection() {
+        for (File file : allCopiedFiles) {
+            if (file.exists()) {
+                IFile iFile = ResourceService.file2IFile(file);
+                if (!FactoriesUtil.PROPERTIES_EXTENSION.equals(iFile.getFileExtension())) {
+                    continue;
+                }
+                Property property = PropertyHelper.getProperty(iFile);
+                if (property == null) {
+                    continue;
+                }
+                Item item = property.getItem();
+                if (item != null && item instanceof DatabaseConnectionItem) {
+                    Connection connection = ((DatabaseConnectionItem) item).getConnection();
+                    if (connection != null && JavaSqlFactory.getUsername(connection) != null) {
+                        CWMPlugin.getDefault().addConnetionAliasToSQLPlugin(connection);
+                    }
+                }
+            }
+        }
     }
 
 }

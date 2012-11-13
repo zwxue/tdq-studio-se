@@ -247,11 +247,14 @@ public class DQRespositoryView extends CommonNavigator {
         // initialized drivers in sql explorer.
         SQLExplorerPlugin.getDefault().initAllDrivers();
         try {
-            for (ConnectionItem item : ProxyRepositoryFactory.getInstance().getMetadataConnectionsItem()) {
-                if (item == null || !(item instanceof DatabaseConnectionItem)) {
-                    continue;
+            if (!SQLExplorerPlugin.getDefault().isInitedAllConnToSQLExpl()) {
+                for (ConnectionItem item : ProxyRepositoryFactory.getInstance().getMetadataConnectionsItem()) {
+                    if (item == null || !(item instanceof DatabaseConnectionItem)) {
+                        continue;
+                    }
+                    CWMPlugin.getDefault().addConnetionAliasToSQLPlugin(item.getConnection());
                 }
-                CWMPlugin.getDefault().addConnetionAliasToSQLPlugin(item.getConnection());
+                SQLExplorerPlugin.getDefault().setInitedAllConnToSQLExpl(true);
             }
         } catch (PersistenceException e) {
             log.error(e, e);
@@ -657,7 +660,7 @@ public class DQRespositoryView extends CommonNavigator {
                         IRepositoryNode previousFilteredNode = RepositoryNodeHelper.getPreviouFilteredNode(filteredNode);
                         if (null != previousFilteredNode) {
                             RepositoryNodeHelper.setFilteredNode(previousFilteredNode);
-                            showSelectedElements((RepositoryNode) previousFilteredNode);
+                            showSelectedElements(previousFilteredNode);
                         }
                     } else {
                         TreeItem selectionTreeItem = selectionNode[(selectionNode.length - 1)];
@@ -667,7 +670,7 @@ public class DQRespositoryView extends CommonNavigator {
                             RepositoryNodeHelper.setFilteredNode(previousFilteredNode);
                             // showSelectedElements((RepositoryNode) previousFilteredNode);
                             DQRepositoryNode.setOnDisplayNextOrPreviousNode(true);
-                            StructuredSelection structSel = new StructuredSelection((RepositoryNode) previousFilteredNode);
+                            StructuredSelection structSel = new StructuredSelection(previousFilteredNode);
                             getCommonViewer().setSelection(structSel);
                             DQRepositoryNode.setOnDisplayNextOrPreviousNode(false);
                         }
@@ -692,7 +695,7 @@ public class DQRespositoryView extends CommonNavigator {
                         IRepositoryNode nextFilteredNode = RepositoryNodeHelper.getNextFilteredNode(filteredNode);
                         if (null != nextFilteredNode) {
                             RepositoryNodeHelper.setFilteredNode(nextFilteredNode);
-                            showSelectedElements((RepositoryNode) nextFilteredNode);
+                            showSelectedElements(nextFilteredNode);
                         }
                     } else {
                         TreeItem selectionTreeItem = selectionNode[(selectionNode.length - 1)];
@@ -703,7 +706,7 @@ public class DQRespositoryView extends CommonNavigator {
                             // showSelectedElements((RepositoryNode) nextFilteredNode);
                             DQRepositoryNode.setOnDisplayNextOrPreviousNode(true);
                             getCommonViewer().expandToLevel(nextFilteredNode, 1);
-                            StructuredSelection structSel = new StructuredSelection((RepositoryNode) nextFilteredNode);
+                            StructuredSelection structSel = new StructuredSelection(nextFilteredNode);
                             getCommonViewer().setSelection(structSel);
                             DQRepositoryNode.setOnDisplayNextOrPreviousNode(false);
                         }
@@ -755,6 +758,7 @@ public class DQRespositoryView extends CommonNavigator {
                         if (isFilterTextEmpty(filterText)) {
                             new UIJob(PluginConstant.EMPTY_STRING) {
 
+                                @Override
                                 public IStatus runInUIThread(IProgressMonitor monitor) {
                                     if (isFilterTextEmpty(filterText)) {
                                         closeFilterStatus(filterText);
@@ -833,7 +837,7 @@ public class DQRespositoryView extends CommonNavigator {
                                 if (null != firstFilteredNode) {
                                     RepositoryNodeHelper.setFilteredNode(firstFilteredNode);
                                     monitor.worked(1);
-                                    showSelectedElements((RepositoryNode) firstFilteredNode);
+                                    showSelectedElements(firstFilteredNode);
                                     monitor.worked(1);
                                 }
                                 monitor.done();

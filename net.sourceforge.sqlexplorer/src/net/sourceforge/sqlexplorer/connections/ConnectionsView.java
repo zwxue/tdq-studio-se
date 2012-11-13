@@ -56,9 +56,14 @@ import org.eclipse.swt.dnd.Clipboard;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Menu;
+import org.eclipse.ui.IMemento;
+import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ViewPart;
+import org.talend.core.GlobalServiceRegister;
+import org.talend.core.ITDQRepositoryService;
 
 public class ConnectionsView extends ViewPart implements ConnectionListener {
 
@@ -84,6 +89,7 @@ public class ConnectionsView extends ViewPart implements ConnectionListener {
     /**
      * @see org.eclipse.ui.IWorkbenchPart#createPartControl(org.eclipse.swt.widgets.Composite)
      */
+    @Override
     public void createPartControl(Composite parent) {
 
         PlatformUI.getWorkbench().getHelpSystem().setHelp(parent, SQLExplorerPlugin.PLUGIN_ID + ".AliasView");//$NON-NLS-1$
@@ -118,9 +124,10 @@ public class ConnectionsView extends ViewPart implements ConnectionListener {
             public boolean select(Viewer viewer, Object parentElement, Object element) {
                 try {
                     IFile file = SQLExplorerPlugin.getDefault().getPropertyFile().get(element);
-                    if (null != file && file.exists())
+                    if (null != file && file.exists()) {
                         // FIXME: Not recommended to judge delete status like this.
                         return !FileUtils.readFileToString(file.getLocation().toFile()).contains("deleted=\"true\"");//$NON-NLS-1$
+                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -143,12 +150,14 @@ public class ConnectionsView extends ViewPart implements ConnectionListener {
                     if (selected instanceof Alias) {
                         Alias alias = (Alias) selection.getFirstElement();
                         user = alias.getDefaultUser();
-                    } else if (selected instanceof User)
+                    } else if (selected instanceof User) {
                         user = (User) selected;
-                    else if (selected instanceof SQLConnection)
+                    } else if (selected instanceof SQLConnection) {
                         user = ((SQLConnection) selected).getUser();
-                    if (user != null)
+                    }
+                    if (user != null) {
                         openNewEditor(user);
+                    }
                 }
             }
         });
@@ -220,6 +229,7 @@ public class ConnectionsView extends ViewPart implements ConnectionListener {
         });
     }
 
+    @Override
     public void dispose() {
         if (clipboard != null) {
             clipboard.dispose();
@@ -271,11 +281,13 @@ public class ConnectionsView extends ViewPart implements ConnectionListener {
      */
     /* package */Object[] getSelected() {
         IStructuredSelection selection = (IStructuredSelection) _treeViewer.getSelection();
-        if (selection == null)
+        if (selection == null) {
             return null;
+        }
         Object[] result = selection.toArray();
-        if (result.length == 0)
+        if (result.length == 0) {
             return null;
+        }
         return result;
     }
 
@@ -289,16 +301,17 @@ public class ConnectionsView extends ViewPart implements ConnectionListener {
      */
     public Set<Alias> getSelectedAliases(boolean recurse) {
         IStructuredSelection selection = (IStructuredSelection) _treeViewer.getSelection();
-        if (selection == null)
+        if (selection == null) {
             return EMPTY_ALIASES;
+        }
 
         LinkedHashSet<Alias> result = new LinkedHashSet<Alias>();
         Iterator iter = selection.iterator();
         while (iter.hasNext()) {
             Object obj = iter.next();
-            if (obj instanceof Alias)
+            if (obj instanceof Alias) {
                 result.add((Alias) obj);
-            else if (recurse) {
+            } else if (recurse) {
                 if (obj instanceof User) {
                     User user = (User) obj;
                     result.add(user.getAlias());
@@ -332,16 +345,17 @@ public class ConnectionsView extends ViewPart implements ConnectionListener {
      */
     public Set<User> getSelectedUsers(boolean recurse) {
         IStructuredSelection selection = (IStructuredSelection) _treeViewer.getSelection();
-        if (selection == null)
+        if (selection == null) {
             return EMPTY_USERS;
+        }
 
         LinkedHashSet<User> result = new LinkedHashSet<User>();
         Iterator iter = selection.iterator();
         while (iter.hasNext()) {
             Object obj = iter.next();
-            if (obj instanceof User)
+            if (obj instanceof User) {
                 result.add((User) obj);
-            else if (recurse) {
+            } else if (recurse) {
                 if (obj instanceof Alias) {
                     Alias alias = (Alias) obj;
                     result.addAll(alias.getUsers());
@@ -374,20 +388,22 @@ public class ConnectionsView extends ViewPart implements ConnectionListener {
      */
     public Set<SQLConnection> getSelectedConnections(boolean recurse) {
         IStructuredSelection selection = (IStructuredSelection) _treeViewer.getSelection();
-        if (selection == null)
+        if (selection == null) {
             return EMPTY_CONNECTIONS;
+        }
 
         LinkedHashSet<SQLConnection> result = new LinkedHashSet<SQLConnection>();
         Iterator iter = selection.iterator();
         while (iter.hasNext()) {
             Object obj = iter.next();
-            if (obj instanceof SQLConnection)
+            if (obj instanceof SQLConnection) {
                 result.add((SQLConnection) obj);
-            else if (recurse) {
+            } else if (recurse) {
                 if (obj instanceof Alias) {
                     Alias alias = (Alias) obj;
-                    for (User user : alias.getUsers())
+                    for (User user : alias.getUsers()) {
                         result.addAll(user.getConnections());
+                    }
                 } else if (obj instanceof User) {
                     User user = (User) obj;
                     result.addAll(user.getConnections());
@@ -411,6 +427,7 @@ public class ConnectionsView extends ViewPart implements ConnectionListener {
     /**
      * @see org.eclipse.ui.IWorkbenchPart#setFocus()
      */
+    @Override
     public void setFocus() {
 
     }
@@ -422,11 +439,13 @@ public class ConnectionsView extends ViewPart implements ConnectionListener {
      * @return
      */
     private Object getFirstOf(Set set) {
-        if (set == null)
+        if (set == null) {
             return null;
+        }
         Iterator iter = set.iterator();
-        if (iter.hasNext())
+        if (iter.hasNext()) {
             return iter.next();
+        }
         return null;
     }
 
@@ -436,8 +455,9 @@ public class ConnectionsView extends ViewPart implements ConnectionListener {
     public User getDefaultUser() {
         if (defaultUser == null) {
             Alias alias = getDefaultAlias();
-            if (alias != null)
+            if (alias != null) {
                 return alias.getDefaultUser();
+            }
         }
         return defaultUser;
     }
@@ -451,14 +471,15 @@ public class ConnectionsView extends ViewPart implements ConnectionListener {
 
     private Alias getDefaultAlias() {
         IStructuredSelection selection = (IStructuredSelection) _treeViewer.getSelection();
-        if (selection == null)
+        if (selection == null) {
             return null;
+        }
 
         Object element = selection.getFirstElement();
 
-        if (element instanceof Alias)
+        if (element instanceof Alias) {
             return (Alias) element;
-        else if (element instanceof Session) {
+        } else if (element instanceof Session) {
             ITreeContentProvider provider = (ITreeContentProvider) _treeViewer.getContentProvider();
             return (Alias) provider.getParent(element);
         }
@@ -470,8 +491,9 @@ public class ConnectionsView extends ViewPart implements ConnectionListener {
      * @return the clipboard
      */
     public Clipboard getClipboard() {
-        if (clipboard == null)
+        if (clipboard == null) {
             clipboard = new Clipboard(getSite().getShell().getDisplay());
+        }
         return clipboard;
     }
 
@@ -480,5 +502,18 @@ public class ConnectionsView extends ViewPart implements ConnectionListener {
      */
     public void setClipboard(Clipboard clipboard) {
         this.clipboard = clipboard;
+    }
+
+    @Override
+    public void init(IViewSite site, IMemento memento) throws PartInitException {
+        super.init(site, memento);
+        // MOD qiongli 2012-11-9 TDQ-6166,init the propertyFileMap when this view init and the map is empty.
+        ITDQRepositoryService tdqRepService = null;
+        if (GlobalServiceRegister.getDefault().isServiceRegistered(ITDQRepositoryService.class)) {
+            tdqRepService = (ITDQRepositoryService) GlobalServiceRegister.getDefault().getService(ITDQRepositoryService.class);
+            if (tdqRepService != null) {
+                tdqRepService.initAllConnectionsToSQLExplorer();
+            }
+        }
     }
 }
