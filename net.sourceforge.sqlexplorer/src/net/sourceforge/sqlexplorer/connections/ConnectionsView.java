@@ -56,9 +56,14 @@ import org.eclipse.swt.dnd.Clipboard;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Menu;
+import org.eclipse.ui.IMemento;
+import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ViewPart;
+import org.talend.core.GlobalServiceRegister;
+import org.talend.core.ITDQRepositoryService;
 
 public class ConnectionsView extends ViewPart implements ConnectionListener {
 
@@ -480,5 +485,18 @@ public class ConnectionsView extends ViewPart implements ConnectionListener {
      */
     public void setClipboard(Clipboard clipboard) {
         this.clipboard = clipboard;
+    }
+
+    @Override
+    public void init(IViewSite site, IMemento memento) throws PartInitException {
+        super.init(site, memento);
+        // MOD qiongli 2012-11-9 TDQ-6166,init the propertyFileMap when this view init and the map is empty.
+        ITDQRepositoryService tdqRepService = null;
+        if (GlobalServiceRegister.getDefault().isServiceRegistered(ITDQRepositoryService.class)) {
+            tdqRepService = (ITDQRepositoryService) GlobalServiceRegister.getDefault().getService(ITDQRepositoryService.class);
+            if (tdqRepService != null) {
+                tdqRepService.initAllConnectionsToSQLExplorer();
+            }
+        }
     }
 }

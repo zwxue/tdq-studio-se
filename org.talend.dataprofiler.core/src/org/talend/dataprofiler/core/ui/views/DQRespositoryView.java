@@ -247,11 +247,14 @@ public class DQRespositoryView extends CommonNavigator {
         // initialized drivers in sql explorer.
         SQLExplorerPlugin.getDefault().initAllDrivers();
         try {
-            for (ConnectionItem item : ProxyRepositoryFactory.getInstance().getMetadataConnectionsItem()) {
-                if (item == null || !(item instanceof DatabaseConnectionItem)) {
-                    continue;
+            if (!SQLExplorerPlugin.getDefault().isInitedAllConnToSQLExpl()) {
+                for (ConnectionItem item : ProxyRepositoryFactory.getInstance().getMetadataConnectionsItem()) {
+                    if (item == null || !(item instanceof DatabaseConnectionItem)) {
+                        continue;
+                    }
+                    CWMPlugin.getDefault().addConnetionAliasToSQLPlugin(item.getConnection());
                 }
-                CWMPlugin.getDefault().addConnetionAliasToSQLPlugin(item.getConnection());
+                SQLExplorerPlugin.getDefault().setInitedAllConnToSQLExpl(true);
             }
         } catch (PersistenceException e) {
             log.error(e, e);

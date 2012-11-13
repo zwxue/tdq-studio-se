@@ -35,11 +35,12 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.talend.commons.bridge.ReponsitoryContextBridge;
 import org.talend.commons.emf.FactoriesUtil;
-import org.talend.commons.emf.FactoriesUtil.EElementEName;
 import org.talend.commons.utils.io.FilesUtils;
 import org.talend.core.model.metadata.builder.connection.Connection;
-import org.talend.core.model.metadata.builder.database.DqRepositoryViewService;
+import org.talend.core.model.metadata.builder.database.JavaSqlFactory;
 import org.talend.core.model.properties.ConnectionItem;
+import org.talend.core.model.properties.DatabaseConnectionItem;
+import org.talend.core.model.properties.Item;
 import org.talend.core.model.properties.Project;
 import org.talend.core.model.properties.PropertiesPackage;
 import org.talend.core.model.properties.Property;
@@ -49,7 +50,6 @@ import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.cwm.dependencies.DependenciesHandler;
 import org.talend.cwm.helper.ConnectionHelper;
-import org.talend.cwm.helper.ResourceHelper;
 import org.talend.cwm.xml.TdXmlSchema;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.migration.AbstractWorksapceUpdateTask;
@@ -57,6 +57,7 @@ import org.talend.dataprofiler.core.migration.helper.WorkspaceVersionHelper;
 import org.talend.dataprofiler.migration.IMigrationTask;
 import org.talend.dataprofiler.migration.IWorkspaceMigrationTask.MigrationTaskType;
 import org.talend.dataprofiler.migration.manager.MigrationTaskManager;
+import org.talend.dq.CWMPlugin;
 import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
@@ -91,6 +92,8 @@ public class FileSystemImportWriter implements IImportWriter {
 
     private String projectName;
 
+    private List<File> allCopiedFiles = new ArrayList<File>();
+
     /*
      * (non-Javadoc)
      * 
@@ -107,10 +110,10 @@ public class FileSystemImportWriter implements IImportWriter {
 
             checkDependency(record);
 
-            checkConflict(record); 
-            if (checkExisted && record.getConflictObject() != null) { 
-            	record.addError(DefaultMessagesImpl.getString("FileSystemImproWriter.hasConflictObject", record.getName()));//$NON-NLS-1$  
-            } 
+            checkConflict(record);
+            if (checkExisted && record.getConflictObject() != null) {
+                record.addError(DefaultMessagesImpl.getString("FileSystemImproWriter.hasConflictObject", record.getName()));//$NON-NLS-1$  
+            }
 
             if (!record.isValid()) {
                 inValidRecords.add(record);
@@ -130,24 +133,24 @@ public class FileSystemImportWriter implements IImportWriter {
         if (property != null) {
             try {
 
-            	ERepositoryObjectType itemType = ERepositoryObjectType.getItemType(property.getItem()); 
-             	List<IRepositoryViewObject> allObjects = ProxyRepositoryFactory.getInstance().getAll(itemType, true); 
+                ERepositoryObjectType itemType = ERepositoryObjectType.getItemType(property.getItem());
+                List<IRepositoryViewObject> allObjects = ProxyRepositoryFactory.getInstance().getAll(itemType, true);
 
                 for (IRepositoryViewObject object : allObjects) {
                     if (isConflict(property, object.getProperty())) {
-                    	List<IRepositoryViewObject> supplierDependency = DependenciesHandler.getInstance().getSupplierDependency( 
-                    			object); 
-                    	for (IRepositoryViewObject supplierViewObject : supplierDependency) { 
-                    		record.addError(DefaultMessagesImpl 
-                    				.getString( 
-                    						"FileSystemImproWriter.DependencyWarning", new Object[] { record.getName(), supplierViewObject.getProperty().getLabel(), object.getLabel() }));//$NON-NLS-1$ 
-                    	} 
-                    	// If set this parameter will delete the object when finished the wizard. 
-                    	record.setConflictObject(object); 
-                    	return;
+                        List<IRepositoryViewObject> supplierDependency = DependenciesHandler.getInstance().getSupplierDependency(
+                                object);
+                        for (IRepositoryViewObject supplierViewObject : supplierDependency) {
+                            record.addError(DefaultMessagesImpl
+                                    .getString(
+                                            "FileSystemImproWriter.DependencyWarning", new Object[] { record.getName(), supplierViewObject.getProperty().getLabel(), object.getLabel() }));//$NON-NLS-1$ 
+                        }
+                        // If set this parameter will delete the object when finished the wizard.
+                        record.setConflictObject(object);
+                        return;
                     }
                 }
-                record.setConflictObject(null); 
+                record.setConflictObject(null);
             } catch (Exception e) {
                 record.addError("\"" + record.getName() + "\" check item conflict failed!");//$NON-NLS-1$ //$NON-NLS-2$ 
             }
@@ -219,12 +222,13 @@ public class FileSystemImportWriter implements IImportWriter {
                 Connection connection = item.getConnection();
                 List<TdXmlSchema> tdXmlDocumentList = ConnectionHelper.getTdXmlDocument(connection);
                 for (TdXmlSchema schema : tdXmlDocumentList) {
-                	IPath srcPath =getXsdFolderPath(record,schema);
+                    IPath srcPath = getXsdFolderPath(record, schema);
                     if (!srcPath.toFile().exists()) {
                         log.error("The file : " + srcPath.toFile() + " can't be found.This will make MDMConnection useless ");//$NON-NLS-1$ //$NON-NLS-2$ 
                         break;
                     }
-                    IPath desPath = ResourceManager.getMDMConnectionFolder().getLocation().append(new Path(schema.getXsdFilePath()));
+                    IPath desPath = ResourceManager.getMDMConnectionFolder().getLocation()
+                            .append(new Path(schema.getXsdFilePath()));
                     toImportMap.put(srcPath, desPath);
                 }
             }
@@ -234,16 +238,16 @@ public class FileSystemImportWriter implements IImportWriter {
     }
 
     private IPath getXsdFolderPath(ItemRecord record, TdXmlSchema schema) {
-    	 IPath mdmPath=record.getFilePath().removeLastSegments(1);
-    	 IPath srcPath = mdmPath.append(schema.getXsdFilePath());
-    	 while(!srcPath.toFile().exists()){
-    		 mdmPath=mdmPath.removeLastSegments(1);
-    		 srcPath=mdmPath.append(schema.getXsdFilePath());
-    	 }
-    	 return srcPath;
-	}
+        IPath mdmPath = record.getFilePath().removeLastSegments(1);
+        IPath srcPath = mdmPath.append(schema.getXsdFilePath());
+        while (!srcPath.toFile().exists()) {
+            mdmPath = mdmPath.removeLastSegments(1);
+            srcPath = mdmPath.append(schema.getXsdFilePath());
+        }
+        return srcPath;
+    }
 
-	/*
+    /*
      * (non-Javadoc)
      * 
      * @see org.talend.dataprofiler.core.ui.imex.model.IImexWriter#write(org.eclipse.core.runtime.IPath,
@@ -365,6 +369,7 @@ public class FileSystemImportWriter implements IImportWriter {
                                         .getResourceManager().resourceSet;
                                 synchronized (resourceSet) {
                                     write(resPath, desPath);
+                                    allCopiedFiles.add(desPath.toFile());
                                 }
                             }
 
@@ -404,6 +409,8 @@ public class FileSystemImportWriter implements IImportWriter {
         doMigration(monitor);
 
         deleteTempProjectFolder();
+        // MOD qiongli 2012-11-8 TDQ-6166.
+        notifySQLExplorerForConnection();
 
     }
 
@@ -595,6 +602,32 @@ public class FileSystemImportWriter implements IImportWriter {
 
     private boolean checkTempPath() {
         return tempFolder != null && tempFolder.exists();
+    }
+
+    /***
+     * 
+     * need to notify sql explorer when import a connection.
+     */
+    private void notifySQLExplorerForConnection() {
+        for (File file : allCopiedFiles) {
+            if (file.exists()) {
+                IFile iFile = ResourceService.file2IFile(file);
+                if (!FactoriesUtil.PROPERTIES_EXTENSION.equals(iFile.getFileExtension())) {
+                    continue;
+                }
+                Property property = PropertyHelper.getProperty(iFile);
+                if (property == null) {
+                    continue;
+                }
+                Item item = property.getItem();
+                if (item != null && item instanceof DatabaseConnectionItem) {
+                    Connection connection = ((DatabaseConnectionItem) item).getConnection();
+                    if (connection != null && JavaSqlFactory.getUsername(connection) != null) {
+                        CWMPlugin.getDefault().addConnetionAliasToSQLPlugin(connection);
+                    }
+                }
+            }
+        }
     }
 
 }
