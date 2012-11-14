@@ -28,6 +28,9 @@ public class EMailValidationIndicatorTest {
     private final static String[] emails = new String[] {
             "mzhao@talend.cn", "xxxmzhao@talend.com", "minglee.zhao@gmail.com", "paslor@126.com", "paslor@hotmail.com", "mzhao@Talxxx.com", "paslor@sina.com.cn", null, "", " ", "a@", "@b", "@hotmail.com" }; //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$ //$NON-NLS-9$ //$NON-NLS-10$ //$NON-NLS-11$ //$NON-NLS-12$ 
 
+    private final static boolean[] valid = { false, false, true, true, false, false, false, false, false, false, false, false,
+            false };
+
     /**
      * DOC zhao Comment method "setUp".
      * 
@@ -36,6 +39,9 @@ public class EMailValidationIndicatorTest {
     @Before
     public void setUp() throws Exception {
         emailValidationIndicator = new EMailValidationIndicator();
+        emailValidationIndicator.setName(this.getClass().getName());
+        emailValidationIndicator.setEmailAddress("mzhao@talend.com");
+        Assert.assertEquals(emails.length, valid.length);
     }
 
     /**
@@ -50,7 +56,7 @@ public class EMailValidationIndicatorTest {
             emailValidationIndicator.handle(email);
         }
         // The total count
-        Assert.assertEquals(13, emailValidationIndicator.getCount().longValue());
+        Assert.assertEquals(emails.length, emailValidationIndicator.getCount().longValue());
         // The matching count
         Assert.assertEquals(2, emailValidationIndicator.getMatchingValueCount().longValue());
     }
@@ -58,41 +64,10 @@ public class EMailValidationIndicatorTest {
     @Test
     public void testIsAddressValid() {
         emailValidationIndicator.reset();
-        boolean addressValid = true;
-        try {
-            addressValid = emailValidationIndicator.isAddressValid(emails[0]);
-            Assert.assertFalse(addressValid);
-
-            addressValid = emailValidationIndicator.isAddressValid(emails[1]);
-
-            Assert.assertFalse(addressValid);
-            addressValid = emailValidationIndicator.isAddressValid(emails[2]);
-            Assert.assertTrue(addressValid);
-            addressValid = emailValidationIndicator.isAddressValid(emails[3]);
-            Assert.assertTrue(addressValid);
-            addressValid = emailValidationIndicator.isAddressValid(emails[4]);
-            Assert.assertFalse(addressValid);
-            addressValid = emailValidationIndicator.isAddressValid(emails[5]);
-            Assert.assertFalse(addressValid);
-            addressValid = emailValidationIndicator.isAddressValid(emails[6]);
-            Assert.assertFalse(addressValid);
-            // addressValid = emailValidationIndicator.isAddressValid(emails[7]); //won't verify assert null here
-            // Assert.assertFalse(addressValid);
-            addressValid = emailValidationIndicator.isAddressValid(emails[8]);
-            Assert.assertFalse(addressValid);
-            addressValid = emailValidationIndicator.isAddressValid(emails[9]);
-            Assert.assertFalse(addressValid);
-            addressValid = emailValidationIndicator.isAddressValid(emails[10]);
-            Assert.assertFalse(addressValid);
-            addressValid = emailValidationIndicator.isAddressValid(emails[11]);
-            Assert.assertFalse(addressValid);
-            addressValid = emailValidationIndicator.isAddressValid(emails[12]);
-            Assert.assertFalse(addressValid);
-        } catch (Throwable e) {
-            addressValid = false;
-            e.printStackTrace();
-            Assert.fail(e.getMessage());
+        for (int j = 0; j < emails.length; j++) {
+            Assert.assertEquals(valid[j], emailValidationIndicator.isAddressValid(emails[0]));
         }
     }
 
+    // TODO create different parameters and test the initparameter method.
 }

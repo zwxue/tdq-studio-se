@@ -28,6 +28,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.management.i18n.Messages;
 import org.talend.dataquality.indicators.Indicator;
+import org.talend.dataquality.indicators.IndicatorsPackage;
 import org.talend.dataquality.indicators.impl.RegexpMatchingIndicatorImpl;
 import org.talend.dq.analysis.memory.AnalysisThreadMemoryChangeNotifier;
 import org.talend.dq.analysis.memory.IMemoryChangeListener;
@@ -155,7 +156,12 @@ public abstract class Evaluator<T> implements IMemoryChangeListener {
         boolean ok = true;
         for (Indicator indic : allIndicators) {
             if (!indic.prepare()) {
-                javaPatternMessage = ((RegexpMatchingIndicatorImpl) indic).getJavaPatternMessage();
+                // FIXME scorreia 2012-11-13 why do we do something specific for the regex matching indicator?
+                // a class cast exception appears when a user defined indicator would like to return false in the
+                // prepare() method.
+                if (IndicatorsPackage.eINSTANCE.getRegexpMatchingIndicator().equals(indic.eClass())) {
+                    javaPatternMessage = ((RegexpMatchingIndicatorImpl) indic).getJavaPatternMessage();
+                }
                 ok = false;
             }
         }

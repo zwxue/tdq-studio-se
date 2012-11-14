@@ -205,12 +205,12 @@ public class ConnectionEvaluator extends AbstractSchemaEvaluator<DataProvider> {
     /**
      * if the connection is created by TOS(DI) return true, else return false.
      * 
-     * @param connection
+     * @param conn
      * @return
      */
-    private boolean isTos(Connection connection) {
-        if (connection instanceof DatabaseConnection) {
-            DatabaseConnection dbConn = (DatabaseConnection) connection;
+    private boolean isTos(Connection conn) {
+        if (conn instanceof DatabaseConnection) {
+            DatabaseConnection dbConn = (DatabaseConnection) conn;
             return dbConn.getUiSchema() != null;
         }
         return false;

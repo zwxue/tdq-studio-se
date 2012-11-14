@@ -71,6 +71,7 @@ public class IndicatorEvaluator extends Evaluator<String> {
         this.analysis = analysis;
     }
 
+    @Override
     protected ReturnCode executeSqlQuery(String sqlStatement) throws SQLException {
         ReturnCode ok = new ReturnCode(true);
         // check analyzed columns
@@ -142,8 +143,9 @@ public class IndicatorEvaluator extends Evaluator<String> {
                 try {
                     object = resultSet.getObject(col);
                 } catch (SQLException e) {
-                    if ("0000-00-00 00:00:00".equals(resultSet.getString(col)))//$NON-NLS-1$  
+                    if ("0000-00-00 00:00:00".equals(resultSet.getString(col))) { //$NON-NLS-1$
                         object = null;
+                    }
 
                 }
 
@@ -162,9 +164,9 @@ public class IndicatorEvaluator extends Evaluator<String> {
                     // Added yyin 20120608 TDQ-3589
                     if (indicator instanceof DuplicateCountIndicator) {
                         ((DuplicateCountIndicator) indicator).handle(object, resultSet, columnCount);
-                    } else { //~
-                    indicator.handle(object);
-                    // ~MOD mzhao feature: 12919
+                    } else { // ~
+                        indicator.handle(object);
+                        // ~MOD mzhao feature: 12919
                     }
 
                     AnalyzedDataSet analyzedDataSet = indicToRowMap.get(indicator);
@@ -191,8 +193,9 @@ public class IndicatorEvaluator extends Evaluator<String> {
                             try {
                                 newobject = resultSet.getObject(newcol);
                             } catch (SQLException e) {
-                                if ("0000-00-00 00:00:00".equals(resultSet.getString(newcol)))//$NON-NLS-1$  
+                                if ("0000-00-00 00:00:00".equals(resultSet.getString(newcol))) { //$NON-NLS-1$
                                     newobject = null;
+                                }
 
                             }
                             if (recordIncrement < maxNumberRows) {// decide whether current record is more than max
@@ -230,7 +233,7 @@ public class IndicatorEvaluator extends Evaluator<String> {
                 }
             }
         }
-        //Added yyin 20120608 TDQ-3589
+        // Added yyin 20120608 TDQ-3589
         for (int i = 0; i < columnListSize; i++) {
             String col = columnlist.get(i);
             List<Indicator> indicators = getIndicators(col);
@@ -245,9 +248,9 @@ public class IndicatorEvaluator extends Evaluator<String> {
                     }
                     // indicator.finalizeComputation();
                     addResultToIndicatorToRowMap(indicator, indicToRowMap, maxNumberRows, columnCount);
-                } 
+                }
             }
-        }//~
+        }// ~
 
         // --- release resultset
         resultSet.close();
@@ -385,7 +388,7 @@ public class IndicatorEvaluator extends Evaluator<String> {
             offset.put(location, col);
         }
 
-        Integer[] keyArray = (Integer[]) offset.keySet().toArray(new Integer[offset.keySet().size()]);
+        Integer[] keyArray = offset.keySet().toArray(new Integer[offset.keySet().size()]);
         int temp = 0;
         for (int i = 0; i < columns.size(); i++) {
             for (int j = keyArray.length - 1; j > i; j--) {
@@ -395,7 +398,7 @@ public class IndicatorEvaluator extends Evaluator<String> {
                     keyArray[j - 1] = temp;
                 }
             }
-            columnNameList.add((String) offset.get(keyArray[i]));
+            columnNameList.add(offset.get(keyArray[i]));
 
         }
         return columnNameList;

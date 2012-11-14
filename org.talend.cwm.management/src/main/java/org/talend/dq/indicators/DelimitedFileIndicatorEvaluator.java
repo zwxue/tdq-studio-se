@@ -48,17 +48,16 @@ import org.talend.dq.helper.ParameterUtil;
 import org.talend.fileprocess.FileInputDelimited;
 import org.talend.utils.sql.TalendTypeConvert;
 import org.talend.utils.sugars.ReturnCode;
+import orgomg.cwm.objectmodel.core.ModelElement;
 
 import com.csvreader.CsvReader;
-
-import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
  * DOC qiongli class global comment. Detailled comment
  */
 public class DelimitedFileIndicatorEvaluator extends IndicatorEvaluator {
 
-    private Analysis analysis = null;
+    private Analysis analysis = null; // FIXME do we need to hide the same field from the parent class?
 
     private DelimitedFileConnection delimitedFileconnection = null;
 
@@ -104,7 +103,6 @@ public class DelimitedFileIndicatorEvaluator extends IndicatorEvaluator {
                 return returnCode;
             }
 
-
             List<ModelElement> analysisElementList = this.analysis.getContext().getAnalysedElements();
             EMap<Indicator, AnalyzedDataSet> indicToRowMap = analysis.getResults().getIndicToRowMap();
             // int recordIncrement = 0;
@@ -135,16 +133,17 @@ public class DelimitedFileIndicatorEvaluator extends IndicatorEvaluator {
                 limiting = ConnectionUtils.getOriginalConntextValue(delimitedFileconnection, limiting);
                 headValue = Integer.parseInt(heading == PluginConstant.EMPTY_STRING ? zero : heading);
                 footValue = Integer.parseInt(footing == PluginConstant.EMPTY_STRING ? zero : footing);
-                limitValue = Integer.parseInt(PluginConstant.EMPTY_STRING.equals(limiting) || zero.equals(limiting)? "-1" : limiting); //$NON-NLS-1$
-			} else {// ~ 5346
-				// MOD qionlgi 2011-5-12,bug 21115.
-				headValue = Integer.parseInt(heading == null|| PluginConstant.EMPTY_STRING.equals(heading) ? zero: heading);
-				footValue = Integer.parseInt(footing == null|| PluginConstant.EMPTY_STRING.equals(footing) ? zero: footing);
-				if (limiting == null|| PluginConstant.EMPTY_STRING.equals(limiting)|| zero.equals(limiting)) {
-					limiting = "-1"; //$NON-NLS-1$
-				}
-				limitValue = Integer.parseInt(limiting);
-			}
+                limitValue = Integer
+                        .parseInt(PluginConstant.EMPTY_STRING.equals(limiting) || zero.equals(limiting) ? "-1" : limiting); //$NON-NLS-1$
+            } else {// ~ 5346
+                // MOD qionlgi 2011-5-12,bug 21115.
+                headValue = Integer.parseInt(heading == null || PluginConstant.EMPTY_STRING.equals(heading) ? zero : heading);
+                footValue = Integer.parseInt(footing == null || PluginConstant.EMPTY_STRING.equals(footing) ? zero : footing);
+                if (limiting == null || PluginConstant.EMPTY_STRING.equals(limiting) || zero.equals(limiting)) {
+                    limiting = "-1"; //$NON-NLS-1$
+                }
+                limitValue = Integer.parseInt(limiting);
+            }
             // use CsvReader to parse.
             if (Escape.CSV.equals(delimitedFileconnection.getEscapeType())) {
                 csvReader = new CsvReader(new BufferedReader(new InputStreamReader(new java.io.FileInputStream(file),
@@ -162,13 +161,12 @@ public class DelimitedFileIndicatorEvaluator extends IndicatorEvaluator {
                     if (!continueRun() || limitValue != -1 && currentRecord > limitValue - 1) {
                         break;
                     }
-                    
-                    if (delimitedFileconnection.isFirstLineCaption() && currentRecord == 0) { //$NON-NLS-1$
+
+                    if (delimitedFileconnection.isFirstLineCaption() && currentRecord == 0) {
                         continue;
                     }
                     rowValues = csvReader.getValues();
-                    handleByARow(rowValues, currentRecord + 1, analysisElementList, columnElementList,
-                            indicToRowMap);
+                    handleByARow(rowValues, currentRecord + 1, analysisElementList, columnElementList, indicToRowMap);
                 }
             } else {
                 // use TOSDelimitedReader in FileInputDelimited to parse.
@@ -195,8 +193,7 @@ public class DelimitedFileIndicatorEvaluator extends IndicatorEvaluator {
                     for (int i = 0; i < columsCount; i++) {
                         rowValues[i] = fileInputDelimited.get(i);
                     }
-                    handleByARow(rowValues, currentRow, analysisElementList, columnElementList,
-                            indicToRowMap);
+                    handleByARow(rowValues, currentRow, analysisElementList, columnElementList, indicToRowMap);
                 }
                 fileInputDelimited.close();
             }
@@ -262,10 +259,9 @@ public class DelimitedFileIndicatorEvaluator extends IndicatorEvaluator {
 
     @Override
     protected ReturnCode closeConnection() {
-        return new ReturnCode(true); //$NON-NLS-1$
+        return new ReturnCode(true);
 
     }
-
 
     public DelimitedFileConnection getDelimitedFileconnection() {
         return this.delimitedFileconnection;
@@ -316,8 +312,7 @@ public class DelimitedFileIndicatorEvaluator extends IndicatorEvaluator {
     }
 
     private void handleByARow(String[] rowValues, long currentRow, List<ModelElement> analysisElementList,
-            List<MetadataColumn> columnElementList,
-            EMap<Indicator, AnalyzedDataSet> indicToRowMap) {
+            List<MetadataColumn> columnElementList, EMap<Indicator, AnalyzedDataSet> indicToRowMap) {
         Object object = null;
         int recordIncrement = 0;
         element: for (int i = 0; i < analysisElementList.size(); i++) {
@@ -355,7 +350,7 @@ public class DelimitedFileIndicatorEvaluator extends IndicatorEvaluator {
                 if (indicator instanceof DuplicateCountIndicator) {
                     ((DuplicateCountIndicator) indicator).handle(object, rowValues);
                 } else { // ~
-                indicator.handle(object);
+                    indicator.handle(object);
                 }
                 AnalyzedDataSet analyzedDataSet = indicToRowMap.get(indicator);
                 if (analyzedDataSet == null) {

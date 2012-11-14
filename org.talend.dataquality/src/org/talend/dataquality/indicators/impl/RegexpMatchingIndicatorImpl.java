@@ -35,6 +35,7 @@ public class RegexpMatchingIndicatorImpl extends PatternMatchingIndicatorImpl im
 
     private static Logger log = Logger.getLogger(RegexpMatchingIndicatorImpl.class);
 
+    // FIXME error message should not be specific to this indicator.
     // add klliu 2010-06-12 bug 13695
     private String javaPatternMessage;
 
