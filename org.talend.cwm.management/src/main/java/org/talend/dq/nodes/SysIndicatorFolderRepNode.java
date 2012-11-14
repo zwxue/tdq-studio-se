@@ -117,6 +117,8 @@ public class SysIndicatorFolderRepNode extends DQRepositoryNode {
         } else if (ERepositoryObjectType.getFolderName(ERepositoryObjectType.SYSTEM_INDICATORS_FUNCTIONAL_DEPENDENCY).endsWith(
                 label)) {
             return ERepositoryObjectType.SYSTEM_INDICATORS_FUNCTIONAL_DEPENDENCY;
+        } else if (ERepositoryObjectType.getFolderName(ERepositoryObjectType.SYSTEM_INDICATORS_OVERVIEW).endsWith(label)) {
+            return ERepositoryObjectType.SYSTEM_INDICATORS_OVERVIEW;
         } else if (ERepositoryObjectType.getFolderName(ERepositoryObjectType.SYSTEM_INDICATORS_PATTERN_FINDER).endsWith(label)) {
             return ERepositoryObjectType.SYSTEM_INDICATORS_PATTERN_FINDER;
         } else if (ERepositoryObjectType.getFolderName(ERepositoryObjectType.SYSTEM_INDICATORS_PATTERN_MATCHING).endsWith(label)) {
