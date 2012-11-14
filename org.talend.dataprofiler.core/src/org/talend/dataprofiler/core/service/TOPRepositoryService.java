@@ -36,6 +36,7 @@ import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.navigator.CommonViewer;
 import org.talend.commons.exception.PersistenceException;
 import org.talend.core.ITDQRepositoryService;
 import org.talend.core.model.metadata.builder.connection.Connection;
@@ -152,8 +153,16 @@ public class TOPRepositoryService implements ITDQRepositoryService {
         // ~ TDQ-5133 mzhao 2012-05-31 when there are many children for a db connection, it's more elegant to collapse
         // the metadata folder when refreshing the tree to save time.
         IRepositoryNode metadataNode = RepositoryNodeHelper.getMetadataFolderNode(EResourceConstant.DB_CONNECTIONS);
-        CorePlugin.getDefault().getRepositoryView().getCommonViewer()
-                .collapseToLevel(metadataNode, AbstractTreeViewer.ALL_LEVELS);
+        // MOD msjian TUP-274 2012-11-14: avoid NPE of metadataNode
+        CommonViewer commonViewer = CorePlugin.getDefault().getRepositoryView().getCommonViewer();
+        if (commonViewer != null) {
+            if (metadataNode != null) {
+                commonViewer.collapseToLevel(metadataNode, AbstractTreeViewer.ALL_LEVELS);
+            } else {
+                commonViewer.collapseAll();
+            }
+        }
+        // TUP-274~
         // ~ TDQ-5311
         CorePlugin.getDefault().refreshDQView();
     }
