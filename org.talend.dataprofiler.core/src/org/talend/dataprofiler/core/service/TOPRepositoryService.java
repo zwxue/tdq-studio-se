@@ -81,6 +81,7 @@ import org.talend.dq.helper.resourcehelper.DQRuleResourceFileHelper;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.dq.nodes.SourceFileRepNode;
 import org.talend.dq.nodes.SourceFileSubFolderNode;
+import org.talend.dq.writer.impl.DataProviderWriter;
 import org.talend.dq.writer.impl.ElementWriterFactory;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
@@ -508,4 +509,10 @@ public class TOPRepositoryService implements ITDQRepositoryService {
             log.error(e, e);
         }
     }
+
+    public void saveConnectionWithDependency(ConnectionItem connectionItem) {
+        DataProviderWriter dataProviderWriter = ElementWriterFactory.getInstance().createDataProviderWriter();
+        dataProviderWriter.save(connectionItem, true);
+    }
+
 }
