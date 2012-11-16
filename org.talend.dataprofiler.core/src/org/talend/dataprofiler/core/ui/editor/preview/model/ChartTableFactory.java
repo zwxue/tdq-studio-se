@@ -104,6 +104,58 @@ public final class ChartTableFactory {
     private ChartTableFactory() {
     }
 
+    /**
+     * add contextual menu for job generation.
+     * 
+     * @param menu
+     * @param analysis
+     * @param currentIndicator
+     */
+    public static void addJobGenerationMenu(final Menu menu, final Analysis analysis, final Indicator currentIndicator) {
+        final Connection tdDataProvider = (Connection) analysis.getContext().getConnection();
+        final boolean isMDMAnalysis = ConnectionUtils.isMdmConnection(tdDataProvider);
+        final boolean isDelimitedFileAnalysis = ConnectionUtils.isDelimitedFileConnection(tdDataProvider);
+        final boolean isHiveConnection = ConnectionHelper.isHive(tdDataProvider);
+
+        if (PluginChecker.isTDCPLoaded() && !(isMDMAnalysis || isDelimitedFileAnalysis || isHiveConnection)) {
+            final IDatabaseJobService service = (IDatabaseJobService) GlobalServiceRegister.getDefault().getService(
+                    IJobService.class);
+            if (service != null) {
+                service.setIndicator(currentIndicator);
+                service.setAnalysis(analysis);
+                MenuItem item = null;
+                if (ChartTableFactory.isDUDIndicator(currentIndicator)
+                        && AnalysisType.COLUMN_SET != analysis.getParameters().getAnalysisType()) {
+                    item = new MenuItem(menu, SWT.PUSH);
+                    item.setText(DefaultMessagesImpl.getString("ChartTableFactory.RemoveDuplicate")); //$NON-NLS-1$
+                } else if (ChartTableFactory.isPatternMatchingIndicator(currentIndicator)) {
+                    item = new MenuItem(menu, SWT.PUSH);
+                    item.setText(DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.generateJob"));//$NON-NLS-1$ 
+                } else if (ChartTableFactory.isAllMatchIndicator(currentIndicator)) {
+                    item = new MenuItem(menu, SWT.PUSH);
+                    item.setText(DefaultMessagesImpl.getString("ChartTableFactory.gen_etl_job_row")); //$NON-NLS-1$
+                } else if (ChartTableFactory.isPhonseNumberIndicator(currentIndicator)) {
+                    item = new MenuItem(menu, SWT.PUSH);
+                    item.setText(DefaultMessagesImpl.getString("ChartTableFactory.gen_std_phone_job")); //$NON-NLS-1$
+                } else if (ChartTableFactory.isDqRule(currentIndicator)) {
+                    item = new MenuItem(menu, SWT.PUSH);
+                    item.setText(DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.generateJob"));//$NON-NLS-1$ 
+                }
+
+                if (item != null) {
+                    item.setImage(ImageLib.getImage(ImageLib.ICON_PROCESS));
+                    item.addSelectionListener(new SelectionAdapter() {
+
+                        @Override
+                        public void widgetSelected(SelectionEvent e) {
+                            service.executeJob();
+                        }
+                    });
+                }
+            }
+        }
+    }
+
     public static void addMenuAndTip(final TableViewer tbViewer, final IDataExplorer explorer, final Analysis analysis) {
 
         final ExecutionLanguage currentEngine = analysis.getParameters().getExecutionLanguage();
@@ -382,37 +434,8 @@ public final class ChartTableFactory {
                                 });
                             }
                         }
-                        if (PluginChecker.isTDCPLoaded() && !(isMDMAnalysis || isDelimitedFileAnalysis || isHiveConnection)) {
-                            final IDatabaseJobService service = (IDatabaseJobService) GlobalServiceRegister.getDefault()
-                                    .getService(IJobService.class);
-                            if (service != null) {
-                                service.setIndicator(indicator);
-                                service.setAnalysis(analysis);
-                                MenuItem item = null;
-                                if (isDUDIndicator(indicator)
-                                        && AnalysisType.COLUMN_SET != analysis.getParameters().getAnalysisType()) {
-                                    item = new MenuItem(menu, SWT.PUSH);
-                                    item.setText(DefaultMessagesImpl.getString("ChartTableFactory.RemoveDuplicate")); //$NON-NLS-1$
-                                } else if (isPatternMatchingIndicator(indicator)) {
-                                    item = new MenuItem(menu, SWT.PUSH);
-                                    item.setText(DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.generateJob"));//$NON-NLS-1$ 
-                                } else if (isAllMatchIndicator(indicator)) {
-                                    item = new MenuItem(menu, SWT.PUSH);
-                                    item.setText(DefaultMessagesImpl.getString("ChartTableFactory.gen_etl_job_row")); //$NON-NLS-1$
-                                } else if (isPhonseNumberIndicator(indicator)) {
-                                    item = new MenuItem(menu, SWT.PUSH);
-                                    item.setText(DefaultMessagesImpl.getString("ChartTableFactory.gen_std_phone_job")); //$NON-NLS-1$
-                                } else if (isDqRule(indicator)) {
-                                    item = new MenuItem(menu, SWT.PUSH);
-                                    item.setText(DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.generateJob"));//$NON-NLS-1$ 
-                                }
 
-                                if (item != null) {
-                                    item.setImage(ImageLib.getImage(ImageLib.ICON_PROCESS));
-                                    item.addSelectionListener(getAdapter(service));
-                                }
-                            }
-                        }
+                        addJobGenerationMenu(menu, analysis, indicator);
 
                         // ~11574
                         menu.setVisible(true);

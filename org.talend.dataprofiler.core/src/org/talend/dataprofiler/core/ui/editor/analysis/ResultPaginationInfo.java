@@ -346,6 +346,8 @@ public class ResultPaginationInfo extends IndicatorPaginationInfo {
                             createPatternFlag++;
                         }
 
+                        ChartTableFactory.addJobGenerationMenu(menu, analysis, currentIndicator);
+
                         menu.setVisible(true);
                     }
                 }

@@ -158,10 +158,9 @@ public abstract class AbstractAnalysisResultPage extends AbstractFormPage implem
         if (analysisHandler.getResultMetadata().isLastRunOk()) {
             toolkit.createLabel(executionComp, DefaultMessagesImpl.getString("AbstractAnalysisResultPage.success")); //$NON-NLS-1$
         } else {
-            toolkit
-                    .createLabel(
-                            executionComp,
-                            DefaultMessagesImpl.getString("AbstractAnalysisResultPage.failure") + analysisHandler.getResultMetadata().getMessage()).setForeground( //$NON-NLS-1$
+            toolkit.createLabel(
+                    executionComp,
+                    DefaultMessagesImpl.getString("AbstractAnalysisResultPage.failure") + analysisHandler.getResultMetadata().getMessage()).setForeground( //$NON-NLS-1$
                             Display.getDefault().getSystemColor(SWT.COLOR_RED));
         }
 
@@ -317,6 +316,8 @@ public abstract class AbstractAnalysisResultPage extends AbstractFormPage implem
 
                             createPatternFlag++;
                         }
+
+                        ChartTableFactory.addJobGenerationMenu(menu, analysis, currentIndicator);
 
                         menu.setVisible(true);
                     }

@@ -118,6 +118,7 @@ public class TableAnalysisResultPage extends AbstractAnalysisResultPage implemen
         return this.masterPage.getAnalysisHandler();
     }
 
+    @Override
     protected void createResultSection(Composite parent) {
 
         // ADD gdbu 2011-3-4 bug 19242
@@ -390,6 +391,8 @@ public class TableAnalysisResultPage extends AbstractAnalysisResultPage implemen
 
                             createPatternFlag++;
                         }
+
+                        ChartTableFactory.addJobGenerationMenu(menu, analysis, currentIndicator);
 
                         menu.setVisible(true);
                     }
