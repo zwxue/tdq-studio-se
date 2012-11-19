@@ -52,6 +52,7 @@ import org.talend.core.model.properties.Property;
 import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
+import org.talend.core.runtime.CoreRuntimePlugin;
 import org.talend.cwm.compare.exception.ReloadCompareException;
 import org.talend.cwm.compare.factory.ComparisonLevelFactory;
 import org.talend.cwm.compare.factory.IComparisonLevel;
@@ -130,8 +131,11 @@ public class TOPRepositoryService implements ITDQRepositoryService {
         }
 
         if (editorInput != null && clazz != null) {
-            CorePlugin.getDefault().closeEditorIfOpened(item);
-            CorePlugin.getDefault().openEditor(editorInput, clazz.getName());
+            // just reopen some opened editors both on DQ and DI perspective.
+            boolean isOpenedThenClosed = CorePlugin.getDefault().itemIsOpening(item, true);
+            if (isOpenedThenClosed || CoreRuntimePlugin.getInstance().isDataProfilePerspectiveSelected()) {
+                CorePlugin.getDefault().openEditor(editorInput, clazz.getName());
+            }
         }
     }
 
