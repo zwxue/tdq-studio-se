@@ -208,13 +208,13 @@ public class TdRowHeaderRenderer extends GridCellRenderer {
                 // draw background oval
                 int offset = 50 - getBounds().height;
                 gc.setBackground(IndicatorSelectGrid.blue);
-                gc.fillOval(originX + offset / 2, getBounds().y, 50 - offset, getBounds().height);
+                gc.fillOval(originX + offset / 2 + 1, getBounds().y + 1, 50 - offset - 2, getBounds().height - 2);
 
                 // draw a white oval for partially selected cells
                 if (item.getGrayed(1)) {
                     gc.setBackground(systemBackColor);
                     gc.setAlpha(160);
-                    gc.fillOval(originX + offset / 2, getBounds().y, 50 - offset, getBounds().height);
+                    gc.fillOval(originX + offset / 2 + 1, getBounds().y + 1, 50 - offset - 2, getBounds().height - 2);
                     gc.setAlpha(-1);
                 }
 
@@ -225,8 +225,8 @@ public class TdRowHeaderRenderer extends GridCellRenderer {
                     gc.setForeground(systemBackColor);
                 }
                 gc.setLineWidth(3);
-                gc.drawLine(originX + 16, getBounds().y + 11, originX + 22, getBounds().y + 17);
-                gc.drawLine(originX + 20, getBounds().y + 17, originX + 32, getBounds().y + 5);
+                gc.drawLine(originX + 18, getBounds().y + 11, originX + 23, getBounds().y + 16);
+                gc.drawLine(originX + 21, getBounds().y + 16, originX + 31, getBounds().y + 6);
                 gc.setLineWidth(1);
             }
 
