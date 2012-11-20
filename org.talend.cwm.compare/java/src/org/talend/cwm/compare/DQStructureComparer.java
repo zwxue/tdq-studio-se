@@ -372,6 +372,7 @@ public final class DQStructureComparer {
                                 ColumnSetHelper.getTableOwner(table)))) {
                     // ~11934
                     toReloadcolumnSet = table;
+                    break;
                 }
             }
 
@@ -384,6 +385,7 @@ public final class DQStructureComparer {
                                 selectedColumnSet).equals(ColumnSetHelper.getTableOwner(view)))) {
                     // ~11934
                     toReloadcolumnSet = view;
+                    break;
                 }
             }
         }
