@@ -144,7 +144,7 @@ public abstract class AbstractSchemaEvaluator<T> extends Evaluator<T> {
             // ---- pk----indexes
             int pkCount = 0;
             int idxCount = 0;
-            if (!isPkIndexSupported) {
+            if (isPkIndexSupported) {
                 pkCount = getPKCount(catalog, schema, table);
                 schemaIndic.setKeyCount(schemaIndic.getKeyCount() + pkCount);
                 idxCount = getIndexCount(catalog, schema, table);
@@ -472,6 +472,9 @@ public abstract class AbstractSchemaEvaluator<T> extends Evaluator<T> {
                         .getTables(getDataManager(), pacage, trimPat, true);
                 // ~TDQ-3607
                 for (NamedColumnSet t : tables) {
+                    this.getMonitor().setTaskName(
+                            Messages.getString("ColumnAnalysisSqlExecutor.AnalyzedElement") + " catalog=" + catName + ", table="
+                                    + t.getName());
                     tableCount++;
                     evalAllCounts(catName, schemaName, t, schemaIndic, true, ok);
                 }

@@ -1202,7 +1202,7 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
                 Indicator indicator = indicators.get(i);
                 if (this.continueRun()) {
                     this.getMonitor().setTaskName(
-                            Messages.getString("ColumnAnalysisSqlExecutor.AnalyzedElement")
+                            Messages.getString("ColumnAnalysisSqlExecutor.AnalyzedElement") + " "
                                     + indicator.getAnalyzedElement().getName());
                     Connection conn = null;
                     if (pooledConnection) {

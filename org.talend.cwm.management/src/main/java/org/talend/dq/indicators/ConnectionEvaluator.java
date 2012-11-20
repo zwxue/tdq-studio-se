@@ -146,10 +146,8 @@ public class ConnectionEvaluator extends AbstractSchemaEvaluator<DataProvider> {
                     String catName = tdCatalog.getName();
                     this.getMonitor().setTaskName(
                             Messages.getString("ColumnAnalysisSqlExecutor.AnalyzedElement") + " catalog=" + catName);
-                    try {
+                    if (dbms().supportCatalogSelection()) {
                         connection.setCatalog(catName);
-                    } catch (Exception e) {
-                        log.warn("Exception while executing SQL query " + sqlStatement, e); //$NON-NLS-1$
                     }
                     CatalogIndicator catalogIndic = SchemaFactory.eINSTANCE.createCatalogIndicator();
                     // MOD xqliu 2009-1-21 feature 4715
