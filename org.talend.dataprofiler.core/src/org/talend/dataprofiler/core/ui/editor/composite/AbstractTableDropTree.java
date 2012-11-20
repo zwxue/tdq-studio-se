@@ -16,7 +16,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.resources.IFile;
-import org.talend.commons.emf.EMFUtil;
 import org.talend.cwm.dependencies.DependenciesHandler;
 import org.talend.dataprofiler.core.model.ModelElementIndicator;
 import org.talend.dataprofiler.core.ui.editor.preview.TableIndicatorUnit;
@@ -93,8 +92,6 @@ public abstract class AbstractTableDropTree extends AbstractColumnDropTree {
             reomveElements.add(indicator.getIndicatorDefinition());
         }
         DependenciesHandler.getInstance().removeDependenciesBetweenModels(analysis, reomveElements);
-        for (ModelElement me : reomveElements) {
-            EMFUtil.saveSingleResource(me.eResource());
-        }
+        super.removedElements.addAll(reomveElements);
     }
 }

@@ -887,6 +887,9 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
             // ~
             // MOD yyi 2012-02-08 TDQ-4621:Explicitly set true for updating dependencies.
             saved = ElementWriterFactory.getInstance().createAnalysisWrite().save(tdqAnalysisItem, true);
+            if (saved.isOk() && !treeViewer.getRemovedElements().isEmpty()) {
+                saveRemovedElements();
+            }
         }
         logSaved(saved);
 

@@ -183,6 +183,7 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
         currentEditor = (AnalysisEditor) editor;
     }
 
+    @Override
     public void initialize(FormEditor editor) {
         super.initialize(editor);
         recomputeIndicators();
@@ -358,6 +359,7 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
         GridDataFactory.fillDefaults().align(SWT.FILL, SWT.TOP).applyTo(clmnBtn);
         clmnBtn.addHyperlinkListener(new HyperlinkAdapter() {
 
+            @Override
             public void linkActivated(HyperlinkEvent e) {
                 openColumnsSelectionDialog();
             }
@@ -427,6 +429,7 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
 
         refreshBtn.addHyperlinkListener(new HyperlinkAdapter() {
 
+            @Override
             public void linkActivated(HyperlinkEvent e) {
 
                 for (Control control : chartComposite.getChildren()) {
@@ -564,8 +567,9 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
         // }
         if (EditorPreferencePage.isHideGraphics()) {
             if (sForm.getChildren().length > 1) {
-                if (null != sForm.getChildren()[1] && !sForm.getChildren()[1].isDisposed())
+                if (null != sForm.getChildren()[1] && !sForm.getChildren()[1].isDisposed()) {
                     sForm.getChildren()[1].dispose();
+                }
                 topComp.getParent().layout();
                 topComp.layout();
             }
@@ -588,6 +592,7 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
                 previewComp.setLayout(new GridLayout());
                 previewComp.addControlListener(new ControlAdapter() {
 
+                    @Override
                     public void controlResized(ControlEvent e) {
                         super.controlResized(e);
                         sForm.redraw();
@@ -725,6 +730,7 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
 
         storeDataCheck.addSelectionListener(new SelectionAdapter() {
 
+            @Override
             public void widgetSelected(SelectionEvent e) {
                 simpleStatIndicator.setStoreData(storeDataCheck.getSelection());
                 setDirty(true);
@@ -804,6 +810,7 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
      * @throws DataprofilerCoreException
      */
 
+    @Override
     public void saveAnalysis() throws DataprofilerCoreException {
         // ADD gdbu 2011-3-3 bug 19179
 
@@ -842,9 +849,9 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
             for (IRepositoryNode rd : repositoryNodes) {
                 reposObject = rd.getObject();
                 if (rd instanceof MDMXmlElementRepNode) {
-                    columnList.add((ModelElement) ((MetadataXmlElementTypeRepositoryObject) reposObject).getTdXmlElementType());
+                    columnList.add(((MetadataXmlElementTypeRepositoryObject) reposObject).getTdXmlElementType());
                 } else {
-                    columnList.add((ModelElement) ((MetadataColumnRepositoryObject) reposObject).getTdColumn());
+                    columnList.add(((MetadataColumnRepositoryObject) reposObject).getTdColumn());
                 }
             }
 
@@ -894,6 +901,9 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
             // ~
             // MOD yyi 2012-02-08 TDQ-4621:Explicitly set true for updating dependencies.
             saved = ElementWriterFactory.getInstance().createAnalysisWrite().save(tdqAnalysisItem, true);
+            if (saved.isOk() && !treeViewer.getRemovedElements().isEmpty()) {
+                saveRemovedElements();
+            }
         }
         // MOD yyi 2012-02-03 TDQ-3602:Avoid to rewriting all analyzes after saving, no reason to update all analyzes
         // which is depended in the referred connection.
@@ -1044,8 +1054,9 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
     }
 
     public void updateIndicatorSection() {
-        if (null != indicatorsViewer)
+        if (null != indicatorsViewer) {
             indicatorsViewer.setInput(simpleStatIndicator, allMatchIndicator);
+        }
     }
 
     private void resetResultPageData() {

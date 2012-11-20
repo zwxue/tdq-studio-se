@@ -13,6 +13,7 @@
 package org.talend.dataprofiler.core.ui.editor.analysis;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 import org.apache.log4j.Level;
@@ -40,6 +41,7 @@ import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.forms.editor.IFormPage;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.part.FileEditorInput;
+import org.talend.commons.emf.EMFUtil;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.database.PluginConstant;
@@ -186,6 +188,7 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
 
     protected abstract void saveAnalysis() throws DataprofilerCoreException;
 
+    @Override
     public void setDirty(boolean isDirty) {
         if (this.isDirty != isDirty) {
             this.isDirty = isDirty;
@@ -237,8 +240,8 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
         // group.setText(" ");
 
         // create label
-//        Label label = new Label(group, SWT.NONE);
-//        label.setText("Metadata Name & Type:");
+        // Label label = new Label(group, SWT.NONE);
+        // label.setText("Metadata Name & Type:");
 
         // create TableCombo
         connCombo = new TableCombo(labelButtonClient, SWT.BORDER | SWT.READ_ONLY);
@@ -325,7 +328,7 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
                 // }
             }
         }
-        return version == null ? getConnectionVersionDefault() : version; //$NON-NLS-1$
+        return version == null ? getConnectionVersionDefault() : version;
     }
 
     /**
@@ -410,8 +413,7 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
 
             // MOD yyin 201204 TDQ-4977, change to TableCombo type to show the connection type.
             TableItem ti = new TableItem(connCombo.getTable(), SWT.NONE);
-            ti.setText(new String[] { property.getDisplayName(),
-                    RepositoryNodeHelper.getConnectionType(repNode) });
+            ti.setText(new String[] { property.getDisplayName(), RepositoryNodeHelper.getConnectionType(repNode) });
             // connCombo.add(property.getDisplayName(), index);
             // String prvFileName = PrvResourceFileHelper.getInstance().findCorrespondingFile(prov).getName();
             connCombo.setData(property.getDisplayName() + RepositoryNodeHelper.getConnectionType(repNode), index);
@@ -570,5 +572,16 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
             }
         }
         return true;
+    }
+
+    /**
+     * 
+     * save the removed elements(clean depency) in treeviewer.
+     */
+    protected void saveRemovedElements() {
+        HashSet<ModelElement> removedElements = this.getTreeViewer().getRemovedElements();
+        for (ModelElement mod : removedElements) {
+            EMFUtil.saveSingleResource(mod.eResource());
+        }
     }
 }

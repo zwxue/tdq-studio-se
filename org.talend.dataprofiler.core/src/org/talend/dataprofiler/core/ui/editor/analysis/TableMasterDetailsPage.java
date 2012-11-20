@@ -175,6 +175,7 @@ public class TableMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
         return currentTableIndicators;
     }
 
+    @Override
     public void initialize(FormEditor editor) {
         super.initialize(editor);
         recomputeIndicators();
@@ -261,6 +262,7 @@ public class TableMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
         GridDataFactory.fillDefaults().align(SWT.FILL, SWT.TOP).applyTo(tblBtn);
         tblBtn.addHyperlinkListener(new HyperlinkAdapter() {
 
+            @Override
             public void linkActivated(HyperlinkEvent e) {
                 openTableSelectionDialog();
             }
@@ -277,6 +279,7 @@ public class TableMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
         collapseAllImageLink.setImage(ImageLib.getImage(ImageLib.COLLAPSE_ALL));
         collapseAllImageLink.addHyperlinkListener(new HyperlinkAdapter() {
 
+            @Override
             public void linkActivated(HyperlinkEvent e) {
                 TreeItem[] items = treeViewer.getTree().getItems();
                 expandTreeItems(items, false);
@@ -289,6 +292,7 @@ public class TableMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
         expandAllImageLink.setImage(ImageLib.getImage(ImageLib.EXPAND_ALL));
         expandAllImageLink.addHyperlinkListener(new HyperlinkAdapter() {
 
+            @Override
             public void linkActivated(HyperlinkEvent e) {
                 TreeItem[] items = treeViewer.getTree().getItems();
                 expandTreeItems(items, true);
@@ -392,6 +396,7 @@ public class TableMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
         collapseAllImageLink.setImage(ImageLib.getImage(ImageLib.COLLAPSE_ALL));
         collapseAllImageLink.addHyperlinkListener(new HyperlinkAdapter() {
 
+            @Override
             public void linkActivated(HyperlinkEvent e) {
                 if (previewChartList != null && !previewChartList.isEmpty()) {
                     for (ExpandableComposite comp : previewChartList) {
@@ -407,6 +412,7 @@ public class TableMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
         expandAllImageLink.setImage(ImageLib.getImage(ImageLib.EXPAND_ALL));
         expandAllImageLink.addHyperlinkListener(new HyperlinkAdapter() {
 
+            @Override
             public void linkActivated(HyperlinkEvent e) {
                 if (previewChartList != null && !previewChartList.isEmpty()) {
                     for (ExpandableComposite comp : previewChartList) {
@@ -435,6 +441,7 @@ public class TableMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
 
         refreshBtn.addHyperlinkListener(new HyperlinkAdapter() {
 
+            @Override
             public void linkActivated(HyperlinkEvent e) {
 
                 for (Control control : chartComposite.getChildren()) {
@@ -669,6 +676,9 @@ public class TableMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
             // ~
             // MOD yyi 2012-02-08 TDQ-4621:Explicitly set true for updating dependencies.
             saved = ElementWriterFactory.getInstance().createAnalysisWrite().save(tdqAnalysisItem, true);
+            if (saved.isOk() && !treeViewer.getRemovedElements().isEmpty()) {
+                saveRemovedElements();
+            }
         }
         // MOD yyi 2012-02-03 TDQ-3602:Avoid to rewriting all analyzes after saving, no reason to update all analyzes
         // which is depended in the referred connection.
@@ -705,8 +715,9 @@ public class TableMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
         // }
         if (EditorPreferencePage.isHideGraphics()) {
             if (sForm.getChildren().length > 1) {
-                if (null != sForm.getChildren()[1] && !sForm.getChildren()[1].isDisposed())
+                if (null != sForm.getChildren()[1] && !sForm.getChildren()[1].isDisposed()) {
                     sForm.getChildren()[1].dispose();
+                }
                 topComp.getParent().layout();
                 topComp.layout();
             }
@@ -729,6 +740,7 @@ public class TableMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
                 previewComp.setLayout(new GridLayout());
                 previewComp.addControlListener(new ControlAdapter() {
 
+                    @Override
                     public void controlResized(ControlEvent e) {
                         super.controlResized(e);
                         sForm.redraw();

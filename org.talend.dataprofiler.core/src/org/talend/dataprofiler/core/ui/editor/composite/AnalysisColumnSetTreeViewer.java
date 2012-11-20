@@ -213,6 +213,7 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
         enabledButtons(false);
         moveUpButton.addSelectionListener(new SelectionAdapter() {
 
+            @Override
             public void widgetSelected(SelectionEvent e) {
                 moveElement(setTreeViewer, -1);
             }
@@ -220,6 +221,7 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
         });
         moveDownButton.addSelectionListener(new SelectionAdapter() {
 
+            @Override
             public void widgetSelected(SelectionEvent e) {
                 moveElement(setTreeViewer, 1);
             }
@@ -227,6 +229,7 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
         });
         delButton.addSelectionListener(new SelectionAdapter() {
 
+            @Override
             public void widgetSelected(SelectionEvent e) {
                 removeSelectedElements();
             }
@@ -269,11 +272,10 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
         int index = 0;
         RepositoryNode moveElement = null;
         List<Integer> indexArray = new ArrayList<Integer>();
-        for (int i = 0; i < selectItem.length; i++) {
-            index = currentTree.indexOf((TreeItem) selectItem[i]);
+        for (Object element : selectItem) {
+            index = currentTree.indexOf((TreeItem) element);
             if (index + step > -1 && index + step < columnList.size()) {
-                Object treeElement = ((TreeItem) selectItem[i])
-                        .getData(AnalysisColumnNominalIntervalTreeViewer.COLUMN_INDICATOR_KEY);
+                Object treeElement = ((TreeItem) element).getData(AnalysisColumnNominalIntervalTreeViewer.COLUMN_INDICATOR_KEY);
                 // MOD by zshen for bug 15750 TODO 39 columnset analysis move up/down one column will get exception.
                 if (treeElement instanceof ModelElement) {
                     moveElement = RepositoryNodeHelper.recursiveFind((ModelElement) treeElement);
@@ -318,6 +320,7 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
         ColumnViewerDND.installDND(newTree);
     }
 
+    @Override
     public void setInput(Object[] objs) {
         if (objs != null && objs.length != 0) {
             List<DBColumnRepNode> columnList = new ArrayList<DBColumnRepNode>();
@@ -346,6 +349,7 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
         super.setInput(objs);
     }
 
+    @Override
     public void setElements(ModelElementIndicator[] elements) {
         this.tree.dispose();
         this.tree = createTree(this.parentComp);
@@ -362,8 +366,8 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
 
     private void addItemElements(final ModelElementIndicator[] elements) {
         // MOD qiongli 2011-1-27,change TdColumn to MetadataColumn for supporting delimited file.
-        for (int i = 0; i < elements.length; i++) {
-            final ModelElementIndicator meIndicator = (ModelElementIndicator) elements[i];
+        for (ModelElementIndicator element2 : elements) {
+            final ModelElementIndicator meIndicator = element2;
 
             // MOD qiongli 2011-3-11,feature 17896,make columnSet support MDM.
             final ModelElement modelElement = RepositoryNodeHelper
@@ -374,7 +378,7 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
             columnSetMultiValueList.add(meIndicator.getModelElementRepositoryNode());
             treeItem.setImage(ImageLib.getImage(ImageLib.TD_COLUMN));
 
-            treeItem.setText(0, getModelElemetnDisplayName(meIndicator)); //$NON-NLS-1$
+            treeItem.setText(0, getModelElemetnDisplayName(meIndicator));
             treeItem.setData(COLUMN_INDICATOR_KEY, modelElement);
             treeItem.setData(MODELELEMENT_INDICATOR_KEY, meIndicator);
 
@@ -403,6 +407,7 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
             }
             combo.addSelectionListener(new SelectionAdapter() {
 
+                @Override
                 public void widgetSelected(SelectionEvent e) {
                     MetadataHelper.setDataminingType(DataminingType.get(combo.getText()), modelElement);
                     setDirty(true);
@@ -486,6 +491,7 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
         return true;
     }
 
+    @Override
     public void addElements(final ModelElementIndicator[] elements) {
         // this.addItemElements(elements);
         RepositoryNode[] columns = new RepositoryNode[elements.length];
@@ -775,7 +781,7 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
         // ~
         if (null != unit) {
             meIndicator.removeIndicatorUnit(unit);
-            masterPage.getAllMatchIndicator().getCompositeRegexMatchingIndicators().remove(unit.getIndicator());
+            // masterPage.getAllMatchIndicator().getCompositeRegexMatchingIndicators().remove(unit.getIndicator());
             masterPage.updateIndicatorSection();
         }
 
