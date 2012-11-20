@@ -13,6 +13,7 @@
 package org.talend.dataprofiler.core.ui.editor.analysis;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -46,6 +47,7 @@ import org.eclipse.ui.forms.editor.IFormPage;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.part.FileEditorInput;
+import org.talend.commons.emf.EMFUtil;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.database.PluginConstant;
@@ -193,6 +195,7 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
 
     protected abstract void saveAnalysis() throws DataprofilerCoreException;
 
+    @Override
     public void setDirty(boolean isDirty) {
         if (this.isDirty != isDirty) {
             this.isDirty = isDirty;
@@ -321,7 +324,7 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
                 }
             }
         }
-        return version == null ? getConnectionVersionDefault() : version; //$NON-NLS-1$
+        return version == null ? getConnectionVersionDefault() : version;
     }
 
     /**
@@ -579,6 +582,7 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
      * @return
      * @deprecated use createAnalysisLimitComposite(Composite pComp) instead
      */
+    @Deprecated
     protected Section createAnalysisLimitSection(final ScrolledForm sForm, Composite pComp) {
         Section section = createSection(sForm, pComp,
                 DefaultMessagesImpl.getString("AbstractMetadataFormPage.AnalysisLimit"), null); //$NON-NLS-1$
@@ -638,5 +642,16 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
     protected void saveNumberOfConnectionsPerAnalysis() {
         AnalysisHandler.createHandler(this.getAnalysis()).setNumberOfConnectionsPerAnalysis(
                 this.numberOfConnectionsPerAnalysisText.getText());
+    }
+
+    /**
+     * 
+     * save the removed elements(clean depency) in treeviewer.
+     */
+    protected void saveRemovedElements() {
+        HashSet<ModelElement> removedElements = this.getTreeViewer().getRemovedElements();
+        for (ModelElement mod : removedElements) {
+            EMFUtil.saveSingleResource(mod.eResource());
+        }
     }
 }
