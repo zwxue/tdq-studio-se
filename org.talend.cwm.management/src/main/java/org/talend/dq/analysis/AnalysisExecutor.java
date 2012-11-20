@@ -105,6 +105,7 @@ public abstract class AnalysisExecutor implements IAnalysisExecutor {
         // these indicator.
         initializeIndicators(analysis.getResults().getIndicators());
         // --- create SQL statement
+        monitor.setTaskName(Messages.getString("AnalysisExecutor.CreateSQLStatements"));
         String sql = createSqlStatement(analysis);
         if (sql == null) {
             return getReturnCode(false);

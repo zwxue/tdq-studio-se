@@ -140,11 +140,11 @@ public abstract class AbstractSchemaEvaluator<T> extends Evaluator<T> {
             }
             // ~11934
             // MOD qiongli 2012-8-13 TDQ-5907.Hive dosen't support PK/INDEX.
-            boolean isHive = ConnectionUtils.isHive(getConnection());
+            boolean isPkIndexSupported = dbmsLanguage.isPkIndexSupported();
             // ---- pk----indexes
             int pkCount = 0;
             int idxCount = 0;
-            if (!isHive) {
+            if (!isPkIndexSupported) {
                 pkCount = getPKCount(catalog, schema, table);
                 schemaIndic.setKeyCount(schemaIndic.getKeyCount() + pkCount);
                 idxCount = getIndexCount(catalog, schema, table);
@@ -340,7 +340,7 @@ public abstract class AbstractSchemaEvaluator<T> extends Evaluator<T> {
 
         Statement statement = null;
         // MOD qiongli 2012-8-13.TDQ-5907
-        if (ConnectionUtils.isHive(conn)) {
+        if (DbmsLanguageFactory.isHive(dbmsLanguage.getDbmsName())) {
             statement = conn.createStatement();
         } else {
             statement = conn.createStatement(ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);

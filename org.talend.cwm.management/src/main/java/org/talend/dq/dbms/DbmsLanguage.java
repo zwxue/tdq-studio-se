@@ -1018,6 +1018,24 @@ public class DbmsLanguage {
     }
 
     /**
+     * Method "isPkIndexSupported".
+     * 
+     * @return true when the driver supports primary key and index
+     */
+    public boolean isPkIndexSupported() {
+        return true;
+    }
+
+    /**
+     * Method "supportCatalogSelection". See {@link java.sql.Connection#setCatalog(String catalog)}
+     * 
+     * @return true when the driver can select a catalog as a subspace of the connection
+     */
+    public boolean supportCatalogSelection() {
+        return true;
+    }
+
+    /**
      * Method "supportNonIntegerConstantInGroupBy".
      * 
      * @return true if expression like "GROUP BY 'toto'" are supported

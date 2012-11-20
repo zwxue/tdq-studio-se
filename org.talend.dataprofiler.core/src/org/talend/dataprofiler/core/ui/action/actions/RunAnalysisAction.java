@@ -277,25 +277,20 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
                 ReturnCode executed = null;
                 AnalysisExecutorThread aet = new AnalysisExecutorThread(analysis, monitor);
 
-                Thread thread = new Thread(aet);
-                thread.start();
+                // MOD sizhaoliu TDQ-6421 use eclipse monitor instead of starting a new thread
+                aet.run();
 
-                while (true) {
+                if (monitor.isCanceled()) {
+                    TdqAnalysisConnectionPool connectionPool = TdqAnalysisConnectionPool.getConnectionPool(analysis);
+                    if (connectionPool != null) {
+                        connectionPool.closeConnectionPool();
+                    }
+                    executed = new ReturnCode(DefaultMessagesImpl.getString("RunAnalysisAction.TaskCancel"), false); //$NON-NLS-1$
+                } else {
                     if (aet.getExecuted() != null) {
                         executed = aet.getExecuted();
-                        break;
-                    }
-                    if (monitor.isCanceled()) {
-                        thread.interrupt();
-                        TdqAnalysisConnectionPool connectionPool = TdqAnalysisConnectionPool.getConnectionPool(analysis);
-                        if (connectionPool != null) {
-                            connectionPool.closeConnectionPool();
-                        }
-                        executed = new ReturnCode(DefaultMessagesImpl.getString("RunAnalysisAction.TaskCancel"), false); //$NON-NLS-1$
-                        break;
                     }
                 }
-                aet = null;
                 monitor.done();
 
                 Display.getDefault().asyncExec(new Runnable() {
@@ -350,7 +345,7 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
         }
 
         if (executed.getMessage() != null) {
-            Display.getDefault().syncExec(new Runnable() {
+            Display.getDefault().asyncExec(new Runnable() {
 
                 public void run() {
                     MessageDialogWithToggle.openError(

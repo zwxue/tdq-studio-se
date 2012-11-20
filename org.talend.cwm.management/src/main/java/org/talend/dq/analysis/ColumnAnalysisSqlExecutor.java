@@ -126,9 +126,11 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
             Collection<Indicator> leafIndicators = IndicatorHelper.getIndicatorLeaves(results);
             // --- create one sql statement for each leaf indicator
             for (Indicator indicator : leafIndicators) {
-                if (!createSqlQuery(stringDataFilter, indicator)) {
-                    log.error(Messages.getString("ColumnAnalysisSqlExecutor.CREATEQUERYERROR") + indicator.getName());//$NON-NLS-1$
-                    // return null;
+                if (this.continueRun()) {
+                    if (!createSqlQuery(stringDataFilter, indicator)) {
+                        log.error(Messages.getString("ColumnAnalysisSqlExecutor.CREATEQUERYERROR") + indicator.getName());//$NON-NLS-1$
+                        // return null;
+                    }
                 }
             }
         } catch (ParseException e) {
@@ -1020,7 +1022,7 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
         Map<ModelElement, List<Indicator>> elementToIndicator = new HashMap<ModelElement, List<Indicator>>();
 
         // execute the sql statement for each indicator
-        Collection<Indicator> indicators = IndicatorHelper.getIndicatorLeaves(analysis.getResults());
+        List<Indicator> indicators = IndicatorHelper.getIndicatorLeaves(analysis.getResults());
 
         TypedReturnCode<java.sql.Connection> connection = null;
         try {
@@ -1182,7 +1184,7 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
      * @throws SQLException
      */
     private boolean runAnalysisIndicatorsParallel(Analysis analysis, Map<ModelElement, List<Indicator>> elementToIndicator,
-            Collection<Indicator> indicators, boolean pooledConnection) throws SQLException {
+            List<Indicator> indicators, boolean pooledConnection) throws SQLException {
         // reset the connection pool before run this analysis
         resetConnectionPool(analysis);
 
@@ -1192,33 +1194,48 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
         // MOD gdbu 2011-6-10 bug : 21273
         try {
             List<ExecutiveAnalysisJob> jobs = new ArrayList<ExecutiveAnalysisJob>();
-            for (Indicator indicator : indicators) {
-                Connection conn = null;
-                if (pooledConnection) {
-                    conn = getPooledConnection(analysis).getObject();
-                } else {
-                    conn = getConnection(analysis).getObject();
-                }
+            // for (Indicator indicator : indicators) {
 
-                if (conn != null) {
-                    ExecutiveAnalysisJob eaj = new ExecutiveAnalysisJob(ColumnAnalysisSqlExecutor.this, conn, elementToIndicator,
-                            indicator);
-                    excuteAnalysisJober.add(eaj);
-                    eaj.schedule();
-                    jobs.add(eaj);
-
-                }
-            }
-
-            for (ExecutiveAnalysisJob job : jobs) {
+            this.getMonitor().beginTask("Run Indicators Parallel", 100);
+            int temp = 0;
+            for (int i = 0; i < indicators.size(); i++) {
+                Indicator indicator = indicators.get(i);
                 if (this.continueRun()) {
-                    job.join();
-                }
-                if (job.errorMessage != null) {
-                    ColumnAnalysisSqlExecutor.this.errorMessage = job.errorMessage;
-                    ColumnAnalysisSqlExecutor.this.parallelExeStatus = false;
+                    this.getMonitor().setTaskName(
+                            Messages.getString("ColumnAnalysisSqlExecutor.AnalyzedElement")
+                                    + indicator.getAnalyzedElement().getName());
+                    Connection conn = null;
+                    if (pooledConnection) {
+                        conn = getPooledConnection(analysis).getObject();
+                    } else {
+                        conn = getConnection(analysis).getObject();
+                    }
+
+                    if (conn != null) {
+                        ExecutiveAnalysisJob eaj = new ExecutiveAnalysisJob(ColumnAnalysisSqlExecutor.this, conn,
+                                elementToIndicator, indicator);
+                        excuteAnalysisJober.add(eaj);
+                        eaj.schedule();
+                        jobs.add(eaj);
+
+                        if (this.continueRun()) {
+                            eaj.join();
+                        }
+
+                        if (eaj.errorMessage != null) {
+                            ColumnAnalysisSqlExecutor.this.errorMessage = eaj.errorMessage;
+                            ColumnAnalysisSqlExecutor.this.parallelExeStatus = false;
+                        }
+                    }
+
+                    int current = (i + 1) * 100 / indicators.size();
+                    if (current > temp) {
+                        this.getMonitor().worked(current - temp);
+                        temp = current;
+                    }
                 }
             }
+            this.getMonitor().done();
 
         } catch (Throwable thr) {
             log.error(thr);
@@ -1382,7 +1399,7 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
             // MOD xqliu 2009-12-09 bug 9822
             if (!(ConnectionUtils.isOdbcMssql(connection) || ConnectionUtils.isOdbcOracle(connection)
                     || ConnectionUtils.isOdbcProgress(connection) || ConnectionUtils.isOdbcTeradata(connection) || ConnectionUtils
-                        .isHive(connection))) {
+                    .isHive(connection))) {
                 // MOD scorreia 2008-08-01 MSSQL does not support quoted catalog's name
                 connection.setCatalog(catalogName);
             }

@@ -19,7 +19,6 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
-import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.helper.CatalogHelper;
 import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.SwitchHelpers;
@@ -107,6 +106,8 @@ public class ConnectionEvaluator extends AbstractSchemaEvaluator<DataProvider> {
             cleanUpCatalog(catalogs);
         }
 
+        this.getMonitor().beginTask("Analyze catalogs", 100);
+        int temp = 0;
         if (catalogs.isEmpty()) { // no catalog, only schemata
             List<Schema> schemata = ConnectionHelper.getSchema(dataProvider);
             // MOD yyi 2009-11-30 10187
@@ -117,8 +118,17 @@ public class ConnectionEvaluator extends AbstractSchemaEvaluator<DataProvider> {
                 }
             }
             // ~
-            for (Schema tdSchema : schemata) {
+            // for (Schema tdSchema : schemata) {
+            for (int i = 0; i < schemata.size(); i++) {
+                Schema tdSchema = schemata.get(i);
+                this.getMonitor().setTaskName(
+                        Messages.getString("ColumnAnalysisSqlExecutor.AnalyzedElement") + " schema=" + tdSchema.getName());
                 evalSchemaIndic(tdSchema, ok);
+                int current = (i + 1) * 100 / catalogs.size();
+                if (current > temp) {
+                    this.getMonitor().worked(current - temp);
+                    temp = current;
+                }
             }
         } else { // catalogs exist
             // MOD yyi 2009-11-30 10187
@@ -129,33 +139,51 @@ public class ConnectionEvaluator extends AbstractSchemaEvaluator<DataProvider> {
                 }
             }
             // ~
-            for (Catalog tdCatalog : catalogs) {
-                String catName = tdCatalog.getName();
-                try {
-                    connection.setCatalog(catName);
-                } catch (Exception e) {
-                    log.warn("Exception while executing SQL query " + sqlStatement, e); //$NON-NLS-1$
-                }
-                CatalogIndicator catalogIndic = SchemaFactory.eINSTANCE.createCatalogIndicator();
-                // MOD xqliu 2009-1-21 feature 4715
-                DefinitionHandler.getInstance().setDefaultIndicatorDefinition(catalogIndic);
-                List<Schema> schemas = CatalogHelper.getSchemas(tdCatalog);
-                if (schemas.isEmpty()) { // no schema
-                    evalCatalogIndic(catalogIndic, tdCatalog, ok);
-                } else {
-                    catalogIndic.setAnalyzedElement(tdCatalog);
-                    // --- create SchemaIndicator for each pair of catalog schema
-                    for (Schema tdSchema : schemas) {
-                        // --- create SchemaIndicator for each catalog
-                        SchemaIndicator schemaIndic = SchemaFactory.eINSTANCE.createSchemaIndicator();
-                        // MOD xqliu 2009-1-21 feature 4715
-                        DefinitionHandler.getInstance().setDefaultIndicatorDefinition(schemaIndic);
-                        evalSchemaIndicLow(catalogIndic, schemaIndic, tdCatalog, tdSchema, ok);
+            // for (Catalog tdCatalog : catalogs) {
+            for (int i = 0; i < catalogs.size(); i++) {
+                if (this.continueRun()) {
+                    Catalog tdCatalog = catalogs.get(i);
+                    String catName = tdCatalog.getName();
+                    this.getMonitor().setTaskName(
+                            Messages.getString("ColumnAnalysisSqlExecutor.AnalyzedElement") + " catalog=" + catName);
+                    try {
+                        connection.setCatalog(catName);
+                    } catch (Exception e) {
+                        log.warn("Exception while executing SQL query " + sqlStatement, e); //$NON-NLS-1$
                     }
-                    catalogIndic.setSchemaCount(schemas.size());
+                    CatalogIndicator catalogIndic = SchemaFactory.eINSTANCE.createCatalogIndicator();
+                    // MOD xqliu 2009-1-21 feature 4715
+                    DefinitionHandler.getInstance().setDefaultIndicatorDefinition(catalogIndic);
+                    List<Schema> schemas = CatalogHelper.getSchemas(tdCatalog);
+                    if (schemas.isEmpty()) { // no schema
+                        evalCatalogIndic(catalogIndic, tdCatalog, ok);
+                    } else {
+                        catalogIndic.setAnalyzedElement(tdCatalog);
+                        // --- create SchemaIndicator for each pair of catalog schema
+                        for (Schema tdSchema : schemas) {
+                            if (this.continueRun()) {
+                                this.getMonitor().setTaskName(
+                                        Messages.getString("ColumnAnalysisSqlExecutor.AnalyzedElement") + " catalog=" + catName
+                                                + ", schema=" + tdSchema.getName());
+                                // --- create SchemaIndicator for each catalog
+                                SchemaIndicator schemaIndic = SchemaFactory.eINSTANCE.createSchemaIndicator();
+                                // MOD xqliu 2009-1-21 feature 4715
+                                DefinitionHandler.getInstance().setDefaultIndicatorDefinition(schemaIndic);
+                                evalSchemaIndicLow(catalogIndic, schemaIndic, tdCatalog, tdSchema, ok);
+                            }
+                        }
+                        catalogIndic.setSchemaCount(schemas.size());
 
+                    }
+
+                    int current = (i + 1) * 100 / catalogs.size();
+                    if (current > temp) {
+                        this.getMonitor().worked(current - temp);
+                        temp = current;
+                    }
                 }
             }
+            this.getMonitor().done();
         }
 
         if (log.isDebugEnabled()) {
@@ -192,7 +220,7 @@ public class ConnectionEvaluator extends AbstractSchemaEvaluator<DataProvider> {
     private boolean setCatalogOk(java.sql.Connection connection, String name) {
         if (connection != null) {
             try {
-                if (!ConnectionUtils.isHive(connection)) {
+                if (dbms().supportCatalogSelection()) {
                     connection.setCatalog(name);
                 }
             } catch (SQLException e) {

@@ -82,9 +82,34 @@ public class HiveDbmsLanguage extends DbmsLanguage {
         return surroundWithSpaces(element + " REGEXP " + regex); //$NON-NLS-1$
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dq.dbms.DbmsLanguage#regexNotLike(java.lang.String, java.lang.String)
+     */
     @Override
     public String regexNotLike(String element, String regex) {
         return surroundWithSpaces(element + " NOT REGEXP " + regex); //$NON-NLS-1$
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dq.dbms.DbmsLanguage#isPkIndexSupported()
+     */
+    @Override
+    public boolean isPkIndexSupported() {
+        return false;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dq.dbms.DbmsLanguage#supportCatalogSelection()
+     */
+    @Override
+    public boolean supportCatalogSelection() {
+        return false;
     }
 
 }
