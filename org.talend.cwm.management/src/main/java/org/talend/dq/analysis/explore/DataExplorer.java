@@ -49,7 +49,7 @@ import orgomg.cwm.resource.relational.Schema;
  */
 public abstract class DataExplorer implements IDataExplorer {
 
-    private static Logger log = Logger.getLogger(PatternExplorer.class);
+    private static Logger log = Logger.getLogger(DataExplorer.class);
 
     public static final String MENU_VIEW_VALUES = Messages.getString("DataExplorer.ViewValues"); //$NON-NLS-1$
 
