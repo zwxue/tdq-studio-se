@@ -21,7 +21,12 @@ import org.junit.Before;
 import org.junit.Test;
 import org.talend.cwm.relational.RelationalFactory;
 import org.talend.cwm.relational.TdColumn;
+import org.talend.dataquality.domain.Domain;
+import org.talend.dataquality.domain.DomainFactory;
+import org.talend.dataquality.domain.pattern.Pattern;
+import org.talend.dataquality.domain.pattern.PatternFactory;
 import org.talend.dataquality.indicators.Indicator;
+import org.talend.dataquality.indicators.IndicatorParameters;
 import org.talend.dataquality.indicators.IndicatorsFactory;
 import org.talend.dataquality.indicators.NullCountIndicator;
 import org.talend.dataquality.indicators.RowCountIndicator;
@@ -143,6 +148,45 @@ public class IndicatorHelperTest {
         // ~
         NullCountIndicator nullCountIndicator2 = IndicatorHelper.getNullCountIndicator(column1, elementToIndicator);
         assert (nullCountIndicator2 == null);
+    }
+
+    /**
+     * 
+     * Test method for get pattern name based on indicator.
+     */
+    @Test
+    public void testGetPatternName() {
+        Indicator indicator = IndicatorsFactory.eINSTANCE.createRegexpMatchingIndicator();
+        IndicatorParameters parameters = IndicatorsFactory.eINSTANCE.createIndicatorParameters();
+        Domain validData = DomainFactory.eINSTANCE.createDomain();
+        Pattern pattern = PatternFactory.eINSTANCE.createPattern();
+        String pn = "Blank Text"; //$NON-NLS-1$
+        pattern.setName(pn);
+        validData.getPatterns().add(pattern);
+        parameters.setDataValidDomain(validData);
+        indicator.setParameters(parameters);
+        String patternName = IndicatorHelper.getPatternName(indicator);
+        assert (patternName.equals(pn));
+    }
+
+    /**
+     * 
+     * Test method for get pattern based on indicator.
+     */
+    @Test
+    public void testGetPattern_1() {
+
+        Indicator indicator = IndicatorsFactory.eINSTANCE.createRegexpMatchingIndicator();
+        IndicatorParameters parameters = IndicatorsFactory.eINSTANCE.createIndicatorParameters();
+        Domain validData = DomainFactory.eINSTANCE.createDomain();
+        Pattern pattern = PatternFactory.eINSTANCE.createPattern();
+        pattern.setName("Blank Text"); //$NON-NLS-1$
+        validData.getPatterns().add(pattern);
+        parameters.setDataValidDomain(validData);
+        indicator.setParameters(parameters);
+        Pattern pattern2 = IndicatorHelper.getPattern(indicator);
+        assert (pattern2 != null);
+        assert (pattern2.equals(pattern));
     }
 
 }

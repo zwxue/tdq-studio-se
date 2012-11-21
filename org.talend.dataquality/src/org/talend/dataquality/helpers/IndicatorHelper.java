@@ -26,6 +26,7 @@ import org.talend.dataquality.PluginConstant;
 import org.talend.dataquality.analysis.AnalysisResult;
 import org.talend.dataquality.domain.Domain;
 import org.talend.dataquality.domain.RangeRestriction;
+import org.talend.dataquality.domain.pattern.Pattern;
 import org.talend.dataquality.indicators.AverageLengthIndicator;
 import org.talend.dataquality.indicators.BlankCountIndicator;
 import org.talend.dataquality.indicators.BoxIndicator;
@@ -873,5 +874,40 @@ public final class IndicatorHelper {
             return false;
         }
         return (indicator instanceof WhereRuleIndicator && !(indicator instanceof WhereRuleAideIndicator));
+    }
+
+    /**
+     * Method "getPatternName" returns the name of the pattern or null.
+     * 
+     * @param indicator an indicator, supposedly a regexMatchingIndicator
+     * @return the name of the pattern used by the regex matching indicator or null
+     */
+    public static String getPatternName(Indicator indicator) {
+        Pattern pattern = getPattern(indicator);
+        return (pattern != null) ? pattern.getName() : null;
+    }
+
+    /**
+     * Method "getPattern" returns the pattern or null.
+     * 
+     * @param indicator an indicator, supposedly a regexMatchingIndicator
+     * @return the pattern used by the regex matching indicator or null
+     */
+    public static Pattern getPattern(Indicator indicator) {
+        IndicatorParameters parameters = indicator.getParameters();
+        return (parameters != null) ? getPattern(indicator, parameters) : null;
+    }
+
+    private static Pattern getPattern(Indicator indicator, IndicatorParameters parameters) {
+        Domain dataValidDomain = parameters.getDataValidDomain();
+        if (dataValidDomain != null) {
+            EList<Pattern> patterns = dataValidDomain.getPatterns();
+            if (patterns.size() != 1) {
+                log.warn("Found " + patterns.size() + " patterns in indicator " + indicator.getName());
+            } else {
+                return patterns.get(0);
+            }
+        }
+        return null;
     }
 }
