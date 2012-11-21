@@ -13,6 +13,7 @@
 package org.talend.dataprofiler.core.ui.editor.analysis;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 import org.apache.log4j.Level;
@@ -40,6 +41,7 @@ import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.forms.editor.IFormPage;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.part.FileEditorInput;
+import org.talend.commons.emf.EMFUtil;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.database.PluginConstant;
@@ -254,7 +256,7 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
         connCombo.setDisplayColumnIndex(0);
         connCombo.getTable().setSize(SWT.DEFAULT, SWT.DEFAULT);
 
- //       connCombo.defineColumns(new String[] { "Id", "Name", "Metadata Type" });// , new int[] { 5, SWT.DEFAULT,
+        // connCombo.defineColumns(new String[] { "Id", "Name", "Metadata Type" });// , new int[] { 5, SWT.DEFAULT,
         // SWT.DEFAULT });
 
         // turn on the table header.
@@ -282,7 +284,6 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
         createConnVersionText(labelButtonClient);
         createConnDeletedLabel(labelButtonClient);
     }
-
 
     /**
      * create the version Text of the connection.
@@ -420,8 +421,7 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
 
             // MOD yyin 201204 TDQ-4977, change to TableCombo type to show the connection type.
             TableItem ti = new TableItem(connCombo.getTable(), SWT.NONE);
-            ti.setText(new String[] { property.getLabel(),
-                    RepositoryNodeHelper.getConnectionType(repNode) });
+            ti.setText(new String[] { property.getLabel(), RepositoryNodeHelper.getConnectionType(repNode) });
             // connCombo.add(property.getDisplayName(), index);
             // String prvFileName = PrvResourceFileHelper.getInstance().findCorrespondingFile(prov).getName();
             connCombo.setData(property.getLabel() + RepositoryNodeHelper.getConnectionType(repNode), index);
@@ -433,7 +433,6 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
             // connCombo.setVisibleItemCount(index * 2);
         }
     }
-
 
     /**
      * DOC Update the client dependency of the analysis. bug 14014
@@ -547,6 +546,7 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
             doLog(log, Level.INFO, DefaultMessagesImpl.getString("ColumnMasterDetailsPage.success", urlString)); //$NON-NLS-1$
         }
     }
+
     /**
      * 
      * DOC zshen Comment method "deleteConnectionDependency".
@@ -570,5 +570,16 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
             }
         }
         return true;
+    }
+
+    /**
+     * 
+     * save the removed elements(clean depency) in treeviewer.
+     */
+    protected void saveRemovedElements() {
+        HashSet<ModelElement> removedElements = this.getTreeViewer().getRemovedElements();
+        for (ModelElement mod : removedElements) {
+            EMFUtil.saveSingleResource(mod.eResource());
+        }
     }
 }

@@ -892,6 +892,9 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
             // ~
 
             saved = ElementWriterFactory.getInstance().createAnalysisWrite().save(tdqAnalysisItem);
+            if (saved.isOk() && !treeViewer.getRemovedElements().isEmpty()) {
+                saveRemovedElements();
+            }
         }
         // MOD yyi 2012-02-03 TDQ-3602:Avoid to rewriting all analyzes after saving, no reason to update all analyzes
         // which is depended in the referred connection.

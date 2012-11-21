@@ -894,6 +894,9 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
             // ~
 
             saved = ElementWriterFactory.getInstance().createAnalysisWrite().save(tdqAnalysisItem);
+            if (saved.isOk() && !treeViewer.getRemovedElements().isEmpty()) {
+                saveRemovedElements();
+            }
         }
         logSaved(saved);
 

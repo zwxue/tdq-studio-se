@@ -775,7 +775,7 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
         // ~
         if (null != unit) {
             meIndicator.removeIndicatorUnit(unit);
-            masterPage.getAllMatchIndicator().getCompositeRegexMatchingIndicators().remove(unit.getIndicator());
+            // masterPage.getAllMatchIndicator().getCompositeRegexMatchingIndicators().remove(unit.getIndicator());
             masterPage.updateIndicatorSection();
         }
 

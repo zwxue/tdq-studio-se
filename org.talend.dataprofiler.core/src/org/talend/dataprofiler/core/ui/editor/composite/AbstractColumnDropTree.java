@@ -13,6 +13,7 @@
 package org.talend.dataprofiler.core.ui.editor.composite;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -30,7 +31,6 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
-import org.talend.commons.emf.EMFUtil;
 import org.talend.core.model.metadata.MetadataColumnRepositoryObject;
 import org.talend.core.model.metadata.builder.connection.MetadataColumn;
 import org.talend.core.model.repository.IRepositoryViewObject;
@@ -101,6 +101,8 @@ public abstract class AbstractColumnDropTree extends AbstractPagePart {
     protected AbstractAnalysisMetadataPage absMasterPage = null;
 
     protected String viewKey = null;
+
+    protected HashSet<ModelElement> removedElements = new HashSet<ModelElement>();
 
     /**
      * DOC qzhang Comment method "createOneUnit".
@@ -261,7 +263,7 @@ public abstract class AbstractColumnDropTree extends AbstractPagePart {
         // remove dependency
         removeDependency(absMasterPage.getAnalysis(), inidicatorUnit);
     }
-    
+
     /**
      * 
      * DOC zshen Comment method "deleteIndicatorItems".
@@ -297,9 +299,9 @@ public abstract class AbstractColumnDropTree extends AbstractPagePart {
             reomveElements.addAll(indicator.getParameters().getDataValidDomain().getPatterns());
         }
         DependenciesHandler.getInstance().removeDependenciesBetweenModels(analysis, reomveElements);
-        for (ModelElement me : reomveElements) {
-            EMFUtil.saveSingleResource(me.eResource());
-        }
+        // MOD qiongli 2012-11-19 TDQ-5581 Don't save the resource of reomveElements at here.should save them after
+        // saving analysis.
+        this.removedElements.addAll(reomveElements);
     }
 
     public void openIndicatorOptionDialog(Shell shell, TreeItem indicatorItem) {
@@ -640,5 +642,9 @@ public abstract class AbstractColumnDropTree extends AbstractPagePart {
 
     protected ModelElementIndicator[] getAllTheElementIndicator() {
         return this.getModelElementIndicator();
+    }
+
+    public HashSet<ModelElement> getRemovedElements() {
+        return this.removedElements;
     }
 }

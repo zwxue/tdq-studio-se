@@ -669,6 +669,9 @@ public class TableMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
             saved = ElementWriterFactory.getInstance().createAnalysisWrite().save(tdqAnalysisItem);
         }
         if (saved.isOk()) {
+            if (!treeViewer.getRemovedElements().isEmpty()) {
+                saveRemovedElements();
+            }
             // ADD gdbu 2011-6-1 bug 19833
             this.updateDQRuleDependency(oldDqRules);
             // ~
