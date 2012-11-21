@@ -472,9 +472,11 @@ public abstract class AbstractSchemaEvaluator<T> extends Evaluator<T> {
                         .getTables(getDataManager(), pacage, trimPat, true);
                 // ~TDQ-3607
                 for (NamedColumnSet t : tables) {
-                    this.getMonitor().setTaskName(
-                            Messages.getString("ColumnAnalysisSqlExecutor.AnalyzedElement") + " catalog=" + catName + ", table="
-                                    + t.getName());
+                    if (this.getMonitor() != null) {
+                        this.getMonitor().setTaskName(
+                                Messages.getString("ColumnAnalysisSqlExecutor.AnalyzedElement") + " catalog=" + catName
+                                        + ", table=" + t.getName());
+                    }
                     tableCount++;
                     evalAllCounts(catName, schemaName, t, schemaIndic, true, ok);
                 }

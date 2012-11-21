@@ -106,7 +106,9 @@ public class ConnectionEvaluator extends AbstractSchemaEvaluator<DataProvider> {
             cleanUpCatalog(catalogs);
         }
 
-        this.getMonitor().beginTask("Analyze catalogs", 100);
+        if (this.getMonitor() != null) {
+            this.getMonitor().beginTask("Analyze catalogs", 100);
+        }
         int temp = 0;
         if (catalogs.isEmpty()) { // no catalog, only schemata
             List<Schema> schemata = ConnectionHelper.getSchema(dataProvider);
@@ -121,13 +123,17 @@ public class ConnectionEvaluator extends AbstractSchemaEvaluator<DataProvider> {
             // for (Schema tdSchema : schemata) {
             for (int i = 0; i < schemata.size(); i++) {
                 Schema tdSchema = schemata.get(i);
-                this.getMonitor().setTaskName(
-                        Messages.getString("ColumnAnalysisSqlExecutor.AnalyzedElement") + " schema=" + tdSchema.getName());
+                if (this.getMonitor() != null) {
+                    this.getMonitor().setTaskName(
+                            Messages.getString("ColumnAnalysisSqlExecutor.AnalyzedElement") + " schema=" + tdSchema.getName());
+                }
                 evalSchemaIndic(tdSchema, ok);
-                int current = (i + 1) * 100 / catalogs.size();
-                if (current > temp) {
-                    this.getMonitor().worked(current - temp);
-                    temp = current;
+                if (this.getMonitor() != null) {
+                    int current = (i + 1) * 100 / catalogs.size();
+                    if (current > temp) {
+                        this.getMonitor().worked(current - temp);
+                        temp = current;
+                    }
                 }
             }
         } else { // catalogs exist
@@ -144,10 +150,16 @@ public class ConnectionEvaluator extends AbstractSchemaEvaluator<DataProvider> {
                 if (this.continueRun()) {
                     Catalog tdCatalog = catalogs.get(i);
                     String catName = tdCatalog.getName();
-                    this.getMonitor().setTaskName(
-                            Messages.getString("ColumnAnalysisSqlExecutor.AnalyzedElement") + " catalog=" + catName);
+                    if (this.getMonitor() != null) {
+                        this.getMonitor().setTaskName(
+                                Messages.getString("ColumnAnalysisSqlExecutor.AnalyzedElement") + " catalog=" + catName);
+                    }
                     if (dbms().supportCatalogSelection()) {
-                        connection.setCatalog(catName);
+                        try {
+                            connection.setCatalog(catName);
+                        } catch (SQLException e) {
+                            log.warn("Exception while executing SQL query " + sqlStatement, e); //$NON-NLS-1$  
+                        }
                     }
                     CatalogIndicator catalogIndic = SchemaFactory.eINSTANCE.createCatalogIndicator();
                     // MOD xqliu 2009-1-21 feature 4715
@@ -160,9 +172,11 @@ public class ConnectionEvaluator extends AbstractSchemaEvaluator<DataProvider> {
                         // --- create SchemaIndicator for each pair of catalog schema
                         for (Schema tdSchema : schemas) {
                             if (this.continueRun()) {
-                                this.getMonitor().setTaskName(
-                                        Messages.getString("ColumnAnalysisSqlExecutor.AnalyzedElement") + " catalog=" + catName
-                                                + ", schema=" + tdSchema.getName());
+                                if (this.getMonitor() != null) {
+                                    this.getMonitor().setTaskName(
+                                            Messages.getString("ColumnAnalysisSqlExecutor.AnalyzedElement") + " catalog="
+                                                    + catName + ", schema=" + tdSchema.getName());
+                                }
                                 // --- create SchemaIndicator for each catalog
                                 SchemaIndicator schemaIndic = SchemaFactory.eINSTANCE.createSchemaIndicator();
                                 // MOD xqliu 2009-1-21 feature 4715
@@ -174,14 +188,18 @@ public class ConnectionEvaluator extends AbstractSchemaEvaluator<DataProvider> {
 
                     }
 
-                    int current = (i + 1) * 100 / catalogs.size();
-                    if (current > temp) {
-                        this.getMonitor().worked(current - temp);
-                        temp = current;
+                    if (this.getMonitor() != null) {
+                        int current = (i + 1) * 100 / catalogs.size();
+                        if (current > temp) {
+                            this.getMonitor().worked(current - temp);
+                            temp = current;
+                        }
                     }
                 }
             }
-            this.getMonitor().done();
+            if (this.getMonitor() != null) {
+                this.getMonitor().done();
+            }
         }
 
         if (log.isDebugEnabled()) {

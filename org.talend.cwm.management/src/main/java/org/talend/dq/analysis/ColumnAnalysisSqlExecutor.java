@@ -1196,14 +1196,18 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
             List<ExecutiveAnalysisJob> jobs = new ArrayList<ExecutiveAnalysisJob>();
             // for (Indicator indicator : indicators) {
 
-            this.getMonitor().beginTask("Run Indicators Parallel", 100);
+            if (this.getMonitor() != null) {
+                this.getMonitor().beginTask("Run Indicators Parallel", 100);
+            }
             int temp = 0;
             for (int i = 0; i < indicators.size(); i++) {
                 Indicator indicator = indicators.get(i);
                 if (this.continueRun()) {
-                    this.getMonitor().setTaskName(
-                            Messages.getString("ColumnAnalysisSqlExecutor.AnalyzedElement") + " "
-                                    + indicator.getAnalyzedElement().getName());
+                    if (this.getMonitor() != null) {
+                        this.getMonitor().setTaskName(
+                                Messages.getString("ColumnAnalysisSqlExecutor.AnalyzedElement") + " "
+                                        + indicator.getAnalyzedElement().getName());
+                    }
                     Connection conn = null;
                     if (pooledConnection) {
                         conn = getPooledConnection(analysis).getObject();
@@ -1228,14 +1232,18 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
                         }
                     }
 
-                    int current = (i + 1) * 100 / indicators.size();
-                    if (current > temp) {
-                        this.getMonitor().worked(current - temp);
-                        temp = current;
+                    if (this.getMonitor() != null) {
+                        int current = (i + 1) * 100 / indicators.size();
+                        if (current > temp) {
+                            this.getMonitor().worked(current - temp);
+                            temp = current;
+                        }
                     }
                 }
             }
-            this.getMonitor().done();
+            if (this.getMonitor() != null) {
+                this.getMonitor().done();
+            }
 
         } catch (Throwable thr) {
             log.error(thr);
@@ -1399,7 +1407,7 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
             // MOD xqliu 2009-12-09 bug 9822
             if (!(ConnectionUtils.isOdbcMssql(connection) || ConnectionUtils.isOdbcOracle(connection)
                     || ConnectionUtils.isOdbcProgress(connection) || ConnectionUtils.isOdbcTeradata(connection) || ConnectionUtils
-                    .isHive(connection))) {
+                        .isHive(connection))) {
                 // MOD scorreia 2008-08-01 MSSQL does not support quoted catalog's name
                 connection.setCatalog(catalogName);
             }
