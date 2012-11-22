@@ -647,9 +647,7 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
         // MOD qiongli 2012-2-14 TDQ-4539.compare the name with all items of the specified type.
         boolean exist = PropertyHelper.existDuplicateName(elementName, repositoryViewObject.getLabel(), objectType);
         if (exist) {
-            ret.setReturnCode(
-                    DefaultMessagesImpl.getString("UIMessages.ItemExistsErrorWithParameter", repositoryViewObject.getLabel()),
-                    false);
+            ret.setReturnCode(DefaultMessagesImpl.getString("UIMessages.ItemExistsErrorWithParameter", elementName), false);
             return ret;
         }
 
