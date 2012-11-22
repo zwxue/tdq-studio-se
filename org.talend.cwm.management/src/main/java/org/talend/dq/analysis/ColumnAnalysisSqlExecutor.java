@@ -1205,8 +1205,8 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
                 if (this.continueRun()) {
                     if (this.getMonitor() != null) {
                         this.getMonitor().setTaskName(
-                                Messages.getString("ColumnAnalysisSqlExecutor.AnalyzedElement", indicator.getAnalyzedElement()
-                                        .getName()));
+                                Messages.getString("ColumnAnalysisSqlExecutor.AnalyzedElement")
+                                        + indicator.getAnalyzedElement().getName());
                     }
                     Connection conn = null;
                     if (pooledConnection) {
@@ -1218,6 +1218,7 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
                     if (conn != null) {
                         ExecutiveAnalysisJob eaj = new ExecutiveAnalysisJob(ColumnAnalysisSqlExecutor.this, conn,
                                 elementToIndicator, indicator);
+                        eaj.setName(indicator.getName());
                         excuteAnalysisJober.add(eaj);
                         eaj.schedule();
                         jobs.add(eaj);
