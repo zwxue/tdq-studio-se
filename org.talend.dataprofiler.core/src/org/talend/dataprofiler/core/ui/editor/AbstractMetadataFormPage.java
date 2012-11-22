@@ -540,9 +540,7 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
         boolean exist = PropertyHelper.existDuplicateName(elementName, oldProperty.getDisplayName(), objectType);
         if (exist) {
             this.nameText.setText(oldProperty != null ? oldProperty.getDisplayName() : PluginConstant.SPACE_STRING);
-            ret.setReturnCode(
-                    DefaultMessagesImpl.getString("UIMessages.ItemExistsErrorWithParameter", repositoryViewObject.getLabel()),
-                    false);
+            ret.setReturnCode(DefaultMessagesImpl.getString("UIMessages.ItemExistsErrorWithParameter", elementName), false);
             return ret;
         }
 
