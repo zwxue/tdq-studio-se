@@ -129,6 +129,7 @@ public abstract class AnalysisExecutor implements IAnalysisExecutor {
                 ok = runAnalysis(analysis, sql);
             }
         } catch (Exception e) {
+            ok = false;
             log.error(e, e);
         } finally {
             // ADD msjian TDQ-5952: we should close connections always.

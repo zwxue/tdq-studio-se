@@ -213,8 +213,16 @@ public class MdmAnalysisSqlExecutor extends MdmAnalysisExecutor {
             // --- finalize indicators by setting the row count and null when they exist.
             setRowCountAndNullCount(elementToIndicator);
 
-        } catch (Exception e) {
-            log.error(e, e);
+        } catch (RemoteException e) {
+            log.error(e.getMessage(), e);
+            this.errorMessage = e.getMessage();
+            // FIXME remove the following information once profiling of SQL mode MDM is supported
+            if (this.errorMessage.contains("Unable to perform a direct query")) { //$NON-NLS-1$
+                this.errorMessage = Messages.getString("MdmAnalysisSqlExecutor.SQLMODEUNSUPPORTED");
+            }
+            ok = false;
+        } catch (ServiceException e) {
+            log.error(e.getMessage(), e);
             this.errorMessage = e.getMessage();
             ok = false;
         } finally {
