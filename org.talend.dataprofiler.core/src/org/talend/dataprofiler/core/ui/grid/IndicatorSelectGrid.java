@@ -493,11 +493,9 @@ public class IndicatorSelectGrid extends Grid {
         IIndicatorNode indicatorNode = (IIndicatorNode) getItem(cell.y).getData();
         IndicatorEnum indicatorEnum = indicatorNode.getIndicatorEnum();
         ModelElementIndicator meIndicator = (ModelElementIndicator) getColumn(cell.x).getData();
-        if (meIndicator != null) {
+        if (meIndicator != null && indicatorEnum != null) {
             if (tick) {
-                if (indicatorEnum != null) {
-                    meIndicator.addTempIndicatorEnum(indicatorEnum);
-                }
+                meIndicator.addTempIndicatorEnum(indicatorEnum);
             } else {
                 meIndicator.removeTempIndicatorEnum(indicatorEnum);
             }
