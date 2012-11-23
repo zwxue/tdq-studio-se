@@ -473,10 +473,18 @@ public abstract class AbstractSchemaEvaluator<T> extends Evaluator<T> {
                 // ~TDQ-3607
                 for (NamedColumnSet t : tables) {
                     if (this.getMonitor() != null) {
-                        this.getMonitor().setTaskName(
-                                Messages.getString("ColumnAnalysisSqlExecutor.AnalyzedElement")
-                                        + Messages.getString("ColumnAnalysisSqlExecutor.AnalyzedElementCatalog", catName) + ", "
-                                        + Messages.getString("ColumnAnalysisSqlExecutor.AnalyzedElementTable", t.getName()));
+                        StringBuilder taskName = new StringBuilder(
+                                Messages.getString("ColumnAnalysisSqlExecutor.AnalyzedElement"));
+                        if (catName != null) {
+                            taskName.append(Messages.getString("ColumnAnalysisSqlExecutor.AnalyzedElementCatalog", catName))
+                                    .append(", ");
+                        }
+                        if (schemaName != null) {
+                            taskName.append(Messages.getString("ColumnAnalysisSqlExecutor.AnalyzedElementSchema", schemaName))
+                                    .append(", ");
+                        }
+                        taskName.append(Messages.getString("ColumnAnalysisSqlExecutor.AnalyzedElementTable", t.getName()));
+                        this.getMonitor().setTaskName(taskName.toString());
                     }
                     tableCount++;
                     evalAllCounts(catName, schemaName, t, schemaIndic, true, ok);

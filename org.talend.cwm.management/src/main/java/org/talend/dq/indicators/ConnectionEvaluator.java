@@ -130,7 +130,7 @@ public class ConnectionEvaluator extends AbstractSchemaEvaluator<DataProvider> {
                 }
                 evalSchemaIndic(tdSchema, ok);
                 if (this.getMonitor() != null) {
-                    int current = (i + 1) * 100 / catalogs.size();
+                    int current = (i + 1) * 100 / schemata.size();
                     if (current > temp) {
                         this.getMonitor().worked(current - temp);
                         temp = current;
