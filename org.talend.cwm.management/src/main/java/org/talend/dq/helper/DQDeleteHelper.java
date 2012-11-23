@@ -12,11 +12,11 @@
 // ============================================================================
 package org.talend.dq.helper;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
-import org.talend.commons.exception.PersistenceException;
 import org.talend.core.model.properties.FolderItem;
 import org.talend.core.model.properties.Item;
 import org.talend.core.model.properties.Property;
@@ -59,7 +59,7 @@ public final class DQDeleteHelper {
         if (item instanceof TDQReportItem) {
             try {
                 rc = ReportUtils.deleteRepOutputFolder(itemFile);
-            } catch (PersistenceException e) {
+            } catch (Exception e) {
                 log.error(e);
                 rc.setMessage(e.getMessage());
                 rc.setOk(false);
@@ -70,18 +70,27 @@ public final class DQDeleteHelper {
     }
 
     /**
+     * 
      * if these items in recycle bin are depended by others which is not in recycle bin,show a warning and return.
      * 
      * @param allNodes
-     * @return
+     * @param isCurrentPerspectiveDQ
+     * @return these list will be used to pop a dialog and display the detail nodes which are depended by others.
      */
-    public static boolean canEmptyRecyBin(List<IRepositoryNode> allNodes) {
+    public static List<IRepositoryNode> getCanNotDeletedNodes(List<IRepositoryNode> allNodes, boolean isCurrentPerspectiveDQ) {
+        List<IRepositoryNode> canNotDeletedNodes = new ArrayList<IRepositoryNode>();
         if (allNodes == null) {
-            return false;
+            return canNotDeletedNodes;
         }
+
         for (IRepositoryNode node : allNodes) {
             List<ModelElement> dependencies = EObjectHelper.getDependencyClients(node);
             if (dependencies == null || dependencies.isEmpty()) {
+                continue;
+            }
+            // if the current perspective is not DQ,no need to judge its client dependences are in recycle bin.
+            if (!isCurrentPerspectiveDQ) {
+                canNotDeletedNodes.add(node);
                 continue;
             }
             for (ModelElement mod : dependencies) {
@@ -91,10 +100,10 @@ public final class DQDeleteHelper {
                 }
                 Item item = property.getItem();
                 if (item != null && !item.getState().isDeleted()) {
-                    return false;
+                    canNotDeletedNodes.add(node);
                 }
             }
         }
-        return true;
+        return canNotDeletedNodes;
     }
 }

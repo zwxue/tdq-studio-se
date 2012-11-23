@@ -15,6 +15,7 @@ package org.talend.dataprofiler.core.service;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -29,7 +30,6 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.swt.widgets.Display;
 import org.talend.commons.exception.PersistenceException;
 import org.talend.commons.utils.WorkspaceUtils;
 import org.talend.commons.utils.io.FilesUtils;
@@ -40,6 +40,7 @@ import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.properties.Item;
 import org.talend.core.model.properties.TDQItem;
 import org.talend.core.model.repository.ERepositoryObjectType;
+import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.core.repository.constants.FileConstants;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.core.repository.utils.AbstractResourceChangesService;
@@ -59,6 +60,7 @@ import org.talend.dataquality.properties.TDQPatternItem;
 import org.talend.dataquality.properties.TDQReportItem;
 import org.talend.dataquality.rules.DQRule;
 import org.talend.dataquality.rules.WhereRule;
+import org.talend.dq.helper.DQDeleteHelper;
 import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.helper.ReportUtils;
@@ -70,6 +72,8 @@ import org.talend.dq.writer.impl.DQRuleWriter;
 import org.talend.dq.writer.impl.IndicatorDefinitionWriter;
 import org.talend.dq.writer.impl.PatternWriter;
 import org.talend.dq.writer.impl.ReportWriter;
+import org.talend.repository.model.IRepositoryNode;
+import org.talend.repository.model.IRepositoryNode.ENodeType;
 import org.talend.resource.ResourceManager;
 import org.talend.resource.ResourceService;
 import org.talend.utils.files.FileUtils;
@@ -122,30 +126,6 @@ public class TDQResourceChangeHandler extends AbstractResourceChangesService {
             // else anaysis,report etc.
         }
         super.handleUnload(toBeUnloadedResource);
-    }
-
-    @Override
-    public boolean handleResourceChange(ModelElement modelElement) {
-
-        // MOD qiongli 2011-1-28 bug 16776,add asyncExec(new Runnable).
-        final ModelElement modelElementFinal = modelElement;
-        List<ModelElement> clientDependencys = EObjectHelper.getDependencyClients(modelElement);
-        if (clientDependencys.size() > 0) {
-            final ModelElement[] dependencyElements = clientDependencys.toArray(new ModelElement[clientDependencys.size()]);
-
-            Display.getDefault().asyncExec(new Runnable() {
-
-                public void run() {
-                    DeleteModelElementConfirmDialog.showDialog(null,
-                            PropertyHelper.getItemFile(PropertyHelper.getProperty(modelElementFinal)), dependencyElements,
-                            DefaultMessagesImpl.getString("TDQResourceChangeHandler.OperationIsRejected"), false); //$NON-NLS-1$
-                }
-            });
-
-            return false;
-        }
-
-        return super.handleResourceChange(modelElement);
     }
 
     @Override
@@ -370,4 +350,81 @@ public class TDQResourceChangeHandler extends AbstractResourceChangesService {
             }
         }
     }
+
+    @Override
+    public boolean hasDependcesInDQ(IRepositoryNode currentNode) {
+        if (currentNode == null) {
+            return false;
+        }
+        if (currentNode.getType() == ENodeType.SIMPLE_FOLDER) {
+            for (IRepositoryNode curNode : currentNode.getChildren()) {
+                if (hasDependcesInDQ(curNode)) {
+                    return true;
+                }
+            }
+        } else {
+            IRepositoryViewObject object = currentNode.getObject();
+            if (object != null && object.getProperty() != null) {
+                Item item = object.getProperty().getItem();
+                if (item == null || !(item instanceof ConnectionItem)) {
+                    return false;
+                }
+                Connection connection = ((ConnectionItem) item).getConnection();
+                if (connection != null) {
+                    List<ModelElement> clientDependencys = EObjectHelper.getDependencyClients(connection);
+                    if (!clientDependencys.isEmpty()) {
+                        final ModelElement[] dependencyElements = clientDependencys.toArray(new ModelElement[clientDependencys
+                                .size()]);
+                        DeleteModelElementConfirmDialog.showDialog(null,
+                                PropertyHelper.getItemFile(PropertyHelper.getProperty(connection)), dependencyElements,
+                                DefaultMessagesImpl.getString("TDQResourceChangeHandler.OperationIsRejected"), false); //$NON-NLS-1$
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+    /**
+     * judge if has connection in recycle bin which depended by DQ analysis.
+     */
+    @Override
+    public boolean canEmptyRecycleBin(List<IRepositoryNode> firstLevelRecyNodes) {
+        List<IRepositoryNode> allConnChildrenNodes = new ArrayList<IRepositoryNode>();
+        for (IRepositoryNode node : firstLevelRecyNodes) {
+            getConnChildrenInRecybin(node, allConnChildrenNodes);
+        }
+        List<IRepositoryNode> canNotDeletedNodes = DQDeleteHelper.getCanNotDeletedNodes(allConnChildrenNodes, false);
+        if (!canNotDeletedNodes.isEmpty()) {
+            DeleteModelElementConfirmDialog.showDialog(null, canNotDeletedNodes,
+                    DefaultMessagesImpl.getString("DQEmptyRecycleBinAction.allDependencies"));//$NON-NLS-1$
+
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * 
+     * get all connection nodes in recycle bin.
+     * 
+     * @param parent
+     * @param childNodes
+     * @return
+     */
+    private List<IRepositoryNode> getConnChildrenInRecybin(IRepositoryNode parent, List<IRepositoryNode> childNodes) {
+        if (parent.getType() == ENodeType.SIMPLE_FOLDER) {
+            childNodes.addAll(parent.getChildren(true));
+        } else {
+            ERepositoryObjectType objectType = parent.getObjectType();
+            if (objectType != null
+                    && (objectType == ERepositoryObjectType.METADATA_CONNECTIONS
+                            || objectType == ERepositoryObjectType.METADATA_FILE_DELIMITED || objectType == ERepositoryObjectType.METADATA_MDMCONNECTION)) {
+                childNodes.add(parent);
+            }
+        }
+        return childNodes;
+    }
+
 }
