@@ -13,6 +13,7 @@
 package org.talend.dq.helper;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
@@ -22,23 +23,29 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
+import org.talend.commons.exception.LoginException;
+import org.talend.commons.exception.PersistenceException;
 import org.talend.commons.utils.WorkspaceUtils;
 import org.talend.commons.utils.io.FilesUtils;
 import org.talend.core.model.properties.Item;
 import org.talend.core.model.properties.Property;
+import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.model.repository.IRepositoryViewObject;
+import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.dataquality.PluginConstant;
 import org.talend.dataquality.helpers.ReportHelper;
 import org.talend.dataquality.properties.TDQReportItem;
 import org.talend.dq.nodes.ReportRepNode;
+import org.talend.repository.ProjectManager;
+import org.talend.repository.RepositoryWorkUnit;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.resource.ResourceManager;
 import org.talend.utils.sugars.ReturnCode;
@@ -69,41 +76,38 @@ public final class ReportUtils {
     }
 
     /**
-     * get report files list and rebuild the .report.list file.
+     * DOC xqliu Comment method "initRepListFile".
      * 
      * @param reportFile
-     * @return
      * @throws Exception
+     * @deprecated
      */
-    public static IResource[] getReportListFiles(IFile reportFile) throws Exception {
-        File reportListFile = getReportListFile(reportFile);
-        if (reportListFile == null || !reportListFile.exists()) {
-            return null;
+    @Deprecated
+    public static void initRepListFile(IFile reportFile) throws Exception {
+        String reportFileName = reportFile.getName();
+        String simpleName = getSimpleName(reportFileName);
+        if (simpleName == null) {
+            return;
         }
+        IFolder reportFileFolder = ((IFolder) reportFile.getParent()).getFolder(PluginConstant.DOT_STRING + simpleName);
+        if (reportFileFolder != null && reportFileFolder.exists()) {
 
-        IFolder folder = getOutputFolder(reportFile);
+            File repListFile = new File(ReportHelper.getOutputFolderNameDefault((IFolder) reportFile.getParent(), simpleName)
+                    + File.separator + REPORT_LIST);
+            List<ReportListParameters> repList = new ArrayList<ReportListParameters>();
 
-        List<IResource> repFileList = new ArrayList<IResource>();
+            IResource[] members = reportFileFolder.members();
 
-        if (folder != null) {
-            List<ReportListParameters> repList = getReportListParameters(reportListFile);
-            List<ReportListParameters> repListSave = new ArrayList<ReportListParameters>();
-
-            for (ReportListParameters rep : repList) {
-                File file = new File(rep.path);
-                if (file.exists() && !file.getName().equals(REPORT_LIST)) {
-                    repListSave.add(rep);
-                    IFile iFile = getLinkFile(file.getName());
-                    iFile.createLink(file.getAbsoluteFile().toURI(), IResource.REPLACE, null);
-                    repFileList.add(iFile);
+            for (IResource res : members) {
+                if (res.getType() == IResource.FILE) {
+                    IFile repFile = (IFile) res;
+                    repList.add(buildRepListParams(repFile.getName(), repFile.getRawLocation().toOSString(),
+                            String.valueOf(repFile.getModificationStamp())));
                 }
             }
 
-            saveReportListFile(reportListFile, repListSave);
-
-            folder.refreshLocal(IResource.DEPTH_INFINITE, null);
+            saveReportListFile(repListFile, repList);
         }
-        return repFileList.toArray(new IResource[repFileList.size()]);
     }
 
     /**
@@ -147,101 +151,51 @@ public final class ReportUtils {
      * @param reportListFile
      * @param repList
      * @throws IOException
+     * @throws PersistenceException
      */
-    private static void saveReportListFile(File reportListFile, List<ReportListParameters> repList) throws IOException {
-        CsvWriter out = new CsvWriter(new FileOutputStream(reportListFile), CURRENT_SEPARATOR, Charset.defaultCharset());
-        out.setEscapeMode(ESCAPE_MODE_BACKSLASH);
-        out.setTextQualifier(TEXT_QUAL);
-        out.setForceQualifier(USE_TEXT_QUAL);
+    private static void saveReportListFile(final File reportListFile, final List<ReportListParameters> repList)
+            throws PersistenceException {
+        RepositoryWorkUnit repositoryWorkUnit = new RepositoryWorkUnit(ProjectManager.getInstance().getCurrentProject(),
+                "saveReportListFile") { //$NON-NLS-1$
 
-        ReportListEnum[] values = ReportListEnum.values();
-        String[] temp = new String[values.length];
+            @Override
+            protected void run() throws LoginException, PersistenceException {
+                try {
+                    CsvWriter out = new CsvWriter(new FileOutputStream(reportListFile), CURRENT_SEPARATOR,
+                            Charset.defaultCharset());
+                    out.setEscapeMode(ESCAPE_MODE_BACKSLASH);
+                    out.setTextQualifier(TEXT_QUAL);
+                    out.setForceQualifier(USE_TEXT_QUAL);
 
-        for (int i = 0; i < repList.size() + 1; i++) {
-            if (i == 0) {
-                temp[0] = ReportListEnum.Name.getLiteral();
-                temp[1] = ReportListEnum.Path.getLiteral();
-                temp[2] = ReportListEnum.CreateTime.getLiteral();
-            } else {
-                temp[0] = repList.get(i - 1).name;
-                temp[1] = repList.get(i - 1).path;
-                temp[2] = repList.get(i - 1).createTime;
-            }
+                    ReportListEnum[] values = ReportListEnum.values();
+                    String[] temp = new String[values.length];
 
-            out.writeRecord(temp);
-        }
+                    for (int i = 0; i < repList.size() + 1; i++) {
+                        if (i == 0) {
+                            temp[0] = ReportListEnum.Name.getLiteral();
+                            temp[1] = ReportListEnum.Path.getLiteral();
+                            temp[2] = ReportListEnum.CreateTime.getLiteral();
+                        } else {
+                            temp[0] = repList.get(i - 1).name;
+                            temp[1] = repList.get(i - 1).path;
+                            temp[2] = repList.get(i - 1).createTime;
+                        }
 
-        out.flush();
-        out.close();
-    }
-
-    /**
-     * DOC xqliu Comment method "getReportListParameters".
-     * 
-     * @param reportListFile
-     * @return
-     * @throws IOException
-     */
-    private static List<ReportListParameters> getReportListParameters(File reportListFile) throws IOException {
-        List<ReportListParameters> repList = new ArrayList<ReportListParameters>();
-
-        if (reportListFile != null && reportListFile.exists()) {
-            CsvReader reader = new CsvReader(new FileReader(reportListFile), CURRENT_SEPARATOR);
-            reader.setEscapeMode(ESCAPE_MODE_BACKSLASH);
-            reader.setTextQualifier(TEXT_QUAL);
-            reader.setUseTextQualifier(USE_TEXT_QUAL);
-            reader.readHeaders();
-            while (reader.readRecord()) {
-                repList.add(buildRepListParams(reader.get(ReportListEnum.Name.getLiteral()),
-                        reader.get(ReportListEnum.Path.getLiteral()), reader.get(ReportListEnum.CreateTime.getLiteral())));
-            }
-            reader.close();
-        }
-        return repList;
-    }
-
-    /**
-     * get the .report.list file for the report.
-     * 
-     * @param reportFile the IFile of report
-     * @return
-     * @throws IOException
-     */
-    public static File getReportListFile(IFile reportFile) throws IOException {
-        String reportFileName = reportFile.getName();
-        String simpleName = getSimpleName(reportFileName);
-        File file = new File(ReportHelper.getOutputFolderNameDefault((IFolder) reportFile.getParent(), simpleName)
-                + File.separator + REPORT_LIST);
-        if (!file.exists()) {
-            File parentFile = file.getParentFile();
-            if (parentFile != null) {
-                if (!parentFile.exists()) {
-                    if (parentFile.mkdirs()) {
-                        file.createNewFile();
+                        out.writeRecord(temp);
                     }
-                } else {
-                    file.createNewFile();
+
+                    out.flush();
+                    out.close();
+                } catch (FileNotFoundException e) {
+                    log.error(e);
+                } catch (IOException e) {
+                    log.error(e);
                 }
             }
-        }
-        return file;
-    }
-
-    /**
-     * remove the extension of full name to get the simple name of a report file.
-     * 
-     * @param reportFileName
-     * @return
-     */
-    public static String getSimpleName(String reportFileName) {
-        int indexOf = reportFileName.lastIndexOf(PluginConstant.DOT_STRING);
-        String simpleName = PluginConstant.EMPTY_STRING;
-        if (indexOf != -1) {
-            simpleName = reportFileName.substring(0, indexOf);
-        } else {
-            simpleName = null;
-        }
-        return simpleName;
+        };
+        repositoryWorkUnit.setAvoidUnloadResources(true);
+        ProxyRepositoryFactory.getInstance().executeRepositoryWorkUnit(repositoryWorkUnit);
+        repositoryWorkUnit.throwPersistenceExceptionIfAny();
     }
 
     /**
@@ -252,56 +206,6 @@ public final class ReportUtils {
      */
     public static String getSimpleName(Property repProp) {
         return repProp.getLabel() + "_" + repProp.getVersion(); //$NON-NLS-1$ 
-    }
-
-    /**
-     * DOC xqliu Comment method "buildRepListParams".
-     * 
-     * @param name
-     * @param path
-     * @param createTime
-     * @return
-     */
-    private static ReportListParameters buildRepListParams(String name, String path, String createTime) {
-        ReportListParameters repListParameters = new ReportUtils().new ReportListParameters();
-        repListParameters.name = name;
-        repListParameters.path = path;
-        repListParameters.createTime = createTime;
-        return repListParameters;
-    }
-
-    /**
-     * DOC xqliu Comment method "initRepListFile".
-     * 
-     * @param reportFile
-     * @throws Exception
-     * @throws
-     */
-    public static void initRepListFile(IFile reportFile) throws Exception {
-        String reportFileName = reportFile.getName();
-        String simpleName = getSimpleName(reportFileName);
-        if (simpleName == null) {
-            return;
-        }
-        IFolder reportFileFolder = ((IFolder) reportFile.getParent()).getFolder(PluginConstant.DOT_STRING + simpleName);
-        if (reportFileFolder != null && reportFileFolder.exists()) {
-
-            File repListFile = new File(ReportHelper.getOutputFolderNameDefault((IFolder) reportFile.getParent(), simpleName)
-                    + File.separator + REPORT_LIST);
-            List<ReportListParameters> repList = new ArrayList<ReportListParameters>();
-
-            IResource[] members = reportFileFolder.members();
-
-            for (IResource res : members) {
-                if (res.getType() == IResource.FILE) {
-                    IFile repFile = (IFile) res;
-                    repList.add(buildRepListParams(repFile.getName(), repFile.getRawLocation().toOSString(),
-                            String.valueOf(repFile.getModificationStamp())));
-                }
-            }
-
-            saveReportListFile(repListFile, repList);
-        }
     }
 
     /**
@@ -323,7 +227,6 @@ public final class ReportUtils {
     }
 
     /**
-     * 
      * set the relationship of main-sub report.
      * 
      * @return
@@ -332,34 +235,34 @@ public final class ReportUtils {
         // for this map:key is main report name without vesion;value is a List about sub reports.
         if (mainSubRepMap == null || mainSubRepMap.isEmpty()) {
             mainSubRepMap = new HashMap<String, List<String>>();
-            String s01ColumnSub = "s01_column_subreport";
-            String b01ColumnSetBasicSubreport1 = "b01_column_set_basic_subreport1";
-            String s02MatchSubSummary = "s02_match_sub_summary";
-            String s03SubOverview = "s03_sub_overview";
+            String s01ColumnSub = "s01_column_subreport"; //$NON-NLS-1$
+            String b01ColumnSetBasicSubreport1 = "b01_column_set_basic_subreport1"; //$NON-NLS-1$
+            String s02MatchSubSummary = "s02_match_sub_summary"; //$NON-NLS-1$
+            String s03SubOverview = "s03_sub_overview"; //$NON-NLS-1$
 
             List<String> cloumnSubLs = new ArrayList<String>();
             cloumnSubLs.add(s01ColumnSub);
-            mainSubRepMap.put("b01_column_basic", cloumnSubLs);
-            mainSubRepMap.put("b02_column_evolution", cloumnSubLs);
+            mainSubRepMap.put("b01_column_basic", cloumnSubLs); //$NON-NLS-1$
+            mainSubRepMap.put("b02_column_evolution", cloumnSubLs); //$NON-NLS-1$
 
             List<String> columnSetSubLs = new ArrayList<String>();
             columnSetSubLs.add(b01ColumnSetBasicSubreport1);
-            mainSubRepMap.put("b01_column_set_basic", columnSetSubLs);
-            mainSubRepMap.put("b02_column_set_evolution", columnSetSubLs);
-            mainSubRepMap.put("b03_column_basic_dq_rules", columnSetSubLs);
-            mainSubRepMap.put("b04_column_dq_rules_evolution", columnSetSubLs);
-            mainSubRepMap.put("functionalDependencyBasic", columnSetSubLs);
-            mainSubRepMap.put("functionalDependencyEvolution", columnSetSubLs);
+            mainSubRepMap.put("b01_column_set_basic", columnSetSubLs); //$NON-NLS-1$
+            mainSubRepMap.put("b02_column_set_evolution", columnSetSubLs); //$NON-NLS-1$
+            mainSubRepMap.put("b03_column_basic_dq_rules", columnSetSubLs); //$NON-NLS-1$
+            mainSubRepMap.put("b04_column_dq_rules_evolution", columnSetSubLs); //$NON-NLS-1$
+            mainSubRepMap.put("functionalDependencyBasic", columnSetSubLs); //$NON-NLS-1$
+            mainSubRepMap.put("functionalDependencyEvolution", columnSetSubLs); //$NON-NLS-1$
 
             List<String> overviewSubLs = new ArrayList<String>();
             overviewSubLs.add(s03SubOverview);
-            mainSubRepMap.put("b03_overview_basic", overviewSubLs);
-            mainSubRepMap.put("b04_overview_evolution", overviewSubLs);
+            mainSubRepMap.put("b03_overview_basic", overviewSubLs); //$NON-NLS-1$
+            mainSubRepMap.put("b04_overview_evolution", overviewSubLs); //$NON-NLS-1$
 
             List<String> matchSubLs = new ArrayList<String>();
             matchSubLs.add(s02MatchSubSummary);
-            mainSubRepMap.put("b05_match_basic", matchSubLs);
-            mainSubRepMap.put("b06_match_evolution", matchSubLs);
+            mainSubRepMap.put("b05_match_basic", matchSubLs); //$NON-NLS-1$
+            mainSubRepMap.put("b06_match_evolution", matchSubLs); //$NON-NLS-1$
         }
         return mainSubRepMap;
     }
@@ -392,34 +295,70 @@ public final class ReportUtils {
     }
 
     /**
-     * if the report's name changed, need to update the report folder name also.
+     * if the report's name changed, need to rename the report generated doc folder also.
      * 
      * @param parentFolder
      * @param oldFolderName
      * @param repItem
+     * @throws PersistenceException
      */
-    public static void checkAndUpdateRepFolderName4Rename(IFolder parentFolder, String oldFolderName, TDQReportItem repItem) {
-        // new report folder name
-        String newFolderName = ReportUtils.getSimpleName(repItem.getProperty());
-        // if the report's name changed, update the report folder name also
-        if (!oldFolderName.equals(newFolderName)) {
-            File oldFolder = WorkspaceUtils.ifolderToFile(parentFolder.getFolder(Path
-                    .fromPortableString(PluginConstant.DOT_STRING + oldFolderName)));
-            File newFolder = WorkspaceUtils.ifolderToFile(parentFolder.getFolder(Path
-                    .fromPortableString(PluginConstant.DOT_STRING + newFolderName)));
-            try {
-                // rename the folder
-                oldFolder.renameTo(newFolder);
-                // replace the path in the .report.list
-                File file = new File(ReportHelper.getOutputFolderNameDefault(parentFolder, newFolderName) + File.separator
-                        + REPORT_LIST);
-                if (file.exists() && file.isFile()) {
-                    replaceReportGenDocFilePath(file, oldFolder.toString(), newFolder.toString());
-                }
+    public static void renameReportGeneratedDocFolder(final IFolder parentFolder, final String oldFolderName,
+            final TDQReportItem repItem) throws PersistenceException {
+        RepositoryWorkUnit repositoryWorkUnit = new RepositoryWorkUnit(ProjectManager.getInstance().getCurrentProject(),
+                "renameReportGeneratedDocFolder") { //$NON-NLS-1$
+
+            @Override
+            protected void run() throws LoginException, PersistenceException {
                 // refresh the container
-                parentFolder.refreshLocal(IResource.DEPTH_INFINITE, null);
-            } catch (Exception e) {
-                log.warn(e, e);
+                try {
+                    parentFolder.refreshLocal(IResource.DEPTH_INFINITE, null);
+                    // new report folder name
+                    String newFolderName = ReportUtils.getSimpleName(repItem.getProperty());
+                    // if the report's name changed, need to rename the report generated doc folder also
+                    if (!oldFolderName.equals(newFolderName)) {
+                        File oldFolder = WorkspaceUtils.ifolderToFile(parentFolder.getFolder(Path
+                                .fromPortableString(PluginConstant.DOT_STRING + oldFolderName)));
+                        File newFolder = WorkspaceUtils.ifolderToFile(parentFolder.getFolder(Path
+                                .fromPortableString(PluginConstant.DOT_STRING + newFolderName)));
+                        // create new folder
+                        if (!newFolder.exists()) {
+                            newFolder.mkdirs();
+                        }
+                        // copy files from old folder to new folder
+                        copyFolder(oldFolder, newFolder);
+                        // delete old folder
+                        deleteFolder(oldFolder);
+                    }
+                    parentFolder.refreshLocal(IResource.DEPTH_INFINITE, null);
+                } catch (CoreException e) {
+                    log.info(e);
+                }
+            }
+        };
+        repositoryWorkUnit.setAvoidUnloadResources(true);
+        ProxyRepositoryFactory.getInstance().executeRepositoryWorkUnit(repositoryWorkUnit);
+        repositoryWorkUnit.throwPersistenceExceptionIfAny();
+    }
+
+    /**
+     * copy the files under old folder to new folder.
+     * 
+     * @param oldFolder
+     * @param newFolder
+     */
+    protected static void copyFolder(File oldFolder, File newFolder) {
+        if (oldFolder.exists() && oldFolder.isDirectory()) {
+            if (!newFolder.exists()) {
+                newFolder.mkdirs();
+            }
+            if (newFolder.exists()) {
+                File[] listFiles = oldFolder.listFiles();
+                for (File file : listFiles) {
+                    if (file.isDirectory() && file.getName().equals(".svn")) { //$NON-NLS-1$
+                        continue;
+                    }
+                    FilesUtils.copyDirectoryWithoutSvnFolder(file, newFolder);
+                }
             }
         }
     }
@@ -434,7 +373,7 @@ public final class ReportUtils {
         List<IFile> linkFiles = new ArrayList<IFile>();
         if (file != null) {
             try {
-                IResource[] reportListFiles = ReportUtils.getReportListFiles(file);
+                IResource[] reportListFiles = ReportUtils.getReportGeneratedDocs(file);
                 for (IResource res : reportListFiles) {
                     IFile linkFile = ResourceManager.getRoot().getFile(res.getFullPath());
                     if (linkFile.exists() && linkFile.isLinked()) {
@@ -492,21 +431,44 @@ public final class ReportUtils {
      * delete the related output folder of report.
      * 
      * @param reportFile
+     * @throws PersistenceException
      */
-    public static ReturnCode deleteRepOutputFolder(IFile reportFile) {
-        ReturnCode rc = new ReturnCode(Boolean.TRUE);
-        IFolder currentRportFolder = ReportUtils.getOutputFolder(reportFile);
-        if (currentRportFolder != null && currentRportFolder.exists()) {
-            try {
-                currentRportFolder.delete(true, new NullProgressMonitor());
-            } catch (CoreException e) {
-                log.error(e, e);
-                rc.setOk(Boolean.FALSE);
-                rc.setMessage(e.getMessage());
+    public static ReturnCode deleteRepOutputFolder(final IFile reportFile) throws PersistenceException {
+        final ReturnCode rc = new ReturnCode(Boolean.TRUE);
+        RepositoryWorkUnit repositoryWorkUnit = new RepositoryWorkUnit(ProjectManager.getInstance().getCurrentProject(),
+                "deleteRepOutputFolder") { //$NON-NLS-1$
+
+            @Override
+            protected void run() throws LoginException, PersistenceException {
+                IFolder reportOutputFolder = ReportUtils.getOutputFolder(reportFile);
+                if (reportOutputFolder != null && reportOutputFolder.exists()) {
+                    try {
+                        IContainer parent = reportOutputFolder.getParent();
+                        // refresh the parent at begin
+                        if (parent != null) {
+                            parent.refreshLocal(IResource.DEPTH_INFINITE, null);
+                        }
+                        // delete folder
+                        File file = WorkspaceUtils.ifolderToFile(reportOutputFolder);
+                        if (file != null && file.exists()) {
+                            deleteFolder(file);
+                        }
+                        // refresh the parent at end
+                        if (parent != null) {
+                            parent.refreshLocal(IResource.DEPTH_INFINITE, null);
+                        }
+                    } catch (CoreException e) {
+                        log.warn(e);
+                    }
+                } else {
+                    rc.setOk(Boolean.FALSE);
+                }
             }
-        } else {
-            rc.setOk(Boolean.FALSE);
-        }
+        };
+        repositoryWorkUnit.setAvoidUnloadResources(true);
+        ProxyRepositoryFactory.getInstance().executeRepositoryWorkUnit(repositoryWorkUnit);
+        repositoryWorkUnit.throwPersistenceExceptionIfAny();
+
         return rc;
     }
 
@@ -540,85 +502,10 @@ public final class ReportUtils {
      */
     public static void deleteRepOutputFolders(List<IFile> repFiles) {
         for (IFile repFile : repFiles) {
-            deleteRepOutputFolder(repFile);
-        }
-    }
-
-    /**
-     * update the file .report.list to deal with the report generated doc folder's movement.
-     * 
-     * @param outputFolder source folder, the original report generated doc folder
-     * @param targetFolder target folder, the new folder which source folder moved into
-     */
-    public static void updateReportListFile(IFolder outputFolder, IFolder targetFolder) {
-        try {
-            File oldFolder = WorkspaceUtils.ifolderToFile(outputFolder);
-            File newFolder = WorkspaceUtils.ifolderToFile(targetFolder.getFolder(outputFolder.getName()));
-            File file = new File(newFolder.getAbsolutePath() + File.separator + ReportUtils.REPORT_LIST);
-            if (file.exists() && file.isFile()) {
-                replaceReportGenDocFilePath(file, oldFolder.toString(), newFolder.toString());
-            }
-        } catch (Exception e) {
-            log.warn(e, e);
-        }
-    }
-
-    /**
-     * DOC xqliu Comment method "replaceReportGenDocFilePath".
-     * 
-     * @param file
-     * @param regex
-     * @param replacement
-     * @throws IOException
-     */
-    public static void replaceReportGenDocFilePath(File file, String regex, String replacement) throws IOException {
-        String str1 = StringUtils.replace(regex, "\\", "\\\\"); //$NON-NLS-1$ //$NON-NLS-2$
-        String str2 = StringUtils.replace(replacement, "\\", "\\\\"); //$NON-NLS-1$ //$NON-NLS-2$
-        FilesUtils.replaceInFile(str1, file.toString(), str2);
-    }
-
-    /**
-     * DOC xqliu Comment method "copyAndUpdateRepGenDocFileInfo".
-     * 
-     * @param newFolder
-     * @param tempFolder
-     * @param subFolderName
-     */
-    public static void copyAndUpdateRepGenDocFileInfo(IFolder newFolder, File tempFolder, String subFolderName) {
-        File srcFolder = new File(tempFolder.getAbsolutePath() + File.separator + subFolderName);
-        File tarFolder = WorkspaceUtils.ifolderToFile(newFolder);
-        // move folder
-        moveHiddenFolders(srcFolder, tarFolder);
-        // update info
-        updateReportListFileInfo(srcFolder, tarFolder, tempFolder.getName());
-        // delete temp folder
-        FilesUtils.deleteFile(tempFolder, Boolean.TRUE);
-    }
-
-    /**
-     * DOC xqliu Comment method "updateReportListFileInfo".
-     * 
-     * @param srcFolder
-     * @param tarFolder
-     */
-    public static void updateReportListFileInfo(File srcFolder, File tarFolder, String tempFolderName) {
-        if (srcFolder == null || tarFolder == null) {
-            return;
-        }
-        File[] listFiles = tarFolder.listFiles();
-        for (File file : listFiles) {
-            if (file.isDirectory()) {
-                if (file.getName().startsWith(".")) { //$NON-NLS-1$
-                    IFolder outputFolder = WorkspaceUtils.fileToIFolder(new File(getOriginalOutoutFolderPath(srcFolder, file,
-                            tempFolderName)));
-                    IFolder tFolder = WorkspaceUtils.fileToIFolder(file);
-                    IFolder targetFolder = tFolder == null ? null : (IFolder) tFolder.getParent();
-                    if (outputFolder != null && targetFolder != null) {
-                        ReportUtils.updateReportListFile(outputFolder, targetFolder);
-                    }
-                } else {
-                    updateReportListFileInfo(getSourceFolder(file, srcFolder, tarFolder), file, tempFolderName);
-                }
+            try {
+                deleteRepOutputFolder(repFile);
+            } catch (PersistenceException e) {
+                log.error(e);
             }
         }
     }
@@ -670,15 +557,17 @@ public final class ReportUtils {
             return;
         }
         File[] listFiles = srcFolder.listFiles();
-        for (File file : listFiles) {
-            if (file.isDirectory()) {
-                if (file.getName().startsWith(".")) { //$NON-NLS-1$
-                    if (file.getName().equals(".svn")) {
-                        continue;
+        if (listFiles != null) {
+            for (File file : listFiles) {
+                if (file.isDirectory()) {
+                    if (file.getName().startsWith(".")) { //$NON-NLS-1$
+                        if (file.getName().equals(".svn")) { //$NON-NLS-1$
+                            continue;
+                        }
+                        FilesUtils.copyDirectoryWithoutSvnFolder(file, tarFolder);
+                    } else {
+                        moveHiddenFolders(file, getTargetFile(file, srcFolder, tarFolder));
                     }
-                    FilesUtils.copyDirectory(file, tarFolder);
-                } else {
-                    moveHiddenFolders(file, getTargetFile(file, srcFolder, tarFolder));
                 }
             }
         }
@@ -701,5 +590,236 @@ public final class ReportUtils {
             tarFile = new File(absolutePath3 + absolutePath.subSequence(absolutePath2.length(), absolutePath.length()));
         }
         return tarFile;
+    }
+
+    /**
+     * DOC xqliu Comment method "buildRepListParams".
+     * 
+     * @param name
+     * @param path
+     * @param createTime
+     * @return
+     */
+    private static ReportListParameters buildRepListParams(String name, String path, String createTime) {
+        ReportListParameters repListParameters = new ReportUtils().new ReportListParameters();
+        repListParameters.name = name;
+        repListParameters.path = path;
+        repListParameters.createTime = createTime;
+        return repListParameters;
+    }
+
+    /**
+     * DOC xqliu Comment method "getReportListParameters".
+     * 
+     * @param reportListFile
+     * @return
+     * @throws IOException
+     */
+    private static List<ReportListParameters> getReportListParameters(File reportListFile) {
+        List<ReportListParameters> repList = new ArrayList<ReportListParameters>();
+
+        if (reportListFile != null && reportListFile.exists()) {
+            try {
+                CsvReader reader = new CsvReader(new FileReader(reportListFile), CURRENT_SEPARATOR);
+                reader.setEscapeMode(ESCAPE_MODE_BACKSLASH);
+                reader.setTextQualifier(TEXT_QUAL);
+                reader.setUseTextQualifier(USE_TEXT_QUAL);
+                reader.readHeaders();
+                while (reader.readRecord()) {
+                    repList.add(buildRepListParams(reader.get(ReportListEnum.Name.getLiteral()),
+                            reader.get(ReportListEnum.Path.getLiteral()), reader.get(ReportListEnum.CreateTime.getLiteral())));
+                }
+                reader.close();
+            } catch (FileNotFoundException e) {
+                log.error(e);
+            } catch (IllegalArgumentException e) {
+                log.error(e);
+            } catch (IOException e) {
+                log.error(e);
+            }
+        }
+        return repList;
+    }
+
+    /**
+     * remove the extension of full name to get the simple name of a report file.
+     * 
+     * @param reportFileName
+     * @return
+     */
+    public static String getSimpleName(String reportFileName) {
+        int indexOf = reportFileName.lastIndexOf(PluginConstant.DOT_STRING);
+        String simpleName = PluginConstant.EMPTY_STRING;
+        if (indexOf != -1) {
+            simpleName = reportFileName.substring(0, indexOf);
+        } else {
+            simpleName = null;
+        }
+        return simpleName;
+    }
+
+    /**
+     * return the .report.list file of the report.
+     * 
+     * @param reportFile
+     * @return
+     */
+    public static File reportListFile(IFile reportFile) {
+        String reportFileName = reportFile.getName();
+        String simpleName = getSimpleName(reportFileName);
+        return new File(ReportHelper.getOutputFolderNameDefault((IFolder) reportFile.getParent(), simpleName) + File.separator
+                + REPORT_LIST);
+    }
+
+    /**
+     * get the .report.list file for the report, if it doesn't exist, create it.
+     * 
+     * @param reportFile the IFile of report
+     * @return
+     */
+    public static File getReportListFile(IFile reportFile) {
+        File file = reportListFile(reportFile);
+        if (!file.exists()) {
+            try {
+                createReportListFile(reportFile);
+            } catch (PersistenceException e) {
+                log.error(e);
+            }
+        }
+        return file;
+    }
+
+    /**
+     * create the hidden Generated Doc Folder, create the .report.list file.
+     * 
+     * @param reportFile the report IFile
+     * @return
+     * @throws PersistenceException
+     */
+    public static boolean createReportListFile(final IFile reportFile) throws PersistenceException {
+        final File file = reportListFile(reportFile);
+        if (!file.exists()) {
+            RepositoryWorkUnit repositoryWorkUnit = new RepositoryWorkUnit(ProjectManager.getInstance().getCurrentProject(),
+                    "initReportGeneratedDocFolder") { //$NON-NLS-1$
+
+                @Override
+                protected void run() throws LoginException, PersistenceException {
+                    File parentFile = file.getParentFile();
+                    if (parentFile != null) {
+                        try {
+                            if (!parentFile.exists()) {
+                                if (parentFile.mkdirs()) {
+                                    file.createNewFile();
+                                }
+                            } else {
+                                file.createNewFile();
+                            }
+                        } catch (IOException e) {
+                            log.warn(e);
+                        }
+                    }
+                    try {
+                        reportFile.getParent().refreshLocal(IResource.DEPTH_INFINITE, null);
+                    } catch (CoreException e) {
+                        log.warn(e);
+                    }
+                }
+            };
+            repositoryWorkUnit.setAvoidUnloadResources(true);
+            ProxyRepositoryFactory.getInstance().executeRepositoryWorkUnit(repositoryWorkUnit);
+            repositoryWorkUnit.throwPersistenceExceptionIfAny();
+        }
+        return file.exists();
+    }
+
+    /**
+     * get the generated doc file list.
+     * 
+     * @param reportFile the report IFile
+     * @return never null
+     */
+    public static IResource[] getReportGeneratedDocs(IFile reportFile) {
+        List<IResource> repFileList = new ArrayList<IResource>();
+
+        File reportListFile = getReportListFile(reportFile);
+        if (reportListFile != null && reportListFile.exists() && reportListFile.isFile()) {
+            List<ReportListParameters> repList = getReportListParameters(reportListFile);
+
+            for (ReportListParameters rep : repList) {
+                String path = rep.path;
+                if (path.startsWith("..")) { //$NON-NLS-1$
+                    path = WorkspaceUtils.ifolderToFile(getOutputFolder(reportFile)).getAbsolutePath() + Path.SEPARATOR
+                            + path.substring(2, path.length());
+                }
+                File file = new File(path);
+                if (file.exists() && !file.getName().equals(REPORT_LIST)) {
+                    IFile iFile = getLinkFile(file.getName());
+                    try {
+                        iFile.createLink(file.getAbsoluteFile().toURI(), IResource.REPLACE, null);
+                    } catch (CoreException e) {
+                        log.info(e);
+                    }
+                    repFileList.add(iFile);
+                }
+            }
+        }
+
+        return repFileList.toArray(new IResource[repFileList.size()]);
+    }
+
+    /**
+     * delete the folder under TDQ_Data Profiling/Reports from the project and the disk, don't refresh the parent
+     * folder, the caller should refresh the parent by hand to change the svn info.
+     * 
+     * @param folder
+     */
+    private static void deleteFolder(File folder) {
+        // delete the folder from the project
+        try {
+            IFolder reportsFolder = ResourceManager.getReportsFolder();
+            IFolder tempFolder = WorkspaceUtils.fileToIFolder(folder);
+            if (tempFolder != null && tempFolder.exists()) {
+                ProxyRepositoryFactory.getInstance().deleteFolder(ERepositoryObjectType.TDQ_REPORT_ELEMENT,
+                        tempFolder.getFullPath().makeRelativeTo(reportsFolder.getFullPath()));
+            }
+        } catch (PersistenceException e) {
+            e.printStackTrace();
+        }
+        // delete folder from the disk
+        if (folder.exists()) {
+            FilesUtils.deleteFile(folder, Boolean.TRUE);
+        }
+    }
+
+    /**
+     * DOC xqliu Comment method "moveReportGeneratedDocFolder".
+     * 
+     * @param srcFolder
+     * @param tarFolder
+     * @throws PersistenceException
+     */
+    public static void moveReportGeneratedDocFolder(final File srcFolder, final File tarFolder) throws PersistenceException {
+        RepositoryWorkUnit repositoryWorkUnit = new RepositoryWorkUnit(ProjectManager.getInstance().getCurrentProject(),
+                "moveReportGeneratedDocFolder") { //$NON-NLS-1$
+
+            @Override
+            protected void run() throws LoginException, PersistenceException {
+                try {
+                    ResourceManager.getReportsFolder().refreshLocal(IResource.DEPTH_INFINITE, null);
+                    if (srcFolder.exists() && srcFolder.isDirectory()) {
+                        if (tarFolder.exists() && tarFolder.isDirectory()) {
+                            FilesUtils.copyDirectoryWithoutSvnFolder(srcFolder, tarFolder);
+                        }
+                        deleteFolder(srcFolder);
+                    }
+                    ResourceManager.getReportsFolder().refreshLocal(IResource.DEPTH_INFINITE, null);
+                } catch (CoreException e) {
+                    log.info(e);
+                }
+            }
+        };
+        repositoryWorkUnit.setAvoidUnloadResources(true);
+        ProxyRepositoryFactory.getInstance().executeRepositoryWorkUnit(repositoryWorkUnit);
+        repositoryWorkUnit.throwPersistenceExceptionIfAny();
     }
 }

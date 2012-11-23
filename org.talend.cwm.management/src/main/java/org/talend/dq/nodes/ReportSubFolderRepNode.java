@@ -87,8 +87,8 @@ public class ReportSubFolderRepNode extends ReportFolderRepNode {
                 if (ReportSubFolderType.ANALYSIS.equals(getReportSubFolderType())) {
                     buildChildrenAnalysis(ReportHelper.getAnalyses(this.getReport()));
                 } else if (ReportSubFolderType.GENERATED_DOCS.equals(getReportSubFolderType())) {
-                    IResource[] repFiles = ReportUtils
-                            .getReportListFiles(ResourceFileMap.findCorrespondingFile(this.getReport()));
+                    IResource[] repFiles = ReportUtils.getReportGeneratedDocs(ResourceFileMap.findCorrespondingFile(this
+                            .getReport()));
                     // MOD msjian TDQ-5128 2012-5-4: fixed when the user delete a file from file system display error
                     buildChildrenReportFile(repFiles);
                     // if (repFiles == null || repFiles.length == 0) {
@@ -118,14 +118,17 @@ public class ReportSubFolderRepNode extends ReportFolderRepNode {
     private List<IRepositoryNode> buildChildrenAnalysis(List<Analysis> analyses) {
         List<IRepositoryNode> nodes = new ArrayList<IRepositoryNode>();
         for (Analysis analysis : analyses) {
-
             // MOD gdbu 2011-8-18 TDQ-3301
             Property anaEleProperty = PropertyHelper.getProperty(analysis);
             IRepositoryViewObject viewObject = null;
-            try {
-                viewObject = ProxyRepositoryFactory.getInstance().getLastVersion(anaEleProperty.getId());
-            } catch (Exception e) {
-                log.error(e);
+            if (anaEleProperty != null) {
+                try {
+                    viewObject = ProxyRepositoryFactory.getInstance().getLastVersion(anaEleProperty.getId());
+                } catch (Exception e) {
+                    log.error(e);
+                }
+            } else {
+                log.error("Analysis [" + analysis.getName() + "] is proxy"); //$NON-NLS-1$//$NON-NLS-2$
             }
 
             if (null == viewObject) {
@@ -133,8 +136,7 @@ public class ReportSubFolderRepNode extends ReportFolderRepNode {
             }
             // ~TDQ-3301
 
-            ReportAnalysisRepNode node = new ReportAnalysisRepNode(viewObject, this,
-                    ENodeType.TDQ_REPOSITORY_ELEMENT);
+            ReportAnalysisRepNode node = new ReportAnalysisRepNode(viewObject, this, ENodeType.TDQ_REPOSITORY_ELEMENT);
             node.setReport(this.getReport());
             node.setAnalysis(analysis);
             node.setId(this.getReport().getName() + analysis.getName());
@@ -233,6 +235,7 @@ public class ReportSubFolderRepNode extends ReportFolderRepNode {
         }
     }
 
+    @Override
     public boolean isVirtualFolder() {
         return this.getReport() != null;
     }

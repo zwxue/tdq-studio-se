@@ -12,57 +12,33 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.wizard.folder;
 
-import java.io.File;
-
-import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.Path;
-import org.talend.commons.utils.io.FilesUtils;
 import org.talend.core.model.repository.ERepositoryObjectType;
-import org.talend.dq.helper.ReportUtils;
-import org.talend.dq.helper.RepositoryNodeHelper;
-import org.talend.dq.nodes.ReportSubFolderRepNode;
+import org.talend.dataprofiler.core.ui.views.resources.IRepositoryObjectCRUD;
 import org.talend.repository.model.IRepositoryNode;
-import org.talend.repository.model.RepositoryNode;
 
 /**
  * This class is a wizard to create/rename a folder on workspace.
+ * 
+ * @deprecated needn't to use this class anymore, because needn't to do any addtional works when rename a
+ * ReportSubFolder, all the works should be done in the supder class
  */
+@Deprecated
 public class TdqFolderWizard extends org.talend.repository.ui.wizards.folder.FolderWizard {
 
     private IRepositoryNode _node;
 
-    private File _tarFile;
+    private IRepositoryObjectCRUD _repositoryObjectCRUD;
 
-    public TdqFolderWizard(IPath path, ERepositoryObjectType objectType, IRepositoryNode node) {
+    public TdqFolderWizard(IPath path, ERepositoryObjectType objectType, IRepositoryNode node,
+            IRepositoryObjectCRUD repositoryObjectCRUD) {
         super(path, objectType, node.getObject().getLabel());
-        _node = node;
-    }
-
-    public TdqFolderWizard(IPath path, ERepositoryObjectType objectType, RepositoryNode node, File tarFile) {
-        this(path, objectType, node);
-        _tarFile = tarFile;
+        this._node = node;
+        this._repositoryObjectCRUD = repositoryObjectCRUD;
     }
 
     @Override
     public boolean performFinish() {
-        boolean rc = super.performFinish();
-        if (_node instanceof ReportSubFolderRepNode) {
-            if (rc) {
-                String value2 = getMainPage().getName();
-                IFolder folder = RepositoryNodeHelper.getIFolder(this._node);
-                if (folder != null && _tarFile != null) {
-                    ReportUtils.copyAndUpdateRepGenDocFileInfo(folder.getParent().getFolder(new Path(value2)), _tarFile,
-                            folder.getName());
-                }
-            } else {
-                // delete temporary files
-                FilesUtils.deleteFile(_tarFile, Boolean.TRUE);
-                rc = true;
-            }
-        }
-
-        return rc;
+        return super.performFinish();
     }
-
 }

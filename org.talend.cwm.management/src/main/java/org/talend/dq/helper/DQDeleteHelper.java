@@ -14,7 +14,9 @@ package org.talend.dq.helper;
 
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
+import org.talend.commons.exception.PersistenceException;
 import org.talend.core.model.properties.FolderItem;
 import org.talend.core.model.properties.Item;
 import org.talend.core.model.properties.Property;
@@ -30,6 +32,8 @@ import orgomg.cwm.objectmodel.core.ModelElement;
  * 
  */
 public final class DQDeleteHelper {
+
+    private static Logger log = Logger.getLogger(DQDeleteHelper.class);
 
     private DQDeleteHelper() {
     }
@@ -53,7 +57,14 @@ public final class DQDeleteHelper {
             return rc;
         }
         if (item instanceof TDQReportItem) {
-            return ReportUtils.deleteRepOutputFolder(itemFile);
+            try {
+                rc = ReportUtils.deleteRepOutputFolder(itemFile);
+            } catch (PersistenceException e) {
+                log.error(e);
+                rc.setMessage(e.getMessage());
+                rc.setOk(false);
+            }
+            return rc;
         }
         return rc;
     }

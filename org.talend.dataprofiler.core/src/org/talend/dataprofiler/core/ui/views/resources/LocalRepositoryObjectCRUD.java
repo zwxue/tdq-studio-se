@@ -14,7 +14,6 @@ package org.talend.dataprofiler.core.ui.views.resources;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -27,19 +26,18 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
 import org.jfree.util.Log;
 import org.talend.commons.exception.BusinessException;
-import org.talend.commons.exception.LoginException;
 import org.talend.commons.exception.PersistenceException;
 import org.talend.commons.utils.WorkspaceUtils;
-import org.talend.commons.utils.io.FilesUtils;
 import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.model.repository.Folder;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
-import org.talend.core.runtime.CoreRuntimePlugin;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.helper.WorkspaceResourceHelper;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
@@ -69,7 +67,6 @@ import org.talend.dq.nodes.RuleRepNode;
 import org.talend.dq.nodes.SourceFileRepNode;
 import org.talend.dq.nodes.SourceFileSubFolderNode;
 import org.talend.dq.nodes.SysIndicatorDefinitionRepNode;
-import org.talend.repository.RepositoryWorkUnit;
 import org.talend.repository.model.ERepositoryStatus;
 import org.talend.repository.model.IProxyRepositoryFactory;
 import org.talend.repository.model.IRepositoryNode;
@@ -77,7 +74,6 @@ import org.talend.repository.model.IRepositoryNode.ENodeType;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.repository.model.actions.MoveObjectAction;
 import org.talend.resource.ResourceManager;
-import org.talend.utils.string.StringUtilities;
 import org.talend.utils.sugars.ReturnCode;
 
 /**
@@ -94,13 +90,6 @@ public class LocalRepositoryObjectCRUD implements IRepositoryObjectCRUD {
 
     private IProxyRepositoryFactory factory = ProxyRepositoryFactory.getInstance();
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * org.talend.dataprofiler.core.ui.views.resources.IRepositoryObjectCRUD#validateDrop(org.talend.repository.model
-     * .IRepositoryNode)
-     */
     public Boolean validateDrop(IRepositoryNode targetNode) {
         Boolean retStatus = Boolean.FALSE;
         for (IRepositoryNode res : getSelectedRepositoryNodes()) {
@@ -169,12 +158,11 @@ public class LocalRepositoryObjectCRUD implements IRepositoryObjectCRUD {
      */
     protected IRepositoryNode[] getSelectedRepositoryNodes() {
         ISelection selection = getUISelection();
+        if (selection == null) {
+            return NO_RESOURCES;
+        }
         Object obj = ((IStructuredSelection) selection).getFirstElement();
         if (obj == null) {
-            MessageDialog
-                    .openWarning(
-                            PlatformUI.getWorkbench().getDisplay().getActiveShell(),
-                            DefaultMessagesImpl.getString("RepositoyNodeDropAdapterAssistant.moveHintTitle"), DefaultMessagesImpl.getString("RepositoyNodeDropAdapterAssistant.moveHintContent")); //$NON-NLS-1$ //$NON-NLS-2$  
             return NO_RESOURCES;
         }
 
@@ -320,13 +308,6 @@ public class LocalRepositoryObjectCRUD implements IRepositoryObjectCRUD {
         return flag;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * org.talend.dataprofiler.core.ui.views.resources.IRepositoryObjectCRUD#handleDrop(org.talend.repository.model.
-     * IRepositoryNode)
-     */
     public Boolean handleDrop(IRepositoryNode targetNode) {
 
         Boolean isHandleOK = Boolean.FALSE;
@@ -411,7 +392,6 @@ public class LocalRepositoryObjectCRUD implements IRepositoryObjectCRUD {
                             moveOthersNode(sourceNode, targetNode, removeLastSegments);
                         }
                     }
-
                 } else if (sourceNode.getType() == ENodeType.SIMPLE_FOLDER) {
                     moveFolderRepNode(sourceNode, targetNode);
                 }
@@ -471,28 +451,16 @@ public class LocalRepositoryObjectCRUD implements IRepositoryObjectCRUD {
         // MOD yyi 2012-02-22:TDQ-4545 Update user define jrxml template path.
         relocateJrxmlTemplates(sourceNode, targetNode);
 
+        // get the report generated doc folder
+        IFolder outputFolder = ReportUtils.getOutputFolder((ReportRepNode) sourceNode);
+
         moveAnaConNode(sourceNode, targetNode);
 
-        // get the target node and folder
+        // move the report generated doc folder
+        File srcFolder = WorkspaceUtils.ifolderToFile(outputFolder);
         IFolder targetFolder = RepositoryNodeHelper.getIFolder(targetNode);
-        if (targetFolder != null) {
-            File targetFile = WorkspaceUtils.ifolderToFile(targetFolder);
-
-            // get the original source node and folder
-            IFolder outputFolder = ReportUtils.getOutputFolder((ReportRepNode) sourceNode);
-            File sourceFile = WorkspaceUtils.ifolderToFile(outputFolder);
-
-            // move the report generate doc folder
-            if (sourceFile.exists()) {
-                if (targetFile.exists()) {
-                    FilesUtils.copyDirectory(sourceFile, targetFile);
-                }
-                FilesUtils.deleteFile(sourceFile, true);
-            }
-
-            // update the file .report.list
-            ReportUtils.updateReportListFile(outputFolder, targetFolder);
-        }
+        File tarFolder = WorkspaceUtils.ifolderToFile(targetFolder);
+        ReportUtils.moveReportGeneratedDocFolder(srcFolder, tarFolder);
     }
 
     /**
@@ -584,52 +552,7 @@ public class LocalRepositoryObjectCRUD implements IRepositoryObjectCRUD {
         }
         // ~19537
 
-        // deal with ReportSubFolderRepNode
-        boolean isReportSubFolderRepNode = sourceNode instanceof ReportSubFolderRepNode;
-        Map<IFolder, IFolder> reportGenDocInfoMap = new HashMap<IFolder, IFolder>();
-        File tarFile = null; // temp folder
-        if (isReportSubFolderRepNode) {
-            String tempFolderName = StringUtilities.getRandomString(8);
-            IFolder folder = RepositoryNodeHelper.getIFolder(sourceNode); // source folder
-            File srcFile = WorkspaceUtils.ifolderToFile(folder);
-            tarFile = WorkspaceUtils.ifolderToFile(folder.getParent().getFolder(new Path(tempFolderName)));
-            if (!tarFile.exists()) {
-                tarFile.mkdirs();
-            }
-            if (srcFile.exists() && tarFile.exists()) {
-                FilesUtils.copyDirectory(srcFile, tarFile);
-            }
-
-            // get the source folder
-            IFolder sourceFolder = RepositoryNodeHelper.getIFolder(sourceNode);
-            // get the target folder
-            IFolder targetFolder = RepositoryNodeHelper.getIFolder(targetNode);
-
-            List<ReportRepNode> reportRepNodeList = new ArrayList<ReportRepNode>();
-            getAllReportRepNode((ReportSubFolderRepNode) sourceNode, reportRepNodeList);
-            if (!reportRepNodeList.isEmpty()) {
-                buildReportGenDocInfoMap(reportRepNodeList, sourceFolder, targetFolder, reportGenDocInfoMap);
-            }
-        }
-
-        MoveFolder(sourceNode, targetNode);
-
-        if (isReportSubFolderRepNode) {
-            if (tarFile != null) {
-                File file1 = new File(tarFile.getAbsolutePath() + IPath.SEPARATOR + sourceNode.getLabel());
-                File file2 = WorkspaceUtils.ifolderToFile(RepositoryNodeHelper.getIFolder(targetNode).getFolder(
-                        new Path(sourceNode.getLabel())));
-
-                ReportUtils.moveHiddenFolders(file1, file2);
-                // delete temp folder
-                FilesUtils.deleteFile(tarFile, Boolean.TRUE);
-            }
-            if (!reportGenDocInfoMap.isEmpty()) {
-                for (IFolder outputFolder : reportGenDocInfoMap.keySet()) {
-                    ReportUtils.updateReportListFile(outputFolder, reportGenDocInfoMap.get(outputFolder));
-                }
-            }
-        }
+        moveFolder(sourceNode, targetNode);
     }
 
     /**
@@ -739,22 +662,14 @@ public class LocalRepositoryObjectCRUD implements IRepositoryObjectCRUD {
      * @param targetNode
      * @throws PersistenceException
      */
-    private void MoveFolder(IRepositoryNode sourceNode, final IRepositoryNode targetNode) throws PersistenceException {
+    private void moveFolder(final IRepositoryNode sourceNode, final IRepositoryNode targetNode) throws PersistenceException {
         IPath sourcePath = WorkbenchUtils.getPath(sourceNode);
         IPath targetPath = WorkbenchUtils.getPath(targetNode);
         IPath makeRelativeTo = getMakeRelativeTo(targetNode);
         final IPath sourceMakeRelativeTo = sourcePath.makeRelativeTo(makeRelativeTo);
         final IPath targetMakeRelativeTo = targetPath.makeRelativeTo(makeRelativeTo);
 
-        RepositoryWorkUnit<Object> repositoryWorkUnit = new RepositoryWorkUnit<Object>("Move", this) { //$NON-NLS-1$
-
-            @Override
-            protected void run() throws LoginException, PersistenceException {
-                factory.moveFolder(targetNode.getContentType(), sourceMakeRelativeTo, targetMakeRelativeTo);
-            }
-        };
-        repositoryWorkUnit.setAvoidUnloadResources(true);
-        CoreRuntimePlugin.getInstance().getProxyRepositoryFactory().executeRepositoryWorkUnit(repositoryWorkUnit);
+        factory.moveFolder(targetNode.getContentType(), sourceMakeRelativeTo, targetMakeRelativeTo);
     }
 
     /**
@@ -766,7 +681,6 @@ public class LocalRepositoryObjectCRUD implements IRepositoryObjectCRUD {
      * @param basePath
      */
     public void moveObject(final IRepositoryNode sourceNode, final IRepositoryNode targetNode, final IPath basePath) {
-
         IPath targetPath = WorkbenchUtils.getPath(targetNode);
         try {
             IPath makeRelativeTo = Path.EMPTY;
@@ -779,16 +693,8 @@ public class LocalRepositoryObjectCRUD implements IRepositoryObjectCRUD {
         } catch (BusinessException e) {
             Log.error(sourceNode, e);
         }
-
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * org.talend.dataprofiler.core.ui.views.resources.IRepositoryObjectCRUD#handleRenameFolder(org.talend.repository
-     * .model.IRepositoryNode, org.talend.repository.ui.actions.RenameFolderAction)
-     */
     public Boolean handleRenameFolder(IRepositoryNode repositoryNode) {
         // ADD xqliu 2012-05-24 TDQ-4831
         if (repositoryNode instanceof JrxmlTempSubFolderNode) {
@@ -814,10 +720,38 @@ public class LocalRepositoryObjectCRUD implements IRepositoryObjectCRUD {
      * @see org.talend.dataprofiler.core.ui.views.resources.IRepositoryObjectCRUD#getUISelection()
      */
     public ISelection getUISelection() {
-        IWorkbenchPart activePart = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActivePart();
-        if (activePart instanceof DQRespositoryView) {
-            return ((DQRespositoryView) activePart).getCommonViewer().getSelection();
+        ISelection sel = null;
+        IWorkbenchWindow activeWorkbenchWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+        if (activeWorkbenchWindow != null) {
+            IWorkbenchPage activePage = activeWorkbenchWindow.getActivePage();
+            if (activePage != null) {
+                IWorkbenchPart activePart = activePage.getActivePart();
+                if (activePart != null) {
+                    if (activePart instanceof DQRespositoryView) {
+                        sel = ((DQRespositoryView) activePart).getCommonViewer().getSelection();
+                    }
+                }
+            }
         }
-        return null;
+        return sel;
+    }
+
+    /**
+     * refresh Workspace and DQView.
+     */
+    public void refreshWorkspaceDQView() {
+        IWorkbenchPart activePart = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActivePart();
+        ((DQRespositoryView) activePart).refresh();
+        CorePlugin.getDefault().refreshWorkSpace();
+    }
+
+    /**
+     * DOC xqliu Comment method "showWarning".
+     */
+    protected void showWarning() {
+        MessageDialog
+                .openWarning(
+                        PlatformUI.getWorkbench().getDisplay().getActiveShell(),
+                        DefaultMessagesImpl.getString("RepositoyNodeDropAdapterAssistant.moveHintTitle"), DefaultMessagesImpl.getString("RepositoyNodeDropAdapterAssistant.moveHintContent")); //$NON-NLS-1$ //$NON-NLS-2$  
     }
 }

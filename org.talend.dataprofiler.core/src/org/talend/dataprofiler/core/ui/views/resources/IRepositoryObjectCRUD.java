@@ -29,12 +29,10 @@ public interface IRepositoryObjectCRUD {
     public Boolean handleRenameFolder(IRepositoryNode targetNode);
 
     /**
-     * 
      * The UI selection will be vary when the project varies (e.g remote project will refresh the tree when get
      * selection on UI, but local project won't)
      * 
      * @return
      */
     public ISelection getUISelection();
-
 }

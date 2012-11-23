@@ -355,6 +355,25 @@ public final class ReportHelper {
      * @return a list of analyses or an empty list. Do not use this list to add analysis to the report.
      */
     public static List<Analysis> getAnalyses(Report report) {
+        // IFile iFile = ModelElementHelper.getIFile(report);
+        // if (iFile != null) {
+        // URI uri = URI.createPlatformResourceURI(iFile.getFullPath().toString(), false);
+        // XmiResourceManager resourceManager = ProxyRepositoryFactory.getInstance().getRepositoryFactoryFromProvider()
+        // .getResourceManager();
+        //
+        // EMFUtil emfUtil = new EMFUtil();
+        // emfUtil.setResourceSet(resourceManager.resourceSet);
+        //
+        // List<Resource> resources = new ArrayList<Resource>(resourceManager.resourceSet.getResources());
+        // for (Resource res : resources) {
+        // if (uri.toString().equals(res.getURI().toString())) {
+        // res.unload();
+        // resourceManager.resourceSet.getResources().remove(res);
+        // }
+        // }
+        // Resource resource = resourceManager.resourceSet.getResource(uri, true);
+        // }
+
         List<Analysis> analyses = new ArrayList<Analysis>();
         // MOD yyin 20120530 TDQ-5050
         for (AnalysisMap anaMap : ((TdReport) report).getAnalysisMap()) {

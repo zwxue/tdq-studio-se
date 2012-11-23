@@ -12,68 +12,43 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.views.resources;
 
-import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.ui.PlatformUI;
-import org.talend.commons.exception.LoginException;
-import org.talend.commons.exception.PersistenceException;
-import org.talend.core.runtime.CoreRuntimePlugin;
-import org.talend.dataprofiler.core.CorePlugin;
-import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dq.helper.RepositoryNodeHelper;
-import org.talend.repository.RepositoryWorkUnit;
 import org.talend.repository.model.IRepositoryNode;
 
 /**
  * Remote Repository Object CRUD. only when the project is remote use this.
- * 
  */
 public class RemoteRepositoryObjectCRUD extends LocalRepositoryObjectCRUD {
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * org.talend.dataprofiler.core.ui.views.resources.LocalRepositoryObjectCRUD#handleDrop(org.talend.repository.model
-     * .IRepositoryNode)
-     */
     @Override
     public Boolean handleDrop(IRepositoryNode targetNode) {
         String[] pathBeforeRefresh = getSelectedNodePaths();
-
-        // in remote project, refresh first.
-        refreshDQView();
-        String[] pathAfterRefresh = getSelectedNodePaths();
-
-        // compare the node path value between before and after refresh
-        for (int i = 0; i < getSelectedRepositoryNodes().length; i++) {
-            if (!pathBeforeRefresh[i].equals(pathAfterRefresh[i])) {
-                MessageDialog
-                        .openInformation(
-                                PlatformUI.getWorkbench().getDisplay().getActiveShell(),
-                                DefaultMessagesImpl.getString("RepositoyNodeDropAdapterAssistant.moveHintTitle"), DefaultMessagesImpl.getString("RepositoyNodeDropAdapterAssistant.moveHintContent")); //$NON-NLS-1$ //$NON-NLS-2$  
-                return Boolean.FALSE;
-            }
+        if (pathBeforeRefresh.length == 0) {
+            showWarning();
+            return Boolean.FALSE;
         }
-        return super.handleDrop(targetNode);
-    }
+        // in remote project, refresh first.
+        refreshWorkspaceDQView();
+        String[] pathAfterRefresh = getSelectedNodePaths();
+        if (pathAfterRefresh.length == 0) {
+            showWarning();
+            return Boolean.FALSE;
+        }
 
-    /**
-     * refresh DQ View First.
-     */
-    public void refreshDQView() {
-        RepositoryWorkUnit<Object> repositoryWorkUnit = new RepositoryWorkUnit<Object>("update from the SVN server") { //$NON-NLS-1$
-
-            @Override
-            protected void run() throws LoginException, PersistenceException {
-                IRepositoryNode[] selectedRepositoryNodes = getSelectedRepositoryNodes();
-                for (IRepositoryNode res : selectedRepositoryNodes) {
-                    CorePlugin.getDefault().refreshDQView(res.getParent());
+        IRepositoryNode[] selectedRepositoryNodes = getSelectedRepositoryNodes();
+        if (selectedRepositoryNodes.length == 0) {
+            showWarning();
+            return Boolean.FALSE;
+        } else {
+            // compare the node path value between before and after refresh
+            for (int i = 0; i < getSelectedRepositoryNodes().length; i++) {
+                if (!pathBeforeRefresh[i].equals(pathAfterRefresh[i])) {
+                    showWarning();
+                    return Boolean.FALSE;
                 }
-                CorePlugin.getDefault().refreshWorkSpace();
             }
-        };
-        repositoryWorkUnit.setAvoidUnloadResources(true);
-        CoreRuntimePlugin.getInstance().getProxyRepositoryFactory().executeRepositoryWorkUnit(repositoryWorkUnit);
+            return super.handleDrop(targetNode);
+        }
     }
 
     /**
@@ -82,11 +57,14 @@ public class RemoteRepositoryObjectCRUD extends LocalRepositoryObjectCRUD {
      * @return
      */
     public String[] getSelectedNodePaths() {
+        String[] pathBeforeRefresh = new String[0];
         IRepositoryNode[] nodesBeforeRefresh = getSelectedRepositoryNodes();
-        String pathBeforeRefresh[] = new String[nodesBeforeRefresh.length];
-        for (int i = 0; i < nodesBeforeRefresh.length; i++) {
-            IRepositoryNode node = nodesBeforeRefresh[i];
-            pathBeforeRefresh[i] = RepositoryNodeHelper.getPath(node).toString();
+        if (nodesBeforeRefresh.length > 0) {
+            pathBeforeRefresh = new String[nodesBeforeRefresh.length];
+            for (int i = 0; i < nodesBeforeRefresh.length; i++) {
+                IRepositoryNode node = nodesBeforeRefresh[i];
+                pathBeforeRefresh[i] = RepositoryNodeHelper.getPath(node).toString();
+            }
         }
         return pathBeforeRefresh;
     }
