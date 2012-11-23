@@ -473,8 +473,7 @@ public abstract class AbstractSchemaEvaluator<T> extends Evaluator<T> {
                 // ~TDQ-3607
                 for (NamedColumnSet t : tables) {
                     if (this.getMonitor() != null) {
-                        StringBuilder taskName = new StringBuilder(
-                                Messages.getString("ColumnAnalysisSqlExecutor.AnalyzedElement"));
+                        StringBuilder taskName = new StringBuilder();
                         if (catName != null) {
                             taskName.append(Messages.getString("ColumnAnalysisSqlExecutor.AnalyzedElementCatalog", catName))
                                     .append(", ");
@@ -484,7 +483,8 @@ public abstract class AbstractSchemaEvaluator<T> extends Evaluator<T> {
                                     .append(", ");
                         }
                         taskName.append(Messages.getString("ColumnAnalysisSqlExecutor.AnalyzedElementTable", t.getName()));
-                        this.getMonitor().setTaskName(taskName.toString());
+                        this.getMonitor().setTaskName(
+                                Messages.getString("ColumnAnalysisSqlExecutor.AnalyzedElement", taskName.toString()));
                     }
                     tableCount++;
                     evalAllCounts(catName, schemaName, t, schemaIndic, true, ok);

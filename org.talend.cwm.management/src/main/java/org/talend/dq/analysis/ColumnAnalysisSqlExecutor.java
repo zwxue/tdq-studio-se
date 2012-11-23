@@ -1205,8 +1205,8 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
                 if (this.continueRun()) {
                     if (this.getMonitor() != null) {
                         this.getMonitor().setTaskName(
-                                Messages.getString("ColumnAnalysisSqlExecutor.AnalyzedElement")
-                                        + indicator.getAnalyzedElement().getName());
+                                Messages.getString("ColumnAnalysisSqlExecutor.AnalyzedElement", indicator.getAnalyzedElement()
+                                        .getName()));
                     }
                     Connection conn = null;
                     if (pooledConnection) {

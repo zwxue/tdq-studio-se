@@ -125,8 +125,8 @@ public class ConnectionEvaluator extends AbstractSchemaEvaluator<DataProvider> {
                 Schema tdSchema = schemata.get(i);
                 if (this.getMonitor() != null) {
                     this.getMonitor().setTaskName(
-                            Messages.getString("ColumnAnalysisSqlExecutor.AnalyzedElement")
-                                    + Messages.getString("ColumnAnalysisSqlExecutor.AnalyzedElementSchema", tdSchema.getName()));
+                            Messages.getString("ColumnAnalysisSqlExecutor.AnalyzedElement",
+                                    Messages.getString("ColumnAnalysisSqlExecutor.AnalyzedElementSchema", tdSchema.getName())));
                 }
                 evalSchemaIndic(tdSchema, ok);
                 if (this.getMonitor() != null) {
@@ -153,8 +153,8 @@ public class ConnectionEvaluator extends AbstractSchemaEvaluator<DataProvider> {
                     String catName = tdCatalog.getName();
                     if (this.getMonitor() != null) {
                         this.getMonitor().setTaskName(
-                                Messages.getString("ColumnAnalysisSqlExecutor.AnalyzedElement")
-                                        + Messages.getString("ColumnAnalysisSqlExecutor.AnalyzedElementCatalog", catName));
+                                Messages.getString("ColumnAnalysisSqlExecutor.AnalyzedElement",
+                                        Messages.getString("ColumnAnalysisSqlExecutor.AnalyzedElementCatalog", catName)));
                     }
                     if (dbms().supportCatalogSelection()) {
                         try {
@@ -176,12 +176,14 @@ public class ConnectionEvaluator extends AbstractSchemaEvaluator<DataProvider> {
                             if (this.continueRun()) {
                                 if (this.getMonitor() != null) {
                                     this.getMonitor().setTaskName(
-                                            Messages.getString("ColumnAnalysisSqlExecutor.AnalyzedElement")
-                                                    + Messages.getString("ColumnAnalysisSqlExecutor.AnalyzedElementCatalog",
+                                            Messages.getString(
+                                                    "ColumnAnalysisSqlExecutor.AnalyzedElement",
+                                                    Messages.getString("ColumnAnalysisSqlExecutor.AnalyzedElementCatalog",
                                                             catName)
-                                                    + ", "
-                                                    + Messages.getString("ColumnAnalysisSqlExecutor.AnalyzedElementSchema",
-                                                            tdSchema.getName()));
+                                                            + ", "
+                                                            + Messages.getString(
+                                                                    "ColumnAnalysisSqlExecutor.AnalyzedElementSchema",
+                                                                    tdSchema.getName())));
 
                                 }
                                 // --- create SchemaIndicator for each catalog
