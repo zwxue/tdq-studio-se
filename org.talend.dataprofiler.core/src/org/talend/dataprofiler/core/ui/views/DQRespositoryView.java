@@ -32,6 +32,7 @@ import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.MenuManager;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.preference.PreferenceContentProvider;
 import org.eclipse.jface.viewers.DoubleClickEvent;
@@ -144,6 +145,7 @@ import org.talend.repository.model.RepositoryNode;
 import org.talend.resource.ResourceManager;
 import org.talend.resource.ResourceService;
 import org.talend.utils.ProductVersion;
+import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
  * @author rli
@@ -950,7 +952,10 @@ public class DQRespositoryView extends CommonNavigator {
             StructuredSelection selectionTarge = (StructuredSelection) getCommonViewer().getSelection();
             if (!selectionTarge.equals(structSel)) {
                 getCommonViewer().refresh();
-                recursiveExpandTree(selectedElement);
+                StructuredSelection recursiveExpandTree = recursiveExpandTree(selectedElement);
+                if (recursiveExpandTree != null) {
+                    structSel = recursiveExpandTree;
+                }
                 getCommonViewer().setSelection(structSel);
             }
         } catch (Exception e) {
@@ -966,19 +971,50 @@ public class DQRespositoryView extends CommonNavigator {
      * @param provider
      * @param item
      */
-    private void recursiveExpandTree(Object item) {
+    private StructuredSelection recursiveExpandTree(Object item) {
         if (contentProvider == null) {
             contentProvider = (ITreeContentProvider) getCommonViewer().getContentProvider();
         }
         // MOD xqliu 2011-01-14 bug 15750: show in DQ Repository View
         if (item instanceof RepositoryNode) {
-            RepositoryNode node = ((RepositoryNode) item).getParent();
-            if (node == null) {
-                return;
+            // RepositoryNode node = ((RepositoryNode) item).getParent();
+            // if (node == null) {
+            RepositoryNode recursiveFind = findRealNode(item);
+            if (recursiveFind == null) {
+                return null;
             }
+            RepositoryNode node = recursiveFind.getParent();
+            // }
             recursiveExpandTree(node);
             getCommonViewer().expandToLevel(node, 1);
+            return new StructuredSelection(recursiveFind);
         }
+        return null;
+    }
+
+    /**
+     * Because the exist for filter on the repositoryView we maybe use a temp node to display so we need to find out
+     * real one at here.
+     * 
+     * @param item
+     * @return
+     */
+    private RepositoryNode findRealNode(Object item) {
+        ModelElement modelElementFromRepositoryNode = RepositoryNodeHelper
+                .getModelElementFromRepositoryNode((RepositoryNode) item);
+        if (modelElementFromRepositoryNode == null) {// for root node case
+            return null;
+        }
+        RepositoryNode recursiveFind = RepositoryNodeHelper.recursiveFind(modelElementFromRepositoryNode);
+        if (recursiveFind == null) {
+            log.warn(DefaultMessagesImpl.getString("DQRepositoryView.nodeNotExistWarring", //$NON-NLS-1$
+                    modelElementFromRepositoryNode.getName()));
+            MessageDialog.openWarning(null, "DQRepositoryView.nodeNotExistWarring.Title", //$NON-NLS-1$
+                    DefaultMessagesImpl.getString("DQRepositoryView.nodeNotExistWarring", //$NON-NLS-1$
+                            modelElementFromRepositoryNode.getName()));
+            return null;
+        }
+        return recursiveFind;
     }
 
     /**

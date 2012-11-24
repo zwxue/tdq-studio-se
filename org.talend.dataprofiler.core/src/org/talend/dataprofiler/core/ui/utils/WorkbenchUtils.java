@@ -78,7 +78,6 @@ import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.resource.EResourceConstant;
 import org.talend.resource.ResourceManager;
-
 import orgomg.cwm.foundation.softwaredeployment.DataProvider;
 import orgomg.cwm.objectmodel.core.Dependency;
 import orgomg.cwm.objectmodel.core.ModelElement;
@@ -172,7 +171,7 @@ public final class WorkbenchUtils {
     }
 
     public static IPath getPath(RepositoryViewObject viewObject) {
-        return getPath((RepositoryNode) viewObject.getRepositoryNode());
+        return getPath(viewObject.getRepositoryNode());
     }
 
     public static IFolder getFolder(RepositoryNode node) {
@@ -481,10 +480,10 @@ public final class WorkbenchUtils {
                 Path path = new Path(analysis.getFileName() == null ? eResource.getURI().toPlatformString(false)
                         : analysis.getFileName());
                 IFile file = root.getFile(path);
-                analysis = (Analysis) AnaResourceFileHelper.getInstance().getModelElement(file);
+                Analysis tempAnalysis = (Analysis) AnaResourceFileHelper.getInstance().getModelElement(file);
                 // MOD qiongli 2010-8-17,bug 14977
-                if (analysis != null) {
-                    eResource = analysis.eResource();
+                if (tempAnalysis != null) {
+                    eResource = tempAnalysis.eResource();
                     Map<EObject, Collection<Setting>> referenceMaps = EcoreUtil.UnresolvedProxyCrossReferencer.find(eResource);
                     Iterator<EObject> it = referenceMaps.keySet().iterator();
                     ModelElement eobj = null;
@@ -495,9 +494,9 @@ public final class WorkbenchUtils {
                         for (Setting setting : settings) {
                             if (setting.getEObject() instanceof AnalysisContext) {
                                 containsAnaTables = true;
-                                analysis.getContext().getAnalysedElements().remove(eobj);
+                                tempAnalysis.getContext().getAnalysedElements().remove(eobj);
                             } else if (setting.getEObject() instanceof Indicator) {
-                                analysis.getResults().getIndicators().remove(setting.getEObject());
+                                tempAnalysis.getResults().getIndicators().remove(setting.getEObject());
                             }
                         }
 
@@ -507,14 +506,14 @@ public final class WorkbenchUtils {
                         List<ModelElement> tempList = new ArrayList<ModelElement>();
                         tempList.add(oldDataProvider);
                         // remove the cliend dependency in the analysis
-                        List<Resource> modified = DependenciesHandler.getInstance().removeDependenciesBetweenModels(analysis,
+                        List<Resource> modified = DependenciesHandler.getInstance().removeDependenciesBetweenModels(tempAnalysis,
                                 tempList);
                         for (Resource me : modified) {
                             EMFUtil.saveSingleResource(me);
                         }
                         // remove the supplier dependency in the dataprovider
                         tempList.clear();
-                        tempList.add(analysis);
+                        tempList.add(tempAnalysis);
                         modified = DependenciesHandler.getInstance().removeSupplierDependenciesBetweenModels(oldDataProvider,
                                 tempList);
                         for (Resource me : modified) {
@@ -526,7 +525,7 @@ public final class WorkbenchUtils {
                         // .save(reposViewObject.getProperty().getItem(), true);
                     }
                     // ~
-                    AnaResourceFileHelper.getInstance().save(analysis);
+                    AnaResourceFileHelper.getInstance().save(tempAnalysis);
 
                 }
             }

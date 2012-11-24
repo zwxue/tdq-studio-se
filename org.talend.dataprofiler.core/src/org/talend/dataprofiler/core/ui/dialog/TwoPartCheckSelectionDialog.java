@@ -57,6 +57,7 @@ import org.eclipse.ui.dialogs.ISelectionStatusValidator;
 import org.eclipse.ui.dialogs.SelectionStatusDialog;
 import org.eclipse.ui.progress.UIJob;
 import org.talend.core.model.properties.Property;
+import org.talend.core.repository.model.ISubRepositoryObject;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.model.nodes.foldernode.ColumnFolderNode;
 import org.talend.dataprofiler.core.model.nodes.foldernode.TableFolderNode;
@@ -66,8 +67,14 @@ import org.talend.dataprofiler.core.ui.filters.AbstractViewerFilter;
 import org.talend.dataprofiler.core.ui.views.provider.ResourceViewContentProvider;
 import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.helper.RepositoryNodeHelper;
+import org.talend.dq.nodes.DBCatalogRepNode;
+import org.talend.dq.nodes.DBColumnRepNode;
 import org.talend.dq.nodes.DBConnectionRepNode;
+import org.talend.dq.nodes.DBSchemaRepNode;
+import org.talend.dq.nodes.DBTableRepNode;
+import org.talend.dq.nodes.DBViewRepNode;
 import org.talend.dq.nodes.DQRepositoryNode;
+import org.talend.repository.model.IRepositoryNode;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
@@ -115,6 +122,8 @@ public abstract class TwoPartCheckSelectionDialog extends SelectionStatusDialog 
     private Text leftFilterText;
 
     private Text rightFilterText;
+
+    private Label messageLabel;
 
     public Object[] getfExpandedElements() {
         return this.fExpandedElements;
@@ -192,6 +201,7 @@ public abstract class TwoPartCheckSelectionDialog extends SelectionStatusDialog 
      * @param sorter
      * @deprecated since 3.3, use {@link TwoPartCheckSelectionDialog#setComparator(ViewerComparator)} instead
      */
+    @Deprecated
     public void setSorter(ViewerSorter sorter) {
         fComparator = sorter;
     }
@@ -285,6 +295,7 @@ public abstract class TwoPartCheckSelectionDialog extends SelectionStatusDialog 
      * 
      * @see org.eclipse.jface.window.Window#open()
      */
+    @Override
     public int open() {
         fIsEmpty = evaluateIfTreeEmpty(fInput);
         super.open();
@@ -294,6 +305,7 @@ public abstract class TwoPartCheckSelectionDialog extends SelectionStatusDialog 
     /**
      * Handles cancel button pressed event.
      */
+    @Override
     protected void cancelPressed() {
         setResult(null);
         super.cancelPressed();
@@ -302,6 +314,7 @@ public abstract class TwoPartCheckSelectionDialog extends SelectionStatusDialog 
     /*
      * @see SelectionStatusDialog#computeResult()
      */
+    @Override
     protected void computeResult() {
         setResult(Arrays.asList(fViewer.getCheckedElements()));
     }
@@ -315,6 +328,7 @@ public abstract class TwoPartCheckSelectionDialog extends SelectionStatusDialog 
      * 
      * @see org.eclipse.jface.window.Window#create()
      */
+    @Override
     public void create() {
         BusyIndicator.showWhile(null, new Runnable() {
 
@@ -350,10 +364,11 @@ public abstract class TwoPartCheckSelectionDialog extends SelectionStatusDialog 
      * 
      * @see org.eclipse.jface.dialogs.Dialog#createDialogArea(org.eclipse.swt.widgets .Composite)
      */
+    @Override
     protected Control createDialogArea(Composite parent) {
         Composite composite = (Composite) super.createDialogArea(parent);
-        Label messageLabel = createMessageArea(composite);
-
+        messageLabel = createMessageArea(composite);
+        messageLabel.setText(this.getMessage());
         Composite twoPartComp = new Composite(composite, 0);
         GridLayout layout = new GridLayout(2, true);
         layout.marginHeight = 0;
@@ -510,6 +525,7 @@ public abstract class TwoPartCheckSelectionDialog extends SelectionStatusDialog 
         } else {
             fViewer = new CheckboxTreeViewer(parent, SWT.BORDER) {
 
+                @Override
                 protected void handleTreeExpand(TreeEvent event) {
                     super.handleTreeExpand(event);
                     // checkElementChecked();
@@ -522,9 +538,9 @@ public abstract class TwoPartCheckSelectionDialog extends SelectionStatusDialog 
         applyDialogFont(fViewer.getTree());
 
         fViewer.setContentProvider(fContentProvider);
-        //mod gdbu 2011-7-25 bug 23220
+        // mod gdbu 2011-7-25 bug 23220
         ((ResourceViewContentProvider) fContentProvider).setTreeViewer(fViewer);
-        //~23220
+        // ~23220
         fViewer.setLabelProvider(fLabelProvider);
         fViewer.addCheckStateListener(new ICheckStateListener() {
 
@@ -536,7 +552,7 @@ public abstract class TwoPartCheckSelectionDialog extends SelectionStatusDialog 
         fViewer.setComparator(fComparator);
         if (fFilters != null) {
             for (int i = 0; i != fFilters.size(); i++) {
-                fViewer.addFilter((ViewerFilter) fFilters.get(i));
+                fViewer.addFilter(fFilters.get(i));
             }
         }
         fViewer.setInput(fInput);
@@ -602,13 +618,14 @@ public abstract class TwoPartCheckSelectionDialog extends SelectionStatusDialog 
     protected void addSelectionButtonListener(Button selectButton, Button deselectButton) {
         SelectionListener listener = new SelectionAdapter() {
 
+            @Override
             public void widgetSelected(SelectionEvent e) {
                 Object[] viewerElements = fContentProvider.getElements(fInput);
                 if (fContainerMode) {
                     fViewer.setCheckedElements(viewerElements);
                 } else {
-                    for (int i = 0; i < viewerElements.length; i++) {
-                        fViewer.setSubtreeChecked(viewerElements[i], true);
+                    for (Object viewerElement : viewerElements) {
+                        fViewer.setSubtreeChecked(viewerElement, true);
                     }
                 }
                 updateOKStatus();
@@ -618,6 +635,7 @@ public abstract class TwoPartCheckSelectionDialog extends SelectionStatusDialog 
 
         listener = new SelectionAdapter() {
 
+            @Override
             public void widgetSelected(SelectionEvent e) {
                 fViewer.setCheckedElements(new Object[0]);
                 updateOKStatus();
@@ -653,9 +671,9 @@ public abstract class TwoPartCheckSelectionDialog extends SelectionStatusDialog 
         gd1.horizontalSpan = 1;
         gd1.grabExcessHorizontalSpace = false;
         leftFilterLabel.setLayoutData(gd1);
-        
+
         leftFilterText = new Text(filterTextsComposite, SWT.BORDER | SWT.SINGLE);
-        leftFilterText.setMessage(DefaultMessagesImpl.getString("TwoPartCheckSelectionDialog.FilterMessage"));//$NON-NSL-1$
+        leftFilterText.setMessage(DefaultMessagesImpl.getString("TwoPartCheckSelectionDialog.FilterMessage"));// $NON-NSL-1$
         GridData gd = new GridData(GridData.FILL_HORIZONTAL);
         gd.horizontalSpan = 2;
         gd.grabExcessHorizontalSpace = true;
@@ -667,9 +685,9 @@ public abstract class TwoPartCheckSelectionDialog extends SelectionStatusDialog 
         } else {
             rightFilterLabel.setText(DefaultMessagesImpl.getString("TwoPartCheckSelectionDialog.ColumnFilter"));// $NON-NSL-1$
         }
-        
+
         rightFilterText = new Text(filterTextsComposite, SWT.BORDER | SWT.SINGLE);
-        rightFilterText.setMessage(DefaultMessagesImpl.getString("TwoPartCheckSelectionDialog.FilterMessage"));//$NON-NSL-1$
+        rightFilterText.setMessage(DefaultMessagesImpl.getString("TwoPartCheckSelectionDialog.FilterMessage"));// $NON-NSL-1$
         rightFilterText.setLayoutData(gd);
 
         addFilterTextsListener();
@@ -713,6 +731,7 @@ public abstract class TwoPartCheckSelectionDialog extends SelectionStatusDialog 
         @Override
         public IStatus runInUIThread(final IProgressMonitor monitor) {
             getDisplay().asyncExec(new Runnable() {
+
                 public void run() {
 
                     boolean save = DQRepositoryNode.isOnFilterring();
@@ -778,7 +797,6 @@ public abstract class TwoPartCheckSelectionDialog extends SelectionStatusDialog 
         }
     }
 
-
     /**
      * Add the listeners for (table, column)filter texts.
      * 
@@ -788,6 +806,7 @@ public abstract class TwoPartCheckSelectionDialog extends SelectionStatusDialog 
     protected void addFilterTextsListener() {
         final FilterJob job = new FilterJob("", leftFilterText.getText(), true);//$NON-NLS-1$
         ModifyListener listener1 = new ModifyListener() {
+
             public void modifyText(ModifyEvent e) {
                 job.cancel();
                 job.setFilter(leftFilterText.getText());
@@ -799,6 +818,7 @@ public abstract class TwoPartCheckSelectionDialog extends SelectionStatusDialog 
 
         final FilterJob job2 = new FilterJob("", rightFilterText.getText(), false);//$NON-NLS-1$
         ModifyListener listener2 = new ModifyListener() {
+
             public void modifyText(ModifyEvent e) {
                 job2.cancel();
                 job2.setFilter(rightFilterText.getText());
@@ -814,12 +834,120 @@ public abstract class TwoPartCheckSelectionDialog extends SelectionStatusDialog 
         if (elements.length > 0) {
             if (fFilters != null) {
                 for (int i = 0; i < fFilters.size(); i++) {
-                    ViewerFilter curr = (ViewerFilter) fFilters.get(i);
+                    ViewerFilter curr = fFilters.get(i);
                     elements = curr.filter(fViewer, input, elements);
                 }
             }
         }
         return elements.length == 0;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.eclipse.ui.dialogs.SelectionDialog#setMessage(java.lang.String)
+     */
+    @Override
+    public void setMessage(String message) {
+
+        super.setMessage(message);
+        if (messageLabel != null) {
+            this.messageLabel.setText(message);
+        }
+    }
+
+    /**
+     * judge whether is hided node
+     * 
+     * @param selectNode
+     * @return
+     */
+    protected boolean isHideNode(List<IRepositoryNode> nodeList) {
+        for (IRepositoryNode selectNode : nodeList) {
+            if (isHideNode(selectNode)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * judge whether is hided node
+     * 
+     * @param selectNode
+     * @return
+     */
+    protected boolean isHideNode(IRepositoryNode selectNode) {
+        if (getRealNodeFromRepository(selectNode) == null) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * DOC talend Comment method "getRealNodeFromRepository".
+     * 
+     * @param selectNode
+     * @return
+     */
+    protected IRepositoryNode getRealNodeFromRepository(IRepositoryNode selectNode) {
+        IRepositoryNode returnNode = null;
+        ModelElement currModelElement = null;
+        if (selectNode.getObject() instanceof ISubRepositoryObject) {
+            currModelElement = ((ISubRepositoryObject) selectNode.getObject()).getModelElement();
+        }
+        if (currModelElement != null) {
+            returnNode = RepositoryNodeHelper.recursiveFind(currModelElement);
+        }
+        return returnNode;
+    }
+
+    /**
+     * find the last one which is visible Real repository node.
+     * 
+     * @param reposNode
+     */
+    protected IRepositoryNode findLastVisibleNode(IRepositoryNode reposNode) {
+        IRepositoryNode returnNode = getRealNodeFromRepository(reposNode);
+        if (returnNode == null) {
+            returnNode = findLastVisibleNode(reposNode.getParent());
+        }
+        return returnNode;
+    }
+
+    /**
+     * when parentNode is catalogNode or SchemaNode we need to select tableFolderNode or ViewFolderNode or the left
+     * treeView
+     */
+    protected IRepositoryNode getAdaptLocationNode(IRepositoryNode parentNode, IRepositoryNode childNode) {
+        // to get TableFolderNode or viewFolderNode
+        IRepositoryNode FolderNode = getContainedFolderNode(childNode);
+        if (FolderNode == null || !(parentNode instanceof DBCatalogRepNode) && !(parentNode instanceof DBSchemaRepNode)) {
+            return null;
+        }
+        if (childNode != null) {
+            for (IRepositoryNode theFolderNode : parentNode.getChildren()) {
+                if (theFolderNode.getLabel().equalsIgnoreCase(FolderNode.getLabel())) {
+                    return theFolderNode;
+                }
+            }
+        }
+        return null;
+    }
+
+    /**
+     * get TableFolderNode or ViewFolderNode.
+     * 
+     * @param childNode
+     * @return
+     */
+    private IRepositoryNode getContainedFolderNode(IRepositoryNode childNode) {
+        if (childNode instanceof DBColumnRepNode) {
+            return childNode.getParent().getParent().getParent();
+        } else if (childNode instanceof DBTableRepNode || childNode instanceof DBViewRepNode) {
+            return childNode.getParent();
+        }
+        return null;
     }
 
     protected abstract void unfoldToCheckedElements();

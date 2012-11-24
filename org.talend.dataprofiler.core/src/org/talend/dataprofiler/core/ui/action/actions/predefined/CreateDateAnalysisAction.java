@@ -81,8 +81,13 @@ public class CreateDateAnalysisAction extends AbstractPredefinedAnalysisAction {
             for (ModelElementIndicator columnIndicator : returnColumnIndicator) {
                 for (Indicator indicator : columnIndicator.getIndicators()) {
                     if (indicator instanceof FrequencyIndicator) {
-                        indicator.getParameters().getDateParameters()
-                                .setDateAggregationType(parameters.getDateParameters().getDateAggregationType());
+                        if (indicator.getParameters().getDateParameters() != null) {// TODO If we will never use the
+                                                                                    // "parameters" parameter, why we
+                                                                                    // add TimeSliceOptionPage and have
+                                                                                    // this loop
+                            indicator.getParameters().getDateParameters()
+                                    .setDateAggregationType(parameters.getDateParameters().getDateAggregationType());
+                        }
                     }
                 }
             }

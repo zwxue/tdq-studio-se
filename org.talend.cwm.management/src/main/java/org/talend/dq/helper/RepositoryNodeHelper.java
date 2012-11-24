@@ -41,6 +41,7 @@ import org.eclipse.ui.navigator.CommonViewer;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.commons.exception.PersistenceException;
 import org.talend.core.model.general.Project;
+import org.talend.core.model.metadata.MetadataColumnRepositoryObject;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
 import org.talend.core.model.metadata.builder.connection.DelimitedFileConnection;
@@ -60,6 +61,8 @@ import org.talend.core.model.repository.RepositoryViewObject;
 import org.talend.core.model.repository.helper.RepositoryObjectTypeHelper;
 import org.talend.core.repository.model.ISubRepositoryObject;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
+import org.talend.core.repository.model.repositoryObject.TdTableRepositoryObject;
+import org.talend.core.repository.model.repositoryObject.TdViewRepositoryObject;
 import org.talend.cwm.helper.CatalogHelper;
 import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.helper.ColumnSetHelper;
@@ -143,6 +146,7 @@ import org.talend.repository.model.ERepositoryStatus;
 import org.talend.repository.model.IProxyRepositoryFactory;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.IRepositoryNode.ENodeType;
+import org.talend.repository.model.IRepositoryNode.EProperties;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.resource.EResourceConstant;
 import orgomg.cwm.foundation.softwaredeployment.DataManager;
@@ -489,9 +493,10 @@ public final class RepositoryNodeHelper {
      * find RepositoryNode by ModelElement, if no RepositoryNode, return null.
      * 
      * @param modelElement
+     * @param isCreate whether create new one when can't find the node from RepositoryView
      * @return
      */
-    public static RepositoryNode recursiveFind(ModelElement modelElement) {
+    public static RepositoryNode recursiveFind(ModelElement modelElement, boolean... isCreate) {
         RepositoryNode node = null;
         if (modelElement instanceof Analysis) {
             node = recursiveFindAnalysis((Analysis) modelElement);
@@ -505,10 +510,19 @@ public final class RepositoryNodeHelper {
             node = recursiveFindSchema((Schema) modelElement);
         } else if (modelElement instanceof TdTable) {
             node = recursiveFindTdTable((TdTable) modelElement);
+            if (node == null && isCreate.length > 0 && isCreate[0] == true) {
+                node = createRepositoryNode(modelElement);
+            }
         } else if (modelElement instanceof TdView) {
             node = recursiveFindTdView((TdView) modelElement);
+            if (node == null && isCreate.length > 0 && isCreate[0] == true) {
+                node = createRepositoryNode(modelElement);
+            }
         } else if (modelElement instanceof TdColumn) {
             node = recursiveFindTdColumn((TdColumn) modelElement);
+            if (node == null && isCreate.length > 0 && isCreate[0] == true) {
+                node = createRepositoryNode(modelElement);
+            }
         } else if (modelElement instanceof MDMConnection) {
             node = recursiveFindMDMConnection((MDMConnection) modelElement);
         } else if (modelElement instanceof TdXmlSchema) {
@@ -517,7 +531,8 @@ public final class RepositoryNodeHelper {
             node = recursiveFindTdXmlElementType((TdXmlElementType) modelElement);
         } else if (modelElement instanceof DelimitedFileConnection) {
             node = recursiveFindDFConnection((DelimitedFileConnection) modelElement);
-        } else if (modelElement instanceof MetadataTable) {
+        } else if (modelElement instanceof MetadataTable) {// can we use this type? it is duplicate with tdView and
+                                                           // tdTable.
             node = recursiveFindMetadataTable((MetadataTable) modelElement);
         } else if (modelElement instanceof MetadataColumn) {
             node = recursiveFindMetadataColumn((MetadataColumn) modelElement);
@@ -548,6 +563,124 @@ public final class RepositoryNodeHelper {
         // + modelElement.getName() + "] NOT FOUND!!!");
         // }
         // return repNode;
+    }
+
+    /**
+     * create a new RepositoryNode when the node is hide on the repositoryView.
+     * 
+     * @param findModelElement
+     * @throws PersistenceException
+     */
+    protected static RepositoryNode createRepositoryNode(ModelElement findModelElement) {
+        RepositoryNode returnNode = null;
+        if (findModelElement == null) {
+            return returnNode;
+        }
+        Property property = PropertyHelper.getProperty(findModelElement);
+        IRepositoryViewObject lastVersion = null;
+        if (property == null) {
+            log.error("Can not find property from modelElement: " + findModelElement.getName()); //$NON-NLS-1$
+            return returnNode;
+        } else {
+            try {
+                lastVersion = ProxyRepositoryFactory.getInstance().getLastVersion(property.getId());
+            } catch (PersistenceException e) {
+                log.error(e, e);
+                return returnNode;
+            }
+            if (lastVersion == null) {
+                log.error("Can not find lastVersion from property: " + property.getDisplayName()); //$NON-NLS-1$
+                return returnNode;
+            }
+        }
+        if (findModelElement instanceof TdColumn) {
+            returnNode = createMetadataColumnRepNode((TdColumn) findModelElement, lastVersion);
+        } else if (findModelElement instanceof TdTable) {
+            returnNode = createDBTableRepNode((TdTable) findModelElement, lastVersion);
+        } else if (findModelElement instanceof TdView) {
+            returnNode = createDBViewRepNode((TdView) findModelElement, lastVersion);
+        }
+        return returnNode;
+    }
+
+    /**
+     * DOC talend Comment method "createDBViewRepNode".
+     * 
+     * @param findModelElement
+     * @param lastVersion
+     * @return
+     */
+    private static RepositoryNode createDBViewRepNode(TdView findModelElement, IRepositoryViewObject lastVersion) {
+        TdViewRepositoryObject tdViewRepositoryObject = new TdViewRepositoryObject(lastVersion, findModelElement);
+        tdViewRepositoryObject.setId(findModelElement.getName());
+        tdViewRepositoryObject.setLabel(findModelElement.getName());
+        DBViewRepNode dbViewRepNode = new DBViewRepNode(tdViewRepositoryObject, null, ENodeType.TDQ_REPOSITORY_ELEMENT);
+        dbViewRepNode.setProperties(EProperties.LABEL, ERepositoryObjectType.METADATA_CON_COLUMN);
+        dbViewRepNode.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.METADATA_CON_COLUMN);
+        tdViewRepositoryObject.setRepositoryNode(dbViewRepNode);
+        return dbViewRepNode;
+    }
+
+    /**
+     * DOC talend Comment method "createDBTableRepNode".
+     * 
+     * @param findModelElement
+     * @return
+     */
+    private static RepositoryNode createDBTableRepNode(TdTable findModelElement, IRepositoryViewObject lastVersion) {
+        TdTableRepositoryObject tdTableRepositoryObject = new TdTableRepositoryObject(lastVersion, findModelElement);
+        tdTableRepositoryObject.setId(findModelElement.getName());
+        tdTableRepositoryObject.setLabel(findModelElement.getName());
+        DBTableRepNode dbTableRepNode = new DBTableRepNode(tdTableRepositoryObject, null, ENodeType.TDQ_REPOSITORY_ELEMENT);
+        dbTableRepNode.setProperties(EProperties.LABEL, ERepositoryObjectType.METADATA_CON_COLUMN);
+        dbTableRepNode.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.METADATA_CON_COLUMN);
+        tdTableRepositoryObject.setRepositoryNode(dbTableRepNode);
+        return dbTableRepNode;
+    }
+
+    // /**
+    // * create a temp RepNode there is a lack of parent attribute
+    // *
+    // * @param findColumn
+    // */
+    // private static DBColumnRepNode createMetadataColumnRepObj(ModelElement findColumn) {
+    // Property property = PropertyHelper.getProperty(findColumn);
+    // IRepositoryViewObject lastVersion = null;
+    // if (property == null) {
+    //            log.error("Can not find property from column: " + findColumn.getName()); //$NON-NLS-1$
+    // } else {
+    // try {
+    // lastVersion = ProxyRepositoryFactory.getInstance().getLastVersion(property.getId());
+    // } catch (PersistenceException e) {
+    // log.error(e, e);
+    // }
+    // if (lastVersion == null) {
+    //                log.error("Can not find lastVersion from property: " + property.getDisplayName()); //$NON-NLS-1$
+    // }
+    // }
+    // MetadataColumnRepositoryObject metadataColumn = new MetadataColumnRepositoryObject(lastVersion, findColumn);
+    // metadataColumn.setId(findColumn.getName());
+    // metadataColumn.setLabel(findColumn.getName());
+    // DBColumnRepNode columnNode = new DBColumnRepNode(metadataColumn, null, ENodeType.TDQ_REPOSITORY_ELEMENT);
+    // columnNode.setProperties(EProperties.LABEL, ERepositoryObjectType.METADATA_CON_COLUMN);
+    // columnNode.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.METADATA_CON_COLUMN);
+    // metadataColumn.setRepositoryNode(columnNode);
+    // return columnNode;
+    // }
+    /**
+     * create a temp RepNode there is a lack of parent attribute
+     * 
+     * @param findColumn
+     */
+    private static DBColumnRepNode createMetadataColumnRepNode(TdColumn findColumn, IRepositoryViewObject lastVersion) {
+        MetadataColumnRepositoryObject metadataColumn = new MetadataColumnRepositoryObject(lastVersion, findColumn);
+        metadataColumn.setId(findColumn.getName());
+        metadataColumn.setLabel(findColumn.getName());
+        DBColumnRepNode columnNode = new DBColumnRepNode(metadataColumn, null, ENodeType.TDQ_REPOSITORY_ELEMENT);
+        columnNode.setProperties(EProperties.LABEL, ERepositoryObjectType.METADATA_CON_COLUMN);
+        columnNode.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.METADATA_CON_COLUMN);
+        metadataColumn.setRepositoryNode(columnNode);
+        return columnNode;
     }
 
     /**

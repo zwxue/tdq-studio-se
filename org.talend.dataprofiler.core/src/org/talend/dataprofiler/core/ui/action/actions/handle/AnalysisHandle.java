@@ -48,20 +48,21 @@ public class AnalysisHandle extends EMFResourceHandle {
      */
     @Override
     protected ModelElement update(ModelElement oldObject, ModelElement newObject) {
-        newObject = super.update(oldObject, newObject);
+        ModelElement tempObject = newObject;
+        tempObject = super.update(oldObject, tempObject);
 
         // Added yyin 2012-10-10 TDQ-6236, create a new domain instead of using the domain in the original object
-        EList<Domain> dataFilters = ((Analysis) newObject).getParameters().getDataFilter();
+        EList<Domain> dataFilters = ((Analysis) tempObject).getParameters().getDataFilter();
         if (!dataFilters.isEmpty()) {// if the old already be copied into the duplicated one, replace it with a new one
-            Domain domain = DomainHelper.createDomain(((Analysis) newObject).getName());
+            Domain domain = DomainHelper.createDomain(((Analysis) tempObject).getName());
             dataFilters.remove(0);
             dataFilters.add(domain);
         }
         // ~6236
 
         // MOD yyi 2012-05-07 TDQ-5270 duplicate an overview analysis with table/view filters.
-        AnalysisHelper.setStringDataFilter((Analysis) newObject, AnalysisHelper.getStringDataFilter((Analysis) oldObject));
+        AnalysisHelper.setStringDataFilter((Analysis) tempObject, AnalysisHelper.getStringDataFilter((Analysis) oldObject));
 
-        return newObject;
+        return tempObject;
     }
 }

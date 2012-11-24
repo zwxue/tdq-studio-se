@@ -158,7 +158,7 @@ public class CreatePatternWizardPage2 extends AbstractWizardPage {
 
     @Override
     public boolean checkFieldsValue() {
-        if (expressionText.getText() == "") { //$NON-NLS-1$
+        if (expressionText.getText().equals("")) { //$NON-NLS-1$
             updateStatus(IStatus.ERROR, MSG_EMPTY);
             return false;
         }

@@ -242,6 +242,7 @@ public abstract class AbstractPagePart {
     // MOD mzhao 2009-06-09 feature 5887
     private Connection callChangeConnectionAction(AbstractAnalysisMetadataPage masterPage, final int oldSelect,
             Connection tdProvider) {
+        Connection returnProvider = tdProvider;
         ChangeConnectionAction changeConnAction = new ChangeConnectionAction(masterPage, tdProvider);
         changeConnAction.run();
         ReturnCode ret = changeConnAction.getStatus();
@@ -271,9 +272,10 @@ public abstract class AbstractPagePart {
             // time connection changes.
             Object connObject = masterPage.getConnCombo().getData(masterPage.getConnCombo().getSelectionIndex() + ""); //$NON-NLS-1$
             if (connObject instanceof RepositoryNode) {
-                tdProvider = ((ConnectionItem) ((RepositoryNode) connObject).getObject().getProperty().getItem()).getConnection();
+                returnProvider = ((ConnectionItem) ((RepositoryNode) connObject).getObject().getProperty().getItem())
+                        .getConnection();
             } else if (connObject instanceof Connection) {
-                tdProvider = (Connection) connObject;
+                returnProvider = (Connection) connObject;
             }
             // MOD mzhao bug 12766, 2010-04-22 save the editor automatically.
             masterPage.doSave(new NullProgressMonitor());
@@ -282,7 +284,7 @@ public abstract class AbstractPagePart {
         } else {
             cancelSelection(masterPage, oldSelect);
         }
-        return tdProvider;
+        return returnProvider;
     }
 
     private void cancelSelection(AbstractAnalysisMetadataPage masterPage, final int oldSelect) {

@@ -73,12 +73,34 @@ public class DBViewFolderRepNode extends DQRepositoryNode {
      * DOC klliu ViewFolderRepNode constructor comment.
      * 
      * @param object
-     * @param parent
+     * @param parent if parent is null will try to create new one to insert of old parent.
      * @param type
      */
     public DBViewFolderRepNode(IRepositoryViewObject object, RepositoryNode parent, ENodeType type) {
         super(object, parent, type);
+        this.viewObject = object;
+        if (parent == null) {
+            RepositoryNode createParentNode = createParentNode();
+            this.setParent(createParentNode);
+        }
 
+    }
+
+    /**
+     * create the node of parent.
+     * 
+     * @param object
+     * @return
+     */
+    private RepositoryNode createParentNode() {
+        RepositoryNode dbParentRepNode = null;
+        if (viewObject instanceof MetadataCatalogRepositoryObject) {
+            dbParentRepNode = new DBCatalogRepNode(viewObject, null, ENodeType.TDQ_REPOSITORY_ELEMENT);
+        } else if (viewObject instanceof MetadataSchemaRepositoryObject) {
+            dbParentRepNode = new DBSchemaRepNode(viewObject, null, ENodeType.TDQ_REPOSITORY_ELEMENT);
+        }
+        viewObject.setRepositoryNode(dbParentRepNode);
+        return dbParentRepNode;
     }
 
     @Override

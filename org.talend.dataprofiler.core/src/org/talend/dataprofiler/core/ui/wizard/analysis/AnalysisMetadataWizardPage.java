@@ -100,7 +100,7 @@ public class AnalysisMetadataWizardPage extends MetadataWizardPage {
 
     @Override
     public boolean checkFieldsValue() {
-        if (typeText.getText() == "" || pathText.getText() == "") { //$NON-NLS-1$ //$NON-NLS-2$
+        if (typeText.getText().equals("") || pathText.getText().equals("")) { //$NON-NLS-1$ //$NON-NLS-2$
             updateStatus(IStatus.ERROR, MSG_EMPTY);
             return false;
         }

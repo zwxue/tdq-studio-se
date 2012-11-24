@@ -229,10 +229,10 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
 
             if (tdColumn == null && mdColumn != null) {
                 currentIndicator = ModelElementIndicatorHelper.createDFColumnIndicator(RepositoryNodeHelper
-                        .recursiveFind2(mdColumn));
+                        .recursiveFind(mdColumn));
             } else if (tdColumn != null) {
-                currentIndicator = ModelElementIndicatorHelper.createModelElementIndicator(RepositoryNodeHelper
-                        .recursiveFind2(tdColumn));
+                currentIndicator = ModelElementIndicatorHelper.createModelElementIndicator(RepositoryNodeHelper.recursiveFind(
+                        tdColumn, true));
             } else if (xmlElement != null) {
                 currentIndicator = ModelElementIndicatorHelper.createXmlElementIndicator(RepositoryNodeHelper
                         .recursiveFind(xmlElement));

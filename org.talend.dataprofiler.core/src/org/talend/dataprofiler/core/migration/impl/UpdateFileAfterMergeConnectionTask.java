@@ -227,7 +227,7 @@ public class UpdateFileAfterMergeConnectionTask extends AbstractWorksapceUpdateT
         String selection = s[0];
 
         int index = 1;
-        if (s[index] != "") {//$NON-NLS-1$
+        if (!s[index].equals("")) {//$NON-NLS-1$
             if (selection.equals(EDatabaseConnTemplate.GODBC.getDBDisplayName())
                     || selection.equals(EDatabaseConnTemplate.MSODBC.getDBDisplayName())) {
                 dbconn.setDatasourceName(s[index]);
@@ -244,7 +244,7 @@ public class UpdateFileAfterMergeConnectionTask extends AbstractWorksapceUpdateT
         }
 
         index = 2;
-        if (s[index] != "") { //$NON-NLS-1$
+        if (!s[index].equals("")) { //$NON-NLS-1$
             if (selection.equals(EDatabaseConnTemplate.INTERBASE.getDBDisplayName())
                     || selection.equals(EDatabaseConnTemplate.TERADATA.getDBDisplayName())
                     || selection.equals(EDatabaseConnTemplate.AS400.getDBDisplayName())
@@ -258,7 +258,7 @@ public class UpdateFileAfterMergeConnectionTask extends AbstractWorksapceUpdateT
         }
 
         index = 3;
-        if (s[index] != "") { //$NON-NLS-1$
+        if (!s[index].equals("")) { //$NON-NLS-1$
             if (selection.equals(EDatabaseConnTemplate.IBMDB2.getDBDisplayName())
                     || selection.equals(EDatabaseConnTemplate.INFORMIX.getDBDisplayName())
                     || selection.equals(EDatabaseConnTemplate.ORACLEFORSID.getDBDisplayName())
@@ -268,7 +268,7 @@ public class UpdateFileAfterMergeConnectionTask extends AbstractWorksapceUpdateT
         }
 
         index = 4;
-        if (s[index] != "") { //$NON-NLS-1$
+        if (!s[index].equals("")) { //$NON-NLS-1$
             if (selection.equals(EDatabaseConnTemplate.INFORMIX.getDBDisplayName())) {
                 dbconn.setDatasourceName(s[index]);
             } else {
@@ -277,7 +277,7 @@ public class UpdateFileAfterMergeConnectionTask extends AbstractWorksapceUpdateT
         }
 
         index = 5;
-        if (s[index] != "") { //$NON-NLS-1$
+        if (!s[index].equals("")) { //$NON-NLS-1$
             dbconn.setAdditionalParams(s[index]);
         }
     }

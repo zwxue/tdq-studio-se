@@ -1339,7 +1339,7 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
                     TableIndicator tableIndicator = (TableIndicator) selection[0].getData(TABLE_INDICATOR_KEY);
                     NamedColumnSet set = tableIndicator.getColumnSet();
                     // ProxyRepositoryViewObject.fetchAllRepositoryViewObjects(true, true);
-                    RepositoryNode node = RepositoryNodeHelper.recursiveFind(set);
+                    RepositoryNode node = RepositoryNodeHelper.recursiveFind(set, true);
                     dqview.showSelectedElements(node);
                     CorePlugin.getDefault().refreshWorkSpace();
                     CorePlugin.getDefault().refreshDQView(node);
