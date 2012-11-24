@@ -16,19 +16,6 @@ import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.ui.navigator.ICommonActionExtensionSite;
 import org.talend.dataprofiler.core.ui.action.actions.TdAddTaskAction;
-import org.talend.dq.nodes.AnalysisRepNode;
-import org.talend.dq.nodes.DBCatalogRepNode;
-import org.talend.dq.nodes.DBColumnRepNode;
-import org.talend.dq.nodes.DBConnectionRepNode;
-import org.talend.dq.nodes.DBSchemaRepNode;
-import org.talend.dq.nodes.DBTableRepNode;
-import org.talend.dq.nodes.DBViewRepNode;
-import org.talend.dq.nodes.DFColumnRepNode;
-import org.talend.dq.nodes.DFConnectionRepNode;
-import org.talend.dq.nodes.DFTableRepNode;
-import org.talend.dq.nodes.MDMConnectionRepNode;
-import org.talend.dq.nodes.ReportAnalysisRepNode;
-import org.talend.dq.nodes.ReportRepNode;
 import org.talend.repository.model.RepositoryNode;
 
 /**
@@ -71,10 +58,8 @@ public class ModelElementTaskProvider extends AbstractCommonActionProvider {
         Object firstElement = currentSelection.getFirstElement();
         if (firstElement instanceof RepositoryNode) {
             RepositoryNode node = (RepositoryNode) firstElement;
-            if (shouldShowAddTask(node)) {
-                addTaskAction = new TdAddTaskAction(site.getViewSite().getShell(), node);
-                menu.add(addTaskAction);
-            }
+            addTaskAction = new TdAddTaskAction(site.getViewSite().getShell(), node);
+            menu.add(addTaskAction);
             // RepositoryNode parent = node.getParent();
             // if (!(parent instanceof ReportSubFolderRepNode)) {
             // Item item = node.getObject().getProperty().getItem();
@@ -91,17 +76,17 @@ public class ModelElementTaskProvider extends AbstractCommonActionProvider {
         }
     }
 
-    /**
-     * DOC xqliu Comment method "shouldShowAddTask".
-     * 
-     * @param node
-     * @return
-     */
-    private boolean shouldShowAddTask(RepositoryNode node) {
-        return (node instanceof AnalysisRepNode || node instanceof ReportRepNode || node instanceof MDMConnectionRepNode
-                || node instanceof DBConnectionRepNode || node instanceof DFConnectionRepNode
-                || node instanceof DBConnectionRepNode || node instanceof DBCatalogRepNode || node instanceof DBSchemaRepNode
-                || node instanceof DBTableRepNode || node instanceof DBViewRepNode || node instanceof DBColumnRepNode
-                || node instanceof DFColumnRepNode || node instanceof DFTableRepNode || node instanceof ReportAnalysisRepNode);
-    }
+    // /**
+    // * DOC xqliu Comment method "shouldShowAddTask".
+    // *
+    // * @param node
+    // * @return
+    // */
+    // private boolean shouldShowAddTask(RepositoryNode node) {
+    // return (node instanceof AnalysisRepNode || node instanceof ReportRepNode || node instanceof MDMConnectionRepNode
+    // || node instanceof DBConnectionRepNode || node instanceof DFConnectionRepNode
+    // || node instanceof DBConnectionRepNode || node instanceof DBCatalogRepNode || node instanceof DBSchemaRepNode
+    // || node instanceof DBTableRepNode || node instanceof DBViewRepNode || node instanceof DBColumnRepNode
+    // || node instanceof DFColumnRepNode || node instanceof DFTableRepNode || node instanceof ReportAnalysisRepNode);
+    // }
 }
