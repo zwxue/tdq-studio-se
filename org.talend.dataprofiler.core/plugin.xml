@@ -1527,6 +1527,12 @@
            id="org.talend.dataprofiler.core.migration.impl.UpdateBlankIndicator4SybaseTask"
            name="Update Blank Indicator for Sybase Task"
            version="5.2.0">
+     </workspacetask>
+     <workspacetask
+           class="org.talend.dataprofiler.core.migration.impl.UpdateReportGeneratedDocPathTask"
+           id="org.talend.dataprofiler.core.migration.impl.UpdateReportGeneratedDocPathTask"
+           name="Update Report Generated Doc Path Task"
+           version="5.2.1">
      </workspacetask>  
      
   </extension>

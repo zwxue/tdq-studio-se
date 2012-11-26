@@ -153,7 +153,7 @@ public final class ReportUtils {
      * @throws IOException
      * @throws PersistenceException
      */
-    private static void saveReportListFile(final File reportListFile, final List<ReportListParameters> repList)
+    public static void saveReportListFile(final File reportListFile, final List<ReportListParameters> repList)
             throws PersistenceException {
         RepositoryWorkUnit repositoryWorkUnit = new RepositoryWorkUnit(ProjectManager.getInstance().getCurrentProject(),
                 "saveReportListFile") { //$NON-NLS-1$
@@ -211,13 +211,37 @@ public final class ReportUtils {
     /**
      * DOC xqliu ReportUtils class global comment. Detailled comment
      */
-    private class ReportListParameters {
+    public class ReportListParameters {
 
-        String name;
+        private String name;
 
-        String path;
+        private String path;
 
-        String createTime;
+        private String createTime;
+
+        public String getName() {
+            return this.name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        public String getPath() {
+            return this.path;
+        }
+
+        public void setPath(String path) {
+            this.path = path;
+        }
+
+        public String getCreateTime() {
+            return this.createTime;
+        }
+
+        public void setCreateTime(String createTime) {
+            this.createTime = createTime;
+        }
 
         public ReportListParameters() {
             name = PluginConstant.EMPTY_STRING;
@@ -600,11 +624,11 @@ public final class ReportUtils {
      * @param createTime
      * @return
      */
-    private static ReportListParameters buildRepListParams(String name, String path, String createTime) {
+    public static ReportListParameters buildRepListParams(String name, String path, String createTime) {
         ReportListParameters repListParameters = new ReportUtils().new ReportListParameters();
-        repListParameters.name = name;
-        repListParameters.path = path;
-        repListParameters.createTime = createTime;
+        repListParameters.setName(name);
+        repListParameters.setPath(path);
+        repListParameters.setCreateTime(createTime);
         return repListParameters;
     }
 
@@ -615,7 +639,7 @@ public final class ReportUtils {
      * @return
      * @throws IOException
      */
-    private static List<ReportListParameters> getReportListParameters(File reportListFile) {
+    public static List<ReportListParameters> getReportListParameters(File reportListFile) {
         List<ReportListParameters> repList = new ArrayList<ReportListParameters>();
 
         if (reportListFile != null && reportListFile.exists()) {
@@ -746,7 +770,7 @@ public final class ReportUtils {
             List<ReportListParameters> repList = getReportListParameters(reportListFile);
 
             for (ReportListParameters rep : repList) {
-                String path = rep.path;
+                String path = rep.getPath();
                 if (path.startsWith("..")) { //$NON-NLS-1$
                     path = WorkspaceUtils.ifolderToFile(getOutputFolder(reportFile)).getAbsolutePath() + Path.SEPARATOR
                             + path.substring(2, path.length());
