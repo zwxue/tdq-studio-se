@@ -446,7 +446,7 @@ public class PatternTestView extends ViewPart {
         // MOD qiongli 2011-1-7.Add java in Pattern Test View
         if (isJavaEngine) {
             String regexStr = regularText.getText();
-            if (regexStr.length() >= 2) {
+            if (regexStr.length() >= 2 && regexStr.startsWith("'") && regexStr.endsWith("'")) {
                 regexStr = regexStr.substring(1, regexStr.length() - 1);
             }
             boolean flag = java.util.regex.Pattern.compile(regexStr).matcher(testText.getText()).find();
