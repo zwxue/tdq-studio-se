@@ -67,7 +67,6 @@ import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.ExecutionLanguage;
 import org.talend.dataquality.helpers.MetadataHelper;
 import org.talend.dataquality.indicators.DataminingType;
-import org.talend.dataquality.indicators.RegexpMatchingIndicator;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.nodes.AnalysisRepNode;
 import org.talend.dq.nodes.DBColumnRepNode;
@@ -101,17 +100,11 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
 
     private List<IRepositoryNode> columnSetMultiValueList;
 
-    // private final List<String> comboTextList = new ArrayList<String>();
-
     private ColumnSetMasterPage masterPage;
 
     private ExecutionLanguage language;
 
     private AnalysisColumnSetTreeViewer setTreeViewer;
-
-    // private Menu menu;
-
-    // private MenuItem editPatternMenuItem;
 
     public AnalysisColumnSetTreeViewer(Composite parent, ColumnSetMasterPage masterPage) {
         absMasterPage = masterPage;
@@ -339,14 +332,41 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
                     masterPage.changeExecuteLanguageToJava(true);
                 }
             }
+
+            // Added yyin TDQ-6329 20121126
+            ModelElementIndicator[] newSelects = translateSelectedNodeIntoIndicator(objs);
+            List<ColumnIndicator> ColumnIndicatorList = new ArrayList<ColumnIndicator>();
+            if (newSelects != null) {
+                // do not replace the original one(which may contains some indicator units), only add the new column
+                // indicator;
+                for (ModelElementIndicator column : newSelects) {
+                    // if the modelElementIndicators contains selected column, add the column in modelElementIndicators
+                    // to ColumnIndicatorList
+                    boolean isOld = false;
+                    for (ModelElementIndicator oldColumn : modelElementIndicators) {
+                        if (oldColumn.getElementName().equals(column.getElementName())) {
+                            ColumnIndicatorList.add((ColumnIndicator) oldColumn);
+                            isOld = true;
+                            break;
+                        }
+                    }
+                    // else add this column in filterInputData to ColumnIndicatorList
+                    if (!isOld) {
+                        ColumnIndicatorList.add((ColumnIndicator) column);
+                    }
+                }
+            }
+            this.modelElementIndicators = ColumnIndicatorList.toArray(new ColumnIndicator[ColumnIndicatorList.size()]);
+            this.setElements(modelElementIndicators);
+            // ~
         } else {
             TreeItem[] items = this.tree.getItems();
             for (TreeItem item : items) {
                 this.removeItemBranch(item);
             }
+            super.setInput(objs);
         }
         // ~
-        super.setInput(objs);
     }
 
     @Override
@@ -531,21 +551,6 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
         return this.columnSetMultiValueList;
     }
 
-    // private void createColumnAnalysis(Tree newTree) {
-    // TreeItem[] items = newTree.getSelection();
-    // if (items.length > 0) {
-    // TreePath[] paths = new TreePath[items.length];
-    //
-    // for (int i = 0; i < items.length; i++) {
-    // TdColumn tdColumn = (TdColumn) items[i].getData(COLUMN_INDICATOR_KEY);
-    // paths[i] = new TreePath(new Object[] { tdColumn });
-    // }
-    // CreateColumnAnalysisAction analysisAction = new CreateColumnAnalysisAction();
-    // analysisAction.setSelection(new TreeSelection(paths));
-    // analysisAction.run();
-    // }
-    // }
-
     /**
      * Remove the selected elements(eg:TdColumn or Indicator) from tree.
      * 
@@ -592,14 +597,9 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
                         tree.setMenu(null);
                         return;
                     } else {
-                        // IndicatorUnit indicatorUnit = (IndicatorUnit) item.getData(INDICATOR_UNIT_KEY);
-                        // IndicatorEnum type = indicatorUnit.getType();
-                        // con = IndicatorEnum.RegexpMatchingIndicatorEnum.compareTo(type) == 0
-                        // || IndicatorEnum.SqlPatternMatchingIndicatorEnum.compareTo(type) == 0;
                         new AnalysisColumnSetMenuProvider(tree).createTreeMenu(Boolean.TRUE);
                     }
                 }
-                // createTreeMenu(tree, con);
             }
         });
 
@@ -628,6 +628,8 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
 
                 if (theSuitedComposite != null && !theSuitedComposite.isExpanded()) {
                     theSuitedComposite.setExpanded(true);
+                } else {
+                    propertyChangeSupport.firePropertyChange(PluginConstant.EXPAND_TREE, null, e.item);
                 }
 
                 comp.layout();
@@ -674,9 +676,6 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
         return this.masterPage.getAnalysisRepNode();
     }
 
-    // public List<String> getComboString() {
-    // return comboTextList;
-    // }
 
     public Tree getTree() {
         return tree;
@@ -685,12 +684,6 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
     @Override
     public void updateModelViewer() {
         masterPage.recomputeIndicators();
-        // columnSetMultiValueList =
-        // masterPage.getColumnSetMultiValueIndicator()
-        // .getAnalyzedColumns().subList(
-        // 0,
-        // masterPage.getColumnSetMultiValueIndicator()
-        // .getAnalyzedColumns().size());
         columnSetMultiValueList.clear();
         this.setElements(masterPage.getCurrentModelElementIndicators());
     }
@@ -730,10 +723,6 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
     @Override
     public void createOneUnit(TreeItem treeItem, IndicatorUnit indicatorUnit) {
         super.createOneUnit(treeItem, indicatorUnit);
-        treeItem.setExpanded(true);
-        masterPage.getAllMatchIndicator().getCompositeRegexMatchingIndicators()
-                .add((RegexpMatchingIndicator) indicatorUnit.getIndicator());
-        masterPage.updateIndicatorSection();
     }
 
     /**
@@ -776,13 +765,8 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
         if (item.getData(COLUMN_INDICATOR_KEY) != null) {
             deleteColumnItems(meIndicator.getModelElementRepositoryNode());
         }
-        // we need to romve the RegexMatchingIndicators,it's not ModelElementIndicator.
-        // deleteModelElementItems(meIndicator);
-        // ~
         if (null != unit) {
             meIndicator.removeIndicatorUnit(unit);
-            // masterPage.getAllMatchIndicator().getCompositeRegexMatchingIndicators().remove(unit.getIndicator());
-            masterPage.updateIndicatorSection();
         }
 
         super.removeItemBranch(item);
@@ -836,23 +820,5 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
         for (TreeItem treeItem : selection) {
             removeItemBranch(treeItem);
         }
-    }
-
-    /**
-     * DOC yyi 2011-03-21 19460:remove selected element form the tree
-     * 
-     * @param deleteModelElementIndiciator
-     */
-    private void deleteModelElementItems(ModelElementIndicator deleteModelElementIndiciator) {
-        List<ModelElementIndicator> remainIndicators = new ArrayList<ModelElementIndicator>();
-        for (ModelElementIndicator indicator : modelElementIndicators) {
-            if (deleteModelElementIndiciator.equals(indicator)) {
-                continue;
-            } else {
-                remainIndicators.add(indicator);
-            }
-        }
-
-        this.modelElementIndicators = remainIndicators.toArray(new ModelElementIndicator[remainIndicators.size()]);
     }
 }

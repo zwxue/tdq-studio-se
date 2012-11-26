@@ -492,6 +492,16 @@ public abstract class AbstractColumnDropTree extends AbstractPagePart {
     public abstract void addElements(final ModelElementIndicator[] elements);
 
     public ModelElementIndicator[] filterInputData(Object[] objs) {
+        // Refactor yyin 20121122 TDQ-6329: if not needed, do not set the new selected objs to
+        // this.modelElementIndicators directly
+        this.modelElementIndicators = translateSelectedNodeIntoIndicator(objs);
+
+        return this.modelElementIndicators;
+    }
+
+    // translate the selected nodes into related indicators, without set the values to this.modelElementIndicators
+    // directly
+    protected ModelElementIndicator[] translateSelectedNodeIntoIndicator(Object[] objs) {
         List<IRepositoryNode> reposList = new ArrayList<IRepositoryNode>();
         for (Object obj : objs) {
             // MOD klliu 2011-02-16 feature 15387
@@ -529,8 +539,8 @@ public abstract class AbstractColumnDropTree extends AbstractPagePart {
         }
         if (reposList.size() == 0) {
             // MOD yyi 2012-02-29 TDQ-3605 Empty column table.
-            this.modelElementIndicators = new ModelElementIndicator[0];
-            return null;
+            // this.modelElementIndicators = new ModelElementIndicator[0];
+            return new ModelElementIndicator[0];
         }
         boolean isMdm = false;
         // MOD qiongli 2011-1-7 feature 16796.
@@ -558,9 +568,8 @@ public abstract class AbstractColumnDropTree extends AbstractPagePart {
                             .createColumnIndicator(repObj);
             modelElementIndicatorList.add(temp);
         }
-        this.modelElementIndicators = modelElementIndicatorList.toArray(new ModelElementIndicator[modelElementIndicatorList
-                .size()]);
-        return this.modelElementIndicators;
+
+        return modelElementIndicatorList.toArray(new ModelElementIndicator[modelElementIndicatorList.size()]);
     }
 
     public ModelElementIndicator[] filterInputData(ModelElementIndicator[] objs) {

@@ -28,6 +28,7 @@ import org.talend.dataprofiler.core.model.ModelElementIndicator;
 import org.talend.dataprofiler.core.pattern.PatternUtilities;
 import org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisMetadataPage;
 import org.talend.dataprofiler.core.ui.editor.analysis.ColumnMasterDetailsPage;
+import org.talend.dataprofiler.core.ui.editor.analysis.ColumnSetMasterPage;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
 import org.talend.dataprofiler.core.ui.utils.MessageUI;
 import org.talend.dataquality.analysis.Analysis;
@@ -139,10 +140,22 @@ public class PatternMouseAdapter extends MouseAdapter {
                     }
                 }
             }
+            // Added yyin 20121121 TDQ-6329: after remove all, should also add the old selected patterns
+            // because the columnset does not have pagination, can not refresh automatically
+            boolean addOldSelected = false;
+            if (masterPage instanceof ColumnSetMasterPage) {
+                addOldSelected = true;
+            }
+            if (addOldSelected) {
+                for (TreeItem child : treeItem.getItems()) {
+                    masterPage.getTreeViewer().removeItemBranch(child);
+                }
+            }// ~
+
             treeItem.removeAll();
 
             for (PatternRepNode patternNode : allSelectedPatternNodes) {
-                if (oldSelectedNodeNames.contains(patternNode.getLabel())) {
+                if (oldSelectedNodeNames.contains(patternNode.getLabel()) && !addOldSelected) {
                     continue;
                 }
                 TypedReturnCode<IndicatorUnit> trc = PatternUtilities.createIndicatorUnit(patternNode.getPattern(), meIndicator,
