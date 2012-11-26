@@ -165,7 +165,8 @@ public class DQEmptyRecycleBinActionTest {
         seleLs.add(node1);
 
         PowerMockito.mockStatic(DQDeleteHelper.class);
-        when(DQDeleteHelper.canEmptyRecyBin(seleLs)).thenReturn(false);
+        List<IRepositoryNode> ls = new ArrayList<IRepositoryNode>();
+        when(DQDeleteHelper.getCanNotDeletedNodes(seleLs, false)).thenReturn(ls);
 
         RecycleBinRepNode recyBin = mock(RecycleBinRepNode.class);
         PowerMockito.mockStatic(RepositoryNodeHelper.class);
@@ -177,7 +178,6 @@ public class DQEmptyRecycleBinActionTest {
 
     }
 
-
     /**
      * Test method for {@link org.talend.dataprofiler.core.ui.action.actions.DQEmptyRecycleBinAction#getSelection()}.
      */
@@ -187,7 +187,8 @@ public class DQEmptyRecycleBinActionTest {
     }
 
     /**
-     * Test method for {@link org.talend.dataprofiler.core.ui.action.actions.DQEmptyRecycleBinAction#getRepositorySelection()}.
+     * Test method for
+     * {@link org.talend.dataprofiler.core.ui.action.actions.DQEmptyRecycleBinAction#getRepositorySelection()}.
      */
     @Test
     public void testGetRepositorySelection() {
@@ -203,7 +204,8 @@ public class DQEmptyRecycleBinActionTest {
     }
 
     /**
-     * Test method for {@link org.talend.dataprofiler.core.ui.action.actions.DQEmptyRecycleBinAction#DQEmptyRecycleBinAction()}.
+     * Test method for
+     * {@link org.talend.dataprofiler.core.ui.action.actions.DQEmptyRecycleBinAction#DQEmptyRecycleBinAction()}.
      */
     @Test
     public void testDQEmptyRecycleBinAction() {
