@@ -1028,11 +1028,6 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
         return allMatchIndicator;
     }
 
-    public void updateIndicatorSection() {
-        // if (null != indicatorsViewer)
-        // indicatorsViewer.setInput(simpleStatIndicator, allMatchIndicator);
-    }
-
     private void resetResultPageData() {
         ColumnSetResultPage theResultPage = null;
         if (this.currentEditor.getResultPage() instanceof ColumnSetResultPage) {
