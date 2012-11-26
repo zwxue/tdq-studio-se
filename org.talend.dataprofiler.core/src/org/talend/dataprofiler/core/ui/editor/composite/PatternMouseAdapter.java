@@ -162,10 +162,6 @@ public class PatternMouseAdapter extends MouseAdapter {
 
            for (PatternRepNode patternNode : allSelectedPatternNodes) {
                 if (oldSelectedNodeNames.contains(patternNode.getLabel()) && !addOldSelected) {
-                    //Added yyin TDQ-6329
-                    // if (addOldSelected) {
-                    // createOneUnit(oldSelectedUnits.get(patternNode.getLabel()));
-                    // }// ~
                     continue;
                 }
                 TypedReturnCode<IndicatorUnit> trc = PatternUtilities.createIndicatorUnit(patternNode.getPattern(), meIndicator,
