@@ -29,6 +29,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Tree;
+import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.swt.widgets.TreeItem;
 import org.talend.core.model.metadata.MetadataColumnRepositoryObject;
 import org.talend.core.model.metadata.builder.connection.MetadataColumn;
@@ -191,16 +192,6 @@ public abstract class AbstractColumnDropTree extends AbstractPagePart {
             createIndicatorItems(indicatorItem, indicatorUnit.getChildren());
         }
         createIndicatorParameters(indicatorItem, indicatorUnit);
-
-        // MOD yyi 2011-06-13:20344: sync tree layout on adding pattern
-        // Display.getCurrent().asyncExec(new Runnable() {
-        //
-        // public void run() {
-        // Rectangle bounds = tree.getBounds();
-        // tree.setBounds(bounds.x, bounds.y, bounds.width, bounds.height - 1);
-        // tree.setBounds(bounds.x, bounds.y, bounds.width, bounds.height + 1);
-        // }
-        // });
     }
 
     protected abstract void setElements(ModelElementIndicator[] modelElementIndicator);
@@ -343,7 +334,7 @@ public abstract class AbstractColumnDropTree extends AbstractPagePart {
      * @param unit
      * @return
      */
-    private String getIndicatorName(IndicatorUnit unit) {
+    protected String getIndicatorName(IndicatorUnit unit) {
         IndicatorEnum indicatorType = unit.getType();
         if (indicatorType == IndicatorEnum.RegexpMatchingIndicatorEnum
                 || indicatorType == IndicatorEnum.SqlPatternMatchingIndicatorEnum) {
@@ -475,6 +466,16 @@ public abstract class AbstractColumnDropTree extends AbstractPagePart {
     public abstract void addElements(final ModelElementIndicator[] elements);
 
     public ModelElementIndicator[] filterInputData(Object[] objs) {
+        // Refactor yyin 20121122 TDQ-6329: if not needed, do not set the new selected objs to
+        // this.modelElementIndicators directly
+        this.modelElementIndicators = translateSelectedNodeIntoIndicator(objs);
+
+        return this.modelElementIndicators;
+    }
+
+    // translate the selected nodes into related indicators, without set the values to this.modelElementIndicators
+    // directly
+    protected ModelElementIndicator[] translateSelectedNodeIntoIndicator(Object[] objs) {
         List<IRepositoryNode> reposList = new ArrayList<IRepositoryNode>();
         for (Object obj : objs) {
             // MOD klliu 2011-02-16 feature 15387
@@ -512,8 +513,8 @@ public abstract class AbstractColumnDropTree extends AbstractPagePart {
         }
         if (reposList.size() == 0) {
             // MOD yyi 2012-02-29 TDQ-3605 Empty column table.
-            this.modelElementIndicators = new ModelElementIndicator[0];
-            return null;
+            // this.modelElementIndicators = new ModelElementIndicator[0];
+            return new ModelElementIndicator[0];
         }
         boolean isMdm = false;
         // MOD qiongli 2011-1-7 feature 16796.
@@ -541,9 +542,8 @@ public abstract class AbstractColumnDropTree extends AbstractPagePart {
                             .createColumnIndicator(repObj);
             modelElementIndicatorList.add(temp);
         }
-        this.modelElementIndicators = modelElementIndicatorList.toArray(new ModelElementIndicator[modelElementIndicatorList
-                .size()]);
-        return this.modelElementIndicators;
+
+        return modelElementIndicatorList.toArray(new ModelElementIndicator[modelElementIndicatorList.size()]);
     }
 
     public ModelElementIndicator[] filterInputData(ModelElementIndicator[] objs) {
@@ -632,4 +632,30 @@ public abstract class AbstractColumnDropTree extends AbstractPagePart {
     public HashSet<ModelElement> getRemovedElements() {
         return this.removedElements;
     }
+
+    // Refactor: move some same code into this parent
+    protected void createTreeDataminingItem(Tree newTree) {
+        TreeColumn column2 = new TreeColumn(newTree, SWT.CENTER);
+        column2.setWidth(120);
+        column2.setText(DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.dataminingType")); //$NON-NLS-1$
+        column2.setToolTipText(DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.columnTip")); //$NON-NLS-1$
+    }
+
+    // create the similar tree column
+    protected void createTreeItem(Tree newTree, int width, String text) {
+        TreeColumn column = new TreeColumn(newTree, SWT.CENTER);
+        column.setWidth(width);
+        column.setText(DefaultMessagesImpl.getString(text));
+    }
+
+    // create the similar label for tree item
+    protected Label createTreeItemLabel(Tree parent, String image, String text) {
+        Label label = new Label(parent, SWT.NONE);
+        label.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_WHITE));
+        label.setImage(ImageLib.getImage(image));
+        label.setToolTipText(DefaultMessagesImpl.getString(text)); //$NON-NLS-1$
+        label.pack();
+        return label;
+    }
+
 }

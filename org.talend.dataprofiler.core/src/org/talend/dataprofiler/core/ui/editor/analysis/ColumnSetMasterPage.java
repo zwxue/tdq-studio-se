@@ -1029,9 +1029,8 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
     }
 
     public void updateIndicatorSection() {
-        if (null != indicatorsViewer) {
-            indicatorsViewer.setInput(simpleStatIndicator, allMatchIndicator);
-        }
+        // if (null != indicatorsViewer)
+        // indicatorsViewer.setInput(simpleStatIndicator, allMatchIndicator);
     }
 
     private void resetResultPageData() {
@@ -1092,5 +1091,15 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
     @Override
     public ExecutionLanguage getUIExecuteEngin() {
         return ExecutionLanguage.get(execCombo.getText());
+    }
+
+    /**
+     * DOC yyin Comment method "removeItem".
+     * 
+     * @param indicatorUnit
+     */
+    public void removeItem(IndicatorUnit indicatorUnit) {
+        this.treeViewer.removeItemByUnit(indicatorUnit);
+
     }
 }

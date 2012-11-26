@@ -13,8 +13,10 @@
 package org.talend.dataprofiler.core.ui.editor.composite;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.jface.viewers.ViewerFilter;
@@ -28,6 +30,7 @@ import org.talend.dataprofiler.core.model.ModelElementIndicator;
 import org.talend.dataprofiler.core.pattern.PatternUtilities;
 import org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisMetadataPage;
 import org.talend.dataprofiler.core.ui.editor.analysis.ColumnMasterDetailsPage;
+import org.talend.dataprofiler.core.ui.editor.analysis.ColumnSetMasterPage;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
 import org.talend.dataprofiler.core.ui.utils.MessageUI;
 import org.talend.dataquality.analysis.Analysis;
@@ -125,38 +128,50 @@ public class PatternMouseAdapter extends MouseAdapter {
                     allSelectedNodeNames.add(patternNode.getLabel());
                 }
             }
+
             Set<String> oldSelectedNodeNames = new HashSet<String>();
+            Map<String, IndicatorUnit> oldSelectedUnits = new HashMap<String, IndicatorUnit>();
             for (IndicatorUnit indicatorUnit : meIndicator.getIndicatorUnits()) {
                 Indicator indicator = indicatorUnit.getIndicator();
                 if (indicator instanceof PatternMatchingIndicator) {
                     if (!allSelectedNodeNames.contains(indicator.getName())) {
                         meIndicator.removeIndicatorUnit(indicatorUnit);
+
                         if (!columnDropTree.isDirty()) {
                             columnDropTree.setDirty(true);
                         }
                     } else {
                         oldSelectedNodeNames.add(indicator.getName());
+                        oldSelectedUnits.put(indicator.getName(), indicatorUnit);
                     }
                 }
             }
+            // Added yyin 20121121 TDQ-6329: after remove all, should also add the old selected patterns
+            // because the columnset does not have pagination, can not refresh automatically
+            boolean addOldSelected = false;
+            if (masterPage instanceof ColumnSetMasterPage) {
+                addOldSelected = true;
+            }
+            if (addOldSelected) {
+                for(TreeItem child:treeItem.getItems()){
+                masterPage.getTreeViewer().removeItemBranch(child);
+                }
+            }// ~
+
             treeItem.removeAll();
 
-            for (PatternRepNode patternNode : allSelectedPatternNodes) {
-                if (oldSelectedNodeNames.contains(patternNode.getLabel())) {
+           for (PatternRepNode patternNode : allSelectedPatternNodes) {
+                if (oldSelectedNodeNames.contains(patternNode.getLabel()) && !addOldSelected) {
+                    //Added yyin TDQ-6329
+                    // if (addOldSelected) {
+                    // createOneUnit(oldSelectedUnits.get(patternNode.getLabel()));
+                    // }// ~
                     continue;
                 }
                 TypedReturnCode<IndicatorUnit> trc = PatternUtilities.createIndicatorUnit(patternNode.getPattern(), meIndicator,
                         analysis);
                 if (trc.isOk()) {
-                    columnDropTree.createOneUnit(treeItem, trc.getObject());
-                    if (!columnDropTree.isDirty()) {
-                        columnDropTree.setDirty(true);
-                    }
-                } else if (trc.getMessage() != null && !trc.getMessage().trim().equals("")) {//$NON-NLS-1$
-                    // Pattern pattern = PatternResourceFileHelper.getInstance().findPattern(file);
-                    // MessageUI.openError(DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.IndicatorSelected") //$NON-NLS-1$
-                    // + pattern.getName());
-                    // MessageUI.openError(trc.getMessage());
+                    createOneUnit(trc.getObject());
                 }
             }
 
@@ -165,6 +180,13 @@ public class PatternMouseAdapter extends MouseAdapter {
                 ColumnMasterDetailsPage page = (ColumnMasterDetailsPage) masterPage;
                 page.refreshTheTree(page.getCurrentModelElementIndicators());
             }
+        }
+    }
+
+    private void createOneUnit(IndicatorUnit newPattern) {
+        columnDropTree.createOneUnit(treeItem, newPattern);
+        if (!columnDropTree.isDirty()) {
+            columnDropTree.setDirty(true);
         }
     }
 

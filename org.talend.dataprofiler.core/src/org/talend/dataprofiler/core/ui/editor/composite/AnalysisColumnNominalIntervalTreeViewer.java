@@ -40,12 +40,10 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Tree;
-import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
@@ -141,16 +139,9 @@ public class AnalysisColumnNominalIntervalTreeViewer extends AbstractColumnDropT
         GridDataFactory.fillDefaults().align(SWT.FILL, SWT.FILL).grab(true, true).applyTo(newTree);
 
         newTree.setHeaderVisible(true);
-        TreeColumn column1 = new TreeColumn(newTree, SWT.CENTER);
-        column1.setWidth(190);
-        column1.setText(DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.analyzedColumns")); //$NON-NLS-1$
-        TreeColumn column2 = new TreeColumn(newTree, SWT.CENTER);
-        column2.setWidth(120);
-        column2.setText(DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.dataminingType")); //$NON-NLS-1$
-        column2.setToolTipText(DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.columnTip")); //$NON-NLS-1$
-        TreeColumn column4 = new TreeColumn(newTree, SWT.CENTER);
-        column4.setWidth(80);
-        column4.setText(DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.operation")); //$NON-NLS-1$
+        createTreeItem(newTree, 190, "AnalysisColumnTreeViewer.analyzedColumns"); //$NON-NLS-1$
+        createTreeDataminingItem(newTree);
+        createTreeItem(newTree, 80, "AnalysisColumnTreeViewer.operation"); //$NON-NLS-1$
 
         parent.layout();
         createTreeMenu(newTree, false);
@@ -566,11 +557,7 @@ public class AnalysisColumnNominalIntervalTreeViewer extends AbstractColumnDropT
             comboEditor.setEditor(combo, treeItem, 1);
 
             TreeEditor delLabelEditor = new TreeEditor(tree);
-            Label delLabel = new Label(tree, SWT.NONE);
-            delLabel.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_WHITE));
-            delLabel.setImage(ImageLib.getImage(ImageLib.DELETE_ACTION));
-            delLabel.setToolTipText(DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.delete")); //$NON-NLS-1$
-            delLabel.pack();
+            Label delLabel = createTreeItemLabel(tree, ImageLib.DELETE_ACTION, "AnalysisColumnTreeViewer.delete"); //$NON-NLS-1$
             delLabel.addMouseListener(new MouseAdapter() {
 
                 @Override

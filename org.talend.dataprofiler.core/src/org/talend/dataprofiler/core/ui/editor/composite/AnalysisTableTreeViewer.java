@@ -45,7 +45,6 @@ import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Tree;
-import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
@@ -202,15 +201,9 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
         GridDataFactory.fillDefaults().align(SWT.FILL, SWT.FILL).grab(true, true).applyTo(newTree);
 
         newTree.setHeaderVisible(true);
-        TreeColumn columnTableName = new TreeColumn(newTree, SWT.CENTER);
-        columnTableName.setWidth(190);
-        columnTableName.setText(DefaultMessagesImpl.getString("AnalysisTableTreeViewer.analyzedTables")); //$NON-NLS-1$
-        TreeColumn columnDQRule = new TreeColumn(newTree, SWT.CENTER);
-        columnDQRule.setWidth(80);
-        columnDQRule.setText(DefaultMessagesImpl.getString("AnalysisTableTreeViewer.dqrule")); //$NON-NLS-1$
-        TreeColumn columnOperation = new TreeColumn(newTree, SWT.CENTER);
-        columnOperation.setWidth(80);
-        columnOperation.setText(DefaultMessagesImpl.getString("AnalysisTableTreeViewer.operation")); //$NON-NLS-1$
+        createTreeItem(newTree, 190, "AnalysisTableTreeViewer.analyzedTables"); //$NON-NLS-1$
+        createTreeItem(newTree, 80, "AnalysisTableTreeViewer.dqrule"); //$NON-NLS-1$
+        createTreeItem(newTree, 80, "AnalysisColumnTreeViewer.operation"); //$NON-NLS-1$
 
         parent.layout();
 
@@ -350,11 +343,8 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
             treeItem.setData(TABLE_INDICATOR_KEY, tableIndicator);
 
             TreeEditor addDQRuleEditor = new TreeEditor(tree);
-            Label addDQRuleLabl = new Label(tree, SWT.NONE);
-            addDQRuleLabl.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_WHITE));
-            addDQRuleLabl.setImage(ImageLib.getImage(ImageLib.ADD_DQ));
-            addDQRuleLabl.setToolTipText(DefaultMessagesImpl.getString("AnalysisTableTreeViewer.addDQRule")); //$NON-NLS-1$
-            addDQRuleLabl.pack();
+
+            Label addDQRuleLabl = createTreeItemLabel(tree, ImageLib.ADD_DQ, "AnalysisColumnTreeViewer.addDQRule"); //$NON-NLS-1$
             addDQRuleLabl.addMouseListener(new MouseAdapter() {
 
                 @Override
@@ -367,11 +357,7 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
             addDQRuleEditor.setEditor(addDQRuleLabl, treeItem, 1);
 
             TreeEditor delLabelEditor = new TreeEditor(tree);
-            Label delLabel = new Label(tree, SWT.NONE);
-            delLabel.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_WHITE));
-            delLabel.setImage(ImageLib.getImage(ImageLib.DELETE_ACTION));
-            delLabel.setToolTipText(DefaultMessagesImpl.getString("AnalysisTableTreeViewer.delete")); //$NON-NLS-1$
-            delLabel.pack();
+            Label delLabel = createTreeItemLabel(tree, ImageLib.DELETE_ACTION, "AnalysisColumnTreeViewer.delete"); //$NON-NLS-1$
             delLabel.addMouseListener(new MouseAdapter() {
 
                 @Override

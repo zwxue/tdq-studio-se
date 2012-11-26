@@ -49,7 +49,6 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Tree;
-import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.CheckedTreeSelectionDialog;
@@ -186,22 +185,12 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
         GridDataFactory.fillDefaults().align(SWT.FILL, SWT.FILL).grab(true, true).applyTo(newTree);
 
         newTree.setHeaderVisible(true);
-        TreeColumn column1 = new TreeColumn(newTree, SWT.CENTER);
-        column1.setWidth(190);
-        column1.setText(DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.analyzedColumns")); //$NON-NLS-1$
-        TreeColumn column2 = new TreeColumn(newTree, SWT.CENTER);
-        column2.setWidth(120);
-        column2.setText(DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.dataminingType")); //$NON-NLS-1$
-        column2.setToolTipText(DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.columnTip")); //$NON-NLS-1$
-        TreeColumn column3 = new TreeColumn(newTree, SWT.CENTER);
-        column3.setWidth(80);
-        column3.setText(DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.pattern")); //$NON-NLS-1$
-        TreeColumn column4 = new TreeColumn(newTree, SWT.CENTER);
-        column4.setWidth(80);
-        column4.setText(DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.udi")); //$NON-NLS-1$
-        TreeColumn column5 = new TreeColumn(newTree, SWT.CENTER);
-        column5.setWidth(80);
-        column5.setText(DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.operation")); //$NON-NLS-1$
+
+        createTreeItem(newTree, 190, "AnalysisColumnTreeViewer.analyzedColumns"); //$NON-NLS-1$
+        createTreeDataminingItem(newTree);
+        createTreeItem(newTree, 80, "AnalysisColumnTreeViewer.pattern"); //$NON-NLS-1$
+        createTreeItem(newTree, 80, "AnalysisColumnTreeViewer.udi"); //$NON-NLS-1$
+        createTreeItem(newTree, 80, "AnalysisColumnTreeViewer.operation"); //$NON-NLS-1$
 
         parent.layout();
 
@@ -238,13 +227,6 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
         Button delButton = new Button(buttonsComp, SWT.NONE);
         delButton.setImage(ImageLib.getImage(ImageLib.DELETE_ACTION));
         delButton.setLayoutData(buttonGridData);
-        Button moveUpButton = new Button(buttonsComp, SWT.NONE);
-        moveUpButton.setText(DefaultMessagesImpl.getString("ColumnsComparisonMasterDetailsPage.moveUp")); //$NON-NLS-1$
-        moveUpButton.setLayoutData(buttonGridData);
-        Button moveDownButton = new Button(buttonsComp, SWT.NONE);
-        moveDownButton.setText(DefaultMessagesImpl.getString("ColumnsComparisonMasterDetailsPage.moveDown")); //$NON-NLS-1$
-        moveDownButton.setLayoutData(buttonGridData);
-
         delButton.addSelectionListener(new SelectionAdapter() {
 
             @Override
@@ -253,6 +235,9 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
             }
         });
 
+        Button moveUpButton = new Button(buttonsComp, SWT.NONE);
+        moveUpButton.setText(DefaultMessagesImpl.getString("ColumnsComparisonMasterDetailsPage.moveUp")); //$NON-NLS-1$
+        moveUpButton.setLayoutData(buttonGridData);
         moveUpButton.addSelectionListener(new SelectionAdapter() {
 
             @Override
@@ -261,6 +246,9 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
             }
         });
 
+        Button moveDownButton = new Button(buttonsComp, SWT.NONE);
+        moveDownButton.setText(DefaultMessagesImpl.getString("ColumnsComparisonMasterDetailsPage.moveDown")); //$NON-NLS-1$
+        moveDownButton.setLayoutData(buttonGridData);
         moveDownButton.addSelectionListener(new SelectionAdapter() {
 
             @Override
@@ -548,11 +536,7 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
             comboEditor.setEditor(combo, treeItem, 1);
 
             TreeEditor addPatternEditor = new TreeEditor(tree);
-            Label addPatternLabl = new Label(tree, SWT.NONE);
-            addPatternLabl.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_WHITE));
-            addPatternLabl.setImage(ImageLib.getImage(ImageLib.ADD_PATTERN));
-            addPatternLabl.setToolTipText(DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.addPattern")); //$NON-NLS-1$
-            addPatternLabl.pack();
+            Label addPatternLabl = createTreeItemLabel(tree, ImageLib.ADD_PATTERN, "AnalysisColumnTreeViewer.addPattern"); //$NON-NLS-1$ 
 
             // MOD mzhao feature:13040, 2010-05-21
             addPatternLabl.addMouseListener(new PatternMouseAdapter(this, masterPage, meIndicator, treeItem));
@@ -564,11 +548,7 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
             // ~
 
             TreeEditor delLabelEditor = new TreeEditor(tree);
-            Label delLabel = new Label(tree, SWT.NONE);
-            delLabel.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_WHITE));
-            delLabel.setImage(ImageLib.getImage(ImageLib.DELETE_ACTION));
-            delLabel.setToolTipText(DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.delete")); //$NON-NLS-1$
-            delLabel.pack();
+            Label delLabel = createTreeItemLabel(tree, ImageLib.DELETE_ACTION, "AnalysisColumnTreeViewer.delete"); //$NON-NLS-1$
             delLabel.addMouseListener(new MouseAdapter() {
 
                 @Override
