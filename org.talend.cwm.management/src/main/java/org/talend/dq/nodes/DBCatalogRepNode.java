@@ -44,7 +44,7 @@ public class DBCatalogRepNode extends DQRepositoryNode {
      * DOC klliu DBCatalogRepNode constructor comment.
      * 
      * @param viewObject
-     * @param parent
+     * @param parent if parent is null will try to create new one to insert of old parent.
      * @param type
      */
     public DBCatalogRepNode(IRepositoryViewObject viewObject, RepositoryNode parent, ENodeType type) {
@@ -54,7 +54,23 @@ public class DBCatalogRepNode extends DQRepositoryNode {
         if (viewObject instanceof MetadataCatalogRepositoryObject) {
             metadataCatalogObject = (MetadataCatalogRepositoryObject) viewObject;
             this.catalog = metadataCatalogObject.getCatalog();
+            if (parent == null) {
+                RepositoryNode createParentNode = createParentNode();
+                this.setParent(createParentNode);
+            }
         }
+    }
+
+    /**
+     * create the node of parent.
+     * 
+     * @param object
+     * @return
+     */
+    private RepositoryNode createParentNode() {
+        RepositoryNode dbParentRepNode = new DBConnectionRepNode(metadataCatalogObject.getViewObject(), null,
+                ENodeType.TDQ_REPOSITORY_ELEMENT);
+        return dbParentRepNode;
     }
 
     /*
@@ -66,6 +82,7 @@ public class DBCatalogRepNode extends DQRepositoryNode {
     public IRepositoryViewObject getObject() {
         return metadataCatalogObject;
     }
+
     /*
      * (non-Jsdoc)
      * 
@@ -120,8 +137,7 @@ public class DBCatalogRepNode extends DQRepositoryNode {
         for (Schema schema : schemas) {
             MetadataSchemaRepositoryObject metadataSchema = new MetadataSchemaRepositoryObject(
                     ((MetadataCatalogRepositoryObject) getObject()).getViewObject(), schema);
-            RepositoryNode schemaNode = new DBSchemaRepNode((IRepositoryViewObject) metadataSchema, this,
-                    ENodeType.TDQ_REPOSITORY_ELEMENT);
+            RepositoryNode schemaNode = new DBSchemaRepNode(metadataSchema, this, ENodeType.TDQ_REPOSITORY_ELEMENT);
             schemaNode.setProperties(EProperties.LABEL, ERepositoryObjectType.METADATA_CON_SCHEMA);
             schemaNode.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.METADATA_CON_SCHEMA);
             metadataSchema.setRepositoryNode(schemaNode);

@@ -89,12 +89,34 @@ public class DBColumnFolderRepNode extends DQRepositoryNode {
      * DOC klliu DBColumnFolderRepNode constructor comment.
      * 
      * @param object
-     * @param parent
+     * @param parent if parent is null will try to create new one to insert of old parent.
      * @param type
      */
     public DBColumnFolderRepNode(IRepositoryViewObject object, RepositoryNode parent, ENodeType type) {
         super(object, parent, type);
         children = new ArrayList<IRepositoryNode>();
+        if (parent == null) {
+            RepositoryNode createParentNode = createParentNode(object);
+            this.setParent(createParentNode);
+        }
+    }
+
+    /**
+     * create the node of parent.
+     * 
+     * @param object
+     * @return
+     */
+    private RepositoryNode createParentNode(IRepositoryViewObject object) {
+        RepositoryNode dbParentRepNode = null;
+
+        if (object instanceof TdTableRepositoryObject) {
+            dbParentRepNode = new DBTableRepNode(object, null, ENodeType.TDQ_REPOSITORY_ELEMENT);
+        } else if (object instanceof TdViewRepositoryObject) {
+            dbParentRepNode = new DBViewRepNode(object, null, ENodeType.TDQ_REPOSITORY_ELEMENT);
+        }
+        object.setRepositoryNode(dbParentRepNode);
+        return dbParentRepNode;
     }
 
     @Override

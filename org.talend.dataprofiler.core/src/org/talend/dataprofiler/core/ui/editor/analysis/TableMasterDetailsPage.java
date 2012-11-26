@@ -345,7 +345,7 @@ public class TableMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
         TableIndicator[] tableIndicators = treeViewer.getTableIndicator();
         List<IRepositoryNode> setList = new ArrayList<IRepositoryNode>();
         for (TableIndicator tableIndicator : tableIndicators) {
-            setList.add(RepositoryNodeHelper.recursiveFind(tableIndicator.getColumnSet()));
+            setList.add(RepositoryNodeHelper.recursiveFind(tableIndicator.getColumnSet(), true));
         }
         TablesSelectionDialog dialog = new TablesSelectionDialog(this, null,
                 DefaultMessagesImpl.getString("TableMasterDetailsPage.tableSelection"), setList, DefaultMessagesImpl //$NON-NLS-1$

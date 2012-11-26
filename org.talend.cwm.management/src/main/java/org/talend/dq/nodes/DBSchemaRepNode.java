@@ -16,9 +16,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.talend.core.model.repository.IRepositoryViewObject;
+import org.talend.core.repository.model.repositoryObject.MetadataCatalogRepositoryObject;
 import org.talend.core.repository.model.repositoryObject.MetadataSchemaRepositoryObject;
+import org.talend.cwm.helper.PackageHelper;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
+import orgomg.cwm.objectmodel.core.Package;
+import orgomg.cwm.resource.relational.Catalog;
 import orgomg.cwm.resource.relational.Schema;
 
 /**
@@ -48,7 +52,7 @@ public class DBSchemaRepNode extends DQRepositoryNode {
      * DOC klliu DBSchemaRepNode constructor comment.
      * 
      * @param object
-     * @param parent
+     * @param parent if parent is null will try to create new one to insert of old parent.
      * @param type
      */
     public DBSchemaRepNode(IRepositoryViewObject object, RepositoryNode parent, ENodeType type) {
@@ -56,7 +60,45 @@ public class DBSchemaRepNode extends DQRepositoryNode {
         if (object instanceof MetadataSchemaRepositoryObject) {
             metadataSchemaObject = (MetadataSchemaRepositoryObject) object;
             this.schema = metadataSchemaObject.getSchema();
+            if (parent == null) {
+                RepositoryNode createParentNode = createParentNode();
+                this.setParent(createParentNode);
+            }
         }
+    }
+
+    /**
+     * create the node of parent.
+     * 
+     * @param object
+     * @return
+     */
+    private RepositoryNode createParentNode() {
+        RepositoryNode dbParentRepNode = null;
+        Package parentPackage = PackageHelper.getParentPackage(schema);
+        if (parentPackage == null) {
+            dbParentRepNode = new DBConnectionRepNode(getParentViewObject(), null, ENodeType.TDQ_REPOSITORY_ELEMENT);
+        } else if (parentPackage instanceof Catalog) {
+            dbParentRepNode = new DBCatalogRepNode(getParentViewObject(), null, ENodeType.TDQ_REPOSITORY_ELEMENT);
+        }
+        return dbParentRepNode;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dq.nodes.DQRepositoryNode#getParentViewObject()
+     */
+    @Override
+    protected IRepositoryViewObject getParentViewObject() {
+        IRepositoryViewObject packageViewObject = null;
+        Package parentPackage = PackageHelper.getParentPackage(schema);
+        if (parentPackage == null) {
+            return metadataSchemaObject.getViewObject();
+        } else if (parentPackage instanceof Catalog) {
+            packageViewObject = new MetadataCatalogRepositoryObject(metadataSchemaObject.getViewObject(), (Catalog) parentPackage);
+        }
+        return packageViewObject;
     }
 
     @Override
@@ -82,7 +124,6 @@ public class DBSchemaRepNode extends DQRepositoryNode {
         repsNodes.add(viewFolderNode);
         return repsNodes;
     }
-
 
     @Override
     public String getLabel() {

@@ -172,10 +172,10 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart {
             RowMatchingIndicator rowMatchingIndicatorA = (RowMatchingIndicator) indicators.get(0);
 
             for (TdColumn tdColumn : rowMatchingIndicatorA.getColumnSetA()) {
-                columnListA.add(RepositoryNodeHelper.recursiveFind(tdColumn));
+                columnListA.add(RepositoryNodeHelper.recursiveFind(tdColumn, true));
             }
             for (TdColumn tdColumn : rowMatchingIndicatorA.getColumnSetB()) {
-                columnListB.add(RepositoryNodeHelper.recursiveFind(tdColumn));
+                columnListB.add(RepositoryNodeHelper.recursiveFind(tdColumn, true));
             }
             // RowMatchingIndicator rowMatchingIndicatorB = (RowMatchingIndicator) indicators.get(1);
 
@@ -194,7 +194,7 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart {
     }
 
     private void createAnalyzedColumnSetsSection(String mainTitle, String description) {
-        columnsComparisonSection = masterPage.createSection(form, parentComp, mainTitle, description); //$NON-NLS-1$ //$NON-NLS-2$
+        columnsComparisonSection = masterPage.createSection(form, parentComp, mainTitle, description);
         Composite sectionClient = toolkit.createComposite(columnsComparisonSection);
         sectionClient.setLayout(new GridLayout());
         // sectionClient.setLayout(new GridLayout(2, true));
@@ -210,6 +210,7 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart {
             checkComputeButton.setToolTipText(DefaultMessagesImpl.getString("ColumnsComparisonMasterDetailsPage.WhenUnchecked")); //$NON-NLS-1$
             checkComputeButton.addSelectionListener(new SelectionAdapter() {
 
+                @Override
                 public void widgetSelected(SelectionEvent e) {
                     masterPage.setDirty(true);
                 }
@@ -356,6 +357,7 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart {
         createTableViewerMenu(columnsElementViewer, columnList, buttons);
         delButton.addSelectionListener(new SelectionAdapter() {
 
+            @Override
             public void widgetSelected(SelectionEvent e) {
                 columnList.removeAll(((IStructuredSelection) columnsElementViewer.getSelection()).toList());
                 columnsElementViewer.setInput(columnList);
@@ -370,6 +372,7 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart {
 
         moveUpButton.addSelectionListener(new SelectionAdapter() {
 
+            @Override
             public void widgetSelected(SelectionEvent e) {
                 moveElement(columnList, columnsElementViewer, false);
 
@@ -378,6 +381,7 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart {
         });
         moveDownButton.addSelectionListener(new SelectionAdapter() {
 
+            @Override
             public void widgetSelected(SelectionEvent e) {
                 moveElement(columnList, columnsElementViewer, true);
 
@@ -386,6 +390,7 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart {
         });
         sortButton.addSelectionListener(new SelectionAdapter() {
 
+            @Override
             public void widgetSelected(SelectionEvent e) {
                 // MOD xqliu 2009-01-17, bug 5940: achieve the function of sort
                 // button
@@ -397,6 +402,7 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart {
         final List<RepositoryNode> columnsOfSectionPart = columnList;
         selectColumnBtn.addHyperlinkListener(new HyperlinkAdapter() {
 
+            @Override
             public void linkActivated(HyperlinkEvent e) {
                 openColumnsSelectionDialog(columnsElementViewer, columnsOfSectionPart);
                 // Object input = columnsElementViewer.getInput();
@@ -484,8 +490,8 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart {
                 }
             }
         } else {
-            for (int i = 0; i < elementArray.length; i++) {
-                RepositoryNode currentElement = (RepositoryNode) elementArray[i];
+            for (Object element : elementArray) {
+                RepositoryNode currentElement = (RepositoryNode) element;
                 int index = columnList.indexOf(currentElement);
                 if ((index - 1) >= 0) {
                     columnList.remove(currentElement);
@@ -573,9 +579,9 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart {
         columnHeader.setWidth(260);
         columnHeader.setAlignment(SWT.CENTER);
         if (columnList.size() > 0) {
-            RepositoryNode column = (RepositoryNode) columnList.get(0);
+            RepositoryNode column = columnList.get(0);
             MetadataColumnRepositoryObject colObject = (MetadataColumnRepositoryObject) column.getObject();
-            String tableName = ColumnHelper.getColumnOwnerAsColumnSet((TdColumn) colObject.getTdColumn()).getName();
+            String tableName = ColumnHelper.getColumnOwnerAsColumnSet(colObject.getTdColumn()).getName();
             columnHeader.setText(DefaultMessagesImpl.getString("ColumnsComparisonMasterDetailsPage.element", tableName)); //$NON-NLS-1$
         }
 
@@ -598,6 +604,7 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart {
 
         menuItem.addSelectionListener(new SelectionAdapter() {
 
+            @Override
             public void widgetSelected(SelectionEvent e) {
                 if (columnList.remove(((IStructuredSelection) columnsElementViewer.getSelection()).getFirstElement())) {
                     columnsElementViewer.setInput(columnList);
@@ -679,6 +686,7 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart {
 
         }
 
+        @Override
         public Image getImage(Object element) {
             if (element instanceof RepositoryNode
                     && ((RepositoryNode) element).getObject() instanceof MetadataColumnRepositoryObject) {
@@ -688,6 +696,7 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart {
             return null;
         }
 
+        @Override
         public String getText(Object element) {
 
             if (element instanceof DBColumnRepNode) {

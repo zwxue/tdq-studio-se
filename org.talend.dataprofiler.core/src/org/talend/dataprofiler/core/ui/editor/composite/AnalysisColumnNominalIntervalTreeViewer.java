@@ -207,12 +207,14 @@ public class AnalysisColumnNominalIntervalTreeViewer extends AbstractColumnDropT
         enabledButtons(false);
         moveUpButton.addSelectionListener(new SelectionAdapter() {
 
+            @Override
             public void widgetSelected(SelectionEvent e) {
                 moveElement(masterPage.getTreeViewer(), false);
             }
         });
         moveDownButton.addSelectionListener(new SelectionAdapter() {
 
+            @Override
             public void widgetSelected(SelectionEvent e) {
                 moveElement(masterPage.getTreeViewer(), true);
             }
@@ -220,12 +222,13 @@ public class AnalysisColumnNominalIntervalTreeViewer extends AbstractColumnDropT
         });
         delButton.addSelectionListener(new SelectionAdapter() {
 
+            @Override
             public void widgetSelected(SelectionEvent e) {
                 Tree currentTree = tree;
                 Object[] selectItem = currentTree.getSelection();
                 List<RepositoryNode> columnList = masterPage.getTreeViewer().getColumnSetMultiValueList();
-                for (int i = 0; i < selectItem.length; i++) {
-                    Object removeElement = ((TreeItem) selectItem[i])
+                for (Object element : selectItem) {
+                    Object removeElement = ((TreeItem) element)
                             .getData(AnalysisColumnNominalIntervalTreeViewer.COLUMN_INDICATOR_KEY);
                     columnList.remove(removeElement);
                 }
@@ -282,12 +285,12 @@ public class AnalysisColumnNominalIntervalTreeViewer extends AbstractColumnDropT
                 }
             }
         } else {
-            for (int i = 0; i < selectItem.length; i++) {
-                index = currentTree.indexOf((TreeItem) selectItem[i]);
+            for (Object element : selectItem) {
+                index = currentTree.indexOf((TreeItem) element);
                 if ((index - 1) < 0) {
                     return;
                 } else {
-                    RepositoryNode moveElement = (RepositoryNode) ((TreeItem) selectItem[i])
+                    RepositoryNode moveElement = (RepositoryNode) ((TreeItem) element)
                             .getData(AnalysisColumnNominalIntervalTreeViewer.COLUMN_INDICATOR_KEY);
                     columnList.remove(moveElement);
                     columnList.add((index - 1), moveElement);
@@ -457,6 +460,7 @@ public class AnalysisColumnNominalIntervalTreeViewer extends AbstractColumnDropT
         newTree.setMenu(menu);
     }
 
+    @Override
     public void setInput(Object[] objs) {
         // MOD xqliu 2011-01-11 bug 15750
         // if (!RepositoryNodeHelper.hasColumnNode(objs) && !RepositoryNodeHelper.hasTdColumn(objs)) {
@@ -549,6 +553,7 @@ public class AnalysisColumnNominalIntervalTreeViewer extends AbstractColumnDropT
              */
             class Selection extends SelectionAdapter {
 
+                @Override
                 public void widgetSelected(SelectionEvent e) {
                     MetadataHelper.setDataminingType(DataminingType.get(combo.getText()), column);
                     setDirty(true);
@@ -785,7 +790,7 @@ public class AnalysisColumnNominalIntervalTreeViewer extends AbstractColumnDropT
     public boolean canDrop(IRepositoryNode modelElement) {
         List<TdColumn> existColumns = new ArrayList<TdColumn>();
         for (RepositoryNode columnFromMultiValueList : this.getColumnSetMultiValueList()) {
-            IRepositoryViewObject repObject = ((RepositoryNode) columnFromMultiValueList).getObject();
+            IRepositoryViewObject repObject = columnFromMultiValueList.getObject();
             existColumns.add((TdColumn) ((MetadataColumnRepositoryObject) repObject).getTdColumn());
         }
 
@@ -825,7 +830,7 @@ public class AnalysisColumnNominalIntervalTreeViewer extends AbstractColumnDropT
     public static List<DBColumnRepNode> columns2Nodes(List<TdColumn> tdColumns) {
         List<DBColumnRepNode> nodes = new ArrayList<DBColumnRepNode>();
         for (TdColumn tdColumn : tdColumns) {
-            RepositoryNode repNode = RepositoryNodeHelper.recursiveFind(tdColumn);
+            RepositoryNode repNode = RepositoryNodeHelper.recursiveFind(tdColumn, true);
             if (repNode != null && repNode instanceof DBColumnRepNode) {
                 nodes.add((DBColumnRepNode) repNode);
             }

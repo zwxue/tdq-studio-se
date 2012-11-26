@@ -75,12 +75,32 @@ public class DBTableFolderRepNode extends DQRepositoryNode {
      * DOC klliu FolderRepNode constructor comment.
      * 
      * @param object
-     * @param parent
+     * @param parent if parent is null will try to create new one to insert of old parent.
      * @param type
      */
     public DBTableFolderRepNode(IRepositoryViewObject object, RepositoryNode parent, ENodeType type) {
         super(object, parent, type);
-        // children = new ArrayList<IRepositoryNode>();
+        if (parent == null) {
+            RepositoryNode createParentNode = createParentNode(object);
+            this.setParent(createParentNode);
+        }
+    }
+
+    /**
+     * create the node of parent.
+     * 
+     * @param object
+     * @return
+     */
+    private RepositoryNode createParentNode(IRepositoryViewObject object) {
+        RepositoryNode dbParentRepNode = null;
+        if (object instanceof MetadataCatalogRepositoryObject) {
+            dbParentRepNode = new DBCatalogRepNode(object, null, ENodeType.TDQ_REPOSITORY_ELEMENT);
+        } else if (object instanceof MetadataSchemaRepositoryObject) {
+            dbParentRepNode = new DBSchemaRepNode(object, null, ENodeType.TDQ_REPOSITORY_ELEMENT);
+        }
+        object.setRepositoryNode(dbParentRepNode);
+        return dbParentRepNode;
     }
 
     @Override
@@ -216,6 +236,7 @@ public class DBTableFolderRepNode extends DQRepositoryNode {
         return tables.size();
     }
 
+    @Override
     public boolean hasChildren() {
         // MOD gdbu 2011-9-1 TDQ-3457
         if (!hasChildrenInFile()) {
