@@ -1,4 +1,4 @@
-//============================================================================
+// ============================================================================
 //
 // Talend Community Edition
 //
@@ -11,20 +11,18 @@
 //
 // This library is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
 // Lesser General Public License for more details.
 //
 // You should have received a copy of the GNU General Public License
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 //
-//============================================================================
+// ============================================================================
 package org.talend.dq.nodes;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,7 +49,6 @@ import org.talend.repository.ProjectManager;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.IRepositoryNode.ENodeType;
 import orgomg.cwmx.analysis.informationreporting.Report;
-
 
 /**
  * DOC qiongli class global comment. Detailled comment <br/>
@@ -132,7 +129,9 @@ public class ReportSubFolderRepNodeTest {
     }
 
     /**
-     * Test method for {@link org.talend.dq.nodes.ReportSubFolderRepNode#setReportSubFolderType(org.talend.dq.nodes.ReportSubFolderRepNode.ReportSubFolderType)}.
+     * Test method for
+     * {@link org.talend.dq.nodes.ReportSubFolderRepNode#setReportSubFolderType(org.talend.dq.nodes.ReportSubFolderRepNode.ReportSubFolderType)}
+     * .
      */
     @Test
     public void testSetReportSubFolderType() {
@@ -148,7 +147,8 @@ public class ReportSubFolderRepNodeTest {
     }
 
     /**
-     * Test method for {@link org.talend.dq.nodes.ReportSubFolderRepNode#setReport(orgomg.cwmx.analysis.informationreporting.Report)}.
+     * Test method for
+     * {@link org.talend.dq.nodes.ReportSubFolderRepNode#setReport(orgomg.cwmx.analysis.informationreporting.Report)}.
      */
     @Test
     public void testSetReport() {
@@ -164,7 +164,9 @@ public class ReportSubFolderRepNodeTest {
     }
 
     /**
-     * Test method for {@link org.talend.dq.nodes.ReportSubFolderRepNode#ReportSubFolderRepNode(org.talend.core.model.repository.IRepositoryViewObject, org.talend.repository.model.RepositoryNode, org.talend.repository.model.IRepositoryNode.ENodeType)}.
+     * Test method for
+     * {@link org.talend.dq.nodes.ReportSubFolderRepNode#ReportSubFolderRepNode(org.talend.core.model.repository.IRepositoryViewObject, org.talend.repository.model.RepositoryNode, org.talend.repository.model.IRepositoryNode.ENodeType)}
+     * .
      */
     @Test
     public void testReportSubFolderRepNode() {
@@ -182,7 +184,7 @@ public class ReportSubFolderRepNodeTest {
         reportSubRepNode.setReportSubFolderType(ReportSubFolderType.GENERATED_DOCS);
         mockForGetChildren();
         String count = reportSubRepNode.getCount();
-        count = count.replace("(", "").replace(")", "");
+        count = count.replace("(", "").replace(")", ""); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
         assertTrue(Integer.parseInt(count) == 3);
 
     }
@@ -200,7 +202,7 @@ public class ReportSubFolderRepNodeTest {
         reportSubRepNode.getReportSubFolderChildren().addAll(ls);
 
         String count = reportSubRepNode.getCount();
-        count = count.replace("(", "").replace(")", "");
+        count = count.replace("(", "").replace(")", ""); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
         assertTrue(Integer.parseInt(count) == 1);
 
     }
@@ -209,18 +211,18 @@ public class ReportSubFolderRepNodeTest {
         IResource[] res = new IResource[3];
         for (int i = 0; i < 3; i++) {
             IFile fe = mock(IFile.class);
-            when(fe.getFullPath()).thenReturn(new Path(""));
+            when(fe.getFullPath()).thenReturn(new Path("")); //$NON-NLS-1$
             res[i] = fe;
         }
         PowerMockito.mockStatic(ReportUtils.class);
         IFile repFile = mock(IFile.class);
-        when(ReportUtils.getReportListFiles(repFile)).thenReturn(res);
+        when(ReportUtils.getReportGeneratedDocs(repFile)).thenReturn(res);
         PowerMockito.mockStatic(ResourceFileMap.class);
         when(ResourceFileMap.findCorrespondingFile(report)).thenReturn(repFile);
 
         PowerMockito.mockStatic(ProjectManager.class);
         ProjectManager projManager = mock(ProjectManager.class);
-        when(projManager.getProjectNode("")).thenReturn(null);
+        when(projManager.getProjectNode("")).thenReturn(null); //$NON-NLS-1$
         PowerMockito.mockStatic(CoreRuntimePlugin.class);
         CoreRuntimePlugin coreRunPlugin = mock(CoreRuntimePlugin.class);
         when(CoreRuntimePlugin.getInstance()).thenReturn(coreRunPlugin).thenReturn(coreRunPlugin).thenReturn(coreRunPlugin);

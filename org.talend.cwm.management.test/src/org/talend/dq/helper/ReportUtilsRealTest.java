@@ -15,7 +15,6 @@ package org.talend.dq.helper;
 import static org.junit.Assert.*;
 
 import java.io.File;
-import java.io.IOException;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -85,12 +84,8 @@ public class ReportUtilsRealTest {
             assertTrue(iFile.exists());
             assertTrue(WorkspaceUtils.ifileToFile(iFile).exists());
 
-            try {
-                File reportListFile = ReportUtils.getReportListFile(iFile);
-                assertTrue(reportListFile.exists());
-            } catch (IOException e) {
-                fail(e.getMessage());
-            }
+            File reportListFile = ReportUtils.getReportListFile(iFile);
+            assertTrue(reportListFile.exists());
         } else {
             fail("project is null!"); //$NON-NLS-1$
         }
