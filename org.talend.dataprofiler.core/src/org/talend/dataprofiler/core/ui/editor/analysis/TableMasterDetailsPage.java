@@ -174,6 +174,7 @@ public class TableMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
         return currentTableIndicators;
     }
 
+    @Override
     public void initialize(FormEditor editor) {
         super.initialize(editor);
         recomputeIndicators();
@@ -260,6 +261,7 @@ public class TableMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
         GridDataFactory.fillDefaults().align(SWT.FILL, SWT.TOP).applyTo(tblBtn);
         tblBtn.addHyperlinkListener(new HyperlinkAdapter() {
 
+            @Override
             public void linkActivated(HyperlinkEvent e) {
                 openTableSelectionDialog();
             }
@@ -276,6 +278,7 @@ public class TableMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
         collapseAllImageLink.setImage(ImageLib.getImage(ImageLib.COLLAPSE_ALL));
         collapseAllImageLink.addHyperlinkListener(new HyperlinkAdapter() {
 
+            @Override
             public void linkActivated(HyperlinkEvent e) {
                 TreeItem[] items = treeViewer.getTree().getItems();
                 expandTreeItems(items, false);
@@ -288,6 +291,7 @@ public class TableMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
         expandAllImageLink.setImage(ImageLib.getImage(ImageLib.EXPAND_ALL));
         expandAllImageLink.addHyperlinkListener(new HyperlinkAdapter() {
 
+            @Override
             public void linkActivated(HyperlinkEvent e) {
                 TreeItem[] items = treeViewer.getTree().getItems();
                 expandTreeItems(items, true);
@@ -340,7 +344,7 @@ public class TableMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
         TableIndicator[] tableIndicators = treeViewer.getTableIndicator();
         List<IRepositoryNode> setList = new ArrayList<IRepositoryNode>();
         for (TableIndicator tableIndicator : tableIndicators) {
-            setList.add(RepositoryNodeHelper.recursiveFind(tableIndicator.getColumnSet()));
+            setList.add(RepositoryNodeHelper.recursiveFind(tableIndicator.getColumnSet(), true));
         }
         TablesSelectionDialog dialog = new TablesSelectionDialog(this, null,
                 DefaultMessagesImpl.getString("TableMasterDetailsPage.tableSelection"), setList, DefaultMessagesImpl //$NON-NLS-1$
@@ -391,6 +395,7 @@ public class TableMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
         collapseAllImageLink.setImage(ImageLib.getImage(ImageLib.COLLAPSE_ALL));
         collapseAllImageLink.addHyperlinkListener(new HyperlinkAdapter() {
 
+            @Override
             public void linkActivated(HyperlinkEvent e) {
                 if (previewChartList != null && !previewChartList.isEmpty()) {
                     for (ExpandableComposite comp : previewChartList) {
@@ -406,6 +411,7 @@ public class TableMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
         expandAllImageLink.setImage(ImageLib.getImage(ImageLib.EXPAND_ALL));
         expandAllImageLink.addHyperlinkListener(new HyperlinkAdapter() {
 
+            @Override
             public void linkActivated(HyperlinkEvent e) {
                 if (previewChartList != null && !previewChartList.isEmpty()) {
                     for (ExpandableComposite comp : previewChartList) {
@@ -434,6 +440,7 @@ public class TableMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
 
         refreshBtn.addHyperlinkListener(new HyperlinkAdapter() {
 
+            @Override
             public void linkActivated(HyperlinkEvent e) {
 
                 for (Control control : chartComposite.getChildren()) {
@@ -711,8 +718,9 @@ public class TableMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
         // }
         if (EditorPreferencePage.isHideGraphics()) {
             if (sForm.getChildren().length > 1) {
-                if (null != sForm.getChildren()[1] && !sForm.getChildren()[1].isDisposed())
+                if (null != sForm.getChildren()[1] && !sForm.getChildren()[1].isDisposed()) {
                     sForm.getChildren()[1].dispose();
+                }
                 topComp.getParent().layout();
                 topComp.layout();
             }
@@ -735,6 +743,7 @@ public class TableMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
                 previewComp.setLayout(new GridLayout());
                 previewComp.addControlListener(new ControlAdapter() {
 
+                    @Override
                     public void controlResized(ControlEvent e) {
                         super.controlResized(e);
                         sForm.redraw();

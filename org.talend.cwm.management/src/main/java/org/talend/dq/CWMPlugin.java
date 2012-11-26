@@ -99,7 +99,7 @@ public class CWMPlugin extends Plugin {
                     // only new Alias when it is not in aliasManager
                     Alias alias = aliasManager.getAlias(dataProvider.getName());
                     if (alias == null) {
-
+                        alias = new Alias(dataProvider.getName());
                         // MOD xqliu 2010-08-06 bug 14593
                         // String clearTextUser = ConnectionUtils.getUsername(connection);
                         // String user = "".equals(clearTextUser) ? "root" : clearTextUser; //$NON-NLS-1$ //$NON-NLS-2$

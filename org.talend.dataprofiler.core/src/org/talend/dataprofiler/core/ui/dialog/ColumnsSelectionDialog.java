@@ -33,7 +33,6 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Shell;
-import org.talend.core.model.properties.ConnectionItem;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.dialog.provider.DBTablesViewLabelProvider;
@@ -44,18 +43,13 @@ import org.talend.dataprofiler.core.ui.filters.TDQEEConnectionFolderFilter;
 import org.talend.dataprofiler.core.ui.pref.AnalysisTuningPreferencePage;
 import org.talend.dataprofiler.core.ui.views.provider.ResourceViewContentProvider;
 import org.talend.dq.helper.RepositoryNodeHelper;
-import org.talend.dq.nodes.DBCatalogRepNode;
 import org.talend.dq.nodes.DBColumnRepNode;
-import org.talend.dq.nodes.DBSchemaRepNode;
-import org.talend.dq.nodes.DBTableFolderRepNode;
 import org.talend.dq.nodes.DBTableRepNode;
-import org.talend.dq.nodes.DBViewFolderRepNode;
 import org.talend.dq.nodes.DBViewRepNode;
 import org.talend.dq.nodes.DFColumnRepNode;
 import org.talend.dq.nodes.DFTableRepNode;
 import org.talend.dq.nodes.MDMSchemaRepNode;
 import org.talend.dq.nodes.MDMXmlElementRepNode;
-import org.talend.dq.writer.impl.ElementWriterFactory;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
 
@@ -95,7 +89,17 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
     protected void unfoldToCheckedElements() {
         Iterator<?> it = modelElementCheckedMap.keySet().iterator();
         while (it.hasNext()) {
-            RepositoryNode reposNode = (RepositoryNode) it.next();
+            IRepositoryNode selectNode = (IRepositoryNode) it.next();
+            IRepositoryNode reposNode = selectNode;
+            List<IRepositoryNode> columnNodeList = (List<IRepositoryNode>) modelElementCheckedMap.get(selectNode);
+            if (isHideNode(columnNodeList)) {
+                reposNode = findLastVisibleNode(columnNodeList.get(0));
+                this.setMessage(DefaultMessagesImpl.getString("ColumnSelectionDialog.CannotFindNodeMessage")); //$NON-NLS-1$
+            }
+            selectNode = getAdaptLocationNode(reposNode, columnNodeList.get(0));
+            if (selectNode != null) {
+                reposNode = selectNode;
+            }
             getTreeViewer().expandToLevel(reposNode, 1);
             StructuredSelection structSel = new StructuredSelection(reposNode);
             getTreeViewer().setSelection(structSel);
@@ -140,6 +144,7 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
         return node;
     }
 
+    @Override
     protected void initProvider() {
         fLabelProvider = new DBTablesViewLabelProvider();
         fContentProvider = new DBTreeViewContentProvider();
@@ -152,6 +157,7 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
      * 
      * @seeorg.talend.dataprofiler.core.ui.dialog.TwoPartCheckSelectionDialog# addCheckedListener()
      */
+    @Override
     protected void addCheckedListener() {
 
         // When user checks a checkbox in the tree, check all its children
@@ -167,27 +173,28 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
                         || selectedNode instanceof DFTableRepNode || selectedNode instanceof MDMSchemaRepNode
                         || selectedNode instanceof MDMXmlElementRepNode) {
                     handleTreeElementsChecked(selectedNode, event.getChecked());
-                }else {
-                	checkChildrenElements(selectedNode,event.getChecked());
+                } else {
+                    checkChildrenElements(selectedNode, event.getChecked());
                 }
                 getTreeViewer().setSubtreeChecked(event.getElement(), event.getChecked());
             }
 
             private void checkChildrenElements(RepositoryNode repNode, Boolean checkedFlag) {
-            	Set<?> keySet = modelElementCheckedMap.keySet();
-            	
-            	RepositoryNode[] repNodeArray=(RepositoryNode[])modelElementCheckedMap.keySet().toArray(new RepositoryNode[keySet.size()]);
-            	for(RepositoryNode  reposNode:repNodeArray){
-            		RepositoryNode parentNode=reposNode.getParent();
-            		while(parentNode!=null){
-            			if(repNode.equals(parentNode)){
-            				handleTreeElementsChecked((RepositoryNode)reposNode, checkedFlag);
-            				break;
-            			}else{
-            				parentNode=parentNode.getParent();
-            			}
-            		}
-            	} 	
+                Set<?> keySet = modelElementCheckedMap.keySet();
+
+                RepositoryNode[] repNodeArray = (RepositoryNode[]) modelElementCheckedMap.keySet().toArray(
+                        new RepositoryNode[keySet.size()]);
+                for (RepositoryNode reposNode : repNodeArray) {
+                    RepositoryNode parentNode = reposNode.getParent();
+                    while (parentNode != null) {
+                        if (repNode.equals(parentNode)) {
+                            handleTreeElementsChecked(reposNode, checkedFlag);
+                            break;
+                        } else {
+                            parentNode = parentNode.getParent();
+                        }
+                    }
+                }
             }
         });
 
@@ -210,13 +217,13 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
         // RepositoryNode tableParent = reposNode.getParent().getParent();
         IRepositoryNode tableParent = getParentNode(reposNode);
         if (checkedFlag) {
-        	
-//        	if(getTreeViewer() instanceof ICheckBoxTreeViewer2){
-//        		((ICheckBoxTreeViewer2)getTreeViewer()).setChecked(tableParent, checkedFlag,false);
-//        	}else{
-        		getTreeViewer().setChecked(tableParent, checkedFlag);
-//        	}
-            
+
+            // if(getTreeViewer() instanceof ICheckBoxTreeViewer2){
+            // ((ICheckBoxTreeViewer2)getTreeViewer()).setChecked(tableParent, checkedFlag,false);
+            // }else{
+            getTreeViewer().setChecked(tableParent, checkedFlag);
+            // }
+
             modelElementCheckedMap.put(tableParent, reposNode);
         } else {
             modelElementCheckedMap.remove(tableParent, reposNode);
@@ -265,16 +272,18 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
      * @seeorg.talend.dataprofiler.core.ui.dialog.TwoPartCheckSelectionDialog#
      * addSelectionButtonListener(org.eclipse.swt .widgets.Button, org.eclipse.swt.widgets.Button)
      */
+    @Override
     protected void addSelectionButtonListener(Button selectButton, Button deselectButton) {
         SelectionListener listener = new SelectionAdapter() {
 
+            @Override
             public void widgetSelected(SelectionEvent e) {
                 Object[] viewerElements = fContentProvider.getElements(getTreeViewer().getInput());
                 if (fContainerMode) {
                     getTreeViewer().setCheckedElements(viewerElements);
                 } else {
-                    for (int i = 0; i < viewerElements.length; i++) {
-                        getTreeViewer().setSubtreeChecked(viewerElements[i], true);
+                    for (Object viewerElement : viewerElements) {
+                        getTreeViewer().setSubtreeChecked(viewerElement, true);
                     }
                 }
                 modelElementCheckedMap.clear();
@@ -288,6 +297,7 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
 
         listener = new SelectionAdapter() {
 
+            @Override
             public void widgetSelected(SelectionEvent e) {
                 getTreeViewer().setCheckedElements(new Object[0]);
                 modelElementCheckedMap.clear();
@@ -331,8 +341,8 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
 
     private void getAllCheckElements() {
         Object[] checkedNodes = this.getTreeViewer().getCheckedElements();
-        for (int i = 0; i < checkedNodes.length; i++) {
-            IRepositoryNode repNode = (IRepositoryNode) checkedNodes[i];
+        for (Object checkedNode : checkedNodes) {
+            IRepositoryNode repNode = (IRepositoryNode) checkedNode;
             if (repNode instanceof DBColumnRepNode || repNode instanceof DFColumnRepNode) {
                 if (!allCheckedElements.contains(repNode)) {
                     allCheckedElements.add(repNode);
@@ -347,10 +357,12 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
                     }
                 }
             } else if (repNode instanceof MDMXmlElementRepNode) {
-            	//MOD by zshen two case need to consider which 
-            	//1 select a node on the treeview then select the parent node of the node check whether the element will be joined twice.
-            	//2 select a node on the tableview and which contain more than one node in the treeview check whether can be select after click on the ok button.
-               getTableviewCheckedElements(allCheckedElements, repNode);
+                // MOD by zshen two case need to consider which
+                // 1 select a node on the treeview then select the parent node of the node check whether the element
+                // will be joined twice.
+                // 2 select a node on the tableview and which contain more than one node in the treeview check whether
+                // can be select after click on the ok button.
+                getTableviewCheckedElements(allCheckedElements, repNode);
             }
         }
 
@@ -383,8 +395,7 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
         return columnFolder.size() > 0;
     }
 
-
-
+    @Override
     protected void okPressed() {
         allCheckedElements.clear();
         getAllCheckElements();
@@ -395,8 +406,8 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
                             DefaultMessagesImpl.getString("ColumnsSelectionDialog.ColumnSelection"), "Exceed maximum column restrictions: " + AnalysisTuningPreferencePage.getCheckedElementsLength());//$NON-NLS-1$
         } else {
             super.okPressed();
-//            ConnectionItem connectionItem = (ConnectionItem) connNode.getObject().getProperty().getItem();
-//            ElementWriterFactory.getInstance().createDataProviderWriter().save(connectionItem);
+            // ConnectionItem connectionItem = (ConnectionItem) connNode.getObject().getProperty().getItem();
+            // ElementWriterFactory.getInstance().createDataProviderWriter().save(connectionItem);
             this.modelElementCheckedMap = null;
         }
     }
@@ -449,6 +460,7 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
             return super.getParent(element);
         }
 
+        @Override
         public boolean hasChildren(Object element) {
             return Boolean.FALSE;
             // ~
@@ -487,6 +499,7 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
             return super.getParent(element);
         }
 
+        @Override
         public boolean hasChildren(Object element) {
             if (element instanceof RepositoryNode) {
                 RepositoryNode repoNode = (RepositoryNode) element;

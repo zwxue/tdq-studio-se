@@ -16,10 +16,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.talend.core.model.repository.IRepositoryViewObject;
+import org.talend.core.repository.model.repositoryObject.MetadataCatalogRepositoryObject;
+import org.talend.core.repository.model.repositoryObject.MetadataSchemaRepositoryObject;
 import org.talend.core.repository.model.repositoryObject.TdViewRepositoryObject;
+import org.talend.cwm.helper.PackageHelper;
 import org.talend.cwm.relational.TdView;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
+import orgomg.cwm.objectmodel.core.Package;
+import orgomg.cwm.resource.relational.Catalog;
+import orgomg.cwm.resource.relational.Schema;
 
 /**
  * DOC klliu Database view repository node displayed on repository view (UI).
@@ -42,7 +48,7 @@ public class DBViewRepNode extends DQRepositoryNode {
      * DOC klliu DBViewRepNode constructor comment.
      * 
      * @param object
-     * @param parent
+     * @param parent if parent is null will try to create new one to insert of old parent.
      * @param type
      */
     public DBViewRepNode(IRepositoryViewObject object, RepositoryNode parent, ENodeType type) {
@@ -50,7 +56,43 @@ public class DBViewRepNode extends DQRepositoryNode {
         if (object instanceof TdViewRepositoryObject) {
             this.tdViewRepositoryObject = (TdViewRepositoryObject) object;
             this.tdView = this.tdViewRepositoryObject.getTdView();
+            if (parent == null) {
+                RepositoryNode createParentNode = createParentNode();
+                this.setParent(createParentNode);
+            }
         }
+    }
+
+    /**
+     * create the node of parent.
+     * 
+     * @param object
+     * @return
+     */
+    private RepositoryNode createParentNode() {
+        DBViewFolderRepNode dbViewFolderRepNode = new DBViewFolderRepNode(getParentViewObject(), null,
+                ENodeType.TDQ_REPOSITORY_ELEMENT);
+        dbViewFolderRepNode.setId(NO_ID);
+        return dbViewFolderRepNode;
+
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dq.nodes.DQRepositoryNode#getParentViewObject()
+     */
+    @Override
+    protected IRepositoryViewObject getParentViewObject() {
+        IRepositoryViewObject packageViewObject = null;
+        Package parentPackage = PackageHelper.getParentPackage(tdView);
+        if (parentPackage instanceof Catalog) {
+            packageViewObject = new MetadataCatalogRepositoryObject(tdViewRepositoryObject.getViewObject(),
+                    (Catalog) parentPackage);
+        } else if (parentPackage instanceof Schema) {
+            packageViewObject = new MetadataSchemaRepositoryObject(tdViewRepositoryObject.getViewObject(), (Schema) parentPackage);
+        }
+        return packageViewObject;
     }
 
     /*
@@ -60,7 +102,7 @@ public class DBViewRepNode extends DQRepositoryNode {
      */
     @Override
     public List<IRepositoryNode> getChildren() {
-        //MOD gdbu 2011-7-1 bug : 22204
+        // MOD gdbu 2011-7-1 bug : 22204
         List<IRepositoryNode> nodes = new ArrayList<IRepositoryNode>();
         DBColumnFolderRepNode columnFolderNode = new DBColumnFolderRepNode(getObject(), this, ENodeType.TDQ_REPOSITORY_ELEMENT);
         nodes.add(columnFolderNode);

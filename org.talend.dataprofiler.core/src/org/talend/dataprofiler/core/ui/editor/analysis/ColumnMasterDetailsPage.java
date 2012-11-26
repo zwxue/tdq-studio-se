@@ -197,8 +197,8 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
                 currentIndicator = ModelElementIndicatorHelper.createDFColumnIndicator(RepositoryNodeHelper
                         .recursiveFind(mdColumn));
             } else if (tdColumn != null) {
-                currentIndicator = ModelElementIndicatorHelper.createModelElementIndicator(RepositoryNodeHelper
-                        .recursiveFind(tdColumn));
+                currentIndicator = ModelElementIndicatorHelper.createModelElementIndicator(RepositoryNodeHelper.recursiveFind(
+                        tdColumn, true));
             } else if (xmlElement != null) {
                 currentIndicator = ModelElementIndicatorHelper.createModelElementIndicator(RepositoryNodeHelper
                         .recursiveFind(xmlElement));

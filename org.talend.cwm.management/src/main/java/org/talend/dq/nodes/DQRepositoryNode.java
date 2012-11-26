@@ -307,4 +307,13 @@ public class DQRepositoryNode extends RepositoryNode {
         DQRepositoryNode.isOnDisplayNextOrPreviousNode = isOnDisplayNextOrPreviousNode;
     }
 
+    /**
+     * get Parent viewObject
+     * 
+     * @return
+     */
+    protected IRepositoryViewObject getParentViewObject() {
+        return null;
+    }
+
 }

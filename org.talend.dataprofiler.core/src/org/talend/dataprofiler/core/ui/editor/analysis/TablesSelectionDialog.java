@@ -42,6 +42,7 @@ import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.dataprofiler.core.ImageLib;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.dialog.TwoPartCheckSelectionDialog;
 import org.talend.dataprofiler.core.ui.filters.DQFolderFliter;
 import org.talend.dataprofiler.core.ui.filters.EMFObjFilter;
@@ -107,21 +108,33 @@ public class TablesSelectionDialog extends TwoPartCheckSelectionDialog {
         Iterator<RepositoryNodeKey> it = packageCheckedMap.keySet().iterator();
         while (it.hasNext()) {
             RepositoryNodeKey csk = it.next();
-            getTreeViewer().expandToLevel(csk.getPackageNode(), 1);
             IRepositoryNode packageNode = csk.getPackageNode();
-            List<IRepositoryNode> filterTableView = filterTableView(packageNode.getChildren());
-            StructuredSelection structSel = new StructuredSelection(packageNode);
-            if (filterTableView.size() > 0) {
-                // MOD qiongli 2012-5-4 TDQ-5137,make DBView could selected correctly.
-                for (Object obj : super.getInitialElementSelections()) {
-                    for (IRepositoryNode node : filterTableView) {
-                        if (obj.equals(node)) {
-                            structSel = new StructuredSelection(node);
-                            break;
-                        }
-                    }
-                }
+            TableCheckedMap tableCheckedMap = packageCheckedMap.get(csk);
+            List<IRepositoryNode> allCheckedTableNodeList = tableCheckedMap.getAllCheckedTableNodeList(packageNode);
+            if (isHideNode(allCheckedTableNodeList)) {
+                packageNode = findLastVisibleNode(allCheckedTableNodeList.get(0));
+                this.setMessage(DefaultMessagesImpl.getString("ColumnSelectionDialog.CannotFindNodeMessage")); //$NON-NLS-1$
             }
+            // // to get TableFolderNode or viewFolderNode
+            IRepositoryNode selectNode = getAdaptLocationNode(packageNode, allCheckedTableNodeList.get(0));
+            if (selectNode != null) {
+                packageNode = selectNode;
+            }
+            getTreeViewer().expandToLevel(packageNode, 1);
+            // IRepositoryNode packageNode = csk.getPackageNode();
+            // List<IRepositoryNode> filterTableView = filterTableView(packageNode.getChildren());
+            StructuredSelection structSel = new StructuredSelection(packageNode);
+            // if (filterTableView.size() > 0) {
+            // // MOD qiongli 2012-5-4 TDQ-5137,make DBView could selected correctly.
+            // for (Object obj : super.getInitialElementSelections()) {
+            // for (IRepositoryNode node : filterTableView) {
+            // if (obj.equals(node)) {
+            // structSel = new StructuredSelection(node);
+            // break;
+            // }
+            // }
+            // }
+            // }
             getTreeViewer().setSelection(structSel);
         }
     }
@@ -168,6 +181,7 @@ public class TablesSelectionDialog extends TwoPartCheckSelectionDialog {
         this.setInitialElementSelections(packageList);
     }
 
+    @Override
     protected void initProvider() {
         fLabelProvider = new DQRepositoryViewLabelProvider();
         fContentProvider = new DBTreeViewContentProvider();
@@ -288,16 +302,18 @@ public class TablesSelectionDialog extends TwoPartCheckSelectionDialog {
         getTableViewer().setAllChecked(checkedFlag);
     }
 
+    @Override
     protected void addSelectionButtonListener(Button selectButton, Button deselectButton) {
         SelectionListener listener = new SelectionAdapter() {
 
+            @Override
             public void widgetSelected(SelectionEvent e) {
                 Object[] viewerElements = fContentProvider.getElements(getTreeViewer().getInput());
                 if (fContainerMode) {
                     getTreeViewer().setCheckedElements(viewerElements);
                 } else {
-                    for (int i = 0; i < viewerElements.length; i++) {
-                        getTreeViewer().setSubtreeChecked(viewerElements[i], true);
+                    for (Object viewerElement : viewerElements) {
+                        getTreeViewer().setSubtreeChecked(viewerElement, true);
                     }
                 }
                 packageCheckedMap.clear();
@@ -311,6 +327,7 @@ public class TablesSelectionDialog extends TwoPartCheckSelectionDialog {
 
         listener = new SelectionAdapter() {
 
+            @Override
             public void widgetSelected(SelectionEvent e) {
                 getTreeViewer().setCheckedElements(new Object[0]);
                 packageCheckedMap.clear();
@@ -433,26 +450,26 @@ public class TablesSelectionDialog extends TwoPartCheckSelectionDialog {
      */
     class TableCheckedMap {
 
-        Map<String, Boolean> tableNameMap = new HashMap<String, Boolean>();
+        Map<IRepositoryNode, Boolean> tableNameMap = new HashMap<IRepositoryNode, Boolean>();
 
         public void putTableChecked(IRepositoryNode set, Boolean isChecked) {
-            tableNameMap.put(set.getLabel(), isChecked);
+            tableNameMap.put(set, isChecked);
         }
 
         public Boolean getTableChecked(IRepositoryNode set) {
-            return tableNameMap.get(set.getLabel());
+            return tableNameMap.get(set);
         }
 
         public void putAllChecked(IRepositoryNode[] sets, Boolean isChecked) {
-            for (int i = 0; i < sets.length; i++) {
-                tableNameMap.put(sets[i].getLabel(), isChecked);
+            for (IRepositoryNode set : sets) {
+                tableNameMap.put(set, isChecked);
             }
         }
 
         public IRepositoryNode[] getCheckedTableNodes(List<IRepositoryNode> setList) {
             List<IRepositoryNode> checkedTables = new ArrayList<IRepositoryNode>();
             for (IRepositoryNode set : setList) {
-                if (tableNameMap.containsKey(set.getLabel()) && tableNameMap.get(set.getLabel())) {
+                if (tableNameMap.containsKey(set) && tableNameMap.get(set)) {
                     checkedTables.add(set);
                 }
             }
@@ -465,7 +482,24 @@ public class TablesSelectionDialog extends TwoPartCheckSelectionDialog {
             List<IRepositoryNode> setList = RepositoryNodeHelper.getNmaedColumnSetNodes(packageNode);
 
             for (IRepositoryNode set : setList) {
-                if (tableNameMap.containsKey(set.getLabel()) && tableNameMap.get(set.getLabel())) {
+                if (tableNameMap.containsKey(set) && tableNameMap.get(set)) {
+                    checkedTables.add(set);
+                }
+            }
+            return checkedTables;
+        }
+
+        /**
+         * 
+         * Get All the checked table node whatever whether has been hide on the DQRepositoryView
+         * 
+         * @param packageNode
+         * @return
+         */
+        public List<IRepositoryNode> getAllCheckedTableNodeList(IRepositoryNode packageNode) {
+            List<IRepositoryNode> checkedTables = new ArrayList<IRepositoryNode>();
+            for (IRepositoryNode set : tableNameMap.keySet()) {
+                if (tableNameMap.get(set)) {
                     checkedTables.add(set);
                 }
             }
@@ -517,6 +551,7 @@ public class TablesSelectionDialog extends TwoPartCheckSelectionDialog {
         return tableList;
     }
 
+    @Override
     protected void okPressed() {
         super.okPressed();
         this.packageCheckedMap = null;
@@ -529,6 +564,7 @@ public class TablesSelectionDialog extends TwoPartCheckSelectionDialog {
      */
     class TableLabelProvider extends LabelProvider {
 
+        @Override
         public Image getImage(Object element) {
             if (element instanceof DBTableRepNode) {
                 return ImageLib.getImage(ImageLib.TABLE);
@@ -539,6 +575,7 @@ public class TablesSelectionDialog extends TwoPartCheckSelectionDialog {
             }
         }
 
+        @Override
         public String getText(Object element) {
             if (element instanceof IRepositoryNode) {
                 return ((IRepositoryNode) element).getLabel();
@@ -557,6 +594,7 @@ public class TablesSelectionDialog extends TwoPartCheckSelectionDialog {
             super();
         }
 
+        @Override
         public Object[] getChildren(Object parentElement) {
             if (!(parentElement instanceof DBTableFolderRepNode || parentElement instanceof DBViewFolderRepNode)) {
                 if (parentElement instanceof IRepositoryNode) {
@@ -567,6 +605,7 @@ public class TablesSelectionDialog extends TwoPartCheckSelectionDialog {
             return null;
         }
 
+        @Override
         public Object getParent(Object element) {
             if (element instanceof IRepositoryNode) {
                 return ((IRepositoryNode) element).getParent();
@@ -574,6 +613,7 @@ public class TablesSelectionDialog extends TwoPartCheckSelectionDialog {
             return null;
         }
 
+        @Override
         public boolean hasChildren(Object element) {
             if (element instanceof IRepositoryNode) {
                 if (!(element instanceof DBTableFolderRepNode || element instanceof DBViewFolderRepNode)) {

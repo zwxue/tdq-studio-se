@@ -15,10 +15,15 @@ package org.talend.dq.nodes;
 import java.util.List;
 
 import org.talend.core.model.metadata.MetadataColumnRepositoryObject;
+import org.talend.core.model.metadata.builder.connection.MetadataTable;
 import org.talend.core.model.repository.IRepositoryViewObject;
+import org.talend.core.repository.model.repositoryObject.TdTableRepositoryObject;
+import org.talend.core.repository.model.repositoryObject.TdViewRepositoryObject;
 import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.relational.TdSqlDataType;
+import org.talend.cwm.relational.TdTable;
+import org.talend.cwm.relational.TdView;
 import org.talend.dq.helper.EObjectHelper;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
@@ -36,7 +41,7 @@ public class DBColumnRepNode extends DQRepositoryNode {
      * DOC klliu DBColumnRepNode constructor comment.
      * 
      * @param object
-     * @param parent
+     * @param parent if parent is null will try to create new one to insert of old parent.
      * @param type
      */
     public DBColumnRepNode(IRepositoryViewObject object, RepositoryNode parent, ENodeType type) {
@@ -44,7 +49,43 @@ public class DBColumnRepNode extends DQRepositoryNode {
         if (object instanceof MetadataColumnRepositoryObject) {
             metadataColumnRepositoryObject = (MetadataColumnRepositoryObject) object;
             tdColumn = (TdColumn) metadataColumnRepositoryObject.getTdColumn();
+            if (parent == null) {
+                RepositoryNode createParentNode = createParentNode();
+                this.setParent(createParentNode);
+            }
         }
+    }
+
+    /**
+     * create node of parent
+     * 
+     * @param metadataColumnRepositoryObject2
+     */
+    private RepositoryNode createParentNode() {
+        DBColumnFolderRepNode dbColumnFolderRepNode = new DBColumnFolderRepNode(getParentViewObject(), null,
+                ENodeType.TDQ_REPOSITORY_ELEMENT);
+        dbColumnFolderRepNode.setId(NO_ID);
+        return dbColumnFolderRepNode;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * org.talend.dq.nodes.DQRepositoryNode#getParentViewObject(org.talend.core.model.repository.IRepositoryViewObject)
+     */
+    @Override
+    protected IRepositoryViewObject getParentViewObject() {
+        IRepositoryViewObject returnViewObject = null;
+        MetadataTable columnOwnerAsMetadataTable = ColumnHelper.getColumnOwnerAsMetadataTable(tdColumn);
+        if (columnOwnerAsMetadataTable instanceof TdTable) {
+            returnViewObject = new TdTableRepositoryObject(metadataColumnRepositoryObject.getViewObject(),
+                    (TdTable) columnOwnerAsMetadataTable);
+        } else if (columnOwnerAsMetadataTable instanceof TdView) {
+            returnViewObject = new TdViewRepositoryObject(metadataColumnRepositoryObject.getViewObject(),
+                    (TdView) columnOwnerAsMetadataTable);
+        }
+        return returnViewObject;
     }
 
     public MetadataColumnRepositoryObject getMetadataColumnRepositoryObject() {

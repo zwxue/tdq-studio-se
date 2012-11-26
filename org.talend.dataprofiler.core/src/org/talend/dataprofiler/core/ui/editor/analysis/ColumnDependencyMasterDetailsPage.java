@@ -123,8 +123,7 @@ public class ColumnDependencyMasterDetailsPage extends AbstractAnalysisMetadataP
         this.metadataSection.setDescription(DefaultMessagesImpl
                 .getString("ColumnsComparisonMasterDetailsPage.setAnalysisProperties")); //$NON-NLS-1$
 
-        anaColumnCompareViewer = new AnalysisColumnCompareTreeViewer((AbstractAnalysisMetadataPage) this, topComp,
-                getColumnLeftSet(), getColumnRightSet(),
+        anaColumnCompareViewer = new AnalysisColumnCompareTreeViewer(this, topComp, getColumnLeftSet(), getColumnRightSet(),
                 DefaultMessagesImpl.getString("FunctionalDependencyMasterDetailsPage.Title"), DefaultMessagesImpl //$NON-NLS-1$
                         .getString("FunctionalDependencyMasterDetailsPage.Description"), false, true); //$NON-NLS-1$
 
@@ -170,6 +169,7 @@ public class ColumnDependencyMasterDetailsPage extends AbstractAnalysisMetadataP
         dataFilterSection.setClient(sectionClient);
     }
 
+    @Override
     public ScrolledForm getScrolledForm() {
         return form;
     }
@@ -330,7 +330,9 @@ public class ColumnDependencyMasterDetailsPage extends AbstractAnalysisMetadataP
         List<RepositoryNode> columns = new ArrayList<RepositoryNode>();
         EList<Indicator> indicators = analysis.getResults().getIndicators();
         for (Indicator indicator : indicators) {
-            columns.add(RepositoryNodeHelper.recursiveFind((TdColumn) indicator.eGet(reference)));
+            TdColumn findColumn = (TdColumn) indicator.eGet(reference);
+            RepositoryNode recursiveFind = RepositoryNodeHelper.recursiveFind(findColumn, true);
+            columns.add(recursiveFind);
         }
         return columns;
     }

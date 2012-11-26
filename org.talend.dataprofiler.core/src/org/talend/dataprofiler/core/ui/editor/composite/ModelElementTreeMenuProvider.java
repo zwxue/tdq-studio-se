@@ -393,7 +393,7 @@ public abstract class ModelElementTreeMenuProvider {
                         .getTdColumn();
 
                 // dqview.showSelectedElements(me);
-                RepositoryNode node = RepositoryNodeHelper.recursiveFind(me);
+                RepositoryNode node = RepositoryNodeHelper.recursiveFind(me, true);
                 dqview.showSelectedElements(node);
             } catch (Exception e) {
                 log.error(e, e);

@@ -12,7 +12,9 @@
 // ============================================================================
 package org.talend.dataprofiler.core.migration.impl;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -67,7 +69,9 @@ public class EncryptAndDecryptPasswordTask extends AbstractWorksapceUpdateTask {
      */
     public static Connection encryptDataProvider(Connection dataProvider) {
         // Delete DataProvider password tag
-        EList<TaggedValue> dpList = dataProvider.getTaggedValue();
+        List<TaggedValue> dpList = new ArrayList<TaggedValue>();
+        EList<TaggedValue> taggedValues = dataProvider.getTaggedValue();
+        dpList.addAll(taggedValues);
         if (dpList != null && dpList.size() > 0) {
             int dpSize = dpList.size();
             for (int j = 0; j < dpSize; ++j) {
@@ -76,8 +80,6 @@ public class EncryptAndDecryptPasswordTask extends AbstractWorksapceUpdateTask {
                     TaggedValue dp = (TaggedValue) dpObj;
                     if (TaggedValueHelper.PASSWORD.equals(dp.getTag())) {
                         dpList.remove(dp);
-                        j--;
-                        dpSize--;
                     }
                 }
             }
