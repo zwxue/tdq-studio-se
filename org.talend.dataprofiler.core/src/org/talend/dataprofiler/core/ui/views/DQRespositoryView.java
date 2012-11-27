@@ -22,7 +22,6 @@ import java.util.Map;
 import net.sourceforge.sqlexplorer.plugin.SQLExplorerPlugin;
 
 import org.apache.log4j.Logger;
-import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -87,8 +86,8 @@ import org.eclipse.ui.progress.UIJob;
 import org.talend.commons.exception.PersistenceException;
 import org.talend.commons.ui.swt.dialogs.ProgressDialog;
 import org.talend.core.model.general.Project;
+import org.talend.core.model.metadata.builder.database.JavaSqlFactory;
 import org.talend.core.model.metadata.builder.database.PluginConstant;
-import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.properties.DatabaseConnectionItem;
 import org.talend.core.model.properties.FolderItem;
 import org.talend.core.model.properties.Item;
@@ -217,9 +216,6 @@ public class DQRespositoryView extends CommonNavigator {
         // MOD qiongli 2010-9-7,bug 14698,add 'try...catch'
         try {
             addPostWindowCloseListener();
-
-            // addResourceChangedListener();
-
             initToolBar();
 
             initWorkspace();
@@ -248,7 +244,10 @@ public class DQRespositoryView extends CommonNavigator {
                     }
                     Item item = viewObject.getProperty().getItem();
                     if (item != null && (item instanceof DatabaseConnectionItem)) {
+                        String username = JavaSqlFactory.getUsername(((DatabaseConnectionItem) item).getConnection());
+                        if (username != null && !"".equals(username.trim())) { //$NON-NLS-1$
                         CWMPlugin.getDefault().addConnetionAliasToSQLPlugin(((DatabaseConnectionItem) item).getConnection());
+                        }
                     }
                 }
                 SQLExplorerPlugin.getDefault().setInitedAllConnToSQLExpl(true);
@@ -287,21 +286,7 @@ public class DQRespositoryView extends CommonNavigator {
             }
 
             public boolean preShutdown(IWorkbench workbench, boolean forced) {
-                // Clean the copied comparison resources under folder
-                // "Metadata/"
-                IFolder folder = ResourceManager.getConnectionFolder();
-                try {
-                    for (IRepositoryViewObject viewObject : ProxyRepositoryFactory.getInstance().getAll(
-                            ERepositoryObjectType.METADATA_CONNECTIONS, true)) {
-                        if (viewObject == null || !(viewObject.getProperty().getItem() instanceof DatabaseConnectionItem)) {
-                            continue;
-                        }
-                        CWMPlugin.getDefault().addConnetionAliasToSQLPlugin(
-                                ((ConnectionItem) viewObject.getProperty().getItem()).getConnection());
-                    }
-                } catch (PersistenceException e) {
-                    log.error(e, e);
-                }
+                // MOD zshen it is duplicate with initWorkspace()
                 return true;
             }
 
