@@ -18,8 +18,15 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IWorkspace;
+import org.eclipse.core.resources.IWorkspaceRunnable;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -417,10 +424,25 @@ public class LocalRepositoryObjectCRUD implements IRepositoryObjectCRUD {
      * @param targetNode
      */
     private void moveAnaConNode(IRepositoryNode sourceNode, IRepositoryNode targetNode) {
-        if (targetNode.getType() == ENodeType.SIMPLE_FOLDER) {
-            moveObject(sourceNode, targetNode, getMakeRelativeTo(sourceNode));
-        } else if (targetNode.getType() == ENodeType.SYSTEM_FOLDER) {
-            moveObject(sourceNode, targetNode, Path.EMPTY);
+        // MOD yyin 20121127, TDQ-6302, when back from DI's expanded Metadata, can not move the connections.
+        final IRepositoryNode finalSourceNode = sourceNode;
+        final IRepositoryNode finalTargetNode = targetNode;
+        IWorkspace workspace = ResourcesPlugin.getWorkspace();
+        IWorkspaceRunnable operation = new IWorkspaceRunnable() {
+
+            public void run(IProgressMonitor monitor) throws CoreException {
+                if (finalTargetNode.getType() == ENodeType.SIMPLE_FOLDER) {
+                    moveObject(finalSourceNode, finalTargetNode, getMakeRelativeTo(finalSourceNode));
+                } else if (finalTargetNode.getType() == ENodeType.SYSTEM_FOLDER) {
+                    moveObject(finalSourceNode, finalTargetNode, Path.EMPTY);
+                }
+            }
+        };
+        ISchedulingRule schedulingRule = workspace.getRoot();
+        try {
+            workspace.run(operation, schedulingRule, IWorkspace.AVOID_UPDATE, new NullProgressMonitor());
+        } catch (CoreException e) {
+            log.error(e, e);
         }
     }
 
