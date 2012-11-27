@@ -15,12 +15,9 @@ package org.talend.dataprofiler.core.ui.views.resources;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.resources.IWorkspaceRoot;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -62,7 +59,6 @@ import org.talend.dq.nodes.PatternRepNode;
 import org.talend.dq.nodes.ReportAnalysisRepNode;
 import org.talend.dq.nodes.ReportFileRepNode;
 import org.talend.dq.nodes.ReportRepNode;
-import org.talend.dq.nodes.ReportSubFolderRepNode;
 import org.talend.dq.nodes.RuleRepNode;
 import org.talend.dq.nodes.SourceFileRepNode;
 import org.talend.dq.nodes.SourceFileSubFolderNode;
@@ -556,43 +552,6 @@ public class LocalRepositoryObjectCRUD implements IRepositoryObjectCRUD {
     }
 
     /**
-     * build the map which contain the report generated doc folder's update information.
-     * 
-     * @param reportRepNodeList
-     * @param sourceFolder
-     * @param targetFolder
-     * @param reportGenDocInfoMap
-     */
-    private void buildReportGenDocInfoMap(List<ReportRepNode> reportRepNodeList, IFolder sourceFolder, IFolder targetFolder,
-            Map<IFolder, IFolder> reportGenDocInfoMap) {
-        for (ReportRepNode repNode : reportRepNodeList) {
-            IFolder outputFolder = ReportUtils.getOutputFolder(RepositoryNodeHelper.getIFile(repNode));
-            IPath relativePath = outputFolder.getFullPath().removeLastSegments(1)
-                    .makeRelativeTo(sourceFolder.getParent().getFullPath());
-            IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
-            IFolder valueFolder = root.getFolder(targetFolder.getFullPath().append(relativePath));
-            reportGenDocInfoMap.put(outputFolder, valueFolder);
-        }
-    }
-
-    /**
-     * get all ReportRepNode under the folder.
-     * 
-     * @param sourceNode a ReportSubFolderRepNode
-     * @param reportRepNodeList the ReportRepNode list
-     */
-    private void getAllReportRepNode(ReportSubFolderRepNode sourceNode, List<ReportRepNode> reportRepNodeList) {
-        List<IRepositoryNode> children = sourceNode.getChildren();
-        for (IRepositoryNode node : children) {
-            if (node instanceof ReportRepNode) {
-                reportRepNodeList.add((ReportRepNode) node);
-            } else if (node instanceof ReportSubFolderRepNode) {
-                getAllReportRepNode((ReportSubFolderRepNode) node, reportRepNodeList);
-            }
-        }
-    }
-
-    /**
      * check whether sourceNode and targetNode is the same Type.
      * 
      * @param sourceNode
@@ -741,7 +700,9 @@ public class LocalRepositoryObjectCRUD implements IRepositoryObjectCRUD {
      */
     public void refreshWorkspaceDQView() {
         IWorkbenchPart activePart = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActivePart();
-        ((DQRespositoryView) activePart).refresh();
+        if (activePart instanceof DQRespositoryView) {
+            ((DQRespositoryView) activePart).refresh();
+        }
         CorePlugin.getDefault().refreshWorkSpace();
     }
 
@@ -753,5 +714,14 @@ public class LocalRepositoryObjectCRUD implements IRepositoryObjectCRUD {
                 .openWarning(
                         PlatformUI.getWorkbench().getDisplay().getActiveShell(),
                         DefaultMessagesImpl.getString("RepositoyNodeDropAdapterAssistant.moveHintTitle"), DefaultMessagesImpl.getString("RepositoyNodeDropAdapterAssistant.moveHintContent")); //$NON-NLS-1$ //$NON-NLS-2$  
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataprofiler.core.ui.views.resources.IRepositoryObjectCRUD#refreshDQViewForRemoteProject()
+     */
+    public void refreshDQViewForRemoteProject() {
+        // in local project, needn't to refresh
     }
 }

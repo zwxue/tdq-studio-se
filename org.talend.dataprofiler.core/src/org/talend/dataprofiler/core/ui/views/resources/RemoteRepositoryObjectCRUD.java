@@ -68,4 +68,9 @@ public class RemoteRepositoryObjectCRUD extends LocalRepositoryObjectCRUD {
         }
         return pathBeforeRefresh;
     }
+
+    @Override
+    public void refreshDQViewForRemoteProject() {
+        refreshWorkspaceDQView();
+    }
 }

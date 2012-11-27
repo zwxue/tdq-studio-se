@@ -35,4 +35,9 @@ public interface IRepositoryObjectCRUD {
      * @return
      */
     public ISelection getUISelection();
+
+    /**
+     * refresh the DQView in Remote Project, do nothing in Local Project.
+     */
+    public void refreshDQViewForRemoteProject();
 }
