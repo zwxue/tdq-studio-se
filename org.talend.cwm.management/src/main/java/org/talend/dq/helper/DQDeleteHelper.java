@@ -56,16 +56,25 @@ public final class DQDeleteHelper {
             return rc;
         }
         if (item instanceof TDQReportItem) {
-            return ReportUtils.deleteRepOutputFolder(itemFile);
+            try {
+                rc = ReportUtils.deleteRepOutputFolder(itemFile);
+            } catch (Exception e) {
+                log.error(e);
+                rc.setMessage(e.getMessage());
+                rc.setOk(false);
+            }
+            return rc;
         }
         return rc;
     }
 
     /**
+     * 
      * if these items in recycle bin are depended by others which is not in recycle bin,show a warning and return.
      * 
      * @param allNodes
-     * @return
+     * @param isCurrentPerspectiveDQ
+     * @return these list will be used to pop a dialog and display the detail nodes which are depended by others.
      */
     public static boolean canEmptyRecyBin(List<IRepositoryNode> allNodes) {
         if (allNodes == null) {

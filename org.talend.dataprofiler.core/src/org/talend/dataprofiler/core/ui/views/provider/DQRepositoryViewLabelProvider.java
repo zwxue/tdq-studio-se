@@ -111,6 +111,7 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider i
         }
     }
 
+    @Override
     public Image getImage(Object element) {
         Image image = super.getImage(element);
 
@@ -147,10 +148,10 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider i
                 if (node instanceof DBConnectionRepNode) {
                     if (!isSupportedConnection(node)) {
                         image = ImageLib.createErrorIcon(ImageLib.TD_DATAPROVIDER).createImage();
-                    }else if(isInvalidJDBCConnection(node)){
-                    	image = ImageLib.createInvalidIcon(ImageLib.TD_DATAPROVIDER).createImage();
-                    }else{
-                    	image = ImageLib.getImage(ImageLib.TD_DATAPROVIDER);
+                    } else if (isInvalidJDBCConnection(node)) {
+                        image = ImageLib.createInvalidIcon(ImageLib.TD_DATAPROVIDER).createImage();
+                    } else {
+                        image = ImageLib.getImage(ImageLib.TD_DATAPROVIDER);
                     }
                 } else if (node instanceof MDMConnectionRepNode) {
                     image = ImageLib.getImage(ImageLib.MDM_CONNECTION);
@@ -233,6 +234,7 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider i
         return image;
     }
 
+    @Override
     public String getText(Object element) {
         if (element != null && element instanceof IRepositoryNode) {
             IRepositoryNode node = (IRepositoryNode) element;
@@ -281,7 +283,7 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider i
             } else if (node instanceof MDMXmlElementRepNode) {
                 MDMXmlElementRepNode mdmColumnRepNode = (MDMXmlElementRepNode) node;
                 String nodeDataType = mdmColumnRepNode.getNodeDataType();
-                if (!PluginConstant.EMPTY_STRING.equals(nodeDataType)) { //$NON-NLS-1$
+                if (!PluginConstant.EMPTY_STRING.equals(nodeDataType)) {
                     return mdmColumnRepNode.getTdXmlElementType().getName() + LEFT + nodeDataType + RIGHT;
                 }
                 return mdmColumnRepNode.getTdXmlElementType().getName();
@@ -327,7 +329,7 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider i
             } else if (node instanceof ReportFileRepNode || node instanceof ReportAnalysisRepNode) {
                 return node.getLabel();
             }
-            String label = node.getObject().getLabel();
+            String label = node.getObject() == null ? "" : node.getObject().getLabel(); //$NON-NLS-1$
             boolean startsWith = label.startsWith(DQStructureManager.PREFIX_TDQ);
             if (startsWith) {
                 label = label.substring(4, label.length());
@@ -339,7 +341,7 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider i
             return node.getObject() == null ? PluginConstant.EMPTY_STRING : label;
         }
         String text = super.getText(element);
-        return PluginConstant.EMPTY_STRING.equals(text) ? DefaultMessagesImpl.getString("DQRepositoryViewLabelProvider.noName") : text; //$NON-NLS-1$ //$NON-NLS-2$
+        return PluginConstant.EMPTY_STRING.equals(text) ? DefaultMessagesImpl.getString("DQRepositoryViewLabelProvider.noName") : text; //$NON-NLS-1$ 
     }
 
     /**
@@ -399,30 +401,31 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider i
 
         return false;
     }
-    
-	/**
-	 * ADD qiongli TDQ-5801 if it is a invalid jdbc connection.
-	 * @param repNode
-	 * @return
-	 */
-	private boolean isInvalidJDBCConnection(IRepositoryNode repNode) {
-		Property property = repNode.getObject().getProperty();
-		if (property != null && property.getItem() != null) {
-			DatabaseConnectionItem connectionItem = (DatabaseConnectionItem) property.getItem();
-			if (connectionItem != null) {
-				DatabaseConnection connection = (DatabaseConnection) connectionItem.getConnection();
-				String databaseType = ((DatabaseConnection) connection).getDatabaseType();
-				if (databaseType.equalsIgnoreCase(SupportDBUrlType.GENERICJDBCDEFAULTURL.getDBKey())
-						&& ((connection.getDriverJarPath() == null) || (connection.getDriverJarPath()).trim().equals(PluginConstant.EMPTY_STRING))) {
-					
-					return true;
-				}
-			}
-		}
 
-		return false;
-	}
-    
+    /**
+     * ADD qiongli TDQ-5801 if it is a invalid jdbc connection.
+     * 
+     * @param repNode
+     * @return
+     */
+    private boolean isInvalidJDBCConnection(IRepositoryNode repNode) {
+        Property property = repNode.getObject().getProperty();
+        if (property != null && property.getItem() != null) {
+            DatabaseConnectionItem connectionItem = (DatabaseConnectionItem) property.getItem();
+            if (connectionItem != null) {
+                DatabaseConnection connection = (DatabaseConnection) connectionItem.getConnection();
+                String databaseType = connection.getDatabaseType();
+                if (databaseType.equalsIgnoreCase(SupportDBUrlType.GENERICJDBCDEFAULTURL.getDBKey())
+                        && ((connection.getDriverJarPath() == null) || (connection.getDriverJarPath()).trim().equals(
+                                PluginConstant.EMPTY_STRING))) {
+
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
 
     /*
      * yyi 2011-04-14 20362:connection modified

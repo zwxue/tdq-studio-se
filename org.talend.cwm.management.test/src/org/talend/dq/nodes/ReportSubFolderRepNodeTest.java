@@ -52,7 +52,6 @@ import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.IRepositoryNode.ENodeType;
 import orgomg.cwmx.analysis.informationreporting.Report;
 
-
 /**
  * DOC qiongli class global comment. Detailled comment <br/>
  * 
@@ -182,7 +181,7 @@ public class ReportSubFolderRepNodeTest {
         reportSubRepNode.setReportSubFolderType(ReportSubFolderType.GENERATED_DOCS);
         mockForGetChildren();
         String count = reportSubRepNode.getCount();
-        count = count.replace("(", "").replace(")", "");
+        count = count.replace("(", "").replace(")", ""); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
         assertTrue(Integer.parseInt(count) == 3);
 
     }
@@ -200,7 +199,7 @@ public class ReportSubFolderRepNodeTest {
         reportSubRepNode.getReportSubFolderChildren().addAll(ls);
 
         String count = reportSubRepNode.getCount();
-        count = count.replace("(", "").replace(")", "");
+        count = count.replace("(", "").replace(")", ""); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
         assertTrue(Integer.parseInt(count) == 1);
 
     }
@@ -209,18 +208,18 @@ public class ReportSubFolderRepNodeTest {
         IResource[] res = new IResource[3];
         for (int i = 0; i < 3; i++) {
             IFile fe = mock(IFile.class);
-            when(fe.getFullPath()).thenReturn(new Path(""));
+            when(fe.getFullPath()).thenReturn(new Path("")); //$NON-NLS-1$
             res[i] = fe;
         }
         PowerMockito.mockStatic(ReportUtils.class);
         IFile repFile = mock(IFile.class);
-        when(ReportUtils.getReportListFiles(repFile)).thenReturn(res);
+        when(ReportUtils.getReportGeneratedDocs(repFile)).thenReturn(res);
         PowerMockito.mockStatic(ResourceFileMap.class);
         when(ResourceFileMap.findCorrespondingFile(report)).thenReturn(repFile);
 
         PowerMockito.mockStatic(ProjectManager.class);
         ProjectManager projManager = mock(ProjectManager.class);
-        when(projManager.getProjectNode("")).thenReturn(null);
+        when(projManager.getProjectNode("")).thenReturn(null); //$NON-NLS-1$
         PowerMockito.mockStatic(CoreRuntimePlugin.class);
         CoreRuntimePlugin coreRunPlugin = mock(CoreRuntimePlugin.class);
         when(CoreRuntimePlugin.getInstance()).thenReturn(coreRunPlugin).thenReturn(coreRunPlugin).thenReturn(coreRunPlugin);

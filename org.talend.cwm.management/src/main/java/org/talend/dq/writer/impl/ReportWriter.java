@@ -91,6 +91,7 @@ public class ReportWriter extends AElementPersistance {
         return FactoriesUtil.REP;
     }
 
+    @Override
     public ReturnCode save(Item item, boolean careDependency) {
         TDQReportItem repItem = (TDQReportItem) item;
         Report report = repItem.getReport();
@@ -101,45 +102,5 @@ public class ReportWriter extends AElementPersistance {
     @Override
     protected void notifyResourceChanges() {
         ProxyRepositoryManager.getInstance().save();
-
     }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.talend.dq.writer.AElementPersistance#updateDependencies(orgomg.cwm.objectmodel.core.ModelElement)
-     */
-    // @Override
-    // protected void updateDependencies(ModelElement element) {
-    // TdReport report = (TdReport) element;
-    // // update supplier dependency
-    // // if report have supplier dependency, add codes here
-    // // update client dependency
-    // EList<Dependency> clientDependency = report.getClientDependency();
-    // try {
-    // for (Dependency cDependency : clientDependency) {
-    // EList<ModelElement> supplier = cDependency.getSupplier();
-    // for (ModelElement me : supplier) {
-    // if (me instanceof Analysis) {
-    // Analysis analysis = (Analysis) me;
-    // TypedReturnCode<Dependency> dependencyReturn = DependenciesHandler.getInstance().setDependencyOn(report,
-    // analysis);
-    // if (dependencyReturn.isOk()) {
-    // RepositoryNode repositoryNode = RepositoryNodeHelper.recursiveFind(analysis);
-    // if (repositoryNode != null) {
-    // TDQAnalysisItem analysisItem = (TDQAnalysisItem) repositoryNode.getObject().getProperty()
-    // .getItem();
-    // analysisItem.setAnalysis(analysis);
-    // }
-    // ProxyRepositoryFactory.getInstance().getRepositoryFactoryFromProvider().getResourceManager()
-    // .saveResource(analysis.eResource());
-    // }
-    // }
-    // }
-    // }
-    // } catch (PersistenceException e) {
-    // log.error(e, e);
-    // }
-    //
-    // }
 }

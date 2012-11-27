@@ -136,7 +136,9 @@ public class ResourceViewContentProvider extends WorkbenchContentProvider {
                             viewObject = new Folder(((IFolder) folder).getName(), ((IFolder) folder).getName());
                         }
                         IRepositoryNode node = new RepositoryNode(viewObject, null, ENodeType.SYSTEM_FOLDER);
-                        viewObject.setRepositoryNode(node);
+                        if (viewObject != null) {
+                            viewObject.setRepositoryNode(node);
+                        }
                         folders.add(node);
                     }
                     // MOD mzhao for metadata folder
@@ -175,7 +177,7 @@ public class ResourceViewContentProvider extends WorkbenchContentProvider {
                     if (0 < children.size()) {
                         try {
 
-                            StructuredSelection structSel = new StructuredSelection((RepositoryNode) node);
+                            StructuredSelection structSel = new StructuredSelection(node);
 
                             if (null != treeViewer) {
                                 ISelection tempSelection = treeViewer.getSelection();

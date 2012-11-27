@@ -19,8 +19,12 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
@@ -28,16 +32,19 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.swt.widgets.Display;
 import org.talend.commons.exception.PersistenceException;
 import org.talend.commons.utils.WorkspaceUtils;
+import org.talend.commons.utils.io.FilesUtils;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
 import org.talend.core.model.metadata.builder.connection.MDMConnection;
 import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.properties.Item;
+import org.talend.core.model.properties.TDQItem;
 import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.repository.constants.FileConstants;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.core.repository.utils.AbstractResourceChangesService;
 import org.talend.core.repository.utils.XmiResourceManager;
+import org.talend.cwm.helper.ModelElementHelper;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.dialog.message.DeleteModelElementConfirmDialog;
 import org.talend.dataprofiler.core.ui.utils.WorkbenchUtils;
@@ -54,6 +61,7 @@ import org.talend.dataquality.rules.DQRule;
 import org.talend.dataquality.rules.WhereRule;
 import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.PropertyHelper;
+import org.talend.dq.helper.ReportUtils;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
 import org.talend.dq.writer.EMFSharedResources;
@@ -140,6 +148,7 @@ public class TDQResourceChangeHandler extends AbstractResourceChangesService {
         return super.handleResourceChange(modelElement);
     }
 
+    @Override
     public Resource create(IProject project, Item item, int classID, IPath path) {
         String fileExtension = FileConstants.ITEM_EXTENSION;
         Resource itemResource = null;
@@ -338,6 +347,27 @@ public class TDQResourceChangeHandler extends AbstractResourceChangesService {
         // ADD gdbu 2011-10-24 TDQ-3546
         EMFSharedResources.getInstance().saveResource(toSave);
     }
-    
 
+    @Override
+    public void moveReportGeneratedDocFolder(TDQItem tdqItem, File tarFolder) {
+        if (tdqItem instanceof TDQReportItem && tarFolder.exists()) {
+            TDQReportItem tdqReportItem = (TDQReportItem) tdqItem;
+            Report report = tdqReportItem.getReport();
+            IFile iFile = ModelElementHelper.getIFile(report);
+            IFolder outputFolder = ReportUtils.getOutputFolder(iFile);
+            File srcFolder = WorkspaceUtils.ifolderToFile(outputFolder);
+            FilesUtils.copyDirectoryWithoutSvnFolder(srcFolder, tarFolder);
+            File newFolder = new File(tarFolder.getAbsolutePath() + Path.SEPARATOR + srcFolder.getName());
+            if (newFolder.exists()) {
+                IFolder ifolder = WorkspaceUtils.fileToIFolder(newFolder);
+                if (ifolder != null) {
+                    try {
+                        ifolder.refreshLocal(IResource.DEPTH_INFINITE, null);
+                    } catch (CoreException e) {
+                        log.info(e);
+                    }
+                }
+            }
+        }
+    }
 }

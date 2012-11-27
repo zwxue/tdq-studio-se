@@ -36,29 +36,22 @@ public class ReportHandle extends EMFResourceHandle {
     ReportHandle(IRepositoryNode node) {
         super(node);
     }
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * org.talend.dataprofiler.core.ui.action.actions.duplicate.DuplicateEMFResourceHandle#update(orgomg.cwm.objectmodel
-     * .core.ModelElement, orgomg.cwm.objectmodel.core.ModelElement)
-     */
+
     @Override
     protected ModelElement update(ModelElement oldObject, ModelElement newObject) {
-        newObject = super.update(oldObject, newObject);
+        TdReport report = (TdReport) super.update(oldObject, newObject);
 
         // MOD klliu 2011-06-21 bug 21812 "duplicate report" have some issue
-        TdReport report = (TdReport) newObject;
         report.getAnalysisMap().clear();
         EList<AnalysisMap> analysisMap = ((TdReport) oldObject).getAnalysisMap();
         for (AnalysisMap analysiM : analysisMap) {
             Analysis analysis = analysiM.getAnalysis();
             DependenciesHandler.getInstance().setDependencyOn(report, analysis);
-            ((TdReport) newObject).addAnalysis(analysis);
-            ((TdReport) newObject).setReportType(analysiM.getReportType(), analysiM.getJrxmlSource(), analysis);
+            report.addAnalysis(analysis);
+            report.setReportType(analysiM.getReportType(), analysiM.getJrxmlSource(), analysis);
         }
         // ~
 
-        return newObject;
+        return report;
     }
 }

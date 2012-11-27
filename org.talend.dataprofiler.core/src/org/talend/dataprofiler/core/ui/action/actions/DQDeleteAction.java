@@ -13,21 +13,34 @@
 package org.talend.dataprofiler.core.ui.action.actions;
 
 import java.io.File;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IWorkspace;
+import org.eclipse.core.resources.IWorkspaceRunnable;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.ActionFactory;
+import org.talend.commons.exception.LoginException;
+import org.talend.commons.exception.PersistenceException;
+import org.talend.commons.ui.runtime.exception.ExceptionHandler;
 import org.talend.core.model.properties.Item;
 import org.talend.core.model.properties.Property;
 import org.talend.core.model.repository.ERepositoryObjectType;
@@ -53,6 +66,8 @@ import org.talend.dq.nodes.ReportFileRepNode;
 import org.talend.dq.nodes.ReportSubFolderRepNode;
 import org.talend.dq.nodes.SourceFileRepNode;
 import org.talend.dq.nodes.SourceFileSubFolderNode;
+import org.talend.repository.ProjectManager;
+import org.talend.repository.RepositoryWorkUnit;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.IRepositoryNode.ENodeType;
 import org.talend.repository.model.RepositoryNode;
@@ -156,7 +171,11 @@ public class DQDeleteAction extends DeleteAction {
             RepositoryNode parent = node.getParent();
             // handle generating report file.bug 18805 .
             if (node instanceof ReportFileRepNode) {
-                deleteReportFile((ReportFileRepNode) node);
+                try {
+                    deleteReportFile((ReportFileRepNode) node);
+                } catch (PersistenceException e) {
+                    log.error(e, e);
+                }
                 continue;
             }
             // onlyDeleteReportFile = false;
@@ -166,7 +185,6 @@ public class DQDeleteAction extends DeleteAction {
                 // closeEditors(selection);
                 excuteSuperRun(null, parent);
                 break;
-
             }
 
             // MOD gdbu 2011-11-30 TDQ-4090 : Determine whether there has some nodes not been shown when filtering.
@@ -391,28 +409,70 @@ public class DQDeleteAction extends DeleteAction {
      * physical delete generating report file.
      * 
      * @param repFileNode
+     * @throws PersistenceException
      */
-    private void deleteReportFile(ReportFileRepNode repFileNode) {
-        try {
-            RepositoryNode parentNode = repFileNode.getParent(); // get the report node
-            IPath location = Path.fromOSString(repFileNode.getResource().getProjectRelativePath().toOSString());
-            IFile latestRepIFile = ResourceManager.getRootProject().getFile(location);
-            if (showConfirmDialog(repFileNode.getLabel())) {
-                if (latestRepIFile.isLinked()) {
-                    File file = new File(latestRepIFile.getRawLocation().toOSString());
-                    if (file.exists()) {
-                        file.delete();
-                    }
-                }
-                latestRepIFile.delete(true, null);
+    private void deleteReportFile(final ReportFileRepNode repFileNode) throws PersistenceException {
+        RepositoryWorkUnit repositoryWorkUnit = new RepositoryWorkUnit(ProjectManager.getInstance().getCurrentProject(),
+                "deleteReportFile") { //$NON-NLS-1$
 
-                // refresh the parent node
-                if (parentNode != null) {
-                    CorePlugin.getDefault().refreshDQView(parentNode);
+            @Override
+            protected void run() throws LoginException, PersistenceException {
+                final IWorkspaceRunnable op = new IWorkspaceRunnable() {
+
+                    public void run(IProgressMonitor monitor) {
+                        try {
+                            IPath location = Path.fromOSString(repFileNode.getResource().getProjectRelativePath().toOSString());
+                            IFile latestRepIFile = ResourceManager.getRootProject().getFile(location);
+                            if (showConfirmDialog(repFileNode.getLabel())) {
+                                if (latestRepIFile.isLinked()) {
+                                    File file = new File(latestRepIFile.getRawLocation().toOSString());
+                                    if (file.exists()) {
+                                        file.delete();
+                                    }
+                                }
+                                latestRepIFile.delete(true, null);
+                                IContainer parent = latestRepIFile.getParent();
+                                if (parent != null) {
+                                    parent.refreshLocal(IResource.DEPTH_INFINITE, monitor);
+                                }
+                            }
+                        } catch (CoreException e) {
+                            log.error(e, e);
+                        }
+                    }
+
+                };
+
+                IRunnableWithProgress iRunnableWithProgress = new IRunnableWithProgress() {
+
+                    public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+                        IWorkspace workspace = ResourcesPlugin.getWorkspace();
+                        try {
+                            ISchedulingRule schedulingRule = workspace.getRoot();
+                            workspace.run(op, schedulingRule, IWorkspace.AVOID_UPDATE, monitor);
+                        } catch (CoreException e) {
+                            throw new InvocationTargetException(e);
+                        }
+                    }
+                };
+
+                try {
+                    PlatformUI.getWorkbench().getProgressService().run(false, false, iRunnableWithProgress);
+                } catch (InterruptedException e) {
+                    ExceptionHandler.process(e);
+                } catch (InvocationTargetException e) {
+                    ExceptionHandler.process(e);
                 }
             }
-        } catch (CoreException e) {
-            log.error(e, e);
+        };
+        repositoryWorkUnit.setAvoidUnloadResources(true);
+        ProxyRepositoryFactory.getInstance().executeRepositoryWorkUnit(repositoryWorkUnit);
+        repositoryWorkUnit.throwPersistenceExceptionIfAny();
+
+        // refresh the parent
+        RepositoryNode parent = repFileNode.getParent();
+        if (parent != null) {
+            CorePlugin.getDefault().refreshDQView(parent);
         }
     }
 

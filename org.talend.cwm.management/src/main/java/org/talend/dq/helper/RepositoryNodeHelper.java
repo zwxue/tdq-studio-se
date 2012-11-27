@@ -40,6 +40,7 @@ import org.eclipse.ui.navigator.CommonNavigator;
 import org.eclipse.ui.navigator.CommonViewer;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.commons.exception.PersistenceException;
+import org.talend.commons.ui.runtime.exception.ExceptionHandler;
 import org.talend.core.model.general.Project;
 import org.talend.core.model.metadata.MetadataColumnRepositoryObject;
 import org.talend.core.model.metadata.builder.connection.Connection;
@@ -3233,5 +3234,75 @@ public final class RepositoryNodeHelper {
         children.remove(removeOne);
         children.add(property.getItem());
         return removeOne;
+    }
+
+    /**
+     * if the IRepositoryNode is locked by current user, return true, else return false.
+     * 
+     * @param node
+     * @return
+     */
+    public static boolean isLockByUser(IRepositoryNode node) {
+        boolean isLock = false;
+        if (node != null) {
+            try {
+                ProxyRepositoryFactory.getInstance().initialize();
+            } catch (PersistenceException e) {
+                ExceptionHandler.process(e);
+            }
+
+            IRepositoryViewObject objectToCopy = node.getObject();
+            // added by hqzhang, update the propery since it has not been updated after initialize()
+            objectToCopy.getProperty();
+            if (ProxyRepositoryFactory.getInstance().getStatus(objectToCopy) == ERepositoryStatus.LOCK_BY_USER) {
+                isLock = true;
+            }
+        }
+        return isLock;
+    }
+
+    /**
+     * if the ModelElement is locked by current user, return true, else return false.
+     * 
+     * @param modelElement
+     * @return
+     */
+    public static boolean isLockByUser(ModelElement modelElement) {
+        return isLockByUser(recursiveFind(modelElement));
+    }
+
+    /**
+     * if the IRepositoryNode is locked by other user, return true, else return false.
+     * 
+     * @param node
+     * @return
+     */
+    public static boolean isLockByOther(IRepositoryNode node) {
+        boolean isLock = true;
+        if (node != null) {
+            try {
+                ProxyRepositoryFactory.getInstance().initialize();
+            } catch (PersistenceException e) {
+                ExceptionHandler.process(e);
+            }
+
+            IRepositoryViewObject objectToCopy = node.getObject();
+            // added by hqzhang, update the propery since it has not been updated after initialize()
+            objectToCopy.getProperty();
+            if (ProxyRepositoryFactory.getInstance().getStatus(objectToCopy) != ERepositoryStatus.LOCK_BY_OTHER) {
+                isLock = false;
+            }
+        }
+        return isLock;
+    }
+
+    /**
+     * if the ModelElement is locked by other user, return true, else return false.
+     * 
+     * @param modelElement
+     * @return
+     */
+    public static boolean isLockByOther(ModelElement modelElement) {
+        return isLockByOther(recursiveFind(modelElement));
     }
 }
