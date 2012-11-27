@@ -56,6 +56,7 @@ import org.talend.core.model.metadata.builder.connection.DelimitedFileConnection
 import org.talend.core.model.metadata.builder.connection.FileConnection;
 import org.talend.core.model.metadata.builder.connection.MDMConnection;
 import org.talend.core.model.metadata.builder.connection.MetadataTable;
+import org.talend.core.model.metadata.builder.database.DriverShim;
 import org.talend.core.model.metadata.builder.database.ExtractMetaDataFromDataBase;
 import org.talend.core.model.metadata.builder.database.ExtractMetaDataUtils;
 import org.talend.core.model.metadata.builder.database.JavaSqlFactory;
@@ -435,7 +436,10 @@ public final class ConnectionUtils {
             ClassNotFoundException {
         // MOD mzhao 2009-06-05,Bug 7571 Get driver from catch first, if not
         // exist then get a new instance.
-        Driver driver = MetadataConnectionUtils.getDriverCache().get(driverClassName);
+        Driver driver = ExtractMetaDataUtils.getDriverCache().get(driverClassName);
+        if (driver == null) {
+        driver = MetadataConnectionUtils.getDriverCache().get(driverClassName);
+        }
         // Driver driver = DRIVER_CACHE.get(driverClassName);
         if (driver != null) {
             return driver;
@@ -466,6 +470,7 @@ public final class ConnectionUtils {
                                 // catch first, if not
                                 // exist then get a new instance.
                                 MetadataConnectionUtils.getDriverCache().put(driverClassName, driver);
+                                ExtractMetaDataUtils.getDriverCache().put(driverClassName, new DriverShim(driver));
                                 return driver; // driver is found
                             }
                         } catch (ClassNotFoundException e) {
@@ -484,6 +489,7 @@ public final class ConnectionUtils {
         // MOD mzhao 2009-06-05,Bug 7571 Get driver from catch first, if not
         // exist then get a new instance.
         MetadataConnectionUtils.getDriverCache().put(driverClassName, driver);
+        ExtractMetaDataUtils.getDriverCache().put(driverClassName, new DriverShim(driver));
         return driver;
     }
 
