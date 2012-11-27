@@ -23,6 +23,7 @@ import org.talend.dataprofiler.core.ui.utils.UDIUtils;
 import org.talend.dataquality.indicators.definition.IndicatorCategory;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.dq.indicators.preview.EIndicatorChartType;
+import org.talend.dq.nodes.indicator.type.IndicatorEnum;
 
 /**
  * DOC zqin class global comment. Detailled comment <br/>
@@ -161,15 +162,20 @@ public final class CompositeIndicator {
 
     private IndicatorUnit[] initChildIndicatorUnits(List<IndicatorUnit> tempList, IndicatorUnit[] indicatorUnits) {
         for (IndicatorUnit unit : indicatorUnits) {
-            // MOD msjian TDQ-6211 2012-11-8:revert TDQ-4261
             // MOD gdbu TDQ-4261 2011-12-21 : Here we should only add the indicator,needn't to add the indicator's
             // classification.
-            tempList.add(unit);
+
             if (unit.getChildren() != null) {
+                // MOD qiongli TDQ-6211 2012-11-27 IQRIndicator and RangeIndicator should add itself.
+                IndicatorEnum type = unit.getType();
+                if (type != null && (type == IndicatorEnum.IQRIndicatorEnum || type == IndicatorEnum.RangeIndicatorEnum)) {
+                    tempList.add(unit);
+                }
                 initChildIndicatorUnits(tempList, unit.getChildren());
+            } else {
+                tempList.add(unit);
             }
             // ~TDQ-4261
-            // TDQ-6211~
         }
 
         return tempList.toArray(new IndicatorUnit[tempList.size()]);

@@ -31,7 +31,9 @@ import org.jfree.data.xy.XYDataset;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
 import org.talend.dataprofiler.core.ui.editor.preview.model.ICustomerDataset;
 import org.talend.dataprofiler.core.ui.editor.preview.model.entity.TableStructureEntity;
+import org.talend.dq.indicators.IndicatorCommonUtil;
 import org.talend.dq.indicators.preview.table.ChartDataEntity;
+import org.talend.dq.nodes.indicator.type.IndicatorEnum;
 
 /**
  * DOC Zqin class global comment. Detailled comment
@@ -69,6 +71,11 @@ public abstract class AbstractChartTypeStates implements IChartTypeStates {
 
         for (IndicatorUnit unit : units) {
 
+            IndicatorEnum type = unit.getType();
+            if (type != null && !unit.isExcuted()
+                    && (type == IndicatorEnum.IQRIndicatorEnum || type == IndicatorEnum.RangeIndicatorEnum)) {
+                IndicatorCommonUtil.getIndicatorValue(unit.getIndicator());
+            }
             if (unit.isExcuted()) {
                 validUnitList.add(unit);
             }

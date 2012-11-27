@@ -430,7 +430,11 @@ public abstract class ModelElementIndicatorImpl implements ModelElementIndicator
 
     public void removeTempIndicatorEnum(IndicatorEnum indicatorEnum) {
         tempIndicatorEnums.remove(indicatorEnum);
-        tempIndicatorEnums.remove(indicatorEnum.getParent());
+        IndicatorEnum parentEnum = indicatorEnum.getParent();
+        if (parentEnum != null
+                && (parentEnum == IndicatorEnum.RangeIndicatorEnum || parentEnum == IndicatorEnum.IQRIndicatorEnum)) {
+            tempIndicatorEnums.remove(parentEnum);
+        }
     }
 
     public void copyOldIndicatorEnum() {
