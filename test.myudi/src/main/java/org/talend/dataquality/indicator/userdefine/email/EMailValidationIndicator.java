@@ -52,11 +52,11 @@ public class EMailValidationIndicator extends UserDefIndicatorImpl {
 
     private static Logger log = Logger.getLogger(EMailValidationIndicator.class);
 
-    private static final String EMAIL_PARAM = "EMAIL";
+    private static final String EMAIL_PARAM = "EMAIL"; //$NON-NLS-1$
 
-    private static final String INVALID_PARAM = "INVALID DATA FILE";
+    private static final String INVALID_PARAM = "INVALID DATA FILE"; //$NON-NLS-1$
 
-    private static final String BUFFER_SIZE_PARAM = "BUFFER SIZE";
+    private static final String BUFFER_SIZE_PARAM = "BUFFER SIZE"; //$NON-NLS-1$
 
     private DirContext ictx = null;
 
@@ -79,7 +79,7 @@ public class EMailValidationIndicator extends UserDefIndicatorImpl {
 
     private int buffSize = 200; // default value set to 200
 
-    private static final String HEADER = "Email Indicator - ";
+    private static final String HEADER = "Email Indicator - "; //$NON-NLS-1$
 
     private static final Pattern EMAIL_PATTERN = java.util.regex.Pattern
             .compile("^[a-zA-Z0-9._%-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,4}$"); //$NON-NLS-1$
@@ -168,12 +168,12 @@ public class EMailValidationIndicator extends UserDefIndicatorImpl {
         // Check prerequisite
         IndicatorParameters param = this.getParameters();
         if (param == null) {
-            log.error("No parameter set in the user defined indicator " + this.getName());
+            log.error("No parameter set in the user defined indicator " + this.getName()); //$NON-NLS-1$
             return false;
         }
         Domain indicatorValidDomain = param.getIndicatorValidDomain();
         if (indicatorValidDomain == null) {
-            log.error("No parameter set in the user defined indicator " + this.getName());
+            log.error("No parameter set in the user defined indicator " + this.getName()); //$NON-NLS-1$
             return false;
         }
 
@@ -189,24 +189,24 @@ public class EMailValidationIndicator extends UserDefIndicatorImpl {
                     this.tempInvalidData = new StringBuffer();
                     this.os = new FileOutputStream(new File(p.getValue()));
                 } catch (FileNotFoundException e) {
-                    log.error("Invalid file path in the user defined indicator: " + this.getName(), e);
+                    log.error("Invalid file path in the user defined indicator: " + this.getName(), e); //$NON-NLS-1$
                     return false;
                 }
             } else if (BUFFER_SIZE_PARAM.equalsIgnoreCase(p.getKey())) {
                 try {
                     this.buffSize = Integer.valueOf(p.getValue());
                 } catch (Exception e) {
-                    log.error("Invalid buffer size: " + p.getValue(), e);
+                    log.error("Invalid buffer size: " + p.getValue(), e); //$NON-NLS-1$
                     return false;
                 }
             } else {
                 // log warn but keep running (don't return false)
-                log.warn("Unknown parameter given to UDI: " + this.getName() + ": " + p.getKey() + " = " + p.getValue());
+                log.warn("Unknown parameter given to UDI: " + this.getName() + ": " + p.getKey() + " = " + p.getValue()); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
             }
         }
 
         if (!this.isAddressValid(emailAddress)) {
-            log.error("Invalid sender email set in parameters of the user defined indicator \"" + this.getName() + "\": "
+            log.error("Invalid sender email set in parameters of the user defined indicator \"" + this.getName() + "\": " //$NON-NLS-1$ //$NON-NLS-2$
                     + emailAddress);
             return false;
         }
@@ -266,7 +266,7 @@ public class EMailValidationIndicator extends UserDefIndicatorImpl {
             attr = attrs.get("A"); //$NON-NLS-1$
             if (attr == null) {
                 if (log.isInfoEnabled()) {
-                    log.info(HEADER + "No match for hostname '" + hostName + "'");
+                    log.info(HEADER + "No match for hostname '" + hostName + "'"); //$NON-NLS-1$ //$NON-NLS-2$
                 }
                 return res;
             }
@@ -301,6 +301,9 @@ public class EMailValidationIndicator extends UserDefIndicatorImpl {
     }
 
     boolean isAddressValid(String address) {
+        if (address == null) {
+            return false;
+        }
         // Find the separator for the domain name
         int pos = address.indexOf('@');
 
@@ -313,7 +316,7 @@ public class EMailValidationIndicator extends UserDefIndicatorImpl {
         final Matcher matcher = EMAIL_PATTERN.matcher(address);
         if (!matcher.find()) {
             if (log.isInfoEnabled()) {
-                log.info(HEADER + "Invalid email syntax for " + address);
+                log.info(HEADER + "Invalid email syntax for " + address); //$NON-NLS-1$
             }
             return false;
         }
@@ -348,7 +351,7 @@ public class EMailValidationIndicator extends UserDefIndicatorImpl {
                 res = getResponse(rdr);
                 if (res != 220) { // SMTP Service ready.
                     if (log.isInfoEnabled()) {
-                        log.info(HEADER + "Invalid header:" + mxList.get(mx));
+                        log.info(HEADER + "Invalid header:" + mxList.get(mx)); //$NON-NLS-1$
                     }
                     return false;
                 }
@@ -357,7 +360,7 @@ public class EMailValidationIndicator extends UserDefIndicatorImpl {
                 res = getResponse(rdr);
                 if (res != 250) {
                     if (log.isInfoEnabled()) {
-                        log.info(HEADER + "Not ESMTP: " + this.emailAddress.substring(emailAddress.indexOf("@") + 1));
+                        log.info(HEADER + "Not ESMTP: " + this.emailAddress.substring(emailAddress.indexOf("@") + 1)); //$NON-NLS-1$ //$NON-NLS-2$
                     }
                     return false;
                 }
@@ -367,7 +370,7 @@ public class EMailValidationIndicator extends UserDefIndicatorImpl {
                 res = getResponse(rdr);
                 if (res != 250) {
                     if (log.isInfoEnabled()) {
-                        log.info(HEADER + "Sender rejected: " + this.emailAddress);
+                        log.info(HEADER + "Sender rejected: " + this.emailAddress); //$NON-NLS-1$
                     }
                     return false;
                 }
@@ -382,7 +385,7 @@ public class EMailValidationIndicator extends UserDefIndicatorImpl {
                 getResponse(rdr);
                 if (res != 250) {
                     if (log.isInfoEnabled()) {
-                        log.info(HEADER + "Address is not valid: " + address);
+                        log.info(HEADER + "Address is not valid: " + address); //$NON-NLS-1$
                     }
                     return false;
                 }
@@ -394,7 +397,7 @@ public class EMailValidationIndicator extends UserDefIndicatorImpl {
             } catch (Throwable e) {
                 // Do nothing but try next host
                 if (log.isDebugEnabled()) {
-                    log.debug("Connection to " + mxList.get(mx) + " failed.", e);
+                    log.debug("Connection to " + mxList.get(mx) + " failed.", e); //$NON-NLS-1$ //$NON-NLS-2$
                 }
                 continue;
             }
