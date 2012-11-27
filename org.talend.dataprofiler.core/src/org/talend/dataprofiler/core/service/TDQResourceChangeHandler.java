@@ -40,7 +40,6 @@ import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.properties.Item;
 import org.talend.core.model.properties.TDQItem;
 import org.talend.core.model.repository.ERepositoryObjectType;
-import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.core.repository.constants.FileConstants;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.core.repository.utils.AbstractResourceChangesService;
@@ -62,7 +61,6 @@ import org.talend.dataquality.rules.DQRule;
 import org.talend.dataquality.rules.WhereRule;
 import org.talend.dq.helper.DQDeleteHelper;
 import org.talend.dq.helper.EObjectHelper;
-import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.helper.ReportUtils;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
@@ -352,57 +350,44 @@ public class TDQResourceChangeHandler extends AbstractResourceChangesService {
     }
 
     @Override
-    public boolean hasDependcesInDQ(IRepositoryNode currentNode) {
+    /**
+     * get has client dependence nodes.
+     */
+    public List<IRepositoryNode> getDependentNodes(IRepositoryNode currentNode) {
+        List<IRepositoryNode> dependentNodes = new ArrayList<IRepositoryNode>();
         if (currentNode == null) {
-            return false;
+            return dependentNodes;
         }
         if (currentNode.getType() == ENodeType.SIMPLE_FOLDER) {
             for (IRepositoryNode curNode : currentNode.getChildren()) {
-                if (hasDependcesInDQ(curNode)) {
-                    return true;
+                List<IRepositoryNode> subDependentNodes = getDependentNodes(curNode);
+                if (!subDependentNodes.isEmpty()) {
+                    dependentNodes.addAll(subDependentNodes);
                 }
             }
         } else {
-            IRepositoryViewObject object = currentNode.getObject();
-            if (object != null && object.getProperty() != null) {
-                Item item = object.getProperty().getItem();
-                if (item == null || !(item instanceof ConnectionItem)) {
-                    return false;
-                }
-                Connection connection = ((ConnectionItem) item).getConnection();
-                if (connection != null) {
-                    List<ModelElement> clientDependencys = EObjectHelper.getDependencyClients(connection);
-                    if (!clientDependencys.isEmpty()) {
-                        final ModelElement[] dependencyElements = clientDependencys.toArray(new ModelElement[clientDependencys
-                                .size()]);
-                        DeleteModelElementConfirmDialog.showDialog(null,
-                                PropertyHelper.getItemFile(PropertyHelper.getProperty(connection)), dependencyElements,
-                                DefaultMessagesImpl.getString("TDQResourceChangeHandler.OperationIsRejected"), false); //$NON-NLS-1$
-                        return true;
-                    }
+            ModelElement connection = RepositoryNodeHelper.getModelElementFromRepositoryNode(currentNode);
+            if (connection != null) {
+                List<ModelElement> clientDependencys = EObjectHelper.getDependencyClients(connection);
+                if (!clientDependencys.isEmpty()) {
+                    dependentNodes.add(currentNode);
                 }
             }
         }
-        return false;
+        return dependentNodes;
     }
 
     /**
      * judge if has connection in recycle bin which depended by DQ analysis.
      */
     @Override
-    public boolean canEmptyRecycleBin(List<IRepositoryNode> firstLevelRecyNodes) {
+    public List<IRepositoryNode> getDependentConnNodesInRecycleBin(List<IRepositoryNode> firstLevelRecyNodes) {
         List<IRepositoryNode> allConnChildrenNodes = new ArrayList<IRepositoryNode>();
         for (IRepositoryNode node : firstLevelRecyNodes) {
             getConnChildrenInRecybin(node, allConnChildrenNodes);
         }
         List<IRepositoryNode> canNotDeletedNodes = DQDeleteHelper.getCanNotDeletedNodes(allConnChildrenNodes, false);
-        if (!canNotDeletedNodes.isEmpty()) {
-            DeleteModelElementConfirmDialog.showDialog(null, canNotDeletedNodes,
-                    DefaultMessagesImpl.getString("DQEmptyRecycleBinAction.allDependencies"));//$NON-NLS-1$
-
-            return false;
-        }
-        return true;
+        return canNotDeletedNodes;
     }
 
     /**
@@ -427,4 +412,12 @@ public class TDQResourceChangeHandler extends AbstractResourceChangesService {
         return childNodes;
     }
 
+    @Override
+    public void openDependcesDialog(List<IRepositoryNode> nodes) {
+        if (nodes == null || nodes.isEmpty()) {
+            return;
+        }
+        DeleteModelElementConfirmDialog.showDialog(null, nodes,
+                DefaultMessagesImpl.getString("DQEmptyRecycleBinAction.allDependencies")); //$NON-NLS-1$
+    }
 }
