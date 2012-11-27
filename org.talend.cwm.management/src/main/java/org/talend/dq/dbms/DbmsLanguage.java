@@ -306,26 +306,32 @@ public class DbmsLanguage {
     public String toQualifiedName(String catalog, String schema, String table) {
         StringBuffer qualName = new StringBuffer();
         if (catalog != null && catalog.trim().length() > 0) {
-            qualName.append(this.quote(catalog));
+            qualName.append(this.handleContextModeOrAddQuotes(catalog));
             qualName.append(getDelimiter());
         }
         if (schema != null && schema.trim().length() > 0) {
-            qualName.append(this.quote(schema));
-            // MOD gdbu 2011-4-11 bug : 18975
-            // FIXME this method should be overriden in InformixDbmsLanguage instead.
-            if (dbmsName.contains(DbmsLanguage.INFOMIX)) {
-                qualName.append(DbmsLanguage.DOT);
-            } else {
-                qualName.append(getDelimiter());
-            }
-            // ~18975
+            qualName.append(this.handleContextModeOrAddQuotes(schema));
+            qualName.append(getDelimiter());
         }
 
-        qualName.append(this.quote(table));
+        qualName.append(this.handleContextModeOrAddQuotes(table));
         if (log.isDebugEnabled()) {
             log.debug(String.format("%s.%s.%s -> %s", catalog, schema, table, qualName)); //$NON-NLS-1$
         }
         return qualName.toString();
+    }
+
+    /**
+     * wrap context mode parameters by tags. otherwise, add quotes database identifier quotes.
+     * 
+     * @param param
+     * @return
+     */
+    private String handleContextModeOrAddQuotes(String param) {
+        if (param.startsWith("context.")) {
+            return "<%=" + param + "%>";
+        }
+        return this.quote(param);
     }
 
     public String getDelimiter() {
