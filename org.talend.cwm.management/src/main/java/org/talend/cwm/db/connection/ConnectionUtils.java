@@ -59,6 +59,7 @@ import org.talend.core.model.metadata.builder.connection.MetadataTable;
 import org.talend.core.model.metadata.builder.database.DriverShim;
 import org.talend.core.model.metadata.builder.database.ExtractMetaDataFromDataBase;
 import org.talend.core.model.metadata.builder.database.ExtractMetaDataUtils;
+import org.talend.core.model.metadata.builder.database.HotClassLoader;
 import org.talend.core.model.metadata.builder.database.JavaSqlFactory;
 import org.talend.core.model.metadata.builder.database.PluginConstant;
 import org.talend.core.model.metadata.builder.database.XMLSchemaBuilder;
@@ -160,7 +161,7 @@ public final class ConnectionUtils {
      */
     public static java.sql.Connection createConnection(String url, String driverClassName, Properties props) throws SQLException,
             InstantiationException, IllegalAccessException, ClassNotFoundException {
-        Driver driver = getClassDriver(driverClassName);
+        Driver driver = getClassDriver(driverClassName, url);
         if (driver != null) {
             DriverManager.registerDriver(driver);
             if (log.isDebugEnabled()) {
@@ -305,6 +306,9 @@ public final class ConnectionUtils {
             }
         }
         // returnCode = MetadataConnectionUtils.checkConnection((DatabaseConnection)analysisDataProvider);
+        // IMetadataConnection metadataConnection = null;
+        JavaSqlFactory.doHivePreSetup(analysisDataProvider);
+
         returnCode = ConnectionUtils.checkConnection(url, JavaSqlFactory.getDriverClass(analysisDataProvider), props);
         return returnCode;
     }
@@ -427,13 +431,14 @@ public final class ConnectionUtils {
      * DOC qzhang Comment method "getClassDriver".
      * 
      * @param driverClassName
+     * @param url
      * @return
      * @throws IllegalAccessException
      * @throws InstantiationException
      * @throws ClassNotFoundException
      */
-    public static Driver getClassDriver(String driverClassName) throws InstantiationException, IllegalAccessException,
-            ClassNotFoundException {
+    private static Driver getClassDriver(String driverClassName, String url) throws InstantiationException,
+            IllegalAccessException, ClassNotFoundException {
         // MOD mzhao 2009-06-05,Bug 7571 Get driver from catch first, if not
         // exist then get a new instance.
         Driver driver = ExtractMetaDataUtils.getDriverCache().get(driverClassName);
@@ -461,9 +466,18 @@ public final class ConnectionUtils {
                     }
                     if (!urls.isEmpty()) {
                         try {
-                            MyURLClassLoader cl;
-                            cl = new MyURLClassLoader(urls.toArray(new URL[0]));
-                            Class<?> clazz = cl.findClass(driverClassName);
+                            Class<?> clazz = null;
+
+                            // if(isHiveEmbedded()){
+                            // handle hive embedded.
+                            if (url.equals("jdbc:hive://")) { //$NON-NLS-1$
+                                HotClassLoader hotSysLoader = (HotClassLoader) Thread.currentThread().getContextClassLoader();
+                                clazz = hotSysLoader.loadClass(driverClassName);
+                            } else {
+                                MyURLClassLoader cl;
+                                cl = new MyURLClassLoader(urls.toArray(new URL[0]));
+                                clazz = cl.findClass(driverClassName);
+                            }
                             if (clazz != null) {
                                 driver = (Driver) clazz.newInstance();
                                 // MOD mzhao 2009-06-05,Bug 7571 Get driver from

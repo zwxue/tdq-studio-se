@@ -1443,6 +1443,9 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
             if ("SQLite".equals(connection.getMetaData().getDatabaseProductName())) { //$NON-NLS-1$ 
                 return false;
             }
+            if ("Hive".equals(connection.getMetaData().getDatabaseProductName())) { //$NON-NLS-1$ 
+                return false;
+            }
         } catch (SQLException e) {
             log.warn(e, e);
         } finally {

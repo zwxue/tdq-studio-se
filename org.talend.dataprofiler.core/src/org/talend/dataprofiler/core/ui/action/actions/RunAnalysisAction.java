@@ -34,7 +34,10 @@ import org.eclipse.ui.cheatsheets.ICheatSheetAction;
 import org.eclipse.ui.cheatsheets.ICheatSheetManager;
 import org.eclipse.ui.forms.editor.IFormPage;
 import org.eclipse.ui.part.FileEditorInput;
+import org.talend.core.model.metadata.IMetadataConnection;
+import org.talend.core.model.metadata.builder.ConvertionHelper;
 import org.talend.core.model.metadata.builder.connection.Connection;
+import org.talend.core.model.metadata.builder.database.JDBCDriverLoader;
 import org.talend.core.model.properties.Item;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.cwm.compare.exception.ReloadCompareException;
@@ -58,6 +61,7 @@ import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
 import org.talend.dq.nodes.AnalysisRepNode;
 import org.talend.repository.model.ERepositoryStatus;
 import org.talend.repository.model.RepositoryNode;
+import org.talend.repository.ui.utils.ManagerConnection;
 import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.foundation.softwaredeployment.DataManager;
 
@@ -225,7 +229,22 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
 
         // MOD klliu bug 4584 Filtering the file connection when checking connection is successful,before real running
         // analysis.
+        ClassLoader contextClassLoader = Thread.currentThread().getContextClassLoader();
+        IMetadataConnection metadataConnection = null;
+        metadataConnection = ConvertionHelper.convert((org.talend.core.model.metadata.builder.connection.Connection) analysis
+                .getContext().getConnection());
+
+        String dbType = metadataConnection.getDbType();
+        String dbVersionString = metadataConnection.getDbVersionString();
+        if ("Hive".equals(dbType) && "Embedded".equalsIgnoreCase(dbVersionString)) { //$NON-NLS-1$ //$NON-NLS-2$
+            ManagerConnection managerConnection = new ManagerConnection();
+            managerConnection.checkForHive(metadataConnection);
+            JDBCDriverLoader jdbcDriverLoader = new JDBCDriverLoader();
+            Thread.currentThread().setContextClassLoader(jdbcDriverLoader.getHotClassLoaderFromCache(dbType, dbVersionString));
+        }
+
         ReturnCode connectionAvailable = ConnectionUtils.isConnectionAvailable(analysisDataProvider);
+
         if (!connectionAvailable.isOk()) {
             MessageDialogWithToggle.openWarning(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
                     DefaultMessagesImpl.getString("RunAnalysisAction.checkConnFailTitle"),//$NON-NLS-1$
@@ -313,6 +332,9 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
 
         job.setUser(true);
         job.schedule();
+        if ("Hive".equals(dbType) && "Embedded".equalsIgnoreCase(dbVersionString)) { //$NON-NLS-1$ //$NON-NLS-2$ 
+            Thread.currentThread().setContextClassLoader(contextClassLoader);
+        }
     }
 
     /*
