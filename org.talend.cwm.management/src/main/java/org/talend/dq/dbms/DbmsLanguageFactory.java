@@ -12,14 +12,21 @@
 // ============================================================================
 package org.talend.dq.dbms;
 
+import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.talend.core.model.metadata.IMetadataConnection;
+import org.talend.core.model.metadata.MetadataFillFactory;
+import org.talend.core.model.metadata.builder.ConvertionHelper;
 import org.talend.core.model.metadata.builder.connection.Connection;
+import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
+import org.talend.core.model.metadata.builder.database.ExtractMetaDataUtils;
 import org.talend.core.model.metadata.builder.database.dburl.SupportDBUrlStore;
 import org.talend.core.model.metadata.builder.database.dburl.SupportDBUrlType;
 import org.talend.core.model.metadata.builder.util.DatabaseConstant;
+import org.talend.core.model.metadata.builder.util.MetadataConnectionUtils;
 import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.SwitchHelpers;
@@ -70,6 +77,30 @@ public final class DbmsLanguageFactory {
         if (dataprovider != null || isMdm) {
             String productSubtype = TaggedValueHelper.getValueString(TaggedValueHelper.DB_PRODUCT_NAME, dataprovider);
             String productVersion = TaggedValueHelper.getValueString(TaggedValueHelper.DB_PRODUCT_VERSION, dataprovider);
+
+            // ADD msjian TDQ-6506 2012-11-28: when this analysis is an imported one. there is no these two tagged
+            // values
+            if (StringUtils.isBlank(productSubtype) && StringUtils.isBlank(productVersion)) {
+                IMetadataConnection iMetadataConnection = ConvertionHelper.convert(dataprovider);
+                java.sql.Connection sqlConn = null;
+                DatabaseConnection temConnection = null;
+                temConnection = (DatabaseConnection) MetadataFillFactory.getDBInstance().fillUIConnParams(iMetadataConnection,
+                        temConnection);
+                sqlConn = MetadataConnectionUtils.checkConnection(iMetadataConnection).getObject();
+                String dbType = iMetadataConnection.getDbType();
+                if (sqlConn != null) {
+                    DatabaseMetaData dbMetaData = ExtractMetaDataUtils.getDatabaseMetaData(sqlConn, dbType, false,
+                            iMetadataConnection.getDatabase());
+                    try {
+                        productSubtype = dbMetaData.getDatabaseProductName();
+                        productVersion = dbMetaData.getDatabaseProductVersion();
+                    } catch (SQLException e) {
+                        // TODO
+                    }
+                }
+            }
+            // TDQ-6506~
+
             final String dbmsSubtype = isMdm ? DbmsLanguage.MDM : productSubtype;
             if (log.isDebugEnabled()) {
                 log.debug("Software system subtype (Database type): " + dbmsSubtype); //$NON-NLS-1$
