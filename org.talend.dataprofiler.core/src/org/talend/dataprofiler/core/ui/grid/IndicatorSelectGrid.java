@@ -118,19 +118,19 @@ public class IndicatorSelectGrid extends Grid {
 
         TdCellRenderer cellRenderer = new TdCellRenderer();
         // database columns
-        for (int i = 0; i < _modelElementIndicators.length; i++) {
+        for (ModelElementIndicator _modelElementIndicator : _modelElementIndicators) {
             GridColumn newCol = new GridColumn(this, SWT.CHECK);
             TdColumnHeaderRenderer headerRenderer = new TdColumnHeaderRenderer();
             headerRenderer.setRotation(COLUMN_HEADER_ROTATION);
             newCol.setHeaderRenderer(headerRenderer);
             newCol.setCellRenderer(cellRenderer);
-            newCol.setText(ModelElementIndicatorHelper.getModelElementDisplayName(_modelElementIndicators[i]));
+            newCol.setText(ModelElementIndicatorHelper.getModelElementDisplayName(_modelElementIndicator));
             newCol.setWidth(COLUMN_WIDTH);
-            newCol.setData(_modelElementIndicators[i]);
+            newCol.setData(_modelElementIndicator);
             newCol.setMoveable(true);
             newCol.setResizeable(false);
             newCol.setHeaderFont(new Font(getDisplay(), "tahoma", 10, SWT.NONE));
-            IRepositoryNode repNode = _modelElementIndicators[i].getModelElementRepositoryNode();
+            IRepositoryNode repNode = _modelElementIndicator.getModelElementRepositoryNode();
             if (repNode instanceof DBColumnRepNode && ((DBColumnRepNode) repNode).isKey()) {
                 newCol.setImage(pkImage);
             }
@@ -139,10 +139,7 @@ public class IndicatorSelectGrid extends Grid {
 
         // initialize grid contents
         IIndicatorNode[] branchNodes = IndicatorTreeModelBuilder.buildIndicatorCategory();
-        for (int i = 0; i < branchNodes.length; i++) {
-            // indicator category row
-            IIndicatorNode indicatorNode = branchNodes[i];
-
+        for (IIndicatorNode indicatorNode : branchNodes) {
             GridItem item = new GridItem(this, SWT.NONE);
             item.setText(indicatorNode.getLabel());
             item.setData(indicatorNode);
@@ -307,6 +304,7 @@ public class IndicatorSelectGrid extends Grid {
             _hScrollBar = hScrollBar;
         }
 
+        @Override
         public void run() {
             _hScrollBar.setSelection(_hScrollBar.getSelection() + _step);
             redraw();
@@ -647,6 +645,18 @@ public class IndicatorSelectGrid extends Grid {
                     } else {
                         currentItem.setGrayed(j, false);
                     }
+                    // MOD qiongli 2012-11-28 TDQ-6211 we should have the range indicator as soon as the min AND the max
+                    // are selected
+                    if (hasCheckedInColumn[j] && allCheckedInColumn[j]) {
+                        IIndicatorNode indicatorNode = (IIndicatorNode) currentItem.getData();
+                        IndicatorEnum indicatorEnum = indicatorNode.getIndicatorEnum();
+                        ModelElementIndicator meIndicator = (ModelElementIndicator) getColumn(j).getData();
+                        if (indicatorEnum != null
+                                && meIndicator != null
+                                && (indicatorEnum == IndicatorEnum.RangeIndicatorEnum || indicatorEnum == IndicatorEnum.IQRIndicatorEnum)) {
+                            meIndicator.addTempIndicatorEnum(indicatorEnum);
+                        }
+                    }
                 }
             }
             if (currentItem.getCheckable(1)) {
@@ -698,8 +708,7 @@ public class IndicatorSelectGrid extends Grid {
         }
         int[] order = getColumnOrder();
         int j = 0;
-        for (int i = 0; i < order.length; i++) {
-            int columnIndex = order[i];
+        for (int columnIndex : order) {
             if (columnIndex > 1) {
                 result[j] = _modelElementIndicators[columnIndex - 2]; // indicator selection starts from the 3rd column
                 j++;
