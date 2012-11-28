@@ -12,7 +12,7 @@
 // ============================================================================
 package org.talend.dq.dbms;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.fail;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -137,9 +137,15 @@ public class DbmsLanguageTest {
         Pattern pattern = PatternFactory.eINSTANCE.createPattern();
         pattern.setName("My Pattern"); //$NON-NLS-1$
         RegularExpression regularExpr = PatternFactory.eINSTANCE.createRegularExpression();
-        TdExpression expression = createExpression();
+        TdExpression expression = createExpression("SQL");
         regularExpr.setExpression(expression);
         pattern.getComponents().add(regularExpr);
+
+        RegularExpression regularExpr2 = PatternFactory.eINSTANCE.createRegularExpression();
+        TdExpression expression2 = createExpression("MySql");
+        regularExpr2.setExpression(expression2);
+        pattern.getComponents().add(regularExpr2);
+
         return pattern;
     }
 
@@ -148,10 +154,10 @@ public class DbmsLanguageTest {
      * 
      * @return
      */
-    private TdExpression createExpression() {
+    private TdExpression createExpression(String language) {
         TdExpression expression = RelationalFactory.eINSTANCE.createTdExpression();
         expression.setBody(REGEXP);
-        expression.setLanguage("SQL"); //$NON-NLS-1$
+        expression.setLanguage(language);
         return expression;
     }
 
@@ -931,7 +937,7 @@ public class DbmsLanguageTest {
 
         try {
             DbmsLanguage dbms = getMysqlDbmsLanguage();
-            Assert.assertNotNull(dbms.getRegexp(pattern, false));
+            Assert.assertNotNull(dbms.getRegexp(pattern));
         } catch (Exception e) {
             fail(e.getMessage());
         }
@@ -982,7 +988,7 @@ public class DbmsLanguageTest {
 
         try {
             DbmsLanguage dbms = DbmsLanguageFactory.createDbmsLanguage(SupportDBUrlType.MSSQLDEFAULTURL);
-            Assert.assertTrue(MssqlRegex.equalsIgnoreCase(dbms.getRegexp(createPattern, false).getBody()));
+            Assert.assertTrue(MssqlRegex.equalsIgnoreCase(dbms.getRegexp(createPattern).getBody()));
         } catch (Exception e) {
             fail(e.getMessage());
         }
@@ -1032,8 +1038,8 @@ public class DbmsLanguageTest {
         // ~init java Expression data
 
         try {
-            DbmsLanguage dbms = DbmsLanguageFactory.createDbmsLanguage(SupportDBUrlType.MSSQLDEFAULTURL);
-            Assert.assertTrue(JavaRegex.equalsIgnoreCase(dbms.getRegexp(createPattern, true).getBody()));
+            DbmsLanguage dbms = DbmsLanguageFactory.createDbmsLanguage(SupportDBUrlType.JAVADEFAULTURL);
+            Assert.assertTrue(JavaRegex.equalsIgnoreCase(dbms.getRegexp(createPattern).getBody()));
         } catch (Exception e) {
             fail(e.getMessage());
         }
@@ -1073,7 +1079,7 @@ public class DbmsLanguageTest {
 
         try {
             DbmsLanguage dbms = DbmsLanguageFactory.createDbmsLanguage(SupportDBUrlType.MSSQLDEFAULTURL);
-            Assert.assertTrue(SqlRegex.equalsIgnoreCase(dbms.getRegexp(createPattern, false).getBody()));
+            Assert.assertTrue(SqlRegex.equalsIgnoreCase(dbms.getRegexp(createPattern).getBody()));
         } catch (Exception e) {
             fail(e.getMessage());
         }
@@ -1096,7 +1102,7 @@ public class DbmsLanguageTest {
         // ~init sql Expression data
         try {
             DbmsLanguage dbms = DbmsLanguageFactory.createDbmsLanguage(SupportDBUrlType.MSSQLDEFAULTURL);
-            Assert.assertTrue(null == dbms.getRegexp(createPattern, false));
+            Assert.assertTrue(null == dbms.getRegexp(createPattern));
         } catch (Exception e) {
             fail(e.getMessage());
         }
@@ -1113,7 +1119,7 @@ public class DbmsLanguageTest {
         // ~Pattern
         try {
             DbmsLanguage dbms = DbmsLanguageFactory.createDbmsLanguage(SupportDBUrlType.MSSQLDEFAULTURL);
-            Assert.assertTrue(null == dbms.getRegexp(createPattern, false));
+            Assert.assertTrue(null == dbms.getRegexp(createPattern));
         } catch (Exception e) {
             fail(e.getMessage());
         }
@@ -1165,7 +1171,7 @@ public class DbmsLanguageTest {
     @Test
     public void testIsApplicable() {
         try {
-            Expression createExpression = createExpression();
+            Expression createExpression = createExpression("Mysql");
             DbmsLanguage dbms = getMysqlDbmsLanguage();
             Assert.assertTrue(dbms.isApplicable(createExpression));
         } catch (Exception e) {
@@ -1181,7 +1187,7 @@ public class DbmsLanguageTest {
     @Test
     public void testGetSelectRegexpTestStringStringExpression() {
         try {
-            Expression createExpression = createExpression();
+            Expression createExpression = createExpression("Mysql");
             DbmsLanguage dbms = getMysqlDbmsLanguage();
             Assert.assertNotNull(dbms.getSelectRegexpTestString(REGEXP_STR, createExpression));
         } catch (Exception e) {
