@@ -307,7 +307,11 @@ public final class ConnectionUtils {
         }
         // returnCode = MetadataConnectionUtils.checkConnection((DatabaseConnection)analysisDataProvider);
         // IMetadataConnection metadataConnection = null;
-        JavaSqlFactory.doHivePreSetup(analysisDataProvider);
+        // FIXME mzhao the following condition is added to avoid NPE for other databases. please add Embedded Mode
+        // constraint if needed.
+        if (ConnectionHelper.isHive(analysisDataProvider)) {
+            JavaSqlFactory.doHivePreSetup(analysisDataProvider);
+        }
 
         returnCode = ConnectionUtils.checkConnection(url, JavaSqlFactory.getDriverClass(analysisDataProvider), props);
         return returnCode;
@@ -443,7 +447,7 @@ public final class ConnectionUtils {
         // exist then get a new instance.
         Driver driver = ExtractMetaDataUtils.getDriverCache().get(driverClassName);
         if (driver == null) {
-        driver = MetadataConnectionUtils.getDriverCache().get(driverClassName);
+            driver = MetadataConnectionUtils.getDriverCache().get(driverClassName);
         }
         // Driver driver = DRIVER_CACHE.get(driverClassName);
         if (driver != null) {
