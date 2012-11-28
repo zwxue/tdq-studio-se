@@ -36,7 +36,6 @@ import org.talend.dataquality.domain.pattern.PatternComponent;
 import org.talend.dataquality.domain.pattern.PatternPackage;
 import org.talend.dataquality.domain.pattern.RegularExpression;
 import org.talend.dataquality.domain.sql.SqlPredicate;
-import org.talend.dataquality.helpers.DomainHelper;
 import org.talend.dataquality.indicators.DateGrain;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.IndicatorParameters;
@@ -755,7 +754,7 @@ public class DbmsLanguage {
         }
         EList<Pattern> patterns = dataValidDomain.getPatterns();
         for (Pattern pattern : patterns) {
-            Expression expression = this.getRegexp(pattern, false);
+            Expression expression = this.getRegexp(pattern);
             return expression == null ? null : expression.getBody();
         }
         return null;
@@ -822,71 +821,35 @@ public class DbmsLanguage {
      * @param pattern a pattern
      * @return the body of the regular expression applicable to this dbms or null
      */
-    public Expression getRegexp(Pattern pattern, boolean isJavaEngin) {
+    public Expression getRegexp(Pattern pattern) {
         // MOD by zhsne for bug 17172 2010.12.10
         Expression expression = null;
+        Expression defaultExpression = null;
         EList<PatternComponent> components = pattern.getComponents();
-        expression = getFullMatchingExpr(components, isJavaEngin);
-        if (expression == null) {
-            expression = getDefaultMatchingExpr(components, isJavaEngin);
-        }
-        return expression;
-    }
-
-    /**
-     * get default one for all of expression
-     * 
-     * @param components
-     * @param isJavaEngin
-     * @return
-     */
-    private Expression getDefaultMatchingExpr(EList<PatternComponent> components, boolean isJavaEngin) {
-        Expression returnExpr = null;
         for (PatternComponent patternComponent : components) {
-            if (isJavaEngin) {
-                returnExpr = DomainHelper.getExpression(patternComponent, ExecutionLanguage.JAVA.getName());
-            } else {
-                returnExpr = DomainHelper.getExpression(patternComponent, ExecutionLanguage.SQL.getName());
-            }
-            if (returnExpr != null) {
-                break;
-            }
-        }
-        return returnExpr;
-    }
-
-    /**
-     * get best one for all of expression
-     * 
-     * @param components
-     * @return
-     */
-    private Expression getFullMatchingExpr(EList<PatternComponent> components, boolean isJavaEngin) {
-        Expression returnExpr = null;
-        for (PatternComponent patternComponent : components) {
-            if (isJavaEngin) {
-                returnExpr = DomainHelper.getExpression(patternComponent, ExecutionLanguage.JAVA.getName());
-            } else {
-                returnExpr = DomainHelper.getExpression(patternComponent, this.getDbmsName());
-            }
-            if (returnExpr != null) {
-                break;
+            if (patternComponent != null) {
+                expression = this.getExpression(patternComponent);
+                if (expression != null && DbmsLanguageFactory.compareDbmsLanguage(this.dbmsName, expression.getLanguage())) {
+                    return expression;// return this db's expression
+                } else if (expression != null
+                        && DbmsLanguageFactory.compareDbmsLanguage(ExecutionLanguage.SQL.getName(), expression.getLanguage())) {
+                    defaultExpression = expression; // remember the default expression
+                }
             }
         }
-        return returnExpr;
+        return defaultExpression;// if can not find itself, return the default one.
     }
 
-    public Expression getExpression(ModelElement element, boolean isJavaEngin) {
+
+    public Expression getExpression(ModelElement element) {
         if (element == null) {
             return null;
         }
         Expression expression = null;
         if (element instanceof Pattern) {
-            expression = getRegexp(((Pattern) element), isJavaEngin);
+            expression = getRegexp(((Pattern) element));
         } else if (element instanceof Indicator) {
-            if (isJavaEngin) {
-                return expression;
-            }
+
             Indicator indicator = ((Indicator) element);
             expression = this.getSqlExpression(indicator.getIndicatorDefinition());
         }

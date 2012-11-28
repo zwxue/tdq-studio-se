@@ -194,7 +194,7 @@ public final class PatternUtilities {
             return result;
         }
         boolean isJavaEngin = ExecutionLanguage.JAVA.equals(executionLanguage);
-        Expression returnExpression = dbmsLanguage.getRegexp(pattern, isJavaEngin);
+        Expression returnExpression = dbmsLanguage.getRegexp(pattern);
         // MOD gdbu 2011-8-26 bug : TDQ-2169
         if ((ExpressionType.REGEXP.getLiteral().equals(expressionType) || ExpressionType.SQL_LIKE.getLiteral().equals(
                 expressionType))

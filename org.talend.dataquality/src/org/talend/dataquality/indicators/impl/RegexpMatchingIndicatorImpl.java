@@ -11,7 +11,6 @@ import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
 import org.talend.core.model.metadata.builder.connection.Connection;
-import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
 import org.talend.core.model.metadata.builder.connection.MDMConnection;
 import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.SwitchHelpers;
@@ -76,7 +75,7 @@ public class RegexpMatchingIndicatorImpl extends PatternMatchingIndicatorImpl im
      */
     @Override
     public boolean prepare() {
-        this.regex = getJavaRegex();
+        this.regex = getRegex();
         if (regex == null) {
             return false;
         }
@@ -118,13 +117,9 @@ public class RegexpMatchingIndicatorImpl extends PatternMatchingIndicatorImpl im
                                     Connection tdDataProvider = ConnectionHelper.getTdDataProvider(column);
 
                                     String dbType = null;
-                                    DatabaseConnection dbConn = SwitchHelpers.DATABASECONNECTION_SWITCH.doSwitch(tdDataProvider);
-                                    if (dbConn != null) {
-                                        dbType = dbConn.getDatabaseType();
-                                    }
                                     MDMConnection mdmConn = SwitchHelpers.MDMCONNECTION_SWITCH.doSwitch(tdDataProvider);
                                     if (mdmConn != null) {
-                                        dbType = "MDM"; // TODO fix me!!!
+                                        dbType = "MDM"; // FIXME
                                     }
 
                                     r = DomainHelper.getRegexp(p, dbType);
@@ -145,35 +140,6 @@ public class RegexpMatchingIndicatorImpl extends PatternMatchingIndicatorImpl im
                             }
                             return r;
                         }
-                    }
-                }
-            }
-        }
-        return null;
-    }
-
-    /**
-     * 
-     * 
-     * this mehtod only return java expression
-     * 
-     * @return
-     */
-
-    @Override
-    public String getJavaRegex() {
-        // MOD zshen TDQ-5645 there will be use with java engin so don't consider ohter case, others
-        // will use in DBMSLanugae mode
-        if (this.parameters != null) {
-            final Domain dataValidDomain = parameters.getDataValidDomain();
-            if (dataValidDomain != null) {
-                final EList<Pattern> patterns = dataValidDomain.getPatterns();
-                for (Pattern p : patterns) {
-                    if (p != null) {
-                        // MOD zshen TDQ-5645 there will be use with java engin so don't consider ohter case, others
-                        // will use in DBMSLanugae mode
-                        return DomainHelper.getJavaRegexp(p);
-
                     }
                 }
             }
