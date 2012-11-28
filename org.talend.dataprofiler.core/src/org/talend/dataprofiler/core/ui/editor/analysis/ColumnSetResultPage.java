@@ -476,7 +476,7 @@ public class ColumnSetResultPage extends AbstractAnalysisResultPage implements P
                             if (regMatIndicator == null) {
                                 continue;
                             }
-                            String regex = regMatIndicator.getJavaRegex();
+                            String regex = regMatIndicator.getRegex();
                             Pattern p = java.util.regex.Pattern.compile(regex);
 
                             Object theElement = ((Object[]) element)[index];
@@ -595,7 +595,7 @@ public class ColumnSetResultPage extends AbstractAnalysisResultPage implements P
                 if (regMatIndicator == null) {
                     continue;
                 }
-                String regex = regMatIndicator.getJavaRegex();
+                String regex = regMatIndicator.getRegex();
                 Pattern p = java.util.regex.Pattern.compile(regex);
                 if (element instanceof Object[]) {
                     Object theElement = ((Object[]) element)[columnIndex];

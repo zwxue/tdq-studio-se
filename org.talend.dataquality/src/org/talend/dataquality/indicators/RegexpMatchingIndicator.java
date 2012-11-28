@@ -26,6 +26,4 @@ public interface RegexpMatchingIndicator extends PatternMatchingIndicator {
      * @generated
      */
     String getRegex();
-
-    String getJavaRegex();
 } // RegexpMatchingIndicator

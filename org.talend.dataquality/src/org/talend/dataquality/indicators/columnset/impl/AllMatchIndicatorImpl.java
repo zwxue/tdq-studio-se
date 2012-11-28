@@ -465,7 +465,7 @@ public class AllMatchIndicatorImpl extends ColumnSetMultiValueIndicatorImpl impl
                     if (null == this.patterns[i]) {
                         this.patterns[i] = new ArrayList<java.util.regex.Pattern>();
                     }
-                    String regex = rmi.getJavaRegex();
+                    String regex = rmi.getRegex();
                     this.patterns[i].add(java.util.regex.Pattern.compile(regex));
                     if (null == regex) {
 
@@ -497,17 +497,4 @@ public class AllMatchIndicatorImpl extends ColumnSetMultiValueIndicatorImpl impl
     public Long getIntegerValue() {
         return getNotMatchingValueCount();
     }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.talend.dataquality.indicators.RegexpMatchingIndicator#getJavaRegex()
-     */
-    @Override
-    public String getJavaRegex() {
-        // TODO: implement this method
-        // Ensure that you remove @generated or mark it @generated NOT
-        throw new UnsupportedOperationException();
-    }
-
 } // AllMatchIndicatorImpl

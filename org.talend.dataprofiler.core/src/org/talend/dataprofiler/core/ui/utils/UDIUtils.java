@@ -141,7 +141,7 @@ public final class UDIUtils {
         ExecutionLanguage executionLanguage = ((AnalysisEditor) activeEditor).getUIExecuteEngin();
         boolean isJavaEngin = ExecutionLanguage.JAVA.equals(executionLanguage);
         DbmsLanguage dbmsLanguage = DbmsLanguageFactory.createDbmsLanguage(analysis, executionLanguage);
-        Expression returnExpression = dbmsLanguage.getExpression(udi, isJavaEngin);
+        Expression returnExpression = dbmsLanguage.getExpression(udi);
         String executeType = isJavaEngin ? executionLanguage.getName() : dbmsLanguage.getDbmsName();
         if (isJavaEngin && judi != null) {
             // need some message
