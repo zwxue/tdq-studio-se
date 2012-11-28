@@ -653,5 +653,6 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
         for (ModelElement mod : removedElements) {
             EMFUtil.saveSingleResource(mod.eResource());
         }
+        this.getTreeViewer().getRemovedElements().clear();
     }
 }

@@ -16,6 +16,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -60,6 +61,7 @@ import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.connection.MetadataColumn;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.core.repository.model.repositoryObject.MetadataXmlElementTypeRepositoryObject;
+import org.talend.cwm.dependencies.DependenciesHandler;
 import org.talend.cwm.helper.ModelElementHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.relational.TdColumn;
@@ -908,9 +910,15 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
             tdqAnalysisItem.getProperty().setLabel(WorkspaceUtils.normalize(analysisHandler.getName()));
             this.nameText.setText(analysisHandler.getName());
             // ~
+            // TDQ-5581,if has removed emlements(patten/udi),should remove dependency each other before saving.
+            HashSet<ModelElement> removedElements = treeViewer.getRemovedElements();
+            if (!removedElements.isEmpty()) {
+                DependenciesHandler.getInstance().removeDependenciesBetweenModels(analysis,
+                        new ArrayList<ModelElement>(removedElements));
+            }
             // MOD yyi 2012-02-08 TDQ-4621:Explicitly set true for updating dependencies.
             saved = ElementWriterFactory.getInstance().createAnalysisWrite().save(tdqAnalysisItem, true);
-            if (saved.isOk() && !treeViewer.getRemovedElements().isEmpty()) {
+            if (saved.isOk() && !removedElements.isEmpty()) {
                 saveRemovedElements();
             }
         }
