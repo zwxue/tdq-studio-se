@@ -45,6 +45,10 @@ public class MyURLClassLoader extends URLClassLoader {
         super(urls, URLUtil.class.getClassLoader());
     }
 
+    public MyURLClassLoader(URL[] urls, ClassLoader classLoader) {
+        super(urls, classLoader);
+    }
+
     public Class[] getAssignableClasses(Class type) throws IOException {
         List classes = new ArrayList();
         URL[] urls = getURLs();
@@ -80,6 +84,7 @@ public class MyURLClassLoader extends URLClassLoader {
         return (Class[]) classes.toArray(new Class[classes.size()]);
     }
 
+    @Override
     public synchronized Class findClass(String className) throws ClassNotFoundException {
         Class cls = (Class) _classes.get(className);
         if (cls == null) {
