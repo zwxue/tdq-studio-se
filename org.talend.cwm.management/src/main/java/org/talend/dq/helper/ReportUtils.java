@@ -772,7 +772,7 @@ public final class ReportUtils {
             for (ReportListParameters rep : repList) {
                 String path = rep.getPath();
                 if (path.startsWith("..")) { //$NON-NLS-1$
-                    path = WorkspaceUtils.ifolderToFile(getOutputFolder(reportFile)).getAbsolutePath() + Path.SEPARATOR
+                    path = WorkspaceUtils.ifolderToFile(getOutputFolder(reportFile)).getAbsolutePath() + File.separator
                             + path.substring(2, path.length());
                 }
                 File file = new File(path);

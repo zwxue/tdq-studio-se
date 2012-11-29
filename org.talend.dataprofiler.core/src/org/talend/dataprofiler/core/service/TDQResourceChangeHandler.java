@@ -25,7 +25,6 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
@@ -335,7 +334,7 @@ public class TDQResourceChangeHandler extends AbstractResourceChangesService {
             IFolder outputFolder = ReportUtils.getOutputFolder(iFile);
             File srcFolder = WorkspaceUtils.ifolderToFile(outputFolder);
             FilesUtils.copyDirectoryWithoutSvnFolder(srcFolder, tarFolder);
-            File newFolder = new File(tarFolder.getAbsolutePath() + Path.SEPARATOR + srcFolder.getName());
+            File newFolder = new File(tarFolder.getAbsolutePath() + File.separator + srcFolder.getName());
             if (newFolder.exists()) {
                 IFolder ifolder = WorkspaceUtils.fileToIFolder(newFolder);
                 if (ifolder != null) {
