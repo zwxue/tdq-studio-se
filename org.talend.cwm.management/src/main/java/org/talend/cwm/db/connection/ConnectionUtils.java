@@ -66,6 +66,7 @@ import org.talend.core.model.metadata.builder.database.XMLSchemaBuilder;
 import org.talend.core.model.metadata.builder.database.dburl.SupportDBUrlType;
 import org.talend.core.model.metadata.builder.util.DatabaseConstant;
 import org.talend.core.model.metadata.builder.util.MetadataConnectionUtils;
+import org.talend.core.model.metadata.connection.hive.HiveConnVersionInfo;
 import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.properties.Item;
 import org.talend.core.model.properties.MDMConnectionItem;
@@ -305,16 +306,40 @@ public final class ConnectionUtils {
                 return rcJdbc;
             }
         }
-        // returnCode = MetadataConnectionUtils.checkConnection((DatabaseConnection)analysisDataProvider);
-        // IMetadataConnection metadataConnection = null;
-        // FIXME mzhao the following condition is added to avoid NPE for other databases. please add Embedded Mode
-        // constraint if needed.
-        if (ConnectionHelper.isHive(analysisDataProvider)) {
+
+        if (isHiveEmbedded(analysisDataProvider)) {
             JavaSqlFactory.doHivePreSetup(analysisDataProvider);
         }
 
         returnCode = ConnectionUtils.checkConnection(url, JavaSqlFactory.getDriverClass(analysisDataProvider), props);
         return returnCode;
+    }
+
+    /**
+     * if the Connection's type is hive embedded return true.
+     * 
+     * @param analysisDataProvider
+     * @return
+     */
+    public static boolean isHiveEmbedded(Connection analysisDataProvider) {
+        IMetadataConnection metadataConnection = ConvertionHelper.convert(analysisDataProvider);
+        return isHiveEmbedded(metadataConnection);
+    }
+
+    /**
+     * if the Connection's type is hive embedded return true.
+     * 
+     * @param metadataConnection
+     * @return
+     */
+    public static boolean isHiveEmbedded(IMetadataConnection metadataConnection) {
+        String dbType = metadataConnection.getDbType();
+        String dbVersionString = metadataConnection.getDbVersionString();
+        if (EDatabaseTypeName.HIVE.getDisplayName().equalsIgnoreCase(dbType)
+                && HiveConnVersionInfo.MODE_EMBEDDED.getKey().equalsIgnoreCase(dbVersionString)) {
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -472,8 +497,7 @@ public final class ConnectionUtils {
                         try {
                             Class<?> clazz = null;
 
-                            // if(isHiveEmbedded()){
-                            // handle hive embedded.
+                            // if it is hive embedded connection
                             if (url.equals("jdbc:hive://")) { //$NON-NLS-1$
                                 HotClassLoader hotSysLoader = (HotClassLoader) Thread.currentThread().getContextClassLoader();
                                 clazz = hotSysLoader.loadClass(driverClassName);
@@ -1717,21 +1741,21 @@ public final class ConnectionUtils {
             if (element instanceof DatabaseConnection) {
                 DatabaseConnection dbConn = (DatabaseConnection) element;
                 String sid = getSID(dbConn);
-                if (sid != null && !"".equals(sid.trim())) {
+                if (sid != null && !"".equals(sid.trim())) { //$NON-NLS-1$
                     // MOD klliu bug 22900
                     TaggedValue taggedValue = TaggedValueHelper.getTaggedValue(TaggedValueHelper.RETRIEVE_ALL,
                             element.getTaggedValue());
                     // if connection is created by 4.2 or 5.0 ,the tagedValue(RETRIEVE_ALL) has been removed.
                     if (taggedValue != null) {
                         String value = taggedValue.getValue();
-                        if (value.equals("true")) {
+                        if (value.equals("true")) { //$NON-NLS-1$
                             return true;
                         }
                     }
                     // ~
                     if (ConnectionHelper.isOracle(dbConn) || isPostgresql(dbConn)) {
                         String uiSchema = dbConn.getUiSchema();
-                        if (uiSchema != null && !"".equals(uiSchema.trim())) {
+                        if (uiSchema != null && !"".equals(uiSchema.trim())) { //$NON-NLS-1$
                             return false;
                         } else {
                             return true;
@@ -1745,7 +1769,7 @@ public final class ConnectionUtils {
             } else if (element instanceof MDMConnection) {
                 MDMConnection mdmConn = (MDMConnection) element;
                 String context = mdmConn.getContext();
-                if (context != null && !"".equals(context.trim())) {
+                if (context != null && !"".equals(context.trim())) { //$NON-NLS-1$
                     return false;
                 } else {
                     return true;

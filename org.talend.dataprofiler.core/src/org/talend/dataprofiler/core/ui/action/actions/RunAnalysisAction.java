@@ -37,6 +37,7 @@ import org.eclipse.ui.part.FileEditorInput;
 import org.talend.core.model.metadata.IMetadataConnection;
 import org.talend.core.model.metadata.builder.ConvertionHelper;
 import org.talend.core.model.metadata.builder.connection.Connection;
+import org.talend.core.model.metadata.builder.database.HotClassLoader;
 import org.talend.core.model.metadata.builder.database.JDBCDriverLoader;
 import org.talend.core.model.properties.Item;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
@@ -230,17 +231,16 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
         // MOD klliu bug 4584 Filtering the file connection when checking connection is successful,before real running
         // analysis.
         ClassLoader contextClassLoader = Thread.currentThread().getContextClassLoader();
-        IMetadataConnection metadataConnection = null;
-        metadataConnection = ConvertionHelper.convert((org.talend.core.model.metadata.builder.connection.Connection) analysis
-                .getContext().getConnection());
 
-        String dbType = metadataConnection.getDbType();
-        String dbVersionString = metadataConnection.getDbVersionString();
-        if ("Hive".equals(dbType) && "Embedded".equalsIgnoreCase(dbVersionString)) { //$NON-NLS-1$ //$NON-NLS-2$
+        IMetadataConnection metadataConnection = ConvertionHelper.convert(analysisDataProvider);
+        boolean isHiveEmbedded = ConnectionUtils.isHiveEmbedded(metadataConnection);
+        if (isHiveEmbedded) {
             ManagerConnection managerConnection = new ManagerConnection();
             managerConnection.checkForHive(metadataConnection);
             JDBCDriverLoader jdbcDriverLoader = new JDBCDriverLoader();
-            Thread.currentThread().setContextClassLoader(jdbcDriverLoader.getHotClassLoaderFromCache(dbType, dbVersionString));
+            HotClassLoader hotClassLoaderFromCache = jdbcDriverLoader.getHotClassLoaderFromCache(metadataConnection.getDbType(),
+                    metadataConnection.getDbVersionString());
+            Thread.currentThread().setContextClassLoader(hotClassLoaderFromCache);
         }
 
         ReturnCode connectionAvailable = ConnectionUtils.isConnectionAvailable(analysisDataProvider);
@@ -332,7 +332,7 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
 
         job.setUser(true);
         job.schedule();
-        if ("Hive".equals(dbType) && "Embedded".equalsIgnoreCase(dbVersionString)) { //$NON-NLS-1$ //$NON-NLS-2$ 
+        if (isHiveEmbedded) {
             Thread.currentThread().setContextClassLoader(contextClassLoader);
         }
     }
