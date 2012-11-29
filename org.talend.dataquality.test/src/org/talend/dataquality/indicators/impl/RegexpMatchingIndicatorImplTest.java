@@ -18,8 +18,10 @@ import org.eclipse.emf.common.util.EList;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.talend.core.model.metadata.builder.connection.MetadataTable;
 import org.talend.core.model.metadata.builder.database.dburl.SupportDBUrlType;
 import org.talend.cwm.relational.RelationalFactory;
+import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.relational.TdExpression;
 import org.talend.dataquality.domain.Domain;
 import org.talend.dataquality.domain.DomainFactory;
@@ -98,9 +100,13 @@ public class RegexpMatchingIndicatorImplTest {
 
         createIndicatorParameters.setDataValidDomain(createDomain);
         createRegexpMatchingIndicator.setParameters(createIndicatorParameters);
+        TdColumn column = RelationalFactory.eINSTANCE.createTdColumn();
 
+        MetadataTable mdColumn = RelationalFactory.eINSTANCE.createTdTable();
+        column.setTable(mdColumn);
+        createRegexpMatchingIndicator.setAnalyzedElement(column);
         // call getRegex()
-        String regexResult = createRegexpMatchingIndicator.getJavaRegex();
+        String regexResult = createRegexpMatchingIndicator.getRegex();
         // ~call getRegex()
         Assert.assertTrue(regexResult == null);
     }
@@ -121,7 +127,7 @@ public class RegexpMatchingIndicatorImplTest {
         createRegexpMatchingIndicator.setParameters(createIndicatorParameters);
 
         // call getRegex()
-        String regexResult = createRegexpMatchingIndicator.getJavaRegex();
+        String regexResult = createRegexpMatchingIndicator.getRegex();
         // ~call getRegex()
         Assert.assertTrue(regexResult == null);
     }
@@ -168,8 +174,54 @@ public class RegexpMatchingIndicatorImplTest {
         createRegexpMatchingIndicator.setParameters(createIndicatorParameters);
 
         // call getRegex()
-        String regexResult = createRegexpMatchingIndicator.getJavaRegex();
+        String regexResult = createRegexpMatchingIndicator.getRegex();
+        String JavaRegex2 = JavaRegex.substring(1, JavaRegex.length() - 1);
         // ~call getRegex()
-        Assert.assertTrue(JavaRegex.equalsIgnoreCase(regexResult));
+        Assert.assertTrue(JavaRegex2.equalsIgnoreCase(regexResult));
+    }
+
+    /**
+     * Test method for {@link org.talend.dataquality.indicators.impl.RegexpMatchingIndicatorImpl#getJavaRegex()}.
+     */
+    @Test
+    public void testGetRegexWithDefaultSQLWhenNoJava() {
+        // RegexpMatchingIndicator
+        RegexpMatchingIndicator createRegexpMatchingIndicator = IndicatorsFactory.eINSTANCE.createRegexpMatchingIndicator();
+        // ~RegexpMatchingIndicator
+
+        // IndicatorParameters
+        IndicatorParameters createIndicatorParameters = IndicatorsFactory.eINSTANCE.createIndicatorParameters();
+        // ~IndicatorParameters
+
+        // Domain
+        Domain createDomain = DomainFactory.eINSTANCE.createDomain();
+        EList<Pattern> patterns = createDomain.getPatterns();
+        // ~Domain
+
+        // Pattern
+        Pattern createSQLPattern = PatternFactory.eINSTANCE.createPattern();
+        Pattern createMSSQLPattern = PatternFactory.eINSTANCE.createPattern();
+        patterns.add(createSQLPattern);
+        patterns.add(createMSSQLPattern);
+        // ~Pattern
+
+        // init default:SQL Pattern data
+        RegularExpression createDefaultExpression = PatternFactory.eINSTANCE.createRegularExpression();
+        TdExpression createDefaultTdExpression = RelationalFactory.eINSTANCE.createTdExpression();
+        createDefaultTdExpression.setBody("'sql body'");
+        createDefaultTdExpression.setLanguage("SQL");
+        createDefaultExpression.setExpression(createDefaultTdExpression);
+        createDefaultExpression.setExpressionType(ExpressionType.REGEXP.getLiteral());
+        EList<PatternComponent> components = createSQLPattern.getComponents();
+        components.add(createDefaultExpression);
+        // ~init default Pattern data
+
+        createIndicatorParameters.setDataValidDomain(createDomain);
+        createRegexpMatchingIndicator.setParameters(createIndicatorParameters);
+
+        // call getRegex()
+        String regexResult = createRegexpMatchingIndicator.getRegex();
+        // ~call getRegex()
+        Assert.assertTrue("sql body".equalsIgnoreCase(regexResult));
     }
 }

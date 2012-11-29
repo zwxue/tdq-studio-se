@@ -117,7 +117,9 @@ public class RegexpMatchingIndicatorImpl extends PatternMatchingIndicatorImpl im
                                 TdColumn column = SwitchHelpers.COLUMN_SWITCH.doSwitch(analyzedElement);
                                 if (column != null) {
                                     Connection tdDataProvider = ConnectionHelper.getTdDataProvider(column);
-
+                                    if (tdDataProvider == null) {
+                                        return null;
+                                    }
                                     String dbType = null;
                                     MDMConnection mdmConn = SwitchHelpers.MDMCONNECTION_SWITCH.doSwitch(tdDataProvider);
                                     if (mdmConn != null) {
