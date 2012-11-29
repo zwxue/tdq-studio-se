@@ -22,7 +22,6 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
 import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.repository.i18n.Messages;
-import org.talend.core.repository.ui.actions.RenameFolderAction;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.helper.WorkspaceResourceHelper;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
@@ -31,6 +30,7 @@ import org.talend.dataprofiler.core.ui.views.DQRespositoryView;
 import org.talend.dataprofiler.core.ui.views.resources.IRepositoryObjectCRUD;
 import org.talend.dq.nodes.SourceFileSubFolderNode;
 import org.talend.repository.model.RepositoryNode;
+import org.talend.repository.ui.actions.RenameFolderAction;
 import org.talend.utils.sugars.ReturnCode;
 
 /**
