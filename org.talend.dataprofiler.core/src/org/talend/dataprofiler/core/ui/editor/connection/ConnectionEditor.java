@@ -19,10 +19,13 @@ import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.PartInitException;
 import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.properties.DatabaseConnectionItem;
+import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.dataprofiler.core.exception.MessageBoxExceptionHandler;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.editor.CommonFormEditor;
 import org.talend.dq.CWMPlugin;
+import org.talend.dq.nodes.ConnectionRepNode;
+import org.talend.dq.nodes.DBConnectionRepNode;
 
 /**
  * DOC rli class global comment. Detailled comment
@@ -52,12 +55,16 @@ public class ConnectionEditor extends CommonFormEditor {
         if (masterPage.isDirty()) {
             masterPage.doSave(monitor);
             setPartName(masterPage.getIntactElemenetName());
-            // MOD klliu 2010-04-21 bug 20204 update SQL Exploer ConnectionNode's name before saving the updated name.
-            ConnectionItem item = (ConnectionItem) ((ConnectionItemEditorInput) this.getEditorInput()).getItem();
-            if (item instanceof DatabaseConnectionItem) {
-                String name = ((DatabaseConnectionItem) item).getConnection().getName();
-                CWMPlugin.getDefault().updateConnetionAliasByName(item.getConnection(), masterPage.getOldDataproviderName());
-                masterPage.setOldDataproviderName(name);
+            // MOD qiongli 2012-11-29 avoid item is proxy(get item form IRepositoryViewObject).
+            ConnectionRepNode connectionRepNode = masterPage.getConnectionRepNode();
+            if (connectionRepNode != null && connectionRepNode instanceof DBConnectionRepNode) {
+                IRepositoryViewObject object = connectionRepNode.getObject();
+                if (object != null) {
+                    ConnectionItem item = (ConnectionItem) object.getProperty().getItem();
+                    String name = ((DatabaseConnectionItem) item).getConnection().getName();
+                    CWMPlugin.getDefault().updateConnetionAliasByName(item.getConnection(), masterPage.getOldDataproviderName());
+                    masterPage.setOldDataproviderName(name);
+                }
             }
         }
         setEditorObject(masterPage.getConnectionRepNode());

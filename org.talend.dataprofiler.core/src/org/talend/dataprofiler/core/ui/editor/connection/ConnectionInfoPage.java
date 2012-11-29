@@ -49,6 +49,7 @@ import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.part.FileEditorInput;
 import org.talend.core.GlobalServiceRegister;
+import org.talend.core.ITDQRepositoryService;
 import org.talend.core.PluginChecker;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
@@ -77,7 +78,6 @@ import org.talend.dataprofiler.core.ui.utils.MessageUI;
 import org.talend.dataquality.exception.DataprofilerCoreException;
 import org.talend.dq.analysis.parameters.DBConnectionParameter;
 import org.talend.dq.connection.DataProviderBuilder;
-import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.nodes.ConnectionRepNode;
@@ -311,7 +311,10 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
         if (connectionItem != null) {
             // MOD mzhao bug:19288
             if (connectionItem.eIsProxy()) {
-                connectionItem = (ConnectionItem) EObjectHelper.resolveObject(connectionItem);
+                Property property = this.repositoryViewObject == null ? null : this.repositoryViewObject.getProperty();
+                if (property != null) {
+                    connectionItem = property.getItem();
+                }
             }
             RepositoryNode node = RepositoryNodeHelper.recursiveFind(((ConnectionItem) connectionItem).getConnection());
 
@@ -584,8 +587,15 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
      */
     @Override
     protected boolean saveTextChange() {
-        if (connection != null && connection.eIsProxy()) {
-            connection = (Connection) EObjectHelper.resolveObject(connection);
+        // get the last version element if it is proxy.
+        if (connectionItem.eIsProxy()) {
+            Property property = this.repositoryViewObject == null ? null : this.repositoryViewObject.getProperty();
+            if (property != null) {
+                connectionItem = property.getItem();
+            }
+            if (connectionItem != null) {
+                connection = ((ConnectionItem) connectionItem).getConnection();
+            }
         }
 
         if (!connection.isContextMode()) {
@@ -611,10 +621,6 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
     }
 
     private void saveConnectionInfo() throws DataprofilerCoreException {
-        if (connection != null && connection.eIsProxy()) {
-            connection = (Connection) EObjectHelper.resolveObject(connection);
-        }
-
         ConnectionUtils.checkUsernameBeforeSaveConnection4Sqlite(connection);
 
         ReturnCode returnCode = ElementWriterFactory.getInstance().createDataProviderWriter().save(connectionItem, true);
@@ -622,6 +628,15 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
         if (returnCode.isOk()) {
             if (log.isDebugEnabled()) {
                 log.debug("Saved in  " + connection.eResource().getURI().toFileString() + " successful"); //$NON-NLS-1$ //$NON-NLS-2$
+            }
+
+            // refresh the opened connection editor after saving
+            if (GlobalServiceRegister.getDefault().isServiceRegistered(ITDQRepositoryService.class)) {
+                ITDQRepositoryService tdqRepService = (ITDQRepositoryService) GlobalServiceRegister.getDefault().getService(
+                        ITDQRepositoryService.class);
+                if (tdqRepService != null) {
+                    tdqRepService.refreshConnectionEditor(connectionItem);
+                }
             }
         } else {
             throw new DataprofilerCoreException(

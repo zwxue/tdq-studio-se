@@ -450,7 +450,7 @@ public class CorePlugin extends AbstractUIPlugin {
                 } else if (editorInput instanceof AbstractItemEditorInput) {
                     AbstractItemEditorInput input = (AbstractItemEditorInput) editorInput;
                     Item it = input.getItem();
-                    if (it != null && item.equals(it)) {
+                    if (it != null && property != null && it.getProperty().getId().equals(property.getId())) {
                         opening = true;
                         if (closeEditor) {
                             activePage.closeEditor(reference.getEditor(false), false);
