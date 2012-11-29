@@ -333,10 +333,10 @@ public class ColumnSetAnalysisExecutor extends AnalysisExecutor {
         EList<RegexpMatchingIndicator> indicators = indicator.getCompositeRegexMatchingIndicators();
         String patternNames = PluginConstant.EMPTY_STRING;
         for (RegexpMatchingIndicator rmi : indicators) {
-            if (null == rmi.getJavaRegex()) {
+            if (null == rmi.getRegex()) {
 
                 patternNames += System.getProperty("line.separator") + "\"" + rmi.getName() + "\"";//$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
-            } else if (rmi.getJavaRegex().equals(rmi.getName())) {
+            } else if (rmi.getRegex().equals(rmi.getName())) {
                 patternNames += System.getProperty("line.separator") + "\"" + rmi.getName() + "\"";//$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
             }
         }

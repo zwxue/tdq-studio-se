@@ -124,7 +124,6 @@ public class AllMatchIndicatorImpl extends ColumnSetMultiValueIndicatorImpl impl
      * 
      * @generated
      */
-    @Override
     public Long getMatchingValueCount() {
         return matchingValueCount;
     }
@@ -134,7 +133,6 @@ public class AllMatchIndicatorImpl extends ColumnSetMultiValueIndicatorImpl impl
      * 
      * @generated
      */
-    @Override
     public void setMatchingValueCount(Long newMatchingValueCount) {
         Long oldMatchingValueCount = matchingValueCount;
         matchingValueCount = newMatchingValueCount;
@@ -149,7 +147,6 @@ public class AllMatchIndicatorImpl extends ColumnSetMultiValueIndicatorImpl impl
      * 
      * @generated
      */
-    @Override
     public Long getNotMatchingValueCount() {
         return notMatchingValueCount;
     }
@@ -159,7 +156,6 @@ public class AllMatchIndicatorImpl extends ColumnSetMultiValueIndicatorImpl impl
      * 
      * @generated
      */
-    @Override
     public void setNotMatchingValueCount(Long newNotMatchingValueCount) {
         Long oldNotMatchingValueCount = notMatchingValueCount;
         notMatchingValueCount = newNotMatchingValueCount;
@@ -174,7 +170,6 @@ public class AllMatchIndicatorImpl extends ColumnSetMultiValueIndicatorImpl impl
      * 
      * @generated
      */
-    @Override
     public EList<RegexpMatchingIndicator> getCompositeRegexMatchingIndicators() {
         if (compositeRegexMatchingIndicators == null) {
             compositeRegexMatchingIndicators = new EObjectContainmentEList<RegexpMatchingIndicator>(
@@ -189,7 +184,6 @@ public class AllMatchIndicatorImpl extends ColumnSetMultiValueIndicatorImpl impl
      * 
      * @generated
      */
-    @Override
     public String getRegex() {
         // TODO: implement this method
         // Ensure that you remove @generated or mark it @generated NOT
@@ -465,7 +459,7 @@ public class AllMatchIndicatorImpl extends ColumnSetMultiValueIndicatorImpl impl
                     if (null == this.patterns[i]) {
                         this.patterns[i] = new ArrayList<java.util.regex.Pattern>();
                     }
-                    String regex = rmi.getJavaRegex();
+                    String regex = rmi.getRegex();
                     this.patterns[i].add(java.util.regex.Pattern.compile(regex));
                     if (null == regex) {
 
@@ -498,16 +492,5 @@ public class AllMatchIndicatorImpl extends ColumnSetMultiValueIndicatorImpl impl
         return getNotMatchingValueCount();
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.talend.dataquality.indicators.RegexpMatchingIndicator#getJavaRegex()
-     */
-    @Override
-    public String getJavaRegex() {
-        // TODO: implement this method
-        // Ensure that you remove @generated or mark it @generated NOT
-        throw new UnsupportedOperationException();
-    }
 
 } // AllMatchIndicatorImpl
