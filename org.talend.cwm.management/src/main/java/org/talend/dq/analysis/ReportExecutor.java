@@ -25,6 +25,7 @@ import org.talend.dataquality.helpers.ReportHelper;
 import org.talend.dataquality.reports.AnalysisMap;
 import org.talend.dataquality.reports.TdReport;
 import org.talend.dq.analysis.connpool.TdqAnalysisConnectionPool;
+import org.talend.dq.helper.EObjectHelper;
 import org.talend.utils.sugars.ReturnCode;
 
 /**
@@ -46,6 +47,9 @@ public class ReportExecutor implements IReportExecutor {
     public ReturnCode execute(TdReport report) {
         atLeastOneFailure = false;
         long startTime = System.currentTimeMillis();
+        if (report.eIsProxy()) {
+            report = (TdReport) EObjectHelper.resolveObject(report);
+        }
         EList<AnalysisMap> analysisMaps = report.getAnalysisMap();
         StringBuilder strBuilder = new StringBuilder();
         // loop on analysis maps is faster than loop on analyses
