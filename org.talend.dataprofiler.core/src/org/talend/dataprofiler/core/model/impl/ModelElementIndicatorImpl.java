@@ -74,7 +74,7 @@ import org.talend.repository.model.RepositoryNode;
 import org.talend.utils.sql.Java2SqlType;
 
 /**
- * DOC xqliu  class global comment. Detailled comment
+ * DOC xqliu class global comment. Detailled comment
  */
 public abstract class ModelElementIndicatorImpl implements ModelElementIndicator {
 
@@ -250,91 +250,116 @@ public abstract class ModelElementIndicatorImpl implements ModelElementIndicator
         switch (indicatorEnum) {
         case CountsIndicatorEnum:
             CountsIndicator countsIndicator = (CountsIndicator) indicator;
-            this.plainIndicatorUnitMap.put(IndicatorEnum.CountsIndicatorEnum, createPlainIndicatorUnit(
-                    IndicatorEnum.CountsIndicatorEnum, countsIndicator));
+            this.plainIndicatorUnitMap.put(IndicatorEnum.CountsIndicatorEnum,
+                    createPlainIndicatorUnit(IndicatorEnum.CountsIndicatorEnum, countsIndicator));
 
             // add indicatorUnit to indicatorUnitMap
-            this.plainIndicatorUnitMap.put(IndicatorEnum.BlankCountIndicatorEnum, createPlainIndicatorUnit(
-                    IndicatorEnum.BlankCountIndicatorEnum, countsIndicator.getBlankCountIndicator()));
-            this.plainIndicatorUnitMap.put(IndicatorEnum.DistinctCountIndicatorEnum, createPlainIndicatorUnit(
-                    IndicatorEnum.DistinctCountIndicatorEnum, countsIndicator.getDistinctCountIndicator()));
-            this.plainIndicatorUnitMap.put(IndicatorEnum.DuplicateCountIndicatorEnum, createPlainIndicatorUnit(
-                    IndicatorEnum.DuplicateCountIndicatorEnum, countsIndicator.getDuplicateCountIndicator()));
-            this.plainIndicatorUnitMap.put(IndicatorEnum.RowCountIndicatorEnum, createPlainIndicatorUnit(
-                    IndicatorEnum.RowCountIndicatorEnum, countsIndicator.getRowCountIndicator()));
-            this.plainIndicatorUnitMap.put(IndicatorEnum.NullCountIndicatorEnum, createPlainIndicatorUnit(
-                    IndicatorEnum.NullCountIndicatorEnum, countsIndicator.getNullCountIndicator()));
-            this.plainIndicatorUnitMap.put(IndicatorEnum.UniqueIndicatorEnum, createPlainIndicatorUnit(
-                    IndicatorEnum.UniqueIndicatorEnum, countsIndicator.getUniqueCountIndicator()));
+            this.plainIndicatorUnitMap.put(IndicatorEnum.BlankCountIndicatorEnum,
+                    createPlainIndicatorUnit(IndicatorEnum.BlankCountIndicatorEnum, countsIndicator.getBlankCountIndicator()));
+            this.plainIndicatorUnitMap.put(
+                    IndicatorEnum.DistinctCountIndicatorEnum,
+                    createPlainIndicatorUnit(IndicatorEnum.DistinctCountIndicatorEnum,
+                            countsIndicator.getDistinctCountIndicator()));
+            this.plainIndicatorUnitMap.put(
+                    IndicatorEnum.DuplicateCountIndicatorEnum,
+                    createPlainIndicatorUnit(IndicatorEnum.DuplicateCountIndicatorEnum,
+                            countsIndicator.getDuplicateCountIndicator()));
+            this.plainIndicatorUnitMap.put(IndicatorEnum.RowCountIndicatorEnum,
+                    createPlainIndicatorUnit(IndicatorEnum.RowCountIndicatorEnum, countsIndicator.getRowCountIndicator()));
+            this.plainIndicatorUnitMap.put(IndicatorEnum.NullCountIndicatorEnum,
+                    createPlainIndicatorUnit(IndicatorEnum.NullCountIndicatorEnum, countsIndicator.getNullCountIndicator()));
+            this.plainIndicatorUnitMap.put(IndicatorEnum.UniqueIndicatorEnum,
+                    createPlainIndicatorUnit(IndicatorEnum.UniqueIndicatorEnum, countsIndicator.getUniqueCountIndicator()));
             // MOD klliu bug 13411 2010-06-03
-            this.plainIndicatorUnitMap.put(IndicatorEnum.DefValueCountIndicatorEnum, createPlainIndicatorUnit(
-                    IndicatorEnum.DefValueCountIndicatorEnum, countsIndicator.getDefaultValueIndicator()));
+            this.plainIndicatorUnitMap
+                    .put(IndicatorEnum.DefValueCountIndicatorEnum,
+                            createPlainIndicatorUnit(IndicatorEnum.DefValueCountIndicatorEnum,
+                                    countsIndicator.getDefaultValueIndicator()));
             break;
         case TextIndicatorEnum:
             TextIndicator textIndicator = (TextIndicator) indicator;
-            this.plainIndicatorUnitMap.put(IndicatorEnum.TextIndicatorEnum, createPlainIndicatorUnit(
-                    IndicatorEnum.TextIndicatorEnum, textIndicator));
+            this.plainIndicatorUnitMap.put(IndicatorEnum.TextIndicatorEnum,
+                    createPlainIndicatorUnit(IndicatorEnum.TextIndicatorEnum, textIndicator));
 
             // add indicatorUnit to indicatorUnitMap
-            this.plainIndicatorUnitMap.put(IndicatorEnum.MinLengthIndicatorEnum, createPlainIndicatorUnit(
-                    IndicatorEnum.MinLengthIndicatorEnum, textIndicator.getMinLengthIndicator()));
-            this.plainIndicatorUnitMap.put(IndicatorEnum.MaxLengthIndicatorEnum, createPlainIndicatorUnit(
-                    IndicatorEnum.MaxLengthIndicatorEnum, textIndicator.getMaxLengthIndicator()));
-            this.plainIndicatorUnitMap.put(IndicatorEnum.AverageLengthIndicatorEnum, createPlainIndicatorUnit(
-                    IndicatorEnum.AverageLengthIndicatorEnum, textIndicator.getAverageLengthIndicator()));
+            this.plainIndicatorUnitMap.put(IndicatorEnum.MinLengthIndicatorEnum,
+                    createPlainIndicatorUnit(IndicatorEnum.MinLengthIndicatorEnum, textIndicator.getMinLengthIndicator()));
+            this.plainIndicatorUnitMap.put(IndicatorEnum.MaxLengthIndicatorEnum,
+                    createPlainIndicatorUnit(IndicatorEnum.MaxLengthIndicatorEnum, textIndicator.getMaxLengthIndicator()));
+            this.plainIndicatorUnitMap
+                    .put(IndicatorEnum.AverageLengthIndicatorEnum,
+                            createPlainIndicatorUnit(IndicatorEnum.AverageLengthIndicatorEnum,
+                                    textIndicator.getAverageLengthIndicator()));
             // MOD mzhao
-            this.plainIndicatorUnitMap.put(IndicatorEnum.MinLengthWithBlankIndicatorEnum, createPlainIndicatorUnit(
-                    IndicatorEnum.MinLengthWithBlankIndicatorEnum, textIndicator.getMinLengthWithBlankIndicator()));
-            this.plainIndicatorUnitMap.put(IndicatorEnum.MinLengthWithBlankNullIndicatorEnum, createPlainIndicatorUnit(
-                    IndicatorEnum.MinLengthWithBlankNullIndicatorEnum, textIndicator.getMinLengthWithBlankNullIndicator()));
-            this.plainIndicatorUnitMap.put(IndicatorEnum.MinLengthWithNullIndicatorEnum, createPlainIndicatorUnit(
-                    IndicatorEnum.MinLengthWithNullIndicatorEnum, textIndicator.getMinLengthWithNullIndicator()));
-            this.plainIndicatorUnitMap.put(IndicatorEnum.MaxLengthWithBlankIndicatorEnum, createPlainIndicatorUnit(
-                    IndicatorEnum.MaxLengthWithBlankIndicatorEnum, textIndicator.getMaxLengthWithBlankIndicator()));
-            this.plainIndicatorUnitMap.put(IndicatorEnum.MaxLengthWithBlankNullIndicatorEnum, createPlainIndicatorUnit(
-                    IndicatorEnum.MaxLengthWithBlankNullIndicatorEnum, textIndicator.getMaxLengthWithBlankNullIndicator()));
-            this.plainIndicatorUnitMap.put(IndicatorEnum.MaxLengthWithNullIndicatorEnum, createPlainIndicatorUnit(
-                    IndicatorEnum.MaxLengthWithNullIndicatorEnum, textIndicator.getMaxLengthWithNullIndicator()));
-            this.plainIndicatorUnitMap.put(IndicatorEnum.AverageLengthWithBlankIndicatorEnum, createPlainIndicatorUnit(
-                    IndicatorEnum.AverageLengthWithBlankIndicatorEnum, textIndicator.getAvgLengthWithBlankIndicator()));
-            this.plainIndicatorUnitMap.put(IndicatorEnum.AverageLengthWithNullBlankIndicatorEnum, createPlainIndicatorUnit(
-                    IndicatorEnum.AverageLengthWithNullBlankIndicatorEnum, textIndicator.getAvgLengthWithBlankNullIndicator()));
-            this.plainIndicatorUnitMap.put(IndicatorEnum.AverageLengthWithNullIndicatorEnum, createPlainIndicatorUnit(
-                    IndicatorEnum.AverageLengthWithNullIndicatorEnum, textIndicator.getAvgLengthWithNullIndicator()));
+            this.plainIndicatorUnitMap.put(
+                    IndicatorEnum.MinLengthWithBlankIndicatorEnum,
+                    createPlainIndicatorUnit(IndicatorEnum.MinLengthWithBlankIndicatorEnum,
+                            textIndicator.getMinLengthWithBlankIndicator()));
+            this.plainIndicatorUnitMap.put(
+                    IndicatorEnum.MinLengthWithBlankNullIndicatorEnum,
+                    createPlainIndicatorUnit(IndicatorEnum.MinLengthWithBlankNullIndicatorEnum,
+                            textIndicator.getMinLengthWithBlankNullIndicator()));
+            this.plainIndicatorUnitMap.put(
+                    IndicatorEnum.MinLengthWithNullIndicatorEnum,
+                    createPlainIndicatorUnit(IndicatorEnum.MinLengthWithNullIndicatorEnum,
+                            textIndicator.getMinLengthWithNullIndicator()));
+            this.plainIndicatorUnitMap.put(
+                    IndicatorEnum.MaxLengthWithBlankIndicatorEnum,
+                    createPlainIndicatorUnit(IndicatorEnum.MaxLengthWithBlankIndicatorEnum,
+                            textIndicator.getMaxLengthWithBlankIndicator()));
+            this.plainIndicatorUnitMap.put(
+                    IndicatorEnum.MaxLengthWithBlankNullIndicatorEnum,
+                    createPlainIndicatorUnit(IndicatorEnum.MaxLengthWithBlankNullIndicatorEnum,
+                            textIndicator.getMaxLengthWithBlankNullIndicator()));
+            this.plainIndicatorUnitMap.put(
+                    IndicatorEnum.MaxLengthWithNullIndicatorEnum,
+                    createPlainIndicatorUnit(IndicatorEnum.MaxLengthWithNullIndicatorEnum,
+                            textIndicator.getMaxLengthWithNullIndicator()));
+            this.plainIndicatorUnitMap.put(
+                    IndicatorEnum.AverageLengthWithBlankIndicatorEnum,
+                    createPlainIndicatorUnit(IndicatorEnum.AverageLengthWithBlankIndicatorEnum,
+                            textIndicator.getAvgLengthWithBlankIndicator()));
+            this.plainIndicatorUnitMap.put(
+                    IndicatorEnum.AverageLengthWithNullBlankIndicatorEnum,
+                    createPlainIndicatorUnit(IndicatorEnum.AverageLengthWithNullBlankIndicatorEnum,
+                            textIndicator.getAvgLengthWithBlankNullIndicator()));
+            this.plainIndicatorUnitMap.put(
+                    IndicatorEnum.AverageLengthWithNullIndicatorEnum,
+                    createPlainIndicatorUnit(IndicatorEnum.AverageLengthWithNullIndicatorEnum,
+                            textIndicator.getAvgLengthWithNullIndicator()));
 
-            
             break;
         case BoxIIndicatorEnum:
             BoxIndicator boxtIndicator = (BoxIndicator) indicator;
-            this.plainIndicatorUnitMap.put(IndicatorEnum.BoxIIndicatorEnum, createPlainIndicatorUnit(
-                    IndicatorEnum.BoxIIndicatorEnum, boxtIndicator));
+            this.plainIndicatorUnitMap.put(IndicatorEnum.BoxIIndicatorEnum,
+                    createPlainIndicatorUnit(IndicatorEnum.BoxIIndicatorEnum, boxtIndicator));
 
-            this.plainIndicatorUnitMap.put(IndicatorEnum.MeanIndicatorEnum, createPlainIndicatorUnit(
-                    IndicatorEnum.MeanIndicatorEnum, boxtIndicator.getMeanIndicator()));
-            this.plainIndicatorUnitMap.put(IndicatorEnum.MedianIndicatorEnum, createPlainIndicatorUnit(
-                    IndicatorEnum.MedianIndicatorEnum, boxtIndicator.getMedianIndicator()));
+            this.plainIndicatorUnitMap.put(IndicatorEnum.MeanIndicatorEnum,
+                    createPlainIndicatorUnit(IndicatorEnum.MeanIndicatorEnum, boxtIndicator.getMeanIndicator()));
+            this.plainIndicatorUnitMap.put(IndicatorEnum.MedianIndicatorEnum,
+                    createPlainIndicatorUnit(IndicatorEnum.MedianIndicatorEnum, boxtIndicator.getMedianIndicator()));
             this.fillCategoryIndicators(IndicatorEnum.RangeIndicatorEnum, boxtIndicator.getRangeIndicator());
             this.fillCategoryIndicators(IndicatorEnum.IQRIndicatorEnum, boxtIndicator.getIQR());
             break;
         case IQRIndicatorEnum:
             IQRIndicator iqrIndicator = (IQRIndicator) indicator;
-            this.plainIndicatorUnitMap.put(IndicatorEnum.IQRIndicatorEnum, createPlainIndicatorUnit(
-                    IndicatorEnum.IQRIndicatorEnum, iqrIndicator));
+            this.plainIndicatorUnitMap.put(IndicatorEnum.IQRIndicatorEnum,
+                    createPlainIndicatorUnit(IndicatorEnum.IQRIndicatorEnum, iqrIndicator));
 
-            this.plainIndicatorUnitMap.put(IndicatorEnum.LowerQuartileIndicatorEnum, createPlainIndicatorUnit(
-                    IndicatorEnum.LowerQuartileIndicatorEnum, iqrIndicator.getLowerValue()));
-            this.plainIndicatorUnitMap.put(IndicatorEnum.UpperQuartileIndicatorEnum, createPlainIndicatorUnit(
-                    IndicatorEnum.UpperQuartileIndicatorEnum, iqrIndicator.getUpperValue()));
+            this.plainIndicatorUnitMap.put(IndicatorEnum.LowerQuartileIndicatorEnum,
+                    createPlainIndicatorUnit(IndicatorEnum.LowerQuartileIndicatorEnum, iqrIndicator.getLowerValue()));
+            this.plainIndicatorUnitMap.put(IndicatorEnum.UpperQuartileIndicatorEnum,
+                    createPlainIndicatorUnit(IndicatorEnum.UpperQuartileIndicatorEnum, iqrIndicator.getUpperValue()));
             break;
         case RangeIndicatorEnum:
             RangeIndicator rangeIndicator = (RangeIndicator) indicator;
-            this.plainIndicatorUnitMap.put(IndicatorEnum.RangeIndicatorEnum, createPlainIndicatorUnit(
-                    IndicatorEnum.RangeIndicatorEnum, rangeIndicator));
+            this.plainIndicatorUnitMap.put(IndicatorEnum.RangeIndicatorEnum,
+                    createPlainIndicatorUnit(IndicatorEnum.RangeIndicatorEnum, rangeIndicator));
 
-            this.plainIndicatorUnitMap.put(IndicatorEnum.MaxValueIndicatorEnum, createPlainIndicatorUnit(
-                    IndicatorEnum.MaxValueIndicatorEnum, rangeIndicator.getUpperValue()));
-            this.plainIndicatorUnitMap.put(IndicatorEnum.MinValueIndicatorEnum, createPlainIndicatorUnit(
-                    IndicatorEnum.MinValueIndicatorEnum, rangeIndicator.getLowerValue()));
+            this.plainIndicatorUnitMap.put(IndicatorEnum.MaxValueIndicatorEnum,
+                    createPlainIndicatorUnit(IndicatorEnum.MaxValueIndicatorEnum, rangeIndicator.getUpperValue()));
+            this.plainIndicatorUnitMap.put(IndicatorEnum.MinValueIndicatorEnum,
+                    createPlainIndicatorUnit(IndicatorEnum.MinValueIndicatorEnum, rangeIndicator.getLowerValue()));
             break;
         case PhoneNumbStatisticsIndicatorEnum:
             PhoneNumbStatisticsIndicator phoneNumbIndicator = (PhoneNumbStatisticsIndicator) indicator;
@@ -400,6 +425,13 @@ public abstract class ModelElementIndicatorImpl implements ModelElementIndicator
     public void addTempIndicatorEnum(IndicatorEnum indicatorEnum) {
         if (!tempIndicatorEnums.contains(indicatorEnum)) {
             tempIndicatorEnums.add(indicatorEnum);
+            if (indicatorEnum == IndicatorEnum.RangeIndicatorEnum || indicatorEnum == IndicatorEnum.IQRIndicatorEnum) {
+                for (IndicatorEnum child : indicatorEnum.getChildren()) {
+                    if (!tempIndicatorEnums.contains(child)) {
+                        tempIndicatorEnums.add(child);
+                    }
+                }
+            }
         }
     }
 
