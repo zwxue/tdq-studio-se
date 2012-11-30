@@ -35,7 +35,6 @@ import org.talend.core.model.metadata.MetadataColumnRepositoryObject;
 import org.talend.core.model.metadata.builder.connection.MetadataColumn;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.core.repository.model.repositoryObject.MetadataXmlElementTypeRepositoryObject;
-import org.talend.cwm.dependencies.DependenciesHandler;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.xml.TdXmlElementType;
 import org.talend.dataprofiler.core.ImageLib;
@@ -260,8 +259,8 @@ public abstract class AbstractColumnDropTree extends AbstractPagePart {
      */
     protected void deleteIndicatorItems(ModelElementIndicator meIndicator, IndicatorUnit inidicatorUnit) {
         meIndicator.removeIndicatorUnit(inidicatorUnit);
-        // remove dependency
-        removeDependency(absMasterPage.getAnalysis(), inidicatorUnit);
+        // add removed dependency
+        addRemovedElements(absMasterPage.getAnalysis(), inidicatorUnit);
     }
 
     /**
@@ -274,18 +273,18 @@ public abstract class AbstractColumnDropTree extends AbstractPagePart {
     protected void deleteIndicatorItems(ModelElementIndicator meIndicator) {
         for (IndicatorUnit indiUnit : meIndicator.getIndicatorUnits()) {
             meIndicator.removeIndicatorUnit(indiUnit);
-            // remove dependency
-            removeDependency(absMasterPage.getAnalysis(), indiUnit);
+            // add removed dependency
+            addRemovedElements(absMasterPage.getAnalysis(), indiUnit);
         }
     }
 
     /**
-     * DOC xqliu Comment method "removeDependency".
+     * rename method "removeDependency" to addRemovedElements.
      * 
      * @param analysis
      * @param unit
      */
-    protected void removeDependency(Analysis analysis, IndicatorUnit unit) {
+    protected void addRemovedElements(Analysis analysis, IndicatorUnit unit) {
         List<ModelElement> reomveElements = new ArrayList<ModelElement>();
         Indicator indicator = unit.getIndicator();
         if (indicator instanceof UserDefIndicator) {
@@ -298,7 +297,6 @@ public abstract class AbstractColumnDropTree extends AbstractPagePart {
         } else if (indicator instanceof PatternMatchingIndicator) {
             reomveElements.addAll(indicator.getParameters().getDataValidDomain().getPatterns());
         }
-        DependenciesHandler.getInstance().removeDependenciesBetweenModels(analysis, reomveElements);
         // MOD qiongli 2012-11-19 TDQ-5581 Don't save the resource of reomveElements at here.should save them after
         // saving analysis.
         this.removedElements.addAll(reomveElements);
@@ -596,8 +594,7 @@ public abstract class AbstractColumnDropTree extends AbstractPagePart {
                 || indicatorEclass.equals(IndicatorsPackage.eINSTANCE.getWeekLowFrequencyIndicator())
                 || indicatorEclass.equals(IndicatorsPackage.eINSTANCE.getMonthLowFrequencyIndicator())
                 || indicatorEclass.equals(IndicatorsPackage.eINSTANCE.getQuarterLowFrequencyIndicator())
-                || indicatorEclass.equals(IndicatorsPackage.eINSTANCE.getYearLowFrequencyIndicator())
-        ) {
+                || indicatorEclass.equals(IndicatorsPackage.eINSTANCE.getYearLowFrequencyIndicator())) {
             return true;
         }
         return false;

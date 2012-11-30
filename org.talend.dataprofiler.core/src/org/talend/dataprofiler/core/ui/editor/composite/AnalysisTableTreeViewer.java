@@ -1056,8 +1056,8 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
         deleteIndicatorAideItems(tableIndicator, inidicatorUnit);
         tableIndicator.removeIndicatorUnit(inidicatorUnit);
         this.indicatorTreeItemMap.remove(inidicatorUnit);
-        // remove dependency
-        removeDependency(masterPage.getAnalysis(), inidicatorUnit);
+        // add removed dependency
+        addRemovedElements(masterPage.getAnalysis(), inidicatorUnit);
     }
 
     /**
@@ -1094,8 +1094,8 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
         for (TableIndicatorUnit indiUnit : tableIndicator.getIndicatorUnits()) {
             tableIndicator.removeIndicatorUnit(indiUnit);
             this.indicatorTreeItemMap.remove(indiUnit);
-            // remove dependency
-            removeDependency(masterPage.getAnalysis(), indiUnit);
+            // add removed dependency
+            addRemovedElements(masterPage.getAnalysis(), indiUnit);
         }
     }
 

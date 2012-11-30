@@ -17,6 +17,7 @@ import java.beans.PropertyChangeListener;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
@@ -63,6 +64,7 @@ import org.jfree.chart.JFreeChart;
 import org.jfree.experimental.chart.swt.ChartComposite;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.repository.IRepositoryViewObject;
+import org.talend.cwm.dependencies.DependenciesHandler;
 import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.dataprofiler.core.ImageLib;
@@ -672,7 +674,12 @@ public class TableMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
             // ADD gdbu 2011-3-3 bug 19179
             this.nameText.setText(analysisHandler.getName());
             // ~
-
+            // TDQ-5581,if has removed rules,should remove dependency each other before saving.
+            HashSet<ModelElement> removedElements = treeViewer.getRemovedElements();
+            if (!removedElements.isEmpty()) {
+                DependenciesHandler.getInstance().removeDependenciesBetweenModels(analysis,
+                        new ArrayList<ModelElement>(removedElements));
+            }
             saved = ElementWriterFactory.getInstance().createAnalysisWrite().save(tdqAnalysisItem);
         }
         if (saved.isOk()) {

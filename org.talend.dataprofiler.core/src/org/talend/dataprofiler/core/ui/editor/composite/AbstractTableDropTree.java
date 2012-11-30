@@ -16,7 +16,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.resources.IFile;
-import org.talend.cwm.dependencies.DependenciesHandler;
 import org.talend.dataprofiler.core.model.ModelElementIndicator;
 import org.talend.dataprofiler.core.ui.editor.preview.TableIndicatorUnit;
 import org.talend.dataquality.analysis.Analysis;
@@ -80,18 +79,17 @@ public abstract class AbstractTableDropTree extends AbstractColumnDropTree {
     }
 
     /**
-     * DOC zshen Comment method "removeDependency".
+     * rename method "removeDependency" to addRemovedElements.
      * 
      * @param analysis
      * @param unit
      */
-    protected void removeDependency(Analysis analysis, TableIndicatorUnit unit) {
+    protected void addRemovedElements(Analysis analysis, TableIndicatorUnit unit) {
         List<ModelElement> reomveElements = new ArrayList<ModelElement>();
         Indicator indicator = unit.getIndicator();
         if (indicator instanceof WhereRuleIndicatorImpl) {
             reomveElements.add(indicator.getIndicatorDefinition());
         }
-        DependenciesHandler.getInstance().removeDependenciesBetweenModels(analysis, reomveElements);
         super.removedElements.addAll(reomveElements);
     }
 }
