@@ -425,6 +425,13 @@ public abstract class ModelElementIndicatorImpl implements ModelElementIndicator
     public void addTempIndicatorEnum(IndicatorEnum indicatorEnum) {
         if (!tempIndicatorEnums.contains(indicatorEnum)) {
             tempIndicatorEnums.add(indicatorEnum);
+            if (indicatorEnum == IndicatorEnum.RangeIndicatorEnum || indicatorEnum == IndicatorEnum.IQRIndicatorEnum) {
+                for (IndicatorEnum child : indicatorEnum.getChildren()) {
+                    if (!tempIndicatorEnums.contains(child)) {
+                        tempIndicatorEnums.add(child);
+                    }
+                }
+            }
         }
     }
 
