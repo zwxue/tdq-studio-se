@@ -77,7 +77,6 @@ public class UpdateMeanMedianForDB2Task extends AbstractWorksapceUpdateTask {
         // Update sql of DB2 to Median indicator
         IndicatorDefinition medianDefinition = definitionHandler.getDefinitionById(MEDIAN_UUID);
         if (medianDefinition != null && IndicatorDefinitionFileHelper.removeSqlExpression(medianDefinition, DB2)) {
-            IndicatorDefinitionFileHelper.removeSqlExpression(medianDefinition, SupportDBUrlType.ACCESS.getLanguage());
             List<TdExpression> remainExpLs = new ArrayList<TdExpression>();
             remainExpLs.addAll(medianDefinition.getSqlGenericExpression());
             medianDefinition.getSqlGenericExpression().clear();
