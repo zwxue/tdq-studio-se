@@ -12,16 +12,20 @@
 // ============================================================================
 package org.talend.dataprofiler.core.migration.impl;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import org.talend.core.model.metadata.builder.database.dburl.SupportDBUrlType;
+import org.talend.cwm.relational.TdExpression;
 import org.talend.dataprofiler.core.migration.AbstractWorksapceUpdateTask;
 import org.talend.dataprofiler.core.migration.helper.IndicatorDefinitionFileHelper;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
+import org.talend.dq.indicators.definitions.DefinitionHandler;
 
 /**
- * DOC msjian class global comment. The task is used to add sql template in all 12 Text Statistics
- * for SQLite. 22517: 2011-07-20
+ * DOC msjian class global comment. The task is used to add sql template in all 12 Text Statistics for SQLite. 22517:
+ * 2011-07-20
  */
 public class UpdateTextStatisticsIndicatorsForSQLiteTask extends AbstractWorksapceUpdateTask {
 
@@ -30,19 +34,19 @@ public class UpdateTextStatisticsIndicatorsForSQLiteTask extends AbstractWorksap
     private static final String AVERAGE_LENGTH_WITH_BLANK = "Average Length With Blank"; //$NON-NLS-1$
 
     private static final String AVERAGE_LENGTH_WITH_BLANK_AND_NULL = "Average Length With Blank and Null"; //$NON-NLS-1$
-    
+
     private static final String AVERAGE_LENGTH_WITH_NULL = "Average Length With Null"; //$NON-NLS-1$
 
     private static final String MAXIMAL_LENGTH = "Maximal Length"; //$NON-NLS-1$
 
     private static final String MAXIMAL_LENGTH_WITH_BLANK = "Maximal Length With Blank"; //$NON-NLS-1$
-    
+
     private static final String MAXIMAL_LENGTH_WITH_BLANK_AND_NULL = "Maximal Length With Blank and Null"; //$NON-NLS-1$
 
     private static final String MAXIMAL_LENGTH_WITH_NULL = "Maximal Length With Null"; //$NON-NLS-1$
 
     private static final String MINIMAL_LENGTH = "Minimal Length"; //$NON-NLS-1$
-    
+
     private static final String MINIMAL_LENGTH_WITH_BLANK = "Minimal Length With Blank"; //$NON-NLS-1$
 
     private static final String MINIMAL_LENGTH_WITH_BLANK_AND_NULL = "Minimal Length With Blank and Null"; //$NON-NLS-1$
@@ -50,7 +54,18 @@ public class UpdateTextStatisticsIndicatorsForSQLiteTask extends AbstractWorksap
     private static final String MINIMAL_LENGTH_WITH_NULL = "Minimal Length With Null"; //$NON-NLS-1$
 
     private static final String SQLITE = SupportDBUrlType.SQLITE3DEFAULTURL.getLanguage();
-    
+
+    private static final String[] TextStatisticsIndicators = { AVERAGE_LENGTH, AVERAGE_LENGTH_WITH_BLANK,
+            AVERAGE_LENGTH_WITH_BLANK_AND_NULL, AVERAGE_LENGTH_WITH_NULL, MAXIMAL_LENGTH, MAXIMAL_LENGTH_WITH_BLANK,
+            MAXIMAL_LENGTH_WITH_BLANK_AND_NULL, MAXIMAL_LENGTH_WITH_NULL, MINIMAL_LENGTH, MINIMAL_LENGTH_WITH_BLANK,
+            MINIMAL_LENGTH_WITH_BLANK_AND_NULL, MINIMAL_LENGTH_WITH_NULL };
+
+    private static final String BODY_AVERAGE = "SELECT SUM(LENGTH(<%=__COLUMN_NAMES__%>)), COUNT(<%=__COLUMN_NAMES__%>) FROM <%=__TABLE_NAME__%> <%=__WHERE_CLAUSE__%>"; //$NON-NLS-1$
+
+    private static final String BODY_MAX = "SELECT MAX(LENGTH(<%=__COLUMN_NAMES__%>)) FROM <%=__TABLE_NAME__%> <%=__WHERE_CLAUSE__%>"; //$NON-NLS-1$
+
+    private static final String BODY_MIN = "SELECT MIN(LENGTH(<%=__COLUMN_NAMES__%>)) FROM <%=__TABLE_NAME__%> <%=__WHERE_CLAUSE__%>"; //$NON-NLS-1$
+
     /*
      * (non-Javadoc)
      * 
@@ -58,69 +73,35 @@ public class UpdateTextStatisticsIndicatorsForSQLiteTask extends AbstractWorksap
      */
     @Override
     protected boolean doExecute() throws Exception {
+        boolean result = true;
+        for (String indicatorName : TextStatisticsIndicators) {
+            IndicatorDefinition indiDefinition = IndicatorDefinitionFileHelper.getSystemIndicatorByName(indicatorName);
+            if (indiDefinition != null && IndicatorDefinitionFileHelper.removeSqlExpression(indiDefinition, SQLITE)) {
+                String body = ""; //$NON-NLS-1$
+                if (indicatorName.startsWith("Average")) { //$NON-NLS-1$
+                    body = BODY_AVERAGE;
+                } else if (indicatorName.startsWith("Maximal")) { //$NON-NLS-1$
+                    body = BODY_MAX;
+                } else if (indicatorName.startsWith("Minimal")) { //$NON-NLS-1$
+                    body = BODY_MIN;
+                }
 
-        IndicatorDefinition definition0 = IndicatorDefinitionFileHelper.getSystemIndicatorByName(AVERAGE_LENGTH);
-        IndicatorDefinition definition1 = IndicatorDefinitionFileHelper.getSystemIndicatorByName(AVERAGE_LENGTH_WITH_BLANK);
-        IndicatorDefinition definition2 = IndicatorDefinitionFileHelper.getSystemIndicatorByName(AVERAGE_LENGTH_WITH_BLANK_AND_NULL);
-        IndicatorDefinition definition3 = IndicatorDefinitionFileHelper.getSystemIndicatorByName(AVERAGE_LENGTH_WITH_NULL);
-        IndicatorDefinition definition4 = IndicatorDefinitionFileHelper.getSystemIndicatorByName(MAXIMAL_LENGTH);
-        IndicatorDefinition definition5 = IndicatorDefinitionFileHelper.getSystemIndicatorByName(MAXIMAL_LENGTH_WITH_BLANK);
-        IndicatorDefinition definition6 = IndicatorDefinitionFileHelper.getSystemIndicatorByName(MAXIMAL_LENGTH_WITH_BLANK_AND_NULL);
-        IndicatorDefinition definition7 = IndicatorDefinitionFileHelper.getSystemIndicatorByName(MAXIMAL_LENGTH_WITH_NULL);
-        IndicatorDefinition definition8 = IndicatorDefinitionFileHelper.getSystemIndicatorByName(MINIMAL_LENGTH);
-        IndicatorDefinition definition9 = IndicatorDefinitionFileHelper.getSystemIndicatorByName(MINIMAL_LENGTH_WITH_BLANK);
-        IndicatorDefinition definition10 = IndicatorDefinitionFileHelper.getSystemIndicatorByName(MINIMAL_LENGTH_WITH_BLANK_AND_NULL);
-        IndicatorDefinition definition11 = IndicatorDefinitionFileHelper.getSystemIndicatorByName(MINIMAL_LENGTH_WITH_NULL);
-        
-        if (definition0 != null && definition1 != null && definition2 != null && definition3 != null && definition4 != null
-                && definition5 != null && definition6 != null && definition7 != null && definition8 != null
-                && definition9 != null && definition10 != null && definition11 != null) {
+                List<TdExpression> remainExpLs = new ArrayList<TdExpression>();
+                remainExpLs.addAll(indiDefinition.getSqlGenericExpression());
+                indiDefinition.getSqlGenericExpression().clear();
 
-            IndicatorDefinitionFileHelper.addSqlExpression(definition0, SQLITE,
-                    "SELECT SUM(LENGTH(<%=__COLUMN_NAMES__%>)), COUNT(<%=__COLUMN_NAMES__%>) FROM <%=__TABLE_NAME__%> <%=__WHERE_CLAUSE__%>"); //$NON-NLS-1$
+                IndicatorDefinitionFileHelper.addSqlExpression(indiDefinition, SQLITE, body);
+                indiDefinition.getSqlGenericExpression().addAll(remainExpLs);
 
-            IndicatorDefinitionFileHelper.addSqlExpression(definition1, SQLITE,
-                    "SELECT SUM(LENGTH(<%=__COLUMN_NAMES__%>)), COUNT(<%=__COLUMN_NAMES__%>) FROM <%=__TABLE_NAME__%> <%=__WHERE_CLAUSE__%>"); //$NON-NLS-1$
+                result = result && IndicatorDefinitionFileHelper.save(indiDefinition);
+            }
 
-            IndicatorDefinitionFileHelper.addSqlExpression(definition2, SQLITE,
-                    "SELECT SUM(LENGTH(<%=__COLUMN_NAMES__%>)), COUNT(<%=__COLUMN_NAMES__%>) FROM <%=__TABLE_NAME__%> <%=__WHERE_CLAUSE__%>"); //$NON-NLS-1$
-
-            IndicatorDefinitionFileHelper.addSqlExpression(definition3, SQLITE,
-                    "SELECT SUM(LENGTH(<%=__COLUMN_NAMES__%>)), COUNT(<%=__COLUMN_NAMES__%>) FROM <%=__TABLE_NAME__%> <%=__WHERE_CLAUSE__%>"); //$NON-NLS-1$
-
-            IndicatorDefinitionFileHelper.addSqlExpression(definition4, SQLITE,
-                    "SELECT MAX(LENGTH(<%=__COLUMN_NAMES__%>)) FROM <%=__TABLE_NAME__%> <%=__WHERE_CLAUSE__%>"); //$NON-NLS-1$
-
-            IndicatorDefinitionFileHelper.addSqlExpression(definition5, SQLITE,
-                    "SELECT MAX(LENGTH(<%=__COLUMN_NAMES__%>)) FROM <%=__TABLE_NAME__%> <%=__WHERE_CLAUSE__%>"); //$NON-NLS-1$
-
-            IndicatorDefinitionFileHelper.addSqlExpression(definition6, SQLITE,
-                    "SELECT MAX(LENGTH(<%=__COLUMN_NAMES__%>)) FROM <%=__TABLE_NAME__%> <%=__WHERE_CLAUSE__%>"); //$NON-NLS-1$
-
-            IndicatorDefinitionFileHelper.addSqlExpression(definition7, SQLITE,
-                    "SELECT MAX(LENGTH(<%=__COLUMN_NAMES__%>)) FROM <%=__TABLE_NAME__%> <%=__WHERE_CLAUSE__%>"); //$NON-NLS-1$
-
-            IndicatorDefinitionFileHelper.addSqlExpression(definition8, SQLITE,
-                    "SELECT MIN(LENGTH(<%=__COLUMN_NAMES__%>)) FROM <%=__TABLE_NAME__%> <%=__WHERE_CLAUSE__%>"); //$NON-NLS-1$
-
-            IndicatorDefinitionFileHelper.addSqlExpression(definition9, SQLITE,
-                    "SELECT MIN(LENGTH(<%=__COLUMN_NAMES__%>)) FROM <%=__TABLE_NAME__%> <%=__WHERE_CLAUSE__%>"); //$NON-NLS-1$
-
-            IndicatorDefinitionFileHelper.addSqlExpression(definition10, SQLITE,
-                    "SELECT MIN(LENGTH(<%=__COLUMN_NAMES__%>)) FROM <%=__TABLE_NAME__%> <%=__WHERE_CLAUSE__%>"); //$NON-NLS-1$
-
-            IndicatorDefinitionFileHelper.addSqlExpression(definition11, SQLITE,
-                    "SELECT MIN(LENGTH(<%=__COLUMN_NAMES__%>)) FROM <%=__TABLE_NAME__%> <%=__WHERE_CLAUSE__%>"); //$NON-NLS-1$
-
-            return IndicatorDefinitionFileHelper.save(definition0) & IndicatorDefinitionFileHelper.save(definition1)
-                    & IndicatorDefinitionFileHelper.save(definition2) & IndicatorDefinitionFileHelper.save(definition3)
-                    & IndicatorDefinitionFileHelper.save(definition4) & IndicatorDefinitionFileHelper.save(definition5)
-                    & IndicatorDefinitionFileHelper.save(definition6) & IndicatorDefinitionFileHelper.save(definition7)
-                    & IndicatorDefinitionFileHelper.save(definition8) & IndicatorDefinitionFileHelper.save(definition9)
-                    & IndicatorDefinitionFileHelper.save(definition10) & IndicatorDefinitionFileHelper.save(definition11);
         }
 
-        return false;
+        DefinitionHandler.getInstance().reloadIndicatorsDefinitions();
+
+        return result;
+
     }
 
     /*
