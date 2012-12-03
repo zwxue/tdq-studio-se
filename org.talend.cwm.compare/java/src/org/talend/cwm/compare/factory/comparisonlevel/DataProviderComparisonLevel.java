@@ -109,7 +109,7 @@ public class DataProviderComparisonLevel extends AbstractComparisonLevel {
                             if (!dbConn.getDatabaseType().equals(EDatabaseTypeName.GENERAL_JDBC.getDisplayName())) {
                                 ((DatabaseConnection) con).setURL(urlStr);
                             }
-                            ConnectionHelper.setUsingURL(con, urlStr);
+                            ConnectionHelper.setIsConnNeedReload(con, Boolean.TRUE);
                         }
 
                     }

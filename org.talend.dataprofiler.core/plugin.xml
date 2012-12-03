@@ -1487,6 +1487,12 @@
            id="org.talend.dataprofiler.core.migration.impl.UpdateBlankIndicator4SybaseTask"
            name="Update Blank Indicator for Sybase Task"
            version="5.0.4">
+     </workspacetask>
+     <workspacetask
+           class="org.talend.dataprofiler.core.migration.impl.ReplaceUsingUrlWithIsConnNeedReloadTask"
+           id="org.talend.dataprofiler.core.migration.impl.ReplaceUsingUrlWithIsConnNeedReloadTask"
+           name="Replace the &quot;USING_URL&quot; tag with &quot;IS_CONN_NEED_RELOAD&quot;&quot;"
+           version="5.0.4">
      </workspacetask> 
   </extension>
   <extension
