@@ -335,7 +335,7 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
 
             // Added yyin TDQ-6329 20121126
             ModelElementIndicator[] newSelects = translateSelectedNodeIntoIndicator(objs);
-            List<ColumnIndicator> ColumnIndicatorList = new ArrayList<ColumnIndicator>();
+            List<ModelElementIndicator> indicatorList = new ArrayList<ModelElementIndicator>();
             if (newSelects != null) {
                 // do not replace the original one(which may contains some indicator units), only add the new column
                 // indicator;
@@ -345,19 +345,19 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
                     boolean isOld = false;
                     for (ModelElementIndicator oldColumn : modelElementIndicators) {
                         if (oldColumn.getElementName().equals(column.getElementName())) {
-                            ColumnIndicatorList.add((ColumnIndicator) oldColumn);
+                            indicatorList.add(oldColumn);
                             isOld = true;
                             break;
                         }
                     }
                     // else add this column in filterInputData to ColumnIndicatorList
                     if (!isOld) {
-                        ColumnIndicatorList.add((ColumnIndicator) column);
+                        indicatorList.add(column);
                     }
                 }
+                this.modelElementIndicators = indicatorList.toArray(new ModelElementIndicator[indicatorList.size()]);
+                this.setElements(modelElementIndicators);
             }
-            this.modelElementIndicators = ColumnIndicatorList.toArray(new ColumnIndicator[ColumnIndicatorList.size()]);
-            this.setElements(modelElementIndicators);
             // ~
         } else {
             TreeItem[] items = this.tree.getItems();
