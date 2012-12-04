@@ -76,13 +76,13 @@ public final class DbmsLanguageFactory {
         boolean isDelimitedFile = ConnectionUtils.isDelimitedFileConnection(dataprovider);
         if (isDelimitedFile) {
             dbmsLanguage = createDbmsLanguage(DbmsLanguage.DELIMITEDFILE, PluginConstant.EMPTY_STRING);
-        } else if (dataprovider != null || isMdm) {
+        } else if (dataprovider != null) {
             String productSubtype = TaggedValueHelper.getValueString(TaggedValueHelper.DB_PRODUCT_NAME, dataprovider);
             String productVersion = TaggedValueHelper.getValueString(TaggedValueHelper.DB_PRODUCT_VERSION, dataprovider);
 
             // ADD msjian TDQ-6506 2012-11-28: when this analysis is an imported one. there is no these two tagged
             // values
-            if (StringUtils.isBlank(productSubtype) && StringUtils.isBlank(productVersion)) {
+            if (!isMdm && StringUtils.isBlank(productSubtype) && StringUtils.isBlank(productVersion)) {
                 IMetadataConnection iMetadataConnection = ConvertionHelper.convert(dataprovider);
                 java.sql.Connection sqlConn = null;
                 DatabaseConnection temConnection = null;
