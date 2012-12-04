@@ -1511,6 +1511,12 @@
            id="org.talend.dataprofiler.core.migration.impl.UpdateReportGeneratedDocPathTask"
            name="Update Report Generated Doc Path Task"
            version="5.1.3">
+     </workspacetask>
+     <workspacetask
+           class="org.talend.dataprofiler.core.migration.impl.ReplaceUsingUrlWithIsConnNeedReloadTask"
+           id="org.talend.dataprofiler.core.migration.impl.ReplaceUsingUrlWithIsConnNeedReloadTask"
+           name="Replace the tag &quot;USING_URL&quot; by the tag &quot;IS_CONN_NEED_RELOAD&quot; for connections"
+           version="5.1.3">
      </workspacetask>  
   </extension>
   <extension
