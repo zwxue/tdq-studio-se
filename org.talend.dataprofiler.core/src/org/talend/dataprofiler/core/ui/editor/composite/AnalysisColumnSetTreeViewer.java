@@ -333,9 +333,9 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
                     if (!isOld) {
                         indicatorList.add(column);
                     }
+                }
                 this.modelElementIndicators = indicatorList.toArray(new ModelElementIndicator[indicatorList.size()]);
                 this.setElements(modelElementIndicators);
-                }
             }
         } else {
             TreeItem[] items = this.tree.getItems();
