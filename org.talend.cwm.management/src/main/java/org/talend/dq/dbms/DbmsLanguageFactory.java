@@ -74,7 +74,9 @@ public final class DbmsLanguageFactory {
         boolean isMdm = ConnectionUtils.isMdmConnection(dataprovider);
         // MOD qiongli 2011-1-11 feature 16796.handle the delimited file
         boolean isDelimitedFile = ConnectionUtils.isDelimitedFileConnection(dataprovider);
-        if (dataprovider != null || isMdm) {
+        if (isDelimitedFile) {
+            dbmsLanguage = createDbmsLanguage(DbmsLanguage.DELIMITEDFILE, PluginConstant.EMPTY_STRING);
+        } else if (dataprovider != null || isMdm) {
             String productSubtype = TaggedValueHelper.getValueString(TaggedValueHelper.DB_PRODUCT_NAME, dataprovider);
             String productVersion = TaggedValueHelper.getValueString(TaggedValueHelper.DB_PRODUCT_VERSION, dataprovider);
 
@@ -109,8 +111,6 @@ public final class DbmsLanguageFactory {
                 String version = isMdm ? DatabaseConstant.MDM_VERSION : productVersion;
                 dbmsLanguage = createDbmsLanguage(dbmsSubtype, version);
             }
-        } else if (isDelimitedFile) {
-            dbmsLanguage = createDbmsLanguage(DbmsLanguage.DELIMITEDFILE, PluginConstant.EMPTY_STRING);
         }
         String identifierQuoteString = ConnectionHelper.getIdentifierQuoteString(dataprovider);
         if (identifierQuoteString == null || identifierQuoteString.length() == 0) {

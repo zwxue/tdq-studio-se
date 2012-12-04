@@ -295,6 +295,7 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
     @Override
     public void setInput(Object[] objs) {
         if (objs != null && objs.length != 0) {
+            // for file connection, here is : DFColumnRepNode
             List<DBColumnRepNode> columnList = new ArrayList<DBColumnRepNode>();
             for (Object obj : objs) {
                 if (obj instanceof DBColumnRepNode) {
@@ -313,7 +314,7 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
             }
 
             ModelElementIndicator[] newSelects = translateSelectedNodeIntoIndicator(objs);
-            List<ColumnIndicator> ColumnIndicatorList = new ArrayList<ColumnIndicator>();
+            List<ModelElementIndicator> indicatorList = new ArrayList<ModelElementIndicator>();
             if (newSelects != null) {
                 // do not replace the original one(which may contains some indicator units), only add the new column
                 // indicator;
@@ -323,18 +324,18 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
                     boolean isOld = false;
                     for (ModelElementIndicator oldColumn : modelElementIndicators) {
                         if (oldColumn.getElementName().equals(column.getElementName())) {
-                            ColumnIndicatorList.add((ColumnIndicator) oldColumn);
+                            indicatorList.add(oldColumn);
                             isOld = true;
                             break;
                         }
                     }
                     // else add this column in filterInputData to ColumnIndicatorList
                     if (!isOld) {
-                        ColumnIndicatorList.add((ColumnIndicator) column);
+                        indicatorList.add(column);
                     }
                 }
             }
-            this.modelElementIndicators = ColumnIndicatorList.toArray(new ColumnIndicator[ColumnIndicatorList.size()]);
+            this.modelElementIndicators = indicatorList.toArray(new ModelElementIndicator[indicatorList.size()]);
             this.setElements(modelElementIndicators);
         } else {
             TreeItem[] items = this.tree.getItems();
