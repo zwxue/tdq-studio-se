@@ -37,13 +37,18 @@ import org.eclipse.ui.part.FileEditorInput;
 import org.talend.core.model.metadata.IMetadataConnection;
 import org.talend.core.model.metadata.builder.ConvertionHelper;
 import org.talend.core.model.metadata.builder.connection.Connection;
+import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
 import org.talend.core.model.metadata.builder.database.HotClassLoader;
 import org.talend.core.model.metadata.builder.database.JDBCDriverLoader;
+import org.talend.core.model.metadata.builder.database.PluginConstant;
+import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.properties.Item;
+import org.talend.core.model.properties.Property;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.cwm.compare.exception.ReloadCompareException;
 import org.talend.cwm.compare.factory.ComparisonLevelFactory;
 import org.talend.cwm.db.connection.ConnectionUtils;
+import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
@@ -56,6 +61,7 @@ import org.talend.dataquality.analysis.AnalysisType;
 import org.talend.dataquality.helpers.AnalysisHelper;
 import org.talend.dataquality.properties.TDQAnalysisItem;
 import org.talend.dq.analysis.connpool.TdqAnalysisConnectionPool;
+import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.helper.ProxyRepositoryManager;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
@@ -251,6 +257,20 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
                     DefaultMessagesImpl.getString("RunAnalysisAction.checkConnFailMsg", connectionAvailable.getMessage()));//$NON-NLS-1$
             return;
         }
+        // MOD qiongli 2012-12-5 TDQ-6506 after checking successfully,add these 2 tagged value into connection if they
+        // are not in item file.
+        if (analysisDataProvider instanceof DatabaseConnection
+                && TaggedValueHelper.getValueString(TaggedValueHelper.DB_PRODUCT_NAME, analysisDataProvider).equals(
+                        PluginConstant.EMPTY_STRING)) {
+            Property property = PropertyHelper.getProperty(analysisDataProvider);
+            if (property != null) {
+                Item item = property.getItem();
+                if (item != null) {
+                    ConnectionUtils.updataTaggedValueForConnectionItem((ConnectionItem) item);
+                }
+            }
+        }
+
         // ~
         AnalysisType analysisType = analysis.getParameters().getAnalysisType();
 
