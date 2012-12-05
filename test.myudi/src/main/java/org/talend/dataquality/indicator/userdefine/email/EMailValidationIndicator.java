@@ -205,11 +205,11 @@ public class EMailValidationIndicator extends UserDefIndicatorImpl {
             }
         }
 
-        // after TDQ-6544 fixed, we can remove this default sender email set
+        // if the parameter sender email is not set
         if (emailAddress == null) {
-            setEmailAddress("bey2nd@yahoo.com.cn"); //$NON-NLS-1$
+            setEmailAddress("set your email as sender email here"); //$NON-NLS-1$
         }
-        // ~
+
         if (!this.isAddressValid(emailAddress)) {
             log.error("Invalid sender email set in parameters of the user defined indicator \"" + this.getName() + "\": " //$NON-NLS-1$ //$NON-NLS-2$
                     + emailAddress);
