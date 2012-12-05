@@ -27,10 +27,15 @@ import org.junit.Test;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.rule.PowerMockRule;
+import org.talend.commons.utils.WorkspaceUtils;
+import org.talend.core.model.general.Project;
 import org.talend.core.model.properties.Item;
 import org.talend.core.model.properties.ItemState;
 import org.talend.core.model.properties.Property;
+import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.dataquality.properties.TDQReportItem;
+import org.talend.repository.ProjectManager;
+import org.talend.repository.RepositoryWorkUnit;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
@@ -42,7 +47,8 @@ import orgomg.cwm.objectmodel.core.ModelElement;
  * 
  */
 // @RunWith(PowerMockRunner.class)
-@PrepareForTest({ DQDeleteHelper.class, PropertyHelper.class, ReportUtils.class, EObjectHelper.class })
+@PrepareForTest({ DQDeleteHelper.class, PropertyHelper.class, ReportUtils.class, EObjectHelper.class, ProjectManager.class,
+        WorkspaceUtils.class, ProxyRepositoryFactory.class })
 public class DQDeleteHelperTest {
 
     @Rule
@@ -63,10 +69,21 @@ public class DQDeleteHelperTest {
         when(item.getProperty()).thenReturn(prop);
         PowerMockito.mockStatic(PropertyHelper.class);
         when(PropertyHelper.getItemFile(prop)).thenReturn(file);
-        stub(method(ReportUtils.class, "getOutputFolder", IFile.class)).toReturn(folder);
+        stub(method(ReportUtils.class, "getOutputFolder", IFile.class)).toReturn(folder); //$NON-NLS-1$
+        PowerMockito.mockStatic(ProjectManager.class);
+        ProjectManager mockProjectManager = PowerMockito.mock(ProjectManager.class);
+        when(ProjectManager.getInstance()).thenReturn(mockProjectManager);
+        Project mockProject = PowerMockito.mock(Project.class);
+        when(mockProjectManager.getCurrentProject()).thenReturn(mockProject);
+        when(folder.getParent()).thenReturn(null);
+        PowerMockito.mockStatic(WorkspaceUtils.class);
+        when(WorkspaceUtils.ifolderToFile(folder)).thenReturn(null);
+        PowerMockito.mockStatic(ProxyRepositoryFactory.class);
+        ProxyRepositoryFactory mockProxyRepositoryFactory = PowerMockito.mock(ProxyRepositoryFactory.class);
+        when(ProxyRepositoryFactory.getInstance()).thenReturn(mockProxyRepositoryFactory);
+        stub(method(ProxyRepositoryFactory.class, "executeRepositoryWorkUnit", RepositoryWorkUnit.class)); //$NON-NLS-1$
         ReturnCode rc = DQDeleteHelper.deleteRelations(item);
         assertTrue(rc.isOk());
-
     }
 
     @Test
@@ -96,7 +113,6 @@ public class DQDeleteHelperTest {
         // replayAll();
         List<IRepositoryNode> canNotDeletedNodes = DQDeleteHelper.getCanNotDeletedNodes(recybinLs, true);
         assertFalse(canNotDeletedNodes.isEmpty());
-
     }
 
     @Test
@@ -127,7 +143,5 @@ public class DQDeleteHelperTest {
         when(PropertyHelper.getProperty(mod)).thenReturn(prop);
         canNotDeletedNodes = DQDeleteHelper.getCanNotDeletedNodes(canNotDeletedNodes, true);
         assertTrue(canNotDeletedNodes.isEmpty());
-
     }
-
 }
