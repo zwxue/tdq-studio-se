@@ -12,7 +12,9 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.views.resources;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.io.File;
 import java.util.List;
@@ -30,6 +32,9 @@ import org.talend.dataprofiler.core.helper.UnitTestBuildHelper;
 import org.talend.dq.nodes.ReportFolderRepNode;
 import org.talend.dq.nodes.ReportRepNode;
 import org.talend.dq.nodes.ReportSubFolderRepNode;
+import org.talend.dq.nodes.SourceFileFolderRepNode;
+import org.talend.dq.nodes.SourceFileRepNode;
+import org.talend.dq.nodes.SourceFileSubFolderNode;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.utils.string.StringUtilities;
@@ -70,12 +75,18 @@ public class RepositoryNodeDorpAdapterAssistantRealTest {
         }
     }
 
+    @Test
+    public void allTestCases() {
+        testMoveReportRepNode();
+
+        testMoveSourceFileRepNode();
+    }
+
     /**
      * Test method for
      * {@link org.talend.dataprofiler.core.ui.views.resources.RepositoryNodeDorpAdapterAssistant#moveReportRepNode(org.talend.repository.model.IRepositoryNode, org.talend.repository.model.IRepositoryNode)}
      * .
      */
-    @Test
     public void testMoveReportRepNode() {
         if (this.realProject != null) {
             String reportName = "B" + StringUtilities.getRandomString(7); //$NON-NLS-1$
@@ -110,4 +121,38 @@ public class RepositoryNodeDorpAdapterAssistantRealTest {
             fail("project is null!"); //$NON-NLS-1$
         }
     }
+
+    // move the source file from system folder to a sub folder
+    public void testMoveSourceFileRepNode() {
+        if (this.realProject != null) {
+            String fileName = "B" + StringUtilities.getRandomString(7); //$NON-NLS-1$
+            String folderName = "C" + StringUtilities.getRandomString(7); //$NON-NLS-1$
+            RepositoryNode realDataProfilingNode = UnitTestBuildHelper.createRealDataProfilingNode(this.realProject);
+            SourceFileFolderRepNode fileFolder = UnitTestBuildHelper.createRealSourceFileFolderRepNode(realDataProfilingNode);
+            SourceFileRepNode sourceFile = UnitTestBuildHelper.createRealSourceFileNode(fileName, fileFolder,
+                    Path.EMPTY, false);
+            SourceFileSubFolderNode subFolder = UnitTestBuildHelper.createRealSourceFileSubFolderRepNode(fileFolder, folderName);
+
+            LocalRepositoryObjectCRUD repNodeDropAssistant = new LocalRepositoryObjectCRUD();
+            try {
+                repNodeDropAssistant.moveRepositoryNodes(new IRepositoryNode[] { sourceFile }, subFolder);
+
+                List<IRepositoryNode> children = fileFolder.getChildren();
+                for (IRepositoryNode child : children) {
+                    assertFalse(child.getId().equals(sourceFile.getId()));
+                }
+
+                List<IRepositoryNode> children2 = subFolder.getChildren();
+                for (IRepositoryNode child : children2) {
+                    assertTrue(child.getId().equals(sourceFile.getId()));
+                }
+            } catch (PersistenceException e) {
+                fail(e.getMessage());
+            }
+        } else {
+            fail("project is null!"); //$NON-NLS-1$
+        }
+    }
+
+
 }
