@@ -205,11 +205,6 @@ public class EMailValidationIndicator extends UserDefIndicatorImpl {
             }
         }
 
-        // if the parameter sender email is not set
-        if (emailAddress == null) {
-            setEmailAddress("set your email as sender email here"); //$NON-NLS-1$
-        }
-
         if (!this.isAddressValid(emailAddress)) {
             log.error("Invalid sender email set in parameters of the user defined indicator \"" + this.getName() + "\": " //$NON-NLS-1$ //$NON-NLS-2$
                     + emailAddress);
