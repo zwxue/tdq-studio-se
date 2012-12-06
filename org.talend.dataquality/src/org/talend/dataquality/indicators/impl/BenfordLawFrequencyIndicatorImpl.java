@@ -39,11 +39,15 @@ public class BenfordLawFrequencyIndicatorImpl extends FrequencyIndicatorImpl imp
     }
 
     /**
-     * handle with some special cases: 1) when there are null values; 2) when there miss some numbers between 1~9; 3)
-     * when the column is double, the leading digit maybe 0; 4) when the column is string type, whenthe leading is not
-     * 1~9, all counted into "invalid" one.
+     * handle some special cases for SQL engine:
+     * <ul>
+     * <li>when there are null values;</li>
+     * <li>when there miss some numbers between 1~9;</li>
+     * <li>when the column is double, the leading digit maybe 0;</li>
+     * <li>when the column is string type, when the leading is not 1~9, all counted into "invalid" one.</li>
+     * </ul>
      */
-    private void checkValues() {
+    private void handleSpecialCharacterAndMissingValues() {
         if (isChecked && valueToFreq.size() < 1) {
             return;
         }
@@ -182,7 +186,7 @@ public class BenfordLawFrequencyIndicatorImpl extends FrequencyIndicatorImpl imp
     public boolean storeSqlResults(List<Object[]> objects) {
         boolean ok = super.storeSqlResults(objects);
         if (ok) {
-            this.checkValues();
+            this.handleSpecialCharacterAndMissingValues();
         }
         return ok;
     }
@@ -190,11 +194,16 @@ public class BenfordLawFrequencyIndicatorImpl extends FrequencyIndicatorImpl imp
     /*
      * (non-Javadoc)
      * 
-     * @see org.talend.dataquality.indicators.impl.FrequencyIndicatorImpl#finalizeComputation()
+     * @see org.talend.dataquality.indicators.impl.FrequencyIndicatorImpl#reset()
      */
     @Override
-    public boolean finalizeComputation() {
-        checkValues();
-        return super.finalizeComputation();
+    public boolean reset() {
+        boolean ok = super.reset();
+        // initialize map with expected digits 1..9
+        for (int i = 1; i <= 9; i++) {
+            valueToFreq.put(String.valueOf(i), 0L);
+        }
+        return ok;
     }
+
 } // BenfordLawFrequencyIndicatorImpl
