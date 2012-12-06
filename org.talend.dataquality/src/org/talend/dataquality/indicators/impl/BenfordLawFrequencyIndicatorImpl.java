@@ -6,7 +6,6 @@
 package org.talend.dataquality.indicators.impl;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import org.eclipse.emf.ecore.EClass;
@@ -37,24 +36,6 @@ public class BenfordLawFrequencyIndicatorImpl extends FrequencyIndicatorImpl imp
      */
     protected BenfordLawFrequencyIndicatorImpl() {
         super();
-    }
-
-    /**
-     * in order to check the result.
-     * 
-     * @Override public boolean storeSqlResults(List<Object[]> objects) { // store the sql results in: valueToFreq
-     * super.storeSqlResults(objects);
-     * 
-     * // deal with valueToFreq for several cases checkValues();
-     * 
-     * return true; }
-     */
-
-    @Override
-    public HashMap<Object, Long> getValueToFreqGen() {
-        checkValues();
-
-        return valueToFreq;
     }
 
     /**
@@ -192,4 +173,17 @@ public class BenfordLawFrequencyIndicatorImpl extends FrequencyIndicatorImpl imp
         return parameters;
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataquality.indicators.impl.FrequencyIndicatorImpl#storeSqlResults(java.util.List)
+     */
+    @Override
+    public boolean storeSqlResults(List<Object[]> objects) {
+        boolean ok = super.storeSqlResults(objects);
+        if (ok) {
+            this.checkValues();
+        }
+        return ok;
+    }
 } // BenfordLawFrequencyIndicatorImpl
