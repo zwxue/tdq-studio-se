@@ -222,17 +222,9 @@ public final class PatternUtilities {
             boolean isDelimitedFileConnection = ConnectionUtils.isDelimitedFileConnection((DataProvider) dm);
             boolean isMdmConnection = ConnectionUtils.isMdmConnection((DataProvider) dm);
             if (trc != null) {
-                java.sql.Connection conn = trc.getObject();
-                if (isDelimitedFileConnection) {
-                    dbmsLanguage = DbmsLanguageFactory.createDbmsLanguage(dm);
-                } else if (isMdmConnection) {
-                    dbmsLanguage = DbmsLanguageFactory.createDbmsLanguage(dm);
-                } else {
                     // SoftwareSystem softwareSystem = DatabaseContentRetriever.getSoftwareSystem(conn);
                     // MOD sizhaoliu TDQ-6316
-                    // SoftwareSystem softwareSystem = ConnectionHelper.getSoftwareSystem(conn);
                     dbmsLanguage = DbmsLanguageFactory.createDbmsLanguage(dm);
-                }
             }
 
             // MOD xqliu 2010-08-12 bug 14601

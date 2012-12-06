@@ -194,7 +194,7 @@ public abstract class AbstractComparisonLevel implements IComparisonLevel {
     private void updateTaggedValue() {
         DatabaseConnection dbConn = SwitchHelpers.DATABASECONNECTION_SWITCH.doSwitch(oldDataProvider);
         if (dbConn != null) {
-            ConnectionHelper.setUsingURL(oldDataProvider, dbConn.getURL());
+            ConnectionHelper.setIsConnNeedReload(oldDataProvider, Boolean.TRUE);
         }
 
     }

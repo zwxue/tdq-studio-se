@@ -494,22 +494,10 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
             }
         }
 
-        // MOD msjian 2011-7-18 23216: there are two times saveTextChange
-        // saveTextChange();
         super.doSave(monitor);
 
-        // MOD by zshen the isUrlChanged will not be true because urlText can not be modify now
-        // if (isUrlChanged) {
-        // updateConnection(tmpParam);
-        // storeDriveInfoToPerference(tmpParam);
-        // }
 
         try {
-            // MOD sizhaoliu TDQ-6296 no need to reload data provider because modifications of
-            // username/passwd/connection will not affect the data provider《
-            // if (checkDBConnection) {
-            // reloadDataProvider();
-            // }
 
             // MOD sizhaoliu TDQ-6296 open an analysis after renaming the connection on which it depends, connection
             // field is empty and all the indicators are lost.
@@ -602,12 +590,6 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
             JavaSqlFactory.setUsername(connection, loginText.getText());
             JavaSqlFactory.setPassword(connection, passwordText.getText());
         }
-        // JavaSqlFactory.setURL(connection, urlText.getText());
-        // MOD zshen for bug 12327:to save driverClassName.
-        //        if (tmpParam != null && tmpParam.getDriverClassName() != null && !"".equals(tmpParam.getDriverClassName())) {//$NON-NLS-1$
-        // ConnectionUtils.setDriverClass(connection, tmpParam.getDriverClassName());
-        // }
-        // ~12327
         // MOD msjian 2011-7-18 23216: when there is no error for name, do set
         if (super.saveTextChange()) {
             ConnectionUtils.setName(connection, nameText.getText());
