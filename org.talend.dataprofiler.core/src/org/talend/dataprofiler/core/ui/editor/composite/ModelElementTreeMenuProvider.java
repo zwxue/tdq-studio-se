@@ -28,6 +28,7 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.FileEditorInput;
+import org.talend.commons.utils.platform.PluginChecker;
 import org.talend.core.model.metadata.MetadataColumnRepositoryObject;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.properties.ConnectionItem;
@@ -184,7 +185,7 @@ public abstract class ModelElementTreeMenuProvider {
         }
         // MOD zshen 2010-06-02 featrue 12919
         // judge to indicator whether is frequency
-        if (isSelectedFrequencyIndicator(tree.getSelection())) {
+        if (isSelectedFrequencyIndicator(tree.getSelection()) && PluginChecker.isTDCPLoaded()) {
             MenuItem editPatternMenuItem = new MenuItem(menu, SWT.CASCADE);
             editPatternMenuItem.setText(DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.generateJob")); //$NON-NLS-1$
             editPatternMenuItem.setImage(ImageLib.getImage(ImageLib.ICON_PROCESS));
