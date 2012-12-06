@@ -186,4 +186,15 @@ public class BenfordLawFrequencyIndicatorImpl extends FrequencyIndicatorImpl imp
         }
         return ok;
     }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataquality.indicators.impl.FrequencyIndicatorImpl#finalizeComputation()
+     */
+    @Override
+    public boolean finalizeComputation() {
+        checkValues();
+        return super.finalizeComputation();
+    }
 } // BenfordLawFrequencyIndicatorImpl
