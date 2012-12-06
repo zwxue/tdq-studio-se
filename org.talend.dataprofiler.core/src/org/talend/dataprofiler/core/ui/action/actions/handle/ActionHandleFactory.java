@@ -108,6 +108,7 @@ public final class ActionHandleFactory {
                 handle = new ReportHandle(node);
                 break;
             case PATTERNS:
+            case RULES_PARSER:
             case RULES_SQL:
                 handle = new EMFResourceHandle(node);
                 break;
