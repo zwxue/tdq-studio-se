@@ -927,7 +927,9 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
                     getTheSuitedComposite(e).setExpanded(false);
                 }
 
-                comp.layout();
+                if (comp != null) {
+                    comp.layout();
+                }
                 form.reflow(true);
             }
 
@@ -944,7 +946,9 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
                     propertyChangeSupport.firePropertyChange(PluginConstant.EXPAND_TREE, null, e.item);
                 }
 
-                comp.layout();
+                if (comp != null) {
+                    comp.layout();
+                }
                 form.reflow(true);
             }
 
