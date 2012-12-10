@@ -12,10 +12,11 @@
 // ============================================================================
 package org.talend.dataprofiler.core.helper;
 
-import static org.mockito.Matchers.*;
-import static org.mockito.Mockito.*;
-import static org.powermock.api.support.membermodification.MemberMatcher.*;
-import static org.powermock.api.support.membermodification.MemberModifier.*;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+import static org.powermock.api.support.membermodification.MemberMatcher.method;
+import static org.powermock.api.support.membermodification.MemberModifier.stub;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -40,6 +41,7 @@ import org.talend.core.context.Context;
 import org.talend.core.context.RepositoryContext;
 import org.talend.core.language.ECodeLanguage;
 import org.talend.core.model.general.Project;
+import org.talend.core.model.properties.ByteArray;
 import org.talend.core.model.properties.FolderItem;
 import org.talend.core.model.properties.Item;
 import org.talend.core.model.properties.ItemState;
@@ -68,6 +70,7 @@ import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.ui.views.provider.RepositoryNodeBuilder;
+import org.talend.dataquality.PluginConstant;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisFactory;
 import org.talend.dataquality.analysis.AnalysisResult;
@@ -78,14 +81,19 @@ import org.talend.dataquality.helpers.AnalysisHelper;
 import org.talend.dataquality.helpers.ReportHelper;
 import org.talend.dataquality.properties.TDQAnalysisItem;
 import org.talend.dataquality.properties.TDQReportItem;
+import org.talend.dataquality.properties.TDQSourceFileItem;
 import org.talend.dataquality.properties.impl.PropertiesFactoryImpl;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.nodes.ReportFolderRepNode;
 import org.talend.dq.nodes.ReportRepNode;
 import org.talend.dq.nodes.ReportSubFolderRepNode;
+import org.talend.dq.nodes.SourceFileFolderRepNode;
+import org.talend.dq.nodes.SourceFileRepNode;
+import org.talend.dq.nodes.SourceFileSubFolderNode;
 import org.talend.repository.ProjectManager;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.IRepositoryNode.ENodeType;
+import org.talend.repository.model.IRepositoryNode.EProperties;
 import org.talend.repository.model.RepositoryConstants;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.resource.EResourceConstant;
@@ -461,6 +469,91 @@ public class UnitTestBuildHelper {
         }
 
         return reportRepNode;
+    }
+
+    /**
+     * create the real SourceFileFolderRepNode.
+     * 
+     * @param parentNode
+     * @return
+     */
+    public static SourceFileFolderRepNode createRealSourceFileFolderRepNode(RepositoryNode parentNode) {
+        SourceFileFolderRepNode node = null;
+        RepositoryNodeBuilder instance = RepositoryNodeBuilder.getInstance();
+        try {
+            node = (SourceFileFolderRepNode) instance.createRepositoryNodeSystemFolder(instance.getFolderHelper(), parentNode,
+                    EResourceConstant.SOURCE_FILES);
+        } catch (PersistenceException e) {
+            Assert.fail(e.getMessage());
+        }
+        return node;
+    }
+
+    public static SourceFileSubFolderNode createRealSourceFileSubFolderRepNode(RepositoryNode parentNode, String folderName) {
+        SourceFileSubFolderNode folderNode = null;
+
+        // create the sub folder
+        IFolder iFolder = RepositoryNodeHelper.getIFolder(parentNode);
+        createRealFolder(iFolder, folderName);
+
+        List<IRepositoryNode> subFolders = new ArrayList<IRepositoryNode>();
+        if (parentNode instanceof SourceFileFolderRepNode) {
+            subFolders = ((SourceFileFolderRepNode) parentNode).getChildren(false);
+        } else if (parentNode instanceof SourceFileSubFolderNode) {
+            subFolders = ((SourceFileSubFolderNode) parentNode).getChildren(false);
+        }
+
+        if (!subFolders.isEmpty()) {
+            for (IRepositoryNode node : subFolders) {
+                if (node instanceof SourceFileSubFolderNode) {
+                    SourceFileSubFolderNode subNode = (SourceFileSubFolderNode) node;
+                    if (folderName.equals(subNode.getLabel())) {
+                        folderNode = subNode;
+                        break;
+                    }
+                }
+            }
+        }
+
+        return folderNode;
+    }
+
+    public static SourceFileRepNode createRealSourceFileNode(String name, RepositoryNode parentNode, IPath createPath,
+            Boolean isDelete) {
+        SourceFileRepNode fileRepNode = null;
+
+        TDQSourceFileItem sourceFileItem = PropertiesFactoryImpl.eINSTANCE.createTDQSourceFileItem();
+        org.talend.core.model.properties.Property fileProperty = PropertiesFactory.eINSTANCE.createProperty();
+
+        fileProperty.setId(EcoreUtil.generateUUID());
+        fileProperty.setItem(sourceFileItem);
+        fileProperty.setLabel(name);
+
+        sourceFileItem.setProperty(fileProperty);
+        sourceFileItem.setFilename(name);
+        sourceFileItem.setName(name);
+        ByteArray byteArray = org.talend.core.model.properties.PropertiesFactory.eINSTANCE.createByteArray();
+        byteArray.setInnerContent(PluginConstant.EMPTY_STRING.getBytes());
+        sourceFileItem.setContent(byteArray);
+
+        ItemState itemState = org.talend.core.model.properties.PropertiesFactory.eINSTANCE.createItemState();
+        itemState.setDeleted(isDelete);
+        sourceFileItem.setState(itemState);
+
+        try {
+            ProxyRepositoryFactory.getInstance().create(sourceFileItem, createPath, false);
+
+            IRepositoryViewObject fileViewObject = new RepositoryViewObject(fileProperty);
+            fileRepNode = new SourceFileRepNode(fileViewObject, parentNode, ENodeType.REPOSITORY_ELEMENT);
+            fileRepNode.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.TDQ_SOURCE_FILE_ELEMENT);
+
+            fileRepNode.setProperties(EProperties.LABEL, ERepositoryObjectType.TDQ_SOURCE_FILE_ELEMENT);
+            fileViewObject.setRepositoryNode(fileRepNode);
+        } catch (PersistenceException e) {
+            Assert.fail(e.getMessage());
+        }
+
+        return fileRepNode;
     }
 
     /**
