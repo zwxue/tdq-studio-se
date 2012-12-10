@@ -107,7 +107,7 @@ public class DbmsLanguage {
      */
     static final String SQL = "SQL"; //$NON-NLS-1$
 
-    private static final String DOT = "."; //$NON-NLS-1$
+    protected static final String DOT = "."; //$NON-NLS-1$
 
     protected static final String COLON = ":"; //$NON-NLS-1$
 
@@ -310,7 +310,7 @@ public class DbmsLanguage {
         }
         if (schema != null && schema.trim().length() > 0) {
             qualName.append(this.handleContextModeOrAddQuotes(schema));
-            qualName.append(getDelimiter());
+            qualName.append(getSchemaDelimiter());
         }
 
         qualName.append(this.handleContextModeOrAddQuotes(table));
@@ -318,6 +318,15 @@ public class DbmsLanguage {
             log.debug(String.format("%s.%s.%s -> %s", catalog, schema, table, qualName)); //$NON-NLS-1$
         }
         return qualName.toString();
+    }
+
+    /**
+     * when separate the schema with table, using maybe different char especially for Informix ADDED TDQ-6570 yyin
+     * 
+     * @return
+     */
+    protected String getSchemaDelimiter() {
+        return getDelimiter();
     }
 
     /**

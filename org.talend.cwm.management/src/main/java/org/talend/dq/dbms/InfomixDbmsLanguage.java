@@ -45,6 +45,15 @@ public class InfomixDbmsLanguage extends DbmsLanguage {
         return DbmsLanguage.COLON;
     }
 
+    /**
+     * when separate the schema with table, using maybe different char especially for Informix ADDED TDQ-6570 yyin
+     * 
+     * @return
+     */
+    @Override
+    protected String getSchemaDelimiter() {
+        return DbmsLanguage.DOT;
+    }
     /*
      * (non-Javadoc)
      * 
