@@ -105,7 +105,7 @@ public class AnalysisExecutorTest {
     @Test
     public void testExecute1() {
         setMemoryControl(true);
-        setMemoryValue(100);
+        setMemoryValue(150);
         ReturnCode execute1 = spy.execute(createAnalysis);
 
         assert (execute1.isOk());

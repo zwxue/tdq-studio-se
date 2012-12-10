@@ -290,7 +290,7 @@ public class SwitchContextGroupNameImplTest {
         createDatabaseConnectionItem.setProperty(createDatabaseConnectionProperty);
         createDatabaseConnectionItem.setConnection(createConnection);
         try {
-            ProxyRepositoryFactory.getInstance().create(createDatabaseConnectionItem, createPath, false);
+            factory.create(createDatabaseConnectionItem, createPath, false);
         } catch (PersistenceException e) {
             Log.error(e, e);
             Assert.fail(e.getMessage());
