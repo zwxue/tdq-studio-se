@@ -1891,8 +1891,8 @@ public final class ConnectionUtils {
         Connection dataProvider = connectionItem.getConnection();
         if (dataProvider instanceof DatabaseConnection) {
             DatabaseConnection dbConn = (DatabaseConnection) dataProvider;
-            if (TaggedValueHelper.getValueString(TaggedValueHelper.DB_PRODUCT_NAME, dataProvider).equals(
-                    PluginConstant.EMPTY_STRING)) {
+            if (PluginConstant.EMPTY_STRING.equals(TaggedValueHelper.getValueString(TaggedValueHelper.DB_PRODUCT_NAME,
+                    dataProvider))) {
                 IMetadataConnection metaConnection = ConvertionHelper.convert(dbConn);
                 dbConn = (DatabaseConnection) MetadataFillFactory.getDBInstance().fillUIConnParams(metaConnection, dbConn);
                 if (dbConn != null) {
