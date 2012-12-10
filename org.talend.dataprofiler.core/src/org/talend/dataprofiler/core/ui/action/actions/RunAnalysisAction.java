@@ -260,8 +260,8 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
         // MOD qiongli 2012-12-5 TDQ-6506 after checking successfully,add these 2 tagged value into connection if they
         // are not in item file.
         if (analysisDataProvider instanceof DatabaseConnection
-                && TaggedValueHelper.getValueString(TaggedValueHelper.DB_PRODUCT_NAME, analysisDataProvider).equals(
-                        PluginConstant.EMPTY_STRING)) {
+                && PluginConstant.EMPTY_STRING.equals(TaggedValueHelper.getValueString(TaggedValueHelper.DB_PRODUCT_NAME,
+                        analysisDataProvider))) {
             Property property = PropertyHelper.getProperty(analysisDataProvider);
             if (property != null) {
                 Item item = property.getItem();
