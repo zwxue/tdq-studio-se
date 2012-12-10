@@ -23,7 +23,9 @@ import org.talend.dataquality.domain.Domain;
 import org.talend.dataquality.domain.RangeRestriction;
 import org.talend.dataquality.helpers.DomainHelper;
 import org.talend.dataquality.indicators.DateGrain;
+import org.talend.dataquality.indicators.DateParameters;
 import org.talend.dataquality.indicators.IndicatorParameters;
+import org.talend.dataquality.indicators.IndicatorsFactory;
 import org.talend.dq.dbms.DB2DbmsLanguage;
 import org.talend.dq.dbms.SybaseASEDbmsLanguage;
 import org.talend.utils.sql.Java2SqlType;
@@ -69,7 +71,7 @@ public class FrequencyStatisticsExplorer extends DataExplorer {
                 clause = getInstantiatedClause();
             }
         } else {
-            clause = getDefaultQuotedStatement(PluginConstant.EMPTY_STRING); // no quote here //$NON-NLS-1$
+            clause = getDefaultQuotedStatement(PluginConstant.EMPTY_STRING); // no quote here
         }
 
         return "SELECT * FROM " + getFullyQualifiedTableName(column) + dbmsLanguage.where() + inBrackets(clause) //$NON-NLS-1$
@@ -79,8 +81,15 @@ public class FrequencyStatisticsExplorer extends DataExplorer {
     @SuppressWarnings("fallthrough")
     private String getClauseWithDate(String clause) {
         IndicatorParameters parameters = indicator.getParameters();
-        DateGrain dateGrain = parameters.getDateParameters().getDateAggregationType();
-
+        // ADD msjian TDQ-6486 2012-12-10: fixed an NPE
+        DateParameters dateParameters = parameters.getDateParameters();
+        // see ModelElementIndicatorImpl line 703 comment
+        if (dateParameters == null) {
+            dateParameters = IndicatorsFactory.eINSTANCE.createDateParameters();
+            parameters.setDateParameters(dateParameters);
+        }
+        DateGrain dateGrain = dateParameters.getDateAggregationType();
+        // TDQ-6486~
         switch (dateGrain) {
         case DAY:
             clause = dbmsLanguage.extractDay(this.columnName) + dbmsLanguage.equal() + getDayCharacters(entity.getLabel());
@@ -129,8 +138,7 @@ public class FrequencyStatisticsExplorer extends DataExplorer {
 
     private String getDefaultQuotedStatement(String quote) {
         return entity.isLabelNull() ? dbmsLanguage.quote(this.columnName) + dbmsLanguage.isNull() : dbmsLanguage
-                .quote(this.columnName)
-                + dbmsLanguage.equal() + quote + entity.getLabel() + quote;
+                .quote(this.columnName) + dbmsLanguage.equal() + quote + entity.getLabel() + quote;
     }
 
     /**
@@ -206,7 +214,7 @@ public class FrequencyStatisticsExplorer extends DataExplorer {
      * @return
      */
     private String concatWhereClause(String clause, String whereclause) {
-        String and = (clause.length() == 0) ? PluginConstant.EMPTY_STRING : dbmsLanguage.and(); //$NON-NLS-1$
+        String and = (clause.length() == 0) ? PluginConstant.EMPTY_STRING : dbmsLanguage.and();
         clause = clause + and + whereclause;
         return clause;
     }
