@@ -504,4 +504,13 @@ public class TOPRepositoryService implements ITDQRepositoryService {
         DataProviderWriter dataProviderWriter = ElementWriterFactory.getInstance().createDataProviderWriter();
         dataProviderWriter.save(connectionItem, true);
     }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.core.ITDQRepositoryService#refreshCurrentAnalysisEditor()
+     */
+    public void refreshCurrentAnalysisEditor() {
+        WorkbenchUtils.refreshCurrentAnalysisEditor();
+    }
 }
