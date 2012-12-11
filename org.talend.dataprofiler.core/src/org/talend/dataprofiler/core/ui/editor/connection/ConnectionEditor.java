@@ -23,6 +23,7 @@ import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.dataprofiler.core.exception.MessageBoxExceptionHandler;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.editor.CommonFormEditor;
+import org.talend.dataprofiler.core.ui.utils.WorkbenchUtils;
 import org.talend.dq.CWMPlugin;
 import org.talend.dq.nodes.ConnectionRepNode;
 import org.talend.dq.nodes.DBConnectionRepNode;
@@ -66,6 +67,8 @@ public class ConnectionEditor extends CommonFormEditor {
                     masterPage.setOldDataproviderName(name);
                 }
             }
+            // refresh the analysis editor
+            WorkbenchUtils.refreshCurrentAnalysisEditor();
         }
         setEditorObject(masterPage.getConnectionRepNode());
         super.doSave(monitor);
