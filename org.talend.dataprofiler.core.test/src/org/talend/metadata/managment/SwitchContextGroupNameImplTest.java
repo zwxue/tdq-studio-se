@@ -12,8 +12,7 @@
 // ============================================================================
 package org.talend.metadata.managment;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -82,8 +81,8 @@ public class SwitchContextGroupNameImplTest {
     String connectionName = "conn1"; //$NON-NLS-1$
 
     String Connectionlabel = "";// ConnectionContextHelper.convertContextLabel(connectionName);// should be label of
-                                                                                         // connection property when
-                                                                                         // use
+                                // connection property when
+                                // use
 
     String prefixName = Connectionlabel + ConnectionContextHelper.LINE;
 
@@ -103,7 +102,7 @@ public class SwitchContextGroupNameImplTest {
     @Before
     public void setUp() throws Exception {
         UnitTestBuildHelper.deleteCurrentProject();
-        UnitTestBuildHelper.createRealProject("testForSoftWareTDQ"); //$NON-NLS-1$
+        UnitTestBuildHelper.createRealProject("testForContextGroupTDQ"); //$NON-NLS-1$
         createContextItem();
         Connectionlabel = ConnectionContextHelper.convertContextLabel(connectionName);
     }
