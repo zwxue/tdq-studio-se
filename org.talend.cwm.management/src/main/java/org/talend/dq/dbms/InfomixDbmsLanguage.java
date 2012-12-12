@@ -28,6 +28,8 @@ public class InfomixDbmsLanguage extends DbmsLanguage {
 
     public static final String AS_REPLACE_COLUMN = "as replace_column";//$NON-NLS-1$
 
+    private static final String COLON = ":"; //$NON-NLS-1$
+
     InfomixDbmsLanguage() {
         super(DbmsLanguage.INFOMIX);
     }
@@ -40,20 +42,16 @@ public class InfomixDbmsLanguage extends DbmsLanguage {
         super(dbmsType, dbVersion);
     }
 
-    @Override
-    public String getDelimiter() {
-        return DbmsLanguage.COLON;
-    }
-
-    /**
-     * when separate the schema with table, using maybe different char especially for Informix ADDED TDQ-6570 yyin
+    /*
+     * (non-Javadoc)
      * 
-     * @return
+     * @see org.talend.dq.dbms.DbmsLanguage#getCatalogDelimiter()
      */
     @Override
-    protected String getSchemaDelimiter() {
-        return DbmsLanguage.DOT;
+    protected String getCatalogDelimiter() {
+        return COLON;
     }
+
     /*
      * (non-Javadoc)
      * 
