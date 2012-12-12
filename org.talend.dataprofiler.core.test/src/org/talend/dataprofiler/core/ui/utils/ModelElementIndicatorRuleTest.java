@@ -12,7 +12,8 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.utils;
 
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import java.sql.Types;
 
@@ -139,5 +140,63 @@ public class ModelElementIndicatorRuleTest {
                 ExecutionLanguage.SQL));
         Assert.assertFalse(ModelElementIndicatorRule.patternRule(IndicatorEnum.LowerQuartileIndicatorEnum, me,
                 ExecutionLanguage.SQL));
+    }
+
+    // Test for Teradata's INTERVAL type , sql language
+    @Test
+    public void testPatternRule_4() {
+        when(tdsql.getName()).thenReturn("INTERVAL YEAR");
+        when(tdsql.getJavaDataType()).thenReturn(Types.REAL);
+
+        Assert.assertTrue(ModelElementIndicatorRule.patternRule(IndicatorEnum.MeanIndicatorEnum, me, ExecutionLanguage.SQL));
+        Assert.assertFalse(ModelElementIndicatorRule
+                .patternRule(IndicatorEnum.SoundexLowIndicatorEnum, me, ExecutionLanguage.SQL));
+        Assert.assertFalse(ModelElementIndicatorRule.patternRule(IndicatorEnum.PatternFreqIndicatorEnum, me,
+                ExecutionLanguage.SQL));
+        Assert.assertFalse(ModelElementIndicatorRule.patternRule(IndicatorEnum.PatternLowFreqIndicatorEnum, me,
+                ExecutionLanguage.SQL));
+        Assert.assertFalse(ModelElementIndicatorRule.patternRule(IndicatorEnum.BenfordLawFrequencyIndicatorEnum, me,
+                ExecutionLanguage.SQL));
+        Assert.assertTrue(ModelElementIndicatorRule.patternRule(IndicatorEnum.LowerQuartileIndicatorEnum, me,
+                ExecutionLanguage.SQL));
+        Assert.assertFalse(ModelElementIndicatorRule.patternRule(IndicatorEnum.TextIndicatorEnum, me, ExecutionLanguage.SQL));
+    }
+
+    // Test for Teradata's INTERVAL type with java language
+    @Test
+    public void testPatternRule_5() {
+        when(tdsql.getName()).thenReturn("INTERVAL YEAR");
+        when(tdsql.getJavaDataType()).thenReturn(Types.REAL);
+
+        Assert.assertTrue(ModelElementIndicatorRule.patternRule(IndicatorEnum.MeanIndicatorEnum, me, ExecutionLanguage.JAVA));
+        Assert.assertFalse(ModelElementIndicatorRule
+                .patternRule(IndicatorEnum.SoundexLowIndicatorEnum, me, ExecutionLanguage.JAVA));
+        Assert.assertTrue(ModelElementIndicatorRule.patternRule(IndicatorEnum.PatternFreqIndicatorEnum, me,
+                ExecutionLanguage.JAVA));
+        Assert.assertTrue(ModelElementIndicatorRule.patternRule(IndicatorEnum.BenfordLawFrequencyIndicatorEnum, me,
+                ExecutionLanguage.JAVA));
+        Assert.assertTrue(ModelElementIndicatorRule.patternRule(IndicatorEnum.LowerQuartileIndicatorEnum, me,
+                ExecutionLanguage.JAVA));
+    }
+
+    // Test for Teradata's INTERVAL_xx_to_xx type , sql language
+    @Test
+    public void testPatternRule_6() {
+        when(tdsql.getName()).thenReturn("INTERVAL YEAR TO MONTH");
+        when(tdsql.getJavaDataType()).thenReturn(Types.NVARCHAR);
+
+        Assert.assertFalse(ModelElementIndicatorRule
+                .patternRule(IndicatorEnum.BlankCountIndicatorEnum, me, ExecutionLanguage.SQL));
+        Assert.assertFalse(ModelElementIndicatorRule.patternRule(IndicatorEnum.ModeIndicatorEnum, me, ExecutionLanguage.SQL));
+
+        Assert.assertFalse(ModelElementIndicatorRule.patternRule(IndicatorEnum.PatternFreqIndicatorEnum, me,
+                ExecutionLanguage.SQL));
+        Assert.assertFalse(ModelElementIndicatorRule.patternRule(IndicatorEnum.PatternLowFreqIndicatorEnum, me,
+                ExecutionLanguage.SQL));
+        Assert.assertFalse(ModelElementIndicatorRule.patternRule(IndicatorEnum.BenfordLawFrequencyIndicatorEnum, me,
+                ExecutionLanguage.SQL));
+        Assert.assertFalse(ModelElementIndicatorRule.patternRule(IndicatorEnum.LowerQuartileIndicatorEnum, me,
+                ExecutionLanguage.SQL));
+        Assert.assertFalse(ModelElementIndicatorRule.patternRule(IndicatorEnum.TextIndicatorEnum, me, ExecutionLanguage.SQL));
     }
 }
