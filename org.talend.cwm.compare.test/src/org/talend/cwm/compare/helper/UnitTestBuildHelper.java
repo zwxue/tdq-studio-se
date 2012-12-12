@@ -10,7 +10,7 @@
 // 9 rue Pages 92150 Suresnes, France
 //
 // ============================================================================
-package org.talend.dataprofiler.core.helper;
+package org.talend.cwm.compare.helper;
 
 import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.*;
@@ -68,9 +68,7 @@ import org.talend.cwm.relational.TdExpression;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
-import org.talend.dataprofiler.core.ui.utils.RepNodeUtils;
 import org.talend.dataprofiler.core.ui.views.provider.RepositoryNodeBuilder;
-import org.talend.dataprofiler.core.ui.views.resources.LocalRepositoryObjectCRUD;
 import org.talend.dataquality.PluginConstant;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisFactory;
@@ -98,7 +96,6 @@ import org.talend.repository.model.IRepositoryNode.EProperties;
 import org.talend.repository.model.RepositoryConstants;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.resource.EResourceConstant;
-import org.talend.resource.ResourceManager;
 import orgomg.cwmx.analysis.informationreporting.Report;
 
 import common.Logger;
@@ -587,23 +584,4 @@ public class UnitTestBuildHelper {
             }
         }
     }
-
-    /**
-     * 
-     * mock LocalRepositoryObjectCRUD for RepNodeUtils.getRepositoryObjectCRUD().
-     */
-    public static void mockLocalRepositoryObjectCRUD() {
-        IProject proj = mock(IProject.class);
-        when(proj.getFullPath()).thenReturn(new Path(PluginConstant.EMPTY_STRING));
-        PowerMockito.mockStatic(ResourceManager.class);
-        when(ResourceManager.getRootProject()).thenReturn(proj);
-
-        PowerMockito.mockStatic(ProxyRepositoryFactory.class);
-        ProxyRepositoryFactory proxFactory = mock(ProxyRepositoryFactory.class);
-        when(ProxyRepositoryFactory.getInstance()).thenReturn(proxFactory);
-        PowerMockito.mockStatic(RepNodeUtils.class);
-        LocalRepositoryObjectCRUD localRepCRUD = mock(LocalRepositoryObjectCRUD.class);
-        when(RepNodeUtils.getRepositoryObjectCRUD()).thenReturn(localRepCRUD);
-    }
-
 }
