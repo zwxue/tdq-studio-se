@@ -399,7 +399,10 @@ public class TDQResourceChangeHandler extends AbstractResourceChangesService {
      */
     private List<IRepositoryNode> getConnChildrenInRecybin(IRepositoryNode parent, List<IRepositoryNode> childNodes) {
         if (parent.getType() == ENodeType.SIMPLE_FOLDER) {
-            childNodes.addAll(parent.getChildren(true));
+            List<IRepositoryNode> children = parent.getChildren(true);
+            for (IRepositoryNode node : children) {
+                getConnChildrenInRecybin(node, childNodes);
+            }
         } else {
             ERepositoryObjectType objectType = parent.getObjectType();
             if (objectType != null
