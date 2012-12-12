@@ -15,6 +15,7 @@ package org.talend.dataprofiler.core.service;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -25,7 +26,6 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.swt.widgets.Display;
 import org.talend.commons.exception.PersistenceException;
 import org.talend.commons.utils.WorkspaceUtils;
 import org.talend.core.model.metadata.builder.connection.Connection;
@@ -52,8 +52,8 @@ import org.talend.dataquality.properties.TDQPatternItem;
 import org.talend.dataquality.properties.TDQReportItem;
 import org.talend.dataquality.rules.DQRule;
 import org.talend.dataquality.rules.WhereRule;
+import org.talend.dq.helper.DQDeleteHelper;
 import org.talend.dq.helper.EObjectHelper;
-import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
 import org.talend.dq.writer.EMFSharedResources;
@@ -62,6 +62,8 @@ import org.talend.dq.writer.impl.DQRuleWriter;
 import org.talend.dq.writer.impl.IndicatorDefinitionWriter;
 import org.talend.dq.writer.impl.PatternWriter;
 import org.talend.dq.writer.impl.ReportWriter;
+import org.talend.repository.model.IRepositoryNode;
+import org.talend.repository.model.IRepositoryNode.ENodeType;
 import org.talend.resource.ResourceManager;
 import org.talend.resource.ResourceService;
 import org.talend.utils.files.FileUtils;
@@ -114,30 +116,6 @@ public class TDQResourceChangeHandler extends AbstractResourceChangesService {
             // else anaysis,report etc.
         }
         super.handleUnload(toBeUnloadedResource);
-    }
-
-    @Override
-    public boolean handleResourceChange(ModelElement modelElement) {
-
-        // MOD qiongli 2011-1-28 bug 16776,add asyncExec(new Runnable).
-        final ModelElement modelElementFinal = modelElement;
-        List<ModelElement> clientDependencys = EObjectHelper.getDependencyClients(modelElement);
-        if (clientDependencys.size() > 0) {
-            final ModelElement[] dependencyElements = clientDependencys.toArray(new ModelElement[clientDependencys.size()]);
-
-            Display.getDefault().asyncExec(new Runnable() {
-
-                public void run() {
-                    DeleteModelElementConfirmDialog.showDialog(null,
-                            PropertyHelper.getItemFile(PropertyHelper.getProperty(modelElementFinal)), dependencyElements,
-                            DefaultMessagesImpl.getString("TDQResourceChangeHandler.OperationIsRejected"), false); //$NON-NLS-1$
-                }
-            });
-
-            return false;
-        }
-
-        return super.handleResourceChange(modelElement);
     }
 
     public Resource create(IProject project, Item item, int classID, IPath path) {
@@ -339,5 +317,79 @@ public class TDQResourceChangeHandler extends AbstractResourceChangesService {
         EMFSharedResources.getInstance().saveResource(toSave);
     }
 
+    @Override
+    /**
+     * get has client dependence nodes.
+     */
+    public List<IRepositoryNode> getDependentNodes(IRepositoryNode currentNode) {
+        List<IRepositoryNode> dependentNodes = new ArrayList<IRepositoryNode>();
+        if (currentNode == null) {
+            return dependentNodes;
+        }
+        if (currentNode.getType() == ENodeType.SIMPLE_FOLDER) {
+            for (IRepositoryNode curNode : currentNode.getChildren()) {
+                List<IRepositoryNode> subDependentNodes = getDependentNodes(curNode);
+                if (!subDependentNodes.isEmpty()) {
+                    dependentNodes.addAll(subDependentNodes);
+                }
+            }
+        } else {
+            ModelElement connection = RepositoryNodeHelper.getModelElementFromRepositoryNode(currentNode);
+            if (connection != null) {
+                List<ModelElement> clientDependencys = EObjectHelper.getDependencyClients(connection);
+                if (!clientDependencys.isEmpty()) {
+                    dependentNodes.add(currentNode);
+                }
+            }
+        }
+        return dependentNodes;
+    }
+
+    /**
+     * judge if has connection in recycle bin which depended by DQ analysis.
+     */
+    @Override
+    public List<IRepositoryNode> getDependentConnNodesInRecycleBin(List<IRepositoryNode> firstLevelRecyNodes) {
+        List<IRepositoryNode> allConnChildrenNodes = new ArrayList<IRepositoryNode>();
+        for (IRepositoryNode node : firstLevelRecyNodes) {
+            getConnChildrenInRecybin(node, allConnChildrenNodes);
+        }
+        List<IRepositoryNode> canNotDeletedNodes = DQDeleteHelper.getCanNotDeletedNodes(allConnChildrenNodes, false);
+        return canNotDeletedNodes;
+    }
+
+    /**
+     * 
+     * get all connection nodes in recycle bin.
+     * 
+     * @param parent
+     * @param childNodes
+     * @return
+     */
+    private List<IRepositoryNode> getConnChildrenInRecybin(IRepositoryNode parent, List<IRepositoryNode> childNodes) {
+        if (parent.getType() == ENodeType.SIMPLE_FOLDER) {
+            List<IRepositoryNode> children = parent.getChildren(true);
+            for (IRepositoryNode node : children) {
+                getConnChildrenInRecybin(node, childNodes);
+            }
+        } else {
+            ERepositoryObjectType objectType = parent.getObjectType();
+            if (objectType != null
+                    && (objectType == ERepositoryObjectType.METADATA_CONNECTIONS
+                            || objectType == ERepositoryObjectType.METADATA_FILE_DELIMITED || objectType == ERepositoryObjectType.METADATA_MDMCONNECTION)) {
+                childNodes.add(parent);
+            }
+        }
+        return childNodes;
+    }
+
+    @Override
+    public void openDependcesDialog(List<IRepositoryNode> nodes) {
+        if (nodes == null || nodes.isEmpty()) {
+            return;
+        }
+        DeleteModelElementConfirmDialog.showDialog(null, nodes,
+                DefaultMessagesImpl.getString("DQEmptyRecycleBinAction.allDependencies")); //$NON-NLS-1$
+    }
 
 }

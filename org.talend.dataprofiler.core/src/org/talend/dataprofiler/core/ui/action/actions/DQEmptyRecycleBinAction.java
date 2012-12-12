@@ -79,14 +79,9 @@ public class DQEmptyRecycleBinAction extends EmptyRecycleBinAction {
             return;
         }
         // ~TDQ-4068
-        for (IRepositoryNode obj : findAllRecycleBinNodes) {
-            if (RepositoryNodeHelper.hasDependencyClients(obj)) {
-                hasDependencyItem = true;
-                break;
-            }
-        }
-        if (hasDependencyItem) {
-            DeleteModelElementConfirmDialog.showDialog(null, findAllRecycleBinNodes,
+        List<IRepositoryNode> canNotDeletedNodes = DQDeleteHelper.getCanNotDeletedNodes(findAllRecycleBinNodes, true);
+        if (!canNotDeletedNodes.isEmpty()) {
+            DeleteModelElementConfirmDialog.showDialog(null, canNotDeletedNodes,
                     DefaultMessagesImpl.getString("DQEmptyRecycleBinAction.allDependencies"));//$NON-NLS-1$
             return;
         }
