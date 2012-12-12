@@ -51,7 +51,9 @@ import org.talend.dataprofiler.core.helper.WorkspaceResourceHelper;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.dialog.message.DeleteModelElementConfirmDialog;
 import org.talend.dataprofiler.core.ui.utils.MessageUI;
+import org.talend.dataprofiler.core.ui.utils.RepNodeUtils;
 import org.talend.dataprofiler.core.ui.views.DQRespositoryView;
+import org.talend.dataprofiler.core.ui.views.resources.IRepositoryObjectCRUD;
 import org.talend.dataquality.properties.TDQReportItem;
 import org.talend.dq.helper.DQDeleteHelper;
 import org.talend.dq.helper.EObjectHelper;
@@ -87,6 +89,8 @@ public class DQDeleteAction extends DeleteAction {
 
     private List<RepositoryNode> selectedNodes;
 
+    private IRepositoryObjectCRUD repositoryObjectCRUD = RepNodeUtils.getRepositoryObjectCRUD();
+
     public DQDeleteAction() {
         super();
         setText(DefaultMessagesImpl.getString("DQDeleteAction.delete"));//$NON-NLS-1$
@@ -119,6 +123,7 @@ public class DQDeleteAction extends DeleteAction {
 
     @Override
     public void run() {
+        repositoryObjectCRUD.refreshDQViewForRemoteProject();
         ISelection selection = this.getSelection();
         // boolean onlyDeleteReportFile = true;
         // MOD gdbu 2011-11-17 TDQ-3969 : when delete elements also need delete this element in filter-list, and move it

@@ -30,7 +30,9 @@ import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.dialog.message.DeleteModelElementConfirmDialog;
+import org.talend.dataprofiler.core.ui.utils.RepNodeUtils;
 import org.talend.dataprofiler.core.ui.views.DQRespositoryView;
+import org.talend.dataprofiler.core.ui.views.resources.IRepositoryObjectCRUD;
 import org.talend.dq.helper.DQDeleteHelper;
 import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.ReportUtils;
@@ -48,6 +50,8 @@ import orgomg.cwm.objectmodel.core.ModelElement;
  * DOC qiongli class global comment. Detailled comment
  */
 public class DQEmptyRecycleBinAction extends EmptyRecycleBinAction {
+
+    private IRepositoryObjectCRUD repositoryObjectCRUD = RepNodeUtils.getRepositoryObjectCRUD();
 
     public DQEmptyRecycleBinAction() {
         super();
@@ -70,14 +74,15 @@ public class DQEmptyRecycleBinAction extends EmptyRecycleBinAction {
 
     @Override
     public void run() {
+        repositoryObjectCRUD.refreshDQViewForRemoteProject();
         // MOD gdbu 2011-11-24 TDQ-4068
         List<IRepositoryNode> findAllRecycleBinNodes = needDeleteNodes();
         if (null == findAllRecycleBinNodes) {
             return;
         }
-        boolean canEmpty = DQDeleteHelper.canEmptyRecyBin(findAllRecycleBinNodes);
-        if (!canEmpty) {
-            DeleteModelElementConfirmDialog.showDialog(null, findAllRecycleBinNodes,
+        List<IRepositoryNode> canNotDeletedNodes = DQDeleteHelper.getCanNotDeletedNodes(findAllRecycleBinNodes, true);
+        if (!canNotDeletedNodes.isEmpty()) {
+            DeleteModelElementConfirmDialog.showDialog(null, canNotDeletedNodes,
                     DefaultMessagesImpl.getString("DQEmptyRecycleBinAction.allDependencies"));//$NON-NLS-1$
             return;
         }
