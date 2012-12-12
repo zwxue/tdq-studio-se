@@ -28,6 +28,8 @@ public class InfomixDbmsLanguage extends DbmsLanguage {
 
     public static final String AS_REPLACE_COLUMN = "as replace_column";//$NON-NLS-1$
 
+    private static final String COLON = ":"; //$NON-NLS-1$
+
     InfomixDbmsLanguage() {
         super(DbmsLanguage.INFOMIX);
     }
@@ -40,9 +42,14 @@ public class InfomixDbmsLanguage extends DbmsLanguage {
         super(dbmsType, dbVersion);
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dq.dbms.DbmsLanguage#getCatalogDelimiter()
+     */
     @Override
-    public String getDelimiter() {
-        return DbmsLanguage.COLON;
+    protected String getCatalogDelimiter() {
+        return COLON;
     }
 
     /*

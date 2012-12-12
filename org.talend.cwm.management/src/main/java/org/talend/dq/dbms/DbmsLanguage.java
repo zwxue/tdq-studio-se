@@ -107,8 +107,6 @@ public class DbmsLanguage {
 
     private static final String DOT = "."; //$NON-NLS-1$
 
-    protected static final String COLON = ":"; //$NON-NLS-1$
-
     /**
      * End of Statement: ";".
      */
@@ -300,7 +298,7 @@ public class DbmsLanguage {
         StringBuffer qualName = new StringBuffer();
         if (catalog != null && catalog.trim().length() > 0) {
             qualName.append(this.quote(catalog));
-            qualName.append(getDelimiter());
+            qualName.append(getCatalogDelimiter());
         }
         if (schema != null && schema.trim().length() > 0) {
             qualName.append(this.quote(schema));
@@ -321,6 +319,24 @@ public class DbmsLanguage {
         return qualName.toString();
     }
 
+    /**
+     * Getter for delimiter between catalog and schema
+     * 
+     * This may be different from the default delimiter for some databases, ex: Informix.
+     * 
+     * @return catalog delimiter
+     */
+    protected String getCatalogDelimiter() {
+        return getDelimiter();
+    }
+
+    /**
+     * Getter for default SQL delimiter of the database.
+     * 
+     * For the delimiter between catalog and schema, we should use {@link #getCatalogDelimiter()} instead of this.
+     * 
+     * @return default SQL delimiter
+     */
     public String getDelimiter() {
         return DOT;
     }
