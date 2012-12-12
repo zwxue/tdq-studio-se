@@ -18,15 +18,16 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-
 /**
- * DOC yyin  class global comment. Detailled comment
+ * DOC yyin class global comment. Detailled comment
  */
 public class InfomixDbmsLanguageTest {
 
     InfomixDbmsLanguage infomix;
+
     /**
      * DOC yyin Comment method "setUp".
+     * 
      * @throws java.lang.Exception
      */
     @Before
@@ -36,6 +37,7 @@ public class InfomixDbmsLanguageTest {
 
     /**
      * DOC yyin Comment method "tearDown".
+     * 
      * @throws java.lang.Exception
      */
     @After
@@ -43,11 +45,11 @@ public class InfomixDbmsLanguageTest {
     }
 
     /**
-     * Test method for {@link org.talend.dq.dbms.InfomixDbmsLanguage#getSchemaDelimiter()}.
+     * Test method for {@link org.talend.dq.dbms.InfomixDbmsLanguage#getCatalogDelimiter()}.
      */
     @Test
-    public void testGetSchemaDelimiter() {
-        assertTrue(DbmsLanguage.DOT.equals(infomix.getSchemaDelimiter()));
+    public void testGetCatalogDelimiter() {
+        assertTrue(":".equals(infomix.getCatalogDelimiter()));
     }
 
     /**
@@ -55,11 +57,12 @@ public class InfomixDbmsLanguageTest {
      */
     @Test
     public void testGetDelimiter() {
-        assertTrue(DbmsLanguage.COLON.equals(infomix.getDelimiter()));
+        assertTrue(".".equals(infomix.getDelimiter()));
     }
 
     /**
-     * Test method for {@link org.talend.dq.dbms.DbmsLanguage#toQualifiedName(java.lang.String, java.lang.String, java.lang.String)}.
+     * Test method for
+     * {@link org.talend.dq.dbms.DbmsLanguage#toQualifiedName(java.lang.String, java.lang.String, java.lang.String)}.
      */
     @Test
     public void testToQualifiedName() {
