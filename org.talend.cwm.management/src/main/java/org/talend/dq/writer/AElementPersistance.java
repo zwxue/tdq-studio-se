@@ -71,7 +71,6 @@ import org.talend.dq.helper.PropertyHelper;
 import org.talend.resource.ResourceManager;
 import org.talend.utils.sugars.ReturnCode;
 import org.talend.utils.sugars.TypedReturnCode;
-
 import orgomg.cwm.analysis.informationvisualization.RenderedObject;
 import orgomg.cwm.objectmodel.core.Dependency;
 import orgomg.cwm.objectmodel.core.ModelElement;
@@ -555,7 +554,8 @@ public abstract class AElementPersistance {
             if (re == null) {
                 continue;
             }
-            // EcoreUtil.resolveAll(re);
+            // the resource should be resolved before saving the item to make sure the references are updated.
+            EcoreUtil.resolveAll(re);
             needSaves.add(re);
         }
 
@@ -571,7 +571,6 @@ public abstract class AElementPersistance {
                 AbstractResourceChangesService.class);
         if (resChangeService != null) {
             for (Resource toSave : needSaves) {
-                EcoreUtil.resolveAll(toSave);
                 resChangeService.saveResourceByEMFShared(toSave);
             }
         }
