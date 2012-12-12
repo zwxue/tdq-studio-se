@@ -37,13 +37,16 @@ import org.talend.core.repository.i18n.Messages;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.core.runtime.CoreRuntimePlugin;
 import org.talend.dataprofiler.core.CorePlugin;
+import org.talend.dataprofiler.core.helper.UnitTestBuildHelper;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
+import org.talend.dataprofiler.core.ui.utils.RepNodeUtils;
 import org.talend.dq.helper.DQDeleteHelper;
 import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.nodes.RecycleBinRepNode;
 import org.talend.repository.model.IProxyRepositoryFactory;
 import org.talend.repository.model.IRepositoryNode;
+import org.talend.resource.ResourceManager;
 
 /**
  * DOC qiongli class global comment. Detailled comment <br/>
@@ -54,7 +57,7 @@ import org.talend.repository.model.IRepositoryNode;
 // @RunWith(PowerMockRunner.class)
 @PrepareForTest({ CorePlugin.class, DQDeleteHelper.class, IProxyRepositoryFactory.class, PropertyHelper.class,
         MessageDialog.class, ProxyRepositoryFactory.class, RepositoryNodeHelper.class, CoreRuntimePlugin.class, Messages.class,
-        DefaultMessagesImpl.class })
+        DefaultMessagesImpl.class, ResourceManager.class, RepNodeUtils.class, ProxyRepositoryFactory.class })
 public class DQEmptyRecycleBinActionTest {
 
     @Rule
@@ -73,17 +76,18 @@ public class DQEmptyRecycleBinActionTest {
      */
     @Before
     public void setUp() throws Exception {
+        UnitTestBuildHelper.mockLocalRepositoryObjectCRUD();
         ResourceBundle rb = mock(ResourceBundle.class);
-        stub(method(ResourceBundle.class, "getBundle", String.class)).toReturn(rb);
+        stub(method(ResourceBundle.class, "getBundle", String.class)).toReturn(rb); //$NON-NLS-1$
         // when(ResourceBundle.getBundle(anyString())).thenReturn(rb);
         PowerMockito.mockStatic(Messages.class);
-        when(Messages.getString(anyString())).thenReturn("aa");
+        when(Messages.getString(anyString())).thenReturn("aa"); //$NON-NLS-1$
         PowerMockito.mockStatic(DefaultMessagesImpl.class);
-        when(DefaultMessagesImpl.getString(anyString())).thenReturn("bb");
+        when(DefaultMessagesImpl.getString(anyString())).thenReturn("bb"); //$NON-NLS-1$
         dqEmptyAction_real = new DQEmptyRecycleBinAction();
         dqEmptyAction_mock = PowerMockito.spy(dqEmptyAction_real);
         PowerMockito.doReturn(null).when(dqEmptyAction_mock).getActivePage();
-        PowerMockito.doReturn(null).when(dqEmptyAction_mock, "getShell");
+        PowerMockito.doReturn(null).when(dqEmptyAction_mock, "getShell"); //$NON-NLS-1$
 
         corePlugin = mock(CorePlugin.class);
         PowerMockito.mockStatic(CorePlugin.class);
@@ -116,7 +120,7 @@ public class DQEmptyRecycleBinActionTest {
      */
     @Test
     public void testRun_1() throws Exception {
-        PowerMockito.doNothing().when(dqEmptyAction_mock, "doRun");
+        PowerMockito.doNothing().when(dqEmptyAction_mock, "doRun"); //$NON-NLS-1$
         IRepositoryNode node1 = mock(IRepositoryNode.class);
         IRepositoryNode node2 = mock(IRepositoryNode.class);
         IRepositoryObject object1 = mock(IRepositoryObject.class);
@@ -131,11 +135,11 @@ public class DQEmptyRecycleBinActionTest {
         seleLs.add(node2);
         seleLs.add(node1);
 
-        stub(method(MessageDialog.class, "openQuestion")).toReturn(true);
+        stub(method(MessageDialog.class, "openQuestion")).toReturn(true); //$NON-NLS-1$
         PowerMockito.mockStatic(ProxyRepositoryFactory.class);
         ProxyRepositoryFactory factory = mock(ProxyRepositoryFactory.class);
         when(ProxyRepositoryFactory.getInstance()).thenReturn(factory);
-        stub(method(DQDeleteHelper.class, "deleteRelations"));
+        stub(method(DQDeleteHelper.class, "deleteRelations")); //$NON-NLS-1$
 
         RecycleBinRepNode recyBin = mock(RecycleBinRepNode.class);
         PowerMockito.mockStatic(RepositoryNodeHelper.class);
@@ -157,7 +161,7 @@ public class DQEmptyRecycleBinActionTest {
      */
     @Test
     public void testRun_2() throws Exception {
-        PowerMockito.doNothing().when(dqEmptyAction_mock, "doRun");
+        PowerMockito.doNothing().when(dqEmptyAction_mock, "doRun"); //$NON-NLS-1$
         IRepositoryNode node1 = mock(IRepositoryNode.class);
         List<IRepositoryNode> seleLs = new ArrayList<IRepositoryNode>();
         ISelection selecetion = new StructuredSelection(seleLs);
