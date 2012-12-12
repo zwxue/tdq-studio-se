@@ -12,17 +12,18 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.action.actions;
 
-import static org.junit.Assert.assertNotNull;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-import static org.powermock.api.support.membermodification.MemberMatcher.method;
-import static org.powermock.api.support.membermodification.MemberModifier.stub;
+import static org.junit.Assert.*;
+import static org.mockito.Matchers.*;
+import static org.mockito.Mockito.*;
+import static org.powermock.api.support.membermodification.MemberMatcher.*;
+import static org.powermock.api.support.membermodification.MemberModifier.*;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.ui.navigator.CommonViewer;
@@ -39,20 +40,23 @@ import org.talend.core.model.properties.ItemState;
 import org.talend.core.model.properties.Property;
 import org.talend.core.model.repository.IRepositoryObject;
 import org.talend.core.repository.i18n.Messages;
+import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.core.runtime.CoreRuntimePlugin;
 import org.talend.dataprofiler.core.CorePlugin;
+import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.dialog.message.DeleteModelElementConfirmDialog;
+import org.talend.dataprofiler.core.ui.utils.RepNodeUtils;
 import org.talend.dataprofiler.core.ui.views.DQRespositoryView;
+import org.talend.dataprofiler.core.ui.views.resources.LocalRepositoryObjectCRUD;
 import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.nodes.RecycleBinRepNode;
 import org.talend.repository.model.IProxyRepositoryFactory;
 import org.talend.repository.model.RepositoryNode;
-import org.talend.repository.ui.actions.DeleteAction;
+import org.talend.resource.ResourceManager;
 import orgomg.cwm.objectmodel.core.ModelElement;
-
 
 /**
  * DOC qionli class global comment. Detailled comment <br/>
@@ -82,6 +86,19 @@ public class DQDeleteActionTest {
      */
     @Before
     public void setUp() throws Exception {
+
+        IProject proj = mock(IProject.class);
+        when(proj.getFullPath()).thenReturn(new Path(PluginConstant.EMPTY_STRING));
+        PowerMockito.mockStatic(ResourceManager.class);
+        when(ResourceManager.getRootProject()).thenReturn(proj);
+
+        PowerMockito.mockStatic(ProxyRepositoryFactory.class);
+        ProxyRepositoryFactory proxFactory = mock(ProxyRepositoryFactory.class);
+        when(ProxyRepositoryFactory.getInstance()).thenReturn(proxFactory);
+        PowerMockito.mockStatic(RepNodeUtils.class);
+        LocalRepositoryObjectCRUD localRepCRUD = mock(LocalRepositoryObjectCRUD.class);
+        when(RepNodeUtils.getRepositoryObjectCRUD()).thenReturn(localRepCRUD);
+
         corePlugin = mock(CorePlugin.class);
         PowerMockito.mockStatic(CorePlugin.class);
         when(CorePlugin.getDefault()).thenReturn(corePlugin);
@@ -100,12 +117,12 @@ public class DQDeleteActionTest {
         PowerMockito.mockStatic(CoreRuntimePlugin.class);
         CoreRuntimePlugin coreRuntPlugin = mock(CoreRuntimePlugin.class);
         when(CoreRuntimePlugin.getInstance()).thenReturn(coreRuntPlugin);
-        IProxyRepositoryFactory proxFactory = mock(IProxyRepositoryFactory.class);
         when(coreRuntPlugin.getProxyRepositoryFactory()).thenReturn(proxFactory);
     }
 
     /**
      * DOC Administrator Comment method "tearDown".
+     * 
      * @throws java.lang.Exception
      */
     @After
@@ -119,34 +136,33 @@ public class DQDeleteActionTest {
      */
     @Test
     public void testRun_1() throws Exception {
-         dqDeleteAction_real.setCurrentNode(null);
-         DQRespositoryView dqView = mock(DQRespositoryView.class);
-         when(corePlugin.getRepositoryView()).thenReturn(dqView);
-         CommonViewer commonView = mock(CommonViewer.class);
-         List<RepositoryNode> seleLs = new ArrayList<RepositoryNode>();
-         RepositoryNode node1 = mock(RepositoryNode.class);
-         IRepositoryObject object = mock(IRepositoryObject.class);
-         Property prop = mock(Property.class);
-         Item item = mock(Item.class);
-         ItemState state = mock(ItemState.class);
-         when(prop.getItem()).thenReturn(item);
-         when(node1.getObject()).thenReturn(object);
-         when(object.getProperty()).thenReturn(prop);
-         when(item.getState()).thenReturn(state);
-         when(state.isDeleted()).thenReturn(false);
-         seleLs.add(node1);
-        
-         ISelection selecetion = new StructuredSelection(seleLs);
-         when(dqView.getCommonViewer()).thenReturn(commonView);
-         when(commonView.getSelection()).thenReturn(selecetion);
-         assertNotNull(dqDeleteAction_real.getSelection());
-        
-         stub(method(RepositoryNodeHelper.class, "isStateDeleted")).toReturn(false);
-         RecycleBinRepNode recyBinNode = mock(RecycleBinRepNode.class);
-         stub(method(RepositoryNodeHelper.class, "getRecycleBinRepNode")).toReturn(recyBinNode);
-        
+        dqDeleteAction_real.setCurrentNode(null);
+        DQRespositoryView dqView = mock(DQRespositoryView.class);
+        when(corePlugin.getRepositoryView()).thenReturn(dqView);
+        CommonViewer commonView = mock(CommonViewer.class);
+        List<RepositoryNode> seleLs = new ArrayList<RepositoryNode>();
+        RepositoryNode node1 = mock(RepositoryNode.class);
+        IRepositoryObject object = mock(IRepositoryObject.class);
+        Property prop = mock(Property.class);
+        Item item = mock(Item.class);
+        ItemState state = mock(ItemState.class);
+        when(prop.getItem()).thenReturn(item);
+        when(node1.getObject()).thenReturn(object);
+        when(object.getProperty()).thenReturn(prop);
+        when(item.getState()).thenReturn(state);
+        when(state.isDeleted()).thenReturn(false);
+        seleLs.add(node1);
 
-         deleteAction_mock.run();
+        ISelection selecetion = new StructuredSelection(seleLs);
+        when(dqView.getCommonViewer()).thenReturn(commonView);
+        when(commonView.getSelection()).thenReturn(selecetion);
+        assertNotNull(dqDeleteAction_real.getSelection());
+
+        stub(method(RepositoryNodeHelper.class, "isStateDeleted")).toReturn(false);
+        RecycleBinRepNode recyBinNode = mock(RecycleBinRepNode.class);
+        stub(method(RepositoryNodeHelper.class, "getRecycleBinRepNode")).toReturn(recyBinNode);
+
+        deleteAction_mock.run();
 
     }
 

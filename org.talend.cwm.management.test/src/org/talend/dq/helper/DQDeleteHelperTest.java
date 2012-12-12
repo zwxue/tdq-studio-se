@@ -12,10 +12,8 @@
 // ============================================================================
 package org.talend.dq.helper;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -65,7 +63,7 @@ public class DQDeleteHelperTest {
         when(PropertyHelper.getItemFile(prop)).thenReturn(file);
         PowerMockito.mockStatic(ReportUtils.class);
         when(ReportUtils.getOutputFolder(file)).thenReturn(folder);
-        ReturnCode rc = DQDeleteHelper.deleteRelations(item); 
+        ReturnCode rc = DQDeleteHelper.deleteRelations(item);
         assertTrue(rc.isOk());
     }
 
@@ -94,8 +92,8 @@ public class DQDeleteHelperTest {
         PowerMockito.mockStatic(PropertyHelper.class);
         when(PropertyHelper.getProperty(mod)).thenReturn(prop);
         // replayAll();
-        boolean canEmptyRecyBin = DQDeleteHelper.canEmptyRecyBin(recybinLs);
-        assertFalse(canEmptyRecyBin);
+        List<IRepositoryNode> canNotDeletedNodes = DQDeleteHelper.getCanNotDeletedNodes(recybinLs, true);
+        assertFalse(canNotDeletedNodes.isEmpty());
 
     }
 
@@ -105,8 +103,8 @@ public class DQDeleteHelperTest {
      */
     public void testcanEmptyRecyBin_2() {
         List<IRepositoryNode> recybinLs = new ArrayList<IRepositoryNode>();
-        boolean canEmptyRecyBin = DQDeleteHelper.canEmptyRecyBin(recybinLs);
-        assertTrue(canEmptyRecyBin);
+        List<IRepositoryNode> canNotDeletedNodes = DQDeleteHelper.getCanNotDeletedNodes(recybinLs, true);
+        assertTrue(canNotDeletedNodes.isEmpty());
         ModelElement mod = mock(ModelElement.class);
         List<ModelElement> dependceLs = new ArrayList<ModelElement>();
         dependceLs.add(mod);
@@ -125,8 +123,8 @@ public class DQDeleteHelperTest {
         when(prop.getItem()).thenReturn(item);
         PowerMockito.mockStatic(PropertyHelper.class);
         when(PropertyHelper.getProperty(mod)).thenReturn(prop);
-        canEmptyRecyBin = DQDeleteHelper.canEmptyRecyBin(recybinLs);
-        assertTrue(canEmptyRecyBin);
+        canNotDeletedNodes = DQDeleteHelper.getCanNotDeletedNodes(canNotDeletedNodes, true);
+        assertTrue(canNotDeletedNodes.isEmpty());
 
     }
 

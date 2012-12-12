@@ -21,6 +21,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
@@ -37,13 +39,17 @@ import org.talend.core.repository.i18n.Messages;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.core.runtime.CoreRuntimePlugin;
 import org.talend.dataprofiler.core.CorePlugin;
+import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
+import org.talend.dataprofiler.core.ui.utils.RepNodeUtils;
+import org.talend.dataprofiler.core.ui.views.resources.LocalRepositoryObjectCRUD;
 import org.talend.dq.helper.DQDeleteHelper;
 import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.nodes.RecycleBinRepNode;
 import org.talend.repository.model.IProxyRepositoryFactory;
 import org.talend.repository.model.IRepositoryNode;
+import org.talend.resource.ResourceManager;
 
 /**
  * DOC qiongli class global comment. Detailled comment <br/>
@@ -73,6 +79,19 @@ public class DQEmptyRecycleBinActionTest {
      */
     @Before
     public void setUp() throws Exception {
+
+        IProject proj = mock(IProject.class);
+        when(proj.getFullPath()).thenReturn(new Path(PluginConstant.EMPTY_STRING));
+        PowerMockito.mockStatic(ResourceManager.class);
+        when(ResourceManager.getRootProject()).thenReturn(proj);
+
+        PowerMockito.mockStatic(ProxyRepositoryFactory.class);
+        ProxyRepositoryFactory proxFactory = mock(ProxyRepositoryFactory.class);
+        when(ProxyRepositoryFactory.getInstance()).thenReturn(proxFactory);
+        PowerMockito.mockStatic(RepNodeUtils.class);
+        LocalRepositoryObjectCRUD localRepCRUD = mock(LocalRepositoryObjectCRUD.class);
+        when(RepNodeUtils.getRepositoryObjectCRUD()).thenReturn(localRepCRUD);
+
         ResourceBundle rb = mock(ResourceBundle.class);
         stub(method(ResourceBundle.class, "getBundle", String.class)).toReturn(rb);
         // when(ResourceBundle.getBundle(anyString())).thenReturn(rb);
@@ -93,7 +112,6 @@ public class DQEmptyRecycleBinActionTest {
         PowerMockito.mockStatic(CoreRuntimePlugin.class);
         CoreRuntimePlugin coreRuntPlugin = mock(CoreRuntimePlugin.class);
         when(CoreRuntimePlugin.getInstance()).thenReturn(coreRuntPlugin);
-        IProxyRepositoryFactory proxFactory = mock(IProxyRepositoryFactory.class);
         when(coreRuntPlugin.getProxyRepositoryFactory()).thenReturn(proxFactory);
 
     }
@@ -165,7 +183,8 @@ public class DQEmptyRecycleBinActionTest {
         seleLs.add(node1);
 
         PowerMockito.mockStatic(DQDeleteHelper.class);
-        when(DQDeleteHelper.canEmptyRecyBin(seleLs)).thenReturn(false);
+        List<IRepositoryNode> ls = new ArrayList<IRepositoryNode>();
+        when(DQDeleteHelper.getCanNotDeletedNodes(seleLs, false)).thenReturn(ls);
 
         RecycleBinRepNode recyBin = mock(RecycleBinRepNode.class);
         PowerMockito.mockStatic(RepositoryNodeHelper.class);
@@ -177,7 +196,6 @@ public class DQEmptyRecycleBinActionTest {
 
     }
 
-
     /**
      * Test method for {@link org.talend.dataprofiler.core.ui.action.actions.DQEmptyRecycleBinAction#getSelection()}.
      */
@@ -187,7 +205,8 @@ public class DQEmptyRecycleBinActionTest {
     }
 
     /**
-     * Test method for {@link org.talend.dataprofiler.core.ui.action.actions.DQEmptyRecycleBinAction#getRepositorySelection()}.
+     * Test method for
+     * {@link org.talend.dataprofiler.core.ui.action.actions.DQEmptyRecycleBinAction#getRepositorySelection()}.
      */
     @Test
     public void testGetRepositorySelection() {
@@ -203,7 +222,8 @@ public class DQEmptyRecycleBinActionTest {
     }
 
     /**
-     * Test method for {@link org.talend.dataprofiler.core.ui.action.actions.DQEmptyRecycleBinAction#DQEmptyRecycleBinAction()}.
+     * Test method for
+     * {@link org.talend.dataprofiler.core.ui.action.actions.DQEmptyRecycleBinAction#DQEmptyRecycleBinAction()}.
      */
     @Test
     public void testDQEmptyRecycleBinAction() {
