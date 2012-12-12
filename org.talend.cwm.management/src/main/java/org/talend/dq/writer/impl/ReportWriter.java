@@ -12,24 +12,14 @@
 // ============================================================================
 package org.talend.dq.writer.impl;
 
-import java.util.Collection;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 import org.apache.log4j.Logger;
-import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.EStructuralFeature.Setting;
-import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.commons.exception.PersistenceException;
 import org.talend.core.model.properties.Item;
 import org.talend.core.model.properties.Property;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
-import org.talend.core.repository.utils.AbstractResourceChangesService;
-import org.talend.core.repository.utils.TDQServiceRegister;
 import org.talend.cwm.dependencies.DependenciesHandler;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.helpers.ReportHelper;
@@ -101,86 +91,16 @@ public class ReportWriter extends AElementPersistance {
         return FactoriesUtil.REP;
     }
 
-    public ReturnCode save(Item item, boolean... careDependency) {
-        ReturnCode rc = new ReturnCode();
-        try {
-            TDQReportItem repItem = (TDQReportItem) item;
-            Report report = repItem.getReport();
-            addDependencies(report);
-            addResourceContent(report.eResource(), report);
-
-            Map<EObject, Collection<Setting>> find = EcoreUtil.ExternalCrossReferencer.find(report.eResource());
-            Set<Resource> needSaves = new HashSet<Resource>();
-            for (EObject object : find.keySet()) {
-                Resource re = object.eResource();
-                if (re == null) {
-                    continue;
-                }
-                needSaves.add(re);
-            }
-
-            ProxyRepositoryFactory.getInstance().save(repItem);
-
-            AbstractResourceChangesService resChangeService = TDQServiceRegister.getInstance().getResourceChangeService(
-                    AbstractResourceChangesService.class);
-            if (resChangeService != null) {
-                for (Resource toSave : needSaves) {
-                    EcoreUtil.resolveAll(toSave);
-                    resChangeService.saveResourceByEMFShared(toSave);
-                }
-            }
-
-            // updateDependencies(report);
-        } catch (PersistenceException e) {
-            log.error(e, e);
-            rc.setOk(Boolean.FALSE);
-            rc.setMessage(e.getMessage());
-        }
-        return rc;
+    @Override
+    public ReturnCode save(Item item, boolean careDependency) {
+        TDQReportItem repItem = (TDQReportItem) item;
+        Report report = repItem.getReport();
+        // MOD yyi 2012-02-07 TDQ-4621:Update dependencies(connection) when careDependency is true.
+        return careDependency ? saveWithDependencies(repItem, report) : saveWithoutDependencies(repItem, report);
     }
 
     @Override
     protected void notifyResourceChanges() {
         ProxyRepositoryManager.getInstance().save();
-
     }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.talend.dq.writer.AElementPersistance#updateDependencies(orgomg.cwm.objectmodel.core.ModelElement)
-     */
-    // @Override
-    // protected void updateDependencies(ModelElement element) {
-    // TdReport report = (TdReport) element;
-    // // update supplier dependency
-    // // if report have supplier dependency, add codes here
-    // // update client dependency
-    // EList<Dependency> clientDependency = report.getClientDependency();
-    // try {
-    // for (Dependency cDependency : clientDependency) {
-    // EList<ModelElement> supplier = cDependency.getSupplier();
-    // for (ModelElement me : supplier) {
-    // if (me instanceof Analysis) {
-    // Analysis analysis = (Analysis) me;
-    // TypedReturnCode<Dependency> dependencyReturn = DependenciesHandler.getInstance().setDependencyOn(report,
-    // analysis);
-    // if (dependencyReturn.isOk()) {
-    // RepositoryNode repositoryNode = RepositoryNodeHelper.recursiveFind(analysis);
-    // if (repositoryNode != null) {
-    // TDQAnalysisItem analysisItem = (TDQAnalysisItem) repositoryNode.getObject().getProperty()
-    // .getItem();
-    // analysisItem.setAnalysis(analysis);
-    // }
-    // ProxyRepositoryFactory.getInstance().getRepositoryFactoryFromProvider().getResourceManager()
-    // .saveResource(analysis.eResource());
-    // }
-    // }
-    // }
-    // }
-    // } catch (PersistenceException e) {
-    // log.error(e, e);
-    // }
-    //
-    // }
 }

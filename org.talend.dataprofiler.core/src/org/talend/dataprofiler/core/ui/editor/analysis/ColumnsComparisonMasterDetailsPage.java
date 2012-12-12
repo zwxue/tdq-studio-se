@@ -135,6 +135,7 @@ public class ColumnsComparisonMasterDetailsPage extends AbstractAnalysisMetadata
     // }
     //
     // }
+    @Override
     public void initialize(FormEditor editor) {
         super.initialize(editor);
         Analysis analysis = (Analysis) this.currentModelElement;
@@ -313,7 +314,7 @@ public class ColumnsComparisonMasterDetailsPage extends AbstractAnalysisMetadata
             this.nameText.setText(analysis.getName());
             // ~
 
-            saved = ElementWriterFactory.getInstance().createAnalysisWrite().save(tdqAnalysisItem);
+            saved = ElementWriterFactory.getInstance().createAnalysisWrite().save(tdqAnalysisItem, true);
         }
         // MOD yyi 2012-02-03 TDQ-3602:Avoid to rewriting all analyzes after saving, no reason to update all analyzes
         // which is depended in the referred connection.
@@ -326,6 +327,7 @@ public class ColumnsComparisonMasterDetailsPage extends AbstractAnalysisMetadata
         dataFilterCompB.setDirty(false);
     }
 
+    @Override
     public void fireRuningItemChanged(boolean status) {
         super.fireRuningItemChanged(status);
 
@@ -371,8 +373,8 @@ public class ColumnsComparisonMasterDetailsPage extends AbstractAnalysisMetadata
                 ColumnSet ownerA = ColumnHelper.getColumnOwnerAsColumnSet(columnA);
                 ColumnSet ownerB = ColumnHelper.getColumnOwnerAsColumnSet(columnB);
 
-                int typeA = ((TdColumn) columnA).getSqlDataType().getJavaDataType();
-                int typeB = ((TdColumn) columnB).getSqlDataType().getJavaDataType();
+                int typeA = columnA.getSqlDataType().getJavaDataType();
+                int typeB = columnB.getSqlDataType().getJavaDataType();
                 if (!Java2SqlType.isGenericSameType(typeA, typeB)) {
                     return new ReturnCode(
                             DefaultMessagesImpl.getString("ColumnsComparisonMasterDetailsPage.notSameColumnType"), false); //$NON-NLS-1$
@@ -407,6 +409,7 @@ public class ColumnsComparisonMasterDetailsPage extends AbstractAnalysisMetadata
 
     }
 
+    @Override
     public ScrolledForm getScrolledForm() {
         return form;
     }

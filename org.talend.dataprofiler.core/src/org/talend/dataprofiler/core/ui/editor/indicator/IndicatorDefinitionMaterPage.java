@@ -2163,7 +2163,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
         if (this.definitionItem != null) {
             this.definitionItem.setIndicatorDefinition(definition);
         }
-        ElementWriterFactory.getInstance().createIndicatorDefinitionWriter().save(definitionItem);
+        ElementWriterFactory.getInstance().createIndicatorDefinitionWriter().save(definitionItem, true);
         this.isDirty = false;
         if (!rc.isOk()) {
             this.isDirty = true;

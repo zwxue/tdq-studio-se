@@ -12,7 +12,6 @@
 // ============================================================================
 package org.talend.dataprofiler.core.migration.impl;
 
-
 import java.util.Date;
 
 import org.eclipse.core.runtime.IPath;
@@ -80,7 +79,7 @@ public class UpdateStartWithBlankPatternTask extends AbstractWorksapceUpdateTask
                         if (JAVA_LANGUAGE.equals(regularExpress.getExpression().getLanguage())) {
                             regularExpress.getExpression().setBody(JAVA_REGULAR_EXPRESSION);
                             patternItem.setPattern(pattern);
-                            ElementWriterFactory.getInstance().createPatternWriter().save(patternItem);
+                            ElementWriterFactory.getInstance().createPatternWriter().save(patternItem, true);
                             isFound = true;
                             break;
                         }
@@ -90,7 +89,7 @@ public class UpdateStartWithBlankPatternTask extends AbstractWorksapceUpdateTask
                     break;
                 }
             }
-    }
+        }
         return true;
     }
 }

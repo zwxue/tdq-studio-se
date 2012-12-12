@@ -900,7 +900,7 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
                 DependenciesHandler.getInstance().removeDependenciesBetweenModels(analysis,
                         new ArrayList<ModelElement>(removedElements));
             }
-            saved = ElementWriterFactory.getInstance().createAnalysisWrite().save(tdqAnalysisItem);
+            saved = ElementWriterFactory.getInstance().createAnalysisWrite().save(tdqAnalysisItem, true);
             if (saved.isOk() && !removedElements.isEmpty()) {
                 saveRemovedElements();
             }

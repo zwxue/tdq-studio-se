@@ -533,7 +533,7 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
         rightLabel.setLayoutData(new GridData());
         rightLabel = new Label(rightComp, SWT.NONE);
         rightLabel.setText(DefaultMessagesImpl.getString(
-                "ConnectionMasterDetailsPage.executionDuration", resultMetadata.getExecutionDuration() / 1000.0d)); //$NON-NLS-1$ //$NON-NLS-2$
+                "ConnectionMasterDetailsPage.executionDuration", resultMetadata.getExecutionDuration() / 1000.0d)); //$NON-NLS-1$ 
         rightLabel.setLayoutData(new GridData());
 
         rightLabel = new Label(rightComp, SWT.NONE);
@@ -807,6 +807,7 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
         tableColumn.setWidth(COL_WIDTH);
     }
 
+    @Override
     public void saveAnalysis() throws DataprofilerCoreException {
         // ADD gdbu 2011-3-3 bug 19179
         // remove the space from analysis name
@@ -845,7 +846,7 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
             this.nameText.setText(analysis.getName());
             // ~
 
-            saved = ElementWriterFactory.getInstance().createAnalysisWrite().save(tdqAnalysisItem);
+            saved = ElementWriterFactory.getInstance().createAnalysisWrite().save(tdqAnalysisItem, true);
         }
         // MOD yyi 2012-02-03 TDQ-3602:Avoid to rewriting all analyzes after saving, no reason to update all analyzes
         // which is depended in the referred connection.
@@ -872,7 +873,7 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
         tableAndViewComposite.setVisible(true);
         // DOC wapperInput retrun OverViewUIElement
 
-        EList<TableIndicator> indicatorTableList = (EList<TableIndicator>) schemaIndicator.getTableIndicators();
+        EList<TableIndicator> indicatorTableList = schemaIndicator.getTableIndicators();
         List<OverviewIndUIElement> tableElements = wapperInput(indicatorTableList, parentNode);
         if (tableOfCatalogOrSchemaViewer == null) {
             tableOfCatalogOrSchemaViewer = new TableViewer(tableAndViewComposite, SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER
@@ -913,13 +914,15 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
             // catalogOrSchemaTable.setMenu(menu);
             keyitem.addSelectionListener(new SelectionAdapter() {
 
+                @Override
                 public void widgetSelected(SelectionEvent e) {
                     TableItem tableItem = cursor.getRow();
                     String tableName = tableItem.getText(0);
                     Package parentPack = (Package) currentSelectionSchemaIndicator.getAnalyzedElement();
                     // MOD qiongli bug 13093,2010-7-2
-                    if (currentCatalogIndicator != null)
+                    if (currentCatalogIndicator != null) {
                         parentPack = (Package) currentCatalogIndicator.getAnalyzedElement();
+                    }
 
                     TypedReturnCode<TableNode> findSqlExplorerTableNode = SqlExplorerBridge.findSqlExplorerTableNode(
                             tdDataProvider, parentPack, tableName, Messages.getString("DatabaseDetailView.Tab.PrimaryKeys")); //$NON-NLS-1$
@@ -933,13 +936,15 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
 
             indexitem.addSelectionListener(new SelectionAdapter() {
 
+                @Override
                 public void widgetSelected(SelectionEvent e) {
                     TableItem tableItem = cursor.getRow();
                     String tableName = tableItem.getText(0);
                     Package parentPack = (Package) currentSelectionSchemaIndicator.getAnalyzedElement();
                     // MOD qiongli bug 13093,2010-7-2
-                    if (currentCatalogIndicator != null)
+                    if (currentCatalogIndicator != null) {
                         parentPack = (Package) currentCatalogIndicator.getAnalyzedElement();
+                    }
 
                     TypedReturnCode<TableNode> findSqlExplorerTableNode = SqlExplorerBridge.findSqlExplorerTableNode(
                             tdDataProvider, parentPack, tableName, Messages.getString("DatabaseDetailView.Tab.Indexes")); //$NON-NLS-1$
@@ -953,6 +958,7 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
 
             tableAnalysisitem.addSelectionListener(new SelectionAdapter() {
 
+                @Override
                 public void widgetSelected(SelectionEvent e) {
                     TableItem tableItem = cursor.getRow();
                     OverviewIndUIElement data = (OverviewIndUIElement) tableItem.getData();
@@ -996,7 +1002,7 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
         }
         tableOfCatalogOrSchemaViewer.getTable().setMenu(null);
         tableOfCatalogOrSchemaViewer.setInput(tableElements);
-        List<ViewIndicator> indicatorViewList = (List<ViewIndicator>) schemaIndicator.getViewIndicators();
+        List<ViewIndicator> indicatorViewList = schemaIndicator.getViewIndicators();
 
         viewOfCatalogOrSchemaViewer.setInput(indicatorViewList);
         // MOD xqliu 2009-11-05 bug 9521
@@ -1080,6 +1086,7 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
         super(editor, id, title);
     }
 
+    @Override
     public void fireRuningItemChanged(boolean status) {
 
         currentEditor.setRunActionButtonState(status);

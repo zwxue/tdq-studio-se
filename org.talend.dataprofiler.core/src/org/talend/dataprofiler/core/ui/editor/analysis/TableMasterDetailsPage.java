@@ -680,7 +680,7 @@ public class TableMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
                 DependenciesHandler.getInstance().removeDependenciesBetweenModels(analysis,
                         new ArrayList<ModelElement>(removedElements));
             }
-            saved = ElementWriterFactory.getInstance().createAnalysisWrite().save(tdqAnalysisItem);
+            saved = ElementWriterFactory.getInstance().createAnalysisWrite().save(tdqAnalysisItem, true);
         }
         if (saved.isOk()) {
             if (!treeViewer.getRemovedElements().isEmpty()) {

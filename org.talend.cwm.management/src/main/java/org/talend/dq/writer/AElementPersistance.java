@@ -12,8 +12,12 @@
 // ============================================================================
 package org.talend.dq.writer;
 
+import java.util.Collection;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
@@ -23,10 +27,12 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EStructuralFeature.Setting;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.talend.commons.bridge.ReponsitoryContextBridge;
 import org.talend.commons.emf.FactoriesUtil;
+import org.talend.commons.exception.PersistenceException;
 import org.talend.commons.utils.WorkspaceUtils;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
@@ -41,6 +47,8 @@ import org.talend.core.model.properties.Property;
 import org.talend.core.model.properties.TDQItem;
 import org.talend.core.model.properties.User;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
+import org.talend.core.repository.utils.AbstractResourceChangesService;
+import org.talend.core.repository.utils.TDQServiceRegister;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.management.i18n.Messages;
 import org.talend.dataquality.PluginConstant;
@@ -261,7 +269,9 @@ public abstract class AElementPersistance {
         }
         // MOD qiongli 2011-1-7 delimitedfile connection dosen't use modelElement.getName().
         if (SwitchHelpers.DELIMITEDFILECONNECTION_SWITCH.doSwitch(modelElement) == null) {
-            property.setLabel(WorkspaceUtils.normalize(modelElement.getName()));
+            if (property.getLabel() == null) {
+                property.setLabel(WorkspaceUtils.normalize(modelElement.getName()));
+            }
         }
         property.setPurpose(purpose);
         property.setDescription(description);
@@ -516,5 +526,76 @@ public abstract class AElementPersistance {
      */
     protected abstract String getFileExtension();
 
-    public abstract ReturnCode save(Item item, boolean... careDependency);
+    /**
+     * Save item and it's dependencies(optional).
+     * 
+     * @param item
+     * @param careDependency Set explicitly <B>true</B> for needs to update dependencies of item.
+     * @return
+     */
+    public abstract ReturnCode save(Item item, boolean careDependency);
+
+    /**
+     * Save item with dependencies.
+     * 
+     * @param element
+     */
+    protected ReturnCode saveWithDependencies(Item item, ModelElement element) {
+        ReturnCode rc = new ReturnCode();
+
+        addDependencies(element);
+        addResourceContent(element.eResource(), element);
+
+        Map<EObject, Collection<Setting>> find = EcoreUtil.ExternalCrossReferencer.find(element.eResource());
+        Set<Resource> needSaves = new HashSet<Resource>();
+        for (EObject object : find.keySet()) {
+            Resource re = object.eResource();
+            if (re == null) {
+                continue;
+            }
+            // the resource should be resolved before saving the item to make sure the references are updated.
+            EcoreUtil.resolveAll(re);
+            needSaves.add(re);
+        }
+
+        try {
+            ProxyRepositoryFactory.getInstance().save(item);
+        } catch (PersistenceException e) {
+            log.error(e, e);
+            rc.setOk(Boolean.FALSE);
+            rc.setMessage(e.getMessage());
+        }
+
+        AbstractResourceChangesService resChangeService = TDQServiceRegister.getInstance().getResourceChangeService(
+                AbstractResourceChangesService.class);
+        if (resChangeService != null) {
+            for (Resource toSave : needSaves) {
+                resChangeService.saveResourceByEMFShared(toSave);
+            }
+        }
+
+        return rc;
+    }
+
+    /**
+     * Save item <B>without</B> dependencies.
+     * 
+     * @param element
+     */
+    protected ReturnCode saveWithoutDependencies(Item item, ModelElement element) {
+        ReturnCode rc = new ReturnCode();
+
+        addDependencies(element);
+        addResourceContent(element.eResource(), element);
+
+        try {
+            ProxyRepositoryFactory.getInstance().save(item);
+        } catch (PersistenceException e) {
+            log.error(e, e);
+            rc.setOk(Boolean.FALSE);
+            rc.setMessage(e.getMessage());
+        }
+        return rc;
+    }
+
 }

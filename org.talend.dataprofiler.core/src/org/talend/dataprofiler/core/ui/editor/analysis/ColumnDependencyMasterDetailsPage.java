@@ -291,7 +291,7 @@ public class ColumnDependencyMasterDetailsPage extends AbstractAnalysisMetadataP
             this.nameText.setText(analysis.getName());
             // ~
 
-            saved = ElementWriterFactory.getInstance().createAnalysisWrite().save(tdqAnalysisItem);
+            saved = ElementWriterFactory.getInstance().createAnalysisWrite().save(tdqAnalysisItem, true);
         }
         // MOD yyi 2012-02-03 TDQ-3602:Avoid to rewriting all analyzes after saving, no reason to update all analyzes
         // which is depended in the referred connection.

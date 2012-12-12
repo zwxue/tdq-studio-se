@@ -22,6 +22,7 @@ import org.talend.core.model.properties.DatabaseConnectionItem;
 import org.talend.dataprofiler.core.exception.MessageBoxExceptionHandler;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.editor.CommonFormEditor;
+import org.talend.dataprofiler.core.ui.utils.WorkbenchUtils;
 import org.talend.dq.CWMPlugin;
 
 /**
@@ -36,6 +37,7 @@ public class ConnectionEditor extends CommonFormEditor {
     public ConnectionEditor() {
     }
 
+    @Override
     protected void addPages() {
         masterPage = new ConnectionInfoPage(this, ID, DefaultMessagesImpl.getString("ConnectionEditor.connectionSettings")); //$NON-NLS-1$ 
         try {
@@ -43,13 +45,14 @@ public class ConnectionEditor extends CommonFormEditor {
         } catch (PartInitException e) {
             MessageBoxExceptionHandler.process(e);
         }
-        setPartName(masterPage.getIntactElemenetName()); //$NON-NLS-1$
+        setPartName(masterPage.getIntactElemenetName());
     }
 
+    @Override
     public void doSave(IProgressMonitor monitor) {
         if (masterPage.isDirty()) {
             masterPage.doSave(monitor);
-            setPartName(masterPage.getIntactElemenetName()); //$NON-NLS-1$
+            setPartName(masterPage.getIntactElemenetName());
             // MOD klliu 2010-04-21 bug 20204 update SQL Exploer ConnectionNode's name before saving the updated name.
             ConnectionItem item = (ConnectionItem) ((ConnectionItemEditorInput) this.getEditorInput()).getItem();
             if (item instanceof DatabaseConnectionItem) {
@@ -57,11 +60,14 @@ public class ConnectionEditor extends CommonFormEditor {
                 CWMPlugin.getDefault().updateAliasInSQLExplorer(masterPage.getOldDataproviderName(), name);
                 masterPage.setOldDataproviderName(name);
             }
+            // refresh the analysis editor
+            WorkbenchUtils.refreshCurrentAnalysisEditor();
         }
         setEditorObject(masterPage.getConnectionRepNode());
         super.doSave(monitor);
     }
 
+    @Override
     protected void firePropertyChange(final int propertyId) {
         super.firePropertyChange(propertyId);
     }
@@ -71,6 +77,7 @@ public class ConnectionEditor extends CommonFormEditor {
      * 
      * @see org.eclipse.ui.part.EditorPart#setInput(org.eclipse.ui.IEditorInput)
      */
+    @Override
     protected void setInput(IEditorInput input) {
         super.setInput(input);
     }

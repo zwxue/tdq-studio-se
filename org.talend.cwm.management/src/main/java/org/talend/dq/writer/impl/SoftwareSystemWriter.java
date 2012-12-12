@@ -39,7 +39,6 @@ public class SoftwareSystemWriter extends AElementPersistance {
     @Override
     protected void addDependencies(ModelElement element) {
         // TODO Auto-generated method stub
-
     }
 
     /*
@@ -52,7 +51,8 @@ public class SoftwareSystemWriter extends AElementPersistance {
         return FactoriesUtil.SOFTWARE_SYSTEM;
     }
 
-    public ReturnCode save(Item item, boolean... careDependency) {
+    @Override
+    public ReturnCode save(Item item, boolean careDependency) {
         // TODO Auto-generated method stub
         return null;
     }
@@ -60,18 +60,5 @@ public class SoftwareSystemWriter extends AElementPersistance {
     @Override
     protected void notifyResourceChanges() {
         ProxyRepositoryManager.getInstance().save();
-
     }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.talend.dq.writer.AElementPersistance#updateDependencies(orgomg.cwm.objectmodel.core.ModelElement)
-     */
-    // @Override
-    // protected void updateDependencies(ModelElement element) {
-    // // TODO Auto-generated method stub
-    //
-    // }
-
 }
