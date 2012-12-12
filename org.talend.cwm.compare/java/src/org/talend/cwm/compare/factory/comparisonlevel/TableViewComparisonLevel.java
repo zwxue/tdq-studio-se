@@ -80,7 +80,8 @@ public class TableViewComparisonLevel extends AbstractComparisonLevel {
 
     }
 
-    protected void createTempConnectionFile() throws ReloadCompareException {
+    @Override
+    protected IFile createTempConnectionFile() throws ReloadCompareException {
         // MOD klliu bug 15822 201-09-30
         if (oldDataProvider != null && oldDataProvider.eIsProxy()) {
             oldDataProvider = (Connection) EObjectHelper.resolveObject(oldDataProvider);
@@ -111,6 +112,7 @@ public class TableViewComparisonLevel extends AbstractComparisonLevel {
                     tempConnectionFile.getLocation().toFile().getAbsolutePath()));
         }
         tempReloadProvider = tdDataProviders.iterator().next();
+        return tempConnectionFile;
     }
 
     @Override
@@ -289,7 +291,7 @@ public class TableViewComparisonLevel extends AbstractComparisonLevel {
             TableHelper.addPrimaryKey((TdTable) columnSet, columnSetSwitch);
             Set<ForeignKey> foreignKeySet = ColumnHelper.getForeignKey(columnSetSwitch);
             for (ForeignKey foreignKey : foreignKeySet) {
-            	TableHelper.addForeignKey((TdTable) columnSet, foreignKey, columnSetSwitch); 
+                TableHelper.addForeignKey((TdTable) columnSet, foreignKey, columnSetSwitch);
             }
 
             return;
