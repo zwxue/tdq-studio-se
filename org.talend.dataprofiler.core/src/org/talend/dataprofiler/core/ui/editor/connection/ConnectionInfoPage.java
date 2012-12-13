@@ -13,10 +13,7 @@
 package org.talend.dataprofiler.core.ui.editor.connection;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.LinkedList;
 import java.util.Properties;
-
-import net.sourceforge.sqlexplorer.dbproduct.ManagedDriver;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
@@ -54,6 +51,7 @@ import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
 import org.talend.core.model.metadata.builder.connection.MDMConnection;
 import org.talend.core.model.metadata.builder.database.JavaSqlFactory;
+import org.talend.core.model.metadata.builder.util.MetadataConnectionUtils;
 import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.properties.Item;
 import org.talend.core.model.properties.Property;
@@ -76,7 +74,6 @@ import org.talend.dataprofiler.core.ui.progress.ProgressUI;
 import org.talend.dataprofiler.core.ui.utils.MessageUI;
 import org.talend.dataquality.exception.DataprofilerCoreException;
 import org.talend.dq.analysis.parameters.DBConnectionParameter;
-import org.talend.dq.connection.DataProviderBuilder;
 import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.helper.RepositoryNodeHelper;
@@ -177,15 +174,21 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
 
             @Override
             public void widgetSelected(SelectionEvent e) {
+                try {
                 ReturnCode code = checkDBConnection();
                 if (code.isOk()) {
                     MessageDialog.openInformation(
                             null,
                             DefaultMessagesImpl.getString("ConnectionInfoPage.checkConnections"), DefaultMessagesImpl.getString("ConnectionInfoPage.checkConnectionSuccessful")); //$NON-NLS-1$ //$NON-NLS-2$
                 } else {
-                    MessageDialog.openInformation(
+                        MessageDialog.openWarning(
                             null,
                             DefaultMessagesImpl.getString("ConnectionInfoPage.checkConnection"), DefaultMessagesImpl.getString("ConnectionInfoPage.CheckConnectionFailure", code.getMessage())); //$NON-NLS-1$ //$NON-NLS-2$ 
+                }
+                } catch (Exception e2) {
+                    MessageDialog.openWarning(
+                            null,
+                            DefaultMessagesImpl.getString("ConnectionInfoPage.checkConnection"), DefaultMessagesImpl.getString("ConnectionInfoPage.CheckConnectionFailure", e2.getMessage())); //$NON-NLS-1$ //$NON-NLS-2$ 
                 }
             }
 
@@ -292,22 +295,6 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
      * MOD yyi 9082 2010-02-25
      */
     protected void changeConnectionInformations() {
-        // UrlEditDialog urlDlg = new UrlEditDialog(null, connection);
-        //
-        // if (urlDlg.open() == Window.OK) {
-        // tmpParam = urlDlg.getResult();
-        //
-        // if (!tmpParam.getJdbcUrl().equals(urlText.getText())) {
-        // urlText.setText(tmpParam.getJdbcUrl());
-        // isUrlChanged = true;
-        // }
-        // // has new jar file for generic jdbc
-        // if (!"".equals(tmpParam.getDriverPath())) {
-        // setDirty(true);
-        // isUrlChanged = true;
-        // }
-        // }
-
         if (connectionItem != null) {
             // MOD mzhao bug:19288
             if (connectionItem.eIsProxy()) {
@@ -340,74 +327,17 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
         }
     }
 
-    /**
-     * DOC yyi Comment method "storeDriverInfo".
-     * 
-     * @param dbConnectionParam
-     */
-    private void storeDriveInfoToPerference(DBConnectionParameter connectionParam) {
-        String driverPath = connectionParam.getDriverPath();
-        if (driverPath != null && !PluginConstant.EMPTY_STRING.equals(driverPath)) {
-            LinkedList<String> jars = new LinkedList<String>();
-            for (String driverpath : driverPath.split(";")) { //$NON-NLS-1$
-                jars.add(driverpath);
-            }
-
-            String jdbcUrl = connectionParam.getJdbcUrl();
-            if (jdbcUrl != null && jdbcUrl.length() > 12) {
-                String name = jdbcUrl.substring(0, 12);
-                ManagedDriver driver = new DataProviderBuilder().buildDriverForSQLExploer(name,
-                        connectionParam.getDriverClassName(), connectionParam.getJdbcUrl(), jars);
-                if (connectionParam == null || driver == null || connection == null) {
-                    return;
-                }
-
-                StringBuilder driverPara = new StringBuilder();
-                if (CorePlugin.getDefault().getPreferenceStore().getString("JDBC_CONN_DRIVER") != null //$NON-NLS-1$
-                        && !CorePlugin.getDefault().getPreferenceStore().getString("JDBC_CONN_DRIVER").equals("")) { //$NON-NLS-1$ //$NON-NLS-2$
-                    driverPara.append(CorePlugin.getDefault().getPreferenceStore().getString("JDBC_CONN_DRIVER") + ";{" //$NON-NLS-1$ //$NON-NLS-2$
-                            + connectionParam.getDriverPath().substring(0, connectionParam.getDriverPath().length() - 1) + "," //$NON-NLS-1$
-                            + connectionParam.getDriverClassName() + "," + connectionParam.getJdbcUrl() + "," //$NON-NLS-1$ //$NON-NLS-2$
-                            + connection.eResource().getURI().toString() + "," + driver.getId() + "};"); //$NON-NLS-1$ //$NON-NLS-2$
-                } else {
-                    driverPara.append("{" //$NON-NLS-1$
-                            + connectionParam.getDriverPath().substring(0, connectionParam.getDriverPath().length() - 1) + "," //$NON-NLS-1$
-                            + connectionParam.getDriverClassName() + "," + connectionParam.getJdbcUrl() + "," //$NON-NLS-1$ //$NON-NLS-2$
-                            + connection.eResource().getURI().toString() + "," + driver.getId() + "};"); //$NON-NLS-1$ //$NON-NLS-2$
-                }
-                CorePlugin.getDefault().getPreferenceStore().putValue("JDBC_CONN_DRIVER", driverPara.toString()); //$NON-NLS-1$
-
-            }
-        }
-
-    }
-
-    /**
-     * DOC yyi Comment method "updateConnection".
-     * 
-     * @param dbConnectionParameter
-     */
-    private void updateConnection(DBConnectionParameter targetParam) {
-        if (connection != null) {
-            ConnectionUtils.setServerName(connection, targetParam.getHost());
-            ConnectionUtils.setPort(connection, targetParam.getPort());
-            ConnectionUtils.setSID(connection, targetParam.getDbName());
-        }
-    }
-
+    // MOD yyin 20121213, use the MetadataConnectionUtils to check the connection to replace the
+    // org.talend.cwm.db.connection.ConnectionUtils.checkCOnnection method
     private ReturnCode checkDBConnection() {
         Properties props = new Properties();
         // MOD qiongli 2011-9-5 feature TDQ-3317,handle context model
         String userName = loginText.getText();
         String password = passwordText.getText();
-        String url = urlText.getText();
-        String driverClassName = JavaSqlFactory.getDriverClass(connection);
 
         if (connection.isContextMode()) {
             userName = ConnectionUtils.getOriginalConntextValue(connection, userName);
             password = ConnectionUtils.getOriginalConntextValue(connection, password);
-            url = ConnectionUtils.getOriginalConntextValue(connection, url);
-            driverClassName = ConnectionUtils.getOriginalConntextValue(connection, driverClassName);
         }
         props.put(TaggedValueHelper.USER, userName);
         props.put(TaggedValueHelper.PASSWORD, password);
@@ -417,16 +347,12 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
             props.put(TaggedValueHelper.DATA_FILTER, ConnectionHelper.getDataFilter((MDMConnection) connection));
         }
 
-        if (ConnectionUtils.isTeradata(connection)) {
-            DatabaseConnection dbConn = (DatabaseConnection) connection;
-            props.put(TaggedValueHelper.DBTYPE, dbConn.getDatabaseType());
-            props.put(TaggedValueHelper.DBNAME, dbConn.getSID());
+        ReturnCode returnCode = null;
+        if (ConnectionUtils.isMdmConnection(connection)) {
+            returnCode = new MdmWebserviceConnection(JavaSqlFactory.getURL(connection), props).checkDatabaseConnection();
+        } else {
+            returnCode = MetadataConnectionUtils.checkConnection((DatabaseConnection) connection);
         }
-
-        ReturnCode returnCode = ConnectionUtils.isMdmConnection(connection) ? new MdmWebserviceConnection(
-                JavaSqlFactory.getURL(connection), props).checkDatabaseConnection() : ConnectionUtils.checkConnection(url,
-                driverClassName, props);
-        // ~
 
         return returnCode;
     }
