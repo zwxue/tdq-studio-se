@@ -13,6 +13,7 @@
 package org.talend.cwm.compare;
 
 import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.DatabaseMetaData;
@@ -41,8 +42,10 @@ import org.eclipse.emf.compare.match.service.MatchService;
 import org.eclipse.emf.compare.util.ModelUtils;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.ui.PlatformUI;
+import org.talend.commons.utils.WorkspaceUtils;
 import org.talend.core.model.metadata.IMetadataConnection;
 import org.talend.core.model.metadata.MetadataFillFactory;
 import org.talend.core.model.metadata.builder.connection.Connection;
@@ -142,7 +145,7 @@ public final class DQStructureComparer {
     private static IFile iterateGetNotExistFile(String fileName) {
         IFile file = getFile(fileName);
         if (file.exists()) {
-            return iterateGetNotExistFile(fileName.substring(0, fileName.lastIndexOf(".")) + "c" //$NON-NLS-1$ //$NON-NLS-2$
+            return iterateGetNotExistFile(fileName.substring(0, fileName.lastIndexOf(".")) + EcoreUtil.generateUUID() //$NON-NLS-1$ 
                     + fileName.substring(fileName.lastIndexOf("."))); //$NON-NLS-1$
         } else {
             return file;
@@ -237,7 +240,7 @@ public final class DQStructureComparer {
      * 
      * @return
      */
-    private static boolean deleteFile(IFile file) {
+    public static boolean deleteFile(IFile file) {
         boolean retValue = false;
         if (file.exists()) {
             URI uri = URI.createPlatformResourceURI(file.getFullPath().toString(), false);
@@ -276,7 +279,7 @@ public final class DQStructureComparer {
         // ~11951
         String urlString = JavaSqlFactory.getURL(prevDataProvider);
         String driverClassName = JavaSqlFactory.getDriverClass(prevDataProvider);
-        driverClassName = ConnectionUtils.getOriginalConntextValue(prevDataProvider,driverClassName);
+        driverClassName = ConnectionUtils.getOriginalConntextValue(prevDataProvider, driverClassName);
         Properties properties = new Properties();
         properties.setProperty(TaggedValueHelper.USER, JavaSqlFactory.getUsername(prevDataProvider));
         properties.setProperty(TaggedValueHelper.PASSWORD, JavaSqlFactory.getPassword(prevDataProvider));
@@ -315,15 +318,13 @@ public final class DQStructureComparer {
         List<String> packageFilter = ConnectionUtils.getPackageFilter(connectionParameters);
         Connection conn = null;
         if (mdm) {
-        	metadataConnection = MetadataFillFactory.getMDMInstance().fillUIParams(
-                     ParameterUtil.toMap(connectionParameters));
+            metadataConnection = MetadataFillFactory.getMDMInstance().fillUIParams(ParameterUtil.toMap(connectionParameters));
             conn = MetadataFillFactory.getMDMInstance().fillUIConnParams(metadataConnection, null);
             MetadataFillFactory.getMDMInstance().fillSchemas(conn, null, packageFilter);
             // returnProvider.setObject(TalendCwmFactory.createMdmTdDataProvider(connectionParameters));
         } else {
-        	// FIXME why do we use MetadataFillFactory.getMDMInstance()
-        	metadataConnection = MetadataFillFactory.getMDMInstance().fillUIParams(
-                     ParameterUtil.toMap(connectionParameters));
+            // FIXME why do we use MetadataFillFactory.getMDMInstance()
+            metadataConnection = MetadataFillFactory.getMDMInstance().fillUIParams(ParameterUtil.toMap(connectionParameters));
             TypedReturnCode<?> trc = (TypedReturnCode<?>) MetadataFillFactory.getDBInstance().checkConnection(metadataConnection);
             Object sqlConnObject = trc.getObject();
             DatabaseMetaData dbJDBCMetadata = null;
@@ -683,5 +684,29 @@ public final class DQStructureComparer {
             }
         }
         return resource;
+    }
+
+    /**
+     * 
+     * remove one Resource from workspace contains unload,remove from resourceSet and delete file
+     * 
+     * @param currResource
+     * @return
+     */
+    public static boolean removeResourceFromWorkspace(Resource currResource) {
+        boolean returnCode = false;
+        if (currResource != null) {
+            URI removeUri = currResource.getURI();
+            IFile modelElementResource = null;
+            if (removeUri.isPlatformResource()) {
+                modelElementResource = WorkspaceUtils.getModelElementResource(removeUri);
+            } else {
+                modelElementResource = WorkspaceUtils.fileToIFile(new File(removeUri.toFileString()));
+            }
+            if (modelElementResource != null && modelElementResource.exists()) {
+                returnCode = deleteFile(modelElementResource);
+            }
+        }
+        return returnCode;
     }
 }

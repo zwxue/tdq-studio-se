@@ -54,7 +54,6 @@ import org.talend.dq.nodes.DBColumnFolderRepNode;
 import org.talend.dq.writer.EMFSharedResources;
 import org.talend.repository.model.RepositoryNode;
 import orgomg.cwm.objectmodel.core.Package;
-import orgomg.cwm.objectmodel.core.StructuralFeature;
 import orgomg.cwm.resource.relational.ColumnSet;
 import orgomg.cwm.resource.relational.ForeignKey;
 import orgomg.cwm.resource.relational.PrimaryKey;
@@ -81,7 +80,8 @@ public class TableViewComparisonLevel extends AbstractComparisonLevel {
 
     }
 
-    protected void createTempConnectionFile() throws ReloadCompareException {
+    @Override
+    protected IFile createTempConnectionFile() throws ReloadCompareException {
         // MOD klliu bug 15822 201-09-30
         if (oldDataProvider != null && oldDataProvider.eIsProxy()) {
             oldDataProvider = (Connection) EObjectHelper.resolveObject(oldDataProvider);
@@ -112,6 +112,7 @@ public class TableViewComparisonLevel extends AbstractComparisonLevel {
                     tempConnectionFile.getLocation().toFile().getAbsolutePath()));
         }
         tempReloadProvider = tdDataProviders.iterator().next();
+        return tempConnectionFile;
     }
 
     @Override
@@ -286,15 +287,15 @@ public class TableViewComparisonLevel extends AbstractComparisonLevel {
             ColumnSetHelper.addColumn(columnSetSwitch, columnSet);
             // MOD zshen 2010.06.10 for feature 12842.
             // Case of pk
-           
+
             PrimaryKey primaryKey = ColumnHelper.getPrimaryKey(columnSetSwitch);
             if (primaryKey != null) {
-            	 TableHelper.addPrimaryKey((TdTable) columnSet, columnSetSwitch);
+                TableHelper.addPrimaryKey((TdTable) columnSet, columnSetSwitch);
             }
             Set<ForeignKey> foreignKeySet = ColumnHelper.getForeignKey(columnSetSwitch);
             for (ForeignKey foreignKey : foreignKeySet) {
                 if (foreignKey != null) {
-                   TableHelper.addForeignKey((TdTable) columnSet, foreignKey,columnSetSwitch);
+                    TableHelper.addForeignKey((TdTable) columnSet, foreignKey, columnSetSwitch);
                 }
             }
             return;
