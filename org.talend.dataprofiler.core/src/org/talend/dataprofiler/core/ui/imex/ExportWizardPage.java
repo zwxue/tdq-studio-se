@@ -322,8 +322,11 @@ public class ExportWizardPage extends WizardPage {
             for (File depFile : dependencyMap.keySet()) {
                 if (!repositoryTree.getChecked(ItemRecord.findRecord(depFile))) {
                     ModelElement element = dependencyMap.get(depFile);
+                    // MOD qiongli 2012-12-13 TDQ-5356 use itself file name for jrxml
+                    boolean isJrxmlDepFile = depFile.getName().endsWith(FactoriesUtil.JRXML);
                     // MOD msjian TDQ-5909: modify to display label name
-                    String fileName = element != null ? PropertyHelper.getProperty(element).getLabel() : depFile.getName();
+                    String fileName = element != null && !isJrxmlDepFile ? PropertyHelper.getProperty(element).getLabel()
+                            : depFile.getName();
                     // TDQ-5909~
                     errors.add("\"" + record.getName() + "\" miss dependency : " + fileName);//$NON-NLS-1$ //$NON-NLS-2$ 
                 }
