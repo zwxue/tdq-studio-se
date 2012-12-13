@@ -639,6 +639,35 @@ public final class RepositoryNodeHelper {
         return dbTableRepNode;
     }
 
+    // /**
+    // * create a temp RepNode there is a lack of parent attribute
+    // *
+    // * @param findColumn
+    // */
+    // private static DBColumnRepNode createMetadataColumnRepObj(ModelElement findColumn) {
+    // Property property = PropertyHelper.getProperty(findColumn);
+    // IRepositoryViewObject lastVersion = null;
+    // if (property == null) {
+    //            log.error("Can not find property from column: " + findColumn.getName()); //$NON-NLS-1$
+    // } else {
+    // try {
+    // lastVersion = ProxyRepositoryFactory.getInstance().getLastVersion(property.getId());
+    // } catch (PersistenceException e) {
+    // log.error(e, e);
+    // }
+    // if (lastVersion == null) {
+    //                log.error("Can not find lastVersion from property: " + property.getDisplayName()); //$NON-NLS-1$
+    // }
+    // }
+    // MetadataColumnRepositoryObject metadataColumn = new MetadataColumnRepositoryObject(lastVersion, findColumn);
+    // metadataColumn.setId(findColumn.getName());
+    // metadataColumn.setLabel(findColumn.getName());
+    // DBColumnRepNode columnNode = new DBColumnRepNode(metadataColumn, null, ENodeType.TDQ_REPOSITORY_ELEMENT);
+    // columnNode.setProperties(EProperties.LABEL, ERepositoryObjectType.METADATA_CON_COLUMN);
+    // columnNode.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.METADATA_CON_COLUMN);
+    // metadataColumn.setRepositoryNode(columnNode);
+    // return columnNode;
+    // }
     /**
      * create a temp RepNode there is a lack of parent attribute
      * 

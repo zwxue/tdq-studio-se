@@ -101,7 +101,7 @@ public class SwitchContextGroupNameImplTest {
      */
     @Before
     public void setUp() throws Exception {
-        UnitTestBuildHelper.deleteCurrentProject("testForContextGroupTDQ"); //$NON-NLS-1$
+        UnitTestBuildHelper.deleteCurrentProject();
         UnitTestBuildHelper.createRealProject("testForContextGroupTDQ"); //$NON-NLS-1$
         createContextItem();
         Connectionlabel = ConnectionContextHelper.convertContextLabel(connectionName);
