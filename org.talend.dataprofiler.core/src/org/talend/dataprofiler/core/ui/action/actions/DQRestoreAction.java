@@ -18,7 +18,9 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.dataprofiler.core.CorePlugin;
+import org.talend.dataprofiler.core.ui.utils.RepNodeUtils;
 import org.talend.dataprofiler.core.ui.views.DQRespositoryView;
+import org.talend.dataprofiler.core.ui.views.resources.IRepositoryObjectCRUD;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.nodes.DQRepositoryNode;
 import org.talend.repository.ui.actions.RestoreAction;
@@ -29,6 +31,8 @@ import org.talend.repository.ui.actions.RestoreAction;
 public class DQRestoreAction extends RestoreAction {
 
     private static Logger log = Logger.getLogger(DQRestoreAction.class);
+
+    private IRepositoryObjectCRUD repositoryObjectCRUD = RepNodeUtils.getRepositoryObjectCRUD();
 
     /**
 	 * 
@@ -41,6 +45,7 @@ public class DQRestoreAction extends RestoreAction {
 
     @Override
     public void run() {
+        repositoryObjectCRUD.refreshDQViewForRemoteProject();
         // MOD qiongli 2011-5-9 bug 21035,avoid to unload resource.
         super.setAvoidUnloadResources(true);
         super.run();
