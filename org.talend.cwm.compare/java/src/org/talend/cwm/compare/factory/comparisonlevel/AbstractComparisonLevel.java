@@ -180,14 +180,21 @@ public abstract class AbstractComparisonLevel implements IComparisonLevel {
         if (oldDataProvider == null) {
             return null;
         }
-        createTempConnectionFile();
+        IFile tempFile = createTempConnectionFile();
 
         if (compareWithReloadObject()) {
             updateTaggedValue();
             saveReloadResult();
         }
-
+        deleteTempConnectionFile(tempFile);
         return oldDataProvider;
+    }
+
+    /**
+     * Delete temp file
+     */
+    private void deleteTempConnectionFile(IFile tempFile) {
+        DQStructureComparer.deleteFile(tempFile);
     }
 
     // store TaggedValueHelper.USING_URL into connetion
@@ -227,14 +234,17 @@ public abstract class AbstractComparisonLevel implements IComparisonLevel {
     }
 
     @SuppressWarnings("deprecation")
-    protected void createCopyedProvider() {
+    protected void createCopyedProvider() throws ReloadCompareException {
         IFile selectedFile = WorkspaceUtils.getModelElementResource(oldDataProvider);
         IFile createNeedReloadElementsFile = DQStructureComparer.getNeedReloadElementsFile();
         IFile copyedFile = DQStructureComparer.copyedToDestinationFile(selectedFile, createNeedReloadElementsFile);
         TypedReturnCode<Connection> returnValue = DqRepositoryViewService.readFromFile(copyedFile);
-
-        copyedDataProvider = returnValue.getObject();
-
+        if (returnValue.isOk()) {
+            copyedDataProvider = returnValue.getObject();
+        } else {
+            DQStructureComparer.deleteFile(createNeedReloadElementsFile);
+            throw new ReloadCompareException(returnValue.getMessage());
+        }
     }
 
     /**
@@ -242,7 +252,7 @@ public abstract class AbstractComparisonLevel implements IComparisonLevel {
      * 
      * @throws ReloadCompareException
      */
-    protected void createTempConnectionFile() throws ReloadCompareException {
+    protected IFile createTempConnectionFile() throws ReloadCompareException {
         IFile tempConnectionFile = DQStructureComparer.getTempRefreshFile();
         // MOD mzhao ,Extract method getRefreshedDataProvider to class
         // DQStructureComparer for common use.
@@ -257,6 +267,7 @@ public abstract class AbstractComparisonLevel implements IComparisonLevel {
                 .create(tempReloadProvider, tempConnectionFile.getFullPath(), false);
         tempReloadProvider.setComponent(null);
         oldDataProvider.getComponent();
+        return tempConnectionFile;
     }
 
     // private void testInit() throws ReloadCompareException {

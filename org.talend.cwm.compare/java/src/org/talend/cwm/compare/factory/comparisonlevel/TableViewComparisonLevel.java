@@ -78,7 +78,7 @@ public class TableViewComparisonLevel extends AbstractComparisonLevel {
     }
 
     @Override
-    protected void createTempConnectionFile() throws ReloadCompareException {
+    protected IFile createTempConnectionFile() throws ReloadCompareException {
         // MOD klliu bug 15822 201-09-30
         if (oldDataProvider != null && oldDataProvider.eIsProxy()) {
             oldDataProvider = (Connection) EObjectHelper.resolveObject(oldDataProvider);
@@ -109,6 +109,7 @@ public class TableViewComparisonLevel extends AbstractComparisonLevel {
                     tempConnectionFile.getLocation().toFile().getAbsolutePath()));
         }
         tempReloadProvider = tdDataProviders.iterator().next();
+        return tempConnectionFile;
     }
 
     @Override

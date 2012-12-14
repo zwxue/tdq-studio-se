@@ -13,6 +13,7 @@
 package org.talend.cwm.compare;
 
 import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.DatabaseMetaData;
@@ -39,8 +40,10 @@ import org.eclipse.emf.compare.match.service.MatchService;
 import org.eclipse.emf.compare.util.ModelUtils;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.ui.PlatformUI;
+import org.talend.commons.utils.WorkspaceUtils;
 import org.talend.core.model.metadata.IMetadataConnection;
 import org.talend.core.model.metadata.MetadataFillFactory;
 import org.talend.core.model.metadata.builder.ConvertionHelper;
@@ -137,7 +140,7 @@ public final class DQStructureComparer {
     private static IFile iterateGetNotExistFile(String fileName) {
         IFile file = getFile(fileName);
         if (file.exists()) {
-            return iterateGetNotExistFile(fileName.substring(0, fileName.lastIndexOf(".")) + "c" //$NON-NLS-1$ //$NON-NLS-2$
+            return iterateGetNotExistFile(fileName.substring(0, fileName.lastIndexOf(".")) + EcoreUtil.generateUUID() //$NON-NLS-1$ 
                     + fileName.substring(fileName.lastIndexOf("."))); //$NON-NLS-1$
         } else {
             return file;
@@ -179,9 +182,11 @@ public final class DQStructureComparer {
     // public static boolean deleteCopiedResourceFile() {
     // return deleteFile(getTempRefreshFile());
     // }
+    //
     // public static boolean deleteNeedReloadElementFile() {
     // return deleteFile(getNeedReloadElementsFile());
     // }
+
     /**
      * 
      * DOC mzhao Delete first selected resource tmp file.
@@ -232,7 +237,7 @@ public final class DQStructureComparer {
      * 
      * @return
      */
-    private static boolean deleteFile(IFile file) {
+    public static boolean deleteFile(IFile file) {
         boolean retValue = false;
         if (file.exists()) {
             URI uri = URI.createPlatformResourceURI(file.getFullPath().toString(), false);
@@ -249,6 +254,33 @@ public final class DQStructureComparer {
             retValue = true;
         }
         return retValue;
+    }
+
+    /**
+     * 
+     * remove one Resource from workspace contains unload,remove from resourceSet and delete file
+     * 
+     * @param currResource
+     * @return
+     */
+    public static boolean removeResourceFromWorkspace(Resource currResource) {
+        boolean returnCode = false;
+        if (currResource != null) {
+            URI removeUri = currResource.getURI();
+            if (removeUri == null) {
+                return returnCode;
+            }
+            IFile modelElementResource = null;
+            if (removeUri.isPlatformResource()) {
+                modelElementResource = WorkspaceUtils.getModelElementResource(removeUri);
+            } else {
+                modelElementResource = WorkspaceUtils.fileToIFile(new File(removeUri.toFileString()));
+            }
+            if (modelElementResource != null && modelElementResource.exists()) {
+                returnCode = deleteFile(modelElementResource);
+            }
+        }
+        return returnCode;
     }
 
     /**
