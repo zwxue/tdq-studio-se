@@ -36,6 +36,7 @@ import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisFactory;
 import org.talend.dataquality.analysis.AnalysisResult;
 import org.talend.dataquality.analysis.AnalyzedDataSet;
+import org.talend.dataquality.indicators.DuplicateCountIndicator;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.UniqueCountIndicator;
 import org.talend.utils.sugars.ReturnCode;
@@ -152,7 +153,15 @@ public class MdmIndicatorEvaluator extends IndicatorEvaluator {
                         if (!continueRun()) {
                             break label;
                         }
-                        indicator.handle(object);
+
+                        // MOD msjian TDQ-5695 2012-12-7: make the duplicate count value correct
+                        if (indicator instanceof DuplicateCountIndicator) {
+                            ((DuplicateCountIndicator) indicator).handle(object, split);
+                        } else {
+                            indicator.handle(object);
+                        }
+                        // TDQ-5695~
+
                         // 12919
                         AnalyzedDataSet analyzedDataSet = indicToRowMap.get(indicator);
                         if (analyzedDataSet == null) {
@@ -240,7 +249,7 @@ public class MdmIndicatorEvaluator extends IndicatorEvaluator {
         // if (mdmconn != null) {
         // return ConnectionUtils.closeConnection((Connection) mdmconn.);
         // }
-        return new ReturnCode(true); //$NON-NLS-1$
+        return new ReturnCode(true);
 
     }
 
