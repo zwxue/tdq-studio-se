@@ -15,7 +15,6 @@ package org.talend.cwm.dependencies;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.emf.common.util.EList;
@@ -44,7 +43,6 @@ import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dataquality.properties.PropertiesFactory;
 import org.talend.dataquality.properties.TDQAnalysisItem;
 import org.talend.dataquality.properties.TDQIndicatorDefinitionItem;
-import org.talend.dataquality.properties.impl.TDQAnalysisItemImpl;
 import org.talend.dq.helper.PropertyHelper;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.objectmodel.core.Dependency;
@@ -161,7 +159,7 @@ public class DependenciesHandlerTest {
         assert (supplier.size() == 1);
         assert (supplier.get(0) == conn);
         if (setUsageDependencyOn.isOk()) {
-            DependenciesHandler.getInstance().removeDependenciesBetweenModel(ana, conn);
+            DependenciesHandler.getInstance().removeDependenciesBetweenModel(conn, ana);
         }
         assert (clientDependencyFirst.size() == 0);
         EList<Dependency> clientDependencyTwo = conn.getClientDependency();
@@ -199,11 +197,12 @@ public class DependenciesHandlerTest {
         when(IndicatorHelper.getIndicators(anaResult)).thenReturn(indLs);
         Property iniProperty = mock(Property.class);
         PowerMockito.mockStatic(PropertyHelper.class);
-        when(PropertyHelper.getProperty(ind1)).thenReturn(iniProperty);
-        DependenciesHandler depenHand = DependenciesHandler.getInstance();
-        List<Property> propLs = depenHand.getAnaDependency(property);
+        Property indDefProperty = org.talend.core.model.properties.PropertiesFactory.eINSTANCE.createProperty();
+        when(PropertyHelper.getProperty(indDefinition1)).thenReturn(indDefProperty);
+
+        DependenciesHandler depHandler = DependenciesHandler.getInstance();
+        List<Property> propLs = depHandler.getAnaDependency(anaProperty);
         assert (propLs.size() == 1);
         
     }
-
 }
