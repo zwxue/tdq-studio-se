@@ -120,7 +120,7 @@ public class MySQLDbmsLanguage extends DbmsLanguage {
      */
     @Override
     public String regexLike(String element, String regex) {
-        return surroundWithSpaces(element + " REGEXP " + regex); //$NON-NLS-1$
+        return surroundWithSpaces(element + " REGEXP BINARY " + regex); //$NON-NLS-1$
     }
 
     /*
@@ -130,7 +130,7 @@ public class MySQLDbmsLanguage extends DbmsLanguage {
      */
     @Override
     public String regexNotLike(String element, String regex) {
-        return surroundWithSpaces(element + " NOT REGEXP " + regex); //$NON-NLS-1$
+        return surroundWithSpaces(element + " NOT REGEXP BINARY " + regex); //$NON-NLS-1$
     }
 
     /*
