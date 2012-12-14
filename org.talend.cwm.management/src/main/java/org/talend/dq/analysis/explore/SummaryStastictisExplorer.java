@@ -16,12 +16,15 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
+import org.talend.core.model.metadata.builder.database.dburl.SupportDBUrlType;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.dataquality.domain.Domain;
 import org.talend.dataquality.helpers.DomainHelper;
 import org.talend.dataquality.indicators.IQRIndicator;
+import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.IndicatorParameters;
 import org.talend.dataquality.indicators.RangeIndicator;
+import org.talend.utils.sql.Java2SqlType;
 
 /**
  * DOC Administrator class global comment. Detailled comment
@@ -173,6 +176,21 @@ public class SummaryStastictisExplorer extends DataExplorer {
         TdColumn column = (TdColumn) indicator.getAnalyzedElement();
         return SELECT_ALL + dbmsLanguage.from() + getFullyQualifiedTableName(column) + whereClause;
 
+    }
+
+    // Added yyin 20121211 TDQ-6099: when the column type is Teradata's INTERVAL_XXX,
+    // the drill down sql should cast this column as REAL.
+    @Override
+    protected String getAnalyzedElementName(Indicator ind) {
+        String tempColumnName = super.getAnalyzedElementName(ind);
+
+        if (SupportDBUrlType.TERADATADEFAULTURL.getLanguage().equalsIgnoreCase(dbmsLanguage.getDbmsName())) {
+            TdColumn column = (TdColumn) indicator.getAnalyzedElement();
+            if (Java2SqlType.isTeradataIntervalType(column.getSqlDataType().getName()) == Java2SqlType.TERADATA_INTERVAL) {
+                tempColumnName = "cast(" + tempColumnName + " AS REAL)";
+            }
+        }
+        return tempColumnName;
     }
 
 }

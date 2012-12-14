@@ -62,9 +62,12 @@ public final class ModelElementIndicatorRule {
     public static boolean patternRule(IndicatorEnum indicatorType, ModelElement me, ExecutionLanguage language) {
         int javaType = 0;
         boolean isDeliFileColumn = !(me instanceof TdColumn) && me instanceof MetadataColumn;
+        int isTeradataInterval = -1;
         if (me instanceof TdColumn) {
-            // javaType = ((TdColumn) me).getJavaType();
             javaType = ((TdColumn) me).getSqlDataType().getJavaDataType();
+            // Added yyin 20121211 TDQ-6099:
+            isTeradataInterval = Java2SqlType.isTeradataIntervalType(((TdColumn) me).getSqlDataType().getName());
+            // ~
         } else if (me instanceof TdXmlElementType) {
             javaType = XSDDataTypeConvertor.convertToJDBCType(((TdXmlElementType) me).getJavaType());
         } else if (isDeliFileColumn) {
@@ -116,6 +119,9 @@ public final class ModelElementIndicatorRule {
             // MOD xwang 2011-07-29 bug TDQ-1731 disable blank count checkable for other data type but Text
             if (me instanceof TdXmlElementType || !Java2SqlType.isTextInSQL(javaType)) {
                 return false;
+            } else if (isTeradataInterval == Java2SqlType.TERADATA_INTERVAL_TO && ExecutionLanguage.SQL.equals(language)) {
+                // Added yyin 20121212 TDQ-6099: disable for Teradata's interval_xx_to_xx type.
+                return false;
             } else {
                 return true;
             }
@@ -133,19 +139,30 @@ public final class ModelElementIndicatorRule {
         case AverageLengthWithNullIndicatorEnum:
         case AverageLengthWithBlankIndicatorEnum:
         case AverageLengthWithNullBlankIndicatorEnum:
-
             if (Java2SqlType.isTextInSQL(javaType)) {
+                // Added yyin 20121212 TDQ-6099: disable for Teradata's interval_xx_to_xx type.
+                if (isTeradataInterval == Java2SqlType.TERADATA_INTERVAL_TO && ExecutionLanguage.SQL.equals(language)) {
+                    return false;
+                }
                 if (dataminingType == DataminingType.NOMINAL || dataminingType == DataminingType.UNSTRUCTURED_TEXT) {
                     return true;
                 }
             }
             break;
-        case ModeIndicatorEnum:
-        case FrequencyIndicatorEnum:
-        case LowFrequencyIndicatorEnum:
         case PatternFreqIndicatorEnum:
         case PatternLowFreqIndicatorEnum:
         case BenfordLawFrequencyIndicatorEnum:
+            // Added yyin 20121211 TDQ-6099: disable these three for INTERVAL type of Teradata
+            if (isTeradataInterval > 0 && ExecutionLanguage.SQL.equals(language)) {
+                return false;
+            }
+        case ModeIndicatorEnum:
+            // Added yyin 20121212 TDQ-6099: disable for Teradata's interval_xx_to_xx type.
+            if (isTeradataInterval == Java2SqlType.TERADATA_INTERVAL_TO && ExecutionLanguage.SQL.equals(language)) {
+                return false;
+            }
+        case FrequencyIndicatorEnum:
+        case LowFrequencyIndicatorEnum:
             if (dataminingType == DataminingType.NOMINAL || dataminingType == DataminingType.INTERVAL) {
                 if (isHiveSQL
                         && (indicatorType == IndicatorEnum.PatternFreqIndicatorEnum || indicatorType == IndicatorEnum.PatternLowFreqIndicatorEnum)) {
@@ -167,6 +184,10 @@ public final class ModelElementIndicatorRule {
             if (!Java2SqlType.isDateInSQL(javaType) && !Java2SqlType.isNumbericInSQL(javaType)
                     && (dataminingType == DataminingType.NOMINAL || dataminingType == DataminingType.INTERVAL)) {
                 if (isHiveSQL) {
+                    return false;
+                }
+                // Added yyin 20121212 TDQ-6099: disable for Teradata's interval_xx_to_xx type.
+                if (isTeradataInterval == Java2SqlType.TERADATA_INTERVAL_TO && ExecutionLanguage.SQL.equals(language)) {
                     return false;
                 }
                 return true;
