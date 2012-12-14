@@ -108,9 +108,6 @@ public class DBConnectionRepNode extends ConnectionRepNode {
      * @return
      */
     private List<IRepositoryNode> filterPackages(String filterCharater, List<IRepositoryNode> afterGlobalFilter) {
-
-        List<IRepositoryNode> afterPackageFilter = new ArrayList<IRepositoryNode>();
-
         if (filterCharater == null || filterCharater.trim().equalsIgnoreCase("")) {//$NON-NLS-1$
             return afterGlobalFilter;
         }
@@ -119,12 +116,8 @@ public class DBConnectionRepNode extends ConnectionRepNode {
             return afterGlobalFilter;
         }
 
-        for (IRepositoryNode packNode : afterGlobalFilter) {
-            if (packNode.getLabel().equalsIgnoreCase(filterCharater)) {
-                afterPackageFilter.add(packNode);
-            }
-        }
-        return afterPackageFilter;
+        // MOD yyin TDQ-5077 20121213
+        return RepositoryNodeHelper.filterPackages(afterGlobalFilter, filterCharater);
     }
 
     /**
