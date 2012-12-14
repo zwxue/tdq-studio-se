@@ -1534,7 +1534,12 @@
            name="Update Report Generated Doc Path Task"
            version="5.2.1">
      </workspacetask>  
-     
+      <workspacetask
+           class="org.talend.dataprofiler.core.migration.impl.ReplaceUsingUrlWithIsConnNeedReloadTask"
+           id="org.talend.dataprofiler.core.migration.impl.ReplaceUsingUrlWithIsConnNeedReloadTask"
+           name="Replace the &quot;USING_URL&quot; in tagged value of the connection with the &quot;IS_CONN_NEED_RELOAD&quot; tag"
+           version="5.2.1">
+     </workspacetask>  
   </extension>
   <extension
         point="org.eclipse.ui.actionSets">

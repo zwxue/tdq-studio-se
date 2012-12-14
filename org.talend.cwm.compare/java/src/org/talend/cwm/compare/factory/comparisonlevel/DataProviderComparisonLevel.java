@@ -109,7 +109,7 @@ public class DataProviderComparisonLevel extends AbstractComparisonLevel {
                             if (!dbConn.getDatabaseType().equals(EDatabaseTypeName.GENERAL_JDBC.getDisplayName())) {
                                 ((DatabaseConnection) con).setURL(urlStr);
                             }
-                            ConnectionHelper.setUsingURL(con, urlStr);
+                            ConnectionHelper.setIsConnNeedReload(con, Boolean.TRUE);
                         }
 
                     }
@@ -147,6 +147,7 @@ public class DataProviderComparisonLevel extends AbstractComparisonLevel {
      * @param item the item of connection
      * @deprecated
      */
+    @Deprecated
     private boolean updateAndSaveSoftWareSystem(Item item) {
         TdSoftwareSystem softwareSystem = null;
         boolean returnCode = SoftwareSystemManager.getInstance().cleanSoftWareSystem(oldDataProvider);
