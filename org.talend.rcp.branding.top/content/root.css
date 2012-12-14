@@ -9,7 +9,7 @@ body {
 	font-size: 0.8125em;
 	font-weight:normal;
 	color:#5B5B5D !important;
-	background-color:#FFFFFF !important;
+	background-color:#AAAAAA !important;
 }
 
 h1 {
@@ -93,3 +93,6 @@ A:hover{
 }
 
 .textBox{padding:15px;}
+
+.main{width:880px;  border:#000000 1px solid; margin:auto; background:#FFFFFF; margin-top:50px; margin-bottom:50px;	}
+.bottom {width:880px; height:24px; text-align:right; margin-top: 20px; margin-bottom:5px; color:#000000;}
