@@ -57,6 +57,7 @@ public class DependenciesHandlerTest {
 
     @Rule
     public PowerMockRule powerMockRule = new PowerMockRule();
+
     /**
      * Test method for
      * {@link org.talend.cwm.dependencies.DependenciesHandler#getClintDependency(org.talend.core.model.properties.Property)}
@@ -98,13 +99,13 @@ public class DependenciesHandlerTest {
         anaProperty.setItem(createItem);
         createItem.setProperty(anaProperty);
 
-        //staticMock PropertyHelper
+        // staticMock PropertyHelper
         PowerMockito.mockStatic(PropertyHelper.class);
         Mockito.when(PropertyHelper.getModelElement(anaProperty)).thenReturn(createAnalysis);
         Mockito.when(PropertyHelper.getProperty(createCountsIndicator.getIndicatorDefinition())).thenReturn(
                 countIndicatorProperty);
-        
-        //staticMock ModelElementHelper 
+
+        // staticMock ModelElementHelper
         PowerMockito.mockStatic(ModelElementHelper.class);
         ModelElementMatcher modelElementMatcher = new ModelElementMatcher();
         Mockito.when(ModelElementHelper.compareUUID(Mockito.argThat(modelElementMatcher), Mockito.argThat(modelElementMatcher)))
@@ -129,13 +130,12 @@ public class DependenciesHandlerTest {
 
     }
 
-
-
     class ModelElementMatcher extends ArgumentMatcher<ModelElement> {
 
+        @Override
         public boolean matches(Object list) {
             if (list instanceof ModelElement) {
-                    return true;
+                return true;
             }
             return false;
         }
@@ -151,58 +151,63 @@ public class DependenciesHandlerTest {
         ModelElement ana = AnalysisHelper.createAnalysis("ana1");
         ModelElement conn = ConnectionHelper.createDatabaseConnection("conn1");
         EList<Dependency> clientDependencyFirst = ana.getClientDependency();
-        assert (clientDependencyFirst.size() == 0);
+        assertEquals(0, clientDependencyFirst.size());
 
         TypedReturnCode<Dependency> setUsageDependencyOn = DependenciesHandler.getInstance().setUsageDependencyOn(ana, conn);
-        assert (clientDependencyFirst.size() == 1);
+        assertEquals(1, clientDependencyFirst.size());
         EList<ModelElement> supplier = clientDependencyFirst.get(0).getSupplier();
-        assert (supplier.size() == 1);
-        assert (supplier.get(0) == conn);
+        assertEquals(1, supplier.size());
+        assertEquals(conn, supplier.get(0));
         if (setUsageDependencyOn.isOk()) {
             DependenciesHandler.getInstance().removeDependenciesBetweenModel(conn, ana);
         }
-        assert (clientDependencyFirst.size() == 0);
+        assertEquals(0, clientDependencyFirst.size());
         EList<Dependency> clientDependencyTwo = conn.getClientDependency();
-        assert (clientDependencyTwo.size() == 0);
+        assertEquals(0, clientDependencyTwo.size());
         setUsageDependencyOn = DependenciesHandler.getInstance().setUsageDependencyOn(conn, ana);
-        assert (clientDependencyTwo.size() == 1);
+        assertEquals(1, clientDependencyTwo.size());
         supplier = clientDependencyTwo.get(0).getSupplier();
-        assert (supplier.size() == 1);
-        assert (supplier.get(0) == ana);
+        assertEquals(1, supplier.size());
+        assertEquals(ana, supplier.get(0));
         if (setUsageDependencyOn.isOk()) {
             DependenciesHandler.getInstance().removeDependenciesBetweenModel(ana, conn);
         }
-        assert (clientDependencyTwo.size() == 0);
+        assertEquals(0, clientDependencyTwo.size());
     }
+
     /**
-     * Test method for {@link org.talend.cwm.dependencies.DependenciesHandler#getAnaDependency(org.talend.core.model.properties.Property)}.
+     * Test method for
+     * {@link org.talend.cwm.dependencies.DependenciesHandler#getAnaDependency(org.talend.core.model.properties.Property)}
+     * .
      */
     @Test
     public void testGetAnaDependency() {
-        Property property=mock(Property.class);
-        TDQAnalysisItemImpl item = mock(TDQAnalysisItemImpl.class);
-        when(property.getItem()).thenReturn(item);
-        Analysis ana = mock(Analysis.class);
-        when(item.getAnalysis()).thenReturn(ana);
-        AnalysisResult anaResult = mock(AnalysisResult.class);
-        when(ana.getResults()).thenReturn(anaResult);
-        PowerMockito.mockStatic(IndicatorHelper.class);
-        List<Indicator> indLs = new ArrayList<Indicator>();
-        Indicator ind1 = mock(Indicator.class);
-        IndicatorDefinition indDefinition1 = mock(IndicatorDefinition.class);
-        when(ind1.getIndicatorDefinition()).thenReturn(indDefinition1);
-        Indicator ind2 = mock(Indicator.class);
-        indLs.add(ind1);
-        indLs.add(ind2);
-        when(IndicatorHelper.getIndicators(anaResult)).thenReturn(indLs);
-        Property iniProperty = mock(Property.class);
+
+        Analysis ana = AnalysisFactory.eINSTANCE.createAnalysis();
+        AnalysisResult results = AnalysisFactory.eINSTANCE.createAnalysisResult();
+        ana.setResults(results);
+
+        TDQAnalysisItem anaItem = PropertiesFactory.eINSTANCE.createTDQAnalysisItem();
+        anaItem.setAnalysis(ana);
+
+        Indicator ind1 = IndicatorsFactory.eINSTANCE.createDuplicateCountIndicator();
+        IndicatorDefinition indDefinition1 = DefinitionFactory.eINSTANCE.createIndicatorDefinition();
+        ind1.setIndicatorDefinition(indDefinition1);
+        results.getIndicators().add(ind1); // contains indicator definition
+
+        Indicator ind2 = IndicatorsFactory.eINSTANCE.createNullCountIndicator();
+        results.getIndicators().add(ind2); // contains no indicator definition
+
+        Property anaProperty = org.talend.core.model.properties.PropertiesFactory.eINSTANCE.createProperty();
+        anaProperty.setItem(anaItem);
+
         PowerMockito.mockStatic(PropertyHelper.class);
         Property indDefProperty = org.talend.core.model.properties.PropertiesFactory.eINSTANCE.createProperty();
         when(PropertyHelper.getProperty(indDefinition1)).thenReturn(indDefProperty);
 
         DependenciesHandler depHandler = DependenciesHandler.getInstance();
         List<Property> propLs = depHandler.getAnaDependency(anaProperty);
-        assert (propLs.size() == 1);
-        
+        assertEquals(1, propLs.size());
+
     }
 }
