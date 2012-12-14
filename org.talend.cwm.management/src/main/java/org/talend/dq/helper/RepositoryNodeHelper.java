@@ -2728,8 +2728,7 @@ public final class RepositoryNodeHelper {
                 String regex = pattern.replaceAll("%", ".*").toLowerCase(); //$NON-NLS-1$ //$NON-NLS-2$
                 String name = t.getName().toLowerCase();
                 // MOD gdbu 2011-1-13 TDQ-4129 Change the way of matching.
-                boolean matches = java.util.regex.Pattern.compile(regex).matcher(name).find();// name.matches(regex);
-                if (matches) {
+                if (isMatch(regex, name)) {
                     resetColumns.add(t);
                     size++;
                     if (size > 2000) {
@@ -2742,6 +2741,11 @@ public final class RepositoryNodeHelper {
         return resetColumns;
     }
 
+    // Refactor: extract same judge filter match together, instead of using it separately which cause issues
+    private static boolean isMatch(String regex, String name) {
+        return java.util.regex.Pattern.compile(regex).matcher(name).find();
+    }
+
     /**
      * 
      * This method is used for filtering packages by patterns.
@@ -2750,17 +2754,15 @@ public final class RepositoryNodeHelper {
      * @param packageFilter
      * @return
      */
-    public static List<orgomg.cwm.objectmodel.core.Package> filterPackages(
-            EList<orgomg.cwm.objectmodel.core.Package> dataPackages, String packageFilter) {
+    public static List<IRepositoryNode> filterPackages(List<IRepositoryNode> afterGlobalFilter, String packageFilter) {
         int size = 0;
         String[] patterns = cleanPatterns(packageFilter.split(",")); //$NON-NLS-1$
-        List<orgomg.cwm.objectmodel.core.Package> filterMatchingPackages = new ArrayList<orgomg.cwm.objectmodel.core.Package>();
-        for (orgomg.cwm.objectmodel.core.Package dbPackage : dataPackages) {
+        List<IRepositoryNode> filterMatchingPackages = new ArrayList<IRepositoryNode>();
+        for (IRepositoryNode dbPackage : afterGlobalFilter) {
             for (String pattern : patterns) {
                 String regex = pattern.replaceAll("%", ".*").toLowerCase(); //$NON-NLS-1$ //$NON-NLS-2$
-                String name = dbPackage.getName().toLowerCase();
-                boolean matches = java.util.regex.Pattern.compile(regex).matcher(name).find();// name.matches(regex);
-                if (matches) {
+                String name = dbPackage.getLabel().toLowerCase();
+                if (isMatch(regex, name)) {
                     filterMatchingPackages.add(dbPackage);
                     size++;
                     if (size > 2000) {
@@ -2790,7 +2792,8 @@ public final class RepositoryNodeHelper {
             for (String pattern : patterns) {
                 String regex = pattern.replaceAll("%", ".*").toLowerCase(); //$NON-NLS-1$ //$NON-NLS-2$
                 String name = t.getName().toLowerCase();
-                if (name.matches(regex)) {
+                if (isMatch(regex, name)) {
+                    // if (name.matches(regex)) {
                     retColumnSets.add(t);
                     size++;
                     if (size > 2000) {
