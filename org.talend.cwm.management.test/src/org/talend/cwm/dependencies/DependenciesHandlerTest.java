@@ -15,7 +15,6 @@ package org.talend.cwm.dependencies;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.emf.common.util.EList;
@@ -44,7 +43,6 @@ import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dataquality.properties.PropertiesFactory;
 import org.talend.dataquality.properties.TDQAnalysisItem;
 import org.talend.dataquality.properties.TDQIndicatorDefinitionItem;
-import org.talend.dataquality.properties.impl.TDQAnalysisItemImpl;
 import org.talend.dq.helper.PropertyHelper;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.objectmodel.core.Dependency;
@@ -161,7 +159,7 @@ public class DependenciesHandlerTest {
         assertEquals(1, supplier.size());
         assertEquals(conn, supplier.get(0));
         if (setUsageDependencyOn.isOk()) {
-            DependenciesHandler.getInstance().removeDependenciesBetweenModel(ana, conn);
+            DependenciesHandler.getInstance().removeDependenciesBetweenModel(conn, ana);
         }
         assertEquals(0, clientDependencyFirst.size());
         EList<Dependency> clientDependencyTwo = conn.getClientDependency();
@@ -184,29 +182,32 @@ public class DependenciesHandlerTest {
      */
     @Test
     public void testGetAnaDependency() {
-        Property property = mock(Property.class);
-        TDQAnalysisItemImpl item = mock(TDQAnalysisItemImpl.class);
-        when(property.getItem()).thenReturn(item);
-        Analysis ana = mock(Analysis.class);
-        when(item.getAnalysis()).thenReturn(ana);
-        AnalysisResult anaResult = mock(AnalysisResult.class);
-        when(ana.getResults()).thenReturn(anaResult);
-        PowerMockito.mockStatic(IndicatorHelper.class);
-        List<Indicator> indLs = new ArrayList<Indicator>();
-        Indicator ind1 = mock(Indicator.class);
-        IndicatorDefinition indDefinition1 = mock(IndicatorDefinition.class);
-        when(ind1.getIndicatorDefinition()).thenReturn(indDefinition1);
-        Indicator ind2 = mock(Indicator.class);
-        indLs.add(ind1);
-        indLs.add(ind2);
-        when(IndicatorHelper.getIndicators(anaResult)).thenReturn(indLs);
-        Property iniProperty = mock(Property.class);
+
+        Analysis ana = AnalysisFactory.eINSTANCE.createAnalysis();
+        AnalysisResult results = AnalysisFactory.eINSTANCE.createAnalysisResult();
+        ana.setResults(results);
+
+        TDQAnalysisItem anaItem = PropertiesFactory.eINSTANCE.createTDQAnalysisItem();
+        anaItem.setAnalysis(ana);
+
+        Indicator ind1 = IndicatorsFactory.eINSTANCE.createDuplicateCountIndicator();
+        IndicatorDefinition indDefinition1 = DefinitionFactory.eINSTANCE.createIndicatorDefinition();
+        ind1.setIndicatorDefinition(indDefinition1);
+        results.getIndicators().add(ind1); // contains indicator definition
+
+        Indicator ind2 = IndicatorsFactory.eINSTANCE.createNullCountIndicator();
+        results.getIndicators().add(ind2); // contains no indicator definition
+
+        Property anaProperty = org.talend.core.model.properties.PropertiesFactory.eINSTANCE.createProperty();
+        anaProperty.setItem(anaItem);
+
         PowerMockito.mockStatic(PropertyHelper.class);
-        when(PropertyHelper.getProperty(ind1)).thenReturn(iniProperty);
-        DependenciesHandler depenHand = DependenciesHandler.getInstance();
-        List<Property> propLs = depenHand.getAnaDependency(property);
+        Property indDefProperty = org.talend.core.model.properties.PropertiesFactory.eINSTANCE.createProperty();
+        when(PropertyHelper.getProperty(indDefinition1)).thenReturn(indDefProperty);
+
+        DependenciesHandler depHandler = DependenciesHandler.getInstance();
+        List<Property> propLs = depHandler.getAnaDependency(anaProperty);
         assertEquals(1, propLs.size());
 
     }
-
 }
