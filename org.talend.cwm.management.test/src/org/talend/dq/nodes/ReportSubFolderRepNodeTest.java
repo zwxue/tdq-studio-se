@@ -21,9 +21,6 @@
 // ============================================================================
 package org.talend.dq.nodes;
 
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -49,6 +46,10 @@ import org.talend.repository.ProjectManager;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.IRepositoryNode.ENodeType;
 import orgomg.cwmx.analysis.informationreporting.Report;
+
+import static org.junit.Assert.*;
+
+import static org.mockito.Mockito.*;
 
 /**
  * DOC qiongli class global comment. Detailled comment <br/>
@@ -222,7 +223,7 @@ public class ReportSubFolderRepNodeTest {
 
         PowerMockito.mockStatic(ProjectManager.class);
         ProjectManager projManager = mock(ProjectManager.class);
-        when(projManager.getProjectNode("")).thenReturn(null); //$NON-NLS-1$
+        //        when(projManager.getProjectNode("")).thenReturn(null); //$NON-NLS-1$
         PowerMockito.mockStatic(CoreRuntimePlugin.class);
         CoreRuntimePlugin coreRunPlugin = mock(CoreRuntimePlugin.class);
         when(CoreRuntimePlugin.getInstance()).thenReturn(coreRunPlugin).thenReturn(coreRunPlugin).thenReturn(coreRunPlugin);
