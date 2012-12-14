@@ -107,9 +107,7 @@ public class DbmsLanguage {
      */
     static final String SQL = "SQL"; //$NON-NLS-1$
 
-    protected static final String DOT = "."; //$NON-NLS-1$
-
-    protected static final String COLON = ":"; //$NON-NLS-1$
+    private static final String DOT = "."; //$NON-NLS-1$
 
     /**
      * End of Statement: ";".
@@ -306,11 +304,11 @@ public class DbmsLanguage {
         StringBuffer qualName = new StringBuffer();
         if (catalog != null && catalog.trim().length() > 0) {
             qualName.append(this.handleContextModeOrAddQuotes(catalog));
-            qualName.append(getDelimiter());
+            qualName.append(getCatalogDelimiter());
         }
         if (schema != null && schema.trim().length() > 0) {
             qualName.append(this.handleContextModeOrAddQuotes(schema));
-            qualName.append(getSchemaDelimiter());
+            qualName.append(getDelimiter());
         }
 
         qualName.append(this.handleContextModeOrAddQuotes(table));
@@ -321,11 +319,13 @@ public class DbmsLanguage {
     }
 
     /**
-     * when separate the schema with table, using maybe different char especially for Informix ADDED TDQ-6570 yyin
+     * Getter for delimiter between catalog and schema
      * 
-     * @return
+     * This may be different from the default delimiter for some databases, ex: Informix.
+     * 
+     * @return catalog delimiter
      */
-    protected String getSchemaDelimiter() {
+    protected String getCatalogDelimiter() {
         return getDelimiter();
     }
 
@@ -342,6 +342,13 @@ public class DbmsLanguage {
         return this.quote(param);
     }
 
+    /**
+     * Getter for default SQL delimiter of the database.
+     * 
+     * For the delimiter between catalog and schema, we should use {@link #getCatalogDelimiter()} instead of this.
+     * 
+     * @return default SQL delimiter
+     */
     public String getDelimiter() {
         return DOT;
     }
@@ -846,8 +853,7 @@ public class DbmsLanguage {
         for (PatternComponent patternComponent : components) {
             if (patternComponent != null) {
                 expression = this.getExpression(patternComponent);
-                if (expression != null
- && DbmsLanguageFactory.compareDbmsLanguage(this.dbmsName, expression.getLanguage())) {
+                if (expression != null && DbmsLanguageFactory.compareDbmsLanguage(this.dbmsName, expression.getLanguage())) {
                     return expression;// return this db's expression
                 } else if (expression != null
                         && DbmsLanguageFactory.compareDbmsLanguage(ExecutionLanguage.SQL.getName(), expression.getLanguage())) {
