@@ -12,7 +12,10 @@
 // ============================================================================
 package org.talend.dq.helper;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -56,6 +59,7 @@ import org.talend.cwm.relational.TdView;
 import org.talend.dq.nodes.DBColumnRepNode;
 import org.talend.dq.nodes.DBTableRepNode;
 import org.talend.dq.nodes.DBViewRepNode;
+import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.IRepositoryNode.EProperties;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.utils.string.StringUtilities;
@@ -420,5 +424,81 @@ public class RepositoryNodeHelperRealTest {
         createTdColumn.setName(columnName);
         TableHelper.addColumn(table, createTdColumn);
         return createTdColumn;
+    }
+
+    // test for match part
+    @Test
+    public void testFilterPackages_1() {
+        RepositoryNode catalogNode1 = mock(RepositoryNode.class);
+        when(catalogNode1.getLabel()).thenReturn("catalog type 1");
+        RepositoryNode catalogNode2 = mock(RepositoryNode.class);
+        when(catalogNode2.getLabel()).thenReturn("catalog type 2");
+
+        RepositoryNode catalogNode3 = mock(RepositoryNode.class);
+        when(catalogNode3.getLabel()).thenReturn("catalog sub 1");
+        RepositoryNode catalogNode4 = mock(RepositoryNode.class);
+        when(catalogNode4.getLabel()).thenReturn("catalog sub 2");
+
+        List<IRepositoryNode> filterPackages = new ArrayList<IRepositoryNode>();
+        filterPackages.add(catalogNode1);
+        filterPackages.add(catalogNode2);
+        filterPackages.add(catalogNode3);
+        filterPackages.add(catalogNode4);
+
+        List<IRepositoryNode> filterResult = RepositoryNodeHelper.filterPackages(filterPackages, "type");
+        Assert.assertEquals(2, filterResult.size());
+        for (IRepositoryNode node : filterResult) {
+            Assert.assertTrue(node.getLabel().contains("catalog type"));
+        }
+    }
+
+    // test for no match
+    @Test
+    public void testFilterPackages_2() {
+        RepositoryNode catalogNode1 = mock(RepositoryNode.class);
+        when(catalogNode1.getLabel()).thenReturn("catalog type 1");
+        RepositoryNode catalogNode2 = mock(RepositoryNode.class);
+        when(catalogNode2.getLabel()).thenReturn("catalog type 2");
+
+        RepositoryNode catalogNode3 = mock(RepositoryNode.class);
+        when(catalogNode3.getLabel()).thenReturn("catalog sub 1");
+        RepositoryNode catalogNode4 = mock(RepositoryNode.class);
+        when(catalogNode4.getLabel()).thenReturn("catalog sub 2");
+
+        List<IRepositoryNode> filterPackages = new ArrayList<IRepositoryNode>();
+        filterPackages.add(catalogNode1);
+        filterPackages.add(catalogNode2);
+        filterPackages.add(catalogNode3);
+        filterPackages.add(catalogNode4);
+
+        List<IRepositoryNode> filterResult = RepositoryNodeHelper.filterPackages(filterPackages, "no one");
+        Assert.assertEquals(0, filterResult.size());
+
+    }
+
+    // test for add comma in the filter string
+    @Test
+    public void testFilterPackages_3() {
+        RepositoryNode catalogNode1 = mock(RepositoryNode.class);
+        when(catalogNode1.getLabel()).thenReturn("catalog type 1");
+        RepositoryNode catalogNode2 = mock(RepositoryNode.class);
+        when(catalogNode2.getLabel()).thenReturn("catalog type 2");
+
+        RepositoryNode catalogNode3 = mock(RepositoryNode.class);
+        when(catalogNode3.getLabel()).thenReturn("catalog sub 1");
+        RepositoryNode catalogNode4 = mock(RepositoryNode.class);
+        when(catalogNode4.getLabel()).thenReturn("catalog sub 2");
+
+        List<IRepositoryNode> filterPackages = new ArrayList<IRepositoryNode>();
+        filterPackages.add(catalogNode1);
+        filterPackages.add(catalogNode2);
+        filterPackages.add(catalogNode3);
+        filterPackages.add(catalogNode4);
+
+        List<IRepositoryNode> filterResult = RepositoryNodeHelper.filterPackages(filterPackages, "type,sub");
+        Assert.assertEquals(4, filterResult.size());
+        for (IRepositoryNode node : filterResult) {
+            Assert.assertTrue(node.getLabel().contains("catalog"));
+        }
     }
 }
