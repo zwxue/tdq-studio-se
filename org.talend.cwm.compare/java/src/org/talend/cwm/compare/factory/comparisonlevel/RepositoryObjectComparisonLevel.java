@@ -12,10 +12,10 @@
 // ============================================================================
 package org.talend.cwm.compare.factory.comparisonlevel;
 
+import org.eclipse.core.runtime.Assert;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.dq.helper.PropertyHelper;
-import org.talend.utils.eclipse.Assert;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**

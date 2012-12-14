@@ -74,7 +74,7 @@ public class SoftwareSystemManagerTest {
     public void testGetSoftwareSystemFromModelfail1() {
 
         TdSoftwareSystem softwareSystemFromModel = SoftwareSystemManager.getInstance().getSoftwareSystemFromModel(null);
-        assert (softwareSystemFromModel == null);
+        assertNull(softwareSystemFromModel);
     }
 
     /**
@@ -89,7 +89,7 @@ public class SoftwareSystemManagerTest {
 
         TdSoftwareSystem softwareSystemFromModel = SoftwareSystemManager.getInstance().getSoftwareSystemFromModel(
                 createConnection);
-        assert (softwareSystemFromModel == null);
+        assertNull(softwareSystemFromModel);
     }
 
     /**
@@ -106,7 +106,7 @@ public class SoftwareSystemManagerTest {
 
         TdSoftwareSystem softwareSystemFromModel = SoftwareSystemManager.getInstance().getSoftwareSystemFromModel(
                 createConnection);
-        assert (softwareSystemFromModel == null);
+        assertNull(softwareSystemFromModel);
     }
 
     /**
@@ -129,7 +129,7 @@ public class SoftwareSystemManagerTest {
 
         TdSoftwareSystem softwareSystemFromModel = SoftwareSystemManager.getInstance().getSoftwareSystemFromModel(
                 createConnection);
-        assert (softwareSystemFromModel == null);
+        assertNull(softwareSystemFromModel);
     }
 
     /**
@@ -153,7 +153,7 @@ public class SoftwareSystemManagerTest {
         createConnection = ConnectionFactory.eINSTANCE.createDatabaseConnection();
         TdSoftwareSystem softwareSystemFromModel = SoftwareSystemManager.getInstance().getSoftwareSystemFromModel(
                 createConnection);
-        assert (softwareSystemFromModel == null);
+        assertNull(softwareSystemFromModel);
     }
 
     /**
@@ -179,8 +179,8 @@ public class SoftwareSystemManagerTest {
         SoftwareSystemManager.saveSoftwareSystem(createTdSoftwareSystem);
         TdSoftwareSystem softwareSystemFromModel = SoftwareSystemManager.getInstance().getSoftwareSystemFromModel(
                 createConnection);
-        assert (softwareSystemFromModel != null);
-        assert (softwareSystemFromModel.equals(createTdSoftwareSystem));
+        assertNotNull(softwareSystemFromModel);
+        assertEquals(softwareSystemFromModel, createTdSoftwareSystem);
     }
 
     /**
@@ -208,10 +208,10 @@ public class SoftwareSystemManagerTest {
         SoftwareSystemManager.saveSoftwareSystem(createTdSoftwareSystem1);
         Resource softwareSystemResource = EMFSharedResources.getInstance().getSoftwareDeploymentResource();
         List<EObject> softwareSystems = softwareSystemResource.getContents();
-        assert (softwareSystems.size() == 2);
+        assertEquals(2, softwareSystems.size());
         boolean isclean = SoftwareSystemManager.getInstance().cleanSoftWareSystem(createConnection);
 
-        assert (softwareSystems.size() == 0);
+        assertEquals(0, softwareSystems.size());
         assertTrue(isclean);
     }
 
@@ -228,7 +228,7 @@ public class SoftwareSystemManagerTest {
         Resource softwareSystemResource = EMFSharedResources.getInstance().getSoftwareDeploymentResource();
         List<EObject> softwareSystems = softwareSystemResource.getContents();
 
-        assert (softwareSystems.size() == 0);
+        assertEquals(0, softwareSystems.size());
         assertFalse(isclean);
     }
 
@@ -245,7 +245,7 @@ public class SoftwareSystemManagerTest {
         Resource softwareSystemResource = EMFSharedResources.getInstance().getSoftwareDeploymentResource();
         List<EObject> softwareSystems = softwareSystemResource.getContents();
 
-        assert (softwareSystems.size() == 0);
+        assertEquals(0, softwareSystems.size());
         assertFalse(isclean);
     }
 
@@ -263,7 +263,7 @@ public class SoftwareSystemManagerTest {
         Resource softwareSystemResource = EMFSharedResources.getInstance().getSoftwareDeploymentResource();
         List<EObject> softwareSystems = softwareSystemResource.getContents();
 
-        assert (softwareSystems.size() == 0);
+        assertEquals(0, softwareSystems.size());
         assertFalse(isclean);
     }
 
@@ -286,7 +286,7 @@ public class SoftwareSystemManagerTest {
         Resource softwareSystemResource = EMFSharedResources.getInstance().getSoftwareDeploymentResource();
         List<EObject> softwareSystems = softwareSystemResource.getContents();
 
-        assert (softwareSystems.size() == 0);
+        assertEquals(0, softwareSystems.size());
         assertTrue(isclean);
     }
 
@@ -315,7 +315,7 @@ public class SoftwareSystemManagerTest {
         Resource softwareSystemResource = EMFSharedResources.getInstance().getSoftwareDeploymentResource();
         List<EObject> softwareSystems = softwareSystemResource.getContents();
 
-        assert (softwareSystems.size() == 0);
+        assertEquals(0, softwareSystems.size());
         assertTrue(isclean);
     }
 
@@ -344,7 +344,7 @@ public class SoftwareSystemManagerTest {
         Resource softwareSystemResource = EMFSharedResources.getInstance().getSoftwareDeploymentResource();
         List<EObject> softwareSystems = softwareSystemResource.getContents();
 
-        assert (softwareSystems.size() == 0);
+        assertEquals(0, softwareSystems.size());
         assertFalse(isclean);
     }
 
