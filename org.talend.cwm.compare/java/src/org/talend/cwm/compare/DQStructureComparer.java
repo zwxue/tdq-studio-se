@@ -639,6 +639,9 @@ public final class DQStructureComparer {
         boolean returnCode = false;
         if (currResource != null) {
             URI removeUri = currResource.getURI();
+            if (removeUri == null) {
+                return returnCode;
+            }
             IFile modelElementResource = null;
             if (removeUri.isPlatformResource()) {
                 modelElementResource = WorkspaceUtils.getModelElementResource(removeUri);
