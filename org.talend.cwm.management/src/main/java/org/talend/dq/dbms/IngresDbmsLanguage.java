@@ -14,9 +14,8 @@ package org.talend.dq.dbms;
 
 import org.talend.utils.ProductVersion;
 
-
 /**
- * DOC xqliu  class global comment. Detailled comment
+ * DOC xqliu class global comment. Detailled comment
  */
 public class IngresDbmsLanguage extends DbmsLanguage {
 
@@ -37,6 +36,7 @@ public class IngresDbmsLanguage extends DbmsLanguage {
         super(dbmsType, dbVersion);
     }
 
+    @Override
     public String toQualifiedName(String catalog, String schema, String table) {
         return super.toQualifiedName(null, null, table);
     }
@@ -46,13 +46,14 @@ public class IngresDbmsLanguage extends DbmsLanguage {
      * 
      * @return average length sql statement
      */
+    @Override
     public String getAverageLengthRows() {
         return "SELECT t.* FROM(" + "SELECT "
                 + "CAST(SUM(LENGTH(<%=__COLUMN_NAMES__%>)) / (COUNT(<%=__COLUMN_NAMES__%>)*1.00)+0.99 as int) c, "
                 + "CAST(SUM(LENGTH(<%=__COLUMN_NAMES__%>)) / (COUNT(<%=__COLUMN_NAMES__%>)*1.00) as int) f "
                 + "FROM <%=__TABLE_NAME__%>) e, <%=__TABLE_NAME__%> t " + "where LENGTH(<%=__COLUMN_NAMES__%>) BETWEEN f AND c";
     }
-    
+
     /*
      * (non-Jsdoc)
      * 
@@ -65,7 +66,7 @@ public class IngresDbmsLanguage extends DbmsLanguage {
                 + trimIfBlank("<%=__COLUMN_NAMES__%>") + ")) / (COUNT(<%=__COLUMN_NAMES__%>)*1.00) as int) f "
                 + "FROM <%=__TABLE_NAME__%> WHERE(<%=__COLUMN_NAMES__%> IS NOT NULL)) e, <%=__TABLE_NAME__%> t "
                 + "WHERE LENGTH(" + trimIfBlank("<%=__COLUMN_NAMES__%>") + ") BETWEEN f AND c";
-         return sql;
+        return sql;
     }
 
     /*
@@ -93,9 +94,8 @@ public class IngresDbmsLanguage extends DbmsLanguage {
     public String getAverageLengthWithNullBlankRows() {
         String sql = "SELECT t.* FROM(SELECT CAST(SUM(LENGTH(" + trimIfBlank("<%=__COLUMN_NAMES__%>")
                 + ")) / (COUNT(*)*1.00)+0.99 as int) c," + "CAST(SUM(LENGTH(" + trimIfBlank("<%=__COLUMN_NAMES__%>")
-                + ")) / (COUNT(*)*1.00) as int) f "
-                + "FROM <%=__TABLE_NAME__%> ) e, <%=__TABLE_NAME__%> t " + "WHERE LENGTH(" + trimIfBlank("<%=__COLUMN_NAMES__%>")
-                + ") BETWEEN f AND c";
+                + ")) / (COUNT(*)*1.00) as int) f " + "FROM <%=__TABLE_NAME__%> ) e, <%=__TABLE_NAME__%> t " + "WHERE LENGTH("
+                + trimIfBlank("<%=__COLUMN_NAMES__%>") + ") BETWEEN f AND c";
         return sql;
     }
 
@@ -107,5 +107,16 @@ public class IngresDbmsLanguage extends DbmsLanguage {
     @Override
     public String charLength(String columnName) {
         return " LENGTH(" + columnName + ") "; //$NON-NLS-1$ //$NON-NLS-2$
+    }
+
+    /*
+     * Added yyin 20121214 TDQ-6571
+     * 
+     * @see org.talend.cwm.management.api.DbmsLanguage#getTopNQuery(java.lang.String, int)
+     */
+    @Override
+    public String getTopNQuery(String query, int n) {
+
+        return query.replaceFirst("SELECT", "SELECT FIRST " + n); //$NON-NLS-1$ //$NON-NLS-2$
     }
 }
