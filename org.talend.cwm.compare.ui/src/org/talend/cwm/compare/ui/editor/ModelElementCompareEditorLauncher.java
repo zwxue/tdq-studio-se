@@ -14,22 +14,34 @@ package org.talend.cwm.compare.ui.editor;
 
 import java.io.IOException;
 
+import org.apache.log4j.Logger;
 import org.eclipse.compare.CompareConfiguration;
 import org.eclipse.compare.CompareUI;
 import org.eclipse.compare.ICompareInputLabelProvider;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.emf.compare.diff.metamodel.ComparisonResourceSnapshot;
+import org.eclipse.emf.compare.diff.metamodel.DiffModel;
+import org.eclipse.emf.compare.ui.ModelCompareInput;
 import org.eclipse.emf.compare.util.ModelUtils;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorLauncher;
+import org.eclipse.ui.IEditorReference;
+import org.eclipse.ui.IPartListener;
+import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.part.EditorPart;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.repository.IRepositoryViewObject;
+import org.talend.cwm.compare.DQStructureComparer;
 import org.talend.cwm.compare.i18n.Messages;
+import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dq.helper.resourcehelper.PrvResourceFileHelper;
 import org.talend.dq.nodes.foldernode.IFolderNode;
 import orgomg.cwm.objectmodel.core.ModelElement;
@@ -45,6 +57,8 @@ public class ModelElementCompareEditorLauncher implements IEditorLauncher {
     private Object selectedObject = null;
 
     private boolean compareEachOther;
+
+    private static Logger log = Logger.getLogger(ModelElementCompareEditorLauncher.class);
 
     public ModelElementCompareEditorLauncher(String connName, Object selObj, boolean ce) {
         connectionName = connName;
@@ -135,7 +149,7 @@ public class ModelElementCompareEditorLauncher implements IEditorLauncher {
                 }
                 compEditorInput.setTitle(editorTitle);
                 CompareUI.openCompareEditor(compEditorInput);
-
+                addCloseListener(compEditorInput);
                 compEditorInput.hookLeftPanelContextMenu(compareEachOther);
                 compEditorInput.hookToolBar(compareEachOther);
             }
@@ -144,5 +158,100 @@ public class ModelElementCompareEditorLauncher implements IEditorLauncher {
             System.out.println(e);
             assert false;
         }
+    }
+
+    /**
+     * remove the temp file when compare any thing
+     * 
+     * @param compEditorInput
+     */
+    private void addCloseListener(ModelElementCompareEditorInput compEditorInput) {
+        CorePlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getActivePage().addPartListener(new IPartListener() {
+
+            public void partActivated(IWorkbenchPart part) {
+                // not implement
+
+            }
+
+            public void partBroughtToTop(IWorkbenchPart part) {
+                // not implement
+
+            }
+
+            public void partClosed(IWorkbenchPart part) {
+                if (part instanceof EditorPart) {
+                    IEditorInput editorInput = ((EditorPart) part).getEditorInput();
+                    if (editorInput instanceof ModelElementCompareEditorInput) {
+                        removeTempFiles((ModelElementCompareEditorInput) editorInput);
+                    }
+                }
+                removeListener();
+
+            }
+
+            /**
+             * Remove this listener when not any CompareEditor is opening
+             */
+            private void removeListener() {
+                IEditorReference[] editorReferences = CorePlugin.getDefault().getWorkbench().getActiveWorkbenchWindow()
+                        .getActivePage().getEditorReferences();
+                for (IEditorReference editorPart : editorReferences) {
+                    try {
+                        IEditorInput editorInput = editorPart.getEditorInput();
+                        if (editorInput instanceof ModelElementCompareEditorInput) {
+                            return;
+                        }
+                    } catch (PartInitException e) {
+                        log.debug("listener can not be remove for delete temp file when generater by open compare editor", e); //$NON-NLS-1$
+                    }
+                }
+                CorePlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getActivePage().removePartListener(this);
+
+            }
+
+            private boolean removeTempFiles(ModelElementCompareEditorInput editorInput) {
+                boolean returnCode = true;
+                if (editorInput == null) {
+                    return false;
+                }
+                Object compareResult = editorInput.getCompareResult();
+                if (compareResult != null && compareResult instanceof ModelCompareInput) {
+                    returnCode &= removeLeftResource((ModelCompareInput) compareResult);
+                    returnCode &= removeRightResource((ModelCompareInput) compareResult);
+                    returnCode &= removeCurrResource((ModelCompareInput) compareResult);
+                }
+                return returnCode;
+            }
+
+            private boolean removeLeftResource(ModelCompareInput compareResult) {
+                Resource leftResource = compareResult.getLeftResource();
+                return DQStructureComparer.removeResourceFromWorkspace(leftResource);
+            }
+
+            private boolean removeRightResource(ModelCompareInput compareResult) {
+                Resource rightResource = compareResult.getRightResource();
+                return DQStructureComparer.removeResourceFromWorkspace(rightResource);
+            }
+
+            private boolean removeCurrResource(ModelCompareInput compareResult) {
+                Object diff = compareResult.getDiff();
+                Resource currResource = null;
+                if (diff instanceof DiffModel) {
+                    currResource = ((DiffModel) diff).eResource();
+                }
+                return DQStructureComparer.removeResourceFromWorkspace(currResource);
+            }
+
+            public void partDeactivated(IWorkbenchPart part) {
+                // not implement
+
+            }
+
+            public void partOpened(IWorkbenchPart part) {
+                // not implement
+
+            }
+
+        });
     }
 }
