@@ -109,7 +109,7 @@ public class AnalysisExecutorTest {
         setMemoryControl(true);
         setMemoryValue(300);
         ReturnCode execute1 = spy.execute(createAnalysis);
-        Assert.assertFalse(execute1.getMessage().equals(Messages.getString("Evaluator.OutOfMomory", spy.getUsedMemory()))); //$NON-NLS-1$
+        Assert.assertFalse(Messages.getString("Evaluator.OutOfMomory", spy.getUsedMemory()).equals(execute1.getMessage())); //$NON-NLS-1$
         Assert.assertTrue(execute1.isOk());
         Assert.assertTrue(execute1.getMessage() == null);
         Mockito.verify(spy, Mockito.times(1)).execute(createAnalysis);
