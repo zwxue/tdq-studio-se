@@ -16,6 +16,8 @@ import java.lang.management.ManagementFactory;
 import java.lang.management.MemoryPoolMXBean;
 import java.lang.management.MemoryType;
 
+import junit.framework.Assert;
+
 import org.eclipse.ui.PlatformUI;
 import org.junit.Before;
 import org.junit.Test;
@@ -105,11 +107,11 @@ public class AnalysisExecutorTest {
     @Test
     public void testExecute1() {
         setMemoryControl(true);
-        setMemoryValue(150);
+        setMemoryValue(300);
         ReturnCode execute1 = spy.execute(createAnalysis);
-        assert (execute1.getMessage().equals(Messages.getString("Evaluator.OutOfMomory", spy.getUsedMemory()))); //$NON-NLS-1$
-        assert (execute1.isOk());
-        assert (execute1.getMessage() == null);
+        Assert.assertFalse(execute1.getMessage().equals(Messages.getString("Evaluator.OutOfMomory", spy.getUsedMemory()))); //$NON-NLS-1$
+        Assert.assertTrue(execute1.isOk());
+        Assert.assertTrue(execute1.getMessage() == null);
         Mockito.verify(spy, Mockito.times(1)).execute(createAnalysis);
 
     }
