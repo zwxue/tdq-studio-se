@@ -108,4 +108,15 @@ public class IngresDbmsLanguage extends DbmsLanguage {
     public String charLength(String columnName) {
         return " LENGTH(" + columnName + ") "; //$NON-NLS-1$ //$NON-NLS-2$
     }
+    
+    /*
+     * Added yyin 20121214 TDQ-6571 
+     * 
+     * @see org.talend.cwm.management.api.DbmsLanguage#getTopNQuery(java.lang.String, int)
+     */
+    @Override
+    public String getTopNQuery(String query, int n) {
+
+        return query.replaceFirst("SELECT", "SELECT FIRST " + n); //$NON-NLS-1$ //$NON-NLS-2$
+    }
 }
