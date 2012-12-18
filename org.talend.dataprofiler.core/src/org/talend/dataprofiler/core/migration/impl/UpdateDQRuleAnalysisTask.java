@@ -17,10 +17,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IWorkspaceRoot;
-import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -30,6 +26,7 @@ import org.talend.commons.utils.WorkspaceUtils;
 import org.talend.core.model.properties.Item;
 import org.talend.core.model.properties.PropertiesPackage;
 import org.talend.core.model.properties.Property;
+import org.talend.cwm.helper.ModelElementHelper;
 import org.talend.dataprofiler.core.migration.AbstractWorksapceUpdateTask;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisResult;
@@ -95,25 +92,11 @@ public class UpdateDQRuleAnalysisTask extends AbstractWorksapceUpdateTask {
             // add WhereRuleAideIndicator into the list
             indicators.add(wraIndicator);
         }
-        // save the analysis
-        // boolean saved = false;
-        // Property property = PropertyHelper.getProperty(ana);
-        // if (property != null) {
-        // Item item = property.getItem();
-        // if (item != null) {
-        // saved = ElementWriterFactory.getInstance().createAnalysisWrite().save(item, true).isOk();
-        // }
-        // }
-        // if (saved) {
-        // System.out.println("save analysis[" + ana.getName() + "] ok!!!");
-        // } else {
-        // System.out.println("save analysis[" + ana.getName() + "] failed!!!");
-        // }
 
         URI uriItem = ana.eResource().getURI();
         File fileItem = null;
         if (uriItem.isPlatform()) {
-            fileItem = WorkspaceUtils.ifileToFile(getIFile(ana));
+            fileItem = WorkspaceUtils.ifileToFile(ModelElementHelper.getIFile(ana));
         } else {
             fileItem = new File(uriItem.toFileString());
         }
@@ -145,18 +128,6 @@ public class UpdateDQRuleAnalysisTask extends AbstractWorksapceUpdateTask {
         propResource.getContents().add(item.getState());
 
         EMFUtil.saveResource(propResource);
-    }
-
-    /**
-     * DOC xqliu Comment method "getIFile".
-     * 
-     * @param modelElement
-     * @return
-     */
-    private IFile getIFile(ModelElement modelElement) {
-        IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
-        String platformString = modelElement.eResource().getURI().toPlatformString(true);
-        return root.getFile(new Path(platformString));
     }
 
     /**
@@ -204,5 +175,4 @@ public class UpdateDQRuleAnalysisTask extends AbstractWorksapceUpdateTask {
         }
         return result;
     }
-
 }
