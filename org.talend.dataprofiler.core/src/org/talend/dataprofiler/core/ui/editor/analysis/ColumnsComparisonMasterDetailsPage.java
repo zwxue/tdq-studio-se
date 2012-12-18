@@ -78,8 +78,6 @@ public class ColumnsComparisonMasterDetailsPage extends AbstractAnalysisMetadata
 
     private AnalysisColumnCompareTreeViewer anaColumnCompareViewer;
 
-    private ScrolledForm form;
-
     private Section columnsComparisonSection = null;
 
     public Section getColumnsComparisonSection() {
@@ -107,6 +105,7 @@ public class ColumnsComparisonMasterDetailsPage extends AbstractAnalysisMetadata
 
     }
 
+    @Override
     public void initialize(FormEditor editor) {
         super.initialize(editor);
         Analysis analysis = (Analysis) this.currentModelElement;
@@ -319,6 +318,7 @@ public class ColumnsComparisonMasterDetailsPage extends AbstractAnalysisMetadata
         dataFilterCompB.setDirty(false);
     }
 
+    @Override
     public void fireRuningItemChanged(boolean status) {
         super.fireRuningItemChanged(status);
 
@@ -363,8 +363,8 @@ public class ColumnsComparisonMasterDetailsPage extends AbstractAnalysisMetadata
                 ColumnSet ownerA = ColumnHelper.getColumnOwnerAsColumnSet(columnA);
                 ColumnSet ownerB = ColumnHelper.getColumnOwnerAsColumnSet(columnB);
 
-                int typeA = ((TdColumn) columnA).getSqlDataType().getJavaDataType();
-                int typeB = ((TdColumn) columnB).getSqlDataType().getJavaDataType();
+                int typeA = columnA.getSqlDataType().getJavaDataType();
+                int typeB = columnB.getSqlDataType().getJavaDataType();
                 if (!Java2SqlType.isGenericSameType(typeA, typeB)) {
                     return new ReturnCode(
                             DefaultMessagesImpl.getString("ColumnsComparisonMasterDetailsPage.notSameColumnType"), false); //$NON-NLS-1$
@@ -395,6 +395,7 @@ public class ColumnsComparisonMasterDetailsPage extends AbstractAnalysisMetadata
                 DefaultMessagesImpl.getString("ColumnsComparisonMasterDetailsPage.columnsBlankRunMessage"), false) : new ReturnCode(true); //$NON-NLS-1$
     }
 
+    @Override
     public ScrolledForm getScrolledForm() {
         return form;
     }

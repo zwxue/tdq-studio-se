@@ -34,8 +34,6 @@ import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.TreeAdapter;
-import org.eclipse.swt.events.TreeEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -49,7 +47,6 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
-import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.part.FileEditorInput;
 import org.talend.core.model.metadata.MetadataColumnRepositoryObject;
 import org.talend.core.model.repository.IRepositoryViewObject;
@@ -63,6 +60,7 @@ import org.talend.dataprofiler.core.model.ColumnIndicator;
 import org.talend.dataprofiler.core.model.ModelElementIndicator;
 import org.talend.dataprofiler.core.ui.editor.AbstractAnalysisActionHandler;
 import org.talend.dataprofiler.core.ui.editor.AbstractMetadataFormPage;
+import org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisMetadataPage;
 import org.talend.dataprofiler.core.ui.editor.analysis.ColumnCorrelationNominalAndIntervalMasterPage;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
 import org.talend.dataprofiler.core.ui.views.ColumnViewerDND;
@@ -87,27 +85,13 @@ public class AnalysisColumnNominalIntervalTreeViewer extends AbstractColumnDropT
 
     protected static Logger log = Logger.getLogger(AnalysisColumnNominalIntervalTreeViewer.class);
 
-    private static final String DATA_PARAM = "DATA_PARAM"; //$NON-NLS-1$
-
-    public static final String INDICATOR_UNIT_KEY = "INDICATOR_UNIT_KEY"; //$NON-NLS-1$
-
-    public static final String COLUMN_INDICATOR_KEY = "COLUMN_INDICATOR_KEY"; //$NON-NLS-1$
-
-    public static final String ITEM_EDITOR_KEY = "ITEM_EDITOR_KEY"; //$NON-NLS-1$
-
     public static final String VIEWER_KEY = "org.talend.dataprofiler.core.ui.editor.composite.AnalysisColumnNominalIntervalTreeViewer"; //$NON-NLS-1$
 
-    private static final int WIDTH1_CELL = 75;
-
     private Composite parentComp;
-
-    private Tree tree;
 
     private Button[] buttons;
 
     private List<RepositoryNode> columnSetMultiValueList;
-
-    // private final List<String> comboTextList = new ArrayList<String>();
 
     private ColumnCorrelationNominalAndIntervalMasterPage masterPage;
 
@@ -129,6 +113,16 @@ public class AnalysisColumnNominalIntervalTreeViewer extends AbstractColumnDropT
         // this.setElements(masterPage.getColumnSetMultiValueIndicator().
         // getAnalyzedColumns());
         this.setDirty(false);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataprofiler.core.ui.editor.composite.AbstractColumnDropTree#getMasterPage()
+     */
+    @Override
+    public AbstractAnalysisMetadataPage getMasterPage() {
+        return masterPage;
     }
 
     /**
@@ -689,42 +683,19 @@ public class AnalysisColumnNominalIntervalTreeViewer extends AbstractColumnDropT
 
         });
 
-        tree.addTreeListener(new TreeAdapter() {
-
-            @Override
-            public void treeCollapsed(TreeEvent e) {
-
-                ExpandableComposite theSuitedComposite = getTheSuitedComposite(e);
-                ScrolledForm form = masterPage.getForm();
-                Composite comp = masterPage.getChartComposite();
-
-                if (theSuitedComposite != null && theSuitedComposite.isExpanded()) {
-                    getTheSuitedComposite(e).setExpanded(false);
-                }
-
-                comp.layout();
-                form.reflow(true);
-            }
-
-            @Override
-            public void treeExpanded(TreeEvent e) {
-                ExpandableComposite theSuitedComposite = getTheSuitedComposite(e);
-                ScrolledForm form = masterPage.getForm();
-                Composite comp = masterPage.getChartComposite();
-
-                if (theSuitedComposite != null && !theSuitedComposite.isExpanded()) {
-                    theSuitedComposite.setExpanded(true);
-                }
-
-                comp.layout();
-                form.reflow(true);
-            }
-
-        });
+        tree.addTreeListener(treeAdapter);
 
     }
 
-    private ExpandableComposite getTheSuitedComposite(SelectionEvent e) {
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * org.talend.dataprofiler.core.ui.editor.composite.AbstractColumnDropTree#getTheSuitedComposite(org.eclipse.swt
+     * .events.SelectionEvent)
+     */
+    @Override
+    public ExpandableComposite getTheSuitedComposite(SelectionEvent e) {
         Composite[] previewChartCompsites = masterPage.getPreviewChartCompsites();
         if (previewChartCompsites == null) {
             return null;

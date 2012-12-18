@@ -23,7 +23,6 @@ import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.dataprofiler.core.model.OverviewIndUIElement;
 import org.talend.dataquality.indicators.Indicator;
-import org.talend.dataquality.indicators.schema.SchemaIndicator;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.repository.model.RepositoryNode;
 import orgomg.cwm.objectmodel.core.ModelElement;
@@ -35,9 +34,6 @@ import orgomg.cwm.resource.relational.Schema;
  * DOC rli class global comment. Detailled comment
  */
 public class SchemaAnalysisMasterDetailsPage extends AbstractFilterMetadataPage {
-
-    // FIXME remove it.
-    private List<SchemaIndicator> schemaIndicatorList = new ArrayList<SchemaIndicator>();
 
     public SchemaAnalysisMasterDetailsPage(FormEditor editor, String id, String title) {
         super(editor, id, title);

@@ -115,8 +115,6 @@ public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnaly
 
     private Composite chartComposite;
 
-    private ScrolledForm form;
-
     private static final int TREE_MAX_LENGTH = 400;
 
     private static final int INDICATORS_SECTION_HEIGHT = 300;
@@ -145,6 +143,7 @@ public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnaly
         super(editor, id, title);
     }
 
+    @Override
     public void initialize(FormEditor editor) {
         super.initialize(editor);
         recomputeIndicators();
@@ -304,6 +303,7 @@ public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnaly
         GridDataFactory.fillDefaults().align(SWT.FILL, SWT.TOP).applyTo(clmnBtn);
         clmnBtn.addHyperlinkListener(new HyperlinkAdapter() {
 
+            @Override
             public void linkActivated(HyperlinkEvent e) {
                 openColumnsSelectionDialog();
             }
@@ -368,6 +368,7 @@ public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnaly
 
         refreshBtn.addHyperlinkListener(new HyperlinkAdapter() {
 
+            @Override
             public void linkActivated(HyperlinkEvent e) {
 
                 for (Control control : chartComposite.getChildren()) {
@@ -446,7 +447,7 @@ public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnaly
 
                         public void run(final IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
                             monitor.beginTask(DefaultMessagesImpl.getString("ColumnMasterDetailsPage.createPreview", //$NON-NLS-1$
-                                    tdColumn.getName()), IProgressMonitor.UNKNOWN); //$NON-NLS-1$
+                                    tdColumn.getName()), IProgressMonitor.UNKNOWN);
                             Display.getDefault().asyncExec(new Runnable() {
 
                                 public void run() {
@@ -492,8 +493,9 @@ public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnaly
     public void refresh() {
         if (EditorPreferencePage.isHideGraphics()) {
             if (sForm.getChildren().length > 1) {
-                if (null != sForm.getChildren()[1] && !sForm.getChildren()[1].isDisposed())
+                if (null != sForm.getChildren()[1] && !sForm.getChildren()[1].isDisposed()) {
                     sForm.getChildren()[1].dispose();
+                }
                 topComp.getParent().layout();
                 topComp.layout();
             }
@@ -516,6 +518,7 @@ public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnaly
                 previewComp.setLayout(new GridLayout());
                 previewComp.addControlListener(new ControlAdapter() {
 
+                    @Override
                     public void controlResized(ControlEvent e) {
                         super.controlResized(e);
                         sForm.redraw();
@@ -588,6 +591,7 @@ public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnaly
      * @throws DataprofilerCoreException
      */
 
+    @Override
     public void saveAnalysis() throws DataprofilerCoreException {
         // ADD gdbu 2011-3-3 bug 19179
 
@@ -712,16 +716,9 @@ public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnaly
      * 
      * @return the treeViewer
      */
+    @Override
     public AnalysisColumnNominalIntervalTreeViewer getTreeViewer() {
         return this.treeViewer;
-    }
-
-    public ScrolledForm getForm() {
-        return form;
-    }
-
-    public void setForm(ScrolledForm form) {
-        this.form = form;
     }
 
     public ColumnCorrelationAnalysisHandler getColumnCorrelationAnalysisHandler() {
@@ -733,9 +730,21 @@ public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnaly
     }
 
     public Composite[] getPreviewChartCompsites() {
+        // ADD msjian TDQ-6213 2012-12-18: filter the disposed composite
+        if (previewChartCompsites != null && previewChartCompsites.length > 0) {
+            List<Composite> withOutDisposed = new ArrayList<Composite>();
+            for (Composite com : previewChartCompsites) {
+                if (!com.isDisposed()) {
+                    withOutDisposed.add(com);
+                }
+            }
+            this.previewChartCompsites = withOutDisposed.toArray(new ExpandableComposite[withOutDisposed.size()]);
+        }
+        // TDQ-6213~
         return previewChartCompsites;
     }
 
+    @Override
     public Composite getChartComposite() {
         return chartComposite;
     }
@@ -795,7 +804,7 @@ public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnaly
         String message = null;
 
         for (int i = 0; i < columns.size(); i++) {
-            RepositoryNode tdColumnNode = (RepositoryNode) columns.get(i);
+            RepositoryNode tdColumnNode = columns.get(i);
             TdColumn tdColumn = (TdColumn) ((MetadataColumnRepositoryObject) tdColumnNode.getObject()).getTdColumn();
             if (className == ColumnsetPackage.eINSTANCE.getCountAvgNullIndicator()) {
                 if (Java2SqlType.isDateInSQL(tdColumn.getSqlDataType().getJavaDataType())) {
