@@ -19,6 +19,7 @@ import java.lang.management.MemoryType;
 import junit.framework.Assert;
 
 import org.eclipse.ui.PlatformUI;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -100,6 +101,11 @@ public class AnalysisExecutorTest {
 
     }
 
+    @After
+    public void tearDown() throws Exception {
+        setMemoryControl(false);
+    }
+
     /**
      * Test method for {@link org.talend.dq.analysis.AnalysisExecutor#execute(org.talend.dataquality.analysis.Analysis)}
      * . case1 have enough memory
@@ -107,8 +113,16 @@ public class AnalysisExecutorTest {
     @Test
     public void testExecute1() {
         setMemoryControl(true);
-        setMemoryValue(300);
-        ReturnCode execute1 = spy.execute(createAnalysis);
+        ReturnCode execute1 = null;
+        int currMemory = AnalysisThreadMemoryChangeNotifier.convertToMB(Runtime.getRuntime().totalMemory());
+        do {
+            setMemoryValue(currMemory);
+            // ~connection
+            spy = Mockito.spy(new ColumnAnalysisExecutor());
+            Mockito.doReturn(true).when(spy).runAnalysis(((Analysis) Mockito.anyObject()), Mockito.anyString());
+            execute1 = spy.execute(createAnalysis);
+            currMemory += 20;
+        } while (Messages.getString("Evaluator.OutOfMomory", spy.getUsedMemory()).equals(execute1.getMessage())); //$NON-NLS-1$
         Assert.assertFalse(Messages.getString("Evaluator.OutOfMomory", spy.getUsedMemory()).equals(execute1.getMessage())); //$NON-NLS-1$
         Assert.assertTrue(execute1.isOk());
         Assert.assertTrue(execute1.getMessage() == null);
@@ -126,8 +140,8 @@ public class AnalysisExecutorTest {
         setMemoryValue(5);
         ReturnCode execute2 = spy.execute(createAnalysis);
 
-        assert (!execute2.isOk());
-        assert (execute2.getMessage().equals(Messages.getString("Evaluator.OutOfMomory", spy.getUsedMemory()))); //$NON-NLS-1$
+        Assert.assertFalse(execute2.isOk());
+        Assert.assertTrue(execute2.getMessage().equals(Messages.getString("Evaluator.OutOfMomory", spy.getUsedMemory()))); //$NON-NLS-1$
         Mockito.verify(spy, Mockito.times(1)).execute(createAnalysis);
 
     }
