@@ -1104,30 +1104,23 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
         doSetInput();
         refreshSumSection();
         // MOD klliu 2011-05-09 bug 20930
-        List<OverviewIndUIElement> catalogIndicators = getCatalogIndicators();
-        List<OverviewIndUIElement> schemaIndicators = getSchemaIndicators();
-        if (catalogIndicators != null && catalogIndicators.size() == 1) {
+        List<OverviewIndUIElement> catalogUIEleList = getCatalogIndicators();
+        List<OverviewIndUIElement> schemaUIEleList = getSchemaIndicators();
+        if (catalogUIEleList != null && catalogUIEleList.size() > 0) {
             Object cataUIEle = catalogTableViewer.getTable().getItem(0).getData();
-            OverviewIndUIElement overviewIndUIElement = catalogIndicators.get(0);
+            catalogTableViewer.setSelection(new StructuredSelection(cataUIEle));
+            OverviewIndUIElement overviewIndUIElement = catalogUIEleList.get(0);
             CatalogIndicator overviewIndicator = (CatalogIndicator) overviewIndUIElement.getOverviewIndicator();
-            EList<SchemaIndicator> cataAndSchemaIndicators = overviewIndicator.getSchemaIndicators();
-            if (cataAndSchemaIndicators != null) {
-                // the count of schema
-                int size = cataAndSchemaIndicators.size();
-                if (size == 1) {
-                    // Case like MS SQL Server
-                    // Show schema TableViewer
-                    catalogTableViewer.setSelection(new StructuredSelection(catalogIndicators.get(0)));
+            EList<SchemaIndicator> schemaIndicatorList = overviewIndicator.getSchemaIndicators();
+            if (schemaIndicatorList != null) {
+                if (schemaIndicatorList.size() > 0) {
+                    // Case like MS SQL Server (containing both catalogs and schemas), show schema TableViewer
                     Object catalogAndSchemaUIEle = schemaTableViewer.getTable().getItem(0).getData();
                     schemaTableViewer.setSelection(new StructuredSelection(catalogAndSchemaUIEle));
-
-                } else if (size == 0) {
-                    // Case like Mysql
-                    catalogTableViewer.setSelection(new StructuredSelection(cataUIEle));
                 }
             }
 
-        } else if (schemaIndicators != null && schemaIndicators.size() == 1) {
+        } else if (schemaUIEleList != null && schemaUIEleList.size() > 0) {
             // Case like Oracle
             Object schemaUIEle = catalogTableViewer.getTable().getItem(0).getData();
             catalogTableViewer.setSelection(new StructuredSelection(schemaUIEle));
