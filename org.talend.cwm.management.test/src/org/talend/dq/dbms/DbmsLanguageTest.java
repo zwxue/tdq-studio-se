@@ -21,14 +21,17 @@ import org.apache.commons.lang.StringUtils;
 import org.eclipse.emf.common.util.EList;
 import org.junit.Assert;
 import org.junit.Test;
+import org.talend.core.model.metadata.builder.database.dburl.SupportDBUrlType;
 import org.talend.cwm.relational.RelationalFactory;
 import org.talend.cwm.relational.TdColumn;
+import org.talend.cwm.relational.TdExpression;
 import org.talend.cwm.relational.TdTable;
+import org.talend.dataquality.analysis.ExecutionLanguage;
+import org.talend.dataquality.domain.pattern.ExpressionType;
 import org.talend.dataquality.domain.pattern.Pattern;
 import org.talend.dataquality.domain.pattern.PatternComponent;
 import org.talend.dataquality.domain.pattern.PatternFactory;
 import org.talend.dataquality.domain.pattern.RegularExpression;
-import orgomg.cwm.objectmodel.core.CoreFactory;
 import orgomg.cwm.objectmodel.core.Expression;
 
 /**
@@ -929,148 +932,6 @@ public class DbmsLanguageTest {
         try {
             DbmsLanguage dbms = getMysqlDbmsLanguage();
             Assert.assertNotNull(dbms.getRegexp(pattern));
-        } catch (Exception e) {
-            fail(e.getMessage());
-        }
-    }
-
-    /**
-     * Test method for
-     * {@link org.talend.dq.dbms.DbmsLanguage#getRegexp(org.talend.dataquality.domain.pattern.Pattern, boolean)}.
-     */
-    @Test
-    public void testGetRegexpGetMssqlFromContainDefault() {
-        // Pattern
-        Pattern createPattern = PatternFactory.eINSTANCE.createPattern();
-        // ~Pattern
-
-        // init java Expression data
-        RegularExpression createJavaRegularExpression = PatternFactory.eINSTANCE.createRegularExpression();
-        TdExpression createJavaTdExpression = RelationalFactory.eINSTANCE.createTdExpression();
-        createJavaTdExpression.setBody(JavaRegex);
-        createJavaTdExpression.setLanguage(SupportDBUrlType.JAVADEFAULTURL.getLanguage());
-        createJavaRegularExpression.setExpression(createJavaTdExpression);
-        createJavaRegularExpression.setExpressionType(ExpressionType.REGEXP.getLiteral());
-        EList<PatternComponent> components = createPattern.getComponents();
-        components.add(createJavaRegularExpression);
-        // ~init java Expression data
-
-        // init sql Expression data
-        RegularExpression createSqlRegularExpression = PatternFactory.eINSTANCE.createRegularExpression();
-        TdExpression createSqlTdExpression = RelationalFactory.eINSTANCE.createTdExpression();
-        createSqlTdExpression.setBody(SqlRegex);
-        createSqlTdExpression.setLanguage(ExecutionLanguage.SQL.getName());
-        createSqlRegularExpression.setExpression(createSqlTdExpression);
-        createSqlRegularExpression.setExpressionType(ExpressionType.REGEXP.getLiteral());
-        components = createPattern.getComponents();
-        components.add(createSqlRegularExpression);
-        // ~init sql Expression data
-
-        // init mssql Expression data
-        RegularExpression createMssqlRegularExpression = PatternFactory.eINSTANCE.createRegularExpression();
-        TdExpression createMssqlTdExpression = RelationalFactory.eINSTANCE.createTdExpression();
-        createMssqlTdExpression.setBody(MssqlRegex);
-        createMssqlTdExpression.setLanguage(SupportDBUrlType.MSSQLDEFAULTURL.getLanguage());
-        createMssqlRegularExpression.setExpression(createMssqlTdExpression);
-        createMssqlRegularExpression.setExpressionType(ExpressionType.REGEXP.getLiteral());
-        components = createPattern.getComponents();
-        components.add(createMssqlRegularExpression);
-        // ~init mssql Expression data
-
-        try {
-            DbmsLanguage dbms = DbmsLanguageFactory.createDbmsLanguage(SupportDBUrlType.MSSQLDEFAULTURL);
-            Assert.assertTrue(MssqlRegex.equalsIgnoreCase(dbms.getRegexp(createPattern).getBody()));
-        } catch (Exception e) {
-            fail(e.getMessage());
-        }
-    }
-
-    /**
-     * Test method for
-     * {@link org.talend.dq.dbms.DbmsLanguage#getRegexp(org.talend.dataquality.domain.pattern.Pattern, boolean)}.
-     */
-    @Test
-    public void testGetRegexpGetJavaFromContainDefault() {
-        // Pattern
-        Pattern createPattern = PatternFactory.eINSTANCE.createPattern();
-        // ~Pattern
-
-        // init sql Expression data
-        RegularExpression createSqlRegularExpression = PatternFactory.eINSTANCE.createRegularExpression();
-        TdExpression createSqlTdExpression = RelationalFactory.eINSTANCE.createTdExpression();
-        createSqlTdExpression.setBody(SqlRegex);
-        createSqlTdExpression.setLanguage(ExecutionLanguage.SQL.getName());
-        createSqlRegularExpression.setExpression(createSqlTdExpression);
-        createSqlRegularExpression.setExpressionType(ExpressionType.REGEXP.getLiteral());
-        EList<PatternComponent> components = createPattern.getComponents();
-        components.add(createSqlRegularExpression);
-        // ~init sql Expression data
-
-        // init mssql Expression data
-        RegularExpression createMssqlRegularExpression = PatternFactory.eINSTANCE.createRegularExpression();
-        TdExpression createMssqlTdExpression = RelationalFactory.eINSTANCE.createTdExpression();
-        createMssqlTdExpression.setBody(MssqlRegex);
-        createMssqlTdExpression.setLanguage(SupportDBUrlType.MSSQLDEFAULTURL.getLanguage());
-        createMssqlRegularExpression.setExpression(createMssqlTdExpression);
-        createMssqlRegularExpression.setExpressionType(ExpressionType.REGEXP.getLiteral());
-        components = createPattern.getComponents();
-        components.add(createMssqlRegularExpression);
-        // ~init mssql Expression data
-
-        // init java Expression data
-        RegularExpression createJavaRegularExpression = PatternFactory.eINSTANCE.createRegularExpression();
-        TdExpression createJavaTdExpression = RelationalFactory.eINSTANCE.createTdExpression();
-        createJavaTdExpression.setBody(JavaRegex);
-        createJavaTdExpression.setLanguage(SupportDBUrlType.JAVADEFAULTURL.getLanguage());
-        createJavaRegularExpression.setExpression(createJavaTdExpression);
-        createJavaRegularExpression.setExpressionType(ExpressionType.REGEXP.getLiteral());
-        components = createPattern.getComponents();
-        components.add(createJavaRegularExpression);
-        // ~init java Expression data
-
-        try {
-            DbmsLanguage dbms = DbmsLanguageFactory.createDbmsLanguage(SupportDBUrlType.JAVADEFAULTURL);
-            Assert.assertTrue(JavaRegex.equalsIgnoreCase(dbms.getRegexp(createPattern).getBody()));
-        } catch (Exception e) {
-            fail(e.getMessage());
-        }
-    }
-
-    /**
-     * Test method for
-     * {@link org.talend.dq.dbms.DbmsLanguage#getRegexp(org.talend.dataquality.domain.pattern.Pattern, boolean)}.
-     */
-    @Test
-    public void testGetRegexpGetMssqlFromContainDefaultAndWithoutMssql() {
-        // Pattern
-        Pattern createPattern = PatternFactory.eINSTANCE.createPattern();
-        // ~Pattern
-
-        // init sql Expression data
-        RegularExpression createSqlRegularExpression = PatternFactory.eINSTANCE.createRegularExpression();
-        TdExpression createSqlTdExpression = RelationalFactory.eINSTANCE.createTdExpression();
-        createSqlTdExpression.setBody(SqlRegex);
-        createSqlTdExpression.setLanguage(ExecutionLanguage.SQL.getName());
-        createSqlRegularExpression.setExpression(createSqlTdExpression);
-        createSqlRegularExpression.setExpressionType(ExpressionType.REGEXP.getLiteral());
-        EList<PatternComponent> components = createPattern.getComponents();
-        components.add(createSqlRegularExpression);
-        // ~init sql Expression data
-
-        // init java Expression data
-        RegularExpression createJavaRegularExpression = PatternFactory.eINSTANCE.createRegularExpression();
-        TdExpression createJavaTdExpression = RelationalFactory.eINSTANCE.createTdExpression();
-        createJavaTdExpression.setBody(JavaRegex);
-        createJavaTdExpression.setLanguage(SupportDBUrlType.JAVADEFAULTURL.getLanguage());
-        createJavaRegularExpression.setExpression(createJavaTdExpression);
-        createJavaRegularExpression.setExpressionType(ExpressionType.REGEXP.getLiteral());
-        components = createPattern.getComponents();
-        components.add(createJavaRegularExpression);
-        // ~init java Expression data
-
-        try {
-            DbmsLanguage dbms = DbmsLanguageFactory.createDbmsLanguage(SupportDBUrlType.MSSQLDEFAULTURL);
-            Assert.assertTrue(SqlRegex.equalsIgnoreCase(dbms.getRegexp(createPattern).getBody()));
         } catch (Exception e) {
             fail(e.getMessage());
         }
