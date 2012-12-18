@@ -75,8 +75,6 @@ public class ColumnDependencyMasterDetailsPage extends AbstractAnalysisMetadataP
 
     private static Logger log = Logger.getLogger(ColumnDependencyMasterDetailsPage.class);
 
-    private ScrolledForm form;
-
     private Section columnsComparisonSection = null;
 
     public Section getColumnsComparisonSection() {

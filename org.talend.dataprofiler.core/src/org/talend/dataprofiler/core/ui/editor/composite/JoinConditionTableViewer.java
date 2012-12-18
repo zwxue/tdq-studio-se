@@ -76,8 +76,6 @@ public class JoinConditionTableViewer extends AbstractColumnDropTree {
 
     private DQRuleMasterDetailsPage masterPage;
 
-    private Table myTable;
-
     private TableViewer myTableViewer;
 
     private List<JoinElement> myJoinElement;
@@ -99,7 +97,6 @@ public class JoinConditionTableViewer extends AbstractColumnDropTree {
         this.parentComposite = parent;
         this.masterPage = masterPage;
         this.myJoinElement = masterPage.getTempJoinElements();
-        this.myTable = createTable(parent);
 
         if (this.myJoinElement.size() > 0) {
             updateColumnSetPackage((TdColumn) this.myJoinElement.get(0).getColA());

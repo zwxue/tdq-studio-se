@@ -37,8 +37,6 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.ShellAdapter;
 import org.eclipse.swt.events.ShellEvent;
-import org.eclipse.swt.events.TreeAdapter;
-import org.eclipse.swt.events.TreeEvent;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -53,7 +51,6 @@ import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.CheckedTreeSelectionDialog;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
-import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.talend.core.model.metadata.MetadataColumnRepositoryObject;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.properties.ConnectionItem;
@@ -66,7 +63,6 @@ import org.talend.cwm.helper.ModelElementHelper;
 import org.talend.cwm.helper.ResourceHelper;
 import org.talend.cwm.relational.TdTable;
 import org.talend.dataprofiler.core.ImageLib;
-import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.helper.ModelElementIndicatorHelper;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.manager.DQPreferenceManager;
@@ -77,6 +73,7 @@ import org.talend.dataprofiler.core.ui.dialog.IndicatorSelectDialog;
 import org.talend.dataprofiler.core.ui.dialog.composite.TooltipTree;
 import org.talend.dataprofiler.core.ui.editor.AbstractAnalysisActionHandler;
 import org.talend.dataprofiler.core.ui.editor.AbstractMetadataFormPage;
+import org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisMetadataPage;
 import org.talend.dataprofiler.core.ui.editor.analysis.ColumnMasterDetailsPage;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
 import org.talend.dataprofiler.core.ui.grid.IndicatorSelectDialog2;
@@ -914,45 +911,7 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
 
         });
 
-        tree.addTreeListener(new TreeAdapter() {
-
-            @Override
-            public void treeCollapsed(TreeEvent e) {
-
-                ExpandableComposite theSuitedComposite = getTheSuitedComposite(e);
-                ScrolledForm form = masterPage.getForm();
-                Composite comp = masterPage.getChartComposite();
-
-                if (theSuitedComposite != null && theSuitedComposite.isExpanded()) {
-                    getTheSuitedComposite(e).setExpanded(false);
-                }
-
-                if (comp != null) {
-                    comp.layout();
-                }
-                form.reflow(true);
-            }
-
-            @Override
-            public void treeExpanded(TreeEvent e) {
-
-                ExpandableComposite theSuitedComposite = getTheSuitedComposite(e);
-                ScrolledForm form = masterPage.getForm();
-                Composite comp = masterPage.getChartComposite();
-
-                if (theSuitedComposite != null && !theSuitedComposite.isExpanded()) {
-                    theSuitedComposite.setExpanded(true);
-                } else {
-                    propertyChangeSupport.firePropertyChange(PluginConstant.EXPAND_TREE, null, e.item);
-                }
-
-                if (comp != null) {
-                    comp.layout();
-                }
-                form.reflow(true);
-            }
-
-        });
+        tree.addTreeListener(treeAdapter);
 
         tree.addMouseListener(new MouseAdapter() {
 
@@ -979,7 +938,15 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
         });
     }
 
-    private ExpandableComposite getTheSuitedComposite(SelectionEvent e) {
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * org.talend.dataprofiler.core.ui.editor.composite.AbstractColumnDropTree#getTheSuitedComposite(org.eclipse.swt
+     * .events.SelectionEvent)
+     */
+    @Override
+    public ExpandableComposite getTheSuitedComposite(SelectionEvent e) {
         Composite[] previewChartCompsites = masterPage.getPreviewChartCompsites();
         if (previewChartCompsites == null) {
             return null;
@@ -1071,7 +1038,13 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
         super.setInput(objs);
     }
 
-    public ColumnMasterDetailsPage getMasterPage() {
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataprofiler.core.ui.editor.composite.AbstractColumnDropTree#getMasterPage()
+     */
+    @Override
+    public AbstractAnalysisMetadataPage getMasterPage() {
         return masterPage;
     }
 

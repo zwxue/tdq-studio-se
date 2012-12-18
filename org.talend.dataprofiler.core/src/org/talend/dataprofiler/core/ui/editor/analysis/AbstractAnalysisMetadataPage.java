@@ -655,4 +655,31 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
         }
         this.getTreeViewer().getRemovedElements().clear();
     }
+
+    /**
+     * set ScrolledForm.
+     * 
+     * @param form
+     */
+    public void setForm(ScrolledForm form) {
+        super.form = form;
+    }
+
+    /**
+     * get ScrolledForm.
+     * 
+     * @return
+     */
+    public ScrolledForm getForm() {
+        return form;
+    }
+
+    /**
+     * get ChartComposite.
+     * 
+     * @return
+     */
+    public Composite getChartComposite() {
+        return null;
+    }
 }
