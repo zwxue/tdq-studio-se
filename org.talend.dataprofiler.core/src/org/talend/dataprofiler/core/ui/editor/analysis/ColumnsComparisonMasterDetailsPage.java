@@ -68,22 +68,15 @@ import orgomg.cwm.resource.relational.ColumnSet;
 /**
  * This page show the comparisons information of column set.
  */
-/**
- * DOC Administrator class global comment. Detailled comment
- */
 public class ColumnsComparisonMasterDetailsPage extends AbstractAnalysisMetadataPage implements PropertyChangeListener {
 
     private static Logger log = Logger.getLogger(ColumnsComparisonMasterDetailsPage.class);
-
-    // private ColumnAnalysisHandler analysisHandler;
 
     private RowMatchingIndicator rowMatchingIndicatorA;
 
     private RowMatchingIndicator rowMatchingIndicatorB;
 
     private AnalysisColumnCompareTreeViewer anaColumnCompareViewer;
-
-    private ScrolledForm form;
 
     private Section columnsComparisonSection = null;
 

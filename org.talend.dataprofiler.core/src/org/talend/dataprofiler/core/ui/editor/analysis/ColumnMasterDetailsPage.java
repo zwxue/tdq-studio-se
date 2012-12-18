@@ -134,13 +134,9 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
 
     private Composite chartComposite;
 
-    private ScrolledForm form;
-
     private static final int TREE_MAX_LENGTH = 400;
 
-    private Composite[] previewChartCompsites;
-
-    private AnalysisEditor currentEditor;
+    private ExpandableComposite[] previewChartCompsites;
 
     private Section dataFilterSection = null;
 
@@ -373,11 +369,7 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
      * DOC zshen Comment method "computePagination".
      */
     private void computePagination() {
-        if (chartComposite != null) {
-            for (Control control : chartComposite.getChildren()) {
-                control.dispose();
-            }
-        }
+    	disposeChartComposite();
 
         if (uiPagination == null) {
             uiPagination = new UIPagination(toolkit);
@@ -418,6 +410,17 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
 
     }
 
+    /**
+     * dispose ChartComposite.
+     */
+    public void disposeChartComposite() {
+        if (chartComposite != null && !chartComposite.isDisposed()) {
+            for (Control control : chartComposite.getChildren()) {
+                control.dispose();
+            }
+        }
+    }
+    
     /**
      * DOC mzhao Comment method "packOtherColumns".
      */
@@ -550,9 +553,7 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
             @Override
             public void linkActivated(HyperlinkEvent e) {
 
-                for (Control control : chartComposite.getChildren()) {
-                    control.dispose();
-                }
+            	disposeChartComposite();
 
                 boolean analysisStatue = analysis.getResults().getResultMetadata() != null
                         && analysis.getResults().getResultMetadata().getExecutionDate() != null;
@@ -609,16 +610,10 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
 
         } else {
             if (chartComposite != null && !chartComposite.isDisposed()) {
-                try {
-                    for (Control control : chartComposite.getChildren()) {
-                        control.dispose();
-                    }
-                    createPreviewCharts(form, chartComposite, true);
-                    chartComposite.getParent().layout();
-                    chartComposite.layout();
-                } catch (Exception ex) {
-                    log.error(ex, ex);
-                }
+                disposeChartComposite();
+                createPreviewCharts(form, chartComposite, true);
+                chartComposite.getParent().layout();
+                chartComposite.layout();
             } else {
                 previewComp = toolkit.createComposite(sForm);
                 previewComp.setLayoutData(new GridData(GridData.FILL_BOTH));
@@ -940,6 +935,7 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
             return;
         }
 
+        ExpandableComposite[] previewChartCompsitesa = getPreviewChartCompsites(); 
         if (previewChartList != null && !previewChartList.isEmpty()) {
             for (ExpandableComposite comp : previewChartList) {
                 if (comp.getData() != indicator) {
@@ -1012,9 +1008,16 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
         return this.currentModelElementIndicators;
     }
 
-    public Composite[] getPreviewChartCompsites() {
+    public ExpandableComposite[] getPreviewChartCompsites() {
         if (previewChartList != null && !previewChartList.isEmpty()) {
-            this.previewChartCompsites = previewChartList.toArray(new Composite[previewChartList.size()]);
+            // ADD msjian TDQ-6213 2012-12-18: filter the disposed composite
+            List<ExpandableComposite> withOutDisposed = new ArrayList<ExpandableComposite>();
+            for (ExpandableComposite com : previewChartList) {
+                if (!com.isDisposed()) {
+                    withOutDisposed.add(com);
+                }
+            }
+            // TDQ-6213~
         }
         return previewChartCompsites;
     }

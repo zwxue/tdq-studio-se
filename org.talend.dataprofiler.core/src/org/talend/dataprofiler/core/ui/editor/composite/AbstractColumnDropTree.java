@@ -25,12 +25,19 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.TreeEditor;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.TreeAdapter;
+import org.eclipse.swt.events.TreeEvent;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Tree;
+import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.swt.widgets.TreeItem;
+import org.eclipse.ui.forms.widgets.ExpandableComposite;
+import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.talend.core.model.metadata.MetadataColumnRepositoryObject;
 import org.talend.core.model.metadata.builder.connection.MetadataColumn;
 import org.talend.core.model.repository.IRepositoryViewObject;
@@ -38,6 +45,7 @@ import org.talend.core.repository.model.repositoryObject.MetadataXmlElementTypeR
 import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.xml.TdXmlElementType;
 import org.talend.dataprofiler.core.ImageLib;
+import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.helper.ModelElementIndicatorHelper;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.model.ModelElementIndicator;
@@ -79,6 +87,10 @@ public abstract class AbstractColumnDropTree extends AbstractPagePart {
 
     private static Logger log = Logger.getLogger(AbstractColumnDropTree.class);
 
+    public static final String COLUMN_INDICATOR_KEY = "COLUMN_INDICATOR_KEY"; //$NON-NLS-1$
+
+    public static final String TABLE_INDICATOR_KEY = "TABLE_INDICATOR_KEY"; //$NON-NLS-1$
+
     public static final String COLUMNVIEWER_KEY = "COLUMNVIEWER_KEY"; //$NON-NLS-1$
 
     public static final String DATA_PARAM = "DATA_PARAM"; //$NON-NLS-1$
@@ -98,6 +110,65 @@ public abstract class AbstractColumnDropTree extends AbstractPagePart {
     protected ModelElementIndicator[] modelElementIndicators;
 
     protected AbstractAnalysisMetadataPage absMasterPage = null;
+
+    protected TreeAdapter treeAdapter = new TreeAdapter() {
+
+        @Override
+        public void treeCollapsed(TreeEvent e) {
+
+            ExpandableComposite theSuitedComposite = getTheSuitedComposite(e);
+            if (theSuitedComposite != null && theSuitedComposite.isExpanded()) {
+                theSuitedComposite.setExpanded(false);
+            }
+
+            layoutChartCompositeRefolwForm();
+        }
+
+        @Override
+        public void treeExpanded(TreeEvent e) {
+
+            ExpandableComposite theSuitedComposite = getTheSuitedComposite(e);
+            if (theSuitedComposite != null && !theSuitedComposite.isExpanded()) {
+                theSuitedComposite.setExpanded(true);
+            } else {
+                propertyChangeSupport.firePropertyChange(PluginConstant.EXPAND_TREE, null, e.item);
+            }
+
+            layoutChartCompositeRefolwForm();
+        }
+
+        /**
+         * layout ChartComposite and Refolw Form.
+         */
+        public void layoutChartCompositeRefolwForm() {
+            ScrolledForm form = getMasterPage().getForm();
+            Composite comp = getMasterPage().getChartComposite();
+            if (comp != null && !comp.isDisposed()) {
+                comp.layout();
+            }
+            form.reflow(true);
+        }
+
+    };
+
+    /**
+     * Getter for MasterPage.
+     * 
+     * @return the MasterPage
+     */
+    public AbstractAnalysisMetadataPage getMasterPage() {
+        return this.absMasterPage;
+    }
+
+    /**
+     * DOC msjian Comment method "getTheSuitedComposite".
+     * 
+     * @param e
+     * @return
+     */
+    public ExpandableComposite getTheSuitedComposite(SelectionEvent e) {
+        return null;
+    }
 
     protected String viewKey = null;
 

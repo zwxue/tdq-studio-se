@@ -49,6 +49,7 @@ import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.forms.events.HyperlinkAdapter;
 import org.eclipse.ui.forms.events.HyperlinkEvent;
+import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.Hyperlink;
 import org.eclipse.ui.forms.widgets.ImageHyperlink;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
@@ -123,9 +124,6 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
 
     private static Logger log = Logger.getLogger(ColumnSetMasterPage.class);
 
-    // FIXME this field masks a visible field in superclass. Remove it.
-    AnalysisEditor currentEditor;
-
     AnalysisColumnSetTreeViewer treeViewer;
 
     IndicatorsComp indicatorsViewer;
@@ -141,8 +139,6 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
     private String stringDataFilter;
 
     private Composite chartComposite;
-
-    private ScrolledForm form;
 
     private static final int TREE_MAX_LENGTH = 300;
 
@@ -959,14 +955,6 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
         return this.treeViewer;
     }
 
-    public ScrolledForm getForm() {
-        return form;
-    }
-
-    public void setForm(ScrolledForm form) {
-        this.form = form;
-    }
-
     public ColumnSetAnalysisHandler getColumnSetAnalysisHandler() {
         return columnSetAnalysisHandler;
     }
@@ -977,6 +965,17 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
     }
 
     public Composite[] getPreviewChartCompsites() {
+        // ADD msjian TDQ-6213 2012-12-18: filter the disposed composite
+        if (previewChartCompsites != null && previewChartCompsites.length > 0) {
+            List<Composite> withOutDisposed = new ArrayList<Composite>();
+            for (Composite com : previewChartCompsites) {
+                if (!com.isDisposed()) {
+                    withOutDisposed.add(com);
+                }
+            }
+            this.previewChartCompsites = withOutDisposed.toArray(new ExpandableComposite[withOutDisposed.size()]);
+        }
+        // TDQ-6213~
         return previewChartCompsites;
     }
 

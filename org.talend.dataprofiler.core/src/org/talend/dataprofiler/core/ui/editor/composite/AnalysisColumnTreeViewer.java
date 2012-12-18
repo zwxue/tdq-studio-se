@@ -79,6 +79,7 @@ import org.talend.dataprofiler.core.ui.dialog.IndicatorSelectDialog;
 import org.talend.dataprofiler.core.ui.dialog.composite.TooltipTree;
 import org.talend.dataprofiler.core.ui.editor.AbstractAnalysisActionHandler;
 import org.talend.dataprofiler.core.ui.editor.AbstractMetadataFormPage;
+import org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisMetadataPage;
 import org.talend.dataprofiler.core.ui.editor.analysis.ColumnMasterDetailsPage;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
 import org.talend.dataprofiler.core.ui.pref.AnalysisTuningPreferencePage;
@@ -902,45 +903,7 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
 
         });
 
-        tree.addTreeListener(new TreeAdapter() {
-
-            @Override
-            public void treeCollapsed(TreeEvent e) {
-
-                ExpandableComposite theSuitedComposite = getTheSuitedComposite(e);
-                ScrolledForm form = masterPage.getForm();
-                Composite comp = masterPage.getChartComposite();
-
-                if (theSuitedComposite != null && theSuitedComposite.isExpanded()) {
-                    getTheSuitedComposite(e).setExpanded(false);
-                }
-
-                if (comp != null) {
-                    comp.layout();
-                }
-                form.reflow(true);
-            }
-
-            @Override
-            public void treeExpanded(TreeEvent e) {
-
-                ExpandableComposite theSuitedComposite = getTheSuitedComposite(e);
-                ScrolledForm form = masterPage.getForm();
-                Composite comp = masterPage.getChartComposite();
-
-                if (theSuitedComposite != null && !theSuitedComposite.isExpanded()) {
-                    theSuitedComposite.setExpanded(true);
-                } else {
-                    propertyChangeSupport.firePropertyChange(PluginConstant.EXPAND_TREE, null, e.item);
-                }
-
-                if (comp != null) {
-                    comp.layout();
-                }
-                form.reflow(true);
-            }
-
-        });
+        tree.addTreeListener(treeAdapter);
 
         tree.addMouseListener(new MouseAdapter() {
 
@@ -967,7 +930,15 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
         });
     }
 
-    private ExpandableComposite getTheSuitedComposite(SelectionEvent e) {
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * org.talend.dataprofiler.core.ui.editor.composite.AbstractColumnDropTree#getTheSuitedComposite(org.eclipse.swt
+     * .events.SelectionEvent)
+     */
+    @Override
+    public ExpandableComposite getTheSuitedComposite(SelectionEvent e) {
         Composite[] previewChartCompsites = masterPage.getPreviewChartCompsites();
         if (previewChartCompsites == null) {
             return null;
@@ -1059,10 +1030,16 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
         super.setInput(objs);
     }
 
-    public ColumnMasterDetailsPage getMasterPage() {
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataprofiler.core.ui.editor.composite.AbstractColumnDropTree#getMasterPage()
+     */
+    @Override
+    public AbstractAnalysisMetadataPage getMasterPage() {
         return masterPage;
     }
-
+    
     /**
      * DOC yyi 2010-06-10 Refactor to ModelElementTreeMenuProvider
      */

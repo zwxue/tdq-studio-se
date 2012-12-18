@@ -119,8 +119,6 @@ public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnaly
 
     private Composite chartComposite;
 
-    private ScrolledForm form;
-
     private static final int TREE_MAX_LENGTH = 400;
 
     private static final int INDICATORS_SECTION_HEIGHT = 300;
@@ -499,20 +497,6 @@ public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnaly
 
     @Override
     public void refresh() {
-        // if (chartComposite != null) {
-        // try {
-        // for (Control control : chartComposite.getChildren()) {
-        // control.dispose();
-        // }
-        //
-        // createPreviewCharts(form, chartComposite, true);
-        // chartComposite.layout();
-        // getForm().reflow(true);
-        // } catch (Exception ex) {
-        // log.error(ex, ex);
-        // }
-        //
-        // }
         if (EditorPreferencePage.isHideGraphics()) {
             if (sForm.getChildren().length > 1) {
                 if (null != sForm.getChildren()[1] && !sForm.getChildren()[1].isDisposed())
@@ -753,14 +737,6 @@ public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnaly
         return this.treeViewer;
     }
 
-    public ScrolledForm getForm() {
-        return form;
-    }
-
-    public void setForm(ScrolledForm form) {
-        this.form = form;
-    }
-
     public ColumnCorrelationAnalysisHandler getColumnCorrelationAnalysisHandler() {
         return correlationAnalysisHandler;
     }
@@ -770,9 +746,21 @@ public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnaly
     }
 
     public Composite[] getPreviewChartCompsites() {
+        // ADD msjian TDQ-6213 2012-12-18: filter the disposed composite
+        if (previewChartCompsites != null && previewChartCompsites.length > 0) {
+            List<Composite> withOutDisposed = new ArrayList<Composite>();
+            for (Composite com : previewChartCompsites) {
+                if (!com.isDisposed()) {
+                    withOutDisposed.add(com);
+                }
+            }
+            this.previewChartCompsites = withOutDisposed.toArray(new ExpandableComposite[withOutDisposed.size()]);
+        }
+        // TDQ-6213~
         return previewChartCompsites;
     }
 
+    @Override
     public Composite getChartComposite() {
         return chartComposite;
     }
@@ -841,7 +829,7 @@ public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnaly
         String message = null;
 
         for (int i = 0; i < columns.size(); i++) {
-            RepositoryNode tdColumnNode = (RepositoryNode) columns.get(i);
+            RepositoryNode tdColumnNode = columns.get(i);
             TdColumn tdColumn = (TdColumn) ((MetadataColumnRepositoryObject) tdColumnNode.getObject()).getTdColumn();
             if (className == ColumnsetPackage.eINSTANCE.getCountAvgNullIndicator()) {
                 if (Java2SqlType.isDateInSQL(tdColumn.getSqlDataType().getJavaDataType())) {

@@ -64,7 +64,6 @@ import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.editor.FormEditor;
-import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.connection.MetadataTable;
@@ -197,8 +196,6 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
     private Composite sumSectionClient;
 
     private Composite tableAndViewComposite;
-
-    private ScrolledForm form;
 
     private TableViewer tableOfCatalogOrSchemaViewer;
 

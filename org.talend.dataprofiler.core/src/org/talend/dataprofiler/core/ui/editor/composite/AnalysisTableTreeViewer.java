@@ -76,6 +76,7 @@ import org.talend.dataprofiler.core.ui.dialog.IndicatorCheckedTreeSelectionDialo
 import org.talend.dataprofiler.core.ui.dialog.composite.TooltipTree;
 import org.talend.dataprofiler.core.ui.editor.AbstractAnalysisActionHandler;
 import org.talend.dataprofiler.core.ui.editor.AbstractMetadataFormPage;
+import org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisMetadataPage;
 import org.talend.dataprofiler.core.ui.editor.analysis.TableMasterDetailsPage;
 import org.talend.dataprofiler.core.ui.editor.dqrules.BusinessRuleItemEditorInput;
 import org.talend.dataprofiler.core.ui.editor.preview.TableIndicatorUnit;
@@ -124,19 +125,9 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
 
     protected static Logger log = Logger.getLogger(AnalysisTableTreeViewer.class);
 
-    private static final String DATA_PARAM = "DATA_PARAM"; //$NON-NLS-1$
-
-    public static final String INDICATOR_UNIT_KEY = "INDICATOR_UNIT_KEY"; //$NON-NLS-1$
-
-    public static final String TABLE_INDICATOR_KEY = "TABLE_INDICATOR_KEY"; //$NON-NLS-1$
-
-    public static final String ITEM_EDITOR_KEY = "ITEM_EDITOR_KEY"; //$NON-NLS-1$
-
     public static final String VIEWER_KEY = "org.talend.dataprofiler.core.ui.editor.composite.AnalysisTableTreeViewer"; //$NON-NLS-1$
 
     private Composite parentComp;
-
-    private Tree tree;
 
     private TableMasterDetailsPage masterPage;
 
@@ -157,6 +148,16 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
         indicatorTreeItemMap = new HashMap<Object, TreeItem>();
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataprofiler.core.ui.editor.composite.AbstractColumnDropTree#getMasterPage()
+     */
+    @Override
+    public AbstractAnalysisMetadataPage getMasterPage() {
+        return masterPage;
+    }
+    
     /**
      * DOC xqliu AnalysisTableTreeViewer constructor comment.
      * 
@@ -245,38 +246,7 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
 
         });
 
-        tree.addTreeListener(new TreeAdapter() {
-
-            @Override
-            public void treeCollapsed(TreeEvent e) {
-
-                ExpandableComposite theSuitedComposite = getTheSuitedComposite(e);
-                ScrolledForm form = masterPage.getForm();
-                Composite comp = masterPage.getChartComposite();
-
-                if (theSuitedComposite != null && theSuitedComposite.isExpanded()) {
-                    getTheSuitedComposite(e).setExpanded(false);
-                }
-
-                comp.layout();
-                form.reflow(true);
-            }
-
-            @Override
-            public void treeExpanded(TreeEvent e) {
-                ExpandableComposite theSuitedComposite = getTheSuitedComposite(e);
-                ScrolledForm form = masterPage.getForm();
-                Composite comp = masterPage.getChartComposite();
-
-                if (theSuitedComposite != null && !theSuitedComposite.isExpanded()) {
-                    theSuitedComposite.setExpanded(true);
-                }
-
-                comp.layout();
-                form.reflow(true);
-            }
-
-        });
+        tree.addTreeListener(treeAdapter);
 
         tree.addMouseListener(new MouseAdapter() {
 
@@ -300,7 +270,15 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
         });
     }
 
-    private ExpandableComposite getTheSuitedComposite(SelectionEvent e) {
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * org.talend.dataprofiler.core.ui.editor.composite.AbstractColumnDropTree#getTheSuitedComposite(org.eclipse.swt
+     * .events.SelectionEvent)
+     */
+    @Override
+    public ExpandableComposite getTheSuitedComposite(SelectionEvent e) {
         Composite[] previewChartCompsites = masterPage.getPreviewChartCompsites();
         if (previewChartCompsites == null) {
             return null;

@@ -125,21 +125,22 @@ public class TableMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
 
     private Composite chartComposite;
 
-    private ScrolledForm form;
-
-    public ScrolledForm getForm() {
-        return form;
-    }
-
-    public void setForm(ScrolledForm form) {
-        this.form = form;
-    }
-
     private static final int TREE_MAX_LENGTH = 400;
 
     private Composite[] previewChartCompsites;
 
     public Composite[] getPreviewChartCompsites() {
+        // ADD msjian TDQ-6213 2012-12-18: filter the disposed composite
+        if (previewChartList != null && !previewChartList.isEmpty()) {
+            List<ExpandableComposite> withOutDisposed = new ArrayList<ExpandableComposite>();
+            for (ExpandableComposite com : previewChartList) {
+                if (!com.isDisposed()) {
+                    withOutDisposed.add(com);
+                }
+            }
+            this.previewChartCompsites = withOutDisposed.toArray(new ExpandableComposite[withOutDisposed.size()]);
+        }
+        // TDQ-6213~
         return previewChartCompsites;
     }
 
