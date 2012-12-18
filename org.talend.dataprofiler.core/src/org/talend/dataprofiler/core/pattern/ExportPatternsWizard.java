@@ -14,7 +14,6 @@ package org.talend.dataprofiler.core.pattern;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -95,10 +94,10 @@ public class ExportPatternsWizard extends Wizard {
             File resource = new File(targetFile);
 
             if (isForExchange) {
-                ExportFactory.export(resource, folder, seletedPatterns.toArray(new Pattern[seletedPatterns.size()]));
+                ExportFactory.export(isForExchange, resource, folder,
+                        seletedPatterns.toArray(new Pattern[seletedPatterns.size()]));
 
-                for (Iterator<Pattern> iterator = seletedPatterns.iterator(); iterator.hasNext();) {
-                    Pattern pattern = iterator.next();
+                for (Pattern pattern : seletedPatterns) {
                     File patternFile = new File(resource, ExportFactory.toLocalFileName(pattern.getName() + ".csv")); //$NON-NLS-1$
                     if (patternFile.isFile() && patternFile.exists()) {
                         try {
@@ -123,7 +122,8 @@ public class ExportPatternsWizard extends Wizard {
                 if (!isContinue) {
                     return false;
                 }
-                ExportFactory.export(resource, folder, seletedPatterns.toArray(new Pattern[seletedPatterns.size()]));
+                ExportFactory.export(isForExchange, resource, folder,
+                        seletedPatterns.toArray(new Pattern[seletedPatterns.size()]));
             }
 
             CorePlugin.getDefault().refreshDQView(RepositoryNodeHelper.getLibrariesFolderNode(EResourceConstant.PATTERNS));

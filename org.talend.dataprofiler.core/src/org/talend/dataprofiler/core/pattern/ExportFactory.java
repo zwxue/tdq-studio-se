@@ -64,12 +64,12 @@ public final class ExportFactory {
     private ExportFactory() {
     }
 
-    static void export(File exportFile, IFolder folder, Pattern... patterns) {
+    static void export(boolean isForExchange, File exportFile, IFolder folder, Pattern... patterns) {
 
         if (exportFile.isDirectory()) {
             for (Pattern pattern : patterns) {
                 File file = new File(exportFile, toLocalFileName(pattern.getName() + ".csv")); //$NON-NLS-1$
-                export(file, folder, pattern);
+                export(isForExchange, file, folder, pattern);
             }
         }
 
@@ -86,11 +86,11 @@ public final class ExportFactory {
 
                 PatternToExcelEnum[] values = PatternToExcelEnum.values();
                 String[] temp = new String[values.length];
-            	Map<PatternToExcelEnum, String> relatedValueMap = null;
+                Map<PatternToExcelEnum, String> relatedValueMap = null;
 
                 for (int i = 0; i < patterns.length + 1; i++) {
                     if (i != 0) {
-                    	relatedValueMap = getRelatedValueFromPattern(patterns[i - 1], folder);
+                        relatedValueMap = getRelatedValueFromPattern(patterns[i - 1], folder, isForExchange);
                     }
                     for (int j = 0; j < values.length; j++) {
                         if (i == 0) {
@@ -241,9 +241,9 @@ public final class ExportFactory {
         if (temps == null) {
             return PluginConstant.EMPTY_STRING;
         }
-        boolean contains = temps.contains("\r");
+        boolean contains = temps.contains("\r"); //$NON-NLS-1$
         if (contains) {
-            return temps.replace("\r", "");
+            return temps.replace("\r", ""); //$NON-NLS-1$//$NON-NLS-2$
         }
         return temps;
     }
@@ -333,16 +333,24 @@ public final class ExportFactory {
         return name.substring(index + 1);
     }
 
-    private static Map<PatternToExcelEnum, String> getRelatedValueFromPattern(Pattern pattern, IFolder folder) {
+    private static Map<PatternToExcelEnum, String> getRelatedValueFromPattern(Pattern pattern, IFolder folder,
+            boolean isForExchange) {
 
         Map<PatternToExcelEnum, String> patternMap = new HashMap<PatternToExcelEnum, String>();
 
         if (folder != null) {
             IFile file = ResourceFileMap.findCorrespondingFile(pattern);
-            // MOD sizhaoliu 2012-5-28 TDQ-5481 
-            URI parentURI = ResourceManager.getPatternFolder().getLocationURI();
-            String relativePath = parentURI.relativize(file.getParent().getLocationURI()).toString();
-            relativePath = relativePath.substring(relativePath.indexOf('/') + 1); // remove Regex or SQL prefix
+            // MOD sizhaoliu 2012-5-28 TDQ-5481
+            // MOD qiongli 2012-12-18 TDQ-5899, Distinguish exporting to Exchange or local for relative path.
+            String relativePath = null;
+            if (isForExchange) {
+                URI parentURI = ResourceManager.getPatternFolder().getLocationURI();
+                relativePath = parentURI.relativize(file.getParent().getLocationURI()).toString();
+                relativePath = relativePath.substring(relativePath.indexOf('/') + 1); // remove Regex or SQL prefix
+            } else {
+                URI relativeURI = folder.getLocationURI().relativize(file.getParent().getLocationURI());
+                relativePath = relativeURI == null ? PluginConstant.EMPTY_STRING : relativeURI.toString();
+            }
 
             // get the basic information
             patternMap.put(PatternToExcelEnum.Label, pattern.getName());
