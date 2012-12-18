@@ -64,7 +64,7 @@ public class MigrationPlugin implements BundleActivator {
      * @return
      */
     public ProductVersion getProductVersion() {
-        String version = System.getProperty("studio.version"); //$NON-NLS-1$
+        String version = System.getProperty("talend.studio.version"); //$NON-NLS-1$
         if (version == null || "".equals(version.trim())) { //$NON-NLS-1$
             version = (String) bundle.getHeaders().get(org.osgi.framework.Constants.BUNDLE_VERSION);
         }
