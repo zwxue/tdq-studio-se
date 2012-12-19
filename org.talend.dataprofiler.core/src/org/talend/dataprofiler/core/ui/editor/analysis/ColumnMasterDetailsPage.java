@@ -1018,6 +1018,7 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
                 }
             }
             // TDQ-6213~
+            this.previewChartCompsites = withOutDisposed.toArray(new ExpandableComposite[withOutDisposed.size()]);
         }
         return previewChartCompsites;
     }
