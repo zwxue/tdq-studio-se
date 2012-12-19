@@ -40,6 +40,7 @@ import org.eclipse.swt.widgets.Widget;
 import org.talend.core.model.metadata.builder.connection.MetadataColumn;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.relational.TdColumn;
+import org.talend.cwm.xml.TdXmlElementType;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataquality.indicators.RegexpMatchingIndicator;
@@ -103,14 +104,9 @@ public class PatternsSelectPage extends WizardPage {
 
         for (ModelElement element : analysisColumns) {
             GridColumn tableCum = new GridColumn(table, SWT.CHECK);
-            // MOD yyi 2011-03-03 17871:filter data
-            MetadataColumn mdColumn = SwitchHelpers.METADATA_COLUMN_SWITCH.doSwitch(element);
-            TdColumn tdColumn = SwitchHelpers.COLUMN_SWITCH.doSwitch(element);
-
-            if (tdColumn != null) {
-                tableCum.setText(tdColumn.getName());
-            } else if (mdColumn != null) {
-                tableCum.setText(mdColumn.getId());
+            String elementName = getElementName(element);
+            if (elementName != null) {
+                tableCum.setText(elementName);
             }
         }
 
@@ -130,6 +126,30 @@ public class PatternsSelectPage extends WizardPage {
 
         this.setControl(parent);
         this.setPageComplete(true);
+    }
+
+    /**
+     * DOC xqliu Comment method "getElementName".
+     * 
+     * @param element
+     * @return
+     */
+    private String getElementName(ModelElement element) {
+        String name = null;
+
+        MetadataColumn mdColumn = SwitchHelpers.METADATA_COLUMN_SWITCH.doSwitch(element);
+        TdColumn tdColumn = SwitchHelpers.COLUMN_SWITCH.doSwitch(element);
+        TdXmlElementType xmlElementType = SwitchHelpers.XMLELEMENTTYPE_SWITCH.doSwitch(element);
+
+        if (tdColumn != null) {
+            name = tdColumn.getName();
+        } else if (mdColumn != null) {
+            name = mdColumn.getId();
+        } else if (xmlElementType != null) {
+            name = xmlElementType.getName();
+        }
+
+        return name;
     }
 
     private void initDataFilterSection(Composite parent) {
