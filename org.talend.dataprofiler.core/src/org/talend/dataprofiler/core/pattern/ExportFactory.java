@@ -42,6 +42,7 @@ import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dataquality.rules.ParserRule;
 import org.talend.dq.helper.UDIHelper;
 import org.talend.dq.helper.resourcehelper.ResourceFileMap;
+import org.talend.resource.EResourceConstant;
 import org.talend.resource.ResourceManager;
 import orgomg.cwm.objectmodel.core.Expression;
 import orgomg.cwm.objectmodel.core.TaggedValue;
@@ -346,7 +347,11 @@ public final class ExportFactory {
             URI parentURI = ResourceManager.getPatternFolder().getLocationURI();
             String relativePath = parentURI.relativize(file.getParent().getLocationURI()).toString();
             relativePath = relativePath.substring(relativePath.indexOf('/') + 1); // remove Regex or SQL prefix
-
+            // MOD qiongli 2012-12-18 TDQ-5899, Replace relative path Regex/SQL with empty string.
+            if (EResourceConstant.PATTERN_REGEX.getName().equals(relativePath)
+                    || EResourceConstant.PATTERN_SQL.getName().equals(relativePath)) {
+                relativePath = PluginConstant.EMPTY_STRING;
+            }
             // get the basic information
             patternMap.put(PatternToExcelEnum.Label, pattern.getName());
             patternMap.put(PatternToExcelEnum.Purpose, MetadataHelper.getPurpose(pattern));
