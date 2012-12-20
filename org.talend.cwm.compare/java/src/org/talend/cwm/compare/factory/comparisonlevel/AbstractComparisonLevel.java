@@ -183,7 +183,6 @@ public abstract class AbstractComparisonLevel implements IComparisonLevel {
         IFile tempFile = createTempConnectionFile();
 
         if (compareWithReloadObject()) {
-            updateTaggedValue();
             saveReloadResult();
         }
         deleteTempConnectionFile(tempFile);
@@ -195,15 +194,6 @@ public abstract class AbstractComparisonLevel implements IComparisonLevel {
      */
     private void deleteTempConnectionFile(IFile tempFile) {
         DQStructureComparer.deleteFile(tempFile);
-    }
-
-    // store TaggedValueHelper.USING_URL into connetion
-    private void updateTaggedValue() {
-        DatabaseConnection dbConn = SwitchHelpers.DATABASECONNECTION_SWITCH.doSwitch(oldDataProvider);
-        if (dbConn != null) {
-            ConnectionHelper.setIsConnNeedReload(dbConn, Boolean.TRUE);
-        }
-
     }
 
     public void popComparisonUI(IUIHandler uiHandler) throws ReloadCompareException {
