@@ -94,8 +94,7 @@ public class ExportPatternsWizard extends Wizard {
             File resource = new File(targetFile);
 
             if (isForExchange) {
-                ExportFactory.export(isForExchange, resource, folder,
-                        seletedPatterns.toArray(new Pattern[seletedPatterns.size()]));
+                ExportFactory.export(resource, folder, seletedPatterns.toArray(new Pattern[seletedPatterns.size()]));
 
                 for (Pattern pattern : seletedPatterns) {
                     File patternFile = new File(resource, ExportFactory.toLocalFileName(pattern.getName() + ".csv")); //$NON-NLS-1$
@@ -122,8 +121,7 @@ public class ExportPatternsWizard extends Wizard {
                 if (!isContinue) {
                     return false;
                 }
-                ExportFactory.export(isForExchange, resource, folder,
-                        seletedPatterns.toArray(new Pattern[seletedPatterns.size()]));
+                ExportFactory.export(resource, folder, seletedPatterns.toArray(new Pattern[seletedPatterns.size()]));
             }
 
             CorePlugin.getDefault().refreshDQView(RepositoryNodeHelper.getLibrariesFolderNode(EResourceConstant.PATTERNS));

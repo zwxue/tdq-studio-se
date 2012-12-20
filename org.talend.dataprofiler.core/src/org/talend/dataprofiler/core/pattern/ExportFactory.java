@@ -42,6 +42,7 @@ import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dataquality.rules.ParserRule;
 import org.talend.dq.helper.UDIHelper;
 import org.talend.dq.helper.resourcehelper.ResourceFileMap;
+import org.talend.resource.EResourceConstant;
 import org.talend.resource.ResourceManager;
 import orgomg.cwm.objectmodel.core.Expression;
 import orgomg.cwm.objectmodel.core.TaggedValue;
@@ -64,12 +65,12 @@ public final class ExportFactory {
     private ExportFactory() {
     }
 
-    static void export(boolean isForExchange, File exportFile, IFolder folder, Pattern... patterns) {
+    static void export(File exportFile, IFolder folder, Pattern... patterns) {
 
         if (exportFile.isDirectory()) {
             for (Pattern pattern : patterns) {
                 File file = new File(exportFile, toLocalFileName(pattern.getName() + ".csv")); //$NON-NLS-1$
-                export(isForExchange, file, folder, pattern);
+                export(file, folder, pattern);
             }
         }
 
@@ -90,7 +91,7 @@ public final class ExportFactory {
 
                 for (int i = 0; i < patterns.length + 1; i++) {
                     if (i != 0) {
-                        relatedValueMap = getRelatedValueFromPattern(patterns[i - 1], folder, isForExchange);
+                        relatedValueMap = getRelatedValueFromPattern(patterns[i - 1], folder);
                     }
                     for (int j = 0; j < values.length; j++) {
                         if (i == 0) {
@@ -333,23 +334,21 @@ public final class ExportFactory {
         return name.substring(index + 1);
     }
 
-    private static Map<PatternToExcelEnum, String> getRelatedValueFromPattern(Pattern pattern, IFolder folder,
-            boolean isForExchange) {
+    private static Map<PatternToExcelEnum, String> getRelatedValueFromPattern(Pattern pattern, IFolder folder) {
 
         Map<PatternToExcelEnum, String> patternMap = new HashMap<PatternToExcelEnum, String>();
 
         if (folder != null) {
             IFile file = ResourceFileMap.findCorrespondingFile(pattern);
             // MOD sizhaoliu 2012-5-28 TDQ-5481
-            // MOD qiongli 2012-12-18 TDQ-5899, Distinguish exporting to Exchange or local for relative path.
             String relativePath = null;
-            if (isForExchange) {
-                URI parentURI = ResourceManager.getPatternFolder().getLocationURI();
-                relativePath = parentURI.relativize(file.getParent().getLocationURI()).toString();
-                relativePath = relativePath.substring(relativePath.indexOf('/') + 1); // remove Regex or SQL prefix
-            } else {
-                URI relativeURI = folder.getLocationURI().relativize(file.getParent().getLocationURI());
-                relativePath = relativeURI == null ? PluginConstant.EMPTY_STRING : relativeURI.toString();
+            URI parentURI = ResourceManager.getPatternFolder().getLocationURI();
+            relativePath = parentURI.relativize(file.getParent().getLocationURI()).toString();
+            relativePath = relativePath.substring(relativePath.indexOf('/') + 1); // remove Regex or SQL prefix
+            // MOD qiongli 2012-12-18 TDQ-5899, Replace relative path Regex/SQL with empty string.
+            if (EResourceConstant.PATTERN_REGEX.getName().equals(relativePath)
+                    || EResourceConstant.PATTERN_SQL.getName().equals(relativePath)) {
+                relativePath = PluginConstant.EMPTY_STRING;
             }
 
             // get the basic information
