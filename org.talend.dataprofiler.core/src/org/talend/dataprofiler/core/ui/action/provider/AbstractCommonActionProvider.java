@@ -17,10 +17,16 @@ import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.ui.navigator.CommonActionProvider;
+import org.talend.core.model.metadata.builder.connection.Connection;
+import org.talend.core.model.properties.ConnectionItem;
+import org.talend.core.model.properties.Item;
+import org.talend.core.model.properties.Property;
 import org.talend.core.model.repository.ERepositoryObjectType;
+import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.dataprofiler.core.service.AbstractSvnRepositoryService;
 import org.talend.dataprofiler.core.service.GlobalServiceRegister;
 import org.talend.dq.helper.RepositoryNodeHelper;
+import org.talend.dq.nodes.foldernode.IConnectionElementSubFolder;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
 
@@ -124,5 +130,38 @@ public class AbstractCommonActionProvider extends CommonActionProvider {
             }
         }
         return true;
+    }
+
+    /**
+     * 
+     * Get Connection which cotain by selectedNode(DBConnectionRepNode\DBCatalogRepNode\DBSchemaRepNode) If want to
+     * support to DelimiteFileConnection node need to make DFColumnFolderRepNode implements IConnectionElementSubFolder
+     * interface The case for MDMConnection is same to DelimiteFileConnection.
+     * 
+     * @param selectedNode
+     * @return
+     */
+    protected Connection getConnection(Object selectedNode) {
+        Connection conn = null;
+        IRepositoryViewObject object = null;
+        if (selectedNode == null) {
+            return conn;
+        }
+        if (selectedNode instanceof RepositoryNode) {
+            object = ((RepositoryNode) selectedNode).getObject();
+        }
+        if (object != null) {
+            Property property = object.getProperty();
+            if (property == null) {
+                return conn;
+            }
+            Item item = property.getItem();
+            if (item != null && item instanceof ConnectionItem) {
+                conn = ((ConnectionItem) item).getConnection();
+            }
+        } else if (selectedNode instanceof IConnectionElementSubFolder) {
+            conn = ((IConnectionElementSubFolder) selectedNode).getConnection();
+        }
+        return conn;
     }
 }

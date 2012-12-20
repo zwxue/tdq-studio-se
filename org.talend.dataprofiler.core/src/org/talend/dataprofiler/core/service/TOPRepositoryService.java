@@ -271,8 +271,9 @@ public class TOPRepositoryService implements ITDQRepositoryService {
      * Comment method "reloadDatabase".
      * 
      * @param connectionItem
-     * 
+     * @deprecated instead of it by TDQCompareService.reloadDatabase
      */
+    @Deprecated
     public ReturnCode reloadDatabase(ConnectionItem connectionItem) {
         ReturnCode retCode = new ReturnCode(Boolean.TRUE);
         Connection conn = connectionItem.getConnection();
