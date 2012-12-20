@@ -254,7 +254,8 @@ public final class ImportFactory {
 
         List<ReturnCode> importEvent = new ArrayList<ReturnCode>();
 
-        Set<String> names = PatternUtilities.getNestFolderPatternNames(new HashSet<String>(), selectionFolder);
+        // MOD qiongli 2012-12-20 TDQ-5899(issue 2),should get all patterns from Pattern folder.
+        Set<String> names = PatternUtilities.getNestFolderPatternNames(new HashSet<String>(), ResourceManager.getPatternFolder());
 
         File importFile = importObject.getObjFile();
 
@@ -427,7 +428,12 @@ public final class ImportFactory {
 
         try {
 
-            String[] folderNames = parameters.relativePath.split("/"); //$NON-NLS-1$
+            String relativePath = parameters.relativePath;
+            if (EResourceConstant.PATTERN_REGEX.getName().equals(relativePath)
+                    || EResourceConstant.PATTERN_SQL.getName().equals(relativePath)) {
+                relativePath = PluginConstant.EMPTY_STRING;
+            }
+            String[] folderNames = relativePath.split("/"); //$NON-NLS-1$
 
             for (String folderName : folderNames) {
 
