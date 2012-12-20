@@ -17,11 +17,9 @@ import java.util.List;
 
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.viewers.TreeSelection;
+import org.talend.core.model.metadata.builder.connection.Connection;
+import org.talend.core.model.metadata.builder.util.MetadataConnectionUtils;
 import org.talend.dataprofiler.core.ui.action.actions.OverviewAnalysisAction;
-import org.talend.dq.nodes.DBCatalogRepNode;
-import org.talend.dq.nodes.DBConnectionRepNode;
-import org.talend.dq.nodes.DBSchemaRepNode;
-import org.talend.dq.nodes.DBTableRepNode;
 import org.talend.repository.model.IRepositoryNode;
 
 /**
@@ -45,16 +43,16 @@ public class OverViewAnalysisActionProvider extends AbstractCommonActionProvider
         List list = currentSelection.toList();
         // DOC MOD klliu 2010-12-14 feature 15750 for overview catalog or schema analysis.
         List<IRepositoryNode> packageList = new ArrayList<IRepositoryNode>();
-        boolean showMenu = false;
         for (Object obj : list) {
-            if (obj instanceof DBConnectionRepNode || obj instanceof DBCatalogRepNode || obj instanceof DBSchemaRepNode
-                    || obj instanceof DBTableRepNode) {
-                IRepositoryNode node = (IRepositoryNode) obj;
-                packageList.add(node);
-                showMenu = true;
+            Connection conn = getConnection(obj);
+            if (!MetadataConnectionUtils.isTDQSupportDBTemplate(conn)) {
+                return;
             }
+            IRepositoryNode node = (IRepositoryNode) obj;
+            packageList.add(node);
+
         }
-        if (showMenu) {
+        if (packageList.size() > 0) {
             OverviewAnalysisAction overviewAnalysisAction = new OverviewAnalysisAction(packageList);
             menu.add(overviewAnalysisAction);
         }

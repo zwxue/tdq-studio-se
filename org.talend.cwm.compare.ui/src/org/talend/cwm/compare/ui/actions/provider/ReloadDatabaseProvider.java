@@ -15,13 +15,15 @@ package org.talend.cwm.compare.ui.actions.provider;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.viewers.TreeSelection;
+import org.talend.core.model.metadata.builder.connection.Connection;
+import org.talend.core.model.metadata.builder.util.MetadataConnectionUtils;
+import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.cwm.compare.i18n.Messages;
 import org.talend.cwm.compare.ui.actions.ReloadDatabaseAction;
 import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.dataprofiler.core.ui.action.provider.AbstractCommonActionProvider;
 import org.talend.dataprofiler.core.ui.utils.WorkbenchUtils;
 import org.talend.dq.nodes.DBColumnFolderRepNode;
-import org.talend.dq.nodes.DBConnectionRepNode;
 import org.talend.dq.nodes.DBTableFolderRepNode;
 import org.talend.dq.nodes.DBViewFolderRepNode;
 import org.talend.repository.model.IRepositoryNode.ENodeType;
@@ -34,7 +36,7 @@ import org.talend.resource.ResourceService;
  */
 public class ReloadDatabaseProvider extends AbstractCommonActionProvider {
 
-    private static final String RELOADDATABASE_MENUTEXT = Messages.getString("ReloadDatabaseProvider.reloadDBList"); //$NON-NLS-1$
+    public static final String RELOADDATABASE_MENUTEXT = Messages.getString("ReloadDatabaseProvider.reloadDBList"); //$NON-NLS-1$
 
     private static final String RELOADTABLES_MENUTEXT = Messages.getString("ReloadDatabaseProvider.reloadTableList"); //$NON-NLS-1$
 
@@ -45,6 +47,7 @@ public class ReloadDatabaseProvider extends AbstractCommonActionProvider {
     public ReloadDatabaseProvider() {
     }
 
+    @Override
     public void fillContextMenu(IMenuManager menu) {
         // MOD mzhao user readonly role on svn repository mode.
         if (!isShowMenu()) {
@@ -85,14 +88,22 @@ public class ReloadDatabaseProvider extends AbstractCommonActionProvider {
         IFolder connectionFolder = ResourceManager.getConnectionFolder();
         if ((ENodeType.REPOSITORY_ELEMENT.equals(type) || ENodeType.TDQ_REPOSITORY_ELEMENT.equals(type))
                 && ResourceService.isSubFolder(connectionFolder, folder)) {
-            if (ConnectionUtils.isMdmConnection(node.getObject())) {
+            IRepositoryViewObject object = node.getObject();
+            if (ConnectionUtils.isMdmConnection(object)) {
                 return false;
             }
-            if (node instanceof DBConnectionRepNode || node instanceof DBTableFolderRepNode
-                    || node instanceof DBViewFolderRepNode || node instanceof DBColumnFolderRepNode) {
+            Connection conn = getConnection(node);
+
+            if (MetadataConnectionUtils.isTDQSupportDBTemplate(conn)) {
                 return true;
             }
+            // MOD zshen has been judge by extensions on the plugin so don't need repeat it
+            // if (node instanceof DBConnectionRepNode || node instanceof DBTableFolderRepNode
+            // || node instanceof DBViewFolderRepNode || node instanceof DBColumnFolderRepNode) {
+            // return true;
+            // }
         }
         return false;
     }
+
 }

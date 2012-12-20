@@ -301,8 +301,9 @@ public class TOPRepositoryService implements ITDQRepositoryService {
      * Comment method "reloadDatabase".
      * 
      * @param connectionItem
-     * 
+     * @deprecated instead of it by TDQCompareService.reloadDatabase
      */
+    @Deprecated
     public ReturnCode reloadDatabase(ConnectionItem connectionItem) {
         ReturnCode retCode = new ReturnCode(Boolean.TRUE);
         Connection conn = connectionItem.getConnection();
@@ -311,8 +312,8 @@ public class TOPRepositoryService implements ITDQRepositoryService {
                 List<ModelElement> dependencyClients = EObjectHelper.getDependencyClients(conn);
                 if (!(dependencyClients == null || dependencyClients.isEmpty())) {
                     int isOk = DeleteModelElementConfirmDialog.showElementImpactConfirmDialog(null, new ModelElement[] { conn },
-                            DefaultMessagesImpl.getString("TOPRepositoryService.dependcyTile"),
-                            DefaultMessagesImpl.getString("TOPRepositoryService.dependcyMessage", conn.getLabel()));
+                            DefaultMessagesImpl.getString("TOPRepositoryService.dependcyTile"), //$NON-NLS-1$
+                            DefaultMessagesImpl.getString("TOPRepositoryService.dependcyMessage", conn.getLabel())); //$NON-NLS-1$
                     if (isOk != Dialog.OK) {
                         retCode.setOk(Boolean.FALSE);
                         retCode.setMessage("The user canceled the operation!"); //$NON-NLS-1$

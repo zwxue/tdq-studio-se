@@ -13,26 +13,39 @@
 package org.talend.cwm.compare.ui.actions;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.action.Action;
+import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
-import org.talend.commons.utils.platform.PluginChecker;
+import org.talend.core.model.metadata.builder.connection.Connection;
+import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
+import org.talend.core.model.metadata.builder.util.MetadataConnectionUtils;
+import org.talend.core.model.properties.ConnectionItem;
+import org.talend.core.model.properties.Item;
+import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.cwm.compare.exception.ReloadCompareException;
 import org.talend.cwm.compare.factory.ComparisonLevelFactory;
 import org.talend.cwm.compare.factory.IComparisonLevel;
 import org.talend.cwm.compare.i18n.Messages;
 import org.talend.cwm.compare.ui.ImageLib;
 import org.talend.dataprofiler.core.CorePlugin;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
+import org.talend.dataprofiler.core.ui.dialog.message.DeleteModelElementConfirmDialog;
 import org.talend.dataprofiler.core.ui.progress.ProgressUI;
 import org.talend.dataprofiler.core.ui.utils.MessageUI;
 import org.talend.dataprofiler.core.ui.utils.WorkbenchUtils;
-import orgomg.cwm.foundation.softwaredeployment.DataProvider;
+import org.talend.dq.helper.EObjectHelper;
+import org.talend.dq.nodes.foldernode.IConnectionElementSubFolder;
+import org.talend.repository.model.RepositoryNode;
+import org.talend.utils.sugars.ReturnCode;
+import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
  * DOC rli class global comment. Detailled comment
@@ -42,6 +55,17 @@ public class ReloadDatabaseAction extends Action {
     private static Logger log = Logger.getLogger(ReloadDatabaseAction.class);
 
     private Object selectedObject;
+
+    private ReturnCode returnCode = new ReturnCode(true);
+
+    /**
+     * Getter for returnCode.
+     * 
+     * @return the returnCode
+     */
+    public ReturnCode getReturnCode() {
+        return this.returnCode;
+    }
 
     public ReloadDatabaseAction(Object selectedNode, String menuText) {
         super(menuText);
@@ -56,15 +80,32 @@ public class ReloadDatabaseAction extends Action {
      */
     @Override
     public void run() {
-        // MOD klliu 2011-06-13 bug unified the confirm message TOP with TDQ
-        String confirmMessage = PluginChecker.isOnlyTopLoaded() ? Messages.getString("ReloadDatabaseAction.ConfirmMessage1") : Messages.getString("ReloadDatabaseAction.ConfirmMessage0"); //$NON-NLS-1$ //$NON-NLS-2$
-        boolean openConfirm = MessageDialog.openConfirm(PlatformUI.getWorkbench().getDisplay().getActiveShell(),
-                Messages.getString("ReloadDatabaseAction.ConfirmMessageTitle"), //$NON-NLS-1$
-                confirmMessage);
-        if (!openConfirm) {
+        returnCode = new ReturnCode(true);
+        if (!isSupport()) {
+            returnCode.setReturnCode(Messages.getString("ReloadDatabaseAction.NotSupportMessage"), false); //$NON-NLS-1$
             return;
         }
-        // ~ 22251
+        Connection conn = getConnection();
+        List<ModelElement> dependencyClients = EObjectHelper.getDependencyClients(conn);
+        if (!(dependencyClients == null || dependencyClients.isEmpty())) {
+            int isOk = DeleteModelElementConfirmDialog.showElementImpactConfirmDialog(null, new ModelElement[] { conn },
+                    DefaultMessagesImpl.getString("TOPRepositoryService.dependcyTile"), //$NON-NLS-1$
+                    DefaultMessagesImpl.getString("TOPRepositoryService.dependcyMessage", conn.getLabel())); //$NON-NLS-1$
+            if (isOk != Dialog.OK) {
+                returnCode.setReturnCode("The user canceled the operation!", false); //$NON-NLS-1$
+                return;
+            }
+        }
+        // // MOD klliu 2011-06-13 bug unified the confirm message TOP with TDQ
+        //        String confirmMessage = PluginChecker.isOnlyTopLoaded() ? Messages.getString("ReloadDatabaseAction.ConfirmMessage1") : Messages.getString("ReloadDatabaseAction.ConfirmMessage0"); //$NON-NLS-1$ //$NON-NLS-2$
+        // boolean openConfirm = MessageDialog.openConfirm(PlatformUI.getWorkbench().getDisplay().getActiveShell(),
+        //                Messages.getString("ReloadDatabaseAction.ConfirmMessageTitle"), //$NON-NLS-1$
+        // confirmMessage);
+        // if (!openConfirm) {
+        //            returnCode.setReturnCode(Messages.getString("ReloadDatabaseAction.NotSupportTitle"), false); //$NON-NLS-1$
+        // return;
+        // }
+        // // ~ 22251
         IRunnableWithProgress op = new IRunnableWithProgress() {
 
             public void run(IProgressMonitor monitor) throws InvocationTargetException {
@@ -73,15 +114,28 @@ public class ReloadDatabaseAction extends Action {
 
                     public void run() {
                         try {
-                            DataProvider oldDataProvider = creatComparisonLevel.reloadCurrentLevelElement();
+                            Connection oldDataProvider = creatComparisonLevel.reloadCurrentLevelElement();
                             // MOD mzhao 2009-07-13 bug 7454 Impact existing
                             // analysis.
                             // MOD qiongli 2011-9-8,move method 'impactExistingAnalyses(...)' to class WorkbenchUtils
+                            // // update the sql explore.
+                            // Property property = PropertyHelper.getProperty(oldDataProvider);
+                            // if (property != null) {
+                            // Item newItem = property.getItem();
+                            // if (newItem != null) {
+                            // CWMPlugin.getDefault()
+                            // .updateConnetionAliasByName(oldDataProvider, oldDataProvider.getLabel());
+                            // // notifySQLExplorer(newItem);
+                            // }
+                            // }
+                            // // update the related analyses.
                             WorkbenchUtils.impactExistingAnalyses(oldDataProvider);
                         } catch (ReloadCompareException e) {
                             log.error(e, e);
+                            returnCode.setReturnCode(e.getMessage(), false);
                         } catch (PartInitException e) {
                             log.error(e, e);
+                            returnCode.setReturnCode(e.getMessage(), false);
                         }
 
                     }
@@ -98,4 +152,45 @@ public class ReloadDatabaseAction extends Action {
             log.error(e, e);
         }
     }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.eclipse.jface.action.Action#isEnabled()
+     */
+
+    private boolean isSupport() {
+        Connection conn = getConnection();
+        if (!(conn instanceof DatabaseConnection)) {
+            return false;
+        }
+        if (!MetadataConnectionUtils.isTDQSupportDBTemplate(conn)) {
+            MessageDialog.openInformation(PlatformUI.getWorkbench().getDisplay().getActiveShell(),
+                    Messages.getString("ReloadDatabaseAction.NotSupportTitle"), //$NON-NLS-1$
+                    Messages.getString("ReloadDatabaseAction.NotSupportMessage")); //$NON-NLS-1$
+            return false;
+        }
+        return true;
+    }
+
+    private Connection getConnection() {
+        Connection conn = null;
+        IRepositoryViewObject object = null;
+        if (selectedObject == null) {
+            return conn;
+        }
+        if (selectedObject instanceof RepositoryNode) {
+            object = ((RepositoryNode) selectedObject).getObject();
+        }
+        if (object != null) {
+            Item item = object.getProperty().getItem();
+            if (item instanceof ConnectionItem) {
+                conn = ((ConnectionItem) item).getConnection();
+            }
+        } else if (selectedObject instanceof IConnectionElementSubFolder) {
+            conn = ((IConnectionElementSubFolder) selectedObject).getConnection();
+        }
+        return conn;
+    }
+
 }

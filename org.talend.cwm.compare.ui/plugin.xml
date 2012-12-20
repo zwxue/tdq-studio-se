@@ -101,6 +101,13 @@
         </enablement>
      </actionProvider>        
    </extension>
+   <extension
+         point="org.talend.core.runtime.service">
+      <Service
+            class="org.talend.cwm.compare.ui.service.TDQCompareService"
+            serviceId="org.talend.core.ITDQCompareService">
+      </Service>
+   </extension>
    
    <!-- extension
          point="org.eclipse.ui.views">
