@@ -26,8 +26,10 @@ import org.talend.dataprofiler.core.ui.action.AbstractPredefinedAnalysisAction;
 import org.talend.dataprofiler.core.ui.views.provider.DQRepositoryViewLabelProvider;
 import org.talend.dataquality.helpers.MetadataHelper;
 import org.talend.dataquality.indicators.DataminingType;
+import org.talend.dq.nodes.DFColumnRepNode;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
 import org.talend.repository.model.IRepositoryNode;
+import org.talend.repository.model.IRepositoryNode.ENodeType;
 import org.talend.utils.sql.Java2SqlType;
 import org.talend.utils.sql.TalendTypeConvert;
 
@@ -65,16 +67,18 @@ public class CreateNominalAnalysisAction extends AbstractPredefinedAnalysisActio
 
     @Override
     protected boolean preDo() {
-        List<MetadataColumn> tempList = new ArrayList<MetadataColumn>();
+    	// MOD msjian TDQ-5530 2012-12-20: make the icon and text have the same look&feel as in the DQ repository view. 
+        List<DFColumnRepNode> tempList = new ArrayList<DFColumnRepNode>();
         addTextIndicator = true;
         for (IRepositoryNode repositoryNode : getColumns()) {
-            MetadataColumn column = ((MetadataColumnRepositoryObject) repositoryNode.getObject()).getTdColumn();
-            int javaSQLType = TalendTypeConvert.convertToJDBCType(column.getTalendType());
+            DFColumnRepNode columnNode = new DFColumnRepNode(repositoryNode.getObject(), repositoryNode.getParent(), ENodeType.TDQ_REPOSITORY_ELEMENT);
+            int javaSQLType = TalendTypeConvert.convertToJDBCType(columnNode.getMetadataColumn().getTalendType());
             if (!Java2SqlType.isTextInSQL(javaSQLType)) {
-                tempList.add(column);
+                tempList.add(columnNode);
                 addTextIndicator = false;
             }
         }
+        // TDQ-5530~
 
         if (!tempList.isEmpty()) {
             ElementListSelectionDialog dialog = new ElementListSelectionDialog(null, new DQRepositoryViewLabelProvider());
@@ -87,8 +91,8 @@ public class CreateNominalAnalysisAction extends AbstractPredefinedAnalysisActio
             if (Window.OK == dialog.open()) {
                 // zqin get the column and change their datamining type to "Nominal"
                 // use MetadataHelper
-                for (MetadataColumn column : tempList) {
-                    MetadataHelper.setDataminingType(DataminingType.NOMINAL, column);
+                for (DFColumnRepNode column : tempList) {
+                    MetadataHelper.setDataminingType(DataminingType.NOMINAL, column.getMetadataColumn());
                 }
                 return true;
             } else {
