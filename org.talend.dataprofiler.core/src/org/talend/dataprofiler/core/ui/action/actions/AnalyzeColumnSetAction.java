@@ -84,7 +84,6 @@ public class AnalyzeColumnSetAction extends Action {
      * 
      * @see org.eclipse.jface.action.Action#run()
      */
-    @SuppressWarnings("unchecked")//$NON-NLS-1$
     @Override
     public void run() {
         PackagesAnalyisParameter packaFilterParameter = new PackagesAnalyisParameter();
@@ -148,8 +147,8 @@ public class AnalyzeColumnSetAction extends Action {
                         }
                     }
                     page.getTreeViewer().setInput(column.toArray());
-                    page.doSave(null);
                 }
+                page.doSave(null);
             }
         }
     }
