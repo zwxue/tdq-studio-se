@@ -19,8 +19,11 @@ import org.apache.log4j.Logger;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.database.DqRepositoryViewService;
 import org.talend.core.model.properties.ConnectionItem;
+import org.talend.core.model.properties.Item;
+import org.talend.core.model.properties.Property;
 import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.model.repository.IRepositoryViewObject;
+import org.talend.core.repository.model.ISubRepositoryObject;
 import org.talend.core.repository.model.repositoryObject.MetadataCatalogRepositoryObject;
 import org.talend.core.repository.model.repositoryObject.MetadataSchemaRepositoryObject;
 import org.talend.core.repository.model.repositoryObject.TdTableRepositoryObject;
@@ -28,6 +31,7 @@ import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.helper.PackageHelper;
 import org.talend.cwm.relational.TdTable;
 import org.talend.dq.helper.RepositoryNodeHelper;
+import org.talend.dq.nodes.foldernode.IConnectionElementSubFolder;
 import org.talend.dq.writer.impl.ElementWriterFactory;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
@@ -39,7 +43,7 @@ import orgomg.cwm.resource.relational.Schema;
  * DOC klliu Folder node node displayed on repository view (UI), knowing exact folder type by folder
  * object:TDQFolderObject.
  */
-public class DBTableFolderRepNode extends DQRepositoryNode {
+public class DBTableFolderRepNode extends DQRepositoryNode implements IConnectionElementSubFolder {
 
     private static Logger log = Logger.getLogger(DBTableFolderRepNode.class);
 
@@ -62,11 +66,33 @@ public class DBTableFolderRepNode extends DQRepositoryNode {
     }
 
     public Connection getConnection() {
+        if (this.connection == null) {
+            getConnectionFromViewObject();
+        }
         return this.connection;
     }
 
     public Schema getSchema() {
         return this.schema;
+    }
+
+    /**
+     * DOC talend Comment method "setConnection".
+     * 
+     * @param object
+     */
+    private void getConnectionFromViewObject() {
+        IRepositoryViewObject object = this.getObject() == null ? this.getParent().getObject() : this.getObject();
+        if (object != null && object instanceof ISubRepositoryObject) {
+            Property property = ((ISubRepositoryObject) object).getProperty();
+            if (property == null) {
+                return;
+            }
+            Item theItem = property.getItem();
+            if (theItem != null && theItem instanceof ConnectionItem) {
+                connection = ((ConnectionItem) theItem).getConnection();
+            }
+        }
     }
 
     /**

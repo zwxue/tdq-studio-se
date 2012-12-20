@@ -20,6 +20,7 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.viewers.TreeSelection;
 import org.talend.core.model.metadata.builder.connection.Connection;
+import org.talend.core.model.metadata.builder.util.MetadataConnectionUtils;
 import org.talend.core.model.properties.DatabaseConnectionItem;
 import org.talend.core.model.properties.Property;
 import org.talend.cwm.compare.i18n.Messages;
@@ -86,6 +87,11 @@ public class SelectedCompareUIProvider extends AbstractCommonActionProvider {
 
         List<Object> objects = new ArrayList<Object>();
         for (Object obj : selectedObj) {
+            Connection conn = getConnection(obj);
+
+            if (!MetadataConnectionUtils.isTDQSupportDBTemplate(conn)) {
+                return;
+            }
             RepositoryNode node = (RepositoryNode) obj;
             if (node instanceof DBConnectionRepNode) {
                 Property property = ((DBConnectionRepNode) node).getObject().getProperty();
