@@ -22,8 +22,11 @@ import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.connection.MetadataColumn;
 import org.talend.core.model.metadata.builder.database.DqRepositoryViewService;
 import org.talend.core.model.properties.ConnectionItem;
+import org.talend.core.model.properties.Item;
+import org.talend.core.model.properties.Property;
 import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.model.repository.IRepositoryViewObject;
+import org.talend.core.repository.model.ISubRepositoryObject;
 import org.talend.core.repository.model.repositoryObject.TdTableRepositoryObject;
 import org.talend.core.repository.model.repositoryObject.TdViewRepositoryObject;
 import org.talend.cwm.helper.ColumnHelper;
@@ -31,6 +34,7 @@ import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.relational.TdTable;
 import org.talend.cwm.relational.TdView;
 import org.talend.dq.helper.RepositoryNodeHelper;
+import org.talend.dq.nodes.foldernode.IConnectionElementSubFolder;
 import org.talend.dq.writer.impl.ElementWriterFactory;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
@@ -39,7 +43,7 @@ import orgomg.cwm.resource.relational.ColumnSet;
 /**
  * DOC klliu class global comment. Detailled comment
  */
-public class DBColumnFolderRepNode extends DQRepositoryNode {
+public class DBColumnFolderRepNode extends DQRepositoryNode implements IConnectionElementSubFolder {
 
     private static Logger log = Logger.getLogger(DBColumnFolderRepNode.class);
 
@@ -70,6 +74,9 @@ public class DBColumnFolderRepNode extends DQRepositoryNode {
     }
 
     public Connection getConnection() {
+        if (this.connection == null) {
+            getConnectionFromViewObject();
+        }
         return this.connection;
     }
 
@@ -98,6 +105,25 @@ public class DBColumnFolderRepNode extends DQRepositoryNode {
         if (parent == null) {
             RepositoryNode createParentNode = createParentNode(object);
             this.setParent(createParentNode);
+        }
+    }
+
+    /**
+     * DOC talend Comment method "setConnection".
+     * 
+     * @param object
+     */
+    private void getConnectionFromViewObject() {
+        IRepositoryViewObject object = this.getObject() == null ? this.getParent().getObject() : this.getObject();
+        if (object != null && object instanceof ISubRepositoryObject) {
+            Property property = ((ISubRepositoryObject) object).getProperty();
+            if (property == null) {
+                return;
+            }
+            Item theItem = property.getItem();
+            if (theItem != null && theItem instanceof ConnectionItem) {
+                connection = ((ConnectionItem) theItem).getConnection();
+            }
         }
     }
 
