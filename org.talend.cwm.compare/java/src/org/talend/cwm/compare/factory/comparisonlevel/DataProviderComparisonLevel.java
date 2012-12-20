@@ -109,9 +109,7 @@ public class DataProviderComparisonLevel extends AbstractComparisonLevel {
                             if (!dbConn.getDatabaseType().equals(EDatabaseTypeName.GENERAL_JDBC.getDisplayName())) {
                                 ((DatabaseConnection) con).setURL(urlStr);
                             }
-                            ConnectionHelper.setIsConnNeedReload(con, Boolean.TRUE);
                         }
-
                     }
                 }
             }
@@ -135,6 +133,10 @@ public class DataProviderComparisonLevel extends AbstractComparisonLevel {
         // save here, it will be handled later.
         try {
             ProxyRepositoryFactory.getInstance().save(currentProject, item);
+            // Added yyin TDQ-6485, after reload the connection, set the need reload tag back to false
+            if (selectedObj instanceof Connection) {
+                ConnectionHelper.setIsConnNeedReload((Connection) selectedObj, Boolean.FALSE);
+            }
         } catch (PersistenceException e) {
             log.error(e, e);
         }

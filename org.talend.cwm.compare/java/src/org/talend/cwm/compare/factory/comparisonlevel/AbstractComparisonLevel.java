@@ -36,7 +36,6 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.talend.commons.utils.WorkspaceUtils;
 import org.talend.core.model.metadata.builder.connection.Connection;
-import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
 import org.talend.core.model.metadata.builder.database.DqRepositoryViewService;
 import org.talend.cwm.compare.DQStructureComparer;
 import org.talend.cwm.compare.exception.ReloadCompareException;
@@ -46,7 +45,6 @@ import org.talend.cwm.compare.factory.update.AddTdRelationalSwitch;
 import org.talend.cwm.compare.factory.update.RemoveTdRelationalSwitch;
 import org.talend.cwm.compare.factory.update.UpdateTdRelationalSwitch;
 import org.talend.cwm.compare.i18n.DefaultMessagesImpl;
-import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.dq.helper.PropertyHelper;
@@ -183,7 +181,6 @@ public abstract class AbstractComparisonLevel implements IComparisonLevel {
         IFile tempFile = createTempConnectionFile();
 
         if (compareWithReloadObject()) {
-            updateTaggedValue();
             saveReloadResult();
         }
         deleteTempConnectionFile(tempFile);
@@ -195,15 +192,6 @@ public abstract class AbstractComparisonLevel implements IComparisonLevel {
      */
     private void deleteTempConnectionFile(IFile tempFile) {
         DQStructureComparer.deleteFile(tempFile);
-    }
-
-    // store TaggedValueHelper.USING_URL into connetion
-    private void updateTaggedValue() {
-        DatabaseConnection dbConn = SwitchHelpers.DATABASECONNECTION_SWITCH.doSwitch(oldDataProvider);
-        if (dbConn != null) {
-            ConnectionHelper.setIsConnNeedReload(oldDataProvider, Boolean.TRUE);
-        }
-
     }
 
     public void popComparisonUI(IUIHandler uiHandler) throws ReloadCompareException {
