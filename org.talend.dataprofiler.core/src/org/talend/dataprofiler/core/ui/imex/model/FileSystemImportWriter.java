@@ -41,10 +41,9 @@ import org.talend.commons.emf.EMFUtil;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.commons.utils.io.FilesUtils;
 import org.talend.core.model.metadata.builder.connection.Connection;
+import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
 import org.talend.core.model.metadata.builder.database.JavaSqlFactory;
 import org.talend.core.model.properties.ConnectionItem;
-import org.talend.core.model.properties.DatabaseConnectionItem;
-import org.talend.core.model.properties.Item;
 import org.talend.core.model.properties.Project;
 import org.talend.core.model.properties.PropertiesPackage;
 import org.talend.core.model.properties.Property;
@@ -111,6 +110,8 @@ public class FileSystemImportWriter implements IImportWriter {
 
     private List<File> allCopiedFiles = new ArrayList<File>();
 
+    private List<DatabaseConnection> allCopiedDBConns = new ArrayList<DatabaseConnection>();
+
     /*
      * check the dependency and conflict; when the record is a indicator(system or user): if overwrite should not add
      * error in record(only check conflict, but not check dependency)
@@ -166,6 +167,17 @@ public class FileSystemImportWriter implements IImportWriter {
      */
     private boolean isPattern(ModelElement element) {
         return element instanceof Pattern;
+    }
+
+    /**
+     * 
+     * judge if the record is a DataBaseConnection or not.
+     * 
+     * @param element
+     * @return
+     */
+    private boolean isDBConnection(ModelElement element) {
+        return element instanceof DatabaseConnection;
     }
 
     /**
@@ -413,17 +425,18 @@ public class FileSystemImportWriter implements IImportWriter {
                             // Delete the conflict node before import.
                             IRepositoryViewObject object = record.getConflictObject();
                             boolean isDelete = true;
+                            ModelElement modEle = record.getElement();
                             if (object != null) {
                                 // added 20120808 yyin TDQ-4189
                                 // when record is valid&conflict, means it need to be merged with the current one if it
                                 // is a system indicator, (using its UUid to find this SI not label)
-                                if (isIndicator(record.getElement())) {
+                                if (isIndicator(modEle)) {
                                     IndicatorDefinition siDef = ((TDQIndicatorDefinitionItem) object.getProperty().getItem())
                                             .getIndicatorDefinition();
 
                                     mergeSystemIndicator(record, siDef);
                                     isDelete = false;
-                                } else if (isPattern(record.getElement())) {
+                                } else if (isPattern(modEle)) {
                                     mergePattern(record, (TDQPatternItem) object.getProperty().getItem());
                                     isDelete = false;
                                 } else {// ~
@@ -439,6 +452,9 @@ public class FileSystemImportWriter implements IImportWriter {
                                     synchronized (resourceSet) {
                                         write(resPath, desPath);
                                         allCopiedFiles.add(desPath.toFile());
+                                        if (modEle != null && isDBConnection(modEle)) {
+                                            allCopiedDBConns.add((DatabaseConnection) modEle);
+                                        }
                                     }
                                 }
                             }
@@ -860,23 +876,9 @@ public class FileSystemImportWriter implements IImportWriter {
      * need to notify sql explorer when import a connection.
      */
     private void notifySQLExplorerForConnection() {
-        for (File file : allCopiedFiles) {
-            if (file.exists()) {
-                IFile iFile = ResourceService.file2IFile(file);
-                if (!FactoriesUtil.PROPERTIES_EXTENSION.equals(iFile.getFileExtension())) {
-                    continue;
-                }
-                Property property = PropertyHelper.getProperty(iFile);
-                if (property == null) {
-                    continue;
-                }
-                Item item = property.getItem();
-                if (item != null && item instanceof DatabaseConnectionItem) {
-                    Connection connection = ((DatabaseConnectionItem) item).getConnection();
-                    if (connection != null && JavaSqlFactory.getUsername(connection) != null) {
-                        CWMPlugin.getDefault().addConnetionAliasToSQLPlugin(connection);
-                    }
-                }
+        for (DatabaseConnection dbConn : allCopiedDBConns) {
+            if (dbConn != null && JavaSqlFactory.getUsername(dbConn) != null) {
+                CWMPlugin.getDefault().addConnetionAliasToSQLPlugin(dbConn);
             }
         }
     }
