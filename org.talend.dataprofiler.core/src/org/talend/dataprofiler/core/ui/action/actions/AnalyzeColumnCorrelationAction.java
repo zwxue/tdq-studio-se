@@ -56,7 +56,6 @@ public class AnalyzeColumnCorrelationAction extends Action {
      * 
      * @see org.eclipse.jface.action.Action#run()
      */
-    @SuppressWarnings("unchecked")
     @Override
     public void run() {
         hasDateColumn = false;
@@ -77,7 +76,10 @@ public class AnalyzeColumnCorrelationAction extends Action {
                         columns[i] = (DBColumnRepNode) it.next();
                         i++;
                     }
-                    page.getTreeViewer().setInput(columns);
+                    if (page != null) {
+                    	page.getTreeViewer().setInput(columns);
+                    	page.doSave(null);
+                    }
                 }
             }
         }

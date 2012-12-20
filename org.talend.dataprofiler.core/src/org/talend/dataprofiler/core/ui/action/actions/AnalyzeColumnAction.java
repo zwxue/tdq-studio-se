@@ -56,7 +56,6 @@ public class AnalyzeColumnAction extends Action {
      * 
      * @see org.eclipse.jface.action.Action#run()
      */
-    @SuppressWarnings("unchecked")//$NON-NLS-1$
     @Override
     public void run() {
 
@@ -73,12 +72,10 @@ public class AnalyzeColumnAction extends Action {
                             nodeList.add((RepositoryNode) obj);
                         }
                     }
-                    if (page instanceof ColumnMasterDetailsPage) {
-                        ((ColumnMasterDetailsPage) page).setTreeViewInput(nodeList.toArray(new RepositoryNode[nodeList.size()]));
-                        return;
-                        // ((ColumnMasterDetailsPage) masterPage).refreshTheTree(treeViewer.getModelElementIndicator());
+                    if (page != null) {
+                        page.getTreeViewer().setInput(nodeList.toArray(new RepositoryNode[nodeList.size()]));
+                        page.doSave(null);
                     }
-                    page.getTreeViewer().setInput(nodeList.toArray(new RepositoryNode[nodeList.size()]));
                 }
             }
         }
