@@ -246,7 +246,7 @@ public class DQRespositoryView extends CommonNavigator {
                     if (item != null && (item instanceof DatabaseConnectionItem)) {
                         String username = JavaSqlFactory.getUsername(((DatabaseConnectionItem) item).getConnection());
                         if (username != null && !"".equals(username.trim())) { //$NON-NLS-1$
-                        CWMPlugin.getDefault().addConnetionAliasToSQLPlugin(((DatabaseConnectionItem) item).getConnection());
+                            CWMPlugin.getDefault().addConnetionAliasToSQLPlugin(((DatabaseConnectionItem) item).getConnection());
                         }
                     }
                 }
@@ -994,7 +994,7 @@ public class DQRespositoryView extends CommonNavigator {
         if (recursiveFind == null) {
             log.warn(DefaultMessagesImpl.getString("DQRepositoryView.nodeNotExistWarring", //$NON-NLS-1$
                     modelElementFromRepositoryNode.getName()));
-            MessageDialog.openWarning(null, "DQRepositoryView.nodeNotExistWarring.Title", //$NON-NLS-1$
+            MessageDialog.openWarning(null, DefaultMessagesImpl.getString("DQRepositoryView.nodeNotExistWarring.Title"), //$NON-NLS-1$
                     DefaultMessagesImpl.getString("DQRepositoryView.nodeNotExistWarring", //$NON-NLS-1$
                             modelElementFromRepositoryNode.getName()));
             return null;
