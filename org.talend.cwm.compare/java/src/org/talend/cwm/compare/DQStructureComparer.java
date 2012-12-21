@@ -592,7 +592,17 @@ public final class DQStructureComparer {
     public static DiffModel openDiffCompareEditor(Resource leftResource, Resource rightResource, Map<String, Object> opt,
             IUIHandler guiHandler, IFile efmDiffResultFile, String dbName, Object selectedObject, boolean compareEachOther)
             throws ReloadCompareException {
-
+        // ~ MOD mzhao bug 11449. 2010-03-16
+        if (leftResource.getContents() == null || leftResource.getContents().size() == 0) {
+            // Could not merge this.
+            MessageDialog.openError(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
+                    DefaultMessagesImpl.getString("DQStructureComparer.errorDialog1"), //$NON-NLS-1$
+                    DefaultMessagesImpl.getString("DQStructureComparer.errorDialog2"));//$NON-NLS-1$ $NON-NLS-2$
+            DQStructureComparer.removeResourceFromWorkspace(leftResource);
+            DQStructureComparer.removeResourceFromWorkspace(rightResource);
+            DQStructureComparer.deleteFile(efmDiffResultFile);
+            return null;
+        }
         MatchModel match = null;
         try {
             boolean isTos = isTos(leftResource);
@@ -602,14 +612,6 @@ public final class DQStructureComparer {
             throw new ReloadCompareException(e);
         }
         final DiffModel diff = DiffService.doDiff(match);
-        // ~ MOD mzhao bug 11449. 2010-03-16
-        if (leftResource.getContents() == null || leftResource.getContents().size() == 0) {
-            // Could not merge this.
-            MessageDialog.openError(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
-                    DefaultMessagesImpl.getString("DQStructureComparer.errorDialog1"),
-                    DefaultMessagesImpl.getString("DQStructureComparer.errorDialog2"));//$NON-NLS-1$ $NON-NLS-2$
-            return null;
-        }
         EList<DiffElement> ownedElements = diff.getOwnedElements();
         for (DiffElement de : ownedElements) {
             EList<DiffElement> subDiffElements = de.getSubDiffElements();
