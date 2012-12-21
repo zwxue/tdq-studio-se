@@ -52,6 +52,8 @@ import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.model.ModelElementIndicator;
+import org.talend.dataprofiler.core.ui.editor.AbstractMetadataFormPage;
+import org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisMetadataPage;
 import org.talend.dataprofiler.core.ui.editor.dqrules.DQRuleMasterDetailsPage;
 import org.talend.dataprofiler.core.ui.utils.MessageUI;
 import org.talend.dataprofiler.core.ui.views.ColumnViewerDND;
@@ -75,7 +77,9 @@ public class JoinConditionTableViewer extends AbstractColumnDropTree {
     private static final String COLUMN_B = "B"; //$NON-NLS-1$
 
     private DQRuleMasterDetailsPage masterPage;
-
+    
+    private Table myTable; 
+    
     private TableViewer myTableViewer;
 
     private List<JoinElement> myJoinElement;
@@ -97,6 +101,7 @@ public class JoinConditionTableViewer extends AbstractColumnDropTree {
         this.parentComposite = parent;
         this.masterPage = masterPage;
         this.myJoinElement = masterPage.getTempJoinElements();
+        this.myTable = createTable(parent); 
 
         if (this.myJoinElement.size() > 0) {
             updateColumnSetPackage((TdColumn) this.myJoinElement.get(0).getColA());
