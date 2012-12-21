@@ -15,6 +15,8 @@ package org.talend.dq.nodes;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.log4j.Logger;
+import org.eclipse.emf.common.util.EList;
 import org.talend.commons.exception.PersistenceException;
 import org.talend.commons.i18n.internal.DefaultMessagesImpl;
 import org.talend.commons.ui.runtime.exception.ExceptionHandler;
@@ -29,6 +31,7 @@ import org.talend.core.model.repository.Folder;
 import org.talend.core.model.repository.RepositoryViewObject;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.dataquality.PluginConstant;
+import org.talend.dq.helper.ProxyRepositoryManager;
 import org.talend.repository.ProjectManager;
 import org.talend.repository.model.IRepositoryNode;
 
@@ -40,6 +43,8 @@ public class RecycleBinRepNode extends DQRepositoryNode {
     private IImage icon;
 
     private String label;
+
+    private static Logger log = Logger.getLogger(RecycleBinRepNode.class);
 
     /**
      * DOC klliu RecyleBinRepNode constructor comment.
@@ -59,6 +64,7 @@ public class RecycleBinRepNode extends DQRepositoryNode {
      * 
      * @return the icon
      */
+    @Override
     public IImage getIcon() {
         return this.icon;
     }
@@ -68,6 +74,7 @@ public class RecycleBinRepNode extends DQRepositoryNode {
      * 
      * @param icon the icon to set
      */
+    @Override
     public void setIcon(IImage icon) {
         this.icon = icon;
     }
@@ -77,6 +84,7 @@ public class RecycleBinRepNode extends DQRepositoryNode {
      * 
      * @return the label
      */
+    @Override
     public String getLabel() {
         if (this.label == null) {
             this.label = DefaultMessagesImpl.getString("RecycleBin.resBinName"); //$NON-NLS-1$
@@ -149,6 +157,7 @@ public class RecycleBinRepNode extends DQRepositoryNode {
         DQRepositoryNode currentParentNode = parentNode;
         if (item instanceof FolderItem) {
             itemType = getFolderContentType((FolderItem) item);
+            EList<Item> childrenList = ((FolderItem) item).getChildren();
             if (item.getState() != null && item.getState().isDeleted()) {
                 // need to display this folder in the recycle bin.
                 Folder folder = new Folder(item.getProperty(), itemType);
@@ -172,12 +181,17 @@ public class RecycleBinRepNode extends DQRepositoryNode {
                     parentNode.getChildren(false).add(folderNode);
                     folderNode.setParent(parentNode);
                 }
-
+                if (childrenList.isEmpty()) {
+                    initChildForRemoteProject((FolderItem) item, itemType);
+                }
                 for (Item curItem : (List<Item>) new ArrayList(((FolderItem) item).getChildren())) {
                     addItemToRecycleBin(folderNode, curItem, foldersList);
                 }
                 currentParentNode = folderNode;
             } else {
+                if (childrenList.isEmpty()) {
+                    initChildForRemoteProject((FolderItem) item, itemType);
+                }
                 for (Item curItem : (List<Item>) new ArrayList(((FolderItem) item).getChildren())) {
                     addItemToRecycleBin(parentNode, curItem, foldersList);
                 }
@@ -244,6 +258,25 @@ public class RecycleBinRepNode extends DQRepositoryNode {
             return getFolderContentType((FolderItem) folderItem.getParent());
         }
         return null;
+    }
+
+    /**
+     * 
+     * init the children for remote FolderItem.
+     * 
+     * @param folderItem
+     * @param itemType
+     */
+    private void initChildForRemoteProject(FolderItem folderItem, ERepositoryObjectType itemType) {
+        boolean isLocalProject = ProxyRepositoryManager.getInstance().isLocalProject();
+        if (!isLocalProject && folderItem.getChildren().isEmpty()) {
+            try {
+                String path = getFullFolderPath(folderItem, PluginConstant.EMPTY_STRING);
+                ProxyRepositoryFactory.getInstance().getTdqRepositoryViewObjects(itemType, path);
+            } catch (Exception e) {
+                log.error(e, e);
+            }
+        }
     }
 
 }
