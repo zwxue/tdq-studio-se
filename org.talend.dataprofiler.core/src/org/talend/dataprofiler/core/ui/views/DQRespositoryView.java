@@ -1028,7 +1028,7 @@ public class DQRespositoryView extends CommonNavigator {
         if (recursiveFind == null) {
             log.warn(DefaultMessagesImpl.getString("DQRepositoryView.nodeNotExistWarring", //$NON-NLS-1$
                     modelElementFromRepositoryNode.getName()));
-            MessageDialog.openWarning(null, "DQRepositoryView.nodeNotExistWarring.Title", //$NON-NLS-1$
+            MessageDialog.openWarning(null, DefaultMessagesImpl.getString("DQRepositoryView.nodeNotExistWarring.Title"), //$NON-NLS-1$
                     DefaultMessagesImpl.getString("DQRepositoryView.nodeNotExistWarring", //$NON-NLS-1$
                             modelElementFromRepositoryNode.getName()));
             return null;
