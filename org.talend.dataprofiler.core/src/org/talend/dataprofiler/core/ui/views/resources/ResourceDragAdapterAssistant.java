@@ -28,6 +28,8 @@ import org.eclipse.ui.part.ResourceTransfer;
 
 /**
  * DOC rli class global comment. Detailled comment
+ * 
+ * @deprecated not used any more
  */
 public class ResourceDragAdapterAssistant extends CommonDragAdapterAssistant {
 
@@ -58,7 +60,7 @@ public class ResourceDragAdapterAssistant extends CommonDragAdapterAssistant {
         } else if (ResourceTransfer.getInstance().isSupportedType(anEvent.dataType)) {
             anEvent.data = getSelectedResources(aSelection);
             return true;
-        } 
+        }
         return false;
     }
 

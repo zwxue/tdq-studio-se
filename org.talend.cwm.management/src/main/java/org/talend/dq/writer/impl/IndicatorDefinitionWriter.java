@@ -59,13 +59,13 @@ public class IndicatorDefinitionWriter extends AElementPersistance {
         return FactoriesUtil.DEFINITION;
     }
 
+    @Override
     public ReturnCode save(Item item, boolean careDependency) {
         TDQIndicatorDefinitionItem indicatorItem = (TDQIndicatorDefinitionItem) item;
         IndicatorDefinition indiDefinition = indicatorItem.getIndicatorDefinition();
         // MOD yyi 2012-02-07 TDQ-4621:Update dependencies when careDependency is true.
         ReturnCode returnCode = careDependency ? saveWithDependencies(indicatorItem, indiDefinition) : saveWithoutDependencies(
-                indicatorItem,
-                indiDefinition);
+                indicatorItem, indiDefinition);
         if (returnCode.isOk()) {
             this.updateDependencies(indiDefinition);
         }
@@ -89,8 +89,8 @@ public class IndicatorDefinitionWriter extends AElementPersistance {
         // if IndicatorDefinition have client depencency, add codes here
         IndicatorDefinition definition = (IndicatorDefinition) element;
         Property property = PropertyHelper.getProperty(definition);
-        List<IRepositoryViewObject> listIndicatorDependency = DependenciesHandler
-                .getIndicatorDependency(new RepositoryViewObject(property));
+        List<IRepositoryViewObject> listIndicatorDependency = DependenciesHandler.getInstance().getIndicatorDependency(
+                new RepositoryViewObject(property));
         for (IRepositoryViewObject viewObject : listIndicatorDependency) {
             Item item = viewObject.getProperty().getItem();
             if (item instanceof TDQAnalysisItem) {

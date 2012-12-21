@@ -436,13 +436,12 @@ public final class DependenciesHandler {
         return returnList;
     }
 
-    // FIXME this method must not be static
     /**
      * get Indicator Dependency.
      * 
      * @return get the list for analysis which use parameter to be a Indicator
      */
-    public static List<IRepositoryViewObject> getIndicatorDependency(IRepositoryViewObject viewObject) {
+    public List<IRepositoryViewObject> getIndicatorDependency(IRepositoryViewObject viewObject) {
         Item item = viewObject.getProperty().getItem();
         List<IRepositoryViewObject> listAnalysisViewObject = new ArrayList<IRepositoryViewObject>();
         if (item instanceof TDQIndicatorDefinitionItemImpl) {
@@ -469,13 +468,12 @@ public final class DependenciesHandler {
         return listAnalysisViewObject;
     }
 
-    // FIXME this method must not be static
     /**
      * get Analysis Dependency (for indicator only).
      * 
      * @return get the list of indicator which in use by the analysis
      */
-    public static List<Property> getAnaDependency(Property property) {
+    public List<Property> getAnaDependency(Property property) {
         Item item = property.getItem();
         List<Property> listProperty = new ArrayList<Property>();
         if (item instanceof TDQAnalysisItemImpl) {

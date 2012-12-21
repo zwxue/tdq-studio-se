@@ -62,6 +62,8 @@ import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
  * DOC rli class global comment. Detailled comment
+ * 
+ * @deprecated not used any more
  */
 public class ResourceDropAdapterAssistant extends CommonDropAdapterAssistant {
 
