@@ -68,6 +68,7 @@ import org.talend.cwm.compare.i18n.Messages;
 import org.talend.cwm.compare.ui.actions.ReloadDatabaseAction;
 import org.talend.cwm.compare.ui.actions.RenameComparedElementAction;
 import org.talend.cwm.compare.ui.actions.SubelementCompareAction;
+import org.talend.cwm.helper.CatalogHelper;
 import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
@@ -81,7 +82,9 @@ import org.talend.dq.nodes.foldernode.IFolderNode;
 import org.talend.repository.model.IRepositoryNode;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.objectmodel.core.Package;
+import orgomg.cwm.resource.relational.Catalog;
 import orgomg.cwm.resource.relational.ColumnSet;
+import orgomg.cwm.resource.relational.Schema;
 
 /**
  * DOC mzhao class global comment. Detailled comment
@@ -126,6 +129,9 @@ public class CompareModelContentMergeViewer extends ModelContentMergeViewer {
                     if (selection.toList().size() == 1) {
                         selectedElement = (EObject) selection.getFirstElement();
                         if (selectedElement instanceof Package) {
+                            if (isMuitLevelStructor((Package) selectedElement)) {
+                                return;
+                            }
                             SubelementCompareAction subEleCompTableAction = new SubelementCompareAction(Messages
                                     .getString("CompareModelContentMergeViewer.CompareListOfTables"), //$NON-NLS-1$
                                     diffTabLeft, selectedOjbect, SubelementCompareAction.TABLE_COMPARE);
@@ -147,6 +153,7 @@ public class CompareModelContentMergeViewer extends ModelContentMergeViewer {
                     }
 
                 }
+
             });
 
             Menu menu = menuMgr.createContextMenu(diffTabLeft.getControl());
@@ -316,6 +323,9 @@ public class CompareModelContentMergeViewer extends ModelContentMergeViewer {
 
         SubelementCompareAction subEleCompColumnAction = null;
         if (selectedElement instanceof Package) {
+            if (isMuitLevelStructor((Package) selectedElement)) {
+                return;
+            }
             subEleCompColumnAction = new SubelementCompareAction(
                     tableOrViewCompare == SubelementCompareAction.TABLE_COMPARE ? Messages
                             .getString("CompareModelContentMergeViewer.CompareListOfTable") //$NON-NLS-1$
@@ -465,6 +475,16 @@ public class CompareModelContentMergeViewer extends ModelContentMergeViewer {
         } catch (Throwable e) {
             log.error(e.getMessage(), e);
         }
+    }
+
+    private boolean isMuitLevelStructor(Package current) {
+        if (current instanceof Catalog) {
+            List<Schema> schemas = CatalogHelper.getSchemas((Catalog) current);
+            if (schemas.size() > 0) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private static final String COPY_LEFT_TO_RIGHT_ID = "org.eclipse.compare.copyAllLeftToRight"; //$NON-NLS-1$

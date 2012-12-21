@@ -96,16 +96,6 @@ public class ReloadDatabaseAction extends Action {
                 return;
             }
         }
-        // // MOD klliu 2011-06-13 bug unified the confirm message TOP with TDQ
-        //        String confirmMessage = PluginChecker.isOnlyTopLoaded() ? Messages.getString("ReloadDatabaseAction.ConfirmMessage1") : Messages.getString("ReloadDatabaseAction.ConfirmMessage0"); //$NON-NLS-1$ //$NON-NLS-2$
-        // boolean openConfirm = MessageDialog.openConfirm(PlatformUI.getWorkbench().getDisplay().getActiveShell(),
-        //                Messages.getString("ReloadDatabaseAction.ConfirmMessageTitle"), //$NON-NLS-1$
-        // confirmMessage);
-        // if (!openConfirm) {
-        //            returnCode.setReturnCode(Messages.getString("ReloadDatabaseAction.NotSupportTitle"), false); //$NON-NLS-1$
-        // return;
-        // }
-        // // ~ 22251
         IRunnableWithProgress op = new IRunnableWithProgress() {
 
             public void run(IProgressMonitor monitor) throws InvocationTargetException {

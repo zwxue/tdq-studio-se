@@ -91,10 +91,6 @@ public class PopComparisonUIProvider extends AbstractCommonActionProvider {
             if (MetadataConnectionUtils.isTDQSupportDBTemplate(conn)) {
                 return true;
             }
-            // if (node instanceof DBConnectionRepNode || node instanceof DBTableFolderRepNode
-            // || node instanceof DBViewFolderRepNode || node instanceof DBColumnFolderRepNode) {
-            // return true;
-            // }
         }
         return false;
     }

@@ -97,11 +97,6 @@ public class ReloadDatabaseProvider extends AbstractCommonActionProvider {
             if (MetadataConnectionUtils.isTDQSupportDBTemplate(conn)) {
                 return true;
             }
-            // MOD zshen has been judge by extensions on the plugin so don't need repeat it
-            // if (node instanceof DBConnectionRepNode || node instanceof DBTableFolderRepNode
-            // || node instanceof DBViewFolderRepNode || node instanceof DBColumnFolderRepNode) {
-            // return true;
-            // }
         }
         return false;
     }
