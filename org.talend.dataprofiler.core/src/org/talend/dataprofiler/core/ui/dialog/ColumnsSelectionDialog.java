@@ -20,7 +20,6 @@ import java.util.Set;
 import org.apache.commons.collections.MultiMap;
 import org.apache.commons.collections.map.MultiValueMap;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.CheckStateChangedEvent;
 import org.eclipse.jface.viewers.ICheckStateListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -40,7 +39,6 @@ import org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisMetadataP
 import org.talend.dataprofiler.core.ui.filters.DQFolderFliter;
 import org.talend.dataprofiler.core.ui.filters.EMFObjFilter;
 import org.talend.dataprofiler.core.ui.filters.TDQEEConnectionFolderFilter;
-import org.talend.dataprofiler.core.ui.pref.AnalysisTuningPreferencePage;
 import org.talend.dataprofiler.core.ui.views.provider.ResourceViewContentProvider;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.nodes.DBColumnRepNode;
@@ -399,17 +397,17 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
     protected void okPressed() {
         allCheckedElements.clear();
         getAllCheckElements();
-        if (allCheckedElements.size() > AnalysisTuningPreferencePage.getCheckedElementsLength()) {
-            MessageDialog
-                    .openWarning(
-                            this.getShell(),
-                            DefaultMessagesImpl.getString("ColumnsSelectionDialog.ColumnSelection"), "Exceed maximum column restrictions: " + AnalysisTuningPreferencePage.getCheckedElementsLength());//$NON-NLS-1$
-        } else {
+        // if (allCheckedElements.size() > AnalysisTuningPreferencePage.getCheckedElementsLength()) {
+        // MessageDialog
+        // .openWarning(
+        // this.getShell(),
+        //                            DefaultMessagesImpl.getString("ColumnsSelectionDialog.ColumnSelection"), "Exceed maximum column restrictions: " + AnalysisTuningPreferencePage.getCheckedElementsLength());//$NON-NLS-1$
+        // } else {
             super.okPressed();
             // ConnectionItem connectionItem = (ConnectionItem) connNode.getObject().getProperty().getItem();
             // ElementWriterFactory.getInstance().createDataProviderWriter().save(connectionItem);
             this.modelElementCheckedMap = null;
-        }
+        // }
     }
 
     @Override

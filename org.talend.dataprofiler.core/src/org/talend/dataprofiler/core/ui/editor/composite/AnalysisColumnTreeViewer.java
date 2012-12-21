@@ -23,7 +23,6 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.help.HelpSystem;
 import org.eclipse.help.IContext;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
@@ -77,7 +76,6 @@ import org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisMetadataP
 import org.talend.dataprofiler.core.ui.editor.analysis.ColumnMasterDetailsPage;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
 import org.talend.dataprofiler.core.ui.grid.IndicatorSelectDialog2;
-import org.talend.dataprofiler.core.ui.pref.AnalysisTuningPreferencePage;
 import org.talend.dataprofiler.core.ui.utils.MessageUI;
 import org.talend.dataprofiler.core.ui.utils.UDIUtils;
 import org.talend.dataprofiler.core.ui.views.ColumnViewerDND;
@@ -414,15 +412,16 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
         ModelElementIndicator[] newsArray = new ModelElementIndicator[this.modelElementIndicators.length + elements.length];
         System.arraycopy(this.modelElementIndicators, 0, newsArray, 0, this.modelElementIndicators.length);
 
-        // MOD gdbu TDQ-1837 2011-11-11 To judge the length of columns when drop columns to analysis editor.
-        if (this.modelElementIndicators.length + elements.length > AnalysisTuningPreferencePage.getCheckedElementsLength()) {
-            MessageDialog
-                    .openWarning(
-                            null,
-                            DefaultMessagesImpl.getString("ColumnsSelectionDialog.ColumnSelection"), "Exceed maximum column restrictions: " + AnalysisTuningPreferencePage.getCheckedElementsLength());//$NON-NLS-1$//$NON-NLS-2$
-            return;
-        }
-        // ~TDQ-1837
+        // // MOD gdbu TDQ-1837 2011-11-11 To judge the length of columns when drop columns to analysis editor.
+        // if (this.modelElementIndicators.length + elements.length >
+        // AnalysisTuningPreferencePage.getCheckedElementsLength()) {
+        // MessageDialog
+        // .openWarning(
+        // null,
+        //                            DefaultMessagesImpl.getString("ColumnsSelectionDialog.ColumnSelection"), "Exceed maximum column restrictions: " + AnalysisTuningPreferencePage.getCheckedElementsLength());//$NON-NLS-1$//$NON-NLS-2$
+        // return;
+        // }
+        // // ~TDQ-1837
 
         for (int i = 0; i < elements.length; i++) {
             newsArray[this.modelElementIndicators.length + i] = elements[i];
