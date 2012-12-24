@@ -21,7 +21,6 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.jface.action.Action;
 import org.eclipse.ui.IEditorInput;
-import org.eclipse.ui.IEditorRegistry;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
@@ -145,7 +144,8 @@ public class OpenItemEditorAction extends Action implements IIntroAction {
                         // the openning.
                         // latestRepIFile.createLink(location, IResource.REPLACE, null);
                         IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-                        page.openEditor(new FileEditorInput(latestRepIFile), IEditorRegistry.SYSTEM_EXTERNAL_EDITOR_ID);
+                        // MOD yyin 20121224 TDQ-5329, using the default editor setted by the user.
+                        IDE.openEditor(page, latestRepIFile);
                     } catch (PartInitException e) {
                         log.error(e, e);
                     }
