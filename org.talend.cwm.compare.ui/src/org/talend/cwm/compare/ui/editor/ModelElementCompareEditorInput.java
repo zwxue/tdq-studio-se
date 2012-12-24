@@ -24,10 +24,13 @@ import org.eclipse.emf.compare.diff.metamodel.DiffModel;
 import org.eclipse.emf.compare.match.metamodel.MatchModel;
 import org.eclipse.emf.compare.ui.ModelCompareInput;
 import org.eclipse.emf.compare.ui.viewer.structure.ModelStructureMergeViewer;
+import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.talend.cwm.compare.DQStructureComparer;
 import org.talend.cwm.compare.ui.actions.provider.CompareModelStructureLabelProvider;
 import org.talend.cwm.compare.ui.views.CompareModelContentMergeViewer;
 import org.talend.cwm.compare.ui.views.CompareModelStructureMergeViewer;
@@ -172,6 +175,52 @@ public class ModelElementCompareEditorInput extends CompareEditorInput {
         final ModelCompareInput input = new ModelCompareInput(match, diff);
         input.addCompareInputChangeListener(inputListener);
         return input;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * org.eclipse.compare.CompareEditorInput#removePropertyChangeListener(org.eclipse.jface.util.IPropertyChangeListener
+     * ) this method with responsibility for remove temp file so be aware about calling
+     */
+    @Override
+    public void removePropertyChangeListener(IPropertyChangeListener listener) {
+        super.removePropertyChangeListener(listener);
+        removeTempFiles(this);
+    }
+
+    private boolean removeTempFiles(ModelElementCompareEditorInput editorInput) {
+        boolean returnCode = true;
+        if (editorInput == null) {
+            return false;
+        }
+        Object compareResult = editorInput.getCompareResult();
+        if (compareResult != null && compareResult instanceof ModelCompareInput) {
+            returnCode &= removeLeftResource((ModelCompareInput) compareResult);
+            returnCode &= removeRightResource((ModelCompareInput) compareResult);
+            returnCode &= removeCurrResource((ModelCompareInput) compareResult);
+        }
+        return returnCode;
+    }
+
+    private boolean removeLeftResource(ModelCompareInput compareResult) {
+        Resource leftResource = compareResult.getLeftResource();
+        return DQStructureComparer.removeResourceFromWorkspace(leftResource);
+    }
+
+    private boolean removeRightResource(ModelCompareInput compareResult) {
+        Resource rightResource = compareResult.getRightResource();
+        return DQStructureComparer.removeResourceFromWorkspace(rightResource);
+    }
+
+    private boolean removeCurrResource(ModelCompareInput compareResult) {
+        Object tempDiff = compareResult.getDiff();
+        Resource currResource = null;
+        if (tempDiff instanceof DiffModel) {
+            currResource = ((DiffModel) tempDiff).eResource();
+        }
+        return DQStructureComparer.removeResourceFromWorkspace(currResource);
     }
 
 }
