@@ -23,7 +23,6 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorInput;
-import org.eclipse.ui.IEditorRegistry;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
@@ -149,18 +148,19 @@ public class OpenItemEditorAction extends Action implements IIntroAction {
                         // the openning.
                         // latestRepIFile.createLink(location, IResource.REPLACE, null);
                         IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-                        page.openEditor(new FileEditorInput(latestRepIFile), IEditorRegistry.SYSTEM_EXTERNAL_EDITOR_ID);
+                        // MOD yyin 20121224 TDQ-5329, using the default editor setted by the user.
+                        IDE.openEditor(page, latestRepIFile);
                     } catch (PartInitException e) {
                         MessageDialog.openError(Display.getCurrent().getActiveShell(),
                                 Messages.getString("NewFolderWizard.failureTitle"), //$NON-NLS-1$
-                                e.getMessage()); //$NON-NLS-1$ //$NON-NLS-2$
+                                e.getMessage());
                         ExceptionHandler.process(e);
                     }
                 }
             } else {
                 // if there don't found the correct ItemEditorInput and it is not Report's genetated doc file, try to
                 // open it as a File, this code will not be execute when method computeEditorInput() work well
-                IPath append = WorkbenchUtils.getFilePath((RepositoryNode) repViewObj.getRepositoryNode());
+                IPath append = WorkbenchUtils.getFilePath(repViewObj.getRepositoryNode());
                 file = ResourceManager.getRootProject().getFile(append);
                 try {
                     IDE.openEditor(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage(), file, true);
@@ -255,7 +255,7 @@ public class OpenItemEditorAction extends Action implements IIntroAction {
                         || ERepositoryObjectType.TDQ_SOURCE_FILE_ELEMENT.getKey().equals(key)) {
 
                     // if there don't found the correct ItemEditorInput, try to open it as a File
-                    IPath append = WorkbenchUtils.getFilePath((RepositoryNode) repViewObj.getRepositoryNode());
+                    IPath append = WorkbenchUtils.getFilePath(repViewObj.getRepositoryNode());
                     result = new FileEditorInput(ResourceManager.getRootProject().getFile(append));
                     editorID = FileEditorInput.class.getName();
                 }
