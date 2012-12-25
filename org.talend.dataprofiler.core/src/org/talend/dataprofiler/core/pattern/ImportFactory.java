@@ -938,10 +938,10 @@ public final class ImportFactory {
                     prParameters.purpose = reader.get(ParserRuleToExcelEnum.Purpose.getLiteral());
                     ParserRuleTdExpresstion prExpresstion = new ImportFactory().new ParserRuleTdExpresstion();
                     prExpresstion.name = addQual(reader.get(ParserRuleToExcelEnum.Name.getLiteral()));
-                    String type = addQual(reader.get(ParserRuleToExcelEnum.Type.getLiteral()));
-                    prExpresstion.type = type.isEmpty() || type.equals("\"\"") || type == null ? addQual(reader//$NON-NLS-1$
-                            .get(ParserRuleToExcelEnum.Language.getLiteral())) : type;
-                    String value = reader.get(ParserRuleToExcelEnum.Value.getLiteral());
+                    String type = reader.get(ParserRuleToExcelEnum.Type.getLiteral());
+                    prExpresstion.type = type.isEmpty() || type.equals("\"\"") || type == null ? reader//$NON-NLS-1$
+                            .get(ParserRuleToExcelEnum.Language.getLiteral()) : type;
+                    String value = addQual(reader.get(ParserRuleToExcelEnum.Value.getLiteral()));
                     prExpresstion.value = value.isEmpty() || value.equals("") || value == null ? addQual(reader//$NON-NLS-1$
                             .get(ParserRuleToExcelEnum.Body.getLiteral())) : value;
                     prParameters.prExpresstions.add(prExpresstion);
