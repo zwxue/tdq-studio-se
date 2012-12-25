@@ -29,6 +29,7 @@ import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
 import org.talend.core.model.metadata.builder.util.MetadataConnectionUtils;
 import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.properties.Item;
+import org.talend.core.model.properties.Property;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.cwm.compare.exception.ReloadCompareException;
 import org.talend.cwm.compare.factory.ComparisonLevelFactory;
@@ -41,7 +42,9 @@ import org.talend.dataprofiler.core.ui.dialog.message.DeleteModelElementConfirmD
 import org.talend.dataprofiler.core.ui.progress.ProgressUI;
 import org.talend.dataprofiler.core.ui.utils.MessageUI;
 import org.talend.dataprofiler.core.ui.utils.WorkbenchUtils;
+import org.talend.dq.CWMPlugin;
 import org.talend.dq.helper.EObjectHelper;
+import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.nodes.foldernode.IConnectionElementSubFolder;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.utils.sugars.ReturnCode;
@@ -109,15 +112,14 @@ public class ReloadDatabaseAction extends Action {
                             // analysis.
                             // MOD qiongli 2011-9-8,move method 'impactExistingAnalyses(...)' to class WorkbenchUtils
                             // // update the sql explore.
-                            // Property property = PropertyHelper.getProperty(oldDataProvider);
-                            // if (property != null) {
-                            // Item newItem = property.getItem();
-                            // if (newItem != null) {
-                            // CWMPlugin.getDefault()
-                            // .updateConnetionAliasByName(oldDataProvider, oldDataProvider.getLabel());
-                            // // notifySQLExplorer(newItem);
-                            // }
-                            // }
+                            Property property = PropertyHelper.getProperty(oldDataProvider);
+                            if (property != null) {
+                                Item newItem = property.getItem();
+                                if (newItem != null) {
+                                    CWMPlugin.getDefault()
+                                            .updateConnetionAliasByName(oldDataProvider, oldDataProvider.getLabel());
+                                }
+                            }
                             // // update the related analyses.
                             WorkbenchUtils.impactExistingAnalyses(oldDataProvider);
                         } catch (ReloadCompareException e) {
@@ -179,6 +181,8 @@ public class ReloadDatabaseAction extends Action {
             }
         } else if (selectedObject instanceof IConnectionElementSubFolder) {
             conn = ((IConnectionElementSubFolder) selectedObject).getConnection();
+        } else if (selectedObject instanceof Connection) {
+            conn = (Connection) selectedObject;
         }
         return conn;
     }

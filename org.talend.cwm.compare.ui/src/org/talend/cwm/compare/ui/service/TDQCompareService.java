@@ -12,8 +12,6 @@ import org.talend.cwm.compare.ui.actions.provider.ReloadDatabaseProvider;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.dialog.message.DeleteModelElementConfirmDialog;
 import org.talend.dq.helper.EObjectHelper;
-import org.talend.dq.helper.RepositoryNodeHelper;
-import org.talend.repository.model.RepositoryNode;
 import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
@@ -47,8 +45,7 @@ public class TDQCompareService implements ITDQCompareService {
                 }
             }
 
-            RepositoryNode recursiveFind = RepositoryNodeHelper.recursiveFind(conn);
-            ReloadDatabaseAction reloadDatabaseAction = new ReloadDatabaseAction(recursiveFind,
+            ReloadDatabaseAction reloadDatabaseAction = new ReloadDatabaseAction(conn,
                     ReloadDatabaseProvider.RELOADDATABASE_MENUTEXT);
             reloadDatabaseAction.run();
             retCode = reloadDatabaseAction.getReturnCode();
