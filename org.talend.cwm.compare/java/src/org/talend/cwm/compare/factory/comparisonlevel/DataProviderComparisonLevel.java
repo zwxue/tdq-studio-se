@@ -134,8 +134,8 @@ public class DataProviderComparisonLevel extends AbstractComparisonLevel {
         try {
             ProxyRepositoryFactory.getInstance().save(currentProject, item);
             // Added yyin TDQ-6485, after reload the connection, set the need reload tag back to false
-            if (selectedObj instanceof Connection) {
-                ConnectionHelper.setIsConnNeedReload((Connection) selectedObj, Boolean.FALSE);
+            if (item instanceof ConnectionItem) {
+                ConnectionHelper.setIsConnNeedReload(((ConnectionItem) item).getConnection(), Boolean.FALSE);
             }
         } catch (PersistenceException e) {
             log.error(e, e);
