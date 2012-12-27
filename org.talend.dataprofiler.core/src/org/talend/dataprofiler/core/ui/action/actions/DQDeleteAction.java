@@ -140,9 +140,13 @@ public class DQDeleteAction extends DeleteAction {
         // remove the source file nodes which have been opened the editor
         deleteElements = checkSourceFilesEditorOpening(deleteElements);
         // ~ TDQ-4831
+
+        List<RepositoryNode> selectedNodeParents = new ArrayList<RepositoryNode>();
         for (Object obj : deleteElements) {
             if (obj instanceof RepositoryNode) {
-                selectedNodes.add((RepositoryNode) obj);
+                RepositoryNode node = (RepositoryNode) obj;
+                selectedNodes.add(node);
+                selectedNodeParents.add(node.getParent());
             }
         }
         if (DQRepositoryNode.isOnFilterring()) {
@@ -189,6 +193,7 @@ public class DQDeleteAction extends DeleteAction {
             if (!isStateDeleted) {
                 // closeEditors(selection);
                 excuteSuperRun(null, parent);
+                // refreshRepositoryNodes(selectedNodeParents);
                 break;
             }
 
@@ -240,6 +245,28 @@ public class DQDeleteAction extends DeleteAction {
         // the deleteReportFile() mothed have refresh the workspace and dqview
         CorePlugin.getDefault().refreshWorkSpace();
         CorePlugin.getDefault().refreshDQView(RepositoryNodeHelper.getRecycleBinRepNode());
+    }
+
+    /**
+     * refresh the RepositoryNodes, this method shoule be called after logic delete multiple objects.
+     * 
+     * @param nodes
+     */
+    private void refreshRepositoryNodes(List<RepositoryNode> nodes) {
+        if (nodes != null) {
+            boolean refreshAll = false;
+            for (RepositoryNode node : nodes) {
+                if (node != null) {
+                    CorePlugin.getDefault().refreshDQView(node);
+                } else {
+                    refreshAll = true;
+                    break;
+                }
+            }
+            if (refreshAll) {
+                CorePlugin.getDefault().refreshDQView();
+            }
+        }
     }
 
     /**
