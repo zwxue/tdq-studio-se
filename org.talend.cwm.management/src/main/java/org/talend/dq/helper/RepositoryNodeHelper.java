@@ -3348,4 +3348,12 @@ public final class RepositoryNodeHelper {
     public static boolean isLockByOther(ModelElement modelElement) {
         return isLockByOther(recursiveFind(modelElement));
     }
+
+    public static boolean isOpenDQCommonViewer() {
+        if (getDQCommonViewer() == null) {
+            return false;
+        }
+        return true;
+
+    }
 }

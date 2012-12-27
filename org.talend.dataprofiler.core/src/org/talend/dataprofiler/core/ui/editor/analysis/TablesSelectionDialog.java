@@ -111,9 +111,12 @@ public class TablesSelectionDialog extends TwoPartCheckSelectionDialog {
             IRepositoryNode packageNode = csk.getPackageNode();
             TableCheckedMap tableCheckedMap = packageCheckedMap.get(csk);
             List<IRepositoryNode> allCheckedTableNodeList = tableCheckedMap.getAllCheckedTableNodeList(packageNode);
-            if (isHideNode(allCheckedTableNodeList)) {
+            if (isHideNode(allCheckedTableNodeList) && RepositoryNodeHelper.isOpenDQCommonViewer()) {
                 packageNode = findLastVisibleNode(allCheckedTableNodeList.get(0));
                 this.setMessage(DefaultMessagesImpl.getString("ColumnSelectionDialog.CannotFindNodeMessage")); //$NON-NLS-1$
+                if (packageNode == null) {
+                    return;
+                }
             }
             // // to get TableFolderNode or viewFolderNode
             IRepositoryNode selectNode = getAdaptLocationNode(packageNode, allCheckedTableNodeList.get(0));

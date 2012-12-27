@@ -908,6 +908,9 @@ public abstract class TwoPartCheckSelectionDialog extends SelectionStatusDialog 
      * @param reposNode
      */
     protected IRepositoryNode findLastVisibleNode(IRepositoryNode reposNode) {
+        if (reposNode == null) {
+            return null;
+        }
         IRepositoryNode returnNode = getRealNodeFromRepository(reposNode);
         if (returnNode == null) {
             returnNode = findLastVisibleNode(reposNode.getParent());

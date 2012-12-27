@@ -90,9 +90,12 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
             IRepositoryNode selectNode = (IRepositoryNode) it.next();
             IRepositoryNode reposNode = selectNode;
             List<IRepositoryNode> columnNodeList = (List<IRepositoryNode>) modelElementCheckedMap.get(selectNode);
-            if (isHideNode(columnNodeList)) {
+            if (isHideNode(columnNodeList) && RepositoryNodeHelper.isOpenDQCommonViewer()) {
                 reposNode = findLastVisibleNode(columnNodeList.get(0));
                 this.setMessage(DefaultMessagesImpl.getString("ColumnSelectionDialog.CannotFindNodeMessage")); //$NON-NLS-1$
+                if (reposNode == null) {
+                    return;
+                }
             }
             selectNode = getAdaptLocationNode(reposNode, columnNodeList.get(0));
             if (selectNode != null) {
@@ -354,13 +357,9 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
                 // will be joined twice.
                 // 2 select a node on the tableview and which contain more than one node in the treeview check whether
                 // can be select after click on the ok button.
-                // boolean isLeaf = RepositoryNodeHelper.getMdmChildren(repNode, true).length > 0;
-                // if (!isLeaf) {
-                getTableviewCheckedElements(allCheckedElements, repNode);
-                // List<IRepositoryNode> children = repNode.getChildren();
-                // allCheckedElements.addAll(children);
 
-                // }
+                getTableviewCheckedElements(allCheckedElements, repNode);
+
             }
         }
 
@@ -398,8 +397,6 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
         allCheckedElements.clear();
         getAllCheckElements();
         super.okPressed();
-        // ConnectionItem connectionItem = (ConnectionItem) connNode.getObject().getProperty().getItem();
-        // ElementWriterFactory.getInstance().createDataProviderWriter().save(connectionItem);
         this.modelElementCheckedMap = null;
 
     }
