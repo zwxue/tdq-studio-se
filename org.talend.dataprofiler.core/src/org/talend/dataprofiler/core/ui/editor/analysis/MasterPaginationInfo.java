@@ -30,6 +30,7 @@ import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.model.ModelElementIndicator;
 import org.talend.dataprofiler.core.ui.chart.ChartDecorator;
+import org.talend.dataprofiler.core.ui.chart.TalendChartComposite;
 import org.talend.dataprofiler.core.ui.editor.composite.AnalysisColumnTreeViewer;
 import org.talend.dataprofiler.core.ui.editor.preview.CompositeIndicator;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
@@ -55,8 +56,8 @@ public class MasterPaginationInfo extends IndicatorPaginationInfo {
     }
 
     public MasterPaginationInfo(ScrolledForm form, List<ExpandableComposite> previewChartList,
-            List<? extends ModelElementIndicator> modelElementIndicators,
-            UIPagination uiPagination, AnalysisColumnTreeViewer treeViewer) {
+            List<? extends ModelElementIndicator> modelElementIndicators, UIPagination uiPagination,
+            AnalysisColumnTreeViewer treeViewer) {
         super(form, modelElementIndicators, uiPagination);
         this.previewChartList = previewChartList;
         if (treeViewer != null) {
@@ -74,7 +75,7 @@ public class MasterPaginationInfo extends IndicatorPaginationInfo {
             treeViewer.setElements(modelElementIndicators.toArray(new ModelElementIndicator[modelElementIndicators.size()]),
                     false);
         }
-        //chart composite don't display So need't consider it.
+        // chart composite don't display So need't consider it.
         if (previewChartList == null || uiPagination.getChartComposite() == null) {
             return;
         }
@@ -109,7 +110,7 @@ public class MasterPaginationInfo extends IndicatorPaginationInfo {
                     }
                 }
             }
-//
+            //
             exComp.addExpansionListener(new ExpansionAdapter() {
 
                 @Override
@@ -139,7 +140,7 @@ public class MasterPaginationInfo extends IndicatorPaginationInfo {
         ChartDecorator.decorate(chart, null);
 
         if (chart != null) {
-            final ChartComposite chartComp = new ChartComposite(comp, SWT.NONE, chart, true);
+            final ChartComposite chartComp = new TalendChartComposite(comp, SWT.NONE, chart, true);
 
             GridData gd = new GridData();
             gd.widthHint = PluginConstant.CHART_STANDARD_WIDHT;

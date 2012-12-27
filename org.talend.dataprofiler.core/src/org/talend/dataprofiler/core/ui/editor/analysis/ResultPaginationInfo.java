@@ -49,6 +49,7 @@ import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.model.ModelElementIndicator;
 import org.talend.dataprofiler.core.ui.chart.ChartDecorator;
+import org.talend.dataprofiler.core.ui.chart.TalendChartComposite;
 import org.talend.dataprofiler.core.ui.editor.analysis.drilldown.DrillDownEditorInput;
 import org.talend.dataprofiler.core.ui.editor.preview.CompositeIndicator;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
@@ -131,6 +132,7 @@ public class ResultPaginationInfo extends IndicatorPaginationInfo {
 
             exComp.addExpansionListener(new ExpansionAdapter() {
 
+                @Override
                 public void expansionStateChanged(ExpansionEvent e) {
 
                     form.reflow(true);
@@ -203,7 +205,7 @@ public class ResultPaginationInfo extends IndicatorPaginationInfo {
             JFreeChart chart = chartTypeState.getChart();
             ChartDecorator.decorate(chart, null);
             if (chart != null) {
-                ChartComposite cc = new ChartComposite(composite, SWT.NONE, chart, true);
+                ChartComposite cc = new TalendChartComposite(composite, SWT.NONE, chart, true);
 
                 GridData gd = new GridData();
                 gd.widthHint = PluginConstant.CHART_STANDARD_WIDHT;

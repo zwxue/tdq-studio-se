@@ -39,6 +39,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
@@ -394,8 +395,7 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
     }
 
     public void setElements(ModelElementIndicator[] elements, boolean isNavigator) {
-        this.tree.dispose();
-        this.tree = createTree(this.parentComp);
+        removeAllItemElements();
         tree.setData(VIEWER_KEY, this);
         this.modelElementIndicators = elements;
         addItemElements(elements);
@@ -408,6 +408,22 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
         updateBindConnection(masterPage, modelElementIndicators, tree);
 
         createUpDownButtons(this.parentComp);
+    }
+
+    /**
+     * DOC talend Comment method "removeAllItemElements".
+     */
+    private void removeAllItemElements() {
+        for (Control control : tree.getChildren()) {
+            if (control != null) {
+                control.dispose();
+            }
+        }
+        for (TreeItem treeItem : tree.getItems()) {
+            if (treeItem != null) {
+                treeItem.dispose();
+            }
+        }
     }
 
     /**
@@ -1024,7 +1040,7 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
     public AbstractAnalysisMetadataPage getMasterPage() {
         return masterPage;
     }
-    
+
     /**
      * DOC yyi 2010-06-10 Refactor to ModelElementTreeMenuProvider
      */

@@ -90,9 +90,12 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
             IRepositoryNode selectNode = (IRepositoryNode) it.next();
             IRepositoryNode reposNode = selectNode;
             List<IRepositoryNode> columnNodeList = (List<IRepositoryNode>) modelElementCheckedMap.get(selectNode);
-            if (isHideNode(columnNodeList)) {
+            if (isHideNode(columnNodeList) && RepositoryNodeHelper.isOpenDQCommonViewer()) {
                 reposNode = findLastVisibleNode(columnNodeList.get(0));
                 this.setMessage(DefaultMessagesImpl.getString("ColumnSelectionDialog.CannotFindNodeMessage")); //$NON-NLS-1$
+                if (reposNode == null) {
+                    return;
+                }
             }
             selectNode = getAdaptLocationNode(reposNode, columnNodeList.get(0));
             if (selectNode != null) {
