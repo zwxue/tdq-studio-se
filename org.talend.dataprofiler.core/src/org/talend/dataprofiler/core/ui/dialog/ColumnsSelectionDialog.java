@@ -90,9 +90,12 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
             IRepositoryNode selectNode = (IRepositoryNode) it.next();
             IRepositoryNode reposNode = selectNode;
             List<IRepositoryNode> columnNodeList = (List<IRepositoryNode>) modelElementCheckedMap.get(selectNode);
-            if (isHideNode(columnNodeList)) {
+            if (isHideNode(columnNodeList) && RepositoryNodeHelper.isOpenDQCommonViewer()) {
                 reposNode = findLastVisibleNode(columnNodeList.get(0));
                 this.setMessage(DefaultMessagesImpl.getString("ColumnSelectionDialog.CannotFindNodeMessage")); //$NON-NLS-1$
+                if (reposNode == null) {
+                    return;
+                }
             }
             selectNode = getAdaptLocationNode(reposNode, columnNodeList.get(0));
             if (selectNode != null) {
@@ -397,17 +400,8 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
     protected void okPressed() {
         allCheckedElements.clear();
         getAllCheckElements();
-        // if (allCheckedElements.size() > AnalysisTuningPreferencePage.getCheckedElementsLength()) {
-        // MessageDialog
-        // .openWarning(
-        // this.getShell(),
-        //                            DefaultMessagesImpl.getString("ColumnsSelectionDialog.ColumnSelection"), "Exceed maximum column restrictions: " + AnalysisTuningPreferencePage.getCheckedElementsLength());//$NON-NLS-1$
-        // } else {
-            super.okPressed();
-            // ConnectionItem connectionItem = (ConnectionItem) connNode.getObject().getProperty().getItem();
-            // ElementWriterFactory.getInstance().createDataProviderWriter().save(connectionItem);
-            this.modelElementCheckedMap = null;
-        // }
+        super.okPressed();
+        this.modelElementCheckedMap = null;
     }
 
     @Override

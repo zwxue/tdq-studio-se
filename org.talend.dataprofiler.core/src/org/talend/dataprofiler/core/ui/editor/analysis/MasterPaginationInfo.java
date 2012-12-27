@@ -30,6 +30,7 @@ import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.model.ModelElementIndicator;
 import org.talend.dataprofiler.core.ui.chart.ChartDecorator;
+import org.talend.dataprofiler.core.ui.chart.TalendChartComposite;
 import org.talend.dataprofiler.core.ui.editor.composite.AnalysisColumnTreeViewer;
 import org.talend.dataprofiler.core.ui.editor.preview.CompositeIndicator;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
@@ -133,7 +134,7 @@ public class MasterPaginationInfo extends IndicatorPaginationInfo {
         ChartDecorator.decorate(chart, null);
 
         if (chart != null) {
-            final ChartComposite chartComp = new ChartComposite(comp, SWT.NONE, chart, true);
+            final ChartComposite chartComp = new TalendChartComposite(comp, SWT.NONE, chart, true);
 
             GridData gd = new GridData();
             gd.widthHint = PluginConstant.CHART_STANDARD_WIDHT;

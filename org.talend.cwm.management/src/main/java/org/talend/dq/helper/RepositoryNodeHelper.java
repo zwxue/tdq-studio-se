@@ -2033,6 +2033,14 @@ public final class RepositoryNodeHelper {
         return commonViewer;
     }
 
+    public static boolean isOpenDQCommonViewer() {
+        if (getDQCommonViewer() == null) {
+            return false;
+        }
+        return true;
+
+    }
+
     public static CommonViewer getDQCommonViewer(boolean open) {
         IViewPart part = null;
         CommonViewer commonViewer = null;

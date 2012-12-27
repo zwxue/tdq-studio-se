@@ -360,6 +360,12 @@ public class TableMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
     }
 
     public void openTableSelectionDialog() {
+        if (!RepositoryNodeHelper.isOpenDQCommonViewer()) {
+            if (RepositoryNodeHelper.getDQCommonViewer(true) == null) {
+                MessageDialog.openWarning(this.getSite().getShell(), "warning dailog", "can not find DQRepositoryNode!"); //$NON-NLS-1$ //$NON-NLS-2$
+                return;
+            }
+        }
         TableIndicator[] tableIndicators = treeViewer.getTableIndicator();
         List<IRepositoryNode> setList = new ArrayList<IRepositoryNode>();
         for (TableIndicator tableIndicator : tableIndicators) {

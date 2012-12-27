@@ -393,7 +393,11 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
         // ~ 14549
 
         int index = 0;
+        if (allConnectionReposNodes.size() == 0 && !RepositoryNodeHelper.isOpenDQCommonViewer()) {
+            return;
+        }
         connCombo.getTable().removeAll();
+
         // connCombo.defineColumns(new String[] { "Id", "Name", "Metadata Type" });// , new int[] { 5, SWT.DEFAULT,
         // MOD qiongli 2011-5-16,filter the logical delete connection except the analysis dependen on.
         Property property = null;
