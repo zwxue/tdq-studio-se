@@ -193,7 +193,7 @@ public class DQDeleteAction extends DeleteAction {
             if (!isStateDeleted) {
                 // closeEditors(selection);
                 excuteSuperRun(null, parent);
-                // refreshRepositoryNodes(selectedNodeParents);
+                refreshRepositoryNodes(selectedNodeParents);
                 break;
             }
 
