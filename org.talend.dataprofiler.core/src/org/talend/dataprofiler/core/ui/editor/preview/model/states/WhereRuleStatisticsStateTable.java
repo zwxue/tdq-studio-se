@@ -250,25 +250,29 @@ public class WhereRuleStatisticsStateTable extends AbstractChartTypeStatesTable 
 
         // Add RowCountIndicator dataset
         CustomerDefaultCategoryDataset customerDatasetRownCount = new CustomerDefaultCategoryDataset();
-        addRownCountDataEntity2CustomerDataset(customerDatasetRownCount, getRownCountUnit(units));
-        result.add(customerDatasetRownCount);
+        // MOD msjian TDQ-5119: fix a NPE
+        if (units != null && units.size() > 0) {
+            addRownCountDataEntity2CustomerDataset(customerDatasetRownCount, getRownCountUnit(units));
+            result.add(customerDatasetRownCount);
 
-        // MOD xqliu 2012-04-23 TDQ-5057: don't include RowCountUnit
-        List<TableIndicatorUnit> whereRuleUnits = removeRowCountUnit(units);
-        int totalNum = whereRuleUnits.size();
-        int pageNum = totalNum % size == 0 ? totalNum / size : totalNum / size + 1;
-        for (int i = 0; i < pageNum; i++) {
-            CustomerDefaultCategoryDataset customerDataset = new CustomerDefaultCategoryDataset();
-            for (int j = 0; j < size; ++j) {
-                int index = i * size + j;
-                if (index < totalNum) {
-                    addDataEntity2CustomerDataset(customerDataset, whereRuleUnits.get(index));
-                } else {
-                    break;
+            // MOD xqliu 2012-04-23 TDQ-5057: don't include RowCountUnit
+            List<TableIndicatorUnit> whereRuleUnits = removeRowCountUnit(units);
+            int totalNum = whereRuleUnits.size();
+            int pageNum = totalNum % size == 0 ? totalNum / size : totalNum / size + 1;
+            for (int i = 0; i < pageNum; i++) {
+                CustomerDefaultCategoryDataset customerDataset = new CustomerDefaultCategoryDataset();
+                for (int j = 0; j < size; ++j) {
+                    int index = i * size + j;
+                    if (index < totalNum) {
+                        addDataEntity2CustomerDataset(customerDataset, whereRuleUnits.get(index));
+                    } else {
+                        break;
+                    }
                 }
+                result.add(customerDataset);
             }
-            result.add(customerDataset);
         }
+        // TDQ-5119~
 
         return result;
     }

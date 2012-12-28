@@ -160,6 +160,7 @@ public class TableAnalysisResultPage extends AbstractAnalysisResultPage implemen
 
             exComp.addExpansionListener(new ExpansionAdapter() {
 
+                @Override
                 public void expansionStateChanged(ExpansionEvent e) {
 
                     form.reflow(true);
@@ -281,7 +282,7 @@ public class TableAnalysisResultPage extends AbstractAnalysisResultPage implemen
             };
 
             try {
-                new ProgressMonitorDialog(null).run(true, false, rwp);
+                new ProgressMonitorDialog(this.getEditorSite().getShell()).run(true, false, rwp);
             } catch (Exception ex) {
                 log.error(ex, ex);
             }
