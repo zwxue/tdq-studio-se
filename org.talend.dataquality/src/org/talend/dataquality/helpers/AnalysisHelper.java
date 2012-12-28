@@ -149,7 +149,7 @@ public final class AnalysisHelper {
         }
         EList<Domain> dataFilters = parameters.getDataFilter();
         // remove existing filters
-        if (dataFilters.isEmpty()) {
+        if (dataFilters == null || dataFilters.isEmpty()) {
             return null;
         }
 
