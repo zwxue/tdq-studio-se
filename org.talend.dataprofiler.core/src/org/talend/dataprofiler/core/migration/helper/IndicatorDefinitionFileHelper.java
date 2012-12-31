@@ -14,6 +14,8 @@ package org.talend.dataprofiler.core.migration.helper;
 
 import org.talend.cwm.relational.TdExpression;
 import org.talend.dataquality.helpers.BooleanExpressionHelper;
+import org.talend.dataquality.indicators.definition.CharactersMapping;
+import org.talend.dataquality.indicators.definition.DefinitionFactory;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dq.helper.resourcehelper.IndicatorResourceFileHelper;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
@@ -118,13 +120,28 @@ public final class IndicatorDefinitionFileHelper {
      * @return
      */
     public static boolean isExistSqlExprWithLanguage(IndicatorDefinition definition, String language) {
-        if (null == definition)
+        if (null == definition) {
             return false;
+        }
         for (TdExpression e : definition.getSqlGenericExpression()) {
             if (e.getLanguage().equals(language)) {
                 return true;
             }
         }
         return false;
+    }
+
+    public static boolean addCharacterMapping(IndicatorDefinition definition, String newLanguage, String name,
+            String newCharactersToReplace, String newReplacementCharacters) {
+        if (null == definition) {
+            return false;
+        }
+        CharactersMapping newMapping = DefinitionFactory.eINSTANCE.createCharactersMapping();
+        newMapping.setLanguage(newLanguage);
+        newMapping.setCharactersToReplace(newCharactersToReplace);
+        newMapping.setReplacementCharacters(newReplacementCharacters);
+        newMapping.setName(name);
+
+        return definition.getCharactersMapping().add(newMapping);
     }
 }

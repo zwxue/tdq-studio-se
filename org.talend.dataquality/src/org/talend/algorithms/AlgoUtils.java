@@ -12,6 +12,7 @@
 // ============================================================================
 package org.talend.algorithms;
 
+import java.math.BigDecimal;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
@@ -71,7 +72,7 @@ public final class AlgoUtils {
         Set<Object> keys = valueToCount.keySet();
         Collection<Long> counts = valueToCount.values();
 
-        double kthValue = ((double) totalCount) * p;
+        double kthValue = totalCount * p;
 
         double localMedian = 0;
 
@@ -81,7 +82,7 @@ public final class AlgoUtils {
 
         for (Long curValue : counts) {
             // MOD msjian 2011-12-16 TDQ-4164: there is something wrong about this compute
-            searchedKey = (Number) keyIterator.next(); // CAST here
+            searchedKey = new BigDecimal(String.valueOf(keyIterator.next()).trim()); // CAST here
             sumCount += curValue;
             // TDQ-4164 ~
             if (sumCount >= kthValue) {

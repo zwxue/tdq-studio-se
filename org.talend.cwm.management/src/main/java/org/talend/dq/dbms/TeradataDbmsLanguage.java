@@ -42,6 +42,7 @@ public class TeradataDbmsLanguage extends DbmsLanguage {
      * 
      * @return average length sql statement
      */
+    @Override
     public String getAverageLengthRows() {
         return "SELECT t.* FROM(" + "SELECT "
                 + "CAST(SUM(CHARACTER_LENGTH(<%=__COLUMN_NAMES__%>)) / (COUNT(<%=__COLUMN_NAMES__%>)*1.00)+0.99 as int) c, "
@@ -92,5 +93,11 @@ public class TeradataDbmsLanguage extends DbmsLanguage {
                 + ") / (COUNT(<%=__COLUMN_NAMES__%>)*1.00) as int) f " + "FROM <%=__TABLE_NAME__%> " + whereExp
                 + ") e, <%=__TABLE_NAME__%> t " + whereExp + "AND " + charLength("<%=__COLUMN_NAMES__%>") + " BETWEEN f AND c";
         return sql;
+    }
+
+    @Override
+    protected String getPatternFinderFunction(String expression, String charsToReplace, String replacementChars) {
+        assert charsToReplace != null && replacementChars != null && charsToReplace.length() == replacementChars.length();
+        return expression;
     }
 }
