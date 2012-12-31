@@ -696,6 +696,26 @@ public final class ReportUtils {
     }
 
     /**
+     * return the latest report.
+     * 
+     * @param reportFile
+     * @return ReportListParameters
+     */
+    public static ReportListParameters getTheLatestReport(IFile reportFile) {
+        ReportListParameters lastest = new ReportUtils().new ReportListParameters();
+
+        File reportListFile = ReportUtils.reportListFile(reportFile);
+        List<ReportListParameters> reportListParameters = ReportUtils.getReportListParameters(reportListFile);
+
+        for (ReportListParameters repParam : reportListParameters) {
+            if (repParam.getCreateTime().compareTo(lastest.getCreateTime()) > 0) {
+                lastest = repParam;
+            }
+        }
+        return lastest;
+    }
+
+    /**
      * get the .report.list file for the report, if it doesn't exist, create it.
      * 
      * @param reportFile the IFile of report
