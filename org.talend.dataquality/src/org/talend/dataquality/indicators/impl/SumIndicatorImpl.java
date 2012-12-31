@@ -80,7 +80,7 @@ public class SumIndicatorImpl extends IndicatorImpl implements SumIndicator {
         public BigDecimal sum = new BigDecimal("0"); //$NON-NLS-N$
 
         public void sumObject(Object object) {
-            BigDecimal obj = new BigDecimal(String.valueOf(object));
+            BigDecimal obj = new BigDecimal(String.valueOf(object).trim());
             sum = sum.add(obj);
         }
 

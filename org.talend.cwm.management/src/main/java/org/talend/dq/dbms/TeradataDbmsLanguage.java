@@ -93,4 +93,10 @@ public class TeradataDbmsLanguage extends DbmsLanguage {
                 + ") e, <%=__TABLE_NAME__%> t " + whereExp + "AND " + charLength("<%=__COLUMN_NAMES__%>") + " BETWEEN f AND c";
         return sql;
     }
+
+    @Override
+    protected String getPatternFinderFunction(String expression, String charsToReplace, String replacementChars) {
+        assert charsToReplace != null && replacementChars != null && charsToReplace.length() == replacementChars.length();
+        return expression;
+    }
 }
