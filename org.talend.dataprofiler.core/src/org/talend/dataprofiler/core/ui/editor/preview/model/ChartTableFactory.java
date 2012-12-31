@@ -396,8 +396,11 @@ public final class ChartTableFactory {
                                     for (final MenuItemEntity itemEntity : itemEntities) {
 
                                         if (itemEntity.getQuery() == null) {
-                                            itemEntity.setQuery(dataEntity.getKey().toString());
-
+                                            if (dataEntity.getKey() == null) {
+                                                itemEntity.setQuery(dataEntity.getLabel());
+                                            } else {
+                                                itemEntity.setQuery(dataEntity.getKey().toString());
+                                            }
                                         }
                                         MenuItem itemCreatePatt = new MenuItem(menu, SWT.PUSH);
                                         itemCreatePatt.setText(DefaultMessagesImpl
