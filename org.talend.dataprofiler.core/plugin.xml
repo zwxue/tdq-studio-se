@@ -1500,6 +1500,12 @@
            name="Update Sybase Language Name For Median Indicator Task"
            version="5.0.4">
      </workspacetask> 
+          <workspacetask
+           class="org.talend.dataprofiler.core.migration.impl.AddTeradataExpressionInPatternFrenquencyIndicatorTask"
+           id="org.talend.dataprofiler.core.migration.impl.AddTeradataExpressionInPatternFrenquencyIndicatorTask"
+           name="Add sql expression and character map for Teradata in PatternFrequency Table and LowFrequency Indicators"
+           version="5.0.4">
+     </workspacetask>  
   </extension>
   <extension
         point="org.eclipse.ui.actionSets">

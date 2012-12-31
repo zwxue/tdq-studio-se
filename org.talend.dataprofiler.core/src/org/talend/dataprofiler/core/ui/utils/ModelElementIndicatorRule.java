@@ -147,10 +147,6 @@ public final class ModelElementIndicatorRule {
             break;
         case PatternFreqIndicatorEnum:
         case PatternLowFreqIndicatorEnum:
-            // Added yyin 20121211 TDQ-6099: disable these three for INTERVAL type of Teradata
-            if (isTeradataInterval > 0 && ExecutionLanguage.SQL.equals(language)) {
-                return false;
-            }
         case ModeIndicatorEnum:
             // Added yyin 20121212 TDQ-6099: disable for Teradata's interval_xx_to_xx type.
             if (isTeradataInterval == Java2SqlType.TERADATA_INTERVAL_TO && ExecutionLanguage.SQL.equals(language)) {
