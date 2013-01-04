@@ -378,6 +378,10 @@ public final class IndicatorCommonUtil {
         Object object = null;
         if (UDIHelper.isCount(indicator)) {
             object = ((UserDefIndicator) indicator).getUserCount();
+            // Added yyin 20130104, TDQ-5890, when the user count is null, use the count.
+            if (object == null) {
+                object = ((UserDefIndicator) indicator).getCount();
+            }// ~
         } else if (UDIHelper.isFrequency(indicator)) {
             object = handleFrequency(indicator);
         } else if (UDIHelper.isMatching(indicator)) {

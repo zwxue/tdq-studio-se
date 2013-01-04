@@ -24,6 +24,7 @@ import org.talend.dataquality.indicators.definition.IndicatorCategory;
 import org.talend.dataquality.indicators.impl.IndicatorImpl;
 import org.talend.dataquality.indicators.sql.IndicatorSqlPackage;
 import org.talend.dataquality.indicators.sql.UserDefIndicator;
+import org.talend.i18n.Messages;
 
 /**
  * <!-- begin-user-doc --> An implementation of the model object '<em><b>User Def Indicator</b></em>'. <!-- end-user-doc
@@ -74,6 +75,11 @@ public class UserDefIndicatorImpl extends IndicatorImpl implements UserDefIndica
      * true.
      */
     private void computeDistinctValues() {
+        // Added yyin TDQ-5890, 20130104, when the user select wrong category for UDI.
+        if(valueToFreq==null){
+            log.error(Messages.getString("UserDefIndicator.categoryError", this.name));
+            return;
+        }// ~
         this.distinctValues = this.valueToFreq.keySet();
         this.setDistinctValueCount(Long.valueOf(distinctValues.size()));
         distinctComputed = true;

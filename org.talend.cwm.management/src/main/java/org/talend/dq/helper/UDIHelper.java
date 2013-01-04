@@ -201,16 +201,21 @@ public final class UDIHelper {
      * yyi 2009-09-22 To check the expression is null, empty or less than 16 characters Feature : 8866.
      */
     public static boolean isUDIValid(IndicatorDefinition indicatorDefinition) {
-
-        if (0 == indicatorDefinition.getSqlGenericExpression().size()) {
-            return false;
-        }
-
         if ("".equals(indicatorDefinition.getName())) {
             return false;
         }
 
         if ('\'' == indicatorDefinition.getName().charAt(0)) {
+            return false;
+        }
+
+        // Added yyin 20130104, TDQ-5890, add the judgement for java udi: if it contains jar, then if the sql
+        // expression=0, should not return false
+        if (TaggedValueHelper.getTaggedValue(TaggedValueHelper.JAR_FILE_PATH, indicatorDefinition.getTaggedValue()) != null) {
+            return true;
+        }// ~
+
+        if (0 == indicatorDefinition.getSqlGenericExpression().size()) {
             return false;
         }
 
