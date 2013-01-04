@@ -39,9 +39,9 @@ import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.ide.undo.CreateProjectOperation;
 import org.eclipse.ui.ide.undo.WorkspaceUndoUtil;
-import org.talend.commons.bridge.ReponsitoryContextBridge;
 import org.talend.commons.exception.PersistenceException;
 import org.talend.commons.utils.VersionUtils;
+import org.talend.commons.utils.platform.PluginChecker;
 import org.talend.core.context.Context;
 import org.talend.core.model.properties.ByteArray;
 import org.talend.core.model.properties.FolderItem;
@@ -155,7 +155,7 @@ public final class DQStructureManager {
                 ProxyRepositoryFactory.getInstance().createFolder(ERepositoryObjectType.TDQ_DATA_PROFILING, Path.EMPTY,
                         EResourceConstant.ANALYSIS.getName());
             }
-            if (!ReponsitoryContextBridge.isDefautProject()) {
+            if (PluginChecker.isTDQLoaded()) {
                 if (!project.getFolder(EResourceConstant.REPORTS.getPath()).exists()) {
                     Folder reportFoler = ProxyRepositoryFactory.getInstance().createFolder(
                             ERepositoryObjectType.TDQ_DATA_PROFILING, Path.EMPTY, EResourceConstant.REPORTS.getName());
@@ -179,7 +179,7 @@ public final class DQStructureManager {
             rulesSQLFoler.getProperty().getItem().getState().setPath(ERepositoryObjectType.TDQ_RULES_SQL.getFolder());
             Folder rulesParserFoler = null;
             if (!project.getFolder(EResourceConstant.RULES_PARSER.getPath()).exists()) {
-                if (!ReponsitoryContextBridge.isDefautProject()) {
+                if (PluginChecker.isTDQLoaded()) {
                     rulesParserFoler = ProxyRepositoryFactory.getInstance().createFolder(ERepositoryObjectType.TDQ_RULES,
                             Path.EMPTY, EResourceConstant.RULES_PARSER.getName());
                 }
@@ -216,9 +216,11 @@ public final class DQStructureManager {
                 ProxyRepositoryFactory.getInstance().createFolder(ERepositoryObjectType.TDQ_USERDEFINE_INDICATORS, Path.EMPTY,
                         EResourceConstant.USER_DEFINED_INDICATORS_LIB.getName());
             }
-            if (!project.getFolder(EResourceConstant.JRXML_TEMPLATE.getPath()).exists()) {
-                ProxyRepositoryFactory.getInstance().createFolder(ERepositoryObjectType.TDQ_LIBRARIES, Path.EMPTY,
-                        EResourceConstant.JRXML_TEMPLATE.getName());
+            if (PluginChecker.isTDQLoaded()) {
+                if (!project.getFolder(EResourceConstant.JRXML_TEMPLATE.getPath()).exists()) {
+                    ProxyRepositoryFactory.getInstance().createFolder(ERepositoryObjectType.TDQ_LIBRARIES, Path.EMPTY,
+                            EResourceConstant.JRXML_TEMPLATE.getName());
+                }
             }
             Folder patternRegexFoler = null;
             if (!project.getFolder(EResourceConstant.PATTERN_REGEX.getPath()).exists()) {
@@ -415,7 +417,7 @@ public final class DQStructureManager {
     public TDQSourceFileItem createSourceFileItem(File initFile, IPath path, String label, String extension) {
         Property property = PropertiesFactory.eINSTANCE.createProperty();
         property.setVersion(VersionUtils.DEFAULT_VERSION);
-        property.setStatusCode(PluginConstant.EMPTY_STRING); //$NON-NLS-1$
+        property.setStatusCode(PluginConstant.EMPTY_STRING);
         property.setLabel(label);
 
         TDQSourceFileItem sourceFileItem = org.talend.dataquality.properties.PropertiesFactory.eINSTANCE
@@ -454,7 +456,7 @@ public final class DQStructureManager {
     public TDQSourceFileItem createSourceFileItem(String content, IPath path, String label, String extension) {
         Property property = PropertiesFactory.eINSTANCE.createProperty();
         property.setVersion(VersionUtils.DEFAULT_VERSION);
-        property.setStatusCode(PluginConstant.EMPTY_STRING); //$NON-NLS-1$
+        property.setStatusCode(PluginConstant.EMPTY_STRING);
         property.setLabel(label);
 
         TDQSourceFileItem sourceFileItem = org.talend.dataquality.properties.PropertiesFactory.eINSTANCE
@@ -483,7 +485,8 @@ public final class DQStructureManager {
      * @return true if need to create new resource structure.
      */
     public boolean isNeedCreateStructure() {
-        // MOD zshen when use commandLine application maybe there don't should have a project, so before there should create a new project firstly.
+        // MOD zshen when use commandLine application maybe there don't should have a project, so before there should
+        // create a new project firstly.
         if (!ResourceManager.getRootProject().exists()) {
             return false;
         }
@@ -576,6 +579,7 @@ public final class DQStructureManager {
      * @throws CoreException
      * @deprecated
      */
+    @Deprecated
     public IFolder createNewFolder(IContainer parent, EResourceConstant constant) throws CoreException {
         return createNewFolder(parent, constant.getName());
     }
@@ -589,6 +593,7 @@ public final class DQStructureManager {
      * @throws CoreException
      * @deprecated
      */
+    @Deprecated
     public IFolder createNewFolder(IContainer parent, String folderName) throws CoreException {
         IFolder desFolder = null;
 
