@@ -39,9 +39,9 @@ import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.ide.undo.CreateProjectOperation;
 import org.eclipse.ui.ide.undo.WorkspaceUndoUtil;
-import org.talend.commons.bridge.ReponsitoryContextBridge;
 import org.talend.commons.exception.PersistenceException;
 import org.talend.commons.utils.VersionUtils;
+import org.talend.commons.utils.platform.PluginChecker;
 import org.talend.core.context.Context;
 import org.talend.core.model.properties.ByteArray;
 import org.talend.core.model.properties.FolderItem;
@@ -155,7 +155,7 @@ public final class DQStructureManager {
                 ProxyRepositoryFactory.getInstance().createFolder(ERepositoryObjectType.TDQ_DATA_PROFILING, Path.EMPTY,
                         EResourceConstant.ANALYSIS.getName());
             }
-            if (!ReponsitoryContextBridge.isDefautProject()) {
+            if (PluginChecker.isTDQLoaded()) {
                 if (!project.getFolder(EResourceConstant.REPORTS.getPath()).exists()) {
                     ProxyRepositoryFactory.getInstance().createFolder(ERepositoryObjectType.TDQ_DATA_PROFILING, Path.EMPTY,
                             EResourceConstant.REPORTS.getName());
@@ -179,7 +179,7 @@ public final class DQStructureManager {
             rulesSQLFoler.getProperty().getItem().getState().setPath(ERepositoryObjectType.TDQ_RULES_SQL.getFolder());
             Folder rulesParserFoler = null;
             if (!project.getFolder(EResourceConstant.RULES_PARSER.getPath()).exists()) {
-                if (!ReponsitoryContextBridge.isDefautProject()) {
+                if (PluginChecker.isTDQLoaded()) {
                     rulesParserFoler = ProxyRepositoryFactory.getInstance().createFolder(ERepositoryObjectType.TDQ_RULES,
                             Path.EMPTY, EResourceConstant.RULES_PARSER.getName());
                 }
@@ -216,9 +216,11 @@ public final class DQStructureManager {
                 ProxyRepositoryFactory.getInstance().createFolder(ERepositoryObjectType.TDQ_USERDEFINE_INDICATORS, Path.EMPTY,
                         EResourceConstant.USER_DEFINED_INDICATORS_LIB.getName());
             }
-            if (!project.getFolder(EResourceConstant.JRXML_TEMPLATE.getPath()).exists()) {
-                ProxyRepositoryFactory.getInstance().createFolder(ERepositoryObjectType.TDQ_LIBRARIES, Path.EMPTY,
-                        EResourceConstant.JRXML_TEMPLATE.getName());
+            if (PluginChecker.isTDQLoaded()) {
+                if (!project.getFolder(EResourceConstant.JRXML_TEMPLATE.getPath()).exists()) {
+                    ProxyRepositoryFactory.getInstance().createFolder(ERepositoryObjectType.TDQ_LIBRARIES, Path.EMPTY,
+                            EResourceConstant.JRXML_TEMPLATE.getName());
+                }
             }
             Folder patternRegexFoler = null;
             if (!project.getFolder(EResourceConstant.PATTERN_REGEX.getPath()).exists()) {
