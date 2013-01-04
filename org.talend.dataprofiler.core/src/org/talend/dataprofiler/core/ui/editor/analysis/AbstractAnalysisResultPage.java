@@ -38,6 +38,7 @@ import org.jfree.experimental.chart.swt.ChartComposite;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.dataprofiler.core.CorePlugin;
+import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.IRuningStatusListener;
 import org.talend.dataprofiler.core.ui.editor.AbstractFormPage;
@@ -158,11 +159,15 @@ public abstract class AbstractAnalysisResultPage extends AbstractFormPage implem
         if (analysisHandler.getResultMetadata().isLastRunOk()) {
             toolkit.createLabel(executionComp, DefaultMessagesImpl.getString("AbstractAnalysisResultPage.success")); //$NON-NLS-1$
         } else {
-            toolkit
-                    .createLabel(
-                            executionComp,
-                            DefaultMessagesImpl.getString("AbstractAnalysisResultPage.failure") + analysisHandler.getResultMetadata().getMessage()).setForeground( //$NON-NLS-1$
-                            Display.getDefault().getSystemColor(SWT.COLOR_RED));
+			// MOD msjian TDQ-5119 2012-12-24: the "execution status" should not
+			// display an error message when the analysis is not executed yet
+			String errMessage = PluginConstant.EMPTY_STRING;
+			if (analysisHandler.getResultMetadata().getExecutionNumber() != 0) {
+				errMessage = DefaultMessagesImpl
+						.getString("AbstractAnalysisResultPage.failure") + analysisHandler.getResultMetadata().getMessage(); //$NON-NLS-1$ 
+			}
+			toolkit.createLabel(executionComp, errMessage).setForeground(Display.getDefault().getSystemColor(SWT.COLOR_RED));
+			// TDQ-5119~
         }
 
         toolkit.createLabel(executionComp, DefaultMessagesImpl.getString("AbstractAnalysisResultPage.numberOfExecution")); //$NON-NLS-1$
