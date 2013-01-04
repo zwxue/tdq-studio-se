@@ -61,8 +61,6 @@ public final class ReportHelper {
     private static final TypedProperties PROPS = PropertiesLoader
             .getProperties(ReportHelper.class, "predefined_jrxml.properties"); //$NON-NLS-1$
 
-    public static final boolean USE_REPORT_DB_CONN = true;
-
     /**
      * The report types.
      * 
