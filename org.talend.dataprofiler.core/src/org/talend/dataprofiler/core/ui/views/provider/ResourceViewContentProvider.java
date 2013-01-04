@@ -25,7 +25,6 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.model.WorkbenchContentProvider;
-import org.talend.commons.bridge.ReponsitoryContextBridge;
 import org.talend.commons.exception.PersistenceException;
 import org.talend.commons.utils.platform.PluginChecker;
 import org.talend.core.model.metadata.IMetadataXmlElementType;
@@ -175,7 +174,7 @@ public class ResourceViewContentProvider extends WorkbenchContentProvider {
                     if (0 < children.size()) {
                         try {
 
-                            StructuredSelection structSel = new StructuredSelection((RepositoryNode) node);
+                            StructuredSelection structSel = new StructuredSelection(node);
 
                             if (null != treeViewer) {
                                 ISelection tempSelection = treeViewer.getSelection();
@@ -209,7 +208,7 @@ public class ResourceViewContentProvider extends WorkbenchContentProvider {
                     if (EResourceConstant.DATA_PROFILING.getName().equals(label)) {
                         List<EResourceConstant> resContants = new ArrayList<EResourceConstant>();
                         resContants.add(EResourceConstant.ANALYSIS);
-                        if (!ReponsitoryContextBridge.isDefautProject()) {
+                        if (PluginChecker.isTDQLoaded()) {
                             resContants.add(EResourceConstant.REPORTS);
                         }
                         instance.createRepositoryNodeSystemFolders(folderHelper, node, resContants);
@@ -217,7 +216,7 @@ public class ResourceViewContentProvider extends WorkbenchContentProvider {
                         List<EResourceConstant> resContants = new ArrayList<EResourceConstant>();
                         resContants.add(EResourceConstant.EXCHANGE);
                         resContants.add(EResourceConstant.INDICATORS);
-                        if (!PluginChecker.isOnlyTopLoaded()) {
+                        if (PluginChecker.isTDQLoaded()) {
                             resContants.add(EResourceConstant.JRXML_TEMPLATE);
                         }
                         resContants.add(EResourceConstant.PATTERNS);
@@ -232,12 +231,16 @@ public class ResourceViewContentProvider extends WorkbenchContentProvider {
                     // resContants.add(EResourceConstant.USER_DEFINED_INDICATORS);
                     // instance.createRepositoryNodeSystemFolders(folderHelper, node, resContants);
                     // }
-                    else if (EResourceConstant.PATTERNS.getName().equals(label)) {
+                    else if (EResourceConstant.PATTERNS.getName().equals(label)) {// this case has been done in the
+                                                                                  // PatternFolderRepNode.getChilren()
+                                                                                  // So I think don't need it again now.
                         List<EResourceConstant> resContants = new ArrayList<EResourceConstant>();
                         resContants.add(EResourceConstant.PATTERN_REGEX);
                         resContants.add(EResourceConstant.PATTERN_SQL);
                         instance.createRepositoryNodeSystemFolders(folderHelper, node, resContants);
-                    } else if (EResourceConstant.RULES.getName().equals(label)) {
+                    } else if (EResourceConstant.RULES.getName().equals(label)) {// this case has been done in the
+                                                                                 // RulesFolderRepNode.getChilren() So
+                                                                                 // I think don't need it again now too.
                         instance.createRepositoryNodeSystemFolder(folderHelper, node, EResourceConstant.RULES_SQL);
                     } else if (EResourceConstant.METADATA.getName().equals(label)) {
                         List<EResourceConstant> resContants = new ArrayList<EResourceConstant>();

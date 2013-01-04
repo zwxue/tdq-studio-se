@@ -18,6 +18,7 @@ import org.apache.log4j.Logger;
 import org.talend.commons.exception.PersistenceException;
 import org.talend.commons.utils.data.container.Container;
 import org.talend.commons.utils.data.container.RootContainer;
+import org.talend.commons.utils.platform.PluginChecker;
 import org.talend.core.model.properties.Property;
 import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.model.repository.Folder;
@@ -78,22 +79,21 @@ public class RulesFolderRepNode extends DQRepositoryNode {
     private void createRulesChildFolderNode(boolean withDeleted, RootContainer<String, IRepositoryViewObject> tdqViewObjects) {
         for (Container<String, IRepositoryViewObject> container : tdqViewObjects.getSubContainer()) {
             Folder folder = null;
-            boolean isSql = container.getLabel().equals("SQL");
-            boolean isParser = container.getLabel().equals("Parser");
+            boolean isSql = container.getLabel().equals("SQL"); //$NON-NLS-1$
+            boolean isParser = container.getLabel().equals("Parser"); //$NON-NLS-1$
             if (isSql) {
                 folder = new Folder((Property) container.getProperty(), ERepositoryObjectType.TDQ_RULES_SQL);
                 if (!withDeleted && folder.isDeleted()) {
                     continue;
                 }
-                RulesSQLFolderRepNode systemIndicatorFolderNode = new RulesSQLFolderRepNode(folder, this,
-                        ENodeType.SYSTEM_FOLDER);
+                RulesSQLFolderRepNode systemIndicatorFolderNode = new RulesSQLFolderRepNode(folder, this, ENodeType.SYSTEM_FOLDER);
                 folder.setRepositoryNode(systemIndicatorFolderNode);
                 systemIndicatorFolderNode.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.TDQ_RULES_SQL);
                 systemIndicatorFolderNode.setProperties(EProperties.LABEL, ERepositoryObjectType.TDQ_RULES_SQL);
                 super.getChildren().add(systemIndicatorFolderNode);
 
             }
-            if (isParser) {
+            if (isParser && PluginChecker.isTDQLoaded()) {
                 folder = new Folder((Property) container.getProperty(), ERepositoryObjectType.TDQ_RULES_PARSER);
                 if (!withDeleted && folder.isDeleted()) {
                     continue;
