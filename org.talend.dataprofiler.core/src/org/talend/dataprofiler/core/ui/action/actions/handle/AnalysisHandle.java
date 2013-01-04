@@ -54,14 +54,33 @@ public class AnalysisHandle extends EMFResourceHandle {
         // Added yyin 2012-10-10 TDQ-6236, create a new domain instead of using the domain in the original object
         EList<Domain> dataFilters = ((Analysis) tempObject).getParameters().getDataFilter();
         if (!dataFilters.isEmpty()) {// if the old already be copied into the duplicated one, replace it with a new one
-            Domain domain = DomainHelper.createDomain(((Analysis) tempObject).getName());
-            dataFilters.remove(0);
-            dataFilters.add(domain);
+            // MOD msjian TDQ-6513 TDQ-5180 2013-1-4: fix duplicate action lost filters
+            int dataFiltersSize = dataFilters.size();
+            String tablePattern = DomainHelper.getTablePattern(dataFilters);
+            String viewPattern = DomainHelper.getViewPattern(dataFilters);
+
+            dataFilters.clear();
+            for (int i = 0; i < dataFiltersSize; i++) {
+                Domain domain = DomainHelper.createDomain("Analysis Data Filter"); //$NON-NLS-1$
+                dataFilters.add(domain);
+
+                // except overview analysis, the data filter type is range
+                String dataFilterStr = AnalysisHelper.getStringDataFilter((Analysis) oldObject, i);
+                if (dataFilterStr != null) {
+                    AnalysisHelper.setStringDataFilter((Analysis) tempObject, dataFilterStr, i);
+                }
+            }
+
+            // the overview analysis, the data filter type is pattern
+            if (tablePattern != null) {
+                DomainHelper.setDataFilterTablePattern(dataFilters, tablePattern);
+            }
+            if (viewPattern != null) {
+                DomainHelper.setDataFilterViewPattern(dataFilters, viewPattern);
+            }
+            // TDQ-6513 TDQ-5180~
         }
         // ~6236
-
-        // MOD yyi 2012-05-07 TDQ-5270 duplicate an overview analysis with table/view filters.
-        AnalysisHelper.setStringDataFilter((Analysis) tempObject, AnalysisHelper.getStringDataFilter((Analysis) oldObject));
 
         return tempObject;
     }
