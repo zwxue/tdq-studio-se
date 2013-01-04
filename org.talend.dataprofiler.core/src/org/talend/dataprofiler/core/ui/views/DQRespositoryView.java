@@ -26,12 +26,9 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
@@ -75,14 +72,11 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 import org.eclipse.swt.widgets.Tree;
-import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.swt.widgets.TreeItem;
-import org.eclipse.ui.IEditorRegistry;
 import org.eclipse.ui.IMemento;
 import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchListener;
-import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.ActionContext;
@@ -90,7 +84,6 @@ import org.eclipse.ui.actions.RefreshAction;
 import org.eclipse.ui.contexts.IContextService;
 import org.eclipse.ui.model.IContributionService;
 import org.eclipse.ui.navigator.CommonNavigator;
-import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.progress.UIJob;
 import org.talend.commons.exception.PersistenceException;
 import org.talend.commons.ui.swt.dialogs.ProgressDialog;
@@ -115,7 +108,6 @@ import org.talend.dataprofiler.core.model.nodes.foldernode.ViewFolderNode;
 import org.talend.dataprofiler.core.service.GlobalServiceRegister;
 import org.talend.dataprofiler.core.service.IService;
 import org.talend.dataprofiler.core.service.IViewerFilterService;
-import org.talend.dataprofiler.core.ui.ResoureceChangedListener;
 import org.talend.dataprofiler.core.ui.action.actions.EditDFTableAction;
 import org.talend.dataprofiler.core.ui.action.actions.EditFileDelimitedAction;
 import org.talend.dataprofiler.core.ui.action.actions.OpenItemEditorAction;
@@ -172,10 +164,6 @@ public class DQRespositoryView extends CommonNavigator {
     private ITreeContentProvider contentProvider = null;
 
     DQStructureManager manager;
-
-    private static boolean upDownStatus = false;// true : down ; fasle : up
-
-    private static boolean isOnUpDownStatus = false;
 
     public DQRespositoryView() {
         super();
@@ -274,11 +262,6 @@ public class DQRespositoryView extends CommonNavigator {
         toolBarManager.add(new RefreshDQReponsitoryViewAction());
 
         // toolBarManager.add((IAction) new FilterDQReponsitoryTreeAction());
-    }
-
-    private void addResourceChangedListener() {
-        IWorkspace workspace = ResourceManager.getRootProject().getWorkspace();
-        workspace.addResourceChangeListener(new ResoureceChangedListener());
     }
 
     /**
@@ -444,21 +427,7 @@ public class DQRespositoryView extends CommonNavigator {
                     }
                     if (obj instanceof DQRepositoryNode) {
                         if (obj instanceof ReportFileRepNode) {
-                            superDoubleClick = false;
-                            ReportFileRepNode reportFileNode = (ReportFileRepNode) obj;
-                            IPath location = Path.fromOSString(reportFileNode.getResource().getRawLocation().toOSString());
-                            // TDQ-5458 sizhaoliu 2012-07-17 add "." before the full name to make sure it is ignored by
-                            // SVN.
-                            IFile latestRepIFile = ResourceManager.getRootProject().getFile("." + location.lastSegment()); //$NON-NLS-1$
-                            try {
-                                // TDQ-5458 sizhaoliu 2012-07-17 the link creation should be after report generation,
-                                // but not at the openning.
-                                // latestRepIFile.createLink(location, IResource.REPLACE, null);
-                                IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-                                page.openEditor(new FileEditorInput(latestRepIFile), IEditorRegistry.SYSTEM_EXTERNAL_EDITOR_ID);
-                            } catch (PartInitException e1) {
-                                log.error(e1, e1);
-                            }
+                            new OpenItemEditorAction((IRepositoryNode) obj).run();
                         } else if (obj instanceof DFConnectionRepNode) { // MOD gdbu 2011-4-1 bug 20051
                             new EditFileDelimitedAction((IRepositoryNode) obj).run();
                         } else if (obj instanceof DFTableRepNode) {// MOD qiongli 2011-10-21 bug TDQ-3797
@@ -534,19 +503,6 @@ public class DQRespositoryView extends CommonNavigator {
                         ((RepositoryNode) selectedElement).getChildren().get(0).getChildren();
                     }
                 }
-                // Object selectedElement = selection.getFirstElement();
-                // if (selectedElement instanceof TdTable || selectedElement instanceof TdView) {
-                // if (contentProvider == null) {
-                // contentProvider = (ITreeContentProvider) getCommonViewer().getContentProvider();
-                // }
-                // for (Object child : contentProvider.getChildren(selectedElement)) {
-                // if (child instanceof IFolderNode
-                // && ((IFolderNode) child).getFolderNodeType() == ColumnFolderNode.COLUMNFOLDER_NODE_TYPE) {
-                // ((IFolderNode) child).loadChildren();
-                // break;
-                // }
-                // }
-                // }
             }
 
         });
@@ -863,30 +819,6 @@ public class DQRespositoryView extends CommonNavigator {
         runFilterThread.run();
     }
 
-    private void expandNodes(boolean expand) {
-        expandTreeItems(getCommonViewer().getTree().getItems(), expand);
-        packOtherColumns();
-    }
-
-    private void expandTreeItems(TreeItem[] items, boolean expandOrCollapse) {
-        for (TreeItem item : items) {
-            item.setExpanded(expandOrCollapse);
-            TreeItem[] its = item.getItems();
-            if (its != null && its.length > 0) {
-                expandTreeItems(its, expandOrCollapse);
-            }
-        }
-    }
-
-    private void packOtherColumns() {
-        TreeColumn[] columns = getCommonViewer().getTree().getColumns();
-        for (TreeColumn column : columns) {
-            column.pack();
-        }
-        getCommonViewer().getTree().pack();
-        getCommonViewer().getTree().getParent().layout();
-    }
-
     protected void setContentAndLabelProviders(TreeViewer treeViewer) {
         treeViewer.setLabelProvider(new DQRepositoryViewLabelProvider());
         IContributionService cs = (IContributionService) PlatformUI.getWorkbench().getActiveWorkbenchWindow()
@@ -902,10 +834,6 @@ public class DQRespositoryView extends CommonNavigator {
     private void activateContext() {
         IContextService contextService = (IContextService) getSite().getService(IContextService.class);
         contextService.activateContext(VIEW_CONTEXT_ID);
-
-        // DQDeleteAction dqDeleteAction = new DQDeleteAction();
-        // IHandlerService service = (IHandlerService) getViewSite().getService(IHandlerService.class);
-        // service.activateHandler(dqDeleteAction.getActionDefinitionId(), new ActionHandler(dqDeleteAction));
     }
 
     private void adjustFilter() {
@@ -1093,22 +1021,6 @@ public class DQRespositoryView extends CommonNavigator {
         } catch (PersistenceException e) {
             log.error(e, e);
         }
-    }
-
-    private static boolean getUpDownStatus() {
-        return upDownStatus;
-    }
-
-    private static void setUpDownStatus(boolean upDownStatus) {
-        DQRespositoryView.upDownStatus = upDownStatus;
-    }
-
-    private static boolean isOnUpDownStatus() {
-        return isOnUpDownStatus;
-    }
-
-    private static void setOnUpDownStatus(boolean isOnUpDownStatus) {
-        DQRespositoryView.isOnUpDownStatus = isOnUpDownStatus;
     }
 
     public void xxxxx() {
