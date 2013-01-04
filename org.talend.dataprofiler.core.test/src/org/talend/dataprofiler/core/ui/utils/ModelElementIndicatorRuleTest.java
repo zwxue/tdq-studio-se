@@ -151,9 +151,10 @@ public class ModelElementIndicatorRuleTest {
         Assert.assertTrue(ModelElementIndicatorRule.patternRule(IndicatorEnum.MeanIndicatorEnum, me, ExecutionLanguage.SQL));
         Assert.assertFalse(ModelElementIndicatorRule
                 .patternRule(IndicatorEnum.SoundexLowIndicatorEnum, me, ExecutionLanguage.SQL));
-        Assert.assertFalse(ModelElementIndicatorRule.patternRule(IndicatorEnum.PatternFreqIndicatorEnum, me,
+        Assert.assertTrue(ModelElementIndicatorRule
+                .patternRule(IndicatorEnum.PatternFreqIndicatorEnum, me,
                 ExecutionLanguage.SQL));
-        Assert.assertFalse(ModelElementIndicatorRule.patternRule(IndicatorEnum.PatternLowFreqIndicatorEnum, me,
+        Assert.assertTrue(ModelElementIndicatorRule.patternRule(IndicatorEnum.PatternLowFreqIndicatorEnum, me,
                 ExecutionLanguage.SQL));
         Assert.assertFalse(ModelElementIndicatorRule.patternRule(IndicatorEnum.BenfordLawFrequencyIndicatorEnum, me,
                 ExecutionLanguage.SQL));
