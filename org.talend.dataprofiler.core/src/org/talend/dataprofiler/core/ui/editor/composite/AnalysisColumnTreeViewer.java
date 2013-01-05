@@ -824,10 +824,10 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
         }
         if (branchIndicatorExist) {
             setElements(modelElementIndicators);
-        }
+        } else {
         // Added yyin 20130105 TDQ-5895, the delete button below the columns doesnot work.
         masterPage.synNagivatorStat();
-        // ~
+        }// ~
     }
 
     private void removeSelectedElements(TreeItem[] items) {
