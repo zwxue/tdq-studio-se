@@ -51,6 +51,7 @@ import org.talend.core.model.properties.Property;
 import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
+import org.talend.core.runtime.CoreRuntimePlugin;
 import org.talend.cwm.compare.exception.ReloadCompareException;
 import org.talend.cwm.compare.factory.ComparisonLevelFactory;
 import org.talend.cwm.compare.factory.IComparisonLevel;
@@ -119,7 +120,21 @@ public class TOPRepositoryService implements ITDQRepositoryService {
         }
     }
 
-    public void openEditor(Item item) {
+    public void openConnectionEditor(Item item) {
+
+        Class<?> clazz = null;
+        IEditorInput editorInput = null;
+        if (item instanceof ConnectionItem) {
+            clazz = ConnectionEditor.class;
+            editorInput = new ConnectionItemEditorInput(item);
+        }
+
+        if (editorInput != null && clazz != null && CoreRuntimePlugin.getInstance().isDataProfilePerspectiveSelected()) {
+            CorePlugin.getDefault().openEditor(editorInput, clazz.getName());
+        }
+    }
+
+    public void refreshConnectionEditor(Item item) {
 
         Class<?> clazz = null;
         IEditorInput editorInput = null;
@@ -129,8 +144,10 @@ public class TOPRepositoryService implements ITDQRepositoryService {
         }
 
         if (editorInput != null && clazz != null) {
-            CorePlugin.getDefault().closeEditorIfOpened(item);
-            CorePlugin.getDefault().openEditor(editorInput, clazz.getName());
+            // just reopen some opened editors both on DQ and DI perspective.
+            if (CorePlugin.getDefault().itemIsOpening(item, true)) {
+                CorePlugin.getDefault().openEditor(editorInput, clazz.getName());
+            }
         }
     }
 
@@ -165,6 +182,10 @@ public class TOPRepositoryService implements ITDQRepositoryService {
      * @param node
      */
     public void refresh(Object refreshObject) {
+        if (refreshObject == null) {
+            this.refresh();
+            return;
+        }
         if (refreshObject instanceof RepositoryNode) {
             CorePlugin.getDefault().refreshWorkSpace();
             CorePlugin.getDefault().refreshDQView(refreshObject);

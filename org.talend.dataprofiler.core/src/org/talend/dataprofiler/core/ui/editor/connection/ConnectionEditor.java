@@ -57,7 +57,8 @@ public class ConnectionEditor extends CommonFormEditor {
             ConnectionItem item = (ConnectionItem) ((ConnectionItemEditorInput) this.getEditorInput()).getItem();
             if (item instanceof DatabaseConnectionItem) {
                 String name = ((DatabaseConnectionItem) item).getConnection().getName();
-                CWMPlugin.getDefault().updateAliasInSQLExplorer(masterPage.getOldDataproviderName(), name);
+                // CWMPlugin.getDefault().updateAliasInSQLExplorer(masterPage.getOldDataproviderName(), name);
+                CWMPlugin.getDefault().updateConnetionAliasByName(item.getConnection(), masterPage.getOldDataproviderName());
                 masterPage.setOldDataproviderName(name);
             }
             // refresh the analysis editor

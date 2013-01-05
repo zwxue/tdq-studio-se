@@ -16,7 +16,14 @@ import java.util.Collection;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IWorkspace;
+import org.eclipse.core.resources.IWorkspaceRunnable;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.talend.commons.emf.FactoriesUtil;
@@ -155,11 +162,31 @@ public class DataProviderWriter extends AElementPersistance {
      * 
      * @see org.talend.dq.writer.AElementPersistance#save(org.talend.core.model.properties.Item, boolean[])
      */
+    @Override
     public ReturnCode save(Item item, boolean careDependency) {
-        ConnectionItem connItem = (ConnectionItem) item;
-        Connection conn = connItem.getConnection();
-        // MOD yyi 2012-02-07 TDQ-4621:Update dependencies(connection) when careDependency is true.
-        return careDependency ? saveWithDependencies(connItem, conn) : saveWithoutDependencies(connItem, conn);
+        final ConnectionItem connItem = (ConnectionItem) item;
+        final boolean isCare = careDependency;
+        // MOD qiongli TDQ-6287 avoid all notification of changes before the end of the modifications.
+        final ReturnCode returnCode = new ReturnCode();
+        IWorkspace workspace = ResourcesPlugin.getWorkspace();
+        IWorkspaceRunnable operation = new IWorkspaceRunnable() {
+
+            public void run(IProgressMonitor monitor) throws CoreException {
+                ReturnCode ret = isCare ? saveWithDependencies(connItem, connItem.getConnection()) : saveWithoutDependencies(
+                        connItem, connItem.getConnection());
+                returnCode.setOk(ret.isOk());
+                returnCode.setMessage(ret.getMessage());
+
+            }
+        };
+        ISchedulingRule schedulingRule = workspace.getRoot();
+        try {
+            workspace.run(operation, schedulingRule, IWorkspace.AVOID_UPDATE, new NullProgressMonitor());
+        } catch (CoreException e) {
+            log.error(e, e);
+            returnCode.setOk(false);
+        }
+        return returnCode;
     }
 
     @Override

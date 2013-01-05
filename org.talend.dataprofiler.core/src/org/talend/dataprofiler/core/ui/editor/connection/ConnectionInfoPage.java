@@ -144,7 +144,7 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
             // String fileLabel = proty.getLabel();
             Item item = proty.getItem();
             if (item instanceof ConnectionItem) {
-                connectionItem = (ConnectionItem) item;
+                connectionItem = item;
                 connection = ((ConnectionItem) item).getConnection();
             }
         }
@@ -532,7 +532,7 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
 
         ConnectionUtils.checkUsernameBeforeSaveConnection4Sqlite(connection);
 
-        ReturnCode returnCode = ElementWriterFactory.getInstance().createDataProviderWriter().save(connection);
+        ReturnCode returnCode = ElementWriterFactory.getInstance().createDataProviderWriter().save(connectionItem, true);
         if (returnCode.isOk()) {
             if (log.isDebugEnabled()) {
                 log.debug("Saved in  " + connection.eResource().getURI().toFileString() + " successful"); //$NON-NLS-1$ //$NON-NLS-2$
