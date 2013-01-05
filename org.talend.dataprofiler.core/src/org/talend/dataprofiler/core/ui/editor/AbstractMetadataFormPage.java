@@ -117,6 +117,7 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
         super(editor, id, title);
     }
 
+    @Override
     public void initialize(FormEditor editor) {
         super.initialize(editor);
         this.currentModelElement = getCurrentModelElement(editor);
@@ -197,7 +198,7 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
             authorText.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_WIDGET_BACKGROUND));
         }
 
-        toolkit.createLabel(parent, STATUS_LABEL); //$NON-NLS-1$
+        toolkit.createLabel(parent, STATUS_LABEL);
         statusCombo = new CCombo(parent, SWT.BORDER);
         statusCombo.setEditable(false);
 
@@ -327,6 +328,7 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
         }
     }
 
+    @Override
     public void doSave(IProgressMonitor monitor) {
         super.doSave(monitor);
         saveTextChange();
@@ -467,7 +469,13 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
     }
 
     public boolean isNameTextUpdate() {
-        return modify;
+        String newDataproviderName = this.currentModelElement.getName();
+        if (newDataproviderName == null) {
+            return modify;
+        } else {
+            return modify && newDataproviderName.equals(this.oldDataproviderName);
+        }
+
     }
 
     /**

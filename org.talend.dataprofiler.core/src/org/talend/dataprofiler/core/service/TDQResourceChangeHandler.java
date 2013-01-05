@@ -274,7 +274,6 @@ public class TDQResourceChangeHandler extends AbstractResourceChangesService {
                 ResourceService.refreshStructure();
                 WorkbenchUtils.refreshAnalysesNode();
                 WorkbenchUtils.refreshMetadataNode();
-                WorkbenchUtils.refreshCurrentAnalysisEditor();
             }
         }
     }
