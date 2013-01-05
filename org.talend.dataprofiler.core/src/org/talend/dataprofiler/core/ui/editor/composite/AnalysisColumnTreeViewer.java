@@ -763,6 +763,7 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
     }
 
     public ModelElementIndicator[] openIndicatorSelectDialog(Shell shell) {
+        @SuppressWarnings("deprecation")
         final IndicatorSelectDialog dialog = new IndicatorSelectDialog(
                 shell,
                 DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.indicatorSelection"), masterPage.getCurrentModelElementIndicators()); //$NON-NLS-1$
@@ -785,8 +786,6 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
             for (ModelElementIndicator modelElementIndicator : result) {
                 modelElementIndicator.storeTempIndicator();
             }
-
-            // this.setElements(result);
             return result;
         } else {
             ModelElementIndicator[] result = dialog.getResult();
@@ -826,12 +825,13 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
         if (branchIndicatorExist) {
             setElements(modelElementIndicators);
         }
-        // MOD mzhao 2009-05-5, bug 6587.
-        // MOD mzhao 2009-06-8, bug 5887.
-        // updateBindConnection(masterPage, getColumnIndicator(), tree);
+        // Added yyin 20130105 TDQ-5895, the delete button below the columns doesnot work.
+        masterPage.synNagivatorStat();
+        // ~
     }
 
     private void removeSelectedElements(TreeItem[] items) {
+
         boolean branchIndicatorExist = false;
         for (TreeItem item : items) {
             IndicatorUnit indicatorUnit = (IndicatorUnit) item.getData(INDICATOR_UNIT_KEY);
@@ -986,8 +986,6 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
         ConnectionItem connItem = (ConnectionItem) metadataRepObject.getProperty().getItem();
         // MOD qiongli 2010-8-19,bug 14436:could not come from diffrent connection
         Connection tdProvider = connItem.getConnection();
-        // FIXME text is never used.
-        boolean text = metadataRepObject instanceof MetadataXmlElementTypeRepositoryObject;
         if (tdProvider == null) {
             return false;
         } else if (this.getAnalysis().getContext().getConnection() != null
