@@ -68,7 +68,9 @@ public class ConnectionEditor extends CommonFormEditor {
                 }
             }
             // refresh the analysis editor
-            WorkbenchUtils.refreshCurrentAnalysisEditor();
+            if (masterPage.isNameTextUpdate()) {
+                WorkbenchUtils.refreshCurrentAnalysisEditor();
+            }
         }
         setEditorObject(masterPage.getConnectionRepNode());
         super.doSave(monitor);

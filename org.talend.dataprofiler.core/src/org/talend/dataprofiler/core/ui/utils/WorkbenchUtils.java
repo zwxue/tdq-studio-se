@@ -44,14 +44,15 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.WorkbenchException;
 import org.talend.commons.emf.EMFUtil;
+import org.talend.commons.exception.PersistenceException;
 import org.talend.core.model.general.Project;
-import org.talend.core.model.metadata.builder.connection.Connection;
-import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.properties.FolderItem;
 import org.talend.core.model.properties.FolderType;
 import org.talend.core.model.properties.Item;
+import org.talend.core.model.properties.Property;
 import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.model.repository.Folder;
+import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.core.model.repository.RepositoryViewObject;
 import org.talend.core.repository.constants.FileConstants;
 import org.talend.core.repository.model.FolderHelper;
@@ -62,13 +63,13 @@ import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.exception.ExceptionHandler;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.action.actions.OpenItemEditorAction;
-import org.talend.dataprofiler.core.ui.editor.analysis.AnalysisItemEditorInput;
-import org.talend.dataprofiler.core.ui.editor.connection.ConnectionItemEditorInput;
+import org.talend.dataprofiler.core.ui.editor.AbstractItemEditorInput;
+import org.talend.dataprofiler.core.ui.editor.analysis.AnalysisEditor;
+import org.talend.dataprofiler.core.ui.editor.connection.ConnectionEditor;
 import org.talend.dataprofiler.core.ui.views.DQRespositoryView;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisContext;
 import org.talend.dataquality.indicators.Indicator;
-import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
 import org.talend.dq.writer.EMFSharedResources;
@@ -94,10 +95,6 @@ public final class WorkbenchUtils {
     private static final int AUTO_CHANGE2DATA_PROFILER_FALSE = 2;
 
     private static final boolean AUTO_CHANGE2DATA_PROFILER = true;
-
-    private static final String ANALYSIS_EDITOR_ID = "org.talend.dataprofiler.core.ui.editor.analysis.AnalysisEditor"; //$NON-NLS-1$
-
-    private static final String CONNECTION_EDITOR_ID = "org.talend.dataprofiler.core.ui.editor.connection.ConnectionEditor"; //$NON-NLS-1$
 
     private WorkbenchUtils() {
     }
@@ -350,7 +347,23 @@ public final class WorkbenchUtils {
         }
     }
 
-    public static void refreshCurrentAnalysisEditor() {
+    /**
+     * 
+     * Refresh the analysis and Connection which is openning
+     */
+    public static void refreshCurrentAnalysisAndConnectionEditor() {
+        List<IEditorReference> iEditorReference = getIEditorReference(AnalysisEditor.class.getName());
+        iEditorReference.addAll(getIEditorReference(ConnectionEditor.class.getName()));
+        closeAndOpenEditor(iEditorReference);
+    }
+
+    /**
+     * 
+     * close and open the editors same method {@link CorePlugin}.getDefault().itemIsOpening()
+     * 
+     * @param iEditorReference
+     */
+    public static void closeAndOpenEditor(List<IEditorReference> iEditorReference) {
         // Refresh current opened editors.
         IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
         // MOD qiongli 2011-9-8 TDQ-3317.when focucs on DI perspective,don't refresh the open editors
@@ -358,65 +371,79 @@ public final class WorkbenchUtils {
         if (findView == null) {
             return;
         }
-        IEditorReference[] editors = activePage.getEditorReferences();
-        if (editors != null) {
-            for (IEditorReference editorRef : editors) {
-                if (editorRef.getId().equals(ANALYSIS_EDITOR_ID) || editorRef.getId().equals(CONNECTION_EDITOR_ID)) {
-                    boolean isConfirm = MessageDialog.openConfirm(
-                            PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
-                            DefaultMessagesImpl.getString("WorkbenchUtils.ElementChange"), //$NON-NLS-1$
-                            DefaultMessagesImpl.getString("WorkbenchUtils.RefreshCurrentEditor")); //$NON-NLS-1$
-                    if (!isConfirm) {
-                        return;
-                    } else {
-                        break;
-                    }
-                }
+        if (iEditorReference.size() > 0) {
+            boolean isConfirm = MessageDialog.openConfirm(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
+                    DefaultMessagesImpl.getString("WorkbenchUtils.ElementChange"), //$NON-NLS-1$
+                    DefaultMessagesImpl.getString("WorkbenchUtils.RefreshCurrentEditor")); //$NON-NLS-1$
+            if (!isConfirm) {
+                return;
             }
-
             try {
-                for (IEditorReference editorRef : editors) {
+                for (IEditorReference editorRef : iEditorReference) {
                     IEditorInput editorInput = editorRef.getEditorInput();
-                    if (editorRef.getId().equals(ANALYSIS_EDITOR_ID)) {
-                        if (editorInput instanceof AnalysisItemEditorInput) {
-                            AnalysisItemEditorInput anaItemEditorInput = (AnalysisItemEditorInput) editorInput;
-                            Analysis analysis = anaItemEditorInput.getTDQAnalysisItem().getAnalysis();
-                            if (analysis.eIsProxy()) {
-                                analysis = (Analysis) EObjectHelper.resolveObject(analysis);
-                            }
-                            RepositoryNode recursiveFind = RepositoryNodeHelper.recursiveFind(analysis);
-                            // close the editor
-                            activePage.closeEditor(editorRef.getEditor(false), false);
-                            // reopen the analysis
-                            if (recursiveFind != null) {
-                                new OpenItemEditorAction(recursiveFind).run();
-                            }
+                    if (editorInput instanceof AbstractItemEditorInput) {
+                        AbstractItemEditorInput anaItemEditorInput = (AbstractItemEditorInput) editorInput;
+                        Item item = anaItemEditorInput.getItem();
+                        Property property = item.getProperty();
+                        if (property == null) {
+                            return;
                         }
-                    } else if (editorRef.getId().equals(CONNECTION_EDITOR_ID)) {
-                        if (editorInput instanceof ConnectionItemEditorInput) {
-                            ConnectionItemEditorInput connItemEditorInput = (ConnectionItemEditorInput) editorInput;
-                            Item item = connItemEditorInput.getItem();
-                            if (item instanceof ConnectionItem) {
-                                ConnectionItem connItem = (ConnectionItem) item;
-                                Connection connection = connItem.getConnection();
-                                if (connection.eIsProxy()) {
-                                    connection = (Connection) EObjectHelper.resolveObject(connection);
-                                }
-                                RepositoryNode recursiveFind = RepositoryNodeHelper.recursiveFind(connection);
-                                // close the editor
-                                activePage.closeEditor(editorRef.getEditor(false), false);
-                                // reopen the connection
-                                if (recursiveFind != null) {
-                                    new OpenItemEditorAction(recursiveFind).run();
-                                }
-                            }
+                        IRepositoryViewObject lastVersion = ProxyRepositoryFactory.getInstance().getLastVersion(property.getId());
+                        // close the editor
+                        activePage.closeEditor(editorRef.getEditor(false), false);
+                        // reopen the analysis
+                        if (lastVersion != null) {
+                            new OpenItemEditorAction(lastVersion).run();
                         }
                     }
                 }
             } catch (PartInitException e) {
                 log.error(e);
+            } catch (PersistenceException e) {
+                log.error(e, e);
             }
         }
+    }
+
+    /**
+     * 
+     * Refresh the analysis which is openning
+     */
+    public static void refreshCurrentAnalysisEditor() {
+        List<IEditorReference> iEditorReference = getIEditorReference(AnalysisEditor.class.getName());
+        closeAndOpenEditor(iEditorReference);
+
+    }
+
+    /**
+     * 
+     * Refresh the Connection which is openning
+     */
+    public static void refreshCurrentConnectionEditor() {
+        List<IEditorReference> iEditorReference = getIEditorReference(ConnectionEditor.class.getName());
+        closeAndOpenEditor(iEditorReference);
+    }
+
+    /**
+     * 
+     * Get Editors which is is same as editorID
+     * 
+     * @param editorID
+     * @return
+     */
+    public static List<IEditorReference> getIEditorReference(String editorID) {
+        List<IEditorReference> returnCode = new ArrayList<IEditorReference>();
+        IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+        IEditorReference[] editors = activePage.getEditorReferences();
+        if (editors != null) {
+            for (IEditorReference editorRef : editors) {
+                if (editorRef.getId().equals(editorID)) {
+                    returnCode.add(editorRef);
+                }
+            }
+
+        }
+        return returnCode;
     }
 
     public static void refreshAnalysesNode() {
