@@ -535,4 +535,15 @@ public class TOPRepositoryService implements ITDQRepositoryService {
     public void refreshCurrentAnalysisEditor() {
         WorkbenchUtils.refreshCurrentAnalysisEditor();
     }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.core.ITDQRepositoryService#refreshCurrentAnalysisAndConnectionEditor()
+     */
+    public void refreshCurrentAnalysisAndConnectionEditor() {
+        WorkbenchUtils.refreshCurrentAnalysisAndConnectionEditor();
+
+    }
+
 }

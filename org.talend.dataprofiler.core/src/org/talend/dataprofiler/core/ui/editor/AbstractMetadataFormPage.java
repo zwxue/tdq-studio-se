@@ -123,6 +123,7 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
         super(editor, id, title);
     }
 
+    @Override
     public void initialize(FormEditor editor) {
         super.initialize(editor);
         this.currentModelElement = getCurrentModelElement(editor);
@@ -167,7 +168,7 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
     protected abstract ModelElement getCurrentModelElement(FormEditor editor);
 
     protected Section creatMetadataSection(final ScrolledForm form, Composite topComp) {
-        Section section = createSection(form, topComp, getMetadataTitle(), ""); //$NON-NLS-1$ //$NON-NLS-2$
+        Section section = createSection(form, topComp, getMetadataTitle(), ""); //$NON-NLS-1$ 
         Composite parent = toolkit.createComposite(section);
         parent.setLayout(new GridLayout(2, false));
 
@@ -210,7 +211,7 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
 
         // versionText = createMetadataVersionFiled(VERSION_LABEL, parent);
 
-        toolkit.createLabel(parent, STATUS_LABEL); //$NON-NLS-1$
+        toolkit.createLabel(parent, STATUS_LABEL);
         statusCombo = new CCombo(parent, SWT.BORDER);
         statusCombo.setEditable(false);
 
@@ -441,6 +442,7 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
         }
     }
 
+    @Override
     public void doSave(IProgressMonitor monitor) {
         super.doSave(monitor);
         saveTextChange();
@@ -581,7 +583,13 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
     }
 
     public boolean isNameTextUpdate() {
-        return modify;
+        String newDataproviderName = this.currentModelElement.getName();
+        if (newDataproviderName == null) {
+            return modify;
+        } else {
+            return modify && newDataproviderName.equals(this.oldDataproviderName);
+        }
+
     }
 
     /**
@@ -642,7 +650,7 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
             oldProperty = this.repositoryViewObject.getProperty();
         }
         ReturnCode ret = new ReturnCode();
-        if (oldProperty == null||objectType==null) {
+        if (oldProperty == null || objectType == null) {
             return ret;
         }
         if (PluginConstant.EMPTY_STRING.equals(elementName.trim())) {
