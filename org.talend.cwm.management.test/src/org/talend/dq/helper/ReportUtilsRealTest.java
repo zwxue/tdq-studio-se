@@ -29,6 +29,7 @@ import org.talend.commons.utils.io.FilesUtils;
 import org.talend.core.model.properties.PropertiesFactory;
 import org.talend.core.model.properties.Property;
 import org.talend.core.model.repository.ERepositoryObjectType;
+import org.talend.dq.helper.ReportUtils.ReportListParameters;
 import org.talend.utils.string.StringUtilities;
 import org.talend.utils.sugars.ReturnCode;
 
@@ -65,6 +66,29 @@ public class ReportUtilsRealTest {
         if (this.projectFile != null) {
             FilesUtils.deleteFile(this.projectFile, true);
             assertFalse(this.projectFile.exists());
+        }
+    }
+
+    /**
+     * Test method for {@link org.talend.dq.helper.ReportUtils#getTheLatestReport(org.eclipse.core.resources.IFile)}.
+     */
+    @Test
+    public void testGetTheLatestReport() {
+        if (this.realProject != null) {
+            String folderName1 = ERepositoryObjectType.TDQ_DATA_PROFILING.getFolder();
+            String folderName2 = ERepositoryObjectType.TDQ_REPORT_ELEMENT.getFolder();
+            String reportName = "B" + StringUtilities.getRandomString(7); //$NON-NLS-1$
+
+            UnitTestBuildHelper.createRealFolder(this.realProject, folderName1);
+            IFolder folder2 = UnitTestBuildHelper.createRealFolder(this.realProject, folderName2);
+            IFile iFile = UnitTestBuildHelper.createRealFile(folder2, reportName + "_0.1.rep"); //$NON-NLS-1$
+            assertTrue(iFile.exists());
+            assertTrue(WorkspaceUtils.ifileToFile(iFile).exists());
+
+            ReportListParameters reportListParameters = ReportUtils.getTheLatestReport(iFile);
+            assertNotNull(reportListParameters);
+        } else {
+            fail("project is null!"); //$NON-NLS-1$
         }
     }
 
