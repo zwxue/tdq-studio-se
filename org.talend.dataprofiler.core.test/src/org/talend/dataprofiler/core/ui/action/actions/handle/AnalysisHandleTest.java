@@ -12,10 +12,8 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.action.actions.handle;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
 import junit.framework.Assert;
 
 import org.eclipse.core.resources.IWorkspaceRoot;
@@ -35,7 +33,11 @@ import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisFactory;
 import org.talend.dataquality.analysis.AnalysisParameters;
 import org.talend.dataquality.domain.Domain;
+import org.talend.dataquality.domain.pattern.Pattern;
+import org.talend.dataquality.domain.pattern.PatternFactory;
+import org.talend.dataquality.domain.pattern.RegularExpression;
 import org.talend.dataquality.helpers.AnalysisHelper;
+import org.talend.dataquality.helpers.BooleanExpressionHelper;
 import org.talend.dataquality.helpers.DomainHelper;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.repository.model.IRepositoryNode;
@@ -43,33 +45,45 @@ import org.talend.resource.ResourceManager;
 import orgomg.cwm.objectmodel.core.Expression;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
-
 /**
- * DOC yyin  class global comment. Detailled comment
+ * DOC yyin class global comment. Detailled comment
  */
 @PrepareForTest({ WorkbenchUtils.class, ResourceManager.class, RepositoryNodeHelper.class })
 public class AnalysisHandleTest {
 
+    private static final String VIEW_PATTERN_FILTER = "viewPatternFilter"; //$NON-NLS-1$
+
+    private static final String TABLE_PATTERN_FILTER = "tablePatternFilter"; //$NON-NLS-1$
+
     @Rule
     public PowerMockRule powerMockRule = new PowerMockRule();
 
-    Analysis analysis1;
+    Analysis oldAnalysis;
 
     AnalysisHandle handle;
+
     /**
      * DOC yyin Comment method "setUp".
+     * 
      * @throws java.lang.Exception
      */
     @Before
     public void setUp() throws Exception {
         // init the analysis
-        analysis1 = AnalysisHelper.createAnalysis("ana");
+        oldAnalysis = AnalysisHelper.createAnalysis("Analysis Data Filter"); //$NON-NLS-1$
         AnalysisParameters parameters = AnalysisFactory.eINSTANCE.createAnalysisParameters();
-        analysis1.setParameters(parameters);
-        EList<Domain> dataFilters = analysis1.getParameters().getDataFilter();
-        Domain domain = DomainHelper.createDomain(analysis1.getName());
-        AnalysisHelper.setStringDataFilter(analysis1, "table.column is null");
-        dataFilters.add(domain);
+        oldAnalysis.setParameters(parameters);
+
+        // add two filters which type is ranges
+        AnalysisHelper.setStringDataFilter(oldAnalysis, "filter1", 0); //$NON-NLS-1$
+        AnalysisHelper.setStringDataFilter(oldAnalysis, "filter2", 1); //$NON-NLS-1$
+
+        // add one filter which type is pattern and contains two patterns
+        EList<Domain> dataFilters = oldAnalysis.getParameters().getDataFilter();
+        RegularExpression tablePattern = BooleanExpressionHelper.createRegularExpression(null, TABLE_PATTERN_FILTER);
+        addPatternToDomain(dataFilters.get(0), tablePattern, "Table Pattern"); //$NON-NLS-1$
+        RegularExpression viewPattern = BooleanExpressionHelper.createRegularExpression(null, VIEW_PATTERN_FILTER);
+        addPatternToDomain(dataFilters.get(0), viewPattern, "View Pattern"); //$NON-NLS-1$
 
         // create a handle
         IRepositoryNode node = mock(IRepositoryNode.class);
@@ -80,7 +94,7 @@ public class AnalysisHandleTest {
 
         IPath itemPath = mock(IPath.class);
         PowerMockito.mockStatic(WorkbenchUtils.class);
-        when(WorkbenchUtils.getFilePath(node)).thenReturn(itemPath); //$NON-NLS-1$
+        when(WorkbenchUtils.getFilePath(node)).thenReturn(itemPath);
 
         PowerMockito.mockStatic(ResourceManager.class);
         IWorkspaceRoot root = mock(IWorkspaceRoot.class);
@@ -88,47 +102,76 @@ public class AnalysisHandleTest {
         when(root.getFile(itemPath)).thenReturn(null);
 
         PowerMockito.mockStatic(RepositoryNodeHelper.class);
-        when(RepositoryNodeHelper.getModelElementFromRepositoryNode(node)).thenReturn(analysis1);
+        when(RepositoryNodeHelper.getModelElementFromRepositoryNode(node)).thenReturn(oldAnalysis);
 
         handle = new AnalysisHandle(node);
     }
 
     /**
      * DOC yyin Comment method "tearDown".
+     * 
      * @throws java.lang.Exception
      */
     @After
     public void tearDown() throws Exception {
+        // TODO
+    }
+
+    private static void addPatternToDomain(Domain domain, RegularExpression filter, String patternName) {
+        Pattern pattern = PatternFactory.eINSTANCE.createPattern();
+        pattern.setName(patternName);
+        pattern.getComponents().add(filter);
+        domain.getPatterns().add(pattern);
+        domain.getOwnedElement().add(pattern);
     }
 
     /**
-     * Test method for {@link org.talend.dataprofiler.core.ui.action.actions.handle.AnalysisHandle#update(orgomg.cwm.objectmodel.core.ModelElement, orgomg.cwm.objectmodel.core.ModelElement)}.
+     * Test method for
+     * {@link org.talend.dataprofiler.core.ui.action.actions.handle.AnalysisHandle#update(orgomg.cwm.objectmodel.core.ModelElement, orgomg.cwm.objectmodel.core.ModelElement)}
+     * .
      */
     @Test
     public void testUpdate() {
-        Analysis newAnalysis = AnalysisHelper.createAnalysis("new ana");
+        Analysis newAnalysis = AnalysisHelper.createAnalysis("new ana"); //$NON-NLS-1$
         AnalysisParameters parameters = AnalysisFactory.eINSTANCE.createAnalysisParameters();
         newAnalysis.setParameters(parameters);
 
         // make the new analysis use the old domain
-        EList<Domain> dataFilters = analysis1.getParameters().getDataFilter();
+        EList<Domain> oldDataFilters = oldAnalysis.getParameters().getDataFilter();
+        assertEquals(2, oldDataFilters.size());
         EList<Domain> newFilter = parameters.getDataFilter();
-        newFilter.add(dataFilters.get(0));
+        for (Domain domain : oldDataFilters) {
+            newFilter.add(domain);
+        }
 
-        ModelElement copiedAna = handle.update(analysis1, newAnalysis);
+        ModelElement copiedAna = handle.update(oldAnalysis, newAnalysis);
+
+        EList<Domain> newDataFilters = ((Analysis) copiedAna).getParameters().getDataFilter();
+        assertEquals(2, newDataFilters.size());
 
         // after update, the old domain should be replaced by a new one, but with same body& language
-        Domain domain = ((Analysis) copiedAna).getParameters().getDataFilter().get(0);
-        assertTrue(domain != null);
-        Assert.assertNotSame(dataFilters.get(0), domain);
-        assertFalse(domain.getName().equals("ana"));
+        for (int i = 0; i < newDataFilters.size(); i++) {
+            Domain domain = newDataFilters.get(i);
+            Domain oldDomain = oldDataFilters.get(i);
+            Assert.assertNotSame(oldDomain, domain);
+            assertTrue(domain.getName().equals("Analysis Data Filter")); //$NON-NLS-1$
 
-        // the expressions are different instances, with same boby&language.
-        Expression ex = domain.getRanges().get(0).getExpressions().getExpression();
-        Expression oldex = dataFilters.get(0).getRanges().get(0).getExpressions().getExpression();
-        Assert.assertNotSame(oldex, ex);
-        assertTrue(ex.getBody().equals(oldex.getBody()));
-        assertTrue(ex.getLanguage().equals(oldex.getLanguage()));
+            // the expressions are different instances, with same boby&language.
+            if (domain.getRanges() != null && oldDomain.getRanges() != null) {
+                Expression ex = domain.getRanges().get(0).getExpressions().getExpression();
+                Expression oldex = oldDomain.getRanges().get(0).getExpressions().getExpression();
+                Assert.assertNotSame(oldex, ex);
+                assertTrue(ex.getBody().equals(oldex.getBody()));
+                assertTrue(ex.getLanguage().equals(oldex.getLanguage()));
+            }
+        }
+
+        // check the patterns
+        String tablePattern = DomainHelper.getTablePattern(newDataFilters);
+        assertEquals(TABLE_PATTERN_FILTER, tablePattern);
+        String viewPattern = DomainHelper.getViewPattern(newDataFilters);
+        assertEquals(VIEW_PATTERN_FILTER, viewPattern);
+
     }
 
 }
