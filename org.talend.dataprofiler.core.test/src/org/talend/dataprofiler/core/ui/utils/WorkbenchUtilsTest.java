@@ -12,8 +12,10 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.utils;
 
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -30,7 +32,6 @@ import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
 import org.talend.cwm.dependencies.DependenciesHandler;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dq.helper.RepositoryNodeHelper;
-
 import orgomg.cwm.foundation.softwaredeployment.DataProvider;
 import orgomg.cwm.objectmodel.core.Dependency;
 import orgomg.cwm.objectmodel.core.ModelElement;
@@ -60,51 +61,23 @@ public class WorkbenchUtilsTest {
     /**
      * Test method for {@link org.talend.dataprofiler.core.ui.utils.WorkbenchUtils#impactExistingAnalyses(orgomg.cwm.foundation.softwaredeployment.DataProvider)}.
      */
+    @SuppressWarnings("unchecked")
     @Test
-    public void testImpactExistingAnalyses() {
+    public void testImpactExistingAnalyses_1() {
         DatabaseConnection mock_data = mock(DatabaseConnection.class);
         Resource mock_Resource = mock(Resource.class);
         when(((ModelElement) mock_data).eResource()).thenReturn(mock_Resource);
 
-        // EList<Dependency> clientDependencies = new
-        // EObjectWithInverseResolvingEList.ManyInverse<Dependency>(Dependency.class,
-        // null, CorePackage.MODEL_ELEMENT__CLIENT_DEPENDENCY, CorePackage.DEPENDENCY__CLIENT_DEPENDENCY);
-        // Dependency mock_depend = mock(Dependency.class);
-        // clientDependencies.add(mock_depend);
-        // when(mock_data.getClientDependency()).thenReturn(clientDependencies);
-        // when(mock_data.getSupplierDependency()).thenReturn(clientDependencies);
-        //
         Analysis mock_ana = mock(Analysis.class);
         EList<Dependency> clients = mock(EObjectWithInverseResolvingEList.class);
-        // new EObjectWithInverseResolvingEList.ManyInverse<ModelElement>(ModelElement.class, null,
-        // CorePackage.MODEL_ELEMENT__CLIENT_DEPENDENCY, CorePackage.DEPENDENCY__CLIENT_DEPENDENCY);//
-        // mock(EObjectWithInverseResolvingEList.ManyInverse<E>.class);
         Iterator<Dependency> mockIterator = mock(Iterator.class);
         when(mockIterator.hasNext()).thenReturn(true).thenReturn(false);
         Dependency dependency = mock(Dependency.class);
         when(mockIterator.next()).thenReturn(dependency);
-        // Resource mockResource = mock(Resource.class);
         when(dependency.eResource()).thenReturn(mock_Resource);
 
         when(clients.iterator()).thenReturn(mockIterator);
         when(mock_ana.getClientDependency()).thenReturn(clients);
-        // when(mock_depend.getClient()).thenReturn(clients);
-        //
-        // Resource eResource = mock(Resource.class);
-        // when(mock_ana.eResource()).thenReturn(eResource);
-        // RepositoryNode mockNode = mock(RepositoryNode.class);
-        // IRepositoryViewObject mockVO = mock(IRepositoryViewObject.class);
-        // try {
-        // PowerMockito.doReturn(mockNode).when(RepositoryNodeHelper.class, "recursiveFind", mock_data);
-        // when(mockNode.getObject()).thenReturn(mockVO);
-        // } catch (Exception e) {
-        // // TODO Auto-generated catch block
-        // e.printStackTrace();
-        // }
-        // Property mockP = mock(Property.class);
-        // when(mockVO.getProperty()).thenReturn(mockP);
-        // org.talend.core.model.properties.Item mockItem = mock(org.talend.core.model.properties.Item.class);
-        // when(mockP.getItem()).thenReturn(mockItem);
         
         List<Resource> result = this.method_impactExistingAnalyses(mock_data, mock_ana);
 
@@ -112,16 +85,28 @@ public class WorkbenchUtilsTest {
         assertEquals(1, result.size());
     }
 
+    // when getClientDependency return null
+    @Test
+    public void testImpactExistingAnalyses_2() {
+        DatabaseConnection mock_data = mock(DatabaseConnection.class);
+        Resource mock_Resource = mock(Resource.class);
+        when(((ModelElement) mock_data).eResource()).thenReturn(mock_Resource);
+
+        Analysis mock_ana = mock(Analysis.class);
+
+        when(mock_ana.getClientDependency()).thenReturn(null);
+
+        List<Resource> result = this.method_impactExistingAnalyses(mock_data, mock_ana);
+
+        assertNotNull(result);
+        assertEquals(0, result.size());
+    }
+
     private List<Resource> method_impactExistingAnalyses(DataProvider oldDataProvider, Analysis analysis) {
         // MOD yyin 20120410, bug 4753
         List<ModelElement> tempList = new ArrayList<ModelElement>();
         tempList.add(oldDataProvider);
         return DependenciesHandler.getInstance().removeDependenciesBetweenModels(analysis, tempList);
-        // DependenciesHandler.getInstance().removeSupplierDependenciesBetweenModels(analysis, tempList);
-
-        // IRepositoryViewObject reposViewObject = RepositoryNodeHelper.recursiveFind(oldDataProvider).getObject();
-        // ElementWriterFactory.getInstance().createDataProviderWriter().save(reposViewObject.getProperty().getItem(),
-        // true);
     }
 
 }
