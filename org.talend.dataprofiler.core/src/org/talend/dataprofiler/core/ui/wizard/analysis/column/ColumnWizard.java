@@ -15,6 +15,7 @@ package org.talend.dataprofiler.core.ui.wizard.analysis.column;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.ui.PlatformUI;
 import org.talend.core.model.properties.Item;
@@ -137,19 +138,16 @@ public class ColumnWizard extends AbstractAnalysisWizard {
                                 .getModelElementFromRepositoryNode(repNode));
                         nodeList.add(repNode);
                     }
-                    // AbstractColumnDropTree treeViewer = masterPage.getTreeViewer();
-                    // ModelElementIndicator[] filterInputData = treeViewer.filterInputData(nodeList
-                    // .toArray(new RepositoryNode[nodeList.size()]));
-                    // if (filterInputData == null) {
-                    // return;
-                    // }
+
+                    // MOD msjian TDQ-6665 2013-1-7: after the wizard, make the editor is saved status
                     if (masterPage instanceof ColumnMasterDetailsPage) {
-                        ((ColumnMasterDetailsPage) masterPage).setTreeViewInput(nodeList
-                            .toArray(new RepositoryNode[nodeList.size()]));
-                        return;
-                        // ((ColumnMasterDetailsPage) masterPage).refreshTheTree(treeViewer.getModelElementIndicator());
+                        ((ColumnMasterDetailsPage) masterPage).setTreeViewInput(nodeList.toArray(new RepositoryNode[nodeList
+                                .size()]));
+                    } else {
+                        masterPage.getTreeViewer().setInput(nodeList.toArray(new RepositoryNode[nodeList.size()]));
                     }
-                    masterPage.getTreeViewer().setInput(nodeList.toArray(new RepositoryNode[nodeList.size()]));
+                    masterPage.doSave(new NullProgressMonitor());
+                    // TDQ-6665~
                 }
             }
         }
