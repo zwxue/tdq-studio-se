@@ -11,36 +11,8 @@
         </sealing>
     </manifest>
     <selectedElements exportClassFiles="true" exportJavaFiles="false" exportOutputFolder="false">
-        <javaElement handleIdentifier="=org.talend.utils/src\/main\/java&lt;org.talend.utils.security"/>
-        <javaElement handleIdentifier="=org.talend.dataquality.record.linkage/src\/main\/java"/>
-        <javaElement handleIdentifier="=org.talend.utils/src\/main\/java&lt;org.talend.utils.string"/>
-        <javaElement handleIdentifier="=org.talend.utils/src\/main\/java&lt;org.talend.utils.collections{DoubleValueAggregate.java"/>
-        <javaElement handleIdentifier="=org.talend.utils/src\/main\/java&lt;org.talend.utils.collections{MapValueSorter.java"/>
-        <javaElement handleIdentifier="=org.talend.utils/src\/main\/java&lt;org.talend.utils.color"/>
-        <javaElement handleIdentifier="=org.talend.utils/src\/main\/java&lt;org.talend.utils.thread{ThreadUtils.java"/>
-        <javaElement handleIdentifier="=org.talend.utils/src\/main\/java&lt;org.talend.utils"/>
-        <javaElement handleIdentifier="=org.talend.utils/src\/main\/java&lt;org.talend.utils.io"/>
-        <javaElement handleIdentifier="=org.talend.utils/src\/main\/java&lt;org.talend.utils.collections{ValueAggregate.java"/>
-        <javaElement handleIdentifier="=org.talend.utils/src\/main\/java&lt;org.talend.utils.thread{TimeoutOperationHandler.java"/>
-        <javaElement handleIdentifier="=org.talend.utils/src\/main\/java&lt;org.talend.json"/>
-        <javaElement handleIdentifier="=org.talend.utils/src\/main\/java&lt;org.talend.utils.files{FileUtils.java"/>
-        <javaElement handleIdentifier="=org.talend.utils/src\/main\/java&lt;org.talend.utils.dates"/>
-        <javaElement handleIdentifier="=org.talend.utils/src\/main\/java&lt;org.talend.utils.eclipse"/>
-        <javaElement handleIdentifier="=org.talend.utils/src\/main\/java&lt;org.talend.utils.sql"/>
-        <javaElement handleIdentifier="=org.talend.utils/src\/main\/java&lt;org.talend.utils.jobconductor"/>
         <folder path="/org.talend.dataquality.record.linkage/META-INF"/>
-        <javaElement handleIdentifier="=org.talend.utils/src\/main\/java&lt;org.talend.utils.collections{MultipleKey.java"/>
-        <javaElement handleIdentifier="=org.talend.utils/src\/main\/java&lt;org.talend.utils.format"/>
-        <javaElement handleIdentifier="=org.talend.utils/src\/main\/java&lt;org.talend.utils.files{AbstractDataCleaner.java"/>
-        <javaElement handleIdentifier="=org.talend.utils/src\/main\/java&lt;org.talend.utils.collections{MultiMapHelper.java"/>
-        <javaElement handleIdentifier="=org.talend.utils/src\/main\/java&lt;org.talend.utils.sql.metadata.constants"/>
-        <javaElement handleIdentifier="=org.talend.utils/src\/main\/java&lt;org.talend.utils.files{FileDirCleaner.java"/>
-        <javaElement handleIdentifier="=org.talend.utils/src\/main\/java&lt;org.talend.utils.cache"/>
         <file path="/org.talend.dataquality.record.linkage/version.txt"/>
-        <javaElement handleIdentifier="=org.talend.utils/src\/main\/java&lt;org.talend.utils.properties"/>
-        <javaElement handleIdentifier="=org.talend.utils/src\/main\/java&lt;org.talend.utils.time"/>
-        <javaElement handleIdentifier="=org.talend.utils/src\/main\/java&lt;org.talend.utils.sugars"/>
-        <javaElement handleIdentifier="=org.talend.utils/src\/main\/java&lt;org.talend.utils.files{FileChecker.java"/>
-        <javaElement handleIdentifier="=org.talend.utils/src\/main\/java&lt;org.talend.utils.network"/>
+        <javaElement handleIdentifier="=org.talend.dataquality.record.linkage/src\/main\/java"/>
     </selectedElements>
 </jardesc>
