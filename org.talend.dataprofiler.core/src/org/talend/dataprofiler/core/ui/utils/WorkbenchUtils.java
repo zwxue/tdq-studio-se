@@ -39,6 +39,7 @@ import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IPerspectiveDescriptor;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchPartReference;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
@@ -366,6 +367,7 @@ public final class WorkbenchUtils {
     public static void closeAndOpenEditor(List<IEditorReference> iEditorReference) {
         // Refresh current opened editors.
         IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+        IWorkbenchPartReference activePartReference = activePage.getActivePartReference();
         // MOD qiongli 2011-9-8 TDQ-3317.when focucs on DI perspective,don't refresh the open editors
         DQRespositoryView findView = (DQRespositoryView) activePage.findView(DQRespositoryView.ID);
         if (findView == null) {
@@ -403,6 +405,7 @@ public final class WorkbenchUtils {
                 log.error(e, e);
             }
         }
+        activePage.activate(activePartReference.getPart(false));
     }
 
     /**
