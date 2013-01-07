@@ -12,6 +12,7 @@
     </manifest>
     <selectedElements exportClassFiles="true" exportJavaFiles="false" exportOutputFolder="false">
         <folder path="/org.talend.dataquality.record.linkage/META-INF"/>
+        <javaElement handleIdentifier="=org.talend.utils/src\/main\/java&lt;org.talend.utils.string{AsciiUtils.java"/>
         <file path="/org.talend.dataquality.record.linkage/version.txt"/>
         <javaElement handleIdentifier="=org.talend.dataquality.record.linkage/src\/main\/java"/>
     </selectedElements>
