@@ -640,10 +640,7 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
             data.heightHint = 10;
             javaEnginSection.setLayoutData(data);
             analysisParamSection.setExpanded(true);
-            storeDataSection.setVisible(true);
-        } else {
-            storeDataSection.setVisible(false);
-        }
+        } 
         execCombo.setText(executionLanguage.getLiteral());
         execLang = executionLanguage.getLiteral();
         treeViewer.setLanguage(ExecutionLanguage.get(executionLanguage.getLiteral()));
@@ -663,14 +660,12 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
                 // hidden or display parameter of java engin.
                 if (ExecutionLanguage.SQL.equals(ExecutionLanguage.get(execLang))) {
                     javaEnginSection.setVisible(false);
-                    storeDataSection.setVisible(true);
                     GridData data = (GridData) javaEnginSection.getLayoutData();
                     data.heightHint = 10;
                     javaEnginSection.setLayoutData(data);
                     analysisParamSection.setExpanded(true);
                 } else {
                     javaEnginSection.setVisible(true);
-                    storeDataSection.setVisible(false);
                     GridData data = (GridData) javaEnginSection.getLayoutData();
                     data.heightHint = 100;
                     javaEnginSection.setLayoutData(data);
@@ -705,7 +700,6 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
 
             @Override
             public void widgetSelected(SelectionEvent e) {
-                simpleStatIndicator.setStoreData(storeDataCheck.getSelection());
                 setDirty(true);
             }
         });
@@ -798,6 +792,7 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
         // set execute engine
         Analysis analysis = columnSetAnalysisHandler.getAnalysis();
         analysis.getParameters().setExecutionLanguage(ExecutionLanguage.get(execLang));
+        simpleStatIndicator.setStoreData(storeDataCheck.getSelection());
 
         // set data filter
         columnSetAnalysisHandler.setStringDataFilter(dataFilterComp.getDataFilterString());
