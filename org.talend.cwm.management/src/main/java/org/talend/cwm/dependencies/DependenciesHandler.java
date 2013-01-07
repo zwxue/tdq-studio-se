@@ -154,6 +154,7 @@ public final class DependenciesHandler {
         clientDependencies = elementFromRemove.getClientDependency();
         // locate resource of each Dependency object
         List<Resource> modifiedResources = new ArrayList<Resource>();
+        if (clientDependencies != null) {
         Iterator<Dependency> dependencyIterator = clientDependencies.iterator();
         while (dependencyIterator.hasNext()) {
             Dependency dependency = dependencyIterator.next();
@@ -165,6 +166,7 @@ public final class DependenciesHandler {
                 modifiedResources.add(dependencyResource);
                 dependencyIterator.remove();
             }
+        }
         }
         return modifiedResources;
     }
