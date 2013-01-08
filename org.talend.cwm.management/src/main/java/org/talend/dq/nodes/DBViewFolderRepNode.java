@@ -33,6 +33,7 @@ import org.talend.cwm.helper.PackageHelper;
 import org.talend.cwm.relational.TdView;
 import org.talend.dataquality.PluginConstant;
 import org.talend.dq.helper.RepositoryNodeHelper;
+import org.talend.dq.nodes.foldernode.IConnectionElementSubFolder;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
 import orgomg.cwm.objectmodel.core.Package;
@@ -42,7 +43,7 @@ import orgomg.cwm.resource.relational.Schema;
 /**
  * DOC klliu class global comment. Detailled comment
  */
-public class DBViewFolderRepNode extends DQRepositoryNode {
+public class DBViewFolderRepNode extends DQRepositoryNode implements IConnectionElementSubFolder { 
 
     private static Logger log = Logger.getLogger(DBViewFolderRepNode.class);
 
