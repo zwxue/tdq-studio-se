@@ -134,7 +134,7 @@ public class PatternsSelectPage extends WizardPage {
      * @param element
      * @return
      */
-    private String getElementName(ModelElement element) {
+    protected static String getElementName(ModelElement element) {
         String name = null;
 
         MetadataColumn mdColumn = SwitchHelpers.METADATA_COLUMN_SWITCH.doSwitch(element);
