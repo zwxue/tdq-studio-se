@@ -36,7 +36,7 @@ import org.talend.dataquality.standardization.record.SynonymRecordSearcher.Recor
 import org.talend.dataquality.standardization.record.SynonymRecordSearcher.WordResult;
 
 /**
- * DOC scorreia class global comment. Detailled comment
+ * Test class.
  */
 public class SynonymRecordSearcherTest {
 
@@ -58,7 +58,6 @@ public class SynonymRecordSearcherTest {
         for (String[][] wrs : WORDRESULTS) {
             System.out.println();
             System.out.println(" ###    Testing #### ");
-
 
             nbDup += testRecordResultCompute(wrs);
         }
@@ -94,7 +93,6 @@ public class SynonymRecordSearcherTest {
         for (OutputRecord outputRecord : expectedOutputRows) {
             System.out.println(outputRecord);
         }
-
 
         // --- test that duplicates are removed when using a set instead of a list
         Set<OutputRecord> uniques = new HashSet<OutputRecord>();
@@ -151,14 +149,11 @@ public class SynonymRecordSearcherTest {
         return init;
     }
 
-
-
     private void initIdx(String path) {
         SynonymIndexBuilder builder = new SynonymIndexBuilder();
         builder.deleteIndexFromFS(path);
         builder.initIndexInFS(path);
-        for (int i = 0; i < SynonymIndexBuilderTest.synonyms.length; i++) {
-            String[] synonyms = SynonymIndexBuilderTest.synonyms[i];
+        for (String[] synonyms : SynonymIndexBuilderTest.synonyms) {
             try {
                 builder.insertDocument(synonyms[0], synonyms[1]);
             } catch (IOException e) {
@@ -247,8 +242,11 @@ public class SynonymRecordSearcherTest {
         }
         try {
             recSearcher.addSearcher(new SynonymIndexSearcher(), 2);
+            Assert.fail("Index should be out of bounds here: trying to set a searcher at position in an empty array");
         } catch (Exception e) {
             Assert.assertNotNull("we should get an exception here", e);
+        } catch (java.lang.AssertionError e) {
+            Assert.assertNotNull("we should get an assertion error here when -ea is added to the VM arguments", e);
         }
 
         try {
