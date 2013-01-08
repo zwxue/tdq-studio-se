@@ -1545,6 +1545,12 @@
            id="org.talend.dataprofiler.core.migration.impl.AddTeradataExpressionInPatternFrenquencyIndicatorTask"
            name="Add sql expression and character map for Teradata in PatternFrequency Table and LowFrequency Indicators"
            version="5.2.2">
+     </workspacetask>
+     <workspacetask
+           class="org.talend.dataprofiler.core.migration.impl.UpdateFileConnectionTask"
+           id="org.talend.dataprofiler.core.migration.impl.UpdateFileConnectionTask"
+           name="update file connection to add connection name"
+           version="5.2.2">
      </workspacetask>  
   </extension>
   <extension
