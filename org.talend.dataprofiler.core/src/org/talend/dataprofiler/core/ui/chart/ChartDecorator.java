@@ -348,6 +348,9 @@ public final class ChartDecorator {
         barplot.getRenderer().setBaseItemLabelGenerator(new StandardCategoryItemLabelGenerator("{2}", df)); //$NON-NLS-1$
         barplot.getRenderer().setBasePositiveItemLabelPosition(
                 new ItemLabelPosition(ItemLabelAnchor.OUTSIDE12, TextAnchor.BASELINE_CENTER));
+        // set the display of Y axis
+        NumberAxis numAxis = (NumberAxis) barplot.getRangeAxis();
+        numAxis.setNumberFormatOverride(df);
 
         CategoryDataset lineDataset = getLineDataset(dotChartLabels, formalValues);
         JFreeChart lineChart = ChartFactory.createLineChart(null, title, categoryAxisLabel, lineDataset,
