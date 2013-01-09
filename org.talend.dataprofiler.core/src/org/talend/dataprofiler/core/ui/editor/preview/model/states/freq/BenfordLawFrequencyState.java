@@ -24,6 +24,7 @@ import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.chart.ChartDecorator;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
 import org.talend.dataprofiler.core.ui.editor.preview.model.dataset.CustomerDefaultCategoryDataset;
+import org.talend.dataprofiler.core.ui.editor.preview.model.entity.TableStructureEntity;
 import org.talend.dataprofiler.core.ui.utils.ComparatorsFactory;
 import org.talend.dq.analysis.explore.BenfordLawFrequencyExplorer;
 import org.talend.dq.analysis.explore.DataExplorer;
@@ -89,19 +90,29 @@ public class BenfordLawFrequencyState extends FrequencyTypeStates {
         dotChartLabels.add(keyLabel);
     }
 
+    @Override
+    protected TableStructureEntity getTableStructure() {
+        TableStructureEntity entity = new TableStructureEntity();
+        entity.setFieldNames(new String[] {
+                DefaultMessagesImpl.getString("BenfordLawFrequencyState.value"), DefaultMessagesImpl.getString("FrequencyTypeStates.count"), "%" }); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+        entity.setFieldWidths(new Integer[] { 200, 150, 150 });
+        return entity;
+    }
+
     /**
      * create a bar chart with points(formalValues) on each bar.
      */
-    @SuppressWarnings("deprecation")
     @Override
     public JFreeChart getChart() {
         // Clear the dot category label first, so that the new category label will be added into list.
         dotChartLabels.clear();
         CategoryDataset dataset = getDataset();
         ChartFactory.setChartTheme(StandardChartTheme.createLegacyTheme());
-        String categoryAxisLabel = DefaultMessagesImpl.getString("TopChartFactory.Value"); //$NON-NLS-1$
-        JFreeChart barChart = ChartFactory.createBarChart(null, getTitle(), categoryAxisLabel, dataset, PlotOrientation.VERTICAL,
+        String categoryAxisLabel = DefaultMessagesImpl.getString("BenfordLawFrequencyState.AxisY"); //$NON-NLS-1$
+        String axisXLabel = DefaultMessagesImpl.getString("BenfordLawFrequencyState.value"); //$NON-NLS-1$
+        JFreeChart barChart = ChartFactory.createBarChart(null, axisXLabel, categoryAxisLabel, dataset, PlotOrientation.VERTICAL,
                 false, true, false);
+
         JFreeChart lineChart = ChartDecorator.decorateBenfordLawChart(dataset, barChart, getTitle(), categoryAxisLabel,
                 dotChartLabels, formalValues);
         return lineChart;
