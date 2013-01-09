@@ -366,7 +366,7 @@ public class LocalRepositoryObjectCRUD implements IRepositoryObjectCRUD {
      * @param targetNode
      * @throws PersistenceException
      */
-    public void moveRepositoryNodes(IRepositoryNode[] repositoryNodes, IRepositoryNode targetNode) throws PersistenceException {
+    private void moveRepositoryNodes(IRepositoryNode[] repositoryNodes, IRepositoryNode targetNode) throws PersistenceException {
         if (repositoryNodes != null) {
             for (IRepositoryNode sourceNode : repositoryNodes) {
                 if (targetNode == sourceNode.getParent()) {
@@ -413,7 +413,7 @@ public class LocalRepositoryObjectCRUD implements IRepositoryObjectCRUD {
      * @param targetNode
      * @throws PersistenceException
      */
-    public void moveJrxmlFileRepNode(IRepositoryNode sourceNode, IRepositoryNode targetNode) throws PersistenceException {
+    private void moveJrxmlFileRepNode(IRepositoryNode sourceNode, IRepositoryNode targetNode) throws PersistenceException {
         MessageUI.openWarning(DefaultMessagesImpl.getString("JrxmlFileAction.forbiddenOperation")); //$NON-NLS-1$
     }
 
@@ -515,7 +515,7 @@ public class LocalRepositoryObjectCRUD implements IRepositoryObjectCRUD {
      * @param targetNode
      * @param removeLastSegments
      */
-    public void moveOthersNode(IRepositoryNode sourceNode, IRepositoryNode targetNode, IPath ipath) {
+    private void moveOthersNode(IRepositoryNode sourceNode, IRepositoryNode targetNode, IPath ipath) {
         if (targetNode.getType() == ENodeType.SIMPLE_FOLDER || targetNode.getType() == ENodeType.SYSTEM_FOLDER) {
             moveObject(sourceNode, targetNode, ipath);
         }
@@ -661,7 +661,7 @@ public class LocalRepositoryObjectCRUD implements IRepositoryObjectCRUD {
      * @param targetNode
      * @param basePath
      */
-    public void moveObject(final IRepositoryNode sourceNode, final IRepositoryNode targetNode, final IPath basePath) {
+    private void moveObject(final IRepositoryNode sourceNode, final IRepositoryNode targetNode, final IPath basePath) {
         IPath targetPath = WorkbenchUtils.getPath(targetNode);
         try {
             IPath makeRelativeTo = Path.EMPTY;
@@ -720,7 +720,7 @@ public class LocalRepositoryObjectCRUD implements IRepositoryObjectCRUD {
     /**
      * refresh Workspace and DQView.
      */
-    public void refreshWorkspaceDQView() {
+    protected void refreshWorkspaceDQView() {
         IWorkbenchPart activePart = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActivePart();
         if (activePart instanceof DQRespositoryView) {
             ((DQRespositoryView) activePart).refresh();
