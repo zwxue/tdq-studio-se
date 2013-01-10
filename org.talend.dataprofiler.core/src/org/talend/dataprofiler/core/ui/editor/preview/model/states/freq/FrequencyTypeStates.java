@@ -48,7 +48,7 @@ public abstract class FrequencyTypeStates extends AbstractChartTypeStates {
     }
 
     public JFreeChart getChart() {
-        return TopChartFactory.createBarChart(getTitle(), getDataset());
+        return TopChartFactory.createBarChart(DefaultMessagesImpl.getString("TopChartFactory.count"), getDataset());
     }
 
     public ICustomerDataset getCustomerDataset() {
