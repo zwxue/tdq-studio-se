@@ -15,8 +15,10 @@ package org.talend.dataprofiler.core.ui.editor.preview.model.states.freq;
 import java.util.List;
 
 import org.eclipse.jface.viewers.ITableLabelProvider;
+import org.jfree.chart.JFreeChart;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
+import org.talend.dataprofiler.core.ui.editor.preview.TopChartFactory;
 import org.talend.dataprofiler.core.ui.editor.preview.model.entity.TableStructureEntity;
 import org.talend.dataprofiler.core.ui.editor.preview.model.states.ChartTableProviderClassSet.SoundexBaseChartTableLabelProvider;
 import org.talend.dataprofiler.core.ui.utils.ComparatorsFactory;
@@ -62,4 +64,10 @@ public class SoundexFrequencyTableState extends FrequencyTypeStates {
         entity.setFieldWidths(new Integer[] { 180, 120, 100, 100 });
         return entity;
     }
+
+    @Override
+    public JFreeChart getChart() {
+        return TopChartFactory.createBarChart(DefaultMessagesImpl.getString("TopChartFactory.distinctCount"), getDataset());
+    }
+
 }

@@ -311,10 +311,6 @@ public final class TopChartFactory {
         final Map<String, DateValueAggregate> createGannttDatasets = ChartDatasetUtils.createGanttDatasets(indic, dateColumn);
 
         TaskSeriesCollection ganttDataset = new TaskSeriesCollection();
-        // TreeSet<String> ganttTreeSet = new TreeSet<String>(createGannttDatasets.keySet());
-        // for (String key : ganttTreeSet) {
-        // createGannttDatasets.get(key).addSeriesToGanttDataset(ganttDataset, key);
-        // }
         final Iterator<String> iterator = createGannttDatasets.keySet().iterator();
         while (iterator.hasNext()) {
             final String next = iterator.next();
@@ -357,7 +353,7 @@ public final class TopChartFactory {
         ChartFactory.setChartTheme(StandardChartTheme.createLegacyTheme());
         // TDQ-5112~
         JFreeChart chart = ChartFactory.createBarChart(null, titile,
-                DefaultMessagesImpl.getString("TopChartFactory.Value"), dataset, PlotOrientation.VERTICAL, showLegend, //$NON-NLS-1$
+                DefaultMessagesImpl.getString("TopChartFactory.count"), dataset, PlotOrientation.VERTICAL, showLegend, //$NON-NLS-1$
                 true, false);
         ChartDecorator.decorateBarChart(chart);
         return chart;
@@ -370,12 +366,14 @@ public final class TopChartFactory {
      * @param dataset
      * @return
      */
-    public static JFreeChart createBarChart(String titile, CategoryDataset dataset) {
+    public static JFreeChart createBarChart(String title, CategoryDataset dataset) {
         // ADD msjian TDQ-5112 2012-4-10: after upgrate to jfreechart-1.0.12.jar, change the default chart wallPaint
         ChartFactory.setChartTheme(StandardChartTheme.createLegacyTheme());
         // TDQ-5112~
-        JFreeChart createBarChart = ChartFactory.createBarChart(null, titile,
-                DefaultMessagesImpl.getString("TopChartFactory.Value"), dataset, PlotOrientation.HORIZONTAL, false, false, false); //$NON-NLS-1$
+        JFreeChart createBarChart = ChartFactory
+                .createBarChart(
+                        null,
+                        DefaultMessagesImpl.getString("TopChartFactory.value"), title, dataset, PlotOrientation.HORIZONTAL, false, false, false); //$NON-NLS-1$
 
         CategoryPlot plot = createBarChart.getCategoryPlot();
 
