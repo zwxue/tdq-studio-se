@@ -331,7 +331,10 @@ public class ColumnDependencyMasterDetailsPage extends AbstractAnalysisMetadataP
         EList<Indicator> indicators = analysis.getResults().getIndicators();
         for (Indicator indicator : indicators) {
             TdColumn findColumn = (TdColumn) indicator.eGet(reference);
-            RepositoryNode recursiveFind = RepositoryNodeHelper.recursiveFind(findColumn, true);
+            RepositoryNode recursiveFind = RepositoryNodeHelper.recursiveFind(findColumn);
+            if (recursiveFind == null) {
+                recursiveFind = RepositoryNodeHelper.createRepositoryNode(findColumn);
+            }
             columns.add(recursiveFind);
         }
         return columns;
