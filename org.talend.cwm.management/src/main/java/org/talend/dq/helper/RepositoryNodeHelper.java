@@ -497,7 +497,7 @@ public final class RepositoryNodeHelper {
      * @param isCreate whether create new one when can't find the node from RepositoryView
      * @return
      */
-    public static RepositoryNode recursiveFind(ModelElement modelElement, boolean... isCreate) {
+    public static RepositoryNode recursiveFind(ModelElement modelElement) {
         RepositoryNode node = null;
         if (modelElement instanceof Analysis) {
             node = recursiveFindAnalysis((Analysis) modelElement);
@@ -511,19 +511,10 @@ public final class RepositoryNodeHelper {
             node = recursiveFindSchema((Schema) modelElement);
         } else if (modelElement instanceof TdTable) {
             node = recursiveFindTdTable((TdTable) modelElement);
-            if (node == null && isCreate.length > 0 && isCreate[0] == true) {
-                node = createRepositoryNode(modelElement);
-            }
         } else if (modelElement instanceof TdView) {
             node = recursiveFindTdView((TdView) modelElement);
-            if (node == null && isCreate.length > 0 && isCreate[0] == true) {
-                node = createRepositoryNode(modelElement);
-            }
         } else if (modelElement instanceof TdColumn) {
             node = recursiveFindTdColumn((TdColumn) modelElement);
-            if (node == null && isCreate.length > 0 && isCreate[0] == true) {
-                node = createRepositoryNode(modelElement);
-            }
         } else if (modelElement instanceof MDMConnection) {
             node = recursiveFindMDMConnection((MDMConnection) modelElement);
         } else if (modelElement instanceof TdXmlSchema) {
@@ -572,7 +563,7 @@ public final class RepositoryNodeHelper {
      * @param findModelElement
      * @throws PersistenceException
      */
-    protected static RepositoryNode createRepositoryNode(ModelElement findModelElement) {
+    public static RepositoryNode createRepositoryNode(ModelElement findModelElement) {
         RepositoryNode returnNode = null;
         if (findModelElement == null) {
             return returnNode;

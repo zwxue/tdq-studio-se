@@ -1299,11 +1299,13 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
                 try {
                     TableIndicator tableIndicator = (TableIndicator) selection[0].getData(TABLE_INDICATOR_KEY);
                     NamedColumnSet set = tableIndicator.getColumnSet();
-                    // ProxyRepositoryViewObject.fetchAllRepositoryViewObjects(true, true);
-                    RepositoryNode node = RepositoryNodeHelper.recursiveFind(set, true);
-                    dqview.showSelectedElements(node);
+                    RepositoryNode recursiveFind = RepositoryNodeHelper.recursiveFind(set);
+                    if (recursiveFind == null) {
+                        recursiveFind = RepositoryNodeHelper.createRepositoryNode(set);
+                    }
+                    dqview.showSelectedElements(recursiveFind);
                     CorePlugin.getDefault().refreshWorkSpace();
-                    CorePlugin.getDefault().refreshDQView(node);
+                    CorePlugin.getDefault().refreshDQView(recursiveFind);
                 } catch (Exception e) {
                     log.error(e, e);
                 }
