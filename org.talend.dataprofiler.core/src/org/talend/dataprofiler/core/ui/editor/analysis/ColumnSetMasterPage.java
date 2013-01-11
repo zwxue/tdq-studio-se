@@ -228,8 +228,11 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
                 currentIndicator = ModelElementIndicatorHelper.createDFColumnIndicator(RepositoryNodeHelper
                         .recursiveFind(mdColumn));
             } else if (tdColumn != null) {
-                currentIndicator = ModelElementIndicatorHelper.createModelElementIndicator(RepositoryNodeHelper.recursiveFind(
-                        tdColumn, true));
+                RepositoryNode recursiveFind = RepositoryNodeHelper.recursiveFind(tdColumn);
+                if (recursiveFind == null) {
+                    recursiveFind = RepositoryNodeHelper.createRepositoryNode(tdColumn);
+                }
+                currentIndicator = ModelElementIndicatorHelper.createModelElementIndicator(recursiveFind);
             } else if (xmlElement != null) {
                 currentIndicator = ModelElementIndicatorHelper.createXmlElementIndicator(RepositoryNodeHelper
                         .recursiveFind(xmlElement));
@@ -640,7 +643,7 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
             data.heightHint = 10;
             javaEnginSection.setLayoutData(data);
             analysisParamSection.setExpanded(true);
-        } 
+        }
         execCombo.setText(executionLanguage.getLiteral());
         execLang = executionLanguage.getLiteral();
         treeViewer.setLanguage(ExecutionLanguage.get(executionLanguage.getLiteral()));

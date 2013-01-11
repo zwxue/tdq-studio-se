@@ -788,7 +788,11 @@ public class AnalysisColumnNominalIntervalTreeViewer extends AbstractColumnDropT
     public static List<DBColumnRepNode> columns2Nodes(List<TdColumn> tdColumns) {
         List<DBColumnRepNode> nodes = new ArrayList<DBColumnRepNode>();
         for (TdColumn tdColumn : tdColumns) {
-            RepositoryNode repNode = RepositoryNodeHelper.recursiveFind(tdColumn, true);
+            RepositoryNode recursiveFind = RepositoryNodeHelper.recursiveFind(tdColumn);
+            if (recursiveFind == null) {
+                recursiveFind = RepositoryNodeHelper.createRepositoryNode(tdColumn);
+            }
+            RepositoryNode repNode = recursiveFind;
             if (repNode != null && repNode instanceof DBColumnRepNode) {
                 nodes.add((DBColumnRepNode) repNode);
             }
