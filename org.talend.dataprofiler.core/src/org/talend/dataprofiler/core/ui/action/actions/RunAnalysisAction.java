@@ -279,9 +279,7 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
                     DefaultMessagesImpl.getString("RunAnalysisAction.confirmMSG"))) { //$NON-NLS-1$
                 return;
             }
-        }
-
-        if (AnalysisType.CONNECTION.equals(analysisType)) {
+        } else if (AnalysisType.CONNECTION.equals(analysisType)) {
             if (AnalysisHelper.getReloadDatabases(analysis)) {
                 Connection conntion = (Connection) analysis.getContext().getConnection();
                 if (conntion != null) {

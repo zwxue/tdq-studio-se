@@ -761,13 +761,14 @@ public class UserDefIndicatorImpl extends IndicatorImpl implements UserDefIndica
      */
     @Override
     public boolean storeSqlResults(List<Object[]> objects) {
-        if (IndicatorCategoryHelper.isUserDefCount(getIndicatorCategory())) {
+        IndicatorCategory indicatorCategoryTmp = getIndicatorCategory();
+        if (IndicatorCategoryHelper.isUserDefCount(indicatorCategoryTmp)) {
             return storeSqlResultsRowCount(objects);
-        } else if (IndicatorCategoryHelper.isUserDefFrequency(getIndicatorCategory())) {
+        } else if (IndicatorCategoryHelper.isUserDefFrequency(indicatorCategoryTmp)) {
             return storeSqlResultsFrequency(objects);
-        } else if (IndicatorCategoryHelper.isUserDefMatching(getIndicatorCategory())) {
+        } else if (IndicatorCategoryHelper.isUserDefMatching(indicatorCategoryTmp)) {
             return storeSqlResultsMatching(objects);
-        } else if (IndicatorCategoryHelper.isUserDefRealValue(getIndicatorCategory())) {
+        } else if (IndicatorCategoryHelper.isUserDefRealValue(indicatorCategoryTmp)) {
             return storeSqlResultsRealValue(objects);
         }
         return false;
