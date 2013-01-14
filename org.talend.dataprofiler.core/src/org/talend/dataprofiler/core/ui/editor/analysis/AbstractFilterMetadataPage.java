@@ -194,7 +194,6 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
 
     private Composite tableAndViewComposite;
 
-
     private TableViewer tableOfCatalogOrSchemaViewer;
 
     private TableViewer viewOfCatalogOrSchemaViewer;
@@ -446,6 +445,7 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
                 DefaultMessagesImpl.getString("ConnectionMasterDetailsPage.analysisSummary")); //$NON-NLS-1$
         sumSectionClient = toolkit.createComposite(summarySection);
         sumSectionClient.setLayout(new GridLayout(2, false));
+        sumSectionClient.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
         refreshSumSection();
         summarySection.setClient(sumSectionClient);
     }
@@ -456,8 +456,8 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
      * @param summarySection
      */
     private void refreshSumSection() {
-        fillDataProvider();
 
+        fillDataProvider();
         if (tdDataProvider == null) {
             return;
         }
@@ -469,89 +469,86 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
             }
         }
         Composite leftComp = new Composite(sumSectionClient, SWT.NONE);
-        GridDataFactory.fillDefaults().grab(true, true).applyTo(leftComp);
-        leftComp.setLayout(new GridLayout());
+        leftComp.setLayout(new GridLayout(2, false));
+        GridData subCompData = new GridData(GridData.FILL_HORIZONTAL);
+        subCompData.verticalAlignment = GridData.BEGINNING;
+        leftComp.setLayoutData(subCompData);
         Composite rightComp = new Composite(sumSectionClient, SWT.NONE);
-        rightComp.setLayout(new GridLayout());
-        GridDataFactory.fillDefaults().grab(true, true).applyTo(rightComp);
+        rightComp.setLayout(new GridLayout(2, false));
+        rightComp.setLayoutData(subCompData);
+
         String connectionStr = JavaSqlFactory.getURL(tdDataProvider);
         Properties pameterProperties = SupportDBUrlStore.getInstance().getDBPameterProperties(connectionStr);
         String labelContent = pameterProperties
                 .getProperty(org.talend.core.model.metadata.builder.database.PluginConstant.DBTYPE_PROPERTY);
-        Label leftLabel = new Label(leftComp, SWT.NONE);
-        leftLabel
-                .setText(DefaultMessagesImpl.getString("ConnectionMasterDetailsPage.DBMS") + (labelContent == null ? PluginConstant.EMPTY_STRING : labelContent)); //$NON-NLS-1$
-        leftLabel.setLayoutData(new GridData());
-        leftLabel = new Label(leftComp, SWT.NONE);
+        toolkit.createLabel(leftComp, DefaultMessagesImpl.getString("ConnectionMasterDetailsPage.DBMS")); //$NON-NLS-1$
+        toolkit.createLabel(leftComp, labelContent == null ? PluginConstant.EMPTY_STRING : labelContent);
         labelContent = pameterProperties
                 .getProperty(org.talend.core.model.metadata.builder.database.PluginConstant.HOSTNAME_PROPERTY);
-        leftLabel
-                .setText(DefaultMessagesImpl.getString("ConnectionMasterDetailsPage.server") + (labelContent == null ? PluginConstant.EMPTY_STRING : labelContent)); //$NON-NLS-1$
-        leftLabel.setLayoutData(new GridData());
-        leftLabel = new Label(leftComp, SWT.NONE);
+        toolkit.createLabel(leftComp, DefaultMessagesImpl.getString("ConnectionMasterDetailsPage.server")); //$NON-NLS-1$
+        toolkit.createLabel(leftComp, labelContent == null ? PluginConstant.EMPTY_STRING : labelContent);
+
         labelContent = pameterProperties
                 .getProperty(org.talend.core.model.metadata.builder.database.PluginConstant.PORT_PROPERTY);
-        leftLabel
-                .setText(DefaultMessagesImpl.getString("ConnectionMasterDetailsPage.port") + (labelContent == null ? PluginConstant.EMPTY_STRING : labelContent)); //$NON-NLS-1$
-        leftLabel.setLayoutData(new GridData());
-        leftLabel = new Label(leftComp, SWT.NONE);
+        toolkit.createLabel(leftComp, DefaultMessagesImpl.getString("ConnectionMasterDetailsPage.port")); //$NON-NLS-1$
+        toolkit.createLabel(leftComp, labelContent == null ? PluginConstant.EMPTY_STRING : labelContent);
+
         labelContent = JavaSqlFactory.getUsername(tdDataProvider);
-        leftLabel
-                .setText(DefaultMessagesImpl.getString("ConnectionMasterDetailsPage.connectAs") + (labelContent == null ? PluginConstant.EMPTY_STRING : labelContent)); //$NON-NLS-1$
-        leftLabel.setLayoutData(new GridData());
+        toolkit.createLabel(leftComp, DefaultMessagesImpl.getString("ConnectionMasterDetailsPage.connectAs")); //$NON-NLS-1$
+        toolkit.createLabel(leftComp, labelContent == null ? PluginConstant.EMPTY_STRING : labelContent);
 
         List<Catalog> tdCatalogs = getCatalogs();
         List<Schema> tdSchema = ConnectionHelper.getSchema(tdDataProvider);
-        leftLabel = new Label(leftComp, SWT.NONE);
-        leftLabel.setText(DefaultMessagesImpl.getString("ConnectionMasterDetailsPage.catalogs", tdCatalogs.size())); //$NON-NLS-1$
-        leftLabel.setLayoutData(new GridData());
-        leftLabel = new Label(leftComp, SWT.NONE);
-        leftLabel.setText(DefaultMessagesImpl.getString("ConnectionMasterDetailsPage.schemata", tdSchema.size())); //$NON-NLS-1$
-        leftLabel.setLayoutData(new GridData());
+        toolkit.createLabel(leftComp,
+                DefaultMessagesImpl.getString("ConnectionMasterDetailsPage.catalogs", PluginConstant.EMPTY_STRING)); //$NON-NLS-1$
+        toolkit.createLabel(leftComp, PluginConstant.EMPTY_STRING + tdCatalogs.size());
+
+        toolkit.createLabel(leftComp,
+                DefaultMessagesImpl.getString("ConnectionMasterDetailsPage.schemata", PluginConstant.EMPTY_STRING)); //$NON-NLS-1$
+        toolkit.createLabel(leftComp, PluginConstant.EMPTY_STRING + tdSchema.size());
+
+        ExecutionInformations resultMetadata = analysis.getResults().getResultMetadata();
+
+        toolkit.createLabel(rightComp,
+                DefaultMessagesImpl.getString("ConnectionMasterDetailsPage.createionDate", PluginConstant.EMPTY_STRING)); //$NON-NLS-1$
+        toolkit.createLabel(rightComp, getFormatDateStr(analysis.getCreationDate()));
+        toolkit.createLabel(rightComp,
+                DefaultMessagesImpl.getString("AbstractAnalysisResultPage.executionDate", PluginConstant.EMPTY_STRING)); //$NON-NLS-1$
+        toolkit.createLabel(rightComp, getFormatDateStr(resultMetadata.getExecutionDate()));
+
+        toolkit.createLabel(rightComp,
+                DefaultMessagesImpl.getString("AbstractAnalysisResultPage.executionDuration", PluginConstant.EMPTY_STRING)); //$NON-NLS-1$
+        toolkit.createLabel(rightComp, PluginConstant.EMPTY_STRING + resultMetadata.getExecutionDuration() / 1000.0d + "s"); //$NON-NLS-1$
+
+        String executeStatus = (resultMetadata.isLastRunOk() ? DefaultMessagesImpl
+                .getString("ConnectionMasterDetailsPage.success") : DefaultMessagesImpl.getString("ConnectionMasterDetailsPage.failure", resultMetadata.getMessage())); //$NON-NLS-1$ //$NON-NLS-2$
+        Label rightLabel = toolkit.createLabel(rightComp,
+                DefaultMessagesImpl.getString("AbstractAnalysisResultPage.executionStatus"));//$NON-NLS-1$  
+        if (!resultMetadata.isLastRunOk()) {
+            rightLabel.setForeground(Display.getDefault().getSystemColor(SWT.COLOR_RED));
+        }
+        rightLabel = toolkit.createLabel(rightComp, resultMetadata.getExecutionNumber() == 0 ? PluginConstant.EMPTY_STRING
+                : executeStatus);
+
+        toolkit.createLabel(rightComp,
+                DefaultMessagesImpl.getString("AbstractAnalysisResultPage.numberOfExecution", PluginConstant.EMPTY_STRING)); //$NON-NLS-1$
+        toolkit.createLabel(rightComp, PluginConstant.EMPTY_STRING + resultMetadata.getExecutionNumber());
+        toolkit.createLabel(rightComp,
+                DefaultMessagesImpl.getString("AbstractAnalysisResultPage.lastSucessfulExecution", PluginConstant.EMPTY_STRING)); //$NON-NLS-1$
+        toolkit.createLabel(rightComp, PluginConstant.EMPTY_STRING + getFormatDateStr(resultMetadata.getExecutionDate()));
         // MOD qiongli 2011-5-16
         DataManager connection = this.analysis.getContext().getConnection();
         if (connection != null) {
             RepositoryNode connNode = RepositoryNodeHelper.recursiveFind(connection);
             if (connNode != null && connNode.getObject().isDeleted()) {
-                leftLabel = new Label(leftComp, SWT.NONE);
+                Label leftLabel = toolkit.createLabel(leftComp,
+                        DefaultMessagesImpl.getString("AbstractPagePart.LogicalDeleteWarn", connNode.getLabel())); //$NON-NLS-1$
                 leftLabel.setForeground(Display.getDefault().getSystemColor(SWT.COLOR_RED));
-                leftLabel.setText(DefaultMessagesImpl.getString("AbstractPagePart.LogicalDeleteWarn", connNode.getLabel())); //$NON-NLS-1$
-                leftLabel.setLayoutData(new GridData());
+                toolkit.createLabel(rightComp, PluginConstant.EMPTY_STRING);
+                toolkit.createLabel(rightComp, PluginConstant.EMPTY_STRING);
             }
         }
 
-        ExecutionInformations resultMetadata = analysis.getResults().getResultMetadata();
-
-        Label rightLabel = new Label(rightComp, SWT.NONE);
-        rightLabel.setText(DefaultMessagesImpl.getString(
-                "ConnectionMasterDetailsPage.createionDate", getFormatDateStr(analysis.getCreationDate()))); //$NON-NLS-1$
-        rightLabel.setLayoutData(new GridData());
-        rightLabel = new Label(rightComp, SWT.NONE);
-        rightLabel.setText(DefaultMessagesImpl.getString(
-                "ConnectionMasterDetailsPage.executionDate", getFormatDateStr(resultMetadata.getExecutionDate()))); //$NON-NLS-1$
-        rightLabel.setLayoutData(new GridData());
-        rightLabel = new Label(rightComp, SWT.NONE);
-        rightLabel.setText(DefaultMessagesImpl.getString(
-                "ConnectionMasterDetailsPage.executionDuration", resultMetadata.getExecutionDuration() / 1000.0d)); //$NON-NLS-1$ 
-        rightLabel.setLayoutData(new GridData());
-
-        rightLabel = new Label(rightComp, SWT.NONE);
-        String executeStatus = (resultMetadata.isLastRunOk() ? DefaultMessagesImpl
-                .getString("ConnectionMasterDetailsPage.success") : DefaultMessagesImpl.getString("ConnectionMasterDetailsPage.failure", resultMetadata.getMessage())); //$NON-NLS-1$ //$NON-NLS-2$
-        rightLabel.setText(DefaultMessagesImpl.getString("ConnectionMasterDetailsPage.executionStatus") //$NON-NLS-1$
-                + (resultMetadata.getExecutionNumber() == 0 ? PluginConstant.EMPTY_STRING : executeStatus));
-        if (!resultMetadata.isLastRunOk()) {
-            rightLabel.setForeground(Display.getDefault().getSystemColor(SWT.COLOR_RED));
-        }
-        rightLabel.setLayoutData(new GridData());
-        rightLabel = new Label(rightComp, SWT.NONE);
-        rightLabel.setText(DefaultMessagesImpl.getString(
-                "ConnectionMasterDetailsPage.number", resultMetadata.getExecutionNumber())); //$NON-NLS-1$
-        rightLabel.setLayoutData(new GridData());
-        rightLabel = new Label(rightComp, SWT.NONE);
-        rightLabel.setText(DefaultMessagesImpl.getString(
-                "ConnectionMasterDetailsPage.successExecution", getFormatDateStr(resultMetadata.getExecutionDate()))); //$NON-NLS-1$
-        rightLabel.setLayoutData(new GridData());
         sumSectionClient.layout();
     }
 
