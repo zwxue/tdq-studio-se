@@ -788,6 +788,15 @@
              </or>
           </enablement>
        </actionProvider>
+      <actionProvider
+            class="org.talend.dataprofiler.core.ui.action.provider.ExportConnecitonActionProvider"
+            id="org.talend.dataprofiler.core.ui.action.provider.ExportConnecitonActionProvider">
+         <enablement>
+            <instanceof
+                  value="org.talend.repository.model.IRepositoryNode">
+            </instanceof>
+         </enablement>
+      </actionProvider>       
   </extension>
     
       
