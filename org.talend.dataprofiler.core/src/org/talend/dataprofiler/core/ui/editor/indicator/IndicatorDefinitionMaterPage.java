@@ -423,10 +423,9 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
         super.createFormContent(managedForm);
 
         metadataSection.setDescription(DefaultMessagesImpl.getString("IndicatorDefinitionMaterPage.formDescript")); //$NON-NLS-1$
-
-        createDefinitionSection(topComp);
-
+        // MOD by zshen move CategorySection to before of DefinitionSection on UDI Editor
         if (isSystemIndicator()) {
+            createDefinitionSection(topComp);
             if (IndicatorCategoryHelper.isCorrelation(category)) {
                 createAdditionalFunctionsSection(topComp);
             }
@@ -435,7 +434,9 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
             }
         } else {
             createCategorySection(topComp);
+            createDefinitionSection(topComp);
             createDefinitionParametersSection(topComp);
+
         }
 
         form.reflow(true);
