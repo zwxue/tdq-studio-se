@@ -14,7 +14,7 @@ package org.talend.cwm.management.i18n;
 
 import java.util.ResourceBundle;
 
-import org.talend.i18n.MessagesCore;
+import org.talend.commons.i18n.MessagesCore;
 
 /**
  * 

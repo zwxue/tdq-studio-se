@@ -14,7 +14,7 @@ package org.talend.dataprofiler.core.i18n.internal;
 
 import java.util.ResourceBundle;
 
-import org.talend.dataprofiler.core.i18n.MessagesCore;
+import org.talend.commons.i18n.MessagesCore;
 
 /**
  * Default implementation of MessageCore from org.talend.commons plug-in.<br/>

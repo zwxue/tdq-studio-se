@@ -14,6 +14,8 @@ package org.talend.i18n;
 
 import java.util.ResourceBundle;
 
+import org.talend.commons.i18n.MessagesCore;
+
 /**
  * 
  * DOC Administrator class global comment. Detailled comment

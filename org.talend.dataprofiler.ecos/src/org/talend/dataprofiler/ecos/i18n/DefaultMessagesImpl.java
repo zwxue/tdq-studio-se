@@ -14,6 +14,8 @@ package org.talend.dataprofiler.ecos.i18n;
 
 import java.util.ResourceBundle;
 
+import org.talend.commons.i18n.MessagesCore;
+
 /**
  * Default implementation of MessageCore from org.talend.commons plug-in.<br/>
  * 
@@ -22,7 +24,7 @@ import java.util.ResourceBundle;
  * <li>the BUNDLE_NAME constant</li>
  * </ul>
  * 
- * $Id: DefaultMessagesImpl.java 3351 2007-05-04 12:14:00 +0000 (星期�? 04 五月 2007) plegall $
+ * $Id: DefaultMessagesImpl.java 3351 2007-05-04 12:14:00 +0000 (星期�? 04 五月 2007) plegall $
  * 
  */
 public class DefaultMessagesImpl extends MessagesCore {

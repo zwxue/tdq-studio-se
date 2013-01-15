@@ -14,6 +14,8 @@ package org.talend.dataquality.matching.i18n;
 
 import java.util.ResourceBundle;
 
+import org.talend.commons.i18n.MessagesCore;
+
 /**
  * DOC scorreia class global comment. Detailled comment
  */
