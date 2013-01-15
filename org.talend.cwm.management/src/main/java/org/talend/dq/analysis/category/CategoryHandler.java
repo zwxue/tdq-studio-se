@@ -34,7 +34,6 @@ import org.talend.dataquality.indicators.definition.DefinitionFactory;
 import org.talend.dataquality.indicators.definition.IndicatorCategory;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
-import org.talend.i18n.MessagesCore;
 
 /**
  * @author scorreia
@@ -254,7 +253,7 @@ public final class CategoryHandler {
     public static String getLabel(String categoryLabel) {
 
         String messageKey = Messages.getString("AnalysisType." + categoryLabel.replaceAll("\\s*", PluginConstant.EMPTY_STRING));//$NON-NLS-1$//$NON-NLS-2$
-        if (messageKey.startsWith(MessagesCore.KEY_NOT_FOUND_PREFIX) && messageKey.endsWith(MessagesCore.KEY_NOT_FOUND_SUFFIX)) {
+        if (messageKey.startsWith(Messages.KEY_NOT_FOUND_PREFIX) && messageKey.endsWith(Messages.KEY_NOT_FOUND_SUFFIX)) {
             return categoryLabel;
         }
         return messageKey;
