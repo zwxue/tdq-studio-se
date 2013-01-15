@@ -21,11 +21,9 @@ Export-Package: org.talend.dataquality.analysis.category.provider,
  org.talend.dataquality.reports.provider,
  org.talend.dataquality.rules.provider,
  org.talend.dataquality.utils
-Require-Bundle: org.eclipse.core.runtime,
- org.talend.dataquality;visibility:=reexport,
+Require-Bundle: org.talend.dataquality;visibility:=reexport,
  org.eclipse.emf.edit;visibility:=reexport,
  org.talend.cwm.mip;visibility:=reexport,
  org.talend.cwm.mip.edit;visibility:=reexport,
- org.talend.model.edit,
- org.talend.model
+ org.talend.model.edit
 Bundle-ActivationPolicy: lazy
