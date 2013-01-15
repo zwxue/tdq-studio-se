@@ -81,7 +81,8 @@ public class UserDefIndicatorImpl extends IndicatorImpl implements UserDefIndica
         if (valueToFreq == null) {
             log.error(Messages.getString("UserDefIndicator.categoryError", this.name));
             return;
-        }// ~ this.distinctValues = this.valueToFreq.keySet();
+        }// ~
+        this.distinctValues = this.valueToFreq.keySet();
         this.setDistinctValueCount(Long.valueOf(distinctValues.size()));
         distinctComputed = true;
     }
