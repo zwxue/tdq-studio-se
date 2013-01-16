@@ -108,10 +108,10 @@ public enum EDriverName {
     HIVE("Hive", //$NON-NLS-1$
          "org.apache.hadoop.hive.jdbc.HiveDriver", //$NON-NLS-1$
          "-55", //$NON-NLS-1$
-         "lib/hive-jdbc-0.8.1.jar", //$NON-NLS-1$
-         "lib/hive-metastore-0.8.1.jar", //$NON-NLS-1$
-         "lib/hive-exec-0.8.1.jar", //$NON-NLS-1$
-         "lib/hive-service-0.8.1.jar", //$NON-NLS-1$
+         "lib/hive-jdbc-0.9.0.jar", //$NON-NLS-1$
+         "lib/hive-metastore-0.9.0.jar", //$NON-NLS-1$
+         "lib/hive-exec-0.9.0.jar", //$NON-NLS-1$
+         "lib/hive-service-0.9.0.jar", //$NON-NLS-1$
          "lib/libfb303_new.jar", //$NON-NLS-1$
          "lib/hadoop-core-1.0.0.jar", //$NON-NLS-1$
          "lib/commons-logging-1.0.4.jar", "lib/log4j-1.2.15.jar", "lib/slf4j-api-1.6.1.jar", "lib/slf4j-log4j12-1.6.1.jar") //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
@@ -233,7 +233,7 @@ public enum EDriverName {
         Bundle bundle = Platform.getBundle(plugins);
         if (bundle != null) {
             try {
-                String requires = (String) bundle.getHeaders().get(Constants.BUNDLE_CLASSPATH);
+                String requires = bundle.getHeaders().get(Constants.BUNDLE_CLASSPATH);
                 ManifestElement[] elements = ManifestElement.parseHeader(Constants.BUNDLE_CLASSPATH, requires);
                 URL hsqldbJar = null;
                 if (jars != null) {
