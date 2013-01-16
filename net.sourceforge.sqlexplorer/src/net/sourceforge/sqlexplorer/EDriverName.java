@@ -233,7 +233,7 @@ public enum EDriverName {
         Bundle bundle = Platform.getBundle(plugins);
         if (bundle != null) {
             try {
-                String requires = bundle.getHeaders().get(Constants.BUNDLE_CLASSPATH);
+                String requires = (String) bundle.getHeaders().get(Constants.BUNDLE_CLASSPATH);
                 ManifestElement[] elements = ManifestElement.parseHeader(Constants.BUNDLE_CLASSPATH, requires);
                 URL hsqldbJar = null;
                 if (jars != null) {
