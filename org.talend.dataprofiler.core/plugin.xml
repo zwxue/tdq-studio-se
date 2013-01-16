@@ -1560,6 +1560,12 @@
            id="org.talend.dataprofiler.core.migration.impl.UpdateFileConnectionTask"
            name="update file connection to add connection name"
            version="5.3.0">
+     </workspacetask>
+     <workspacetask
+           class="org.talend.dataprofiler.core.migration.impl.UpdateTextStatisticsIndicatorsTask"
+           id="org.talend.dataprofiler.core.migration.impl.UpdateTextStatisticsIndicatorsTask"
+           name="Update Text Statistics Indicators Task"
+           version="5.3.0">
      </workspacetask>  
      
   </extension>

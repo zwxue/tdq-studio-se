@@ -239,9 +239,11 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
             TextParameters textParameter = parameters.getTextParameter();
             if (textParameter != null) {
                 if (textParameter.isUseNulls()) {
-                    colName = dbms().replaceNullsWithString(colName, "''");//$NON-NLS-1$
+                    // MOD xqliu 2012-01-15 TDQ-6378, replace the nulls with string in the sql template
+                    // colName = dbms().replaceNullsWithString(colName, "''");//$NON-NLS-1$
                 } else {
-                    whereExpression.add(colName.concat(dbms().isNotNull()));
+                    // MOD xqliu 2012-01-14 TDQ-6378, add the where clause in the sql template
+                    // whereExpression.add(colName.concat(dbms().isNotNull()));
                 }
                 if (textParameter.isIgnoreCase()) {
                     colName = dbms().toUpperCase(colName);
@@ -251,7 +253,8 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
 
                     String tdColName = getQuotedColumnName(tdColumn);
                     tdColName = dbms().replaceNullsWithString(tdColName, "'NULL TALEND'");//$NON-NLS-1$
-                    whereExpression.add(dbms().isNotBlank(tdColName));
+                    // MOD xqliu 2012-01-14 TDQ-6378, add the where clause in the sql template
+                    // whereExpression.add(dbms().isNotBlank(tdColName));
 
                 } else if (textParameter.isUseBlank()
                         && IndicatorsPackage.eINSTANCE.getFrequencyIndicator().isSuperTypeOf(indicatorEclass)) {
@@ -259,8 +262,9 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
                 } else if (textParameter.isUseBlank()
                         && IndicatorsPackage.eINSTANCE.getAverageLengthIndicator().isSuperTypeOf(indicatorEclass)
                         && !IndicatorsPackage.eINSTANCE.getAverageLengthIndicator().equals(indicatorEclass)) {
+                    // MOD xqliu 2012-01-15 TDQ-6378, trim the blank data in the sql template
                     // MOD qiongli 2011-8-10 TDQ-2474,trim for blank data.
-                    colName = dbms().trimIfBlank(colName);
+                    // colName = dbms().trimIfBlank(colName);
                 }
             }
         }
@@ -1408,7 +1412,7 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
             // MOD xqliu 2009-12-09 bug 9822
             if (!(ConnectionUtils.isOdbcMssql(connection) || ConnectionUtils.isOdbcOracle(connection)
                     || ConnectionUtils.isOdbcProgress(connection) || ConnectionUtils.isOdbcTeradata(connection) || ConnectionUtils
-                    .isHive(connection))) {
+                        .isHive(connection))) {
                 // MOD scorreia 2008-08-01 MSSQL does not support quoted catalog's name
                 connection.setCatalog(catalogName);
             }
