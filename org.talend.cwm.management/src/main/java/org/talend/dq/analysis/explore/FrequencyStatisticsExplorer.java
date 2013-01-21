@@ -25,7 +25,6 @@ import org.talend.dataquality.helpers.DomainHelper;
 import org.talend.dataquality.indicators.DateGrain;
 import org.talend.dataquality.indicators.DateParameters;
 import org.talend.dataquality.indicators.IndicatorParameters;
-import org.talend.dataquality.indicators.IndicatorsFactory;
 import org.talend.dq.dbms.DB2DbmsLanguage;
 import org.talend.dq.dbms.SybaseASEDbmsLanguage;
 import org.talend.utils.sql.Java2SqlType;
@@ -46,7 +45,22 @@ public class FrequencyStatisticsExplorer extends DataExplorer {
             clause = getInstantiatedClause();
         } else if (Java2SqlType.isDateInSQL(javaType)) {
             // MOD scorreia 2009-09-22 first check whether the value is null
-            clause = entity.isLabelNull() ? getInstantiatedClause() : getClauseWithDate(clause);
+            if (entity.isLabelNull()) {
+                clause = getInstantiatedClause();
+            } else {
+                IndicatorParameters parameters = indicator.getParameters();
+                if (parameters != null) {
+                    DateParameters dateParameters = parameters.getDateParameters();
+                    if (dateParameters != null) {
+                        DateGrain dateGrain = dateParameters.getDateAggregationType();
+                        clause = entity.isLabelNull() ? getInstantiatedClause() : getClauseWithDate(dateGrain, clause);
+                    } else {
+                        clause = getInstantiatedClause();
+                    }
+                } else {
+                    clause = getInstantiatedClause();
+                }
+            }
 
         } else if (Java2SqlType.isNumbericInSQL(javaType)) {
             IndicatorParameters parameters = indicator.getParameters();
@@ -78,18 +92,15 @@ public class FrequencyStatisticsExplorer extends DataExplorer {
                 + andDataFilterClause();
     }
 
+    /**
+     * get Claus With Date.
+     * 
+     * @param dateGrain
+     * @param clause
+     * @return
+     */
     @SuppressWarnings("fallthrough")
-    private String getClauseWithDate(String clause) {
-        IndicatorParameters parameters = indicator.getParameters();
-        // ADD msjian TDQ-6486 2012-12-10: fixed an NPE
-        DateParameters dateParameters = parameters.getDateParameters();
-        // see ModelElementIndicatorImpl line 703 comment
-        if (dateParameters == null) {
-            dateParameters = IndicatorsFactory.eINSTANCE.createDateParameters();
-            parameters.setDateParameters(dateParameters);
-        }
-        DateGrain dateGrain = dateParameters.getDateAggregationType();
-        // TDQ-6486~
+    private String getClauseWithDate(DateGrain dateGrain, String clause) {
         switch (dateGrain) {
         case DAY:
             clause = dbmsLanguage.extractDay(this.columnName) + dbmsLanguage.equal() + getDayCharacters(entity.getLabel());
