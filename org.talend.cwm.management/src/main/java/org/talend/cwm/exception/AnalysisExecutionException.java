@@ -12,6 +12,8 @@
 // ============================================================================
 package org.talend.cwm.exception;
 
+import org.talend.utils.exceptions.TalendException;
+
 /**
  * DOC scorreia class global comment. Detailled comment
  */
