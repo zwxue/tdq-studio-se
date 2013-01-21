@@ -42,23 +42,23 @@ public class FrequencyStatisticsExplorer extends DataExplorer {
         int javaType = column.getSqlDataType().getJavaDataType();
 
         if (Java2SqlType.isTextInSQL(javaType)) {
-            clause = getInstantiatedClause(javaType);
+            clause = getInstantiatedClause();
         } else if (Java2SqlType.isDateInSQL(javaType)) {
             // MOD scorreia 2009-09-22 first check whether the value is null
             if (entity.isLabelNull()) {
-                clause = getInstantiatedClause(javaType);
+                clause = getInstantiatedClause();
             } else {
                 IndicatorParameters parameters = indicator.getParameters();
                 if (parameters != null) {
                     DateParameters dateParameters = parameters.getDateParameters();
                     if (dateParameters != null) {
                         DateGrain dateGrain = dateParameters.getDateAggregationType();
-                        clause = entity.isLabelNull() ? getInstantiatedClause(javaType) : getClauseWithDate(dateGrain, clause);
+                        clause = entity.isLabelNull() ? getInstantiatedClause() : getClauseWithDate(dateGrain, clause);
                     } else {
-                        clause = getInstantiatedClause(javaType);
+                        clause = getInstantiatedClause();
                     }
                 } else {
-                    clause = getInstantiatedClause(javaType);
+                    clause = getInstantiatedClause();
                 }
             }
 
@@ -78,11 +78,11 @@ public class FrequencyStatisticsExplorer extends DataExplorer {
                         }
                     }
                 } else {// MOD hcheng 2009-05-18.Bug 7377,Frequency indicator,when bins is null,handle as textual data
-                    clause = getInstantiatedClause(javaType);
+                    clause = getInstantiatedClause();
                 }
             } else { // MOD scorreia 2009-05-13. Bug 7235
                 // no parameter set: handle as textual data
-                clause = getInstantiatedClause(javaType);
+                clause = getInstantiatedClause();
             }
         } else {
             clause = getDefaultQuotedStatement(PluginConstant.EMPTY_STRING); // no quote here
@@ -249,7 +249,10 @@ public class FrequencyStatisticsExplorer extends DataExplorer {
      * 
      * @return the where clause from the instantiated query
      */
-    protected String getInstantiatedClause(int javaType) {
+    protected String getInstantiatedClause() {
+        // get function which convert data into a pattern
+        TdColumn column = (TdColumn) indicator.getAnalyzedElement();
+        int javaType = column.getSqlDataType().getJavaDataType();
         // MOD mzhao bug 9681 2009-11-09
 
         Object value = null;
