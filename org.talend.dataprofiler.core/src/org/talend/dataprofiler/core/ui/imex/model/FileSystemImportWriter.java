@@ -877,7 +877,7 @@ public class FileSystemImportWriter implements IImportWriter {
      */
     private void notifySQLExplorerForConnection() {
         for (DatabaseConnection dbConn : allCopiedDBConns) {
-            if (dbConn != null && JavaSqlFactory.getUsername(dbConn) != null) {
+            if (dbConn != null && !dbConn.eIsProxy() && JavaSqlFactory.getUsername(dbConn) != null) {
                 CWMPlugin.getDefault().addConnetionAliasToSQLPlugin(dbConn);
             }
         }
