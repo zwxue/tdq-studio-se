@@ -17,6 +17,7 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.talend.dataquality.record.linkage.attribute.IAttributeMatcher;
+import org.talend.utils.exceptions.TalendException;
 
 /**
  * DOC scorreia class global comment. Detailled comment
@@ -111,7 +112,7 @@ abstract class AbstractRecordMatcher implements IRecordMatcher {
      * 
      * @see org.talend.dataquality.matching.record.IRecordMatcher#setAttributeWeights(double[])
      */
-    public boolean setAttributeWeights(double[] weights) {
+    public boolean setAttributeWeights(double[] weights) throws TalendException {
         if (weights == null || recordSize != weights.length) {
             return false;
         }
@@ -119,11 +120,14 @@ abstract class AbstractRecordMatcher implements IRecordMatcher {
         return true;
     }
 
-    private double[] normalize(double[] weights) {
+    private double[] normalize(double[] weights) throws TalendException {
         List<Integer> indices = new ArrayList<Integer>();
         double total = 0;
         for (int i = 0; i < recordSize; i++) {
             final double w = weights[i];
+            if (w < 0) {
+                throw new TalendException(Messages.getString("AbstractRecordMatcher.InvalideAttributeWeight") + w); //$NON-NLS-1$
+            }
             total += w;
             if (w != 0) {
                 indices.add(i);
@@ -139,7 +143,11 @@ abstract class AbstractRecordMatcher implements IRecordMatcher {
         double[] normalized = new double[recordSize];
         for (int i = 0; i < recordSize; i++) {
             final double w = weights[i];
-            normalized[i] = w / total;
+            if (total != 0d) {
+                normalized[i] = w / total;
+            } else {
+                normalized[i] = w;
+            }
         }
         return normalized;
     }

@@ -13,6 +13,7 @@
 package org.talend.dataquality.record.linkage.record;
 
 import org.talend.dataquality.record.linkage.attribute.IAttributeMatcher;
+import org.talend.utils.exceptions.TalendException;
 
 /**
  * @author scorreia
@@ -28,14 +29,14 @@ public interface IRecordMatcher {
      */
     void setRecordSize(int numberOfAttributes);
 
-
     /**
      * Method "setAttributeWeights".
      * 
      * @param weights the weight of each attribute of the records
      * @return false when the weights cannot be applied to the given records.
+     * @throws an talend exception when weights include invalid attribute weight such as minus values.
      */
-    boolean setAttributeWeights(double[] weights);
+    boolean setAttributeWeights(double[] weights) throws TalendException;
 
     /**
      * Method "setAttributeGroups".
@@ -53,7 +54,7 @@ public interface IRecordMatcher {
      * expected number of attributes)
      */
     boolean setAttributeMatchers(IAttributeMatcher[] attributeMatchers);
-    
+
     /**
      * Method "setBlockingAttributeMatchers".
      * 
