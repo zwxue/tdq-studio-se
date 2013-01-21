@@ -18,6 +18,7 @@ import org.talend.core.model.properties.Property;
 import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
+import org.talend.dataquality.indicators.definition.IndicatorCategory;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dq.factory.ModelElementFileFactory;
 import org.talend.dq.helper.UDIHelper;
@@ -43,6 +44,7 @@ public class UDIHandle extends EMFResourceHandle {
     UDIHandle(IRepositoryNode node) {
         super(node);
     }
+
     /*
      * (non-Javadoc)
      * 
@@ -64,10 +66,14 @@ public class UDIHandle extends EMFResourceHandle {
     public IFile duplicate(String newLabel) {
         IFile duplicatedFile = super.duplicate(newLabel);
         IndicatorDefinition definition = (IndicatorDefinition) ModelElementFileFactory.getModelElement(duplicatedFile);
-        // MOD klliu 2010-09-25 bug 15530 when duplicate the system indicator ,the definition must be reset the category
-        // and the label
-        // name
-        UDIHelper.setUDICategory(definition, DefinitionHandler.getInstance().getUserDefinedCountIndicatorCategory());
+
+        // MOD klliu 2010-09-25 bug 15530 when duplicate the system indicator ,the definition must be reset the
+        // category and the label name
+        IndicatorCategory category = UDIHelper.getUDICategory(definition);
+        if (category == null || !UDIHelper.isUDICategory(category)) {
+            UDIHelper.setUDICategory(definition, DefinitionHandler.getInstance().getUserDefinedCountIndicatorCategory());
+        }
+
         TaggedValueHelper.setValidStatus(true, definition);
         definition.setLabel(definition.getName());
         IndicatorResourceFileHelper.getInstance().save(definition);
