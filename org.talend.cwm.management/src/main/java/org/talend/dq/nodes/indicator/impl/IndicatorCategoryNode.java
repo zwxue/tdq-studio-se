@@ -53,12 +53,14 @@ public class IndicatorCategoryNode extends AbstractIndicatorNode {
         this.setChildren(childrenNodes);
     }
 
+    // MOD yyin 20130118 TDQ-3249, make it international
     public String getLabel() {
+        String displayLabel = label;
         if (indicatorEnum != null) {
-            return this.indicatorEnum.getLabel();
-        } else {
-            return label;
+            displayLabel = this.indicatorEnum.getLabel();
         }
+
+        return org.talend.cwm.management.i18n.Messages.getString(displayLabel.replace(' ', '.'));
     }
 
     public boolean isIndicatorEnumNode() {

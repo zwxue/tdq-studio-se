@@ -68,8 +68,8 @@ public abstract class AbstractIndicatorNode implements IIndicatorNode {
         if (getIndicatorInstance() != null) {
             IndicatorDefinition define = getIndicatorInstance().getIndicatorDefinition();
             if (define != null) {
-                // MOD qiongli 2012-5-24 TDQ-5069 use attribute 'name' at here.
-                return define.getName();
+                // MOD yyin 20130118 make it international
+                return org.talend.cwm.management.i18n.Messages.getString(define.getLabel().replace(' ', '.'));
             }
         }
 

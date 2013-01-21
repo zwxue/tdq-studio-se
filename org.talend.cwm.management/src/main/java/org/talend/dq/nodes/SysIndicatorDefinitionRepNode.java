@@ -19,6 +19,7 @@ import org.talend.core.model.properties.Property;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dataquality.properties.TDQIndicatorDefinitionItem;
+import org.talend.dq.helper.PropertyHelper;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
 
@@ -64,7 +65,9 @@ public class SysIndicatorDefinitionRepNode extends DQRepositoryNode {
     @Override
     public String getLabel() {
         if (this.getIndicatorDefinition() != null) {
-            return this.getIndicatorDefinition().getName();
+            Property property = PropertyHelper.getProperty(this.getIndicatorDefinition());
+            return property.getDisplayName();
+            // return this.getIndicatorDefinition().getName();
         }
         return super.getLabel();
     }

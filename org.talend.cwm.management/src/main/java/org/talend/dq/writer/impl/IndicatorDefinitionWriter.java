@@ -102,4 +102,28 @@ public class IndicatorDefinitionWriter extends AElementPersistance {
             }
         }
     }
+
+    /**
+     * Added 20130115
+     */
+
+    public Property initProperty(ModelElement modelElement) {
+        Property property = super.initProperty(modelElement);
+        // property.setLabel(((IndicatorDefinition) modelElement).getLabel());
+        // make the display name internationalized.
+        property.setDisplayName(org.talend.cwm.management.i18n.Messages.getString(modelElement.getName().replace(' ', '.')));
+        return property;
+    }
+
+    /**
+     * Added yyin 20130118 TDQ-3249, when importing, should also consider the international as init.
+     */
+    @Override
+    public void updateProperty(ModelElement element) {
+        super.updateProperty(element);
+        Property property = PropertyHelper.getProperty(element);
+        if (property != null) {
+            property.setDisplayName(org.talend.cwm.management.i18n.Messages.getString(element.getName().replace(' ', '.')));
+        }
+    }
 }
