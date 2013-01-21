@@ -28,7 +28,6 @@ import org.talend.dataquality.record.linkage.attribute.IAttributeMatcher;
 import org.talend.dataquality.record.linkage.attribute.JaroWinklerMatcher;
 import org.talend.dataquality.record.linkage.constant.AttributeMatcherType;
 import org.talend.dataquality.record.linkage.constant.RecordMatcherType;
-import org.talend.utils.exceptions.TalendException;
 
 /**
  * DOC scorreia class global comment. Detailled comment
@@ -79,11 +78,12 @@ public class SimpleVSRRecordMatcherTest {
                     true,
                     match.setAttributeMatchers(new IAttributeMatcher[] { new ExactIgnoreCaseMatcher(), new JaroWinklerMatcher(),
                             new ExactIgnoreCaseMatcher() }));
-            try {
-                Assert.assertEquals(true, match.setAttributeWeights(attributeWeights));
-            } catch (TalendException e) {
-                Assert.fail("exception occured: " + e.getMessage()); //$NON-NLS-1$
+
+            if (!areValidAttributeWeitghts(match, attributeWeights)) {
+                // don't continue the program
+                return;
             }
+
             // compute proba
             int matchIdx = 0;
             for (String[] record1 : RECORDS1) {
@@ -106,6 +106,23 @@ public class SimpleVSRRecordMatcherTest {
         }
     }
 
+    private static boolean areValidAttributeWeitghts(IRecordMatcher match, double[] attributeWeights) {
+        if (!expectedReturnedValue(attributeWeights)) {
+            // will get an exception
+            try {
+                match.setAttributeWeights(attributeWeights);
+                fail("We should get an exception here as the attribute weights are not valid!");
+            } catch (Exception e) {
+                // we caught an exception.
+                System.out.println("This exception is expected: " + e.getMessage());
+                // don't even try to execute the remaining code
+                return false;
+            }
+        }
+        assertEquals(expectedReturnedValue(attributeWeights), match.setAttributeWeights(attributeWeights));
+        return true;
+    }
+
     @Test
     public void testGetMatchingWeightWithDistance() {
         IRecordMatcher recordMatcher = RecordMatcherFactory.createMatcher(RecordMatcherType.simpleVSRMatcher);
@@ -125,11 +142,7 @@ public class SimpleVSRRecordMatcherTest {
         recordMatcher.setAttributeMatchers(attributeMatchers);
 
         // set the weights chosen by the user
-        try {
-            recordMatcher.setAttributeWeights(ATTRIBUTEWEIGHTS);
-        } catch (TalendException e) {
-            Assert.fail("exception occured: " + e.getMessage()); //$NON-NLS-1$
-        }
+        Assert.assertTrue(recordMatcher.setAttributeWeights(ATTRIBUTEWEIGHTS));
 
         // initialize the blocking variables
         // (we use the column which are in exact match as blocking variables but we could change this in the future)
@@ -208,11 +221,11 @@ public class SimpleVSRRecordMatcherTest {
                 true,
                 match.setAttributeMatchers(new IAttributeMatcher[] { new ExactIgnoreCaseMatcher(), new JaroWinklerMatcher(),
                         new ExactIgnoreCaseMatcher() }));
-        try {
-            Assert.assertEquals(true, match.setAttributeWeights(attributeWeights));
-        } catch (TalendException e) {
-            Assert.fail("exception occured: " + e.getMessage()); //$NON-NLS-1$
+        if (!areValidAttributeWeitghts(match, attributeWeights)) {
+            // break here
+            return;
         }
+        Assert.assertEquals(true, match.setAttributeWeights(attributeWeights));
 
         // compute proba
         int matchIdx = 0;
@@ -226,7 +239,7 @@ public class SimpleVSRRecordMatcherTest {
         }
     }
 
-    private static String printRecord(Object[] record) {
+    static String printRecord(Object[] record) {
         return StringUtils.join(record, '|');
     }
 
@@ -267,29 +280,24 @@ public class SimpleVSRRecordMatcherTest {
         // recordSize must be same to weights.length
         IRecordMatcher match = RecordMatcherFactory.createMatcher(RecordMatcherType.simpleVSRMatcher);
         match.setRecordSize(2);
-        try {
-            Assert.assertFalse(match.setAttributeWeights(ALLATTRIBUTEWEIGHTS[0]));
-        } catch (TalendException e) {
-            Assert.fail("exception occured: " + e.getMessage()); //$NON-NLS-1$
-        }
+        Assert.assertFalse(match.setAttributeWeights(ALLATTRIBUTEWEIGHTS[0]));
 
         match.setRecordSize(3);
+        // Assert values of zeros
         try {
-            // Assert values of zeros
-            Assert.assertTrue(match.setAttributeWeights(new double[] { 0.0, 0.0, 0.0 }));
-            assertArrayEquals(new double[] { 0.0, 0.0, 0.0 }, ((SimpleVSRRecordMatcher) match).attributeWeights, 0);
-        } catch (TalendException e) {
-            Assert.fail("exception occured: " + e.getMessage()); //$NON-NLS-1$
+            match.setAttributeWeights(new double[] { 0.0, 0.0, 0.0 });
+            Assert.fail("we should not arrive here. ");
+        } catch (Exception e) {
+            Assert.assertTrue(e != null && e instanceof IllegalArgumentException);
         }
+        assertNull(((SimpleVSRRecordMatcher) match).attributeWeights);
 
-        boolean retValue = false;
+        // Assert the minus values
         try {
-            // Asser the minus values
-            retValue = match.setAttributeWeights(new double[] { -1, -1, 2 });
-            assertTrue(retValue);// the exception occurred before this line, so this assertion will always fail when it
-                                 // was being exectued.
-        } catch (TalendException e) {
-            assertFalse(retValue);
+            match.setAttributeWeights(new double[] { -1, -1, 2 });
+            Assert.fail("we should not arrive here. ");
+        } catch (Exception e) {
+            Assert.assertTrue(e != null && e instanceof IllegalArgumentException);
         }
     }
 
@@ -331,5 +339,19 @@ public class SimpleVSRRecordMatcherTest {
                     0.2800000031789144, 1.0 },
             { 0.48333332538604734, 0.8074073950449625, 0.48333332538604734, 0.30740739504496256, 1.0, 0.2800000031789144,
                     0.2800000031789144, 1.0 } };
+
+    private static boolean expectedReturnedValue(double[] attributeWeights) {
+        if (attributeWeights == null) {
+            return false;
+        }
+        double total = 0.0;
+        for (double d : attributeWeights) {
+            if (d < 0) {
+                return false;
+            }
+            total += d;
+        }
+        return total > 0;
+    }
 
 }

@@ -17,6 +17,8 @@ package org.talend.dataquality.record.linkage.attribute;
  */
 public abstract class AbstractAttributeMatcher implements IAttributeMatcher {
 
+    private NullOption nullOption = NullOption.nullMatchNull;
+
     /*
      * (non-Javadoc)
      * 
@@ -24,19 +26,37 @@ public abstract class AbstractAttributeMatcher implements IAttributeMatcher {
      * java.lang.String)
      */
     public double getMatchingWeight(String str1, String str2) {
-        if ("".equals(str1)) { //$NON-NLS-1$
-            if ("".equals(str2)) { //$NON-NLS-1$
+        switch (nullOption) {
+        case nullMatchAll:
+            if (isNullOrEmpty(str1) || isNullOrEmpty(str2)) {
                 return 1.0;
-            } else {
+            }
+            break;
+        case nullMatchNone:
+            if (isNullOrEmpty(str1) || isNullOrEmpty(str2)) {
                 return 0.0;
             }
-        } else {
-            if ("".equals(str2)) { //$NON-NLS-1$
+            break;
+        case nullMatchNull:
+            boolean str1IsNull = isNullOrEmpty(str1);
+            boolean str2IsNull = isNullOrEmpty(str2);
+            if (str1IsNull && str2IsNull) { // both null => match
+                return 1.0;
+            } else if (str1IsNull || str2IsNull) { // only one null => non-match
                 return 0.0;
             }
+            break;
+        default:
+            break;
         }
 
+        assert !isNullOrEmpty(str1) : "string should not be null or empty here"; //$NON-NLS-1$
+        assert !isNullOrEmpty(str2) : "string should not be null or empty here"; //$NON-NLS-1$
         return getWeight(str1, str2);
+    }
+
+    private boolean isNullOrEmpty(String str) {
+        return str == null || "".equals(str); //$NON-NLS-1$ //$NON-NLS-1$
     }
 
     /**
@@ -47,5 +67,16 @@ public abstract class AbstractAttributeMatcher implements IAttributeMatcher {
      * @return result between 0 and 1
      */
     protected abstract double getWeight(String record1, String record2);
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * org.talend.dataquality.record.linkage.attribute.IAttributeMatcher#setNullOption(org.talend.dataquality.record
+     * .linkage.attribute.IAttributeMatcher.NullOption)
+     */
+    public void setNullOption(NullOption option) {
+        this.nullOption = option;
+    }
 
 }

@@ -20,6 +20,15 @@ import org.talend.dataquality.record.linkage.constant.AttributeMatcherType;
 public interface IAttributeMatcher {
 
     /**
+     * The different ways to handle a comparison with null values.
+     */
+    public static enum NullOption {
+        nullMatchNull, // null = null
+        nullMatchAll, // null = any string
+        nullMatchNone // null != null
+    }
+
+    /**
      * Method "getMatchingWeight".
      * 
      * @param str1 a first string (must not be null)
@@ -35,5 +44,13 @@ public interface IAttributeMatcher {
      * @return the matching type.
      */
     AttributeMatcherType getMatchType();
+
     // TODO handle other types of data
+
+    /**
+     * Method "setNullOption" sets the option about the comparison of null values.
+     * 
+     * @param option the option
+     */
+    void setNullOption(NullOption option);
 }

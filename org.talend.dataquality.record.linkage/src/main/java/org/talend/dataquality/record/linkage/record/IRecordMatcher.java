@@ -13,7 +13,6 @@
 package org.talend.dataquality.record.linkage.record;
 
 import org.talend.dataquality.record.linkage.attribute.IAttributeMatcher;
-import org.talend.utils.exceptions.TalendException;
 
 /**
  * @author scorreia
@@ -30,13 +29,19 @@ public interface IRecordMatcher {
     void setRecordSize(int numberOfAttributes);
 
     /**
+     * Method "getRecordSize".
+     * 
+     * @return the number of attributes of a record.
+     */
+    int getRecordSize();
+
+    /**
      * Method "setAttributeWeights".
      * 
      * @param weights the weight of each attribute of the records
      * @return false when the weights cannot be applied to the given records.
-     * @throws an talend exception when weights include invalid attribute weight such as minus values.
      */
-    boolean setAttributeWeights(double[] weights) throws TalendException;
+    boolean setAttributeWeights(double[] weights);
 
     /**
      * Method "setAttributeGroups".
@@ -88,4 +93,19 @@ public interface IRecordMatcher {
      * @return true if ok
      */
     boolean setblockingThreshold(double threshold);
+
+    /**
+     * Getter for record match threshold.
+     * 
+     * @return the recordMatchThreshold
+     */
+    double getRecordMatchThreshold();
+
+    /**
+     * Sets the recordMatchThreshold sets a record matching threshold. When the computed matching weight is above the
+     * threshold, the compared records match. When below, they don't.
+     * 
+     * @param recordMatchThreshold the recordMatchThreshold to set
+     */
+    void setRecordMatchThreshold(double recordMatchThreshold);
 }

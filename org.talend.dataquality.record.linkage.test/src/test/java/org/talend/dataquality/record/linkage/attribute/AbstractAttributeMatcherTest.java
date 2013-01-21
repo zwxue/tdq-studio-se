@@ -12,11 +12,13 @@
 // ============================================================================
 package org.talend.dataquality.record.linkage.attribute;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 import java.util.Arrays;
 
+import org.junit.Assert;
 import org.junit.Test;
+import org.talend.dataquality.record.linkage.attribute.IAttributeMatcher.NullOption;
 import org.talend.dataquality.record.linkage.constant.AttributeMatcherType;
 
 /**
@@ -79,7 +81,12 @@ public class AbstractAttributeMatcherTest {
             // tests for blank fields
             { AttributeMatcherType.doubleMetaphone.toString(), "", "stephanie", "0.0" },
             { AttributeMatcherType.doubleMetaphone.toString(), "stephanie", "", "0.0" },
-            { AttributeMatcherType.doubleMetaphone.toString(), "", "", "1.0" }, };
+            { AttributeMatcherType.doubleMetaphone.toString(), "", "", "1.0" },
+
+            // tests for null fields (default null option)
+            { AttributeMatcherType.doubleMetaphone.toString(), null, "stephanie", "0.0" },
+            { AttributeMatcherType.doubleMetaphone.toString(), "stephanie", null, "0.0" },
+            { AttributeMatcherType.doubleMetaphone.toString(), null, null, "1.0" }, };
 
     /**
      * Test method for
@@ -91,7 +98,41 @@ public class AbstractAttributeMatcherTest {
         for (String[] str : testcase) {
             IAttributeMatcher matcher = AttributeMatcherFactory.createMatcher(str[0]);
             assertEquals("The score of test case is unexpected.\n" + Arrays.asList(str), Double.valueOf(str[3]),
-                    matcher.getMatchingWeight(str[1].toString(), str[2].toString()), 0.01);
+                    matcher.getMatchingWeight(str[1], str[2]), 0.01);
         }
+    }
+
+    @Test
+    public void testNullOptions() {
+        for (AttributeMatcherType type : AttributeMatcherType.values()) {
+            if (type.equals(AttributeMatcherType.custom)) {
+                continue; // do not handle this case.
+            }
+            IAttributeMatcher matcher = AttributeMatcherFactory.createMatcher(type);
+            matcher.setNullOption(NullOption.nullMatchAll);
+            Assert.assertEquals(1.0d, matcher.getMatchingWeight(null, null), 0);
+            Assert.assertEquals(1.0d, matcher.getMatchingWeight(null, "toto"), 0);
+            Assert.assertEquals(1.0d, matcher.getMatchingWeight("", "toto"), 0);
+            Assert.assertEquals(1.0d, matcher.getMatchingWeight("", ""), 0);
+            Assert.assertEquals(1.0d, matcher.getMatchingWeight("a", "a"), 0);
+
+            // change option
+            matcher.setNullOption(NullOption.nullMatchNone);
+            Assert.assertEquals(0.0d, matcher.getMatchingWeight(null, null), 0);
+            Assert.assertEquals(0.0d, matcher.getMatchingWeight(null, "toto"), 0);
+            Assert.assertEquals(0.0d, matcher.getMatchingWeight("", "toto"), 0);
+            Assert.assertEquals(0.0d, matcher.getMatchingWeight("", ""), 0);
+            Assert.assertEquals(1.0d, matcher.getMatchingWeight("a", "a"), 0);
+
+            // change option
+            matcher.setNullOption(NullOption.nullMatchNull);
+            Assert.assertEquals(1.0d, matcher.getMatchingWeight(null, null), 0);
+            Assert.assertEquals(0.0d, matcher.getMatchingWeight(null, "toto"), 0);
+            Assert.assertEquals(0.0d, matcher.getMatchingWeight("", "toto"), 0);
+            Assert.assertEquals(1.0d, matcher.getMatchingWeight("", ""), 0);
+            Assert.assertEquals(1.0d, matcher.getMatchingWeight("a", "a"), 0);
+
+        }
+
     }
 }

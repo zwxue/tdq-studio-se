@@ -16,11 +16,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.talend.dataquality.record.linkage.Messages;
 import org.talend.dataquality.record.linkage.attribute.IAttributeMatcher;
-import org.talend.utils.exceptions.TalendException;
 
 /**
- * DOC scorreia class global comment. Detailled comment
+ * @author scorreia Abstract class for matching records.
  */
 abstract class AbstractRecordMatcher implements IRecordMatcher {
 
@@ -30,6 +30,9 @@ abstract class AbstractRecordMatcher implements IRecordMatcher {
 
     protected int[][] attributeGroups;
 
+    /**
+     * The importance weights of each attribute.
+     */
     protected double[] attributeWeights;
 
     /**
@@ -49,7 +52,9 @@ abstract class AbstractRecordMatcher implements IRecordMatcher {
      */
     protected int[] usedIndicesNotblocked = null; // TODO to be reset
 
-    // TODO be able to return the list of attribute weights
+    /**
+     * The attribute matching weigths computed by each attribute matcher.
+     */
     protected double[] attributeMatchingWeights;
 
     /**
@@ -61,6 +66,11 @@ abstract class AbstractRecordMatcher implements IRecordMatcher {
      * Threshold below which variables are blocked. Default value is 1.
      */
     protected double blockingThreshold = 1;
+
+    /**
+     * Threshold below which a record will not match
+     */
+    protected double recordMatchThreshold = 0.95;
 
     /*
      * (non-Javadoc)
@@ -112,26 +122,30 @@ abstract class AbstractRecordMatcher implements IRecordMatcher {
      * 
      * @see org.talend.dataquality.matching.record.IRecordMatcher#setAttributeWeights(double[])
      */
-    public boolean setAttributeWeights(double[] weights) throws TalendException {
+    public boolean setAttributeWeights(double[] weights) {
         if (weights == null || recordSize != weights.length) {
             return false;
         }
         attributeWeights = normalize(weights);
-        return true;
+        return attributeWeights != null;
     }
 
-    private double[] normalize(double[] weights) throws TalendException {
+    private double[] normalize(double[] weights) {
         List<Integer> indices = new ArrayList<Integer>();
         double total = 0;
         for (int i = 0; i < recordSize; i++) {
             final double w = weights[i];
             if (w < 0) {
-                throw new TalendException(Messages.getString("AbstractRecordMatcher.InvalideAttributeWeight") + w); //$NON-NLS-1$
+                throw new IllegalArgumentException(Messages.getString("AbstractRecordMatcher.InvalideAttributeWeight", w)); //$NON-NLS-1$
             }
             total += w;
             if (w != 0) {
                 indices.add(i);
             }
+        }
+        // at least one weight must be non zero
+        if (total == 0.0) {
+            throw new IllegalArgumentException(Messages.getString("AbstractRecordMatcher.0")); //$NON-NLS-1$
         }
 
         this.usedIndices = new int[indices.size()];
@@ -197,7 +211,7 @@ abstract class AbstractRecordMatcher implements IRecordMatcher {
 
     protected int[] getUsedIndicesNotblocked() {
 
-        if (usedIndicesNotblocked == null) {
+        if (usedIndicesNotblocked == null && usedIndices != null) {
             List<Integer> indices = new ArrayList<Integer>();
             for (int usedIdx : usedIndices) {
                 boolean isBlocked = false;
@@ -238,6 +252,49 @@ abstract class AbstractRecordMatcher implements IRecordMatcher {
      */
     public double[] getCurrentAttributeMatchingWeights() {
         return this.attributeMatchingWeights;
+    }
+
+    /**
+     * Getter for recordMatchThreshold.
+     * 
+     * @return the recordMatchThreshold
+     */
+    public double getRecordMatchThreshold() {
+        return this.recordMatchThreshold;
+    }
+
+    /**
+     * Sets the recordMatchThreshold.
+     * 
+     * @param recordMatchThreshold the recordMatchThreshold to set
+     */
+    public void setRecordMatchThreshold(double recordMatchThreshold) {
+        this.recordMatchThreshold = recordMatchThreshold;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataquality.record.linkage.record.IRecordMatcher#getRecordSize()
+     */
+    public int getRecordSize() {
+        return recordSize;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see java.lang.Object#toString()
+     */
+    @Override
+    public String toString() {
+        StringBuffer buf = new StringBuffer();
+        buf.append(this.getClass().getSimpleName()).append(" Record size:"); //$NON-NLS-1$
+        buf.append(this.recordSize).append("\n"); //$NON-NLS-1$
+        for (int i = 0; i < usedIndices.length; i++) {
+            buf.append(this.attributeMatchers[i].getMatchType()).append("/"); //$NON-NLS-1$
+        }
+        return buf.toString();
     }
 
 }
