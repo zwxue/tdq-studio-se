@@ -25,7 +25,6 @@ import org.talend.dataquality.helpers.DomainHelper;
 import org.talend.dataquality.indicators.DateGrain;
 import org.talend.dataquality.indicators.DateParameters;
 import org.talend.dataquality.indicators.IndicatorParameters;
-import org.talend.dataquality.indicators.IndicatorsFactory;
 import org.talend.dq.dbms.DB2DbmsLanguage;
 import org.talend.dq.dbms.SybaseASEDbmsLanguage;
 import org.talend.utils.sql.Java2SqlType;
@@ -43,10 +42,25 @@ public class FrequencyStatisticsExplorer extends DataExplorer {
         int javaType = column.getSqlDataType().getJavaDataType();
 
         if (Java2SqlType.isTextInSQL(javaType)) {
-            clause = getInstantiatedClause();
+            clause = getInstantiatedClause(javaType);
         } else if (Java2SqlType.isDateInSQL(javaType)) {
             // MOD scorreia 2009-09-22 first check whether the value is null
-            clause = entity.isLabelNull() ? getInstantiatedClause() : getClauseWithDate(clause);
+            if (entity.isLabelNull()) {
+                clause = getInstantiatedClause(javaType);
+            } else {
+                IndicatorParameters parameters = indicator.getParameters();
+                if (parameters != null) {
+                    DateParameters dateParameters = parameters.getDateParameters();
+                    if (dateParameters != null) {
+                        DateGrain dateGrain = dateParameters.getDateAggregationType();
+                        clause = entity.isLabelNull() ? getInstantiatedClause(javaType) : getClauseWithDate(dateGrain, clause);
+                    } else {
+                        clause = getInstantiatedClause(javaType);
+                    }
+                } else {
+                    clause = getInstantiatedClause(javaType);
+                }
+            }
 
         } else if (Java2SqlType.isNumbericInSQL(javaType)) {
             IndicatorParameters parameters = indicator.getParameters();
@@ -64,11 +78,11 @@ public class FrequencyStatisticsExplorer extends DataExplorer {
                         }
                     }
                 } else {// MOD hcheng 2009-05-18.Bug 7377,Frequency indicator,when bins is null,handle as textual data
-                    clause = getInstantiatedClause();
+                    clause = getInstantiatedClause(javaType);
                 }
             } else { // MOD scorreia 2009-05-13. Bug 7235
                 // no parameter set: handle as textual data
-                clause = getInstantiatedClause();
+                clause = getInstantiatedClause(javaType);
             }
         } else {
             clause = getDefaultQuotedStatement(PluginConstant.EMPTY_STRING); // no quote here
@@ -78,18 +92,15 @@ public class FrequencyStatisticsExplorer extends DataExplorer {
                 + andDataFilterClause();
     }
 
+    /**
+     * get Claus With Date.
+     * 
+     * @param dateGrain
+     * @param clause
+     * @return
+     */
     @SuppressWarnings("fallthrough")
-    private String getClauseWithDate(String clause) {
-        IndicatorParameters parameters = indicator.getParameters();
-        // ADD msjian TDQ-6486 2012-12-10: fixed an NPE
-        DateParameters dateParameters = parameters.getDateParameters();
-        // see ModelElementIndicatorImpl line 703 comment
-        if (dateParameters == null) {
-            dateParameters = IndicatorsFactory.eINSTANCE.createDateParameters();
-            parameters.setDateParameters(dateParameters);
-        }
-        DateGrain dateGrain = dateParameters.getDateAggregationType();
-        // TDQ-6486~
+    private String getClauseWithDate(DateGrain dateGrain, String clause) {
         switch (dateGrain) {
         case DAY:
             clause = dbmsLanguage.extractDay(this.columnName) + dbmsLanguage.equal() + getDayCharacters(entity.getLabel());
@@ -238,10 +249,7 @@ public class FrequencyStatisticsExplorer extends DataExplorer {
      * 
      * @return the where clause from the instantiated query
      */
-    protected String getInstantiatedClause() {
-        // get function which convert data into a pattern
-        TdColumn column = (TdColumn) indicator.getAnalyzedElement();
-        int javaType = column.getSqlDataType().getJavaDataType();
+    protected String getInstantiatedClause(int javaType) {
         // MOD mzhao bug 9681 2009-11-09
 
         Object value = null;
