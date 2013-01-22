@@ -69,10 +69,11 @@ public interface IRecordMatcher {
     boolean setBlockingAttributeMatchers(int[] attrMatcherIndices);
 
     /**
-     * Method "getMatchingWeight".
+     * Method "getMatchingWeight" compares the given records and returns the matching weight (between 0 - no match - and
+     * 1 - exact match).
      * 
-     * @param record1
-     * @param record2
+     * @param record1 the first record (array of string attributes)
+     * @param record2 the second record to be compared to the first record.
      * @return the matching weight of the given two records
      */
     double getMatchingWeight(String[] record1, String[] record2);
@@ -84,6 +85,14 @@ public interface IRecordMatcher {
      * {@link #getMatchingWeight(String[], String[])} method
      */
     double[] getCurrentAttributeMatchingWeights();
+
+    /**
+     * Method "getLabeledAttributeMatchWeights" returns the attribute names with the last matching weights (or simply
+     * the last matching weights) concatenated in a a string for display.
+     * 
+     * @return the readable string giving the information about the last comparison.
+     */
+    public String getLabeledAttributeMatchWeights();
 
     /**
      * Method "setblockingThreshold" sets a threshold value. When the attribute matching weight is below this value when

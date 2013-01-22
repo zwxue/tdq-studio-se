@@ -13,6 +13,7 @@
 package org.talend.dataquality.record.linkage.record;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -70,7 +71,7 @@ abstract class AbstractRecordMatcher implements IRecordMatcher {
     /**
      * Threshold below which a record will not match
      */
-    protected double recordMatchThreshold = 0.95;
+    protected Double recordMatchThreshold = Double.POSITIVE_INFINITY;
 
     /*
      * (non-Javadoc)
@@ -144,7 +145,7 @@ abstract class AbstractRecordMatcher implements IRecordMatcher {
             }
         }
         // at least one weight must be non zero
-        if (total == 0.0) {
+        if (total == 0.0d) {
             throw new IllegalArgumentException(Messages.getString("AbstractRecordMatcher.0")); //$NON-NLS-1$
         }
 
@@ -157,11 +158,8 @@ abstract class AbstractRecordMatcher implements IRecordMatcher {
         double[] normalized = new double[recordSize];
         for (int i = 0; i < recordSize; i++) {
             final double w = weights[i];
-            if (total != 0d) {
-                normalized[i] = w / total;
-            } else {
-                normalized[i] = w;
-            }
+            // total = 0 already handled before
+            normalized[i] = w / total;
         }
         return normalized;
     }
@@ -173,7 +171,11 @@ abstract class AbstractRecordMatcher implements IRecordMatcher {
      */
     public void setRecordSize(int numberOfAttributes) {
         this.recordSize = numberOfAttributes;
-        // initialize array of attribute matching weights
+        // initialize weights with 1 for every attribute
+        double[] weights = new double[recordSize];
+        Arrays.fill(weights, 1.0d);
+        this.attributeWeights = normalize(weights);
+        // initialize array of attribute MATCHING weights
         this.attributeMatchingWeights = new double[recordSize];
     }
 
@@ -252,6 +254,30 @@ abstract class AbstractRecordMatcher implements IRecordMatcher {
      */
     public double[] getCurrentAttributeMatchingWeights() {
         return this.attributeMatchingWeights;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataquality.record.linkage.record.IRecordMatcher#getLabeledAttributeMatchWeights()
+     */
+    public String getLabeledAttributeMatchWeights() {
+        StringBuffer buffer = new StringBuffer();
+        double[] currentAttributeMatchingWeights = this.getCurrentAttributeMatchingWeights();
+        for (int i = 0; i < currentAttributeMatchingWeights.length; i++) {
+            IAttributeMatcher attributeMatcher = this.attributeMatchers[i];
+            String attributeName = attributeMatcher.getAttributeName();
+            if (attributeName != null) {
+                buffer.append(attributeName).append(": ");
+            }
+            buffer.append(currentAttributeMatchingWeights[i]);
+            if (i != currentAttributeMatchingWeights.length - 1) {
+                buffer.append("|");
+            }
+        }
+
+        return buffer.toString();
+
     }
 
     /**

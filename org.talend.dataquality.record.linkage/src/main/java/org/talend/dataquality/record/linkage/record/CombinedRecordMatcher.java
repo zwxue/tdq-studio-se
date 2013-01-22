@@ -28,6 +28,8 @@ public class CombinedRecordMatcher extends AbstractRecordMatcher {
 
     private final List<IRecordMatcher> matchers = new ArrayList<IRecordMatcher>();
 
+    private IRecordMatcher lastPositiveMatcher;
+
     /*
      * (non-Javadoc)
      * 
@@ -38,8 +40,14 @@ public class CombinedRecordMatcher extends AbstractRecordMatcher {
         double matchingWeight = 0;
         for (IRecordMatcher matcher : matchers) {
             // TODO optimization could be done here when some attribute distances must not be computed again.
-            matchingWeight = Math.max(matchingWeight, matcher.getMatchingWeight(record1, record2));
-            if (matchingWeight > recordMatchThreshold) {
+            double currentWeight = matcher.getMatchingWeight(record1, record2);
+            if (currentWeight > matchingWeight) {
+                // store last matcher
+                lastPositiveMatcher = matcher;
+                matchingWeight = currentWeight;
+            }
+            if (matchingWeight >= matcher.getRecordMatchThreshold()) {
+                // when there is a match with one matcher, no need to loop on all matcher
                 return matchingWeight;
             }
         }
@@ -65,6 +73,16 @@ public class CombinedRecordMatcher extends AbstractRecordMatcher {
         }
 
         return this.matchers.add(matcher);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataquality.record.linkage.record.AbstractRecordMatcher#getLabeledAttributeMatchWeights()
+     */
+    @Override
+    public String getLabeledAttributeMatchWeights() {
+        return this.lastPositiveMatcher.getLabeledAttributeMatchWeights();
     }
 
     /*

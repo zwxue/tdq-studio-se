@@ -53,4 +53,18 @@ public interface IAttributeMatcher {
      * @param option the option
      */
     void setNullOption(NullOption option);
+
+    /**
+     * Method "getAttributeName" returns the attribute name.
+     * 
+     * @return the attribute name or null when not set.
+     */
+    String getAttributeName();
+
+    /**
+     * Method "setAttributeName" sets the attribute name.
+     * 
+     * @param name the attribute name
+     */
+    void setAttributeName(String name);
 }

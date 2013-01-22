@@ -290,7 +290,7 @@ public class SimpleVSRRecordMatcherTest {
         } catch (Exception e) {
             Assert.assertTrue(e != null && e instanceof IllegalArgumentException);
         }
-        assertNull(((SimpleVSRRecordMatcher) match).attributeWeights);
+        assertNotNull(((SimpleVSRRecordMatcher) match).attributeWeights);
 
         // Assert the minus values
         try {
@@ -352,6 +352,14 @@ public class SimpleVSRRecordMatcherTest {
             total += d;
         }
         return total > 0;
+    }
+
+    @Test
+    public void testgetLabeledAttributeMatchWeights() {
+        // TODO create attribute matchers with names
+        // TODO create a record matcher with the attribute matchers
+        // TODO test getLabeledAttributeMatchWeights (check that it gives expected results)
+
     }
 
 }

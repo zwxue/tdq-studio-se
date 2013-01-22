@@ -19,6 +19,8 @@ public abstract class AbstractAttributeMatcher implements IAttributeMatcher {
 
     private NullOption nullOption = NullOption.nullMatchNull;
 
+    private String attributeName = "";
+
     /*
      * (non-Javadoc)
      * 
@@ -56,7 +58,7 @@ public abstract class AbstractAttributeMatcher implements IAttributeMatcher {
     }
 
     private boolean isNullOrEmpty(String str) {
-        return str == null || "".equals(str); //$NON-NLS-1$ //$NON-NLS-1$
+        return str == null || "".equals(str); //$NON-NLS-1$ 
     }
 
     /**
@@ -77,6 +79,24 @@ public abstract class AbstractAttributeMatcher implements IAttributeMatcher {
      */
     public void setNullOption(NullOption option) {
         this.nullOption = option;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataquality.record.linkage.attribute.IAttributeMatcher#getAttributeName()
+     */
+    public String getAttributeName() {
+        return attributeName;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataquality.record.linkage.attribute.IAttributeMatcher#setAttributeName(java.lang.String)
+     */
+    public void setAttributeName(String name) {
+        this.attributeName = name;
     }
 
 }

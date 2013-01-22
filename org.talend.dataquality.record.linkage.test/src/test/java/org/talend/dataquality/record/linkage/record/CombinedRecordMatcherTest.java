@@ -19,6 +19,8 @@ import java.util.List;
 import junit.framework.Assert;
 
 import org.junit.Test;
+import org.talend.dataquality.record.linkage.attribute.AttributeMatcherFactory;
+import org.talend.dataquality.record.linkage.attribute.IAttributeMatcher;
 import org.talend.dataquality.record.linkage.constant.RecordMatcherType;
 
 /**
@@ -251,4 +253,40 @@ public class CombinedRecordMatcherTest {
         }
     }
 
+    @Test
+    public void testgetLabeledAttributeMatchWeights() {
+        IAttributeMatcher attMatcher1 = AttributeMatcherFactory.createMatcher("exact");
+        attMatcher1.setAttributeName("EMAIL");
+        IAttributeMatcher attMatcher2 = AttributeMatcherFactory.createMatcher("exact");
+        attMatcher2.setAttributeName("NAME");
+
+        IRecordMatcher recordMatcher = RecordMatcherFactory.createMatcher("Simple VSR Matcher");
+
+        IAttributeMatcher[] attrMatchers = new IAttributeMatcher[] { attMatcher1, attMatcher2 };
+        Assert.assertFalse("record size is not set. It's not allowed to set the attribute matchers",
+                recordMatcher.setAttributeMatchers(attrMatchers));
+        recordMatcher.setRecordSize(2);
+        Assert.assertTrue("The record size is now set. It's allowed to set the attribute matchers",
+                recordMatcher.setAttributeMatchers(attrMatchers));
+
+        String[] record1 = { "toto@free.fr", "Tota" };
+        double[] emptyAttributeMatchingWeights = recordMatcher.getCurrentAttributeMatchingWeights();
+        for (double d : emptyAttributeMatchingWeights) {
+            Assert.assertEquals(0.0d, d);
+        }
+
+        Assert.assertEquals(1.0d, recordMatcher.getMatchingWeight(record1, record1));
+
+        Assert.assertFalse(recordMatcher.setAttributeWeights(ATTRIBUTEWEIGHTS_1));
+        Assert.assertTrue(recordMatcher.setAttributeWeights(new double[] { 1.0, 1.0 }));
+        Assert.assertEquals(1.0d, recordMatcher.getMatchingWeight(record1, record1));
+
+        double[] currentAttributeMatchingWeights = recordMatcher.getCurrentAttributeMatchingWeights();
+        for (double d : currentAttributeMatchingWeights) {
+            Assert.assertEquals(1.0, d);
+        }
+
+        Assert.assertEquals("EMAIL: 1.0|NAME: 1.0", recordMatcher.getLabeledAttributeMatchWeights());
+
+    }
 }

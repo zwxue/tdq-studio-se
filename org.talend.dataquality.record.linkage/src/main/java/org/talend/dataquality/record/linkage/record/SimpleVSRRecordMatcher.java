@@ -53,7 +53,6 @@ public class SimpleVSRRecordMatcher extends AbstractRecordMatcher {
         return result;
     }
 
-
     private double computeMatchingWeight(int blockedIdx, String[] record1, String[] record2) {
         final IAttributeMatcher match = attributeMatchers[blockedIdx];
         double pa = match.getMatchingWeight(record1[blockedIdx], record2[blockedIdx]);
@@ -61,5 +60,5 @@ public class SimpleVSRRecordMatcher extends AbstractRecordMatcher {
         this.attributeMatchingWeights[blockedIdx] = pa;
         return pa;
     }
-    
+
 }
