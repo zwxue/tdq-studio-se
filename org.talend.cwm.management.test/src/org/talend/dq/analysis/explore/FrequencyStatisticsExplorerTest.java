@@ -104,13 +104,15 @@ public class FrequencyStatisticsExplorerTest {
 
         // create indicator
         LowFrequencyIndicator indicator = IndicatorsFactory.eINSTANCE.createLowFrequencyIndicator();
-        ChartDataEntity chartDataEntity = new ChartDataEntity(indicator, "2012-06-05", ""); //$NON-NLS-1$  //$NON-NLS-2$
+        ChartDataEntity chartDataEntity = new ChartDataEntity(indicator, "2012-06-05", "1"); //$NON-NLS-1$  //$NON-NLS-2$
+        chartDataEntity.setLabelNull(false);
+        chartDataEntity.setKey("2012-06-05"); //$NON-NLS-1$
         assertFalse(chartDataEntity.isLabelNull());
 
         indicator.setAnalyzedElement(column);
         IndicatorParameters indicatorParameters = IndicatorsFactory.eINSTANCE.createIndicatorParameters();
-        indicator.setParameters(indicatorParameters);
         indicatorParameters.setDateParameters(null);
+        indicator.setParameters(indicatorParameters);
         assertNull(indicatorParameters.getDateParameters());
 
         freqExp = new FrequencyStatisticsExplorer();
@@ -119,7 +121,7 @@ public class FrequencyStatisticsExplorerTest {
 
         String clause = freqExp.getFreqRowsStatement();
 
-        assertEquals("SELECT * FROM `TDQ_CALENDAR` WHERE  (YEAR(`CAL_DATE`) = 2012) ", clause); //$NON-NLS-1$
+        assertEquals("SELECT * FROM `TDQ_CALENDAR` WHERE  (`CAL_DATE` = '2012-06-05') ", clause); //$NON-NLS-1$
     }
 
     /**
@@ -128,16 +130,16 @@ public class FrequencyStatisticsExplorerTest {
      */
     @Test
     public void testGetFreqRowsStatement_2() {
-        // TODO
+        // TODO when the column javaType is Text
     }
 
     /**
      * Test method for {@link org.talend.dq.analysis.explore.FrequencyStatisticsExplorer#getFreqRowsStatement()} case_3:
-     * for the column javaType is Number
+     * for for the column javaType is Number
      */
     @Test
     public void testGetFreqRowsStatement_3() {
-        // TODO
+        // TODO when the column javaType is Number
 
     }
 }
