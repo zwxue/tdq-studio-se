@@ -62,12 +62,18 @@ public class SysIndicatorDefinitionRepNode extends DQRepositoryNode {
         return this.isSystemIndicator;
     }
 
+    /**
+     * MOD 20130122 yyin TDQ-3249, make the system indicator display international. but for the user defined indicator,
+     * no need.
+     */
     @Override
     public String getLabel() {
         if (this.getIndicatorDefinition() != null) {
-            Property property = PropertyHelper.getProperty(this.getIndicatorDefinition());
-            return property.getDisplayName();
-            // return this.getIndicatorDefinition().getName();
+            if (this.isSystemIndicator) {
+                Property property = PropertyHelper.getProperty(this.getIndicatorDefinition());
+                return property.getDisplayName();
+            }
+            return this.getIndicatorDefinition().getName();
         }
         return super.getLabel();
     }
