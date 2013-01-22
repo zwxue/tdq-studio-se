@@ -18,6 +18,7 @@ import org.eclipse.ui.navigator.ICommonActionExtensionSite;
 import org.eclipse.ui.navigator.ICommonViewerWorkbenchSite;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.core.repository.model.repositoryObject.TdTableRepositoryObject;
+import org.talend.core.repository.model.repositoryObject.TdViewRepositoryObject;
 import org.talend.dataprofiler.core.ui.action.provider.AbstractCommonActionProvider;
 import org.talend.repository.model.IRepositoryNode;
 
@@ -46,7 +47,7 @@ public abstract class AbstractPredefinedTableActionProvider extends AbstractComm
         Object fe = currentSelection.getFirstElement();
         if (fe instanceof IRepositoryNode) {
             IRepositoryViewObject object = ((IRepositoryNode) fe).getObject();
-            if (object instanceof TdTableRepositoryObject) {
+            if (object instanceof TdTableRepositoryObject || object instanceof TdViewRepositoryObject) {
                 action.setSelection(currentSelection);
 
                 if (action.isAllowed()) {

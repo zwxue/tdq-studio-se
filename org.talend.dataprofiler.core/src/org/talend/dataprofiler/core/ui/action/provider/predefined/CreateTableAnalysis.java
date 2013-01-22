@@ -17,6 +17,7 @@ import org.eclipse.ui.navigator.ICommonActionExtensionSite;
 import org.eclipse.ui.navigator.ICommonViewerWorkbenchSite;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.core.repository.model.repositoryObject.TdTableRepositoryObject;
+import org.talend.core.repository.model.repositoryObject.TdViewRepositoryObject;
 import org.talend.dataprofiler.core.ui.action.AbstractPredefinedTableActionProvider;
 import org.talend.dataprofiler.core.ui.action.AbstractPredefinedTableAnalysisAction;
 import org.talend.dataprofiler.core.ui.action.actions.predefined.CreateTableAnalysisAction;
@@ -45,6 +46,9 @@ public class CreateTableAnalysis extends AbstractPredefinedTableActionProvider {
                 if (object instanceof TdTableRepositoryObject) {
                     TdTableRepositoryObject tableObject = (TdTableRepositoryObject) object;
                     modelElement = tableObject.getTdTable();
+                } else if (object instanceof TdViewRepositoryObject) {
+                    TdViewRepositoryObject viewObject = (TdViewRepositoryObject) object;
+                    modelElement = viewObject.getTdView();
                 }
             }
         }

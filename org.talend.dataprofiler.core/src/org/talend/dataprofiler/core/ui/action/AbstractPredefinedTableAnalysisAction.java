@@ -23,8 +23,7 @@ import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.ui.PlatformUI;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.cwm.helper.ConnectionHelper;
-import org.talend.cwm.helper.TableHelper;
-import org.talend.cwm.relational.TdTable;
+import org.talend.cwm.helper.PackageHelper;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.model.TableIndicator;
 import org.talend.dataprofiler.core.ui.editor.analysis.AnalysisEditor;
@@ -33,9 +32,10 @@ import org.talend.dataprofiler.core.ui.wizard.analysis.WizardFactory;
 import org.talend.dataprofiler.core.ui.wizard.analysis.table.TableAnalysisWizard;
 import org.talend.dataquality.analysis.AnalysisType;
 import org.talend.dq.analysis.parameters.AnalysisParameter;
-import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.nodes.DBTableRepNode;
+import org.talend.dq.nodes.DBViewRepNode;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
+import orgomg.cwm.resource.relational.NamedColumnSet;
 
 /**
  * DOC xqliu class global comment. Detailled comment
@@ -65,22 +65,29 @@ public abstract class AbstractPredefinedTableAnalysisAction extends Action {
         this.selection = selection;
     }
 
-    protected TdTable[] getTables() {
-        List<DBTableRepNode> tableNodeList = RepositoryNodeHelper.getTableNodeList(getSelection().toArray());
-        if (tableNodeList.size() > 0) {
-            List<TdTable> tableList = new ArrayList<TdTable>();
-            for (DBTableRepNode tableNode : tableNodeList) {
-                tableList.add(tableNode.getTdTable());
+    protected NamedColumnSet[] getTablesAndViews() {
+        List<NamedColumnSet> list = new ArrayList<NamedColumnSet>();
+
+        Object[] array = getSelection().toArray();
+        for (Object obj : array) {
+            if (obj instanceof DBTableRepNode) {
+                list.add(((DBTableRepNode) obj).getTdTable());
+            } else if (obj instanceof DBViewRepNode) {
+                list.add(((DBViewRepNode) obj).getTdView());
             }
-            return tableList.toArray(new TdTable[tableList.size()]);
+
         }
-        return null;
+
+        return list.toArray(new NamedColumnSet[list.size()]);
+
     }
 
     protected Connection getTdDataProvidor() {
         Object obj = getSelection().getFirstElement();
         if (obj instanceof DBTableRepNode) {
-            return ConnectionHelper.getTdDataProvider(TableHelper.getParentCatalogOrSchema(((DBTableRepNode) obj).getTdTable()));
+            return ConnectionHelper.getTdDataProvider(PackageHelper.getParentPackage(((DBTableRepNode) obj).getTdTable()));
+        } else if (obj instanceof DBViewRepNode) {
+            return ConnectionHelper.getTdDataProvider(PackageHelper.getParentPackage(((DBViewRepNode) obj).getTdView()));
         }
         return null;
     }
@@ -113,10 +120,11 @@ public abstract class AbstractPredefinedTableAnalysisAction extends Action {
     }
 
     protected TableIndicator[] composePredefinedTableIndicator(IndicatorEnum[] allowedEnum) {
-        TableIndicator[] predefinedTableIndicator = new TableIndicator[getTables().length];
-        for (int i = 0; i < getTables().length; i++) {
-            TdTable table = getTables()[i];
-            TableIndicator tableIndicator = new TableIndicator(table);
+        NamedColumnSet[] tablesAndViews = getTablesAndViews();
+        TableIndicator[] predefinedTableIndicator = new TableIndicator[tablesAndViews.length];
+        for (int i = 0; i < tablesAndViews.length; i++) {
+            NamedColumnSet tableOrView = tablesAndViews[i];
+            TableIndicator tableIndicator = new TableIndicator(tableOrView);
             predefinedTableIndicator[i] = tableIndicator;
         }
         return predefinedTableIndicator;
@@ -132,7 +140,7 @@ public abstract class AbstractPredefinedTableAnalysisAction extends Action {
             dialog.setPageSize(500, 340);
             if (wizard instanceof TableAnalysisWizard) {
                 TableAnalysisWizard taw = (TableAnalysisWizard) wizard;
-                taw.setNamedColumnSet(getTables());
+                taw.setNamedColumnSet(getTablesAndViews());
                 taw.setTdDataProvider(getTdDataProvidor());
                 taw.setShowTableSelectPage(false);
             }

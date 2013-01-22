@@ -37,9 +37,8 @@ import org.talend.dq.analysis.parameters.PackagesAnalyisParameter;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.nodes.DBCatalogRepNode;
 import org.talend.dq.nodes.DBColumnFolderRepNode;
-import org.talend.dq.nodes.DBConnectionRepNode;
 import org.talend.dq.nodes.DBSchemaRepNode;
-import org.talend.dq.nodes.DBTableFolderRepNode;
+import org.talend.dq.nodes.DQRepositoryNode;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
 
@@ -89,13 +88,13 @@ public class AnalyzeColumnSetAction extends Action {
         PackagesAnalyisParameter packaFilterParameter = new PackagesAnalyisParameter();
 
         if (nodeColumns != null) {
-            DBTableFolderRepNode tFolder = (DBTableFolderRepNode) nodeColumns.getParent();
+            DQRepositoryNode tFolder = (DQRepositoryNode) nodeColumns.getParent();
             if (tFolder != null) {
                 IRepositoryNode node = tFolder.getParent();
 
                 if (node instanceof DBCatalogRepNode) {
                     IRepositoryNode connNode = ((DBCatalogRepNode) node).getParent();
-                    packaFilterParameter.setConnectionRepNode((DBConnectionRepNode) connNode);
+                    packaFilterParameter.setConnectionRepNode(connNode);
                     catalogs.add(node);
                     packaFilterParameter.setPackages(catalogs);
                 } else if (node instanceof DBSchemaRepNode) {

@@ -21,7 +21,6 @@ import java.util.List;
 import java.util.Properties;
 
 import net.sourceforge.sqlexplorer.Messages;
-import net.sourceforge.sqlexplorer.dbstructure.nodes.TableNode;
 
 import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.EList;
@@ -72,10 +71,11 @@ import org.talend.core.model.metadata.builder.database.dburl.SupportDBUrlStore;
 import org.talend.core.repository.model.repositoryObject.MetadataTableRepositoryObject;
 import org.talend.cwm.helper.CatalogHelper;
 import org.talend.cwm.helper.ConnectionHelper;
-import org.talend.cwm.helper.TableHelper;
-import org.talend.cwm.relational.TdTable;
+import org.talend.cwm.helper.ViewHelper;
+import org.talend.cwm.relational.TdView;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
+import org.talend.dataprofiler.core.helper.FolderNodeHelper;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.model.OverviewIndUIElement;
 import org.talend.dataprofiler.core.model.SqlExplorerBridge;
@@ -96,11 +96,11 @@ import org.talend.dataquality.indicators.schema.ViewIndicator;
 import org.talend.dataquality.properties.TDQAnalysisItem;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.nodes.DBTableFolderRepNode;
+import org.talend.dq.nodes.DBViewRepNode;
 import org.talend.dq.writer.impl.ElementWriterFactory;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.utils.sugars.ReturnCode;
-import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.foundation.softwaredeployment.DataManager;
 import orgomg.cwm.objectmodel.core.Package;
 import orgomg.cwm.resource.relational.Catalog;
@@ -913,25 +913,11 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
             tableAnalysisitem.setText(DefaultMessagesImpl.getString("CreateTableAnalysisAction.tableAnalysis")); //$NON-NLS-1$
             tableAnalysisitem.setImage(ImageLib.getImage(ImageLib.ACTION_NEW_ANALYSIS));
 
-            // catalogOrSchemaTable.setMenu(menu);
             keyitem.addSelectionListener(new SelectionAdapter() {
 
                 @Override
                 public void widgetSelected(SelectionEvent e) {
-                    TableItem tableItem = cursor.getRow();
-                    String tableName = tableItem.getText(0);
-                    Package parentPack = (Package) currentSelectionSchemaIndicator.getAnalyzedElement();
-                    // MOD qiongli bug 13093,2010-7-2
-                    if (currentCatalogIndicator != null) {
-                        parentPack = (Package) currentCatalogIndicator.getAnalyzedElement();
-                    }
-
-                    TypedReturnCode<TableNode> findSqlExplorerTableNode = SqlExplorerBridge.findSqlExplorerTableNode(
-                            tdDataProvider, parentPack, tableName, Messages.getString("DatabaseDetailView.Tab.PrimaryKeys")); //$NON-NLS-1$
-
-                    if (!findSqlExplorerTableNode.isOk()) {
-                        // log.error(findSqlExplorerTableNode.getMessage());
-                    }
+                    runMenu(cursor, Messages.getString("DatabaseDetailView.Tab.PrimaryKeys")); //$NON-NLS-1$
                 }
 
             });
@@ -940,20 +926,7 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
 
                 @Override
                 public void widgetSelected(SelectionEvent e) {
-                    TableItem tableItem = cursor.getRow();
-                    String tableName = tableItem.getText(0);
-                    Package parentPack = (Package) currentSelectionSchemaIndicator.getAnalyzedElement();
-                    // MOD qiongli bug 13093,2010-7-2
-                    if (currentCatalogIndicator != null) {
-                        parentPack = (Package) currentCatalogIndicator.getAnalyzedElement();
-                    }
-
-                    TypedReturnCode<TableNode> findSqlExplorerTableNode = SqlExplorerBridge.findSqlExplorerTableNode(
-                            tdDataProvider, parentPack, tableName, Messages.getString("DatabaseDetailView.Tab.Indexes")); //$NON-NLS-1$
-
-                    if (!findSqlExplorerTableNode.isOk()) {
-                        // log.error(findSqlExplorerTableNode.getMessage());
-                    }
+                    runMenu(cursor, Messages.getString("DatabaseDetailView.Tab.Indexes")); //$NON-NLS-1$
                 }
 
             });
@@ -987,6 +960,7 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
                     }
                 }
             });
+
             viewOfCatalogOrSchemaViewer = new TableViewer(tableAndViewComposite, SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER
                     | SWT.FULL_SELECTION);
             Table tableCatalogOrSchemaView = viewOfCatalogOrSchemaViewer.getTable();
@@ -1001,6 +975,42 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
             ViewOfCatalogOrSchemaProvider viewProvider = new ViewOfCatalogOrSchemaProvider();
             viewOfCatalogOrSchemaViewer.setLabelProvider(viewProvider);
             viewOfCatalogOrSchemaViewer.setContentProvider(viewProvider);
+
+            // ADD msjian TDQ-4523 2013-1-22: Add "Table analysis" menu on the views
+            final Menu menuForView = new Menu(tableCatalogOrSchemaView);
+            MenuItem tableAnalysisitemForView = new MenuItem(menuForView, SWT.PUSH);
+            tableAnalysisitemForView.setText(DefaultMessagesImpl.getString("CreateTableAnalysisAction.tableAnalysis")); //$NON-NLS-1$
+            tableAnalysisitemForView.setImage(ImageLib.getImage(ImageLib.ACTION_NEW_ANALYSIS));
+
+            final TableCursor cursorForView = new TableCursor(tableCatalogOrSchemaView, SWT.NONE);
+            cursorForView.setBackground(tableCatalogOrSchemaView.getDisplay().getSystemColor(SWT.COLOR_LIST_SELECTION));
+            cursorForView.setForeground(tableCatalogOrSchemaView.getDisplay().getSystemColor(SWT.COLOR_LIST_SELECTION_TEXT));
+            cursorForView.setLayout(new FillLayout());
+
+            cursorForView.addMenuDetectListener(new MenuDetectListener() {
+
+                public void menuDetected(MenuDetectEvent e) {
+                    int column = cursorForView.getColumn();
+                    if (column == TABLE_COLUMN_INDEX) {
+                        cursorForView.setMenu(menuForView);
+                        menuForView.setVisible(true);
+                    } else {
+                        cursorForView.setMenu(null);
+                    }
+                }
+            });
+
+            tableAnalysisitemForView.addSelectionListener(new SelectionAdapter() {
+
+                @Override
+                public void widgetSelected(SelectionEvent e) {
+                    TableItem tableItem = cursorForView.getRow();
+                    ViewIndicator viewIndicator = (ViewIndicator) tableItem.getData();
+                    runTableAnalysis(viewIndicator.getTableName());
+                }
+
+            });
+            // TDQ-4523~
         }
         tableOfCatalogOrSchemaViewer.getTable().setMenu(null);
         tableOfCatalogOrSchemaViewer.setInput(tableElements);
@@ -1014,6 +1024,24 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
         // ~
         form.reflow(true);
 
+    }
+
+    /**
+     * when select menu, run.
+     * 
+     * @param cursor
+     * @param message
+     */
+    private void runMenu(final TableCursor cursor, String message) {
+        TableItem tableItem = cursor.getRow();
+        String tableName = tableItem.getText(0);
+        Package parentPack = (Package) currentSelectionSchemaIndicator.getAnalyzedElement();
+        // MOD qiongli bug 13093,2010-7-2
+        if (currentCatalogIndicator != null) {
+            parentPack = (Package) currentCatalogIndicator.getAnalyzedElement();
+        }
+
+        SqlExplorerBridge.findSqlExplorerTableNode(tdDataProvider, parentPack, tableName, message);
     }
 
     /**
@@ -1144,33 +1172,24 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
     }
 
     private void runTableAnalysis(OverviewIndUIElement data) {
-
         new AnalyzeColumnSetAction(data.getNode()).run();
     }
 
     /**
-     * DOC yyi Comment method "runTableAnalysis".
+     * run TableAnalysis with view name.
      * 
-     * @param tableName
+     * @param viewName
      */
-    // protected void runTableAnalysis(String tableName) {
-    //
-    // Package parentPack = (Package) currentSelectionSchemaIndicator.getAnalyzedElement();
-    // TdTable tdTable = getTable(parentPack, tableName);
-    // if (null == tdTable) {
-    // FolderNodeHelper.getTableFolderNode(parentPack).loadChildren();
-    // tdTable = getTable(parentPack, tableName);
-    // }
-    // try {
-    // List<TdColumn> columns = 0 == ColumnSetHelper.getColumns(tdTable).size() ? DqRepositoryViewService.getColumns(
-    // tdDataProvider, tdTable, null, true) : ColumnSetHelper.getColumns(tdTable);
-    //
-    // new AnalyzeColumnSetAction(columns.toArray(new TdColumn[columns.size()])).run();
-    // } catch (Exception e) {
-    // log.error(e.getMessage());
-    // e.printStackTrace();
-    // }
-    // }
+    protected void runTableAnalysis(String viewName) {
+        Package parentPack = (Package) currentSelectionSchemaIndicator.getAnalyzedElement();
+        TdView tdView = getView(parentPack, viewName);
+        if (null == tdView) {
+            FolderNodeHelper.getTableFolderNode(parentPack).loadChildren();
+            tdView = getView(parentPack, viewName);
+        }
+        DBViewRepNode dbViewRepNode = RepositoryNodeHelper.recursiveFindTdView(tdView);
+        new AnalyzeColumnSetAction(dbViewRepNode).run();
+    }
 
     protected void createContextMenuFor(final StructuredViewer viewer) {
         final MenuManager contextMenu = new MenuManager("#PopUp");//$NON-NLS-1$
@@ -1199,16 +1218,16 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
     }
 
     /**
-     * DOC yyi get table form package by its name.
+     * get view from package by its name.
      * 
      * @param pkg
-     * @param tableName
+     * @param viewName
      * @return
      */
-    private TdTable getTable(Package pkg, String tableName) {
-        for (TdTable tabel : TableHelper.getTables(pkg.getOwnedElement())) {
-            if (tabel.getName().equals(tableName)) {
-                return tabel;
+    private TdView getView(Package pkg, String viewName) {
+        for (TdView view : ViewHelper.getViews(pkg.getOwnedElement())) {
+            if (view.getName().equals(viewName)) {
+                return view;
             }
         }
         return null;

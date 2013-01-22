@@ -489,11 +489,14 @@
             class="org.talend.dataprofiler.core.ui.action.provider.predefined.CreateTableAnalysis"
             id="org.talend.dataprofiler.core.ui.action.provider.predefined.CreateTableAnalysis">
          <enablement>
-            <and>
+            <or>
                <instanceof
                      value="org.talend.dq.nodes.DBTableRepNode">
                </instanceof>
-            </and>
+               <instanceof
+                     value="org.talend.dq.nodes.DBViewRepNode">
+               </instanceof>
+            </or>
          </enablement>
       </actionProvider>
       <actionProvider
