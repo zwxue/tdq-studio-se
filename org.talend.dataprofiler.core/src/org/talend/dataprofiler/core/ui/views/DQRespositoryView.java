@@ -170,22 +170,22 @@ public class DQRespositoryView extends CommonNavigator {
     public DQRespositoryView() {
         super();
 
-        manager = DQStructureManager.getInstance();
+        // MOD qiongli 2010-9-7,bug 14698,add 'try...catch'
+        try {
+            manager = DQStructureManager.getInstance();
 
-        if (manager.isNeedCreateStructure()) {
-            ProxyRepositoryFactory.getInstance().executeRepositoryWorkUnit(
-                    new RepositoryWorkUnit<Object>("Create DQ Repository structure") { //$NON-NLS-1$
+            if (manager.isNeedCreateStructure()) {
+                ProxyRepositoryFactory.getInstance().executeRepositoryWorkUnit(
+                        new RepositoryWorkUnit<Object>("Create DQ Repository structure") { //$NON-NLS-1$
 
-                        @Override
-                        protected void run() {
-                            manager.createDQStructure();
-                        }
-                    });
-        }
+                            @Override
+                            protected void run() {
+                                manager.createDQStructure();
+                            }
+                        });
+            }
 
-        if (manager.isNeedMigration()) {
-            // MOD qiongli 2010-9-7,bug 14698,add 'try...catch'
-            try {
+            if (manager.isNeedMigration()) {
                 IRunnableWithProgress op = new IRunnableWithProgress() {
 
                     public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
@@ -196,9 +196,9 @@ public class DQRespositoryView extends CommonNavigator {
                 };
 
                 ProgressUI.popProgressDialog(op);
-            } catch (Exception e) {
-                log.error(e, e);
             }
+        } catch (Exception e) {
+            log.error(e, e);
         }
     }
 
