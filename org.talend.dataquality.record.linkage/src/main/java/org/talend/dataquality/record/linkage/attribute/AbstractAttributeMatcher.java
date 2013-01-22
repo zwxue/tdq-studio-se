@@ -19,7 +19,7 @@ public abstract class AbstractAttributeMatcher implements IAttributeMatcher {
 
     private NullOption nullOption = NullOption.nullMatchNull;
 
-    private String attributeName = "";
+    private String attributeName = null;
 
     /*
      * (non-Javadoc)

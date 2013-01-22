@@ -256,9 +256,7 @@ public class CombinedRecordMatcherTest {
     @Test
     public void testgetLabeledAttributeMatchWeights() {
         IAttributeMatcher attMatcher1 = AttributeMatcherFactory.createMatcher("exact");
-        attMatcher1.setAttributeName("EMAIL");
         IAttributeMatcher attMatcher2 = AttributeMatcherFactory.createMatcher("exact");
-        attMatcher2.setAttributeName("NAME");
 
         IRecordMatcher recordMatcher = RecordMatcherFactory.createMatcher("Simple VSR Matcher");
 
@@ -285,6 +283,10 @@ public class CombinedRecordMatcherTest {
         for (double d : currentAttributeMatchingWeights) {
             Assert.assertEquals(1.0, d);
         }
+        Assert.assertEquals("1.0|1.0", recordMatcher.getLabeledAttributeMatchWeights());
+
+        attMatcher1.setAttributeName("EMAIL");
+        attMatcher2.setAttributeName("NAME");
 
         Assert.assertEquals("EMAIL: 1.0|NAME: 1.0", recordMatcher.getLabeledAttributeMatchWeights());
 
