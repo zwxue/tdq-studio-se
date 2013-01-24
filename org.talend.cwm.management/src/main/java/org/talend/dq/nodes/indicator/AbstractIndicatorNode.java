@@ -69,7 +69,7 @@ public abstract class AbstractIndicatorNode implements IIndicatorNode {
             IndicatorDefinition define = getIndicatorInstance().getIndicatorDefinition();
             if (define != null) {
                 // MOD yyin 20130118 make it international
-                return org.talend.cwm.management.i18n.Messages.getString(define.getLabel().replace(' ', '.'));
+                return org.talend.cwm.management.i18n.Messages.getString(define.getLabel().replace(' ', '.'));//$NON-NLS-1$ 
             }
         }
 

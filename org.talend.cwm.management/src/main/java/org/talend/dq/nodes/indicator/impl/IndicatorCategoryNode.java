@@ -60,7 +60,7 @@ public class IndicatorCategoryNode extends AbstractIndicatorNode {
             displayLabel = this.indicatorEnum.getLabel();
         }
 
-        return org.talend.cwm.management.i18n.Messages.getString(displayLabel.replace(' ', '.'));
+        return org.talend.cwm.management.i18n.Messages.getString(displayLabel.replace(' ', '.'));//$NON-NLS-1$ 
     }
 
     public boolean isIndicatorEnumNode() {
