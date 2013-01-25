@@ -187,7 +187,7 @@
          id="com.ibm.icu"
          download-size="0"
          install-size="0"
-         version="0.0.0"
+         version="4.2.1.v20100412"
          unpack="false"/>
 
    <plugin
@@ -448,7 +448,7 @@
          id="org.apache.lucene"
          download-size="0"
          install-size="0"
-         version="0.0.0"
+         version="1.9.1.v20100518-1140"
          unpack="false"/>
 
    <plugin
@@ -646,7 +646,7 @@
          id="org.apache.lucene.analysis"
          download-size="0"
          install-size="0"
-         version="0.0.0"
+         version="1.9.1.v20100518-1140"
          unpack="false"/>
 
    <plugin
