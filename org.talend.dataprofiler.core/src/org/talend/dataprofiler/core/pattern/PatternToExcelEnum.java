@@ -40,7 +40,8 @@ public enum PatternToExcelEnum {
     AS400(19, "AS400"), //$NON-NLS-1$
     JavaClassName(20, "CLASS_NAME_TEXT"), //$NON-NLS-1$
     JavaJarPath(21, "JAR_FILE_PATH"), //$NON-NLS-1$
-    Hive(22, "Hive");//$NON-NLS-1$
+    Hive(22, "Hive"), //$NON-NLS-1$
+    IndicatorDefinitionParameter(23, "IndicatorDefinitionParameter");//$NON-NLS-1$
 
     private String literal;
 
