@@ -33,6 +33,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.TableColumn;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.pattern.PatternToExcelEnum;
+import org.talend.dq.helper.UDIHelper;
 
 import com.csvreader.CsvReader;
 
@@ -90,7 +91,21 @@ public class CsvFileTableViewer extends Composite {
                 log.error(e, e);
             }
 
-            return rows.toArray(new Object[rows.size()]);
+            List<Object> rows2 = new ArrayList<Object>();
+            for (Object obj : rows) {
+                if (obj instanceof String[]) {
+                    String[] strs = (String[]) obj;
+                    for (int i = 0; i < strs.length; ++i) {
+                        strs[i] = strs[i].replaceAll(UDIHelper.PARA_SEPARATE_1, UDIHelper.PARA_SEPARATE_1_DISPLAY).replaceAll(
+                                UDIHelper.PARA_SEPARATE_2, UDIHelper.PARA_SEPARATE_2_DISPLAY);
+                    }
+                    rows2.add(strs);
+                } else {
+                    rows2.add(obj);
+                }
+            }
+
+            return rows2.toArray(new Object[rows2.size()]);
         }
     }
 

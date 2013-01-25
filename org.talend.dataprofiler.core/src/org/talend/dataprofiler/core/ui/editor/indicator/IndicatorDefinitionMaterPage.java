@@ -22,6 +22,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.common.util.EList;
@@ -2279,6 +2280,59 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
                 return rc;
             }
         }
+
+        if (tempParameters != null) {
+            // detecting the IndicatorDefinitionParameter whether include duplicate keywords
+            Map<String, Integer> paraMap = new HashMap<String, Integer>();
+            for (IndicatorDefinitionParameter para : tempParameters) {
+                String key = para.getKey();
+                Integer keyCount = paraMap.get(key);
+                if (keyCount == null) {
+                    paraMap.put(key, Integer.valueOf(1));
+                } else {
+                    paraMap.put(key, Integer.valueOf(keyCount.intValue() + 1));
+                }
+            }
+
+            if (paraMap.size() != tempParameters.size()) {
+                StringBuffer duplicateKeywords = new StringBuffer();
+                for (String key : paraMap.keySet()) {
+                    Integer value = paraMap.get(key);
+                    if (value.intValue() > 1) {
+                        duplicateKeywords.append("\n" + key); //$NON-NLS-1$
+                    }
+                }
+                rc.setOk(false);
+                rc.setMessage(DefaultMessagesImpl.getString(
+                        "IndicatorDefinitionMaterPage.includeDuplicateKeywords", duplicateKeywords.toString()));//$NON-NLS-1$
+                return rc;
+            }
+
+            // detecting the IndicatorDefinitionParameter whether include special characters
+            for (IndicatorDefinitionParameter para : tempParameters) {
+                String key = para.getKey();
+                String value = para.getValue();
+
+                if (!StringUtils.isBlank(key)
+                        && (key.indexOf(UDIHelper.PARA_SEPARATE_1) > -1 || key.indexOf(UDIHelper.PARA_SEPARATE_2) > -1)) {
+                    rc.setOk(false);
+                    rc.setMessage(DefaultMessagesImpl
+                            .getString(
+                                    "IndicatorDefinitionMaterPage.includeSpecialCharacter", "\n" + UDIHelper.PARA_SEPARATE_1 + "\n" + UDIHelper.PARA_SEPARATE_2));//$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                    return rc;
+                }
+
+                if (!StringUtils.isBlank(value)
+                        && (value.indexOf(UDIHelper.PARA_SEPARATE_1) > -1 || value.indexOf(UDIHelper.PARA_SEPARATE_2) > -1)) {
+                    rc.setOk(false);
+                    rc.setMessage(DefaultMessagesImpl
+                            .getString(
+                                    "IndicatorDefinitionMaterPage.includeSpecialCharacter", "\n" + UDIHelper.PARA_SEPARATE_1 + "\n" + UDIHelper.PARA_SEPARATE_2));//$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                    return rc;
+                }
+            }
+        }
+
         return rc;
     }
 
