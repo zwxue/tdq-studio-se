@@ -46,6 +46,7 @@ import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.helper.WorkspaceResourceHelper;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.utils.MessageUI;
+import org.talend.dataprofiler.core.ui.utils.RepNodeUtils;
 import org.talend.dataprofiler.core.ui.utils.WorkbenchUtils;
 import org.talend.dataprofiler.core.ui.views.DQRespositoryView;
 import org.talend.dataquality.helpers.ReportHelper;
@@ -388,7 +389,7 @@ public class LocalRepositoryObjectCRUD implements IRepositoryObjectCRUD {
                         } else if (sourceNode instanceof PatternRepNode) {
                             moveOthersNode(sourceNode, targetNode, removeLastSegments);
                         } else if (sourceNode instanceof JrxmlTempleteRepNode) {
-                            moveJrxmlFileRepNode(sourceNode, targetNode);
+                            moveJrxmlFileRepNode(sourceNode, targetNode, makeRelativeTo);
                         } else if (sourceNode instanceof SourceFileRepNode || sourceNode instanceof RuleRepNode) {
                             moveOthersNode(sourceNode, targetNode, makeRelativeTo);
                         } else {
@@ -407,14 +408,29 @@ public class LocalRepositoryObjectCRUD implements IRepositoryObjectCRUD {
     }
 
     /**
-     * move Jrxml File.
+     * move Jrxml File. MOD yyin 20130123 TDQ-5392
      * 
      * @param sourceNode
      * @param targetNode
+     * @param makeRelativeTo
      * @throws PersistenceException
      */
-    private void moveJrxmlFileRepNode(IRepositoryNode sourceNode, IRepositoryNode targetNode) throws PersistenceException {
-        MessageUI.openWarning(DefaultMessagesImpl.getString("JrxmlFileAction.forbiddenOperation")); //$NON-NLS-1$
+    private void moveJrxmlFileRepNode(IRepositoryNode sourceNode, IRepositoryNode targetNode, IPath makeRelativeTo)
+            throws PersistenceException {
+        //MessageUI.openWarning(DefaultMessagesImpl.getString("JrxmlFileAction.forbiddenOperation")); //$NON-NLS-1$
+        // remeber the old path
+        String filename = "/" + RepositoryNodeHelper.getFileNameOfTheNode(sourceNode);
+        IPath oldPath = RepositoryNodeHelper.getPath(sourceNode).append(filename);
+
+        // move the jrxml file
+        this.moveObject(sourceNode, targetNode, makeRelativeTo);
+
+        // update the depended reports
+        ReturnCode returnCode = RepNodeUtils.updateJrxmlRelatedReport(oldPath,
+                makeRelativeTo.append("/").append(targetNode.getLabel()).append(filename));
+        if (!returnCode.isOk()) {
+            MessageUI.openWarning(returnCode.getMessage());
+        }
     }
 
     /**
@@ -558,9 +574,20 @@ public class LocalRepositoryObjectCRUD implements IRepositoryObjectCRUD {
      */
     private void moveFolderRepNode(IRepositoryNode sourceNode, IRepositoryNode targetNode) throws PersistenceException {
         // ADD xqliu 2012-05-24 TDQ-4831
+        IPath oldPath = null;
+        List<String> jrxmlFileNames = null;
+        List<JrxmlTempleteRepNode> jrxmlFileRepNodes = null;
+
         if (sourceNode instanceof JrxmlTempSubFolderNode) {
-            MessageUI.openWarning(DefaultMessagesImpl.getString("JrxmlFileAction.forbiddenOperation")); //$NON-NLS-1$
-            return;
+            jrxmlFileNames = new ArrayList<String>();
+            // remeber the old path
+            oldPath = RepositoryNodeHelper.getPath(sourceNode);
+            // find all jrxml files in this folder
+            jrxmlFileRepNodes = RepositoryNodeHelper.getJrxmlFileRepNodes(sourceNode, true);
+            // remember the files name
+            for (JrxmlTempleteRepNode jrxml : jrxmlFileRepNodes) {
+                jrxmlFileNames.add(oldPath.append("/").append(RepositoryNodeHelper.getFileNameOfTheNode(jrxml)).toOSString());//$NON-NLS-1$
+            }
         }
         // ~ TDQ-4831
         // MOD bu gdbu 2011-4-2 bug : 19537
@@ -571,6 +598,23 @@ public class LocalRepositoryObjectCRUD implements IRepositoryObjectCRUD {
         // ~19537
 
         moveFolder(sourceNode, targetNode);
+
+        if (sourceNode instanceof JrxmlTempSubFolderNode) {
+            // use two array :old file names and new file names, to call the method.
+            List<String> jrxmlFileNamesAfterMove = new ArrayList<String>();
+            IPath newPath = RepositoryNodeHelper.getPath(targetNode);
+            for (JrxmlTempleteRepNode jrxml : jrxmlFileRepNodes) {
+                RepositoryNodeHelper.getPath(jrxml);
+                jrxmlFileNamesAfterMove.add(newPath.append("/").append(sourceNode.getLabel()).append("/")//$NON-NLS-1$
+                        .append(RepositoryNodeHelper.getFileNameOfTheNode(jrxml))
+                        .toOSString());
+            }
+            // update the depended reports
+            ReturnCode returnCode = RepNodeUtils.updateJrxmlRelatedReport(jrxmlFileNames, jrxmlFileNamesAfterMove);
+            if (!returnCode.isOk()) {
+                MessageUI.openWarning(returnCode.getMessage());
+            }
+        }
     }
 
     /**
@@ -682,6 +726,7 @@ public class LocalRepositoryObjectCRUD implements IRepositoryObjectCRUD {
             MessageUI.openWarning(DefaultMessagesImpl.getString("JrxmlFileAction.forbiddenOperation")); //$NON-NLS-1$
             return Boolean.TRUE;
         }
+
         // ~ TDQ-4831
         // Added yyin 20120712 TDQ-5721 when rename the sql file folder with file opening, should inform
         if (repositoryNode instanceof SourceFileSubFolderNode) {

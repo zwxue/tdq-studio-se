@@ -445,6 +445,9 @@ public class DeleteModelElementConfirmDialog {
 
                 @Override
                 public String getText(Object obj) {
+                    if (obj == null) {
+                        return "";
+                    }
                     if (obj instanceof ImpactNode) {
                         return ((ImpactNode) obj).toString();
                     } else if (obj instanceof IFile) {

@@ -46,6 +46,7 @@ import org.eclipse.ui.model.WorkbenchLabelProvider;
 import org.eclipse.ui.views.navigator.ResourceComparator;
 import org.talend.commons.exception.BusinessException;
 import org.talend.commons.exception.PersistenceException;
+import org.talend.commons.utils.WorkspaceUtils;
 import org.talend.core.model.general.Project;
 import org.talend.core.model.properties.Property;
 import org.talend.core.repository.constants.FileConstants;
@@ -162,7 +163,7 @@ public class RenameSqlFileAction extends Action {
 
         Property property = sourceFiletem.getProperty();
         property.setDisplayName(newName);
-        property.setLabel(newName);
+        property.setLabel(WorkspaceUtils.normalize(newName));
         sourceFiletem.setName(newName);
         sourceFiletem.setFileExtension(FileConstants.SQL_EXTENSION);
         sourceFiletem.setFilename(property.getLabel() + "_" + property.getVersion() + PluginConstant.DOT_STRING

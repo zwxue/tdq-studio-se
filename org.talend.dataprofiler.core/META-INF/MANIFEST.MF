@@ -418,6 +418,7 @@ Export-Package: org.eclipse.nebula.jface.tablecomboviewer,
    org.talend.dataquality.indicators,
    org.talend.dq.indicators.preview.table",
  org.talend.dataprofiler.core.ui.editor.report;uses:="org.talend.dataprofiler.core.ui.editor,org.talend.dataquality.properties,org.talend.core.model.properties",
+ org.talend.dataprofiler.core.ui.events,
  org.talend.dataprofiler.core.ui.filters;uses:="org.apache.log4j,org.eclipse.jface.viewers",
  org.talend.dataprofiler.core.ui.imex.model;
   uses:="org.eclipse.emf.ecore.resource,

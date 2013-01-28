@@ -3347,4 +3347,18 @@ public final class RepositoryNodeHelper {
     public static boolean isLockByOther(ModelElement modelElement) {
         return isLockByOther(recursiveFind(modelElement));
     }
+
+    /**
+     * plus the label +"_"+ version +"." + file extension
+     * 
+     * @param node
+     * @return
+     */
+    public static String getFileNameOfTheNode(IRepositoryNode node) {
+        Property property = node.getObject().getProperty();
+        String fullName = property.getLabel() + "_" + property.getVersion() + PluginConstant.DOT_STRING//$NON-NLS-1$
+                + property.getItem().getFileExtension();
+
+        return fullName;
+    }
 }

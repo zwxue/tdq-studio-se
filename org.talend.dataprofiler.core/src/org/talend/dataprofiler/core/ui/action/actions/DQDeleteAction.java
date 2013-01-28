@@ -30,6 +30,7 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.ISelection;
@@ -54,7 +55,11 @@ import org.talend.dataprofiler.core.ui.utils.MessageUI;
 import org.talend.dataprofiler.core.ui.utils.RepNodeUtils;
 import org.talend.dataprofiler.core.ui.views.DQRespositoryView;
 import org.talend.dataprofiler.core.ui.views.resources.IRepositoryObjectCRUD;
+import org.talend.dataquality.helpers.ReportHelper;
+import org.talend.dataquality.helpers.ReportHelper.ReportType;
 import org.talend.dataquality.properties.TDQReportItem;
+import org.talend.dataquality.reports.AnalysisMap;
+import org.talend.dataquality.reports.TdReport;
 import org.talend.dq.helper.DQDeleteHelper;
 import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.PropertyHelper;
@@ -65,6 +70,7 @@ import org.talend.dq.nodes.DQRepositoryNode;
 import org.talend.dq.nodes.JrxmlTempSubFolderNode;
 import org.talend.dq.nodes.JrxmlTempleteRepNode;
 import org.talend.dq.nodes.ReportFileRepNode;
+import org.talend.dq.nodes.ReportRepNode;
 import org.talend.dq.nodes.ReportSubFolderRepNode;
 import org.talend.dq.nodes.SourceFileRepNode;
 import org.talend.dq.nodes.SourceFileSubFolderNode;
@@ -74,6 +80,7 @@ import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.IRepositoryNode.ENodeType;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.repository.ui.actions.DeleteAction;
+import org.talend.resource.EResourceConstant;
 import org.talend.resource.ResourceManager;
 import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
@@ -134,9 +141,9 @@ public class DQDeleteAction extends DeleteAction {
             return;
         }
         // ADD xqliu 2012-05-24 TDQ-4831
-        if (forbiddenDeleteJrxmlFileFolder(deleteElements)) {
-            return;
-        }
+        // if (forbiddenDeleteJrxmlFileFolder(deleteElements)) {
+        // return;
+        // }
         // remove the source file nodes which have been opened the editor
         deleteElements = checkSourceFilesEditorOpening(deleteElements);
         // ~ TDQ-4831
@@ -187,7 +194,7 @@ public class DQDeleteAction extends DeleteAction {
                 }
                 continue;
             }
-            // onlyDeleteReportFile = false;
+
             boolean isStateDeleted = RepositoryNodeHelper.isStateDeleted(node);
             // logical delete
             if (!isStateDeleted) {
@@ -229,6 +236,8 @@ public class DQDeleteAction extends DeleteAction {
                 if (!haveSubNode) {
                     excuteSuperRun(node, parent);
                 }
+            } else if (isJrxml(node)) {
+                deleteJrxml(node);
             } else {
                 hasDependency = RepositoryNodeHelper.hasDependencyClients(node);
                 if (!hasDependency || hasDependency && handleDependencies(node)) {
@@ -245,6 +254,79 @@ public class DQDeleteAction extends DeleteAction {
         // the deleteReportFile() mothed have refresh the workspace and dqview
         CorePlugin.getDefault().refreshWorkSpace();
         CorePlugin.getDefault().refreshDQView(RepositoryNodeHelper.getRecycleBinRepNode());
+    }
+
+    /**
+     * DOC yyin Comment method "isJrxml".
+     * 
+     * @param node
+     * @return
+     */
+    private boolean isJrxml(RepositoryNode node) {
+        if (node.getObject() != null) {
+            return ERepositoryObjectType.TDQ_JRAXML_ELEMENT.equals(node.getObject().getRepositoryObjectType());
+        }
+        return false;
+    }
+
+    /**
+     * Added yyin20130121, TDQ-5392, support delete Jrxml. when there are some reports using this jrxml, popup warning,
+     * if force delete, the jrxml and all reports used it will be physically deleted together
+     * 
+     * @param node
+     */
+    private void deleteJrxml(RepositoryNode node) {
+        IPath path = PropertyHelper.getItemPath(node.getObject().getProperty());
+        // check if it has depended Report
+        List<ModelElement> dependedReport = new ArrayList<ModelElement>();
+
+        // get all reports
+        List<ReportRepNode> repNodes = RepositoryNodeHelper.getReportRepNodes(
+                RepositoryNodeHelper.getDataProfilingFolderNode(EResourceConstant.REPORTS), true, true);
+        // go through every report to find if any one used current jrxml
+        for (ReportRepNode report : repNodes) {
+            EList<AnalysisMap> analysisMap = ((TdReport) report.getReport()).getAnalysisMap();
+            for (AnalysisMap anaMap : analysisMap) {
+                if (isUsedByDeletedJrxml(path, anaMap)) {
+                    dependedReport.add(report.getReport());
+                    break;
+                }
+            }
+        }
+        // if the depended report size is 0, delete directly
+        if (dependedReport.size() == 0) {
+            excuteSuperRun(node, node.getParent());
+        } else {// else: popup the dialog to show the options
+            if (showDialog(node, dependedReport)) {// delete the jrxml & all depended reports
+                excuteSuperRun(node, node.getParent());
+                physicalDeleteDependencies(dependedReport);
+            } else {
+                MessageDialog.openError(null, DefaultMessagesImpl.getString("DQDeleteAction.deleteFailTitle"),//$NON-NLS-1$
+                        DefaultMessagesImpl.getString("DQDeleteAction.deleteFailMessage"));//$NON-NLS-1$
+            }
+        }
+    }
+
+    /**
+     * check if the anaMap comtains the Jrxml or not, by compare the jrxml's path with anaMap's jrxml source(when user
+     * mode)
+     * 
+     * @param path
+     * @param jrxmlSource
+     * @return
+     */
+    private boolean isUsedByDeletedJrxml(IPath path, AnalysisMap anaMap) {
+        ReportType reportType = ReportHelper.ReportType.getReportType(anaMap.getAnalysis(), anaMap.getReportType());
+        // compare the Jrxml path if the report has the user defined one.
+        if (ReportHelper.ReportType.USER_MADE.equals(reportType)) {
+            String jrxmlPath = anaMap.getJrxmlSource();
+            String deletedpath = path.removeFirstSegments(2).toString();
+            if (jrxmlPath.contains(deletedpath)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**
@@ -343,16 +425,7 @@ public class DQDeleteAction extends DeleteAction {
                 if (tempNode == null) {
                     tempNode = RepositoryNodeHelper.recursiveFindRecycleBin(mod);
                 }
-                boolean isStateDel = RepositoryNodeHelper.isStateDeleted(tempNode);
-                if (tempNode != null && !isStateDel) {
-                    // logcial delete dependcy element.
-                    if (tempNode.getObject() != null) {
-                        CorePlugin.getDefault().closeEditorIfOpened(tempNode.getObject().getProperty().getItem());
-                    }
-                    // need to pass the tempNode parameter at here for logical delete dependce.
-                    excuteSuperRun(tempNode, tempNode.getParent());
-                    CorePlugin.getDefault().refreshDQView(RepositoryNodeHelper.getRecycleBinRepNode());
-                }
+                boolean isStateDel = logicDeleteDependeny(tempNode);
                 // physical delete dependcy element.
                 tempNode = RepositoryNodeHelper.recursiveFindRecycleBin(mod);
                 if (tempNode != null) {
@@ -380,6 +453,20 @@ public class DQDeleteAction extends DeleteAction {
             return false;
         }
         return isSucceed;
+    }
+
+    private boolean logicDeleteDependeny(RepositoryNode tempNode) {
+        boolean isStateDel = RepositoryNodeHelper.isStateDeleted(tempNode);
+        if (tempNode != null && !isStateDel) {
+            // logcial delete dependcy element.
+            if (tempNode.getObject() != null) {
+                CorePlugin.getDefault().closeEditorIfOpened(tempNode.getObject().getProperty().getItem());
+            }
+            // need to pass the tempNode parameter at here for logical delete dependce.
+            excuteSuperRun(tempNode, tempNode.getParent());
+            CorePlugin.getDefault().refreshDQView(RepositoryNodeHelper.getRecycleBinRepNode());
+        }
+        return isStateDel;
     }
 
     /**
