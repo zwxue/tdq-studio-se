@@ -52,8 +52,10 @@ import org.talend.dataquality.domain.pattern.PatternFactory;
 import org.talend.dataquality.domain.pattern.RegularExpression;
 import org.talend.dataquality.helpers.BooleanExpressionHelper;
 import org.talend.dataquality.helpers.MetadataHelper;
+import org.talend.dataquality.indicators.definition.DefinitionFactory;
 import org.talend.dataquality.indicators.definition.IndicatorCategory;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
+import org.talend.dataquality.indicators.definition.IndicatorDefinitionParameter;
 import org.talend.dataquality.rules.ParserRule;
 import org.talend.dq.dqrule.DqRuleBuilder;
 import org.talend.dq.factory.ModelElementFileFactory;
@@ -487,9 +489,20 @@ public final class ImportFactory {
 
         String category;
 
+        Map<String, String> paraMap;
+
+        public Map<String, String> getParaMap() {
+            return this.paraMap;
+        }
+
+        public void setParaMap(Map<String, String> paraMap) {
+            this.paraMap = paraMap;
+        }
+
         public UDIParameters() {
             super();
             category = ""; //$NON-NLS-1$
+            paraMap = new HashMap<String, String>();
         }
 
     }
@@ -582,6 +595,7 @@ public final class ImportFactory {
                         }
                     }
 
+                    udiParameters.setParaMap(buildIndDefPara(record));
                     createAndStoreUDI(udiParameters, selectionFolder);
 
                     names.add(name);
@@ -711,6 +725,30 @@ public final class ImportFactory {
         return information;
     }
 
+    /**
+     * get the IndicatorDefinitionParameter information from the record and build the paraMap, set it into
+     * UDIParameters.
+     * 
+     * @param record
+     */
+    private static Map<String, String> buildIndDefPara(HashMap<String, String> record) {
+        Map<String, String> paraMap = new HashMap<String, String>();
+        String string = trimQuote(record.get(PatternToExcelEnum.IndicatorDefinitionParameter.getLiteral()));
+        if (StringUtils.isNotBlank(string)) {
+            String[] keyValues = StringUtils.splitByWholeSeparator(string, UDIHelper.PARA_SEPARATE_2);
+            for (String keyValue : keyValues) {
+                if (StringUtils.isNotBlank(keyValue)) {
+                    String[] para = StringUtils.splitByWholeSeparator(keyValue, UDIHelper.PARA_SEPARATE_1);
+                    // the key should not be blank, the value can be anything
+                    if (para.length == 2 && StringUtils.isNotBlank(para[0]) && para[1] != null) {
+                        paraMap.put(para[0], para[1]);
+                    }
+                }
+            }
+        }
+        return paraMap;
+    }
+
     private static String trimQuote(String text) {
         if (text.length() < 2) {
             return text;
@@ -765,16 +803,27 @@ public final class ImportFactory {
      */
     private static void createAndStoreUDI(UDIParameters parameters, IFolder selectionFolder) {
 
-        IndicatorDefinition id = UDIHelper.createUDI(parameters.name, parameters.auther, parameters.description,
+        IndicatorDefinition indDef = UDIHelper.createUDI(parameters.name, parameters.auther, parameters.description,
                 parameters.purpose, parameters.status, parameters.category, parameters.javaClassName, parameters.javaJarPath);
 
         for (String key : parameters.regex.keySet()) {
             TdExpression expression = BooleanExpressionHelper.createTdExpression(key, parameters.regex.get(key));
-            id.getSqlGenericExpression().add(expression);
+            indDef.getSqlGenericExpression().add(expression);
         }
 
-        boolean validStatus = UDIHelper.isUDIValid(id);
-        TaggedValueHelper.setValidStatus(validStatus, id);
+        boolean validStatus = UDIHelper.isUDIValid(indDef);
+        TaggedValueHelper.setValidStatus(validStatus, indDef);
+
+        Map<String, String> paraMap = parameters.getParaMap();
+        if (!paraMap.isEmpty()) {
+            for (String key : paraMap.keySet()) {
+                String value = paraMap.get(key);
+                IndicatorDefinitionParameter idPara = DefinitionFactory.eINSTANCE.createIndicatorDefinitionParameter();
+                idPara.setKey(key);
+                idPara.setValue(value);
+                indDef.getIndicatorDefinitionParameter().add(idPara);
+            }
+        }
 
         String fname = DqRepositoryViewService.createFilename(parameters.name, FactoriesUtil.DEFINITION);
 
@@ -796,7 +845,7 @@ public final class ImportFactory {
 
         IFile pfile = selectionFolder.getFile(fname);
 
-        ElementWriterFactory.getInstance().createIndicatorDefinitionWriter().create(id, selectionFolder);
+        ElementWriterFactory.getInstance().createIndicatorDefinitionWriter().create(indDef, selectionFolder);
     }
 
     /**

@@ -27,6 +27,7 @@ import java.util.Map;
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.talend.commons.utils.io.FilesUtils;
 import org.talend.cwm.helper.TaggedValueHelper;
@@ -39,6 +40,7 @@ import org.talend.dataquality.domain.pattern.PatternComponent;
 import org.talend.dataquality.domain.pattern.RegularExpression;
 import org.talend.dataquality.helpers.MetadataHelper;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
+import org.talend.dataquality.indicators.definition.IndicatorDefinitionParameter;
 import org.talend.dataquality.rules.ParserRule;
 import org.talend.dq.helper.UDIHelper;
 import org.talend.dq.helper.resourcehelper.ResourceFileMap;
@@ -315,6 +317,14 @@ public final class ExportFactory {
                 }
 
             }
+
+            // put the IndicatorDefinitionParameter into Map
+            StringBuffer strBuf = new StringBuffer();
+            EList<IndicatorDefinitionParameter> indDefParas = indicatorDefinition.getIndicatorDefinitionParameter();
+            for (IndicatorDefinitionParameter indDefPara : indDefParas) {
+                strBuf.append(indDefPara.getKey() + UDIHelper.PARA_SEPARATE_1 + indDefPara.getValue() + UDIHelper.PARA_SEPARATE_2);
+            }
+            idMap.put(PatternToExcelEnum.IndicatorDefinitionParameter, strBuf.toString());
         }
 
         return idMap;

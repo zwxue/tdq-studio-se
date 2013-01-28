@@ -53,6 +53,26 @@ public final class UDIHelper {
 
     public static final String JAREXTENSIONG = "jar";//$NON-NLS-1$
 
+    /**
+     * separate the key from value.
+     */
+    public static final String PARA_SEPARATE_1 = "__PARA_SEP_1__"; //$NON-NLS-1$
+
+    /**
+     * the display name of PARA_SEPARATE_1.
+     */
+    public static final String PARA_SEPARATE_1_DISPLAY = ":"; //$NON-NLS-1$
+
+    /**
+     * separate the KeyValue from another one.
+     */
+    public static final String PARA_SEPARATE_2 = "__PARA_SEP_2__"; //$NON-NLS-1$
+
+    /**
+     * the display name of PARA_SEPARATE_2.
+     */
+    public static final String PARA_SEPARATE_2_DISPLAY = ";"; //$NON-NLS-1$
+
     private static IndicatorSqlSwitch<UserDefIndicator> userDefIndSwitch = new IndicatorSqlSwitch<UserDefIndicator>() {
 
         @Override

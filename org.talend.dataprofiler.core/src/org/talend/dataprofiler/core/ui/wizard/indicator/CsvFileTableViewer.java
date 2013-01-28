@@ -32,6 +32,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.TableColumn;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.pattern.PatternToExcelEnum;
+import org.talend.dq.helper.UDIHelper;
 
 import com.csvreader.CsvReader;
 
@@ -86,7 +87,21 @@ public class CsvFileTableViewer extends Composite {
                 e.printStackTrace();
             }
 
-            return rows.toArray(new Object[rows.size()]);
+            List<Object> rows2 = new ArrayList<Object>();
+            for (Object obj : rows) {
+                if (obj instanceof String[]) {
+                    String[] strs = (String[]) obj;
+                    for (int i = 0; i < strs.length; ++i) {
+                        strs[i] = strs[i].replaceAll(UDIHelper.PARA_SEPARATE_1, UDIHelper.PARA_SEPARATE_1_DISPLAY).replaceAll(
+                                UDIHelper.PARA_SEPARATE_2, UDIHelper.PARA_SEPARATE_2_DISPLAY);
+                    }
+                    rows2.add(strs);
+                } else {
+                    rows2.add(obj);
+                }
+            }
+
+            return rows2.toArray(new Object[rows2.size()]);
         }
     }
 
@@ -105,6 +120,7 @@ public class CsvFileTableViewer extends Composite {
             return index < values.length ? getImage(values[index]) : null;
         }
 
+        @Override
         public Image getImage(Object obj) {
             if (!checkQuoteMarks(obj.toString())) {
                 quotesError = true;
@@ -147,14 +163,17 @@ public class CsvFileTableViewer extends Composite {
     }
 
     private boolean checkQuoteMarks(String text) {
-        if (0 == text.length())
+        if (0 == text.length()) {
             return true;
+        }
 
-        if ('\"' == text.charAt(0) && '\"' == text.charAt(text.length() - 1))
+        if ('\"' == text.charAt(0) && '\"' == text.charAt(text.length() - 1)) {
             return true;
+        }
 
-        if ('\"' != text.charAt(0) && '\"' != text.charAt(text.length() - 1))
+        if ('\"' != text.charAt(0) && '\"' != text.charAt(text.length() - 1)) {
             return true;
+        }
 
         return false;
     }
@@ -167,15 +186,17 @@ public class CsvFileTableViewer extends Composite {
         }
 
         for (String header : headers) {
-            if (!patternEnum.contains(trimQuote(header)))
+            if (!patternEnum.contains(trimQuote(header))) {
                 return false;
+            }
         }
         return true;
     }
 
     private String trimQuote(String text) {
-        if (text.length() < 2)
+        if (text.length() < 2) {
             return text;
+        }
 
         int beginLen = 0;
         int endLen = text.length();
