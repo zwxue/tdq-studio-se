@@ -18,29 +18,45 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
+import org.eclipse.emf.common.util.EList;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.talend.commons.utils.StringUtils;
+import org.talend.commons.utils.data.container.RootContainer;
+import org.talend.core.model.repository.ERepositoryObjectType;
+import org.talend.core.model.repository.IRepositoryViewObject;
+import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.cwm.relational.TdExpression;
 import org.talend.dataprofiler.core.helper.UnitTestBuildHelper;
 import org.talend.dataprofiler.core.ui.action.actions.ImportObject;
+import org.talend.dataquality.indicators.definition.IndicatorDefinition;
+import org.talend.dataquality.indicators.definition.IndicatorDefinitionParameter;
+import org.talend.dataquality.properties.TDQIndicatorDefinitionItem;
 import org.talend.dataquality.rules.ParserRule;
+import org.talend.dq.helper.UDIHelper;
 import org.talend.dq.helper.resourcehelper.DQRuleResourceFileHelper;
 import org.talend.resource.EResourceConstant;
 import org.talend.resource.ResourceManager;
+import org.talend.utils.string.StringUtilities;
 import org.talend.utils.sugars.ReturnCode;
 
 /**
  * Junit test case for the class org.talend.dataprofiler.core.pattern.ImportFactory.
  */
 public class ImportFactoryTest {
+
+    private static final String UDI_NAME = "UDI1"; //$NON-NLS-1$
+
+    private static final String IND_DEF_PARA_STRING = "email__PARA_SEP_1__a@b.cn; x@y.zn__PARA_SEP_2__int__PARA_SEP_1__100__PARA_SEP_2__name1__PARA_SEP_1__value1__PARA_SEP_2__key__PARA_SEP_1__ `1234567890-=~!@#$%^&*()_+[]\\{}|;':\"\",./<>?qwertyuiopasdfghjklzxcvbnmMNBVCXZLKJHGFDSAPOIUYTREWQ __PARA_SEP_2__"; //$NON-NLS-1$
 
     /**
      * DOC xqliu Comment method "setUpBeforeClass".
@@ -317,5 +333,149 @@ public class ImportFactoryTest {
             assertTrue(lang.equals(expression.getLanguage()));
             assertTrue(body.equals(expression.getBody()));
         }
+    }
+
+    /**
+     * Test method for
+     * {@link org.talend.dataprofiler.core.pattern.ImportFactory#importIndicatorToStucture(org.talend.dataprofiler.core.ui.action.actions.ImportObject, org.eclipse.core.resources.IFolder, boolean, boolean, java.lang.String)}
+     * normal condition: the import file's extension is csv.
+     */
+    @Test
+    public void testImportIndicatorToStucture() throws Exception {
+        File importFile = createImportFile(UDI_NAME, StringUtilities.getRandomString(8) + ".csv"); //$NON-NLS-1$
+        assertTrue(importFile.exists());
+        assertTrue(importFile.isFile());
+        assertTrue(importFile.length() > 0);
+        List<File> pJarfiles = new ArrayList<File>();
+        ImportObject importObject = ImportObject.createImportObject(importFile, pJarfiles);
+
+        IFolder udiFolder = ResourceManager.getUDIFolder();
+
+        boolean skip = false;
+        boolean rename = true;
+
+        List<ReturnCode> rc = ImportFactory.importIndicatorToStucture(importObject, udiFolder, skip, rename, UDI_NAME);
+        assertTrue(rc.size() == 1);
+        assertTrue(rc.get(0).isOk());
+
+        IndicatorDefinition indicatorDefinition = null;
+        RootContainer<String, IRepositoryViewObject> tdqViewObjects = ProxyRepositoryFactory.getInstance()
+                .getTdqRepositoryViewObjects(ERepositoryObjectType.TDQ_USERDEFINE_INDICATORS,
+                        ERepositoryObjectType.getFolderName(ERepositoryObjectType.TDQ_USERDEFINE_INDICATORS));
+        for (IRepositoryViewObject viewObject : tdqViewObjects.getMembers()) {
+            IndicatorDefinition indDefTemp = ((TDQIndicatorDefinitionItem) viewObject.getProperty().getItem())
+                    .getIndicatorDefinition();
+            if (UDI_NAME.equals(indDefTemp.getName())) {
+                indicatorDefinition = indDefTemp;
+                break;
+            }
+        }
+        assertNotNull(indicatorDefinition);
+
+        if (indicatorDefinition != null) {
+            EList<IndicatorDefinitionParameter> indDefParas = indicatorDefinition.getIndicatorDefinitionParameter();
+            assertFalse(indDefParas.isEmpty());
+            String paraString = StringUtils.replace(IND_DEF_PARA_STRING, "\"\"", "\""); //$NON-NLS-1$ //$NON-NLS-2$
+            for (IndicatorDefinitionParameter indDefPara : indDefParas) {
+                String temp = indDefPara.getKey() + UDIHelper.PARA_SEPARATE_1 + indDefPara.getValue() + UDIHelper.PARA_SEPARATE_2;
+                assertTrue(paraString.indexOf(temp) > -1);
+            }
+        }
+    }
+
+    /**
+     * Test method for
+     * {@link org.talend.dataprofiler.core.pattern.ImportFactory#importIndicatorToStucture(org.talend.dataprofiler.core.ui.action.actions.ImportObject, org.eclipse.core.resources.IFolder, boolean, boolean, java.lang.String)}
+     * non-normal condition: the import file's extension is not csv.
+     */
+    @Test
+    public void testImportIndicatorToStuctureImportFileExtensionIsNotCsv() throws Exception {
+        File importFile = createImportFile(UDI_NAME, StringUtilities.getRandomString(8) + ".nonCsv"); //$NON-NLS-1$
+        List<File> pJarfiles = new ArrayList<File>();
+        ImportObject importObject = ImportObject.createImportObject(importFile, pJarfiles);
+
+        IFolder udiFolder = ResourceManager.getUDIFolder();
+
+        boolean skip = false;
+        boolean rename = true;
+
+        List<ReturnCode> rc = ImportFactory.importIndicatorToStucture(importObject, udiFolder, skip, rename, UDI_NAME);
+        assertTrue(rc.size() == 1);
+        assertFalse(rc.get(0).isOk());
+    }
+
+    /**
+     * Test method for
+     * {@link org.talend.dataprofiler.core.pattern.ImportFactory#importIndicatorToStucture(org.talend.dataprofiler.core.ui.action.actions.ImportObject, org.eclipse.core.resources.IFolder, boolean, boolean, java.lang.String)}
+     * non-normal condition: the import file is not exist.
+     */
+    @Test
+    public void testImportIndicatorToStuctureImportFileIsNotExist() throws Exception {
+        File importFile = new File(File.separator + StringUtilities.getRandomString(8) + ".csv"); //$NON-NLS-1$
+        List<File> pJarfiles = new ArrayList<File>();
+        ImportObject importObject = ImportObject.createImportObject(importFile, pJarfiles);
+
+        IFolder udiFolder = ResourceManager.getUDIFolder();
+
+        boolean skip = false;
+        boolean rename = true;
+
+        List<ReturnCode> rc = ImportFactory.importIndicatorToStucture(importObject, udiFolder, skip, rename, UDI_NAME);
+        assertTrue(rc.size() == 1);
+        assertFalse(rc.get(0).isOk());
+    }
+
+    /**
+     * Test method for
+     * {@link org.talend.dataprofiler.core.pattern.ImportFactory#importIndicatorToStucture(org.talend.dataprofiler.core.ui.action.actions.ImportObject, org.eclipse.core.resources.IFolder, boolean, boolean, java.lang.String)}
+     * non-normal condition: the import file is empty.
+     */
+    @Test
+    public void testImportIndicatorToStuctureImportFileIsEmpty() throws Exception {
+        File importFile = new File(
+                System.getProperty("java.io.tmpdir") + File.separator + StringUtilities.getRandomString(8) + ".csv"); //$NON-NLS-1$ //$NON-NLS-2$
+        if (!importFile.exists()) {
+            if (!importFile.getParentFile().exists()) {
+                importFile.getParentFile().mkdirs();
+            }
+            importFile.createNewFile();
+        }
+        List<File> pJarfiles = new ArrayList<File>();
+        ImportObject importObject = ImportObject.createImportObject(importFile, pJarfiles);
+
+        IFolder udiFolder = ResourceManager.getUDIFolder();
+
+        boolean skip = false;
+        boolean rename = true;
+
+        List<ReturnCode> rc = ImportFactory.importIndicatorToStucture(importObject, udiFolder, skip, rename, UDI_NAME);
+        assertTrue(rc.size() == 1);
+        assertFalse(rc.get(0).isOk());
+    }
+
+    /**
+     * create the import file for test.
+     * 
+     * @param udiName
+     * @return
+     */
+    private File createImportFile(String udiName, String fileName) throws Exception {
+        String header = "\"Label\"\t\"Purpose\"\t\"Description\"\t\"Author\"\t\"Relative_Path\"\t\"All_DB_Regexp\"\t\"DB2_Regexp\"\t\"MySQL_Regexp\"\t\"Oracle_Regexp\"\t\"PostgreSQL_Regexp\"\t\"SQL_Server_Regexp\"\t\"Sybase_Regexp\"\t\"Ingres_Regexp\"\t\"Informix_Regexp\"\t\"MDM_Informix_Regexp\"\t\"SQLite3_Regexp\"\t\"Teradata_Regexp\"\t\"Java_Regexp\"\t\"Category\"\t\"Access\"\t\"AS400\"\t\"CLASS_NAME_TEXT\"\t\"JAR_FILE_PATH\"\t\"Hive\"\t\"IndicatorDefinitionParameter\""; //$NON-NLS-1$
+        String record = "\"" + UDI_NAME + "\"\t\"\"\t\"\"\t\"\"\t\"\"\t\"\"\t\"\"\t\"\"\t\"\"\t\"\"\t\"\"\t\"\"\t\"\"\t\"\"\t\"\"\t\"\"\t\"\"\t\"\"\t\"User Defined Count\"\t\"\"\t\"\"\t\"\"\t\"\"\t\"\"\t\"" + IND_DEF_PARA_STRING + "\""; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+        File file = new File(System.getProperty("java.io.tmpdir") + File.separator + fileName); //$NON-NLS-1$
+        if (!file.exists()) {
+            if (!file.getParentFile().exists()) {
+                file.getParentFile().mkdirs();
+            }
+            file.createNewFile();
+        }
+        if (file.exists()) {
+            FileWriter fw = new FileWriter(file);
+            PrintWriter pw = new PrintWriter(fw);
+            pw.println(header);
+            pw.println(record);
+            pw.close();
+        }
+        return file;
     }
 }
