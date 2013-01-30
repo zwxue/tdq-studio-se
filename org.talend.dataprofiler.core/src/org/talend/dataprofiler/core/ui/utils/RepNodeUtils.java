@@ -41,6 +41,7 @@ import org.talend.dataquality.reports.AnalysisMap;
 import org.talend.dataquality.reports.TdReport;
 import org.talend.dq.helper.ProxyRepositoryManager;
 import org.talend.dq.helper.RepositoryNodeHelper;
+import org.talend.dq.nodes.JrxmlTempleteRepNode;
 import org.talend.dq.nodes.ReportRepNode;
 import org.talend.repository.ProjectManager;
 import org.talend.repository.model.IRepositoryNode;
@@ -257,13 +258,69 @@ public final class RepNodeUtils {
     }
 
     /**
-     * get the edtor if it is opened.
+     * get the full jrxml name with path before move/rename its parent folder.
      * 
-     * @param node the node which need to check: if opened find its editor
-     * @return the opened editor of the node, null: if the node is no editor opened.
-     
-    public static IRepositoryNode getOpenedEditor(IRepositoryNode node) {
+     * @param oldPath: the path before rename
+     * @param jrxmlFileRepNodes the related reports list with name
+     * @return the full jrxml new names with path
+     */
+    public static List<String> getListOfJrxmlNameWithPath(IPath path, List<JrxmlTempleteRepNode> jrxmlFileRepNodes) {
+        List<String> jrxmlFileNames = new ArrayList<String>();
+        IPath basePath = ResourceManager.getRootProject().getLocation().removeFirstSegments(1);
 
-    }*/
+        for (JrxmlTempleteRepNode jrxml : jrxmlFileRepNodes) {
+            // if the parent of the jrxml is not the current folder,
+            IPath parentPath = RepositoryNodeHelper.getPath(jrxml.getParent());
+            IPath makeRelativeTo = null;
+            if (path.equals(parentPath)) {
+                makeRelativeTo = path.append("/").append(RepositoryNodeHelper.getFileNameOfTheNode(jrxml));//$NON-NLS-1$
+                makeRelativeTo = makeRelativeTo.makeRelativeTo(basePath);
+            } else {
+                parentPath = parentPath.append("/").append(RepositoryNodeHelper.getFileNameOfTheNode(jrxml));//$NON-NLS-1$
+                makeRelativeTo = parentPath.makeRelativeTo(basePath);
+            }
+            jrxmlFileNames.add(makeRelativeTo.toOSString());
+        }
+        return jrxmlFileNames;
+    }
+
+    /**
+     * Used for replace only the renamed folder name, the path of the parent& the path of the sub folder should remain.
+     * 
+     * @param oldPath: the path before rename
+     * @param newPath: the new foler name
+     * @param jrxmlFileRepNodes the related reports list with name
+     * @return the full jrxml new names after folder renamed
+     */
+    public static List<String> getListOfJrxmlNewNameWithPath(IPath oldPath, IPath newPath,
+            List<JrxmlTempleteRepNode> jrxmlFileRepNodes) {
+        IPath basePath = ResourceManager.getRootProject().getLocation().removeFirstSegments(1);
+        List<String> jrxmlFileNames = new ArrayList<String>();
+        for (JrxmlTempleteRepNode jrxml : jrxmlFileRepNodes) {
+            // if the parent of the jrxml is not the current folder,
+            IPath parentPath = RepositoryNodeHelper.getPath(jrxml.getParent());
+            if (oldPath.equals(parentPath)) {
+                jrxmlFileNames
+                        .add(newPath
+                                .append("/").append(RepositoryNodeHelper.getFileNameOfTheNode(jrxml)).makeRelativeTo(basePath).toOSString());//$NON-NLS-1$
+            } else {
+                // change the old folder name in parent path to new path:
+                // e.g. /tdq_libraries/JRXML Template/c01/(sub/) to -->/tdq_libraries/JRXML Template/c01_new/sub/
+                IPath replacedPath = new Path("");
+                for (int i = 0; i < parentPath.segmentCount(); i++) {
+                    if (i < newPath.segmentCount() && !newPath.segment(i).equals(parentPath.segment(i))) {
+                        replacedPath = replacedPath.append(newPath.segment(i)).append("/");//$NON-NLS-1$
+                    } else {
+                        replacedPath = replacedPath.append(parentPath.segment(i)).append("/");//$NON-NLS-1$
+                    }
+                }
+                jrxmlFileNames
+.add(replacedPath.append(RepositoryNodeHelper.getFileNameOfTheNode(jrxml)).makeRelativeTo(basePath)
+                        .toOSString());
+
+            }
+        }
+        return jrxmlFileNames;
+    }
 
 }

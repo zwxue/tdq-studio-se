@@ -427,7 +427,7 @@ public class LocalRepositoryObjectCRUD implements IRepositoryObjectCRUD {
 
         // update the depended reports
         ReturnCode returnCode = RepNodeUtils.updateJrxmlRelatedReport(oldPath,
-                makeRelativeTo.append("/").append(targetNode.getLabel()).append(filename));
+                RepositoryNodeHelper.getPath(targetNode).append("/").append(filename));
         if (!returnCode.isOk()) {
             MessageUI.openWarning(returnCode.getMessage());
         }
@@ -573,23 +573,21 @@ public class LocalRepositoryObjectCRUD implements IRepositoryObjectCRUD {
      * @throws PersistenceException
      */
     private void moveFolderRepNode(IRepositoryNode sourceNode, IRepositoryNode targetNode) throws PersistenceException {
-        // ADD xqliu 2012-05-24 TDQ-4831
+        // MOD yyin 20130125 TDQ-5392
         IPath oldPath = null;
         List<String> jrxmlFileNames = null;
         List<JrxmlTempleteRepNode> jrxmlFileRepNodes = null;
 
         if (sourceNode instanceof JrxmlTempSubFolderNode) {
-            jrxmlFileNames = new ArrayList<String>();
             // remeber the old path
             oldPath = RepositoryNodeHelper.getPath(sourceNode);
+
             // find all jrxml files in this folder
             jrxmlFileRepNodes = RepositoryNodeHelper.getJrxmlFileRepNodes(sourceNode, true);
             // remember the files name
-            for (JrxmlTempleteRepNode jrxml : jrxmlFileRepNodes) {
-                jrxmlFileNames.add(oldPath.append("/").append(RepositoryNodeHelper.getFileNameOfTheNode(jrxml)).toOSString());//$NON-NLS-1$
-            }
+            jrxmlFileNames = RepNodeUtils.getListOfJrxmlNameWithPath(oldPath, jrxmlFileRepNodes);
         }
-        // ~ TDQ-4831
+        // ~
         // MOD bu gdbu 2011-4-2 bug : 19537
         if (!canMoveNode(sourceNode, targetNode)) {
             // Doesn't allow the parent node moved to the child node
@@ -599,23 +597,33 @@ public class LocalRepositoryObjectCRUD implements IRepositoryObjectCRUD {
 
         moveFolder(sourceNode, targetNode);
 
+        // ADD yyin 20130125 TDQ-5392
         if (sourceNode instanceof JrxmlTempSubFolderNode) {
             // use two array :old file names and new file names, to call the method.
-            List<String> jrxmlFileNamesAfterMove = new ArrayList<String>();
             IPath newPath = RepositoryNodeHelper.getPath(targetNode);
+            oldPath.makeRelativeTo(newPath);
+            newPath.makeRelativeTo(oldPath);
+            List<String> jrxmlFileNamesAfterMove = new ArrayList<String>();
+            IPath basePath = ResourceManager.getRootProject().getLocation().removeFirstSegments(1);
+
             for (JrxmlTempleteRepNode jrxml : jrxmlFileRepNodes) {
-                RepositoryNodeHelper.getPath(jrxml);
-                jrxmlFileNamesAfterMove.add(newPath.append("/").append(sourceNode.getLabel()).append("/")//$NON-NLS-1$
-                        .append(RepositoryNodeHelper.getFileNameOfTheNode(jrxml))
-                        .toOSString());
+                // check it there some sub folder under the source node
+                IPath relativeTo = RepositoryNodeHelper.getPath(jrxml.getParent()).makeRelativeTo(oldPath);
+                IPath tempPath = newPath.append("/").append(sourceNode.getLabel()).append("/");//$NON-NLS-1$
+                if (relativeTo.segmentCount() > 0) {// if there are some sub folder under the source node
+                    tempPath = tempPath.append(relativeTo).append("/");//$NON-NLS-1$
+                }
+                jrxmlFileNamesAfterMove.add(tempPath.append(RepositoryNodeHelper.getFileNameOfTheNode(jrxml))
+                        .makeRelativeTo(basePath).toOSString());
             }
             // update the depended reports
             ReturnCode returnCode = RepNodeUtils.updateJrxmlRelatedReport(jrxmlFileNames, jrxmlFileNamesAfterMove);
             if (!returnCode.isOk()) {
                 MessageUI.openWarning(returnCode.getMessage());
             }
-        }
+        }// ~
     }
+
 
     /**
      * check whether sourceNode and targetNode is the same Type.
@@ -721,12 +729,6 @@ public class LocalRepositoryObjectCRUD implements IRepositoryObjectCRUD {
     }
 
     public Boolean handleRenameFolder(IRepositoryNode repositoryNode) {
-        // ADD xqliu 2012-05-24 TDQ-4831
-        if (repositoryNode instanceof JrxmlTempSubFolderNode) {
-            MessageUI.openWarning(DefaultMessagesImpl.getString("JrxmlFileAction.forbiddenOperation")); //$NON-NLS-1$
-            return Boolean.TRUE;
-        }
-
         // ~ TDQ-4831
         // Added yyin 20120712 TDQ-5721 when rename the sql file folder with file opening, should inform
         if (repositoryNode instanceof SourceFileSubFolderNode) {

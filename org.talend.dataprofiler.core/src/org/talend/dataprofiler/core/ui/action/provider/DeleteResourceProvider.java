@@ -16,7 +16,9 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.viewers.TreeSelection;
 import org.talend.core.model.properties.Item;
+import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.dataprofiler.core.ui.action.actions.DQDeleteAction;
+import org.talend.dataprofiler.core.ui.action.actions.RenameJrxmlFolderAction;
 import org.talend.dataprofiler.core.ui.action.actions.RenameTdqFolderAction;
 import org.talend.dataprofiler.core.ui.exchange.ExchangeCategoryRepNode;
 import org.talend.dataprofiler.core.ui.exchange.ExchangeComponentRepNode;
@@ -50,6 +52,7 @@ import org.talend.dq.nodes.RulesParserSubFolderRepNode;
 import org.talend.dq.nodes.RulesSQLSubFolderRepNode;
 import org.talend.dq.nodes.UserDefIndicatorSubFolderRepNode;
 import org.talend.repository.model.IRepositoryNode.ENodeType;
+import org.talend.repository.model.IRepositoryNode.EProperties;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.resource.ResourceManager;
 import org.talend.resource.ResourceService;
@@ -77,7 +80,12 @@ public class DeleteResourceProvider extends AbstractCommonActionProvider {
                 // menu.add(new DeleteObjectsAction());
                 menu.add(new DQDeleteAction());
                 if (shouldShowRenameFolderMenu(node)) {
-                    menu.add(new RenameTdqFolderAction(node));
+                    Object type = (ERepositoryObjectType) node.getProperties(EProperties.CONTENT_TYPE);
+                    if (ERepositoryObjectType.TDQ_JRAXML_ELEMENT.equals(type)) {
+                        menu.add(new RenameJrxmlFolderAction(node));
+                    } else {
+                        menu.add(new RenameTdqFolderAction(node));
+                    }
                 }
             }
             // }

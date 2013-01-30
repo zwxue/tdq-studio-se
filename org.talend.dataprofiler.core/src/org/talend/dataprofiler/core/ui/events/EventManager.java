@@ -95,7 +95,7 @@ public class EventManager {
      */
     public void publish(IRepositoryNode context, EventEnum event, Object data) {
         MultiMap receverQueryMap = ctxToReceiverQueueMap.get(context);
-        if (receverQueryMap.isEmpty()) {
+        if (receverQueryMap == null || receverQueryMap.isEmpty()) {
             return;
         }
         @SuppressWarnings("unchecked")

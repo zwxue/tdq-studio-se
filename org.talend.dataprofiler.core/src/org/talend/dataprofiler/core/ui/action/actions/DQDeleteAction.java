@@ -226,6 +226,10 @@ public class DQDeleteAction extends DeleteAction {
                 // if the folder have sub node(s) not be deleted, the folder should not be deleted also
                 boolean haveSubNode = false;
                 for (IRepositoryNode subNode : newLs) {
+                    if (isJrxml(subNode)) {
+                        haveSubNode = !deleteJrxml(subNode);
+                        continue;
+                    }
                     hasDependency = RepositoryNodeHelper.hasDependencyClients(subNode);
                     if (!hasDependency || hasDependency && handleDependencies(subNode)) {
                         excuteSuperRun((RepositoryNode) subNode, node);
@@ -262,7 +266,7 @@ public class DQDeleteAction extends DeleteAction {
      * @param node
      * @return
      */
-    private boolean isJrxml(RepositoryNode node) {
+    private boolean isJrxml(IRepositoryNode node) {
         if (node.getObject() != null) {
             return ERepositoryObjectType.TDQ_JRAXML_ELEMENT.equals(node.getObject().getRepositoryObjectType());
         }
@@ -275,11 +279,11 @@ public class DQDeleteAction extends DeleteAction {
      * 
      * @param node
      */
-    private void deleteJrxml(RepositoryNode node) {
+    private boolean deleteJrxml(IRepositoryNode node) {
         IPath path = PropertyHelper.getItemPath(node.getObject().getProperty());
         // check if it has depended Report
         List<ModelElement> dependedReport = new ArrayList<ModelElement>();
-
+        boolean forceDelete = false;
         // get all reports
         List<ReportRepNode> repNodes = RepositoryNodeHelper.getReportRepNodes(
                 RepositoryNodeHelper.getDataProfilingFolderNode(EResourceConstant.REPORTS), true, true);
@@ -295,16 +299,15 @@ public class DQDeleteAction extends DeleteAction {
         }
         // if the depended report size is 0, delete directly
         if (dependedReport.size() == 0) {
-            excuteSuperRun(node, node.getParent());
+            excuteSuperRun((RepositoryNode) node, node.getParent());
         } else {// else: popup the dialog to show the options
-            if (showDialog(node, dependedReport)) {// delete the jrxml & all depended reports
-                excuteSuperRun(node, node.getParent());
+            forceDelete = showDialog(node, dependedReport);
+            if (forceDelete) {// delete the jrxml & all depended reports
+                excuteSuperRun((RepositoryNode) node, node.getParent());
                 physicalDeleteDependencies(dependedReport);
-            } else {
-                MessageDialog.openError(null, DefaultMessagesImpl.getString("DQDeleteAction.deleteFailTitle"),//$NON-NLS-1$
-                        DefaultMessagesImpl.getString("DQDeleteAction.deleteFailMessage"));//$NON-NLS-1$
             }
         }
+        return forceDelete;
     }
 
     /**
