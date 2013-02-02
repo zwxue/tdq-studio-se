@@ -6,9 +6,7 @@ Bundle-Version: 5.2.0.qualifier
 Bundle-Activator: org.talend.dataprofiler.core.CorePlugin
 Bundle-Vendor: .Talend SA.
 Require-Bundle: net.sourceforge.sqlexplorer;resolution:=optional,
- org.talend.commons,
  org.eclipse.ui.ide,
- org.talend.commons,
  org.eclipse.ui.ide,
  org.talend.utils,
  org.eclipse.emf.edit.ui,
@@ -37,7 +35,8 @@ Require-Bundle: net.sourceforge.sqlexplorer;resolution:=optional,
  org.eclipse.ui.intro,
  org.talend.dataprofiler.migration,
  org.talend.repository.metadata,
- org.eclipse.nebula.widgets.grid
+ org.eclipse.nebula.widgets.grid,
+ org.apache.log4j
 Bundle-ActivationPolicy: lazy
 Export-Package: org.eclipse.nebula.jface.tablecomboviewer,
  org.talend.dataprofiler.core;

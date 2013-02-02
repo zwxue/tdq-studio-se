@@ -5,11 +5,10 @@ Bundle-SymbolicName: org.talend.dataprofiler.ecos
 Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: org.talend.dataprofiler.ecos.EcosPlugin
 Require-Bundle: org.eclipse.core.runtime,
- org.talend.libraries.apache,
  org.apache.commons.discovery,
  org.talend.utils,
  org.apache.log4j,
- org.talend.commons,
+ org.talend.commons.runtime,
  org.eclipse.core.net,
  org.apache.axis,
  org.talend.libraries.jackson

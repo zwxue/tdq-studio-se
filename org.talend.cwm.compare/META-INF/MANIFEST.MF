@@ -10,11 +10,11 @@ Require-Bundle: org.eclipse.emf.compare;bundle-version="0.8.0",
  org.talend.cwm.management,
  org.eclipse.emf.compare.match;bundle-version="0.8.0",
  org.talend.utils,
- org.talend.commons,
  org.eclipse.ui,
  org.talend.core.runtime,
  org.talend.core.repository,
- org.talend.metadata.managment
+ org.talend.metadata.managment,
+ org.apache.log4j
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Bundle-ActivationPolicy: lazy
 Eclipse-RegisterBuddy: org.talend.testutils

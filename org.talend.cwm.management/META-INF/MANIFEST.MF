@@ -9,7 +9,6 @@ Require-Bundle: org.eclipse.ui,
  org.talend.sqltools,
  org.talend.utils,
  net.sourceforge.sqlexplorer,
- org.talend.commons,
  org.talend.libraries.jung;resolution:=optional,
  org.talend.libraries.jdbc.jtds;resolution:=optional,
  org.talend.libraries.jdbc.oracle;resolution:=optional,
@@ -31,7 +30,8 @@ Require-Bundle: org.eclipse.ui,
  org.talend.metadata.managment,
  org.talend.libraries.javacsv;bundle-version="2.2.0",
  org.talend.common.ui.runtime,
- org.talend.metadata.managment.ui
+ org.talend.metadata.managment.ui,
+ org.apache.log4j
 Bundle-Vendor: .Talend SA.
  org.talend.dq.writer,
  org.talend.dq.writer.impl
