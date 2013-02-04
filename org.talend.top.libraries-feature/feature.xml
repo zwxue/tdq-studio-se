@@ -492,7 +492,11 @@
          download-size="0"
          install-size="0"
          version="0.0.0"/>
-
+    <plugin
+         id="org.talend.libraries.csv"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
    <plugin
          id="org.talend.libraries.jdbc.as400"
          download-size="0"
