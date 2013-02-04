@@ -17,8 +17,6 @@ import org.eclipse.emf.compare.FactoryException;
 import org.eclipse.emf.compare.match.engine.GenericMatchEngine;
 import org.eclipse.emf.ecore.EObject;
 import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
-import org.talend.cwm.helper.ConnectionHelper;
-import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.relational.TdExpression;
 import org.talend.cwm.relational.TdSqlDataType;
@@ -33,8 +31,6 @@ import orgomg.cwm.resource.relational.Schema;
  */
 public class ModelElementMatchEngine extends GenericMatchEngine {
 
-    private static boolean changeUrl = false;
-
     /*
      * ADD yyi 2011-03-30 19137:reload database list on editing connection url
      * 
@@ -43,13 +39,6 @@ public class ModelElementMatchEngine extends GenericMatchEngine {
      */
     @Override
     public boolean isSimilar(EObject obj1, EObject obj2) throws FactoryException {
-
-        DatabaseConnection connection1 = SwitchHelpers.DATABASECONNECTION_SWITCH.doSwitch(obj1);
-        DatabaseConnection connection2 = SwitchHelpers.DATABASECONNECTION_SWITCH.doSwitch(obj2);
-
-        if (connection1 != null && connection2 != null) {
-            changeUrl = ConnectionHelper.isUrlChanged(connection1);
-        }
 
         // MOD xqliu 2011-06-03 bug:16538
         // return changeUrl ? false : super.isSimilar(obj1, obj2);
@@ -94,11 +83,9 @@ public class ModelElementMatchEngine extends GenericMatchEngine {
 
         if (obj1 instanceof DatabaseConnection) {
             return true;
-        } else if (changeUrl && !result) {
-            return false;
         }
-
-        return true;
+        // MOD yyin 20130201 TDQ-6780, do not use "isURlChanged" any more.
+        return result;
         // ~ 16538
     }
 
@@ -109,7 +96,6 @@ public class ModelElementMatchEngine extends GenericMatchEngine {
      */
     @Override
     public void reset() {
-        changeUrl = false;
         super.reset();
     }
 }
