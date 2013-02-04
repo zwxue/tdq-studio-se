@@ -419,7 +419,7 @@ public class LocalRepositoryObjectCRUD implements IRepositoryObjectCRUD {
             throws PersistenceException {
         //MessageUI.openWarning(DefaultMessagesImpl.getString("JrxmlFileAction.forbiddenOperation")); //$NON-NLS-1$
         // remeber the old path
-        String filename = "/" + RepositoryNodeHelper.getFileNameOfTheNode(sourceNode);
+        String filename = File.separator + RepositoryNodeHelper.getFileNameOfTheNode(sourceNode);
         IPath oldPath = RepositoryNodeHelper.getPath(sourceNode).append(filename);
 
         // move the jrxml file
@@ -427,7 +427,7 @@ public class LocalRepositoryObjectCRUD implements IRepositoryObjectCRUD {
 
         // update the depended reports
         ReturnCode returnCode = RepNodeUtils.updateJrxmlRelatedReport(oldPath,
-                RepositoryNodeHelper.getPath(targetNode).append("/").append(filename));
+                RepositoryNodeHelper.getPath(targetNode).append(File.separator).append(filename));
         if (!returnCode.isOk()) {
             MessageUI.openWarning(returnCode.getMessage());
         }
@@ -601,20 +601,18 @@ public class LocalRepositoryObjectCRUD implements IRepositoryObjectCRUD {
         if (sourceNode instanceof JrxmlTempSubFolderNode) {
             // use two array :old file names and new file names, to call the method.
             IPath newPath = RepositoryNodeHelper.getPath(targetNode);
-            oldPath.makeRelativeTo(newPath);
-            newPath.makeRelativeTo(oldPath);
             List<String> jrxmlFileNamesAfterMove = new ArrayList<String>();
             IPath basePath = ResourceManager.getRootProject().getLocation().removeFirstSegments(1);
 
             for (JrxmlTempleteRepNode jrxml : jrxmlFileRepNodes) {
                 // check it there some sub folder under the source node
                 IPath relativeTo = RepositoryNodeHelper.getPath(jrxml.getParent()).makeRelativeTo(oldPath);
-                IPath tempPath = newPath.append("/").append(sourceNode.getLabel()).append("/");//$NON-NLS-1$
+                IPath tempPath = newPath.append(File.separator).append(sourceNode.getLabel()).append(File.separator);
                 if (relativeTo.segmentCount() > 0) {// if there are some sub folder under the source node
-                    tempPath = tempPath.append(relativeTo).append("/");//$NON-NLS-1$
+                    tempPath = tempPath.append(relativeTo).append(File.separator);
                 }
                 jrxmlFileNamesAfterMove.add(tempPath.append(RepositoryNodeHelper.getFileNameOfTheNode(jrxml))
-                        .makeRelativeTo(basePath).toOSString());
+.toOSString());
             }
             // update the depended reports
             ReturnCode returnCode = RepNodeUtils.updateJrxmlRelatedReport(jrxmlFileNames, jrxmlFileNamesAfterMove);

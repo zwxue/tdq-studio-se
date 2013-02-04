@@ -61,7 +61,7 @@ public class RepNodeUtilsTest {
 
     TdReport realReport;
 
-    String oldJrxmlPath = "TDQ_Libraries/JRXML Template/column/column_basic_0.1.jrxml";
+    String oldJrxmlPath = "../../../TDQ_Libraries/JRXML Template/column/column_basic_0.1.jrxml";
 
     String newJrxmlPath = "TDQ_Libraries/JRXML Template/column/new_column_basic_new_0.1.jrxml";
 

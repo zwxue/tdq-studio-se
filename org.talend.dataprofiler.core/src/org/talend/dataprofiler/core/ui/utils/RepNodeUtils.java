@@ -12,6 +12,7 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.utils;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -172,12 +173,11 @@ public final class RepNodeUtils {
             rc.setMessage(DefaultMessagesImpl.getString("RepNodeUtils.updateReport.empty"));//$NON-NLS-1$ //$NON-NLS-2$
             return rc;
         }
-        IPath makeRelativeTo = newPath.makeRelativeTo(ResourceManager.getRootProject().getLocation()).removeFirstSegments(1);
 
         List<String> jrxmlFileNames = new ArrayList<String>();
         List<String> jrxmlFileNamesAfterMove = new ArrayList<String>();
         jrxmlFileNames.add(oldPath.toOSString());
-        jrxmlFileNamesAfterMove.add(makeRelativeTo.toOSString());
+        jrxmlFileNamesAfterMove.add(newPath.toOSString());
 
         return updateJrxmlRelatedReport(jrxmlFileNames, jrxmlFileNamesAfterMove);
     }
@@ -195,8 +195,7 @@ public final class RepNodeUtils {
         // compare the Jrxml path if the report has the user defined one.
         if (ReportHelper.ReportType.USER_MADE.equals(reportType)) {
             String jrxmlPath = anaMap.getJrxmlSource();
-            String oldPath = path.removeFirstSegments(2).toString();
-            if (jrxmlPath.contains(oldPath)) {
+            if (jrxmlPath.contains(path.toString())) {
                 return true;
             }
         }
@@ -234,13 +233,13 @@ public final class RepNodeUtils {
                 for (int i = 0; i < jrxmlFileNames.size(); i++) {
                     String oldPath = jrxmlFileNames.get(i);
                     if (isUsedByJrxml(new Path(oldPath), anaMap)) {
-                        // IPath makeRelativeTo = new Path(jrxmlFileNamesAfterMove.get(i)).makeRelativeTo(
-                        // ResourceManager.getRootProject().getLocation()).removeFirstSegments(1);
+                        String before = anaMap.getJrxmlSource().substring(0,
+                                anaMap.getJrxmlSource().lastIndexOf(".." + File.separator) + 3);
 
                         // Added 20130128, using event/listener to refresh the page if opening
-                        EventManager.getInstance().publish(report, EventEnum.DQ_JRXML_RENAME, jrxmlFileNamesAfterMove.get(i));
-
-                        anaMap.setJrxmlSource(jrxmlFileNamesAfterMove.get(i));
+                        EventManager.getInstance().publish(report, EventEnum.DQ_JRXML_RENAME,
+                                before + jrxmlFileNamesAfterMove.get(i));
+                        anaMap.setJrxmlSource(before + jrxmlFileNamesAfterMove.get(i));
                         isUpdated = true;
                     }
                 }
@@ -273,11 +272,9 @@ public final class RepNodeUtils {
             IPath parentPath = RepositoryNodeHelper.getPath(jrxml.getParent());
             IPath makeRelativeTo = null;
             if (path.equals(parentPath)) {
-                makeRelativeTo = path.append("/").append(RepositoryNodeHelper.getFileNameOfTheNode(jrxml));//$NON-NLS-1$
-                makeRelativeTo = makeRelativeTo.makeRelativeTo(basePath);
+                makeRelativeTo = path.append(File.separator).append(RepositoryNodeHelper.getFileNameOfTheNode(jrxml));
             } else {
-                parentPath = parentPath.append("/").append(RepositoryNodeHelper.getFileNameOfTheNode(jrxml));//$NON-NLS-1$
-                makeRelativeTo = parentPath.makeRelativeTo(basePath);
+                makeRelativeTo = parentPath.append(File.separator).append(RepositoryNodeHelper.getFileNameOfTheNode(jrxml));
             }
             jrxmlFileNames.add(makeRelativeTo.toOSString());
         }
@@ -301,22 +298,21 @@ public final class RepNodeUtils {
             IPath parentPath = RepositoryNodeHelper.getPath(jrxml.getParent());
             if (oldPath.equals(parentPath)) {
                 jrxmlFileNames
-                        .add(newPath
-                                .append("/").append(RepositoryNodeHelper.getFileNameOfTheNode(jrxml)).makeRelativeTo(basePath).toOSString());//$NON-NLS-1$
+.add(newPath.append(File.separator).append(RepositoryNodeHelper.getFileNameOfTheNode(jrxml))
+                        .toOSString());
             } else {
                 // change the old folder name in parent path to new path:
                 // e.g. /tdq_libraries/JRXML Template/c01/(sub/) to -->/tdq_libraries/JRXML Template/c01_new/sub/
                 IPath replacedPath = new Path("");
                 for (int i = 0; i < parentPath.segmentCount(); i++) {
                     if (i < newPath.segmentCount() && !newPath.segment(i).equals(parentPath.segment(i))) {
-                        replacedPath = replacedPath.append(newPath.segment(i)).append("/");//$NON-NLS-1$
+                        replacedPath = replacedPath.append(newPath.segment(i)).append(File.separator);
                     } else {
-                        replacedPath = replacedPath.append(parentPath.segment(i)).append("/");//$NON-NLS-1$
+                        replacedPath = replacedPath.append(parentPath.segment(i)).append(File.separator);
                     }
                 }
                 jrxmlFileNames
-.add(replacedPath.append(RepositoryNodeHelper.getFileNameOfTheNode(jrxml)).makeRelativeTo(basePath)
-                        .toOSString());
+.add(replacedPath.append(RepositoryNodeHelper.getFileNameOfTheNode(jrxml)).toOSString());
 
             }
         }
