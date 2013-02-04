@@ -21,6 +21,7 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
@@ -88,6 +89,15 @@ public class ReloadDatabaseAction extends Action {
             returnCode.setReturnCode(Messages.getString("ReloadDatabaseAction.NotSupportMessage"), false); //$NON-NLS-1$
             return;
         }
+        // Added yyin 20130131 TDQ-6780, warn the user to check the compare result before copy
+        boolean isContinue = isContinueReload();
+        if (!isContinue) {
+            // go to compare instead of reloading now
+            new PopComparisonUIAction(selectedObject, Messages.getString("ReloadDatabaseAction.CompareLabel")).run();//$NON-NLS-1$ 
+            returnCode.setReturnCode(Messages.getString("ReloadDatabaseAction.IsContinue"), false);//$NON-NLS-1$ 
+            return;
+        }// ~
+
         Connection conn = getConnection();
         List<ModelElement> dependencyClients = EObjectHelper.getDependencyClients(conn);
         if (!(dependencyClients == null || dependencyClients.isEmpty())) {
@@ -183,5 +193,19 @@ public class ReloadDatabaseAction extends Action {
             conn = (Connection) selectedObject;
         }
         return conn;
+    }
+    /**
+     * popup a dialog to warn the user better do the compare before the reload, and provide two buttons: compare, reload
+     * if the user click the compare button, the compare will be executed. if the user click the reload button, the
+     * reload will continue.
+     * 
+     * @return true if the user select reload, false: when select compare
+     */
+    private boolean isContinueReload() {
+        String[] dialogButtonLabels = {
+                Messages.getString("ReloadDatabaseAction.CompareLabel"), Messages.getString("ReloadDatabaseAction.ReloadLabel") };//$NON-NLS-1$ 
+        MessageDialog dialog = new MessageDialog(CorePlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getShell(),
+                "Reload", null, Messages.getString("ReloadDatabaseAction.IsContinue"), 3, dialogButtonLabels, SWT.NONE);//$NON-NLS-1$ 
+        return dialog.open() == 1;
     }
 }

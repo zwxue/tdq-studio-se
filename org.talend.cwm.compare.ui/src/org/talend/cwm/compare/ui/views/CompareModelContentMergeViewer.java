@@ -73,10 +73,12 @@ import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.dialog.message.DeleteModelElementConfirmDialog;
+import org.talend.dataprofiler.core.ui.utils.MessageUI;
 import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.helper.resourcehelper.PrvResourceFileHelper;
 import org.talend.dq.nodes.DBCatalogRepNode;
+import org.talend.dq.nodes.DBSchemaRepNode;
 import org.talend.dq.nodes.DBTableRepNode;
 import org.talend.dq.nodes.foldernode.IFolderNode;
 import org.talend.repository.model.IRepositoryNode;
@@ -403,6 +405,11 @@ public class CompareModelContentMergeViewer extends ModelContentMergeViewer {
 
     @Override
     protected void copy(boolean leftToRight) {
+        // Added yyin 20130131 TDQ-6780, warn the user to check the compare result before copy
+        boolean isContinue = MessageUI.openYesNoQuestion(Messages.getString("CompareModelContentMergeViewer.IsContinueCopy"));//$NON-NLS-1$ 
+        if (!isContinue) {
+            return;
+        }// ~
         // First check dependencies.
         ModelElement modelElement = null;
         IFile resourceFile = null;
@@ -417,6 +424,9 @@ public class CompareModelContentMergeViewer extends ModelContentMergeViewer {
             // MOD msjian 2011-5-20 20875:Change to model element
             IRepositoryNode parentNode = DBTableRepNode.getParentPackageNode((IRepositoryNode) selectedOjbect);
             Package ctatlogSwtich = parentNode instanceof DBCatalogRepNode ? ((DBCatalogRepNode) parentNode).getCatalog() : null;
+            if (ctatlogSwtich == null) {
+                ctatlogSwtich = parentNode instanceof DBSchemaRepNode ? ((DBSchemaRepNode) parentNode).getSchema() : null;
+            }
             // ~
             if (ctatlogSwtich != null) {
                 resourceFile = PrvResourceFileHelper.getInstance().findCorrespondingFile(
