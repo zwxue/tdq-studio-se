@@ -45,7 +45,7 @@ public class PatternStatisticsState extends AbstractChartTypeStates {
         // TODO Auto-generated method stub
         return TopChartFactory
                 .createStackedBarChart(
-                DefaultMessagesImpl.getString("TopChartFactory.Count"), getDataset(), PlotOrientation.VERTICAL); //$NON-NLS-1$
+                        DefaultMessagesImpl.getString("PatternStatisticsState.PatternStatistics"), getDataset(), PlotOrientation.VERTICAL); //$NON-NLS-1$
     }
 
     public ICustomerDataset getCustomerDataset() {
