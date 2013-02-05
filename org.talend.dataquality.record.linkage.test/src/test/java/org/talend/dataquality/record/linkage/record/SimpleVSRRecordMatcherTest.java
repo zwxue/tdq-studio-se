@@ -356,10 +356,25 @@ public class SimpleVSRRecordMatcherTest {
 
     @Test
     public void testgetLabeledAttributeMatchWeights() {
-        // TODO create attribute matchers with names
-        // TODO create a record matcher with the attribute matchers
-        // TODO test getLabeledAttributeMatchWeights (check that it gives expected results)
+        // create attribute matchers with names
+        AttributeMatcherType type = AttributeMatcherType.jaro;
+        IAttributeMatcher attMatcher = AttributeMatcherFactory.createMatcher(type);
+        final String colName = "EMAIL";
+        attMatcher.setAttributeName(colName);
+
+        // create a record matcher with the attribute matchers
+        IAttributeMatcher[] allAttMatchers = new IAttributeMatcher[] { attMatcher };
+        IRecordMatcher matcher = RecordMatcherFactory.createMatcher(RecordMatcherType.simpleVSRMatcher);
+        matcher.setRecordSize(1);
+        Assert.assertTrue(matcher.setAttributeMatchers(allAttMatchers));
+
+        // test getLabeledAttributeMatchWeights (check that it gives expected results)
+        String labeledAttributeMatchWeights = matcher.getLabeledAttributeMatchWeights();
+        Assert.assertEquals("no computation done. Result should be 0", "EMAIL: 0.0", labeledAttributeMatchWeights);
+
+        Assert.assertEquals(1.0d, matcher.getMatchingWeight(RECORDS1[1], RECORDS1[1]));
+        labeledAttributeMatchWeights = matcher.getLabeledAttributeMatchWeights();
+        Assert.assertEquals("Computation done and exact match. Result should be 1", "EMAIL: 1.0", labeledAttributeMatchWeights);
 
     }
-
 }
