@@ -440,14 +440,4 @@ public final class UDIHelper {
         }
         return fileList;
     }
-
-    /**
-     * if the category belongs to User Defined Categories, return true, else return false.
-     * 
-     * @param category
-     * @return
-     */
-    public static boolean isUDICategory(IndicatorCategory category) {
-        return category.getName().startsWith("User Defined"); //$NON-NLS-1$
-    }
 }

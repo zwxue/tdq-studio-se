@@ -46,6 +46,18 @@ public final class IndicatorCategoryHelper {
 
     public static final String SYSTEM_PHONENUMBER = "_Ohyz4bEEEeCVE-ofo1XCug";
 
+    /**
+     * if the IndicatorCategory is one kind of User Defined Category return true, else return false. If
+     * indicatorCategory is null return false.
+     * 
+     * @param indicatorCategory
+     * @return
+     */
+    public static final boolean isUserDefCategory(IndicatorCategory indicatorCategory) {
+        return isUserDefCount(indicatorCategory) || isUserDefFrequency(indicatorCategory) || isUserDefMatching(indicatorCategory)
+                || isUserDefRealValue(indicatorCategory);
+    }
+
     public static final boolean isUserDefCount(IndicatorCategory indicatorCategory) {
         if (indicatorCategory != null) {
             return USER_DEFINED_COUNT_CATEGORY.equals(ResourceHelper.getUUID(indicatorCategory));
