@@ -18,6 +18,7 @@ import org.talend.core.model.properties.Property;
 import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
+import org.talend.dataquality.helpers.IndicatorCategoryHelper;
 import org.talend.dataquality.indicators.definition.IndicatorCategory;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dq.factory.ModelElementFileFactory;
@@ -70,7 +71,7 @@ public class UDIHandle extends EMFResourceHandle {
         // MOD klliu 2010-09-25 bug 15530 when duplicate the system indicator ,the definition must be reset the
         // category and the label name
         IndicatorCategory category = UDIHelper.getUDICategory(definition);
-        if (category == null || !UDIHelper.isUDICategory(category)) {
+        if (category == null || !IndicatorCategoryHelper.isUserDefCategory(category)) {
             UDIHelper.setUDICategory(definition, DefinitionHandler.getInstance().getUserDefinedCountIndicatorCategory());
         }
 
