@@ -31,11 +31,16 @@ import jxl.Workbook;
 import jxl.WorkbookSettings;
 import jxl.read.biff.BiffException;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.Path;
+import org.eclipse.jface.wizard.Wizard;
+import org.eclipse.jface.wizard.WizardDialog;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.commons.utils.io.FilesUtils;
 import org.talend.core.exception.TalendInternalPersistenceException;
@@ -47,7 +52,9 @@ import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.action.actions.ImportObject;
 import org.talend.dataprofiler.core.ui.action.provider.NewSourcePatternActionProvider;
+import org.talend.dataprofiler.core.ui.imex.ImportFromExchangeWizard;
 import org.talend.dataprofiler.core.ui.wizard.parserrule.ParserRuleToExcelEnum;
+import org.talend.dataprofiler.ecos.model.IEcosComponent;
 import org.talend.dataquality.domain.pattern.ExpressionType;
 import org.talend.dataquality.domain.pattern.Pattern;
 import org.talend.dataquality.domain.pattern.PatternFactory;
@@ -1107,6 +1114,25 @@ public final class ImportFactory {
             name = ""; //$NON-NLS-1$
             type = ""; //$NON-NLS-1$
             value = ""; //$NON-NLS-1$
+        }
+    }
+
+    /**
+     * DOC xqliu Comment method "importFromExchange".
+     * 
+     * @param componet
+     * @return
+     */
+    public static void importFromExchange(IEcosComponent componet) throws Exception {
+        File file = new File(componet.getInstalledLocation());
+        File copiedFile = new File(
+                System.getProperty("java.io.tmpdir") + File.separator + new Path(componet.getInstalledLocation()).lastSegment()); //$NON-NLS-1$
+        FileUtils.copyFile(file, copiedFile); // copy the downloaded file out of the workspace
+        Wizard wizard = new ImportFromExchangeWizard(copiedFile.getAbsolutePath());
+        WizardDialog dialog = new WizardDialog(null, wizard);
+        wizard.setWindowTitle("Import From Talend Exchange"); //$NON-NLS-1$
+        if (WizardDialog.OK == dialog.open()) {
+            ResourceManager.getLibrariesFolder().refreshLocal(IResource.DEPTH_INFINITE, null);
         }
     }
 }

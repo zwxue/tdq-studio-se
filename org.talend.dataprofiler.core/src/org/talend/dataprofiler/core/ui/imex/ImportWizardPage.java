@@ -72,17 +72,17 @@ public class ImportWizardPage extends WizardPage {
 
     private TableViewer errorsList;
 
-    private Button dirBTN, archBTN;
+    protected Button dirBTN, archBTN;
 
     private Button browseDirBTN, browseArchBTN;
 
-    private Button overwriteBTN;
+    protected Button overwriteBTN;
 
-    private Text dirTxt, archTxt;
+    protected Text dirTxt, archTxt;
 
-    private IImportWriter writer;
+    protected IImportWriter writer;
 
-    private String basePath;
+    protected String basePath;
 
     private List<String> errors = new ArrayList<String>();
 
@@ -337,7 +337,7 @@ public class ImportWizardPage extends WizardPage {
     /**
      * update the page state that is the finish button enable state according to the error message being present or not.
      */
-    private void updatePageStatus() {
+    protected void updatePageStatus() {
         boolean valid = getErrorMessage() == null;
         setPageComplete(valid);
     }
@@ -347,7 +347,7 @@ public class ImportWizardPage extends WizardPage {
      * check that the folder is a data quality repository or issue an error.<br>
      * check that anything is check in the tree or issue an error.<br>
      */
-    private void checkforErrors() {
+    protected void checkforErrors() {
         List<String> dErrors = new ArrayList<String>();
 
         if (repositoryTree.getTree().getItems().length == 0) {
@@ -390,7 +390,7 @@ public class ImportWizardPage extends WizardPage {
     /**
      * DOC bZhou Comment method "initControlState".
      */
-    private void initControlState() {
+    protected void initControlState() {
         setArchState(false);
         setPageComplete(false);
 

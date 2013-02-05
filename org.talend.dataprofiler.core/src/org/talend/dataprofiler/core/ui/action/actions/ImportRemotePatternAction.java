@@ -115,32 +115,49 @@ public class ImportRemotePatternAction extends Action {
 
         setEnabled(true);
         if (fExtensionDownloaded > 0) {
-            for (IEcosComponent componet : fInstalledComponents) {
-                List<ImportObject> validImportObject = ImportObject.extractImportObject(componet, information);
+            String csvFormat = System.getProperty("talend.exchange.csv"); //$NON-NLS-1$
+            if ("true".equals(csvFormat)) { //$NON-NLS-1$
+                for (IEcosComponent componet : fInstalledComponents) {
+                    List<ImportObject> validImportObject = ImportObject.extractImportObject(componet, information);
 
-                if (!validImportObject.isEmpty()) {
-                    String categoryName = componet.getCategry().getName();
+                    if (!validImportObject.isEmpty()) {
+                        String categoryName = componet.getCategry().getName();
 
-                    EEcosCategory ecosCategory = EEcosCategory.getEcosCategory(categoryName);
+                        EEcosCategory ecosCategory = EEcosCategory.getEcosCategory(categoryName);
 
-                    if (ecosCategory != null) {
-                        EResourceConstant resourceType = ecosCategory.getResource();
-                        for (ImportObject importObject : validImportObject) {
-                            information.addAll(ImportFactory.doImport(resourceType, importObject, componet.getName()));
+                        if (ecosCategory != null) {
+                            EResourceConstant resourceType = ecosCategory.getResource();
+                            for (ImportObject importObject : validImportObject) {
+                                information.addAll(ImportFactory.doImport(resourceType, importObject, componet.getName()));
+                            }
                         }
                     }
                 }
-            }
 
-            // MOD qiongli 2011-11-28 TDQ-4038,give the message when there is nothing to import.
-            if (information.isEmpty()) {
-                information.add(new ReturnCode(DefaultMessagesImpl.getString("ImportRemotePatternAction.NothingImport"), false)); //$NON-NLS-1$
-            }
-            ImportInfoDialog
-                    .openImportInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), DefaultMessagesImpl
-                            .getString("ImportRemotePatternAction.ImportFinish"), information.toArray(new ReturnCode[0])); //$NON-NLS-1$
+                // MOD qiongli 2011-11-28 TDQ-4038,give the message when there is nothing to import.
+                if (information.isEmpty()) {
+                    information.add(new ReturnCode(
+                            DefaultMessagesImpl.getString("ImportRemotePatternAction.NothingImport"), false)); //$NON-NLS-1$
+                }
+                ImportInfoDialog
+                        .openImportInformation(
+                                PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
+                                DefaultMessagesImpl.getString("ImportRemotePatternAction.ImportFinish"), information.toArray(new ReturnCode[0])); //$NON-NLS-1$
+                CorePlugin.getDefault().refreshDQView();
+            } else {
+                Display.getDefault().asyncExec(new Runnable() {
 
-            CorePlugin.getDefault().refreshDQView();
+                    public void run() {
+                        for (IEcosComponent componet : fInstalledComponents) {
+                            try {
+                                ImportFactory.importFromExchange(componet);
+                            } catch (Exception e) {
+                                ExceptionHandler.process(e);
+                            }
+                        }
+                    }
+                });
+            }
         }
     }
 

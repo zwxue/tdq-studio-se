@@ -20,10 +20,12 @@ import org.eclipse.help.HelpSystem;
 import org.eclipse.help.IContext;
 import org.eclipse.help.IHelpResource;
 import org.eclipse.jface.action.Action;
+import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.pattern.ExportPatternsWizard;
+import org.talend.dataprofiler.core.ui.imex.ExportForExchangeWizard;
 import org.talend.dataprofiler.core.ui.utils.OpeningHelpWizardDialog;
 import org.talend.dataprofiler.core.ui.utils.WorkbenchUtils;
 import org.talend.dataprofiler.help.HelpPlugin;
@@ -78,8 +80,8 @@ public class ExportPatternsAction extends Action {
 
     @Override
     public void run() {
-
-        ExportPatternsWizard wizard = new ExportPatternsWizard(node, isForExchange);
+        Wizard wizard = isForExchange ? new ExportForExchangeWizard(folder.getFullPath().toString()) : new ExportPatternsWizard(
+                node, isForExchange);
         WizardDialog dialog = null;
         // MOD hcheng 2009-07-07,for 8122.Add an help file in the "Export patterns for Talend exchange wizard".
         if (isForExchange) {
@@ -103,6 +105,5 @@ public class ExportPatternsAction extends Action {
             }
         }
     }
-
 
 }

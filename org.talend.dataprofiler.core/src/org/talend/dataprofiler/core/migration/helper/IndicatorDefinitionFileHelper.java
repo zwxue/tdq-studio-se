@@ -77,6 +77,28 @@ public final class IndicatorDefinitionFileHelper {
     }
 
     /**
+     * Add a sql expression for indicator.
+     * 
+     * @param definition
+     * @param name
+     * @param language
+     * @param body
+     * @param modifyDate
+     * @return
+     */
+    public static boolean addSqlExpression(IndicatorDefinition definition, String name, String language, String body,
+            String modifyDate) {
+        if (null == definition) {
+            return false;
+        }
+
+        TdExpression e = BooleanExpressionHelper.createTdExpression(language, body);
+        e.setName(name);
+        e.setModificationDate(modifyDate);
+        return definition.getSqlGenericExpression().add(e);
+    }
+
+    /**
      * remove a sql expression for indicator.
      * 
      * @param definition
@@ -91,6 +113,30 @@ public final class IndicatorDefinitionFileHelper {
         TdExpression removeExpression = null;
         for (TdExpression e : definition.getSqlGenericExpression()) {
             if (e.getLanguage().equals(language)) {
+                removeExpression = e;
+            }
+        }
+        if (removeExpression != null) {
+            return definition.getSqlGenericExpression().remove(removeExpression);
+        }
+        return false;
+
+    }
+
+    /**
+     * remove a sql expression by name.
+     * 
+     * @param definition
+     * @param name
+     * @return
+     */
+    public static boolean removeSqlExpressionByName(IndicatorDefinition definition, String name) {
+        if (null == definition || null == name) {
+            return false;
+        }
+        TdExpression removeExpression = null;
+        for (TdExpression e : definition.getSqlGenericExpression()) {
+            if (name.equals(e.getName())) {
                 removeExpression = e;
             }
         }

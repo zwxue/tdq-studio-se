@@ -33,6 +33,7 @@ import org.junit.Test;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.rule.PowerMockRule;
+import org.talend.core.model.properties.Property;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.cwm.relational.RelationalFactory;
 import org.talend.cwm.relational.TdExpression;
@@ -45,9 +46,12 @@ import org.talend.dataquality.domain.pattern.RegularExpression;
 import org.talend.dataquality.helpers.BooleanExpressionHelper;
 import org.talend.dataquality.indicators.definition.DefinitionFactory;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
+import org.talend.dataquality.properties.PropertiesFactory;
+import org.talend.dataquality.properties.TDQIndicatorDefinitionItem;
 import org.talend.dataquality.properties.TDQPatternItem;
 import org.talend.dq.helper.resourcehelper.IndicatorResourceFileHelper;
 import org.talend.dq.writer.impl.ElementWriterFactory;
+import org.talend.dq.writer.impl.IndicatorDefinitionWriter;
 import org.talend.dq.writer.impl.PatternWriter;
 import org.talend.utils.sugars.ReturnCode;
 
@@ -90,7 +94,11 @@ public class FileSystemImportWriterTest {
     @Test
     public void testMergeSystemIndicator() {
         ItemRecord mockItem = mock(ItemRecord.class);
+        TDQIndicatorDefinitionItem siItem = PropertiesFactory.eINSTANCE.createTDQIndicatorDefinitionItem();
+        Property siProp = org.talend.core.model.properties.PropertiesFactory.eINSTANCE.createProperty();
         IndicatorDefinition SIdef = DefinitionFactory.eINSTANCE.createIndicatorDefinition();
+        siItem.setIndicatorDefinition(SIdef);
+        siItem.setProperty(siProp);
         IndicatorDefinition importedDef = DefinitionFactory.eINSTANCE.createIndicatorDefinition();
         // make mockItem has: one new template, one modified newer template, one modified older template.
         TdExpression e0 = BooleanExpressionHelper.createTdExpression("new", "new body"); //$NON-NLS-1$ //$NON-NLS-2$
@@ -111,15 +119,16 @@ public class FileSystemImportWriterTest {
         SIdef.getSqlGenericExpression().add(e3);
         SIdef.getSqlGenericExpression().add(e4);
 
-        PowerMockito.mockStatic(IndicatorResourceFileHelper.class);
-        IndicatorResourceFileHelper helper = mock(IndicatorResourceFileHelper.class);
-        when(IndicatorResourceFileHelper.getInstance()).thenReturn(helper);
         ReturnCode rc = mock(ReturnCode.class);
         when(rc.isOk()).thenReturn(true);
-        when(helper.save(SIdef)).thenReturn(rc);
+        ElementWriterFactory ewFactory = mock(ElementWriterFactory.class);
+        IndicatorDefinitionWriter indWriter = mock(IndicatorDefinitionWriter.class);
+        when(indWriter.save(siItem, false)).thenReturn(rc);
+        stub(method(ElementWriterFactory.class, "getInstance")).toReturn(ewFactory); //$NON-NLS-1$
+        when(ewFactory.createIndicatorDefinitionWriter()).thenReturn(indWriter);
 
         Assert.assertEquals(SIdef.getSqlGenericExpression().size(), 2);// before merge
-        writer.mergeSystemIndicator(mockItem, SIdef);
+        writer.mergeSystemIndicator(mockItem, siItem);
         Assert.assertEquals(SIdef.getSqlGenericExpression().size(), 3);// after merge
         for (TdExpression ex : SIdef.getSqlGenericExpression()) {
             if (ex.getLanguage().equals("new")) {//$NON-NLS-1$

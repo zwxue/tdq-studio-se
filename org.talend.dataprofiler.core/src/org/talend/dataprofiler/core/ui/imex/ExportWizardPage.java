@@ -65,17 +65,19 @@ public class ExportWizardPage extends WizardPage {
 
     private CheckboxTreeViewer repositoryTree;
 
-    private Button dirBTN, archBTN;
+    protected Button dirBTN, archBTN;
 
     private Button browseDirBTN, browseArchBTN;
 
     private Text dirTxt, archTxt;
 
+    protected Button selectAllBTN, deselectAllBTN, addRequireBTN;
+
     private IPath specifiedPath;
 
     private List<String> errors;
 
-    private IExportWriter writer;
+    protected IExportWriter writer;
 
     public static final String[] FILE_EXPORT_MASK = { "*.zip;*.tar;*.tar.gz", "*.*" }; //$NON-NLS-1$//$NON-NLS-2$
 
@@ -103,8 +105,6 @@ public class ExportWizardPage extends WizardPage {
         top.setLayoutData(new GridData(GridData.FILL_BOTH));
 
         createSelectComposite(top);
-
-        // createOptionComposite(top);
 
         createRepositoryTree(top);
 
@@ -359,23 +359,12 @@ public class ExportWizardPage extends WizardPage {
     }
 
     /**
-     * update the page state that is the finish button enable state according to the error message being present or not.
+     * update the page state that is the finish button enable state according to the error message being present or not
+     * and user select at least one item to export.
      */
     protected void updatePageStatus() {
-        setPageComplete(getErrorMessage() == null);
+        setPageComplete(getErrorMessage() == null && getElements().length > 0);
     }
-
-    /**
-     * DOC bZhou Comment method "createOptionComposite".
-     * 
-     * @param top
-     */
-    // private void createOptionComposite(Composite top) {
-    // Group optionGroup = new Group(top, SWT.NONE);
-    // optionGroup.setLayout(new RowLayout());
-    // optionGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-    //        optionGroup.setText(Messages.getString("ExportWizardPage.5")); //$NON-NLS-1$
-    // }
 
     /**
      * DOC bZhou Comment method "createRepositoryTree".
@@ -416,13 +405,13 @@ public class ExportWizardPage extends WizardPage {
         gd.horizontalSpan = 0;
         btnsComposite.setLayoutData(gd);
 
-        Button selectAllBTN = new Button(btnsComposite, SWT.PUSH);
+        selectAllBTN = new Button(btnsComposite, SWT.PUSH);
         selectAllBTN.setText("Select All");//$NON-NLS-1$ 
 
-        Button deselectAllBTN = new Button(btnsComposite, SWT.PUSH);
+        deselectAllBTN = new Button(btnsComposite, SWT.PUSH);
         deselectAllBTN.setText("Deselect All");//$NON-NLS-1$ 
 
-        Button addRequireBTN = new Button(btnsComposite, SWT.PUSH);
+        addRequireBTN = new Button(btnsComposite, SWT.PUSH);
         addRequireBTN.setText("Include dependancies");//$NON-NLS-1$ 
 
         Composite infoComposite = new Composite(utilityComposite, SWT.NONE);
@@ -457,6 +446,7 @@ public class ExportWizardPage extends WizardPage {
                     repositoryTree.setSubtreeChecked(treeItem.getData(), true);
                 }
                 repositoryTree.refresh();
+                updatePageStatus();
             }
         });
 
@@ -469,6 +459,7 @@ public class ExportWizardPage extends WizardPage {
                     repositoryTree.setSubtreeChecked(treeItem.getData(), false);
                 }
                 repositoryTree.refresh();
+                updatePageStatus();
             }
         });
 
