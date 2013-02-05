@@ -22,10 +22,8 @@ import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.ui.IFolderLayout;
 import org.eclipse.ui.IPageLayout;
 import org.eclipse.ui.application.IActionBarConfigurer;
-import org.talend.core.GlobalServiceRegister;
 import org.talend.core.language.ECodeLanguage;
 import org.talend.core.model.repository.ERepositoryObjectType;
-import org.talend.core.service.ICorePerlService;
 import org.talend.core.ui.branding.IActionBarHelper;
 import org.talend.core.ui.branding.IBrandingConfiguration;
 import org.talend.repository.model.IRepositoryNode;
@@ -46,10 +44,12 @@ public class TOPConfiguration implements IBrandingConfiguration {
 
     private boolean useProductRegistration = true;
 
+    @Override
     public IActionBarHelper getHelper() {
         return this.helper;
     }
 
+    @Override
     public void setHelper(IActionBarHelper helper) {
         this.helper = helper;
     }
@@ -62,12 +62,14 @@ public class TOPConfiguration implements IBrandingConfiguration {
         this.actionBarConfigurer = actionBarConfigurer;
     }
 
+    @Override
     public void fillMenuBar(IMenuManager menuBar) {
         if (helper != null) {
             helper.fillMenuBar(menuBar);
         }
     }
 
+    @Override
     public void fillCoolBar(ICoolBarManager coolBar) {
         if (helper != null) {
             helper.fillCoolBar(coolBar);
@@ -79,6 +81,7 @@ public class TOPConfiguration implements IBrandingConfiguration {
      * 
      * @see org.talend.core.ui.branding.IBrandingConfiguration#getHiddenRepositoryCategory()
      */
+    @Override
     public List<IRepositoryNode> getHiddenRepositoryCategory(IRepositoryNode parent, String type) {
 
         List<IRepositoryNode> nodes = new ArrayList<IRepositoryNode>();
@@ -91,6 +94,7 @@ public class TOPConfiguration implements IBrandingConfiguration {
      * 
      * @see org.talend.core.ui.branding.IBrandingConfiguration#initPerspective(org.eclipse.ui.IPageLayout)
      */
+    @Override
     public void initPerspective(IPageLayout layout) {
         String componentSettingViewerId = "org.talend.designer.core.ui.views.properties.ComponentSettingsView";//$NON-NLS-1$
         String navigatorId = "org.eclipse.ui.views.ResourceNavigator"; //$NON-NLS-1$
@@ -145,6 +149,7 @@ public class TOPConfiguration implements IBrandingConfiguration {
      * 
      * @see org.talend.core.ui.branding.IBrandingConfiguration#getAvailableComponents()
      */
+    @Override
     public String[] getAvailableComponents() {
         return null;
     }
@@ -154,14 +159,9 @@ public class TOPConfiguration implements IBrandingConfiguration {
      * 
      * @see org.talend.core.ui.branding.IBrandingConfiguration#getAvailableLanguages()
      */
+    @Override
     public String[] getAvailableLanguages() {
-        String[] languages;
-        if (GlobalServiceRegister.getDefault().isServiceRegistered(ICorePerlService.class)) {
-            languages = new String[] { ECodeLanguage.JAVA.getName(), ECodeLanguage.PERL.getName() };
-        } else {
-            languages = new String[] { ECodeLanguage.JAVA.getName() };
-        }
-        return languages;
+        return new String[] { ECodeLanguage.JAVA.getName() };
     }
 
     /*
@@ -169,6 +169,7 @@ public class TOPConfiguration implements IBrandingConfiguration {
      * 
      * @see org.talend.core.ui.branding.IBrandingConfiguration#getJobEditorSettings()
      */
+    @Override
     public Map<String, Object> getJobEditorSettings() {
         // no specific settings by default.
         return new HashMap<String, Object>();
@@ -179,6 +180,7 @@ public class TOPConfiguration implements IBrandingConfiguration {
      * 
      * @see org.talend.core.ui.branding.IBrandingConfiguration#isUseMailLoginCheck()
      */
+    @Override
     public boolean isUseMailLoginCheck() {
         return useMainLoginCheck;
     }
@@ -188,6 +190,7 @@ public class TOPConfiguration implements IBrandingConfiguration {
      * 
      * @see org.talend.core.ui.branding.IBrandingConfiguration#isUseProductRegistration()
      */
+    @Override
     public boolean isUseProductRegistration() {
         return useProductRegistration;
     }
@@ -197,6 +200,7 @@ public class TOPConfiguration implements IBrandingConfiguration {
      * 
      * @see org.talend.core.ui.branding.IBrandingConfiguration#isAllowDebugMode()
      */
+    @Override
     public boolean isAllowDebugMode() {
         return true;
     }
@@ -206,6 +210,7 @@ public class TOPConfiguration implements IBrandingConfiguration {
      * 
      * @see org.talend.core.ui.branding.IBrandingConfiguration#isUseDemoProjects()
      */
+    @Override
     public boolean isUseDemoProjects() {
         return true;
     }
@@ -215,6 +220,7 @@ public class TOPConfiguration implements IBrandingConfiguration {
      * 
      * @see org.talend.core.ui.branding.IBrandingConfiguration#getAdditionalTitle()
      */
+    @Override
     public String getAdditionalTitle() {
         return title;
     }
@@ -224,10 +230,12 @@ public class TOPConfiguration implements IBrandingConfiguration {
      * 
      * @see org.talend.core.ui.branding.IBrandingConfiguration#setAdditionalTitle(java.lang.String)
      */
+    @Override
     public void setAdditionalTitle(String title) {
         this.title = title;
     }
 
+    @Override
     public String getInitialWindowPerspectiveId() {
         return "org.talend.dataprofiler.DataProfilingPerspective"; //$NON-NLS-1$
     }
@@ -241,6 +249,7 @@ public class TOPConfiguration implements IBrandingConfiguration {
      * 
      * @see org.talend.core.ui.branding.IBrandingConfiguration#setUseMailLoginCheck(boolean)
      */
+    @Override
     public void setUseMailLoginCheck(boolean useMainLoginCheck) {
         this.useMainLoginCheck = useMainLoginCheck;
     }
@@ -250,6 +259,7 @@ public class TOPConfiguration implements IBrandingConfiguration {
      * 
      * @see org.talend.core.ui.branding.IBrandingConfiguration#setUseProductRegistration(boolean)
      */
+    @Override
     public void setUseProductRegistration(boolean useProductRegistration) {
         this.useProductRegistration = useProductRegistration;
     }
@@ -268,6 +278,7 @@ public class TOPConfiguration implements IBrandingConfiguration {
      * 
      * @see org.talend.core.ui.branding.IBrandingConfiguration#isOnlyRemoteConnection()
      */
+    @Override
     public boolean isOnlyRemoteConnection() {
         return false;
     }
