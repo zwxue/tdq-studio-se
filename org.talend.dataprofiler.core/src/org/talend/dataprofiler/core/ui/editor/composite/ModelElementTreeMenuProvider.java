@@ -393,8 +393,11 @@ public abstract class ModelElementTreeMenuProvider {
                 ModelElement me = ((MetadataColumnRepositoryObject) meIndicator.getModelElementRepositoryNode().getObject())
                         .getTdColumn();
 
-                // dqview.showSelectedElements(me);
-                RepositoryNode node = RepositoryNodeHelper.recursiveFind(me, true);
+                RepositoryNode recursiveFind = RepositoryNodeHelper.recursiveFind(me);
+                if (recursiveFind == null) {
+                    recursiveFind = RepositoryNodeHelper.createRepositoryNode(me);
+                }
+                RepositoryNode node = recursiveFind;
                 dqview.showSelectedElements(node);
             } catch (Exception e) {
                 log.error(e, e);

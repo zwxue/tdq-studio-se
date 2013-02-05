@@ -34,8 +34,6 @@ import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.TreeAdapter;
-import org.eclipse.swt.events.TreeEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -51,7 +49,6 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
-import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.part.FileEditorInput;
 import org.talend.core.model.metadata.MetadataColumnRepositoryObject;
 import org.talend.core.model.repository.IRepositoryViewObject;
@@ -129,7 +126,7 @@ public class AnalysisColumnNominalIntervalTreeViewer extends AbstractColumnDropT
     public AbstractAnalysisMetadataPage getMasterPage() {
         return masterPage;
     }
-    
+
     /**
      * @param parent
      */
@@ -804,7 +801,11 @@ public class AnalysisColumnNominalIntervalTreeViewer extends AbstractColumnDropT
     public static List<DBColumnRepNode> columns2Nodes(List<TdColumn> tdColumns) {
         List<DBColumnRepNode> nodes = new ArrayList<DBColumnRepNode>();
         for (TdColumn tdColumn : tdColumns) {
-            RepositoryNode repNode = RepositoryNodeHelper.recursiveFind(tdColumn, true);
+            RepositoryNode recursiveFind = RepositoryNodeHelper.recursiveFind(tdColumn);
+            if (recursiveFind == null) {
+                recursiveFind = RepositoryNodeHelper.createRepositoryNode(tdColumn);
+            }
+            RepositoryNode repNode = recursiveFind;
             if (repNode != null && repNode instanceof DBColumnRepNode) {
                 nodes.add((DBColumnRepNode) repNode);
             }

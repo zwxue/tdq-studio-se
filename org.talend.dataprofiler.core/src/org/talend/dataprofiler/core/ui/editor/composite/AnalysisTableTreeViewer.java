@@ -36,8 +36,6 @@ import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.TreeAdapter;
-import org.eclipse.swt.events.TreeEvent;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
@@ -52,7 +50,6 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.ISelectionStatusValidator;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
-import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.model.WorkbenchContentProvider;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.core.model.metadata.builder.connection.Connection;
@@ -157,7 +154,7 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
     public AbstractAnalysisMetadataPage getMasterPage() {
         return masterPage;
     }
-    
+
     /**
      * DOC xqliu AnalysisTableTreeViewer constructor comment.
      * 
@@ -1317,7 +1314,11 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
                     TableIndicator tableIndicator = (TableIndicator) selection[0].getData(TABLE_INDICATOR_KEY);
                     NamedColumnSet set = tableIndicator.getColumnSet();
                     // ProxyRepositoryViewObject.fetchAllRepositoryViewObjects(true, true);
-                    RepositoryNode node = RepositoryNodeHelper.recursiveFind(set, true);
+                    RepositoryNode recursiveFind = RepositoryNodeHelper.recursiveFind(set);
+                    if (recursiveFind == null) {
+                        recursiveFind = RepositoryNodeHelper.createRepositoryNode(set);
+                    }
+                    RepositoryNode node = recursiveFind;
                     dqview.showSelectedElements(node);
                     CorePlugin.getDefault().refreshWorkSpace();
                     CorePlugin.getDefault().refreshDQView(node);

@@ -172,10 +172,18 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart {
             RowMatchingIndicator rowMatchingIndicatorA = (RowMatchingIndicator) indicators.get(0);
 
             for (TdColumn tdColumn : rowMatchingIndicatorA.getColumnSetA()) {
-                columnListA.add(RepositoryNodeHelper.recursiveFind(tdColumn, true));
+                RepositoryNode recursiveFind = RepositoryNodeHelper.recursiveFind(tdColumn);
+                if (recursiveFind == null) {
+                    recursiveFind = RepositoryNodeHelper.createRepositoryNode(tdColumn);
+                }
+                columnListA.add(recursiveFind);
             }
             for (TdColumn tdColumn : rowMatchingIndicatorA.getColumnSetB()) {
-                columnListB.add(RepositoryNodeHelper.recursiveFind(tdColumn, true));
+                RepositoryNode recursiveFind = RepositoryNodeHelper.recursiveFind(tdColumn);
+                if (recursiveFind == null) {
+                    recursiveFind = RepositoryNodeHelper.createRepositoryNode(tdColumn);
+                }
+                columnListB.add(recursiveFind);
             }
             // RowMatchingIndicator rowMatchingIndicatorB = (RowMatchingIndicator) indicators.get(1);
 

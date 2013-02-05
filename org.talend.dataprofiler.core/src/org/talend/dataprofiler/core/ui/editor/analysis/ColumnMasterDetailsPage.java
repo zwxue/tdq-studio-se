@@ -196,8 +196,11 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
                 currentIndicator = ModelElementIndicatorHelper.createDFColumnIndicator(RepositoryNodeHelper
                         .recursiveFind(mdColumn));
             } else if (tdColumn != null) {
-                currentIndicator = ModelElementIndicatorHelper.createModelElementIndicator(RepositoryNodeHelper.recursiveFind(
-                        tdColumn, true));
+                RepositoryNode recursiveFind = RepositoryNodeHelper.recursiveFind(tdColumn);
+                if (recursiveFind == null) {
+                    recursiveFind = RepositoryNodeHelper.createRepositoryNode(tdColumn);
+                }
+                currentIndicator = ModelElementIndicatorHelper.createModelElementIndicator(recursiveFind);
             } else if (xmlElement != null) {
                 currentIndicator = ModelElementIndicatorHelper.createModelElementIndicator(RepositoryNodeHelper
                         .recursiveFind(xmlElement));
@@ -369,7 +372,7 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
      * DOC zshen Comment method "computePagination".
      */
     private void computePagination() {
-    	disposeChartComposite();
+        disposeChartComposite();
 
         if (uiPagination == null) {
             uiPagination = new UIPagination(toolkit);
@@ -420,7 +423,7 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
             }
         }
     }
-    
+
     /**
      * DOC mzhao Comment method "packOtherColumns".
      */
@@ -553,7 +556,7 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
             @Override
             public void linkActivated(HyperlinkEvent e) {
 
-            	disposeChartComposite();
+                disposeChartComposite();
 
                 boolean analysisStatue = analysis.getResults().getResultMetadata() != null
                         && analysis.getResults().getResultMetadata().getExecutionDate() != null;
@@ -935,7 +938,7 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
             return;
         }
 
-        ExpandableComposite[] previewChartCompsitesa = getPreviewChartCompsites(); 
+        ExpandableComposite[] previewChartCompsitesa = getPreviewChartCompsites();
         if (previewChartList != null && !previewChartList.isEmpty()) {
             for (ExpandableComposite comp : previewChartList) {
                 if (comp.getData() != indicator) {
@@ -992,10 +995,12 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
         return this.treeViewer;
     }
 
+    @Override
     public ScrolledForm getForm() {
         return form;
     }
 
+    @Override
     public void setForm(ScrolledForm form) {
         this.form = form;
     }
@@ -1023,6 +1028,7 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
         return previewChartCompsites;
     }
 
+    @Override
     public Composite getChartComposite() {
         return chartComposite;
     }
