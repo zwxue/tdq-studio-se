@@ -32,11 +32,10 @@ public class ImportWizard extends Wizard {
 
     private static Logger log = Logger.getLogger(ImportWizard.class);
 
-    private ImportWizardPage importPage;
+    protected ImportWizardPage importPage;
 
     public ImportWizard() {
         setWindowTitle("Import Item");//$NON-NLS-1$ 
-
         this.importPage = new ImportWizardPage();
     }
 

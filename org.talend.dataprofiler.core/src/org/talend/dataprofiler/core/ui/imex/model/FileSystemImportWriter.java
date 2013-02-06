@@ -54,6 +54,7 @@ import org.talend.core.repository.constants.FileConstants;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.cwm.dependencies.DependenciesHandler;
 import org.talend.cwm.helper.ConnectionHelper;
+import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.relational.TdExpression;
 import org.talend.cwm.xml.TdXmlSchema;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
@@ -67,10 +68,15 @@ import org.talend.dataquality.domain.pattern.Pattern;
 import org.talend.dataquality.domain.pattern.PatternComponent;
 import org.talend.dataquality.domain.pattern.PatternFactory;
 import org.talend.dataquality.domain.pattern.RegularExpression;
+import org.talend.dataquality.helpers.IndicatorCategoryHelper;
+import org.talend.dataquality.indicators.definition.IndicatorCategory;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
+import org.talend.dataquality.indicators.definition.IndicatorDefinitionParameter;
+import org.talend.dataquality.properties.TDQBusinessRuleItem;
 import org.talend.dataquality.properties.TDQIndicatorDefinitionItem;
 import org.talend.dataquality.properties.TDQPatternItem;
 import org.talend.dataquality.rules.DQRule;
+import org.talend.dataquality.rules.ParserRule;
 import org.talend.dq.CWMPlugin;
 import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.PropertyHelper;
@@ -157,6 +163,16 @@ public class FileSystemImportWriter implements IImportWriter {
      */
     private boolean isIndicator(ModelElement element) {
         return element instanceof IndicatorDefinition && !(element instanceof DQRule);
+    }
+
+    /**
+     * judge if the record is a ParserRule or not.
+     * 
+     * @param element
+     * @return
+     */
+    private boolean isParserRule(ModelElement element) {
+        return element instanceof ParserRule;
     }
 
     /**
@@ -431,10 +447,10 @@ public class FileSystemImportWriter implements IImportWriter {
                                 // when record is valid&conflict, means it need to be merged with the current one if it
                                 // is a system indicator, (using its UUid to find this SI not label)
                                 if (isIndicator(modEle)) {
-                                    IndicatorDefinition siDef = ((TDQIndicatorDefinitionItem) object.getProperty().getItem())
-                                            .getIndicatorDefinition();
-
-                                    mergeSystemIndicator(record, siDef);
+                                    mergeSystemIndicator(record, (TDQIndicatorDefinitionItem) object.getProperty().getItem());
+                                    isDelete = false;
+                                } else if (isParserRule(modEle)) {
+                                    mergeParserRule(record, (TDQBusinessRuleItem) object.getProperty().getItem());
                                     isDelete = false;
                                 } else if (isPattern(modEle)) {
                                     mergePattern(record, (TDQPatternItem) object.getProperty().getItem());
@@ -482,22 +498,94 @@ public class FileSystemImportWriter implements IImportWriter {
     }
 
     /**
+     * for ParserRule: 1) replace the same name old rule with new rule; 2) will keep the old rule if new one don't
+     * include the same name rule
+     * 
+     * @param record imported modified parser rule
+     * @param parserRuleItem the parser rule in the current studio
+     */
+    protected void mergeParserRule(ItemRecord record, TDQBusinessRuleItem parserRuleItem) {
+        // only when the parser rule is modified, do the save
+        boolean isModified = false;
+
+        // old object
+        DQRule parserRule = parserRuleItem.getDqrule();
+        Property parserRuleProp = parserRuleItem.getProperty();
+
+        // new object
+        DQRule recordRule = (DQRule) record.getElement();
+        Property recordRuleProp = record.getProperty();
+
+        // get expression list from record
+        EList<TdExpression> importedExs = recordRule.getSqlGenericExpression();
+        // for each expression:
+        for (TdExpression importedEx : importedExs) {
+            TdExpression systemExpression = null;
+            for (TdExpression ex : parserRule.getSqlGenericExpression()) {
+                if (ex.getName().equals(importedEx.getName())) {
+                    systemExpression = ex;
+                    break;
+                }
+            }
+            if (systemExpression != null) {
+                IndicatorDefinitionFileHelper.removeSqlExpressionByName(parserRule, importedEx.getName());
+                IndicatorDefinitionFileHelper.addSqlExpression(parserRule, importedEx.getName(), importedEx.getLanguage(),
+                        importedEx.getBody(), importedEx.getModificationDate());
+            } else {
+                IndicatorDefinitionFileHelper.addSqlExpression(parserRule, importedEx.getName(), importedEx.getLanguage(),
+                        importedEx.getBody(), importedEx.getModificationDate());
+            }
+            isModified = true;
+        }
+
+        // for ParserRule Metadata
+        if (parserRuleProp != null && recordRuleProp != null) {
+            if (!StringUtils.isBlank(recordRuleProp.getPurpose())) {
+                parserRuleProp.setPurpose(recordRuleProp.getPurpose());
+            }
+            if (!StringUtils.isBlank(recordRuleProp.getDescription())) {
+                parserRuleProp.setDescription(recordRuleProp.getDescription());
+            }
+            parserRuleProp.setAuthor(recordRuleProp.getAuthor());
+            parserRuleProp.setStatusCode(recordRuleProp.getStatusCode());
+            isModified = true;
+        }
+
+        if (isModified) {
+            ElementWriterFactory.getInstance().createIndicatorDefinitionWriter().save(parserRuleItem, false);
+        }
+    }
+
+    /**
      * Added: (20120808 yyin, TDQ-4189) The system indicators are not read-only because the user may want to write his
      * own SQL template. so this task deals with the modified SI from imported one, and merge them with the current
      * studio. 1)only when the user select the"Overwrite existing items" on the import wizard(and the modifydate is
      * newer than the current studio's SI), the conflict modification in imported SI will overwrite the ones in current
      * studio, otherwise, the SI in current studio will keep. 2)If a language does not exist in the system indicator but
      * exists in the user modified indicator, then we add it 3)if a language exists in the system indicator but has been
-     * removed in the user modified indicator, then we keep the system indicator definition
+     * removed in the user modified indicator, then we keep the system indicator definition. [for Indicator
+     * matadata(Purpose, Description, Author, Status): 1) will replace old value with new value if new value is not
+     * blank; 2) will keep old value if new value is blank][for IndicatorDefinitionParameter: 1) will replace the same
+     * name old parameter with new parameter; 2) will keep the old parameter if new one don't include the same name
+     * parameter ]
      * 
      * @param record imported modified system indicator
      * @param siDef the system indicator in the current studio
      */
-    protected void mergeSystemIndicator(ItemRecord record, IndicatorDefinition siDef) {
+    protected void mergeSystemIndicator(ItemRecord record, TDQIndicatorDefinitionItem siDefItem) {
         // only when the Si is modified, do the save
         boolean isModified = false;
+
+        // old object
+        IndicatorDefinition siDef = siDefItem.getIndicatorDefinition();
+        Property siProp = siDefItem.getProperty();
+
+        // new object
+        IndicatorDefinition indDef = (IndicatorDefinition) record.getElement();
+        Property indDefProp = record.getProperty();
+
         // get expression list from record
-        EList<TdExpression> importedExs = ((IndicatorDefinition) record.getElement()).getSqlGenericExpression();
+        EList<TdExpression> importedExs = indDef.getSqlGenericExpression();
         // for each expression:
         for (TdExpression importedEx : importedExs) {
             // if the modify date ==null, means it is not modified, do nothing
@@ -528,26 +616,95 @@ public class FileSystemImportWriter implements IImportWriter {
                 }
             }
         }
+
+        // handle the category
+        IndicatorCategory siDefCategory = IndicatorCategoryHelper.getCategory(siDef);
+        IndicatorCategory indDefCategory = IndicatorCategoryHelper.getCategory(indDef);
+        if (siDefCategory != null && indDefCategory != null) {
+            if (!siDefCategory.equals(indDefCategory)) {
+                IndicatorCategoryHelper.setCategory(siDef, indDefCategory);
+                isModified = true;
+            }
+        }
+
+        // for Indicator Metadata
+        if (siProp != null && indDefProp != null) {
+            if (!StringUtils.isBlank(indDefProp.getPurpose())) {
+                siProp.setPurpose(indDefProp.getPurpose());
+            }
+            if (!StringUtils.isBlank(indDefProp.getDescription())) {
+                siProp.setDescription(indDefProp.getDescription());
+            }
+            siProp.setAuthor(indDefProp.getAuthor());
+            siProp.setStatusCode(indDefProp.getStatusCode());
+            isModified = true;
+        }
+
+        // for judi's jar file information
+        String jarFilePath = TaggedValueHelper.getJarFilePath(indDef);
+        if (!StringUtils.isBlank(jarFilePath)) {
+            TaggedValueHelper.setJarFilePath(jarFilePath, siDef);
+            isModified = true;
+        }
+        String classNameText = TaggedValueHelper.getClassNameText(indDef);
+        if (!StringUtils.isBlank(classNameText)) {
+            TaggedValueHelper.setClassNameText(classNameText, siDef);
+            isModified = true;
+        }
+
+        // for IndicatorDefinintionParameter
+        EList<IndicatorDefinitionParameter> siParameter = siDef.getIndicatorDefinitionParameter();
+        EList<IndicatorDefinitionParameter> indDefParameter = indDef.getIndicatorDefinitionParameter();
+        List<IndicatorDefinitionParameter> tempParameter = new ArrayList<IndicatorDefinitionParameter>();
+        for (IndicatorDefinitionParameter indDefPara : indDefParameter) {
+            boolean include = false;
+            String key = indDefPara.getKey();
+            for (IndicatorDefinitionParameter siPara : siParameter) {
+                if (key.equals(siPara.getKey())) {
+                    include = true;
+                    siPara.setValue(indDefPara.getValue());
+                    isModified = true;
+                }
+            }
+            if (!include) {
+                tempParameter.add(indDefPara);
+                isModified = true;
+            }
+        }
+        if (isModified && !tempParameter.isEmpty()) {
+            siParameter.addAll(tempParameter);
+        }
+
         // replace the name (using the imported name incase of modify the name), and save the SI
         // siDef.setName(record.getElement().getName());
+
         if (isModified) {
-            IndicatorDefinitionFileHelper.save(siDef);
+            ElementWriterFactory.getInstance().createIndicatorDefinitionWriter().save(siDefItem, false);
         }
     }
 
     /**
      * when imported pattern is from lower version, even if it is modified, the "modify date" is still null, so, even if
-     * the modify date is null ,still do the comparation.
+     * the modify date is null ,still do the comparation. [for Pattern matadata(Purpose, Description, Author, Status):
+     * 1) will replace old value with new value if new value is not blank; 2) will keep old value if new value is blank]
      * 
      * @param record
      * @param patternItem
      */
     protected void mergePattern(ItemRecord record, TDQPatternItem patternItem) {
-        Pattern pattern = patternItem.getPattern();
         // only when the Si is modified, do the save
         boolean isModified = false;
+
+        // old objects
+        Pattern pattern = patternItem.getPattern();
+        Property patternProp = patternItem.getProperty();
+
+        // new objects
+        Pattern recordPattern = (Pattern) record.getElement();
+        Property recordProp = record.getProperty();
+
         // get expression list from record
-        EList<PatternComponent> importComponents = ((Pattern) record.getElement()).getComponents();
+        EList<PatternComponent> importComponents = recordPattern.getComponents();
         // for each expression:
         for (PatternComponent component : importComponents) {
             // if the modify date ==null, maybe it is from lower version, still do the compare
@@ -573,10 +730,25 @@ public class FileSystemImportWriter implements IImportWriter {
                 }
             }
         }
+
+        // for Pattern Metadata
+        if (patternProp != null && recordProp != null) {
+            if (!StringUtils.isBlank(recordProp.getPurpose())) {
+                patternProp.setPurpose(recordProp.getPurpose());
+            }
+            if (!StringUtils.isBlank(recordProp.getDescription())) {
+                patternProp.setDescription(recordProp.getDescription());
+            }
+            patternProp.setAuthor(recordProp.getAuthor());
+            patternProp.setStatusCode(recordProp.getStatusCode());
+            isModified = true;
+        }
+
         // replace the name (using the imported name incase of modify the name), and save the SI
         // siDef.setName(record.getElement().getName());
+
         if (isModified) {
-            ElementWriterFactory.getInstance().createPatternWriter().save(patternItem, true);
+            ElementWriterFactory.getInstance().createPatternWriter().save(patternItem, false);
         }
     }
 
@@ -655,13 +827,13 @@ public class FileSystemImportWriter implements IImportWriter {
     }
 
     private void handleDefinitionFile() throws IOException {
-        IFile defFile = ResourceManager.getLibrariesFolder().getFile(DEFINITION_FILE_NAME);
+        IFile defIFile = ResourceManager.getLibrariesFolder().getFile(DEFINITION_FILE_NAME);
 
-        if (definitionFile != null && definitionFile.exists()) {
-            File defintionFile = defFile.getLocation().toFile();
-            FilesUtils.copyFile(definitionFile, defintionFile);
+        if (this.definitionFile != null && this.definitionFile.exists()) {
+            File defFile = defIFile.getLocation().toFile();
+            FilesUtils.copyFile(this.definitionFile, defFile);
 
-            URI uri = URI.createPlatformResourceURI(defFile.getFullPath().toString(), false);
+            URI uri = URI.createPlatformResourceURI(defIFile.getFullPath().toString(), false);
             EMFSharedResources.getInstance().unloadResource(uri.toString());
         }
     }

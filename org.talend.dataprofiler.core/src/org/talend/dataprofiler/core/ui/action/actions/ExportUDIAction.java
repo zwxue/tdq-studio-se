@@ -17,9 +17,11 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.action.Action;
+import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
+import org.talend.dataprofiler.core.ui.imex.ExportUdiForExchangeWizard;
 import org.talend.dataprofiler.core.ui.wizard.indicator.ExportUDIWizard;
 
 /**
@@ -47,7 +49,8 @@ public class ExportUDIAction extends Action {
 
     @Override
     public void run() {
-        ExportUDIWizard wizard = new ExportUDIWizard(folder, isForExchange);
+        Wizard wizard = isForExchange ? new ExportUdiForExchangeWizard(folder.getFullPath().toString()) : new ExportUDIWizard(
+                folder, isForExchange);
         WizardDialog dialog = new WizardDialog(null, wizard);
         wizard.setWindowTitle(getText());
         if (WizardDialog.OK == dialog.open()) {

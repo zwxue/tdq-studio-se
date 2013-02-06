@@ -114,7 +114,7 @@ public class ZipFileExportWriter extends FileSystemExportWriter {
         super.finish(records);
 
         addFilesToExistingZip(getBasePath().toFile(), tempMap);
-
+        tempMap.clear();
         if (outputStream != null) {
             outputStream.close();
         }

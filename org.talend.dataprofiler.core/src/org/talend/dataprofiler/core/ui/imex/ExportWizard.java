@@ -29,7 +29,7 @@ public class ExportWizard extends Wizard {
 
     private static Logger log = Logger.getLogger(ExportWizard.class);
 
-    private ExportWizardPage exportPage;
+    protected ExportWizardPage exportPage;
 
     /**
      * DOC bZhou ExportWizard constructor comment.
