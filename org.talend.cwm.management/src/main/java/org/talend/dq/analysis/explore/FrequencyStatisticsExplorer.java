@@ -17,6 +17,7 @@ import java.util.Map;
 
 import org.eclipse.emf.common.util.EList;
 import org.talend.cwm.relational.TdColumn;
+import org.talend.cwm.relational.TdExpression;
 import org.talend.dataquality.PluginConstant;
 import org.talend.dataquality.analysis.ExecutionLanguage;
 import org.talend.dataquality.domain.Domain;
@@ -25,7 +26,11 @@ import org.talend.dataquality.helpers.DomainHelper;
 import org.talend.dataquality.indicators.DateGrain;
 import org.talend.dataquality.indicators.DateParameters;
 import org.talend.dataquality.indicators.IndicatorParameters;
+import org.talend.dataquality.indicators.definition.IndicatorDefinition;
+import org.talend.dataquality.indicators.definition.userdefine.UDIndicatorDefinition;
 import org.talend.dq.dbms.DB2DbmsLanguage;
+import org.talend.dq.dbms.DbmsLanguage;
+import org.talend.dq.dbms.GenericSQLHandler;
 import org.talend.dq.dbms.SybaseASEDbmsLanguage;
 import org.talend.utils.sql.Java2SqlType;
 
@@ -35,6 +40,26 @@ import org.talend.utils.sql.Java2SqlType;
 public class FrequencyStatisticsExplorer extends DataExplorer {
 
     protected String getFreqRowsStatement() {
+
+        IndicatorDefinition indicatorDefinition = this.indicator.getIndicatorDefinition();
+        if (indicatorDefinition instanceof UDIndicatorDefinition) {
+            String sql = PluginConstant.EMPTY_STRING;
+            EList<TdExpression> list = ((UDIndicatorDefinition) indicatorDefinition).getViewRowsExpression();
+            TdExpression tdExp = DbmsLanguage.getSqlExpression(indicatorDefinition, dbmsLanguage.getDbmsName(), list,
+                    dbmsLanguage.getDbVersion());
+            sql = tdExp.getBody();
+            String dataFilterClause = getDataFilterClause();
+            sql = sql.replace(GenericSQLHandler.WHERE_CLAUSE, dbmsLanguage.where() + dataFilterClause);
+            sql = sql.replace(GenericSQLHandler.AND_WHERE_CLAUSE,
+                    PluginConstant.EMPTY_STRING.equals(dataFilterClause) ? PluginConstant.EMPTY_STRING : dbmsLanguage.and()
+                            + dataFilterClause);
+            String tableName = getFullyQualifiedTableName(this.indicator.getAnalyzedElement());
+            sql = sql.replace(GenericSQLHandler.TABLE_NAME, tableName);
+
+            // replace <%=__INDICATOR_VALUE__%>
+            sql = sql.replace(GenericSQLHandler.UDI_INDICATOR_VALUE, this.indicator.getAnalyzedElement().getName());
+            return sql;
+        }
 
         String clause = PluginConstant.EMPTY_STRING;
 

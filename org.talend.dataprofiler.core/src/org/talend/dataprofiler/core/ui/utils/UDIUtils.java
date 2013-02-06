@@ -80,6 +80,7 @@ import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.resource.ResourceManager;
 import org.talend.resource.ResourceService;
+import org.talend.utils.dates.DateUtils;
 import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.objectmodel.core.Expression;
 import orgomg.cwm.objectmodel.core.TaggedValue;
@@ -96,6 +97,15 @@ public final class UDIUtils {
     static Logger log = Logger.getLogger(UDIUtils.class);
 
     private UDIUtils() {
+    }
+
+    /**
+     * get Current DateTime
+     * 
+     * @return
+     */
+    public static String getCurrentDateTime() {
+        return DateUtils.getCurrentDate(DateUtils.PATTERN_5);
     }
 
     public static IndicatorCategory getUDICategory(IndicatorUnit unit) {
@@ -604,4 +614,5 @@ class UdiJarContentProvider implements ITreeContentProvider {
     public boolean hasChildren(Object element) {
         return false;
     }
+
 }

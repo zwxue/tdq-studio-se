@@ -616,6 +616,10 @@ public class DbmsLanguage {
             whereClause = whereClause.length() != 0 ? and() + whereClause : whereClause;
             statement = genericSQLHandler.replaceAndClause(whereClause).getSqlString();
         }
+
+        if (genericSQLHandler.containsUDIWhere()) {
+            statement = genericSQLHandler.replaceUDIWhere(whereClause).getSqlString();
+        }
         return statement;
     }
 
@@ -788,7 +792,7 @@ public class DbmsLanguage {
      * @param defaultLanguage
      * @return
      */
-    private static TdExpression getSqlExpression(IndicatorDefinition indicatorDefinition, String language,
+    public static TdExpression getSqlExpression(IndicatorDefinition indicatorDefinition, String language,
             EList<TdExpression> sqlGenericExpression) {
         for (TdExpression sqlGenExpr : sqlGenericExpression) {
             if (DbmsLanguageFactory.compareDbmsLanguage(language, sqlGenExpr.getLanguage())) {
@@ -807,7 +811,7 @@ public class DbmsLanguage {
      * @param dbVersion
      * @return
      */
-    private static TdExpression getSqlExpression(IndicatorDefinition indicatorDefinition, String language,
+    public static TdExpression getSqlExpression(IndicatorDefinition indicatorDefinition, String language,
             EList<TdExpression> sqlGenericExpression, ProductVersion dbVersion) {
         List<TdExpression> tempExpressions = new ArrayList<TdExpression>();
         for (TdExpression sqlGenExpr : sqlGenericExpression) {

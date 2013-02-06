@@ -935,6 +935,26 @@
           </eAnnotations>
         </eStructuralFeatures>
       </eClassifiers>
+      <eSubpackages name="userdefine" nsURI="http://dataquality.indicators.definition.userdefine"
+          nsPrefix="dataquality.indicators.definition.userdefine">
+        <eClassifiers xsi:type="ecore:EClass" name="UDIndicatorDefinition" eSuperTypes="#//indicators/definition/IndicatorDefinition">
+          <eStructuralFeatures xsi:type="ecore:EReference" name="viewInvalidRowsExpression"
+              upperBound="-1" eType="ecore:EClass ../../org.talend.model/model/metadata.ecore#//cwm/relational/TdExpression"
+              containment="true"/>
+          <eStructuralFeatures xsi:type="ecore:EReference" name="viewValidRowsExpression"
+              upperBound="-1" eType="ecore:EClass ../../org.talend.model/model/metadata.ecore#//cwm/relational/TdExpression"
+              containment="true"/>
+          <eStructuralFeatures xsi:type="ecore:EReference" name="viewInvalidValuesExpression"
+              upperBound="-1" eType="ecore:EClass ../../org.talend.model/model/metadata.ecore#//cwm/relational/TdExpression"
+              containment="true"/>
+          <eStructuralFeatures xsi:type="ecore:EReference" name="viewValidValuesExpression"
+              upperBound="-1" eType="ecore:EClass ../../org.talend.model/model/metadata.ecore#//cwm/relational/TdExpression"
+              containment="true"/>
+          <eStructuralFeatures xsi:type="ecore:EReference" name="viewRowsExpression"
+              upperBound="-1" eType="ecore:EClass ../../org.talend.model/model/metadata.ecore#//cwm/relational/TdExpression"
+              containment="true"/>
+        </eClassifiers>
+      </eSubpackages>
     </eSubpackages>
     <eSubpackages name="sql" nsURI="http://dataquality.indicators.sql" nsPrefix="dataquality.indicators.sql">
       <eClassifiers xsi:type="ecore:EClass" name="UserDefIndicator" eSuperTypes="#//indicators/Indicator">

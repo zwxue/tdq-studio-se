@@ -93,6 +93,7 @@ import org.talend.dataquality.indicators.definition.DefinitionFactory;
 import org.talend.dataquality.indicators.definition.IndicatorCategory;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dataquality.indicators.definition.IndicatorDefinitionParameter;
+import org.talend.dataquality.indicators.definition.userdefine.UDIndicatorDefinition;
 import org.talend.dataquality.properties.TDQIndicatorDefinitionItem;
 import org.talend.dq.helper.ProxyRepositoryManager;
 import org.talend.dq.helper.RepositoryNodeHelper;
@@ -104,7 +105,6 @@ import org.talend.dq.writer.impl.ElementWriterFactory;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.resource.EResourceConstant;
 import org.talend.resource.ResourceManager;
-import org.talend.utils.dates.DateUtils;
 import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.objectmodel.core.TaggedValue;
@@ -128,6 +128,16 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
     // private List<String> remainDBTypeList;
 
     private Map<CCombo, TdExpression> tempExpressionMap;
+
+    private Map<CCombo, TdExpression> tempViewRowsExpressionMap;
+
+    private Map<CCombo, TdExpression> tempViewValidRowsExpressionMap;
+
+    private Map<CCombo, TdExpression> tempViewInvalidRowsExpressionMap;
+
+    private Map<CCombo, TdExpression> tempViewValidValuesExpressionMap;
+
+    private Map<CCombo, TdExpression> tempViewInvalidValuesExpressionMap;
 
     private Map<CCombo, Composite> widgetMap;
 
@@ -296,7 +306,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
         remainDBTypeListCM.addAll(allDBTypeList);
 
         // MOD xqliu 2010-03-23 feature 11201
-        initTempExpressionMap();
+        initTempMap();
 
         if (widgetMap == null) {
             widgetMap = new HashMap<CCombo, Composite>();
@@ -323,6 +333,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
 
         // ADD xqliu 2010-03-23 feature 11201
         initTempExpressionList(definition);
+
         // ADD klliu 2010-07-14 feature 13429
         initTempIndicatorDefinitionParameter(definition);
 
@@ -335,14 +346,52 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
     }
 
     /**
+     * DOC msjian Comment method "initTempMap".
+     */
+    public void initTempMap() {
+        if (tempExpressionMap == null) {
+            tempExpressionMap = new HashMap<CCombo, TdExpression>();
+        } else {
+            tempExpressionMap.clear();
+        }
+        // if (definition instanceof UDIndicatorDefinition) {
+        // if (IndicatorCategoryHelper.isUserDefMatching(category)) {
+        if (tempViewValidRowsExpressionMap == null) {
+            tempViewValidRowsExpressionMap = new HashMap<CCombo, TdExpression>();
+        } else {
+            tempViewValidRowsExpressionMap.clear();
+        }
+        if (tempViewInvalidRowsExpressionMap == null) {
+            tempViewInvalidRowsExpressionMap = new HashMap<CCombo, TdExpression>();
+        } else {
+            tempViewInvalidRowsExpressionMap.clear();
+        }
+        if (tempViewValidValuesExpressionMap == null) {
+            tempViewValidValuesExpressionMap = new HashMap<CCombo, TdExpression>();
+        } else {
+            tempViewValidValuesExpressionMap.clear();
+        }
+        if (tempViewInvalidValuesExpressionMap == null) {
+            tempViewInvalidValuesExpressionMap = new HashMap<CCombo, TdExpression>();
+        } else {
+            tempViewInvalidValuesExpressionMap.clear();
+        }
+        // } else {
+        if (tempViewRowsExpressionMap == null) {
+            tempViewRowsExpressionMap = new HashMap<CCombo, TdExpression>();
+        } else {
+            tempViewRowsExpressionMap.clear();
+        }
+        // }
+        // }
+    }
+
+    /**
      * DOC klliu Comment method "initTempIndicatorDefinitionParameter". ADD klliu 2010-07-12 bug 13429.
      * 
      * @param definition2
      */
     private void initTempIndicatorDefinitionParameter(IndicatorDefinition definition2) {
-        // if (tempParameters == null) {
-        // tempParameters = new ArrayList<IndicatorDefinitionParameter>();
-        // }
         if (definition != null) {
             tempParameters = cloneIndicatorDefParameter(definition.getIndicatorDefinitionParameter());
         } else {
@@ -383,27 +432,29 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
     /**
      * DOC xqliu Comment method "initTempExpressionMap". ADD xqliu 2010-03-23 feature 11201
      */
-    private void initTempExpressionMap() {
-        if (tempExpressionMap == null) {
-            tempExpressionMap = new HashMap<CCombo, TdExpression>();
+    private void initTempExpressionMap(Map<CCombo, TdExpression> tmp) {
+        if (tmp == null) {
+            tmp = new HashMap<CCombo, TdExpression>();
         } else {
-            tempExpressionMap.clear();
+            tmp.clear();
         }
     }
 
     /**
-     * DOC xqliu Comment method "initTempExpressionList". ADD xqliu 2010-03-23 feature 11201
+     * DOC msjian Comment method "initTempExpressionList".
+     * 
+     * @param def
      */
-    private void initTempExpressionList(IndicatorDefinition definition) {
+    private void initTempExpressionList(IndicatorDefinition def) {
         if (tempExpressionList == null) {
             tempExpressionList = new ArrayList<TdExpression>();
         } else {
             tempExpressionList.clear();
         }
-        if (definition != null) {
-            EList<TdExpression> expressions = definition.getSqlGenericExpression();
+        if (def != null) {
+            EList<TdExpression> expressions = def.getSqlGenericExpression();
             for (TdExpression exp : expressions) {
-                tempExpressionList.add(cloneExpression(exp));
+                tempExpressionList.add(cloneExpression(exp, def));
             }
         }
     }
@@ -926,7 +977,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
             public void widgetSelected(SelectionEvent e) {
                 String lang = combo.getText();
                 aggregateDateExpression.setLanguage(PatternLanguageType.findLanguageByName(lang));
-                aggregateDateExpression.setModificationDate(getCurrentDateTime());
+                aggregateDateExpression.setModificationDate(UDIUtils.getCurrentDateTime());
                 setDirty(true);
             }
         });
@@ -1080,7 +1131,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
 
                 String language = PatternLanguageType.findLanguageByName(remainDBTypeListAF.get(0));
                 TdExpression expression = BooleanExpressionHelper.createTdExpression(language, ""); //$NON-NLS-1$
-                expression.setModificationDate(getCurrentDateTime());
+                expression.setModificationDate(UDIUtils.getCurrentDateTime());
                 AggregateDateExpression ade = new AggregateDateExpression();
                 if (hasAggregateExpression) {
                     expression.setBody(BODY_AGGREGATE);
@@ -1141,6 +1192,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
             public void modifyText(ModifyEvent e) {
                 setDirty(true);
                 UDIHelper.setUDICategory(definition, comboCategory.getText());
+                category = definition.getCategories().get(0);
                 updateDetailList();
             }
 
@@ -1224,6 +1276,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
         dataBaseComp = new Composite(expressionComp, SWT.NONE);
         dataBaseComp.setLayout(new GridLayout());
         dataBaseComp.setLayoutData(new GridData(GridData.FILL_BOTH));
+
         // ADD xqliu 2010-02-26 bug 11201
         if (tempExpressionList.size() > 0 || !checkJavaUDIBeforeOpen()) {
             addTitleComp(dataBaseComp);
@@ -1234,8 +1287,6 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
         if (tempExpressionMap.size() == 0) {
             if (definition != null) {
                 // MOD xqliu 2010-03-23 feature 11201
-                // EList<Expression> expList = definition.getSqlGenericExpression();
-                // for (Expression expression : expList) {
                 for (TdExpression expression : tempExpressionList) {
                     createNewLineWithExpression(expression);
                 }
@@ -1243,22 +1294,6 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
             }
         }
         createAddButton(composite);
-        // } else
-
-        // if (tempExpressionMap.size() == 0) {
-        // if (definition != null) {
-        // // MOD xqliu 2010-03-23 feature 11201
-        // // EList<Expression> expList = definition.getSqlGenericExpression();
-        // // for (Expression expression : expList) {
-        // for (Expression expression : tempExpressionList) {
-        // createNewLineWithExpression(expression);
-        // }
-        // // ~11201
-        // // Whether Java UDI exists.
-        // createNewLineWithJavaUDI();
-        // }
-        // }
-        // createAddButton(composite);
 
         return composite;
     }
@@ -1322,8 +1357,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
         // ~11201
         javaCombo.setText(PatternLanguageType.JAVA.getName());
         javaCombo.addSelectionListener(new LangCombSelectionListener());
-        tempExpressionMap.put(javaCombo, BooleanExpressionHelper.createTdExpression(javaCombo.getText(), null));
-
+        putTdExpressToTempMap(javaCombo, BooleanExpressionHelper.createTdExpression(javaCombo.getText(), null));
         final Composite detailComp = new Composite(javaCombo.getParent(), SWT.NONE);
         widgetMap.put(javaCombo, detailComp);
         detailComp.setLayout(new GridLayout(4, false));
@@ -1356,7 +1390,6 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
         classNameText.addListener(SWT.Modify, new Listener() {
 
             public void handleEvent(Event event) {
-                // TODO Auto-generated method stub
                 setClassNameForSave(classNameText.getText().toString());
                 setJarPathForSave(jarPathText.getText().toString());
             }
@@ -1429,7 +1462,9 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
         final Composite lineComp = new Composite(dataBaseComp, SWT.NONE);
         lineComp.setLayout(new GridLayout(3, false));
         final CCombo combo = new CCombo(lineComp, SWT.BORDER);
-        tempExpressionMap.put(combo, expression);
+
+        putTdExpressToTempMap(combo, expression);
+
         combo.setLayoutData(new GridData());
         ((GridData) combo.getLayoutData()).widthHint = 150;
         combo.setEditable(false);
@@ -1462,12 +1497,154 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
         patternText.setLayoutData(new GridData(GridData.FILL_BOTH));
         ((GridData) patternText.getLayoutData()).widthHint = 600;
         patternText.addModifyListener(new ExpressTextModListener(combo));
-        createExpressionEditButton(detailComp, patternText);
+        createExpressionEditButton(detailComp, patternText, combo);
         createExpressionDelButton(detailComp, combo);
         widgetMap.put(combo, detailComp);
         updateOtherCombos(combo);
         GridDataFactory.fillDefaults().align(SWT.FILL, SWT.FILL).grab(true, false).applyTo(detailComp);
     }
+
+    /**
+     * DOC msjian Comment method "putTdExpressToTempMap".
+     * 
+     * @param expression
+     * @param combo
+     */
+    public void putTdExpressToTempMap(final CCombo combo, final TdExpression expression) {
+        tempExpressionMap.put(combo, expression);
+        if (definition instanceof UDIndicatorDefinition) {
+            UDIndicatorDefinition definition2 = (UDIndicatorDefinition) definition;
+            String language = expression.getLanguage();
+            String version = expression.getVersion();
+            if (IndicatorCategoryHelper.isUserDefMatching(category)) {
+                // setToTempMap(expression, combo, viewValidRowsExpression, tempViewValidRowsExpressionMap);
+                EList<TdExpression> viewValidRowsExpression = definition2.getViewValidRowsExpression();
+                if (viewValidRowsExpression != null) {
+                    for (TdExpression tdExp : viewValidRowsExpression) {
+                        if (tdExp.getLanguage().equals(language)
+                                && ((tdExp.getVersion() == null && version == null) || (tdExp.getVersion() != null && tdExp
+                                        .getVersion().equals(version)))) {
+                            tempViewValidRowsExpressionMap.put(combo, tdExp);
+                            break;
+                        }
+                    }
+                }
+
+                EList<TdExpression> viewInvalidRowsExpression = definition2.getViewInvalidRowsExpression();
+                // setToTempMap(expression, combo, viewInvalidRowsExpression, tempViewInvalidRowsExpressionMap);
+                if (viewInvalidRowsExpression != null) {
+                    for (TdExpression tdExp : viewInvalidRowsExpression) {
+                        if (tdExp.getLanguage().equals(language)
+                                && ((tdExp.getVersion() == null && version == null) || (tdExp.getVersion() != null && tdExp
+                                        .getVersion().equals(version)))) {
+                            tempViewInvalidRowsExpressionMap.put(combo, tdExp);
+                            break;
+                        }
+                    }
+                }
+
+                EList<TdExpression> viewValidValuesExpression = definition2.getViewValidValuesExpression();
+                // setToTempMap(expression, combo, viewValidValuesExpression, tempViewValidValuesExpressionMap);
+                if (viewValidValuesExpression != null) {
+                    for (TdExpression tdExp : viewValidValuesExpression) {
+                        if (tdExp.getLanguage().equals(language)
+                                && ((tdExp.getVersion() == null && version == null) || (tdExp.getVersion() != null && tdExp
+                                        .getVersion().equals(version)))) {
+                            tempViewValidValuesExpressionMap.put(combo, tdExp);
+                            break;
+                        }
+                    }
+                }
+
+                EList<TdExpression> viewInvalidValuesExpression = definition2.getViewInvalidValuesExpression();
+                // setToTempMap(expression, combo, viewInvalidValuesExpression, tempViewInvalidValuesExpressionMap);
+                if (viewInvalidValuesExpression != null) {
+                    for (TdExpression tdExp : viewInvalidValuesExpression) {
+                        if (tdExp.getLanguage().equals(language)
+                                && ((tdExp.getVersion() == null && version == null) || (tdExp.getVersion() != null && tdExp
+                                        .getVersion().equals(version)))) {
+                            tempViewInvalidValuesExpressionMap.put(combo, tdExp);
+                            break;
+                        }
+                    }
+                }
+            } else {
+                // get view rows tdExpress list, and set currect tdexpress to temp map
+                EList<TdExpression> viewRowsExpression = definition2.getViewRowsExpression();
+                // setToTempMap(expression, combo, viewRowsExpression, tempViewRowsExpressionMap);
+                if (viewRowsExpression != null) {
+                    for (TdExpression tdExp : viewRowsExpression) {
+                        if (tdExp.getLanguage().equals(language)
+                                && ((tdExp.getVersion() == null && version == null) || (tdExp.getVersion() != null && tdExp
+                                        .getVersion().equals(version)))) {
+                            tempViewRowsExpressionMap.put(combo, tdExp);
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    public void removeFromTempMap(final CCombo combo) {
+        tempExpressionMap.remove(combo);
+        if (definition instanceof UDIndicatorDefinition) {
+
+            if (IndicatorCategoryHelper.isUserDefMatching(category)) {
+                tempViewValidRowsExpressionMap.remove(combo);
+                tempViewInvalidRowsExpressionMap.remove(combo);
+                tempViewValidValuesExpressionMap.remove(combo);
+                tempViewInvalidValuesExpressionMap.remove(combo);
+
+            } else {
+                tempViewRowsExpressionMap.remove(combo);
+            }
+        }
+    }
+
+    // /**
+    // * DOC msjian Comment method "setViewValidRowsTotempMap".
+    // *
+    // * @param expression
+    // * @param combo
+    // */
+    // public void setViewValidRowsTotempMap(final TdExpression expression, final CCombo combo) {
+    // String language = expression.getLanguage();
+    // String version = expression.getVersion();
+    // EList<TdExpression> viewValidRowsExpression = ((UDIndicatorDefinition) definition).getViewValidRowsExpression();
+    // if (viewValidRowsExpression != null) {
+    // for (TdExpression tdExp : viewValidRowsExpression) {
+    // if (tdExp.getLanguage().equals(language)
+    // && ((tdExp.getVersion() == null && version == null) || (tdExp.getVersion() != null && tdExp.getVersion()
+    // .equals(version)))) {
+    // tempViewValidRowsExpressionMap.put(combo, tdExp);
+    // break;
+    // }
+    // }
+    // }
+    // }
+
+    // /**
+    // * DOC msjian Comment method "setViewRowsTotempMap".
+    // *
+    // * @param expression
+    // * @param combo
+    // */
+    // public void setToTempMap(final TdExpression expression, final CCombo combo, EList<TdExpression> list,
+    // Map<CCombo, TdExpression> map) {
+    // String language = expression.getLanguage();
+    // String version = expression.getVersion();
+    // if (list != null) {
+    // for (TdExpression tdExp : list) {
+    // if (tdExp.getLanguage().equals(language)
+    // && ((tdExp.getVersion() == null && version == null) || (tdExp.getVersion() != null && tdExp.getVersion()
+    // .equals(version)))) {
+    // map.put(combo, tdExp);
+    // break;
+    // }
+    // }
+    // }
+    // }
 
     /**
      * DOC bZhou Comment method "creatNewLine". MOD mzhao feature 11128 Be able to add Java UDI, 2010-01-27
@@ -1495,9 +1672,22 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
 
         TdExpression expression = BooleanExpressionHelper.createTdExpression(combo.getText(), null);
         String oldLanguage = expression.getLanguage();
-        expression.setModificationDate(getCurrentDateTime());
+        expression.setModificationDate(UDIUtils.getCurrentDateTime());
         checkCComboIsDisposed();
-        tempExpressionMap.put(combo, expression);
+
+        putTdExpressToTempMap(combo, expression);
+
+        updateLineAndOtherCombos(combo, expression, oldLanguage);
+    }
+
+    /**
+     * DOC msjian Comment method "updateLineAndOtherCombos".
+     * 
+     * @param combo
+     * @param expression
+     * @param oldLanguage
+     */
+    public void updateLineAndOtherCombos(final CCombo combo, TdExpression expression, String oldLanguage) {
         if (combo.getText().equals(PatternLanguageType.JAVA.getName())) {
             updateLineForJava(combo);
         } else {
@@ -1540,7 +1730,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
             Text patternText = (Text) e.getSource();
             TdExpression expression = tempExpressionMap.get(combo);
             expression.setBody(patternText.getText());
-            expression.setModificationDate(getCurrentDateTime());
+            expression.setModificationDate(UDIUtils.getCurrentDateTime());
             setDirty(true);
         }
 
@@ -1560,14 +1750,30 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
         public void modifyText(ModifyEvent e) {
             // MOD xqliu 2010-04-01 bug 11892
             setDirty(true);
-            Text dbVersionText = null;
-            if (e.getSource() != null && e.getSource() instanceof Text) {
-                dbVersionText = (Text) e.getSource();
+
+
+
+            Text dbVersionText = (Text) e.getSource();
+            List<TdExpression> modifyList = new ArrayList<TdExpression>();
+            modifyList.add(tempExpressionMap.get(this.combo));
+            // update other Temp Maps
+            if (definition instanceof UDIndicatorDefinition) {
+                if (IndicatorCategoryHelper.isUserDefMatching(category)) {
+                    modifyList.add(tempViewValidRowsExpressionMap.get(this.combo));
+                    modifyList.add(tempViewInvalidRowsExpressionMap.get(this.combo));
+                    modifyList.add(tempViewValidValuesExpressionMap.get(this.combo));
+                    modifyList.add(tempViewInvalidValuesExpressionMap.get(this.combo));
+
+                } else {
+                    modifyList.add(tempViewRowsExpressionMap.get(this.combo));
+                }
             }
-            TdExpression expression = tempExpressionMap.get(this.combo);
-            if (expression != null && dbVersionText != null) {
-                expression.setVersion(dbVersionText.getText().trim());
-                expression.setModificationDate(getCurrentDateTime());
+
+            for (TdExpression exp : modifyList) {
+                if (exp != null) {
+                    exp.setVersion(dbVersionText.getText().trim());
+                    exp.setModificationDate(UDIUtils.getCurrentDateTime());
+                }
             }
             // ~11892
         }
@@ -1584,26 +1790,34 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
         public void widgetSelected(SelectionEvent e) {
             CCombo combo = (CCombo) e.getSource();
             String lang = combo.getText();
+            List<TdExpression> modifyList = new ArrayList<TdExpression>();
             TdExpression expression = tempExpressionMap.get(combo);
             String oldLanguage = expression.getLanguage();
-            if (expression == null) {
-                expression = BooleanExpressionHelper.createTdExpression(lang, null);
-                tempExpressionMap.put(combo, expression);
-            } else {
-                expression.setLanguage(PatternLanguageType.findLanguageByName(lang));
+            modifyList.add(expression);
+            // update other Temp Maps
+            if (definition instanceof UDIndicatorDefinition) {
+                if (IndicatorCategoryHelper.isUserDefMatching(category)) {
+                    modifyList.add(tempViewValidRowsExpressionMap.get(combo));
+                    modifyList.add(tempViewInvalidRowsExpressionMap.get(combo));
+                    modifyList.add(tempViewValidValuesExpressionMap.get(combo));
+                    modifyList.add(tempViewInvalidValuesExpressionMap.get(combo));
+
+                } else {
+                    modifyList.add(tempViewRowsExpressionMap.get(combo));
+                }
             }
-            expression.setModificationDate(getCurrentDateTime());
-            if (!lang.equals(PatternLanguageType.JAVA.getName())) {
-                // MOD xqliu 2010-03-23 feature 11201
-                updateLineForExpression(combo, expression, oldLanguage);
-                // ~11201
-            } else {
-                // Handle java UID.
-                updateLineForJava(combo);
+
+            for (TdExpression exp : modifyList) {
+                if (exp == null) {
+                    exp = BooleanExpressionHelper.createTdExpression(lang, null);
+                    putTdExpressToTempMap(combo, exp);
+                } else {
+                    exp.setLanguage(PatternLanguageType.findLanguageByName(lang));
+                }
+                exp.setModificationDate(UDIUtils.getCurrentDateTime());
             }
-            // Update other combos.
-            updateOtherCombos(combo);
-            // ~
+            updateLineAndOtherCombos(combo, expression, oldLanguage);
+
             setDirty(true);
         }
     }
@@ -1641,14 +1855,15 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
             dataBaseCombo.setItems(allDBTypeList.toArray(new String[allDBTypeList.size()]));
             dataBaseCombo.addSelectionListener(new LangCombSelectionListener());
             dataBaseCombo.select(combo.getSelectionIndex());
-            tempExpressionMap.put(dataBaseCombo, expression);
+            putTdExpressToTempMap(dataBaseCombo, expression);
             detailComp = new Composite(lineComp, SWT.NONE);
             detailComp.setLayout(new GridLayout(4, false));
             widgetMap.put(dataBaseCombo, detailComp);
             createDataBaseLineComponent(dataBaseCombo, expression, detailComp);
-            // remove the combo in the widgetMaP then add new javacombo
+            // remove the combo in the widgetMap then add new javacombo
             widgetMap.remove(combo);
-            tempExpressionMap.remove(combo);
+
+            removeFromTempMap(combo);
             // line comp dispose
             combo.getParent().dispose();
             // java title dispose
@@ -1671,7 +1886,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
         // MOD xqliu 2010-03-23 feature 11201
         patternText.setText(expression.getBody() == null ? "" : expression.getBody());
         // ~11201
-        createExpressionEditButton(detailComp, patternText);
+        createExpressionEditButton(detailComp, patternText, combo);
         createExpressionDelButton(detailComp, combo);
         GridDataFactory.fillDefaults().align(SWT.FILL, SWT.FILL).grab(true, false).applyTo(detailComp);
         detailComp.getParent().layout();
@@ -1729,7 +1944,6 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
         classNameText.addListener(SWT.Modify, new Listener() {
 
             public void handleEvent(Event event) {
-                // TODO Auto-generated method stub
                 setClassNameForSave(classNameText.getText().toString());
                 setJarPathForSave(jarPathText.getText().toString());
 
@@ -1743,11 +1957,11 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
         // remove the data base combo in the widgetMap then add new javacombo
         widgetMap.put(javaCombo, detailComp);
         widgetMap.remove(combo);
-        tempExpressionMap.remove(combo);
+        removeFromTempMap(combo);
         TdExpression expression = tempExpressionMap.get(combo);
         if (expression == null) {
             expression = BooleanExpressionHelper.createTdExpression(javaCombo.getText(), null);
-            tempExpressionMap.put(javaCombo, expression);
+            putTdExpressToTempMap(javaCombo, expression);
         }
         combo.getParent().dispose();
 
@@ -1854,7 +2068,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
      * 
      * @return
      */
-    private void createExpressionEditButton(Composite expressComp, final Text patternText) {
+    private void createExpressionEditButton(Composite expressComp, final Text patternText, final CCombo combo) {
         Button editButton = new Button(expressComp, SWT.PUSH);
         editButton.setText(DefaultMessagesImpl.getString("IndicatorDefinitionMaterPage.editExpression")); //$NON-NLS-1$
         editButton.setToolTipText(DefaultMessagesImpl.getString("IndicatorDefinitionMaterPage.editExpression")); //$NON-NLS-1$
@@ -1862,12 +2076,18 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
 
             @Override
             public void widgetSelected(SelectionEvent e) {
-                String[] templates = new String[] { "<%=__TABLE_NAME__%>", "<%=__COLUMN_NAMES__%>", "<%=__WHERE_CLAUSE__%>", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-                        "<%=__GROUP_BY_ALIAS__%>" }; //$NON-NLS-1$
-                final ExpressionEditDialog editDialog = new ExpressionEditDialog(null, patternText.getText(), templates);
 
-                if (Dialog.OK == editDialog.open() && !patternText.getText().equals(editDialog.getResult())) {
+                definition = (IndicatorDefinition) getCurrentModelElement(getEditor());
+                TdExpression tdExpression = tempExpressionMap.get(combo);
+                final ExpressionEditDialog editDialog = new ExpressionEditDialog(null, patternText.getText(), definition,
+                        tdExpression);
+
+                if (Dialog.OK == editDialog.open()) {
                     patternText.setText(editDialog.getResult());
+                    tdExpression = editDialog.getTdExpression();
+                    definition = editDialog.getIndicatorDefinition();
+
+                    putTdExpressToTempMap(combo, tdExpression);
                 }
                 setDirty(true);
             }
@@ -1969,6 +2189,35 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
         rc = checkBeforeSave();
         if (rc.isOk()) {
 
+            if (definition instanceof UDIndicatorDefinition) {
+                UDIndicatorDefinition def = (UDIndicatorDefinition) definition;
+                if (IndicatorCategoryHelper.isUserDefMatching(category)) {
+                    EList<TdExpression> viewValidRowsExpression = def.getViewValidRowsExpression();
+                    viewValidRowsExpression.clear();
+                    viewValidRowsExpression = saveFromTempMapToDefinition(viewValidRowsExpression, tempViewValidRowsExpressionMap);
+
+                    EList<TdExpression> viewInvalidRowsExpression = def.getViewInvalidRowsExpression();
+                    viewInvalidRowsExpression.clear();
+                    viewInvalidRowsExpression = saveFromTempMapToDefinition(viewInvalidRowsExpression,
+                            tempViewInvalidRowsExpressionMap);
+
+                    EList<TdExpression> viewValidValuesExpression = def.getViewValidValuesExpression();
+                    viewValidValuesExpression.clear();
+                    viewValidValuesExpression = saveFromTempMapToDefinition(viewValidValuesExpression,
+                            tempViewValidValuesExpressionMap);
+
+                    EList<TdExpression> viewInvalidValuesExpression = def.getViewInvalidValuesExpression();
+                    viewInvalidValuesExpression.clear();
+                    viewInvalidValuesExpression = saveFromTempMapToDefinition(viewInvalidValuesExpression,
+                            tempViewInvalidValuesExpressionMap);
+
+                } else {
+                    EList<TdExpression> viewRowsExpression = def.getViewRowsExpression();
+                    viewRowsExpression.clear();
+                    viewRowsExpression = saveFromTempMapToDefinition(viewRowsExpression, tempViewRowsExpressionMap);
+                }
+            }
+
             EList<TdExpression> expressions = definition.getSqlGenericExpression();
             expressions.clear();
             Iterator<CCombo> it = tempExpressionMap.keySet().iterator();
@@ -1979,11 +2228,14 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
                 // MOD MOD mzhao feature 11128 Be able to add Java UDI, 2010-01-28
                 if (cb.getText().equals(PatternLanguageType.JAVA.getName())) {
                     javaUIDCombo = cb;
-                } else if (tempExpressionMap.get(cb).getBody() != null
-                        && !PluginConstant.EMPTY_STRING.equals(tempExpressionMap.get(cb).getBody())) {
-                    // MOD xqliu 2010-04-01 bug 11892
-                    expressions.add(cloneExpression(tempExpressionMap.get(cb)));
-                    // ~11892
+                } else {
+                    TdExpression exp = tempExpressionMap.get(cb);
+                    if (exp.getBody() != null && !PluginConstant.EMPTY_STRING.equals(exp.getBody())) {
+                        // MOD xqliu 2010-04-01 bug 11892
+                        TdExpression cloneExpression = cloneExpression(exp, definition);
+                        expressions.add(cloneExpression);
+                        // ~11892
+                    }
                 }
             }
 
@@ -2088,12 +2340,32 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
     }
 
     /**
+     * DOC msjian Comment method "saveFromTempMapToDefinition".
+     * 
+     * @param expressions
+     * @return
+     */
+    public EList<TdExpression> saveFromTempMapToDefinition(EList<TdExpression> expressions, Map<CCombo, TdExpression> map) {
+        EList<TdExpression> temp = expressions;
+        temp.clear();
+        Iterator<CCombo> it = map.keySet().iterator();
+        while (it.hasNext()) {
+            CCombo cb = it.next();
+            TdExpression exp = map.get(cb);
+            if (exp.getBody() != null && !PluginConstant.EMPTY_STRING.equals(exp.getBody())) {
+                TdExpression cloneExpression = cloneExpression(exp, definition);
+                temp.add(cloneExpression);
+            }
+        }
+        return temp;
+    }
+
+    /**
      * DDOC klliu Comment method "saveDefinitionParameters". ADD klliu figure 13429 2010-07-12
      * 
      * @param definitionUDI
      */
     private void saveDefinitionParameters(IndicatorDefinition definitionUDI) {
-        // TODO Auto-generated method stub
         EList<IndicatorDefinitionParameter> params = definitionUDI.getIndicatorDefinitionParameter();
         if (params != null) {
             params.clear();
@@ -2139,7 +2411,6 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
      * @return
      */
     private boolean checkContainsJavaUDI(IndicatorDefinition definition2) {
-        // TODO Auto-generated method stub
         EList<TaggedValue> tvs = definition.getTaggedValue();
         for (TaggedValue tv : tvs) {
             if (tv.getTag().equals(TaggedValueHelper.CLASS_NAME_TEXT)) {
@@ -2155,7 +2426,6 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
      * @return
      */
     private boolean checkJavaIndicatorIsEixt() {
-        // TODO Auto-generated method stub
         String className = this.getClassNameForSave();
         String jarPath = this.getJarPathForSave();
 
@@ -2188,7 +2458,6 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
      * @return
      */
     private boolean checkIsHaveSqlExcepretion() {
-        // TODO Auto-generated method stub
         EList<TdExpression> expression = definition.getSqlGenericExpression();
         if (!expression.isEmpty()) {
             return true;
@@ -2202,7 +2471,6 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
      * @return
      */
     private boolean checkIsHaveJavaComb() {
-        // TODO Auto-generated method stub
         Iterator<CCombo> it = tempExpressionMap.keySet().iterator();
         while (it.hasNext()) {
             CCombo cb = it.next();
@@ -2221,7 +2489,6 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
      * @param jarPath
      */
     private void volidateNameAndPath(String className, String jarPath, EList<TaggedValue> tvs) {
-        // TODO Auto-generated method stub
         if (className == null || jarPath == null) {
             for (TaggedValue tv : tvs) {
                 if (tv.getTag().equals(TaggedValueHelper.CLASS_NAME_TEXT)) {
@@ -2350,7 +2617,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
             }
         }
         for (CCombo combo : disposedKey) {
-            tempExpressionMap.remove(combo);
+            removeFromTempMap(combo);
         }
     }
 
@@ -3039,20 +3306,14 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
      * @param exp
      * @return
      */
-    public static final TdExpression cloneExpression(TdExpression exp) {
+    public static final TdExpression cloneExpression(TdExpression exp, IndicatorDefinition definition) {
         TdExpression newExp = BooleanExpressionHelper.createTdExpression(exp.getLanguage(), exp.getBody());
         newExp.setVersion(exp.getVersion());
         newExp.setModificationDate(exp.getModificationDate());
+        if (definition instanceof UDIndicatorDefinition) {
+            newExp.setExpressionVariableMap(exp.getExpressionVariableMap());
+        }
         return newExp;
-    }
-
-    /**
-     * DOC xqliu Comment method "getCurrentDateTime". ADD xqliu 2010-06-04 feature 13454
-     * 
-     * @return
-     */
-    private String getCurrentDateTime() {
-        return DateUtils.getCurrentDate(DateUtils.PATTERN_5);
     }
 
     /*

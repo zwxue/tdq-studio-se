@@ -18,9 +18,15 @@ import java.util.Map;
 import org.eclipse.emf.common.util.EList;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.cwm.helper.ConnectionHelper;
+import org.talend.cwm.relational.TdExpression;
+import org.talend.dataquality.PluginConstant;
 import org.talend.dataquality.analysis.ExecutionLanguage;
 import org.talend.dataquality.indicators.PatternMatchingIndicator;
 import org.talend.dataquality.indicators.columnset.ColumnsetPackage;
+import org.talend.dataquality.indicators.definition.IndicatorDefinition;
+import org.talend.dataquality.indicators.definition.userdefine.UDIndicatorDefinition;
+import org.talend.dq.dbms.DbmsLanguage;
+import org.talend.dq.dbms.GenericSQLHandler;
 import orgomg.cwm.objectmodel.core.Expression;
 
 /**
@@ -30,12 +36,11 @@ import orgomg.cwm.objectmodel.core.Expression;
  */
 public class PatternExplorer extends DataExplorer {
 
-    private String functionReturnValue = "";
+    private String functionReturnValue = ""; //$NON-NLS-1$
 
     /**
      * DOC scorreia PatternExplorer constructor comment.
      * 
-     * @param dbmsLang
      */
     public PatternExplorer() {
     }
@@ -43,31 +48,8 @@ public class PatternExplorer extends DataExplorer {
     /*
      * (non-Javadoc)
      * 
-     * @see org.talend.dq.analysis.explore.IDataExplorer#getInvalidRowsStatement()
+     * @see org.talend.dq.analysis.explore.IDataExplorer#getQueryMap()
      */
-    public String getInvalidRowsStatement() {
-        String regexPatternString = dbmsLanguage.getRegexPatternString((PatternMatchingIndicator) this.indicator);
-        String columnName = dbmsLanguage.quote(indicator.getAnalyzedElement().getName());
-        String regexCmp = dbmsLanguage.regexNotLike(columnName, regexPatternString) + functionReturnValue;
-        // add null as invalid rows
-        String nullClause = dbmsLanguage.or() + columnName + dbmsLanguage.isNull();
-        // mzhao TDQ-4967 add "(" and ")" for regex and null clause.
-        String pattCondStr = "(" + regexCmp + nullClause + ")";//$NON-NLS-1$//$NON-NLS-2$
-        return getRowsStatement(pattCondStr);
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.talend.dq.analysis.explore.IDataExplorer#getValidRowsStatement()
-     */
-    public String getValidRowsStatement() {
-        String regexPatternString = dbmsLanguage.getRegexPatternString((PatternMatchingIndicator) this.indicator);
-        final String columnName = dbmsLanguage.quote(indicator.getAnalyzedElement().getName());
-        String regexCmp = dbmsLanguage.regexLike(columnName, regexPatternString) + functionReturnValue;
-        return getRowsStatement(regexCmp);
-    }
-
     public Map<String, String> getQueryMap() {
         Map<String, String> map = new HashMap<String, String>();// MOD zshen feature 12919 adapt to pop-menu for Jave
         // MOD qiongli 2011-3-30,feature 19192,filter this menu and query for ColumnSet AllMatchIndicator
@@ -83,11 +65,11 @@ public class PatternExplorer extends DataExplorer {
             Expression expression = instantiatedExpressions.get(0);
             String body = expression.getBody().toUpperCase();
             String functionName = body.split("WHEN").length > 1 ? body.split("WHEN")[1] : "";//$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
-            functionReturnValue = functionName.split("\\(").length > 1 ? functionName.split("\\(")[1] : "";
+            functionReturnValue = functionName.split("\\(").length > 1 ? functionName.split("\\(")[1] : ""; //$NON-NLS-1$ //$NON-NLS-2$//$NON-NLS-3$
             functionName = functionName.split("\\(").length > 1 ? functionName.split("\\(")[0] : "";//$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
             dbmsLanguage.setFunctionName(functionName);
-            functionReturnValue = functionReturnValue.split("\\)").length > 1 ? functionReturnValue.split("\\)")[1] : "";
-            functionReturnValue = functionReturnValue.split("THEN").length > 1 ? functionReturnValue.split("THEN")[0] : "";
+            functionReturnValue = functionReturnValue.split("\\)").length > 1 ? functionReturnValue.split("\\)")[1] : ""; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+            functionReturnValue = functionReturnValue.split("THEN").length > 1 ? functionReturnValue.split("THEN")[0] : ""; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
             map.put(MENU_VIEW_INVALID_VALUES, isSqlEngine ? getComment(MENU_VIEW_INVALID_VALUES) + getInvalidValuesStatement()
                     : null);
@@ -115,8 +97,14 @@ public class PatternExplorer extends DataExplorer {
      * @return SELECT statement for the invalid Value of select column
      */
     public String getInvalidValuesStatement() {
+        // when the indicator is the use define match
+        IndicatorDefinition indicatorDefinition = this.indicator.getIndicatorDefinition();
+        if (indicatorDefinition instanceof UDIndicatorDefinition) {
+            EList<TdExpression> list = ((UDIndicatorDefinition) indicatorDefinition).getViewInvalidValuesExpression();
+            return getReplacedSql(list);
+        }
+
         String regexPatternString = dbmsLanguage.getRegexPatternString((PatternMatchingIndicator) this.indicator);
-        String columnName = dbmsLanguage.quote(indicator.getAnalyzedElement().getName());
         String regexCmp = dbmsLanguage.regexNotLike(columnName, regexPatternString) + functionReturnValue;
         // add null as invalid rows
         String nullClause = dbmsLanguage.or() + columnName + dbmsLanguage.isNull();
@@ -132,10 +120,77 @@ public class PatternExplorer extends DataExplorer {
      * @return SELECT statement for the valid Value of select column
      */
     public String getValidValuesStatement() {
+        // when the indicator is the use define match
+        IndicatorDefinition indicatorDefinition = this.indicator.getIndicatorDefinition();
+        if (indicatorDefinition instanceof UDIndicatorDefinition) {
+            EList<TdExpression> list = ((UDIndicatorDefinition) indicatorDefinition).getViewValidValuesExpression();
+            return getReplacedSql(list);
+        }
+
         String regexPatternString = dbmsLanguage.getRegexPatternString((PatternMatchingIndicator) this.indicator);
-        final String columnName = dbmsLanguage.quote(indicator.getAnalyzedElement().getName());
         String regexCmp = dbmsLanguage.regexLike(columnName, regexPatternString) + functionReturnValue;
         return getValuesStatement(columnName, regexCmp);
+    }
+
+    /**
+     * DOC msjian Comment method "getInvalidRowsStatement".
+     * 
+     * @return
+     */
+    public String getInvalidRowsStatement() {
+        // when the indicator is the use define match
+        IndicatorDefinition indicatorDefinition = this.indicator.getIndicatorDefinition();
+        if (indicatorDefinition instanceof UDIndicatorDefinition) {
+            EList<TdExpression> list = ((UDIndicatorDefinition) indicatorDefinition).getViewInvalidRowsExpression();
+            return getReplacedSql(list);
+        }
+
+        String regexPatternString = dbmsLanguage.getRegexPatternString((PatternMatchingIndicator) this.indicator);
+        String regexCmp = dbmsLanguage.regexNotLike(columnName, regexPatternString) + functionReturnValue;
+        // add null as invalid rows
+        String nullClause = dbmsLanguage.or() + columnName + dbmsLanguage.isNull();
+        // mzhao TDQ-4967 add "(" and ")" for regex and null clause.
+        String pattCondStr = "(" + regexCmp + nullClause + ")";//$NON-NLS-1$//$NON-NLS-2$
+        return getRowsStatement(pattCondStr);
+    }
+
+    /**
+     * DOC msjian Comment method "getValidRowsStatement".
+     * 
+     * @return
+     */
+    public String getValidRowsStatement() {
+        // when the indicator is the use define match
+        IndicatorDefinition indicatorDefinition = this.indicator.getIndicatorDefinition();
+        if (indicatorDefinition instanceof UDIndicatorDefinition) {
+            EList<TdExpression> list = ((UDIndicatorDefinition) indicatorDefinition).getViewValidRowsExpression();
+            return getReplacedSql(list);
+        }
+
+        String regexPatternString = dbmsLanguage.getRegexPatternString((PatternMatchingIndicator) this.indicator);
+        String regexCmp = dbmsLanguage.regexLike(columnName, regexPatternString) + functionReturnValue;
+        return getRowsStatement(regexCmp);
+    }
+
+    /**
+     * DOC msjian Comment method "getReplacedSql".
+     * 
+     * @param list
+     * @return
+     */
+    public String getReplacedSql(EList<TdExpression> list) {
+        String sql = PluginConstant.EMPTY_STRING;
+        TdExpression tdExp = DbmsLanguage.getSqlExpression(this.indicator.getIndicatorDefinition(), dbmsLanguage.getDbmsName(),
+                list, dbmsLanguage.getDbVersion());
+        sql = tdExp.getBody();
+        String dataFilterClause = getDataFilterClause();
+        String tableName = getFullyQualifiedTableName(this.indicator.getAnalyzedElement());
+        sql = sql.replace(GenericSQLHandler.WHERE_CLAUSE, dbmsLanguage.where() + dataFilterClause);
+        sql = sql.replace(GenericSQLHandler.AND_WHERE_CLAUSE,
+                PluginConstant.EMPTY_STRING.equals(dataFilterClause) ? PluginConstant.EMPTY_STRING : dbmsLanguage.and()
+                        + dataFilterClause);
+        sql = dbmsLanguage.fillGenericQueryWithColumnsAndTable(sql, indicator.getAnalyzedElement().getName(), tableName);
+        return sql;
     }
 
 }

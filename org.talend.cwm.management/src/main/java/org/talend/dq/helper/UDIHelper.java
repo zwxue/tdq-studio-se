@@ -13,12 +13,15 @@
 package org.talend.dq.helper;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.Set;
 
 import org.apache.commons.beanutils.PropertyUtils;
@@ -54,6 +57,8 @@ import orgomg.cwm.objectmodel.core.TaggedValue;
 public final class UDIHelper {
 
     private static final Map<Indicator, Indicator> JAVAUDIMAP = new HashMap<Indicator, Indicator>();
+
+    private static Properties UDI_TEMPLATES_PROPERTIES = new Properties();
 
     public static final String JAREXTENSIONG = "jar";//$NON-NLS-1$
 
@@ -440,4 +445,32 @@ public final class UDIHelper {
         }
         return fileList;
     }
+
+    /**
+     * Create Templates Properties..
+     * 
+     * @return
+     */
+    public static Properties getCreateTemplatesProperties() {
+        InputStream in = UDIHelper.class.getClassLoader().getResourceAsStream("viewRowsTemplates.txt"); //$NON-NLS-1$
+        try {
+            UDI_TEMPLATES_PROPERTIES.load(in);
+        } catch (IOException e) {
+            log.error(e.getMessage());
+        }
+        return UDI_TEMPLATES_PROPERTIES;
+    }
+
+    /**
+     * get Templates Properties which content is used only by use define indicators.
+     * 
+     * @return
+     */
+    public static Properties getUDITemplatesProperties() {
+        if (UDI_TEMPLATES_PROPERTIES != null && !UDI_TEMPLATES_PROPERTIES.isEmpty()) {
+            return UDI_TEMPLATES_PROPERTIES;
+        }
+        return getCreateTemplatesProperties();
+    }
+
 }

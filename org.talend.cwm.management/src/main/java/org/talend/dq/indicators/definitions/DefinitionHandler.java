@@ -106,7 +106,7 @@ public final class DefinitionHandler {
     private static final String PLUGIN_PATH = "/org.talend.dataquality/" + FILENAME; //$NON-NLS-1$
 
     public static DefinitionHandler getInstance() {
-        if (instance == null) {
+        if (instance == null || instance.getIndicatorsDefinitions().size() == 0) {
             instance = new DefinitionHandler();
             // try to copy in workspace
             if (!getTalendDefinitionFile().exists()) {
@@ -541,7 +541,7 @@ public final class DefinitionHandler {
      */
     public void updateAggregates() {
         List<IndicatorDefinition> indicatorsDefinitions = getIndicatorsDefinitions();
-        
+
         String defFileExt = PluginConstant.DOT_STRING + FactoriesUtil.DEFINITION;
         for (IndicatorDefinition indiDef : indicatorsDefinitions) {
             EList<IndicatorDefinition> aggregatedDefinitions = indiDef.getAggregatedDefinitions();

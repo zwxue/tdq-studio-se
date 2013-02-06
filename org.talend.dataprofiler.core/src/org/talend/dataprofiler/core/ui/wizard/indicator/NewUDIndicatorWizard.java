@@ -21,11 +21,11 @@ import org.talend.cwm.relational.RelationalFactory;
 import org.talend.cwm.relational.TdExpression;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
-import org.talend.dataprofiler.core.pattern.PatternLanguageType;
 import org.talend.dataprofiler.core.ui.editor.indicator.IndicatorDefinitionItemEditorInput;
 import org.talend.dataprofiler.core.ui.editor.indicator.IndicatorEditor;
 import org.talend.dataprofiler.core.ui.wizard.AbstractWizard;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
+import org.talend.dataquality.indicators.definition.userdefine.UDIndicatorDefinition;
 import org.talend.dq.analysis.parameters.UDIndicatorParameter;
 import org.talend.dq.helper.UDIHelper;
 import org.talend.dq.helper.resourcehelper.ResourceFileMap;
@@ -35,7 +35,6 @@ import org.talend.dq.writer.impl.ElementWriterFactory;
 import org.talend.utils.dates.DateUtils;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
-import orgomg.cwm.objectmodel.core.TaggedValue;
 
 /**
  * DOC xqliu class global comment. Detailled comment
@@ -48,8 +47,6 @@ public class NewUDIndicatorWizard extends AbstractWizard {
 
     private NewUDIndicatorWizardPage1 mPage1;
 
-    private NewUDIndicatorWizardPage2 mPage2;
-
     private UDIndicatorParameter parameter;
 
     public NewUDIndicatorWizard(UDIndicatorParameter parameter) {
@@ -61,29 +58,15 @@ public class NewUDIndicatorWizard extends AbstractWizard {
         String s = DefaultMessagesImpl.getString("NewUDIndicatorWizard.udi"); //$NON-NLS-1$
 
         mPage1 = new NewUDIndicatorWizardPage1();
-        mPage1.setTitle(s + DefaultMessagesImpl.getString("NewUDIndicatorWizard.createPage1_2")); //$NON-NLS-1$
+        mPage1.setTitle(s + DefaultMessagesImpl.getString("NewUDIndicatorWizard.createPage1_1")); //$NON-NLS-1$
         mPage1.setDescription(DefaultMessagesImpl.getString("NewUDIndicatorWizard.defineProp")); //$NON-NLS-1$
         mPage1.setPageComplete(false);
 
-        mPage2 = new NewUDIndicatorWizardPage2();
-        mPage2.setTitle(s + DefaultMessagesImpl.getString("NewUDIndicatorWizard.createPage2_2")); //$NON-NLS-1$
-        mPage2.setDescription(""); //$NON-NLS-1$
-
         addPage(mPage1);
-        addPage(mPage2);
     }
 
     public TypedReturnCode<Object> createAndSaveCWMFile(ModelElement cwmElement) {
-        IndicatorDefinition indicatorDefinition = (IndicatorDefinition) cwmElement;
-        // MOD mzhao feature 11128.
-        if (!getParameter().getLanguage().equals(PatternLanguageType.JAVA.getName())) {
-            indicatorDefinition.getSqlGenericExpression().add(getExpression());
-        } else {
-            TaggedValue classNameTV = TaggedValueHelper.createTaggedValue(TaggedValueHelper.CLASS_NAME_TEXT, ""); //$NON-NLS-1$
-            TaggedValue jarPathTV = TaggedValueHelper.createTaggedValue(TaggedValueHelper.JAR_FILE_PATH, ""); //$NON-NLS-1$
-            indicatorDefinition.getTaggedValue().add(classNameTV);
-            indicatorDefinition.getTaggedValue().add(jarPathTV);
-        }
+        UDIndicatorDefinition indicatorDefinition = (UDIndicatorDefinition) cwmElement;
         UDIHelper.setUDICategory(indicatorDefinition, DefinitionHandler.getInstance().getUserDefinedCountIndicatorCategory());
         IFolder folder = parameter.getFolderProvider().getFolderResource();
         // ADD xqliu 2010-06-04 feature 13454
@@ -160,13 +143,10 @@ public class NewUDIndicatorWizard extends AbstractWizard {
 
     @Override
     public boolean canFinish() {
-        if (mPage1 != null && mPage2 != null) {
+        if (mPage1 != null) {
             // MOD mzhao feature 11128, In case of Java UDI,the page can finish.
-            if (PatternLanguageType.JAVA.getName().equals(getParameter().getLanguage())) {
-                return true;
-            }
-            if (getParameter().getExpression() != null && !"".equals(getParameter().getExpression().trim())) { //$NON-NLS-1$
-                return mPage1.isPageComplete() && mPage2.isPageComplete();
+            if (getParameter().getName() != null && !"".equals(getParameter().getName().trim())) { //$NON-NLS-1$
+                return mPage1.isPageComplete();
             }
         }
         return false;

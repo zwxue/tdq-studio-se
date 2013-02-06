@@ -30,11 +30,10 @@ public class UDIFrequencyStatisticsState extends FrequencyStatisticsState {
      */
     public UDIFrequencyStatisticsState(List<IndicatorUnit> units) {
         super(units);
-        // TODO Auto-generated constructor stub
     }
 
+    @Override
     public DataExplorer getDataExplorer() {
-        // TODO Auto-generated method stub
-        return null;
+        return super.getDataExplorer();
     }
 }

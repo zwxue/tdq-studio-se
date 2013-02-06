@@ -15,8 +15,17 @@ package org.talend.dq.analysis.explore;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.eclipse.emf.common.util.EList;
+import org.talend.cwm.relational.TdExpression;
+import org.talend.dataquality.PluginConstant;
 import org.talend.dataquality.analysis.AnalysisType;
 import org.talend.dataquality.analysis.ExecutionLanguage;
+import org.talend.dataquality.helpers.IndicatorCategoryHelper;
+import org.talend.dataquality.indicators.definition.IndicatorCategory;
+import org.talend.dataquality.indicators.definition.IndicatorDefinition;
+import org.talend.dataquality.indicators.definition.userdefine.UDIndicatorDefinition;
+import org.talend.dq.dbms.DbmsLanguage;
+import org.talend.dq.dbms.GenericSQLHandler;
 import org.talend.dq.dbms.HiveDbmsLanguage;
 
 /**
@@ -44,7 +53,31 @@ public class SimpleStatisticsExplorer extends DataExplorer {
             case NullCountIndicatorEnum:
             case BlankCountIndicatorEnum:
             case DefValueCountIndicatorEnum:
-                map.put(MENU_VIEW_ROWS, isSqlEngine ? getComment(MENU_VIEW_ROWS) + getRowsStatement() : null);
+            case UserDefinedIndicatorEnum:
+                String sql = getRowsStatement();
+                IndicatorDefinition indicatorDefinition = this.indicator.getIndicatorDefinition();
+                if (indicatorDefinition instanceof UDIndicatorDefinition) {
+                    IndicatorCategory category = IndicatorCategoryHelper.getCategory(indicatorDefinition);
+                    EList<TdExpression> list = ((UDIndicatorDefinition) indicatorDefinition).getViewRowsExpression();
+                    TdExpression tdExp = DbmsLanguage.getSqlExpression(indicatorDefinition, dbmsLanguage.getDbmsName(), list,
+                            dbmsLanguage.getDbVersion());
+                    sql = tdExp.getBody();
+                    String dataFilterClause = getDataFilterClause();
+                    sql = sql.replace(GenericSQLHandler.WHERE_CLAUSE, dbmsLanguage.where() + dataFilterClause);
+                    sql = sql.replace(
+                            GenericSQLHandler.AND_WHERE_CLAUSE,
+                            PluginConstant.EMPTY_STRING.equals(dataFilterClause) ? PluginConstant.EMPTY_STRING : dbmsLanguage
+                                    .and() + dataFilterClause);
+                    String tableName = getFullyQualifiedTableName(this.indicator.getAnalyzedElement());
+                    sql = sql.replace(GenericSQLHandler.TABLE_NAME, tableName);
+
+                    if (IndicatorCategoryHelper.isUserDefRealValue(category)) {
+                        // replace <%=__INDICATOR_VALUE__%>
+                        sql = sql.replace(GenericSQLHandler.UDI_INDICATOR_VALUE, this.indicator.getRealValue().toString());
+
+                    }
+                }
+                map.put(MENU_VIEW_ROWS, isSqlEngine ? getComment(MENU_VIEW_ROWS) + sql : null);
                 break;
 
             case UniqueIndicatorEnum:

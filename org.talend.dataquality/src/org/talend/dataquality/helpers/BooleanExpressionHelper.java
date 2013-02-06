@@ -57,6 +57,14 @@ public final class BooleanExpressionHelper {
         return expression;
     }
 
+    public static TdExpression createTdExpression(String language, String body, String version) {
+        TdExpression expression = RelationalFactory.eINSTANCE.createTdExpression();
+        expression.setBody(body);
+        expression.setLanguage(language);
+        expression.setVersion(version);
+        return expression;
+    }
+
     public static ExpressionNode createExpressionNode(String language, String body) {
         ExpressionNode node = orgomg.cwm.foundation.expressions.ExpressionsFactory.eINSTANCE.createExpressionNode();
         node.setExpression(createTdExpression(language, body));

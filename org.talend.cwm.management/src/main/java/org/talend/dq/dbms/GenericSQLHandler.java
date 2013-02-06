@@ -17,7 +17,23 @@ package org.talend.dq.dbms;
  */
 public class GenericSQLHandler {
 
-    private static final String AND_WHERE_CLAUSE = "<%=__AND_WHERE_CLAUSE__%>"; //$NON-NLS-1$
+    public static final String UDI_ORDER_BY = "<ORDER_BY_TEXT_FIELD>"; //$NON-NLS-1$
+
+    public static final String UDI_GROUP_BY = "<GROUP_BY_TEXT_FIELD>"; //$NON-NLS-1$
+
+    public static final String UDI_SECOND_COLUMN = "<SECOND_COLUMN_EXPRESSION_TEXT_FIELD>"; //$NON-NLS-1$
+
+    public static final String UDI_FIRST_COLUMN = "<FIRST_COLUMN_EXPRESSION_TEXT_FIELD>"; //$NON-NLS-1$
+
+    public static final String UDI_COLUMN = "<COLUMN_EXPRESSION_TEXT_FIELD>"; //$NON-NLS-1$
+
+    public static final String UDI_WHERE = "<WHERE_TEXT_FIELD>"; //$NON-NLS-1$
+
+    public static final String UDI_MATCHING = "<MATCHING_EXPRESSION_TEXT_FIELD>"; //$NON-NLS-1$
+
+    public static final String UDI_INDICATOR_VALUE = "<%=__INDICATOR_VALUE__%>"; //$NON-NLS-1$
+
+    public static final String AND_WHERE_CLAUSE = "<%=__AND_WHERE_CLAUSE__%>"; //$NON-NLS-1$
 
     public static final String WHERE_CLAUSE = "<%=__WHERE_CLAUSE__%>"; //$NON-NLS-1$
 
@@ -122,8 +138,8 @@ public class GenericSQLHandler {
     public GenericSQLHandler replaceLimitOffset(String colName, String table, String limitRow, String offset,
             String limitRowPlusOffset) {
         this.replaceColumnTable(colName, table);
-        sqlString = this.sqlString.replace(LIMIT_ROW, limitRow).replace(LIMIT_OFFSET, offset).replace(LIMIT_ROW_PLUS_OFFSET,
-                limitRowPlusOffset);
+        sqlString = this.sqlString.replace(LIMIT_ROW, limitRow).replace(LIMIT_OFFSET, offset)
+                .replace(LIMIT_ROW_PLUS_OFFSET, limitRowPlusOffset);
         return this;
     }
 
@@ -156,7 +172,7 @@ public class GenericSQLHandler {
     }
 
     /**
-     *Method "createGenericSqlWithRegexFunction".
+     * Method "createGenericSqlWithRegexFunction".
      * 
      * @param function a two arguments function.
      * @return the full generic statement
@@ -164,6 +180,69 @@ public class GenericSQLHandler {
     public String createGenericSqlWithRegexFunction(String function) {
         return "SELECT COUNT(CASE WHEN " + function + "(" + COLUMN_NAMES + "," + PATTERN_EXPRESSION //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
                 + ") THEN 1 END), COUNT(*) FROM " + TABLE_NAME + " " + WHERE_CLAUSE; //$NON-NLS-1$ //$NON-NLS-2$
+    }
+
+    public boolean containsUDIOrderBy() {
+        return sqlString.contains(UDI_ORDER_BY);
+    }
+
+    public GenericSQLHandler replaceUDIOrderBy(String UDIOrderBy) {
+        sqlString = sqlString.replace(UDI_ORDER_BY, UDIOrderBy);
+        return this;
+    }
+
+    public boolean containsUDIGroupBy() {
+        return sqlString.contains(UDI_GROUP_BY);
+    }
+
+    public GenericSQLHandler replaceUDIGroupBy(String UDIGroupBy) {
+        sqlString = sqlString.replace(UDI_GROUP_BY, UDIGroupBy);
+        return this;
+    }
+
+    public boolean containsUDISecondColumn() {
+        return sqlString.contains(UDI_SECOND_COLUMN);
+    }
+
+    public GenericSQLHandler replaceUDISecondColumn(String UDISecondColumn) {
+        sqlString = sqlString.replace(UDI_SECOND_COLUMN, UDISecondColumn);
+        return this;
+    }
+
+    public boolean containsUDIFirstColumn() {
+        return sqlString.contains(UDI_FIRST_COLUMN);
+    }
+
+    public GenericSQLHandler replaceUDIFirstColumn(String UDIFirstColumn) {
+        sqlString = sqlString.replace(UDI_FIRST_COLUMN, UDIFirstColumn);
+        return this;
+    }
+
+    public boolean containsUDIColumn() {
+        return sqlString.contains(UDI_COLUMN);
+    }
+
+    public GenericSQLHandler replaceUDIColumn(String UDIColumn) {
+        sqlString = sqlString.replace(UDI_COLUMN, UDIColumn);
+        return this;
+    }
+
+    public boolean containsUDIWhere() {
+        return sqlString.contains(UDI_WHERE);
+    }
+
+    public GenericSQLHandler replaceUDIWhere(String UDIWhere) {
+        sqlString = sqlString.replace(UDI_WHERE, UDIWhere);
+        return this;
+    }
+
+    public boolean containsUDIMatching() {
+        return sqlString.contains(UDI_MATCHING);
+    }
+
+    public GenericSQLHandler replaceUDIMatching(String UDIMatching) {
+        sqlString = sqlString.replace(UDI_MATCHING, UDIMatching);
+        return this;
     }
 
 }

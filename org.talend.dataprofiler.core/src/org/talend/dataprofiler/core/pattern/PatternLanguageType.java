@@ -23,7 +23,9 @@ import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
  */
 public enum PatternLanguageType {
 
-    Default(0, DefaultMessagesImpl.getString("PatternLanguageType.Default"), "SQL", PatternToExcelEnum.AllDBRegexp), //$NON-NLS-1$ //$NON-NLS-2$
+    Default(0, DefaultMessagesImpl.getString("PatternLanguageType.Default"), //$NON-NLS-1$
+            "SQL", //$NON-NLS-1$
+            PatternToExcelEnum.AllDBRegexp),
     MYSQL(
           1,
           SupportDBUrlType.MYSQLDEFAULTURL.getLanguage(),
@@ -140,6 +142,9 @@ public enum PatternLanguageType {
     }
 
     public static String findNameByLanguage(String language) {
+        if (language != null && language.trim().equals("Default")) { //$NON-NLS-1$
+            return "Default"; //$NON-NLS-1$
+        }
         for (PatternLanguageType oneType : values()) {
             if (language != null && language.equalsIgnoreCase(oneType.getLiteral())) {
                 return oneType.getName();

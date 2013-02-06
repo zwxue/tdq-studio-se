@@ -313,12 +313,11 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
                     // ~ TDQ-3210
                 }
             }
-        } else
-
-        // --- handle case when frequency indicator
-        if (indicatorEclass.equals(IndicatorsPackage.eINSTANCE.getFrequencyIndicator())
+        } else if (indicatorEclass.equals(IndicatorsPackage.eINSTANCE.getFrequencyIndicator())
                 || IndicatorsPackage.eINSTANCE.getFrequencyIndicator().isSuperTypeOf(indicatorEclass)
                 || indicatorEclass.equals(IndicatorsPackage.eINSTANCE.getModeIndicator()) || UDIHelper.isFrequency(indicator)) {
+            // --- handle case when frequency indicator
+
             // TODO scorreia test type of column and cast when needed
             // with ranges (frequencies of numerical intervals)
 
@@ -375,10 +374,8 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
                 completedSqlString = addWhereToSqlStringStatement(whereExpression, completedSqlString);
                 completedSqlString = dbms().getTopNQuery(completedSqlString, topN);
             }
-        } else
-
-        // --- handle case of matching pattern count
-        if (IndicatorsPackage.eINSTANCE.getPatternMatchingIndicator().isSuperTypeOf(indicatorEclass)) {
+        } else if (IndicatorsPackage.eINSTANCE.getPatternMatchingIndicator().isSuperTypeOf(indicatorEclass)) {
+            // --- handle case of matching pattern count
             List<String> patterns = getPatterns(indicator);
             if (patterns.isEmpty()) {
                 return traceError(Messages.getString(

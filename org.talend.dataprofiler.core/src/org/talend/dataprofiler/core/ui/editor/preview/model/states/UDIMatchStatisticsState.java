@@ -30,11 +30,10 @@ public class UDIMatchStatisticsState extends PatternStatisticsState {
      */
     public UDIMatchStatisticsState(List<IndicatorUnit> units) {
         super(units);
-        // TODO Auto-generated constructor stub
     }
 
+    @Override
     public DataExplorer getDataExplorer() {
-        // TODO Auto-generated method stub
-        return null;
+        return super.getDataExplorer();
     }
 }

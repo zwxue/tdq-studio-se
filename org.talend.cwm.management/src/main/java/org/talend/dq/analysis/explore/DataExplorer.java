@@ -132,7 +132,7 @@ public abstract class DataExplorer implements IDataExplorer {
                 }
                 indName = this.indicator.getName() == null ? PluginConstant.EMPTY_STRING : this.indicator.getName();
             }
-            showing = showing == null ? PluginConstant.EMPTY_STRING : showing; //$NON-NLS-1$
+            showing = showing == null ? PluginConstant.EMPTY_STRING : showing;
             //            sb.append("/*\n"); //$NON-NLS-1$
             //            sb.append("Analysis: " + anaName + "\n"); //$NON-NLS-1$  //$NON-NLS-2$
             //            sb.append("Type of Analysis: " + anaType + "\n"); //$NON-NLS-1$  //$NON-NLS-2$

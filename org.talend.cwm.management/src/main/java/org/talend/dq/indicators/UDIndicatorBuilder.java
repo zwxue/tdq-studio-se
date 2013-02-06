@@ -13,9 +13,10 @@
 package org.talend.dq.indicators;
 
 import org.apache.log4j.Logger;
-import org.talend.dataquality.indicators.definition.DefinitionFactory;
 import org.talend.dataquality.indicators.definition.IndicatorCategory;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
+import org.talend.dataquality.indicators.definition.userdefine.UDIndicatorDefinition;
+import org.talend.dataquality.indicators.definition.userdefine.impl.UserdefineFactoryImpl;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
 
 /**
@@ -27,7 +28,7 @@ public class UDIndicatorBuilder {
 
     private boolean initialized = false;
 
-    private IndicatorDefinition indicatorDefinition;
+    private UDIndicatorDefinition indicatorDefinition;
 
     public boolean initializeUDIndicatorBuilder(String udiName) {
 
@@ -36,7 +37,7 @@ public class UDIndicatorBuilder {
             return false;
         }
 
-        this.indicatorDefinition = DefinitionFactory.eINSTANCE.createIndicatorDefinition();
+        this.indicatorDefinition = UserdefineFactoryImpl.eINSTANCE.createUDIndicatorDefinition();
         indicatorDefinition.setName(udiName);
         indicatorDefinition.setLabel(udiName);
         IndicatorCategory udiCategory = DefinitionHandler.getInstance().getUserDefinedCountIndicatorCategory();
