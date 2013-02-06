@@ -1169,4 +1169,22 @@
          install-size="0"
          version="0.0.0"/>
 
+   <plugin
+         id="org.talend.libraries.excel"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
+
+   <plugin
+         id="org.talend.libraries.jxplorer"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
+
+   <plugin
+         id="org.talend.libraries.salesforce"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"/>
+
 </feature>
