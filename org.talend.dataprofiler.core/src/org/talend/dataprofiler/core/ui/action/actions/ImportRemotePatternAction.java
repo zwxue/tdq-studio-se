@@ -114,7 +114,11 @@ public class ImportRemotePatternAction extends Action {
                     if (ecosCategory != null) {
                         EResourceConstant resourceType = ecosCategory.getResource();
                         for (File oneFile : validFiles) {
-                            information.addAll(ImportFactory.doImport(resourceType, oneFile, componet.getName()));
+                            if (oneFile.getName().endsWith("jar")) { //$NON-NLS-1$
+                                ImportFactory.doImport(resourceType, oneFile, componet.getName());
+                            } else {
+                                information.addAll(ImportFactory.doImport(resourceType, oneFile, componet.getName()));
+                            }
                         }
                     }
                 }
@@ -125,9 +129,8 @@ public class ImportRemotePatternAction extends Action {
                 information.add(new ReturnCode(DefaultMessagesImpl.getString("ImportRemotePatternAction.NothingImport"), false)); //$NON-NLS-1$
             }
             ImportInfoDialog
-                    .openImportInformation(
-                            PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
-                            DefaultMessagesImpl.getString("ImportRemotePatternAction.ImportFinish"), (ReturnCode[]) information.toArray(new ReturnCode[0])); //$NON-NLS-1$
+                    .openImportInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), DefaultMessagesImpl
+                            .getString("ImportRemotePatternAction.ImportFinish"), information.toArray(new ReturnCode[0])); //$NON-NLS-1$
 
             CorePlugin.getDefault().refreshDQView();
         }
@@ -161,8 +164,14 @@ public class ImportRemotePatternAction extends Action {
 
             if (files.isEmpty()) {
                 information.add(new ReturnCode("No valid exchange extension file(CSV) found in " + componet.getName(), false)); //$NON-NLS-1$
-            }
+            } else {
+                FilesUtils.getAllFilesFromFolder(componentFileFolder, files, new FilenameFilter() {
 
+                    public boolean accept(File dir, String name) {
+                        return !FilesUtils.isSVNFolder(dir) && name.endsWith("jar"); //$NON-NLS-1$
+                    }
+                });
+            }
         } catch (Exception e) {
             ExceptionHandler.process(e);
         }

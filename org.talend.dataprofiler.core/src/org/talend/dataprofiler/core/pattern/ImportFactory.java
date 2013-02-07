@@ -37,6 +37,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.CoreException;
 import org.talend.commons.emf.FactoriesUtil;
+import org.talend.commons.utils.WorkspaceUtils;
 import org.talend.commons.utils.io.FilesUtils;
 import org.talend.core.model.metadata.builder.database.DqRepositoryViewService;
 import org.talend.cwm.constants.DevelopmentStatus;
@@ -613,6 +614,15 @@ public final class ImportFactory {
             }
         }
 
+        if ("jar".equalsIgnoreCase(fileExtName)) { //$NON-NLS-1$
+            try {
+                FilesUtils.copyFile(importFile,
+                        WorkspaceUtils.ifileToFile(ResourceManager.getUDIJarFolder().getFile(importFile.getName())));
+            } catch (IOException e) {
+                log.error(e, e);
+            }
+        }
+
         if ("xls".equalsIgnoreCase(fileExtName)) { //$NON-NLS-1$
             Map<Integer, PatternLanguageType> expressionMap = new HashMap<Integer, PatternLanguageType>();
             String contents = PluginConstant.EMPTY_STRING;
@@ -733,15 +743,18 @@ public final class ImportFactory {
      */
     private static Map<String, String> buildIndDefPara(HashMap<String, String> record) {
         Map<String, String> paraMap = new HashMap<String, String>();
-        String string = trimQuote(record.get(PatternToExcelEnum.IndicatorDefinitionParameter.getLiteral()));
-        if (StringUtils.isNotBlank(string)) {
-            String[] keyValues = StringUtils.splitByWholeSeparator(string, UDIHelper.PARA_SEPARATE_2);
-            for (String keyValue : keyValues) {
-                if (StringUtils.isNotBlank(keyValue)) {
-                    String[] para = StringUtils.splitByWholeSeparator(keyValue, UDIHelper.PARA_SEPARATE_1);
-                    // the key should not be blank, the value can be anything
-                    if (para.length == 2 && StringUtils.isNotBlank(para[0]) && para[1] != null) {
-                        paraMap.put(para[0], para[1]);
+        String cellStr = record.get(PatternToExcelEnum.IndicatorDefinitionParameter.getLiteral());
+        if (cellStr != null && !cellStr.equals("\"\"")) { //$NON-NLS-1$
+            String string = trimQuote(cellStr);
+            if (StringUtils.isNotBlank(string)) {
+                String[] keyValues = StringUtils.splitByWholeSeparator(string, UDIHelper.PARA_SEPARATE_2);
+                for (String keyValue : keyValues) {
+                    if (StringUtils.isNotBlank(keyValue)) {
+                        String[] para = StringUtils.splitByWholeSeparator(keyValue, UDIHelper.PARA_SEPARATE_1);
+                        // the key should not be blank, the value can be anything
+                        if (para.length == 2 && StringUtils.isNotBlank(para[0]) && para[1] != null) {
+                            paraMap.put(para[0], para[1]);
+                        }
                     }
                 }
             }
