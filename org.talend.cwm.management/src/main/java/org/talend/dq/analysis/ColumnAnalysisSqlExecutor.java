@@ -1130,7 +1130,6 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
      * @throws
      */
     // TDQ Guodong bu 2011-2-25, feature 19107
-    // FIXME use a static inner class instead
     static class ExecutiveAnalysisJob extends Job {
 
         ColumnAnalysisSqlExecutor parent;
@@ -1188,24 +1187,20 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
         // reset the connection pool before run this analysis
         resetConnectionPool(analysis);
 
-        // MOD qiongli 2011-5-20 bug 21580.backport rightly for bug 19107 and 19522.
-        List<ExecutiveAnalysisJob> excuteAnalysisJober = new ArrayList<ExecutiveAnalysisJob>();
-
         // MOD gdbu 2011-6-10 bug : 21273
         try {
+            int totleWork = 100;
             List<ExecutiveAnalysisJob> jobs = new ArrayList<ExecutiveAnalysisJob>();
-            // for (Indicator indicator : indicators) {
 
             if (this.getMonitor() != null) {
-                this.getMonitor().beginTask("Run Indicators Parallel", 100);
+                this.getMonitor().beginTask("Run Indicators Parallel", totleWork); //$NON-NLS-1$
             }
-            int temp = 0;
-            for (int i = 0; i < indicators.size(); i++) {
-                Indicator indicator = indicators.get(i);
+
+            for (Indicator indicator : indicators) {
                 if (this.continueRun()) {
                     if (this.getMonitor() != null) {
                         this.getMonitor().setTaskName(
-                                Messages.getString("ColumnAnalysisSqlExecutor.AnalyzedElement", indicator.getAnalyzedElement()
+                                Messages.getString("ColumnAnalysisSqlExecutor.AnalyzedElement", indicator.getAnalyzedElement() //$NON-NLS-1$
                                         .getName()));
                     }
                     Connection conn = null;
@@ -1219,33 +1214,37 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
                         ExecutiveAnalysisJob eaj = new ExecutiveAnalysisJob(ColumnAnalysisSqlExecutor.this, conn,
                                 elementToIndicator, indicator);
                         eaj.setName(indicator.getName());
-                        excuteAnalysisJober.add(eaj);
                         eaj.schedule();
                         jobs.add(eaj);
-
-                        if (this.continueRun()) {
-                            eaj.join();
-                        }
-
-                        if (eaj.errorMessage != null) {
-                            ColumnAnalysisSqlExecutor.this.errorMessage = eaj.errorMessage;
-                            ColumnAnalysisSqlExecutor.this.parallelExeStatus = false;
-                        }
-                    }
-
-                    if (this.getMonitor() != null) {
-                        int current = (i + 1) * 100 / indicators.size();
-                        if (current > temp) {
-                            this.getMonitor().worked(current - temp);
-                            temp = current;
-                        }
                     }
                 }
             }
+
+            int temp = 0;
+            // should call join() after schedule all the jobs
+            for (int i = 0; i < jobs.size(); i++) {
+                ExecutiveAnalysisJob eaj = jobs.get(i);
+                if (this.continueRun()) {
+                    eaj.join();
+                }
+
+                if (eaj.errorMessage != null) {
+                    ColumnAnalysisSqlExecutor.this.errorMessage = eaj.errorMessage;
+                    ColumnAnalysisSqlExecutor.this.parallelExeStatus = false;
+                }
+
+                if (this.getMonitor() != null) {
+                    int current = (i + 1) * totleWork / jobs.size();
+                    if (current > temp) {
+                        this.getMonitor().worked(current - temp);
+                        temp = current;
+                    }
+                }
+            }
+
             if (this.getMonitor() != null) {
                 this.getMonitor().done();
             }
-
         } catch (Throwable thr) {
             log.error(thr);
         } finally {
@@ -1355,7 +1354,6 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
      * @throws SQLException
      */
     protected List<Object[]> executeQuery(String catalogName, Connection connection, String queryStmt) throws SQLException {
-
         if (catalogName != null) { // check whether null argument can be given
             changeCatalog(catalogName, connection);
         }
@@ -1408,7 +1406,7 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
             // MOD xqliu 2009-12-09 bug 9822
             if (!(ConnectionUtils.isOdbcMssql(connection) || ConnectionUtils.isOdbcOracle(connection)
                     || ConnectionUtils.isOdbcProgress(connection) || ConnectionUtils.isOdbcTeradata(connection) || ConnectionUtils
-                    .isHive(connection))) {
+                        .isHive(connection))) {
                 // MOD scorreia 2008-08-01 MSSQL does not support quoted catalog's name
                 connection.setCatalog(catalogName);
             }

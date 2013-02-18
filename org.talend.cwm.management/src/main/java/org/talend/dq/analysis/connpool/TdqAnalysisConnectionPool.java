@@ -117,8 +117,6 @@ public class TdqAnalysisConnectionPool {
         this.setMaxConnections(maxConnections);
     }
 
-
-
     /**
      * DOC xqliu Comment method "getPConnections".
      * 
@@ -193,15 +191,17 @@ public class TdqAnalysisConnectionPool {
             log.debug(e);
         }
 
-        try {
-            DatabaseMetaData metaData = conn.getMetaData();
-            int currentDriverMaxConnections = new Float(metaData.getMaxConnections() * DEFAULT_CONNECTION_NUMBER_OFFSET)
-                    .intValue();
-            synchronized (this.synchronizedFlag) {
-                this.setDriverMaxConnections(currentDriverMaxConnections);
+        if (conn != null) {
+            try {
+                DatabaseMetaData metaData = conn.getMetaData();
+                int currentDriverMaxConnections = new Float(metaData.getMaxConnections() * DEFAULT_CONNECTION_NUMBER_OFFSET)
+                        .intValue();
+                synchronized (this.synchronizedFlag) {
+                    this.setDriverMaxConnections(currentDriverMaxConnections);
+                }
+            } catch (Exception e) {
+                log.debug(e, e);
             }
-        } catch (Exception e) {
-            log.debug(e, e);
         }
 
         return conn;
@@ -233,7 +233,7 @@ public class TdqAnalysisConnectionPool {
 
         Enumeration<PooledTdqAnalysisConnection> enumerate = this.getPConnections().elements();
         while (enumerate.hasMoreElements()) {
-            PooledTdqAnalysisConnection pConn = (PooledTdqAnalysisConnection) enumerate.nextElement();
+            PooledTdqAnalysisConnection pConn = enumerate.nextElement();
             try {
                 if (!pConn.isBusy()) {
                     Connection tempConn = pConn.getConnection();
@@ -265,7 +265,7 @@ public class TdqAnalysisConnectionPool {
 
         Enumeration<PooledTdqAnalysisConnection> enumerate = this.getPConnections().elements();
         while (enumerate.hasMoreElements()) {
-            PooledTdqAnalysisConnection pConn = (PooledTdqAnalysisConnection) enumerate.nextElement();
+            PooledTdqAnalysisConnection pConn = enumerate.nextElement();
             if (conn == pConn.getConnection()) {
                 pConn.setBusy(false);
                 break;
@@ -286,13 +286,13 @@ public class TdqAnalysisConnectionPool {
                 boolean hasElement = false;
                 while (enumerate.hasMoreElements()) {
                     hasElement = true;
-                    PooledTdqAnalysisConnection pConn = (PooledTdqAnalysisConnection) enumerate.nextElement();
+                    PooledTdqAnalysisConnection pConn = enumerate.nextElement();
                     i++;
-                    log.info("pConn: id=[" + i + "] pid=[" + pConn.hashCode() + "] conn=[" + pConn.getConnection().toString() + "] [closed=" //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+                    log.error("pConn: id=[" + i + "] pid=[" + pConn.hashCode() + "] conn=[" + pConn.getConnection().toString() + "] [closed=" //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
                             + pConn.getConnection().isClosed() + "] busy=[" + pConn.isBusy() + "]"); //$NON-NLS-1$ //$NON-NLS-2$
                 }
                 if (!hasElement) {
-                    log.info("the connection pool is empty!"); //$NON-NLS-1$
+                    log.error("the connection pool is empty!"); //$NON-NLS-1$
                 }
             } catch (Exception e) {
                 log.debug(e);
@@ -306,7 +306,7 @@ public class TdqAnalysisConnectionPool {
     public synchronized void refreshConnections() {
         Enumeration<PooledTdqAnalysisConnection> enumerate = this.getPConnections().elements();
         while (enumerate.hasMoreElements()) {
-            PooledTdqAnalysisConnection pConn = (PooledTdqAnalysisConnection) enumerate.nextElement();
+            PooledTdqAnalysisConnection pConn = enumerate.nextElement();
             int times = 0;
             busy: while (pConn.isBusy()) {
                 try {
@@ -335,7 +335,7 @@ public class TdqAnalysisConnectionPool {
     public void closeConnectionPool() {
         Enumeration<PooledTdqAnalysisConnection> enumerate = this.getPConnections().elements();
         while (enumerate.hasMoreElements()) {
-            PooledTdqAnalysisConnection pConn = (PooledTdqAnalysisConnection) enumerate.nextElement();
+            PooledTdqAnalysisConnection pConn = enumerate.nextElement();
             int times = 0;
             busy: if (pConn.isBusy()) {
                 times++;
@@ -377,7 +377,7 @@ public class TdqAnalysisConnectionPool {
         Enumeration<PooledTdqAnalysisConnection> enumerate = this.getPConnections().elements();
 
         while (enumerate.hasMoreElements()) {
-            PooledTdqAnalysisConnection pConn = (PooledTdqAnalysisConnection) enumerate.nextElement();
+            PooledTdqAnalysisConnection pConn = enumerate.nextElement();
             if (pConn.getConnection().equals(conn)) {
                 getPConnections().remove(pConn);
                 break;
