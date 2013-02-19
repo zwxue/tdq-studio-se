@@ -318,10 +318,7 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
                 aet.run();
 
                 if (monitor.isCanceled()) {
-                    TdqAnalysisConnectionPool connectionPool = TdqAnalysisConnectionPool.getConnectionPool(analysis);
-                    if (connectionPool != null) {
-                        connectionPool.closeConnectionPool();
-                    }
+                    TdqAnalysisConnectionPool.closeConnectionPool(analysis);
                     executed = new ReturnCode(DefaultMessagesImpl.getString("RunAnalysisAction.TaskCancel"), false); //$NON-NLS-1$
                 } else {
                     if (aet.getExecuted() != null) {

@@ -36,9 +36,9 @@ import orgomg.cwm.foundation.softwaredeployment.DataManager;
  */
 public class TdqAnalysisConnectionPool {
 
-    public static final int CONNECTIONS_PER_ANALYSIS_DEFAULT_LENGTH = 5;
+    private static Logger log = Logger.getLogger(TdqAnalysisConnectionPool.class);
 
-    public static final String NUMBER_OF_CONNECTIONS_PER_ANALYSIS = "NUMBER_OF_CONNECTIONS_PER_ANALYSIS"; //$NON-NLS-1$\
+    public static final int CONNECTIONS_PER_ANALYSIS_DEFAULT_LENGTH = 5;
 
     private static final int DEFAULT_WAIT_MILLISECOND = 5;
 
@@ -48,13 +48,7 @@ public class TdqAnalysisConnectionPool {
 
     private static final boolean SHOW_CONNECTIONS_INFO = Boolean.FALSE;
 
-    /**
-     * Keep a reference to analysis because the connection information from this analysis is required when create a
-     * java.sql.connection.
-     */
-    private Analysis analysis = null;
-
-    private static Logger log = Logger.getLogger(TdqAnalysisConnectionPool.class);
+    public static final String NUMBER_OF_CONNECTIONS_PER_ANALYSIS = "NUMBER_OF_CONNECTIONS_PER_ANALYSIS"; //$NON-NLS-1$\
 
     /**
      * Map where key is the analysis and value is the connection pool of this analysis.
@@ -62,17 +56,22 @@ public class TdqAnalysisConnectionPool {
     private static final Map<Analysis, TdqAnalysisConnectionPool> INSTANCE_ANA_TO_POOL_MAP = Collections
             .synchronizedMap(new HashMap<Analysis, TdqAnalysisConnectionPool>());
 
+    /**
+     * Keep a reference to analysis because the connection information from this analysis is required when create a
+     * java.sql.connection.
+     */
+    private Analysis analysis = null;
+
     private Vector<PooledTdqAnalysisConnection> pConnections;
 
     private int driverMaxConnections = Integer.MAX_VALUE;
 
-    private String synchronizedFlag = ""; //$NON-NLS-1$\
-
     private int maxConnections = CONNECTIONS_PER_ANALYSIS_DEFAULT_LENGTH;
 
+    private String synchronizedFlag = ""; //$NON-NLS-1$\
+
     /**
-     * 
-     * Look up the conn pool from instance map.
+     * Look up the conn pool from instance map, if there not have, creata a new one.
      * 
      * @param analysis
      * @return the specific connection pool by analylsis.
@@ -85,6 +84,31 @@ public class TdqAnalysisConnectionPool {
             INSTANCE_ANA_TO_POOL_MAP.put(analysis, connPoolTemp);
         }
         return connPoolTemp;
+    }
+
+    /**
+     * close the connection pool: 1) close all the connections belong to it; 2) remove it from the map.
+     * 
+     * @param analysis
+     */
+    public static void closeConnectionPool(Analysis analysis) {
+        TdqAnalysisConnectionPool connectionPool = INSTANCE_ANA_TO_POOL_MAP.get(analysis);
+        if (connectionPool != null) {
+            connectionPool.closeConnectionPool();
+        }
+    }
+
+    /**
+     * return the connection to the pool.
+     * 
+     * @param analysis
+     * @param connection
+     */
+    public static void returnPooledConnection(Analysis analysis, java.sql.Connection connection) {
+        TdqAnalysisConnectionPool connectionPool = INSTANCE_ANA_TO_POOL_MAP.get(analysis);
+        if (connectionPool != null) {
+            connectionPool.returnConnection(connection);
+        }
     }
 
     public int getMaxConnections() {
@@ -330,7 +354,7 @@ public class TdqAnalysisConnectionPool {
     }
 
     /**
-     * DOC xqliu Comment method "closeConnectionPool".
+     * close all the connections belong to this pool, remove the pool from the map.
      */
     public void closeConnectionPool() {
         Enumeration<PooledTdqAnalysisConnection> enumerate = this.getPConnections().elements();
@@ -348,6 +372,7 @@ public class TdqAnalysisConnectionPool {
         }
         getPConnections().removeAllElements();
         this.setPConnections(null);
+        INSTANCE_ANA_TO_POOL_MAP.put(analysis, null);
     }
 
     /**
