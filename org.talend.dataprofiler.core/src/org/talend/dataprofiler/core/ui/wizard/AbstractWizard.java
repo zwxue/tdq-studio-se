@@ -54,48 +54,43 @@ public abstract class AbstractWizard extends Wizard implements ICWMResouceAdapte
     protected ModelElement modelElement = null;
     @Override
     public boolean performFinish() {
-        ReturnCode checkResult = checkMetadata();
 
         IRepositoryNode currentSelectionNode = CorePlugin.getDefault().getCurrentSelectionNode();
 
-        if (checkResult.isOk()) {
-            // MOD mzhao feature 15750 Use repository object represent ModelElement.
-            modelElement = initCWMResourceBuilder();
-            if (modelElement != null) {
-                fillMetadataToCWMResource(modelElement);
-                // Save the repository objects.
-                TypedReturnCode<Object> csResult = createAndSaveCWMFile(modelElement);
-                if (csResult.isOk()) {
-                    Object savedObj = csResult.getObject();
-                    if (savedObj instanceof Item) {
-                        openEditor((Item) savedObj);
-                    }
-
-                    if (modelElement instanceof AnalysisImpl || modelElement instanceof TdReportImpl) {
-                        //MOD by zshen refresh the folder which contain the modelElement neither nor which one be select current.
-                    	CorePlugin.getDefault().refreshDQView(
-                        		RepositoryNodeHelper.findNearestSystemFolderNode(RepositoryNodeHelper.recursiveFind(modelElement)));
-                    }else{
-                    	CorePlugin.getDefault().refreshDQView(currentSelectionNode);
-                    }
-                    CorePlugin.getDefault().refreshWorkSpace();
-                    
-
-                    // MOD gdbu 2011-11-18 TDQ-3969 : after create items re-filter the tree , to create a new list .
-                    if (DQRepositoryNode.isOnFilterring()) {
-                        RepositoryNodeHelper.fillTreeList(null);
-                        RepositoryNodeHelper.setFilteredNode(RepositoryNodeHelper.getRootNode(
-                                ERepositoryObjectType.TDQ_DATA_PROFILING, true));
-                    }
-
-                    return true;
-                } else {
-                    MessageUI.openError(csResult.getMessage());
+        // MOD mzhao feature 15750 Use repository object represent ModelElement.
+        modelElement = initCWMResourceBuilder();
+        if (modelElement != null) {
+            fillMetadataToCWMResource(modelElement);
+            // Save the repository objects.
+            TypedReturnCode<Object> csResult = createAndSaveCWMFile(modelElement);
+            if (csResult.isOk()) {
+                Object savedObj = csResult.getObject();
+                if (savedObj instanceof Item) {
+                    openEditor((Item) savedObj);
                 }
+
+                if (modelElement instanceof AnalysisImpl || modelElement instanceof TdReportImpl) {
+                    //MOD by zshen refresh the folder which contain the modelElement neither nor which one be select current.
+                	CorePlugin.getDefault().refreshDQView(
+                    		RepositoryNodeHelper.findNearestSystemFolderNode(RepositoryNodeHelper.recursiveFind(modelElement)));
+                }else{
+                	CorePlugin.getDefault().refreshDQView(currentSelectionNode);
+                }
+                CorePlugin.getDefault().refreshWorkSpace();
+                
+
+                // MOD gdbu 2011-11-18 TDQ-3969 : after create items re-filter the tree , to create a new list .
+                if (DQRepositoryNode.isOnFilterring()) {
+                    RepositoryNodeHelper.fillTreeList(null);
+                    RepositoryNodeHelper.setFilteredNode(RepositoryNodeHelper.getRootNode(
+                            ERepositoryObjectType.TDQ_DATA_PROFILING, true));
+                }
+
+                return true;
+            } else {
+                MessageUI.openError(csResult.getMessage());
             }
-        } else {
-            MessageUI.openError(checkResult.getMessage());
-        }
+        }    
 
         return false;
     }

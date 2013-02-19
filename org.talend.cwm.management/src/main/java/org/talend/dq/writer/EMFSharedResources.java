@@ -17,6 +17,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
@@ -37,6 +38,8 @@ import org.talend.resource.ResourceManager;
  */
 public final class EMFSharedResources {
 
+	private static Logger log = Logger.getLogger(EMFSharedResources.class); 
+	
     private static EMFSharedResources instance;
 
     private EMFUtil emfUtil;
@@ -129,7 +132,12 @@ public final class EMFSharedResources {
     }
 
     public synchronized Resource getResource(URI uri, boolean loadOnDemand) {
-        return resourceSet.getResource(uri, loadOnDemand);
+        try {
+			return resourceSet.getResource(uri, loadOnDemand);
+		} catch (Exception e) {
+			log.error(e.fillInStackTrace()); 
+			return null;
+		}
     }
 
     public Resource getResource(IFile file, boolean loadOnDemand) {
