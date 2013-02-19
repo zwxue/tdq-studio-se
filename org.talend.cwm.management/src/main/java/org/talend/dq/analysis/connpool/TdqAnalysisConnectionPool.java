@@ -48,12 +48,6 @@ public class TdqAnalysisConnectionPool {
 
     private static final boolean SHOW_CONNECTIONS_INFO = Boolean.FALSE;
 
-    /**
-     * Keep a reference to analysis because the connection information from this analysis is required when create a
-     * java.sql.connection.
-     */
-    private Analysis analysis = null;
-
     private static Logger log = Logger.getLogger(TdqAnalysisConnectionPool.class);
 
     /**
@@ -62,13 +56,17 @@ public class TdqAnalysisConnectionPool {
     private static final Map<Analysis, TdqAnalysisConnectionPool> INSTANCE_ANA_TO_POOL_MAP = Collections
             .synchronizedMap(new HashMap<Analysis, TdqAnalysisConnectionPool>());
 
+    /**
+     * Keep a reference to analysis because the connection information from this analysis is required when create a
+     * java.sql.connection.
+     */
+    private Analysis analysis = null;
+
     private Vector<PooledTdqAnalysisConnection> pConnections;
 
     private int driverMaxConnections = Integer.MAX_VALUE;
 
     private String synchronizedFlag = ""; //$NON-NLS-1$\
-
-    private int maxConnections = CONNECTIONS_PER_ANALYSIS_DEFAULT_LENGTH;
 
     /**
      * 
@@ -80,11 +78,35 @@ public class TdqAnalysisConnectionPool {
     public static TdqAnalysisConnectionPool getConnectionPool(Analysis analysis) {
         TdqAnalysisConnectionPool connPoolTemp = INSTANCE_ANA_TO_POOL_MAP.get(analysis);
         if (connPoolTemp == null) {
-//            int maxConnNumberPerAnalysis = AnalysisHandler.createHandler(analysis).getNumberOfConnectionsPerAnalysis();
             connPoolTemp = new TdqAnalysisConnectionPool(analysis);
             INSTANCE_ANA_TO_POOL_MAP.put(analysis, connPoolTemp);
         }
         return connPoolTemp;
+    }
+
+    /**
+     * close the connection pool: 1) close all the connections belong to it; 2) remove it from the map.
+     * 
+     * @param analysis
+     */
+    public static void closeConnectionPool(Analysis analysis) {
+        TdqAnalysisConnectionPool connectionPool = INSTANCE_ANA_TO_POOL_MAP.get(analysis);
+        if (connectionPool != null) {
+            connectionPool.closeConnectionPool();
+        }
+    }
+
+    /**
+     * return the connection to the pool.
+     * 
+     * @param analysis
+     * @param connection
+     */
+    public static void returnPooledConnection(Analysis analysis, java.sql.Connection connection) {
+        TdqAnalysisConnectionPool connectionPool = INSTANCE_ANA_TO_POOL_MAP.get(analysis);
+        if (connectionPool != null) {
+            connectionPool.returnConnection(connection);
+        }
     }
 
     public int getMaxConnections() {
@@ -95,12 +117,6 @@ public class TdqAnalysisConnectionPool {
             log.debug(e);
         }
         return max;
-    }
-
-    public void setMaxConnections(int maxConnections) {
-        if (maxConnections > 0) {
-            this.maxConnections = maxConnections;
-        }
     }
 
     public int getDriverMaxConnections() {
@@ -121,8 +137,6 @@ public class TdqAnalysisConnectionPool {
     public TdqAnalysisConnectionPool(Analysis analysis) {
         this.analysis = analysis;
     }
-
-
 
     /**
      * DOC xqliu Comment method "getPConnections".
@@ -238,7 +252,7 @@ public class TdqAnalysisConnectionPool {
 
         Enumeration<PooledTdqAnalysisConnection> enumerate = this.getPConnections().elements();
         while (enumerate.hasMoreElements()) {
-            PooledTdqAnalysisConnection pConn = (PooledTdqAnalysisConnection) enumerate.nextElement();
+            PooledTdqAnalysisConnection pConn = enumerate.nextElement();
             try {
                 if (!pConn.isBusy()) {
                     Connection tempConn = pConn.getConnection();
@@ -270,7 +284,7 @@ public class TdqAnalysisConnectionPool {
 
         Enumeration<PooledTdqAnalysisConnection> enumerate = this.getPConnections().elements();
         while (enumerate.hasMoreElements()) {
-            PooledTdqAnalysisConnection pConn = (PooledTdqAnalysisConnection) enumerate.nextElement();
+            PooledTdqAnalysisConnection pConn = enumerate.nextElement();
             if (conn == pConn.getConnection()) {
                 pConn.setBusy(false);
                 break;
@@ -291,13 +305,13 @@ public class TdqAnalysisConnectionPool {
                 boolean hasElement = false;
                 while (enumerate.hasMoreElements()) {
                     hasElement = true;
-                    PooledTdqAnalysisConnection pConn = (PooledTdqAnalysisConnection) enumerate.nextElement();
+                    PooledTdqAnalysisConnection pConn = enumerate.nextElement();
                     i++;
-                    log.info("pConn: id=[" + i + "] pid=[" + pConn.hashCode() + "] conn=[" + pConn.getConnection().toString() + "] [closed=" //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+                    log.error("pConn: id=[" + i + "] pid=[" + pConn.hashCode() + "] conn=[" + pConn.getConnection().toString() + "] [closed=" //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
                             + pConn.getConnection().isClosed() + "] busy=[" + pConn.isBusy() + "]"); //$NON-NLS-1$ //$NON-NLS-2$
                 }
                 if (!hasElement) {
-                    log.info("the connection pool is empty!"); //$NON-NLS-1$
+                    log.error("the connection pool is empty!"); //$NON-NLS-1$
                 }
             } catch (Exception e) {
                 log.debug(e);
@@ -311,7 +325,7 @@ public class TdqAnalysisConnectionPool {
     public synchronized void refreshConnections() {
         Enumeration<PooledTdqAnalysisConnection> enumerate = this.getPConnections().elements();
         while (enumerate.hasMoreElements()) {
-            PooledTdqAnalysisConnection pConn = (PooledTdqAnalysisConnection) enumerate.nextElement();
+            PooledTdqAnalysisConnection pConn = enumerate.nextElement();
             int times = 0;
             busy: while (pConn.isBusy()) {
                 try {
@@ -335,12 +349,12 @@ public class TdqAnalysisConnectionPool {
     }
 
     /**
-     * DOC xqliu Comment method "closeConnectionPool".
+     * close all the connections belong to this pool, remove the pool from the map.
      */
     public void closeConnectionPool() {
         Enumeration<PooledTdqAnalysisConnection> enumerate = this.getPConnections().elements();
         while (enumerate.hasMoreElements()) {
-            PooledTdqAnalysisConnection pConn = (PooledTdqAnalysisConnection) enumerate.nextElement();
+            PooledTdqAnalysisConnection pConn = enumerate.nextElement();
             int times = 0;
             busy: if (pConn.isBusy()) {
                 times++;
@@ -353,6 +367,7 @@ public class TdqAnalysisConnectionPool {
         }
         getPConnections().removeAllElements();
         this.setPConnections(null);
+        INSTANCE_ANA_TO_POOL_MAP.put(analysis, null);
     }
 
     /**
@@ -382,7 +397,7 @@ public class TdqAnalysisConnectionPool {
         Enumeration<PooledTdqAnalysisConnection> enumerate = this.getPConnections().elements();
 
         while (enumerate.hasMoreElements()) {
-            PooledTdqAnalysisConnection pConn = (PooledTdqAnalysisConnection) enumerate.nextElement();
+            PooledTdqAnalysisConnection pConn = enumerate.nextElement();
             if (pConn.getConnection().equals(conn)) {
                 getPConnections().remove(pConn);
                 break;

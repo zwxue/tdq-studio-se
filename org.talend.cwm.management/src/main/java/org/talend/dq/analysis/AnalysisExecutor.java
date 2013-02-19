@@ -132,10 +132,7 @@ public abstract class AnalysisExecutor implements IAnalysisExecutor {
             // ADD msjian TDQ-5952: we should close connections always.
             // after run analysis, close connection at once when don't need it
             // mod yin TDQ-5362 20120919
-            TdqAnalysisConnectionPool connectionPool = TdqAnalysisConnectionPool.getConnectionPool(analysis);
-            if (connectionPool != null) {
-                connectionPool.closeConnectionPool();
-            }
+            TdqAnalysisConnectionPool.closeConnectionPool(analysis);
             // TDQ-5952~
         }
 
@@ -361,10 +358,7 @@ public abstract class AnalysisExecutor implements IAnalysisExecutor {
      * @param analysisDataProvider
      */
     protected void resetConnectionPool(Analysis analysis) {
-        TdqAnalysisConnectionPool connectionPool = TdqAnalysisConnectionPool.getConnectionPool(analysis);
-        if (connectionPool != null) {
-            connectionPool.closeConnectionPool();
-        }
+        TdqAnalysisConnectionPool.closeConnectionPool(analysis);
     }
 
     /**
@@ -372,71 +366,6 @@ public abstract class AnalysisExecutor implements IAnalysisExecutor {
      */
     protected void resetConnectionPool() {
         this.resetConnectionPool(cachedAnalysis);
-    }
-
-
-    /**
-     * DOC xqliu Comment method "releasePooledConnection".
-     * 
-     * @deprecated use {@link resetConnectionPool}
-     * @param analysis
-     * @param dataProvider the talend Connection
-     * @param connection the java.sql.Connection
-     * @param colseConn close and remove the connection from the pool
-     */
-    @Deprecated
-    protected void releasePooledConnection(Analysis analysis, Connection dataProvider, java.sql.Connection connection,
-            boolean closeConn) {
-        if (dataProvider == null) {
-            return;
-        }
-        TdqAnalysisConnectionPool connectionPool = TdqAnalysisConnectionPool.getConnectionPool(analysis);
-        connectionPool.returnConnection(connection);
-        if (closeConn) {
-            connectionPool.closeConnection(connection);
-            connectionPool.removeConnection(connection);
-        }
-    }
-
-    /**
-     * DOC xqliu Comment method "releasePooledConnection".
-     * 
-     * @deprecated use {@link resetConnectionPool}
-     * @param connection
-     * @param closeConn
-     */
-    @Deprecated
-    protected void releasePooledConnection(java.sql.Connection connection, boolean closeConn) {
-        TdqAnalysisConnectionPool connectionPool = getConnectionPool();
-        if (connectionPool != null) {
-            connectionPool.returnConnection(connection);
-            if (closeConn) {
-                connectionPool.closeConnection(connection);
-                connectionPool.removeConnection(connection);
-            }
-        }
-    }
-
-    /**
-     * DOC xqliu Comment method "returnPooledConnection".
-     * 
-     * @param connection
-     * @param closeConn
-     */
-    protected void returnPooledConnection(java.sql.Connection connection) {
-        TdqAnalysisConnectionPool connectionPool = getConnectionPool();
-        if (connectionPool != null) {
-            connectionPool.returnConnection(connection);
-        }
-    }
-
-    /**
-     * DOC xqliu Comment method "getConnectionPool".
-     * 
-     * @return
-     */
-    protected TdqAnalysisConnectionPool getConnectionPool() {
-        return TdqAnalysisConnectionPool.getConnectionPool(cachedAnalysis);
     }
 
     /**
@@ -533,11 +462,9 @@ public abstract class AnalysisExecutor implements IAnalysisExecutor {
      * 2012-3-14 TDQ-4433,reset indicatorDefinition for indicator if needed(indicatorDefinition is null or proxy).
      */
     protected void initializeIndicators(List<Indicator> indicators) {
-
         ModelElementAnalysisHandler modHandler = new ModelElementAnalysisHandler();
         for (Indicator ind : indicators) {
             modHandler.initializeIndicator(ind);
         }
     }
-
 }

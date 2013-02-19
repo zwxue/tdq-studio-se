@@ -12,11 +12,10 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.pref;
 
-
-
 import java.lang.management.ManagementFactory;
 import java.lang.management.MemoryPoolMXBean;
 import java.lang.management.MemoryType;
+import java.util.regex.Pattern;
 
 import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.jface.preference.ScaleFieldEditor;
@@ -24,6 +23,8 @@ import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
+import org.eclipse.swt.events.VerifyEvent;
+import org.eclipse.swt.events.VerifyListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -47,16 +48,14 @@ import org.talend.dq.analysis.memory.AnalysisThreadMemoryChangeNotifier;
  */
 public class AnalysisTuningPreferencePage extends PreferencePage implements IWorkbenchPreferencePage {
 
-
     public static final String CHECKED_ELEMENTS_LENGTH = "CHECKED_ELEMENTS_LENGTH";//$NON-NLS-1$
-
 
     private Text textNumberOfConnectionsPerAnalysis;
 
     private ScaleFieldEditor memoryScaleField;
 
     private CheckBoxFieldEditor autoComboField;
- 
+
     private int memMax;
 
     private int memFree;
@@ -92,11 +91,26 @@ public class AnalysisTuningPreferencePage extends PreferencePage implements IWor
         mainComposite.setLayout(new GridLayout());
         mainComposite.setLayoutData(new GridData(GridData.FILL_BOTH));
 
-           Group group2 = new Group(mainComposite, SWT.SHADOW_ETCHED_IN);
-        group2.setText(DefaultMessagesImpl.getString("AnalysisTuningPreferencePage.MemoryGroup")); //$NON-NLS-1$
-        GridLayout gridLayout1 = new GridLayout(2, false);
-        group2.setLayout(gridLayout1);
+        Group group1 = new Group(mainComposite, SWT.SHADOW_ETCHED_IN);
+        group1.setText(DefaultMessagesImpl.getString("AnalysisTuningPreferencePage.LimitGroup")); //$NON-NLS-1$
+        GridLayout gridLayout1 = new GridLayout();
+        group1.setLayout(gridLayout1);
         GridData gridData1 = new GridData(GridData.FILL_HORIZONTAL);
+        group1.setLayoutData(gridData1);
+
+        Composite composite = new Composite(group1, SWT.FILL);
+        composite.setLayout(new GridLayout(2, false));
+
+        GridData gdText = new GridData(SWT.CENTER, SWT.CENTER, false, false, 1, 1);
+        gdText.widthHint = 50;
+
+        createNumberOfConnectionsPerAnalysisLine(composite, gdText);
+
+        Group group2 = new Group(mainComposite, SWT.SHADOW_ETCHED_IN);
+        group2.setText(DefaultMessagesImpl.getString("AnalysisTuningPreferencePage.MemoryGroup")); //$NON-NLS-1$
+        gridLayout1 = new GridLayout(2, false);
+        group2.setLayout(gridLayout1);
+        gridData1 = new GridData(GridData.FILL_HORIZONTAL);
         group2.setLayoutData(gridData1);
 
         Composite composite2 = new Composite(group2, SWT.NONE);
@@ -173,7 +187,38 @@ public class AnalysisTuningPreferencePage extends PreferencePage implements IWor
         return mainComposite;
     }
 
-  
+    /**
+     * DOC xqliu Comment method "createNumberOfConnectionsPerAnalysisLine".
+     * 
+     * @param composite
+     * @param gdText
+     */
+    private void createNumberOfConnectionsPerAnalysisLine(Composite composite, GridData gdText) {
+        Label labelNocpa = new Label(composite, SWT.NONE);
+        labelNocpa.setAlignment(SWT.CENTER);
+        labelNocpa.setText(DefaultMessagesImpl.getString("AnalysisTuningPreferencePage.NumberOfConnectionsPerAnalysis")); //$NON-NLS-1$
+        textNumberOfConnectionsPerAnalysis = new Text(composite, SWT.BORDER);
+        textNumberOfConnectionsPerAnalysis.setLayoutData(gdText);
+        String nocpa = PlatformUI.getPreferenceStore().getString(TdqAnalysisConnectionPool.NUMBER_OF_CONNECTIONS_PER_ANALYSIS);
+
+        if (nocpa == null || nocpa.equals(PluginConstant.EMPTY_STRING)) {
+            nocpa = TdqAnalysisConnectionPool.CONNECTIONS_PER_ANALYSIS_DEFAULT_LENGTH + PluginConstant.EMPTY_STRING;
+        }
+        textNumberOfConnectionsPerAnalysis.setText(nocpa);
+        textNumberOfConnectionsPerAnalysis.addVerifyListener(new VerifyListener() {
+
+            public void verifyText(VerifyEvent e) {
+                String inputValue = e.text;
+                Pattern pattern = Pattern.compile("^[0-9.]"); //$NON-NLS-1$
+                char[] charArray = inputValue.toCharArray();
+                for (char c : charArray) {
+                    if (!pattern.matcher(String.valueOf(c)).matches()) {
+                        e.doit = false;
+                    }
+                }
+            }
+        });
+    }
 
     /*
      * (non-Javadoc)
@@ -213,8 +258,6 @@ public class AnalysisTuningPreferencePage extends PreferencePage implements IWor
         autoComboField.store();
         super.performApply();
     }
-
- 
 
     /**
      * DOC xqliu Comment method "saveNumberOfConnectionsPerAnalysis".

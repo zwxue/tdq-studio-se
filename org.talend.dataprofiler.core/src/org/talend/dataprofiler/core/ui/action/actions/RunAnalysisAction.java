@@ -278,10 +278,7 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
                     }
                     if (monitor.isCanceled()) {
                         thread.interrupt();
-                        TdqAnalysisConnectionPool connectionPool = TdqAnalysisConnectionPool.getConnectionPool(analysis);
-                        if (connectionPool != null) {
-                            connectionPool.closeConnectionPool();
-                        }
+                        TdqAnalysisConnectionPool.closeConnectionPool(analysis);
                         executed = new ReturnCode(DefaultMessagesImpl.getString("RunAnalysisAction.TaskCancel"), false); //$NON-NLS-1$
                         break;
                     }

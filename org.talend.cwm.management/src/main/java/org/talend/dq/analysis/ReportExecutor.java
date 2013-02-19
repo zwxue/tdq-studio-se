@@ -64,10 +64,7 @@ public class ReportExecutor implements IReportExecutor {
 
                 // ADD msjian TDQ-5952: we should close connections always
                 // MOD yyin TDQ-5362
-                TdqAnalysisConnectionPool connectionPool = TdqAnalysisConnectionPool.getConnectionPool(analysis);
-                if (connectionPool != null) {
-                    connectionPool.closeConnectionPool();
-                }
+                TdqAnalysisConnectionPool.closeConnectionPool(analysis);
                 // TDQ-5952~
                 if (executeRc.getMessage() != null) {
                     final Analysis finalAnalysis = analysis;
