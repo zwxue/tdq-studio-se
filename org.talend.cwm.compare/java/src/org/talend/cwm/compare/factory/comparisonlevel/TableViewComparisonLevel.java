@@ -97,6 +97,9 @@ public class TableViewComparisonLevel extends AbstractComparisonLevel {
 
         URI uri = URI.createPlatformResourceURI(tempConnectionFile.getFullPath().toString(), false);
         Resource resource = EMFSharedResources.getInstance().getResource(uri, true);
+        if (resource == null) {
+            throw new ReloadCompareException(DefaultMessagesImpl.getString("TableViewComparisonLevel.NoFactoryFoundForURI", uri)); //$NON-NLS-1$
+        }
         Collection<Connection> tdDataProviders = ConnectionHelper.getTdDataProviders(resource.getContents());
 
         if (tdDataProviders.isEmpty()) {

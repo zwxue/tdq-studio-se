@@ -64,30 +64,35 @@ public class UpdateSomePatternToMatchMysql extends AbstractWorksapceUpdateTask {
         }
         URI uri = URI.createFileURI(updateFile.getAbsolutePath());
         Resource patternResource = EMFSharedResources.getInstance().reloadResource(uri);
-        Pattern thePattern = retirePattern(patternResource);
-        for (PatternComponent currentExpression : thePattern.getComponents()) {
-            if (currentExpression instanceof RegularExpression) {
-                if (PatternLanguageType.MYSQL.getLiteral().equals(
-                        ((RegularExpression) currentExpression).getExpression().getLanguage())) {
-                    return true;// if the case of Mysql has been added.
+        if (patternResource != null) {
+            Pattern thePattern = retirePattern(patternResource);
+            for (PatternComponent currentExpression : thePattern.getComponents()) {
+                if (currentExpression instanceof RegularExpression) {
+                    if (PatternLanguageType.MYSQL.getLiteral().equals(
+                            ((RegularExpression) currentExpression).getExpression().getLanguage())) {
+                        return true;// if the case of Mysql has been added.
+                    }
                 }
             }
+            String language = PatternLanguageType.MYSQL.getLiteral();
+            RegularExpression newRegularExpress = BooleanExpressionHelper.createRegularExpression(language, EXPRESSIONBODY);
+            String expressionType = DomainHelper.getExpressionType(thePattern);
+            newRegularExpress.setExpressionType(expressionType);
+            List<PatternComponent> componentsList = new ArrayList<PatternComponent>();
+            componentsList.add(newRegularExpress);
+            componentsList.addAll(thePattern.getComponents());
+            thePattern.getComponents().clear();
+            thePattern.getComponents().addAll(componentsList);
+
+            ReturnCode rc = PatternResourceFileHelper.getInstance().save(thePattern);
+
+            uri = URI.createFileURI(updateFile.getAbsolutePath());
+            EMFSharedResources.getInstance().reloadResource(uri);
+            return rc.isOk();
+        } else {
+            log.error(DefaultMessagesImpl.getString("UpdateSomePatternToMatchMysql_logErr", patternResource)); //$NON-NLS-1$
+            return false;
         }
-        String language = PatternLanguageType.MYSQL.getLiteral();
-        RegularExpression newRegularExpress = BooleanExpressionHelper.createRegularExpression(language, EXPRESSIONBODY);
-        String expressionType = DomainHelper.getExpressionType(thePattern);
-        newRegularExpress.setExpressionType(expressionType);
-        List<PatternComponent> componentsList = new ArrayList<PatternComponent>();
-        componentsList.add(newRegularExpress);
-        componentsList.addAll(thePattern.getComponents());
-        thePattern.getComponents().clear();
-        thePattern.getComponents().addAll(componentsList);
-
-        ReturnCode rc = PatternResourceFileHelper.getInstance().save(thePattern);
-
-        uri = URI.createFileURI(updateFile.getAbsolutePath());
-        EMFSharedResources.getInstance().reloadResource(uri);
-        return rc.isOk();
 
     }
 
@@ -107,6 +112,7 @@ public class UpdateSomePatternToMatchMysql extends AbstractWorksapceUpdateTask {
         }
         PatternSwitch<Pattern> mySwitch = new PatternSwitch<Pattern>() {
 
+            @Override
             public Pattern casePattern(Pattern object) {
                 return object;
             }

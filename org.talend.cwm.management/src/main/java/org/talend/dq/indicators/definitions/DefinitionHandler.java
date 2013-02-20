@@ -277,15 +277,17 @@ public final class DefinitionHandler {
         // MOD mzhao feature 13676,Reload from original place of .talend.definition file. 2010-07-09
         URI uri = URI.createPlatformPluginURI(PLUGIN_PATH, false);
         Resource resource = EMFSharedResources.getInstance().getResource(uri, true);
-        EMFUtil.changeUri(resource, destinationUri);
+        if (resource != null) {
+            EMFUtil.changeUri(resource, destinationUri);
 
-        if (EMFSharedResources.getInstance().saveResource(resource)) {
-            if (log.isInfoEnabled()) {
-                log.info("Indicator default definitions correctly saved in " + resource.getURI()); //$NON-NLS-1$
+            if (EMFSharedResources.getInstance().saveResource(resource)) {
+                if (log.isInfoEnabled()) {
+                    log.info("Indicator default definitions correctly saved in " + resource.getURI()); //$NON-NLS-1$
+                }
+            } else {
+                log.error(Messages.getString("DefinitionHandler.FailToSave", resource.getURI()));//$NON-NLS-1$
+
             }
-        } else {
-            log.error(Messages.getString("DefinitionHandler.FailToSave", resource.getURI()));//$NON-NLS-1$
-
         }
         return resource;
     }
@@ -541,7 +543,7 @@ public final class DefinitionHandler {
      */
     public void updateAggregates() {
         List<IndicatorDefinition> indicatorsDefinitions = getIndicatorsDefinitions();
-        
+
         String defFileExt = PluginConstant.DOT_STRING + FactoriesUtil.DEFINITION;
         for (IndicatorDefinition indiDef : indicatorsDefinitions) {
             EList<IndicatorDefinition> aggregatedDefinitions = indiDef.getAggregatedDefinitions();
@@ -556,8 +558,8 @@ public final class DefinitionHandler {
                 }
                 String oldLabel = (oldUri.lastSegment());
                 oldLabel = oldLabel.replace(defFileExt, PluginConstant.EMPTY_STRING);
-                if (oldLabel.equalsIgnoreCase("Inter Quartile Range")) {
-                    oldLabel = "IQR";
+                if (oldLabel.equalsIgnoreCase("Inter Quartile Range")) { //$NON-NLS-1$
+                    oldLabel = "IQR"; //$NON-NLS-1$
                 }
                 IndicatorDefinition find = getIndicatorDefinition(oldLabel);
                 if (find != null) {
