@@ -31,6 +31,7 @@ import org.talend.dq.helper.ProxyRepositoryManager;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.writer.EMFSharedResources;
 import org.talend.repository.model.RepositoryNode;
+
 /**
  * DOC qiongli class global comment. Detailled comment <br/>
  * 
@@ -54,16 +55,18 @@ public class CommonEditorPartListener extends PartListener {
         URI uri = URI.createPlatformResourceURI(propertyFile.getFullPath().toString(), false);
         EMFSharedResources.getInstance().unloadResource(uri.toString());
         Resource propertyResource = EMFSharedResources.getInstance().getResource(uri, true);
-        EList<EObject> contents = propertyResource.getContents();
-        Property property = null;
-        for (EObject obj : contents) {
-            if (obj instanceof Property) {
-                property = (Property) obj;
-                break;
+        if (propertyResource != null) {
+            EList<EObject> contents = propertyResource.getContents();
+            Property property = null;
+            for (EObject obj : contents) {
+                if (obj instanceof Property) {
+                    property = (Property) obj;
+                    break;
+                }
             }
-        }
-        if (property != null) {
-            tdqItem = property.getItem();
+            if (property != null) {
+                tdqItem = property.getItem();
+            }
         }
         return tdqItem;
     }

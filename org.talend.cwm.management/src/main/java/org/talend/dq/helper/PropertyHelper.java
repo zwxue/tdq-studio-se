@@ -23,7 +23,9 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
@@ -138,10 +140,13 @@ public final class PropertyHelper {
             if (StringUtils.equalsIgnoreCase(file.getFileExtension(), FactoriesUtil.PROPERTIES_EXTENSION)) {
                 URI propURI = URI.createPlatformResourceURI(file.getFullPath().toOSString(), false);
                 Resource resource = EMFSharedResources.getInstance().getResource(propURI, true);
-                if (resource.getContents() != null) {
-                    Object object = EcoreUtil.getObjectByType(resource.getContents(), PropertiesPackage.eINSTANCE.getProperty());
-                    if (object != null) {
-                        return (Property) object;
+                if (resource != null) {
+                    EList<EObject> contents = resource.getContents();
+                    if (contents != null) {
+                        Object object = EcoreUtil.getObjectByType(contents, PropertiesPackage.eINSTANCE.getProperty());
+                        if (object != null) {
+                            return (Property) object;
+                        }
                     }
                 }
             } else {
