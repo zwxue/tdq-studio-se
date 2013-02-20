@@ -65,9 +65,6 @@ public class TableViewComparisonLevel extends AbstractComparisonLevel {
 
     protected static Logger log = Logger.getLogger(TableViewComparisonLevel.class);
 
-    /**
-     * 
-     */
     private static final List<TdColumn> EMPTY_COLUMN_LIST = Collections.emptyList();
 
     public TableViewComparisonLevel(DBColumnFolderRepNode dbFolderNode) {
@@ -100,6 +97,9 @@ public class TableViewComparisonLevel extends AbstractComparisonLevel {
 
         URI uri = URI.createPlatformResourceURI(tempConnectionFile.getFullPath().toString(), false);
         Resource resource = EMFSharedResources.getInstance().getResource(uri, true);
+        if (resource == null) {
+            throw new ReloadCompareException(DefaultMessagesImpl.getString("TableViewComparisonLevel.NoFactoryFoundForURI", uri)); //$NON-NLS-1$
+        }
         Collection<Connection> tdDataProviders = ConnectionHelper.getTdDataProviders(resource.getContents());
 
         if (tdDataProviders.isEmpty()) {
@@ -117,7 +117,6 @@ public class TableViewComparisonLevel extends AbstractComparisonLevel {
 
     @Override
     protected boolean compareWithReloadObject() throws ReloadCompareException {
-
         // add option for ignoring some elements
         MatchModel match = null;
         try {
@@ -259,8 +258,7 @@ public class TableViewComparisonLevel extends AbstractComparisonLevel {
         Resource rightResource = null;
         rightResource = EMFSharedResources.getInstance().getResource(uri, true);
         if (rightResource == null) {
-            throw new ReloadCompareException(DefaultMessagesImpl.getString("TableViewComparisonLevel.NoFactoryFoundForURI", uri));
-            //$NON-NLS-1$
+            throw new ReloadCompareException(DefaultMessagesImpl.getString("TableViewComparisonLevel.NoFactoryFoundForURI", uri)); //$NON-NLS-1$
         }
         rightResource.getContents().clear();
         for (TdColumn column : columns) {
