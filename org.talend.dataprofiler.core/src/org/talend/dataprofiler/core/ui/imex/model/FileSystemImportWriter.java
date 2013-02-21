@@ -39,7 +39,6 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.talend.commons.bridge.ReponsitoryContextBridge;
 import org.talend.commons.emf.EMFUtil;
 import org.talend.commons.emf.FactoriesUtil;
-import org.talend.commons.utils.io.FilesUtils;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
 import org.talend.core.model.metadata.builder.database.JavaSqlFactory;
@@ -620,7 +619,7 @@ public class FileSystemImportWriter implements IImportWriter {
         // handle the category
         IndicatorCategory siDefCategory = IndicatorCategoryHelper.getCategory(siDef);
         IndicatorCategory indDefCategory = IndicatorCategoryHelper.getCategory(indDef);
-        if (siDefCategory != null && indDefCategory != null) {
+        if (siDefCategory != null && indDefCategory != null && !indDefCategory.eIsProxy()) {
             if (!siDefCategory.equals(indDefCategory)) {
                 IndicatorCategoryHelper.setCategory(siDef, indDefCategory);
                 isModified = true;
@@ -793,8 +792,6 @@ public class FileSystemImportWriter implements IImportWriter {
     public void finish(ItemRecord[] records, IProgressMonitor monitor) throws IOException, CoreException {
         ItemRecord.clear();
 
-        handleDefinitionFile();
-
         checkImportItems();
 
         doMigration(monitor);
@@ -820,22 +817,8 @@ public class FileSystemImportWriter implements IImportWriter {
 
             removeInvalidDependency(property);
 
-            // restoreCorruptedConn(property);
-
         }
 
-    }
-
-    private void handleDefinitionFile() throws IOException {
-        IFile defIFile = ResourceManager.getLibrariesFolder().getFile(DEFINITION_FILE_NAME);
-
-        if (this.definitionFile != null && this.definitionFile.exists()) {
-            File defFile = defIFile.getLocation().toFile();
-            FilesUtils.copyFile(this.definitionFile, defFile);
-
-            URI uri = URI.createPlatformResourceURI(defIFile.getFullPath().toString(), false);
-            EMFSharedResources.getInstance().unloadResource(uri.toString());
-        }
     }
 
     private void doMigration(IProgressMonitor monitor) {
