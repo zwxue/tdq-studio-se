@@ -2,28 +2,37 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Assistant de création des intervalles</title>
+<title>Statistiques simples</title>
 <link type="text/css" href="style.css" rel="stylesheet"></link>
 </head>
 <body>
-	<h1>Statistiques simples :</h1>
+	<h1>Statistiques simples</h1>
 	<hr>
 	
-	&nbsp;&nbsp;Effectue quelques comptes simples sur vos données. 
+	Ils fournissent des statistiques simples sur le nombre d'enregistrements.
 	<p>
-	&nbsp;&nbsp;Cet indicateur vous donne une vue d'ensemble du contenu de la colonne, combien de données nulles il y a, combien de données distinctes...
+	Cet indicateur vous donne une vue d'ensemble du contenu de la colonne, combien de données nulles il y a, combien de données distinctes...
+    
 	<p>
-	"Compte de valeurs distinctes" compte le nombre de valeurs distinctes de votre colonne (SELECT DISTINCT ...)
+	<ul>
+	<li>Blank count : compte le nombre de lignes blanches. Un "blanc" est composé de données textuelles non nulles contenant uniquement un espace blanc. Notez qu'Oracle ne fait pas la différence entre une chaîne vide et une valeur nulle.</li>
 	<p>
-    "Compte de valeurs uniques" compte le nombre de valeurs distinctes n'ayant qu'une seule instance. Il est nécessairement inférieur ou égal au "compte de valeurs distinctes".
-    <p>
-    "Compte des valeurs en doublon" compte le nombre de valeurs apparaissant plus d'une fois.
+	<li>Default value count : compte le nombre de valeurs par défaut.</li>
 	<p>
-    Ces comptes sont liés à travers la relation :
-    <p>
-	<code>"Compte des valeurs en doublon" + "Compte des valeurs uniques" = "Compte distinct"</code>
+	<li>Distinct count : compte le nombre de valeurs distinctes de votre colonne.</li>
 	<p>
-	Par exemple, a,a,a,a,b,b,c,d,e => 9 valeurs, 5 valeurs distinctes, 3 valeurs uniques, 2 valeurs en doublon.
+	<li>Duplicate count : compte le nombre de valeurs qui apparaissent plus d'une fois. La relation est la suivante : Duplicate count + Unique count = Distinct count.</li>
+	<p>
+	<li>Null count : compte le nombre de lignes nulles.</li>
+	<p>
+	<li>Row count : compte le nombre de lignes.</li>
+	<p>
+	<li>Unique count : compte le nombre de valeurs distinctes avec une seule occurrence. Le compte est forcément inférieur ou égal au compte distinct.</li>
+	</ul>
+	
+	<p>
+	Par exemple, a,a,a,a,b,b,c,d,e => 9 valeurs, 5 valeurs distinctes, 3 valeurs uniques, 2 valeurs en doublon.	
+	<p>
 	
 	<iframe align="top" frameborder="0" scrolling="no" id="footer" src="footer.html"></iframe>
 	
