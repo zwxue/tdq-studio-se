@@ -2,21 +2,25 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Assistant de création des intervalles</title>
+<title>Statistiques de fréquence Soundex</title>
 <link type="text/css" href="style.css" rel="stylesheet"></link>
 </head>
 <body>
-	<h1>Statistiques de fréquence Soundex :</h1>
+	<h1>Statistiques de fréquence Soundex</h1>
 	<hr>
 	
-	&nbsp;&nbsp;Fournit des indicateurs pour analyser la fréquence phonétique de vos données. Il est utile afin d'identifier les fautes d'orthographe ou de frappe.  
+	Les indicateurs de ce groupe utilisent l'algorithme Soundex construit dans le SGBD.
 	<p>
-	&nbsp;&nbsp;Par exemple, "abod" et "adobe" produiront le même son même si ces mots sont différents. Ces indicateurs afficheront que "adobe" a deux orthographes différentes. 
+	Ils indexent les enregistrements par son. Ainsi, les enregistrements ayant la même prononciation (uniquement la prononciation anglaise) sont encodés avec la même représentation pour qu'ils puissent correspondre malgré de légères différences orthographiques.
 	<p>
-	&nbsp;&nbsp;La table de fréquence soundex affiche les sons les plus fréquents dans vos données et combien de fois ils apparaissent. 
-	<p>
-	&nbsp;&nbsp;La table de basse fréquence soundex affiche les sons les moins fréquents et combien de fois ils apparaissent.   
 	
+	<ul>
+		<li>Soundex frequency table : calcule le nombre d'enregistrements distincts les plus fréquents relativement au nombre total d'enregistrements ayant la même prononciation.</li>
+		<p>
+	    <li>Soundex low frequency table : calcule le nombre d'enregistrements distincts les moins fréquents relativement au nombre total d'enregistrements ayant la même prononciation.</li>
+    </ul>
+    
+	<p>	
 	<iframe align="top" frameborder="0" scrolling="no" id="footer" src="footer.html"></iframe>
 	
 </body>

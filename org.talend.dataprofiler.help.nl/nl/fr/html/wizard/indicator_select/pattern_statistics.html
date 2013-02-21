@@ -2,23 +2,25 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Assistant de création des intervalles</title>
+<title>Statistiques de fréquence des modèles</title>
 <link type="text/css" href="style.css" rel="stylesheet"></link>
 </head>
 <body>
-	<h1>Statistiques de fréquence des modèles :</h1>
+	<h1>Statistiques de fréquence des modèles</h1>
 	<hr>
 	
-	&nbsp;&nbsp;Fournit des indicateurs pour analyser la structure de vos données. Remplace tous les caractères alphabétiques en minuscules par "a", tous les caractères alphabétiques en majuscules par "A" et tous les caractères numériques par "9".
+	Les indicateurs de ce groupe déterminent les modèles les plus fréquents et les moins fréquents.
 	<p>
-	&nbsp;&nbsp;Par exemple, un code postal anglais tel que "SL6 1NJ" donnera le modèle suivant : "AA9 9AA".
-	<p>
-	&nbsp;&nbsp;La table de fréquence des modèles affiche les modèles les plus fréquents dans vos données et le nombre de fois qu'ils apparaissent.
-	<p>
-	&nbsp;&nbsp;La table de basse fréquence des modèles affiche les modèles les moins fréquents et le nombre de fois qu'ils apparaissent.  
-	<p>
-	&nbsp;&nbsp;La table de fréquence de modèles de date affiche les modèles fréquents ayant un format de date spécialement conçu dans vos données et combien de fois ils apparaissent. Ne l'exécutez que dans le moteur Java.   
 	
+	<ul>
+    	<li>Pattern frequency table : calcule le nombre d'enregistrements les plus fréquents pour chaque modèle distinct.</li>
+		<p>
+	    <li>Pattern low frequency table : calcule le nombre d'enregistrements les moins fréquents pour chaque modèle distinct.</li>
+		<p>
+    	<li>Date pattern frequency table : retourne les modèles de date à partir de colonnes de date ou de texte. Cela ne fonctionne qu'avec le moteur Java.</li>
+	</ul>
+	
+	<p>
 	<iframe align="top" frameborder="0" scrolling="no" id="footer" src="footer.html"></iframe>
 
 </body>
