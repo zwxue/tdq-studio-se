@@ -655,7 +655,7 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
         if (dataProvider instanceof DatabaseConnection) {
             subtype = TaggedValueHelper.getValueString(TaggedValueHelper.DB_PRODUCT_NAME, dataProvider);
             if (PluginConstant.EMPTY_STRING.equals(subtype)) { // tagged values not present in local connection file.
-                ConnectionUtils.updataTaggedValueForConnectionItem(connectionItem);
+                ConnectionUtils.updataTaggedValueForConnectionItem(dataProvider);
                 subtype = TaggedValueHelper.getValueString(TaggedValueHelper.DB_PRODUCT_NAME, dataProvider);
                 if (!PluginConstant.EMPTY_STRING.equals(subtype)) {
                     version = TaggedValueHelper.getValueString(TaggedValueHelper.DB_PRODUCT_VERSION, dataProvider);

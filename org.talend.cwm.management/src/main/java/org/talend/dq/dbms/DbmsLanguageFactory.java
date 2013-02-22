@@ -71,6 +71,13 @@ public final class DbmsLanguageFactory {
             dbmsLanguage = createDbmsLanguage(DbmsLanguage.DELIMITEDFILE, PluginConstant.EMPTY_STRING);
         } else if (dataprovider != null || isMdm) {
             String productSubtype = TaggedValueHelper.getValueString(TaggedValueHelper.DB_PRODUCT_NAME, dataprovider);
+            // Added 20130222 TDQ-6760 yyin, if the tag value is null, update it
+            // All analysis & reports will go here, so check it here is better than other place.
+            if (StringUtils.isBlank(productSubtype)) {
+                ConnectionUtils.updataTaggedValueForConnectionItem(dataprovider);
+                productSubtype = TaggedValueHelper.getValueString(TaggedValueHelper.DB_PRODUCT_NAME, dataprovider);
+            }
+            // ~
             String productVersion = TaggedValueHelper.getValueString(TaggedValueHelper.DB_PRODUCT_VERSION, dataprovider);
 
             final String dbmsSubtype = isMdm ? DbmsLanguage.MDM : productSubtype;

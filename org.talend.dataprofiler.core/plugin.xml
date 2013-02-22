@@ -1570,12 +1570,6 @@
            name="Update Text Statistics Indicators Task"
            version="5.3.0">
      </workspacetask>
-     <workspacetask
-           class="org.talend.dataprofiler.core.migration.impl.UpdataTaggedValueForConnectionItemTask"
-           id="org.talend.dataprofiler.core.migration.impl.UpdataTaggedValueForConnectionItemTask"
-           name="Add the new Tag:TaggedValueHelper.DB_PRODUCT_NAME in connection if it does not have one"
-           version="5.3.0">
-     </workspacetask>  
      
   </extension>
   <extension
