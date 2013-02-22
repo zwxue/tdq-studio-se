@@ -65,7 +65,7 @@ public abstract class AbstractSchemaEvaluator<T> extends Evaluator<T> {
     /**
      * 
      */
-    public static final char FILTER_SEP = ',';//$NON-NLS-1$
+    public static final char FILTER_SEP = ',';
 
     private DbmsLanguage dbmsLanguage;
 
@@ -235,7 +235,7 @@ public abstract class AbstractSchemaEvaluator<T> extends Evaluator<T> {
         } catch (SQLException e) {
 
             log.warn(Messages.getString("AbstractSchemaEvaluator.IndexException", //$NON-NLS-1$
-                    this.dbms().toQualifiedName(catalog, schema, table), e.getLocalizedMessage()), e); //$NON-NLS-1$
+                    this.dbms().toQualifiedName(catalog, schema, table), e.getLocalizedMessage()), e);
             // Oracle increments the number of cursors to close each time a new query is executed after this exception!
             reloadConnectionAfterException(catalog);
         }
@@ -351,7 +351,7 @@ public abstract class AbstractSchemaEvaluator<T> extends Evaluator<T> {
             statement.close();
             log.warn(e.getMessage() + " for SQL statement: " + sqlStatement); //$NON-NLS-1$
             if (log.isDebugEnabled()) {
-                log.debug(e, e); //$NON-NLS-1$
+                log.debug(e, e);
             }
             // some tables on Oracle give the following exception:
             // ORA-25191: cannot reference overflow table of an index-organized table
@@ -509,7 +509,8 @@ public abstract class AbstractSchemaEvaluator<T> extends Evaluator<T> {
             catalogIndic.setTableCount(catalogIndic.getTableCount() + tableCount);
             catalogIndic.setTableRowCount(catalogIndic.getTableRowCount() + schemaIndic.getTableRowCount());
             catalogIndic.setViewRowCount(catalogIndic.getViewRowCount() + schemaIndic.getViewRowCount());
-
+            // Added 20130221 TDQ-6546: add the missed the view count
+            catalogIndic.setViewCount(catalogIndic.getViewCount() + schemaIndic.getViewCount());
         } else if (!hasCatalog) { // has schema only
             // add it to list of indicators
             this.addToConnectionIndicator(schemaIndic);
@@ -672,8 +673,9 @@ public abstract class AbstractSchemaEvaluator<T> extends Evaluator<T> {
                             getConnection().getMetaData(), catalog, null);
                     if (schemas != null) {
                         for (Schema tdSchema : schemas) {
-                            if (tdSchema.getName().equals(schema.getName()))
+                            if (tdSchema.getName().equals(schema.getName())) {
                                 return true;
+                            }
                         }
                     }
                     // ~
