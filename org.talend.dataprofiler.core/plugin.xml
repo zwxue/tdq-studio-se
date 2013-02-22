@@ -1552,12 +1552,6 @@
            name="update file connection to add connection name"
            version="5.2.2">
      </workspacetask>
-     <workspacetask
-           class="org.talend.dataprofiler.core.migration.impl.UpdataTaggedValueForConnectionItemTask"
-           id="org.talend.dataprofiler.core.migration.impl.UpdataTaggedValueForConnectionItemTask"
-           name="Add new tagged values for imported old connections: TaggedValueHelper.DB_PRODUCT_NAME"
-           version="5.2.2">
-     </workspacetask>  
   </extension>
   <extension
         point="org.eclipse.ui.actionSets">

@@ -67,7 +67,6 @@ import org.talend.core.model.metadata.builder.database.dburl.SupportDBUrlType;
 import org.talend.core.model.metadata.builder.util.DatabaseConstant;
 import org.talend.core.model.metadata.builder.util.MetadataConnectionUtils;
 import org.talend.core.model.metadata.connection.hive.HiveConnVersionInfo;
-import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.properties.Item;
 import org.talend.core.model.properties.MDMConnectionItem;
 import org.talend.core.model.properties.Property;
@@ -1887,19 +1886,22 @@ public final class ConnectionUtils {
      * 
      * @throws SQLException
      */
-    public static void updataTaggedValueForConnectionItem(ConnectionItem connectionItem) {
-        Connection dataProvider = connectionItem.getConnection();
-        if (dataProvider instanceof DatabaseConnection) {
-            DatabaseConnection dbConn = (DatabaseConnection) dataProvider;
-            if (PluginConstant.EMPTY_STRING.equals(TaggedValueHelper.getValueString(TaggedValueHelper.DB_PRODUCT_NAME,
-                    dataProvider))) {
-                IMetadataConnection metaConnection = ConvertionHelper.convert(dbConn);
-                dbConn = (DatabaseConnection) MetadataFillFactory.getDBInstance().fillUIConnParams(metaConnection, dbConn);
-                if (dbConn != null) {
-                    try {
-                        ProxyRepositoryFactory.getInstance().save(connectionItem);
-                    } catch (PersistenceException e) {
-                        ExceptionHandler.process(e);
+    public static void updataTaggedValueForConnectionItem(Connection dataProvider) {
+        if (dataProvider instanceof DatabaseConnection
+                && StringUtils.isBlank(TaggedValueHelper.getValueString(TaggedValueHelper.DB_PRODUCT_NAME, dataProvider))) {
+            Property property = PropertyHelper.getProperty(dataProvider);
+            if (property != null) {
+                Item item = property.getItem();
+                if (item != null) {
+                    DatabaseConnection dbConn = (DatabaseConnection) dataProvider;
+                    IMetadataConnection metaConnection = ConvertionHelper.convert(dbConn);
+                    dbConn = (DatabaseConnection) MetadataFillFactory.getDBInstance().fillUIConnParams(metaConnection, dbConn);
+                    if (dbConn != null) {
+                        try {
+                            ProxyRepositoryFactory.getInstance().save(item);
+                        } catch (PersistenceException e) {
+                            ExceptionHandler.process(e);
+                        }
                     }
                 }
             }
