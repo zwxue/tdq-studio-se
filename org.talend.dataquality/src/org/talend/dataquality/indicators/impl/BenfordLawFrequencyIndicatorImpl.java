@@ -92,15 +92,14 @@ public class BenfordLawFrequencyIndicatorImpl extends FrequencyIndicatorImpl imp
     }
 
     /**
-     * if the val is 1~9, then return 1 if it is "0", return 0, if it is return , return -1 MOD 20130221 TDQ-6099
-     * yyin:add trim to avoid the blankspace at the beginning of the data
+     * if the val is 1~9, then return 1 if it is "0", return 0, if it is return , return -1
      * 
      * @param val
      * @return
      */
     private int isInvalid(Object val) {
         // MOD msjian TDQ-6123: fix a IndexOutOfBoundsException
-        String strValue = String.valueOf(val).trim();
+        String strValue = String.valueOf(val);
         if (strValue.length() < 1) {
             return -1;
         }
@@ -128,7 +127,6 @@ public class BenfordLawFrequencyIndicatorImpl extends FrequencyIndicatorImpl imp
     /**
      * <!-- begin-user-doc --> count the occur times for 1~9 at the beginning of every numbers. <!-- end-user-doc -->
      * 
-     * 
      * @generated NOT
      */
     @Override
@@ -146,8 +144,7 @@ public class BenfordLawFrequencyIndicatorImpl extends FrequencyIndicatorImpl imp
         } else if (isInvalid < 0) {
             setValue("invalid");
         } else {
-            // MOD 20130221 TDQ-6099 yyin:add trim to avoid the blankspace at the beginning of the data
-            setValue(String.valueOf(data).trim().substring(0, 1));
+            setValue(String.valueOf(data).substring(0, 1));
         }
 
         return true;

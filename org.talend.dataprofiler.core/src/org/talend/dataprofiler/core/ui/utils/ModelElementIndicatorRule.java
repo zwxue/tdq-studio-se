@@ -151,7 +151,7 @@ public final class ModelElementIndicatorRule {
             break;
         case BenfordLawFrequencyIndicatorEnum:
             // Added yyin 20121211 TDQ-6099: disable these three for INTERVAL type of Teradata
-            if (isTeradataInterval > 0 && ExecutionLanguage.SQL.equals(language)) {
+            if (isTeradataInterval > 0) {
                 return false;
             }
         case PatternFreqIndicatorEnum:
