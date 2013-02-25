@@ -25,10 +25,13 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Tree;
+import org.talend.commons.exception.PersistenceException;
 import org.talend.core.model.metadata.MetadataColumnRepositoryObject;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.properties.Property;
+import org.talend.core.model.repository.IRepositoryViewObject;
+import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.relational.TdColumn;
@@ -181,9 +184,22 @@ public abstract class AbstractPagePart {
     }
 
     private void setConnectionState(final AbstractAnalysisMetadataPage masterPage, final DataManager dataManager) {
-        if (dataManager != null) {
+        DataManager newDataManager = dataManager;
+        final DataManager fianlDataManager;
+        if (newDataManager != null) {
+            Property prop = PropertyHelper.getProperty(newDataManager);
             // MOD gdbu 2011-8-15 bug : TDQ-3213
             masterPage.reloadDataproviderAndFillConnCombo();
+            try {
+                if (newDataManager.eIsProxy()) {
+                    IRepositoryViewObject lastVersion = ProxyRepositoryFactory.getInstance().getLastVersion(prop.getId());
+                    prop = lastVersion.getProperty();
+                    newDataManager = (DataManager) PropertyHelper.getModelElement(prop);
+                }
+            } catch (PersistenceException e1) {
+                log.error(e1, e1);
+            }
+            fianlDataManager = newDataManager;
             // ~TDQ-3213
 
             // MOD yyin 201204 TDQ-4977
@@ -191,10 +207,9 @@ public abstract class AbstractPagePart {
 
             // MOD qiongli 2011-1-7 delimitedFile connection dosen't use 'dataManager.getName()'.
 
-            Property prop = PropertyHelper.getProperty(dataManager);
-            if (SwitchHelpers.CONNECTION_SWITCH.doSwitch(dataManager) != null) {
+            if (SwitchHelpers.CONNECTION_SWITCH.doSwitch(newDataManager) != null) {
                 value = masterPage.getConnCombo().getData(
-                        prop.getDisplayName() + RepositoryNodeHelper.getConnectionType(dataManager));
+                        prop.getDisplayName() + RepositoryNodeHelper.getConnectionType(newDataManager));
             }
             Integer index = 0;
             if (value != null && value instanceof Integer) {
@@ -217,7 +232,7 @@ public abstract class AbstractPagePart {
 
                     private int prevSelect = masterPage.getConnCombo().getSelectionIndex();
 
-                    private Connection dataProvider = (Connection) dataManager;
+                    private Connection dataProvider = (Connection) fianlDataManager;
 
                     public void widgetDefaultSelected(SelectionEvent e) {
                     }
