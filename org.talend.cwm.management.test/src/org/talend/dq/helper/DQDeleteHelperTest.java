@@ -30,7 +30,10 @@ import org.powermock.modules.junit4.rule.PowerMockRule;
 import org.talend.core.model.properties.Item;
 import org.talend.core.model.properties.ItemState;
 import org.talend.core.model.properties.Property;
+import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.dataquality.properties.TDQReportItem;
+import org.talend.repository.ProjectManager;
+import org.talend.repository.RepositoryWorkUnit;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
@@ -42,7 +45,8 @@ import orgomg.cwm.objectmodel.core.ModelElement;
  * 
  */
 // @RunWith(PowerMockRunner.class)
-@PrepareForTest({ DQDeleteHelper.class, PropertyHelper.class, ReportUtils.class, EObjectHelper.class })
+@PrepareForTest({ DQDeleteHelper.class, PropertyHelper.class, ReportUtils.class, EObjectHelper.class,
+        ProxyRepositoryFactory.class, ProjectManager.class })
 public class DQDeleteHelperTest {
 
     @Rule
@@ -63,7 +67,16 @@ public class DQDeleteHelperTest {
         when(item.getProperty()).thenReturn(prop);
         PowerMockito.mockStatic(PropertyHelper.class);
         when(PropertyHelper.getItemFile(prop)).thenReturn(file);
-        stub(method(ReportUtils.class, "getOutputFolder", IFile.class)).toReturn(folder);
+        stub(method(ReportUtils.class, "getOutputFolder", IFile.class)).toReturn(folder); //$NON-NLS-1$
+        PowerMockito.mockStatic(ProjectManager.class);
+        ProjectManager pmMock = PowerMockito.mock(ProjectManager.class);
+        when(ProjectManager.getInstance()).thenReturn(pmMock);
+        org.talend.core.model.general.Project projectMock = PowerMockito.mock(org.talend.core.model.general.Project.class);
+        when(pmMock.getCurrentProject()).thenReturn(projectMock);
+        PowerMockito.mockStatic(ProxyRepositoryFactory.class);
+        ProxyRepositoryFactory prfMock = PowerMockito.mock(ProxyRepositoryFactory.class);
+        when(ProxyRepositoryFactory.getInstance()).thenReturn(prfMock);
+        stub(method(ProxyRepositoryFactory.class, "executeRepositoryWorkUnit", RepositoryWorkUnit.class)); //$NON-NLS-1$
         ReturnCode rc = DQDeleteHelper.deleteRelations(item);
         assertTrue(rc.isOk());
 
