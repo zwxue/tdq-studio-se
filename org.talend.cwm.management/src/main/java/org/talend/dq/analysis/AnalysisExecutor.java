@@ -20,9 +20,6 @@ import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.common.util.EList;
 import org.talend.core.model.metadata.builder.connection.Connection;
-import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
-import org.talend.core.model.metadata.builder.connection.DelimitedFileConnection;
-import org.talend.core.model.metadata.builder.connection.MDMConnection;
 import org.talend.core.model.metadata.builder.database.JavaSqlFactory;
 import org.talend.cwm.helper.CatalogHelper;
 import org.talend.cwm.helper.SchemaHelper;
@@ -246,12 +243,8 @@ public abstract class AnalysisExecutor implements IAnalysisExecutor {
         }
         if (log.isInfoEnabled()) {
             if (SoftwaredeploymentPackage.eINSTANCE.getDataProvider().isInstance(connection)) {
-                boolean isMDM = connection instanceof MDMConnection;
-                boolean isDelimitedFile = connection instanceof DelimitedFileConnection;
-                log.info(Messages.getString("AnalysisExecutor.CONNECTIONTO")//$NON-NLS-1$
-                        + (isMDM ? ((MDMConnection) connection).getPathname()
-                                : isDelimitedFile ? ((DelimitedFileConnection) connection).getPathname()
-                                        : ((DatabaseConnection) connection).getURL()));
+                // MOD 20130225 TDQ-6632 the name of the item should be given (not the pathname)
+                log.info(Messages.getString("AnalysisExecutor.CONNECTIONTO", connection.getName()));//$NON-NLS-1$
             }
         }
         AnalysisResult results = analysis.getResults();
