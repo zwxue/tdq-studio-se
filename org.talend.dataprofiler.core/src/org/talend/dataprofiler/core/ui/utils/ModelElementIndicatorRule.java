@@ -138,7 +138,7 @@ public final class ModelElementIndicatorRule {
 
             if (Java2SqlType.isTextInSQL(javaType)) {
                 // Added yyin 20121212 TDQ-6099: disable for Teradata's interval_xx_to_xx type.
-                if (isTeradataInterval == Java2SqlType.TERADATA_INTERVAL_TO && ExecutionLanguage.SQL.equals(language)) {
+                if (isTeradataInterval > 0) {
                     return false;
                 }// ~
                 if (dataminingType == DataminingType.NOMINAL || dataminingType == DataminingType.UNSTRUCTURED_TEXT) {
@@ -172,7 +172,7 @@ public final class ModelElementIndicatorRule {
             if (!Java2SqlType.isDateInSQL(javaType) && !Java2SqlType.isNumbericInSQL(javaType)
                     && (dataminingType == DataminingType.NOMINAL || dataminingType == DataminingType.INTERVAL)) {
                 // Added yyin 20121212 TDQ-6099: disable for Teradata's interval_xx_to_xx type.
-                if (isTeradataInterval == Java2SqlType.TERADATA_INTERVAL_TO && ExecutionLanguage.SQL.equals(language)) {
+                if (isTeradataInterval >0 && ExecutionLanguage.SQL.equals(language)) {
                     return false;
                 }// ~
                 return true;

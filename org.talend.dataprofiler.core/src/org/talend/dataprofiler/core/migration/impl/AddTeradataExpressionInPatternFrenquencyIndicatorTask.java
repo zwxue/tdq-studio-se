@@ -33,15 +33,15 @@ public class AddTeradataExpressionInPatternFrenquencyIndicatorTask extends Abstr
 
     private final String Teradata = SupportDBUrlType.TERADATADEFAULTURL.getLanguage();
 
-    private final String PATTERN_FREQUENCY_SQL = "<sqlGenericExpression xmi:id=\"_kA11YE_MEeKv2IJ41ZWUFQ\" body=\"SELECT &lt;%=__COLUMN_NAMES__%>, COUNT(*) c FROM &lt;%=__TABLE_NAME__%> t &lt;%=__WHERE_CLAUSE__%> GROUP BY &lt;%=__GROUP_BY_ALIAS__%> ORDER BY c DESC\" language=\"Teradata\" />";//$NON-NLS-1$
-
     private final String CHAR_TOREPLACE = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";//$NON-NLS-1$
 
     private final String CHAR_REPLACE = "aaaaaaaaaaaaaaaaaaaaaaaaaaAAAAAAAAAAAAAAAAAAAAAAAAAA9999999999";//$NON-NLS-1$
 
-    private final String CHAR_NAME = "Characters mapping on Teradata";
+    private final String CHAR_NAME = "Characters mapping on Teradata";//$NON-NLS-1$
 
-    private final String PATTERN_LOW_FREQUENCY_SQL = "<sqlGenericExpression xmi:id=\"_sn8CgU_WEeKqC6ZsUWhp4g\" body=\"SELECT &lt;%=__COLUMN_NAMES__%>, COUNT(*) c FROM &lt;%=__TABLE_NAME__%> t &lt;%=__WHERE_CLAUSE__%> GROUP BY &lt;%=__GROUP_BY_ALIAS__%> ORDER BY c ASC\" language=\"Teradata\" />";//$NON-NLS-1$
+    private final String PATTERN_FREQUENCY_SQL = "SELECT <%=__COLUMN_NAMES__%>, COUNT(*) c FROM <%=__TABLE_NAME__%> t <%=__WHERE_CLAUSE__%> GROUP BY <%=__GROUP_BY_ALIAS__%> ORDER BY c DESC";//$NON-NLS-1$
+
+    private final String PATTERN_LOW_FREQUENCY_SQL = "SELECT <%=__COLUMN_NAMES__%>, COUNT(*) c FROM <%=__TABLE_NAME__%> t <%=__WHERE_CLAUSE__%> GROUP BY <%=__GROUP_BY_ALIAS__%> ORDER BY c ASC";//$NON-NLS-1$
 
     /*
      * (non-Javadoc)
