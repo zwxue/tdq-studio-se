@@ -38,6 +38,8 @@ import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.core.runtime.CoreRuntimePlugin;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
+import org.talend.dataprofiler.core.ui.utils.RepNodeUtils;
+import org.talend.dataprofiler.core.ui.views.resources.IRepositoryObjectCRUD;
 import org.talend.dq.helper.DQDeleteHelper;
 import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.helper.RepositoryNodeHelper;
@@ -54,7 +56,7 @@ import org.talend.repository.model.IRepositoryNode;
 // @RunWith(PowerMockRunner.class)
 @PrepareForTest({ CorePlugin.class, DQDeleteHelper.class, IProxyRepositoryFactory.class, PropertyHelper.class,
         MessageDialog.class, ProxyRepositoryFactory.class, RepositoryNodeHelper.class, CoreRuntimePlugin.class, Messages.class,
-        DefaultMessagesImpl.class })
+        DefaultMessagesImpl.class, RepNodeUtils.class })
 public class DQEmptyRecycleBinActionTest {
 
     @Rule
@@ -80,6 +82,11 @@ public class DQEmptyRecycleBinActionTest {
         when(Messages.getString(anyString())).thenReturn("aa");
         PowerMockito.mockStatic(DefaultMessagesImpl.class);
         when(DefaultMessagesImpl.getString(anyString())).thenReturn("bb");
+
+        IRepositoryObjectCRUD curdObject = mock(IRepositoryObjectCRUD.class);
+        PowerMockito.mockStatic(RepNodeUtils.class);
+        when(RepNodeUtils.getRepositoryObjectCRUD()).thenReturn(curdObject);
+
         dqEmptyAction_real = new DQEmptyRecycleBinAction();
         dqEmptyAction_mock = PowerMockito.spy(dqEmptyAction_real);
         PowerMockito.doReturn(null).when(dqEmptyAction_mock).getActivePage();
