@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.talend.cwm.db.connection.ConnectionUtils;
@@ -32,6 +33,7 @@ import org.talend.dataquality.indicators.IndicatorsPackage;
 import org.talend.dataquality.indicators.impl.RegexpMatchingIndicatorImpl;
 import org.talend.dq.analysis.memory.AnalysisThreadMemoryChangeNotifier;
 import org.talend.dq.analysis.memory.IMemoryChangeListener;
+import org.talend.dq.helper.UDIHelper;
 import org.talend.utils.collections.MultiMapHelper;
 import org.talend.utils.sugars.ReturnCode;
 
@@ -67,7 +69,7 @@ public abstract class Evaluator<T> implements IMemoryChangeListener {
 
     protected Set<Indicator> allIndicators = new HashSet<Indicator>();
 
-    private String javaPatternMessage;
+    private String javaPatternMessage = StringUtils.EMPTY;
 
     /**
      * Method "storeIndicator" stores the mapping between the analyzed element name and its indicators. if needed, this
@@ -161,6 +163,10 @@ public abstract class Evaluator<T> implements IMemoryChangeListener {
                 // prepare() method.
                 if (IndicatorsPackage.eINSTANCE.getRegexpMatchingIndicator().equals(indic.eClass())) {
                     javaPatternMessage = ((RegexpMatchingIndicatorImpl) indic).getJavaPatternMessage();
+                } else if (UDIHelper.isUDI(indic)) {
+                    // Added yyin TDQ-6632:"Problem when preparing all indicatorsnull"--> replace the null with
+                    // indicator's name
+                    javaPatternMessage = " : " + indic.getName();//$NON-NLS-1$
                 }
                 ok = false;
             }
