@@ -12,16 +12,18 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.action.actions;
 
-import static org.junit.Assert.*;
-import static org.mockito.Matchers.*;
-import static org.mockito.Mockito.*;
-import static org.powermock.api.support.membermodification.MemberMatcher.*;
-import static org.powermock.api.support.membermodification.MemberModifier.*;
+import static org.junit.Assert.assertNotNull;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+import static org.powermock.api.support.membermodification.MemberMatcher.method;
+import static org.powermock.api.support.membermodification.MemberModifier.stub;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.ui.navigator.CommonViewer;
@@ -65,7 +67,7 @@ import orgomg.cwm.objectmodel.core.ModelElement;
 @PrepareForTest({ CorePlugin.class, RepositoryNodeHelper.class, CoreRuntimePlugin.class, IProxyRepositoryFactory.class,
         PropertyHelper.class, DeleteModelElementConfirmDialog.class, EObjectHelper.class, ProxyRepositoryFactory.class,
         org.talend.core.repository.i18n.Messages.class, ResourceBundle.class, DefaultMessagesImpl.class, RepNodeUtils.class,
-        ResourceManager.class })
+        ResourceManager.class, MessageDialog.class })
 public class DQDeleteActionTest {
 
     @Rule
@@ -92,7 +94,7 @@ public class DQDeleteActionTest {
         stub(method(ResourceBundle.class, "getBundle", String.class)).toReturn(rb2);
         PowerMockito.mockStatic(Messages.class);
         when(Messages.getString(anyString())).thenReturn("aa");
-        PowerMockito.mock(DefaultMessagesImpl.class);
+        PowerMockito.mockStatic(DefaultMessagesImpl.class);
         when(DefaultMessagesImpl.getString(anyString())).thenReturn("bb").thenReturn("cc").thenReturn("dd").thenReturn("ee");
         dqDeleteAction_real = new DQDeleteAction();
         deleteAction_mock = PowerMockito.spy(dqDeleteAction_real);
@@ -232,6 +234,8 @@ public class DQDeleteActionTest {
         when(commonView.getSelection()).thenReturn(selecetion);
         assertNotNull(dqDeleteAction_real.getSelection());
 
+        PowerMockito.mockStatic(MessageDialog.class);
+        stub(method(MessageDialog.class, "openError"));
         deleteAction_mock.run();
 
     }
