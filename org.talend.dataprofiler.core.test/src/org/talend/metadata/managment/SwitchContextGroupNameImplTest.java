@@ -80,9 +80,9 @@ public class SwitchContextGroupNameImplTest {
 
     String connectionName = "conn1"; //$NON-NLS-1$
 
-    String Connectionlabel = ConnectionContextHelper.convertContextLabel(connectionName);// should be label of
-                                                                                         // connection property when
-                                                                                         // use
+    String Connectionlabel = "";// should be label of
+                                // connection property when
+                                // use
 
     String prefixName = Connectionlabel + ConnectionContextHelper.LINE;
 
@@ -103,6 +103,7 @@ public class SwitchContextGroupNameImplTest {
     public void setUp() throws Exception {
         UnitTestBuildHelper.deleteCurrentProject();
         UnitTestBuildHelper.createRealProject("testForSoftWareTDQ"); //$NON-NLS-1$
+        Connectionlabel = ConnectionContextHelper.convertContextLabel(connectionName);
         createContextItem();
     }
 
