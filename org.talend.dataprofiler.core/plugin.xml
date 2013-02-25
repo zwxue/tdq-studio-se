@@ -1570,6 +1570,12 @@
            name="Update Text Statistics Indicators Task"
            version="5.3.0">
      </workspacetask>
+     <workspacetask
+           class="org.talend.dataprofiler.core.migration.impl.UpdateAllIndicators4DefaultTask"
+           id="org.talend.dataprofiler.core.migration.impl.UpdateAllIndicators4DefaultTask"
+           name="Update All Indicators for Default type Task"
+           version="5.3.0">
+     </workspacetask>  
      
   </extension>
   <extension

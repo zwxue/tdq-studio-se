@@ -131,7 +131,6 @@ public enum PatternLanguageType {
     }
 
     public static String findLanguageByName(String name) {
-
         for (PatternLanguageType oneType : values()) {
             if (name != null && name.equalsIgnoreCase(oneType.getName())) {
                 return oneType.getLiteral();
@@ -142,9 +141,6 @@ public enum PatternLanguageType {
     }
 
     public static String findNameByLanguage(String language) {
-        if (language != null && language.trim().equals("Default")) { //$NON-NLS-1$
-            return "Default"; //$NON-NLS-1$
-        }
         for (PatternLanguageType oneType : values()) {
             if (language != null && language.equalsIgnoreCase(oneType.getLiteral())) {
                 return oneType.getName();

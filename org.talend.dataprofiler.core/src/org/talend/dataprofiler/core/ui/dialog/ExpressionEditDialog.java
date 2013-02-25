@@ -271,8 +271,8 @@ public class ExpressionEditDialog extends TrayDialog {
     protected Control createDialogAreaForNotUDI(Composite parent) {
         Composite comp = (Composite) super.createDialogArea(parent);
         GridData data = new GridData(SWT.FILL, SWT.FILL, true, true);
-        data.widthHint = 650;
-        data.heightHint = 380;
+        data.widthHint = 750;
+        data.heightHint = 650;
         comp.setLayoutData(data);
 
         PlatformUI.getWorkbench().getHelpSystem().setHelp(comp, HelpPlugin.getDefault().getExpressionEditContextID());
@@ -299,7 +299,7 @@ public class ExpressionEditDialog extends TrayDialog {
     protected Control createDialogArea(Composite parent) {
         Control comp;
         // if the category is user define, then create tabs, else as before
-        if (IndicatorCategoryHelper.isUserDefCategory(category)) {
+        if (definition instanceof UDIndicatorDefinition && IndicatorCategoryHelper.isUserDefCategory(category)) {
             comp = createDialogAreaForUDI(parent);
         } else {
             comp = createDialogAreaForNotUDI(parent);
