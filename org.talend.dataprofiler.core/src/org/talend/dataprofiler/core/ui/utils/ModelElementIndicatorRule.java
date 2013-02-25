@@ -141,7 +141,7 @@ public final class ModelElementIndicatorRule {
         case AverageLengthWithNullBlankIndicatorEnum:
             if (Java2SqlType.isTextInSQL(javaType)) {
                 // Added yyin 20121212 TDQ-6099: disable for Teradata's interval_xx_to_xx type.
-                if (isTeradataInterval == Java2SqlType.TERADATA_INTERVAL_TO && ExecutionLanguage.SQL.equals(language)) {
+                if (isTeradataInterval > 0) {
                     return false;
                 }
                 if (dataminingType == DataminingType.NOMINAL || dataminingType == DataminingType.UNSTRUCTURED_TEXT) {
