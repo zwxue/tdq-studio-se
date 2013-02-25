@@ -12,6 +12,9 @@
 // ============================================================================
 package org.talend.resource;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
@@ -19,7 +22,14 @@ import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.talend.commons.bridge.ReponsitoryContextBridge;
+import org.talend.core.model.properties.Item;
+import org.talend.core.model.properties.PropertiesPackage;
+import org.talend.core.model.properties.Property;
+import org.talend.dataquality.properties.TDQJrxmlItem;
 
 /**
  * DOC bZhou class global comment. Detailled comment
@@ -148,6 +158,7 @@ public final class ResourceManager {
     public static IFolder getRulesParserFolder() {
         return getOneFolder(EResourceConstant.RULES_PARSER);
     }
+
     /**
      * DOC bZhou Comment method "getPatternFolder".
      * 
@@ -543,5 +554,42 @@ public final class ResourceManager {
 
     public static boolean isMac() {
         return System.getProperty("os.name").toUpperCase().indexOf("MAC") > -1; //$NON-NLS-1$ //$NON-NLS-2$
+    }
+
+    /**
+     * remove the jrxml Resource from ResourceSet, should call this method only when call MatchService.doMatch().
+     * 
+     * @param resourceSet
+     * @return Jrxml Resource List
+     */
+    public static List<Resource> removeJrxmls(ResourceSet resourceSet) {
+        List<Resource> resToRemove = new ArrayList<Resource>();
+        for (Resource res : resourceSet.getResources()) {
+            if (isJrxml(res)) {
+                resToRemove.add(res);
+            }
+        }
+        resourceSet.getResources().removeAll(resToRemove);
+        return resToRemove;
+    }
+
+    /**
+     * if the Resource is Jrxml return true else return false.
+     * 
+     * @param res
+     * @return
+     */
+    public static boolean isJrxml(Resource res) {
+        boolean isJrxml = false;
+        if (res != null) {
+            Object object = EcoreUtil.getObjectByType(res.getContents(), PropertiesPackage.eINSTANCE.getProperty());
+            if (object != null) {
+                Item item = ((Property) object).getItem();
+                if (item != null) {
+                    isJrxml = item instanceof TDQJrxmlItem;
+                }
+            }
+        }
+        return isJrxml;
     }
 }

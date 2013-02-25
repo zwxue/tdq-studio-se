@@ -12,7 +12,9 @@
 // ============================================================================
 package org.talend.cwm.compare.factory.comparisonlevel;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
@@ -34,9 +36,9 @@ import org.eclipse.emf.compare.match.metamodel.MatchModel;
 import org.eclipse.emf.compare.match.service.MatchService;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.talend.commons.utils.WorkspaceUtils;
 import org.talend.core.model.metadata.builder.connection.Connection;
-import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
 import org.talend.core.model.metadata.builder.database.DqRepositoryViewService;
 import org.talend.cwm.compare.DQStructureComparer;
 import org.talend.cwm.compare.exception.ReloadCompareException;
@@ -46,13 +48,13 @@ import org.talend.cwm.compare.factory.update.AddTdRelationalSwitch;
 import org.talend.cwm.compare.factory.update.RemoveTdRelationalSwitch;
 import org.talend.cwm.compare.factory.update.UpdateTdRelationalSwitch;
 import org.talend.cwm.compare.i18n.DefaultMessagesImpl;
-import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.nodes.foldernode.AbstractDatabaseFolderNode;
 import org.talend.dq.writer.EMFSharedResources;
 import org.talend.dq.writer.impl.ElementWriterFactory;
+import org.talend.resource.ResourceManager;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.objectmodel.core.Package;
@@ -319,7 +321,19 @@ public abstract class AbstractComparisonLevel implements IComparisonLevel {
 
         MatchModel match = null;
         try {
+            // remove the jrxml from the ResourceSet before doMatch
+            ResourceSet resourceSet = oldDataProvider.eResource() == null ? null : oldDataProvider.eResource().getResourceSet();
+            List<Resource> jrxmlResources = new ArrayList<Resource>();
+            if (resourceSet != null) {
+                jrxmlResources = ResourceManager.removeJrxmls(resourceSet);
+            }
+
             match = MatchService.doMatch(oldDataProvider, getSavedReloadObject(), options);
+
+            // add the jrxml into the ResourceSet after doMatch
+            if (resourceSet != null && !jrxmlResources.isEmpty()) {
+                resourceSet.getResources().addAll(jrxmlResources);
+            }
         } catch (InterruptedException e) {
             log.error(e, e);
             return false;
