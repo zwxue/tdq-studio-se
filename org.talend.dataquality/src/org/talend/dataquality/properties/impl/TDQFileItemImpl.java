@@ -124,7 +124,7 @@ public class TDQFileItemImpl extends TDQItemImpl implements TDQFileItem {
     /**
      * <!-- begin-user-doc --> normalize the name. <!-- end-user-doc -->
      * 
-     * @generated
+     * @generated NOT
      */
     public void setName(String newName) {
         String oldName = name;
