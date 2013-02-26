@@ -36,12 +36,14 @@ import org.talend.dataquality.domain.pattern.PatternComponent;
 import org.talend.dataquality.domain.pattern.PatternPackage;
 import org.talend.dataquality.domain.pattern.RegularExpression;
 import org.talend.dataquality.domain.sql.SqlPredicate;
+import org.talend.dataquality.helpers.IndicatorCategoryHelper;
 import org.talend.dataquality.indicators.DateGrain;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.IndicatorParameters;
 import org.talend.dataquality.indicators.PatternMatchingIndicator;
 import org.talend.dataquality.indicators.definition.CharactersMapping;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
+import org.talend.dataquality.indicators.sql.UserDefIndicator;
 import org.talend.dataquality.rules.JoinElement;
 import org.talend.utils.ProductVersion;
 import orgomg.cwm.objectmodel.core.Expression;
@@ -60,9 +62,6 @@ import orgomg.cwm.resource.relational.ColumnSet;
 public class DbmsLanguage {
 
     private static Logger log = Logger.getLogger(DbmsLanguage.class);
-
-    // ADD xqliu 2010-02-25 feature 11201
-    private static boolean matchDbVersion = true;
 
     // TODO scorreia put this into its own class and offer simple methods to replace tokens.
 
@@ -296,7 +295,7 @@ public class DbmsLanguage {
      * 
      * @return the default String to use when no dbms is defined.
      */
-    public String getDefaultLanguage() {
+    public static String getDefaultLanguage() {
         return SQL;
     }
 
@@ -669,24 +668,9 @@ public class DbmsLanguage {
         // MOD xqliu 2010-02-25 feature 11201 MOD by zshen for bug 10630
         boolean excelToAccess = "Distinct Count".equals(indicatorDefinition.getName()) && "EXCEL".equals(this.dbmsName);//$NON-NLS-1$//$NON-NLS-2$
         String dbms = excelToAccess ? "Access" : this.dbmsName;//$NON-NLS-1$
-        TdExpression sqlGenExpr = matchDbVersion ? getSqlExpression(indicatorDefinition, dbms, sqlGenericExpression,
-                this.getDbVersion()) : getSqlExpression(indicatorDefinition, dbms, sqlGenericExpression);
+        return getSqlExpression(indicatorDefinition, dbms, sqlGenericExpression, this.getDbVersion());
         // ~11201
-        if (sqlGenExpr != null) {
-            return sqlGenExpr; // language found
-        }
 
-        // else try with default language (ANSI SQL)
-        if (log.isDebugEnabled()) {
-            log.warn("The indicator SQL expression has not been found for the database type " + this.dbmsName //$NON-NLS-1$
-                    + " for the indicator" + indicatorDefinition.getName() //$NON-NLS-1$
-                    + ". This is not necessarily a problem since the default SQL expression will be used. " //$NON-NLS-1$
-                    + "Nevertheless, if an SQL error during the analysis, this could be the cause."); //$NON-NLS-1$
-            log.info("Trying to compute the indicator with the default language " + getDefaultLanguage()); //$NON-NLS-1$
-        }
-        // MOD xqliu 2010-02-25 feature 11201
-        return matchDbVersion ? getSqlExpression(indicatorDefinition, getDefaultLanguage(), sqlGenericExpression,
-                this.getDbVersion()) : getSqlExpression(indicatorDefinition, getDefaultLanguage(), sqlGenericExpression);
     }
 
     /**
@@ -740,8 +724,7 @@ public class DbmsLanguage {
 
     private List<String> getFunctions(IndicatorDefinition indicatorDefinition, final EList<TdExpression> functions) {
         // MOD xqliu 2010-02-25 feature 11201
-        TdExpression sqlGenExpr = matchDbVersion ? getSqlExpression(indicatorDefinition, this.dbmsName, functions,
-                this.getDbVersion()) : getSqlExpression(indicatorDefinition, this.dbmsName, functions);
+        TdExpression sqlGenExpr = getSqlExpression(indicatorDefinition, this.dbmsName, functions, this.getDbVersion());
         // ~11201
         if (sqlGenExpr != null) {
             final String body = sqlGenExpr.getBody();
@@ -749,16 +732,6 @@ public class DbmsLanguage {
             return Arrays.asList(fonc); // language found
         }
 
-        // else try with default language (ANSI SQL)
-        // MOD xqliu 2010-02-25 feature 11201
-        sqlGenExpr = matchDbVersion ? getSqlExpression(indicatorDefinition, getDefaultLanguage(), functions, this.getDbVersion())
-                : getSqlExpression(indicatorDefinition, getDefaultLanguage(), functions);
-        // ~11201
-        if (sqlGenExpr != null) {
-            final String body = sqlGenExpr.getBody();
-            final String[] fonc = body.split(";"); //$NON-NLS-1$
-            return Arrays.asList(fonc); // language found
-        }
         return Collections.emptyList();
     }
 
@@ -768,44 +741,30 @@ public class DbmsLanguage {
      * @param indicator
      * @return the regular expression or null if none was found
      */
-    public String getRegexPatternString(PatternMatchingIndicator indicator) {
-        IndicatorParameters parameters = indicator.getParameters();
-        if (parameters == null) {
-            return null;
-        }
-        Domain dataValidDomain = parameters.getDataValidDomain();
-        if (dataValidDomain == null) {
-            return null;
-        }
-        EList<Pattern> patterns = dataValidDomain.getPatterns();
-        for (Pattern pattern : patterns) {
-            Expression expression = this.getRegexp(pattern);
-            return expression == null ? null : expression.getBody();
-        }
-        return null;
-    }
-
-    /**
-     * DOC scorreia Comment method "getSqlExpression".
-     * 
-     * @param indicatorDefinition
-     * @param defaultLanguage
-     * @return
-     */
-    public static TdExpression getSqlExpression(IndicatorDefinition indicatorDefinition, String language,
-            EList<TdExpression> sqlGenericExpression) {
-        for (TdExpression sqlGenExpr : sqlGenericExpression) {
-            if (DbmsLanguageFactory.compareDbmsLanguage(language, sqlGenExpr.getLanguage())) {
-                return sqlGenExpr; // language found
+    public String getRegexPatternString(Indicator indicator) {
+        if (indicator instanceof PatternMatchingIndicator
+                || (indicator instanceof UserDefIndicator && IndicatorCategoryHelper.isUserDefMatching(IndicatorCategoryHelper
+                        .getCategory(indicator.getIndicatorDefinition())))) {
+            IndicatorParameters parameters = indicator.getParameters();
+            if (parameters == null) {
+                return null;
+            }
+            Domain dataValidDomain = parameters.getDataValidDomain();
+            if (dataValidDomain == null) {
+                return null;
+            }
+            EList<Pattern> patterns = dataValidDomain.getPatterns();
+            for (Pattern pattern : patterns) {
+                Expression expression = this.getRegexp(pattern);
+                return expression == null ? null : expression.getBody();
             }
         }
         return null;
     }
 
     /**
-     * DOC xqliu Comment method "getSqlExpression". ADD xqliu 2010-02-25 feature 11201
+     * get language Sql Expression from TdExpression list with dbVersion, if not found, use the default "SQL" language.
      * 
-     * @param indicatorDefinition
      * @param language
      * @param sqlGenericExpression
      * @param dbVersion
@@ -837,7 +796,21 @@ public class DbmsLanguage {
                 return exp;
             }
         }
-        return defaultExpression;
+
+        if (defaultExpression != null) {
+            return defaultExpression; // language found
+        }
+
+        // else try with default language (ANSI SQL)
+        String defaultLanguage = getDefaultLanguage();
+        if (log.isDebugEnabled()) {
+            log.warn("The indicator SQL expression has not been found for the database type " + language //$NON-NLS-1$
+                    + " for the indicator" + indicatorDefinition.getName() //$NON-NLS-1$
+                    + ". This is not necessarily a problem since the default SQL expression will be used. " //$NON-NLS-1$
+                    + "Nevertheless, if an SQL error during the analysis, this could be the cause."); //$NON-NLS-1$
+            log.info("Trying to compute the indicator with the default language " + defaultLanguage); //$NON-NLS-1$
+        }
+        return getSqlExpression(indicatorDefinition, defaultLanguage, sqlGenericExpression, dbVersion);
     }
 
     /**

@@ -21,7 +21,6 @@ import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.relational.TdExpression;
 import org.talend.dataquality.PluginConstant;
 import org.talend.dataquality.analysis.ExecutionLanguage;
-import org.talend.dataquality.indicators.PatternMatchingIndicator;
 import org.talend.dataquality.indicators.columnset.ColumnsetPackage;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dataquality.indicators.definition.userdefine.UDIndicatorDefinition;
@@ -36,7 +35,7 @@ import orgomg.cwm.objectmodel.core.Expression;
  */
 public class PatternExplorer extends DataExplorer {
 
-    private String functionReturnValue = ""; //$NON-NLS-1$
+    private String functionReturnValue = PluginConstant.EMPTY_STRING;
 
     /**
      * DOC scorreia PatternExplorer constructor comment.
@@ -92,7 +91,7 @@ public class PatternExplorer extends DataExplorer {
 
     /**
      * 
-     * DOC zshen Comment method "getValidValuesStatement".
+     * get the Valid Values Statement.
      * 
      * @return SELECT statement for the invalid Value of select column
      */
@@ -101,10 +100,10 @@ public class PatternExplorer extends DataExplorer {
         IndicatorDefinition indicatorDefinition = this.indicator.getIndicatorDefinition();
         if (indicatorDefinition instanceof UDIndicatorDefinition) {
             EList<TdExpression> list = ((UDIndicatorDefinition) indicatorDefinition).getViewInvalidValuesExpression();
-            return getReplacedSql(list);
+            return getQueryAfterReplaced(indicatorDefinition, list);
         }
 
-        String regexPatternString = dbmsLanguage.getRegexPatternString((PatternMatchingIndicator) this.indicator);
+        String regexPatternString = dbmsLanguage.getRegexPatternString(this.indicator);
         String regexCmp = dbmsLanguage.regexNotLike(columnName, regexPatternString) + functionReturnValue;
         // add null as invalid rows
         String nullClause = dbmsLanguage.or() + columnName + dbmsLanguage.isNull();
@@ -115,7 +114,7 @@ public class PatternExplorer extends DataExplorer {
 
     /**
      * 
-     * DOC zshen Comment method "getValidValuesStatement".
+     * get the Valid Values Statement.
      * 
      * @return SELECT statement for the valid Value of select column
      */
@@ -124,16 +123,16 @@ public class PatternExplorer extends DataExplorer {
         IndicatorDefinition indicatorDefinition = this.indicator.getIndicatorDefinition();
         if (indicatorDefinition instanceof UDIndicatorDefinition) {
             EList<TdExpression> list = ((UDIndicatorDefinition) indicatorDefinition).getViewValidValuesExpression();
-            return getReplacedSql(list);
+            return getQueryAfterReplaced(indicatorDefinition, list);
         }
 
-        String regexPatternString = dbmsLanguage.getRegexPatternString((PatternMatchingIndicator) this.indicator);
+        String regexPatternString = dbmsLanguage.getRegexPatternString(this.indicator);
         String regexCmp = dbmsLanguage.regexLike(columnName, regexPatternString) + functionReturnValue;
         return getValuesStatement(columnName, regexCmp);
     }
 
     /**
-     * DOC msjian Comment method "getInvalidRowsStatement".
+     * get the Invalid Rows Statement.
      * 
      * @return
      */
@@ -142,10 +141,10 @@ public class PatternExplorer extends DataExplorer {
         IndicatorDefinition indicatorDefinition = this.indicator.getIndicatorDefinition();
         if (indicatorDefinition instanceof UDIndicatorDefinition) {
             EList<TdExpression> list = ((UDIndicatorDefinition) indicatorDefinition).getViewInvalidRowsExpression();
-            return getReplacedSql(list);
+            return getQueryAfterReplaced(indicatorDefinition, list);
         }
 
-        String regexPatternString = dbmsLanguage.getRegexPatternString((PatternMatchingIndicator) this.indicator);
+        String regexPatternString = dbmsLanguage.getRegexPatternString(this.indicator);
         String regexCmp = dbmsLanguage.regexNotLike(columnName, regexPatternString) + functionReturnValue;
         // add null as invalid rows
         String nullClause = dbmsLanguage.or() + columnName + dbmsLanguage.isNull();
@@ -155,7 +154,7 @@ public class PatternExplorer extends DataExplorer {
     }
 
     /**
-     * DOC msjian Comment method "getValidRowsStatement".
+     * get the Valid Rows Statement.
      * 
      * @return
      */
@@ -164,24 +163,25 @@ public class PatternExplorer extends DataExplorer {
         IndicatorDefinition indicatorDefinition = this.indicator.getIndicatorDefinition();
         if (indicatorDefinition instanceof UDIndicatorDefinition) {
             EList<TdExpression> list = ((UDIndicatorDefinition) indicatorDefinition).getViewValidRowsExpression();
-            return getReplacedSql(list);
+            return getQueryAfterReplaced(indicatorDefinition, list);
         }
 
-        String regexPatternString = dbmsLanguage.getRegexPatternString((PatternMatchingIndicator) this.indicator);
+        String regexPatternString = dbmsLanguage.getRegexPatternString(this.indicator);
         String regexCmp = dbmsLanguage.regexLike(columnName, regexPatternString) + functionReturnValue;
         return getRowsStatement(regexCmp);
     }
 
     /**
-     * DOC msjian Comment method "getReplacedSql".
+     * get the Query After Replaced.
      * 
+     * @param indicatorDefinition
      * @param list
-     * @return
+     * @return String
      */
-    public String getReplacedSql(EList<TdExpression> list) {
+    public String getQueryAfterReplaced(IndicatorDefinition indicatorDefinition, EList<TdExpression> list) {
         String sql = PluginConstant.EMPTY_STRING;
-        TdExpression tdExp = DbmsLanguage.getSqlExpression(this.indicator.getIndicatorDefinition(), dbmsLanguage.getDbmsName(),
-                list, dbmsLanguage.getDbVersion());
+        TdExpression tdExp = DbmsLanguage.getSqlExpression(indicatorDefinition, dbmsLanguage.getDbmsName(), list,
+                dbmsLanguage.getDbVersion());
         sql = tdExp.getBody();
         String dataFilterClause = getDataFilterClause();
         String tableName = getFullyQualifiedTableName(this.indicator.getAnalyzedElement());

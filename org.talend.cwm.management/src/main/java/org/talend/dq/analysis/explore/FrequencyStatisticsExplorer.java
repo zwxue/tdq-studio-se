@@ -43,22 +43,7 @@ public class FrequencyStatisticsExplorer extends DataExplorer {
 
         IndicatorDefinition indicatorDefinition = this.indicator.getIndicatorDefinition();
         if (indicatorDefinition instanceof UDIndicatorDefinition) {
-            String sql = PluginConstant.EMPTY_STRING;
-            EList<TdExpression> list = ((UDIndicatorDefinition) indicatorDefinition).getViewRowsExpression();
-            TdExpression tdExp = DbmsLanguage.getSqlExpression(indicatorDefinition, dbmsLanguage.getDbmsName(), list,
-                    dbmsLanguage.getDbVersion());
-            sql = tdExp.getBody();
-            String dataFilterClause = getDataFilterClause();
-            sql = sql.replace(GenericSQLHandler.WHERE_CLAUSE, dbmsLanguage.where() + dataFilterClause);
-            sql = sql.replace(GenericSQLHandler.AND_WHERE_CLAUSE,
-                    PluginConstant.EMPTY_STRING.equals(dataFilterClause) ? PluginConstant.EMPTY_STRING : dbmsLanguage.and()
-                            + dataFilterClause);
-            String tableName = getFullyQualifiedTableName(this.indicator.getAnalyzedElement());
-            sql = sql.replace(GenericSQLHandler.TABLE_NAME, tableName);
-
-            // replace <%=__INDICATOR_VALUE__%>
-            sql = sql.replace(GenericSQLHandler.UDI_INDICATOR_VALUE, this.indicator.getAnalyzedElement().getName());
-            return sql;
+            return getQueryForUDIndicator(indicatorDefinition);
         }
 
         String clause = PluginConstant.EMPTY_STRING;
@@ -115,6 +100,30 @@ public class FrequencyStatisticsExplorer extends DataExplorer {
 
         return "SELECT * FROM " + getFullyQualifiedTableName(column) + dbmsLanguage.where() + inBrackets(clause) //$NON-NLS-1$
                 + andDataFilterClause();
+    }
+
+    /**
+     * get Query For User define indicator.
+     * 
+     * @param indicatorDefinition
+     * @return
+     */
+    private String getQueryForUDIndicator(IndicatorDefinition indicatorDefinition) {
+        String sql = PluginConstant.EMPTY_STRING;
+        EList<TdExpression> list = ((UDIndicatorDefinition) indicatorDefinition).getViewRowsExpression();
+        TdExpression tdExp = DbmsLanguage.getSqlExpression(indicatorDefinition, dbmsLanguage.getDbmsName(), list,
+                dbmsLanguage.getDbVersion());
+        sql = tdExp.getBody();
+        String dataFilterClause = getDataFilterClause();
+        sql = sql.replace(GenericSQLHandler.WHERE_CLAUSE, dbmsLanguage.where() + dataFilterClause);
+        sql = sql.replace(GenericSQLHandler.AND_WHERE_CLAUSE,
+                PluginConstant.EMPTY_STRING.equals(dataFilterClause) ? PluginConstant.EMPTY_STRING : dbmsLanguage.and()
+                        + dataFilterClause);
+        String tableName = getFullyQualifiedTableName(this.indicator.getAnalyzedElement());
+        sql = sql.replace(GenericSQLHandler.TABLE_NAME, tableName);
+        sql = sql.replace(GenericSQLHandler.COLUMN_NAMES, this.indicator.getAnalyzedElement().getName());
+        sql = sql.replace(GenericSQLHandler.UDI_INDICATOR_VALUE, (String.valueOf(this.indicator.getIntegerValue().intValue())));
+        return sql;
     }
 
     /**

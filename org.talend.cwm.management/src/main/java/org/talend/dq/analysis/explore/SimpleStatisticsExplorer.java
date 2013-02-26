@@ -54,29 +54,10 @@ public class SimpleStatisticsExplorer extends DataExplorer {
             case BlankCountIndicatorEnum:
             case DefValueCountIndicatorEnum:
             case UserDefinedIndicatorEnum:
-                String sql = getRowsStatement();
+                // when user define indicator
                 IndicatorDefinition indicatorDefinition = this.indicator.getIndicatorDefinition();
-                if (indicatorDefinition instanceof UDIndicatorDefinition) {
-                    IndicatorCategory category = IndicatorCategoryHelper.getCategory(indicatorDefinition);
-                    EList<TdExpression> list = ((UDIndicatorDefinition) indicatorDefinition).getViewRowsExpression();
-                    TdExpression tdExp = DbmsLanguage.getSqlExpression(indicatorDefinition, dbmsLanguage.getDbmsName(), list,
-                            dbmsLanguage.getDbVersion());
-                    sql = tdExp.getBody();
-                    String dataFilterClause = getDataFilterClause();
-                    sql = sql.replace(GenericSQLHandler.WHERE_CLAUSE, dbmsLanguage.where() + dataFilterClause);
-                    sql = sql.replace(
-                            GenericSQLHandler.AND_WHERE_CLAUSE,
-                            PluginConstant.EMPTY_STRING.equals(dataFilterClause) ? PluginConstant.EMPTY_STRING : dbmsLanguage
-                                    .and() + dataFilterClause);
-                    String tableName = getFullyQualifiedTableName(this.indicator.getAnalyzedElement());
-                    sql = sql.replace(GenericSQLHandler.TABLE_NAME, tableName);
-
-                    if (IndicatorCategoryHelper.isUserDefRealValue(category)) {
-                        // replace <%=__INDICATOR_VALUE__%>
-                        sql = sql.replace(GenericSQLHandler.UDI_INDICATOR_VALUE, this.indicator.getRealValue().toString());
-
-                    }
-                }
+                String sql = indicatorDefinition instanceof UDIndicatorDefinition ? getQueryForViewRows(indicatorDefinition)
+                        : getRowsStatement();
                 map.put(MENU_VIEW_ROWS, isSqlEngine ? getComment(MENU_VIEW_ROWS) + sql : null);
                 break;
 
@@ -112,4 +93,36 @@ public class SimpleStatisticsExplorer extends DataExplorer {
         return map;
     }
 
+    /**
+     * get Query For View Rows.
+     * 
+     * @param indicatorDefinition
+     * @return
+     */
+    public String getQueryForViewRows(IndicatorDefinition indicatorDefinition) {
+        String sql = PluginConstant.EMPTY_STRING;
+        IndicatorCategory category = IndicatorCategoryHelper.getCategory(indicatorDefinition);
+        EList<TdExpression> list = ((UDIndicatorDefinition) indicatorDefinition).getViewRowsExpression();
+        TdExpression tdExp = DbmsLanguage.getSqlExpression(indicatorDefinition, dbmsLanguage.getDbmsName(), list,
+                dbmsLanguage.getDbVersion());
+        sql = tdExp.getBody();
+        String dataFilterClause = getDataFilterClause();
+        sql = sql.replace(GenericSQLHandler.WHERE_CLAUSE, dbmsLanguage.where() + dataFilterClause);
+        sql = sql.replace(GenericSQLHandler.AND_WHERE_CLAUSE,
+                PluginConstant.EMPTY_STRING.equals(dataFilterClause) ? PluginConstant.EMPTY_STRING : dbmsLanguage.and()
+                        + dataFilterClause);
+        String tableName = getFullyQualifiedTableName(this.indicator.getAnalyzedElement());
+        sql = sql.replace(GenericSQLHandler.TABLE_NAME, tableName);
+        sql = sql.replace(GenericSQLHandler.COLUMN_NAMES, this.indicator.getAnalyzedElement().getName());
+
+        if (IndicatorCategoryHelper.isUserDefRealValue(category)) {
+            // replace <%=__INDICATOR_VALUE__%>
+            sql = sql.replace(GenericSQLHandler.UDI_INDICATOR_VALUE, this.indicator.getRealValue().toString());
+
+        } else {
+            sql = sql.replace(GenericSQLHandler.UDI_INDICATOR_VALUE,
+                    (String.valueOf(this.indicator.getIntegerValue().intValue())));
+        }
+        return sql;
+    }
 }
