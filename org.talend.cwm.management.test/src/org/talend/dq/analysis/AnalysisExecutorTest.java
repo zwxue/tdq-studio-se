@@ -17,6 +17,7 @@ import java.lang.management.MemoryPoolMXBean;
 import java.lang.management.MemoryType;
 
 import org.eclipse.ui.PlatformUI;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -105,11 +106,19 @@ public class AnalysisExecutorTest {
     @Test
     public void testExecute1() {
         setMemoryControl(true);
-        setMemoryValue(100);
-        ReturnCode execute1 = spy.execute(createAnalysis);
-
-        assert (execute1.isOk());
-        assert (execute1.getMessage() == null);
+        ReturnCode execute1 = null;
+        int currMemory = AnalysisThreadMemoryChangeNotifier.convertToMB(Runtime.getRuntime().totalMemory());
+        do {
+            setMemoryValue(currMemory);
+            // ~connection
+            spy = Mockito.spy(new ColumnAnalysisExecutor());
+            Mockito.doReturn(true).when(spy).runAnalysis(((Analysis) Mockito.anyObject()), Mockito.anyString());
+            execute1 = spy.execute(createAnalysis);
+            currMemory += 20;
+        } while (Messages.getString("Evaluator.OutOfMomory", spy.getUsedMemory()).equals(execute1.getMessage())); //$NON-NLS-1$
+        Assert.assertFalse(Messages.getString("Evaluator.OutOfMomory", spy.getUsedMemory()).equals(execute1.getMessage())); //$NON-NLS-1$
+        Assert.assertTrue(execute1.isOk());
+        Assert.assertTrue(execute1.getMessage() == null);
         Mockito.verify(spy, Mockito.times(1)).execute(createAnalysis);
 
     }
