@@ -102,7 +102,7 @@ public class SwitchContextGroupNameImplTest {
     @Before
     public void setUp() throws Exception {
         UnitTestBuildHelper.deleteCurrentProject();
-        UnitTestBuildHelper.createRealProject("testForSoftWareTDQ"); //$NON-NLS-1$
+        UnitTestBuildHelper.createRealProject("testForSwitchContextGroupTDQ"); //$NON-NLS-1$
         Connectionlabel = ConnectionContextHelper.convertContextLabel(connectionName);
         createContextItem();
     }
