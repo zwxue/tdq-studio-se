@@ -348,16 +348,11 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
      */
     public void initTempMaps() {
         tempExpressionMap = initTempMap(tempExpressionMap);
-        if (definition instanceof UDIndicatorDefinition) {
-            if (IndicatorCategoryHelper.isUserDefMatching(category)) {
-                tempViewValidRowsExpressionMap = initTempMap(tempViewValidRowsExpressionMap);
-                tempViewInvalidRowsExpressionMap = initTempMap(tempViewInvalidRowsExpressionMap);
-                tempViewValidValuesExpressionMap = initTempMap(tempViewValidValuesExpressionMap);
-                tempViewInvalidValuesExpressionMap = initTempMap(tempViewInvalidValuesExpressionMap);
-            } else {
-                tempViewRowsExpressionMap = initTempMap(tempViewRowsExpressionMap);
-            }
-        }
+        tempViewValidRowsExpressionMap = initTempMap(tempViewValidRowsExpressionMap);
+        tempViewInvalidRowsExpressionMap = initTempMap(tempViewInvalidRowsExpressionMap);
+        tempViewValidValuesExpressionMap = initTempMap(tempViewValidValuesExpressionMap);
+        tempViewInvalidValuesExpressionMap = initTempMap(tempViewInvalidValuesExpressionMap);
+        tempViewRowsExpressionMap = initTempMap(tempViewRowsExpressionMap);
     }
 
     /**

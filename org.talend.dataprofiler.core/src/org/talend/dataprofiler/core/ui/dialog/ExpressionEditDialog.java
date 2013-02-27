@@ -152,6 +152,18 @@ public class ExpressionEditDialog extends TrayDialog {
 
     private Text tab0_match_where_var;
 
+    private Button resetButton_tab1;
+
+    private Button resetButton_tab2_viewRows;
+
+    private Button resetButton_tab2_match;
+
+    private Button resetButton_tab3_match;
+
+    private Button resetButton_tab4_match;
+
+    private Button resetButton_tab5_match;
+
     // for TAB1 all types :
     private Text tab1_fullSql;
 
@@ -198,6 +210,19 @@ public class ExpressionEditDialog extends TrayDialog {
     // when the other tabs text modified, set false
     private boolean useAutoGenSqlFlag = false;
 
+    // when tab1 or tab2 text is inputted by user, can not use the AutoGenSql to overwriten
+    private boolean canBeOverwriten_tab1 = true;
+
+    private boolean canBeOverwriten_tab2_viewRows = true;
+
+    private boolean canBeOverwriten_tab2_match = true;
+
+    private boolean canBeOverwriten_tab3_match = true;
+
+    private boolean canBeOverwriten_tab4_match = true;
+
+    private boolean canBeOverwriten_tab5_match = true;
+
     // the sql generated from template
     private String autoGenSql = PluginConstant.EMPTY_STRING;
 
@@ -209,8 +234,8 @@ public class ExpressionEditDialog extends TrayDialog {
 
         this.tdExpression = tdExpression;
         language = tdExpression.getLanguage().trim();
-        version = tdExpression.getVersion();
         if (definition instanceof UDIndicatorDefinition) {
+            version = tdExpression.getVersion();
             UDIndicatorDefinition definitionTemp = (UDIndicatorDefinition) this.definition;
             if (IndicatorCategoryHelper.isUserDefMatching(category)) {
                 tempViewValidRowsExp = getCurrentLanguageExp(definitionTemp.getViewValidRowsExpression());
@@ -334,14 +359,16 @@ public class ExpressionEditDialog extends TrayDialog {
         tab0Composite = new Composite(tabFolder, SWT.None);
         tab0Composite.setLayout(new GridLayout());
         tab0.setControl(tab0Composite);
-        createTabPart(tab0Composite, 0);
+        selectTabNumber = 0;
+        createTabPart(tab0Composite);
 
         TabItem tab1 = new TabItem(tabFolder, SWT.NULL);
         tab1.setText(tab1_name);
         tab1Composite = new Composite(tabFolder, SWT.None);
         tab1Composite.setLayout(new GridLayout());
         tab1.setControl(tab1Composite);
-        createTabPart(tab1Composite, 1);
+        selectTabNumber = 1;
+        createTabPart(tab1Composite);
 
         // for use define match, have more tabs belong to itself
         if (IndicatorCategoryHelper.isUserDefMatching(category)) {
@@ -350,28 +377,32 @@ public class ExpressionEditDialog extends TrayDialog {
             tab3Composite = new Composite(tabFolder, SWT.None);
             tab3Composite.setLayout(new GridLayout());
             tab3.setControl(tab3Composite);
-            createTabPart(tab3Composite, 2);
+            selectTabNumber = 2;
+            createTabPart(tab3Composite);
 
             TabItem tab4 = new TabItem(tabFolder, SWT.NULL);
             tab4.setText(tab4_name);
             tab4Composite = new Composite(tabFolder, SWT.None);
             tab4Composite.setLayout(new GridLayout());
             tab4.setControl(tab4Composite);
-            createTabPart(tab4Composite, 3);
+            selectTabNumber = 3;
+            createTabPart(tab4Composite);
 
             TabItem tab5 = new TabItem(tabFolder, SWT.NULL);
             tab5.setText(tab5_name);
             tab5Composite = new Composite(tabFolder, SWT.None);
             tab5Composite.setLayout(new GridLayout());
             tab5.setControl(tab5Composite);
-            createTabPart(tab5Composite, 4);
+            selectTabNumber = 4;
+            createTabPart(tab5Composite);
 
             TabItem tab6 = new TabItem(tabFolder, SWT.NULL);
             tab6.setText(tab6_name);
             tab6Composite = new Composite(tabFolder, SWT.None);
             tab6Composite.setLayout(new GridLayout());
             tab6.setControl(tab6Composite);
-            createTabPart(tab6Composite, 5);
+            selectTabNumber = 5;
+            createTabPart(tab6Composite);
 
         } else {
             TabItem tab2 = new TabItem(tabFolder, SWT.NULL);
@@ -379,69 +410,93 @@ public class ExpressionEditDialog extends TrayDialog {
             tab2Composite = new Composite(tabFolder, SWT.None);
             tab2Composite.setLayout(new GridLayout());
             tab2.setControl(tab2Composite);
-            createTabPart(tab2Composite, 2);
+            selectTabNumber = 2;
+            createTabPart(tab2Composite);
         }
 
         tabFolder.addSelectionListener(new SelectionListener() {
 
             public void widgetSelected(SelectionEvent e) {
                 String text = ((TabItem) e.item).getText();
-                // int oldSelectTab = selectTabNumber;
                 selectTabNumber = tabFolder.getSelectionIndex();
 
-                // when from tab0 change to other tabs, automatically generate the sql templates
-                if (useAutoGenSqlFlag) {
-                    getAutoGeneratedSql();
-                }
-
                 if (tab0_name.equals(text)) {
+                    // Indicator Definition
                     tab0Composite.layout();
-                } else if (tab1_name.equals(text)) {
-                    if (useAutoGenSqlFlag) {
-                        disposeChildren(tab1Composite);
-                        createTabPart(tab1Composite, 1);
+                } else {
+                    if (tab1_name.equals(text)) {
+                        // Full SQL Template
+                        if (useAutoGenSqlFlag && canBeOverwriten_tab1) {
+                            tab1_fullSql.setText(getAutoGeneratedSql());
+                            useAutoGenSqlFlag = true;
+                            canBeOverwriten_tab1 = true;
+                        }
+                        tab1Composite.layout();
+                    } else if (tab2_name.equals(text)) {
+                        // View Rows
+                        if (useAutoGenSqlFlag && canBeOverwriten_tab2_viewRows) {
+                            tab2_viewRows.setText(getAutoGeneratedSql());
+                            useAutoGenSqlFlag = true;
+                            canBeOverwriten_tab2_viewRows = true;
+                        }
+                        tab2Composite.layout();
+                    } else if (tab3_name.equals(text)) {
+                        // View Valid Rows Template
+                        if (useAutoGenSqlFlag && canBeOverwriten_tab2_match) {
+                            tab2_match_viewvalidRows.setText(getAutoGeneratedSql());
+                            useAutoGenSqlFlag = true;
+                            canBeOverwriten_tab2_match = true;
+                        }
+                        tab3Composite.layout();
+                    } else if (tab4_name.equals(text)) {
+                        // View Invalid Rows Template
+                        if (useAutoGenSqlFlag && canBeOverwriten_tab3_match) {
+                            tab3_match_viewInvalidRows.setText(getAutoGeneratedSql());
+                            useAutoGenSqlFlag = true;
+                            canBeOverwriten_tab3_match = true;
+                        }
+                        tab4Composite.layout();
+                    } else if (tab5_name.equals(text)) {
+                        // View Valid Values Template
+                        if (useAutoGenSqlFlag && canBeOverwriten_tab4_match) {
+                            tab4_match_viewValidValues.setText(getAutoGeneratedSql());
+                            useAutoGenSqlFlag = true;
+                            canBeOverwriten_tab4_match = true;
+                        }
+                        tab5Composite.layout();
+                    } else if (tab6_name.equals(text)) {
+                        // View Invalid Values Template
+                        if (useAutoGenSqlFlag && canBeOverwriten_tab5_match) {
+                            tab5_match_viewInvalidValues.setText(getAutoGeneratedSql());
+                            useAutoGenSqlFlag = true;
+                            canBeOverwriten_tab5_match = true;
+                        }
+                        tab6Composite.layout();
                     }
-                    tab1Composite.layout();
-                } else if (tab2_name.equals(text)) {
-                    if (useAutoGenSqlFlag) {
-                        disposeChildren(tab2Composite);
-                        createTabPart(tab2Composite, 2);
-                    }
-                    tab2Composite.layout();
-                } else if (tab3_name.equals(text)) {
-                    if (useAutoGenSqlFlag) {
-                        disposeChildren(tab3Composite);
-                        createTabPart(tab3Composite, 2);
-                    }
-                    tab3Composite.layout();
-                } else if (tab4_name.equals(text)) {
-                    if (useAutoGenSqlFlag) {
-                        disposeChildren(tab4Composite);
-                        createTabPart(tab4Composite, 3);
-                    }
-                    tab4Composite.layout();
-                } else if (tab5_name.equals(text)) {
-                    if (useAutoGenSqlFlag) {
-                        disposeChildren(tab5Composite);
-                        createTabPart(tab5Composite, 4);
-                    }
-                    tab5Composite.layout();
-                } else if (tab6_name.equals(text)) {
-                    if (useAutoGenSqlFlag) {
-                        disposeChildren(tab6Composite);
-                        createTabPart(tab6Composite, 5);
-                    }
-                    tab6Composite.layout();
-                }
-            }
 
-            /**
-             * DOC msjian Comment method "disposeChildren".
-             */
-            public void disposeChildren(Composite temp) {
-                for (Control a : temp.getChildren()) {
-                    a.dispose();
+                    if (selectTabNumber == 1) {
+                        resetButton_tab1.setEnabled(!getAutoGeneratedSql().equals(tab1_fullSql.getText()));
+                    } else if (selectTabNumber == 2) {
+                        if (IndicatorCategoryHelper.isUserDefMatching(category)) {
+                            // for match dis View Valid Rows template
+                            resetButton_tab2_match.setEnabled(!getAutoGeneratedSql().equals(tab2_match_viewvalidRows.getText()));
+                        } else {
+                            // for others is view rows template
+                            resetButton_tab2_viewRows.setEnabled(!getAutoGeneratedSql().equals(tab2_viewRows.getText()));
+                        }
+                    } else if (selectTabNumber == 3) {
+                        // for match is View Invalid Rows Template
+                        resetButton_tab3_match.setEnabled(!getAutoGeneratedSql().equals(tab3_match_viewInvalidRows.getText()));
+                    } else if (selectTabNumber == 4) {
+                        // for match is View Valid Values Template
+                        resetButton_tab4_match.setEnabled(!getAutoGeneratedSql().equals(tab4_match_viewValidValues.getText()));
+                    } else if (selectTabNumber == 5) {
+                        // for match is View Invalid Values Template
+                        resetButton_tab5_match.setEnabled(!getAutoGeneratedSql().equals(tab5_match_viewInvalidValues.getText()));
+                    }
+
                 }
+
             }
 
             public void widgetDefaultSelected(SelectionEvent e) {
@@ -450,6 +505,7 @@ public class ExpressionEditDialog extends TrayDialog {
         });
 
         // set the default selected tab
+        selectTabNumber = 0;
         tabFolder.setSelection(selectTabNumber);
         tab0Composite.layout();
 
@@ -461,20 +517,22 @@ public class ExpressionEditDialog extends TrayDialog {
      * create Reset Button.
      * 
      * @param sform
-     * @param tabFlag
      */
-    public void createResetButton(Composite sform, final int tabFlag) {
+    public Button createResetButton(Composite sform) {
         Button resetButton = new Button(sform, SWT.PUSH);
         resetButton.setBounds(10, 10, 60, 30);
         resetButton.setText(RESET);
         resetButton.setToolTipText(RESET_HINT);
+        // // set default is unenable
+        // resetButton.setEnabled(false);
 
         resetButton.addSelectionListener(new SelectionListener() {
 
             public void widgetSelected(SelectionEvent e) {
-                if (tabFlag == 1) {
+                useAutoGenSqlFlag = true;
+                if (selectTabNumber == 1) {
                     tab1_fullSql.setText(getAutoGeneratedSql());
-                } else if (tabFlag == 2) {
+                } else if (selectTabNumber == 2) {
                     if (IndicatorCategoryHelper.isUserDefMatching(category)) {
                         // for match is View Valid Rows template
                         tab2_match_viewvalidRows.setText(getAutoGeneratedSql());
@@ -482,34 +540,67 @@ public class ExpressionEditDialog extends TrayDialog {
                         // for others is view rows template
                         tab2_viewRows.setText(getAutoGeneratedSql());
                     }
-                } else if (tabFlag == 3) {
+                } else if (selectTabNumber == 3) {
                     tab3_match_viewInvalidRows.setText(getAutoGeneratedSql());
-                } else if (tabFlag == 4) {
+                } else if (selectTabNumber == 4) {
                     tab4_match_viewValidValues.setText(getAutoGeneratedSql());
-                } else if (tabFlag == 5) {
+                } else if (selectTabNumber == 5) {
                     tab5_match_viewInvalidValues.setText(getAutoGeneratedSql());
                 }
+
+                setResetButtonStatus(false);
+                setTextOverWriteStatus(true);
             }
 
             public void widgetDefaultSelected(SelectionEvent e) {
                 widgetSelected(e);
             }
         });
+        return resetButton;
     }
 
     /**
      * create tab1,tab2(for match is tab3456) part
      * 
      * @param comp
-     * @param tabFlag
      */
-    public void createTabPart(Composite comp, int tabFlag) {
-        // create reset button
-        if (tabFlag != 0) {
-            createResetButton(comp, tabFlag);
+    public void createTabPart(Composite comp) {
+        // create reset button, and set its status.
+        // if the text different from the template, then set the reset button default status is enable, else set
+        // unenable
+        if (selectTabNumber == 1) {
+            resetButton_tab1 = createResetButton(comp);
+            canBeOverwriten_tab1 = getAutoGeneratedSql().equals(fullSqlContent);
+            resetButton_tab1.setEnabled(!canBeOverwriten_tab1);
+        } else if (selectTabNumber == 2) {
+            if (IndicatorCategoryHelper.isUserDefMatching(category)) {
+                // for match is View Valid Rows template
+                resetButton_tab2_match = createResetButton(comp);
+                canBeOverwriten_tab2_match = getAutoGeneratedSql().equals(getExpressValue(tempViewValidRowsExp));
+                resetButton_tab2_match.setEnabled(!canBeOverwriten_tab2_match);
+            } else {
+                // for others is view rows template
+                resetButton_tab2_viewRows = createResetButton(comp);
+                canBeOverwriten_tab2_viewRows = getAutoGeneratedSql().equals(getExpressValue(tempViewRowsExp));
+                resetButton_tab2_viewRows.setEnabled(!canBeOverwriten_tab2_viewRows);
+            }
+        } else if (selectTabNumber == 3) {
+            // for match is View Invalid Rows Template
+            resetButton_tab3_match = createResetButton(comp);
+            canBeOverwriten_tab3_match = getAutoGeneratedSql().equals(getExpressValue(tempViewInvalidRowsExp));
+            resetButton_tab3_match.setEnabled(!canBeOverwriten_tab3_match);
+        } else if (selectTabNumber == 4) {
+            // for match is View Valid Values Template
+            resetButton_tab4_match = createResetButton(comp);
+            canBeOverwriten_tab4_match = getAutoGeneratedSql().equals(getExpressValue(tempViewValidValuesExp));
+            resetButton_tab4_match.setEnabled(!canBeOverwriten_tab4_match);
+        } else if (selectTabNumber == 5) {
+            // for match is View Invalid Values Template
+            resetButton_tab5_match = createResetButton(comp);
+            canBeOverwriten_tab5_match = getAutoGeneratedSql().equals(getExpressValue(tempViewInvalidValuesExp));
+            resetButton_tab5_match.setEnabled(!canBeOverwriten_tab5_match);
         }
 
-        // create sform
         GridData data;
         SashForm sform = new SashForm(comp, SWT.VERTICAL | SWT.SMOOTH | SWT.FILL);
         data = new GridData();
@@ -520,21 +611,21 @@ public class ExpressionEditDialog extends TrayDialog {
         sform.setLayoutData(data);
 
         // create content for different tabs in sfrom
-        createTabPage(sform, tabFlag);
+        createTabPage(sform);
 
         // create templates table part
         createTemplatesTablePart(sform);
 
         // set weights for sform
-        if (tabFlag == 0) {
+        if (selectTabNumber == 0) {
             if (IndicatorCategoryHelper.isUserDefCount(category)) {
                 sform.setWeights(new int[] { 2, 1 });
             } else if (IndicatorCategoryHelper.isUserDefFrequency(category)) {
-                sform.setWeights(new int[] { 1, 1, 1, 1, 1, 1 });
+                sform.setWeights(new int[] { 1, 1, 1, 1, 1, 2 });
             } else if (IndicatorCategoryHelper.isUserDefRealValue(category)) {
-                sform.setWeights(new int[] { 2, 2, 1 });
+                sform.setWeights(new int[] { 1, 1, 1 });
             } else if (IndicatorCategoryHelper.isUserDefMatching(category)) {
-                sform.setWeights(new int[] { 2, 2, 1 });
+                sform.setWeights(new int[] { 1, 1, 1 });
             }
         } else {
             sform.setWeights(new int[] { 10, 5 });
@@ -550,7 +641,7 @@ public class ExpressionEditDialog extends TrayDialog {
      * @param textContent
      * @return
      */
-    public Text createTextPart(SashForm sform, String title, int height, String textContent) {
+    private Text createTextPart(SashForm sform, String title, int height, String textContent) {
         Group group = new Group(sform, SWT.NONE);
         group.setText(title);
         GridLayout gridLayout = new GridLayout();
@@ -725,24 +816,27 @@ public class ExpressionEditDialog extends TrayDialog {
      * 
      * @param sform
      */
-    public void createTabPage(SashForm sform, int tabFlag) {
+    public void createTabPage(SashForm sform) {
         ModifyListener listener = new ModifyListener() {
 
             public void modifyText(ModifyEvent e) {
                 useAutoGenSqlFlag = false;
+                setResetButtonStatus(true);
+                setTextOverWriteStatus(false);
             }
+
         };
 
-        if (tabFlag == 0) {
+        if (selectTabNumber == 0) {
             createTab0Page(sform);
 
-        } else if (tabFlag == 1) {
+        } else if (selectTabNumber == 1) {
             tab1_fullSql = createTextPart(sform, EXPREEION, 20, checkUseAutoGenSql(fullSqlContent));
             tab1_fullSql.addModifyListener(listener);
 
-        } else if (tabFlag == 2) {
+        } else if (selectTabNumber == 2) {
             if (IndicatorCategoryHelper.isUserDefMatching(category)) {
-                // for match is View Valid Rows template
+                // for match dis View Valid Rows template
                 tab2_match_viewvalidRows = createTextPart(sform, EXPREEION, 20,
                         checkUseAutoGenSql(getExpressValue(tempViewValidRowsExp)));
                 tab2_match_viewvalidRows.addModifyListener(listener);
@@ -752,25 +846,75 @@ public class ExpressionEditDialog extends TrayDialog {
                 tab2_viewRows.addModifyListener(listener);
             }
 
-        } else if (tabFlag == 3) {
+        } else if (selectTabNumber == 3) {
             // for match is View Invalid Rows Template
             tab3_match_viewInvalidRows = createTextPart(sform, EXPREEION, 20,
                     checkUseAutoGenSql(getExpressValue(tempViewInvalidRowsExp)));
             tab3_match_viewInvalidRows.addModifyListener(listener);
 
-        } else if (tabFlag == 4) {
+        } else if (selectTabNumber == 4) {
             // for match is View Valid Values Template
             tab4_match_viewValidValues = createTextPart(sform, EXPREEION, 20,
                     checkUseAutoGenSql(getExpressValue(tempViewValidValuesExp)));
             tab4_match_viewValidValues.addModifyListener(listener);
 
-        } else if (tabFlag == 5) {
+        } else if (selectTabNumber == 5) {
             // for match is View Invalid Values Template
             tab5_match_viewInvalidValues = createTextPart(sform, EXPREEION, 20,
                     checkUseAutoGenSql(getExpressValue(tempViewInvalidValuesExp)));
             tab5_match_viewInvalidValues.addModifyListener(listener);
         }
 
+    }
+
+    /**
+     * set Reset Button Status and the overwrite flag value. when reset button is true, the overwrite flag is false
+     * 
+     * @param isEnable
+     */
+    private void setResetButtonStatus(boolean isEnable) {
+        if (selectTabNumber == 1) {
+            resetButton_tab1.setEnabled(isEnable);
+        } else if (selectTabNumber == 2) {
+            if (IndicatorCategoryHelper.isUserDefMatching(category)) {
+                // for match is View Valid Rows template
+                resetButton_tab2_match.setEnabled(isEnable);
+            } else {
+                // for others is view rows template
+                resetButton_tab2_viewRows.setEnabled(isEnable);
+            }
+        } else if (selectTabNumber == 3) {
+            resetButton_tab3_match.setEnabled(isEnable);
+        } else if (selectTabNumber == 4) {
+            resetButton_tab4_match.setEnabled(isEnable);
+        } else if (selectTabNumber == 5) {
+            resetButton_tab5_match.setEnabled(isEnable);
+        }
+    }
+
+    /**
+     * set Reset Button Status and the overwrite flag value. when reset button is true, the overwrite flag is false
+     * 
+     * @param isEnable
+     */
+    private void setTextOverWriteStatus(boolean canBeOverwriten) {
+        if (selectTabNumber == 1) {
+            canBeOverwriten_tab1 = canBeOverwriten;
+        } else if (selectTabNumber == 2) {
+            if (IndicatorCategoryHelper.isUserDefMatching(category)) {
+                // for match is View Valid Rows template
+                canBeOverwriten_tab2_match = canBeOverwriten;
+            } else {
+                // for others is view rows template
+                canBeOverwriten_tab2_viewRows = canBeOverwriten;
+            }
+        } else if (selectTabNumber == 3) {
+            canBeOverwriten_tab3_match = canBeOverwriten;
+        } else if (selectTabNumber == 4) {
+            canBeOverwriten_tab4_match = canBeOverwriten;
+        } else if (selectTabNumber == 5) {
+            canBeOverwriten_tab5_match = canBeOverwriten;
+        }
     }
 
     /**
