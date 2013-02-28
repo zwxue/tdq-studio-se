@@ -30,6 +30,7 @@ import java.util.TreeMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.naming.Context;
 import javax.naming.NamingEnumeration;
 import javax.naming.NamingException;
 import javax.naming.directory.Attribute;
@@ -58,6 +59,8 @@ public class EMailValidationIndicator extends UserDefIndicatorImpl {
 
     private static final String BUFFER_SIZE_PARAM = "BUFFER SIZE"; //$NON-NLS-1$
 
+    private static final String NAMING_PARAM = "java.naming.provider.url";//$NON-NLS-1$
+
     private DirContext ictx = null;
 
     private String emailAddress = null;
@@ -83,6 +86,7 @@ public class EMailValidationIndicator extends UserDefIndicatorImpl {
 
     private static final Pattern EMAIL_PATTERN = java.util.regex.Pattern
             .compile("^[a-zA-Z0-9._%-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,4}$"); //$NON-NLS-1$
+
 
     /*
      * (non-Javadoc)
@@ -150,18 +154,50 @@ public class EMailValidationIndicator extends UserDefIndicatorImpl {
     public boolean reset() {
         boolean retValue = super.reset();
         matchingValueCount = new Long(0L);
+
         // Prepare naming directory context.
         Hashtable<String, String> env = new Hashtable<String, String>();
         env.put("java.naming.factory.initial", "com.sun.jndi.dns.DnsContextFactory"); //$NON-NLS-1$ //$NON-NLS-2$
+
+        // if the user add the paramter for: java.naming.provider.url, if has then add it to env
+        // Added TDQ-6918 Allow user add parameter: java.naming.provider.url
+        String dnsUrl = getDNSUrl();
+        if (dnsUrl != null) {
+            env.put(Context.PROVIDER_URL, dnsUrl);
+        }// ~
+
         try {
             ictx = new InitialDirContext(env);
         } catch (NamingException e) {
+            log.error("Invalid DNS in the user defined indicator: " + this.getName(), e); //$NON-NLS-1$
             retValue = false;
         }
 
         retValue = retValue && this.initParameters();
         return retValue;
 
+    }
+
+    /**
+     * Check: if the user add the paramter for: java.naming.provider.url if the parameter with this name is added,
+     * return its value.
+     * 
+     * @return string: if has the related parameter null: no such parameter
+     */
+    private String getDNSUrl() {
+        IndicatorParameters param = this.getParameters();
+        if (param != null) {
+            Domain indicatorValidDomain = param.getIndicatorValidDomain();
+            if (indicatorValidDomain != null) {
+                EList<JavaUDIIndicatorParameter> javaUDIIndicatorParameter = indicatorValidDomain.getJavaUDIIndicatorParameter();
+                for (JavaUDIIndicatorParameter p : javaUDIIndicatorParameter) {
+                    if (NAMING_PARAM.equalsIgnoreCase(p.getKey())) {
+                        return p.getValue();
+                    }
+                }
+            }
+        }
+        return null;
     }
 
     boolean initParameters() {
@@ -201,7 +237,9 @@ public class EMailValidationIndicator extends UserDefIndicatorImpl {
                 }
             } else {
                 // log warn but keep running (don't return false)
-                log.warn("Unknown parameter given to UDI: " + this.getName() + ": " + p.getKey() + " = " + p.getValue()); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                if (!NAMING_PARAM.equalsIgnoreCase(p.getKey())) {
+                    log.warn("Unknown parameter given to UDI: " + this.getName() + ": " + p.getKey() + " = " + p.getValue()); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                }
             }
         }
 
