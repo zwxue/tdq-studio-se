@@ -108,30 +108,6 @@ public class AnalysisExecutorTest {
 
     /**
      * Test method for {@link org.talend.dq.analysis.AnalysisExecutor#execute(org.talend.dataquality.analysis.Analysis)}
-     * . case1 have enough memory
-     */
-    @Test
-    public void testExecute1() {
-        setMemoryControl(true);
-        ReturnCode execute1 = null;
-        int currMemory = AnalysisThreadMemoryChangeNotifier.convertToMB(Runtime.getRuntime().totalMemory());
-        do {
-            setMemoryValue(currMemory);
-            // ~connection
-            spy = Mockito.spy(new ColumnAnalysisExecutor());
-            Mockito.doReturn(true).when(spy).runAnalysis(((Analysis) Mockito.anyObject()), Mockito.anyString());
-            execute1 = spy.execute(createAnalysis);
-            currMemory += 20;
-        } while (Messages.getString("Evaluator.OutOfMomory", spy.getUsedMemory()).equals(execute1.getMessage())); //$NON-NLS-1$
-        Assert.assertFalse(Messages.getString("Evaluator.OutOfMomory", spy.getUsedMemory()).equals(execute1.getMessage())); //$NON-NLS-1$
-        Assert.assertTrue(execute1.isOk());
-        Assert.assertTrue(execute1.getMessage() == null);
-        Mockito.verify(spy, Mockito.times(1)).execute(createAnalysis);
-
-    }
-
-    /**
-     * Test method for {@link org.talend.dq.analysis.AnalysisExecutor#execute(org.talend.dataquality.analysis.Analysis)}
      * . case2 no have enough memory
      */
     @Test
