@@ -12,6 +12,8 @@
 // ============================================================================
 package org.talend.dq.dbms;
 
+import org.talend.dataquality.PluginConstant;
+
 /**
  * DOC scorreia class global comment. Detailled comment
  */
@@ -245,4 +247,22 @@ public class GenericSQLHandler {
         return this;
     }
 
+    public GenericSQLHandler replaceUDIQueryToMatch() {
+        sqlString = sqlString.replace("WHERE " + UDI_WHERE + PluginConstant.SPACE_STRING //$NON-NLS-1$ 
+                + GenericSQLHandler.AND_WHERE_CLAUSE, WHERE_CLAUSE);
+        sqlString = sqlString.replace("AND " + UDI_WHERE + PluginConstant.SPACE_STRING //$NON-NLS-1$ 
+                + AND_WHERE_CLAUSE, AND_WHERE_CLAUSE);
+        sqlString = sqlString.replace("ORDER BY " + UDI_ORDER_BY, PluginConstant.SPACE_STRING); //$NON-NLS-1$ 
+        sqlString = sqlString.replace("GROUP BY " + GenericSQLHandler.UDI_GROUP_BY, PluginConstant.SPACE_STRING); //$NON-NLS-1$ 
+        sqlString = sqlString.replace("WHERE  AND", "WHERE "); //$NON-NLS-1$ //$NON-NLS-2$
+        sqlString = sqlString.replace("AND  " + AND_WHERE_CLAUSE, AND_WHERE_CLAUSE); //$NON-NLS-1$ 
+        sqlString = sqlString.replace("( AND", "("); //$NON-NLS-1$ //$NON-NLS-2$
+        sqlString = sqlString.replace("AND )", ")"); //$NON-NLS-1$ //$NON-NLS-2$
+        sqlString = sqlString.replace("( AND )", " "); //$NON-NLS-1$ //$NON-NLS-2$
+        sqlString = sqlString.replace("NOT   " + AND_WHERE_CLAUSE, "NOT " + WHERE_CLAUSE); //$NON-NLS-1$ //$NON-NLS-2$
+        sqlString = sqlString.replace("NOT ( ) " + AND_WHERE_CLAUSE, "NOT " + WHERE_CLAUSE); //$NON-NLS-1$ //$NON-NLS-2$
+        sqlString = sqlString.replace("WHERE   " + AND_WHERE_CLAUSE, WHERE_CLAUSE); //$NON-NLS-1$ 
+        sqlString = sqlString.replace("WHERE  = <%=__INDICATOR_VALUE__%> <%=__AND_WHERE_CLAUSE__%>", "WHERE " + WHERE_CLAUSE); //$NON-NLS-1$ //$NON-NLS-2$
+        return this;
+    }
 }

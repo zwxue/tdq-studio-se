@@ -1576,6 +1576,12 @@
            name="Update All Indicators for Default type Task"
            version="5.3.0">
      </workspacetask>  
+     <workspacetask
+           class="org.talend.dataprofiler.core.migration.impl.UpdateUDIIndicatorsWithNewModelTask"
+           id="org.talend.dataprofiler.core.migration.impl.UpdateUDIIndicatorsWithNewModelTask"
+           name="Update UDI Indicators With New Model Task"
+           version="5.3.0">
+     </workspacetask>  
      
   </extension>
   <extension

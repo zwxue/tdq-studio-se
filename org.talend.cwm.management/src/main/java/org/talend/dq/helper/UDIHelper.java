@@ -37,6 +37,7 @@ import org.talend.core.model.metadata.builder.database.PluginConstant;
 import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.management.i18n.Messages;
 import org.talend.dataquality.domain.pattern.Pattern;
+import org.talend.dataquality.helpers.IndicatorCategoryHelper;
 import org.talend.dataquality.helpers.MetadataHelper;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.definition.DefinitionFactory;
@@ -471,6 +472,57 @@ public final class UDIHelper {
             return UDI_TEMPLATES_PROPERTIES;
         }
         return getCreateTemplatesProperties();
+    }
+
+    /**
+     * get Query From Templates.
+     * 
+     * @param selectTabNumber
+     * @param language
+     * @param category
+     * @return
+     */
+    public static String getQueryFromTemplates(int selectTabNumber, String language, IndicatorCategory category) {
+        Properties properties = UDIHelper.getUDITemplatesProperties();
+        // get sql template depend on the language and selectTabNumber
+
+        String key = PluginConstant.EMPTY_STRING;
+        String autoGenSql = PluginConstant.EMPTY_STRING;
+        // when from tab0 change to tab1, get full sql
+        if (selectTabNumber == 1) {
+            if (IndicatorCategoryHelper.isUserDefCount(category)) {
+                key = "SqlTemplate." + language + ".UDI.Count"; //$NON-NLS-1$ //$NON-NLS-2$
+            } else if (IndicatorCategoryHelper.isUserDefRealValue(category)) {
+                key = "SqlTemplate." + language + ".UDI.RealValue"; //$NON-NLS-1$ //$NON-NLS-2$
+            } else if (IndicatorCategoryHelper.isUserDefFrequency(category)) {
+                key = "SqlTemplate." + language + ".UDI.Frequency"; //$NON-NLS-1$ //$NON-NLS-2$
+            } else if (IndicatorCategoryHelper.isUserDefMatching(category)) {
+                key = "SqlTemplate." + language + ".UDI.Match"; //$NON-NLS-1$ //$NON-NLS-2$
+            }
+        } else if (selectTabNumber == 2) {
+            // for match is View Valid Rows template
+            // for others is view rows template
+            if (IndicatorCategoryHelper.isUserDefMatching(category)) {
+                key = "SqlTemplate." + language + ".UDI.Match.ViewValidRows"; //$NON-NLS-1$ //$NON-NLS-2$
+            } else if (IndicatorCategoryHelper.isUserDefRealValue(category)) {
+                key = "SqlTemplate." + language + ".UDI.RealValue.ViewRows"; //$NON-NLS-1$ //$NON-NLS-2$
+            } else if (IndicatorCategoryHelper.isUserDefFrequency(category)) {
+                key = "SqlTemplate." + language + ".UDI.Frequency.ViewRows"; //$NON-NLS-1$ //$NON-NLS-2$
+            } else if (IndicatorCategoryHelper.isUserDefCount(category)) {
+                key = "SqlTemplate." + language + ".UDI.Count.ViewRows"; //$NON-NLS-1$ //$NON-NLS-2$
+            }
+        } else if (selectTabNumber == 3) {
+            // for match is View Invalid Rows Template
+            key = "SqlTemplate." + language + ".UDI.Match.ViewInvalidRows"; //$NON-NLS-1$ //$NON-NLS-2$
+        } else if (selectTabNumber == 4) {
+            // for match is View Valid Values Template
+            key = "SqlTemplate." + language + ".UDI.Match.ViewValidValues"; //$NON-NLS-1$ //$NON-NLS-2$
+        } else if (selectTabNumber == 5) {
+            // for match is View Invalid Values Template
+            key = "SqlTemplate." + language + ".UDI.Match.ViewInvalidValues"; //$NON-NLS-1$ //$NON-NLS-2$
+        }
+        autoGenSql = properties.getProperty(key);
+        return autoGenSql;
     }
 
 }

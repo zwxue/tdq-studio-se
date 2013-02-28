@@ -25,6 +25,7 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.DecorationOverlayIcon;
@@ -46,6 +47,7 @@ import org.talend.commons.utils.WorkspaceUtils;
 import org.talend.core.model.properties.Item;
 import org.talend.cwm.dependencies.DependenciesHandler;
 import org.talend.cwm.helper.TaggedValueHelper;
+import org.talend.cwm.relational.TdExpression;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
@@ -61,6 +63,7 @@ import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.ExecutionLanguage;
 import org.talend.dataquality.domain.Domain;
 import org.talend.dataquality.domain.JavaUDIIndicatorParameter;
+import org.talend.dataquality.helpers.BooleanExpressionHelper;
 import org.talend.dataquality.helpers.DomainHelper;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.IndicatorParameters;
@@ -106,6 +109,53 @@ public final class UDIUtils {
      */
     public static String getCurrentDateTime() {
         return DateUtils.getCurrentDate(DateUtils.PATTERN_5);
+    }
+
+    /**
+     * check the TdExpression is Language And Version.
+     * 
+     * @param tdExp
+     * @param language
+     * @param version
+     * @return
+     */
+    public static boolean isCurrentLanguageAndVersion(TdExpression tdExp, String language, String version) {
+        return tdExp.getLanguage().equals(language)
+                && ((tdExp.getVersion() == null && version == null) || (tdExp.getVersion() != null && tdExp.getVersion().equals(
+                        version)));
+    }
+
+    /**
+     * check if Exist In List.
+     * 
+     * @param viewValidRowsList
+     * @param language
+     * @param version
+     * @return
+     */
+    public static boolean checkExistInList(EList<TdExpression> viewValidRowsList, String language, String version) {
+        boolean isExist = false;
+        for (TdExpression temp : viewValidRowsList) {
+            if (isCurrentLanguageAndVersion(temp, language, version)) {
+                isExist = true;
+                break;
+            }
+        }
+        return isExist;
+    }
+
+    /**
+     * create New TdExpression.
+     * 
+     * @param language
+     * @param version
+     * @param body
+     * @return
+     */
+    public static TdExpression createNewTdExpression(String language, String version, String body) {
+        TdExpression newTdExp = BooleanExpressionHelper.createTdExpression(language, body, version);
+        newTdExp.setModificationDate(getCurrentDateTime());
+        return newTdExp;
     }
 
     public static IndicatorCategory getUDICategory(IndicatorUnit unit) {
