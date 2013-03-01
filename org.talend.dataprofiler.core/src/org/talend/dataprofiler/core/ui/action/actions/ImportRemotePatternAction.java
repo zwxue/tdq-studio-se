@@ -116,7 +116,7 @@ public class ImportRemotePatternAction extends Action {
 
         setEnabled(true);
         if (fExtensionDownloaded > 0) {
-            if (TalendPropertiesUtil.isEnableCsvFormat4Exchange()) {
+            if (TalendPropertiesUtil.isEnabledCsvFormat4Exchange()) {
                 for (IEcosComponent componet : fInstalledComponents) {
                     List<ImportObject> validImportObject = ImportObject.extractImportObject(componet, information);
 
