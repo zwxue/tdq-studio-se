@@ -62,6 +62,7 @@ Export-Package: org.talend.algorithms,
  org.talend.resource
 Require-Bundle: org.talend.utils,
  org.apache.log4j,
+ org.apache.commons.lang,
  org.talend.model;visibility:=reexport,
  org.talend.dataquality.matching,
  org.talend.core.repository,
