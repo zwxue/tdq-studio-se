@@ -14,7 +14,9 @@ package org.talend.dataprofiler.core.ui.dialog.message;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.emf.common.util.EList;
@@ -29,8 +31,10 @@ import org.eclipse.swt.widgets.Shell;
 import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
 import org.talend.core.model.metadata.builder.connection.DelimitedFileConnection;
 import org.talend.core.model.metadata.builder.connection.MDMConnection;
+import org.talend.core.model.repository.ERepositoryObjectType;
+import org.talend.core.model.repository.IRepositoryViewObject;
+import org.talend.core.model.repository.RepositoryViewObject;
 import org.talend.dataprofiler.core.ImageLib;
-import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.domain.pattern.Pattern;
@@ -63,10 +67,21 @@ public class DeleteModelElementConfirmDialog {
 
         List<Object> children = new ArrayList<Object>();
 
-        private final ModelElement nodeElement;
+        private ModelElement nodeElement = null;
+
+        private IRepositoryNode node = null;
 
         public ImpactNode(ModelElement modelElement) {
             this.nodeElement = modelElement;
+        }
+
+        /**
+         * DOC yyin ImpactNode constructor comment.
+         * 
+         * @param node
+         */
+        public ImpactNode(IRepositoryNode node) {
+            this.node = node;
         }
 
         public void addRequireModelElement(Object object) {
@@ -81,7 +96,11 @@ public class DeleteModelElementConfirmDialog {
 
         @Override
         public String toString() {
-            return nodeElement.getName();
+            if (this.nodeElement != null) {
+                return nodeElement.getName();
+            } else {
+                return this.node.getObject().getLabel();
+            }
         }
 
         /**
@@ -456,10 +475,14 @@ public class DeleteModelElementConfirmDialog {
                         // MOD msjian TDQ-5909: modify to displayName
                         String name = modelElement != null ? PropertyHelper.getProperty(modelElement).getDisplayName() : file
                                 .getName();
-                        return REQUIRES + PluginConstant.SPACE_STRING + "<<" + name + ">>";//$NON-NLS-1$ //$NON-NLS-2$
-                    }
-                    return REQUIRES + PluginConstant.SPACE_STRING
-                            + "<<" + PropertyHelper.getProperty((ModelElement) obj).getDisplayName() + ">>"; //$NON-NLS-1$ //$NON-NLS-2$
+                        return name;
+                        //return REQUIRES + PluginConstant.SPACE_STRING + "<<" + name + ">>";//$NON-NLS-1$ //$NON-NLS-2$
+                    } else if (obj instanceof RepositoryViewObject) {// Added 20130226 TDQ-6899 show the name for Jrxml
+                                                                     // object (which has no related ModelElement)
+                        return ((IRepositoryViewObject) obj).getLabel();
+                    }// ~
+                    return PropertyHelper.getProperty((ModelElement) obj).getDisplayName();
+                    //REQUIRES + PluginConstant.SPACE_STRING+ "<<" + PropertyHelper.getProperty((ModelElement) obj).getDisplayName() + ">>"; //$NON-NLS-1$ //$NON-NLS-2$
                     // TDQ-5909~
                 }
 
@@ -472,8 +495,15 @@ public class DeleteModelElementConfirmDialog {
                         modelElement = ((ImpactNode) obj).getNodeElement();
                     } else if (obj instanceof IFile) {
                         modelElement = ModelElementFileFactory.getModelElement((IFile) obj);
+                    } else if (obj instanceof RepositoryViewObject) {
+                        // Added 20130226 TDQ-6899 show the name for Jrxml object (which has no related ModelElement)
+                        return ImageLib.getImage(ImageLib.XML_DOC);
                     }
+                    // ~
                     if (modelElement == null) {
+                        if (((ImpactNode) obj).node != null) {
+                            return ImageLib.getImage(ImageLib.XML_DOC);
+                        }
                         return super.getImage(obj);
                     }
                     if (modelElement instanceof Analysis) {
@@ -506,6 +536,82 @@ public class DeleteModelElementConfirmDialog {
             };
         }
         return fLabelProvider;
+    }
+
+    /**
+     * show all nodes with its dependencies (in nodeWithDependsMap) in one dialog. if the dependency has its own
+     * depends, also show them under this dependency
+     * 
+     * @param nodeWithDependsMap key is the repostiory node and value is the dependencies of this node.
+     * @param dialogMessage the message shown in dialog
+     * @return true if the user choose force delete, false if the user did not choose force delete
+     */
+    public static boolean showDialog(Map<IRepositoryNode, List<ModelElement>> nodeWithDependsMap, String dialogMessage) {
+        // for each node in the map, add the node as a ImpactNode, and its children are its depends.
+        Iterator iter = nodeWithDependsMap.entrySet().iterator();
+        while (iter.hasNext()) {
+            Map.Entry<IRepositoryNode, List<ModelElement>> entry = (Map.Entry<IRepositoryNode, List<ModelElement>>) iter.next();
+            IRepositoryNode node = (IRepositoryNode) entry.getKey();
+            List<ModelElement> dependencies = (List<ModelElement>) entry.getValue();
+            addDenpendencyElements(node, dependencies);
+        }
+        ImpactNode[] impactElements = getImpactNodes();
+        boolean isChecked = false;
+
+        // show the dialog
+        if (impactElements.length > 0) {
+            TreeMessageInfoDialog dialog = new TreeMessageInfoDialog(null,
+                    DefaultMessagesImpl.getString("DeleteModelElementConfirmDialog.confirmResourceDelete"), null, dialogMessage, //$NON-NLS-1$
+                    MessageDialog.WARNING, new String[] { IDialogConstants.OK_LABEL }, 1);
+            dialog.setNeedCheckbox(true);
+            dialog.setContentProvider(new DialogContentProvider(impactElements));
+            dialog.setLabelProvider(getLabelProvider());
+            dialog.setInput(new Object());
+            clear();
+            // MOD qiongli 2012-1-6 if don't click OK button,should return false;
+            int result = dialog.open();
+            isChecked = dialog.isChecked() && (result == Window.OK);
+        }
+        return isChecked;
+    }
+
+    /**
+     * The first level node is (connection, DQ rule, Pattern), the second level is analysis, Jrxml, the third is report
+     * only for analysis , need to check if there are some reports depends on this analysis and list them if any.
+     * 
+     * @param node
+     * @param dependencies
+     */
+    private static void addDenpendencyElements(IRepositoryNode node, List<ModelElement> dependencies) {
+        ImpactNode impactNode;
+        // if node is a jrxml
+        if (ERepositoryObjectType.TDQ_JRAXML_ELEMENT.equals(node.getObject().getRepositoryObjectType())) {
+            impactNode = new ImpactNode(node);
+        } else {
+            impactNode = new ImpactNode(RepositoryNodeHelper.getModelElementFromRepositoryNode(node));
+        }
+
+        for (ModelElement element : dependencies) {
+
+            // only for analysis
+            if (element instanceof Analysis) {
+                List<ModelElement> dependReports = EObjectHelper.getDependencyClients(element);
+                if (dependReports.size() > 0) {
+                    ImpactNode anaNode = new ImpactNode(element);
+                    for (ModelElement report : dependReports) {
+                        anaNode.addRequireModelElement(report);
+                    }
+                    // impactNodes.add(anaNode);
+                    impactNode.addRequireModelElement(anaNode);
+                } else {
+                    impactNode.addRequireModelElement(element);
+                }
+            } else {
+                impactNode.addRequireModelElement(element);
+            }
+        }
+        impactNodes.add(impactNode);
+
     }
 
 }
