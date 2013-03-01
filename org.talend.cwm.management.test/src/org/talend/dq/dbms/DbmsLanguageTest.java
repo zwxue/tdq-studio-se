@@ -12,7 +12,7 @@
 // ============================================================================
 package org.talend.dq.dbms;
 
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -83,7 +83,8 @@ public class DbmsLanguageTest {
 
     private static final String QUERY_AB_STR = "select " + GenericSQLHandler.COLUMN_NAMES_A + ", " + GenericSQLHandler.COLUMN_NAMES_B + " from " + GenericSQLHandler.TABLE_NAME; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
-    private static final String QUERY_WHERE_STR = QUERY_STR + SPACE + GenericSQLHandler.WHERE_CLAUSE;
+    private static final String QUERY_WHERE_STR = QUERY_STR + SPACE + GenericSQLHandler.WHERE_CLAUSE + SPACE
+            + GenericSQLHandler.UDI_WHERE;
 
     private static final String QUERY_PATTERN_STR = "SELECT COUNT(CASE WHEN " + GenericSQLHandler.COLUMN_NAMES //$NON-NLS-1$
             + " REGEXP BINARY " + GenericSQLHandler.PATTERN_EXPRESSION + " THEN 1 END), COUNT(*) FROM " //$NON-NLS-1$ //$NON-NLS-2$
@@ -773,7 +774,7 @@ public class DbmsLanguageTest {
             DbmsLanguage dbms = getMysqlDbmsLanguage();
             String addWhereToStatement = dbms.addWhereToStatement(QUERY_WHERE_STR, w1);
             Assert.assertTrue(addWhereToStatement.indexOf(GenericSQLHandler.WHERE_CLAUSE) < 0
-                    && addWhereToStatement.indexOf(w1) > -1);
+                    && addWhereToStatement.indexOf(GenericSQLHandler.UDI_WHERE) < 0 && addWhereToStatement.indexOf(w1) > -1);
         } catch (Exception e) {
             fail(e.getMessage());
         }
