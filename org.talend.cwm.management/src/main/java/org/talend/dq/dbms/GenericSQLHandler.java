@@ -249,11 +249,11 @@ public class GenericSQLHandler {
 
     public GenericSQLHandler replaceUDIQueryToMatch() {
         sqlString = sqlString.replace("WHERE " + UDI_WHERE + PluginConstant.SPACE_STRING //$NON-NLS-1$ 
-                + GenericSQLHandler.AND_WHERE_CLAUSE, WHERE_CLAUSE);
+                + AND_WHERE_CLAUSE, WHERE_CLAUSE);
         sqlString = sqlString.replace("AND " + UDI_WHERE + PluginConstant.SPACE_STRING //$NON-NLS-1$ 
                 + AND_WHERE_CLAUSE, AND_WHERE_CLAUSE);
         sqlString = sqlString.replace("ORDER BY " + UDI_ORDER_BY, PluginConstant.SPACE_STRING); //$NON-NLS-1$ 
-        sqlString = sqlString.replace("GROUP BY " + GenericSQLHandler.UDI_GROUP_BY, PluginConstant.SPACE_STRING); //$NON-NLS-1$ 
+        sqlString = sqlString.replace("GROUP BY " + UDI_GROUP_BY, PluginConstant.SPACE_STRING); //$NON-NLS-1$ 
         sqlString = sqlString.replace("WHERE  AND", "WHERE "); //$NON-NLS-1$ //$NON-NLS-2$
         sqlString = sqlString.replace("AND  " + AND_WHERE_CLAUSE, AND_WHERE_CLAUSE); //$NON-NLS-1$ 
         sqlString = sqlString.replace("( AND", "("); //$NON-NLS-1$ //$NON-NLS-2$
@@ -262,7 +262,19 @@ public class GenericSQLHandler {
         sqlString = sqlString.replace("NOT   " + AND_WHERE_CLAUSE, "NOT " + WHERE_CLAUSE); //$NON-NLS-1$ //$NON-NLS-2$
         sqlString = sqlString.replace("NOT ( ) " + AND_WHERE_CLAUSE, "NOT " + WHERE_CLAUSE); //$NON-NLS-1$ //$NON-NLS-2$
         sqlString = sqlString.replace("WHERE   " + AND_WHERE_CLAUSE, WHERE_CLAUSE); //$NON-NLS-1$ 
-        sqlString = sqlString.replace("WHERE  = <%=__INDICATOR_VALUE__%> <%=__AND_WHERE_CLAUSE__%>", "WHERE " + WHERE_CLAUSE); //$NON-NLS-1$ //$NON-NLS-2$
+        sqlString = sqlString.replace("WHERE  " + AND_WHERE_CLAUSE, WHERE_CLAUSE); //$NON-NLS-1$ 
+        sqlString = sqlString.replace("WHERE " + WHERE_CLAUSE, WHERE_CLAUSE); //$NON-NLS-1$ 
+        sqlString = sqlString.replace("WHERE  = <%=__INDICATOR_VALUE__%> <%=__AND_WHERE_CLAUSE__%>", WHERE_CLAUSE); //$NON-NLS-1$
+        sqlString = sqlString.replace("GROUP BY   ORDER BY", " ORDER BY"); //$NON-NLS-1$ //$NON-NLS-2$
+        sqlString = sqlString.trim();
+        if (sqlString.endsWith("ORDER BY")) { //$NON-NLS-1$
+            sqlString = sqlString.replace("ORDER BY", PluginConstant.EMPTY_STRING); //$NON-NLS-1$
+        }
+        sqlString = sqlString.trim();
+        if (sqlString.endsWith("GROUP BY")) { //$NON-NLS-1$
+            sqlString = sqlString.replace("GROUP BY", PluginConstant.EMPTY_STRING); //$NON-NLS-1$
+        }
+        sqlString = sqlString.trim();
         return this;
     }
 }

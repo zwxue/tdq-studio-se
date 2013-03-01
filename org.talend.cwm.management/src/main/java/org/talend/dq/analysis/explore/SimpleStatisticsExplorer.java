@@ -107,10 +107,13 @@ public class SimpleStatisticsExplorer extends DataExplorer {
                 dbmsLanguage.getDbVersion());
         sql = tdExp.getBody();
         String dataFilterClause = getDataFilterClause();
-        sql = sql.replace(GenericSQLHandler.WHERE_CLAUSE, dbmsLanguage.where() + dataFilterClause);
-        sql = sql.replace(GenericSQLHandler.AND_WHERE_CLAUSE,
-                PluginConstant.EMPTY_STRING.equals(dataFilterClause) ? PluginConstant.EMPTY_STRING : dbmsLanguage.and()
-                        + dataFilterClause);
+        if (!dataFilterClause.equals(PluginConstant.EMPTY_STRING)) {
+            sql = sql.replace(GenericSQLHandler.WHERE_CLAUSE, dbmsLanguage.where() + dataFilterClause);
+            sql = sql.replace(GenericSQLHandler.AND_WHERE_CLAUSE, dbmsLanguage.and() + dataFilterClause);
+        } else {
+            sql = sql.replace(GenericSQLHandler.WHERE_CLAUSE, PluginConstant.EMPTY_STRING);
+            sql = sql.replace(GenericSQLHandler.AND_WHERE_CLAUSE, PluginConstant.EMPTY_STRING);
+        }
         String tableName = getFullyQualifiedTableName(this.indicator.getAnalyzedElement());
         sql = sql.replace(GenericSQLHandler.TABLE_NAME, tableName);
         sql = sql.replace(GenericSQLHandler.COLUMN_NAMES, this.indicator.getAnalyzedElement().getName());

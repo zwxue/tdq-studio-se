@@ -69,13 +69,6 @@ public class PatternExplorer extends DataExplorer {
             dbmsLanguage.setFunctionName(functionName);
             functionReturnValue = functionReturnValue.split("\\)").length > 1 ? functionReturnValue.split("\\)")[1] : ""; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
             functionReturnValue = functionReturnValue.split("THEN").length > 1 ? functionReturnValue.split("THEN")[0] : ""; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-
-            map.put(MENU_VIEW_INVALID_VALUES, isSqlEngine ? getComment(MENU_VIEW_INVALID_VALUES) + getInvalidValuesStatement()
-                    : null);
-            map.put(MENU_VIEW_VALID_VALUES, isSqlEngine ? getComment(MENU_VIEW_VALID_VALUES) + getValidValuesStatement() : null);
-            map.put(MENU_VIEW_INVALID_ROWS, isSqlEngine ? getComment(MENU_VIEW_INVALID_ROWS) + getInvalidRowsStatement() : null);
-            map.put(MENU_VIEW_VALID_ROWS, isSqlEngine ? getComment(MENU_VIEW_VALID_ROWS) + getValidRowsStatement() : null);
-            return map;
         }
         // ~TDQ-4087
 
@@ -184,11 +177,14 @@ public class PatternExplorer extends DataExplorer {
                 dbmsLanguage.getDbVersion());
         sql = tdExp.getBody();
         String dataFilterClause = getDataFilterClause();
+        if (!dataFilterClause.equals(PluginConstant.EMPTY_STRING)) {
+            sql = sql.replace(GenericSQLHandler.WHERE_CLAUSE, dbmsLanguage.where() + dataFilterClause);
+            sql = sql.replace(GenericSQLHandler.AND_WHERE_CLAUSE, dbmsLanguage.and() + dataFilterClause);
+        } else {
+            sql = sql.replace(GenericSQLHandler.WHERE_CLAUSE, PluginConstant.EMPTY_STRING);
+            sql = sql.replace(GenericSQLHandler.AND_WHERE_CLAUSE, PluginConstant.EMPTY_STRING);
+        }
         String tableName = getFullyQualifiedTableName(this.indicator.getAnalyzedElement());
-        sql = sql.replace(GenericSQLHandler.WHERE_CLAUSE, dbmsLanguage.where() + dataFilterClause);
-        sql = sql.replace(GenericSQLHandler.AND_WHERE_CLAUSE,
-                PluginConstant.EMPTY_STRING.equals(dataFilterClause) ? PluginConstant.EMPTY_STRING : dbmsLanguage.and()
-                        + dataFilterClause);
         sql = dbmsLanguage.fillGenericQueryWithColumnsAndTable(sql, indicator.getAnalyzedElement().getName(), tableName);
         return sql;
     }
