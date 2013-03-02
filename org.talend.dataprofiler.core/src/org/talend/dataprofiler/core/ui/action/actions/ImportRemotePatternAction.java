@@ -42,7 +42,6 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
-import org.talend.core.model.utils.TalendPropertiesUtil;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.exception.ExceptionHandler;
@@ -116,7 +115,8 @@ public class ImportRemotePatternAction extends Action {
 
         setEnabled(true);
         if (fExtensionDownloaded > 0) {
-            if (TalendPropertiesUtil.isEnabledCsvFormat4Exchange()) {
+            String csvFormat = System.getProperty("talend.exchange.csv"); //$NON-NLS-1$
+            if ("true".equals(csvFormat)) { //$NON-NLS-1$
                 for (IEcosComponent componet : fInstalledComponents) {
                     List<ImportObject> validImportObject = ImportObject.extractImportObject(componet, information);
 
