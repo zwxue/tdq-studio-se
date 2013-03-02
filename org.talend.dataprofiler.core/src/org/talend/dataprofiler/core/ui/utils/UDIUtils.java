@@ -128,14 +128,14 @@ public final class UDIUtils {
     /**
      * check if Exist In List.
      * 
-     * @param viewValidRowsList
+     * @param list
      * @param language
      * @param version
      * @return
      */
-    public static boolean checkExistInList(EList<TdExpression> viewValidRowsList, String language, String version) {
+    public static boolean checkExistInList(EList<TdExpression> list, String language, String version) {
         boolean isExist = false;
-        for (TdExpression temp : viewValidRowsList) {
+        for (TdExpression temp : list) {
             if (isCurrentLanguageAndVersion(temp, language, version)) {
                 isExist = true;
                 break;

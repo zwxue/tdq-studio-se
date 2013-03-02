@@ -32,12 +32,22 @@ import org.talend.dataquality.domain.pattern.Pattern;
 import org.talend.dataquality.domain.pattern.PatternComponent;
 import org.talend.dataquality.domain.pattern.PatternFactory;
 import org.talend.dataquality.domain.pattern.RegularExpression;
+import org.talend.dataquality.helpers.BooleanExpressionHelper;
+import org.talend.dataquality.indicators.definition.userdefine.UDIndicatorDefinition;
+import org.talend.dataquality.indicators.definition.userdefine.UserdefineFactory;
+import org.talend.dataquality.indicators.sql.IndicatorSqlFactory;
+import org.talend.dataquality.indicators.sql.UserDefIndicator;
+import org.talend.utils.dates.DateUtils;
 import orgomg.cwm.objectmodel.core.Expression;
 
 /**
  * DOC scorreia class global comment. Detailled comment
  */
 public class DbmsLanguageTest {
+
+    private static final String sql_1 = "SELECT 1 FROM <%=__TABLE_NAME__%> <%=__WHERE_CLAUSE__%>"; //$NON-NLS-1$
+
+    private static final String sql_2 = "SELECT 2 FROM <%=__TABLE_NAME__%> <%=__WHERE_CLAUSE__%>"; //$NON-NLS-1$
 
     private static final String EMPTY_STRING = ""; //$NON-NLS-1$
 
@@ -62,12 +72,6 @@ public class DbmsLanguageTest {
     private static final String COLUMN_B_NAME = "column_b_name"; //$NON-NLS-1$
 
     private static final String KEY = "key"; //$NON-NLS-1$
-
-    private static final String PARTIAL_EXPRESSION = "partial_expression"; //$NON-NLS-1$
-
-    private static final char TO_REPLACE = 'a';
-
-    private static final char REPLACEMENT_CHAR = 'b';
 
     private static final String REPLACEMENT_STR = "replacement_str"; //$NON-NLS-1$
 
@@ -859,9 +863,26 @@ public class DbmsLanguageTest {
      */
     @Test
     public void testGetSqlExpression() {
-        // TODO need to implement this method!!!
-        // need an IndicatorDefinition object to test this method
-        // fail("Not yet implemented");
+        // create indicator
+        UserDefIndicator userDefIndicator = IndicatorSqlFactory.eINSTANCE.createUserDefIndicator();
+        UDIndicatorDefinition indicatorDefinition = UserdefineFactory.eINSTANCE.createUDIndicatorDefinition();
+        indicatorDefinition.setName("user define"); //$NON-NLS-1$
+        userDefIndicator.setName(indicatorDefinition.getName());
+        userDefIndicator.setIndicatorDefinition(indicatorDefinition);
+
+        TdExpression newTdExp = BooleanExpressionHelper.createTdExpression("MySQL", //$NON-NLS-1$
+                sql_1, null);
+        newTdExp.setModificationDate(DateUtils.getCurrentDate(DateUtils.PATTERN_5));
+        indicatorDefinition.getSqlGenericExpression().add(newTdExp);
+
+        TdExpression newTdExp_2 = BooleanExpressionHelper.createTdExpression("SQL", //$NON-NLS-1$
+                sql_2, null);
+        newTdExp.setModificationDate(DateUtils.getCurrentDate(DateUtils.PATTERN_5));
+        indicatorDefinition.getSqlGenericExpression().add(newTdExp_2);
+        DbmsLanguage dbms = getMysqlDbmsLanguage();
+        Expression sqlExpression = dbms.getSqlExpression(indicatorDefinition);
+        Assert.assertNotNull(sqlExpression);
+        Assert.assertEquals(sql_1, sqlExpression.getBody());
     }
 
     /**
