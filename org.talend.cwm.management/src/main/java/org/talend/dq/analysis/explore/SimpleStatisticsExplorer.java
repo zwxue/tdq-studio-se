@@ -99,7 +99,7 @@ public class SimpleStatisticsExplorer extends DataExplorer {
      * @param indicatorDefinition
      * @return
      */
-    public String getQueryForViewRows(IndicatorDefinition indicatorDefinition) {
+    private String getQueryForViewRows(IndicatorDefinition indicatorDefinition) {
         String sql = PluginConstant.EMPTY_STRING;
         IndicatorCategory category = IndicatorCategoryHelper.getCategory(indicatorDefinition);
         EList<TdExpression> list = ((UDIndicatorDefinition) indicatorDefinition).getViewRowsExpression();
@@ -118,13 +118,15 @@ public class SimpleStatisticsExplorer extends DataExplorer {
         sql = sql.replace(GenericSQLHandler.TABLE_NAME, tableName);
         sql = sql.replace(GenericSQLHandler.COLUMN_NAMES, this.indicator.getAnalyzedElement().getName());
 
-        if (IndicatorCategoryHelper.isUserDefRealValue(category)) {
-            // replace <%=__INDICATOR_VALUE__%>
-            sql = sql.replace(GenericSQLHandler.UDI_INDICATOR_VALUE, this.indicator.getRealValue().toString());
+        if (sql.indexOf(GenericSQLHandler.UDI_INDICATOR_VALUE) != -1) {
+            if (IndicatorCategoryHelper.isUserDefRealValue(category)) {
+                // replace <%=__INDICATOR_VALUE__%>
+                sql = sql.replace(GenericSQLHandler.UDI_INDICATOR_VALUE, this.indicator.getRealValue().toString());
 
-        } else {
-            sql = sql.replace(GenericSQLHandler.UDI_INDICATOR_VALUE,
-                    (String.valueOf(this.indicator.getIntegerValue().intValue())));
+            } else {
+                sql = sql.replace(GenericSQLHandler.UDI_INDICATOR_VALUE,
+                        (String.valueOf(this.indicator.getIntegerValue().intValue())));
+            }
         }
         return sql;
     }
