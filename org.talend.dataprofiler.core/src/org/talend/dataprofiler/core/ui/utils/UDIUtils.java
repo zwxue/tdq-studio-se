@@ -50,6 +50,7 @@ import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.relational.TdExpression;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
+import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.model.ModelElementIndicator;
 import org.talend.dataprofiler.core.ui.action.actions.OpenItemEditorAction;
@@ -65,16 +66,19 @@ import org.talend.dataquality.domain.Domain;
 import org.talend.dataquality.domain.JavaUDIIndicatorParameter;
 import org.talend.dataquality.helpers.BooleanExpressionHelper;
 import org.talend.dataquality.helpers.DomainHelper;
+import org.talend.dataquality.helpers.IndicatorCategoryHelper;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.IndicatorParameters;
 import org.talend.dataquality.indicators.IndicatorsFactory;
 import org.talend.dataquality.indicators.definition.IndicatorCategory;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dataquality.indicators.definition.IndicatorDefinitionParameter;
+import org.talend.dataquality.indicators.definition.userdefine.UDIndicatorDefinition;
 import org.talend.dataquality.indicators.sql.UserDefIndicator;
 import org.talend.dataquality.properties.TDQIndicatorDefinitionItem;
 import org.talend.dq.dbms.DbmsLanguage;
 import org.talend.dq.dbms.DbmsLanguageFactory;
+import org.talend.dq.dbms.GenericSQLHandler;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.helper.UDIHelper;
 import org.talend.dq.helper.resourcehelper.IndicatorResourceFileHelper;
@@ -156,6 +160,106 @@ public final class UDIUtils {
         TdExpression newTdExp = BooleanExpressionHelper.createTdExpression(language, body, version);
         newTdExp.setModificationDate(getCurrentDateTime());
         return newTdExp;
+    }
+
+    /**
+     * create Default Drill Down List for UDI.
+     * 
+     * @param indiDefinition
+     * @return
+     */
+    public static IndicatorDefinition createDefaultDrillDownList(IndicatorDefinition indiDefinition) {
+        IndicatorCategory category = IndicatorCategoryHelper.getCategory(indiDefinition);
+        if (IndicatorCategoryHelper.isUserDefMatching(category)) {
+            // set default value from templates
+            EList<TdExpression> viewValidRowsList = ((UDIndicatorDefinition) indiDefinition).getViewValidRowsExpression();
+            EList<TdExpression> viewInvalidRowsList = ((UDIndicatorDefinition) indiDefinition).getViewInvalidRowsExpression();
+            EList<TdExpression> viewValidValuesList = ((UDIndicatorDefinition) indiDefinition).getViewValidValuesExpression();
+            EList<TdExpression> viewInvalidValuesList = ((UDIndicatorDefinition) indiDefinition).getViewInvalidValuesExpression();
+
+            EList<TdExpression> sqlGenericExpression = indiDefinition.getSqlGenericExpression();
+            if (sqlGenericExpression != null) {
+                for (TdExpression tdExp : sqlGenericExpression) {
+                    String language = tdExp.getLanguage();
+                    String version = tdExp.getVersion();
+
+                    // if not exist, add one.(when do migration more than one time, will add one)
+                    if (!UDIUtils.checkExistInList(viewValidRowsList, language, version)) {
+                        // for match is View Valid Rows template
+                        String body = UDIHelper.getQueryFromTemplates(2, language, category);
+                        viewValidRowsList.add(UDIUtils.createNewTdExpression(language, version, replaceQueryForMatchUDI(body)));
+                    }
+
+                    if (!UDIUtils.checkExistInList(viewInvalidRowsList, language, version)) {
+                        // for match is View Invalid Rows Template
+                        String body = UDIHelper.getQueryFromTemplates(3, language, category);
+                        viewInvalidRowsList.add(UDIUtils.createNewTdExpression(language, version, replaceQueryForMatchUDI(body)));
+                    }
+
+                    if (!UDIUtils.checkExistInList(viewValidValuesList, language, version)) {
+                        // for match is View Valid Values Template
+                        String body = UDIHelper.getQueryFromTemplates(4, language, category);
+                        viewValidValuesList.add(UDIUtils.createNewTdExpression(language, version, replaceQueryForMatchUDI(body)));
+
+                    }
+
+                    if (!UDIUtils.checkExistInList(viewInvalidValuesList, language, version)) {
+                        // for match is View Invalid Values Template
+                        String body = UDIHelper.getQueryFromTemplates(5, language, category);
+                        viewInvalidValuesList.add(UDIUtils
+                                .createNewTdExpression(language, version, replaceQueryForMatchUDI(body)));
+                    }
+                }
+            }
+        } else {
+            // for others is view rows template
+            EList<TdExpression> viewRowsList = ((UDIndicatorDefinition) indiDefinition).getViewRowsExpression();
+            EList<TdExpression> sqlGenericExpression = indiDefinition.getSqlGenericExpression();
+            if (sqlGenericExpression != null) {
+                for (TdExpression tdExp : sqlGenericExpression) {
+                    String language = tdExp.getLanguage();
+                    String version = tdExp.getVersion();
+
+                    // if not exist, add one.(when do migration more than one time, will add one)
+                    if (!UDIUtils.checkExistInList(viewRowsList, language, version)) {
+                        String body = UDIHelper.getQueryFromTemplates(2, language, category);
+
+                        GenericSQLHandler genericSQLHandler = new GenericSQLHandler(body);
+                        if (IndicatorCategoryHelper.isUserDefRealValue(category)) {
+                            // replace <COLUMN_EXPRESSION_TEXT_FIELD>
+                            genericSQLHandler.replaceUDIColumn(PluginConstant.EMPTY_STRING);
+
+                        } else if (IndicatorCategoryHelper.isUserDefFrequency(category)) {
+                            // replace <FIRST_COLUMN_EXPRESSION_TEXT_FIELD>
+                            // replace <SECOND_COLUMN_EXPRESSION_TEXT_FIELD>
+                            genericSQLHandler.replaceUDIFirstColumn(PluginConstant.EMPTY_STRING).replaceUDISecondColumn(
+                                    PluginConstant.EMPTY_STRING);
+                        }
+                        viewRowsList.add(UDIUtils.createNewTdExpression(language, version, genericSQLHandler
+                                .replaceUDIQueryToMatch().getSqlString()));
+                    }
+                }
+            }
+
+        }
+
+        return indiDefinition;
+    }
+
+    /**
+     * replace Query For Match UDI.
+     * 
+     * @param genericSQLHandler
+     * @return
+     */
+    private static String replaceQueryForMatchUDI(String body) {
+        GenericSQLHandler genericSQLHandler = new GenericSQLHandler(body);
+        // replace <MATCHING_EXPRESSION_TEXT_FIELD>
+        genericSQLHandler.replaceUDIMatching(PluginConstant.EMPTY_STRING);
+        // replace <WHERE_TEXT_FIELD>
+        genericSQLHandler.replaceUDIWhere(PluginConstant.EMPTY_STRING);
+
+        return genericSQLHandler.replaceUDIQueryToMatch().getSqlString();
     }
 
     public static IndicatorCategory getUDICategory(IndicatorUnit unit) {

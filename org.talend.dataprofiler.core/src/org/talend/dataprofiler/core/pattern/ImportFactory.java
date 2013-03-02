@@ -53,6 +53,7 @@ import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.action.actions.ImportObject;
 import org.talend.dataprofiler.core.ui.action.provider.NewSourcePatternActionProvider;
 import org.talend.dataprofiler.core.ui.imex.ImportFromExchangeWizard;
+import org.talend.dataprofiler.core.ui.utils.UDIUtils;
 import org.talend.dataprofiler.core.ui.wizard.parserrule.ParserRuleToExcelEnum;
 import org.talend.dataprofiler.ecos.model.IEcosComponent;
 import org.talend.dataquality.domain.pattern.ExpressionType;
@@ -885,8 +886,7 @@ public final class ImportFactory {
             log.error(e, e);
         }
 
-        IFile pfile = selectionFolder.getFile(fname);
-
+        indDef = UDIUtils.createDefaultDrillDownList(indDef);
         ElementWriterFactory.getInstance().createIndicatorDefinitionWriter().create(indDef, selectionFolder);
     }
 
