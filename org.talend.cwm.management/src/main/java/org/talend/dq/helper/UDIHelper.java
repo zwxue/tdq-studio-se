@@ -40,9 +40,10 @@ import org.talend.dataquality.domain.pattern.Pattern;
 import org.talend.dataquality.helpers.IndicatorCategoryHelper;
 import org.talend.dataquality.helpers.MetadataHelper;
 import org.talend.dataquality.indicators.Indicator;
-import org.talend.dataquality.indicators.definition.DefinitionFactory;
 import org.talend.dataquality.indicators.definition.IndicatorCategory;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
+import org.talend.dataquality.indicators.definition.userdefine.UDIndicatorDefinition;
+import org.talend.dataquality.indicators.definition.userdefine.UserdefineFactory;
 import org.talend.dataquality.indicators.sql.UserDefIndicator;
 import org.talend.dataquality.indicators.sql.util.IndicatorSqlSwitch;
 import org.talend.dq.helper.resourcehelper.IndicatorResourceFileHelper;
@@ -149,7 +150,8 @@ public final class UDIHelper {
 
     public static IndicatorDefinition createUDI(String name, String author, String description, String purpose, String status,
             String category, String javaClassName, String javaJarPath) {
-        IndicatorDefinition id = DefinitionFactory.eINSTANCE.createIndicatorDefinition();
+        // IndicatorDefinition id = DefinitionFactory.eINSTANCE.createIndicatorDefinition();
+        UDIndicatorDefinition id = UserdefineFactory.eINSTANCE.createUDIndicatorDefinition();
         id.setName(name);
         MetadataHelper.setAuthor(id, author == null ? PluginConstant.EMPTY_STRING : author);
         MetadataHelper.setDescription(description == null ? PluginConstant.EMPTY_STRING : description, id);
