@@ -12,7 +12,6 @@
 // ============================================================================
 package org.talend.cwm.compare.factory.comparisonlevel;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -309,6 +308,38 @@ public abstract class AbstractComparisonLevel implements IComparisonLevel {
     }
 
     /**
+     * remove the jrxml from the ResourceSet before doMatch, if the ResourceSet is null, return empty Map. Should call
+     * this method only before doMatch.
+     * 
+     * @return
+     */
+    protected Map<ResourceSet, List<Resource>> removeJrxmlsFromResourceSet() {
+        Map<ResourceSet, List<Resource>> map = new HashMap<ResourceSet, List<Resource>>();
+
+        ResourceSet resourceSet = oldDataProvider.eResource() == null ? null : oldDataProvider.eResource().getResourceSet();
+        if (resourceSet != null) {
+            map.put(resourceSet, ResourceManager.removeJrxmls(resourceSet));
+        }
+
+        return map;
+    }
+
+    /**
+     * add the jrxml into the ResourceSet after doMatch. Should call this method only after doMatch
+     * 
+     * @param rsJrxmlMap
+     */
+    protected void addJrxmlsIntoResourceSet(Map<ResourceSet, List<Resource>> rsJrxmlMap) {
+        if (!rsJrxmlMap.isEmpty()) {
+            ResourceSet resourceSet = rsJrxmlMap.keySet().iterator().next();
+            List<Resource> jrxmlResources = rsJrxmlMap.get(resourceSet);
+            if (resourceSet != null && !jrxmlResources.isEmpty()) {
+                resourceSet.getResources().addAll(jrxmlResources);
+            }
+        }
+    }
+
+    /**
      * Compare the old selected object with reload object(rightResource), and updated the content of old selected
      * object.
      * 
@@ -322,18 +353,12 @@ public abstract class AbstractComparisonLevel implements IComparisonLevel {
         MatchModel match = null;
         try {
             // remove the jrxml from the ResourceSet before doMatch
-            ResourceSet resourceSet = oldDataProvider.eResource() == null ? null : oldDataProvider.eResource().getResourceSet();
-            List<Resource> jrxmlResources = new ArrayList<Resource>();
-            if (resourceSet != null) {
-                jrxmlResources = ResourceManager.removeJrxmls(resourceSet);
-            }
+            Map<ResourceSet, List<Resource>> rsJrxmlMap = removeJrxmlsFromResourceSet();
 
             match = MatchService.doMatch(oldDataProvider, getSavedReloadObject(), options);
 
             // add the jrxml into the ResourceSet after doMatch
-            if (resourceSet != null && !jrxmlResources.isEmpty()) {
-                resourceSet.getResources().addAll(jrxmlResources);
-            }
+            addJrxmlsIntoResourceSet(rsJrxmlMap);
         } catch (InterruptedException e) {
             log.error(e, e);
             return false;
