@@ -233,8 +233,8 @@ public class ExpressionEditDialog extends TrayDialog {
 
         this.tdExpression = tdExpression;
         language = tdExpression.getLanguage().trim();
+        version = tdExpression.getVersion();
         if (definition instanceof UDIndicatorDefinition) {
-            version = tdExpression.getVersion();
             UDIndicatorDefinition definitionTemp = (UDIndicatorDefinition) this.definition;
             if (IndicatorCategoryHelper.isUserDefMatching(category)) {
                 tempViewValidRowsExp = getCurrentLanguageExp(definitionTemp.getViewValidRowsExpression());

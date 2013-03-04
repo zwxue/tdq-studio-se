@@ -1279,15 +1279,15 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
         dataBaseTitleComp = new Composite(parentComp, SWT.NONE);
         dataBaseTitleComp.setLayout(new GridLayout(3, false));
         Label databaseLabel = new Label(dataBaseTitleComp, SWT.NONE);
-        databaseLabel.setText(DefaultMessagesImpl.getString("IndicatorDefinitionMaterPage.database"));
+        databaseLabel.setText(DefaultMessagesImpl.getString("IndicatorDefinitionMaterPage.database")); //$NON-NLS-1$
         databaseLabel.setLayoutData(new GridData());
         ((GridData) databaseLabel.getLayoutData()).widthHint = 150;
         Label dbversionLabel = new Label(dataBaseTitleComp, SWT.NONE);
-        dbversionLabel.setText(DefaultMessagesImpl.getString("IndicatorDefinitionMaterPage.dbVersion"));
+        dbversionLabel.setText(DefaultMessagesImpl.getString("IndicatorDefinitionMaterPage.dbVersion")); //$NON-NLS-1$
         dbversionLabel.setLayoutData(new GridData(GridData.BEGINNING));
         ((GridData) dbversionLabel.getLayoutData()).widthHint = 60;
         Label sqlTemplateLabel = new Label(dataBaseTitleComp, SWT.NONE);
-        sqlTemplateLabel.setText(DefaultMessagesImpl.getString("IndicatorDefinitionMaterPage.sqlTemplate"));
+        sqlTemplateLabel.setText(DefaultMessagesImpl.getString("IndicatorDefinitionMaterPage.sqlTemplate")); //$NON-NLS-1$
         GridDataFactory.fillDefaults().align(SWT.FILL, SWT.FILL).grab(true, false).applyTo(dataBaseTitleComp);
         return dataBaseTitleComp;
     }
@@ -1388,15 +1388,15 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
         javaTitleComp = new Composite(javaLanguageComp, SWT.NONE);
         javaTitleComp.setLayout(new GridLayout(3, false));
         Label languageLabel = new Label(javaTitleComp, SWT.NONE);
-        languageLabel.setText(DefaultMessagesImpl.getString("IndicatorDefinitionMaterPage.language"));
+        languageLabel.setText(DefaultMessagesImpl.getString("IndicatorDefinitionMaterPage.language")); //$NON-NLS-1$
         languageLabel.setLayoutData(new GridData());
         ((GridData) languageLabel.getLayoutData()).widthHint = 250;
         Label classLabel = new Label(javaTitleComp, SWT.NONE);
-        classLabel.setText(DefaultMessagesImpl.getString("IndicatorDefinitionMaterPage.javaClass"));
+        classLabel.setText(DefaultMessagesImpl.getString("IndicatorDefinitionMaterPage.javaClass")); //$NON-NLS-1$
         classLabel.setLayoutData(new GridData(GridData.BEGINNING));
         ((GridData) classLabel.getLayoutData()).widthHint = 380;
         Label jarLabel = new Label(javaTitleComp, SWT.NONE);
-        jarLabel.setText(DefaultMessagesImpl.getString("IndicatorDefinitionMaterPage.jars"));
+        jarLabel.setText(DefaultMessagesImpl.getString("IndicatorDefinitionMaterPage.jars")); //$NON-NLS-1$
         GridDataFactory.fillDefaults().align(SWT.FILL, SWT.FILL).grab(true, false).applyTo(javaTitleComp);
         return javaTitleComp;
     }
@@ -1445,11 +1445,6 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
         combo.setItems(allDBTypeList.toArray(new String[allDBTypeList.size()]));
         // ~
         String language = expression.getLanguage();
-        String body = expression.getBody();
-        // ADD xqliu 2010-02-25 feature 11201
-        String version = expression.getVersion();
-        // ~
-
         if (language == null) {
             // MOD xqliu 2010-02-25 feature 11201
             // combo.setText(remainDBTypeList.get(0));
@@ -1461,16 +1456,9 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
         combo.addSelectionListener(new LangCombSelectionListener());
         Composite detailComp = new Composite(lineComp, SWT.NONE);
         detailComp.setLayout(new GridLayout(4, false));
-        // ADD xqliu 2010-02-25 feature 11201
-        createDbVersionText(combo, detailComp, version, 30);
-        // ~
-        final Text patternText = new Text(detailComp, SWT.BORDER);
-        patternText.setText(body == null ? PluginConstant.EMPTY_STRING : body);
-        patternText.setLayoutData(new GridData(GridData.FILL_BOTH));
-        ((GridData) patternText.getLayoutData()).widthHint = 600;
-        patternText.addModifyListener(new ExpressTextModListener(combo));
-        createExpressionEditButton(detailComp, patternText, combo);
-        createExpressionDelButton(detailComp, combo);
+
+        createDataBaseLineComponent(combo, expression, detailComp);
+
         widgetMap.put(combo, detailComp);
         updateOtherCombos(combo);
         GridDataFactory.fillDefaults().align(SWT.FILL, SWT.FILL).grab(true, false).applyTo(detailComp);
@@ -1792,6 +1780,11 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
         // MOD xqliu 2010-03-23 feature 11201
         patternText.setText(expression.getBody() == null ? PluginConstant.EMPTY_STRING : expression.getBody());
         // ~11201
+        // ADD msjian TDQ-6841: set the pattern text can not input when the indicator is UDI
+        if (!isSystemIndicator()) {
+            patternText.setEditable(false);
+        }
+        // TDQ-6841~
         createExpressionEditButton(detailComp, patternText, combo);
         createExpressionDelButton(detailComp, combo);
         GridDataFactory.fillDefaults().align(SWT.FILL, SWT.FILL).grab(true, false).applyTo(detailComp);
