@@ -710,20 +710,19 @@ public class ExpressionEditDialog extends TrayDialog {
     }
 
     /**
-     * get the text content.
+     * check whether use the auto generated sql
      * 
      * @param old content
      * @return
      */
-    public String checkUseAutoGenSql(String oldContent) {
-        // check whether use the auto generated sql
+    public boolean checkUseAutoGenSql(String oldContent) {
         if (StringUtils.isEmpty(oldContent)) {
-            return autoGenSql;
+            return true;
         }
         if (useAutoGenSqlFlag && autoGenSql != null && !autoGenSql.equals(PluginConstant.EMPTY_STRING)) {
-            return autoGenSql;
+            return true;
         }
-        return oldContent;
+        return false;
     }
 
     /**
@@ -755,37 +754,68 @@ public class ExpressionEditDialog extends TrayDialog {
             createTab0Page(sform);
 
         } else if (selectTabNumber == 1) {
-            tab1_fullSql = createTextPart(sform, EXPREEION, 20, checkUseAutoGenSql(fullSqlContent));
+            boolean checkUseAutoGenSql = checkUseAutoGenSql(fullSqlContent);
+            tab1_fullSql = createTextPart(sform, EXPREEION, 20, checkUseAutoGenSql ? autoGenSql : fullSqlContent);
+            if (checkUseAutoGenSql) {
+                resetButton_tab1.setEnabled(false);
+                canBeOverwriten_tab1 = true;
+            }
             tab1_fullSql.addModifyListener(listener);
 
         } else if (selectTabNumber == 2) {
             if (IndicatorCategoryHelper.isUserDefMatching(category)) {
                 // for match dis View Valid Rows template
-                tab2_match_viewvalidRows = createTextPart(sform, EXPREEION, 20,
-                        checkUseAutoGenSql(getExpressValue(tempViewValidRowsExp)));
+                String expressValue = getExpressValue(tempViewValidRowsExp);
+                boolean checkUseAutoGenSql = checkUseAutoGenSql(expressValue);
+                tab2_match_viewvalidRows = createTextPart(sform, EXPREEION, 20, checkUseAutoGenSql ? autoGenSql : expressValue);
+                if (checkUseAutoGenSql) {
+                    resetButton_tab2_match.setEnabled(false);
+                    canBeOverwriten_tab2_match = true;
+                }
                 tab2_match_viewvalidRows.addModifyListener(listener);
             } else {
                 // for others is view rows template
-                tab2_viewRows = createTextPart(sform, EXPREEION, 20, checkUseAutoGenSql(getExpressValue(tempViewRowsExp)));
+                String expressValue = getExpressValue(tempViewRowsExp);
+                boolean checkUseAutoGenSql = checkUseAutoGenSql(expressValue);
+                tab2_viewRows = createTextPart(sform, EXPREEION, 20, checkUseAutoGenSql ? autoGenSql : expressValue);
+                if (checkUseAutoGenSql) {
+                    resetButton_tab2_viewRows.setEnabled(false);
+                    canBeOverwriten_tab2_viewRows = true;
+                }
                 tab2_viewRows.addModifyListener(listener);
             }
 
         } else if (selectTabNumber == 3) {
             // for match is View Invalid Rows Template
-            tab3_match_viewInvalidRows = createTextPart(sform, EXPREEION, 20,
-                    checkUseAutoGenSql(getExpressValue(tempViewInvalidRowsExp)));
+            String expressValue = getExpressValue(tempViewInvalidRowsExp);
+            boolean checkUseAutoGenSql = checkUseAutoGenSql(expressValue);
+            tab3_match_viewInvalidRows = createTextPart(sform, EXPREEION, 20, checkUseAutoGenSql ? autoGenSql : expressValue);
+            if (checkUseAutoGenSql) {
+                resetButton_tab3_match.setEnabled(false);
+                canBeOverwriten_tab3_match = true;
+            }
             tab3_match_viewInvalidRows.addModifyListener(listener);
 
         } else if (selectTabNumber == 4) {
             // for match is View Valid Values Template
-            tab4_match_viewValidValues = createTextPart(sform, EXPREEION, 20,
-                    checkUseAutoGenSql(getExpressValue(tempViewValidValuesExp)));
+            String expressValue = getExpressValue(tempViewValidValuesExp);
+            boolean checkUseAutoGenSql = checkUseAutoGenSql(expressValue);
+            tab4_match_viewValidValues = createTextPart(sform, EXPREEION, 20, checkUseAutoGenSql ? autoGenSql : expressValue);
+            if (checkUseAutoGenSql) {
+                resetButton_tab4_match.setEnabled(false);
+                canBeOverwriten_tab4_match = true;
+            }
             tab4_match_viewValidValues.addModifyListener(listener);
 
         } else if (selectTabNumber == 5) {
             // for match is View Invalid Values Template
-            tab5_match_viewInvalidValues = createTextPart(sform, EXPREEION, 20,
-                    checkUseAutoGenSql(getExpressValue(tempViewInvalidValuesExp)));
+            String expressValue = getExpressValue(tempViewInvalidValuesExp);
+            boolean checkUseAutoGenSql = checkUseAutoGenSql(expressValue);
+            tab5_match_viewInvalidValues = createTextPart(sform, EXPREEION, 20, checkUseAutoGenSql ? autoGenSql : expressValue);
+            if (checkUseAutoGenSql) {
+                resetButton_tab5_match.setEnabled(false);
+                canBeOverwriten_tab5_match = true;
+            }
             tab5_match_viewInvalidValues.addModifyListener(listener);
         }
 

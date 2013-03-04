@@ -321,13 +321,18 @@ public final class IndicatorHelper {
     public static List<Indicator> getIndicators(AnalysisResult result) {
         List<Indicator> indicators = new ArrayList<Indicator>();
 
-        for (Indicator indicator : result.getIndicators()) {
-            List<Indicator> indicatorLeaves = getIndicatorLeaves(indicator);
-            if (indicator instanceof CompositeIndicator) {
-                indicators.add(indicator);
-            }
+        if (result != null) {
+            EList<Indicator> indicators2 = result.getIndicators();
+            if (indicators2 != null) {
+                for (Indicator indicator : indicators2) {
+                    List<Indicator> indicatorLeaves = getIndicatorLeaves(indicator);
+                    if (indicator instanceof CompositeIndicator) {
+                        indicators.add(indicator);
+                    }
 
-            indicators.addAll(indicatorLeaves);
+                    indicators.addAll(indicatorLeaves);
+                }
+            }
         }
 
         return indicators;
