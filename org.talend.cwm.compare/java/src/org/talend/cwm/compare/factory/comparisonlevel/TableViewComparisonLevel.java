@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
@@ -31,6 +32,7 @@ import org.eclipse.emf.compare.match.metamodel.MatchModel;
 import org.eclipse.emf.compare.match.service.MatchService;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.talend.commons.utils.WorkspaceUtils;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.database.DqRepositoryViewService;
@@ -120,8 +122,14 @@ public class TableViewComparisonLevel extends AbstractComparisonLevel {
         // add option for ignoring some elements
         MatchModel match = null;
         try {
+            // remove the jrxml from the ResourceSet before doMatch
+            Map<ResourceSet, List<Resource>> rsJrxmlMap = removeJrxmlsFromResourceSet();
+
             DBColumnFolderRepNode columnFolderRepNode = (DBColumnFolderRepNode) selectedObj;
             match = MatchService.doContentMatch(columnFolderRepNode.getColumnSet(), getSavedReloadObject(), options);
+
+            // add the jrxml into the ResourceSet after doMatch
+            addJrxmlsIntoResourceSet(rsJrxmlMap);
         } catch (InterruptedException e) {
             log.error(e, e);
             return false;
