@@ -135,7 +135,7 @@ public final class EMFSharedResources {
         try {
 			return resourceSet.getResource(uri, loadOnDemand);
 		} catch (Exception e) {
-			log.error(e.fillInStackTrace()); 
+            log.error("The file " + uri.lastSegment() + " cannot be loaded. ", e); //$NON-NLS-1$ //$NON-NLS-2$
 			return null;
 		}
     }
