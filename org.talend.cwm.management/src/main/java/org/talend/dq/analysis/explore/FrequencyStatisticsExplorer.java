@@ -126,8 +126,7 @@ public class FrequencyStatisticsExplorer extends DataExplorer {
         sql = sql.replace(GenericSQLHandler.TABLE_NAME, tableName);
         sql = sql.replace(GenericSQLHandler.COLUMN_NAMES, this.indicator.getAnalyzedElement().getName());
         if (sql.indexOf(GenericSQLHandler.UDI_INDICATOR_VALUE) != -1) {
-            sql = sql.replace(GenericSQLHandler.UDI_INDICATOR_VALUE,
-                    (String.valueOf(this.indicator.getIntegerValue().intValue())));
+            sql = sql.replace(GenericSQLHandler.UDI_INDICATOR_VALUE, this.indicator.getAnalyzedElement().getName());
         }
         return sql;
     }

@@ -523,6 +523,7 @@ public final class UDIHelper {
             // for match is View Invalid Values Template
             key = "SqlTemplate." + language + ".UDI.Match.ViewInvalidValues"; //$NON-NLS-1$ //$NON-NLS-2$
         }
+        key = key.replaceAll(" ", "_"); //$NON-NLS-1$ //$NON-NLS-2$
         autoGenSql = properties.getProperty(key);
         return autoGenSql;
     }
