@@ -13,6 +13,8 @@
 package org.talend.dataprofiler.core.ui.editor.analysis;
 
 import java.awt.event.MouseEvent;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -152,6 +154,9 @@ public abstract class AbstractAnalysisResultPage extends AbstractFormPage implem
         GridData executionCompData = new GridData(GridData.FILL_HORIZONTAL);
         executionCompData.verticalAlignment = GridData.BEGINNING;
         executionComp.setLayoutData(executionCompData);
+        toolkit.createLabel(executionComp,
+                DefaultMessagesImpl.getString("ConnectionMasterDetailsPage.createionDate", PluginConstant.EMPTY_STRING)); //$NON-NLS-1$
+        toolkit.createLabel(executionComp, getFormatDateStr(analysisHandler.getAnalysis().getCreationDate()));
         toolkit.createLabel(executionComp, DefaultMessagesImpl.getString("AbstractAnalysisResultPage.executionDate")); //$NON-NLS-1$
         toolkit.createLabel(executionComp, analysisHandler.getExecuteData());
         toolkit.createLabel(executionComp, DefaultMessagesImpl.getString("AbstractAnalysisResultPage.executionDuration")); //$NON-NLS-1$
@@ -176,6 +181,14 @@ public abstract class AbstractAnalysisResultPage extends AbstractFormPage implem
         toolkit.createLabel(executionComp, analysisHandler.getLastExecutionNumberOk());
 
         summarySection.setClient(sectionClient);
+    }
+
+    private String getFormatDateStr(Date date) {
+        if (date == null) {
+            return PluginConstant.EMPTY_STRING;
+        }
+        String format = SimpleDateFormat.getDateTimeInstance().format(date);
+        return format;
     }
 
     /*

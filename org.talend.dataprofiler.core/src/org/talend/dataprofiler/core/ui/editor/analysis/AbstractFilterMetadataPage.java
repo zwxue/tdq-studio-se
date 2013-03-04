@@ -535,7 +535,7 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
         toolkit.createLabel(rightComp, PluginConstant.EMPTY_STRING + resultMetadata.getExecutionNumber());
         toolkit.createLabel(rightComp,
                 DefaultMessagesImpl.getString("AbstractAnalysisResultPage.lastSucessfulExecution", PluginConstant.EMPTY_STRING)); //$NON-NLS-1$
-        toolkit.createLabel(rightComp, PluginConstant.EMPTY_STRING + getFormatDateStr(resultMetadata.getExecutionDate()));
+        toolkit.createLabel(rightComp, PluginConstant.EMPTY_STRING + resultMetadata.getLastExecutionNumberOk());
         // MOD qiongli 2011-5-16
         DataManager connection = this.analysis.getContext().getConnection();
         if (connection != null) {
