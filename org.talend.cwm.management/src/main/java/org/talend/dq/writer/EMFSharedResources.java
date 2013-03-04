@@ -136,7 +136,7 @@ public final class EMFSharedResources {
         try {
             return resourceSet.getResource(uri, loadOnDemand);
         } catch (Exception e) {
-            log.error(e.fillInStackTrace());
+            log.error("The file " + uri.lastSegment() + " cannot be read. it may be corrupted. Suggested fix: delete it."); //$NON-NLS-1$ //$NON-NLS-2$
             return null;
         }
     }
