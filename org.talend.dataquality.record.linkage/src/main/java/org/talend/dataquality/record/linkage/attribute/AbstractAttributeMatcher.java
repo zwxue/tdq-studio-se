@@ -27,6 +27,7 @@ public abstract class AbstractAttributeMatcher implements IAttributeMatcher {
      * @see org.talend.dataquality.record.linkage.attribute.IAttributeMatcher#getMatchingWeight(java.lang.String,
      * java.lang.String)
      */
+    @Override
     public double getMatchingWeight(String str1, String str2) {
         switch (nullOption) {
         case nullMatchAll:
@@ -77,6 +78,7 @@ public abstract class AbstractAttributeMatcher implements IAttributeMatcher {
      * org.talend.dataquality.record.linkage.attribute.IAttributeMatcher#setNullOption(org.talend.dataquality.record
      * .linkage.attribute.IAttributeMatcher.NullOption)
      */
+    @Override
     public void setNullOption(NullOption option) {
         this.nullOption = option;
     }
@@ -86,6 +88,7 @@ public abstract class AbstractAttributeMatcher implements IAttributeMatcher {
      * 
      * @see org.talend.dataquality.record.linkage.attribute.IAttributeMatcher#getAttributeName()
      */
+    @Override
     public String getAttributeName() {
         return attributeName;
     }
@@ -95,8 +98,27 @@ public abstract class AbstractAttributeMatcher implements IAttributeMatcher {
      * 
      * @see org.talend.dataquality.record.linkage.attribute.IAttributeMatcher#setAttributeName(java.lang.String)
      */
+    @Override
     public void setAttributeName(String name) {
         this.attributeName = name;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataquality.record.linkage.attribute.IAttributeMatcher#setNullOption(java.lang.String)
+     */
+    @Override
+    public void setNullOption(String option) {
+        if (IAttributeMatcher.NullOption.nullMatchAll.name().equalsIgnoreCase(option)) {
+            this.nullOption = IAttributeMatcher.NullOption.nullMatchAll;
+        } else if (IAttributeMatcher.NullOption.nullMatchNone.name().equalsIgnoreCase(option)) {
+            this.nullOption = IAttributeMatcher.NullOption.nullMatchNone;
+        } else if (IAttributeMatcher.NullOption.nullMatchNull.name().equalsIgnoreCase(option)) {
+            this.nullOption = IAttributeMatcher.NullOption.nullMatchNull;
+        } else {
+            this.nullOption = IAttributeMatcher.NullOption.nullMatchNull;
+        }
     }
 
 }

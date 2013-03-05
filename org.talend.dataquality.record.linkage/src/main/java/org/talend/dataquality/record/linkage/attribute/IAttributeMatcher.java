@@ -55,6 +55,13 @@ public interface IAttributeMatcher {
     void setNullOption(NullOption option);
 
     /**
+     * Method "setNullOption" sets the option about the comparison of null values.
+     * 
+     * @param option the option
+     */
+    void setNullOption(String option);
+
+    /**
      * Method "getAttributeName" returns the attribute name.
      * 
      * @return the attribute name or null when not set.
@@ -67,4 +74,5 @@ public interface IAttributeMatcher {
      * @param name the attribute name
      */
     void setAttributeName(String name);
+
 }

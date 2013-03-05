@@ -36,6 +36,7 @@ public class CombinedRecordMatcher extends AbstractRecordMatcher {
      * @see org.talend.dataquality.record.linkage.record.IRecordMatcher#getMatchingWeight(java.lang.String[],
      * java.lang.String[])
      */
+    @Override
     public double getMatchingWeight(String[] record1, String[] record2) {
         double matchingWeight = 0;
         for (IRecordMatcher matcher : matchers) {
@@ -48,6 +49,7 @@ public class CombinedRecordMatcher extends AbstractRecordMatcher {
             }
             if (matchingWeight >= matcher.getRecordMatchThreshold()) {
                 // when there is a match with one matcher, no need to loop on all matcher
+                attributeMatchingWeights = matcher.getCurrentAttributeMatchingWeights();
                 return matchingWeight;
             }
         }
