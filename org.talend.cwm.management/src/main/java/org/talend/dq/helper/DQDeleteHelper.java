@@ -17,11 +17,20 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.emf.common.util.EList;
 import org.talend.core.model.properties.FolderItem;
 import org.talend.core.model.properties.Item;
 import org.talend.core.model.properties.Property;
+import org.talend.dataquality.helpers.ReportHelper;
+import org.talend.dataquality.helpers.ReportHelper.ReportType;
 import org.talend.dataquality.properties.TDQReportItem;
+import org.talend.dataquality.reports.AnalysisMap;
+import org.talend.dataquality.reports.TdReport;
+import org.talend.dq.nodes.JrxmlTempleteRepNode;
+import org.talend.dq.nodes.ReportRepNode;
 import org.talend.repository.model.IRepositoryNode;
+import org.talend.resource.EResourceConstant;
 import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
@@ -85,6 +94,13 @@ public final class DQDeleteHelper {
 
         for (IRepositoryNode node : allNodes) {
             List<ModelElement> dependencies = EObjectHelper.getDependencyClients(node);
+            if (node instanceof JrxmlTempleteRepNode) {
+                if (node.getObject().getProperty() == null) {
+                    continue;
+                }
+                IPath path = PropertyHelper.getItemPath(node.getObject().getProperty());
+                dependencies = getDependedReportOfJrxml(path);
+            }
             if (dependencies == null || dependencies.isEmpty()) {
                 continue;
             }
@@ -105,5 +121,45 @@ public final class DQDeleteHelper {
             }
         }
         return canNotDeletedNodes;
+    }
+
+    public static List<ModelElement> getDependedReportOfJrxml(IPath path) {
+        // check if it has depended Report
+        List<ModelElement> dependedReport = new ArrayList<ModelElement>();
+        // get all reports
+        List<ReportRepNode> repNodes = RepositoryNodeHelper.getReportRepNodes(
+                RepositoryNodeHelper.getDataProfilingFolderNode(EResourceConstant.REPORTS), true, true);
+        // go through every report to find if any one used current jrxml
+        for (ReportRepNode report : repNodes) {
+            EList<AnalysisMap> analysisMap = ((TdReport) report.getReport()).getAnalysisMap();
+            for (AnalysisMap anaMap : analysisMap) {
+                if (isUsedByDeletedJrxml(path, anaMap)) {
+                    dependedReport.add(report.getReport());
+                    break;
+                }
+            }
+        }
+        return dependedReport;
+    }
+
+    /**
+     * check if the anaMap comtains the Jrxml or not, by compare the jrxml's path with anaMap's jrxml source(when user
+     * mode)
+     * 
+     * @param path
+     * @param jrxmlSource
+     * @return
+     */
+    private static boolean isUsedByDeletedJrxml(IPath path, AnalysisMap anaMap) {
+        ReportType reportType = ReportHelper.ReportType.getReportType(anaMap.getAnalysis(), anaMap.getReportType());
+        // compare the Jrxml path if the report has the user defined one.
+        if (ReportHelper.ReportType.USER_MADE.equals(reportType)) {
+            String jrxmlPath = anaMap.getJrxmlSource();
+            String deletedpath = path.removeFirstSegments(2).toString();
+            if (jrxmlPath.contains(deletedpath)) {
+                return true;
+            }
+        }
+        return false;
     }
 }

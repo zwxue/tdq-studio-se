@@ -474,11 +474,9 @@ public class TOPRepositoryService implements ITDQRepositoryService {
     public boolean sourceFileOpening(RepositoryNode node) {
         boolean result = false;
         if (node instanceof SourceFileRepNode) {
-            SourceFileRepNode fileNode = (SourceFileRepNode) node;
-            result = WorkspaceResourceHelper.checkSourceFileNodeOpening(fileNode).isOk();
+            result = WorkspaceResourceHelper.checkSourceFileNodeOpening(node).isOk();
         } else if (node instanceof SourceFileSubFolderNode) {
-            SourceFileSubFolderNode folderNode = (SourceFileSubFolderNode) node;
-            result = WorkspaceResourceHelper.checkSourceFileSubFolderNodeOpening(folderNode).isOk();
+            result = WorkspaceResourceHelper.checkSourceFileSubFolderNodeOpening(node).isOk();
         }
         return result;
     }

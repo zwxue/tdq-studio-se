@@ -67,6 +67,9 @@ public class RenameJrxmlFolderAction extends RenameTdqFolderAction {
     @Override
     public void run() {
         super.run();
+        if (newNameOfFolder == null) {// means that the action is cancelled
+            return;
+        }
         // get the new folder name
         IPath newPath = oldPath.removeLastSegments(1).append(newNameOfFolder);
 

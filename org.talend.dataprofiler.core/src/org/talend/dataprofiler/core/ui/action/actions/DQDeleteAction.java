@@ -33,7 +33,6 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.jobs.ISchedulingRule;
-import org.eclipse.emf.common.util.EList;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.ISelection;
@@ -57,11 +56,7 @@ import org.talend.dataprofiler.core.ui.dialog.message.DeleteModelElementConfirmD
 import org.talend.dataprofiler.core.ui.utils.RepNodeUtils;
 import org.talend.dataprofiler.core.ui.views.DQRespositoryView;
 import org.talend.dataprofiler.core.ui.views.resources.IRepositoryObjectCRUD;
-import org.talend.dataquality.helpers.ReportHelper;
-import org.talend.dataquality.helpers.ReportHelper.ReportType;
 import org.talend.dataquality.properties.TDQReportItem;
-import org.talend.dataquality.reports.AnalysisMap;
-import org.talend.dataquality.reports.TdReport;
 import org.talend.dq.helper.DQDeleteHelper;
 import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.PropertyHelper;
@@ -69,8 +64,9 @@ import org.talend.dq.helper.ReportUtils;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.nodes.AnalysisSubFolderRepNode;
 import org.talend.dq.nodes.DQRepositoryNode;
+import org.talend.dq.nodes.JrxmlTempSubFolderNode;
+import org.talend.dq.nodes.JrxmlTempleteRepNode;
 import org.talend.dq.nodes.ReportFileRepNode;
-import org.talend.dq.nodes.ReportRepNode;
 import org.talend.dq.nodes.ReportSubFolderRepNode;
 import org.talend.dq.nodes.SourceFileRepNode;
 import org.talend.dq.nodes.SourceFileSubFolderNode;
@@ -80,7 +76,6 @@ import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.IRepositoryNode.ENodeType;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.repository.ui.actions.DeleteAction;
-import org.talend.resource.EResourceConstant;
 import org.talend.resource.ResourceManager;
 import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
@@ -369,7 +364,7 @@ public class DQDeleteAction extends DeleteAction {
                 return false;
             }
             IPath path = PropertyHelper.getItemPath(node.getObject().getProperty());
-            List<ModelElement> dependedReport = getDependedReportOfJrxml(path);
+            List<ModelElement> dependedReport = DQDeleteHelper.getDependedReportOfJrxml(path);
             if(dependedReport.size()>0){
                 nodeWithDependsMap.put(node, dependedReport);
                 return true;
@@ -420,46 +415,6 @@ public class DQDeleteAction extends DeleteAction {
     private boolean isJrxml(IRepositoryNode node) {
         if (node.getObject() != null) {
             return ERepositoryObjectType.TDQ_JRAXML_ELEMENT.equals(node.getObject().getRepositoryObjectType());
-        }
-        return false;
-    }
-
-    private List<ModelElement> getDependedReportOfJrxml(IPath path) {
-        // check if it has depended Report
-        List<ModelElement> dependedReport = new ArrayList<ModelElement>();
-        // get all reports
-        List<ReportRepNode> repNodes = RepositoryNodeHelper.getReportRepNodes(
-                RepositoryNodeHelper.getDataProfilingFolderNode(EResourceConstant.REPORTS), true, true);
-        // go through every report to find if any one used current jrxml
-        for (ReportRepNode report : repNodes) {
-            EList<AnalysisMap> analysisMap = ((TdReport) report.getReport()).getAnalysisMap();
-            for (AnalysisMap anaMap : analysisMap) {
-                if (isUsedByDeletedJrxml(path, anaMap)) {
-                    dependedReport.add(report.getReport());
-                    break;
-                }
-            }
-        }
-        return dependedReport;
-    }
-
-    /**
-     * check if the anaMap comtains the Jrxml or not, by compare the jrxml's path with anaMap's jrxml source(when user
-     * mode)
-     * 
-     * @param path
-     * @param jrxmlSource
-     * @return
-     */
-    private boolean isUsedByDeletedJrxml(IPath path, AnalysisMap anaMap) {
-        ReportType reportType = ReportHelper.ReportType.getReportType(anaMap.getAnalysis(), anaMap.getReportType());
-        // compare the Jrxml path if the report has the user defined one.
-        if (ReportHelper.ReportType.USER_MADE.equals(reportType)) {
-            String jrxmlPath = anaMap.getJrxmlSource();
-            String deletedpath = path.removeFirstSegments(2).toString();
-            if (jrxmlPath.contains(deletedpath)) {
-                return true;
-            }
         }
         return false;
     }
@@ -712,18 +667,16 @@ public class DQDeleteAction extends DeleteAction {
         boolean opened = false;
         String openSourceFileNames = ""; //$NON-NLS-1$
         for (Object obj : deleteElements) {
-            if (obj instanceof SourceFileRepNode) {
-                SourceFileRepNode node = (SourceFileRepNode) obj;
-                ReturnCode rc = WorkspaceResourceHelper.checkSourceFileNodeOpening(node);
+            if (obj instanceof SourceFileRepNode || obj instanceof JrxmlTempleteRepNode) {
+                ReturnCode rc = WorkspaceResourceHelper.checkSourceFileNodeOpening((RepositoryNode) obj);
                 if (rc.isOk()) {
                     opened = rc.isOk();
                     openSourceFileNames += rc.getMessage();
                 } else {
                     list.add(obj);
                 }
-            } else if (obj instanceof SourceFileSubFolderNode) {
-                SourceFileSubFolderNode node = (SourceFileSubFolderNode) obj;
-                ReturnCode rc = WorkspaceResourceHelper.checkSourceFileSubFolderNodeOpening(node);
+            } else if (obj instanceof SourceFileSubFolderNode || obj instanceof JrxmlTempSubFolderNode) {
+                ReturnCode rc = WorkspaceResourceHelper.checkSourceFileSubFolderNodeOpening((RepositoryNode) obj);
                 if (rc.isOk()) {
                     opened = rc.isOk();
                     openSourceFileNames += rc.getMessage();

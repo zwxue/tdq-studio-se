@@ -43,10 +43,13 @@ import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.utils.MessageUI;
 import org.talend.dq.helper.FileUtils;
 import org.talend.dq.helper.RepositoryNodeHelper;
+import org.talend.dq.nodes.JrxmlTempSubFolderNode;
+import org.talend.dq.nodes.JrxmlTempleteRepNode;
 import org.talend.dq.nodes.SourceFileRepNode;
 import org.talend.dq.nodes.SourceFileSubFolderNode;
 import org.talend.repository.ProjectManager;
 import org.talend.repository.model.IRepositoryNode;
+import org.talend.repository.model.RepositoryNode;
 import org.talend.resource.ResourceManager;
 import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
@@ -211,7 +214,7 @@ public final class WorkspaceResourceHelper {
      * @param node
      * @return
      */
-    public static ReturnCode checkSourceFileNodeOpening(SourceFileRepNode node) {
+    public static ReturnCode checkSourceFileNodeOpening(RepositoryNode node) {
         boolean opened = false;
         String msg = ""; //$NON-NLS-1$
         if (WorkspaceResourceHelper.sourceFileHasBeenOpened(node)) {
@@ -227,21 +230,19 @@ public final class WorkspaceResourceHelper {
      * @param node
      * @return
      */
-    public static ReturnCode checkSourceFileSubFolderNodeOpening(SourceFileSubFolderNode node) {
+    public static ReturnCode checkSourceFileSubFolderNodeOpening(RepositoryNode node) {
         boolean opened = false;
         String msg = ""; //$NON-NLS-1$
         List<IRepositoryNode> children = node.getChildren();
         for (IRepositoryNode iNode : children) {
-            if (iNode instanceof SourceFileRepNode) {
-                SourceFileRepNode fileNode = (SourceFileRepNode) iNode;
-                ReturnCode rc = checkSourceFileNodeOpening(fileNode);
+            if (iNode instanceof SourceFileRepNode || iNode instanceof JrxmlTempleteRepNode) {
+                ReturnCode rc = checkSourceFileNodeOpening((RepositoryNode) iNode);
                 if (rc.isOk()) {
                     opened = rc.isOk();
                     msg += rc.getMessage();
                 }
-            } else if (iNode instanceof SourceFileSubFolderNode) {
-                SourceFileSubFolderNode folderNode = (SourceFileSubFolderNode) iNode;
-                ReturnCode rc = checkSourceFileSubFolderNodeOpening(folderNode);
+            } else if (iNode instanceof SourceFileSubFolderNode || iNode instanceof JrxmlTempSubFolderNode) {
+                ReturnCode rc = checkSourceFileSubFolderNodeOpening((RepositoryNode) iNode);
                 if (rc.isOk()) {
                     opened = rc.isOk();
                     msg += rc.getMessage();
