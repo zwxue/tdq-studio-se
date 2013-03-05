@@ -31,6 +31,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
 import org.talend.core.model.metadata.builder.connection.DelimitedFileConnection;
 import org.talend.core.model.metadata.builder.connection.MDMConnection;
+import org.talend.core.model.properties.Property;
 import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.core.model.repository.RepositoryViewObject;
@@ -482,8 +483,8 @@ public class DeleteModelElementConfirmDialog {
                         return ((IRepositoryViewObject) obj).getLabel();
                     }// ~
 
-                    return PropertyHelper.getProperty((ModelElement) obj) == null ? ((ModelElement) obj).getName()
-                            : PropertyHelper.getProperty((ModelElement) obj).getDisplayName();
+                    Property property = PropertyHelper.getProperty((ModelElement) obj);
+                    return property == null ? ((ModelElement) obj).getName() : property.getDisplayName();
                     //REQUIRES + PluginConstant.SPACE_STRING+ "<<" + PropertyHelper.getProperty((ModelElement) obj).getDisplayName() + ">>"; //$NON-NLS-1$ //$NON-NLS-2$
                     // TDQ-5909~
                 }
