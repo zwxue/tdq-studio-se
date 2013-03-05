@@ -12,7 +12,6 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.utils;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -56,6 +55,8 @@ import org.talend.utils.sugars.ReturnCode;
 public final class RepNodeUtils {
 
     private static Logger log = Logger.getLogger(RepNodeUtils.class);
+
+    private static String separator = "/";//File.separator;//$NON-NLS-1$
 
     private RepNodeUtils() {
     }
@@ -234,7 +235,7 @@ public final class RepNodeUtils {
                     String oldPath = jrxmlFileNames.get(i);
                     if (isUsedByJrxml(new Path(oldPath), anaMap)) {
                         String before = anaMap.getJrxmlSource().substring(0,
-                                anaMap.getJrxmlSource().lastIndexOf(".." + File.separator) + 3);
+                                anaMap.getJrxmlSource().lastIndexOf(".." + separator) + 3);
 
                         // Added 20130128, using event/listener to refresh the page if opening
                         EventManager.getInstance().publish(report, EventEnum.DQ_JRXML_RENAME,
@@ -272,9 +273,9 @@ public final class RepNodeUtils {
             IPath parentPath = RepositoryNodeHelper.getPath(jrxml.getParent());
             IPath makeRelativeTo = null;
             if (path.equals(parentPath)) {
-                makeRelativeTo = path.append(File.separator).append(RepositoryNodeHelper.getFileNameOfTheNode(jrxml));
+                makeRelativeTo = path.append(separator).append(RepositoryNodeHelper.getFileNameOfTheNode(jrxml));
             } else {
-                makeRelativeTo = parentPath.append(File.separator).append(RepositoryNodeHelper.getFileNameOfTheNode(jrxml));
+                makeRelativeTo = parentPath.append(separator).append(RepositoryNodeHelper.getFileNameOfTheNode(jrxml));
             }
             jrxmlFileNames.add(makeRelativeTo.toOSString());
         }
@@ -298,7 +299,7 @@ public final class RepNodeUtils {
             IPath parentPath = RepositoryNodeHelper.getPath(jrxml.getParent());
             if (oldPath.equals(parentPath)) {
                 jrxmlFileNames
-.add(newPath.append(File.separator).append(RepositoryNodeHelper.getFileNameOfTheNode(jrxml))
+.add(newPath.append(separator).append(RepositoryNodeHelper.getFileNameOfTheNode(jrxml))
                         .toOSString());
             } else {
                 // change the old folder name in parent path to new path:
@@ -306,9 +307,9 @@ public final class RepNodeUtils {
                 IPath replacedPath = new Path("");
                 for (int i = 0; i < parentPath.segmentCount(); i++) {
                     if (i < newPath.segmentCount() && !newPath.segment(i).equals(parentPath.segment(i))) {
-                        replacedPath = replacedPath.append(newPath.segment(i)).append(File.separator);
+                        replacedPath = replacedPath.append(newPath.segment(i)).append(separator);
                     } else {
-                        replacedPath = replacedPath.append(parentPath.segment(i)).append(File.separator);
+                        replacedPath = replacedPath.append(parentPath.segment(i)).append(separator);
                     }
                 }
                 jrxmlFileNames
@@ -317,6 +318,10 @@ public final class RepNodeUtils {
             }
         }
         return jrxmlFileNames;
+    }
+
+    public static String getSeparator() {
+        return separator;
     }
 
 }

@@ -12,7 +12,6 @@
 // ============================================================================
 package org.talend.dataprofiler.core.sql;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -91,13 +90,13 @@ public class RenameJrxmlTemplateFileAction extends Action {
         if (dialog.open() == RenameDialog.OK) {
             CorePlugin.getDefault().closeEditorIfOpened(jrxmlItem);
             try {
-                String filenameBeforeRename = File.separator + RepositoryNodeHelper.getFileNameOfTheNode(jrxmlNode);
+                String filenameBeforeRename = RepNodeUtils.getSeparator() + RepositoryNodeHelper.getFileNameOfTheNode(jrxmlNode);
                 IPath path = RepositoryNodeHelper.getPath(jrxmlNode);
                 // rename the Jrxml file
                 renameJrxmlFile();
 
                 // update the related reports which use it as user defined template
-                String filenameAfterRename = File.separator + RepositoryNodeHelper.getFileNameOfTheNode(jrxmlNode);
+                String filenameAfterRename = RepNodeUtils.getSeparator() + RepositoryNodeHelper.getFileNameOfTheNode(jrxmlNode);
                 ReturnCode returnCode = RepNodeUtils.updateJrxmlRelatedReport(path.append(filenameBeforeRename),
                         path.append(filenameAfterRename));
                 if (!returnCode.isOk()) {
