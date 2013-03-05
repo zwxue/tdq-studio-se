@@ -772,13 +772,17 @@ public class DbmsLanguage {
      */
     public static TdExpression getSqlExpression(IndicatorDefinition indicatorDefinition, String language,
             EList<TdExpression> sqlGenericExpression, ProductVersion dbVersion) {
+        TdExpression defaultExpression = null;
+        if (sqlGenericExpression == null || sqlGenericExpression.size() == 0) {
+            return defaultExpression;
+        }
+
         List<TdExpression> tempExpressions = new ArrayList<TdExpression>();
         for (TdExpression sqlGenExpr : sqlGenericExpression) {
             if (DbmsLanguageFactory.compareDbmsLanguage(language, sqlGenExpr.getLanguage())) {
                 tempExpressions.add(sqlGenExpr);
             }
         }
-        TdExpression defaultExpression = null;
         List<TdExpression> tempExpressions2 = new ArrayList<TdExpression>();
         for (TdExpression exp : tempExpressions) {
             if (exp.getVersion() == null || PluginConstant.EMPTY_STRING.equals(exp.getVersion())) {
