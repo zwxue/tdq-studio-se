@@ -23,12 +23,15 @@ import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.talend.commons.emf.CwmResource;
 import org.talend.commons.emf.EMFUtil;
+import org.talend.commons.emf.EmfFileResourceUtil;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.cwm.management.i18n.Messages;
 import org.talend.cwm.relational.TdExpression;
@@ -109,7 +112,7 @@ public final class DefinitionHandler {
         if (instance == null) {
             instance = new DefinitionHandler();
             // try to copy in workspace
-            if (!getTalendDefinitionFile().exists()) {
+            if (Platform.isRunning() && !getTalendDefinitionFile().exists()) {
                 instance.copyDefinitionsIntoFolder(ResourceManager.getLibrariesFolder());
             }
             // MOD mzhao feature 13676.
@@ -172,22 +175,11 @@ public final class DefinitionHandler {
         // for development purposes)
         Resource definitionsFile = null;
 
-        IPath definitionPath = ResourceManager.getLibrariesFolder().getFullPath().append(FILENAME);
-        URI uri = URI.createPlatformResourceURI(definitionPath.toString(), false);
-        try { // load from workspace path
-              // do not create it here if it does not exist.
-            definitionsFile = EMFSharedResources.getInstance().getResource(uri, true);
-            if (log.isDebugEnabled()) {
-                log.debug("Definition of indicators loaded from " + uri); //$NON-NLS-1$
-            }
-        } catch (RuntimeException e) {
-            if (log.isDebugEnabled()) {
-                log.debug("ERROR: " + e.getMessage(), e); //$NON-NLS-1$
-            }
-        }
-        if (definitionsFile == null) {
-            uri = URI.createPlatformPluginURI(PLUGIN_PATH, false);
-            try { // load from plugin path
+        if (Platform.isRunning()) {
+            IPath definitionPath = ResourceManager.getLibrariesFolder().getFullPath().append(FILENAME);
+            URI uri = URI.createPlatformResourceURI(definitionPath.toString(), false);
+            try { // load from workspace path
+                  // do not create it here if it does not exist.
                 definitionsFile = EMFSharedResources.getInstance().getResource(uri, true);
                 if (log.isDebugEnabled()) {
                     log.debug("Definition of indicators loaded from " + uri); //$NON-NLS-1$
@@ -197,17 +189,51 @@ public final class DefinitionHandler {
                     log.debug("ERROR: " + e.getMessage(), e); //$NON-NLS-1$
                 }
             }
+            if (definitionsFile == null) {
+                uri = URI.createPlatformPluginURI(PLUGIN_PATH, false);
+                try { // load from plugin path
+                    definitionsFile = EMFSharedResources.getInstance().getResource(uri, true);
+                    if (log.isDebugEnabled()) {
+                        log.debug("Definition of indicators loaded from " + uri); //$NON-NLS-1$
+                    }
+                } catch (RuntimeException e) {
+                    if (log.isDebugEnabled()) {
+                        log.debug("ERROR: " + e.getMessage(), e); //$NON-NLS-1$
+                    }
+                }
+            }
+
+            if (definitionsFile == null) {
+                // try to load from a local file
+                definitionsFile = EMFSharedResources.getInstance().getResource(
+                        URI.createFileURI(".." + File.separator + PLUGIN_PATH), true); //$NON-NLS-1$
+            }
+
+            if (definitionsFile == null) {
+                log.error(Messages.getString("DefinitionHandler.NoResourceFound", PLUGIN_PATH, uri));//$NON-NLS-1$
+                return null;
+            }
+
+        } else { // call reporting engine as java library
+
+            try { // try to load from a local file
+                  // IPath definitionPath = Path.fromOSString("TDQEEDEMOJAVA/TDQ_Libraries/").append(FILENAME);
+                IPath definitionPath = Path.fromOSString(
+                        "/misc/repo/tdq/org.talend.dataquality.reporting.engine.test/TDQEEDEMOJAVA/TDQ_Libraries/").append(
+                        FILENAME);
+                definitionsFile = EmfFileResourceUtil.getInstance().getFileResource(definitionPath.toString());
+            } catch (RuntimeException e) {
+                if (log.isDebugEnabled()) {
+                    log.debug("ERROR: " + e.getMessage(), e); //$NON-NLS-1$
+                }
+            }
+
+            if (definitionsFile == null) {
+                log.error(Messages.getString("DefinitionHandler.NoResourceFound", PLUGIN_PATH));//$NON-NLS-1$
+                return null;
+            }
         }
 
-        if (definitionsFile == null) {
-            // try to load from a local file
-            definitionsFile = EMFSharedResources.getInstance().getResource(
-                    URI.createFileURI(".." + File.separator + PLUGIN_PATH), true); //$NON-NLS-1$
-        }
-        if (definitionsFile == null) {
-            log.error(Messages.getString("DefinitionHandler.NoResourceFound", PLUGIN_PATH, uri));//$NON-NLS-1$
-            return null;
-        }
         return definitionsFile;
     }
 

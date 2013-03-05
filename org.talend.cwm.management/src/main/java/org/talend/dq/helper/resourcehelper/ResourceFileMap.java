@@ -22,11 +22,13 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.talend.commons.emf.EmfFileResourceUtil;
 import org.talend.commons.utils.platform.PluginChecker;
 import org.talend.cwm.management.i18n.Messages;
 import org.talend.dq.writer.AElementPersistance;
@@ -175,7 +177,11 @@ public abstract class ResourceFileMap {
      * @return
      */
     public List<? extends ModelElement> getAllElement() {
-        return getAllElement(getTypedFolder());
+        if (Platform.isRunning()) {
+            return getAllElement(getTypedFolder());
+        } else {// reporting engine is running as library
+            return EmfFileResourceUtil.getInstance().getAllElement("TDQEEDEMOJAVA/TDQ_Libraries/Indicators");
+        }
     }
 
     /**

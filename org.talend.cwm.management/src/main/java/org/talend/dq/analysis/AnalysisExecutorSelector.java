@@ -14,6 +14,7 @@ package org.talend.dq.analysis;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.swt.widgets.Display;
 import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.management.i18n.Messages;
@@ -156,12 +157,14 @@ public final class AnalysisExecutorSelector {
             ReturnCode execute = analysisExecutor.execute(analysis);
 
             // save analysis.
-            Display.getDefault().asyncExec(new Runnable() {
+            if (Platform.isRunning()) {
+                Display.getDefault().asyncExec(new Runnable() {
 
-                public void run() {
-                    AnaResourceFileHelper.getInstance().save(analysis);
-                }
-            });
+                    public void run() {
+                        AnaResourceFileHelper.getInstance().save(analysis);
+                    }
+                });
+            }
 
             return execute;
         }

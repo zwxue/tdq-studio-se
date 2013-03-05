@@ -26,6 +26,7 @@ import java.util.Set;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.Platform;
 import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.management.i18n.Messages;
 import org.talend.dataquality.indicators.Indicator;
@@ -286,6 +287,9 @@ public abstract class Evaluator<T> implements IMemoryChangeListener {
     }
 
     protected boolean continueRun() {
+        if (!Platform.isRunning()) { // Reporting engine is working as library
+            return true;
+        }
         boolean ret = true;
         if (getMonitor() != null && getMonitor().isCanceled()) {
             ret = false;

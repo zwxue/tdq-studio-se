@@ -18,6 +18,7 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.common.util.EList;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.database.JavaSqlFactory;
@@ -365,6 +366,9 @@ public abstract class AnalysisExecutor implements IAnalysisExecutor {
     }
 
     protected boolean continueRun() {
+    	if(!Platform.isRunning()){ // reporting engine is working as library
+    		return true;
+    	}
         boolean ret = true;
         if (getMonitor() != null && getMonitor().isCanceled()) {
             ret = false;

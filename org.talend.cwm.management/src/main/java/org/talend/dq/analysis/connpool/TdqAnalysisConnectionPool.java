@@ -170,12 +170,8 @@ public class TdqAnalysisConnectionPool {
      */
     public Connection getConnection() throws SQLException {
         Connection conn = findFreeConnection();
-        while (conn == null) {
-            wait(DEFAULT_WAIT_MILLISECOND);
-            conn = findFreeConnection();
-            if (conn == null) {
-                newConnection();
-            }
+        if (conn == null) {
+            conn = newConnection();
         }
         showConnectionInfo();
         return conn;

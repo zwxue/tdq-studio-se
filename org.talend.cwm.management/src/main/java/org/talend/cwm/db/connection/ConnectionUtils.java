@@ -42,6 +42,7 @@ import net.sourceforge.sqlexplorer.util.MyURLClassLoader;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.preferences.IPreferencesService;
 import org.eclipse.emf.common.util.EList;
 import org.talend.commons.exception.PersistenceException;
 import org.talend.commons.ui.runtime.exception.ExceptionHandler;
@@ -129,8 +130,13 @@ public final class ConnectionUtils {
 
     public static boolean isTimeout() {
         if (timeout == null) {
-            timeout = Platform.getPreferencesService().getBoolean(CWMPlugin.getDefault().getBundle().getSymbolicName(),
-                    PluginConstant.CONNECTION_TIMEOUT, false, null);
+            IPreferencesService service = Platform.getPreferencesService();
+            if (service == null) {
+                timeout = true;
+            } else {
+                timeout = service.getBoolean(CWMPlugin.getDefault().getBundle().getSymbolicName(),
+                        PluginConstant.CONNECTION_TIMEOUT, false, null);
+            }
         }
         return timeout;
     }
@@ -321,6 +327,9 @@ public final class ConnectionUtils {
      * @return
      */
     public static boolean isHiveEmbedded(Connection analysisDataProvider) {
+        if (2 > 1) {
+            return false;
+        }
         IMetadataConnection metadataConnection = ConvertionHelper.convert(analysisDataProvider);
         return isHiveEmbedded(metadataConnection);
     }
@@ -332,6 +341,10 @@ public final class ConnectionUtils {
      * @return
      */
     public static boolean isHiveEmbedded(IMetadataConnection metadataConnection) {
+        if (!Platform.isRunning()) {
+            return false;
+        }
+        // FIXME do not use metadata connection to test hive mode if possible.
         String dbType = metadataConnection.getDbType();
         String dbVersionString = metadataConnection.getDbVersionString();
         if (EDatabaseTypeName.HIVE.getDisplayName().equalsIgnoreCase(dbType)
@@ -407,7 +420,8 @@ public final class ConnectionUtils {
         java.sql.Connection ret = null;
         if (isTimeout()) {
             ConnectionCreator cc = new ConnectionCreator(driver, url, props);
-            new Thread(cc).start();
+            Thread t = new Thread(cc);
+            t.start();
             long begin = System.currentTimeMillis();
             boolean isTimeout = false;
             boolean isOK = false;
@@ -425,6 +439,11 @@ public final class ConnectionUtils {
                 if (System.currentTimeMillis() - begin > LOGIN_TEMEOUT_MILLISECOND) {
                     isTimeout = true;
                     break;
+                }
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    // do nothing
                 }
             }
             if (isTimeout) {
@@ -478,50 +497,52 @@ public final class ConnectionUtils {
             return driver;
         }
 
-        SQLExplorerPlugin sqlExplorerPlugin = SQLExplorerPlugin.getDefault();
-        if (sqlExplorerPlugin != null) {
-            net.sourceforge.sqlexplorer.dbproduct.DriverManager driverModel = sqlExplorerPlugin.getDriverModel();
-            try {
-                Collection<ManagedDriver> drivers = driverModel.getDrivers();
-                for (ManagedDriver managedDriver : drivers) {
-                    LinkedList<String> jars = managedDriver.getJars();
-                    List<URL> urls = new ArrayList<URL>();
-                    for (int i = 0; i < jars.size(); i++) {
-                        File file = new File(jars.get(i));
-                        if (file.exists()) {
-                            urls.add(file.toURI().toURL());
-                        }
-                    }
-                    if (!urls.isEmpty()) {
-                        try {
-                            Class<?> clazz = null;
-
-                            // if it is hive embedded connection
-                            if (url.equals("jdbc:hive://")) { //$NON-NLS-1$
-                                HotClassLoader hotSysLoader = (HotClassLoader) Thread.currentThread().getContextClassLoader();
-                                clazz = hotSysLoader.loadClass(driverClassName);
-                            } else {
-                                MyURLClassLoader cl;
-                                cl = new MyURLClassLoader(urls.toArray(new URL[0]));
-                                clazz = cl.findClass(driverClassName);
+        if (Platform.isRunning()) {
+            SQLExplorerPlugin sqlExplorerPlugin = SQLExplorerPlugin.getDefault();
+            if (sqlExplorerPlugin != null) {
+                net.sourceforge.sqlexplorer.dbproduct.DriverManager driverModel = sqlExplorerPlugin.getDriverModel();
+                try {
+                    Collection<ManagedDriver> drivers = driverModel.getDrivers();
+                    for (ManagedDriver managedDriver : drivers) {
+                        LinkedList<String> jars = managedDriver.getJars();
+                        List<URL> urls = new ArrayList<URL>();
+                        for (int i = 0; i < jars.size(); i++) {
+                            File file = new File(jars.get(i));
+                            if (file.exists()) {
+                                urls.add(file.toURI().toURL());
                             }
-                            if (clazz != null) {
-                                driver = (Driver) clazz.newInstance();
-                                // MOD mzhao 2009-06-05,Bug 7571 Get driver from
-                                // catch first, if not
-                                // exist then get a new instance.
-                                MetadataConnectionUtils.getDriverCache().put(driverClassName, driver);
-                                ExtractMetaDataUtils.getDriverCache().put(driverClassName, new DriverShim(driver));
-                                return driver; // driver is found
-                            }
-                        } catch (ClassNotFoundException e) {
-                            // do nothings
                         }
-                    }
+                        if (!urls.isEmpty()) {
+                            try {
+                                Class<?> clazz = null;
 
+                                // if it is hive embedded connection
+                                if (url.equals("jdbc:hive://")) { //$NON-NLS-1$
+                                    HotClassLoader hotSysLoader = (HotClassLoader) Thread.currentThread().getContextClassLoader();
+                                    clazz = hotSysLoader.loadClass(driverClassName);
+                                } else {
+                                    MyURLClassLoader cl;
+                                    cl = new MyURLClassLoader(urls.toArray(new URL[0]));
+                                    clazz = cl.findClass(driverClassName);
+                                }
+                                if (clazz != null) {
+                                    driver = (Driver) clazz.newInstance();
+                                    // MOD mzhao 2009-06-05,Bug 7571 Get driver from
+                                    // catch first, if not
+                                    // exist then get a new instance.
+                                    MetadataConnectionUtils.getDriverCache().put(driverClassName, driver);
+                                    ExtractMetaDataUtils.getDriverCache().put(driverClassName, new DriverShim(driver));
+                                    return driver; // driver is found
+                                }
+                            } catch (ClassNotFoundException e) {
+                                // do nothings
+                            }
+                        }
+
+                    }
+                } catch (MalformedURLException e) {
+                    // do nothings
                 }
-            } catch (MalformedURLException e) {
-                // do nothings
             }
         }
         if (driver == null) {
