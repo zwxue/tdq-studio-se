@@ -19,6 +19,7 @@ import static org.mockito.Mockito.*;
 import java.sql.Types;
 
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.api.mockito.PowerMockito;
@@ -73,12 +74,18 @@ public class PatternExplorerTest {
 
     private static final String RES_INVALIED_VALUES = "SELECT `lname` FROM `tbi`.`customer`  WHERE (((customer.lname = \"sunny\")) AND  `lname` NOT REGEXP 'su.*' OR `lname` IS NULL )"; //$NON-NLS-1$
 
+    private PatternExplorer patternExplorer;
+
     /**
-     * get Pattern Explorer.
+     * DOC msjian Comment method "setUp".
+     * 
+     * @throws java.lang.Exception
      */
-    private PatternExplorer getPatternExplorer() {
+    @Before
+    public void setUp() throws Exception {
         DataExplorerTestHelper.initDataExplorer();
-        PatternExplorer patternExplorer = new PatternExplorer();
+
+        patternExplorer = new PatternExplorer();
 
         // mock setEntity
         PatternMatchingIndicator indicator = mock(PatternMatchingIndicator.class);
@@ -105,7 +112,7 @@ public class PatternExplorerTest {
         when(dbmsLanguage.isNull()).thenReturn(" IS NULL "); //$NON-NLS-1$
 
         Analysis analysis = DataExplorerTestHelper.getAnalysis(indicator, dbmsLanguage);
-        Assert.assertTrue(patternExplorer.setAnalysis(analysis));
+        patternExplorer.setAnalysis(analysis);
 
         ChartDataEntity cdEntity = mock(ChartDataEntity.class);
         when(cdEntity.getIndicator()).thenReturn(indicator);
@@ -119,8 +126,6 @@ public class PatternExplorerTest {
         Expression instantiatedExpression = mock(Expression.class);
         when(dbmsLanguage.getInstantiatedExpression(indicator)).thenReturn(instantiatedExpression);
         when(instantiatedExpression.getBody()).thenReturn(" FROM `tbi`.`customer` "); //$NON-NLS-1$
-
-        return patternExplorer;
     }
 
     /**
@@ -129,7 +134,6 @@ public class PatternExplorerTest {
     @Test
     public void testPatternExplorer() {
         try {
-            getPatternExplorer();
             PatternExplorer pe = new PatternExplorer();
             Assert.assertNotNull(pe);
         } catch (Exception e) {
@@ -142,7 +146,7 @@ public class PatternExplorerTest {
      */
     @Test
     public void testGetInvalidRowsStatement() {
-        String strStatement = getPatternExplorer().getInvalidRowsStatement();
+        String strStatement = patternExplorer.getInvalidRowsStatement();
         Assert.assertEquals(RES_INVALIED_ROWS, strStatement);
     }
 
@@ -151,7 +155,7 @@ public class PatternExplorerTest {
      */
     @Test
     public void testGetValidRowsStatement() {
-        String strStatement = getPatternExplorer().getValidRowsStatement();
+        String strStatement = patternExplorer.getValidRowsStatement();
         Assert.assertEquals(RES_VALIED_ROWS, strStatement);
     }
 
@@ -160,7 +164,7 @@ public class PatternExplorerTest {
      */
     @Test
     public void testGetInvalidValuesStatement() {
-        String strStatement = getPatternExplorer().getInvalidValuesStatement();
+        String strStatement = patternExplorer.getInvalidValuesStatement();
         Assert.assertEquals(RES_INVALIED_VALUES, strStatement);
     }
 
@@ -169,7 +173,7 @@ public class PatternExplorerTest {
      */
     @Test
     public void testGetValidValuesStatement() {
-        String strStatement = getPatternExplorer().getValidValuesStatement();
+        String strStatement = patternExplorer.getValidValuesStatement();
         Assert.assertEquals(RES_VALIED_VALUES, strStatement);
     }
 
@@ -179,8 +183,6 @@ public class PatternExplorerTest {
      */
     @Test
     public void testGetValidValuesStatement_2() {
-        DataExplorerTestHelper.initDataExplorer();
-
         // mock an analysis for the super class.
         Analysis analysis = mock(Analysis.class);
         AnalysisParameters parameters = mock(AnalysisParameters.class);
@@ -254,8 +256,6 @@ public class PatternExplorerTest {
      */
     @Test
     public void testGetInvalidValuesStatement_2() {
-        DataExplorerTestHelper.initDataExplorer();
-
         // mock an analysis for the super class.
         Analysis analysis = mock(Analysis.class);
         AnalysisParameters parameters = mock(AnalysisParameters.class);
@@ -328,8 +328,6 @@ public class PatternExplorerTest {
      */
     @Test
     public void testGetInvalidRowsStatement_2() {
-        DataExplorerTestHelper.initDataExplorer();
-
         // mock an analysis for the super class.
         Analysis analysis = mock(Analysis.class);
         AnalysisParameters parameters = mock(AnalysisParameters.class);
@@ -402,8 +400,6 @@ public class PatternExplorerTest {
      */
     @Test
     public void testGetValidRowsStatement_2() {
-        DataExplorerTestHelper.initDataExplorer();
-
         // mock an analysis for the super class.
         Analysis analysis = mock(Analysis.class);
         AnalysisParameters parameters = mock(AnalysisParameters.class);
