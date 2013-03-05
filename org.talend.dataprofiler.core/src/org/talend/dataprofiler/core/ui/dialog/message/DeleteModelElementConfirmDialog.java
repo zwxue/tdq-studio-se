@@ -482,7 +482,8 @@ public class DeleteModelElementConfirmDialog {
                         return ((IRepositoryViewObject) obj).getLabel();
                     }// ~
 
-                    return ((ModelElement) obj).getName();
+                    return PropertyHelper.getProperty((ModelElement) obj) == null ? ((ModelElement) obj).getName()
+                            : PropertyHelper.getProperty((ModelElement) obj).getDisplayName();
                     //REQUIRES + PluginConstant.SPACE_STRING+ "<<" + PropertyHelper.getProperty((ModelElement) obj).getDisplayName() + ">>"; //$NON-NLS-1$ //$NON-NLS-2$
                     // TDQ-5909~
                 }
