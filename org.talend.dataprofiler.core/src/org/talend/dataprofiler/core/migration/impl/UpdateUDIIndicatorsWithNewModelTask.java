@@ -84,8 +84,9 @@ public class UpdateUDIIndicatorsWithNewModelTask extends AbstractWorksapceUpdate
         for (IndicatorDefinition indiDefinition : indiDefinitions) {
             if (indiDefinition != null) {
                 if (indiDefinition instanceof UDIndicatorDefinition) {
-                    indiDefinition = UDIUtils.createDefaultDrillDownList(indiDefinition);
-                    result &= ElementWriterFactory.getInstance().createIndicatorDefinitionWriter().save(indiDefinition).isOk();
+                    UDIndicatorDefinition udi = (UDIndicatorDefinition) indiDefinition;
+                    udi = UDIUtils.createDefaultDrillDownList(udi);
+                    result &= ElementWriterFactory.getInstance().createIndicatorDefinitionWriter().save(udi).isOk();
                 }
             }
         }

@@ -148,7 +148,7 @@ public final class UDIHelper {
         }
     }
 
-    public static IndicatorDefinition createUDI(String name, String author, String description, String purpose, String status,
+    public static UDIndicatorDefinition createUDI(String name, String author, String description, String purpose, String status,
             String category, String javaClassName, String javaJarPath) {
         // IndicatorDefinition id = DefinitionFactory.eINSTANCE.createIndicatorDefinition();
         UDIndicatorDefinition id = UserdefineFactory.eINSTANCE.createUDIndicatorDefinition();

@@ -168,14 +168,14 @@ public final class UDIUtils {
      * @param indiDefinition
      * @return
      */
-    public static IndicatorDefinition createDefaultDrillDownList(IndicatorDefinition indiDefinition) {
+    public static UDIndicatorDefinition createDefaultDrillDownList(UDIndicatorDefinition indiDefinition) {
         IndicatorCategory category = IndicatorCategoryHelper.getCategory(indiDefinition);
         if (IndicatorCategoryHelper.isUserDefMatching(category)) {
             // set default value from templates
-            EList<TdExpression> viewValidRowsList = ((UDIndicatorDefinition) indiDefinition).getViewValidRowsExpression();
-            EList<TdExpression> viewInvalidRowsList = ((UDIndicatorDefinition) indiDefinition).getViewInvalidRowsExpression();
-            EList<TdExpression> viewValidValuesList = ((UDIndicatorDefinition) indiDefinition).getViewValidValuesExpression();
-            EList<TdExpression> viewInvalidValuesList = ((UDIndicatorDefinition) indiDefinition).getViewInvalidValuesExpression();
+            EList<TdExpression> viewValidRowsList = indiDefinition.getViewValidRowsExpression();
+            EList<TdExpression> viewInvalidRowsList = indiDefinition.getViewInvalidRowsExpression();
+            EList<TdExpression> viewValidValuesList = indiDefinition.getViewValidValuesExpression();
+            EList<TdExpression> viewInvalidValuesList = indiDefinition.getViewInvalidValuesExpression();
 
             EList<TdExpression> sqlGenericExpression = indiDefinition.getSqlGenericExpression();
             if (sqlGenericExpression != null) {
@@ -213,7 +213,7 @@ public final class UDIUtils {
             }
         } else {
             // for others is view rows template
-            EList<TdExpression> viewRowsList = ((UDIndicatorDefinition) indiDefinition).getViewRowsExpression();
+            EList<TdExpression> viewRowsList = indiDefinition.getViewRowsExpression();
             EList<TdExpression> sqlGenericExpression = indiDefinition.getSqlGenericExpression();
             if (sqlGenericExpression != null) {
                 for (TdExpression tdExp : sqlGenericExpression) {

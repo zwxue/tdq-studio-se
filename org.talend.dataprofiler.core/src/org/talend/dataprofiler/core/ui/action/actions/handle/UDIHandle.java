@@ -18,9 +18,10 @@ import org.talend.core.model.properties.Property;
 import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
+import org.talend.dataprofiler.core.ui.utils.UDIUtils;
 import org.talend.dataquality.helpers.IndicatorCategoryHelper;
 import org.talend.dataquality.indicators.definition.IndicatorCategory;
-import org.talend.dataquality.indicators.definition.IndicatorDefinition;
+import org.talend.dataquality.indicators.definition.userdefine.UDIndicatorDefinition;
 import org.talend.dq.factory.ModelElementFileFactory;
 import org.talend.dq.helper.UDIHelper;
 import org.talend.dq.helper.resourcehelper.IndicatorResourceFileHelper;
@@ -66,7 +67,7 @@ public class UDIHandle extends EMFResourceHandle {
     @Override
     public IFile duplicate(String newLabel) {
         IFile duplicatedFile = super.duplicate(newLabel);
-        IndicatorDefinition definition = (IndicatorDefinition) ModelElementFileFactory.getModelElement(duplicatedFile);
+        UDIndicatorDefinition definition = (UDIndicatorDefinition) ModelElementFileFactory.getModelElement(duplicatedFile);
 
         // MOD klliu 2010-09-25 bug 15530 when duplicate the system indicator ,the definition must be reset the
         // category and the label name
@@ -77,6 +78,9 @@ public class UDIHandle extends EMFResourceHandle {
 
         TaggedValueHelper.setValidStatus(true, definition);
         definition.setLabel(definition.getName());
+
+        definition = UDIUtils.createDefaultDrillDownList(definition);
+
         IndicatorResourceFileHelper.getInstance().save(definition);
         // MOD klliu duplicate successfully, refresh the duplicate session
         DefinitionHandler.reload();

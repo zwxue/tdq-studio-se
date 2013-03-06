@@ -64,8 +64,8 @@ import org.talend.dataquality.helpers.BooleanExpressionHelper;
 import org.talend.dataquality.helpers.MetadataHelper;
 import org.talend.dataquality.indicators.definition.DefinitionFactory;
 import org.talend.dataquality.indicators.definition.IndicatorCategory;
-import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dataquality.indicators.definition.IndicatorDefinitionParameter;
+import org.talend.dataquality.indicators.definition.userdefine.UDIndicatorDefinition;
 import org.talend.dataquality.rules.ParserRule;
 import org.talend.dq.dqrule.DqRuleBuilder;
 import org.talend.dq.factory.ModelElementFileFactory;
@@ -846,7 +846,7 @@ public final class ImportFactory {
      */
     private static void createAndStoreUDI(UDIParameters parameters, IFolder selectionFolder) {
 
-        IndicatorDefinition indDef = UDIHelper.createUDI(parameters.name, parameters.auther, parameters.description,
+        UDIndicatorDefinition indDef = UDIHelper.createUDI(parameters.name, parameters.auther, parameters.description,
                 parameters.purpose, parameters.status, parameters.category, parameters.javaClassName, parameters.javaJarPath);
 
         for (String key : parameters.regex.keySet()) {
