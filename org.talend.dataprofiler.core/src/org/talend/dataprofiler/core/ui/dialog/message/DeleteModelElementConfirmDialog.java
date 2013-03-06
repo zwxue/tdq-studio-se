@@ -547,9 +547,11 @@ public class DeleteModelElementConfirmDialog {
      * 
      * @param nodeWithDependsMap key is the repostiory node and value is the dependencies of this node.
      * @param dialogMessage the message shown in dialog
+     * @param needCheckBox show the check box or not
      * @return true if the user choose force delete, false if the user did not choose force delete
      */
-    public static boolean showDialog(Map<IRepositoryNode, List<ModelElement>> nodeWithDependsMap, String dialogMessage) {
+    public static boolean showDialog(Map<IRepositoryNode, List<ModelElement>> nodeWithDependsMap, String dialogMessage,
+            boolean needCheckBox) {
         // for each node in the map, add the node as a ImpactNode, and its children are its depends.
         Iterator iter = nodeWithDependsMap.entrySet().iterator();
         while (iter.hasNext()) {
@@ -566,7 +568,7 @@ public class DeleteModelElementConfirmDialog {
             TreeMessageInfoDialog dialog = new TreeMessageInfoDialog(null,
                     DefaultMessagesImpl.getString("DeleteModelElementConfirmDialog.confirmResourceDelete"), null, dialogMessage, //$NON-NLS-1$
                     MessageDialog.WARNING, new String[] { IDialogConstants.OK_LABEL }, 1);
-            dialog.setNeedCheckbox(true);
+            dialog.setNeedCheckbox(needCheckBox);
             dialog.setContentProvider(new DialogContentProvider(impactElements));
             dialog.setLabelProvider(getLabelProvider());
             dialog.setInput(new Object());
@@ -575,6 +577,7 @@ public class DeleteModelElementConfirmDialog {
             int result = dialog.open();
             isChecked = dialog.isChecked() && (result == Window.OK);
         }
+
         return isChecked;
     }
 

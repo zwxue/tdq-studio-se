@@ -220,9 +220,9 @@ public class DQDeleteAction extends DeleteAction {
             }
         }
         selectedNodes.clear();
-        selectedNodes.addAll(reportNodes);
-        selectedNodes.addAll(anaOrJrxml);
         selectedNodes.addAll(finalLevel);
+        selectedNodes.addAll(anaOrJrxml);
+        selectedNodes.addAll(reportNodes);
 
     }
 
@@ -269,6 +269,9 @@ public class DQDeleteAction extends DeleteAction {
         List<IRepositoryNode> folderNodeWhichChildHadDepend = null;
 
         for (int i = selectedNodes.size() - 1; i >= 0; i--) {
+            if (selectedNodes.size() == 0) {
+                break;
+            }
             RepositoryNode node = selectedNodes.get(i);
             RepositoryNode parent = node.getParent();
 
@@ -319,7 +322,7 @@ public class DQDeleteAction extends DeleteAction {
         if (nodeWithDependsMap.size() > 0) {
             // show all nodes in one dialog.
             forceDelete = DeleteModelElementConfirmDialog.showDialog(nodeWithDependsMap,
-                    DefaultMessagesImpl.getString("DQDeleteAction.dependencyByOther"));
+                    DefaultMessagesImpl.getString("DQDeleteAction.dependencyByOther"), true);//$NON-NLS-1$
             if (forceDelete) {
                 Iterator iter = nodeWithDependsMap.entrySet().iterator();
                 while (iter.hasNext()) {
@@ -360,11 +363,7 @@ public class DQDeleteAction extends DeleteAction {
      */
     private boolean hasDependencyClients(IRepositoryNode node) {
         if(isJrxml(node)){
-            if (node.getObject().getProperty() == null) {
-                return false;
-            }
-            IPath path = PropertyHelper.getItemPath(node.getObject().getProperty());
-            List<ModelElement> dependedReport = DQDeleteHelper.getDependedReportOfJrxml(path);
+            List<ModelElement> dependedReport = DQDeleteHelper.getDependedReportOfJrxml(node);
             if(dependedReport.size()>0){
                 nodeWithDependsMap.put(node, dependedReport);
                 return true;

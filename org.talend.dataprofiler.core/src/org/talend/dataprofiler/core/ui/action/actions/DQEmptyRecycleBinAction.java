@@ -14,6 +14,7 @@ package org.talend.dataprofiler.core.ui.action.actions;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -80,10 +81,11 @@ public class DQEmptyRecycleBinAction extends EmptyRecycleBinAction {
         if (null == findAllRecycleBinNodes) {
             return;
         }
-        List<IRepositoryNode> canNotDeletedNodes = DQDeleteHelper.getCanNotDeletedNodes(findAllRecycleBinNodes, true);
+        Map<IRepositoryNode, List<ModelElement>> canNotDeletedNodes = DQDeleteHelper.getCanNotDeletedNodesMap(
+                findAllRecycleBinNodes, true);
         if (!canNotDeletedNodes.isEmpty()) {
-            DeleteModelElementConfirmDialog.showDialog(null, canNotDeletedNodes,
-                    DefaultMessagesImpl.getString("DQEmptyRecycleBinAction.allDependencies"));//$NON-NLS-1$
+            DeleteModelElementConfirmDialog.showDialog(canNotDeletedNodes,
+                    DefaultMessagesImpl.getString("DQEmptyRecycleBinAction.allDependencies"), false);//$NON-NLS-1$
             return;
         }
 

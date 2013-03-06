@@ -13,7 +13,9 @@
 package org.talend.dq.helper;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
@@ -22,12 +24,12 @@ import org.eclipse.emf.common.util.EList;
 import org.talend.core.model.properties.FolderItem;
 import org.talend.core.model.properties.Item;
 import org.talend.core.model.properties.Property;
+import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.dataquality.helpers.ReportHelper;
 import org.talend.dataquality.helpers.ReportHelper.ReportType;
 import org.talend.dataquality.properties.TDQReportItem;
 import org.talend.dataquality.reports.AnalysisMap;
 import org.talend.dataquality.reports.TdReport;
-import org.talend.dq.nodes.JrxmlTempleteRepNode;
 import org.talend.dq.nodes.ReportRepNode;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.resource.EResourceConstant;
@@ -94,13 +96,11 @@ public final class DQDeleteHelper {
 
         for (IRepositoryNode node : allNodes) {
             List<ModelElement> dependencies = EObjectHelper.getDependencyClients(node);
-            if (node instanceof JrxmlTempleteRepNode) {
-                if (node.getObject().getProperty() == null) {
-                    continue;
-                }
-                IPath path = PropertyHelper.getItemPath(node.getObject().getProperty());
-                dependencies = getDependedReportOfJrxml(path);
-            }
+            // Added 20130305 check the jRxml and its folder here, because the jrxml are not modelelement type.
+            if (node.getObject() != null
+                    && ERepositoryObjectType.TDQ_JRAXML_ELEMENT.equals(node.getObject().getRepositoryObjectType())) {
+                dependencies = getDependedReportOfJrxml(node);
+            }// ~
             if (dependencies == null || dependencies.isEmpty()) {
                 continue;
             }
@@ -123,7 +123,55 @@ public final class DQDeleteHelper {
         return canNotDeletedNodes;
     }
 
-    public static List<ModelElement> getDependedReportOfJrxml(IPath path) {
+    /**
+     * Special modified for Empty recycle bin, TDQ5392, but need to be modified for TDQ-6963
+     * 
+     * TODO: TDQ-6963 Make the behavior same from "Empty the recycle bin" to delete all by selecting each items in
+     * recycle bin
+     * 
+     * @param allNodes
+     * @param isCurrentPerspectiveDQ
+     * @return map: key=node, value=its dependencies
+     */
+    public static Map<IRepositoryNode, List<ModelElement>> getCanNotDeletedNodesMap(List<IRepositoryNode> allNodes,
+            boolean isCurrentPerspectiveDQ) {
+        Map<IRepositoryNode, List<ModelElement>> nodeWithDependsMap = new HashMap<IRepositoryNode, List<ModelElement>>();
+
+        if (allNodes == null) {
+            return nodeWithDependsMap;
+        }
+
+        for (IRepositoryNode node : allNodes) {
+            List<ModelElement> dependencies = EObjectHelper.getDependencyClients(node);
+            // Added 20130305 check the jRxml and its folder here, because the jrxml are not modelelement type.
+            if (node.getObject() != null
+                    && ERepositoryObjectType.TDQ_JRAXML_ELEMENT.equals(node.getObject().getRepositoryObjectType())) {
+                dependencies = getDependedReportOfJrxml(node);
+            }// ~
+            if (dependencies == null || dependencies.isEmpty()) {
+                continue;
+            }
+            // if the current perspective is not DQ,no need to judge its client dependences are in recycle bin.
+            if (!isCurrentPerspectiveDQ) {
+                nodeWithDependsMap.put(node, dependencies);
+                continue;
+            }
+            nodeWithDependsMap.put(node, dependencies);
+        }
+        return nodeWithDependsMap;
+    }
+
+    /**
+     * Go throught all reports in the project and return all which used the current jrxml.
+     * 
+     * @param node the Jrxml node
+     * @return list of reports who used this jrxml as user defined template
+     */
+    public static List<ModelElement> getDependedReportOfJrxml(IRepositoryNode node) {
+        if (node.getObject().getProperty() == null) {
+            return null;
+        }
+        IPath path = PropertyHelper.getItemPath(node.getObject().getProperty());
         // check if it has depended Report
         List<ModelElement> dependedReport = new ArrayList<ModelElement>();
         // get all reports
@@ -146,9 +194,9 @@ public final class DQDeleteHelper {
      * check if the anaMap comtains the Jrxml or not, by compare the jrxml's path with anaMap's jrxml source(when user
      * mode)
      * 
-     * @param path
-     * @param jrxmlSource
-     * @return
+     * @param path the path of the jrxml saved in the analysis map
+     * @param anaMap the analysis map in the report.
+     * @return the analysis map used the current jrxml or not.
      */
     private static boolean isUsedByDeletedJrxml(IPath path, AnalysisMap anaMap) {
         ReportType reportType = ReportHelper.ReportType.getReportType(anaMap.getAnalysis(), anaMap.getReportType());
