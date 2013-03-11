@@ -111,7 +111,7 @@ public final class DefinitionHandler {
     public static DefinitionHandler getInstance() {
         if (instance == null) {
             instance = new DefinitionHandler();
-            // try to copy in workspace
+            // try to copy into workspace
             if (Platform.isRunning() && !getTalendDefinitionFile().exists()) {
                 instance.copyDefinitionsIntoFolder(ResourceManager.getLibrariesFolder());
             }
@@ -142,11 +142,7 @@ public final class DefinitionHandler {
         Resource definitionsFile = getDefCategoryResourceFromFile();
 
         EList<EObject> contents = definitionsFile.getContents();
-        if (contents == null) {
-            log.error(Messages.getString("DefinitionHandler.NoContentFound", definitionsFile.getURI())); //$NON-NLS-1$
-            return null;
-        }
-        if (contents.isEmpty()) {
+        if (contents == null || contents.isEmpty()) {
             log.error(Messages.getString("DefinitionHandler.NoContentFound", definitionsFile.getURI())); //$NON-NLS-1$
             return null;
         }
@@ -178,9 +174,12 @@ public final class DefinitionHandler {
         if (Platform.isRunning()) {
             IPath definitionPath = ResourceManager.getLibrariesFolder().getFullPath().append(FILENAME);
             URI uri = URI.createPlatformResourceURI(definitionPath.toString(), false);
-            try { // load from workspace path
-                  // do not create it here if it does not exist.
-                definitionsFile = EMFSharedResources.getInstance().getResource(uri, true);
+            try {
+                // load from workspace path
+                // do not create it here if it does not exist.
+                // ADD msjian TDQ-6865 2013-3-8: reload first, because the file is copied into workspace just now
+                definitionsFile = EMFSharedResources.getInstance().reloadResource(uri);
+                // TDQ-6865~
                 if (log.isDebugEnabled()) {
                     log.debug("Definition of indicators loaded from " + uri); //$NON-NLS-1$
                 }
@@ -201,17 +200,20 @@ public final class DefinitionHandler {
                         log.debug("ERROR: " + e.getMessage(), e); //$NON-NLS-1$
                     }
                 }
-            }
 
-            if (definitionsFile == null) {
-                // try to load from a local file
-                definitionsFile = EMFSharedResources.getInstance().getResource(
-                        URI.createFileURI(".." + File.separator + PLUGIN_PATH), true); //$NON-NLS-1$
-            }
+                if (definitionsFile == null) {
+                    // try to load from a local file
+                    URI createFileURI = URI.createFileURI(".." + File.separator + PLUGIN_PATH); //$NON-NLS-1$
+                    definitionsFile = EMFSharedResources.getInstance().getResource(createFileURI, true);
+                    if (log.isDebugEnabled()) {
+                        log.debug("Definition of indicators loaded from " + createFileURI); //$NON-NLS-1$
+                    }
+                }
 
-            if (definitionsFile == null) {
-                log.error(Messages.getString("DefinitionHandler.NoResourceFound", PLUGIN_PATH, uri));//$NON-NLS-1$
-                return null;
+                if (definitionsFile == null) {
+                    log.error(Messages.getString("DefinitionHandler.NoResourceFound", PLUGIN_PATH, uri));//$NON-NLS-1$
+                    return null;
+                }
             }
 
         } else { // call reporting engine as java library
@@ -219,7 +221,7 @@ public final class DefinitionHandler {
             try { // try to load from a local file
                   // IPath definitionPath = Path.fromOSString("TDQEEDEMOJAVA/TDQ_Libraries/").append(FILENAME);
                 IPath definitionPath = Path.fromOSString(
-                        "/misc/repo/tdq/org.talend.dataquality.reporting.engine.test/TDQEEDEMOJAVA/TDQ_Libraries/").append(
+                        "/misc/repo/tdq/org.talend.dataquality.reporting.engine.test/TDQEEDEMOJAVA/TDQ_Libraries/").append( //$NON-NLS-1$
                         FILENAME);
                 definitionsFile = EmfFileResourceUtil.getInstance().getFileResource(definitionPath.toString());
             } catch (RuntimeException e) {
