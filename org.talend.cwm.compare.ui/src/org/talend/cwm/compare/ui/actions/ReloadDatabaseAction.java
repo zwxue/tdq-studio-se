@@ -209,6 +209,11 @@ public class ReloadDatabaseAction extends Action {
      * @return true if the user select reload, false: when select compare
      */
     private boolean isContinueReload() {
+        // Added TDQ-6999 Copy from right to left should not popup reloading/comparing confirmation dialog,yyin
+        if (this.getText() != null
+                && this.getText().equalsIgnoreCase(Messages.getString("CompareModelContentMergeViewer.NoNeedToPopupReload"))) {
+            return true;
+        }// ~
         String[] dialogButtonLabels = {
                 Messages.getString("ReloadDatabaseAction.CompareLabel"), Messages.getString("ReloadDatabaseAction.ReloadLabel") };//$NON-NLS-1$
         MessageDialog dialog = new MessageDialog(CorePlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getShell(),
