@@ -14,6 +14,7 @@ package org.talend.cwm.compare.factory.comparisonlevel;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.EList;
@@ -26,6 +27,7 @@ import org.eclipse.emf.compare.match.metamodel.MatchModel;
 import org.eclipse.emf.compare.match.service.MatchService;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.database.DqRepositoryViewService;
 import org.talend.core.model.properties.ConnectionItem;
@@ -140,7 +142,13 @@ public class CatalogSchemaComparisonLevel extends AbstractComparisonLevel {
         // MOD scorreia 2009-01-16 option initialized in CTOR
         MatchModel match = null;
         try {
+            // remove the jrxml from the ResourceSet before doMatch
+            Map<ResourceSet, List<Resource>> rsJrxmlMap = removeJrxmlsFromResourceSet();
+
             match = MatchService.doContentMatch(getPackageFromObject(selectedObj), getSavedReloadObject(), options);
+
+            // add the jrxml into the ResourceSet after doMatch
+            addJrxmlsIntoResourceSet(rsJrxmlMap);
         } catch (InterruptedException e) {
             log.error(e, e);
             return false;
