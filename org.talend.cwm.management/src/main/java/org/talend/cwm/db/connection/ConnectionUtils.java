@@ -44,8 +44,8 @@ import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.preferences.IPreferencesService;
 import org.eclipse.emf.common.util.EList;
+import org.talend.commons.exception.ExceptionHandler;
 import org.talend.commons.exception.PersistenceException;
-import org.talend.commons.ui.runtime.exception.ExceptionHandler;
 import org.talend.core.database.EDatabaseTypeName;
 import org.talend.core.database.conn.version.EDatabaseVersion4Drivers;
 import org.talend.core.model.metadata.IMetadataConnection;
@@ -327,7 +327,7 @@ public final class ConnectionUtils {
      * @return
      */
     public static boolean isHiveEmbedded(Connection analysisDataProvider) {
-        if (2 > 1) {
+        if (!Platform.isRunning()) {
             return false;
         }
         IMetadataConnection metadataConnection = ConvertionHelper.convert(analysisDataProvider);
