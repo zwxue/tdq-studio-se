@@ -53,9 +53,11 @@ import org.talend.commons.bridge.ReponsitoryContextBridge;
 import org.talend.commons.emf.EMFUtil;
 import org.talend.commons.exception.PersistenceException;
 import org.talend.commons.utils.VersionUtils;
+import org.talend.core.GlobalServiceRegister;
 import org.talend.core.context.Context;
 import org.talend.core.context.RepositoryContext;
 import org.talend.core.language.ECodeLanguage;
+import org.talend.core.model.general.ILibrariesService;
 import org.talend.core.model.general.Project;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.database.JavaSqlFactory;
@@ -548,8 +550,16 @@ public class CorePlugin extends AbstractUIPlugin {
                     String defaultTechnicalStatusList = "DEV development;TEST testing;PROD production"; //$NON-NLS-1$
                     List<Status> statusList = StatusHelper.parse(defaultTechnicalStatusList);
                     proxyRepository.setTechnicalStatus(statusList);
-                }
 
+                    // deploy libraries here
+                    if (GlobalServiceRegister.getDefault().isServiceRegistered(ILibrariesService.class)) {
+                        ILibrariesService librariesService = (ILibrariesService) GlobalServiceRegister.getDefault().getService(
+                                ILibrariesService.class);
+                        if (librariesService != null) {
+                            librariesService.syncLibrariesFromApp();
+                        }
+                    }
+                }
             } catch (PersistenceException e) {
                 ExceptionHandler.process(e);
                 rc.setMessage(e.getMessage());
