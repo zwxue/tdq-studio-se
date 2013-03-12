@@ -57,8 +57,6 @@ import org.eclipse.swt.events.TreeAdapter;
 import org.eclipse.swt.events.TreeEvent;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.FillLayout;
-import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.CoolBar;
 import org.eclipse.swt.widgets.CoolItem;
@@ -301,36 +299,20 @@ public class DQRespositoryView extends CommonNavigator {
     @Override
     public void createPartControl(Composite parent) {
 
-        GridLayout gl = new GridLayout();
-        gl.horizontalSpacing = 0;
-        gl.verticalSpacing = 0;
-        gl.marginWidth = 0;
-        gl.marginHeight = 0;
-        parent.setLayout(gl);
+        parent.setLayout(new BorderLayout());
 
         Composite topComp = new Composite(parent, SWT.NONE);
         topComp.setFont(parent.getFont());
+        topComp.setLayoutData(BorderLayout.NORTH);
+
         Composite bottomComp = new Composite(parent, SWT.NONE);
         bottomComp.setBackground(parent.getDisplay().getSystemColor(SWT.COLOR_LIST_BACKGROUND));
         bottomComp.setFont(parent.getFont());
+        bottomComp.setLayoutData(BorderLayout.CENTER);
 
-        GridData gridDataTop = new GridData();
-        gridDataTop.horizontalAlignment = GridData.FILL;
-        gridDataTop.verticalAlignment = GridData.FILL;
-        gridDataTop.grabExcessHorizontalSpace = true;
-        topComp.setLayoutData(gridDataTop);
+        topComp.setLayout(new BorderLayout());
 
-        GridData gridDataBottom = new GridData();
-        gridDataBottom.horizontalAlignment = GridData.FILL;
-        gridDataBottom.verticalAlignment = GridData.FILL;
-        gridDataBottom.grabExcessVerticalSpace = true;
-        gridDataBottom.grabExcessHorizontalSpace = true;
-        bottomComp.setLayoutData(gridDataBottom);
-
-        FillLayout topLayout = new FillLayout(SWT.FILL_WINDING);
-        topComp.setLayout(topLayout);
-
-        FillLayout bottomLayout = new FillLayout(SWT.FILL_WINDING);
+        FillLayout bottomLayout = new FillLayout(SWT.VERTICAL);
         bottomComp.setLayout(bottomLayout);
 
         createTreeFilter(topComp);
@@ -475,23 +457,6 @@ public class DQRespositoryView extends CommonNavigator {
 
             public void selectionChanged(SelectionChangedEvent event) {
                 TreeSelection selection = (TreeSelection) event.getSelection();
-                // if (selection.size() != 1) {
-                // return;
-                // }
-                // ADD xwang 2011-08-30
-                // MOD sizhaoliu 2012-09-10 TDQ-5612 remove the following part to reduce operation latency with remote
-                // connection.
-                // if (PluginChecker.isSVNProviderPluginLoaded()) {
-                // RepositoryWorkUnit<Object> workUnit = new RepositoryWorkUnit<Object>("Open editor") {
-                //
-                // @Override
-                // protected void run() {
-                //
-                // }
-                // };
-                // workUnit.setAvoidUnloadResources(true);
-                // ProxyRepositoryFactory.getInstance().executeRepositoryWorkUnit(workUnit);
-                // }
                 // MOD klliu 2011-12-19 TDQ-4197
                 Iterator<?> iterator = selection.iterator();
                 while (iterator.hasNext()) {
@@ -500,19 +465,6 @@ public class DQRespositoryView extends CommonNavigator {
                         ((RepositoryNode) selectedElement).getChildren().get(0).getChildren();
                     }
                 }
-                // Object selectedElement = selection.getFirstElement();
-                // if (selectedElement instanceof TdTable || selectedElement instanceof TdView) {
-                // if (contentProvider == null) {
-                // contentProvider = (ITreeContentProvider) getCommonViewer().getContentProvider();
-                // }
-                // for (Object child : contentProvider.getChildren(selectedElement)) {
-                // if (child instanceof IFolderNode
-                // && ((IFolderNode) child).getFolderNodeType() == ColumnFolderNode.COLUMNFOLDER_NODE_TYPE) {
-                // ((IFolderNode) child).loadChildren();
-                // break;
-                // }
-                // }
-                // }
             }
 
         });
@@ -541,31 +493,20 @@ public class DQRespositoryView extends CommonNavigator {
      */
     protected void createTreeFilter(final Composite parent) {
 
-        parent.setLayout(new BorderLayout());
-
         Composite centerComp = new Composite(parent, SWT.NONE);
-        // centerComp.setBackground(parent.getDisplay().getSystemColor(SWT.COLOR_LIST_BACKGROUND));
         centerComp.setFont(parent.getFont());
-        Composite eastComp = new Composite(parent, SWT.NONE);
-        // eastComp.setBackground(parent.getDisplay().getSystemColor(SWT.COLOR_LIST_BACKGROUND));
-        eastComp.setFont(parent.getFont());
-
         centerComp.setLayoutData(BorderLayout.CENTER);
-        eastComp.setLayoutData(BorderLayout.EAST);
-
-        FillLayout centerLayout = new FillLayout(SWT.FILL_WINDING);
-        centerLayout.marginHeight = 1;
-        // centerLayout.marginWidth = 2;
-        centerComp.setLayout(centerLayout);
-
-        FillLayout leftLayout = new FillLayout(SWT.HORIZONTAL);
-        leftLayout.marginWidth = 1;
-        leftLayout.marginHeight = 2;
-        // leftLayout.spacing = 1;
-        eastComp.setLayout(leftLayout);
+        FillLayout fillLayout = new FillLayout(SWT.HORIZONTAL);
+        fillLayout.marginHeight = 2;
+        centerComp.setLayout(fillLayout);
 
         final Text filterText = new Text(centerComp, SWT.BORDER);
         filterText.setBackground(parent.getDisplay().getSystemColor(SWT.COLOR_LIST_BACKGROUND));
+
+        Composite eastComp = new Composite(parent, SWT.NONE);
+        eastComp.setFont(parent.getFont());
+        eastComp.setLayoutData(BorderLayout.EAST);
+        eastComp.setLayout(new FillLayout(SWT.HORIZONTAL));
 
         final CoolBar coolBar = new CoolBar(eastComp, SWT.FLAT);
         CoolItem coolItem1 = new CoolItem(coolBar, SWT.FLAT);
@@ -586,9 +527,6 @@ public class DQRespositoryView extends CommonNavigator {
         ToolItem closeFilterItem = new ToolItem(toolBar, SWT.FLAT);
         closeFilterItem.setImage(ImageLib.getImage(ImageLib.FILTER_CLOSE));
         closeFilterItem.setToolTipText(DefaultMessagesImpl.getString("DQRespositoryView.CloseFilter"));//$NON-NLS-1$
-
-        // MOD gdbu 2011-8-17 bug TDQ-3276 : set the filter buttons composite height
-        ((GridData) parent.getLayoutData()).heightHint = nextMatchItem.getImage().getImageData().height + 8;
 
         toolBar.pack();
         Point size = toolBar.getSize();
@@ -868,10 +806,6 @@ public class DQRespositoryView extends CommonNavigator {
     private void activateContext() {
         IContextService contextService = (IContextService) getSite().getService(IContextService.class);
         contextService.activateContext(VIEW_CONTEXT_ID);
-
-        // DQDeleteAction dqDeleteAction = new DQDeleteAction();
-        // IHandlerService service = (IHandlerService) getViewSite().getService(IHandlerService.class);
-        // service.activateHandler(dqDeleteAction.getActionDefinitionId(), new ActionHandler(dqDeleteAction));
     }
 
     private void adjustFilter() {
