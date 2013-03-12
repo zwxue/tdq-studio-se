@@ -29,22 +29,6 @@
        </contexts>
    </extension>
    <extension
-         point="org.eclipse.ui.actionSets">
-      <actionSet
-            id="org.talend.dataprofiler.help.actionSet"
-            label="%actionSet.label.actionSet"
-            visible="true">
-         <action
-               class="org.talend.dataprofiler.help.actions.ViewBookMarksAction"
-               icon="icons/bookmarks_view.gif"
-               id="org.talend.dataprofiler.help.openBookmarkAction"
-               label="%ViewBookmark"
-               menubarPath="help/helpStart"
-               style="push">
-         </action>
-      </actionSet>
-   </extension>
-   <extension
          point="org.eclipse.help.index">
       <index
             file="index.xml">
@@ -60,6 +44,33 @@
             name="%Bookmarks"
             restorable="true">
       </view>
+   </extension>
+   <extension
+         point="org.eclipse.ui.commands">
+      <command
+            id="org.talend.dataprofiler.help.show.viewBookmark.command"
+            name="View bookmarks">
+      </command>
+   </extension>
+   <extension
+         point="org.eclipse.ui.handlers">
+      <handler
+            class="org.talend.dataprofiler.help.handler.ShowViewBookmarkHandler"
+            commandId="org.talend.dataprofiler.help.show.viewBookmark.command">
+      </handler>
+   </extension>
+   <extension
+         point="org.eclipse.ui.menus">
+      <menuContribution
+            allPopups="false"
+            locationURI="menu:help?before=group help">
+         <command
+               commandId="org.talend.dataprofiler.help.show.viewBookmark.command"
+               icon="icons/bookmarks_view.gif"
+               id="org.talend.dataprofiler.help.show.viewBookmark.menus.command"
+               style="push">
+         </command>
+      </menuContribution>
    </extension>
 
 </plugin>

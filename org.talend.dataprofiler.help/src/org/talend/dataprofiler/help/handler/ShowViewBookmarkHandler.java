@@ -1,32 +1,40 @@
-package org.talend.dataprofiler.help.actions;
+// ============================================================================
+//
+// Copyright (C) 2006-2013 Talend Inc. - www.talend.com
+//
+// This source code is available under agreement available at
+// %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
+//
+// You should have received a copy of the agreement
+// along with this program; if not, write to Talend SA
+// 9 rue Pages 92150 Suresnes, France
+//
+// ============================================================================
+package org.talend.dataprofiler.help.handler;
 
 import org.apache.log4j.Logger;
+import org.eclipse.core.commands.AbstractHandler;
+import org.eclipse.core.commands.ExecutionEvent;
+import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.help.internal.base.BaseHelpSystem;
-import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.talend.dataprofiler.help.BookmarksHelpView;
 
+/**
+ * 
+ * DOC fywang class global comment. Detailled comment
+ */
 @SuppressWarnings("restriction")
-public class ViewBookMarksAction implements IWorkbenchWindowActionDelegate {
+public class ShowViewBookmarkHandler extends AbstractHandler {
 
-    protected static Logger log = Logger.getLogger(ViewBookMarksAction.class);
+    protected static Logger log = Logger.getLogger(ShowViewBookmarkHandler.class);
 
-    public void dispose() {
-
-    }
-
-    public void init(IWorkbenchWindow window) {
-
-    }
-
-    @SuppressWarnings( { "static-access" })
-    public void run(IAction action) {
+    @SuppressWarnings({ "static-access" })
+    public Object execute(ExecutionEvent event) throws ExecutionException {
         try {
 
             if (BaseHelpSystem.getInstance().ensureWebappRunning()) {
@@ -49,10 +57,6 @@ public class ViewBookMarksAction implements IWorkbenchWindowActionDelegate {
         } catch (Exception e) {
             log.error(e, e);
         }
+        return null;
     }
-
-    public void selectionChanged(IAction action, ISelection selection) {
-
-    }
-
 }
