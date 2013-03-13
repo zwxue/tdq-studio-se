@@ -43,13 +43,13 @@ public class UpdateUDIIndicatorsWithNewModelTask extends AbstractWorksapceUpdate
 
     Logger log = Logger.getLogger(UpdateUDIIndicatorsWithNewModelTask.class);
 
-    private String old_one = "xmlns:dataquality.indicators.definition=\"http://dataquality.indicators.definition\""; //$NON-NLS-1$
+    private static String old_one = "xmlns:dataquality.indicators.definition=\"http://dataquality.indicators.definition\""; //$NON-NLS-1$
 
-    private String new_one = "xmlns:dataquality.indicators.definition.userdefine=\"http://dataquality.indicators.definition.userdefine\""; //$NON-NLS-1$
+    private static String new_one = "xmlns:dataquality.indicators.definition.userdefine=\"http://dataquality.indicators.definition.userdefine\""; //$NON-NLS-1$
 
-    private String old_two = "dataquality.indicators.definition:IndicatorDefinition"; //$NON-NLS-1$
+    private static String old_two = "dataquality.indicators.definition:IndicatorDefinition"; //$NON-NLS-1$
 
-    private String new_two = "dataquality.indicators.definition.userdefine:UDIndicatorDefinition"; //$NON-NLS-1$
+    private static String new_two = "dataquality.indicators.definition.userdefine:UDIndicatorDefinition"; //$NON-NLS-1$
 
     public Date getOrder() {
         return createDate(2013, 2, 25);
@@ -99,7 +99,7 @@ public class UpdateUDIIndicatorsWithNewModelTask extends AbstractWorksapceUpdate
      * 
      * @return
      */
-    private Map<String, String> initIndicatorReplaceMap() {
+    public static Map<String, String> initIndicatorReplaceMap() {
 
         Map<String, String> replaceStringMap = new HashMap<String, String>();
 

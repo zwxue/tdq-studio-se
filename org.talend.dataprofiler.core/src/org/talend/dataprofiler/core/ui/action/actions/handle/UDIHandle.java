@@ -12,22 +12,37 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.action.actions.handle;
 
+import java.io.File;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
+import org.talend.commons.exception.PersistenceException;
+import org.talend.commons.utils.WorkspaceUtils;
+import org.talend.commons.utils.io.FilesUtils;
 import org.talend.core.model.properties.Property;
+import org.talend.core.model.repository.ERepositoryObjectType;
+import org.talend.core.model.repository.IRepositoryViewObject;
+import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.migration.impl.UpdateUDIIndicatorsWithNewModelTask;
+import org.talend.dataprofiler.core.ui.utils.UDIUtils;
 import org.talend.dataquality.helpers.IndicatorCategoryHelper;
 import org.talend.dataquality.indicators.definition.IndicatorCategory;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
+import org.talend.dataquality.indicators.definition.userdefine.UDIndicatorDefinition;
 import org.talend.dq.factory.ModelElementFileFactory;
 import org.talend.dq.helper.UDIHelper;
 import org.talend.dq.helper.resourcehelper.IndicatorResourceFileHelper;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
+import org.talend.dq.writer.impl.ElementWriterFactory;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.resource.ResourceManager;
+import org.talend.resource.ResourceService;
 import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
@@ -35,6 +50,8 @@ import orgomg.cwm.objectmodel.core.ModelElement;
  * DOC bZhou class global comment. Detailled comment
  */
 public class UDIHandle extends EMFResourceHandle {
+
+    Logger log = Logger.getLogger(UDIHandle.class);
 
     /**
      * DOC bZhou DuplicateUDIHandle constructor comment.
@@ -80,12 +97,36 @@ public class UDIHandle extends EMFResourceHandle {
         definition.setLabel(definition.getName());
         IndicatorResourceFileHelper.getInstance().save(definition);
 
+        // update the udi model to new model, not use the migration task
+        if (!IndicatorCategoryHelper.isUserDefCategory(category)) {
+            File ifileToFile = WorkspaceUtils.ifileToFile(duplicatedFile);
+            Map<String, String> initIndicatorReplaceMap = UpdateUDIIndicatorsWithNewModelTask.initIndicatorReplaceMap();
+            if (FilesUtils.migrateFile(ifileToFile, initIndicatorReplaceMap, log)) {
+                try {
+                    for (IRepositoryViewObject viewObject : ProxyRepositoryFactory.getInstance().getAll(
+                            ERepositoryObjectType.TDQ_USERDEFINE_INDICATORS)) {
+                        ProxyRepositoryFactory.getInstance().reload(viewObject.getProperty());
+                    }
+                } catch (PersistenceException e) {
+                    log.error(e);
+                }
+                ResourceService.refreshStructure();
+
+                List<IndicatorDefinition> indiDefinitions = DefinitionHandler.getInstance().getIndicatorsDefinitions();
+                for (IndicatorDefinition indiDefinition : indiDefinitions) {
+                    if (indiDefinition instanceof UDIndicatorDefinition) {
+                        if (indiDefinition.getLabel().equals(newLabel)) {
+                            UDIndicatorDefinition udi = (UDIndicatorDefinition) indiDefinition;
+                            udi = UDIUtils.createDefaultDrillDownList(udi);
+                            ElementWriterFactory.getInstance().createIndicatorDefinitionWriter().save(udi).isOk();
+                        }
+                    }
+                }
+            }
+        }
+
         // MOD klliu duplicate successfully, refresh the duplicate session
         DefinitionHandler.reload();
-
-        // update the udi model to new model
-        UpdateUDIIndicatorsWithNewModelTask task = new UpdateUDIIndicatorsWithNewModelTask();
-        task.execute();
 
         return duplicatedFile;
     }
