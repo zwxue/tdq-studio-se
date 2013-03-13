@@ -39,6 +39,7 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.talend.commons.bridge.ReponsitoryContextBridge;
 import org.talend.commons.emf.EMFUtil;
 import org.talend.commons.emf.FactoriesUtil;
+import org.talend.commons.exception.PersistenceException;
 import org.talend.commons.utils.io.FilesUtils;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.database.JavaSqlFactory;
@@ -311,9 +312,16 @@ public class FileSystemImportWriter implements IImportWriter {
 
                 if (property != null) {
                     User user = ReponsitoryContextBridge.getUser();
-                    if (user != null && property.getAuthor() == null) {
+                    // MOD 20130313 TDQ-6780 when import local project into remote one, some problems,yyin
+                    if (user != null && (property.getAuthor() == null || property.getAuthor().getCreationDate() == null)) {
                         property.setAuthor(user);
-                        EMFSharedResources.getInstance().saveResource(property.eResource());
+                        try {
+                            ProxyRepositoryFactory.getInstance().save(property.getItem());
+                        } catch (PersistenceException e) {
+                            log.error("Loading property error: " + desIFile.getFullPath().toString());//$NON-NLS-1$
+                            e.printStackTrace();
+                        }
+                        // EMFSharedResources.getInstance().saveResource(property.eResource());
                     }
 
                     if (log.isDebugEnabled()) {
@@ -361,11 +369,12 @@ public class FileSystemImportWriter implements IImportWriter {
                         if (record.isValid()) {
                             log.info("Importing " + record.getFile().getAbsolutePath());//$NON-NLS-1$
 
-                            // Delete the conflict node before import.
-                            IRepositoryViewObject object = record.getConflictObject();
-                            if (object != null) {
-                                ProxyRepositoryFactory.getInstance().deleteObjectPhysical(object);
-                            }
+                            // MOD 20130313 TDQ-6780 when import local project into remote one, some problems,yyin
+                            // remove the : Delete the conflict node before import.
+                            // IRepositoryViewObject object = record.getConflictObject();
+                            // if (object != null) {
+                            // ProxyRepositoryFactory.getInstance().deleteObjectPhysical(object);
+                            // }
 
                             for (IPath resPath : toImportMap.keySet()) {
                                 IPath desPath = toImportMap.get(resPath);
