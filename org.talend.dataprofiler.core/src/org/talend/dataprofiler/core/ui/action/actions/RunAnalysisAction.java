@@ -219,8 +219,10 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
         // MOD klliu bug 4584 Filtering the file connection when checking connection is successful,before real running
         // analysis.
         ClassLoader contextClassLoader = Thread.currentThread().getContextClassLoader();
-
-        IMetadataConnection metadataConnection = ConvertionHelper.convert(analysisDataProvider);
+        // MOD 20130313 TDQ-6524 avoid popup context select dialog when running analysis,yyin
+        IMetadataConnection metadataConnection = ConvertionHelper.convert(analysisDataProvider, false,
+                analysisDataProvider.getContextName());
+        // ~
         boolean isHiveEmbedded = ConnectionUtils.isHiveEmbedded(metadataConnection);
         if (isHiveEmbedded) {
             ManagerConnection managerConnection = new ManagerConnection();
