@@ -330,7 +330,9 @@ public final class ConnectionUtils {
         if (!Platform.isRunning()) {
             return false;
         }
-        IMetadataConnection metadataConnection = ConvertionHelper.convert(analysisDataProvider);
+        // MOD 20130313 TDQ-6524 avoid popup context select dialog when running analysis,yyin
+        IMetadataConnection metadataConnection = ConvertionHelper.convert(analysisDataProvider, false,
+                analysisDataProvider.getContextName());
         return isHiveEmbedded(metadataConnection);
     }
 
