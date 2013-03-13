@@ -101,6 +101,8 @@ public final class DefinitionHandler {
 
     private EList<IndicatorCategory> indicatorCategories;
 
+    private static String PROJECT_PATH = System.getProperty("talend.project.path"); //$NON-NLS-1$
+
     /**
      * plugin relative path to the default file.
      */
@@ -128,7 +130,37 @@ public final class DefinitionHandler {
     private void initializeDefinitions() {
         this.indicatorDefinitions.clear();
         this.indicatorCategories = loadDefinitionsFromFile().getCategories();
-        indicatorDefinitions.addAll((List<IndicatorDefinition>) IndicatorResourceFileHelper.getInstance().getAllElement());
+        if (Platform.isRunning()) {
+            indicatorDefinitions.addAll((List<IndicatorDefinition>) IndicatorResourceFileHelper.getInstance().getAllElement());
+        } else {// reporting engine is running as library
+            indicatorDefinitions.addAll((List<IndicatorDefinition>) EmfFileResourceUtil.getInstance().getAllElement(
+                    getTdqLibPath() + "/Indicators")); //$NON-NLS-1$
+        }
+    }
+
+    private String getTdqLibPath() {
+        String tdqLibPath = null;
+        String projectName = null;
+
+        int pos = PROJECT_PATH.lastIndexOf('/');
+        if (pos > 0 && pos < PROJECT_PATH.length() + 1) {
+            projectName = PROJECT_PATH.substring(pos + 1);
+            File f = new File("items/"); //$NON-NLS-1$
+            if (f.exists()) { // running exported job
+                f = new java.io.File(PROJECT_PATH + "/TDQ_Data Profiling/Reports/"); //$NON-NLS-1$
+                if (!f.exists()) {
+                    System.err.println("[INFO] This error may appear if you did not export the dependencies of the job."); //$NON-NLS-1$
+                }
+                tdqLibPath = "items/" + projectName.toLowerCase() + "/TDQ_Libraries/"; //$NON-NLS-1$ //$NON-NLS-2$
+            } else { // running job in studio
+                // same reason for calling toUpperCase()
+                tdqLibPath = PROJECT_PATH + "/TDQ_Libraries/"; //$NON-NLS-1$ //$NON-NLS-2$
+            }
+        } else {
+            System.err.println("[ERROR]"); //$NON-NLS-1$
+        }
+        System.err.println("tdqLibPath: " + tdqLibPath); //$NON-NLS-1$
+        return tdqLibPath;
     }
 
     /**
@@ -219,10 +251,7 @@ public final class DefinitionHandler {
         } else { // call reporting engine as java library
 
             try { // try to load from a local file
-                  // IPath definitionPath = Path.fromOSString("TDQEEDEMOJAVA/TDQ_Libraries/").append(FILENAME);
-                IPath definitionPath = Path.fromOSString(
-                        "/misc/repo/tdq/org.talend.dataquality.reporting.engine.test/TDQEEDEMOJAVA/TDQ_Libraries/").append( //$NON-NLS-1$
-                        FILENAME);
+                IPath definitionPath = Path.fromOSString(getTdqLibPath()).append(FILENAME);
                 definitionsFile = EmfFileResourceUtil.getInstance().getFileResource(definitionPath.toString());
             } catch (RuntimeException e) {
                 if (log.isDebugEnabled()) {
