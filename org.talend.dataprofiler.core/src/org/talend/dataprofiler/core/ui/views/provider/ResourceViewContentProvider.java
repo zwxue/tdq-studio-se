@@ -15,6 +15,7 @@ package org.talend.dataprofiler.core.ui.views.provider;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspaceRoot;
@@ -57,8 +58,6 @@ import org.talend.repository.model.IRepositoryNode.ENodeType;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.resource.EResourceConstant;
 import org.talend.resource.ResourceManager;
-
-import common.Logger;
 
 /**
  * DOC klliu Reconstructure the ResourceViewContentProvider for using DI's API.

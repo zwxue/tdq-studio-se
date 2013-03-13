@@ -15,8 +15,8 @@ package org.talend.dataprofiler.core.recycle.impl;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.talend.commons.exception.ExceptionHandler;
 import org.talend.commons.exception.PersistenceException;
-import org.talend.commons.ui.runtime.exception.ExceptionHandler;
 import org.talend.core.model.general.Project;
 import org.talend.core.model.properties.FolderItem;
 import org.talend.core.model.properties.FolderType;
@@ -137,8 +137,7 @@ public final class RecycleBinManager {
                 if (item.getProperty().getVersion()
                         .equals(ProxyRepositoryFactory.getInstance().getLastVersion(item.getProperty().getId()).getVersion())) {
                     DQRepositoryNode repNode = new DQRepositoryNode(new RepositoryViewObject(item.getProperty()),
-                            currentParentNode,
-                            ENodeType.REPOSITORY_ELEMENT);
+                            currentParentNode, ENodeType.REPOSITORY_ELEMENT);
                     repNode.setProperties(EProperties.CONTENT_TYPE, itemType);
                     repNode.setProperties(EProperties.LABEL, item.getProperty().getLabel());
                     currentParentNode.getChildren().add(repNode);

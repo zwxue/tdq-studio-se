@@ -45,6 +45,7 @@ import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.part.FileEditorInput;
+import org.talend.commons.exception.ExceptionHandler;
 import org.talend.core.GlobalServiceRegister;
 import org.talend.core.ITDQRepositoryService;
 import org.talend.core.PluginChecker;
@@ -63,7 +64,6 @@ import org.talend.cwm.db.connection.MdmWebserviceConnection;
 import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.dataprofiler.core.PluginConstant;
-import org.talend.dataprofiler.core.exception.ExceptionHandler;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.dialog.message.DeleteModelElementConfirmDialog;
 import org.talend.dataprofiler.core.ui.editor.AbstractMetadataFormPage;
@@ -166,18 +166,19 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
             @Override
             public void widgetSelected(SelectionEvent e) {
                 try {
-                ReturnCode code = checkDBConnection();
-                if (code.isOk()) {
-                    MessageDialog.openInformation(
-                            null,
-                            DefaultMessagesImpl.getString("ConnectionInfoPage.checkConnections"), DefaultMessagesImpl.getString("ConnectionInfoPage.checkConnectionSuccessful")); //$NON-NLS-1$ //$NON-NLS-2$
-                } else {
+                    ReturnCode code = checkDBConnection();
+                    if (code.isOk()) {
+                        MessageDialog.openInformation(
+                                null,
+                                DefaultMessagesImpl.getString("ConnectionInfoPage.checkConnections"), DefaultMessagesImpl.getString("ConnectionInfoPage.checkConnectionSuccessful")); //$NON-NLS-1$ //$NON-NLS-2$
+                    } else {
+                        MessageDialog.openWarning(
+                                null,
+                                DefaultMessagesImpl.getString("ConnectionInfoPage.checkConnection"), DefaultMessagesImpl.getString("ConnectionInfoPage.CheckConnectionFailure", code.getMessage())); //$NON-NLS-1$ //$NON-NLS-2$ 
+                    }
+                } catch (Exception e2) {
                     MessageDialog.openWarning(
                             null,
-                            DefaultMessagesImpl.getString("ConnectionInfoPage.checkConnection"), DefaultMessagesImpl.getString("ConnectionInfoPage.CheckConnectionFailure", code.getMessage())); //$NON-NLS-1$ //$NON-NLS-2$ 
-                }
-                } catch (Exception e2) {
-                    MessageDialog.openWarning(null,
                             DefaultMessagesImpl.getString("ConnectionInfoPage.checkConnection"), DefaultMessagesImpl.getString("ConnectionInfoPage.CheckConnectionFailure", e2.getMessage())); //$NON-NLS-1$ //$NON-NLS-2$ 
                 }
             }
@@ -409,7 +410,6 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
 
         super.doSave(monitor);
 
-
         try {
 
             // MOD sizhaoliu TDQ-6296 open an analysis after renaming the connection on which it depends, connection
@@ -425,7 +425,6 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
             this.isDirty = false;
         } catch (DataprofilerCoreException e) {
             ExceptionHandler.process(e, Level.ERROR);
-            log.error(e, e);
         }
     }
 

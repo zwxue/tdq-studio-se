@@ -17,10 +17,10 @@ import java.util.List;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.PartInitException;
+import org.talend.commons.exception.ExceptionHandler;
 import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.properties.DatabaseConnectionItem;
 import org.talend.core.model.repository.IRepositoryViewObject;
-import org.talend.dataprofiler.core.exception.MessageBoxExceptionHandler;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.editor.CommonFormEditor;
 import org.talend.dataprofiler.core.ui.utils.WorkbenchUtils;
@@ -46,7 +46,7 @@ public class ConnectionEditor extends CommonFormEditor {
         try {
             addPage(masterPage);
         } catch (PartInitException e) {
-            MessageBoxExceptionHandler.process(e);
+            ExceptionHandler.process(e);
         }
         setPartName(masterPage.getIntactElemenetName());
     }

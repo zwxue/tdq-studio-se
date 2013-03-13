@@ -26,7 +26,7 @@ import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.jfree.chart.ChartMouseEvent;
 import org.jfree.chart.ChartMouseListener;
 import org.jfree.experimental.chart.swt.ChartComposite;
-import org.talend.dataprofiler.core.exception.ExceptionHandler;
+import org.talend.commons.exception.ExceptionHandler;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.model.ModelElementIndicator;
 import org.talend.dataprofiler.core.ui.chart.ChartUtils;

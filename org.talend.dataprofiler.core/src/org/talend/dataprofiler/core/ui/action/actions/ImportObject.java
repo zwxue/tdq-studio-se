@@ -19,9 +19,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.talend.commons.exception.ExceptionHandler;
 import org.talend.commons.utils.WorkspaceUtils;
 import org.talend.commons.utils.io.FilesUtils;
-import org.talend.dataprofiler.core.exception.ExceptionHandler;
 import org.talend.dataprofiler.ecos.jobs.ComponentInstaller;
 import org.talend.dataprofiler.ecos.model.IEcosComponent;
 import org.talend.resource.ResourceManager;

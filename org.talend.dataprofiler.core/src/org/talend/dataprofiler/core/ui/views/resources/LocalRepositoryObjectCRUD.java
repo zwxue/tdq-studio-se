@@ -26,7 +26,6 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -454,9 +453,9 @@ public class LocalRepositoryObjectCRUD implements IRepositoryObjectCRUD {
                 }
             }
         };
-        ISchedulingRule schedulingRule = workspace.getRoot();
+        // ISchedulingRule schedulingRule = workspace.getRoot();
         try {
-            workspace.run(operation, schedulingRule, IWorkspace.AVOID_UPDATE, new NullProgressMonitor());
+            workspace.run(operation, new NullProgressMonitor());
         } catch (CoreException e) {
             log.error(e, e);
         }

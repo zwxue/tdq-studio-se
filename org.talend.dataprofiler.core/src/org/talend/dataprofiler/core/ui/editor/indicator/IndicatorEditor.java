@@ -18,7 +18,7 @@ import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.FileEditorInput;
-import org.talend.dataprofiler.core.exception.ExceptionHandler;
+import org.talend.commons.exception.ExceptionHandler;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.action.actions.DefaultSaveAction;
 import org.talend.dataprofiler.core.ui.editor.CommonFormEditor;

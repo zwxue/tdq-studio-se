@@ -50,6 +50,7 @@ import org.eclipse.ui.contexts.IContextService;
 import org.eclipse.ui.handlers.IHandlerService;
 import org.eclipse.ui.part.ViewPart;
 import org.talend.commons.emf.EMFUtil;
+import org.talend.commons.ui.runtime.exception.MessageBoxExceptionHandler;
 import org.talend.commons.utils.WorkspaceUtils;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.connection.impl.DatabaseConnectionImpl;
@@ -61,7 +62,6 @@ import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
-import org.talend.dataprofiler.core.exception.MessageBoxExceptionHandler;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.pattern.PatternLanguageType;
 import org.talend.dataprofiler.core.pattern.actions.CreatePatternAction;
@@ -501,7 +501,7 @@ public class PatternTestView extends ViewPart {
                         // bug TDQ-2066-->TDQ-3594 for mysql
                         String exceptionName = exception.getClass().getName();
                         Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
-                        MessageBoxExceptionHandler.process(exception, shell, exceptionName);
+                        MessageBoxExceptionHandler.process(exception, shell);
                         // ~
                         emoticonLabel.setImage(null);
                         return;

@@ -21,8 +21,9 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IExtensionRegistry;
 import org.eclipse.core.runtime.Platform;
-import org.talend.dataprofiler.core.exception.ExceptionHandler;
+import org.talend.commons.exception.ExceptionHandler;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
+
 /**
  * A global service register provides the service registration and acquirement. <br/>
  * 
@@ -38,6 +39,7 @@ public class GlobalServiceRegister {
     private static IConfigurationElement[] bandingConfigurationElements;
 
     private static IConfigurationElement[] svnRepositoryElements;
+
     public static GlobalServiceRegister getDefault() {
         return instance;
     }
@@ -45,7 +47,9 @@ public class GlobalServiceRegister {
     private Map<Class<?>, IService> services = new HashMap<Class<?>, IService>();
 
     private Map<Class<?>, AbstractSvnRepositoryService> svnRepositoryServices = new HashMap<Class<?>, AbstractSvnRepositoryService>();
+
     private Map<Class<?>, org.talend.core.ui.branding.IBrandingService> brandingServices = new HashMap<Class<?>, org.talend.core.ui.branding.IBrandingService>();
+
     private Map<Class<?>, List<IService>> serviceGroups = new HashMap<Class<?>, List<IService>>();
 
     static {
@@ -94,6 +98,7 @@ public class GlobalServiceRegister {
         }
         return true;
     }
+
     /**
      * Gets the specific IService.overide klliu 2010-09-15 bug 15520.
      * 
@@ -149,6 +154,7 @@ public class GlobalServiceRegister {
         }
         return null;
     }
+
     /**
      * Gets the specific IService group.
      * 
@@ -214,6 +220,7 @@ public class GlobalServiceRegister {
         }
         return null;
     }
+
     /**
      * Finds the special service group from the list.
      * 
