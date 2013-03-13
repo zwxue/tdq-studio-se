@@ -12,7 +12,9 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.views.provider;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
@@ -96,6 +98,8 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider i
 
     private static Font italicFont;
 
+    private static Map<ERepositoryObjectType, Image[]> lockImageMap = new HashMap<ERepositoryObjectType, Image[]>();
+
     public DQRepositoryViewLabelProvider() {
         super(MNComposedAdapterFactory.getAdapterFactory());
 
@@ -111,6 +115,8 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider i
         }
     }
 
+    @SuppressWarnings("null")
+    @Override
     public Image getImage(Object element) {
         Image image = super.getImage(element);
 
@@ -124,19 +130,20 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider i
             if (element instanceof RecycleBinRepNode) {
                 image = ImageLib.getImage(ImageLib.RECYCLEBIN_EMPTY);
             } else if (type.equals(ENodeType.SYSTEM_FOLDER)) {
-                if (viewObject.getLabel().equals(EResourceConstant.DATA_PROFILING.getName())) {
+                String label = viewObject.getLabel();
+                if (label.equals(EResourceConstant.DATA_PROFILING.getName())) {
                     image = ImageLib.getImage(ImageLib.DATA_PROFILING);
-                } else if (viewObject.getLabel().equals(EResourceConstant.METADATA.getName())) {
+                } else if (label.equals(EResourceConstant.METADATA.getName())) {
                     image = ImageLib.getImage(ImageLib.METADATA);
                 } else if (node instanceof DBConnectionFolderRepNode) {
                     image = ImageLib.getImage(ImageLib.CONNECTION);
                 } else if (node instanceof MDMConnectionFolderRepNode) {
                     image = ImageLib.getImage(ImageLib.MDM_CONNECTION);
-                } else if (viewObject.getLabel().equals(EResourceConstant.FILEDELIMITED.getName())) {
+                } else if (label.equals(EResourceConstant.FILEDELIMITED.getName())) {
                     image = ImageLib.getImage(ImageLib.FILE_DELIMITED);
-                } else if (viewObject.getLabel().equals(EResourceConstant.LIBRARIES.getName())) {
+                } else if (label.equals(EResourceConstant.LIBRARIES.getName())) {
                     image = ImageLib.getImage(ImageLib.LIBRARIES);
-                } else if (viewObject.getLabel().equals(EResourceConstant.EXCHANGE.getName())) {
+                } else if (label.equals(EResourceConstant.EXCHANGE.getName())) {
                     image = ImageLib.getImage(ImageLib.EXCHANGE);
                 } else {
                     image = ImageLib.getImage(ImageLib.FOLDERNODE_IMAGE);
@@ -149,7 +156,7 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider i
                         image = ImageLib.createErrorIcon(ImageLib.TD_DATAPROVIDER).createImage();
                     } else if (isInvalidJDBCConnection(node)) {
                         image = ImageLib.createInvalidIcon(ImageLib.TD_DATAPROVIDER).createImage();
-                    }else{
+                    } else {
                         image = ImageLib.getImage(ImageLib.TD_DATAPROVIDER);
                     }
                 } else if (node instanceof MDMConnectionRepNode) {
@@ -185,11 +192,24 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider i
                 // exchange folder did not contain viewObject.
                 if (viewObject != null) {
                     // MOD yyi 2011-04-07 19696: "Lock element"
-                    if (ERepositoryStatus.LOCK_BY_USER == ProxyRepositoryFactory.getInstance().getStatus(viewObject)) {
-                        image = ImageLib.createLockedIcon(ImageDescriptor.createFromImage(image)).createImage();
-                    } else if (ERepositoryStatus.LOCK_BY_OTHER == ProxyRepositoryFactory.getInstance().getStatus(viewObject)) {
-                        image = ImageLib.createLockedByOtherIcon(ImageDescriptor.createFromImage(image)).createImage();
+                    ERepositoryStatus status = ProxyRepositoryFactory.getInstance().getStatus(viewObject);
+                    if (ERepositoryStatus.DEFAULT != status) {
+                        ERepositoryObjectType repositoryObjectType = viewObject.getRepositoryObjectType();
+                        if (lockImageMap.get(repositoryObjectType) == null) {
+                            ImageDescriptor imageDescriptor = ImageDescriptor.createFromImage(image);
+                            Image[] imageTemp = new Image[2];
+                            imageTemp[0] = ImageLib.createLockedIcon(imageDescriptor).createImage();
+                            imageTemp[1] = ImageLib.createLockedByOtherIcon(imageDescriptor).createImage();
+                            lockImageMap.put(repositoryObjectType, imageTemp);
+                        }
+
+                        if (ERepositoryStatus.LOCK_BY_USER == status) {
+                            image = lockImageMap.get(repositoryObjectType)[0];
+                        } else if (ERepositoryStatus.LOCK_BY_OTHER == status) {
+                            image = lockImageMap.get(repositoryObjectType)[1];
+                        }
                     }
+
                 }
             } else if (type.equals(ENodeType.TDQ_REPOSITORY_ELEMENT)) {
                 if (node instanceof DBCatalogRepNode) {
@@ -233,6 +253,7 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider i
         return image;
     }
 
+    @Override
     public String getText(Object element) {
         if (element != null && element instanceof IRepositoryNode) {
             IRepositoryNode node = (IRepositoryNode) element;
@@ -281,7 +302,7 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider i
             } else if (node instanceof MDMXmlElementRepNode) {
                 MDMXmlElementRepNode mdmColumnRepNode = (MDMXmlElementRepNode) node;
                 String nodeDataType = mdmColumnRepNode.getNodeDataType();
-                if (!PluginConstant.EMPTY_STRING.equals(nodeDataType)) { //$NON-NLS-1$
+                if (!PluginConstant.EMPTY_STRING.equals(nodeDataType)) {
                     return mdmColumnRepNode.getTdXmlElementType().getName() + LEFT + nodeDataType + RIGHT;
                 }
                 return mdmColumnRepNode.getTdXmlElementType().getName();
@@ -339,7 +360,7 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider i
             return node.getObject() == null ? PluginConstant.EMPTY_STRING : label;
         }
         String text = super.getText(element);
-        return PluginConstant.EMPTY_STRING.equals(text) ? DefaultMessagesImpl.getString("DQRepositoryViewLabelProvider.noName") : text; //$NON-NLS-1$ //$NON-NLS-2$
+        return PluginConstant.EMPTY_STRING.equals(text) ? DefaultMessagesImpl.getString("DQRepositoryViewLabelProvider.noName") : text; //$NON-NLS-1$ 
     }
 
     /**
@@ -399,9 +420,10 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider i
 
         return false;
     }
-    
+
     /**
      * ADD qiongli TDQ-5801 if it is a invalid jdbc connection.
+     * 
      * @param repNode
      * @return
      */
@@ -411,10 +433,11 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider i
             DatabaseConnectionItem connectionItem = (DatabaseConnectionItem) property.getItem();
             if (connectionItem != null) {
                 DatabaseConnection connection = (DatabaseConnection) connectionItem.getConnection();
-                String databaseType = ((DatabaseConnection) connection).getDatabaseType();
+                String databaseType = connection.getDatabaseType();
                 if (databaseType.equalsIgnoreCase(SupportDBUrlType.GENERICJDBCDEFAULTURL.getDBKey())
-                        && ((connection.getDriverJarPath() == null) || (connection.getDriverJarPath()).trim().equals(PluginConstant.EMPTY_STRING))) {
-                    
+                        && ((connection.getDriverJarPath() == null) || (connection.getDriverJarPath()).trim().equals(
+                                PluginConstant.EMPTY_STRING))) {
+
                     return true;
                 }
             }

@@ -14,7 +14,9 @@ package org.talend.dataprofiler.core.ui.utils.pagination;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.Viewer;
@@ -29,7 +31,6 @@ import org.eclipse.swt.layout.FormData;
 import org.eclipse.swt.layout.FormLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.PlatformUI;
@@ -75,12 +76,14 @@ public class UIPagination {
 
     private Viewer bandingViewer;
 
-
     public UIPagination(FormToolkit toolkit, Composite composite) {
         this.toolkit = toolkit;
         this.composite = composite;
         currentPage = 0;
         totalPages = 0;
+        if (navImageMap.size() == 0) {
+            initImageMap();
+        }
     }
 
     public UIPagination(FormToolkit toolkit, Composite composite, Composite chartComposite) {
@@ -135,6 +138,7 @@ public class UIPagination {
     public Composite getChartComposite() {
         return chartComposite;
     }
+
     public void updatePageInfoLabel() {
         pageInfoLabel.setText(currentPage + 1 + "/" + totalPages); //$NON-NLS-1$
     }
@@ -391,19 +395,13 @@ public class UIPagination {
         goImgHypLnk.setEnabled(true);
     }
 
-
     private void setNavImgState(ImageHyperlink imgHypLnk, Image img, Boolean isEnabled) {
         imgHypLnk.setEnabled(isEnabled);
-        imgHypLnk.setImage(getImage(null, img, isEnabled));
+        imgHypLnk.setImage(getImage(img, isEnabled));
     }
 
-    public static Image getImage(Display disp, Image img, Boolean isEnabled) {
-        int imgStatus = SWT.IMAGE_DISABLE;
-        if (isEnabled) {
-            imgStatus = SWT.IMAGE_COPY;
-        }
-        Image disabledImg = new Image(disp, img, imgStatus);
-        return disabledImg;
+    private Image getImage(Image img, Boolean isEnabled) {
+        return (Image) ((HashMap<?, ?>) navImageMap.get(img)).get(isEnabled);
     }
 
     private static final Image IMG_LNK_NAV_LAST = ImageLib.getImage(ImageLib.ICON_PAGE_LAST_LNK);
@@ -413,6 +411,35 @@ public class UIPagination {
     private static final Image IMG_LNK_NAV_PREV = ImageLib.getImage(ImageLib.ICON_PAGE_PREV_LNK);
 
     private static final Image IMG_LNK_NAV_FIRST = ImageLib.getImage(ImageLib.ICON_PAGE_FIRST_LNK);
+
+    private static final Map<Image, Map<Boolean, Image>> navImageMap = new HashMap<Image, Map<Boolean, Image>>();
+
+    private void initImageMap() {
+        navImageMap.clear();
+        // IMG_LNK_NAV_LAST
+        Map<Boolean, Image> map = new HashMap<Boolean, Image>();
+        map.put(true, new Image(null, IMG_LNK_NAV_LAST, SWT.IMAGE_COPY));
+        map.put(false, new Image(null, IMG_LNK_NAV_LAST, SWT.IMAGE_DISABLE));
+        navImageMap.put(IMG_LNK_NAV_LAST, map);
+
+        // IMG_LNK_NAV_NEXT
+        Map<Boolean, Image> map2 = new HashMap<Boolean, Image>();
+        map2.put(true, new Image(null, IMG_LNK_NAV_NEXT, SWT.IMAGE_COPY));
+        map2.put(false, new Image(null, IMG_LNK_NAV_NEXT, SWT.IMAGE_DISABLE));
+        navImageMap.put(IMG_LNK_NAV_NEXT, map2);
+
+        // IMG_LNK_NAV_PREV
+        Map<Boolean, Image> map3 = new HashMap<Boolean, Image>();
+        map3.put(true, new Image(null, IMG_LNK_NAV_PREV, SWT.IMAGE_COPY));
+        map3.put(false, new Image(null, IMG_LNK_NAV_PREV, SWT.IMAGE_DISABLE));
+        navImageMap.put(IMG_LNK_NAV_PREV, map3);
+
+        // IMG_LNK_NAV_FIRST
+        Map<Boolean, Image> map4 = new HashMap<Boolean, Image>();
+        map4.put(true, new Image(null, IMG_LNK_NAV_FIRST, SWT.IMAGE_COPY));
+        map4.put(false, new Image(null, IMG_LNK_NAV_FIRST, SWT.IMAGE_DISABLE));
+        navImageMap.put(IMG_LNK_NAV_FIRST, map4);
+    }
 
     /**
      * Sets the bandingViewer.

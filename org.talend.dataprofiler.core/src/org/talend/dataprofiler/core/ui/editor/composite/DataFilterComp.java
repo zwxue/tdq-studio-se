@@ -12,6 +12,8 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.editor.composite;
 
+import java.beans.PropertyChangeListener;
+
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
@@ -36,6 +38,8 @@ public class DataFilterComp extends AbstractPagePart {
 
     private Text dataFilterText;
 
+    private Font boldFont;
+
     public DataFilterComp(Composite parent, String stringDataFilter) {
         this.stringDataFilter = stringDataFilter;
         this.createContent(parent);
@@ -46,7 +50,7 @@ public class DataFilterComp extends AbstractPagePart {
         // MOD hcheng,2009-06-22,for 7803
         Label label = new Label(parent, SWT.NULL);
         label.setText("Where"); //$NON-NLS-1$
-        Font boldFont = new Font(Display.getDefault(), "Arial", 10, SWT.BOLD); //$NON-NLS-1$
+        boldFont = new Font(Display.getDefault(), "Arial", 10, SWT.BOLD); //$NON-NLS-1$
         label.setFont(boldFont);
         GridData gd = new GridData();
         gd.verticalAlignment = GridData.BEGINNING;
@@ -65,6 +69,20 @@ public class DataFilterComp extends AbstractPagePart {
             }
 
         });
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataprofiler.core.ui.editor.composite.AbstractPagePart#removePropertyChangeListener(java.beans.
+     * PropertyChangeListener)
+     */
+    @Override
+    public void removePropertyChangeListener(PropertyChangeListener listener) {
+        if (boldFont != null) {
+            boldFont.dispose();
+        }
+        super.removePropertyChangeListener(listener);
     }
 
     // TDQ Guodong bu 2011-2-25, bug 19107

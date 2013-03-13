@@ -51,6 +51,8 @@ public class IndicatorSelectGrid extends Grid {
 
     private IndicatorSelectDialog2 _dialog;
 
+    static final Font font = new Font(Display.getCurrent(), "tahoma", 10, SWT.NONE); //$NON-NLS-1$
+
     static final Color gray = new Color(Display.getCurrent(), 240, 240, 240);
 
     static final Color yellow = new Color(Display.getCurrent(), 255, 255, 40);
@@ -103,14 +105,14 @@ public class IndicatorSelectGrid extends Grid {
         GridColumn indicatorLabelColumn = new GridColumn(this, SWT.NONE);
         indicatorLabelColumn.setTree(true);
         indicatorLabelColumn.setWidth(200);
-        indicatorLabelColumn.setText("Indicators");
+        indicatorLabelColumn.setText("Indicators"); //$NON-NLS-1$
         indicatorLabelColumn.setVisible(false); // hide the label column, but it is actually visible in the fixed column
 
         // select all column
         GridColumn rowSelectCol = new GridColumn(this, SWT.CHECK);
         rowSelectCol.setHeaderRenderer(new TdColumnHeaderRenderer());
         rowSelectCol.setCellRenderer(new TdCellRenderer());
-        rowSelectCol.setText("Select All");
+        rowSelectCol.setText("Select All"); //$NON-NLS-1$
         rowSelectCol.setWidth(COLUMN_WIDTH);
         rowSelectCol.setWordWrap(true);
         rowSelectCol.setCellSelectionEnabled(true);
@@ -129,7 +131,7 @@ public class IndicatorSelectGrid extends Grid {
             newCol.setData(_modelElementIndicator);
             newCol.setMoveable(true);
             newCol.setResizeable(false);
-            newCol.setHeaderFont(new Font(getDisplay(), "tahoma", 10, SWT.NONE));
+            newCol.setHeaderFont(font);
             IRepositoryNode repNode = _modelElementIndicator.getModelElementRepositoryNode();
             if (repNode instanceof DBColumnRepNode && ((DBColumnRepNode) repNode).isKey()) {
                 newCol.setImage(pkImage);
@@ -174,7 +176,7 @@ public class IndicatorSelectGrid extends Grid {
         setFocusRenderer(null);
 
         for (GridItem gridItem : getItems()) {
-            gridItem.setBackground(0, IndicatorSelectGrid.gray);
+            gridItem.setBackground(0, gray);
         }
     }
 
@@ -448,7 +450,7 @@ public class IndicatorSelectGrid extends Grid {
                         item.setBackground(j, getDisplay().getSystemColor(SWT.COLOR_LIST_BACKGROUND));
                     }
                 }
-                item.setBackground(0, IndicatorSelectGrid.gray);
+                item.setBackground(0, gray);
                 item.setBackground(1, null);
             }
 
