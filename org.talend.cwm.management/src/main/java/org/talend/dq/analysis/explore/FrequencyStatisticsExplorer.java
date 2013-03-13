@@ -33,6 +33,7 @@ import org.talend.dq.dbms.DbmsLanguage;
 import org.talend.dq.dbms.GenericSQLHandler;
 import org.talend.dq.dbms.SybaseASEDbmsLanguage;
 import org.talend.utils.sql.Java2SqlType;
+import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
  * DOC Administrator class global comment. Detailled comment
@@ -122,11 +123,15 @@ public class FrequencyStatisticsExplorer extends DataExplorer {
             sql = sql.replace(GenericSQLHandler.WHERE_CLAUSE, PluginConstant.EMPTY_STRING);
             sql = sql.replace(GenericSQLHandler.AND_WHERE_CLAUSE, PluginConstant.EMPTY_STRING);
         }
-        String tableName = getFullyQualifiedTableName(this.indicator.getAnalyzedElement());
+        ModelElement analyzedElement = this.indicator.getAnalyzedElement();
+        String tableName = getFullyQualifiedTableName(analyzedElement);
         sql = sql.replace(GenericSQLHandler.TABLE_NAME, tableName);
-        sql = sql.replace(GenericSQLHandler.COLUMN_NAMES, this.indicator.getAnalyzedElement().getName());
+        sql = sql.replace(GenericSQLHandler.COLUMN_NAMES, analyzedElement.getName());
         if (sql.indexOf(GenericSQLHandler.UDI_INDICATOR_VALUE) != -1) {
             sql = sql.replace(GenericSQLHandler.UDI_INDICATOR_VALUE, "'" + entity.getKey() + "'"); //$NON-NLS-1$ //$NON-NLS-2$
+        }
+        if (sql.indexOf(GenericSQLHandler.GROUP_BY_ALIAS) != -1) {
+            sql = sql.replace(GenericSQLHandler.GROUP_BY_ALIAS, "'" + analyzedElement.getName() + "'"); //$NON-NLS-1$ //$NON-NLS-2$
         }
         return sql;
     }

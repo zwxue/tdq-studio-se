@@ -27,6 +27,7 @@ import org.talend.dataquality.indicators.definition.userdefine.UDIndicatorDefini
 import org.talend.dq.dbms.DbmsLanguage;
 import org.talend.dq.dbms.GenericSQLHandler;
 import orgomg.cwm.objectmodel.core.Expression;
+import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
  * @author scorreia
@@ -184,8 +185,12 @@ public class PatternExplorer extends DataExplorer {
             sql = sql.replace(GenericSQLHandler.WHERE_CLAUSE, PluginConstant.EMPTY_STRING);
             sql = sql.replace(GenericSQLHandler.AND_WHERE_CLAUSE, PluginConstant.EMPTY_STRING);
         }
-        String tableName = getFullyQualifiedTableName(this.indicator.getAnalyzedElement());
-        sql = dbmsLanguage.fillGenericQueryWithColumnsAndTable(sql, indicator.getAnalyzedElement().getName(), tableName);
+        ModelElement analyzedElement = indicator.getAnalyzedElement();
+        String tableName = getFullyQualifiedTableName(analyzedElement);
+        sql = dbmsLanguage.fillGenericQueryWithColumnsAndTable(sql, analyzedElement.getName(), tableName);
+        if (sql.indexOf(GenericSQLHandler.GROUP_BY_ALIAS) != -1) {
+            sql = sql.replace(GenericSQLHandler.GROUP_BY_ALIAS, "'" + analyzedElement.getName() + "'"); //$NON-NLS-1$ //$NON-NLS-2$
+        }
         return sql;
     }
 
