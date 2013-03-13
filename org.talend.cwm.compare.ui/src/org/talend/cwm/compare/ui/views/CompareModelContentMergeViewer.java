@@ -475,11 +475,14 @@ public class CompareModelContentMergeViewer extends ModelContentMergeViewer {
             // currently selected element.
             if (!leftToRight && diffItemsCount > 0) {
                 // MOD yyi 2011-05-16 21512:need to reload the db connection element
+                // MOD 20130311 TDQ-6999: pass a text for compare special, then no popup dialog from compare yyin
                 if (selectedOjbect instanceof RepositoryViewObject) {
-                    new ReloadDatabaseAction(((RepositoryViewObject) selectedOjbect).getRepositoryNode(), null).run();
+                    new ReloadDatabaseAction(((RepositoryViewObject) selectedOjbect).getRepositoryNode(),
+                            Messages.getString("CompareModelContentMergeViewer.NoNeedToPopupReload")).run();
                 } else {
                     // MOD msjian 2011-5-20 20875:do copy for table list
-                    new ReloadDatabaseAction(selectedOjbect, null).run();
+                    new ReloadDatabaseAction(selectedOjbect,
+                            Messages.getString("CompareModelContentMergeViewer.NoNeedToPopupReload")).run();
                 }
             }
         } catch (Throwable e) {
