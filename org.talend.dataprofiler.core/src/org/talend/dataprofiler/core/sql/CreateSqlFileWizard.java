@@ -85,6 +85,7 @@ public class CreateSqlFileWizard extends Wizard {
         property.setVersion(VersionUtils.DEFAULT_VERSION);
         property.setStatusCode(PluginConstant.EMPTY_STRING);
         property.setLabel(WorkspaceUtils.normalize(parameter.getFileName()));
+        property.setDisplayName(parameter.getFileName());
 
         TDQSourceFileItem sourceFileItem = org.talend.dataquality.properties.PropertiesFactory.eINSTANCE
                 .createTDQSourceFileItem();

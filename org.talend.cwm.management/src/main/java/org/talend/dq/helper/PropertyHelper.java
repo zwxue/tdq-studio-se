@@ -574,9 +574,29 @@ public final class PropertyHelper {
             return false;
         }
         String normalizeName = WorkspaceUtils.normalize(newName);
+        String normalizeName_old = WorkspaceUtils.normalize(oldName);
+        if (normalizeName.equals(normalizeName_old)) {
+            return false;
+        }
+        if (getDuplicateObject(newName, objectType) != null) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * return the duplicate object property.
+     * 
+     * @param newName
+     * @param objectType
+     */
+    public static Property getDuplicateObject(String newName, ERepositoryObjectType objectType) {
+        Property prop = null;
+        String normalizeName = WorkspaceUtils.normalize(newName);
+        List<IRepositoryViewObject> existObjects;
         try {
-            List<IRepositoryViewObject> existObjects = ProxyRepositoryFactory.getInstance().getAll(objectType, true, false);
-            Property prop = null;
+            existObjects = ProxyRepositoryFactory.getInstance().getAll(objectType, true, false);
+
             if (existObjects != null) {
                 for (IRepositoryViewObject object : existObjects) {
                     if (object == null || object.getProperty() == null) {
@@ -584,14 +604,14 @@ public final class PropertyHelper {
                     }
                     prop = object.getProperty();
                     if (newName.equals(prop.getDisplayName()) || normalizeName.equals(prop.getLabel())) {
-                        return true;
+                        return prop;
                     }
                 }
             }
         } catch (PersistenceException e) {
             log.error(e, e);
         }
-        return false;
+        return prop;
     }
 
     /**

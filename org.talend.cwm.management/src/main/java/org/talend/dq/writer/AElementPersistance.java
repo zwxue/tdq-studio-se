@@ -439,7 +439,8 @@ public abstract class AElementPersistance {
         itemState.setDeleted(false);
         item.setState(itemState);
         if (item instanceof TDQItem) {
-            ((TDQItem) item).setFilename(element.getName() + "_" + MetadataHelper.getVersion(element) + PluginConstant.DOT_STRING //$NON-NLS-1$
+            ((TDQItem) item).setFilename(WorkspaceUtils.normalize(element.getName())
+                    + "_" + MetadataHelper.getVersion(element) + PluginConstant.DOT_STRING //$NON-NLS-1$
                     + this.getFileExtension());
         }
 
