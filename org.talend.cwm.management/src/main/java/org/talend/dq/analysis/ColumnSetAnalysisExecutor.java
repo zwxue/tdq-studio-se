@@ -80,7 +80,7 @@ public class ColumnSetAnalysisExecutor extends AnalysisExecutor {
      * java.lang.String)
      */
     @Override
-    protected boolean runAnalysis(Analysis analysis, String sqlStatement) {
+    protected ReturnCode evaluate(Analysis analysis, java.sql.Connection connection, String sqlStatement) {
         ColumnSetIndicatorEvaluator eval = new ColumnSetIndicatorEvaluator(analysis);
         eval.setMonitor(getMonitor());
         // --- add indicators
@@ -104,57 +104,24 @@ public class ColumnSetAnalysisExecutor extends AnalysisExecutor {
             }
         }
 
-        TypedReturnCode<java.sql.Connection> connection = null;
         // MOD yyi 2011-02-22 17871:delimitefile
         if (isMdm) {
             TypedReturnCode<MdmWebserviceConnection> mdmReturnObj = getMdmConnection(analysis);
             if (!mdmReturnObj.isOk()) {
                 log.error(mdmReturnObj.getMessage());
-                return false;
+                return new ReturnCode(mdmReturnObj.getMessage(), Boolean.FALSE);
             }
             eval.setMdmWebserviceConn(mdmReturnObj.getObject());
         } else if (!isDelimitedFile) {
-            if (POOLED_CONNECTION) {
-                // reset the connection pool before run this analysis
-                resetConnectionPool(analysis);
-                connection = getPooledConnection(analysis);
-            } else {
-                connection = getConnection(analysis);
-            }
-
-            if (!connection.isOk()) {
-                log.error(connection.getMessage());
-                this.errorMessage = connection.getMessage();
-                return false;
-            }
-
             // set it into the evaluator
-            eval.setConnection(connection.getObject());
+            eval.setConnection(connection);
             // use pooled connection
             eval.setPooledConnection(POOLED_CONNECTION);
-
         }
 
         // when to close connection
         boolean closeAtTheEnd = true;
-        ReturnCode rc = eval.evaluateIndicators(sqlStatement, closeAtTheEnd);
-
-        // MOD gdbu 2011-8-12 : file delimited connection is null
-        if (connection != null) {
-            if (POOLED_CONNECTION) {
-                // release the pooled connection
-                resetConnectionPool(analysis);
-            } else {
-                ConnectionUtils.closeConnection(connection.getObject());
-            }
-        }
-
-        if (!rc.isOk()) {
-            log.warn(rc.getMessage());
-            this.errorMessage = rc.getMessage();
-        }
-
-        return true;
+        return eval.evaluateIndicators(sqlStatement, closeAtTheEnd);
     }
 
     /*
@@ -214,6 +181,8 @@ public class ColumnSetAnalysisExecutor extends AnalysisExecutor {
             }
         }
 
+        // From here to the end of the method is as same as the part in ColumnAnalysisExecutor(line 153),
+        // so if you modify the code here, please also modify the same part.
         if (analysedElements == null || analysedElements.isEmpty()) {
             this.errorMessage = Messages.getString("ColumnAnalysisExecutor.CannotCreateSQLStatement",//$NON-NLS-1$
                     analysis.getName());

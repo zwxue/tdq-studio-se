@@ -17,6 +17,7 @@ import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dq.indicators.SchemaEvaluator;
+import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.resource.relational.Schema;
 
@@ -32,7 +33,7 @@ public class SchemaAnalysisExecutor extends AbstactSchemaAnalysisExecutor {
      * java.lang.String)
      */
     @Override
-    protected boolean runAnalysis(Analysis analysis, String sqlStatement) {
+    protected ReturnCode evaluate(Analysis analysis, java.sql.Connection connection, String sqlStatement) {
         SchemaEvaluator eval = new SchemaEvaluator();
         // MOD xqliu 2009-02-09 bug 6237
         eval.setMonitor(getMonitor());

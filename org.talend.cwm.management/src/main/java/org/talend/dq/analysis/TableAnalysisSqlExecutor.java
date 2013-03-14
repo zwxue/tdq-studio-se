@@ -295,14 +295,7 @@ public class TableAnalysisSqlExecutor extends TableAnalysisExecutor {
     protected boolean runAnalysis(Analysis analysis, String sqlStatement) {
         boolean ok = true;
 
-        TypedReturnCode<java.sql.Connection> trc = null;
-        if (POOLED_CONNECTION) {
-            // reset the connection pool before run this analysis
-            resetConnectionPool(analysis);
-            trc = getPooledConnection(analysis);
-        } else {
-            trc = getConnection(analysis);
-        }
+        TypedReturnCode<java.sql.Connection> trc = this.getConnectionBeforeRun(analysis);
 
         if (!trc.isOk()) {
             log.error(trc.getMessage());
@@ -352,15 +345,12 @@ public class TableAnalysisSqlExecutor extends TableAnalysisExecutor {
             this.errorMessage = e.getMessage();
             ok = false;
         } finally {
-            if (POOLED_CONNECTION) {
-                resetConnectionPool(analysis);
-            } else {
-                ReturnCode rc = ConnectionUtils.closeConnection(connection);
-                ok = rc.isOk();
+            ReturnCode rc = closeConnection(analysis, connection);
+            ok = ok && rc.isOk();
                 if (!ok) {
                     this.errorMessage = rc.getMessage();
                 }
-            }
+
         }
         return ok;
     }

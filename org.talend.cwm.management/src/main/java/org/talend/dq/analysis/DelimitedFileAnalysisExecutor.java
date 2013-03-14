@@ -137,5 +137,16 @@ public class DelimitedFileAnalysisExecutor extends AnalysisExecutor {
         return ResourceHelper.areSame(dataprovider, dp);
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dq.analysis.AnalysisExecutor#evaluate(org.talend.dataquality.analysis.Analysis,
+     * java.sql.Connection, java.lang.String)
+     */
+    @Override
+    protected ReturnCode evaluate(Analysis analysis, java.sql.Connection connection, String sqlStatement) {
+        // no need to implement here
+        return null;
+    }
 
 }

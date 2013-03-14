@@ -265,15 +265,7 @@ public class MultiColumnAnalysisExecutor extends ColumnAnalysisSqlExecutor {
     protected boolean runAnalysis(Analysis analysis, String sqlStatement) {
         boolean ok = true;
 
-        TypedReturnCode<java.sql.Connection> trc = null;
-        if (POOLED_CONNECTION) {
-            // reset the connection pool before run this analysis
-            resetConnectionPool(analysis);
-            trc = getPooledConnection(analysis);
-        } else {
-            trc = getConnection(analysis);
-        }
-
+        TypedReturnCode<java.sql.Connection> trc = this.getConnectionBeforeRun(analysis);
         if (!trc.isOk()) {
             log.error(trc.getMessage());
             this.errorMessage = trc.getMessage();

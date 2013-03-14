@@ -997,18 +997,6 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
         return sqlGenericString.replaceAll("'", "''"); //$NON-NLS-1$ //$NON-NLS-2$
     }
 
-    /**
-     * Method "traceError".
-     * 
-     * @param error the message to set in errorMessage
-     * @return always false
-     */
-    protected boolean traceError(String error) {
-        this.errorMessage = error;
-        log.error(this.errorMessage);
-        return false;
-    }
-
     /*
      * (non-Javadoc)
      * 
@@ -1016,7 +1004,7 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
      * java.lang.String)
      */
     @Override
-    protected boolean runAnalysis(Analysis analysis, String sqlStatement) {
+    protected ReturnCode evaluate(Analysis analysis, java.sql.Connection connection, String sqlStatement) {
         boolean ok = true;
 
         // store map of element to each indicator used for computation (leaf indicator)
@@ -1025,27 +1013,11 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
         // execute the sql statement for each indicator
         List<Indicator> indicators = IndicatorHelper.getIndicatorLeaves(analysis.getResults());
 
-        TypedReturnCode<java.sql.Connection> connection = null;
         try {
             if (canParallel()) {
                 ok = runAnalysisIndicatorsParallel(analysis, elementToIndicator, indicators, POOLED_CONNECTION);
             } else {
-                if (POOLED_CONNECTION) {
-                    // reset the connection pool before run this analysis
-                    resetConnectionPool(analysis);
-                    connection = getPooledConnection(analysis);
-                } else {
-                    connection = getConnection(analysis);
-                }
-
-                if (!connection.isOk()) {
-                    log.error(connection.getMessage());
-                    this.errorMessage = connection.getMessage();
-                    return traceError("Cannot execute Analysis " + analysis.getName() + ". Error: " + connection.getMessage());//$NON-NLS-1$//$NON-NLS-2$
-                }
-
-                ok = runAnalysisIndicators(connection.getObject(), elementToIndicator, indicators);
-
+                ok = runAnalysisIndicators(connection, elementToIndicator, indicators);
             }
             // --- finalize indicators by setting the row count and null when they exist.
             setRowCountAndNullCount(elementToIndicator);
@@ -1053,33 +1025,10 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
             log.error(e, e);
             this.errorMessage = e.getMessage();
             ok = false;
-        } finally {
-            if (connection != null) {
-                ReturnCode rc = closeConnection(analysis, connection.getObject());
-                ok = ok && rc.isOk();
-            }
         }
 
-        return ok;
-    }
+        return new ReturnCode(this.errorMessage, ok);
 
-    protected ReturnCode closeConnection(Analysis analysis, java.sql.Connection connection) {
-        ReturnCode rc = new ReturnCode(Boolean.TRUE);
-        if (connection != null) {
-            if (POOLED_CONNECTION) {
-                resetConnectionPool(analysis);
-            } else {
-                rc = ConnectionUtils.closeConnection(connection);
-                if (!rc.isOk()) {
-                    this.errorMessage = rc.getMessage();
-                }
-            }
-        } else {
-            rc.setOk(Boolean.FALSE);
-            rc.setMessage("Connection is null when running analysis: " + analysis.getName()); //$NON-NLS-1$
-            log.error(rc.getMessage());
-        }
-        return rc;
     }
 
     /**

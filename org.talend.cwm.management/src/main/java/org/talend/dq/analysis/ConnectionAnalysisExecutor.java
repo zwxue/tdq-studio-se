@@ -18,6 +18,7 @@ import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dq.indicators.ConnectionEvaluator;
+import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
@@ -32,7 +33,7 @@ public class ConnectionAnalysisExecutor extends AbstactSchemaAnalysisExecutor {
      * java.lang.String)
      */
     @Override
-    protected boolean runAnalysis(Analysis analysis, String sqlStatement) {
+    protected ReturnCode evaluate(Analysis analysis, java.sql.Connection connection, String sqlStatement) {
 
         ConnectionEvaluator eval = new ConnectionEvaluator();
         // MOD xqliu 2009-02-09 bug 6237

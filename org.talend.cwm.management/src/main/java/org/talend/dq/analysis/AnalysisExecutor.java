@@ -22,6 +22,7 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.common.util.EList;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.database.JavaSqlFactory;
+import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.helper.CatalogHelper;
 import org.talend.cwm.helper.SchemaHelper;
 import org.talend.cwm.helper.SwitchHelpers;
@@ -257,14 +258,91 @@ public abstract class AnalysisExecutor implements IAnalysisExecutor {
     }
 
     /**
-     * Method "runAnalysis".
+     * Method "runAnalysis". Mod 20130314 TDQ-5973 refactor to extract same part here
      * 
      * @param analysis the analysis to be run
      * @param sqlStatement the sql statement to execute on Database
      * @return true if ok
      */
-    protected abstract boolean runAnalysis(Analysis analysis, String sqlStatement);
+    protected boolean runAnalysis(Analysis analysis, String sqlStatement) {
+        // Open connection
+        TypedReturnCode<java.sql.Connection> connection = this.getConnectionBeforeRun(analysis);
+        if (!connection.isOk()) {
+            return this.traceError(connection.getMessage());
+        }
 
+        // abstract method
+        ReturnCode rc = evaluate(analysis, connection.getObject(), sqlStatement);
+
+        // close connection
+        ReturnCode rcon = closeConnection(analysis, connection.getObject());
+        if (!rc.isOk()) {
+            traceError(rc.getMessage());
+        }
+
+        return rc.isOk() && rcon.isOk();
+    }
+
+    protected abstract ReturnCode evaluate(Analysis analysis, java.sql.Connection connection, String sqlStatement);
+
+    /**
+     * get the connection before evaluating, same for all sub classes
+     * 
+     * @param analysis
+     * @return the connection(pooled or not)
+     */
+    protected TypedReturnCode<java.sql.Connection> getConnectionBeforeRun(Analysis analysis) {
+        // open a connection
+        TypedReturnCode<java.sql.Connection> connection = null;
+        if (POOLED_CONNECTION) {
+            // reset the connection pool before run this analysis
+            resetConnectionPool(analysis);
+            connection = getPooledConnection(analysis);
+        } else {
+            connection = getConnection(analysis);
+        }
+
+        return connection;
+
+    }
+
+    /**
+     * close the connection for the analysis after running.
+     * 
+     * @param analysis
+     * @param connection
+     * @return close success or not
+     */
+    protected ReturnCode closeConnection(Analysis analysis, java.sql.Connection connection) {
+        ReturnCode rc = new ReturnCode(Boolean.TRUE);
+        if (connection != null) {
+            if (POOLED_CONNECTION) {
+                resetConnectionPool(analysis);
+            } else {
+                rc = ConnectionUtils.closeConnection(connection);
+                if (!rc.isOk()) {
+                    this.errorMessage = rc.getMessage();
+                }
+            }
+        } else {
+            rc.setOk(Boolean.FALSE);
+            rc.setMessage("Connection is null when running analysis: " + analysis.getName()); //$NON-NLS-1$
+            log.error(rc.getMessage());
+        }
+        return rc;
+    }
+
+    /**
+     * Method "traceError".
+     * 
+     * @param error the message to set in errorMessage
+     * @return always false
+     */
+    protected boolean traceError(String error) {
+        this.errorMessage = error;
+        log.error(this.errorMessage);
+        return false;
+    }
     /**
      * DOC scorreia Comment method "getConnection".
      * 

@@ -12,11 +12,8 @@
 // ============================================================================
 package org.talend.dq.analysis;
 
-import java.sql.Connection;
-
 import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.EList;
-import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.dataquality.PluginConstant;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisParameters;
@@ -51,21 +48,14 @@ public abstract class AbstactSchemaAnalysisExecutor extends AnalysisExecutor {
      * @param eval
      * @return
      */
-    protected boolean runAnalysisLow(Analysis analysis, String sqlStatement, AbstractSchemaEvaluator<?> eval) {
+    protected ReturnCode runAnalysisLow(Analysis analysis, String sqlStatement, AbstractSchemaEvaluator<?> eval) {
         // get a pooled connection
-        TypedReturnCode<Connection> connection = null;
-        if (POOLED_CONNECTION) {
-            // reset the connection pool before run this analysis
-            resetConnectionPool(analysis);
-            connection = getPooledConnection(analysis);
-        } else {
-            connection = getConnection(analysis);
-        }
+        TypedReturnCode<java.sql.Connection> connection = this.getConnectionBeforeRun(analysis);
 
         if (!connection.isOk()) {
             log.error(connection.getMessage());
             this.errorMessage = connection.getMessage();
-            return false;
+            return new ReturnCode(errorMessage, Boolean.FALSE);
         }
 
         // set it into the evaluator
@@ -83,18 +73,13 @@ public abstract class AbstactSchemaAnalysisExecutor extends AnalysisExecutor {
         boolean closeAtTheEnd = true;
         ReturnCode rc = eval.evaluateIndicators(sqlStatement, closeAtTheEnd);
 
-        if (POOLED_CONNECTION) {
-            // release the pooled connection
-            resetConnectionPool(analysis);
-        } else {
-            ConnectionUtils.closeConnection(connection.getObject());
-        }
+        ReturnCode rcon = closeConnection(analysis, connection.getObject());
 
         if (!rc.isOk()) {
             log.warn(rc.getMessage());
             this.errorMessage = rc.getMessage();
         }
-        return rc.isOk();
+        return rc;
     }
 
     /**

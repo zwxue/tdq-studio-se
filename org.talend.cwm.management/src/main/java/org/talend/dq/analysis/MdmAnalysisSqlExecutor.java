@@ -179,18 +179,6 @@ public class MdmAnalysisSqlExecutor extends MdmAnalysisExecutor {
         return false;
     }
 
-    /**
-     * DOC xqliu Comment method "traceError".
-     * 
-     * @param error
-     * @return
-     */
-    protected boolean traceError(String error) {
-        this.errorMessage = error;
-        log.error(this.errorMessage);
-        return false;
-    }
-
     @Override
     protected boolean runAnalysis(Analysis analysis, String sqlStatement) {
         boolean ok = true;

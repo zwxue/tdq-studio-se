@@ -42,7 +42,6 @@ import org.talend.dq.dbms.GenericSQLHandler;
 import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.indicators.IndicatorEvaluator;
 import org.talend.utils.sugars.ReturnCode;
-import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.objectmodel.core.Classifier;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.objectmodel.core.Package;
@@ -73,10 +72,16 @@ public class ColumnAnalysisExecutor extends AnalysisExecutor {
     }
 
     @Override
-    protected boolean runAnalysis(Analysis analysis, String sqlStatement) {
+    protected ReturnCode evaluate(Analysis analysis, java.sql.Connection connection, String sqlStatement) {
+
         IndicatorEvaluator eval = new IndicatorEvaluator(analysis);
         // MOD xqliu 2009-02-09 bug 6237
         eval.setMonitor(getMonitor());
+        // set it into the evaluator
+        eval.setConnection(connection);
+        // use pooled connection
+        eval.setPooledConnection(POOLED_CONNECTION);
+
         // --- add indicators
         EList<Indicator> indicators = analysis.getResults().getIndicators();
         for (Indicator indicator : indicators) {
@@ -88,32 +93,11 @@ public class ColumnAnalysisExecutor extends AnalysisExecutor {
             // --- get the schema owner
             if (!belongToSameSchemata(tdColumn)) {
                 this.errorMessage = Messages.getString("ColumnAnalysisExecutor.GivenColumn", tdColumn.getName()); //$NON-NLS-1$
-                return false;
+                return new ReturnCode(errorMessage, Boolean.FALSE);
             }
             String columnName = ColumnHelper.getFullName(tdColumn);
             eval.storeIndicator(columnName, indicator);
         }
-
-        // open a connection
-        TypedReturnCode<java.sql.Connection> connection = null;
-        if (POOLED_CONNECTION) {
-            // reset the connection pool before run this analysis
-            resetConnectionPool(analysis);
-            connection = getPooledConnection(analysis);
-        } else {
-            connection = getConnection(analysis);
-        }
-
-        if (!connection.isOk()) {
-            log.error(connection.getMessage());
-            this.errorMessage = connection.getMessage();
-            return false;
-        }
-
-        // set it into the evaluator
-        eval.setConnection(connection.getObject());
-        // use pooled connection
-        eval.setPooledConnection(POOLED_CONNECTION);
 
         // when to close connection
         boolean closeAtTheEnd = true;
@@ -121,21 +105,8 @@ public class ColumnAnalysisExecutor extends AnalysisExecutor {
         if (!eval.selectCatalog(catalog.getName())) {
             log.warn(Messages.getString("ColumnAnalysisExecutor.FAILEDTOSELECTCATALOG", catalog.getName()));//$NON-NLS-1$
         }
-        ReturnCode rc = eval.evaluateIndicators(sqlStatement, closeAtTheEnd);
 
-        // MOD gdbu 2011-8-15 : file delimited connection is null
-        if (POOLED_CONNECTION && null != connection) {
-            // release the pooled connection
-            resetConnectionPool(analysis);
-        } else {
-            ConnectionUtils.closeConnection(connection.getObject());
-        }
-
-        if (!rc.isOk()) {
-            log.warn(rc.getMessage());
-            this.errorMessage = rc.getMessage();
-        }
-        return rc.isOk();
+        return eval.evaluateIndicators(sqlStatement, closeAtTheEnd);
     }
 
     /**
@@ -178,6 +149,9 @@ public class ColumnAnalysisExecutor extends AnalysisExecutor {
         // CwmZQuery query = new CwmZQuery();
         StringBuilder sql = new StringBuilder("SELECT ");//$NON-NLS-1$
         EList<ModelElement> analysedElements = analysis.getContext().getAnalysedElements();
+
+        // From here to the end of the method is as same as the part in ColumnSetAnalysisExecutor(line 184),
+        // so if you modify the code here, please also modify the same part.
         if (analysedElements.isEmpty()) {
             this.errorMessage = Messages.getString("ColumnAnalysisExecutor.CannotCreateSQLStatement",//$NON-NLS-1$
                     analysis.getName());
@@ -212,10 +186,6 @@ public class ColumnAnalysisExecutor extends AnalysisExecutor {
                 }
             }
 
-            // if (!query.addSelect(col)) {
-            //                this.errorMessage = Messages.getString("ColumnAnalysisExecutor.Problem"); //$NON-NLS-1$
-            // return null;
-            // }
             // add from
             fromPart.add(colSet);
 
@@ -261,12 +231,6 @@ public class ColumnAnalysisExecutor extends AnalysisExecutor {
             }
             sql.append(dbms().toQualifiedName(parentRelation.getName(), ownerUser, element.getName()));
         }
-        // String catalog = SwitchHelpers.CATALOG_SWITCH.doSwitch(element);
-
-        // sql.append(this.quote(TableHelper.getParentCatalogOrSchema(fromPart.iterator().next()).getName()));
-        // sql.append(".");
-        // sql.append(this.quote(fromPart.iterator().next().getName()));
-
         // add where clause
         // --- get data filter
         ModelElementAnalysisHandler handler = new ModelElementAnalysisHandler();
@@ -372,93 +336,4 @@ public class ColumnAnalysisExecutor extends AnalysisExecutor {
         return table;
     }
 
-    /**
-     * DOC xqliu Comment method "isOracle".
-     * 
-     * @return
-     */
-    protected boolean isOracle() {
-        return ConnectionHelper.isOracle(dataprovider);
-    }
-
-    /**
-     * DOC xqliu Comment method "isMysql".
-     * 
-     * @return
-     */
-    protected boolean isMysql() {
-        return ConnectionHelper.isMysql(dataprovider);
-    }
-
-    /**
-     * DOC xqliu Comment method "isMssql".
-     * 
-     * @return
-     */
-    protected boolean isMssql() {
-        return ConnectionHelper.isMssql(dataprovider);
-    }
-
-    /**
-     * DOC xqliu Comment method "isPostgresql".
-     * 
-     * @return
-     */
-    protected boolean isPostgresql() {
-        return ConnectionHelper.isPostgresql(dataprovider);
-    }
-
-    /**
-     * DOC xqliu Comment method "isInformix".
-     * 
-     * @return
-     */
-    protected boolean isInformix() {
-        return ConnectionHelper.isInformix(dataprovider);
-    }
-
-    /**
-     * DOC xqliu Comment method "isIngress".
-     * 
-     * @return
-     */
-    protected boolean isIngress() {
-        return ConnectionHelper.isIngress(dataprovider);
-    }
-
-    /**
-     * DOC xqliu Comment method "isDb2".
-     * 
-     * @return
-     */
-    protected boolean isDb2() {
-        return ConnectionHelper.isDb2(dataprovider);
-    }
-
-    /**
-     * DOC xqliu Comment method "isSybase".
-     * 
-     * @return
-     */
-    protected boolean isSybase() {
-        return ConnectionHelper.isSybase(dataprovider);
-    }
-
-    /**
-     * DOC xqliu Comment method "isTeradata".
-     * 
-     * @return
-     */
-    protected boolean isTeradata() {
-        return ConnectionHelper.isTeradata(dataprovider);
-    }
-
-    /**
-     * DOC xqliu Comment method "isNetezza".
-     * 
-     * @return
-     */
-    protected boolean isNetezza() {
-        return ConnectionHelper.isNetezza(dataprovider);
-    }
 }
