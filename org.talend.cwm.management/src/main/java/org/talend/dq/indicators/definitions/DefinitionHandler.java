@@ -157,9 +157,8 @@ public final class DefinitionHandler {
                 tdqLibPath = PROJECT_PATH + "/TDQ_Libraries/"; //$NON-NLS-1$ //$NON-NLS-2$
             }
         } else {
-            System.err.println("[ERROR]"); //$NON-NLS-1$
+            System.err.println("[ERROR] Failed to retrieve TDQ Library Path"); //$NON-NLS-1$
         }
-        System.err.println("tdqLibPath: " + tdqLibPath); //$NON-NLS-1$
         return tdqLibPath;
     }
 
