@@ -16,6 +16,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -547,8 +548,9 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
         // MOD qiongli 2012-2-14 TDQ-4539.compare the name with all items of the specified type.
         boolean exist = PropertyHelper.existDuplicateName(elementName, oldProperty.getDisplayName(), objectType);
         if (exist) {
-            this.nameText.setText(oldProperty != null ? oldProperty.getDisplayName() : PluginConstant.SPACE_STRING);
-            ret.setReturnCode(DefaultMessagesImpl.getString("UIMessages.ItemExistsErrorWithParameter", elementName), false);
+            IPath path = PropertyHelper.getItemPath(PropertyHelper.getDuplicateObject(elementName, objectType));
+            ret.setReturnCode(
+                    DefaultMessagesImpl.getString("UIMessages.ItemExistsErrorWithParameter", elementName, path.toOSString()), false); //$NON-NLS-1$
             return ret;
         }
 
