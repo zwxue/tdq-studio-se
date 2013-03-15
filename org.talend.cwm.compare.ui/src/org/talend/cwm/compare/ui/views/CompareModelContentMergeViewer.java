@@ -22,7 +22,6 @@ import org.eclipse.compare.CompareConfiguration;
 import org.eclipse.compare.internal.ChangePropertyAction;
 import org.eclipse.compare.internal.CompareUIPlugin;
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IResource;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.compare.diff.metamodel.ComparisonResourceSnapshot;
 import org.eclipse.emf.compare.diff.metamodel.DiffElement;
@@ -52,7 +51,6 @@ import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ViewerComparator;
-import org.eclipse.jface.window.Window;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.events.MouseEvent;
@@ -71,10 +69,7 @@ import org.talend.cwm.compare.ui.actions.SubelementCompareAction;
 import org.talend.cwm.helper.CatalogHelper;
 import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.relational.TdColumn;
-import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
-import org.talend.dataprofiler.core.ui.dialog.message.DeleteModelElementConfirmDialog;
 import org.talend.dataprofiler.core.ui.utils.MessageUI;
-import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.helper.resourcehelper.PrvResourceFileHelper;
 import org.talend.dq.nodes.DBCatalogRepNode;
@@ -447,17 +442,6 @@ public class CompareModelContentMergeViewer extends ModelContentMergeViewer {
                 resourceFile = PrvResourceFileHelper.getInstance().findCorrespondingFile(
                         ConnectionHelper.getDataProvider(columnSet));
                 modelElement = ConnectionHelper.getDataProvider(columnSet);
-            }
-        }
-        if (modelElement != null && resourceFile != null) {
-            String titleMessage = DefaultMessagesImpl.getString("CompareModelContentMergeViewer.ImpactAnalyses"); //$NON-NLS-1$
-
-            int showDialog = DeleteModelElementConfirmDialog.showElementImpactDialog(null, new ModelElement[] { modelElement },
-                    titleMessage, titleMessage);
-            if (showDialog == Window.OK) {
-                EObjectHelper.removeDependencys(new IResource[] { resourceFile });
-            } else {
-                return;
             }
         }
 
