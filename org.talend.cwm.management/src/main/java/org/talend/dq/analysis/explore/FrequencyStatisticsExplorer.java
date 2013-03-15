@@ -117,8 +117,8 @@ public class FrequencyStatisticsExplorer extends DataExplorer {
         sql = tdExp.getBody();
         String dataFilterClause = getDataFilterClause();
         if (!dataFilterClause.equals(PluginConstant.EMPTY_STRING)) {
-            sql = sql.replace(GenericSQLHandler.WHERE_CLAUSE, dbmsLanguage.where() + dataFilterClause);
-            sql = sql.replace(GenericSQLHandler.AND_WHERE_CLAUSE, dbmsLanguage.and() + dataFilterClause);
+            sql = sql.replace(GenericSQLHandler.WHERE_CLAUSE, dbmsLanguage.where() + "(" + dataFilterClause + ")"); //$NON-NLS-1$ //$NON-NLS-2$
+            sql = sql.replace(GenericSQLHandler.AND_WHERE_CLAUSE, dbmsLanguage.and() + "(" + dataFilterClause + ")"); //$NON-NLS-1$ //$NON-NLS-2$
         } else {
             sql = sql.replace(GenericSQLHandler.WHERE_CLAUSE, PluginConstant.EMPTY_STRING);
             sql = sql.replace(GenericSQLHandler.AND_WHERE_CLAUSE, PluginConstant.EMPTY_STRING);
@@ -128,7 +128,12 @@ public class FrequencyStatisticsExplorer extends DataExplorer {
         sql = sql.replace(GenericSQLHandler.TABLE_NAME, tableName);
         sql = sql.replace(GenericSQLHandler.COLUMN_NAMES, analyzedElement.getName());
         if (sql.indexOf(GenericSQLHandler.UDI_INDICATOR_VALUE) != -1) {
-            sql = sql.replace(GenericSQLHandler.UDI_INDICATOR_VALUE, "'" + entity.getKey() + "'"); //$NON-NLS-1$ //$NON-NLS-2$
+            Object key = entity.getKey();
+            if (key == null) {
+                sql = sql.replace("= " + GenericSQLHandler.UDI_INDICATOR_VALUE, "IS NULL"); //$NON-NLS-1$ //$NON-NLS-2$                
+            } else {
+                sql = sql.replace(GenericSQLHandler.UDI_INDICATOR_VALUE, "'" + key + "'"); //$NON-NLS-1$ //$NON-NLS-2$
+            }
         }
         if (sql.indexOf(GenericSQLHandler.GROUP_BY_ALIAS) != -1) {
             sql = sql.replace(GenericSQLHandler.GROUP_BY_ALIAS, "'" + analyzedElement.getName() + "'"); //$NON-NLS-1$ //$NON-NLS-2$

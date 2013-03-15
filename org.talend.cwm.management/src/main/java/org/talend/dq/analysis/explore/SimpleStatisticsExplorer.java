@@ -108,8 +108,8 @@ public class SimpleStatisticsExplorer extends DataExplorer {
         sql = tdExp.getBody();
         String dataFilterClause = getDataFilterClause();
         if (!dataFilterClause.equals(PluginConstant.EMPTY_STRING)) {
-            sql = sql.replace(GenericSQLHandler.WHERE_CLAUSE, dbmsLanguage.where() + dataFilterClause);
-            sql = sql.replace(GenericSQLHandler.AND_WHERE_CLAUSE, dbmsLanguage.and() + dataFilterClause);
+            sql = sql.replace(GenericSQLHandler.WHERE_CLAUSE, dbmsLanguage.where() + "(" + dataFilterClause + ")"); //$NON-NLS-1$ //$NON-NLS-2$
+            sql = sql.replace(GenericSQLHandler.AND_WHERE_CLAUSE, dbmsLanguage.and() + "(" + dataFilterClause + ")"); //$NON-NLS-1$ //$NON-NLS-2$
         } else {
             sql = sql.replace(GenericSQLHandler.WHERE_CLAUSE, PluginConstant.EMPTY_STRING);
             sql = sql.replace(GenericSQLHandler.AND_WHERE_CLAUSE, PluginConstant.EMPTY_STRING);
