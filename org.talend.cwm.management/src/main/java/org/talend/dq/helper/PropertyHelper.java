@@ -602,9 +602,9 @@ public final class PropertyHelper {
                     if (object == null || object.getProperty() == null) {
                         continue;
                     }
-                    prop = object.getProperty();
-                    if (newName.equals(prop.getDisplayName()) || normalizeName.equals(prop.getLabel())) {
-                        return prop;
+                    if (newName.equals(object.getProperty().getDisplayName())
+                            || normalizeName.equals(object.getProperty().getLabel())) {
+                        return object.getProperty();
                     }
                 }
             }
