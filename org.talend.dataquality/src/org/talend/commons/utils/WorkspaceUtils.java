@@ -119,6 +119,12 @@ public final class WorkspaceUtils {
         return resourceFile;
     }
 
+    /**
+     * make the pathName to normal(replace the special forbidden chars to "_").
+     * 
+     * @param pathName
+     * @return
+     */
     public static String normalize(String pathName) {
         if (pathName == null) {
             return pathName;

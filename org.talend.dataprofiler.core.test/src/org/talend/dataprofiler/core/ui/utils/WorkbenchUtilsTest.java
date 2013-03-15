@@ -12,10 +12,8 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.utils;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -28,6 +26,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.talend.commons.utils.WorkspaceUtils;
 import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
 import org.talend.cwm.dependencies.DependenciesHandler;
 import org.talend.dataquality.analysis.Analysis;
@@ -37,13 +36,14 @@ import orgomg.cwm.objectmodel.core.Dependency;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
- * DOC yyin  class global comment. Detailled comment
+ * DOC yyin class global comment. Detailled comment
  */
 @PrepareForTest({ RepositoryNodeHelper.class })
 public class WorkbenchUtilsTest {
 
     /**
      * DOC yyin Comment method "setUp".
+     * 
      * @throws java.lang.Exception
      */
     @Before
@@ -52,6 +52,7 @@ public class WorkbenchUtilsTest {
 
     /**
      * DOC yyin Comment method "tearDown".
+     * 
      * @throws java.lang.Exception
      */
     @After
@@ -59,7 +60,9 @@ public class WorkbenchUtilsTest {
     }
 
     /**
-     * Test method for {@link org.talend.dataprofiler.core.ui.utils.WorkbenchUtils#impactExistingAnalyses(orgomg.cwm.foundation.softwaredeployment.DataProvider)}.
+     * Test method for
+     * {@link org.talend.dataprofiler.core.ui.utils.WorkbenchUtils#impactExistingAnalyses(orgomg.cwm.foundation.softwaredeployment.DataProvider)}
+     * .
      */
     @SuppressWarnings("unchecked")
     @Test
@@ -78,7 +81,7 @@ public class WorkbenchUtilsTest {
 
         when(clients.iterator()).thenReturn(mockIterator);
         when(mock_ana.getClientDependency()).thenReturn(clients);
-        
+
         List<Resource> result = this.method_impactExistingAnalyses(mock_data, mock_ana);
 
         assertNotNull(result);
@@ -109,4 +112,18 @@ public class WorkbenchUtilsTest {
         return DependenciesHandler.getInstance().removeDependenciesBetweenModels(analysis, tempList);
     }
 
+    /**
+     * Test method for {@link org.talend.commons.utils.WorkspaceUtils#normalize(String)}.
+     */
+    @Test
+    public void testNormalize() {
+        assertEquals(null, WorkspaceUtils.normalize(null));
+        assertEquals("_", WorkspaceUtils.normalize("?")); //$NON-NLS-1$ //$NON-NLS-2$
+        assertEquals("_test", WorkspaceUtils.normalize("*test")); //$NON-NLS-1$ //$NON-NLS-2$
+        assertEquals("_test_", WorkspaceUtils.normalize("<test>")); //$NON-NLS-1$ //$NON-NLS-2$
+        assertEquals("test_", WorkspaceUtils.normalize("test?")); //$NON-NLS-1$ //$NON-NLS-2$
+        assertEquals("test__", WorkspaceUtils.normalize("test'\"")); //$NON-NLS-1$ //$NON-NLS-2$
+        assertEquals("_test_", WorkspaceUtils.normalize("(test)")); //$NON-NLS-1$ //$NON-NLS-2$
+        assertEquals("__________", WorkspaceUtils.normalize("#^&/:;\\~.!")); //$NON-NLS-1$ //$NON-NLS-2$
+    }
 }
