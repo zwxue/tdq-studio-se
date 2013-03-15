@@ -12,6 +12,7 @@
 // ============================================================================
 package org.talend.dq.analysis;
 
+import java.sql.Connection;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -80,7 +81,7 @@ public class ColumnSetAnalysisExecutor extends AnalysisExecutor {
      * java.lang.String)
      */
     @Override
-    protected ReturnCode evaluate(Analysis analysis, java.sql.Connection connection, String sqlStatement) {
+    protected boolean runAnalysis(Analysis analysis, String sqlStatement) {
         ColumnSetIndicatorEvaluator eval = new ColumnSetIndicatorEvaluator(analysis);
         eval.setMonitor(getMonitor());
         // --- add indicators
@@ -104,24 +105,47 @@ public class ColumnSetAnalysisExecutor extends AnalysisExecutor {
             }
         }
 
+        TypedReturnCode<java.sql.Connection> connection = null;
         // MOD yyi 2011-02-22 17871:delimitefile
         if (isMdm) {
             TypedReturnCode<MdmWebserviceConnection> mdmReturnObj = getMdmConnection(analysis);
             if (!mdmReturnObj.isOk()) {
                 log.error(mdmReturnObj.getMessage());
-                return new ReturnCode(mdmReturnObj.getMessage(), Boolean.FALSE);
+                return false;
             }
             eval.setMdmWebserviceConn(mdmReturnObj.getObject());
         } else if (!isDelimitedFile) {
+            connection = getConnectionBeforeRun(analysis);
+            if (!connection.isOk()) {
+                return this.traceError(connection.getMessage());
+            }
+
             // set it into the evaluator
-            eval.setConnection(connection);
+            eval.setConnection(connection.getObject());
             // use pooled connection
             eval.setPooledConnection(POOLED_CONNECTION);
+
         }
 
         // when to close connection
         boolean closeAtTheEnd = true;
-        return eval.evaluateIndicators(sqlStatement, closeAtTheEnd);
+        ReturnCode rc = eval.evaluateIndicators(sqlStatement, closeAtTheEnd);
+
+        // MOD gdbu 2011-8-12 : file delimited connection is null
+        // close connection
+        if (connection != null) {
+            if (POOLED_CONNECTION) {
+                // release the pooled connection
+                resetConnectionPool(analysis);
+            } else {
+                ConnectionUtils.closeConnection(connection.getObject());
+            }
+        }
+        if (!rc.isOk()) {
+            traceError(rc.getMessage());
+        }
+
+        return true;
     }
 
     /*
@@ -181,8 +205,6 @@ public class ColumnSetAnalysisExecutor extends AnalysisExecutor {
             }
         }
 
-        // From here to the end of the method is as same as the part in ColumnAnalysisExecutor(line 153),
-        // so if you modify the code here, please also modify the same part.
         if (analysedElements == null || analysedElements.isEmpty()) {
             this.errorMessage = Messages.getString("ColumnAnalysisExecutor.CannotCreateSQLStatement",//$NON-NLS-1$
                     analysis.getName());
@@ -328,5 +350,17 @@ public class ColumnSetAnalysisExecutor extends AnalysisExecutor {
         rc.setOk(tempMdmConnection.checkDatabaseConnection().isOk());
         rc.setMessage(dataProvider.getPathname());
         return rc;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dq.analysis.AnalysisExecutor#evaluate(org.talend.dataquality.analysis.Analysis,
+     * java.sql.Connection, java.lang.String)
+     */
+    @Override
+    protected ReturnCode evaluate(Analysis analysis, Connection connection, String sqlStatement) {
+        // no need to implement
+        return null;
     }
 }
