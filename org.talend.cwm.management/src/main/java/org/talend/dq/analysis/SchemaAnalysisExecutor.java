@@ -54,7 +54,7 @@ public class SchemaAnalysisExecutor extends AbstactSchemaAnalysisExecutor {
             indicator.reset();
         }
 
-        return runAnalysisLow(analysis, sqlStatement, eval);
+        return runAnalysisLow(analysis, sqlStatement, eval, connection);
     }
 
 }

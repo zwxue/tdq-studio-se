@@ -21,7 +21,6 @@ import org.talend.dataquality.domain.Domain;
 import org.talend.dataquality.helpers.DomainHelper;
 import org.talend.dq.indicators.AbstractSchemaEvaluator;
 import org.talend.utils.sugars.ReturnCode;
-import org.talend.utils.sugars.TypedReturnCode;
 
 /**
  * DOC scorreia class global comment. Detailled comment
@@ -48,18 +47,10 @@ public abstract class AbstactSchemaAnalysisExecutor extends AnalysisExecutor {
      * @param eval
      * @return
      */
-    protected ReturnCode runAnalysisLow(Analysis analysis, String sqlStatement, AbstractSchemaEvaluator<?> eval) {
-        // get a pooled connection
-        TypedReturnCode<java.sql.Connection> connection = this.getConnectionBeforeRun(analysis);
-
-        if (!connection.isOk()) {
-            log.error(connection.getMessage());
-            this.errorMessage = connection.getMessage();
-            return new ReturnCode(errorMessage, Boolean.FALSE);
-        }
-
+    protected ReturnCode runAnalysisLow(Analysis analysis, String sqlStatement, AbstractSchemaEvaluator<?> eval,
+            java.sql.Connection connection) {
         // set it into the evaluator
-        eval.setConnection(connection.getObject());
+        eval.setConnection(connection);
         // use pooled connection
         eval.setPooledConnection(POOLED_CONNECTION);
 
@@ -71,15 +62,7 @@ public abstract class AbstactSchemaAnalysisExecutor extends AnalysisExecutor {
 
         // when to close connection
         boolean closeAtTheEnd = true;
-        ReturnCode rc = eval.evaluateIndicators(sqlStatement, closeAtTheEnd);
-
-        ReturnCode rcon = closeConnection(analysis, connection.getObject());
-
-        if (!rc.isOk()) {
-            log.warn(rc.getMessage());
-            this.errorMessage = rc.getMessage();
-        }
-        return rc;
+        return eval.evaluateIndicators(sqlStatement, closeAtTheEnd);
     }
 
     /**
