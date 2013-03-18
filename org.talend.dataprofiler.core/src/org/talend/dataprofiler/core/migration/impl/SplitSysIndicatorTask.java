@@ -25,6 +25,8 @@ import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.migration.AbstractWorksapceUpdateTask;
+import org.talend.dataprofiler.core.migration.helper.WorkspaceVersionHelper;
+import org.talend.dataprofiler.migration.helper.VersionComparator;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.helpers.IndicatorHelper;
 import org.talend.dataquality.indicators.CompositeIndicator;
@@ -36,6 +38,7 @@ import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.dq.writer.EMFSharedResources;
 import org.talend.resource.EResourceConstant;
 import org.talend.resource.ResourceManager;
+import org.talend.utils.ProductVersion;
 
 /**
  * 
@@ -140,6 +143,15 @@ public class SplitSysIndicatorTask extends AbstractWorksapceUpdateTask {
 
     public Date getOrder() {
         return createDate(2010, 07, 07);
+    }
+
+    @Override
+    public boolean valid() {
+        IFile file = WorkspaceVersionHelper.getVersionFile();
+        if (file.exists() && VersionComparator.isLower(WorkspaceVersionHelper.getVesion(), new ProductVersion(4, 1))) {
+            return true;
+        }
+        return false;
     }
 
 }

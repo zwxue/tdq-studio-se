@@ -37,7 +37,7 @@ public class CreateDQRulesFolderTask extends AbstractWorksapceUpdateTask {
      */
     @Override
     public boolean valid() {
-        return !ResourceManager.getLibrariesFolder().getFolder(DQ_RULES).exists() && super.valid();
+        return !ResourceManager.getRulesSQLFolder().exists() && super.valid();
     }
 
     /*
