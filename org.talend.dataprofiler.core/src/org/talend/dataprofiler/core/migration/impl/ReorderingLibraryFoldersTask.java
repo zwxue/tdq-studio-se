@@ -64,27 +64,39 @@ public class ReorderingLibraryFoldersTask extends AbstractWorksapceUpdateTask {
 
         // Patterns -> Patterns/Regex
         IFolder patternFolder = ResourceManager.getPatternFolder();
-        IFolder newRegexSubfolder = createSubfolder(patternFolder, EResourceConstant.PATTERN_REGEX.getName());
-        moveItems(patternFolder, newRegexSubfolder);
+        IFolder regexFolder = ResourceManager.getPatternRegexFolder();
+        if (!regexFolder.exists()) {
+            IFolder newRegexSubfolder = createSubfolder(patternFolder, EResourceConstant.PATTERN_REGEX.getName());
+            moveItems(patternFolder, newRegexSubfolder);
+        }
 
         // SQL Patterns -> Patterns/SQL
-        IFolder oldSqlPatternsFolder = libraryFolder.getFolder(SQL_PATTERNS);
-        IFolder newSqlSubfolder = createSubfolder(patternFolder, EResourceConstant.PATTERN_SQL.getName());
-        moveItems(oldSqlPatternsFolder, newSqlSubfolder);
-        oldSqlPatternsFolder.delete(true, null);
+        IFolder sqlFolder = ResourceManager.getPatternSQLFolder();
+        if (!sqlFolder.exists()) {
+            IFolder oldSqlPatternsFolder = libraryFolder.getFolder(SQL_PATTERNS);
+            IFolder newSqlSubfolder = createSubfolder(patternFolder, EResourceConstant.PATTERN_SQL.getName());
+            moveItems(oldSqlPatternsFolder, newSqlSubfolder);
+            oldSqlPatternsFolder.delete(true, null);
+        }
 
         // DQ Rules -> Rules/SQL
-        IFolder oldDqRulesFolder = libraryFolder.getFolder(DQ_RULES);
-        IFolder newRulesFolder = createSubfolder(libraryFolder, EResourceConstant.RULES.getName());
-        IFolder newRulesSQLSubfolder = createSubfolder(newRulesFolder, EResourceConstant.RULES_SQL.getName());
-        moveItems(oldDqRulesFolder, newRulesSQLSubfolder);
-        oldDqRulesFolder.delete(true, null);
+        IFolder dqRuleFolder = ResourceManager.getRulesSQLFolder();
+        if (!dqRuleFolder.exists()) {
+            IFolder oldDqRulesFolder = libraryFolder.getFolder(DQ_RULES);
+            IFolder newRulesFolder = createSubfolder(libraryFolder, EResourceConstant.RULES.getName());
+            IFolder newRulesSQLSubfolder = createSubfolder(newRulesFolder, EResourceConstant.RULES_SQL.getName());
+            moveItems(oldDqRulesFolder, newRulesSQLSubfolder);
+            oldDqRulesFolder.delete(true, null);
+        }
 
         // JRXML Reports -> JRXML Template
-        IFolder oldJrxmlFolder = libraryFolder.getFolder(JRXML_REPORTS);
-        IFolder newJrxmlFolder = createSubfolder(libraryFolder, EResourceConstant.JRXML_TEMPLATE.getName());
-        moveItems(oldJrxmlFolder, newJrxmlFolder);
-        oldJrxmlFolder.delete(true, null);
+        IFolder jrxmlFolder = ResourceManager.getJRXMLFolder();
+        if (!jrxmlFolder.exists()) {
+            IFolder oldJrxmlFolder = libraryFolder.getFolder(JRXML_REPORTS);
+            IFolder newJrxmlFolder = createSubfolder(libraryFolder, EResourceConstant.JRXML_TEMPLATE.getName());
+            moveItems(oldJrxmlFolder, newJrxmlFolder);
+            oldJrxmlFolder.delete(true, null);
+        }
 
         // Refresh project
         ResourceService.refreshStructure();
@@ -105,8 +117,9 @@ public class ReorderingLibraryFoldersTask extends AbstractWorksapceUpdateTask {
 
     private void moveItems(IFolder oldSubFolder, IFolder newSubfolder) throws CoreException {
 
-        if (!oldSubFolder.exists())
+        if (!oldSubFolder.exists()) {
             return;
+        }
 
         for (IResource oldResource : oldSubFolder.members()) {
             if (newSubfolder.getName().equals(oldResource.getName())) {
