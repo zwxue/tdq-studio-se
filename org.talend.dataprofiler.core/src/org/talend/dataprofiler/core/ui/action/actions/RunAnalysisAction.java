@@ -12,6 +12,7 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.action.actions;
 
+import java.sql.SQLException;
 import java.text.DecimalFormat;
 
 import org.apache.log4j.Logger;
@@ -34,6 +35,7 @@ import org.eclipse.ui.cheatsheets.ICheatSheetAction;
 import org.eclipse.ui.cheatsheets.ICheatSheetManager;
 import org.eclipse.ui.forms.editor.IFormPage;
 import org.eclipse.ui.part.FileEditorInput;
+import org.talend.commons.exception.CommonExceptionHandler;
 import org.talend.core.model.metadata.IMetadataConnection;
 import org.talend.core.model.metadata.builder.ConvertionHelper;
 import org.talend.core.model.metadata.builder.connection.Connection;
@@ -60,9 +62,9 @@ import org.talend.dq.helper.ProxyRepositoryManager;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
 import org.talend.dq.nodes.AnalysisRepNode;
+import org.talend.metadata.managment.connection.manager.HiveConnectionManager;
 import org.talend.repository.model.ERepositoryStatus;
 import org.talend.repository.model.RepositoryNode;
-import org.talend.repository.ui.utils.ManagerConnection;
 import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.foundation.softwaredeployment.DataManager;
 
@@ -237,8 +239,18 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
         // ~
         boolean isHiveEmbedded = ConnectionUtils.isHiveEmbedded(metadataConnection);
         if (isHiveEmbedded) {
-            ManagerConnection managerConnection = new ManagerConnection();
-            managerConnection.checkForHive(metadataConnection);
+            // ManagerConnection managerConnection = new ManagerConnection();
+            try {
+                HiveConnectionManager.getInstance().checkConnection(metadataConnection);
+            } catch (ClassNotFoundException e) {
+                CommonExceptionHandler.process(e);
+            } catch (InstantiationException e) {
+                CommonExceptionHandler.process(e);
+            } catch (IllegalAccessException e) {
+                CommonExceptionHandler.process(e);
+            } catch (SQLException e) {
+                CommonExceptionHandler.process(e);
+            }
             JDBCDriverLoader jdbcDriverLoader = new JDBCDriverLoader();
             HotClassLoader hotClassLoaderFromCache = jdbcDriverLoader.getHotClassLoaderFromCache(metadataConnection.getDbType(),
                     metadataConnection.getDbVersionString());
