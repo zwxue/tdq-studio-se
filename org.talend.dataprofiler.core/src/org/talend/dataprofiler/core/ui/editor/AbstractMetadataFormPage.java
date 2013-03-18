@@ -18,6 +18,7 @@ import java.util.List;
 
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridDataFactory;
@@ -548,7 +549,12 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
         // MOD qiongli 2012-2-14 TDQ-4539.compare the name with all items of the specified type.
         boolean exist = PropertyHelper.existDuplicateName(elementName, oldProperty.getDisplayName(), objectType);
         if (exist) {
-            IPath path = PropertyHelper.getItemPath(PropertyHelper.getDuplicateObject(elementName, objectType));
+            Property duplicateObject = PropertyHelper.getDuplicateObject(elementName, objectType);
+            IPath path = PropertyHelper.getItemPath(duplicateObject);
+            if (duplicateObject.getItem().getState().isDeleted()) {
+                // "/S/TDQ_Data Profiling/Reports/s_0.1.rep" to "/S/Recycle Bin/s_0.1.rep"
+                path = new Path(path.segment(0)).append(new Path("Recycle Bin")).append(path.lastSegment()); //$NON-NLS-1$
+            }
             ret.setReturnCode(
                     DefaultMessagesImpl.getString("UIMessages.ItemExistsErrorWithParameter", elementName, path.toOSString()), false); //$NON-NLS-1$
             return ret;
