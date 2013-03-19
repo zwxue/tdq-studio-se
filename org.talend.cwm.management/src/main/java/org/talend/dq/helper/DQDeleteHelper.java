@@ -156,7 +156,18 @@ public final class DQDeleteHelper {
                 nodeWithDependsMap.put(node, dependencies);
                 continue;
             }
-            nodeWithDependsMap.put(node, dependencies);
+            // mod: must judge the :item.isdeleted, because if it has been in recycleBin, then not return it in the
+            // list(to allow empty)
+            for (ModelElement mod : dependencies) {
+                Property property = PropertyHelper.getProperty(mod);
+                if (property == null) {
+                    continue;
+                }
+                Item item = property.getItem();
+                if (item != null && !item.getState().isDeleted()) {
+                    nodeWithDependsMap.put(node, dependencies);
+                }
+            }
         }
         return nodeWithDependsMap;
     }
