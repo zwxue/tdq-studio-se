@@ -68,12 +68,14 @@ public class SysIndicatorDefinitionRepNode extends DQRepositoryNode {
      */
     @Override
     public String getLabel() {
-        if (this.getIndicatorDefinition() != null) {
+        if (this.getIndicatorDefinition() != null && !this.getIndicatorDefinition().eIsProxy()) {
             if (this.isSystemIndicator) {
                 Property property = PropertyHelper.getProperty(this.getIndicatorDefinition());
                 return property.getDisplayName();
             }
-            return this.getIndicatorDefinition().getName();
+            if (this.getIndicatorDefinition().getName() != null) {
+                return this.getIndicatorDefinition().getName();
+            }
         }
         return super.getLabel();
     }

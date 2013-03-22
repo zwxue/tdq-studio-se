@@ -51,6 +51,7 @@ import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.resource.ResourceManager;
 import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.objectmodel.core.Expression;
+import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.objectmodel.core.TaggedValue;
 
 /**
@@ -107,6 +108,15 @@ public final class UDIHelper {
             if (categories != null && categories.size() > 0) {
                 return categories.get(0);
             }
+        }
+        return null;
+    }
+/**
+ * getUDICategory by modelElement
+ */
+    public static IndicatorCategory getUDICategory(ModelElement modelElement) {
+        if (modelElement != null && modelElement instanceof IndicatorDefinition) {
+            return getUDICategory((IndicatorDefinition) modelElement);
         }
         return null;
     }

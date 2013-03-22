@@ -19,6 +19,7 @@ import java.util.Map;
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
+import org.talend.commons.exception.BusinessException;
 import org.talend.commons.exception.PersistenceException;
 import org.talend.commons.utils.WorkspaceUtils;
 import org.talend.commons.utils.io.FilesUtils;
@@ -82,7 +83,7 @@ public class UDIHandle extends EMFResourceHandle {
      * @see org.talend.dataprofiler.core.ui.action.actions.handle.EMFResourceHandle#duplicate(java.lang.String)
      */
     @Override
-    public IFile duplicate(String newLabel) {
+    public IFile duplicate(String newLabel) throws BusinessException {
         IFile duplicatedFile = super.duplicate(newLabel);
         IndicatorDefinition definition = (IndicatorDefinition) ModelElementFileFactory.getModelElement(duplicatedFile);
 

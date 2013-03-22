@@ -14,6 +14,7 @@ package org.talend.dataprofiler.core.ui.action.actions;
 
 import java.util.List;
 
+import org.apache.log4j.Level;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
@@ -31,21 +32,27 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.navigator.CommonViewer;
 import org.eclipse.ui.part.ISetSelectionTarget;
 import org.talend.commons.emf.FactoriesUtil;
+import org.talend.commons.exception.BusinessException;
 import org.talend.commons.utils.VersionUtils;
 import org.talend.core.model.properties.Item;
 import org.talend.core.model.properties.Property;
 import org.talend.core.model.repository.ERepositoryObjectType;
+import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.cwm.helper.ResourceHelper;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
+import org.talend.dataprofiler.core.exception.ExceptionFactory;
+import org.talend.dataprofiler.core.exception.ExceptionHandler;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.action.actions.handle.ActionHandleFactory;
 import org.talend.dataprofiler.core.ui.action.actions.handle.IDuplicateHandle;
+import org.talend.dataquality.indicators.definition.userdefine.UDIndicatorDefinition;
 import org.talend.dataquality.properties.TDQJrxmlItem;
 import org.talend.dataquality.properties.TDQSourceFileItem;
 import org.talend.dq.factory.ModelElementFileFactory;
 import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.helper.RepositoryNodeHelper;
+import org.talend.dq.helper.UDIHelper;
 import org.talend.dq.nodes.AnalysisRepNode;
 import org.talend.dq.nodes.AnalysisSubFolderRepNode;
 import org.talend.dq.nodes.ReportRepNode;
@@ -88,59 +95,72 @@ public class DuplicateAction extends Action {
      */
     @Override
     public void run() {
+        try {
+            IFile duplicateObject = null;
+            for (final IRepositoryNode node : nodeArray) {
+                if (node != null) {
+                    IRepositoryViewObject viewObject = node.getObject();
+                    ModelElement modelElement = null;
+                    if (viewObject != null) {
+                        modelElement = PropertyHelper.getModelElement(viewObject.getProperty());
+                    }
+                    if (modelElement == null || modelElement.eResource() == null || modelElement instanceof UDIndicatorDefinition
+                            && UDIHelper.getUDICategory(modelElement) == null) {
+                        BusinessException createBusinessException = ExceptionFactory.getInstance().createBusinessException(
+                                viewObject);
+                        throw createBusinessException;
+                    }
 
-        Object duplicateObject = null;
-        for (final IRepositoryNode node : nodeArray) {
-            if (node != null) {
+                    final IDuplicateHandle handle = ActionHandleFactory.createDuplicateHandle(node);
 
-                final IDuplicateHandle handle = ActionHandleFactory.createDuplicateHandle(node);
+                    if (handle != null) {
+                        // MOD msjian TDQ-4672 2012-2-17: modified the check duplicate name method
+                        String initLabel = generateInitialLabel(node);
+                        InputDialog dialog = new InputDialog(
+                                null,
+                                DefaultMessagesImpl.getString("DuplicateAction.InputDialog"), DefaultMessagesImpl.getString("DuplicateAction.InpurtDesc"), initLabel, //$NON-NLS-1$ //$NON-NLS-2$
+                                new IInputValidator() {
 
-                if (handle != null) {
-                    // MOD msjian TDQ-4672 2012-2-17: modified the check duplicate name method
-                    String initLabel = generateInitialLabel(node);
-                    InputDialog dialog = new InputDialog(
-                            null,
-                            DefaultMessagesImpl.getString("DuplicateAction.InputDialog"), DefaultMessagesImpl.getString("DuplicateAction.InpurtDesc"), initLabel, //$NON-NLS-1$ //$NON-NLS-2$
-                            new IInputValidator() {
+                                    public String isValid(String newText) {
+                                        if (PropertyHelper.existDuplicateName(newText, null, node.getContentType())) {
+                                            return DefaultMessagesImpl.getString("DuplicateAction.LabelExists"); //$NON-NLS-1$
+                                        }
 
-                                public String isValid(String newText) {
-                                    if (PropertyHelper.existDuplicateName(newText, null, node.getContentType())) {
-                                        return DefaultMessagesImpl.getString("DuplicateAction.LabelExists"); //$NON-NLS-1$
+                                        return null;
                                     }
+                                });
+                        // TDQ-4672~
+                        if (dialog.open() == Window.OK) {
+                            String newLabel = dialog.getValue();
 
-                                    return null;
-                                }
-                            });
-                    // TDQ-4672~
-
-                    if (dialog.open() == Window.OK) {
-                        String newLabel = dialog.getValue();
-
-                        // TDQ-4179 MOD yyin 20120313: when duplicate a user defined indicator,
-                        // there are no rule for the user, only for sys, so no need to check the valid rule,just
-                        // duplicate
-                        if (ERepositoryObjectType.TDQ_USERDEFINE_INDICATORS.equals(node
-                                .getProperties(IRepositoryNode.EProperties.LABEL))) {
-                            duplicateObject = handle.duplicate(newLabel);
-                        } else {
-                            // ~TDQ-4719
-                            ReturnCode rc = handle.validDuplicated();
-                            if (rc.isOk()) {
+                            // TDQ-4179 MOD yyin 20120313: when duplicate a user defined indicator,
+                            // there are no rule for the user, only for sys, so no need to check the valid rule,just
+                            // duplicate
+                            if (ERepositoryObjectType.TDQ_USERDEFINE_INDICATORS.equals(node
+                                    .getProperties(IRepositoryNode.EProperties.LABEL))) {
                                 duplicateObject = handle.duplicate(newLabel);
                             } else {
-                                MessageDialog.openError(null,
-                                        DefaultMessagesImpl.getString("DuplicateAction.InvalidDialog"), rc.getMessage()); //$NON-NLS-1$
+                                // ~TDQ-4719
+                                ReturnCode rc = handle.validDuplicated();
+                                if (rc.isOk()) {
+                                    duplicateObject = handle.duplicate(newLabel);
+                                } else {
+                                    MessageDialog.openError(null,
+                                            DefaultMessagesImpl.getString("DuplicateAction.InvalidDialog"), rc.getMessage()); //$NON-NLS-1$
+                                }
                             }
                         }
                     }
                 }
             }
-        }
 
-        CorePlugin.getDefault().refreshWorkSpace();
-        // CorePlugin.getDefault().refreshDQView();
-        if (duplicateObject != null) {
-            selectAndReveal(duplicateObject);
+            CorePlugin.getDefault().refreshWorkSpace();
+            // CorePlugin.getDefault().refreshDQView();
+            if (duplicateObject != null) {
+                selectAndReveal(duplicateObject);
+            }
+        } catch (BusinessException e) {
+            ExceptionHandler.process(e, Level.FATAL);
         }
     }
 
@@ -201,14 +221,15 @@ public class DuplicateAction extends Action {
      * Selects and reveals the newly added resource in all parts of the active workbench window's active page.
      * 
      * @param duplicateObject
+     * @throws BusinessException
      */
-    private void selectAndReveal(Object duplicateObject) {
+    private void selectAndReveal(IFile duplicateObject) throws BusinessException {
         IWorkbenchWindow workbenchWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
         IWorkbenchPage page = workbenchWindow.getActivePage();
         IWorkbenchPart activePart = page.getActivePart();
-        ModelElement modelElement = ModelElementFileFactory.getModelElement((IFile) duplicateObject);
+        ModelElement modelElement = ModelElementFileFactory.getModelElement(duplicateObject);
         RepositoryNode recursiveFind = null;
-        recursiveFind = getSelctionNode(duplicateObject, modelElement, recursiveFind);
+        recursiveFind = getSelctionNode(duplicateObject, modelElement);
         if (recursiveFind != null) {
             if (recursiveFind instanceof AnalysisRepNode || recursiveFind instanceof AnalysisSubFolderRepNode
                     || recursiveFind instanceof ReportRepNode || recursiveFind instanceof ReportSubFolderRepNode) {
@@ -226,9 +247,15 @@ public class DuplicateAction extends Action {
 
     }
 
-    private RepositoryNode getSelctionNode(Object duplicateObject, ModelElement modelElement, RepositoryNode recursiveFind) {
+    private RepositoryNode getSelctionNode(IFile duplicateObject, ModelElement modelElement) throws BusinessException {
+        RepositoryNode recursiveFind = null;
         if (modelElement != null) {
             recursiveFind = RepositoryNodeHelper.recursiveFind(modelElement);
+            if (recursiveFind == null) {
+                BusinessException createBusinessException = ExceptionFactory.getInstance().createBusinessException(
+                        duplicateObject.getName());
+                throw createBusinessException;
+            }
             RepositoryNode parent = recursiveFind.getParent();
             CommonViewer dqCommonViewer = RepositoryNodeHelper.getDQCommonViewer();
             if (dqCommonViewer != null && !dqCommonViewer.getExpandedState(parent)) {
@@ -236,7 +263,7 @@ public class DuplicateAction extends Action {
             }
 
         } else {
-            IPath filePath = new Path(((IFile) duplicateObject).getFullPath().removeFileExtension().toString()
+            IPath filePath = new Path(duplicateObject.getFullPath().removeFileExtension().toString()
                     .concat("_" + VersionUtils.DEFAULT_VERSION)) //$NON-NLS-1$
                     .addFileExtension(FactoriesUtil.PROPERTIES_EXTENSION);
             Property itemProperty = PropertyHelper.getProperty(ResourceManager.getRootProject().getFile(filePath));

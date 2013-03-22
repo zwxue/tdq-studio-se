@@ -38,6 +38,7 @@ import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 import org.talend.commons.bridge.ReponsitoryContextBridge;
 import org.talend.commons.emf.EmfHelper;
+import org.talend.commons.exception.BusinessException;
 import org.talend.commons.utils.WorkspaceUtils;
 import org.talend.core.model.metadata.builder.database.DqRepositoryViewService;
 import org.talend.core.model.properties.Property;
@@ -130,6 +131,7 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
                 this.repositoryViewObject = (RepositoryViewObject) this.repositoryNode.getObject();
             }
         }
+
     }
 
     @Override
@@ -152,12 +154,17 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
      * DOC bZhou Comment method "getIntactElemenetName".
      * 
      * @return
+     * @throws BusinessException
      */
     public String getIntactElemenetName() {
         if (currentModelElement == null) {
+
             currentModelElement = getCurrentModelElement(getEditor());
+
         }
+
         return DqRepositoryViewService.buildElementName(getProperty());
+
     }
 
     protected abstract ModelElement getCurrentModelElement(FormEditor editor);

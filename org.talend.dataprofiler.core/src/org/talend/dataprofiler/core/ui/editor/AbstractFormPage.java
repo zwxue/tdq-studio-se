@@ -100,6 +100,7 @@ public abstract class AbstractFormPage extends FormPage {
 
         section.addExpansionListener(new ExpansionAdapter() {
 
+            @Override
             public void expansionStateChanged(ExpansionEvent e) {
                 form.reflow(true);
             }

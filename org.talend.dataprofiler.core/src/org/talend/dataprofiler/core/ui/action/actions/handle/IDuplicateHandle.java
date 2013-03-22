@@ -13,6 +13,7 @@
 package org.talend.dataprofiler.core.ui.action.actions.handle;
 
 import org.eclipse.core.resources.IFile;
+import org.talend.commons.exception.BusinessException;
 import org.talend.utils.sugars.ReturnCode;
 
 /**
@@ -36,8 +37,9 @@ public interface IDuplicateHandle extends IActionHandle {
      * @param newLabel
      * 
      * @return
+     * @throws BusinessException
      */
-    public IFile duplicate(String newLabel);
+    public IFile duplicate(String newLabel) throws BusinessException;
 
     /**
      * DOC bZhou Comment method "validDuplicated".

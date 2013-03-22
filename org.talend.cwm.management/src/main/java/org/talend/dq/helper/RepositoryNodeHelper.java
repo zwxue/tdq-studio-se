@@ -2212,6 +2212,15 @@ public final class RepositoryNodeHelper {
         }
         return null;
     }
+/**
+ * judge whether the node has been delete
+ */
+    public static boolean isStateDeleted(Object node) {
+        if (node instanceof IRepositoryNode) {
+            return isStateDeleted((IRepositoryNode) node);
+        }
+        return false;
+    }
 
     /**
      * 

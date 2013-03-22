@@ -16,6 +16,7 @@ package org.talend.dataprofiler.core.ui.action.actions;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.eclipse.core.internal.resources.Workspace;
 import org.eclipse.core.resources.IFile;
@@ -23,8 +24,11 @@ import org.eclipse.core.resources.IMarker;
 import org.eclipse.jface.action.Action;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.views.markers.MarkerViewUtil;
+import org.talend.commons.exception.BusinessException;
 import org.talend.commons.utils.WorkspaceUtils;
 import org.talend.dataprofiler.core.ImageLib;
+import org.talend.dataprofiler.core.exception.ExceptionFactory;
+import org.talend.dataprofiler.core.exception.ExceptionHandler;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.model.TdResourceModel;
 import org.talend.dataprofiler.core.ui.dialog.TdTaskPropertiesDialog;
@@ -80,6 +84,11 @@ public class TdAddTaskAction extends Action {
             if (navObj instanceof RepositoryNode) {
                 RepositoryNode node = (RepositoryNode) navObj;
                 modelElement = RepositoryNodeHelper.getModelElementFromRepositoryNode(node);
+                if (modelElement == null || modelElement.eResource() == null) {
+                    BusinessException createBusinessException = ExceptionFactory.getInstance().createBusinessException(
+                            node.getObject());
+                    throw createBusinessException;
+                }
                 file = WorkspaceUtils.getModelElementResource(modelElement);
             } else {
                 modelElement = (ModelElement) navObj;
@@ -97,6 +106,8 @@ public class TdAddTaskAction extends Action {
                 dialog.open();
             }
 
+        } catch (BusinessException e) {
+            ExceptionHandler.process(e, Level.FATAL);
         } catch (Exception e1) {
             log.error(e1, e1);
         }

@@ -52,7 +52,7 @@ public class RuleRepNode extends DQRepositoryNode {
 
     @Override
     public String getLabel() {
-        if (this.getRule() != null) {
+        if (this.getRule() != null && this.getRule().getName() != null) {
             return this.getRule().getName();
         }
         return super.getLabel();

@@ -77,6 +77,7 @@ public class AnalysisEditor extends CommonFormEditor {
 
     }
 
+    @Override
     protected void addPages() {
 
         TdEditorToolBar toolbar = getToolBar();
@@ -142,6 +143,7 @@ public class AnalysisEditor extends CommonFormEditor {
         }
     }
 
+    @Override
     public void doSave(IProgressMonitor monitor) {
         if (masterPage != null && masterPage.isDirty()) {
             masterPage.doSave(monitor);
@@ -149,8 +151,10 @@ public class AnalysisEditor extends CommonFormEditor {
         }
         setEditorObject(masterPage.getAnalysisRepNode());
         super.doSave(monitor);
+
     }
 
+    @Override
     protected void firePropertyChange(final int propertyId) {
         if (masterPage.isActive()) {
             // setRunActionButtonState(!isDirty() && masterPage.canRun().isOk());
@@ -161,6 +165,7 @@ public class AnalysisEditor extends CommonFormEditor {
         super.firePropertyChange(propertyId);
     }
 
+    @Override
     protected void translateInput(IEditorInput input) {
         // MOD klliu 2010-12-10
         Analysis findAnalysis = null;

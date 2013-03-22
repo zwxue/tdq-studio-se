@@ -166,6 +166,9 @@ public final class ReportHelper {
                 return USER_MADE;
             }
             // Multi column
+            if (anaType == null) {
+                return null;
+            }
             if (anaType.getName().equals(AnalysisType.MULTIPLE_COLUMN.getName())) {
                 if (BASIC_MUTICOLUMN.getLabel().equals(text)) {
                     return BASIC_MUTICOLUMN;
@@ -374,13 +377,14 @@ public final class ReportHelper {
 
         List<Analysis> analyses = new ArrayList<Analysis>();
         // MOD yyin 20120530 TDQ-5050
-        for (AnalysisMap anaMap : ((TdReport) report).getAnalysisMap()) {
-            Analysis analysis = anaMap.getAnalysis();
-            if (analysis != null) {
-                analyses.add(analysis);
+        if (report instanceof TdReport) {
+            for (AnalysisMap anaMap : ((TdReport) report).getAnalysisMap()) {
+                Analysis analysis = anaMap.getAnalysis();
+                if (analysis != null) {
+                    analyses.add(analysis);
+                }
             }
         }
-
         return analyses;
     }
 

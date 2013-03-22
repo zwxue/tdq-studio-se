@@ -325,9 +325,11 @@ public class DQRespositoryView extends CommonNavigator {
 
             public void menuAboutToShow(IMenuManager manager) {
                 ISelection selection = getCommonViewer().getSelection();
+
                 getNavigatorActionService().setContext(new ActionContext(selection));
                 getNavigatorActionService().fillContextMenu(manager);
             }
+
         });
 
         Menu menu = menuMgr.createContextMenu(getCommonViewer().getTree());
@@ -361,10 +363,11 @@ public class DQRespositoryView extends CommonNavigator {
 
             @Override
             public void mouseDoubleClick(MouseEvent e) {
+
                 boolean superDoubleClick = true;
                 Tree tree = (Tree) e.getSource();
                 Point point = new Point(e.x, e.y);
-                TreeItem item = tree.getItem(point);
+                final TreeItem item = tree.getItem(point);
                 if (item != null) {
                     Object obj = item.getData();
 
@@ -414,6 +417,7 @@ public class DQRespositoryView extends CommonNavigator {
                             if (RepositoryNodeHelper.canOpenEditor(repoNode)) {
                                 OpenItemEditorAction openItemEditorAction = new OpenItemEditorAction(repoNode.getObject());
                                 openItemEditorAction.run();
+
                             }
                             if (repoNode instanceof AnalysisRepNode || repoNode instanceof ReportRepNode
                                     || repoNode instanceof SysIndicatorDefinitionRepNode || repoNode instanceof PatternRepNode
@@ -427,6 +431,7 @@ public class DQRespositoryView extends CommonNavigator {
                     super.mouseDoubleClick(e);
                 }
             }
+
         });
         getCommonViewer().getTree().addKeyListener(new KeyListener() {
 

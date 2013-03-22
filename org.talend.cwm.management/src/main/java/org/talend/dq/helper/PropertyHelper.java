@@ -127,6 +127,21 @@ public final class PropertyHelper {
 
         return null;
     }
+/**
+ * getItemFile from the resource of property
+ */
+    public static IFile getModelElementFile(Resource propertyResource) {
+        assert propertyResource != null;
+        if (propertyResource.getURI().isPlatform()) {
+            String pString = propertyResource.getURI().toPlatformString(false);
+            IPath ePath = new Path(pString);
+            ePath = ePath.removeFileExtension().addFileExtension(FactoriesUtil.PROPERTIES_EXTENSION);
+
+            return ResourceManager.getRoot().getFile(ePath);
+        }
+
+        return null;
+    }
 
     /**
      * DOC bZhou Comment method "getProperty".
@@ -385,7 +400,6 @@ public final class PropertyHelper {
      */
     public static IFile getItemFile(Property property) {
         IPath itemPath = getItemPath(property);
-
         return ResourceManager.getRoot().getFile(itemPath);
     }
 

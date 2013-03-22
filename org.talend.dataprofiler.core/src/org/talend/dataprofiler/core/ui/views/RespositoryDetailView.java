@@ -167,6 +167,9 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
     }
 
     private void createTechnicalDetail(EObject fe) {
+        if (fe == null) {
+            return;
+        }
         newLabelAndText(tContainer,
                 DefaultMessagesImpl.getString("RespositoryDetailView.group.Identifier"), ResourceHelper.getUUID(fe)); //$NON-NLS-1$
 
@@ -463,7 +466,7 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
             }
             if (item instanceof TDQReportItem) {
                 Report report = ((TDQReportItem) item).getReport();
-                createReportDetail((TdReport) report);
+                createReportDetail(report);
                 is = false;
             }
         }
@@ -501,6 +504,9 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
     }
 
     private void createAnaysisDetail(Analysis ana) {
+        if (ana == null) {
+            return;
+        }
         createName(ana);
         createPurpose(ana);
         createDescription(ana);
@@ -561,7 +567,7 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
                 DefaultMessagesImpl.getString("RespositoryDetailView.modificationDate"), new Date(modificationStamp).toString()); //$NON-NLS-1$
     }
 
-    private void createReportDetail(TdReport rep) {
+    private void createReportDetail(Report rep) {
         createName(rep);
         createPurpose(rep);
         createDescription(rep);
