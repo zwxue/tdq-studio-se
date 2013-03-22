@@ -63,13 +63,21 @@
          point="org.eclipse.ui.menus">
       <menuContribution
             allPopups="false"
-            locationURI="menu:help?before=group help">
+            locationURI="menu:help?after=additions">
+         <separator
+               name="org.talend.dataprofiler.help.separator.start"
+               visible="true">
+         </separator>
          <command
                commandId="org.talend.dataprofiler.help.show.viewBookmark.command"
                icon="icons/bookmarks_view.gif"
                id="org.talend.dataprofiler.help.show.viewBookmark.menus.command"
                style="push">
          </command>
+         <separator
+               name="org.talend.dataprofiler.help.separator.end"
+               visible="true">
+         </separator>
       </menuContribution>
    </extension>
 
