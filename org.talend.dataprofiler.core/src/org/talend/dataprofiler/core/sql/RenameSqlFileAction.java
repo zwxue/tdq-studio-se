@@ -129,7 +129,7 @@ public class RenameSqlFileAction extends Action {
                     return;
                 }
             }
-            if (!this.filePath.toFile().exists()) {
+            if (!ResourceManager.getRootProject().exists(filePath)) {
                 BusinessException createBusinessException = ExceptionFactory.getInstance().createBusinessException(
                         this.filePath.toFile().getName());
                 throw createBusinessException;

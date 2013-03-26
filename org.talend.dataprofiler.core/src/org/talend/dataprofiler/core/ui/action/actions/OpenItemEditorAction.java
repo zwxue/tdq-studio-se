@@ -66,6 +66,7 @@ import org.talend.dataprofiler.core.ui.editor.report.ReportItemEditorInput;
 import org.talend.dataprofiler.core.ui.utils.WorkbenchUtils;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.properties.TDQAnalysisItem;
+import org.talend.dataquality.properties.TDQFileItem;
 import org.talend.dataquality.properties.TDQIndicatorDefinitionItem;
 import org.talend.dataquality.properties.TDQPatternItem;
 import org.talend.dataquality.properties.TDQReportItem;
@@ -201,7 +202,7 @@ public class OpenItemEditorAction extends Action implements IIntroAction {
             // Connection editor
             String key = repViewObj.getRepositoryObjectType().getKey();
             Item item = repViewObj.getProperty().getItem();
-            if (item instanceof TDQItem) {
+            if (item instanceof TDQItem && !(item instanceof TDQFileItem)) {
                 ModelElement modelElement = PropertyHelper.getModelElement(repViewObj.getProperty());
                 if (modelElement == null || modelElement.eResource() == null) {
                     BusinessException createBusinessException = ExceptionFactory.getInstance().createBusinessException(

@@ -47,6 +47,7 @@ import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.action.actions.handle.ActionHandleFactory;
 import org.talend.dataprofiler.core.ui.action.actions.handle.IDuplicateHandle;
 import org.talend.dataquality.indicators.definition.userdefine.UDIndicatorDefinition;
+import org.talend.dataquality.properties.TDQFileItem;
 import org.talend.dataquality.properties.TDQJrxmlItem;
 import org.talend.dataquality.properties.TDQSourceFileItem;
 import org.talend.dq.factory.ModelElementFileFactory;
@@ -104,8 +105,14 @@ public class DuplicateAction extends Action {
                     if (viewObject != null) {
                         modelElement = PropertyHelper.getModelElement(viewObject.getProperty());
                     }
-                    if (modelElement == null || modelElement.eResource() == null || modelElement instanceof UDIndicatorDefinition
-                            && UDIHelper.getUDICategory(modelElement) == null) {
+                    if (viewObject == null || viewObject.getProperty() == null || viewObject.getProperty().getItem() == null) {
+                        BusinessException createBusinessException = ExceptionFactory.getInstance().createBusinessException(""); //$NON-NLS-1$
+                        throw createBusinessException;
+                    }
+                    Item item = viewObject.getProperty().getItem();
+                    if ((modelElement == null || modelElement.eResource() == null || modelElement.getName() == null || modelElement instanceof UDIndicatorDefinition
+                            && UDIHelper.getUDICategory(modelElement) == null)
+                            && !(item instanceof TDQFileItem)) {
                         BusinessException createBusinessException = ExceptionFactory.getInstance().createBusinessException(
                                 viewObject);
                         throw createBusinessException;
