@@ -17,7 +17,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.DatabaseMetaData;
-import java.sql.SQLException;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
@@ -289,22 +288,19 @@ public final class DQStructureComparer {
             DatabaseMetaData dbJDBCMetadata = null;
             if (trc.isOk() && sqlConnObject instanceof java.sql.Connection) {
                 java.sql.Connection sqlConn = (java.sql.Connection) sqlConnObject;
-                try {
-                    // MOD sizhaoliu 2012-5-21 TDQ-4884 reload structure issue
-                    // dbJDBCMetadata = org.talend.utils.sql.ConnectionUtils.getConnectionMetadata(sqlConn);
-                    dbJDBCMetadata = ExtractMetaDataUtils.getConnectionMetadata(sqlConn);
 
-                    conn = MetadataFillFactory.getDBInstance().fillUIConnParams(metadataConnection, null);
-                    // MOD zshen the parameter for packageFiler need to differnent isCatalog or not.
-                    MetadataFillFactory.getDBInstance().fillCatalogs(conn, dbJDBCMetadata,
-                            MetadataConnectionUtils.getPackageFilter(conn, dbJDBCMetadata, true));
-                    MetadataFillFactory.getDBInstance().fillSchemas(conn, dbJDBCMetadata,
-                            MetadataConnectionUtils.getPackageFilter(conn, dbJDBCMetadata, false));
-                } catch (SQLException e) {
-                    log.error(e, e);
-                } finally {
-                    ConnectionUtils.closeConnection(sqlConn);
-                }
+                // MOD sizhaoliu 2012-5-21 TDQ-4884 reload structure issue
+                // dbJDBCMetadata = org.talend.utils.sql.ConnectionUtils.getConnectionMetadata(sqlConn);
+                dbJDBCMetadata = ExtractMetaDataUtils.getDatabaseMetaData(sqlConn, (DatabaseConnection) prevDataProvider);
+
+                conn = MetadataFillFactory.getDBInstance().fillUIConnParams(metadataConnection, null);
+                // MOD zshen the parameter for packageFiler need to differnent isCatalog or not.
+                MetadataFillFactory.getDBInstance().fillCatalogs(conn, dbJDBCMetadata,
+                        MetadataConnectionUtils.getPackageFilter(conn, dbJDBCMetadata, true));
+                MetadataFillFactory.getDBInstance().fillSchemas(conn, dbJDBCMetadata,
+                        MetadataConnectionUtils.getPackageFilter(conn, dbJDBCMetadata, false));
+
+                ConnectionUtils.closeConnection(sqlConn);
             }
         }
         if (conn == null) {
