@@ -16,8 +16,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.talend.dataquality.record.linkage.Messages;
+import org.talend.dataquality.record.linkage.attribute.DummyMatcher;
 import org.talend.dataquality.record.linkage.attribute.IAttributeMatcher;
 
 /**
@@ -73,11 +75,27 @@ abstract class AbstractRecordMatcher implements IRecordMatcher {
      */
     protected Double recordMatchThreshold = Double.POSITIVE_INFINITY;
 
+    /**
+     * hide the label when there is only one matcher.
+     */
+    protected boolean displayLabels = false;
+
+    /*
+     * (non-Javadoc)
+     *
+     * @see org.talend.dataquality.record.linkage.record.IRecordMatcher#setDisplayLabels(boolean)
+     */
+    @Override
+    public void setDisplayLabels(boolean displayLabels) {
+        this.displayLabels = displayLabels;
+    }
+
     /*
      * (non-Javadoc)
      * 
      * @see org.talend.dataquality.matching.record.IRecordMatcher#setAttributeGroups(int[][])
      */
+    @Override
     public boolean setAttributeGroups(int[][] groups) {
         if (groups == null) {
             this.useGroups = true;
@@ -104,11 +122,12 @@ abstract class AbstractRecordMatcher implements IRecordMatcher {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.talend.dataquality.matching.record.IRecordMatcher#setAttributeMatchers(org.talend.dataquality.matching.attribute
      * .IAttributeMatcher[])
      */
+    @Override
     public boolean setAttributeMatchers(IAttributeMatcher[] attrMatchers) {
         if (attrMatchers == null || attrMatchers.length != recordSize) {
             return false;
@@ -120,9 +139,10 @@ abstract class AbstractRecordMatcher implements IRecordMatcher {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataquality.matching.record.IRecordMatcher#setAttributeWeights(double[])
      */
+    @Override
     public boolean setAttributeWeights(double[] weights) {
         if (weights == null || recordSize != weights.length) {
             return false;
@@ -166,9 +186,10 @@ abstract class AbstractRecordMatcher implements IRecordMatcher {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataquality.matching.record.IRecordMatcher#setRecordSize(int)
      */
+    @Override
     public void setRecordSize(int numberOfAttributes) {
         this.recordSize = numberOfAttributes;
         // initialize weights with 1 for every attribute
@@ -181,7 +202,7 @@ abstract class AbstractRecordMatcher implements IRecordMatcher {
 
     /**
      * Method "internalScalarProduct" computes the scalar product of elements listed in usedIndices array.
-     * 
+     *
      * @param v1
      * @param v2
      * @return
@@ -197,9 +218,10 @@ abstract class AbstractRecordMatcher implements IRecordMatcher {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataquality.record.linkage.record.IRecordMatcher#setBlockingAttributeMatchers(int[])
      */
+    @Override
     public boolean setBlockingAttributeMatchers(int[] attrMatcherIndices) {
         for (int idx : attrMatcherIndices) {
             if (idx < 0 || idx >= recordSize) {
@@ -239,9 +261,10 @@ abstract class AbstractRecordMatcher implements IRecordMatcher {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataquality.record.linkage.record.IRecordMatcher#setblockingThreshold(double)
      */
+    @Override
     public boolean setblockingThreshold(double threshold) {
         this.blockingThreshold = threshold;
         return true;
@@ -249,30 +272,40 @@ abstract class AbstractRecordMatcher implements IRecordMatcher {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataquality.record.linkage.record.IRecordMatcher#getCurrentAttributeMatchingWeights()
      */
+    @Override
     public double[] getCurrentAttributeMatchingWeights() {
         return this.attributeMatchingWeights;
     }
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataquality.record.linkage.record.IRecordMatcher#getLabeledAttributeMatchWeights()
      */
+    @Override
     public String getLabeledAttributeMatchWeights() {
+        final String separator = "|"; //$NON-NLS-1$
         StringBuffer buffer = new StringBuffer();
         double[] currentAttributeMatchingWeights = this.getCurrentAttributeMatchingWeights();
         for (int i = 0; i < currentAttributeMatchingWeights.length; i++) {
             IAttributeMatcher attributeMatcher = this.attributeMatchers[i];
-            String attributeName = attributeMatcher.getAttributeName();
-            if (attributeName != null) {
-                buffer.append(attributeName).append(": ");
+            if (attributeMatcher instanceof DummyMatcher) {
+                // Remove the last ";" when exist
+                buffer = new StringBuffer(StringUtils.removeEnd(buffer.toString(), separator));
+                continue; // Don't take dummy matcher into account.
+            }
+            if (displayLabels) {
+                String attributeName = attributeMatcher.getAttributeName();
+                if (attributeName != null) {
+                    buffer.append(attributeName).append(": "); //$NON-NLS-1$
+                }
             }
             buffer.append(currentAttributeMatchingWeights[i]);
             if (i != currentAttributeMatchingWeights.length - 1) {
-                buffer.append("|");
+                buffer.append(separator);
             }
         }
 
@@ -282,34 +315,37 @@ abstract class AbstractRecordMatcher implements IRecordMatcher {
 
     /**
      * Getter for recordMatchThreshold.
-     * 
+     *
      * @return the recordMatchThreshold
      */
+    @Override
     public double getRecordMatchThreshold() {
         return this.recordMatchThreshold;
     }
 
     /**
      * Sets the recordMatchThreshold.
-     * 
+     *
      * @param recordMatchThreshold the recordMatchThreshold to set
      */
+    @Override
     public void setRecordMatchThreshold(double recordMatchThreshold) {
         this.recordMatchThreshold = recordMatchThreshold;
     }
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataquality.record.linkage.record.IRecordMatcher#getRecordSize()
      */
+    @Override
     public int getRecordSize() {
         return recordSize;
     }
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.lang.Object#toString()
      */
     @Override

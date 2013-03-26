@@ -19,7 +19,7 @@ import org.talend.dataquality.record.linkage.attribute.IAttributeMatcher;
 
 /**
  * created by scorreia on Jan 9, 2013
- * 
+ *
  * This class combines several matchers. It is also a matcher, but attribute matchers cannot be set to this class.
  * Instead, record matchers can be added (each record matcher containing a set of attribute matchers). The record size
  * must the same for all matchers.
@@ -32,7 +32,7 @@ public class CombinedRecordMatcher extends AbstractRecordMatcher {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataquality.record.linkage.record.IRecordMatcher#getMatchingWeight(java.lang.String[],
      * java.lang.String[])
      */
@@ -49,7 +49,6 @@ public class CombinedRecordMatcher extends AbstractRecordMatcher {
             }
             if (matchingWeight >= matcher.getRecordMatchThreshold()) {
                 // when there is a match with one matcher, no need to loop on all matcher
-                attributeMatchingWeights = matcher.getCurrentAttributeMatchingWeights();
                 return matchingWeight;
             }
         }
@@ -60,7 +59,7 @@ public class CombinedRecordMatcher extends AbstractRecordMatcher {
      * Method "add" adds the given matcher to the list of matchers. There is a constraint that all matchers must have
      * the same recordSize value. If a matcher has a different recordSize, then it's not added and the method returns
      * false.
-     * 
+     *
      * @param matcher the matcher to add (must not be null)
      * @return true when the matcher is added and false otherwise.
      */
@@ -73,23 +72,24 @@ public class CombinedRecordMatcher extends AbstractRecordMatcher {
                 return false;
             }
         }
-
         return this.matchers.add(matcher);
     }
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataquality.record.linkage.record.AbstractRecordMatcher#getLabeledAttributeMatchWeights()
      */
     @Override
     public String getLabeledAttributeMatchWeights() {
-        return this.lastPositiveMatcher.getLabeledAttributeMatchWeights();
+        lastPositiveMatcher.setDisplayLabels(displayLabels);
+        String labelWeights = lastPositiveMatcher.getLabeledAttributeMatchWeights();
+        return labelWeights;
     }
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.talend.dataquality.record.linkage.record.AbstractRecordMatcher#setAttributeMatchers(org.talend.dataquality
      * .record.linkage.attribute.IAttributeMatcher[])
@@ -101,7 +101,7 @@ public class CombinedRecordMatcher extends AbstractRecordMatcher {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataquality.record.linkage.record.AbstractRecordMatcher#setAttributeWeights(double[])
      */
     @Override
@@ -111,7 +111,7 @@ public class CombinedRecordMatcher extends AbstractRecordMatcher {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataquality.record.linkage.record.AbstractRecordMatcher#toString()
      */
     @Override

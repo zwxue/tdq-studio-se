@@ -12,8 +12,6 @@
 // ============================================================================
 package org.talend.dataquality.record.linkage.record;
 
-import static org.junit.Assert.*;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -28,6 +26,8 @@ import org.talend.dataquality.record.linkage.attribute.IAttributeMatcher;
 import org.talend.dataquality.record.linkage.attribute.JaroWinklerMatcher;
 import org.talend.dataquality.record.linkage.constant.AttributeMatcherType;
 import org.talend.dataquality.record.linkage.constant.RecordMatcherType;
+
+import static org.junit.Assert.*;
 
 /**
  * DOC scorreia class global comment. Detailled comment
@@ -65,7 +65,7 @@ public class SimpleVSRRecordMatcherTest {
     public static final String[][] RECORDS2_UNREG = { { "seb" }, { "sebas", "taland", "suresnes" }, };
 
     /**
-     * 
+     *
      * Test what if the record size are not match.
      */
     @Test
@@ -207,7 +207,7 @@ public class SimpleVSRRecordMatcherTest {
 
     /**
      * DOC scorreia Comment method "computeForWeights".
-     * 
+     *
      * @param attributeWeights
      */
     private static void computeForWeights(double[] attributeWeights, IRecordMatcher match, int weightIdxOut) {
@@ -369,6 +369,7 @@ public class SimpleVSRRecordMatcherTest {
         Assert.assertTrue(matcher.setAttributeMatchers(allAttMatchers));
 
         // test getLabeledAttributeMatchWeights (check that it gives expected results)
+        matcher.setDisplayLabels(Boolean.TRUE);
         String labeledAttributeMatchWeights = matcher.getLabeledAttributeMatchWeights();
         Assert.assertEquals("no computation done. Result should be 0", "EMAIL: 0.0", labeledAttributeMatchWeights);
 

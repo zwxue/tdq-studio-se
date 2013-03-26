@@ -117,4 +117,12 @@ public interface IRecordMatcher {
      * @param recordMatchThreshold the recordMatchThreshold to set
      */
     void setRecordMatchThreshold(double recordMatchThreshold);
+
+    /**
+     * 
+     * Set to display the distance details labels or not.
+     *
+     * @param displayLabels
+     */
+    public void setDisplayLabels(boolean displayLabels);
 }

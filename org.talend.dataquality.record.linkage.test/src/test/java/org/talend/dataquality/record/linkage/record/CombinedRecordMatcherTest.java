@@ -25,7 +25,7 @@ import org.talend.dataquality.record.linkage.constant.RecordMatcherType;
 
 /**
  * created by scorreia on Jan 17, 2013 Detailled comment
- * 
+ *
  */
 public class CombinedRecordMatcherTest {
 
@@ -120,7 +120,7 @@ public class CombinedRecordMatcherTest {
 
     /**
      * DOC scorreia Comment method "compare".
-     * 
+     *
      * @param m1
      * @param m2
      */
@@ -287,8 +287,21 @@ public class CombinedRecordMatcherTest {
 
         attMatcher1.setAttributeName("EMAIL");
         attMatcher2.setAttributeName("NAME");
-
+        recordMatcher.setDisplayLabels(true);
         Assert.assertEquals("EMAIL: 1.0|NAME: 1.0", recordMatcher.getLabeledAttributeMatchWeights());
+
+        CombinedRecordMatcher combMatcher = RecordMatcherFactory.createCombinedRecordMatcher();
+        IRecordMatcher recordMatcher2 = RecordMatcherFactory.createMatcher("Simple VSR Matcher");
+        recordMatcher2.setRecordSize(2);
+        recordMatcher2.setAttributeMatchers(attrMatchers);
+        combMatcher.add(recordMatcher);
+        combMatcher.add(recordMatcher2);
+
+        Assert.assertEquals(1.0d, combMatcher.getMatchingWeight(record1, record1));
+        combMatcher.setDisplayLabels(Boolean.FALSE);
+        Assert.assertEquals("1.0|1.0", combMatcher.getLabeledAttributeMatchWeights());
+        combMatcher.setDisplayLabels(Boolean.TRUE);
+        Assert.assertEquals("EMAIL: 1.0|NAME: 1.0", combMatcher.getLabeledAttributeMatchWeights());
 
     }
 }
