@@ -535,7 +535,7 @@ public final class WorkbenchUtils {
                     }
                     // only when all elements of the data provider are removed from the analysis, the dependency between
                     // them should be removed too. If only parts of them removed, the dependendy should not be removed.
-                    if (tempAnalysis.getContext().getAnalysedElements().size() < 1) {
+                    if (tempAnalysis.getContext().getAnalysedElements().isEmpty()) {
                         removeDependenciesBetweenAnaCon(oldDataProvider, tempAnalysis);
                     }
                     // ~
