@@ -27,6 +27,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Platform;
+import org.talend.core.model.metadata.builder.database.ExtractMetaDataUtils;
 import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.management.i18n.Messages;
 import org.talend.dataquality.indicators.Indicator;
@@ -262,7 +263,7 @@ public abstract class Evaluator<T> implements IMemoryChangeListener {
         }
         try {
             // MOD qiongli 2012-8-9,Method 'Method not supported' not supported for HiveConnection
-            if (!(ConnectionUtils.isOdbcProgress(connection) || ConnectionUtils.isHive(connection))) {
+            if (!(ConnectionUtils.isOdbcProgress(connection) || ExtractMetaDataUtils.isHiveConnection(connection))) {
                 connection.setCatalog(catalogName);
             }
             return true;

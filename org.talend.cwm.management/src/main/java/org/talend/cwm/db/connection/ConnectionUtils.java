@@ -60,7 +60,6 @@ import org.talend.core.model.metadata.builder.connection.MetadataTable;
 import org.talend.core.model.metadata.builder.database.DriverShim;
 import org.talend.core.model.metadata.builder.database.ExtractMetaDataFromDataBase;
 import org.talend.core.model.metadata.builder.database.ExtractMetaDataUtils;
-import org.talend.core.model.metadata.builder.database.HotClassLoader;
 import org.talend.core.model.metadata.builder.database.JavaSqlFactory;
 import org.talend.core.model.metadata.builder.database.PluginConstant;
 import org.talend.core.model.metadata.builder.database.XMLSchemaBuilder;
@@ -95,6 +94,7 @@ import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.nodes.DQRepositoryNode;
 import org.talend.dq.writer.impl.ElementWriterFactory;
+import org.talend.metadata.managment.connection.manager.HiveConnectionManager;
 import org.talend.repository.ui.utils.ConnectionContextHelper;
 import org.talend.repository.ui.utils.DBConnectionContextUtils;
 import org.talend.repository.ui.utils.FileConnectionContextUtils;
@@ -262,6 +262,35 @@ public final class ConnectionUtils {
 
     public static ReturnCode isConnectionAvailable(Connection analysisDataProvider) {
         ReturnCode returnCode = new ReturnCode();
+
+        // check hive connection
+        IMetadataConnection metadataConnection = ConvertionHelper.convert(analysisDataProvider);
+        if (metadataConnection != null) {
+            if (EDatabaseTypeName.HIVE.getXmlName().equalsIgnoreCase(metadataConnection.getDbType())) {
+                try {
+                    HiveConnectionManager.getInstance().checkConnection(metadataConnection);
+                    returnCode.setOk(true);
+                    return returnCode;
+                } catch (ClassNotFoundException e) {
+                    returnCode.setOk(false);
+                    returnCode.setMessage(e.toString());
+                    return returnCode;
+                } catch (InstantiationException e) {
+                    returnCode.setOk(false);
+                    returnCode.setMessage(e.toString());
+                    return returnCode;
+                } catch (IllegalAccessException e) {
+                    returnCode.setOk(false);
+                    returnCode.setMessage(e.toString());
+                    return returnCode;
+                } catch (SQLException e) {
+                    returnCode.setOk(false);
+                    returnCode.setMessage(e.toString());
+                    return returnCode;
+                }
+            }
+        }
+
         // MOD klliu check file connection is available
         if (analysisDataProvider instanceof FileConnection) {
             FileConnection fileConn = (FileConnection) analysisDataProvider;
@@ -518,15 +547,9 @@ public final class ConnectionUtils {
                             try {
                                 Class<?> clazz = null;
 
-                                // if it is hive embedded connection
-                                if (url.equals("jdbc:hive://")) { //$NON-NLS-1$
-                                    HotClassLoader hotSysLoader = (HotClassLoader) Thread.currentThread().getContextClassLoader();
-                                    clazz = hotSysLoader.loadClass(driverClassName);
-                                } else {
-                                    MyURLClassLoader cl;
-                                    cl = new MyURLClassLoader(urls.toArray(new URL[0]));
-                                    clazz = cl.findClass(driverClassName);
-                                }
+                                MyURLClassLoader cl;
+                                cl = new MyURLClassLoader(urls.toArray(new URL[0]));
+                                clazz = cl.findClass(driverClassName);
                                 if (clazz != null) {
                                     driver = (Driver) clazz.newInstance();
                                     // MOD mzhao 2009-06-05,Bug 7571 Get driver from
@@ -695,7 +718,9 @@ public final class ConnectionUtils {
      * @param connection
      * @return
      * @throws SQLException
+     * @deprecated use ExtractMetaDataUtils.isHiveConnection instead of it
      */
+    @Deprecated
     public static boolean isHive(java.sql.Connection connection) throws SQLException {
         DatabaseMetaData connectionMetadata = ExtractMetaDataUtils.getConnectionMetadata(connection);
         if (MetadataConnectionUtils.isHive(connectionMetadata)) {

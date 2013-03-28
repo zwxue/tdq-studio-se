@@ -13,6 +13,7 @@
 package org.talend.dq.analysis;
 
 import java.lang.management.ManagementFactory;
+import java.sql.SQLException;
 import java.util.Date;
 import java.util.List;
 
@@ -20,6 +21,9 @@ import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.common.util.EList;
+import org.talend.core.database.EDatabaseTypeName;
+import org.talend.core.model.metadata.IMetadataConnection;
+import org.talend.core.model.metadata.builder.ConvertionHelper;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.database.JavaSqlFactory;
 import org.talend.cwm.db.connection.ConnectionUtils;
@@ -43,6 +47,7 @@ import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.indicators.IndicatorCommonUtil;
 import org.talend.dq.indicators.ext.PatternMatchingExt;
 import org.talend.dq.indicators.preview.table.ChartDataEntity;
+import org.talend.metadata.managment.connection.manager.HiveConnectionManager;
 import org.talend.utils.sugars.ReturnCode;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.foundation.softwaredeployment.DataManager;
@@ -343,6 +348,7 @@ public abstract class AnalysisExecutor implements IAnalysisExecutor {
         log.error(this.errorMessage);
         return false;
     }
+
     /**
      * DOC scorreia Comment method "getConnection".
      * 
@@ -370,17 +376,38 @@ public abstract class AnalysisExecutor implements IAnalysisExecutor {
             return rc;
         }
 
-        // else ok
+        // create hive connection
+        IMetadataConnection metadataConnection = ConvertionHelper.convert(dataprovider);
+        if (EDatabaseTypeName.HIVE.getXmlName().equalsIgnoreCase(metadataConnection.getDbType())) {
+            try {
+                java.sql.Connection createConnection = HiveConnectionManager.getInstance().createConnection(metadataConnection);
+                rc.setOk(true);
+                rc.setObject(createConnection);
+            } catch (ClassNotFoundException e) {
+                log.error(e);
+                rc.setOk(false);
+            } catch (InstantiationException e) {
+                log.error(e);
+                rc.setOk(false);
+            } catch (IllegalAccessException e) {
+                log.error(e);
+                rc.setOk(false);
+            } catch (SQLException e) {
+                log.error(e);
+                rc.setOk(false);
+            }
+            return rc;
+        } else {
+            // create other type connection
+            TypedReturnCode<java.sql.Connection> connection = JavaSqlFactory.createConnection(dataprovider);
+            if (!connection.isOk()) {
+                rc.setReturnCode(connection.getMessage(), false);
+                return rc;
+            }
 
-        TypedReturnCode<java.sql.Connection> connection = JavaSqlFactory.createConnection(dataprovider);
-        if (!connection.isOk()) {
-            rc.setReturnCode(connection.getMessage(), false);
+            rc.setObject(connection.getObject());
             return rc;
         }
-        // else ok
-        rc.setObject(connection.getObject());
-        return rc;
-
     }
 
     /**
@@ -410,7 +437,7 @@ public abstract class AnalysisExecutor implements IAnalysisExecutor {
         }
 
         if (pooledConnection == null) {
-            rc.setReturnCode("Can't get any useable connection!", false);
+            rc.setReturnCode("Can't get any useable connection!", false); //$NON-NLS-1$
             return rc;
         }
 
@@ -444,9 +471,9 @@ public abstract class AnalysisExecutor implements IAnalysisExecutor {
     }
 
     protected boolean continueRun() {
-    	if(!Platform.isRunning()){ // reporting engine is working as library
-    		return true;
-    	}
+        if (!Platform.isRunning()) { // reporting engine is working as library
+            return true;
+        }
         boolean ret = true;
         if (getMonitor() != null && getMonitor().isCanceled()) {
             ret = false;

@@ -77,8 +77,9 @@ public final class ExecutionResultImpl implements ExecutionResults {
         this.parameters = parameters;
         this.maxRows = maxRows;
 
-        if (!hasResults)
+        if (!hasResults) {
             state = State.SECONDARY_RESULTS;
+        }
     }
 
     public DataSet nextDataSet() throws SQLException {
@@ -89,29 +90,32 @@ public final class ExecutionResultImpl implements ExecutionResults {
         }
 
         // Anything more to do?
-        if (state == State.CLOSED)
+        if (state == State.CLOSED) {
             return null;
+        }
 
         // Get the first set
         if (state == State.PRIMARY_RESULTS) {
             currentResultSet = stmt.getResultSet();
             state = State.SECONDARY_RESULTS;
-            if (currentResultSet != null)
+            if (currentResultSet != null) {
                 return new DataSet(currentResultSet, null, maxRows);
+            }
         }
 
         // While we have more secondary results (i.e. those that come directly from Statement but after the first
         // getResults())
         while (state == State.SECONDARY_RESULTS) {
             // MOD qiongli TDQ-5907, HivePreparedStatement dosenot support method 'getResultSet()'.
-            if (!(stmt instanceof HivePreparedStatement) && stmt.getMoreResults())
+            if (!(HivePreparedStatement.class.getName().equals(stmt.getClass().getName())) && stmt.getMoreResults()) {
                 currentResultSet = stmt.getResultSet();
-            else {
+            } else {
                 int updateCount = stmt.getUpdateCount();
-                if (updateCount != -1 && updateCount != 0)
+                if (updateCount != -1 && updateCount != 0) {
                     this.updateCount += updateCount;
-                else
+                } else {
                     state = State.PARAMETER_RESULTS;
+                }
             }
         }
 
@@ -130,21 +134,25 @@ public final class ExecutionResultImpl implements ExecutionResults {
             }
             while (paramIter.hasNext()) {
                 NamedParameter param = paramIter.next();
-                if (param.getDataType() == NamedParameter.DataType.CURSOR)
+                if (param.getDataType() == NamedParameter.DataType.CURSOR) {
                     currentResultSet = product.getResultSet(stmt, param, paramColumnIndex);
+                }
                 paramColumnIndex++;
-                if (currentResultSet != null)
+                if (currentResultSet != null) {
                     return new DataSet(Messages.getString("DataSet.Cursor") + ' ' + param.getName(), currentResultSet, null,
                             maxRows);
+                }
             }
         }
 
         // Generate a dataset for output parameters
         state = State.CLOSED;
-        if (parameters == null)
+        if (parameters == null) {
             return null;
-        if (!(stmt instanceof CallableStatement))
+        }
+        if (!(stmt instanceof CallableStatement)) {
             return null;
+        }
         CallableStatement stmt = (CallableStatement) this.stmt;
         TreeMap<NamedParameter, ParamValues> params = new TreeMap<NamedParameter, ParamValues>();
         int columnIndex = 1;
@@ -152,16 +160,18 @@ public final class ExecutionResultImpl implements ExecutionResults {
         for (NamedParameter param : parameters) {
             if (param.getDataType() != NamedParameter.DataType.CURSOR && param.isOutput()) {
                 ParamValues pv = params.get(param);
-                if (pv == null)
+                if (pv == null) {
                     params.put(param, new ParamValues(param, columnIndex));
-                else
+                } else {
                     pv.add(columnIndex);
+                }
                 numValues++;
             }
             columnIndex++;
         }
-        if (numValues == 0)
+        if (numValues == 0) {
             return null;
+        }
         Comparable[][] rows = new Comparable[numValues][2];
         columnIndex = 1;
         int rowIndex = 0;
@@ -170,10 +180,11 @@ public final class ExecutionResultImpl implements ExecutionResults {
             for (Integer index : pv.columnIndexes) {
                 Comparable[] row = rows[rowIndex++];
                 row[0] = pv.param.getName();
-                if (pv.columnIndexes.size() > 1)
+                if (pv.columnIndexes.size() > 1) {
                     row[0] = (pv.param.getName() + '[' + valueIndex + ']');
-                else
+                } else {
                     row[0] = pv.param.getName();
+                }
                 row[1] = stmt.getString(index);
                 valueIndex++;
             }
@@ -188,8 +199,9 @@ public final class ExecutionResultImpl implements ExecutionResults {
         } catch (SQLException e) {
             // Nothing
         }
-        if (currentResultSet != null)
+        if (currentResultSet != null) {
             currentResultSet.close();
+        }
     }
 
     public int getUpdateCount() throws SQLException {

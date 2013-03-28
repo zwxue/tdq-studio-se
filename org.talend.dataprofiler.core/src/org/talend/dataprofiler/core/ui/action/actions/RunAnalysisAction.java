@@ -37,12 +37,10 @@ import org.eclipse.ui.cheatsheets.ICheatSheetManager;
 import org.eclipse.ui.forms.editor.IFormPage;
 import org.eclipse.ui.part.FileEditorInput;
 import org.talend.commons.exception.BusinessException;
-import org.talend.commons.exception.CommonExceptionHandler;
+import org.talend.core.database.EDatabaseTypeName;
 import org.talend.core.model.metadata.IMetadataConnection;
 import org.talend.core.model.metadata.builder.ConvertionHelper;
 import org.talend.core.model.metadata.builder.connection.Connection;
-import org.talend.core.model.metadata.builder.database.HotClassLoader;
-import org.talend.core.model.metadata.builder.database.JDBCDriverLoader;
 import org.talend.core.model.properties.Item;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.cwm.compare.exception.ReloadCompareException;
@@ -242,27 +240,30 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
             IMetadataConnection metadataConnection = ConvertionHelper.convert(analysisDataProvider, false,
                     analysisDataProvider.getContextName());
             // ~
-            boolean isHiveEmbedded = ConnectionUtils.isHiveEmbedded(metadataConnection);
-            if (isHiveEmbedded) {
-                // ManagerConnection managerConnection = new ManagerConnection();
+
+            ReturnCode connectionAvailable = new ReturnCode(false);
+
+            if (metadataConnection != null
+                    && EDatabaseTypeName.HIVE.getXmlName().equalsIgnoreCase(metadataConnection.getDbType())) {
                 try {
                     HiveConnectionManager.getInstance().checkConnection(metadataConnection);
+                    connectionAvailable.setOk(true);
                 } catch (ClassNotFoundException e) {
-                    CommonExceptionHandler.process(e);
+                    connectionAvailable.setOk(false);
+                    log.error(e);
                 } catch (InstantiationException e) {
-                    CommonExceptionHandler.process(e);
+                    connectionAvailable.setOk(false);
+                    log.error(e);
                 } catch (IllegalAccessException e) {
-                    CommonExceptionHandler.process(e);
+                    connectionAvailable.setOk(false);
+                    log.error(e);
                 } catch (SQLException e) {
-                    CommonExceptionHandler.process(e);
+                    connectionAvailable.setOk(false);
+                    log.error(e);
                 }
-                JDBCDriverLoader jdbcDriverLoader = new JDBCDriverLoader();
-                HotClassLoader hotClassLoaderFromCache = jdbcDriverLoader.getHotClassLoaderFromCache(
-                        metadataConnection.getDbType(), metadataConnection.getDbVersionString());
-                Thread.currentThread().setContextClassLoader(hotClassLoaderFromCache);
+            } else {
+                connectionAvailable = ConnectionUtils.isConnectionAvailable(analysisDataProvider);
             }
-
-            ReturnCode connectionAvailable = ConnectionUtils.isConnectionAvailable(analysisDataProvider);
 
             if (!connectionAvailable.isOk()) {
                 MessageDialogWithToggle.openWarning(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
@@ -348,9 +349,6 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
 
             job.setUser(true);
             job.schedule();
-            if (isHiveEmbedded) {
-                Thread.currentThread().setContextClassLoader(contextClassLoader);
-            }
         } catch (BusinessException e) {
             ExceptionHandler.process(e, Level.FATAL);
         }

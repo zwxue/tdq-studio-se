@@ -219,11 +219,11 @@ public class ConnectionUtilsTest {
         when(ExtractMetaDataUtils.getConnectionMetadata(connection)).thenReturn(connectionMetadata);
         PowerMockito.mockStatic(MetadataConnectionUtils.class);
         when(MetadataConnectionUtils.isHive(connectionMetadata)).thenReturn(true);
-        boolean isHive = ConnectionUtils.isHive(connection);
+        boolean isHive = ExtractMetaDataUtils.isHiveConnection(connection);
         assertTrue(isHive);
 
         when(MetadataConnectionUtils.isHive(connectionMetadata)).thenReturn(false);
-        isHive = ConnectionUtils.isHive(connection);
+        isHive = ExtractMetaDataUtils.isHiveConnection(connection);
         assertFalse(isHive);
     }
 

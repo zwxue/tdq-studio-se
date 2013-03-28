@@ -166,7 +166,7 @@ public class DBViewFolderRepNode extends DQRepositoryNode implements IConnection
                         // MOD gdbu 2011-7-21 bug 23220
                         connection = item.getConnection();
                         views = DqRepositoryViewService.getViews(connection, catalog, null, true);
-                        if (views.size() > 0) {
+                        if (views != null && views.size() > 0) {
                             ProxyRepositoryFactory.getInstance().save(item, false);
                         }
                         // ~23220
@@ -219,19 +219,21 @@ public class DBViewFolderRepNode extends DQRepositoryNode implements IConnection
      * @param tables
      */
     private void createViewRepositoryNode(List<TdView> views, List<IRepositoryNode> node) {
-        for (TdView view : views) {
-            // create view object
-            TdViewRepositoryObject metadataView = new TdViewRepositoryObject(viewObject, view);
-            metadataView.setTableName(view.getName());
-            metadataView.setLabel(view.getName());
-            metadataView.setId(view.getName());
-            // create a node for ui
-            DBViewRepNode viewNode = new DBViewRepNode(metadataView, this, ENodeType.TDQ_REPOSITORY_ELEMENT);
-            viewNode.setProperties(EProperties.LABEL, ERepositoryObjectType.METADATA_CON_TABLE);
-            viewNode.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.METADATA_CON_VIEW);
+        if (views != null) {
+            for (TdView view : views) {
+                // create view object
+                TdViewRepositoryObject metadataView = new TdViewRepositoryObject(viewObject, view);
+                metadataView.setTableName(view.getName());
+                metadataView.setLabel(view.getName());
+                metadataView.setId(view.getName());
+                // create a node for ui
+                DBViewRepNode viewNode = new DBViewRepNode(metadataView, this, ENodeType.TDQ_REPOSITORY_ELEMENT);
+                viewNode.setProperties(EProperties.LABEL, ERepositoryObjectType.METADATA_CON_TABLE);
+                viewNode.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.METADATA_CON_VIEW);
 
-            metadataView.setRepositoryNode(viewNode);
-            node.add(viewNode);
+                metadataView.setRepositoryNode(viewNode);
+                node.add(viewNode);
+            }
         }
     }
 

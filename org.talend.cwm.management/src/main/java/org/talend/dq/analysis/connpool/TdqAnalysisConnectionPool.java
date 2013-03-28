@@ -22,12 +22,16 @@ import java.util.Map;
 import java.util.Vector;
 
 import org.apache.log4j.Logger;
+import org.talend.core.database.EDatabaseTypeName;
+import org.talend.core.model.metadata.IMetadataConnection;
+import org.talend.core.model.metadata.builder.ConvertionHelper;
 import org.talend.core.model.metadata.builder.database.JavaSqlFactory;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.management.i18n.Messages;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dq.analysis.AnalysisHandler;
 import org.talend.dq.helper.EObjectHelper;
+import org.talend.metadata.managment.connection.manager.HiveConnectionManager;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.foundation.softwaredeployment.DataManager;
 
@@ -191,40 +195,67 @@ public class TdqAnalysisConnectionPool {
         if (isFull()) {
             return conn;
         }
-        try {
-            DataManager datamanager = analysis.getContext().getConnection();
-            if (datamanager == null) {
-                log.error(Messages.getString("AnalysisExecutor.DataManagerNull", analysis.getName())); //$NON-NLS-1$
-                return null;
-            }
-            if (datamanager != null && datamanager.eIsProxy()) {
-                datamanager = (DataManager) EObjectHelper.resolveObject(datamanager);
-            }
-            org.talend.core.model.metadata.builder.connection.Connection dataprovider = SwitchHelpers.CONNECTION_SWITCH
-                    .doSwitch(datamanager);
+        DataManager datamanager = analysis.getContext().getConnection();
+        if (datamanager == null) {
+            log.error(Messages.getString("AnalysisExecutor.DataManagerNull", analysis.getName())); //$NON-NLS-1$
+            return null;
+        }
+        if (datamanager != null && datamanager.eIsProxy()) {
+            datamanager = (DataManager) EObjectHelper.resolveObject(datamanager);
+        }
+        org.talend.core.model.metadata.builder.connection.Connection dataprovider = SwitchHelpers.CONNECTION_SWITCH
+                .doSwitch(datamanager);
 
-            TypedReturnCode<Connection> trcConn = JavaSqlFactory.createConnection(dataprovider);
-            if (trcConn.isOk()) {
-                conn = trcConn.getObject();
-                synchronized (this.synchronizedFlag) {
-                    this.getPConnections().add(new PooledTdqAnalysisConnection(conn));
+        TypedReturnCode<Connection> trcConn = null;
+
+        IMetadataConnection metadataConnection = ConvertionHelper.convert(dataprovider);
+
+        if (metadataConnection != null && EDatabaseTypeName.HIVE.getXmlName().equalsIgnoreCase(metadataConnection.getDbType())) {
+            trcConn = new TypedReturnCode<Connection>(false);
+            try {
+                Connection hiveConnection = HiveConnectionManager.getInstance().createConnection(metadataConnection);
+                if (hiveConnection != null) {
+                    trcConn.setOk(true);
+                    trcConn.setObject(hiveConnection);
                 }
+            } catch (ClassNotFoundException e) {
+                trcConn.setOk(false);
+                log.error(e);
+            } catch (InstantiationException e) {
+                trcConn.setOk(false);
+                log.error(e);
+            } catch (IllegalAccessException e) {
+                trcConn.setOk(false);
+                log.error(e);
+            } catch (SQLException e) {
+                trcConn.setOk(false);
+                log.error(e);
             }
-
-        } catch (Exception e) {
-            log.debug(e);
+        } else {
+            trcConn = JavaSqlFactory.createConnection(dataprovider);
+        }
+        if (trcConn != null && trcConn.isOk()) {
+            conn = trcConn.getObject();
+            synchronized (this.synchronizedFlag) {
+                this.getPConnections().add(new PooledTdqAnalysisConnection(conn));
+            }
         }
 
         if (conn != null) {
             try {
-                DatabaseMetaData metaData = conn.getMetaData();
-                int currentDriverMaxConnections = new Float(metaData.getMaxConnections() * DEFAULT_CONNECTION_NUMBER_OFFSET)
-                        .intValue();
-                synchronized (this.synchronizedFlag) {
-                    this.setDriverMaxConnections(currentDriverMaxConnections);
+                if (metadataConnection != null
+                        && EDatabaseTypeName.HIVE.getXmlName().equalsIgnoreCase(metadataConnection.getDbType())) {
+                    // don't set the max connection number if it is hive connection
+                } else {
+                    DatabaseMetaData metaData = conn.getMetaData();
+                    int currentDriverMaxConnections = new Float(metaData.getMaxConnections() * DEFAULT_CONNECTION_NUMBER_OFFSET)
+                            .intValue();
+                    synchronized (this.synchronizedFlag) {
+                        this.setDriverMaxConnections(currentDriverMaxConnections);
+                    }
                 }
-            } catch (Exception e) {
-                log.debug(e, e);
+            } catch (SQLException e) {
+                log.debug(e,e);
             }
         }
 

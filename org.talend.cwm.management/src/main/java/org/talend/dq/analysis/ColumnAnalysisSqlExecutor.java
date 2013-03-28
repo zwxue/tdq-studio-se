@@ -36,6 +36,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
+import org.talend.core.model.metadata.builder.database.ExtractMetaDataUtils;
 import org.talend.core.model.metadata.builder.database.dburl.SupportDBUrlType;
 import org.talend.core.model.metadata.builder.util.DatabaseConstant;
 import org.talend.cwm.db.connection.ConnectionUtils;
@@ -1355,8 +1356,8 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
         try {
             // MOD xqliu 2009-12-09 bug 9822
             if (!(ConnectionUtils.isOdbcMssql(connection) || ConnectionUtils.isOdbcOracle(connection)
-                    || ConnectionUtils.isOdbcProgress(connection) || ConnectionUtils.isOdbcTeradata(connection) || ConnectionUtils
-                        .isHive(connection))) {
+                    || ConnectionUtils.isOdbcProgress(connection) || ConnectionUtils.isOdbcTeradata(connection) || ExtractMetaDataUtils
+                        .isHiveConnection(connection))) {
                 // MOD scorreia 2008-08-01 MSSQL does not support quoted catalog's name
                 connection.setCatalog(catalogName);
             }
@@ -1391,7 +1392,7 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
             if ("SQLite".equals(connection.getMetaData().getDatabaseProductName())) { //$NON-NLS-1$ 
                 return false;
             }
-            if ("Hive".equals(connection.getMetaData().getDatabaseProductName())) { //$NON-NLS-1$ 
+            if (ExtractMetaDataUtils.isHiveConnection(connection)) {
                 return false;
             }
         } catch (SQLException e) {

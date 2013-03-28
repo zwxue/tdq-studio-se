@@ -59,6 +59,10 @@ public class User implements Comparable<User>, SessionEstablishedListener {
     // Pool of available connections
     private LinkedList<SQLConnection> unused = new LinkedList<SQLConnection>();
 
+    public LinkedList<SQLConnection> getUnused() {
+        return this.unused;
+    }
+
     // List of connections in use
     private LinkedList<SQLConnection> allocated = new LinkedList<SQLConnection>();
 

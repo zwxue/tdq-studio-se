@@ -29,6 +29,7 @@ import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.talend.core.model.metadata.builder.database.ExtractMetaDataUtils;
 import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.exception.AnalysisExecutionException;
 import org.talend.cwm.helper.CatalogHelper;
@@ -162,7 +163,7 @@ public class TableAnalysisSqlExecutor extends TableAnalysisExecutor {
             joinConditions.clear();
             if (!wr.getJoins().isEmpty()) {
                 for (JoinElement joinelt : wr.getJoins()) {
-                    JoinElement joinCopy = (JoinElement) EcoreUtil.copy(joinelt);
+                    JoinElement joinCopy = EcoreUtil.copy(joinelt);
                     joinConditions.add(joinCopy);
                 }
             }
@@ -212,6 +213,7 @@ public class TableAnalysisSqlExecutor extends TableAnalysisExecutor {
         return true;
     }
 
+    @Override
     protected boolean traceError(String error) {
         this.errorMessage = error;
         log.error(this.errorMessage);
@@ -233,6 +235,7 @@ public class TableAnalysisSqlExecutor extends TableAnalysisExecutor {
         return true;
     }
 
+    @Override
     protected DbmsLanguage dbms() {
         if (this.dbmsLanguage == null) {
             this.dbmsLanguage = createDbmsLanguage();
@@ -347,9 +350,9 @@ public class TableAnalysisSqlExecutor extends TableAnalysisExecutor {
         } finally {
             ReturnCode rc = closeConnection(analysis, connection);
             ok = ok && rc.isOk();
-                if (!ok) {
-                    this.errorMessage = rc.getMessage();
-                }
+            if (!ok) {
+                this.errorMessage = rc.getMessage();
+            }
 
         }
         return ok;
@@ -413,8 +416,8 @@ public class TableAnalysisSqlExecutor extends TableAnalysisExecutor {
     protected boolean changeCatalog(String catalogName, Connection connection) {
         try {
             if (!(ConnectionUtils.isOdbcMssql(connection) || ConnectionUtils.isOdbcOracle(connection)
-                    || ConnectionUtils.isOdbcProgress(connection) || ConnectionUtils.isOdbcTeradata(connection) || ConnectionUtils
-                    .isHive(connection))) {
+                    || ConnectionUtils.isOdbcProgress(connection) || ConnectionUtils.isOdbcTeradata(connection) || ExtractMetaDataUtils
+                        .isHiveConnection(connection))) {
                 connection.setCatalog(catalogName);
             }
             return true;
@@ -541,7 +544,7 @@ public class TableAnalysisSqlExecutor extends TableAnalysisExecutor {
             joinConditions.clear();
             if (!wr.getJoins().isEmpty()) {
                 for (JoinElement joinelt : wr.getJoins()) {
-                    JoinElement joinCopy = (JoinElement) EcoreUtil.copy(joinelt);
+                    JoinElement joinCopy = EcoreUtil.copy(joinelt);
                     joinConditions.add(joinCopy);
                     setAliasA = PluginConstant.EMPTY_STRING.equals(setAliasA) ? joinCopy.getTableAliasA() : setAliasA;
                 }
