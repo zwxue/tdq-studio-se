@@ -63,7 +63,7 @@ public class SysIndicatorDefinitionRepNode extends DQRepositoryNode {
 
     @Override
     public String getLabel() {
-        if (this.getIndicatorDefinition() != null) {
+        if (this.getIndicatorDefinition() != null && this.getIndicatorDefinition().getName() != null) {
             return this.getIndicatorDefinition().getName();
         }
         return super.getLabel();

@@ -14,6 +14,7 @@ package org.talend.dataprofiler.core.sql;
 
 import java.util.List;
 
+import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.jface.action.Action;
@@ -23,8 +24,11 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.ide.IDE;
+import org.talend.commons.exception.BusinessException;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
+import org.talend.dataprofiler.core.exception.ExceptionFactory;
+import org.talend.dataprofiler.core.exception.ExceptionHandler;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.perspective.ChangePerspectiveAction;
 
@@ -60,17 +64,28 @@ public class OpenSqlFileAction extends Action {
      */
     @Override
     public void run() {
-        // ADD xqliu 2010-08-20 bug 13729
-        new ChangePerspectiveAction(PluginConstant.SE_ID).run();
-        // ~ 13729
-        IWorkbenchWindow aww = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
-        IWorkbenchPage ap = aww.getActivePage();
-        for (IFile file : folder) {
-            try {
-                IDE.openEditor(ap, file, true);
-            } catch (PartInitException e) {
-                log.error(e, e);
+        try {
+            for (IFile file : folder) {
+                if (!file.exists()) {
+                    BusinessException createBusinessException = ExceptionFactory.getInstance().createBusinessException(
+                            file.getName());
+                    throw createBusinessException;
+                }
             }
+            // ADD xqliu 2010-08-20 bug 13729
+            new ChangePerspectiveAction(PluginConstant.SE_ID).run();
+            // ~ 13729
+            IWorkbenchWindow aww = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+            IWorkbenchPage ap = aww.getActivePage();
+            for (IFile file : folder) {
+                try {
+                    IDE.openEditor(ap, file, true);
+                } catch (PartInitException e) {
+                    log.error(e, e);
+                }
+            }
+        } catch (BusinessException e) {
+            ExceptionHandler.process(e, Level.FATAL);
         }
     }
 

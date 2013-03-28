@@ -315,4 +315,17 @@ public class DQRepositoryNode extends RepositoryNode {
     protected IRepositoryViewObject getParentViewObject() {
         return null;
     }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.repository.model.RepositoryNode#getLabel()
+     */
+    @Override
+    public String getLabel() {
+        if (this.getObject().getLabel() != null) {
+            return this.getObject().getLabel();
+        }
+        return super.getLabel();
+    }
 }

@@ -12,6 +12,7 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.editor;
 
+import org.apache.log4j.Level;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
@@ -20,8 +21,10 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.ide.ResourceUtil;
 import org.eclipse.ui.navigator.ILinkHelper;
 import org.eclipse.ui.part.FileEditorInput;
+import org.talend.commons.exception.BusinessException;
 import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.properties.Item;
+import org.talend.dataprofiler.core.exception.ExceptionHandler;
 import org.talend.dataprofiler.core.ui.action.actions.OpenItemEditorAction;
 import org.talend.dataquality.properties.TDQAnalysisItem;
 import org.talend.dataquality.properties.TDQBusinessRuleItem;
@@ -73,14 +76,21 @@ public class DQEditorLinkHelper implements ILinkHelper {
     }
 
     public void activateEditor(IWorkbenchPage aPage, IStructuredSelection aSelection) {
-        RepositoryNode repNode = (RepositoryNode) aSelection.getFirstElement();
-        OpenItemEditorAction openEditorAction = new OpenItemEditorAction(repNode.getObject());
-        // MOD msjian TDQ-4209 2012-2-7 : modify to IEditorInput type
-        IEditorInput absEditorInput = openEditorAction.computeEditorInput(false);
-		if (absEditorInput != null) {
-            aPage.bringToTop(aPage.findEditor(absEditorInput));
-		}
-		// TDQ-4209~
+        try {
+            RepositoryNode repNode = (RepositoryNode) aSelection.getFirstElement();
+            OpenItemEditorAction openEditorAction;
+
+            openEditorAction = new OpenItemEditorAction(repNode.getObject());
+
+            // MOD msjian TDQ-4209 2012-2-7 : modify to IEditorInput type
+            IEditorInput absEditorInput = openEditorAction.computeEditorInput(false);
+            if (absEditorInput != null) {
+                aPage.bringToTop(aPage.findEditor(absEditorInput));
+            }
+        } catch (BusinessException e) {
+            ExceptionHandler.process(e, Level.FATAL);
+        }
+        // TDQ-4209~
     }
 
 }
