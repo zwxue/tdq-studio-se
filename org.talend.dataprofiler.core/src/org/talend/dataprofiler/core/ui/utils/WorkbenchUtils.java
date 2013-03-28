@@ -521,13 +521,11 @@ public final class WorkbenchUtils {
                     Map<EObject, Collection<Setting>> referenceMaps = EcoreUtil.UnresolvedProxyCrossReferencer.find(eResource);
                     Iterator<EObject> it = referenceMaps.keySet().iterator();
                     ModelElement eobj = null;
-                    boolean containsAnaTables = false;
                     while (it.hasNext()) {
                         eobj = (ModelElement) it.next();
                         Collection<Setting> settings = referenceMaps.get(eobj);
                         for (Setting setting : settings) {
                             if (setting.getEObject() instanceof AnalysisContext) {
-                                containsAnaTables = true;
                                 tempAnalysis.getContext().getAnalysedElements().remove(eobj);
                             } else if (setting.getEObject() instanceof Indicator) {
                                 tempAnalysis.getResults().getIndicators().remove(setting.getEObject());
@@ -535,28 +533,10 @@ public final class WorkbenchUtils {
                         }
 
                     }
-                    // MOD yyin 20120410, bug 4753
-                    if (containsAnaTables) {
-                        List<ModelElement> tempList = new ArrayList<ModelElement>();
-                        tempList.add(oldDataProvider);
-                        // remove the cliend dependency in the analysis
-                        List<Resource> modified = DependenciesHandler.getInstance().removeDependenciesBetweenModels(tempAnalysis,
-                                tempList);
-                        for (Resource me : modified) {
-                            EMFUtil.saveSingleResource(me);
-                        }
-                        // remove the supplier dependency in the dataprovider
-                        tempList.clear();
-                        tempList.add(tempAnalysis);
-                        modified = DependenciesHandler.getInstance().removeSupplierDependenciesBetweenModels(oldDataProvider,
-                                tempList);
-                        for (Resource me : modified) {
-                            EMFUtil.saveSingleResource(me);
-                        }
-                        // IRepositoryViewObject reposViewObject =
-                        // RepositoryNodeHelper.recursiveFind(oldDataProvider).getObject();
-                        // ElementWriterFactory.getInstance().createDataProviderWriter()
-                        // .save(reposViewObject.getProperty().getItem(), true);
+                    // only when all elements of the data provider are removed from the analysis, the dependency between
+                    // them should be removed too. If only parts of them removed, the dependendy should not be removed.
+                    if (tempAnalysis.getContext().getAnalysedElements().size() < 1) {
+                        removeDependenciesBetweenAnaCon(oldDataProvider, tempAnalysis);
                     }
                     // ~
                     AnaResourceFileHelper.getInstance().save(tempAnalysis);
@@ -567,6 +547,23 @@ public final class WorkbenchUtils {
 
         // Refresh current opened editors.
         refreshCurrentAnalysisEditor();
+    }
+
+    private static void removeDependenciesBetweenAnaCon(DataProvider oldDataProvider, Analysis tempAnalysis) {
+        List<ModelElement> tempList = new ArrayList<ModelElement>();
+        tempList.add(oldDataProvider);
+        // remove the cliend dependency in the analysis
+        List<Resource> modified = DependenciesHandler.getInstance().removeDependenciesBetweenModels(tempAnalysis, tempList);
+        for (Resource me : modified) {
+            EMFUtil.saveSingleResource(me);
+        }
+        // remove the supplier dependency in the dataprovider
+        tempList.clear();
+        tempList.add(tempAnalysis);
+        modified = DependenciesHandler.getInstance().removeSupplierDependenciesBetweenModels(oldDataProvider, tempList);
+        for (Resource me : modified) {
+            EMFUtil.saveSingleResource(me);
+        }
     }
 
     /**
