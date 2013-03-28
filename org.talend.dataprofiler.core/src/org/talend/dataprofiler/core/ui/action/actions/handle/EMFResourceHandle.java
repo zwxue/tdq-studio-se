@@ -25,6 +25,7 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.talend.commons.bridge.ReponsitoryContextBridge;
+import org.talend.commons.exception.BusinessException;
 import org.talend.core.model.metadata.builder.connection.AbstractMetadataObject;
 import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
 import org.talend.core.model.properties.Property;
@@ -89,7 +90,7 @@ public class EMFResourceHandle implements IDuplicateHandle {
      * 
      * @see org.talend.dataprofiler.core.ui.action.actions.handle.IDuplicateHandle#duplicate(java.lang.String)
      */
-    public IFile duplicate(String newLabel) {
+    public IFile duplicate(String newLabel) throws BusinessException {
         if (modelElement != null) {
             ModelElement newObject = (ModelElement) EMFSharedResources.getInstance().copyEObject(modelElement);
             newObject.setName(newLabel);

@@ -162,8 +162,12 @@ public final class ReportHelper {
          * @return
          */
         public static ReportType getReportType(AnalysisType anaType, String text) {
+
             if (USER_MADE.getLabel().equals(text)) {
                 return USER_MADE;
+            }
+            if (anaType == null) {
+                return null;
             }
             // Multi column
             if (anaType.getName().equals(AnalysisType.MULTIPLE_COLUMN.getName())) {
@@ -355,13 +359,14 @@ public final class ReportHelper {
     public static List<Analysis> getAnalyses(Report report) {
         List<Analysis> analyses = new ArrayList<Analysis>();
         // MOD yyin 20120530 TDQ-5050
-        for (AnalysisMap anaMap : ((TdReport) report).getAnalysisMap()) {
-            Analysis analysis = anaMap.getAnalysis();
-            if (analysis != null) {
-                analyses.add(analysis);
+        if (report instanceof TdReport) {
+            for (AnalysisMap anaMap : ((TdReport) report).getAnalysisMap()) {
+                Analysis analysis = anaMap.getAnalysis();
+                if (analysis != null) {
+                    analyses.add(analysis);
+                }
             }
         }
-
         return analyses;
     }
 

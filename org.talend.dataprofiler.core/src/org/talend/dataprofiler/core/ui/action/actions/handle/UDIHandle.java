@@ -14,6 +14,7 @@ package org.talend.dataprofiler.core.ui.action.actions.handle;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
+import org.talend.commons.exception.BusinessException;
 import org.talend.core.model.properties.Property;
 import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.dataprofiler.core.PluginConstant;
@@ -64,7 +65,7 @@ public class UDIHandle extends EMFResourceHandle {
      * @see org.talend.dataprofiler.core.ui.action.actions.handle.EMFResourceHandle#duplicate(java.lang.String)
      */
     @Override
-    public IFile duplicate(String newLabel) {
+    public IFile duplicate(String newLabel) throws BusinessException {
         IFile duplicatedFile = super.duplicate(newLabel);
         IndicatorDefinition definition = (IndicatorDefinition) ModelElementFileFactory.getModelElement(duplicatedFile);
 

@@ -168,6 +168,9 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
     }
 
     private void createTechnicalDetail(EObject fe) {
+        if (fe == null) {
+            return;
+        }
         newLabelAndText(tContainer,
                 DefaultMessagesImpl.getString("RespositoryDetailView.group.Identifier"), ResourceHelper.getUUID(fe)); //$NON-NLS-1$
 
@@ -201,7 +204,7 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
                 createTechnicalDetail(pattern);
             } else if (item instanceof TDQReportItem) {
                 Report report = ((TDQReportItem) item).getReport();
-                createTechnicalDetail((TdReport) report);
+                createTechnicalDetail(report);
             }
         }
     }
@@ -315,7 +318,7 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
             } else if (fe instanceof ExchangeComponentRepNode) {
                 // MOD klliu 2001-02-28 bug 19154
                 IEcosComponent ecosComponent = ((ExchangeComponentRepNode) fe).getEcosComponent();
-                IEcosComponent component = (IEcosComponent) ecosComponent;
+                IEcosComponent component = ecosComponent;
                 createEcosComponent(component);
                 is = false;
 
@@ -489,6 +492,9 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
     }
 
     private void createAnaysisDetail(Analysis ana) {
+        if (ana == null) {
+            return;
+        }
         createName(ana);
         createPurpose(ana);
         createDescription(ana);

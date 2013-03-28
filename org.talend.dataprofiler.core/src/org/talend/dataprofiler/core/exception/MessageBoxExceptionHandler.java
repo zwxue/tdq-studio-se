@@ -121,4 +121,28 @@ public final class MessageBoxExceptionHandler {
             MessageDialog.openInformation(shell, title, msg);
         }
     }
+
+    /**
+     * Open a message box showing a specical message.
+     * 
+     * @param ex - exception to show
+     */
+    protected static void showMessage(Exception ex, Shell shell, Priority priority, String msg) {
+        if (ex.equals(lastShowedAction)) {
+            return;
+        }
+        lastShowedAction = ex;
+
+        String title = Messages.getString("MessageBoxExceptionHandler.common.error"); //$NON-NLS-1$
+
+        if (priority == Level.FATAL || priority == Level.ERROR) {
+            MessageDialog.openError(shell, title, msg);
+        } else if (priority == Level.WARN) {
+            MessageDialog.openWarning(shell, title, msg);
+        } else if (priority == Level.INFO) {
+            MessageDialog.openInformation(shell, title, msg);
+        } else {
+            MessageDialog.openInformation(shell, title, msg);
+        }
+    }
 }

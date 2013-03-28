@@ -15,6 +15,7 @@ package org.talend.dataprofiler.core.sql;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -52,6 +53,8 @@ import org.talend.core.repository.constants.FileConstants;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
+import org.talend.dataprofiler.core.exception.ExceptionFactory;
+import org.talend.dataprofiler.core.exception.ExceptionHandler;
 import org.talend.dataprofiler.core.helper.WorkspaceResourceHelper;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.dialog.FolderSelectionDialog;
@@ -115,32 +118,42 @@ public class RenameSqlFileAction extends Action {
 
     @Override
     public void run() {
-        // ADD xqliu 2012-05-24 TDQ-4831
-        if (this.node != null) {
-            if (WorkspaceResourceHelper.sourceFileHasBeenOpened(this.node)) {
-                MessageUI.openWarning(DefaultMessagesImpl.getString("SourceFileAction.sourceFileOpening", this.node.getLabel())); //$NON-NLS-1$
-                return;
-            }
-        }
-        // ~ TDQ-4831
-        RenameDialog dialog = new RenameDialog(Display.getDefault().getActiveShell());
-        existNames = new ArrayList<String>();
-        getExistNames(parentNode, existNames);
-        if (dialog.open() == RenameDialog.OK) {
-            try {
-                CorePlugin.getDefault().closeEditorIfOpened(sourceFiletem);
-                Project project = ProjectManager.getInstance().getCurrentProject();
-                if (!isNeedToMove(newFolderPath)) {
-                    renameSourceFile(project);
-                } else {
-                    moveSourceFile(project, newFolderPath);
+        try {
+            // ADD xqliu 2012-05-24 TDQ-4831
+            if (this.node != null) {
+                if (WorkspaceResourceHelper.sourceFileHasBeenOpened(this.node)) {
+                    MessageUI.openWarning(DefaultMessagesImpl.getString(
+                            "SourceFileAction.sourceFileOpening", this.node.getLabel())); //$NON-NLS-1$
+                    return;
                 }
-                CorePlugin.getDefault().refreshDQView(parentNode);
-            } catch (PersistenceException e) {
-                log.error(e);
-            } catch (BusinessException e) {
-                log.error(e);
             }
+            if (!ResourceManager.getRootProject().exists(filePath)) {
+                BusinessException createBusinessException = ExceptionFactory.getInstance().createBusinessException(
+                        this.filePath.toFile().getName());
+                throw createBusinessException;
+            }
+            // ~ TDQ-4831
+            RenameDialog dialog = new RenameDialog(Display.getDefault().getActiveShell());
+            existNames = new ArrayList<String>();
+            getExistNames(parentNode, existNames);
+            if (dialog.open() == RenameDialog.OK) {
+                try {
+                    CorePlugin.getDefault().closeEditorIfOpened(sourceFiletem);
+                    Project project = ProjectManager.getInstance().getCurrentProject();
+                    if (!isNeedToMove(newFolderPath)) {
+                        renameSourceFile(project);
+                    } else {
+                        moveSourceFile(project, newFolderPath);
+                    }
+                    CorePlugin.getDefault().refreshDQView(parentNode);
+                } catch (PersistenceException e) {
+                    log.error(e);
+                } catch (BusinessException e) {
+                    log.error(e);
+                }
+            }
+        } catch (BusinessException e) {
+            ExceptionHandler.process(e, Level.FATAL);
         }
     }
 

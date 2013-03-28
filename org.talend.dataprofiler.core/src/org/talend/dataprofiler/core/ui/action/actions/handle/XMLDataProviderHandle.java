@@ -13,6 +13,7 @@
 package org.talend.dataprofiler.core.ui.action.actions.handle;
 
 import org.eclipse.core.resources.IFile;
+import org.talend.commons.exception.BusinessException;
 import org.talend.core.model.properties.Property;
 import org.talend.repository.model.IRepositoryNode;
 
@@ -39,7 +40,7 @@ public class XMLDataProviderHandle extends RepositoryViewObjectHandle {
      * 
      * @see org.talend.dataprofiler.core.ui.action.actions.handle.IDuplicateHandle#duplicate(java.lang.String)
      */
-    public IFile duplicate(String newLabel) {
+    public IFile duplicate(String newLabel) throws BusinessException {
         Property property = getProperty();
         if (property != null) {
             IFile copyFile = new EMFResourceHandle(property).duplicate(newLabel);

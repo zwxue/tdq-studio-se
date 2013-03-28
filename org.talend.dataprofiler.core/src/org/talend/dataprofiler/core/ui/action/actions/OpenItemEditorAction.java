@@ -14,6 +14,7 @@ package org.talend.dataprofiler.core.ui.action.actions;
 
 import java.util.Properties;
 
+import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IPath;
@@ -28,9 +29,11 @@ import org.eclipse.ui.ide.IDE;
 import org.eclipse.ui.intro.IIntroSite;
 import org.eclipse.ui.intro.config.IIntroAction;
 import org.eclipse.ui.part.FileEditorInput;
+import org.talend.commons.exception.BusinessException;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.connection.MetadataColumn;
 import org.talend.core.model.properties.Item;
+import org.talend.core.model.properties.TDQItem;
 import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
@@ -42,6 +45,7 @@ import org.talend.cwm.relational.TdView;
 import org.talend.cwm.xml.TdXmlElementType;
 import org.talend.cwm.xml.TdXmlSchema;
 import org.talend.dataprofiler.core.CorePlugin;
+import org.talend.dataprofiler.core.exception.ExceptionFactory;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.editor.analysis.AnalysisEditor;
 import org.talend.dataprofiler.core.ui.editor.analysis.AnalysisItemEditorInput;
@@ -58,7 +62,15 @@ import org.talend.dataprofiler.core.ui.editor.report.ReportItemEditorInput;
 import org.talend.dataprofiler.core.ui.utils.WorkbenchUtils;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.properties.TDQAnalysisItem;
+import org.talend.dataquality.properties.TDQFileItem;
+import org.talend.dataquality.properties.TDQIndicatorDefinitionItem;
+import org.talend.dataquality.properties.TDQPatternItem;
+import org.talend.dataquality.properties.TDQReportItem;
+import org.talend.dataquality.reports.AnalysisMap;
+import org.talend.dataquality.reports.TdReport;
+import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.helper.RepositoryNodeHelper;
+import org.talend.dq.helper.UDIHelper;
 import org.talend.dq.nodes.ReportFileRepNode;
 import org.talend.repository.RepositoryWorkUnit;
 import org.talend.repository.model.IRepositoryNode;
@@ -114,6 +126,8 @@ public class OpenItemEditorAction extends Action implements IIntroAction {
             protected void run() {
                 try {
                     duRun();
+                } catch (BusinessException e) {
+                    org.talend.dataprofiler.core.exception.ExceptionHandler.process(e, Level.FATAL);
                 } catch (Exception e) {
                     log.error(e, e);
                 }
@@ -124,7 +138,7 @@ public class OpenItemEditorAction extends Action implements IIntroAction {
         // duRun();
     }
 
-    protected void duRun() {
+    protected void duRun() throws BusinessException {
 
         this.itemEditorInput = computeEditorInput(true);
         if (itemEditorInput != null) {
@@ -153,8 +167,13 @@ public class OpenItemEditorAction extends Action implements IIntroAction {
             } else {
                 // if there don't found the correct ItemEditorInput and it is not Report's genetated doc file, try to
                 // open it as a File, this code will not be execute when method computeEditorInput() work well
-                IPath append = WorkbenchUtils.getFilePath((RepositoryNode) repViewObj.getRepositoryNode());
+                IPath append = WorkbenchUtils.getFilePath(repViewObj.getRepositoryNode());
                 file = ResourceManager.getRootProject().getFile(append);
+                if (!file.exists()) {
+                    BusinessException createBusinessException = ExceptionFactory.getInstance()
+                            .createBusinessException(repViewObj);
+                    throw createBusinessException;
+                }
                 try {
                     IDE.openEditor(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage(), file, true);
                 } catch (PartInitException e) {
@@ -170,12 +189,20 @@ public class OpenItemEditorAction extends Action implements IIntroAction {
      * @param isOpenItemEditorAction
      * @return
      */
-    public IEditorInput computeEditorInput(boolean isOpenItemEditorAction) {
+    public IEditorInput computeEditorInput(boolean isOpenItemEditorAction) throws BusinessException {
         IEditorInput result = null;
         if (repViewObj != null) {
             // Connection editor
             String key = repViewObj.getRepositoryObjectType().getKey();
             Item item = repViewObj.getProperty().getItem();
+            if (item instanceof TDQItem && !(item instanceof TDQFileItem)) {
+                ModelElement modelElement = PropertyHelper.getModelElement(repViewObj.getProperty());
+                if (modelElement == null || modelElement.eResource() == null) {
+                    BusinessException createBusinessException = ExceptionFactory.getInstance().createBusinessException(
+                            ((TDQItem) item).getFilename());
+                    throw createBusinessException;
+                }
+            }
             if (ERepositoryObjectType.METADATA_CONNECTIONS.getKey().equals(key)
                     || ERepositoryObjectType.METADATA_MDMCONNECTION.getKey().equals(key)) {
                 result = new ConnectionItemEditorInput(item);
@@ -183,10 +210,11 @@ public class OpenItemEditorAction extends Action implements IIntroAction {
             } else if (ERepositoryObjectType.TDQ_ANALYSIS_ELEMENT.getKey().equals(key)) {
                 result = new AnalysisItemEditorInput(item);
                 Analysis analysis = ((TDQAnalysisItem) item).getAnalysis();
-                // AnalysisParameters parameters = analysis.getParameters();
-                // AnalysisType analysisType = parameters.getAnalysisType();
-                // boolean equals = analysisType.equals(AnalysisType.CONNECTION);
-                // if (equals) {
+                if (analysis == null || analysis.getContext() == null) {
+                    BusinessException createBusinessException = ExceptionFactory.getInstance()
+                            .createBusinessException(repViewObj);
+                    throw createBusinessException;
+                }
                 EList<ModelElement> analysedElements = analysis.getContext().getAnalysedElements();
                 RepositoryNode connectionRepositoryNode = null;
                 if (analysedElements.size() > 0) {
@@ -227,6 +255,17 @@ public class OpenItemEditorAction extends Action implements IIntroAction {
                 editorID = AnalysisEditor.class.getName();
             } else if (ERepositoryObjectType.TDQ_INDICATOR_ELEMENT.getKey().equals(key)) {
                 result = new IndicatorDefinitionItemEditorInput(item);
+                TDQIndicatorDefinitionItem definitionItem = (TDQIndicatorDefinitionItem) item;
+                if (definitionItem.getIndicatorDefinition().eResource() == null) {
+                    BusinessException createBusinessException = ExceptionFactory.getInstance().createBusinessException(
+                            definitionItem.getFilename());
+                    throw createBusinessException;
+                }
+                if (UDIHelper.getUDICategory(definitionItem.getIndicatorDefinition()) == null) {
+                    BusinessException createBusinessException = ExceptionFactory.getInstance().createBusinessException(
+                            definitionItem.getFilename());
+                    throw createBusinessException;
+                }
                 editorID = IndicatorEditor.class.getName();
             } else if (ERepositoryObjectType.TDQ_RULES_SQL.getKey().equals(key)) {
                 result = new BusinessRuleItemEditorInput(item);
@@ -237,9 +276,29 @@ public class OpenItemEditorAction extends Action implements IIntroAction {
                 editorID = DQRuleEditor.class.getName();
             } else if (ERepositoryObjectType.TDQ_PATTERN_ELEMENT.getKey().equals(key)) {
                 result = new PatternItemEditorInput(item);
+                TDQPatternItem patternItem = (TDQPatternItem) item;
+                if (patternItem.getPattern() == null || patternItem.getPattern().eResource() == null) {
+                    BusinessException createBusinessException = ExceptionFactory.getInstance().createBusinessException(
+                            patternItem.getFilename());
+                    throw createBusinessException;
+                }
                 editorID = PatternEditor.class.getName();
             } else if (ERepositoryObjectType.TDQ_REPORT_ELEMENT.getKey().equals(key)) {
                 result = new ReportItemEditorInput(item);
+                TDQReportItem reportItem = (TDQReportItem) item;
+                if (!(reportItem.getReport() instanceof TdReport)) {
+                    BusinessException createBusinessException = ExceptionFactory.getInstance().createBusinessException(
+                            reportItem.getFilename());
+                    throw createBusinessException;
+                }
+                for (AnalysisMap anaMap : ((TdReport) reportItem.getReport()).getAnalysisMap()) {
+                    Analysis analysis = anaMap.getAnalysis();
+                    if (analysis.eResource() == null) {
+                        BusinessException createBusinessException = ExceptionFactory.getInstance().createBusinessException(
+                                reportItem.getFilename());
+                        throw createBusinessException;
+                    }
+                }
                 editorID = "org.talend.dataprofiler.core.tdq.ui.editor.report.ReportEditror"; //$NON-NLS-1$
             }
             // ADD msjian TDQ-4209 2012-2-7 : return the editorInput of *.jrxml and *.sql files
@@ -248,7 +307,7 @@ public class OpenItemEditorAction extends Action implements IIntroAction {
                         || ERepositoryObjectType.TDQ_SOURCE_FILE_ELEMENT.getKey().equals(key)) {
 
                     // if there don't found the correct ItemEditorInput, try to open it as a File
-                    IPath append = WorkbenchUtils.getFilePath((RepositoryNode) repViewObj.getRepositoryNode());
+                    IPath append = WorkbenchUtils.getFilePath(repViewObj.getRepositoryNode());
                     result = new FileEditorInput(ResourceManager.getRootProject().getFile(append));
                     editorID = FileEditorInput.class.getName();
                 }

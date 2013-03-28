@@ -2198,6 +2198,16 @@ public final class RepositoryNodeHelper {
     }
 
     /**
+     * judge whether the node has been delete
+     */
+    public static boolean isStateDeleted(Object node) {
+        if (node instanceof IRepositoryNode) {
+            return isStateDeleted((IRepositoryNode) node);
+        }
+        return false;
+    }
+
+    /**
      * find the RepositoryNode according to the ModelElement.
      * 
      * @param modelElement
@@ -3307,4 +3317,5 @@ public final class RepositoryNodeHelper {
         return true;
 
     }
+
 }

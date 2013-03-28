@@ -16,6 +16,7 @@ package org.talend.dataprofiler.core.ui.action.actions;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.eclipse.core.internal.resources.Workspace;
 import org.eclipse.core.resources.IFile;
@@ -23,8 +24,13 @@ import org.eclipse.core.resources.IMarker;
 import org.eclipse.jface.action.Action;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.views.markers.MarkerViewUtil;
+import org.talend.commons.exception.BusinessException;
 import org.talend.commons.utils.WorkspaceUtils;
+import org.talend.core.model.properties.Item;
+import org.talend.core.model.properties.TDQItem;
 import org.talend.dataprofiler.core.ImageLib;
+import org.talend.dataprofiler.core.exception.ExceptionFactory;
+import org.talend.dataprofiler.core.exception.ExceptionHandler;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.model.TdResourceModel;
 import org.talend.dataprofiler.core.ui.dialog.TdTaskPropertiesDialog;
@@ -55,48 +61,38 @@ public class TdAddTaskAction extends Action {
     public void run() {
         try {
             TdTaskPropertiesDialog dialog = new TdTaskPropertiesDialog(shell);
-            // TaskPropertiesDialog dialog = new TaskPropertiesDialog(newTree.getShell());
             ModelElement modelElement = null;
-            IFile file = null;
-            // if (navObj instanceof IFile) {
-            // file = (IFile) navObj;
-            // String fileExtension = file.getFileExtension();
-            // if (FactoriesUtil.isAnalysisFile(fileExtension)) {
-            // modelElement = AnaResourceFileHelper.getInstance().findAnalysis(file);
-            // } else if (FactoriesUtil.isReportFile(fileExtension)) {
-            // modelElement = RepResourceFileHelper.getInstance().findReport(file);
-            // }
-            //
-            // } else if (navObj instanceof ModelElement) {
-            // modelElement = (ModelElement) navObj;
-            // // MOD qiongli 2011-1-10 feature 16796.for DelimitedFile ModelElement.
-            // if (modelElement.getName() == null) {
-            // modelElement.setName(ModelElementHelper.getName(modelElement));
-            // }
-            //
-            // file = WorkspaceUtils.getModelElementResource(modelElement);
-            //
-            // }
             if (navObj instanceof RepositoryNode) {
                 RepositoryNode node = (RepositoryNode) navObj;
                 modelElement = RepositoryNodeHelper.getModelElementFromRepositoryNode(node);
-                file = WorkspaceUtils.getModelElementResource(modelElement);
+
             } else {
                 modelElement = (ModelElement) navObj;
-                file = WorkspaceUtils.getModelElementResource(modelElement);
-            }
-            if (modelElement != null) {
-                TdResourceModel tdResModel = new TdResourceModel(file.getFullPath(), (Workspace) file.getWorkspace(),
-                        modelElement);
-                dialog.setResource(tdResModel);
-                Map<String, Object> attMap = new HashMap<String, Object>();
-                attMap.put(MarkerViewUtil.NAME_ATTRIBUTE, modelElement.getName());
-                attMap.put(IMarker.LOCATION, file.getRawLocation().toString());
-                attMap.put(IMarker.LINE_NUMBER, file.getRawLocation().toString());
-                dialog.setInitialAttributes(attMap);
-                dialog.open();
-            }
 
+            }
+            if (modelElement == null || modelElement.eResource() == null || modelElement.getName() == null) {
+                String fileName = ""; //$NON-NLS-1$
+                if (navObj instanceof RepositoryNode) {
+                    Item item = ((RepositoryNode) navObj).getObject().getProperty().getItem();
+                    if (item instanceof TDQItem) {
+                        fileName = ((TDQItem) item).getFilename();
+                    }
+                }
+                BusinessException createBusinessException = ExceptionFactory.getInstance().createBusinessException(fileName);
+                throw createBusinessException;
+            }
+            IFile file = WorkspaceUtils.getModelElementResource(modelElement);
+            TdResourceModel tdResModel = new TdResourceModel(file.getFullPath(), (Workspace) file.getWorkspace(), modelElement);
+            dialog.setResource(tdResModel);
+            Map<String, Object> attMap = new HashMap<String, Object>();
+            attMap.put(MarkerViewUtil.NAME_ATTRIBUTE, modelElement.getName());
+            attMap.put(IMarker.LOCATION, file.getRawLocation().toString());
+            attMap.put(IMarker.LINE_NUMBER, file.getRawLocation().toString());
+            dialog.setInitialAttributes(attMap);
+            dialog.open();
+
+        } catch (BusinessException e) {
+            ExceptionHandler.process(e, Level.FATAL);
         } catch (Exception e1) {
             log.error(e1, e1);
         }

@@ -26,9 +26,8 @@ import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
 import orgomg.cwm.objectmodel.core.Expression;
 
-
 /**
- * DOC klliu  class global comment. Detailled comment
+ * DOC klliu class global comment. Detailled comment
  */
 public class PatternRepNode extends DQRepositoryNode {
 
@@ -40,6 +39,7 @@ public class PatternRepNode extends DQRepositoryNode {
 
     /**
      * DOC klliu PatternRepNode constructor comment.
+     * 
      * @param object
      * @param parent
      * @param type
@@ -77,7 +77,7 @@ public class PatternRepNode extends DQRepositoryNode {
 
     @Override
     public String getLabel() {
-        if (this.getPattern() != null) {
+        if (this.getPattern() != null && this.getPattern().getName() != null) {
             return this.getPattern().getName();
         }
         return super.getLabel();

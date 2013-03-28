@@ -14,6 +14,7 @@ package org.talend.dataprofiler.core.ui.action.actions;
 
 import java.text.DecimalFormat;
 
+import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.WorkspaceJob;
@@ -34,6 +35,7 @@ import org.eclipse.ui.cheatsheets.ICheatSheetAction;
 import org.eclipse.ui.cheatsheets.ICheatSheetManager;
 import org.eclipse.ui.forms.editor.IFormPage;
 import org.eclipse.ui.part.FileEditorInput;
+import org.talend.commons.exception.BusinessException;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.properties.Item;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
@@ -42,6 +44,8 @@ import org.talend.cwm.compare.factory.ComparisonLevelFactory;
 import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
+import org.talend.dataprofiler.core.exception.ExceptionFactory;
+import org.talend.dataprofiler.core.exception.ExceptionHandler;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.IRuningStatusListener;
 import org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisMetadataPage;
@@ -106,206 +110,223 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
      */
     @Override
     public void run() {
-        IEditorPart editor = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
+        try {
+            IEditorPart editor = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
 
-        // MOD klliu bug 19244 2011-03-10
-        if (node != null) {
-            // MOD sizhaoliu TDQ-5452 verify the lock status before running an analysis
-            Item item = node.getObject().getProperty().getItem();
-            // try to lock item, the status will be updated in case it is already locked by someone else
-            ProxyRepositoryManager.getInstance().lock(item);
-            if (ProxyRepositoryFactory.getInstance().getStatus(item) == ERepositoryStatus.LOCK_BY_OTHER) {
-                CorePlugin.getDefault().refreshDQView(node);
-                MessageDialog.openError(PlatformUI.getWorkbench().getDisplay().getActiveShell(),
-                        DefaultMessagesImpl.getString("RunAnalysisAction.runAnalysis"), //$NON-NLS-1$
-                        DefaultMessagesImpl.getString("RunAnalysisAction.error.lockByOthers")); //$NON-NLS-1$
-                return;
-            }
-            // ~ TDQ-5452
-            editor = CorePlugin.getDefault().openEditor(new AnalysisItemEditorInput(node.getObject().getProperty().getItem()),
-                    AnalysisEditor.class.getName());
-        }
-        // MOD qiongli bug 13880,2010-7-6,avoid 'ClassCastException'
-        if (selectionFile != null) {
-            analysis = AnaResourceFileHelper.getInstance().findAnalysis(selectionFile);
-            RepositoryNode recursiveFind = RepositoryNodeHelper.recursiveFind(analysis);
-            if (recursiveFind != null) {
-                editor = CorePlugin.getDefault().openEditor(
-                        new AnalysisItemEditorInput(recursiveFind.getObject().getProperty().getItem()),
-                        AnalysisEditor.class.getName());
-            }
-        }
-        // ~
-        if (editor == null) {
-            analysis = this.node.getAnalysis();
-        } else {
-            AnalysisEditor anaEditor = (AnalysisEditor) editor;
-            if (editor.isDirty()) {
-                // MOD qiongli 2011-6-20 bug 21533,can save should before method doSave()
-                // MOD klliu bug 19991 3td 2011-03-29
-                ReturnCode canSave = anaEditor.getMasterPage().canSave();
-                if (!canSave.isOk()) {
-                    MessageDialog.openError(null, DefaultMessagesImpl.getString("RunAnalysisAction.runAnalysis"), //$NON-NLS-1$
-                            canSave.getMessage());
+            // MOD klliu bug 19244 2011-03-10
+            if (node != null) {
+                // MOD sizhaoliu TDQ-5452 verify the lock status before running an analysis
+                Item item = node.getObject().getProperty().getItem();
+                if (item instanceof TDQAnalysisItem) {
+                    if (((TDQAnalysisItem) item).getAnalysis() == null
+                            || ((TDQAnalysisItem) item).getAnalysis().getParameters() == null) {
+                        BusinessException createBusinessException = ExceptionFactory.getInstance().createBusinessException(
+                                ((TDQAnalysisItem) item).getFilename());
+                        throw createBusinessException;
+                    }
+                }
+                // try to lock item, the status will be updated in case it is already locked by someone else
+                ProxyRepositoryManager.getInstance().lock(item);
+                if (ProxyRepositoryFactory.getInstance().getStatus(item) == ERepositoryStatus.LOCK_BY_OTHER) {
+                    CorePlugin.getDefault().refreshDQView(node);
+                    MessageDialog.openError(PlatformUI.getWorkbench().getDisplay().getActiveShell(),
+                            DefaultMessagesImpl.getString("RunAnalysisAction.runAnalysis"), //$NON-NLS-1$
+                            DefaultMessagesImpl.getString("RunAnalysisAction.error.lockByOthers")); //$NON-NLS-1$
                     return;
                 }
-                // ~
-                anaEditor.doSave(null);
+                // ~ TDQ-5452
+                editor = CorePlugin.getDefault().openEditor(
+                        new AnalysisItemEditorInput(node.getObject().getProperty().getItem()), AnalysisEditor.class.getName());
             }
-
-            ReturnCode canRun = anaEditor.canRun();
-            if (!canRun.isOk()) {
-                MessageDialogWithToggle.openError(null, DefaultMessagesImpl.getString("RunAnalysisAction.runAnalysis"), canRun//$NON-NLS-1$
-                        .getMessage());
-                return;
-            }
-
+            // MOD qiongli bug 13880,2010-7-6,avoid 'ClassCastException'
             if (selectionFile != null) {
                 analysis = AnaResourceFileHelper.getInstance().findAnalysis(selectionFile);
+                RepositoryNode recursiveFind = RepositoryNodeHelper.recursiveFind(analysis);
+                if (recursiveFind != null) {
+                    editor = CorePlugin.getDefault().openEditor(
+                            new AnalysisItemEditorInput(recursiveFind.getObject().getProperty().getItem()),
+                            AnalysisEditor.class.getName());
+                }
+            }
+            // ~
+            if (editor == null) {
+                analysis = this.node.getAnalysis();
+            } else {
+                AnalysisEditor anaEditor = (AnalysisEditor) editor;
+                if (editor.isDirty()) {
+                    // MOD qiongli 2011-6-20 bug 21533,can save should before method doSave()
+                    // MOD klliu bug 19991 3td 2011-03-29
+                    ReturnCode canSave = anaEditor.getMasterPage().canSave();
+                    if (!canSave.isOk()) {
+                        MessageDialog.openError(null, DefaultMessagesImpl.getString("RunAnalysisAction.runAnalysis"), //$NON-NLS-1$
+                                canSave.getMessage());
+                        return;
+                    }
+                    // ~
+                    anaEditor.doSave(null);
+                }
 
-                IEditorReference[] editorReferences = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
-                        .getEditorReferences();
+                ReturnCode canRun = anaEditor.canRun();
+                if (!canRun.isOk()) {
+                    MessageDialogWithToggle.openError(null,
+                            DefaultMessagesImpl.getString("RunAnalysisAction.runAnalysis"), canRun//$NON-NLS-1$
+                                    .getMessage());
+                    return;
+                }
 
-                for (IEditorReference reference : editorReferences) {
-                    AnalysisItemEditorInput analysisItemEditorInput;
-                    try {
-                        // MOD qiongli bug 16505.
-                        IEditorInput editorInput = reference.getEditorInput();
-                        if (editorInput instanceof AnalysisItemEditorInput) {
-                            analysisItemEditorInput = (AnalysisItemEditorInput) editorInput;
-                            Analysis ana = ((TDQAnalysisItem) analysisItemEditorInput.getItem()).getAnalysis();
-                            if (analysis.equals(ana)) {
-                                IFormPage activePageInstance = ((AnalysisEditor) reference.getEditor(true))
-                                        .getActivePageInstance();
-                                // MOD qiongli bug 13880
-                                // if (reference instanceof IRuningStatusListener) {
-                                if (activePageInstance instanceof IRuningStatusListener) {
-                                    listener = (IRuningStatusListener) activePageInstance;
+                if (selectionFile != null) {
+                    analysis = AnaResourceFileHelper.getInstance().findAnalysis(selectionFile);
+
+                    IEditorReference[] editorReferences = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
+                            .getEditorReferences();
+
+                    for (IEditorReference reference : editorReferences) {
+                        AnalysisItemEditorInput analysisItemEditorInput;
+                        try {
+                            // MOD qiongli bug 16505.
+                            IEditorInput editorInput = reference.getEditorInput();
+                            if (editorInput instanceof AnalysisItemEditorInput) {
+                                analysisItemEditorInput = (AnalysisItemEditorInput) editorInput;
+                                Analysis ana = ((TDQAnalysisItem) analysisItemEditorInput.getItem()).getAnalysis();
+                                if (analysis.equals(ana)) {
+                                    IFormPage activePageInstance = ((AnalysisEditor) reference.getEditor(true))
+                                            .getActivePageInstance();
+                                    // MOD qiongli bug 13880
+                                    // if (reference instanceof IRuningStatusListener) {
+                                    if (activePageInstance instanceof IRuningStatusListener) {
+                                        listener = (IRuningStatusListener) activePageInstance;
+                                    }
                                 }
                             }
+                        } catch (PartInitException e) {
+                            log.error(e, e);
                         }
-                    } catch (PartInitException e) {
-                        log.error(e, e);
+                    }
+                } else {
+                    IEditorInput editorInput = anaEditor.getEditorInput();
+                    if (editorInput instanceof FileEditorInput) {
+                        IFile afile = ((FileEditorInput) editorInput).getFile();
+                        analysis = AnaResourceFileHelper.getInstance().findAnalysis(afile);
+                    } else if (editorInput instanceof AnalysisItemEditorInput) {
+                        analysis = ((TDQAnalysisItem) ((AnalysisItemEditorInput) editorInput).getItem()).getAnalysis();
+                    }
+                    IFormPage activePageInstance = anaEditor.getActivePageInstance();
+                    if (activePageInstance instanceof IRuningStatusListener) {
+                        listener = (IRuningStatusListener) activePageInstance;
                     }
                 }
-            } else {
-                IEditorInput editorInput = anaEditor.getEditorInput();
-                if (editorInput instanceof FileEditorInput) {
-                    IFile afile = ((FileEditorInput) editorInput).getFile();
-                    analysis = AnaResourceFileHelper.getInstance().findAnalysis(afile);
-                } else if (editorInput instanceof AnalysisItemEditorInput) {
-                    analysis = ((TDQAnalysisItem) ((AnalysisItemEditorInput) editorInput).getItem()).getAnalysis();
-                }
-                IFormPage activePageInstance = anaEditor.getActivePageInstance();
-                if (activePageInstance instanceof IRuningStatusListener) {
-                    listener = (IRuningStatusListener) activePageInstance;
-                }
             }
-        }
 
-        if (analysis == null) {
-            return;
-        }
-        // MOD klliu bug 4546 check connectiong is connected well.
-        // MOD yyin TDQ-5362
-        DataManager datamanager = analysis.getContext().getConnection();
-        Connection analysisDataProvider = ConnectionUtils.getConnectionFromDatamanager(datamanager); // MOD klliu bug
-                                                                                                     // 4584 Filtering
-                                                                                                     // the file
-                                                                                                     // connection when
-                                                                                                     // checking
-                                                                                                     // connection is
-                                                                                                     // successful,before
-                                                                                                     // real running
-        // analysis.
-        ReturnCode connectionAvailable = ConnectionUtils.isConnectionAvailable(analysisDataProvider);
-        if (!connectionAvailable.isOk()) {
-            MessageDialogWithToggle.openWarning(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
-                    DefaultMessagesImpl.getString("RunAnalysisAction.checkConnFailTitle"),//$NON-NLS-1$
-                    DefaultMessagesImpl.getString("RunAnalysisAction.checkConnFailMsg", connectionAvailable.getMessage()));//$NON-NLS-1$
-            return;
-        }
-        // ~
-        AnalysisType analysisType = analysis.getParameters().getAnalysisType();
-
-        if (AnalysisType.COLUMNS_COMPARISON.equals(analysisType)) {
-            if (!MessageDialogWithToggle.openConfirm(null, DefaultMessagesImpl.getString("RunAnalysisAction.confirmTitle"), //$NON-NLS-1$
-                    DefaultMessagesImpl.getString("RunAnalysisAction.confirmMSG"))) { //$NON-NLS-1$
+            if (analysis == null) {
                 return;
             }
-        } else if (AnalysisType.CONNECTION.equals(analysisType)) {
-            if (AnalysisHelper.getReloadDatabases(analysis)) {
-                Connection conntion = (Connection) analysis.getContext().getConnection();
-                if (conntion != null) {
-                    try {
-                        RepositoryNode connectionNode = RepositoryNodeHelper.recursiveFind(conntion);
-                        ComparisonLevelFactory.creatComparisonLevel(connectionNode).reloadCurrentLevelElement();
-                    } catch (ReloadCompareException e) {
-                        log.error(e, e);
+            // MOD klliu bug 4546 check connectiong is connected well.
+            // MOD yyin TDQ-5362
+            DataManager datamanager = analysis.getContext().getConnection();
+            Connection analysisDataProvider = ConnectionUtils.getConnectionFromDatamanager(datamanager); // MOD klliu
+                                                                                                         // bug
+                                                                                                         // 4584
+                                                                                                         // Filtering
+                                                                                                         // the file
+                                                                                                         // connection
+                                                                                                         // when
+                                                                                                         // checking
+                                                                                                         // connection
+                                                                                                         // is
+                                                                                                         // successful,before
+                                                                                                         // real running
+            // analysis.
+            ReturnCode connectionAvailable = ConnectionUtils.isConnectionAvailable(analysisDataProvider);
+            if (!connectionAvailable.isOk()) {
+                MessageDialogWithToggle.openWarning(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
+                        DefaultMessagesImpl.getString("RunAnalysisAction.checkConnFailTitle"),//$NON-NLS-1$
+                        DefaultMessagesImpl.getString("RunAnalysisAction.checkConnFailMsg", connectionAvailable.getMessage()));//$NON-NLS-1$
+                return;
+            }
+            // ~
+            AnalysisType analysisType = analysis.getParameters().getAnalysisType();
+
+            if (AnalysisType.COLUMNS_COMPARISON.equals(analysisType)) {
+                if (!MessageDialogWithToggle.openConfirm(null, DefaultMessagesImpl.getString("RunAnalysisAction.confirmTitle"), //$NON-NLS-1$
+                        DefaultMessagesImpl.getString("RunAnalysisAction.confirmMSG"))) { //$NON-NLS-1$
+                    return;
+                }
+            } else if (AnalysisType.CONNECTION.equals(analysisType)) {
+                if (AnalysisHelper.getReloadDatabases(analysis)) {
+                    Connection conntion = (Connection) analysis.getContext().getConnection();
+                    if (conntion != null) {
+                        try {
+                            RepositoryNode connectionNode = RepositoryNodeHelper.recursiveFind(conntion);
+                            ComparisonLevelFactory.creatComparisonLevel(connectionNode).reloadCurrentLevelElement();
+                        } catch (ReloadCompareException e) {
+                            log.error(e, e);
+                        }
                     }
                 }
             }
+
+            final WorkspaceJob job = new WorkspaceJob("Run Analysis") { //$NON-NLS-1$
+
+                @Override
+                public IStatus runInWorkspace(IProgressMonitor monitor) throws CoreException {
+
+                    monitor.beginTask(
+                            DefaultMessagesImpl.getString("RunAnalysisAction.running", analysis.getName()), IProgressMonitor.UNKNOWN); //$NON-NLS-1$ 
+
+                    Display.getDefault().asyncExec(new Runnable() {
+
+                        public void run() {
+                            if (listener != null) {
+                                listener.fireRuningItemChanged(false);
+                            }
+                        }
+
+                    });
+
+                    ReturnCode executed = null;
+                    AnalysisExecutorThread aet = new AnalysisExecutorThread(analysis, monitor);
+
+                    Thread thread = new Thread(aet);
+                    thread.start();
+
+                    while (true) {
+                        if (aet.getExecuted() != null) {
+                            executed = aet.getExecuted();
+                            break;
+                        }
+                        if (monitor.isCanceled()) {
+                            thread.interrupt();
+                            TdqAnalysisConnectionPool.closeConnectionPool(analysis);
+                            executed = new ReturnCode(DefaultMessagesImpl.getString("RunAnalysisAction.TaskCancel"), false); //$NON-NLS-1$
+                            break;
+                        }
+                    }
+                    aet = null;
+                    monitor.done();
+
+                    Display.getDefault().asyncExec(new Runnable() {
+
+                        public void run() {
+                            if (listener != null) {
+                                listener.fireRuningItemChanged(true);
+                            }
+
+                            // CorePlugin.getDefault().refreshDQView();
+                        }
+
+                    });
+
+                    displayResultStatus(executed);
+                    return Status.OK_STATUS;
+                }
+
+            };
+
+            job.setUser(true);
+            job.schedule();
+        } catch (BusinessException e) {
+            ExceptionHandler.process(e, Level.FATAL);
         }
-
-        final WorkspaceJob job = new WorkspaceJob("Run Analysis") { //$NON-NLS-1$
-
-            @Override
-            public IStatus runInWorkspace(IProgressMonitor monitor) throws CoreException {
-
-                monitor.beginTask(
-                        DefaultMessagesImpl.getString("RunAnalysisAction.running", analysis.getName()), IProgressMonitor.UNKNOWN); //$NON-NLS-1$ 
-
-                Display.getDefault().asyncExec(new Runnable() {
-
-                    public void run() {
-                        if (listener != null) {
-                            listener.fireRuningItemChanged(false);
-                        }
-                    }
-
-                });
-
-                ReturnCode executed = null;
-                AnalysisExecutorThread aet = new AnalysisExecutorThread(analysis, monitor);
-
-                Thread thread = new Thread(aet);
-                thread.start();
-
-                while (true) {
-                    if (aet.getExecuted() != null) {
-                        executed = aet.getExecuted();
-                        break;
-                    }
-                    if (monitor.isCanceled()) {
-                        thread.interrupt();
-                        TdqAnalysisConnectionPool.closeConnectionPool(analysis);
-                        executed = new ReturnCode(DefaultMessagesImpl.getString("RunAnalysisAction.TaskCancel"), false); //$NON-NLS-1$
-                        break;
-                    }
-                }
-                aet = null;
-                monitor.done();
-
-                Display.getDefault().asyncExec(new Runnable() {
-
-                    public void run() {
-                        if (listener != null) {
-                            listener.fireRuningItemChanged(true);
-                        }
-
-                        // CorePlugin.getDefault().refreshDQView();
-                    }
-
-                });
-
-                displayResultStatus(executed);
-                return Status.OK_STATUS;
-            }
-
-        };
-
-        job.setUser(true);
-        job.schedule();
     }
 
     /*
