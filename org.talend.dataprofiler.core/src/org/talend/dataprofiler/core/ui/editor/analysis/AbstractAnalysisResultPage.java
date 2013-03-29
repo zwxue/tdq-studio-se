@@ -158,7 +158,8 @@ public abstract class AbstractAnalysisResultPage extends AbstractFormPage implem
                 DefaultMessagesImpl.getString("ConnectionMasterDetailsPage.createionDate", PluginConstant.EMPTY_STRING)); //$NON-NLS-1$ 
         toolkit.createLabel(executionComp, getFormatDateStr(analysisHandler.getAnalysis().getCreationDate()));
         toolkit.createLabel(executionComp, DefaultMessagesImpl.getString("AbstractAnalysisResultPage.executionDate")); //$NON-NLS-1$
-        toolkit.createLabel(executionComp, analysisHandler.getExecuteData());
+        toolkit.createLabel(executionComp, getFormatDateStr(analysisHandler.getAnalysis().getResults().getResultMetadata()
+                .getExecutionDate()));
         toolkit.createLabel(executionComp, DefaultMessagesImpl.getString("AbstractAnalysisResultPage.executionDuration")); //$NON-NLS-1$
         toolkit.createLabel(executionComp, analysisHandler.getExecuteDuration());
         toolkit.createLabel(executionComp, DefaultMessagesImpl.getString("AbstractAnalysisResultPage.executionStatus")); //$NON-NLS-1$
