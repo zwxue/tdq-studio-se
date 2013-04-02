@@ -7,6 +7,7 @@
 package org.talend.dataquality.properties.impl;
 
 import org.eclipse.emf.ecore.EClass;
+import org.talend.commons.emf.FactoriesUtil;
 import org.talend.core.repository.constants.FileConstants;
 import org.talend.dataquality.properties.PropertiesPackage;
 import org.talend.dataquality.properties.TDQJrxmlItem;
@@ -40,9 +41,15 @@ public class TDQJrxmlItemImpl extends TDQFileItemImpl implements TDQJrxmlItem {
         return PropertiesPackage.Literals.TDQ_JRXML_ITEM;
     }
 
+    
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated NOT
+     */
     @Override
-    public String getFileExtension() {
-        return FileConstants.JRXML_EXTENSION;
+    public String getFileExtension(){
+        return FactoriesUtil.JRXML;
     }
 
 } //TDQJrxmlItemImpl

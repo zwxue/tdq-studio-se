@@ -13,6 +13,7 @@ import org.eclipse.emf.ecore.InternalEObject;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
+import org.talend.commons.emf.FactoriesUtil;
 import org.talend.core.model.properties.impl.TDQItemImpl;
 import org.talend.dataquality.domain.pattern.Pattern;
 
@@ -157,6 +158,16 @@ public class TDQPatternItemImpl extends TDQItemImpl implements TDQPatternItem {
                 return pattern != null;
         }
         return super.eIsSet(featureID);
+    }
+    
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated NOT
+     */
+    @Override
+    public String getFileExtension(){
+        return FactoriesUtil.PATTERN;
     }
 
 } //TDQPatternItemImpl

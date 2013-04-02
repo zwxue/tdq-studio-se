@@ -13,6 +13,7 @@ import org.eclipse.emf.ecore.InternalEObject;
 
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
+import org.talend.commons.emf.FactoriesUtil;
 import org.talend.core.model.properties.impl.TDQItemImpl;
 import org.talend.dataquality.analysis.Analysis;
 
@@ -158,5 +159,14 @@ public class TDQAnalysisItemImpl extends TDQItemImpl implements TDQAnalysisItem 
         }
         return super.eIsSet(featureID);
     }
-
+    
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated NOT
+     */
+    @Override
+    public String getFileExtension(){
+        return FactoriesUtil.ANA;
+    }
 } //TDQAnalysisItemImpl

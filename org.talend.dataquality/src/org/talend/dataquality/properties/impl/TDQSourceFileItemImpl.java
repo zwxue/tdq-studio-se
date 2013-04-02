@@ -42,5 +42,4 @@ public class TDQSourceFileItemImpl extends TDQFileItemImpl implements TDQSourceF
         return FileConstants.SQL_EXTENSION;
     }
 
-
 } // TDQSourceFileItemImpl
