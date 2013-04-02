@@ -139,27 +139,21 @@ public final class DefinitionHandler {
     }
 
     private String getTdqLibPath() {
-        String tdqLibPath = null;
-        String projectName = null;
+        String projectPath = null;
 
-        int pos = PROJECT_PATH.lastIndexOf('/');
+        int pos = PROJECT_PATH.lastIndexOf(File.separator);
         if (pos > 0 && pos < PROJECT_PATH.length() + 1) {
-            projectName = PROJECT_PATH.substring(pos + 1);
-            File f = new File("items/"); //$NON-NLS-1$
+            projectPath = "items" + File.separator + PROJECT_PATH.substring(pos + 1).toLowerCase(); //$NON-NLS-1$
+
+            File f = new File(projectPath);
             if (f.exists()) { // running exported job
-                f = new java.io.File(PROJECT_PATH + "/TDQ_Data Profiling/Reports/"); //$NON-NLS-1$
-                if (!f.exists()) {
-                    System.err.println("[INFO] This error may appear if you did not export the dependencies of the job."); //$NON-NLS-1$
-                }
-                tdqLibPath = "items/" + projectName.toLowerCase() + "/TDQ_Libraries/"; //$NON-NLS-1$ //$NON-NLS-2$
-            } else { // running job in studio
-                // same reason for calling toUpperCase()
-                tdqLibPath = PROJECT_PATH + "/TDQ_Libraries/"; //$NON-NLS-1$ //$NON-NLS-2$
+                return projectPath + File.separator + "TDQ_Libraries" + File.separator; //$NON-NLS-1$ 
+            } else {
+                log.error("[INFO] This error may appear if you did not export the dependencies of the job."); //$NON-NLS-1$
             }
-        } else {
-            System.err.println("[ERROR] Failed to retrieve TDQ Library Path"); //$NON-NLS-1$
         }
-        return tdqLibPath;
+        // running job in studio
+        return PROJECT_PATH + File.separator + "TDQ_Libraries" + File.separator; //$NON-NLS-1$ 
     }
 
     /**
