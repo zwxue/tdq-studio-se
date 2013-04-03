@@ -39,6 +39,7 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.talend.commons.bridge.ReponsitoryContextBridge;
 import org.talend.commons.emf.EMFUtil;
 import org.talend.commons.emf.FactoriesUtil;
+import org.talend.commons.utils.WorkspaceUtils;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
 import org.talend.core.model.metadata.builder.database.JavaSqlFactory;
@@ -79,6 +80,7 @@ import org.talend.dataquality.rules.ParserRule;
 import org.talend.dq.CWMPlugin;
 import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.PropertyHelper;
+import org.talend.dq.helper.resourcehelper.PrvResourceFileHelper;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.dq.writer.EMFSharedResources;
 import org.talend.dq.writer.impl.ElementWriterFactory;
@@ -114,8 +116,6 @@ public class FileSystemImportWriter implements IImportWriter {
     private String projectName;
 
     private List<File> allCopiedFiles = new ArrayList<File>();
-
-    private List<DatabaseConnection> allCopiedDBConns = new ArrayList<DatabaseConnection>();
 
     /*
      * check the dependency and conflict; when the record is a indicator(system or user): if overwrite should not add
@@ -465,9 +465,6 @@ public class FileSystemImportWriter implements IImportWriter {
                                     synchronized (resourceSet) {
                                         write(resPath, desPath);
                                         allCopiedFiles.add(desPath.toFile());
-                                        if (modEle != null && isDBConnection(modEle)) {
-                                            allCopiedDBConns.add((DatabaseConnection) modEle);
-                                        }
                                     }
                                 }
                             }
@@ -798,6 +795,7 @@ public class FileSystemImportWriter implements IImportWriter {
         // MOD qiongli 2012-11-8 TDQ-6166.
         notifySQLExplorerForConnection();
 
+        allCopiedFiles.clear();
     }
 
     /**
@@ -1025,13 +1023,19 @@ public class FileSystemImportWriter implements IImportWriter {
     }
 
     /***
-     * 
      * need to notify sql explorer when import a connection.
      */
     private void notifySQLExplorerForConnection() {
-        for (DatabaseConnection dbConn : allCopiedDBConns) {
-            if (dbConn != null && !dbConn.eIsProxy() && JavaSqlFactory.getUsername(dbConn) != null) {
-                CWMPlugin.getDefault().addConnetionAliasToSQLPlugin(dbConn);
+        for (File file : allCopiedFiles) {
+            IFile iFile = WorkspaceUtils.fileToIFile(file);
+            if (iFile != null) {
+                Connection conn = PrvResourceFileHelper.getInstance().findProvider(iFile);
+                if (conn != null && conn instanceof DatabaseConnection) {
+                    DatabaseConnection dbConn = (DatabaseConnection) conn;
+                    if (JavaSqlFactory.getUsername(dbConn) != null) {
+                        CWMPlugin.getDefault().addConnetionAliasToSQLPlugin(dbConn);
+                    }
+                }
             }
         }
     }
