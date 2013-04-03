@@ -1776,10 +1776,10 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
         final Text patternText = new Text(detailComp, SWT.BORDER);
         patternText.setLayoutData(new GridData(GridData.FILL_BOTH));
         ((GridData) patternText.getLayoutData()).widthHint = 600;
-        patternText.addModifyListener(new ExpressTextModListener(combo));
         // MOD xqliu 2010-03-23 feature 11201
         patternText.setText(expression.getBody() == null ? PluginConstant.EMPTY_STRING : expression.getBody());
         // ~11201
+        patternText.addModifyListener(new ExpressTextModListener(combo));
         // ADD msjian TDQ-6841: set the pattern text can not input when the indicator is UDI
         if (!isSystemIndicator()) {
             patternText.setEditable(false);
