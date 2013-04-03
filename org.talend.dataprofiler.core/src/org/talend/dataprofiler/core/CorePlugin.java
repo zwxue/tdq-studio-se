@@ -13,7 +13,6 @@
 package org.talend.dataprofiler.core;
 
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -23,7 +22,6 @@ import java.util.regex.Pattern;
 
 import net.sourceforge.sqlexplorer.dbproduct.Alias;
 import net.sourceforge.sqlexplorer.dbproduct.AliasManager;
-import net.sourceforge.sqlexplorer.dbproduct.SQLConnection;
 import net.sourceforge.sqlexplorer.plugin.SQLExplorerPlugin;
 import net.sourceforge.sqlexplorer.plugin.editors.SQLEditor;
 import net.sourceforge.sqlexplorer.plugin.editors.SQLEditorInput;
@@ -59,7 +57,6 @@ import org.talend.commons.utils.VersionUtils;
 import org.talend.core.GlobalServiceRegister;
 import org.talend.core.context.Context;
 import org.talend.core.context.RepositoryContext;
-import org.talend.core.database.EDatabaseTypeName;
 import org.talend.core.language.ECodeLanguage;
 import org.talend.core.model.general.ILibrariesService;
 import org.talend.core.model.general.Project;
@@ -94,7 +91,6 @@ import org.talend.dataprofiler.core.ui.views.PatternTestView;
 import org.talend.dataprofiler.help.BookMarkEnum;
 import org.talend.dq.CWMPlugin;
 import org.talend.dq.helper.PropertyHelper;
-import org.talend.metadata.managment.connection.manager.HiveConnectionManager;
 import org.talend.repository.ProjectManager;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryConstants;
@@ -263,14 +259,13 @@ public class CorePlugin extends AbstractUIPlugin {
                     SQLEditorInput input = new SQLEditorInput("SQL Editor (" + alias.getName() + "." + lEditorName + ").sql"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
                     net.sourceforge.sqlexplorer.dbproduct.User user = alias.getUser(userName);
 
-                    // prepare the connection for hive
+                    // set IMetadataConnection into the user, if the db type is hive, should use IMetadataConnection to
+                    // create the hive connection
                     DatabaseConnection databaseConnection = SwitchHelpers.DATABASECONNECTION_SWITCH.doSwitch(connection);
                     if (databaseConnection != null) {
                         IMetadataConnection metadataConnection = ConvertionHelper.convert(databaseConnection);
                         if (metadataConnection != null) {
-                            if (EDatabaseTypeName.HIVE.getXmlName().equalsIgnoreCase(metadataConnection.getDbType())) {
-                                prepareHiveConnection(user, metadataConnection);
-                            }
+                            user.setMetadataConnection(metadataConnection);
                         }
                     }
 
@@ -286,31 +281,6 @@ public class CorePlugin extends AbstractUIPlugin {
         }
 
         return null;
-    }
-
-    /**
-     * DOC xqliu Comment method "setHiveConnection".
-     * 
-     * @param user
-     */
-    private void prepareHiveConnection(net.sourceforge.sqlexplorer.dbproduct.User user, IMetadataConnection metadataConnection) {
-        try {
-            java.sql.Connection hiveConnection = HiveConnectionManager.getInstance().createConnection(metadataConnection);
-            if (hiveConnection != null) {
-                SQLConnection sqlConnection = new SQLConnection(user, hiveConnection, user.getAlias().getDriver(),
-                        "HiveConnection"); //$NON-NLS-1$
-                // add the connection to the unused pool directly thus the user can use it instead of create a new one
-                user.getUnused().add(sqlConnection);
-            }
-        } catch (ClassNotFoundException e) {
-            log.error(e);
-        } catch (InstantiationException e) {
-            log.error(e);
-        } catch (IllegalAccessException e) {
-            log.error(e);
-        } catch (SQLException e) {
-            log.error(e);
-        }
     }
 
     /**

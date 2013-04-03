@@ -14,6 +14,7 @@
  */
 package net.sourceforge.sqlexplorer.dbproduct;
 
+import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -26,6 +27,10 @@ import net.sourceforge.sqlexplorer.plugin.SQLExplorerPlugin;
 
 import org.dom4j.Element;
 import org.dom4j.tree.DefaultElement;
+import org.talend.core.GlobalServiceRegister;
+import org.talend.core.ITDQRepositoryService;
+import org.talend.core.database.EDatabaseTypeName;
+import org.talend.core.model.metadata.IMetadataConnection;
 import org.talend.cwm.helper.ConnectionHelper;
 
 /**
@@ -59,10 +64,6 @@ public class User implements Comparable<User>, SessionEstablishedListener {
     // Pool of available connections
     private LinkedList<SQLConnection> unused = new LinkedList<SQLConnection>();
 
-    public LinkedList<SQLConnection> getUnused() {
-        return this.unused;
-    }
-
     // List of connections in use
     private LinkedList<SQLConnection> allocated = new LinkedList<SQLConnection>();
 
@@ -79,6 +80,17 @@ public class User implements Comparable<User>, SessionEstablishedListener {
     private boolean autoCommit;
 
     private boolean commitOnClose;
+
+    private IMetadataConnection metadataConnection;
+
+    /**
+     * Sets the metadataConnection.
+     * 
+     * @param metadataConnection the metadataConnection to set
+     */
+    public void setMetadataConnection(IMetadataConnection metadataConnection) {
+        this.metadataConnection = metadataConnection;
+    }
 
     /**
      * Constructor
@@ -442,14 +454,30 @@ public class User implements Comparable<User>, SessionEstablishedListener {
     }
 
     /**
-     * Creates a new connection
+     * Creates a new connection, MOD xqliu 2013-04-03 TDQ-7003
      * 
      * @return
      * @throws ExplorerException
      * @throws SQLException
      */
     protected SQLConnection createNewConnection() throws SQLException {
-        SQLConnection connection = alias.getDriver().getConnection(this);
+        SQLConnection connection = null;
+        // if it is hive connection, should call tdqRepService.createHiveConnection() to create the connection, because
+        // need use DynamicClassLoader to deal with it
+        if (metadataConnection != null && EDatabaseTypeName.HIVE.getXmlName().equalsIgnoreCase(metadataConnection.getDbType())) {
+            if (GlobalServiceRegister.getDefault().isServiceRegistered(ITDQRepositoryService.class)) {
+                ITDQRepositoryService tdqRepService = (ITDQRepositoryService) GlobalServiceRegister.getDefault().getService(
+                        ITDQRepositoryService.class);
+                if (tdqRepService != null) {
+                    Connection hiveConnection = tdqRepService.createHiveConnection(metadataConnection);
+                    if (hiveConnection != null) {
+                        connection = new SQLConnection(this, hiveConnection, alias.getDriver(), "HiveConnection");
+                    }
+                }
+            }
+        } else {
+            connection = alias.getDriver().getConnection(this);
+        }
         return connection;
     }
 

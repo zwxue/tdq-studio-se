@@ -12,6 +12,7 @@
 // ============================================================================
 package org.talend.dataprofiler.core.service;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -39,6 +40,8 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.navigator.CommonViewer;
 import org.talend.commons.exception.PersistenceException;
 import org.talend.core.ITDQRepositoryService;
+import org.talend.core.database.EDatabaseTypeName;
+import org.talend.core.model.metadata.IMetadataConnection;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
 import org.talend.core.model.metadata.builder.connection.DelimitedFileConnection;
@@ -84,6 +87,7 @@ import org.talend.dq.nodes.SourceFileRepNode;
 import org.talend.dq.nodes.SourceFileSubFolderNode;
 import org.talend.dq.writer.impl.DataProviderWriter;
 import org.talend.dq.writer.impl.ElementWriterFactory;
+import org.talend.metadata.managment.connection.manager.HiveConnectionManager;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.resource.EResourceConstant;
@@ -552,5 +556,29 @@ public class TOPRepositoryService implements ITDQRepositoryService {
     public void refreshCurrentAnalysisAndConnectionEditor() {
         WorkbenchUtils.refreshCurrentAnalysisAndConnectionEditor();
 
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * org.talend.core.ITDQRepositoryService#createHiveConnection(org.talend.core.model.metadata.IMetadataConnection)
+     */
+    public java.sql.Connection createHiveConnection(IMetadataConnection metadataConnection) {
+        java.sql.Connection connection = null;
+        if (metadataConnection != null && EDatabaseTypeName.HIVE.getXmlName().equalsIgnoreCase(metadataConnection.getDbType())) {
+            try {
+                connection = HiveConnectionManager.getInstance().createConnection(metadataConnection);
+            } catch (ClassNotFoundException e) {
+                log.error(e);
+            } catch (InstantiationException e) {
+                log.error(e);
+            } catch (IllegalAccessException e) {
+                log.error(e);
+            } catch (SQLException e) {
+                log.error(e);
+            }
+        }
+        return connection;
     }
 }
