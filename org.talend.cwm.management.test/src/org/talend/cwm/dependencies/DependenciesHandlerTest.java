@@ -36,7 +36,6 @@ import org.talend.dataquality.helpers.IndicatorHelper;
 import org.talend.dataquality.indicators.BlankCountIndicator;
 import org.talend.dataquality.indicators.CompositeIndicator;
 import org.talend.dataquality.indicators.CountsIndicator;
-import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.IndicatorsFactory;
 import org.talend.dataquality.indicators.definition.DefinitionFactory;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
@@ -65,6 +64,8 @@ public class DependenciesHandlerTest {
      */
     @Test
     public void testGetClintDependencyProperty() {
+        // DependenciesHandler is a final class we can not mock it. so test this method need to call really
+        // getAnaDependency method that we must to create so many element
         // countIndicator
         Property countIndicatorProperty = org.talend.core.model.properties.PropertiesFactory.eINSTANCE.createProperty();
         TDQIndicatorDefinitionItem countIndicatorItem = PropertiesFactory.eINSTANCE.createTDQIndicatorDefinitionItem();
@@ -76,24 +77,26 @@ public class DependenciesHandlerTest {
 
         Analysis createAnalysis = AnalysisFactory.eINSTANCE.createAnalysis();
 
+        // create analysisResult
         AnalysisResult createAnalysisResult = AnalysisFactory.eINSTANCE.createAnalysisResult();
-
+        // for getAnaDependency method
         CountsIndicator createCountsIndicator = IndicatorsFactory.eINSTANCE.createCountsIndicator();
 
         BlankCountIndicator createBlankCountIndicator = IndicatorsFactory.eINSTANCE.createBlankCountIndicator();
         IndicatorDefinition createIndicatorDefinition = DefinitionFactory.eINSTANCE.createIndicatorDefinition();
-        createIndicatorDefinition = DefinitionFactory.eINSTANCE.createIndicatorDefinition();
         createCountsIndicator.setIndicatorDefinition(createIndicatorDefinition);
         countIndicatorItem.setIndicatorDefinition(createIndicatorDefinition);
         createBlankCountIndicator.setIndicatorDefinition(createIndicatorDefinition);
         createCountsIndicator.getAllChildIndicators().add(createBlankCountIndicator);
         createAnalysisResult.getIndicators().add(createCountsIndicator);
 
+        // two different Indicator use same IndicatorDefinition the second one will be filter out.
         CompositeIndicator createCompositeIndicator = IndicatorsFactory.eINSTANCE.createTextIndicator();
         createAnalysisResult.getIndicators().add(createCompositeIndicator);
         createIndicatorDefinition = DefinitionFactory.eINSTANCE.createIndicatorDefinition();
         createCompositeIndicator.setIndicatorDefinition(createIndicatorDefinition);
-
+        // ~
+        // ~for getAnaDependency method
         createAnalysis.setResults(createAnalysisResult);
         createItem.setAnalysis(createAnalysis);
         anaProperty.setItem(createItem);
@@ -175,39 +178,4 @@ public class DependenciesHandlerTest {
         assertEquals(0, clientDependencyTwo.size());
     }
 
-    /**
-     * Test method for
-     * {@link org.talend.cwm.dependencies.DependenciesHandler#getAnaDependency(org.talend.core.model.properties.Property)}
-     * .
-     */
-    @Test
-    public void testGetAnaDependency() {
-
-        Analysis ana = AnalysisFactory.eINSTANCE.createAnalysis();
-        AnalysisResult results = AnalysisFactory.eINSTANCE.createAnalysisResult();
-        ana.setResults(results);
-
-        TDQAnalysisItem anaItem = PropertiesFactory.eINSTANCE.createTDQAnalysisItem();
-        anaItem.setAnalysis(ana);
-
-        Indicator ind1 = IndicatorsFactory.eINSTANCE.createDuplicateCountIndicator();
-        IndicatorDefinition indDefinition1 = DefinitionFactory.eINSTANCE.createIndicatorDefinition();
-        ind1.setIndicatorDefinition(indDefinition1);
-        results.getIndicators().add(ind1); // contains indicator definition
-
-        Indicator ind2 = IndicatorsFactory.eINSTANCE.createNullCountIndicator();
-        results.getIndicators().add(ind2); // contains no indicator definition
-
-        Property anaProperty = org.talend.core.model.properties.PropertiesFactory.eINSTANCE.createProperty();
-        anaProperty.setItem(anaItem);
-
-        PowerMockito.mockStatic(PropertyHelper.class);
-        Property indDefProperty = org.talend.core.model.properties.PropertiesFactory.eINSTANCE.createProperty();
-        when(PropertyHelper.getProperty(indDefinition1)).thenReturn(indDefProperty);
-
-        DependenciesHandler depHandler = DependenciesHandler.getInstance();
-        List<Property> propLs = depHandler.getAnaDependency(anaProperty);
-        assertEquals(1, propLs.size());
-
-    }
 }
