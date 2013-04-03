@@ -95,7 +95,6 @@ public abstract class AbstractSchemaEvaluator<T> extends Evaluator<T> {
                 throw new RuntimeException("No data manager found."); //$NON-NLS-1$ 
             }
             this.dbmsLanguage = DbmsLanguageFactory.createDbmsLanguage(dm);
-            // this.dbmsLanguage.setDbQuoteString(this.dbmsLanguage.getQuoteIdentifier());
         }
         return this.dbmsLanguage;
     }
@@ -119,14 +118,12 @@ public abstract class AbstractSchemaEvaluator<T> extends Evaluator<T> {
      */
     protected void evalAllCounts(String catalog, String schema, NamedColumnSet t, SchemaIndicator schemaIndic, boolean isTable,
             ReturnCode ok) throws SQLException {
-        // String quCatalog = catalog == null ? null : dbms().quote(catalog);
         // MOD klliu 2011-02-17 bug 18961
         EObject eContainer = schemaIndic.getAnalyzedElement().eContainer();
         String quCatalog = null;
         if (eContainer instanceof Catalog) {
             quCatalog = dbms().quote(((Catalog) eContainer).getName());
         }
-        // String quCatalog = catalog == null ? null : dbms().quote(catalog);
         String quSchema = schema == null ? null : dbms().quote(schema);
         final String table = t.getName();
         String quTable = dbms().quote(table);
@@ -280,7 +277,6 @@ public abstract class AbstractSchemaEvaluator<T> extends Evaluator<T> {
             while (pk.next()) {
                 pkCount += 1;
             }
-            // ResultSetUtils.printResultSet(pk, 0);
             pk.close();
         }
         return pkCount;
@@ -326,9 +322,6 @@ public abstract class AbstractSchemaEvaluator<T> extends Evaluator<T> {
      */
     private long getRowCounts(String quCatalog, String quSchema, String quTable) throws SQLException {
         String sqlStatement = SELECT_COUNT_FROM + dbms().toQualifiedName(quCatalog, quSchema, quTable);
-        // Statement statement = getConnection().createStatement(ResultSet.TYPE_FORWARD_ONLY,
-        // ResultSet.CONCUR_READ_ONLY,
-        // ResultSet.CLOSE_CURSORS_AT_COMMIT);
 
         long totalRowCount = 0;
         java.sql.Connection conn = getConnection();
@@ -370,8 +363,6 @@ public abstract class AbstractSchemaEvaluator<T> extends Evaluator<T> {
                 if (!continueRun()) {
                     break;
                 }
-                // List<Indicator> indicators = getIndicators(col);
-                // ResultSetUtils.printResultSet(resultSet, 0);
                 // --- get content of column
                 String str = String.valueOf(resultSet.getObject(1));
                 // MOD gdbu 2011-4-21 bug : 18975
@@ -380,11 +371,6 @@ public abstract class AbstractSchemaEvaluator<T> extends Evaluator<T> {
                 totalRowCount += count;
                 if (log.isDebugEnabled()) {
                     log.debug(quCatalog + "/" + quSchema + "/" + quTable + ": " + count); //$NON-NLS-1$  //$NON-NLS-2$  //$NON-NLS-3$
-
-                    // // --- give row to handle to indicators
-                    // for (SchemaIndicator indicator : indicators) {
-                    // indicator.setTotalRowCount(count);
-                    // }
                 }
 
                 // TODO scorreia give a full row to indicator (indicator will have to handle its data??
@@ -511,6 +497,9 @@ public abstract class AbstractSchemaEvaluator<T> extends Evaluator<T> {
             catalogIndic.setViewRowCount(catalogIndic.getViewRowCount() + schemaIndic.getViewRowCount());
             // Added 20130221 TDQ-6546: add the missed the view count
             catalogIndic.setViewCount(catalogIndic.getViewCount() + schemaIndic.getViewCount());
+            // Added 20130401 TDQ-6823: add the missed key and index count for the catelog(which contains schemas)
+            catalogIndic.setKeyCount(catalogIndic.getKeyCount() + schemaIndic.getKeyCount());
+            catalogIndic.setIndexCount(catalogIndic.getIndexCount() + schemaIndic.getIndexCount());
         } else if (!hasCatalog) { // has schema only
             // add it to list of indicators
             this.addToConnectionIndicator(schemaIndic);
