@@ -34,7 +34,7 @@ import org.osgi.framework.Bundle;
  */
 public class Messages {
 
-    private static final String BUNDLE_NAME = "messages";
+    private static final String BUNDLE_NAME = "net.sourceforge.sqlexplorer.messages";
 
     private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle.getBundle(BUNDLE_NAME);
 
@@ -110,8 +110,8 @@ public class Messages {
 
     /**
      * Parse some input string and translate all special tokens. This is similar to a string template engine: it
-     * extracts <em>key</em> from <tt>${key}</tt> sequences in the input string and uses {@link #getString(String)}
-     * to translate it. Contents in between <tt>${}</tt> sequences are copied as-is.
+     * extracts <em>key</em> from <tt>${key}</tt> sequences in the input string and uses {@link #getString(String)} to
+     * translate it. Contents in between <tt>${}</tt> sequences are copied as-is.
      * 
      * @param input The input string.
      * @return String with all special tokens replaced.
