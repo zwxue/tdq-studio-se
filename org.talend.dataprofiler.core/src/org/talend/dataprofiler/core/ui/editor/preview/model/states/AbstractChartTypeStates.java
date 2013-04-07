@@ -89,9 +89,9 @@ public abstract class AbstractChartTypeStates implements IChartTypeStates {
     }
 
     public ChartDataEntity[] getDataEntity() {
-        // TODO Auto-generated method stub
-        if (getCustomerDataset() != null) {
-            return getCustomerDataset().getDataEntities();
+        ICustomerDataset customerDataset = getCustomerDataset();
+        if (customerDataset != null) {
+            return customerDataset.getDataEntities();
         }
 
         return null;
