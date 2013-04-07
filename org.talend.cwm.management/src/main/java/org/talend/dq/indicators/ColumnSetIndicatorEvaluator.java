@@ -644,7 +644,7 @@ public class ColumnSetIndicatorEvaluator extends Evaluator<String> {
                 indicator.handle(objectLs);
                 if (indicator instanceof SimpleStatIndicator) {
                     if (!indicator.isStoreData()) {
-                        break;
+                        continue;
                     }
                     SimpleStatIndicator simpIndi = (SimpleStatIndicator) indicator;
                     for (Indicator leafIndicator : simpIndi.getLeafIndicators()) {
