@@ -17,8 +17,6 @@ import net.sourceforge.sqlexplorer.dataset.DataSet;
 import net.sourceforge.sqlexplorer.dbproduct.DatabaseProduct.ExecutionResults;
 import net.sourceforge.sqlexplorer.parsers.NamedParameter;
 
-import org.apache.hadoop.hive.jdbc.HivePreparedStatement;
-
 public final class ExecutionResultImpl implements ExecutionResults {
 
     // Current state - IE, which set of results we're currently looking for
@@ -107,7 +105,7 @@ public final class ExecutionResultImpl implements ExecutionResults {
         // getResults())
         while (state == State.SECONDARY_RESULTS) {
             // MOD qiongli TDQ-5907, HivePreparedStatement dosenot support method 'getResultSet()'.
-            if (!(HivePreparedStatement.class.getName().equals(stmt.getClass().getName())) && stmt.getMoreResults()) {
+            if (!("org.apache.hadoop.hive.jdbc.HivePreparedStatement".equals(stmt.getClass().getName())) && stmt.getMoreResults()) {
                 currentResultSet = stmt.getResultSet();
             } else {
                 int updateCount = stmt.getUpdateCount();
