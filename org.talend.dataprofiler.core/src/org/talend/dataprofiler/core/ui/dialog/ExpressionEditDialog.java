@@ -13,14 +13,13 @@
 package org.talend.dataprofiler.core.ui.dialog;
 
 import java.util.HashMap;
-import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
-import org.eclipse.emf.common.util.EList;
 import org.eclipse.help.HelpSystem;
 import org.eclipse.help.IContext;
 import org.eclipse.help.ui.internal.views.HelpTray;
 import org.eclipse.help.ui.internal.views.ReusableHelpPart;
+import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.TrayDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
@@ -57,11 +56,8 @@ import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.manager.DQPreferenceManager;
 import org.talend.dataprofiler.core.ui.utils.UDIUtils;
 import org.talend.dataprofiler.help.HelpPlugin;
-import org.talend.dataquality.helpers.BooleanExpressionHelper;
 import org.talend.dataquality.helpers.IndicatorCategoryHelper;
 import org.talend.dataquality.indicators.definition.IndicatorCategory;
-import org.talend.dataquality.indicators.definition.IndicatorDefinition;
-import org.talend.dataquality.indicators.definition.userdefine.UDIndicatorDefinition;
 import org.talend.dq.dbms.GenericSQLHandler;
 import org.talend.dq.helper.UDIHelper;
 
@@ -181,11 +177,9 @@ public class ExpressionEditDialog extends TrayDialog {
     // for TAB5 match only :
     private Text tab5_match_viewInvalidValues;
 
-    private IndicatorDefinition definition;
+    private TdExpression tempExpression;
 
-    private TdExpression tdExpression;
-
-    private HashMap<String, String> variableMap;
+    private HashMap<String, String> tempVariableMap;
 
     private IndicatorCategory category;
 
@@ -205,11 +199,11 @@ public class ExpressionEditDialog extends TrayDialog {
 
     private TdExpression tempViewInvalidValuesExp;
 
-    // when tab0 text modified, set true, use autoGenSql to fill other tabs(from tab1 to tab6),
+    // when tab0 text modified, set true, use autoGenQuery to fill other tabs(from tab1 to tab6),
     // when the other tabs text modified, set false
-    private boolean useAutoGenSqlFlag = false;
+    private boolean useAutoGenQueryFlag = false;
 
-    // when tab1 or tab2 text is inputted by user, can not use the AutoGenSql to overwriten
+    // when tab1 or tab2 text is input by user, can not use the AutoGenQuery to overwriten
     private boolean canBeOverwriten_tab1 = true;
 
     private boolean canBeOverwriten_tab2_viewRows = true;
@@ -222,32 +216,21 @@ public class ExpressionEditDialog extends TrayDialog {
 
     private boolean canBeOverwriten_tab5_match = true;
 
-    // the sql generated from template
-    private String autoGenSql = PluginConstant.EMPTY_STRING;
+    private boolean isUDIndicatorDefinition = false;
 
-    public ExpressionEditDialog(Shell parentShell, String patternText, IndicatorDefinition definition, TdExpression tdExpression) {
+    // the query generated from template
+    private String autoGenQuery = PluginConstant.EMPTY_STRING;
+
+    public ExpressionEditDialog(Shell parentShell, String patternText, boolean isUDIndicatorDefinition, TdExpression tdExpression) {
         super(parentShell);
-        this.definition = definition;
-        this.category = IndicatorCategoryHelper.getCategory(definition);
         this.fullSqlContent = patternText;
+        this.isUDIndicatorDefinition = isUDIndicatorDefinition;
+        this.tempExpression = tdExpression;
 
-        this.tdExpression = tdExpression;
-        language = tdExpression.getLanguage().trim();
-        version = tdExpression.getVersion();
-        if (definition instanceof UDIndicatorDefinition) {
-            UDIndicatorDefinition definitionTemp = (UDIndicatorDefinition) this.definition;
-            if (IndicatorCategoryHelper.isUserDefMatching(category)) {
-                tempViewValidRowsExp = getCurrentLanguageExp(definitionTemp.getViewValidRowsExpression());
-                tempViewInvalidRowsExp = getCurrentLanguageExp(definitionTemp.getViewInvalidRowsExpression());
-                tempViewValidValuesExp = getCurrentLanguageExp(definitionTemp.getViewValidValuesExpression());
-                tempViewInvalidValuesExp = getCurrentLanguageExp(definitionTemp.getViewInvalidValuesExpression());
-            } else {
-                tempViewRowsExp = getCurrentLanguageExp(definitionTemp.getViewRowsExpression());
-            }
-
-            this.variableMap = tdExpression.getExpressionVariableMap();
-            if (variableMap == null) {
-                variableMap = new HashMap<String, String>();
+        if (isUDIndicatorDefinition) {
+            this.tempVariableMap = tempExpression.getExpressionVariableMap();
+            if (tempVariableMap == null) {
+                tempVariableMap = new HashMap<String, String>();
             }
         }
 
@@ -256,22 +239,156 @@ public class ExpressionEditDialog extends TrayDialog {
     }
 
     /**
-     * get Current Language Expression.
+     * Getter for isUDIndicatorDefinition.
      * 
-     * @param tempViewValidRowsExpList
+     * @return the isUDIndicatorDefinition
      */
-    public TdExpression getCurrentLanguageExp(List<TdExpression> tempViewValidRowsExpList) {
-        if (tempViewValidRowsExpList != null) {
-            for (TdExpression tdExp : tempViewValidRowsExpList) {
-                if (UDIUtils.isCurrentLanguageAndVersion(tdExp, language, version)) {
-                    return tdExp;
-                }
-            }
-        }
-        TdExpression createTdExpression = BooleanExpressionHelper.createTdExpression(language, PluginConstant.EMPTY_STRING,
-                version);
-        createTdExpression.setModificationDate(UDIUtils.getCurrentDateTime());
-        return createTdExpression;
+    public boolean isUDIndicatorDefinition() {
+        return this.isUDIndicatorDefinition;
+    }
+
+    /**
+     * Sets the isUDIndicatorDefinition.
+     * 
+     * @param isUDIndicatorDefinition the isUDIndicatorDefinition to set
+     */
+    public void setUDIndicatorDefinition(boolean isUDIndicatorDefinition) {
+        this.isUDIndicatorDefinition = isUDIndicatorDefinition;
+    }
+
+    /**
+     * Sets the category.
+     * 
+     * @param category the category to set
+     */
+    public void setCategory(IndicatorCategory category) {
+        this.category = category;
+    }
+
+    /**
+     * Sets the language.
+     * 
+     * @param language the language to set
+     */
+    public void setLanguage(String language) {
+        this.language = language;
+    }
+
+    /**
+     * Sets the version.
+     * 
+     * @param version the version to set
+     */
+    public void setVersion(String version) {
+        this.version = version;
+    }
+
+    /**
+     * Getter for tempViewRowsExp.
+     * 
+     * @return the tempViewRowsExp
+     */
+    public TdExpression getTempViewRowsExp() {
+        return this.tempViewRowsExp;
+    }
+
+    /**
+     * Sets the tempViewRowsExp.
+     * 
+     * @param tempViewRowsExp the tempViewRowsExp to set
+     */
+    public void setTempViewRowsExp(TdExpression tempViewRowsExp) {
+        this.tempViewRowsExp = tempViewRowsExp;
+    }
+
+    /**
+     * Getter for tempViewValidRowsExp.
+     * 
+     * @return the tempViewValidRowsExp
+     */
+    public TdExpression getTempViewValidRowsExp() {
+        return this.tempViewValidRowsExp;
+    }
+
+    /**
+     * Sets the tempViewValidRowsExp.
+     * 
+     * @param tempViewValidRowsExp the tempViewValidRowsExp to set
+     */
+    public void setTempViewValidRowsExp(TdExpression tempViewValidRowsExp) {
+        this.tempViewValidRowsExp = tempViewValidRowsExp;
+    }
+
+    /**
+     * Getter for tempViewInvalidRowsExp.
+     * 
+     * @return the tempViewInvalidRowsExp
+     */
+    public TdExpression getTempViewInvalidRowsExp() {
+        return this.tempViewInvalidRowsExp;
+    }
+
+    /**
+     * Sets the tempViewInvalidRowsExp.
+     * 
+     * @param tempViewInvalidRowsExp the tempViewInvalidRowsExp to set
+     */
+    public void setTempViewInvalidRowsExp(TdExpression tempViewInvalidRowsExp) {
+        this.tempViewInvalidRowsExp = tempViewInvalidRowsExp;
+    }
+
+    /**
+     * Getter for tempViewValidValuesExp.
+     * 
+     * @return the tempViewValidValuesExp
+     */
+    public TdExpression getTempViewValidValuesExp() {
+        return this.tempViewValidValuesExp;
+    }
+
+    /**
+     * Sets the tempViewValidValuesExp.
+     * 
+     * @param tempViewValidValuesExp the tempViewValidValuesExp to set
+     */
+    public void setTempViewValidValuesExp(TdExpression tempViewValidValuesExp) {
+        this.tempViewValidValuesExp = tempViewValidValuesExp;
+    }
+
+    /**
+     * Getter for tempViewInvalidValuesExp.
+     * 
+     * @return the tempViewInvalidValuesExp
+     */
+    public TdExpression getTempViewInvalidValuesExp() {
+        return this.tempViewInvalidValuesExp;
+    }
+
+    /**
+     * Sets the tempViewInvalidValuesExp.
+     * 
+     * @param tempViewInvalidValuesExp the tempViewInvalidValuesExp to set
+     */
+    public void setTempViewInvalidValuesExp(TdExpression tempViewInvalidValuesExp) {
+        this.tempViewInvalidValuesExp = tempViewInvalidValuesExp;
+    }
+
+    /**
+     * Sets the tempExpression.
+     * 
+     * @param tempExpression the tempExpression to set
+     */
+    public void setTempExpression(TdExpression tempExpression) {
+        this.tempExpression = tempExpression;
+    }
+
+    /**
+     * get this tempExpression.
+     * 
+     * @return
+     */
+    public TdExpression getTempExpression() {
+        return tempExpression;
     }
 
     /**
@@ -311,7 +428,7 @@ public class ExpressionEditDialog extends TrayDialog {
     protected Control createDialogArea(Composite parent) {
         Control comp;
         // if the category is user define, then create tabs, else as before
-        if (definition instanceof UDIndicatorDefinition && IndicatorCategoryHelper.isUserDefCategory(category)) {
+        if (isUDIndicatorDefinition && IndicatorCategoryHelper.isUserDefCategory(category)) {
             comp = createDialogAreaForUDI(parent);
         } else {
             comp = createDialogAreaForNotUDI(parent);
@@ -413,73 +530,73 @@ public class ExpressionEditDialog extends TrayDialog {
                 } else {
                     if (tab1_name.equals(text)) {
                         // Full SQL Template
-                        if (useAutoGenSqlFlag && canBeOverwriten_tab1) {
-                            tab1_fullSql.setText(getAutoGeneratedSql());
-                            useAutoGenSqlFlag = true;
+                        if (useAutoGenQueryFlag && canBeOverwriten_tab1) {
+                            tab1_fullSql.setText(getAutoGeneratedQuery());
+                            useAutoGenQueryFlag = true;
                             canBeOverwriten_tab1 = true;
                         }
                         tab1Composite.layout();
                     } else if (tab2_name.equals(text)) {
                         // View Rows
-                        if (useAutoGenSqlFlag && canBeOverwriten_tab2_viewRows) {
-                            tab2_viewRows.setText(getAutoGeneratedSql());
-                            useAutoGenSqlFlag = true;
+                        if (useAutoGenQueryFlag && canBeOverwriten_tab2_viewRows) {
+                            tab2_viewRows.setText(getAutoGeneratedQuery());
+                            useAutoGenQueryFlag = true;
                             canBeOverwriten_tab2_viewRows = true;
                         }
                         tab2Composite.layout();
                     } else if (tab3_name.equals(text)) {
                         // View Valid Rows Template
-                        if (useAutoGenSqlFlag && canBeOverwriten_tab2_match) {
-                            tab2_match_viewvalidRows.setText(getAutoGeneratedSql());
-                            useAutoGenSqlFlag = true;
+                        if (useAutoGenQueryFlag && canBeOverwriten_tab2_match) {
+                            tab2_match_viewvalidRows.setText(getAutoGeneratedQuery());
+                            useAutoGenQueryFlag = true;
                             canBeOverwriten_tab2_match = true;
                         }
                         tab3Composite.layout();
                     } else if (tab4_name.equals(text)) {
                         // View Invalid Rows Template
-                        if (useAutoGenSqlFlag && canBeOverwriten_tab3_match) {
-                            tab3_match_viewInvalidRows.setText(getAutoGeneratedSql());
-                            useAutoGenSqlFlag = true;
+                        if (useAutoGenQueryFlag && canBeOverwriten_tab3_match) {
+                            tab3_match_viewInvalidRows.setText(getAutoGeneratedQuery());
+                            useAutoGenQueryFlag = true;
                             canBeOverwriten_tab3_match = true;
                         }
                         tab4Composite.layout();
                     } else if (tab5_name.equals(text)) {
                         // View Valid Values Template
-                        if (useAutoGenSqlFlag && canBeOverwriten_tab4_match) {
-                            tab4_match_viewValidValues.setText(getAutoGeneratedSql());
-                            useAutoGenSqlFlag = true;
+                        if (useAutoGenQueryFlag && canBeOverwriten_tab4_match) {
+                            tab4_match_viewValidValues.setText(getAutoGeneratedQuery());
+                            useAutoGenQueryFlag = true;
                             canBeOverwriten_tab4_match = true;
                         }
                         tab5Composite.layout();
                     } else if (tab6_name.equals(text)) {
                         // View Invalid Values Template
-                        if (useAutoGenSqlFlag && canBeOverwriten_tab5_match) {
-                            tab5_match_viewInvalidValues.setText(getAutoGeneratedSql());
-                            useAutoGenSqlFlag = true;
+                        if (useAutoGenQueryFlag && canBeOverwriten_tab5_match) {
+                            tab5_match_viewInvalidValues.setText(getAutoGeneratedQuery());
+                            useAutoGenQueryFlag = true;
                             canBeOverwriten_tab5_match = true;
                         }
                         tab6Composite.layout();
                     }
 
                     if (selectTabNumber == 1) {
-                        resetButton_tab1.setEnabled(!getAutoGeneratedSql().equals(tab1_fullSql.getText()));
+                        resetButton_tab1.setEnabled(!getAutoGeneratedQuery().equals(tab1_fullSql.getText()));
                     } else if (selectTabNumber == 2) {
                         if (IndicatorCategoryHelper.isUserDefMatching(category)) {
                             // for match dis View Valid Rows template
-                            resetButton_tab2_match.setEnabled(!getAutoGeneratedSql().equals(tab2_match_viewvalidRows.getText()));
+                            resetButton_tab2_match.setEnabled(!getAutoGeneratedQuery().equals(tab2_match_viewvalidRows.getText()));
                         } else {
                             // for others is view rows template
-                            resetButton_tab2_viewRows.setEnabled(!getAutoGeneratedSql().equals(tab2_viewRows.getText()));
+                            resetButton_tab2_viewRows.setEnabled(!getAutoGeneratedQuery().equals(tab2_viewRows.getText()));
                         }
                     } else if (selectTabNumber == 3) {
                         // for match is View Invalid Rows Template
-                        resetButton_tab3_match.setEnabled(!getAutoGeneratedSql().equals(tab3_match_viewInvalidRows.getText()));
+                        resetButton_tab3_match.setEnabled(!getAutoGeneratedQuery().equals(tab3_match_viewInvalidRows.getText()));
                     } else if (selectTabNumber == 4) {
                         // for match is View Valid Values Template
-                        resetButton_tab4_match.setEnabled(!getAutoGeneratedSql().equals(tab4_match_viewValidValues.getText()));
+                        resetButton_tab4_match.setEnabled(!getAutoGeneratedQuery().equals(tab4_match_viewValidValues.getText()));
                     } else if (selectTabNumber == 5) {
                         // for match is View Invalid Values Template
-                        resetButton_tab5_match.setEnabled(!getAutoGeneratedSql().equals(tab5_match_viewInvalidValues.getText()));
+                        resetButton_tab5_match.setEnabled(!getAutoGeneratedQuery().equals(tab5_match_viewInvalidValues.getText()));
                     }
 
                 }
@@ -500,7 +617,7 @@ public class ExpressionEditDialog extends TrayDialog {
             selectTabNumber = 1;
             tabFolder.setSelection(selectTabNumber);
             tab1Composite.layout();
-            canBeOverwriten_tab1 = getAutoGeneratedSql().equals(tab1_fullSql.getText());
+            canBeOverwriten_tab1 = getAutoGeneratedQuery().equals(tab1_fullSql.getText());
             resetButton_tab1.setEnabled(!canBeOverwriten_tab1);
         }
 
@@ -522,23 +639,23 @@ public class ExpressionEditDialog extends TrayDialog {
         resetButton.addSelectionListener(new SelectionListener() {
 
             public void widgetSelected(SelectionEvent e) {
-                useAutoGenSqlFlag = true;
+                useAutoGenQueryFlag = true;
                 if (selectTabNumber == 1) {
-                    tab1_fullSql.setText(getAutoGeneratedSql());
+                    tab1_fullSql.setText(getAutoGeneratedQuery());
                 } else if (selectTabNumber == 2) {
                     if (IndicatorCategoryHelper.isUserDefMatching(category)) {
                         // for match is View Valid Rows template
-                        tab2_match_viewvalidRows.setText(getAutoGeneratedSql());
+                        tab2_match_viewvalidRows.setText(getAutoGeneratedQuery());
                     } else {
                         // for others is view rows template
-                        tab2_viewRows.setText(getAutoGeneratedSql());
+                        tab2_viewRows.setText(getAutoGeneratedQuery());
                     }
                 } else if (selectTabNumber == 3) {
-                    tab3_match_viewInvalidRows.setText(getAutoGeneratedSql());
+                    tab3_match_viewInvalidRows.setText(getAutoGeneratedQuery());
                 } else if (selectTabNumber == 4) {
-                    tab4_match_viewValidValues.setText(getAutoGeneratedSql());
+                    tab4_match_viewValidValues.setText(getAutoGeneratedQuery());
                 } else if (selectTabNumber == 5) {
-                    tab5_match_viewInvalidValues.setText(getAutoGeneratedSql());
+                    tab5_match_viewInvalidValues.setText(getAutoGeneratedQuery());
                 }
 
                 setResetButtonStatus(false);
@@ -563,34 +680,34 @@ public class ExpressionEditDialog extends TrayDialog {
         // unenable
         if (selectTabNumber == 1) {
             resetButton_tab1 = createResetButton(comp);
-            canBeOverwriten_tab1 = getAutoGeneratedSql().equals(fullSqlContent);
+            canBeOverwriten_tab1 = getAutoGeneratedQuery().equals(fullSqlContent);
             resetButton_tab1.setEnabled(!canBeOverwriten_tab1);
         } else if (selectTabNumber == 2) {
             if (IndicatorCategoryHelper.isUserDefMatching(category)) {
                 // for match is View Valid Rows template
                 resetButton_tab2_match = createResetButton(comp);
-                canBeOverwriten_tab2_match = getAutoGeneratedSql().equals(getExpressValue(tempViewValidRowsExp));
+                canBeOverwriten_tab2_match = getAutoGeneratedQuery().equals(getExpressValue(tempViewValidRowsExp));
                 resetButton_tab2_match.setEnabled(!canBeOverwriten_tab2_match);
             } else {
                 // for others is view rows template
                 resetButton_tab2_viewRows = createResetButton(comp);
-                canBeOverwriten_tab2_viewRows = getAutoGeneratedSql().equals(getExpressValue(tempViewRowsExp));
+                canBeOverwriten_tab2_viewRows = getAutoGeneratedQuery().equals(getExpressValue(tempViewRowsExp));
                 resetButton_tab2_viewRows.setEnabled(!canBeOverwriten_tab2_viewRows);
             }
         } else if (selectTabNumber == 3) {
             // for match is View Invalid Rows Template
             resetButton_tab3_match = createResetButton(comp);
-            canBeOverwriten_tab3_match = getAutoGeneratedSql().equals(getExpressValue(tempViewInvalidRowsExp));
+            canBeOverwriten_tab3_match = getAutoGeneratedQuery().equals(getExpressValue(tempViewInvalidRowsExp));
             resetButton_tab3_match.setEnabled(!canBeOverwriten_tab3_match);
         } else if (selectTabNumber == 4) {
             // for match is View Valid Values Template
             resetButton_tab4_match = createResetButton(comp);
-            canBeOverwriten_tab4_match = getAutoGeneratedSql().equals(getExpressValue(tempViewValidValuesExp));
+            canBeOverwriten_tab4_match = getAutoGeneratedQuery().equals(getExpressValue(tempViewValidValuesExp));
             resetButton_tab4_match.setEnabled(!canBeOverwriten_tab4_match);
         } else if (selectTabNumber == 5) {
             // for match is View Invalid Values Template
             resetButton_tab5_match = createResetButton(comp);
-            canBeOverwriten_tab5_match = getAutoGeneratedSql().equals(getExpressValue(tempViewInvalidValuesExp));
+            canBeOverwriten_tab5_match = getAutoGeneratedQuery().equals(getExpressValue(tempViewInvalidValuesExp));
             resetButton_tab5_match.setEnabled(!canBeOverwriten_tab5_match);
         }
 
@@ -645,8 +762,19 @@ public class ExpressionEditDialog extends TrayDialog {
         Text text = new Text(group, SWT.MULTI | SWT.BORDER | SWT.WRAP | SWT.V_SCROLL | SWT.H_SCROLL);
         text.setText(textContent);
         text.setLayoutData(data);
-        // addDropListener
+
+        // add Drag & Drop Listener
         addDropVariableListenerToText(text);
+
+        // add Modify Listener
+        ModifyListener listener = new ModifyListener() {
+
+            public void modifyText(ModifyEvent e) {
+                getButton(IDialogConstants.OK_ID).setEnabled(true);
+            }
+        };
+        text.addModifyListener(listener);
+
         return text;
     }
 
@@ -660,15 +788,15 @@ public class ExpressionEditDialog extends TrayDialog {
     }
 
     /**
-     * get the auto generated sql.
+     * get the auto generated query.
      */
-    public String getAutoGeneratedSql() {
+    public String getAutoGeneratedQuery() {
 
-        autoGenSql = UDIHelper.getQueryFromTemplates(selectTabNumber, language, category);
+        autoGenQuery = UDIHelper.getQueryFromTemplates(selectTabNumber, language, category);
 
         // replace some variables in the auto generate sql
-        if (definition instanceof UDIndicatorDefinition) {
-            GenericSQLHandler genericSQLHandler = new GenericSQLHandler(autoGenSql);
+        if (isUDIndicatorDefinition) {
+            GenericSQLHandler genericSQLHandler = new GenericSQLHandler(autoGenQuery);
             if (IndicatorCategoryHelper.isUserDefCount(category)) {
                 // replace <WHERE_TEXT_FIELD>
                 genericSQLHandler.replaceUDIWhere(tab0_count_where_var.getText());
@@ -704,22 +832,22 @@ public class ExpressionEditDialog extends TrayDialog {
                 genericSQLHandler.replaceUDIWhere(tab0_match_where_var.getText());
             }
 
-            autoGenSql = genericSQLHandler.replaceUDIQueryToMatch().getSqlString();
+            autoGenQuery = genericSQLHandler.replaceUDIQueryToMatch().getSqlString();
         }
-        return autoGenSql;
+        return autoGenQuery;
     }
 
     /**
-     * check whether use the auto generated sql
+     * check whether use the auto generated query.
      * 
      * @param old content
      * @return
      */
-    public boolean checkUseAutoGenSql(String oldContent) {
+    public boolean checkUseAutoGenQuery(String oldContent) {
         if (StringUtils.isEmpty(oldContent)) {
             return true;
         }
-        if (useAutoGenSqlFlag && autoGenSql != null && !autoGenSql.equals(PluginConstant.EMPTY_STRING)) {
+        if (useAutoGenQueryFlag && autoGenQuery != null && !autoGenQuery.equals(PluginConstant.EMPTY_STRING)) {
             return true;
         }
         return false;
@@ -743,7 +871,7 @@ public class ExpressionEditDialog extends TrayDialog {
         ModifyListener listener = new ModifyListener() {
 
             public void modifyText(ModifyEvent e) {
-                useAutoGenSqlFlag = false;
+                useAutoGenQueryFlag = false;
                 setResetButtonStatus(true);
                 setTextOverWriteStatus(false);
             }
@@ -754,8 +882,8 @@ public class ExpressionEditDialog extends TrayDialog {
             createTab0Page(sform);
 
         } else if (selectTabNumber == 1) {
-            boolean checkUseAutoGenSql = checkUseAutoGenSql(fullSqlContent);
-            tab1_fullSql = createTextPart(sform, EXPREEION, 20, checkUseAutoGenSql ? autoGenSql : fullSqlContent);
+            boolean checkUseAutoGenSql = checkUseAutoGenQuery(fullSqlContent);
+            tab1_fullSql = createTextPart(sform, EXPREEION, 20, checkUseAutoGenSql ? autoGenQuery : fullSqlContent);
             if (checkUseAutoGenSql) {
                 resetButton_tab1.setEnabled(false);
                 canBeOverwriten_tab1 = true;
@@ -766,8 +894,8 @@ public class ExpressionEditDialog extends TrayDialog {
             if (IndicatorCategoryHelper.isUserDefMatching(category)) {
                 // for match dis View Valid Rows template
                 String expressValue = getExpressValue(tempViewValidRowsExp);
-                boolean checkUseAutoGenSql = checkUseAutoGenSql(expressValue);
-                tab2_match_viewvalidRows = createTextPart(sform, EXPREEION, 20, checkUseAutoGenSql ? autoGenSql : expressValue);
+                boolean checkUseAutoGenSql = checkUseAutoGenQuery(expressValue);
+                tab2_match_viewvalidRows = createTextPart(sform, EXPREEION, 20, checkUseAutoGenSql ? autoGenQuery : expressValue);
                 if (checkUseAutoGenSql) {
                     resetButton_tab2_match.setEnabled(false);
                     canBeOverwriten_tab2_match = true;
@@ -776,8 +904,8 @@ public class ExpressionEditDialog extends TrayDialog {
             } else {
                 // for others is view rows template
                 String expressValue = getExpressValue(tempViewRowsExp);
-                boolean checkUseAutoGenSql = checkUseAutoGenSql(expressValue);
-                tab2_viewRows = createTextPart(sform, EXPREEION, 20, checkUseAutoGenSql ? autoGenSql : expressValue);
+                boolean checkUseAutoGenSql = checkUseAutoGenQuery(expressValue);
+                tab2_viewRows = createTextPart(sform, EXPREEION, 20, checkUseAutoGenSql ? autoGenQuery : expressValue);
                 if (checkUseAutoGenSql) {
                     resetButton_tab2_viewRows.setEnabled(false);
                     canBeOverwriten_tab2_viewRows = true;
@@ -788,8 +916,8 @@ public class ExpressionEditDialog extends TrayDialog {
         } else if (selectTabNumber == 3) {
             // for match is View Invalid Rows Template
             String expressValue = getExpressValue(tempViewInvalidRowsExp);
-            boolean checkUseAutoGenSql = checkUseAutoGenSql(expressValue);
-            tab3_match_viewInvalidRows = createTextPart(sform, EXPREEION, 20, checkUseAutoGenSql ? autoGenSql : expressValue);
+            boolean checkUseAutoGenSql = checkUseAutoGenQuery(expressValue);
+            tab3_match_viewInvalidRows = createTextPart(sform, EXPREEION, 20, checkUseAutoGenSql ? autoGenQuery : expressValue);
             if (checkUseAutoGenSql) {
                 resetButton_tab3_match.setEnabled(false);
                 canBeOverwriten_tab3_match = true;
@@ -799,8 +927,8 @@ public class ExpressionEditDialog extends TrayDialog {
         } else if (selectTabNumber == 4) {
             // for match is View Valid Values Template
             String expressValue = getExpressValue(tempViewValidValuesExp);
-            boolean checkUseAutoGenSql = checkUseAutoGenSql(expressValue);
-            tab4_match_viewValidValues = createTextPart(sform, EXPREEION, 20, checkUseAutoGenSql ? autoGenSql : expressValue);
+            boolean checkUseAutoGenSql = checkUseAutoGenQuery(expressValue);
+            tab4_match_viewValidValues = createTextPart(sform, EXPREEION, 20, checkUseAutoGenSql ? autoGenQuery : expressValue);
             if (checkUseAutoGenSql) {
                 resetButton_tab4_match.setEnabled(false);
                 canBeOverwriten_tab4_match = true;
@@ -810,8 +938,8 @@ public class ExpressionEditDialog extends TrayDialog {
         } else if (selectTabNumber == 5) {
             // for match is View Invalid Values Template
             String expressValue = getExpressValue(tempViewInvalidValuesExp);
-            boolean checkUseAutoGenSql = checkUseAutoGenSql(expressValue);
-            tab5_match_viewInvalidValues = createTextPart(sform, EXPREEION, 20, checkUseAutoGenSql ? autoGenSql : expressValue);
+            boolean checkUseAutoGenSql = checkUseAutoGenQuery(expressValue);
+            tab5_match_viewInvalidValues = createTextPart(sform, EXPREEION, 20, checkUseAutoGenSql ? autoGenQuery : expressValue);
             if (checkUseAutoGenSql) {
                 resetButton_tab5_match.setEnabled(false);
                 canBeOverwriten_tab5_match = true;
@@ -880,7 +1008,7 @@ public class ExpressionEditDialog extends TrayDialog {
         ModifyListener listener = new ModifyListener() {
 
             public void modifyText(ModifyEvent e) {
-                useAutoGenSqlFlag = true;
+                useAutoGenQueryFlag = true;
             }
         };
 
@@ -935,7 +1063,7 @@ public class ExpressionEditDialog extends TrayDialog {
      * @return
      */
     public String getVaribleFromMap(String key) {
-        return variableMap == null ? PluginConstant.EMPTY_STRING : StringUtils.trimToEmpty(variableMap.get(key));
+        return tempVariableMap == null ? PluginConstant.EMPTY_STRING : StringUtils.trimToEmpty(tempVariableMap.get(key));
     }
 
     /**
@@ -1010,6 +1138,8 @@ public class ExpressionEditDialog extends TrayDialog {
         if (!DQPreferenceManager.isBlockWeb()) {
             showHelp();
         }
+
+        getButton(IDialogConstants.OK_ID).setEnabled(false);
     }
 
     /**
@@ -1025,33 +1155,6 @@ public class ExpressionEditDialog extends TrayDialog {
         }
     }
 
-    /**
-     * get the full sql tempaltes text content.
-     * 
-     * @return
-     */
-    public String getResult() {
-        return fullSqlContent;
-    }
-
-    /**
-     * get this TdExpression.
-     * 
-     * @return
-     */
-    public TdExpression getTdExpression() {
-        return tdExpression;
-    }
-
-    /**
-     * get this IndicatorDefinition.
-     * 
-     * @return
-     */
-    public IndicatorDefinition getIndicatorDefinition() {
-        return definition;
-    }
-
     /*
      * (non-Javadoc)
      * 
@@ -1061,32 +1164,34 @@ public class ExpressionEditDialog extends TrayDialog {
     protected void okPressed() {
         // when the category is not user define indicator
         if (!IndicatorCategoryHelper.isUserDefCategory(category)) {
-            fullSqlContent = editTextNotUDI.getText();
+            // fullSqlContent = editTextNotUDI.getText();
+            storeTdExpValuesFromText(tempExpression, editTextNotUDI);
         } else {
-            fullSqlContent = tab1_fullSql.getText();
+            // fullSqlContent = tab1_fullSql.getText();
+            storeTdExpValuesFromText(tempExpression, tab1_fullSql);
 
-            variableMap.clear();
+            tempVariableMap.clear();
             if (IndicatorCategoryHelper.isUserDefMatching(category)) {
-                variableMap.put(GenericSQLHandler.UDI_MATCHING, tab0_match_match_var.getText());
-                variableMap.put(GenericSQLHandler.UDI_WHERE, tab0_match_where_var.getText());
+                tempVariableMap.put(GenericSQLHandler.UDI_MATCHING, tab0_match_match_var.getText());
+                tempVariableMap.put(GenericSQLHandler.UDI_WHERE, tab0_match_where_var.getText());
                 storeExpForMatch();
             } else {
                 if (IndicatorCategoryHelper.isUserDefCount(category)) {
-                    variableMap.put(GenericSQLHandler.UDI_WHERE, tab0_count_where_var.getText());
+                    tempVariableMap.put(GenericSQLHandler.UDI_WHERE, tab0_count_where_var.getText());
                 } else if (IndicatorCategoryHelper.isUserDefRealValue(category)) {
-                    variableMap.put(GenericSQLHandler.UDI_COLUMN, tab0_realvalue_column_var.getText());
-                    variableMap.put(GenericSQLHandler.UDI_WHERE, tab0_realvalue_where_var.getText());
+                    tempVariableMap.put(GenericSQLHandler.UDI_COLUMN, tab0_realvalue_column_var.getText());
+                    tempVariableMap.put(GenericSQLHandler.UDI_WHERE, tab0_realvalue_where_var.getText());
                 } else if (IndicatorCategoryHelper.isUserDefFrequency(category)) {
-                    variableMap.put(GenericSQLHandler.UDI_FIRST_COLUMN, tab0_fre_first_var.getText());
-                    variableMap.put(GenericSQLHandler.UDI_SECOND_COLUMN, tab0_fre_second_var.getText());
-                    variableMap.put(GenericSQLHandler.UDI_WHERE, tab0_fre_where_var.getText());
-                    variableMap.put(GenericSQLHandler.UDI_GROUP_BY, tab0_fre_groupby_var.getText());
-                    variableMap.put(GenericSQLHandler.UDI_ORDER_BY, tab0_fre_orderby_var.getText());
+                    tempVariableMap.put(GenericSQLHandler.UDI_FIRST_COLUMN, tab0_fre_first_var.getText());
+                    tempVariableMap.put(GenericSQLHandler.UDI_SECOND_COLUMN, tab0_fre_second_var.getText());
+                    tempVariableMap.put(GenericSQLHandler.UDI_WHERE, tab0_fre_where_var.getText());
+                    tempVariableMap.put(GenericSQLHandler.UDI_GROUP_BY, tab0_fre_groupby_var.getText());
+                    tempVariableMap.put(GenericSQLHandler.UDI_ORDER_BY, tab0_fre_orderby_var.getText());
                 }
                 storeViewRowsExp();
             }
 
-            tdExpression.setExpressionVariableMap(variableMap);
+            tempExpression.setExpressionVariableMap(tempVariableMap);
         }
         super.okPressed();
     }
@@ -1096,21 +1201,9 @@ public class ExpressionEditDialog extends TrayDialog {
      */
     public void storeExpForMatch() {
         storeTdExpValuesFromText(tempViewValidRowsExp, tab2_match_viewvalidRows);
-        EList<TdExpression> viewValidRowsExpression = ((UDIndicatorDefinition) this.definition).getViewValidRowsExpression();
-        removeThenAddToList(viewValidRowsExpression, tempViewValidRowsExp);
-
         storeTdExpValuesFromText(tempViewInvalidRowsExp, tab3_match_viewInvalidRows);
-        EList<TdExpression> viewInvalidRowsExpression = ((UDIndicatorDefinition) this.definition).getViewInvalidRowsExpression();
-        removeThenAddToList(viewInvalidRowsExpression, tempViewInvalidRowsExp);
-
         storeTdExpValuesFromText(tempViewValidValuesExp, tab4_match_viewValidValues);
-        EList<TdExpression> viewValidValuesExpression = ((UDIndicatorDefinition) this.definition).getViewValidValuesExpression();
-        removeThenAddToList(viewValidValuesExpression, tempViewValidValuesExp);
-
         storeTdExpValuesFromText(tempViewInvalidValuesExp, tab5_match_viewInvalidValues);
-        EList<TdExpression> viewInvalidValuesExpression = ((UDIndicatorDefinition) this.definition)
-                .getViewInvalidValuesExpression();
-        removeThenAddToList(viewInvalidValuesExpression, tempViewInvalidValuesExp);
     }
 
     /**
@@ -1118,8 +1211,6 @@ public class ExpressionEditDialog extends TrayDialog {
      */
     public void storeViewRowsExp() {
         storeTdExpValuesFromText(tempViewRowsExp, tab2_viewRows);
-        EList<TdExpression> viewRowsExpression = ((UDIndicatorDefinition) this.definition).getViewRowsExpression();
-        removeThenAddToList(viewRowsExpression, tempViewRowsExp);
     }
 
     /**
@@ -1135,20 +1226,4 @@ public class ExpressionEditDialog extends TrayDialog {
         tdExp.setModificationDate(UDIUtils.getCurrentDateTime());
     }
 
-    /**
-     * remove current language expression, and then add the new one to list.
-     * 
-     * @param list
-     * @param newTdExp
-     */
-    public void removeThenAddToList(EList<TdExpression> list, TdExpression newTdExp) {
-        if (list != null) {
-            for (int i = 0; i < list.size(); i++) {
-                if (UDIUtils.isCurrentLanguageAndVersion(list.get(i), language, version)) {
-                    list.remove(i);
-                }
-            }
-        }
-        list.add(newTdExp);
-    }
 }

@@ -28,6 +28,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.InternalEObject;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.MessageDialogWithToggle;
@@ -1785,7 +1786,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
             patternText.setEditable(false);
         }
         // TDQ-6841~
-        createExpressionEditButton(detailComp, patternText, combo);
+        createExpressionEditButton(detailComp, patternText, combo, expression.getVersion());
         createExpressionDelButton(detailComp, combo);
         GridDataFactory.fillDefaults().align(SWT.FILL, SWT.FILL).grab(true, false).applyTo(detailComp);
         detailComp.getParent().layout();
@@ -1968,7 +1969,8 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
      * 
      * @return
      */
-    private void createExpressionEditButton(Composite expressComp, final Text patternText, final CCombo combo) {
+    private void createExpressionEditButton(Composite expressComp, final Text patternText, final CCombo combo,
+            final String version) {
         Button editButton = new Button(expressComp, SWT.PUSH);
         editButton.setText(DefaultMessagesImpl.getString("IndicatorDefinitionMaterPage.editExpression")); //$NON-NLS-1$
         editButton.setToolTipText(DefaultMessagesImpl.getString("IndicatorDefinitionMaterPage.editExpression")); //$NON-NLS-1$
@@ -1978,21 +1980,89 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
             public void widgetSelected(SelectionEvent e) {
 
                 definition = (IndicatorDefinition) getCurrentModelElement(getEditor());
-                TdExpression tdExpression = tempExpressionMap.get(combo);
-                final ExpressionEditDialog editDialog = new ExpressionEditDialog(null, patternText.getText(), definition,
-                        tdExpression);
+                TdExpression tdExpression = getCurrentLanguageExp(definition.getSqlGenericExpression(),
+                        PatternLanguageType.findLanguageByName(combo.getText()), version);
+                String language = tdExpression.getLanguage();
+
+                boolean isUDIndicatorDefinition = definition instanceof UDIndicatorDefinition;
+                final ExpressionEditDialog editDialog = new ExpressionEditDialog(null, patternText.getText(),
+                        isUDIndicatorDefinition, cloneExpression(tdExpression, definition));
+                editDialog.setVersion(version);
+                editDialog.setLanguage(language);
+                editDialog.setCategory(IndicatorCategoryHelper.getCategory(definition));
+
+                if (isUDIndicatorDefinition) {
+                    if (IndicatorCategoryHelper.isUserDefMatching(category)) {
+                        EList<TdExpression> viewValidRowsExpression = ((UDIndicatorDefinition) definition)
+                                .getViewValidRowsExpression();
+                        TdExpression viewValidRows = getCurrentLanguageExp(viewValidRowsExpression, language, version);
+                        editDialog.setTempViewValidRowsExp(cloneExpression(viewValidRows, definition));
+
+                        EList<TdExpression> viewInvalidRowsExpression = ((UDIndicatorDefinition) definition)
+                                .getViewInvalidRowsExpression();
+                        TdExpression ViewInvalidRows = getCurrentLanguageExp(viewInvalidRowsExpression, language, version);
+                        editDialog.setTempViewInvalidRowsExp(cloneExpression(ViewInvalidRows, definition));
+
+                        EList<TdExpression> viewValidValuesExpression = ((UDIndicatorDefinition) definition)
+                                .getViewValidValuesExpression();
+                        TdExpression viewValidValues = getCurrentLanguageExp(viewValidValuesExpression, language, version);
+                        editDialog.setTempViewValidValuesExp(cloneExpression(viewValidValues, definition));
+
+                        EList<TdExpression> viewInvalidValuesExpression = ((UDIndicatorDefinition) definition)
+                                .getViewInvalidValuesExpression();
+                        TdExpression ViewInvalidValues = getCurrentLanguageExp(viewInvalidValuesExpression, language, version);
+                        editDialog.setTempViewInvalidValuesExp(cloneExpression(ViewInvalidValues, definition));
+
+                    } else {
+                        EList<TdExpression> viewRowsExpression = ((UDIndicatorDefinition) definition).getViewRowsExpression();
+                        TdExpression viewRows = getCurrentLanguageExp(viewRowsExpression, language, version);
+                        editDialog.setTempViewRowsExp(cloneExpression(viewRows, definition));
+                    }
+                }
 
                 if (Dialog.OK == editDialog.open()) {
-                    patternText.setText(editDialog.getResult());
-                    tdExpression = editDialog.getTdExpression();
-                    definition = editDialog.getIndicatorDefinition();
+                    patternText.setText(editDialog.getTempExpression().getBody());
+                    tempExpressionMap.put(combo, editDialog.getTempExpression());
 
-                    putTdExpressToTempMap(combo, tdExpression);
+                    if (isUDIndicatorDefinition) {
+                        if (IndicatorCategoryHelper.isUserDefMatching(category)) {
+                            tempViewValidRowsExpressionMap.put(combo, editDialog.getTempViewValidRowsExp());
+                            tempViewInvalidRowsExpressionMap.put(combo, editDialog.getTempViewInvalidRowsExp());
+                            tempViewValidValuesExpressionMap.put(combo, editDialog.getTempViewValidValuesExp());
+                            tempViewInvalidValuesExpressionMap.put(combo, editDialog.getTempViewInvalidValuesExp());
+
+                        } else {
+                            // get view rows tdExpress list, and set currect tdexpress to temp map
+                            tempViewRowsExpressionMap.put(combo, editDialog.getTempViewRowsExp());
+                        }
+                    }
+
+                    setDirty(true);
                 }
-                setDirty(true);
             }
         });
 
+    }
+
+    /**
+     * get Current Language Expression.
+     * 
+     * @param tempViewValidRowsExpList
+     * @param language
+     * @param version
+     */
+    public TdExpression getCurrentLanguageExp(List<TdExpression> tempViewValidRowsExpList, String language, String version) {
+        if (tempViewValidRowsExpList != null) {
+            for (TdExpression tdExp : tempViewValidRowsExpList) {
+                if (UDIUtils.isCurrentLanguageAndVersion(tdExp, language, version)) {
+                    return tdExp;
+                }
+            }
+        }
+        TdExpression createTdExpression = BooleanExpressionHelper.createTdExpression(language, PluginConstant.EMPTY_STRING,
+                version);
+        createTdExpression.setModificationDate(UDIUtils.getCurrentDateTime());
+        return createTdExpression;
     }
 
     private void createAddButton(final Composite parent) {
@@ -3205,19 +3275,18 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
     }
 
     /**
-     * DOC xqliu Comment method "cloneExpression". ADD xqliu 2010-04-01 bug 11892
+     * clone Expression.
      * 
      * @param exp
      * @return
      */
     public static final TdExpression cloneExpression(TdExpression exp, IndicatorDefinition definition) {
-        TdExpression newExp = BooleanExpressionHelper.createTdExpression(exp.getLanguage(), exp.getBody());
-        newExp.setVersion(exp.getVersion());
-        newExp.setModificationDate(exp.getModificationDate());
-        if (definition instanceof UDIndicatorDefinition) {
-            newExp.setExpressionVariableMap(exp.getExpressionVariableMap());
+        TdExpression copy = EcoreUtil.copy(exp);
+        HashMap<String, String> expressionVariableMap = exp.getExpressionVariableMap();
+        if (expressionVariableMap != null) {
+            copy.setExpressionVariableMap((HashMap<String, String>) expressionVariableMap.clone());
         }
-        return newExp;
+        return copy;
     }
 
     /*
