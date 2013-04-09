@@ -62,6 +62,9 @@ public abstract class AbstractNode implements INode {
 
     protected String _type;
 
+    // Added 20130409 TDQ-7101 yyin
+    protected String _schemaName = null;
+
     public AbstractNode(String name) {
     	this._name = name;
     }
@@ -432,4 +435,23 @@ public abstract class AbstractNode implements INode {
 
         return getName();
     }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see net.sourceforge.sqlexplorer.dbstructure.nodes.INode#setSchemaName(java.lang.String)
+     */
+    public void setSchemaName(String schemaName) {
+        // mainly used for catalog + schema
+        _schemaName = schemaName;
+    }
+
+    public String getSchemaName() {
+        return this._schemaName;
+    }
+
+    public boolean isChildrenLoaded() {
+        return _childrenLoaded;
+    }
+
 }

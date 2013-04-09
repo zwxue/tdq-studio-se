@@ -26,6 +26,7 @@ import net.sourceforge.sqlexplorer.plugin.SQLExplorerPlugin;
 import net.sourceforge.sqlexplorer.plugin.actions.OpenPasswordConnectDialogAction;
 import net.sourceforge.sqlexplorer.plugin.views.DatabaseStructureView;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.StructuredSelection;
@@ -41,6 +42,7 @@ import org.talend.dataprofiler.core.ui.perspective.ChangePerspectiveAction;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.objectmodel.core.Package;
 import orgomg.cwm.resource.relational.Catalog;
+import orgomg.cwm.resource.relational.Schema;
 
 /**
  * DOC rli class global comment. Detailled comment
@@ -83,7 +85,10 @@ public final class SqlExplorerBridge {
         root.load();
         List<INode> catalogs = root.getCatalogs();
         List<INode> schemas = root.getSchemas();
+
         Catalog doSwitch = SwitchHelpers.CATALOG_SWITCH.doSwitch(parentPackageElement);
+        Schema schema = SwitchHelpers.SCHEMA_SWITCH.doSwitch(parentPackageElement);
+
         INode catalogOrSchemaNode = null;
         if (doSwitch != null) {
             // MOD klliu bug 14662 2010-08-05
@@ -121,7 +126,34 @@ public final class SqlExplorerBridge {
         if (catalogOrSchemaNode == null) {
             throw new NullPointerException(DefaultMessagesImpl.getString("SqlExplorerBridge.CATORSCHMISNULL")); //$NON-NLS-1$
         }
+        // Added 20130409 TDQ-6823 yyin when want to get some schema's tables, should give the schema name to the
+        // catalog node.
+        if (schema != null) {
+            if (catalogOrSchemaNode.getSchemaName() == null) {
+                catalogOrSchemaNode.setSchemaName(schema.getName());
+            } else if (!StringUtils.equals(catalogOrSchemaNode.getSchemaName(), schema.getName())) {
+                // catalogOrSchemaNode.setSchemaName(schema.getName());
+                // if this catalog already loaded its children of some schema, should reload for this schema.
+                if (catalogOrSchemaNode.isChildrenLoaded()) {
+                    SQLExplorerPlugin.getDefault().getDatabaseStructureView()
+                            .refreshSessionTrees(currentUser.getMetaDataSession());
+                    List<INode> catalogs2 = currentUser.getMetaDataSession().getRoot().getCatalogs();
+                    if (catalogs2.size() != 0) {
+                        for (INode catalogNode : catalogs2) {
+                            if (catalogOrSchemaNode.getName().equalsIgnoreCase(catalogNode.getName())) {
+                                catalogOrSchemaNode = catalogNode;
+                                catalogOrSchemaNode.setSchemaName(schema.getName());
+                                break;
+                            }
+                        }
+
+                    }
+                }
+            }
+        }// ~
+
         INode[] childNodes = catalogOrSchemaNode.getChildNodes();
+
         TableFolderNode tableFolderNode = null;
         for (INode node : childNodes) {
             if ("TABLE".equals(node.getQualifiedName())) { //$NON-NLS-1$

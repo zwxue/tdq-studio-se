@@ -28,6 +28,7 @@ import net.sourceforge.sqlexplorer.util.ImageUtil;
 import net.sourceforge.sqlexplorer.util.TextUtil;
 import net.sourceforge.squirrel_sql.fw.sql.ITableInfo;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.eclipse.core.runtime.IConfigurationElement;
@@ -285,22 +286,26 @@ public class CatalogNode extends AbstractNode {
      * @see net.sourceforge.sqlexplorer.dbstructure.nodes.AbstractNode#loadChildren()
      */
     public void loadChildren() {
-
         _childNames = new ArrayList();
 
         try {
-
-            ITableInfo[] tables = null;
             String[] tableTypes = _session.getMetaData().getTableTypes();
-
-            try {
-                tables = _session.getMetaData().getTables(_name, null, "%", tableTypes, null);
-            } catch (Throwable e) {
-                _logger.debug("Loading all tables at once is not supported");
+            ITableInfo[] tables = null;
+            // MOD TDQ-7101 fix: can only show catalogs without schemas
+            if ( !StringUtils.isEmpty(_schemaName)) {
+                    // get all tables of the pointed schema
+                    tables= _session.getMetaData().getTables(_name, _schemaName, "%", tableTypes, null);
+            } else {
+                try {
+                    // use null = get all tables under default schema(dbo),
+                    // when use "%" insteadof null, will return all tables under all schemas
+                    tables = _session.getMetaData().getTables(_name, null, "%", tableTypes, null);
+                } catch (Throwable e) {
+                    _logger.debug("Loading all tables at once is not supported");
+                }
             }
 
             for (int i = 0; i < tableTypes.length; ++i) {
-
                 INode childNode = findExtensionNode(tableTypes[i]);
                 if (childNode != null) {
                     _childNames.add(childNode.getLabelText());
@@ -314,10 +319,10 @@ public class CatalogNode extends AbstractNode {
                         addChildNode(node);
                     }
                 }
-            }
 
+            }
             // load extension nodes
-            addExtensionNodes();
+                addExtensionNodes();
 
         } catch (Throwable e) {
             SQLExplorerPlugin.error("Could not load childnodes for " + _name, e);

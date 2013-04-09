@@ -139,4 +139,17 @@ public interface INode {
      * Set expanded state of element
      */
     public void setExpanded(boolean expanded);
+
+    /**
+     * Added 20130409 TDQ-6823 set some pointed schema: used for get the tables under this schema, insteadof get tables
+     * under the catalog
+     */
+    public void setSchemaName(String schemaName);
+
+    public String getSchemaName();
+
+    /**
+     * Added 20130409 TDQ-6823 get the status of _childrenLoaded or not
+     */
+    public boolean isChildrenLoaded();
 }
