@@ -56,6 +56,7 @@ import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.manager.DQPreferenceManager;
 import org.talend.dataprofiler.core.ui.utils.UDIUtils;
 import org.talend.dataprofiler.help.HelpPlugin;
+import org.talend.dataquality.helpers.BooleanExpressionHelper;
 import org.talend.dataquality.helpers.IndicatorCategoryHelper;
 import org.talend.dataquality.indicators.definition.IndicatorCategory;
 import org.talend.dq.dbms.GenericSQLHandler;
@@ -1185,10 +1186,10 @@ public class ExpressionEditDialog extends TrayDialog {
         // when the category is not user define indicator
         if (!IndicatorCategoryHelper.isUserDefCategory(category)) {
             // fullSqlContent = editTextNotUDI.getText();
-            storeTdExpValuesFromText(tempExpression, editTextNotUDI);
+            tempExpression = storeTdExpValuesFromText(editTextNotUDI);
         } else {
             // fullSqlContent = tab1_fullSql.getText();
-            storeTdExpValuesFromText(tempExpression, tab1_fullSql);
+            tempExpression = storeTdExpValuesFromText(tab1_fullSql);
 
             tempVariableMap.clear();
             if (IndicatorCategoryHelper.isUserDefMatching(category)) {
@@ -1220,30 +1221,28 @@ public class ExpressionEditDialog extends TrayDialog {
      * store Expression values when indicator is user define match.
      */
     public void storeExpForMatch() {
-        storeTdExpValuesFromText(tempViewValidRowsExp, tab2_match_viewvalidRows);
-        storeTdExpValuesFromText(tempViewInvalidRowsExp, tab3_match_viewInvalidRows);
-        storeTdExpValuesFromText(tempViewValidValuesExp, tab4_match_viewValidValues);
-        storeTdExpValuesFromText(tempViewInvalidValuesExp, tab5_match_viewInvalidValues);
+        tempViewValidRowsExp = storeTdExpValuesFromText(tab2_match_viewvalidRows);
+        tempViewInvalidRowsExp = storeTdExpValuesFromText(tab3_match_viewInvalidRows);
+        tempViewValidValuesExp = storeTdExpValuesFromText(tab4_match_viewValidValues);
+        tempViewInvalidValuesExp = storeTdExpValuesFromText(tab5_match_viewInvalidValues);
     }
 
     /**
-     * store ViewRows Expression value.
+     * store text value to temp ViewRows Expression.
      */
     public void storeViewRowsExp() {
-        storeTdExpValuesFromText(tempViewRowsExp, tab2_viewRows);
+        tempViewRowsExp = storeTdExpValuesFromText(tab2_viewRows);
     }
 
     /**
      * set Text value as body of TdExpression.
      * 
-     * @param tdExp
      * @param text
      */
-    public void storeTdExpValuesFromText(TdExpression tdExp, Text text) {
-        tdExp.setBody(text.getText());
-        tdExp.setVersion(version);
-        tdExp.setLanguage(language);
-        tdExp.setModificationDate(UDIUtils.getCurrentDateTime());
+    public TdExpression storeTdExpValuesFromText(Text text) {
+        TdExpression result = BooleanExpressionHelper.createTdExpression(language, text.getText(), version);
+        result.setModificationDate(UDIUtils.getCurrentDateTime());
+        return result;
     }
 
 }
