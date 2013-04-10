@@ -862,7 +862,7 @@ public class DbmsLanguageTest {
      * .
      */
     @Test
-    public void testGetSqlExpression() {
+    public void testGetSqlExpression_1() {
         // create indicator
         UserDefIndicator userDefIndicator = IndicatorSqlFactory.eINSTANCE.createUserDefIndicator();
         UDIndicatorDefinition indicatorDefinition = UserdefineFactory.eINSTANCE.createUDIndicatorDefinition();
@@ -877,12 +877,37 @@ public class DbmsLanguageTest {
 
         TdExpression newTdExp_2 = BooleanExpressionHelper.createTdExpression("SQL", //$NON-NLS-1$
                 sql_2, null);
-        newTdExp.setModificationDate(DateUtils.getCurrentDate(DateUtils.PATTERN_5));
+        newTdExp_2.setModificationDate(DateUtils.getCurrentDate(DateUtils.PATTERN_5));
         indicatorDefinition.getSqlGenericExpression().add(newTdExp_2);
         DbmsLanguage dbms = getMysqlDbmsLanguage();
         Expression sqlExpression = dbms.getSqlExpression(indicatorDefinition);
         Assert.assertNotNull(sqlExpression);
         Assert.assertEquals(sql_1, sqlExpression.getBody());
+    }
+
+    /**
+     * Test method for
+     * {@link org.talend.dq.dbms.DbmsLanguage#getSqlExpression(org.talend.dataquality.indicators.definition.IndicatorDefinition)}
+     * .
+     */
+    @Test
+    public void testGetSqlExpression_2() {
+        // test for can not get sql expression(means: both database type and default type don't exist)
+        // create indicator
+        UserDefIndicator userDefIndicator = IndicatorSqlFactory.eINSTANCE.createUserDefIndicator();
+        UDIndicatorDefinition indicatorDefinition = UserdefineFactory.eINSTANCE.createUDIndicatorDefinition();
+        indicatorDefinition.setName("user define"); //$NON-NLS-1$
+        userDefIndicator.setName(indicatorDefinition.getName());
+        userDefIndicator.setIndicatorDefinition(indicatorDefinition);
+
+        TdExpression newTdExp = BooleanExpressionHelper.createTdExpression("Ingres", //$NON-NLS-1$
+                sql_1, null);
+        newTdExp.setModificationDate(DateUtils.getCurrentDate(DateUtils.PATTERN_5));
+        indicatorDefinition.getSqlGenericExpression().add(newTdExp);
+
+        DbmsLanguage dbms = getMysqlDbmsLanguage();
+        Expression sqlExpression = dbms.getSqlExpression(indicatorDefinition);
+        Assert.assertNull(sqlExpression);
     }
 
     /**
