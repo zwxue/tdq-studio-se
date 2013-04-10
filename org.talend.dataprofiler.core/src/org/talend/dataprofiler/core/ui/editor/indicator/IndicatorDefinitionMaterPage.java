@@ -2504,26 +2504,23 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
         Iterator<CCombo> it = tempExpressionMap.keySet().iterator();
         while (it.hasNext()) {
             CCombo cb = it.next();
-            if (tempExpressionMap.get(cb).getBody() != null
-                    && !PluginConstant.EMPTY_STRING.equals(tempExpressionMap.get(cb).getBody())) {
-                TdExpression expression = tempExpressionMap.get(cb);
-                String language = expression.getLanguage();
-                String version = expression.getVersion();
-                String body = expression.getBody();
-                if (null == body || body.length() + 1 < UDIHelper.MIN_EXPRESSION_LENGTH) {
-                    rc.setOk(false);
-                    rc.setMessage(DefaultMessagesImpl.getString("IndicatorDefinition.validateTooShort"));//$NON-NLS-1$
-                    return rc;
-                }
-                if (version != null && !PluginConstant.EMPTY_STRING.equals(version)) {
-                    language = language + " V" + expression.getVersion();//$NON-NLS-1$
-                }
-                Integer integer = languageVersionCountMap.get(language);
-                if (integer == null) {
-                    languageVersionCountMap.put(language, 1);
-                } else {
-                    languageVersionCountMap.put(language, integer + 1);
-                }
+            TdExpression expression = tempExpressionMap.get(cb);
+            String language = expression.getLanguage();
+            String version = expression.getVersion();
+            String body = expression.getBody();
+            if (null == body || body.length() + 1 < UDIHelper.MIN_EXPRESSION_LENGTH) {
+                rc.setOk(false);
+                rc.setMessage(DefaultMessagesImpl.getString("IndicatorDefinition.validateTooShort"));//$NON-NLS-1$
+                return rc;
+            }
+            if (version != null && !PluginConstant.EMPTY_STRING.equals(version)) {
+                language = language + " V" + expression.getVersion();//$NON-NLS-1$
+            }
+            Integer integer = languageVersionCountMap.get(language);
+            if (integer == null) {
+                languageVersionCountMap.put(language, 1);
+            } else {
+                languageVersionCountMap.put(language, integer + 1);
             }
         }
 
