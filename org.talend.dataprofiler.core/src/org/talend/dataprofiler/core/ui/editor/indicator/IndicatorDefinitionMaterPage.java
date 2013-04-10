@@ -413,7 +413,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
     }
 
     /**
-     * DOC msjian Comment method "initTempExpressionList".
+     * init TempExpressionList.
      * 
      * @param def
      */
@@ -426,7 +426,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
         if (def != null) {
             EList<TdExpression> expressions = def.getSqlGenericExpression();
             for (TdExpression exp : expressions) {
-                tempExpressionList.add(cloneExpression(exp, def));
+                tempExpressionList.add(cloneExpression(exp));
             }
         }
     }
@@ -1980,13 +1980,19 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
             public void widgetSelected(SelectionEvent e) {
 
                 definition = (IndicatorDefinition) getCurrentModelElement(getEditor());
+
+                // if it is dirty, get value from tempMap, else from definition
                 TdExpression tdExpression = getCurrentLanguageExp(definition.getSqlGenericExpression(),
                         PatternLanguageType.findLanguageByName(combo.getText()), version);
+                if (isDirty()) {
+                    tdExpression = tempExpressionMap.get(combo);
+                }
+
                 String language = tdExpression.getLanguage();
 
                 boolean isUDIndicatorDefinition = definition instanceof UDIndicatorDefinition;
                 final ExpressionEditDialog editDialog = new ExpressionEditDialog(null, patternText.getText(),
-                        isUDIndicatorDefinition, cloneExpression(tdExpression, definition));
+                        isUDIndicatorDefinition, cloneExpression(tdExpression));
                 editDialog.setVersion(version);
                 editDialog.setLanguage(language);
                 editDialog.setCategory(IndicatorCategoryHelper.getCategory(definition));
@@ -1996,27 +2002,42 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
                         EList<TdExpression> viewValidRowsExpression = ((UDIndicatorDefinition) definition)
                                 .getViewValidRowsExpression();
                         TdExpression viewValidRows = getCurrentLanguageExp(viewValidRowsExpression, language, version);
-                        editDialog.setTempViewValidRowsExp(cloneExpression(viewValidRows, definition));
+                        if (isDirty()) {
+                            viewValidRows = tempViewValidRowsExpressionMap.get(combo);
+                        }
+                        editDialog.setTempViewValidRowsExp(cloneExpression(viewValidRows));
 
                         EList<TdExpression> viewInvalidRowsExpression = ((UDIndicatorDefinition) definition)
                                 .getViewInvalidRowsExpression();
-                        TdExpression ViewInvalidRows = getCurrentLanguageExp(viewInvalidRowsExpression, language, version);
-                        editDialog.setTempViewInvalidRowsExp(cloneExpression(ViewInvalidRows, definition));
+                        TdExpression viewInvalidRows = getCurrentLanguageExp(viewInvalidRowsExpression, language, version);
+                        if (isDirty()) {
+                            viewInvalidRows = tempViewInvalidRowsExpressionMap.get(combo);
+                        }
+                        editDialog.setTempViewInvalidRowsExp(cloneExpression(viewInvalidRows));
 
                         EList<TdExpression> viewValidValuesExpression = ((UDIndicatorDefinition) definition)
                                 .getViewValidValuesExpression();
                         TdExpression viewValidValues = getCurrentLanguageExp(viewValidValuesExpression, language, version);
-                        editDialog.setTempViewValidValuesExp(cloneExpression(viewValidValues, definition));
+                        if (isDirty()) {
+                            viewValidValues = tempViewValidValuesExpressionMap.get(combo);
+                        }
+                        editDialog.setTempViewValidValuesExp(cloneExpression(viewValidValues));
 
                         EList<TdExpression> viewInvalidValuesExpression = ((UDIndicatorDefinition) definition)
                                 .getViewInvalidValuesExpression();
-                        TdExpression ViewInvalidValues = getCurrentLanguageExp(viewInvalidValuesExpression, language, version);
-                        editDialog.setTempViewInvalidValuesExp(cloneExpression(ViewInvalidValues, definition));
+                        TdExpression viewInvalidValues = getCurrentLanguageExp(viewInvalidValuesExpression, language, version);
+                        if (isDirty()) {
+                            viewInvalidValues = tempViewInvalidValuesExpressionMap.get(combo);
+                        }
+                        editDialog.setTempViewInvalidValuesExp(cloneExpression(viewInvalidValues));
 
                     } else {
                         EList<TdExpression> viewRowsExpression = ((UDIndicatorDefinition) definition).getViewRowsExpression();
                         TdExpression viewRows = getCurrentLanguageExp(viewRowsExpression, language, version);
-                        editDialog.setTempViewRowsExp(cloneExpression(viewRows, definition));
+                        if (isDirty()) {
+                            viewRows = tempViewRowsExpressionMap.get(combo);
+                        }
+                        editDialog.setTempViewRowsExp(cloneExpression(viewRows));
                     }
                 }
 
@@ -2202,7 +2223,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
                     TdExpression exp = tempExpressionMap.get(cb);
                     if (exp.getBody() != null && !PluginConstant.EMPTY_STRING.equals(exp.getBody())) {
                         // MOD xqliu 2010-04-01 bug 11892
-                        TdExpression cloneExpression = cloneExpression(exp, definition);
+                        TdExpression cloneExpression = cloneExpression(exp);
                         expressions.add(cloneExpression);
                         // ~11892
                     }
@@ -2323,7 +2344,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
             CCombo cb = it.next();
             TdExpression exp = map.get(cb);
             if (exp.getBody() != null && !PluginConstant.EMPTY_STRING.equals(exp.getBody())) {
-                TdExpression cloneExpression = cloneExpression(exp, definition);
+                TdExpression cloneExpression = cloneExpression(exp);
                 temp.add(cloneExpression);
             }
         }
@@ -3280,7 +3301,10 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
      * @param exp
      * @return
      */
-    public static final TdExpression cloneExpression(TdExpression exp, IndicatorDefinition definition) {
+    public static final TdExpression cloneExpression(TdExpression exp) {
+        if (exp == null) {
+            return null;
+        }
         TdExpression copy = EcoreUtil.copy(exp);
         HashMap<String, String> expressionVariableMap = exp.getExpressionVariableMap();
         if (expressionVariableMap != null) {
