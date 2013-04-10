@@ -807,6 +807,12 @@ public class DbmsLanguage {
 
         // else try with default language (ANSI SQL)
         String defaultLanguage = getDefaultLanguage();
+
+        // if can not find the expression of default language, return null
+        if (language.equals(defaultLanguage)) {
+            return null;
+        }
+
         if (log.isDebugEnabled()) {
             log.warn("The indicator SQL expression has not been found for the database type " + language //$NON-NLS-1$
                     + " for the indicator" + indicatorDefinition.getName() //$NON-NLS-1$
