@@ -1934,7 +1934,7 @@ public final class ConnectionUtils {
      * 
      * @throws SQLException
      */
-    public static void updataTaggedValueForConnectionItem(Connection dataProvider) {
+    public static synchronized void updataTaggedValueForConnectionItem(Connection dataProvider) {
         if (dataProvider instanceof DatabaseConnection
                 && StringUtils.isBlank(TaggedValueHelper.getValueString(TaggedValueHelper.DB_PRODUCT_NAME, dataProvider))) {
             Property property = PropertyHelper.getProperty(dataProvider);
