@@ -12,11 +12,11 @@
 // ============================================================================
 package org.talend.dq.analysis.connpool;
 
-import static org.junit.Assert.assertNotNull;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
 
 import java.sql.Connection;
+import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 
 import junit.framework.Assert;
@@ -39,9 +39,8 @@ import org.talend.dataquality.analysis.ExecutionInformations;
 import org.talend.dq.analysis.AnalysisHandler;
 import org.talend.utils.sugars.TypedReturnCode;
 
-
 /**
- * DOC yyin  class global comment. Detailled comment
+ * DOC yyin class global comment. Detailled comment
  */
 @PrepareForTest({ AnalysisHandler.class, SwitchHelpers.class, JavaSqlFactory.class })
 public class TdqAnalysisConnectionPoolTest {
@@ -54,15 +53,17 @@ public class TdqAnalysisConnectionPoolTest {
     Analysis analysis;
 
     org.talend.core.model.metadata.builder.connection.Connection dataManager;
+
     /**
      * DOC yyin Comment method "setUp".
+     * 
      * @throws java.lang.Exception
      */
     @Before
     public void setUp() throws Exception {
         analysis = mock(Analysis.class);
         AnalysisContext context = mock(AnalysisContext.class);
-        AnalysisResult result =mock(AnalysisResult.class); 
+        AnalysisResult result = mock(AnalysisResult.class);
         dataManager = mock(org.talend.core.model.metadata.builder.connection.Connection.class);
         ExecutionInformations resultMetadata = mock(ExecutionInformations.class);
 
@@ -81,6 +82,7 @@ public class TdqAnalysisConnectionPoolTest {
 
     /**
      * DOC yyin Comment method "tearDown".
+     * 
      * @throws java.lang.Exception
      */
     @After
@@ -88,7 +90,9 @@ public class TdqAnalysisConnectionPoolTest {
     }
 
     /**
-     * Test method for {@link org.talend.dq.analysis.connpool.TdqAnalysisConnectionPool#getConnectionPool(org.talend.dataquality.analysis.Analysis)}.
+     * Test method for
+     * {@link org.talend.dq.analysis.connpool.TdqAnalysisConnectionPool#getConnectionPool(org.talend.dataquality.analysis.Analysis)}
+     * .
      */
     @Test
     public void testGetConnectionPool() {
@@ -125,6 +129,9 @@ public class TdqAnalysisConnectionPoolTest {
         when(trcConn.isOk()).thenReturn(true);
         Connection conn = mock(Connection.class);
         when(trcConn.getObject()).thenReturn(conn);
+        DatabaseMetaData metaData = mock(DatabaseMetaData.class);
+        when(conn.getMetaData()).thenReturn(metaData);
+        when(metaData.getMaxConnections()).thenReturn(100);
 
         Connection con = pool.getConnection();
         assertNotNull(con);
