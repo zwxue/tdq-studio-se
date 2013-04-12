@@ -34,17 +34,16 @@ public class BubbleChartMain {
      */
     public static void main(String[] args) {
         try {
-            MultiColAnalysisCreationMain myTest = new MultiColAnalysisCreationMain();
-            final ColumnSetMultiValueIndicator indic = myTest.run();
+            MultiColAnalysisCreationTest myTest = new MultiColAnalysisCreationTest();
+            myTest.run();
+            final ColumnSetMultiValueIndicator indic = myTest.getColumnSetMultiValueIndicator();
             JFreeChart chart = TopChartFactory.createBubbleChart(indic, indic.getNumericColumns().get(0));
 
-            ChartFrame frame = new ChartFrame("TEST", chart);
+            ChartFrame frame = new ChartFrame("TEST", chart); //$NON-NLS-1$
             frame.pack();
             frame.setVisible(true);
         } catch (TalendException e) {
             log.error(e, e);
         }
-
     }
-
 }
