@@ -12,14 +12,20 @@
 // ============================================================================
 package org.talend.dq.analysis;
 
+import static org.mockito.Mockito.mock;
+import static org.powermock.api.support.membermodification.MemberMatcher.method;
+import static org.powermock.api.support.membermodification.MemberModifier.stub;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ResourceBundle;
 
 import junit.framework.Assert;
 
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -30,6 +36,7 @@ import org.talend.core.database.EDatabaseTypeName;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.connection.ConnectionFactory;
 import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
+import org.talend.cwm.management.i18n.Messages;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisType;
 import org.talend.dataquality.domain.Domain;
@@ -44,13 +51,21 @@ import org.talend.utils.sugars.ReturnCode;
  * created by zshen on Apr 2, 2013 Detailled comment
  * 
  */
-@PrepareForTest({ TdqAnalysisConnectionPool.class })
+@PrepareForTest({ TdqAnalysisConnectionPool.class, Messages.class })
 public class ConnectionAnalysisCreationTest {
 
     @Rule
     public PowerMockRule powerMockRule = new PowerMockRule();
 
     // private static final DomainFactory DOMAIN = DomainFactory.eINSTANCE;
+    @Before
+    public void setUp() throws Exception {
+
+        ResourceBundle rb = mock(ResourceBundle.class);
+        stub(method(ResourceBundle.class, "getBundle", String.class)).toReturn(rb);
+        PowerMockito.mock(Messages.class);
+        stub(method(Messages.class, "getString", String.class)).toReturn("String");
+    }
 
     @Test
     public void testCreateConnectionAnalysis() {

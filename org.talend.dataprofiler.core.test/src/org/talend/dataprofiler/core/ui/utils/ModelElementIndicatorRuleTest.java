@@ -14,8 +14,11 @@ package org.talend.dataprofiler.core.ui.utils;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import static org.powermock.api.support.membermodification.MemberMatcher.method;
+import static org.powermock.api.support.membermodification.MemberModifier.stub;
 
 import java.sql.Types;
+import java.util.ResourceBundle;
 
 import junit.framework.Assert;
 
@@ -27,6 +30,7 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.rule.PowerMockRule;
 import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
 import org.talend.cwm.helper.ConnectionHelper;
+import org.talend.cwm.management.i18n.Messages;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.relational.TdSqlDataType;
 import org.talend.dataquality.analysis.ExecutionLanguage;
@@ -35,7 +39,7 @@ import org.talend.dq.nodes.indicator.type.IndicatorEnum;
 /**
  * DOC yyin class global comment. Detailled comment
  */
-@PrepareForTest({ ConnectionHelper.class })
+@PrepareForTest({ ConnectionHelper.class, Messages.class })
 public class ModelElementIndicatorRuleTest {
 
     @Rule
@@ -56,6 +60,11 @@ public class ModelElementIndicatorRuleTest {
         me = mock(TdColumn.class);
         when(me.getSqlDataType()).thenReturn(tdsql);
         when(me.getContentType()).thenReturn("type"); //$NON-NLS-1$
+
+        ResourceBundle rb = mock(ResourceBundle.class);
+        stub(method(ResourceBundle.class, "getBundle", String.class)).toReturn(rb);
+        PowerMockito.mock(Messages.class);
+        stub(method(Messages.class, "getString", String.class)).toReturn("String");
     }
 
     /**
@@ -174,7 +183,7 @@ public class ModelElementIndicatorRuleTest {
                 .patternRule(IndicatorEnum.SoundexLowIndicatorEnum, me, ExecutionLanguage.JAVA));
         Assert.assertTrue(ModelElementIndicatorRule.patternRule(IndicatorEnum.PatternFreqIndicatorEnum, me,
                 ExecutionLanguage.JAVA));
-        Assert.assertTrue(ModelElementIndicatorRule.patternRule(IndicatorEnum.BenfordLawFrequencyIndicatorEnum, me,
+        Assert.assertFalse(ModelElementIndicatorRule.patternRule(IndicatorEnum.BenfordLawFrequencyIndicatorEnum, me,
                 ExecutionLanguage.JAVA));
         Assert.assertTrue(ModelElementIndicatorRule.patternRule(IndicatorEnum.LowerQuartileIndicatorEnum, me,
                 ExecutionLanguage.JAVA));
