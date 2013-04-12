@@ -114,13 +114,16 @@ public class DatabaseStructureView extends ViewPart {
      */
     public void addUser(final User user) throws SQLCannotConnectException {
         // Make sure we list each user only once
-        for (Session session : _allSessions)
-            if (session.getUser() == user)
+        for (Session session : _allSessions) {
+            if (session.getUser() == user) {
                 return;
+            }
+        }
 
         MetaDataSession session = user.getMetaDataSession();
-        if (session != null)
+        if (session != null) {
             addSession(user.getMetaDataSession());
+        }
     }
 
     /**
@@ -129,8 +132,9 @@ public class DatabaseStructureView extends ViewPart {
      * @param session
      */
     private void addSession(final MetaDataSession session) throws SQLCannotConnectException {
-        if (_allSessions.contains(session))
+        if (_allSessions.contains(session)) {
             return;
+        }
         try {
             session.getMetaData();
             session.setAutoCommit(true);
@@ -142,8 +146,9 @@ public class DatabaseStructureView extends ViewPart {
             MessageDialog.openError(getSite().getShell(), "Cannot connect", e.getMessage());
         }
         DatabaseNode rootNode = session.getRoot();
-        if (rootNode == null)
+        if (rootNode == null) {
             return;
+        }
         _allSessions.add(session);
 
         if (_filterAction != null) {
@@ -160,6 +165,7 @@ public class DatabaseStructureView extends ViewPart {
             // add listener to keep both views on the same active tab
             _tabFolder.addSelectionListener(new SelectionAdapter() {
 
+                @Override
                 public void widgetSelected(SelectionEvent e) {
 
                     // set the selected node in the detail view.
@@ -179,6 +185,7 @@ public class DatabaseStructureView extends ViewPart {
             // Add a listener to handle the close button on each tab
             _tabFolder.addCTabFolder2Listener(new CTabFolder2Adapter() {
 
+                @Override
                 public void close(CTabFolderEvent event) {
                     CTabItem tabItem = (CTabItem) event.item;
                     TabData tabData = (TabData) tabItem.getData();
@@ -238,8 +245,9 @@ public class DatabaseStructureView extends ViewPart {
                     } else {
                         TableNode tn = (TableNode) sel;
                         TableNodeTransfer.getInstance().setSelection(tn);
-                        if (!tn.isTable())
+                        if (!tn.isTable()) {
                             event.doit = false;
+                        }
                     }
                 }
             }
@@ -400,8 +408,8 @@ public class DatabaseStructureView extends ViewPart {
 
         Control[] children = _parent.getChildren();
         if (children != null) {
-            for (int i = 0; i < children.length; i++) {
-                children[i].dispose();
+            for (Control element : children) {
+                element.dispose();
             }
         }
     }
@@ -411,6 +419,7 @@ public class DatabaseStructureView extends ViewPart {
      * 
      * @see org.eclipse.ui.IWorkbenchPart#createPartControl(org.eclipse.swt.widgets.Composite)
      */
+    @Override
     public void createPartControl(Composite parent) {
 
         PlatformUI.getWorkbench().getHelpSystem().setHelp(parent, SQLExplorerPlugin.PLUGIN_ID + ".DatabaseStructureView");
@@ -440,6 +449,7 @@ public class DatabaseStructureView extends ViewPart {
      * 
      * @see org.eclipse.ui.IWorkbenchPart#dispose()
      */
+    @Override
     public void dispose() {
 
         // refresh detail view
@@ -448,12 +458,19 @@ public class DatabaseStructureView extends ViewPart {
 
         if (detailView != null) {
             detailView.setSelectedNode(null);
+            detailView.dispose();
         }
+        // clear session
+        _allSessions.clear();
+        _tabFolder.dispose();
+
+        SQLExplorerPlugin.getDefault().setDatabaseStructureView(null);
     }
 
     public MetaDataSession getSession() {
-        if (_tabFolder == null || _tabFolder.getSelectionIndex() < 0)
+        if (_tabFolder == null || _tabFolder.getSelectionIndex() < 0) {
             return null;
+        }
 
         CTabItem item = _tabFolder.getItem(_tabFolder.getSelectionIndex());
         TabData tabData = (TabData) item.getData();
@@ -464,8 +481,9 @@ public class DatabaseStructureView extends ViewPart {
      * Loop through all tabs and refresh trees for sessions with session
      */
     public void refreshSessionTrees(Session session) {
-        if (_tabFolder == null || _tabFolder.getSelectionIndex() < 0)
+        if (_tabFolder == null || _tabFolder.getSelectionIndex() < 0) {
             return;
+        }
 
         CTabItem[] items = _tabFolder.getItems();
         if (items != null) {
@@ -501,6 +519,7 @@ public class DatabaseStructureView extends ViewPart {
      * 
      * @see org.eclipse.ui.IWorkbenchPart#setFocus()
      */
+    @Override
     public void setFocus() {
 
         // we don't need to do anything here..
@@ -554,9 +573,11 @@ public class DatabaseStructureView extends ViewPart {
     }
 
     public boolean isConnectedToUser(User user) {
-        for (Session session : _allSessions)
-            if (session.getUser().compareTo(user) == 0)
+        for (Session session : _allSessions) {
+            if (session.getUser().compareTo(user) == 0) {
                 return true;
+            }
+        }
         return false;
     }
 
@@ -565,8 +586,9 @@ public class DatabaseStructureView extends ViewPart {
      * DOC qiongli Comment method "closeCurrentCabItem".bug 16394.
      */
     public void closeCurrentCabItem(String conName) {
-        if (_tabFolder == null || _tabFolder.isDisposed() || conName == null)
+        if (_tabFolder == null || _tabFolder.isDisposed() || conName == null) {
             return;
+        }
         CTabItem items[] = _tabFolder.getItems();
         for (CTabItem item : items) {
             if (!item.isDisposed() && item.getText().startsWith(conName + "/")) {
