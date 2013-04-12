@@ -24,7 +24,7 @@ import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.dataquality.indicators.IndicatorsPackage;
 import org.talend.dataquality.indicators.schema.ConnectionIndicator;
 import org.talend.dataquality.indicators.schema.SchemaFactory;
-import org.talend.dq.analysis.AnalysisCreationMain;
+import org.talend.dq.analysis.AnalysisCreationTest;
 import org.talend.utils.properties.PropertiesLoader;
 import org.talend.utils.properties.TypedProperties;
 import org.talend.utils.sql.ConnectionUtils;
@@ -54,7 +54,7 @@ public final class ConnectionIndicEvalMain {
             // create connection
             java.sql.Connection connection = ConnectionUtils.createConnection(dbUrl, driverClassName, connectionParams);
 
-            Connection dataProvider = new AnalysisCreationMain().getDataManager();
+            Connection dataProvider = new AnalysisCreationTest().getDataManager();
 
             // --- test connection evaluator
             String catalog = "test";

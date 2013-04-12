@@ -17,12 +17,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.junit.After;
 import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.database.DqRepositoryViewService;
-import org.talend.core.repository.model.IRepositoryFactory;
-import org.talend.core.repository.model.ProxyRepositoryFactory;
-import org.talend.core.repository.model.RepositoryFactoryProvider;
 import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.helper.CatalogHelper;
 import org.talend.cwm.management.api.ConnectionService;
@@ -50,9 +50,11 @@ import org.talend.dataquality.indicators.definition.DefinitionFactory;
 import org.talend.dataquality.indicators.definition.IndicatorCategory;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dq.analysis.parameters.DBConnectionParameter;
+import org.talend.dq.helper.UnitTestBuildHelper;
 import org.talend.dq.indicators.IndicatorEvaluator;
 import org.talend.dq.sql.converters.CwmZExpression;
 import org.talend.dq.writer.impl.ElementWriterFactory;
+import org.talend.resource.ResourceManager;
 import org.talend.utils.exceptions.TalendException;
 import org.talend.utils.properties.PropertiesLoader;
 import org.talend.utils.properties.TypedProperties;
@@ -63,7 +65,16 @@ import orgomg.cwm.resource.relational.Catalog;
 /**
  * DOC scorreia class global comment. Detailled comment
  */
-public class AnalysisCreationMain {
+public class AnalysisCreationTest {
+
+    /**
+     * project name
+     */
+    private static final String PROJECT_NAME = "AnalysisCreationTestProject"; //$NON-NLS-1$\
+
+    private static final String ANALYSIS_NAME = "My_test_analysis"; //$NON-NLS-1$\
+
+    private static final String DATA_PROVIDER_NAME = "My_data_provider"; //$NON-NLS-1$\
 
     private static final String EMPTY_STRING = ""; //$NON-NLS-1$
 
@@ -94,37 +105,18 @@ public class AnalysisCreationMain {
 
     private static final String INDICATOR_NAME_RegexpMatchingIndicator = "RegexpMatchingIndicator"; //$NON-NLS-1$
 
-    /**
-     * DOC xqliu TestAnalysisCreation constructor comment.
-     */
-    public AnalysisCreationMain() {
-        initProxyRepository();
+    private static Logger log = Logger.getLogger(AnalysisCreationTest.class);
+
+    private AnalysisBuilder analysisBuilder;
+
+    @Before
+    public void setUp() throws Exception {
+        UnitTestBuildHelper.createRealProject(PROJECT_NAME);
     }
 
-    /**
-     * DOC xqliu Comment method "initProxyRepository".
-     */
-    protected void initProxyRepository() {
-        if (ProxyRepositoryFactory.getInstance().getRepositoryFactoryFromProvider() == null) {
-            IRepositoryFactory repository = RepositoryFactoryProvider.getRepositoriyById("local"); //$NON-NLS-1$
-            if (repository != null) {
-                ProxyRepositoryFactory.getInstance().setRepositoryFactoryFromProvider(repository);
-            }
-        }
-    }
-
-    /**
-     * DOC scorreia Comment method "main".
-     * 
-     * @param args
-     */
-    public static void main(String[] args) {
-        try {
-            AnalysisCreationMain myTest = new AnalysisCreationMain();
-            myTest.run();
-        } catch (TalendException e) {
-            log.error(e, e);
-        }
+    @After
+    public void tearDown() throws Exception {
+        UnitTestBuildHelper.deleteCurrentProject();
     }
 
     /**
@@ -132,63 +124,12 @@ public class AnalysisCreationMain {
      * 
      * @throws TalendException
      */
-    private void run() throws TalendException {
-        String outputFolder = "ANA"; //$NON-NLS-1$
+    @Test
+    public void run() throws TalendException {
         analysisBuilder = new AnalysisBuilder();
-        String analysisName = "My test analysis"; //$NON-NLS-1$
 
-        boolean analysisInitialized = analysisBuilder.initializeAnalysis(analysisName, AnalysisType.COLUMN);
-        Assert.assertTrue(analysisName + " failed to initialize!", analysisInitialized); //$NON-NLS-1$
-
-        // get the connection
-        Connection dataManager = getDataManager();
-        Assert.assertNotNull("No datamanager found!", dataManager); //$NON-NLS-1$
-        analysisBuilder.setAnalysisConnection(dataManager);
-
-        // get a column to analyze
-        ModelElement column = null;
-        try {
-            column = getColumn(dataManager);
-        } catch (Exception e) {
-            log.error(e, e);
-        }
-        Indicator[] indicators = getIndicators(column);
-        analysisBuilder.addElementToAnalyze(column, indicators);
-
-        // get the domain constraint
-        Domain dataFilter = getDataFilter(dataManager, (TdColumn) column); // CAST here for test
-        // analysisBuilder.addFilterOnData(dataFilter);
-
-        // TODO scorreia save domain with analysisbuilder?
-        FolderProvider folderProvider = new FolderProvider();
-        folderProvider.setFolder(new File(outputFolder));
-
-        // run analysis
-        Analysis analysis = analysisBuilder.getAnalysis();
-        final boolean useSql = true;
-        IAnalysisExecutor exec = useSql ? new ColumnAnalysisSqlExecutor() : new ColumnAnalysisExecutor();
-        ReturnCode executed = exec.execute(analysis);
-        Assert.assertTrue("Problem executing analysis: " + analysisName + ": " + executed.getMessage(), executed.isOk()); //$NON-NLS-1$ //$NON-NLS-2$
-
-        // save data provider
-        ElementWriterFactory.getInstance().createDataProviderWriter().create(dataManager, folderProvider.getFolderResource());
-
-        // Need workspace context
-        // AnalysisWriter writer = new AnalysisWriter();
-        // File file = new File(outputFolder + File.separator + "analysis.ana");
-        // ReturnCode saved = writer.save(analysis, file);
-        // Assert.assertTrue(saved.getMessage(), saved.isOk());
-        // if (saved.isOk()) {
-        // log.info("Saved in " + file.getAbsolutePath());
-        // }
-    }
-
-    public Analysis createAndRunAnalysis() throws TalendException {
-        analysisBuilder = new AnalysisBuilder();
-        String analysisName = "My test analysis"; //$NON-NLS-1$
-
-        boolean analysisInitialized = analysisBuilder.initializeAnalysis(analysisName, AnalysisType.COLUMN);
-        Assert.assertTrue(analysisName + " failed to initialize!", analysisInitialized); //$NON-NLS-1$
+        boolean analysisInitialized = analysisBuilder.initializeAnalysis(ANALYSIS_NAME, AnalysisType.COLUMN);
+        Assert.assertTrue(ANALYSIS_NAME + " failed to initialize!", analysisInitialized); //$NON-NLS-1$
 
         // get the connection
         Connection dataManager = getDataManager();
@@ -209,12 +150,74 @@ public class AnalysisCreationMain {
         Domain dataFilter = getDataFilter(dataManager, (TdColumn) column); // CAST here for test
         analysisBuilder.addFilterOnData(dataFilter);
 
+        // TODO scorreia save domain with analysisbuilder?
+        FolderProvider folderProvider = new FolderProvider();
+        folderProvider.setFolderResource(ResourceManager.getAnalysisFolder());
+
         // run analysis
         Analysis analysis = analysisBuilder.getAnalysis();
         final boolean useSql = true;
         IAnalysisExecutor exec = useSql ? new ColumnAnalysisSqlExecutor() : new ColumnAnalysisExecutor();
         ReturnCode executed = exec.execute(analysis);
-        Assert.assertTrue("Problem executing analysis: " + analysisName + ": " + executed.getMessage(), executed.isOk()); //$NON-NLS-1$ //$NON-NLS-2$
+        Assert.assertTrue("Problem executing analysis: " + ANALYSIS_NAME + ": " + executed.getMessage(), executed.isOk()); //$NON-NLS-1$ //$NON-NLS-2$
+
+        // assert before create: the folder is empty
+        Assert.assertNull(folderProvider.getFolder().listFiles());
+
+        // save data provider
+        ElementWriterFactory.getInstance().createDataProviderWriter().create(dataManager, folderProvider.getFolderResource());
+        // save analysis
+        ElementWriterFactory.getInstance().createAnalysisWrite().create(analysis, folderProvider.getFolderResource());
+
+        // assert after create
+        boolean dataProviderOK = false;
+        boolean analysisOK = false;
+        File[] listFiles = folderProvider.getFolder().listFiles();
+        if (listFiles != null) {
+            for (File file : listFiles) {
+                String name = file.getName();
+                if (name.startsWith(DATA_PROVIDER_NAME)) {
+                    dataProviderOK = true;
+                } else if (name.startsWith(ANALYSIS_NAME)) {
+                    analysisOK = true;
+                }
+            }
+        }
+        Assert.assertTrue(dataProviderOK);
+        Assert.assertTrue(analysisOK);
+    }
+
+    public Analysis createAndRunAnalysis() throws TalendException {
+        this.analysisBuilder = new AnalysisBuilder();
+
+        boolean analysisInitialized = analysisBuilder.initializeAnalysis(ANALYSIS_NAME, AnalysisType.COLUMN);
+        Assert.assertTrue(ANALYSIS_NAME + " failed to initialize!", analysisInitialized); //$NON-NLS-1$
+
+        // get the connection
+        Connection dataManager = getDataManager();
+        Assert.assertNotNull("No datamanager found!", dataManager); //$NON-NLS-1$
+        analysisBuilder.setAnalysisConnection(dataManager);
+
+        // get a column to analyze
+        ModelElement column = null;
+        try {
+            column = getColumn(dataManager);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        Indicator[] indicators = getIndicators(column);
+        analysisBuilder.addElementToAnalyze(column, indicators);
+
+        // get the domain constraint
+        Domain dataFilter = getDataFilter(dataManager, (TdColumn) column); // CAST here for test
+        analysisBuilder.addFilterOnData(dataFilter);
+
+        // run analysis
+        Analysis analysis = analysisBuilder.getAnalysis();
+        final boolean useSql = true;
+        IAnalysisExecutor exec = useSql ? new ColumnAnalysisSqlExecutor() : new ColumnAnalysisExecutor();
+        ReturnCode executed = exec.execute(analysis);
+        Assert.assertTrue("Problem executing analysis: " + ANALYSIS_NAME + ": " + executed.getMessage(), executed.isOk()); //$NON-NLS-1$ //$NON-NLS-2$
         return analysis;
     }
 
@@ -246,10 +249,6 @@ public class AnalysisCreationMain {
         expre.setOperands(column, "\"sunny\""); //$NON-NLS-1$
         return expre.generateExpressions();
     }
-
-    private static Logger log = Logger.getLogger(AnalysisCreationMain.class);
-
-    private AnalysisBuilder analysisBuilder;
 
     /**
      * DOC scorreia Comment method "getIndicators".
@@ -438,7 +437,7 @@ public class AnalysisCreationMain {
         ConnectionUtils.setTimeout(false);
         Connection dataProvider = ConnectionService.createConnection(params).getObject();
 
-        dataProvider.setName("My data provider"); //$NON-NLS-1$
+        dataProvider.setName(DATA_PROVIDER_NAME);
         return dataProvider;
     }
 
