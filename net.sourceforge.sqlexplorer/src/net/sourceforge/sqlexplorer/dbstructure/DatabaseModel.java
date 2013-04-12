@@ -241,7 +241,7 @@ public class DatabaseModel implements INode {
      * @see net.sourceforge.sqlexplorer.dbstructure.nodes.INode#setSchemaName(java.lang.String)
      */
     public void setSchemaName(String schemaName) {
-        // TODO Auto-generated method stub
+        // no need to set it here
 
     }
 
@@ -251,7 +251,6 @@ public class DatabaseModel implements INode {
      * @see net.sourceforge.sqlexplorer.dbstructure.nodes.INode#getSchemaName()
      */
     public String getSchemaName() {
-        // TODO Auto-generated method stub
         return null;
     }
 
@@ -261,7 +260,6 @@ public class DatabaseModel implements INode {
      * @see net.sourceforge.sqlexplorer.dbstructure.nodes.INode#isChildrenLoaded()
      */
     public boolean isChildrenLoaded() {
-        // TODO Auto-generated method stub
         return false;
     }
 

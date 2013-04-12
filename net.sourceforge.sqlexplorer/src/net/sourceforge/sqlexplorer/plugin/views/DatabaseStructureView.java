@@ -448,7 +448,13 @@ public class DatabaseStructureView extends ViewPart {
 
         if (detailView != null) {
             detailView.setSelectedNode(null);
+            detailView.dispose();
         }
+        // clear session
+        _allSessions.clear();
+        _tabFolder.dispose();
+
+        SQLExplorerPlugin.getDefault().setDatabaseStructureView(null);
     }
 
     public MetaDataSession getSession() {
