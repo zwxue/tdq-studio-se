@@ -12,14 +12,11 @@
 // ============================================================================
 package org.talend.dataprofiler.core.helper;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-import static org.powermock.api.support.membermodification.MemberMatcher.method;
-import static org.powermock.api.support.membermodification.MemberModifier.stub;
+import static org.junit.Assert.*;
+import static org.mockito.Matchers.*;
+import static org.mockito.Mockito.*;
+import static org.powermock.api.support.membermodification.MemberMatcher.*;
+import static org.powermock.api.support.membermodification.MemberModifier.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -64,50 +61,50 @@ public class WorkspaceResourceHelperTest {
      */
     @Test
     public void testSourceFileHasBeenOpened() {
+        SourceFileRepNode fileNode = mock(SourceFileRepNode.class);
+
+        CorePlugin cpMock = mock(CorePlugin.class);
+        PowerMockito.mockStatic(CorePlugin.class);
+        when(CorePlugin.getDefault()).thenReturn(cpMock);
+
+        IWorkbench workbenchMock = mock(IWorkbench.class);
+        when(cpMock.getWorkbench()).thenReturn(workbenchMock);
+
+        IWorkbenchWindow workbenchWindowMock = mock(IWorkbenchWindow.class);
+        when(workbenchMock.getActiveWorkbenchWindow()).thenReturn(workbenchWindowMock);
+
+        IWorkbenchPage workbenchPageMock = mock(IWorkbenchPage.class);
+        when(workbenchWindowMock.getActivePage()).thenReturn(workbenchPageMock);
+
+        IEditorReference editorRefMock = mock(IEditorReference.class);
+        IEditorReference[] editorRefMocks = new IEditorReference[] { editorRefMock };
+        when(workbenchPageMock.getEditorReferences()).thenReturn(editorRefMocks);
+
+        FileEditorInput fileEditorInputMock = mock(FileEditorInput.class);
         try {
-            SourceFileRepNode fileNode = mock(SourceFileRepNode.class);
-
-            CorePlugin cpMock = mock(CorePlugin.class);
-            PowerMockito.mockStatic(CorePlugin.class);
-            when(CorePlugin.getDefault()).thenReturn(cpMock);
-
-            IWorkbench workbenchMock = mock(IWorkbench.class);
-            when(cpMock.getWorkbench()).thenReturn(workbenchMock);
-
-            IWorkbenchWindow workbenchWindowMock = mock(IWorkbenchWindow.class);
-            when(workbenchMock.getActiveWorkbenchWindow()).thenReturn(workbenchWindowMock);
-
-            IWorkbenchPage workbenchPageMock = mock(IWorkbenchPage.class);
-            when(workbenchWindowMock.getActivePage()).thenReturn(workbenchPageMock);
-
-            IEditorReference editorRefMock = mock(IEditorReference.class);
-            IEditorReference[] editorRefMocks = new IEditorReference[] { editorRefMock };
-            when(workbenchPageMock.getEditorReferences()).thenReturn(editorRefMocks);
-
-            FileEditorInput fileEditorInputMock = mock(FileEditorInput.class);
             when(editorRefMock.getEditorInput()).thenReturn(fileEditorInputMock);
-
-            IFile nodeFileMock = mock(IFile.class);
-            stub(method(RepositoryNodeHelper.class, "getIFile", SourceFileRepNode.class)).toReturn(nodeFileMock); //$NON-NLS-1$
-
-            IPath nodeFilePathMock = mock(IPath.class);
-            when(nodeFileMock.getFullPath()).thenReturn(nodeFilePathMock);
-
-            String path = "/abc"; //$NON-NLS-1$
-            when(nodeFilePathMock.toString()).thenReturn(path);
-
-            IFile inputFileMock = mock(IFile.class);
-            when(fileEditorInputMock.getFile()).thenReturn(inputFileMock);
-
-            IPath inputFilePathMock = mock(IPath.class);
-            when(inputFileMock.getFullPath()).thenReturn(inputFilePathMock);
-
-            when(inputFilePathMock.toString()).thenReturn(path);
-
-            assertTrue(WorkspaceResourceHelper.sourceFileHasBeenOpened(fileNode));
         } catch (PartInitException e) {
             fail(e.getMessage());
         }
+
+        IFile nodeFileMock = mock(IFile.class);
+        stub(method(RepositoryNodeHelper.class, "getIFile", SourceFileRepNode.class)).toReturn(nodeFileMock); //$NON-NLS-1$
+
+        IPath nodeFilePathMock = mock(IPath.class);
+        when(nodeFileMock.getFullPath()).thenReturn(nodeFilePathMock);
+
+        String path = "/abc"; //$NON-NLS-1$
+        when(nodeFilePathMock.toString()).thenReturn(path);
+
+        IFile inputFileMock = mock(IFile.class);
+        when(fileEditorInputMock.getFile()).thenReturn(inputFileMock);
+
+        IPath inputFilePathMock = mock(IPath.class);
+        when(inputFileMock.getFullPath()).thenReturn(inputFilePathMock);
+
+        when(inputFilePathMock.toString()).thenReturn(path);
+
+        assertTrue(WorkspaceResourceHelper.sourceFileHasBeenOpened(fileNode));
     }
 
     /**
@@ -154,42 +151,5 @@ public class WorkspaceResourceHelperTest {
 
         assertEquals(rc.isOk(), rc2.isOk());
         assertEquals(rc.getMessage(), rc2.getMessage());
-    }
-
-    /**
-     * Test method for
-     * {@link org.talend.dataprofiler.core.helper.WorkspaceResourceHelper#showSourceFilesOpeningWarnMessages(java.lang.String)}
-     * .
-     */
-    @Test
-    public void testShowSourceFilesOpeningWarnMessages() {
-        try {
-            CorePlugin cpMock = mock(CorePlugin.class);
-            PowerMockito.mockStatic(CorePlugin.class);
-            when(CorePlugin.getDefault()).thenReturn(cpMock);
-
-            ResourceBundle rb = mock(ResourceBundle.class);
-            stub(method(ResourceBundle.class, "getBundle", String.class)).toReturn(rb); //$NON-NLS-1$
-
-            PowerMockito.mockStatic(DefaultMessagesImpl.class);
-            when(DefaultMessagesImpl.getString(anyString(), anyString())).thenReturn("anyString()"); //$NON-NLS-1$
-
-            PowerMockito.mockStatic(MessageUI.class);
-            stub(method(MessageUI.class, "openWarning", String.class)); //$NON-NLS-1$
-            // test null String
-            String openSourceFileNames = null;
-            WorkspaceResourceHelper.showSourceFilesOpeningWarnMessages(openSourceFileNames);
-            // test empty String
-            openSourceFileNames = " "; //$NON-NLS-1$
-            WorkspaceResourceHelper.showSourceFilesOpeningWarnMessages(openSourceFileNames);
-            // test one name String
-            openSourceFileNames = "abc, "; //$NON-NLS-1$
-            WorkspaceResourceHelper.showSourceFilesOpeningWarnMessages(openSourceFileNames);
-            // test some names String
-            openSourceFileNames = "abc, bcd, xyz, "; //$NON-NLS-1$
-            WorkspaceResourceHelper.showSourceFilesOpeningWarnMessages(openSourceFileNames);
-        } catch (Exception e) {
-            fail(e.getMessage());
-        }
     }
 }
