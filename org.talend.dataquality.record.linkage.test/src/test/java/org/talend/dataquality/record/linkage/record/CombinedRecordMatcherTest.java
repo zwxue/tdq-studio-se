@@ -51,9 +51,11 @@ public class CombinedRecordMatcherTest {
      */
     @Test
     public void testGetMatchingWeight() {
+        final double MATCH_THRESHOLD = 0.9;
         // create a first matcher
         IRecordMatcher recMatcher1 = RecordMatcherFactory.createMatcher(RecordMatcherType.simpleVSRMatcher,
                 ATTRIBUTEMATCHERALGORITHMS, ATTRIBUTEWEIGHTS_1);
+        recMatcher1.setRecordMatchThreshold(MATCH_THRESHOLD);
         List<List<Double>> matcherWeigths = computeWeights(recMatcher1);
 
         // check that the combined matcher with only one matcher is identical to the matcher
@@ -67,6 +69,7 @@ public class CombinedRecordMatcherTest {
         // create a second simple matcher and do the same
         IRecordMatcher recMatcher2 = RecordMatcherFactory.createMatcher(RecordMatcherType.simpleVSRMatcher,
                 ATTRIBUTEMATCHERALGORITHMS, ATTRIBUTEWEIGHTS_2);
+        recMatcher2.setRecordMatchThreshold(MATCH_THRESHOLD);
         matcherWeigths = computeWeights(recMatcher2);
 
         CombinedRecordMatcher combMatcher2 = RecordMatcherFactory.createCombinedRecordMatcher();
@@ -81,6 +84,7 @@ public class CombinedRecordMatcherTest {
         // create a third simple matcher and do the same
         IRecordMatcher recMatcher3 = RecordMatcherFactory.createMatcher(RecordMatcherType.simpleVSRMatcher, new String[] {
                 "dummy", "dummy", "dummy", "exact" }, new double[] { 0, 0, 0, 1 });
+        recMatcher3.setRecordMatchThreshold(MATCH_THRESHOLD);
         matcherWeigths = computeWeights(recMatcher3);
 
         CombinedRecordMatcher combMatcher3 = RecordMatcherFactory.createCombinedRecordMatcher();
@@ -118,6 +122,29 @@ public class CombinedRecordMatcherTest {
 
     }
 
+    @Test
+    public void testMatchThreshold() {
+        // create a first matcher
+        IRecordMatcher recMatcher1 = RecordMatcherFactory.createMatcher(RecordMatcherType.simpleVSRMatcher,
+                ATTRIBUTEMATCHERALGORITHMS, ATTRIBUTEWEIGHTS_1);
+        IRecordMatcher recMatcher2 = RecordMatcherFactory.createMatcher(RecordMatcherType.simpleVSRMatcher,
+                ATTRIBUTEMATCHERALGORITHMS, ATTRIBUTEWEIGHTS_2);
+        CombinedRecordMatcher combMatcher = RecordMatcherFactory.createCombinedRecordMatcher();
+        Assert.assertTrue(combMatcher.add(recMatcher1));
+        Assert.assertTrue(combMatcher.add(recMatcher2));
+
+        // count matches when no threshold is set
+        int countMatches = countMatches(combMatcher);
+        Assert.assertEquals(0, countMatches);
+
+        // set thresholds
+        recMatcher1.setRecordMatchThreshold(0.7);
+        recMatcher2.setRecordMatchThreshold(0.9);
+        countMatches = countMatches(combMatcher);
+        Assert.assertNotSame(0, countMatches);
+
+    }
+
     /**
      * DOC scorreia Comment method "compare".
      *
@@ -136,12 +163,17 @@ public class CombinedRecordMatcherTest {
 
     private int countMatches(IRecordMatcher combMatcher) {
         List<List<Double>> allWeights = computeWeights(combMatcher);
-        return countMatches(allWeights);
+        double recordMatchThreshold = combMatcher.getRecordMatchThreshold();
+        return countMatches(allWeights, Double.POSITIVE_INFINITY != recordMatchThreshold);
     }
 
     private int countMatches(List<List<Double>> allWeights) {
+        return countMatches(allWeights, true);
+    }
+
+    private int countMatches(List<List<Double>> allWeights, boolean useThreshold) {
         // count number of matches
-        final double MATCH_THRESHOLD = 0.9;
+        final double MATCH_THRESHOLD = 0;
         int nbMatch = 0;
         for (int i = 0; i < allWeights.size(); i++) {
             List<Double> list = allWeights.get(i);
@@ -153,7 +185,7 @@ public class CombinedRecordMatcherTest {
 
                 System.out.print(NumberFormat.getNumberInstance().format(value));
                 System.out.print("\t");
-                if (i == j) {
+                if (useThreshold && i == j) {
                     Assert.assertEquals("Diagonal weights should be one", 1.0d, value);
                 }
             }
@@ -171,6 +203,10 @@ public class CombinedRecordMatcherTest {
             List<Double> allWeightInRow = new ArrayList<Double>();
             for (String[] record2 : MAINRECORDS) {
                 double matchingWeight = combMatcher.getMatchingWeight(record1, record2);
+                // add the matching weight into the matrix when it's a match
+                if (matchingWeight < combMatcher.getRecordMatchThreshold()) {
+                    matchingWeight = 0; // add 0 otherwise
+                }
                 allWeightInRow.add(matchingWeight);
 
                 if (DEBUG) {
