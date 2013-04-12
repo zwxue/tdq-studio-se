@@ -1,20 +1,16 @@
 /*
- * Copyright (C) 2006 Davy Vanherbergen
- * dvanherbergen@users.sourceforge.net
- *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation; either
- * version 2.1 of the License, or (at your option) any later version.
- *
- * This library is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Copyright (C) 2006 Davy Vanherbergen dvanherbergen@users.sourceforge.net
+ * 
+ * This program is free software; you can redistribute it and/or modify it under the terms of the GNU Lesser General
+ * Public License as published by the Free Software Foundation; either version 2.1 of the License, or (at your option)
+ * any later version.
+ * 
+ * This library is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License along with this library; if not, write to
+ * the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
 package net.sourceforge.sqlexplorer.dbstructure;
 
@@ -30,8 +26,8 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 
 /**
- * DatabaseModel container for the database node and used to set as the input
- * for the treeViewer in the database structure outline.
+ * DatabaseModel container for the database node and used to set as the input for the treeViewer in the database
+ * structure outline.
  * 
  * @modified Davy Vanherbergen
  */
@@ -40,7 +36,6 @@ public class DatabaseModel implements INode {
     private DatabaseNode _root;
 
     private MetaDataSession session;
-
 
     /**
      * Create new DatabaseModel for a database session
@@ -53,12 +48,10 @@ public class DatabaseModel implements INode {
 
     }
 
-
     public void fillDetailComposite(Composite composite) {
 
         // not implemented
     }
-
 
     /**
      * Returns an array of all root nodes..
@@ -73,7 +66,6 @@ public class DatabaseModel implements INode {
         return rootNodes;
     }
 
-
     /*
      * (non-Javadoc)
      * 
@@ -83,7 +75,6 @@ public class DatabaseModel implements INode {
 
         return null;
     }
-
 
     /*
      * (non-Javadoc)
@@ -95,7 +86,6 @@ public class DatabaseModel implements INode {
         return null;
     }
 
-
     /*
      * (non-Javadoc)
      * 
@@ -104,7 +94,6 @@ public class DatabaseModel implements INode {
     public String getLabelDecoration() {
         return null;
     }
-
 
     /*
      * (non-Javadoc)
@@ -116,7 +105,6 @@ public class DatabaseModel implements INode {
         return null;
     }
 
-
     /*
      * (non-Javadoc)
      * 
@@ -126,7 +114,6 @@ public class DatabaseModel implements INode {
 
         return getQualifiedName();
     }
-
 
     /**
      * Always returns null, since this is the root...
@@ -138,7 +125,6 @@ public class DatabaseModel implements INode {
         return null;
     }
 
-
     /*
      * (non-Javadoc)
      * 
@@ -149,15 +135,13 @@ public class DatabaseModel implements INode {
         return "databaseModel";
     }
 
-
     /**
      * @return
      */
     public DatabaseNode getRoot() {
 
-        return (DatabaseNode) _root;
+        return _root;
     }
-
 
     /*
      * (non-Javadoc)
@@ -167,7 +151,6 @@ public class DatabaseModel implements INode {
     public String getSchemaOrCatalogName() {
         return null;
     }
-
 
     /**
      * @return SessionTreeNode for this node.
@@ -180,10 +163,8 @@ public class DatabaseModel implements INode {
         return session;
     }
 
-
     /**
-     * Returns "model" as the type for this node. This method is not used and
-     * only implemented for the interface.
+     * Returns "model" as the type for this node. This method is not used and only implemented for the interface.
      * 
      * @see net.sourceforge.sqlexplorer.dbstructure.nodes.INode#getType()
      */
@@ -191,7 +172,6 @@ public class DatabaseModel implements INode {
 
         return "model";
     }
-
 
     /*
      * (non-Javadoc)
@@ -203,7 +183,6 @@ public class DatabaseModel implements INode {
         return getQualifiedName();
     }
 
-
     /*
      * (non-Javadoc)
      * 
@@ -214,19 +193,17 @@ public class DatabaseModel implements INode {
         return false;
     }
 
-
     /*
      * (non-Javadoc)
      * 
-     * @see net.sourceforge.sqlexplorer.dbstructure.nodes.INode#initialize(net.sourceforge.sqlexplorer.dbstructure.nodes.INode,
-     *      java.lang.String,
-     *      net.sourceforge.sqlexplorer.sessiontree.model.SessionTreeNode)
+     * @see
+     * net.sourceforge.sqlexplorer.dbstructure.nodes.INode#initialize(net.sourceforge.sqlexplorer.dbstructure.nodes.
+     * INode, java.lang.String, net.sourceforge.sqlexplorer.sessiontree.model.SessionTreeNode)
      */
     public void initialize(INode parent, String name, Session sessionNode) {
 
         // noop
     }
-
 
     /*
      * (non-Javadoc)
@@ -238,7 +215,6 @@ public class DatabaseModel implements INode {
         return false;
     }
 
-
     /*
      * (non-Javadoc)
      * 
@@ -248,7 +224,6 @@ public class DatabaseModel implements INode {
 
         return false;
     }
-
 
     /*
      * (non-Javadoc)
@@ -260,7 +235,6 @@ public class DatabaseModel implements INode {
         // we don't need refresh for the database model..
     }
 
-
     /*
      * (non-Javadoc)
      * 
@@ -271,4 +245,15 @@ public class DatabaseModel implements INode {
         return;
     }
 
+    public void setSchemaName(String schemaName) {
+        // no need here
+    }
+
+    public String getSchemaName() {
+        return null;
+    }
+
+    public boolean isChildrenLoaded() {
+        return false;
+    }
 };

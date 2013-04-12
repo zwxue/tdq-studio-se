@@ -1,20 +1,16 @@
 /*
- * Copyright (C) 2006 Davy Vanherbergen
- * dvanherbergen@users.sourceforge.net
- *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation; either
- * version 2.1 of the License, or (at your option) any later version.
- *
- * This library is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Copyright (C) 2006 Davy Vanherbergen dvanherbergen@users.sourceforge.net
+ * 
+ * This program is free software; you can redistribute it and/or modify it under the terms of the GNU Lesser General
+ * Public License as published by the Free Software Foundation; either version 2.1 of the License, or (at your option)
+ * any later version.
+ * 
+ * This library is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License along with this library; if not, write to
+ * the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
 package net.sourceforge.sqlexplorer.dbstructure.nodes;
 
@@ -33,8 +29,7 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 
 /**
- * Abstract implementation of INode. Extend this class to create your own node
- * types.
+ * Abstract implementation of INode. Extend this class to create your own node types.
  * 
  * @author Davy Vanherbergen
  */
@@ -62,20 +57,23 @@ public abstract class AbstractNode implements INode {
 
     protected String _type;
 
+    // Added 20130409 TDQ-7101 yyin
+    protected String _schemaName = null;
+
     public AbstractNode(String name) {
-    	this._name = name;
+        this._name = name;
     }
 
     public AbstractNode(String name, MetaDataSession session) {
-    	this._name = name;
-    	this._session = session;
+        this._name = name;
+        this._session = session;
     }
 
     public AbstractNode(INode parent, String name, MetaDataSession session, String type) {
-    	this._parent = parent;
-    	this._name = name;
-    	this._session = session;
-    	this._type = type;
+        this._parent = parent;
+        this._name = name;
+        this._session = session;
+        this._type = type;
     }
 
     /**
@@ -88,7 +86,6 @@ public abstract class AbstractNode implements INode {
         _children.add(childNode);
     }
 
-
     /*
      * (non-Javadoc)
      * 
@@ -99,10 +96,8 @@ public abstract class AbstractNode implements INode {
         // noop
     }
 
-
     /**
-     * Get an iterator to all child nodes. If child nodes haven't been loaded
-     * yet, loading is triggered.
+     * Get an iterator to all child nodes. If child nodes haven't been loaded yet, loading is triggered.
      * 
      * @return Iterator of child elements
      */
@@ -115,10 +110,8 @@ public abstract class AbstractNode implements INode {
         return _children.iterator();
     }
 
-
     /**
-     * Get all the children of this node. If child nodes haven't been loaded
-     * yet, loading is triggered.
+     * Get all the children of this node. If child nodes haven't been loaded yet, loading is triggered.
      * 
      * @return All child nodes of this node.
      * @see net.sourceforge.sqlexplorer.db.INode#getChildren()
@@ -133,9 +126,8 @@ public abstract class AbstractNode implements INode {
             }
         }
 
-        return (INode[]) _children.toArray(new INode[] {});
+        return _children.toArray(new INode[] {});
     }
-
 
     /**
      * Override this method to implement custom sorting of child nodes.
@@ -162,10 +154,8 @@ public abstract class AbstractNode implements INode {
         };
     }
 
-
     /**
-     * Override this method to change the image that is displayed for this node
-     * in the database structure outline.
+     * Override this method to change the image that is displayed for this node in the database structure outline.
      */
     public final Image getExpandedImage() {
 
@@ -175,10 +165,8 @@ public abstract class AbstractNode implements INode {
         return ImageUtil.getImage(_expandedImageKey);
     }
 
-
     /**
-     * Override this method to change the image that is displayed for this node
-     * in the database structure outline.
+     * Override this method to change the image that is displayed for this node in the database structure outline.
      */
     public Image getImage() {
 
@@ -191,22 +179,18 @@ public abstract class AbstractNode implements INode {
         return ImageUtil.getImage(_imageKey);
     }
 
-
     public String getLabelDecoration() {
 
         return null;
     }
 
-
     /**
-     * Override this method to change the text that is displayed in the database
-     * structure outline for this node.
+     * Override this method to change the text that is displayed in the database structure outline for this node.
      */
     public String getLabelText() {
 
         return getName();
     }
-
 
     /**
      * @return simple name for this node.
@@ -217,7 +201,6 @@ public abstract class AbstractNode implements INode {
         }
         return _name;
     }
-
 
     /**
      * Get the parent of this node.
@@ -230,7 +213,6 @@ public abstract class AbstractNode implements INode {
         return _parent;
     }
 
-
     /*
      * (non-Javadoc)
      * 
@@ -240,7 +222,6 @@ public abstract class AbstractNode implements INode {
 
         return getName();
     }
-
 
     public String getSchemaOrCatalogName() {
 
@@ -254,7 +235,6 @@ public abstract class AbstractNode implements INode {
         return node.getName();
     }
 
-
     /**
      * @return SessionTreeNode for this node.
      */
@@ -262,16 +242,14 @@ public abstract class AbstractNode implements INode {
         return _session;
     }
 
-
     public String getType() {
 
         return _type;
     }
 
-
     /**
-     * Implement this method to return a unique identifier for this node. It is
-     * used to identify the node in the detail cache.
+     * Implement this method to return a unique identifier for this node. It is used to identify the node in the detail
+     * cache.
      * 
      * @see net.sourceforge.sqlexplorer.dbstructure.nodes.INode#getUniqueIdentifier()
      */
@@ -280,11 +258,9 @@ public abstract class AbstractNode implements INode {
         return getParent().getQualifiedName() + "." + getQualifiedName();
     }
 
-
     /**
-     * Checks if this node has children. If child nodes haven't been loaded yet,
-     * this method always returns true. This defers the loading of metadata used
-     * in the database structure outline until it is actually required.
+     * Checks if this node has children. If child nodes haven't been loaded yet, this method always returns true. This
+     * defers the loading of metadata used in the database structure outline until it is actually required.
      * 
      * @return true if this node has children.
      */
@@ -301,11 +277,9 @@ public abstract class AbstractNode implements INode {
         return true;
     }
 
-
     /**
-     * Returns true. Override this method to return false if your node cannot
-     * have any children. This will avoid the twistie being displayed in the
-     * database structure outline for nodes that cannot have children.
+     * Returns true. Override this method to return false if your node cannot have any children. This will avoid the
+     * twistie being displayed in the database structure outline for nodes that cannot have children.
      * 
      * @see net.sourceforge.sqlexplorer.dbstructure.nodes.INode#isEndNode()
      */
@@ -314,12 +288,10 @@ public abstract class AbstractNode implements INode {
         return false;
     }
 
-
     public boolean isExpanded() {
 
         return _isExpanded;
     }
-
 
     /**
      * Loads all the children for this node if they haven't been loaded yet.
@@ -349,17 +321,14 @@ public abstract class AbstractNode implements INode {
         }
     }
 
-
     /**
-     * Load all the children of this node here. Do not call this method, but use
-     * load() instead.
+     * Load all the children of this node here. Do not call this method, but use load() instead.
      */
     public abstract void loadChildren();
 
-
     /**
-     * Refresh. This will clear the nodes' children and reload them. It will
-     * also update the dictionary for this node & descendants
+     * Refresh. This will clear the nodes' children and reload them. It will also update the dictionary for this node &
+     * descendants
      */
     public final void refresh() {
 
@@ -369,7 +338,6 @@ public abstract class AbstractNode implements INode {
 
     }
 
-
     public final void setExpanded(boolean expanded) {
         _isExpanded = expanded;
     }
@@ -377,23 +345,22 @@ public abstract class AbstractNode implements INode {
     public void setImage(Image image) {
         this._image = image;
     }
-    
+
     protected void setImageKey(String imageKey) {
-    	this._imageKey = imageKey;
+        this._imageKey = imageKey;
     }
-    
+
     public String getExpandedImageKey() {
-		return _expandedImageKey;
-	}
-
-	public String get_imageKey() {
-		return _imageKey;
-	}
-
-	protected void setExpandedImageKey(String expandedImageKey) {
-    	this._expandedImageKey = expandedImageKey;
+        return _expandedImageKey;
     }
 
+    public String get_imageKey() {
+        return _imageKey;
+    }
+
+    protected void setExpandedImageKey(String expandedImageKey) {
+        this._expandedImageKey = expandedImageKey;
+    }
 
     /**
      * Set parent node for this node.
@@ -405,7 +372,6 @@ public abstract class AbstractNode implements INode {
         this._parent = parent;
     }
 
-
     /**
      * Set sessiontreenode for this node
      * 
@@ -416,20 +382,37 @@ public abstract class AbstractNode implements INode {
         this._session = session;
     }
 
-
     public void setType(String type) {
 
         this._type = type;
     }
-
 
     /*
      * (non-Javadoc)
      * 
      * @see java.lang.Object#toString()
      */
+    @Override
     public String toString() {
 
         return getName();
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see net.sourceforge.sqlexplorer.dbstructure.nodes.INode#setSchemaName(java.lang.String)
+     */
+    public void setSchemaName(String schemaName) {
+        // mainly used for catalog + schema
+        _schemaName = schemaName;
+    }
+
+    public String getSchemaName() {
+        return this._schemaName;
+    }
+
+    public boolean isChildrenLoaded() {
+        return _childrenLoaded;
     }
 }
