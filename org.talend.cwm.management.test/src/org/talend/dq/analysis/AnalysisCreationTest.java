@@ -162,7 +162,8 @@ public class AnalysisCreationTest {
         Assert.assertTrue("Problem executing analysis: " + ANALYSIS_NAME + ": " + executed.getMessage(), executed.isOk()); //$NON-NLS-1$ //$NON-NLS-2$
 
         // assert before create: the folder is empty
-        Assert.assertNull(folderProvider.getFolder().listFiles());
+        File[] listFiles = folderProvider.getFolder().listFiles();
+        Assert.assertTrue(listFiles == null || listFiles.length == 0);
 
         // save data provider
         ElementWriterFactory.getInstance().createDataProviderWriter().create(dataManager, folderProvider.getFolderResource());
@@ -172,7 +173,7 @@ public class AnalysisCreationTest {
         // assert after create
         boolean dataProviderOK = false;
         boolean analysisOK = false;
-        File[] listFiles = folderProvider.getFolder().listFiles();
+        listFiles = folderProvider.getFolder().listFiles();
         if (listFiles != null) {
             for (File file : listFiles) {
                 String name = file.getName();
