@@ -51,6 +51,7 @@ import org.talend.core.model.metadata.builder.database.dburl.SupportDBUrlType;
 import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.properties.ContextItem;
 import org.talend.core.model.properties.Item;
+import org.talend.core.model.properties.Property;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.db.connection.MdmWebserviceConnection;
@@ -608,13 +609,14 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
         if (contextId != null && !contextId.equals(PluginConstant.EMPTY_STRING)) {
             ContextItem contextItem = ContextUtils.getContextItemById2(contextId);
             if (contextItem != null) {
-                newLabelAndText(gContainer,
-                        DefaultMessagesImpl.getString("RespositoryDetailView.contextName"), contextItem.getProperty().getLabel()); //$NON-NLS-1$
+                newLabelAndText(
+                        gContainer,
+                        DefaultMessagesImpl.getString("RespositoryDetailView.contextGroupName"), contextItem.getProperty().getLabel()); //$NON-NLS-1$
             }
         }
         String contextName = connection.getContextName();
         if (contextName != null) {
-            newLabelAndText(gContainer, DefaultMessagesImpl.getString("RespositoryDetailView.contextGroupName"), contextName); //$NON-NLS-1$
+            newLabelAndText(gContainer, DefaultMessagesImpl.getString("RespositoryDetailView.contextName"), contextName); //$NON-NLS-1$
         }
 
     }
@@ -629,6 +631,7 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
 
     private void createDataProviderDetail(ConnectionItem connectionItem) {
         Connection dataProvider = connectionItem.getConnection();
+        Property dbProperty = connectionItem.getProperty();
         boolean isDelimitedFile = ConnectionUtils.isDelimitedFileConnection(dataProvider);
         // MOD qiongli 2011-9-21 TDQ-3317
         Connection origValueConn = null;
@@ -646,8 +649,13 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
         if (origValueConn != null) {
             createContextDetail(dataProvider);
         }
-        createPurpose(origValueConn == null ? dataProvider : origValueConn);
-        createDescription(origValueConn == null ? dataProvider : origValueConn);
+        if (dbProperty != null) {
+            createPurpose(dbProperty);
+            createDescription(dbProperty);
+        } else {
+            createPurpose(origValueConn == null ? dataProvider : origValueConn);
+            createDescription(origValueConn == null ? dataProvider : origValueConn);
+        }
         // MOD mzhao xmldb have no actual connection.
         if (dataProvider != null) {
             String connectionString = JavaSqlFactory.getURL(dataProvider);
@@ -687,13 +695,47 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
     private void createDataProviderDetail(Connection dataProvider) {
     }
 
+    /**
+     * DOC xqliu Comment method "createDescription".
+     * 
+     * @param dataProvider
+     * @deprecated use createDescription(Property prop) instead of it
+     */
+    @Deprecated
     private void createDescription(ModelElement dataProvider) {
         String description = MetadataHelper.getDescription(dataProvider);
         newLabelAndText(gContainer, DefaultMessagesImpl.getString("RespositoryDetailView.description"), description); //$NON-NLS-1$
     }
 
+    /**
+     * DOC xqliu Comment method "createPurpose".
+     * 
+     * @param dataProvider
+     * @deprecated use createPurpose(Property prop) instead of it
+     */
+    @Deprecated
     private void createPurpose(ModelElement dataProvider) {
         String purpose = MetadataHelper.getPurpose(dataProvider);
+        newLabelAndText(gContainer, DefaultMessagesImpl.getString("RespositoryDetailView.purpose"), purpose); //$NON-NLS-1$
+    }
+
+    /**
+     * create the Description's Label and Text by the Property.
+     * 
+     * @param prop
+     */
+    private void createDescription(Property prop) {
+        String description = prop.getDescription() == null ? PluginConstant.EMPTY_STRING : prop.getDescription();
+        newLabelAndText(gContainer, DefaultMessagesImpl.getString("RespositoryDetailView.description"), description); //$NON-NLS-1$
+    }
+
+    /**
+     * create the Purpose's Label and Text by the Property.
+     * 
+     * @param prop
+     */
+    private void createPurpose(Property prop) {
+        String purpose = prop.getPurpose() == null ? PluginConstant.EMPTY_STRING : prop.getPurpose();
         newLabelAndText(gContainer, DefaultMessagesImpl.getString("RespositoryDetailView.purpose"), purpose); //$NON-NLS-1$
     }
 
