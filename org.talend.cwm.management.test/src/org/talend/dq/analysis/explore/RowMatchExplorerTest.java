@@ -12,10 +12,8 @@
 // ============================================================================
 package org.talend.dq.analysis.explore;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
-import org.junit.After;
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.talend.core.model.metadata.builder.connection.Connection;
@@ -37,8 +35,8 @@ import orgomg.cwm.resource.relational.Schema;
 
 public class RowMatchExplorerTest {
 
-    private static final String COMMENTS = "-- Analysis:  ;\n" + "-- Type of Analysis:  ;\n" + "-- Purpose: Purpose ;\n"
-            + "-- Description: Description ;\n" + "-- AnalyzedElement: tableA ;\n" + "-- Indicator: RowMatchingIndicator ;\n";
+    private static final String COMMENTS = "-- Analysis:  ;\n" + "-- Type of Analysis:  ;\n" + "-- Purpose: Purpose ;\n" //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+            + "-- Description: Description ;\n" + "-- AnalyzedElement: tableA ;\n" + "-- Indicator: RowMatchingIndicator ;\n"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 
     private static RowMatchExplorer explorer;
 
@@ -65,34 +63,34 @@ public class RowMatchExplorerTest {
 
         // ------------------------- table A ------------------------------
         Catalog catalogA = orgomg.cwm.resource.relational.RelationalFactory.eINSTANCE.createCatalog();
-        catalogA.setName("catalogA");
+        catalogA.setName("catalogA"); //$NON-NLS-1$
 
         Schema schemaA = orgomg.cwm.resource.relational.RelationalFactory.eINSTANCE.createSchema();
-        schemaA.setName("schemaA");
+        schemaA.setName("schemaA"); //$NON-NLS-1$
         catalogA.getOwnedElement().add(schemaA);
 
         TdTable tableA = RelationalFactory.eINSTANCE.createTdTable();
-        tableA.setName("tableA");
+        tableA.setName("tableA"); //$NON-NLS-1$
         schemaA.getOwnedElement().add(tableA);
 
         TdColumn tdColumnA = RelationalFactory.eINSTANCE.createTdColumn();
-        tdColumnA.setName("columnA");
+        tdColumnA.setName("columnA"); //$NON-NLS-1$
         tableA.getFeature().add(tdColumnA);
 
         // ------------------------- table B ------------------------------
         Catalog catalogB = orgomg.cwm.resource.relational.RelationalFactory.eINSTANCE.createCatalog();
-        catalogB.setName("catalogB");
+        catalogB.setName("catalogB"); //$NON-NLS-1$
 
         Schema schemaB = orgomg.cwm.resource.relational.RelationalFactory.eINSTANCE.createSchema();
-        schemaB.setName("schemaB");
+        schemaB.setName("schemaB"); //$NON-NLS-1$
         catalogB.getOwnedElement().add(schemaB);
 
         TdTable tableB = org.talend.cwm.relational.RelationalFactory.eINSTANCE.createTdTable();
-        tableB.setName("tableB");
+        tableB.setName("tableB"); //$NON-NLS-1$
         schemaB.getOwnedElement().add(tableB);
 
         TdColumn tdColumnB = org.talend.cwm.relational.RelationalFactory.eINSTANCE.createTdColumn();
-        tdColumnB.setName("columnB");
+        tdColumnB.setName("columnB"); //$NON-NLS-1$
         tableB.getFeature().add(tdColumnB);
 
         // indicator
@@ -110,14 +108,6 @@ public class RowMatchExplorerTest {
         entity.setIndicator(rowMatchingIndicator);
     }
 
-    @Before
-    public void setUp() throws Exception {
-    }
-
-    @After
-    public void tearDown() throws Exception {
-    }
-
     /**
      * Test method for {@link org.talend.dq.analysis.explore.RowMatchExplorer#getRowsMatchStatement()}.
      */
@@ -131,9 +121,8 @@ public class RowMatchExplorerTest {
         explorer.setEnitty(entity);
         assertEquals(
                 COMMENTS
-                        + "-- Showing: View match rows ;\n"
-                        + "SELECT * FROM `catalogA`.`schemaA`.`tableA` WHERE (`catalogA`.`schemaA`.`tableA`.`columnA` NOT IN (SELECT  A.`columnA` FROM  (SELECT * FROM `catalogA`.`schemaA`.`tableA`) A LEFT JOIN "
-                        + " (SELECT * FROM `catalogB`.`schemaB`.`tableB`) B ON  (A.`columnA`= B.`columnB`)  WHERE  B.`columnB` IS NULL )) ",
+                        + "-- Showing: View match rows ;\n" //$NON-NLS-1$
+                        + "SELECT * FROM `catalogA`.`schemaA`.`tableA` WHERE ((`catalogA`.`schemaA`.`tableA`.`columnA`) IN (SELECT  A.`columnA` FROM  (SELECT * FROM `catalogA`.`schemaA`.`tableA`) A JOIN  (SELECT * FROM `catalogB`.`schemaB`.`tableB`) B ON  (A.`columnA`= B.`columnB`) )) ", //$NON-NLS-1$
                 explorer.getRowsMatchStatement());
 
         // test oracle
@@ -143,9 +132,8 @@ public class RowMatchExplorerTest {
         explorer.setEnitty(entity);
         assertEquals(
                 COMMENTS
-                        + "-- Showing: View match rows ;\n"
-                        + "SELECT * FROM \"catalogA\".\"schemaA\".\"tableA\" WHERE (\"catalogA\".\"schemaA\".\"tableA\".\"columnA\" NOT IN (SELECT  A.\"columnA\" FROM  (SELECT * FROM \"catalogA\".\"schemaA\".\"tableA\") A LEFT JOIN "
-                        + " (SELECT * FROM \"catalogB\".\"schemaB\".\"tableB\") B ON  (A.\"columnA\"= B.\"columnB\")  WHERE  B.\"columnB\" IS NULL )) ",
+                        + "-- Showing: View match rows ;\n" //$NON-NLS-1$
+                        + "SELECT * FROM \"catalogA\".\"schemaA\".\"tableA\" WHERE ((\"catalogA\".\"schemaA\".\"tableA\".\"columnA\") IN (SELECT  A.\"columnA\" FROM  (SELECT * FROM \"catalogA\".\"schemaA\".\"tableA\") A JOIN  (SELECT * FROM \"catalogB\".\"schemaB\".\"tableB\") B ON  (A.\"columnA\"= B.\"columnB\") )) ", //$NON-NLS-1$
                 explorer.getRowsMatchStatement());
 
         // test postgresql
@@ -155,9 +143,8 @@ public class RowMatchExplorerTest {
         explorer.setEnitty(entity);
         assertEquals(
                 COMMENTS
-                        + "-- Showing: View match rows ;\n"
-                        + "SELECT * FROM \"schemaA\".\"tableA\" WHERE (\"schemaA\".\"tableA\".\"columnA\" NOT IN (SELECT  A.\"columnA\" FROM  (SELECT * FROM \"schemaA\".\"tableA\") A LEFT JOIN "
-                        + " (SELECT * FROM \"schemaB\".\"tableB\") B ON  (A.\"columnA\"= B.\"columnB\")  WHERE  B.\"columnB\" IS NULL )) ",
+                        + "-- Showing: View match rows ;\n" //$NON-NLS-1$
+                        + "SELECT * FROM \"schemaA\".\"tableA\" WHERE ((\"schemaA\".\"tableA\".\"columnA\") IN (SELECT  A.\"columnA\" FROM  (SELECT * FROM \"schemaA\".\"tableA\") A JOIN  (SELECT * FROM \"schemaB\".\"tableB\") B ON  (A.\"columnA\"= B.\"columnB\") )) ", //$NON-NLS-1$
                 explorer.getRowsMatchStatement());
 
         // test informix
@@ -167,11 +154,9 @@ public class RowMatchExplorerTest {
         explorer.setEnitty(entity);
         assertEquals(
                 COMMENTS
-                        + "-- Showing: View match rows ;\n"
-                        + "SELECT * FROM catalogA:schemaA.tableA WHERE (catalogA:schemaA.tableA.columnA NOT IN (SELECT  A.columnA FROM  (SELECT * FROM catalogA:schemaA.tableA) A"
-                        + " LEFT JOIN  (SELECT * FROM catalogB:schemaB.tableB) B ON  (A.columnA= B.columnB)  WHERE  B.columnB IS NULL )) ",
+                        + "-- Showing: View match rows ;\n" //$NON-NLS-1$
+                        + "SELECT * FROM catalogA:schemaA.tableA WHERE ((catalogA:schemaA.tableA.columnA) IN (SELECT  A.columnA FROM  (SELECT * FROM catalogA:schemaA.tableA) A JOIN  (SELECT * FROM catalogB:schemaB.tableB) B ON  (A.columnA= B.columnB) )) ", //$NON-NLS-1$
                 explorer.getRowsMatchStatement());
-
     }
 
     /**
@@ -187,8 +172,8 @@ public class RowMatchExplorerTest {
         explorer.setEnitty(entity);
         assertEquals(
                 COMMENTS
-                        + "-- Showing: View not match rows ;\n"
-                        + "SELECT A.* FROM  (SELECT * FROM `catalogA`.`schemaA`.`tableA`) A LEFT JOIN  (SELECT * FROM `catalogB`.`schemaB`.`tableB`) B ON  (A.`columnA`= B.`columnB`)  WHERE  B.`columnB` IS NULL ",
+                        + "-- Showing: View not match rows ;\n" //$NON-NLS-1$
+                        + "SELECT A.* FROM  (SELECT * FROM `catalogA`.`schemaA`.`tableA`) A LEFT JOIN  (SELECT * FROM `catalogB`.`schemaB`.`tableB`) B ON  (A.`columnA`= B.`columnB`)  WHERE  B.`columnB` IS NULL ", //$NON-NLS-1$
                 explorer.getRowsNotMatchStatement());
 
         // test oracle
@@ -198,8 +183,8 @@ public class RowMatchExplorerTest {
         explorer.setEnitty(entity);
         assertEquals(
                 COMMENTS
-                        + "-- Showing: View not match rows ;\n"
-                        + "SELECT A.* FROM  (SELECT * FROM \"catalogA\".\"schemaA\".\"tableA\") A LEFT JOIN  (SELECT * FROM \"catalogB\".\"schemaB\".\"tableB\") B ON  (A.\"columnA\"= B.\"columnB\")  WHERE  B.\"columnB\" IS NULL ",
+                        + "-- Showing: View not match rows ;\n" //$NON-NLS-1$
+                        + "SELECT A.* FROM  (SELECT * FROM \"catalogA\".\"schemaA\".\"tableA\") A LEFT JOIN  (SELECT * FROM \"catalogB\".\"schemaB\".\"tableB\") B ON  (A.\"columnA\"= B.\"columnB\")  WHERE  B.\"columnB\" IS NULL ", //$NON-NLS-1$
                 explorer.getRowsNotMatchStatement());
 
         // test postgresql
@@ -209,9 +194,9 @@ public class RowMatchExplorerTest {
         explorer.setEnitty(entity);
         assertEquals(
                 COMMENTS
-                        + "-- Showing: View not match rows ;\n"
-                        + "SELECT A.* FROM  (SELECT * FROM \"schemaA\".\"tableA\") A "
-                        + "LEFT JOIN  (SELECT * FROM \"schemaB\".\"tableB\") B ON  (A.\"columnA\"= B.\"columnB\")  WHERE  B.\"columnB\" IS NULL ",
+                        + "-- Showing: View not match rows ;\n" //$NON-NLS-1$
+                        + "SELECT A.* FROM  (SELECT * FROM \"schemaA\".\"tableA\") A " //$NON-NLS-1$
+                        + "LEFT JOIN  (SELECT * FROM \"schemaB\".\"tableB\") B ON  (A.\"columnA\"= B.\"columnB\")  WHERE  B.\"columnB\" IS NULL ", //$NON-NLS-1$
                 explorer.getRowsNotMatchStatement());
 
         // test informix
@@ -219,9 +204,9 @@ public class RowMatchExplorerTest {
                 SupportDBUrlType.INFORMIXDEFAULTURL.getLanguage());
         explorer.setAnalysis(analysis);
         explorer.setEnitty(entity);
-        assertEquals(COMMENTS + "-- Showing: View not match rows ;\n"
-                + "SELECT A.* FROM  (SELECT * FROM catalogA:schemaA.tableA) A"
-                + " LEFT JOIN  (SELECT * FROM catalogB:schemaB.tableB) B ON  (A.columnA= B.columnB)  WHERE  B.columnB IS NULL ",
+        assertEquals(COMMENTS + "-- Showing: View not match rows ;\n" //$NON-NLS-1$
+                + "SELECT A.* FROM  (SELECT * FROM catalogA:schemaA.tableA) A" //$NON-NLS-1$
+                + " LEFT JOIN  (SELECT * FROM catalogB:schemaB.tableB) B ON  (A.columnA= B.columnB)  WHERE  B.columnB IS NULL ", //$NON-NLS-1$
                 explorer.getRowsNotMatchStatement());
 
     }
