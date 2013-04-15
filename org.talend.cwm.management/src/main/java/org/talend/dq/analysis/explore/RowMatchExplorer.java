@@ -45,7 +45,7 @@ public class RowMatchExplorer extends DataExplorer {
     }
 
     /**
-     * DOC yyi Comment method "getRowsNotMatchStatement".
+     * get Rows for NotMatched Statement.
      * 
      * @return
      */
@@ -55,9 +55,7 @@ public class RowMatchExplorer extends DataExplorer {
         String tableA = tablea.getName();
         String query = "SELECT A.*" + dbmsLanguage.from();//$NON-NLS-1$
         if (ColumnsetPackage.eINSTANCE.getRowMatchingIndicator() == indicator.eClass()) {
-            ColumnSet tableb = (ColumnSet) ColumnHelper.getColumnOwnerAsColumnSet(((RowMatchingIndicator) indicator)
-                    .getColumnSetB().get(
-                    0));
+            ColumnSet tableb = ColumnHelper.getColumnOwnerAsColumnSet(((RowMatchingIndicator) indicator).getColumnSetB().get(0));
             String tableB = tableb.getName();
             EList<TdColumn> columnSetA = ((RowMatchingIndicator) indicator).getColumnSetA();
             EList<TdColumn> columnSetB = ((RowMatchingIndicator) indicator).getColumnSetB();
@@ -105,7 +103,7 @@ public class RowMatchExplorer extends DataExplorer {
     }
 
     /**
-     * DOC Administrator Comment method "getRowsMatchStatement".
+     * get Rows for Matched Statement.
      * 
      * @return
      */
@@ -114,9 +112,7 @@ public class RowMatchExplorer extends DataExplorer {
         String tableA = tablea.getName();
         String query = PluginConstant.EMPTY_STRING;
         if (ColumnsetPackage.eINSTANCE.getRowMatchingIndicator() == indicator.eClass()) {
-            ColumnSet tableb = (ColumnSet) ColumnHelper.getColumnOwnerAsColumnSet(((RowMatchingIndicator) indicator)
-                    .getColumnSetB().get(
-                    0));
+            ColumnSet tableb = ColumnHelper.getColumnOwnerAsColumnSet(((RowMatchingIndicator) indicator).getColumnSetB().get(0));
             String tableB = tableb.getName();
             EList<TdColumn> columnSetA = ((RowMatchingIndicator) indicator).getColumnSetA();
             EList<TdColumn> columnSetB = ((RowMatchingIndicator) indicator).getColumnSetB();
@@ -125,7 +121,6 @@ public class RowMatchExplorer extends DataExplorer {
             String clauseB = " (SELECT *" + dbmsLanguage.from() + getFullyQualifiedTableName(tableb);//$NON-NLS-1$
             String where = null;
             String onClause = " ON ";//$NON-NLS-1$
-            String realWhereClause = dbmsLanguage.where();
             String columnsName = "";//$NON-NLS-1$
 
             for (int i = 0; i < columnSetA.size(); i++) {
@@ -138,12 +133,8 @@ public class RowMatchExplorer extends DataExplorer {
                     columnsName += " (" + fullColumnAName + " ";//$NON-NLS-1$//$NON-NLS-2$
                 } else {
                     onClause += where;
-                    realWhereClause += where;
                     columnsName += ", " + fullColumnAName + " ";//$NON-NLS-1$//$NON-NLS-2$
                 }
-
-                realWhereClause += " B" + dbmsLanguage.getDelimiter() + dbmsLanguage.quote(columnSetB.get(i).getName())//$NON-NLS-1$
-                        + dbmsLanguage.isNull();
 
                 onClause += " (A" + dbmsLanguage.getDelimiter() + dbmsLanguage.quote(columnSetA.get(i).getName()) + "=" + " B"//$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
                         + dbmsLanguage.getDelimiter() + dbmsLanguage.quote(columnSetB.get(i).getName()) + ") ";//$NON-NLS-1$
@@ -162,21 +153,29 @@ public class RowMatchExplorer extends DataExplorer {
 
             query = "SELECT * FROM " + getFullyQualifiedTableName(tablea);//$NON-NLS-1$
 
+            String clause = PluginConstant.EMPTY_STRING;
+            String columnNameByAlias = PluginConstant.EMPTY_STRING;
             for (int i = 0; i < columnSetA.size(); i++) {
-                String clause = PluginConstant.EMPTY_STRING;
-                String fullColumnAName = getFullyQualifiedTableName(tablea) + PluginConstant.DOT_STRING
-                        + dbmsLanguage.quote(columnSetA.get(i).getName());
-                String columnNameByAlias = " A" + dbmsLanguage.getDelimiter() + dbmsLanguage.quote(columnSetA.get(i).getName());//$NON-NLS-1$
-                clause = "(SELECT " + columnNameByAlias + dbmsLanguage.from() + clauseA + " LEFT JOIN " + clauseB + onClause//$NON-NLS-1$//$NON-NLS-2$
-                        + realWhereClause + ")";//$NON-NLS-1$
-                if (i == 0) {
-
-                    clause = dbmsLanguage.where() + "(" + fullColumnAName + dbmsLanguage.notIn() + clause;//$NON-NLS-1$
-                } else {
-                    clause = dbmsLanguage.or() + fullColumnAName + dbmsLanguage.notIn() + clause;
+                columnNameByAlias += " A" + dbmsLanguage.getDelimiter() + dbmsLanguage.quote(columnSetA.get(i).getName());//$NON-NLS-1$
+                if (i != columnSetA.size() - 1) {
+                    columnNameByAlias += ","; //$NON-NLS-1$
                 }
-                query += clause;
             }
+            clause = "(SELECT " + columnNameByAlias + dbmsLanguage.from() + clauseA + " JOIN " + clauseB + onClause + ")";//$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$
+
+            String fullColumnAName = "("; //$NON-NLS-1$
+            for (int j = 0; j < columnSetA.size(); j++) {
+                fullColumnAName += getFullyQualifiedTableName(tablea) + PluginConstant.DOT_STRING
+                        + dbmsLanguage.quote(columnSetA.get(j).getName());
+                if (j != columnSetA.size() - 1) {
+                    fullColumnAName += ","; //$NON-NLS-1$
+                } else {
+                    fullColumnAName += ")"; //$NON-NLS-1$
+                }
+            }
+            clause = dbmsLanguage.where() + "(" + fullColumnAName + dbmsLanguage.in() + clause;//$NON-NLS-1$
+            query += clause;
+
             query += ") "//$NON-NLS-1$
                     + (tableA.equals(tableB) ? andDataFilter(tableA,
                             (getdataFilterIndex(null) == AnalysisHelper.DATA_FILTER_A ? AnalysisHelper.DATA_FILTER_A
@@ -187,15 +186,14 @@ public class RowMatchExplorer extends DataExplorer {
     }
 
     /**
-     * DOC Administrator Comment method "getAllRowsStatement".
+     * get All Rows Statement.
      * 
      * @return
      */
     public String getAllRowsStatement() {
         ColumnSet tablea = (ColumnSet) indicator.getAnalyzedElement();
         String tableA = tablea.getName();
-        ColumnSet tableb = (ColumnSet) ColumnHelper.getColumnOwnerAsColumnSet(((RowMatchingIndicator) indicator).getColumnSetB()
-                .get(0));
+        ColumnSet tableb = ColumnHelper.getColumnOwnerAsColumnSet(((RowMatchingIndicator) indicator).getColumnSetB().get(0));
         String tableB = tableb.getName();
         return getComment(MENU_VIEW_ROWS)
                 + "SELECT * " + dbmsLanguage.from() + getFullyQualifiedTableName(tablea) + whereDataFilter(tableA.equals(tableB) ? null : tableA, null); //$NON-NLS-1$
@@ -249,8 +247,9 @@ public class RowMatchExplorer extends DataExplorer {
         if (null != andTable && !andTable.equals(PluginConstant.EMPTY_STRING)) {
             andTable = dbmsLanguage.and() + andTable;
         }
-        if (andTable == null)
+        if (andTable == null) {
             andTable = PluginConstant.EMPTY_STRING;
+        }
         return andTable;
 
     }
@@ -274,8 +273,9 @@ public class RowMatchExplorer extends DataExplorer {
         if (null != andTable && !andTable.equals(PluginConstant.EMPTY_STRING)) {
             andTable = dbmsLanguage.where() + andTable;
         }
-        if (andTable == null)
+        if (andTable == null) {
             andTable = PluginConstant.EMPTY_STRING;
+        }
         return andTable;
 
     }
