@@ -770,37 +770,37 @@ public class ExpressionEditDialog extends TrayDialog {
             GenericSQLHandler genericSQLHandler = new GenericSQLHandler(autoGenQuery);
             if (IndicatorCategoryHelper.isUserDefCount(category)) {
                 // replace <WHERE_TEXT_FIELD>
-                genericSQLHandler.replaceUDIWhere(tab0_count_where_var.getText());
+                genericSQLHandler.replaceUDIWhere(tab0_count_where_var.getText().trim());
 
             } else if (IndicatorCategoryHelper.isUserDefRealValue(category)) {
                 // replace <COLUMN_EXPRESSION_TEXT_FIELD>
-                genericSQLHandler.replaceUDIColumn(tab0_realvalue_column_var.getText());
+                genericSQLHandler.replaceUDIColumn(tab0_realvalue_column_var.getText().trim());
 
                 // replace <WHERE_TEXT_FIELD>
-                genericSQLHandler.replaceUDIWhere(tab0_realvalue_where_var.getText());
+                genericSQLHandler.replaceUDIWhere(tab0_realvalue_where_var.getText().trim());
 
             } else if (IndicatorCategoryHelper.isUserDefFrequency(category)) {
                 // replace <FIRST_COLUMN_EXPRESSION_TEXT_FIELD>
-                genericSQLHandler.replaceUDIFirstColumn(tab0_fre_first_var.getText());
+                genericSQLHandler.replaceUDIFirstColumn(tab0_fre_first_var.getText().trim());
 
                 // replace <SECOND_COLUMN_EXPRESSION_TEXT_FIELD>
-                genericSQLHandler.replaceUDISecondColumn(tab0_fre_second_var.getText());
+                genericSQLHandler.replaceUDISecondColumn(tab0_fre_second_var.getText().trim());
 
                 // replace <WHERE_TEXT_FIELD>
-                genericSQLHandler.replaceUDIWhere(tab0_fre_where_var.getText());
+                genericSQLHandler.replaceUDIWhere(tab0_fre_where_var.getText().trim());
 
                 // replace <GROUP_BY_TEXT_FIELD>
-                genericSQLHandler.replaceUDIGroupBy(tab0_fre_groupby_var.getText());
+                genericSQLHandler.replaceUDIGroupBy(tab0_fre_groupby_var.getText().trim());
 
                 // replace <ORDER_BY_TEXT_FIELD>
-                genericSQLHandler.replaceUDIOrderBy(tab0_fre_orderby_var.getText());
+                genericSQLHandler.replaceUDIOrderBy(tab0_fre_orderby_var.getText().trim());
 
             } else if (IndicatorCategoryHelper.isUserDefMatching(category)) {
                 // replace <MATCHING_EXPRESSION_TEXT_FIELD>
-                genericSQLHandler.replaceUDIMatching(tab0_match_match_var.getText());
+                genericSQLHandler.replaceUDIMatching(tab0_match_match_var.getText().trim());
 
                 // replace <WHERE_TEXT_FIELD>
-                genericSQLHandler.replaceUDIWhere(tab0_match_where_var.getText());
+                genericSQLHandler.replaceUDIWhere(tab0_match_where_var.getText().trim());
             }
 
             autoGenQuery = genericSQLHandler.replaceUDIQueryToMatch().getSqlString();
@@ -1193,21 +1193,21 @@ public class ExpressionEditDialog extends TrayDialog {
 
             tempVariableMap.clear();
             if (IndicatorCategoryHelper.isUserDefMatching(category)) {
-                tempVariableMap.put(GenericSQLHandler.UDI_MATCHING, tab0_match_match_var.getText());
-                tempVariableMap.put(GenericSQLHandler.UDI_WHERE, tab0_match_where_var.getText());
+                tempVariableMap.put(GenericSQLHandler.UDI_MATCHING, tab0_match_match_var.getText().trim());
+                tempVariableMap.put(GenericSQLHandler.UDI_WHERE, tab0_match_where_var.getText().trim());
                 storeExpForMatch();
             } else {
                 if (IndicatorCategoryHelper.isUserDefCount(category)) {
-                    tempVariableMap.put(GenericSQLHandler.UDI_WHERE, tab0_count_where_var.getText());
+                    tempVariableMap.put(GenericSQLHandler.UDI_WHERE, tab0_count_where_var.getText().trim());
                 } else if (IndicatorCategoryHelper.isUserDefRealValue(category)) {
-                    tempVariableMap.put(GenericSQLHandler.UDI_COLUMN, tab0_realvalue_column_var.getText());
-                    tempVariableMap.put(GenericSQLHandler.UDI_WHERE, tab0_realvalue_where_var.getText());
+                    tempVariableMap.put(GenericSQLHandler.UDI_COLUMN, tab0_realvalue_column_var.getText().trim());
+                    tempVariableMap.put(GenericSQLHandler.UDI_WHERE, tab0_realvalue_where_var.getText().trim());
                 } else if (IndicatorCategoryHelper.isUserDefFrequency(category)) {
-                    tempVariableMap.put(GenericSQLHandler.UDI_FIRST_COLUMN, tab0_fre_first_var.getText());
-                    tempVariableMap.put(GenericSQLHandler.UDI_SECOND_COLUMN, tab0_fre_second_var.getText());
-                    tempVariableMap.put(GenericSQLHandler.UDI_WHERE, tab0_fre_where_var.getText());
-                    tempVariableMap.put(GenericSQLHandler.UDI_GROUP_BY, tab0_fre_groupby_var.getText());
-                    tempVariableMap.put(GenericSQLHandler.UDI_ORDER_BY, tab0_fre_orderby_var.getText());
+                    tempVariableMap.put(GenericSQLHandler.UDI_FIRST_COLUMN, tab0_fre_first_var.getText().trim());
+                    tempVariableMap.put(GenericSQLHandler.UDI_SECOND_COLUMN, tab0_fre_second_var.getText().trim());
+                    tempVariableMap.put(GenericSQLHandler.UDI_WHERE, tab0_fre_where_var.getText().trim());
+                    tempVariableMap.put(GenericSQLHandler.UDI_GROUP_BY, tab0_fre_groupby_var.getText().trim());
+                    tempVariableMap.put(GenericSQLHandler.UDI_ORDER_BY, tab0_fre_orderby_var.getText().trim());
                 }
                 storeViewRowsExp();
             }
@@ -1240,7 +1240,7 @@ public class ExpressionEditDialog extends TrayDialog {
      * @param text
      */
     public TdExpression storeTdExpValuesFromText(Text text) {
-        TdExpression result = BooleanExpressionHelper.createTdExpression(language, text.getText(), version);
+        TdExpression result = BooleanExpressionHelper.createTdExpression(language, text.getText().trim(), version);
         result.setModificationDate(UDIUtils.getCurrentDateTime());
         return result;
     }

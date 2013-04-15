@@ -234,7 +234,7 @@ public class GenericSQLHandler {
     }
 
     public GenericSQLHandler replaceUDIWhere(String UDIWhere) {
-        sqlString = sqlString.replace(UDI_WHERE, "(" + UDIWhere + ")");
+        sqlString = sqlString.replace(UDI_WHERE, "(" + UDIWhere + ")"); //$NON-NLS-1$ //$NON-NLS-2$
         return this;
     }
 
@@ -256,7 +256,7 @@ public class GenericSQLHandler {
         sqlString = sqlString.replace("GROUP BY " + UDI_GROUP_BY, PluginConstant.SPACE_STRING); //$NON-NLS-1$ 
         sqlString = sqlString.replace("WHERE  AND", "WHERE "); //$NON-NLS-1$ //$NON-NLS-2$
         sqlString = sqlString.replace("AND  " + AND_WHERE_CLAUSE, AND_WHERE_CLAUSE); //$NON-NLS-1$ 
-        sqlString = sqlString.replace("AND () " + AND_WHERE_CLAUSE, AND_WHERE_CLAUSE); //$NON-NLS-1$ 
+        sqlString = sqlString.replace("AND ()", " "); //$NON-NLS-1$ //$NON-NLS-2$ 
         sqlString = sqlString.replace("( AND", "("); //$NON-NLS-1$ //$NON-NLS-2$
         sqlString = sqlString.replace("AND )", ")"); //$NON-NLS-1$ //$NON-NLS-2$
         sqlString = sqlString.replace("( AND )", " "); //$NON-NLS-1$ //$NON-NLS-2$
