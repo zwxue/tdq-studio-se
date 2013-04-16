@@ -34,6 +34,7 @@ import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.properties.Item;
 import org.talend.core.model.properties.Property;
+import org.talend.core.repository.model.ISubRepositoryObject;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
@@ -390,8 +391,8 @@ public abstract class ModelElementTreeMenuProvider {
             try {
                 ModelElementIndicator meIndicator = (ModelElementIndicator) selection[0]
                         .getData(AbstractColumnDropTree.MODELELEMENT_INDICATOR_KEY);
-                ModelElement me = ((MetadataColumnRepositoryObject) meIndicator.getModelElementRepositoryNode().getObject())
-                        .getTdColumn();
+                ModelElement me = ((ISubRepositoryObject) meIndicator.getModelElementRepositoryNode().getObject())
+                        .getModelElement();
 
                 // dqview.showSelectedElements(me);
                 RepositoryNode recursiveFind = RepositoryNodeHelper.recursiveFind(me);
