@@ -182,8 +182,9 @@ public class DQDeleteAction extends DeleteAction {
             } else {
                 // show a confirm dialog to make sure the user want to proceed
                 if (showConfirmDialog()) {
-                // sort the selected nodes with special order: first report type, then (jrxml, analysis) type, finally
-                // (connection, DQ Rule, Pattern) type.
+                    // sort the selected nodes with special order: first report type, then (jrxml, analysis) type,
+                    // finally
+                    // (connection, DQ Rule, Pattern) type.
                     sortNodesBeforePhysicalDelete();
 
                     physicalDelete(deleteNodes, shownNodes, findAllRecycleBinNodes);
@@ -226,7 +227,6 @@ public class DQDeleteAction extends DeleteAction {
 
     }
 
-
     /**
      * Judge if the node is an analysis or NOT
      * 
@@ -236,7 +236,7 @@ public class DQDeleteAction extends DeleteAction {
     private boolean isAna(RepositoryNode node) {
         if (node.getObject() != null) {
             return ERepositoryObjectType.TDQ_ANALYSIS_ELEMENT.equals(node.getObject().getRepositoryObjectType());
-            }
+        }
         return false;
     }
 
@@ -313,7 +313,7 @@ public class DQDeleteAction extends DeleteAction {
                 }
             } else {
                 if (!hasDependencyClients(node)) {
-                    excuteSuperRun((RepositoryNode) node, parent);
+                    excuteSuperRun(node, parent);
                 }
             }
         }
@@ -328,8 +328,8 @@ public class DQDeleteAction extends DeleteAction {
                 while (iter.hasNext()) {
                     Map.Entry<IRepositoryNode, List<ModelElement>> entry = (Map.Entry<IRepositoryNode, List<ModelElement>>) iter
                             .next();
-                    IRepositoryNode node = (IRepositoryNode) entry.getKey();
-                    List<ModelElement> dependencies = (List<ModelElement>) entry.getValue();
+                    IRepositoryNode node = entry.getKey();
+                    List<ModelElement> dependencies = entry.getValue();
 
                     excuteSuperRun((RepositoryNode) node, node.getParent());
                     physicalDeleteDependencies(dependencies);
@@ -347,9 +347,9 @@ public class DQDeleteAction extends DeleteAction {
             }
         }
 
-            // Added 20130227 TDQ-6901 yyin, when physical deleting object with dependencies, do not popup
-            // confirm anymore. and after dealing with it, store back to its default value.
-            confirmFromDialog = false;
+        // Added 20130227 TDQ-6901 yyin, when physical deleting object with dependencies, do not popup
+        // confirm anymore. and after dealing with it, store back to its default value.
+        confirmFromDialog = false;
     }
 
     /**
@@ -362,20 +362,20 @@ public class DQDeleteAction extends DeleteAction {
      * @return
      */
     private boolean hasDependencyClients(IRepositoryNode node) {
-        if(isJrxml(node)){
+        if (isJrxml(node)) {
             List<ModelElement> dependedReport = DQDeleteHelper.getDependedReportOfJrxml(node);
-            if(dependedReport.size()>0){
+            if (dependedReport.size() > 0) {
                 nodeWithDependsMap.put(node, dependedReport);
                 return true;
-            }else{
+            } else {
                 return false;
             }
-        }else{
-           boolean hasDependencyClients = RepositoryNodeHelper.hasDependencyClients(node);
-           if(hasDependencyClients){
-               List<ModelElement> dependencies = EObjectHelper.getDependencyClients(node);
+        } else {
+            boolean hasDependencyClients = RepositoryNodeHelper.hasDependencyClients(node);
+            if (hasDependencyClients) {
+                List<ModelElement> dependencies = EObjectHelper.getDependencyClients(node);
                 nodeWithDependsMap.put(node, dependencies);
-           }
+            }
             return hasDependencyClients;
         }
     }
@@ -489,10 +489,10 @@ public class DQDeleteAction extends DeleteAction {
                 tempNode = RepositoryNodeHelper.recursiveFindRecycleBin(mod);
                 if (tempNode != null) {
                     excuteSuperRun(tempNode, tempNode.getParent());
-                        IFile propertyFile = PropertyHelper.getPropertyFile(mod);
-                        if (propertyFile != null && propertyFile.exists()) {
-                            isSucceed = false;
-                        }
+                    IFile propertyFile = PropertyHelper.getPropertyFile(mod);
+                    if (propertyFile != null && propertyFile.exists()) {
+                        isSucceed = false;
+                    }
                 }
             }
         } catch (Exception exc) {
@@ -591,17 +591,17 @@ public class DQDeleteAction extends DeleteAction {
                         try {
                             IPath location = Path.fromOSString(repFileNode.getResource().getProjectRelativePath().toOSString());
                             IFile latestRepIFile = ResourceManager.getRootProject().getFile(location);
-                                if (latestRepIFile.isLinked()) {
-                                    File file = new File(latestRepIFile.getRawLocation().toOSString());
-                                    if (file.exists()) {
-                                        file.delete();
-                                    }
+                            if (latestRepIFile.isLinked()) {
+                                File file = new File(latestRepIFile.getRawLocation().toOSString());
+                                if (file.exists()) {
+                                    file.delete();
                                 }
-                                latestRepIFile.delete(true, null);
-                                IContainer parent = latestRepIFile.getParent();
-                                if (parent != null) {
-                                    parent.refreshLocal(IResource.DEPTH_INFINITE, monitor);
-                                }
+                            }
+                            latestRepIFile.delete(true, null);
+                            IContainer parent = latestRepIFile.getParent();
+                            if (parent != null) {
+                                parent.refreshLocal(IResource.DEPTH_INFINITE, monitor);
+                            }
                         } catch (CoreException e) {
                             log.error(e, e);
                         }
@@ -642,7 +642,7 @@ public class DQDeleteAction extends DeleteAction {
         }
     }
 
-    private boolean showConfirmDialog() {
+    protected boolean showConfirmDialog() {
         return MessageDialog.openConfirm(null, DefaultMessagesImpl.getString("DQDeleteAction.deleteForeverTitle"), //$NON-NLS-1$
                 PluginConstant.SPACE_STRING + DefaultMessagesImpl.getString("DQDeleteAction.areYouDeleteForever"));//$NON-NLS-1$
     }
