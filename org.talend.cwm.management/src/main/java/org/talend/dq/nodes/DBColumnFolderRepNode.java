@@ -43,7 +43,7 @@ import orgomg.cwm.resource.relational.ColumnSet;
 /**
  * DOC klliu class global comment. Detailled comment
  */
-public class DBColumnFolderRepNode extends DQRepositoryNode implements IConnectionElementSubFolder {
+public class DBColumnFolderRepNode extends DQDBFolderRepositoryNode implements IConnectionElementSubFolder {
 
     private static Logger log = Logger.getLogger(DBColumnFolderRepNode.class);
 
@@ -147,6 +147,8 @@ public class DBColumnFolderRepNode extends DQRepositoryNode implements IConnecti
 
     @Override
     public List<IRepositoryNode> getChildren() {
+        // reload the connection to make sure the connection(and all it's owned elements) is not proxy
+        reloadConnectionViewObject();
         if (!this.isReload() && !children.isEmpty()) {
             // MOD gdbu 2011-6-29 bug : 22204
             return filterResultsIfAny(children);
@@ -193,7 +195,7 @@ public class DBColumnFolderRepNode extends DQRepositoryNode implements IConnecti
                 tdcolumns.add((TdColumn) mec);
             }
         }
-        if (filterCharater != null && !filterCharater.equals("")) {
+        if (filterCharater != null && !filterCharater.equals("")) { //$NON-NLS-1$
             tdcolumns = RepositoryNodeHelper.filterColumns(tdcolumns, filterCharater);
         }
         createTdcolumnsNode(tdcolumns, children);
