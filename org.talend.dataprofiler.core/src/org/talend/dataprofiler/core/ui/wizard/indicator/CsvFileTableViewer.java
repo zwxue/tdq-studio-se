@@ -244,6 +244,8 @@ public class CsvFileTableViewer extends Composite {
                 return true;
             } else if ('\'' == trimQuote.charAt(0) && '\'' == trimQuote.charAt(trimQuote.length() - 1)) {
                 return true;
+            } else if ('\'' != trimQuote.charAt(0) && '\'' != trimQuote.charAt(trimQuote.length() - 1)) {
+                return true;
             } else {
                 return false;
             }
