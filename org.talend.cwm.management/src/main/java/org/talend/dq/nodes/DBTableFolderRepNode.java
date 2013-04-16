@@ -43,7 +43,7 @@ import orgomg.cwm.resource.relational.Schema;
  * DOC klliu Folder node node displayed on repository view (UI), knowing exact folder type by folder
  * object:TDQFolderObject.
  */
-public class DBTableFolderRepNode extends DQRepositoryNode implements IConnectionElementSubFolder {
+public class DBTableFolderRepNode extends DQDBFolderRepositoryNode implements IConnectionElementSubFolder {
 
     private static Logger log = Logger.getLogger(DBTableFolderRepNode.class);
 
@@ -129,6 +129,8 @@ public class DBTableFolderRepNode extends DQRepositoryNode implements IConnectio
 
     @Override
     public List<IRepositoryNode> getChildren() {
+        // reload the connection to make sure the connection(and all it's owned elements) is not proxy
+        reloadConnectionViewObject();
         // MOD gdbu 2011-7-1 bug : 22204
         List<IRepositoryNode> children = new ArrayList<IRepositoryNode>();
         IRepositoryViewObject object = this.getParent().getObject();

@@ -43,7 +43,7 @@ import orgomg.cwm.resource.relational.Schema;
 /**
  * DOC klliu class global comment. Detailled comment
  */
-public class DBViewFolderRepNode extends DQRepositoryNode implements IConnectionElementSubFolder { 
+public class DBViewFolderRepNode extends DQDBFolderRepositoryNode implements IConnectionElementSubFolder {
 
     private static Logger log = Logger.getLogger(DBViewFolderRepNode.class);
 
@@ -131,6 +131,8 @@ public class DBViewFolderRepNode extends DQRepositoryNode implements IConnection
 
     @Override
     public List<IRepositoryNode> getChildren() {
+        // reload the connection to make sure the connection(and all it's owned elements) is not proxy
+        reloadConnectionViewObject();
         // MOD gdbu 2011-7-1 bug : 22204
         List<IRepositoryNode> repsNodes = new ArrayList<IRepositoryNode>();
         IRepositoryViewObject object = this.getParent().getObject();
