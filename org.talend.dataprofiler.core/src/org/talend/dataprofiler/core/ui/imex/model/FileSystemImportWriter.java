@@ -233,7 +233,7 @@ public class FileSystemImportWriter implements IImportWriter {
     }
 
     private boolean isConflict(Property p1, Property p2) {
-        if (p1.getLabel().equals(p2.getLabel())) {
+        if (WorkspaceUtils.normalize(p1.getLabel()).equals(p2.getLabel())) {
             return true;
         } else if (p1.getId().equals(p2.getId())) {
             return true;
