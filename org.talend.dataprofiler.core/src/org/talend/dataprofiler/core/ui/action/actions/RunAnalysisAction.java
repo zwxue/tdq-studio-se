@@ -27,6 +27,7 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorReference;
@@ -387,8 +388,15 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
             Display.getDefault().asyncExec(new Runnable() {
 
                 public void run() {
+                    // use the ActiveWorkbenchWindow's shell, don't use the default shell, otherwize the error dialog
+                    // will be cloed when the "Run Analysis" dialog (if user don't check "Always run in background", it
+                    // will always show this dialog when run an analysis) close, just like don't show the error dialog
+                    Shell shell = null;
+                    if (PlatformUI.getWorkbench().getActiveWorkbenchWindow() != null) {
+                        shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
+                    }
                     MessageDialogWithToggle.openError(
-                            null,
+                            shell,
                             DefaultMessagesImpl.getString("RunAnalysisAction.runAnalysis"), DefaultMessagesImpl.getString("RunAnalysisAction.failRunAnalysis", analysis.getName(), executed.getMessage())); //$NON-NLS-1$ //$NON-NLS-2$
                 }
             });
