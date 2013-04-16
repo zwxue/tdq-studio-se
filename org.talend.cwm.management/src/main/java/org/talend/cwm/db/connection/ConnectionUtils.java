@@ -231,7 +231,7 @@ public final class ConnectionUtils {
             }
         } catch (SQLException e) {
             log.error(e.getMessage());
-            rc.setReturnCode(e.getMessage(), false);
+            rc.setReturnCode(Messages.getString("ConnectionUtils.SQLException", e.getMessage(), url), false); //$NON-NLS-1$
         } catch (InstantiationException e) {
             log.error(e.getMessage(), e);
             rc.setReturnCode(e.getMessage(), false);
