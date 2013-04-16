@@ -50,7 +50,6 @@ public class UDIActionProvider extends AbstractCommonActionProvider {
                         if (ResourceService.isSubFolder(ResourceManager.getUDIFolder(), folder)) {
                             menu.add(new CreateUDIAction(folder));
                             menu.add(new ImportUDIAction(folder));
-                            menu.add(new ExportUDIAction(folder, false));
                             menu.add(new ExportUDIAction(folder, true));
                         }
                     } catch (Exception e) {
