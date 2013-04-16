@@ -42,11 +42,13 @@ public class CombinedRecordMatcher extends AbstractRecordMatcher {
         for (IRecordMatcher matcher : matchers) {
             // TODO optimization could be done here when some attribute distances must not be computed again.
             double currentWeight = matcher.getMatchingWeight(record1, record2);
-            if (currentWeight >= matchingWeight) {
-                // store last matcher
-                lastPositiveMatcher = matcher;
-                matchingWeight = currentWeight;
+            if (currentWeight < matchingWeight) {
+                continue; // a better match already exists
             }
+            // store last matcher
+            lastPositiveMatcher = matcher;
+            matchingWeight = currentWeight;
+
             if (matchingWeight >= matcher.getRecordMatchThreshold()) {
                 // when there is a match with one matcher, no need to loop on all matchers
                 return matchingWeight;

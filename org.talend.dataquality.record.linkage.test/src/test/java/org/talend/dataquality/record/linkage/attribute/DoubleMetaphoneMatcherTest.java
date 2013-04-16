@@ -21,7 +21,7 @@ import org.talend.dataquality.record.linkage.constant.AttributeMatcherType;
  * created by zhao on Apr 16, 2013 Detailled comment
  * 
  */
-public class MetaphoneMatcherTest {
+public class DoubleMetaphoneMatcherTest {
 
     /**
      * Test method for
@@ -30,7 +30,7 @@ public class MetaphoneMatcherTest {
      */
     @Test
     public void testGetWeight() {
-        MetaphoneMatcher metaphoneMatcher = new MetaphoneMatcher();
+        DoubleMetaphoneMatcher metaphoneMatcher = new DoubleMetaphoneMatcher();
         String a = "John"; //$NON-NLS-1$
         String b = "Jon"; //$NON-NLS-1$
         double matchingWeight = metaphoneMatcher.getMatchingWeight(a, b);
@@ -46,9 +46,8 @@ public class MetaphoneMatcherTest {
         a = "JohnFit";
         b = "JohnFitzgeraldKennedy";
         matchingWeight = metaphoneMatcher.getMatchingWeight(a, b);
-        Assert.assertTrue("input strings are not the same but Metaphone should not be able to distinguish between " + a + " and "
-                + b, 1.0d == matchingWeight);
-
+        Assert.assertTrue("input strings are not the same but DoubleMetaphone should not be able to distinguish between " + a
+                + " and " + b, 1.0d == matchingWeight);
     }
 
     /**
