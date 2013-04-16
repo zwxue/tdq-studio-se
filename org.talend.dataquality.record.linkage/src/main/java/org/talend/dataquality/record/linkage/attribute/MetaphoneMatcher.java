@@ -31,6 +31,7 @@ public class MetaphoneMatcher extends AbstractAttributeMatcher {
      * 
      * @see org.talend.dataquality.record.linkage.attribute.IAttributeMatcher#getMatchType()
      */
+    @Override
     public AttributeMatcherType getMatchType() {
         return AttributeMatcherType.metaphone;
     }
@@ -41,10 +42,15 @@ public class MetaphoneMatcher extends AbstractAttributeMatcher {
      * @see org.talend.dataquality.record.linkage.attribute.AbstractAttributeMatcher#getWeight(java.lang.String,
      * java.lang.String)
      */
+    @Override
     public double getWeight(String str1, String str2) {
         String code1 = algorithm.encode(str1);
         String code2 = algorithm.encode(str2);
-        algorithm.setMaxCodeLen(Math.max(code1.length(), code2.length()));
+        int maxLengh = Math.max(code1.length(), code2.length());
+        if (maxLengh == 0) {
+            return 0d;
+        }
+        algorithm.setMaxCodeLen(maxLengh);
         return StringComparisonUtil.difference(code1, code2) / (double) algorithm.getMaxCodeLen();
     }
 }
