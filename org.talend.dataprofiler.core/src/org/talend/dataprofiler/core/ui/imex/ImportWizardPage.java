@@ -68,6 +68,14 @@ import orgomg.cwm.objectmodel.core.ModelElement;
  */
 public class ImportWizardPage extends WizardPage {
 
+    private static final String SELECT_ARCHIVE_FILE = Messages.getString("ExportWizardPage.8"); //$NON-NLS-1$
+
+    private static final String BROWSE = Messages.getString("ExportWizardPage.7"); //$NON-NLS-1$
+
+    private static final String SELECT_ROOT_DIR = Messages.getString("ExportWizardPage.6"); //$NON-NLS-1$
+
+    private static final String OVERWRITE_EXIST_ITEM = Messages.getString("ImportWizardPage.4"); //$NON-NLS-1$
+
     private CheckboxTreeViewer repositoryTree;
 
     private TableViewer errorsList;
@@ -406,7 +414,7 @@ public class ImportWizardPage extends WizardPage {
         repositoryTree = new ContainerCheckedTreeViewer(top);
         repositoryTree.setContentProvider(new FileTreeContentProvider());
         repositoryTree.setLabelProvider(new FileTreeLabelProvider());
-        repositoryTree.setInput(""); //$NON-NLS-1$
+        repositoryTree.setInput(PluginConstant.EMPTY_STRING);
 
         GridDataFactory.fillDefaults().grab(true, true).applyTo(repositoryTree.getTree());
     }
@@ -475,7 +483,8 @@ public class ImportWizardPage extends WizardPage {
      */
     private void createOptionComposite(Composite top) {
         overwriteBTN = new Button(top, SWT.CHECK);
-        overwriteBTN.setText(Messages.getString("ImportWizardPage.4")); //$NON-NLS-1$
+        overwriteBTN.setText(OVERWRITE_EXIST_ITEM);
+        overwriteBTN.setToolTipText(OVERWRITE_EXIST_ITEM);
     }
 
     /**
@@ -537,25 +546,29 @@ public class ImportWizardPage extends WizardPage {
         selectComp.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
         dirBTN = new Button(selectComp, SWT.RADIO);
-        dirBTN.setText(Messages.getString("ImportWizardPage.7")); //$NON-NLS-1$
+        dirBTN.setText(SELECT_ROOT_DIR);
+        dirBTN.setToolTipText(SELECT_ROOT_DIR);
         setButtonLayoutData(dirBTN);
 
         dirTxt = new Text(selectComp, SWT.BORDER);
         dirTxt.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
         browseDirBTN = new Button(selectComp, SWT.PUSH);
-        browseDirBTN.setText(Messages.getString("ImportWizardPage.8")); //$NON-NLS-1$
+        browseDirBTN.setText(BROWSE);
+        browseDirBTN.setToolTipText(BROWSE);
         setButtonLayoutData(browseDirBTN);
 
         archBTN = new Button(selectComp, SWT.RADIO);
-        archBTN.setText(Messages.getString("ImportWizardPage.9")); //$NON-NLS-1$
+        archBTN.setText(SELECT_ARCHIVE_FILE);
+        archBTN.setToolTipText(SELECT_ARCHIVE_FILE);
         setButtonLayoutData(archBTN);
 
         archTxt = new Text(selectComp, SWT.BORDER);
         archTxt.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
         browseArchBTN = new Button(selectComp, SWT.PUSH);
-        browseArchBTN.setText(Messages.getString("ImportWizardPage.10")); //$NON-NLS-1$
+        browseArchBTN.setText(BROWSE);
+        browseArchBTN.setToolTipText(BROWSE);
         setButtonLayoutData(browseArchBTN);
 
     }
