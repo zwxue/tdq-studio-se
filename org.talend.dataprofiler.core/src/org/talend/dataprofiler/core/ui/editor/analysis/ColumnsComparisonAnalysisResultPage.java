@@ -148,8 +148,8 @@ public class ColumnsComparisonAnalysisResultPage extends AbstractAnalysisResultP
     }
 
     private void createAnalyzedColumnSetsSection(Composite parent) {
-        columnSetSection = createSection(form, parent, DefaultMessagesImpl
-                .getString("ColumnsComparisonAnalysisResultPage.analyzedColumnSets"), null); //$NON-NLS-1$
+        columnSetSection = createSection(form, parent,
+                DefaultMessagesImpl.getString("ColumnsComparisonAnalysisResultPage.analyzedColumnSets"), null); //$NON-NLS-1$
         Composite sectionClient = toolkit.createComposite(columnSetSection);
         sectionClient.setLayout(new GridLayout());
         sectionClient.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
@@ -157,18 +157,16 @@ public class ColumnsComparisonAnalysisResultPage extends AbstractAnalysisResultP
         TableViewer elementsTableViewer = new TableViewer(sectionClient, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
         Table table = elementsTableViewer.getTable();
         GridDataFactory.fillDefaults().applyTo(table);
-        ((GridData) table.getLayoutData()).heightHint = 280;
-        ((GridData) table.getLayoutData()).widthHint = 510;
+        ((GridData) table.getLayoutData()).heightHint = 240;
+        ((GridData) table.getLayoutData()).widthHint = 600;
         table.setHeaderVisible(true);
         table.setLinesVisible(true);
         table.setDragDetect(true);
         table.setToolTipText(DefaultMessagesImpl.getString("ColumnsComparisonAnalysisResultPage.dragAndDropToolTip")); //$NON-NLS-1$
-        final TableColumn columnHeader1 = new TableColumn(table, SWT.CENTER);
-        columnHeader1.setWidth(260);
-        columnHeader1.setAlignment(SWT.CENTER);
-        final TableColumn columnHeader2 = new TableColumn(table, SWT.CENTER);
-        columnHeader2.setWidth(260);
-        columnHeader2.setAlignment(SWT.CENTER);
+        final TableColumn columnHeader1 = new TableColumn(table, SWT.LEAD);
+        columnHeader1.setWidth(300);
+        final TableColumn columnHeader2 = new TableColumn(table, SWT.LEAD);
+        columnHeader2.setWidth(300);
         Analysis analysis = this.masterPage.getAnalysisHandler().getAnalysis();
         isHasDeactivatedIndicator = analysis.getParameters().getDeactivatedIndicators().size() != 0;
         EList<Indicator> indicators = analysis.getResults().getIndicators();
@@ -183,12 +181,12 @@ public class ColumnsComparisonAnalysisResultPage extends AbstractAnalysisResultP
                     columnA = (TdColumn) EObjectHelper.resolveObject(columnA);
                 }
             }
-            String columnName = rowMatchingIndicatorA.getColumnSetA().size() > 0 ? ColumnHelper.getColumnOwnerAsColumnSet(
-                    columnA).getName(): PluginConstant.EMPTY_STRING;
+            String columnName = rowMatchingIndicatorA.getColumnSetA().size() > 0 ? ColumnHelper
+                    .getColumnOwnerAsColumnSet(columnA).getName() : PluginConstant.EMPTY_STRING;
             columnHeader1.setText(columnName.equals(PluginConstant.EMPTY_STRING) ? columnName : DefaultMessagesImpl.getString(
                     "ColumnsComparisonAnalysisResultPage.elementsFrom", columnName)); //$NON-NLS-1$
             TdColumn columnB = null;
-            if(rowMatchingIndicatorA.getColumnSetB().size()>0){
+            if (rowMatchingIndicatorA.getColumnSetB().size() > 0) {
                 columnB = rowMatchingIndicatorA.getColumnSetB().get(0);
                 if (columnB.eIsProxy()) {
                     columnB = (TdColumn) EObjectHelper.resolveObject(columnB);
@@ -208,8 +206,8 @@ public class ColumnsComparisonAnalysisResultPage extends AbstractAnalysisResultP
 
     @Override
     protected void createResultSection(Composite parent) {
-        resultSection = createSection(form, parent, DefaultMessagesImpl
-                .getString("ColumnsComparisonAnalysisResultPage.analysisResults"), ""); //$NON-NLS-1$ //$NON-NLS-2$
+        resultSection = createSection(form, parent,
+                DefaultMessagesImpl.getString("ColumnsComparisonAnalysisResultPage.analysisResults"), ""); //$NON-NLS-1$ //$NON-NLS-2$
         Composite sectionClient = toolkit.createComposite(resultSection);
         sectionClient.setLayout(new GridLayout(2, false));
         sectionClient.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
@@ -220,12 +218,10 @@ public class ColumnsComparisonAnalysisResultPage extends AbstractAnalysisResultP
         Table resultTable = new Table(sectionClient, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
         resultTable.setLinesVisible(true);
         resultTable.setHeaderVisible(true);
-        final TableColumn columnHeader0 = new TableColumn(resultTable, SWT.CENTER);
-        columnHeader0.setWidth(150);
-        columnHeader0.setAlignment(SWT.CENTER);
-        final TableColumn columnHeader1 = new TableColumn(resultTable, SWT.CENTER);
-        columnHeader1.setWidth(120);
-        columnHeader1.setAlignment(SWT.CENTER);
+        final TableColumn columnHeader0 = new TableColumn(resultTable, SWT.LEAD);
+        columnHeader0.setWidth(100);
+        final TableColumn columnHeader1 = new TableColumn(resultTable, SWT.LEAD);
+        columnHeader1.setWidth(150);
         // add by hcheng for 6503:change the "set A" and "set B" labels
         Analysis analysis = this.masterPage.getAnalysisHandler().getAnalysis();
         EList<Indicator> indicators = analysis.getResults().getIndicators();
@@ -250,14 +246,13 @@ public class ColumnsComparisonAnalysisResultPage extends AbstractAnalysisResultP
             // ~
             // MOD zshen 11136: the chart of result lose one table
             if (tableNameA.equals(tableNameB)) {
-                tableNameB = tableNameB + "(*)";
+                tableNameB = tableNameB + "(*)"; //$NON-NLS-1$
             }
             // ~11136
             columnHeader1.setText(tableNameA);
             if (!isHasDeactivatedIndicator) {
-                final TableColumn columnHeader2 = new TableColumn(resultTable, SWT.CENTER);
-                columnHeader2.setWidth(120);
-                columnHeader2.setAlignment(SWT.CENTER);
+                final TableColumn columnHeader2 = new TableColumn(resultTable, SWT.LEAD);
+                columnHeader2.setWidth(150);
                 columnHeader2.setText(tableNameB);
             }
             createTableItems(resultTable);
@@ -267,16 +262,12 @@ public class ColumnsComparisonAnalysisResultPage extends AbstractAnalysisResultP
             }
 
             StringBuilder description = new StringBuilder();
-            description.append(setAMatchPercent);
             description.append(DefaultMessagesImpl.getString(
-                    "ColumnsComparisonAnalysisResultPage.ASetFoundInB", tableNameA, tableNameB)); //$NON-NLS-1$
+                    "ColumnsComparisonAnalysisResultPage.ASetFoundInB", setAMatchPercent, tableNameA, tableNameB)); //$NON-NLS-1$
             if (!isHasDeactivatedIndicator) {
                 description.append("\n"); //$NON-NLS-1$
-                description.append(setBMatchPercent);
                 description.append(DefaultMessagesImpl.getString(
-                        "ColumnsComparisonAnalysisResultPage.BSetFoundInA", tableNameB, tableNameA)); //$NON-NLS-1$
-            } else {
-                description.append("."); //$NON-NLS-1$
+                        "ColumnsComparisonAnalysisResultPage.BSetFoundInA", setBMatchPercent, tableNameB, tableNameA)); //$NON-NLS-1$
             }
             resultSection.setDescription(description.toString());
         }
@@ -294,9 +285,11 @@ public class ColumnsComparisonAnalysisResultPage extends AbstractAnalysisResultP
         item1.setText(1, setAMatchPercent);
         TableItem item2 = new TableItem(resultTable, SWT.NULL);
         item2.setText(0, DefaultMessagesImpl.getString("ColumnsComparisonAnalysisResultPage.%NotMatch")); //$NON-NLS-1$
-        item2.setText(1, StringFormatUtil.format(
-                (rowMatchingIndicatorA.getNotMatchingValueCount().doubleValue()) / columnSetARows.doubleValue(),
-                StringFormatUtil.PERCENT).toString());
+        item2.setText(
+                1,
+                StringFormatUtil.format(
+                        (rowMatchingIndicatorA.getNotMatchingValueCount().doubleValue()) / columnSetARows.doubleValue(),
+                        StringFormatUtil.PERCENT).toString());
         TableItem item3 = new TableItem(resultTable, SWT.NULL);
         item3.setText(0, DefaultMessagesImpl.getString("ColumnsComparisonAnalysisResultPage.Match")); //$NON-NLS-1$
         item3.setText(1, rowMatchingIndicatorA.getMatchingValueCount().toString());
@@ -314,9 +307,11 @@ public class ColumnsComparisonAnalysisResultPage extends AbstractAnalysisResultP
                     (rowMatchingIndicatorB.getMatchingValueCount().doubleValue()) / columnSetBRows.doubleValue(),
                     StringFormatUtil.PERCENT).toString();
             item1.setText(2, setBMatchPercent);
-            item2.setText(2, StringFormatUtil.format(
-                    (rowMatchingIndicatorB.getNotMatchingValueCount().doubleValue()) / columnSetBRows.doubleValue(),
-                    StringFormatUtil.PERCENT).toString());
+            item2.setText(
+                    2,
+                    StringFormatUtil.format(
+                            (rowMatchingIndicatorB.getNotMatchingValueCount().doubleValue()) / columnSetBRows.doubleValue(),
+                            StringFormatUtil.PERCENT).toString());
             item3.setText(2, rowMatchingIndicatorB.getMatchingValueCount().toString());
             item4.setText(2, rowMatchingIndicatorB.getNotMatchingValueCount().toString());
             item5.setText(2, columnSetBRows.toString());
@@ -326,6 +321,7 @@ public class ColumnsComparisonAnalysisResultPage extends AbstractAnalysisResultP
 
         cursor.addSelectionListener(new SelectionAdapter() {
 
+            @Override
             public void widgetSelected(SelectionEvent e) {
                 int column = cursor.getColumn();
 
@@ -420,14 +416,7 @@ public class ColumnsComparisonAnalysisResultPage extends AbstractAnalysisResultP
 
             public void handleEvent(Event event) {
 
-                // TdDataProvider provider = DataProviderHelper.getDataProvider(columnSet);
-                //
-                // DbmsLanguage dbmsLanguage = DbmsLanguageFactory.createDbmsLanguage(provider);
-                //
-                //                String query = "SELECT * " + dbmsLanguage.from() + dbmsLanguage.quote(ColumnSetHelper.getParentCatalogOrSchema(columnSet).getName()) //$NON-NLS-1$
-                //                        + "." + dbmsLanguage.quote(columnSet.getName()); //$NON-NLS-1$
                 // MOD 10913 zshen:unify the method that get sql query
-
                 RowMatchExplorer rowMatchExplorer = new RowMatchExplorer();
                 rowMatchExplorer.setAnalysis(masterPage.analysis);
                 rowMatchExplorer.setEnitty(new ChartDataEntity(indicator, "", "")); //$NON-NLS-1$ //$NON-NLS-2$
@@ -469,8 +458,8 @@ public class ColumnsComparisonAnalysisResultPage extends AbstractAnalysisResultP
 
             dataset.addDataEntity(dataEntityB);
         }
-        JFreeChart chart = TopChartFactory.createStackedBarChart(DefaultMessagesImpl
-                .getString("ColumnsComparisonAnalysisResultPage.ColumnsComparison"), dataset, //$NON-NLS-1$
+        JFreeChart chart = TopChartFactory.createStackedBarChart(
+                DefaultMessagesImpl.getString("ColumnsComparisonAnalysisResultPage.ColumnsComparison"), dataset, //$NON-NLS-1$
                 PlotOrientation.HORIZONTAL);
         ChartDecorator.decorate(chart, PlotOrientation.HORIZONTAL);
 
@@ -531,6 +520,7 @@ public class ColumnsComparisonAnalysisResultPage extends AbstractAnalysisResultP
                             menuItem.setImage(ImageLib.getImage(ImageLib.EXPLORE_IMAGE));
                             menuItem.addSelectionListener(new SelectionAdapter() {
 
+                                @Override
                                 public void widgetSelected(SelectionEvent e) {
                                     Display.getDefault().asyncExec(new Runnable() {
 
@@ -558,7 +548,7 @@ public class ColumnsComparisonAnalysisResultPage extends AbstractAnalysisResultP
              * @see org.jfree.chart.ChartMouseListener#chartMouseMoved(org.jfree.chart.ChartMouseEvent)
              */
             public void chartMouseMoved(ChartMouseEvent event) {
-
+                // until now, no action here
             }
         });
         // ~
@@ -595,7 +585,7 @@ public class ColumnsComparisonAnalysisResultPage extends AbstractAnalysisResultP
      */
     @Override
     public void setDirty(boolean isDirty) {
-
+        // until now, no action here
     }
 
     @Override
@@ -646,7 +636,7 @@ public class ColumnsComparisonAnalysisResultPage extends AbstractAnalysisResultP
         }
 
         public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
-
+            // until now, no action here
         }
 
     }
