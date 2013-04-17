@@ -27,6 +27,7 @@ import org.talend.core.model.properties.Property;
 import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
+import org.talend.cwm.helper.ResourceHelper;
 import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
@@ -134,19 +135,22 @@ public class UDIHandle extends EMFResourceHandle {
 
     @Override
     public ReturnCode validDuplicated() {
-        ReturnCode returnCode = new ReturnCode(true);
-        String label = getProperty().getLabel();
-        if (label.equals(PluginConstant.UNIQUE_COUNT) || label.equals(PluginConstant.BLANK_COUNT)
-                || label.equals(PluginConstant.DEFAULT_VALUE_COUNT) || label.equals(PluginConstant.ROW_COUNT)
-                || label.equals(PluginConstant.DUPLICATE_COUNT) || label.equals(PluginConstant.NULL_COUNT)
-                || label.equals(PluginConstant.PATTERN_FREQUENCY_TABLE)
-                || label.equals(PluginConstant.DATE_PATTERN_FREQUENCY_TABLE)
-                || label.equals(PluginConstant.PATTERN_LOW_FREQUENCY_TABLE)) {
-            return returnCode;
-        }
-        returnCode.setMessage(DefaultMessagesImpl.getString("UDIHandle.TypeDuplicated", label));//$NON-NLS-1$
+        ReturnCode returnCode = new ReturnCode();
 
-        returnCode.setOk(false);
+        String indDefUuid = ResourceHelper.getUUID(this.getModelElement());
+
+        if (PluginConstant.UNIQUE_COUNT_ID.equals(indDefUuid) || PluginConstant.BLANK_COUNT_ID.equals(indDefUuid)
+                || PluginConstant.DEFAULT_VALUE_COUNT_ID.equals(indDefUuid) || PluginConstant.ROW_COUNT_ID.equals(indDefUuid)
+                || PluginConstant.DUPLICATE_COUNT_ID.equals(indDefUuid) || PluginConstant.NULL_COUNT_ID.equals(indDefUuid)
+                || PluginConstant.PATTERN_FREQUENCY_TABLE_ID.equals(indDefUuid)
+                || PluginConstant.DATE_PATTERN_FREQUENCY_TABLE_ID.equals(indDefUuid)
+                || PluginConstant.PATTERN_LOW_FREQUENCY_TABLE_ID.equals(indDefUuid)) {
+            returnCode.setOk(true);
+        } else {
+            returnCode.setOk(false);
+            returnCode.setMessage(DefaultMessagesImpl.getString("UDIHandle.TypeDuplicated", getProperty().getDisplayName()));//$NON-NLS-1$
+        }
+
         return returnCode;
     }
 }
