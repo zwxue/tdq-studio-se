@@ -55,6 +55,15 @@ public class EMFResourceHandle implements IDuplicateHandle {
 
     private ModelElement modelElement;
 
+    /**
+     * Getter for modelElement.
+     * 
+     * @return the modelElement
+     */
+    public ModelElement getModelElement() {
+        return this.modelElement;
+    }
+
     protected IFile file;
 
     protected Property property;
