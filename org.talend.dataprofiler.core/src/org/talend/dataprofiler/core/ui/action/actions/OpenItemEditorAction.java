@@ -14,6 +14,8 @@ package org.talend.dataprofiler.core.ui.action.actions;
 
 import java.util.Properties;
 
+import net.sourceforge.sqlexplorer.plugin.editors.SQLEditor;
+
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
@@ -312,6 +314,16 @@ public class OpenItemEditorAction extends Action implements IIntroAction {
                     }
                 }
                 editorID = "org.talend.dataprofiler.core.tdq.ui.editor.report.ReportEditror"; //$NON-NLS-1$
+            } else if (ERepositoryObjectType.TDQ_SOURCE_FILE_ELEMENT.getKey().equals(key)) {
+                IPath append = WorkbenchUtils.getFilePath(repViewObj.getRepositoryNode());
+                file = ResourceManager.getRootProject().getFile(append);
+                if (!file.exists()) {
+                    BusinessException createBusinessException = ExceptionFactory.getInstance()
+                            .createBusinessException(repViewObj);
+                    throw createBusinessException;
+                }
+                editorID = SQLEditor.EDITOR_ID;
+                result = new FileEditorInput(ResourceManager.getRootProject().getFile(append));
             }
             // ADD msjian TDQ-4209 2012-2-7 : return the editorInput of *.jrxml and *.sql files
             if (!isOpenItemEditorAction) {

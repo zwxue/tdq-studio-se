@@ -12,6 +12,8 @@
 // ============================================================================
 package org.talend.dataprofiler.core.sql;
 
+import net.sourceforge.sqlexplorer.plugin.editors.SQLEditor;
+
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.jface.action.Action;
@@ -94,7 +96,7 @@ public class AddSqlFileAction extends Action implements ICheatSheetAction {
                 CorePlugin.getDefault().refreshWorkSpace();
                 CorePlugin.getDefault().refreshDQView(node);
 
-                IDE.openEditor(ap, WorkspaceUtils.fileToIFile(fileWizard.getSqlFile()));
+                IDE.openEditor(ap, WorkspaceUtils.fileToIFile(fileWizard.getSqlFile()), SQLEditor.EDITOR_ID);
             } catch (PartInitException e) {
                 log.error(e, e);
             }
