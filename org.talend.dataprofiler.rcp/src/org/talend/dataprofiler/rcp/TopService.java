@@ -36,6 +36,7 @@ import org.talend.core.model.metadata.IMetadataTable;
 import org.talend.core.model.metadata.builder.connection.MetadataTable;
 import org.talend.core.model.properties.Item;
 import org.talend.core.model.repository.IRepositoryViewObject;
+import org.talend.core.utils.KeywordsValidator;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.designer.core.model.utils.emf.talendfile.NodeType;
 
@@ -383,8 +384,7 @@ public class TopService implements ICoreService {
      */
     @Override
     public boolean isKeyword(String word) {
-        // TODO Auto-generated method stub
-        return false;
+        return KeywordsValidator.isKeyword(word);
     }
 
     /*
