@@ -121,8 +121,7 @@ public final class UDIUtils {
         for (Indicator indicator : meIndicator.getIndicators()) {
             // MOD xwang 2011-08-01 bug TDQ-2730
             if (udid.getName().equals(indicator.getName()) && indicator instanceof UserDefIndicator) {
-                MessageUI.openWarning(DefaultMessagesImpl.getString("UDIUtils.UDISelected", udid.getName()) //$NON-NLS-1$
-                        + udid.getName());
+                MessageUI.openWarning(DefaultMessagesImpl.getString("UDIUtils.UDISelected", udid.getName())); //$NON-NLS-1$
                 return null;
             }
         }
