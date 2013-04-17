@@ -177,7 +177,9 @@ public final class DefinitionHandler {
         URI uri = URI.createPlatformResourceURI(definitionPath.toString(), false);
         try { // load from workspace path
               // do not create it here if it does not exist.
-            definitionsFile = EMFSharedResources.getInstance().getResource(uri, true);
+        	// ADD msjian TDQ-6865 2013-3-8: reload first, because the file is copied into workspace just now
+            definitionsFile = EMFSharedResources.getInstance().reloadResource(uri);
+            // TDQ-6865~ 
             if (log.isDebugEnabled()) {
                 log.debug("Definition of indicators loaded from " + uri); //$NON-NLS-1$
             }
