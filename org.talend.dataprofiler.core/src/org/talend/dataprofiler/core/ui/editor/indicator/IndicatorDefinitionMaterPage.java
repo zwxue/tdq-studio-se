@@ -2507,11 +2507,13 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
             TdExpression expression = tempExpressionMap.get(cb);
             String language = expression.getLanguage();
             String version = expression.getVersion();
-            String body = expression.getBody();
-            if (null == body || body.length() + 1 < UDIHelper.MIN_EXPRESSION_LENGTH) {
-                rc.setOk(false);
-                rc.setMessage(DefaultMessagesImpl.getString("IndicatorDefinition.validateTooShort"));//$NON-NLS-1$
-                return rc;
+            if (!language.equals(PatternLanguageType.JAVA.getLiteral())) {
+                String body = expression.getBody();
+                if (null == body || body.length() + 1 < UDIHelper.MIN_EXPRESSION_LENGTH) {
+                    rc.setOk(false);
+                    rc.setMessage(DefaultMessagesImpl.getString("IndicatorDefinition.validateTooShort"));//$NON-NLS-1$
+                    return rc;
+                }
             }
             if (version != null && !PluginConstant.EMPTY_STRING.equals(version)) {
                 language = language + " V" + expression.getVersion();//$NON-NLS-1$
