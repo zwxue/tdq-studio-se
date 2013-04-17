@@ -22,8 +22,6 @@ import java.util.List;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EObjectWithInverseResolvingEList;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.talend.commons.utils.WorkspaceUtils;
@@ -42,29 +40,10 @@ import orgomg.cwm.objectmodel.core.ModelElement;
 public class WorkbenchUtilsTest {
 
     /**
-     * DOC yyin Comment method "setUp".
-     * 
-     * @throws java.lang.Exception
-     */
-    @Before
-    public void setUp() throws Exception {
-    }
-
-    /**
-     * DOC yyin Comment method "tearDown".
-     * 
-     * @throws java.lang.Exception
-     */
-    @After
-    public void tearDown() throws Exception {
-    }
-
-    /**
      * Test method for
      * {@link org.talend.dataprofiler.core.ui.utils.WorkbenchUtils#impactExistingAnalyses(orgomg.cwm.foundation.softwaredeployment.DataProvider)}
      * .
      */
-    @SuppressWarnings("unchecked")
     @Test
     public void testImpactExistingAnalyses_1() {
         DatabaseConnection mock_data = mock(DatabaseConnection.class);
@@ -88,6 +67,11 @@ public class WorkbenchUtilsTest {
         assertEquals(1, result.size());
     }
 
+    /**
+     * Test method for
+     * {@link org.talend.dataprofiler.core.ui.utils.WorkbenchUtils#impactExistingAnalyses(orgomg.cwm.foundation.softwaredeployment.DataProvider)}
+     * .
+     */
     // when getClientDependency return null
     @Test
     public void testImpactExistingAnalyses_2() {
@@ -124,6 +108,6 @@ public class WorkbenchUtilsTest {
         assertEquals("test_", WorkspaceUtils.normalize("test?")); //$NON-NLS-1$ //$NON-NLS-2$
         assertEquals("test__", WorkspaceUtils.normalize("test'\"")); //$NON-NLS-1$ //$NON-NLS-2$
         assertEquals("_test_", WorkspaceUtils.normalize("(test)")); //$NON-NLS-1$ //$NON-NLS-2$
-        assertEquals("__________", WorkspaceUtils.normalize("#^&/:;\\~.!")); //$NON-NLS-1$ //$NON-NLS-2$
+        assertEquals("___________", WorkspaceUtils.normalize("#^&/:;\\~.! ")); //$NON-NLS-1$ //$NON-NLS-2$
     }
 }
