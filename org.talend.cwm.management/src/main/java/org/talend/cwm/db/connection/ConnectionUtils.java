@@ -1373,37 +1373,32 @@ public final class ConnectionUtils {
     @Deprecated
     public static DatabaseConnection fillDbConnectionInformation(DatabaseConnection dbConn) {
         // fill database structure
-        if (DatabaseConstant.XML_EXIST_DRIVER_NAME.equals(dbConn.getDriverClass())) { // xmldb(e.g eXist)
-            IXMLDBConnection xmlDBConnection = new EXistXMLDBConnection(dbConn.getDriverClass(), dbConn.getURL());
-            ConnectionHelper.addXMLDocuments(xmlDBConnection.createConnection(dbConn));
-        } else {
-            boolean noStructureExists = ConnectionHelper.getAllCatalogs(dbConn).isEmpty()
-                    && ConnectionHelper.getAllSchemas(dbConn).isEmpty();
-            java.sql.Connection sqlConn = null;
-            try {
-                if (noStructureExists) { // do no override existing catalogs or
-                                         // schemas
-                                         // Map<String, String> paramMap =
-                                         // ParameterUtil.toMap(ConnectionUtils.createConnectionParam(dbConn));
-                    IMetadataConnection metaConnection = ConvertionHelper.convert(dbConn);
-                    dbConn = (DatabaseConnection) MetadataFillFactory.getDBInstance().fillUIConnParams(metaConnection, dbConn);
-                    sqlConn = MetadataConnectionUtils.checkConnection(metaConnection).getObject();
+        boolean noStructureExists = ConnectionHelper.getAllCatalogs(dbConn).isEmpty()
+                && ConnectionHelper.getAllSchemas(dbConn).isEmpty();
+        java.sql.Connection sqlConn = null;
+        try {
+            if (noStructureExists) { // do no override existing catalogs or
+                                     // schemas
+                                     // Map<String, String> paramMap =
+                                     // ParameterUtil.toMap(ConnectionUtils.createConnectionParam(dbConn));
+                IMetadataConnection metaConnection = ConvertionHelper.convert(dbConn);
+                dbConn = (DatabaseConnection) MetadataFillFactory.getDBInstance().fillUIConnParams(metaConnection, dbConn);
+                sqlConn = MetadataConnectionUtils.checkConnection(metaConnection).getObject();
 
-                    if (sqlConn != null) {
-                        DatabaseMetaData dm = ExtractMetaDataUtils.getDatabaseMetaData(sqlConn, dbConn, false);
-                        MetadataFillFactory.getDBInstance().fillCatalogs(dbConn, dm,
-                                MetadataConnectionUtils.getPackageFilter(dbConn, dm, true));
-                        MetadataFillFactory.getDBInstance().fillSchemas(dbConn, dm,
-                                MetadataConnectionUtils.getPackageFilter(dbConn, dm, false));
-                    }
-
-                }
-            } finally {
                 if (sqlConn != null) {
-                    ConnectionUtils.closeConnection(sqlConn);
+                    DatabaseMetaData dm = ExtractMetaDataUtils.getDatabaseMetaData(sqlConn, dbConn, false);
+                    MetadataFillFactory.getDBInstance().fillCatalogs(dbConn, dm,
+                            MetadataConnectionUtils.getPackageFilter(dbConn, dm, true));
+                    MetadataFillFactory.getDBInstance().fillSchemas(dbConn, dm,
+                            MetadataConnectionUtils.getPackageFilter(dbConn, dm, false));
                 }
 
             }
+        } finally {
+            if (sqlConn != null) {
+                ConnectionUtils.closeConnection(sqlConn);
+            }
+
         }
         return dbConn;
     }
