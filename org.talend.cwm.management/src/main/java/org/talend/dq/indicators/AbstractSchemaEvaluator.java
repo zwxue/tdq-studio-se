@@ -241,7 +241,9 @@ public abstract class AbstractSchemaEvaluator<T> extends Evaluator<T> {
         if (idx != null) {
             while (idx.next()) {
                 // MOD msjian 2011-10-9 TDQ-3566: incorrect index number result in overview analysis
-                if (idx.getString("INDEX_NAME") != null) { //$NON-NLS-1$
+                // MOD 20130418 TDQ-6823 use type!=tableIndexStatistic to filter the statistic index(do not show this
+                // type)
+                if (0 != idx.getShort("TYPE")) { //$NON-NLS-1$
                     idxCount += 1;
                 }
                 // TDQ-3566 ~
