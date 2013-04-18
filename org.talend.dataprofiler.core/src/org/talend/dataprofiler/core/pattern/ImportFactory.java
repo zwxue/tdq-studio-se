@@ -44,14 +44,13 @@ import org.eclipse.jface.wizard.WizardDialog;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.commons.utils.io.FilesUtils;
 import org.talend.core.exception.TalendInternalPersistenceException;
-import org.talend.core.model.metadata.builder.database.DqRepositoryViewService;
+import org.talend.core.model.properties.TDQItem;
 import org.talend.cwm.constants.DevelopmentStatus;
 import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.relational.TdExpression;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.action.actions.ImportObject;
-import org.talend.dataprofiler.core.ui.action.provider.NewSourcePatternActionProvider;
 import org.talend.dataprofiler.core.ui.imex.ImportFromExchangeWizard;
 import org.talend.dataprofiler.core.ui.utils.UDIUtils;
 import org.talend.dataprofiler.core.ui.wizard.parserrule.ParserRuleToExcelEnum;
@@ -309,11 +308,16 @@ public final class ImportFactory {
                     }
 
                     try {
-                        String relativePath = "Patterns/" + createAndStorePattern(patternParameters, selectionFolder, type); //$NON-NLS-1$
-                        names.add(name);
+                        TypedReturnCode<Object> create = createAndStorePattern(patternParameters, selectionFolder, type);
+                        if (create.isOk()) {
+                            names.add(name);
 
-                        importEvent.add(new ReturnCode(DefaultMessagesImpl.getString("ImportFactory.importPattern", name, //$NON-NLS-1$
-                                relativePath), true));
+                            importEvent.add(new ReturnCode(DefaultMessagesImpl.getString("ImportFactory.importPattern", name, //$NON-NLS-1$
+                                    selectionFolder.getProjectRelativePath().toString()), true));
+                        } else {
+                            throw new TalendInternalPersistenceException(create.getMessage());
+                        }
+
                     } catch (Exception e) {
                         importEvent.add(new ReturnCode(DefaultMessagesImpl.getString("ImportFactory.SaveFailed", name), false)); //$NON-NLS-1$
                     }
@@ -420,8 +424,8 @@ public final class ImportFactory {
         }
     }
 
-    private static String createAndStorePattern(PatternParameters parameters, IFolder selectionFolder, ExpressionType type)
-            throws TalendInternalPersistenceException {
+    private static TypedReturnCode<Object> createAndStorePattern(PatternParameters parameters, IFolder selectionFolder,
+            ExpressionType type) throws TalendInternalPersistenceException {
 
         Pattern pattern = createPattern(parameters.name, parameters.auther, parameters.description, parameters.purpose,
                 parameters.status);
@@ -434,10 +438,7 @@ public final class ImportFactory {
         boolean validStatus = PatternUtilities.isPatternValid(pattern);
         TaggedValueHelper.setValidStatus(validStatus, pattern);
 
-        String fname = DqRepositoryViewService.createFilename(parameters.name, NewSourcePatternActionProvider.EXTENSION_PATTERN);
-
         try {
-
             String relativePath = parameters.relativePath;
             if (EResourceConstant.PATTERN_REGEX.getName().equals(relativePath)
                     || EResourceConstant.PATTERN_SQL.getName().equals(relativePath)) {
@@ -458,15 +459,7 @@ public final class ImportFactory {
             log.error(e, e);
         }
 
-        IFile pfile = selectionFolder.getFile(fname);
-
-        TypedReturnCode<Object> create = ElementWriterFactory.getInstance().createPatternWriter()
-                .create(pattern, selectionFolder);
-        if (create.isOk()) {
-            return ResourceManager.getPatternFolder().getLocationURI().relativize(selectionFolder.getLocationURI()).toString();
-        } else {
-            throw new TalendInternalPersistenceException(create.getMessage());
-        }
+        return ElementWriterFactory.getInstance().createPatternWriter().create(pattern, selectionFolder);
     }
 
     /**
@@ -668,14 +661,17 @@ public final class ImportFactory {
                     }
 
                     udiParameters.setParaMap(buildIndDefPara(record));
-                    createAndStoreUDI(udiParameters, selectionFolder);
+                    TypedReturnCode<Object> create = createAndStoreUDI(udiParameters, selectionFolder);
+                    if (create.isOk()) {
+                        names.add(name);
 
-                    names.add(name);
-
-                    // add the suscess message to display.
-                    information.add(new ReturnCode(DefaultMessagesImpl.getString("ImportFactory.importedSucess" //$NON-NLS-1$
-                            , name), true));
-
+                        // add the suscess message to display.
+                        information.add(new ReturnCode(DefaultMessagesImpl.getString("ImportFactory.importedSucess" //$NON-NLS-1$
+                                , ((TDQItem) create.getObject()).getProperty().getDisplayName(), selectionFolder
+                                        .getProjectRelativePath().toString()), true));
+                    } else {
+                        throw new TalendInternalPersistenceException(create.getMessage());
+                    }
                 }
 
                 reader.close();
@@ -844,7 +840,7 @@ public final class ImportFactory {
      * @param parameters
      * @param selectionFolder
      */
-    private static void createAndStoreUDI(UDIParameters parameters, IFolder selectionFolder) {
+    private static TypedReturnCode<Object> createAndStoreUDI(UDIParameters parameters, IFolder selectionFolder) {
 
         UDIndicatorDefinition indDef = UDIHelper.createUDI(parameters.name, parameters.auther, parameters.description,
                 parameters.purpose, parameters.status, parameters.category, parameters.javaClassName, parameters.javaJarPath);
@@ -868,8 +864,6 @@ public final class ImportFactory {
             }
         }
 
-        String fname = DqRepositoryViewService.createFilename(parameters.name, FactoriesUtil.DEFINITION);
-
         try {
 
             String[] folderNames = parameters.relativePath.split("/"); //$NON-NLS-1$
@@ -887,7 +881,7 @@ public final class ImportFactory {
         }
 
         indDef = UDIUtils.createDefaultDrillDownList(indDef);
-        ElementWriterFactory.getInstance().createIndicatorDefinitionWriter().create(indDef, selectionFolder);
+        return ElementWriterFactory.getInstance().createIndicatorDefinitionWriter().create(indDef, selectionFolder);
     }
 
     /**
@@ -1010,7 +1004,7 @@ public final class ImportFactory {
                     } else {
                         names.add(name);
                         information.add(new ReturnCode(DefaultMessagesImpl.getString("ImportFactory.importedParserRuleSucess" //$NON-NLS-1$
-                                , name), true));
+                                , name, selectionFolder.getProjectRelativePath().toString()), true));
                         createAndStoreParserRule(prParameters, selectionFolder, name);
                     }
                 }
