@@ -701,9 +701,9 @@ public abstract class TwoPartCheckSelectionDialog extends SelectionStatusDialog 
                             } else {
                                 // ADD msjian 2011-7-27 22206: fixed note 93509 when cleared the filter, the selected
                                 // turn to unselected
-                                unfoldToCheckedElements();
                                 sTableViewer.refresh();
                             }
+                            unfoldToCheckedElements();
                         } else {
                             DQRepositoryNode.setFiltering(true);
                             if (isfViewer) {
@@ -718,6 +718,7 @@ public abstract class TwoPartCheckSelectionDialog extends SelectionStatusDialog 
                                 fViewer.refresh();
                                 fViewer.expandAll();
                                 DQRepositoryNode.setIsReturnAllNodesWhenFiltering(true);
+                                restoreCheckStatus();
                             } else {
                                 DQRepositoryNode.setIsReturnAllNodesWhenFiltering(false);
                                 sTableViewer.refresh();

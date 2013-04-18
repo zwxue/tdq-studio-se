@@ -343,6 +343,8 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
                 }
                 // ~
             }
+        } else {
+            this.getTableViewer().setInput(null);
         }
 
     }

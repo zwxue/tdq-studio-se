@@ -72,7 +72,7 @@ public class TablesSelectionDialog extends TwoPartCheckSelectionDialog {
 
     private static Logger log = Logger.getLogger(TablesSelectionDialog.class);
 
-    private Map<RepositoryNodeKey, TableCheckedMap> packageCheckedMap;
+    private Map<RepositoryNodeKey, List<IRepositoryNode>> packageCheckedMap;
 
     private RepositoryNode metadataFolder = RepositoryNodeHelper.getRootNode(ERepositoryObjectType.METADATA);
 
@@ -87,13 +87,13 @@ public class TablesSelectionDialog extends TwoPartCheckSelectionDialog {
     }
 
     public TablesSelectionDialog(AbstractAnalysisMetadataPage metadataFormPage, Shell parent, String title,
-            List<IRepositoryNode> setList, String message) {
+            List<IRepositoryNode> columnSetList, String message) {
         super(metadataFormPage, parent, message);
         this.setDialogType(DIALOG_TYPE_TABLE);
         addFirstPartFilters();
         this.setInput(metadataFolder);
-        packageCheckedMap = new HashMap<RepositoryNodeKey, TableCheckedMap>();
-        initCheckedTable(setList);
+        packageCheckedMap = new HashMap<RepositoryNodeKey, List<IRepositoryNode>>();
+        initCheckedColumnSet(columnSetList);
         this.setTitle(title);
         this.tableType = TableSelectionType.TABLE;
     }
@@ -109,17 +109,16 @@ public class TablesSelectionDialog extends TwoPartCheckSelectionDialog {
         while (it.hasNext()) {
             RepositoryNodeKey csk = it.next();
             IRepositoryNode packageNode = csk.getPackageNode();
-            TableCheckedMap tableCheckedMap = packageCheckedMap.get(csk);
-            List<IRepositoryNode> allCheckedTableNodeList = tableCheckedMap.getAllCheckedTableNodeList(packageNode);
-            if (isHideNode(allCheckedTableNodeList) && RepositoryNodeHelper.isOpenDQCommonViewer()) {
-                packageNode = findLastVisibleNode(allCheckedTableNodeList.get(0));
+            List<IRepositoryNode> checkedTableNodeList = packageCheckedMap.get(csk);
+            if (isHideNode(checkedTableNodeList) && RepositoryNodeHelper.isOpenDQCommonViewer()) {
+                packageNode = findLastVisibleNode(checkedTableNodeList.get(0));
                 this.setMessage(DefaultMessagesImpl.getString("ColumnSelectionDialog.CannotFindNodeMessage")); //$NON-NLS-1$
                 if (packageNode == null) {
                     return;
                 }
             }
             // // to get TableFolderNode or viewFolderNode
-            IRepositoryNode selectNode = getAdaptLocationNode(packageNode, allCheckedTableNodeList.get(0));
+            IRepositoryNode selectNode = getAdaptLocationNode(packageNode, checkedTableNodeList.get(0));
             if (selectNode != null) {
                 packageNode = selectNode;
             }
@@ -143,8 +142,7 @@ public class TablesSelectionDialog extends TwoPartCheckSelectionDialog {
         packeNodeKeyArray = packageCheckedMap.keySet().toArray(packeNodeKeyArray);
         List<IRepositoryNode> folderNodeList = new ArrayList<IRepositoryNode>();
         for (RepositoryNodeKey pKey : packeNodeKeyArray) {
-            TableCheckedMap tableCheckedMap = packageCheckedMap.get(pKey);
-            List<IRepositoryNode> allCheckedTableNodeList = tableCheckedMap.getAllCheckedTableNodeList(pKey.getPackageNode());
+            List<IRepositoryNode> allCheckedTableNodeList = packageCheckedMap.get(pKey);
             int addedCount = 0;
             for (IRepositoryNode tableOrViewNode : allCheckedTableNodeList) {
                 // Add the adapted table or view node into list.
@@ -160,14 +158,13 @@ public class TablesSelectionDialog extends TwoPartCheckSelectionDialog {
             }
         }
         getTreeViewer().setCheckedElements(folderNodeList.toArray());
-
     }
 
-    private void initCheckedTable(List<IRepositoryNode> tableList) {
+    private void initCheckedColumnSet(List<IRepositoryNode> columnSetList) {
         List<IRepositoryNode> packageList = new ArrayList<IRepositoryNode>();
-        for (IRepositoryNode tableNode : tableList) {
-            if (tableNode instanceof DBTableRepNode) {
-                DBTableRepNode tableRepNode = (DBTableRepNode) tableNode;
+        for (IRepositoryNode columnSetNode : columnSetList) {
+            if (columnSetNode instanceof DBTableRepNode) {
+                DBTableRepNode tableRepNode = (DBTableRepNode) columnSetNode;
                 // MOD qiongli 2012-5-4 TDQ-5137 use the table parent(DBTableFolderRepNode not DBCatalogRepNode or
                 // DBSchemaRepNode).
                 IRepositoryNode parentPackageNode = tableRepNode.getParent();
@@ -176,28 +173,28 @@ public class TablesSelectionDialog extends TwoPartCheckSelectionDialog {
                         packageList.add(parentPackageNode);
                     }
                     RepositoryNodeKey packageKey = new RepositoryNodeKey(parentPackageNode);
-                    TableCheckedMap tableCheckedMap = packageCheckedMap.get(packageKey);
-                    if (tableCheckedMap == null) {
-                        tableCheckedMap = new TableCheckedMap();
-                        this.packageCheckedMap.put(packageKey, tableCheckedMap);
+                    List<IRepositoryNode> repoNodelist = packageCheckedMap.get(packageKey);
+                    if (repoNodelist == null) {
+                        repoNodelist = new ArrayList<IRepositoryNode>();
+                        this.packageCheckedMap.put(packageKey, repoNodelist);
                     }
-                    tableCheckedMap.putTableChecked(tableNode, Boolean.TRUE);
+                    repoNodelist.add(tableRepNode);
                 }
-            } else if (tableNode instanceof DBViewRepNode) {
+            } else if (columnSetNode instanceof DBViewRepNode) {
                 // support DBview
-                DBViewRepNode viewRepNode = (DBViewRepNode) tableNode;
+                DBViewRepNode viewRepNode = (DBViewRepNode) columnSetNode;
                 IRepositoryNode parentPackageNode = viewRepNode.getParent();
                 if (parentPackageNode != null) {
                     if (!packageList.contains(parentPackageNode)) {
                         packageList.add(parentPackageNode);
                     }
                     RepositoryNodeKey packageKey = new RepositoryNodeKey(parentPackageNode);
-                    TableCheckedMap tableCheckedMap = packageCheckedMap.get(packageKey);
-                    if (tableCheckedMap == null) {
-                        tableCheckedMap = new TableCheckedMap();
-                        this.packageCheckedMap.put(packageKey, tableCheckedMap);
+                    List<IRepositoryNode> repoNodelist = packageCheckedMap.get(packageKey);
+                    if (repoNodelist == null) {
+                        repoNodelist = new ArrayList<IRepositoryNode>();
+                        this.packageCheckedMap.put(packageKey, repoNodelist);
                     }
-                    tableCheckedMap.putTableChecked(tableNode, Boolean.TRUE);
+                    repoNodelist.add(viewRepNode);
                 }
             }
         }
@@ -281,54 +278,43 @@ public class TablesSelectionDialog extends TwoPartCheckSelectionDialog {
 
     private IRepositoryNode[] getCheckedTableNodes(IRepositoryNode node) {
         RepositoryNodeKey packageKey = new RepositoryNodeKey(node);
-        TableCheckedMap tableCheckMap = packageCheckedMap.get(packageKey);
-        if (tableCheckMap == null) {
+        List<IRepositoryNode> repoNodeList = packageCheckedMap.get(packageKey);
+        if (repoNodeList == null) {
             Boolean allCheckFlag = this.getTreeViewer().getChecked(node);
             this.getTableViewer().setAllChecked(allCheckFlag);
-            tableCheckMap = new TableCheckedMap();
-            List<IRepositoryNode> nmaedColumnSetNodes = RepositoryNodeHelper.getNmaedColumnSetNodes(node);
-            IRepositoryNode[] tables = nmaedColumnSetNodes.toArray(new IRepositoryNode[nmaedColumnSetNodes.size()]);
-            tableCheckMap.putAllChecked(tables, allCheckFlag);
-            packageCheckedMap.put(packageKey, tableCheckMap);
-            return allCheckFlag ? tables : null;
+            repoNodeList = allCheckFlag ? RepositoryNodeHelper.getNmaedColumnSetNodes(node) : new ArrayList<IRepositoryNode>();
+            packageCheckedMap.put(packageKey, repoNodeList);
+            return allCheckFlag ? repoNodeList.toArray(new IRepositoryNode[repoNodeList.size()]) : null;
         } else {
-            return tableCheckMap.getCheckedTableNodes(RepositoryNodeHelper.getNmaedColumnSetNodes(node));
+            return repoNodeList.toArray(new IRepositoryNode[repoNodeList.size()]);
         }
     }
 
-    private void handleTableChecked(IRepositoryNode table, Boolean checkedFlag) {
-        // IRepositoryNode parentPackageNode = DBTableRepNode.getParentPackageNode(table);
-        IRepositoryNode parentPackageNode = table.getParent();
+    private void handleTableChecked(IRepositoryNode columnSet, Boolean checkedFlag) {
+        IRepositoryNode parentPackageNode = columnSet.getParent();
         if (checkedFlag) {
             getTreeViewer().setChecked(parentPackageNode, true);
         }
-        TableCheckedMap tableCheckMap = packageCheckedMap.get(new RepositoryNodeKey(parentPackageNode));
-
-        if (tableCheckMap != null) {
-            tableCheckMap.putTableChecked(table, checkedFlag);
+        List<IRepositoryNode> repoNodeList = packageCheckedMap.get(new RepositoryNodeKey(parentPackageNode));
+        if (repoNodeList == null) {
+            repoNodeList = new ArrayList<IRepositoryNode>();
         }
-
+        if (checkedFlag) {
+            repoNodeList.add(columnSet);
+        } else {
+            repoNodeList.remove(columnSet);
+        }
         // If the element in the right table check viewer are all DESELECTED, then clear the check status in the left
         // tree viewer.
-        if (!checkedFlag && (tableCheckMap == null || tableCheckMap.getAllCheckedTableNodeList(parentPackageNode).size() == 0)) {
+        if (!checkedFlag && repoNodeList.size() == 0) {
             getTreeViewer().setChecked(parentPackageNode, false);
         }
     }
 
     private void handleTablesChecked(IRepositoryNode packageNode, Boolean checkedFlag) {
         RepositoryNodeKey key = new RepositoryNodeKey(packageNode);
-        TableCheckedMap tableCheckMap = packageCheckedMap.get(key);
-        List<IRepositoryNode> nmaedColumnSetNodes = RepositoryNodeHelper.getNmaedColumnSetNodes(packageNode);
-        if (tableCheckMap != null) {
-            tableCheckMap.clear();
-            tableCheckMap
-                    .putAllChecked(nmaedColumnSetNodes.toArray(new IRepositoryNode[nmaedColumnSetNodes.size()]), checkedFlag);
-        } else {
-            tableCheckMap = new TableCheckedMap();
-            tableCheckMap
-                    .putAllChecked(nmaedColumnSetNodes.toArray(new IRepositoryNode[nmaedColumnSetNodes.size()]), checkedFlag);
-            packageCheckedMap.put(key, tableCheckMap);
-        }
+        List<IRepositoryNode> repoNodeList = checkedFlag ? RepositoryNodeHelper.getNmaedColumnSetNodes(packageNode) : null;
+        packageCheckedMap.put(key, repoNodeList);
         getTableViewer().setAllChecked(checkedFlag);
     }
 
@@ -372,13 +358,17 @@ public class TablesSelectionDialog extends TwoPartCheckSelectionDialog {
 
     public void selectionChanged(SelectionChangedEvent event) {
         Object selectedObj = ((IStructuredSelection) event.getSelection()).getFirstElement();
-        if (selectedObj instanceof DBTableFolderRepNode || selectedObj instanceof DBViewFolderRepNode) {
-            IRepositoryNode node = (IRepositoryNode) selectedObj;
-            this.setOutput(node);
-            IRepositoryNode[] tables = getCheckedTableNodes(node);
-            if (tables != null) {
-                this.getTableViewer().setCheckedElements(tables);
+        if (selectedObj != null) {
+            if (selectedObj instanceof DBTableFolderRepNode || selectedObj instanceof DBViewFolderRepNode) {
+                IRepositoryNode node = (IRepositoryNode) selectedObj;
+                this.setOutput(node);
+                IRepositoryNode[] tables = getCheckedTableNodes(node);
+                if (tables != null) {
+                    this.getTableViewer().setCheckedElements(tables);
+                }
             }
+        } else {
+            this.getTableViewer().setInput(null);
         }
     }
 
@@ -473,82 +463,6 @@ public class TablesSelectionDialog extends TwoPartCheckSelectionDialog {
         }
     }
 
-    /**
-     * @author xqliu
-     * 
-     * FIXME this inner class should be static. Confirm and fix the error.
-     */
-    class TableCheckedMap {
-
-        Map<IRepositoryNode, Boolean> tableNameMap = new HashMap<IRepositoryNode, Boolean>();
-
-        public void putTableChecked(IRepositoryNode set, Boolean isChecked) {
-            tableNameMap.put(set, isChecked);
-        }
-
-        public Boolean getTableChecked(IRepositoryNode set) {
-            return tableNameMap.get(set);
-        }
-
-        public void putAllChecked(IRepositoryNode[] sets, Boolean isChecked) {
-            for (IRepositoryNode set : sets) {
-                tableNameMap.put(set, isChecked);
-            }
-        }
-
-        public IRepositoryNode[] getCheckedTableNodes(List<IRepositoryNode> setList) {
-            List<IRepositoryNode> checkedTables = new ArrayList<IRepositoryNode>();
-            for (IRepositoryNode set : setList) {
-                if (tableNameMap.containsKey(set) && tableNameMap.get(set)) {
-                    checkedTables.add(set);
-                }
-            }
-            return checkedTables.toArray(new IRepositoryNode[checkedTables.size()]);
-        }
-
-        /**
-         * 
-         * Get All the checked table node If the node not been hide on the DQRepositoryView
-         * 
-         * @param packageNode
-         * @return
-         */
-        public List<IRepositoryNode> getCheckedTableNodeList(IRepositoryNode packageNode) {
-            List<IRepositoryNode> checkedTables = new ArrayList<IRepositoryNode>();
-
-            List<IRepositoryNode> setList = RepositoryNodeHelper.getNmaedColumnSetNodes(packageNode);
-
-            for (IRepositoryNode set : setList) {
-                if (tableNameMap.containsKey(set) && tableNameMap.get(set)) {
-                    checkedTables.add(set);
-                }
-            }
-            return checkedTables;
-        }
-
-        /**
-         * 
-         * Get All the checked table node whatever whether has been hide on the DQRepositoryView
-         * 
-         * @param packageNode
-         * @return
-         */
-        public List<IRepositoryNode> getAllCheckedTableNodeList(IRepositoryNode packageNode) {
-            List<IRepositoryNode> checkedTables = new ArrayList<IRepositoryNode>();
-            for (IRepositoryNode set : tableNameMap.keySet()) {
-                if (tableNameMap.get(set)) {
-                    checkedTables.add(set);
-                }
-            }
-            return checkedTables;
-        }
-
-        public void clear() {
-            tableNameMap.clear();
-        }
-
-    }
-
     @Override
     protected void computeResult() {
         setResult(getAllCheckedTables());
@@ -564,8 +478,7 @@ public class TablesSelectionDialog extends TwoPartCheckSelectionDialog {
             IRepositoryNode node = (IRepositoryNode) obj;
             RepositoryNodeKey packageKey = new RepositoryNodeKey(node);
             if (packageCheckedMap.containsKey(packageKey)) {
-                TableCheckedMap tableMap = packageCheckedMap.get(packageKey);
-                tableList.addAll(tableMap.getCheckedTableNodeList(node));
+                tableList.addAll(packageCheckedMap.get(packageKey));
             } else {
                 tableList.addAll(RepositoryNodeHelper.getNmaedColumnSetNodes(node));
             }
@@ -576,8 +489,7 @@ public class TablesSelectionDialog extends TwoPartCheckSelectionDialog {
         Iterator<?> it = packageCheckedMap.keySet().iterator();
         while (it.hasNext()) {
             RepositoryNodeKey packageKey = (RepositoryNodeKey) it.next();
-            TableCheckedMap tableMap = packageCheckedMap.get(packageKey);
-            List<?> checkedTableNodeList = tableMap.getCheckedTableNodeList(packageKey.getPackageNode());
+            List<?> checkedTableNodeList = packageCheckedMap.get(packageKey);
             for (int i = 0; i < checkedTableNodeList.size(); i++) {
                 if (!tableList.contains(checkedTableNodeList.get(i))) {
                     tableList.add((IRepositoryNode) checkedTableNodeList.get(i));
