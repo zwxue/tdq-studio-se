@@ -890,8 +890,6 @@ public final class ImportFactory {
             log.error(e, e);
         }
 
-        IFile pfile = selectionFolder.getFile(fname);
-
         return ElementWriterFactory.getInstance().createIndicatorDefinitionWriter().create(indDef, selectionFolder);
     }
 
