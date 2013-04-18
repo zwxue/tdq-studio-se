@@ -61,6 +61,20 @@ import orgomg.cwm.objectmodel.core.ModelElement;
  */
 public class ExportWizardPage extends WizardPage {
 
+    private static final String SHOW_ONLY_SELECTED = Messages.getString("ExportWizardPage.9"); //$NON-NLS-1$
+
+    private static final String SELECT_ARCHIVE_FILE = Messages.getString("ExportWizardPage.8"); //$NON-NLS-1$
+
+    private static final String BROWSE = Messages.getString("ExportWizardPage.7"); //$NON-NLS-1$
+
+    private static final String SELECT_ROOT_DIR = Messages.getString("ExportWizardPage.6"); //$NON-NLS-1$
+
+    private static final String INCLUDE_DEPENDANCY = Messages.getString("ExportWizardPage.12"); //$NON-NLS-1$
+
+    private static final String DESELECT_ALL = Messages.getString("ExportWizardPage.11"); //$NON-NLS-1$
+
+    private static final String SELECT_ALL = Messages.getString("ExportWizardPage.10"); //$NON-NLS-1$
+
     private static Logger log = Logger.getLogger(ExportWizardPage.class);
 
     private CheckboxTreeViewer repositoryTree;
@@ -160,7 +174,7 @@ public class ExportWizardPage extends WizardPage {
      */
     protected String getTextContent(Text archTxt2) {
         if (archTxt2 == null) {
-            return "";
+            return PluginConstant.EMPTY_STRING;
         }
         return archTxt2.getText();
     }
@@ -417,13 +431,16 @@ public class ExportWizardPage extends WizardPage {
         btnsComposite.setLayoutData(gd);
 
         Button selectAllBTN = new Button(btnsComposite, SWT.PUSH);
-        selectAllBTN.setText("Select All");//$NON-NLS-1$ 
+        selectAllBTN.setText(SELECT_ALL);
+        selectAllBTN.setToolTipText(SELECT_ALL);
 
         Button deselectAllBTN = new Button(btnsComposite, SWT.PUSH);
-        deselectAllBTN.setText("Deselect All");//$NON-NLS-1$ 
+        deselectAllBTN.setText(DESELECT_ALL);
+        deselectAllBTN.setToolTipText(DESELECT_ALL);
 
         Button addRequireBTN = new Button(btnsComposite, SWT.PUSH);
-        addRequireBTN.setText("Include dependancies");//$NON-NLS-1$ 
+        addRequireBTN.setText(INCLUDE_DEPENDANCY);
+        addRequireBTN.setToolTipText(INCLUDE_DEPENDANCY);
 
         Composite infoComposite = new Composite(utilityComposite, SWT.NONE);
         infoComposite.setLayout(new GridLayout());
@@ -435,13 +452,14 @@ public class ExportWizardPage extends WizardPage {
         infoComposite.setLayoutData(gd);
 
         final Button showSelectBTN = new Button(infoComposite, SWT.CHECK);
-        showSelectBTN.setText("Show only selected elements");//$NON-NLS-1$ 
+        showSelectBTN.setText(SHOW_ONLY_SELECTED);
+        showSelectBTN.setToolTipText(SHOW_ONLY_SELECTED);
 
         Button[] utilityBTNs = new Button[] { selectAllBTN, deselectAllBTN, addRequireBTN };
 
         for (Button btn : utilityBTNs) {
             gd = new GridData();
-            gd.widthHint = 150;
+            gd.widthHint = 170;
             gd.verticalIndent = 0;
             gd.horizontalIndent = 0;
 
@@ -531,25 +549,29 @@ public class ExportWizardPage extends WizardPage {
         selectComp.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
         dirBTN = new Button(selectComp, SWT.RADIO);
-        dirBTN.setText(Messages.getString("ExportWizardPage.6")); //$NON-NLS-1$
+        dirBTN.setText(SELECT_ROOT_DIR);
+        dirBTN.setToolTipText(SELECT_ROOT_DIR);
         setButtonLayoutData(dirBTN);
 
         dirTxt = new Text(selectComp, SWT.BORDER);
         dirTxt.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
         browseDirBTN = new Button(selectComp, SWT.PUSH);
-        browseDirBTN.setText(Messages.getString("ExportWizardPage.7")); //$NON-NLS-1$
+        browseDirBTN.setText(BROWSE);
+        browseDirBTN.setToolTipText(BROWSE);
         setButtonLayoutData(browseDirBTN);
 
         archBTN = new Button(selectComp, SWT.RADIO);
-        archBTN.setText(Messages.getString("ExportWizardPage.8")); //$NON-NLS-1$
+        archBTN.setText(SELECT_ARCHIVE_FILE);
+        archBTN.setToolTipText(SELECT_ARCHIVE_FILE);
         setButtonLayoutData(archBTN);
 
         archTxt = new Text(selectComp, SWT.BORDER);
         archTxt.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
         browseArchBTN = new Button(selectComp, SWT.PUSH);
-        browseArchBTN.setText(Messages.getString("ExportWizardPage.9")); //$NON-NLS-1$
+        browseArchBTN.setText(BROWSE);
+        browseArchBTN.setToolTipText(BROWSE);
         setButtonLayoutData(browseArchBTN);
     }
 
