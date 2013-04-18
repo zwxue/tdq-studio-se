@@ -378,11 +378,25 @@ public final class ImportFactory {
                                 }
                             }
 
-                            String relativePath = "Patterns/" + createAndStorePattern(patternParameters, selectionFolder, type); //$NON-NLS-1$
+                            try {
+                                TypedReturnCode<Object> create = createAndStorePattern(patternParameters, selectionFolder, type);
+                                if (create.isOk()) {
+                                    names.add(contents);
 
-                            names.add(contents);
-                            importEvent.add(new ReturnCode(DefaultMessagesImpl.getString("ImportFactory.importPattern", contents, //$NON-NLS-1$
-                                    relativePath), true));
+                                    importEvent
+                                            .add(new ReturnCode(
+                                                    DefaultMessagesImpl
+                                                            .getString(
+                                                                    "ImportFactory.importPattern", ((TDQItem) create.getObject()).getProperty().getDisplayName(), //$NON-NLS-1$
+                                                                    selectionFolder.getProjectRelativePath().toString()), true));
+                                } else {
+                                    throw new TalendInternalPersistenceException(create.getMessage());
+                                }
+
+                            } catch (Exception e) {
+                                importEvent.add(new ReturnCode(DefaultMessagesImpl
+                                        .getString("ImportFactory.SaveFailed", contents), false)); //$NON-NLS-1$
+                            }
                         }
                     }
                 }
@@ -392,9 +406,6 @@ public final class ImportFactory {
                 log.error(e, e);
                 importEvent.add(new ReturnCode(DefaultMessagesImpl.getString("ImportFactory.importFailed"), false)); //$NON-NLS-1$
             } catch (IOException e) {
-                log.error(e, e);
-                importEvent.add(new ReturnCode(DefaultMessagesImpl.getString("ImportFactory.importFailed"), false)); //$NON-NLS-1$
-            } catch (TalendInternalPersistenceException e) {
                 log.error(e, e);
                 importEvent.add(new ReturnCode(DefaultMessagesImpl.getString("ImportFactory.importFailed"), false)); //$NON-NLS-1$
             }
