@@ -36,7 +36,6 @@
       <import plugin="org.eclipse.core.resources" version="3.4.0" match="greaterOrEqual"/>
       <import plugin="org.eclipse.core.runtime" version="3.6.0" match="compatible"/>
       <import plugin="org.talend.libraries.apache"/>
-      <import plugin="org.talend.libraries.eXist"/>
       <import plugin="org.eclipse.xsd"/>
       <import plugin="org.apache.axis"/>
       <import plugin="javax.xml.rpc" version="1.1.0" match="compatible"/>
