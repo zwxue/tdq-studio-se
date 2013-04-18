@@ -162,9 +162,8 @@ public class DuplicateAction extends Action {
                 }
             }
 
-            CorePlugin.getDefault().refreshWorkSpace();
-            // CorePlugin.getDefault().refreshDQView();
             if (duplicateObject != null) {
+                CorePlugin.getDefault().refreshWorkSpace();
                 selectAndReveal(duplicateObject);
             }
         } catch (BusinessException e) {
