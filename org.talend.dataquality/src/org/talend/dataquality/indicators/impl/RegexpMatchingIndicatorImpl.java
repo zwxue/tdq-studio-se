@@ -10,11 +10,6 @@ import java.util.regex.Matcher;
 import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
-import org.talend.core.model.metadata.builder.connection.Connection;
-import org.talend.core.model.metadata.builder.connection.MDMConnection;
-import org.talend.cwm.helper.ConnectionHelper;
-import org.talend.cwm.helper.SwitchHelpers;
-import org.talend.cwm.relational.TdColumn;
 import org.talend.dataquality.domain.Domain;
 import org.talend.dataquality.domain.pattern.Pattern;
 import org.talend.dataquality.helpers.DomainHelper;
@@ -96,11 +91,13 @@ public class RegexpMatchingIndicatorImpl extends PatternMatchingIndicatorImpl im
      * 
      * this mehtod only for job Action
      * 
+     * 1) only in Java Engine will call this method 2) get Java Regex first, if don't have Java Regex then get Default
+     * Regex, if don't have Default Regex then return null
+     * 
      * @return
      */
     @Override
     public String getRegex() {
-
         // MOD klliu 2010-06-12 bug 13695
         if (this.parameters != null) {
             final Domain dataValidDomain = parameters.getDataValidDomain();
@@ -110,31 +107,8 @@ public class RegexpMatchingIndicatorImpl extends PatternMatchingIndicatorImpl im
                     if (p != null) {
                         // MOD yyi 2009-09-29 Feature: 9289
                         String r = DomainHelper.getJavaRegexp(p);
-                        if (r == null) { // get regex valid for all kind of database and engine
+                        if (r == null) { // if don't have Java Regex, get the Default Regex
                             r = DomainHelper.getSQLRegexp(p);
-                            // MOD klliu 2010-06-18 bug : 13695
-                            if (r == null) { // get regex valid for all kind of database and engine
-                                TdColumn column = SwitchHelpers.COLUMN_SWITCH.doSwitch(analyzedElement);
-                                if (column != null) {
-                                    Connection tdDataProvider = ConnectionHelper.getTdDataProvider(column);
-                                    if (tdDataProvider == null) {
-                                        return null;
-                                    }
-                                    String dbType = null;
-                                    MDMConnection mdmConn = SwitchHelpers.MDMCONNECTION_SWITCH.doSwitch(tdDataProvider);
-                                    if (mdmConn != null) {
-                                        dbType = "MDM"; // FIXME
-                                    }
-
-                                    r = DomainHelper.getRegexp(p, dbType);
-                                    // MOD klliu 2010-07-08 bug 13695 give detail message
-                                    if (r == null) {
-                                        r = p.getName();
-                                        this.setJavaPatternMessage(r);
-                                    }
-                                    return r;
-                                }
-                            }
                         }
 
                         if (r != null) {
