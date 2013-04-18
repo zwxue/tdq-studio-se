@@ -18,6 +18,7 @@
  */
 package net.sourceforge.sqlexplorer.dbdetail.tab;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import net.sourceforge.sqlexplorer.Messages;
@@ -61,11 +62,17 @@ public class IndexesTab extends AbstractDataSetTab {
             TableNode tableNode = (TableNode) node;
 
             List<IndexInfo> indexes = node.getSession().getMetaData().getIndexInfo(tableNode.getTableInfo());
-            Comparable[][] dataRows = new Comparable[indexes.size()][];
+
+            List<Comparable[]> dataRows = new ArrayList<Comparable[]>();
             int index = 0;
             for (IndexInfo col : indexes) {
-            	Comparable[] row = new Comparable[COLUMN_LABELS.length];
-            	dataRows[index++] = row;
+                // MOD 20130418 TDQ-6823 use type!=tableIndexStatistic to filter the statistic index(do not show this
+                // type)
+                if ("STATISTIC".equalsIgnoreCase(col.getIndexType().name())) {
+                    continue;
+                }
+                Comparable[] row = new Comparable[COLUMN_LABELS.length];
+                dataRows.add(row);
 
             	int i = 0;
             	row[i++] = col.isNonUnique();
@@ -81,8 +88,8 @@ public class IndexesTab extends AbstractDataSetTab {
             	if (i != COLUMN_LABELS.length)
                     throw new RuntimeException(Messages.getString("ColumnInfoTab.runtimeException"));
             }
-            DataSet dataSet = new DataSet(COLUMN_LABELS, dataRows);
-            
+            DataSet dataSet = new DataSet(COLUMN_LABELS, dataRows.toArray(new Comparable[dataRows.size()][]));
+
             return dataSet;
         }
         
