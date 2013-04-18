@@ -108,7 +108,8 @@ public class EMFResourceHandle implements IDuplicateHandle {
                 if (dataPackages != null) {
                     for (Package oldDataPackage : dataPackages) {
                         EList<Package> newDataPackages = ((DatabaseConnection) newObject).getDataPackage();
-                        newDataPackages.add(oldDataPackage);
+                        Package copyEObject = (Package) EMFSharedResources.getInstance().copyEObject(oldDataPackage);
+                        newDataPackages.add(copyEObject);
                     }
                 }
             }
