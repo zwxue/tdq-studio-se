@@ -20,6 +20,7 @@ import java.util.Set;
 import org.apache.commons.collections.MultiMap;
 import org.apache.commons.collections.map.MultiValueMap;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.jface.viewers.AbstractTreeViewer;
 import org.eclipse.jface.viewers.CheckStateChangedEvent;
 import org.eclipse.jface.viewers.ICheckStateListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -104,6 +105,20 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
             getTreeViewer().expandToLevel(reposNode, 1);
             StructuredSelection structSel = new StructuredSelection(reposNode);
             getTreeViewer().setSelection(structSel);
+        }
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataprofiler.core.ui.dialog.TwoPartCheckSelectionDialog#restoreCheckStatus()
+     */
+    @Override
+    protected void restoreCheckStatus() {
+        Object[] checkElementArray = modelElementCheckedMap.keySet().toArray();
+        if (checkElementArray.length > 0) {
+            getTreeViewer().setCheckedElements(checkElementArray);
+            getTreeViewer().expandToLevel(checkElementArray[0], AbstractTreeViewer.ALL_LEVELS);
         }
     }
 

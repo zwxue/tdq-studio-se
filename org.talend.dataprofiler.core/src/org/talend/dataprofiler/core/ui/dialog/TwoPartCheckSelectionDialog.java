@@ -411,22 +411,7 @@ public abstract class TwoPartCheckSelectionDialog extends SelectionStatusDialog 
     /**
      * Add the checked listener for treeviewer or tableviewer.
      */
-    protected void addCheckedListener() {
-
-        // When user checks a checkbox in the tree, check all its children
-        // fViewer.addCheckStateListener(new ICheckStateListener() {
-        //
-        // public void checkStateChanged(CheckStateChangedEvent event) {
-        // // If the item is checked . . .
-        // if (event.getChecked()) {
-        // // . . . check all its children
-        // fViewer.setSubtreeChecked(event.getElement(), true);
-        // } else {
-        // fViewer.setSubtreeChecked(event.getElement(), false);
-        // }
-        // }
-        // });
-    }
+    protected abstract void addCheckedListener();
 
     /**
      * DOC mzhao 2009-05-05 bug: 6587, Add connection metadata filter.
@@ -442,46 +427,6 @@ public abstract class TwoPartCheckSelectionDialog extends SelectionStatusDialog 
 
             @Override
             public boolean select(Viewer viewer, Object parentElement, Object element) {
-                // if (element instanceof IFile) {
-                // IFile file = (IFile) element;
-                // ModelElement modelElemet = null;
-                // Integer selectIndex = metadataFormPage.getConnCombo().getSelectionIndex();
-                // Integer connectionIndex = null;
-                // // MOD get property and then get Connection
-                // // ModelElementFileFactory.getModelElement(repositoryObject)
-                // if (FactoriesUtil.ITEM_EXTENSION.equalsIgnoreCase(file.getFileExtension())) {
-                // modelElemet = ModelElementFileFactory.getModelElement(file);
-                // }
-                //
-                // Object value = metadataFormPage.getConnCombo().getData(modelElemet != null ? modelElemet.getName() :
-                // "");
-                // if (value != null && value instanceof Integer) {
-                // connectionIndex = (Integer) value;
-                // }
-                // // if (connectionIndex != null && selectIndex.intValue() == connectionIndex.intValue()) {
-                // // return true;
-                // // } else {
-                // // return false;
-                // // }
-                // return (connectionIndex != null && selectIndex.intValue() == connectionIndex.intValue());
-                // } else if (element instanceof IRepositoryViewObject) {
-                // Integer selectIndex = metadataFormPage.getConnCombo().getSelectionIndex();
-                // Integer connectionIndex = null;
-                // ModelElement modelelement = PropertyHelper.retrieveElement(((IRepositoryViewObject)
-                // element).getProperty()
-                // .getItem());
-                // Object value = metadataFormPage.getConnCombo().getData(modelelement == null ? "" :
-                // modelelement.getName());
-                // if (value != null && value instanceof Integer) {
-                // connectionIndex = (Integer) value;
-                // }
-                // // if (connectionIndex != null && selectIndex.intValue() == connectionIndex.intValue()) {
-                // // return true;
-                // // } else {
-                // // return false;
-                // // }
-                // return (connectionIndex != null && selectIndex.intValue() == connectionIndex.intValue());
-                // }
                 if (element instanceof DBConnectionRepNode) {
                     DBConnectionRepNode node = (DBConnectionRepNode) element;
                     Integer selectIndex = metadataFormPage.getConnCombo().getSelectionIndex();
@@ -752,6 +697,7 @@ public abstract class TwoPartCheckSelectionDialog extends SelectionStatusDialog 
                             DQRepositoryNode.setFiltering(false);
                             if (isfViewer) {
                                 fViewer.refresh();
+                                restoreCheckStatus();
                             } else {
                                 // ADD msjian 2011-7-27 22206: fixed note 93509 when cleared the filter, the selected
                                 // turn to unselected
@@ -792,10 +738,13 @@ public abstract class TwoPartCheckSelectionDialog extends SelectionStatusDialog 
 
                     updateOKStatus();
                 }
+
             });
             return Status.OK_STATUS;
         }
     }
+
+    protected abstract void restoreCheckStatus();
 
     /**
      * Add the listeners for (table, column)filter texts.

@@ -124,22 +124,43 @@ public class TablesSelectionDialog extends TwoPartCheckSelectionDialog {
                 packageNode = selectNode;
             }
             getTreeViewer().expandToLevel(packageNode, 1);
-            // IRepositoryNode packageNode = csk.getPackageNode();
-            // List<IRepositoryNode> filterTableView = filterTableView(packageNode.getChildren());
             StructuredSelection structSel = new StructuredSelection(packageNode);
-            // MOD qiongli 2012-5-4 TDQ-5137,make DBView could selected correctly.
-            // if (filterTableView.size() > 0) {
-            // for (Object obj : super.getInitialElementSelections()) {
-            // for (IRepositoryNode node : filterTableView) {
-            // if (obj.equals(node)) {
-            // structSel = new StructuredSelection(obj);
-            // break;
-            // }
-            // }
-            // }
-            // }
             getTreeViewer().setSelection(structSel);
         }
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataprofiler.core.ui.dialog.TwoPartCheckSelectionDialog#restoreCheckStatus()
+     */
+    @Override
+    protected void restoreCheckStatus() {
+        if (packageCheckedMap.keySet().size() == 0) {
+            return;
+        }
+        RepositoryNodeKey[] packeNodeKeyArray = new RepositoryNodeKey[packageCheckedMap.keySet().size()];
+        packeNodeKeyArray = packageCheckedMap.keySet().toArray(packeNodeKeyArray);
+        List<IRepositoryNode> folderNodeList = new ArrayList<IRepositoryNode>();
+        for (RepositoryNodeKey pKey : packeNodeKeyArray) {
+            TableCheckedMap tableCheckedMap = packageCheckedMap.get(pKey);
+            List<IRepositoryNode> allCheckedTableNodeList = tableCheckedMap.getAllCheckedTableNodeList(pKey.getPackageNode());
+            int addedCount = 0;
+            for (IRepositoryNode tableOrViewNode : allCheckedTableNodeList) {
+                // Add the adapted table or view node into list.
+                if (addedCount == 2) {
+                    break;
+                }
+                IRepositoryNode adaptLocationNode = null;
+                adaptLocationNode = getAdaptLocationNode(pKey.getPackageNode(), tableOrViewNode);
+                if (!folderNodeList.contains(adaptLocationNode)) {
+                    folderNodeList.add(adaptLocationNode);
+                    addedCount++;
+                }
+            }
+        }
+        getTreeViewer().setCheckedElements(folderNodeList.toArray());
+
     }
 
     private void initCheckedTable(List<IRepositoryNode> tableList) {
@@ -282,8 +303,15 @@ public class TablesSelectionDialog extends TwoPartCheckSelectionDialog {
             getTreeViewer().setChecked(parentPackageNode, true);
         }
         TableCheckedMap tableCheckMap = packageCheckedMap.get(new RepositoryNodeKey(parentPackageNode));
+
         if (tableCheckMap != null) {
             tableCheckMap.putTableChecked(table, checkedFlag);
+        }
+
+        // If the element in the right table check viewer are all DESELECTED, then clear the check status in the left
+        // tree viewer.
+        if (!checkedFlag && (tableCheckMap == null || tableCheckMap.getAllCheckedTableNodeList(parentPackageNode).size() == 0)) {
+            getTreeViewer().setChecked(parentPackageNode, false);
         }
     }
 
