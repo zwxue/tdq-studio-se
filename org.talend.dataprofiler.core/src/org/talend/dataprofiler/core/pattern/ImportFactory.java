@@ -39,7 +39,9 @@ import org.eclipse.core.runtime.CoreException;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.commons.utils.WorkspaceUtils;
 import org.talend.commons.utils.io.FilesUtils;
+import org.talend.core.exception.TalendInternalPersistenceException;
 import org.talend.core.model.metadata.builder.database.DqRepositoryViewService;
+import org.talend.core.model.properties.TDQItem;
 import org.talend.cwm.constants.DevelopmentStatus;
 import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.relational.TdExpression;
@@ -67,6 +69,7 @@ import org.talend.dq.writer.impl.ElementWriterFactory;
 import org.talend.resource.EResourceConstant;
 import org.talend.resource.ResourceManager;
 import org.talend.utils.sugars.ReturnCode;
+import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
 import com.csvreader.CsvReader;
@@ -216,11 +219,16 @@ public final class ImportFactory {
                     }
 
                     try {
-                        String relativePath = "Patterns/" + createAndStorePattern(patternParameters, selectionFolder, type); //$NON-NLS-1$
-                        names.add(name);
+                        TypedReturnCode<Object> create = createAndStorePattern(patternParameters, selectionFolder, type);
+                        if (create.isOk()) {
+                            names.add(name);
 
-                        importEvent.add(new ReturnCode(DefaultMessagesImpl.getString("ImportFactory.importPattern", name, //$NON-NLS-1$
-                                relativePath), true));
+                            importEvent.add(new ReturnCode(DefaultMessagesImpl.getString("ImportFactory.importPattern", name, //$NON-NLS-1$
+                                    selectionFolder.getProjectRelativePath().toString()), true));
+                        } else {
+                            throw new TalendInternalPersistenceException(create.getMessage());
+                        }
+
                     } catch (Exception e) {
                         importEvent.add(new ReturnCode(DefaultMessagesImpl.getString("ImportFactory.SaveFailed", name), false)); //$NON-NLS-1$
                     }
@@ -282,11 +290,20 @@ public final class ImportFactory {
                                 }
                             }
 
-                            String relativePath = "Patterns/" + createAndStorePattern(patternParameters, selectionFolder, type); //$NON-NLS-1$
+                            try {
+                                TypedReturnCode<Object> create = createAndStorePattern(patternParameters, selectionFolder, type);
+                                if (create.isOk()) {
+                                    names.add(contents);
 
-                            names.add(contents);
-                            importEvent.add(new ReturnCode(DefaultMessagesImpl.getString("ImportFactory.importPattern", contents, //$NON-NLS-1$
-                                    relativePath), true));
+                                    importEvent.add(new ReturnCode(DefaultMessagesImpl.getString("ImportFactory.importPattern", contents, //$NON-NLS-1$
+                                            selectionFolder.getProjectRelativePath().toString()), true));
+                                } else {
+                                    throw new TalendInternalPersistenceException(create.getMessage());
+                                }
+
+                            } catch (Exception e) {
+                                importEvent.add(new ReturnCode(DefaultMessagesImpl.getString("ImportFactory.SaveFailed", contents), false)); //$NON-NLS-1$
+                            }
                         }
                     }
                 }
@@ -322,51 +339,8 @@ public final class ImportFactory {
         }
     }
 
-    /**
-     * DOC yyi Comment method "varifyImportFile".
-     * 
-     * @param importFile
-     */
-    // private static ReturnCode verifyImportFile(File importFile) {
-    //
-    // ReturnCode rc = new ReturnCode(true);
-    // CsvReader reader;
-    //
-    // try {
-    // reader = new CsvReader(new FileReader(importFile), CURRENT_SEPARATOR);
-    // reader.setEscapeMode(ESCAPE_MODE_BACKSLASH);
-    // reader.setTextQualifier(TEXT_QUAL);
-    // reader.setUseTextQualifier(true);
-    //
-    // reader.readHeaders();
-    // if (!checkFileHeader(reader.getHeaders())) {
-    // rc.setReturnCode(DefaultMessagesImpl.getString("ImportFactory.noHeader"), false);
-    // return rc;
-    // }
-    // reader.setUseTextQualifier(false);
-    // while (reader.readRecord()) {
-    // if (!checkQuotes(reader.getValues())) {
-    // rc.setReturnCode(DefaultMessagesImpl.getString("ImportFactory.invalidFormat"), false);
-    // return rc;
-    // }
-    // }
-    // reader.close();
-    //
-    // } catch (Exception e) {
-    // e.printStackTrace();
-    // }
-    // return rc;
-    // }
-
-    // private static boolean checkQuotes(String[] values) {
-    // for (String value : values) {
-    // if (!checkQuotationMarks(value))
-    // return false;
-    // }
-    // return true;
-    // }
-
-    private static String createAndStorePattern(PatternParameters parameters, IFolder selectionFolder, ExpressionType type) {
+    private static TypedReturnCode<Object> createAndStorePattern(PatternParameters parameters, IFolder selectionFolder,
+            ExpressionType type) throws TalendInternalPersistenceException {
 
         Pattern pattern = createPattern(parameters.name, parameters.auther, parameters.description, parameters.purpose,
                 parameters.status);
@@ -379,10 +353,7 @@ public final class ImportFactory {
         boolean validStatus = PatternUtilities.isPatternValid(pattern);
         TaggedValueHelper.setValidStatus(validStatus, pattern);
 
-        String fname = DqRepositoryViewService.createFilename(parameters.name, NewSourcePatternActionProvider.EXTENSION_PATTERN);
-
         try {
-
             String relativePath = parameters.relativePath;
             if (EResourceConstant.PATTERN_REGEX.getName().equals(relativePath)
                     || EResourceConstant.PATTERN_SQL.getName().equals(relativePath)) {
@@ -403,11 +374,7 @@ public final class ImportFactory {
             log.error(e, e);
         }
 
-        IFile pfile = selectionFolder.getFile(fname);
-
-        ElementWriterFactory.getInstance().createPatternWriter().create(pattern, selectionFolder);
-
-        return ResourceManager.getPatternFolder().getLocationURI().relativize(selectionFolder.getLocationURI()).toString();
+        return ElementWriterFactory.getInstance().createPatternWriter().create(pattern, selectionFolder);
     }
 
     /**
@@ -597,14 +564,17 @@ public final class ImportFactory {
                     }
 
                     udiParameters.setParaMap(buildIndDefPara(record));
-                    createAndStoreUDI(udiParameters, selectionFolder);
+                    TypedReturnCode<Object> create = createAndStoreUDI(udiParameters, selectionFolder);
+                    if (create.isOk()) {
+                        names.add(name);
 
-                    names.add(name);
-
-                    // add the suscess message to display.
-                    information.add(new ReturnCode(DefaultMessagesImpl.getString("ImportFactory.importedSucess" //$NON-NLS-1$
-                            , name), true));
-
+                        // add the suscess message to display.
+                        information.add(new ReturnCode(DefaultMessagesImpl.getString("ImportFactory.importedSucess" //$NON-NLS-1$
+                                , ((TDQItem) create.getObject()).getProperty().getDisplayName(), selectionFolder
+                                        .getProjectRelativePath().toString()), true));
+                    } else {
+                        throw new TalendInternalPersistenceException(create.getMessage());
+                    }
                 }
 
                 reader.close();
@@ -777,44 +747,13 @@ public final class ImportFactory {
         return text;
     }
 
-    // private static boolean checkFileHeader(String[] headers) {
-    //
-    // List<String> patternEnum = new ArrayList<String>();
-    // for (PatternToExcelEnum tmpEnum : PatternToExcelEnum.values()) {
-    // patternEnum.add(tmpEnum.getLiteral());
-    // }
-    //
-    // for (String header : headers) {
-    // if (!patternEnum.contains(header))
-    // return false;
-    // }
-    // return true;
-    // }
-    //
-    // private static boolean checkQuotationMarks(String text) {
-    // if (0 == text.length())
-    // return true;
-    //
-    // int beginLen = 0;
-    // int endLen = text.length();
-    //
-    // while ('\"' == text.charAt(beginLen)) {
-    // beginLen++;
-    // }
-    // while ('\"' == text.charAt(endLen - 1)) {
-    // endLen--;
-    // }
-    // // System.out.println(text + "|" + beginLen + "|" + (text.length() - endLen));
-    // return beginLen == text.length() - endLen;
-    // }
-
     /**
      * DOC xqliu Comment method "createAndStoreUDI".
      * 
      * @param parameters
      * @param selectionFolder
      */
-    private static void createAndStoreUDI(UDIParameters parameters, IFolder selectionFolder) {
+    private static TypedReturnCode<Object> createAndStoreUDI(UDIParameters parameters, IFolder selectionFolder) {
 
         IndicatorDefinition indDef = UDIHelper.createUDI(parameters.name, parameters.auther, parameters.description,
                 parameters.purpose, parameters.status, parameters.category, parameters.javaClassName, parameters.javaJarPath);
@@ -838,8 +777,6 @@ public final class ImportFactory {
             }
         }
 
-        String fname = DqRepositoryViewService.createFilename(parameters.name, FactoriesUtil.DEFINITION);
-
         try {
 
             String[] folderNames = parameters.relativePath.split("/"); //$NON-NLS-1$
@@ -856,9 +793,7 @@ public final class ImportFactory {
             log.error(e, e);
         }
 
-        IFile pfile = selectionFolder.getFile(fname);
-
-        ElementWriterFactory.getInstance().createIndicatorDefinitionWriter().create(indDef, selectionFolder);
+        return ElementWriterFactory.getInstance().createIndicatorDefinitionWriter().create(indDef, selectionFolder);
     }
 
     /**
@@ -961,7 +896,7 @@ public final class ImportFactory {
                     } else {
                         names.add(name);
                         information.add(new ReturnCode(DefaultMessagesImpl.getString("ImportFactory.importedParserRuleSucess" //$NON-NLS-1$
-                                , name), true));
+                                , name, selectionFolder.getProjectRelativePath().toString()), true));
                         createAndStoreParserRule(prParameters, selectionFolder, name);
                     }
                 }
