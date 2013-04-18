@@ -63,7 +63,7 @@ public abstract class AbstractImportFileAction extends Action implements ICheatS
 
                 Map<File, IPath> resultMap = computeFilePath();
 
-                if (resultMap != null) {
+                if (resultMap != null && resultMap.size() != 0) {
                     for (File file : resultMap.keySet()) {
                         // MOD msjian TDQ-4608 2012-3-6: when the file is *.jasper, copy it.
                         IPath path = resultMap.get(file);
@@ -78,13 +78,14 @@ public abstract class AbstractImportFileAction extends Action implements ICheatS
                         }
                         // TDQ-4608~
                     }
+
+                    saveAndRefresh();
                 }
 
             } catch (Exception e) {
                 ExceptionHandler.process(e);
             }
 
-            saveAndRefresh();
         }
     }
 
