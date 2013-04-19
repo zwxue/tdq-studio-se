@@ -29,12 +29,9 @@ import org.talend.core.database.conn.version.EDatabaseVersion4Drivers;
 import org.talend.core.exception.TalendInternalPersistenceException;
 import org.talend.core.model.metadata.IMetadataConnection;
 import org.talend.core.model.metadata.MetadataFillFactory;
-import org.talend.core.model.metadata.MetadataTalendType;
 import org.talend.core.model.metadata.builder.ConvertionHelper;
-import org.talend.core.model.metadata.builder.connection.Connection;
-import org.talend.core.model.metadata.builder.connection.ConnectionFactory;
 import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
-import org.talend.core.model.metadata.builder.database.JavaSqlFactory;
+import org.talend.core.model.metadata.builder.database.ExtractMetaDataUtils;
 import org.talend.core.model.metadata.builder.util.MetadataConnectionUtils;
 import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.properties.PropertiesFactory;
@@ -86,7 +83,7 @@ public class ExportConnectionToTOSAction extends Action {
         for (Package pack : packList) {
             IProxyRepositoryFactory factory = ProxyRepositoryFactory.getInstance();
 
-            Connection tdDataProvider = ConnectionHelper.getTdDataProvider(pack);
+            DatabaseConnection tdDataProvider = (DatabaseConnection) ConnectionHelper.getTdDataProvider(pack);
 
             Property connectionProperty = initConnectionProperty(tdDataProvider, pack);
             connectionProperty.setId(factory.getNextId());
@@ -119,7 +116,7 @@ public class ExportConnectionToTOSAction extends Action {
      * @param tdDataProvider
      * @return
      */
-    private Property initConnectionProperty(Connection tdDataProvider, Package pack) {
+    private Property initConnectionProperty(DatabaseConnection tdDataProvider, Package pack) {
         Property connectionProperty = PropertiesFactory.eINSTANCE.createProperty();
 
         String purpose = MetadataHelper.getPurpose(tdDataProvider);
@@ -143,61 +140,34 @@ public class ExportConnectionToTOSAction extends Action {
      * @param tdDataProvider
      * @return
      */
-    private ConnectionItem initConnectionItem(Connection tdDataProvider, Package pack) {
+    private ConnectionItem initConnectionItem(DatabaseConnection tdDataProvider, Package pack) {
         ConnectionItem connectionItem = PropertiesFactory.eINSTANCE.createDatabaseConnectionItem();
 
         if (tdDataProvider != null) {
-            DatabaseConnection connection = ConnectionFactory.eINSTANCE.createDatabaseConnection();
-
-            String host = ConnectionUtils.getServerName(tdDataProvider);
-            String port = ConnectionUtils.getPort(tdDataProvider);
-            String user = JavaSqlFactory.getUsername(tdDataProvider);
-            String pass = JavaSqlFactory.getPassword(tdDataProvider);
+            IMetadataConnection newMetadataConnection = ConvertionHelper.convert(tdDataProvider);
             String connName = tdDataProvider.getName();
-            String url = JavaSqlFactory.getURL(tdDataProvider);
-            String driver = JavaSqlFactory.getDriverClass(tdDataProvider);
+            newMetadataConnection.setLabel(connName + "_" + pack.getName());
+            // if there have catalog on the structor of database we must set it by pack or parent of pack so that we can
+            // only display the one on the DQRepositoryView
 
+            // set database to filter catalog
+            // catalog case
             String database = pack.getName();
 
+            // schema case
             if (pack instanceof Schema) {
                 Package parent = ColumnSetHelper.getParentCatalogOrSchema(pack);
                 if (parent != null) {
                     database = parent.getName();
                 }
-
-                database = ConnectionUtils.getSID(tdDataProvider);
+                newMetadataConnection.setUiSchema(pack.getName());
             }
-            connection.setUiSchema(pack.getName());
-            connection.setServerName(host);
-            connection.setPort(port);
-            connection.setUsername(user);
-            ConnectionHelper.setPassword(connection, pass);
-            connection.setSID(database);
-            connection.setURL(url);
-            connection.setDriverClass(driver);
-
-            Boolean isContextMod = tdDataProvider.isContextMode();
-            IMetadataConnection metadataConnection = null;
-            if (isContextMod) {
-                metadataConnection = ConvertionHelper.convert(tdDataProvider, false, tdDataProvider.getContextName());
-            } else {
-                metadataConnection = ConvertionHelper.convert(tdDataProvider);
-            }
-            if (metadataConnection != null) {
-                String dbType = metadataConnection.getDbType();
-                String product = metadataConnection.getProduct();
-                String mapping = MetadataTalendType.getDefaultDbmsFromProduct(product).getId();
-                String dbVersion = retrieveDBVersion(dbType);
-                connection.setName(connName + "_" + pack.getName());//$NON-NLS-1$
-                connection.setDatabaseType(dbType);
-                connection.setProductId(product);
-                connection.setDbmsId(mapping);
-                connection.setDbVersionString(dbVersion);
-            }
+            newMetadataConnection.setDatabase(database);
+            // ~set database to filter catalog
             // MOD gdbu TDQ-4282 2011-12-28 fill catalog and schema.
-            fillCatalogSchema(connection);
+            DatabaseConnection newConnection = fillCatalogSchema(newMetadataConnection);
             // ~TDQ-4282
-            connectionItem.setConnection(connection);
+            connectionItem.setConnection(newConnection);
         }
 
         return connectionItem;
@@ -209,14 +179,13 @@ public class ExportConnectionToTOSAction extends Action {
      * 
      * @param tdDataProvider
      */
-    private void fillCatalogSchema(Connection tdDataProvider) {
+    private DatabaseConnection fillCatalogSchema(IMetadataConnection newMetadataConn) {
         MetadataFillFactory instance = MetadataFillFactory.getDBInstance();
 
-        IMetadataConnection metaConnection = ConvertionHelper.convert(tdDataProvider);
-        ReturnCode rc = instance.checkConnection(metaConnection);
-        Connection dbConn = null;
+        ReturnCode rc = instance.checkConnection(newMetadataConn);
+        DatabaseConnection dbConn = null;
         if (rc.isOk()) {
-            dbConn = instance.fillUIConnParams(metaConnection, tdDataProvider);
+            dbConn = (DatabaseConnection) instance.fillUIConnParams(newMetadataConn, null);
             DatabaseMetaData dbMetadata = null;
             java.sql.Connection sqlConn = null;
             try {
@@ -224,7 +193,7 @@ public class ExportConnectionToTOSAction extends Action {
                     Object sqlConnObject = ((TypedReturnCode) rc).getObject();
                     if (sqlConnObject instanceof java.sql.Connection) {
                         sqlConn = (java.sql.Connection) sqlConnObject;
-                        dbMetadata = org.talend.utils.sql.ConnectionUtils.getConnectionMetadata(sqlConn);
+                        dbMetadata = ExtractMetaDataUtils.getConnectionMetadata(sqlConn);
                     }
                 }
                 List<String> packageFilterCatalog = MetadataConnectionUtils.getPackageFilter(dbConn, dbMetadata, true);
@@ -242,6 +211,7 @@ public class ExportConnectionToTOSAction extends Action {
         } else {
             log.error(rc.getMessage());
         }
+        return dbConn;
     }
 
     /**
