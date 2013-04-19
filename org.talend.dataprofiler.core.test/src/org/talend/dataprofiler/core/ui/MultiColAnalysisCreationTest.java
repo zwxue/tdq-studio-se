@@ -13,6 +13,8 @@
 package org.talend.dataprofiler.core.ui;
 
 import java.io.File;
+import java.sql.DatabaseMetaData;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,10 +23,12 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.talend.core.model.metadata.IMetadataConnection;
+import org.talend.core.model.metadata.MetadataFillFactory;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.database.DqRepositoryViewService;
+import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.helper.CatalogHelper;
-import org.talend.cwm.management.api.ConnectionService;
 import org.talend.cwm.management.api.FolderProvider;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.relational.TdTable;
@@ -41,6 +45,7 @@ import org.talend.dq.analysis.AnalysisBuilder;
 import org.talend.dq.analysis.IAnalysisExecutor;
 import org.talend.dq.analysis.MultiColumnAnalysisExecutor;
 import org.talend.dq.analysis.parameters.DBConnectionParameter;
+import org.talend.dq.helper.ParameterUtil;
 import org.talend.dq.indicators.IndicatorEvaluator;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.dq.sql.converters.CwmZExpression;
@@ -51,6 +56,7 @@ import org.talend.utils.properties.PropertiesLoader;
 import org.talend.utils.properties.TypedProperties;
 import org.talend.utils.sql.Java2SqlType;
 import org.talend.utils.sugars.ReturnCode;
+import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.resource.relational.Catalog;
 
 /**
@@ -291,9 +297,41 @@ public class MultiColAnalysisCreationTest {
         params.getParameters();
 
         // create connection
-        Connection dataProvider = ConnectionService.createConnection(params).getObject();
+        ConnectionUtils.setTimeout(false);
 
-        dataProvider.setName(DATA_PROVIDER_NAME);
+        MetadataFillFactory instance = MetadataFillFactory.getDBInstance();
+        IMetadataConnection metaConnection = instance.fillUIParams(ParameterUtil.toMap(params));
+        ReturnCode rc = instance.checkConnection(metaConnection);
+        Connection dataProvider = null;
+        if (rc.isOk()) {
+            dataProvider = instance.fillUIConnParams(metaConnection, null);
+            dataProvider.setName(DATA_PROVIDER_NAME);
+
+            DatabaseMetaData dbMetadata = null;
+            List<String> packageFilter = ConnectionUtils.getPackageFilter(params);
+            java.sql.Connection sqlConn = null;
+            try {
+                if (rc instanceof TypedReturnCode) {
+                    Object sqlConnObject = ((TypedReturnCode) rc).getObject();
+                    if (sqlConnObject instanceof java.sql.Connection) {
+                        sqlConn = (java.sql.Connection) sqlConnObject;
+                        dbMetadata = org.talend.utils.sql.ConnectionUtils.getConnectionMetadata(sqlConn);
+                    }
+                }
+
+                instance.fillCatalogs(dataProvider, dbMetadata, packageFilter);
+                instance.fillSchemas(dataProvider, dbMetadata, packageFilter);
+            } catch (SQLException e) {
+                log.error(e.getMessage(), e);
+                Assert.fail(e.getMessage());
+            } finally {
+                if (sqlConn != null) {
+                    ConnectionUtils.closeConnection(sqlConn);
+                }
+
+            }
+        }
+        Assert.assertNotNull(dataProvider);
         return dataProvider;
     }
 }
