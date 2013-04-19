@@ -13,6 +13,8 @@
 package org.talend.dq.analysis;
 
 import java.io.File;
+import java.sql.DatabaseMetaData;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,11 +23,12 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.talend.core.model.metadata.IMetadataConnection;
+import org.talend.core.model.metadata.MetadataFillFactory;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.database.DqRepositoryViewService;
 import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.helper.CatalogHelper;
-import org.talend.cwm.management.api.ConnectionService;
 import org.talend.cwm.management.api.FolderProvider;
 import org.talend.cwm.relational.RelationalFactory;
 import org.talend.cwm.relational.TdColumn;
@@ -50,6 +53,7 @@ import org.talend.dataquality.indicators.definition.DefinitionFactory;
 import org.talend.dataquality.indicators.definition.IndicatorCategory;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dq.analysis.parameters.DBConnectionParameter;
+import org.talend.dq.helper.ParameterUtil;
 import org.talend.dq.helper.UnitTestBuildHelper;
 import org.talend.dq.indicators.IndicatorEvaluator;
 import org.talend.dq.sql.converters.CwmZExpression;
@@ -59,6 +63,7 @@ import org.talend.utils.exceptions.TalendException;
 import org.talend.utils.properties.PropertiesLoader;
 import org.talend.utils.properties.TypedProperties;
 import org.talend.utils.sugars.ReturnCode;
+import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.resource.relational.Catalog;
 
@@ -436,35 +441,40 @@ public class AnalysisCreationTest {
 
         // create connection
         ConnectionUtils.setTimeout(false);
-        Connection dataProvider = ConnectionService.createConnection(params).getObject();
 
-        dataProvider.setName(DATA_PROVIDER_NAME);
-        return dataProvider;
-    }
+        MetadataFillFactory instance = MetadataFillFactory.getDBInstance();
+        IMetadataConnection metaConnection = instance.fillUIParams(ParameterUtil.toMap(params));
+        ReturnCode rc = instance.checkConnection(metaConnection);
+        Connection dataProvider = null;
+        if (rc.isOk()) {
+            dataProvider = instance.fillUIConnParams(metaConnection, null);
+            dataProvider.setName(DATA_PROVIDER_NAME);
 
-    /**
-     * create a postgresql connection
-     * 
-     * @return
-     */
-    public Connection getDataManagerPostgresql() {
-        TypedProperties connectionParams = PropertiesLoader.getProperties(IndicatorEvaluator.class, "postgresql.properties"); //$NON-NLS-1$
-        String driverClassName = connectionParams.getProperty("driver"); //$NON-NLS-1$
-        String dbUrl = connectionParams.getProperty("url"); //$NON-NLS-1$
-        String sqlTypeName = connectionParams.getProperty("sqlTypeName"); //$NON-NLS-1$
+            DatabaseMetaData dbMetadata = null;
+            List<String> packageFilter = ConnectionUtils.getPackageFilter(params);
+            java.sql.Connection sqlConn = null;
+            try {
+                if (rc instanceof TypedReturnCode) {
+                    Object sqlConnObject = ((TypedReturnCode) rc).getObject();
+                    if (sqlConnObject instanceof java.sql.Connection) {
+                        sqlConn = (java.sql.Connection) sqlConnObject;
+                        dbMetadata = org.talend.utils.sql.ConnectionUtils.getConnectionMetadata(sqlConn);
+                    }
+                }
 
-        DBConnectionParameter params = new DBConnectionParameter();
-        params.setName("Postgresql connection"); //$NON-NLS-1$
-        params.setDriverClassName(driverClassName);
-        params.setJdbcUrl(dbUrl);
-        params.setSqlTypeName(sqlTypeName);
-        params.setParameters(connectionParams);
+                instance.fillCatalogs(dataProvider, dbMetadata, packageFilter);
+                instance.fillSchemas(dataProvider, dbMetadata, packageFilter);
+            } catch (SQLException e) {
+                log.error(e.getMessage(), e);
+                Assert.fail(e.getMessage());
+            } finally {
+                if (sqlConn != null) {
+                    ConnectionUtils.closeConnection(sqlConn);
+                }
 
-        // create connection
-        ConnectionUtils.setTimeout(false);
-        Connection dataProvider = ConnectionService.createConnection(params).getObject();
-
-        dataProvider.setName("Postgresql data provider"); //$NON-NLS-1$
+            }
+        }
+        Assert.assertNotNull(dataProvider);
         return dataProvider;
     }
 }
