@@ -18,7 +18,6 @@ import static org.mockito.Mockito.*;
 import static org.powermock.api.support.membermodification.MemberMatcher.*;
 import static org.powermock.api.support.membermodification.MemberModifier.*;
 
-import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -204,27 +203,4 @@ public class ConnectionUtilsTest {
         assertFalse(JavaSqlFactory.DEFAULT_USERNAME.equals(sqliteConn.getUsername()));
         assertTrue(username.equals(sqliteConn.getUsername()));
     }
-
-    /**
-     * 
-     * test this to judge if it is hive connection.
-     * 
-     * @throws SQLException
-     */
-    @Test
-    public void testisHive() throws SQLException {
-        java.sql.Connection connection = mock(java.sql.Connection.class);
-        DatabaseMetaData connectionMetadata = mock(DatabaseMetaData.class);
-        PowerMockito.mockStatic(ExtractMetaDataUtils.class);
-        when(ExtractMetaDataUtils.getConnectionMetadata(connection)).thenReturn(connectionMetadata);
-        PowerMockito.mockStatic(MetadataConnectionUtils.class);
-        when(MetadataConnectionUtils.isHive(connectionMetadata)).thenReturn(true);
-        boolean isHive = ExtractMetaDataUtils.isHiveConnection(connection);
-        assertTrue(isHive);
-
-        when(MetadataConnectionUtils.isHive(connectionMetadata)).thenReturn(false);
-        isHive = ExtractMetaDataUtils.isHiveConnection(connection);
-        assertFalse(isHive);
-    }
-
 }

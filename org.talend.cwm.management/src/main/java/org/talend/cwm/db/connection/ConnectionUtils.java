@@ -713,23 +713,6 @@ public final class ConnectionUtils {
     }
 
     /**
-     * judge if it is hive connection.
-     * 
-     * @param connection
-     * @return
-     * @throws SQLException
-     * @deprecated use ExtractMetaDataUtils.isHiveConnection instead of it
-     */
-    @Deprecated
-    public static boolean isHive(java.sql.Connection connection) throws SQLException {
-        DatabaseMetaData connectionMetadata = ExtractMetaDataUtils.getConnectionMetadata(connection);
-        if (MetadataConnectionUtils.isHive(connectionMetadata)) {
-            return true;
-        }
-        return false;
-    }
-
-    /**
      * mzhao bug: TDQ-4622 Is the connection is an ingres connection?
      * 
      * @param connection
