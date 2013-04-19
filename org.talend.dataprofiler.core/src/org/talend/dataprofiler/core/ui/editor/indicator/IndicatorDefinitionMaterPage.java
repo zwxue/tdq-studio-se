@@ -61,6 +61,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
@@ -179,6 +180,9 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
     private boolean hasAggregateExpression, hasDateExpression, hasCharactersMapping;
 
     private boolean systemIndicator;
+
+    // used to when change the category changed, whether need the confirm dialog
+    private boolean needConfirm = true;
 
     // ADD xqliu 2010-03-23 feature 11201
     private List<TdExpression> tempExpressionList;
@@ -1162,10 +1166,39 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
         comboCategory.addModifyListener(new ModifyListener() {
 
             public void modifyText(ModifyEvent e) {
-                setDirty(true);
-                UDIHelper.setUDICategory(definition, comboCategory.getText());
-                category = definition.getCategories().get(0);
-                updateDetailList();
+                if (needConfirm) {
+                    boolean openQuestion = MessageDialogWithToggle.openQuestion(Display.getCurrent().getActiveShell(),
+                            DefaultMessagesImpl.getString("IndicatorDefinitionMaterPage.changeCategoryTitle"), //$NON-NLS-1$
+                            DefaultMessagesImpl.getString("IndicatorDefinitionMaterPage.changeCategory")); //$NON-NLS-1$
+
+                    if (openQuestion) {
+                        setDirty(true);
+                        category = DefinitionHandler.getInstance().getIndicatorCategoryByLabel(comboCategory.getText());
+                        updateDetailList();
+                        // clear all the temp maps
+                        initTempMaps();
+
+                        if (dataBaseComp != null) {
+                            Control[] children = dataBaseComp.getChildren();
+                            for (Control con : children) {
+                                con.dispose();
+                            }
+
+                        }
+                        if (javaLanguageComp != null) {
+                            Control[] children = javaLanguageComp.getChildren();
+                            for (Control con : children) {
+                                con.dispose();
+                            }
+                        }
+                        definitionSection.setExpanded(false);
+                        definitionSection.setExpanded(true);
+                    } else {
+                        needConfirm = false;
+                        comboCategory.setText(category.getLabel());
+                        needConfirm = true;
+                    }
+                }
             }
 
         });
@@ -1182,20 +1215,23 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
      * @param composite
      */
     protected void updateDetailList() {
-        if (!PluginConstant.EMPTY_STRING.equals(comboCategory.getText())) {
-            IndicatorCategory ic = UDIHelper.getUDICategory(definition);
-            String purposeText = PluginConstant.EMPTY_STRING;
-            String descriptionText = PluginConstant.EMPTY_STRING;
-            for (TaggedValue value : ic.getTaggedValue()) {
-                if ("Purpose".equals(value.getTag())) {//$NON-NLS-1$
-                    purposeText = DefaultMessagesImpl.getString("IndicatorDefinitionMaterPage.Purpose") + value.getValue();//$NON-NLS-1$
-                } else if ("Description".equals(value.getTag())) { //$NON-NLS-1$
-                    descriptionText = DefaultMessagesImpl.getString("IndicatorDefinitionMaterPage.Description")//$NON-NLS-1$
-                            + value.getValue();
+        String categoryLabel = comboCategory.getText();
+        if (StringUtils.isNotBlank(categoryLabel)) {
+            IndicatorCategory ic = DefinitionHandler.getInstance().getIndicatorCategoryByLabel(categoryLabel);
+            if (ic != null) {
+                String purposeString = PluginConstant.EMPTY_STRING;
+                String descriptionString = PluginConstant.EMPTY_STRING;
+                for (TaggedValue value : ic.getTaggedValue()) {
+                    if ("Purpose".equals(value.getTag())) {//$NON-NLS-1$
+                        purposeString = DefaultMessagesImpl.getString("IndicatorDefinitionMaterPage.Purpose") + value.getValue();//$NON-NLS-1$
+                    } else if ("Description".equals(value.getTag())) { //$NON-NLS-1$
+                        descriptionString = DefaultMessagesImpl.getString("IndicatorDefinitionMaterPage.Description")//$NON-NLS-1$
+                                + value.getValue();
+                    }
                 }
+                labelDetail.setText(purposeString + System.getProperty("line.separator") + System.getProperty("line.separator")//$NON-NLS-1$//$NON-NLS-2$
+                        + descriptionString);
             }
-            labelDetail.setText(purposeText + System.getProperty("line.separator") + System.getProperty("line.separator")//$NON-NLS-1$//$NON-NLS-2$
-                    + descriptionText);
         }
     }
 
@@ -1442,13 +1478,11 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
         ((GridData) combo.getLayoutData()).widthHint = 150;
         combo.setEditable(false);
         // MOD xqliu 2010-02-25 feature 11201
-        // combo.setItems(remainDBTypeList.toArray(new String[remainDBTypeList.size()]));
         combo.setItems(allDBTypeList.toArray(new String[allDBTypeList.size()]));
         // ~
         String language = expression.getLanguage();
         if (language == null) {
             // MOD xqliu 2010-02-25 feature 11201
-            // combo.setText(remainDBTypeList.get(0));
             combo.setText(allDBTypeList.get(0));
             // ~
         } else {
@@ -1942,12 +1976,12 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
                     Control[] children = parent.getChildren();
                     children[0].dispose();
                 }
-                int languageLegth = javaLanguageComp == null ? 0 : javaLanguageComp.getChildren().length;
+                int languageLength = javaLanguageComp == null ? 0 : javaLanguageComp.getChildren().length;
                 int dataBaseLength = dataBaseComp == null ? 0 : dataBaseComp.getChildren().length;
-                if (languageLegth == 0 && dataBaseLength == 0) {
+                if (languageLength == 0 && dataBaseLength == 0) {
                     addTitleComp(dataBaseComp);
                 }
-                if (languageLegth == 1) {
+                if (languageLength == 1) {
                     Control[] children = javaLanguageComp.getChildren();
                     children[0].dispose();
                 }
@@ -1995,7 +2029,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
                         isUDIndicatorDefinition, cloneExpression(tdExpression));
                 editDialog.setVersion(version);
                 editDialog.setLanguage(language);
-                editDialog.setCategory(IndicatorCategoryHelper.getCategory(definition));
+                editDialog.setCategory(category);
 
                 if (isUDIndicatorDefinition) {
                     if (IndicatorCategoryHelper.isUserDefMatching(category)) {
@@ -2182,30 +2216,31 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
 
             if (definition instanceof UDIndicatorDefinition) {
                 UDIndicatorDefinition def = (UDIndicatorDefinition) definition;
-                if (IndicatorCategoryHelper.isUserDefMatching(category)) {
-                    EList<TdExpression> viewValidRowsExpression = def.getViewValidRowsExpression();
-                    viewValidRowsExpression.clear();
-                    viewValidRowsExpression = saveFromTempMapToDefinition(viewValidRowsExpression, tempViewValidRowsExpressionMap);
+                EList<TdExpression> viewValidRowsExpression = def.getViewValidRowsExpression();
+                viewValidRowsExpression.clear();
+                viewValidRowsExpression = saveFromTempMapToDefinition(viewValidRowsExpression, tempViewValidRowsExpressionMap);
 
-                    EList<TdExpression> viewInvalidRowsExpression = def.getViewInvalidRowsExpression();
-                    viewInvalidRowsExpression.clear();
-                    viewInvalidRowsExpression = saveFromTempMapToDefinition(viewInvalidRowsExpression,
-                            tempViewInvalidRowsExpressionMap);
+                EList<TdExpression> viewInvalidRowsExpression = def.getViewInvalidRowsExpression();
+                viewInvalidRowsExpression.clear();
+                viewInvalidRowsExpression = saveFromTempMapToDefinition(viewInvalidRowsExpression,
+                        tempViewInvalidRowsExpressionMap);
 
-                    EList<TdExpression> viewValidValuesExpression = def.getViewValidValuesExpression();
-                    viewValidValuesExpression.clear();
-                    viewValidValuesExpression = saveFromTempMapToDefinition(viewValidValuesExpression,
-                            tempViewValidValuesExpressionMap);
+                EList<TdExpression> viewValidValuesExpression = def.getViewValidValuesExpression();
+                viewValidValuesExpression.clear();
+                viewValidValuesExpression = saveFromTempMapToDefinition(viewValidValuesExpression,
+                        tempViewValidValuesExpressionMap);
 
-                    EList<TdExpression> viewInvalidValuesExpression = def.getViewInvalidValuesExpression();
-                    viewInvalidValuesExpression.clear();
-                    viewInvalidValuesExpression = saveFromTempMapToDefinition(viewInvalidValuesExpression,
-                            tempViewInvalidValuesExpressionMap);
+                EList<TdExpression> viewInvalidValuesExpression = def.getViewInvalidValuesExpression();
+                viewInvalidValuesExpression.clear();
+                viewInvalidValuesExpression = saveFromTempMapToDefinition(viewInvalidValuesExpression,
+                        tempViewInvalidValuesExpressionMap);
 
-                } else {
-                    EList<TdExpression> viewRowsExpression = def.getViewRowsExpression();
-                    viewRowsExpression.clear();
-                    viewRowsExpression = saveFromTempMapToDefinition(viewRowsExpression, tempViewRowsExpressionMap);
+                EList<TdExpression> viewRowsExpression = def.getViewRowsExpression();
+                viewRowsExpression.clear();
+                viewRowsExpression = saveFromTempMapToDefinition(viewRowsExpression, tempViewRowsExpressionMap);
+
+                if (category != null) {
+                    UDIHelper.setUDICategory(definition, category);
                 }
             }
 
