@@ -160,6 +160,14 @@ public class TablesSelectionDialog extends TwoPartCheckSelectionDialog {
         getTreeViewer().setCheckedElements(folderNodeList.toArray());
     }
 
+    @Override
+    protected void restoreTableCheckStatus() {
+        List<IRepositoryNode> allCheckedTables = this.getAllCheckedTables();
+        if (!allCheckedTables.isEmpty()) {
+            getTableViewer().setCheckedElements(allCheckedTables.toArray(new IRepositoryNode[allCheckedTables.size()]));
+        }
+    }
+
     private void initCheckedColumnSet(List<IRepositoryNode> columnSetList) {
         List<IRepositoryNode> packageList = new ArrayList<IRepositoryNode>();
         for (IRepositoryNode columnSetNode : columnSetList) {
@@ -367,8 +375,6 @@ public class TablesSelectionDialog extends TwoPartCheckSelectionDialog {
                     this.getTableViewer().setCheckedElements(tables);
                 }
             }
-        } else {
-            this.getTableViewer().setInput(null);
         }
     }
 
