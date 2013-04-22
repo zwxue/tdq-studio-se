@@ -90,9 +90,21 @@ public class UDIHandle extends EMFResourceHandle {
 
         // MOD klliu 2010-09-25 bug 15530 when duplicate the system indicator ,the definition must be reset the
         // category and the label name
-        IndicatorCategory category = UDIHelper.getUDICategory(definition);
-        if (category == null || !IndicatorCategoryHelper.isUserDefCategory(category)) {
-            UDIHelper.setUDICategory(definition, DefinitionHandler.getInstance().getUserDefinedCountIndicatorCategory());
+        boolean isUserDefCategory = IndicatorCategoryHelper.isUserDefCategory(UDIHelper.getUDICategory(definition));
+        if (!isUserDefCategory) {
+            IndicatorCategory category = null;
+            String indDefUuid = ResourceHelper.getUUID(this.getModelElement());
+            if (PluginConstant.PATTERN_FREQUENCY_TABLE_ID.equals(indDefUuid)
+                    || PluginConstant.DATE_PATTERN_FREQUENCY_TABLE_ID.equals(indDefUuid)
+                    || PluginConstant.PATTERN_LOW_FREQUENCY_TABLE_ID.equals(indDefUuid)) {
+                category = DefinitionHandler.getInstance().getUserDefinedFrequencyIndicatorCategory();
+            } else {
+                category = DefinitionHandler.getInstance().getUserDefinedCountIndicatorCategory();
+            }
+
+            if (category != null) {
+                UDIHelper.setUDICategory(definition, category);
+            }
         }
 
         TaggedValueHelper.setValidStatus(true, definition);
@@ -100,7 +112,7 @@ public class UDIHandle extends EMFResourceHandle {
         IndicatorResourceFileHelper.getInstance().save(definition);
 
         // update the udi model to new model, not use the migration task
-        if (!IndicatorCategoryHelper.isUserDefCategory(category)) {
+        if (!isUserDefCategory) {
             File ifileToFile = WorkspaceUtils.ifileToFile(duplicatedFile);
             Map<String, String> initIndicatorReplaceMap = UpdateUDIIndicatorsWithNewModelTask.initIndicatorReplaceMap();
             if (FilesUtils.migrateFile(ifileToFile, initIndicatorReplaceMap, log)) {
