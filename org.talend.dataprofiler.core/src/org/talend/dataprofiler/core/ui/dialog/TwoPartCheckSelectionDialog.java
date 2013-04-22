@@ -723,6 +723,7 @@ public abstract class TwoPartCheckSelectionDialog extends SelectionStatusDialog 
                                 DQRepositoryNode.setIsReturnAllNodesWhenFiltering(false);
                                 sTableViewer.refresh();
                                 DQRepositoryNode.setIsReturnAllNodesWhenFiltering(true);
+                                restoreTableCheckStatus();
                                 // TDQ-3282 ~
                             }
                         }
@@ -745,7 +746,15 @@ public abstract class TwoPartCheckSelectionDialog extends SelectionStatusDialog 
         }
     }
 
+    /**
+     * restore the left viewer's check status.
+     */
     protected abstract void restoreCheckStatus();
+
+    /**
+     * restore the right viewer's check status.
+     */
+    protected abstract void restoreTableCheckStatus();
 
     /**
      * Add the listeners for (table, column)filter texts.

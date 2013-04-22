@@ -122,6 +122,15 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
         }
     }
 
+    @Override
+    protected void restoreTableCheckStatus() {
+        this.getAllCheckElements();
+        if (!this.allCheckedElements.isEmpty()) {
+            getTableViewer().setCheckedElements(
+                    this.allCheckedElements.toArray(new IRepositoryNode[this.allCheckedElements.size()]));
+        }
+    }
+
     /**
      * DOC mzhao Initiate the checked list in column selection dialog.
      * 
@@ -343,10 +352,7 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
                 }
                 // ~
             }
-        } else {
-            this.getTableViewer().setInput(null);
         }
-
     }
 
     List<IRepositoryNode> allCheckedElements = new ArrayList<IRepositoryNode>();
