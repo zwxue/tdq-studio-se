@@ -42,6 +42,7 @@ import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.utils.UDIUtils;
 import org.talend.dataquality.helpers.ReportHelper;
 import org.talend.dataquality.helpers.ReportHelper.ReportType;
+import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dataquality.reports.AnalysisMap;
 import org.talend.dataquality.reports.TdReport;
 import org.talend.dq.helper.EObjectHelper;
@@ -225,6 +226,13 @@ public class ItemRecord {
                     File depFile = new File(uriString);
                     dependencyMap.put(depFile, modelElement);
                 }
+
+                // MOD sizhaoliu 2013-04-13 TDQ-7082
+                if (modelElement instanceof IndicatorDefinition) {
+                    for (IndicatorDefinition definition : ((IndicatorDefinition) modelElement).getAggregatedDefinitions()) {
+                        includeAggregatedDependencies((IndicatorDefinition) definition);
+                    }
+                }
             }
             // MOD yyi 2012-02-20 TDQ-4545 TDQ-4701: Map user define jrxm templates with report.
             if (element instanceof TdReport) {
@@ -239,7 +247,22 @@ public class ItemRecord {
                         dependencyMap.put(path.append(anaMap.getJrxmlSource()).toFile(), element);
                     }
                 }
+            } else if (element instanceof IndicatorDefinition) { // MOD sizhaoliu 2013-04-13 TDQ-7082
+                includeAggregatedDependencies((IndicatorDefinition) element);
             }
+        }
+    }
+
+    private void includeAggregatedDependencies(IndicatorDefinition definition) {
+        URI uri = EObjectHelper.getURI(definition);
+        if (uri != null) {
+            String uriString = WorkspaceUtils.toFile(uri);
+            File depFile = new File(uriString);
+            dependencyMap.put(depFile, definition);
+        }
+
+        for (IndicatorDefinition aggregatedDefinition : definition.getAggregatedDefinitions()) {
+            includeAggregatedDependencies(aggregatedDefinition);
         }
     }
 
