@@ -93,10 +93,7 @@ public class ExportConnectionToTOSAction extends Action {
 
             try {
                 factory.create(connectionItem, new Path(""));//$NON-NLS-1$
-                MessageDialog
-                        .openInformation(
-                                null,
-                                DefaultMessagesImpl.getString("ExportConnectionToTOSAction.info"), DefaultMessagesImpl.getString("ExportConnectionToTOSAction.meta"));//$NON-NLS-1$ //$NON-NLS-2$
+                openSuccessInformation();
             } catch (TalendInternalPersistenceException e1) {
                 //                MessageDialog.openError(null, DefaultMessagesImpl.getString("ExportConnectionToTOSAction.error"), e1.getMessage());//$NON-NLS-1$
             } catch (PersistenceException e) {
@@ -104,10 +101,27 @@ public class ExportConnectionToTOSAction extends Action {
                 log.error(e.getMessage(), e);
             }
         }
+        refreshViewerAndNode();
+    }
+
+    /**
+     * DOC zshen Comment method "refreshViewerAndNode".
+     */
+    protected void refreshViewerAndNode() {
         // refresh TDQ's matadata tree list
         RepositoryNodeHelper.getDQCommonViewer().refresh(RepositoryNodeHelper.getRootNode(ERepositoryObjectType.METADATA, true));
         // refresh TOS's matadata tree list
         RepositoryManager.refreshCreatedNode(ERepositoryObjectType.METADATA_CONNECTIONS);
+    }
+
+    /**
+     * DOC zshen Comment method "openSuccessInformation".
+     */
+    protected void openSuccessInformation() {
+        MessageDialog
+                .openInformation(
+                        null,
+                        DefaultMessagesImpl.getString("ExportConnectionToTOSAction.info"), DefaultMessagesImpl.getString("ExportConnectionToTOSAction.meta"));//$NON-NLS-1$ //$NON-NLS-2$
     }
 
     /**
@@ -179,7 +193,7 @@ public class ExportConnectionToTOSAction extends Action {
      * 
      * @param tdDataProvider
      */
-    private DatabaseConnection fillCatalogSchema(IMetadataConnection newMetadataConn) {
+    protected DatabaseConnection fillCatalogSchema(IMetadataConnection newMetadataConn) {
         MetadataFillFactory instance = MetadataFillFactory.getDBInstance();
 
         ReturnCode rc = instance.checkConnection(newMetadataConn);
