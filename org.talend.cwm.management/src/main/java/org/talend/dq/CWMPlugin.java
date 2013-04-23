@@ -115,13 +115,14 @@ public class CWMPlugin extends Plugin {
                         // is serialized correctly.
                         assert password != null;
 
-                        // password should not null when serialized
-                        password = password != null ? password : ""; //$NON-NLS-1$
-
                         String url = JavaSqlFactory.getURL(connection);
 
                         User previousUser = new User(user, password);
-                        alias.setDefaultUser(previousUser);
+                        if (user == null || user.length() == 0) {
+                            alias.setHasNoUserName(true);
+                        } else {
+                            alias.setDefaultUser(previousUser);
+                        }
 
                         alias.setAutoLogon(false);
                         alias.setConnectAtStartup(true);

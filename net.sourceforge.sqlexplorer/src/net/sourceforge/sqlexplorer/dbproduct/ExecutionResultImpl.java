@@ -104,6 +104,11 @@ public final class ExecutionResultImpl implements ExecutionResults {
         // While we have more secondary results (i.e. those that come directly from Statement but after the first
         // getResults())
         while (state == State.SECONDARY_RESULTS) {
+            // MOD msjian TDQ-5927, fix the "statement is not executing" error for SQLite.
+            if ("org.sqlite.PrepStmt".equals(stmt.getClass().getName())) {
+                return null;
+            }
+            
             // MOD qiongli TDQ-5907, HivePreparedStatement dosenot support method 'getResultSet()'.
             if (!("org.apache.hadoop.hive.jdbc.HivePreparedStatement".equals(stmt.getClass().getName())) && stmt.getMoreResults()) {
                 currentResultSet = stmt.getResultSet();
