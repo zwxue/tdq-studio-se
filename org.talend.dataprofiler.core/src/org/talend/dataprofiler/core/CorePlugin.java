@@ -57,7 +57,10 @@ import org.talend.core.context.Context;
 import org.talend.core.context.RepositoryContext;
 import org.talend.core.language.ECodeLanguage;
 import org.talend.core.model.general.Project;
+import org.talend.core.model.metadata.IMetadataConnection;
+import org.talend.core.model.metadata.builder.ConvertionHelper;
 import org.talend.core.model.metadata.builder.connection.Connection;
+import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
 import org.talend.core.model.metadata.builder.database.JavaSqlFactory;
 import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.properties.Item;
@@ -213,12 +216,6 @@ public class CorePlugin extends AbstractUIPlugin {
             lEditorName = String.valueOf(SQLExplorerPlugin.getDefault().getEditorSerialNo());
         }
 
-        String username = JavaSqlFactory.getUsername(tdDataProvider);
-        if (username == null || "".equals(username)) { //$NON-NLS-1$
-            MessageUI.openWarning(DefaultMessagesImpl.getString("CorePlugin.cantPreview")); //$NON-NLS-1$
-            return null;
-        }
-
         SQLExplorerPlugin sqlPlugin = SQLExplorerPlugin.getDefault();
         AliasManager aliasManager = sqlPlugin.getAliasManager();
 
@@ -252,7 +249,20 @@ public class CorePlugin extends AbstractUIPlugin {
                 if (connection != null) {
                     String userName = JavaSqlFactory.getUsername(connection);
                     SQLEditorInput input = new SQLEditorInput("SQL Editor (" + alias.getName() + "." + lEditorName + ").sql"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-                    input.setUser(alias.getUser(userName));
+                    net.sourceforge.sqlexplorer.dbproduct.User user = alias.hasNoUserName() ? alias.getDefaultUser() : alias
+                            .getUser(userName);
+
+                    // set IMetadataConnection into the user, if the db type is hive, should use IMetadataConnection to
+                    // create the hive connection
+                    DatabaseConnection databaseConnection = SwitchHelpers.DATABASECONNECTION_SWITCH.doSwitch(connection);
+                    if (databaseConnection != null) {
+                        IMetadataConnection metadataConnection = ConvertionHelper.convert(databaseConnection);
+                        if (metadataConnection != null) {
+                            user.setMetadataConnection(metadataConnection);
+                        }
+                    }
+
+                    input.setUser(user);
                     IWorkbenchPage page = SQLExplorerPlugin.getDefault().getActivePage();
                     SQLEditor editorPart = (SQLEditor) page.openEditor(input, SQLEditor.class.getName());
                     editorPart.setText(query);

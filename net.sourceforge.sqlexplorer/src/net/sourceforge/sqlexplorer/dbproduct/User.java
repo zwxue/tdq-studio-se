@@ -26,6 +26,7 @@ import net.sourceforge.sqlexplorer.plugin.SQLExplorerPlugin;
 
 import org.dom4j.Element;
 import org.dom4j.tree.DefaultElement;
+import org.talend.core.model.metadata.IMetadataConnection;
 import org.talend.cwm.helper.ConnectionHelper;
 
 /**
@@ -75,6 +76,17 @@ public class User implements Comparable<User>, SessionEstablishedListener {
     private boolean autoCommit;
 
     private boolean commitOnClose;
+
+    private IMetadataConnection metadataConnection;
+
+    /**
+     * Sets the metadataConnection.
+     * 
+     * @param metadataConnection the metadataConnection to set
+     */
+    public void setMetadataConnection(IMetadataConnection metadataConnection) {
+        this.metadataConnection = metadataConnection;
+    }
 
     /**
      * Constructor
