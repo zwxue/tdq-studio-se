@@ -19,6 +19,7 @@ import java.util.List;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.events.SelectionEvent;
@@ -29,10 +30,12 @@ import org.talend.commons.exception.PersistenceException;
 import org.talend.core.model.metadata.MetadataColumnRepositoryObject;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.properties.ConnectionItem;
+import org.talend.core.model.properties.Item;
 import org.talend.core.model.properties.Property;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.cwm.helper.ConnectionHelper;
+import org.talend.cwm.helper.ResourceHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.dataprofiler.core.PluginConstant;
@@ -238,8 +241,75 @@ public abstract class AbstractPagePart {
                     }
 
                     public void widgetSelected(SelectionEvent e) {
-                        dataProvider = callChangeConnectionAction(masterPage, prevSelect, dataProvider);
-                        prevSelect = masterPage.getConnCombo().getSelectionIndex();
+                        ReturnCode rc = selectedObjectAvailable();
+                        if (rc.isOk()) {
+                            dataProvider = callChangeConnectionAction(masterPage, prevSelect, dataProvider);
+                            prevSelect = masterPage.getConnCombo().getSelectionIndex();
+                        } else {
+                            // show error message
+                            MessageDialogWithToggle
+                                    .openError(
+                                            null,
+                                            DefaultMessagesImpl.getString("AbstractPagePart.ChangeConnectionTitle"), DefaultMessagesImpl.getString("AbstractPagePart.ChangeConnectionError1", rc.getMessage())); //$NON-NLS-1$ //$NON-NLS-2$
+                            // reload the connection combo
+                            masterPage.reloadDataproviderAndFillConnCombo();
+                            // reselect the old connection
+                            masterPage.getConnCombo().removeSelectionListener(selectionListener);
+                            String uuid = ResourceHelper.getUUID(dataProvider);
+                            if (uuid != null) {
+                                int itemCount = masterPage.getConnCombo().getItemCount();
+                                for (int i = 0; i < itemCount; i++) {
+                                    Object connectionObj = masterPage.getConnCombo().getData(String.valueOf(i));
+                                    RepositoryNode repoNode = (RepositoryNode) connectionObj;
+                                    Connection connection = getConnectionFromRepositoryNode(repoNode);
+                                    if (connection != null && uuid.endsWith(ResourceHelper.getUUID(connection))) {
+                                        masterPage.getConnCombo().select(i);
+                                        break;
+                                    }
+                                }
+                            }
+                            masterPage.getConnCombo().addSelectionListener(selectionListener);
+                        }
+                    }
+
+                    /**
+                     * check the connection is available or not(the connection is exist and not proxy, don't check the
+                     * connection).
+                     * 
+                     * @return a ReturnCode, the message is the connection label
+                     */
+                    private ReturnCode selectedObjectAvailable() {
+                        ReturnCode rc = new ReturnCode("", Boolean.FALSE); //$NON-NLS-1$
+                        Object connectionObj = masterPage.getConnCombo().getData(
+                                masterPage.getConnCombo().getSelectionIndex() + PluginConstant.EMPTY_STRING);
+                        RepositoryNode repoNode = (RepositoryNode) connectionObj;
+                        rc.setMessage(repoNode.getLabel());
+                        Connection connection = getConnectionFromRepositoryNode(repoNode);
+                        if (connection != null && !connection.eIsProxy()) {
+                            rc.setOk(true);
+                        }
+                        return rc;
+                    }
+
+                    /**
+                     * DOC xqliu Comment method "getConnectionFromRepositoryNode".
+                     * 
+                     * @param repoNode
+                     * @return
+                     */
+                    private Connection getConnectionFromRepositoryNode(RepositoryNode repoNode) {
+                        Connection connection = null;
+                        IRepositoryViewObject repoViewObject = repoNode.getObject();
+                        if (repoViewObject != null) {
+                            Property property = repoViewObject.getProperty();
+                            if (property != null) {
+                                Item item = property.getItem();
+                                if (item != null && item instanceof ConnectionItem) {
+                                    connection = ((ConnectionItem) item).getConnection();
+                                }
+                            }
+                        }
+                        return connection;
                     }
                 };
                 masterPage.getConnCombo().addSelectionListener(selectionListener);
