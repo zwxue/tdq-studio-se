@@ -35,8 +35,6 @@ import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.TreeAdapter;
-import org.eclipse.swt.events.TreeEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -47,14 +45,12 @@ import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
-import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.talend.core.model.metadata.builder.connection.MetadataColumn;
 import org.talend.cwm.relational.TdSqlDataType;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.model.ColumnIndicator;
-import org.talend.dataprofiler.core.model.DelimitedFileIndicator;
 import org.talend.dataprofiler.core.model.ModelElementIndicator;
 import org.talend.dataprofiler.core.model.XmlElementIndicator;
 import org.talend.dataprofiler.core.model.impl.DelimitedFileIndicatorImpl;
@@ -127,7 +123,7 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
     public AbstractAnalysisMetadataPage getMasterPage() {
         return masterPage;
     }
-    
+
     /**
      * @param parent
      */
@@ -397,7 +393,7 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
                     .getSubModelElement(meIndicator.getModelElementRepositoryNode());
             final TreeItem treeItem = new TreeItem(tree, SWT.NONE);
 
-            MetadataHelper.setDataminingType(DataminingType.NOMINAL, modelElement);
+            MetadataHelper.setDefaultDataminingType(modelElement);
             columnSetMultiValueList.add(meIndicator.getModelElementRepositoryNode());
             treeItem.setImage(ImageLib.getImage(ImageLib.TD_COLUMN));
 
@@ -413,15 +409,7 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
                 combo.add(type.getLiteral()); // MODSCA 2008-04-10 use literal
                 // for presentation
             }
-            // final MetadataColumn tdColumn = (MetadataColumn) ((MetadataColumnRepositoryObject) meIndicator
-            // .getModelElementRepositoryNode().getObject()).getTdColumn();
             DataminingType dataminingType = MetadataHelper.getDataminingType(modelElement);
-            if (meIndicator instanceof DelimitedFileIndicator) {
-                dataminingType = MetadataHelper.getDefaultDataminingType(meIndicator.getJavaType());
-            } else if (meIndicator instanceof XmlElementIndicator) {
-                // MOD yyi 2011-06-15 22419:column set pattern for MDM
-                dataminingType = MetadataHelper.getDataminingType(modelElement);
-            }
 
             if (dataminingType == null) {
                 combo.select(0);
@@ -653,7 +641,6 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
     public AnalysisRepNode getAnalysisNode() {
         return this.masterPage.getAnalysisRepNode();
     }
-
 
     public Tree getTree() {
         return tree;

@@ -15,6 +15,7 @@ package org.talend.dataquality.helpers;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.talend.commons.bridge.ReponsitoryContextBridge;
 import org.talend.commons.emf.FactoriesUtil;
@@ -76,7 +77,6 @@ public final class MetadataHelper {
     private MetadataHelper() {
     }
 
-
     /**
      * Method "setDataminingType" sets the type of the content of a column.
      * 
@@ -104,11 +104,20 @@ public final class MetadataHelper {
      * @param modelElement
      */
     public static void setDataminingType(DataminingType type, ModelElement modelElement) {
-        if (modelElement instanceof TdColumn) {
-            setDataminingType(type, (TdColumn) modelElement);
-        } else if (modelElement instanceof TdXmlElementType) {
-            setDataminingType(type, (TdXmlElementType) modelElement);
+        TaggedValueHelper.setTaggedValue(modelElement, TaggedValueHelper.DATA_CONTENT_TYPE_TAGGED_VAL, type.getLiteral());
+    }
+
+    /**
+     * Set the DataminingType according to the Column Type.
+     * 
+     * @param modelElement
+     */
+    public static void setDefaultDataminingType(ModelElement modelElement) {
+        DataminingType type = getDataminingType(modelElement);
+        if (type == null) {
+            type = getDefaultDataminingType(0);
         }
+        TaggedValueHelper.setTaggedValue(modelElement, TaggedValueHelper.DATA_CONTENT_TYPE_TAGGED_VAL, type.getLiteral());
     }
 
     /**
@@ -238,8 +247,9 @@ public final class MetadataHelper {
             List<org.talend.core.model.properties.Status> statusList = MetadataHelper.getTechnicalStatus();
             if (statusList != null && statusList.size() > 0) {
                 return statusList.get(0).getLabel();
-            } else
+            } else {
                 return DevelopmentStatus.DRAFT.getLiteral();
+            }
         }
         String statusValueString = taggedValue.getValue();
         return statusValueString;
@@ -358,6 +368,11 @@ public final class MetadataHelper {
             } else if (modelElement instanceof TdXmlElementType) {
                 return DataminingType.get(((TdXmlElementType) modelElement).getContentType());
             } else if (modelElement instanceof MetadataColumn) {
+                String contentType = TaggedValueHelper.getValueString(TaggedValueHelper.DATA_CONTENT_TYPE_TAGGED_VAL,
+                        modelElement);
+                if (StringUtils.isNotEmpty(contentType)) {
+                    return DataminingType.get(contentType);
+                }
                 // MOD yyi 2011-06-23 22700: override the method for flatfile column
                 int javaType = TalendTypeConvert.convertToJDBCType(((MetadataColumn) modelElement).getTalendType());
                 return MetadataHelper.getDefaultDataminingType(javaType);
