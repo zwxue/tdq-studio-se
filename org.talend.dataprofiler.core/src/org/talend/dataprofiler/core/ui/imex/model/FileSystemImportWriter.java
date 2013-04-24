@@ -546,7 +546,7 @@ public class FileSystemImportWriter implements IImportWriter {
         }
 
         if (isModified) {
-            ElementWriterFactory.getInstance().createIndicatorDefinitionWriter().save(parserRuleItem, false);
+            ElementWriterFactory.getInstance().createdRuleWriter().save(parserRuleItem, false);
         }
     }
 
