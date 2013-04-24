@@ -49,7 +49,6 @@ import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.model.ColumnIndicator;
-import org.talend.dataprofiler.core.model.DelimitedFileIndicator;
 import org.talend.dataprofiler.core.model.ModelElementIndicator;
 import org.talend.dataprofiler.core.model.XmlElementIndicator;
 import org.talend.dataprofiler.core.model.impl.DelimitedFileIndicatorImpl;
@@ -369,7 +368,7 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
                     .getSubModelElement(meIndicator.getModelElementRepositoryNode());
             final TreeItem treeItem = new TreeItem(tree, SWT.NONE);
 
-            MetadataHelper.setDataminingType(DataminingType.NOMINAL, modelElement);
+            MetadataHelper.setDefaultDataminingType(modelElement);
             columnSetMultiValueList.add(meIndicator.getModelElementRepositoryNode());
             treeItem.setImage(ImageLib.getImage(ImageLib.TD_COLUMN));
 
@@ -386,12 +385,6 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
                 // for presentation
             }
             DataminingType dataminingType = MetadataHelper.getDataminingType(modelElement);
-            if (meIndicator instanceof DelimitedFileIndicator) {
-                dataminingType = MetadataHelper.getDefaultDataminingType(meIndicator.getJavaType());
-            } else if (meIndicator instanceof XmlElementIndicator) {
-                // MOD yyi 2011-06-15 22419:column set pattern for MDM
-                dataminingType = MetadataHelper.getDataminingType(modelElement);
-            }
 
             if (dataminingType == null) {
                 combo.select(0);
