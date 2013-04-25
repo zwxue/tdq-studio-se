@@ -63,7 +63,9 @@ import org.talend.dataquality.indicators.IndicatorParameters;
 import org.talend.dataquality.indicators.IndicatorsPackage;
 import org.talend.dataquality.indicators.PatternMatchingIndicator;
 import org.talend.dataquality.indicators.TextParameters;
+import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dataquality.indicators.sql.UserDefIndicator;
+import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.helper.UDIHelper;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
@@ -409,7 +411,15 @@ public abstract class AbstractColumnDropTree extends AbstractPagePart {
             Pattern pattern = unit.getIndicator().getParameters().getDataValidDomain().getPatterns().get(0);
             return pattern.getName();
         } else if (indicatorType == IndicatorEnum.UserDefinedIndicatorEnum) {
-            return unit.getIndicator().getIndicatorDefinition().getName();
+            if (unit.getIndicatorName() != null) {
+                return unit.getIndicatorName();
+            } else {
+                IndicatorDefinition indicatorDefinition = unit.getIndicator().getIndicatorDefinition();
+                if (indicatorDefinition.eIsProxy()) {
+                    indicatorDefinition = (IndicatorDefinition) EObjectHelper.resolveObject(indicatorDefinition);
+                }
+                return indicatorDefinition.getLabel();
+            }
         }
         return unit.getIndicatorName();
     }

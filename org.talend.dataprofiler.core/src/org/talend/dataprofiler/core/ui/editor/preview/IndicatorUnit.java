@@ -102,7 +102,7 @@ public class IndicatorUnit {
     public String getIndicatorName() {
         Property property = PropertyHelper.getProperty(indicator.getIndicatorDefinition());
         if (property != null) {
-        return property.getDisplayName();
+            return property.getDisplayName();
         } else {
             return this.indicator.getName();
         }
