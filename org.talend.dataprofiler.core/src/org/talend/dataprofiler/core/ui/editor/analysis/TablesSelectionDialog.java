@@ -105,11 +105,29 @@ public class TablesSelectionDialog extends TwoPartCheckSelectionDialog {
      * @param columnSetList
      */
     protected void unfoldToCheckedElements() {
-        Iterator<RepositoryNodeKey> it = packageCheckedMap.keySet().iterator();
-        while (it.hasNext()) {
-            RepositoryNodeKey csk = it.next();
-            IRepositoryNode packageNode = csk.getPackageNode();
-            List<IRepositoryNode> checkedTableNodeList = packageCheckedMap.get(csk);
+        // if there have a selected tree node, only unfold it is enough
+        if (this.selectedTreeRepoNode != null) {
+            Iterator<RepositoryNodeKey> it = packageCheckedMap.keySet().iterator();
+            while (it.hasNext()) {
+                RepositoryNodeKey csk = it.next();
+                if (this.selectedTreeRepoNode.equals(csk.getPackageNode())) {
+                    unfoldRepositoryNode(csk);
+                    break;
+                }
+            }
+        } else { // if there have not a selected tree node, unfold all nodes
+            Iterator<RepositoryNodeKey> it = packageCheckedMap.keySet().iterator();
+            while (it.hasNext()) {
+                RepositoryNodeKey csk = it.next();
+                unfoldRepositoryNode(csk);
+            }
+        }
+    }
+
+    private void unfoldRepositoryNode(RepositoryNodeKey csk) {
+        IRepositoryNode packageNode = csk.getPackageNode();
+        List<IRepositoryNode> checkedTableNodeList = packageCheckedMap.get(csk);
+        if (checkedTableNodeList != null && !checkedTableNodeList.isEmpty()) {
             if (isHideNode(checkedTableNodeList) && RepositoryNodeHelper.isOpenDQCommonViewer()) {
                 packageNode = findLastVisibleNode(checkedTableNodeList.get(0));
                 this.setMessage(DefaultMessagesImpl.getString("ColumnSelectionDialog.CannotFindNodeMessage")); //$NON-NLS-1$
@@ -126,6 +144,7 @@ public class TablesSelectionDialog extends TwoPartCheckSelectionDialog {
             StructuredSelection structSel = new StructuredSelection(packageNode);
             getTreeViewer().setSelection(structSel);
         }
+
     }
 
     /*
@@ -369,6 +388,7 @@ public class TablesSelectionDialog extends TwoPartCheckSelectionDialog {
         if (selectedObj != null) {
             if (selectedObj instanceof DBTableFolderRepNode || selectedObj instanceof DBViewFolderRepNode) {
                 IRepositoryNode node = (IRepositoryNode) selectedObj;
+                this.selectedTreeRepoNode = node.getParent();
                 this.setOutput(node);
                 IRepositoryNode[] tables = getCheckedTableNodes(node);
                 if (tables != null) {

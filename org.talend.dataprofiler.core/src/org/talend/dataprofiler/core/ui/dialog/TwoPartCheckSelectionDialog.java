@@ -149,6 +149,8 @@ public abstract class TwoPartCheckSelectionDialog extends SelectionStatusDialog 
 
     public static final int DIALOG_TYPE_TABLE = 2;
 
+    protected IRepositoryNode selectedTreeRepoNode;
+
     /**
      * Constructs an instance of <code>ElementTreeSelectionDialog</code>.
      * 

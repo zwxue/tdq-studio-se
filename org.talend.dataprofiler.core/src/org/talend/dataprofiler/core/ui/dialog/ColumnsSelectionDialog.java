@@ -86,11 +86,24 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
      * DOC mzhao bug 9240 mzhao 2009-11-05.
      */
     protected void unfoldToCheckedElements() {
-        Iterator<?> it = modelElementCheckedMap.keySet().iterator();
-        while (it.hasNext()) {
-            IRepositoryNode selectNode = (IRepositoryNode) it.next();
-            IRepositoryNode reposNode = selectNode;
-            List<IRepositoryNode> columnNodeList = (List<IRepositoryNode>) modelElementCheckedMap.get(selectNode);
+        if (this.selectedTreeRepoNode != null) {
+            // if there have a selected tree node, only unfold it is enough
+            unfoldRepositoryNode(this.selectedTreeRepoNode);
+        } else {
+            // if there have not a selected tree node, unfold all nodes
+            Iterator<?> it = modelElementCheckedMap.keySet().iterator();
+            while (it.hasNext()) {
+                IRepositoryNode selectNode = (IRepositoryNode) it.next();
+                unfoldRepositoryNode(selectNode);
+                break;
+            }
+        }
+    }
+
+    private void unfoldRepositoryNode(IRepositoryNode selectNode) {
+        IRepositoryNode reposNode = selectNode;
+        List<IRepositoryNode> columnNodeList = (List<IRepositoryNode>) modelElementCheckedMap.get(selectNode);
+        if (columnNodeList != null && !columnNodeList.isEmpty()) {
             if (isHideNode(columnNodeList) && RepositoryNodeHelper.isOpenDQCommonViewer()) {
                 reposNode = findLastVisibleNode(columnNodeList.get(0));
                 this.setMessage(DefaultMessagesImpl.getString("ColumnSelectionDialog.CannotFindNodeMessage")); //$NON-NLS-1$
@@ -334,6 +347,7 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
         RepositoryNode selectedObj = (RepositoryNode) ((IStructuredSelection) event.getSelection()).getFirstElement();
         if (selectedObj != null) {
             if (selectedObj.hasChildren()) {
+                this.selectedTreeRepoNode = selectedObj;
                 this.setOutput(selectedObj);
                 Boolean allCheckFlag = this.getTreeViewer().getChecked(selectedObj);
                 List<?> repositoryNodeList = (List<?>) modelElementCheckedMap.get(selectedObj);
