@@ -12,12 +12,14 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.editor.preview;
 
+import org.talend.core.model.properties.Property;
 import org.talend.dataprofiler.core.model.ColumnIndicator;
 import org.talend.dataprofiler.core.model.DelimitedFileIndicator;
 import org.talend.dataprofiler.core.model.ModelElementIndicator;
 import org.talend.dataprofiler.core.model.XmlElementIndicator;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.IndicatorParameters;
+import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.indicators.IndicatorCommonUtil;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
 
@@ -98,7 +100,12 @@ public class IndicatorUnit {
      * @return the indicatorName
      */
     public String getIndicatorName() {
-        return this.indicator.getName();
+        Property property = PropertyHelper.getProperty(indicator.getIndicatorDefinition());
+        if (property != null) {
+            return property.getDisplayName();
+        } else {
+            return this.indicator.getName();
+        }
     }
 
     /**
