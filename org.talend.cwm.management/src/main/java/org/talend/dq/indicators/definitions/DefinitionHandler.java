@@ -368,6 +368,22 @@ public final class DefinitionHandler {
         return null;
     }
 
+    /**
+     * get UDI Indicator Definitions.
+     * 
+     * @return
+     */
+    public List<IndicatorDefinition> getUserDefinedIndicatorDefinitions() {
+        List<IndicatorDefinition> list = new ArrayList<IndicatorDefinition>();
+        for (IndicatorDefinition indicatorDefinition : getIndicatorsDefinitions()) {
+            IndicatorCategory category = IndicatorCategoryHelper.getCategory(indicatorDefinition);
+            if (IndicatorCategoryHelper.isUserDefCategory(category)) {
+                list.add(indicatorDefinition);
+            }
+        }
+        return list;
+    }
+
     public boolean updateRegex(String dbmsName, String regexpFunction) {
         boolean ok = true;
         boolean replaced = false;

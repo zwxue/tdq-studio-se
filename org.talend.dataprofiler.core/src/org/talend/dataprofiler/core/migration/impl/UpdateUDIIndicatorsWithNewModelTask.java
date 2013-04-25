@@ -80,7 +80,7 @@ public class UpdateUDIIndicatorsWithNewModelTask extends AbstractWorksapceUpdate
             log.error(e, e);
         }
 
-        List<IndicatorDefinition> indiDefinitions = DefinitionHandler.getInstance().getIndicatorsDefinitions();
+        List<IndicatorDefinition> indiDefinitions = DefinitionHandler.getInstance().getUserDefinedIndicatorDefinitions();
         for (IndicatorDefinition indiDefinition : indiDefinitions) {
             if (indiDefinition != null) {
                 if (indiDefinition instanceof UDIndicatorDefinition) {
