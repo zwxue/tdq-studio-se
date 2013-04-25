@@ -24,7 +24,7 @@ import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
 
 /**
- * Update All Indicators from language="Default " to language="SQL", only for UDI.
+ * Update All Indicators from language="Default " to language="SQL".
  * 
  */
 public class UpdateAllIndicators4DefaultTask extends AbstractWorksapceUpdateTask {
@@ -44,7 +44,7 @@ public class UpdateAllIndicators4DefaultTask extends AbstractWorksapceUpdateTask
     @Override
     protected boolean doExecute() throws Exception {
         boolean result = true;
-        List<IndicatorDefinition> indiDefinitions = DefinitionHandler.getInstance().getUserDefinedIndicatorDefinitions();
+        List<IndicatorDefinition> indiDefinitions = DefinitionHandler.getInstance().getIndicatorsDefinitions();
         for (IndicatorDefinition indiDefinition : indiDefinitions) {
             if (indiDefinition != null) {
                 EList<TdExpression> sqlGenericExpression = indiDefinition.getSqlGenericExpression();
