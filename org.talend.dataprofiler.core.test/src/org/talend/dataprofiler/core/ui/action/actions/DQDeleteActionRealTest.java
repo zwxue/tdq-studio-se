@@ -108,6 +108,7 @@ public class DQDeleteActionRealTest {
         UnitTestBuildHelper.createRealProject("testForDeleteActionTDQ"); //$NON-NLS-1$
         dqDeleteAction_real = PowerMockito.spy(new DQDeleteAction());
         PowerMockito.doReturn(true).when(dqDeleteAction_real, "showConfirmDialog"); //$NON-NLS-1$
+        PowerMockito.doReturn(null).when(dqDeleteAction_real).getActivePage();
         // Mockito.when(dqDeleteAction_real.showConfirmDialog()).thenReturn(true);
     }
 
