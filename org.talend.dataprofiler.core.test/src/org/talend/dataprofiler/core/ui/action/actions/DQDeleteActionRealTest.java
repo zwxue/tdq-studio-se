@@ -62,6 +62,7 @@ import org.talend.dq.nodes.DBConnectionRepNode;
 import org.talend.repository.localprovider.model.LocalRepositoryFactory;
 import org.talend.repository.model.IRepositoryNode.ENodeType;
 import org.talend.repository.model.RepositoryNode;
+import org.talend.repository.ui.actions.DeleteActionCache;
 
 /**
  * created by zshen on Apr 11, 2013 Detailled comment
@@ -109,6 +110,7 @@ public class DQDeleteActionRealTest {
         dqDeleteAction_real = PowerMockito.spy(new DQDeleteAction());
         PowerMockito.doReturn(true).when(dqDeleteAction_real, "showConfirmDialog"); //$NON-NLS-1$
         PowerMockito.doReturn(null).when(dqDeleteAction_real).getActivePage();
+        PowerMockito.doNothing().when(dqDeleteAction_real).synchUI((DeleteActionCache) Mockito.any());
         // Mockito.when(dqDeleteAction_real.showConfirmDialog()).thenReturn(true);
     }
 
