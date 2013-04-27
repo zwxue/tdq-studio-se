@@ -45,7 +45,7 @@ public enum EDriverName {
     MYSQLDEFAULTURL("Mysql", //$NON-NLS-1$
                     "org.gjt.mm.mysql.Driver", //$NON-NLS-1$
                     "-6",
-                    "lib/mysql-connector-java-5.1.3-bin.jar"),
+                    "lib/mysql-connector-java-5.1.22-bin.jar"),
     HSQLDEFAULTURL("HSql", //$NON-NLS-1$
                    "org.hsqldb.jdbcDriver", //$NON-NLS-1$
                    "-18",
