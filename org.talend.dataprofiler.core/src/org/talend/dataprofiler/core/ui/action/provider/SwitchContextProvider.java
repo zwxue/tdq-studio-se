@@ -17,19 +17,19 @@ import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.viewers.TreeSelection;
 import org.talend.core.context.Context;
 import org.talend.core.model.context.ContextUtils;
+import org.talend.core.model.metadata.builder.connection.Connection;
+import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.properties.ContextItem;
+import org.talend.core.model.properties.Item;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.action.actions.SwitchContextAction;
 import org.talend.dq.nodes.ConnectionRepNode;
-import org.talend.dq.nodes.DBConnectionRepNode;
-import org.talend.dq.nodes.DFConnectionRepNode;
-import org.talend.dq.nodes.MDMConnectionRepNode;
 import org.talend.repository.model.IRepositoryNode.ENodeType;
 import org.talend.repository.model.RepositoryNode;
 
 /**
- * DOC msjian  class global comment. Detailled comment
+ * DOC msjian class global comment. Detailled comment
  */
 public class SwitchContextProvider extends AbstractCommonActionProvider {
 
@@ -71,12 +71,12 @@ public class SwitchContextProvider extends AbstractCommonActionProvider {
 
             // MOD qiongli 2011-10-10
             String contextId = null;
-            if (node instanceof DBConnectionRepNode) {
-                contextId = ((DBConnectionRepNode) node).getDatabaseConnection().getContextId();
-            } else if (node instanceof DFConnectionRepNode) {
-                contextId = ((DFConnectionRepNode) node).getDfConnection().getContextId();
-            } else if (node instanceof MDMConnectionRepNode) {
-                contextId = ((MDMConnectionRepNode) node).getMdmConnection().getContextId();
+            Item item = node.getObject().getProperty().getItem();
+            if (item instanceof ConnectionItem) {
+                Connection connection = ((ConnectionItem) item).getConnection();
+                if (connection != null) {
+                    contextId = connection.getContextId();
+                }
             }
             // TDQ-4559~
 
