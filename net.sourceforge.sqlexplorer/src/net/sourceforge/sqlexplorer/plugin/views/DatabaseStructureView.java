@@ -452,7 +452,9 @@ public class DatabaseStructureView extends ViewPart {
         }
         // clear session
         _allSessions.clear();
-        _tabFolder.dispose();
+        if (_tabFolder != null && !_tabFolder.isDisposed()) {
+            _tabFolder.dispose();
+        }
 
         SQLExplorerPlugin.getDefault().setDatabaseStructureView(null);
     }
