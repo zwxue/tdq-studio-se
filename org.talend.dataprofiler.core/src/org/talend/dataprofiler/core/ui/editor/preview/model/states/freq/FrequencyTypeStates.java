@@ -43,8 +43,6 @@ import orgomg.cwm.objectmodel.core.ModelElement;
  */
 public abstract class FrequencyTypeStates extends AbstractChartTypeStates {
 
-    public static int TOP_NUM = 10; // default topN
-
     public FrequencyTypeStates(List<IndicatorUnit> units) {
         super(units);
     }
