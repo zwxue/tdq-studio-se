@@ -76,6 +76,7 @@ import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.IRepositoryNode.ENodeType;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.repository.ui.actions.DeleteAction;
+import org.talend.repository.ui.actions.DeleteActionCache;
 import org.talend.resource.ResourceManager;
 import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
@@ -197,6 +198,13 @@ public class DQDeleteAction extends DeleteAction {
         }
 
         // the deleteReportFile() mothed have refresh the workspace and dqview
+        refreshWorkspaceAndRecycleBenNode();
+    }
+
+    /**
+     * DOC zshen Comment method "refreshWorkspaceAndRecycleBenNode".
+     */
+    protected void refreshWorkspaceAndRecycleBenNode() {
         CorePlugin.getDefault().refreshWorkSpace();
         CorePlugin.getDefault().refreshDQView(RepositoryNodeHelper.getRecycleBinRepNode());
     }
@@ -691,4 +699,15 @@ public class DQDeleteAction extends DeleteAction {
         }
         return list.toArray();
     }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.repository.ui.actions.DeleteAction#synchUI(org.talend.repository.ui.actions.DeleteActionCache)
+     */
+    @Override
+    protected void synchUI(DeleteActionCache deleteActionCache) {
+        super.synchUI(deleteActionCache);
+    }
+
 }

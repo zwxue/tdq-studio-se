@@ -21,6 +21,7 @@ import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.ui.PlatformUI;
 import org.talend.commons.exception.PersistenceException;
 import org.talend.commons.utils.VersionUtils;
 import org.talend.core.context.Context;
@@ -120,7 +121,7 @@ public class ExportConnectionToTOSAction extends Action {
     protected void openSuccessInformation() {
         MessageDialog
                 .openInformation(
-                        null,
+                        PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
                         DefaultMessagesImpl.getString("ExportConnectionToTOSAction.info"), DefaultMessagesImpl.getString("ExportConnectionToTOSAction.meta"));//$NON-NLS-1$ //$NON-NLS-2$
     }
 

@@ -111,6 +111,7 @@ public class DQDeleteActionRealTest {
         PowerMockito.doReturn(true).when(dqDeleteAction_real, "showConfirmDialog"); //$NON-NLS-1$
         PowerMockito.doReturn(null).when(dqDeleteAction_real).getActivePage();
         PowerMockito.doNothing().when(dqDeleteAction_real).synchUI((DeleteActionCache) Mockito.any());
+        PowerMockito.doNothing().when(dqDeleteAction_real).refreshWorkspaceAndRecycleBenNode();
         // Mockito.when(dqDeleteAction_real.showConfirmDialog()).thenReturn(true);
     }
 
