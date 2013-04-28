@@ -64,8 +64,12 @@ public abstract class FrequencyTypeStates extends AbstractChartTypeStates {
                 int numOfShown = frequencyExt.length;
                 IndicatorParameters parameters = unit.getIndicator().getParameters();
                 if (parameters != null) {
-                    if (parameters.getTopN() < frequencyExt.length) {
+                    if (parameters.getTopN() < numOfShown) {
                         numOfShown = parameters.getTopN();
+                    }
+                } else {
+                    if (TOP_NUM < numOfShown) {
+                        numOfShown = TOP_NUM;
                     }
                 }
 
@@ -100,12 +104,10 @@ public abstract class FrequencyTypeStates extends AbstractChartTypeStates {
     }
 
     public JFreeChart getExampleChart() {
-        // TODO Auto-generated method stub
         return null;
     }
 
     public String getReferenceLink() {
-        // TODO Auto-generated method stub
         return null;
     }
 
@@ -121,13 +123,11 @@ public abstract class FrequencyTypeStates extends AbstractChartTypeStates {
 
     @Override
     protected ITableLabelProvider getLabelProvider() {
-        // TODO Auto-generated method stub
         return new FrequencyLabelProvider();
     }
 
     @Override
     protected IStructuredContentProvider getContentProvider() {
-        // TODO Auto-generated method stub
         return new CommonContenteProvider();
     }
 
