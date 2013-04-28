@@ -64,8 +64,12 @@ public class DateLowFrequencyStatisticsState extends LowFrequencyStatisticsState
                 int numOfShown = frequencyExt.length;
                 IndicatorParameters parameters = unit.getIndicator().getParameters();
                 if (parameters != null) {
-                    if (parameters.getTopN() < frequencyExt.length) {
+                    if (parameters.getTopN() < numOfShown) {
                         numOfShown = parameters.getTopN();
+                    }
+                } else {
+                    if (TOP_NUM < numOfShown) {
+                        numOfShown = TOP_NUM;
                     }
                 }
 

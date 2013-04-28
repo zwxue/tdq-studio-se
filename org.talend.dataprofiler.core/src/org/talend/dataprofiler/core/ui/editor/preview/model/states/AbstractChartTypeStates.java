@@ -40,6 +40,8 @@ import org.talend.dq.nodes.indicator.type.IndicatorEnum;
  */
 public abstract class AbstractChartTypeStates implements IChartTypeStates {
 
+    public static int TOP_NUM = 10; // default topN
+
     protected List<IndicatorUnit> units = new ArrayList<IndicatorUnit>();
 
     public AbstractChartTypeStates(List<IndicatorUnit> units) {
