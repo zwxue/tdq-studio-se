@@ -43,12 +43,14 @@ import orgomg.cwm.objectmodel.core.ModelElement;
  */
 public abstract class FrequencyTypeStates extends AbstractChartTypeStates {
 
+    public static int TOP_NUM = 10; // default topN
+
     public FrequencyTypeStates(List<IndicatorUnit> units) {
         super(units);
     }
 
     public JFreeChart getChart() {
-        return TopChartFactory.createBarChart(DefaultMessagesImpl.getString("TopChartFactory.count"), getDataset());
+        return TopChartFactory.createBarChart(DefaultMessagesImpl.getString("TopChartFactory.count"), getDataset()); //$NON-NLS-1$
     }
 
     public ICustomerDataset getCustomerDataset() {
@@ -63,8 +65,12 @@ public abstract class FrequencyTypeStates extends AbstractChartTypeStates {
                 int numOfShown = frequencyExt.length;
                 IndicatorParameters parameters = unit.getIndicator().getParameters();
                 if (parameters != null) {
-                    if (parameters.getTopN() < frequencyExt.length) {
+                    if (parameters.getTopN() < numOfShown) {
                         numOfShown = parameters.getTopN();
+                    }
+                } else {
+                    if (TOP_NUM < numOfShown) {
+                        numOfShown = TOP_NUM;
                     }
                 }
 
