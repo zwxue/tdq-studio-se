@@ -58,10 +58,7 @@ public class EmfFileResourceUtil {
         // Initialize the enterprise packages
         FactoriesUtil.initializeAllPackages();
 
-        // Initialize the model
-        // ReportsPackage.eINSTANCE.eClass();
-
-        // Register the XMI resource factory for the all extensions
+        // Register the XMI resource factory for all the extensions
         Resource.Factory.Registry reg = Resource.Factory.Registry.INSTANCE;
 
         final Collection<String> fileExtensions = FactoriesUtil.getExtensions();
