@@ -21,6 +21,7 @@ import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
@@ -49,6 +50,7 @@ import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.helper.resourcehelper.RepResourceFileHelper;
 import org.talend.resource.EResourceConstant;
+import org.talend.resource.ResourceManager;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.objectmodel.core.TaggedValue;
 
@@ -239,16 +241,31 @@ public class ItemRecord {
                 TdReport rep = (TdReport) element;
                 for (AnalysisMap anaMap : rep.getAnalysisMap()) {
                     ReportType reportType = ReportHelper.ReportType.getReportType(anaMap.getAnalysis(), anaMap.getReportType());
-                    boolean isUseMode = ReportHelper.ReportType.USER_MADE.equals(reportType);
-                    if (isUseMode) {
-                        URI uri = rep.eResource().getURI();
-                        IPath path = new Path(uri.toFileString());
-                        // Append the relative path of jrxmltemplate to file.
-                        dependencyMap.put(path.append(anaMap.getJrxmlSource()).toFile(), element);
+                    boolean isUserMade = ReportHelper.ReportType.USER_MADE.equals(reportType);
+                    if (isUserMade) {
+                        IFolder folder = ResourceManager.getJRXMLFolder();
+                        traverseFolderAndAddJrxmlDependencies(folder.getLocation().toFile());
                     }
                 }
             } else if (element instanceof IndicatorDefinition) { // MOD sizhaoliu 2013-04-13 TDQ-7082
                 includeAggregatedDependencies((IndicatorDefinition) element);
+            }
+        }
+    }
+
+    private void traverseFolderAndAddJrxmlDependencies(File folderFile) {
+        for (File file : folderFile.listFiles()) {
+            if (file.isDirectory()) {
+                traverseFolderAndAddJrxmlDependencies(file);
+            } else if (file.isFile()) {
+                String name = file.getName();
+                int dotIndex = name.lastIndexOf(".");
+                if (dotIndex > 0) {
+                    String ext = name.substring(dotIndex + 1);
+                    if (FactoriesUtil.PROPERTIES_EXTENSION.equals(ext)) {
+                        dependencyMap.put(file, null);
+                    }
+                }
             }
         }
     }
