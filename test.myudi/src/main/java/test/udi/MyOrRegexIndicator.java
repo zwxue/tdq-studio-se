@@ -42,9 +42,10 @@ public class MyOrRegexIndicator extends UserDefIndicatorImpl {
         if (parameters != null) {
             final Domain dataValidDomain = parameters.getIndicatorValidDomain();
             if (dataValidDomain != null) {
+                patternList.clear();
                 for (JavaUDIIndicatorParameter param : dataValidDomain.getJavaUDIIndicatorParameter()) {
                     if (param != null) {
-                        if ("pattern".equals(param.getKey())) {
+                        if (param.getKey().startsWith("pattern")) {
                             paramValue = param.getValue();
                             pattern = Pattern.compile(paramValue);
                             patternList.add(pattern);
