@@ -581,7 +581,6 @@ public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnaly
         analysisParamSection = createSection(form, anasisDataComp,
                 DefaultMessagesImpl.getString("ColumnMasterDetailsPage.AnalysisParameter"), null); //$NON-NLS-1$
         Composite sectionClient = toolkit.createComposite(analysisParamSection);
-        sectionClient.setLayout(new GridLayout(1, false));
         this.createAnalysisLimitComposite(sectionClient);
         analysisParamSection.setClient(sectionClient);
     }

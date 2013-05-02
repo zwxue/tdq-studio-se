@@ -354,7 +354,6 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
         sectionClient.setLayout(new GridLayout(1, false));
 
         Composite comp1 = new Composite(sectionClient, SWT.NONE);
-        comp1.setLayout(new GridLayout(1, false));
         this.createAnalysisLimitComposite(comp1);
 
         Composite comp2 = new Composite(sectionClient, SWT.NONE);
@@ -524,15 +523,15 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
                 .getString("ConnectionMasterDetailsPage.success") : DefaultMessagesImpl.getString("ConnectionMasterDetailsPage.failure", resultMetadata.getMessage())); //$NON-NLS-1$ //$NON-NLS-2$
         Label rightLabel = toolkit.createLabel(rightComp,
                 DefaultMessagesImpl.getString("AbstractAnalysisResultPage.executionStatus"));//$NON-NLS-1$  
-        if (!resultMetadata.isLastRunOk()) {
+        int executionNumber = resultMetadata.getExecutionNumber();
+        if (!resultMetadata.isLastRunOk() && executionNumber != 0) {
             rightLabel.setForeground(Display.getDefault().getSystemColor(SWT.COLOR_RED));
         }
-        rightLabel = toolkit.createLabel(rightComp, resultMetadata.getExecutionNumber() == 0 ? PluginConstant.EMPTY_STRING
-                : executeStatus);
+        rightLabel = toolkit.createLabel(rightComp, executionNumber == 0 ? PluginConstant.EMPTY_STRING : executeStatus);
 
         toolkit.createLabel(rightComp,
                 DefaultMessagesImpl.getString("AbstractAnalysisResultPage.numberOfExecution", PluginConstant.EMPTY_STRING)); //$NON-NLS-1$
-        toolkit.createLabel(rightComp, PluginConstant.EMPTY_STRING + resultMetadata.getExecutionNumber());
+        toolkit.createLabel(rightComp, PluginConstant.EMPTY_STRING + executionNumber);
         toolkit.createLabel(rightComp,
                 DefaultMessagesImpl.getString("AbstractAnalysisResultPage.lastSucessfulExecution", PluginConstant.EMPTY_STRING)); //$NON-NLS-1$
         toolkit.createLabel(rightComp, PluginConstant.EMPTY_STRING + resultMetadata.getLastExecutionNumberOk());

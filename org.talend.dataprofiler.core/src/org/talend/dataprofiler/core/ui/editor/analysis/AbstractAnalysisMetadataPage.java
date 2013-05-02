@@ -167,7 +167,7 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
             MessageDialogWithToggle
                     .openError(
                             null,
-                            DefaultMessagesImpl.getString("AbstractAnalysisMetadataPage.SaveAnalysis"), DefaultMessagesImpl.getString("AbstractMetadataFormPage.whitespace")); //$NON-NLS-1$
+                            DefaultMessagesImpl.getString("AbstractAnalysisMetadataPage.SaveAnalysis"), DefaultMessagesImpl.getString("AbstractMetadataFormPage.whitespace")); //$NON-NLS-1$ //$NON-NLS-2$
         } else {
             super.doSave(monitor);
             try {
@@ -299,7 +299,7 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
      */
     public void updateAnalysisConnectionVersionInfo() {
         if (this.textConnVersion != null) {
-            String strConnVersion = DefaultMessagesImpl.getString("AbstractMetadataFormPage.connVersion")
+            String strConnVersion = DefaultMessagesImpl.getString("AbstractMetadataFormPage.connVersion") //$NON-NLS-1$
                     + getConnectionVersion();
             textConnVersion.setText(strConnVersion);
         }
@@ -595,7 +595,6 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
         Section section = createSection(sForm, pComp,
                 DefaultMessagesImpl.getString("AbstractMetadataFormPage.AnalysisLimit"), null); //$NON-NLS-1$
         Composite parent = this.toolkit.createComposite(section);
-        parent.setLayout(new GridLayout(1, false));
         this.createAnalysisLimitComposite(parent);
         section.setClient(parent);
         return section;
@@ -608,11 +607,10 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
      * @return
      */
     protected Composite createAnalysisLimitComposite(Composite pComp) {
-        Composite comp = new Composite(pComp, SWT.NONE);
+        Composite comp = pComp;
         comp.setLayout(new GridLayout(2, false));
-
         this.toolkit.createLabel(comp,
-                DefaultMessagesImpl.getString("AnalysisTuningPreferencePage.NumberOfConnectionsPerAnalysis"));
+                DefaultMessagesImpl.getString("AnalysisTuningPreferencePage.NumberOfConnectionsPerAnalysis")); //$NON-NLS-1$
 
         this.numberOfConnectionsPerAnalysisText = this.toolkit.createText(comp,
                 String.valueOf(AnalysisHandler.createHandler(getAnalysis()).getNumberOfConnectionsPerAnalysis()), SWT.BORDER);

@@ -666,7 +666,6 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
         sectionClient.setLayout(new GridLayout(1, false));
 
         Composite comp1 = new Composite(sectionClient, SWT.NONE);
-        comp1.setLayout(new GridLayout(1, false));
         this.createAnalysisLimitComposite(comp1);
 
         Composite comp2 = new Composite(sectionClient, SWT.NONE);

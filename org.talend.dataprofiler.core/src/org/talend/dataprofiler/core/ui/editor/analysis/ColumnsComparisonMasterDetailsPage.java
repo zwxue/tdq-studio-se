@@ -169,7 +169,6 @@ public class ColumnsComparisonMasterDetailsPage extends AbstractAnalysisMetadata
         this.analysisParamSection = createSection(pForm, pComp,
                 DefaultMessagesImpl.getString("ColumnMasterDetailsPage.AnalysisParameter"), null); //$NON-NLS-1$
         Composite sectionClient = this.toolkit.createComposite(this.analysisParamSection);
-        sectionClient.setLayout(new GridLayout(1, false));
         this.createAnalysisLimitComposite(sectionClient);
         this.analysisParamSection.setClient(sectionClient);
     }
