@@ -129,8 +129,6 @@ public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnaly
 
     private Section previewSection;
 
-    private Section analysisParamSection;
-
     private Section indicatorsSection;
 
     private IndicatorsComp indicatorsViewer;
@@ -569,20 +567,6 @@ public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnaly
         // ADD yyi 2011-05-31 16158:add whitespace check for text fields.
         addWhitespaceValidate(dataFilterComp.getDataFilterText());
         dataFilterSection.setClient(sectionClient);
-    }
-
-    /**
-     * DOC hcheng Comment method "createAnalysisParamSection".
-     * 
-     * @param form
-     * @param anasisDataComp
-     */
-    void createAnalysisParamSection(final ScrolledForm form, Composite anasisDataComp) {
-        analysisParamSection = createSection(form, anasisDataComp,
-                DefaultMessagesImpl.getString("ColumnMasterDetailsPage.AnalysisParameter"), null); //$NON-NLS-1$
-        Composite sectionClient = toolkit.createComposite(analysisParamSection);
-        this.createAnalysisLimitComposite(sectionClient);
-        analysisParamSection.setClient(sectionClient);
     }
 
     /**

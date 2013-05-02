@@ -94,8 +94,6 @@ public class ColumnsComparisonMasterDetailsPage extends AbstractAnalysisMetadata
 
     private Section dataFilterSection = null;
 
-    private Section analysisParamSection;
-
     private String stringDataFilterA;
 
     private String stringDataFilterB;
@@ -157,20 +155,6 @@ public class ColumnsComparisonMasterDetailsPage extends AbstractAnalysisMetadata
         createDataFilterSection(form, topComp);
 
         createAnalysisParamSection(form, topComp);
-    }
-
-    /**
-     * DOC xqliu Comment method "createAnalysisParamSection".
-     * 
-     * @param pForm
-     * @param pComp
-     */
-    void createAnalysisParamSection(final ScrolledForm pForm, Composite pComp) {
-        this.analysisParamSection = createSection(pForm, pComp,
-                DefaultMessagesImpl.getString("ColumnMasterDetailsPage.AnalysisParameter"), null); //$NON-NLS-1$
-        Composite sectionClient = this.toolkit.createComposite(this.analysisParamSection);
-        this.createAnalysisLimitComposite(sectionClient);
-        this.analysisParamSection.setClient(sectionClient);
     }
 
     void createDataFilterSection(final ScrolledForm form, Composite anasisDataComp) {

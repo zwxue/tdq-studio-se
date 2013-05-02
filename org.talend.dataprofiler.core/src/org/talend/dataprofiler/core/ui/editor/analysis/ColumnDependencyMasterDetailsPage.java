@@ -93,8 +93,6 @@ public class ColumnDependencyMasterDetailsPage extends AbstractAnalysisMetadataP
 
     private Section dataFilterSection = null;
 
-    private Section analysisParamSection;
-
     private String stringDataFilter;
 
     private AnalysisColumnCompareTreeViewer anaColumnCompareViewer;
@@ -140,20 +138,6 @@ public class ColumnDependencyMasterDetailsPage extends AbstractAnalysisMetadataP
         anaColumnCompareViewer.addPropertyChangeListener(this);
 
         form.reflow(true);
-    }
-
-    /**
-     * DOC xqliu Comment method "createAnalysisParamSection".
-     * 
-     * @param pForm
-     * @param pComp
-     */
-    void createAnalysisParamSection(final ScrolledForm pForm, Composite pComp) {
-        this.analysisParamSection = createSection(pForm, pComp,
-                DefaultMessagesImpl.getString("ColumnMasterDetailsPage.AnalysisParameter"), null); //$NON-NLS-1$
-        Composite sectionClient = this.toolkit.createComposite(this.analysisParamSection);
-        this.createAnalysisLimitComposite(sectionClient);
-        this.analysisParamSection.setClient(sectionClient);
     }
 
     /**

@@ -94,6 +94,8 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
 
     protected AnalysisRepNode analysisRepNode;
 
+    protected Section analysisParamSection;
+
     public AnalysisRepNode getAnalysisRepNode() {
         return this.analysisRepNode;
     }
@@ -687,5 +689,19 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
      */
     public Composite getChartComposite() {
         return null;
+    }
+
+    /**
+     * create Analysis Param Section.
+     * 
+     * @param pForm
+     * @param pComp
+     */
+    protected void createAnalysisParamSection(final ScrolledForm pForm, Composite pComp) {
+        analysisParamSection = createSection(pForm, pComp,
+                DefaultMessagesImpl.getString("ColumnMasterDetailsPage.AnalysisParameter"), null); //$NON-NLS-1$
+        Composite sectionClient = toolkit.createComposite(analysisParamSection);
+        createAnalysisLimitComposite(sectionClient);
+        analysisParamSection.setClient(sectionClient);
     }
 }

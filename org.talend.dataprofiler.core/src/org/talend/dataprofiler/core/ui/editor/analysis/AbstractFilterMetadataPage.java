@@ -22,7 +22,6 @@ import java.util.Properties;
 
 import net.sourceforge.sqlexplorer.Messages;
 
-import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
@@ -111,8 +110,6 @@ import orgomg.cwm.resource.relational.Schema;
  */
 public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadataPage {
 
-    private static Logger log = Logger.getLogger(ConnectionMasterDetailsPage.class);
-
     private static final String SCHEMA = DefaultMessagesImpl.getString("ConnectionMasterDetailsPage.schema"); //$NON-NLS-1$
 
     private static final String CATALOG = DefaultMessagesImpl.getString("ConnectionMasterDetailsPage.catalog"); //$NON-NLS-1$
@@ -199,8 +196,6 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
     private TableViewer viewOfCatalogOrSchemaViewer;
 
     private SchemaIndicator currentSelectionSchemaIndicator;
-
-    private Section analysisParamSection = null;
 
     private Section summarySection = null;
 
@@ -347,6 +342,11 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
         createStatisticalSection(topComp);
     }
 
+    /**
+     * create Analysis Param Section.
+     * 
+     * @param topComp
+     */
     private void createAnalysisParamSection(Composite topComp) {
         analysisParamSection = createSection(form, topComp,
                 DefaultMessagesImpl.getString("ConnectionMasterDetailsPage.analysisParameter")); //$NON-NLS-1$

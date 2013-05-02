@@ -160,8 +160,6 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
     // MOD qiongli 2011-1-25.add java engine for columnSet.
     private String execLang;
 
-    private Section analysisParamSection = null;
-
     private CCombo execCombo;
 
     private Button drillDownCheck;
@@ -602,7 +600,8 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
      * @param form
      * @param anasisDataComp
      */
-    void createAnalysisParamSection(final ScrolledForm form, Composite anasisDataComp) {
+    @Override
+    protected void createAnalysisParamSection(final ScrolledForm form, Composite anasisDataComp) {
         analysisParamSection = createSection(form, anasisDataComp,
                 DefaultMessagesImpl.getString("ColumnMasterDetailsPage.AnalysisParameter"), null); //$NON-NLS-1$
         Composite sectionClient = toolkit.createComposite(analysisParamSection);

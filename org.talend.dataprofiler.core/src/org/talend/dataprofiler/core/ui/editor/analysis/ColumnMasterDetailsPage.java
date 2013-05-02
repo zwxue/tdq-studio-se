@@ -141,8 +141,6 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
 
     private Section analysisColumnSection = null;
 
-    private Section analysisParamSection = null;
-
     private Section previewSection = null;
 
     final private List<ExpandableComposite> previewChartList = new ArrayList<ExpandableComposite>();
@@ -659,7 +657,8 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
      * @param form
      * @param anasisDataComp
      */
-    void createAnalysisParamSection(final ScrolledForm form, Composite anasisDataComp) {
+    @Override
+    protected void createAnalysisParamSection(final ScrolledForm form, Composite anasisDataComp) {
         analysisParamSection = createSection(form, anasisDataComp,
                 DefaultMessagesImpl.getString("ColumnMasterDetailsPage.AnalysisParameter"), null); //$NON-NLS-1$
         Composite sectionClient = toolkit.createComposite(analysisParamSection);

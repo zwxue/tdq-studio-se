@@ -155,8 +155,6 @@ public class TableMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
 
     private Section previewSection = null;
 
-    private Section analysisParamSection;
-
     private List<ExpandableComposite> previewChartList = null;
 
     private SashForm sForm;
@@ -252,20 +250,6 @@ public class TableMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
 
             createPreviewSection(form, previewComp);
         }
-    }
-
-    /**
-     * DOC xqliu Comment method "createAnalysisParamSection".
-     * 
-     * @param pForm
-     * @param pComp
-     */
-    void createAnalysisParamSection(final ScrolledForm pForm, Composite pComp) {
-        this.analysisParamSection = createSection(pForm, pComp,
-                DefaultMessagesImpl.getString("ColumnMasterDetailsPage.AnalysisParameter"), null); //$NON-NLS-1$
-        Composite sectionClient = this.toolkit.createComposite(this.analysisParamSection);
-        this.createAnalysisLimitComposite(sectionClient);
-        this.analysisParamSection.setClient(sectionClient);
     }
 
     void createAnalysisTablesSection(final ScrolledForm form, Composite anasisDataComp) {
