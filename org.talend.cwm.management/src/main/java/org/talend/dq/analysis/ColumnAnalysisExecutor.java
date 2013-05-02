@@ -20,6 +20,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.talend.core.model.metadata.builder.connection.Connection;
@@ -40,6 +41,7 @@ import org.talend.dataquality.analysis.AnalysisContext;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dq.dbms.GenericSQLHandler;
 import org.talend.dq.helper.EObjectHelper;
+import org.talend.dq.helper.UDIHelper;
 import org.talend.dq.indicators.IndicatorEvaluator;
 import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.objectmodel.core.Classifier;
@@ -73,6 +75,10 @@ public class ColumnAnalysisExecutor extends AnalysisExecutor {
 
     @Override
     protected ReturnCode evaluate(Analysis analysis, java.sql.Connection connection, String sqlStatement) {
+        // ADD sizhaoliu TDQ-7216 update JUDI indicators while running a tDqReportRun job.
+        if (!Platform.isRunning()) {
+            UDIHelper.updateJUDIsForAnalysis(analysis);
+        }
 
         IndicatorEvaluator eval = new IndicatorEvaluator(analysis);
         // MOD xqliu 2009-02-09 bug 6237

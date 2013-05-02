@@ -31,11 +31,14 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.common.util.EList;
+import org.talend.commons.exception.ExceptionHandler;
 import org.talend.commons.utils.TalendURLClassLoader;
 import org.talend.core.model.metadata.builder.database.PluginConstant;
 import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.management.i18n.Messages;
+import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.domain.pattern.Pattern;
 import org.talend.dataquality.helpers.IndicatorCategoryHelper;
 import org.talend.dataquality.helpers.MetadataHelper;
@@ -111,9 +114,10 @@ public final class UDIHelper {
         }
         return null;
     }
-/**
- * getUDICategory by modelElement
- */
+
+    /**
+     * getUDICategory by modelElement
+     */
     public static IndicatorCategory getUDICategory(ModelElement modelElement) {
         if (modelElement != null && modelElement instanceof IndicatorDefinition) {
             return getUDICategory((IndicatorDefinition) modelElement);
@@ -354,8 +358,8 @@ public final class UDIHelper {
             // MOD by zshen for feature 18724
             if (validateJavaUDI(userJavaClassName, jarPath)) {
                 List<URL> jarUrls = new ArrayList<URL>();
-                for (IFile file : getContainJarFile(jarPath)) {
-                    jarUrls.add(file.getLocationURI().toURL());
+                for (File file : getContainJarFile(jarPath)) {
+                    jarUrls.add(file.toURI().toURL());
                 }
                 TalendURLClassLoader cl;
                 cl = new TalendURLClassLoader(jarUrls.toArray(new URL[jarUrls.size()]));// new URL[] {
@@ -419,8 +423,8 @@ public final class UDIHelper {
      * 
      * @return
      */
-    public static List<IFile> getLibJarFileList() {
-        List<IFile> fileList = new ArrayList<IFile>();
+    private static List<File> getLibJarFileList() {
+        List<File> fileList = new ArrayList<File>();
         try {
             File newFile = ResourceManager.getUDIJarFolder().getLocation().toFile();
             if (!newFile.exists()) {
@@ -429,11 +433,26 @@ public final class UDIHelper {
             for (org.eclipse.core.resources.IResource fileResource : ResourceManager.getUDIJarFolder().members()) {
                 if (IResource.FILE == fileResource.getType()
                         && JAREXTENSIONG.equalsIgnoreCase(fileResource.getFullPath().getFileExtension())) {
-                    fileList.add((IFile) fileResource);
+                    fileList.add(fileResource.getLocation().toFile());
                 }
             }
         } catch (CoreException e) {
             log.error(e, e);
+        }
+        return fileList;
+    }
+
+    private static List<File> getLibJarFileListForJobs() {
+        List<File> fileList = new ArrayList<File>();
+        String tdqLibPath = DefinitionHandler.getInstance().getTdqLibPath();
+        String libJarPath = tdqLibPath + "Indicators" + File.separator + "User Defined Indicators" + File.separator + "lib";
+        File newFile = new File(libJarPath);
+        if (newFile.exists() && newFile.isDirectory()) {
+            for (File libFile : newFile.listFiles()) {
+                if (libFile.getName().endsWith(".jar")) {
+                    fileList.add(libFile);
+                }
+            }
         }
         return fileList;
     }
@@ -445,11 +464,17 @@ public final class UDIHelper {
      * @param jarPathStr
      * @return
      */
-    public static List<IFile> getContainJarFile(String jarPathStr) {
-        List<IFile> fileList = new ArrayList<IFile>();
+    private static List<File> getContainJarFile(String jarPathStr) {
+        List<File> fileList = new ArrayList<File>();
 
-        for (String containJarName : jarPathStr.split("\\|\\|")) {//$NON-NLS-1$
-            for (IFile libJarFile : getLibJarFileList()) {
+        List<File> libJarFileList = null;
+        if (Platform.isRunning()) {
+            libJarFileList = getLibJarFileList();
+        } else {
+            libJarFileList = getLibJarFileListForJobs();
+        }
+        for (String containJarName : jarPathStr.split("\\|\\|")) {//$NON-NLS-1$            
+            for (File libJarFile : libJarFileList) {
                 if (libJarFile.getName().equalsIgnoreCase(containJarName)) {
                     fileList.add(libJarFile);
                     break;
@@ -536,6 +561,25 @@ public final class UDIHelper {
         key = key.replaceAll(" ", "_"); //$NON-NLS-1$ //$NON-NLS-2$
         autoGenSql = properties.getProperty(key);
         return autoGenSql;
+    }
+
+    public static void updateJUDIsForAnalysis(Analysis analysis) {
+        EList<Indicator> allIndics = analysis.getResults().getIndicators();
+        List<Indicator> updatedIndWithJUDI = new ArrayList<Indicator>();
+        for (Indicator indicator : allIndics) {
+            if (UDIHelper.isJUDIValid(indicator.getIndicatorDefinition())) {
+                try {
+                    indicator = UDIHelper.adaptToJavaUDI(indicator);
+                    updatedIndWithJUDI.add(indicator);
+                } catch (Throwable e) {
+                    ExceptionHandler.process(e);
+                }
+            } else {
+                updatedIndWithJUDI.add(indicator);
+            }
+        }
+        allIndics.clear();
+        allIndics.addAll(updatedIndWithJUDI);
     }
 
 }

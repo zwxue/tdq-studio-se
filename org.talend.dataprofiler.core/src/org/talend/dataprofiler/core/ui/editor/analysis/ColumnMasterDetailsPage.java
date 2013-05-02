@@ -166,21 +166,7 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
         analysisHandler = new ModelElementAnalysisHandler();
         analysisHandler.setAnalysis((Analysis) this.currentModelElement);
         // Handle JUDIs
-        EList<Indicator> allIndics = analysis.getResults().getIndicators();
-        List<Indicator> updatedIndWithJUDI = new ArrayList<Indicator>();
-        for (Indicator indicator : allIndics) {
-            if (UDIHelper.isJUDIValid(indicator.getIndicatorDefinition())) {
-                try {
-                    indicator = UDIHelper.adaptToJavaUDI(indicator);
-                    updatedIndWithJUDI.add(indicator);
-                } catch (Throwable e) {
-                    log.error(e);
-                }
-            }
-            updatedIndWithJUDI.add(indicator);
-        }
-        allIndics.clear();
-        allIndics.addAll(updatedIndWithJUDI);
+        UDIHelper.updateJUDIsForAnalysis(analysis);
 
         stringDataFilter = analysisHandler.getStringDataFilter();
         EList<ModelElement> analyzedColumns = analysisHandler.getAnalyzedColumns();

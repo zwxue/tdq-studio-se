@@ -56,6 +56,7 @@ import org.talend.dq.helper.resourcehelper.IndicatorResourceFileHelper;
 import org.talend.dq.writer.EMFSharedResources;
 import org.talend.resource.ResourceManager;
 import orgomg.cwm.objectmodel.core.Expression;
+import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
  * @author scorreia
@@ -133,27 +134,98 @@ public final class DefinitionHandler {
         if (Platform.isRunning()) {
             indicatorDefinitions.addAll((List<IndicatorDefinition>) IndicatorResourceFileHelper.getInstance().getAllElement());
         } else {// reporting engine is running as library
-            indicatorDefinitions.addAll((List<IndicatorDefinition>) EmfFileResourceUtil.getInstance().getAllElement(
-                    getTdqLibPath() + "/Indicators")); //$NON-NLS-1$
+            indicatorDefinitions.addAll((List<IndicatorDefinition>) getAllIndicatorElement(getTdqLibPath() + "/Indicators")); //$NON-NLS-1$
         }
     }
 
-    private String getTdqLibPath() {
-        String projectPath = null;
+    private List<? extends ModelElement> getAllIndicatorElement(String parentFolder) {
+        List<ModelElement> elementList = new ArrayList<ModelElement>();
+        try {
+            List<File> allFiles = searchAllFiles(new File(parentFolder));
+            // MOD qiongli 2011-4-19.bug 20566,avoid NPE
+            ModelElement mod = null;
+            for (File file : allFiles) {
+                mod = getIndicatorModelElement(file);
+                if (mod != null) {
+                    // MOD msjian TDQ-4672 2012-2-17: modify another issue
+                    elementList.add(mod);
+                    // TDQ-4672~
+                }
+            }
+        } catch (Exception e) {
+            log.error(e);
+        }
 
+        return elementList;
+    }
+
+    private final ModelElement getIndicatorModelElement(File file) {
+        DefinitionSwitch<IndicatorDefinition> definitionSwitch = new DefinitionSwitch<IndicatorDefinition>() {
+
+            @Override
+            public IndicatorDefinition caseIndicatorDefinition(IndicatorDefinition object) {
+                return object;
+            }
+
+        };
+        if (file != null) {
+            Resource resource = EmfFileResourceUtil.getInstance().getFileResource(file.getAbsolutePath());
+
+            EList<EObject> contents = resource.getContents();
+            if (contents.isEmpty()) {
+                log.error("no content in: " + resource);//$NON-NLS-1$
+            }
+
+            for (EObject object : contents) {
+                ModelElement switchObject = definitionSwitch.doSwitch(object);
+
+                if (switchObject != null) {
+                    return switchObject;
+                }
+            }
+        }
+        return null;
+    }
+
+    private List<File> searchAllFiles(File file) {
+        List<File> fileList = new ArrayList<File>();
+        if (file.exists()) {
+            for (File child : file.listFiles()) {
+                if (child.isDirectory()) {
+                    fileList.addAll(searchAllFiles(child));
+                    continue;
+                }
+
+                if (checkFile(child)) {
+                    fileList.add(child);
+                }
+            }
+        }
+        return fileList;
+    }
+
+    private boolean checkFile(File file) {
+        String path = file.getAbsolutePath();
+        String extension = path.substring(path.lastIndexOf(".") + 1);
+        return file != null && FactoriesUtil.DEFINITION.equalsIgnoreCase(extension);
+    }
+
+    public String getTdqProjectPath() {
+        String projectPath = null;
         int pos = PROJECT_PATH.lastIndexOf(File.separator);
         if (pos > 0 && pos < PROJECT_PATH.length() + 1) {
             projectPath = "items" + File.separator + PROJECT_PATH.substring(pos + 1).toLowerCase(); //$NON-NLS-1$
-
             File f = new File(projectPath);
             if (f.exists()) { // running exported job
-                return projectPath + File.separator + "TDQ_Libraries" + File.separator; //$NON-NLS-1$ 
-            } else {
-                log.error("[INFO] This error may appear if you did not export the dependencies of the job."); //$NON-NLS-1$
+                return projectPath + File.separator;
             }
         }
         // running job in studio
-        return PROJECT_PATH + File.separator + "TDQ_Libraries" + File.separator; //$NON-NLS-1$ 
+        return PROJECT_PATH + File.separator;
+    }
+
+    public String getTdqLibPath() {
+        return getTdqProjectPath() + "TDQ_Libraries" + File.separator;
     }
 
     /**

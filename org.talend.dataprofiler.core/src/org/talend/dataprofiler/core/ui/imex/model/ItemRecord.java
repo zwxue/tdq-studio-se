@@ -44,6 +44,7 @@ import org.talend.dataprofiler.core.ui.utils.UDIUtils;
 import org.talend.dataquality.helpers.ReportHelper;
 import org.talend.dataquality.helpers.ReportHelper.ReportType;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
+import org.talend.dataquality.indicators.definition.userdefine.UDIndicatorDefinition;
 import org.talend.dataquality.reports.AnalysisMap;
 import org.talend.dataquality.reports.TdReport;
 import org.talend.dq.helper.EObjectHelper;
@@ -202,22 +203,6 @@ public class ItemRecord {
             }
         } else if (element != null) {
 
-            // MOD by zshen for bug 18724 2011.02.23
-            TaggedValue tv = TaggedValueHelper.getTaggedValue(TaggedValueHelper.JAR_FILE_PATH, element.getTaggedValue());
-            if (tv != null) {
-                IPath libFolderPath = getFilePath().removeLastSegments(1).append("lib"); //$NON-NLS-1$
-                File libFolder = libFolderPath.toFile();
-                if (libFolder.exists()) {
-                    for (File udiJarFile : UDIUtils.getLibJarFileList(libFolder)) {
-                        for (String str : tv.getValue().split("\\|\\|")) {//$NON-NLS-1$
-                            if (udiJarFile.getName().equals(str)) {
-                                dependencyMap.put(udiJarFile, null);
-                            }
-                        }
-                    }
-                }
-            }
-
             List<Property> dependencyProperty = DependenciesHandler.getInstance().getClintDependency(element);
             for (Property depElement : dependencyProperty) {
                 ModelElement modelElement = PropertyHelper.getModelElement(depElement);
@@ -231,8 +216,12 @@ public class ItemRecord {
 
                 // MOD sizhaoliu 2013-04-13 TDQ-7082
                 if (modelElement instanceof IndicatorDefinition) {
-                    for (IndicatorDefinition definition : ((IndicatorDefinition) modelElement).getAggregatedDefinitions()) {
-                        includeAggregatedDependencies((IndicatorDefinition) definition);
+                    if (modelElement instanceof UDIndicatorDefinition) {
+                        includeJUDIDependencies((IndicatorDefinition) modelElement);
+                    } else {
+                        for (IndicatorDefinition definition : ((IndicatorDefinition) modelElement).getAggregatedDefinitions()) {
+                            includeAggregatedDependencies((IndicatorDefinition) definition);
+                        }
                     }
                 }
             }
@@ -248,7 +237,30 @@ public class ItemRecord {
                     }
                 }
             } else if (element instanceof IndicatorDefinition) { // MOD sizhaoliu 2013-04-13 TDQ-7082
-                includeAggregatedDependencies((IndicatorDefinition) element);
+                IndicatorDefinition definition = (IndicatorDefinition) element;
+                if (definition instanceof UDIndicatorDefinition) {
+                    includeJUDIDependencies(definition);
+                } else {
+                    includeAggregatedDependencies(definition);
+                }
+            }
+        }
+    }
+
+    private void includeJUDIDependencies(IndicatorDefinition definition) {
+        TaggedValue tv = TaggedValueHelper.getTaggedValue(TaggedValueHelper.JAR_FILE_PATH, definition.getTaggedValue());
+        if (tv != null) {
+            IPath definitionPath = Path.fromOSString(definition.eResource().getURI().toFileString());
+            IPath libFolderPath = definitionPath.removeLastSegments(1).append("lib"); //$NON-NLS-1$
+            File libFolder = libFolderPath.toFile();
+            if (libFolder.exists()) {
+                for (File udiJarFile : UDIUtils.getLibJarFileList(libFolder)) {
+                    for (String str : tv.getValue().split("\\|\\|")) {//$NON-NLS-1$
+                        if (udiJarFile.getName().equals(str)) {
+                            dependencyMap.put(udiJarFile, null);
+                        }
+                    }
+                }
             }
         }
     }
