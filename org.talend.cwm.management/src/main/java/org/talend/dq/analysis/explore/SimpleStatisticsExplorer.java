@@ -56,9 +56,9 @@ public class SimpleStatisticsExplorer extends DataExplorer {
             case UserDefinedIndicatorEnum:
                 // when user define indicator
                 IndicatorDefinition indicatorDefinition = this.indicator.getIndicatorDefinition();
-                String sql = indicatorDefinition instanceof UDIndicatorDefinition ? getQueryForViewRows(indicatorDefinition)
-                        : getRowsStatement();
-                map.put(MENU_VIEW_ROWS, isSqlEngine ? getComment(MENU_VIEW_ROWS) + sql : null);
+                map.put(MENU_VIEW_ROWS, isSqlEngine ? getComment(MENU_VIEW_ROWS)
+                        + (indicatorDefinition instanceof UDIndicatorDefinition ? getQueryForViewRows(indicatorDefinition)
+                                : getRowsStatement()) : null);
                 break;
 
             case UniqueIndicatorEnum:
