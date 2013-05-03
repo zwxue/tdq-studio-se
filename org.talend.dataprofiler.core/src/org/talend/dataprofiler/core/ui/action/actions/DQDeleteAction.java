@@ -143,12 +143,10 @@ public class DQDeleteAction extends DeleteAction {
         deleteElements = checkSourceFilesEditorOpening(deleteElements);
         // ~ TDQ-4831
 
-        List<RepositoryNode> selectedNodeParents = new ArrayList<RepositoryNode>();
         for (Object obj : deleteElements) {
             if (obj instanceof RepositoryNode) {
                 RepositoryNode node = (RepositoryNode) obj;
                 selectedNodes.add(node);
-                selectedNodeParents.add(node.getParent());
             }
         }
         if (DQRepositoryNode.isOnFilterring()) {
@@ -179,7 +177,7 @@ public class DQDeleteAction extends DeleteAction {
             boolean isStateDeleted = RepositoryNodeHelper.isStateDeleted(firstNode);
             // logical delete
             if (!isStateDeleted) {
-                logicDelete(selectedNodeParents);
+                logicDelete();
             } else {
                 // show a confirm dialog to make sure the user want to proceed
                 if (showConfirmDialog()) {
@@ -391,9 +389,8 @@ public class DQDeleteAction extends DeleteAction {
     /**
      * logical delete the selected nodes
      * 
-     * @param selectedNodeParents: the parents of selected nodes
      */
-    private void logicDelete(List<RepositoryNode> selectedNodeParents) {
+    private void logicDelete() {
         for (int i = selectedNodes.size() - 1; i >= 0; i--) {
             RepositoryNode node = selectedNodes.get(i);
             // handle generating report file.bug 18805 .
@@ -405,12 +402,11 @@ public class DQDeleteAction extends DeleteAction {
                 }
                 continue;
             }
-
-            if (node.getObject().getProperty() != null) {
-                excuteSuperRun(null, node.getParent());
-                refreshRepositoryNodes(selectedNodeParents);
-            }
         }
+
+        RepositoryNode parent = selectedNodes.get(0).getParent();
+        // only need to run one time, because in the super.run() can handle all selected node.
+        excuteSuperRun(null, parent);
     }
 
     /**
@@ -424,28 +420,6 @@ public class DQDeleteAction extends DeleteAction {
             return ERepositoryObjectType.TDQ_JRAXML_ELEMENT.equals(node.getObject().getRepositoryObjectType());
         }
         return false;
-    }
-
-    /**
-     * refresh the RepositoryNodes, this method shoule be called after logic delete multiple objects.
-     * 
-     * @param nodes
-     */
-    private void refreshRepositoryNodes(List<RepositoryNode> nodes) {
-        if (nodes != null) {
-            boolean refreshAll = false;
-            for (RepositoryNode node : nodes) {
-                if (node != null) {
-                    CorePlugin.getDefault().refreshDQView(node);
-                } else {
-                    refreshAll = true;
-                    break;
-                }
-            }
-            if (refreshAll) {
-                CorePlugin.getDefault().refreshDQView();
-            }
-        }
     }
 
     /**
@@ -572,6 +546,15 @@ public class DQDeleteAction extends DeleteAction {
         }
 
         // refresh parent node
+        refreshParentNode(parent);
+    }
+
+    /**
+     * refresh Parent Node.
+     * 
+     * @param parent
+     */
+    private void refreshParentNode(RepositoryNode parent) {
         if (parent != null) {
             if (parent instanceof AnalysisSubFolderRepNode || parent instanceof ReportSubFolderRepNode) {
                 CorePlugin.getDefault().refreshDQView(RepositoryNodeHelper.findNearestSystemFolderNode(parent));
