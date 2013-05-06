@@ -51,14 +51,6 @@ public class ReportFolderRepNode extends DQRepositoryNode {
         return getChildren(false);
     }
 
-    @Override
-    public String getLabel() {
-        if (this.getObject() != null) {
-            return this.getObject().getLabel();
-        }
-        return super.getLabel();
-    }
-
     public String getLabelWithCount() {
         String label = "Report"; //$NON-NLS-1$
         if (this.getObject() != null) {

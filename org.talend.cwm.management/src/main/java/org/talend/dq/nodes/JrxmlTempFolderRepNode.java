@@ -94,17 +94,11 @@ public class JrxmlTempFolderRepNode extends DQRepositoryNode {
 
     private boolean duplicateNode(List<IRepositoryNode> children, JrxmlTempleteRepNode jrxmlNode) {
         for (IRepositoryNode node : children) {
-            if (node.getLabel().equals(jrxmlNode.getLabel()))
+            if (node.getLabel().equals(jrxmlNode.getLabel())) {
                 return true;
+            }
         }
         return false;
     }
 
-    @Override
-    public String getLabel() {
-        if (this.getObject() != null) {
-            return this.getObject().getLabel();
-        }
-        return super.getLabel();
-    }
 }

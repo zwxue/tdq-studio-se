@@ -71,17 +71,6 @@ public class AnalysisRepNode extends DQRepositoryNode {
     }
 
     @Override
-    public String getLabel() {
-        // if (this.getAnalysis() != null) {
-        // return this.getAnalysis().getName();
-        // }
-        if (this.getObject() != null) {
-            return this.getObject().getLabel();
-        }
-        return super.getLabel();
-    }
-
-    @Override
     public boolean canExpandForDoubleClick() {
         return false;
     }

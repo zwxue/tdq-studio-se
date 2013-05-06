@@ -143,11 +143,4 @@ public class SysIndicatorFolderRepNode extends DQRepositoryNode {
         return null;
     }
 
-    @Override
-    public String getLabel() {
-        if (this.getObject() != null) {
-            return this.getObject().getLabel();
-        }
-        return super.getLabel();
-    }
 }

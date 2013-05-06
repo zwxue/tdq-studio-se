@@ -57,7 +57,7 @@ public class SourceFileFolderRepNode extends DQRepositoryNode {
                 if (folder.isDeleted()) {
                     continue;
                 }
-                SourceFileSubFolderNode childNodeFolder =new SourceFileSubFolderNode(folder, this, ENodeType.SIMPLE_FOLDER);
+                SourceFileSubFolderNode childNodeFolder = new SourceFileSubFolderNode(folder, this, ENodeType.SIMPLE_FOLDER);
                 childNodeFolder.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.TDQ_SOURCE_FILE_ELEMENT);
                 childNodeFolder.setProperties(EProperties.LABEL, ERepositoryObjectType.TDQ_SOURCE_FILE_ELEMENT);
                 super.getChildren().add(childNodeFolder);
@@ -80,11 +80,4 @@ public class SourceFileFolderRepNode extends DQRepositoryNode {
         // ~!22204
     }
 
-    @Override
-    public String getLabel() {
-        if (this.getObject() != null) {
-            return this.getObject().getLabel();
-        }
-        return super.getLabel();
-    }
 }

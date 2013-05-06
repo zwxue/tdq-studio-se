@@ -27,12 +27,10 @@ import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
 
-
 /**
  * DOC gdbu class global commente
  */
 public class IndicatorFolderRepNode extends DQRepositoryNode {
-
 
     private static Logger log = Logger.getLogger(UserDefIndicatorFolderRepNode.class);
 
@@ -50,14 +48,6 @@ public class IndicatorFolderRepNode extends DQRepositoryNode {
     @Override
     public List<IRepositoryNode> getChildren() {
         return getChildren(false);
-    }
-
-    @Override
-    public String getLabel() {
-        if (this.getObject() != null) {
-            return this.getObject().getLabel();
-        }
-        return super.getLabel();
     }
 
     @Override

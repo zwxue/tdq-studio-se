@@ -323,8 +323,9 @@ public class DQRepositoryNode extends RepositoryNode {
      */
     @Override
     public String getLabel() {
-        if (this.getObject().getLabel() != null) {
-            return this.getObject().getLabel();
+        IRepositoryViewObject object = this.getObject();
+        if (object != null) {
+            return object.getLabel();
         }
         return super.getLabel();
     }

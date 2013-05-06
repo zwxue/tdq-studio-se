@@ -283,12 +283,7 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider i
                 return ((DBColumnFolderRepNode) node).getNodeName();
             } else if (node instanceof DFColumnFolderRepNode) {
                 return ((DFColumnFolderRepNode) node).getNodeName();
-            }
-            // else if (node instanceof DBColumnFolderRepNode || node instanceof DFColumnFolderRepNode) {
-            //                return DefaultMessagesImpl.getString("ColumnFolderNode.columns"); //$NON-NLS-1$
-            // }
-            // ~MOD klliu 2011-03-29 bug 19936
-            else if (node instanceof DBTableRepNode) {
+            } else if (node instanceof DBTableRepNode) {
                 return ((DBTableRepNode) node).getLabel();
             } else if (node instanceof DBViewRepNode) {
                 return ((DBViewRepNode) node).getLabel();
@@ -306,17 +301,18 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider i
                     return mdmColumnRepNode.getTdXmlElementType().getName() + LEFT + nodeDataType + RIGHT;
                 }
                 return mdmColumnRepNode.getTdXmlElementType().getName();
-            }
-            // ~
-            else if (node instanceof SourceFileRepNode) {
-                return ((SourceFileRepNode) node).getLabel();
             } else if (node instanceof AnalysisRepNode || node instanceof ReportRepNode
                     || node instanceof SysIndicatorDefinitionRepNode || node instanceof PatternRepNode
-                    || node instanceof RuleRepNode) {
+                    || node instanceof RuleRepNode || node instanceof SourceFileRepNode || node instanceof DFConnectionRepNode
+                    || node instanceof MDMConnectionRepNode) {
                 // return node.getObject().getLabel() + " " + node.getObject().getVersion();
                 return node.getLabel() + " " + node.getObject().getVersion(); //$NON-NLS-1$
-            } else if (node instanceof DBConnectionRepNode && !isSupportedConnection(node)) {
-                return node.getObject().getLabel() + "(Unsupported)"; //$NON-NLS-1$
+            } else if (node instanceof DBConnectionRepNode) {
+                if (!isSupportedConnection(node)) {
+                    return node.getObject().getLabel() + "(Unsupported)"; //$NON-NLS-1$
+                } else {
+                    return node.getLabel() + " " + node.getObject().getVersion(); //$NON-NLS-1$
+                }
             } else if (node instanceof DBCatalogRepNode) {
                 // MOD zshen to modify catalog name when connection is ODBC
                 String catalogName = node.getObject().getLabel();

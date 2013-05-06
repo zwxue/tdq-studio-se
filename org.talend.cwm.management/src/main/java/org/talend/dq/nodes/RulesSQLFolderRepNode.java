@@ -51,14 +51,6 @@ public class RulesSQLFolderRepNode extends DQRepositoryNode {
     }
 
     @Override
-    public String getLabel() {
-        if (this.getObject() != null) {
-            return this.getObject().getLabel();
-        }
-        return super.getLabel();
-    }
-
-    @Override
     public List<IRepositoryNode> getChildren(boolean withDeleted) {
         try {
             super.getChildren().clear();

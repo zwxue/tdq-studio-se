@@ -31,11 +31,4 @@ public class PatternSqlSubFolderRepNode extends PatternSqlFolderRepNode {
         super(object, parent, type);
     }
 
-    @Override
-    public String getLabel() {
-        if (this.getObject() != null) {
-            this.getObject().getLabel();
-        }
-        return super.getLabel();
-    }
 }

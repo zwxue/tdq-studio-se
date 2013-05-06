@@ -35,12 +35,13 @@ public class PatternEditor extends CommonFormEditor {
     // ~
     private static final String ID = "PatternEditor.masterPage";//$NON-NLS-1$
 
+    @Override
     protected void addPages() {
         masterPage = new PatternMasterDetailsPage(this, ID, DefaultMessagesImpl.getString("PatternEditor.patternSettings")); //$NON-NLS-1$ 
         // MOD qiongli 2011-3-21,bug 19472.set method 'setPartName(...)' behind method 'addPage(...)'
         try {
             addPage(masterPage);
-            setPartName(masterPage.getIntactElemenetName()); //$NON-NLS-1$
+            setPartName(masterPage.getIntactElemenetName());
         } catch (PartInitException e) {
             ExceptionHandler.process(e, Level.ERROR);
         }
@@ -54,16 +55,18 @@ public class PatternEditor extends CommonFormEditor {
         // ~
     }
 
+    @Override
     public void doSave(IProgressMonitor monitor) {
         if (masterPage.isDirty()) {
             masterPage.doSave(monitor);
-            setPartName(((PatternMasterDetailsPage) masterPage).getIntactElemenetName()); //$NON-NLS-1$
+            setPartName(masterPage.getIntactElemenetName());
         }
         setEditorObject(masterPage.getPatternRepNode());
         super.doSave(monitor);
 
     }
 
+    @Override
     protected void firePropertyChange(final int propertyId) {
         // ADD xqliu 2009-07-02 bug 7687
         setSaveActionButtonState(isDirty());

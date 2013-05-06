@@ -45,12 +45,4 @@ public class SourceFileRepNode extends DQRepositoryNode {
         }
     }
 
-    @Override
-    public String getLabel() {
-        if (this.getObject() != null) {
-            return this.getObject().getLabel();
-        }
-        return super.getLabel();
-
-    }
 }

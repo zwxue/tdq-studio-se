@@ -81,6 +81,7 @@ public class IndicatorEditor extends CommonFormEditor {
         masterPage = new IndicatorDefinitionMaterPage(this, "Master Page", "Indicator Definition");//$NON-NLS-1$//$NON-NLS-2$
         try {
             addPage(masterPage);
+            setPartName(masterPage.getIntactElemenetName());
         } catch (PartInitException e) {
             ExceptionHandler.process(e, Level.ERROR);
         }

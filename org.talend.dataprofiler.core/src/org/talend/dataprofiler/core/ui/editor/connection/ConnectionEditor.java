@@ -45,10 +45,10 @@ public class ConnectionEditor extends CommonFormEditor {
         masterPage = new ConnectionInfoPage(this, ID, DefaultMessagesImpl.getString("ConnectionEditor.connectionSettings")); //$NON-NLS-1$ 
         try {
             addPage(masterPage);
+            setPartName(masterPage.getIntactElemenetName());
         } catch (PartInitException e) {
             ExceptionHandler.process(e);
         }
-        setPartName(masterPage.getIntactElemenetName());
     }
 
     @Override

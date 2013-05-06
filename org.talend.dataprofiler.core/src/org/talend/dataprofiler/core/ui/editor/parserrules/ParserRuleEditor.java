@@ -35,11 +35,12 @@ public class ParserRuleEditor extends CommonFormEditor {
 
     // ~
 
+    @Override
     protected void addPages() {
         masterPage = new ParserRuleMasterDetailsPage(this, ID, "Parser Rule Settings"); //$NON-NLS-1$ 
         try {
             addPage(masterPage);
-            setPartName(((ParserRuleMasterDetailsPage) masterPage).getIntactElemenetName()); //$NON-NLS-1$
+            setPartName(masterPage.getIntactElemenetName());
         } catch (PartInitException e) {
             ExceptionHandler.process(e, Level.ERROR);
         }
@@ -50,16 +51,18 @@ public class ParserRuleEditor extends CommonFormEditor {
         }
     }
 
+    @Override
     public void doSave(IProgressMonitor monitor) {
         if (masterPage.isDirty()) {
             masterPage.doSave(monitor);
-            setPartName(masterPage.getIntactElemenetName()); //$NON-NLS-1$
+            setPartName(masterPage.getIntactElemenetName());
         }
         setEditorObject(masterPage.getRuleRepNode());
         super.doSave(monitor);
 
     }
 
+    @Override
     protected void firePropertyChange(final int propertyId) {
         setSaveActionButtonState(isDirty());
         super.firePropertyChange(propertyId);

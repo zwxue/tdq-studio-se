@@ -39,7 +39,12 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.jface.action.IContributionItem;
 import org.eclipse.jface.action.IStatusLineManager;
 import org.eclipse.jface.dialogs.IDialogConstants;
@@ -80,6 +85,8 @@ import org.eclipse.ui.IWorkbenchPartReference;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.EditorPart;
 import org.eclipse.ui.part.FileEditorInput;
+import org.talend.core.model.properties.PropertiesPackage;
+import org.talend.core.model.properties.Property;
 
 /**
  * SQLEditor is the top-level Editor component which is registered with Eclipse as the Editor for each new SQL
@@ -147,6 +154,7 @@ public class SQLEditor extends EditorPart implements SwitchableSessionEditor {
      * 
      * @see org.eclipse.ui.IEditorPart#init(org.eclipse.ui.IEditorSite, org.eclipse.ui.IEditorInput)
      */
+    @Override
     public void init(IEditorSite site, IEditorInput input) throws PartInitException {
 
         // Configure the editor
@@ -166,6 +174,8 @@ public class SQLEditor extends EditorPart implements SwitchableSessionEditor {
         textEditor = new SQLTextEditor(this);
         textEditor.init(site, input);
 
+        // setPartName(getSite().getPage().getLabel());
+
         // Make sure we get notification that our editor is closing because
         // we may need to stop running queries
         getSite().getPage().addPartListener(new PartAdapter2() {
@@ -175,6 +185,7 @@ public class SQLEditor extends EditorPart implements SwitchableSessionEditor {
              * 
              * @see net.sourceforge.sqlexplorer.util.PartAdapter2#partClosed(org.eclipse.ui.IWorkbenchPartReference)
              */
+            @Override
             public void partClosed(IWorkbenchPartReference partRef) {
                 if (partRef.getPart(false) == SQLEditor.this) {
                     onCloseEditor();
@@ -188,7 +199,7 @@ public class SQLEditor extends EditorPart implements SwitchableSessionEditor {
             ConnectionsView view = SQLExplorerPlugin.getDefault().getConnectionsView();
             if (view != null) {
                 User user = view.getDefaultUser();
-                if (user != null)
+                if (user != null) {
                     user.queueForNewSession(new SessionEstablishedAdapter() {
 
                         @Override
@@ -196,6 +207,7 @@ public class SQLEditor extends EditorPart implements SwitchableSessionEditor {
                             setSession(session);
                         }
                     });
+                }
             }
         }
     }
@@ -211,6 +223,7 @@ public class SQLEditor extends EditorPart implements SwitchableSessionEditor {
      * 
      * @see org.eclipse.ui.part.WorkbenchPart#createPartControl(org.eclipse.swt.widgets.Composite)
      */
+    @Override
     public void createPartControl(Composite parent) {
         try {
             parent.setLayout(new FillLayout());
@@ -264,14 +277,14 @@ public class SQLEditor extends EditorPart implements SwitchableSessionEditor {
             data.bottom = new FormAttachment(100, 0);
             tabFolder.setLayoutData(data);
 
-            if (session != null)
+            if (session != null) {
                 toolBar.onEditorSessionChanged(session);
+            }
 
         } catch (Exception e) {
             SQLExplorerPlugin.error("Couldn't create text editor", e);
             MessageDialog.openError(getSite().getShell(), Messages.getString("SQLEditor.Init.CreateTextEditor"), e.getClass()
-                    .getCanonicalName()
-                    + ": " + e.getMessage());
+                    .getCanonicalName() + ": " + e.getMessage());
         }
     }
 
@@ -415,6 +428,7 @@ public class SQLEditor extends EditorPart implements SwitchableSessionEditor {
              * 
              * @see org.eclipse.swt.custom.CTabFolder2Adapter#close(org.eclipse.swt.custom.CTabFolderEvent)
              */
+            @Override
             public void close(CTabFolderEvent event) {
                 super.close(event);
                 CTabItem tabItem = (CTabItem) event.item;
@@ -431,29 +445,54 @@ public class SQLEditor extends EditorPart implements SwitchableSessionEditor {
      * 
      * @see org.eclipse.ui.part.EditorPart#setInput(org.eclipse.ui.IEditorInput)
      */
+    @Override
     protected void setInput(IEditorInput input) {
         super.setInput(input);
-        if (textEditor != null)
+        if (textEditor != null) {
             textEditor.setInput(input);
+        }
 
         // Handle our own form of input
         if (input instanceof SQLEditorInput) {
             SQLEditorInput sqlInput = (SQLEditorInput) input;
             if (input != null) {
                 User user = sqlInput.getUser();
-                if (user != null)
+                if (user != null) {
                     user.queueForNewSession(new SessionEstablishedAdapter() {
 
+                        @Override
                         public void sessionEstablished(Session session) {
                             setSession(session);
                         }
                     });
+                }
                 isDirty = true;
                 isUntitled = true;
             }
         }
 
-        setPartName(input.getName());
+        // set part name as displayName + " " + version
+        String partName = input.getName();
+        if (input instanceof FileEditorInput) {
+            FileEditorInput fileEditorInput = (FileEditorInput) input;
+            IPath fileName = fileEditorInput.getPath().removeFileExtension().addFileExtension("properties"); //$NON-NLS-1$
+
+            Property property = null;
+            URI propURI = URI.createFileURI(fileName.toOSString());
+            Resource resource = new ResourceSetImpl().getResource(propURI, true);
+            if (resource.getContents() != null) {
+                Object object = EcoreUtil.getObjectByType(resource.getContents(), PropertiesPackage.eINSTANCE.getProperty());
+                if (object != null) {
+                    property = (Property) object;
+                }
+            }
+
+            if (property != null) {
+                partName = property.getDisplayName() + " " + property.getVersion(); //$NON-NLS-1$
+            }
+        }
+
+        setPartName(partName);
     }
 
     /*
@@ -461,13 +500,16 @@ public class SQLEditor extends EditorPart implements SwitchableSessionEditor {
      * 
      * @see org.eclipse.ui.part.EditorPart#doSave(org.eclipse.core.runtime.IProgressMonitor)
      */
+    @Override
     public void doSave(IProgressMonitor monitor) {
-        if (monitor == null)
+        if (monitor == null) {
             monitor = textEditor.getProgressMonitor();
+        }
 
         if (isUntitled) {
-            if (!doSave(false, monitor))
+            if (!doSave(false, monitor)) {
                 monitor.setCanceled(true);
+            }
             return;
         }
 
@@ -475,7 +517,7 @@ public class SQLEditor extends EditorPart implements SwitchableSessionEditor {
         // has been saved into a project (via SaveAs) then the input becomes IFileEditorInput
         // and Eclipse knows how to deal with it
         IEditorInput input = getEditorInput();
-        if (input instanceof SQLEditorInput)
+        if (input instanceof SQLEditorInput) {
             try {
                 SQLEditorInput sqlInput = (SQLEditorInput) input;
                 saveToFile(sqlInput.getFile());
@@ -484,8 +526,9 @@ public class SQLEditor extends EditorPart implements SwitchableSessionEditor {
                 monitor.setCanceled(true);
                 return;
             }
-        else
+        } else {
             textEditor.doSave(monitor);
+        }
 
         setIsDirty(textEditor.isDirty());
     }
@@ -495,6 +538,7 @@ public class SQLEditor extends EditorPart implements SwitchableSessionEditor {
      * 
      * @see org.eclipse.ui.ISaveablePart#doSaveAs()
      */
+    @Override
     public void doSaveAs() {
         doSave(true, null);
     }
@@ -518,61 +562,65 @@ public class SQLEditor extends EditorPart implements SwitchableSessionEditor {
 
         // If we have a file, then we already have a filename outside of the project;
         // but if we're doing a save-as then recheck with the user
-        if (file != null && !saveAs)
+        if (file != null && !saveAs) {
             saveInsideProject = false;
-
-        // Either we're doing a save on a file outside a project or we're doing a save-as
-        else if (input instanceof SQLEditorInput) {
+        } else if (input instanceof SQLEditorInput) {
             IConstants.Confirm confirm = SQLExplorerPlugin.getConfirm(IConstants.CONFIRM_YNA_SAVING_INSIDE_PROJECT);
 
             // If we're supposed to ask the user...
             if (confirm == IConstants.Confirm.ASK) {
                 // Build up the message to ask
                 String msg = Messages.getString("Confirm.SaveInsideProject.Intro") + "\n\n";
-                if (!haveProjects)
+                if (!haveProjects) {
                     msg = msg + Messages.getString("Confirm.SaveInsideProject.NoProjectsConfigured") + "\n\n";
+                }
                 msg = msg + Messages.getString("Confirm.SaveInsideProject.SaveInProject");
 
                 // Ask them
-                MessageDialogWithToggle dialog = MessageDialogWithToggle.openYesNoCancelQuestion(getSite().getShell(), Messages
-                        .getString("SQLEditor.SaveAsDialog.Title"), msg, Messages.getString("Confirm.SaveInsideProject.Toggle"),
-                        false, null, null);
-                if (dialog.getReturnCode() == IDialogConstants.CANCEL_ID)
+                MessageDialogWithToggle dialog = MessageDialogWithToggle.openYesNoCancelQuestion(getSite().getShell(),
+                        Messages.getString("SQLEditor.SaveAsDialog.Title"), msg,
+                        Messages.getString("Confirm.SaveInsideProject.Toggle"), false, null, null);
+                if (dialog.getReturnCode() == IDialogConstants.CANCEL_ID) {
                     return false;
+                }
 
                 // If they turned on the toggle ("Use this answer in the future"), update the preferences
                 if (dialog.getToggleState()) {
                     confirm = dialog.getReturnCode() == IDialogConstants.YES_ID ? IConstants.Confirm.YES : IConstants.Confirm.NO;
-                    SQLExplorerPlugin.getDefault().getPreferenceStore().setValue(IConstants.CONFIRM_YNA_SAVING_INSIDE_PROJECT,
-                            confirm.toString());
+                    SQLExplorerPlugin.getDefault().getPreferenceStore()
+                            .setValue(IConstants.CONFIRM_YNA_SAVING_INSIDE_PROJECT, confirm.toString());
                 }
 
                 // Whether to save inside or outside
                 saveInsideProject = dialog.getReturnCode() == IDialogConstants.YES_ID;
-            } else
+            } else {
                 saveInsideProject = confirm == IConstants.Confirm.YES;
+            }
         }
 
         // Saving inside a project - convert SQLEditorInput into a Resource by letting TextEditor do the work for us
         if (saveInsideProject) {
             if (!haveProjects) {
-                MessageDialog.openError(getSite().getShell(), Messages.getString("Confirm.SaveInsideProject.Title"), Messages
-                        .getString("Confirm.SaveInsideProject.CreateAProject"));
+                MessageDialog.openError(getSite().getShell(), Messages.getString("Confirm.SaveInsideProject.Title"),
+                        Messages.getString("Confirm.SaveInsideProject.CreateAProject"));
                 return false;
             }
-            if (input instanceof SQLEditorInput)
+            if (input instanceof SQLEditorInput) {
                 saveAs = true;
+            }
 
             // Save it and use their EditorInput
-            if (saveAs)
+            if (saveAs) {
                 textEditor.doSaveAs();
-            else {
-                if (monitor == null)
+            } else {
+                if (monitor == null) {
                     monitor = textEditor.getProgressMonitor();
+                }
                 textEditor.doSave(monitor);
             }
-            if (input.equals(textEditor.getEditorInput()))
+            if (input.equals(textEditor.getEditorInput())) {
                 return false;
+            }
             input = textEditor.getEditorInput();
             setInput(input);
 
@@ -590,8 +638,9 @@ public class SQLEditor extends EditorPart implements SwitchableSessionEditor {
                     dialog.setFileName("*.sql");
 
                     String path = dialog.open();
-                    if (path == null)
+                    if (path == null) {
                         return false;
+                    }
                     file = new File(path);
                 }
 
@@ -639,8 +688,9 @@ public class SQLEditor extends EditorPart implements SwitchableSessionEditor {
      * Saves the text to a file on the filing system - IE outside of any projects
      */
     private void saveToFile(File file) throws IOException {
-        if (file.exists())
+        if (file.exists()) {
             file.delete();
+        }
 
         file.createNewFile();
 
@@ -672,21 +722,24 @@ public class SQLEditor extends EditorPart implements SwitchableSessionEditor {
      * @param message
      */
     public void addMessage(Message message) {
-        if (isClosed())
+        if (isClosed()) {
             return;
+        }
 
         // Don't log success messages unless we're supposed to
         if (message.getStatus() == Message.Status.SUCCESS
-                && !SQLExplorerPlugin.getDefault().getPreferenceStore().getBoolean(IConstants.LOG_SUCCESS_MESSAGES))
+                && !SQLExplorerPlugin.getDefault().getPreferenceStore().getBoolean(IConstants.LOG_SUCCESS_MESSAGES)) {
             return;
+        }
 
         TableItem tableRow = new TableItem(messagesTable, SWT.NONE);
         tableRow.setText(message.getTableText());
         tableRow.setData(message);
 
         TableColumn[] cols = messagesTable.getColumns();
-        for (int i = 0; i < cols.length; i++)
-            cols[i].pack();
+        for (TableColumn col : cols) {
+            col.pack();
+        }
     }
 
     /**
@@ -696,8 +749,9 @@ public class SQLEditor extends EditorPart implements SwitchableSessionEditor {
      * @return
      */
     public ResultsTab createResultsTab(AbstractSQLExecution job) {
-        if (tabFolder.isDisposed())
+        if (tabFolder.isDisposed()) {
             return null;
+        }
 
         // Create the new tab, make it second to last (IE keep the messages tab
         // always at the end) and set the new tab's title to the 1-based index
@@ -730,8 +784,9 @@ public class SQLEditor extends EditorPart implements SwitchableSessionEditor {
      */
     private boolean onCloseTab(CTabItem tabItem) {
         // Cannot close the messages tab
-        if (tabItem == messagesTab)
+        if (tabItem == messagesTab) {
             return false;
+        }
 
         // The SQL query runs in a background thread and if the tab item gets disposed of
         // BEFORE the query has finished we need to notify the thread that there is no UI
@@ -773,13 +828,16 @@ public class SQLEditor extends EditorPart implements SwitchableSessionEditor {
      * Closes all result tabs and signals all associated AbstractSQLExecutions to stop (if they're still running)
      */
     public void clearResults() {
-        if (tabFolder.isDisposed())
+        if (tabFolder.isDisposed()) {
             return;
+        }
         synchronized (this) {
             CTabItem[] tabItems = tabFolder.getItems();
-            for (int i = 0; i < tabItems.length; i++)
-                if (tabItems[i] != messagesTab)
-                    closeTab(tabItems[i]);
+            for (CTabItem tabItem : tabItems) {
+                if (tabItem != messagesTab) {
+                    closeTab(tabItem);
+                }
+            }
             messagesTable.removeAll();
         }
     }
@@ -811,9 +869,11 @@ public class SQLEditor extends EditorPart implements SwitchableSessionEditor {
      */
     public CTabItem getResultsTab(AbstractSQLExecution sqlExec) {
         CTabItem[] items = tabFolder.getItems();
-        for (int i = 0; i < items.length; i++)
-            if (items[i].getData() == sqlExec)
-                return items[i];
+        for (CTabItem item : items) {
+            if (item.getData() == sqlExec) {
+                return item;
+            }
+        }
         return null;
     }
 
@@ -822,9 +882,10 @@ public class SQLEditor extends EditorPart implements SwitchableSessionEditor {
      * 
      * @see org.eclipse.ui.part.EditorPart#isDirty()
      */
+    @Override
     public boolean isDirty() {
-        boolean saveOnClose = SQLExplorerPlugin.getDefault().getPreferenceStore().getBoolean(
-                IConstants.REQUIRE_SAVE_ON_CLOSE_EDITOR);
+        boolean saveOnClose = SQLExplorerPlugin.getDefault().getPreferenceStore()
+                .getBoolean(IConstants.REQUIRE_SAVE_ON_CLOSE_EDITOR);
         return saveOnClose && (isDirty || textEditor.isDirty());
     }
 
@@ -833,8 +894,9 @@ public class SQLEditor extends EditorPart implements SwitchableSessionEditor {
             this.isDirty = isDirty;
             firePropertyChange(PROP_DIRTY);
         }
-        if (!isDirty)
+        if (!isDirty) {
             isUntitled = false;
+        }
     }
 
     /*
@@ -842,6 +904,7 @@ public class SQLEditor extends EditorPart implements SwitchableSessionEditor {
      * 
      * @see org.eclipse.ui.part.WorkbenchPart#setFocus()
      */
+    @Override
     public void setFocus() {
         textEditor.setFocus();
     }
@@ -851,6 +914,7 @@ public class SQLEditor extends EditorPart implements SwitchableSessionEditor {
      * 
      * @see org.eclipse.ui.part.EditorPart#isSaveAsAllowed()
      */
+    @Override
     public boolean isSaveAsAllowed() {
         return textEditor.isSaveAsAllowed();
     }
@@ -881,17 +945,21 @@ public class SQLEditor extends EditorPart implements SwitchableSessionEditor {
      * @param session The new Session
      */
     public void setSession(Session session) {
-        if (session == this.session)
+        if (session == this.session) {
             return;
+        }
 
         // If we already have a session and we're changing to a different one, close the current one
-        if (getSession() != null && session != this.session)
+        if (getSession() != null && session != this.session) {
             this.session.close();
+        }
         this.session = session;
-        if (textEditor != null)
+        if (textEditor != null) {
             textEditor.onEditorSessionChanged(session);
-        if (toolBar != null)
+        }
+        if (toolBar != null) {
             toolBar.onEditorSessionChanged(session);
+        }
     }
 
     /**
@@ -902,8 +970,9 @@ public class SQLEditor extends EditorPart implements SwitchableSessionEditor {
         // had our session changed or reset; however, just in case this doesn't happen we can
         // detect it because the session has it's user set to null when it is detached. If that
         // happened, then we reset the session to null
-        if (session != null && session.getUser() == null)
+        if (session != null && session.getUser() == null) {
             session = null;
+        }
         return session;
     }
 
@@ -926,8 +995,9 @@ public class SQLEditor extends EditorPart implements SwitchableSessionEditor {
     public String getSQLToBeExecuted() {
 
         String sql = textEditor.sqlTextViewer.getTextWidget().getSelectionText();
-        if (sql == null || sql.trim().length() == 0)
+        if (sql == null || sql.trim().length() == 0) {
             sql = textEditor.sqlTextViewer.getTextWidget().getText();
+        }
 
         // Normalise this to have standard \n in strings. \r confuses Oracle and
         // isn't normally needed internally anyway
@@ -950,11 +1020,13 @@ public class SQLEditor extends EditorPart implements SwitchableSessionEditor {
      */
     public int getSQLLineNumber() {
         String sql = textEditor.sqlTextViewer.getTextWidget().getSelectionText();
-        if (sql == null || sql.trim().length() == 0)
+        if (sql == null || sql.trim().length() == 0) {
             return 1;
+        }
         Point pt = textEditor.sqlTextViewer.getTextWidget().getSelection();
-        if (pt == null)
+        if (pt == null) {
             return 1;
+        }
         StyledText text = (StyledText) textEditor.getAdapter(org.eclipse.swt.widgets.Control.class);
         int offset = pt.x;
         int lineNo = text.getLineAtOffset(offset);
@@ -1017,10 +1089,12 @@ public class SQLEditor extends EditorPart implements SwitchableSessionEditor {
      * @param charNo
      */
     public void setCursorPosition(int lineNo, int charNo) {
-        if (lineNo < 1)
+        if (lineNo < 1) {
             return;
-        if (charNo < 1)
+        }
+        if (charNo < 1) {
             charNo = 1;
+        }
         Object adapter = textEditor.getAdapter(org.eclipse.swt.widgets.Control.class);
         if (adapter instanceof StyledText) {
             StyledText text = (StyledText) adapter;

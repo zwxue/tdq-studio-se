@@ -46,6 +46,7 @@ public class DQRuleEditor extends CommonFormEditor {
 
     // ~
 
+    @Override
     protected void addPages() {
         IEditorInput editorInput = this.getEditorInput();
         try {
@@ -53,30 +54,28 @@ public class DQRuleEditor extends CommonFormEditor {
             if (editorInput instanceof ParserRuleItemEditorInput) {
                 parserPage = new ParserRuleMasterDetailsPage(this, ID, "Parser Rule Settings"); //$NON-NLS-1$ 
                 addPage(parserPage);
-                setPartName(((ParserRuleMasterDetailsPage) parserPage).getIntactElemenetName()); //$NON-NLS-1$
+                setPartName(parserPage.getIntactElemenetName());
             } else if (editorInput instanceof FileEditorInput) {
                 DQRule findDQRule = null;
                 FileEditorInput fileEditorInput = (FileEditorInput) editorInput;
                 IFile file = fileEditorInput.getFile();
-                String label = file.getFullPath().toString();
                 if (FactoriesUtil.isDQRuleFile(file.getFileExtension())) {
                     findDQRule = DQRuleResourceFileHelper.getInstance().findDQRule(file);
-
                 }
                 if (findDQRule instanceof ParserRule) {
                     parserPage = new ParserRuleMasterDetailsPage(this, ID, "Parser Rule Settings"); //$NON-NLS-1$ 
                     addPage(parserPage);
-                    setPartName(((ParserRuleMasterDetailsPage) parserPage).getIntactElemenetName()); //$NON-NLS-1$
+                    setPartName(parserPage.getIntactElemenetName());
                 } else {
                     masterPage = new DQRuleMasterDetailsPage(this, ID,
                             DefaultMessagesImpl.getString("DQRuleEditor.dqRuleSettings")); //$NON-NLS-1$ 
                     addPage(masterPage);
-                    setPartName(((DQRuleMasterDetailsPage) masterPage).getIntactElemenetName()); //$NON-NLS-1$
+                    setPartName(masterPage.getIntactElemenetName());
                 }
             } else {
                 masterPage = new DQRuleMasterDetailsPage(this, ID, DefaultMessagesImpl.getString("DQRuleEditor.dqRuleSettings")); //$NON-NLS-1$ 
                 addPage(masterPage);
-                setPartName(((DQRuleMasterDetailsPage) masterPage).getIntactElemenetName()); //$NON-NLS-1$
+                setPartName(masterPage.getIntactElemenetName());
             }
             // MOD qiongli 2011-3-21,bug 19472.set method 'setPartName(...)' behind the method 'addPage(...)'
 
@@ -95,17 +94,18 @@ public class DQRuleEditor extends CommonFormEditor {
         // ~
     }
 
+    @Override
     public void doSave(IProgressMonitor monitor) {
         if (masterPage != null) {
             if (masterPage.isDirty()) {
                 masterPage.doSave(monitor);
-                setPartName(masterPage.getIntactElemenetName()); //$NON-NLS-1$
+                setPartName(masterPage.getIntactElemenetName());
             }
             setEditorObject(masterPage.getRuleRepNode());
         } else if (parserPage != null) {
             if (parserPage.isDirty()) {
                 parserPage.doSave(monitor);
-                setPartName(parserPage.getIntactElemenetName()); //$NON-NLS-1$
+                setPartName(parserPage.getIntactElemenetName());
             }
             setEditorObject(parserPage.getRuleRepNode());
         }
@@ -113,6 +113,7 @@ public class DQRuleEditor extends CommonFormEditor {
 
     }
 
+    @Override
     protected void firePropertyChange(final int propertyId) {
         // ADD xqliu 2009-07-02 bug 7687
         setSaveActionButtonState(isDirty());

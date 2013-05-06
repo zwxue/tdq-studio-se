@@ -51,14 +51,6 @@ public class UserDefIndicatorFolderRepNode extends DQRepositoryNode {
     }
 
     @Override
-    public String getLabel() {
-        if (this.getObject() != null) {
-            return this.getObject().getLabel();
-        }
-        return super.getLabel();
-    }
-
-    @Override
     public List<IRepositoryNode> getChildren(boolean withDeleted) {
         try {
             super.getChildren().clear();
@@ -67,7 +59,7 @@ public class UserDefIndicatorFolderRepNode extends DQRepositoryNode {
             // sub folders
             for (Container<String, IRepositoryViewObject> container : tdqViewObjects.getSubContainer()) {
                 Folder folder = new Folder((Property) container.getProperty(), ERepositoryObjectType.TDQ_USERDEFINE_INDICATORS);
-                if (!withDeleted&&folder.isDeleted()) {
+                if (!withDeleted && folder.isDeleted()) {
                     continue;
                 }
                 UserDefIndicatorSubFolderRepNode childNodeFolder = new UserDefIndicatorSubFolderRepNode(folder, this,
