@@ -33,6 +33,7 @@ import org.talend.cwm.management.i18n.Messages;
 import org.talend.dataquality.PluginConstant;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisContext;
+import org.talend.dataquality.analysis.AnalysisType;
 import org.talend.dataquality.helpers.AnalysisHelper;
 import org.talend.dataquality.helpers.BooleanExpressionHelper;
 import org.talend.dataquality.indicators.Indicator;
@@ -106,6 +107,9 @@ public class MultiColumnAnalysisExecutor extends ColumnAnalysisSqlExecutor {
             }
             // ~
 
+            // get indicator definition
+            final Expression sqlGenericExpression = dbms().getSqlExpression(indicator.getIndicatorDefinition());
+
             // separate nominal from numeric columns
             List<String> nominalColumns = new ArrayList<String>();
             for (ModelElement column : colSetMultValIndicator.getNominalColumns()) {
@@ -126,12 +130,25 @@ public class MultiColumnAnalysisExecutor extends ColumnAnalysisSqlExecutor {
             }
             // add count(*)
             computedColumns.add(colSetMultValIndicator.getCountAll());
-            String selectItems = createSelect(nominalColumns, computedColumns);
 
-            // get indicator definition
-            final Expression sqlGenericExpression = dbms().getSqlExpression(indicator.getIndicatorDefinition());
+            // MOD msjian TDQ-7254: fix the columnset analysis run get error. the columnset analysis don't need to
+            // consider the datamining type.
+            List<String> columns = new ArrayList<String>();
 
-            String grpByClause = createGroupBy(nominalColumns);
+            // if the analysis type is columnset, use analyzed columns
+            if (AnalysisType.COLUMN_SET == cachedAnalysis.getParameters().getAnalysisType()) {
+                for (ModelElement column : analyzedColumns) {
+                    columns.add(getQuotedColumnName(column));
+                }
+            } else {
+                columns = nominalColumns;
+            }
+            // TDQ-7254~
+
+            String selectItems = createSelect(columns, computedColumns);
+
+            String grpByClause = createGroupBy(columns);
+
             // all columns must belong to the same table
             String tableName = getTableName(analyzedColumns);
             // definition is SELECT &lt;%=__COLUMN_NAMES__%> FROM &lt;%=__TABLE_NAME__%> GROUP BY
