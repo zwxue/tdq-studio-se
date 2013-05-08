@@ -228,6 +228,8 @@ public abstract class AbstractPagePart {
                 masterPage.getLabelConnDeleted().setVisible(true);
                 masterPage.getLabelConnDeleted().setText(
                         DefaultMessagesImpl.getString("AbstractPagePart.LogicalDeleteWarn", prop.getDisplayName()));//$NON-NLS-1$
+            } else {
+                masterPage.getLabelConnDeleted().setVisible(false);
             }
             // MOD mzhao 2009-06-09 feature 5887
             if (selectionListener == null) {
