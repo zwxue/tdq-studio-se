@@ -204,14 +204,17 @@ public class TDQFileItemImpl extends TDQItemImpl implements TDQFileItem {
             for (Object element : resourceSet.getResources()) {
                 Resource resource = (Resource) element;
                 if (theURIConverter.normalize(resource.getURI()).equals(normalizedURI)) {
-                    byteArrayResource = (ByteArrayResource) resource;
+                    // MOD TDQ-7211 yyin 20130508: remove the current bytearray resource to avoid load the old one and
+                    // lost the changes of the file
+                    resourceSet.getResources().remove(resource);
+                    break;
                 }
             }
 
-            if (byteArrayResource == null) {
-                byteArrayResource = new ByteArrayResource(resourceUri);
-                resourceSet.getResources().add(byteArrayResource);
-            }
+            // MOD TDQ-7211 yyin 20130508: create the bytearray resource from the file to make sure using the new
+            // changes of the file.
+            byteArrayResource = new ByteArrayResource(resourceUri);
+            resourceSet.getResources().add(byteArrayResource);
 
             try {
                 byteArrayResource.load(null);
