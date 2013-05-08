@@ -45,7 +45,7 @@ public class MultiColumnAnalysisExecutorTest {
 
     /**
      * Test method for
-     * {@link org.talend.dq.analysis.MultiMultiColumnAnalysisExecutor#createSqlStatement(org.talend.dataquality.analysis.Analysis)}
+     * {@link org.talend.dq.analysis.MultiColumnAnalysisExecutor#createSqlStatement(org.talend.dataquality.analysis.Analysis)}
      * . this is test for columnset analysis
      */
     @Test
@@ -110,11 +110,31 @@ public class MultiColumnAnalysisExecutorTest {
 
     /**
      * Test method for
-     * {@link org.talend.dq.analysis.MultiMultiColumnAnalysisExecutor#createSqlStatement(org.talend.dataquality.analysis.Analysis)}
-     * . this is test for correlation analysis
+     * {@link org.talend.dq.analysis.MultiColumnAnalysisExecutor#createSqlStatement(org.talend.dataquality.analysis.Analysis)}
+     * . this is test for numerical correlation analysis
      */
     @Test
     public void testCreateSqlStatement_2() {
+        // TODO
+    }
+
+    /**
+     * Test method for
+     * {@link org.talend.dq.analysis.MultiColumnAnalysisExecutor#createSqlStatement(org.talend.dataquality.analysis.Analysis)}
+     * . this is test for time correlation analysis
+     */
+    @Test
+    public void testCreateSqlStatement_3() {
+        // TODO
+    }
+
+    /**
+     * Test method for
+     * {@link org.talend.dq.analysis.MultiColumnAnalysisExecutor#createSqlStatement(org.talend.dataquality.analysis.Analysis)}
+     * . this is test for nominal correlation analysis
+     */
+    @Test
+    public void testCreateSqlStatement_4() {
         // TODO
     }
 }
