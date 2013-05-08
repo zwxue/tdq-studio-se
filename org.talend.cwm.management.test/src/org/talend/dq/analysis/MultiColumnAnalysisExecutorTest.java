@@ -106,35 +106,13 @@ public class MultiColumnAnalysisExecutorTest {
         assertEquals("SELECT date_accnt_opened,COUNT(*) FROM tbi.customer  GROUP BY date_accnt_opened", //$NON-NLS-1$
                 analysis.getResults().getIndicators().get(0).getInstantiatedExpressions("SQL").getBody()); //$NON-NLS-1$
 
+        // set the datamining type is interval, the result should be the same with nominal.
+        simpleStatIndicator.setDataminingType(DataminingType.INTERVAL);
+        assertEquals("", multiColumnAnalysisExecutor.createSqlStatement(analysis)); //$NON-NLS-1$
+        assertEquals(1, analysis.getResults().getIndicators().size());
+        assertEquals("SELECT date_accnt_opened,COUNT(*) FROM tbi.customer  GROUP BY date_accnt_opened", //$NON-NLS-1$
+                analysis.getResults().getIndicators().get(0).getInstantiatedExpressions("SQL").getBody()); //$NON-NLS-1$
+
     }
 
-    /**
-     * Test method for
-     * {@link org.talend.dq.analysis.MultiColumnAnalysisExecutor#createSqlStatement(org.talend.dataquality.analysis.Analysis)}
-     * . this is test for numerical correlation analysis
-     */
-    @Test
-    public void testCreateSqlStatement_2() {
-        // TODO
-    }
-
-    /**
-     * Test method for
-     * {@link org.talend.dq.analysis.MultiColumnAnalysisExecutor#createSqlStatement(org.talend.dataquality.analysis.Analysis)}
-     * . this is test for time correlation analysis
-     */
-    @Test
-    public void testCreateSqlStatement_3() {
-        // TODO
-    }
-
-    /**
-     * Test method for
-     * {@link org.talend.dq.analysis.MultiColumnAnalysisExecutor#createSqlStatement(org.talend.dataquality.analysis.Analysis)}
-     * . this is test for nominal correlation analysis
-     */
-    @Test
-    public void testCreateSqlStatement_4() {
-        // TODO
-    }
 }
