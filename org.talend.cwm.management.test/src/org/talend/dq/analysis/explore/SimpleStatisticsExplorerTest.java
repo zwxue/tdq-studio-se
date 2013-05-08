@@ -139,6 +139,18 @@ public class SimpleStatisticsExplorerTest {
 
         Map<String, String> queryMap = simpleStatisticsExplorer.getQueryMap();
         assertFalse(queryMap.isEmpty());
+        assertEquals(1, queryMap.size());
+        assertEquals("-- unit test  ;\n" + "-- unit test  ;\n" + "-- unit test Purpose ;\n" + "-- unit test Description ;\n" //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+                + "-- unit test CAL_DATE ;\n" + "-- unit test user define ;\n" + "-- unit test unit test ;\n" //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                + "SELECT * FROM TDQ_CALENDAR ", queryMap.get("unit test")); //$NON-NLS-1$ //$NON-NLS-2$
+
+        // test when is not sql engine
+        when(parameters.getExecutionLanguage()).thenReturn(ExecutionLanguage.JAVA);
+        Map<String, String> queryMap_java = simpleStatisticsExplorer.getQueryMap();
+        assertFalse(queryMap_java.isEmpty());
+        assertEquals(1, queryMap_java.size());
+        assertEquals(null, queryMap_java.get("unit test")); //$NON-NLS-1$
+
     }
 
 }
