@@ -174,6 +174,8 @@ public class ExportConnectionToTOSAction extends Action {
                 Package parent = ColumnSetHelper.getParentCatalogOrSchema(pack);
                 if (parent != null) {
                     database = parent.getName();
+                } else {
+                    database = tdDataProvider.getSID();
                 }
                 newMetadataConnection.setUiSchema(pack.getName());
             }
