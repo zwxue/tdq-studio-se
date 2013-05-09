@@ -18,7 +18,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.eclipse.core.resources.IFile;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -26,25 +25,14 @@ import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.window.Window;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Shell;
-import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
-import org.talend.core.model.metadata.builder.connection.DelimitedFileConnection;
-import org.talend.core.model.metadata.builder.connection.MDMConnection;
 import org.talend.core.model.properties.Property;
 import org.talend.core.model.repository.ERepositoryObjectType;
-import org.talend.core.model.repository.IRepositoryViewObject;
-import org.talend.core.model.repository.RepositoryViewObject;
-import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataquality.analysis.Analysis;
-import org.talend.dataquality.domain.pattern.Pattern;
-import org.talend.dataquality.indicators.definition.IndicatorDefinition;
-import org.talend.dataquality.reports.TdReport;
-import org.talend.dataquality.rules.DQRule;
-import org.talend.dq.factory.ModelElementFileFactory;
 import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.PropertyHelper;
+import org.talend.dq.helper.ProxyRepositoryManager;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.repository.model.IRepositoryNode;
 import orgomg.cwm.objectmodel.core.Dependency;
@@ -71,6 +59,24 @@ public class DeleteModelElementConfirmDialog {
         private ModelElement nodeElement = null;
 
         private IRepositoryNode node = null;
+
+        /**
+         * Getter for node.
+         * 
+         * @return the node
+         */
+        public IRepositoryNode getNode() {
+            return this.node;
+        }
+
+        /**
+         * Sets the node.
+         * 
+         * @param node the node to set
+         */
+        public void setNode(IRepositoryNode node) {
+            this.node = node;
+        }
 
         public ImpactNode(ModelElement modelElement) {
             this.nodeElement = modelElement;
@@ -260,7 +266,6 @@ public class DeleteModelElementConfirmDialog {
                     MessageDialog.WARNING, new String[] { IDialogConstants.OK_LABEL }, 1);
             dialog.setNeedCheckbox(isNeedCheckbox);
             dialog.setContentProvider(new DialogContentProvider(impactElements));
-            dialog.setLabelProvider(getLabelProvider());
             dialog.setInput(new Object());
             clear();
             // MOD qiongli 2012-1-6 if don't click OK button,should return false;
@@ -305,7 +310,6 @@ public class DeleteModelElementConfirmDialog {
                     DefaultMessagesImpl.getString("DeleteModelElementConfirmDialog.confirmResourceDelete"), null, dialogMessage, //$NON-NLS-1$
                     MessageDialog.WARNING, new String[] { IDialogConstants.OK_LABEL }, 1);
             dialog.setContentProvider(new DialogContentProvider(impactElements));
-            dialog.setLabelProvider(getLabelProvider());
             dialog.setInput(new Object());
             clear();
             return dialog.open();
@@ -338,7 +342,6 @@ public class DeleteModelElementConfirmDialog {
             TreeMessageInfoDialog dialog = new TreeMessageInfoDialog(parentShell, dialogTitle, null, dialogMessage,
                     MessageDialog.WARNING, new String[] { IDialogConstants.OK_LABEL, IDialogConstants.CANCEL_LABEL }, 0);
             dialog.setContentProvider(new DialogContentProvider(impactElements));
-            dialog.setLabelProvider(getLabelProvider());
             dialog.setInput(new Object());
             clear();
             return dialog.open();
@@ -363,7 +366,6 @@ public class DeleteModelElementConfirmDialog {
                     DefaultMessagesImpl.getString("DeleteModelElementConfirmDialog.confirmResourceDelete"), null, dialogMessage, //$NON-NLS-1$
                     MessageDialog.WARNING, new String[] { IDialogConstants.OK_LABEL }, 1);
             dialog.setContentProvider(new DialogContentProvider(impactElements));
-            dialog.setLabelProvider(getLabelProvider());
             dialog.setInput(new Object());
             clear();
             dialog.open();
@@ -391,7 +393,6 @@ public class DeleteModelElementConfirmDialog {
             TreeMessageInfoDialog dialog = new TreeMessageInfoDialog(parentShell, dialogTitle, null, dialogMessage,
                     MessageDialog.WARNING, new String[] { IDialogConstants.OK_LABEL }, 0);
             dialog.setContentProvider(new DialogContentProvider(impactElements));
-            dialog.setLabelProvider(getLabelProvider());
             dialog.setInput(new Object());
             clear();
             int result = dialog.open();
@@ -409,7 +410,6 @@ public class DeleteModelElementConfirmDialog {
             TreeMessageInfoDialog dialog = new TreeMessageInfoDialog(parentShell, dialogTitle, null, dialogMessage,
                     MessageDialog.WARNING, new String[] { IDialogConstants.OK_LABEL, IDialogConstants.CANCEL_LABEL }, 0);
             dialog.setContentProvider(new DialogContentProvider(impactElements));
-            dialog.setLabelProvider(getLabelProvider());
             dialog.setInput(new Object());
             clear();
             int result = dialog.open();
@@ -437,113 +437,9 @@ public class DeleteModelElementConfirmDialog {
         return messageDialog.open();
     }
 
-    // private static void removeReportComponent(ImpactNode[] impactNodes) {
-    // ReportsSwitch<TdReport> mySwitch = new ReportsSwitch<TdReport>() {
-    //
-    // public TdReport caseTdReport(TdReport object) {
-    // return object;
-    // }
-    // };
-    // TdReport report = null;
-    // for (ImpactNode node : impactNodes) {
-    // report = mySwitch.doSwitch(node.getNodeElement());
-    // if (report != null && node.getChildren().length > 0) {
-    // List<Analysis> anaList = new ArrayList<Analysis>();
-    // for (ModelElement element : node.getChildren()) {
-    // anaList.add((Analysis) element);
-    // }
-    // ReportHelper.removeAnalyses(report, anaList);
-    // // remove dependencies
-    // DependenciesHandler.getInstance().removeDependenciesBetweenModels(report, anaList);
-    // }
-    // }
-    // }
-
-    protected static LabelProvider getLabelProvider() {
-        if (fLabelProvider == null) {
-            fLabelProvider = new LabelProvider() {
-
-                @Override
-                public String getText(Object obj) {
-                    if (obj == null) {
-                        return "";
-                    }
-                    if (obj instanceof ImpactNode) {
-                        return ((ImpactNode) obj).toString();
-                    } else if (obj instanceof IFile) {
-                        IFile file = (IFile) obj;
-                        ModelElement modelElement = ModelElementFileFactory.getModelElement(file);
-                        // MOD msjian TDQ-5909: modify to displayName
-                        String name = modelElement != null ? PropertyHelper.getProperty(modelElement).getDisplayName() : file
-                                .getName();
-                        return name;
-                        //return REQUIRES + PluginConstant.SPACE_STRING + "<<" + name + ">>";//$NON-NLS-1$ //$NON-NLS-2$
-                    } else if (obj instanceof RepositoryViewObject) {// Added 20130226 TDQ-6899 show the name for Jrxml
-                                                                     // object (which has no related ModelElement)
-                        return ((IRepositoryViewObject) obj).getLabel();
-                    }// ~
-
-                    Property property = PropertyHelper.getProperty((ModelElement) obj);
-                    return property == null ? ((ModelElement) obj).getName() : property.getDisplayName();
-                    //REQUIRES + PluginConstant.SPACE_STRING+ "<<" + PropertyHelper.getProperty((ModelElement) obj).getDisplayName() + ">>"; //$NON-NLS-1$ //$NON-NLS-2$
-                    // TDQ-5909~
-                }
-
-                @Override
-                public Image getImage(Object obj) {
-                    ModelElement modelElement = null;
-                    if (obj instanceof ModelElement) {
-                        modelElement = (ModelElement) obj;
-                    } else if (obj instanceof ImpactNode) {
-                        modelElement = ((ImpactNode) obj).getNodeElement();
-                    } else if (obj instanceof IFile) {
-                        modelElement = ModelElementFileFactory.getModelElement((IFile) obj);
-                    } else if (obj instanceof RepositoryViewObject) {
-                        // Added 20130226 TDQ-6899 show the name for Jrxml object (which has no related ModelElement)
-                        return ImageLib.getImage(ImageLib.XML_DOC);
-                    }
-                    // ~
-                    if (modelElement == null) {
-                        if (((ImpactNode) obj).node != null) {
-                            return ImageLib.getImage(ImageLib.XML_DOC);
-                        }
-                        return super.getImage(obj);
-                    }
-                    if (modelElement instanceof Analysis) {
-                        return ImageLib.getImage(ImageLib.ANALYSIS_OBJECT);
-                    }
-                    if (modelElement instanceof TdReport) {
-                        return ImageLib.getImage(ImageLib.REPORT_OBJECT);
-                    }
-                    if (modelElement instanceof DatabaseConnection) {
-                        return ImageLib.getImage(ImageLib.CONNECTION);
-                    }
-                    if (modelElement instanceof MDMConnection) {
-                        return ImageLib.getImage(ImageLib.MDM_CONNECTION);
-                    }
-                    if (modelElement instanceof DelimitedFileConnection) {
-                        return ImageLib.getImage(ImageLib.FILE_DELIMITED);
-                    }
-                    if (modelElement instanceof Pattern) {
-                        return ImageLib.getImage(ImageLib.PATTERN_REG);
-                    }
-                    if (modelElement instanceof IndicatorDefinition) {
-                        return ImageLib.getImage(ImageLib.IND_DEFINITION);
-                    }
-                    if (modelElement instanceof DQRule) {
-                        return ImageLib.getImage(ImageLib.DQ_RULE);
-                    }
-
-                    return super.getImage(obj);
-                }
-            };
-        }
-        return fLabelProvider;
-    }
-
     /**
      * show all nodes with its dependencies (in nodeWithDependsMap) in one dialog. if the dependency has its own
-     * depends, also show them under this dependency
+     * depends, also show them under this dependsency
      * 
      * @param nodeWithDependsMap key is the repostiory node and value is the dependencies of this node.
      * @param dialogMessage the message shown in dialog
@@ -554,23 +450,29 @@ public class DeleteModelElementConfirmDialog {
             boolean needCheckBox) {
         // for each node in the map, add the node as a ImpactNode, and its children are its depends.
         Iterator iter = nodeWithDependsMap.entrySet().iterator();
+        List<ModelElement> lockedByOthersList = new ArrayList<ModelElement>();
         while (iter.hasNext()) {
             Map.Entry<IRepositoryNode, List<ModelElement>> entry = (Map.Entry<IRepositoryNode, List<ModelElement>>) iter.next();
-            IRepositoryNode node = (IRepositoryNode) entry.getKey();
-            List<ModelElement> dependencies = (List<ModelElement>) entry.getValue();
+            IRepositoryNode node = entry.getKey();
+            List<ModelElement> dependencies = entry.getValue();
             addDenpendencyElements(node, dependencies);
+            findLockedByOthersModelElement(lockedByOthersList, dependencies);
         }
         ImpactNode[] impactElements = getImpactNodes();
         boolean isChecked = false;
 
         // show the dialog
         if (impactElements.length > 0) {
+            boolean lockedByOthersFlag = !lockedByOthersList.isEmpty();
+
+            String message = lockedByOthersFlag ? DefaultMessagesImpl.getString("DQDeleteAction.lockedByOthers") : dialogMessage; //$NON-NLS-1$
+            String[] buttonLabels = lockedByOthersFlag ? new String[] {} : new String[] { IDialogConstants.OK_LABEL };
+
             TreeMessageInfoDialog dialog = new TreeMessageInfoDialog(null,
-                    DefaultMessagesImpl.getString("DeleteModelElementConfirmDialog.confirmResourceDelete"), null, dialogMessage, //$NON-NLS-1$
-                    MessageDialog.WARNING, new String[] { IDialogConstants.OK_LABEL }, 1);
-            dialog.setNeedCheckbox(needCheckBox);
+                    DefaultMessagesImpl.getString("DeleteModelElementConfirmDialog.confirmResourceDelete"), null, message, //$NON-NLS-1$
+                    MessageDialog.WARNING, buttonLabels, 1);
+            dialog.setNeedCheckbox(lockedByOthersFlag ? false : needCheckBox);
             dialog.setContentProvider(new DialogContentProvider(impactElements));
-            dialog.setLabelProvider(getLabelProvider());
             dialog.setInput(new Object());
             clear();
             // MOD qiongli 2012-1-6 if don't click OK button,should return false;
@@ -579,6 +481,35 @@ public class DeleteModelElementConfirmDialog {
         }
 
         return isChecked;
+    }
+
+    /**
+     * it the ModelElement is locked by others, add it into lockedByOthers.
+     * 
+     * @param lockedByOthers
+     * @param dependencies
+     */
+    private static void findLockedByOthersModelElement(List<ModelElement> lockedByOthers, List<ModelElement> dependencies) {
+        for (ModelElement me : dependencies) {
+            if (lockedByOthers(me)) {
+                lockedByOthers.add(me);
+            }
+        }
+    }
+
+    /**
+     * if the ModelElement locked by others return true, else return false.
+     * 
+     * @param me ModelElement
+     * @return
+     */
+    private static boolean lockedByOthers(ModelElement me) {
+        boolean result = false;
+        Property property = PropertyHelper.getProperty(me);
+        if (property != null) {
+            result = ProxyRepositoryManager.getInstance().isLockByOthers(property.getItem());
+        }
+        return result;
     }
 
     /**
@@ -617,7 +548,5 @@ public class DeleteModelElementConfirmDialog {
             }
         }
         impactNodes.add(impactNode);
-
     }
-
 }

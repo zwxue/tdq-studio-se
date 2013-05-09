@@ -369,7 +369,18 @@ public final class ImageLib {
      * @return
      */
     public static ImageDescriptor createIcon(ImageDescriptor originalImg, ImageDescriptor decorateImg) {
-        return new DecorationOverlayIcon(originalImg.createImage(), decorateImg, IDecoration.BOTTOM_RIGHT);
+        return createIcon(originalImg.createImage(), decorateImg);
+    }
+
+    /**
+     * DOC xqliu Comment method "createIcon".
+     * 
+     * @param originalImg
+     * @param decorateImg
+     * @return
+     */
+    public static ImageDescriptor createIcon(Image originalImg, ImageDescriptor decorateImg) {
+        return new DecorationOverlayIcon(originalImg, decorateImg, IDecoration.BOTTOM_RIGHT);
     }
 
     /**
@@ -461,8 +472,25 @@ public final class ImageLib {
 
     public static ImageDescriptor createLockedByOtherIcon(ImageDescriptor originalImg) {
         ImageDescriptor lockImg = getImageDescriptor(ICON_LOCK_BYOTHER);
-
         return originalImg != null ? createIcon(originalImg, lockImg) : null;
     }
 
+    public static ImageDescriptor createLockedByOtherIcon(Image originalImg) {
+        ImageDescriptor lockImg = getImageDescriptor(ICON_LOCK_BYOTHER);
+        return originalImg != null ? createIcon(originalImg, lockImg) : null;
+    }
+
+    public static ImageDescriptor createLockedByOwnIcon(String originalImgName) {
+        return createLockedByOtherIcon(getImageDescriptor(originalImgName));
+    }
+
+    public static ImageDescriptor createLockedByOwnIcon(ImageDescriptor originalImg) {
+        ImageDescriptor lockImg = getImageDescriptor(ICON_LOCK);
+        return originalImg != null ? createIcon(originalImg, lockImg) : null;
+    }
+
+    public static ImageDescriptor createLockedByOwnIcon(Image originalImg) {
+        ImageDescriptor lockImg = getImageDescriptor(ICON_LOCK);
+        return originalImg != null ? createIcon(originalImg, lockImg) : null;
+    }
 }
