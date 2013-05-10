@@ -29,9 +29,11 @@ import org.eclipse.swt.widgets.Shell;
 import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
 import org.talend.core.model.metadata.builder.connection.DelimitedFileConnection;
 import org.talend.core.model.metadata.builder.connection.MDMConnection;
+import org.talend.core.model.properties.Property;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
+import org.talend.dataprofiler.core.ui.utils.MessageUI;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.domain.pattern.Pattern;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
@@ -40,6 +42,7 @@ import org.talend.dataquality.rules.DQRule;
 import org.talend.dq.factory.ModelElementFileFactory;
 import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.PropertyHelper;
+import org.talend.dq.helper.ProxyRepositoryManager;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.repository.model.IRepositoryNode;
 import orgomg.cwm.objectmodel.core.Dependency;
@@ -235,21 +238,58 @@ public class DeleteModelElementConfirmDialog {
         ImpactNode[] impactElements = getImpactNodes();
         boolean isChecked = false;
         if (impactElements.length > 0) {
-            TreeMessageInfoDialog dialog = new TreeMessageInfoDialog(parentShell,
-                    DefaultMessagesImpl.getString("DeleteModelElementConfirmDialog.confirmResourceDelete"), null, dialogMessage, //$NON-NLS-1$
-                    MessageDialog.WARNING, new String[] { IDialogConstants.OK_LABEL }, 1);
-            dialog.setNeedCheckbox(isNeedCheckbox);
-            dialog.setContentProvider(new DialogContentProvider(impactElements));
-            dialog.setLabelProvider(getLabelProvider());
-            dialog.setInput(new Object());
-            clear();
-            // MOD qiongli 2012-1-6 if don't click OK button,should return false;
-            int result = dialog.open();
-            isChecked = dialog.isChecked() && (result == Window.OK);
-
+            if (lockedByOthers(impactElements)) {
+                MessageUI.openError(DefaultMessagesImpl.getString("DQDeleteAction.lockedByOthers")); //$NON-NLS-1$
+            } else {
+                TreeMessageInfoDialog dialog = new TreeMessageInfoDialog(
+                        parentShell,
+                        DefaultMessagesImpl.getString("DeleteModelElementConfirmDialog.confirmResourceDelete"), null, dialogMessage, //$NON-NLS-1$
+                        MessageDialog.WARNING, new String[] { IDialogConstants.OK_LABEL }, 1);
+                dialog.setNeedCheckbox(isNeedCheckbox);
+                dialog.setContentProvider(new DialogContentProvider(impactElements));
+                dialog.setLabelProvider(getLabelProvider());
+                dialog.setInput(new Object());
+                clear();
+                // MOD qiongli 2012-1-6 if don't click OK button,should return false;
+                int result = dialog.open();
+                isChecked = dialog.isChecked() && (result == Window.OK);
+            }
         }
 
         return isChecked;
+    }
+
+    /**
+     * DOC xqliu Comment method "lockedByOthers".
+     * 
+     * @param impactElements
+     * @return
+     */
+    private static boolean lockedByOthers(ImpactNode[] impactElements) {
+        for (ImpactNode node : impactElements) {
+            if (lockedByOthers(node)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * DOC xqliu Comment method "lockedByOthers".
+     * 
+     * @param node
+     * @return
+     */
+    private static boolean lockedByOthers(ImpactNode node) {
+        boolean result = false;
+        ModelElement nodeElement = node.getNodeElement();
+        if (nodeElement != null) {
+            Property property = PropertyHelper.getProperty(nodeElement);
+            if (property != null) {
+                result = ProxyRepositoryManager.getInstance().isLockByOthers(property.getItem());
+            }
+        }
+        return result;
     }
 
     /**
