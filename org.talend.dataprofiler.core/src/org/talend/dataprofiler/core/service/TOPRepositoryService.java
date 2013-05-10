@@ -581,4 +581,18 @@ public class TOPRepositoryService implements ITDQRepositoryService {
         }
         return connection;
     }
+
+    /**
+     * judge if the related editor is opened.
+     **/
+    public boolean isDQEditorOpened(Item item) {
+        if (item != null) {
+            boolean hasOpened = CorePlugin.getDefault().itemIsOpening(item, false);
+            if (hasOpened) {
+                return true;
+            }
+        }
+
+        return false;
+    }
 }
