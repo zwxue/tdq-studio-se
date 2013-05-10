@@ -124,11 +124,6 @@ public class ExportConnectionToTOSActionRealTest {
     public void setUp() throws Exception {
         UnitTestBuildHelper.deleteCurrentProject("testForExportConnectionToTOSAction"); //$NON-NLS-1$
         UnitTestBuildHelper.createRealProject("testForExportConnectionToTOSAction"); //$NON-NLS-1$
-        // connectionNode
-        DatabaseConnectionItem createConnectionItem = createConnectionItem("conn1", null, false, true);
-        initPackageList(createConnectionItem);
-
-        // ~connectionNode
 
     }
 
@@ -179,14 +174,37 @@ public class ExportConnectionToTOSActionRealTest {
      * @param packageList
      * @throws PersistenceException
      */
-    private static void initPackageList(DatabaseConnectionItem createConnectionItem) throws PersistenceException {
+    private static void initCatalogList(DatabaseConnectionItem createConnectionItem) throws PersistenceException {
         catalog1 = addCataPackage("catalog1", createConnectionItem);
         catalog2 = addCataPackage("catalog2", createConnectionItem);
         catalog3 = addCataPackage("catalog3", createConnectionItem);
         catalog4 = addCataPackage("catalog4", createConnectionItem);
         catalog5 = addCataPackage("catalog5", createConnectionItem);
+
+        factory.save(createConnectionItem, null);
+    }
+
+    /**
+     * DOC zshen Comment method "initPackageList".
+     * 
+     * @param packageList
+     * @throws PersistenceException
+     */
+    private static void initSchemaOfCagalogList(DatabaseConnectionItem createConnectionItem) throws PersistenceException {
         schema1 = addSchePackage("schema1", catalog1);
         schema2 = addSchePackage("schema2", catalog2);
+        factory.save(createConnectionItem, null);
+    }
+
+    /**
+     * DOC zshen Comment method "initPackageList".
+     * 
+     * @param packageList
+     * @throws PersistenceException
+     */
+    private static void initSchemaList(DatabaseConnectionItem createConnectionItem) throws PersistenceException {
+        schema1 = addSchePackage("schema1", (DatabaseConnection) createConnectionItem.getConnection());
+        schema2 = addSchePackage("schema2", (DatabaseConnection) createConnectionItem.getConnection());
         factory.save(createConnectionItem, null);
     }
 
@@ -200,6 +218,19 @@ public class ExportConnectionToTOSActionRealTest {
     private static Schema addSchePackage(String schemaName, Catalog catalog1) {
         Schema createSchema = SchemaHelper.createSchema(schemaName);
         CatalogHelper.addSchemas(createSchema, catalog1);
+        return createSchema;
+    }
+
+    /**
+     * DOC zshen Comment method "addSchePackage".
+     * 
+     * @param string
+     * @param catalog1
+     * @return
+     */
+    private static Schema addSchePackage(String schemaName, DatabaseConnection conn) {
+        Schema createSchema = SchemaHelper.createSchema(schemaName);
+        ConnectionHelper.addSchema(createSchema, conn);
         return createSchema;
     }
 
@@ -218,10 +249,15 @@ public class ExportConnectionToTOSActionRealTest {
      * 
      * @throws PersistenceException
      * 
-     * case1: create new connection from catalog node
+     * case1: create new connection from catalog case
      */
     @Test
     public void testRuncase1() throws PersistenceException {
+        // connectionNode
+        DatabaseConnectionItem createOldConnectionItem = createConnectionItem("conn1", null, false, true);
+        initCatalogList(createOldConnectionItem);
+        initSchemaOfCagalogList(createOldConnectionItem);
+        // ~connectionNode
 
         List<Package> packageList = new ArrayList<Package>();
         packageList.add(catalog1);
@@ -239,7 +275,6 @@ public class ExportConnectionToTOSActionRealTest {
         PowerMockito.doReturn(tempConnection).when(createAction)
                 .fillCatalogSchema(Mockito.argThat(new MetadataConnectionMatcher(catalog1)));
         createAction.run();
-        String newConnectionId = createConnectionItem.getProperty().getId();
         List<IRepositoryViewObject> all = factory.getAll(ERepositoryObjectType.METADATA_CONNECTIONS, false);
         Assert.assertTrue(all.size() == 2);
         IRepositoryViewObject lastVersion = all.get(1);
@@ -253,11 +288,15 @@ public class ExportConnectionToTOSActionRealTest {
      * 
      * @throws PersistenceException
      * 
-     * case1: create new connection from schema node
+     * case2: create new connection from schema case
      */
     @Test
     public void testRuncase2() throws PersistenceException {
-
+        // connectionNode
+        DatabaseConnectionItem createOldConnectionItem = createConnectionItem("conn1", null, false, true);
+        initCatalogList(createOldConnectionItem);
+        initSchemaOfCagalogList(createOldConnectionItem);
+        // ~connectionNode
         List<Package> packageList = new ArrayList<Package>();
         packageList.add(schema1);
         createAction = PowerMockito.spy(new ExportConnectionToTOSAction(packageList));
@@ -274,12 +313,95 @@ public class ExportConnectionToTOSActionRealTest {
         PowerMockito.doReturn(tempConnection).when(createAction)
                 .fillCatalogSchema(Mockito.argThat(new MetadataConnectionMatcher(schema1)));
         createAction.run();
-        String newConnectionId = createConnectionItem.getProperty().getId();
         List<IRepositoryViewObject> all = factory.getAll(ERepositoryObjectType.METADATA_CONNECTIONS, false);
         Assert.assertTrue(all.size() == 2);
         IRepositoryViewObject lastVersion = all.get(1);
         DatabaseConnectionItem item = (DatabaseConnectionItem) lastVersion.getProperty().getItem();
         Connection newConnection = item.getConnection();
+        Assert.assertTrue(CatalogHelper.getCatalog(newConnection, catalog1.getName()) != null);
+    }
+
+    /**
+     * Test method for {@link org.talend.dataprofiler.core.ui.action.actions.ExportConnectionToTOSAction#run()}.
+     * 
+     * @throws PersistenceException
+     * 
+     * case3: create new connection from only schema case
+     */
+    @Test
+    public void testRuncase3() throws PersistenceException {
+        // connectionNode
+        DatabaseConnectionItem createOldConnectionItem = createConnectionItem("conn1", null, false, true);
+        DatabaseConnection oldConnection = ((DatabaseConnection) createOldConnectionItem.getConnection());
+        oldConnection.setSID("orcl"); //$NON-NLS-1$
+        initSchemaList(createOldConnectionItem);
+
+        // ~connectionNode
+        List<Package> packageList = new ArrayList<Package>();
+        packageList.add(schema1);
+        createAction = PowerMockito.spy(new ExportConnectionToTOSAction(packageList));
+        PowerMockito.doNothing().when(createAction).openSuccessInformation();
+        PowerMockito.doNothing().when(createAction).refreshViewerAndNode();
+        // Connection oldConnection = ConnectionHelper.getConnection(schema1);
+        DatabaseConnectionItem createConnectionItem = createConnectionItem(oldConnection.getName() + "_" + schema1.getName(),
+                null, false, false);
+        DatabaseConnection tempConnection = (DatabaseConnection) createConnectionItem.getConnection();
+        tempConnection.setUiSchema(schema1.getName());
+        tempConnection.setSID("orcl"); //$NON-NLS-1$
+        ConnectionHelper.addSchema(EcoreUtil.copy(schema1), tempConnection);
+
+        PowerMockito.doReturn(tempConnection).when(createAction)
+                .fillCatalogSchema(Mockito.argThat(new MetadataConnectionMatcher(schema1)));
+        createAction.run();
+        List<IRepositoryViewObject> all = factory.getAll(ERepositoryObjectType.METADATA_CONNECTIONS, false);
+        Assert.assertTrue(all.size() == 2);
+        IRepositoryViewObject lastVersion = all.get(1);
+        DatabaseConnectionItem item = (DatabaseConnectionItem) lastVersion.getProperty().getItem();
+        DatabaseConnection newConnection = (DatabaseConnection) item.getConnection();
+        Assert.assertTrue(newConnection.getSID().equalsIgnoreCase(oldConnection.getSID()));
+        Assert.assertTrue(newConnection.getUiSchema().equalsIgnoreCase(schema1.getName()));
+        Assert.assertTrue(SchemaHelper.getSchema(newConnection, schema1.getName()) != null);
+    }
+
+    /**
+     * Test method for {@link org.talend.dataprofiler.core.ui.action.actions.ExportConnectionToTOSAction#run()}.
+     * 
+     * @throws PersistenceException
+     * 
+     * case4: create new connection from only Catalog case
+     */
+    @Test
+    public void testRuncase4() throws PersistenceException {
+        // connectionNode
+        DatabaseConnectionItem createOldConnectionItem = createConnectionItem("conn1", null, false, true);
+        DatabaseConnection oldConnection = ((DatabaseConnection) createOldConnectionItem.getConnection());
+        oldConnection.setSID("orcl"); //$NON-NLS-1$
+        initCatalogList(createOldConnectionItem);
+
+        // ~connectionNode
+        List<Package> packageList = new ArrayList<Package>();
+        packageList.add(catalog1);
+        createAction = PowerMockito.spy(new ExportConnectionToTOSAction(packageList));
+        PowerMockito.doNothing().when(createAction).openSuccessInformation();
+        PowerMockito.doNothing().when(createAction).refreshViewerAndNode();
+        // Connection oldConnection = ConnectionHelper.getConnection(schema1);
+        DatabaseConnectionItem createConnectionItem = createConnectionItem(oldConnection.getName() + "_" + catalog1.getName(),
+                null, false, false);
+        DatabaseConnection tempConnection = (DatabaseConnection) createConnectionItem.getConnection();
+        // tempConnection.setUiSchema(schema1.getName());
+        tempConnection.setSID("orcl"); //$NON-NLS-1$
+        ConnectionHelper.addCatalog(EcoreUtil.copy(catalog1), tempConnection);
+
+        PowerMockito.doReturn(tempConnection).when(createAction)
+                .fillCatalogSchema(Mockito.argThat(new MetadataConnectionMatcher(catalog1)));
+        createAction.run();
+        List<IRepositoryViewObject> all = factory.getAll(ERepositoryObjectType.METADATA_CONNECTIONS, false);
+        Assert.assertTrue(all.size() == 2);
+        IRepositoryViewObject lastVersion = all.get(1);
+        DatabaseConnectionItem item = (DatabaseConnectionItem) lastVersion.getProperty().getItem();
+        DatabaseConnection newConnection = (DatabaseConnection) item.getConnection();
+        Assert.assertTrue(newConnection.getSID().equalsIgnoreCase(oldConnection.getSID()));
+        Assert.assertTrue(newConnection.getUiSchema() == null);
         Assert.assertTrue(CatalogHelper.getCatalog(newConnection, catalog1.getName()) != null);
     }
 
@@ -301,15 +423,17 @@ public class ExportConnectionToTOSActionRealTest {
             if (comparePackage == null || !(item instanceof IMetadataConnection)) {
                 return false;
             }
-            Connection connection = ConnectionHelper.getConnection(comparePackage);
+            DatabaseConnection connection = (DatabaseConnection) ConnectionHelper.getConnection(comparePackage);
 
-            String compareLabel = connection.getName() + "_" + comparePackage.getName();
-            String compareUiSchema = "";
+            String compareLabel = connection.getName() + "_" + comparePackage.getName(); //$NON-NLS-1$
+            String compareUiSchema = ""; //$NON-NLS-1$
             String compareDatabase = comparePackage.getName();
             if (comparePackage instanceof Schema) {
                 Package parent = ColumnSetHelper.getParentCatalogOrSchema(comparePackage);
                 if (parent != null) {
                     compareDatabase = parent.getName();
+                } else {
+                    compareDatabase = connection.getSID();
                 }
                 compareUiSchema = comparePackage.getName();
             }

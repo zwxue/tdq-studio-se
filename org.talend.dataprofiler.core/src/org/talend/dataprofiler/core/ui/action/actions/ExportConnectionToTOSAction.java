@@ -161,7 +161,7 @@ public class ExportConnectionToTOSAction extends Action {
         if (tdDataProvider != null) {
             IMetadataConnection newMetadataConnection = ConvertionHelper.convert(tdDataProvider);
             String connName = tdDataProvider.getName();
-            newMetadataConnection.setLabel(connName + "_" + pack.getName());
+            newMetadataConnection.setLabel(connName + "_" + pack.getName()); //$NON-NLS-1$
             // if there have catalog on the structor of database we must set it by pack or parent of pack so that we can
             // only display the one on the DQRepositoryView
 
