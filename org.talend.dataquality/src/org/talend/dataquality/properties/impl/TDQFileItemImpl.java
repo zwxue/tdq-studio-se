@@ -1,7 +1,6 @@
 /**
- * <copyright>
- * </copyright>
- *
+ * <copyright> </copyright>
+ * 
  * $Id$
  */
 package org.talend.dataquality.properties.impl;
@@ -28,25 +27,24 @@ import org.talend.dataquality.properties.PropertiesPackage;
 import org.talend.dataquality.properties.TDQFileItem;
 
 /**
- * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>TDQ File Item</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model object '<em><b>TDQ File Item</b></em>'. <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link org.talend.dataquality.properties.impl.TDQFileItemImpl#getName <em>Name</em>}</li>
- *   <li>{@link org.talend.dataquality.properties.impl.TDQFileItemImpl#getExtension <em>Extension</em>}</li>
- *   <li>{@link org.talend.dataquality.properties.impl.TDQFileItemImpl#getContent <em>Content</em>}</li>
+ * <li>{@link org.talend.dataquality.properties.impl.TDQFileItemImpl#getName <em>Name</em>}</li>
+ * <li>{@link org.talend.dataquality.properties.impl.TDQFileItemImpl#getExtension <em>Extension</em>}</li>
+ * <li>{@link org.talend.dataquality.properties.impl.TDQFileItemImpl#getContent <em>Content</em>}</li>
  * </ul>
  * </p>
- *
+ * 
  * @generated
  */
 public class TDQFileItemImpl extends TDQItemImpl implements TDQFileItem {
+
     /**
-     * The default value of the '{@link #getName() <em>Name</em>}' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The default value of the '{@link #getName() <em>Name</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc
+     * -->
+     * 
      * @see #getName()
      * @generated
      * @ordered
@@ -54,9 +52,9 @@ public class TDQFileItemImpl extends TDQItemImpl implements TDQFileItem {
     protected static final String NAME_EDEFAULT = null;
 
     /**
-     * The cached value of the '{@link #getName() <em>Name</em>}' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The cached value of the '{@link #getName() <em>Name</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc
+     * -->
+     * 
      * @see #getName()
      * @generated
      * @ordered
@@ -64,9 +62,9 @@ public class TDQFileItemImpl extends TDQItemImpl implements TDQFileItem {
     protected String name = NAME_EDEFAULT;
 
     /**
-     * The default value of the '{@link #getExtension() <em>Extension</em>}' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The default value of the '{@link #getExtension() <em>Extension</em>}' attribute. <!-- begin-user-doc --> <!--
+     * end-user-doc -->
+     * 
      * @see #getExtension()
      * @generated
      * @ordered
@@ -74,9 +72,9 @@ public class TDQFileItemImpl extends TDQItemImpl implements TDQFileItem {
     protected static final String EXTENSION_EDEFAULT = null;
 
     /**
-     * The cached value of the '{@link #getExtension() <em>Extension</em>}' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The cached value of the '{@link #getExtension() <em>Extension</em>}' attribute. <!-- begin-user-doc --> <!--
+     * end-user-doc -->
+     * 
      * @see #getExtension()
      * @generated
      * @ordered
@@ -84,9 +82,9 @@ public class TDQFileItemImpl extends TDQItemImpl implements TDQFileItem {
     protected String extension = EXTENSION_EDEFAULT;
 
     /**
-     * The cached value of the '{@link #getContent() <em>Content</em>}' reference.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * The cached value of the '{@link #getContent() <em>Content</em>}' reference. <!-- begin-user-doc --> <!--
+     * end-user-doc -->
+     * 
      * @see #getContent()
      * @generated
      * @ordered
@@ -94,8 +92,8 @@ public class TDQFileItemImpl extends TDQItemImpl implements TDQFileItem {
     protected ByteArray content;
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     protected TDQFileItemImpl() {
@@ -103,8 +101,8 @@ public class TDQFileItemImpl extends TDQItemImpl implements TDQFileItem {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
@@ -113,8 +111,8 @@ public class TDQFileItemImpl extends TDQItemImpl implements TDQFileItem {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public String getName() {
@@ -134,8 +132,8 @@ public class TDQFileItemImpl extends TDQItemImpl implements TDQFileItem {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public String getExtension() {
@@ -143,24 +141,26 @@ public class TDQFileItemImpl extends TDQItemImpl implements TDQFileItem {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public void setExtension(String newExtension) {
         String oldExtension = extension;
         extension = newExtension;
         if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, PropertiesPackage.TDQ_FILE_ITEM__EXTENSION, oldExtension, extension));
+            eNotify(new ENotificationImpl(this, Notification.SET, PropertiesPackage.TDQ_FILE_ITEM__EXTENSION, oldExtension,
+                    extension));
     }
 
     private ByteArray getContentOld() {
         if (content != null && content.eIsProxy()) {
-            InternalEObject oldContent = (InternalEObject)content;
-            content = (ByteArray)eResolveProxy(oldContent);
+            InternalEObject oldContent = (InternalEObject) content;
+            content = (ByteArray) eResolveProxy(oldContent);
             if (content != oldContent) {
                 if (eNotificationRequired())
-                    eNotify(new ENotificationImpl(this, Notification.RESOLVE, PropertiesPackage.TDQ_FILE_ITEM__CONTENT, oldContent, content));
+                    eNotify(new ENotificationImpl(this, Notification.RESOLVE, PropertiesPackage.TDQ_FILE_ITEM__CONTENT,
+                            oldContent, content));
             }
         }
         return content;
@@ -200,35 +200,26 @@ public class TDQFileItemImpl extends TDQItemImpl implements TDQFileItem {
         URIConverter theURIConverter = resourceSet.getURIConverter();
         URI normalizedURI = theURIConverter.normalize(resourceUri);
 
-        if ("platform".equals(proxyUri.scheme()) && proxyUri.segmentCount() > 1 && "resource".equals(proxyUri.segment(0))) { //$NON-NLS-1$ //$NON-NLS-2$
-            for (Object element : resourceSet.getResources()) {
-                Resource resource = (Resource) element;
-                if (theURIConverter.normalize(resource.getURI()).equals(normalizedURI)) {
-                    // MOD TDQ-7211 yyin 20130508: remove the current bytearray resource to avoid load the old one and
-                    // lost the changes of the file
-                    resourceSet.getResources().remove(resource);
-                    break;
-                }
+        for (Object element : resourceSet.getResources()) {
+            Resource resource = (Resource) element;
+            if (theURIConverter.normalize(resource.getURI()).equals(normalizedURI)) {
+                // MOD TDQ-7211 yyin 20130508: remove the current bytearray resource to avoid load the old one and
+                // lost the changes of the file
+                resourceSet.getResources().remove(resource);
+                break;
             }
+        }
 
-            // MOD TDQ-7211 yyin 20130508: create the bytearray resource from the file to make sure using the new
-            // changes of the file.
-            byteArrayResource = new ByteArrayResource(resourceUri);
-            resourceSet.getResources().add(byteArrayResource);
+        // MOD TDQ-7211 yyin 20130508: create the bytearray resource from the file to make sure using the new
+        // changes of the file.
+        byteArrayResource = new ByteArrayResource(resourceUri);
+        resourceSet.getResources().add(byteArrayResource);
 
-            try {
-                byteArrayResource.load(null);
+        try {
+            byteArrayResource.load(null);
 
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        } else {
-            for (Object element : resourceSet.getResources()) {
-                Resource resource = (Resource) element;
-                if (theURIConverter.normalize(resource.getURI()).equals(normalizedURI)) {
-                    byteArrayResource = (ByteArrayResource) resource;
-                }
-            }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
 
         if (byteArrayResource != null && byteArrayResource.isLoaded()) {
@@ -255,8 +246,8 @@ public class TDQFileItemImpl extends TDQItemImpl implements TDQFileItem {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public ByteArray basicGetContent() {
@@ -264,8 +255,8 @@ public class TDQFileItemImpl extends TDQItemImpl implements TDQFileItem {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public void setContent(ByteArray newContent) {
@@ -276,92 +267,94 @@ public class TDQFileItemImpl extends TDQItemImpl implements TDQFileItem {
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
     public Object eGet(int featureID, boolean resolve, boolean coreType) {
         switch (featureID) {
-            case PropertiesPackage.TDQ_FILE_ITEM__NAME:
-                return getName();
-            case PropertiesPackage.TDQ_FILE_ITEM__EXTENSION:
-                return getExtension();
-            case PropertiesPackage.TDQ_FILE_ITEM__CONTENT:
-                if (resolve) return getContent();
-                return basicGetContent();
+        case PropertiesPackage.TDQ_FILE_ITEM__NAME:
+            return getName();
+        case PropertiesPackage.TDQ_FILE_ITEM__EXTENSION:
+            return getExtension();
+        case PropertiesPackage.TDQ_FILE_ITEM__CONTENT:
+            if (resolve)
+                return getContent();
+            return basicGetContent();
         }
         return super.eGet(featureID, resolve, coreType);
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
     public void eSet(int featureID, Object newValue) {
         switch (featureID) {
-            case PropertiesPackage.TDQ_FILE_ITEM__NAME:
-                setName((String)newValue);
-                return;
-            case PropertiesPackage.TDQ_FILE_ITEM__EXTENSION:
-                setExtension((String)newValue);
-                return;
-            case PropertiesPackage.TDQ_FILE_ITEM__CONTENT:
-                setContent((ByteArray)newValue);
-                return;
+        case PropertiesPackage.TDQ_FILE_ITEM__NAME:
+            setName((String) newValue);
+            return;
+        case PropertiesPackage.TDQ_FILE_ITEM__EXTENSION:
+            setExtension((String) newValue);
+            return;
+        case PropertiesPackage.TDQ_FILE_ITEM__CONTENT:
+            setContent((ByteArray) newValue);
+            return;
         }
         super.eSet(featureID, newValue);
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
     public void eUnset(int featureID) {
         switch (featureID) {
-            case PropertiesPackage.TDQ_FILE_ITEM__NAME:
-                setName(NAME_EDEFAULT);
-                return;
-            case PropertiesPackage.TDQ_FILE_ITEM__EXTENSION:
-                setExtension(EXTENSION_EDEFAULT);
-                return;
-            case PropertiesPackage.TDQ_FILE_ITEM__CONTENT:
-                setContent((ByteArray)null);
-                return;
+        case PropertiesPackage.TDQ_FILE_ITEM__NAME:
+            setName(NAME_EDEFAULT);
+            return;
+        case PropertiesPackage.TDQ_FILE_ITEM__EXTENSION:
+            setExtension(EXTENSION_EDEFAULT);
+            return;
+        case PropertiesPackage.TDQ_FILE_ITEM__CONTENT:
+            setContent((ByteArray) null);
+            return;
         }
         super.eUnset(featureID);
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
     public boolean eIsSet(int featureID) {
         switch (featureID) {
-            case PropertiesPackage.TDQ_FILE_ITEM__NAME:
-                return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
-            case PropertiesPackage.TDQ_FILE_ITEM__EXTENSION:
-                return EXTENSION_EDEFAULT == null ? extension != null : !EXTENSION_EDEFAULT.equals(extension);
-            case PropertiesPackage.TDQ_FILE_ITEM__CONTENT:
-                return content != null;
+        case PropertiesPackage.TDQ_FILE_ITEM__NAME:
+            return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
+        case PropertiesPackage.TDQ_FILE_ITEM__EXTENSION:
+            return EXTENSION_EDEFAULT == null ? extension != null : !EXTENSION_EDEFAULT.equals(extension);
+        case PropertiesPackage.TDQ_FILE_ITEM__CONTENT:
+            return content != null;
         }
         return super.eIsSet(featureID);
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
     public String toString() {
-        if (eIsProxy()) return super.toString();
+        if (eIsProxy())
+            return super.toString();
 
         StringBuffer result = new StringBuffer(super.toString());
         result.append(" (name: ");
@@ -372,4 +365,4 @@ public class TDQFileItemImpl extends TDQItemImpl implements TDQFileItem {
         return result.toString();
     }
 
-} //TDQFileItemImpl
+} // TDQFileItemImpl
