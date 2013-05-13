@@ -135,20 +135,7 @@ public class TOPRepositoryService implements ITDQRepositoryService {
     }
 
     public void refreshConnectionEditor(Item item) {
-
-        Class<?> clazz = null;
-        IEditorInput editorInput = null;
-        if (item instanceof ConnectionItem) {
-            clazz = ConnectionEditor.class;
-            editorInput = new ConnectionItemEditorInput(item);
-        }
-
-        if (editorInput != null && clazz != null) {
-            // just reopen some opened editors both on DQ and DI perspective.
-            if (CorePlugin.getDefault().itemIsOpening(item, true)) {
-                CorePlugin.getDefault().openEditor(editorInput, clazz.getName());
-            }
-        }
+        CorePlugin.getDefault().refreshOpenedEditor(item);
     }
 
     /**

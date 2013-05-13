@@ -89,4 +89,10 @@ public class ConnectionEditor extends CommonFormEditor {
     public List<String> getPreferredPerspectiveId() {
         return null;
     }
+
+    @Override
+    public void refreshEditor() {
+        masterPage.refreshTextInfo();
+        super.refreshEditor();
+    }
 }
