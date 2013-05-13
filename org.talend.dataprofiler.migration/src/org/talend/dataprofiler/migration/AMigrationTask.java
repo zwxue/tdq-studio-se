@@ -34,6 +34,7 @@ public abstract class AMigrationTask implements IMigrationTask {
      * 
      * @see org.talend.dataprofiler.core.migration.IMigrationTask#getId()
      */
+    @Override
     public String getId() {
         return id;
     }
@@ -43,6 +44,7 @@ public abstract class AMigrationTask implements IMigrationTask {
      * 
      * @see org.talend.dataprofiler.core.migration.IMigrationTask#getName()
      */
+    @Override
     public String getName() {
         return name;
     }
@@ -52,6 +54,7 @@ public abstract class AMigrationTask implements IMigrationTask {
      * 
      * @see org.talend.dataprofiler.core.migration.IMigrationTask#setId(java.lang.String)
      */
+    @Override
     public void setId(String id) {
         this.id = id;
     }
@@ -61,6 +64,7 @@ public abstract class AMigrationTask implements IMigrationTask {
      * 
      * @see org.talend.dataprofiler.core.migration.IMigrationTask#setName(java.lang.String)
      */
+    @Override
     public void setName(String name) {
         this.name = name;
     }
@@ -70,6 +74,7 @@ public abstract class AMigrationTask implements IMigrationTask {
      * 
      * @see org.talend.dataprofiler.core.migration.IMigrationTask#execute()
      */
+    @Override
     public final boolean execute() {
         try {
             return doExecute() && persist();
@@ -106,6 +111,7 @@ public abstract class AMigrationTask implements IMigrationTask {
      */
     protected abstract boolean doExecute() throws Exception;
 
+    @Override
     public Boolean isModelTask() {
         return "org.talend.dataprofiler.core.migration.impl.MergeMetadataTask".equals(getId())//$NON-NLS-1$
                 || "org.talend.dataprofiler.core.migration.impl.ExchangeFileNameToReferenceTask".equals(getId())//$NON-NLS-1$
@@ -115,6 +121,7 @@ public abstract class AMigrationTask implements IMigrationTask {
                 || "org.talend.dataprofiler.core.migration.impl.UpdateFileAfterMergeConnectionTask".equals(getId())//$NON-NLS-1$
                 || "update the value of path on the property files".equals(getId())//$NON-NLS-1$
                 || "org.talend.dataprofiler.core.changeBinFrequanceUUID".equals(getId()) //$NON-NLS-1$
-                || "org.talend.dataprofiler.core.tdq.migration.UpdateReportUserDefinedJrxmlFilePathTask".equals(getId()); //$NON-NLS-1$
+                || "org.talend.dataprofiler.core.tdq.migration.UpdateReportUserDefinedJrxmlFilePathTask".equals(getId()) //$NON-NLS-1$
+                || "org.talend.dataprofiler.core.migration.impl.UpdateAggrDefinitionTask".equals(getId()); //$NON-NLS-1$
     }
 }
