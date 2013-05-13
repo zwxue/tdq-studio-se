@@ -37,6 +37,7 @@ import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.texteditor.IDocumentProvider;
 import org.eclipse.ui.texteditor.IDocumentProviderExtension2;
 import org.eclipse.ui.texteditor.IElementStateListener;
+import org.talend.core.model.metadata.builder.database.DqRepositoryViewService;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.repository.model.RepositoryNode;
@@ -122,6 +123,7 @@ public abstract class CommonFormEditor extends FormEditor implements IPrefersPer
         return super.createPageContainer(mainParent);
     }
 
+    @Override
     protected void setInput(IEditorInput input) {
         super.setInput(input);
         translateInput(input);
@@ -182,6 +184,7 @@ public abstract class CommonFormEditor extends FormEditor implements IPrefersPer
         super.dispose();
     }
 
+    @Override
     public void close(final boolean save) {
         Display display = getSite().getShell().getDisplay();
         display.asyncExec(new Runnable() {
@@ -192,10 +195,12 @@ public abstract class CommonFormEditor extends FormEditor implements IPrefersPer
         });
     }
 
+    @Override
     public void doSaveAs() {
         doSave(null);
     }
 
+    @Override
     public void doSave(IProgressMonitor monitor) {
         this.isDirty = false;
         firePropertyChange(IEditorPart.PROP_DIRTY);
@@ -217,6 +222,7 @@ public abstract class CommonFormEditor extends FormEditor implements IPrefersPer
         CorePlugin.getDefault().refreshWorkSpace();
     }
 
+    @Override
     public boolean isSaveAsAllowed() {
         return false;
     }
@@ -314,5 +320,18 @@ public abstract class CommonFormEditor extends FormEditor implements IPrefersPer
         result.add(PluginConstant.PERSPECTIVE_ID);
         result.add(PluginConstant.SQLEXPLORER_PERSPECTIVE_ID);
         return result;
+    }
+
+    /**
+     * 
+     * refresh the opend editor.
+     */
+    public void refreshEditor() {
+        // just refresh the partName for the opend editor at here.the content refresh should be in subclass.
+        if (getActivePageInstance() instanceof AbstractFormPage) {
+            AbstractFormPage page = (AbstractFormPage) getActivePageInstance();
+            setPartName(DqRepositoryViewService.buildElementName(page.getProperty()));
+            firePropertyChange(org.eclipse.ui.IWorkbenchPart.PROP_TITLE);
+        }
     }
 }

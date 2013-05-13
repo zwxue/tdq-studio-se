@@ -83,6 +83,7 @@ import org.talend.core.runtime.CoreRuntimePlugin;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.editor.AbstractItemEditorInput;
+import org.talend.dataprofiler.core.ui.editor.CommonFormEditor;
 import org.talend.dataprofiler.core.ui.editor.analysis.AnalysisEditor;
 import org.talend.dataprofiler.core.ui.utils.WorkbenchUtils;
 import org.talend.dataprofiler.core.ui.views.DQRespositoryView;
@@ -474,6 +475,39 @@ public class CorePlugin extends AbstractUIPlugin {
             }
         }
         return opening;
+    }
+
+    /**
+     * 
+     * refresh the related connection which is opened in DQ side.
+     * 
+     * @param item
+     */
+    public void refreshOpenedEditor(Item item) {
+
+        if (item == null) {
+            return;
+        }
+        IWorkbenchPage activePage = CorePlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getActivePage();
+        IEditorReference[] editorReferences = activePage.getEditorReferences();
+        Property property = item.getProperty();
+        try {
+            for (IEditorReference reference : editorReferences) {
+                IEditorInput input = reference.getEditorInput();
+                if (input instanceof AbstractItemEditorInput) {
+                    AbstractItemEditorInput itemInput = (AbstractItemEditorInput) input;
+                    Item it = itemInput.getItem();
+                    if (it != null && property != null && it.getProperty().getId().equals(property.getId())) {
+                        CommonFormEditor editor = (CommonFormEditor) reference.getEditor(false);
+                        editor.refreshEditor();
+                        break;
+                    }
+                }
+
+            }
+        } catch (PartInitException e) {
+            e.printStackTrace();
+        }
     }
 
     public List<AnalysisEditor> getCurrentOpenAnalysisEditor() {

@@ -210,15 +210,6 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
         passwordText = new Text(sectionClient, SWT.BORDER | SWT.PASSWORD);
         GridDataFactory.fillDefaults().grab(true, true).applyTo(passwordText);
 
-        String loginValue = JavaSqlFactory.getUsername(connection);
-        loginText.setText(loginValue == null ? PluginConstant.EMPTY_STRING : loginValue);
-        loginText.setEditable(!connection.isContextMode());
-
-        // MOD scorreia 2009-01-09 handle encrypted password
-        String passwordValue = JavaSqlFactory.getPassword(connection);
-        passwordText.setText(passwordValue == null ? PluginConstant.EMPTY_STRING : passwordValue);
-        passwordText.setEditable(!connection.isContextMode());
-
         Label urlLabel = new Label(sectionClient, SWT.NONE);
         urlLabel.setText(DefaultMessagesImpl.getString("ConnectionInfoPage.Url")); //$NON-NLS-1$
 
@@ -230,8 +221,7 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
         GridDataFactory.fillDefaults().grab(true, true).applyTo(urlComp);
         urlText = new Text(urlComp, SWT.BORDER | SWT.READ_ONLY);
         GridDataFactory.fillDefaults().hint(100, -1).grab(true, true).applyTo(urlText);
-        String urlValue = JavaSqlFactory.getURL(connection);
-        urlText.setText(urlValue == null ? PluginConstant.EMPTY_STRING : urlValue);
+
         // urlText.setEnabled(false);
 
         Button editButton = new Button(urlComp, SWT.PUSH);
@@ -245,12 +235,7 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
             }
         });
 
-        String driverClass = JavaSqlFactory.getDriverClass(connection);
-        if (driverClass != null && driverClass.startsWith("org.sqlite")) { //$NON-NLS-1$
-            loginText.setEnabled(false);
-            passwordText.setEnabled(false);
-        }
-
+        initConnInfoTextField();
         // MOD klliu 2010-07-06 bug 14095
         loginText.addModifyListener(new ModifyListener() {
 
@@ -518,6 +503,31 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
                     DefaultMessagesImpl.getString("AbstractMetadataFormPage.saveFailed"), rc.getMessage()); //$NON-NLS-1$
         }
         return rc;
+    }
+
+    public void refreshTextInfo() {
+        initMetaTextFied();
+        initConnInfoTextField();
+        setDirty(false);
+
+    }
+
+    private void initConnInfoTextField() {
+        String loginValue = JavaSqlFactory.getUsername(connection);
+        loginText.setText(loginValue == null ? PluginConstant.EMPTY_STRING : loginValue);
+        loginText.setEditable(!connection.isContextMode());
+        // MOD scorreia 2009-01-09 handle encrypted password
+        String passwordValue = JavaSqlFactory.getPassword(connection);
+        passwordText.setText(passwordValue == null ? PluginConstant.EMPTY_STRING : passwordValue);
+        passwordText.setEditable(!connection.isContextMode());
+
+        String urlValue = JavaSqlFactory.getURL(connection);
+        urlText.setText(urlValue == null ? PluginConstant.EMPTY_STRING : urlValue);
+        String driverClass = JavaSqlFactory.getDriverClass(connection);
+        if (driverClass != null && driverClass.startsWith("org.sqlite")) { //$NON-NLS-1$
+            loginText.setEnabled(false);
+            passwordText.setEnabled(false);
+        }
     }
 
 }
