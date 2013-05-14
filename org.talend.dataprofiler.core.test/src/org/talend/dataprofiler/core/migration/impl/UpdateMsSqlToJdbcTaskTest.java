@@ -13,62 +13,106 @@
 package org.talend.dataprofiler.core.migration.impl;
 
 import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
-import static org.powermock.api.support.membermodification.MemberMatcher.*;
-import static org.powermock.api.support.membermodification.MemberModifier.*;
+import junit.framework.Assert;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.jfree.util.Log;
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
+import org.talend.commons.exception.PersistenceException;
+import org.talend.core.context.Context;
+import org.talend.core.context.RepositoryContext;
+import org.talend.core.model.general.Project;
 import org.talend.core.model.metadata.builder.connection.ConnectionFactory;
 import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
-import org.talend.core.model.properties.ConnectionItem;
-import org.talend.core.model.properties.Property;
-import org.talend.core.model.repository.ERepositoryObjectType;
-import org.talend.core.model.repository.IRepositoryViewObject;
+import org.talend.core.model.properties.DatabaseConnectionItem;
+import org.talend.core.model.properties.PropertiesFactory;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
-import org.talend.resource.ResourceManager;
-
-
+import org.talend.core.runtime.CoreRuntimePlugin;
+import org.talend.dataprofiler.core.helper.UnitTestBuildHelper;
+import org.talend.repository.localprovider.model.LocalRepositoryFactory;
 
 /**
  * DOC qiongli Test case for split system indicators.
  */
-@RunWith(PowerMockRunner.class)
-@PrepareForTest({ ProxyRepositoryFactory.class, ResourceManager.class })
 public class UpdateMsSqlToJdbcTaskTest {
+
+    private static Project originalProject;
+
+    private static LocalRepositoryFactory repositoryFactory;
+
+    ProxyRepositoryFactory factory = ProxyRepositoryFactory.getInstance();
+
+    @BeforeClass
+    public static void beforeAllTests() {
+        Context ctx = CoreRuntimePlugin.getInstance().getContext();
+        RepositoryContext repositoryContext = (RepositoryContext) ctx.getProperty(Context.REPOSITORY_CONTEXT_KEY);
+        if (repositoryContext != null) {
+            originalProject = repositoryContext.getProject();
+        }
+        repositoryFactory = new LocalRepositoryFactory();
+    }
+
+    @Before
+    public void setUp() throws Exception {
+        UnitTestBuildHelper.deleteCurrentProject("testForDeleteActionTDQ"); //$NON-NLS-1$
+        UnitTestBuildHelper.createRealProject("testForDeleteActionTDQ"); //$NON-NLS-1$
+    }
+
+    @AfterClass
+    public static void afterAllTests() {
+        repositoryFactory = null;
+        if (originalProject != null) {
+            Context ctx = CoreRuntimePlugin.getInstance().getContext();
+            RepositoryContext repositoryContext = (RepositoryContext) ctx.getProperty(Context.REPOSITORY_CONTEXT_KEY);
+            repositoryContext.setProject(originalProject);
+        }
+    }
 
     @Test
     public void testDoExecute() throws Exception {
-        ProxyRepositoryFactory proxFactory = mock(ProxyRepositoryFactory.class);
-        stub(method(ProxyRepositoryFactory.class, "getInstance")).toReturn(proxFactory);
-        IRepositoryViewObject repObject = mock(IRepositoryViewObject.class);
-        List<IRepositoryViewObject> ls = new ArrayList<IRepositoryViewObject>();
-        ls.add(repObject);
-        when(proxFactory.getAll(ERepositoryObjectType.METADATA_CONNECTIONS)).thenReturn(ls);
-        Property prop = mock(Property.class);
-        ConnectionItem item = mock(ConnectionItem.class);
-        when(repObject.getProperty()).thenReturn(prop);
-        when(prop.getItem()).thenReturn(item);
-        DatabaseConnection dbConn = ConnectionFactory.eINSTANCE.createDatabaseConnection();
-        dbConn.setDatabaseType("Microsoft SQL Server 2005/2008");
-        when(item.getConnection()).thenReturn(dbConn);
-
-        // mock something for super-class AbstractWorksapceUpdateTask
-        IProject proj = mock(IProject.class);
-        when(proj.getLocation()).thenReturn(new Path(""));
-        stub(method(ResourceManager.class, "getRootProject")).toReturn(proj);
+        DatabaseConnection dbConn = createConnectionItem("conn1", null); //$NON-NLS-1$
         UpdateMsSqlToJdbcTask updateMsSqlToJdbcTask = new UpdateMsSqlToJdbcTask();
         updateMsSqlToJdbcTask.doExecute();
-        assertTrue("General JDBC".equals(dbConn.getDatabaseType()));
+        assertTrue("General JDBC".equals(dbConn.getDatabaseType())); //$NON-NLS-1$
         assertTrue(dbConn.getDriverJarPath() == null);
-        assertTrue("".equals(dbConn.getDriverClass()));
+        assertTrue("".equals(dbConn.getDriverClass())); //$NON-NLS-1$
+    }
+
+    private DatabaseConnection createConnectionItem(String name, IFolder folder) {
+        IPath createPath = Path.EMPTY;
+        if (folder != null) {
+            createPath = new Path(folder.getFullPath().lastSegment());
+        }
+        // connection
+        DatabaseConnection createConnection = ConnectionFactory.eINSTANCE.createDatabaseConnection();
+        createConnection.setName(name);
+        createConnection.setUsername("UserName"); //$NON-NLS-1$
+        createConnection.setPassword("Password"); //$NON-NLS-1$
+        createConnection.setURL("URL"); //$NON-NLS-1$
+        createConnection.setDatabaseType("Microsoft SQL Server 2005/2008"); //$NON-NLS-1$
+        createConnection.setContextMode(true);
+        // ~connection
+        DatabaseConnectionItem createDatabaseConnectionItem = PropertiesFactory.eINSTANCE.createDatabaseConnectionItem();
+
+        org.talend.core.model.properties.Property createDatabaseConnectionProperty = PropertiesFactory.eINSTANCE.createProperty();
+        createDatabaseConnectionProperty.setId(EcoreUtil.generateUUID());
+        createDatabaseConnectionProperty.setItem(createDatabaseConnectionItem);
+        createDatabaseConnectionProperty.setLabel(createConnection.getName());
+        createDatabaseConnectionItem.setProperty(createDatabaseConnectionProperty);
+        createDatabaseConnectionItem.setConnection(createConnection);
+        try {
+            factory.create(createDatabaseConnectionItem, createPath, false);
+        } catch (PersistenceException e) {
+            Log.error(e, e);
+            Assert.fail(e.getMessage());
+        }
+        return createConnection;
     }
 
 }
