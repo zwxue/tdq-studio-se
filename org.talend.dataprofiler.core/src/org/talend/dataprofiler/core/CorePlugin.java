@@ -471,7 +471,8 @@ public class CorePlugin extends AbstractUIPlugin {
                     }
                 }
             } catch (PartInitException e) {
-                e.printStackTrace();
+                log.error(e);
+                continue;
             }
         }
         return opening;
@@ -491,8 +492,8 @@ public class CorePlugin extends AbstractUIPlugin {
         IWorkbenchPage activePage = CorePlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getActivePage();
         IEditorReference[] editorReferences = activePage.getEditorReferences();
         Property property = item.getProperty();
-        try {
-            for (IEditorReference reference : editorReferences) {
+        for (IEditorReference reference : editorReferences) {
+            try {
                 IEditorInput input = reference.getEditorInput();
                 if (input instanceof AbstractItemEditorInput) {
                     AbstractItemEditorInput itemInput = (AbstractItemEditorInput) input;
@@ -503,10 +504,10 @@ public class CorePlugin extends AbstractUIPlugin {
                         break;
                     }
                 }
-
+            } catch (PartInitException e) {
+                log.error(e);
+                continue;
             }
-        } catch (PartInitException e) {
-            e.printStackTrace();
         }
     }
 
