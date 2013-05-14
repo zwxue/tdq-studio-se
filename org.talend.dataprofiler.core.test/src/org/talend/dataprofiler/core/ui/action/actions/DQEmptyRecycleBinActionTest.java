@@ -140,6 +140,8 @@ public class DQEmptyRecycleBinActionTest {
         ProxyRepositoryFactory factory = mock(ProxyRepositoryFactory.class);
         when(ProxyRepositoryFactory.getInstance()).thenReturn(factory);
         stub(method(DQDeleteHelper.class, "deleteRelations")); //$NON-NLS-1$
+        PowerMockito.mockStatic(DQDeleteHelper.class);
+        when(DQDeleteHelper.getCanNotDeletedNodes(seleLs, false)).thenReturn(new ArrayList<IRepositoryNode>());
 
         RecycleBinRepNode recyBin = mock(RecycleBinRepNode.class);
         PowerMockito.mockStatic(RepositoryNodeHelper.class);
