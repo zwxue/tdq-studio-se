@@ -230,7 +230,7 @@ public class ItemRecord {
                 // MOD sizhaoliu 2013-04-13 TDQ-7082
                 if (modelElement instanceof IndicatorDefinition) {
                     for (IndicatorDefinition definition : ((IndicatorDefinition) modelElement).getAggregatedDefinitions()) {
-                        includeAggregatedDependencies((IndicatorDefinition) definition);
+                        includeAggregatedDependencies(definition);
                     }
                 }
             }
@@ -248,7 +248,9 @@ public class ItemRecord {
                     }
                 }
             } else if (element instanceof IndicatorDefinition) { // MOD sizhaoliu 2013-04-13 TDQ-7082
-                includeAggregatedDependencies((IndicatorDefinition) element);
+                for (IndicatorDefinition definition : ((IndicatorDefinition) element).getAggregatedDefinitions()) {
+                    includeAggregatedDependencies(definition);
+                }
             }
         }
     }
