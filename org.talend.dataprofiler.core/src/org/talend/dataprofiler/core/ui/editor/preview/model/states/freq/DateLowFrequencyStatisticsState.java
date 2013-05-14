@@ -38,7 +38,6 @@ public class DateLowFrequencyStatisticsState extends LowFrequencyStatisticsState
      */
     public DateLowFrequencyStatisticsState(List<IndicatorUnit> units) {
         super(units);
-        // TODO Auto-generated constructor stub
     }
 
     public DateLowFrequencyStatisticsState(List<IndicatorUnit> units, EIndicatorChartType type) {
@@ -67,10 +66,6 @@ public class DateLowFrequencyStatisticsState extends LowFrequencyStatisticsState
                     if (parameters.getTopN() < numOfShown) {
                         numOfShown = parameters.getTopN();
                     }
-                } else {
-                    if (TOP_NUM < numOfShown) {
-                        numOfShown = TOP_NUM;
-                    }
                 }
 
                 for (int i = 0; i < numOfShown; i++) {
@@ -83,7 +78,7 @@ public class DateLowFrequencyStatisticsState extends LowFrequencyStatisticsState
                         keyLabel = SpecialValueDisplay.EMPTY_FIELD;
                     }
 
-                    customerdataset.addValue(freqExt.getValue(), unit.getIndicatorName(), keyLabel); //$NON-NLS-1$
+                    customerdataset.addValue(freqExt.getValue(), unit.getIndicatorName(), keyLabel);
 
                     ChartDataEntity entity = new ChartDataEntity();
                     entity.setIndicator(unit.getIndicator());
