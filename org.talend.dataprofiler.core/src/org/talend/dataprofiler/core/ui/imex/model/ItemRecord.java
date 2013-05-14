@@ -220,7 +220,7 @@ public class ItemRecord {
                         includeJUDIDependencies((IndicatorDefinition) modelElement);
                     } else {
                         for (IndicatorDefinition definition : ((IndicatorDefinition) modelElement).getAggregatedDefinitions()) {
-                            includeAggregatedDependencies((IndicatorDefinition) definition);
+                            includeAggregatedDependencies(definition);
                         }
                     }
                 }
@@ -241,7 +241,9 @@ public class ItemRecord {
                 if (definition instanceof UDIndicatorDefinition) {
                     includeJUDIDependencies(definition);
                 } else {
-                    includeAggregatedDependencies(definition);
+                    for (IndicatorDefinition defInd : definition.getAggregatedDefinitions()) {
+                        includeAggregatedDependencies(defInd);
+                    }
                 }
             }
         }
