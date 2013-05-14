@@ -31,6 +31,7 @@ import org.talend.dataquality.helpers.MetadataHelper;
 import org.talend.dataquality.indicators.CompositeIndicator;
 import org.talend.dataquality.indicators.DataminingType;
 import org.talend.dataquality.indicators.Indicator;
+import org.talend.dataquality.indicators.IndicatorsFactory;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.foundation.softwaredeployment.DataManager;
@@ -73,6 +74,11 @@ public class ModelElementAnalysisHandler extends AnalysisHandler {
         }
 
         for (Indicator indicator : indicators) {
+            // ADD TDQ-7164 msjian 2013-5-14:set default indicator parameters.
+            if (indicator.getParameters() == null) {
+                indicator.setParameters(IndicatorsFactory.eINSTANCE.createIndicatorParameters());
+            }
+            // TDQ-7164~
             // store first level of indicators in result.
             analysis.getResults().getIndicators().add(indicator);
             initializeIndicator(indicator, modelElement);
@@ -206,7 +212,7 @@ public class ModelElementAnalysisHandler extends AnalysisHandler {
     public void setDatamingType(String dataminingTypeLiteral, ModelElement modelElement) {
         DataminingType type = DataminingType.get(dataminingTypeLiteral);
         if (modelElement instanceof MetadataColumn) {
-            MetadataHelper.setDataminingType(type, (ModelElement) modelElement);
+            MetadataHelper.setDataminingType(type, modelElement);
         } else if (modelElement instanceof TdXmlElementType) {
             MetadataHelper.setDataminingType(type, (TdXmlElementType) modelElement);
         } else {

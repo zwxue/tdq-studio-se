@@ -141,7 +141,7 @@ public class PieStatisticsState extends AbstractChartTypeStates {
                     if ("null".equals(keyLabel)) { //$NON-NLS-1$
                         keyLabel = SpecialValueDisplay.NULL_FIELD;
                     }
-                    if (PluginConstant.EMPTY_STRING.equals(keyLabel)) { //$NON-NLS-1$
+                    if (PluginConstant.EMPTY_STRING.equals(keyLabel)) {
                         keyLabel = SpecialValueDisplay.EMPTY_FIELD;
                     }
                     Double percent = freqExt.getFrequency();
@@ -165,10 +165,6 @@ public class PieStatisticsState extends AbstractChartTypeStates {
                     if (parameters.getTopN() < numOfShown) {
                         numOfShown = parameters.getTopN();
                     }
-                } else {
-                    if (TOP_NUM < numOfShown) {
-                        numOfShown = TOP_NUM;
-                    }
                 }
 
                 for (int i = 0; i < numOfShown; i++) {
@@ -177,11 +173,11 @@ public class PieStatisticsState extends AbstractChartTypeStates {
                     if ("null".equals(keyLabel)) { //$NON-NLS-1$
                         keyLabel = SpecialValueDisplay.NULL_FIELD;
                     }
-                    if (PluginConstant.EMPTY_STRING.equals(keyLabel)) { //$NON-NLS-1$
+                    if (PluginConstant.EMPTY_STRING.equals(keyLabel)) {
                         keyLabel = SpecialValueDisplay.EMPTY_FIELD;
                     }
 
-                    customerdataset.addValue(freqExt.getValue(), PluginConstant.EMPTY_STRING, keyLabel); //$NON-NLS-1$
+                    customerdataset.addValue(freqExt.getValue(), PluginConstant.EMPTY_STRING, keyLabel);
                     ChartDataEntity entity = new ChartDataEntity();
                     entity.setIndicator(unit.getIndicator());
                     entity.setKey(freqExt.getKey());
