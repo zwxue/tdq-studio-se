@@ -67,10 +67,6 @@ public abstract class FrequencyTypeStates extends AbstractChartTypeStates {
                     if (parameters.getTopN() < numOfShown) {
                         numOfShown = parameters.getTopN();
                     }
-                } else {
-                    if (TOP_NUM < numOfShown) {
-                        numOfShown = TOP_NUM;
-                    }
                 }
 
                 for (int i = 0; i < numOfShown; i++) {
