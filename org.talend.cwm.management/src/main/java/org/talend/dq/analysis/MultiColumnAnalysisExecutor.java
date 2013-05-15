@@ -168,7 +168,8 @@ public class MultiColumnAnalysisExecutor extends ColumnAnalysisSqlExecutor {
             // MOD qiongli 2011-3-30 feature 19192.allow drill down for sql engine.
             if (ColumnsetPackage.eINSTANCE.getSimpleStatIndicator().isSuperTypeOf(indicator.eClass())) {
                 SimpleStatIndicator simpleIndicator = (SimpleStatIndicator) indicator;
-                String columnsName = createSelect(nominalColumns, new ArrayList<String>());
+                // MOD TDQ-7287 lost some columns(type!=norminal) when view values in column set ana. yyin 20130514
+                String columnsName = createSelect(columns, new ArrayList<String>());
                 for (Indicator leafIndicator : simpleIndicator.getLeafIndicators()) {
                     final Expression leafSqlGenericExpression = dbms().getSqlExpression(leafIndicator.getIndicatorDefinition());
                     String leafSqlExpr = dbms().fillGenericQueryWithColumnTableAndAlias(leafSqlGenericExpression.getBody(),
