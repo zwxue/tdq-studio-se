@@ -14,38 +14,17 @@ package org.talend.dataprofiler.core.ui.action.actions;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
-import org.eclipse.core.resources.IFile;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.swt.widgets.Shell;
-import org.talend.commons.exception.ExceptionHandler;
-import org.talend.commons.exception.PersistenceException;
-import org.talend.commons.ui.runtime.exception.MessageBoxExceptionHandler;
-import org.talend.core.model.properties.Item;
-import org.talend.core.model.properties.Property;
-import org.talend.core.model.repository.ERepositoryObjectType;
-import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.dataprofiler.core.CorePlugin;
-import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
-import org.talend.dataprofiler.core.ui.dialog.message.DeleteModelElementConfirmDialog;
 import org.talend.dataprofiler.core.ui.utils.RepNodeUtils;
 import org.talend.dataprofiler.core.ui.views.DQRespositoryView;
 import org.talend.dataprofiler.core.ui.views.resources.IRepositoryObjectCRUD;
-import org.talend.dq.helper.DQDeleteHelper;
-import org.talend.dq.helper.EObjectHelper;
-import org.talend.dq.helper.ReportUtils;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.nodes.DQRepositoryNode;
-import org.talend.repository.ProjectManager;
-import org.talend.repository.model.IProxyRepositoryFactory;
 import org.talend.repository.model.IRepositoryNode;
-import org.talend.repository.model.IRepositoryNode.ENodeType;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.repository.ui.actions.EmptyRecycleBinAction;
-import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
  * DOC qiongli class global comment. Detailled comment
@@ -81,91 +60,7 @@ public class DQEmptyRecycleBinAction extends EmptyRecycleBinAction {
         if (null == findAllRecycleBinNodes) {
             return;
         }
-        Map<IRepositoryNode, List<ModelElement>> canNotDeletedNodes = DQDeleteHelper.getCanNotDeletedNodesMap(
-                findAllRecycleBinNodes, true);
-        if (!canNotDeletedNodes.isEmpty()) {
-            DeleteModelElementConfirmDialog.showDialog(canNotDeletedNodes,
-                    DefaultMessagesImpl.getString("DQEmptyRecycleBinAction.allDependencies"), false);//$NON-NLS-1$
-            return;
-        }
-
-        // get the link files which link to the Report Generated Doc File
-        List<IFile> linkFiles = ReportUtils.getRepGenDocLinkFiles(findAllRecycleBinNodes);
-        List<IFile> repFiles = ReportUtils.getReportFiles(findAllRecycleBinNodes);
-
-        // MOD qiongli 2011-5-20 bug 21035,avoid to unload resource.
-        super.setAvoidUnloadResources(true);
-        super.run();
-
-        if (!linkFiles.isEmpty()) {
-            ReportUtils.removeRepDocLinkFiles(linkFiles);
-        }
-        if (!repFiles.isEmpty()) {
-            ReportUtils.deleteRepOutputFolders(repFiles);
-        }
-
-        CorePlugin.getDefault().refreshDQView(findAllRecycleBinNodes.get(0).getParent());
-        CorePlugin.getDefault().refreshWorkSpace();
-
-        // MOD gdbu 2011-11-18 TDQ-3969 : after empty recycle bin re-filter the tree , to create a new list .
-        if (DQRepositoryNode.isOnFilterring()) {
-            RepositoryNodeHelper.fillTreeList(null);
-            RepositoryNodeHelper
-                    .setFilteredNode(RepositoryNodeHelper.getRootNode(ERepositoryObjectType.TDQ_DATA_PROFILING, true));
-        }
-    }
-
-    @Override
-    /**
-     * override the method so as to removing dependencies
-     */
-    protected void doRun() {
-        ISelection selection = getSelection();
-        Object obj = ((IStructuredSelection) selection).getFirstElement();
-        final RepositoryNode node = (RepositoryNode) obj;
-
-        final String title = DefaultMessagesImpl.getString("DQEmptyRecycleBinAction.dialog.title"); //$NON-NLS-1$
-        String message = null;
-        DQRepositoryNode.setIsReturnAllNodesWhenFiltering(false);
-        List<IRepositoryNode> children = node.getChildren();
-        DQRepositoryNode.setIsReturnAllNodesWhenFiltering(true);
-        if (children.size() == 0) {
-            return;
-        } else if (children.size() >= 1) {
-            message = DefaultMessagesImpl.getString("DQEmptyRecycleBinAction.dialog.messageAllElements") + "\n" + //$NON-NLS-1$ //$NON-NLS-2$
-                    DefaultMessagesImpl.getString("DQEmptyRecycleBinAction.dialog.message1"); //$NON-NLS-1$;
-        }
-        final Shell shell = super.getShell();
-        if (!(MessageDialog.openQuestion(shell, title, message))) {
-            return;
-        }
-
-        IProxyRepositoryFactory factory = ProxyRepositoryFactory.getInstance();
-        for (IRepositoryNode child : children) {
-            try {
-                if (child.getType() == ENodeType.REPOSITORY_ELEMENT) {
-                    // remove client dependcy for supplier, .eg. delete analysis,should remove client dependecy in
-                    // connection
-                    ModelElement modelEle = RepositoryNodeHelper.getModelElementFromRepositoryNode(child);
-                    EObjectHelper.removeDependencys(modelEle);
-                }
-                // MOD qiongli 2012-3-29 delete related elements after physical delete itself.
-                Item item = null;
-                Property property = child.getObject().getProperty();
-                if (property != null) {
-                    item = property.getItem();
-                }
-                deleteElements(factory, (RepositoryNode) child);
-                DQDeleteHelper.deleteRelations(item);
-            } catch (Exception e) {
-                MessageBoxExceptionHandler.process(e);
-            }
-        }
-        try {
-            factory.saveProject(ProjectManager.getInstance().getCurrentProject());
-        } catch (PersistenceException e) {
-            ExceptionHandler.process(e);
-        }
+        new DQDeleteAction(findAllRecycleBinNodes.toArray()).run();
     }
 
     /**

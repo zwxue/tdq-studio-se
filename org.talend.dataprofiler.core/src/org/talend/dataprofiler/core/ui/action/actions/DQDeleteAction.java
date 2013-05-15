@@ -36,6 +36,8 @@ import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
@@ -97,20 +99,36 @@ public class DQDeleteAction extends DeleteAction {
     // key in nodeWithDependsMap is the repostiory node and value is the dependencies of this node.
     private Map<IRepositoryNode, List<ModelElement>> nodeWithDependsMap = new HashMap<IRepositoryNode, List<ModelElement>>();
 
+    private Object[] deleteElements = null;
+
     public DQDeleteAction() {
         super();
         setText(DefaultMessagesImpl.getString("DQDeleteAction.delete"));//$NON-NLS-1$
         setId(ActionFactory.DELETE.getId());
-        selectedNodes = new ArrayList<RepositoryNode>();
+        this.selectedNodes = new ArrayList<RepositoryNode>();
+        this.deleteElements = ((IStructuredSelection) this.getSelection()).toArray();
+
+    }
+
+    public DQDeleteAction(Object[] delElements) {
+        super();
+        setText(DefaultMessagesImpl.getString("DQDeleteAction.delete"));//$NON-NLS-1$
+        setId(ActionFactory.DELETE.getId());
+        this.selectedNodes = new ArrayList<RepositoryNode>();
+        this.deleteElements = delElements;
     }
 
     @Override
     public ISelection getSelection() {
         ISelection selection = null;
         if (currentNode == null) {
-            // select by UI(tree)
-            DQRespositoryView findView = CorePlugin.getDefault().getRepositoryView();
-            selection = findView.getCommonViewer().getSelection();
+            if (deleteElements != null) {
+                selection = super.getSelection();
+            } else {
+                // select by UI(tree)
+                DQRespositoryView findView = CorePlugin.getDefault().getRepositoryView();
+                selection = findView.getCommonViewer().getSelection();
+            }
         } else {
             // new instance of selection for dependency modeleEelemnt.
             selection = new StructuredSelection(currentNode);
@@ -127,18 +145,35 @@ public class DQDeleteAction extends DeleteAction {
     public void init(TreeViewer viewer, IStructuredSelection selection) {
     }
 
+    ISelectionProvider deletionSelProv = new ISelectionProvider() {
+
+        public void setSelection(ISelection arg0) {
+        }
+
+        public void removeSelectionChangedListener(ISelectionChangedListener arg0) {
+        }
+
+        public ISelection getSelection() {
+            IStructuredSelection structruedSelection = null;
+            if (deleteElements != null) {
+                structruedSelection = new StructuredSelection(deleteElements);
+            }
+            return structruedSelection;
+        }
+
+        public void addSelectionChangedListener(ISelectionChangedListener arg0) {
+        }
+    };
+
     @Override
     public void run() {
         repositoryObjectCRUD.refreshDQViewForRemoteProject();
-        ISelection selection = this.getSelection();
-        // boolean onlyDeleteReportFile = true;
-        // MOD gdbu 2011-11-17 TDQ-3969 : when delete elements also need delete this element in filter-list, and move it
-        // to recycle bin node.
-        Object[] deleteElements = ((IStructuredSelection) selection).toArray();
+
         // MOD qiongli 2012-4-1 TDQ-4926.fill selectedNodes,and delete opration will base on the List.
         if (deleteElements.length == 0) {
             return;
         }
+        setSpecialSelection(deletionSelProv);
         // remove the source file nodes which have been opened the editor
         deleteElements = checkSourceFilesEditorOpening(deleteElements);
         // ~ TDQ-4831
