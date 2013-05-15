@@ -78,14 +78,19 @@ public final class ModelElementIndicatorRule {
             dataminingType = MetadataHelper.getDefaultDataminingType(javaType);
         }
         // MOD qiongli 2012-4-25 TDQ-2699
-        if (javaType == Types.LONGVARCHAR && ExecutionLanguage.SQL.equals(language)) {
-            if (me instanceof TdColumn) {
-                Connection con = ConnectionHelper.getTdDataProvider((TdColumn) me);
-                if (con != null && ConnectionHelper.isDb2(con)) {
-                    return enableLongVarchar(indicatorType, dataminingType, me);
-                }
+        Connection connection = null;
+        if (me instanceof TdColumn) {
+            connection = ConnectionHelper.getTdDataProvider((TdColumn) me);
+        }
+        boolean isSQLEngine = ExecutionLanguage.SQL.equals(language);
+        if (javaType == Types.LONGVARCHAR && isSQLEngine) {
+            if (connection != null && ConnectionHelper.isDb2(connection)) {
+                return enableLongVarchar(indicatorType, dataminingType, me);
             }
         }
+
+        // MOD msjian 2013-5-15 TDQ-7275 need to disabled indicators for teradata with sql engine.
+        boolean isTeradataSQL = connection == null ? false : ConnectionHelper.isTeradata(connection) && isSQLEngine;
 
         switch (indicatorType) {
         case CountsIndicatorEnum:
@@ -115,7 +120,7 @@ public final class ModelElementIndicatorRule {
             // MOD xwang 2011-07-29 bug TDQ-1731 disable blank count checkable for other data type but Text
             if (me instanceof TdXmlElementType || !Java2SqlType.isTextInSQL(javaType)) {
                 return false;
-            } else if (isTeradataInterval == Java2SqlType.TERADATA_INTERVAL_TO && ExecutionLanguage.SQL.equals(language)) {
+            } else if (isTeradataInterval == Java2SqlType.TERADATA_INTERVAL_TO && isSQLEngine) {
                 // Added yyin 20121212 TDQ-6099: disable for Teradata's interval_xx_to_xx type.
                 return false;
             } else {
@@ -148,9 +153,12 @@ public final class ModelElementIndicatorRule {
             break;
         case PatternFreqIndicatorEnum:
         case PatternLowFreqIndicatorEnum:
+            if (isTeradataSQL) {
+                return false;
+            }
         case ModeIndicatorEnum:
             // Added yyin 20121212 TDQ-6099: disable for Teradata's interval_xx_to_xx type.
-            if (isTeradataInterval == Java2SqlType.TERADATA_INTERVAL_TO && ExecutionLanguage.SQL.equals(language)) {
+            if (isTeradataInterval == Java2SqlType.TERADATA_INTERVAL_TO && isSQLEngine) {
                 return false;
             }
         case FrequencyIndicatorEnum:
@@ -172,7 +180,7 @@ public final class ModelElementIndicatorRule {
             if (!Java2SqlType.isDateInSQL(javaType) && !Java2SqlType.isNumbericInSQL(javaType)
                     && (dataminingType == DataminingType.NOMINAL || dataminingType == DataminingType.INTERVAL)) {
                 // Added yyin 20121212 TDQ-6099: disable for Teradata's interval_xx_to_xx type.
-                if (isTeradataInterval >0 && ExecutionLanguage.SQL.equals(language)) {
+                if (isTeradataInterval > 0 && isSQLEngine) {
                     return false;
                 }// ~
                 return true;
