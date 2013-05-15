@@ -12,10 +12,9 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.utils;
 
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-import static org.powermock.api.support.membermodification.MemberMatcher.method;
-import static org.powermock.api.support.membermodification.MemberModifier.stub;
+import static org.mockito.Mockito.*;
+import static org.powermock.api.support.membermodification.MemberMatcher.*;
+import static org.powermock.api.support.membermodification.MemberModifier.*;
 
 import java.sql.Types;
 import java.util.ResourceBundle;
@@ -62,9 +61,9 @@ public class ModelElementIndicatorRuleTest {
         when(me.getContentType()).thenReturn("type"); //$NON-NLS-1$
 
         ResourceBundle rb = mock(ResourceBundle.class);
-        stub(method(ResourceBundle.class, "getBundle", String.class)).toReturn(rb);
+        stub(method(ResourceBundle.class, "getBundle", String.class)).toReturn(rb); //$NON-NLS-1$
         PowerMockito.mock(Messages.class);
-        stub(method(Messages.class, "getString", String.class)).toReturn("String");
+        stub(method(Messages.class, "getString", String.class)).toReturn("String"); //$NON-NLS-1$ //$NON-NLS-2$
     }
 
     /**
@@ -77,15 +76,8 @@ public class ModelElementIndicatorRuleTest {
         // modified: when the column is TIME type, any indicator using year(),month(),week() ,quarter(),day() should be
         // disabled
         when(tdsql.getJavaDataType()).thenReturn(Types.TIME);
-        // ExecutionLanguage el = mock(ExecutionLanguage.class);
-        // can not mock final class
-        // PowerMockito.mockStatic(MetadataHelper.class);
-        // when(MetadataHelper.getDataminingType(me)).thenReturn(DataminingType.OTHER);
-
         Assert.assertTrue(ModelElementIndicatorRule.patternRule(IndicatorEnum.ModeIndicatorEnum, me, ExecutionLanguage.JAVA));
         Assert.assertTrue(ModelElementIndicatorRule.patternRule(IndicatorEnum.FrequencyIndicatorEnum, me, ExecutionLanguage.JAVA));
-        // Assert.assertFalse(ModelElementIndicatorRule.patternRule(IndicatorEnum.LowFrequencyIndicatorEnum, me,
-        // ExecutionLanguage.JAVA));
         Assert.assertFalse(ModelElementIndicatorRule.patternRule(IndicatorEnum.DateFrequencyIndicatorEnum, me,
                 ExecutionLanguage.JAVA));
         Assert.assertFalse(ModelElementIndicatorRule.patternRule(IndicatorEnum.WeekFrequencyIndicatorEnum, me,
@@ -106,7 +98,6 @@ public class ModelElementIndicatorRuleTest {
                 ExecutionLanguage.JAVA));
         Assert.assertFalse(ModelElementIndicatorRule.patternRule(IndicatorEnum.YearLowFrequencyIndicatorEnum, me,
                 ExecutionLanguage.JAVA));
-
     }
 
     /**
@@ -154,15 +145,14 @@ public class ModelElementIndicatorRuleTest {
     // Test for Teradata's INTERVAL type , sql language
     @Test
     public void testPatternRule_4() {
-        when(tdsql.getName()).thenReturn("INTERVAL YEAR");
+        when(tdsql.getName()).thenReturn("INTERVAL YEAR"); //$NON-NLS-1$
         when(tdsql.getJavaDataType()).thenReturn(Types.REAL);
 
         Assert.assertTrue(ModelElementIndicatorRule.patternRule(IndicatorEnum.MeanIndicatorEnum, me, ExecutionLanguage.SQL));
         Assert.assertFalse(ModelElementIndicatorRule
                 .patternRule(IndicatorEnum.SoundexLowIndicatorEnum, me, ExecutionLanguage.SQL));
         Assert.assertTrue(ModelElementIndicatorRule
-                .patternRule(IndicatorEnum.PatternFreqIndicatorEnum, me,
-                ExecutionLanguage.SQL));
+                .patternRule(IndicatorEnum.PatternFreqIndicatorEnum, me, ExecutionLanguage.SQL));
         Assert.assertTrue(ModelElementIndicatorRule.patternRule(IndicatorEnum.PatternLowFreqIndicatorEnum, me,
                 ExecutionLanguage.SQL));
         Assert.assertFalse(ModelElementIndicatorRule.patternRule(IndicatorEnum.BenfordLawFrequencyIndicatorEnum, me,
@@ -175,12 +165,12 @@ public class ModelElementIndicatorRuleTest {
     // Test for Teradata's INTERVAL type with java language
     @Test
     public void testPatternRule_5() {
-        when(tdsql.getName()).thenReturn("INTERVAL YEAR");
+        when(tdsql.getName()).thenReturn("INTERVAL YEAR"); //$NON-NLS-1$
         when(tdsql.getJavaDataType()).thenReturn(Types.REAL);
 
         Assert.assertTrue(ModelElementIndicatorRule.patternRule(IndicatorEnum.MeanIndicatorEnum, me, ExecutionLanguage.JAVA));
-        Assert.assertFalse(ModelElementIndicatorRule
-                .patternRule(IndicatorEnum.SoundexLowIndicatorEnum, me, ExecutionLanguage.JAVA));
+        Assert.assertFalse(ModelElementIndicatorRule.patternRule(IndicatorEnum.SoundexLowIndicatorEnum, me,
+                ExecutionLanguage.JAVA));
         Assert.assertTrue(ModelElementIndicatorRule.patternRule(IndicatorEnum.PatternFreqIndicatorEnum, me,
                 ExecutionLanguage.JAVA));
         Assert.assertFalse(ModelElementIndicatorRule.patternRule(IndicatorEnum.BenfordLawFrequencyIndicatorEnum, me,
@@ -192,7 +182,7 @@ public class ModelElementIndicatorRuleTest {
     // Test for Teradata's INTERVAL_xx_to_xx type , sql language
     @Test
     public void testPatternRule_6() {
-        when(tdsql.getName()).thenReturn("INTERVAL YEAR TO MONTH");
+        when(tdsql.getName()).thenReturn("INTERVAL YEAR TO MONTH"); //$NON-NLS-1$
         when(tdsql.getJavaDataType()).thenReturn(Types.NVARCHAR);
 
         Assert.assertFalse(ModelElementIndicatorRule
@@ -208,5 +198,44 @@ public class ModelElementIndicatorRuleTest {
         Assert.assertFalse(ModelElementIndicatorRule.patternRule(IndicatorEnum.LowerQuartileIndicatorEnum, me,
                 ExecutionLanguage.SQL));
         Assert.assertFalse(ModelElementIndicatorRule.patternRule(IndicatorEnum.TextIndicatorEnum, me, ExecutionLanguage.SQL));
+    }
+
+    /**
+     * 
+     * test for teradata connection and Pattern Frequency Statistics indicators should be disabled.
+     */
+    @Test
+    public void testPatternRule_7() {
+        when(tdsql.getJavaDataType()).thenReturn(Types.VARCHAR);
+        DatabaseConnection connection = mock(DatabaseConnection.class);
+        PowerMockito.mockStatic(ConnectionHelper.class);
+        when(ConnectionHelper.getTdDataProvider(me)).thenReturn(connection);
+        when(ConnectionHelper.isTeradata(connection)).thenReturn(true);
+        Assert.assertFalse(ModelElementIndicatorRule.patternRule(IndicatorEnum.PatternFreqIndicatorEnum, me,
+                ExecutionLanguage.SQL));
+        Assert.assertFalse(ModelElementIndicatorRule.patternRule(IndicatorEnum.PatternLowFreqIndicatorEnum, me,
+                ExecutionLanguage.SQL));
+        Assert.assertFalse(ModelElementIndicatorRule.patternRule(IndicatorEnum.DatePatternFreqIndicatorEnum, me,
+                ExecutionLanguage.SQL));
+        Assert.assertTrue(ModelElementIndicatorRule.patternRule(IndicatorEnum.PatternFreqIndicatorEnum, me,
+                ExecutionLanguage.JAVA));
+        Assert.assertTrue(ModelElementIndicatorRule.patternRule(IndicatorEnum.PatternLowFreqIndicatorEnum, me,
+                ExecutionLanguage.JAVA));
+        Assert.assertTrue(ModelElementIndicatorRule.patternRule(IndicatorEnum.DatePatternFreqIndicatorEnum, me,
+                ExecutionLanguage.JAVA));
+
+        when(tdsql.getJavaDataType()).thenReturn(Types.DATE);
+        Assert.assertFalse(ModelElementIndicatorRule.patternRule(IndicatorEnum.PatternFreqIndicatorEnum, me,
+                ExecutionLanguage.SQL));
+        Assert.assertFalse(ModelElementIndicatorRule.patternRule(IndicatorEnum.PatternLowFreqIndicatorEnum, me,
+                ExecutionLanguage.SQL));
+        Assert.assertFalse(ModelElementIndicatorRule.patternRule(IndicatorEnum.DatePatternFreqIndicatorEnum, me,
+                ExecutionLanguage.SQL));
+        Assert.assertTrue(ModelElementIndicatorRule.patternRule(IndicatorEnum.PatternFreqIndicatorEnum, me,
+                ExecutionLanguage.JAVA));
+        Assert.assertTrue(ModelElementIndicatorRule.patternRule(IndicatorEnum.PatternLowFreqIndicatorEnum, me,
+                ExecutionLanguage.JAVA));
+        Assert.assertTrue(ModelElementIndicatorRule.patternRule(IndicatorEnum.DatePatternFreqIndicatorEnum, me,
+                ExecutionLanguage.JAVA));
     }
 }
