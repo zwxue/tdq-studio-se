@@ -12,6 +12,7 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.action.actions;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import junit.framework.Assert;
@@ -60,6 +61,7 @@ import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.nodes.AnalysisRepNode;
 import org.talend.dq.nodes.DBConnectionRepNode;
 import org.talend.repository.localprovider.model.LocalRepositoryFactory;
+import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.IRepositoryNode.ENodeType;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.repository.ui.actions.DeleteActionCache;
@@ -104,14 +106,9 @@ public class DQDeleteActionRealTest {
      * @throws java.lang.Exception
      */
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         UnitTestBuildHelper.deleteCurrentProject("testForDeleteActionTDQ"); //$NON-NLS-1$
         UnitTestBuildHelper.createRealProject("testForDeleteActionTDQ"); //$NON-NLS-1$
-        dqDeleteAction_real = PowerMockito.spy(new DQDeleteAction());
-        PowerMockito.doReturn(true).when(dqDeleteAction_real, "showConfirmDialog"); //$NON-NLS-1$
-        PowerMockito.doReturn(null).when(dqDeleteAction_real).getActivePage();
-        PowerMockito.doNothing().when(dqDeleteAction_real).synchUI((DeleteActionCache) Mockito.any());
-        PowerMockito.doNothing().when(dqDeleteAction_real).refreshWorkspaceAndRecycleBenNode();
         // Mockito.when(dqDeleteAction_real.showConfirmDialog()).thenReturn(true);
     }
 
@@ -126,13 +123,19 @@ public class DQDeleteActionRealTest {
      * case 1: set special node to delete for logic delete
      */
     @Test
-    public void testRun() {
-
+    public void testRun() throws Exception {
         // connectionNode
         DatabaseConnectionItem createConnectionItem = createConnectionItem("conn1", null, false);
         RepositoryNode dbParentRepNode = createConnectionNode(createConnectionItem);
-
         // ~connectionNode
+
+        List<IRepositoryNode> nodeList = new ArrayList<IRepositoryNode>();
+        nodeList.add(dbParentRepNode);
+        dqDeleteAction_real = PowerMockito.spy(new DQDeleteAction(nodeList.toArray()));
+        PowerMockito.doReturn(true).when(dqDeleteAction_real, "showConfirmDialog"); //$NON-NLS-1$
+        PowerMockito.doReturn(null).when(dqDeleteAction_real).getActivePage();
+        PowerMockito.doNothing().when(dqDeleteAction_real).synchUI((DeleteActionCache) Mockito.any());
+        PowerMockito.doNothing().when(dqDeleteAction_real).refreshWorkspaceAndRecycleBenNode();
 
         // analysisNode
         TDQAnalysisItem createAnaItem = createAnalysisItem("ana1", null, false);
