@@ -141,12 +141,7 @@ public class DQEmptyRecycleBinAction extends EmptyRecycleBinAction {
         IProxyRepositoryFactory factory = ProxyRepositoryFactory.getInstance();
         for (IRepositoryNode child : children) {
             try {
-                if (child.getType() == ENodeType.REPOSITORY_ELEMENT) {
-                    // remove client dependcy for supplier, .eg. delete analysis,should remove client dependecy in
-                    // connection
-                    ModelElement modelEle = RepositoryNodeHelper.getModelElementFromRepositoryNode(child);
-                    EObjectHelper.removeDependencys(modelEle);
-                }
+                removeDependency(child);
                 // MOD qiongli 2012-3-29 delete related elements after physical delete itself.
                 Item item = null;
                 Property property = child.getObject().getProperty();
@@ -163,6 +158,24 @@ public class DQEmptyRecycleBinAction extends EmptyRecycleBinAction {
             factory.saveProject(ProjectManager.getInstance().getCurrentProject());
         } catch (PersistenceException e) {
             ExceptionHandler.process(e);
+        }
+    }
+
+    /**
+     * remove the dependencies of the IRepositoryNode(include all the children).
+     * 
+     * @param repoNode the IRepositoryNode
+     */
+    private void removeDependency(IRepositoryNode repoNode) {
+        if (repoNode.getType() == ENodeType.REPOSITORY_ELEMENT) {
+            ModelElement modelEle = RepositoryNodeHelper.getModelElementFromRepositoryNode(repoNode);
+            EObjectHelper.removeDependencys(modelEle);
+        } else if (repoNode.getType() == ENodeType.SIMPLE_FOLDER) {
+            if (repoNode.getChildren() != null) {
+                for (IRepositoryNode childNode : repoNode.getChildren()) {
+                    removeDependency(childNode);
+                }
+            }
         }
     }
 
