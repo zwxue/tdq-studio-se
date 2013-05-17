@@ -591,7 +591,9 @@ public class ColumnSetIndicatorEvaluator extends Evaluator<String> {
                             if (!this.continueRun()) {
                                 break;
                             }
-                            if (!(leafIndicator instanceof RowCountIndicator) || !analysis.getParameters().isStoreData()) {
+                            // MOD 20130517 yyinTDQ-7279 Column Set Analysis on FIle/DB - Can't view rows for (distinct
+                            // count, unique count, duplicate count, etc).
+                            if (!analysis.getParameters().isStoreData()) {
                                 continue;
                             }
                             List<Object[]> valueObjectList = initDataSet(leafIndicator, indicToRowMap);
