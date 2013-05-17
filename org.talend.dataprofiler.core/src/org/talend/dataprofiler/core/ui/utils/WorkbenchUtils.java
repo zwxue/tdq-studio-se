@@ -71,6 +71,7 @@ import org.talend.dataprofiler.core.ui.views.DQRespositoryView;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisContext;
 import org.talend.dataquality.indicators.Indicator;
+import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
 import org.talend.dq.writer.EMFSharedResources;
@@ -96,10 +97,6 @@ public final class WorkbenchUtils {
     private static final int AUTO_CHANGE2DATA_PROFILER_FALSE = 2;
 
     private static final boolean AUTO_CHANGE2DATA_PROFILER = true;
-
-    private static final String ANALYSIS_EDITOR_ID = "org.talend.dataprofiler.core.ui.editor.analysis.AnalysisEditor"; //$NON-NLS-1$
-
-    private static final String CONNECTION_EDITOR_ID = "org.talend.dataprofiler.core.ui.editor.connection.ConnectionEditor"; //$NON-NLS-1$
 
     private WorkbenchUtils() {
     }
@@ -222,8 +219,7 @@ public final class WorkbenchUtils {
 
     public static IPath getFilePath(IRepositoryNode node) {
         Item item = node.getObject().getProperty().getItem();
-        // FIXME itemType never used.
-        ERepositoryObjectType itemType = ERepositoryObjectType.getItemType(item);
+
         IPath folderPath = WorkbenchUtils.getPath(node);
         String name = node.getObject()
                 .getProperty()
@@ -593,5 +589,17 @@ public final class WorkbenchUtils {
             page.bringToTop(part);
         }
         return part;
+    }
+
+    // Added 20130517 TDQ-7289 yyin, reload the object to avoid unsaved values still in the object
+    public static void loadModelElement(IRepositoryNode sourceNode) {
+        if (sourceNode == null || sourceNode.getObject() == null) {
+            return;
+        }
+
+        ModelElement modelElement = PropertyHelper.getModelElement(sourceNode.getObject().getProperty());
+        if (modelElement != null) {
+            EMFSharedResources.getInstance().reloadResource(modelElement.eResource().getURI());
+        }
     }
 }
