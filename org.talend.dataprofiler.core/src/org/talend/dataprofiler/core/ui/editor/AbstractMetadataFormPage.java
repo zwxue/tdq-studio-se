@@ -119,6 +119,8 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
 
     private Collection<Text> checkWhitespaceTextFields = new HashSet<Text>();
 
+    protected boolean isRefreshText = false;
+
     public AbstractMetadataFormPage(FormEditor editor, String id, String title) {
         super(editor, id, title);
     }
@@ -241,17 +243,18 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
 
             public void modifyText(ModifyEvent e) {
                 // boolean dirty = isDirty();
-                modify = true;
-                setDirty(true);
+                if (!isRefreshText) {
+                    modify = true;
+                    setDirty(true);
 
-                // MOD msjian 2011-7-18 23216: when changed the name of a connection to null, write a warning
-                if (PluginConstant.EMPTY_STRING.equals(nameText.getText())) {
-                    getManagedForm().getMessageManager().addMessage(NAMECONNOTBEEMPTY, NAMECONNOTBEEMPTY, null,
-                            IMessageProvider.ERROR, nameText);
-                } else {
-                    getManagedForm().getMessageManager().removeMessage(NAMECONNOTBEEMPTY, nameText);
+                    // MOD msjian 2011-7-18 23216: when changed the name of a connection to null, write a warning
+                    if (PluginConstant.EMPTY_STRING.equals(nameText.getText())) {
+                        getManagedForm().getMessageManager().addMessage(NAMECONNOTBEEMPTY, NAMECONNOTBEEMPTY, null,
+                                IMessageProvider.ERROR, nameText);
+                    } else {
+                        getManagedForm().getMessageManager().removeMessage(NAMECONNOTBEEMPTY, nameText);
+                    }
                 }
-
                 // if ("".equals(nameText.getText().trim())) { //$NON-NLS-1$
                 // setDirty(dirty);
                 // MessageDialog.openError(null,
@@ -662,10 +665,19 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
         boolean exist = PropertyHelper.existDuplicateName(elementName, oldProperty.getDisplayName(), objectType);
         if (exist) {
             this.nameText.setText(oldProperty != null ? oldProperty.getDisplayName() : PluginConstant.SPACE_STRING);
-            ret.setReturnCode(DefaultMessagesImpl.getString("UIMessages.ItemExistsErrorWithParameter", elementName), false);
+            ret.setReturnCode(DefaultMessagesImpl.getString("UIMessages.ItemExistsErrorWithParameter", elementName), false); //$NON-NLS-1$
             return ret;
         }
 
         return ret;
+    }
+
+    /**
+     * Sets the modify.
+     * 
+     * @param modify the modify to set
+     */
+    public void setModify(boolean modify) {
+        this.modify = modify;
     }
 }

@@ -175,16 +175,16 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
             @Override
             public void widgetSelected(SelectionEvent e) {
                 try {
-                ReturnCode code = checkDBConnection();
-                if (code.isOk()) {
-                    MessageDialog.openInformation(
-                            null,
-                            DefaultMessagesImpl.getString("ConnectionInfoPage.checkConnections"), DefaultMessagesImpl.getString("ConnectionInfoPage.checkConnectionSuccessful")); //$NON-NLS-1$ //$NON-NLS-2$
-                } else {
+                    ReturnCode code = checkDBConnection();
+                    if (code.isOk()) {
+                        MessageDialog.openInformation(
+                                null,
+                                DefaultMessagesImpl.getString("ConnectionInfoPage.checkConnections"), DefaultMessagesImpl.getString("ConnectionInfoPage.checkConnectionSuccessful")); //$NON-NLS-1$ //$NON-NLS-2$
+                    } else {
                         MessageDialog.openWarning(
-                            null,
-                            DefaultMessagesImpl.getString("ConnectionInfoPage.checkConnection"), DefaultMessagesImpl.getString("ConnectionInfoPage.CheckConnectionFailure", code.getMessage())); //$NON-NLS-1$ //$NON-NLS-2$ 
-                }
+                                null,
+                                DefaultMessagesImpl.getString("ConnectionInfoPage.checkConnection"), DefaultMessagesImpl.getString("ConnectionInfoPage.CheckConnectionFailure", code.getMessage())); //$NON-NLS-1$ //$NON-NLS-2$ 
+                    }
                 } catch (Exception e2) {
                     MessageDialog.openWarning(
                             null,
@@ -249,25 +249,31 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
         loginText.addModifyListener(new ModifyListener() {
 
             public void modifyText(ModifyEvent e) {
-                setDirty(true);
-                isLoginChanged = true;
+                if (!isRefreshText) {
+                    setDirty(true);
+                    isLoginChanged = true;
+                }
             }
 
         });
         passwordText.addModifyListener(new ModifyListener() {
 
             public void modifyText(ModifyEvent e) {
-                setDirty(true);
-                isPassWordChanged = true;
+                if (!isRefreshText) {
+                    setDirty(true);
+                    isPassWordChanged = true;
+                }
             }
 
         });
         urlText.addModifyListener(new ModifyListener() {
 
             public void modifyText(ModifyEvent e) {
-                setDirty(true);
-                isUrlChanged = true;
-                // saveTextChange();
+                if (!isRefreshText) {
+                    setDirty(true);
+                    isUrlChanged = true;
+                    // saveTextChange();
+                }
             }
 
         });
@@ -385,16 +391,18 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
             return;
         }
         boolean checkDBConnection = checkDBConnectionWithProgress().isOk();
-        if (!checkDBConnection) {
-            String dialogMessage = DefaultMessagesImpl.getString("ConnectionInfoPage.checkDBConnection");//$NON-NLS-1$
-            String dialogTitle = DefaultMessagesImpl.getString("ConnectionInfoPage.urlChanged");//$NON-NLS-1$
-            if (Window.CANCEL == DeleteModelElementConfirmDialog.showElementImpactConfirmDialog(null,
-                    new ModelElement[] { connection }, dialogTitle, dialogMessage)) {
-                return;
-            }
-        } else {
-            if (!impactAnalyses().isOk()) {
-                return;
+        if ((this.isUrlChanged || this.isLoginChanged || this.isPassWordChanged)) {
+            if (!checkDBConnection) {
+                String dialogMessage = DefaultMessagesImpl.getString("ConnectionInfoPage.checkDBConnection");//$NON-NLS-1$
+                String dialogTitle = DefaultMessagesImpl.getString("ConnectionInfoPage.urlChanged");//$NON-NLS-1$
+                if (Window.CANCEL == DeleteModelElementConfirmDialog.showElementImpactConfirmDialog(null,
+                        new ModelElement[] { connection }, dialogTitle, dialogMessage)) {
+                    return;
+                }
+            } else {
+                if (!impactAnalyses().isOk()) {
+                    return;
+                }
             }
         }
 
@@ -546,8 +554,10 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
     }
 
     public void refreshTextInfo() {
+        isRefreshText = true;
         initMetaTextFied();
         initConnInfoTextField();
+        isRefreshText = false;
         setDirty(false);
 
     }
