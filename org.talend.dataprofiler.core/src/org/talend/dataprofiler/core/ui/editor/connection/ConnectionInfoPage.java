@@ -240,24 +240,30 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
         loginText.addModifyListener(new ModifyListener() {
 
             public void modifyText(ModifyEvent e) {
-                setDirty(true);
-                isLoginChanged = true;
+                if (!isRefreshText) {
+                    setDirty(true);
+                    isLoginChanged = true;
+                }
             }
 
         });
         passwordText.addModifyListener(new ModifyListener() {
 
             public void modifyText(ModifyEvent e) {
-                setDirty(true);
-                isPassWordChanged = true;
+                if (!isRefreshText) {
+                    setDirty(true);
+                    isPassWordChanged = true;
+                }
             }
 
         });
         urlText.addModifyListener(new ModifyListener() {
 
             public void modifyText(ModifyEvent e) {
-                setDirty(true);
-                isUrlChanged = true;
+                if (!isRefreshText) {
+                    setDirty(true);
+                    isUrlChanged = true;
+                }
                 // saveTextChange();
             }
 
@@ -379,18 +385,9 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
             return;
         }
 
-        boolean checkDBConnection = checkDBConnectionWithProgress().isOk();
-        if (!checkDBConnection) {
-            String dialogMessage = DefaultMessagesImpl.getString("ConnectionInfoPage.checkDBConnection");//$NON-NLS-1$
-            String dialogTitle = DefaultMessagesImpl.getString("ConnectionInfoPage.warningTitle");//$NON-NLS-1$
-            if (Window.CANCEL == DeleteModelElementConfirmDialog.showElementImpactConfirmDialog(null,
-                    new ModelElement[] { connection }, dialogTitle, dialogMessage)) {
-                return;
-            }
-        } else {
-            if (!impactAnalyses().isOk()) {
-                return;
-            }
+        // MOD qiongi 2013-5-17 delete some code of checkconnection.no need to check connection at here
+        if (!impactAnalyses().isOk()) {
+            return;
         }
 
         super.doSave(monitor);
@@ -506,8 +503,10 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
     }
 
     public void refreshTextInfo() {
+        isRefreshText = true;
         initMetaTextFied();
         initConnInfoTextField();
+        isRefreshText = false;
         setDirty(false);
 
     }
