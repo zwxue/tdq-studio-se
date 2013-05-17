@@ -20,7 +20,7 @@ import org.talend.repository.model.IRepositoryNode;
  * should be considerred )
  * 
  */
-public interface IRepositoryObjectCRUD {
+public interface IRepositoryObjectCRUDAction {
 
     public Boolean validateDrop(IRepositoryNode targetNode);
 

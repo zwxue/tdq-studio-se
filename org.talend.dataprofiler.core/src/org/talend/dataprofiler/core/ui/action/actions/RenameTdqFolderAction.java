@@ -26,7 +26,7 @@ import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.utils.RepNodeUtils;
 import org.talend.dataprofiler.core.ui.views.DQRespositoryView;
-import org.talend.dataprofiler.core.ui.views.resources.IRepositoryObjectCRUD;
+import org.talend.dataprofiler.core.ui.views.resources.IRepositoryObjectCRUDAction;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.repository.ui.actions.RenameFolderAction;
 
@@ -37,7 +37,7 @@ public class RenameTdqFolderAction extends RenameFolderAction {
 
     protected static Logger log = Logger.getLogger(RenameTdqFolderAction.class);
 
-    private IRepositoryObjectCRUD repositoryObjectCRUD = RepNodeUtils.getRepositoryObjectCRUD();
+    private IRepositoryObjectCRUDAction repositoryObjectCRUD = RepNodeUtils.getRepositoryObjectCRUD();
 
     /**
      * @param node a folder

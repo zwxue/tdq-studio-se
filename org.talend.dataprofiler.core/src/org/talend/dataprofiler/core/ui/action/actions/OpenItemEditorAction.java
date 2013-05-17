@@ -22,7 +22,6 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.common.util.EList;
-import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorInput;
@@ -66,6 +65,7 @@ import org.talend.dataprofiler.core.ui.editor.pattern.PatternEditor;
 import org.talend.dataprofiler.core.ui.editor.pattern.PatternItemEditorInput;
 import org.talend.dataprofiler.core.ui.editor.report.ReportItemEditorInput;
 import org.talend.dataprofiler.core.ui.utils.WorkbenchUtils;
+import org.talend.dataprofiler.core.ui.views.resources.AbstractRepObjectCRUDAction;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.properties.TDQAnalysisItem;
 import org.talend.dataquality.properties.TDQFileItem;
@@ -89,7 +89,7 @@ import orgomg.cwm.resource.relational.Schema;
 /**
  * DOC mzhao Open TDQ items editor action.
  */
-public class OpenItemEditorAction extends Action implements IIntroAction {
+public class OpenItemEditorAction extends AbstractRepObjectCRUDAction implements IIntroAction {
 
     protected static Logger log = Logger.getLogger(OpenItemEditorAction.class);
 
@@ -123,6 +123,12 @@ public class OpenItemEditorAction extends Action implements IIntroAction {
 
     @Override
     public void run() {
+        // Added 20130517 yyin TDQ-7289
+        if (repViewObj != null) {
+            super.loadModelElement(repViewObj.getRepositoryNode());
+        } else {
+            super.loadModelElement(repNode);
+        }
 
         // MOD qiongli 2011-7-14 bug 21707,unload all unlocked resources before opening an editor.move all code in this
         // method to method doRun().
@@ -212,8 +218,7 @@ public class OpenItemEditorAction extends Action implements IIntroAction {
                     throw createBusinessException;
                 }
             }
-            if (ERepositoryObjectType.METADATA_CONNECTIONS.getKey().equals(key)
-                    || ERepositoryObjectType.METADATA_MDMCONNECTION.getKey().equals(key)) {
+            if (ERepositoryObjectType.METADATA_CONNECTIONS.getKey().equals(key)) {
                 result = new ConnectionItemEditorInput(item);
                 editorID = ConnectionEditor.class.getName();
             } else if (ERepositoryObjectType.TDQ_ANALYSIS_ELEMENT.getKey().equals(key)) {

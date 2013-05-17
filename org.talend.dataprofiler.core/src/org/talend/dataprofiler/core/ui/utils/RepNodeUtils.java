@@ -32,7 +32,7 @@ import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.editor.AbstractItemEditorInput;
 import org.talend.dataprofiler.core.ui.events.EventEnum;
 import org.talend.dataprofiler.core.ui.events.EventManager;
-import org.talend.dataprofiler.core.ui.views.resources.IRepositoryObjectCRUD;
+import org.talend.dataprofiler.core.ui.views.resources.IRepositoryObjectCRUDAction;
 import org.talend.dataprofiler.core.ui.views.resources.LocalRepositoryObjectCRUD;
 import org.talend.dataprofiler.core.ui.views.resources.RemoteRepositoryObjectCRUD;
 import org.talend.dataquality.helpers.ReportHelper;
@@ -149,7 +149,7 @@ public final class RepNodeUtils {
      * 
      * @return
      */
-    public static IRepositoryObjectCRUD getRepositoryObjectCRUD() {
+    public static IRepositoryObjectCRUDAction getRepositoryObjectCRUD() {
         if (ProxyRepositoryManager.getInstance().isLocalProject()) {
             return new LocalRepositoryObjectCRUD();
         } else {

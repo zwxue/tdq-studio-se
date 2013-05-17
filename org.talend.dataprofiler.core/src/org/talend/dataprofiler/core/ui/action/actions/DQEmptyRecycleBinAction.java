@@ -19,7 +19,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ui.utils.RepNodeUtils;
 import org.talend.dataprofiler.core.ui.views.DQRespositoryView;
-import org.talend.dataprofiler.core.ui.views.resources.IRepositoryObjectCRUD;
+import org.talend.dataprofiler.core.ui.views.resources.IRepositoryObjectCRUDAction;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.nodes.DQRepositoryNode;
 import org.talend.repository.model.IRepositoryNode;
@@ -31,7 +31,7 @@ import org.talend.repository.ui.actions.EmptyRecycleBinAction;
  */
 public class DQEmptyRecycleBinAction extends EmptyRecycleBinAction {
 
-    private IRepositoryObjectCRUD repositoryObjectCRUD = RepNodeUtils.getRepositoryObjectCRUD();
+    private IRepositoryObjectCRUDAction repositoryObjectCRUD = RepNodeUtils.getRepositoryObjectCRUD();
 
     public DQEmptyRecycleBinAction() {
         super();

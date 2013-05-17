@@ -30,7 +30,7 @@ public class RepositoryNodeDorpAdapterAssistant extends CommonDropAdapterAssista
 
     protected static Logger log = Logger.getLogger(RepositoryNodeDorpAdapterAssistant.class);
 
-    private IRepositoryObjectCRUD repositoryObjectCRUD = RepNodeUtils.getRepositoryObjectCRUD();
+    private IRepositoryObjectCRUDAction repositoryObjectCRUD = RepNodeUtils.getRepositoryObjectCRUD();
 
     public RepositoryNodeDorpAdapterAssistant() {
     }

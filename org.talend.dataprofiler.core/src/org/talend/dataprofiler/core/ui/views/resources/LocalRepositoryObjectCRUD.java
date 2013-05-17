@@ -42,6 +42,7 @@ import org.talend.core.model.repository.Folder;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.dataprofiler.core.CorePlugin;
+import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.helper.WorkspaceResourceHelper;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.utils.MessageUI;
@@ -83,7 +84,20 @@ import org.talend.utils.sugars.ReturnCode;
  * Local Repository Object CRUD. only when the project is local use this.
  * 
  */
-public class LocalRepositoryObjectCRUD implements IRepositoryObjectCRUD {
+public class LocalRepositoryObjectCRUD extends AbstractRepObjectCRUDAction {
+
+    /**
+     * DOC yyin LocalRepositoryObjectCRUD constructor comment.
+     * 
+     * @param text
+     */
+    public LocalRepositoryObjectCRUD(String text) {
+        super(text);
+    }
+
+    public LocalRepositoryObjectCRUD() {
+        this(PluginConstant.EMPTY_STRING);
+    }
 
     private static final IPath PROJECT_FULL_PATH = ResourceManager.getRootProject().getFullPath();
 
@@ -332,6 +346,8 @@ public class LocalRepositoryObjectCRUD implements IRepositoryObjectCRUD {
                     return isHandleOK;
                 }
                 // TDQ-5614 ~
+                // Added 20130517 yyin TDQ-7289
+                super.loadModelElement(sourceNode);
             }
 
             // do move.

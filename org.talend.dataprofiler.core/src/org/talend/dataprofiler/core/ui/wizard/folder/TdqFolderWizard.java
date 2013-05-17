@@ -14,7 +14,7 @@ package org.talend.dataprofiler.core.ui.wizard.folder;
 
 import org.eclipse.core.runtime.IPath;
 import org.talend.core.model.repository.ERepositoryObjectType;
-import org.talend.dataprofiler.core.ui.views.resources.IRepositoryObjectCRUD;
+import org.talend.dataprofiler.core.ui.views.resources.IRepositoryObjectCRUDAction;
 import org.talend.repository.model.IRepositoryNode;
 
 /**
@@ -28,10 +28,10 @@ public class TdqFolderWizard extends org.talend.repository.ui.wizards.folder.Fol
 
     private IRepositoryNode _node;
 
-    private IRepositoryObjectCRUD _repositoryObjectCRUD;
+    private IRepositoryObjectCRUDAction _repositoryObjectCRUD;
 
     public TdqFolderWizard(IPath path, ERepositoryObjectType objectType, IRepositoryNode node,
-            IRepositoryObjectCRUD repositoryObjectCRUD) {
+            IRepositoryObjectCRUDAction repositoryObjectCRUD) {
         super(path, objectType, node.getObject().getLabel());
         this._node = node;
         this._repositoryObjectCRUD = repositoryObjectCRUD;
