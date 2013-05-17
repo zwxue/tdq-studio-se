@@ -115,6 +115,8 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
 
     private Collection<Text> checkWhitespaceTextFields = new HashSet<Text>();
 
+    protected boolean isRefreshText = false;
+
     public AbstractMetadataFormPage(FormEditor editor, String id, String title) {
         super(editor, id, title);
     }
@@ -230,15 +232,17 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
 
             public void modifyText(ModifyEvent e) {
                 // boolean dirty = isDirty();
-                modify = true;
-                setDirty(true);
+                if (!isRefreshText) {
+                    modify = true;
+                    setDirty(true);
 
-                // MOD msjian 2011-7-18 23216: when changed the name of a connection to null, write a warning
-                if (PluginConstant.EMPTY_STRING.equals(nameText.getText())) {
-                    getManagedForm().getMessageManager().addMessage(NAMECONNOTBEEMPTY, NAMECONNOTBEEMPTY, null,
-                            IMessageProvider.ERROR, nameText);
-                } else {
-                    getManagedForm().getMessageManager().removeMessage(NAMECONNOTBEEMPTY, nameText);
+                    // MOD msjian 2011-7-18 23216: when changed the name of a connection to null, write a warning
+                    if (PluginConstant.EMPTY_STRING.equals(nameText.getText())) {
+                        getManagedForm().getMessageManager().addMessage(NAMECONNOTBEEMPTY, NAMECONNOTBEEMPTY, null,
+                                IMessageProvider.ERROR, nameText);
+                    } else {
+                        getManagedForm().getMessageManager().removeMessage(NAMECONNOTBEEMPTY, nameText);
+                    }
                 }
             }
 
@@ -561,5 +565,9 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
         }
 
         return ret;
+    }
+
+    public void setModify(boolean modify) {
+        this.modify = modify;
     }
 }

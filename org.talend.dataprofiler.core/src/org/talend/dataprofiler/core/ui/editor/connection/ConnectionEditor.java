@@ -70,6 +70,7 @@ public class ConnectionEditor extends CommonFormEditor {
             // refresh the analysis editor
             if (masterPage.isNameTextUpdate()) {
                 WorkbenchUtils.refreshCurrentAnalysisEditor();
+                masterPage.setModify(false);
             }
         }
         setEditorObject(masterPage.getConnectionRepNode());
@@ -98,6 +99,7 @@ public class ConnectionEditor extends CommonFormEditor {
 
     @Override
     public void refreshEditor() {
+        masterPage.initialize(this);
         masterPage.refreshTextInfo();
         super.refreshEditor();
     }
