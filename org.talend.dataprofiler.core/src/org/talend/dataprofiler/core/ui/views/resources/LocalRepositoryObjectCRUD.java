@@ -324,6 +324,9 @@ public class LocalRepositoryObjectCRUD implements IRepositoryObjectCRUD {
                     return isHandleOK;
                 }
                 // TDQ-5614 ~
+
+                // Added 20130517 yyin TDQ-7289
+                WorkbenchUtils.loadModelElement(sourceNode);
             }
 
             // do move.
