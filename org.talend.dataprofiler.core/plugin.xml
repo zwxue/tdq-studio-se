@@ -1523,7 +1523,13 @@
            id="org.talend.dataprofiler.core.migration.impl.AddTeradataExpressionInPatternFrenquencyIndicatorTask"
            name="Add sql expression and character map for Teradata in PatternFrequency Table and LowFrequency Indicators"
            version="5.1.3">
-     </workspacetask>  
+     </workspacetask>
+          <workspacetask
+                class="org.talend.dataprofiler.core.migration.impl.UpdateMeanAggrDefinitionTask"
+                id="org.talend.dataprofiler.core.migration.impl.UpdateMeanAggrDefinitionTask"
+                name="UpdateMeanAggrDefinitionTask"
+                version="5.1.4">
+          </workspacetask>  
   </extension>
   <extension
         point="org.eclipse.ui.actionSets">

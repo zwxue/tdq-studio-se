@@ -122,6 +122,7 @@ public abstract class AMigrationTask implements IMigrationTask {
                 || "update the value of path on the property files".equals(getId())//$NON-NLS-1$
                 || "org.talend.dataprofiler.core.changeBinFrequanceUUID".equals(getId()) //$NON-NLS-1$
                 || "org.talend.dataprofiler.core.tdq.migration.UpdateReportUserDefinedJrxmlFilePathTask".equals(getId()) //$NON-NLS-1$
-                || "org.talend.dataprofiler.core.migration.impl.UpdateAggrDefinitionTask".equals(getId()); //$NON-NLS-1$
+                || "org.talend.dataprofiler.core.migration.impl.UpdateAggrDefinitionTask".equals(getId()) //$NON-NLS-1$
+                || "org.talend.dataprofiler.core.migration.impl.UpdateMeanAggrDefinitionTask".equals(getId()); //$NON-NLS-1$  
     }
 }
