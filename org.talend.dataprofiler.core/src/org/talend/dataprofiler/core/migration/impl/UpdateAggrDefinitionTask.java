@@ -36,9 +36,9 @@ import org.talend.dq.writer.EMFSharedResources;
  */
 public class UpdateAggrDefinitionTask extends AbstractWorksapceUpdateTask {
 
-    private static String[] needUpateKeys;
+    protected static String[] needUpateKeys;
 
-    private static HashMap<String, String[]> map = new HashMap<String, String[]>();
+    protected static HashMap<String, String[]> map = new HashMap<String, String[]>();
 
     private static Logger log = Logger.getLogger(UpdateAggrDefinitionTask.class);
 
@@ -52,9 +52,9 @@ public class UpdateAggrDefinitionTask extends AbstractWorksapceUpdateTask {
         return MigrationTaskType.FILE;
     }
 
-    private void initializtion() {
+    protected void initializtion() {
         needUpateKeys = new String[] { "Simple Statistics", "Text Statistics", "Phone Number Statistics", "Catalog Overview", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
-                "Connection Overview", "Schema Overview", "Range", "IQR", "Summary Statistics", "Mean" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
+                "Connection Overview", "Schema Overview", "Range", "IQR", "Summary Statistics" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
 
         String[] simpArray = new String[] { "Blank Count", "Distinct Count", "Duplicate Count", "Unique Count", "Null Count", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
                 "Row Count", "Default Value Count" }; //$NON-NLS-1$ //$NON-NLS-2$
@@ -80,8 +80,6 @@ public class UpdateAggrDefinitionTask extends AbstractWorksapceUpdateTask {
         map.put("IQR", interRangeArray); //$NON-NLS-1$
         String[] rangeArray = new String[] { "Maximum", "Minimum" }; //$NON-NLS-1$ //$NON-NLS-2$
         map.put("Range", rangeArray); //$NON-NLS-1$
-        String[] meanArray = new String[] {};
-        map.put("Mean", meanArray); //$NON-NLS-1$
     }
 
     @Override
@@ -111,6 +109,8 @@ public class UpdateAggrDefinitionTask extends AbstractWorksapceUpdateTask {
                     EMFSharedResources.getInstance().saveResource(indiDefinition.eResource());
                 }
             }
+            // clear the indicatorsDefinitions
+            this.indicatorsDefinitions.clear();
         } catch (Exception exc) {
             log.error("do migration for UpdateAggrDefinitionTask failed:", exc); //$NON-NLS-1$
         }

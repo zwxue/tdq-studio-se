@@ -36,6 +36,7 @@ import org.talend.dataquality.helpers.IndicatorHelper;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dataquality.properties.TDQAnalysisItem;
+import org.talend.dataquality.properties.TDQFileItem;
 import org.talend.dataquality.properties.TDQSourceFileItem;
 import org.talend.dataquality.properties.impl.TDQAnalysisItemImpl;
 import org.talend.dataquality.properties.impl.TDQIndicatorDefinitionItemImpl;
@@ -155,18 +156,18 @@ public final class DependenciesHandler {
         // locate resource of each Dependency object
         List<Resource> modifiedResources = new ArrayList<Resource>();
         if (clientDependencies != null) {
-        Iterator<Dependency> dependencyIterator = clientDependencies.iterator();
-        while (dependencyIterator.hasNext()) {
-            Dependency dependency = dependencyIterator.next();
-            Resource dependencyResource = dependency.eResource();
-            if (!toRemoveResources.contains(dependencyResource)) {
-                continue;
+            Iterator<Dependency> dependencyIterator = clientDependencies.iterator();
+            while (dependencyIterator.hasNext()) {
+                Dependency dependency = dependencyIterator.next();
+                Resource dependencyResource = dependency.eResource();
+                if (!toRemoveResources.contains(dependencyResource)) {
+                    continue;
+                }
+                if (dependencyResource != null) {
+                    modifiedResources.add(dependencyResource);
+                    dependencyIterator.remove();
+                }
             }
-            if (dependencyResource != null) {
-                modifiedResources.add(dependencyResource);
-                dependencyIterator.remove();
-            }
-        }
         }
         return modifiedResources;
     }
@@ -357,7 +358,7 @@ public final class DependenciesHandler {
     public List<IRepositoryViewObject> getSupplierDependency(IRepositoryViewObject object) {
         List<IRepositoryViewObject> listViewObject = new ArrayList<IRepositoryViewObject>();
         ModelElement modelElement = PropertyHelper.getModelElement(object.getProperty());
-        if (object.getProperty().getItem() instanceof TDQSourceFileItem) {
+        if (object.getProperty().getItem() instanceof TDQFileItem) {
             return listViewObject;
         }
         if (modelElement instanceof IndicatorDefinition) {

@@ -232,8 +232,7 @@ public class ItemRecord {
                     ReportType reportType = ReportHelper.ReportType.getReportType(anaMap.getAnalysis(), anaMap.getReportType());
                     boolean isUserMade = ReportHelper.ReportType.USER_MADE.equals(reportType);
                     if (isUserMade) {
-                        IFolder folder = ResourceManager.getJRXMLFolder();
-                        traverseFolderAndAddJrxmlDependencies(folder.getLocation().toFile());
+                        traverseFolderAndAddJrxmlDependencies(getJrxmlFolderFromReport(rep, ResourceManager.getJRXMLFolder()));
                     }
                 }
             } else if (element instanceof IndicatorDefinition) { // MOD sizhaoliu 2013-04-13 TDQ-7082
@@ -247,6 +246,28 @@ public class ItemRecord {
                 }
             }
         }
+    }
+
+    /**
+     * get the jrxml folder according to the Report file(if the Report file is out of current workspace, the Jrxml
+     * Folder should also out of it).
+     * 
+     * @param rep the Report file
+     * @param folder the Jrxml Folder in the current project
+     * @return
+     */
+    private File getJrxmlFolderFromReport(TdReport rep, IFolder folder) {
+        File jrxmlFolderFile = null;
+        String repFileString = rep.eResource().getURI().toFileString();
+        String projectString = folder.getProject().getLocation().toString();
+        if (repFileString.startsWith(projectString)) {
+            jrxmlFolderFile = folder.getLocation().toFile();
+        } else {
+            String jrxmlFolderString = folder.getLocation().toString();
+            jrxmlFolderFile = new File(jrxmlFolderString.replaceFirst(projectString,
+                    repFileString.substring(0, repFileString.indexOf(EResourceConstant.DATA_PROFILING.getPath()) - 1)));
+        }
+        return jrxmlFolderFile;
     }
 
     private void includeJUDIDependencies(IndicatorDefinition definition) {
@@ -268,16 +289,16 @@ public class ItemRecord {
     }
 
     private void traverseFolderAndAddJrxmlDependencies(File folderFile) {
-        for (File file : folderFile.listFiles()) {
-            if (file.isDirectory()) {
-                traverseFolderAndAddJrxmlDependencies(file);
-            } else if (file.isFile()) {
-                String name = file.getName();
-                int dotIndex = name.lastIndexOf(".");
+        for (File subFile : folderFile.listFiles()) {
+            if (subFile.isDirectory()) {
+                traverseFolderAndAddJrxmlDependencies(subFile);
+            } else if (subFile.isFile()) {
+                String name = subFile.getName();
+                int dotIndex = name.lastIndexOf("."); //$NON-NLS-1$
                 if (dotIndex > 0) {
                     String ext = name.substring(dotIndex + 1);
-                    if (FactoriesUtil.PROPERTIES_EXTENSION.equals(ext)) {
-                        dependencyMap.put(file, null);
+                    if (FactoriesUtil.JRXML.equals(ext)) {
+                        dependencyMap.put(subFile, null);
                     }
                 }
             }
