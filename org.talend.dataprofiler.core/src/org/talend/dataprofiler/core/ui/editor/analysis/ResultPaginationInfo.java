@@ -109,7 +109,7 @@ public class ResultPaginationInfo extends IndicatorPaginationInfo {
             IRepositoryNode modelElementRepositoryNode = modelElementIndicator.getModelElementRepositoryNode();
             IRepositoryNode parentNodeForColumnNode = RepositoryNodeHelper.getParentNodeForColumnNode(modelElementRepositoryNode);
             String label = parentNodeForColumnNode.getObject().getLabel();
-            if (label != null && !label.equals("")) {
+            if (label != null && !label.equals("")) { //$NON-NLS-1$
                 label = label.concat(".").concat(modelElementIndicator.getElementName());//$NON-NLS-1$
             } else {
                 label = modelElementIndicator.getElementName();
@@ -232,7 +232,6 @@ public class ResultPaginationInfo extends IndicatorPaginationInfo {
     private void addMouseListenerForChart(final ChartComposite chartComp, final IDataExplorer explorer, final Analysis analysis) {
         chartComp.addChartMouseListener(new ChartMouseListener() {
 
-            @SuppressWarnings("unchecked")
             public void chartMouseClicked(ChartMouseEvent event) {
                 boolean flag = event.getTrigger().getButton() != MouseEvent.BUTTON3;
 
@@ -262,6 +261,12 @@ public class ResultPaginationInfo extends IndicatorPaginationInfo {
                             return;
                         }
                         // ~22524
+                        // ADD msjian TDQ-7275 2013-5-21: when allow drill down is not checked, no menu display
+                        if (ExecutionLanguage.JAVA == currentEngine && !analysis.getParameters().isStoreData()) {
+                            return;
+                        }
+                        // TDQ-7275~
+
                         // create menu
                         Menu menu = new Menu(chartComp.getShell(), SWT.POP_UP);
                         chartComp.setMenu(menu);
@@ -380,7 +385,7 @@ public class ResultPaginationInfo extends IndicatorPaginationInfo {
             }
 
             public void chartMouseMoved(ChartMouseEvent event) {
-                // TODO Auto-generated method stub
+                // no action here
 
             }
 
