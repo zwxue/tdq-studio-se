@@ -26,6 +26,7 @@ import org.talend.commons.exception.PersistenceException;
 import org.talend.commons.utils.VersionUtils;
 import org.talend.core.context.Context;
 import org.talend.core.context.RepositoryContext;
+import org.talend.core.database.EDatabaseTypeName;
 import org.talend.core.database.conn.version.EDatabaseVersion4Drivers;
 import org.talend.core.exception.TalendInternalPersistenceException;
 import org.talend.core.model.metadata.IMetadataConnection;
@@ -178,7 +179,14 @@ public class ExportConnectionToTOSAction extends Action {
                     database = tdDataProvider.getSID();
                 }
                 newMetadataConnection.setUiSchema(pack.getName());
+                // teradata database use "database" attribute as uiSchema on the DatabaseWizard
+                if (EDatabaseTypeName.TERADATA.getXmlName().equalsIgnoreCase(tdDataProvider.getDatabaseType())) {
+                    if (database.isEmpty()) {
+                        database = pack.getName();
+                    }
+                }
             }
+
             newMetadataConnection.setDatabase(database);
             // ~set database to filter catalog
             // MOD gdbu TDQ-4282 2011-12-28 fill catalog and schema.
