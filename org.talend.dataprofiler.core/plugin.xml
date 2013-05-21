@@ -1546,6 +1546,12 @@
            name="update file connection to add connection name"
            version="5.2.2">
      </workspacetask>
+     <workspacetask
+           class="org.talend.dataprofiler.core.migration.impl.UpdateMeanAggrDefinitionTask"
+           id="org.talend.dataprofiler.core.migration.impl.UpdateMeanAggrDefinitionTask"
+           name="Update Mean AggrDefinition Task"
+           version="5.2.3">
+     </workspacetask>
   </extension>
   <extension
         point="org.eclipse.ui.actionSets">

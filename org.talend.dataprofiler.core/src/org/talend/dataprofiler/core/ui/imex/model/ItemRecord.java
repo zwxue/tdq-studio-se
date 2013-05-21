@@ -21,6 +21,7 @@ import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
@@ -49,6 +50,7 @@ import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.helper.resourcehelper.RepResourceFileHelper;
 import org.talend.resource.EResourceConstant;
+import org.talend.resource.ResourceManager;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.objectmodel.core.TaggedValue;
 
@@ -239,17 +241,53 @@ public class ItemRecord {
                 TdReport rep = (TdReport) element;
                 for (AnalysisMap anaMap : rep.getAnalysisMap()) {
                     ReportType reportType = ReportHelper.ReportType.getReportType(anaMap.getAnalysis(), anaMap.getReportType());
-                    boolean isUseMode = ReportHelper.ReportType.USER_MADE.equals(reportType);
-                    if (isUseMode) {
-                        URI uri = rep.eResource().getURI();
-                        IPath path = new Path(uri.toFileString());
-                        // Append the relative path of jrxmltemplate to file.
-                        dependencyMap.put(path.append(anaMap.getJrxmlSource()).toFile(), element);
+                    boolean isUserMade = ReportHelper.ReportType.USER_MADE.equals(reportType);
+                    if (isUserMade) {
+                        traverseFolderAndAddJrxmlDependencies(getJrxmlFolderFromReport(rep, ResourceManager.getJRXMLFolder()));
                     }
                 }
             } else if (element instanceof IndicatorDefinition) { // MOD sizhaoliu 2013-04-13 TDQ-7082
                 for (IndicatorDefinition definition : ((IndicatorDefinition) element).getAggregatedDefinitions()) {
                     includeAggregatedDependencies(definition);
+                }
+            }
+        }
+    }
+
+    /**
+     * get the jrxml folder according to the Report file(if the Report file is out of current workspace, the Jrxml
+     * Folder should also out of it).
+     * 
+     * @param rep the Report file
+     * @param folder the Jrxml Folder in the current project
+     * @return
+     */
+    private File getJrxmlFolderFromReport(TdReport rep, IFolder folder) {
+        File jrxmlFolderFile = null;
+        String repFileString = rep.eResource().getURI().toFileString();
+        String projectString = folder.getProject().getLocation().toString();
+        if (repFileString.startsWith(projectString)) {
+            jrxmlFolderFile = folder.getLocation().toFile();
+        } else {
+            String jrxmlFolderString = folder.getLocation().toString();
+            jrxmlFolderFile = new File(jrxmlFolderString.replaceFirst(projectString,
+                    repFileString.substring(0, repFileString.indexOf(EResourceConstant.DATA_PROFILING.getPath()) - 1)));
+        }
+        return jrxmlFolderFile;
+    }
+
+    private void traverseFolderAndAddJrxmlDependencies(File folderFile) {
+        for (File subFile : folderFile.listFiles()) {
+            if (subFile.isDirectory()) {
+                traverseFolderAndAddJrxmlDependencies(subFile);
+            } else if (subFile.isFile()) {
+                String name = subFile.getName();
+                int dotIndex = name.lastIndexOf("."); //$NON-NLS-1$
+                if (dotIndex > 0) {
+                    String ext = name.substring(dotIndex + 1);
+                    if (FactoriesUtil.JRXML.equals(ext)) {
+                        dependencyMap.put(subFile, null);
+                    }
                 }
             }
         }
