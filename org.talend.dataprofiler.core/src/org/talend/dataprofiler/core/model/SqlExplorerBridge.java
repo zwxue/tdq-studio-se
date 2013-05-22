@@ -26,6 +26,7 @@ import net.sourceforge.sqlexplorer.plugin.SQLExplorerPlugin;
 import net.sourceforge.sqlexplorer.plugin.actions.OpenPasswordConnectDialogAction;
 import net.sourceforge.sqlexplorer.plugin.views.DatabaseStructureView;
 
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.widgets.Shell;
@@ -123,8 +124,7 @@ public final class SqlExplorerBridge {
         if (schema != null) {
             if (catalogOrSchemaNode.getSchemaName() == null) {
                 catalogOrSchemaNode.setSchemaName(schema.getName());
-            } else if (catalogOrSchemaNode.getSchemaName().equalsIgnoreCase(schema.getName())) {
-                // catalogOrSchemaNode.setSchemaName(schema.getName());
+            } else if (!StringUtils.equals(catalogOrSchemaNode.getSchemaName(), schema.getName())) {
                 // if this catalog already loaded its children of some schema, should reload for this schema.
                 if (catalogOrSchemaNode.isChildrenLoaded()) {
                     SQLExplorerPlugin.getDefault().getDatabaseStructureView()
