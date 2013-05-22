@@ -921,7 +921,7 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
                     String tableName = tableItem.getText(0);
                     Package parentPack = (Package) currentSelectionSchemaIndicator.getAnalyzedElement();
                     // MOD qiongli bug 13093,2010-7-2
-                    if (currentCatalogIndicator != null) {
+                    if (currentCatalogIndicator != null && parentPack == null) {
                         parentPack = (Package) currentCatalogIndicator.getAnalyzedElement();
                     }
 
