@@ -58,7 +58,7 @@ public class TDQJrxmlItemImplTest {
         jrxmlItem = PropertiesFactory.eINSTANCE.createTDQJrxmlItem();
 
         EMFUtil emfUtil = new EMFUtil();
-        file = new File("data/test_0.1.jrxml");
+        file = new File("./data/test_0.1.jrxml");
         System.out.println("Loading file " + file.getAbsolutePath());
         writeToFile("original jrxml content");
 
@@ -138,7 +138,7 @@ public class TDQJrxmlItemImplTest {
     }
 
     private void writeToFile(String content) throws FileNotFoundException {
-        BufferedOutputStream stream = new BufferedOutputStream(new FileOutputStream(file));
+        BufferedOutputStream stream = new BufferedOutputStream(new FileOutputStream(file.getAbsoluteFile()));
         try {
             stream.write(content.getBytes());
         } catch (IOException e) {
