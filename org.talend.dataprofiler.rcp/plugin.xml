@@ -932,6 +932,54 @@
             required="true"
             uripath="platform:/plugin/org.talend.libraries.slf4j/lib/slf4j-log4j12-1.6.1.jar">
       </libraryNeeded>
+      <libraryNeeded
+            context="Hive wizard"
+            language="java"
+            message="Wizard use for TOP"
+            name="guava-11.0.2.jar"
+            required="true"
+            uripath="platform:/plugin/org.talend.libraries.guava/lib/guava-11.0.2.jar">
+      </libraryNeeded>
+      <libraryNeeded
+            context="Hive wizard"
+            language="java"
+            message="Wizard use for TOP"
+            name="hive-builtins-0.9.0-cdh4.1.2.jar"
+            required="true"
+            uripath="platform:/plugin/org.talend.libraries.hadoop.cloudera.cdh4/lib/hive-builtins-0.9.0-cdh4.1.2.jar">
+      </libraryNeeded>
+      <libraryNeeded
+            context="Hive wizard"
+            language="java"
+            message="Wizard use for TOP"
+            name="hive-exec-0.9.0-cdh4.1.2.jar"
+            required="true"
+            uripath="platform:/plugin/org.talend.libraries.hadoop.cloudera.cdh4/lib/hive-exec-0.9.0-cdh4.1.2.jar">
+      </libraryNeeded>
+      <libraryNeeded
+            context="Hive wizard"
+            language="java"
+            message="Wizard use for TOP"
+            name="hive-jdbc-0.9.0-cdh4.1.2.jar"
+            required="true"
+            uripath="platform:/plugin/org.talend.libraries.hadoop.cloudera.cdh4/lib/hive-jdbc-0.9.0-cdh4.1.2.jar">
+      </libraryNeeded>
+      <libraryNeeded
+            context="Hive wizard"
+            language="java"
+            message="Wizard use for TOP"
+            name="hive-metastore-0.9.0-cdh4.1.2.jar"
+            required="true"
+            uripath="platform:/plugin/org.talend.libraries.hadoop.cloudera.cdh4/lib/hive-metastore-0.9.0-cdh4.1.2.jar">
+      </libraryNeeded>
+      <libraryNeeded
+            context="Hive wizard"
+            language="java"
+            message="Wizard use for TOP"
+            name="hive-service-0.9.0-cdh4.1.2.jar"
+            required="true"
+            uripath="platform:/plugin/org.talend.libraries.hadoop.cloudera.cdh4/lib/hive-service-0.9.0-cdh4.1.2.jar">
+      </libraryNeeded>
    </extension>
    <extension
          point="org.talend.core.runtime.service">
