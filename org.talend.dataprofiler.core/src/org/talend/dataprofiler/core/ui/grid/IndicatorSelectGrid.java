@@ -728,7 +728,7 @@ public class IndicatorSelectGrid extends Grid {
         ScrollBar hScrollBar = getHorizontalBar();
         int res = hScrollBar.getSelection() * COLUMN_WIDTH;
         int max = hScrollBar.getMaximum();
-        if (max > 3 && hScrollBar.getSelection() >= max - 3) {
+        if (max > 1 && hScrollBar.getSelection() >= max - 1) {
             return res + 100;
         }
         return res;
