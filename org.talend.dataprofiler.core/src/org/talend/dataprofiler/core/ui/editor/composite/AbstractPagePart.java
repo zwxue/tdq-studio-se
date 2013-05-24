@@ -26,14 +26,12 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Tree;
-import org.talend.commons.exception.PersistenceException;
 import org.talend.core.model.metadata.MetadataColumnRepositoryObject;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.properties.Item;
 import org.talend.core.model.properties.Property;
 import org.talend.core.model.repository.IRepositoryViewObject;
-import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.ResourceHelper;
 import org.talend.cwm.helper.SwitchHelpers;
@@ -94,10 +92,10 @@ public abstract class AbstractPagePart {
     }
 
     /**
-     * ADD mzhao 2009-05-05 bug:6587.
+     * ADD mzhao 2009-05-05 bug:6587. MOD 20130524 TDQ-7327 yyin: even when the indicators is empty, if the tdProvider
+     * is not null, should also set the connection state
      */
     protected void updateBindConnection(AbstractAnalysisMetadataPage masterPage, ModelElementIndicator[] indicators, Tree tree) {
-        if (indicators != null && indicators.length != 0) {
             // MOD mzhao 2010-07-24, avoid a NPE, feature 13221
             DataManager connection = masterPage.getAnalysis().getContext().getConnection();
             Connection tdProvider = null;
@@ -105,9 +103,11 @@ public abstract class AbstractPagePart {
                 tdProvider = SwitchHelpers.CONNECTION_SWITCH.doSwitch(connection);
             }
 
-            if (tdProvider == null) {
+        if (indicators != null && indicators.length != 0 && tdProvider == null) {
                 tdProvider = ModelElementIndicatorHelper.getTdDataProvider(indicators[0]);
             }
+
+        if (tdProvider != null) {
             setConnectionState(masterPage, tdProvider);
         }
     }
@@ -117,17 +117,12 @@ public abstract class AbstractPagePart {
      * ADD mzhao 2009-05-05 bug:6587.
      */
     protected void updateBindConnection(AbstractAnalysisMetadataPage masterPage, TableIndicator[] indicators, Tree tree) {
-        // MOD mzhao 2009-06-09 feature 5887
-        // if (!isAnalyzedColumnsEmpty(tree)) {
-        // List<TdDataProvider> providerList = new
-        // ArrayList<TdDataProvider>();
         Connection tdProvider = null;
         if (indicators != null && indicators.length != 0) {
             tdProvider = ConnectionHelper.getDataProvider(SwitchHelpers.COLUMN_SET_SWITCH.doSwitch(indicators[0].getColumnSet()));
 
             setConnectionState(masterPage, tdProvider);
         }
-        // }
     }
 
     /**
@@ -193,17 +188,10 @@ public abstract class AbstractPagePart {
             Property prop = PropertyHelper.getProperty(newDataManager);
             // MOD gdbu 2011-8-15 bug : TDQ-3213
             masterPage.reloadDataproviderAndFillConnCombo();
-            try {
-                if (newDataManager.eIsProxy()) {
-                    IRepositoryViewObject lastVersion = ProxyRepositoryFactory.getInstance().getLastVersion(prop.getId());
-                    prop = lastVersion.getProperty();
-                    newDataManager = (DataManager) PropertyHelper.getModelElement(prop);
-                }
-            } catch (PersistenceException e1) {
-                log.error(e1, e1);
+            if (newDataManager.eIsProxy()) {
+                newDataManager = (DataManager) EObjectHelper.resolveObject(newDataManager);
             }
             fianlDataManager = newDataManager;
-            // ~TDQ-3213
 
             // MOD yyin 201204 TDQ-4977
             Object value = null;
@@ -219,8 +207,6 @@ public abstract class AbstractPagePart {
                 index = (Integer) value;
             }
             masterPage.getConnCombo().select(index);
-            // MOD yyin 20120409 TDQ4977
-            // masterPage.getConnCombo().setDisplayColumnIndex(index);
 
             // MOD qiongli 2011-5-16 bug 21453
             if (prop != null && prop.getItem() != null && prop.getItem().getState() != null
@@ -245,6 +231,11 @@ public abstract class AbstractPagePart {
                     public void widgetSelected(SelectionEvent e) {
                         ReturnCode rc = selectedObjectAvailable();
                         if (rc.isOk()) {
+                            // Added TDQ-7327 20130523 yyin: to resolve the proxy connection which is caused by the
+                            // refresh of the db connection tree
+                            if (dataProvider.eIsProxy()) {
+                                dataProvider = (Connection) EObjectHelper.resolveObject(dataProvider);
+                            }// ~
                             dataProvider = callChangeConnectionAction(masterPage, prevSelect, dataProvider);
                             prevSelect = masterPage.getConnCombo().getSelectionIndex();
                         } else {
@@ -319,9 +310,6 @@ public abstract class AbstractPagePart {
         } else {
             masterPage.getConnCombo().setText("unknown connection");//$NON-NLS-1$
         }
-
-        // MOD mzhao 2009-06-09 feature 5887
-        // masterPage.getConnCombo().setEnabled(false);
     }
 
     // MOD mzhao 2009-06-09 feature 5887
