@@ -352,12 +352,13 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
                     }
                     final EList<CharactersMapping> charactersMapping = indicatorDefinition.getCharactersMapping();
                     colName = dbms().getPatternFinderFunction(colName, charactersMapping);
-                    if (colName == null) { // no replacement found, try the default one
+                    if (colName == null) {
+                        // no replacement found, try the default one
                         colName = dbms().getPatternFinderDefaultFunction(colName);
-                    }
-                    if (colName == null) { // no replacement found, try the default one
-                        return traceError(Messages.getString(
-                                "ColumnAnalysisSqlExecutor.NOREPLACEMENTFOUNDFORDBTYPE", language, indicator.getName()));//$NON-NLS-1$
+                        if (colName == null) {
+                            return traceError(Messages.getString(
+                                    "ColumnAnalysisSqlExecutor.NOREPLACEMENTFOUNDFORDBTYPE", language, indicator.getName()));//$NON-NLS-1$
+                        }
                     }
                     // ~
                 } else if (indicatorEclass.equals(IndicatorsPackage.eINSTANCE.getSoundexFreqIndicator())
