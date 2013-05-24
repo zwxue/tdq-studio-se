@@ -57,6 +57,7 @@ import org.talend.commons.utils.VersionUtils;
 import org.talend.core.GlobalServiceRegister;
 import org.talend.core.context.Context;
 import org.talend.core.context.RepositoryContext;
+import org.talend.core.database.EDatabaseTypeName;
 import org.talend.core.language.ECodeLanguage;
 import org.talend.core.model.general.ILibrariesService;
 import org.talend.core.model.general.Project;
@@ -85,6 +86,7 @@ import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.editor.AbstractItemEditorInput;
 import org.talend.dataprofiler.core.ui.editor.CommonFormEditor;
 import org.talend.dataprofiler.core.ui.editor.analysis.AnalysisEditor;
+import org.talend.dataprofiler.core.ui.utils.MessageUI;
 import org.talend.dataprofiler.core.ui.utils.WorkbenchUtils;
 import org.talend.dataprofiler.core.ui.views.DQRespositoryView;
 import org.talend.dataprofiler.core.ui.views.PatternTestView;
@@ -218,6 +220,21 @@ public class CorePlugin extends AbstractUIPlugin {
             lEditorName = String.valueOf(SQLExplorerPlugin.getDefault().getEditorSerialNo());
         }
 
+        String dbType = PluginConstant.EMPTY_STRING;
+        DatabaseConnection dbConn = SwitchHelpers.DATABASECONNECTION_SWITCH.doSwitch(tdDataProvider);
+        if (dbConn != null) {
+            dbType = dbConn.getDatabaseType();
+        }
+
+        String username = JavaSqlFactory.getUsername(tdDataProvider);
+        boolean notSupport = (EDatabaseTypeName.HIVE.getXmlName().equalsIgnoreCase(dbType) && !"STANDALONE".equals(dbConn //$NON-NLS-1$
+                .getDbVersionString())) || EDatabaseTypeName.MSSQL.getDisplayName().equalsIgnoreCase(dbType)
+                && (username == null || PluginConstant.EMPTY_STRING.equals(username));
+        if (notSupport) {
+            MessageUI.openWarning(DefaultMessagesImpl.getString("CorePlugin.cantPreview")); //$NON-NLS-1$ 
+            return null;
+        }
+
         SQLExplorerPlugin sqlPlugin = SQLExplorerPlugin.getDefault();
         AliasManager aliasManager = sqlPlugin.getAliasManager();
 
@@ -250,9 +267,25 @@ public class CorePlugin extends AbstractUIPlugin {
                 Connection connection = SwitchHelpers.CONNECTION_SWITCH.doSwitch(tdDataProvider);
                 if (connection != null) {
                     String userName = JavaSqlFactory.getUsername(connection);
+
+                    String url = JavaSqlFactory.getURL(connection);
                     SQLEditorInput input = new SQLEditorInput("SQL Editor (" + alias.getName() + "." + lEditorName + ").sql"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-                    net.sourceforge.sqlexplorer.dbproduct.User user = alias.hasNoUserName() ? alias.getDefaultUser() : alias
-                            .getUser(userName);
+                    net.sourceforge.sqlexplorer.dbproduct.User user;
+                    user = alias.getUser(userName);
+                    if (PluginConstant.EMPTY_STRING.equals(userName)) {
+                        // get the user both the dbtype and username are the same.
+                        if (!alias.getUrl().equals(url)) {
+                            String password = JavaSqlFactory.getPassword(connection);
+                            user = new net.sourceforge.sqlexplorer.dbproduct.User(userName, password);
+                            user.setAlias(alias);
+                            alias.addUser(user);
+                        }
+                    } else {
+                        if (user == null) {
+                            user = alias.getDefaultUser();
+                        }
+                    }
+                    alias.setDefaultUser(user);
 
                     // set IMetadataConnection into the user, if the db type is hive, should use IMetadataConnection to
                     // create the hive connection

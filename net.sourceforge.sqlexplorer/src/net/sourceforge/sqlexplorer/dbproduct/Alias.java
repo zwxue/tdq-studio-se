@@ -124,8 +124,9 @@ public class Alias {
         connectAtStartup = Boolean.parseBoolean(root.attributeValue(CONNECT_AT_STARTUP));
         driverId = root.attributeValue(DRIVER_ID);
         String str = root.attributeValue(HAS_NO_USER_NAME);
-        if (str != null)
+        if (str != null) {
             hasNoUserName = Boolean.parseBoolean(str);
+        }
         name = root.elementText(NAME);
         url = root.elementText(URL);
         folderFilterExpression = root.elementText(FOLDER_FILTER_EXPRESSION);
@@ -133,7 +134,7 @@ public class Alias {
         schemaFilterExpression = root.elementText(SCHEMA_FILTER_EXPRESSION);
 
         if (hasNoUserName) {
-            User user = new User("anonymous", "");
+            User user = new User("", "");
             addUser(user);
             setDefaultUser(user);
         } else {
@@ -143,17 +144,18 @@ public class Alias {
                 if (list != null) {
                     for (Element userElem : list) {
                         User user = new User(userElem);
-                        if (user.getUserName() != null && user.getUserName().trim().length() > 0) {
-                            addUser(user);
-                        }
+                        // if (user.getUserName() != null && user.getUserName().trim().length() > 0) {
+                        addUser(user);
+                        // }
                     }
                 }
-                    String defaultUserName = root.elementText(DEFAULT_USER);
-                    if (defaultUserName != null) {
-                        User user = users.get(defaultUserName);
-                        if (user != null)
-                            defaultUser = user;
+                String defaultUserName = root.elementText(DEFAULT_USER);
+                if (defaultUserName != null) {
+                    User user = users.get(defaultUserName);
+                    if (user != null) {
+                        defaultUser = user;
                     }
+                }
 
             }
         }
@@ -176,11 +178,13 @@ public class Alias {
         root.addElement(NAME_FILTER_EXPRESSION).setText(nameFilterExpression);
         root.addElement(SCHEMA_FILTER_EXPRESSION).setText(schemaFilterExpression);
         Element usersElem = root.addElement(USERS);
-        for (User user : users.values())
+        for (User user : users.values()) {
             // user.setPassword(ALIAS)
             usersElem.add(user.describeAsXml());
-        if (defaultUser != null)
+        }
+        if (defaultUser != null) {
             root.addElement(DEFAULT_USER).setText(defaultUser.getUserName());
+        }
         return root;
     }
 
@@ -203,8 +207,9 @@ public class Alias {
      * @throws ExplorerException
      */
     public void closeAllConnections() {
-        for (User user : users.values())
+        for (User user : users.values()) {
             user.closeAllSessions();
+        }
     }
 
     /**
@@ -237,14 +242,15 @@ public class Alias {
      */
     public User addUser(User user) {
         if (user.getAlias() != null) {
-            if (user.getAlias() != this)
+            if (user.getAlias() != this) {
                 throw new IllegalArgumentException("User already belongs to a different Alias");
+            }
             return user;
         }
-        if (user.getUserName() == null || user.getUserName().length() == 0)
-            throw new IllegalArgumentException("Illegal user name");
-        if (!users.isEmpty() && hasNoUserName)
-            throw new IllegalArgumentException("Cannot add users when usernames are not required by the alias");
+        // if (user.getUserName() == null || user.getUserName().length() == 0)
+        // throw new IllegalArgumentException("Illegal user name");
+        // if (!users.isEmpty() && hasNoUserName)
+        // throw new IllegalArgumentException("Cannot add users when usernames are not required by the alias");
 
         User existingUser = users.get(user.getUserName());
         if (existingUser != null) {
@@ -254,8 +260,9 @@ public class Alias {
 
         users.put(user.getUserName(), user);
         user.setAlias(this);
-        if (defaultUser == null)
+        if (defaultUser == null) {
             defaultUser = user;
+        }
         SQLExplorerPlugin.getDefault().getAliasManager().modelChanged();
         return user;
     }
@@ -267,16 +274,18 @@ public class Alias {
      */
     public void removeUser(User user) {
         boolean isDefault = user == defaultUser;
-        if (user.getAlias() != this)
+        if (user.getAlias() != this) {
             throw new IllegalArgumentException("User belongs to a different Alias");
+        }
         user.closeAllSessions();
         user.setAlias(null);
         users.remove(user.getUserName());
         if (isDefault) {
-            if (!users.isEmpty())
+            if (!users.isEmpty()) {
                 defaultUser = users.values().iterator().next();
-            else
+            } else {
                 defaultUser = null;
+            }
         }
     }
 
@@ -421,19 +430,22 @@ public class Alias {
      * @param hasNoUserName the hasNoUserName to set
      */
     public void setHasNoUserName(boolean hasNoUserName) {
-        if (this.hasNoUserName == hasNoUserName)
+        if (this.hasNoUserName == hasNoUserName) {
             return;
+        }
         this.hasNoUserName = hasNoUserName;
         if (hasNoUserName) {
-            for (User user : users.values())
+            for (User user : users.values()) {
                 user.setAlias(null);
+            }
             users.clear();
-            User user = new User("anonymous", "");
+            User user = new User("", "");
             addUser(user);
             setDefaultUser(user);
         } else {
-            for (User user : users.values())
+            for (User user : users.values()) {
                 user.setAlias(null);
+            }
             users.clear();
         }
     }

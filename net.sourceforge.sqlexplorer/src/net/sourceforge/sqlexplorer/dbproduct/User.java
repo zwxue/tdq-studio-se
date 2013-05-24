@@ -84,6 +84,15 @@ public class User implements Comparable<User>, SessionEstablishedListener {
     private IMetadataConnection metadataConnection;
 
     /**
+     * Getter for metadataConnection.
+     * 
+     * @return the metadataConnection
+     */
+    public IMetadataConnection getMetadataConnection() {
+        return this.metadataConnection;
+    }
+
+    /**
      * Sets the metadataConnection.
      * 
      * @param metadataConnection the metadataConnection to set
@@ -143,7 +152,6 @@ public class User implements Comparable<User>, SessionEstablishedListener {
     /**
      * Creates a duplicate of this User
      * 
-     * @param alias
      * @return
      */
     public User createCopy() {
@@ -495,7 +503,7 @@ public class User implements Comparable<User>, SessionEstablishedListener {
      * 
      * @param alias
      */
-    /* package */void setAlias(Alias alias) {
+    public void setAlias(Alias alias) {
         if (this.alias != null && alias != null) {
             if (this.alias != alias) {
                 throw new IllegalArgumentException("Cannot change a User's Alias");
