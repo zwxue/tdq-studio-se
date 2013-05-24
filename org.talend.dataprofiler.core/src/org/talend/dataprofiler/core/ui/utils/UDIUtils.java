@@ -306,9 +306,12 @@ public final class UDIUtils {
         DbmsLanguage dbmsLanguage = DbmsLanguageFactory.createDbmsLanguage(analysis, executionLanguage);
         Expression returnExpression = dbmsLanguage.getExpression(udi);
         String executeType = isJavaEngin ? executionLanguage.getName() : dbmsLanguage.getDbmsName();
-        if (isJavaEngin && judi != null) {
-            // need some message
-        } else if (returnExpression == null) {
+        // MOD qiongli 2013.5.22 TDQ-7282.if don't find a valid java expression for JUDI,should also pop this dialog.
+        boolean finddExpression = true;
+        if (isJavaEngin && judi == null || !isJavaEngin && returnExpression == null) {
+            finddExpression = false;
+        }
+        if (!finddExpression) {
             // open the editor
             boolean openUDI = MessageDialog
                     .openQuestion(

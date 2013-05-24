@@ -17,6 +17,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -47,11 +48,13 @@ import org.talend.dataquality.indicators.MinLengthIndicator;
 import org.talend.dataquality.indicators.PatternFreqIndicator;
 import org.talend.dataquality.indicators.PatternLowFreqIndicator;
 import org.talend.dataquality.indicators.UniqueCountIndicator;
+import org.talend.dataquality.indicators.sql.UserDefIndicator;
 import org.talend.dq.dbms.DbmsLanguage;
 import org.talend.dq.dbms.DbmsLanguageFactory;
 import org.talend.dq.dbms.HiveDbmsLanguage;
 import org.talend.dq.dbms.MSSqlDbmsLanguage;
 import org.talend.dq.dbms.SQLiteDbmsLanguage;
+import org.talend.dq.helper.UDIHelper;
 import org.talend.utils.collections.MultiMapHelper;
 import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.resource.relational.ColumnSet;
@@ -118,7 +121,8 @@ public class IndicatorEvaluator extends Evaluator<String> {
             statement.close();
             return ok;
         }
-
+        // MOD qiongli TDQ-7282,check invalid judi.if there are invalid judis,return false code and show message later.
+        ok = getMessageForInvalidJUDIs();
         int columnCount = resultSet.getMetaData().getColumnCount();
         int maxNumberRows = analysis.getParameters().getMaxNumberRows();
 
@@ -423,6 +427,43 @@ public class IndicatorEvaluator extends Evaluator<String> {
             }
         }
         return ok;
+    }
+
+    /**
+     * 
+     * check each UDI if has realted java expression(class) for Java Engine,remove it from elementToIndicators(no need
+     * to compute),then populate the message
+     * 
+     * @param analysis
+     * @return
+     */
+    protected ReturnCode getMessageForInvalidJUDIs() {
+        ReturnCode ret = new ReturnCode(Boolean.TRUE);
+        Set<String> invalidUdiNames = new HashSet<String>();
+        Set<String> columns = elementToIndicators.keySet();
+        Iterator<String> colIt = columns.iterator();
+        while (colIt.hasNext()) {
+            String nextCol = colIt.next();
+            List<Indicator> indicators = elementToIndicators.get(nextCol);
+            List<Indicator> needRemovedInds = new ArrayList<Indicator>();
+            for (Indicator ind : indicators) {
+                if (ind instanceof UserDefIndicator && !UDIHelper.isJUDIValid(ind.getIndicatorDefinition())) {
+                    invalidUdiNames.add(ind.getName());
+                    needRemovedInds.add(ind);
+                }
+            }
+            if (!needRemovedInds.isEmpty()) {
+                indicators.removeAll(needRemovedInds);
+                allIndicators.removeAll(needRemovedInds);
+            }
+        }
+
+        if (!invalidUdiNames.isEmpty()) {
+            String message = invalidUdiNames.toString();
+            ret.setReturnCode(Messages.getString("IndicatorEvaluator.NoExpressionFound", message), false); //$NON-NLS-1$
+
+        }
+        return ret;
     }
 
 }

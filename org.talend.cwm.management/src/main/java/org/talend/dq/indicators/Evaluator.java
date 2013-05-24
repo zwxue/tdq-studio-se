@@ -127,9 +127,11 @@ public abstract class Evaluator<T> implements IMemoryChangeListener {
             if (this.continueRun()) {
                 rc = executeSqlQuery(sqlStatement);
             }
-            if (!rc.isOk()) {
-                return rc;
-            }
+            // MOD qiongli tdq-7282 when rc is not ok,should not return,need to continue and dispaly those correct
+            // indicator results.
+            // if (!rc.isOk()) {
+            // return rc;
+            // }
             if (!finalizeIndicators()) {
                 rc.setReturnCode(Messages.getString("Evaluator.ProblemFinalizeIndicators"), false); //$NON-NLS-1$
             }
