@@ -264,12 +264,12 @@ public class ItemRecord {
      */
     private File getJrxmlFolderFromReport(TdReport rep, IFolder folder) {
         File jrxmlFolderFile = null;
-        String repFileString = rep.eResource().getURI().toFileString();
-        String projectString = folder.getProject().getLocation().toString();
+        String repFileString = new File(rep.eResource().getURI().toFileString()).getAbsolutePath();
+        String projectString = folder.getProject().getLocation().toFile().getAbsolutePath();
         if (repFileString.startsWith(projectString)) {
             jrxmlFolderFile = folder.getLocation().toFile();
         } else {
-            String jrxmlFolderString = folder.getLocation().toString();
+            String jrxmlFolderString = folder.getLocation().toFile().getAbsolutePath();
             jrxmlFolderFile = new File(jrxmlFolderString.replaceFirst(projectString,
                     repFileString.substring(0, repFileString.indexOf(EResourceConstant.DATA_PROFILING.getPath()) - 1)));
         }
