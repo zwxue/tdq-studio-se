@@ -409,14 +409,7 @@ public abstract class AbstractColumnDropTree extends AbstractPagePart {
         if (indicatorType == IndicatorEnum.RegexpMatchingIndicatorEnum
                 || indicatorType == IndicatorEnum.SqlPatternMatchingIndicatorEnum) {
             Pattern pattern = unit.getIndicator().getParameters().getDataValidDomain().getPatterns().get(0);
-            if (pattern.eIsProxy()) {
-                pattern = (Pattern) EObjectHelper.resolveObject(pattern);
-            }
-            if (pattern.getName() != null) {
-                return pattern.getName();
-            } else {
-                return unit.getIndicator().getName();
-            }
+            return pattern.getName();
         } else if (indicatorType == IndicatorEnum.UserDefinedIndicatorEnum) {
             if (unit.getIndicatorName() != null) {
                 return unit.getIndicatorName();
