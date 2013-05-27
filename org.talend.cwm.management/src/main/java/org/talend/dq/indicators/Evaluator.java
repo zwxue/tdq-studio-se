@@ -118,7 +118,7 @@ public abstract class Evaluator<T> implements IMemoryChangeListener {
         }
         try {
             if (!prepareIndicators()) {
-                rc.setReturnCode(Messages.getString("Evaluator.Problem") + javaPatternMessage, false); //$NON-NLS-1$
+                rc.setReturnCode(Messages.getString("Evaluator.Problem", javaPatternMessage), false); //$NON-NLS-1$
                 return rc;
             }
 
@@ -130,11 +130,12 @@ public abstract class Evaluator<T> implements IMemoryChangeListener {
             }
             if (!finalizeIndicators()) {
                 rc.setReturnCode(Messages.getString("Evaluator.ProblemFinalizeIndicators"), false); //$NON-NLS-1$
+                return rc;
             }
             if (isLowMemory) {
                 rc.setReturnCode(Messages.getString("Evaluator.OutOfMomory", usedMemory), false); //$NON-NLS-1$
+                return rc;
             }
-            return rc;
         } catch (SQLException e) {
             log.error(Messages.getString("Evaluator.SQLException", sqlStatement), e); //$NON-NLS-1$
             rc.setReturnCode(e.getMessage(), false);
@@ -166,7 +167,7 @@ public abstract class Evaluator<T> implements IMemoryChangeListener {
                 } else if (UDIHelper.isUDI(indic)) {
                     // Added yyin TDQ-6632:"Problem when preparing all indicatorsnull"--> replace the null with
                     // indicator's name
-                    javaPatternMessage = " : " + indic.getName();//$NON-NLS-1$
+                    javaPatternMessage = indic.getName();
                 }
                 ok = false;
             }
