@@ -32,6 +32,7 @@ import org.eclipse.ui.PlatformUI;
 import org.talend.commons.utils.io.FilesUtils;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
+import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.exception.ExceptionHandler;
 import org.talend.dataprofiler.core.helper.EEcosCategory;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
@@ -227,7 +228,7 @@ public class ImportRemotePatternAction extends Action {
 
             // get the latest revision url
             String componentUrl = extension.getLatestRevision().getUrl();
-            monitor.setTaskName(EcosConstants.DOWNLOAD_TASK_NAME + componentUrl);
+            monitor.setTaskName(EcosConstants.DOWNLOAD_TASK_NAME + PluginConstant.SPACE_STRING + componentUrl);
             String targetFolder = ResourceManager.getExchangeFolder().getLocation().toOSString();
             try {
                 String fileName = extension.getLatestRevision().getFileName();
