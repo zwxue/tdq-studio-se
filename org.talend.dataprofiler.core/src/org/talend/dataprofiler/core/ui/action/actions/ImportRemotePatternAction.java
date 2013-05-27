@@ -42,9 +42,10 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
+import org.talend.dataprofiler.core.exception.ExceptionHandler;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
-import org.talend.dataprofiler.core.exception.ExceptionHandler;
+import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.helper.EEcosCategory;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.pattern.ImportFactory;
@@ -213,7 +214,7 @@ public class ImportRemotePatternAction extends Action {
                     return;
                 }
                 String componentUrl = revision.getUrl();
-                monitor.setTaskName(EcosConstants.DOWNLOAD_TASK_NAME + componentUrl);
+                monitor.setTaskName(EcosConstants.DOWNLOAD_TASK_NAME + PluginConstant.SPACE_STRING + componentUrl);
                 String targetFolder = ResourceManager.getExchangeFolder().getLocation().toOSString();
                 String fileName = revision.getFileName();
                 File localZipFile = new File(targetFolder, fileName);

@@ -842,7 +842,11 @@ public class FileSystemImportWriter implements IImportWriter {
                         ((AbstractWorksapceUpdateTask) task).setWorkspacePath(basePath);
                         modelTasks.add(task);
                     } else {
-                        commTasks.add(task);
+                        // MOD msjian TDQ-7365 2013-5-27: only added the not inclued tasks
+                        if (!commTasks.contains(task)) {
+                            commTasks.add(task);
+                        }
+                        // TDQ-7365~
                     }
                 }
             }
