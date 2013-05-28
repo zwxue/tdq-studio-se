@@ -171,14 +171,14 @@ public final class RepNodeUtils {
         if (oldPath == null || newPath == null) {
             ReturnCode rc = new ReturnCode();
             rc.setOk(Boolean.FALSE);
-            rc.setMessage(DefaultMessagesImpl.getString("RepNodeUtils.updateReport.empty"));//$NON-NLS-1$ //$NON-NLS-2$
+            rc.setMessage(DefaultMessagesImpl.getString("RepNodeUtils.updateReport.empty"));//$NON-NLS-1$ 
             return rc;
         }
 
         List<String> jrxmlFileNames = new ArrayList<String>();
         List<String> jrxmlFileNamesAfterMove = new ArrayList<String>();
-        jrxmlFileNames.add(oldPath.toOSString());
-        jrxmlFileNamesAfterMove.add(newPath.toOSString());
+        jrxmlFileNames.add(oldPath.toString());
+        jrxmlFileNamesAfterMove.add(newPath.toString());
 
         return updateJrxmlRelatedReport(jrxmlFileNames, jrxmlFileNamesAfterMove);
     }
@@ -196,7 +196,7 @@ public final class RepNodeUtils {
         // compare the Jrxml path if the report has the user defined one.
         if (ReportHelper.ReportType.USER_MADE.equals(reportType)) {
             String jrxmlPath = anaMap.getJrxmlSource();
-            if (jrxmlPath.contains(path.toString())) {
+            if (new Path(jrxmlPath).toOSString().contains(path.toOSString())) {
                 return true;
             }
         }
@@ -211,14 +211,14 @@ public final class RepNodeUtils {
      * @param jrxmlFileNames : the whole path with whole name of the jrxml, e.g./TDQ_Libraries/JRXML
      * Template/columnset/column_set_basic_0.1.jrxml
      * @param jrxmlFileNamesAfterMove
-     * @return  ReturnCode.ok if suceed; ko, if any exception.
+     * @return ReturnCode.ok if suceed; ko, if any exception.
      */
     public static ReturnCode updateJrxmlRelatedReport(List<String> jrxmlFileNames, List<String> jrxmlFileNamesAfterMove) {
         ReturnCode rc = new ReturnCode();
 
         if (jrxmlFileNames.size() == 0 || jrxmlFileNamesAfterMove.size() < jrxmlFileNames.size()) {
             rc.setOk(Boolean.FALSE);
-            rc.setMessage(DefaultMessagesImpl.getString("RepNodeUtils.updateReport.empty"));//$NON-NLS-1$ //$NON-NLS-2$
+            rc.setMessage(DefaultMessagesImpl.getString("RepNodeUtils.updateReport.empty"));//$NON-NLS-1$ 
             return rc;
         }
 
@@ -250,7 +250,7 @@ public final class RepNodeUtils {
                     ProxyRepositoryFactory.getInstance().save(project, report.getObject().getProperty().getItem());
                 } catch (PersistenceException e) {
                     rc.setOk(Boolean.FALSE);
-                    rc.setMessage(DefaultMessagesImpl.getString("RepNodeUtils.updateReport.fail", report.getLabel()));//$NON-NLS-1$ //$NON-NLS-2$
+                    rc.setMessage(DefaultMessagesImpl.getString("RepNodeUtils.updateReport.fail", report.getLabel()));//$NON-NLS-1$ 
                 }
             }
         }
@@ -298,8 +298,7 @@ public final class RepNodeUtils {
             // if the parent of the jrxml is not the current folder,
             IPath parentPath = RepositoryNodeHelper.getPath(jrxml.getParent());
             if (oldPath.equals(parentPath)) {
-                jrxmlFileNames
-.add(newPath.append(separator).append(RepositoryNodeHelper.getFileNameOfTheNode(jrxml))
+                jrxmlFileNames.add(newPath.append(separator).append(RepositoryNodeHelper.getFileNameOfTheNode(jrxml))
                         .toOSString());
             } else {
                 // change the old folder name in parent path to new path:
@@ -312,8 +311,7 @@ public final class RepNodeUtils {
                         replacedPath = replacedPath.append(parentPath.segment(i)).append(separator);
                     }
                 }
-                jrxmlFileNames
-.add(replacedPath.append(RepositoryNodeHelper.getFileNameOfTheNode(jrxml)).toOSString());
+                jrxmlFileNames.add(replacedPath.append(RepositoryNodeHelper.getFileNameOfTheNode(jrxml)).toOSString());
 
             }
         }
