@@ -122,9 +122,12 @@ public class SQLEditorSessionSwitcher extends ControlContribution implements Con
                 sessionIndexes.put(new Integer(index++), user);
                 // MOD msjian TDQ-5927 2013-5-24: set the item identify by the username, url and connection name
                 if (currentUser != null) {
-                    if (currentUser.getUserName().equals(user.getUserName())
-                            && currentUser.getAlias().getUrl().equals(alias.getUrl())
-                            && currentUser.getMetadataConnection().getLabel().equals(alias.getName())) {
+                    boolean isMatched = currentUser.getUserName().equals(user.getUserName())
+                            && currentUser.getAlias().getUrl().equals(alias.getUrl());
+                    if (currentUser.getMetadataConnection() != null) {
+                        isMatched = isMatched && currentUser.getMetadataConnection().getLabel().equals(alias.getName());
+                    }
+                    if (isMatched) {
                         _sessionCombo.select(_sessionCombo.getItemCount() - 1);
                     }
                 }
