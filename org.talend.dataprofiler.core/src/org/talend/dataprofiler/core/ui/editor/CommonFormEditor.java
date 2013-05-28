@@ -37,7 +37,6 @@ import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.texteditor.IDocumentProvider;
 import org.eclipse.ui.texteditor.IDocumentProviderExtension2;
 import org.eclipse.ui.texteditor.IElementStateListener;
-import org.talend.core.model.metadata.builder.database.DqRepositoryViewService;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.repository.model.RepositoryNode;
@@ -327,11 +326,6 @@ public abstract class CommonFormEditor extends FormEditor implements IPrefersPer
      * refresh the opend editor.
      */
     public void refreshEditor() {
-        // just refresh the partName for the opend editor at here.the content refresh should be in subclass.
-        if (getActivePageInstance() instanceof AbstractFormPage) {
-            AbstractFormPage page = (AbstractFormPage) getActivePageInstance();
-            setPartName(DqRepositoryViewService.buildElementName(page.getProperty()));
-            firePropertyChange(org.eclipse.ui.IWorkbenchPart.PROP_TITLE);
-        }
+        // empty at here,implement in sub-classes
     }
 }

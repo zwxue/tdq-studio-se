@@ -47,7 +47,6 @@ import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.part.FileEditorInput;
 import org.talend.commons.exception.ExceptionHandler;
 import org.talend.core.GlobalServiceRegister;
-import org.talend.core.ITDQRepositoryService;
 import org.talend.core.PluginChecker;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
@@ -471,14 +470,6 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
                 log.debug("Saved in  " + connection.eResource().getURI().toFileString() + " successful"); //$NON-NLS-1$ //$NON-NLS-2$
             }
 
-            // refresh the opened connection editor after saving
-            if (GlobalServiceRegister.getDefault().isServiceRegistered(ITDQRepositoryService.class)) {
-                ITDQRepositoryService tdqRepService = (ITDQRepositoryService) GlobalServiceRegister.getDefault().getService(
-                        ITDQRepositoryService.class);
-                if (tdqRepService != null) {
-                    tdqRepService.refreshConnectionEditor(connectionItem);
-                }
-            }
         } else {
             throw new DataprofilerCoreException(
                     DefaultMessagesImpl

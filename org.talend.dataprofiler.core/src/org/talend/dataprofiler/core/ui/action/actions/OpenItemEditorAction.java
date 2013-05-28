@@ -218,7 +218,8 @@ public class OpenItemEditorAction extends AbstractRepObjectCRUDAction implements
                     throw createBusinessException;
                 }
             }
-            if (ERepositoryObjectType.METADATA_CONNECTIONS.getKey().equals(key)) {
+            if (ERepositoryObjectType.METADATA_CONNECTIONS.getKey().equals(key)
+                    || ERepositoryObjectType.METADATA_MDMCONNECTION.getKey().equals(key)) {
                 result = new ConnectionItemEditorInput(item);
                 editorID = ConnectionEditor.class.getName();
             } else if (ERepositoryObjectType.TDQ_ANALYSIS_ELEMENT.getKey().equals(key)) {
