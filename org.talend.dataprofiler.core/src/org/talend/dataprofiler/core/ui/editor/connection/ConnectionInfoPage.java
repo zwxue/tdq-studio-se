@@ -46,7 +46,6 @@ import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.part.FileEditorInput;
 import org.talend.core.GlobalServiceRegister;
-import org.talend.core.ITDQRepositoryService;
 import org.talend.core.PluginChecker;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
@@ -166,18 +165,19 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
             @Override
             public void widgetSelected(SelectionEvent e) {
                 try {
-                ReturnCode code = checkDBConnection();
-                if (code.isOk()) {
-                    MessageDialog.openInformation(
-                            null,
-                            DefaultMessagesImpl.getString("ConnectionInfoPage.checkConnections"), DefaultMessagesImpl.getString("ConnectionInfoPage.checkConnectionSuccessful")); //$NON-NLS-1$ //$NON-NLS-2$
-                } else {
+                    ReturnCode code = checkDBConnection();
+                    if (code.isOk()) {
+                        MessageDialog.openInformation(
+                                null,
+                                DefaultMessagesImpl.getString("ConnectionInfoPage.checkConnections"), DefaultMessagesImpl.getString("ConnectionInfoPage.checkConnectionSuccessful")); //$NON-NLS-1$ //$NON-NLS-2$
+                    } else {
+                        MessageDialog.openWarning(
+                                null,
+                                DefaultMessagesImpl.getString("ConnectionInfoPage.checkConnection"), DefaultMessagesImpl.getString("ConnectionInfoPage.CheckConnectionFailure", code.getMessage())); //$NON-NLS-1$ //$NON-NLS-2$ 
+                    }
+                } catch (Exception e2) {
                     MessageDialog.openWarning(
                             null,
-                            DefaultMessagesImpl.getString("ConnectionInfoPage.checkConnection"), DefaultMessagesImpl.getString("ConnectionInfoPage.CheckConnectionFailure", code.getMessage())); //$NON-NLS-1$ //$NON-NLS-2$ 
-                }
-                } catch (Exception e2) {
-                    MessageDialog.openWarning(null,
                             DefaultMessagesImpl.getString("ConnectionInfoPage.checkConnection"), DefaultMessagesImpl.getString("ConnectionInfoPage.CheckConnectionFailure", e2.getMessage())); //$NON-NLS-1$ //$NON-NLS-2$ 
                 }
             }
@@ -490,14 +490,6 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
                 log.debug("Saved in  " + connection.eResource().getURI().toFileString() + " successful"); //$NON-NLS-1$ //$NON-NLS-2$
             }
 
-            // refresh the opened connection editor after saving
-            if (GlobalServiceRegister.getDefault().isServiceRegistered(ITDQRepositoryService.class)) {
-                ITDQRepositoryService tdqRepService = (ITDQRepositoryService) GlobalServiceRegister.getDefault().getService(
-                        ITDQRepositoryService.class);
-                if (tdqRepService != null) {
-                    tdqRepService.refreshConnectionEditor(connectionItem);
-                }
-            }
         } else {
             throw new DataprofilerCoreException(
                     DefaultMessagesImpl
