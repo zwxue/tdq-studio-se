@@ -95,6 +95,7 @@ public class ConnectionEditor extends CommonFormEditor {
     public void refreshEditor() {
         masterPage.initialize(this);
         masterPage.refreshTextInfo();
-        super.refreshEditor();
+        setPartName((masterPage.getIntactElemenetName()));
+        firePropertyChange(org.eclipse.ui.IWorkbenchPart.PROP_TITLE);
     }
 }

@@ -164,7 +164,8 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
         if (currentModelElement == null) {
             currentModelElement = getCurrentModelElement(getEditor());
         }
-        return DqRepositoryViewService.buildElementName(getProperty());
+        String name = (currentModelElement == null) ? null : currentModelElement.getName();
+        return (name == null) ? DqRepositoryViewService.buildElementName(getProperty()) : name;
     }
 
     protected abstract ModelElement getCurrentModelElement(FormEditor editor);
