@@ -56,7 +56,6 @@
       <import plugin="org.eclipse.ui.browser"/>
       <import plugin="org.talend.libraries.jung"/>
       <import plugin="org.talend.model.migration"/>
-      <import plugin="org.talend.libraries.jdbc.informix"/>
       <import plugin="org.eclipse.ui.intro"/>
       <import plugin="org.eclipse.help.webapp"/>
       <import plugin="org.eclipse.equinox.http.jetty"/>
