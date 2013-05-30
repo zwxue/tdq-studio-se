@@ -32,6 +32,7 @@ import org.talend.dataquality.indicators.CompositeIndicator;
 import org.talend.dataquality.indicators.DataminingType;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.IndicatorsFactory;
+import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.foundation.softwaredeployment.DataManager;
@@ -135,14 +136,18 @@ public class ModelElementAnalysisHandler extends AnalysisHandler {
     /**
      * Method "getIndicators".
      * 
-     * @param column
+     * @param modelElement
      * @return the indicators attached to this column
      */
     public Collection<Indicator> getIndicators(ModelElement modelElement) {
+        ModelElement me = modelElement;
+        if (me.eIsProxy()) {
+            me = (ModelElement) EObjectHelper.resolveObject(me);
+        }
         Collection<Indicator> indics = new ArrayList<Indicator>();
         EList<Indicator> allIndics = analysis.getResults().getIndicators();
         for (Indicator indicator : allIndics) {
-            if (indicator.getAnalyzedElement() != null && indicator.getAnalyzedElement().equals(modelElement)) {
+            if (indicator.getAnalyzedElement() != null && indicator.getAnalyzedElement().equals(me)) {
                 initializeIndicator(indicator);
                 indics.add(indicator);
             }
