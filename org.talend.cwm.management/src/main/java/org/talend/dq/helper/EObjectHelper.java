@@ -267,6 +267,7 @@ public final class EObjectHelper {
                     .getResourceManager();
             if (xmiRes != null) {
                 ResourceSet resourceSet = xmiRes.resourceSet;
+                // FIXME the input proxy object should not be changed in this method.
                 proxy = EcoreUtil.resolve(proxy, resourceSet);
             }
         }

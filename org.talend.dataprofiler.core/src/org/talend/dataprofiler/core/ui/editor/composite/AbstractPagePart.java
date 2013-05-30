@@ -96,16 +96,16 @@ public abstract class AbstractPagePart {
      * is not null, should also set the connection state
      */
     protected void updateBindConnection(AbstractAnalysisMetadataPage masterPage, ModelElementIndicator[] indicators, Tree tree) {
-            // MOD mzhao 2010-07-24, avoid a NPE, feature 13221
-            DataManager connection = masterPage.getAnalysis().getContext().getConnection();
-            Connection tdProvider = null;
-            if (connection != null) {
-                tdProvider = SwitchHelpers.CONNECTION_SWITCH.doSwitch(connection);
-            }
+        // MOD mzhao 2010-07-24, avoid a NPE, feature 13221
+        DataManager connection = masterPage.getAnalysis().getContext().getConnection();
+        Connection tdProvider = null;
+        if (connection != null) {
+            tdProvider = SwitchHelpers.CONNECTION_SWITCH.doSwitch(connection);
+        }
 
         if (indicators != null && indicators.length != 0 && tdProvider == null) {
-                tdProvider = ModelElementIndicatorHelper.getTdDataProvider(indicators[0]);
-            }
+            tdProvider = ModelElementIndicatorHelper.getTdDataProvider(indicators[0]);
+        }
 
         if (tdProvider != null) {
             setConnectionState(masterPage, tdProvider);
@@ -185,12 +185,12 @@ public abstract class AbstractPagePart {
         DataManager newDataManager = dataManager;
         final DataManager fianlDataManager;
         if (newDataManager != null) {
-            Property prop = PropertyHelper.getProperty(newDataManager);
-            // MOD gdbu 2011-8-15 bug : TDQ-3213
-            masterPage.reloadDataproviderAndFillConnCombo();
             if (newDataManager.eIsProxy()) {
                 newDataManager = (DataManager) EObjectHelper.resolveObject(newDataManager);
             }
+            Property prop = PropertyHelper.getProperty(newDataManager);
+            // MOD gdbu 2011-8-15 bug : TDQ-3213
+            masterPage.reloadDataproviderAndFillConnCombo();
             fianlDataManager = newDataManager;
 
             // MOD yyin 201204 TDQ-4977
