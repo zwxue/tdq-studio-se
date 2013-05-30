@@ -20,6 +20,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
@@ -113,8 +114,6 @@ import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
-
-import com.informix.util.stringUtil;
 
 /**
  * @author yyi 2009-12-16
@@ -300,7 +299,7 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
 
                 /*
                  * (non-Javadoc)
-                 * 
+                 *
                  * @see org.eclipse.swt.events.ControlAdapter#controlResized(org.eclipse .swt.events.ControlEvent)
                  */
                 @Override
@@ -317,7 +316,7 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
 
     /**
      * DOC yyi Comment method "createIndicatorsSection".
-     * 
+     *
      * @param topComp
      * @param form
      */
@@ -596,7 +595,7 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
 
     /**
      * DOC qiongli Comment method "createAnalysisParamSection".
-     * 
+     *
      * @param form
      * @param anasisDataComp
      */
@@ -685,7 +684,7 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
 
     /**
      * DOC qiongli Comment method "createStoreDataCheck".
-     * 
+     *
      * @param sectionClient
      */
     private Composite createStoreDataCheck(Composite sectionClient) {
@@ -693,7 +692,7 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
         GridLayout gridLayout = new GridLayout(2, false);
         gridLayout.marginWidth = 0;
         storeDataSection.setLayout(gridLayout);
-        toolkit.createLabel(storeDataSection, "Store data:").setToolTipText("Storing data in analysis file"); //$NON-NLS-1$ 
+        toolkit.createLabel(storeDataSection, "Store data:").setToolTipText("Storing data in analysis file"); //$NON-NLS-1$
         storeDataCheck = new Button(storeDataSection, SWT.CHECK | SWT.RIGHT_TO_LEFT);
         storeDataCheck.setSelection(simpleStatIndicator.isStoreData());
 
@@ -710,7 +709,7 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
 
     /**
      * DOC qiongli Comment method "createjavaEnginSection".
-     * 
+     *
      * @param sectionClient
      * @return
      */
@@ -752,7 +751,7 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
 
             public void modifyText(ModifyEvent e) {
                 String textContent = maxNumText.getText();
-                if (stringUtil.isANum(textContent)) {
+                if (StringUtils.isNumeric(textContent)) {
                     setDirty(true);
                 } else {
                     MessageDialog.openWarning(e.display.getActiveShell(),
@@ -920,7 +919,7 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisMetadataPage#getTreeViewer()
      */
     @Override
@@ -1042,7 +1041,7 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
 
     /**
      * DOC qiongli Comment method "includeDatePatternFreqIndicator".
-     * 
+     *
      * @return
      */
     private boolean includeDatePatternFreqIndicator() {
@@ -1056,7 +1055,7 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
 
     /**
      * DOC qiongli Comment method "getDataFilterComp".
-     * 
+     *
      * @return
      */
     public DataFilterComp getDataFilterComp() {
@@ -1092,7 +1091,7 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
 
     /**
      * DOC yyin Comment method "removeItem".
-     * 
+     *
      * @param indicatorUnit
      */
     public void removeItem(IndicatorUnit indicatorUnit) {

@@ -19,6 +19,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -100,7 +101,7 @@ import org.talend.repository.model.RepositoryNode;
 import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
-import com.informix.util.stringUtil;
+
 
 /**
  * @author rli
@@ -238,7 +239,7 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
 
                 /*
                  * (non-Javadoc)
-                 * 
+                 *
                  * @see org.eclipse.swt.events.ControlAdapter#controlResized(org.eclipse .swt.events.ControlEvent)
                  */
                 @Override
@@ -336,7 +337,7 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
 
     /**
      * DOC zshen Comment method "createPaginationTree".
-     * 
+     *
      * @param topComp
      */
     private void createPaginationTree(Composite topComp) {
@@ -422,9 +423,9 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
     }
 
     /**
-     * 
+     *
      * DOC mzhao Comment method "expandTreeItems".
-     * 
+     *
      * @param items
      * @param expandOrCollapse
      */
@@ -639,7 +640,7 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
 
     /**
      * DOC hcheng Comment method "createAnalysisParamSection".
-     * 
+     *
      * @param form
      * @param anasisDataComp
      */
@@ -761,7 +762,7 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
 
             public void modifyText(ModifyEvent e) {
                 String textContent = maxNumText.getText();
-                if (stringUtil.isANum(textContent)) {
+                if (StringUtils.isNumeric(textContent)) {
                     setDirty(true);
                 } else {
                     MessageDialog.openWarning(e.display.getActiveShell(),
@@ -781,7 +782,7 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
 
     /**
      * ADD xqliu 2009-08-24 bug 8776.
-     * 
+     *
      * @return
      */
     protected boolean includeUDI() {
@@ -927,7 +928,7 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
 
     /**
      * DOC yyi 2011-06-02 16929:expand the selected column in the graphical chart.
-     * 
+     *
      * @param indicator
      */
     protected void expandChart(ModelElementIndicator indicator) {
@@ -985,7 +986,7 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisMetadataPage#getTreeViewer()
      */
     @Override
@@ -1088,7 +1089,7 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
 
     /**
      * DOC zshen Comment method "getExecCombo".
-     * 
+     *
      * @return the Combo for executeLanguage
      */
     public CCombo getExecCombo() {
@@ -1097,7 +1098,7 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
 
     /**
      * DOC zshen Comment method "includeDatePatternFreqIndicator".
-     * 
+     *
      * @return whether have a datePatternFreqIndicator in the "analyzed Columns"
      */
     public boolean includeDatePatternFreqIndicator() {
@@ -1133,7 +1134,7 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
 
     /**
      * DOC xqliu Comment method "changeExecuteLanguageToSql".
-     * 
+     *
      * @param enabled
      */
     public void changeExecuteLanguageToSql(boolean enabled) {
@@ -1157,7 +1158,7 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
 
     /**
      * DOC qiongli Comment method "getDataFilterComp".
-     * 
+     *
      * @return
      */
     public DataFilterComp getDataFilterComp() {
