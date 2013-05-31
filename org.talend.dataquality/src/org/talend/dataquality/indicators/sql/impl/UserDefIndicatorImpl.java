@@ -449,12 +449,13 @@ public class UserDefIndicatorImpl extends IndicatorImpl implements UserDefIndica
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
      * 
-     * @generated
+     * @generated NOT
      */
     @Override
     public void setValueToFreq(HashMap<Object, Long> newValueToFreq) {
         HashMap<Object, Long> oldValueToFreq = valueToFreq;
         valueToFreq = newValueToFreq;
+        distinctComputed = false;
         if (eNotificationRequired()) {
             eNotify(new ENotificationImpl(this, Notification.SET, IndicatorSqlPackage.USER_DEF_INDICATOR__VALUE_TO_FREQ,
                     oldValueToFreq, valueToFreq));
