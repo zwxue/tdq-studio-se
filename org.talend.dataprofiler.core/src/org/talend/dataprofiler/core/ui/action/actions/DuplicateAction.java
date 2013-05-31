@@ -57,6 +57,7 @@ import org.talend.dq.nodes.AnalysisRepNode;
 import org.talend.dq.nodes.AnalysisSubFolderRepNode;
 import org.talend.dq.nodes.ReportRepNode;
 import org.talend.dq.nodes.ReportSubFolderRepNode;
+import org.talend.dq.nodes.SysIndicatorDefinitionRepNode;
 import org.talend.dq.nodes.UserDefIndicatorFolderRepNode;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
@@ -129,7 +130,13 @@ public class DuplicateAction extends Action {
                                 new IInputValidator() {
 
                                     public String isValid(String newText) {
-                                        if (PropertyHelper.existDuplicateName(newText, null, node.getContentType())) {
+                                        // MOD msjian TDQ-7218 2013-5-31: when dulicate a system indicator, should check
+                                        // whether exist in UDI.
+                                        ERepositoryObjectType contentType = node.getContentType();
+                                        if (node instanceof SysIndicatorDefinitionRepNode) {
+                                            contentType = ERepositoryObjectType.TDQ_USERDEFINE_INDICATORS;
+                                        }
+                                        if (PropertyHelper.existDuplicateName(newText, null, contentType)) {
                                             return DefaultMessagesImpl.getString("DuplicateAction.LabelExists"); //$NON-NLS-1$
                                         }
 
