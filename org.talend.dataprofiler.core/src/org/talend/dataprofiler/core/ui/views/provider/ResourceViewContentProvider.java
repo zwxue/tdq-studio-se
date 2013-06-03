@@ -21,10 +21,12 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.widgets.TreeItem;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.model.WorkbenchContentProvider;
 import org.talend.commons.exception.PersistenceException;
 import org.talend.commons.utils.platform.PluginChecker;
@@ -77,7 +79,6 @@ public class ResourceViewContentProvider extends WorkbenchContentProvider {
 
     @Override
     public Object[] getChildren(Object element) {
-
         if (DQRepositoryNode.isOnDisplayNextOrPreviousNode() && element instanceof IRepositoryNode) {
             List<IRepositoryNode> children = new ArrayList<IRepositoryNode>();
             IRepositoryNode node = (IRepositoryNode) element;
@@ -266,7 +267,7 @@ public class ResourceViewContentProvider extends WorkbenchContentProvider {
 
     /**
      * sort element on the tree.
-     * 
+     *
      * @param array
      * @return
      */
@@ -280,6 +281,7 @@ public class ResourceViewContentProvider extends WorkbenchContentProvider {
 
     @Override
     public boolean hasChildren(Object element) {
+        try {
         if (element instanceof IRepositoryNode) {
             IRepositoryNode node = (IRepositoryNode) element;
             IRepositoryViewObject viewObject = node.getObject();
@@ -366,12 +368,24 @@ public class ResourceViewContentProvider extends WorkbenchContentProvider {
         }
         // ~TDQ-3457
 
+        } catch (RuntimeException e) {
+            int indexOf = e.getMessage().indexOf("java.lang.ClassNotFoundException:"); //$NON-NLS-1$
+            if (indexOf > 0 && PluginChecker.isOnlyTopLoaded()) {
+                String errorMessage = e.getMessage().substring(indexOf);
+                MessageDialog.openWarning(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
+                        DefaultMessagesImpl.getString("ResourceViewContentProvider.warining"), //$NON-NLS-1$
+                        errorMessage);
+            } else {
+                log.error(e);
+            }
+            return false;
+        }
         return super.hasChildren(element);
     }
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.ui.model.BaseWorkbenchContentProvider#getParent(java.lang.Object)
      */
     @Override

@@ -12,10 +12,12 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.views.provider;
 
+import java.sql.Driver;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
@@ -26,6 +28,9 @@ import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.ui.navigator.CommonViewer;
+import org.talend.core.model.metadata.IMetadataConnection;
+import org.talend.core.model.metadata.builder.ConvertionHelper;
 import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
 import org.talend.core.model.metadata.builder.database.PluginConstant;
 import org.talend.core.model.metadata.builder.database.dburl.SupportDBUrlType;
@@ -37,6 +42,7 @@ import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.cwm.helper.ConnectionHelper;
+import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
@@ -98,7 +104,10 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider i
 
     private static Font italicFont;
 
+    private Logger log = Logger.getLogger(DQRepositoryViewLabelProvider.class);
+
     private static Map<ERepositoryObjectType, Image[]> lockImageMap = new HashMap<ERepositoryObjectType, Image[]>();
+
 
     public DQRepositoryViewLabelProvider() {
         super(MNComposedAdapterFactory.getAdapterFactory());
@@ -152,8 +161,9 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider i
                 image = ImageLib.getImage(ImageLib.FOLDERNODE_IMAGE);
             } else if (type.equals(ENodeType.REPOSITORY_ELEMENT)) {
                 if (node instanceof DBConnectionRepNode) {
-                    if (!isSupportedConnection(node)) {
+                    if (!isSupportedConnection(node) || isNeedAddDriverConnection(node)) {
                         image = ImageLib.createErrorIcon(ImageLib.TD_DATAPROVIDER).createImage();
+                        
                     } else if (isInvalidJDBCConnection(node)) {
                         image = ImageLib.createInvalidIcon(ImageLib.TD_DATAPROVIDER).createImage();
                     } else {
@@ -356,13 +366,13 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider i
             return node.getObject() == null ? PluginConstant.EMPTY_STRING : label;
         }
         String text = super.getText(element);
-        return PluginConstant.EMPTY_STRING.equals(text) ? DefaultMessagesImpl.getString("DQRepositoryViewLabelProvider.noName") : text; //$NON-NLS-1$ 
+        return PluginConstant.EMPTY_STRING.equals(text) ? DefaultMessagesImpl.getString("DQRepositoryViewLabelProvider.noName") : text; //$NON-NLS-1$
     }
 
     /**
-     * 
+     *
      * DOC qiongli Comment method "getImageByContentType".
-     * 
+     *
      * @param repositoryNode
      * @return
      */
@@ -419,9 +429,34 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider i
         return false;
     }
 
+    private boolean isNeedAddDriverConnection(IRepositoryNode repNode) {
+        ERepositoryObjectType objectType = repNode.getObjectType();
+
+        if (objectType == ERepositoryObjectType.METADATA_CONNECTIONS) {
+            ConnectionItem connectionItem = (ConnectionItem) repNode.getObject().getProperty().getItem();
+            if (connectionItem.getConnection() instanceof DatabaseConnection) {
+                IMetadataConnection metadataConnection = ConvertionHelper.convert(connectionItem.getConnection());
+                try {
+                    MetadataConnectionUtils.getClassDriver(metadataConnection);
+                } catch (RuntimeException e) {
+                    int indexOf = e.getMessage().indexOf("java.lang.ClassNotFoundException:");
+                    if (indexOf > 0) {
+                        return true;
+                    } else {
+                        log.error(e, e);
+                    }
+                } catch (Exception e) {
+
+                    log.error(e, e);
+                }
+            }
+        }
+        return false;
+    }
+
     /**
      * ADD qiongli TDQ-5801 if it is a invalid jdbc connection.
-     * 
+     *
      * @param repNode
      * @return
      */
@@ -446,7 +481,7 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider i
 
     /*
      * yyi 2011-04-14 20362:connection modified
-     * 
+     *
      * @see org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider#getFont(java.lang.Object)
      */
     @Override
@@ -468,4 +503,6 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider i
 
         return changeURL ? italicFont : super.getFont(element);
     }
+
+
 }

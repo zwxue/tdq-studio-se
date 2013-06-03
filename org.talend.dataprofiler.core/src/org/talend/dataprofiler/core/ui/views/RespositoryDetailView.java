@@ -21,6 +21,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
@@ -37,6 +38,7 @@ import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.ViewPart;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.commons.utils.platform.PluginChecker;
@@ -108,9 +110,11 @@ import orgomg.cwm.resource.relational.PrimaryKey;
 import orgomg.cwm.resource.relational.Schema;
 import orgomg.cwmx.analysis.informationreporting.Report;
 
+import common.Logger;
+
 /**
  * Detail view of the Data profiler.
- * 
+ *
  * @author qzhang
  */
 public class RespositoryDetailView extends ViewPart implements ISelectionListener {
@@ -122,6 +126,8 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
     private ScrolledComposite scomp = null;
 
     private Composite composite = null;
+
+    Logger log = Logger.getLogger(RespositoryDetailView.class);
 
     /**
      * DOC qzhang RespositoryDetailView constructor comment.
@@ -238,7 +244,7 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @seeorg.eclipse.ui.ISelectionListener#selectionChanged(org.eclipse.ui. IWorkbenchPart,
      * org.eclipse.jface.viewers.ISelection)
      */
@@ -246,144 +252,156 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
         clearContainer();
         // FIXME What's the fucking "is" mean here???
         boolean is = true;
-        if (part instanceof DQRespositoryView) {
-            StructuredSelection sel = (StructuredSelection) selection;
-            // MOD by zshen for bug 15750 TODO 39(13) make Detail View can be used.
-            Object fe = sel.getFirstElement();
-            // if(fe instanceof IRepositoryNode){
-            // fe = RepositoryNodeHelper.getModelElementFromRepositoryNode((IRepositoryNode) fe);
-            // }
-            // MOD klliu 2011-02-24 if choose diffirent node ,that will load diffirent child ,so that not use up.
-            if (fe instanceof AnalysisRepNode || fe instanceof ReportRepNode || fe instanceof SysIndicatorDefinitionRepNode
-                    || fe instanceof PatternRepNode || fe instanceof RuleRepNode) {
-                fe = ((IRepositoryNode) fe).getObject();
-            }
-            if (fe instanceof IFile) {
-                IFile fe2 = (IFile) fe;
-                is = createFileDetail(is, fe2);
-            } else if (fe instanceof IRepositoryViewObject) {
-                is = createFileDetail(is, (IRepositoryViewObject) fe);
-            } else if (fe instanceof DBConnectionRepNode) {
-                DBConnectionRepNode connNode = (DBConnectionRepNode) fe;
-                // MOD sizhaoliu TDQ-6316
-                // DatabaseConnection databaseConnection = connNode.getDatabaseConnection();
-                ConnectionItem connectionItem = (ConnectionItem) connNode.getObject().getProperty().getItem();
-                createDataProviderDetail(connectionItem);
-                is = false;
-            } else if (fe instanceof DBCatalogRepNode) {
-                DBCatalogRepNode catalogNode = (DBCatalogRepNode) fe;
-                Catalog catalog = catalogNode.getCatalog();
-                createTdCatalogDetail(catalog);
-                is = false;
-            } else if (fe instanceof DBSchemaRepNode) {
-                DBSchemaRepNode schemaNode = (DBSchemaRepNode) fe;
-                Schema schema = schemaNode.getSchema();
-                createTdSchemaDetail(schema);
-                is = false;
-            } else if (fe instanceof DBTableRepNode) {
-                DBTableRepNode tableNode = (DBTableRepNode) fe;
-                // MOD gdbu 2011-9-14 TDQ-3243
-                if (!DQRepositoryNode.isOnFilterring()) {
-                    tableNode.getChildren().get(0).getChildren();
+        try {
+            if (part instanceof DQRespositoryView) {
+                StructuredSelection sel = (StructuredSelection) selection;
+                // MOD by zshen for bug 15750 TODO 39(13) make Detail View can be used.
+                Object fe = sel.getFirstElement();
+                // if(fe instanceof IRepositoryNode){
+                // fe = RepositoryNodeHelper.getModelElementFromRepositoryNode((IRepositoryNode) fe);
+                // }
+                // MOD klliu 2011-02-24 if choose diffirent node ,that will load diffirent child ,so that not use up.
+                if (fe instanceof AnalysisRepNode || fe instanceof ReportRepNode || fe instanceof SysIndicatorDefinitionRepNode
+                        || fe instanceof PatternRepNode || fe instanceof RuleRepNode) {
+                    fe = ((IRepositoryNode) fe).getObject();
                 }
-                // ~TDQ-3243
-                TdTable tdTable = tableNode.getTdTable();
-                createTableDetail(tdTable);
-                is = false;
-            } else if (fe instanceof DBViewRepNode) {
-                DBViewRepNode viewNode = (DBViewRepNode) fe;
-                // MOD gdbu 2011-9-14 TDQ-3243
-                if (!DQRepositoryNode.isOnFilterring()) {
-                    viewNode.getChildren().get(0).getChildren();
-                }
-                // ~TDQ-3243
-                createNameCommentDetail(viewNode.getTdView());
-                is = false;
-            } else if (fe instanceof DBColumnRepNode) {
-                DBColumnRepNode columnNode = (DBColumnRepNode) fe;
-                TdColumn column = columnNode.getTdColumn();
-                createTdColumn(column);
-                is = false;
-            } else if (fe instanceof IEcosComponent) {
-                IEcosComponent component = (IEcosComponent) fe;
-                createEcosComponent(component);
-                is = false;
-            } else if (fe instanceof RegularExpression) {
-                // MOD mzhao 2009-04-20,Bug 6349.
-                RegularExpression regularExpression = (RegularExpression) fe;
-                createRegularExpression(regularExpression);
-                is = false;
-            } else if (fe instanceof PatternLanguageRepNode) {
-                // MOD mzhao 2012-08-15,feature TDQ-4037.
-                PatternLanguageRepNode pattLangNode = (PatternLanguageRepNode) fe;
-                createRegularExpression(pattLangNode.getRegularExpression());
-                is = false;
-            } else if (fe instanceof SourceFileRepNode) {
-                // MOD klliu 2001-02-28 bug 19154
-                IPath filePath = WorkbenchUtils.getFilePath((SourceFileRepNode) fe);
-                IFile file = ResourceManager.getRootProject().getFile(filePath);
-                createSqlFileDetail(file);
-            } else if (fe instanceof ExchangeComponentRepNode) {
-                // MOD klliu 2001-02-28 bug 19154
-                IEcosComponent ecosComponent = ((ExchangeComponentRepNode) fe).getEcosComponent();
-                IEcosComponent component = ecosComponent;
-                createEcosComponent(component);
-                is = false;
-
-                // ADD by msjian 2011-5-12 21186: don't check whether the selected object is "MDMConnectionRepNode"
-            } else if (fe instanceof MDMConnectionRepNode) {
-                MDMConnectionRepNode mdmNode = (MDMConnectionRepNode) fe;
-                MDMConnection mdmConnection = mdmNode.getMdmConnection();
-                createDataProviderDetail(mdmConnection);
-                is = false;
-            } else if (fe instanceof DFConnectionRepNode) {
-                DFConnectionRepNode dfNode = (DFConnectionRepNode) fe;
-                DelimitedFileConnection dfConnection = dfNode.getDfConnection();
-                createDFconnectionName(dfNode.getObject().getLabel());
-                createDataProviderDetail(dfConnection);
-                is = false;
-            }
-            if (PluginChecker.isTDQLoaded()) {
-                if (fe instanceof EObject) {
-                    createTechnicalDetail((EObject) fe);
-                } else if (fe instanceof IFile) {
-                    createTechnicalDetail((IFile) fe);
+                if (fe instanceof IFile) {
+                    IFile fe2 = (IFile) fe;
+                    is = createFileDetail(is, fe2);
                 } else if (fe instanceof IRepositoryViewObject) {
-                    createTechnicalDetail((IRepositoryViewObject) fe);
-                } else {
-                    createExtDefault();
+                    is = createFileDetail(is, (IRepositoryViewObject) fe);
+                } else if (fe instanceof DBConnectionRepNode) {
+                    DBConnectionRepNode connNode = (DBConnectionRepNode) fe;
+                    // MOD sizhaoliu TDQ-6316
+                    // DatabaseConnection databaseConnection = connNode.getDatabaseConnection();
+                    ConnectionItem connectionItem = (ConnectionItem) connNode.getObject().getProperty().getItem();
+                    createDataProviderDetail(connectionItem);
+                    is = false;
+                } else if (fe instanceof DBCatalogRepNode) {
+                    DBCatalogRepNode catalogNode = (DBCatalogRepNode) fe;
+                    Catalog catalog = catalogNode.getCatalog();
+                    createTdCatalogDetail(catalog);
+                    is = false;
+                } else if (fe instanceof DBSchemaRepNode) {
+                    DBSchemaRepNode schemaNode = (DBSchemaRepNode) fe;
+                    Schema schema = schemaNode.getSchema();
+                    createTdSchemaDetail(schema);
+                    is = false;
+                } else if (fe instanceof DBTableRepNode) {
+                    DBTableRepNode tableNode = (DBTableRepNode) fe;
+                    // MOD gdbu 2011-9-14 TDQ-3243
+                    if (!DQRepositoryNode.isOnFilterring()) {
+                        tableNode.getChildren().get(0).getChildren();
+                    }
+                    // ~TDQ-3243
+                    TdTable tdTable = tableNode.getTdTable();
+                    createTableDetail(tdTable);
+                    is = false;
+                } else if (fe instanceof DBViewRepNode) {
+                    DBViewRepNode viewNode = (DBViewRepNode) fe;
+                    // MOD gdbu 2011-9-14 TDQ-3243
+                    if (!DQRepositoryNode.isOnFilterring()) {
+                        viewNode.getChildren().get(0).getChildren();
+                    }
+                    // ~TDQ-3243
+                    createNameCommentDetail(viewNode.getTdView());
+                    is = false;
+                } else if (fe instanceof DBColumnRepNode) {
+                    DBColumnRepNode columnNode = (DBColumnRepNode) fe;
+                    TdColumn column = columnNode.getTdColumn();
+                    createTdColumn(column);
+                    is = false;
+                } else if (fe instanceof IEcosComponent) {
+                    IEcosComponent component = (IEcosComponent) fe;
+                    createEcosComponent(component);
+                    is = false;
+                } else if (fe instanceof RegularExpression) {
+                    // MOD mzhao 2009-04-20,Bug 6349.
+                    RegularExpression regularExpression = (RegularExpression) fe;
+                    createRegularExpression(regularExpression);
+                    is = false;
+                } else if (fe instanceof PatternLanguageRepNode) {
+                    // MOD mzhao 2012-08-15,feature TDQ-4037.
+                    PatternLanguageRepNode pattLangNode = (PatternLanguageRepNode) fe;
+                    createRegularExpression(pattLangNode.getRegularExpression());
+                    is = false;
+                } else if (fe instanceof SourceFileRepNode) {
+                    // MOD klliu 2001-02-28 bug 19154
+                    IPath filePath = WorkbenchUtils.getFilePath((SourceFileRepNode) fe);
+                    IFile file = ResourceManager.getRootProject().getFile(filePath);
+                    createSqlFileDetail(file);
+                } else if (fe instanceof ExchangeComponentRepNode) {
+                    // MOD klliu 2001-02-28 bug 19154
+                    IEcosComponent ecosComponent = ((ExchangeComponentRepNode) fe).getEcosComponent();
+                    IEcosComponent component = ecosComponent;
+                    createEcosComponent(component);
+                    is = false;
+
+                    // ADD by msjian 2011-5-12 21186: don't check whether the selected object is "MDMConnectionRepNode"
+                } else if (fe instanceof MDMConnectionRepNode) {
+                    MDMConnectionRepNode mdmNode = (MDMConnectionRepNode) fe;
+                    MDMConnection mdmConnection = mdmNode.getMdmConnection();
+                    createDataProviderDetail(mdmConnection);
+                    is = false;
+                } else if (fe instanceof DFConnectionRepNode) {
+                    DFConnectionRepNode dfNode = (DFConnectionRepNode) fe;
+                    DelimitedFileConnection dfConnection = dfNode.getDfConnection();
+                    createDFconnectionName(dfNode.getObject().getLabel());
+                    createDataProviderDetail(dfConnection);
+                    is = false;
+                }
+                if (PluginChecker.isTDQLoaded()) {
+                    if (fe instanceof EObject) {
+                        createTechnicalDetail((EObject) fe);
+                    } else if (fe instanceof IFile) {
+                        createTechnicalDetail((IFile) fe);
+                    } else if (fe instanceof IRepositoryViewObject) {
+                        createTechnicalDetail((IRepositoryViewObject) fe);
+                    } else {
+                        createExtDefault();
+                    }
+                }
+                if (!scomp.isDisposed()) {
+                    scomp.setMinSize(composite.computeSize(SWT.DEFAULT, SWT.DEFAULT));
+                    composite.layout();
+                }
+
+            } else if (part instanceof CommonFormEditor) {
+                CommonFormEditor editor = (CommonFormEditor) part;
+                IEditorInput editorInput = editor.getEditorInput();
+                if (editorInput instanceof IFileEditorInput) {
+                    IFileEditorInput input = (IFileEditorInput) editorInput;
+                    IFile file = input.getFile();
+                    is = createFileDetail(is, file);
                 }
             }
-            if (!scomp.isDisposed()) {
-                scomp.setMinSize(composite.computeSize(SWT.DEFAULT, SWT.DEFAULT));
-                composite.layout();
-            }
 
-        } else if (part instanceof CommonFormEditor) {
-            CommonFormEditor editor = (CommonFormEditor) part;
-            IEditorInput editorInput = editor.getEditorInput();
-            if (editorInput instanceof IFileEditorInput) {
-                IFileEditorInput input = (IFileEditorInput) editorInput;
-                IFile file = input.getFile();
-                is = createFileDetail(is, file);
+            if (is) {
+                createDefault();
             }
-        }
-
-        if (is) {
-            createDefault();
-        }
-        // feature 19053
-        if (!gContainer.isDisposed()) {
-            gContainer.layout();
-            if (tContainer != null) {
-                tContainer.layout();
+            // feature 19053
+            if (!gContainer.isDisposed()) {
+                gContainer.layout();
+                if (tContainer != null) {
+                    tContainer.layout();
+                }
+            }
+        } catch (RuntimeException e) {
+            int indexOf = e.getMessage().indexOf("java.lang.ClassNotFoundException:"); //$NON-NLS-1$
+            if (indexOf > 0 && PluginChecker.isOnlyTopLoaded()) {
+                String errorMessage = e.getMessage().substring(indexOf);
+                MessageDialog.openWarning(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
+                        DefaultMessagesImpl.getString("RespositoryDetailView.warning"), //$NON-NLS-1$
+                        errorMessage);
+            } else {
+                log.error(e);
             }
         }
     }
 
     /**
      * DOC klliu Comment method "createDFconnectionName".
-     * 
+     *
      * @param label
      */
     private void createDFconnectionName(String label) {
@@ -393,7 +411,7 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
 
     /**
      * DOC bZhou Comment method "createEcosComponent".
-     * 
+     *
      * @param component
      */
     private void createEcosComponent(IEcosComponent component) {
@@ -697,7 +715,7 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
 
     /**
      * DOC xqliu Comment method "createDescription".
-     * 
+     *
      * @param dataProvider
      * @deprecated use createDescription(Property prop) instead of it
      */
@@ -709,7 +727,7 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
 
     /**
      * DOC xqliu Comment method "createPurpose".
-     * 
+     *
      * @param dataProvider
      * @deprecated use createPurpose(Property prop) instead of it
      */
@@ -721,7 +739,7 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
 
     /**
      * create the Description's Label and Text by the Property.
-     * 
+     *
      * @param prop
      */
     private void createDescription(Property prop) {
@@ -731,7 +749,7 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
 
     /**
      * create the Purpose's Label and Text by the Property.
-     * 
+     *
      * @param prop
      */
     private void createPurpose(Property prop) {
@@ -760,9 +778,9 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
     }
 
     /**
-     * 
+     *
      * DOC qiongli Comment method "getMDMVersion".
-     * 
+     *
      * @param mdmConn
      * @return
      */
