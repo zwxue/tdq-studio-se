@@ -683,7 +683,7 @@ public class LocalRepositoryObjectCRUD implements IRepositoryObjectCRUD {
         // ADD xqliu 2012-05-24 TDQ-4831
         if (repositoryNode instanceof JrxmlTempSubFolderNode) {
             MessageUI.openWarning(DefaultMessagesImpl.getString("JrxmlFileAction.forbiddenOperation")); //$NON-NLS-1$
-            return Boolean.TRUE;
+            return Boolean.FALSE;
         }
         // ~ TDQ-4831
         // Added yyin 20120712 TDQ-5721 when rename the sql file folder with file opening, should inform
@@ -691,7 +691,7 @@ public class LocalRepositoryObjectCRUD implements IRepositoryObjectCRUD {
             ReturnCode rc = WorkspaceResourceHelper.checkSourceFileSubFolderNodeOpening((SourceFileSubFolderNode) repositoryNode);
             if (rc.isOk()) {
                 WorkspaceResourceHelper.showSourceFilesOpeningWarnMessages(rc.getMessage());
-                return Boolean.TRUE;
+                return Boolean.FALSE;
             }
         }// ~
 

@@ -14,6 +14,8 @@ package org.talend.dataprofiler.core.ui.action.actions;
 
 import java.util.Properties;
 
+import net.sourceforge.sqlexplorer.plugin.editors.SQLEditor;
+
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
@@ -51,6 +53,7 @@ import org.talend.cwm.xml.TdXmlSchema;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.exception.ExceptionFactory;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
+import org.talend.dataprofiler.core.ui.editor.TDQFileEditorInput;
 import org.talend.dataprofiler.core.ui.editor.analysis.AnalysisEditor;
 import org.talend.dataprofiler.core.ui.editor.analysis.AnalysisItemEditorInput;
 import org.talend.dataprofiler.core.ui.editor.connection.ConnectionEditor;
@@ -73,6 +76,7 @@ import org.talend.dataquality.properties.TDQReportItem;
 import org.talend.dataquality.reports.AnalysisMap;
 import org.talend.dataquality.reports.TdReport;
 import org.talend.dq.helper.PropertyHelper;
+import org.talend.dq.helper.ProxyRepositoryManager;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.helper.UDIHelper;
 import org.talend.dq.nodes.ReportFileRepNode;
@@ -153,6 +157,10 @@ public class OpenItemEditorAction extends Action implements IIntroAction {
         if (itemEditorInput != null) {
             // open ItemEditorInput
             CorePlugin.getDefault().openEditor(itemEditorInput, editorID);
+            // Added TDQ-7143 yyin 20130531
+            if (itemEditorInput instanceof TDQFileEditorInput) {
+                ((TDQFileEditorInput) itemEditorInput).addCloseListener();
+            }// ~
         } else {
             // not find ItemEditorInput
             if (repViewObj == null) {
@@ -312,6 +320,26 @@ public class OpenItemEditorAction extends Action implements IIntroAction {
                     }
                 }
                 editorID = "org.talend.dataprofiler.core.tdq.ui.editor.report.ReportEditror"; //$NON-NLS-1$
+            } else if (ERepositoryObjectType.TDQ_SOURCE_FILE_ELEMENT.getKey().equals(key)
+                    || ERepositoryObjectType.TDQ_JRAXML_ELEMENT.getKey().equals(key)) {
+                IPath append = WorkbenchUtils.getFilePath(repViewObj.getRepositoryNode());
+                file = ResourceManager.getRootProject().getFile(append);
+                if (!file.exists()) {
+                    BusinessException createBusinessException = ExceptionFactory.getInstance()
+                            .createBusinessException(repViewObj);
+                    throw createBusinessException;
+                }
+                // Added TDQ-7143 yyin 20130531
+                if (ERepositoryObjectType.TDQ_SOURCE_FILE_ELEMENT.getKey().equals(key)) {
+                    editorID = SQLEditor.EDITOR_ID;
+                } else {
+                    editorID = TDQFileEditorInput.DEFAULT_EDITOR_ID;
+                }
+                result = new TDQFileEditorInput(file);
+                ((TDQFileEditorInput) result).setFileItem(item);
+                ProxyRepositoryManager.getInstance().lock(item);
+                CorePlugin.getDefault().refreshDQView(this.repNode);
+                // ~
             }
             // ADD msjian TDQ-4209 2012-2-7 : return the editorInput of *.jrxml and *.sql files
             if (!isOpenItemEditorAction) {
