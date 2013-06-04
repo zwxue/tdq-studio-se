@@ -12,7 +12,6 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.views.provider;
 
-import java.sql.Driver;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -21,6 +20,7 @@ import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.IFontProvider;
 import org.eclipse.swt.SWT;
@@ -28,7 +28,8 @@ import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.ui.navigator.CommonViewer;
+import org.eclipse.ui.PlatformUI;
+import org.talend.commons.utils.platform.PluginChecker;
 import org.talend.core.model.metadata.IMetadataConnection;
 import org.talend.core.model.metadata.builder.ConvertionHelper;
 import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
@@ -42,7 +43,6 @@ import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.cwm.helper.ConnectionHelper;
-import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
@@ -163,7 +163,7 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider i
                 if (node instanceof DBConnectionRepNode) {
                     if (!isSupportedConnection(node) || isNeedAddDriverConnection(node)) {
                         image = ImageLib.createErrorIcon(ImageLib.TD_DATAPROVIDER).createImage();
-                        
+
                     } else if (isInvalidJDBCConnection(node)) {
                         image = ImageLib.createInvalidIcon(ImageLib.TD_DATAPROVIDER).createImage();
                     } else {
@@ -265,6 +265,7 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider i
 
     @Override
     public String getText(Object element) {
+        try {
         if (element != null && element instanceof IRepositoryNode) {
             IRepositoryNode node = (IRepositoryNode) element;
             if (node instanceof RecycleBinRepNode || node instanceof ExchangeCategoryRepNode
@@ -364,6 +365,17 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider i
                 return label;
             }
             return node.getObject() == null ? PluginConstant.EMPTY_STRING : label;
+        }
+        } catch (RuntimeException e) {
+            int indexOf = e.getMessage().indexOf("java.lang.ClassNotFoundException:"); //$NON-NLS-1$
+            if (indexOf > 0 && PluginChecker.isOnlyTopLoaded()) {
+                String errorMessage = e.getMessage().substring(indexOf);
+                MessageDialog.openWarning(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
+                        DefaultMessagesImpl.getString("ResourceViewContentProvider.warining"), //$NON-NLS-1$
+                        errorMessage);
+            } else {
+                log.error(e);
+            }
         }
         String text = super.getText(element);
         return PluginConstant.EMPTY_STRING.equals(text) ? DefaultMessagesImpl.getString("DQRepositoryViewLabelProvider.noName") : text; //$NON-NLS-1$

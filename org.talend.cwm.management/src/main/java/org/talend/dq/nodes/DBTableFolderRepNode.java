@@ -78,7 +78,7 @@ public class DBTableFolderRepNode extends DQDBFolderRepositoryNode implements IC
 
     /**
      * DOC klliu FolderRepNode constructor comment.
-     * 
+     *
      * @param object
      * @param parent if parent is null will try to create new one to insert of old parent.
      * @param type
@@ -93,7 +93,7 @@ public class DBTableFolderRepNode extends DQDBFolderRepositoryNode implements IC
 
     /**
      * DOC talend Comment method "setConnection".
-     * 
+     *
      * @param object
      */
     private void getConnectionFromViewObject() {
@@ -112,7 +112,7 @@ public class DBTableFolderRepNode extends DQDBFolderRepositoryNode implements IC
 
     /**
      * create the node of parent.
-     * 
+     *
      * @param object
      * @return
      */
@@ -146,7 +146,7 @@ public class DBTableFolderRepNode extends DQDBFolderRepositoryNode implements IC
 
     /**
      * Create TableFolderNodeRepositoryNode.
-     * 
+     *
      * @param nodes parent RepositoryNode
      * @param metadataObject parent CatalogViewObject or SchemaViewObject
      */
@@ -210,7 +210,7 @@ public class DBTableFolderRepNode extends DQDBFolderRepositoryNode implements IC
 
     /**
      * DOC klliu Comment method "createTableRepositoryNode".
-     * 
+     *
      * @param tables
      */
     private void createTableRepositoryNode(List<TdTable> tables, List<IRepositoryNode> node) {
@@ -232,7 +232,7 @@ public class DBTableFolderRepNode extends DQDBFolderRepositoryNode implements IC
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.repository.model.RepositoryNode#getLabel()
      */
     @Override
@@ -311,6 +311,8 @@ public class DBTableFolderRepNode extends DQDBFolderRepositoryNode implements IC
             schema = ((MetadataSchemaRepositoryObject) object).getSchema();
             try {
                 hasChildrenInDB = DqRepositoryViewService.isContainsTable(connection, schema, null);
+            } catch (RuntimeException e) {
+                throw new RuntimeException(e);
             } catch (Exception e) {
                 log.error(e.toString());
             }
@@ -320,7 +322,7 @@ public class DBTableFolderRepNode extends DQDBFolderRepositoryNode implements IC
 
     /**
      * return the Catalog or Schema, or null.
-     * 
+     *
      * @return
      */
     public Package getPackage() {

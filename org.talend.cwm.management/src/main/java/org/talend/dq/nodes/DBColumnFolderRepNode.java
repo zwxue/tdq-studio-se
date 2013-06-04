@@ -94,7 +94,7 @@ public class DBColumnFolderRepNode extends DQDBFolderRepositoryNode implements I
 
     /**
      * DOC klliu DBColumnFolderRepNode constructor comment.
-     * 
+     *
      * @param object
      * @param parent if parent is null will try to create new one to insert of old parent.
      * @param type
@@ -110,7 +110,7 @@ public class DBColumnFolderRepNode extends DQDBFolderRepositoryNode implements I
 
     /**
      * DOC talend Comment method "setConnection".
-     * 
+     *
      * @param object
      */
     private void getConnectionFromViewObject() {
@@ -129,7 +129,7 @@ public class DBColumnFolderRepNode extends DQDBFolderRepositoryNode implements I
 
     /**
      * create the node of parent.
-     * 
+     *
      * @param object
      * @return
      */
@@ -187,6 +187,8 @@ public class DBColumnFolderRepNode extends DQDBFolderRepositoryNode implements I
                 if (tdcolumns.size() > 0) {
                     ElementWriterFactory.getInstance().createDataProviderWriter().save(item, false);
                 }
+            } catch (RuntimeException e) {
+                throw new RuntimeException(e);
             } catch (Exception e) {
                 log.error(e, e);
             }
@@ -207,7 +209,7 @@ public class DBColumnFolderRepNode extends DQDBFolderRepositoryNode implements I
 
     /**
      * DOC klliu Comment method "createTdcolumnsNode".
-     * 
+     *
      * @param tdcolumns
      * @param repsNodes
      */
@@ -227,7 +229,7 @@ public class DBColumnFolderRepNode extends DQDBFolderRepositoryNode implements I
 
     /**
      * return the TdTable or TdView, or null.
-     * 
+     *
      * @return
      */
     public ColumnSet getColumnSet() {
@@ -248,7 +250,7 @@ public class DBColumnFolderRepNode extends DQDBFolderRepositoryNode implements I
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.repository.model.RepositoryNode#getLabel()
      */
     @Override
