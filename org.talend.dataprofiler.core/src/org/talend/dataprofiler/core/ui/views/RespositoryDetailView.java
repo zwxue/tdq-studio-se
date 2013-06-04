@@ -129,6 +129,8 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
 
     Logger log = Logger.getLogger(RespositoryDetailView.class);
 
+    private ISelection currentSelection = null;
+
     /**
      * DOC qzhang RespositoryDetailView constructor comment.
      */
@@ -250,10 +252,16 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
      */
     public void selectionChanged(IWorkbenchPart part, ISelection selection) {
         clearContainer();
-        // FIXME What's the fucking "is" mean here???
-        boolean is = true;
+        boolean isNeedcreateDefault = true;
         try {
             if (part instanceof DQRespositoryView) {
+                // Added 20130604 TDQ-7408 yyin, when the selection is not changed should not execute this method.
+                if (selection.equals(currentSelection)) {
+                    return;
+                } else {
+                    currentSelection = selection;
+                }// ~
+
                 StructuredSelection sel = (StructuredSelection) selection;
                 // MOD by zshen for bug 15750 TODO 39(13) make Detail View can be used.
                 Object fe = sel.getFirstElement();
@@ -267,26 +275,26 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
                 }
                 if (fe instanceof IFile) {
                     IFile fe2 = (IFile) fe;
-                    is = createFileDetail(is, fe2);
+                    isNeedcreateDefault = createFileDetail(isNeedcreateDefault, fe2);
                 } else if (fe instanceof IRepositoryViewObject) {
-                    is = createFileDetail(is, (IRepositoryViewObject) fe);
+                    isNeedcreateDefault = createFileDetail(isNeedcreateDefault, (IRepositoryViewObject) fe);
                 } else if (fe instanceof DBConnectionRepNode) {
                     DBConnectionRepNode connNode = (DBConnectionRepNode) fe;
                     // MOD sizhaoliu TDQ-6316
                     // DatabaseConnection databaseConnection = connNode.getDatabaseConnection();
                     ConnectionItem connectionItem = (ConnectionItem) connNode.getObject().getProperty().getItem();
                     createDataProviderDetail(connectionItem);
-                    is = false;
+                    isNeedcreateDefault = false;
                 } else if (fe instanceof DBCatalogRepNode) {
                     DBCatalogRepNode catalogNode = (DBCatalogRepNode) fe;
                     Catalog catalog = catalogNode.getCatalog();
                     createTdCatalogDetail(catalog);
-                    is = false;
+                    isNeedcreateDefault = false;
                 } else if (fe instanceof DBSchemaRepNode) {
                     DBSchemaRepNode schemaNode = (DBSchemaRepNode) fe;
                     Schema schema = schemaNode.getSchema();
                     createTdSchemaDetail(schema);
-                    is = false;
+                    isNeedcreateDefault = false;
                 } else if (fe instanceof DBTableRepNode) {
                     DBTableRepNode tableNode = (DBTableRepNode) fe;
                     // MOD gdbu 2011-9-14 TDQ-3243
@@ -296,7 +304,7 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
                     // ~TDQ-3243
                     TdTable tdTable = tableNode.getTdTable();
                     createTableDetail(tdTable);
-                    is = false;
+                    isNeedcreateDefault = false;
                 } else if (fe instanceof DBViewRepNode) {
                     DBViewRepNode viewNode = (DBViewRepNode) fe;
                     // MOD gdbu 2011-9-14 TDQ-3243
@@ -305,26 +313,26 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
                     }
                     // ~TDQ-3243
                     createNameCommentDetail(viewNode.getTdView());
-                    is = false;
+                    isNeedcreateDefault = false;
                 } else if (fe instanceof DBColumnRepNode) {
                     DBColumnRepNode columnNode = (DBColumnRepNode) fe;
                     TdColumn column = columnNode.getTdColumn();
                     createTdColumn(column);
-                    is = false;
+                    isNeedcreateDefault = false;
                 } else if (fe instanceof IEcosComponent) {
                     IEcosComponent component = (IEcosComponent) fe;
                     createEcosComponent(component);
-                    is = false;
+                    isNeedcreateDefault = false;
                 } else if (fe instanceof RegularExpression) {
                     // MOD mzhao 2009-04-20,Bug 6349.
                     RegularExpression regularExpression = (RegularExpression) fe;
                     createRegularExpression(regularExpression);
-                    is = false;
+                    isNeedcreateDefault = false;
                 } else if (fe instanceof PatternLanguageRepNode) {
                     // MOD mzhao 2012-08-15,feature TDQ-4037.
                     PatternLanguageRepNode pattLangNode = (PatternLanguageRepNode) fe;
                     createRegularExpression(pattLangNode.getRegularExpression());
-                    is = false;
+                    isNeedcreateDefault = false;
                 } else if (fe instanceof SourceFileRepNode) {
                     // MOD klliu 2001-02-28 bug 19154
                     IPath filePath = WorkbenchUtils.getFilePath((SourceFileRepNode) fe);
@@ -335,20 +343,20 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
                     IEcosComponent ecosComponent = ((ExchangeComponentRepNode) fe).getEcosComponent();
                     IEcosComponent component = ecosComponent;
                     createEcosComponent(component);
-                    is = false;
+                    isNeedcreateDefault = false;
 
                     // ADD by msjian 2011-5-12 21186: don't check whether the selected object is "MDMConnectionRepNode"
                 } else if (fe instanceof MDMConnectionRepNode) {
                     MDMConnectionRepNode mdmNode = (MDMConnectionRepNode) fe;
                     MDMConnection mdmConnection = mdmNode.getMdmConnection();
                     createDataProviderDetail(mdmConnection);
-                    is = false;
+                    isNeedcreateDefault = false;
                 } else if (fe instanceof DFConnectionRepNode) {
                     DFConnectionRepNode dfNode = (DFConnectionRepNode) fe;
                     DelimitedFileConnection dfConnection = dfNode.getDfConnection();
                     createDFconnectionName(dfNode.getObject().getLabel());
                     createDataProviderDetail(dfConnection);
-                    is = false;
+                    isNeedcreateDefault = false;
                 }
                 if (PluginChecker.isTDQLoaded()) {
                     if (fe instanceof EObject) {
@@ -372,11 +380,11 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
                 if (editorInput instanceof IFileEditorInput) {
                     IFileEditorInput input = (IFileEditorInput) editorInput;
                     IFile file = input.getFile();
-                    is = createFileDetail(is, file);
+                    isNeedcreateDefault = createFileDetail(isNeedcreateDefault, file);
                 }
             }
 
-            if (is) {
+            if (isNeedcreateDefault) {
                 createDefault();
             }
             // feature 19053
