@@ -17,7 +17,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.jface.dialogs.MessageDialogWithToggle;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 import org.talend.commons.utils.platform.PluginChecker;
 import org.talend.core.model.repository.IRepositoryViewObject;
@@ -34,10 +33,8 @@ import org.talend.repository.model.RepositoryNode;
  */
 public class ExchangeFolderRepNode extends DQRepositoryNode {
 
-    private boolean timeoutFlag = true;
-
     /**
-     * DOC klliu ExchangeFolderRepNode constructor comment.
+     * constructor.
      * 
      * @param object
      * @param parent
@@ -50,29 +47,18 @@ public class ExchangeFolderRepNode extends DQRepositoryNode {
     @Override
     public List<IRepositoryNode> getChildren() {
         Object[] result = null;
-        // MOD msjian 2012-5-30 TDQ-4997 :no information about Exchange time out
-        Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
-        String title = DefaultMessagesImpl.getString("ExchangeFolderRepNode.connectFailedTitle"); //$NON-NLS-1$
         try {
-            if (timeoutFlag) {
-                String version = CorePlugin.getDefault().getProductVersion().toString();
-                result = ComponentSearcher.getAvailableCategory(version).toArray();
-            } else {
-                MessageDialogWithToggle.openInformation(shell, title,
-                        DefaultMessagesImpl.getString("ExchangeFolderRepNode.connectFailed1")); //$NON-NLS-1$
-                result = new String[] {};
-            }
+            String version = CorePlugin.getDefault().getProductVersion().toString();
+            result = ComponentSearcher.getAvailableCategory(version).toArray();
         } catch (SocketTimeoutException e) {
-            timeoutFlag = false;
-            MessageDialogWithToggle.openInformation(shell, title, e.getMessage());
-            result = new String[] {};
+            MessageDialogWithToggle.openWarning(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
+                    DefaultMessagesImpl.getString("ExchangeFolderRepNode.connectFailedTitle"), //$NON-NLS-1$
+                    e.getMessage());
         } catch (Exception e) {
-            timeoutFlag = false;
-            MessageDialogWithToggle.openInformation(shell, title,
+            MessageDialogWithToggle.openWarning(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
+                    DefaultMessagesImpl.getString("ExchangeFolderRepNode.connectFailedTitle"), //$NON-NLS-1$
                     DefaultMessagesImpl.getString("ExchangeFolderRepNode.connectFailed2")); //$NON-NLS-1$
-            result = new String[] {};
         }
-        // TDQ-4997~
         // MOD gdbu 2011-6-29 bug : 22204
         return filterResultsIfAny(buildRepositoryNode(result));
         // ~22204
