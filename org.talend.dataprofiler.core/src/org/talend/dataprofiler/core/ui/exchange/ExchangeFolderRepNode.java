@@ -47,17 +47,22 @@ public class ExchangeFolderRepNode extends DQRepositoryNode {
     @Override
     public List<IRepositoryNode> getChildren() {
         Object[] result = null;
+        boolean isOnFilter = ExchangeFolderRepNode.isOnFilterring();
         try {
             String version = CorePlugin.getDefault().getProductVersion().toString();
-            result = ComponentSearcher.getAvailableCategory(version).toArray();
+            result = ComponentSearcher.getAvailableCategory(version, isOnFilter).toArray();
         } catch (SocketTimeoutException e) {
-            MessageDialogWithToggle.openWarning(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
-                    DefaultMessagesImpl.getString("ExchangeFolderRepNode.connectFailedTitle"), //$NON-NLS-1$
-                    e.getMessage());
+            if (!isOnFilter) {
+                MessageDialogWithToggle.openWarning(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
+                        DefaultMessagesImpl.getString("ExchangeFolderRepNode.connectFailedTitle"), //$NON-NLS-1$
+                        e.getMessage());
+            }
         } catch (Exception e) {
-            MessageDialogWithToggle.openWarning(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
-                    DefaultMessagesImpl.getString("ExchangeFolderRepNode.connectFailedTitle"), //$NON-NLS-1$
-                    DefaultMessagesImpl.getString("ExchangeFolderRepNode.connectFailed2")); //$NON-NLS-1$
+            if (!isOnFilter) {
+                MessageDialogWithToggle.openWarning(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
+                        DefaultMessagesImpl.getString("ExchangeFolderRepNode.connectFailedTitle"), //$NON-NLS-1$
+                        DefaultMessagesImpl.getString("ExchangeFolderRepNode.connectFailed2")); //$NON-NLS-1$
+            }
         }
         // MOD gdbu 2011-6-29 bug : 22204
         return filterResultsIfAny(buildRepositoryNode(result));

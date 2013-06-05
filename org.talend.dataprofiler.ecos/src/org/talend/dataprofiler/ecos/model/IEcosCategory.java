@@ -47,4 +47,11 @@ public interface IEcosCategory {
      * @return {@linkplain IEcosComponent} in {@linkplain List}. empty list if there is no any component.
      */
     List<IEcosComponent> getComponent();
+
+    /**
+     * get Components in the category depend on isOnFilter.
+     * 
+     * @return {@linkplain IEcosComponent} in {@linkplain List}. empty list if there is no any component.
+     */
+    List<IEcosComponent> getComponent(boolean isOnFilter);
 }
