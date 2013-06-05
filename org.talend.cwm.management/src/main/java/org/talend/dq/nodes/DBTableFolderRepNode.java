@@ -35,6 +35,7 @@ import org.talend.dq.nodes.foldernode.IConnectionElementSubFolder;
 import org.talend.dq.writer.impl.ElementWriterFactory;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
+import org.talend.utils.exceptions.MissingDriverException;
 import orgomg.cwm.objectmodel.core.Package;
 import orgomg.cwm.resource.relational.Catalog;
 import orgomg.cwm.resource.relational.Schema;
@@ -311,8 +312,8 @@ public class DBTableFolderRepNode extends DQDBFolderRepositoryNode implements IC
             schema = ((MetadataSchemaRepositoryObject) object).getSchema();
             try {
                 hasChildrenInDB = DqRepositoryViewService.isContainsTable(connection, schema, null);
-            } catch (RuntimeException e) {
-                throw new RuntimeException(e);
+            } catch (MissingDriverException e) {
+                throw e;
             } catch (Exception e) {
                 log.error(e.toString());
             }

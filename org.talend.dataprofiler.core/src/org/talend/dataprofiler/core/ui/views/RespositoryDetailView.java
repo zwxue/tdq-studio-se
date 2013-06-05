@@ -102,6 +102,7 @@ import org.talend.dq.nodes.SourceFileRepNode;
 import org.talend.dq.nodes.SysIndicatorDefinitionRepNode;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.resource.ResourceManager;
+import org.talend.utils.exceptions.MissingDriverException;
 import orgomg.cwm.foundation.softwaredeployment.DataManager;
 import orgomg.cwm.objectmodel.core.Expression;
 import orgomg.cwm.objectmodel.core.ModelElement;
@@ -394,15 +395,13 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
                     tContainer.layout();
                 }
             }
-        } catch (RuntimeException e) {
-            int indexOf = e.getMessage().indexOf("java.lang.ClassNotFoundException:"); //$NON-NLS-1$
-            if (indexOf > 0 && PluginChecker.isOnlyTopLoaded()) {
-                String errorMessage = e.getMessage().substring(indexOf);
+        } catch (MissingDriverException e) {
+            if (PluginChecker.isOnlyTopLoaded()) {
                 MessageDialog.openWarning(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
                         DefaultMessagesImpl.getString("RespositoryDetailView.warning"), //$NON-NLS-1$
-                        errorMessage);
+                        e.getErrorMessage());
             } else {
-                log.error(e);
+                log.error(e,e);
             }
         }
     }

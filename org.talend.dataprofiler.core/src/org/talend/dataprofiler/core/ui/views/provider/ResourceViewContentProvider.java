@@ -60,6 +60,7 @@ import org.talend.repository.model.IRepositoryNode.ENodeType;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.resource.EResourceConstant;
 import org.talend.resource.ResourceManager;
+import org.talend.utils.exceptions.MissingDriverException;
 
 /**
  * DOC klliu Reconstructure the ResourceViewContentProvider for using DI's API.
@@ -368,15 +369,13 @@ public class ResourceViewContentProvider extends WorkbenchContentProvider {
         }
         // ~TDQ-3457
 
-        } catch (RuntimeException e) {
-            int indexOf = e.getMessage().indexOf("java.lang.ClassNotFoundException:"); //$NON-NLS-1$
-            if (indexOf > 0 && PluginChecker.isOnlyTopLoaded()) {
-                String errorMessage = e.getMessage().substring(indexOf);
+        } catch (MissingDriverException e) {
+            if (PluginChecker.isOnlyTopLoaded()) {
                 MessageDialog.openWarning(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
                         DefaultMessagesImpl.getString("ResourceViewContentProvider.warining"), //$NON-NLS-1$
-                        errorMessage);
+                        e.getErrorMessage());
             } else {
-                log.error(e);
+                log.error(e,e);
             }
             return false;
         }

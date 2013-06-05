@@ -38,6 +38,7 @@ import org.talend.dq.nodes.foldernode.IConnectionElementSubFolder;
 import org.talend.dq.writer.impl.ElementWriterFactory;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
+import org.talend.utils.exceptions.MissingDriverException;
 import orgomg.cwm.resource.relational.ColumnSet;
 
 /**
@@ -187,8 +188,8 @@ public class DBColumnFolderRepNode extends DQDBFolderRepositoryNode implements I
                 if (tdcolumns.size() > 0) {
                     ElementWriterFactory.getInstance().createDataProviderWriter().save(item, false);
                 }
-            } catch (RuntimeException e) {
-                throw new RuntimeException(e);
+            } catch (MissingDriverException e) {
+                throw e;
             } catch (Exception e) {
                 log.error(e, e);
             }

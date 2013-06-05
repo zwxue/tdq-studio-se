@@ -30,6 +30,7 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
 import org.talend.commons.utils.platform.PluginChecker;
+import org.talend.core.database.EDatabaseTypeName;
 import org.talend.core.model.metadata.IMetadataConnection;
 import org.talend.core.model.metadata.builder.ConvertionHelper;
 import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
@@ -92,6 +93,7 @@ import org.talend.repository.model.IRepositoryNode.ENodeType;
 import org.talend.repository.model.IRepositoryNode.EProperties;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.resource.EResourceConstant;
+import org.talend.utils.exceptions.MissingDriverException;
 
 /**
  * @author rli
@@ -366,15 +368,13 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider i
             }
             return node.getObject() == null ? PluginConstant.EMPTY_STRING : label;
         }
-        } catch (RuntimeException e) {
-            int indexOf = e.getMessage().indexOf("java.lang.ClassNotFoundException:"); //$NON-NLS-1$
-            if (indexOf > 0 && PluginChecker.isOnlyTopLoaded()) {
-                String errorMessage = e.getMessage().substring(indexOf);
+        } catch (MissingDriverException e) {
+            if (PluginChecker.isOnlyTopLoaded()) {
                 MessageDialog.openWarning(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
                         DefaultMessagesImpl.getString("ResourceViewContentProvider.warining"), //$NON-NLS-1$
-                        errorMessage);
+                        e.getErrorMessage());
             } else {
-                log.error(e);
+                log.error(e,e);
             }
         }
         String text = super.getText(element);
@@ -449,14 +449,12 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider i
             if (connectionItem.getConnection() instanceof DatabaseConnection) {
                 IMetadataConnection metadataConnection = ConvertionHelper.convert(connectionItem.getConnection());
                 try {
-                    MetadataConnectionUtils.getClassDriver(metadataConnection);
-                } catch (RuntimeException e) {
-                    int indexOf = e.getMessage().indexOf("java.lang.ClassNotFoundException:");
-                    if (indexOf > 0) {
-                        return true;
-                    } else {
-                        log.error(e, e);
+
+                    if (!EDatabaseTypeName.HIVE.getXmlName().equalsIgnoreCase(metadataConnection.getDbType())) {
+                        MetadataConnectionUtils.getClassDriver(metadataConnection);
                     }
+                } catch (MissingDriverException e) {
+                        return true;
                 } catch (Exception e) {
 
                     log.error(e, e);
