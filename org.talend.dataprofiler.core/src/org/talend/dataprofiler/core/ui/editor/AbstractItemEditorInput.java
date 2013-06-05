@@ -113,4 +113,8 @@ public class AbstractItemEditorInput implements IEditorInput {
     public String getModelElementUuid() {
         return null;
     }
+
+    public void setItem(Item item) {
+        this.item = item;
+    }
 }
