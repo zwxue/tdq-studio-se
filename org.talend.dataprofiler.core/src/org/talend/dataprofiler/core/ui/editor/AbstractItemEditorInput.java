@@ -31,6 +31,10 @@ public class AbstractItemEditorInput implements IEditorInput {
 
     protected Item item = null;
 
+    public void setItem(Item item) {
+        this.item = item;
+    }
+
     public AbstractItemEditorInput(Item tdqItem) {
         this.item = tdqItem;
 

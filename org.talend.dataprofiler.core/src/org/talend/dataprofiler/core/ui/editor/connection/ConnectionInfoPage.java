@@ -87,8 +87,6 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
 
     private static Logger log = Logger.getLogger(ConnectionInfoPage.class);
 
-    private Connection connection;
-
     protected ConnectionRepNode connectionRepNode;
 
     public ConnectionRepNode getConnectionRepNode() {
@@ -101,8 +99,6 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
             this.connectionRepNode = (ConnectionRepNode) recursiveFind;
         }
     }
-
-    private Item connectionItem;
 
     private Text loginText;
 
@@ -118,23 +114,24 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
 
     private boolean isLoginChanged = false;
 
+    private IEditorInput editorInput = null;
+
     public ConnectionInfoPage(FormEditor editor, String id, String title) {
         super(editor, id, title);
     }
 
     @Override
     protected ModelElement getCurrentModelElement(FormEditor editor) {
-        IEditorInput editorInput = editor.getEditorInput();
+        editorInput = editor.getEditorInput();
+        Connection connection = null;
         if (editorInput instanceof ConnectionItemEditorInput) {
             ConnectionItemEditorInput input = (ConnectionItemEditorInput) editorInput;
-            connectionItem = input.getItem();
             connection = ((ConnectionItem) input.getItem()).getConnection();
         } else if (editorInput instanceof FileEditorInput) {
             Property proty = PropertyHelper.getProperty(((FileEditorInput) editorInput).getFile());
             // String fileLabel = proty.getLabel();
             Item item = proty.getItem();
             if (item instanceof ConnectionItem) {
-                connectionItem = item;
                 connection = ((ConnectionItem) item).getConnection();
             }
         }
@@ -276,15 +273,16 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
      * MOD yyi 9082 2010-02-25
      */
     protected void changeConnectionInformations() {
+        ConnectionItem connectionItem = getConnectionItem();
         if (connectionItem != null) {
             // MOD mzhao bug:19288
             if (connectionItem.eIsProxy()) {
                 Property property = this.repositoryViewObject == null ? null : this.repositoryViewObject.getProperty();
                 if (property != null) {
-                    connectionItem = property.getItem();
+                    connectionItem = (ConnectionItem) property.getItem();
                 }
             }
-            RepositoryNode node = RepositoryNodeHelper.recursiveFind(((ConnectionItem) connectionItem).getConnection());
+            RepositoryNode node = RepositoryNodeHelper.recursiveFind(connectionItem.getConnection());
 
             IWizard wizard = null;
             if (node != null) {
@@ -319,23 +317,31 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
         String userName = loginText.getText();
         String password = passwordText.getText();
 
-        if (connection.isContextMode()) {
-            userName = ConnectionUtils.getOriginalConntextValue(connection, userName);
-            password = ConnectionUtils.getOriginalConntextValue(connection, password);
-        }
-        props.put(TaggedValueHelper.USER, userName);
-        props.put(TaggedValueHelper.PASSWORD, password);
+        ConnectionItem connItem = getConnectionItem();
+        ReturnCode returnCode = new ReturnCode(false);
+        if (connItem != null) {
+            Connection connection = connItem.getConnection();
+            if (connection == null) {
+                returnCode.setMessage("connection is null!"); //$NON-NLS-1$
+                return returnCode;
+            }
+            if (connection.isContextMode()) {
+                userName = ConnectionUtils.getOriginalConntextValue(connection, userName);
+                password = ConnectionUtils.getOriginalConntextValue(connection, password);
+            }
+            props.put(TaggedValueHelper.USER, userName);
+            props.put(TaggedValueHelper.PASSWORD, password);
 
-        if (connection instanceof MDMConnection) {
-            props.put(TaggedValueHelper.UNIVERSE, ConnectionHelper.getUniverse((MDMConnection) connection));
-            props.put(TaggedValueHelper.DATA_FILTER, ConnectionHelper.getDataFilter((MDMConnection) connection));
-        }
+            if (connection instanceof MDMConnection) {
+                props.put(TaggedValueHelper.UNIVERSE, ConnectionHelper.getUniverse((MDMConnection) connection));
+                props.put(TaggedValueHelper.DATA_FILTER, ConnectionHelper.getDataFilter((MDMConnection) connection));
+            }
 
-        ReturnCode returnCode = null;
-        if (ConnectionUtils.isMdmConnection(connection)) {
-            returnCode = new MdmWebserviceConnection(JavaSqlFactory.getURL(connection), props).checkDatabaseConnection();
-        } else {
-            returnCode = MetadataConnectionUtils.checkConnection((DatabaseConnection) connection);
+            if (ConnectionUtils.isMdmConnection(connection)) {
+                returnCode = new MdmWebserviceConnection(JavaSqlFactory.getURL(connection), props).checkDatabaseConnection();
+            } else {
+                returnCode = MetadataConnectionUtils.checkConnection((DatabaseConnection) connection);
+            }
         }
 
         return returnCode;
@@ -431,10 +437,14 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
         ReturnCode rc = new ReturnCode();
         String dialogMessage = DefaultMessagesImpl.getString("ConnectionInfoPage.impactAnalyses");//$NON-NLS-1$
         String dialogTitle = DefaultMessagesImpl.getString("ConnectionInfoPage.warningTitle");//$NON-NLS-1$
-        // MOD klliu 2010-07-06 bug 14095: unnecessary wizard
-        if (this.isUrlChanged || this.isLoginChanged || this.isPassWordChanged) {
-            rc.setOk(Window.OK == DeleteModelElementConfirmDialog.showElementImpactConfirmDialog(null,
-                    new ModelElement[] { connection }, dialogTitle, dialogMessage));
+        ConnectionItem connItem = getConnectionItem();
+        if (connItem != null) {
+            Connection connection = connItem.getConnection();
+            // MOD klliu 2010-07-06 bug 14095: unnecessary wizard
+            if (connection != null && (this.isUrlChanged || this.isLoginChanged || this.isPassWordChanged)) {
+                rc.setOk(Window.OK == DeleteModelElementConfirmDialog.showElementImpactConfirmDialog(null,
+                        new ModelElement[] { connection }, dialogTitle, dialogMessage));
+            }
         }
 
         return rc;
@@ -447,54 +457,68 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
      */
     @Override
     protected boolean saveTextChange() {
-        // get the last version element if it is proxy.
-        if (connectionItem.eIsProxy()) {
-            Property property = this.repositoryViewObject == null ? null : this.repositoryViewObject.getProperty();
-            if (property != null) {
-                connectionItem = property.getItem();
+        ConnectionItem connItem = getConnectionItem();
+        if (connItem != null) {
+            Connection connection = connItem.getConnection();
+            if (connection == null) {
+                return false;
             }
-            if (connectionItem != null) {
-                connection = ((ConnectionItem) connectionItem).getConnection();
+            // get the last version element if it is proxy.
+            if (connItem.eIsProxy()) {
+                Property property = this.repositoryViewObject == null ? null : this.repositoryViewObject.getProperty();
+                if (property != null && property.getItem() != null) {
+                    connItem = (ConnectionItem) property.getItem();
+                }
+                if (connItem != null) {
+                    connection = (connItem).getConnection();
+                }
             }
-        }
 
-        if (!connection.isContextMode()) {
-            JavaSqlFactory.setUsername(connection, loginText.getText());
-            JavaSqlFactory.setPassword(connection, passwordText.getText());
-        }
-        // JavaSqlFactory.setURL(connection, urlText.getText());
-        // MOD zshen for bug 12327:to save driverClassName.
-        //        if (tmpParam != null && tmpParam.getDriverClassName() != null && !"".equals(tmpParam.getDriverClassName())) {//$NON-NLS-1$
-        // ConnectionUtils.setDriverClass(connection, tmpParam.getDriverClassName());
-        // }
-        // ~12327
-        // MOD msjian 2011-7-18 23216: when there is no error for name, do set
-        if (super.saveTextChange()) {
-            ConnectionUtils.setName(connection, nameText.getText());
-            // MOD zshen for bug 4314 I think there not need this set method for displayName
-            // PropertyHelper.getProperty(connection).setDisplayName(nameText.getText());
-            // PropertyHelper.getProperty(connection).setLabel(nameText.getText());
-        } else {
-            return false;
+            if (!connection.isContextMode()) {
+                JavaSqlFactory.setUsername(connection, loginText.getText());
+                JavaSqlFactory.setPassword(connection, passwordText.getText());
+            }
+            // JavaSqlFactory.setURL(connection, urlText.getText());
+            // MOD zshen for bug 12327:to save driverClassName.
+            //        if (tmpParam != null && tmpParam.getDriverClassName() != null && !"".equals(tmpParam.getDriverClassName())) {//$NON-NLS-1$
+            // ConnectionUtils.setDriverClass(connection, tmpParam.getDriverClassName());
+            // }
+            // ~12327
+            // MOD msjian 2011-7-18 23216: when there is no error for name, do set
+            if (super.saveTextChange()) {
+                ConnectionUtils.setName(connection, nameText.getText());
+                // MOD zshen for bug 4314 I think there not need this set method for displayName
+                // PropertyHelper.getProperty(connection).setDisplayName(nameText.getText());
+                // PropertyHelper.getProperty(connection).setLabel(nameText.getText());
+            } else {
+                return false;
+            }
         }
         return true;
     }
 
     private void saveConnectionInfo() throws DataprofilerCoreException {
-        ConnectionUtils.checkUsernameBeforeSaveConnection4Sqlite(connection);
-
-        ReturnCode returnCode = ElementWriterFactory.getInstance().createDataProviderWriter().save(connectionItem, true);
-
-        if (returnCode.isOk()) {
-            if (log.isDebugEnabled()) {
-                log.debug("Saved in  " + connection.eResource().getURI().toFileString() + " successful"); //$NON-NLS-1$ //$NON-NLS-2$
+        ConnectionItem connItem = getConnectionItem();
+        if (connItem != null) {
+            Connection connection = connItem.getConnection();
+            if (connection == null) {
+                return;
             }
+            ConnectionUtils.checkUsernameBeforeSaveConnection4Sqlite(connection);
 
-        } else {
-            throw new DataprofilerCoreException(
-                    DefaultMessagesImpl
-                            .getString(
-                                    "ConnectionInfoPage.ProblemSavingFile", connection.eResource().getURI().toFileString(), returnCode.getMessage())); //$NON-NLS-1$
+            ReturnCode returnCode = ElementWriterFactory.getInstance().createDataProviderWriter().save(connItem, true);
+
+            if (returnCode.isOk()) {
+                if (log.isDebugEnabled()) {
+                    log.debug("Saved in  " + connection.eResource().getURI().toFileString() + " successful"); //$NON-NLS-1$ //$NON-NLS-2$
+                }
+
+            } else {
+                throw new DataprofilerCoreException(
+                        DefaultMessagesImpl
+                                .getString(
+                                        "ConnectionInfoPage.ProblemSavingFile", connection.eResource().getURI().toFileString(), returnCode.getMessage())); //$NON-NLS-1$
+            }
         }
     }
 
@@ -523,21 +547,51 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
     }
 
     private void initConnInfoTextField() {
-        String loginValue = JavaSqlFactory.getUsername(connection);
-        loginText.setText(loginValue == null ? PluginConstant.EMPTY_STRING : loginValue);
-        loginText.setEditable(!connection.isContextMode());
-        // MOD scorreia 2009-01-09 handle encrypted password
-        String passwordValue = JavaSqlFactory.getPassword(connection);
-        passwordText.setText(passwordValue == null ? PluginConstant.EMPTY_STRING : passwordValue);
-        passwordText.setEditable(!connection.isContextMode());
+        ConnectionItem connItem = getConnectionItem();
+        if (connItem != null) {
+            Connection connection = connItem.getConnection();
+            if (connection == null) {
+                return;
+            }
+            String loginValue = JavaSqlFactory.getUsername(connection);
+            loginText.setText(loginValue == null ? PluginConstant.EMPTY_STRING : loginValue);
+            loginText.setEditable(!connection.isContextMode());
+            // MOD scorreia 2009-01-09 handle encrypted password
+            String passwordValue = JavaSqlFactory.getPassword(connection);
+            passwordText.setText(passwordValue == null ? PluginConstant.EMPTY_STRING : passwordValue);
+            passwordText.setEditable(!connection.isContextMode());
 
-        String urlValue = JavaSqlFactory.getURL(connection);
-        urlText.setText(urlValue == null ? PluginConstant.EMPTY_STRING : urlValue);
-        String driverClass = JavaSqlFactory.getDriverClass(connection);
-        if (driverClass != null && driverClass.startsWith("org.sqlite")) { //$NON-NLS-1$
-            loginText.setEnabled(false);
-            passwordText.setEnabled(false);
+            String urlValue = JavaSqlFactory.getURL(connection);
+            urlText.setText(urlValue == null ? PluginConstant.EMPTY_STRING : urlValue);
+            String driverClass = JavaSqlFactory.getDriverClass(connection);
+            if (driverClass != null && driverClass.startsWith("org.sqlite")) { //$NON-NLS-1$
+                loginText.setEnabled(false);
+                passwordText.setEnabled(false);
+            }
         }
+    }
+
+    /**
+     * 
+     * make sure the connection item in this page just has one instance and it is from EditorInput.
+     * 
+     * @return
+     */
+    private ConnectionItem getConnectionItem() {
+        ConnectionItem item = null;
+        if (editorInput == null) {
+            editorInput = getEditorInput();
+        }
+        if (editorInput instanceof ConnectionItemEditorInput) {
+            ConnectionItemEditorInput input = (ConnectionItemEditorInput) editorInput;
+            item = (ConnectionItem) input.getItem();
+        } else if (editorInput instanceof FileEditorInput) {
+            Property proty = PropertyHelper.getProperty(((FileEditorInput) editorInput).getFile());
+            if (proty != null && proty.getItem() != null) {
+                item = (ConnectionItem) proty.getItem();
+            }
+        }
+        return item;
     }
 
 }
