@@ -130,8 +130,6 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
 
     Logger log = Logger.getLogger(RespositoryDetailView.class);
 
-    private ISelection currentSelection = null;
-
     /**
      * DOC qzhang RespositoryDetailView constructor comment.
      */
@@ -184,21 +182,12 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
                 DefaultMessagesImpl.getString("RespositoryDetailView.group.Identifier"), ResourceHelper.getUUID(fe)); //$NON-NLS-1$
 
         // MOD xqliu 2009-4-27 bug 6507
-        // newLabelAndText(
-        // tContainer,
-        // DefaultMessagesImpl
-        //						.getString("RespositoryDetailView.group.FilePath"), fe.eResource() //$NON-NLS-1$
-        // .getURI().toPlatformString(false));
         newLabelAndText(tContainer, DefaultMessagesImpl.getString("RespositoryDetailView.group.FilePath"), //$NON-NLS-1$
                 fe.eResource() == null ? "" : fe.eResource().getURI().toPlatformString(false)); //$NON-NLS-1$
         // ~
     }
 
     private void createTechnicalDetail(IRepositoryViewObject reposViewObj) {
-        // Connection connection = ((ConnectionItem) reposViewObj.getProperty().getItem()).getConnection();
-        // if (connection != null) {
-        // createTechnicalDetail(connection);
-        // }
         // MOD klliu the DQRepositoryview unified with tos, so refactor as follow bug 19154 2011-02-28
         if (reposViewObj.getProperty() != null) {
             Item item = reposViewObj.getProperty().getItem();
@@ -256,19 +245,9 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
         boolean isNeedcreateDefault = true;
         try {
             if (part instanceof DQRespositoryView) {
-                // Added 20130604 TDQ-7408 yyin, when the selection is not changed should not execute this method.
-                if (selection.equals(currentSelection)) {
-                    return;
-                } else {
-                    currentSelection = selection;
-                }// ~
-
                 StructuredSelection sel = (StructuredSelection) selection;
                 // MOD by zshen for bug 15750 TODO 39(13) make Detail View can be used.
                 Object fe = sel.getFirstElement();
-                // if(fe instanceof IRepositoryNode){
-                // fe = RepositoryNodeHelper.getModelElementFromRepositoryNode((IRepositoryNode) fe);
-                // }
                 // MOD klliu 2011-02-24 if choose diffirent node ,that will load diffirent child ,so that not use up.
                 if (fe instanceof AnalysisRepNode || fe instanceof ReportRepNode || fe instanceof SysIndicatorDefinitionRepNode
                         || fe instanceof PatternRepNode || fe instanceof RuleRepNode) {
@@ -282,7 +261,6 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
                 } else if (fe instanceof DBConnectionRepNode) {
                     DBConnectionRepNode connNode = (DBConnectionRepNode) fe;
                     // MOD sizhaoliu TDQ-6316
-                    // DatabaseConnection databaseConnection = connNode.getDatabaseConnection();
                     ConnectionItem connectionItem = (ConnectionItem) connNode.getObject().getProperty().getItem();
                     createDataProviderDetail(connectionItem);
                     isNeedcreateDefault = false;
