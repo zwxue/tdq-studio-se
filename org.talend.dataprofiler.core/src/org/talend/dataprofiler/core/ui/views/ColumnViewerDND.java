@@ -239,8 +239,8 @@ public class ColumnViewerDND {
                     if (viewer instanceof AnalysisColumnSetTreeViewer) {
                         String expressionType = DomainHelper.getExpressionType(pattern);
                         boolean isSQLPattern = (ExpressionType.SQL_LIKE.getLiteral().equals(expressionType));
-                        Analysis analysis = ((AnalysisColumnSetTreeViewer) viewer).getAnalysis(); 
-                        if (isSQLPattern|| ExecutionLanguage.SQL.equals(analysis.getParameters().getExecutionLanguage())) {
+                        Analysis analysis = ((AnalysisColumnSetTreeViewer) viewer).getAnalysis();
+                        if (isSQLPattern || ExecutionLanguage.SQL.equals(analysis.getParameters().getExecutionLanguage())) {
                             is = true;
                         }
                     } else if (viewer instanceof AnalysisColumnTreeViewer) {
@@ -282,10 +282,9 @@ public class ColumnViewerDND {
                 Analysis analysis = null;
                 ArrayList<IFile> al = new ArrayList<IFile>();
                 if (ts.iterator() != null) {
-                    Iterator<IRepositoryNode> iter = (Iterator<IRepositoryNode>) ts.iterator();
+                    Iterator<IRepositoryNode> iter = ts.iterator();
                     while (iter.hasNext()) {
-                        IFile fe = ResourceManager.getRootProject().getFile(
-                                WorkbenchUtils.getFilePath((PatternRepNode) iter.next()));
+                        IFile fe = ResourceManager.getRootProject().getFile(WorkbenchUtils.getFilePath(iter.next()));
                         al.add(fe);
                     }
                     for (IFile fe : al) {
@@ -426,7 +425,7 @@ public class ColumnViewerDND {
                     }
                     selectedColumn.addAll(columns);
                 } else {
-                    RepositoryNode column = (RepositoryNode) next;
+                    RepositoryNode column = next;
                     selectedColumn.add(column);
                 }
 
@@ -529,7 +528,6 @@ public class ColumnViewerDND {
             }
 
             boolean is = true;
-            
 
             Object firstElement = ((StructuredSelection) commonViewer.getSelection()).getFirstElement();
 
@@ -591,7 +589,9 @@ public class ColumnViewerDND {
                 }
                 for (IFile fe : al) {
                     TreeItem item = (TreeItem) event.item;
-                    ColumnIndicator data = (ColumnIndicator) item.getData(AnalysisColumnTreeViewer.MODELELEMENT_INDICATOR_KEY);
+                    // MOD 20130606 TDQ-5852 should include using delimitedfile indicator type,
+                    ModelElementIndicator data = (ModelElementIndicator) item
+                            .getData(AnalysisColumnTreeViewer.MODELELEMENT_INDICATOR_KEY);
                     viewer = (AnalysisColumnTreeViewer) item.getParent().getData(AnalysisColumnTreeViewer.VIEWER_KEY);
 
                     analysis = viewer.getAnalysis();
@@ -654,8 +654,9 @@ public class ColumnViewerDND {
 
             @Override
             public void dragOver(DropTargetEvent event) {
-                if (receiver == null)
+                if (receiver == null) {
                     return;
+                }
 
                 super.dragOver(event);
                 receiver.doDropValidation(event, commonViewer);
@@ -664,8 +665,9 @@ public class ColumnViewerDND {
             @SuppressWarnings("unchecked")
             @Override
             public void drop(DropTargetEvent event) {
-                if (receiver == null)
+                if (receiver == null) {
                     return;
+                }
 
                 int index = targetControl.getItemCount();
                 super.drop(event);
