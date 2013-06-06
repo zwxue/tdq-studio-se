@@ -530,6 +530,10 @@ public class CorePlugin extends AbstractUIPlugin {
                     AbstractItemEditorInput itemInput = (AbstractItemEditorInput) input;
                     Item it = itemInput.getItem();
                     if (it != null && property != null && it.getProperty().getId().equals(property.getId())) {
+                        // make sure the item in editorInput is latest.
+                        if (!item.equals(it)) {
+                            itemInput.setItem(item);
+                        }
                         CommonFormEditor editor = (CommonFormEditor) reference.getEditor(false);
                         editor.refreshEditor();
                         break;
