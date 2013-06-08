@@ -118,9 +118,10 @@ public class ImportFactoryTest {
 
         File dict = new File(""); //$NON-NLS-1$
         File importFile = new File(dict.getAbsolutePath() + File.separator + "paser_rule.csv"); //$NON-NLS-1$
-        if (!importFile.exists()) {
-            importFile.createNewFile();
+        if (importFile.exists()) {
+            importFile.delete();
         }
+        importFile.createNewFile();
         // set the csv file's head
         String content = "\"Label\"\t\"Purpose\"\t\"Description\"\t\"Author\"\t\"Relative_Path\"\t\"Name\"\t\"Type\"\t\"Value\"\n"; //$NON-NLS-1$
         // set the csv file's content: the clumn's value is none empty with double quote
@@ -177,9 +178,10 @@ public class ImportFactoryTest {
 
         File dict = new File(""); //$NON-NLS-1$
         File importFile = new File(dict.getAbsolutePath() + File.separator + "paser_rule.csv"); //$NON-NLS-1$
-        if (!importFile.exists()) {
-            importFile.createNewFile();
+        if (importFile.exists()) {
+            importFile.delete();
         }
+        importFile.createNewFile();
         // set the csv file's head
         String content = "\"Label\"\t\"Purpose\"\t\"Description\"\t\"Author\"\t\"Relative_Path\"\t\"Name\"\t\"Type\"\t\"Value\"\n"; //$NON-NLS-1$
         // set the csv file's content: the clumn's value is none empty without double quote
@@ -236,9 +238,10 @@ public class ImportFactoryTest {
 
         File dict = new File(""); //$NON-NLS-1$
         File importFile = new File(dict.getAbsolutePath() + File.separator + "paser_rule.csv"); //$NON-NLS-1$
-        if (!importFile.exists()) {
-            importFile.createNewFile();
+        if (importFile.exists()) {
+            importFile.delete();
         }
+        importFile.createNewFile();
         // set the csv file's head
         String content = "\"Label\"\t\"Purpose\"\t\"Description\"\t\"Author\"\t\"Relative_Path\"\t\"Name\"\t\"Type\"\t\"Value\"\n"; //$NON-NLS-1$
         // set the csv file's content: the clumn's value is empty with double quote
@@ -295,9 +298,10 @@ public class ImportFactoryTest {
 
         File dict = new File(""); //$NON-NLS-1$
         File importFile = new File(dict.getAbsolutePath() + File.separator + "paser_rule.csv"); //$NON-NLS-1$
-        if (!importFile.exists()) {
-            importFile.createNewFile();
+        if (importFile.exists()) {
+            importFile.delete();
         }
+        importFile.createNewFile();
         // set the csv file's head
         String content = "\"Label\"\t\"Purpose\"\t\"Description\"\t\"Author\"\t\"Relative_Path\"\t\"Name\"\t\"Type\"\t\"Value\"\n"; //$NON-NLS-1$
         // set the csv file's content: the clumn's value is empty without double quote
