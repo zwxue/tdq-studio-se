@@ -247,7 +247,8 @@ public class SynonymRecordSearcherTest {
         }
         try {
             recSearcher.addSearcher(new SynonymIndexSearcher(), 2);
-        } catch (Exception e) {
+            Assert.fail("We should not reach here as an exception should be thrown before");
+        } catch (Throwable e) {
             Assert.assertNotNull("we should get an exception here", e);
         }
 
