@@ -264,7 +264,7 @@ public class ItemRecord {
             jrxmlFolderFile = folder.getLocation().toFile();
         } else {
             String jrxmlFolderString = folder.getLocation().toFile().getAbsolutePath();
-            jrxmlFolderFile = new File(jrxmlFolderString.replaceFirst(projectString,
+            jrxmlFolderFile = new File(jrxmlFolderString.replace(projectString,
                     repFileString.substring(0, repFileString.indexOf(EResourceConstant.DATA_PROFILING.getPath()) - 1)));
         }
         return jrxmlFolderFile;
