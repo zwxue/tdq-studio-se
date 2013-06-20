@@ -346,8 +346,6 @@ public class LocalRepositoryObjectCRUD extends AbstractRepObjectCRUDAction {
                     return isHandleOK;
                 }
                 // TDQ-5614 ~
-                // Added 20130517 yyin TDQ-7289
-                super.loadModelElement(sourceNode);
             }
 
             // do move.

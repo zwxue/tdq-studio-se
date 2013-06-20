@@ -123,13 +123,6 @@ public class OpenItemEditorAction extends AbstractRepObjectCRUDAction implements
 
     @Override
     public void run() {
-        // Added 20130517 yyin TDQ-7289
-        if (repViewObj != null) {
-            super.loadModelElement(repViewObj.getRepositoryNode());
-        } else {
-            super.loadModelElement(repNode);
-        }
-
         // MOD qiongli 2011-7-14 bug 21707,unload all unlocked resources before opening an editor.move all code in this
         // method to method doRun().
         RepositoryWorkUnit<Object> workUnit = new RepositoryWorkUnit<Object>("Open an DQ editor") {//$NON-NLS-1$
