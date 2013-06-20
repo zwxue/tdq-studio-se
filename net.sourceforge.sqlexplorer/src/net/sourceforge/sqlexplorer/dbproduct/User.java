@@ -445,7 +445,9 @@ public class User implements Comparable<User>, SessionEstablishedListener {
      */
     public List<SQLConnection> getUnusedConnections() {
         LinkedList<SQLConnection> result = new LinkedList<SQLConnection>();
-        result.addAll(allocated);
+        // MOD xqliu TDQ-7401 don't add allocated connections here
+        // result.addAll(allocated);
+        // ~ TDQ-7401
         result.addAll(unused);
         return result;
     }
