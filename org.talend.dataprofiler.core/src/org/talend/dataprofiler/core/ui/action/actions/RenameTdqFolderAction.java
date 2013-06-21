@@ -12,21 +12,36 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.action.actions;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.ui.IEditorInput;
+import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IViewReference;
+import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.part.FileEditorInput;
+import org.talend.commons.ui.runtime.exception.ExceptionHandler;
 import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.repository.i18n.Messages;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
+import org.talend.dataprofiler.core.ui.editor.AbstractItemEditorInput;
 import org.talend.dataprofiler.core.ui.utils.RepNodeUtils;
 import org.talend.dataprofiler.core.ui.views.DQRespositoryView;
 import org.talend.dataprofiler.core.ui.views.resources.IRepositoryObjectCRUDAction;
+import org.talend.dq.helper.RepositoryNodeHelper;
+import org.talend.repository.model.IRepositoryNode;
+import org.talend.repository.model.IRepositoryNode.ENodeType;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.repository.ui.actions.RenameFolderAction;
 
@@ -48,15 +63,59 @@ public class RenameTdqFolderAction extends RenameFolderAction {
     }
 
     /*
-     * (non-Javadoc)
-     * 
-     * @see org.talend.repository.ui.actions.AContextualAction#doRun()
+     * MOD 20130530 TDQ-7143, when any items are opened under the current folder, should not let it be renamed
      */
     @Override
-    protected void doRun() {
-        repositoryObjectCRUD.handleRenameFolder(repositoryNode);
-        super.doRun();
+    protected String getFirstOpenedChild(IRepositoryNode node) {
+        if (node.hasChildren()) {
+            IWorkbenchPage page = getActivePage();
+            IEditorReference[] editorReferences = page.getEditorReferences();
+            List<String> openEditor = new ArrayList<String>();
+            for (IEditorReference tmpInput : editorReferences) {
+                try {
+                    IEditorInput editorInput = tmpInput.getEditorInput();
+
+                    if (editorInput instanceof AbstractItemEditorInput) {
+                        AbstractItemEditorInput einput = (AbstractItemEditorInput) editorInput;
+                        openEditor.add(einput.getItem().getProperty().getId());
+                    } else if (editorInput instanceof FileEditorInput) {
+                        if (editorInput instanceof FileEditorInput) {
+                            FileEditorInput fileInput = (FileEditorInput) editorInput;
+                            for (IRepositoryNode currentNode : node.getChildren()) {
+                                IFile nodeFile = RepositoryNodeHelper.getIFile(currentNode);
+                                if (nodeFile != null
+                                        && nodeFile.getFullPath().toString().equals(fileInput.getFile().getFullPath().toString())) {
+                                    return currentNode.getObject().getLabel();
+                                }
+                            }
+                        }
+                    }
+                } catch (PartInitException e) {
+                    ExceptionHandler.process(e, Level.WARN);
+                }
+            }
+
+            List<IRepositoryNode> children = node.getChildren();
+            for (IRepositoryNode currentNode : children) {
+                if (currentNode.getType() == ENodeType.REPOSITORY_ELEMENT) {
+                    if (openEditor.contains(currentNode.getObject().getId())) {
+                        return currentNode.getObject().getLabel();
+                    }
+                } else if (currentNode.getType() == ENodeType.SIMPLE_FOLDER) {
+                    String childOpen = getFirstOpenedChild(currentNode);
+                    if (childOpen != null) {
+                        return childOpen;
+                    }
+                }
+            }
+        }
+        return null;
     }
+
+    @Override
+    protected Object getLabelOfNode(RepositoryNode node) {
+        return node.getObject().getLabel();
+    }// ~
 
     @Override
     protected void openFolderWizard(RepositoryNode node, ERepositoryObjectType objectType, IPath path) {

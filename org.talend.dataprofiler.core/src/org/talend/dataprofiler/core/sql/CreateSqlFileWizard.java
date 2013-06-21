@@ -48,6 +48,9 @@ public class CreateSqlFileWizard extends Wizard {
 
     private SqlFileParameter parameter;
 
+    private TDQSourceFileItem sourceFileItem;
+
+
     /**
      * DOC qzhang CreateSqlFileWizard constructor comment.
      * 
@@ -87,7 +90,7 @@ public class CreateSqlFileWizard extends Wizard {
         property.setLabel(WorkspaceUtils.normalize(parameter.getFileName()));
         property.setDisplayName(parameter.getFileName());
 
-        TDQSourceFileItem sourceFileItem = org.talend.dataquality.properties.PropertiesFactory.eINSTANCE
+        sourceFileItem = org.talend.dataquality.properties.PropertiesFactory.eINSTANCE
                 .createTDQSourceFileItem();
         sourceFileItem.setProperty(property);
         sourceFileItem.setName(parameter.getFileName());
@@ -130,6 +133,11 @@ public class CreateSqlFileWizard extends Wizard {
      */
     public File getSqlFile() {
         return this.sqlFile;
+    }
+
+    // Added 20130603 yyin TDQ-7143
+    public TDQSourceFileItem getSourceFileItem() {
+        return this.sourceFileItem;
     }
 
 }
