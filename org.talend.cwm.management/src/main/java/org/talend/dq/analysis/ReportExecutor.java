@@ -15,6 +15,7 @@ package org.talend.dq.analysis;
 import java.util.Date;
 
 import org.apache.log4j.Logger;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.common.util.EList;
 import org.talend.cwm.exception.AnalysisExecutionException;
 import org.talend.cwm.management.i18n.Messages;
@@ -43,7 +44,7 @@ public class ReportExecutor implements IReportExecutor {
      * 
      * @see org.talend.dq.analysis.IReportExecutor#execute(org.talend.dataquality.reports.TdReport)
      */
-    public ReturnCode execute(TdReport report) throws AnalysisExecutionException {
+    public ReturnCode execute(TdReport report, IProgressMonitor monitor) throws AnalysisExecutionException {
         atLeastOneFailure = false;
         long startTime = System.currentTimeMillis();
         if (report.eIsProxy()) {
@@ -59,7 +60,7 @@ public class ReportExecutor implements IReportExecutor {
                     return new ReturnCode(
                             Messages.getString("ReportExecutor.CannotEvaluateNullAnalysis", report.getName()), false); //$NON-NLS-1$
                 }
-                ReturnCode executeRc = AnalysisExecutorSelector.executeAnalysis(analysis);
+                ReturnCode executeRc = AnalysisExecutorSelector.executeAnalysis(analysis, monitor);
 
                 if (executeRc.getMessage() != null) {
                     throw new AnalysisExecutionException(Messages.getString("ReportExecutor.failRunAnalysis", analysis.getName(),
