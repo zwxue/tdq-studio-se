@@ -42,7 +42,6 @@ public class PatternStatisticsState extends AbstractChartTypeStates {
     }
 
     public JFreeChart getChart() {
-        // TODO Auto-generated method stub
         return TopChartFactory
                 .createStackedBarChart(
                         DefaultMessagesImpl.getString("PatternStatisticsState.PatternStatistics"), getDataset(), PlotOrientation.VERTICAL); //$NON-NLS-1$
@@ -51,7 +50,7 @@ public class PatternStatisticsState extends AbstractChartTypeStates {
     public ICustomerDataset getCustomerDataset() {
         CustomerDefaultCategoryDataset customerdataset = new CustomerDefaultCategoryDataset();
         for (IndicatorUnit unit : units) {
-            String label = unit.getIndicatorName();
+            String label = unit.getIndicator().getName();
             PatternMatchingExt patternExt = (PatternMatchingExt) unit.getValue();
             double notMathCount = patternExt.getNotMatchingValueCount();
             double machCount = patternExt.getMatchingValueCount();
@@ -61,7 +60,7 @@ public class PatternStatisticsState extends AbstractChartTypeStates {
 
             PatternChartDataEntity patternEntity = new PatternChartDataEntity();
             patternEntity.setIndicator(unit.getIndicator());
-            patternEntity.setLabel(unit.getIndicatorName());
+            patternEntity.setLabel(label);
             patternEntity.setNumMatch(String.valueOf(machCount));
             patternEntity.setNumNoMatch(String.valueOf(notMathCount));
 
@@ -72,7 +71,6 @@ public class PatternStatisticsState extends AbstractChartTypeStates {
     }
 
     public DataExplorer getDataExplorer() {
-        // TODO Auto-generated method stub
         return new PatternExplorer();
     }
 
@@ -84,27 +82,23 @@ public class PatternStatisticsState extends AbstractChartTypeStates {
     @Override
     protected TableStructureEntity getTableStructure() {
         TableStructureEntity entity = new TableStructureEntity();
-        entity
-                .setFieldNames(new String[] {
-                        DefaultMessagesImpl.getString("PatternStatisticsState.Label"), DefaultMessagesImpl.getString("PatternStatisticsState.Match"), DefaultMessagesImpl.getString("PatternStatisticsState.NoMatch"), DefaultMessagesImpl.getString("PatternStatisticsState.Match_"), DefaultMessagesImpl.getString("PatternStatisticsState.NoMatch_") }); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
+        entity.setFieldNames(new String[] {
+                DefaultMessagesImpl.getString("PatternStatisticsState.Label"), DefaultMessagesImpl.getString("PatternStatisticsState.Match"), DefaultMessagesImpl.getString("PatternStatisticsState.NoMatch"), DefaultMessagesImpl.getString("PatternStatisticsState.Match_"), DefaultMessagesImpl.getString("PatternStatisticsState.NoMatch_") }); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
         entity.setFieldWidths(new Integer[] { 200, 75, 75, 75, 75 });
         return entity;
     }
 
     @Override
     protected ITableLabelProvider getLabelProvider() {
-        // TODO Auto-generated method stub
         return new PatternLabelProvider();
     }
 
     @Override
     protected IStructuredContentProvider getContentProvider() {
-        // TODO Auto-generated method stub
         return new CommonContenteProvider();
     }
 
     public String getReferenceLink() {
-        // TODO Auto-generated method stub
         return null;
     }
 }
