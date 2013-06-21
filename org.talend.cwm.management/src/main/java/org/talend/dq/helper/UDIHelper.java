@@ -390,7 +390,7 @@ public final class UDIHelper {
         return true;
     }
 
-    private static boolean containsJavaUDI(IndicatorDefinition definition) {
+    public static boolean containsJavaUDI(IndicatorDefinition definition) {
         EList<TaggedValue> tvs = definition.getTaggedValue();
         int findCount = 0;
         for (TaggedValue tv : tvs) {

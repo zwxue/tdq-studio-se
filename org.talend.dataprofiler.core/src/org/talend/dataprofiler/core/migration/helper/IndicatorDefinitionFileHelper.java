@@ -12,11 +12,15 @@
 // ============================================================================
 package org.talend.dataprofiler.core.migration.helper;
 
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 import org.talend.cwm.relational.TdExpression;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataquality.helpers.BooleanExpressionHelper;
 import org.talend.dataquality.indicators.definition.CharactersMapping;
 import org.talend.dataquality.indicators.definition.DefinitionFactory;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
+import org.talend.dq.helper.UDIHelper;
 import org.talend.dq.helper.resourcehelper.IndicatorResourceFileHelper;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
 
@@ -26,6 +30,8 @@ import org.talend.dq.indicators.definitions.DefinitionHandler;
  * This class helps to update the splited indicator files.
  */
 public final class IndicatorDefinitionFileHelper {
+
+    private static Logger log = Logger.getLogger(IndicatorDefinitionFileHelper.class);
 
     private IndicatorDefinitionFileHelper() {
     }
@@ -198,5 +204,47 @@ public final class IndicatorDefinitionFileHelper {
         newMapping.setName(name);
 
         return definition.getCharactersMapping().add(newMapping);
+    }
+
+    /**
+     * find the IndicatorDefinition by the uuid in current project, if the IndicatorDefinition exist and don't include
+     * any sql and java template and the AggregatedDefinitions is not empty then return true, else return false.
+     * 
+     * @param uuid the IndicatorDefinition's uuid
+     * @return
+     */
+    private static boolean isSubCategoryIndicator(String uuid) {
+        if (!StringUtils.isEmpty(uuid)) {
+            IndicatorDefinition ind = DefinitionHandler.getInstance().getDefinitionById(uuid);
+            if (ind != null) {
+                return !UDIHelper.containsJavaUDI(ind) && ind.getSqlGenericExpression().isEmpty()
+                        && !ind.getAggregatedDefinitions().isEmpty();
+            }
+        }
+        return false;
+    }
+
+    /**
+     * if the Indicator is TableOverview/ViewOverview/DatePatternFrequencyTable return true, else return false. these
+     * Indicators don't include any sql and java template and the AggregatedDefinitions is empty also, and don't show
+     * them in the DQRepositoryView and import/export wizard.<br>
+     * Sum indicator shoud not show in DQ Repository View and import/export wizard also. <br>
+     * Technical indicators are not need to be displayed on UI.
+     * 
+     * @param uuid
+     * @return
+     */
+    public static boolean isTechnialIndicator(String uuid) {
+        if (StringUtils.isEmpty(uuid)) {
+            log.error(DefaultMessagesImpl.getString("IndicatorDefinitionFileHelper.NULL_UUID")); //$NON-NLS-1$
+            return Boolean.FALSE;
+        }
+        String tableOverviewUuid = "_hgO7YMYUEd27NP4lvE0A4w"; //$NON-NLS-1$
+        String viewOverviewUuid = "_lNIE0MbNEd2d_JPxxDRSfQ"; //$NON-NLS-1$
+        String datePatternFrequencyTableUuid = "_OCTbwJR_Ed2XO-JvLwVAaa"; //$NON-NLS-1$
+        String sumUuid = "_ccJgAhF2Ed2PKb6nEJEvhw"; //$NON-NLS-1$
+        boolean isTechUUID = tableOverviewUuid.compareTo(uuid) == 0 || viewOverviewUuid.compareTo(uuid) == 0
+                || datePatternFrequencyTableUuid.compareTo(uuid) == 0 || sumUuid.compareTo(uuid) == 0;
+        return isTechUUID || isSubCategoryIndicator(uuid);
     }
 }

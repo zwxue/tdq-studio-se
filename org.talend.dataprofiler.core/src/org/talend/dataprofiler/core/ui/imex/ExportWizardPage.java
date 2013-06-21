@@ -44,15 +44,20 @@ import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.dialogs.ContainerCheckedTreeViewer;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.commons.utils.WorkspaceUtils;
+import org.talend.cwm.helper.ResourceHelper;
 import org.talend.dataprofiler.core.PluginConstant;
+import org.talend.dataprofiler.core.migration.helper.IndicatorDefinitionFileHelper;
 import org.talend.dataprofiler.core.ui.imex.model.EImexType;
 import org.talend.dataprofiler.core.ui.imex.model.ExportWriterFactory;
 import org.talend.dataprofiler.core.ui.imex.model.IExportWriter;
 import org.talend.dataprofiler.core.ui.imex.model.ItemRecord;
 import org.talend.dataprofiler.core.ui.utils.ImportAndExportUtils;
+import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.helper.ReportUtils;
+import org.talend.dq.helper.resourcehelper.IndicatorResourceFileHelper;
+import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.resource.ResourceManager;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
@@ -358,6 +363,14 @@ public class ExportWizardPage extends WizardPage {
                     String fileName = element != null && !isJrxmlDepFile ? PropertyHelper.getProperty(element).getDisplayName()
                             : depFile.getName();
                     // TDQ-5909~
+                    // if the dependency Indicator is Technial Indicator, don't add it into errors even if it is not
+                    // exist in the export wizard
+                    if (element instanceof IndicatorDefinition) {
+                        String uuid = ResourceHelper.getUUID(element);
+                        if (IndicatorDefinitionFileHelper.isTechnialIndicator(uuid)) {
+                            continue;
+                        }
+                    }
                     errors.add("\"" + record.getName() + "\" miss dependency : " + fileName);//$NON-NLS-1$ //$NON-NLS-2$ 
                 }
             }
@@ -574,6 +587,7 @@ public class ExportWizardPage extends WizardPage {
     public ItemRecord[] getElements() {
         List<ItemRecord> itemRecords = new ArrayList<ItemRecord>();
 
+        boolean sumIndicatorAdded = false;
         Object[] checkedElements = repositoryTree.getCheckedElements();
         for (Object obj : checkedElements) {
             if (obj instanceof ItemRecord) {
@@ -584,6 +598,27 @@ public class ExportWizardPage extends WizardPage {
                     itemRecords.add(record);
                     if (file.getName().endsWith(FactoriesUtil.JRXML)) {
                         addSubRepToElements(record, itemRecords);
+                    }
+                    // if it is Mean Indicator, add it's dependency Sum Indicator
+                    if (!sumIndicatorAdded) {
+                        String meanIndicatorUuid = "_ccI48RF2Ed2PKb6nEJEvhw"; //$NON-NLS-1$
+                        String sumIndicatorLabel = "Sum"; //$NON-NLS-1$
+                        ModelElement element = record.getElement();
+                        if (element != null && element instanceof IndicatorDefinition
+                                && meanIndicatorUuid.equals(ResourceHelper.getUUID(element))) {
+                            IndicatorDefinition sumIndicator = DefinitionHandler.getInstance().getIndicatorDefinition(
+                                    sumIndicatorLabel);
+                            if (sumIndicator != null) {
+                                IFile sumIndicatorIFile = IndicatorResourceFileHelper.findCorrespondingFile(sumIndicator);
+                                if (sumIndicatorIFile != null) {
+                                    File sumIndicatorFile = WorkspaceUtils.ifileToFile(sumIndicatorIFile);
+                                    if (sumIndicatorFile != null) {
+                                        itemRecords.add(new ItemRecord(sumIndicatorFile));
+                                        sumIndicatorAdded = true;
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }
