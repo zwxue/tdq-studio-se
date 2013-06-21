@@ -21,18 +21,18 @@ import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.cheatsheets.ICheatSheetAction;
 import org.eclipse.ui.cheatsheets.ICheatSheetManager;
-import org.eclipse.ui.ide.IDE;
 import org.talend.commons.utils.WorkspaceUtils;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.action.CheatSheetActionHelper;
+import org.talend.dataprofiler.core.ui.editor.TDQFileEditorInput;
 import org.talend.dataprofiler.core.ui.utils.WorkbenchUtils;
 import org.talend.dataprofiler.core.ui.wizard.analysis.WizardFactory;
+import org.talend.dq.helper.ProxyRepositoryManager;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.resource.ResourceManager;
 
@@ -86,20 +86,15 @@ public class AddSqlFileAction extends Action implements ICheatSheetAction {
         WizardDialog dialog = new WizardDialog(Display.getDefault().getActiveShell(), fileWizard);
         fileWizard.setWindowTitle(getText());
         if (WizardDialog.OK == dialog.open()) {
-            // try {
-            // folder.refreshLocal(IResource.DEPTH_INFINITE, null);
-            // } catch (CoreException e) {
-            // log.error(e, e);
-            // }
+            // MOD TDQ-7143 yyin 20130603
+            TDQFileEditorInput result = new TDQFileEditorInput(WorkspaceUtils.fileToIFile(fileWizard.getSqlFile()));
+            result.setFileItem(fileWizard.getSourceFileItem());
+            ProxyRepositoryManager.getInstance().lock(fileWizard.getSourceFileItem());
+            CorePlugin.getDefault().openEditor(result, SQLEditor.EDITOR_ID);
+            result.addCloseListener();
 
-            try {
-                CorePlugin.getDefault().refreshWorkSpace();
-                CorePlugin.getDefault().refreshDQView(node);
-
-                IDE.openEditor(ap, WorkspaceUtils.fileToIFile(fileWizard.getSqlFile()), SQLEditor.EDITOR_ID);
-            } catch (PartInitException e) {
-                log.error(e, e);
-            }
+            CorePlugin.getDefault().refreshWorkSpace();
+            CorePlugin.getDefault().refreshDQView(node);
         }
     }
 
