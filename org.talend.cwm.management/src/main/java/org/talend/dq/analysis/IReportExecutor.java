@@ -12,10 +12,10 @@
 // ============================================================================
 package org.talend.dq.analysis;
 
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.talend.cwm.exception.AnalysisExecutionException;
 import org.talend.dataquality.reports.TdReport;
 import org.talend.utils.sugars.ReturnCode;
-
 
 /**
  * @author scorreia
@@ -31,5 +31,5 @@ public interface IReportExecutor {
      * @return a return code with an error message in case when something went bad
      * @throws AnalysisExecutionException
      */
-    public abstract ReturnCode execute(final TdReport report) throws AnalysisExecutionException;
+    public abstract ReturnCode execute(final TdReport report, IProgressMonitor monitor) throws AnalysisExecutionException;
 }
