@@ -42,17 +42,31 @@ public class ComponentSearcher {
 
     private static List<IEcosCategory> ecosCategories;
 
-    // private static List<IEcosComponent> extensions = new ArrayList<IEcosComponent>();;
-
     /**
-     * DOC bZhou Comment method "getAvailableCategory".
+     * get Available Category.
      * 
      * @param version
      * @return empty list if no any category.
      * @throws Exception
      */
+    @Deprecated
     public static List<IEcosCategory> getAvailableCategory(String version) throws Exception {
         if (ecosCategories == null) {
+            ecosCategories = EcosystemService.getCategoryList(version);
+        }
+        return ecosCategories;
+    }
+
+    /**
+     * get Available Category depend on isOnFilter.
+     * 
+     * @param version
+     * @return empty list if no any category.
+     * @throws Exception
+     */
+    public static List<IEcosCategory> getAvailableCategory(String version, boolean isOnFilter) throws Exception {
+        // when on filter, get ecosCategories from cache.
+        if (ecosCategories == null && !isOnFilter) {
             ecosCategories = EcosystemService.getCategoryList(version);
         }
         return ecosCategories;
@@ -70,16 +84,21 @@ public class ComponentSearcher {
     }
 
     /**
-     * DOC bZhou Comment method "getAvailableComponentExtensions".
+     * get Available Component Extensions depend on isOnFilter.
      * 
      * @param version
      * @param categry
-     * @param reload
+     * @param isOnFilter
      * @return
      */
-    public static List<IEcosComponent> getAvailableComponentExtensions(String version, IEcosCategory categry, boolean reload) {
+    public static List<IEcosComponent> getAvailableComponentExtensions(String version, IEcosCategory categry, boolean isOnFilter) {
 
         List<IEcosComponent> extensions = new ArrayList<IEcosComponent>();
+
+        // when on filter, do not get component from internet
+        if (isOnFilter) {
+            return extensions;
+        }
 
         try {
             List<RevisionInfo> revisions = EcosystemService.getRevisionList(categry.getId(), version);

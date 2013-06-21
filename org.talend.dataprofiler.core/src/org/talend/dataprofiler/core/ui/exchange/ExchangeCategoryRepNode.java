@@ -62,6 +62,7 @@ public class ExchangeCategoryRepNode extends DQRepositoryNode {
         this.msg = msg;
     }
 
+    @Override
     public ENodeType getType() {
         return this.type;
     }
@@ -89,7 +90,7 @@ public class ExchangeCategoryRepNode extends DQRepositoryNode {
     public List<IRepositoryNode> getChildren() {
         List<IRepositoryNode> list = new ArrayList<IRepositoryNode>();
         if (this.isFlag()) {
-            List<IEcosComponent> component = this.getEcosCategory().getComponent();
+            List<IEcosComponent> component = this.ecosCategory.getComponent(ExchangeCategoryRepNode.isOnFilterring());
             for (IEcosComponent eco : component) {
                 list.add(new ExchangeComponentRepNode(eco, this, ENodeType.REPOSITORY_ELEMENT));
             }

@@ -85,8 +85,7 @@ public abstract class EcosystemService {
         }
     }
 
-    @SuppressWarnings("unchecked")
-    public static String[] getBranch(String version) {
+    public static String[] getBranch(String version) throws Exception {
         version = getMainVersion(version);
         if (versionMap.isEmpty()) {
             getVersionList();
@@ -105,7 +104,7 @@ public abstract class EcosystemService {
     }
 
     @SuppressWarnings("unchecked")
-    public static String[] getVersionList() {
+    public static String[] getVersionList() throws Exception {
         versionMap.clear();
         try {
             String jsonContent = sendGetRequest(VERSION_LIST_URL);
@@ -132,9 +131,8 @@ public abstract class EcosystemService {
             });
             return versions.toArray(new String[versions.size()]);
         } catch (Exception e) {
-            log.error(e, e);
+            throw e;
         }
-        return new String[0];
     }
 
     public static <T> List<T> parseJsonObject(String jsonContent, Class<T> clazz) throws Exception {
@@ -218,7 +216,7 @@ public abstract class EcosystemService {
         List<EcosCategory> categorys = parseJsonObject(jsonContent, EcosCategory.class);
         if (categorys != null) {
             for (EcosCategory category : categorys) {
-                ((EcosCategory) category).setVersion(version);
+                category.setVersion(version);
             }
         } else {
             categorys = Collections.emptyList();
