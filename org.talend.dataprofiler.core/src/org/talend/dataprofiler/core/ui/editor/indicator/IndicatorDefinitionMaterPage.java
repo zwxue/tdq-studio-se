@@ -1720,6 +1720,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
             List<TdExpression> modifyList = new ArrayList<TdExpression>();
             TdExpression expression = tempExpressionMap.get(combo);
             String oldLanguage = expression.getLanguage();
+            String oldSQLTemplate = expression.getBody();
             modifyList.add(expression);
             // update other Temp Maps
             if (definition instanceof UDIndicatorDefinition) {
@@ -1738,6 +1739,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
                 if (exp == null) {
                     // MOD TDQ-6824 msjian 2013-2-8: when create expression, we should set correct language
                     exp = BooleanExpressionHelper.createTdExpression(PatternLanguageType.findLanguageByName(name), null);
+                    exp.setBody(oldSQLTemplate);
                     // TDQ-6824~
                     putTdExpressToTempMap(combo, exp);
                 } else {
