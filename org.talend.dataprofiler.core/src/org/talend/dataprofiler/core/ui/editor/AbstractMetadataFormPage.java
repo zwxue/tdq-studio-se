@@ -46,9 +46,11 @@ import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.model.repository.RepositoryViewObject;
 import org.talend.cwm.constants.DevelopmentStatus;
 import org.talend.cwm.helper.TaggedValueHelper;
+import org.talend.cwm.management.i18n.Messages;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataquality.helpers.MetadataHelper;
+import org.talend.dataquality.indicators.definition.DefinitionPackage;
 import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.repository.model.RepositoryNode;
@@ -324,8 +326,14 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
             String devStatus = property.getStatusCode();
 
             nameText.setText(name == null ? PluginConstant.EMPTY_STRING : name);
-            // MOD klliu 2010-04-21 bug 20204 get the init value
-            setOldDataproviderName(nameText.getText());
+            // MOD sizhaoliu TDQ-7454 disallow the system indicator renaming to avoid i18n problems
+            if (DefinitionPackage.eINSTANCE.getIndicatorDefinition().equals(currentModelElement.eClass())) {
+                nameText.setEditable(false);
+                nameText.setText(name == null ? PluginConstant.EMPTY_STRING : Messages.getString(name.replace(" ", ".")));
+            } else {
+                // MOD klliu 2010-04-21 bug 20204 get the init value
+                setOldDataproviderName(nameText.getText());
+            }
             purposeText.setText(purpose == null ? PluginConstant.EMPTY_STRING : purpose);
             descriptionText.setText(description == null ? PluginConstant.EMPTY_STRING : description);
             // ~ MOD klliu bug 3938 check the currentModelElement's AUTHOR whether is null,if not ,
@@ -357,7 +365,10 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
         } else {
             // MOD gdbu 2011-4-8 bug : 19976
             // nameText.setText(WorkspaceUtils.normalize(nameText.getText()));
-            currentModelElement.setName(nameText.getText());
+            // MOD sizhaoliu TDQ-7454 disallow the system indicator renaming to avoid i18n problems
+            if (!DefinitionPackage.eINSTANCE.getIndicatorDefinition().equals(currentModelElement.eClass())) {
+                currentModelElement.setName(nameText.getText());
+            }
             // ~19976
         }
 
@@ -371,8 +382,11 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
         // Property property = PropertyHelper.getProperty(currentModelElement);
         Property property = this.repositoryViewObject == null ? null : this.repositoryViewObject.getProperty();
         if (property != null) {
-            property.setDisplayName(nameText.getText());
-            property.setLabel(WorkspaceUtils.normalize(nameText.getText()));
+            // MOD sizhaoliu TDQ-7454 disallow the system indicator renaming to avoid i18n problems
+            if (!DefinitionPackage.eINSTANCE.getIndicatorDefinition().equals(currentModelElement.eClass())) {
+                property.setDisplayName(nameText.getText());
+                property.setLabel(WorkspaceUtils.normalize(nameText.getText()));
+            }
             property.setPurpose(purposeText.getText());
             property.setDescription(descriptionText.getText());
             property.setStatusCode(statusCombo.getText());
