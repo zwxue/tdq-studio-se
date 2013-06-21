@@ -102,8 +102,10 @@ public class AnalyzeColumnSetAction extends Action {
                     RepositoryNode parent = schemaNode.getParent();
                     if (parent instanceof DBCatalogRepNode) {
                         catalogs.add(parent);
+                        packaFilterParameter.setConnectionRepNode(parent);
                     } else {
                         catalogs.add(schemaNode);
+                        packaFilterParameter.setConnectionRepNode(schemaNode);
                     }
                     packaFilterParameter.setPackages(catalogs);
                 }
