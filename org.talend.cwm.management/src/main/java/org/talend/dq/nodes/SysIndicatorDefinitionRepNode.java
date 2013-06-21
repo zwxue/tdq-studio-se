@@ -71,7 +71,8 @@ public class SysIndicatorDefinitionRepNode extends DQRepositoryNode {
         if (this.getIndicatorDefinition() != null && !this.getIndicatorDefinition().eIsProxy()) {
             if (this.isSystemIndicator) {
                 Property property = PropertyHelper.getProperty(this.getIndicatorDefinition());
-                return property.getDisplayName();
+                // MOD sizhaoliu TDQ-7454 internationalize the display name here
+                return org.talend.cwm.management.i18n.Messages.getString(property.getLabel().replace("_", "."));
             }
             if (this.getIndicatorDefinition().getName() != null) {
                 return this.getIndicatorDefinition().getName();
