@@ -71,7 +71,6 @@ import org.talend.dataprofiler.core.ui.views.DQRespositoryView;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisContext;
 import org.talend.dataquality.indicators.Indicator;
-import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
 import org.talend.dq.writer.EMFSharedResources;
@@ -591,15 +590,4 @@ public final class WorkbenchUtils {
         return part;
     }
 
-    // Added 20130517 TDQ-7289 yyin, reload the object to avoid unsaved values still in the object
-    public static void loadModelElement(IRepositoryNode sourceNode) {
-        if (sourceNode == null || sourceNode.getObject() == null) {
-            return;
-        }
-
-        ModelElement modelElement = PropertyHelper.getModelElement(sourceNode.getObject().getProperty());
-        if (modelElement != null) {
-            EMFSharedResources.getInstance().reloadResource(modelElement.eResource().getURI());
-        }
-    }
 }
