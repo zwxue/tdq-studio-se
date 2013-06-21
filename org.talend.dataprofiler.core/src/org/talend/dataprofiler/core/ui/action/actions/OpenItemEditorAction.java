@@ -51,6 +51,7 @@ import org.talend.cwm.relational.TdView;
 import org.talend.cwm.xml.TdXmlElementType;
 import org.talend.cwm.xml.TdXmlSchema;
 import org.talend.dataprofiler.core.CorePlugin;
+import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.exception.ExceptionFactory;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.editor.TDQFileEditorInput;
@@ -120,7 +121,7 @@ public class OpenItemEditorAction extends Action implements IIntroAction {
         super(DefaultMessagesImpl.getString("OpenIndicatorDefinitionAction.Open")); //$NON-NLS-1$
         this.repNode = repNode;
         this.repViewObj = repNode.getObject();
-
+        setImageDescriptor(ImageLib.getImageDescriptorByRepositoryNode(repNode));
     }
 
     @Override

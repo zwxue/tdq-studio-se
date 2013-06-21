@@ -21,7 +21,40 @@ import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.jface.viewers.DecorationOverlayIcon;
 import org.eclipse.jface.viewers.IDecoration;
 import org.eclipse.swt.graphics.Image;
+import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
+import org.talend.dataprofiler.core.ui.exchange.ExchangeCategoryRepNode;
+import org.talend.dataprofiler.core.ui.exchange.ExchangeComponentRepNode;
+import org.talend.dq.nodes.AnalysisRepNode;
+import org.talend.dq.nodes.DBCatalogRepNode;
+import org.talend.dq.nodes.DBColumnFolderRepNode;
+import org.talend.dq.nodes.DBColumnRepNode;
+import org.talend.dq.nodes.DBConnectionFolderRepNode;
+import org.talend.dq.nodes.DBConnectionRepNode;
+import org.talend.dq.nodes.DBSchemaRepNode;
+import org.talend.dq.nodes.DBTableFolderRepNode;
+import org.talend.dq.nodes.DBTableRepNode;
+import org.talend.dq.nodes.DBViewFolderRepNode;
+import org.talend.dq.nodes.DBViewRepNode;
+import org.talend.dq.nodes.DFColumnFolderRepNode;
+import org.talend.dq.nodes.DFColumnRepNode;
+import org.talend.dq.nodes.DFConnectionRepNode;
+import org.talend.dq.nodes.DFTableRepNode;
+import org.talend.dq.nodes.JrxmlTempleteRepNode;
+import org.talend.dq.nodes.MDMConnectionFolderRepNode;
+import org.talend.dq.nodes.MDMConnectionRepNode;
+import org.talend.dq.nodes.MDMSchemaRepNode;
+import org.talend.dq.nodes.MDMXmlElementRepNode;
+import org.talend.dq.nodes.PatternRepNode;
+import org.talend.dq.nodes.RecycleBinRepNode;
+import org.talend.dq.nodes.ReportAnalysisRepNode;
+import org.talend.dq.nodes.ReportRepNode;
+import org.talend.dq.nodes.RuleRepNode;
+import org.talend.dq.nodes.SourceFileRepNode;
+import org.talend.dq.nodes.SysIndicatorDefinitionRepNode;
+import org.talend.repository.model.IRepositoryNode;
+import org.talend.repository.model.IRepositoryNode.ENodeType;
+import org.talend.resource.EResourceConstant;
 
 /**
  * Store and lazy load Imaged. <br/>
@@ -465,4 +498,99 @@ public final class ImageLib {
         return originalImg != null ? createIcon(originalImg, lockImg) : null;
     }
 
+
+    public static ImageDescriptor getImageDescriptorByRepositoryNode(IRepositoryNode node) {
+        return getImageDescriptor(getImageNameByRepositoryNode(node));
+    }
+
+    public static String getImageNameByRepositoryNode(IRepositoryNode node) {
+        String imageName = null;
+        IRepositoryViewObject viewObject = node.getObject();
+        ENodeType type = node.getType();
+        if (node instanceof ReportAnalysisRepNode) {
+            imageName = ImageLib.ANALYSIS_OBJECT;
+        }
+        if (node instanceof RecycleBinRepNode) {
+            imageName = ImageLib.RECYCLEBIN_EMPTY;
+        } else if (type.equals(ENodeType.SYSTEM_FOLDER)) {
+            String label = viewObject.getLabel();
+            if (label.equals(EResourceConstant.DATA_PROFILING.getName())) {
+                imageName = ImageLib.DATA_PROFILING;
+            } else if (label.equals(EResourceConstant.METADATA.getName())) {
+                imageName = ImageLib.METADATA;
+            } else if (node instanceof DBConnectionFolderRepNode) {
+                imageName = ImageLib.CONNECTION;
+            } else if (node instanceof MDMConnectionFolderRepNode) {
+                imageName = ImageLib.MDM_CONNECTION;
+            } else if (label.equals(EResourceConstant.FILEDELIMITED.getName())) {
+                imageName = ImageLib.FILE_DELIMITED;
+            } else if (label.equals(EResourceConstant.LIBRARIES.getName())) {
+                imageName = ImageLib.LIBRARIES;
+            } else if (label.equals(EResourceConstant.EXCHANGE.getName())) {
+                imageName = ImageLib.EXCHANGE;
+            } else {
+                imageName = ImageLib.FOLDERNODE_IMAGE;
+            }
+        } else if (type.equals(ENodeType.SIMPLE_FOLDER)) {
+            imageName = ImageLib.FOLDERNODE_IMAGE;
+        } else if (type.equals(ENodeType.REPOSITORY_ELEMENT)) {
+            if (node instanceof DBConnectionRepNode) {
+                imageName = ImageLib.TD_DATAPROVIDER;
+            } else if (node instanceof MDMConnectionRepNode) {
+                imageName = ImageLib.MDM_CONNECTION;
+            } else if (node instanceof MDMSchemaRepNode) {
+                imageName = ImageLib.XML_DOC;
+            } else if (node instanceof MDMXmlElementRepNode) {
+                imageName = ImageLib.XML_ELEMENT_DOC;
+            } else if (node instanceof DFConnectionRepNode) {
+                imageName = ImageLib.FILE_DELIMITED;
+            } else if (node instanceof AnalysisRepNode) {
+                imageName = ImageLib.ANALYSIS_OBJECT;
+            } else if (node instanceof ReportRepNode) {
+                imageName = ImageLib.REPORT_OBJECT;
+            } else if (node instanceof SysIndicatorDefinitionRepNode) {
+                imageName = ImageLib.IND_DEFINITION;
+            } else if (node instanceof PatternRepNode) {
+                imageName = ImageLib.PATTERN_REG;
+            } else if (node instanceof RuleRepNode) {
+                imageName = ImageLib.DQ_RULE;
+            } else if (node instanceof SourceFileRepNode) {
+                imageName = ImageLib.SOURCE_FILE;
+            } else if (node instanceof ExchangeCategoryRepNode || node instanceof ExchangeComponentRepNode) {
+                imageName = ImageLib.EXCHANGE;
+            } else if (node instanceof JrxmlTempleteRepNode) {
+                imageName = ImageLib.XML_DOC;
+            }
+        } else if (type.equals(ENodeType.TDQ_REPOSITORY_ELEMENT)) {
+            if (node instanceof DBCatalogRepNode) {
+                imageName = ImageLib.CATALOG;
+            } else if (node instanceof DBSchemaRepNode) {
+                imageName = ImageLib.SCHEMA;
+            } else if (node instanceof DBTableFolderRepNode) {
+                imageName = ImageLib.FOLDERNODE_IMAGE;
+            } else if (node instanceof DBViewFolderRepNode) {
+                imageName = ImageLib.FOLDERNODE_IMAGE;
+            } else if (node instanceof DBTableRepNode || node instanceof DFTableRepNode) {
+                imageName = ImageLib.TABLE;
+            } else if (node instanceof DBViewRepNode) {
+                imageName = ImageLib.VIEW;
+            } else if (node instanceof DBColumnRepNode) {
+                if (((DBColumnRepNode) node).isKey()) {
+                    imageName = ImageLib.PK_COLUMN;
+                } else {
+                    imageName = ImageLib.TD_COLUMN;
+                }
+            } else if (node instanceof DFColumnRepNode) {
+
+                imageName = ImageLib.TD_COLUMN;
+            } else if (node instanceof MDMSchemaRepNode) {
+                imageName = ImageLib.XML_DOC;
+            } else if (node instanceof MDMXmlElementRepNode) {
+                imageName = ImageLib.XML_ELEMENT_DOC;
+            } else if (node instanceof DBColumnFolderRepNode || node instanceof DFColumnFolderRepNode) {
+                imageName = ImageLib.FOLDERNODE_IMAGE;
+            }
+        }
+        return imageName;
+    }
 }
