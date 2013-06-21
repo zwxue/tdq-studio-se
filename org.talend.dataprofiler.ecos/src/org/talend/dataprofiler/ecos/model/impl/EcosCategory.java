@@ -35,7 +35,7 @@ public class EcosCategory implements IEcosCategory {
 
     List<IEcosComponent> components = Collections.emptyList();
 
-    boolean reload = false;
+    boolean isOnFilter = false;
 
     public EcosCategory() {
         super();
@@ -61,12 +61,12 @@ public class EcosCategory implements IEcosCategory {
         this.id = id;
     }
 
-    public boolean isReload() {
-        return reload;
+    public boolean isOnFilter() {
+        return isOnFilter;
     }
 
-    public void setReload(boolean reload) {
-        this.reload = reload;
+    public void setOnFilter(boolean isOnFilter) {
+        this.isOnFilter = isOnFilter;
     }
 
     /*
@@ -75,8 +75,9 @@ public class EcosCategory implements IEcosCategory {
      * @see org.talend.dataprofiler.ecos.model.IEcosCategory#getComponent()
      */
     public List<IEcosComponent> getComponent() {
-        if (components.isEmpty() || isReload()) {
-            components = ComponentSearcher.getAvailableComponentExtensions(version, this, reload);
+        // when on filter, get components from cache.
+        if (components.isEmpty() && !isOnFilter) {
+            components = ComponentSearcher.getAvailableComponentExtensions(version, this, isOnFilter);
         }
         return components;
     }
@@ -93,8 +94,8 @@ public class EcosCategory implements IEcosCategory {
     public String toString() {
         StringBuffer sb = new StringBuffer();
 
-        sb.append("name:").append(getName()).append("\n");//$NON-NLS-1$ $NON-NLS-2$
-        sb.append("counter:").append(getCounter()).append("\n");//$NON-NLS-1$ $NON-NLS-2$
+        sb.append("name:").append(getName()).append("\n");//$NON-NLS-1$ //$NON-NLS-2$
+        sb.append("counter:").append(getCounter()).append("\n");//$NON-NLS-1$ //$NON-NLS-2$
         return sb.toString();
     }
 
@@ -104,6 +105,16 @@ public class EcosCategory implements IEcosCategory {
 
     public void setCounter(int counter) {
         this.counter = counter;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataprofiler.ecos.model.IEcosCategory#getComponent(boolean)
+     */
+    public List<IEcosComponent> getComponent(boolean onFilter) {
+        this.setOnFilter(onFilter);
+        return this.getComponent();
     }
 
 }
