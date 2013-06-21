@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
@@ -50,14 +51,17 @@ import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.dialogs.ContainerCheckedTreeViewer;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.commons.exception.ExceptionHandler;
+import org.talend.cwm.helper.ResourceHelper;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
+import org.talend.dataprofiler.core.migration.helper.IndicatorDefinitionFileHelper;
 import org.talend.dataprofiler.core.ui.imex.model.EImexType;
 import org.talend.dataprofiler.core.ui.imex.model.IImportWriter;
 import org.talend.dataprofiler.core.ui.imex.model.ImportWriterFactory;
 import org.talend.dataprofiler.core.ui.imex.model.ItemRecord;
 import org.talend.dataprofiler.core.ui.progress.ProgressUI;
 import org.talend.dataprofiler.core.ui.utils.ImportAndExportUtils;
+import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.helper.ReportUtils;
@@ -381,6 +385,15 @@ public class ImportWizardPage extends WizardPage {
                         .getProperty(element).getDisplayName() : depFile.getName();
                 // TDQ-5909~
                 if (findRecord == null || !repositoryTree.getChecked(findRecord)) {
+                    // if the element is IndicatorDefinition and it exist in the current project and don't include any
+                    // sql and java templates and the AggregatedDefinitions is not empty or TableOverview/ViewOverview
+                    // Indicator, don't add it into errors even if it is not exist
+                    if (element instanceof IndicatorDefinition) {
+                        String uuid = ResourceHelper.getUUID(element);
+                        if (IndicatorDefinitionFileHelper.isTechnialIndicator(uuid)) {
+                            continue;
+                        }
+                    }
                     dErrors.add("\"" + record.getName() + "\" miss dependency :" + dptLabel); //$NON-NLS-1$ //$NON-NLS-2$
                 }
             }
@@ -592,10 +605,48 @@ public class ImportWizardPage extends WizardPage {
                     if (file.getName().endsWith(FactoriesUtil.JRXML)) {
                         addSubRepToElements(record, itemRecords);
                     }
+                    // if it is Mean Indicator, import it's dependency Sum Indicator also
+                    String meanIndicatorUuid = "_ccI48RF2Ed2PKb6nEJEvhw"; //$NON-NLS-1$
+                    ModelElement element = record.getElement();
+                    if (element != null && element instanceof IndicatorDefinition
+                            && meanIndicatorUuid.equals(ResourceHelper.getUUID(element))) {
+                        File sumIndicatorFile = getSumIndicatorFile(element);
+                        if (sumIndicatorFile != null) {
+                            itemRecords.add(new ItemRecord(sumIndicatorFile));
+                        }
+                    }
                 }
             }
         }
         return itemRecords.toArray(new ItemRecord[itemRecords.size()]);
+    }
+
+    /**
+     * get the Sum Indicator File according to the Mean Indicator's ModelElement.
+     * 
+     * @param meanIndicator
+     * @return
+     */
+    private File getSumIndicatorFile(ModelElement meanIndicator) {
+        String sumIndicatorLabel = "Sum"; //$NON-NLS-1$
+        File sumIndicatorFile = null;
+        File meanIndicatorFile = new File(meanIndicator.eResource().getURI().toFileString());
+        if (meanIndicatorFile.exists() && meanIndicatorFile.isFile()) {
+            File parentFile = meanIndicatorFile.getParentFile();
+            File[] listFiles = parentFile.listFiles();
+            for (File listFile : listFiles) {
+                if (listFile.isFile()) {
+                    String fileName = listFile.getName();
+                    if (!StringUtils.isBlank(fileName)) {
+                        if (fileName.startsWith(sumIndicatorLabel) && fileName.endsWith(FactoriesUtil.DEFINITION)) {
+                            sumIndicatorFile = listFile;
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+        return sumIndicatorFile;
     }
 
     /**

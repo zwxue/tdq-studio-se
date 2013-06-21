@@ -54,6 +54,7 @@ import org.talend.core.repository.constants.FileConstants;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.cwm.dependencies.DependenciesHandler;
 import org.talend.cwm.helper.ConnectionHelper;
+import org.talend.cwm.helper.ResourceHelper;
 import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.relational.TdExpression;
 import org.talend.cwm.xml.TdXmlSchema;
@@ -249,6 +250,15 @@ public class FileSystemImportWriter implements IImportWriter {
     private void checkDependency(ItemRecord record) {
         for (ModelElement melement : record.getDependencyMap().values()) {
             if (melement != null && melement.eIsProxy()) {
+                // if the element is IndicatorDefinition and it exist in the current project and don't include any
+                // sql and java templates and the AggregatedDefinitions is not empty or TableOverview/ViewOverview
+                // Indicator, don't add it into errors even if it is not exist
+                if (melement instanceof IndicatorDefinition) {
+                    String uuid = ResourceHelper.getUUID(melement);
+                    if (IndicatorDefinitionFileHelper.isTechnialIndicator(uuid)) {
+                        continue;
+                    }
+                }
                 InternalEObject inObject = (InternalEObject) melement;
                 record.addError("\"" + record.getName() + "\" missing dependented file : " + inObject.eProxyURI().toFileString());//$NON-NLS-1$ //$NON-NLS-2$ 
             }
