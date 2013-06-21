@@ -58,6 +58,7 @@ import org.talend.dq.nodes.AnalysisRepNode;
 import org.talend.dq.nodes.AnalysisSubFolderRepNode;
 import org.talend.dq.nodes.ReportRepNode;
 import org.talend.dq.nodes.ReportSubFolderRepNode;
+import org.talend.dq.nodes.SysIndicatorDefinitionRepNode;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.resource.EResourceConstant;
@@ -65,16 +66,12 @@ import org.talend.resource.ResourceManager;
 import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
-import common.Logger;
-
 /**
  * DOC bZhou class global comment. Detailled comment
  */
 public class DuplicateAction extends Action {
 
     private IRepositoryNode[] nodeArray = new IRepositoryNode[0];
-
-    private static Logger log = Logger.getLogger(DuplicateAction.class);
 
     /**
      * DOC bZhou DuplicateAction constructor comment.
@@ -129,9 +126,16 @@ public class DuplicateAction extends Action {
                                 new IInputValidator() {
 
                                     public String isValid(String newText) {
-                                        if (PropertyHelper.existDuplicateName(newText, null, node.getContentType())) {
+                                        // MOD msjian TDQ-7218 2013-5-31: when dulicate a system indicator, should check
+                                        // whether exist in UDI.
+                                        ERepositoryObjectType contentType = node.getContentType();
+                                        if (node instanceof SysIndicatorDefinitionRepNode) {
+                                            contentType = ERepositoryObjectType.TDQ_USERDEFINE_INDICATORS;
+                                        }
+                                        if (PropertyHelper.existDuplicateName(newText, null, contentType)) {
                                             return DefaultMessagesImpl.getString("DuplicateAction.LabelExists"); //$NON-NLS-1$
                                         }
+                                        // TDQ-7218~
 
                                         return null;
                                     }
