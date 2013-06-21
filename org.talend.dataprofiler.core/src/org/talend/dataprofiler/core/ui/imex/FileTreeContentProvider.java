@@ -13,10 +13,16 @@
 package org.talend.dataprofiler.core.ui.imex;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
+import org.talend.cwm.helper.ResourceHelper;
+import org.talend.dataprofiler.core.migration.helper.IndicatorDefinitionFileHelper;
 import org.talend.dataprofiler.core.ui.imex.model.ItemRecord;
+import org.talend.dataquality.indicators.definition.IndicatorDefinition;
+import org.talend.dataquality.indicators.definition.userdefine.UDIndicatorDefinition;
 
 /**
  * DOC bZhou class global comment. Detailled comment
@@ -31,9 +37,43 @@ public class FileTreeContentProvider implements ITreeContentProvider {
     public Object[] getChildren(Object parentElement) {
         if (parentElement instanceof ItemRecord) {
             ItemRecord record = (ItemRecord) parentElement;
-            return record.getChildern();
+            return filterRecords(record.getChildern());
         }
         return new Object[0];
+    }
+
+    /**
+     * filter the ItemRecords.
+     * 
+     * @param childern
+     * @return
+     */
+    private Object[] filterRecords(ItemRecord[] childern) {
+        ItemRecord[] result = childern;
+        result = hideTechnialIndicators(result);
+        return result;
+    }
+
+    /**
+     * hide the Technial indicators.
+     * 
+     * @param itemRecords
+     * @return
+     */
+    private ItemRecord[] hideTechnialIndicators(ItemRecord[] itemRecords) {
+        List<ItemRecord> result = new ArrayList<ItemRecord>();
+        for (ItemRecord itemRecord : itemRecords) {
+            if (itemRecord != null && itemRecord.getElement() != null && itemRecord.getElement() instanceof IndicatorDefinition
+                    && !(itemRecord.getElement() instanceof UDIndicatorDefinition)) {
+                IndicatorDefinition indDef = (IndicatorDefinition) itemRecord.getElement();
+                String uuid = ResourceHelper.getUUID(indDef);
+                if (IndicatorDefinitionFileHelper.isTechnialIndicator(uuid)) {
+                    continue;
+                }
+            }
+            result.add(itemRecord);
+        }
+        return result.toArray(new ItemRecord[result.size()]);
     }
 
     /*
