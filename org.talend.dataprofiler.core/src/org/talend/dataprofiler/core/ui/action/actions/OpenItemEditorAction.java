@@ -117,13 +117,6 @@ public class OpenItemEditorAction extends Action implements IIntroAction {
 
     @Override
     public void run() {
-        // Added 20130517 yyin TDQ-7289
-        if (repViewObj != null) {
-            WorkbenchUtils.loadModelElement(repViewObj.getRepositoryNode());
-        } else {
-            WorkbenchUtils.loadModelElement(repNode);
-        }
-
         // MOD qiongli 2011-7-14 bug 21707,unload all unlocked resources before opening an editor.move all code in this
         // method to method doRun().
         RepositoryWorkUnit<Object> workUnit = new RepositoryWorkUnit<Object>("Open an DQ editor") {//$NON-NLS-1$
