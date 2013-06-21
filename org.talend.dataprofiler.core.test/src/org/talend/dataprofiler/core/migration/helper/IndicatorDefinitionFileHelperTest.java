@@ -17,9 +17,15 @@ import static org.mockito.Mockito.*;
 
 import org.eclipse.emf.common.util.BasicEList;
 import org.eclipse.emf.common.util.EList;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.talend.core.context.Context;
+import org.talend.core.context.RepositoryContext;
+import org.talend.core.model.general.Project;
+import org.talend.core.runtime.CoreRuntimePlugin;
 import org.talend.cwm.relational.TdExpression;
+import org.talend.dataprofiler.core.helper.UnitTestBuildHelper;
 import org.talend.dataquality.helpers.BooleanExpressionHelper;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 
@@ -30,6 +36,8 @@ import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 public class IndicatorDefinitionFileHelperTest {
 
     private IndicatorDefinition indiDefinition;
+
+    private static Project originalProject;
 
     @Before
     public void setup() {
@@ -43,6 +51,14 @@ public class IndicatorDefinitionFileHelperTest {
         tdExpessionLs.add(tdExpression1);
         tdExpessionLs.add(tdExpression2);
         when(indiDefinition.getSqlGenericExpression()).thenReturn(tdExpessionLs);
+
+        UnitTestBuildHelper.deleteCurrentProject("testForIndicatorDefinitionFileHelperTest"); //$NON-NLS-1$
+        UnitTestBuildHelper.createRealProject("testForIndicatorDefinitionFileHelperTest"); //$NON-NLS-1$
+    }
+
+    @After
+    public void tearDown() throws Exception {
+        UnitTestBuildHelper.deleteCurrentProject();
     }
 
     /**
@@ -71,4 +87,76 @@ public class IndicatorDefinitionFileHelperTest {
 
     }
 
+    /**
+     * Test method for
+     * {@link org.talend.dataprofiler.core.migration.helper.IndicatorDefinitionFileHelper#isSubCategoryIndicator(java.lang.String)}
+     * .
+     */
+    @Test
+    public void testIsTechnialIndicatorWithSubCategory() {
+        Context ctx = CoreRuntimePlugin.getInstance().getContext();
+        RepositoryContext repositoryContext = (RepositoryContext) ctx.getProperty(Context.REPOSITORY_CONTEXT_KEY);
+        if (repositoryContext != null) {
+            originalProject = repositoryContext.getProject();
+        }
+
+        // sub category indicator
+        String textStatisticsUuid = "_yb9x0zh8Ed2XmO7pl5Yuyg"; //$NON-NLS-1$
+        String summaryStatisticsUuid = "_ccI48BF2Ed2PKb6nEJEvhw"; //$NON-NLS-1$
+        String interQuartileRangeUuid = "_ccI48xF2Ed2PKb6nEJEvhw"; //$NON-NLS-1$
+        String rangeUuid = "_ccI49hF2Ed2PKb6nEJEvhw"; //$NON-NLS-1$
+        String simpleStatisticsUuid = "_yb-Y4Dh8Ed2XmO7pl5Yuyg"; //$NON-NLS-1$
+        String phoneNumberStatisticsUuid = "_JOE-0LQ2EeCrhIKO626ZRQ"; //$NON-NLS-1$
+        String connectionOverviewUuid = "_nZEo8MYSEd27NP4lvE0A4w"; //$NON-NLS-1$
+        String catalogOverviewUuid = "_QwDiwMYUEd27NP4lvE0A4w"; //$NON-NLS-1$
+        String schemaOverviewUuid = "_V4SA0MYUEd27NP4lvE0A4w"; //$NON-NLS-1$
+
+        // technical indicator
+        String tableOverviewUuid = "_hgO7YMYUEd27NP4lvE0A4w"; //$NON-NLS-1$
+        String viewOverviewUuid = "_lNIE0MbNEd2d_JPxxDRSfQ"; //$NON-NLS-1$
+        String datePatternFrequencyUuid = "_OCTbwJR_Ed2XO-JvLwVAaa"; //$NON-NLS-1$
+
+        // normal indicator
+        String rowCountUuid = "_ccFOkBF2Ed2PKb6nEJEvhw"; //$NON-NLS-1$
+
+        assertTrue(IndicatorDefinitionFileHelper.isTechnialIndicator(textStatisticsUuid));
+        assertTrue(IndicatorDefinitionFileHelper.isTechnialIndicator(summaryStatisticsUuid));
+        assertTrue(IndicatorDefinitionFileHelper.isTechnialIndicator(interQuartileRangeUuid));
+        assertTrue(IndicatorDefinitionFileHelper.isTechnialIndicator(rangeUuid));
+        assertTrue(IndicatorDefinitionFileHelper.isTechnialIndicator(simpleStatisticsUuid));
+        assertTrue(IndicatorDefinitionFileHelper.isTechnialIndicator(phoneNumberStatisticsUuid));
+        assertTrue(IndicatorDefinitionFileHelper.isTechnialIndicator(connectionOverviewUuid));
+        assertTrue(IndicatorDefinitionFileHelper.isTechnialIndicator(catalogOverviewUuid));
+        assertTrue(IndicatorDefinitionFileHelper.isTechnialIndicator(schemaOverviewUuid));
+
+        assertTrue(IndicatorDefinitionFileHelper.isTechnialIndicator(tableOverviewUuid));
+        assertTrue(IndicatorDefinitionFileHelper.isTechnialIndicator(viewOverviewUuid));
+        assertTrue(IndicatorDefinitionFileHelper.isTechnialIndicator(datePatternFrequencyUuid));
+
+        assertFalse(IndicatorDefinitionFileHelper.isTechnialIndicator(rowCountUuid));
+
+        if (originalProject != null) {
+            ctx = CoreRuntimePlugin.getInstance().getContext();
+            repositoryContext = (RepositoryContext) ctx.getProperty(Context.REPOSITORY_CONTEXT_KEY);
+            repositoryContext.setProject(originalProject);
+        }
+
+    }
+
+    @Test
+    public void testIsTechnialIndicator() {
+        String tableOverviewUuid = "_hgO7YMYUEd27NP4lvE0A4w"; //$NON-NLS-1$
+        String viewOverviewUuid = "_lNIE0MbNEd2d_JPxxDRSfQ"; //$NON-NLS-1$
+        String datePatternFrequencyTableUuid = "_OCTbwJR_Ed2XO-JvLwVAaa"; //$NON-NLS-1$
+        assertTrue(IndicatorDefinitionFileHelper.isTechnialIndicator(tableOverviewUuid));
+        assertTrue(IndicatorDefinitionFileHelper.isTechnialIndicator(viewOverviewUuid));
+        assertTrue(IndicatorDefinitionFileHelper.isTechnialIndicator(datePatternFrequencyTableUuid));
+
+        // null argument will return false.
+        assertFalse(IndicatorDefinitionFileHelper.isTechnialIndicator(null));
+        assertFalse(IndicatorDefinitionFileHelper.isTechnialIndicator(""));//$NON-NLS-1$
+
+        String multipleColumnUuid = "_JoeMkM-jEd6qN5aKpPNGTg";//$NON-NLS-1$
+        assertFalse(IndicatorDefinitionFileHelper.isTechnialIndicator(multipleColumnUuid));
+    }
 }

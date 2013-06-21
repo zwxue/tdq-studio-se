@@ -244,6 +244,70 @@ public class UDIHelperTest {
     }
 
     /**
+     * Test method for
+     * {@link org.talend.dq.helper.UDIHelper#containsJavaUDI(org.talend.dataquality.indicators.definition.IndicatorDefinition)}
+     * .
+     */
+    @Test
+    public void testContainsJavaUDI1() {
+        // prepare data
+        IndicatorDefinition javaIndicatorDefinition = DefinitionFactory.eINSTANCE.createIndicatorDefinition();
+        TaggedValue calssNameTaggedValue = TaggedValueHelper.createTaggedValue(TaggedValueHelper.CLASS_NAME_TEXT, "calssName"); //$NON-NLS-1$
+        TaggedValue jarPathTaggedValue = TaggedValueHelper.createTaggedValue(TaggedValueHelper.CLASS_NAME_TEXT, "jarPath"); //$NON-NLS-1$
+        javaIndicatorDefinition.getTaggedValue().add(calssNameTaggedValue);
+        javaIndicatorDefinition.getTaggedValue().add(jarPathTaggedValue);
+
+        // testMethod
+        assertTrue(UDIHelper.containsJavaUDI(javaIndicatorDefinition));
+    }
+
+    /**
+     * Test method for
+     * {@link org.talend.dq.helper.UDIHelper#containsJavaUDI(org.talend.dataquality.indicators.definition.IndicatorDefinition)}
+     * .
+     */
+    @Test
+    public void testContainsJavaUDI2() {
+        // prepare data
+        IndicatorDefinition javaIndicatorDefinition = DefinitionFactory.eINSTANCE.createIndicatorDefinition();
+        TaggedValue calssNameTaggedValue = TaggedValueHelper.createTaggedValue(TaggedValueHelper.CLASS_NAME_TEXT, "calssName"); //$NON-NLS-1$
+        javaIndicatorDefinition.getTaggedValue().add(calssNameTaggedValue);
+
+        // testMethod
+        assertFalse(UDIHelper.containsJavaUDI(javaIndicatorDefinition));
+    }
+
+    /**
+     * Test method for
+     * {@link org.talend.dq.helper.UDIHelper#containsJavaUDI(org.talend.dataquality.indicators.definition.IndicatorDefinition)}
+     * .
+     */
+    @Test
+    public void testContainsJavaUDI3() {
+        // prepare data
+        IndicatorDefinition javaIndicatorDefinition = DefinitionFactory.eINSTANCE.createIndicatorDefinition();
+        TaggedValue jarPathTaggedValue = TaggedValueHelper.createTaggedValue(TaggedValueHelper.CLASS_NAME_TEXT, "jarPath"); //$NON-NLS-1$
+        javaIndicatorDefinition.getTaggedValue().add(jarPathTaggedValue);
+
+        // testMethod
+        assertFalse(UDIHelper.containsJavaUDI(javaIndicatorDefinition));
+    }
+
+    /**
+     * Test method for
+     * {@link org.talend.dq.helper.UDIHelper#containsJavaUDI(org.talend.dataquality.indicators.definition.IndicatorDefinition)}
+     * .
+     */
+    @Test
+    public void testContainsJavaUDI4() {
+        // prepare data
+        IndicatorDefinition javaIndicatorDefinition = DefinitionFactory.eINSTANCE.createIndicatorDefinition();
+
+        // testMethod
+        assertFalse(UDIHelper.containsJavaUDI(javaIndicatorDefinition));
+    }
+
+    /**
      * Test method for {@link org.talend.dq.helper.UDIHelper#getLibJarFileList()}.
      */
     @Test
