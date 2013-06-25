@@ -84,13 +84,6 @@ public class CommonEditorPartListener extends PartListener {
         // MOD qiongli 2011-7-14 bug 22276,just unlock and commit for editable itme.
         if (ProxyRepositoryManager.getInstance().isReadOnly() || ProxyRepositoryManager.getInstance().isEditable(item)) {
             ProxyRepositoryManager.getInstance().unLock(item);
-            // RepositoryNode recursiveFind = RepositoryNodeHelper.recursiveFind(item.getProperty());
-            // CommonViewer dqCommonViewer = RepositoryNodeHelper.getDQCommonViewer();
-            // if (dqCommonViewer != null && null != recursiveFind) {
-            // dqCommonViewer.refresh(recursiveFind);
-            // } else {
-            // CorePlugin.getDefault().refreshDQView();
-            // }
             refreshItem(item);
         } else {
             ProxyRepositoryManager.getInstance().refresh();
@@ -113,7 +106,9 @@ public class CommonEditorPartListener extends PartListener {
 
         CorePlugin.getDefault().refreshWorkSpace();
         // If the item is not editable.
-        if (ProxyRepositoryManager.getInstance().isReadOnly() || !ProxyRepositoryManager.getInstance().isEditable(item)) {
+        // MOD 20130624 TDQ-7497 yyin, change to use :isEditableAndLockIfPossible instead of lock method
+        // (when remote and ask user: when the user select unlock should be also not editable)
+        if (!ProxyRepositoryFactory.getInstance().isEditableAndLockIfPossible(item)) {
             // ADD xwang 2011-08-30 if item was locked by others pop up a dialog to tell user
             MessageDialog.openWarning(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), "Item not editable",
                     part.getTitle() + " is not editable: " + ProxyRepositoryFactory.getInstance().getStatus(item).name() + "!");
@@ -123,7 +118,6 @@ public class CommonEditorPartListener extends PartListener {
             refreshItem(item);
             return;
         }
-        ProxyRepositoryManager.getInstance().lock(item);
         refreshItem(item);
         super.partOpened(part);
     }
