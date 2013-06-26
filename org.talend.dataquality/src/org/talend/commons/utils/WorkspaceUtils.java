@@ -142,11 +142,12 @@ public final class WorkspaceUtils {
      * 
      * @param sourceFile
      * @param targetIFile
+     * @param message
      */
-    public static void createIFileFromFile(File sourceFile, IFile targetIFile) {
+    public static void createIFileFromFile(File sourceFile, IFile targetIFile, String message) {
         final IFile ifile = targetIFile;
         final File srcFile = sourceFile;
-        RepositoryWorkUnit<Object> workUnit = new RepositoryWorkUnit<Object>("Import build JRXMLs.") {//$NON-NLS-1$
+        RepositoryWorkUnit<Object> workUnit = new RepositoryWorkUnit<Object>(message) {
 
             @Override
             protected void run() {
