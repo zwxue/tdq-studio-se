@@ -13,15 +13,16 @@
 package org.talend.dataprofiler.core.ui.action;
 
 import java.io.File;
-import java.net.URI;
 import java.util.Map;
 
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.jface.action.Action;
 import org.eclipse.ui.cheatsheets.ICheatSheetAction;
 import org.eclipse.ui.cheatsheets.ICheatSheetManager;
 import org.talend.commons.exception.ExceptionHandler;
 import org.talend.commons.utils.VersionUtils;
+import org.talend.commons.utils.WorkspaceUtils;
 import org.talend.core.model.properties.Item;
 import org.talend.core.model.properties.PropertiesFactory;
 import org.talend.core.model.properties.Property;
@@ -31,16 +32,15 @@ import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dq.helper.FileUtils;
-import org.talend.dq.helper.ProxyRepositoryManager;
 import org.talend.repository.model.IProxyRepositoryFactory;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.resource.ResourceManager;
 
 /**
  * DOC bZhou class global comment. Detailled comment <br/>
- * 
+ *
  * $Id: talend.epf 55206 2011-02-15 17:32:14Z bzhou $
- * 
+ *
  */
 public abstract class AbstractImportFileAction extends Action implements ICheatSheetAction {
 
@@ -53,45 +53,44 @@ public abstract class AbstractImportFileAction extends Action implements ICheatS
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.jface.action.Action#run()
      */
     @Override
     public void run() {
         if (node != null) {
+
             try {
 
-                Map<File, IPath> resultMap = computeFilePath();
+                final Map<File, IPath> resultMap = computeFilePath();
 
                 if (resultMap != null && resultMap.size() != 0) {
-                    for (File file : resultMap.keySet()) {
+                    for (final File file : resultMap.keySet()) {
                         // MOD msjian TDQ-4608 2012-3-6: when the file is *.jasper, copy it.
                         IPath path = resultMap.get(file);
                         if (file.getName().endsWith(PluginConstant.JASPER_STRING)) {
-                            IPath fullPath = ResourceManager.getJRXMLFolder().getFullPath();
-                            URI locationURI = ResourceManager.getRoot().findMember(fullPath).getLocationURI();
-                            File targetFile = new File(locationURI.getPath() + System.getProperty("file.separator") + path //$NON-NLS-1$
-                                    + System.getProperty("file.separator") + file.getName()); //$NON-NLS-1$
-                            org.apache.commons.io.FileUtils.copyFile(file, targetFile);
+                            // TDQ-7451 Replace File copy with eclipse IFile create.make svn could syn and control.
+                            IFile targetFile = ResourceManager.getJRXMLFolder().getFile(path.append(file.getName()));
+                            WorkspaceUtils.createIFileFromFile(file, targetFile);
                         } else {
                             createItem(file, path);
+
                         }
                         // TDQ-4608~
                     }
-
                     saveAndRefresh();
                 }
 
             } catch (Exception e) {
                 ExceptionHandler.process(e);
             }
-
         }
+
     }
 
     /**
      * DOC bZhou Comment method "createItem".
-     * 
+     *
      * @param initFile
      * @param path
      * @return
@@ -122,14 +121,12 @@ public abstract class AbstractImportFileAction extends Action implements ICheatS
      * DOC bZhou Comment method "saveAndRefresh".
      */
     private void saveAndRefresh() {
-        ProxyRepositoryManager.getInstance().save();
         CorePlugin.getDefault().refreshDQView(node);
-        CorePlugin.getDefault().refreshWorkSpace();
     }
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.ui.cheatsheets.ICheatSheetAction#run(java.lang.String[],
      * org.eclipse.ui.cheatsheets.ICheatSheetManager)
      */
