@@ -71,7 +71,7 @@ public abstract class AbstractImportFileAction extends Action implements ICheatS
                         if (file.getName().endsWith(PluginConstant.JASPER_STRING)) {
                             // TDQ-7451 Replace File copy with eclipse IFile create.make svn could syn and control.
                             IFile targetFile = ResourceManager.getJRXMLFolder().getFile(path.append(file.getName()));
-                            WorkspaceUtils.createIFileFromFile(file, targetFile);
+                            WorkspaceUtils.createIFileFromFile(file, targetFile, "Import a jasper file:" + file.getName()); //$NON-NLS-1$
                         } else {
                             createItem(file, path);
 
