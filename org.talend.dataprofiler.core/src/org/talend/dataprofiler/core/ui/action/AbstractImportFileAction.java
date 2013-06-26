@@ -13,14 +13,15 @@
 package org.talend.dataprofiler.core.ui.action;
 
 import java.io.File;
-import java.net.URI;
 import java.util.Map;
 
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.jface.action.Action;
 import org.eclipse.ui.cheatsheets.ICheatSheetAction;
 import org.eclipse.ui.cheatsheets.ICheatSheetManager;
 import org.talend.commons.utils.VersionUtils;
+import org.talend.commons.utils.WorkspaceUtils;
 import org.talend.core.model.properties.Item;
 import org.talend.core.model.properties.PropertiesFactory;
 import org.talend.core.model.properties.Property;
@@ -68,11 +69,9 @@ public abstract class AbstractImportFileAction extends Action implements ICheatS
                         // MOD msjian TDQ-4608 2012-3-6: when the file is *.jasper, copy it.
                         IPath path = resultMap.get(file);
                         if (file.getName().endsWith(PluginConstant.JASPER_STRING)) {
-                            IPath fullPath = ResourceManager.getJRXMLFolder().getFullPath();
-                            URI locationURI = ResourceManager.getRoot().findMember(fullPath).getLocationURI();
-                            File targetFile = new File(locationURI.getPath() + System.getProperty("file.separator") + path //$NON-NLS-1$
-                                    + System.getProperty("file.separator") + file.getName()); //$NON-NLS-1$
-                            org.apache.commons.io.FileUtils.copyFile(file, targetFile);
+                            // TDQ-7451 Replace File copy with eclipse IFile create.make svn could syn and control.
+                            IFile targetFile = ResourceManager.getJRXMLFolder().getFile(path.append(file.getName()));
+                            WorkspaceUtils.createIFileFromFile(file, targetFile);
                         } else {
                             createItem(file, path);
                         }

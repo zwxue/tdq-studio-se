@@ -13,14 +13,19 @@
 package org.talend.commons.utils;
 
 import java.io.File;
+import java.io.FileInputStream;
 
+import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.common.util.URI;
+import org.talend.core.repository.model.ProxyRepositoryFactory;
+import org.talend.repository.RepositoryWorkUnit;
 import org.talend.repository.model.RepositoryConstants;
 import org.talend.resource.ResourceManager;
 import orgomg.cwm.objectmodel.core.ModelElement;
@@ -128,6 +133,37 @@ public final class WorkspaceUtils {
             label = label.replace(toReplace, "_"); //$NON-NLS-1$
         }
         return label;
+
+    }
+
+    /**
+     * 
+     * create a IFile from File inputStream.
+     * 
+     * @param sourceFile
+     * @param targetIFile
+     */
+    public static void createIFileFromFile(File sourceFile, IFile targetIFile) {
+        final IFile ifile = targetIFile;
+        final File srcFile = sourceFile;
+        RepositoryWorkUnit<Object> workUnit = new RepositoryWorkUnit<Object>("Import build JRXMLs.") {//$NON-NLS-1$
+
+            @Override
+            protected void run() {
+                try {
+                    File targetfile = ifileToFile(ifile);
+                    if (!targetfile.exists() || srcFile.lastModified() > targetfile.lastModified()) {
+                        FileInputStream fileInputStream = new FileInputStream(srcFile);
+                        ifile.create(fileInputStream, Boolean.TRUE, new NullProgressMonitor());
+                        fileInputStream.close();
+                    }
+                } catch (Exception e) {
+                    Logger.getLogger(WorkspaceUtils.class).error(e, e);
+                }
+            }
+        };
+        workUnit.setAvoidUnloadResources(true);
+        ProxyRepositoryFactory.getInstance().executeRepositoryWorkUnit(workUnit);
 
     }
 }
