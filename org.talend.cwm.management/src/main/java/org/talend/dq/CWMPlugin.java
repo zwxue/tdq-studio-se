@@ -28,6 +28,7 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Plugin;
 import org.eclipse.core.runtime.preferences.DefaultScope;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
+import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
 import org.osgi.framework.BundleContext;
 import org.talend.core.model.metadata.builder.connection.Connection;
@@ -63,7 +64,7 @@ public class CWMPlugin extends Plugin {
 
     /**
      * DOC xqliu Comment method "initPreferences".
-     * 
+     *
      * @param cwm
      */
     private void initPreferences(CWMPlugin cwm) {
@@ -75,7 +76,7 @@ public class CWMPlugin extends Plugin {
 
     /**
      * DOC bZhou Comment method "getDefault".
-     * 
+     *
      * @return
      */
     public static CWMPlugin getDefault() {
@@ -84,7 +85,7 @@ public class CWMPlugin extends Plugin {
 
     /**
      * DOC bZhou Comment method "addConnetionAliasToSQLPlugin".
-     * 
+     *
      * @param dataproviders
      */
     public void addConnetionAliasToSQLPlugin(ModelElement... dataproviders) {
@@ -163,9 +164,9 @@ public class CWMPlugin extends Plugin {
     }
 
     /**
-     * 
+     *
      * DOC qiongli Comment method "updateConnetionAliasByName".
-     * 
+     *
      * @param connection
      * @param aliasName
      */
@@ -175,9 +176,15 @@ public class CWMPlugin extends Plugin {
         }
         SQLExplorerPlugin sqlPlugin = SQLExplorerPlugin.getDefault();
         // if the ctabItem is open,close it.
-        DatabaseStructureView view = sqlPlugin.getDatabaseStructureView();
-        if (view != null) {
-            view.closeCurrentCabItem(aliasName);
+        IWorkbenchPage page = sqlPlugin.getActivePage();
+        if (page != null) {
+            DatabaseStructureView view = (DatabaseStructureView) page.findView(DatabaseStructureView.class.getName());
+            if (view != null) {
+                view.closeCurrentCabItem(aliasName);
+            }
+        } else {
+            // print the error log when page is null(command line environment or other cases).
+            log.error("Workebench page is null!"); //$NON-NLS-1$
         }
 
         AliasManager aliasManager = sqlPlugin.getAliasManager();
@@ -214,7 +221,7 @@ public class CWMPlugin extends Plugin {
 
     /**
      * DOC bZhou Comment method "removeAliasInSQLExplorer".
-     * 
+     *
      * @param dataproviders
      */
     public void removeAliasInSQLExplorer(DataProvider... dataproviders) {
