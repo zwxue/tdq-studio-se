@@ -31,6 +31,7 @@ import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.exception.ExceptionHandler;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dq.helper.FileUtils;
 import org.talend.repository.model.IProxyRepositoryFactory;
 import org.talend.repository.model.RepositoryNode;
@@ -70,7 +71,8 @@ public abstract class AbstractImportFileAction extends Action implements ICheatS
                         if (file.getName().endsWith(PluginConstant.JASPER_STRING)) {
                             // TDQ-7451 Replace File copy with eclipse IFile create.make svn could syn and control.
                             IFile targetFile = ResourceManager.getJRXMLFolder().getFile(path.append(file.getName()));
-                            WorkspaceUtils.createIFileFromFile(file, targetFile, "Import a jasper file:" + file.getName()); //$NON-NLS-1$
+                            WorkspaceUtils.createIFileFromFile(file, targetFile,
+                                    DefaultMessagesImpl.getString("AbstractImportFileAction.importJasperFile", file.getName())); //$NON-NLS-1$
                         } else {
                             createItem(file, path);
                         }

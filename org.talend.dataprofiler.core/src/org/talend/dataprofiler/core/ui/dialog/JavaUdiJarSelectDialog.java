@@ -593,7 +593,8 @@ public class JavaUdiJarSelectDialog extends SelectionStatusDialog {
                             filePath = filePath.removeLastSegments(1).append(name);
                             // TDQ-7451 Replace File copy with eclipse IFile create.make svn could syn and control.
                             IFile targetFile = ResourceManager.getUDIJarFolder().getFile(filePath.lastSegment());
-                            WorkspaceUtils.createIFileFromFile(filePath.toFile(), targetFile, "Add a jar file for JUDI:" + name); //$NON-NLS-1$
+                            WorkspaceUtils.createIFileFromFile(filePath.toFile(), targetFile,
+                                    DefaultMessagesImpl.getString("JavaUdiJarSelectDialog.addJarFile", name)); //$NON-NLS-1$
                         }
                     }
                     // MOD msjian 2011-7-14 22092 feature: Java UDI: not convinient to delete udi jar files
