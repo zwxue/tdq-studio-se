@@ -55,7 +55,6 @@ import org.eclipse.ui.dialogs.ContainerCheckedTreeViewer;
 import org.eclipse.ui.dialogs.ISelectionStatusValidator;
 import org.eclipse.ui.dialogs.SelectionStatusDialog;
 import org.eclipse.ui.internal.WorkbenchMessages;
-import org.jfree.util.Log;
 import org.talend.commons.utils.WorkspaceUtils;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
@@ -582,17 +581,13 @@ public class JavaUdiJarSelectDialog extends SelectionStatusDialog {
                         // jarPathText.setText(path);
                         // // MOD klliu 2010-05-31 13451: Class name of Java User Define Indicator must be validated
                         // validateJavaUDI(classNameText, jarPathText);
-                        try {
-                            for (String name : fileNames) {
-                                IPath filePath = new Path(path);
-                                filePath = filePath.removeLastSegments(1).append(name);
+                        for (String name : fileNames) {
+                            IPath filePath = new Path(path);
+                            filePath = filePath.removeLastSegments(1).append(name);
 
-                                // TDQ-7451 Replace File copy with eclipse IFile create.make svn could syn and control.
-                                IFile targetFile = ResourceManager.getUDIJarFolder().getFile(filePath.lastSegment());
-                                WorkspaceUtils.createIFileFromFile(filePath.toFile(), targetFile);
-                            }
-                        } catch (Exception e1) {
-                            Log.error(e1.getMessage(), e1);
+                            // TDQ-7451 Replace File copy with eclipse IFile create.make svn could syn and control.
+                            IFile targetFile = ResourceManager.getUDIJarFolder().getFile(filePath.lastSegment());
+                            WorkspaceUtils.createIFileFromFile(filePath.toFile(), targetFile, "Add a jar file for UDI:" + name); //$NON-NLS-1$
                         }
                     }
                     // MOD msjian 2011-7-14 22092 feature: Java UDI: not convinient to delete udi jar files
