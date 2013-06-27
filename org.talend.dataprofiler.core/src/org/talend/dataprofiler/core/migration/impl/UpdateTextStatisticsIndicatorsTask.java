@@ -12,8 +12,13 @@
 // ============================================================================
 package org.talend.dataprofiler.core.migration.impl;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
+import org.talend.cwm.relational.TdExpression;
 import org.talend.dataprofiler.core.migration.AbstractWorksapceUpdateTask;
 import org.talend.dataprofiler.core.migration.helper.IndicatorDefinitionFileHelper;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
@@ -25,21 +30,33 @@ import org.talend.dq.indicators.definitions.DefinitionHandler;
 public class UpdateTextStatisticsIndicatorsTask extends AbstractWorksapceUpdateTask {
 
     // langs
-    private final String LANG_SQL = "SQL"; //$NON-NLS-1$
+    private final static String LANG_SQL = "SQL"; //$NON-NLS-1$
 
-    private final String LANG_ORACLE = "Oracle"; //$NON-NLS-1$
+    private final static String LANG_ORACLE = "Oracle"; //$NON-NLS-1$
 
-    private final String LANG_SQL_SERVER = "Microsoft SQL Server"; //$NON-NLS-1$
+    private final static String LANG_SQL_SERVER = "Microsoft SQL Server"; //$NON-NLS-1$
 
-    private final String LANG_DB2 = "DB2"; //$NON-NLS-1$
+    private final static String LANG_DB2 = "DB2"; //$NON-NLS-1$
 
-    private final String LANG_INGRES = "Ingres"; //$NON-NLS-1$
+    private final static String LANG_INGRES = "Ingres"; //$NON-NLS-1$
 
-    private final String LANG_SQLITE = "SQLite"; //$NON-NLS-1$
+    private final static String LANG_SQLITE = "SQLite"; //$NON-NLS-1$
 
-    private final String LANG_HIVE = "Hive"; //$NON-NLS-1$
+    private final static String LANG_HIVE = "Hive"; //$NON-NLS-1$
 
     // ============================================
+
+    private static Set<String> clearLanguages = new HashSet<String>();
+
+    static {
+        clearLanguages.add(LANG_SQL);
+        clearLanguages.add(LANG_ORACLE);
+        clearLanguages.add(LANG_SQL_SERVER);
+        clearLanguages.add(LANG_DB2);
+        clearLanguages.add(LANG_INGRES);
+        clearLanguages.add(LANG_SQLITE);
+        clearLanguages.add(LANG_HIVE);
+    }
 
     // indicator uuids
     private final String AVERAGE_LENGTH_WITH_BLANK_AND_NULL_UUID = "__TbUIJSOEd-TE5ti6XNR2Q"; //$NON-NLS-1$
@@ -228,7 +245,7 @@ public class UpdateTextStatisticsIndicatorsTask extends AbstractWorksapceUpdateT
         // AVERAGE_LENGTH_WITH_BLANK_AND_NULL
         IndicatorDefinition definition = definitionHandler.getDefinitionById(AVERAGE_LENGTH_WITH_BLANK_AND_NULL_UUID);
         if (definition != null) {
-            definition.getSqlGenericExpression().clear();
+            clearSqlGenericExpression(definition, clearLanguages);
             IndicatorDefinitionFileHelper.addSqlExpression(definition, LANG_SQL, BODY_AVGBN_SQL);
             IndicatorDefinitionFileHelper.addSqlExpression(definition, LANG_ORACLE, BODY_AVGBN_ORACLE);
             IndicatorDefinitionFileHelper.addSqlExpression(definition, LANG_SQL_SERVER, BODY_AVGBN_SQL_SERVER);
@@ -242,7 +259,7 @@ public class UpdateTextStatisticsIndicatorsTask extends AbstractWorksapceUpdateT
         // AVERAGE_LENGTH_WITH_BLANK
         definition = definitionHandler.getDefinitionById(AVERAGE_LENGTH_WITH_BLANK_UUID);
         if (definition != null) {
-            definition.getSqlGenericExpression().clear();
+            clearSqlGenericExpression(definition, clearLanguages);
             IndicatorDefinitionFileHelper.addSqlExpression(definition, LANG_SQL, BODY_AVGB_SQL);
             IndicatorDefinitionFileHelper.addSqlExpression(definition, LANG_ORACLE, BODY_AVGB_ORACLE);
             IndicatorDefinitionFileHelper.addSqlExpression(definition, LANG_SQL_SERVER, BODY_AVGB_SQL_SERVER);
@@ -256,7 +273,7 @@ public class UpdateTextStatisticsIndicatorsTask extends AbstractWorksapceUpdateT
         // AVERAGE_LENGTH_WITH_NULL
         definition = definitionHandler.getDefinitionById(AVERAGE_LENGTH_WITH_NULL_UUID);
         if (definition != null) {
-            definition.getSqlGenericExpression().clear();
+            clearSqlGenericExpression(definition, clearLanguages);
             IndicatorDefinitionFileHelper.addSqlExpression(definition, LANG_SQL, BODY_AVGN_SQL);
             IndicatorDefinitionFileHelper.addSqlExpression(definition, LANG_ORACLE, BODY_AVGN_ORACLE);
             IndicatorDefinitionFileHelper.addSqlExpression(definition, LANG_SQL_SERVER, BODY_AVGN_SQL_SERVER);
@@ -270,7 +287,7 @@ public class UpdateTextStatisticsIndicatorsTask extends AbstractWorksapceUpdateT
         // AVERAGE_LENGTH
         definition = definitionHandler.getDefinitionById(AVERAGE_LENGTH_UUID);
         if (definition != null) {
-            definition.getSqlGenericExpression().clear();
+            clearSqlGenericExpression(definition, clearLanguages);
             IndicatorDefinitionFileHelper.addSqlExpression(definition, LANG_SQL, BODY_AVG_SQL);
             IndicatorDefinitionFileHelper.addSqlExpression(definition, LANG_ORACLE, BODY_AVG_ORACLE);
             IndicatorDefinitionFileHelper.addSqlExpression(definition, LANG_SQL_SERVER, BODY_AVG_SQL_SERVER);
@@ -284,7 +301,7 @@ public class UpdateTextStatisticsIndicatorsTask extends AbstractWorksapceUpdateT
         // MAXIMAL_LENGTH_WITH_BLANK_AND_NULL
         definition = definitionHandler.getDefinitionById(MAXIMAL_LENGTH_WITH_BLANK_AND_NULL_UUID);
         if (definition != null) {
-            definition.getSqlGenericExpression().clear();
+            clearSqlGenericExpression(definition, clearLanguages);
             IndicatorDefinitionFileHelper.addSqlExpression(definition, LANG_SQL, BODY_MAXBN_SQL);
             IndicatorDefinitionFileHelper.addSqlExpression(definition, LANG_ORACLE, BODY_MAXBN_ORACLE);
             IndicatorDefinitionFileHelper.addSqlExpression(definition, LANG_SQL_SERVER, BODY_MAXBN_SQL_SERVER);
@@ -298,7 +315,7 @@ public class UpdateTextStatisticsIndicatorsTask extends AbstractWorksapceUpdateT
         // MAXIMAL_LENGTH_WITH_BLANK
         definition = definitionHandler.getDefinitionById(MAXIMAL_LENGTH_WITH_BLANK_UUID);
         if (definition != null) {
-            definition.getSqlGenericExpression().clear();
+            clearSqlGenericExpression(definition, clearLanguages);
             IndicatorDefinitionFileHelper.addSqlExpression(definition, LANG_SQL, BODY_MAXB_SQL);
             IndicatorDefinitionFileHelper.addSqlExpression(definition, LANG_ORACLE, BODY_MAXB_ORACLE);
             IndicatorDefinitionFileHelper.addSqlExpression(definition, LANG_SQL_SERVER, BODY_MAXB_SQL_SERVER);
@@ -312,7 +329,7 @@ public class UpdateTextStatisticsIndicatorsTask extends AbstractWorksapceUpdateT
         // MAXIMAL_LENGTH_WITH_NULL
         definition = definitionHandler.getDefinitionById(MAXIMAL_LENGTH_WITH_NULL_UUID);
         if (definition != null) {
-            definition.getSqlGenericExpression().clear();
+            clearSqlGenericExpression(definition, clearLanguages);
             IndicatorDefinitionFileHelper.addSqlExpression(definition, LANG_SQL, BODY_MAXN_SQL);
             IndicatorDefinitionFileHelper.addSqlExpression(definition, LANG_ORACLE, BODY_MAXN_ORACLE);
             IndicatorDefinitionFileHelper.addSqlExpression(definition, LANG_SQL_SERVER, BODY_MAXN_SQL_SERVER);
@@ -326,7 +343,7 @@ public class UpdateTextStatisticsIndicatorsTask extends AbstractWorksapceUpdateT
         // MAXIMAL_LENGTH
         definition = definitionHandler.getDefinitionById(MAXIMAL_LENGTH_UUID);
         if (definition != null) {
-            definition.getSqlGenericExpression().clear();
+            clearSqlGenericExpression(definition, clearLanguages);
             IndicatorDefinitionFileHelper.addSqlExpression(definition, LANG_SQL, BODY_MAX_SQL);
             IndicatorDefinitionFileHelper.addSqlExpression(definition, LANG_ORACLE, BODY_MAX_ORACLE);
             IndicatorDefinitionFileHelper.addSqlExpression(definition, LANG_SQL_SERVER, BODY_MAX_SQL_SERVER);
@@ -340,7 +357,7 @@ public class UpdateTextStatisticsIndicatorsTask extends AbstractWorksapceUpdateT
         // MINIMAL_LENGTH_WITH_BLANK_AND_NULL
         definition = definitionHandler.getDefinitionById(MINIMAL_LENGTH_WITH_BLANK_AND_NULL_UUID);
         if (definition != null) {
-            definition.getSqlGenericExpression().clear();
+            clearSqlGenericExpression(definition, clearLanguages);
             IndicatorDefinitionFileHelper.addSqlExpression(definition, LANG_SQL, BODY_MINBN_SQL);
             IndicatorDefinitionFileHelper.addSqlExpression(definition, LANG_ORACLE, BODY_MINBN_ORACLE);
             IndicatorDefinitionFileHelper.addSqlExpression(definition, LANG_SQL_SERVER, BODY_MINBN_SQL_SERVER);
@@ -354,7 +371,7 @@ public class UpdateTextStatisticsIndicatorsTask extends AbstractWorksapceUpdateT
         // MINIMAL_LENGTH_WITH_BLANK
         definition = definitionHandler.getDefinitionById(MINIMAL_LENGTH_WITH_BLANK_UUID);
         if (definition != null) {
-            definition.getSqlGenericExpression().clear();
+            clearSqlGenericExpression(definition, clearLanguages);
             IndicatorDefinitionFileHelper.addSqlExpression(definition, LANG_SQL, BODY_MINB_SQL);
             IndicatorDefinitionFileHelper.addSqlExpression(definition, LANG_ORACLE, BODY_MINB_ORACLE);
             IndicatorDefinitionFileHelper.addSqlExpression(definition, LANG_SQL_SERVER, BODY_MINB_SQL_SERVER);
@@ -368,7 +385,7 @@ public class UpdateTextStatisticsIndicatorsTask extends AbstractWorksapceUpdateT
         // MINIMAL_LENGTH_WITH_NULL
         definition = definitionHandler.getDefinitionById(MINIMAL_LENGTH_WITH_NULL_UUID);
         if (definition != null) {
-            definition.getSqlGenericExpression().clear();
+            clearSqlGenericExpression(definition, clearLanguages);
             IndicatorDefinitionFileHelper.addSqlExpression(definition, LANG_SQL, BODY_MINN_SQL);
             IndicatorDefinitionFileHelper.addSqlExpression(definition, LANG_ORACLE, BODY_MINN_ORACLE);
             IndicatorDefinitionFileHelper.addSqlExpression(definition, LANG_SQL_SERVER, BODY_MINN_SQL_SERVER);
@@ -382,7 +399,7 @@ public class UpdateTextStatisticsIndicatorsTask extends AbstractWorksapceUpdateT
         // MINIMAL_LENGTH
         definition = definitionHandler.getDefinitionById(MINIMAL_LENGTH_UUID);
         if (definition != null) {
-            definition.getSqlGenericExpression().clear();
+            clearSqlGenericExpression(definition, clearLanguages);
             IndicatorDefinitionFileHelper.addSqlExpression(definition, LANG_SQL, BODY_MIN_SQL);
             IndicatorDefinitionFileHelper.addSqlExpression(definition, LANG_ORACLE, BODY_MIN_ORACLE);
             IndicatorDefinitionFileHelper.addSqlExpression(definition, LANG_SQL_SERVER, BODY_MIN_SQL_SERVER);
@@ -396,5 +413,22 @@ public class UpdateTextStatisticsIndicatorsTask extends AbstractWorksapceUpdateT
         DefinitionHandler.getInstance().reloadIndicatorsDefinitions();
 
         return result;
+    }
+
+    /**
+     * clear the specified language from the IndicatorDefinition.
+     * 
+     * @param definition
+     * @param languages the languages which need to be clear
+     */
+    private void clearSqlGenericExpression(IndicatorDefinition definition, Set<String> languages) {
+        List<TdExpression> expressions = new ArrayList<TdExpression>();
+        for (TdExpression expression : definition.getSqlGenericExpression()) {
+            if (expression != null && !languages.contains(expression.getLanguage())) {
+                expressions.add(expression);
+            }
+        }
+        definition.getSqlGenericExpression().clear();
+        definition.getSqlGenericExpression().addAll(expressions);
     }
 }
