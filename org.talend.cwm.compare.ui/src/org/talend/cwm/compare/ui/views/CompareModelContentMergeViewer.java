@@ -461,11 +461,11 @@ public class CompareModelContentMergeViewer extends ModelContentMergeViewer {
                 // MOD 20130311 TDQ-6999: pass a text for compare special, then no popup dialog from compare yyin
                 if (selectedOjbect instanceof RepositoryViewObject) {
                     new ReloadDatabaseAction(((RepositoryViewObject) selectedOjbect).getRepositoryNode(),
-                            Messages.getString("CompareModelContentMergeViewer.NoNeedToPopupReload")).run();
+                            Messages.getString("CompareModelContentMergeViewer.NoNeedToPopupReload"), false).run();
                 } else {
                     // MOD msjian 2011-5-20 20875:do copy for table list
                     new ReloadDatabaseAction(selectedOjbect,
-                            Messages.getString("CompareModelContentMergeViewer.NoNeedToPopupReload")).run();
+                            Messages.getString("CompareModelContentMergeViewer.NoNeedToPopupReload"), false).run();
                 }
             }
         } catch (Throwable e) {

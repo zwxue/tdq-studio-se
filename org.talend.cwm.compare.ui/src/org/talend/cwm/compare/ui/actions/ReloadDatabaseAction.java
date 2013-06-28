@@ -62,6 +62,8 @@ public class ReloadDatabaseAction extends Action {
 
     private ReturnCode returnCode = new ReturnCode(true);
 
+    private boolean needCompare = true;
+
     /**
      * Getter for returnCode.
      * 
@@ -77,6 +79,13 @@ public class ReloadDatabaseAction extends Action {
         setImageDescriptor(ImageLib.getImageDescriptor(ImageLib.UPDATE_IMAGE));
     }
 
+    // Added TDQ-7528: add a parameter to control if popup the select dialog(reload or compare)
+    public ReloadDatabaseAction(Object selectedNode, String menuText, boolean needCompare) {
+        super(menuText);
+        this.selectedObject = selectedNode;
+        this.needCompare = needCompare;
+        setImageDescriptor(ImageLib.getImageDescriptor(ImageLib.UPDATE_IMAGE));
+    }
     /*
      * (non-Javadoc)
      * 
@@ -203,8 +212,8 @@ public class ReloadDatabaseAction extends Action {
      */
     private boolean isContinueReload() {
         // Added TDQ-6999 Copy from right to left should not popup reloading/comparing confirmation dialog,yyin
-        if (this.getText() != null
-                && this.getText().equalsIgnoreCase(Messages.getString("CompareModelContentMergeViewer.NoNeedToPopupReload"))) {
+        // MOD TDQ-7528 20130627 yyin: if needCompare=false,no need to popup select compare dialog
+        if (!this.needCompare) {
             return true;
         }// ~
         String[] dialogButtonLabels = {
