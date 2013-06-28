@@ -26,8 +26,9 @@ public class TDQCompareService implements ITDQCompareService {
         ReturnCode retCode = new ReturnCode(Boolean.TRUE);
         Connection conn = connectionItem.getConnection();
         if (conn instanceof DatabaseConnection) {
+            // MOD TDQ-7528 20130627 yyin: no need to popup select compare dialog
             ReloadDatabaseAction reloadDatabaseAction = new ReloadDatabaseAction(conn,
-                    ReloadDatabaseProvider.RELOADDATABASE_MENUTEXT);
+                    ReloadDatabaseProvider.RELOADDATABASE_MENUTEXT, false);
             reloadDatabaseAction.run();
             retCode = reloadDatabaseAction.getReturnCode();
 
