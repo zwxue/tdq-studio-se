@@ -798,6 +798,7 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
         // set execute engine
         Analysis analysis = columnSetAnalysisHandler.getAnalysis();
         analysis.getParameters().setExecutionLanguage(ExecutionLanguage.get(execLang));
+        analysis.getParameters().setMaxNumberRows(Integer.valueOf(maxNumText.getText()));
         simpleStatIndicator.setStoreData(storeDataCheck.getSelection());
 
         // set data filter
