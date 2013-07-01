@@ -18,8 +18,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
+import java.util.regex.Pattern;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -34,6 +34,8 @@ import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.VerifyEvent;
+import org.eclipse.swt.events.VerifyListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -100,8 +102,6 @@ import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
-
-
 
 /**
  * @author rli
@@ -239,7 +239,7 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
 
                 /*
                  * (non-Javadoc)
-                 *
+                 * 
                  * @see org.eclipse.swt.events.ControlAdapter#controlResized(org.eclipse .swt.events.ControlEvent)
                  */
                 @Override
@@ -337,7 +337,7 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
 
     /**
      * DOC zshen Comment method "createPaginationTree".
-     *
+     * 
      * @param topComp
      */
     private void createPaginationTree(Composite topComp) {
@@ -423,9 +423,9 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
     }
 
     /**
-     *
+     * 
      * DOC mzhao Comment method "expandTreeItems".
-     *
+     * 
      * @param items
      * @param expandOrCollapse
      */
@@ -640,7 +640,7 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
 
     /**
      * DOC hcheng Comment method "createAnalysisParamSection".
-     *
+     * 
      * @param form
      * @param anasisDataComp
      */
@@ -761,18 +761,22 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
         maxNumText.addModifyListener(new ModifyListener() {
 
             public void modifyText(ModifyEvent e) {
-                String textContent = maxNumText.getText();
-                if (StringUtils.isNumeric(textContent)) {
-                    setDirty(true);
-                } else {
-                    MessageDialog.openWarning(e.display.getActiveShell(),
-                            DefaultMessagesImpl.getString("ColumnMasterDetailsPage.warningMessageTitle"),//$NON-NLS-1$
-                            DefaultMessagesImpl.getString("ColumnMasterDetailsPage.integerConvertWarning"));//$NON-NLS-1$
-                    maxNumText.setText(textContent.substring(0, textContent.length() - 1));
-                }
-
+                setDirty(true);
             }
 
+        });
+        maxNumText.addVerifyListener(new VerifyListener() {
+
+            public void verifyText(VerifyEvent e) {
+                String inputValue = e.text;
+                Pattern pattern = Pattern.compile("^[0-9]"); //$NON-NLS-1$
+                char[] charArray = inputValue.toCharArray();
+                for (char c : charArray) {
+                    if (!pattern.matcher(String.valueOf(c)).matches()) {
+                        e.doit = false;
+                    }
+                }
+            }
         });
         GridDataFactory.fillDefaults().grab(true, false).applyTo(maxNumText);
         GridDataFactory.fillDefaults().align(SWT.BEGINNING, SWT.BEGINNING).applyTo(maxNumLabel);
@@ -782,7 +786,7 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
 
     /**
      * ADD xqliu 2009-08-24 bug 8776.
-     *
+     * 
      * @return
      */
     protected boolean includeUDI() {
@@ -928,7 +932,7 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
 
     /**
      * DOC yyi 2011-06-02 16929:expand the selected column in the graphical chart.
-     *
+     * 
      * @param indicator
      */
     protected void expandChart(ModelElementIndicator indicator) {
@@ -986,7 +990,7 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisMetadataPage#getTreeViewer()
      */
     @Override
@@ -1089,7 +1093,7 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
 
     /**
      * DOC zshen Comment method "getExecCombo".
-     *
+     * 
      * @return the Combo for executeLanguage
      */
     public CCombo getExecCombo() {
@@ -1098,7 +1102,7 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
 
     /**
      * DOC zshen Comment method "includeDatePatternFreqIndicator".
-     *
+     * 
      * @return whether have a datePatternFreqIndicator in the "analyzed Columns"
      */
     public boolean includeDatePatternFreqIndicator() {
@@ -1134,7 +1138,7 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
 
     /**
      * DOC xqliu Comment method "changeExecuteLanguageToSql".
-     *
+     * 
      * @param enabled
      */
     public void changeExecuteLanguageToSql(boolean enabled) {
@@ -1158,7 +1162,7 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
 
     /**
      * DOC qiongli Comment method "getDataFilterComp".
-     *
+     * 
      * @return
      */
     public DataFilterComp getDataFilterComp() {

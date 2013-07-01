@@ -19,8 +19,8 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.regex.Pattern;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
@@ -36,6 +36,8 @@ import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.VerifyEvent;
+import org.eclipse.swt.events.VerifyListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -299,7 +301,7 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
 
                 /*
                  * (non-Javadoc)
-                 *
+                 * 
                  * @see org.eclipse.swt.events.ControlAdapter#controlResized(org.eclipse .swt.events.ControlEvent)
                  */
                 @Override
@@ -316,7 +318,7 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
 
     /**
      * DOC yyi Comment method "createIndicatorsSection".
-     *
+     * 
      * @param topComp
      * @param form
      */
@@ -595,7 +597,7 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
 
     /**
      * DOC qiongli Comment method "createAnalysisParamSection".
-     *
+     * 
      * @param form
      * @param anasisDataComp
      */
@@ -684,7 +686,7 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
 
     /**
      * DOC qiongli Comment method "createStoreDataCheck".
-     *
+     * 
      * @param sectionClient
      */
     private Composite createStoreDataCheck(Composite sectionClient) {
@@ -709,7 +711,7 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
 
     /**
      * DOC qiongli Comment method "createjavaEnginSection".
-     *
+     * 
      * @param sectionClient
      * @return
      */
@@ -750,18 +752,22 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
         maxNumText.addModifyListener(new ModifyListener() {
 
             public void modifyText(ModifyEvent e) {
-                String textContent = maxNumText.getText();
-                if (StringUtils.isNumeric(textContent)) {
-                    setDirty(true);
-                } else {
-                    MessageDialog.openWarning(e.display.getActiveShell(),
-                            DefaultMessagesImpl.getString("ColumnMasterDetailsPage.warningMessageTitle"),
-                            DefaultMessagesImpl.getString("ColumnMasterDetailsPage.integerConvertWarning"));
-                    maxNumText.setText(textContent.substring(0, textContent.length() - 1));
-                }
-
+                setDirty(true);
             }
 
+        });
+        maxNumText.addVerifyListener(new VerifyListener() {
+
+            public void verifyText(VerifyEvent e) {
+                String inputValue = e.text;
+                Pattern pattern = Pattern.compile("^[0-9]"); //$NON-NLS-1$
+                char[] charArray = inputValue.toCharArray();
+                for (char c : charArray) {
+                    if (!pattern.matcher(String.valueOf(c)).matches()) {
+                        e.doit = false;
+                    }
+                }
+            }
         });
         GridDataFactory.fillDefaults().grab(true, false).applyTo(maxNumText);
         GridDataFactory.fillDefaults().align(SWT.BEGINNING, SWT.BEGINNING).applyTo(maxNumLabel);
@@ -919,7 +925,7 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisMetadataPage#getTreeViewer()
      */
     @Override
@@ -1041,7 +1047,7 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
 
     /**
      * DOC qiongli Comment method "includeDatePatternFreqIndicator".
-     *
+     * 
      * @return
      */
     private boolean includeDatePatternFreqIndicator() {
@@ -1055,7 +1061,7 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
 
     /**
      * DOC qiongli Comment method "getDataFilterComp".
-     *
+     * 
      * @return
      */
     public DataFilterComp getDataFilterComp() {
@@ -1091,7 +1097,7 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
 
     /**
      * DOC yyin Comment method "removeItem".
-     *
+     * 
      * @param indicatorUnit
      */
     public void removeItem(IndicatorUnit indicatorUnit) {
