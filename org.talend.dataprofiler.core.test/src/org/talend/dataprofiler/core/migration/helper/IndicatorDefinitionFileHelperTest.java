@@ -20,10 +20,7 @@ import org.eclipse.emf.common.util.EList;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.talend.core.context.Context;
-import org.talend.core.context.RepositoryContext;
 import org.talend.core.model.general.Project;
-import org.talend.core.runtime.CoreRuntimePlugin;
 import org.talend.cwm.relational.TdExpression;
 import org.talend.dataprofiler.core.helper.UnitTestBuildHelper;
 import org.talend.dataquality.helpers.BooleanExpressionHelper;
@@ -94,12 +91,6 @@ public class IndicatorDefinitionFileHelperTest {
      */
     @Test
     public void testIsTechnialIndicatorWithSubCategory() {
-        Context ctx = CoreRuntimePlugin.getInstance().getContext();
-        RepositoryContext repositoryContext = (RepositoryContext) ctx.getProperty(Context.REPOSITORY_CONTEXT_KEY);
-        if (repositoryContext != null) {
-            originalProject = repositoryContext.getProject();
-        }
-
         // sub category indicator
         String textStatisticsUuid = "_yb9x0zh8Ed2XmO7pl5Yuyg"; //$NON-NLS-1$
         String summaryStatisticsUuid = "_ccI48BF2Ed2PKb6nEJEvhw"; //$NON-NLS-1$
@@ -134,13 +125,6 @@ public class IndicatorDefinitionFileHelperTest {
         assertTrue(IndicatorDefinitionFileHelper.isTechnialIndicator(datePatternFrequencyUuid));
 
         assertFalse(IndicatorDefinitionFileHelper.isTechnialIndicator(rowCountUuid));
-
-        if (originalProject != null) {
-            ctx = CoreRuntimePlugin.getInstance().getContext();
-            repositoryContext = (RepositoryContext) ctx.getProperty(Context.REPOSITORY_CONTEXT_KEY);
-            repositoryContext.setProject(originalProject);
-        }
-
     }
 
     @Test
