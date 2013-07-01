@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.EList;
@@ -33,6 +34,8 @@ import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.VerifyEvent;
+import org.eclipse.swt.events.VerifyListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -776,18 +779,22 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
         maxNumText.addModifyListener(new ModifyListener() {
 
             public void modifyText(ModifyEvent e) {
-                String textContent = maxNumText.getText();
-                if (stringUtil.isANum(textContent)) {
-                    setDirty(true);
-                } else {
-                    MessageDialog.openWarning(e.display.getActiveShell(),
-                            DefaultMessagesImpl.getString("ColumnMasterDetailsPage.warningMessageTitle"),//$NON-NLS-1$
-                            DefaultMessagesImpl.getString("ColumnMasterDetailsPage.integerConvertWarning"));//$NON-NLS-1$
-                    maxNumText.setText(textContent.substring(0, textContent.length() - 1));
-                }
-
+                setDirty(true);
             }
 
+        });
+        maxNumText.addVerifyListener(new VerifyListener() {
+
+            public void verifyText(VerifyEvent e) {
+                String inputValue = e.text;
+                Pattern pattern = Pattern.compile("^[0-9]"); //$NON-NLS-1$
+                char[] charArray = inputValue.toCharArray();
+                for (char c : charArray) {
+                    if (!pattern.matcher(String.valueOf(c)).matches()) {
+                        e.doit = false;
+                    }
+                }
+            }
         });
         GridDataFactory.fillDefaults().grab(true, false).applyTo(maxNumText);
         GridDataFactory.fillDefaults().align(SWT.BEGINNING, SWT.BEGINNING).applyTo(maxNumLabel);
