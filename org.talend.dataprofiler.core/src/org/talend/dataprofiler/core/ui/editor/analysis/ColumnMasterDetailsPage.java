@@ -182,17 +182,18 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
             if (tdColumn == null && xmlElement == null && mdColumn == null) {
                 continue;
             }
+            // MOD qiongli TDQ-7052 if the node is filtered ,it will be return null,so should create a new node.
+            RepositoryNode repNode = RepositoryNodeHelper.recursiveFind(element);
+            if (repNode == null) {
+                repNode = RepositoryNodeHelper.createRepositoryNode(element);
+            }
             // MOD mzhao feature 15750, The column is recompute from the file, here create a new repository view object.
-
             if (tdColumn == null && mdColumn != null) {
-                currentIndicator = ModelElementIndicatorHelper.createDFColumnIndicator(RepositoryNodeHelper
-                        .recursiveFind(mdColumn));
+                currentIndicator = ModelElementIndicatorHelper.createDFColumnIndicator(repNode);
             } else if (tdColumn != null) {
-                currentIndicator = ModelElementIndicatorHelper.createModelElementIndicator(RepositoryNodeHelper
-                        .recursiveFind(tdColumn));
+                currentIndicator = ModelElementIndicatorHelper.createModelElementIndicator(repNode);
             } else if (xmlElement != null) {
-                currentIndicator = ModelElementIndicatorHelper.createModelElementIndicator(RepositoryNodeHelper
-                        .recursiveFind(xmlElement));
+                currentIndicator = ModelElementIndicatorHelper.createModelElementIndicator(repNode);
             }
 
             DataminingType dataminingType = DataminingType.get(analysisHandler.getDatamingType(element));
