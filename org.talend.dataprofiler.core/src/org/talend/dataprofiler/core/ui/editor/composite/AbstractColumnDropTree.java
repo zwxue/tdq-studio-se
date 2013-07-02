@@ -41,7 +41,6 @@ import org.talend.core.model.metadata.MetadataColumnRepositoryObject;
 import org.talend.core.model.metadata.builder.connection.MetadataColumn;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.core.repository.model.repositoryObject.MetadataXmlElementTypeRepositoryObject;
-import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.xml.TdXmlElementType;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
@@ -576,17 +575,13 @@ public abstract class AbstractColumnDropTree extends AbstractPagePart {
                     List<IRepositoryNode> children = ((IRepositoryNode) obj).getChildren();
                     reposList.addAll(children);
                 }
-            } else if (obj instanceof TdColumn) {
-                // MOD yyi 2012-02-29 TDQ-3605 For column set column list.
-                reposList.add(RepositoryNodeHelper.recursiveFind((TdColumn) obj));
-            } else if (obj instanceof MetadataColumn) {
-                // MOD yyin 2012-03-31 TDQ-4994 reopen column set analysis about fileDelimited file all items gone.
-                // because here did not check this kind of obj so it is not be added in the list
-                reposList.add(RepositoryNodeHelper.recursiveFind((MetadataColumn) obj));
-            } else if (obj instanceof TdXmlElementType) {
-                // MOD yyin 2012-03-31 TDQ-4994 reopen column set analysis about fileDelimited file all items gone.
-                // because here did not check this kind of obj so it is not be added in the list
-                reposList.add(RepositoryNodeHelper.recursiveFind((TdXmlElementType) obj));
+            } else if (obj instanceof MetadataColumn || obj instanceof TdXmlElementType) {
+                // MOD qiongli TDQ-7052 if the node is filtered ,it will be return null,so should create a new node.
+                RepositoryNode repNode = RepositoryNodeHelper.recursiveFind((ModelElement) obj);
+                if (repNode == null) {
+                    repNode = RepositoryNodeHelper.createRepositoryNode((ModelElement) obj);
+                }
+                reposList.add(repNode);
             }
         }
         if (reposList.size() == 0) {
