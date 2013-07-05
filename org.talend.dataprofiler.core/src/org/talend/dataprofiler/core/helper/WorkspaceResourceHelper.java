@@ -32,9 +32,11 @@ import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.navigator.CommonViewer;
 import org.eclipse.ui.part.FileEditorInput;
 import org.talend.commons.utils.WorkspaceUtils;
 import org.talend.core.model.properties.FolderItem;
+import org.talend.core.model.properties.Item;
 import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.model.repository.Folder;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
@@ -47,6 +49,7 @@ import org.talend.dq.nodes.SourceFileRepNode;
 import org.talend.dq.nodes.SourceFileSubFolderNode;
 import org.talend.repository.ProjectManager;
 import org.talend.repository.model.IRepositoryNode;
+import org.talend.repository.model.RepositoryNode;
 import org.talend.resource.ResourceManager;
 import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
@@ -269,5 +272,20 @@ public final class WorkspaceResourceHelper {
             msgTag = "SourceFileAction.sourceFilesOpening"; //$NON-NLS-1$
         }
         MessageUI.openWarning(DefaultMessagesImpl.getString(msgTag, sourcFileNames));
+    }
+
+    /**
+     * Refresh the related Repository node of the item in the view
+     * 
+     * @param item
+     */
+    public static void refreshItem(Item item) {
+        RepositoryNode recursiveFind = RepositoryNodeHelper.recursiveFind(item.getProperty());
+        CommonViewer dqCommonViewer = RepositoryNodeHelper.getDQCommonViewer();
+        if (dqCommonViewer != null && null != recursiveFind) {
+            dqCommonViewer.refresh(recursiveFind);
+        } else {
+            CorePlugin.getDefault().refreshDQView(recursiveFind);
+        }
     }
 }
