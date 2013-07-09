@@ -18,6 +18,7 @@ import java.util.Map;
 import org.apache.commons.lang.StringUtils;
 import org.talend.core.model.metadata.builder.database.dburl.SupportDBUrlType;
 import org.talend.cwm.relational.TdColumn;
+import org.talend.dataquality.analysis.ExecutionLanguage;
 import org.talend.dataquality.domain.Domain;
 import org.talend.dataquality.helpers.DomainHelper;
 import org.talend.dataquality.indicators.IQRIndicator;
@@ -39,8 +40,7 @@ public class SummaryStastictisExplorer extends DataExplorer {
     private String getMatchingRowsStatement() {
         double value = Double.valueOf(entity.getValue());
         String whereClause = dbmsLanguage.where() + this.columnName + dbmsLanguage.equal() + value;
-        TdColumn column = (TdColumn) indicator.getAnalyzedElement();
-        return SELECT_ALL + dbmsLanguage.from() + getFullyQualifiedTableName(column) + whereClause;
+        return SELECT_ALL + dbmsLanguage.from() + getFullyQualifiedTableName(indicator.getAnalyzedElement()) + whereClause;
     }
 
     /**
@@ -115,20 +115,38 @@ public class SummaryStastictisExplorer extends DataExplorer {
      */
     public Map<String, String> getQueryMap() {
         Map<String, String> map = new HashMap<String, String>();
+        boolean isSqlEngine = ExecutionLanguage.SQL.equals(this.analysis.getParameters().getExecutionLanguage());
+        boolean isJavaEngine = ExecutionLanguage.JAVA.equals(this.analysis.getParameters().getExecutionLanguage());
 
-        switch (indicatorEnum) {
-        case MeanIndicatorEnum:
-            break;
-        case IQRIndicatorEnum:
-        case RangeIndicatorEnum:
-            map.put(MENU_ROWS_IN_RANGE, getComment(MENU_ROWS_IN_RANGE) + getInRangeRowsStatement());
-            map.put(MENU_ROWS_OUTSIDE_RANGE, getComment(MENU_ROWS_OUTSIDE_RANGE) + getOutRangeRowsStatement());
-            break;
-        default:
-            if (entity.isOutOfRange(entity.getValue())) {
-                map.put(MENU_VIEW_INVALID_ROWS, getComment(MENU_VIEW_INVALID_ROWS) + getInvalidRowsStatement());
+        if (isSqlEngine) {
+            switch (indicatorEnum) {
+            case MeanIndicatorEnum:
+                break;
+            case IQRIndicatorEnum:
+            case RangeIndicatorEnum:
+                map.put(MENU_ROWS_IN_RANGE, getComment(MENU_ROWS_IN_RANGE) + getInRangeRowsStatement());
+                map.put(MENU_ROWS_OUTSIDE_RANGE, getComment(MENU_ROWS_OUTSIDE_RANGE) + getOutRangeRowsStatement());
+                break;
+            default:
+                if (entity.isOutOfRange(entity.getValue())) {
+                    map.put(MENU_VIEW_INVALID_ROWS, getComment(MENU_VIEW_INVALID_ROWS) + getInvalidRowsStatement());
+                }
+                map.put(MENU_VIEW_ROWS, getComment(MENU_VIEW_ROWS) + getMatchingRowsStatement());
             }
-            map.put(MENU_VIEW_ROWS, getComment(MENU_VIEW_ROWS) + getMatchingRowsStatement());
+        } else if (isJavaEngine) {
+            switch (indicatorEnum) {
+            case MeanIndicatorEnum:
+            case MedianIndicatorEnum:
+            case IQRIndicatorEnum:
+            case LowerQuartileIndicatorEnum:
+            case UpperQuartileIndicatorEnum:
+            case RangeIndicatorEnum:
+            case MinValueIndicatorEnum:
+            case MaxValueIndicatorEnum:
+                break;
+            default:
+                map.put(MENU_VIEW_ROWS, null);
+            }
         }
 
         return map;
@@ -173,8 +191,8 @@ public class SummaryStastictisExplorer extends DataExplorer {
 
         String whereClause = dbmsLanguage.where() + this.columnName + dbmsLanguage.greaterOrEqual() + lowerValue
                 + dbmsLanguage.and() + this.columnName + dbmsLanguage.lessOrEqual() + upperValue;
-        TdColumn column = (TdColumn) indicator.getAnalyzedElement();
-        return SELECT_ALL + dbmsLanguage.from() + getFullyQualifiedTableName(column) + whereClause;
+
+        return SELECT_ALL + dbmsLanguage.from() + getFullyQualifiedTableName(indicator.getAnalyzedElement()) + whereClause;
 
     }
 
