@@ -104,6 +104,7 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
     private IEditorPart editor = null;
 
     // ~
+    private boolean isLocalProject = ProxyRepositoryManager.getInstance().isLocalProject();
 
     public IFile getSelectionFile() {
         return selectionFile;
@@ -374,7 +375,9 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
                             // Added TDQ-7551 0704 yyin
                             // unlock the current item if it is locked in this run, close the editor, if it is opened in
                             // this
-                            disableEditorWhenUnlock();
+                            if (!isLocalProject) {
+                                disableEditorWhenUnlock();
+                            }
 
                             // CorePlugin.getDefault().refreshDQView();
                         }
