@@ -341,4 +341,9 @@ public class ValueIndicatorImpl extends IndicatorImpl implements ValueIndicator 
         return this.objValue;
     }
 
+    @Override
+    public boolean handle(Object data) {
+        mustStoreRow = true;
+        return super.handle(data);
+    }
 } // ValueIndicatorImpl
