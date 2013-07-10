@@ -136,8 +136,13 @@ public class SummaryStastictisExplorer extends DataExplorer {
         } else if (isJavaEngine) {
             switch (indicatorEnum) {
             case MeanIndicatorEnum:
+            case MedianIndicatorEnum:
             case IQRIndicatorEnum:
+            case LowerQuartileIndicatorEnum:
+            case UpperQuartileIndicatorEnum:
             case RangeIndicatorEnum:
+            case MinValueIndicatorEnum:
+            case MaxValueIndicatorEnum:
                 break;
             default:
                 map.put(MENU_VIEW_ROWS, null);

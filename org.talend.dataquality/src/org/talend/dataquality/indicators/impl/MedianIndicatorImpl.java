@@ -38,9 +38,9 @@ import org.talend.utils.time.TimeTracer;
 public class MedianIndicatorImpl extends IndicatorImpl implements MedianIndicator {
 
     /**
-     * The default value of the '{@link #getMedian() <em>Median</em>}' attribute. <!-- begin-user-doc --> <!--
+     * The default value of the '{@link #getMedian() <em>Median</em>}' attribute.
+     * <!-- begin-user-doc --> <!--
      * end-user-doc -->
-     * 
      * @see #getMedian()
      * @generated
      * @ordered
@@ -48,9 +48,9 @@ public class MedianIndicatorImpl extends IndicatorImpl implements MedianIndicato
     protected static final Double MEDIAN_EDEFAULT = null;
 
     /**
-     * The cached value of the '{@link #getMedian() <em>Median</em>}' attribute. <!-- begin-user-doc --> <!--
+     * The cached value of the '{@link #getMedian() <em>Median</em>}' attribute.
+     * <!-- begin-user-doc --> <!--
      * end-user-doc -->
-     * 
      * @see #getMedian()
      * @generated
      * @ordered
@@ -58,17 +58,17 @@ public class MedianIndicatorImpl extends IndicatorImpl implements MedianIndicato
     protected Double median = MEDIAN_EDEFAULT;
 
     /**
-     * This is true if the Median attribute has been set. <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
+     * This is true if the Median attribute has been set.
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
      * @generated
      * @ordered
      */
     protected boolean medianESet;
 
     /**
-     * The default value of the '{@link #getFrequenceTable() <em>Frequence Table</em>}' attribute. <!-- begin-user-doc
+     * The default value of the '{@link #getFrequenceTable() <em>Frequence Table</em>}' attribute.
+     * <!-- begin-user-doc
      * --> <!-- end-user-doc -->
-     * 
      * @see #getFrequenceTable()
      * @generated
      * @ordered
@@ -76,9 +76,9 @@ public class MedianIndicatorImpl extends IndicatorImpl implements MedianIndicato
     protected static final TreeMap<Object, Long> FREQUENCE_TABLE_EDEFAULT = null;
 
     /**
-     * The cached value of the '{@link #getFrequenceTable() <em>Frequence Table</em>}' attribute. <!-- begin-user-doc
+     * The cached value of the '{@link #getFrequenceTable() <em>Frequence Table</em>}' attribute.
+     * <!-- begin-user-doc
      * --> <!-- end-user-doc -->
-     * 
      * @see #getFrequenceTable()
      * @generated
      * @ordered
@@ -86,9 +86,9 @@ public class MedianIndicatorImpl extends IndicatorImpl implements MedianIndicato
     protected TreeMap<Object, Long> frequenceTable = FREQUENCE_TABLE_EDEFAULT;
 
     /**
-     * The default value of the '{@link #getDateMedian() <em>Date Median</em>}' attribute. <!-- begin-user-doc --> <!--
+     * The default value of the '{@link #getDateMedian() <em>Date Median</em>}' attribute.
+     * <!-- begin-user-doc --> <!--
      * end-user-doc -->
-     * 
      * @see #getDateMedian()
      * @generated
      * @ordered
@@ -96,9 +96,9 @@ public class MedianIndicatorImpl extends IndicatorImpl implements MedianIndicato
     protected static final Date DATE_MEDIAN_EDEFAULT = null;
 
     /**
-     * The cached value of the '{@link #getDateMedian() <em>Date Median</em>}' attribute. <!-- begin-user-doc --> <!--
+     * The cached value of the '{@link #getDateMedian() <em>Date Median</em>}' attribute.
+     * <!-- begin-user-doc --> <!--
      * end-user-doc -->
-     * 
      * @see #getDateMedian()
      * @generated
      * @ordered
@@ -113,7 +113,6 @@ public class MedianIndicatorImpl extends IndicatorImpl implements MedianIndicato
     // private TreeMap<Object, Long> freqTable = new TreeMap<Object, Long>();
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     protected MedianIndicatorImpl() {
@@ -122,7 +121,6 @@ public class MedianIndicatorImpl extends IndicatorImpl implements MedianIndicato
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     @Override
@@ -132,61 +130,48 @@ public class MedianIndicatorImpl extends IndicatorImpl implements MedianIndicato
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
-    @Override
     public Double getMedian() {
         return median;
     }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
-    @Override
     public void setMedian(Double newMedian) {
         Double oldMedian = median;
         median = newMedian;
         boolean oldMedianESet = medianESet;
         medianESet = true;
-        if (eNotificationRequired()) {
-            eNotify(new ENotificationImpl(this, Notification.SET, IndicatorsPackage.MEDIAN_INDICATOR__MEDIAN, oldMedian, median,
-                    !oldMedianESet));
-        }
+        if (eNotificationRequired())
+            eNotify(new ENotificationImpl(this, Notification.SET, IndicatorsPackage.MEDIAN_INDICATOR__MEDIAN, oldMedian, median, !oldMedianESet));
     }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
-    @Override
     public void unsetMedian() {
         Double oldMedian = median;
         boolean oldMedianESet = medianESet;
         median = MEDIAN_EDEFAULT;
         medianESet = false;
-        if (eNotificationRequired()) {
-            eNotify(new ENotificationImpl(this, Notification.UNSET, IndicatorsPackage.MEDIAN_INDICATOR__MEDIAN, oldMedian,
-                    MEDIAN_EDEFAULT, oldMedianESet));
-        }
+        if (eNotificationRequired())
+            eNotify(new ENotificationImpl(this, Notification.UNSET, IndicatorsPackage.MEDIAN_INDICATOR__MEDIAN, oldMedian, MEDIAN_EDEFAULT, oldMedianESet));
     }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
-    @Override
     public boolean isSetMedian() {
         return medianESet;
     }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     public TreeMap<Object, Long> getFrequenceTableGen() {
@@ -198,7 +183,6 @@ public class MedianIndicatorImpl extends IndicatorImpl implements MedianIndicato
      * 
      * @see org.talend.dataquality.indicators.MedianIndicator#getFrequenceTable() @generated NOT
      */
-    @Override
     public TreeMap<Object, Long> getFrequenceTable() {
         if (frequenceTable == FREQUENCE_TABLE_EDEFAULT) {
             frequenceTable = new TreeMap<Object, Long>();
@@ -208,42 +192,32 @@ public class MedianIndicatorImpl extends IndicatorImpl implements MedianIndicato
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
-    @Override
     public void setFrequenceTable(TreeMap<Object, Long> newFrequenceTable) {
         TreeMap<Object, Long> oldFrequenceTable = frequenceTable;
         frequenceTable = newFrequenceTable;
-        if (eNotificationRequired()) {
-            eNotify(new ENotificationImpl(this, Notification.SET, IndicatorsPackage.MEDIAN_INDICATOR__FREQUENCE_TABLE,
-                    oldFrequenceTable, frequenceTable));
-        }
+        if (eNotificationRequired())
+            eNotify(new ENotificationImpl(this, Notification.SET, IndicatorsPackage.MEDIAN_INDICATOR__FREQUENCE_TABLE, oldFrequenceTable, frequenceTable));
     }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
-    @Override
     public Date getDateMedian() {
         return dateMedian;
     }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
-    @Override
     public void setDateMedian(Date newDateMedian) {
         Date oldDateMedian = dateMedian;
         dateMedian = newDateMedian;
-        if (eNotificationRequired()) {
-            eNotify(new ENotificationImpl(this, Notification.SET, IndicatorsPackage.MEDIAN_INDICATOR__DATE_MEDIAN, oldDateMedian,
-                    dateMedian));
-        }
+        if (eNotificationRequired())
+            eNotify(new ENotificationImpl(this, Notification.SET, IndicatorsPackage.MEDIAN_INDICATOR__DATE_MEDIAN, oldDateMedian, dateMedian));
     }
 
     /**
@@ -251,7 +225,6 @@ public class MedianIndicatorImpl extends IndicatorImpl implements MedianIndicato
      * 
      * @generated NOT
      */
-    @Override
     public boolean computeMedian() {
         // scorreia keep private method "computeNumericMedian" as we may have a computeDateMedian later
         return computeNumericMedian();
@@ -259,79 +232,75 @@ public class MedianIndicatorImpl extends IndicatorImpl implements MedianIndicato
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     @Override
     public Object eGet(int featureID, boolean resolve, boolean coreType) {
         switch (featureID) {
-        case IndicatorsPackage.MEDIAN_INDICATOR__MEDIAN:
-            return getMedian();
-        case IndicatorsPackage.MEDIAN_INDICATOR__FREQUENCE_TABLE:
-            return getFrequenceTable();
-        case IndicatorsPackage.MEDIAN_INDICATOR__DATE_MEDIAN:
-            return getDateMedian();
+            case IndicatorsPackage.MEDIAN_INDICATOR__MEDIAN:
+                return getMedian();
+            case IndicatorsPackage.MEDIAN_INDICATOR__FREQUENCE_TABLE:
+                return getFrequenceTable();
+            case IndicatorsPackage.MEDIAN_INDICATOR__DATE_MEDIAN:
+                return getDateMedian();
         }
         return super.eGet(featureID, resolve, coreType);
     }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     @SuppressWarnings("unchecked")
     @Override
     public void eSet(int featureID, Object newValue) {
         switch (featureID) {
-        case IndicatorsPackage.MEDIAN_INDICATOR__MEDIAN:
-            setMedian((Double) newValue);
-            return;
-        case IndicatorsPackage.MEDIAN_INDICATOR__FREQUENCE_TABLE:
-            setFrequenceTable((TreeMap<Object, Long>) newValue);
-            return;
-        case IndicatorsPackage.MEDIAN_INDICATOR__DATE_MEDIAN:
-            setDateMedian((Date) newValue);
-            return;
+            case IndicatorsPackage.MEDIAN_INDICATOR__MEDIAN:
+                setMedian((Double)newValue);
+                return;
+            case IndicatorsPackage.MEDIAN_INDICATOR__FREQUENCE_TABLE:
+                setFrequenceTable((TreeMap<Object, Long>)newValue);
+                return;
+            case IndicatorsPackage.MEDIAN_INDICATOR__DATE_MEDIAN:
+                setDateMedian((Date)newValue);
+                return;
         }
         super.eSet(featureID, newValue);
     }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     @Override
     public void eUnset(int featureID) {
         switch (featureID) {
-        case IndicatorsPackage.MEDIAN_INDICATOR__MEDIAN:
-            unsetMedian();
-            return;
-        case IndicatorsPackage.MEDIAN_INDICATOR__FREQUENCE_TABLE:
-            setFrequenceTable(FREQUENCE_TABLE_EDEFAULT);
-            return;
-        case IndicatorsPackage.MEDIAN_INDICATOR__DATE_MEDIAN:
-            setDateMedian(DATE_MEDIAN_EDEFAULT);
-            return;
+            case IndicatorsPackage.MEDIAN_INDICATOR__MEDIAN:
+                unsetMedian();
+                return;
+            case IndicatorsPackage.MEDIAN_INDICATOR__FREQUENCE_TABLE:
+                setFrequenceTable(FREQUENCE_TABLE_EDEFAULT);
+                return;
+            case IndicatorsPackage.MEDIAN_INDICATOR__DATE_MEDIAN:
+                setDateMedian(DATE_MEDIAN_EDEFAULT);
+                return;
         }
         super.eUnset(featureID);
     }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     @Override
     public boolean eIsSet(int featureID) {
         switch (featureID) {
-        case IndicatorsPackage.MEDIAN_INDICATOR__MEDIAN:
-            return isSetMedian();
-        case IndicatorsPackage.MEDIAN_INDICATOR__FREQUENCE_TABLE:
-            return FREQUENCE_TABLE_EDEFAULT == null ? frequenceTable != null : !FREQUENCE_TABLE_EDEFAULT.equals(frequenceTable);
-        case IndicatorsPackage.MEDIAN_INDICATOR__DATE_MEDIAN:
-            return DATE_MEDIAN_EDEFAULT == null ? dateMedian != null : !DATE_MEDIAN_EDEFAULT.equals(dateMedian);
+            case IndicatorsPackage.MEDIAN_INDICATOR__MEDIAN:
+                return isSetMedian();
+            case IndicatorsPackage.MEDIAN_INDICATOR__FREQUENCE_TABLE:
+                return FREQUENCE_TABLE_EDEFAULT == null ? frequenceTable != null : !FREQUENCE_TABLE_EDEFAULT.equals(frequenceTable);
+            case IndicatorsPackage.MEDIAN_INDICATOR__DATE_MEDIAN:
+                return DATE_MEDIAN_EDEFAULT == null ? dateMedian != null : !DATE_MEDIAN_EDEFAULT.equals(dateMedian);
         }
         return super.eIsSet(featureID);
     }
@@ -346,11 +315,10 @@ public class MedianIndicatorImpl extends IndicatorImpl implements MedianIndicato
 
         StringBuffer result = new StringBuffer(super.toString());
         result.append(" (median: ");
-        if (medianESet) {
+        if (medianESet)
             result.append(median);
-        } else {
+        else
             result.append("<unset>");
-        }
         return result.toString();
     }
 
@@ -369,11 +337,10 @@ public class MedianIndicatorImpl extends IndicatorImpl implements MedianIndicato
         }
 
         TimeTracer tt;
-        if (trace) {
+        if (trace)
             tt = new TimeTracer("Median computation with frequency table.", null);
-        } else {
+        else
             tt = null;
-        }
 
         if (trace) {
             tt.start("searching median");
@@ -404,7 +371,6 @@ public class MedianIndicatorImpl extends IndicatorImpl implements MedianIndicato
      */
     @Override
     public boolean handle(Object data) {
-        mustStoreRow = true;
         boolean ok = super.handle(data);
         // TODO scorreia handle null values (handle case when null is replaced by a default value.
         if (data == null) {
@@ -513,7 +479,7 @@ public class MedianIndicatorImpl extends IndicatorImpl implements MedianIndicato
         if (frequenceTable != null) {
             this.frequenceTable.clear();
         }
-        this.computed = COMPUTED_EDEFAULT;
+        this.computed = COMPUTED_EDEFAULT; 
         return super.reset();
     }
 
@@ -533,4 +499,6 @@ public class MedianIndicatorImpl extends IndicatorImpl implements MedianIndicato
         return medianComputed;
     }
 
+    
+    
 } // MedianIndicatorImpl
