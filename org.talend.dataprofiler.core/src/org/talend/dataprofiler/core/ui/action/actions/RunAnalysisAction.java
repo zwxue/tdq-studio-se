@@ -38,6 +38,8 @@ import org.eclipse.ui.cheatsheets.ICheatSheetManager;
 import org.eclipse.ui.forms.editor.IFormPage;
 import org.eclipse.ui.part.FileEditorInput;
 import org.talend.commons.exception.BusinessException;
+import org.talend.commons.exception.LoginException;
+import org.talend.commons.exception.PersistenceException;
 import org.talend.core.database.EDatabaseTypeName;
 import org.talend.core.model.metadata.IMetadataConnection;
 import org.talend.core.model.metadata.builder.ConvertionHelper;
@@ -53,6 +55,7 @@ import org.talend.dataprofiler.core.exception.ExceptionFactory;
 import org.talend.dataprofiler.core.exception.ExceptionHandler;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.IRuningStatusListener;
+import org.talend.dataprofiler.core.ui.editor.CommonFormEditor;
 import org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisMetadataPage;
 import org.talend.dataprofiler.core.ui.editor.analysis.AnalysisEditor;
 import org.talend.dataprofiler.core.ui.editor.analysis.AnalysisItemEditorInput;
@@ -66,7 +69,6 @@ import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
 import org.talend.dq.nodes.AnalysisRepNode;
 import org.talend.metadata.managment.connection.manager.HiveConnectionManager;
-import org.talend.repository.model.ERepositoryStatus;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.foundation.softwaredeployment.DataManager;
@@ -91,6 +93,17 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
     private IFile selectionFile;
 
     private AnalysisRepNode node;
+
+    // Added TDQ-7551 20130704: for lock/unlock in SVN ask user mode
+    private boolean editable = true;
+
+    private Boolean lockByUserOwn = false;
+
+    private Item item = null;
+
+    private IEditorPart editor = null;
+
+    // ~
 
     public IFile getSelectionFile() {
         return selectionFile;
@@ -117,13 +130,12 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
     @Override
     public void run() {
         try {
-            IEditorPart editor = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
+            editor = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
 
             // MOD klliu bug 19244 2011-03-10
             if (node != null) {
                 // MOD sizhaoliu TDQ-5452 verify the lock status before running an analysis
-                Item item = node.getObject().getProperty().getItem();
-                // check file whether lost some part
+                item = node.getObject().getProperty().getItem();
                 if (item instanceof TDQAnalysisItem) {
                     if (((TDQAnalysisItem) item).getAnalysis() == null
                             || ((TDQAnalysisItem) item).getAnalysis().getParameters() == null) {
@@ -132,18 +144,30 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
                         throw createBusinessException;
                     }
                 }
-                // try to lock item, the status will be updated in case it is already locked by someone else
-                ProxyRepositoryManager.getInstance().lock(item);
-                if (ProxyRepositoryFactory.getInstance().getStatus(item) == ERepositoryStatus.LOCK_BY_OTHER) {
+                if (ProxyRepositoryManager.getInstance().isLockByOthers(item)) {
                     CorePlugin.getDefault().refreshDQView(node.getParent());
                     MessageDialog.openError(PlatformUI.getWorkbench().getDisplay().getActiveShell(),
-                            DefaultMessagesImpl.getString("RunAnalysisAction.runAnalysis"),
-                            DefaultMessagesImpl.getString("RunAnalysisAction.error.lockByOthers"));
+                            DefaultMessagesImpl.getString("RunAnalysisAction.runAnalysis"), //$NON-NLS-1$
+                            DefaultMessagesImpl.getString("RunAnalysisAction.error.lockByOthers")); //$NON-NLS-1$
                     return;
+                } // ~ TDQ-5452
+
+                // Added TDQ-7551 0704 yyin
+                lockByUserOwn = ProxyRepositoryManager.getInstance().isLockByUserOwn(item);
+                // if the analysis is not locked, lock it
+                if (!lockByUserOwn) {
+                    editable = ProxyRepositoryFactory.getInstance().isEditableAndLockIfPossible(item);
                 }
 
-                // ~ TDQ-5452
-                editor = CorePlugin.getDefault().openEditor(new AnalysisItemEditorInput(item), AnalysisEditor.class.getName());
+                if (!editable) {
+                    // when the item is not editable, and the user select not lock the item
+                    // under ask user mode(remote). and in this case, we will not continue the run action.
+                    return;
+                }
+                // ~ TDQ-7551
+                editor = CorePlugin.getDefault().openEditor(
+                        new AnalysisItemEditorInput(node.getObject().getProperty().getItem()), AnalysisEditor.class.getName());
+                // // in this running, the editor should be editable if before is not editable
             }
             // MOD qiongli bug 13880,2010-7-6,avoid 'ClassCastException'
             if (selectionFile != null) {
@@ -158,7 +182,7 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
             }
             // ~
             if (editor == null) {
-                analysis = this.node.getAnalysis();// AnaResourceFileHelper.getInstance().findAnalysis(selectionFile);
+                analysis = this.node.getAnalysis();
             } else {
                 AnalysisEditor anaEditor = (AnalysisEditor) editor;
                 if (editor.isDirty()) {
@@ -166,7 +190,8 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
                     // MOD klliu bug 19991 3td 2011-03-29
                     ReturnCode canSave = anaEditor.getMasterPage().canSave();
                     if (!canSave.isOk()) {
-                        MessageDialog.openError(null, DefaultMessagesImpl.getString("RunAnalysisAction.runAnalysis"),
+                        MessageDialog.openError(editor.getSite().getShell(),
+                                DefaultMessagesImpl.getString("RunAnalysisAction.runAnalysis"), //$NON-NLS-1$
                                 canSave.getMessage());
                         return;
                     }
@@ -330,12 +355,26 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
                     }
                     monitor.done();
 
+                    if (!lockByUserOwn && item != null && editable) {
+                        try {
+                            ProxyRepositoryFactory.getInstance().unlock(item);
+                        } catch (PersistenceException e) {
+                            log.error(e, e);
+                        } catch (LoginException e) {
+                            log.error(e, e);
+                        }
+                    }// ~
+
                     Display.getDefault().asyncExec(new Runnable() {
 
                         public void run() {
                             if (listener != null) {
                                 listener.fireRuningItemChanged(true);
                             }
+                            // Added TDQ-7551 0704 yyin
+                            // unlock the current item if it is locked in this run, close the editor, if it is opened in
+                            // this
+                            disableEditorWhenUnlock();
 
                             // CorePlugin.getDefault().refreshDQView();
                         }
@@ -352,6 +391,13 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
             job.schedule();
         } catch (BusinessException e) {
             ExceptionHandler.process(e, Level.FATAL);
+        }
+    }
+
+    // if the user select unlock after running, unable the editor
+    private void disableEditorWhenUnlock() {
+        if (!ProxyRepositoryFactory.getInstance().getStatus(item).isEditable()) {
+            ((CommonFormEditor) editor).lockFormEditor(true);
         }
     }
 
