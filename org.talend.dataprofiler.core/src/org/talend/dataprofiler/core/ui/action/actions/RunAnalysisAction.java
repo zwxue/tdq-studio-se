@@ -172,6 +172,9 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
                 editor = CorePlugin.getDefault().openEditor(
                         new AnalysisItemEditorInput(node.getObject().getProperty().getItem()), AnalysisEditor.class.getName());
                 // // in this running, the editor should be editable if before is not editable
+            } else {
+                // means that the user select "run" inside the analysis editor, it is locked already before running
+                lockByUserOwn = true;
             }
             // MOD qiongli bug 13880,2010-7-6,avoid 'ClassCastException'
             if (selectionFile != null) {
@@ -342,10 +345,9 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
                     }
                     monitor.done();
 
-                    if (!lockByUserOwn && item != null && editable) {
+                    if (!isLocalProject && !lockByUserOwn && item != null && editable) {
                         try {
                             ProxyRepositoryFactory.getInstance().unlock(item);
-                            CorePlugin.getDefault().refreshDQView(node);
                         } catch (PersistenceException e) {
                             log.error(e, e);
                         } catch (LoginException e) {
@@ -360,9 +362,9 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
                                 listener.fireRuningItemChanged(true);
                             }
                             // Added TDQ-7551 0704 yyin
-                            // unlock the current item if it is locked in this run, close the editor, if it is opened in
-                            // this
-                            if (!isLocalProject) {
+                            // unlock the current item if it is locked/opened in this run,
+                            // else, do not unlock it
+                            if (!isLocalProject && !lockByUserOwn) {
                                 disableEditorWhenUnlock();
                             }
 
@@ -392,7 +394,6 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
     private void disableEditorWhenUnlock() {
         if (!ProxyRepositoryFactory.getInstance().getStatus(item).isEditable()) {
             ((CommonFormEditor) editor).lockFormEditor(true);
-            // CorePlugin.getDefault().refreshDQView(node.getParent());
         }
     }
 
