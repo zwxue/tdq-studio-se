@@ -133,10 +133,12 @@ public class UDIHandle extends EMFResourceHandle {
                 List<IndicatorDefinition> indiDefinitions = DefinitionHandler.getInstance().getUserDefinedIndicatorDefinitions();
                 for (IndicatorDefinition indiDefinition : indiDefinitions) {
                     if (indiDefinition instanceof UDIndicatorDefinition) {
-                        if (indiDefinition.getLabel().equals(newLabel)) {
+                        String name = indiDefinition.getLabel() != null ? indiDefinition.getLabel() : indiDefinition.getName();
+                        if (name != null && name.equals(newLabel)) {
                             UDIndicatorDefinition udi = (UDIndicatorDefinition) indiDefinition;
                             udi = UDIUtils.createDefaultDrillDownList(udi);
                             ElementWriterFactory.getInstance().createIndicatorDefinitionWriter().save(udi);
+                            break;
                         }
                     }
                 }
