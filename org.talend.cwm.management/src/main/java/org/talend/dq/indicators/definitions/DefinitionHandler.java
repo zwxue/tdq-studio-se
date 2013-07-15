@@ -371,7 +371,7 @@ public final class DefinitionHandler {
 
     /**
      * 
-     * DOC klliu Comment method "reloadIndicatorsDefinitions".
+     * reload all the indicators' Definitions.
      */
     public void reloadIndicatorsDefinitions() {
         initializeDefinitions();
@@ -642,6 +642,12 @@ public final class DefinitionHandler {
         return ResourceManager.getLibrariesFolder().getFile(FILENAME);
     }
 
+    /**
+     * reload.
+     * 
+     * @deprecated see {{@link #reloadIndicatorsDefinitions()}
+     */
+    @Deprecated
     public static void reload() {
         instance = null;
     }
