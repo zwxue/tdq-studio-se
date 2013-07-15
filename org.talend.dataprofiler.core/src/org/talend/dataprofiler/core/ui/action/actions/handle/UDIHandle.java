@@ -111,6 +111,9 @@ public class UDIHandle extends EMFResourceHandle {
         definition.setLabel(definition.getName());
         IndicatorResourceFileHelper.getInstance().save(definition);
 
+        // reload is needed after duplicate an indicator.
+        DefinitionHandler.getInstance().reloadIndicatorsDefinitions();
+
         // update the udi model to new model, not use the migration task
         if (!isUserDefCategory) {
             File ifileToFile = WorkspaceUtils.ifileToFile(duplicatedFile);
@@ -126,21 +129,19 @@ public class UDIHandle extends EMFResourceHandle {
                 }
                 ResourceService.refreshStructure();
 
-                List<IndicatorDefinition> indiDefinitions = DefinitionHandler.getInstance().getIndicatorsDefinitions();
+                // add templates for udi only.
+                List<IndicatorDefinition> indiDefinitions = DefinitionHandler.getInstance().getUserDefinedIndicatorDefinitions();
                 for (IndicatorDefinition indiDefinition : indiDefinitions) {
                     if (indiDefinition instanceof UDIndicatorDefinition) {
                         if (indiDefinition.getLabel().equals(newLabel)) {
                             UDIndicatorDefinition udi = (UDIndicatorDefinition) indiDefinition;
                             udi = UDIUtils.createDefaultDrillDownList(udi);
-                            ElementWriterFactory.getInstance().createIndicatorDefinitionWriter().save(udi).isOk();
+                            ElementWriterFactory.getInstance().createIndicatorDefinitionWriter().save(udi);
                         }
                     }
                 }
             }
         }
-
-        // MOD klliu duplicate successfully, refresh the duplicate session
-        DefinitionHandler.reload();
 
         return duplicatedFile;
     }
