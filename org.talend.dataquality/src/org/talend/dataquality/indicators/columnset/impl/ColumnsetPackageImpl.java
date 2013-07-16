@@ -44,6 +44,8 @@ import org.talend.dataquality.indicators.columnset.ValueMatchingIndicator;
 import org.talend.dataquality.indicators.columnset.WeakCorrelationIndicator;
 import org.talend.dataquality.indicators.definition.DefinitionPackage;
 import org.talend.dataquality.indicators.definition.impl.DefinitionPackageImpl;
+import org.talend.dataquality.indicators.definition.userdefine.UserdefinePackage;
+import org.talend.dataquality.indicators.definition.userdefine.impl.UserdefinePackageImpl;
 import org.talend.dataquality.indicators.impl.IndicatorsPackageImpl;
 import org.talend.dataquality.indicators.schema.SchemaPackage;
 import org.talend.dataquality.indicators.schema.impl.SchemaPackageImpl;
@@ -195,6 +197,7 @@ public class ColumnsetPackageImpl extends EPackageImpl implements ColumnsetPacka
         IndicatorsPackageImpl theIndicatorsPackage = (IndicatorsPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(IndicatorsPackage.eNS_URI) instanceof IndicatorsPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(IndicatorsPackage.eNS_URI) : IndicatorsPackage.eINSTANCE);
         SchemaPackageImpl theSchemaPackage = (SchemaPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(SchemaPackage.eNS_URI) instanceof SchemaPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(SchemaPackage.eNS_URI) : SchemaPackage.eINSTANCE);
         DefinitionPackageImpl theDefinitionPackage = (DefinitionPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(DefinitionPackage.eNS_URI) instanceof DefinitionPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(DefinitionPackage.eNS_URI) : DefinitionPackage.eINSTANCE);
+        UserdefinePackageImpl theUserdefinePackage = (UserdefinePackageImpl)(EPackage.Registry.INSTANCE.getEPackage(UserdefinePackage.eNS_URI) instanceof UserdefinePackageImpl ? EPackage.Registry.INSTANCE.getEPackage(UserdefinePackage.eNS_URI) : UserdefinePackage.eINSTANCE);
         IndicatorSqlPackageImpl theIndicatorSqlPackage = (IndicatorSqlPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(IndicatorSqlPackage.eNS_URI) instanceof IndicatorSqlPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(IndicatorSqlPackage.eNS_URI) : IndicatorSqlPackage.eINSTANCE);
         ExpressionsPackageImpl theExpressionsPackage = (ExpressionsPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(ExpressionsPackage.eNS_URI) instanceof ExpressionsPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(ExpressionsPackage.eNS_URI) : ExpressionsPackage.eINSTANCE);
         DomainPackageImpl theDomainPackage = (DomainPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(DomainPackage.eNS_URI) instanceof DomainPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(DomainPackage.eNS_URI) : DomainPackage.eINSTANCE);
@@ -211,6 +214,7 @@ public class ColumnsetPackageImpl extends EPackageImpl implements ColumnsetPacka
         theIndicatorsPackage.createPackageContents();
         theSchemaPackage.createPackageContents();
         theDefinitionPackage.createPackageContents();
+        theUserdefinePackage.createPackageContents();
         theIndicatorSqlPackage.createPackageContents();
         theExpressionsPackage.createPackageContents();
         theDomainPackage.createPackageContents();
@@ -227,6 +231,7 @@ public class ColumnsetPackageImpl extends EPackageImpl implements ColumnsetPacka
         theIndicatorsPackage.initializePackageContents();
         theSchemaPackage.initializePackageContents();
         theDefinitionPackage.initializePackageContents();
+        theUserdefinePackage.initializePackageContents();
         theIndicatorSqlPackage.initializePackageContents();
         theExpressionsPackage.initializePackageContents();
         theDomainPackage.initializePackageContents();

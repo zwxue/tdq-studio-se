@@ -2628,7 +2628,7 @@ public class IndicatorsPackageImpl extends EPackageImpl implements IndicatorsPac
         valueIndicatorEClass.getESuperTypes().add(this.getIndicator());
         minValueIndicatorEClass.getESuperTypes().add(this.getValueIndicator());
         maxValueIndicatorEClass.getESuperTypes().add(this.getValueIndicator());
-        modeIndicatorEClass.getESuperTypes().add(this.getIndicator());
+        modeIndicatorEClass.getESuperTypes().add(this.getFrequencyIndicator());
         nullCountIndicatorEClass.getESuperTypes().add(this.getIndicator());
         distinctCountIndicatorEClass.getESuperTypes().add(this.getIndicator());
         uniqueCountIndicatorEClass.getESuperTypes().add(this.getIndicator());

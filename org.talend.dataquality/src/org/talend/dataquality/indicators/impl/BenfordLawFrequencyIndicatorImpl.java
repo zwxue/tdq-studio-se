@@ -18,11 +18,8 @@ import org.talend.dataquality.indicators.IndicatorsPackage;
  * <!-- begin-user-doc --> An implementation of the model object '<em><b>Benford Law Frequency Indicator</b></em>'. <!--
  * end-user-doc -->
  * <p>
- * * This Class provide the function to compute a group of data by Benford's Law and output the leading digits with its
- * distribution in this dataset. Then the user can use it to compare with the standard, to detect possible cases of
- * Fraud. can handle type: positive number , string, can not handle: negetive number
  * </p>
- * 
+ *
  * @generated
  */
 public class BenfordLawFrequencyIndicatorImpl extends FrequencyIndicatorImpl implements BenfordLawFrequencyIndicator {
@@ -31,7 +28,6 @@ public class BenfordLawFrequencyIndicatorImpl extends FrequencyIndicatorImpl imp
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     protected BenfordLawFrequencyIndicatorImpl() {
@@ -120,7 +116,6 @@ public class BenfordLawFrequencyIndicatorImpl extends FrequencyIndicatorImpl imp
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     @Override

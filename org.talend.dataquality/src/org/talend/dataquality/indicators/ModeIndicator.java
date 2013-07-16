@@ -23,7 +23,7 @@ package org.talend.dataquality.indicators;
  * @model
  * @generated
  */
-public interface ModeIndicator extends Indicator {
+public interface ModeIndicator extends FrequencyIndicator {
     /**
      * Returns the value of the '<em><b>Mode</b></em>' attribute.
      * <!-- begin-user-doc -->

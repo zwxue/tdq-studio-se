@@ -269,6 +269,7 @@ public class IndicatorsSwitch<T> {
             case IndicatorsPackage.MODE_INDICATOR: {
                 ModeIndicator modeIndicator = (ModeIndicator)theEObject;
                 T result = caseModeIndicator(modeIndicator);
+                if (result == null) result = caseFrequencyIndicator(modeIndicator);
                 if (result == null) result = caseIndicator(modeIndicator);
                 if (result == null) result = caseModelElement(modeIndicator);
                 if (result == null) result = caseElement(modeIndicator);

@@ -4396,7 +4396,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int MODE_INDICATOR__NAME = INDICATOR__NAME;
+    int MODE_INDICATOR__NAME = FREQUENCY_INDICATOR__NAME;
 
     /**
      * The feature id for the '<em><b>Visibility</b></em>' attribute.
@@ -4405,7 +4405,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int MODE_INDICATOR__VISIBILITY = INDICATOR__VISIBILITY;
+    int MODE_INDICATOR__VISIBILITY = FREQUENCY_INDICATOR__VISIBILITY;
 
     /**
      * The feature id for the '<em><b>Client Dependency</b></em>' reference list.
@@ -4414,7 +4414,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int MODE_INDICATOR__CLIENT_DEPENDENCY = INDICATOR__CLIENT_DEPENDENCY;
+    int MODE_INDICATOR__CLIENT_DEPENDENCY = FREQUENCY_INDICATOR__CLIENT_DEPENDENCY;
 
     /**
      * The feature id for the '<em><b>Supplier Dependency</b></em>' reference list.
@@ -4423,7 +4423,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int MODE_INDICATOR__SUPPLIER_DEPENDENCY = INDICATOR__SUPPLIER_DEPENDENCY;
+    int MODE_INDICATOR__SUPPLIER_DEPENDENCY = FREQUENCY_INDICATOR__SUPPLIER_DEPENDENCY;
 
     /**
      * The feature id for the '<em><b>Constraint</b></em>' reference list.
@@ -4432,7 +4432,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int MODE_INDICATOR__CONSTRAINT = INDICATOR__CONSTRAINT;
+    int MODE_INDICATOR__CONSTRAINT = FREQUENCY_INDICATOR__CONSTRAINT;
 
     /**
      * The feature id for the '<em><b>Namespace</b></em>' container reference.
@@ -4441,7 +4441,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int MODE_INDICATOR__NAMESPACE = INDICATOR__NAMESPACE;
+    int MODE_INDICATOR__NAMESPACE = FREQUENCY_INDICATOR__NAMESPACE;
 
     /**
      * The feature id for the '<em><b>Importer</b></em>' reference list.
@@ -4450,7 +4450,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int MODE_INDICATOR__IMPORTER = INDICATOR__IMPORTER;
+    int MODE_INDICATOR__IMPORTER = FREQUENCY_INDICATOR__IMPORTER;
 
     /**
      * The feature id for the '<em><b>Stereotype</b></em>' reference.
@@ -4459,7 +4459,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int MODE_INDICATOR__STEREOTYPE = INDICATOR__STEREOTYPE;
+    int MODE_INDICATOR__STEREOTYPE = FREQUENCY_INDICATOR__STEREOTYPE;
 
     /**
      * The feature id for the '<em><b>Tagged Value</b></em>' containment reference list.
@@ -4468,7 +4468,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int MODE_INDICATOR__TAGGED_VALUE = INDICATOR__TAGGED_VALUE;
+    int MODE_INDICATOR__TAGGED_VALUE = FREQUENCY_INDICATOR__TAGGED_VALUE;
 
     /**
      * The feature id for the '<em><b>Document</b></em>' reference list.
@@ -4477,7 +4477,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int MODE_INDICATOR__DOCUMENT = INDICATOR__DOCUMENT;
+    int MODE_INDICATOR__DOCUMENT = FREQUENCY_INDICATOR__DOCUMENT;
 
     /**
      * The feature id for the '<em><b>Description</b></em>' reference list.
@@ -4486,7 +4486,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int MODE_INDICATOR__DESCRIPTION = INDICATOR__DESCRIPTION;
+    int MODE_INDICATOR__DESCRIPTION = FREQUENCY_INDICATOR__DESCRIPTION;
 
     /**
      * The feature id for the '<em><b>Responsible Party</b></em>' reference list.
@@ -4495,7 +4495,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int MODE_INDICATOR__RESPONSIBLE_PARTY = INDICATOR__RESPONSIBLE_PARTY;
+    int MODE_INDICATOR__RESPONSIBLE_PARTY = FREQUENCY_INDICATOR__RESPONSIBLE_PARTY;
 
     /**
      * The feature id for the '<em><b>Element Node</b></em>' reference list.
@@ -4504,7 +4504,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int MODE_INDICATOR__ELEMENT_NODE = INDICATOR__ELEMENT_NODE;
+    int MODE_INDICATOR__ELEMENT_NODE = FREQUENCY_INDICATOR__ELEMENT_NODE;
 
     /**
      * The feature id for the '<em><b>Set</b></em>' reference list.
@@ -4513,7 +4513,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int MODE_INDICATOR__SET = INDICATOR__SET;
+    int MODE_INDICATOR__SET = FREQUENCY_INDICATOR__SET;
 
     /**
      * The feature id for the '<em><b>Rendered Object</b></em>' reference list.
@@ -4522,7 +4522,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int MODE_INDICATOR__RENDERED_OBJECT = INDICATOR__RENDERED_OBJECT;
+    int MODE_INDICATOR__RENDERED_OBJECT = FREQUENCY_INDICATOR__RENDERED_OBJECT;
 
     /**
      * The feature id for the '<em><b>Vocabulary Element</b></em>' reference list.
@@ -4531,7 +4531,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int MODE_INDICATOR__VOCABULARY_ELEMENT = INDICATOR__VOCABULARY_ELEMENT;
+    int MODE_INDICATOR__VOCABULARY_ELEMENT = FREQUENCY_INDICATOR__VOCABULARY_ELEMENT;
 
     /**
      * The feature id for the '<em><b>Measurement</b></em>' reference list.
@@ -4540,7 +4540,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int MODE_INDICATOR__MEASUREMENT = INDICATOR__MEASUREMENT;
+    int MODE_INDICATOR__MEASUREMENT = FREQUENCY_INDICATOR__MEASUREMENT;
 
     /**
      * The feature id for the '<em><b>Change Request</b></em>' reference list.
@@ -4549,7 +4549,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int MODE_INDICATOR__CHANGE_REQUEST = INDICATOR__CHANGE_REQUEST;
+    int MODE_INDICATOR__CHANGE_REQUEST = FREQUENCY_INDICATOR__CHANGE_REQUEST;
 
     /**
      * The feature id for the '<em><b>Dasdl Property</b></em>' reference list.
@@ -4558,7 +4558,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int MODE_INDICATOR__DASDL_PROPERTY = INDICATOR__DASDL_PROPERTY;
+    int MODE_INDICATOR__DASDL_PROPERTY = FREQUENCY_INDICATOR__DASDL_PROPERTY;
 
     /**
      * The feature id for the '<em><b>Count</b></em>' attribute.
@@ -4567,7 +4567,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int MODE_INDICATOR__COUNT = INDICATOR__COUNT;
+    int MODE_INDICATOR__COUNT = FREQUENCY_INDICATOR__COUNT;
 
     /**
      * The feature id for the '<em><b>Null Count</b></em>' attribute.
@@ -4576,7 +4576,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int MODE_INDICATOR__NULL_COUNT = INDICATOR__NULL_COUNT;
+    int MODE_INDICATOR__NULL_COUNT = FREQUENCY_INDICATOR__NULL_COUNT;
 
     /**
      * The feature id for the '<em><b>Parameters</b></em>' containment reference.
@@ -4585,7 +4585,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int MODE_INDICATOR__PARAMETERS = INDICATOR__PARAMETERS;
+    int MODE_INDICATOR__PARAMETERS = FREQUENCY_INDICATOR__PARAMETERS;
 
     /**
      * The feature id for the '<em><b>Analyzed Element</b></em>' reference.
@@ -4594,7 +4594,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int MODE_INDICATOR__ANALYZED_ELEMENT = INDICATOR__ANALYZED_ELEMENT;
+    int MODE_INDICATOR__ANALYZED_ELEMENT = FREQUENCY_INDICATOR__ANALYZED_ELEMENT;
 
     /**
      * The feature id for the '<em><b>Datamining Type</b></em>' attribute.
@@ -4603,7 +4603,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int MODE_INDICATOR__DATAMINING_TYPE = INDICATOR__DATAMINING_TYPE;
+    int MODE_INDICATOR__DATAMINING_TYPE = FREQUENCY_INDICATOR__DATAMINING_TYPE;
 
     /**
      * The feature id for the '<em><b>Indicator Definition</b></em>' reference.
@@ -4612,7 +4612,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int MODE_INDICATOR__INDICATOR_DEFINITION = INDICATOR__INDICATOR_DEFINITION;
+    int MODE_INDICATOR__INDICATOR_DEFINITION = FREQUENCY_INDICATOR__INDICATOR_DEFINITION;
 
     /**
      * The feature id for the '<em><b>Instantiated Expressions</b></em>' containment reference list.
@@ -4621,7 +4621,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int MODE_INDICATOR__INSTANTIATED_EXPRESSIONS = INDICATOR__INSTANTIATED_EXPRESSIONS;
+    int MODE_INDICATOR__INSTANTIATED_EXPRESSIONS = FREQUENCY_INDICATOR__INSTANTIATED_EXPRESSIONS;
 
     /**
      * The feature id for the '<em><b>Computed</b></em>' attribute.
@@ -4630,7 +4630,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int MODE_INDICATOR__COMPUTED = INDICATOR__COMPUTED;
+    int MODE_INDICATOR__COMPUTED = FREQUENCY_INDICATOR__COMPUTED;
 
     /**
      * The feature id for the '<em><b>Join Conditions</b></em>' containment reference list.
@@ -4639,7 +4639,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int MODE_INDICATOR__JOIN_CONDITIONS = INDICATOR__JOIN_CONDITIONS;
+    int MODE_INDICATOR__JOIN_CONDITIONS = FREQUENCY_INDICATOR__JOIN_CONDITIONS;
 
     /**
      * The feature id for the '<em><b>Max Number Rows</b></em>' attribute.
@@ -4648,7 +4648,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int MODE_INDICATOR__MAX_NUMBER_ROWS = INDICATOR__MAX_NUMBER_ROWS;
+    int MODE_INDICATOR__MAX_NUMBER_ROWS = FREQUENCY_INDICATOR__MAX_NUMBER_ROWS;
 
     /**
      * The feature id for the '<em><b>Valid Row</b></em>' attribute.
@@ -4657,7 +4657,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int MODE_INDICATOR__VALID_ROW = INDICATOR__VALID_ROW;
+    int MODE_INDICATOR__VALID_ROW = FREQUENCY_INDICATOR__VALID_ROW;
 
     /**
      * The feature id for the '<em><b>In Valid Row</b></em>' attribute.
@@ -4666,7 +4666,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int MODE_INDICATOR__IN_VALID_ROW = INDICATOR__IN_VALID_ROW;
+    int MODE_INDICATOR__IN_VALID_ROW = FREQUENCY_INDICATOR__IN_VALID_ROW;
 
     /**
      * The feature id for the '<em><b>Store Data</b></em>' attribute.
@@ -4675,7 +4675,52 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int MODE_INDICATOR__STORE_DATA = INDICATOR__STORE_DATA;
+    int MODE_INDICATOR__STORE_DATA = FREQUENCY_INDICATOR__STORE_DATA;
+
+    /**
+     * The feature id for the '<em><b>Unique Values</b></em>' attribute list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MODE_INDICATOR__UNIQUE_VALUES = FREQUENCY_INDICATOR__UNIQUE_VALUES;
+
+    /**
+     * The feature id for the '<em><b>Distinct Value Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MODE_INDICATOR__DISTINCT_VALUE_COUNT = FREQUENCY_INDICATOR__DISTINCT_VALUE_COUNT;
+
+    /**
+     * The feature id for the '<em><b>Unique Value Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MODE_INDICATOR__UNIQUE_VALUE_COUNT = FREQUENCY_INDICATOR__UNIQUE_VALUE_COUNT;
+
+    /**
+     * The feature id for the '<em><b>Duplicate Value Count</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MODE_INDICATOR__DUPLICATE_VALUE_COUNT = FREQUENCY_INDICATOR__DUPLICATE_VALUE_COUNT;
+
+    /**
+     * The feature id for the '<em><b>Value To Freq</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MODE_INDICATOR__VALUE_TO_FREQ = FREQUENCY_INDICATOR__VALUE_TO_FREQ;
 
     /**
      * The feature id for the '<em><b>Mode</b></em>' attribute.
@@ -4684,7 +4729,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int MODE_INDICATOR__MODE = INDICATOR_FEATURE_COUNT + 0;
+    int MODE_INDICATOR__MODE = FREQUENCY_INDICATOR_FEATURE_COUNT + 0;
 
     /**
      * The number of structural features of the '<em>Mode Indicator</em>' class.
@@ -4693,7 +4738,7 @@ public interface IndicatorsPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int MODE_INDICATOR_FEATURE_COUNT = INDICATOR_FEATURE_COUNT + 1;
+    int MODE_INDICATOR_FEATURE_COUNT = FREQUENCY_INDICATOR_FEATURE_COUNT + 1;
 
     /**
      * The meta object id for the '{@link org.talend.dataquality.indicators.impl.NullCountIndicatorImpl <em>Null Count Indicator</em>}' class.
