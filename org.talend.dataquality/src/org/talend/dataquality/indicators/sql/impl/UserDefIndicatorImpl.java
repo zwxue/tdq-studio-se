@@ -1024,4 +1024,16 @@ public class UserDefIndicatorImpl extends IndicatorImpl implements UserDefIndica
         return F2_DIGIT.format(Integer.valueOf(str));
     }
 
-} // UserDefIndicatorImpl
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataquality.indicators.Indicator#reset()
+     */
+    @Override
+    public boolean reset() {
+        super.reset();
+        this.valueToFreq = new HashMap<Object, Long>();
+        distinctComputed = false;
+        return true;
+    }
+}
