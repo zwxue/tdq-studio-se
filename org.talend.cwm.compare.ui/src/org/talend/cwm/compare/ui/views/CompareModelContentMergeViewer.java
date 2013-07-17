@@ -58,6 +58,7 @@ import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.ui.IWorkbenchActionConstants;
+import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.core.model.repository.RepositoryViewObject;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
@@ -423,6 +424,10 @@ public class CompareModelContentMergeViewer extends ModelContentMergeViewer {
             // MOD klliu 2010-10-08 bug 16173: get changes in "database compare" editor
             modelElement = PropertyHelper.getModelElement(((IRepositoryViewObject) selectedOjbect).getProperty());
 
+        } else if (selectedOjbect instanceof Connection) {
+            // TDQ-7600 20130717 yyin:add judgement for connection type(sometimes from TDQCompareService will give this 
+            // type of object 
+            modelElement = (ModelElement) selectedOjbect;
         } else {
             // Folder
             // MOD msjian 2011-5-20 20875:Change to model element
