@@ -138,6 +138,17 @@ public class ProxyRepositoryManager {
         }
     }
 
+    public Boolean isLocked(Item item) {
+        ERepositoryStatus status = ProxyRepositoryFactory.getInstance().getStatus(item);
+        switch (status) {
+        case LOCK_BY_OTHER:
+        case LOCK_BY_USER:
+            return Boolean.TRUE;
+        default:
+            return Boolean.FALSE;
+        }
+    }
+
     public Boolean isReadOnly() {
         return ProxyRepositoryFactory.getInstance().isUserReadOnlyOnCurrentProject();
     }
