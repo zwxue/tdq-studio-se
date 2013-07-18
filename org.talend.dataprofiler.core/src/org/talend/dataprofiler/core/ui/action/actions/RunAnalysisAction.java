@@ -30,8 +30,6 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
-import org.eclipse.ui.IEditorReference;
-import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.cheatsheets.ICheatSheetAction;
 import org.eclipse.ui.cheatsheets.ICheatSheetManager;
@@ -55,7 +53,6 @@ import org.talend.dataprofiler.core.exception.ExceptionFactory;
 import org.talend.dataprofiler.core.exception.ExceptionHandler;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.IRuningStatusListener;
-import org.talend.dataprofiler.core.ui.editor.CommonFormEditor;
 import org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisMetadataPage;
 import org.talend.dataprofiler.core.ui.editor.analysis.AnalysisEditor;
 import org.talend.dataprofiler.core.ui.editor.analysis.AnalysisItemEditorInput;
@@ -90,25 +87,24 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
 
     private IRuningStatusListener listener;
 
-    private IFile selectionFile;
+    @Deprecated
+    private IFile selectionFile;// no one used
 
     private AnalysisRepNode node;
 
     // Added TDQ-7551 20130704: for lock/unlock in SVN ask user mode
-    private boolean editable = true;
-
-    private Boolean lockByUserOwn = false;
-
-    private Item item = null;
-
     private IEditorPart editor = null;
+
+    private boolean isNeedUnlock = false;
 
     // ~
 
+    @Deprecated
     public IFile getSelectionFile() {
         return selectionFile;
     }
 
+    @Deprecated
     public void setSelectionFile(IFile selectionFile) {
         this.selectionFile = selectionFile;
     }
@@ -131,192 +127,69 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
     public void run() {
         try {
             editor = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
+            Item item = null;
+
 
             // MOD klliu bug 19244 2011-03-10
             if (node != null) {
-                // MOD sizhaoliu TDQ-5452 verify the lock status before running an analysis
+                // means it from the context menu "run" which need to select a node
                 item = node.getObject().getProperty().getItem();
-                if (item instanceof TDQAnalysisItem) {
-                    if (((TDQAnalysisItem) item).getAnalysis() == null
-                            || ((TDQAnalysisItem) item).getAnalysis().getParameters() == null) {
-                        BusinessException createBusinessException = ExceptionFactory.getInstance().createBusinessException(
-                                ((TDQAnalysisItem) item).getFilename());
-                        throw createBusinessException;
-                    }
-                }
-                if (ProxyRepositoryManager.getInstance().isLockByOthers(item)) {
-                    CorePlugin.getDefault().refreshDQView(node.getParent());
-                    MessageDialog.openError(PlatformUI.getWorkbench().getDisplay().getActiveShell(),
-                            DefaultMessagesImpl.getString("RunAnalysisAction.runAnalysis"), //$NON-NLS-1$
-                            DefaultMessagesImpl.getString("RunAnalysisAction.error.lockByOthers")); //$NON-NLS-1$
-                    return;
-                } // ~ TDQ-5452
-
-                // Added TDQ-7551 0704 yyin
-                lockByUserOwn = ProxyRepositoryManager.getInstance().isLockByUserOwn(item);
-                // if the analysis is not locked, lock it
-                if (!lockByUserOwn) {
-                    editable = ProxyRepositoryFactory.getInstance().isEditableAndLockIfPossible(item);
-                }
-
-                if (!editable) {
-                    // when the item is not editable, and the user select not lock the item
-                    // under ask user mode(remote). and in this case, we will not continue the run action.
+                if(item==null){
+                    log.error("Analysis item is null");
                     return;
                 }
-                // ~ TDQ-7551
-                editor = CorePlugin.getDefault().openEditor(
-                        new AnalysisItemEditorInput(node.getObject().getProperty().getItem()), AnalysisEditor.class.getName());
-                // // in this running, the editor should be editable if before is not editable
-            }
-            // MOD qiongli bug 13880,2010-7-6,avoid 'ClassCastException'
-            if (selectionFile != null) {
-                // editor = CorePlugin.getDefault().openEditor(selectionFile, AnalysisEditor.class.getName());
-                analysis = AnaResourceFileHelper.getInstance().findAnalysis(selectionFile);
-                RepositoryNode recursiveFind = RepositoryNodeHelper.recursiveFind(analysis);
-                if (recursiveFind != null) {
-                    editor = CorePlugin.getDefault().openEditor(
-                            new AnalysisItemEditorInput(recursiveFind.getObject().getProperty().getItem()),
-                            AnalysisEditor.class.getName());
+                validateAnalysis(item);
+                if (ifLockByOthers(item)) {
+                    return;
                 }
-            }
-            // ~
-            if (editor == null) {
                 analysis = this.node.getAnalysis();
-            } else {
+            }
+
+            // only when the current opened editor is the analysis editor type
+            if (editor != null && editor instanceof AnalysisEditor) {
+                // editor already opened, the run comes from the run button in the editor
                 AnalysisEditor anaEditor = (AnalysisEditor) editor;
-                if (editor.isDirty()) {
-                    // MOD qiongli 2011-6-20 bug 21533,can save should before method doSave()
-                    // MOD klliu bug 19991 3td 2011-03-29
-                    ReturnCode canSave = anaEditor.getMasterPage().canSave();
-                    if (!canSave.isOk()) {
-                        MessageDialog.openError(editor.getSite().getShell(),
-                                DefaultMessagesImpl.getString("RunAnalysisAction.runAnalysis"), //$NON-NLS-1$
-                                canSave.getMessage());
-                        return;
-                    }
-                    // ~
-                    anaEditor.doSave(null);
-                }
-
-                ReturnCode canRun = anaEditor.canRun();
-                if (!canRun.isOk()) {
-                    MessageDialogWithToggle.openError(null,
-                            DefaultMessagesImpl.getString("RunAnalysisAction.runAnalysis"), canRun//$NON-NLS-1$
-                                    .getMessage());
+                // check if the analysis editor is dirty or not, if dirty save it before continue running
+                if (!saveAnalysisIfNeeded(anaEditor) || !isAnalysisCanRun(anaEditor)) {
                     return;
                 }
 
-                if (selectionFile != null) {
-                    analysis = AnaResourceFileHelper.getInstance().findAnalysis(selectionFile);
-
-                    IEditorReference[] editorReferences = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
-                            .getEditorReferences();
-
-                    for (IEditorReference reference : editorReferences) {
-                        AnalysisItemEditorInput analysisItemEditorInput;
-                        try {
-                            // MOD qiongli bug 16505.
-                            IEditorInput editorInput = reference.getEditorInput();
-
-                            if (editorInput instanceof AnalysisItemEditorInput) {
-                                analysisItemEditorInput = (AnalysisItemEditorInput) editorInput;
-                                Analysis ana = ((TDQAnalysisItem) analysisItemEditorInput.getItem()).getAnalysis();
-                                if (analysis.equals(ana)) {
-                                    IFormPage activePageInstance = ((AnalysisEditor) reference.getEditor(true))
-                                            .getActivePageInstance();
-                                    // MOD qiongli bug 13880
-                                    // if (reference instanceof IRuningStatusListener) {
-                                    if (activePageInstance instanceof IRuningStatusListener) {
-                                        listener = (IRuningStatusListener) activePageInstance;
-                                    }
-                                }
-                            }
-                        } catch (PartInitException e) {
-                            log.error(e, e);
-                        }
-                    }
-                } else {
                     IEditorInput editorInput = anaEditor.getEditorInput();
-                    if (editorInput instanceof FileEditorInput) {
-                        IFile afile = ((FileEditorInput) editorInput).getFile();
-                        analysis = AnaResourceFileHelper.getInstance().findAnalysis(afile);
-                    } else if (editorInput instanceof AnalysisItemEditorInput) {
-                        analysis = ((TDQAnalysisItem) ((AnalysisItemEditorInput) editorInput).getItem()).getAnalysis();
-                    }
-                    IFormPage activePageInstance = anaEditor.getActivePageInstance();
-                    if (activePageInstance instanceof IRuningStatusListener) {
-                        listener = (IRuningStatusListener) activePageInstance;
-                    }
+                    analysis=findAnalysisFromEditorInput(editorInput);
+                    // find the listener by the editor
+                    listener = findAnalysisListenerFromAnalysisEditor(anaEditor);
+            }
+
+            if (analysis == null || !isConnectedAvailable(analysis) ) {
+                return;
+            }
+            AnalysisType analysisType = analysis.getParameters().getAnalysisType();
+            if (AnalysisType.COLUMNS_COMPARISON.equals(analysisType)) {
+                //If the analysis type is column comparison, ask user to continue to run or not.
+                if(!isContinueRun()){
+                    return;
                 }
             }
 
-            if (analysis == null) {
-                return;
+            if (AnalysisType.CONNECTION.equals(analysisType)) {
+                // If the analysis type is overview analysis, reload the database. TODO check here the needed of
+                // reloading database
+                reloadConnection(analysis);
             }
-            // MOD klliu bug 4546 check connectiong is connected well.
-            DataManager datamanager = analysis.getContext().getConnection();
-            Connection analysisDataProvider = ConnectionUtils.getConnectionFromDatamanager(datamanager);
 
-            // MOD klliu bug 4584 Filtering the file connection when checking connection is successful,before real
-            // running
-            // analysis.
-            ClassLoader contextClassLoader = Thread.currentThread().getContextClassLoader();
-            // MOD 20130313 TDQ-6524 avoid popup context select dialog when running analysis,yyin
-            IMetadataConnection metadataConnection = ConvertionHelper.convert(analysisDataProvider, false,
-                    analysisDataProvider.getContextName());
-            // ~
-
-            ReturnCode connectionAvailable = new ReturnCode(false);
-
-            if (metadataConnection != null
-                    && EDatabaseTypeName.HIVE.getXmlName().equalsIgnoreCase(metadataConnection.getDbType())) {
-                try {
-                    HiveConnectionManager.getInstance().checkConnection(metadataConnection);
-                    connectionAvailable.setOk(true);
-                } catch (ClassNotFoundException e) {
-                    connectionAvailable.setOk(false);
-                    log.error(e);
-                } catch (InstantiationException e) {
-                    connectionAvailable.setOk(false);
-                    log.error(e);
-                } catch (IllegalAccessException e) {
-                    connectionAvailable.setOk(false);
-                    log.error(e);
-                } catch (SQLException e) {
-                    connectionAvailable.setOk(false);
-                    log.error(e);
+            // lock the analysis before running it if it is not locked yet.(whenever the editor is not opened)
+            // when the run comes from the button in editor, the node is null;
+            // when the run comes from context menu, the node is not null
+            if (node != null && !ProxyRepositoryManager.getInstance().isLocked(item)) {
+                if (!ProxyRepositoryFactory.getInstance().isEditableAndLockIfPossible(item)) {
+                    // if the analysis is not editable , return without running.
+                    isNeedUnlock = false;
+                    return;
+                } else {// it is locked here, means that it need the unlock too.
+                    isNeedUnlock = true;
                 }
             } else {
-                connectionAvailable = ConnectionUtils.isConnectionAvailable(analysisDataProvider);
-            }
-
-            if (!connectionAvailable.isOk()) {
-                MessageDialogWithToggle.openWarning(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
-                        DefaultMessagesImpl.getString("RunAnalysisAction.checkConnFailTitle"),//$NON-NLS-1$
-                        DefaultMessagesImpl.getString("RunAnalysisAction.checkConnFailMsg", connectionAvailable.getMessage()));//$NON-NLS-1$
-                return;
-            }
-
-            AnalysisType analysisType = analysis.getParameters().getAnalysisType();
-
-            if (AnalysisType.COLUMNS_COMPARISON.equals(analysisType)) {
-                if (!MessageDialogWithToggle.openConfirm(null, DefaultMessagesImpl.getString("RunAnalysisAction.confirmTitle"), //$NON-NLS-1$
-                        DefaultMessagesImpl.getString("RunAnalysisAction.confirmMSG"))) { //$NON-NLS-1$
-                    return;
-                }
-            } else if (AnalysisType.CONNECTION.equals(analysisType)) {
-                if (AnalysisHelper.getReloadDatabases(analysis)) {
-                    Connection conntion = (Connection) analysis.getContext().getConnection();
-                    if (conntion != null) {
-                        try {
-                            RepositoryNode connectionNode = RepositoryNodeHelper.recursiveFind(conntion);
-                            ComparisonLevelFactory.creatComparisonLevel(connectionNode).reloadCurrentLevelElement();
-                        } catch (ReloadCompareException e) {
-                            log.error(e, e);
-                        }
-                    }
-                }
+                isNeedUnlock = false;
             }
 
             final WorkspaceJob job = new WorkspaceJob("Run Analysis") { //$NON-NLS-1$
@@ -347,6 +220,9 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
                         TdqAnalysisConnectionPool.closeConnectionPool(analysis);
                         executed = new ReturnCode(DefaultMessagesImpl.getString("RunAnalysisAction.TaskCancel"), false); //$NON-NLS-1$
                         monitor.done();
+                        if (isNeedUnlock) {
+                            unlockAnalysis();
+                        }
                         return Status.CANCEL_STATUS;
                     }
 
@@ -354,16 +230,9 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
                         executed = aet.getExecuted();
                     }
                     monitor.done();
-
-                    if (!lockByUserOwn && item != null && editable) {
-                        try {
-                            ProxyRepositoryFactory.getInstance().unlock(item);
-                        } catch (PersistenceException e) {
-                            log.error(e, e);
-                        } catch (LoginException e) {
-                            log.error(e, e);
-                        }
-                    }// ~
+                    if (isNeedUnlock) {
+                        unlockAnalysis();
+                    }
 
                     Display.getDefault().asyncExec(new Runnable() {
 
@@ -376,7 +245,6 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
                             // this
                             disableEditorWhenUnlock();
 
-                            // CorePlugin.getDefault().refreshDQView();
                         }
 
                     });
@@ -384,6 +252,7 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
                     displayResultStatus(executed);
                     return Status.OK_STATUS;
                 }
+
 
             };
 
@@ -394,10 +263,156 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
         }
     }
 
-    // if the user select unlock after running, unable the editor
-    private void disableEditorWhenUnlock() {
-        if (!ProxyRepositoryFactory.getInstance().getStatus(item).isEditable()) {
-            ((CommonFormEditor) editor).lockFormEditor(true);
+    private Analysis findAnalysisFromEditorInput(IEditorInput editorInput) {
+        Analysis analysisToFind = null;
+        if (editorInput instanceof FileEditorInput) {
+            IFile afile = ((FileEditorInput) editorInput).getFile();
+            analysisToFind = AnaResourceFileHelper.getInstance().findAnalysis(afile);
+        } else if (editorInput instanceof AnalysisItemEditorInput) {
+            analysisToFind = ((TDQAnalysisItem) ((AnalysisItemEditorInput) editorInput).getItem()).getAnalysis();
+        }
+        return analysisToFind;
+    }
+
+    private void unlockAnalysis() {
+            try {
+            ProxyRepositoryFactory.getInstance().unlock(node.getObject().getProperty().getItem());
+            } catch (PersistenceException e) {
+                log.error(e, e);
+            } catch (LoginException e) {
+                log.error(e, e);
+            }
+    }
+
+    private Boolean isContinueRun(){
+        boolean isContinueRun = Boolean.TRUE;
+        if (!MessageDialogWithToggle.openConfirm(null, DefaultMessagesImpl.getString("RunAnalysisAction.confirmTitle"), //$NON-NLS-1$
+                DefaultMessagesImpl.getString("RunAnalysisAction.confirmMSG"))) { //$NON-NLS-1$
+            isContinueRun=Boolean.FALSE;
+        }
+        return isContinueRun;
+    }
+    
+    private void reloadConnection(Analysis analysis) {
+            if (AnalysisHelper.getReloadDatabases(analysis)) {
+                Connection conntion = (Connection) analysis.getContext().getConnection();
+                if (conntion != null) {
+                    try {
+                        RepositoryNode connectionNode = RepositoryNodeHelper.recursiveFind(conntion);
+                        ComparisonLevelFactory.creatComparisonLevel(connectionNode).reloadCurrentLevelElement();
+                    } catch (ReloadCompareException e) {
+                        log.error(e, e);
+                    }
+                }
+            }
+    }
+
+    // return true when the connection is well connected
+    private boolean isConnectedAvailable(Analysis analysis) {
+        // MOD klliu bug 4546 check connectiong is connected well.
+        DataManager datamanager = analysis.getContext().getConnection();
+        Connection analysisDataProvider = ConnectionUtils.getConnectionFromDatamanager(datamanager);
+
+        // MOD klliu bug 4584 Filtering the file connection when checking connection is successful,before real
+        // running analysis.
+        // MOD 20130313 TDQ-6524 avoid popup context select dialog when running analysis,yyin
+        IMetadataConnection metadataConnection = ConvertionHelper.convert(analysisDataProvider, false,
+                analysisDataProvider.getContextName());
+        // ~
+
+        ReturnCode connectionAvailable = new ReturnCode(false);
+
+        if (metadataConnection != null && EDatabaseTypeName.HIVE.getXmlName().equalsIgnoreCase(metadataConnection.getDbType())) {
+            try {
+                HiveConnectionManager.getInstance().checkConnection(metadataConnection);
+                connectionAvailable.setOk(true);
+            } catch (ClassNotFoundException e) {
+                connectionAvailable.setOk(false);
+                log.error(e);
+            } catch (InstantiationException e) {
+                connectionAvailable.setOk(false);
+                log.error(e);
+            } catch (IllegalAccessException e) {
+                connectionAvailable.setOk(false);
+                log.error(e);
+            } catch (SQLException e) {
+                connectionAvailable.setOk(false);
+                log.error(e);
+            }
+        } else {
+            connectionAvailable = ConnectionUtils.isConnectionAvailable(analysisDataProvider);
+        }
+
+        if (!connectionAvailable.isOk()) {
+            MessageDialogWithToggle.openWarning(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
+                    DefaultMessagesImpl.getString("RunAnalysisAction.checkConnFailTitle"),//$NON-NLS-1$
+                    DefaultMessagesImpl.getString("RunAnalysisAction.checkConnFailMsg", connectionAvailable.getMessage()));//$NON-NLS-1$
+            return false;
+        }
+        return true;
+    }
+
+    private IRuningStatusListener findAnalysisListenerFromAnalysisEditor(AnalysisEditor anaEditor) {
+        IRuningStatusListener listenerToFind=null;
+        IFormPage activePageInstance = anaEditor.getActivePageInstance();
+        if (activePageInstance instanceof IRuningStatusListener) {
+            listenerToFind = (IRuningStatusListener) activePageInstance;
+        }
+        return listenerToFind;
+    }
+
+    /**
+     * check if the analysis can run when editor is opened, if can not, popup dialog
+     * 
+     * @param anaEditor
+     * @return
+     */
+    private boolean isAnalysisCanRun(AnalysisEditor anaEditor) {
+        ReturnCode canRun = anaEditor.canRun();
+        if (!canRun.isOk()) {
+            MessageDialogWithToggle.openError(null, DefaultMessagesImpl.getString("RunAnalysisAction.runAnalysis"), canRun//$NON-NLS-1$
+                    .getMessage());
+            return false;
+        }
+        return true;
+    }
+
+    private boolean saveAnalysisIfNeeded(AnalysisEditor anaEditor) {
+        if (anaEditor.isDirty()) {
+            // MOD qiongli 2011-6-20 bug 21533,can save should before method doSave()
+            // MOD klliu bug 19991 3td 2011-03-29
+            ReturnCode canSave = anaEditor.getMasterPage().canSave();
+            if (!canSave.isOk()) {
+                MessageDialog.openError(editor.getSite().getShell(),
+                        DefaultMessagesImpl.getString("RunAnalysisAction.runAnalysis"), //$NON-NLS-1$
+                        canSave.getMessage());
+                return false;
+            }
+            // ~
+            anaEditor.doSave(null);
+        }
+        return true;
+    }
+
+    private boolean ifLockByOthers(Item item) {
+        // MOD sizhaoliu TDQ-5452 verify the lock status before running an analysis
+        if (ProxyRepositoryManager.getInstance().isLockByOthers(item)) {
+            CorePlugin.getDefault().refreshDQView(node.getParent());
+            MessageDialog.openError(PlatformUI.getWorkbench().getDisplay().getActiveShell(),
+                    DefaultMessagesImpl.getString("RunAnalysisAction.runAnalysis"), //$NON-NLS-1$
+                    DefaultMessagesImpl.getString("RunAnalysisAction.error.lockByOthers")); //$NON-NLS-1$
+            return true;
+        } // ~ TDQ-5452
+        return false;
+    }
+
+    private void validateAnalysis(Item item) throws BusinessException {
+        if (item instanceof TDQAnalysisItem) {
+            if (((TDQAnalysisItem) item).getAnalysis() == null || ((TDQAnalysisItem) item).getAnalysis().getParameters() == null) {
+                BusinessException createBusinessException = ExceptionFactory.getInstance().createBusinessException(
+                        ((TDQAnalysisItem) item).getFilename());
+                throw createBusinessException;
+            }
         }
     }
 
