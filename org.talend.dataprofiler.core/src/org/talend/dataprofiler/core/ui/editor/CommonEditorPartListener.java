@@ -17,20 +17,16 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPart;
-import org.eclipse.ui.PlatformUI;
 import org.talend.core.model.properties.Item;
 import org.talend.core.model.properties.Property;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.helper.WorkspaceResourceHelper;
-import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dq.helper.ProxyRepositoryManager;
 import org.talend.dq.writer.EMFSharedResources;
-import org.talend.repository.model.ERepositoryStatus;
 
 /**
  * DOC qiongli class global comment. Detailled comment <br/>
@@ -109,18 +105,6 @@ public class CommonEditorPartListener extends PartListener {
         // MOD 20130624 TDQ-7497 yyin, change to use :isEditableAndLockIfPossible instead of lock method
         // (when remote and ask user: when the user select unlock should be also not editable)
         if (!ProxyRepositoryFactory.getInstance().isEditableAndLockIfPossible(item)) {
-            String message = ""; //$NON-NLS-1$
-            ERepositoryStatus status = ProxyRepositoryFactory.getInstance().getStatus(item);
-            // when the item is not editable: one status is locked by
-            if (status == ERepositoryStatus.LOCK_BY_OTHER) {
-                message = DefaultMessagesImpl.getString("CommonEditorPartListener.lockByOthers"); //$NON-NLS-1$
-            } else {
-                message = DefaultMessagesImpl.getString("CommonEditorPartListener.readOnlyUser"); //$NON-NLS-1$
-            }
-            // ADD xwang 2011-08-30 if item was locked by others pop up a dialog to tell user
-            MessageDialog.openWarning(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), "", part.getTitle() //$NON-NLS-1$
-                    + DefaultMessagesImpl.getString("CommonEditorPartListener.notEditable") + message); //$NON-NLS-1$
-            // alert user that the item is not able to edit.
             // MOD yyi 2010-11-29 15686: Make the editor readonly when the login user has no sufficient previlege.
             lockCommonFormEditor(part);
             WorkspaceResourceHelper.refreshItem(item);
