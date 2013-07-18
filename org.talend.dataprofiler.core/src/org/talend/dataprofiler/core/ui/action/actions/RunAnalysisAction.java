@@ -129,12 +129,11 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
             editor = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
             Item item = null;
 
-
             // MOD klliu bug 19244 2011-03-10
             if (node != null) {
                 // means it from the context menu "run" which need to select a node
                 item = node.getObject().getProperty().getItem();
-                if(item==null){
+                if (item == null) {
                     log.error("Analysis item is null");
                     return;
                 }
@@ -154,19 +153,19 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
                     return;
                 }
 
-                    IEditorInput editorInput = anaEditor.getEditorInput();
-                    analysis=findAnalysisFromEditorInput(editorInput);
-                    // find the listener by the editor
-                    listener = findAnalysisListenerFromAnalysisEditor(anaEditor);
+                IEditorInput editorInput = anaEditor.getEditorInput();
+                analysis = findAnalysisFromEditorInput(editorInput);
+                // find the listener by the editor
+                listener = findAnalysisListenerFromAnalysisEditor(anaEditor);
             }
 
-            if (analysis == null || !isConnectedAvailable(analysis) ) {
+            if (analysis == null || !isConnectedAvailable(analysis)) {
                 return;
             }
             AnalysisType analysisType = analysis.getParameters().getAnalysisType();
             if (AnalysisType.COLUMNS_COMPARISON.equals(analysisType)) {
-                //If the analysis type is column comparison, ask user to continue to run or not.
-                if(!isContinueRun()){
+                // If the analysis type is column comparison, ask user to continue to run or not.
+                if (!isContinueRun()) {
                     return;
                 }
             }
@@ -240,11 +239,6 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
                             if (listener != null) {
                                 listener.fireRuningItemChanged(true);
                             }
-                            // Added TDQ-7551 0704 yyin
-                            // unlock the current item if it is locked in this run, close the editor, if it is opened in
-                            // this
-                            disableEditorWhenUnlock();
-
                         }
 
                     });
@@ -252,7 +246,6 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
                     displayResultStatus(executed);
                     return Status.OK_STATUS;
                 }
-
 
             };
 
@@ -275,36 +268,36 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
     }
 
     private void unlockAnalysis() {
-            try {
+        try {
             ProxyRepositoryFactory.getInstance().unlock(node.getObject().getProperty().getItem());
-            } catch (PersistenceException e) {
-                log.error(e, e);
-            } catch (LoginException e) {
-                log.error(e, e);
-            }
+        } catch (PersistenceException e) {
+            log.error(e, e);
+        } catch (LoginException e) {
+            log.error(e, e);
+        }
     }
 
-    private Boolean isContinueRun(){
+    private Boolean isContinueRun() {
         boolean isContinueRun = Boolean.TRUE;
         if (!MessageDialogWithToggle.openConfirm(null, DefaultMessagesImpl.getString("RunAnalysisAction.confirmTitle"), //$NON-NLS-1$
                 DefaultMessagesImpl.getString("RunAnalysisAction.confirmMSG"))) { //$NON-NLS-1$
-            isContinueRun=Boolean.FALSE;
+            isContinueRun = Boolean.FALSE;
         }
         return isContinueRun;
     }
-    
+
     private void reloadConnection(Analysis analysis) {
-            if (AnalysisHelper.getReloadDatabases(analysis)) {
-                Connection conntion = (Connection) analysis.getContext().getConnection();
-                if (conntion != null) {
-                    try {
-                        RepositoryNode connectionNode = RepositoryNodeHelper.recursiveFind(conntion);
-                        ComparisonLevelFactory.creatComparisonLevel(connectionNode).reloadCurrentLevelElement();
-                    } catch (ReloadCompareException e) {
-                        log.error(e, e);
-                    }
+        if (AnalysisHelper.getReloadDatabases(analysis)) {
+            Connection conntion = (Connection) analysis.getContext().getConnection();
+            if (conntion != null) {
+                try {
+                    RepositoryNode connectionNode = RepositoryNodeHelper.recursiveFind(conntion);
+                    ComparisonLevelFactory.creatComparisonLevel(connectionNode).reloadCurrentLevelElement();
+                } catch (ReloadCompareException e) {
+                    log.error(e, e);
                 }
             }
+        }
     }
 
     // return true when the connection is well connected
@@ -353,7 +346,7 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
     }
 
     private IRuningStatusListener findAnalysisListenerFromAnalysisEditor(AnalysisEditor anaEditor) {
-        IRuningStatusListener listenerToFind=null;
+        IRuningStatusListener listenerToFind = null;
         IFormPage activePageInstance = anaEditor.getActivePageInstance();
         if (activePageInstance instanceof IRuningStatusListener) {
             listenerToFind = (IRuningStatusListener) activePageInstance;
