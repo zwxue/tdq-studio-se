@@ -37,7 +37,6 @@ import org.talend.dataquality.indicators.sql.IndicatorSqlFactory;
 import org.talend.dataquality.indicators.sql.WhereRuleAideIndicator;
 import org.talend.dataquality.indicators.sql.WhereRuleIndicator;
 import org.talend.dataquality.properties.TDQAnalysisItem;
-import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
 import orgomg.cwm.objectmodel.core.ModelElement;
@@ -167,9 +166,7 @@ public class UpdateDQRuleAnalysisTask extends AbstractWorksapceUpdateTask {
             // MOD msjian TDQ-7186 2013-6-3: fix a NPE(get name is null)
             for (Indicator indd : indicators) {
                 if (indd instanceof WhereRuleAideIndicator) {
-                    URI uri_ind = EObjectHelper.getURI(ind.getIndicatorDefinition());
-                    URI uri_indd = EObjectHelper.getURI(indd.getIndicatorDefinition());
-                    if (uri_ind == uri_indd) {
+                    if (ind.getIndicatorDefinition() == indd.getIndicatorDefinition()) {
                         result = false;
                         break;
                     }
