@@ -439,9 +439,7 @@ public abstract class AElementPersistance {
         itemState.setDeleted(false);
         item.setState(itemState);
         if (item instanceof TDQItem) {
-            ((TDQItem) item).setFilename(WorkspaceUtils.normalize(element.getName())
-                    + "_" + MetadataHelper.getVersion(element) + PluginConstant.DOT_STRING //$NON-NLS-1$
-                    + this.getFileExtension());
+            setTDQItemFileName(element, item);
         }
 
         Resource eResource = element.eResource();
@@ -462,6 +460,18 @@ public abstract class AElementPersistance {
         }
 
         return item;
+    }
+
+    /**
+     * Set the TDQ item file name, this file name will be usefull when commit changes to svn for example.
+     * 
+     * @param element The element of which the name might have been renamed.
+     * @param item
+     */
+    private void setTDQItemFileName(ModelElement element, Item item) {
+        ((TDQItem) item).setFilename(WorkspaceUtils.normalize(element.getName())
+                + "_" + MetadataHelper.getVersion(element) + PluginConstant.DOT_STRING //$NON-NLS-1$
+                + this.getFileExtension());
     }
 
     /**
@@ -560,6 +570,10 @@ public abstract class AElementPersistance {
             needSaves.add(re);
         }
 
+        // Set the TDQ item file name.
+        if (item instanceof TDQItem) {
+            setTDQItemFileName(element, item);
+        }
         try {
             ProxyRepositoryFactory.getInstance().save(item);
         } catch (PersistenceException e) {
@@ -589,7 +603,10 @@ public abstract class AElementPersistance {
 
         addDependencies(element);
         addResourceContent(element.eResource(), element);
-
+        // Set the TDQ item file name.
+        if (item instanceof TDQItem) {
+            setTDQItemFileName(element, item);
+        }
         try {
             ProxyRepositoryFactory.getInstance().save(item);
         } catch (PersistenceException e) {
