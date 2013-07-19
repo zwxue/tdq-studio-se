@@ -1552,6 +1552,12 @@
            name="Update Mean AggrDefinition Task"
            version="5.2.3">
      </workspacetask>
+     <workspacetask
+           class="org.talend.dataprofiler.core.migration.impl.CheckAndUpdateAnalysisDependencyTask"
+           id="org.talend.dataprofiler.core.migration.impl.CheckAndUpdateAnalysisDependencyTask"
+           name="Check and Update Analysis Dependency if with more than one db dependency"
+           version="5.2.3">
+     </workspacetask>
   </extension>
   <extension
         point="org.eclipse.ui.actionSets">
