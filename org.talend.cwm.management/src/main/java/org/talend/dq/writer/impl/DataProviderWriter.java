@@ -39,6 +39,7 @@ import org.talend.cwm.softwaredeployment.TdSoftwareSystem;
 import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.helper.ProxyRepositoryManager;
 import org.talend.dq.writer.AElementPersistance;
+import org.talend.repository.RepositoryWorkUnit;
 import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
@@ -169,24 +170,35 @@ public class DataProviderWriter extends AElementPersistance {
         final boolean isCare = careDependency;
         // MOD qiongli TDQ-6287 avoid all notification of changes before the end of the modifications.
         final ReturnCode returnCode = new ReturnCode();
-        IWorkspace workspace = ResourcesPlugin.getWorkspace();
-        IWorkspaceRunnable operation = new IWorkspaceRunnable() {
 
-            public void run(IProgressMonitor monitor) throws CoreException {
-                ReturnCode ret = isCare ? saveWithDependencies(connItem, connItem.getConnection()) : saveWithoutDependencies(
-                        connItem, connItem.getConnection());
-                returnCode.setOk(ret.isOk());
-                returnCode.setMessage(ret.getMessage());
+        RepositoryWorkUnit<Object> workUnit = new RepositoryWorkUnit<Object>(
+                "Save connection item: " + item.getProperty().getDisplayName()) {//$NON-NLS-1$
 
+            @Override
+            protected void run() {
+                IWorkspace workspace = ResourcesPlugin.getWorkspace();
+                IWorkspaceRunnable operation = new IWorkspaceRunnable() {
+
+                    public void run(IProgressMonitor monitor) throws CoreException {
+                        ReturnCode ret = isCare ? saveWithDependencies(connItem, connItem.getConnection())
+                                : saveWithoutDependencies(connItem, connItem.getConnection());
+                        returnCode.setOk(ret.isOk());
+                        returnCode.setMessage(ret.getMessage());
+
+                    }
+                };
+                ISchedulingRule schedulingRule = workspace.getRoot();
+                try {
+                    workspace.run(operation, schedulingRule, IWorkspace.AVOID_UPDATE, new NullProgressMonitor());
+                } catch (CoreException e) {
+                    log.error(e, e);
+                    returnCode.setOk(false);
+                }
             }
         };
-        ISchedulingRule schedulingRule = workspace.getRoot();
-        try {
-            workspace.run(operation, schedulingRule, IWorkspace.AVOID_UPDATE, new NullProgressMonitor());
-        } catch (CoreException e) {
-            log.error(e, e);
-            returnCode.setOk(false);
-        }
+        workUnit.setAvoidUnloadResources(true);
+        ProxyRepositoryFactory.getInstance().executeRepositoryWorkUnit(workUnit);
+
         // MOD yyi 2012-02-07 TDQ-4621:Update dependencies(connection) when careDependency is true.
         return returnCode;
     }

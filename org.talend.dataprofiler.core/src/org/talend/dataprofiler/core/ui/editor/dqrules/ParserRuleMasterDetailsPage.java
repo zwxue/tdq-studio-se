@@ -38,11 +38,8 @@ import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.part.FileEditorInput;
-import org.talend.commons.exception.PersistenceException;
-import org.talend.core.model.general.Project;
 import org.talend.core.model.properties.Property;
 import org.talend.core.model.repository.ERepositoryObjectType;
-import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.relational.TdExpression;
 import org.talend.dataprofiler.core.ImageLib;
@@ -59,7 +56,7 @@ import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.helper.resourcehelper.DQRuleResourceFileHelper;
 import org.talend.dq.nodes.RuleRepNode;
-import org.talend.repository.ProjectManager;
+import org.talend.dq.writer.impl.ElementWriterFactory;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
@@ -151,6 +148,7 @@ public class ParserRuleMasterDetailsPage extends AbstractMetadataFormPage implem
         }
     }
 
+    @Override
     protected void createFormContent(IManagedForm managedForm) {
         super.createFormContent(managedForm);
         form = managedForm.getForm();
@@ -181,13 +179,8 @@ public class ParserRuleMasterDetailsPage extends AbstractMetadataFormPage implem
         parserRule.getExpression().addAll(parserRuleTableViewer.getParserRuleTdExpressions());
         TDQBusinessRuleItem parserRuleItem = this.getParserRuleItem();
         parserRuleItem.setDqrule(parserRule);
-        // parserRuleItem.setFilename(parserRule.getName());
-        // ProxyRepositoryFactory.getInstance().save(null, parserRuleItem, null);
-        // ReturnCode rc = ElementWriterFactory.getInstance().createdRuleWriter().save(parserRuleItem);
-        Project currentProject = ProjectManager.getInstance().getCurrentProject();
-        try {
-            ProxyRepositoryFactory.getInstance().save(currentProject, parserRuleItem);
-        } catch (PersistenceException e) {
+        ReturnCode rc = ElementWriterFactory.getInstance().createdRuleWriter().save(parserRuleItem, Boolean.FALSE);
+        if (!rc.isOk()) {
             return false;
         }
         return true;
@@ -276,6 +269,7 @@ public class ParserRuleMasterDetailsPage extends AbstractMetadataFormPage implem
         addButton.setLayoutData(labelGd);
         addButton.addSelectionListener(new SelectionAdapter() {
 
+            @Override
             public void widgetSelected(SelectionEvent e) {
                 parserRuleTableViewer.addTdExpression();
             }
@@ -287,6 +281,7 @@ public class ParserRuleMasterDetailsPage extends AbstractMetadataFormPage implem
         delButton.setLayoutData(labelGd);
         delButton.addSelectionListener(new SelectionAdapter() {
 
+            @Override
             public void widgetSelected(SelectionEvent e) {
                 TdExpression tdExpression = (TdExpression) ((IStructuredSelection) parserRuleTableViewer.getSelection())
                         .getFirstElement();
@@ -301,6 +296,7 @@ public class ParserRuleMasterDetailsPage extends AbstractMetadataFormPage implem
         upButton.setLayoutData(labelGd);
         upButton.addSelectionListener(new SelectionAdapter() {
 
+            @Override
             public void widgetSelected(SelectionEvent e) {
                 TdExpression tdExpression = (TdExpression) ((IStructuredSelection) parserRuleTableViewer.getSelection())
                         .getFirstElement();
@@ -316,6 +312,7 @@ public class ParserRuleMasterDetailsPage extends AbstractMetadataFormPage implem
         downButton.setLayoutData(labelGd);
         downButton.addSelectionListener(new SelectionAdapter() {
 
+            @Override
             public void widgetSelected(SelectionEvent e) {
                 TdExpression tdExpression = (TdExpression) ((IStructuredSelection) parserRuleTableViewer.getSelection())
                         .getFirstElement();
@@ -330,6 +327,7 @@ public class ParserRuleMasterDetailsPage extends AbstractMetadataFormPage implem
         copyButton.setLayoutData(labelGd);
         copyButton.addSelectionListener(new SelectionAdapter() {
 
+            @Override
             public void widgetSelected(SelectionEvent e) {
                 List<TdExpression> listTdExpression = ((IStructuredSelection) parserRuleTableViewer.getSelection()).toList();
                 parserRuleTableViewer.copyTdExpression(listTdExpression);
@@ -343,27 +341,29 @@ public class ParserRuleMasterDetailsPage extends AbstractMetadataFormPage implem
         pasteButton.setLayoutData(labelGd);
         pasteButton.addSelectionListener(new SelectionAdapter() {
 
+            @Override
             public void widgetSelected(SelectionEvent e) {
                 parserRuleTableViewer.pasteTdExpression();
 
             }
         });
         if (isNeedTestButton) {
-        final Button testButton = new Button(buttonsComposite, SWT.NONE);
-        testButton.setImage(ImageLib.getImage(ImageLib.RULE_TEST));
-        testButton.setToolTipText(DefaultMessagesImpl.getString("ParserRuleMasterDetailsPage.testRule"));//$NON-NLS-1$
-        testButton.setLayoutData(labelGd);
-        testButton.addSelectionListener(new SelectionAdapter() {
+            final Button testButton = new Button(buttonsComposite, SWT.NONE);
+            testButton.setImage(ImageLib.getImage(ImageLib.RULE_TEST));
+            testButton.setToolTipText(DefaultMessagesImpl.getString("ParserRuleMasterDetailsPage.testRule"));//$NON-NLS-1$
+            testButton.setLayoutData(labelGd);
+            testButton.addSelectionListener(new SelectionAdapter() {
 
-            public void widgetSelected(SelectionEvent e) {
-                if (GlobalServiceRegister.getDefault().isServiceRegistered(IAntlrEditorUIService.class)) {
-                IAntlrEditorUIService antlrEditorUIService = (IAntlrEditorUIService) GlobalServiceRegister.getDefault()
-                        .getService(IAntlrEditorUIService.class);
-                    antlrEditorUIService.runTestRuleAction(parserRule, ParserRuleMasterDetailsPage.this.getEditor());
+                @Override
+                public void widgetSelected(SelectionEvent e) {
+                    if (GlobalServiceRegister.getDefault().isServiceRegistered(IAntlrEditorUIService.class)) {
+                        IAntlrEditorUIService antlrEditorUIService = (IAntlrEditorUIService) GlobalServiceRegister.getDefault()
+                                .getService(IAntlrEditorUIService.class);
+                        antlrEditorUIService.runTestRuleAction(parserRule, ParserRuleMasterDetailsPage.this.getEditor());
+                    }
+
                 }
-
-            }
-        });
+            });
         }
     }
 
