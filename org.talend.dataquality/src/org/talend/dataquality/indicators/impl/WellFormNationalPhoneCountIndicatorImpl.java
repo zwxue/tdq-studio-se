@@ -1,7 +1,6 @@
 /**
- * <copyright>
- * </copyright>
- *
+ * <copyright> </copyright>
+ * 
  * $Id$
  */
 package org.talend.dataquality.indicators.impl;
@@ -19,26 +18,28 @@ import org.talend.dataquality.indicators.WellFormNationalPhoneCountIndicator;
 
 import com.google.i18n.phonenumbers.NumberParseException;
 import com.google.i18n.phonenumbers.PhoneNumberUtil;
+import com.google.i18n.phonenumbers.PhoneNumberUtil.PhoneNumberFormat;
 import com.google.i18n.phonenumbers.Phonenumber.PhoneNumber;
 
 /**
- * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Well Form National Phone Count Indicator</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model object '
+ * <em><b>Well Form National Phone Count Indicator</b></em>'. <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link org.talend.dataquality.indicators.impl.WellFormNationalPhoneCountIndicatorImpl#getWellFormNatiPhoneCount <em>Well Form Nati Phone Count</em>}</li>
+ * <li>{@link org.talend.dataquality.indicators.impl.WellFormNationalPhoneCountIndicatorImpl#getWellFormNatiPhoneCount
+ * <em>Well Form Nati Phone Count</em>}</li>
  * </ul>
  * </p>
- *
+ * 
  * @generated
  */
 public class WellFormNationalPhoneCountIndicatorImpl extends IndicatorImpl implements WellFormNationalPhoneCountIndicator {
+
     /**
      * The default value of the '{@link #getWellFormNatiPhoneCount() <em>Well Form Nati Phone Count</em>}' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @see #getWellFormNatiPhoneCount()
      * @generated
      * @ordered
@@ -47,8 +48,8 @@ public class WellFormNationalPhoneCountIndicatorImpl extends IndicatorImpl imple
 
     /**
      * The cached value of the '{@link #getWellFormNatiPhoneCount() <em>Well Form Nati Phone Count</em>}' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @see #getWellFormNatiPhoneCount()
      * @generated
      * @ordered
@@ -56,8 +57,8 @@ public class WellFormNationalPhoneCountIndicatorImpl extends IndicatorImpl imple
     protected Long wellFormNatiPhoneCount = WELL_FORM_NATI_PHONE_COUNT_EDEFAULT;
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     protected WellFormNationalPhoneCountIndicatorImpl() {
@@ -65,8 +66,8 @@ public class WellFormNationalPhoneCountIndicatorImpl extends IndicatorImpl imple
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
@@ -75,31 +76,37 @@ public class WellFormNationalPhoneCountIndicatorImpl extends IndicatorImpl imple
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
+    @Override
     public Long getWellFormNatiPhoneCount() {
         return wellFormNatiPhoneCount;
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
+    @Override
     public void setWellFormNatiPhoneCount(Long newWellFormNatiPhoneCount) {
         Long oldWellFormNatiPhoneCount = wellFormNatiPhoneCount;
         wellFormNatiPhoneCount = newWellFormNatiPhoneCount;
-        if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, IndicatorsPackage.WELL_FORM_NATIONAL_PHONE_COUNT_INDICATOR__WELL_FORM_NATI_PHONE_COUNT, oldWellFormNatiPhoneCount, wellFormNatiPhoneCount));
+        if (eNotificationRequired()) {
+            eNotify(new ENotificationImpl(this, Notification.SET,
+                    IndicatorsPackage.WELL_FORM_NATIONAL_PHONE_COUNT_INDICATOR__WELL_FORM_NATI_PHONE_COUNT,
+                    oldWellFormNatiPhoneCount, wellFormNatiPhoneCount));
+        }
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
+    @Override
     public Set<Object> getWellFormNatiPhoneValues() {
         // TODO: implement this method
         // Ensure that you remove @generated or mark it @generated NOT
@@ -107,71 +114,74 @@ public class WellFormNationalPhoneCountIndicatorImpl extends IndicatorImpl imple
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
     public Object eGet(int featureID, boolean resolve, boolean coreType) {
         switch (featureID) {
-            case IndicatorsPackage.WELL_FORM_NATIONAL_PHONE_COUNT_INDICATOR__WELL_FORM_NATI_PHONE_COUNT:
-                return getWellFormNatiPhoneCount();
+        case IndicatorsPackage.WELL_FORM_NATIONAL_PHONE_COUNT_INDICATOR__WELL_FORM_NATI_PHONE_COUNT:
+            return getWellFormNatiPhoneCount();
         }
         return super.eGet(featureID, resolve, coreType);
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
     public void eSet(int featureID, Object newValue) {
         switch (featureID) {
-            case IndicatorsPackage.WELL_FORM_NATIONAL_PHONE_COUNT_INDICATOR__WELL_FORM_NATI_PHONE_COUNT:
-                setWellFormNatiPhoneCount((Long)newValue);
-                return;
+        case IndicatorsPackage.WELL_FORM_NATIONAL_PHONE_COUNT_INDICATOR__WELL_FORM_NATI_PHONE_COUNT:
+            setWellFormNatiPhoneCount((Long) newValue);
+            return;
         }
         super.eSet(featureID, newValue);
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
     public void eUnset(int featureID) {
         switch (featureID) {
-            case IndicatorsPackage.WELL_FORM_NATIONAL_PHONE_COUNT_INDICATOR__WELL_FORM_NATI_PHONE_COUNT:
-                setWellFormNatiPhoneCount(WELL_FORM_NATI_PHONE_COUNT_EDEFAULT);
-                return;
+        case IndicatorsPackage.WELL_FORM_NATIONAL_PHONE_COUNT_INDICATOR__WELL_FORM_NATI_PHONE_COUNT:
+            setWellFormNatiPhoneCount(WELL_FORM_NATI_PHONE_COUNT_EDEFAULT);
+            return;
         }
         super.eUnset(featureID);
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
     public boolean eIsSet(int featureID) {
         switch (featureID) {
-            case IndicatorsPackage.WELL_FORM_NATIONAL_PHONE_COUNT_INDICATOR__WELL_FORM_NATI_PHONE_COUNT:
-                return WELL_FORM_NATI_PHONE_COUNT_EDEFAULT == null ? wellFormNatiPhoneCount != null : !WELL_FORM_NATI_PHONE_COUNT_EDEFAULT.equals(wellFormNatiPhoneCount);
+        case IndicatorsPackage.WELL_FORM_NATIONAL_PHONE_COUNT_INDICATOR__WELL_FORM_NATI_PHONE_COUNT:
+            return WELL_FORM_NATI_PHONE_COUNT_EDEFAULT == null ? wellFormNatiPhoneCount != null
+                    : !WELL_FORM_NATI_PHONE_COUNT_EDEFAULT.equals(wellFormNatiPhoneCount);
         }
         return super.eIsSet(featureID);
     }
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
     public String toString() {
-        if (eIsProxy()) return super.toString();
+        if (eIsProxy()) {
+            return super.toString();
+        }
 
         StringBuffer result = new StringBuffer(super.toString());
         result.append(" (wellFormNatiPhoneCount: ");
@@ -194,12 +204,11 @@ public class WellFormNationalPhoneCountIndicatorImpl extends IndicatorImpl imple
             TextParameters textParameters = indParameters == null ? null : indParameters.getTextParameter();
             String country = IndicatorHelper.getCountryCodeByParameter(textParameters);
             PhoneNumber phoneNumeber = phoneUtil.parseAndKeepRawInput(data.toString(), country);
-            String nationalSignificantNumber = PhoneNumberUtil.getNationalSignificantNumber(phoneNumeber);
-            if (data.toString().equals(nationalSignificantNumber)) {
+            String format = phoneUtil.format(phoneNumeber, PhoneNumberFormat.NATIONAL);
+            if (data.toString().equals(format)) {
                 this.wellFormNatiPhoneCount++;
                 this.mustStoreRow = true;
             }
-
         } catch (NumberParseException e) {
             return false;
         }
@@ -217,4 +226,4 @@ public class WellFormNationalPhoneCountIndicatorImpl extends IndicatorImpl imple
         return this.getWellFormNatiPhoneCount();
     }
 
-} //WellFormNationalPhoneCountIndicatorImpl
+} // WellFormNationalPhoneCountIndicatorImpl
