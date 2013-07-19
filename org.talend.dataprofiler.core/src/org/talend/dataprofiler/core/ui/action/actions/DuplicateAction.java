@@ -41,6 +41,7 @@ import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.cwm.helper.ResourceHelper;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
+import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.exception.ExceptionFactory;
 import org.talend.dataprofiler.core.exception.ExceptionHandler;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
@@ -129,23 +130,29 @@ public class DuplicateAction extends Action {
                                 new IInputValidator() {
 
                                     public String isValid(String newText) {
+                                        // ADD msjian TDQ-7579: fix the name can not be empty
+                                        if (PluginConstant.EMPTY_STRING.equals(newText.trim())) {
+                                            return DefaultMessagesImpl.getString("DuplicateAction.LabelEmpty"); //$NON-NLS-1$
+                                        }
+                                        // TDQ-7579~
+
                                         // MOD msjian TDQ-7218 2013-5-31: when dulicate a system indicator, should check
                                         // whether exist in UDI.
                                         ERepositoryObjectType contentType = node.getContentType();
                                         if (node instanceof SysIndicatorDefinitionRepNode) {
                                             contentType = ERepositoryObjectType.TDQ_USERDEFINE_INDICATORS;
                                         }
-                                        if (PropertyHelper.existDuplicateName(newText, null, contentType)) {
+                                        if (PropertyHelper.existDuplicateName(newText.trim(), null, contentType)) {
                                             return DefaultMessagesImpl.getString("DuplicateAction.LabelExists"); //$NON-NLS-1$
                                         }
+                                        // TDQ-7218~
 
                                         return null;
                                     }
                                 });
                         // TDQ-4672~
-
                         if (dialog.open() == Window.OK) {
-                            String newLabel = dialog.getValue();
+                            String newLabel = dialog.getValue().trim();
 
                             // TDQ-4179 MOD yyin 20120313: when duplicate a user defined indicator,
                             // there are no rule for the user, only for sys, so no need to check the valid rule,just
@@ -234,6 +241,7 @@ public class DuplicateAction extends Action {
      * Selects and reveals the newly added resource in all parts of the active workbench window's active page.
      * 
      * @param duplicateObject
+     * @throws BusinessException
      */
     private void selectAndReveal(IFile duplicateObject) throws BusinessException {
         IWorkbenchWindow workbenchWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
