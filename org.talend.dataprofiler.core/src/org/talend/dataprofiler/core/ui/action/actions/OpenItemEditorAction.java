@@ -77,7 +77,6 @@ import org.talend.dataquality.properties.TDQReportItem;
 import org.talend.dataquality.reports.AnalysisMap;
 import org.talend.dataquality.reports.TdReport;
 import org.talend.dq.helper.PropertyHelper;
-import org.talend.dq.helper.ProxyRepositoryManager;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.helper.UDIHelper;
 import org.talend.dq.nodes.ReportFileRepNode;
@@ -152,10 +151,6 @@ public class OpenItemEditorAction extends AbstractRepObjectCRUDAction implements
         if (itemEditorInput != null) {
             // open ItemEditorInput
             CorePlugin.getDefault().openEditor(itemEditorInput, editorID);
-            // Added TDQ-7143 yyin 20130531
-            if (itemEditorInput instanceof TDQFileEditorInput) {
-                ((TDQFileEditorInput) itemEditorInput).addCloseListener();
-            }// ~
         } else {
             // not find ItemEditorInput
             if (repViewObj == null) {
@@ -337,7 +332,6 @@ public class OpenItemEditorAction extends AbstractRepObjectCRUDAction implements
                 result = new TDQFileEditorInput(file);
                 // Added TDQ-7143 yyin 20130531
                 ((TDQFileEditorInput) result).setFileItem(item);
-                ProxyRepositoryManager.getInstance().lock(item);
                 CorePlugin.getDefault().refreshDQView(this.repNode);
                 // ~
             }

@@ -16,6 +16,7 @@ import net.sourceforge.sqlexplorer.service.ISaveAsService;
 
 import org.eclipse.core.runtime.IPath;
 import org.talend.core.model.properties.Item;
+import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dq.helper.RepositoryNodeHelper;
@@ -37,6 +38,8 @@ public class SqlExploerSaveAsService implements ISaveAsService {
      */
     public Item createFile(String content, IPath path, String label, String extension) {
         Item item = DQStructureManager.getInstance().createSourceFileItem(content, path, label, extension);
+        // Added TDQ-7532, 20130719 yyin: to lock the editor when creating the sql file from "preview table"
+        ProxyRepositoryFactory.getInstance().isEditableAndLockIfPossible(item);// ~
         CorePlugin.getDefault().refreshDQView(RepositoryNodeHelper.getLibrariesFolderNode(EResourceConstant.SOURCE_FILES));
         return item;
 
