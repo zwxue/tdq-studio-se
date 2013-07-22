@@ -45,6 +45,15 @@ public class SourceFileRepNode extends DQRepositoryNode {
         }
     }
 
+    @Override
+    public String getLabel() {
+        if (this.getObject() != null) {
+            return this.getObject().getLabel();
+        }
+        return super.getLabel();
+
+    }
+
     // Added TDQ-7672 Add lock/unlock in context menu for sql source file
     @Override
     public boolean canExpandForDoubleClick() {
