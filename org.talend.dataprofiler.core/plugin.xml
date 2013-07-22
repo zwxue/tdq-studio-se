@@ -1587,6 +1587,12 @@
            id="org.talend.dataprofiler.core.migration.impl.UpdateTextStatisticsIndicatorsForSomeDatabasesTask"
            name="Update Text Statistics Indicators For Some Databases Task"
            version="5.4.0">
+     </workspacetask>
+     <workspacetask
+           class="org.talend.dataprofiler.core.migration.impl.CheckAndUpdateAnalysisDependencyTask"
+           id="org.talend.dataprofiler.core.migration.impl.CheckAndUpdateAnalysisDependencyTask"
+           name="Check and Update Analysis Dependency if with more than one db dependency"
+           version="5.4.0">
      </workspacetask>  
      
   </extension>
