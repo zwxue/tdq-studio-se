@@ -75,16 +75,6 @@ public class TopService implements ICoreService {
     /*
      * (non-Javadoc)
      * 
-     * @see org.talend.core.ICoreService#componentsReset()
-     */
-    @Override
-    public void componentsReset() {
-        throw new UnsupportedOperationException();
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
      * @see org.talend.core.ICoreService#createStatsLogAndImplicitParamter(org.talend.core.model.general.Project)
      */
     @Override
@@ -300,16 +290,6 @@ public class TopService implements ICoreService {
     /*
      * (non-Javadoc)
      * 
-     * @see org.talend.core.ICoreService#initializeComponents(org.eclipse.core.runtime.IProgressMonitor)
-     */
-    @Override
-    public void initializeComponents(IProgressMonitor monitor) {
-        throw new UnsupportedOperationException();
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
      * @see org.talend.core.ICoreService#initializeForTalendStartupJob()
      */
     @Override
@@ -404,16 +384,6 @@ public class TopService implements ICoreService {
      */
     @Override
     public void syncAllRoutines() throws SystemException {
-        throw new UnsupportedOperationException();
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.talend.core.ICoreService#syncAllRules()
-     */
-    @Override
-    public void syncAllRules() {
         throw new UnsupportedOperationException();
     }
 
