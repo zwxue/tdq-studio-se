@@ -2212,9 +2212,10 @@ public final class RepositoryNodeHelper {
         }
         return null;
     }
-/**
- * judge whether the node has been delete
- */
+
+    /**
+     * judge whether the node has been delete
+     */
     public static boolean isStateDeleted(Object node) {
         if (node instanceof IRepositoryNode) {
             return isStateDeleted((IRepositoryNode) node);
@@ -3292,7 +3293,9 @@ public final class RepositoryNodeHelper {
      * 
      * @param node
      * @return
+     * @deprecated
      */
+    @Deprecated
     public static boolean isLockByUser(IRepositoryNode node) {
         boolean isLock = false;
         if (node != null) {
@@ -3317,7 +3320,9 @@ public final class RepositoryNodeHelper {
      * 
      * @param modelElement
      * @return
+     * @deprecated
      */
+    @Deprecated
     public static boolean isLockByUser(ModelElement modelElement) {
         return isLockByUser(recursiveFind(modelElement));
     }
@@ -3327,7 +3332,9 @@ public final class RepositoryNodeHelper {
      * 
      * @param node
      * @return
+     * @deprecated
      */
+    @Deprecated
     public static boolean isLockByOther(IRepositoryNode node) {
         boolean isLock = true;
         if (node != null) {
@@ -3352,7 +3359,9 @@ public final class RepositoryNodeHelper {
      * 
      * @param modelElement
      * @return
+     * @deprecated
      */
+    @Deprecated
     public static boolean isLockByOther(ModelElement modelElement) {
         return isLockByOther(recursiveFind(modelElement));
     }
