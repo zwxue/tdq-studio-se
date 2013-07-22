@@ -132,6 +132,7 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
             // MOD klliu bug 19244 2011-03-10
             if (node != null) {
                 // means it from the context menu "run" which need to select a node
+                // then find the analysis from the node, and not fromt the editor(only one way)
                 item = node.getObject().getProperty().getItem();
                 if (item == null) {
                     log.error("Analysis item is null");
@@ -142,10 +143,9 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
                     return;
                 }
                 analysis = this.node.getAnalysis();
-            }
-
-            // only when the current opened editor is the analysis editor type
-            if (editor != null && editor instanceof AnalysisEditor) {
+                // if not from the context menu, then find the analysis from the editor
+            } else if (editor != null && editor instanceof AnalysisEditor) {
+                // only when the current opened editor is the analysis editor type
                 // editor already opened, the run comes from the run button in the editor
                 AnalysisEditor anaEditor = (AnalysisEditor) editor;
                 // check if the analysis editor is dirty or not, if dirty save it before continue running
