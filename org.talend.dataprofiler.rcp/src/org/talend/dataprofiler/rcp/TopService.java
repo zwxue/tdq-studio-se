@@ -20,14 +20,12 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 import org.talend.commons.exception.BusinessException;
 import org.talend.commons.exception.SystemException;
-import org.talend.commons.ui.swt.actions.ITreeContextualAction;
 import org.talend.core.ICoreService;
 import org.talend.core.model.general.LibraryInfo;
 import org.talend.core.model.general.Project;
@@ -466,16 +464,6 @@ public class TopService implements ICoreService {
     }
 
     /*
-     * (non-Javadoc)
-     * 
-     * @see org.talend.core.ICoreService#updatePalette()
-     */
-    @Override
-    public void updatePalette() {
-        throw new UnsupportedOperationException();
-    }
-
-    /*
      * (non-Jsdoc)
      * 
      * @see org.talend.core.ICoreService#resetUniservLibraries()
@@ -513,16 +501,6 @@ public class TopService implements ICoreService {
     @Override
     public IMetadataTable convert(MetadataTable originalTable) {
         throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public MenuManager[] getRepositoryContextualsActionGroups() {
-        return null;
-    }
-
-    @Override
-    public List<ITreeContextualAction> getRepositoryContextualsActions() {
-        return null;
     }
 
     @Override
