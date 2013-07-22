@@ -169,7 +169,6 @@ public class SQLEditor extends EditorPart implements SwitchableSessionEditor {
         // Make sure we get notification that our editor is closing because
         // we may need to stop running queries
         getSite().getPage().addPartListener(new PartAdapter2() {
-
             /*
              * (non-JavaDoc)
              * 
@@ -1042,5 +1041,15 @@ public class SQLEditor extends EditorPart implements SwitchableSessionEditor {
      */
     public void refreshToolbars() {
         getEditorToolBar().refresh();
+    }
+
+    /**
+     * Added TDQ-7532, 20130719 yyin: to lock the editor make it not editable/or editable
+     * 
+     * @param lock : true - set it editable; false - set it not editable.
+     */
+    public void setEditable(boolean lock) {
+        this.textEditor.getViewer().setEditable(lock);
+        this.toolBar.getToolbarControl().setEnabled(lock);
     }
 }
