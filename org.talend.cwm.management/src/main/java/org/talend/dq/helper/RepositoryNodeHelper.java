@@ -3293,7 +3293,8 @@ public final class RepositoryNodeHelper {
      * 
      * @param node
      * @return
-     * @deprecated
+     * @deprecated use instead of
+     * {@link org.talend.dq.helper.ProxyRepositoryManager#isLockByUserOwn(org.talend.core.model.properties.Item)}
      */
     @Deprecated
     public static boolean isLockByUser(IRepositoryNode node) {
@@ -3320,7 +3321,8 @@ public final class RepositoryNodeHelper {
      * 
      * @param modelElement
      * @return
-     * @deprecated
+     * @deprecated use instead of
+     * {@link org.talend.dq.helper.ProxyRepositoryManager#isLockByUserOwn(org.talend.core.model.properties.Item)}
      */
     @Deprecated
     public static boolean isLockByUser(ModelElement modelElement) {
@@ -3332,7 +3334,8 @@ public final class RepositoryNodeHelper {
      * 
      * @param node
      * @return
-     * @deprecated
+     * @deprecated use instead of
+     * {@link org.talend.dq.helper.ProxyRepositoryManager#isLockByOthers(org.talend.core.model.properties.Item)}
      */
     @Deprecated
     public static boolean isLockByOther(IRepositoryNode node) {
@@ -3359,7 +3362,8 @@ public final class RepositoryNodeHelper {
      * 
      * @param modelElement
      * @return
-     * @deprecated
+     * @deprecated use instead of
+     * {@link org.talend.dq.helper.ProxyRepositoryManager#isLockByOthers(org.talend.core.model.properties.Item)}
      */
     @Deprecated
     public static boolean isLockByOther(ModelElement modelElement) {
