@@ -589,7 +589,7 @@ public class CorePlugin extends AbstractUIPlugin {
                 log.error(e, e);
             }
             ProxyRepositoryFactory proxyRepository = ProxyRepositoryFactory.getInstance();
-            IRepositoryFactory repository = RepositoryFactoryProvider.getRepositoriyById("local"); //$NON-NLS-1$
+            IRepositoryFactory repository = RepositoryFactoryProvider.getRepositoriyById(RepositoryConstants.REPOSITORY_LOCAL_ID);
             if (repository == null) {
                 log.fatal(DefaultMessagesImpl.getString("CorePlugin.noLocalRepositoryFound")); //$NON-NLS-1$
                 rc.setMessage(DefaultMessagesImpl.getString("CorePlugin.noLocalRepositoryFound"));//$NON-NLS-1$

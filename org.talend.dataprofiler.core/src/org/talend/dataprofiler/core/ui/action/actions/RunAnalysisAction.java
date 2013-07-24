@@ -43,7 +43,9 @@ import org.talend.core.model.metadata.IMetadataConnection;
 import org.talend.core.model.metadata.builder.ConvertionHelper;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.properties.Item;
+import org.talend.core.repository.model.IRepositoryFactory;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
+import org.talend.core.repository.model.RepositoryFactoryProvider;
 import org.talend.cwm.compare.exception.ReloadCompareException;
 import org.talend.cwm.compare.factory.ComparisonLevelFactory;
 import org.talend.cwm.db.connection.ConnectionUtils;
@@ -60,20 +62,21 @@ import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisType;
 import org.talend.dataquality.helpers.AnalysisHelper;
 import org.talend.dataquality.properties.TDQAnalysisItem;
+import org.talend.dq.analysis.AnalysisExecutorSelector;
 import org.talend.dq.analysis.connpool.TdqAnalysisConnectionPool;
 import org.talend.dq.helper.ProxyRepositoryManager;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
 import org.talend.dq.nodes.AnalysisRepNode;
 import org.talend.metadata.managment.connection.manager.HiveConnectionManager;
+import org.talend.repository.model.RepositoryConstants;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.foundation.softwaredeployment.DataManager;
 
 /**
- * DOC zqin class global comment. Detailled comment <br/>
+ * Run Analysis Action.
  * 
- * $Id: talend.epf 1 2006-09-29 17:06:40Z zqin $
  */
 public class RunAnalysisAction extends Action implements ICheatSheetAction {
 
@@ -113,6 +116,9 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
         this.node = node;
     }
 
+    /**
+     * constructor.
+     */
     public RunAnalysisAction() {
         super(DefaultMessagesImpl.getString("RunAnalysisAction.Run")); //$NON-NLS-1$
         setImageDescriptor(ImageLib.getImageDescriptor(ImageLib.REFRESH_IMAGE));
@@ -129,14 +135,12 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
             editor = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
             Item item = null;
 
-
-            // MOD klliu bug 19244 2011-03-10
             if (node != null) {
                 // means it from the context menu "run" which need to select a node
                 // then find the analysis from the node, and not fromt the editor(only one way)
                 item = node.getObject().getProperty().getItem();
-                if(item==null){
-                    log.error("Analysis item is null");
+                if (item == null) {
+                    log.error("Analysis item is null"); //$NON-NLS-1$
                     return;
                 }
                 validateAnalysis(item);
@@ -154,27 +158,25 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
                     return;
                 }
 
-                    IEditorInput editorInput = anaEditor.getEditorInput();
-                    analysis=findAnalysisFromEditorInput(editorInput);
-                    // find the listener by the editor
-                    listener = findAnalysisListenerFromAnalysisEditor(anaEditor);
+                IEditorInput editorInput = anaEditor.getEditorInput();
+                analysis = findAnalysisFromEditorInput(editorInput);
+                // find the listener by the editor
+                listener = findAnalysisListenerFromAnalysisEditor(anaEditor);
             }
 
-            if (analysis == null || !isConnectedAvailable(analysis) ) {
+            if (analysis == null || !isConnectedAvailable()) {
                 return;
             }
             AnalysisType analysisType = analysis.getParameters().getAnalysisType();
             if (AnalysisType.COLUMNS_COMPARISON.equals(analysisType)) {
-                //If the analysis type is column comparison, ask user to continue to run or not.
-                if(!isContinueRun()){
+                // If the analysis type is column comparison, ask user to continue to run or not.
+                if (!isContinueRun()) {
                     return;
                 }
-            }
-
-            if (AnalysisType.CONNECTION.equals(analysisType)) {
-                // If the analysis type is overview analysis, reload the database. TODO check here the needed of
-                // reloading database
-                reloadConnection(analysis);
+            } else if (AnalysisType.CONNECTION.equals(analysisType)) {
+                // If the analysis type is overview analysis, reload the database.
+                // TODO check here the needed of reloading database
+                reloadConnection();
             }
 
             // lock the analysis before running it if it is not locked yet.(whenever the editor is not opened)
@@ -210,11 +212,7 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
 
                     });
 
-                    ReturnCode executed = null;
-                    AnalysisExecutorThread aet = new AnalysisExecutorThread(analysis, monitor);
-
-                    // MOD sizhaoliu TDQ-6421 use eclipse monitor instead of starting a new thread
-                    aet.run();
+                    ReturnCode executed = AnalysisExecutorSelector.executeAnalysis(analysis, monitor);
 
                     if (monitor.isCanceled()) {
                         TdqAnalysisConnectionPool.closeConnectionPool(analysis);
@@ -226,9 +224,6 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
                         return Status.CANCEL_STATUS;
                     }
 
-                    if (aet.getExecuted() != null) {
-                        executed = aet.getExecuted();
-                    }
                     monitor.done();
                     if (isNeedUnlock) {
                         unlockAnalysis();
@@ -249,7 +244,6 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
                     return Status.OK_STATUS;
                 }
 
-
             };
 
             job.setUser(true);
@@ -259,6 +253,12 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
         }
     }
 
+    /**
+     * find Analysis From EditorInput.
+     * 
+     * @param editorInput
+     * @return
+     */
     private Analysis findAnalysisFromEditorInput(IEditorInput editorInput) {
         Analysis analysisToFind = null;
         if (editorInput instanceof FileEditorInput) {
@@ -270,42 +270,56 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
         return analysisToFind;
     }
 
+    /**
+     * unlock analysis.
+     */
     private void unlockAnalysis() {
-            try {
+        try {
             ProxyRepositoryFactory.getInstance().unlock(node.getObject().getProperty().getItem());
-            } catch (PersistenceException e) {
-                log.error(e, e);
-            } catch (LoginException e) {
-                log.error(e, e);
-            }
+        } catch (PersistenceException e) {
+            log.error(e, e);
+        } catch (LoginException e) {
+            log.error(e, e);
+        }
     }
 
-    private Boolean isContinueRun(){
+    /**
+     * popup dialog isContinueRun.
+     * 
+     * @return
+     */
+    private Boolean isContinueRun() {
         boolean isContinueRun = Boolean.TRUE;
         if (!MessageDialogWithToggle.openConfirm(null, DefaultMessagesImpl.getString("RunAnalysisAction.confirmTitle"), //$NON-NLS-1$
                 DefaultMessagesImpl.getString("RunAnalysisAction.confirmMSG"))) { //$NON-NLS-1$
-            isContinueRun=Boolean.FALSE;
+            isContinueRun = Boolean.FALSE;
         }
         return isContinueRun;
     }
-    
-    private void reloadConnection(Analysis analysis) {
-            if (AnalysisHelper.getReloadDatabases(analysis)) {
-                Connection conntion = (Connection) analysis.getContext().getConnection();
-                if (conntion != null) {
-                    try {
-                        RepositoryNode connectionNode = RepositoryNodeHelper.recursiveFind(conntion);
-                        ComparisonLevelFactory.creatComparisonLevel(connectionNode).reloadCurrentLevelElement();
-                    } catch (ReloadCompareException e) {
-                        log.error(e, e);
-                    }
+
+    /**
+     * reload analysis connection.
+     */
+    private void reloadConnection() {
+        if (AnalysisHelper.getReloadDatabases(analysis)) {
+            Connection conntion = (Connection) analysis.getContext().getConnection();
+            if (conntion != null) {
+                try {
+                    RepositoryNode connectionNode = RepositoryNodeHelper.recursiveFind(conntion);
+                    ComparisonLevelFactory.creatComparisonLevel(connectionNode).reloadCurrentLevelElement();
+                } catch (ReloadCompareException e) {
+                    log.error(e, e);
                 }
             }
+        }
     }
 
-    // return true when the connection is well connected
-    private boolean isConnectedAvailable(Analysis analysis) {
-        // MOD klliu bug 4546 check connectiong is connected well.
+    /**
+     * check whether the connection of analysis is available.
+     * 
+     * @return true when the connection is well connected
+     */
+    private boolean isConnectedAvailable() {
         DataManager datamanager = analysis.getContext().getConnection();
         Connection analysisDataProvider = ConnectionUtils.getConnectionFromDatamanager(datamanager);
 
@@ -348,8 +362,14 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
         return true;
     }
 
+    /**
+     * find Analysis Listener From AnalysisEditor.
+     * 
+     * @param anaEditor
+     * @return
+     */
     private IRuningStatusListener findAnalysisListenerFromAnalysisEditor(AnalysisEditor anaEditor) {
-        IRuningStatusListener listenerToFind=null;
+        IRuningStatusListener listenerToFind = null;
         IFormPage activePageInstance = anaEditor.getActivePageInstance();
         if (activePageInstance instanceof IRuningStatusListener) {
             listenerToFind = (IRuningStatusListener) activePageInstance;
@@ -373,10 +393,15 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
         return true;
     }
 
+    /**
+     * save analysis when needed.
+     * 
+     * @param anaEditor
+     * @return
+     */
     private boolean saveAnalysisIfNeeded(AnalysisEditor anaEditor) {
         if (anaEditor.isDirty()) {
             // MOD qiongli 2011-6-20 bug 21533,can save should before method doSave()
-            // MOD klliu bug 19991 3td 2011-03-29
             ReturnCode canSave = anaEditor.getMasterPage().canSave();
             if (!canSave.isOk()) {
                 MessageDialog.openError(editor.getSite().getShell(),
@@ -385,11 +410,32 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
                 return false;
             }
             // ~
-            anaEditor.doSave(null);
+            saveBeforeRun(anaEditor);
         }
         return true;
     }
 
+    /**
+     * Save the analysis before run the analysis.
+     * 
+     * @param anaEditor
+     */
+    private void saveBeforeRun(AnalysisEditor anaEditor) {
+        IRepositoryFactory localRepository = RepositoryFactoryProvider
+                .getRepositoriyById(RepositoryConstants.REPOSITORY_LOCAL_ID);
+        IRepositoryFactory oldRepository = ProxyRepositoryFactory.getInstance().getRepositoryFactoryFromProvider();
+        ProxyRepositoryFactory.getInstance().setRepositoryFactoryFromProvider(localRepository);
+        // This save action won't invoke any remote repository action such as svn commit. TDQ-7508
+        anaEditor.doSave(null);
+        ProxyRepositoryFactory.getInstance().setRepositoryFactoryFromProvider(oldRepository);
+    }
+
+    /**
+     * check whether the item is locked by Others.
+     * 
+     * @param item
+     * @return
+     */
     private boolean ifLockByOthers(Item item) {
         // MOD sizhaoliu TDQ-5452 verify the lock status before running an analysis
         if (ProxyRepositoryManager.getInstance().isLockByOthers(item)) {
@@ -402,6 +448,12 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
         return false;
     }
 
+    /**
+     * validate analysis.
+     * 
+     * @param item
+     * @throws BusinessException
+     */
     private void validateAnalysis(Item item) throws BusinessException {
         if (item instanceof TDQAnalysisItem) {
             if (((TDQAnalysisItem) item).getAnalysis() == null || ((TDQAnalysisItem) item).getAnalysis().getParameters() == null) {
@@ -432,6 +484,11 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
         run();
     }
 
+    /**
+     * display Result Status.
+     * 
+     * @param executed
+     */
     private void displayResultStatus(final ReturnCode executed) {
         if (log.isInfoEnabled()) {
             int executionDuration = analysis.getResults().getResultMetadata().getExecutionDuration();

@@ -196,7 +196,7 @@ public class UnitTestBuildHelper {
         Project project = null;
 
         ProxyRepositoryFactory proxyRepository = ProxyRepositoryFactory.getInstance();
-        IRepositoryFactory repository = RepositoryFactoryProvider.getRepositoriyById("local"); //$NON-NLS-1$
+        IRepositoryFactory repository = RepositoryFactoryProvider.getRepositoriyById(RepositoryConstants.REPOSITORY_LOCAL_ID);
         if (repository == null) {
             log.fatal(DefaultMessagesImpl
                     .getString("No local Repository found! Probably due to a missing plugin in the product.")); //$NON-NLS-1$

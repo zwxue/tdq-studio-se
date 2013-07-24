@@ -64,7 +64,6 @@ import org.jfree.chart.JFreeChart;
 import org.jfree.experimental.chart.swt.ChartComposite;
 import org.talend.commons.utils.WorkspaceUtils;
 import org.talend.core.model.metadata.builder.connection.Connection;
-import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.cwm.dependencies.DependenciesHandler;
 import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.SwitchHelpers;
@@ -89,7 +88,6 @@ import org.talend.dataquality.domain.Domain;
 import org.talend.dataquality.exception.DataprofilerCoreException;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.properties.TDQAnalysisItem;
-import org.talend.dataquality.rules.DQRule;
 import org.talend.dq.analysis.TableAnalysisHandler;
 import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.RepositoryNodeHelper;
@@ -645,15 +643,11 @@ public class TableMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
     @Override
     public void saveAnalysis() throws DataprofilerCoreException {
         // ADD gdbu 2011-3-3 bug 19179
-        List<DQRule> oldDqRules = getDqRules(analysis);
-        // remove the space from analysis name
-        //        analysis.setName(analysis.getName().replace(" ", ""));//$NON-NLS-1$ //$NON-NLS-2$
         for (Domain domain : this.analysis.getParameters().getDataFilter()) {
             domain.setName(this.analysis.getName());
         }
         // ~
 
-        IRepositoryViewObject reposObject = null;
         analysisHandler.clearAnalysis();
         TableIndicator[] tableIndicators = treeViewer.getTableIndicator();
         Connection tdProvider = null;

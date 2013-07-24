@@ -27,7 +27,7 @@ import orgomg.cwm.objectmodel.core.ModelElement;
 /**
  * DOC xqliu class global comment. Detailled comment
  */
-public final class ColumnAnalysisSqlParallelExecutor extends ColumnAnalysisSqlExecutor implements Runnable {
+public final class ColumnAnalysisSqlParallelExecutor extends ColumnAnalysisSqlExecutor {
 
     protected Connection connection;
 
@@ -74,10 +74,8 @@ public final class ColumnAnalysisSqlParallelExecutor extends ColumnAnalysisSqlEx
         return inst;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see java.lang.Runnable#run()
+    /**
+     * run analysis when SqlParallelExecutor.
      */
     public void run() {
         try {

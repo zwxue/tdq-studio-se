@@ -56,7 +56,6 @@ import org.talend.core.repository.utils.ProjectHelper;
 import org.talend.core.repository.utils.XmiResourceManager;
 import org.talend.core.runtime.CoreRuntimePlugin;
 import org.talend.repository.ProjectManager;
-import org.talend.repository.ProjectManager;
 import org.talend.repository.model.IRepositoryNode.ENodeType;
 import org.talend.repository.model.RepositoryConstants;
 import org.talend.repository.model.RepositoryNode;
@@ -205,7 +204,7 @@ public class UnitTestBuildHelper {
         Project project = null;
 
         ProxyRepositoryFactory proxyRepository = ProxyRepositoryFactory.getInstance();
-        IRepositoryFactory repository = RepositoryFactoryProvider.getRepositoriyById("local"); //$NON-NLS-1$
+        IRepositoryFactory repository = RepositoryFactoryProvider.getRepositoriyById(RepositoryConstants.REPOSITORY_LOCAL_ID);
         if (repository == null) {
             log.fatal("No local Repository found! Probably due to a missing plugin in the product."); //$NON-NLS-1$
         }

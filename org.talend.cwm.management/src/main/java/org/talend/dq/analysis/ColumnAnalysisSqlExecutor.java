@@ -1144,15 +1144,16 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
             int totleWork = 100;
             List<ExecutiveAnalysisJob> jobs = new ArrayList<ExecutiveAnalysisJob>();
 
-            if (this.getMonitor() != null) {
-                this.getMonitor().beginTask("Run Indicators Parallel", totleWork); //$NON-NLS-1$
+            IProgressMonitor monitor = this.getMonitor();
+            if (monitor != null) {
+                monitor.beginTask("Run Indicators Parallel", totleWork); //$NON-NLS-1$
             }
 
             for (Indicator indicator : indicators) {
                 if (this.continueRun()) {
-                    if (this.getMonitor() != null) {
-                        this.getMonitor().setTaskName(
-                                Messages.getString("ColumnAnalysisSqlExecutor.AnalyzedElement", indicator.getAnalyzedElement() //$NON-NLS-1$
+                    if (monitor != null) {
+                        monitor.setTaskName(Messages.getString(
+                                "ColumnAnalysisSqlExecutor.AnalyzedElement", indicator.getAnalyzedElement() //$NON-NLS-1$
                                         .getName()));
                     }
                     Connection conn = null;
@@ -1185,17 +1186,17 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
                     ColumnAnalysisSqlExecutor.this.parallelExeStatus = false;
                 }
 
-                if (this.getMonitor() != null) {
+                if (monitor != null) {
                     int current = (i + 1) * totleWork / jobs.size();
                     if (current > temp) {
-                        this.getMonitor().worked(current - temp);
+                        monitor.worked(current - temp);
                         temp = current;
                     }
                 }
             }
 
-            if (this.getMonitor() != null) {
-                this.getMonitor().done();
+            if (monitor != null) {
+                monitor.done();
             }
         } catch (Throwable thr) {
             log.error(thr);
