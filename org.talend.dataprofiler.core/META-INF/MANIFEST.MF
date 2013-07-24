@@ -1,12 +1,11 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Core Plug-in
+Bundle-Name: Data Profiler Core Plug-in
 Bundle-SymbolicName: org.talend.dataprofiler.core; singleton:=true
-Bundle-Version: 5.2.0.qualifier
+Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: org.talend.dataprofiler.core.CorePlugin
 Bundle-Vendor: .Talend SA.
 Require-Bundle: net.sourceforge.sqlexplorer;resolution:=optional,
- org.eclipse.ui.ide,
  org.eclipse.ui.ide,
  org.apache.commons.logging,
  org.apache.commons.collections,
@@ -14,31 +13,31 @@ Require-Bundle: net.sourceforge.sqlexplorer;resolution:=optional,
  org.apache.commons.io,
  org.talend.utils,
  org.eclipse.emf.edit.ui,
+ org.eclipse.ui.cheatsheets,
+ org.eclipse.ui.editors,
+ org.eclipse.ui.browser,
+ org.eclipse.help.ui,
+ org.eclipse.ui.intro,
+ org.eclipse.nebula.widgets.grid,
  org.talend.cwm.management,
  org.talend.dataprofiler.help,
  org.talend.libraries.jfreechart,
- org.eclipse.ui.cheatsheets,
  org.talend.dataquality.edit,
- org.eclipse.help.ui,
  org.talend.dataprofiler.libraries,
- org.eclipse.ui.editors,
- org.eclipse.ui.browser,
  org.talend.libraries.javacsv,
  org.talend.libraries.jung,
  org.talend.dataprofiler.ecos,
  org.talend.cwm.compare,
  org.talend.model.migration,
  org.talend.model.edit,
- org.talend.core.repository,
  org.talend.core.runtime,
+ org.talend.core.repository,
  org.talend.repository.localprovider,
  org.talend.metadata.managment,
  org.talend.metadata.managment.ui,
  org.talend.commons.ui,
- org.eclipse.ui.intro,
- org.talend.dataprofiler.migration,
  org.talend.repository.metadata,
- org.eclipse.nebula.widgets.grid,
+ org.talend.dataprofiler.migration,
  org.apache.log4j
 Bundle-ActivationPolicy: lazy
 Export-Package: org.eclipse.nebula.jface.tablecomboviewer,
