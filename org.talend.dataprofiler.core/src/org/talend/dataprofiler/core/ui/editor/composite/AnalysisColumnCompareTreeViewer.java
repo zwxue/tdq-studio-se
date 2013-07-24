@@ -183,7 +183,7 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart {
                 if (recursiveFind == null) {
                     recursiveFind = RepositoryNodeHelper.createRepositoryNode(tdColumn);
                 }
-                columnListB.add(RepositoryNodeHelper.recursiveFind(tdColumn));
+                columnListB.add(recursiveFind);
             }
             // RowMatchingIndicator rowMatchingIndicatorB = (RowMatchingIndicator) indicators.get(1);
 
@@ -292,13 +292,13 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart {
         leftComp.setLayoutData(new GridData(GridData.FILL_BOTH));
         leftComp.setLayout(new GridLayout());
         leftTable = this.createSectionPart(leftComp, columnListA,
-                DefaultMessagesImpl.getString("ColumnsComparisonMasterDetailsPage.leftColumns"), hyperlinkTextLeft); //$NON-NLS-1$ 
+                DefaultMessagesImpl.getString("ColumnsComparisonMasterDetailsPage.leftColumns"), hyperlinkTextLeft); //$NON-NLS-1$
 
         Composite rightComp = toolkit.createComposite(sashForm);
         rightComp.setLayoutData(new GridData(GridData.FILL_BOTH));
         rightComp.setLayout(new GridLayout());
         rightTable = this.createSectionPart(rightComp, columnListB,
-                DefaultMessagesImpl.getString("ColumnsComparisonMasterDetailsPage.rightColumns"), hyperlinkTextRight); //$NON-NLS-1$ 
+                DefaultMessagesImpl.getString("ColumnsComparisonMasterDetailsPage.rightColumns"), hyperlinkTextRight); //$NON-NLS-1$
         // MOD mzhao 2009-05-05 bug:6587.
         updateBindConnection(masterPage, tableViewerPosStack);
         columnsComparisonSection.setClient(sectionClient);
@@ -465,7 +465,7 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart {
 
     /**
      * DOC rli Comment method "moveElement".
-     * 
+     *
      * @param columnList
      * @param columnsElementViewer
      */
@@ -513,9 +513,9 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart {
     }
 
     /**
-     * 
+     *
      * DOC xqliu Comment method "sortElement".
-     * 
+     *
      * @param columnList
      * @param columnsElementViewer
      * @param asc
@@ -526,9 +526,9 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart {
     }
 
     /**
-     * 
+     *
      * DOC xqliu ColumnsComparisonMasterDetailsPage class global comment. Detailled comment
-     * 
+     *
      * FIXME this inner class should be static. Confirm and fix the error.
      */
     private class CaseInsensitiveComparator implements Comparator<Object> {
@@ -633,7 +633,7 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart {
 
             /*
              * (non-Javadoc)
-             * 
+             *
              * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse .swt.events.SelectionEvent)
              */
             @Override
@@ -647,9 +647,9 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart {
     }
 
     /**
-     * 
+     *
      * DOC mzhao Comment method "showSelectedElements".
-     * 
+     *
      * @param newTree
      */
     private void showSelectedElements(TableViewer tableView) {
@@ -719,7 +719,7 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart {
     }
 
     /**
-     * 
+     *
      * DOC mzhao Open column selection dialog for left column set. this method is intended to use from cheat sheets.
      */
     public void openColumnsSetASelectionDialog() {
@@ -727,7 +727,7 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart {
     }
 
     /**
-     * 
+     *
      * DOC mzhao Open column selection dialog for right column set. this method is intended to use from cheat sheets.
      */
     public void openColumnsSetBSelectionDialog() {
@@ -800,7 +800,7 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart {
     }
 
     /**
-     * 
+     *
      * DOC mzhao feature 11387, 2010-03-08, AnalysisColumnCompareTreeViewer class global comment. Detailled comment
      */
     private void handleColumnReverseAction() {
