@@ -43,7 +43,9 @@ import org.talend.core.model.metadata.IMetadataConnection;
 import org.talend.core.model.metadata.builder.ConvertionHelper;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.properties.Item;
+import org.talend.core.repository.model.IRepositoryFactory;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
+import org.talend.core.repository.model.RepositoryFactoryProvider;
 import org.talend.cwm.compare.exception.ReloadCompareException;
 import org.talend.cwm.compare.factory.ComparisonLevelFactory;
 import org.talend.cwm.db.connection.ConnectionUtils;
@@ -66,6 +68,7 @@ import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
 import org.talend.dq.nodes.AnalysisRepNode;
 import org.talend.metadata.managment.connection.manager.HiveConnectionManager;
+import org.talend.repository.model.RepositoryConstants;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.foundation.softwaredeployment.DataManager;
@@ -382,11 +385,25 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
                 return false;
             }
             // ~
-            anaEditor.doSave(null);
+            saveBeforeRun(anaEditor);
         }
         return true;
     }
 
+    /**
+     * Save the analysis before run the analysis.
+     * 
+     * @param anaEditor
+     */
+    private void saveBeforeRun(AnalysisEditor anaEditor) {
+        IRepositoryFactory localRepository = RepositoryFactoryProvider
+                .getRepositoriyById(RepositoryConstants.REPOSITORY_LOCAL_ID);
+        IRepositoryFactory oldRepository = ProxyRepositoryFactory.getInstance().getRepositoryFactoryFromProvider();
+        ProxyRepositoryFactory.getInstance().setRepositoryFactoryFromProvider(localRepository);
+        // This save action won't invoke any remote repository action such as svn commit. TDQ-7508
+        anaEditor.doSave(null);
+        ProxyRepositoryFactory.getInstance().setRepositoryFactoryFromProvider(oldRepository);
+    }
     private boolean ifLockByOthers(Item item) {
         // MOD sizhaoliu TDQ-5452 verify the lock status before running an analysis
         if (ProxyRepositoryManager.getInstance().isLockByOthers(item)) {
