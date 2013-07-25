@@ -73,19 +73,31 @@ public class ReloadDatabaseAction extends Action {
         return this.returnCode;
     }
 
+    /**
+     * constructor.
+     * 
+     * @param selectedNode
+     * @param menuText
+     */
     public ReloadDatabaseAction(Object selectedNode, String menuText) {
         super(menuText);
         this.selectedObject = selectedNode;
         setImageDescriptor(ImageLib.getImageDescriptor(ImageLib.UPDATE_IMAGE));
     }
 
-    // Added TDQ-7528: add a parameter to control if popup the select dialog(reload or compare)
+    /**
+     * constructor.
+     * 
+     * @param selectedNode
+     * @param menuText
+     * @param needCompare
+     */
     public ReloadDatabaseAction(Object selectedNode, String menuText, boolean needCompare) {
-        super(menuText);
-        this.selectedObject = selectedNode;
+        this(selectedNode, menuText);
+        // Added TDQ-7528: add a parameter to control if popup the select dialog(reload or compare)
         this.needCompare = needCompare;
-        setImageDescriptor(ImageLib.getImageDescriptor(ImageLib.UPDATE_IMAGE));
     }
+
     /*
      * (non-Javadoc)
      * 
@@ -99,13 +111,31 @@ public class ReloadDatabaseAction extends Action {
             return;
         }
         // Added yyin 20130131 TDQ-6780, warn the user to check the compare result before copy
-        boolean isContinue = isContinueReload();
-        if (!isContinue) {
-            // go to compare instead of reloading now
-            new PopComparisonUIAction(selectedObject, Messages.getString("ReloadDatabaseAction.CompareLabel")).run();//$NON-NLS-1$ 
-            returnCode.setReturnCode(Messages.getString("ReloadDatabaseAction.IsContinue"), false);//$NON-NLS-1$ 
-            return;
-        }// ~
+        // Added TDQ-6999 Copy from right to left should not popup reloading/comparing confirmation dialog,yyin
+        // MOD TDQ-7528 20130627 yyin: if needCompare=false,no need to popup select compare dialog
+        if (this.needCompare) {
+            // popup a dialog to warn the user better do the compare before the reload, and provide two buttons:
+            // if the user click the compare button, the compare will be executed.
+            // if the user click the reload button, the reload will continue.
+            String[] dialogButtonLabels = {
+                    Messages.getString("ReloadDatabaseAction.CompareLabel"), Messages.getString("ReloadDatabaseAction.ReloadLabel") };//$NON-NLS-1$ //$NON-NLS-2$ 
+            MessageDialog dialog = new MessageDialog(
+                    CorePlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getShell(),
+                    Messages.getString("ReloadDatabaseAction.ReloadLabel"), null, Messages.getString("ReloadDatabaseAction.IsContinue"), 3, dialogButtonLabels, SWT.NONE);//$NON-NLS-1$ //$NON-NLS-2$ 
+            int open = dialog.open();
+            // when click close, do nothing.
+            if (open == -1) {
+                return;
+            }
+
+            // when click compare
+            if (open == 0) {
+                // go to compare instead of reloading now
+                new PopComparisonUIAction(selectedObject, Messages.getString("ReloadDatabaseAction.CompareLabel")).run();//$NON-NLS-1$ 
+                returnCode.setReturnCode(Messages.getString("ReloadDatabaseAction.IsContinue"), false);//$NON-NLS-1$ 
+                return;
+            }// ~
+        }
 
         Connection conn = getConnection();
         List<ModelElement> dependencyClients = EObjectHelper.getDependencyClients(conn);
@@ -162,12 +192,11 @@ public class ReloadDatabaseAction extends Action {
         }
     }
 
-    /*
-     * (non-Javadoc)
+    /**
+     * check whether support the reload database action.
      * 
-     * @see org.eclipse.jface.action.Action#isEnabled()
+     * @return boolean
      */
-
     private boolean isSupport() {
         Connection conn = getConnection();
         if (!(conn instanceof DatabaseConnection)) {
@@ -182,6 +211,11 @@ public class ReloadDatabaseAction extends Action {
         return true;
     }
 
+    /**
+     * get Connection.
+     * 
+     * @return
+     */
     private Connection getConnection() {
         Connection conn = null;
         IRepositoryViewObject object = null;
@@ -203,23 +237,5 @@ public class ReloadDatabaseAction extends Action {
         }
         return conn;
     }
-    /**
-     * popup a dialog to warn the user better do the compare before the reload, and provide two buttons: compare, reload
-     * if the user click the compare button, the compare will be executed. if the user click the reload button, the
-     * reload will continue.
-     * 
-     * @return true if the user select reload, false: when select compare
-     */
-    private boolean isContinueReload() {
-        // Added TDQ-6999 Copy from right to left should not popup reloading/comparing confirmation dialog,yyin
-        // MOD TDQ-7528 20130627 yyin: if needCompare=false,no need to popup select compare dialog
-        if (!this.needCompare) {
-            return true;
-        }// ~
-        String[] dialogButtonLabels = {
-                Messages.getString("ReloadDatabaseAction.CompareLabel"), Messages.getString("ReloadDatabaseAction.ReloadLabel") };//$NON-NLS-1$ 
-        MessageDialog dialog = new MessageDialog(CorePlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getShell(),
-                "Reload", null, Messages.getString("ReloadDatabaseAction.IsContinue"), 3, dialogButtonLabels, SWT.NONE);//$NON-NLS-1$ 
-        return dialog.open() == 1;
-    }
+
 }
