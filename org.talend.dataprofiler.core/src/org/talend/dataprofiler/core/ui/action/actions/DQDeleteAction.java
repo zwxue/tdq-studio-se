@@ -59,6 +59,7 @@ import org.talend.dataprofiler.core.ui.dialog.message.DeleteModelElementConfirmD
 import org.talend.dataprofiler.core.ui.utils.RepNodeUtils;
 import org.talend.dataprofiler.core.ui.views.DQRespositoryView;
 import org.talend.dataprofiler.core.ui.views.resources.IRepositoryObjectCRUDAction;
+import org.talend.dataprofiler.core.ui.views.resources.RemoteRepositoryObjectCRUD;
 import org.talend.dataquality.properties.TDQReportItem;
 import org.talend.dq.helper.DQDeleteHelper;
 import org.talend.dq.helper.EObjectHelper;
@@ -171,11 +172,13 @@ public class DQDeleteAction extends DeleteAction {
         repositoryObjectCRUD.refreshDQViewForRemoteProject();
 
         // ADD msjian TDQ-7006 2013-7-24: after refresh get the selection to check.
-        if (getSelection() == null) {
-            MessageDialog.openInformation(Display.getCurrent().getActiveShell(),
-                    DefaultMessagesImpl.getString("DQDeleteAction.delete"), DefaultMessagesImpl //$NON-NLS-1$
-                            .getString("DQDeleteAction.deleteByOther")); //$NON-NLS-1$
-            return;
+        if (repositoryObjectCRUD instanceof RemoteRepositoryObjectCRUD) {
+            if (getSelection() == null) {
+                MessageDialog.openInformation(Display.getCurrent().getActiveShell(),
+                        DefaultMessagesImpl.getString("DQDeleteAction.delete"), DefaultMessagesImpl //$NON-NLS-1$
+                                .getString("DQDeleteAction.deleteByOther")); //$NON-NLS-1$
+                return;
+            }
         }
         // TDQ-7006~
 
