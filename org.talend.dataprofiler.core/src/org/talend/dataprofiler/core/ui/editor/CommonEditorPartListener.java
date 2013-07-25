@@ -173,6 +173,9 @@ public class CommonEditorPartListener extends PartListener {
             RepositoryNode fileNode = RepositoryNodeHelper.recursiveFindFile(((FileEditorInput) editorInput).getFile());
             item = fileNode.getObject().getProperty().getItem();
         }
+        if (item == null) {// when preview a table and not save, close directly, the item is null
+            return;
+        }
         try {
             ProxyRepositoryFactory.getInstance().unlock(item);
         } catch (PersistenceException e) {
