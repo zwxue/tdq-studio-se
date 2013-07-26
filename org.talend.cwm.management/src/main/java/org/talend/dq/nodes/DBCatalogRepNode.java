@@ -15,6 +15,8 @@ package org.talend.dq.nodes;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Path;
 import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.core.repository.model.repositoryObject.MetadataCatalogRepositoryObject;
@@ -159,4 +161,17 @@ public class DBCatalogRepNode extends DQRepositoryNode {
         return this.getObject().getLabel();
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.repository.model.RepositoryNode#getDisplayText()
+     */
+    @Override
+    public String getDisplayText() {
+        // MOD zshen to modify catalog name when connection is ODBC
+        String catalogName = getObject().getLabel();
+        IPath catalogPath = new Path(catalogName);
+        catalogName = catalogPath.removeFileExtension().lastSegment();
+        return catalogName;
+    }
 }

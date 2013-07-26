@@ -86,4 +86,14 @@ public class ReportRepNode extends DQRepositoryNode {
     public boolean canExpandForDoubleClick() {
         return false;
     }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.repository.model.RepositoryNode#getDisplayText()
+     */
+    @Override
+    public String getDisplayText() {
+        return getLabel() + " " + getObject().getVersion(); //$NON-NLS-1$
+    }
 }

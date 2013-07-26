@@ -129,4 +129,14 @@ public class DBColumnRepNode extends DQRepositoryNode {
     public boolean isKey() {
         return ColumnHelper.isPrimaryKey(this.getTdColumn());
     }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.repository.model.RepositoryNode#getDisplayText()
+     */
+    @Override
+    public String getDisplayText() {
+        return getLabel() + "(" + getNodeDataType() + ")"; //$NON-NLS-1$ //$NON-NLS-2$
+    }
 }

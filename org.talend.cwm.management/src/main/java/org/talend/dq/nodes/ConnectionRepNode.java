@@ -13,11 +13,11 @@
 package org.talend.dq.nodes;
 
 import org.talend.core.model.repository.IRepositoryViewObject;
+import org.talend.dataquality.PluginConstant;
 import org.talend.repository.model.RepositoryNode;
 
-
 /**
- * DOC xqliu  class global comment. Detailled comment
+ * DOC xqliu class global comment. Detailled comment
  */
 public class ConnectionRepNode extends DQRepositoryNode {
 
@@ -30,6 +30,16 @@ public class ConnectionRepNode extends DQRepositoryNode {
      */
     public ConnectionRepNode(IRepositoryViewObject object, RepositoryNode parent, ENodeType type) {
         super(object, parent, type);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.repository.model.RepositoryNode#getDisplayText()
+     */
+    @Override
+    public String getDisplayText() {
+        return getLabel() + PluginConstant.SPACE_STRING + getObject().getVersion();
     }
 
 }

@@ -30,4 +30,14 @@ public class DBConnectionSubFolderRepNode extends DBConnectionFolderRepNode {
     public DBConnectionSubFolderRepNode(IRepositoryViewObject object, RepositoryNode parent, ENodeType type) {
         super(object, parent, type);
     }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.repository.model.RepositoryNode#getDisplayText()
+     */
+    @Override
+    public String getDisplayText() {
+        return getObject().getLabel();
+    }
 }

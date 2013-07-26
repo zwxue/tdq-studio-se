@@ -151,4 +151,14 @@ public class AnalysisFolderRepNode extends DQRepositoryNode {
     public boolean isVirtualFolder() {
         return false;
     }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.repository.model.RepositoryNode#getDisplayText()
+     */
+    @Override
+    public String getDisplayText() {
+        return getLabelWithCount();
+    }
 }

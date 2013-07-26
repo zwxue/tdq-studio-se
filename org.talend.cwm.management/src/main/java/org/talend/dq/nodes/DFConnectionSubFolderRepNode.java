@@ -27,4 +27,13 @@ public class DFConnectionSubFolderRepNode extends DFConnectionFolderRepNode {
         super(object, parent, type);
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.repository.model.RepositoryNode#getDisplayText()
+     */
+    @Override
+    public String getDisplayText() {
+        return getObject().getLabel();
+    }
 }

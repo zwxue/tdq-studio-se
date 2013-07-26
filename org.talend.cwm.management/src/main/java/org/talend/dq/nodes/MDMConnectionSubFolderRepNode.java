@@ -15,14 +15,14 @@ package org.talend.dq.nodes;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.repository.model.RepositoryNode;
 
-
 /**
- * DOC klliu  class global comment. Detailled comment
+ * DOC klliu class global comment. Detailled comment
  */
 public class MDMConnectionSubFolderRepNode extends MDMConnectionFolderRepNode {
 
     /**
      * DOC klliu MDMConnectionSubFolderRepNode constructor comment.
+     * 
      * @param object
      * @param parent
      * @param type
@@ -42,6 +42,16 @@ public class MDMConnectionSubFolderRepNode extends MDMConnectionFolderRepNode {
             return this.getObject().getProperty().getLabel();
         }
         return super.getLabel();
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.repository.model.RepositoryNode#getDisplayText()
+     */
+    @Override
+    public String getDisplayText() {
+        return getObject().getLabel();
     }
 
 }

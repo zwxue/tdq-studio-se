@@ -150,4 +150,13 @@ public class ReportFolderRepNode extends DQRepositoryNode {
         return false;
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.repository.model.RepositoryNode#getDisplayText()
+     */
+    @Override
+    public String getDisplayText() {
+        return getLabelWithCount();
+    }
 }

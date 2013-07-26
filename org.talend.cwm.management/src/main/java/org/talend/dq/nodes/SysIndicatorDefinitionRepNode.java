@@ -95,4 +95,14 @@ public class SysIndicatorDefinitionRepNode extends DQRepositoryNode {
     public List<IRepositoryNode> getChildren() {
         return filterResultsIfAny(super.getChildren());
     }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.repository.model.RepositoryNode#getDisplayText()
+     */
+    @Override
+    public String getDisplayText() {
+        return getLabel() + " " + getObject().getVersion(); //$NON-NLS-1$
+    }
 }

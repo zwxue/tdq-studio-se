@@ -68,4 +68,14 @@ public class RuleRepNode extends DQRepositoryNode {
         // MOD klliu 2011-06-28 bug 22669
         return new ArrayList<IRepositoryNode>();
     }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.repository.model.RepositoryNode#getDisplayText()
+     */
+    @Override
+    public String getDisplayText() {
+        return getLabel() + " " + getObject().getVersion(); //$NON-NLS-1$
+    }
 }

@@ -23,17 +23,18 @@ import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.model.repository.Folder;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
+import org.talend.cwm.management.i18n.Messages;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
 
-
 /**
- * DOC qiongli  class global comment. Detailled comment
+ * DOC qiongli class global comment. Detailled comment
  */
 public class DFConnectionFolderRepNode extends DQRepositoryNode {
 
     private static Logger log = Logger.getLogger(DFConnectionFolderRepNode.class);
+
     /**
      * DOC qiongli FileDelimitedFolderRepNode constructor comment.
      * 
@@ -49,7 +50,6 @@ public class DFConnectionFolderRepNode extends DQRepositoryNode {
     public List<IRepositoryNode> getChildren() {
         return getChildren(false);
     }
-
 
     @Override
     public List<IRepositoryNode> getChildren(boolean withDeleted) {
@@ -103,5 +103,14 @@ public class DFConnectionFolderRepNode extends DQRepositoryNode {
         return this.getObject().getLabel();
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.repository.model.RepositoryNode#getDisplayText()
+     */
+    @Override
+    public String getDisplayText() {
+        return Messages.getString("DQRepositoryViewLabelProvider.DFConnectionFolderName"); //$NON-NLS-1$
+    }
 
 }

@@ -24,6 +24,7 @@ import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.model.repository.Folder;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
+import org.talend.cwm.management.i18n.Messages;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
@@ -110,5 +111,15 @@ public class DBConnectionFolderRepNode extends DQRepositoryNode {
             return this.getProperties(EProperties.LABEL).toString();
         }
         return this.getObject().getLabel();
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.repository.model.RepositoryNode#getDisplayText()
+     */
+    @Override
+    public String getDisplayText() {
+        return Messages.getString("DQRepositoryViewLabelProvider.DBConnectionFolderName"); //$NON-NLS-1$
     }
 }

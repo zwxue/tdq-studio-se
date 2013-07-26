@@ -26,6 +26,7 @@ public class DFColumnRepNode extends DQRepositoryNode {
     private MetadataColumnRepositoryObject metadataColumnRepositoryObject;
 
     private MetadataColumn metadataColumn;
+
     /**
      * DOC qiongli DFColumnRepNode constructor comment.
      * 
@@ -36,7 +37,7 @@ public class DFColumnRepNode extends DQRepositoryNode {
     public DFColumnRepNode(IRepositoryViewObject object, RepositoryNode parent, ENodeType type) {
         super(object, parent, type);
         metadataColumnRepositoryObject = (MetadataColumnRepositoryObject) object;
-        metadataColumn = (MetadataColumn) metadataColumnRepositoryObject.getTdColumn();
+        metadataColumn = metadataColumnRepositoryObject.getTdColumn();
     }
 
     // @Override
@@ -64,5 +65,15 @@ public class DFColumnRepNode extends DQRepositoryNode {
         String convertToJavaType = TalendTypeConvert.convertToJavaType(this.getMetadataColumn().getTalendType());
         return convertToJavaType;
 
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.repository.model.RepositoryNode#getDisplayText()
+     */
+    @Override
+    public String getDisplayText() {
+        return getId() + "(" + getNodeDataType() + ")"; //$NON-NLS-1$ //$NON-NLS-2$
     }
 }

@@ -239,4 +239,17 @@ public class ReportSubFolderRepNode extends ReportFolderRepNode {
     public boolean isVirtualFolder() {
         return this.getReport() != null;
     }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.repository.model.RepositoryNode#getDisplayText()
+     */
+    @Override
+    public String getDisplayText() {
+        if (!ReportSubFolderType.SUB_FOLDER.equals(getReportSubFolderType())) {
+            return (String) getProperties(EProperties.LABEL) + getCount();
+        }
+        return getLabelWithCount();
+    }
 }

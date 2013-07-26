@@ -29,6 +29,7 @@ import org.talend.core.repository.model.repositoryObject.MetadataSchemaRepositor
 import org.talend.core.repository.model.repositoryObject.MetadataXmlElementTypeRepositoryObject;
 import org.talend.core.repository.model.repositoryObject.TdTableRepositoryObject;
 import org.talend.core.repository.model.repositoryObject.TdViewRepositoryObject;
+import org.talend.cwm.management.i18n.Messages;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.relational.TdTable;
 import org.talend.cwm.relational.TdView;
@@ -216,5 +217,18 @@ public class AnalysisSubFolderRepNode extends AnalysisFolderRepNode {
             // return this.getObject().getLabel();
         }
         return super.getLabel();
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.repository.model.RepositoryNode#getDisplayText()
+     */
+    @Override
+    public String getDisplayText() {
+        if (getObject() == null) {
+            return Messages.getString("AnalysisSubFolderRepNode.analyzedElement") + getCount(); //$NON-NLS-1$
+        }
+        return getLabelWithCount();
     }
 }

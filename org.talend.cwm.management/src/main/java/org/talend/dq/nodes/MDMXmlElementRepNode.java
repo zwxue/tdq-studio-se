@@ -75,8 +75,8 @@ public class MDMXmlElementRepNode extends DQRepositoryNode {
             for (ModelElement mElement : xmlElements) {
                 MetadataXmlElementTypeRepositoryObject metadataXmlElementType = new MetadataXmlElementTypeRepositoryObject(
                         this.getObject(), (TdXmlElementType) mElement);
-                RepositoryNode xmlElementTypeNode = new MDMXmlElementRepNode((IRepositoryViewObject) metadataXmlElementType,
-                        this, ENodeType.TDQ_REPOSITORY_ELEMENT);
+                RepositoryNode xmlElementTypeNode = new MDMXmlElementRepNode(metadataXmlElementType, this,
+                        ENodeType.TDQ_REPOSITORY_ELEMENT);
                 xmlElementTypeNode.setProperties(EProperties.LABEL, ERepositoryObjectType.MDM_ELEMENT_TYPE);
                 xmlElementTypeNode.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.METADATA_CON_CATALOG);
                 metadataXmlElementType.setRepositoryNode(xmlElementTypeNode);
@@ -112,5 +112,19 @@ public class MDMXmlElementRepNode extends DQRepositoryNode {
         }
         return PluginConstant.EMPTY_STRING;
 
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.repository.model.RepositoryNode#getDisplayText()
+     */
+    @Override
+    public String getDisplayText() {
+        String nodeDataType = getNodeDataType();
+        if (!PluginConstant.EMPTY_STRING.equals(nodeDataType)) {
+            return getTdXmlElementType().getName() + "(" + nodeDataType + ")"; //$NON-NLS-1$ //$NON-NLS-2$
+        }
+        return getTdXmlElementType().getName();
     }
 }

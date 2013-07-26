@@ -17,8 +17,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
-import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.resource.ImageDescriptor;
@@ -34,7 +32,6 @@ import org.talend.core.database.EDatabaseTypeName;
 import org.talend.core.model.metadata.IMetadataConnection;
 import org.talend.core.model.metadata.builder.ConvertionHelper;
 import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
-import org.talend.core.model.metadata.builder.database.PluginConstant;
 import org.talend.core.model.metadata.builder.database.dburl.SupportDBUrlType;
 import org.talend.core.model.metadata.builder.util.MetadataConnectionUtils;
 import org.talend.core.model.properties.ConnectionItem;
@@ -45,19 +42,17 @@ import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.dataprofiler.core.ImageLib;
+import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.ui.exchange.ExchangeCategoryRepNode;
 import org.talend.dataprofiler.core.ui.exchange.ExchangeComponentRepNode;
-import org.talend.dq.nodes.AnalysisFolderRepNode;
 import org.talend.dq.nodes.AnalysisRepNode;
-import org.talend.dq.nodes.AnalysisSubFolderRepNode;
 import org.talend.dq.nodes.DBCatalogRepNode;
 import org.talend.dq.nodes.DBColumnFolderRepNode;
 import org.talend.dq.nodes.DBColumnRepNode;
 import org.talend.dq.nodes.DBConnectionFolderRepNode;
 import org.talend.dq.nodes.DBConnectionRepNode;
-import org.talend.dq.nodes.DBConnectionSubFolderRepNode;
 import org.talend.dq.nodes.DBSchemaRepNode;
 import org.talend.dq.nodes.DBTableFolderRepNode;
 import org.talend.dq.nodes.DBTableRepNode;
@@ -65,25 +60,18 @@ import org.talend.dq.nodes.DBViewFolderRepNode;
 import org.talend.dq.nodes.DBViewRepNode;
 import org.talend.dq.nodes.DFColumnFolderRepNode;
 import org.talend.dq.nodes.DFColumnRepNode;
-import org.talend.dq.nodes.DFConnectionFolderRepNode;
 import org.talend.dq.nodes.DFConnectionRepNode;
-import org.talend.dq.nodes.DFConnectionSubFolderRepNode;
 import org.talend.dq.nodes.DFTableRepNode;
+import org.talend.dq.nodes.DQRepositoryNode;
 import org.talend.dq.nodes.JrxmlTempleteRepNode;
 import org.talend.dq.nodes.MDMConnectionFolderRepNode;
 import org.talend.dq.nodes.MDMConnectionRepNode;
-import org.talend.dq.nodes.MDMConnectionSubFolderRepNode;
 import org.talend.dq.nodes.MDMSchemaRepNode;
 import org.talend.dq.nodes.MDMXmlElementRepNode;
-import org.talend.dq.nodes.PatternLanguageRepNode;
 import org.talend.dq.nodes.PatternRepNode;
 import org.talend.dq.nodes.RecycleBinRepNode;
 import org.talend.dq.nodes.ReportAnalysisRepNode;
-import org.talend.dq.nodes.ReportFileRepNode;
-import org.talend.dq.nodes.ReportFolderRepNode;
 import org.talend.dq.nodes.ReportRepNode;
-import org.talend.dq.nodes.ReportSubFolderRepNode;
-import org.talend.dq.nodes.ReportSubFolderRepNode.ReportSubFolderType;
 import org.talend.dq.nodes.RuleRepNode;
 import org.talend.dq.nodes.SourceFileRepNode;
 import org.talend.dq.nodes.SysIndicatorDefinitionRepNode;
@@ -100,9 +88,9 @@ import org.talend.utils.exceptions.MissingDriverException;
  */
 public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider implements IFontProvider {
 
-    private static final String LEFT = "(";//$NON-NLS-1$
-
-    private static final String RIGHT = ")";//$NON-NLS-1$
+    /**
+     * 
+     */
 
     private static Font italicFont;
 
@@ -110,12 +98,10 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider i
 
     private static Map<ERepositoryObjectType, Image[]> lockImageMap = new HashMap<ERepositoryObjectType, Image[]>();
 
-
     public DQRepositoryViewLabelProvider() {
         super(MNComposedAdapterFactory.getAdapterFactory());
 
         if (null == italicFont) {
-
             italicFont = Display.getDefault().getSystemFont();
             FontData[] exfds = italicFont.getFontData();
             if (exfds.length > 0) {
@@ -126,7 +112,6 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider i
         }
     }
 
-    @SuppressWarnings("null")
     @Override
     public Image getImage(Object element) {
         Image image = super.getImage(element);
@@ -165,7 +150,6 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider i
                 if (node instanceof DBConnectionRepNode) {
                     if (!isSupportedConnection(node) || isNeedAddDriverConnection(node)) {
                         image = ImageLib.createErrorIcon(ImageLib.TD_DATAPROVIDER).createImage();
-
                     } else if (isInvalidJDBCConnection(node)) {
                         image = ImageLib.createInvalidIcon(ImageLib.TD_DATAPROVIDER).createImage();
                     } else {
@@ -221,7 +205,6 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider i
                             image = lockImageMap.get(repositoryObjectType)[1];
                         }
                     }
-
                 }
             } else if (type.equals(ENodeType.TDQ_REPOSITORY_ELEMENT)) {
                 if (node instanceof DBCatalogRepNode) {
@@ -243,7 +226,6 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider i
                         image = ImageLib.getImage(ImageLib.TD_COLUMN);
                     }
                 } else if (node instanceof DFColumnRepNode) {
-
                     image = ImageLib.getImage(ImageLib.TD_COLUMN);
                 } else if (node instanceof MDMSchemaRepNode) {
                     image = ImageLib.getImage(ImageLib.XML_DOC);
@@ -254,11 +236,7 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider i
                 } else if (node instanceof JrxmlTempleteRepNode) {
                     image = ImageLib.getImage(ImageLib.XML_DOC);
                 }
-                // else if (node instanceof PatternLanguageRepNode) {
-                // return ImageLib.getImage(ImageLib.);
-                // }
             }
-
         }
         // ~
 
@@ -268,113 +246,33 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider i
     @Override
     public String getText(Object element) {
         try {
-        if (element != null && element instanceof IRepositoryNode) {
-            IRepositoryNode node = (IRepositoryNode) element;
-            if (node instanceof RecycleBinRepNode || node instanceof ExchangeCategoryRepNode
-                    || node instanceof ExchangeComponentRepNode) {
-                // virtual node, get the lable of node directly
-                return node.getLabel();
-            } else if (node instanceof DBConnectionSubFolderRepNode) {
-                return ((DBConnectionSubFolderRepNode) node).getObject().getLabel();
-            } else if (node instanceof DBConnectionFolderRepNode) {
-                return DefaultMessagesImpl.getString("DQRepositoryViewLabelProvider.DBConnectionFolderName"); //$NON-NLS-1$
-            } else if (node instanceof DFConnectionSubFolderRepNode) {
-                return ((DFConnectionSubFolderRepNode) node).getObject().getLabel();
-            } else if (node instanceof DFConnectionFolderRepNode) {
-                return DefaultMessagesImpl.getString("DQRepositoryViewLabelProvider.DFConnectionFolderName");//$NON-NLS-1$
-            } else if (node instanceof MDMSchemaRepNode) {
-                return ((MDMSchemaRepNode) node).getLabel();
-            } else if (node instanceof MDMConnectionSubFolderRepNode) {
-                return ((MDMConnectionSubFolderRepNode) node).getObject().getLabel();
-            } else if (node instanceof MDMConnectionFolderRepNode) {
-                return DefaultMessagesImpl.getString("DQRepositoryViewLabelProvider.MDMConnectionFolderName"); //$NON-NLS-1$
-            } else if (node instanceof DBTableFolderRepNode) {
-                return ((DBTableFolderRepNode) node).getLabel();
-            } else if (node instanceof DBViewFolderRepNode) {
-                return ((DBViewFolderRepNode) node).getLabel();
-            } else if (node instanceof DBColumnFolderRepNode) {
-                return ((DBColumnFolderRepNode) node).getNodeName();
-            } else if (node instanceof DFColumnFolderRepNode) {
-                return ((DFColumnFolderRepNode) node).getNodeName();
-            } else if (node instanceof DBTableRepNode) {
-                return ((DBTableRepNode) node).getLabel();
-            } else if (node instanceof DBViewRepNode) {
-                return ((DBViewRepNode) node).getLabel();
-            } else if (node instanceof DBColumnRepNode) {
-                DBColumnRepNode columnNode = (DBColumnRepNode) node;
-                return columnNode.getLabel() + LEFT + columnNode.getNodeDataType() + RIGHT;
-            } else if (node instanceof DFColumnRepNode) {
-                DFColumnRepNode dfColumnRepNode = (DFColumnRepNode) node;
-                String nodeDataType = dfColumnRepNode.getNodeDataType();
-                return dfColumnRepNode.getId() + LEFT + nodeDataType + RIGHT;
-            } else if (node instanceof MDMXmlElementRepNode) {
-                MDMXmlElementRepNode mdmColumnRepNode = (MDMXmlElementRepNode) node;
-                String nodeDataType = mdmColumnRepNode.getNodeDataType();
-                if (!PluginConstant.EMPTY_STRING.equals(nodeDataType)) {
-                    return mdmColumnRepNode.getTdXmlElementType().getName() + LEFT + nodeDataType + RIGHT;
-                }
-                return mdmColumnRepNode.getTdXmlElementType().getName();
-            } else if (node instanceof AnalysisRepNode || node instanceof ReportRepNode
-                    || node instanceof SysIndicatorDefinitionRepNode || node instanceof PatternRepNode
-                    || node instanceof RuleRepNode || node instanceof SourceFileRepNode || node instanceof DFConnectionRepNode
-                    || node instanceof MDMConnectionRepNode) {
-                // return node.getObject().getLabel() + " " + node.getObject().getVersion();
-                return node.getLabel() + " " + node.getObject().getVersion(); //$NON-NLS-1$
-            } else if (node instanceof DBConnectionRepNode) {
-                if (!isSupportedConnection(node)) {
-                    return node.getObject().getLabel() + "(Unsupported)"; //$NON-NLS-1$
-                } else {
-                    return node.getLabel() + " " + node.getObject().getVersion(); //$NON-NLS-1$
-                }
-            } else if (node instanceof DBCatalogRepNode) {
-                // MOD zshen to modify catalog name when connection is ODBC
-                String catalogName = node.getObject().getLabel();
-                IPath catalogPath = new Path(catalogName);
-                catalogName = catalogPath.removeFileExtension().lastSegment();
-                return catalogName;
-            } else if (node instanceof AnalysisFolderRepNode) {
-                if (node instanceof AnalysisSubFolderRepNode) {
-                    AnalysisSubFolderRepNode anaSubNode = (AnalysisSubFolderRepNode) node;
-                    if (node.getObject() == null) {
-                        return DefaultMessagesImpl.getString("AnalysisSubFolderRepNode.analyzedElement") + anaSubNode.getCount(); //$NON-NLS-1$
+            if (element != null && element instanceof IRepositoryNode) {
+                IRepositoryNode node = (IRepositoryNode) element;
+
+                if (node instanceof DBConnectionRepNode) {
+                    if (!isSupportedConnection(node)) {
+                        return node.getObject().getLabel() + PluginConstant.UNSUPPORTED;
                     }
-                    return anaSubNode.getLabelWithCount();
                 }
-                AnalysisFolderRepNode anaNode = (AnalysisFolderRepNode) node;
-                return anaNode.getLabelWithCount();
-            } else if (node instanceof ReportFolderRepNode) {
-                if (node instanceof ReportSubFolderRepNode) {
-                    ReportSubFolderRepNode repSubNode = (ReportSubFolderRepNode) node;
-                    if (!ReportSubFolderType.SUB_FOLDER.equals(repSubNode.getReportSubFolderType())) {
-                        return (String) node.getProperties(EProperties.LABEL) + repSubNode.getCount();
-                    }
-                    return repSubNode.getLabelWithCount();
+                if (node instanceof DQRepositoryNode) {
+                    return node.getDisplayText();
                 }
-                ReportFolderRepNode repNode = (ReportFolderRepNode) node;
-                return repNode.getLabelWithCount();
-            } else if (node instanceof PatternLanguageRepNode) {
-                return node.getLabel();
-            } else if (node instanceof ReportFileRepNode || node instanceof ReportAnalysisRepNode) {
-                return node.getLabel();
+
+                String label = node.getObject().getLabel();
+                if (label.startsWith(DQStructureManager.PREFIX_TDQ)) {
+                    return label.substring(4, label.length());
+                } else if (label.equals(EResourceConstant.METADATA.getName())) {
+                    return label.substring(0, 1).toUpperCase() + label.substring(1);
+                }
+                return node.getObject() == null ? PluginConstant.EMPTY_STRING : label;
             }
-            String label = node.getObject().getLabel();
-            boolean startsWith = label.startsWith(DQStructureManager.PREFIX_TDQ);
-            if (startsWith) {
-                label = label.substring(4, label.length());
-                return label;
-            } else if (label.equals(EResourceConstant.METADATA.getName())) {
-                label = label.substring(0, 1).toUpperCase() + label.substring(1);
-                return label;
-            }
-            return node.getObject() == null ? PluginConstant.EMPTY_STRING : label;
-        }
         } catch (MissingDriverException e) {
             if (PluginChecker.isOnlyTopLoaded()) {
                 MessageDialog.openWarning(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
                         DefaultMessagesImpl.getString("ResourceViewContentProvider.warining"), //$NON-NLS-1$
                         e.getErrorMessage());
             } else {
-                log.error(e,e);
+                log.error(e, e);
             }
         }
         String text = super.getText(element);
@@ -382,9 +280,9 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider i
     }
 
     /**
-     *
+     * 
      * DOC qiongli Comment method "getImageByContentType".
-     *
+     * 
      * @param repositoryNode
      * @return
      */
@@ -449,14 +347,12 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider i
             if (connectionItem.getConnection() instanceof DatabaseConnection) {
                 IMetadataConnection metadataConnection = ConvertionHelper.convert(connectionItem.getConnection());
                 try {
-
                     if (!EDatabaseTypeName.HIVE.getXmlName().equalsIgnoreCase(metadataConnection.getDbType())) {
                         MetadataConnectionUtils.getClassDriver(metadataConnection);
                     }
                 } catch (MissingDriverException e) {
-                        return true;
+                    return true;
                 } catch (Exception e) {
-
                     log.error(e, e);
                 }
             }
@@ -466,7 +362,7 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider i
 
     /**
      * ADD qiongli TDQ-5801 if it is a invalid jdbc connection.
-     *
+     * 
      * @param repNode
      * @return
      */
@@ -480,7 +376,6 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider i
                 if (databaseType.equalsIgnoreCase(SupportDBUrlType.GENERICJDBCDEFAULTURL.getDBKey())
                         && ((connection.getDriverJarPath() == null) || (connection.getDriverJarPath()).trim().equals(
                                 PluginConstant.EMPTY_STRING))) {
-
                     return true;
                 }
             }
@@ -491,7 +386,7 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider i
 
     /*
      * yyi 2011-04-14 20362:connection modified
-     *
+     * 
      * @see org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider#getFont(java.lang.Object)
      */
     @Override
@@ -513,6 +408,5 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider i
 
         return changeURL ? italicFont : super.getFont(element);
     }
-
 
 }

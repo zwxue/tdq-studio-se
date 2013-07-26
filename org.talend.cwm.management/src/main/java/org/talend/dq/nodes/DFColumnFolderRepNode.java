@@ -117,4 +117,14 @@ public class DFColumnFolderRepNode extends DQRepositoryNode {
         }
         return this.getObject().getLabel();
     }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.repository.model.RepositoryNode#getDisplayText()
+     */
+    @Override
+    public String getDisplayText() {
+        return getNodeName();
+    }
 }
