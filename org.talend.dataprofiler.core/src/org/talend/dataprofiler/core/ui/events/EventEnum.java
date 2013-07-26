@@ -19,5 +19,7 @@ package org.talend.dataprofiler.core.ui.events;
 public enum EventEnum {
     DQ_JRXML_RENAME,
     DQ_JRXML_MOVE,
-    DQ_JRXML_DELETE;
+    DQ_JRXML_DELETE,
+    DQ_ANALYSIS_RUN_FROM_MENU,
+    DQ_ANALYSIS_CHECK_BEFORERUN;
 }

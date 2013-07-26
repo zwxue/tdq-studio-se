@@ -17,6 +17,7 @@ import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.action.Action;
+import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.FileEditorInput;
@@ -28,6 +29,9 @@ import org.talend.dataprofiler.core.ui.action.actions.RefreshChartAction;
 import org.talend.dataprofiler.core.ui.action.actions.RunAnalysisAction;
 import org.talend.dataprofiler.core.ui.editor.CommonFormEditor;
 import org.talend.dataprofiler.core.ui.editor.TdEditorToolBar;
+import org.talend.dataprofiler.core.ui.events.EventEnum;
+import org.talend.dataprofiler.core.ui.events.EventManager;
+import org.talend.dataprofiler.core.ui.events.EventReceiver;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisType;
 import org.talend.dataquality.analysis.ExecutionLanguage;
@@ -65,6 +69,12 @@ public class AnalysisEditor extends CommonFormEditor {
 
     // MOD xqliu 2009-07-02 bug 7687
     private DefaultSaveAction saveAction;
+    // ~
+
+    // Added 20130725 TDQ-7639 yyin
+    private EventReceiver refreshReceiver = null;
+
+    private EventReceiver checkBeforeRunReceiver = null;
 
     // ~
 
@@ -141,6 +151,8 @@ public class AnalysisEditor extends CommonFormEditor {
         } catch (PartInitException e) {
             ExceptionHandler.process(e, Level.ERROR);
         }
+        // Added 20130725 TDQ-7639 yyin : register the run analysis event, which need to refresh the pages
+        registerUpdateExecutionEvent();
     }
 
     @Override
@@ -307,4 +319,62 @@ public class AnalysisEditor extends CommonFormEditor {
     public ExecutionLanguage getUIExecuteEngin() {
         return this.getMasterPage().getUIExecuteEngin();
     }
+
+    /**
+     * currently will not open the editor of the analysis when running from menu, so, if the editor is opened and not
+     * the current active one, the page will not know that the result is changed. so we need to add the event/listener
+     * to them to handle this. Added 20130725 TDQ-7639
+     * 
+     * @param analysis
+     */
+    private void registerUpdateExecutionEvent() {
+        // register: check if the analysis need to be saved or if it can run before running it(from menu's RUN)
+        checkBeforeRunReceiver = new EventReceiver() {
+
+            @Override
+            public boolean handle(Object data) {
+                if (isDirty()) {
+                    if (masterPage.canSave().isOk()) {
+                        // save the analysis before running
+                        doSave(null);
+                    } else {
+                        return false;
+                    }
+                }
+                ReturnCode canRun = canRun();
+                if (!canRun.isOk()) {
+                    MessageDialogWithToggle.openError(null,
+                            DefaultMessagesImpl.getString("RunAnalysisAction.runAnalysis"), canRun//$NON-NLS-1$
+                                    .getMessage());
+                    return false;
+                }
+                return true;
+            }
+        };
+        EventManager.getInstance().register(masterPage.getAnalysis(), EventEnum.DQ_ANALYSIS_CHECK_BEFORERUN,
+                checkBeforeRunReceiver);
+
+        // register: refresh the result page after running it from menu
+        refreshReceiver = new EventReceiver() {
+
+            @Override
+            public boolean handle(Object data) {
+                resultPage.refresh(masterPage);
+                return true;
+            }
+        };
+        EventManager.getInstance().register(masterPage.getAnalysis(), EventEnum.DQ_ANALYSIS_RUN_FROM_MENU, refreshReceiver);
+    }
+
+    /**
+     * unregister the update execution event Added 20130725 TDQ-7639
+     */
+    @Override
+    public void dispose() {
+        EventManager.getInstance().unRegister(masterPage.getAnalysis(), EventEnum.DQ_ANALYSIS_CHECK_BEFORERUN,
+                checkBeforeRunReceiver);
+        EventManager.getInstance().unRegister(masterPage.getAnalysis(), EventEnum.DQ_ANALYSIS_RUN_FROM_MENU, refreshReceiver);
+        super.dispose();
+    }
+
 }
