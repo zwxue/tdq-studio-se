@@ -58,6 +58,8 @@ import org.talend.dataprofiler.core.ui.IRuningStatusListener;
 import org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisMetadataPage;
 import org.talend.dataprofiler.core.ui.editor.analysis.AnalysisEditor;
 import org.talend.dataprofiler.core.ui.editor.analysis.AnalysisItemEditorInput;
+import org.talend.dataprofiler.core.ui.events.EventEnum;
+import org.talend.dataprofiler.core.ui.events.EventManager;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisType;
 import org.talend.dataquality.helpers.AnalysisHelper;
@@ -148,6 +150,14 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
                     return;
                 }
                 analysis = this.node.getAnalysis();
+
+                // check if the analysis need to be saved or can run before real running by the event
+                if (!EventManager.getInstance().publish(analysis, EventEnum.DQ_ANALYSIS_CHECK_BEFORERUN, null)) {
+                    // if the analysis need save but can not be saved, return without continue;
+                    // or the analysis can not run, return without continue
+                    return;
+                }
+
                 // if not from the context menu, then find the analysis from the editor
             } else if (editor != null && editor instanceof AnalysisEditor) {
                 // only when the current opened editor is the analysis editor type
@@ -234,6 +244,8 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
                         public void run() {
                             if (listener != null) {
                                 listener.fireRuningItemChanged(true);
+                            } else {
+                                EventManager.getInstance().publish(analysis, EventEnum.DQ_ANALYSIS_RUN_FROM_MENU, null);
                             }
 
                         }
@@ -241,6 +253,7 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
                     });
 
                     displayResultStatus(executed);
+
                     return Status.OK_STATUS;
                 }
 

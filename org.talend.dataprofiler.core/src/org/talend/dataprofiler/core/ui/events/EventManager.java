@@ -18,7 +18,6 @@ import java.util.Map;
 
 import org.apache.commons.collections.MultiMap;
 import org.apache.commons.collections.map.MultiValueMap;
-import org.talend.repository.model.IRepositoryNode;
 
 /**
  * DOC yyin  class global comment. Detailled comment
@@ -28,10 +27,10 @@ public class EventManager {
     private static EventManager instance;
 
     // MultiMap<EventEnum,IEventReceiver>
-    private Map<IRepositoryNode, MultiMap> ctxToReceiverQueueMap;
+    private Map<Object, MultiMap> ctxToReceiverQueueMap;
 
     private EventManager() {
-        ctxToReceiverQueueMap = new HashMap<IRepositoryNode, MultiMap>();
+        ctxToReceiverQueueMap = new HashMap<Object, MultiMap>();
     }
 
     /**
@@ -55,7 +54,7 @@ public class EventManager {
      * @param receiver: event handler
      * @return
      */
-    public boolean register(IRepositoryNode context, EventEnum event, IEventReceiver receiver) {
+    public boolean register(Object context, EventEnum event, IEventReceiver receiver) {
         MultiMap receverQueryMap = ctxToReceiverQueueMap.get(context);
         if (receverQueryMap == null) {
             receverQueryMap = new MultiValueMap();
@@ -74,7 +73,7 @@ public class EventManager {
      * @param toBeUnRegistered: event handler
      * @return false: if the related receivers & event of some repository node is not registered yet.
      */
-    public boolean unRegister(IRepositoryNode context, EventEnum event, IEventReceiver toBeUnRegistered) {
+    public boolean unRegister(Object context, EventEnum event, IEventReceiver toBeUnRegistered) {
         MultiMap receverQueryMap = ctxToReceiverQueueMap.get(context);
         if (receverQueryMap == null) {
             return false;
@@ -93,19 +92,24 @@ public class EventManager {
      * @param event
      * @param data
      */
-    public void publish(IRepositoryNode context, EventEnum event, Object data) {
+    public boolean publish(Object context, EventEnum event, Object data) {
         MultiMap receverQueryMap = ctxToReceiverQueueMap.get(context);
         if (receverQueryMap == null || receverQueryMap.isEmpty()) {
-            return;
+            return true;
         }
         @SuppressWarnings("unchecked")
         List<IEventReceiver> receivers = (List<IEventReceiver>) receverQueryMap.get(event);
         if (receivers == null || receivers.size() == 0) {
-            return;
+            return true;
         }
         // Notify the receiver to handle the event.
+        boolean handleResult = Boolean.TRUE;
         for (IEventReceiver receiver : receivers) {
-            receiver.handle(data);
+            handleResult = receiver.handle(data);
+            if (!handleResult) {
+                break;
+            }
         }
+        return handleResult;
     }
 }
