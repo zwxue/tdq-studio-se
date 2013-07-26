@@ -12,6 +12,7 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.views.resources;
 
+import org.eclipse.jface.viewers.ISelection;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.repository.model.IRepositoryNode;
 
@@ -69,8 +70,24 @@ public class RemoteRepositoryObjectCRUD extends LocalRepositoryObjectCRUD {
         return pathBeforeRefresh;
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataprofiler.core.ui.views.resources.LocalRepositoryObjectCRUD#refreshDQViewForRemoteProject()
+     */
     @Override
     public void refreshDQViewForRemoteProject() {
         refreshWorkspaceDQView();
     }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataprofiler.core.ui.views.resources.LocalRepositoryObjectCRUD#isSelectionAvailable()
+     */
+    @Override
+    public Boolean isSelectionAvailable(ISelection selection) {
+        return selection != null;
+    }
+
 }

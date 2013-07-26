@@ -12,13 +12,11 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.views.resources;
 
-import org.eclipse.jface.action.Action;
 import org.eclipse.jface.viewers.ISelection;
 import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.writer.EMFSharedResources;
 import org.talend.repository.model.IRepositoryNode;
 import orgomg.cwm.objectmodel.core.ModelElement;
-
 
 /**
  * Added 20130515 yyin: Axtracted this class for the purpose of: when there are some values have been set into the
@@ -26,16 +24,9 @@ import orgomg.cwm.objectmodel.core.ModelElement;
  * open and move, the changed values will be loaded which the user has cancelled. So it is better to reload the obect
  * from its file(which not changed) before the operations. Referenced issue: TDQ-7289
  */
-public abstract class AbstractRepObjectCRUDAction extends Action implements IRepositoryObjectCRUDAction {
+public abstract class AbstractRepObjectCRUDAction implements IRepositoryObjectCRUDAction {
 
     public AbstractRepObjectCRUDAction() {
-
-    }
-    /**
-     * DOC yyin AbstractRepObjectCRUD constructor comment.
-     */
-    public AbstractRepObjectCRUDAction(String text) {
-        super(text);
     }
 
     /*
@@ -86,7 +77,7 @@ public abstract class AbstractRepObjectCRUDAction extends Action implements IRep
      * @see org.talend.dataprofiler.core.ui.views.resources.IRepositoryObjectCRUDAction#refreshDQViewForRemoteProject()
      */
     public void refreshDQViewForRemoteProject() {
-
+        // do nothing here.
     }
 
     protected Boolean loadModelElement(IRepositoryNode sourceNode) {

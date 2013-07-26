@@ -40,4 +40,11 @@ public interface IRepositoryObjectCRUDAction {
      * refresh the DQView in Remote Project, do nothing in Local Project.
      */
     public void refreshDQViewForRemoteProject();
+
+    /**
+     * check whether the selected node is Available.
+     * 
+     * @return
+     */
+    public Boolean isSelectionAvailable(ISelection selection);
 }

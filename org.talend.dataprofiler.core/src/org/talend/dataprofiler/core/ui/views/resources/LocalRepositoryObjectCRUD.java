@@ -42,7 +42,6 @@ import org.talend.core.model.repository.Folder;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.dataprofiler.core.CorePlugin;
-import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.helper.WorkspaceResourceHelper;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.utils.MessageUI;
@@ -86,17 +85,7 @@ import org.talend.utils.sugars.ReturnCode;
  */
 public class LocalRepositoryObjectCRUD extends AbstractRepObjectCRUDAction {
 
-    /**
-     * DOC yyin LocalRepositoryObjectCRUD constructor comment.
-     * 
-     * @param text
-     */
-    public LocalRepositoryObjectCRUD(String text) {
-        super(text);
-    }
-
     public LocalRepositoryObjectCRUD() {
-        this(PluginConstant.EMPTY_STRING);
     }
 
     private static final IPath PROJECT_FULL_PATH = ResourceManager.getRootProject().getFullPath();
@@ -107,6 +96,7 @@ public class LocalRepositoryObjectCRUD extends AbstractRepObjectCRUDAction {
 
     private IProxyRepositoryFactory factory = ProxyRepositoryFactory.getInstance();
 
+    @Override
     public Boolean validateDrop(IRepositoryNode targetNode) {
         Boolean retStatus = Boolean.FALSE;
         for (IRepositoryNode res : getSelectedRepositoryNodes()) {
@@ -325,6 +315,7 @@ public class LocalRepositoryObjectCRUD extends AbstractRepObjectCRUDAction {
         return flag;
     }
 
+    @Override
     public Boolean handleDrop(IRepositoryNode targetNode) {
 
         Boolean isHandleOK = Boolean.FALSE;
@@ -625,8 +616,7 @@ public class LocalRepositoryObjectCRUD extends AbstractRepObjectCRUDAction {
                 if (relativeTo.segmentCount() > 0) {// if there are some sub folder under the source node
                     tempPath = tempPath.append(relativeTo).append(RepNodeUtils.getSeparator());
                 }
-                jrxmlFileNamesAfterMove.add(tempPath.append(RepositoryNodeHelper.getFileNameOfTheNode(jrxml))
-.toOSString());
+                jrxmlFileNamesAfterMove.add(tempPath.append(RepositoryNodeHelper.getFileNameOfTheNode(jrxml)).toOSString());
             }
             // update the depended reports
             ReturnCode returnCode = RepNodeUtils.updateJrxmlRelatedReport(jrxmlFileNames, jrxmlFileNamesAfterMove);
@@ -635,7 +625,6 @@ public class LocalRepositoryObjectCRUD extends AbstractRepObjectCRUDAction {
             }
         }// ~
     }
-
 
     /**
      * check whether sourceNode and targetNode is the same Type.
@@ -740,6 +729,7 @@ public class LocalRepositoryObjectCRUD extends AbstractRepObjectCRUDAction {
         }
     }
 
+    @Override
     public Boolean handleRenameFolder(IRepositoryNode repositoryNode) {
         // ~ TDQ-4831
         // Added yyin 20120712 TDQ-5721 when rename the sql file folder with file opening, should inform
@@ -759,6 +749,7 @@ public class LocalRepositoryObjectCRUD extends AbstractRepObjectCRUDAction {
      * 
      * @see org.talend.dataprofiler.core.ui.views.resources.IRepositoryObjectCRUD#getUISelection()
      */
+    @Override
     public ISelection getUISelection() {
         ISelection sel = null;
         IWorkbenchWindow activeWorkbenchWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
@@ -802,7 +793,19 @@ public class LocalRepositoryObjectCRUD extends AbstractRepObjectCRUDAction {
      * 
      * @see org.talend.dataprofiler.core.ui.views.resources.IRepositoryObjectCRUD#refreshDQViewForRemoteProject()
      */
+    @Override
     public void refreshDQViewForRemoteProject() {
         // in local project, needn't to refresh
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * org.talend.dataprofiler.core.ui.views.resources.IRepositoryObjectCRUDAction#isSelectionAvailable(org.eclipse.
+     * jface.viewers.ISelection)
+     */
+    public Boolean isSelectionAvailable(ISelection selection) {
+        return true;
     }
 }
