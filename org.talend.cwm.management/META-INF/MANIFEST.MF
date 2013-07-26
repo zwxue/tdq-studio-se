@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Management Plug-in
+Bundle-Name: CWM Management Plug-in
 Bundle-SymbolicName: org.talend.cwm.management;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Require-Bundle: org.eclipse.ui,
@@ -36,8 +36,6 @@ Require-Bundle: org.eclipse.ui,
  org.talend.metadata.managment.ui,
  org.apache.log4j
 Bundle-Vendor: .Talend SA.
- org.talend.dq.writer,
- org.talend.dq.writer.impl
 Bundle-ClassPath: .,
  lib/commons-discovery-0.2.jar,
  lib/mdm_webservice.jar,
