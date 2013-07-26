@@ -22,6 +22,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.common.util.EList;
+import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorInput;
@@ -51,6 +52,7 @@ import org.talend.cwm.xml.TdXmlElementType;
 import org.talend.cwm.xml.TdXmlSchema;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
+import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.exception.ExceptionFactory;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.editor.TDQFileEditorInput;
@@ -67,7 +69,6 @@ import org.talend.dataprofiler.core.ui.editor.pattern.PatternEditor;
 import org.talend.dataprofiler.core.ui.editor.pattern.PatternItemEditorInput;
 import org.talend.dataprofiler.core.ui.editor.report.ReportItemEditorInput;
 import org.talend.dataprofiler.core.ui.utils.WorkbenchUtils;
-import org.talend.dataprofiler.core.ui.views.resources.AbstractRepObjectCRUDAction;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.properties.TDQAnalysisItem;
 import org.talend.dataquality.properties.TDQFileItem;
@@ -91,7 +92,7 @@ import orgomg.cwm.resource.relational.Schema;
 /**
  * DOC mzhao Open TDQ items editor action.
  */
-public class OpenItemEditorAction extends AbstractRepObjectCRUDAction implements IIntroAction {
+public class OpenItemEditorAction extends Action implements IIntroAction {
 
     protected static Logger log = Logger.getLogger(OpenItemEditorAction.class);
 
@@ -159,7 +160,8 @@ public class OpenItemEditorAction extends AbstractRepObjectCRUDAction implements
                     ReportFileRepNode reportFileNode = (ReportFileRepNode) repNode;
                     IPath location = Path.fromOSString(reportFileNode.getResource().getRawLocation().toOSString());
                     // TDQ-5458 sizhaoliu 2012-07-17 add "." before the full name to make sure it is ignored by SVN.
-                    IFile latestRepIFile = ResourceManager.getRootProject().getFile("." + location.lastSegment());
+                    IFile latestRepIFile = ResourceManager.getRootProject().getFile(
+                            PluginConstant.DOT_STRING + location.lastSegment());
                     try {
                         // TDQ-5458 sizhaoliu 2012-07-17 the link creation should be after report generation, but not at
                         // the openning.
