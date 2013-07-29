@@ -171,7 +171,7 @@ public class DQDeleteAction extends DeleteAction {
         repositoryObjectCRUD.refreshDQViewForRemoteProject();
 
         // ADD msjian TDQ-7006 2013-7-24: after refresh get the selection to check.
-        if (!repositoryObjectCRUD.isSelectionAvailable(getSelection())) {
+        if (!repositoryObjectCRUD.isSelectionAvailable()) {
             MessageDialog.openInformation(Display.getCurrent().getActiveShell(),
                     DefaultMessagesImpl.getString("DQDeleteAction.delete"), DefaultMessagesImpl //$NON-NLS-1$
                             .getString("DQDeleteAction.deleteByOther")); //$NON-NLS-1$

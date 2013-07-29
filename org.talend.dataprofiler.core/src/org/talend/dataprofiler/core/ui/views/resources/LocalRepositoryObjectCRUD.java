@@ -801,11 +801,9 @@ public class LocalRepositoryObjectCRUD extends AbstractRepObjectCRUDAction {
     /*
      * (non-Javadoc)
      * 
-     * @see
-     * org.talend.dataprofiler.core.ui.views.resources.IRepositoryObjectCRUDAction#isSelectionAvailable(org.eclipse.
-     * jface.viewers.ISelection)
+     * @see org.talend.dataprofiler.core.ui.views.resources.IRepositoryObjectCRUDAction#isSelectionAvailable()
      */
-    public Boolean isSelectionAvailable(ISelection selection) {
+    public Boolean isSelectionAvailable() {
         return true;
     }
 }

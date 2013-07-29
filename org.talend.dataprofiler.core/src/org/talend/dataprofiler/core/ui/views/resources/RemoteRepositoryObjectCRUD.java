@@ -86,8 +86,9 @@ public class RemoteRepositoryObjectCRUD extends LocalRepositoryObjectCRUD {
      * @see org.talend.dataprofiler.core.ui.views.resources.LocalRepositoryObjectCRUD#isSelectionAvailable()
      */
     @Override
-    public Boolean isSelectionAvailable(ISelection selection) {
-        return selection != null;
+    public Boolean isSelectionAvailable() {
+        ISelection uiSelection = getUISelection();
+        return uiSelection != null && !uiSelection.isEmpty();
     }
 
 }

@@ -46,5 +46,5 @@ public interface IRepositoryObjectCRUDAction {
      * 
      * @return
      */
-    public Boolean isSelectionAvailable(ISelection selection);
+    public Boolean isSelectionAvailable();
 }
