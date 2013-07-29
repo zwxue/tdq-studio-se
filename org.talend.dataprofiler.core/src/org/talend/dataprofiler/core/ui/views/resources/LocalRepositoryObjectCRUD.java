@@ -746,4 +746,13 @@ public class LocalRepositoryObjectCRUD implements IRepositoryObjectCRUD {
     public void refreshDQViewForRemoteProject() {
         // in local project, needn't to refresh
     }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataprofiler.core.ui.views.resources.IRepositoryObjectCRUDAction#isSelectionAvailable()
+     */
+    public Boolean isSelectionAvailable() {
+        return true;
+    }
 }

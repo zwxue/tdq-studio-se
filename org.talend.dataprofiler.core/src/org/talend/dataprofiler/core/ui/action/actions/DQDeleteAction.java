@@ -36,6 +36,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.ActionFactory;
 import org.talend.commons.exception.LoginException;
@@ -124,6 +125,16 @@ public class DQDeleteAction extends DeleteAction {
     @Override
     public void run() {
         repositoryObjectCRUD.refreshDQViewForRemoteProject();
+
+        // ADD msjian TDQ-7006 2013-7-24: after refresh get the selection to check.
+        if (!repositoryObjectCRUD.isSelectionAvailable()) {
+            MessageDialog.openInformation(Display.getCurrent().getActiveShell(),
+                    DefaultMessagesImpl.getString("DQDeleteAction.delete"), DefaultMessagesImpl //$NON-NLS-1$
+                            .getString("DQDeleteAction.deleteByOther")); //$NON-NLS-1$
+            return;
+        }
+        // TDQ-7006~
+
         ISelection selection = this.getSelection();
         // boolean onlyDeleteReportFile = true;
         // MOD gdbu 2011-11-17 TDQ-3969 : when delete elements also need delete this element in filter-list, and move it
