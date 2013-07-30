@@ -46,6 +46,14 @@ public class DQRestoreAction extends RestoreAction {
     @Override
     public void run() {
         repositoryObjectCRUD.refreshDQViewForRemoteProject();
+
+        // ADD msjian TDQ-7006 2013-7-24: after refresh get the selection to check.
+        if (!repositoryObjectCRUD.isSelectionAvailable()) {
+            repositoryObjectCRUD.showWarningDialog();
+            return;
+        }
+        // TDQ-7006~
+
         // MOD qiongli 2011-5-9 bug 21035,avoid to unload resource.
         super.setAvoidUnloadResources(true);
         super.run();
