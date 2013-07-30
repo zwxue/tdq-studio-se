@@ -47,4 +47,9 @@ public interface IRepositoryObjectCRUDAction {
      * @return
      */
     public Boolean isSelectionAvailable();
+
+    /**
+     * show the unsynchronized warning dialog.
+     */
+    public void showWarningDialog();
 }

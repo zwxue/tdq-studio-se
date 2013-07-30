@@ -778,14 +778,16 @@ public class LocalRepositoryObjectCRUD extends AbstractRepObjectCRUDAction {
         CorePlugin.getDefault().refreshWorkSpace();
     }
 
-    /**
-     * DOC xqliu Comment method "showWarning".
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataprofiler.core.ui.views.resources.IRepositoryObjectCRUDAction#showWarningDialog()
      */
-    protected void showWarning() {
+    public void showWarningDialog() {
         MessageDialog
                 .openWarning(
                         PlatformUI.getWorkbench().getDisplay().getActiveShell(),
-                        DefaultMessagesImpl.getString("RepositoyNodeDropAdapterAssistant.moveHintTitle"), DefaultMessagesImpl.getString("RepositoyNodeDropAdapterAssistant.moveHintContent")); //$NON-NLS-1$ //$NON-NLS-2$  
+                        DefaultMessagesImpl.getString("LocalRepositoryObjectCRUD.Title"), DefaultMessagesImpl.getString("LocalRepositoryObjectCRUD.Content")); //$NON-NLS-1$ //$NON-NLS-2$  
     }
 
     /*

@@ -25,26 +25,27 @@ public class RemoteRepositoryObjectCRUD extends LocalRepositoryObjectCRUD {
     public Boolean handleDrop(IRepositoryNode targetNode) {
         String[] pathBeforeRefresh = getSelectedNodePaths();
         if (pathBeforeRefresh.length == 0) {
-            showWarning();
+            showWarningDialog();
             return Boolean.FALSE;
         }
         // in remote project, refresh first.
-        refreshWorkspaceDQView();
+        refreshDQViewForRemoteProject();
+
         String[] pathAfterRefresh = getSelectedNodePaths();
         if (pathAfterRefresh.length == 0) {
-            showWarning();
+            showWarningDialog();
             return Boolean.FALSE;
         }
 
         IRepositoryNode[] selectedRepositoryNodes = getSelectedRepositoryNodes();
         if (selectedRepositoryNodes.length == 0) {
-            showWarning();
+            showWarningDialog();
             return Boolean.FALSE;
         } else {
             // compare the node path value between before and after refresh
             for (int i = 0; i < getSelectedRepositoryNodes().length; i++) {
                 if (!pathBeforeRefresh[i].equals(pathAfterRefresh[i])) {
-                    showWarning();
+                    showWarningDialog();
                     return Boolean.FALSE;
                 }
             }

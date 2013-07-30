@@ -47,6 +47,8 @@ import org.talend.dataprofiler.core.exception.ExceptionHandler;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.action.actions.handle.ActionHandleFactory;
 import org.talend.dataprofiler.core.ui.action.actions.handle.IDuplicateHandle;
+import org.talend.dataprofiler.core.ui.utils.RepNodeUtils;
+import org.talend.dataprofiler.core.ui.views.resources.IRepositoryObjectCRUDAction;
 import org.talend.dataquality.indicators.definition.userdefine.UDIndicatorDefinition;
 import org.talend.dataquality.properties.TDQFileItem;
 import org.talend.dataquality.properties.TDQJrxmlItem;
@@ -74,6 +76,8 @@ public class DuplicateAction extends Action {
 
     private IRepositoryNode[] nodeArray = new IRepositoryNode[0];
 
+    private IRepositoryObjectCRUDAction repositoryObjectCRUD = RepNodeUtils.getRepositoryObjectCRUD();
+
     /**
      * DOC bZhou DuplicateAction constructor comment.
      */
@@ -94,6 +98,15 @@ public class DuplicateAction extends Action {
      */
     @Override
     public void run() {
+        repositoryObjectCRUD.refreshDQViewForRemoteProject();
+
+        // ADD msjian TDQ-7006 2013-7-24: after refresh get the selection to check.
+        if (!repositoryObjectCRUD.isSelectionAvailable()) {
+            repositoryObjectCRUD.showWarningDialog();
+            return;
+        }
+        // TDQ-7006~
+
         try {
             IFile duplicateObject = null;
             for (final IRepositoryNode node : nodeArray) {
