@@ -181,8 +181,9 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
                 ((AnalysisEditor) this.getEditor()).firePropertyChange(IEditorPart.PROP_DIRTY);
                 this.updateAnalysisConnectionVersionInfo();
             } catch (DataprofilerCoreException e) {
+                MessageDialogWithToggle.openError(null,
+                        DefaultMessagesImpl.getString("AbstractAnalysisMetadataPage.SaveAnalysis"), e.getMessage()); //$NON-NLS-1$ //$NON-NLS-2$
                 ExceptionHandler.process(e, Level.ERROR);
-                log.error(e, e);
             }
         }
     }

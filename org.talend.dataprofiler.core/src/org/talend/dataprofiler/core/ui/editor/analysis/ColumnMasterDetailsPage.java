@@ -829,11 +829,28 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
         // ~
 
         analysis.getParameters().setExecutionLanguage(ExecutionLanguage.get(execLang));
-        // MOD zshen feature 12919 to save analysisParameter.
-        if (ExecutionLanguage.JAVA.equals(ExecutionLanguage.get(execLang))) {
-            analysis.getParameters().setMaxNumberRows(Integer.parseInt(maxNumText.getText()));
-            analysis.getParameters().setStoreData(drillDownCheck.getSelection());
+
+        try {
+            // MOD zshen feature 12919 to save analysisParameter.
+            if (ExecutionLanguage.JAVA.equals(ExecutionLanguage.get(execLang))) {
+                analysis.getParameters().setMaxNumberRows(Integer.parseInt(maxNumText.getText()));
+                analysis.getParameters().setStoreData(drillDownCheck.getSelection());
+            }
+        } catch (NumberFormatException nfe) {
+            throw new DataprofilerCoreException(DefaultMessagesImpl.getString("ColumnMasterDetailsPage.emptyField",
+                    DefaultMessagesImpl.getString("ColumnMasterDetailsPage.maxNumberLabel")));
         }
+
+        try {
+            // check whether the field has integer value
+            Integer.valueOf(numberOfConnectionsPerAnalysisText.getText());
+            // save the number of connections per analysis
+            this.saveNumberOfConnectionsPerAnalysis();
+        } catch (NumberFormatException nfe) {
+            throw new DataprofilerCoreException(DefaultMessagesImpl.getString("ColumnMasterDetailsPage.emptyField",
+                    DefaultMessagesImpl.getString("AnalysisTuningPreferencePage.NumberOfConnectionsPerAnalysis")));
+        }
+
         // ~12919
         if (modelElementIndicators != null && modelElementIndicators.length != 0) {
             tdProvider = ModelElementIndicatorHelper.getTdDataProvider(modelElementIndicators[0]);
@@ -866,9 +883,6 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
         this.updateAnalysisClientDependency();
         // ~ 14014
         // 2011.1.12 MOD by zhsne to unify anlysis and connection id when saving.
-
-        // save the number of connections per analysis
-        this.saveNumberOfConnectionsPerAnalysis();
 
         ReturnCode saved = new ReturnCode(false);
         IEditorInput editorInput = this.getEditorInput();
