@@ -12,6 +12,7 @@ import org.eclipse.emf.ecore.EOperation;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.impl.EPackageImpl;
+import org.eclipse.emf.ecore.xml.type.XMLTypePackage;
 import org.talend.core.model.properties.PropertiesPackage;
 import org.talend.core.model.metadata.builder.connection.ConnectionPackage;
 import org.talend.dataquality.analysis.AnalysisPackage;
@@ -31,6 +32,8 @@ import org.talend.dataquality.indicators.columnset.ColumnsetPackage;
 import org.talend.dataquality.indicators.columnset.impl.ColumnsetPackageImpl;
 import org.talend.dataquality.indicators.definition.DefinitionPackage;
 import org.talend.dataquality.indicators.definition.impl.DefinitionPackageImpl;
+import org.talend.dataquality.indicators.definition.userdefine.UserdefinePackage;
+import org.talend.dataquality.indicators.definition.userdefine.impl.UserdefinePackageImpl;
 import org.talend.dataquality.indicators.impl.IndicatorsPackageImpl;
 import org.talend.dataquality.indicators.schema.SchemaPackage;
 import org.talend.dataquality.indicators.schema.impl.SchemaPackageImpl;
@@ -44,6 +47,7 @@ import org.talend.dataquality.reports.ReportsPackage;
 import org.talend.dataquality.reports.TdReport;
 import org.talend.dataquality.rules.RulesPackage;
 import org.talend.dataquality.rules.impl.RulesPackageImpl;
+import org.talend.designer.core.model.utils.emf.talendfile.TalendFilePackage;
 import orgomg.cwm.analysis.informationvisualization.InformationvisualizationPackage;
 import orgomg.cwm.objectmodel.core.CorePackage;
 import orgomg.cwmx.analysis.informationreporting.InformationreportingPackage;
@@ -124,6 +128,7 @@ public class ReportsPackageImpl extends EPackageImpl implements ReportsPackage {
 
         // Initialize simple dependencies
         PropertiesPackage.eINSTANCE.eClass();
+        XMLTypePackage.eINSTANCE.eClass();
 
         // Obtain or create and register interdependencies
         AnalysisPackageImpl theAnalysisPackage = (AnalysisPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(AnalysisPackage.eNS_URI) instanceof AnalysisPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(AnalysisPackage.eNS_URI) : AnalysisPackage.eINSTANCE);
@@ -131,6 +136,7 @@ public class ReportsPackageImpl extends EPackageImpl implements ReportsPackage {
         IndicatorsPackageImpl theIndicatorsPackage = (IndicatorsPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(IndicatorsPackage.eNS_URI) instanceof IndicatorsPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(IndicatorsPackage.eNS_URI) : IndicatorsPackage.eINSTANCE);
         SchemaPackageImpl theSchemaPackage = (SchemaPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(SchemaPackage.eNS_URI) instanceof SchemaPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(SchemaPackage.eNS_URI) : SchemaPackage.eINSTANCE);
         DefinitionPackageImpl theDefinitionPackage = (DefinitionPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(DefinitionPackage.eNS_URI) instanceof DefinitionPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(DefinitionPackage.eNS_URI) : DefinitionPackage.eINSTANCE);
+        UserdefinePackageImpl theUserdefinePackage = (UserdefinePackageImpl)(EPackage.Registry.INSTANCE.getEPackage(UserdefinePackage.eNS_URI) instanceof UserdefinePackageImpl ? EPackage.Registry.INSTANCE.getEPackage(UserdefinePackage.eNS_URI) : UserdefinePackage.eINSTANCE);
         IndicatorSqlPackageImpl theIndicatorSqlPackage = (IndicatorSqlPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(IndicatorSqlPackage.eNS_URI) instanceof IndicatorSqlPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(IndicatorSqlPackage.eNS_URI) : IndicatorSqlPackage.eINSTANCE);
         ColumnsetPackageImpl theColumnsetPackage = (ColumnsetPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(ColumnsetPackage.eNS_URI) instanceof ColumnsetPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(ColumnsetPackage.eNS_URI) : ColumnsetPackage.eINSTANCE);
         ExpressionsPackageImpl theExpressionsPackage = (ExpressionsPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(ExpressionsPackage.eNS_URI) instanceof ExpressionsPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(ExpressionsPackage.eNS_URI) : ExpressionsPackage.eINSTANCE);
@@ -147,6 +153,7 @@ public class ReportsPackageImpl extends EPackageImpl implements ReportsPackage {
         theIndicatorsPackage.createPackageContents();
         theSchemaPackage.createPackageContents();
         theDefinitionPackage.createPackageContents();
+        theUserdefinePackage.createPackageContents();
         theIndicatorSqlPackage.createPackageContents();
         theColumnsetPackage.createPackageContents();
         theExpressionsPackage.createPackageContents();
@@ -163,6 +170,7 @@ public class ReportsPackageImpl extends EPackageImpl implements ReportsPackage {
         theIndicatorsPackage.initializePackageContents();
         theSchemaPackage.initializePackageContents();
         theDefinitionPackage.initializePackageContents();
+        theUserdefinePackage.initializePackageContents();
         theIndicatorSqlPackage.initializePackageContents();
         theColumnsetPackage.initializePackageContents();
         theExpressionsPackage.initializePackageContents();
@@ -285,6 +293,24 @@ public class ReportsPackageImpl extends EPackageImpl implements ReportsPackage {
      * <!-- end-user-doc -->
      * @generated
      */
+    public EReference getTdReport_Context() {
+        return (EReference)tdReportEClass.getEStructuralFeatures().get(10);
+    }
+
+                /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public EAttribute getTdReport_DefaultContext() {
+        return (EAttribute)tdReportEClass.getEStructuralFeatures().get(11);
+    }
+
+                /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
     public EClass getPresentationParameter() {
         return presentationParameterEClass;
     }
@@ -391,6 +417,8 @@ public class ReportsPackageImpl extends EPackageImpl implements ReportsPackage {
         createEAttribute(tdReportEClass, TD_REPORT__LOGO);
         createEAttribute(tdReportEClass, TD_REPORT__INPUT_JRXML);
         createEAttribute(tdReportEClass, TD_REPORT__REPORT_TYPE);
+        createEReference(tdReportEClass, TD_REPORT__CONTEXT);
+        createEAttribute(tdReportEClass, TD_REPORT__DEFAULT_CONTEXT);
 
         presentationParameterEClass = createEClass(PRESENTATION_PARAMETER);
         createEAttribute(presentationParameterEClass, PRESENTATION_PARAMETER__PLOT_TYPE);
@@ -429,6 +457,8 @@ public class ReportsPackageImpl extends EPackageImpl implements ReportsPackage {
         // Obtain other dependent packages
         InformationreportingPackage theInformationreportingPackage = (InformationreportingPackage)EPackage.Registry.INSTANCE.getEPackage(InformationreportingPackage.eNS_URI);
         AnalysisPackage theAnalysisPackage = (AnalysisPackage)EPackage.Registry.INSTANCE.getEPackage(AnalysisPackage.eNS_URI);
+        TalendFilePackage theTalendFilePackage = (TalendFilePackage)EPackage.Registry.INSTANCE.getEPackage(TalendFilePackage.eNS_URI);
+        XMLTypePackage theXMLTypePackage = (XMLTypePackage)EPackage.Registry.INSTANCE.getEPackage(XMLTypePackage.eNS_URI);
         CorePackage theCorePackage = (CorePackage)EPackage.Registry.INSTANCE.getEPackage(CorePackage.eNS_URI);
         InformationvisualizationPackage theInformationvisualizationPackage = (InformationvisualizationPackage)EPackage.Registry.INSTANCE.getEPackage(InformationvisualizationPackage.eNS_URI);
         IndicatorsPackage theIndicatorsPackage = (IndicatorsPackage)EPackage.Registry.INSTANCE.getEPackage(IndicatorsPackage.eNS_URI);
@@ -453,6 +483,8 @@ public class ReportsPackageImpl extends EPackageImpl implements ReportsPackage {
         initEAttribute(getTdReport_Logo(), ecorePackage.getEString(), "logo", "", 0, 1, TdReport.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
         initEAttribute(getTdReport_InputJrxml(), ecorePackage.getEString(), "inputJrxml", null, 0, 1, TdReport.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
         initEAttribute(getTdReport_ReportType(), ecorePackage.getEString(), "reportType", null, 0, 1, TdReport.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEReference(getTdReport_Context(), theTalendFilePackage.getContextType(), null, "context", null, 0, -1, TdReport.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEAttribute(getTdReport_DefaultContext(), theXMLTypePackage.getString(), "defaultContext", null, 0, 1, TdReport.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
         EOperation op = addEOperation(tdReportEClass, ecorePackage.getEBoolean(), "addAnalysis", 0, 1, IS_UNIQUE, IS_ORDERED);
         addEParameter(op, theAnalysisPackage.getAnalysis(), "analysis", 0, 1, IS_UNIQUE, IS_ORDERED);

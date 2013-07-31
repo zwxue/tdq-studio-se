@@ -48,6 +48,8 @@ public final class ReportHelper {
 
     private static Logger log = Logger.getLogger(ReportHelper.class);
 
+    public static final String HSQL_DEFAULT_DBTYPE = "HSQL"; //$NON-NLS-1$
+
     public static final String DOT_MARK = "."; //$NON-NLS-1$
 
     // ~ADD mzhao 2009-02-05

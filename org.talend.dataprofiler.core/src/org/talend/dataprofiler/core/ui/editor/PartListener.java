@@ -24,6 +24,8 @@ import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.IPartListener;
 import org.eclipse.ui.IWorkbenchPart;
+import org.talend.dataprofiler.core.service.GlobalServiceRegister;
+import org.talend.dataprofiler.core.service.ITdqContextViewService;
 import org.talend.dq.helper.PropertyHelper;
 
 /**
@@ -33,11 +35,13 @@ import org.talend.dq.helper.PropertyHelper;
 public class PartListener implements IPartListener {
 
     private static Logger log = Logger.getLogger(PartListener.class);
+
     private IFile propertyFile = null;
+
     public PartListener() {
-        
+
     }
-    
+
     protected IFile getPropertyFile(IEditorPart editor) {
         if (isCommonFormEditor(editor)) {
             // MOD mzhao bug 9348.
@@ -68,7 +72,7 @@ public class PartListener implements IPartListener {
         }
         return propertyFile;
     }
-    
+
     protected boolean isCommonFormEditor(IWorkbenchPart editor) {
         if (editor instanceof CommonFormEditor) {
             return true;
@@ -81,11 +85,23 @@ public class PartListener implements IPartListener {
     }
 
     public void partBroughtToTop(IWorkbenchPart part) {
-
+        if (GlobalServiceRegister.getDefault().isServiceRegistered(ITdqContextViewService.class)) {
+            ITdqContextViewService tdqContextViewService = (ITdqContextViewService) GlobalServiceRegister.getDefault()
+                    .getService(ITdqContextViewService.class);
+            if (tdqContextViewService != null) {
+                tdqContextViewService.showContextView(part);
+            }
+        }
     }
 
     public void partClosed(IWorkbenchPart part) {
-
+        if (GlobalServiceRegister.getDefault().isServiceRegistered(ITdqContextViewService.class)) {
+            ITdqContextViewService tdqContextViewService = (ITdqContextViewService) GlobalServiceRegister.getDefault()
+                    .getService(ITdqContextViewService.class);
+            if (tdqContextViewService != null) {
+                tdqContextViewService.resetContextView();
+            }
+        }
     }
 
     public void partDeactivated(IWorkbenchPart part) {
@@ -94,8 +110,8 @@ public class PartListener implements IPartListener {
 
     public void partOpened(IWorkbenchPart part) {
     }
-    
-    private static IConfigurationElement getConfigurationElement() {
+
+    protected static IConfigurationElement getConfigurationElement() {
         IExtensionPoint pt = Platform.getExtensionRegistry().getExtensionPoint(EXTENSION_NAME);
         IExtension[] extensions = pt.getExtensions();
         for (IExtension extension : extensions) {
@@ -105,12 +121,13 @@ public class PartListener implements IPartListener {
         }
         return null;
     }
-    
+
     public static PartListener getPartListener() {
         try {
             IConfigurationElement configurationElement = getConfigurationElement();
-            if (configurationElement != null)
+            if (configurationElement != null) {
                 return (PartListener) configurationElement.createExecutableExtension("class"); //$NON-NLS-1$
+            }
         } catch (CoreException e) {
             log.error(e, e);
         }

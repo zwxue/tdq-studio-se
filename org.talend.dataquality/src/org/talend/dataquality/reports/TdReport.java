@@ -11,6 +11,7 @@ import java.util.Date;
 import org.eclipse.emf.common.util.EList;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.ExecutionInformations;
+import org.talend.designer.core.model.utils.emf.talendfile.ContextType;
 import orgomg.cwmx.analysis.informationreporting.Report;
 
 /**
@@ -31,6 +32,8 @@ import orgomg.cwmx.analysis.informationreporting.Report;
  *   <li>{@link org.talend.dataquality.reports.TdReport#getLogo <em>Logo</em>}</li>
  *   <li>{@link org.talend.dataquality.reports.TdReport#getInputJrxml <em>Input Jrxml</em>}</li>
  *   <li>{@link org.talend.dataquality.reports.TdReport#getReportType <em>Report Type</em>}</li>
+ *   <li>{@link org.talend.dataquality.reports.TdReport#getContext <em>Context</em>}</li>
+ *   <li>{@link org.talend.dataquality.reports.TdReport#getDefaultContext <em>Default Context</em>}</li>
  * </ul>
  * </p>
  *
@@ -285,6 +288,48 @@ public interface TdReport extends Report {
      * @generated
      */
     void setReportType(String value);
+
+                /**
+     * Returns the value of the '<em><b>Context</b></em>' containment reference list.
+     * The list contents are of type {@link org.talend.designer.core.model.utils.emf.talendfile.ContextType}.
+     * <!-- begin-user-doc -->
+     * <p>
+     * If the meaning of the '<em>Context</em>' containment reference list isn't clear,
+     * there really should be more of a description here...
+     * </p>
+     * <!-- end-user-doc -->
+     * @return the value of the '<em>Context</em>' containment reference list.
+     * @see org.talend.dataquality.reports.ReportsPackage#getTdReport_Context()
+     * @model containment="true"
+     * @generated
+     */
+    EList<ContextType> getContext();
+
+                /**
+     * Returns the value of the '<em><b>Default Context</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <p>
+     * If the meaning of the '<em>Default Context</em>' attribute isn't clear,
+     * there really should be more of a description here...
+     * </p>
+     * <!-- end-user-doc -->
+     * @return the value of the '<em>Default Context</em>' attribute.
+     * @see #setDefaultContext(String)
+     * @see org.talend.dataquality.reports.ReportsPackage#getTdReport_DefaultContext()
+     * @model dataType="org.eclipse.emf.ecore.xml.type.String"
+     * @generated
+     */
+    String getDefaultContext();
+
+                /**
+     * Sets the value of the '{@link org.talend.dataquality.reports.TdReport#getDefaultContext <em>Default Context</em>}' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @param value the new value of the '<em>Default Context</em>' attribute.
+     * @see #getDefaultContext()
+     * @generated
+     */
+    void setDefaultContext(String value);
 
                 /**
      * <!-- begin-user-doc -->

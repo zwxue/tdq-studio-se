@@ -56,6 +56,7 @@ import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.core.runtime.CoreRuntimePlugin;
+import org.talend.core.ui.context.view.AbstractContextView;
 import org.talend.cwm.compare.exception.ReloadCompareException;
 import org.talend.cwm.compare.factory.ComparisonLevelFactory;
 import org.talend.cwm.compare.factory.IComparisonLevel;
@@ -581,5 +582,55 @@ public class TOPRepositoryService implements ITDQRepositoryService {
         }
 
         return false;
+    }
+
+    /**
+     * find the Tdq Context View.
+     * 
+     * @return
+     */
+    private AbstractContextView getTdqContextView() {
+        IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+        IViewPart view = page.findView(AbstractContextView.CTX_ID_TDQ);
+        if (view instanceof AbstractContextView) {
+            return (AbstractContextView) view;
+        }
+        return null;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.core.ITDQRepositoryService#updateContextView(boolean)
+     */
+    public void updateContextView(boolean isBuildIn) {
+        AbstractContextView tdqContextView = getTdqContextView();
+        if (tdqContextView != null) {
+            tdqContextView.updateContextView(isBuildIn);
+        }
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.core.ITDQRepositoryService#updateContextView(boolean, boolean)
+     */
+    public void updateContextView(boolean isBuildIn, boolean isDisposeAll) {
+        AbstractContextView tdqContextView = getTdqContextView();
+        if (tdqContextView != null) {
+            tdqContextView.updateContextView(isBuildIn, isDisposeAll);
+        }
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.core.ITDQRepositoryService#updateContextView(boolean, boolean, boolean)
+     */
+    public void updateContextView(boolean isBuildIn, boolean isDisposeAll, boolean refreshView) {
+        AbstractContextView tdqContextView = getTdqContextView();
+        if (tdqContextView != null) {
+            tdqContextView.updateContextView(isBuildIn, isDisposeAll, refreshView);
+        }
     }
 }

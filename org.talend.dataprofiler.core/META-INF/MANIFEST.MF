@@ -38,7 +38,8 @@ Require-Bundle: net.sourceforge.sqlexplorer;resolution:=optional,
  org.talend.commons.ui,
  org.talend.repository.metadata,
  org.talend.dataprofiler.migration,
- org.apache.log4j
+ org.apache.log4j,
+ org.talend.core.ui;bundle-version="1.0.0"
 Bundle-ActivationPolicy: lazy
 Export-Package: org.eclipse.nebula.jface.tablecomboviewer,
  org.talend.dataprofiler.core,
