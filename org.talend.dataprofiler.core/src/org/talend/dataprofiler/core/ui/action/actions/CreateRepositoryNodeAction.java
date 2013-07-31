@@ -19,6 +19,8 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
+import org.talend.dataprofiler.core.ui.utils.RepNodeUtils;
+import org.talend.dataprofiler.core.ui.views.resources.IRepositoryObjectCRUDAction;
 import org.talend.dataprofiler.core.ui.wizard.folder.FolderWizard;
 import org.talend.dq.helper.ProxyRepositoryManager;
 
@@ -28,6 +30,8 @@ import org.talend.dq.helper.ProxyRepositoryManager;
 public class CreateRepositoryNodeAction extends Action {
 
     public IFolder currentSelection;
+
+    private IRepositoryObjectCRUDAction repositoryObjectCRUD = RepNodeUtils.getRepositoryObjectCRUD();
 
     public CreateRepositoryNodeAction(IFolder folder) {
         super(DefaultMessagesImpl.getString("CreateUserFolderProvider.createFolder")); //$NON-NLS-1$
@@ -39,6 +43,7 @@ public class CreateRepositoryNodeAction extends Action {
      * (non-Javadoc) Method declared on IAction.
      */
     public void run() {
+        repositoryObjectCRUD.refreshDQViewForRemoteProject();
         FolderWizard processWizard = new FolderWizard(currentSelection.getFullPath(), null);
         Shell activeShell = Display.getCurrent().getActiveShell();
         WizardDialog dialog = new WizardDialog(activeShell, processWizard);
