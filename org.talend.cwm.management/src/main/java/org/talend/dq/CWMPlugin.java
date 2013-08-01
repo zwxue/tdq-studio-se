@@ -12,9 +12,15 @@
 // ============================================================================
 package org.talend.dq;
 
+import java.io.File;
+import java.net.MalformedURLException;
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import net.sourceforge.sqlexplorer.EDriverName;
+import net.sourceforge.sqlexplorer.ExplorerException;
 import net.sourceforge.sqlexplorer.dbproduct.Alias;
 import net.sourceforge.sqlexplorer.dbproduct.AliasManager;
 import net.sourceforge.sqlexplorer.dbproduct.DriverManager;
@@ -25,20 +31,29 @@ import net.sourceforge.sqlexplorer.plugin.views.DatabaseStructureView;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Plugin;
 import org.eclipse.core.runtime.preferences.DefaultScope;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
 import org.osgi.framework.BundleContext;
+import org.talend.commons.utils.io.FilesUtils;
+import org.talend.core.database.conn.version.EDatabaseVersion4Drivers;
+import org.talend.core.language.ECodeLanguage;
+import org.talend.core.model.general.Project;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
+import org.talend.core.model.metadata.builder.database.ExtractMetaDataUtils;
 import org.talend.core.model.metadata.builder.database.JavaSqlFactory;
 import org.talend.core.model.metadata.builder.database.PluginConstant;
+import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.dq.analysis.memory.AnalysisThreadMemoryChangeNotifier;
 import org.talend.dq.helper.PropertyHelper;
+import org.talend.librariesmanager.prefs.LibrariesManagerUtils;
+import org.talend.repository.ProjectManager;
 import orgomg.cwm.foundation.softwaredeployment.DataProvider;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
@@ -204,7 +219,7 @@ public class CWMPlugin extends Plugin {
 
     }
 
-    private void addJars(Connection connection, ManagedDriver manDr) {
+    private void addJars(Connection connection, ManagedDriver manDr){
         DatabaseConnection dbConnnection = (DatabaseConnection) connection;
         String driverJarPath = dbConnnection.getDriverJarPath();
 
@@ -217,6 +232,102 @@ public class CWMPlugin extends Plugin {
                 }
             }
         }
+    }
+
+    /**
+     *
+     * update ManagedDriver driver jars.
+     *
+     * @param connection
+     */
+    public void loadDriverByLibManageSystem(DatabaseConnection connection) {
+        String dbType = connection.getDatabaseType();
+        String dbVersion = connection.getVersion();
+        String driverClassName = JavaSqlFactory.getDriverClass(connection);
+        loadDriverByLibManageSystem(dbType, dbVersion, driverClassName);
+    }
+
+    /**
+     *
+     * Load the driver by lib management system , which will configure the SQL Explorer driver classpath from xml.
+     *
+     * @param dbType
+     * @param dbVersion
+     * @param driverClassName
+     */
+    public void loadDriverByLibManageSystem(String dbType, String dbVersion, String driverClassName) {
+        if (dbType == null || driverClassName == null) {
+            return;
+        }
+        DriverManager driverManager = SQLExplorerPlugin.getDefault().getDriverModel();
+        ManagedDriver manDr = driverManager.getDriver(EDriverName.getId(driverClassName));
+        if (manDr != null && !manDr.isDriverClassLoaded()) {
+            // find driver jars from prefrence page or installation path.
+            String librariesPath = LibrariesManagerUtils.getLibrariesPath(ECodeLanguage.JAVA);
+
+            // get the required jar names from 'EDatabaseVersion4Drivers' accordig dbType and version.
+            List<String> jarNames = EDatabaseVersion4Drivers.getDrivers(dbType, dbVersion);
+            Set<String> allJarPath = findAllJarPath(new File(librariesPath), jarNames);
+            // if not found jars from installation path,find driver jars from workspace 'temp/dbWizard' folder.
+            if (allJarPath.isEmpty()) {
+                librariesPath = ExtractMetaDataUtils.getJavaLibPath();
+                allJarPath = findAllJarPath(new File(librariesPath), jarNames);
+            }
+            // if not found jars from installation path and folder 'temp/dbWizard',find driver jars from workspace
+            // 'libs' folder.
+            if (allJarPath.isEmpty()) {
+                Project currentProject = ProjectManager.getInstance().getCurrentProject();
+                String projectLabel = currentProject.getTechnicalLabel();
+                librariesPath = new Path(Platform.getInstanceLocation().getURL().getPath()).toFile().getPath();
+                librariesPath = librariesPath + File.separatorChar + projectLabel + File.separatorChar
+                        + ERepositoryObjectType.getFolderName(ERepositoryObjectType.LIBS);
+                allJarPath = findAllJarPath(new File(librariesPath), jarNames);
+            }
+            if (!allJarPath.isEmpty()) {
+                manDr.getJars().clear();
+                manDr.getJars().addAll(allJarPath);
+                try {
+                    driverManager.saveDrivers();
+                } catch (ExplorerException e) {
+                    log.error(e);
+                }
+            }
+        }
+    }
+
+    /**
+     *
+     * find all jar pathes by jar names.
+     *
+     * @param root
+     * @param jarNames
+     * @return if return an empty Set,indicate that it find failed.
+     * @throws MalformedURLException
+     */
+    public Set<String> findAllJarPath(File root, List<String> jarNames) {
+        Set<String> jarPathes = new HashSet<String>();
+        if (!root.exists() || jarNames == null || jarNames.isEmpty()) {
+            return jarPathes;
+        }
+        boolean allIsOK = true;
+        try {
+            for (String jarName : jarNames) {
+                List<File> jarFiles = FilesUtils.getJarFilesFromFolder(root, jarName);
+                if (jarFiles.isEmpty()) {
+                    allIsOK = false;
+                    break;
+                }
+                for (File file : jarFiles) {
+                    jarPathes.add(file.getPath());
+                }
+            }
+        } catch (MalformedURLException e) {
+            log.error(e);
+        }
+        if (!allIsOK) {
+            jarPathes.clear();
+        }
+        return jarPathes;
     }
 
     /**

@@ -20,8 +20,11 @@ import java.util.List;
 import java.util.Locale;
 import java.util.regex.Pattern;
 
+import net.sourceforge.sqlexplorer.EDriverName;
 import net.sourceforge.sqlexplorer.dbproduct.Alias;
 import net.sourceforge.sqlexplorer.dbproduct.AliasManager;
+import net.sourceforge.sqlexplorer.dbproduct.DriverManager;
+import net.sourceforge.sqlexplorer.dbproduct.ManagedDriver;
 import net.sourceforge.sqlexplorer.plugin.SQLExplorerPlugin;
 import net.sourceforge.sqlexplorer.plugin.editors.SQLEditor;
 import net.sourceforge.sqlexplorer.plugin.editors.SQLEditorInput;
@@ -119,7 +122,7 @@ public class CorePlugin extends AbstractUIPlugin {
 
     /**
      * Getter for repositoryInitialized.
-     * 
+     *
      * @return the repositoryInitialized
      */
     public boolean isRepositoryInitialized() {
@@ -134,7 +137,7 @@ public class CorePlugin extends AbstractUIPlugin {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.ui.plugin.AbstractUIPlugin#start(org.osgi.framework.BundleContext )
      */
     @SuppressWarnings("restriction")
@@ -156,7 +159,7 @@ public class CorePlugin extends AbstractUIPlugin {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.ui.plugin.AbstractUIPlugin#stop(org.osgi.framework.BundleContext )
      */
     @Override
@@ -167,7 +170,7 @@ public class CorePlugin extends AbstractUIPlugin {
 
     /**
      * Returns the shared instance.
-     * 
+     *
      * @return the shared instance
      */
     public static CorePlugin getDefault() {
@@ -176,7 +179,7 @@ public class CorePlugin extends AbstractUIPlugin {
 
     /**
      * Returns an image descriptor for the image file at the given plug-in relative path.
-     * 
+     *
      * @param path the path
      * @return the image descriptor
      */
@@ -186,7 +189,7 @@ public class CorePlugin extends AbstractUIPlugin {
 
     /**
      * DOC Zqin Comment method "getCurrentActiveEditor".
-     * 
+     *
      * @return the current active editor;
      */
     public IEditorPart getCurrentActiveEditor() {
@@ -195,7 +198,7 @@ public class CorePlugin extends AbstractUIPlugin {
 
     /**
      * DOC Zqin Comment method "runInDQViewer". this method open DQ responsitory view and run the specified query.
-     * 
+     *
      * @param tdDataProvider
      * @param query
      */
@@ -208,7 +211,7 @@ public class CorePlugin extends AbstractUIPlugin {
 
     /**
      * DOC bZhou Comment method "openInSqlEditor".
-     * 
+     *
      * @param tdDataProvider
      * @param query
      * @param editorName
@@ -231,7 +234,7 @@ public class CorePlugin extends AbstractUIPlugin {
                 .getDbVersionString())) || EDatabaseTypeName.MSSQL.getDisplayName().equalsIgnoreCase(dbType)
                 && (username == null || PluginConstant.EMPTY_STRING.equals(username));
         if (notSupport) {
-            MessageUI.openWarning(DefaultMessagesImpl.getString("CorePlugin.cantPreview")); //$NON-NLS-1$ 
+            MessageUI.openWarning(DefaultMessagesImpl.getString("CorePlugin.cantPreview")); //$NON-NLS-1$
             return null;
         }
 
@@ -295,6 +298,8 @@ public class CorePlugin extends AbstractUIPlugin {
                         if (metadataConnection != null) {
                             user.setMetadataConnection(metadataConnection);
                         }
+                        // if ManagedDriver class is not Loaded,check if it lack jars then update the realted jar.
+                        updateDriverIfClassNotLoad(databaseConnection);
                     }
 
                     input.setUser(user);
@@ -312,8 +317,27 @@ public class CorePlugin extends AbstractUIPlugin {
     }
 
     /**
+     * if the sqlexplorer driver is unRegisted,load the driver jar by lib manage system.
+     *
+     * @param sqlPlugin
+     * @param connection
+     * @param databaseConnection
+     */
+    private void updateDriverIfClassNotLoad(DatabaseConnection databaseConnection) {
+        SQLExplorerPlugin sqlPlugin = SQLExplorerPlugin.getDefault();
+        DriverManager driverManager = sqlPlugin.getDriverModel();
+        String driverClassName = JavaSqlFactory.getDriverClass(databaseConnection);
+        if (driverClassName != null) {
+            ManagedDriver manDr = driverManager.getDriver(EDriverName.getId(driverClassName));
+            if (manDr != null && !manDr.isDriverClassLoaded()) {
+                CWMPlugin.getDefault().loadDriverByLibManageSystem(databaseConnection);
+            }
+        }
+    }
+
+    /**
      * DOC bZhou Comment method "openEditor".
-     * 
+     *
      * @param file
      * @param editorId
      * @return
@@ -333,7 +357,7 @@ public class CorePlugin extends AbstractUIPlugin {
 
     /**
      * DOC mzhao open editor with editor input.
-     * 
+     *
      * @param editorInput
      * @param editorId
      * @return
@@ -349,7 +373,7 @@ public class CorePlugin extends AbstractUIPlugin {
 
     /**
      * DOC bzhou Comment method "getRepositoryView".
-     * 
+     *
      * @return
      */
     public DQRespositoryView getRepositoryView() {
@@ -359,7 +383,7 @@ public class CorePlugin extends AbstractUIPlugin {
 
     /**
      * DOC bzhou Comment method "getPatternTestView".
-     * 
+     *
      * @return
      */
     public PatternTestView getPatternTestView() {
@@ -399,7 +423,7 @@ public class CorePlugin extends AbstractUIPlugin {
 
     /**
      * refresh the object of DQReposirotyView.
-     * 
+     *
      * @param object
      */
     public void refreshDQView(Object object) {
@@ -417,7 +441,7 @@ public class CorePlugin extends AbstractUIPlugin {
 
     /**
      * DOC bzhou Comment method "getProductVersion".
-     * 
+     *
      * @return
      */
     public ProductVersion getProductVersion() {
@@ -427,7 +451,7 @@ public class CorePlugin extends AbstractUIPlugin {
 
     /**
      * DOC qiongli close editor by file.
-     * 
+     *
      * @param fileRes
      */
     public void closeEditorIfOpened(Item item) {
@@ -436,7 +460,7 @@ public class CorePlugin extends AbstractUIPlugin {
 
     /**
      * check the item's editor is opening or not.
-     * 
+     *
      * @param item
      * @return
      */
@@ -446,7 +470,7 @@ public class CorePlugin extends AbstractUIPlugin {
 
     /**
      * check the item's editor is opening or not.
-     * 
+     *
      * @param item
      * @param closeEditor close the editor if it is opening
      * @return
@@ -512,9 +536,9 @@ public class CorePlugin extends AbstractUIPlugin {
     }
 
     /**
-     * 
+     *
      * refresh the related connection which is opened in DQ side.
-     * 
+     *
      * @param item
      */
     public void refreshOpenedEditor(Item item) {
@@ -671,7 +695,7 @@ public class CorePlugin extends AbstractUIPlugin {
 
     /**
      * copy the method from ProxyRepositoryFactory to avoid tos migeration.
-     * 
+     *
      * @param fileName
      * @param pattern
      */

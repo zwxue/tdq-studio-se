@@ -153,7 +153,7 @@ public final class ConnectionUtils {
 
     /**
      * Method "createConnection".
-     * 
+     *
      * @param url the database url
      * @param driverClassName the Driver classname
      * @param props properties passed to the driver manager for getting the connection (normally at least a "user" and
@@ -167,7 +167,7 @@ public final class ConnectionUtils {
      */
     public static java.sql.Connection createConnection(String url, String driverClassName, Properties props) throws SQLException,
             InstantiationException, IllegalAccessException, ClassNotFoundException {
-        Driver driver = getClassDriver(driverClassName, url);
+        Driver driver = getClassDriver(driverClassName, url, props);
         if (driver != null) {
             DriverManager.registerDriver(driver);
             if (log.isDebugEnabled()) {
@@ -207,7 +207,7 @@ public final class ConnectionUtils {
 
     /**
      * Method "checkConnection".
-     * 
+     *
      * @param url the database url
      * @param driverClassName the driver class name to use for connection
      * @param props the properties of the connection
@@ -255,7 +255,7 @@ public final class ConnectionUtils {
 
     /**
      * This method is used to check conectiton is avalible for analysis or report ,when analysis or report runs.
-     * 
+     *
      * @param analysisDataProvider
      * @return
      */
@@ -339,6 +339,18 @@ public final class ConnectionUtils {
             if (!rcJdbc.isOk()) {
                 return rcJdbc;
             }
+        } else if (analysisDataProvider instanceof DatabaseConnection) {
+        //MOD qiongli 2013 TDQ-7156,add dbTYpe and dbVersion into prop so as to load driver by lib manage system.
+            DatabaseConnection dbConn = (DatabaseConnection) analysisDataProvider;
+            String databaseType = dbConn.getDatabaseType();
+            String dbVersionString = dbConn.getDbVersionString();
+            if (databaseType != null) {
+                props.put(TaggedValueHelper.DBTYPE, dbConn.getDatabaseType());
+            }
+            if (dbVersionString != null) {
+                props.put(TaggedValueHelper.DB_PRODUCT_VERSION, dbVersionString);
+            }
+
         }
 
         if (isHiveEmbedded(analysisDataProvider)) {
@@ -351,7 +363,7 @@ public final class ConnectionUtils {
 
     /**
      * if the Connection's type is hive embedded return true.
-     * 
+     *
      * @param analysisDataProvider
      * @return
      */
@@ -367,7 +379,7 @@ public final class ConnectionUtils {
 
     /**
      * if the Connection's type is hive embedded return true.
-     * 
+     *
      * @param metadataConnection
      * @return
      */
@@ -387,7 +399,7 @@ public final class ConnectionUtils {
 
     /**
      * if the Connection's type is General JDBC return true.
-     * 
+     *
      * @param conn a database connection
      * @return
      */
@@ -405,7 +417,7 @@ public final class ConnectionUtils {
 
     /**
      * if the DriverClassName is empty or Jar File Path is invalid return false.
-     * 
+     *
      * @param dbConn a General JDBC database connection
      * @return
      */
@@ -439,7 +451,7 @@ public final class ConnectionUtils {
 
     /**
      * DOC xqliu Comment method "createConnectionWithTimeout".
-     * 
+     *
      * @param driver
      * @param url
      * @param props
@@ -507,7 +519,7 @@ public final class ConnectionUtils {
 
     /**
      * DOC qzhang Comment method "getClassDriver".
-     * 
+     *
      * @param driverClassName
      * @param url
      * @return
@@ -515,8 +527,8 @@ public final class ConnectionUtils {
      * @throws InstantiationException
      * @throws ClassNotFoundException
      */
-    private static Driver getClassDriver(String driverClassName, String url) throws InstantiationException,
-            IllegalAccessException, ClassNotFoundException {
+    private static Driver getClassDriver(String driverClassName, String url, Properties props) throws InstantiationException,
+            IllegalAccessException {
         // MOD mzhao 2009-06-05,Bug 7571 Get driver from catch first, if not
         // exist then get a new instance.
         Driver driver = ExtractMetaDataUtils.getDriverCache().get(driverClassName);
@@ -527,7 +539,54 @@ public final class ConnectionUtils {
         if (driver != null) {
             return driver;
         }
+        driver = getClassDriverFromSQLExplorer(driverClassName);
+        if (driver != null) {
+            return driver;
+        }
 
+        try {
+            driver = (Driver) Class.forName(driverClassName).newInstance();
+        } catch (ClassNotFoundException e) {
+            driver = findDriverByLibManageSystem(driverClassName, props);
+        }
+        return driver;
+    }
+
+    /**
+     *
+     * find some installed jars from lib folder by driverclass name.
+     * 
+     * @param driverClassName
+     * @param props
+     * @return
+     * @throws InstantiationException
+     * @throws IllegalAccessException
+     */
+    private static Driver findDriverByLibManageSystem(String driverClassName, Properties props)
+            throws InstantiationException, IllegalAccessException {
+        Driver driver = null;
+        //
+        String dbType = props.getProperty(TaggedValueHelper.DBTYPE);
+        String dbVersion = props.getProperty(TaggedValueHelper.DB_PRODUCT_VERSION);
+        if (dbType != null) {
+            CWMPlugin.getDefault().loadDriverByLibManageSystem(dbType, dbVersion, driverClassName);
+            driver = getClassDriverFromSQLExplorer(driverClassName);
+        }
+        return driver;
+    }
+
+    /**
+     *
+     * abstract this function from getClassDriver(String driverClassName, String url, Properties props).
+     *
+     * @param driverClassName
+     * @return
+     * @throws InstantiationException
+     * @throws IllegalAccessException
+     */
+    private static Driver getClassDriverFromSQLExplorer(String driverClassName) throws InstantiationException,
+            IllegalAccessException {
+        Driver driver = null;
         if (Platform.isRunning()) {
             SQLExplorerPlugin sqlExplorerPlugin = SQLExplorerPlugin.getDefault();
             if (sqlExplorerPlugin != null) {
@@ -570,19 +629,12 @@ public final class ConnectionUtils {
                 }
             }
         }
-        if (driver == null) {
-            driver = (Driver) Class.forName(driverClassName).newInstance();
-        }
-        // MOD mzhao 2009-06-05,Bug 7571 Get driver from catch first, if not
-        // exist then get a new instance.
-        MetadataConnectionUtils.getDriverCache().put(driverClassName, driver);
-        ExtractMetaDataUtils.getDriverCache().put(driverClassName, new DriverShim(driver));
         return driver;
     }
 
     /**
      * Method "isValid".
-     * 
+     *
      * @param connection the connection to test
      * @return a return code with the appropriate message (never null)
      */
@@ -592,7 +644,7 @@ public final class ConnectionUtils {
 
     /**
      * Method "closeConnection".
-     * 
+     *
      * @param connection the connection to close.
      * @return a ReturnCode with true if ok, false if problem. {@link ReturnCode#getMessage()} gives the error message
      * when there is a problem.
@@ -606,7 +658,7 @@ public final class ConnectionUtils {
 
     /**
      * DOC xqliu Comment method "existTable".
-     * 
+     *
      * @param url
      * @param driver
      * @param props
@@ -648,7 +700,7 @@ public final class ConnectionUtils {
 
     /**
      * DOC xqliu Comment method "isOdbcMssql". bug 9822
-     * 
+     *
      * @param connection
      * @return
      * @throws SQLException
@@ -679,7 +731,7 @@ public final class ConnectionUtils {
 
     /**
      * DOC xqliu Comment method "isTeradata".
-     * 
+     *
      * @param connection
      * @return
      */
@@ -695,7 +747,7 @@ public final class ConnectionUtils {
 
     /**
      * DOC zshen Comment method "isMssql".
-     * 
+     *
      * @param connection
      * @return decide to whether is mssql connection
      * @throws SQLException
@@ -714,7 +766,7 @@ public final class ConnectionUtils {
 
     /**
      * mzhao bug: TDQ-4622 Is the connection is an ingres connection?
-     * 
+     *
      * @param connection
      * @return true if connection is ingres, false otherwise
      */
@@ -730,7 +782,7 @@ public final class ConnectionUtils {
 
     /**
      * mzhao bug: TDQ-4622 Is the connection is an informix connection?
-     * 
+     *
      * @param connection
      * @return true if connection is informix, false otherwise
      */
@@ -746,7 +798,7 @@ public final class ConnectionUtils {
 
     /**
      * mzhao bug: TDQ-4622 Is the connection is an DB2 connection?
-     * 
+     *
      * @param connection
      * @return true if connection is DB2, false otherwise
      */
@@ -763,7 +815,7 @@ public final class ConnectionUtils {
 
     /**
      * Comment method "isDB2".
-     * 
+     *
      * @param metadata
      * @return
      * @throws SQLException
@@ -778,7 +830,7 @@ public final class ConnectionUtils {
 
     /**
      * DOC xqliu Comment method "isMssql".
-     * 
+     *
      * @param connection
      * @return
      */
@@ -796,7 +848,7 @@ public final class ConnectionUtils {
 
     /**
      * DOC hwang Comment method "isMysql".
-     * 
+     *
      * @param connection
      * @return
      * @throws SQLException
@@ -815,7 +867,7 @@ public final class ConnectionUtils {
 
     /**
      * DOC xqliu Comment method "isAs400".
-     * 
+     *
      * @param connection
      * @return
      */
@@ -836,7 +888,7 @@ public final class ConnectionUtils {
 
     /**
      * DOC xqliu Comment method "isMdmConnection".
-     * 
+     *
      * @param dataprovider
      * @return
      */
@@ -846,7 +898,7 @@ public final class ConnectionUtils {
 
     /**
      * DOC qiongli Comment method "isDelimitedFileConnection".
-     * 
+     *
      * @param dataprovider
      * @return
      */
@@ -856,7 +908,7 @@ public final class ConnectionUtils {
 
     /**
      * DOC xqliu Comment method "isMdmConnection".
-     * 
+     *
      * @param object
      * @return
      */
@@ -877,7 +929,7 @@ public final class ConnectionUtils {
 
     /**
      * DOC xqliu Comment method "isMdmConnection".
-     * 
+     *
      * @param file
      * @return
      */
@@ -892,7 +944,7 @@ public final class ConnectionUtils {
 
     /**
      * DOC zshen Comment method "isOdbcMssql". feature 10630
-     * 
+     *
      * @param connection
      * @return
      * @throws SQLException
@@ -911,7 +963,7 @@ public final class ConnectionUtils {
 
     /**
      * DOC zshen Comment method "isOdbcConnection". feature 10630
-     * 
+     *
      * @param connection
      * @return
      * @throws SQLException
@@ -928,7 +980,7 @@ public final class ConnectionUtils {
 
     /**
      * DOC xqliu Comment method "isPostgresql".
-     * 
+     *
      * @param connection
      * @return
      * @throws SQLException
@@ -946,7 +998,7 @@ public final class ConnectionUtils {
 
     /**
      * DOC xqliu Comment method "isPostgresql".
-     * 
+     *
      * @param connection
      * @return
      */
@@ -971,7 +1023,7 @@ public final class ConnectionUtils {
 
     /**
      * DOC xqliu Comment method "isOdbcPostgresql".
-     * 
+     *
      * @param connection
      * @return
      * @throws SQLException
@@ -990,7 +1042,7 @@ public final class ConnectionUtils {
 
     /**
      * DOC xqliu Comment method "isOdbcOracle".
-     * 
+     *
      * @param connection
      * @return
      * @throws SQLException
@@ -1008,9 +1060,9 @@ public final class ConnectionUtils {
     }
 
     /**
-     * 
+     *
      * DOC qiongli Comment method "isOdbcOracle".
-     * 
+     *
      * @param connection
      * @return
      * @throws SQLException
@@ -1029,7 +1081,7 @@ public final class ConnectionUtils {
 
     /**
      * DOC xqliu Comment method "isOdbcIngres".
-     * 
+     *
      * @param connection
      * @return
      * @throws SQLException
@@ -1048,7 +1100,7 @@ public final class ConnectionUtils {
 
     /**
      * DOC xqliu Comment method "isJdbcIngres".
-     * 
+     *
      * @param connection
      * @return
      * @throws SQLException
@@ -1067,7 +1119,7 @@ public final class ConnectionUtils {
 
     /**
      * DOC xqliu Comment method "isSqlite".
-     * 
+     *
      * @param connection
      * @return
      */
@@ -1081,7 +1133,7 @@ public final class ConnectionUtils {
 
     /**
      * DOC xqliu Comment method "printResultSetColumns".
-     * 
+     *
      * @param rs
      */
     public static void printResultSetColumns(ResultSet rs) {
@@ -1098,7 +1150,7 @@ public final class ConnectionUtils {
 
     /**
      * DOC xqliu Comment method "getDatabaseType".
-     * 
+     *
      * @param connection
      * @return the database type string or null
      */
@@ -1116,7 +1168,7 @@ public final class ConnectionUtils {
 
     /**
      * DOC zshen Comment method "setName".
-     * 
+     *
      * @param conn
      * @param password
      */
@@ -1135,7 +1187,7 @@ public final class ConnectionUtils {
 
     /**
      * DOC xqliu Comment method "setDriverClass".
-     * 
+     *
      * @param conn
      * @param driverClass
      */
@@ -1148,7 +1200,7 @@ public final class ConnectionUtils {
 
     /**
      * DOC xqliu Comment method "getServerName".
-     * 
+     *
      * @param conn
      * @return server name of the connection or null
      */
@@ -1171,7 +1223,7 @@ public final class ConnectionUtils {
 
     /**
      * DOC xqliu Comment method "setServerName".
-     * 
+     *
      * @param conn
      * @param serverName
      */
@@ -1188,7 +1240,7 @@ public final class ConnectionUtils {
 
     /**
      * DOC xqliu Comment method "getPort".
-     * 
+     *
      * @param conn
      * @return port of the connection or null
      */
@@ -1210,7 +1262,7 @@ public final class ConnectionUtils {
 
     /**
      * DOC xqliu Comment method "setPort".
-     * 
+     *
      * @param conn
      * @param port
      */
@@ -1227,7 +1279,7 @@ public final class ConnectionUtils {
 
     /**
      * DOC xqliu Comment method "getSID".
-     * 
+     *
      * @param conn
      * @return sid of the connection or null
      */
@@ -1249,7 +1301,7 @@ public final class ConnectionUtils {
 
     /**
      * DOC xqliu Comment method "setSID".
-     * 
+     *
      * @param conn
      * @param sid
      */
@@ -1266,10 +1318,10 @@ public final class ConnectionUtils {
 
     /**
      * DOC connection created by TOS need to fill the basic information for useing in TOP.<br>
-     * 
+     *
      * @deprecated Not be useful anymore later, TOS should use the common filler API to create the metadata objects,
      * then TOP don't complement again. Use MetadataFillFactory.java
-     * 
+     *
      * @param conn
      * @return
      */
@@ -1312,7 +1364,7 @@ public final class ConnectionUtils {
 
     /**
      * DOC xqliu Comment method "fillConnectionInformation".
-     * 
+     *
      * @param conns
      * @return
      * @deprecated Is Replaced By DBConnectionFiller.fillUIConnParams
@@ -1329,7 +1381,7 @@ public final class ConnectionUtils {
 
     /**
      * DOC xqliu Comment method "fillMdmConnectionInformation".
-     * 
+     *
      * @param mdmConn
      * @return
      */
@@ -1347,9 +1399,9 @@ public final class ConnectionUtils {
 
     /**
      * DOC xqliu Comment method "fillDbConnectionInformation".
-     * 
+     *
      * @deprecated Is Replaced By DBConnectionFiller.fillUIConnParams
-     * 
+     *
      * @param dbConn
      * @return
      */
@@ -1388,7 +1440,7 @@ public final class ConnectionUtils {
 
     /**
      * DOC xqliu Comment method "createConnectionParam".
-     * 
+     *
      * @param conn
      * @return
      */
@@ -1441,7 +1493,7 @@ public final class ConnectionUtils {
 
     /**
      * DOC xqliu Comment method "fillConnectionMetadataInformation".
-     * 
+     *
      * @param conn
      * @return
      */
@@ -1480,7 +1532,7 @@ public final class ConnectionUtils {
 
     /**
      * DOC xqliu Comment method "createDatabaseVersionString".
-     * 
+     *
      * @param dbConn
      * @return
      */
@@ -1494,7 +1546,7 @@ public final class ConnectionUtils {
 
     /**
      * retrieve sqlDataType if it have a name is "Null".
-     * 
+     *
      * @param tdTable
      */
     public static void retrieveColumn(MetadataTable tdTable) {
@@ -1545,10 +1597,10 @@ public final class ConnectionUtils {
 
     /**
      * method "fillAttributeBetweenConnection".
-     * 
+     *
      * @param target the connection which will be filled attribute.
      * @param source the connection which will provider attribute.
-     * 
+     *
      * @deprecated the method will be deleted when the connection fetch from
      * IRepositoryViewObject.getProperty().getItem().getConnection
      */
@@ -1581,7 +1633,7 @@ public final class ConnectionUtils {
 
     /**
      * DOC zshen Comment method "getPackageFilter".
-     * 
+     *
      * @param connectionParam
      * @return
      * @deprecated After branch4.2 we unique the ui for the wizard which to create connection so no retrieveAll and Data
@@ -1625,7 +1677,7 @@ public final class ConnectionUtils {
 
     /**
      * get the DbName from DBConnectionParameter, this value is for package filter only.
-     * 
+     *
      * @param connectionParam
      * @return
      */
@@ -1662,7 +1714,7 @@ public final class ConnectionUtils {
 
     /**
      * DOC gdbu Comment method "getXMLElementsWithOutSave".
-     * 
+     *
      * @param document
      * @return
      */
@@ -1682,7 +1734,7 @@ public final class ConnectionUtils {
 
     /**
      * DOC gdbu Comment method "getXMLElementsWithOutSave".
-     * 
+     *
      * @param element
      * @return
      */
@@ -1712,7 +1764,7 @@ public final class ConnectionUtils {
 
     /**
      * Method "getDataType".
-     * 
+     *
      * @param catalogName the catalog (can be null)
      * @param schemaPattern the schema(s) (can be null)
      * @param tablePattern the table(s)
@@ -1757,7 +1809,7 @@ public final class ConnectionUtils {
 
     /**
      * if the connection has sid return false, else return true (don't need the TaggedValue any more).
-     * 
+     *
      * @param element
      * @return
      */
@@ -1809,7 +1861,7 @@ public final class ConnectionUtils {
 
     /**
      * Get the original value for context mode.
-     * 
+     *
      * @param connection
      * @param rawValue
      * @return
@@ -1835,7 +1887,7 @@ public final class ConnectionUtils {
 
     /**
      * Get the original DatabaseConnection for context mode.
-     * 
+     *
      * @param connection
      * @return
      */
@@ -1855,7 +1907,7 @@ public final class ConnectionUtils {
 
     /**
      * Get the original FileConnection for context mode.
-     * 
+     *
      * @param fileConn
      * @return
      */
@@ -1879,7 +1931,7 @@ public final class ConnectionUtils {
 
     /**
      * if sqlite connection don't set username, set it with a default username.
-     * 
+     *
      * @param connection
      */
     public static void checkUsernameBeforeSaveConnection4Sqlite(Connection connection) {
@@ -1892,9 +1944,9 @@ public final class ConnectionUtils {
     }
 
     /**
-     * 
+     *
      * Get connection from data manager.
-     * 
+     *
      * @param datamanager
      * @return
      */
@@ -1909,7 +1961,7 @@ public final class ConnectionUtils {
 
     /**
      * Updata DB_PRODUCT tagged values for connection item in case they are not present in current file.
-     * 
+     *
      * @throws SQLException
      */
     public static synchronized void updataTaggedValueForConnectionItem(Connection dataProvider) {
@@ -1936,7 +1988,7 @@ public final class ConnectionUtils {
 
     /**
      * get the database product version.
-     * 
+     *
      * @param connection
      * @return
      */
@@ -1949,6 +2001,10 @@ public final class ConnectionUtils {
         String password = JavaSqlFactory.getPassword(conn);
         props.put(TaggedValueHelper.USER, userName);
         props.put(TaggedValueHelper.PASSWORD, password);
+        String dbType = connection.getDbType();
+        if (dbType != null) {
+            props.put(TaggedValueHelper.DBTYPE, dbType);
+        }
         String url = JavaSqlFactory.getURL(conn);
         String driverClass = JavaSqlFactory.getDriverClass(conn);
 
