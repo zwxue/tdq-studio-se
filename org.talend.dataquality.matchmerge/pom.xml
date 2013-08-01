@@ -130,7 +130,7 @@
         <dependency>
             <groupId>org.talend.dataquality</groupId>
             <artifactId>org.talend.dataquality.record.linkage</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <version>5.4.0-SNAPSHOT</version>
         </dependency>
 
         <dependency>
