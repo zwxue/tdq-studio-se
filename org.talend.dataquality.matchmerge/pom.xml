@@ -134,14 +134,6 @@
         </dependency>
 
         <dependency>
-            <groupId>com.aliasi.spell</groupId>
-            <artifactId>lingpipe</artifactId>
-            <systemPath>${project.basedir}/lib/lingpipe-4.0.1.jar</systemPath>
-            <version>4.0.1</version>
-            <scope>system</scope>
-        </dependency>
-
-        <dependency>
             <groupId>commons-codec</groupId>
             <artifactId>commons-codec</artifactId>
             <version>1.7</version>
