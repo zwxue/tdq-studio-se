@@ -28,13 +28,16 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.IWorkspace;
+import org.eclipse.core.resources.IWorkspaceRunnable;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Plugin;
+import org.eclipse.core.runtime.jobs.ISchedulingRule;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.ide.undo.CreateProjectOperation;
@@ -67,6 +70,7 @@ import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.dq.writer.AElementPersistance;
 import org.talend.dq.writer.impl.ElementWriterFactory;
 import org.talend.repository.ProjectManager;
+import org.talend.repository.RepositoryWorkUnit;
 import org.talend.repository.model.IProxyRepositoryFactory;
 import org.talend.resource.EResourceConstant;
 import org.talend.resource.ResourceManager;
@@ -127,6 +131,34 @@ public final class DQStructureManager {
      * DOC bZhou Comment method "createDQStructure".
      */
     public void createDQStructure() {
+        RepositoryWorkUnit<Object> workUnit = new RepositoryWorkUnit<Object>(
+                DefaultMessagesImpl.getString("DQStructureManager.SVN_LOG_CREATE_STRUCTURE")) { //$NON-NLS-1$
+
+            @Override
+            protected void run() {
+                IWorkspace workspace = ResourcesPlugin.getWorkspace();
+                IWorkspaceRunnable operation = new IWorkspaceRunnable() {
+
+                    public void run(IProgressMonitor monitor) throws CoreException {
+                        createDQStructureUnit();
+                    }
+                };
+                ISchedulingRule schedulingRule = workspace.getRoot();
+                try {
+                    workspace.run(operation, schedulingRule, IWorkspace.AVOID_UPDATE, new NullProgressMonitor());
+                } catch (CoreException e) {
+                    log.error(e, e);
+                }
+            }
+        };
+        workUnit.setAvoidUnloadResources(true);
+        ProxyRepositoryFactory.getInstance().executeRepositoryWorkUnit(workUnit);
+    }
+
+    /**
+     * DOC zhao Comment method "createDQStructureUnit".
+     */
+    private void createDQStructureUnit() {
         RepositoryNodeBuilder instance = RepositoryNodeBuilder.getInstance();
         Plugin plugin = CorePlugin.getDefault();
         try {
