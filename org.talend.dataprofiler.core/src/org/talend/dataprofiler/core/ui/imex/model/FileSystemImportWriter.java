@@ -44,6 +44,7 @@ import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
 import org.talend.core.model.metadata.builder.database.JavaSqlFactory;
 import org.talend.core.model.properties.ConnectionItem;
+import org.talend.core.model.properties.ItemState;
 import org.talend.core.model.properties.Project;
 import org.talend.core.model.properties.PropertiesPackage;
 import org.talend.core.model.properties.Property;
@@ -823,6 +824,9 @@ public class FileSystemImportWriter implements IImportWriter {
 
             removeInvalidDependency(property);
 
+            // ADD msjian TDQ-7534 2013-8-2: remove all the locked status
+            removeLockStatus(property);
+            // TDQ-7534~
         }
 
     }
@@ -1034,6 +1038,21 @@ public class FileSystemImportWriter implements IImportWriter {
             }
         }
 
+    }
+
+    /**
+     * when the item's status is locked, change to unlocked.
+     * 
+     * @param property
+     */
+    private void removeLockStatus(Property property) {
+        ItemState state = property.getItem().getState();
+        if (state.isLocked()) {
+            state.setLocker(null);
+            state.setLockDate(null);
+            state.setLocked(false);
+            EMFUtil.saveSingleResource(property.eResource());
+        }
     }
 
     /***
