@@ -39,12 +39,14 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.talend.commons.bridge.ReponsitoryContextBridge;
 import org.talend.commons.emf.EMFUtil;
 import org.talend.commons.emf.FactoriesUtil;
+import org.talend.commons.exception.LoginException;
+import org.talend.commons.exception.PersistenceException;
 import org.talend.commons.utils.WorkspaceUtils;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
 import org.talend.core.model.metadata.builder.database.JavaSqlFactory;
 import org.talend.core.model.properties.ConnectionItem;
-import org.talend.core.model.properties.ItemState;
+import org.talend.core.model.properties.Item;
 import org.talend.core.model.properties.Project;
 import org.talend.core.model.properties.PropertiesPackage;
 import org.talend.core.model.properties.Property;
@@ -1046,12 +1048,13 @@ public class FileSystemImportWriter implements IImportWriter {
      * @param property
      */
     private void removeLockStatus(Property property) {
-        ItemState state = property.getItem().getState();
-        if (state.isLocked()) {
-            state.setLocker(null);
-            state.setLockDate(null);
-            state.setLocked(false);
-            EMFUtil.saveSingleResource(property.eResource());
+        Item item = property.getItem();
+        try {
+            ProxyRepositoryFactory.getInstance().unlock(item);
+        } catch (PersistenceException e) {
+            log.error(e, e);
+        } catch (LoginException e) {
+            log.error(e, e);
         }
     }
 
