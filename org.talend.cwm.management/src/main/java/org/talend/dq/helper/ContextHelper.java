@@ -53,6 +53,7 @@ public final class ContextHelper {
     public static String getContextValue(List<ContextType> contexts, String defaultContextName, String str) {
         String value = EMPTY_STRING;
         if (!StringUtils.isEmpty(str)) {
+            boolean findContext = false;
             if (str.startsWith(CONTEXT_PREFFIX)) {
                 String contextName = str.substring(CONTEXT_PREFFIX.length(), str.length());
                 for (ContextType ct : contexts) {
@@ -61,13 +62,15 @@ public final class ContextHelper {
                             ContextParameterType cpt = (ContextParameterType) obj;
                             if (cpt.getName().equals(contextName)) {
                                 value = cpt.getValue();
+                                findContext = true;
                                 break;
                             }
                         }
                         break;
                     }
                 }
-            } else {
+            }
+            if (!findContext) {
                 value = str;
             }
         }
