@@ -496,6 +496,15 @@ public final class ResourceManager {
     }
 
     /**
+     * get the product root folder location.
+     * 
+     * @return
+     */
+    public static IPath getProductFolderLocation() {
+        return getRootFolderLocation().removeLastSegments(1);
+    }
+
+    /**
      * 
      * DOC qiongli Comment method "isFileDelimitedFolder".
      * 
