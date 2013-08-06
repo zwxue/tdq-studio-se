@@ -15,7 +15,9 @@ package org.talend.dataquality.helpers;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -949,5 +951,40 @@ public final class ReportHelper {
      */
     public static IPath getSubReportsPath() {
         return new Path(PROPS.getProperty("SUB_REPORT_FOLDER")); //$NON-NLS-1$
+    }
+
+    /**
+     * if all the reports have the same output folder return it, else return null.
+     * 
+     * @param reports
+     * @return the output folder or null
+     */
+    public static String getOutputFolderFromReports(List<TdReport> reports) {
+        String result = null;
+        if (reports != null && !reports.isEmpty()) {
+            if (reports.size() == 1) {
+                String ofName = ReportHelper.getOutputFolderNameAssinged(reports.get(0));
+                if (StringUtils.isNotBlank(ofName)) {
+                    result = ofName;
+                }
+            } else {
+                Set<String> temp = new HashSet<String>();
+                for (TdReport report : reports) {
+                    String ofName = ReportHelper.getOutputFolderNameAssinged(report);
+                    // if there exist the report which don't set the output folder, this mean use default output folder,
+                    // so just return null
+                    if (StringUtils.isBlank(ofName)) {
+                        return null;
+                    }
+                    if (StringUtils.isNotBlank(ofName)) {
+                        temp.add(ofName);
+                    }
+                }
+                if (temp.size() == 1) {
+                    result = temp.iterator().next();
+                }
+            }
+        }
+        return result;
     }
 }
