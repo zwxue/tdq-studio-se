@@ -299,7 +299,6 @@ public final class DQStructureComparer {
         // ADD xqliu 2010-03-29 bug 11951
         TypedReturnCode<Connection> returnProvider = new TypedReturnCode<Connection>();
         boolean mdm = ConnectionUtils.isMdmConnection(prevDataProvider);
-        List<String> packageFilter = null;
         // ~11951
 
         // MOD by zshen 2012-07-05 for bug 5074 remove convert about DatabaseParameter instead
@@ -312,7 +311,8 @@ public final class DQStructureComparer {
             MetadataFillFactory.getMDMInstance().fillSchemas(conn, null, null);
             // returnProvider.setObject(TalendCwmFactory.createMdmTdDataProvider(connectionParameters));
         } else {
-            TypedReturnCode<?> trc = (TypedReturnCode<?>) MetadataFillFactory.getDBInstance().checkConnection(metadataConnection);
+            TypedReturnCode<?> trc = (TypedReturnCode<?>) MetadataFillFactory.getDBInstance()
+                    .createConnection(metadataConnection);
             Object sqlConnObject = trc.getObject();
             DatabaseMetaData dbJDBCMetadata = null;
             if (trc.isOk() && sqlConnObject instanceof java.sql.Connection) {

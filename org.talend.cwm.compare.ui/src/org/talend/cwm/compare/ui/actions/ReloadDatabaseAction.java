@@ -25,6 +25,8 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
+import org.talend.core.GlobalServiceRegister;
+import org.talend.core.ITDQRepositoryService;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
 import org.talend.core.model.metadata.builder.util.MetadataConnectionUtils;
@@ -170,6 +172,9 @@ public class ReloadDatabaseAction extends Action {
                             }
                             // update the related analyses.
                             WorkbenchUtils.impactExistingAnalyses(oldDataProvider);
+
+                            // Update software system.
+                            updateSoftwareSystem(oldDataProvider);
                         } catch (ReloadCompareException e) {
                             log.error(e, e);
                             returnCode.setReturnCode(e.getMessage(), false);
@@ -190,6 +195,16 @@ public class ReloadDatabaseAction extends Action {
             log.error(e, e);
         } catch (InterruptedException e) {
             log.error(e, e);
+        }
+    }
+
+    private void updateSoftwareSystem(Connection oldProvider) {
+        if (GlobalServiceRegister.getDefault().isServiceRegistered(ITDQRepositoryService.class)) {
+            ITDQRepositoryService tdqRepService = (ITDQRepositoryService) GlobalServiceRegister.getDefault().getService(
+                    ITDQRepositoryService.class);
+            if (tdqRepService != null) {
+                tdqRepService.publishSoftwareSystemUpdateEvent((DatabaseConnection) oldProvider);
+            }
         }
     }
 
