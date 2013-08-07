@@ -398,7 +398,12 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
                 return false;
             }
             // ~
-            saveBeforeRun(anaEditor);
+            try {
+                saveBeforeRun(anaEditor);
+            } catch (Exception e) {
+                log.error(e, e);
+                return false;
+            }
         }
         return true;
     }
@@ -407,15 +412,21 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
      * Save the analysis before run the analysis.
      * 
      * @param anaEditor
+     * @throws Exception
      */
-    private void saveBeforeRun(AnalysisEditor anaEditor) {
+    private void saveBeforeRun(AnalysisEditor anaEditor) throws Exception {
         IRepositoryFactory localRepository = RepositoryFactoryProvider
                 .getRepositoriyById(RepositoryConstants.REPOSITORY_LOCAL_ID);
         IRepositoryFactory oldRepository = ProxyRepositoryFactory.getInstance().getRepositoryFactoryFromProvider();
         ProxyRepositoryFactory.getInstance().setRepositoryFactoryFromProvider(localRepository);
         // This save action won't invoke any remote repository action such as svn commit. TDQ-7508
-        anaEditor.doSave(null);
-        ProxyRepositoryFactory.getInstance().setRepositoryFactoryFromProvider(oldRepository);
+        try {
+            anaEditor.doSave(null);
+        } catch (Exception e) {
+            throw e;
+        } finally {
+            ProxyRepositoryFactory.getInstance().setRepositoryFactoryFromProvider(oldRepository);
+        }
     }
     private boolean ifLockByOthers(Item item) {
         // MOD sizhaoliu TDQ-5452 verify the lock status before running an analysis
