@@ -179,7 +179,7 @@ public final class ConnectionUtils {
                 }
             }
             java.sql.Connection connection = null;
-            if (driverClassName.equals("org.hsqldb.jdbcDriver")) { //$NON-NLS-1$
+            if (driverClassName.equals(EDriverName.HSQLDEFAULTURL.getDbDriver())) {
                 // getClassDriver
                 // MOD mzhao 2009-04-13, Try to load driver first as there will
                 // cause exception: No suitable driver

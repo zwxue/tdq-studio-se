@@ -19,6 +19,10 @@ import org.apache.log4j.Logger;
 import org.talend.commons.exception.PersistenceException;
 import org.talend.commons.utils.data.container.Container;
 import org.talend.commons.utils.data.container.RootContainer;
+import org.talend.core.GlobalServiceRegister;
+import org.talend.core.ITDQRepositoryService;
+import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
+import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.properties.Property;
 import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.model.repository.Folder;
@@ -36,6 +40,12 @@ public class DBConnectionFolderRepNode extends DQRepositoryNode {
 
     private static Logger log = Logger.getLogger(DBConnectionFolderRepNode.class);
 
+    private ITDQRepositoryService tdqRepService = null;
+
+    private List<IRepositoryNode> nodesCache = new ArrayList<IRepositoryNode>();
+
+    private Boolean useNodeCache = Boolean.FALSE;
+
     /**
      * DOC klliu DBConnectionFolderRepNode constructor comment.
      * 
@@ -45,6 +55,7 @@ public class DBConnectionFolderRepNode extends DQRepositoryNode {
      */
     public DBConnectionFolderRepNode(IRepositoryViewObject object, RepositoryNode parent, ENodeType type) {
         super(object, parent, type);
+        initDQRepositoryService();
     }
 
     @Override
@@ -56,6 +67,10 @@ public class DBConnectionFolderRepNode extends DQRepositoryNode {
 
     @Override
     public List<IRepositoryNode> getChildren(boolean withDeleted) {
+        if (useNodeCache) {
+            return nodesCache;
+        }
+        nodesCache.clear();
         List<IRepositoryNode> children = new ArrayList<IRepositoryNode>();
         try {
             RootContainer<String, IRepositoryViewObject> tdqViewObjects = ProxyRepositoryFactory.getInstance()
@@ -93,11 +108,36 @@ public class DBConnectionFolderRepNode extends DQRepositoryNode {
                 repNode.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.METADATA_CONNECTIONS);
                 viewObject.setRepositoryNode(repNode);
                 children.add(repNode);
+
+                // Update software system
+                updateSoftwareSystem(viewObject);
             }
         } catch (PersistenceException e) {
             log.error(e, e);
         }
-        return filterResultsIfAny(children);
+        List<IRepositoryNode> filteredResults = filterResultsIfAny(children);
+        nodesCache.addAll(filteredResults);
+        return filteredResults;
+    }
+
+    /**
+     * DOC zhao Comment method "updateSoftwareSystem".
+     * 
+     * @param viewObject
+     */
+    private void updateSoftwareSystem(IRepositoryViewObject viewObject) {
+        DatabaseConnection connection = (DatabaseConnection) ((ConnectionItem) viewObject.getProperty().getItem())
+                .getConnection();
+        if (tdqRepService != null) {
+            tdqRepService.publishSoftwareSystemUpdateEvent(connection);
+        }
+
+    }
+
+    private void initDQRepositoryService() {
+        if (GlobalServiceRegister.getDefault().isServiceRegistered(ITDQRepositoryService.class)) {
+            tdqRepService = (ITDQRepositoryService) GlobalServiceRegister.getDefault().getService(ITDQRepositoryService.class);
+        }
     }
 
     /*
@@ -121,5 +161,9 @@ public class DBConnectionFolderRepNode extends DQRepositoryNode {
     @Override
     public String getDisplayText() {
         return Messages.getString("DQRepositoryViewLabelProvider.DBConnectionFolderName"); //$NON-NLS-1$
+    }
+
+    public void setUseNodeCache(Boolean isUseCache) {
+        this.useNodeCache = isUseCache;
     }
 }

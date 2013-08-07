@@ -16,12 +16,16 @@ import org.talend.commons.emf.FactoriesUtil;
 import org.talend.core.model.properties.Item;
 import org.talend.dq.helper.ProxyRepositoryManager;
 import org.talend.dq.writer.AElementPersistance;
+import org.talend.dq.writer.EMFSharedResources;
 import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
  * DOC bZhou class global comment. Detailled comment
+ * 
+ * @deprecated use {@link EMFSharedResources#saveResource(org.eclipse.emf.ecore.resource.Resource) } instead.
  */
+@Deprecated
 public class SoftwareSystemWriter extends AElementPersistance {
 
     /**
@@ -41,6 +45,7 @@ public class SoftwareSystemWriter extends AElementPersistance {
         return FactoriesUtil.SOFTWARE_SYSTEM;
     }
 
+    @Override
     public ReturnCode save(Item item, boolean careDependency) {
         return null;
     }
@@ -58,7 +63,6 @@ public class SoftwareSystemWriter extends AElementPersistance {
      */
     @Override
     protected void addDependencies(ModelElement element) {
-
 
     }
 

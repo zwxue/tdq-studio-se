@@ -74,6 +74,10 @@ import org.talend.dataprofiler.core.ui.editor.connection.ConnectionEditor;
 import org.talend.dataprofiler.core.ui.editor.connection.ConnectionItemEditorInput;
 import org.talend.dataprofiler.core.ui.editor.dqrules.DQRuleEditor;
 import org.talend.dataprofiler.core.ui.editor.parserrules.ParserRuleItemEditorInput;
+import org.talend.dataprofiler.core.ui.events.EventEnum;
+import org.talend.dataprofiler.core.ui.events.EventManager;
+import org.talend.dataprofiler.core.ui.events.EventReceiver;
+import org.talend.dataprofiler.core.ui.events.SoftwareSystemUpdateEventReceiver;
 import org.talend.dataprofiler.core.ui.utils.WorkbenchUtils;
 import org.talend.dataquality.indicators.definition.IndicatorCategory;
 import org.talend.dataquality.rules.ParserRule;
@@ -633,4 +637,26 @@ public class TOPRepositoryService implements ITDQRepositoryService {
             tdqContextView.updateContextView(isBuildIn, isDisposeAll, refreshView);
         }
     }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.core.ITDQRepositoryService#addSoftwareSystemUpdateListener()
+     */
+    public void addSoftwareSystemUpdateListener() {
+        EventReceiver softwareSystemUpdateEventReceiver = new SoftwareSystemUpdateEventReceiver();
+        EventManager.getInstance().register(EventEnum.DQ_SOFTWARESYSTEM_UPDATE.name(), EventEnum.DQ_SOFTWARESYSTEM_UPDATE,
+                softwareSystemUpdateEventReceiver);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.core.ITDQRepositoryService#publishSoftwareSystemUpdateEvent()
+     */
+    public void publishSoftwareSystemUpdateEvent(DatabaseConnection databaseConnection) {
+        EventManager.getInstance().publish(EventEnum.DQ_SOFTWARESYSTEM_UPDATE.name(), EventEnum.DQ_SOFTWARESYSTEM_UPDATE,
+                databaseConnection);
+    }
+
 }

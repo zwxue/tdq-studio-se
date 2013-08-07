@@ -279,12 +279,12 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
     @Override
     public void initialize(FormEditor editor) {
         super.initialize(editor);
-        String[] supportTypes = PatternLanguageType.getAllLanguageTypes();
+        String[] databaseTypes = PatternLanguageType.getAllLanguageTypes();
         // initialize user defined indicator category
         definition = (IndicatorDefinition) getCurrentModelElement(getEditor());
 
         allDBTypeList = new ArrayList<String>();
-        allDBTypeList.addAll(Arrays.asList(supportTypes));
+        allDBTypeList.addAll(Arrays.asList(databaseTypes));
         // MOD klliu 13104: Do not allow the user to add a java language in the system indicators
         URI uri = null;
         if (definition.eIsProxy()) {

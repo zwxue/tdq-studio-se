@@ -13,9 +13,11 @@
 package org.talend.dataprofiler.core.pattern;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.talend.core.model.metadata.builder.database.dburl.SupportDBUrlType;
+import org.talend.cwm.management.api.SoftwareSystemManager;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 
 /**
@@ -136,8 +138,8 @@ public enum PatternLanguageType {
                 return oneType.getLiteral();
             }
         }
-
-        return null;
+        // When the type is not supported officially, return the database name.
+        return name;
     }
 
     public static String findNameByLanguage(String language) {
@@ -146,21 +148,20 @@ public enum PatternLanguageType {
                 return oneType.getName();
             }
         }
-
-        return DefaultMessagesImpl.getString("PatternLanguageType.Unrecognized"); //$NON-NLS-1$
+        // When the type is not supported officially, return the database name.
+        return language;
     }
 
     public static String[] getAllLanguageTypes() {
-        Set<String> set = new HashSet<String>();
+        Set<String> existingTypes = new HashSet<String>();
 
         for (PatternLanguageType oneType : values()) {
-            set.add(oneType.getName());
+            existingTypes.add(oneType.getName());
         }
-        // MOD xqliu 2009-11-05 bug 9652
-        // set.remove(SupportDBUrlType.JAVADEFAULTURL.getLanguage());
-        // ~
-
-        return set.toArray(new String[set.size()]);
+        // Get the new database types which is not defined offically.
+        List<String> newTypes = SoftwareSystemManager.getInstance().getNewDBTypesFromSoftwareSystem(existingTypes);
+        existingTypes.addAll(newTypes);
+        return existingTypes.toArray(new String[existingTypes.size()]);
     }
 
     /**
@@ -190,15 +191,18 @@ public enum PatternLanguageType {
      * @return
      */
     public static String[] getAllLanguageTypesForPattern() {
-        Set<String> set = new HashSet<String>();
+        Set<String> existingTypes = new HashSet<String>();
 
         for (PatternLanguageType oneType : values()) {
-            set.add(oneType.getName());
+            existingTypes.add(oneType.getName());
         }
-        // set.remove(SupportDBUrlType.JAVADEFAULTURL.getLanguage());
-        set.remove(SupportDBUrlType.MDM.getLanguage());
+        existingTypes.remove(SupportDBUrlType.MDM.getLanguage());
 
-        return set.toArray(new String[set.size()]);
+        // Get the new database types which is not defined offically.
+        List<String> newTypes = SoftwareSystemManager.getInstance().getNewDBTypesFromSoftwareSystem(existingTypes);
+        existingTypes.addAll(newTypes);
+
+        return existingTypes.toArray(new String[existingTypes.size()]);
     }
 
 }
