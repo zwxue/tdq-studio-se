@@ -141,6 +141,12 @@
             <groupId>org.talend</groupId>
             <artifactId>org.talend.utils</artifactId>
             <version>5.4.0-SNAPSHOT</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>log4j</groupId>
+                    <artifactId>log4j</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <dependency>
