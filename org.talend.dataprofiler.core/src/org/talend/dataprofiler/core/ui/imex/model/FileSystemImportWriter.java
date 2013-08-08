@@ -87,6 +87,8 @@ import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.dq.writer.EMFSharedResources;
 import org.talend.dq.writer.impl.ElementWriterFactory;
 import org.talend.repository.RepositoryWorkUnit;
+import org.talend.repository.model.ERepositoryStatus;
+import org.talend.repository.model.IProxyRepositoryFactory;
 import org.talend.resource.EResourceConstant;
 import org.talend.resource.ResourceManager;
 import org.talend.resource.ResourceService;
@@ -785,6 +787,7 @@ public class FileSystemImportWriter implements IImportWriter {
         // MOD qiongli 2012-11-8 TDQ-6166.
         notifySQLExplorerForConnection();
 
+
     }
 
     /**
@@ -1025,13 +1028,37 @@ public class FileSystemImportWriter implements IImportWriter {
      */
     private void removeLockStatus(Property property) {
         Item item = property.getItem();
-        try {
-            ProxyRepositoryFactory.getInstance().unlock(item);
-        } catch (PersistenceException e) {
-            log.error(e, e);
-        } catch (LoginException e) {
-            log.error(e, e);
+        IProxyRepositoryFactory factory = ProxyRepositoryFactory.getInstance();
+        ERepositoryStatus status = factory.getStatus(item);
+        if (status != null && status == ERepositoryStatus.LOCK_BY_USER) {
+            try {
+                factory.unlock(item);
+                // after unlock, reload the resource.
+                EMFSharedResources.getInstance().reloadResource(getUri(property));
+            } catch (PersistenceException e) {
+                log.error(e, e);
+            } catch (LoginException e) {
+                log.error(e, e);
+            }
         }
+    }
+
+    /**
+     * get the uri from property.
+     * 
+     * @param property
+     * @return
+     */
+    private URI getUri(Property property) {
+        URI uri = property.eResource().getURI();
+        if (!uri.isPlatform()) {
+            // change the schema from "file" to "platform"
+            IFile ifile = WorkspaceUtils.fileToIFile(new File(uri.toFileString()));
+            if (ifile != null && ifile.exists()) {
+                uri = URI.createPlatformResourceURI(ifile.getFullPath().toString(), false);
+            }
+        }
+        return uri;
     }
 
     /***
