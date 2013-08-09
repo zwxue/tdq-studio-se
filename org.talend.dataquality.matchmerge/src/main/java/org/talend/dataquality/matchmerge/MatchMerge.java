@@ -192,7 +192,7 @@ public class MatchMerge {
                                 case SUM:
                                     mergedRecord.getAttributes().get(i).setValue(Integer.toString((Integer.parseInt(r1.get(i).getValue())) + (Integer.parseInt(r2.get(i).getValue()))));
                                     break;
-                                case MOST_RECENT_DATE:
+                                case MOST_RECENT:
                                     if (r1.get(i).getValue().compareTo(r2.get(i).getValue()) <= 0) {
                                         mergedRecord.getAttributes().get(i).setValue(r2.get(i).getValue());
                                     } else {

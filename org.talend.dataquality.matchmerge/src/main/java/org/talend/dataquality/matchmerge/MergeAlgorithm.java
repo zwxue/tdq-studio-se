@@ -21,7 +21,8 @@ public enum MergeAlgorithm {
     MIN,
     MEAN,
     SUM,
-    MOST_RECENT_DATE,
+    MOST_RECENT,
     OLDEST_DATE,
-    REPEATED_VALUES
+    REPEATED_VALUES,
+    MOST_COMMON
 }
