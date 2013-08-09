@@ -68,6 +68,7 @@ import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dataquality.properties.TDQAnalysisItem;
 import org.talend.dataquality.rules.DQRule;
 import org.talend.dq.analysis.AnalysisHandler;
+import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
 import org.talend.dq.nodes.AnalysisRepNode;
@@ -654,7 +655,14 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
     protected void saveRemovedElements() {
         HashSet<ModelElement> removedElements = this.getTreeViewer().getRemovedElements();
         for (ModelElement mod : removedElements) {
-            EMFUtil.saveSingleResource(mod.eResource());
+            if (mod.eIsProxy()) {
+                mod = (ModelElement) EObjectHelper.resolveObject(mod);
+            }
+            if (mod.eResource() == null) {
+                log.error("There is something wrong when saving resource of " + mod.getName() + " after remove it from " + this.getAnalysis().getName()); //$NON-NLS-1$ //$NON-NLS-2$
+            } else {
+                EMFUtil.saveSingleResource(mod.eResource());
+            }
         }
         this.getTreeViewer().getRemovedElements().clear();
     }
