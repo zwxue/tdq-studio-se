@@ -48,8 +48,8 @@ public class MFB implements MatchMergeAlgorithm {
         // Read source record per record
         Queue<Record> queue = new ProcessQueue<Record>(sourceRecords);
         while (!queue.isEmpty()) {
-            if (index % 10000 == 0) {
-                LOGGER.info("Current index: " + index);
+            if (LOGGER.isDebugEnabled() && index % 10000 == 0) {
+                LOGGER.debug("Current index: " + index);
             }
             Record currentRecord = queue.poll();
             // Sanity checks
@@ -59,7 +59,7 @@ public class MFB implements MatchMergeAlgorithm {
             if (index == 0) { // Performs this only for first record.
                 performAsserts(currentRecord);
             }
-            // Actual MFB algorithm
+            // MFB algorithm
             boolean hasCreatedNewMerge = false;
             for (Record mergedRecord : mergedRecords) {
                 if (MatchMerge.equals(currentRecord, mergedRecord) || matchRecords(mergedRecord, currentRecord)) {
@@ -74,6 +74,7 @@ public class MFB implements MatchMergeAlgorithm {
             }
             if (!hasCreatedNewMerge) {
                 currentRecord.setGroupId(UUID.randomUUID().toString());
+                currentRecord.getRelatedIds().add(currentRecord.getId());
                 mergedRecords.add(currentRecord);
             }
             index++;

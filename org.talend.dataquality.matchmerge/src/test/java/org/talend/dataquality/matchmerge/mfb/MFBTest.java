@@ -73,13 +73,10 @@ public class MFBTest extends TestCase {
                 new MergeAlgorithm[]{MergeAlgorithm.UNIFY});
         List<Record> mergedRecords = algorithm.execute(iterator);
         assertEquals(constantNumber, mergedRecords.size());
-        System.out.println("---------");
         for (Record mergedRecord : mergedRecords) {
             assertNotNull(mergedRecord.getGroupId());
             assertEquals(totalCount / constantNumber, mergedRecord.getRelatedIds().size());
-            System.out.println("Group id: " + mergedRecord.getGroupId() + " (" + mergedRecord.getRelatedIds().size() + ").");
         }
-        System.out.println("---------");
     }
 
     public void testSimilarValueRecords() throws Exception {
@@ -106,13 +103,10 @@ public class MFBTest extends TestCase {
                 new MergeAlgorithm[]{MergeAlgorithm.UNIFY});
         List<Record> mergedRecords = algorithm.execute(iterator);
         assertEquals(1, mergedRecords.size());
-        System.out.println("---------");
         for (Record mergedRecord : mergedRecords) {
             assertNotNull(mergedRecord.getGroupId());
             assertEquals(totalCount, mergedRecord.getRelatedIds().size());
-            System.out.println("Group id: " + mergedRecord.getGroupId() + " (" + mergedRecord.getRelatedIds().size() + ").");
         }
-        System.out.println("---------");
     }
 
     interface ValueGenerator {

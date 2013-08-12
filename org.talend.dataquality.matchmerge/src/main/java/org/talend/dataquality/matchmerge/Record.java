@@ -67,17 +67,25 @@ public class Record {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof Record)) return false;
+        if (o == null || getClass() != o.getClass()) return false;
 
         Record record = (Record) o;
 
-        if (attributes != null ? !attributes.equals(record.attributes) : record.attributes != null) return false;
+        if (id != null ? !id.equals(record.id) : record.id != null) return false;
 
         return true;
     }
 
     @Override
     public int hashCode() {
-        return attributes != null ? attributes.hashCode() : 0;
+        return id != null ? id.hashCode() : 0;
+    }
+
+    public String toString() {
+        StringBuilder builder = new StringBuilder();
+        for (String relatedId : relatedIds) {
+            builder.append(relatedId).append(' ');
+        }
+        return id + " ( " + builder + ")";
     }
 }
