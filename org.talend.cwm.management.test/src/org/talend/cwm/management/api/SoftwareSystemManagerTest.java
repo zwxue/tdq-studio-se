@@ -36,6 +36,7 @@ import org.talend.core.model.metadata.MetadataFillFactory;
 import org.talend.core.model.metadata.builder.ConvertionHelper;
 import org.talend.core.model.metadata.builder.connection.ConnectionPackage;
 import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
+import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.softwaredeployment.SoftwaredeploymentPackage;
 import org.talend.cwm.softwaredeployment.TdSoftwareSystem;
 import org.talend.dq.writer.EMFSharedResources;
@@ -90,7 +91,8 @@ public class SoftwareSystemManagerTest {
             when(mockDBMetaData.getDatabaseMajorVersion()).thenReturn(5);
 
             DatabaseConnection dbConn = ConnectionPackage.eINSTANCE.getConnectionFactory().createDatabaseConnection();
-
+            TaggedValueHelper.setTaggedValue(dbConn, TaggedValueHelper.DB_PRODUCT_NAME, mysqlDB);
+            TaggedValueHelper.setTaggedValue(dbConn, TaggedValueHelper.DB_PRODUCT_VERSION, version);
             PowerMockito.mockStatic(ConvertionHelper.class);
             when(ConvertionHelper.convert(dbConn, false, "")).thenReturn(null); //$NON-NLS-1$
             PowerMockito.mockStatic(MetadataFillFactory.class);

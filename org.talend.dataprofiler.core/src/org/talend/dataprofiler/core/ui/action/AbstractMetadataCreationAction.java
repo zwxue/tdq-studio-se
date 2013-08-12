@@ -26,6 +26,7 @@ import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dq.helper.RepositoryNodeHelper;
+import org.talend.dq.nodes.DBConnectionFolderRepNode;
 import org.talend.dq.nodes.DQRepositoryNode;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;

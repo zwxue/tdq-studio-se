@@ -48,6 +48,7 @@ import org.talend.cwm.compare.factory.update.RemoveTdRelationalSwitch;
 import org.talend.cwm.compare.factory.update.UpdateTdRelationalSwitch;
 import org.talend.cwm.compare.i18n.DefaultMessagesImpl;
 import org.talend.cwm.helper.SwitchHelpers;
+import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.nodes.foldernode.AbstractDatabaseFolderNode;
@@ -184,6 +185,11 @@ public abstract class AbstractComparisonLevel implements IComparisonLevel {
         IFile tempFile = createTempConnectionFile();
 
         if (compareWithReloadObject()) {
+            // Copy db type and db version tagged values .
+            String databaseType = TaggedValueHelper.getValueString(TaggedValueHelper.DB_PRODUCT_NAME, tempReloadProvider);
+            String productVersion = TaggedValueHelper.getValueString(TaggedValueHelper.DB_PRODUCT_VERSION, tempReloadProvider);
+            TaggedValueHelper.setTaggedValue(oldDataProvider, TaggedValueHelper.DB_PRODUCT_NAME, databaseType);
+            TaggedValueHelper.setTaggedValue(oldDataProvider, TaggedValueHelper.DB_PRODUCT_VERSION, productVersion);
             saveReloadResult();
         }
         deleteTempConnectionFile(tempFile);

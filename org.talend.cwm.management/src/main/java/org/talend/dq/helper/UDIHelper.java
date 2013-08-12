@@ -49,6 +49,7 @@ import org.talend.dataquality.indicators.definition.userdefine.UDIndicatorDefini
 import org.talend.dataquality.indicators.definition.userdefine.UserdefineFactory;
 import org.talend.dataquality.indicators.sql.UserDefIndicator;
 import org.talend.dataquality.indicators.sql.util.IndicatorSqlSwitch;
+import org.talend.dq.dbms.DbmsLanguage;
 import org.talend.dq.helper.resourcehelper.IndicatorResourceFileHelper;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.resource.ResourceManager;
@@ -445,11 +446,11 @@ public final class UDIHelper {
     private static List<File> getLibJarFileListForJobs() {
         List<File> fileList = new ArrayList<File>();
         String tdqLibPath = DefinitionHandler.getInstance().getTdqLibPath();
-        String libJarPath = tdqLibPath + "Indicators" + File.separator + "User Defined Indicators" + File.separator + "lib";
+        String libJarPath = tdqLibPath + "Indicators" + File.separator + "User Defined Indicators" + File.separator + "lib"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
         File newFile = new File(libJarPath);
         if (newFile.exists() && newFile.isDirectory()) {
             for (File libFile : newFile.listFiles()) {
-                if (libFile.getName().endsWith(".jar")) {
+                if (libFile.getName().endsWith(".jar")) { //$NON-NLS-1$
                     fileList.add(libFile);
                 }
             }
@@ -560,6 +561,14 @@ public final class UDIHelper {
         }
         key = key.replaceAll(" ", "_"); //$NON-NLS-1$ //$NON-NLS-2$
         autoGenSql = properties.getProperty(key);
+        if (autoGenSql == null) {
+            if (StringUtils.equalsIgnoreCase(DbmsLanguage.SQL, language)) {
+                log.error(Messages.getString("UDIHelper.NO_DEFAULT_SQL_EXPR_DEFINED")); //$NON-NLS-1$
+                return org.talend.dataquality.PluginConstant.EMPTY_STRING;
+            }
+            // use default SQL expression if the auto generated SQL cannot be find by given language.
+            autoGenSql = getQueryFromTemplates(selectTabNumber, DbmsLanguage.SQL, category);
+        }
         return autoGenSql;
     }
 

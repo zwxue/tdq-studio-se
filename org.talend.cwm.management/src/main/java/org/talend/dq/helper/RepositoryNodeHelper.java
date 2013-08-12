@@ -1701,16 +1701,8 @@ public final class RepositoryNodeHelper {
         if (node != null) {
             List<IRepositoryNode> childrens = node.getChildren();
             for (IRepositoryNode subNode : childrens) {
-                if (subNode instanceof DBConnectionFolderRepNode) {
-                    // Use cache will optimize the performance .
-                    ((DBConnectionFolderRepNode) subNode).setUseNodeCache(Boolean.TRUE);
-                    connNodes.addAll(getModelElementFromFolder(subNode, withDeleted));
-                }
                 if (subNode instanceof DFConnectionFolderRepNode || subNode instanceof MDMConnectionFolderRepNode) {
                     connNodes.addAll(getModelElementFromFolder(subNode, withDeleted));
-                }
-                if (subNode instanceof DBConnectionFolderRepNode) {
-                    ((DBConnectionFolderRepNode) subNode).setUseNodeCache(Boolean.FALSE);
                 }
             }
         }

@@ -104,7 +104,7 @@ public class DbmsLanguage {
     /**
      * Ansi SQL.
      */
-    static final String SQL = "SQL"; //$NON-NLS-1$
+    public static final String SQL = "SQL"; //$NON-NLS-1$
 
     private static final String DOT = "."; //$NON-NLS-1$
 

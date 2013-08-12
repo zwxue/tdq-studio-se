@@ -12,7 +12,6 @@
 // ============================================================================
 package org.talend.cwm.management.api;
 
-import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,23 +21,16 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
-import org.talend.commons.i18n.internal.Messages;
 import org.talend.commons.utils.WorkspaceUtils;
-import org.talend.core.model.metadata.IMetadataConnection;
-import org.talend.core.model.metadata.MetadataFillFactory;
-import org.talend.core.model.metadata.builder.ConvertionHelper;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
-import org.talend.core.model.metadata.builder.database.ExtractMetaDataUtils;
-import org.talend.core.model.metadata.builder.database.dburl.SupportDBUrlType;
-import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.helper.ResourceHelper;
 import org.talend.cwm.helper.TaggedValueHelper;
+import org.talend.cwm.management.i18n.Messages;
 import org.talend.cwm.softwaredeployment.SoftwaredeploymentPackage;
 import org.talend.cwm.softwaredeployment.TdSoftwareSystem;
-import org.talend.dataquality.PluginConstant;
 import org.talend.dq.writer.EMFSharedResources;
-import org.talend.utils.sugars.TypedReturnCode;
+import org.talend.utils.exceptions.TalendException;
 import orgomg.cwm.foundation.softwaredeployment.Component;
 import orgomg.cwm.foundation.softwaredeployment.DeployedComponent;
 import orgomg.cwm.objectmodel.core.ModelElement;
@@ -198,85 +190,17 @@ public final class SoftwareSystemManager {
         Resource softwareSystemResource = EMFSharedResources.getInstance().getSoftwareDeploymentResource();
         List<EObject> softwareSystems = softwareSystemResource.getContents();
 
-        Boolean isExisted = isExistedInSoftwareSystem(databaseConnection, softwareSystems);
-        if (isExisted) {
-            // Aready existed.
-            return;
-        }
-        IMetadataConnection metadataConnection = ConvertionHelper.convert(databaseConnection, false,
-                databaseConnection.getContextName());
-        TypedReturnCode<?> connectionCode = (TypedReturnCode<?>) MetadataFillFactory.getDBInstance().createConnection(
-                metadataConnection);
-        Object sqlConnObject = connectionCode.getObject();
-        if (!connectionCode.isOk() || !(sqlConnObject instanceof java.sql.Connection)) {
-            return;
-        }
-        connectAndUpdate(softwareSystemResource, softwareSystems, sqlConnObject);
-
-    }
-
-    /**
-     * DOC zhao Comment method "connectAndUpdate".
-     * 
-     * @param softwareSystemResource
-     * @param softwareSystems
-     * @param sqlConnObject
-     * @throws SQLException
-     */
-    private void connectAndUpdate(Resource softwareSystemResource, List<EObject> softwareSystems, Object sqlConnObject)
-            throws SQLException {
-        java.sql.Connection connection = null;
+        Boolean isExisted = Boolean.FALSE;
         try {
-            connection = (java.sql.Connection) sqlConnObject;
-            DatabaseMetaData databaseMetadata = ExtractMetaDataUtils.getConnectionMetadata(connection);
-            // --- get informations
-            String databaseProductName = null;
-            try {
-                databaseProductName = databaseMetadata.getDatabaseProductName();
-                if (log.isInfoEnabled()) {
-                    log.info(Messages.getString("DatabaseContentRetriever.PRODUCTNAME") + databaseProductName);//$NON-NLS-1$
-                }
-            } catch (Exception e1) {
-                log.warn("" + e1, e1);//$NON-NLS-1$
-            }
-            String databaseProductVersion = null;
-            try {
-                databaseProductVersion = databaseMetadata.getDatabaseProductVersion();
-                if (log.isInfoEnabled()) {
-                    log.info(Messages.getString("DatabaseContentRetriever.PRODUCTVERSION") + databaseProductVersion);//$NON-NLS-1$
-                }
-            } catch (Exception e1) {
-                log.warn("" + e1, e1);//$NON-NLS-1$
-            }
-            if (databaseProductVersion == null && !SupportDBUrlType.HIVEDEFAULTURL.getDBKey().equals(databaseProductName)) {
-                // Hive connection dosen't have getDatabaseMinorVersion/getDatabaseMinorVersion
-                try {
-                    int databaseMinorVersion = databaseMetadata.getDatabaseMinorVersion();
-                    int databaseMajorVersion = databaseMetadata.getDatabaseMajorVersion();
-                    // simplify the database product version when these informations are accessible
-                    databaseProductVersion = Integer.toString(databaseMajorVersion) + PluginConstant.DOT_STRING
-                            + databaseMinorVersion;
-
-                    if (log.isDebugEnabled()) {
-                        log.debug("Database=" + databaseProductName + " | " + databaseProductVersion + ". DB version: "//$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
-                                + databaseMajorVersion + PluginConstant.DOT_STRING + databaseMinorVersion);
-                    }
-                } catch (RuntimeException e) {
-                    // happens for Sybase ASE for example
-                    if (log.isDebugEnabled()) {
-                        log.debug("Database=" + databaseProductName + " | " + databaseProductVersion + " " + e, e);//$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
-                    }
-                }
-            }
-            update(databaseProductName, databaseProductVersion, softwareSystems, softwareSystemResource);
-        } catch (Throwable e) {
-            log.error(e.getMessage(), e);
-
-        } finally {
-            if (connection != null) {
-                ConnectionUtils.closeConnection(connection);
-            }
+            isExisted = isExistedInSoftwareSystem(databaseConnection, softwareSystems);
+        } catch (TalendException e) {
+            log.error(e.getMessage());
+            return;
         }
+        if (!isExisted) {
+            update(databaseConnection, softwareSystems, softwareSystemResource);
+        }
+
     }
 
     /**
@@ -285,10 +209,11 @@ public final class SoftwareSystemManager {
      * @param databaseConnection
      * @return
      */
-    private Boolean isExistedInSoftwareSystem(DatabaseConnection databaseConnection, List<EObject> softwareSystems) {
+    private Boolean isExistedInSoftwareSystem(DatabaseConnection databaseConnection, List<EObject> softwareSystems)
+            throws TalendException {
         String databaseType = TaggedValueHelper.getValueString(TaggedValueHelper.DB_PRODUCT_NAME, databaseConnection);
         if (StringUtils.isEmpty(databaseType)) {
-            return Boolean.FALSE;
+            throw new TalendException(Messages.getString("SoftwareSystemManager_NULL_DB_TYPE") + databaseConnection.getName()); //$NON-NLS-1$
         }
         String productVersion = TaggedValueHelper.getValueString(TaggedValueHelper.DB_PRODUCT_VERSION, databaseConnection);
         for (EObject system : softwareSystems) {
@@ -310,38 +235,24 @@ public final class SoftwareSystemManager {
      * @param databaseProductName
      * @param databaseProductVersion
      */
-    private void update(String databaseProductName, String databaseProductVersion, List<EObject> softwareSystems,
-            Resource softwareSystemResource) {
+    private void update(DatabaseConnection databaseConnection, List<EObject> softwareSystems, Resource softwareSystemResource) {
+
+        String databaseType = TaggedValueHelper.getValueString(TaggedValueHelper.DB_PRODUCT_NAME, databaseConnection);
+        if (StringUtils.isEmpty(databaseType)) {
+            return;
+        }
+        String productVersion = TaggedValueHelper.getValueString(TaggedValueHelper.DB_PRODUCT_VERSION, databaseConnection);
         // update software system.
-        Boolean isExist = Boolean.FALSE;
-        for (EObject system : softwareSystems) {
-            if (system instanceof TdSoftwareSystem) {
-                if (StringUtils.equalsIgnoreCase(((TdSoftwareSystem) system).getSubtype(), databaseProductName)
-                        && StringUtils.endsWithIgnoreCase(((TdSoftwareSystem) system).getVersion(), databaseProductVersion)) {
-                    // Found the software system given the database type and version.
-                    isExist = Boolean.TRUE;
-                    break;
-                }
-            }
+
+        TdSoftwareSystem softwareSystemNew = SoftwaredeploymentPackage.eINSTANCE.getSoftwaredeploymentFactory()
+                .createTdSoftwareSystem();
+        softwareSystemNew.setName(databaseType);
+        softwareSystemNew.setSubtype(databaseType);
+        if (productVersion != null) {
+            softwareSystemNew.setVersion(productVersion);
         }
-        if (!isExist) {
-            TdSoftwareSystem softwareSystemNew = SoftwaredeploymentPackage.eINSTANCE.getSoftwaredeploymentFactory()
-                    .createTdSoftwareSystem();
-            Boolean isNeedSave = Boolean.FALSE;
-            if (databaseProductName != null) {
-                softwareSystemNew.setName(databaseProductName);
-                softwareSystemNew.setSubtype(databaseProductName);
-                isNeedSave = Boolean.TRUE;
-            }
-            if (databaseProductVersion != null) {
-                softwareSystemNew.setVersion(databaseProductVersion);
-                isNeedSave = Boolean.TRUE;
-            }
-            if (isNeedSave) {
-                softwareSystems.add(softwareSystemNew);
-                EMFSharedResources.getInstance().saveResource(softwareSystemResource);
-            }
-        }
+        softwareSystems.add(softwareSystemNew);
+        EMFSharedResources.getInstance().saveResource(softwareSystemResource);
     }
 
     /**
