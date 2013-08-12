@@ -287,7 +287,10 @@ public class CWMPlugin extends Plugin {
                 manDr.getJars().clear();
                 manDr.getJars().addAll(allJarPath);
                 try {
+                    manDr.registerSQLDriver();
                     driverManager.saveDrivers();
+                } catch (ClassNotFoundException e) {
+                    log.error(e);
                 } catch (ExplorerException e) {
                     log.error(e);
                 }

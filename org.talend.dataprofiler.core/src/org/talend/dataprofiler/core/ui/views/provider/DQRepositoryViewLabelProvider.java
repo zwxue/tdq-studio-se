@@ -12,9 +12,15 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.views.provider;
 
+import java.sql.Driver;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import net.sourceforge.sqlexplorer.EDriverName;
+import net.sourceforge.sqlexplorer.dbproduct.DriverManager;
+import net.sourceforge.sqlexplorer.dbproduct.ManagedDriver;
+import net.sourceforge.sqlexplorer.plugin.SQLExplorerPlugin;
 
 import org.apache.log4j.Logger;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
@@ -29,9 +35,8 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
 import org.talend.commons.utils.platform.PluginChecker;
 import org.talend.core.database.EDatabaseTypeName;
-import org.talend.core.model.metadata.IMetadataConnection;
-import org.talend.core.model.metadata.builder.ConvertionHelper;
 import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
+import org.talend.core.model.metadata.builder.database.JavaSqlFactory;
 import org.talend.core.model.metadata.builder.database.dburl.SupportDBUrlType;
 import org.talend.core.model.metadata.builder.util.MetadataConnectionUtils;
 import org.talend.core.model.properties.ConnectionItem;
@@ -47,6 +52,7 @@ import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.ui.exchange.ExchangeCategoryRepNode;
 import org.talend.dataprofiler.core.ui.exchange.ExchangeComponentRepNode;
+import org.talend.dq.CWMPlugin;
 import org.talend.dq.nodes.AnalysisRepNode;
 import org.talend.dq.nodes.DBCatalogRepNode;
 import org.talend.dq.nodes.DBColumnFolderRepNode;
@@ -89,7 +95,7 @@ import org.talend.utils.exceptions.MissingDriverException;
 public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider implements IFontProvider {
 
     /**
-     * 
+     *
      */
 
     private static Font italicFont;
@@ -280,9 +286,9 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider i
     }
 
     /**
-     * 
+     *
      * DOC qiongli Comment method "getImageByContentType".
-     * 
+     *
      * @param repositoryNode
      * @return
      */
@@ -341,28 +347,44 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider i
 
     private boolean isNeedAddDriverConnection(IRepositoryNode repNode) {
         ERepositoryObjectType objectType = repNode.getObjectType();
-
+        boolean isNeed = false;
         if (objectType == ERepositoryObjectType.METADATA_CONNECTIONS) {
             ConnectionItem connectionItem = (ConnectionItem) repNode.getObject().getProperty().getItem();
             if (connectionItem.getConnection() instanceof DatabaseConnection) {
-                IMetadataConnection metadataConnection = ConvertionHelper.convert(connectionItem.getConnection());
-                try {
-                    if (!EDatabaseTypeName.HIVE.getXmlName().equalsIgnoreCase(metadataConnection.getDbType())) {
-                        MetadataConnectionUtils.getClassDriver(metadataConnection);
-                    }
-                } catch (MissingDriverException e) {
+                DatabaseConnection dbConn = (DatabaseConnection) (connectionItem.getConnection());
+                String dbType = dbConn.getDatabaseType();
+                String driverClassName = JavaSqlFactory.getDriverClass(dbConn);
+                if (dbType == null || driverClassName == null || PluginConstant.EMPTY_STRING.equals(driverClassName)) {
                     return true;
-                } catch (Exception e) {
-                    log.error(e, e);
+                }
+
+                // firstly,find driver from cache.if not find,load jar by lib folder then find driver from
+                // SQLExplorer driver.
+                if (!EDatabaseTypeName.HIVE.getXmlName().equalsIgnoreCase(dbType)) {
+                    Driver driver = MetadataConnectionUtils.getDriverCache().get(driverClassName);
+                    if (driver != null) {
+                        return false;
+                    }
+                    DriverManager driverManager = SQLExplorerPlugin.getDefault().getDriverModel();
+                    ManagedDriver manDr = driverManager.getDriver(EDriverName.getId(driverClassName));
+                    if (manDr == null) {
+                        isNeed = true;
+                    } else if (!manDr.isDriverClassLoaded()) {
+                        CWMPlugin.getDefault().loadDriverByLibManageSystem(dbConn);
+                        if (!manDr.isDriverClassLoaded()) {
+                            isNeed = true;
+                        }
+                    }
                 }
             }
+
         }
-        return false;
+        return isNeed;
     }
 
     /**
      * ADD qiongli TDQ-5801 if it is a invalid jdbc connection.
-     * 
+     *
      * @param repNode
      * @return
      */
@@ -386,7 +408,7 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider i
 
     /*
      * yyi 2011-04-14 20362:connection modified
-     * 
+     *
      * @see org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider#getFont(java.lang.Object)
      */
     @Override
