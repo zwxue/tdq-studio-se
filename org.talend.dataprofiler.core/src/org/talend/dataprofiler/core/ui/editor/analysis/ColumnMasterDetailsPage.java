@@ -23,6 +23,7 @@ import java.util.regex.Pattern;
 import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
@@ -67,6 +68,7 @@ import org.talend.core.repository.model.repositoryObject.MetadataXmlElementTypeR
 import org.talend.cwm.dependencies.DependenciesHandler;
 import org.talend.cwm.helper.ModelElementHelper;
 import org.talend.cwm.helper.SwitchHelpers;
+import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.xml.TdXmlElementType;
 import org.talend.dataprofiler.core.ImageLib;
@@ -93,6 +95,7 @@ import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.sql.UserDefIndicator;
 import org.talend.dataquality.properties.TDQAnalysisItem;
 import org.talend.dq.analysis.ModelElementAnalysisHandler;
+import org.talend.dq.analysis.connpool.TdqAnalysisConnectionPool;
 import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.helper.UDIHelper;
@@ -831,27 +834,37 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
         analysis.getParameters().setExecutionLanguage(ExecutionLanguage.get(execLang));
 
         try {
-            // MOD zshen feature 12919 to save analysisParameter.
-            if (ExecutionLanguage.JAVA.equals(ExecutionLanguage.get(execLang))) {
-                analysis.getParameters().setMaxNumberRows(Integer.parseInt(maxNumText.getText()));
-                analysis.getParameters().setStoreData(drillDownCheck.getSelection());
-            }
-        } catch (NumberFormatException nfe) {
-            throw new DataprofilerCoreException(DefaultMessagesImpl.getString("ColumnMasterDetailsPage.emptyField",
-                    DefaultMessagesImpl.getString("ColumnMasterDetailsPage.maxNumberLabel")));
-        }
-
-        try {
             // check whether the field has integer value
             Integer.valueOf(numberOfConnectionsPerAnalysisText.getText());
-            // save the number of connections per analysis
-            this.saveNumberOfConnectionsPerAnalysis();
         } catch (NumberFormatException nfe) {
-            throw new DataprofilerCoreException(DefaultMessagesImpl.getString("ColumnMasterDetailsPage.emptyField",
-                    DefaultMessagesImpl.getString("AnalysisTuningPreferencePage.NumberOfConnectionsPerAnalysis")));
-        }
+            MessageDialogWithToggle.openError(
+                    null,
+                    DefaultMessagesImpl.getString("AbstractAnalysisMetadataPage.SaveAnalysis"),
+                    DefaultMessagesImpl.getString("ColumnMasterDetailsPage.emptyField",
+                            DefaultMessagesImpl.getString("AnalysisTuningPreferencePage.NumberOfConnectionsPerAnalysis"))); //$NON-NLS-1$ //$NON-NLS-2$
 
+            String originalValue = TaggedValueHelper.getTaggedValue(TdqAnalysisConnectionPool.NUMBER_OF_CONNECTIONS_PER_ANALYSIS,
+                    this.analysis.getTaggedValue()).getValue();
+            numberOfConnectionsPerAnalysisText.setText(originalValue);
+        }
+        // save the number of connections per analysis
+        this.saveNumberOfConnectionsPerAnalysis();
+
+        try {
+            // MOD zshen feature 12919 to save analysisParameter.
+            analysis.getParameters().setMaxNumberRows(Integer.parseInt(maxNumText.getText()));
+        } catch (NumberFormatException nfe) {
+            MessageDialogWithToggle.openError(
+                    null,
+                    DefaultMessagesImpl.getString("AbstractAnalysisMetadataPage.SaveAnalysis"),
+                    DefaultMessagesImpl.getString("ColumnMasterDetailsPage.emptyField",
+                            DefaultMessagesImpl.getString("ColumnMasterDetailsPage.maxNumberLabel"))); //$NON-NLS-1$ //$NON-NLS-2$
+            maxNumText.setText(String.valueOf(analysis.getParameters().getMaxNumberRows()));
+        }
+        analysis.getParameters().setMaxNumberRows(analysis.getParameters().getMaxNumberRows());
+        analysis.getParameters().setStoreData(drillDownCheck.getSelection());
         // ~12919
+
         if (modelElementIndicators != null && modelElementIndicators.length != 0) {
             tdProvider = ModelElementIndicatorHelper.getTdDataProvider(modelElementIndicators[0]);
             if (tdProvider.eIsProxy()) {
