@@ -168,7 +168,7 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
             MessageDialogWithToggle
                     .openError(
                             null,
-                            DefaultMessagesImpl.getString("AbstractAnalysisMetadataPage.SaveAnalysis"), DefaultMessagesImpl.getString("AbstractMetadataFormPage.whitespace")); //$NON-NLS-1$
+                            DefaultMessagesImpl.getString("AbstractAnalysisMetadataPage.SaveAnalysis"), DefaultMessagesImpl.getString("AbstractMetadataFormPage.whitespace")); //$NON-NLS-1$ //$NON-NLS-2$
         } else {
             super.doSave(monitor);
             try {
@@ -300,7 +300,7 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
      */
     public void updateAnalysisConnectionVersionInfo() {
         if (this.textConnVersion != null) {
-            String strConnVersion = DefaultMessagesImpl.getString("AbstractMetadataFormPage.connVersion")
+            String strConnVersion = DefaultMessagesImpl.getString("AbstractMetadataFormPage.connVersion") //$NON-NLS-1$
                     + getConnectionVersion();
             textConnVersion.setText(strConnVersion);
         }
@@ -608,7 +608,7 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
         comp.setLayout(new GridLayout(2, false));
 
         this.toolkit.createLabel(comp,
-                DefaultMessagesImpl.getString("AnalysisTuningPreferencePage.NumberOfConnectionsPerAnalysis"));
+                DefaultMessagesImpl.getString("AnalysisTuningPreferencePage.NumberOfConnectionsPerAnalysis")); //$NON-NLS-1$
 
         this.numberOfConnectionsPerAnalysisText = this.toolkit.createText(comp,
                 String.valueOf(AnalysisHandler.createHandler(getAnalysis()).getNumberOfConnectionsPerAnalysis()), SWT.BORDER);
@@ -659,7 +659,7 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
                 mod = (ModelElement) EObjectHelper.resolveObject(mod);
             }
             if (mod.eResource() == null) {
-                log.error("There is something wrong when saving resource of " + mod.getName() + " after remove it from " + this.getAnalysis().getName()); //$NON-NLS-1$ //$NON-NLS-2$
+                log.error("There is something wrong when saving resource of " + mod.getName()); //$NON-NLS-1$ 
             } else {
                 EMFUtil.saveSingleResource(mod.eResource());
             }
