@@ -1,1 +1,2 @@
-Topcase 2.5.0 is used to generate Ecore file.
+The model should be edited with directly from dataquality.ecorediag file.
+ 
