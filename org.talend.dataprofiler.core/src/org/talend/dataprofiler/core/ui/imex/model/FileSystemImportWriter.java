@@ -756,9 +756,53 @@ public class FileSystemImportWriter implements IImportWriter {
         // replace the name (using the imported name incase of modify the name), and save the SI
         // siDef.setName(record.getElement().getName());
 
+        // ADD msjian TDQ-7534 2013-8-13: merge ClientDependency to pattern when import pattern
+        isModified = mergeClientDependency2Pattern(isModified, pattern, recordPattern);
+        // TDQ-7534~
+
         if (isModified) {
             ElementWriterFactory.getInstance().createPatternWriter().save(patternItem, false);
         }
+    }
+
+    /**
+     * merge ClientDependency to Pattern.
+     * 
+     * @param isModified
+     * @param pattern
+     * @param recordPattern
+     * @return
+     */
+    private boolean mergeClientDependency2Pattern(boolean isModified, Pattern pattern, Pattern recordPattern) {
+        EList<Dependency> supplierDependency = recordPattern.getSupplierDependency();
+        if (supplierDependency != null) {
+            for (Dependency dependency : supplierDependency) {
+                for (ModelElement client : dependency.getClient()) {
+                    // avoid to merge the invalid client
+                    if (client.eIsProxy()) {
+                        continue;
+                    }
+                    URI uri = client.eResource().getURI();
+                    if (!uri.isRelative()) {
+                        IPath anaPath = new Path(ResourceManager.getRootProject().getLocation() + File.separator
+                                + uri.devicePath().substring(uri.devicePath().indexOf(EResourceConstant.ANALYSIS.getPath())));
+
+                        // make the analysis' path relative.
+                        IPath makeRelativeTo = anaPath.makeRelativeTo(ResourceManager.getRootProject().getLocation()
+                                .removeLastSegments(1));
+                        uri = URI.createPlatformResourceURI(makeRelativeTo.toString(), false);
+
+                        // set the client's uri with relative path.
+                        client.eResource().setURI(uri);
+                    }
+
+                    // set client to the old pattern.
+                    DependenciesHandler.getInstance().setUsageDependencyOn(client, pattern);
+                    isModified = true;
+                }
+            }
+        }
+        return isModified;
     }
 
     private PatternComponent createPatternComponent(PatternComponent oldComponent) {
