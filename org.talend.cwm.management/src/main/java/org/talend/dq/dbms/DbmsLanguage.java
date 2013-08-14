@@ -12,6 +12,10 @@
 // ============================================================================
 package org.talend.dq.dbms;
 
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -20,6 +24,7 @@ import java.util.List;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.EList;
+import org.talend.core.database.EDatabaseTypeName;
 import org.talend.core.model.metadata.builder.database.dburl.SupportDBUrlType;
 import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.helper.ColumnHelper;
@@ -100,6 +105,8 @@ public class DbmsLanguage {
     static final String DELIMITEDFILE = SupportDBUrlType.DELIMITEDFILE.getLanguage();
 
     static final String HIVE = SupportDBUrlType.HIVEDEFAULTURL.getLanguage();
+
+    static final String VERTICA = EDatabaseTypeName.VERTICA.getXmlName();
 
     /**
      * Ansi SQL.
@@ -1526,4 +1533,16 @@ public class DbmsLanguage {
         return "SELECT * FROM <%=__TABLE_NAME__%> " + whereExpression + "AND LENGTH(<%=__COLUMN_NAMES__%>) BETWEEN (SELECT FLOOR(SUM(LENGTH(<%=__COLUMN_NAMES__%> )) / COUNT( * )) FROM <%=__TABLE_NAME__%> " + whereExpression + ") AND (SELECT CEIL(SUM(LENGTH(<%=__COLUMN_NAMES__%> )) / COUNT(*)) FROM <%=__TABLE_NAME__%>  " + whereExpression + ")"; //$NON-NLS-1$
     }
 
+    /**
+     * DOC xqliu Comment method "createStatement".
+     * 
+     * @param connection
+     * @return
+     * @throws SQLException
+     */
+    public Statement createStatement(Connection connection, int fetchSize) throws SQLException {
+        Statement statement = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
+        statement.setFetchSize(fetchSize);
+        return statement;
+    }
 }

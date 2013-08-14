@@ -12,6 +12,10 @@
 // ============================================================================
 package org.talend.dq.dbms;
 
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.sql.Statement;
+
 import org.talend.utils.ProductVersion;
 
 /**
@@ -48,6 +52,7 @@ public class HiveDbmsLanguage extends DbmsLanguage {
         super(dbmsType, dbVersion);
     }
 
+    @Override
     public String toQualifiedName(String catalog, String schema, String table) {
         return super.toQualifiedName(null, null, table);
     }
@@ -112,4 +117,14 @@ public class HiveDbmsLanguage extends DbmsLanguage {
         return false;
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dq.dbms.DbmsLanguage#createStatement(java.sql.Connection)
+     */
+    @Override
+    public Statement createStatement(Connection connection, int fetchSize) throws SQLException {
+        // hive don't need to set fetch size
+        return connection.createStatement();
+    }
 }

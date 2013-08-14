@@ -12,6 +12,9 @@
 // ============================================================================
 package org.talend.dq.dbms;
 
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -19,10 +22,12 @@ import org.apache.commons.lang.StringUtils;
 import org.talend.cwm.management.i18n.Messages;
 import org.talend.dataquality.indicators.DateGrain;
 import org.talend.utils.ProductVersion;
+
 /**
  * DOC scorreia class global comment. Detailled comment
  */
 public class MSSqlDbmsLanguage extends DbmsLanguage {
+
     private static final Pattern SELECT_PATTERN = Pattern.compile("SELECT", Pattern.CASE_INSENSITIVE); //$NON-NLS-1$
 
     /**
@@ -76,7 +81,6 @@ public class MSSqlDbmsLanguage extends DbmsLanguage {
                 + ",'z','a'),'1','9'),'2','9'),'3','9'),'4','9'),'5','9'),'6','9')" + ",'7','9'),'8','9'),'0','9')"; //$NON-NLS-1$ //$NON-NLS-2$
     }
 
-    
     @Override
     protected String getPatternFinderFunction(String expression, String charsToReplace, String replacementChars) {
         assert charsToReplace != null && replacementChars != null && charsToReplace.length() == replacementChars.length();
@@ -88,7 +92,6 @@ public class MSSqlDbmsLanguage extends DbmsLanguage {
         return expression;
     }
 
-    
     /*
      * (non-Javadoc)
      * 
@@ -141,16 +144,17 @@ public class MSSqlDbmsLanguage extends DbmsLanguage {
         // MOD klliu bug TDQ-4724 2012-03-13
         return " LEN(" + columnName + ") "; //$NON-NLS-1$ //$NON-NLS-2$
     }
-    
-  
-    /* (non-Javadoc)
+
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.talend.dq.dbms.DbmsLanguage#createGenericSqlWithRegexFunction(java.lang.String)
      */
     @Override
-    public String createGenericSqlWithRegexFunction(String function){
-        
-         return "SELECT COUNT(CASE WHEN " + function + "(" + GenericSQLHandler.COLUMN_NAMES + "," + GenericSQLHandler.PATTERN_EXPRESSION //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-        + ") = 1 THEN 1 END), COUNT(*) FROM " + GenericSQLHandler.TABLE_NAME + " " + GenericSQLHandler.WHERE_CLAUSE; //$NON-NLS-1$ //$NON-NLS-2$
+    public String createGenericSqlWithRegexFunction(String function) {
+
+        return "SELECT COUNT(CASE WHEN " + function + "(" + GenericSQLHandler.COLUMN_NAMES + "," + GenericSQLHandler.PATTERN_EXPRESSION //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                + ") = 1 THEN 1 END), COUNT(*) FROM " + GenericSQLHandler.TABLE_NAME + " " + GenericSQLHandler.WHERE_CLAUSE; //$NON-NLS-1$ //$NON-NLS-2$
     }
 
     /*
@@ -158,6 +162,7 @@ public class MSSqlDbmsLanguage extends DbmsLanguage {
      * 
      * @see org.talend.dq.dbms.DbmsLanguage#regexLike(java.lang.String, java.lang.String)
      */
+    @Override
     public String regexLike(String element, String regex) {
         return regexLike(element, regex, getFunctionName());
     }
@@ -193,16 +198,19 @@ public class MSSqlDbmsLanguage extends DbmsLanguage {
      * 
      * @return average length sql statement
      */
+    @Override
     public String getAverageLengthRows() {
         return "SELECT * FROM <%=__TABLE_NAME__%> WHERE DATALENGTH(<%=__COLUMN_NAMES__%>) BETWEEN (SELECT FLOOR(SUM(DATALENGTH(<%=__COLUMN_NAMES__%>)) / COUNT(<%=__COLUMN_NAMES__%>)) FROM <%=__TABLE_NAME__%>) AND (SELECT CEILING(SUM(DATALENGTH(<%=__COLUMN_NAMES__%>)) / COUNT(<%=__COLUMN_NAMES__%>)) FROM <%=__TABLE_NAME__%>)"; //$NON-NLS-1$ 
     }
-    
+
     @Override
     public String trimIfBlank(String colName) {
         return " CASE WHEN  LEN(" + trim(colName) + ")=0  THEN '' ELSE  " + colName + " END"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
     }
-    
-    /* (non-Jsdoc)
+
+    /*
+     * (non-Jsdoc)
+     * 
      * @see org.talend.dq.dbms.DbmsLanguage#getAverageLengthWithBlankRows()
      */
     @Override
@@ -239,5 +247,17 @@ public class MSSqlDbmsLanguage extends DbmsLanguage {
     @Override
     public String getAverageLengthWithNullBlankRows() {
         return "SELECT * FROM <%=__TABLE_NAME__%> WHERE LEN(" + trimIfBlank("<%=__COLUMN_NAMES__%>") + ") BETWEEN (SELECT FLOOR(SUM(LEN(" + trimIfBlank("<%=__COLUMN_NAMES__%>") + ")) / COUNT(*)) FROM <%=__TABLE_NAME__%>) AND (SELECT CEILING(CAST(SUM(LEN(" + trimIfBlank("<%=__COLUMN_NAMES__%>") + " ))*1.00 AS FLOAT) / COUNT(*)) FROM <%=__TABLE_NAME__%>)"; //$NON-NLS-1$
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dq.dbms.DbmsLanguage#createStatement(java.sql.Connection)
+     */
+    @Override
+    public Statement createStatement(Connection connection, int fetchSize) throws SQLException {
+        Statement statement = connection.createStatement();
+        statement.setFetchSize(fetchSize);
+        return statement;
     }
 }

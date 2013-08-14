@@ -26,7 +26,6 @@ import java.util.Set;
 import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.EMap;
 import org.talend.commons.utils.SpecialValueDisplay;
-import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.cwm.helper.ColumnSetHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.management.i18n.Messages;
@@ -51,9 +50,6 @@ import org.talend.dataquality.indicators.UniqueCountIndicator;
 import org.talend.dataquality.indicators.sql.UserDefIndicator;
 import org.talend.dq.dbms.DbmsLanguage;
 import org.talend.dq.dbms.DbmsLanguageFactory;
-import org.talend.dq.dbms.HiveDbmsLanguage;
-import org.talend.dq.dbms.MSSqlDbmsLanguage;
-import org.talend.dq.dbms.SQLiteDbmsLanguage;
 import org.talend.dq.helper.UDIHelper;
 import org.talend.utils.collections.MultiMapHelper;
 import org.talend.utils.sugars.ReturnCode;
@@ -67,8 +63,6 @@ import orgomg.cwm.resource.relational.ColumnSet;
 public class IndicatorEvaluator extends Evaluator<String> {
 
     private static Logger log = Logger.getLogger(IndicatorEvaluator.class);
-
-    protected Analysis analysis = null;
 
     public IndicatorEvaluator(Analysis analysis) {
         this.analysis = analysis;
@@ -91,20 +85,7 @@ public class IndicatorEvaluator extends Evaluator<String> {
         // ~ 13826
         // create query statement
         // feature 0010630 zshen: Tables are not found when using Excel with ODBC connection
-        Statement statement = null;
-        // MOD qiongli 2011-6-28 bug 22520,statement for sqlLite
-        Connection dataManager = (Connection) analysis.getContext().getConnection();
-        DbmsLanguage dbmsLanguage = DbmsLanguageFactory.createDbmsLanguage(dataManager);
-        boolean isHiveDbms = dbmsLanguage instanceof HiveDbmsLanguage;
-        if (dbmsLanguage instanceof MSSqlDbmsLanguage || dbmsLanguage instanceof SQLiteDbmsLanguage || isHiveDbms) {
-            statement = connection.createStatement();
-        } else {
-            statement = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
-        }
-        // ~10630
-        if (!isHiveDbms) {
-            statement.setFetchSize(fetchSize);
-        }
+        Statement statement = createStatement();
         // MOD xqliu 2009-02-09 bug 6237
         if (continueRun()) {
             if (log.isInfoEnabled()) {

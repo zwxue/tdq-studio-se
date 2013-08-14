@@ -145,6 +145,8 @@ public final class DbmsLanguageFactory {
             dbmsLanguage = new InfomixDbmsLanguage(dbmsSubtype, dbVersion);
         } else if (isHive(dbmsSubtype)) {
             dbmsLanguage = new HiveDbmsLanguage(dbmsSubtype, dbVersion);
+        } else if (isVertica(dbmsSubtype)) {
+            dbmsLanguage = new VerticaDbmsLanguage(dbmsSubtype, dbVersion);
         } else {
             dbmsLanguage = new DbmsLanguage(dbmsSubtype, dbVersion);
         }
@@ -266,6 +268,10 @@ public final class DbmsLanguageFactory {
         return compareDbmsLanguage(DbmsLanguage.HIVE, dbms);
     }
 
+    public static boolean isVertica(String dbms) {
+        return compareDbmsLanguage(DbmsLanguage.VERTICA, dbms);
+    }
+
     // ~11005
 
     public static boolean isAllDatabaseType(String dbms) {
@@ -303,6 +309,9 @@ public final class DbmsLanguageFactory {
         if (lang1.startsWith(DbmsLanguage.INFOMIX)) {
             return StringUtils.upperCase(lang1).startsWith(StringUtils.upperCase(lang2))
                     || StringUtils.upperCase(lang2).startsWith(StringUtils.upperCase(lang1));
+        }
+        if (StringUtils.contains(lang1, DbmsLanguage.VERTICA) && StringUtils.contains(lang2, DbmsLanguage.VERTICA)) {
+            return true;
         }
         return StringUtils.equalsIgnoreCase(lang1, lang2);
     }

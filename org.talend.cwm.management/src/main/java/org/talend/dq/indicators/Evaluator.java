@@ -15,6 +15,7 @@ package org.talend.dq.indicators;
 import java.lang.management.ManagementFactory;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -30,11 +31,13 @@ import org.eclipse.core.runtime.Platform;
 import org.talend.core.model.metadata.builder.database.ExtractMetaDataUtils;
 import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.management.i18n.Messages;
+import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.IndicatorsPackage;
 import org.talend.dataquality.indicators.impl.RegexpMatchingIndicatorImpl;
 import org.talend.dq.analysis.memory.AnalysisThreadMemoryChangeNotifier;
 import org.talend.dq.analysis.memory.IMemoryChangeListener;
+import org.talend.dq.dbms.DbmsLanguageFactory;
 import org.talend.dq.helper.UDIHelper;
 import org.talend.utils.collections.MultiMapHelper;
 import org.talend.utils.sugars.ReturnCode;
@@ -72,6 +75,17 @@ public abstract class Evaluator<T> implements IMemoryChangeListener {
     protected Set<Indicator> allIndicators = new HashSet<Indicator>();
 
     private String javaPatternMessage = StringUtils.EMPTY;
+
+    protected Analysis analysis = null;
+
+    /**
+     * Getter for analysis.
+     * 
+     * @return the analysis
+     */
+    public Analysis getAnalysis() {
+        return this.analysis;
+    }
 
     /**
      * Method "storeIndicator" stores the mapping between the analyzed element name and its indicators. if needed, this
@@ -316,5 +330,20 @@ public abstract class Evaluator<T> implements IMemoryChangeListener {
      */
     public void onMemoryChange(long freeMemory) {
         this.isLowMemory = true;
+    }
+
+    /**
+     * create the statement.
+     * 
+     * @return
+     * @throws SQLException
+     */
+    protected Statement createStatement() throws SQLException {
+        Statement statement = null;
+        if (getAnalysis() != null && getConnection() != null) {
+            statement = DbmsLanguageFactory.createDbmsLanguage(getAnalysis().getContext().getConnection()).createStatement(
+                    getConnection(), getFetchSize());
+        }
+        return statement;
     }
 }

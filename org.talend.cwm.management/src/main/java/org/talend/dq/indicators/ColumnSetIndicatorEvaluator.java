@@ -38,7 +38,6 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Display;
 import org.talend.commons.utils.StringUtils;
 import org.talend.core.language.LanguageManager;
-import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.connection.DelimitedFileConnection;
 import org.talend.core.model.metadata.builder.connection.Escape;
 import org.talend.core.model.metadata.builder.connection.MDMConnection;
@@ -68,11 +67,6 @@ import org.talend.dataquality.indicators.UniqueCountIndicator;
 import org.talend.dataquality.indicators.columnset.ColumnSetMultiValueIndicator;
 import org.talend.dataquality.indicators.columnset.ColumnsetPackage;
 import org.talend.dataquality.indicators.columnset.SimpleStatIndicator;
-import org.talend.dq.dbms.DbmsLanguage;
-import org.talend.dq.dbms.DbmsLanguageFactory;
-import org.talend.dq.dbms.HiveDbmsLanguage;
-import org.talend.dq.dbms.MSSqlDbmsLanguage;
-import org.talend.dq.dbms.SQLiteDbmsLanguage;
 import org.talend.dq.helper.ParameterUtil;
 import org.talend.fileprocess.FileInputDelimited;
 import org.talend.utils.sql.TalendTypeConvert;
@@ -87,8 +81,6 @@ import com.csvreader.CsvReader;
 public class ColumnSetIndicatorEvaluator extends Evaluator<String> {
 
     private static Logger log = Logger.getLogger(ColumnSetIndicatorEvaluator.class);
-
-    protected Analysis analysis = null;
 
     // MOD yyi 2011-02-22 17871:delimitefile
     protected boolean isDelimitedFile = false;
@@ -156,20 +148,7 @@ public class ColumnSetIndicatorEvaluator extends Evaluator<String> {
         Statement statement = null;
         ResultSet resultSet = null;
         try {
-            // MOD qiongli 2011-7-8 bug 22520,statement for sqlLite
-            Connection dataManager = (Connection) analysis.getContext().getConnection();
-            // MOD msjian TDQ-5503 2012-6-12: fixed SQLServerException: make the same with IndicatorEvaluator
-            DbmsLanguage dbmsLanguage = DbmsLanguageFactory.createDbmsLanguage(dataManager);
-            boolean isHiveDbms = dbmsLanguage instanceof HiveDbmsLanguage;
-            if (dbmsLanguage instanceof MSSqlDbmsLanguage || dbmsLanguage instanceof SQLiteDbmsLanguage || isHiveDbms) {
-                statement = getConnection().createStatement();
-            } else {
-                statement = getConnection().createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
-            }
-            // TDQ-5503~
-            if (!isHiveDbms) {
-                statement.setFetchSize(fetchSize);
-            }
+            statement = createStatement();
             if (continueRun()) {
                 if (log.isInfoEnabled()) {
                     log.info("Executing query: " + sqlStatement); //$NON-NLS-1$
