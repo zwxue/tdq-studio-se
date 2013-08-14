@@ -1701,7 +1701,8 @@ public final class RepositoryNodeHelper {
         if (node != null) {
             List<IRepositoryNode> childrens = node.getChildren();
             for (IRepositoryNode subNode : childrens) {
-                if (subNode instanceof DFConnectionFolderRepNode || subNode instanceof MDMConnectionFolderRepNode) {
+                if (subNode instanceof DBConnectionFolderRepNode || subNode instanceof DFConnectionFolderRepNode
+                        || subNode instanceof MDMConnectionFolderRepNode) {
                     connNodes.addAll(getModelElementFromFolder(subNode, withDeleted));
                 }
             }
