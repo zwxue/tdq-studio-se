@@ -183,7 +183,7 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
                 this.updateAnalysisConnectionVersionInfo();
             } catch (DataprofilerCoreException e) {
                 MessageDialogWithToggle.openError(null,
-                        DefaultMessagesImpl.getString("AbstractAnalysisMetadataPage.SaveAnalysis"), e.getMessage()); //$NON-NLS-1$ //$NON-NLS-2$
+                        DefaultMessagesImpl.getString("AbstractAnalysisMetadataPage.SaveAnalysis"), e.getMessage()); //$NON-NLS-1$ 
                 ExceptionHandler.process(e, Level.ERROR);
             }
         }
@@ -665,7 +665,7 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
                 mod = (ModelElement) EObjectHelper.resolveObject(mod);
             }
             if (mod.eResource() == null) {
-                log.error("There is something wrong when saving resource of " + mod.getName() + " after remove it from " + this.getAnalysis().getName()); //$NON-NLS-1$ //$NON-NLS-2$
+                log.error("There is something wrong when saving resource of " + mod.getName()); //$NON-NLS-1$ 
             } else {
                 EMFUtil.saveSingleResource(mod.eResource());
             }
