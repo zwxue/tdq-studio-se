@@ -476,4 +476,9 @@ public class TopService implements ICoreService {
     @Override
     public void createTalendCorePreference(CorePreferencePage page, Composite parentComposite) {
     }
+
+    @Override
+    public void syncLog4jSettings() {
+        throw new UnsupportedOperationException();
+    }
 }
