@@ -242,7 +242,7 @@ public class CWMPlugin extends Plugin {
      */
     public void loadDriverByLibManageSystem(DatabaseConnection connection) {
         String dbType = connection.getDatabaseType();
-        String dbVersion = connection.getVersion();
+        String dbVersion = connection.getDbVersionString();
         String driverClassName = JavaSqlFactory.getDriverClass(connection);
         loadDriverByLibManageSystem(dbType, dbVersion, driverClassName);
     }
