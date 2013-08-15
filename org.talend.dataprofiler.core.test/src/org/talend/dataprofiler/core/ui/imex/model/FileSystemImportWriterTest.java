@@ -17,14 +17,21 @@ import static org.mockito.Mockito.*;
 import static org.powermock.api.support.membermodification.MemberMatcher.*;
 import static org.powermock.api.support.membermodification.MemberModifier.*;
 
+import java.io.File;
+import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
 import junit.framework.Assert;
 
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.runtime.Path;
+import org.eclipse.emf.common.util.BasicEList;
 import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.InternalEObject;
+import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.junit.After;
 import org.junit.Before;
@@ -35,9 +42,11 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.rule.PowerMockRule;
 import org.talend.core.model.properties.Property;
 import org.talend.core.model.repository.IRepositoryViewObject;
+import org.talend.cwm.dependencies.DependenciesHandler;
 import org.talend.cwm.relational.RelationalFactory;
 import org.talend.cwm.relational.TdExpression;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
+import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.domain.pattern.Pattern;
 import org.talend.dataquality.domain.pattern.PatternComponent;
 import org.talend.dataquality.domain.pattern.PatternFactory;
@@ -53,13 +62,18 @@ import org.talend.dq.helper.resourcehelper.IndicatorResourceFileHelper;
 import org.talend.dq.writer.impl.ElementWriterFactory;
 import org.talend.dq.writer.impl.IndicatorDefinitionWriter;
 import org.talend.dq.writer.impl.PatternWriter;
+import org.talend.resource.ResourceManager;
 import org.talend.utils.sugars.ReturnCode;
+import org.talend.utils.sugars.TypedReturnCode;
+import orgomg.cwm.objectmodel.core.Dependency;
+import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
  * created by yyin on 2012-8-8 Detailled comment
  * 
  */
-@PrepareForTest({ IndicatorResourceFileHelper.class, DefaultMessagesImpl.class, ElementWriterFactory.class })
+@PrepareForTest({ IndicatorResourceFileHelper.class, DefaultMessagesImpl.class, ElementWriterFactory.class,
+        ResourceManager.class, DependenciesHandler.class })
 public class FileSystemImportWriterTest {
 
     @Rule
@@ -84,6 +98,7 @@ public class FileSystemImportWriterTest {
      */
     @After
     public void tearDown() throws Exception {
+        // do nothing
     }
 
     /**
@@ -142,14 +157,24 @@ public class FileSystemImportWriterTest {
         // other type?not SI
     }
 
+    /**
+     * Test method for
+     * {@link org.talend.dataprofiler.core.ui.imex.model.FileSystemImportWriter#mergePattern(org.talend.dataprofiler.core.ui.imex.model.ItemRecord, org.talend.dataquality.domain.pattern.Pattern)}
+     * .
+     * 
+     * @throws MalformedURLException
+     */
     @Test
-    public void testMergePattern() {
-        ItemRecord mockItem = mock(ItemRecord.class);
-        TDQPatternItem patternItem = mock(TDQPatternItem.class);
-        Pattern pattern = mock(Pattern.class);
+    public void testMergePattern() throws MalformedURLException {
+        // import object
+        ItemRecord importItem = mock(ItemRecord.class);
         Pattern importPattern = mock(Pattern.class);
-        when(patternItem.getPattern()).thenReturn(pattern);
-        when(mockItem.getElement()).thenReturn(importPattern);
+        when(importItem.getElement()).thenReturn(importPattern);
+
+        // old object
+        TDQPatternItem oldPatternItem = mock(TDQPatternItem.class);
+        Pattern oldPattern = mock(Pattern.class);
+        when(oldPatternItem.getPattern()).thenReturn(oldPattern);
 
         // for imported pattern's expression
         InternalEObject eo = mock(InternalEObject.class);
@@ -178,6 +203,48 @@ public class FileSystemImportWriterTest {
         importComponents.add(re4);
         when(importPattern.getComponents()).thenReturn(importComponents);
 
+        // for imported pattern's supplierDependencies
+        Analysis analysis = mock(Analysis.class);
+        Dependency dependency = mock(Dependency.class);
+        when(dependency.getKind()).thenReturn(DependenciesHandler.USAGE);
+
+        EList<ModelElement> analysisList = new BasicEList<ModelElement>();
+        analysisList.add(analysis);
+        when(dependency.getClient()).thenReturn(analysisList);
+        when(analysis.eIsProxy()).thenReturn(false);
+
+        File file = new File("C://Users//msjian//Desktop//myusetest//AA//TDQ_Data Profiling//Analyses//k_0.1.ana");//$NON-NLS-1$
+        org.eclipse.emf.common.util.URI uri = URI.createURI(file.toURL().getPath().substring(1));
+        Resource resource = mock(Resource.class);
+        when(analysis.eResource()).thenReturn(resource);
+        when(resource.getURI()).thenReturn(uri);
+
+        PowerMockito.mockStatic(ResourceManager.class);
+        IProject pro = mock(IProject.class);
+        when(ResourceManager.getRootProject()).thenReturn(pro);
+        when(pro.getLocation()).thenReturn(new Path("D:\\worspace\\workspace_TDQEE_5.3\\A")); //$NON-NLS-1$
+
+        EList<ModelElement> patternlist = mock(EObjectContainmentEList.class);
+        patternlist.add(importPattern);
+        when(dependency.getSupplier()).thenReturn(patternlist);
+
+        EList<Dependency> supplierDependencies_old = new BasicEList<Dependency>();
+        when(oldPattern.getSupplierDependency()).thenReturn(supplierDependencies_old);
+        Assert.assertEquals(0, oldPattern.getSupplierDependency().size());
+
+        EList<Dependency> supplierDependencies_import = new BasicEList<Dependency>();
+        supplierDependencies_import.add(dependency);
+        when(importPattern.getSupplierDependency()).thenReturn(supplierDependencies_import);
+        Assert.assertEquals(1, importPattern.getSupplierDependency().size());
+
+        PowerMockito.mockStatic(DependenciesHandler.class);
+        DependenciesHandler instance = mock(DependenciesHandler.class);
+        when(DependenciesHandler.getInstance()).thenReturn(instance);
+        TypedReturnCode<Dependency> rc = new TypedReturnCode<Dependency>();
+        rc.setObject(dependency);
+        when(instance.setUsageDependencyOn(analysis, oldPattern)).thenReturn(rc);
+        when(oldPattern.getSupplierDependency()).thenReturn(supplierDependencies_import);
+
         // for system pattern's expression
         EList<PatternComponent> components = new EObjectContainmentEList<PatternComponent>(PatternComponent.class, eo,
                 PatternPackage.PATTERN__COMPONENTS);
@@ -196,15 +263,15 @@ public class FileSystemImportWriterTest {
         td5.setModificationDate(null);
         re5.setExpression(td5);
         components.add(re5);
-        when(pattern.getComponents()).thenReturn(components);
+        when(oldPattern.getComponents()).thenReturn(components);
 
         ElementWriterFactory ewFactory = mock(ElementWriterFactory.class);
         PatternWriter pw = mock(PatternWriter.class);
-        when(pw.save(patternItem, true)).thenReturn(null);
-        stub(method(ElementWriterFactory.class, "getInstance")).toReturn(ewFactory);
+        when(pw.save(oldPatternItem, true)).thenReturn(null);
+        stub(method(ElementWriterFactory.class, "getInstance")).toReturn(ewFactory); //$NON-NLS-1$
         when(ewFactory.createPatternWriter()).thenReturn(pw);
 
-        writer.mergePattern(mockItem, patternItem);
+        writer.mergePattern(importItem, oldPatternItem);
 
         for (PatternComponent component : components) {
             TdExpression ex = ((RegularExpression) component).getExpression();
@@ -216,6 +283,9 @@ public class FileSystemImportWriterTest {
                 Assert.assertEquals("imported 4 body", ex.getBody());//$NON-NLS-1$
             }
         }
+
+        Assert.assertNotNull(oldPattern.getSupplierDependency());
+        Assert.assertEquals(1, oldPattern.getSupplierDependency().size());
     }
 
     /**
@@ -251,14 +321,14 @@ public class FileSystemImportWriterTest {
         // if checkExist = true , should return 1
         when(item1.isValid()).thenReturn(false);
         when(item1.getConflictObject()).thenReturn(mock(IRepositoryViewObject.class));
-        when(item1.getName()).thenReturn("name");
+        when(item1.getName()).thenReturn("name"); //$NON-NLS-1$
 
         PowerMockito.spy(item1);
         PowerMockito.doNothing().when(item1).addError(anyString());
         ResourceBundle rb2 = mock(ResourceBundle.class);
-        stub(method(ResourceBundle.class, "getBundle", String.class)).toReturn(rb2);
+        stub(method(ResourceBundle.class, "getBundle", String.class)).toReturn(rb2); //$NON-NLS-1$
         PowerMockito.mockStatic(DefaultMessagesImpl.class);
-        when(DefaultMessagesImpl.getString(anyString())).thenReturn("name");
+        when(DefaultMessagesImpl.getString(anyString())).thenReturn("name"); //$NON-NLS-1$
 
         ItemRecord[] result2 = this.writer.populate(itemRecords.toArray(new ItemRecord[itemRecords.size()]), true);
         Assert.assertEquals(result2.length, 1);
