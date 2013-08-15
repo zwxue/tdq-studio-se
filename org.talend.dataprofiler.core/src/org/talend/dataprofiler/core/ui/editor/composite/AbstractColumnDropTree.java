@@ -38,10 +38,7 @@ import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.talend.core.model.metadata.MetadataColumnRepositoryObject;
-import org.talend.core.model.metadata.builder.connection.MetadataColumn;
 import org.talend.core.model.repository.IRepositoryViewObject;
-import org.talend.core.repository.model.repositoryObject.MetadataXmlElementTypeRepositoryObject;
-import org.talend.cwm.xml.TdXmlElementType;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.helper.ModelElementIndicatorHelper;
@@ -50,6 +47,7 @@ import org.talend.dataprofiler.core.model.ModelElementIndicator;
 import org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisMetadataPage;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
 import org.talend.dataprofiler.core.ui.utils.OpeningHelpWizardDialog;
+import org.talend.dataprofiler.core.ui.utils.RepNodeUtils;
 import org.talend.dataprofiler.core.ui.wizard.indicator.IndicatorOptionsWizard;
 import org.talend.dataprofiler.core.ui.wizard.indicator.forms.FormEnum;
 import org.talend.dataquality.analysis.Analysis;
@@ -65,18 +63,13 @@ import org.talend.dataquality.indicators.TextParameters;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dataquality.indicators.sql.UserDefIndicator;
 import org.talend.dq.helper.EObjectHelper;
-import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.helper.UDIHelper;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.dq.nodes.DBColumnRepNode;
-import org.talend.dq.nodes.DBTableRepNode;
-import org.talend.dq.nodes.DBViewRepNode;
 import org.talend.dq.nodes.DFColumnRepNode;
-import org.talend.dq.nodes.DFTableRepNode;
 import org.talend.dq.nodes.MDMXmlElementRepNode;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
 import org.talend.repository.model.IRepositoryNode;
-import org.talend.repository.model.RepositoryNode;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
@@ -553,37 +546,7 @@ public abstract class AbstractColumnDropTree extends AbstractPagePart {
     // translate the selected nodes into related indicators, without set the values to this.modelElementIndicators
     // directly
     protected ModelElementIndicator[] translateSelectedNodeIntoIndicator(Object[] objs) {
-        List<IRepositoryNode> reposList = new ArrayList<IRepositoryNode>();
-        for (Object obj : objs) {
-            // MOD klliu 2011-02-16 feature 15387
-            if (obj instanceof MDMXmlElementRepNode) {
-                boolean isleaf = isLeaf((MDMXmlElementRepNode) obj);
-                if (isleaf) {
-                    reposList.add((RepositoryNode) obj);
-                }
-            }
-            if (obj instanceof DBColumnRepNode || obj instanceof DFColumnRepNode) {
-                reposList.add((RepositoryNode) obj);
-            }
-            if (obj instanceof DBTableRepNode || obj instanceof DBViewRepNode || obj instanceof DFTableRepNode) {
-                List<IRepositoryNode> children = ((IRepositoryNode) obj).getChildren().get(0).getChildren();
-                reposList.addAll(children);
-
-            } else if (obj instanceof MDMXmlElementRepNode) {
-                boolean isLeaf = RepositoryNodeHelper.getMdmChildren(obj, true).length > 0;
-                if (!isLeaf) {
-                    List<IRepositoryNode> children = ((IRepositoryNode) obj).getChildren();
-                    reposList.addAll(children);
-                }
-            } else if (obj instanceof MetadataColumn || obj instanceof TdXmlElementType) {
-                // MOD qiongli TDQ-7052 if the node is filtered ,it will be return null,so should create a new node.
-                RepositoryNode repNode = RepositoryNodeHelper.recursiveFind((ModelElement) obj);
-                if (repNode == null) {
-                    repNode = RepositoryNodeHelper.createRepositoryNode((ModelElement) obj);
-                }
-                reposList.add(repNode);
-            }
-        }
+        List<IRepositoryNode> reposList = RepNodeUtils.translateSelectedToStandardReposityoryNode(objs);
         if (reposList.size() == 0) {
             // MOD yyi 2012-02-29 TDQ-3605 Empty column table.
             // this.modelElementIndicators = new ModelElementIndicator[0];
@@ -594,8 +557,8 @@ public abstract class AbstractColumnDropTree extends AbstractPagePart {
         boolean isDelimitedFile = false;
         if (objs != null && objs.length != 0) {
             // MOD klliu 2011-02-16 feature 15387
-            isMdm = objs[0] instanceof MetadataXmlElementTypeRepositoryObject || objs[0] instanceof MDMXmlElementRepNode;
-            isDelimitedFile = objs[0] instanceof DFTableRepNode || objs[0] instanceof DFColumnRepNode;
+            isMdm = RepNodeUtils.isMDM(objs[0]);
+            isDelimitedFile = RepNodeUtils.isDelimitedFile(objs[0]);
             if (!(reposList.get(0) instanceof DBColumnRepNode || isMdm || isDelimitedFile)) {
                 return null;
             }

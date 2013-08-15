@@ -14,6 +14,7 @@ import org.eclipse.emf.ecore.EDataType;
 import org.eclipse.emf.ecore.EOperation;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EReference;
+import org.eclipse.emf.ecore.EcorePackage;
 import org.eclipse.emf.ecore.impl.EPackageImpl;
 import org.eclipse.emf.ecore.xml.type.XMLTypePackage;
 import org.talend.core.model.properties.PropertiesPackage;
@@ -35,6 +36,8 @@ import org.talend.dataquality.indicators.columnset.ColumnsetPackage;
 import org.talend.dataquality.indicators.columnset.impl.ColumnsetPackageImpl;
 import org.talend.dataquality.indicators.definition.DefinitionPackage;
 import org.talend.dataquality.indicators.definition.impl.DefinitionPackageImpl;
+import org.talend.dataquality.indicators.definition.userdefine.UserdefinePackage;
+import org.talend.dataquality.indicators.definition.userdefine.impl.UserdefinePackageImpl;
 import org.talend.dataquality.indicators.impl.IndicatorsPackageImpl;
 import org.talend.dataquality.indicators.schema.SchemaPackage;
 import org.talend.dataquality.indicators.schema.impl.SchemaPackageImpl;
@@ -43,13 +46,22 @@ import org.talend.dataquality.indicators.sql.impl.IndicatorSqlPackageImpl;
 import org.talend.dataquality.properties.impl.PropertiesPackageImpl;
 import org.talend.dataquality.reports.ReportsPackage;
 import org.talend.dataquality.reports.impl.ReportsPackageImpl;
+import org.talend.dataquality.rules.AlgorithmDefinition;
+import org.talend.dataquality.rules.AppliedBlockKey;
+import org.talend.dataquality.rules.BlockKeyDefinition;
 import org.talend.dataquality.rules.DQRule;
+import org.talend.dataquality.rules.DefaultSurvivorshipDefinition;
 import org.talend.dataquality.rules.InferredDQRule;
 import org.talend.dataquality.rules.JoinElement;
+import org.talend.dataquality.rules.KeyDefinition;
+import org.talend.dataquality.rules.MatchKeyDefinition;
+import org.talend.dataquality.rules.MatchRule;
+import org.talend.dataquality.rules.MatchRuleDefinition;
 import org.talend.dataquality.rules.ParserRule;
 import org.talend.dataquality.rules.RulesFactory;
 import org.talend.dataquality.rules.RulesPackage;
 import org.talend.dataquality.rules.SpecifiedDQRule;
+import org.talend.dataquality.rules.SurvivorshipKeyDefinition;
 import org.talend.dataquality.rules.WhereRule;
 import orgomg.cwm.objectmodel.core.CorePackage;
 
@@ -101,6 +113,69 @@ public class RulesPackageImpl extends EPackageImpl implements RulesPackage {
      * @generated
      */
     private EClass parserRuleEClass = null;
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    private EClass matchRuleDefinitionEClass = null;
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    private EClass blockKeyDefinitionEClass = null;
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    private EClass keyDefinitionEClass = null;
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    private EClass matchKeyDefinitionEClass = null;
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    private EClass algorithmDefinitionEClass = null;
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    private EClass matchRuleEClass = null;
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    private EClass appliedBlockKeyEClass = null;
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    private EClass survivorshipKeyDefinitionEClass = null;
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    private EClass defaultSurvivorshipDefinitionEClass = null;
 
     /**
      * <!-- begin-user-doc -->
@@ -166,6 +241,7 @@ public class RulesPackageImpl extends EPackageImpl implements RulesPackage {
         IndicatorsPackageImpl theIndicatorsPackage = (IndicatorsPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(IndicatorsPackage.eNS_URI) instanceof IndicatorsPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(IndicatorsPackage.eNS_URI) : IndicatorsPackage.eINSTANCE);
         SchemaPackageImpl theSchemaPackage = (SchemaPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(SchemaPackage.eNS_URI) instanceof SchemaPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(SchemaPackage.eNS_URI) : SchemaPackage.eINSTANCE);
         DefinitionPackageImpl theDefinitionPackage = (DefinitionPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(DefinitionPackage.eNS_URI) instanceof DefinitionPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(DefinitionPackage.eNS_URI) : DefinitionPackage.eINSTANCE);
+        UserdefinePackageImpl theUserdefinePackage = (UserdefinePackageImpl)(EPackage.Registry.INSTANCE.getEPackage(UserdefinePackage.eNS_URI) instanceof UserdefinePackageImpl ? EPackage.Registry.INSTANCE.getEPackage(UserdefinePackage.eNS_URI) : UserdefinePackage.eINSTANCE);
         IndicatorSqlPackageImpl theIndicatorSqlPackage = (IndicatorSqlPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(IndicatorSqlPackage.eNS_URI) instanceof IndicatorSqlPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(IndicatorSqlPackage.eNS_URI) : IndicatorSqlPackage.eINSTANCE);
         ColumnsetPackageImpl theColumnsetPackage = (ColumnsetPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(ColumnsetPackage.eNS_URI) instanceof ColumnsetPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(ColumnsetPackage.eNS_URI) : ColumnsetPackage.eINSTANCE);
         ExpressionsPackageImpl theExpressionsPackage = (ExpressionsPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(ExpressionsPackage.eNS_URI) instanceof ExpressionsPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(ExpressionsPackage.eNS_URI) : ExpressionsPackage.eINSTANCE);
@@ -182,6 +258,7 @@ public class RulesPackageImpl extends EPackageImpl implements RulesPackage {
         theIndicatorsPackage.createPackageContents();
         theSchemaPackage.createPackageContents();
         theDefinitionPackage.createPackageContents();
+        theUserdefinePackage.createPackageContents();
         theIndicatorSqlPackage.createPackageContents();
         theColumnsetPackage.createPackageContents();
         theExpressionsPackage.createPackageContents();
@@ -198,6 +275,7 @@ public class RulesPackageImpl extends EPackageImpl implements RulesPackage {
         theIndicatorsPackage.initializePackageContents();
         theSchemaPackage.initializePackageContents();
         theDefinitionPackage.initializePackageContents();
+        theUserdefinePackage.initializePackageContents();
         theIndicatorSqlPackage.initializePackageContents();
         theColumnsetPackage.initializePackageContents();
         theExpressionsPackage.initializePackageContents();
@@ -382,6 +460,294 @@ public class RulesPackageImpl extends EPackageImpl implements RulesPackage {
      * <!-- end-user-doc -->
      * @generated
      */
+    public EClass getMatchRuleDefinition() {
+        return matchRuleDefinitionEClass;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public EReference getMatchRuleDefinition_BlockKeys() {
+        return (EReference)matchRuleDefinitionEClass.getEStructuralFeatures().get(0);
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public EReference getMatchRuleDefinition_MatchRules() {
+        return (EReference)matchRuleDefinitionEClass.getEStructuralFeatures().get(1);
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public EAttribute getMatchRuleDefinition_XmiId() {
+        return (EAttribute)matchRuleDefinitionEClass.getEStructuralFeatures().get(2);
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public EAttribute getMatchRuleDefinition_RecordLinkageAlgorithm() {
+        return (EAttribute)matchRuleDefinitionEClass.getEStructuralFeatures().get(3);
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public EReference getMatchRuleDefinition_AppliedBlockKeys() {
+        return (EReference)matchRuleDefinitionEClass.getEStructuralFeatures().get(4);
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public EReference getMatchRuleDefinition_SurvivorshipKeys() {
+        return (EReference)matchRuleDefinitionEClass.getEStructuralFeatures().get(5);
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public EReference getMatchRuleDefinition_DefaultSurvivorshipDefinitions() {
+        return (EReference)matchRuleDefinitionEClass.getEStructuralFeatures().get(6);
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public EAttribute getMatchRuleDefinition_MatchGroupQualityThreshold() {
+        return (EAttribute)matchRuleDefinitionEClass.getEStructuralFeatures().get(7);
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public EClass getBlockKeyDefinition() {
+        return blockKeyDefinitionEClass;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public EReference getBlockKeyDefinition_PreAlgorithm() {
+        return (EReference)blockKeyDefinitionEClass.getEStructuralFeatures().get(0);
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public EReference getBlockKeyDefinition_Algorithm() {
+        return (EReference)blockKeyDefinitionEClass.getEStructuralFeatures().get(1);
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public EReference getBlockKeyDefinition_PostAlgorithm() {
+        return (EReference)blockKeyDefinitionEClass.getEStructuralFeatures().get(2);
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public EClass getKeyDefinition() {
+        return keyDefinitionEClass;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public EAttribute getKeyDefinition_Column() {
+        return (EAttribute)keyDefinitionEClass.getEStructuralFeatures().get(0);
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public EClass getMatchKeyDefinition() {
+        return matchKeyDefinitionEClass;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public EReference getMatchKeyDefinition_Algorithm() {
+        return (EReference)matchKeyDefinitionEClass.getEStructuralFeatures().get(0);
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public EAttribute getMatchKeyDefinition_ConfidenceWeight() {
+        return (EAttribute)matchKeyDefinitionEClass.getEStructuralFeatures().get(1);
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public EAttribute getMatchKeyDefinition_HandleNull() {
+        return (EAttribute)matchKeyDefinitionEClass.getEStructuralFeatures().get(2);
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public EAttribute getMatchKeyDefinition_Threshold() {
+        return (EAttribute)matchKeyDefinitionEClass.getEStructuralFeatures().get(3);
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public EClass getAlgorithmDefinition() {
+        return algorithmDefinitionEClass;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public EAttribute getAlgorithmDefinition_AlgorithmType() {
+        return (EAttribute)algorithmDefinitionEClass.getEStructuralFeatures().get(0);
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public EAttribute getAlgorithmDefinition_AlgorithmParameters() {
+        return (EAttribute)algorithmDefinitionEClass.getEStructuralFeatures().get(1);
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public EClass getMatchRule() {
+        return matchRuleEClass;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public EReference getMatchRule_MatchKeys() {
+        return (EReference)matchRuleEClass.getEStructuralFeatures().get(0);
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public EClass getAppliedBlockKey() {
+        return appliedBlockKeyEClass;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public EClass getSurvivorshipKeyDefinition() {
+        return survivorshipKeyDefinitionEClass;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public EReference getSurvivorshipKeyDefinition_Function() {
+        return (EReference)survivorshipKeyDefinitionEClass.getEStructuralFeatures().get(0);
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public EAttribute getSurvivorshipKeyDefinition_AllowManualResolution() {
+        return (EAttribute)survivorshipKeyDefinitionEClass.getEStructuralFeatures().get(1);
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public EClass getDefaultSurvivorshipDefinition() {
+        return defaultSurvivorshipDefinitionEClass;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public EAttribute getDefaultSurvivorshipDefinition_DataType() {
+        return (EAttribute)defaultSurvivorshipDefinitionEClass.getEStructuralFeatures().get(0);
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public EReference getDefaultSurvivorshipDefinition_Function() {
+        return (EReference)defaultSurvivorshipDefinitionEClass.getEStructuralFeatures().get(1);
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
     public EDataType getTdExpressionList() {
         return tdExpressionListEDataType;
     }
@@ -438,6 +804,47 @@ public class RulesPackageImpl extends EPackageImpl implements RulesPackage {
 
         parserRuleEClass = createEClass(PARSER_RULE);
 
+        matchRuleDefinitionEClass = createEClass(MATCH_RULE_DEFINITION);
+        createEReference(matchRuleDefinitionEClass, MATCH_RULE_DEFINITION__BLOCK_KEYS);
+        createEReference(matchRuleDefinitionEClass, MATCH_RULE_DEFINITION__MATCH_RULES);
+        createEAttribute(matchRuleDefinitionEClass, MATCH_RULE_DEFINITION__XMI_ID);
+        createEAttribute(matchRuleDefinitionEClass, MATCH_RULE_DEFINITION__RECORD_LINKAGE_ALGORITHM);
+        createEReference(matchRuleDefinitionEClass, MATCH_RULE_DEFINITION__APPLIED_BLOCK_KEYS);
+        createEReference(matchRuleDefinitionEClass, MATCH_RULE_DEFINITION__SURVIVORSHIP_KEYS);
+        createEReference(matchRuleDefinitionEClass, MATCH_RULE_DEFINITION__DEFAULT_SURVIVORSHIP_DEFINITIONS);
+        createEAttribute(matchRuleDefinitionEClass, MATCH_RULE_DEFINITION__MATCH_GROUP_QUALITY_THRESHOLD);
+
+        blockKeyDefinitionEClass = createEClass(BLOCK_KEY_DEFINITION);
+        createEReference(blockKeyDefinitionEClass, BLOCK_KEY_DEFINITION__PRE_ALGORITHM);
+        createEReference(blockKeyDefinitionEClass, BLOCK_KEY_DEFINITION__ALGORITHM);
+        createEReference(blockKeyDefinitionEClass, BLOCK_KEY_DEFINITION__POST_ALGORITHM);
+
+        keyDefinitionEClass = createEClass(KEY_DEFINITION);
+        createEAttribute(keyDefinitionEClass, KEY_DEFINITION__COLUMN);
+
+        matchKeyDefinitionEClass = createEClass(MATCH_KEY_DEFINITION);
+        createEReference(matchKeyDefinitionEClass, MATCH_KEY_DEFINITION__ALGORITHM);
+        createEAttribute(matchKeyDefinitionEClass, MATCH_KEY_DEFINITION__CONFIDENCE_WEIGHT);
+        createEAttribute(matchKeyDefinitionEClass, MATCH_KEY_DEFINITION__HANDLE_NULL);
+        createEAttribute(matchKeyDefinitionEClass, MATCH_KEY_DEFINITION__THRESHOLD);
+
+        algorithmDefinitionEClass = createEClass(ALGORITHM_DEFINITION);
+        createEAttribute(algorithmDefinitionEClass, ALGORITHM_DEFINITION__ALGORITHM_TYPE);
+        createEAttribute(algorithmDefinitionEClass, ALGORITHM_DEFINITION__ALGORITHM_PARAMETERS);
+
+        matchRuleEClass = createEClass(MATCH_RULE);
+        createEReference(matchRuleEClass, MATCH_RULE__MATCH_KEYS);
+
+        appliedBlockKeyEClass = createEClass(APPLIED_BLOCK_KEY);
+
+        survivorshipKeyDefinitionEClass = createEClass(SURVIVORSHIP_KEY_DEFINITION);
+        createEReference(survivorshipKeyDefinitionEClass, SURVIVORSHIP_KEY_DEFINITION__FUNCTION);
+        createEAttribute(survivorshipKeyDefinitionEClass, SURVIVORSHIP_KEY_DEFINITION__ALLOW_MANUAL_RESOLUTION);
+
+        defaultSurvivorshipDefinitionEClass = createEClass(DEFAULT_SURVIVORSHIP_DEFINITION);
+        createEAttribute(defaultSurvivorshipDefinitionEClass, DEFAULT_SURVIVORSHIP_DEFINITION__DATA_TYPE);
+        createEReference(defaultSurvivorshipDefinitionEClass, DEFAULT_SURVIVORSHIP_DEFINITION__FUNCTION);
+
         // Create data types
         tdExpressionListEDataType = createEDataType(TD_EXPRESSION_LIST);
     }
@@ -470,6 +877,7 @@ public class RulesPackageImpl extends EPackageImpl implements RulesPackage {
         CorePackage theCorePackage = (CorePackage)EPackage.Registry.INSTANCE.getEPackage(CorePackage.eNS_URI);
         XMLTypePackage theXMLTypePackage = (XMLTypePackage)EPackage.Registry.INSTANCE.getEPackage(XMLTypePackage.eNS_URI);
         RelationalPackage theRelationalPackage = (RelationalPackage)EPackage.Registry.INSTANCE.getEPackage(RelationalPackage.eNS_URI);
+        EcorePackage theEcorePackage = (EcorePackage)EPackage.Registry.INSTANCE.getEPackage(EcorePackage.eNS_URI);
 
         // Create type parameters
 
@@ -481,6 +889,13 @@ public class RulesPackageImpl extends EPackageImpl implements RulesPackage {
         inferredDQRuleEClass.getESuperTypes().add(this.getDQRule());
         whereRuleEClass.getESuperTypes().add(this.getSpecifiedDQRule());
         parserRuleEClass.getESuperTypes().add(this.getDQRule());
+        matchRuleDefinitionEClass.getESuperTypes().add(theDefinitionPackage.getIndicatorDefinition());
+        blockKeyDefinitionEClass.getESuperTypes().add(this.getKeyDefinition());
+        keyDefinitionEClass.getESuperTypes().add(theCorePackage.getModelElement());
+        matchKeyDefinitionEClass.getESuperTypes().add(this.getKeyDefinition());
+        matchRuleEClass.getESuperTypes().add(theCorePackage.getModelElement());
+        appliedBlockKeyEClass.getESuperTypes().add(this.getKeyDefinition());
+        survivorshipKeyDefinitionEClass.getESuperTypes().add(this.getKeyDefinition());
 
         // Initialize classes and features; add operations and parameters
         initEClass(dqRuleEClass, DQRule.class, "DQRule", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
@@ -516,6 +931,47 @@ public class RulesPackageImpl extends EPackageImpl implements RulesPackage {
         addEParameter(op, theXMLTypePackage.getString(), "name", 0, 1, IS_UNIQUE, IS_ORDERED);
 
         addEOperation(parserRuleEClass, this.getTdExpressionList(), "getExpression", 0, 1, IS_UNIQUE, IS_ORDERED);
+
+        initEClass(matchRuleDefinitionEClass, MatchRuleDefinition.class, "MatchRuleDefinition", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+        initEReference(getMatchRuleDefinition_BlockKeys(), this.getBlockKeyDefinition(), null, "blockKeys", null, 0, -1, MatchRuleDefinition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEReference(getMatchRuleDefinition_MatchRules(), this.getMatchRule(), null, "matchRules", null, 0, -1, MatchRuleDefinition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEAttribute(getMatchRuleDefinition_XmiId(), theEcorePackage.getEString(), "xmiId", null, 0, 1, MatchRuleDefinition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEAttribute(getMatchRuleDefinition_RecordLinkageAlgorithm(), theEcorePackage.getEString(), "recordLinkageAlgorithm", null, 0, 1, MatchRuleDefinition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEReference(getMatchRuleDefinition_AppliedBlockKeys(), this.getAppliedBlockKey(), null, "appliedBlockKeys", null, 0, -1, MatchRuleDefinition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEReference(getMatchRuleDefinition_SurvivorshipKeys(), this.getSurvivorshipKeyDefinition(), null, "survivorshipKeys", null, 0, -1, MatchRuleDefinition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEReference(getMatchRuleDefinition_DefaultSurvivorshipDefinitions(), this.getDefaultSurvivorshipDefinition(), null, "defaultSurvivorshipDefinitions", null, 0, -1, MatchRuleDefinition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEAttribute(getMatchRuleDefinition_MatchGroupQualityThreshold(), theEcorePackage.getEDouble(), "matchGroupQualityThreshold", null, 0, 1, MatchRuleDefinition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+        initEClass(blockKeyDefinitionEClass, BlockKeyDefinition.class, "BlockKeyDefinition", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+        initEReference(getBlockKeyDefinition_PreAlgorithm(), this.getAlgorithmDefinition(), null, "preAlgorithm", null, 0, 1, BlockKeyDefinition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEReference(getBlockKeyDefinition_Algorithm(), this.getAlgorithmDefinition(), null, "algorithm", null, 0, 1, BlockKeyDefinition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEReference(getBlockKeyDefinition_PostAlgorithm(), this.getAlgorithmDefinition(), null, "postAlgorithm", null, 0, 1, BlockKeyDefinition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+        initEClass(keyDefinitionEClass, KeyDefinition.class, "KeyDefinition", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+        initEAttribute(getKeyDefinition_Column(), theEcorePackage.getEString(), "column", null, 0, 1, KeyDefinition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+        initEClass(matchKeyDefinitionEClass, MatchKeyDefinition.class, "MatchKeyDefinition", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+        initEReference(getMatchKeyDefinition_Algorithm(), this.getAlgorithmDefinition(), null, "algorithm", null, 0, 1, MatchKeyDefinition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEAttribute(getMatchKeyDefinition_ConfidenceWeight(), theEcorePackage.getEInt(), "confidenceWeight", null, 0, 1, MatchKeyDefinition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEAttribute(getMatchKeyDefinition_HandleNull(), theEcorePackage.getEString(), "handleNull", null, 0, 1, MatchKeyDefinition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEAttribute(getMatchKeyDefinition_Threshold(), theEcorePackage.getEDouble(), "threshold", null, 0, 1, MatchKeyDefinition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+        initEClass(algorithmDefinitionEClass, AlgorithmDefinition.class, "AlgorithmDefinition", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+        initEAttribute(getAlgorithmDefinition_AlgorithmType(), theEcorePackage.getEString(), "algorithmType", null, 0, 1, AlgorithmDefinition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEAttribute(getAlgorithmDefinition_AlgorithmParameters(), theEcorePackage.getEString(), "algorithmParameters", null, 0, 1, AlgorithmDefinition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+        initEClass(matchRuleEClass, MatchRule.class, "MatchRule", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+        initEReference(getMatchRule_MatchKeys(), this.getMatchKeyDefinition(), null, "matchKeys", null, 0, -1, MatchRule.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+        initEClass(appliedBlockKeyEClass, AppliedBlockKey.class, "AppliedBlockKey", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+
+        initEClass(survivorshipKeyDefinitionEClass, SurvivorshipKeyDefinition.class, "SurvivorshipKeyDefinition", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+        initEReference(getSurvivorshipKeyDefinition_Function(), this.getAlgorithmDefinition(), null, "function", null, 0, 1, SurvivorshipKeyDefinition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEAttribute(getSurvivorshipKeyDefinition_AllowManualResolution(), theEcorePackage.getEBoolean(), "allowManualResolution", null, 0, 1, SurvivorshipKeyDefinition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+        initEClass(defaultSurvivorshipDefinitionEClass, DefaultSurvivorshipDefinition.class, "DefaultSurvivorshipDefinition", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+        initEAttribute(getDefaultSurvivorshipDefinition_DataType(), theEcorePackage.getEString(), "dataType", null, 0, 1, DefaultSurvivorshipDefinition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEReference(getDefaultSurvivorshipDefinition_Function(), this.getAlgorithmDefinition(), null, "function", null, 0, 1, DefaultSurvivorshipDefinition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
         // Initialize data types
         initEDataType(tdExpressionListEDataType, List.class, "TdExpressionList", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS, "java.util.List<org.talend.cwm.relational.TdExpression>");

@@ -24,13 +24,9 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.talend.core.model.metadata.builder.connection.Connection;
-import org.talend.core.model.metadata.builder.connection.MetadataTable;
-import org.talend.core.model.metadata.builder.database.dburl.SupportDBUrlType;
-import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.helper.ColumnSetHelper;
 import org.talend.cwm.helper.ConnectionHelper;
-import org.talend.cwm.helper.PackageHelper;
 import org.talend.cwm.helper.ResourceHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.management.i18n.Messages;
@@ -40,6 +36,7 @@ import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisContext;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dq.dbms.GenericSQLHandler;
+import org.talend.dq.helper.AnalysisExecutorHelper;
 import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.UDIHelper;
 import org.talend.dq.indicators.IndicatorEvaluator;
@@ -47,9 +44,7 @@ import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.objectmodel.core.Classifier;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.objectmodel.core.Package;
-import orgomg.cwm.resource.relational.Catalog;
 import orgomg.cwm.resource.relational.ColumnSet;
-import orgomg.cwm.resource.relational.Schema;
 
 /**
  * @author scorreia
@@ -220,23 +215,7 @@ public class ColumnAnalysisExecutor extends AnalysisExecutor {
 
         // add from clause
         sql.append(dbms().from());
-        ModelElement element = fromPart.iterator().next();
-        Package parentRelation = PackageHelper.getParentPackage((MetadataTable) fromPart.iterator().next());
-        if (parentRelation instanceof Schema) {
-            // MOD msjian TDQ-5503 2012-6-12: fix when the db is mssql, there should exist catalog
-            String catalog = null;
-            if (SupportDBUrlType.isMssql(dbms().getDbmsName())) {
-                catalog = PackageHelper.getParentPackage(parentRelation).getName();
-            }
-            sql.append(dbms().toQualifiedName(catalog, parentRelation.getName(), element.getName()));
-            // TDQ-5503~
-        } else if (parentRelation instanceof Catalog) {
-            String ownerUser = null;
-            if (ConnectionUtils.isSybaseeDBProducts(dbms().getDbmsName())) {
-                ownerUser = ColumnSetHelper.getTableOwner(element);
-            }
-            sql.append(dbms().toQualifiedName(parentRelation.getName(), ownerUser, element.getName()));
-        }
+        sql.append(AnalysisExecutorHelper.getTableName(analysedElements.get(0), this.dbms()));
         // add where clause
         // --- get data filter
         ModelElementAnalysisHandler handler = new ModelElementAnalysisHandler();

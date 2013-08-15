@@ -12,10 +12,8 @@
 // ============================================================================
 package org.talend.dq.indicators;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -27,16 +25,12 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.common.util.EMap;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Display;
-import org.talend.commons.utils.StringUtils;
-import org.talend.core.language.LanguageManager;
 import org.talend.core.model.metadata.builder.connection.DelimitedFileConnection;
 import org.talend.core.model.metadata.builder.connection.Escape;
 import org.talend.core.model.metadata.builder.connection.MetadataColumn;
 import org.talend.core.model.metadata.builder.connection.MetadataTable;
-import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.management.i18n.Messages;
-import org.talend.dataquality.PluginConstant;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisFactory;
 import org.talend.dataquality.analysis.AnalyzedDataSet;
@@ -44,7 +38,7 @@ import org.talend.dataquality.indicators.DuplicateCountIndicator;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.RowCountIndicator;
 import org.talend.dataquality.indicators.UniqueCountIndicator;
-import org.talend.dq.helper.ParameterUtil;
+import org.talend.dq.helper.AnalysisExecutorHelper;
 import org.talend.fileprocess.FileInputDelimited;
 import org.talend.utils.sql.TalendTypeConvert;
 import org.talend.utils.sugars.ReturnCode;
@@ -81,23 +75,12 @@ public class DelimitedFileIndicatorEvaluator extends IndicatorEvaluator {
         if (delimitedFileconnection == null) {
             delimitedFileconnection = (DelimitedFileConnection) analysis.getContext().getConnection();
         }
-        boolean isContextMode = delimitedFileconnection.isContextMode();
-        String path = delimitedFileconnection.getFilePath();
-        if (isContextMode) {
-            path = ConnectionUtils.getOriginalConntextValue(delimitedFileconnection, path);
-        }
+        String path = AnalysisExecutorHelper.getFilePath(delimitedFileconnection);
         IPath iPath = new Path(path);
 
-        CsvReader csvReader = null;
         try {
-            // File csvFile = outPut.toFile();
             File file = iPath.toFile();
-            String separator = delimitedFileconnection.getFieldSeparatorValue();
-            String encoding = delimitedFileconnection.getEncoding();
-            if (isContextMode) {
-                separator = ConnectionUtils.getOriginalConntextValue(delimitedFileconnection, separator);
-                encoding = ConnectionUtils.getOriginalConntextValue(delimitedFileconnection, encoding);
-            }
+
             if (!file.exists()) {
                 returnCode.setReturnCode(Messages.getString("System can not find the file specified"), false); //$NON-NLS-1$
                 return returnCode;
@@ -105,10 +88,7 @@ public class DelimitedFileIndicatorEvaluator extends IndicatorEvaluator {
 
             List<ModelElement> analysisElementList = this.analysis.getContext().getAnalysedElements();
             EMap<Indicator, AnalyzedDataSet> indicToRowMap = analysis.getResults().getIndicToRowMap();
-            // int recordIncrement = 0;
             indicToRowMap.clear();
-
-            // MOD qiongli 2011-4-2,bug 20033
 
             List<MetadataColumn> columnElementList = new ArrayList<MetadataColumn>();
             for (int i = 0; i < analysisElementList.size(); i++) {
@@ -119,70 +99,15 @@ public class DelimitedFileIndicatorEvaluator extends IndicatorEvaluator {
                     break;
                 }
             }
-            // Added yyin 20120611 TDQ-5346
-            String zero = "0"; //$NON-NLS-1$
-            int headValue = 0;
-            int footValue = 0;
-            int limitValue = 0;
-            String heading = delimitedFileconnection.getHeaderValue();
-            String footing = delimitedFileconnection.getFooterValue();
-            String limiting = delimitedFileconnection.getLimitValue();
-            if (isContextMode) {
-                heading = ConnectionUtils.getOriginalConntextValue(delimitedFileconnection, heading);
-                footing = ConnectionUtils.getOriginalConntextValue(delimitedFileconnection, footing);
-                limiting = ConnectionUtils.getOriginalConntextValue(delimitedFileconnection, limiting);
-                headValue = Integer.parseInt(heading == PluginConstant.EMPTY_STRING ? zero : heading);
-                footValue = Integer.parseInt(footing == PluginConstant.EMPTY_STRING ? zero : footing);
-                limitValue = Integer
-                        .parseInt(PluginConstant.EMPTY_STRING.equals(limiting) || zero.equals(limiting) ? "-1" : limiting); //$NON-NLS-1$
-            } else {// ~ 5346
-                // MOD qionlgi 2011-5-12,bug 21115.
-                headValue = Integer.parseInt(heading == null || PluginConstant.EMPTY_STRING.equals(heading) ? zero : heading);
-                footValue = Integer.parseInt(footing == null || PluginConstant.EMPTY_STRING.equals(footing) ? zero : footing);
-                if (limiting == null || PluginConstant.EMPTY_STRING.equals(limiting) || zero.equals(limiting)) {
-                    limiting = "-1"; //$NON-NLS-1$
-                }
-                limitValue = Integer.parseInt(limiting);
-            }
             // use CsvReader to parse.
             if (Escape.CSV.equals(delimitedFileconnection.getEscapeType())) {
-                csvReader = new CsvReader(new BufferedReader(new InputStreamReader(new java.io.FileInputStream(file),
-                        encoding == null ? "UTF-8" : encoding)), ParameterUtil //$NON-NLS-1$
-                        .trimParameter(separator).charAt(0));
-
-                initializeCsvReader(csvReader);
-                for (int i = 0; i < headValue && csvReader.readRecord(); i++) {
-                    // do nothing, just ignore the header part
-                }
-                String[] rowValues = null;
-                long currentRecord = 0;
-                while (csvReader.readRecord()) {
-                    currentRecord = csvReader.getCurrentRecord();
-                    if (!continueRun() || limitValue != -1 && currentRecord > limitValue - 1) {
-                        break;
-                    }
-
-                    if (delimitedFileconnection.isFirstLineCaption() && currentRecord == 0) {
-                        continue;
-                    }
-                    rowValues = csvReader.getValues();
-                    handleByARow(rowValues, currentRecord + 1, analysisElementList, columnElementList, indicToRowMap);
-                }
+                useCsvReader(file, delimitedFileconnection, analysisElementList, columnElementList, indicToRowMap);
             } else {
                 // use TOSDelimitedReader in FileInputDelimited to parse.
-                String rowSeparator = delimitedFileconnection.getRowSeparatorValue();
-                if (isContextMode) {
-                    rowSeparator = ConnectionUtils.getOriginalConntextValue(delimitedFileconnection, rowSeparator);
-                }
-                boolean isSpliteRecord = delimitedFileconnection.isSplitRecord();
-                boolean isSkipeEmptyRow = delimitedFileconnection.isRemoveEmptyRow();
-                String languageName = LanguageManager.getCurrentLanguage().getName();
+                FileInputDelimited fileInputDelimited = AnalysisExecutorHelper.createFileInputDelimited(delimitedFileconnection);
 
-                FileInputDelimited fileInputDelimited = new FileInputDelimited(ParameterUtil.trimParameter(path),
-                        ParameterUtil.trimParameter(encoding), ParameterUtil.trimParameter(StringUtils.loadConvert(separator,
-                                languageName)), ParameterUtil.trimParameter(StringUtils.loadConvert(rowSeparator, languageName)),
-                        isSkipeEmptyRow, headValue, footValue, limitValue, -1, isSpliteRecord);
-                long currentRow = headValue;
+                long currentRow = AnalysisExecutorHelper.getHeadValue(delimitedFileconnection);
+
                 while (fileInputDelimited.nextRecord()) {
                     if (!continueRun()) {
                         break;
@@ -217,12 +142,44 @@ public class DelimitedFileIndicatorEvaluator extends IndicatorEvaluator {
 
         } catch (IOException e) {
             e.printStackTrace();
+        }
+        return returnCode;
+    }
+
+    private void useCsvReader(File file, DelimitedFileConnection dfCon, List<ModelElement> analysisElementList,
+            List<MetadataColumn> columnElementList, EMap<Indicator, AnalyzedDataSet> indicToRowMap) {
+        int limitValue = AnalysisExecutorHelper.getLimitValue(delimitedFileconnection);
+        int headValue = AnalysisExecutorHelper.getHeadValue(delimitedFileconnection);
+        CsvReader csvReader = null;
+        try {
+            csvReader = AnalysisExecutorHelper.createCsvReader(file, delimitedFileconnection);
+
+            AnalysisExecutorHelper.initializeCsvReader(delimitedFileconnection, csvReader);
+
+            for (int i = 0; i < headValue && csvReader.readRecord(); i++) {
+                // do nothing, just ignore the header part
+            }
+            String[] rowValues = null;
+            long currentRecord = 0;
+            while (csvReader.readRecord()) {
+                currentRecord = csvReader.getCurrentRecord();
+                if (!continueRun() || limitValue != -1 && currentRecord > limitValue - 1) {
+                    break;
+                }
+
+                if (delimitedFileconnection.isFirstLineCaption() && currentRecord == 0) {
+                    continue;
+                }
+                rowValues = csvReader.getValues();
+                handleByARow(rowValues, currentRecord + 1, analysisElementList, columnElementList, indicToRowMap);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
         } finally {
             if (csvReader != null) {
                 csvReader.close();
             }
         }
-        return returnCode;
     }
 
     /**
@@ -279,37 +236,7 @@ public class DelimitedFileIndicatorEvaluator extends IndicatorEvaluator {
         return new ReturnCode(true);
     }
 
-    /**
-     * 
-     * DOC qiongli Comment method "initializeCsvReader".
-     * 
-     * @param csvReader
-     * @param connection
-     */
-    private void initializeCsvReader(CsvReader csvReader) {
-        String rowSep = delimitedFileconnection.getRowSeparatorValue();
-        if (delimitedFileconnection.isContextMode()) {
-            rowSep = ConnectionUtils.getOriginalConntextValue(delimitedFileconnection, rowSep);
-        }
-        if (!rowSep.equals("\"\\n\"") && !rowSep.equals("\"\\r\"")) { //$NON-NLS-1$ //$NON-NLS-2$
-            csvReader.setRecordDelimiter(ParameterUtil.trimParameter(rowSep).charAt(0));
-        }
 
-        csvReader.setSkipEmptyRecords(true);
-        String textEnclosure = delimitedFileconnection.getTextEnclosure();
-        if (textEnclosure != null && textEnclosure.length() > 0) {
-            csvReader.setTextQualifier(ParameterUtil.trimParameter(textEnclosure).charAt(0));
-        } else {
-            csvReader.setUseTextQualifier(false);
-        }
-        String escapeChar = delimitedFileconnection.getEscapeChar();
-        if (escapeChar == null || escapeChar.equals("\"\\\\\"") || escapeChar.equals("\"\"")) { //$NON-NLS-1$ //$NON-NLS-2$
-            csvReader.setEscapeMode(CsvReader.ESCAPE_MODE_BACKSLASH);
-        } else {
-            csvReader.setEscapeMode(CsvReader.ESCAPE_MODE_DOUBLED);
-        }
-
-    }
 
     private void handleByARow(String[] rowValues, long currentRow, List<ModelElement> analysisElementList,
             List<MetadataColumn> columnElementList, EMap<Indicator, AnalyzedDataSet> indicToRowMap) {

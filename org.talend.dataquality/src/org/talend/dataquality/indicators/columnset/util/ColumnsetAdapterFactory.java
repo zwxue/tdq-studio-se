@@ -127,6 +127,14 @@ public class ColumnsetAdapterFactory extends AdapterFactoryImpl {
                 return createSimpleStatIndicatorAdapter();
             }
             @Override
+            public Adapter caseBlockKeyIndicator(BlockKeyIndicator object) {
+                return createBlockKeyIndicatorAdapter();
+            }
+            @Override
+            public Adapter caseRecordMatchingIndicator(RecordMatchingIndicator object) {
+                return createRecordMatchingIndicatorAdapter();
+            }
+            @Override
             public Adapter caseElement(Element object) {
                 return createElementAdapter();
             }
@@ -311,6 +319,34 @@ public class ColumnsetAdapterFactory extends AdapterFactoryImpl {
      * @generated
      */
     public Adapter createSimpleStatIndicatorAdapter() {
+        return null;
+    }
+
+    /**
+     * Creates a new adapter for an object of class '{@link org.talend.dataquality.indicators.columnset.BlockKeyIndicator <em>Block Key Indicator</em>}'.
+     * <!-- begin-user-doc -->
+     * This default implementation returns null so that we can easily ignore cases;
+     * it's useful to ignore a case when inheritance will catch all the cases anyway.
+     * <!-- end-user-doc -->
+     * @return the new adapter.
+     * @see org.talend.dataquality.indicators.columnset.BlockKeyIndicator
+     * @generated
+     */
+    public Adapter createBlockKeyIndicatorAdapter() {
+        return null;
+    }
+
+    /**
+     * Creates a new adapter for an object of class '{@link org.talend.dataquality.indicators.columnset.RecordMatchingIndicator <em>Record Matching Indicator</em>}'.
+     * <!-- begin-user-doc -->
+     * This default implementation returns null so that we can easily ignore cases;
+     * it's useful to ignore a case when inheritance will catch all the cases anyway.
+     * <!-- end-user-doc -->
+     * @return the new adapter.
+     * @see org.talend.dataquality.indicators.columnset.RecordMatchingIndicator
+     * @generated
+     */
+    public Adapter createRecordMatchingIndicatorAdapter() {
         return null;
     }
 

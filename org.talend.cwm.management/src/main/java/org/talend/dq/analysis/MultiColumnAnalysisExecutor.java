@@ -19,16 +19,10 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.EList;
-import org.eclipse.emf.ecore.EObject;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
-import org.talend.core.model.metadata.builder.connection.MetadataTable;
-import org.talend.cwm.db.connection.ConnectionUtils;
-import org.talend.cwm.helper.CatalogHelper;
 import org.talend.cwm.helper.ColumnSetHelper;
-import org.talend.cwm.helper.SchemaHelper;
-import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.management.i18n.Messages;
 import org.talend.dataquality.PluginConstant;
 import org.talend.dataquality.analysis.Analysis;
@@ -42,13 +36,13 @@ import org.talend.dataquality.indicators.columnset.ColumnSetMultiValueIndicator;
 import org.talend.dataquality.indicators.columnset.ColumnsetPackage;
 import org.talend.dataquality.indicators.columnset.SimpleStatIndicator;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
+import org.talend.dq.helper.AnalysisExecutorHelper;
 import org.talend.utils.sugars.ReturnCode;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.objectmodel.core.Expression;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.objectmodel.core.Package;
 import orgomg.cwm.resource.relational.Catalog;
-import orgomg.cwm.resource.relational.ColumnSet;
 import orgomg.cwm.resource.relational.Schema;
 
 /**
@@ -150,7 +144,8 @@ public class MultiColumnAnalysisExecutor extends ColumnAnalysisSqlExecutor {
             String grpByClause = createGroupBy(columns);
 
             // all columns must belong to the same table
-            String tableName = getTableName(analyzedColumns);
+            String tableName = AnalysisExecutorHelper.getTableName(analyzedColumns.get(0), dbms());
+            getCatalogOrSchema(AnalysisExecutorHelper.findColumnSetOwner(analyzedColumns.get(0)));
             // definition is SELECT &lt;%=__COLUMN_NAMES__%> FROM &lt;%=__TABLE_NAME__%> GROUP BY
             // &lt;%=__GROUP_BY_ALIAS__%>
             String sqlExpr = dbms().fillGenericQueryWithColumnTableAndAlias(sqlGenericExpression.getBody(), selectItems,
@@ -183,6 +178,19 @@ public class MultiColumnAnalysisExecutor extends ColumnAnalysisSqlExecutor {
         }
     }
 
+    private void getCatalogOrSchema(ModelElement columnSetOwner) {
+        Package pack = ColumnSetHelper.getParentCatalogOrSchema(columnSetOwner);
+        // ~ MOD mzhao feature 10082. Here differentiate case of MS SQL Sever(Catalog/schema).
+        if (pack instanceof Schema && ColumnSetHelper.getParentCatalogOrSchema(pack) instanceof Catalog) {
+            pack = ColumnSetHelper.getParentCatalogOrSchema(pack);
+        }
+        // ~
+        if (pack == null) {
+            log.error(Messages.getString("MultiColumnAnalysisExecutor.NOCATALOGORSCHEMAFOUNDFORCOLUMN", columnSetOwner.getName()));//$NON-NLS-1$
+        } else {
+            this.catalogOrSchema = pack.getName();
+        }
+    }
     /**
      * DOC scorreia Comment method "initializeNumericFunctions".
      * 
@@ -223,49 +231,6 @@ public class MultiColumnAnalysisExecutor extends ColumnAnalysisSqlExecutor {
      * @param analyzedColumns
      * @return the quoted table name
      */
-    private String getTableName(final EList<ModelElement> analyzedColumns) {
-        // MOD yyi 2011-02-22 17871:delimitefile
-        EObject owner = analyzedColumns.get(0).eContainer();
-        ColumnSet set = SwitchHelpers.COLUMN_SET_SWITCH.doSwitch(owner);
-        MetadataTable mdColumn = SwitchHelpers.METADATA_TABLE_SWITCH.doSwitch(owner);
-
-        String tableName = PluginConstant.EMPTY_STRING;
-        ModelElement columnSetOwner = null;
-        if (null == set && mdColumn != null) {
-            tableName = mdColumn.getName();
-            columnSetOwner = mdColumn;
-        } else if (null != set) {
-            tableName = set.getName();
-            columnSetOwner = set;
-        }
-
-        Package pack = ColumnSetHelper.getParentCatalogOrSchema(columnSetOwner);
-        // ~ MOD mzhao feature 10082. Here differentiate case of MS SQL Sever(Catalog/schema).
-        if (pack instanceof Schema && ColumnSetHelper.getParentCatalogOrSchema(pack) instanceof Catalog) {
-            pack = ColumnSetHelper.getParentCatalogOrSchema(pack);
-        }
-        // ~
-        if (pack == null) {
-            log.error(Messages.getString("MultiColumnAnalysisExecutor.NOCATALOGORSCHEMAFOUNDFORCOLUMN", tableName));//$NON-NLS-1$
-        } else {
-            this.catalogOrSchema = pack.getName();
-        }
-
-        String schemaName = getQuotedSchemaName(columnSetOwner);
-        String catalogName = getQuotedCatalogName(columnSetOwner);
-        if (catalogName == null && schemaName != null) {
-            // try to get catalog above schema
-            final Schema parentSchema = SchemaHelper.getParentSchema(columnSetOwner);
-            final Catalog parentCatalog = CatalogHelper.getParentCatalog(parentSchema);
-            catalogName = parentCatalog != null ? parentCatalog.getName() : null;
-        }
-        // MOD by zshen: change schemaName of sybase database to Table's owner.
-        if (ConnectionUtils.isSybaseeDBProducts(dbms().getDbmsName())) {
-            schemaName = ColumnSetHelper.getTableOwner(columnSetOwner);
-        }
-        // ~11934
-        return dbms().toQualifiedName(catalogName, schemaName, tableName);
-    }
 
     /*
      * tableName = columnSetOwner.getName(); Package pack = PackageHelper.getCatalogOrSchema(columnSetOwner); if (pack

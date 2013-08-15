@@ -12,9 +12,7 @@
 // ============================================================================
 package org.talend.dq.indicators;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.InputStreamReader;
 import java.rmi.RemoteException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -36,8 +34,6 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.EMap;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Display;
-import org.talend.commons.utils.StringUtils;
-import org.talend.core.language.LanguageManager;
 import org.talend.core.model.metadata.builder.connection.DelimitedFileConnection;
 import org.talend.core.model.metadata.builder.connection.Escape;
 import org.talend.core.model.metadata.builder.connection.MDMConnection;
@@ -68,6 +64,7 @@ import org.talend.dataquality.indicators.columnset.ColumnSetMultiValueIndicator;
 import org.talend.dataquality.indicators.columnset.ColumnsetPackage;
 import org.talend.dataquality.indicators.columnset.SimpleStatIndicator;
 import org.talend.dq.helper.ParameterUtil;
+import org.talend.dq.helper.AnalysisExecutorHelper;
 import org.talend.fileprocess.FileInputDelimited;
 import org.talend.utils.sql.TalendTypeConvert;
 import org.talend.utils.sugars.ReturnCode;
@@ -207,16 +204,12 @@ public class ColumnSetIndicatorEvaluator extends Evaluator<String> {
      * @return
      */
     private ReturnCode evaluateByDelimitedFile(String sqlStatement, ReturnCode returnCode) {
-        DelimitedFileConnection con = (DelimitedFileConnection) analysis.getContext().getConnection();
-        String path = con.getFilePath();
-        // MOD msjian TDQ-5851: we should consider the context mode
-        String separator = con.getFieldSeparatorValue();
-        String encoding = con.getEncoding();
-        boolean isContextMode = con.isContextMode();
-        if (isContextMode) {
-            path = ConnectionUtils.getOriginalConntextValue(con, path);
-            separator = ConnectionUtils.getOriginalConntextValue(con, separator);
-            encoding = ConnectionUtils.getOriginalConntextValue(con, encoding);
+        DelimitedFileConnection fileConnection = (DelimitedFileConnection) analysis.getContext().getConnection();
+        String path = AnalysisExecutorHelper.getFilePath(fileConnection);
+
+        String rowSeparator = fileConnection.getRowSeparatorValue();
+        if (fileConnection.isContextMode()) {
+            rowSeparator = ConnectionUtils.getOriginalConntextValue(fileConnection, rowSeparator);
         }
         IPath iPath = new Path(path);
         File file = iPath.toFile();
@@ -224,51 +217,21 @@ public class ColumnSetIndicatorEvaluator extends Evaluator<String> {
             returnCode.setReturnCode(Messages.getString("ColumnSetIndicatorEvaluator.FileNotFound", file.getName()), false); //$NON-NLS-1$ 
             return returnCode;
         }
-
+        CsvReader csvReader = null;
         try {
             List<ModelElement> analysisElementList = this.analysis.getContext().getAnalysedElements();
             EMap<Indicator, AnalyzedDataSet> indicToRowMap = analysis.getResults().getIndicToRowMap();
             indicToRowMap.clear();
-            String zero = "0"; //$NON-NLS-1$
-            int headValue = 0;
-            int footValue = 0;
-            int limitValue = 0;
-            String heading = con.getHeaderValue();
-            String footing = con.getFooterValue();
-            String limiting = con.getLimitValue();
-            if (isContextMode) {
-                heading = ConnectionUtils.getOriginalConntextValue(con, heading);
-                footing = ConnectionUtils.getOriginalConntextValue(con, footing);
-                limiting = ConnectionUtils.getOriginalConntextValue(con, limiting);
-                headValue = Integer.parseInt(heading == PluginConstant.EMPTY_STRING ? zero : heading);
-                footValue = Integer.parseInt(footing == PluginConstant.EMPTY_STRING ? zero : footing);
-                limitValue = Integer
-                        .parseInt(PluginConstant.EMPTY_STRING.equals(limiting) || zero.equals(limiting) ? "-1" : limiting); //$NON-NLS-1$
-            } else {
-                headValue = Integer.parseInt(heading == null || PluginConstant.EMPTY_STRING.equals(heading) ? zero : heading);
-                footValue = Integer.parseInt(footing == null || PluginConstant.EMPTY_STRING.equals(footing) ? zero : footing);
-                if (limiting == null || PluginConstant.EMPTY_STRING.equals(limiting) || zero.equals(limiting)) {
-                    limiting = "-1"; //$NON-NLS-1$
-                }
-                limitValue = Integer.parseInt(limiting);
-            }
-            if (Escape.CSV.equals(con.getEscapeType())) {
+
+            if (Escape.CSV.equals(fileConnection.getEscapeType())) {
                 // use CsvReader to parse.
-                this.useCsvReader(file, con, analysisElementList);
+                csvReader = AnalysisExecutorHelper.createCsvReader(file, fileConnection);
+                this.useCsvReader(csvReader, file, fileConnection, analysisElementList);
             } else {
                 // use TOSDelimitedReader in FileInputDelimited to parse.
-                String rowSeparator = con.getRowSeparatorValue();
-                if (isContextMode) {
-                    rowSeparator = ConnectionUtils.getOriginalConntextValue(con, rowSeparator);
-                }
-                boolean isSpliteRecord = con.isSplitRecord();
-                boolean isSkipeEmptyRow = con.isRemoveEmptyRow();
-                String languageName = LanguageManager.getCurrentLanguage().getName();
-                FileInputDelimited fileInputDelimited = new FileInputDelimited(ParameterUtil.trimParameter(path),
-                        ParameterUtil.trimParameter(encoding), ParameterUtil.trimParameter(StringUtils.loadConvert(separator,
-                                languageName)), ParameterUtil.trimParameter(StringUtils.loadConvert(rowSeparator, languageName)),
-                        isSkipeEmptyRow, headValue, footValue, limitValue, -1, isSpliteRecord);
-                long currentRow = headValue;
+                FileInputDelimited fileInputDelimited = AnalysisExecutorHelper.createFileInputDelimited(fileConnection);
+
+                long currentRow = AnalysisExecutorHelper.getHeadValue(fileConnection);
                 int columsCount = 0;
                 while (fileInputDelimited.nextRecord()) {
                     if (!continueRun()) {
@@ -290,41 +253,23 @@ public class ColumnSetIndicatorEvaluator extends Evaluator<String> {
         } catch (Exception e) {
             log.error(e, e);
             returnCode.setReturnCode(e.getMessage(), false);
+        } finally {
+            if (csvReader != null) {
+                csvReader.close();
+            }
         }
 
         return returnCode;
     }
 
-    private void useCsvReader(File file, DelimitedFileConnection dfCon, List<ModelElement> analysisElementList) throws Exception {
-        String encoding = dfCon.getEncoding();
-        String fieldSeparator = dfCon.getFieldSeparatorValue();
-        CsvReader csvReader = new CsvReader(new BufferedReader(new InputStreamReader(new java.io.FileInputStream(file),
-                encoding == null ? "UTF-8" : encoding)), ParameterUtil.trimParameter(fieldSeparator).charAt(0));
+    private void useCsvReader(CsvReader csvReader, File file, DelimitedFileConnection dfCon,
+            List<ModelElement> analysisElementList) throws Exception {
 
-        String rowSep = dfCon.getRowSeparatorValue();
-        if (!rowSep.equals("\"\\n\"") && !rowSep.equals("\"\\r\"")) { //$NON-NLS-1$ //$NON-NLS-2$
-            csvReader.setRecordDelimiter(ParameterUtil.trimParameter(rowSep).charAt(0));
-        }
-        csvReader.setSkipEmptyRecords(true);
-        String textEnclosure = dfCon.getTextEnclosure();
-        if (textEnclosure != null && textEnclosure.length() > 0) {
-            csvReader.setTextQualifier(ParameterUtil.trimParameter(textEnclosure).charAt(0));
-        } else {
-            csvReader.setUseTextQualifier(false);
-        }
-        String escapeChar = dfCon.getEscapeChar();
-        if (escapeChar == null || escapeChar.equals("\"\\\\\"") || escapeChar.equals("\"\"")) { //$NON-NLS-1$ //$NON-NLS-2$
-            csvReader.setEscapeMode(CsvReader.ESCAPE_MODE_BACKSLASH);
-        } else {
-            csvReader.setEscapeMode(CsvReader.ESCAPE_MODE_DOUBLED);
-        }
+        AnalysisExecutorHelper.initializeCsvReader(dfCon, csvReader);
 
         long currentRecord = 0;
-        String limitStr = dfCon.getLimitValue();
-        if (limitStr == null) {
-            limitStr = "0"; //$NON-NLS-1$
-        }
-        int limitValue = Integer.parseInt(limitStr);
+        int limitValue = AnalysisExecutorHelper.getLimitValue(dfCon);
+
         while (csvReader.readRecord()) {
             currentRecord = csvReader.getCurrentRecord();
             if (!continueRun() || limitValue != 0 && currentRecord > limitValue - 1) {
@@ -334,7 +279,8 @@ public class ColumnSetIndicatorEvaluator extends Evaluator<String> {
                 continue;
             }
             String[] rowValues = csvReader.getValues();
-            this.orgnizeObjectsToHandel(dfCon.getFilePath(), rowValues, currentRecord + 1, analysisElementList, fieldSeparator);
+            this.orgnizeObjectsToHandel(dfCon.getFilePath(), rowValues, currentRecord + 1, analysisElementList,
+                    dfCon.getFieldSeparatorValue());
 
         }
     }

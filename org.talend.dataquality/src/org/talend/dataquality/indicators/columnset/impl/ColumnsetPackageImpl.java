@@ -13,6 +13,7 @@ import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EDataType;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EReference;
+import org.eclipse.emf.ecore.EcorePackage;
 import org.eclipse.emf.ecore.impl.EPackageImpl;
 import org.talend.core.model.properties.PropertiesPackage;
 import org.talend.core.model.metadata.builder.connection.ConnectionPackage;
@@ -31,6 +32,7 @@ import org.talend.dataquality.expressions.ExpressionsPackage;
 import org.talend.dataquality.expressions.impl.ExpressionsPackageImpl;
 import org.talend.dataquality.indicators.IndicatorsPackage;
 import org.talend.dataquality.indicators.columnset.AllMatchIndicator;
+import org.talend.dataquality.indicators.columnset.BlockKeyIndicator;
 import org.talend.dataquality.indicators.columnset.ColumnDependencyIndicator;
 import org.talend.dataquality.indicators.columnset.ColumnSetMultiValueIndicator;
 import org.talend.dataquality.indicators.columnset.ColumnsCompareIndicator;
@@ -38,6 +40,7 @@ import org.talend.dataquality.indicators.columnset.ColumnsetFactory;
 import org.talend.dataquality.indicators.columnset.ColumnsetPackage;
 import org.talend.dataquality.indicators.columnset.CountAvgNullIndicator;
 import org.talend.dataquality.indicators.columnset.MinMaxDateIndicator;
+import org.talend.dataquality.indicators.columnset.RecordMatchingIndicator;
 import org.talend.dataquality.indicators.columnset.RowMatchingIndicator;
 import org.talend.dataquality.indicators.columnset.SimpleStatIndicator;
 import org.talend.dataquality.indicators.columnset.ValueMatchingIndicator;
@@ -133,6 +136,20 @@ public class ColumnsetPackageImpl extends EPackageImpl implements ColumnsetPacka
      * @generated
      */
     private EClass simpleStatIndicatorEClass = null;
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    private EClass blockKeyIndicatorEClass = null;
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    private EClass recordMatchingIndicatorEClass = null;
 
     /**
      * <!-- begin-user-doc -->
@@ -551,6 +568,69 @@ public class ColumnsetPackageImpl extends EPackageImpl implements ColumnsetPacka
      * <!-- end-user-doc -->
      * @generated
      */
+    public EClass getBlockKeyIndicator() {
+        return blockKeyIndicatorEClass;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public EAttribute getBlockKeyIndicator_BlockSize2frequency() {
+        return (EAttribute)blockKeyIndicatorEClass.getEStructuralFeatures().get(0);
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public EClass getRecordMatchingIndicator() {
+        return recordMatchingIndicatorEClass;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public EAttribute getRecordMatchingIndicator_GroupSize2groupFrequency() {
+        return (EAttribute)recordMatchingIndicatorEClass.getEStructuralFeatures().get(0);
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public EAttribute getRecordMatchingIndicator_MatchedRecordCount() {
+        return (EAttribute)recordMatchingIndicatorEClass.getEStructuralFeatures().get(1);
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public EAttribute getRecordMatchingIndicator_SuspectRecordCount() {
+        return (EAttribute)recordMatchingIndicatorEClass.getEStructuralFeatures().get(2);
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public EReference getRecordMatchingIndicator_BuiltInMatchRuleDefinition() {
+        return (EReference)recordMatchingIndicatorEClass.getEStructuralFeatures().get(3);
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
     public EDataType getListObject() {
         return listObjectEDataType;
     }
@@ -626,6 +706,15 @@ public class ColumnsetPackageImpl extends EPackageImpl implements ColumnsetPacka
 
         simpleStatIndicatorEClass = createEClass(SIMPLE_STAT_INDICATOR);
 
+        blockKeyIndicatorEClass = createEClass(BLOCK_KEY_INDICATOR);
+        createEAttribute(blockKeyIndicatorEClass, BLOCK_KEY_INDICATOR__BLOCK_SIZE2FREQUENCY);
+
+        recordMatchingIndicatorEClass = createEClass(RECORD_MATCHING_INDICATOR);
+        createEAttribute(recordMatchingIndicatorEClass, RECORD_MATCHING_INDICATOR__GROUP_SIZE2GROUP_FREQUENCY);
+        createEAttribute(recordMatchingIndicatorEClass, RECORD_MATCHING_INDICATOR__MATCHED_RECORD_COUNT);
+        createEAttribute(recordMatchingIndicatorEClass, RECORD_MATCHING_INDICATOR__SUSPECT_RECORD_COUNT);
+        createEReference(recordMatchingIndicatorEClass, RECORD_MATCHING_INDICATOR__BUILT_IN_MATCH_RULE_DEFINITION);
+
         // Create data types
         listObjectEDataType = createEDataType(LIST_OBJECT);
     }
@@ -657,6 +746,8 @@ public class ColumnsetPackageImpl extends EPackageImpl implements ColumnsetPacka
         IndicatorsPackage theIndicatorsPackage = (IndicatorsPackage)EPackage.Registry.INSTANCE.getEPackage(IndicatorsPackage.eNS_URI);
         RelationalPackage theRelationalPackage = (RelationalPackage)EPackage.Registry.INSTANCE.getEPackage(RelationalPackage.eNS_URI);
         CorePackage theCorePackage = (CorePackage)EPackage.Registry.INSTANCE.getEPackage(CorePackage.eNS_URI);
+        EcorePackage theEcorePackage = (EcorePackage)EPackage.Registry.INSTANCE.getEPackage(EcorePackage.eNS_URI);
+        RulesPackage theRulesPackage = (RulesPackage)EPackage.Registry.INSTANCE.getEPackage(RulesPackage.eNS_URI);
 
         // Create type parameters
 
@@ -674,6 +765,8 @@ public class ColumnsetPackageImpl extends EPackageImpl implements ColumnsetPacka
         weakCorrelationIndicatorEClass.getESuperTypes().add(this.getColumnSetMultiValueIndicator());
         columnDependencyIndicatorEClass.getESuperTypes().add(theIndicatorsPackage.getIndicator());
         simpleStatIndicatorEClass.getESuperTypes().add(this.getColumnSetMultiValueIndicator());
+        blockKeyIndicatorEClass.getESuperTypes().add(this.getColumnSetMultiValueIndicator());
+        recordMatchingIndicatorEClass.getESuperTypes().add(this.getColumnSetMultiValueIndicator());
 
         // Initialize classes and features; add operations and parameters
         initEClass(columnsCompareIndicatorEClass, ColumnsCompareIndicator.class, "ColumnsCompareIndicator", IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
@@ -719,6 +812,15 @@ public class ColumnsetPackageImpl extends EPackageImpl implements ColumnsetPacka
 
         initEClass(simpleStatIndicatorEClass, SimpleStatIndicator.class, "SimpleStatIndicator", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
+        initEClass(blockKeyIndicatorEClass, BlockKeyIndicator.class, "BlockKeyIndicator", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+        initEAttribute(getBlockKeyIndicator_BlockSize2frequency(), theIndicatorsPackage.getJavaTreeMap(), "blockSize2frequency", null, 0, 1, BlockKeyIndicator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
+        initEClass(recordMatchingIndicatorEClass, RecordMatchingIndicator.class, "RecordMatchingIndicator", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
+        initEAttribute(getRecordMatchingIndicator_GroupSize2groupFrequency(), theIndicatorsPackage.getJavaTreeMap(), "groupSize2groupFrequency", null, 0, 1, RecordMatchingIndicator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEAttribute(getRecordMatchingIndicator_MatchedRecordCount(), theEcorePackage.getELong(), "matchedRecordCount", null, 0, 1, RecordMatchingIndicator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEAttribute(getRecordMatchingIndicator_SuspectRecordCount(), theEcorePackage.getELong(), "suspectRecordCount", null, 0, 1, RecordMatchingIndicator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEReference(getRecordMatchingIndicator_BuiltInMatchRuleDefinition(), theRulesPackage.getMatchRuleDefinition(), null, "builtInMatchRuleDefinition", null, 0, 1, RecordMatchingIndicator.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
         // Initialize data types
         initEDataType(listObjectEDataType, List.class, "ListObject", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS, "java.util.List<Object>");
 
@@ -740,7 +842,7 @@ public class ColumnsetPackageImpl extends EPackageImpl implements ColumnsetPacka
            source, 
            new String[] {
              "name", "ColumnDependencyIndicator"
-           });
+           });					
     }
 
 } //ColumnsetPackageImpl

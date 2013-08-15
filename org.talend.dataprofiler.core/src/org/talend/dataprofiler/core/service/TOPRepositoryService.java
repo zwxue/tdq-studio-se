@@ -109,6 +109,8 @@ public class TOPRepositoryService implements ITDQRepositoryService {
 
     private static Logger log = Logger.getLogger(TOPRepositoryService.class);
 
+    private boolean noNeedToOpenConnectionEditor = Boolean.FALSE;
+
     public IViewPart getTDQRespositoryView() {
         return CorePlugin.getDefault().getRepositoryView();
     }
@@ -183,7 +185,7 @@ public class TOPRepositoryService implements ITDQRepositoryService {
 
     /**
      * ADDED yyin 20120503 TDQ-4959.
-     * 
+     *
      * @param node
      */
     public void refresh(Object refreshObject) {
@@ -278,7 +280,7 @@ public class TOPRepositoryService implements ITDQRepositoryService {
 
     /*
      * Added yyi 2011-08-04 TDQ-3186
-     * 
+     *
      * @see org.talend.core.ITDQRepositoryService#getPaserRulesFromResources(java.lang.Object[])
      */
     public List<Map<String, String>> getPaserRulesFromResources(Object[] rules) {
@@ -293,9 +295,9 @@ public class TOPRepositoryService implements ITDQRepositoryService {
     }
 
     /**
-     * 
+     *
      * Comment method "reloadDatabase".
-     * 
+     *
      * @param connectionItem
      * @deprecated instead of it by TDQCompareService.reloadDatabase
      */
@@ -366,7 +368,7 @@ public class TOPRepositoryService implements ITDQRepositoryService {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.core.ITDQRepositoryService#confirmUpdateAnalysis(org.talend.core.model.properties.ConnectionItem)
      */
     public boolean confirmUpdateAnalysis(ConnectionItem connectionItem) {
@@ -394,7 +396,7 @@ public class TOPRepositoryService implements ITDQRepositoryService {
 
     /**
      * Comment method "confimDelete".
-     * 
+     *
      * @param deleteObject which you want to delete
      * @return SWT.OK or SWT.Cancel
      */
@@ -412,7 +414,7 @@ public class TOPRepositoryService implements ITDQRepositoryService {
 
     /**
      * Comment method "getInputDialog".
-     * 
+     *
      * @param get input dialog
      * @return inputDialog
      */
@@ -452,10 +454,10 @@ public class TOPRepositoryService implements ITDQRepositoryService {
 
     /**
      * Comment method "changeElementName".
-     * 
+     *
      * @param item the item which will be changed
      * @param newName
-     * 
+     *
      */
     public void changeElementName(Item item, String newName) {
         Property property = item.getProperty();
@@ -464,7 +466,7 @@ public class TOPRepositoryService implements ITDQRepositoryService {
 
     /*
      * (non-Jsdoc)
-     * 
+     *
      * @see org.talend.core.ITDQRepositoryService#sourceFileOpening(org.talend.repository.model.RepositoryNode)
      */
     public boolean sourceFileOpening(RepositoryNode node) {
@@ -479,7 +481,7 @@ public class TOPRepositoryService implements ITDQRepositoryService {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.core.ITDQRepositoryService#checkUsernameBeforeSaveConnection(org.talend.core.model.properties.
      * ConnectionItem)
      */
@@ -490,7 +492,7 @@ public class TOPRepositoryService implements ITDQRepositoryService {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.core.ITDQRepositoryService#removeSoftWareSystem(org.talend.repository.model.IRepositoryNode)
      */
     @Deprecated
@@ -533,7 +535,7 @@ public class TOPRepositoryService implements ITDQRepositoryService {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.core.ITDQRepositoryService#refreshCurrentAnalysisEditor()
      */
     public void refreshCurrentAnalysisEditor() {
@@ -542,7 +544,7 @@ public class TOPRepositoryService implements ITDQRepositoryService {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.core.ITDQRepositoryService#refreshCurrentAnalysisAndConnectionEditor()
      */
     public void refreshCurrentAnalysisAndConnectionEditor() {
@@ -552,7 +554,7 @@ public class TOPRepositoryService implements ITDQRepositoryService {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.talend.core.ITDQRepositoryService#createHiveConnection(org.talend.core.model.metadata.IMetadataConnection)
      */
@@ -590,7 +592,7 @@ public class TOPRepositoryService implements ITDQRepositoryService {
 
     /**
      * find the Tdq Context View.
-     * 
+     *
      * @return
      */
     private AbstractContextView getTdqContextView() {
@@ -604,7 +606,7 @@ public class TOPRepositoryService implements ITDQRepositoryService {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.core.ITDQRepositoryService#updateContextView(boolean)
      */
     public void updateContextView(boolean isBuildIn) {
@@ -616,7 +618,7 @@ public class TOPRepositoryService implements ITDQRepositoryService {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.core.ITDQRepositoryService#updateContextView(boolean, boolean)
      */
     public void updateContextView(boolean isBuildIn, boolean isDisposeAll) {
@@ -628,7 +630,7 @@ public class TOPRepositoryService implements ITDQRepositoryService {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.core.ITDQRepositoryService#updateContextView(boolean, boolean, boolean)
      */
     public void updateContextView(boolean isBuildIn, boolean isDisposeAll, boolean refreshView) {
@@ -640,7 +642,7 @@ public class TOPRepositoryService implements ITDQRepositoryService {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.core.ITDQRepositoryService#addSoftwareSystemUpdateListener()
      */
     public void addSoftwareSystemUpdateListener() {
@@ -651,12 +653,16 @@ public class TOPRepositoryService implements ITDQRepositoryService {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.core.ITDQRepositoryService#publishSoftwareSystemUpdateEvent()
      */
     public void publishSoftwareSystemUpdateEvent(DatabaseConnection databaseConnection) {
         EventManager.getInstance().publish(EventEnum.DQ_SOFTWARESYSTEM_UPDATE.name(), EventEnum.DQ_SOFTWARESYSTEM_UPDATE,
                 databaseConnection);
+    }
+
+    public void setNoNeedToOpenConnectionEditor(boolean noNeedToOpenConnectionEditor) {
+        this.noNeedToOpenConnectionEditor = noNeedToOpenConnectionEditor;
     }
 
 }

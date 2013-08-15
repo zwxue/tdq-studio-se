@@ -27,8 +27,6 @@ import org.talend.core.model.metadata.builder.ConvertionHelper;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.database.JavaSqlFactory;
 import org.talend.cwm.db.connection.ConnectionUtils;
-import org.talend.cwm.helper.CatalogHelper;
-import org.talend.cwm.helper.SchemaHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.management.i18n.Messages;
 import org.talend.dataquality.PluginConstant;
@@ -43,6 +41,7 @@ import org.talend.dq.analysis.connpool.TdqAnalysisConnectionPool;
 import org.talend.dq.analysis.memory.AnalysisThreadMemoryChangeNotifier;
 import org.talend.dq.dbms.DbmsLanguage;
 import org.talend.dq.dbms.DbmsLanguageFactory;
+import org.talend.dq.helper.AnalysisExecutorHelper;
 import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.indicators.IndicatorCommonUtil;
 import org.talend.dq.indicators.ext.PatternMatchingExt;
@@ -53,8 +52,6 @@ import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.foundation.softwaredeployment.DataManager;
 import orgomg.cwm.foundation.softwaredeployment.SoftwaredeploymentPackage;
 import orgomg.cwm.objectmodel.core.ModelElement;
-import orgomg.cwm.resource.relational.Catalog;
-import orgomg.cwm.resource.relational.Schema;
 
 /**
  * DOC scorreia class global comment. Detailled comment
@@ -496,8 +493,7 @@ public abstract class AnalysisExecutor implements IAnalysisExecutor {
      */
     // MOD yyi 2011-02-22 17871:delimitefile
     protected String getQuotedCatalogName(ModelElement analyzedElement) {
-        final Catalog parentCatalog = CatalogHelper.getParentCatalog(analyzedElement);
-        return parentCatalog == null ? null : quote(parentCatalog.getName());
+        return AnalysisExecutorHelper.getQuotedCatalogName(analyzedElement, dbmsLanguage);
     }
 
     /**
@@ -507,8 +503,7 @@ public abstract class AnalysisExecutor implements IAnalysisExecutor {
      * @return
      */
     protected String getQuotedSchemaName(ModelElement columnSetOwner) {
-        final Schema parentSchema = SchemaHelper.getParentSchema(columnSetOwner);
-        return (parentSchema == null) ? null : quote(parentSchema.getName());
+        return AnalysisExecutorHelper.getQuotedSchemaName(columnSetOwner, dbmsLanguage);
     }
 
     /**

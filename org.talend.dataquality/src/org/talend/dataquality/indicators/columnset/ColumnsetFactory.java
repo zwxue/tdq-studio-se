@@ -107,6 +107,24 @@ public interface ColumnsetFactory extends EFactory {
     SimpleStatIndicator createSimpleStatIndicator();
 
     /**
+     * Returns a new object of class '<em>Block Key Indicator</em>'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return a new object of class '<em>Block Key Indicator</em>'.
+     * @generated
+     */
+    BlockKeyIndicator createBlockKeyIndicator();
+
+    /**
+     * Returns a new object of class '<em>Record Matching Indicator</em>'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return a new object of class '<em>Record Matching Indicator</em>'.
+     * @generated
+     */
+    RecordMatchingIndicator createRecordMatchingIndicator();
+
+    /**
      * Returns the package supported by this factory.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->

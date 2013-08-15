@@ -151,6 +151,79 @@ public class RulesSwitch<T> {
                 if (result == null) result = defaultCase(theEObject);
                 return result;
             }
+            case RulesPackage.MATCH_RULE_DEFINITION: {
+                MatchRuleDefinition matchRuleDefinition = (MatchRuleDefinition)theEObject;
+                T result = caseMatchRuleDefinition(matchRuleDefinition);
+                if (result == null) result = caseIndicatorDefinition(matchRuleDefinition);
+                if (result == null) result = caseModelElement(matchRuleDefinition);
+                if (result == null) result = caseElement(matchRuleDefinition);
+                if (result == null) result = defaultCase(theEObject);
+                return result;
+            }
+            case RulesPackage.BLOCK_KEY_DEFINITION: {
+                BlockKeyDefinition blockKeyDefinition = (BlockKeyDefinition)theEObject;
+                T result = caseBlockKeyDefinition(blockKeyDefinition);
+                if (result == null) result = caseKeyDefinition(blockKeyDefinition);
+                if (result == null) result = caseModelElement(blockKeyDefinition);
+                if (result == null) result = caseElement(blockKeyDefinition);
+                if (result == null) result = defaultCase(theEObject);
+                return result;
+            }
+            case RulesPackage.KEY_DEFINITION: {
+                KeyDefinition keyDefinition = (KeyDefinition)theEObject;
+                T result = caseKeyDefinition(keyDefinition);
+                if (result == null) result = caseModelElement(keyDefinition);
+                if (result == null) result = caseElement(keyDefinition);
+                if (result == null) result = defaultCase(theEObject);
+                return result;
+            }
+            case RulesPackage.MATCH_KEY_DEFINITION: {
+                MatchKeyDefinition matchKeyDefinition = (MatchKeyDefinition)theEObject;
+                T result = caseMatchKeyDefinition(matchKeyDefinition);
+                if (result == null) result = caseKeyDefinition(matchKeyDefinition);
+                if (result == null) result = caseModelElement(matchKeyDefinition);
+                if (result == null) result = caseElement(matchKeyDefinition);
+                if (result == null) result = defaultCase(theEObject);
+                return result;
+            }
+            case RulesPackage.ALGORITHM_DEFINITION: {
+                AlgorithmDefinition algorithmDefinition = (AlgorithmDefinition)theEObject;
+                T result = caseAlgorithmDefinition(algorithmDefinition);
+                if (result == null) result = defaultCase(theEObject);
+                return result;
+            }
+            case RulesPackage.MATCH_RULE: {
+                MatchRule matchRule = (MatchRule)theEObject;
+                T result = caseMatchRule(matchRule);
+                if (result == null) result = caseModelElement(matchRule);
+                if (result == null) result = caseElement(matchRule);
+                if (result == null) result = defaultCase(theEObject);
+                return result;
+            }
+            case RulesPackage.APPLIED_BLOCK_KEY: {
+                AppliedBlockKey appliedBlockKey = (AppliedBlockKey)theEObject;
+                T result = caseAppliedBlockKey(appliedBlockKey);
+                if (result == null) result = caseKeyDefinition(appliedBlockKey);
+                if (result == null) result = caseModelElement(appliedBlockKey);
+                if (result == null) result = caseElement(appliedBlockKey);
+                if (result == null) result = defaultCase(theEObject);
+                return result;
+            }
+            case RulesPackage.SURVIVORSHIP_KEY_DEFINITION: {
+                SurvivorshipKeyDefinition survivorshipKeyDefinition = (SurvivorshipKeyDefinition)theEObject;
+                T result = caseSurvivorshipKeyDefinition(survivorshipKeyDefinition);
+                if (result == null) result = caseKeyDefinition(survivorshipKeyDefinition);
+                if (result == null) result = caseModelElement(survivorshipKeyDefinition);
+                if (result == null) result = caseElement(survivorshipKeyDefinition);
+                if (result == null) result = defaultCase(theEObject);
+                return result;
+            }
+            case RulesPackage.DEFAULT_SURVIVORSHIP_DEFINITION: {
+                DefaultSurvivorshipDefinition defaultSurvivorshipDefinition = (DefaultSurvivorshipDefinition)theEObject;
+                T result = caseDefaultSurvivorshipDefinition(defaultSurvivorshipDefinition);
+                if (result == null) result = defaultCase(theEObject);
+                return result;
+            }
             default: return defaultCase(theEObject);
         }
     }
@@ -242,6 +315,141 @@ public class RulesSwitch<T> {
      * @generated
      */
     public T caseParserRule(ParserRule object) {
+        return null;
+    }
+
+    /**
+     * Returns the result of interpreting the object as an instance of '<em>Match Rule Definition</em>'.
+     * <!-- begin-user-doc -->
+     * This implementation returns null;
+     * returning a non-null result will terminate the switch.
+     * <!-- end-user-doc -->
+     * @param object the target of the switch.
+     * @return the result of interpreting the object as an instance of '<em>Match Rule Definition</em>'.
+     * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+     * @generated
+     */
+    public T caseMatchRuleDefinition(MatchRuleDefinition object) {
+        return null;
+    }
+
+    /**
+     * Returns the result of interpreting the object as an instance of '<em>Block Key Definition</em>'.
+     * <!-- begin-user-doc -->
+     * This implementation returns null;
+     * returning a non-null result will terminate the switch.
+     * <!-- end-user-doc -->
+     * @param object the target of the switch.
+     * @return the result of interpreting the object as an instance of '<em>Block Key Definition</em>'.
+     * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+     * @generated
+     */
+    public T caseBlockKeyDefinition(BlockKeyDefinition object) {
+        return null;
+    }
+
+    /**
+     * Returns the result of interpreting the object as an instance of '<em>Key Definition</em>'.
+     * <!-- begin-user-doc -->
+     * This implementation returns null;
+     * returning a non-null result will terminate the switch.
+     * <!-- end-user-doc -->
+     * @param object the target of the switch.
+     * @return the result of interpreting the object as an instance of '<em>Key Definition</em>'.
+     * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+     * @generated
+     */
+    public T caseKeyDefinition(KeyDefinition object) {
+        return null;
+    }
+
+    /**
+     * Returns the result of interpreting the object as an instance of '<em>Match Key Definition</em>'.
+     * <!-- begin-user-doc -->
+     * This implementation returns null;
+     * returning a non-null result will terminate the switch.
+     * <!-- end-user-doc -->
+     * @param object the target of the switch.
+     * @return the result of interpreting the object as an instance of '<em>Match Key Definition</em>'.
+     * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+     * @generated
+     */
+    public T caseMatchKeyDefinition(MatchKeyDefinition object) {
+        return null;
+    }
+
+    /**
+     * Returns the result of interpreting the object as an instance of '<em>Algorithm Definition</em>'.
+     * <!-- begin-user-doc -->
+     * This implementation returns null;
+     * returning a non-null result will terminate the switch.
+     * <!-- end-user-doc -->
+     * @param object the target of the switch.
+     * @return the result of interpreting the object as an instance of '<em>Algorithm Definition</em>'.
+     * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+     * @generated
+     */
+    public T caseAlgorithmDefinition(AlgorithmDefinition object) {
+        return null;
+    }
+
+    /**
+     * Returns the result of interpreting the object as an instance of '<em>Match Rule</em>'.
+     * <!-- begin-user-doc -->
+     * This implementation returns null;
+     * returning a non-null result will terminate the switch.
+     * <!-- end-user-doc -->
+     * @param object the target of the switch.
+     * @return the result of interpreting the object as an instance of '<em>Match Rule</em>'.
+     * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+     * @generated
+     */
+    public T caseMatchRule(MatchRule object) {
+        return null;
+    }
+
+    /**
+     * Returns the result of interpreting the object as an instance of '<em>Applied Block Key</em>'.
+     * <!-- begin-user-doc -->
+     * This implementation returns null;
+     * returning a non-null result will terminate the switch.
+     * <!-- end-user-doc -->
+     * @param object the target of the switch.
+     * @return the result of interpreting the object as an instance of '<em>Applied Block Key</em>'.
+     * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+     * @generated
+     */
+    public T caseAppliedBlockKey(AppliedBlockKey object) {
+        return null;
+    }
+
+    /**
+     * Returns the result of interpreting the object as an instance of '<em>Survivorship Key Definition</em>'.
+     * <!-- begin-user-doc -->
+     * This implementation returns null;
+     * returning a non-null result will terminate the switch.
+     * <!-- end-user-doc -->
+     * @param object the target of the switch.
+     * @return the result of interpreting the object as an instance of '<em>Survivorship Key Definition</em>'.
+     * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+     * @generated
+     */
+    public T caseSurvivorshipKeyDefinition(SurvivorshipKeyDefinition object) {
+        return null;
+    }
+
+    /**
+     * Returns the result of interpreting the object as an instance of '<em>Default Survivorship Definition</em>'.
+     * <!-- begin-user-doc -->
+     * This implementation returns null;
+     * returning a non-null result will terminate the switch.
+     * <!-- end-user-doc -->
+     * @param object the target of the switch.
+     * @return the result of interpreting the object as an instance of '<em>Default Survivorship Definition</em>'.
+     * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+     * @generated
+     */
+    public T caseDefaultSurvivorshipDefinition(DefaultSurvivorshipDefinition object) {
         return null;
     }
 

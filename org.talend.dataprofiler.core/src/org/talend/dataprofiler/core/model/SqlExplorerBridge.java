@@ -132,7 +132,6 @@ public final class SqlExplorerBridge {
             if (catalogOrSchemaNode.getSchemaName() == null) {
                 catalogOrSchemaNode.setSchemaName(schema.getName());
             } else if (!StringUtils.equals(catalogOrSchemaNode.getSchemaName(), schema.getName())) {
-                // catalogOrSchemaNode.setSchemaName(schema.getName());
                 // if this catalog already loaded its children of some schema, should reload for this schema.
                 if (catalogOrSchemaNode.isChildrenLoaded()) {
                     SQLExplorerPlugin.getDefault().getDatabaseStructureView()

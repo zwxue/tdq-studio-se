@@ -183,7 +183,7 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
                 this.updateAnalysisConnectionVersionInfo();
             } catch (DataprofilerCoreException e) {
                 MessageDialogWithToggle.openError(null,
-                        DefaultMessagesImpl.getString("AbstractAnalysisMetadataPage.SaveAnalysis"), e.getMessage()); //$NON-NLS-1$ 
+                        DefaultMessagesImpl.getString("AbstractAnalysisMetadataPage.SaveAnalysis"), e.getMessage()); //$NON-NLS-1$ //$NON-NLS-2$
                 ExceptionHandler.process(e, Level.ERROR);
             }
         }
@@ -243,16 +243,6 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
         toolkit.createLabel(labelButtonClient, DefaultMessagesImpl.getString("AbstractMetadataFormPage.connBind")); //$NON-NLS-1$
 
         // MOD yyin 201204 TDQ-4977, change to TableCombo type to show the connection type.
-        // create group
-        // Group group = new Group(labelButtonClient, SWT.NONE);
-        // group.setLayout(new GridLayout(2, false));
-        // group.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false));
-        // group.setText(" ");
-
-        // create label
-        // Label label = new Label(group, SWT.NONE);
-        // label.setText("Metadata Name & Type:");
-
         // create TableCombo
         connCombo = new TableCombo(labelButtonClient, SWT.BORDER | SWT.READ_ONLY);
         connCombo.setLayoutData(new GridData(SWT.DEFAULT, SWT.DEFAULT));

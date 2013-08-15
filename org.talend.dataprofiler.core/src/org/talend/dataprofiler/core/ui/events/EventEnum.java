@@ -23,5 +23,7 @@ public enum EventEnum {
     DQ_ANALYSIS_CHECK_BEFORERUN,
     // Update the software system when : new connection created; existing connection altered, exsiting connection
     // reloaded, connections checkedout from svn repository.
-    DQ_SOFTWARESYSTEM_UPDATE;
+    DQ_SOFTWARESYSTEM_UPDATE,
+    DQ_MATCH_ANALYSIS_AFTER_CREATE_CONNECTION;
+
 }

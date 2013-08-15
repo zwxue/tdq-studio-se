@@ -72,6 +72,15 @@ public class RulesFactoryImpl extends EFactoryImpl implements RulesFactory {
             case RulesPackage.WHERE_RULE: return createWhereRule();
             case RulesPackage.JOIN_ELEMENT: return createJoinElement();
             case RulesPackage.PARSER_RULE: return createParserRule();
+            case RulesPackage.MATCH_RULE_DEFINITION: return createMatchRuleDefinition();
+            case RulesPackage.BLOCK_KEY_DEFINITION: return createBlockKeyDefinition();
+            case RulesPackage.KEY_DEFINITION: return createKeyDefinition();
+            case RulesPackage.MATCH_KEY_DEFINITION: return createMatchKeyDefinition();
+            case RulesPackage.ALGORITHM_DEFINITION: return createAlgorithmDefinition();
+            case RulesPackage.MATCH_RULE: return createMatchRule();
+            case RulesPackage.APPLIED_BLOCK_KEY: return createAppliedBlockKey();
+            case RulesPackage.SURVIVORSHIP_KEY_DEFINITION: return createSurvivorshipKeyDefinition();
+            case RulesPackage.DEFAULT_SURVIVORSHIP_DEFINITION: return createDefaultSurvivorshipDefinition();
             default:
                 throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
         }
@@ -165,6 +174,96 @@ public class RulesFactoryImpl extends EFactoryImpl implements RulesFactory {
     public ParserRule createParserRule() {
         ParserRuleImpl parserRule = new ParserRuleImpl();
         return parserRule;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public MatchRuleDefinition createMatchRuleDefinition() {
+        MatchRuleDefinitionImpl matchRuleDefinition = new MatchRuleDefinitionImpl();
+        return matchRuleDefinition;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public BlockKeyDefinition createBlockKeyDefinition() {
+        BlockKeyDefinitionImpl blockKeyDefinition = new BlockKeyDefinitionImpl();
+        return blockKeyDefinition;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public KeyDefinition createKeyDefinition() {
+        KeyDefinitionImpl keyDefinition = new KeyDefinitionImpl();
+        return keyDefinition;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public MatchKeyDefinition createMatchKeyDefinition() {
+        MatchKeyDefinitionImpl matchKeyDefinition = new MatchKeyDefinitionImpl();
+        return matchKeyDefinition;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public AlgorithmDefinition createAlgorithmDefinition() {
+        AlgorithmDefinitionImpl algorithmDefinition = new AlgorithmDefinitionImpl();
+        return algorithmDefinition;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public MatchRule createMatchRule() {
+        MatchRuleImpl matchRule = new MatchRuleImpl();
+        return matchRule;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public AppliedBlockKey createAppliedBlockKey() {
+        AppliedBlockKeyImpl appliedBlockKey = new AppliedBlockKeyImpl();
+        return appliedBlockKey;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public SurvivorshipKeyDefinition createSurvivorshipKeyDefinition() {
+        SurvivorshipKeyDefinitionImpl survivorshipKeyDefinition = new SurvivorshipKeyDefinitionImpl();
+        return survivorshipKeyDefinition;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public DefaultSurvivorshipDefinition createDefaultSurvivorshipDefinition() {
+        DefaultSurvivorshipDefinitionImpl defaultSurvivorshipDefinition = new DefaultSurvivorshipDefinitionImpl();
+        return defaultSurvivorshipDefinition;
     }
 
     /**

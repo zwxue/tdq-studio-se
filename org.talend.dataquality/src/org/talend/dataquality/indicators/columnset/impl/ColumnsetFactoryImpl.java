@@ -80,6 +80,8 @@ public class ColumnsetFactoryImpl extends EFactoryImpl implements ColumnsetFacto
             case ColumnsetPackage.WEAK_CORRELATION_INDICATOR: return createWeakCorrelationIndicator();
             case ColumnsetPackage.COLUMN_DEPENDENCY_INDICATOR: return createColumnDependencyIndicator();
             case ColumnsetPackage.SIMPLE_STAT_INDICATOR: return createSimpleStatIndicator();
+            case ColumnsetPackage.BLOCK_KEY_INDICATOR: return createBlockKeyIndicator();
+            case ColumnsetPackage.RECORD_MATCHING_INDICATOR: return createRecordMatchingIndicator();
             default:
                 throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
         }
@@ -203,6 +205,26 @@ public class ColumnsetFactoryImpl extends EFactoryImpl implements ColumnsetFacto
     public SimpleStatIndicator createSimpleStatIndicator() {
         SimpleStatIndicatorImpl simpleStatIndicator = new SimpleStatIndicatorImpl();
         return simpleStatIndicator;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public BlockKeyIndicator createBlockKeyIndicator() {
+        BlockKeyIndicatorImpl blockKeyIndicator = new BlockKeyIndicatorImpl();
+        return blockKeyIndicator;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public RecordMatchingIndicator createRecordMatchingIndicator() {
+        RecordMatchingIndicatorImpl recordMatchingIndicator = new RecordMatchingIndicatorImpl();
+        return recordMatchingIndicator;
     }
 
     /**

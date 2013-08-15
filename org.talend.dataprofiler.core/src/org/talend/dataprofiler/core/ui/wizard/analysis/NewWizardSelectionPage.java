@@ -180,7 +180,11 @@ public class NewWizardSelectionPage extends AbstractAnalysisWizardPage {
                         AnalysisParameter correlationParam = new AnalysisParameter();
                         correlationParam.setFolderProvider(folderProvider);
                         parameter = correlationParam;
-                        type = currentType == AnalysisType.COLUMN_SET ? currentType : type;
+                        if (currentType == AnalysisType.MATCH_ANALYSIS) {// Added 20130724 TDQ-7504
+                            type = currentType;
+                        } else {
+                            type = currentType == AnalysisType.COLUMN_SET ? currentType : type;
+                        }
                         href = currentType == AnalysisType.COLUMN_SET ? relatedTopics[8].getHref() : relatedTopics[4].getHref();
                         break;
                     case COLUMNS_COMPARISON:

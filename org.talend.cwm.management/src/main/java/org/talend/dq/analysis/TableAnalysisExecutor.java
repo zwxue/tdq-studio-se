@@ -20,24 +20,20 @@ import java.util.Set;
 import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.EList;
 import org.talend.core.model.metadata.builder.connection.Connection;
-import org.talend.cwm.db.connection.ConnectionUtils;
-import org.talend.cwm.helper.CatalogHelper;
 import org.talend.cwm.helper.ColumnSetHelper;
 import org.talend.cwm.helper.ResourceHelper;
-import org.talend.cwm.helper.SchemaHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.management.i18n.Messages;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.indicators.Indicator;
+import org.talend.dq.helper.AnalysisExecutorHelper;
 import org.talend.dq.indicators.IndicatorEvaluator;
 import org.talend.dq.sql.converters.CwmZQuery;
 import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.objectmodel.core.Package;
-import orgomg.cwm.resource.relational.Catalog;
 import orgomg.cwm.resource.relational.ColumnSet;
 import orgomg.cwm.resource.relational.NamedColumnSet;
-import orgomg.cwm.resource.relational.Schema;
 
 /**
  * DOC xqliu class global comment. Detailled comment
@@ -111,24 +107,7 @@ public class TableAnalysisExecutor extends AnalysisExecutor {
                 this.errorMessage = Messages.getString("TableAnalysisExecutor.GivenTable", set.getName()); //$NON-NLS-1$
                 return new ReturnCode(errorMessage, Boolean.FALSE);
             }
-            String setName = set.getName();
-
-            // --- normalize table name
-            String schemaName = getQuotedSchemaName(set);
-            String catalogName = getQuotedCatalogName(set);
-            if (catalogName == null && schemaName != null) {
-                // try to get catalog above schema
-                final Schema parentSchema = SchemaHelper.getParentSchema(set);
-                final Catalog parentCatalog = CatalogHelper.getParentCatalog(parentSchema);
-                catalogName = parentCatalog != null ? parentCatalog.getName() : null;
-            }
-            // MOD by zshen: change schemaName of sybase database to Table's owner.
-            if (ConnectionUtils.isSybaseeDBProducts(dbms().getDbmsName())) {
-                schemaName = ColumnSetHelper.getTableOwner(set);
-            }
-            // ~11934
-
-            setName = dbms().toQualifiedName(catalogName, schemaName, setName);
+            String setName = AnalysisExecutorHelper.getTableName(set, dbms());
 
             eval.storeIndicator(setName, indicator);
         }

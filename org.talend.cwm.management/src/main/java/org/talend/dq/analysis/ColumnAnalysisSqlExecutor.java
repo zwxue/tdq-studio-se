@@ -72,6 +72,7 @@ import org.talend.dataquality.indicators.TextParameters;
 import org.talend.dataquality.indicators.definition.CharactersMapping;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dq.dbms.GenericSQLHandler;
+import org.talend.dq.helper.AnalysisExecutorHelper;
 import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.UDIHelper;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
@@ -273,27 +274,7 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
         final ColumnSet columnSetOwner = ColumnHelper.getColumnOwnerAsColumnSet(tdColumn);
         String schemaName = getQuotedSchemaName(columnSetOwner);
 
-        String table = getQuotedTableName(tdColumn);
-
-        // --- normalize table name
-        String catalogName = getQuotedCatalogName(columnSetOwner);
-        if (catalogName == null && schemaName != null) {
-            // try to get catalog above schema
-            final Schema parentSchema = SchemaHelper.getParentSchema(columnSetOwner);
-            final Catalog parentCatalog = CatalogHelper.getParentCatalog(parentSchema);
-            catalogName = parentCatalog != null ? parentCatalog.getName() : null;
-        }
-
-        // MOD by zshen: change schemaName of sybase database to Table's owner.
-        boolean isSybase = false;
-        if (Arrays.asList(org.talend.utils.sql.ConnectionUtils.getSybaseDBProductsName()).contains(dbms().getDbmsName())) {
-            isSybase = true;
-        }
-        if (isSybase) {
-            schemaName = ColumnSetHelper.getTableOwner(columnSetOwner);
-        }
-        table = dbms().toQualifiedName(catalogName, schemaName, table);
-        // ~11934
+        String table = AnalysisExecutorHelper.getTableName(tdColumn, this.dbms());
 
         // ### evaluate SQL Statement depending on indicators ###
         String completedSqlString = null;

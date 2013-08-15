@@ -133,6 +133,10 @@ public class AnalysisEditor extends CommonFormEditor {
             masterPage = new ColumnSetMasterPage(this, MASTER_PAGE, ANALYSIS_SETTINGS);
             resultPage = new ColumnSetResultPage(this, RESULT_PAGE, ANALYSIS_RESULTS);
             break;
+        case MATCH_ANALYSIS:// Added 20130724 TDQ-7504
+            masterPage = new MatchMasterDetailsPage(this, MASTER_PAGE, ANALYSIS_SETTINGS);
+            resultPage = new MatchAnalysisResultPage(this, RESULT_PAGE, ANALYSIS_RESULTS);
+            break;
         default:
 
         }

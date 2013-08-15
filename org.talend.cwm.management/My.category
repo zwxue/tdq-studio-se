@@ -19,6 +19,7 @@
     <!--subCategories label="Default Analysis"/-->
     <subCategories analysisType="Multiple Column Analysis" label="Column Analysis"/>
     <subCategories analysisType="Column Set Analysis" label="Column Set Analysis"/>
+    <subCategories analysisType="Match Analysis" label="Match Analysis"/>
   </categories>
   <!--categories label="Analysis on a column">
     <subCategories label="Default Analysis"/>

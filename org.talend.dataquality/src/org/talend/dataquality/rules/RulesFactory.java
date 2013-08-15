@@ -91,6 +91,87 @@ public interface RulesFactory extends EFactory {
     ParserRule createParserRule();
 
     /**
+     * Returns a new object of class '<em>Match Rule Definition</em>'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return a new object of class '<em>Match Rule Definition</em>'.
+     * @generated
+     */
+    MatchRuleDefinition createMatchRuleDefinition();
+
+    /**
+     * Returns a new object of class '<em>Block Key Definition</em>'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return a new object of class '<em>Block Key Definition</em>'.
+     * @generated
+     */
+    BlockKeyDefinition createBlockKeyDefinition();
+
+    /**
+     * Returns a new object of class '<em>Key Definition</em>'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return a new object of class '<em>Key Definition</em>'.
+     * @generated
+     */
+    KeyDefinition createKeyDefinition();
+
+    /**
+     * Returns a new object of class '<em>Match Key Definition</em>'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return a new object of class '<em>Match Key Definition</em>'.
+     * @generated
+     */
+    MatchKeyDefinition createMatchKeyDefinition();
+
+    /**
+     * Returns a new object of class '<em>Algorithm Definition</em>'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return a new object of class '<em>Algorithm Definition</em>'.
+     * @generated
+     */
+    AlgorithmDefinition createAlgorithmDefinition();
+
+    /**
+     * Returns a new object of class '<em>Match Rule</em>'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return a new object of class '<em>Match Rule</em>'.
+     * @generated
+     */
+    MatchRule createMatchRule();
+
+    /**
+     * Returns a new object of class '<em>Applied Block Key</em>'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return a new object of class '<em>Applied Block Key</em>'.
+     * @generated
+     */
+    AppliedBlockKey createAppliedBlockKey();
+
+    /**
+     * Returns a new object of class '<em>Survivorship Key Definition</em>'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return a new object of class '<em>Survivorship Key Definition</em>'.
+     * @generated
+     */
+    SurvivorshipKeyDefinition createSurvivorshipKeyDefinition();
+
+    /**
+     * Returns a new object of class '<em>Default Survivorship Definition</em>'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return a new object of class '<em>Default Survivorship Definition</em>'.
+     * @generated
+     */
+    DefaultSurvivorshipDefinition createDefaultSurvivorshipDefinition();
+
+    /**
      * Returns the package supported by this factory.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->

@@ -213,6 +213,28 @@ public class ColumnsetSwitch<T> {
                 if (result == null) result = defaultCase(theEObject);
                 return result;
             }
+            case ColumnsetPackage.BLOCK_KEY_INDICATOR: {
+                BlockKeyIndicator blockKeyIndicator = (BlockKeyIndicator)theEObject;
+                T result = caseBlockKeyIndicator(blockKeyIndicator);
+                if (result == null) result = caseColumnSetMultiValueIndicator(blockKeyIndicator);
+                if (result == null) result = caseCompositeIndicator(blockKeyIndicator);
+                if (result == null) result = caseIndicator(blockKeyIndicator);
+                if (result == null) result = caseModelElement(blockKeyIndicator);
+                if (result == null) result = caseElement(blockKeyIndicator);
+                if (result == null) result = defaultCase(theEObject);
+                return result;
+            }
+            case ColumnsetPackage.RECORD_MATCHING_INDICATOR: {
+                RecordMatchingIndicator recordMatchingIndicator = (RecordMatchingIndicator)theEObject;
+                T result = caseRecordMatchingIndicator(recordMatchingIndicator);
+                if (result == null) result = caseColumnSetMultiValueIndicator(recordMatchingIndicator);
+                if (result == null) result = caseCompositeIndicator(recordMatchingIndicator);
+                if (result == null) result = caseIndicator(recordMatchingIndicator);
+                if (result == null) result = caseModelElement(recordMatchingIndicator);
+                if (result == null) result = caseElement(recordMatchingIndicator);
+                if (result == null) result = defaultCase(theEObject);
+                return result;
+            }
             default: return defaultCase(theEObject);
         }
     }
@@ -364,6 +386,36 @@ public class ColumnsetSwitch<T> {
      * @generated
      */
     public T caseSimpleStatIndicator(SimpleStatIndicator object) {
+        return null;
+    }
+
+    /**
+     * Returns the result of interpreting the object as an instance of '<em>Block Key Indicator</em>'.
+     * <!-- begin-user-doc -->
+     * This implementation returns null;
+     * returning a non-null result will terminate the switch.
+     * <!-- end-user-doc -->
+     * @param object the target of the switch.
+     * @return the result of interpreting the object as an instance of '<em>Block Key Indicator</em>'.
+     * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+     * @generated
+     */
+    public T caseBlockKeyIndicator(BlockKeyIndicator object) {
+        return null;
+    }
+
+    /**
+     * Returns the result of interpreting the object as an instance of '<em>Record Matching Indicator</em>'.
+     * <!-- begin-user-doc -->
+     * This implementation returns null;
+     * returning a non-null result will terminate the switch.
+     * <!-- end-user-doc -->
+     * @param object the target of the switch.
+     * @return the result of interpreting the object as an instance of '<em>Record Matching Indicator</em>'.
+     * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+     * @generated
+     */
+    public T caseRecordMatchingIndicator(RecordMatchingIndicator object) {
         return null;
     }
 

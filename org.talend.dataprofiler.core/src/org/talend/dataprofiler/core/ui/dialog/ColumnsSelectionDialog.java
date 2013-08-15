@@ -81,6 +81,16 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
         setTitle(title);
     }
 
+    public ColumnsSelectionDialog(AbstractAnalysisMetadataPage metadataFormPage, Shell parent, String message,
+            List<? extends IRepositoryNode> checkedRepoNodes) {
+        super(metadataFormPage, parent, message);
+        modelElementCheckedMap = new MultiValueMap();
+        initCheckedElements(checkedRepoNodes);
+        addFilter(new EMFObjFilter());
+        addFilter(new DQFolderFliter(true));
+        addFilter(new TDQEEConnectionFolderFilter());
+    }
+
     @Override
     /**
      * DOC mzhao bug 9240 mzhao 2009-11-05.

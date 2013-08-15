@@ -102,6 +102,42 @@ public class RulesAdapterFactory extends AdapterFactoryImpl {
                 return createParserRuleAdapter();
             }
             @Override
+            public Adapter caseMatchRuleDefinition(MatchRuleDefinition object) {
+                return createMatchRuleDefinitionAdapter();
+            }
+            @Override
+            public Adapter caseBlockKeyDefinition(BlockKeyDefinition object) {
+                return createBlockKeyDefinitionAdapter();
+            }
+            @Override
+            public Adapter caseKeyDefinition(KeyDefinition object) {
+                return createKeyDefinitionAdapter();
+            }
+            @Override
+            public Adapter caseMatchKeyDefinition(MatchKeyDefinition object) {
+                return createMatchKeyDefinitionAdapter();
+            }
+            @Override
+            public Adapter caseAlgorithmDefinition(AlgorithmDefinition object) {
+                return createAlgorithmDefinitionAdapter();
+            }
+            @Override
+            public Adapter caseMatchRule(MatchRule object) {
+                return createMatchRuleAdapter();
+            }
+            @Override
+            public Adapter caseAppliedBlockKey(AppliedBlockKey object) {
+                return createAppliedBlockKeyAdapter();
+            }
+            @Override
+            public Adapter caseSurvivorshipKeyDefinition(SurvivorshipKeyDefinition object) {
+                return createSurvivorshipKeyDefinitionAdapter();
+            }
+            @Override
+            public Adapter caseDefaultSurvivorshipDefinition(DefaultSurvivorshipDefinition object) {
+                return createDefaultSurvivorshipDefinitionAdapter();
+            }
+            @Override
             public Adapter caseElement(Element object) {
                 return createElementAdapter();
             }
@@ -214,6 +250,132 @@ public class RulesAdapterFactory extends AdapterFactoryImpl {
      * @generated
      */
     public Adapter createParserRuleAdapter() {
+        return null;
+    }
+
+    /**
+     * Creates a new adapter for an object of class '{@link org.talend.dataquality.rules.MatchRuleDefinition <em>Match Rule Definition</em>}'.
+     * <!-- begin-user-doc -->
+     * This default implementation returns null so that we can easily ignore cases;
+     * it's useful to ignore a case when inheritance will catch all the cases anyway.
+     * <!-- end-user-doc -->
+     * @return the new adapter.
+     * @see org.talend.dataquality.rules.MatchRuleDefinition
+     * @generated
+     */
+    public Adapter createMatchRuleDefinitionAdapter() {
+        return null;
+    }
+
+    /**
+     * Creates a new adapter for an object of class '{@link org.talend.dataquality.rules.BlockKeyDefinition <em>Block Key Definition</em>}'.
+     * <!-- begin-user-doc -->
+     * This default implementation returns null so that we can easily ignore cases;
+     * it's useful to ignore a case when inheritance will catch all the cases anyway.
+     * <!-- end-user-doc -->
+     * @return the new adapter.
+     * @see org.talend.dataquality.rules.BlockKeyDefinition
+     * @generated
+     */
+    public Adapter createBlockKeyDefinitionAdapter() {
+        return null;
+    }
+
+    /**
+     * Creates a new adapter for an object of class '{@link org.talend.dataquality.rules.KeyDefinition <em>Key Definition</em>}'.
+     * <!-- begin-user-doc -->
+     * This default implementation returns null so that we can easily ignore cases;
+     * it's useful to ignore a case when inheritance will catch all the cases anyway.
+     * <!-- end-user-doc -->
+     * @return the new adapter.
+     * @see org.talend.dataquality.rules.KeyDefinition
+     * @generated
+     */
+    public Adapter createKeyDefinitionAdapter() {
+        return null;
+    }
+
+    /**
+     * Creates a new adapter for an object of class '{@link org.talend.dataquality.rules.MatchKeyDefinition <em>Match Key Definition</em>}'.
+     * <!-- begin-user-doc -->
+     * This default implementation returns null so that we can easily ignore cases;
+     * it's useful to ignore a case when inheritance will catch all the cases anyway.
+     * <!-- end-user-doc -->
+     * @return the new adapter.
+     * @see org.talend.dataquality.rules.MatchKeyDefinition
+     * @generated
+     */
+    public Adapter createMatchKeyDefinitionAdapter() {
+        return null;
+    }
+
+    /**
+     * Creates a new adapter for an object of class '{@link org.talend.dataquality.rules.AlgorithmDefinition <em>Algorithm Definition</em>}'.
+     * <!-- begin-user-doc -->
+     * This default implementation returns null so that we can easily ignore cases;
+     * it's useful to ignore a case when inheritance will catch all the cases anyway.
+     * <!-- end-user-doc -->
+     * @return the new adapter.
+     * @see org.talend.dataquality.rules.AlgorithmDefinition
+     * @generated
+     */
+    public Adapter createAlgorithmDefinitionAdapter() {
+        return null;
+    }
+
+    /**
+     * Creates a new adapter for an object of class '{@link org.talend.dataquality.rules.MatchRule <em>Match Rule</em>}'.
+     * <!-- begin-user-doc -->
+     * This default implementation returns null so that we can easily ignore cases;
+     * it's useful to ignore a case when inheritance will catch all the cases anyway.
+     * <!-- end-user-doc -->
+     * @return the new adapter.
+     * @see org.talend.dataquality.rules.MatchRule
+     * @generated
+     */
+    public Adapter createMatchRuleAdapter() {
+        return null;
+    }
+
+    /**
+     * Creates a new adapter for an object of class '{@link org.talend.dataquality.rules.AppliedBlockKey <em>Applied Block Key</em>}'.
+     * <!-- begin-user-doc -->
+     * This default implementation returns null so that we can easily ignore cases;
+     * it's useful to ignore a case when inheritance will catch all the cases anyway.
+     * <!-- end-user-doc -->
+     * @return the new adapter.
+     * @see org.talend.dataquality.rules.AppliedBlockKey
+     * @generated
+     */
+    public Adapter createAppliedBlockKeyAdapter() {
+        return null;
+    }
+
+    /**
+     * Creates a new adapter for an object of class '{@link org.talend.dataquality.rules.SurvivorshipKeyDefinition <em>Survivorship Key Definition</em>}'.
+     * <!-- begin-user-doc -->
+     * This default implementation returns null so that we can easily ignore cases;
+     * it's useful to ignore a case when inheritance will catch all the cases anyway.
+     * <!-- end-user-doc -->
+     * @return the new adapter.
+     * @see org.talend.dataquality.rules.SurvivorshipKeyDefinition
+     * @generated
+     */
+    public Adapter createSurvivorshipKeyDefinitionAdapter() {
+        return null;
+    }
+
+    /**
+     * Creates a new adapter for an object of class '{@link org.talend.dataquality.rules.DefaultSurvivorshipDefinition <em>Default Survivorship Definition</em>}'.
+     * <!-- begin-user-doc -->
+     * This default implementation returns null so that we can easily ignore cases;
+     * it's useful to ignore a case when inheritance will catch all the cases anyway.
+     * <!-- end-user-doc -->
+     * @return the new adapter.
+     * @see org.talend.dataquality.rules.DefaultSurvivorshipDefinition
+     * @generated
+     */
+    public Adapter createDefaultSurvivorshipDefinitionAdapter() {
         return null;
     }
 
