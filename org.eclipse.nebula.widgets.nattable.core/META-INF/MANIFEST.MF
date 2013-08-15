@@ -1,0 +1,37 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Nebula NatTable
+Bundle-SymbolicName: org.eclipse.nebula.widgets.nattable.core; singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Bundle-Activator: org.eclipse.nebula.widgets.nattable.core.Activator
+Bundle-Vendor: Eclipse.org
+Require-Bundle: org.eclipse.core.runtime,
+ org.eclipse.swt;bundle-version="3.6.1",
+ org.eclipse.jface;bundle-version="3.6.1",
+ org.apache.commons.lang;bundle-version="2.4.0",
+ org.apache.commons.logging;bundle-version="1.1.1"
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-ActivationPolicy: lazy
+Export-Package: org.eclipse.nebula.widgets.nattable,
+ org.eclipse.nebula.widgets.nattable.config,
+ org.eclipse.nebula.widgets.nattable.coordinate,
+ org.eclipse.nebula.widgets.nattable.data,
+ org.eclipse.nebula.widgets.nattable.grid.data,
+ org.eclipse.nebula.widgets.nattable.grid.layer,
+ org.eclipse.nebula.widgets.nattable.group,
+ org.eclipse.nebula.widgets.nattable.group.painter,
+ org.eclipse.nebula.widgets.nattable.hideshow,
+ org.eclipse.nebula.widgets.nattable.layer,
+ org.eclipse.nebula.widgets.nattable.layer.cell,
+ org.eclipse.nebula.widgets.nattable.layer.config,
+ org.eclipse.nebula.widgets.nattable.layer.event,
+ org.eclipse.nebula.widgets.nattable.painter.cell,
+ org.eclipse.nebula.widgets.nattable.painter.cell.decorator,
+ org.eclipse.nebula.widgets.nattable.reorder,
+ org.eclipse.nebula.widgets.nattable.selection,
+ org.eclipse.nebula.widgets.nattable.selection.config,
+ org.eclipse.nebula.widgets.nattable.selection.event,
+ org.eclipse.nebula.widgets.nattable.sort.painter,
+ org.eclipse.nebula.widgets.nattable.style,
+ org.eclipse.nebula.widgets.nattable.util,
+ org.eclipse.nebula.widgets.nattable.viewport
