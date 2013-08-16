@@ -150,7 +150,7 @@ public class MatchRuleDataChart extends Composite {
     }
 
     private CategoryDataset createDataset() {
-        String s = DefaultMessagesImpl.getString("MatchRuleDataChart.DataChart.4"); //$NON-NLS-1$
+        String s = DefaultMessagesImpl.getString("DataChart.4"); //$NON-NLS-1$
         DefaultCategoryDataset defaultcategorydataset = new DefaultCategoryDataset();
 
         // grp count, itmes
@@ -179,7 +179,6 @@ public class MatchRuleDataChart extends Composite {
             }
         });
         for (String count : groups) {
-            // if (groupCounts.get(count) > times) {
             if (Integer.parseInt(count) > times - 1) {
                 defaultcategorydataset.addValue(groupCounts.get(count), s, count);
             }

@@ -248,22 +248,22 @@ public class MatchRuleDataTable extends Composite {
         data.widthHint = 100;
 
         firstBtn = new Button(pagination, SWT.NONE);
-        firstBtn.setText(DefaultMessagesImpl.getString("MatchRuleDataTable.DataTable.1")); //$NON-NLS-1$
+        firstBtn.setText(DefaultMessagesImpl.getString("DataTable.first")); //$NON-NLS-1$
         firstBtn.setLayoutData(data);
         firstBtn.addSelectionListener(new PageButtonAdapter(0));
 
         previousBtn = new Button(pagination, SWT.NONE);
-        previousBtn.setText(DefaultMessagesImpl.getString("MatchRuleDataTable.DataTable.2")); //$NON-NLS-1$
+        previousBtn.setText(DefaultMessagesImpl.getString("DataTable.previous")); //$NON-NLS-1$
         previousBtn.setLayoutData(data);
         previousBtn.addSelectionListener(new PageButtonAdapter(1));
 
         nextBtn = new Button(pagination, SWT.NONE);
-        nextBtn.setText(DefaultMessagesImpl.getString("MatchRuleDataTable.DataTable.3")); //$NON-NLS-1$
+        nextBtn.setText(DefaultMessagesImpl.getString("DataTable.next")); //$NON-NLS-1$
         nextBtn.setLayoutData(data);
         nextBtn.addSelectionListener(new PageButtonAdapter(2));
 
         lastBtn = new Button(pagination, SWT.NONE);
-        lastBtn.setText(DefaultMessagesImpl.getString("MatchRuleDataTable.DataTable.4")); //$NON-NLS-1$
+        lastBtn.setText(DefaultMessagesImpl.getString("DataTable.last")); //$NON-NLS-1$
         lastBtn.setLayoutData(data);
         lastBtn.addSelectionListener(new PageButtonAdapter(3));
 
@@ -356,7 +356,7 @@ public class MatchRuleDataTable extends Composite {
             nextBtn.setEnabled(false);
         }
 
-        index.setText(DefaultMessagesImpl.getString("MatchRuleDataTable.DataTable.index", (page + 1), (totalPage))); //$NON-NLS-1$
+        index.setText(DefaultMessagesImpl.getString("DataTable.index", (page + 1), (totalPage))); //$NON-NLS-1$
 
         index.getParent().layout();
     }

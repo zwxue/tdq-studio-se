@@ -147,20 +147,7 @@ blockingKeyComposite
         blockingKeyComposite.removeElement(columnName);
     }
 
-    // private List<String[]> computeMatchResult(List<String[]> viewData) {
-    // ExecuteGenerateBlockingAction generateBlockingAction = new ExecuteGenerateBlockingAction();
-    // if (hasBlockKey()) {
-    // for (BlockKeyDefinition blockKeyDef : this.blockingKeyComposite.getInputElement()) {
-    // List<Map<String, String>> ruleMatcherConvertResult = MatchRuleAnlaysisUtils
-    // .blockingKeyDataConvert(blockKeyDef,
-    // columnMap);
-    // executeMatchRuleDoGroupAction.addRuleMatcher(ruleMatcherConvertResult);
-    // }
-    // executeMatchRuleDoGroupAction.setInputList(viewData);
-    // executeMatchRuleDoGroupAction.run();
-    // }
-    // return executeMatchRuleDoGroupAction.getResultStrList();
-    // }
+
 
     /**
      * DOC yyin Comment method "hasBlockKey".
