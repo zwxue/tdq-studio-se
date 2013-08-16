@@ -493,7 +493,7 @@ public abstract class AnalysisExecutor implements IAnalysisExecutor {
      */
     // MOD yyi 2011-02-22 17871:delimitefile
     protected String getQuotedCatalogName(ModelElement analyzedElement) {
-        return AnalysisExecutorHelper.getQuotedCatalogName(analyzedElement, dbmsLanguage);
+        return AnalysisExecutorHelper.getQuotedCatalogName(analyzedElement, dbms());
     }
 
     /**
@@ -503,7 +503,7 @@ public abstract class AnalysisExecutor implements IAnalysisExecutor {
      * @return
      */
     protected String getQuotedSchemaName(ModelElement columnSetOwner) {
-        return AnalysisExecutorHelper.getQuotedSchemaName(columnSetOwner, dbmsLanguage);
+        return AnalysisExecutorHelper.getQuotedSchemaName(columnSetOwner, dbms());
     }
 
     /**
