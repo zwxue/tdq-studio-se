@@ -29,7 +29,7 @@ public class RefreshChartAction extends Action {
 
     @Override
     public void run() {
-        this.matchingTableSection.RefreshChart();
+        this.matchingTableSection.refreshChart();
     }
 
 }

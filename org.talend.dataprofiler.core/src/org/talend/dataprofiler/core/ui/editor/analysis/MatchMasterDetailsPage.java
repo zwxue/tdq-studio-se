@@ -69,8 +69,6 @@ import org.talend.dataprofiler.core.ui.utils.RepNodeUtils;
 import org.talend.dataprofiler.core.ui.wizard.analysis.connection.ConnectionWizard;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.exception.DataprofilerCoreException;
-import org.talend.dataquality.indicators.columnset.ColumnsetFactory;
-import org.talend.dataquality.indicators.columnset.RecordMatchingIndicator;
 import org.talend.dataquality.properties.TDQAnalysisItem;
 import org.talend.dataquality.record.linkage.ui.action.AddTableItemAction;
 import org.talend.dataquality.record.linkage.ui.action.DellTableItemAction;
@@ -87,16 +85,16 @@ import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.foundation.softwaredeployment.DataManager;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
-
 /**
- * DOC yyin  class global comment. Detailled comment
+ * DOC yyin class global comment. Detailled comment
  */
 public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage implements PropertyChangeListener {
 
     private static Logger log = Logger.getLogger(MatchMasterDetailsPage.class);
 
     private EventReceiver afterCreateConnectionReceiver = null;
-    MatchAnalysisHandler analysisHandler;
+
+    private MatchAnalysisHandler analysisHandler;
 
     public MatchAnalysisHandler getAnalysisHandler() {
         return analysisHandler;
@@ -128,11 +126,17 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
 
     private boolean isDelimitedFile = false;
 
-    private RecordMatchingIndicator matchRuleIndicator;
+    /**
+     * DOC yyin Comment method "createDataSampleSection".
+     * 
+     * @param form
+     * @param topComp
+     */
+    private Composite dataSampleparentComposite;
 
     /**
      * DOC yyin MatchMasterDetailsPage constructor comment.
-     *
+     * 
      * @param editor
      * @param id
      * @param title
@@ -145,10 +149,10 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
     @Override
     public void initialize(FormEditor editor) {
         super.initialize(editor);
-        recomputeIndicators();
+        computeIndicators();
     }
 
-    public void recomputeIndicators() {
+    public void computeIndicators() {
         analysisHandler = new MatchAnalysisHandler();
         analysisHandler.setAnalysis((Analysis) this.currentModelElement);
 
@@ -158,10 +162,8 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
         for (ModelElement element : analyzedColumns) {
             selectedColumns[i++] = element;
         }
-
-        // create Match rule Indicator
-        matchRuleIndicator = ColumnsetFactory.eINSTANCE.createRecordMatchingIndicator();
     }
+
     @Override
     protected void createFormContent(IManagedForm managedForm) {
         this.form = managedForm.getForm();
@@ -188,54 +190,26 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
 
     /**
      * DOC yyin Comment method "createMatchingKeySection".
-     *
+     * 
      * @param form
      * @param topComp
      */
     private void createMatchingKeySection(final ScrolledForm form, Composite topComp) {
-
-        // matchingKeySection = new MatchingKeySection(form, topComp, Section.TWISTIE | Section.TITLE_BAR |
-        // Section.EXPANDED,
-        // toolkit);
-        matchingKeySection.createContext();
-
-        // GridData sectuibClientData = new GridData(GridData.FILL_BOTH);
-        // tabFolderContext.setLayoutData(sectuibClientData);
-        // tabFolderContext.setLayout(new GridLayout(2, true));
-
-        // matchingKeySection.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_BEGINNING));
-        // matchingKeySection.setExpanded(true);
-        // matchingKeySection.addExpansionListener(new ExpansionAdapter() {
-        //
-        // @Override
-        // public void expansionStateChanged(ExpansionEvent e) {
-        // form.reflow(true);
-        // }
-        //
-        // });
-        // tabFolderContext.layout();
-        // matchingKeySection.setClient(tabFolderContext);
+        matchingKeySection.createContent();
         registerSection(matchingKeySection.getSection());
     }
 
     /**
      * DOC yyin Comment method "createBlockingKeySection".
-     *
+     * 
      * @param form
      * @param topComp
      */
     private void createBlockingKeySection(final ScrolledForm form, Composite topComp) {
-        blockingKeySection.createContext();
+        blockingKeySection.createContent();
         registerSection(blockingKeySection.getSection());
     }
 
-    /**
-     * DOC yyin Comment method "createDataSampleSection".
-     *
-     * @param form
-     * @param topComp
-     */
-    private Composite dataSampleparentComposite;
     private void createDataSampleSection(ScrolledForm form, Composite topComp) {
         dataSampleSection = createSection(form, topComp, DefaultMessagesImpl.getString("MatchMasterDetailsPage.DataSample"));//$NON-NLS-1$
         dataSampleparentComposite = toolkit.createComposite(dataSampleSection);
@@ -247,9 +221,9 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
         createButtonComposite(dataSampleparentComposite);
 
         blockingKeySection = new BlockingKeySection(form, topComp, Section.TWISTIE | Section.TITLE_BAR | Section.EXPANDED,
-                toolkit);
+                toolkit, analysis);
         matchingKeySection = new MatchingKeySection(form, topComp, Section.TWISTIE | Section.TITLE_BAR | Section.EXPANDED,
-                toolkit);
+                toolkit, analysis);
 
         // create the data table
         createDataTableComposite(dataSampleparentComposite);
@@ -257,10 +231,11 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
 
     /**
      * DOC yyin Comment method "createDataTableComposite".
-     *
+     * 
      * @param dataparent
      */
     private Composite dataTableComp;
+
     private void createDataTableComposite(Composite dataparent) {
         dataTableComp = toolkit.createComposite(dataparent);
         GridLayout dataTableLayout = new GridLayout(1, Boolean.TRUE);
@@ -315,12 +290,14 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
 
             public void mouseDoubleClick(MouseEvent e) {
             }
+
             public void mouseDown(MouseEvent e) {
                 // every time click the button, change its status
                 selectMatchKeyBtn.setEnabled(canSelectBlockingKey);
                 canSelectBlockingKey = !canSelectBlockingKey;
 
             }
+
             public void mouseUp(MouseEvent e) {
             }
 
@@ -330,12 +307,14 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
 
             public void mouseDoubleClick(MouseEvent e) {
             }
+
             public void mouseDown(MouseEvent e) {
                 // every time click the button, change its status
                 selectBlockKeyBtn.setEnabled(canSelectMatchingKey);
                 canSelectMatchingKey = !canSelectMatchingKey;
 
             }
+
             public void mouseUp(MouseEvent e) {
             }
 
@@ -448,7 +427,7 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
 
     /**
      * need to be called after the user selects some columns
-     *
+     * 
      * @param nodes
      */
     public void setSelectedNodes(Object[] nodes) {
@@ -508,7 +487,7 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
      * when the user select one column, check: if the column is not selected before, add it(with color changed) else if
      * the column already be selected before, remove it(with color changed) Need to check: canSelectBlockingKey/
      * canSelectMatchingKey firstly,
-     *
+     * 
      * @param rowPosition
      * @param columnPosition
      * @param columnName
@@ -519,14 +498,18 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
             return;
         } else if (canSelectBlockingKey) {
             // check if the column is added or not:
-            Boolean isAdded = this.blockingKeySection.addElement(columnName);
-
+            Boolean isAdded = this.blockingKeySection.addElement(columnName, analysisHandler.getAnalysis());
+            // Notify editor dirty.
+            if (isAdded) {
+                this.setDirty(Boolean.TRUE);
+            }
+            // TODO yyin why use "!isAdded" ?
             changeColumnColor(columnName, !isAdded);
             if (!isAdded) {
                 blockingKeySection.removeElement(columnName);
             }
         } else if (canSelectMatchingKey) {// same as blocking key
-            AddTableItemAction addAction = new AddTableItemAction(matchingKeySection, columnName);
+            AddTableItemAction addAction = new AddTableItemAction(matchingKeySection, columnName, analysis);
             addAction.run();
 
             changeColumnColor(columnName, addAction.isAlreadyAdded());
@@ -545,9 +528,10 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
             sampleTable.changeColumnHeaderLabelColor(columnName, GUIHelper.COLOR_BLACK);
         }
     }
+
     /**
      * fetch the data according to the connection type(db,file,mdm)
-     *
+     * 
      * @return
      */
     private List<Object[]> fetchDataForTable() {
@@ -606,8 +590,9 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
         return modelElementList.toArray(new ModelElement[modelElementList.size()]);
     }
 
-
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see java.beans.PropertyChangeListener#propertyChange(java.beans.PropertyChangeEvent)
      */
     public void propertyChange(PropertyChangeEvent evt) {
@@ -615,7 +600,9 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
 
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisMetadataPage#canRun()
      */
     @Override
@@ -624,7 +611,9 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
         return null;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisMetadataPage#refresh()
      */
     @Override
@@ -633,13 +622,13 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
 
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisMetadataPage#saveAnalysis()
      */
     @Override
     protected void saveAnalysis() throws DataprofilerCoreException {
-        analysisHandler.clearAnalysis();
-        Analysis analysis = analysisHandler.getAnalysis();
         this.updateAnalysisClientDependency();
 
         if (selectedColumns != null && selectedColumns.length != 0) {
@@ -670,7 +659,7 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
 
     /**
      * DOC yyin Comment method "findDataProvider".
-     *
+     * 
      * @param modelElement
      * @return
      */

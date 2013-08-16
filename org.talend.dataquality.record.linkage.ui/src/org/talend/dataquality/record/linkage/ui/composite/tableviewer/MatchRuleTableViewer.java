@@ -23,6 +23,7 @@ import org.eclipse.jface.viewers.IContentProvider;
 import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
+import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.record.linkage.ui.composite.tableviewer.provider.MatchRuleContentProvider;
 import org.talend.dataquality.record.linkage.ui.composite.tableviewer.provider.MatchRuleLabelProvider;
 import org.talend.dataquality.record.linkage.ui.composite.utils.MatchRuleAnlaysisUtils;
@@ -33,35 +34,28 @@ import org.talend.dataquality.rules.MatchKeyDefinition;
 import org.talend.dataquality.rules.MatchRule;
 import org.talend.dataquality.rules.RulesFactory;
 
-
 /**
- * created by zshen on Jul 31, 2013
- * Detailled comment
- *
+ * created by zshen on Jul 31, 2013 Detailled comment
+ * 
  */
-public class MatchRuleTableViewer extends AbstractMatchAnalysisTabveViewer {
-
-
-
-
+public class MatchRuleTableViewer extends AbstractMatchAnalysisTableViewer {
 
     private MatchRule inputMatcher = null;
 
-
     /**
      * DOC zshen MatchRuleTableViewer constructor comment.
-     *
+     * 
      * @param parent
      * @param style
      */
     public MatchRuleTableViewer(Composite parent, int style) {
         super(parent, style);
 
-
     }
 
     /**
      * DOC zshen Comment method "getCellEditor".
+     * 
      * @param headers
      * @return
      */
@@ -84,9 +78,9 @@ public class MatchRuleTableViewer extends AbstractMatchAnalysisTabveViewer {
         return editors;
     }
 
-
     /**
      * DOC zshen Comment method "getTableLabelProvider".
+     * 
      * @return
      */
     @Override
@@ -94,9 +88,9 @@ public class MatchRuleTableViewer extends AbstractMatchAnalysisTabveViewer {
         return new MatchRuleLabelProvider();
     }
 
-
     /**
      * DOC zshen Comment method "getTableContentProvider".
+     * 
      * @return
      */
     @Override
@@ -104,9 +98,9 @@ public class MatchRuleTableViewer extends AbstractMatchAnalysisTabveViewer {
         return new MatchRuleContentProvider();
     }
 
-
     /**
      * DOC zshen Comment method "getCellModifier".
+     * 
      * @return
      */
     @Override
@@ -115,13 +109,13 @@ public class MatchRuleTableViewer extends AbstractMatchAnalysisTabveViewer {
     }
 
     /**
-     *
+     * 
      * add new Element
-     *
+     * 
      * @param columnName the name of column
      */
     @Override
-    public boolean addElement(String columnName) {
+    public boolean addElement(String columnName, Analysis analysis) {
         if (isAddedAlready(columnName)) {
             return false;
         }
@@ -148,12 +142,9 @@ public class MatchRuleTableViewer extends AbstractMatchAnalysisTabveViewer {
         }
     }
 
-
-
-
     /**
      * use this value to compute the vaule of column width
-     *
+     * 
      * @return
      */
     @Override
@@ -189,7 +180,7 @@ public class MatchRuleTableViewer extends AbstractMatchAnalysisTabveViewer {
     }
 
     private void initData(List<MatchRule> tempMatcherList) {
-        List<MatchRule> matcherList = new ArrayList<MatchRule>();
+        List<MatchRule> matcherList = new ArrayList<>();
         MatchRule createRuleMatcher = RulesFactory.eINSTANCE.createMatchRule();
         MatchKeyDefinition createMatchKeyDefinition1 = RulesFactory.eINSTANCE.createMatchKeyDefinition();
         MatchKeyDefinition createMatchKeyDefinition2 = RulesFactory.eINSTANCE.createMatchKeyDefinition();

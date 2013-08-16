@@ -12,6 +12,7 @@
 // ============================================================================
 package org.talend.dataquality.record.linkage.ui.composite.tableviewer;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.jface.action.MenuManager;
@@ -29,25 +30,28 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
+import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.record.linkage.ui.action.DellTableItemAction;
 import org.talend.dataquality.record.linkage.ui.action.MatchRuleActionGroup;
-
+import org.talend.dataquality.rules.KeyDefinition;
 
 /**
- * created by zshen on Aug 6, 2013
- * Detailled comment
- *
+ * created by zshen on Aug 6, 2013 Detailled comment
+ * 
  */
-public abstract class AbstractMatchAnalysisTabveViewer extends TableViewer {
+public abstract class AbstractMatchAnalysisTableViewer extends TableViewer {
 
     protected Table MatchTable = null;
+
+    protected List<KeyDefinition> inputElements = new ArrayList<>();
+
     /**
      * DOC zshen MatchAnalysisTabveViewer constructor comment.
-     *
+     * 
      * @param parent
      * @param style
      */
-    public AbstractMatchAnalysisTabveViewer(Composite parent, int style) {
+    public AbstractMatchAnalysisTableViewer(Composite parent, int style) {
         super(parent, style);
         MatchTable = this.getTable();
         initListener();
@@ -63,7 +67,7 @@ public abstract class AbstractMatchAnalysisTabveViewer extends TableViewer {
             public void keyPressed(KeyEvent e) {
                 char character = e.character;
                 if (SWT.DEL == character) {
-                    new DellTableItemAction(AbstractMatchAnalysisTabveViewer.this).run();
+                    new DellTableItemAction(AbstractMatchAnalysisTableViewer.this).run();
                 }
             }
 
@@ -77,9 +81,9 @@ public abstract class AbstractMatchAnalysisTabveViewer extends TableViewer {
     }
 
     /**
-     *
+     * 
      * DOC zshen Comment method "initTable".
-     *
+     * 
      * @param headers the name of column
      * @param pixelDataOfHeaders the width of the column
      */
@@ -116,60 +120,71 @@ public abstract class AbstractMatchAnalysisTabveViewer extends TableViewer {
 
     /**
      * DOC zshen Comment method "getDisplayWeight".
-     *
+     * 
      * @return
      */
     abstract protected int getDisplayWeight();
 
     /**
      * DOC zshen Comment method "getTestData".
-     *
+     * 
      * @return
      */
     abstract protected Object getinputData();
 
     /**
      * DOC zshen Comment method "getTableLabelProvider".
-     *
+     * 
      * @return
      */
     abstract protected IBaseLabelProvider getTableLabelProvider();
 
     /**
      * DOC zshen Comment method "getTableContentProvider".
-     *
+     * 
      * @return
      */
     abstract protected IContentProvider getTableContentProvider();
 
     /**
      * DOC zshen Comment method "getTableCellModifier".
-     *
+     * 
      * @return
      */
     abstract protected ICellModifier getTableCellModifier();
 
     /**
      * DOC zshen Comment method "getCellEditor".
-     *
+     * 
      * @param headers
      * @return
      */
     abstract protected CellEditor[] getCellEditor(List<String> headers);
 
     /**
-     *
+     * 
      * add new Element
-     *
+     * 
      * @param columnName the name of column
+     * @param analysis the context of this add operation perform on.
      */
-    abstract public boolean addElement(String columnName);
+    abstract public boolean addElement(String columnName, Analysis analysis);
 
     /**
      * remove Element
-     *
+     * 
      * @param columnName
      */
     abstract public void removeElement(String columnName);
 
+    public void setInputData(List<KeyDefinition> input) {
+        this.inputElements = input;
+        this.setInput(input);
+        this.refresh();
+
+    }
+
+    public List<KeyDefinition> getInputElements() {
+        return this.inputElements;
+    }
 }

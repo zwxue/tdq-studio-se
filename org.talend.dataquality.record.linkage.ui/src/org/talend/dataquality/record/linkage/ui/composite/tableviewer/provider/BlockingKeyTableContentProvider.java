@@ -12,22 +12,20 @@
 // ============================================================================
 package org.talend.dataquality.record.linkage.ui.composite.tableviewer.provider;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.Viewer;
-import org.talend.dataquality.rules.BlockKeyDefinition;
-
 
 /**
- * created by zshen on Aug 6, 2013
- * Detailled comment
- *
+ * created by zshen on Aug 6, 2013 Detailled comment
+ * 
  */
 public class BlockingKeyTableContentProvider implements IStructuredContentProvider {
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.eclipse.jface.viewers.IContentProvider#dispose()
      */
     @Override
@@ -36,8 +34,11 @@ public class BlockingKeyTableContentProvider implements IStructuredContentProvid
 
     }
 
-    /* (non-Javadoc)
-     * @see org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse.jface.viewers.Viewer, java.lang.Object, java.lang.Object)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse.jface.viewers.Viewer, java.lang.Object,
+     * java.lang.Object)
      */
     @Override
     public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
@@ -45,18 +46,19 @@ public class BlockingKeyTableContentProvider implements IStructuredContentProvid
 
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.eclipse.jface.viewers.IStructuredContentProvider#getElements(java.lang.Object)
      */
     @Override
     public Object[] getElements(Object inputElement) {
-        List<Object> returnList = new ArrayList<Object>();
-        if (inputElement instanceof BlockKeyDefinition[] && ((BlockKeyDefinition[]) inputElement).length > 0) {
-            for (BlockKeyDefinition mkd : ((BlockKeyDefinition[]) inputElement)) {
-                returnList.add(mkd);
-            }
+        if (inputElement instanceof List) {
+            return ((List<?>) inputElement).toArray();
+        } else if (inputElement instanceof Object[]) {
+            return (Object[]) inputElement;
         }
-        return returnList.toArray(new Object[returnList.size()]);
+        return new Object[0];
 
     }
 

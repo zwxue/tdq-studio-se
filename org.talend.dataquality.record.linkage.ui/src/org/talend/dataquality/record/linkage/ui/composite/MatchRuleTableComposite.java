@@ -12,36 +12,26 @@
 // ============================================================================
 package org.talend.dataquality.record.linkage.ui.composite;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.talend.dataquality.record.linkage.ui.composite.tableviewer.MatchRuleTableViewer;
 import org.talend.dataquality.record.linkage.utils.MatchAnalysisConstant;
 import org.talend.dataquality.rules.MatchRule;
 
-
 /**
- * created by zshen on Jul 31, 2013
- * Detailled comment
- *
+ * created by zshen on Jul 31, 2013 Detailled comment
+ * 
  */
-public class MatchRuleTableComposite extends Composite {
+public class MatchRuleTableComposite extends AbsMatchAnalysisTableComposite {
 
-
-    protected List<String> headers = new ArrayList<String>();
-
-    private MatchRuleTableViewer matchRuleTableViewer = null;
     /**
      * DOC zshen MatchRuleComposite constructor comment.
-     *
+     * 
      * @param parent
      * @param style
      */
     public MatchRuleTableComposite(Composite parent, int style) {
         super(parent, style);
-        createContent();
     }
 
     /**
@@ -56,6 +46,7 @@ public class MatchRuleTableComposite extends Composite {
     /**
      * DOC zshen Comment method "initHeaders".
      */
+    @Override
     protected void initHeaders() {
         headers.add(MatchAnalysisConstant.MATCH_KEY_NAME); // 14
         headers.add(MatchAnalysisConstant.COLUMN); // 14
@@ -65,36 +56,27 @@ public class MatchRuleTableComposite extends Composite {
         headers.add(MatchAnalysisConstant.HANDLE_NULL); // 11
     }
 
-
-
-    /**
-     * Getter for matchRuleTableViewer.
-     *
-     * @return the matchRuleTableViewer
-     */
-    public MatchRuleTableViewer getMatchRuleTableViewer() {
-        return this.matchRuleTableViewer;
-    }
-
     /**
      * DOC zshen Comment method "createTable".
      */
+    @Override
     protected void createTable() {
-        matchRuleTableViewer = new MatchRuleTableViewer(this, getTableStyle());
-        matchRuleTableViewer.initTable(headers);
+        tableViewer = new MatchRuleTableViewer(this, getTableStyle());
+        tableViewer.initTable(headers);
     }
 
+    @Override
     protected int getTableStyle() {
         int style = SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.HIDE_SELECTION;
         return style;
     }
 
     public void setInputData(MatchRule inputMatcher) {
-        matchRuleTableViewer.setInputData(inputMatcher);
+        ((MatchRuleTableViewer) tableViewer).setInputData(inputMatcher);
     }
 
     public void getInputData() {
-        matchRuleTableViewer.getInput();
+        tableViewer.getInput();
     }
 
 }

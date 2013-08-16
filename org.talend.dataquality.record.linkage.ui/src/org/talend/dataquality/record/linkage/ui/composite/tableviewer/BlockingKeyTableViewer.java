@@ -15,6 +15,7 @@ package org.talend.dataquality.record.linkage.ui.composite.tableviewer;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ComboBoxCellEditor;
 import org.eclipse.jface.viewers.IBaseLabelProvider;
@@ -23,30 +24,33 @@ import org.eclipse.jface.viewers.IContentProvider;
 import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
+import org.talend.dataquality.analysis.Analysis;
+import org.talend.dataquality.indicators.columnset.RecordMatchingIndicator;
 import org.talend.dataquality.record.linkage.ui.composite.tableviewer.provider.BlockingKeyTableContentProvider;
 import org.talend.dataquality.record.linkage.ui.composite.tableviewer.provider.BlockingKeyTableLabelProvider;
+import org.talend.dataquality.record.linkage.ui.composite.utils.MatchRuleAnlaysisUtils;
 import org.talend.dataquality.record.linkage.utils.BlockingKeyAlgorithmEnum;
 import org.talend.dataquality.record.linkage.utils.BlockingKeyPostAlgorithmEnum;
 import org.talend.dataquality.record.linkage.utils.BlockingKeyPreAlgorithmEnum;
 import org.talend.dataquality.rules.AlgorithmDefinition;
 import org.talend.dataquality.rules.BlockKeyDefinition;
+import org.talend.dataquality.rules.KeyDefinition;
 import org.talend.dataquality.rules.MatchRule;
 import org.talend.dataquality.rules.RulesFactory;
 
-
 /**
- * created by zshen on Aug 6, 2013
- * Detailled comment
- *
+ * created by zshen on Aug 6, 2013 Detailled comment
+ * 
  */
-public class BlockingKeyTableViewer extends AbstractMatchAnalysisTabveViewer {
+public class BlockingKeyTableViewer extends AbstractMatchAnalysisTableViewer {
+
+    private static Logger log = Logger.getLogger(BlockingKeyTableViewer.class);
 
     private final String BLOCK_KEY_DEFAULT_VALUE = "blocking key name"; //$NON-NLS-1$
 
-    private List<BlockKeyDefinition> inputElements = new ArrayList<BlockKeyDefinition>();
     /**
      * DOC zshen BlockingKeyTableViewer constructor comment.
-     *
+     * 
      * @param parent
      * @param style
      */
@@ -54,13 +58,9 @@ public class BlockingKeyTableViewer extends AbstractMatchAnalysisTabveViewer {
         super(parent, style);
     }
 
-    public List<BlockKeyDefinition> getInputElements() {
-        return this.inputElements;
-    }
-
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see
      * org.talend.dataquality.record.linkage.ui.composite.tableviewer.MatchRuleTableViewer#getCellEditor(java.util.List)
      */
@@ -88,7 +88,7 @@ public class BlockingKeyTableViewer extends AbstractMatchAnalysisTabveViewer {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see org.talend.dataquality.record.linkage.ui.composite.tableviewer.MatchRuleTableViewer#getTableLabelProvider()
      */
     @Override
@@ -98,7 +98,7 @@ public class BlockingKeyTableViewer extends AbstractMatchAnalysisTabveViewer {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see
      * org.talend.dataquality.record.linkage.ui.composite.tableviewer.MatchRuleTableViewer#getTableContentProvider()
      */
@@ -109,7 +109,7 @@ public class BlockingKeyTableViewer extends AbstractMatchAnalysisTabveViewer {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see org.talend.dataquality.record.linkage.ui.composite.tableviewer.MatchRuleTableViewer#getTableCellModifier()
      */
     @Override
@@ -119,7 +119,7 @@ public class BlockingKeyTableViewer extends AbstractMatchAnalysisTabveViewer {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see org.talend.dataquality.record.linkage.ui.composite.tableviewer.MatchRuleTableViewer#getDisplayWeight()
      */
     @Override
@@ -129,7 +129,7 @@ public class BlockingKeyTableViewer extends AbstractMatchAnalysisTabveViewer {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see
      * org.talend.dataquality.record.linkage.ui.composite.tableviewer.AbstractMatchAnalysisTabveViewer#getTestData()
      */
@@ -139,13 +139,6 @@ public class BlockingKeyTableViewer extends AbstractMatchAnalysisTabveViewer {
             return null;
         }
         return inputElements.toArray(new BlockKeyDefinition[inputElements.size()]);
-    }
-
-    public void setInputData(List<BlockKeyDefinition> inputMatcher) {
-        this.inputElements = inputMatcher;
-        this.setInput(getinputData());
-        this.refresh();
-
     }
 
     private void initData(List<MatchRule> tempMatcherList) {
@@ -191,35 +184,37 @@ public class BlockingKeyTableViewer extends AbstractMatchAnalysisTabveViewer {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see
      * org.talend.dataquality.record.linkage.ui.composite.tableviewer.AbstractMatchAnalysisTabveViewer#addElement(java
      * .lang.String)
      */
     @Override
-    public boolean addElement(String columnName) {
+    public boolean addElement(String columnName, Analysis analysis) {
         if (isAddedAlready(columnName)) {
             return false;
         }
-        List<BlockKeyDefinition> bkdList = null;
-        if (this.getInput() == null) {
-            bkdList = new ArrayList<BlockKeyDefinition>();
-        } else if (this.getInput() instanceof BlockKeyDefinition[] && ((BlockKeyDefinition[]) this.getInput()).length > 0) {
-            bkdList = convertToList((BlockKeyDefinition[]) this.getInput());
-
+        RecordMatchingIndicator recordMatchingIndiator = MatchRuleAnlaysisUtils.getRecordMatchIndicatorFromAna(analysis);
+        if (recordMatchingIndiator == null) {
+            log.error("null record matching indicator for analysis: " + analysis.getName());
+            return Boolean.FALSE;
         }
-        bkdList.add(createDefaultRow(columnName));
-        setInputData(bkdList);
+        List<BlockKeyDefinition> bkdList = recordMatchingIndiator.getBuiltInMatchRuleDefinition().getBlockKeys();
+        BlockKeyDefinition blockKeyDef = createNewBlockDefinition(columnName);
+        bkdList.add(blockKeyDef);
+        List<KeyDefinition> keyDefListCopy = new ArrayList<>(bkdList.size());
+        keyDefListCopy.addAll(bkdList);
+        setInputData(keyDefListCopy);
         return true;
     }
 
     /**
      * DOC zshen Comment method "createDefaultRow".
-     *
+     * 
      * @param columnName
      * @return
      */
-    private BlockKeyDefinition createDefaultRow(String columnName) {
+    private BlockKeyDefinition createNewBlockDefinition(String columnName) {
         BlockKeyDefinition createBlockKeyDefinition = RulesFactory.eINSTANCE.createBlockKeyDefinition();
         createBlockKeyDefinition.setName(BLOCK_KEY_DEFAULT_VALUE);
         createBlockKeyDefinition.setColumn(columnName);
@@ -257,7 +252,7 @@ public class BlockingKeyTableViewer extends AbstractMatchAnalysisTabveViewer {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see
      * org.talend.dataquality.record.linkage.ui.composite.tableviewer.AbstractMatchAnalysisTabveViewer#removeElement
      * (java.lang.String)
@@ -285,12 +280,12 @@ public class BlockingKeyTableViewer extends AbstractMatchAnalysisTabveViewer {
 
     /**
      * DOC yyin Comment method "convertToList".
-     *
+     * 
      * @param asList
      * @return
      */
     private List<BlockKeyDefinition> convertToList(BlockKeyDefinition[] blockArray) {
-        List<BlockKeyDefinition> resultList = new ArrayList<BlockKeyDefinition>();
+        List<BlockKeyDefinition> resultList = new ArrayList<>();
         for (BlockKeyDefinition blocKey : blockArray) {
             resultList.add(blocKey);
         }

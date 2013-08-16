@@ -12,26 +12,20 @@
 // ============================================================================
 package org.talend.dataquality.record.linkage.ui.composite;
 
-import java.util.List;
-
 import org.eclipse.swt.widgets.Composite;
+import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.record.linkage.ui.composite.tableviewer.BlockingKeyTableViewer;
 import org.talend.dataquality.record.linkage.utils.MatchAnalysisConstant;
-import org.talend.dataquality.rules.BlockKeyDefinition;
-
 
 /**
- * created by zshen on Aug 6, 2013
- * Detailled comment
- *
+ * created by zshen on Aug 6, 2013 Detailled comment
+ * 
  */
-public class BlockingKeyTableComposite extends MatchRuleTableComposite {
-
-    private BlockingKeyTableViewer blockingKeyTableViewer;
+public class BlockingKeyTableComposite extends AbsMatchAnalysisTableComposite {
 
     /**
      * DOC zshen BlockingKeyTableComposite constructor comment.
-     *
+     * 
      * @param parent
      * @param style
      */
@@ -41,7 +35,7 @@ public class BlockingKeyTableComposite extends MatchRuleTableComposite {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see org.talend.dataquality.record.linkage.ui.composite.MatchRuleTableComposite#initHeaders()
      */
     @Override
@@ -58,25 +52,21 @@ public class BlockingKeyTableComposite extends MatchRuleTableComposite {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see org.talend.dataquality.record.linkage.ui.composite.MatchRuleTableComposite#createTable()
      */
     @Override
     protected void createTable() {
-        blockingKeyTableViewer = new BlockingKeyTableViewer(this, getTableStyle());
-        blockingKeyTableViewer.initTable(headers);
+        tableViewer = new BlockingKeyTableViewer(this, getTableStyle());
+        ((BlockingKeyTableViewer) tableViewer).initTable(headers);
     }
 
-    public boolean addElement(String columnName) {
-        return blockingKeyTableViewer.addElement(columnName);
+    public boolean addElement(String columnName, Analysis analysis) {
+        return ((BlockingKeyTableViewer) tableViewer).addElement(columnName, analysis);
     }
 
     public void removeElement(String columnName) {
-        blockingKeyTableViewer.removeElement(columnName);
-    }
-
-    public List<BlockKeyDefinition> getInputElement() {
-        return blockingKeyTableViewer.getInputElements();
+        ((BlockingKeyTableViewer) tableViewer).removeElement(columnName);
     }
 
 }

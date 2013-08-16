@@ -17,7 +17,7 @@ import org.eclipse.jface.action.MenuManager;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.ui.actions.ActionGroup;
-import org.talend.dataquality.record.linkage.ui.composite.tableviewer.AbstractMatchAnalysisTabveViewer;
+import org.talend.dataquality.record.linkage.ui.composite.tableviewer.AbstractMatchAnalysisTableViewer;
 
 
 /**
@@ -27,9 +27,9 @@ import org.talend.dataquality.record.linkage.ui.composite.tableviewer.AbstractMa
  */
 public class MatchRuleActionGroup extends ActionGroup {
 
-    private AbstractMatchAnalysisTabveViewer tv;
+    private AbstractMatchAnalysisTableViewer tv;
 
-    public MatchRuleActionGroup(AbstractMatchAnalysisTabveViewer tv) {
+    public MatchRuleActionGroup(AbstractMatchAnalysisTableViewer tv) {
         this.tv = tv;
     }
 

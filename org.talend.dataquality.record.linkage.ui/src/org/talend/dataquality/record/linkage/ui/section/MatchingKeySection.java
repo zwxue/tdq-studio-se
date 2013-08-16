@@ -30,6 +30,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
+import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.record.linkage.ui.action.ExecuteMatchRuleDoGroupAction;
 import org.talend.dataquality.record.linkage.ui.composite.MatchRuleTableComposite;
 import org.talend.dataquality.record.linkage.ui.composite.chart.MatchRuleDataChart;
@@ -39,11 +40,9 @@ import org.talend.dataquality.record.linkage.utils.MatchAnalysisConstant;
 import org.talend.dataquality.rules.MatchRule;
 import org.talend.dataquality.rules.RulesFactory;
 
-
 /**
- * created by zshen on Jul 31, 2013
- * Detailled comment
- *
+ * created by zshen on Jul 31, 2013 Detailled comment
+ * 
  */
 public class MatchingKeySection extends AbstractMatchTableSection {
 
@@ -57,19 +56,19 @@ public class MatchingKeySection extends AbstractMatchTableSection {
 
     private MatchRuleTableComposite matchRuleComposite = null;
 
-    private List<MatchRule> matcherList = new ArrayList<MatchRule>();
+    private List<MatchRule> matcherList = new ArrayList<>();
 
     private MatchRuleDataChart matchRuleChartComp = null;
 
     /**
      * DOC zshen MatchingKeySection constructor comment.
-     *
+     * 
      * @param parent
      * @param style
      * @param toolkit
      */
-    public MatchingKeySection(final ScrolledForm form, Composite parent, int style, FormToolkit toolkit) {
-        super(form, parent, style, toolkit);
+    public MatchingKeySection(final ScrolledForm form, Composite parent, int style, FormToolkit toolkit, Analysis analysis) {
+        super(form, parent, style, toolkit, analysis);
     }
 
     public List<MatchRule> getMatcherList() {
@@ -78,7 +77,7 @@ public class MatchingKeySection extends AbstractMatchTableSection {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see org.talend.dataquality.record.linkage.ui.section.AbstractMatchTableSection#getSectionName()
      */
     @Override
@@ -88,7 +87,7 @@ public class MatchingKeySection extends AbstractMatchTableSection {
 
     /**
      * Getter for ruleFolder.
-     *
+     * 
      * @return the ruleFolder
      */
     public CTabFolder getRuleFolder() {
@@ -97,13 +96,13 @@ public class MatchingKeySection extends AbstractMatchTableSection {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see
      * org.talend.dataquality.record.linkage.ui.section.AbstractMatchTableSection#createSubContext(org.eclipse.swt.widgets
      * .Composite)
      */
     @Override
-    protected void createSubContext(Composite sectionClient) {
+    protected void createSubContent(Composite sectionClient) {
 
         Composite tableComposite = toolkit.createComposite(sectionClient);
         GridLayout tableLayout = new GridLayout(1, Boolean.TRUE);
@@ -148,8 +147,6 @@ public class MatchingKeySection extends AbstractMatchTableSection {
 
     }
 
-
-
     /**
      * add properties tab
      */
@@ -160,7 +157,7 @@ public class MatchingKeySection extends AbstractMatchTableSection {
 
     /**
      * DOC zshen Comment method "createPropertyTab".
-     *
+     * 
      * @param tabName
      * @param reComputeMatchRule
      */
@@ -200,7 +197,7 @@ public class MatchingKeySection extends AbstractMatchTableSection {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see
      * org.talend.dataquality.record.linkage.ui.section.AbstractMatchTableSection#createSubChart(org.eclipse.swt.widgets
      * .Composite)
@@ -251,7 +248,7 @@ public class MatchingKeySection extends AbstractMatchTableSection {
 
     /**
      * DOC zshen Comment method "getViewColumn".
-     *
+     * 
      * @return
      */
     private String[] getViewColumn() {
@@ -272,7 +269,7 @@ public class MatchingKeySection extends AbstractMatchTableSection {
 
     /**
      * DOC zshen Comment method "getViewData".
-     *
+     * 
      * @return
      */
     private List<String[]> getViewData() {
@@ -280,13 +277,8 @@ public class MatchingKeySection extends AbstractMatchTableSection {
         return tableData;
     }
 
-
-
-
-
-
     @Override
-    public void RefreshChart() {
+    public void refreshChart() {
         matchRuleChartComp.refresh(computeMatchResult(tableData));
     }
 }

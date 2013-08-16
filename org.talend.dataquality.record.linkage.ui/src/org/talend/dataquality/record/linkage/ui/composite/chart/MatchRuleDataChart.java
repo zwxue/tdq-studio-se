@@ -21,6 +21,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
@@ -41,11 +42,12 @@ import org.jfree.experimental.chart.swt.ChartComposite;
 import org.talend.dataquality.record.linkage.ui.composite.utils.MatchRuleColorRegistry;
 import org.talend.dataquality.record.linkage.ui.i18n.internal.DefaultMessagesImpl;
 
-
 /**
  * DOC yyi class global comment. Detailled comment
  */
 public class MatchRuleDataChart extends Composite {
+
+    private static Logger log = Logger.getLogger(MatchRuleDataChart.class);
 
     public static final Color[] COLOR_LIST = MatchRuleColorRegistry.getColorsForAwt();
 
@@ -61,7 +63,7 @@ public class MatchRuleDataChart extends Composite {
 
     /**
      * DOC yyi DataChart constructor comment.
-     *
+     * 
      * @param parent
      * @param style
      */
@@ -157,6 +159,10 @@ public class MatchRuleDataChart extends Composite {
         final Map<String, Integer> groupCounts = new HashMap<String, Integer>();
 
         for (String[] values : this.previewData) {
+            if (values.length <= masterColumn) {
+                // TODO zshen check this exceptional case
+                log.error("Array size " + values.length + " less than " + masterColumn);
+            }
             if (Boolean.valueOf(values[masterColumn])) {
                 if (null == groupCounts.get(values[grpSizeColumn])) {
                     groupCounts.put(values[grpSizeColumn], 1);
@@ -199,7 +205,7 @@ public class MatchRuleDataChart extends Composite {
 
     /**
      * DOC set spinner value
-     *
+     * 
      * @param times
      */
     public void setTimes(int times) {
@@ -212,7 +218,7 @@ public class MatchRuleDataChart extends Composite {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see org.eclipse.swt.widgets.Widget#dispose()
      */
     @Override

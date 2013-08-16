@@ -22,47 +22,44 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.custom.CTabItem;
 import org.talend.dataquality.record.linkage.ui.composite.MatchRuleTableComposite;
-import org.talend.dataquality.record.linkage.ui.composite.tableviewer.AbstractMatchAnalysisTabveViewer;
-import org.talend.dataquality.record.linkage.ui.composite.tableviewer.MatchRuleTableViewer;
+import org.talend.dataquality.record.linkage.ui.composite.tableviewer.AbstractMatchAnalysisTableViewer;
 import org.talend.dataquality.record.linkage.ui.section.MatchingKeySection;
 import org.talend.dataquality.record.linkage.utils.MatchAnalysisConstant;
 import org.talend.dataquality.rules.MatchKeyDefinition;
 
-
 /**
- * created by zshen on Aug 2, 2013
- * Detailled comment
- *
+ * created by zshen on Aug 2, 2013 Detailled comment
+ * 
  */
 public class DellTableItemAction extends Action {
 
-    private AbstractMatchAnalysisTabveViewer tv = null;
-    
+    private AbstractMatchAnalysisTableViewer tv = null;
+
     private MatchingKeySection matchingKeySection = null;
 
     private String columnName = null;
-    
-    private List<MatchRuleTableViewer> tvs = new ArrayList<MatchRuleTableViewer>();
 
-    public DellTableItemAction(AbstractMatchAnalysisTabveViewer tv) {
+    private List<AbstractMatchAnalysisTableViewer> tvs = new ArrayList<>();
+
+    public DellTableItemAction(AbstractMatchAnalysisTableViewer tv) {
         this.tv = tv;
         setText("Dell"); //$NON-NLS-1$
     }
-    
+
     public DellTableItemAction(MatchingKeySection matchingKeySection, String columnName) {
         this.matchingKeySection = matchingKeySection;
         this.tvs.addAll(getTableViewerList());
         this.columnName = columnName;
     }
-    
+
     /**
      * DOC zshen Comment method "getTableViewerList".
-     *
+     * 
      * @param ctabFolder
      * @return
      */
-    private Collection<? extends MatchRuleTableViewer> getTableViewerList() {
-        List<MatchRuleTableViewer> returnList = new ArrayList<MatchRuleTableViewer>();
+    private Collection<? extends AbstractMatchAnalysisTableViewer> getTableViewerList() {
+        List<AbstractMatchAnalysisTableViewer> returnList = new ArrayList<>();
         if (matchingKeySection == null) {
             return returnList;
         }
@@ -72,8 +69,9 @@ public class DellTableItemAction extends Action {
         }
 
         for (CTabItem item : ctabFolder.getItems()) {
-            MatchRuleTableComposite data = (MatchRuleTableComposite) item.getData(MatchAnalysisConstant.MATCH_RULE_TABLE_COMPOSITE);
-            returnList.add(data.getMatchRuleTableViewer());
+            MatchRuleTableComposite data = (MatchRuleTableComposite) item
+                    .getData(MatchAnalysisConstant.MATCH_RULE_TABLE_COMPOSITE);
+            returnList.add(data.getTableViewer());
         }
 
         return returnList;
@@ -81,16 +79,16 @@ public class DellTableItemAction extends Action {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see org.eclipse.jface.action.Action#run()
      */
     @Override
     public void run() {
-        for (MatchRuleTableViewer currentTV : tvs) {
+        for (AbstractMatchAnalysisTableViewer currentTV : tvs) {
             currentTV.removeElement(columnName);
         }
-        
-        if(tv!=null){
+
+        if (tv != null) {
             StructuredSelection selection = (StructuredSelection) tv.getSelection();
             Iterator<Object> selectioniterator = selection.iterator();
             while (selectioniterator.hasNext()) {

@@ -29,13 +29,13 @@ import org.eclipse.ui.forms.events.ExpansionEvent;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
+import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.record.linkage.ui.action.RefreshChartAction;
 import org.talend.dataquality.record.linkage.ui.composite.utils.ImageLib;
 
-
 /**
  * created by zshen on Jul 31, 2013 Detailled comment
- *
+ * 
  */
 public abstract class AbstractMatchTableSection {
 
@@ -47,12 +47,13 @@ public abstract class AbstractMatchTableSection {
 
     protected Section section = null;
 
+    protected Analysis analysis = null;
+
     /**
      * @param parent
      * @param style
      */
-    public AbstractMatchTableSection(final ScrolledForm form, Composite parent, int style, FormToolkit toolkit) {
-
+    public AbstractMatchTableSection(final ScrolledForm form, Composite parent, int style, FormToolkit toolkit, Analysis analysis) {
 
         this.toolkit = toolkit;
         this.section = this.toolkit.createSection(parent, style);
@@ -66,18 +67,18 @@ public abstract class AbstractMatchTableSection {
 
         });
         section.setExpanded(true);
-
+        this.analysis = analysis;
     }
 
     /**
      * DOC zshen Comment method "createContext".
      */
-    public Composite createContext() {
+    public Composite createContent() {
         section.setText(getSectionName());
         Composite sectionClient = toolkit.createComposite(section, SWT.NONE);
         sectionClient.setLayout(new GridLayout(2, true));
         section.setClient(sectionClient);
-        createSubContext(sectionClient);
+        createSubContent(sectionClient);
         createSubChart(sectionClient);
         return sectionClient;
     }
@@ -130,40 +131,38 @@ public abstract class AbstractMatchTableSection {
 
     /**
      * Getter for section.
-     *
+     * 
      * @return the section
      */
     public Section getSection() {
         return this.section;
     }
 
-    public void setClient(Control client){
+    public void setClient(Control client) {
         this.section.setClient(client);
     }
 
     /**
      * DOC zshen Comment method "createSubChart".
-     *
+     * 
      * @param sectionClient
      */
     abstract protected void createSubChart(Composite sectionClient);
 
     /**
-     * DOC zshen Comment method "createSubContext".
-     *
+     * DOC zshen Comment method "createSubContent".
+     * 
      * @param sectionClient
      */
-    abstract protected void createSubContext(Composite sectionClient);
+    abstract protected void createSubContent(Composite sectionClient);
 
     /**
      * DOC zshen Comment method "getSectionName".
-     *
+     * 
      * @return
      */
     abstract protected String getSectionName();
 
-
-    abstract public void RefreshChart();
-
+    abstract public void refreshChart();
 
 }

@@ -22,18 +22,26 @@ import org.talend.core.model.properties.Item;
 import org.talend.dataprofiler.core.ui.editor.analysis.AnalysisEditor;
 import org.talend.dataprofiler.core.ui.editor.analysis.MatchMasterDetailsPage;
 import org.talend.dataprofiler.core.ui.wizard.analysis.AnalysisMetadataWizardPage;
+import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisType;
+import org.talend.dataquality.indicators.Indicator;
+import org.talend.dataquality.indicators.columnset.ColumnsetFactory;
+import org.talend.dataquality.indicators.columnset.RecordMatchingIndicator;
+import org.talend.dataquality.rules.MatchRuleDefinition;
+import org.talend.dataquality.rules.RulesFactory;
 import org.talend.dq.analysis.parameters.AnalysisParameter;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
+import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
- * DOC yyin  class global comment. Detailled comment
+ * DOC yyin class global comment. Detailled comment
  */
 public class MatchWizard extends ColumnWizard {
 
     private ColumnAnalysisDOSelectionPage selectionPage;
+
     /**
      * DOC yyin MatchWizard constructor comment.
      * 
@@ -41,7 +49,6 @@ public class MatchWizard extends ColumnWizard {
      */
     public MatchWizard(AnalysisParameter parameter) {
         super(parameter);
-        // TODO Auto-generated constructor stub
     }
 
     // make the next button available and the next page is to select columns
@@ -49,8 +56,7 @@ public class MatchWizard extends ColumnWizard {
     public void addPages() {
         addPage(new AnalysisMetadataWizardPage());
         AnalysisParameter parameter = (AnalysisParameter) getParameter();
-        if (parameter.getConnectionRepNode() == null
- && parameter.getAnalysisType().equals(AnalysisType.MATCH_ANALYSIS)) {
+        if (parameter.getConnectionRepNode() == null && parameter.getAnalysisType().equals(AnalysisType.MATCH_ANALYSIS)) {
             selectionPage = new ColumnAnalysisDOSelectionPage();
             addPage(selectionPage);
         }
@@ -78,8 +84,7 @@ public class MatchWizard extends ColumnWizard {
         if (nodes != null && nodes.size() > 0) {
             List<IRepositoryNode> nodeList = new ArrayList<IRepositoryNode>();
             for (IRepositoryNode repNode : nodes) {
-                repNode = RepositoryNodeHelper.recursiveFind(RepositoryNodeHelper
-                        .getModelElementFromRepositoryNode(repNode));
+                repNode = RepositoryNodeHelper.recursiveFind(RepositoryNodeHelper.getModelElementFromRepositoryNode(repNode));
                 nodeList.add(repNode);
             }
 
@@ -88,4 +93,26 @@ public class MatchWizard extends ColumnWizard {
             masterPage.doSave(new NullProgressMonitor());
         }
     }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataprofiler.core.ui.wizard.analysis.column.ColumnSetWizard#initCWMResourceBuilder()
+     */
+    @Override
+    public ModelElement initCWMResourceBuilder() {
+        Analysis analysis = (Analysis) super.initCWMResourceBuilder();
+
+        // New blocking key indicator.
+        Indicator blockKeyIndicator = ColumnsetFactory.eINSTANCE.createBlockKeyIndicator();
+        analysis.getResults().getIndicators().add(blockKeyIndicator);
+
+        // Match rule indicator
+        RecordMatchingIndicator matchRuleIndicator = ColumnsetFactory.eINSTANCE.createRecordMatchingIndicator();
+        MatchRuleDefinition matchRuleDefinition = RulesFactory.eINSTANCE.createMatchRuleDefinition();
+        matchRuleIndicator.setBuiltInMatchRuleDefinition(matchRuleDefinition);
+        analysis.getResults().getIndicators().add(matchRuleIndicator);
+        return analysis;
+    }
+
 }

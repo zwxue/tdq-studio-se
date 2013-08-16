@@ -21,20 +21,20 @@ import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.custom.CTabItem;
 import org.jfree.util.Log;
 import org.talend.commons.exception.BusinessException;
+import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.record.linkage.ui.composite.MatchRuleTableComposite;
+import org.talend.dataquality.record.linkage.ui.composite.tableviewer.AbstractMatchAnalysisTableViewer;
 import org.talend.dataquality.record.linkage.ui.composite.tableviewer.MatchRuleTableViewer;
 import org.talend.dataquality.record.linkage.ui.section.MatchingKeySection;
 import org.talend.dataquality.record.linkage.utils.MatchAnalysisConstant;
 
-
 /**
- * created by zshen on Aug 2, 2013
- * Detailled comment
- *
+ * created by zshen on Aug 2, 2013 Detailled comment
+ * 
  */
 public class AddTableItemAction extends Action {
 
-    private List<MatchRuleTableViewer> tvs = new ArrayList<MatchRuleTableViewer>();
+    private List<AbstractMatchAnalysisTableViewer> tvs = new ArrayList<>();
 
     private MatchingKeySection matchingKeySection = null;
 
@@ -42,25 +42,29 @@ public class AddTableItemAction extends Action {
 
     boolean isAlreadyAdded = Boolean.FALSE;
 
-    public AddTableItemAction(MatchRuleTableViewer tv, String columnName) {
+    private Analysis analysis = null;
+
+    public AddTableItemAction(MatchRuleTableViewer tv, String columnName, Analysis analysis) {
         this.tvs.add(tv);
         this.columnName = columnName;
+        this.analysis = analysis;
     }
 
-    public AddTableItemAction(MatchingKeySection matchingKeySection, String columnName) {
+    public AddTableItemAction(MatchingKeySection matchingKeySection, String columnName, Analysis analysis) {
         this.matchingKeySection = matchingKeySection;
         this.tvs.addAll(getTableViewerList());
         this.columnName = columnName;
+        this.analysis = analysis;
     }
 
     /**
      * DOC zshen Comment method "getTableViewerList".
-     *
+     * 
      * @param ctabFolder
      * @return
      */
-    private Collection<? extends MatchRuleTableViewer> getTableViewerList() {
-        List<MatchRuleTableViewer> returnList = new ArrayList<MatchRuleTableViewer>();
+    private Collection<? extends AbstractMatchAnalysisTableViewer> getTableViewerList() {
+        List<AbstractMatchAnalysisTableViewer> returnList = new ArrayList<>();
         if (matchingKeySection == null) {
             return returnList;
         }
@@ -70,15 +74,17 @@ public class AddTableItemAction extends Action {
         }
 
         for (CTabItem item : ctabFolder.getItems()) {
-            MatchRuleTableComposite data = (MatchRuleTableComposite) item.getData(MatchAnalysisConstant.MATCH_RULE_TABLE_COMPOSITE);
-            returnList.add(data.getMatchRuleTableViewer());
+            MatchRuleTableComposite data = (MatchRuleTableComposite) item
+                    .getData(MatchAnalysisConstant.MATCH_RULE_TABLE_COMPOSITE);
+            returnList.add(data.getTableViewer());
         }
 
         return returnList;
     }
+
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see org.eclipse.jface.action.Action#run()
      */
     @Override
@@ -91,11 +97,11 @@ public class AddTableItemAction extends Action {
                 CTabItem newTabItem = createNewRuleTabItem();
                 MatchRuleTableComposite data = (MatchRuleTableComposite) newTabItem
                         .getData(MatchAnalysisConstant.MATCH_RULE_TABLE_COMPOSITE);
-                this.tvs.add(data.getMatchRuleTableViewer());
+                this.tvs.add(data.getTableViewer());
             }
 
-            for (MatchRuleTableViewer currentTV : tvs) {
-                boolean addSuccessed = currentTV.addElement(columnName);
+            for (AbstractMatchAnalysisTableViewer currentTV : tvs) {
+                boolean addSuccessed = currentTV.addElement(columnName, analysis);
                 if (addSuccessed) {
                     successNum++;
                 }
@@ -113,7 +119,7 @@ public class AddTableItemAction extends Action {
 
     /**
      * DOC zshen Comment method "createNewRuleTabItem".
-     *
+     * 
      * @return
      * @throws BusinessException
      */
