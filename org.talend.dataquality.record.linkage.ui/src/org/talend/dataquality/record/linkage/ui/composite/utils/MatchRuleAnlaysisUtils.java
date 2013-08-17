@@ -86,7 +86,7 @@ public class MatchRuleAnlaysisUtils {
     }
 
     public static List<MatchRule> convertDataMapToRuleMatcher(Map<String, String> columnMap) {
-        List<MatchRule> matcherList = new ArrayList<>();
+        List<MatchRule> matcherList = new ArrayList<MatchRule>();
         if (columnMap == null) {
             return matcherList;
         }
@@ -108,10 +108,10 @@ public class MatchRuleAnlaysisUtils {
      * @return
      */
     public static List<Map<String, String>> blockingKeyDataConvert(List<KeyDefinition> blockKeyDefList) {
-        List<Map<String, String>> resultListData = new ArrayList<>();
+        List<Map<String, String>> resultListData = new ArrayList<Map<String, String>>();
         for (KeyDefinition keyDef : blockKeyDefList) {
             BlockKeyDefinition blockKeydef = (BlockKeyDefinition) keyDef;
-            Map<String, String> blockKeyDefMap = new HashMap<>();
+            Map<String, String> blockKeyDefMap = new HashMap<String, String>();
             blockKeyDefMap.put(MatchAnalysisConstant.COLUMN, blockKeydef.getColumn());
             blockKeyDefMap.put(MatchAnalysisConstant.PRE_ALGORITHM, blockKeydef.getPreAlgorithm().getAlgorithmType());
             blockKeyDefMap.put(MatchAnalysisConstant.PRE_VALUE, blockKeydef.getPreAlgorithm().getAlgorithmParameters());

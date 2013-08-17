@@ -90,7 +90,7 @@ public class BlockingKeySection extends AbstractMatchTableSection {
     private void initTableInput() {
         RecordMatchingIndicator recordMatchingIndicator = MatchRuleAnlaysisUtils.getRecordMatchIndicatorFromAna(analysis);
         List<BlockKeyDefinition> keyDefs = recordMatchingIndicator.getBuiltInMatchRuleDefinition().getBlockKeys();
-        List<KeyDefinition> keyDefsCopy = new ArrayList<>(keyDefs.size());
+        List<KeyDefinition> keyDefsCopy = new ArrayList<KeyDefinition>(keyDefs.size());
         keyDefsCopy.addAll(keyDefs);
         blockingKeyComposite.setInput(keyDefsCopy);
     }

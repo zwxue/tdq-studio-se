@@ -39,7 +39,7 @@ public class DellTableItemAction extends Action {
 
     private String columnName = null;
 
-    private List<AbstractMatchAnalysisTableViewer> tvs = new ArrayList<>();
+    private List<AbstractMatchAnalysisTableViewer> tvs = new ArrayList<AbstractMatchAnalysisTableViewer>();
 
     public DellTableItemAction(AbstractMatchAnalysisTableViewer tv) {
         this.tv = tv;
@@ -59,7 +59,7 @@ public class DellTableItemAction extends Action {
      * @return
      */
     private Collection<? extends AbstractMatchAnalysisTableViewer> getTableViewerList() {
-        List<AbstractMatchAnalysisTableViewer> returnList = new ArrayList<>();
+        List<AbstractMatchAnalysisTableViewer> returnList = new ArrayList<AbstractMatchAnalysisTableViewer>();
         if (matchingKeySection == null) {
             return returnList;
         }

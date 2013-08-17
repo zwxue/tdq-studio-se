@@ -202,7 +202,7 @@ public class BlockingKeyTableViewer extends AbstractMatchAnalysisTableViewer {
         List<BlockKeyDefinition> bkdList = recordMatchingIndiator.getBuiltInMatchRuleDefinition().getBlockKeys();
         BlockKeyDefinition blockKeyDef = createNewBlockDefinition(columnName);
         bkdList.add(blockKeyDef);
-        List<KeyDefinition> keyDefListCopy = new ArrayList<>(bkdList.size());
+        List<KeyDefinition> keyDefListCopy = new ArrayList<KeyDefinition>(bkdList.size());
         keyDefListCopy.addAll(bkdList);
         setInputData(keyDefListCopy);
         return true;
@@ -285,11 +285,10 @@ public class BlockingKeyTableViewer extends AbstractMatchAnalysisTableViewer {
      * @return
      */
     private List<BlockKeyDefinition> convertToList(BlockKeyDefinition[] blockArray) {
-        List<BlockKeyDefinition> resultList = new ArrayList<>();
+        List<BlockKeyDefinition> resultList = new ArrayList<BlockKeyDefinition>();
         for (BlockKeyDefinition blocKey : blockArray) {
             resultList.add(blocKey);
         }
         return resultList;
     }
-
 }

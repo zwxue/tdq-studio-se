@@ -180,7 +180,7 @@ public class MatchRuleTableViewer extends AbstractMatchAnalysisTableViewer {
     }
 
     private void initData(List<MatchRule> tempMatcherList) {
-        List<MatchRule> matcherList = new ArrayList<>();
+        List<MatchRule> matcherList = new ArrayList<MatchRule>();
         MatchRule createRuleMatcher = RulesFactory.eINSTANCE.createMatchRule();
         MatchKeyDefinition createMatchKeyDefinition1 = RulesFactory.eINSTANCE.createMatchKeyDefinition();
         MatchKeyDefinition createMatchKeyDefinition2 = RulesFactory.eINSTANCE.createMatchKeyDefinition();

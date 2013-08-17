@@ -43,7 +43,7 @@ public abstract class AbstractMatchAnalysisTableViewer extends TableViewer {
 
     protected Table MatchTable = null;
 
-    protected List<KeyDefinition> inputElements = new ArrayList<>();
+    protected List<KeyDefinition> inputElements = new ArrayList<KeyDefinition>();
 
     /**
      * DOC zshen MatchAnalysisTabveViewer constructor comment.

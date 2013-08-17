@@ -27,7 +27,7 @@ import org.talend.dataquality.rules.KeyDefinition;
  */
 public abstract class AbsMatchAnalysisTableComposite extends Composite {
 
-    protected List<String> headers = new ArrayList<>();
+    protected List<String> headers = new ArrayList<String>();
 
     protected AbstractMatchAnalysisTableViewer tableViewer = null;
 

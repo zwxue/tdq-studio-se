@@ -56,7 +56,7 @@ public class MatchingKeySection extends AbstractMatchTableSection {
 
     private MatchRuleTableComposite matchRuleComposite = null;
 
-    private List<MatchRule> matcherList = new ArrayList<>();
+    private List<MatchRule> matcherList = new ArrayList<MatchRule>();
 
     private MatchRuleDataChart matchRuleChartComp = null;
 

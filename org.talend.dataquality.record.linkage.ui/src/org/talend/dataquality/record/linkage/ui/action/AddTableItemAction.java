@@ -34,7 +34,7 @@ import org.talend.dataquality.record.linkage.utils.MatchAnalysisConstant;
  */
 public class AddTableItemAction extends Action {
 
-    private List<AbstractMatchAnalysisTableViewer> tvs = new ArrayList<>();
+    private List<AbstractMatchAnalysisTableViewer> tvs = new ArrayList<AbstractMatchAnalysisTableViewer>();
 
     private MatchingKeySection matchingKeySection = null;
 
@@ -64,7 +64,7 @@ public class AddTableItemAction extends Action {
      * @return
      */
     private Collection<? extends AbstractMatchAnalysisTableViewer> getTableViewerList() {
-        List<AbstractMatchAnalysisTableViewer> returnList = new ArrayList<>();
+        List<AbstractMatchAnalysisTableViewer> returnList = new ArrayList<AbstractMatchAnalysisTableViewer>();
         if (matchingKeySection == null) {
             return returnList;
         }
