@@ -21,7 +21,7 @@ import org.eclipse.jface.viewers.Viewer;
  * created by zshen on Aug 6, 2013 Detailled comment
  * 
  */
-public class BlockingKeyTableContentProvider implements IStructuredContentProvider {
+public class KeyDefinitionContentProvider implements IStructuredContentProvider {
 
     /*
      * (non-Javadoc)

@@ -70,6 +70,7 @@ public class MatchWizard extends ColumnWizard {
         super.openEditor(item);
 
         if (selectionPage != null) {
+            // TODO yyin, what if the current active page is not anaysis editor??
             AnalysisEditor editor = (AnalysisEditor) PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
                     .getActiveEditor();
             if (editor != null) {

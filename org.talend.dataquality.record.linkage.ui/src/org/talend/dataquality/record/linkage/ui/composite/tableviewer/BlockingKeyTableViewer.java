@@ -13,8 +13,10 @@
 package org.talend.dataquality.record.linkage.ui.composite.tableviewer;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ComboBoxCellEditor;
@@ -26,8 +28,8 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.indicators.columnset.RecordMatchingIndicator;
-import org.talend.dataquality.record.linkage.ui.composite.tableviewer.provider.BlockingKeyTableContentProvider;
 import org.talend.dataquality.record.linkage.ui.composite.tableviewer.provider.BlockingKeyTableLabelProvider;
+import org.talend.dataquality.record.linkage.ui.composite.tableviewer.provider.KeyDefinitionContentProvider;
 import org.talend.dataquality.record.linkage.ui.composite.utils.MatchRuleAnlaysisUtils;
 import org.talend.dataquality.record.linkage.utils.BlockingKeyAlgorithmEnum;
 import org.talend.dataquality.record.linkage.utils.BlockingKeyPostAlgorithmEnum;
@@ -71,16 +73,16 @@ public class BlockingKeyTableViewer extends AbstractMatchAnalysisTableViewer {
             switch (i) {
 
             case 2:
-                editors[i] = new ComboBoxCellEditor(MatchTable, BlockingKeyPreAlgorithmEnum.getAllTypes(), SWT.READ_ONLY);
+                editors[i] = new ComboBoxCellEditor(matchTable, BlockingKeyPreAlgorithmEnum.getAllTypes(), SWT.READ_ONLY);
                 break;
             case 4:
-                editors[i] = new ComboBoxCellEditor(MatchTable, BlockingKeyAlgorithmEnum.getAllTypes(), SWT.READ_ONLY);
+                editors[i] = new ComboBoxCellEditor(matchTable, BlockingKeyAlgorithmEnum.getAllTypes(), SWT.READ_ONLY);
                 break;
             case 6:
-                editors[i] = new ComboBoxCellEditor(MatchTable, BlockingKeyPostAlgorithmEnum.getAllTypes(), SWT.READ_ONLY);
+                editors[i] = new ComboBoxCellEditor(matchTable, BlockingKeyPostAlgorithmEnum.getAllTypes(), SWT.READ_ONLY);
                 break;
             default:
-                editors[i] = new TextCellEditor(MatchTable);
+                editors[i] = new TextCellEditor(matchTable);
             }
         }
         return editors;
@@ -104,7 +106,7 @@ public class BlockingKeyTableViewer extends AbstractMatchAnalysisTableViewer {
      */
     @Override
     protected IContentProvider getTableContentProvider() {
-        return new BlockingKeyTableContentProvider();
+        return new KeyDefinitionContentProvider();
     }
 
     /*
@@ -125,20 +127,6 @@ public class BlockingKeyTableViewer extends AbstractMatchAnalysisTableViewer {
     @Override
     protected int getDisplayWeight() {
         return 8;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * org.talend.dataquality.record.linkage.ui.composite.tableviewer.AbstractMatchAnalysisTabveViewer#getTestData()
-     */
-    @Override
-    protected Object getinputData() {
-        if (inputElements.size() == 0) {
-            return null;
-        }
-        return inputElements.toArray(new BlockKeyDefinition[inputElements.size()]);
     }
 
     private void initData(List<MatchRule> tempMatcherList) {
@@ -191,9 +179,6 @@ public class BlockingKeyTableViewer extends AbstractMatchAnalysisTableViewer {
      */
     @Override
     public boolean addElement(String columnName, Analysis analysis) {
-        if (isAddedAlready(columnName)) {
-            return false;
-        }
         RecordMatchingIndicator recordMatchingIndiator = MatchRuleAnlaysisUtils.getRecordMatchIndicatorFromAna(analysis);
         if (recordMatchingIndiator == null) {
             log.error("null record matching indicator for analysis: " + analysis.getName());
@@ -202,9 +187,7 @@ public class BlockingKeyTableViewer extends AbstractMatchAnalysisTableViewer {
         List<BlockKeyDefinition> bkdList = recordMatchingIndiator.getBuiltInMatchRuleDefinition().getBlockKeys();
         BlockKeyDefinition blockKeyDef = createNewBlockDefinition(columnName);
         bkdList.add(blockKeyDef);
-        List<KeyDefinition> keyDefListCopy = new ArrayList<KeyDefinition>(bkdList.size());
-        keyDefListCopy.addAll(bkdList);
-        setInputData(keyDefListCopy);
+        add(blockKeyDef);
         return true;
     }
 
@@ -235,21 +218,6 @@ public class BlockingKeyTableViewer extends AbstractMatchAnalysisTableViewer {
         return createBlockKeyDefinition;
     }
 
-    private boolean isAddedAlready(String columnName) {
-        if (this.getInput() == null) {
-            return false;
-        }
-        if (this.getInput() instanceof BlockKeyDefinition[] && ((BlockKeyDefinition[]) this.getInput()).length > 0) {
-            BlockKeyDefinition[] inputElements = ((BlockKeyDefinition[]) this.getInput());
-            for (BlockKeyDefinition element : inputElements) {
-                if (element.getColumn().equals(columnName)) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-
     /*
      * (non-Javadoc)
      * 
@@ -258,24 +226,19 @@ public class BlockingKeyTableViewer extends AbstractMatchAnalysisTableViewer {
      * (java.lang.String)
      */
     @Override
-    public void removeElement(String columnName) {
-        if (this.getInput() instanceof BlockKeyDefinition[] && ((BlockKeyDefinition[]) this.getInput()).length > 0) {
-            List<BlockKeyDefinition> bkdList = convertToList(((BlockKeyDefinition[]) this.getInput()));
-            List<BlockKeyDefinition> tempList = new ArrayList<BlockKeyDefinition>();
-            tempList.addAll(bkdList);
-            for (BlockKeyDefinition element : tempList) {
-                if (element.getColumn().equals(columnName)) {
-                    bkdList.remove(element);
-                }
+    public void removeElement(String columnName, Analysis analysis) {
+        RecordMatchingIndicator recordMatchingIndiator = MatchRuleAnlaysisUtils.getRecordMatchIndicatorFromAna(analysis);
+        List<BlockKeyDefinition> bkdList = recordMatchingIndiator.getBuiltInMatchRuleDefinition().getBlockKeys();
+        Iterator<BlockKeyDefinition> blockKeyIterator = bkdList.iterator();
+        while (blockKeyIterator.hasNext()) {
+            KeyDefinition keyDef = blockKeyIterator.next();
+            if (StringUtils.equals(keyDef.getColumn(), columnName)) {
+                bkdList.remove(keyDef);
+                // Update table view.
+                remove(keyDef);
+                break;
             }
-            if (bkdList.size() != 0) {
-                this.setInput(bkdList.toArray(new BlockKeyDefinition[bkdList.size()]));
-            } else {
-                this.setInput(null);
-            }
-            this.refresh();
         }
-
     }
 
     /**

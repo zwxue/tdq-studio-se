@@ -12,10 +12,14 @@
 // ============================================================================
 package org.talend.dataquality.record.linkage.ui.composite;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.talend.dataquality.record.linkage.ui.composite.tableviewer.MatchRuleTableViewer;
 import org.talend.dataquality.record.linkage.utils.MatchAnalysisConstant;
+import org.talend.dataquality.rules.KeyDefinition;
 import org.talend.dataquality.rules.MatchRule;
 
 /**
@@ -24,23 +28,30 @@ import org.talend.dataquality.rules.MatchRule;
  */
 public class MatchRuleTableComposite extends AbsMatchAnalysisTableComposite {
 
+    private MatchRule matchRule = null;
+
     /**
      * DOC zshen MatchRuleComposite constructor comment.
      * 
      * @param parent
      * @param style
      */
-    public MatchRuleTableComposite(Composite parent, int style) {
+    public MatchRuleTableComposite(Composite parent, int style, MatchRule matchRule) {
         super(parent, style);
+        this.matchRule = matchRule;
+        setInput(matchRule);
     }
 
     /**
-     * DOC zshen Comment method "createContent".
+     * DOC zhao Comment method "setInput".
+     * 
+     * @param matchRule
      */
-    private void createContent() {
-        initHeaders();
-        createTable();
-
+    private void setInput(MatchRule matchRule) {
+        List<KeyDefinition> keyDefs = new ArrayList<KeyDefinition>();
+        keyDefs.addAll(matchRule.getMatchKeys());
+        ((MatchRuleTableViewer) tableViewer).setMatchRule(matchRule);
+        setInput(keyDefs);
     }
 
     /**
@@ -71,12 +82,13 @@ public class MatchRuleTableComposite extends AbsMatchAnalysisTableComposite {
         return style;
     }
 
-    public void setInputData(MatchRule inputMatcher) {
-        ((MatchRuleTableViewer) tableViewer).setInputData(inputMatcher);
-    }
-
-    public void getInputData() {
-        tableViewer.getInput();
+    /**
+     * Getter for matchRule.
+     * 
+     * @return the matchRule
+     */
+    public MatchRule getMatchRule() {
+        return this.matchRule;
     }
 
 }

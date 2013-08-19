@@ -13,7 +13,6 @@
 package org.talend.dataquality.record.linkage.ui.composite;
 
 import org.eclipse.swt.widgets.Composite;
-import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.record.linkage.ui.composite.tableviewer.BlockingKeyTableViewer;
 import org.talend.dataquality.record.linkage.utils.MatchAnalysisConstant;
 
@@ -59,14 +58,6 @@ public class BlockingKeyTableComposite extends AbsMatchAnalysisTableComposite {
     protected void createTable() {
         tableViewer = new BlockingKeyTableViewer(this, getTableStyle());
         ((BlockingKeyTableViewer) tableViewer).initTable(headers);
-    }
-
-    public boolean addElement(String columnName, Analysis analysis) {
-        return ((BlockingKeyTableViewer) tableViewer).addElement(columnName, analysis);
-    }
-
-    public void removeElement(String columnName) {
-        ((BlockingKeyTableViewer) tableViewer).removeElement(columnName);
     }
 
 }

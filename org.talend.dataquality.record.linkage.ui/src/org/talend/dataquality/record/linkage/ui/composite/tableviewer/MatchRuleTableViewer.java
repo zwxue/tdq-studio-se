@@ -12,9 +12,12 @@
 // ============================================================================
 package org.talend.dataquality.record.linkage.ui.composite.tableviewer;
 
-import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ComboBoxCellEditor;
 import org.eclipse.jface.viewers.IBaseLabelProvider;
@@ -24,15 +27,15 @@ import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.talend.dataquality.analysis.Analysis;
-import org.talend.dataquality.record.linkage.ui.composite.tableviewer.provider.MatchRuleContentProvider;
+import org.talend.dataquality.record.linkage.ui.composite.tableviewer.provider.KeyDefinitionContentProvider;
 import org.talend.dataquality.record.linkage.ui.composite.tableviewer.provider.MatchRuleLabelProvider;
 import org.talend.dataquality.record.linkage.ui.composite.utils.MatchRuleAnlaysisUtils;
+import org.talend.dataquality.record.linkage.ui.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataquality.record.linkage.utils.HandleNullEnum;
 import org.talend.dataquality.record.linkage.utils.MatchingTypeEnum;
-import org.talend.dataquality.rules.AlgorithmDefinition;
+import org.talend.dataquality.rules.KeyDefinition;
 import org.talend.dataquality.rules.MatchKeyDefinition;
 import org.talend.dataquality.rules.MatchRule;
-import org.talend.dataquality.rules.RulesFactory;
 
 /**
  * created by zshen on Jul 31, 2013 Detailled comment
@@ -40,7 +43,9 @@ import org.talend.dataquality.rules.RulesFactory;
  */
 public class MatchRuleTableViewer extends AbstractMatchAnalysisTableViewer {
 
-    private MatchRule inputMatcher = null;
+    private static Logger log = Logger.getLogger(MatchRuleTableViewer.class);
+
+    private MatchRule matchRule = null;
 
     /**
      * DOC zshen MatchRuleTableViewer constructor comment.
@@ -66,13 +71,13 @@ public class MatchRuleTableViewer extends AbstractMatchAnalysisTableViewer {
             switch (i) {
 
             case 2:
-                editors[i] = new ComboBoxCellEditor(MatchTable, MatchingTypeEnum.getAllTypes(), SWT.READ_ONLY);
+                editors[i] = new ComboBoxCellEditor(matchTable, MatchingTypeEnum.getAllTypes(), SWT.READ_ONLY);
                 break;
             case 5:
-                editors[i] = new ComboBoxCellEditor(MatchTable, HandleNullEnum.getAllTypes(), SWT.READ_ONLY);
+                editors[i] = new ComboBoxCellEditor(matchTable, HandleNullEnum.getAllTypes(), SWT.READ_ONLY);
                 break;
             default:
-                editors[i] = new TextCellEditor(MatchTable);
+                editors[i] = new TextCellEditor(matchTable);
             }
         }
         return editors;
@@ -95,7 +100,7 @@ public class MatchRuleTableViewer extends AbstractMatchAnalysisTableViewer {
      */
     @Override
     protected IContentProvider getTableContentProvider() {
-        return new MatchRuleContentProvider();
+        return new KeyDefinitionContentProvider();
     }
 
     /**
@@ -116,29 +121,26 @@ public class MatchRuleTableViewer extends AbstractMatchAnalysisTableViewer {
      */
     @Override
     public boolean addElement(String columnName, Analysis analysis) {
-        if (isAddedAlready(columnName)) {
-            return false;
+        if (matchRule == null) {
+            log.error(DefaultMessagesImpl.getString("MatchRuleTableViewer.NULL_MATCH_RULE_INSTANCE") + analysis.getName()); //$NON-NLS-1$
         }
-        if (this.getInput() instanceof MatchRule) {
-            MatchRule inputElement = (MatchRule) this.getInput();
-            inputElement.getMatchKeys().add(MatchRuleAnlaysisUtils.createDefaultMatchRow(columnName));
-            this.refresh();
-        }
+        MatchKeyDefinition newMatchkey = MatchRuleAnlaysisUtils.createDefaultMatchRow(columnName);
+        matchRule.getMatchKeys().add(newMatchkey);
+        add(newMatchkey);
         return true;
     }
 
     @Override
-    public void removeElement(String columnName) {
-        if (this.getInput() instanceof MatchRule) {
-            MatchRule inputElement = (MatchRule) this.getInput();
-            List<MatchKeyDefinition> tempList = new ArrayList<MatchKeyDefinition>();
-            tempList.addAll(inputElement.getMatchKeys());
-            for (MatchKeyDefinition element : tempList) {
-                if (element.getColumn().equals(columnName)) {
-                    inputElement.getMatchKeys().remove(element);
-                }
+    public void removeElement(String columnName, Analysis analysis) {
+        EList<MatchKeyDefinition> matchKeys = matchRule.getMatchKeys();
+        Iterator<MatchKeyDefinition> matchKeyIterator = matchKeys.iterator();
+        while (matchKeyIterator.hasNext()) {
+            KeyDefinition keyDef = matchKeyIterator.next();
+            if (StringUtils.equals(keyDef.getColumn(), columnName)) {
+                matchKeys.remove(keyDef);
+                remove(keyDef);
+                break;
             }
-            this.refresh(inputElement);
         }
     }
 
@@ -164,47 +166,13 @@ public class MatchRuleTableViewer extends AbstractMatchAnalysisTableViewer {
         return false;
     }
 
-    @Override
-    protected MatchRule getinputData() {
-        if (inputMatcher == null) {
-            inputMatcher = RulesFactory.eINSTANCE.createMatchRule();
-        }
-        return inputMatcher;
-    }
-
-    public void setInputData(MatchRule inputMatcher) {
-        this.inputMatcher = inputMatcher;
-        this.setInput(getinputData());
-        this.refresh();
-
-    }
-
-    private void initData(List<MatchRule> tempMatcherList) {
-        List<MatchRule> matcherList = new ArrayList<MatchRule>();
-        MatchRule createRuleMatcher = RulesFactory.eINSTANCE.createMatchRule();
-        MatchKeyDefinition createMatchKeyDefinition1 = RulesFactory.eINSTANCE.createMatchKeyDefinition();
-        MatchKeyDefinition createMatchKeyDefinition2 = RulesFactory.eINSTANCE.createMatchKeyDefinition();
-        AlgorithmDefinition createAlgorithmDefinition1 = RulesFactory.eINSTANCE.createAlgorithmDefinition();
-        AlgorithmDefinition createAlgorithmDefinition2 = RulesFactory.eINSTANCE.createAlgorithmDefinition();
-        createMatchKeyDefinition1.setName("match name 1");
-        createMatchKeyDefinition1.setColumn("column name 1");
-        createMatchKeyDefinition1.setConfidenceWeight(1);
-        createMatchKeyDefinition1.setHandleNull(HandleNullEnum.NULL_MATCH_NULL.getValue());
-        createAlgorithmDefinition1.setAlgorithmParameters("1");
-        createAlgorithmDefinition1.setAlgorithmType(MatchingTypeEnum.EXACT.getValue());
-        createMatchKeyDefinition1.setAlgorithm(createAlgorithmDefinition1);
-        createRuleMatcher.getMatchKeys().add(createMatchKeyDefinition1);
-        createMatchKeyDefinition2.setName("match name 2");
-        createMatchKeyDefinition2.setColumn("column name 2");
-        createMatchKeyDefinition2.setConfidenceWeight(2);
-        createMatchKeyDefinition2.setHandleNull(HandleNullEnum.NULL_MATCH_ALL.getValue());
-        createAlgorithmDefinition2.setAlgorithmParameters("2");
-        createAlgorithmDefinition2.setAlgorithmType(MatchingTypeEnum.CUSTOM.getValue());
-        createMatchKeyDefinition2.setAlgorithm(createAlgorithmDefinition2);
-        createRuleMatcher.getMatchKeys().add(createMatchKeyDefinition2);
-        matcherList.add(createRuleMatcher);
-
-        tempMatcherList.addAll(matcherList);
+    /**
+     * DOC zhao Comment method "setMatchRule".
+     * 
+     * @param matchRule2
+     */
+    public void setMatchRule(MatchRule matchRule) {
+        this.matchRule = matchRule;
     }
 
 }

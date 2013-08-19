@@ -70,8 +70,6 @@ import org.talend.dataprofiler.core.ui.wizard.analysis.connection.ConnectionWiza
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.exception.DataprofilerCoreException;
 import org.talend.dataquality.properties.TDQAnalysisItem;
-import org.talend.dataquality.record.linkage.ui.action.AddTableItemAction;
-import org.talend.dataquality.record.linkage.ui.action.DellTableItemAction;
 import org.talend.dataquality.record.linkage.ui.composite.table.DataSampleTable;
 import org.talend.dataquality.record.linkage.ui.section.BlockingKeySection;
 import org.talend.dataquality.record.linkage.ui.section.MatchingKeySection;
@@ -476,7 +474,7 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
                     Collection<Range> ranges = columnEvent.getColumnPositionRanges();
                     if (ranges.size() > 0) {
                         Range range = ranges.iterator().next();
-                        changeBlockingKeys(range.start);
+                        handleColumnSelectionChange(range.start);
                     }
                 }
             }
@@ -492,40 +490,59 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
      * @param columnPosition
      * @param columnName
      */
-    private void changeBlockingKeys(int index) {
+    private void handleColumnSelectionChange(int index) {
         String columnName = sampleTable.getColumnNameByPosition(index);
         if (!canSelectBlockingKey && !canSelectMatchingKey) {
             return;
         } else if (canSelectBlockingKey) {
-            // check if the column is added or not:
-            Boolean isAdded = this.blockingKeySection.addElement(columnName, analysisHandler.getAnalysis());
-            // Notify editor dirty.
-            if (isAdded) {
-                this.setDirty(Boolean.TRUE);
-            }
-            // TODO yyin why use "!isAdded" ?
-            changeColumnColor(columnName, !isAdded);
-            if (!isAdded) {
-                blockingKeySection.removeElement(columnName);
-            }
-        } else if (canSelectMatchingKey) {// same as blocking key
-            AddTableItemAction addAction = new AddTableItemAction(matchingKeySection, columnName, analysis);
-            addAction.run();
+            handleBlockKeySelection(columnName);
+        } else if (canSelectMatchingKey) {
+            handleMatchKeySelection(columnName);
+        }
+        this.setDirty(Boolean.TRUE);
+    }
 
-            changeColumnColor(columnName, addAction.isAlreadyAdded());
-            if (addAction.isAlreadyAdded()) {
-                new DellTableItemAction(this.matchingKeySection, columnName).run();
+    /**
+     * DOC zhao Comment method "handleMatchKeySelection".
+     * 
+     * @param columnName
+     */
+    private void handleMatchKeySelection(String columnName) {
+        try {
+            Boolean isAdded = matchingKeySection.isKeyDefinitionAdded(columnName);
+            if (isAdded) {
+                matchingKeySection.removeMatchKeyFromCurrentMatchRule(columnName);
+                sampleTable.changeColumnHeaderLabelColor(columnName, GUIHelper.COLOR_BLACK);
+            } else {
+                matchingKeySection.createMatchKeyFromCurrentMatchRule(columnName);
+                sampleTable.changeColumnHeaderLabelColor(columnName, GUIHelper.COLOR_RED);
             }
+        } catch (Exception e) {
+            // TODO yyin popup to notify user that at least one match rule tab is needed.
         }
     }
 
-    private void changeColumnColor(String columnName, Boolean isAdded) {
-        // -->not added , change the color to red, call key's add method
-        if (!isAdded) {
-            sampleTable.changeColumnHeaderLabelColor(columnName, GUIHelper.COLOR_RED);
-        } else {
-            // already added: change the color to default , call key's delete method
+    /**
+     * DOC zhao Comment method "handleBlockKeySelection".
+     * 
+     * @param columnName
+     */
+    private void handleBlockKeySelection(String columnName) {
+        // check if the column is added or not:
+        Boolean isAdded = Boolean.FALSE;
+        try {
+            isAdded = this.blockingKeySection.isKeyDefinitionAdded(columnName);
+        } catch (Exception e) {
+            // Normally it should have no exception.
+            log.error(e.getMessage());
+        }
+
+        if (isAdded) {
+            blockingKeySection.removeBlockingKey(columnName);
             sampleTable.changeColumnHeaderLabelColor(columnName, GUIHelper.COLOR_BLACK);
+        } else {
+            blockingKeySection.createBlockingKey(columnName);
+            sampleTable.changeColumnHeaderLabelColor(columnName, GUIHelper.COLOR_GREEN);
         }
     }
 

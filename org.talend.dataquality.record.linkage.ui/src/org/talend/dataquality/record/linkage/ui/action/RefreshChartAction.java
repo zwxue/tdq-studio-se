@@ -13,7 +13,7 @@
 package org.talend.dataquality.record.linkage.ui.action;
 
 import org.eclipse.jface.action.Action;
-import org.talend.dataquality.record.linkage.ui.section.AbstractMatchTableSection;
+import org.talend.dataquality.record.linkage.ui.section.AbstractMatchAnaysisTableSection;
 
 
 /**
@@ -21,9 +21,9 @@ import org.talend.dataquality.record.linkage.ui.section.AbstractMatchTableSectio
  */
 public class RefreshChartAction extends Action {
 
-    private AbstractMatchTableSection matchingTableSection = null;
+    private AbstractMatchAnaysisTableSection matchingTableSection = null;
 
-    public RefreshChartAction(AbstractMatchTableSection matchingKeySection) {
+    public RefreshChartAction(AbstractMatchAnaysisTableSection matchingKeySection) {
         this.matchingTableSection = matchingKeySection;
     }
 

@@ -37,7 +37,7 @@ import org.talend.dataquality.record.linkage.ui.composite.utils.ImageLib;
  * created by zshen on Jul 31, 2013 Detailled comment
  * 
  */
-public abstract class AbstractMatchTableSection {
+public abstract class AbstractMatchAnaysisTableSection {
 
     protected FormToolkit toolkit;
 
@@ -53,7 +53,8 @@ public abstract class AbstractMatchTableSection {
      * @param parent
      * @param style
      */
-    public AbstractMatchTableSection(final ScrolledForm form, Composite parent, int style, FormToolkit toolkit, Analysis analysis) {
+    public AbstractMatchAnaysisTableSection(final ScrolledForm form, Composite parent, int style, FormToolkit toolkit,
+            Analysis analysis) {
 
         this.toolkit = toolkit;
         this.section = this.toolkit.createSection(parent, style);
@@ -86,7 +87,7 @@ public abstract class AbstractMatchTableSection {
     /**
      * DOC zshen Comment method "createButtons".
      */
-    protected void createRefrshButton(Composite sectionClient) {
+    protected void createRefreshButton(Composite sectionClient) {
 
         Composite buttonsComposite = new Composite(sectionClient, SWT.NONE);
         buttonsComposite.setLayout(new GridLayout(7, true));
@@ -103,7 +104,7 @@ public abstract class AbstractMatchTableSection {
 
             @Override
             public void widgetSelected(SelectionEvent e) {
-                new RefreshChartAction(AbstractMatchTableSection.this).run();
+                new RefreshChartAction(AbstractMatchAnaysisTableSection.this).run();
             }
         });
 
@@ -143,7 +144,8 @@ public abstract class AbstractMatchTableSection {
     }
 
     /**
-     * DOC zshen Comment method "createSubChart".
+     * DOC zshen Comment method "createSubChart". TODO re-order the protected and abstract key word. let "protected"
+     * first.
      * 
      * @param sectionClient
      */
@@ -164,5 +166,7 @@ public abstract class AbstractMatchTableSection {
     abstract protected String getSectionName();
 
     abstract public void refreshChart();
+
+    public abstract Boolean isKeyDefinitionAdded(String columnName) throws Exception;
 
 }

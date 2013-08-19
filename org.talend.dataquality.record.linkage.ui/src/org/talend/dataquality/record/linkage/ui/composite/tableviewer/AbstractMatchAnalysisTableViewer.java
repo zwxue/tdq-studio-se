@@ -12,7 +12,6 @@
 // ============================================================================
 package org.talend.dataquality.record.linkage.ui.composite.tableviewer;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.jface.action.MenuManager;
@@ -31,9 +30,8 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.talend.dataquality.analysis.Analysis;
-import org.talend.dataquality.record.linkage.ui.action.DellTableItemAction;
 import org.talend.dataquality.record.linkage.ui.action.MatchRuleActionGroup;
-import org.talend.dataquality.rules.KeyDefinition;
+import org.talend.dataquality.record.linkage.ui.action.RemoveMatchKeyDefinitionAction;
 
 /**
  * created by zshen on Aug 6, 2013 Detailled comment
@@ -41,9 +39,7 @@ import org.talend.dataquality.rules.KeyDefinition;
  */
 public abstract class AbstractMatchAnalysisTableViewer extends TableViewer {
 
-    protected Table MatchTable = null;
-
-    protected List<KeyDefinition> inputElements = new ArrayList<KeyDefinition>();
+    protected Table matchTable = null;
 
     /**
      * DOC zshen MatchAnalysisTabveViewer constructor comment.
@@ -53,7 +49,7 @@ public abstract class AbstractMatchAnalysisTableViewer extends TableViewer {
      */
     public AbstractMatchAnalysisTableViewer(Composite parent, int style) {
         super(parent, style);
-        MatchTable = this.getTable();
+        matchTable = this.getTable();
         initListener();
     }
 
@@ -61,13 +57,13 @@ public abstract class AbstractMatchAnalysisTableViewer extends TableViewer {
      * DOC zshen Comment method "initListener".
      */
     private void initListener() {
-        MatchTable.addKeyListener(new KeyListener() {
+        matchTable.addKeyListener(new KeyListener() {
 
             @Override
             public void keyPressed(KeyEvent e) {
                 char character = e.character;
                 if (SWT.DEL == character) {
-                    new DellTableItemAction(AbstractMatchAnalysisTableViewer.this).run();
+                    new RemoveMatchKeyDefinitionAction(AbstractMatchAnalysisTableViewer.this).run();
                 }
             }
 
@@ -89,20 +85,20 @@ public abstract class AbstractMatchAnalysisTableViewer extends TableViewer {
      */
     public void initTable(List<String> headers) {
         TableLayout tLayout = new TableLayout();
-        MatchTable.setLayout(tLayout);
-        MatchTable.setHeaderVisible(true);
-        MatchTable.setLinesVisible(true);
+        matchTable.setLayout(tLayout);
+        matchTable.setHeaderVisible(true);
+        matchTable.setLinesVisible(true);
         GridData gd = new GridData(GridData.FILL_BOTH);
-        MatchTable.setLayoutData(gd);
+        matchTable.setLayoutData(gd);
 
         for (int index = 0; index < headers.size(); index++) {
             tLayout.addColumnData(new ColumnPixelData(headers.get(index).length() * getDisplayWeight()));
 
-            new TableColumn(MatchTable, SWT.LEFT).setText(headers.get(index));
+            new TableColumn(matchTable, SWT.LEFT).setText(headers.get(index));
         }
 
         CellEditor[] editors = getCellEditor(headers);
-        // add mnue
+        // add menu
         MatchRuleActionGroup actionGroup = new MatchRuleActionGroup(this);
         actionGroup.fillContextMenu(new MenuManager());
         this.setCellModifier(getTableCellModifier());
@@ -110,11 +106,9 @@ public abstract class AbstractMatchAnalysisTableViewer extends TableViewer {
         this.setColumnProperties(headers.toArray(new String[headers.size()]));
         this.setContentProvider(getTableContentProvider());
         this.setLabelProvider(getTableLabelProvider());
-        this.setInput(getinputData());
-
         GridData tableGD = new GridData(GridData.FILL_BOTH);
         tableGD.heightHint = 130;
-        MatchTable.setLayoutData(tableGD);
+        matchTable.setLayoutData(tableGD);
 
     }
 
@@ -124,13 +118,6 @@ public abstract class AbstractMatchAnalysisTableViewer extends TableViewer {
      * @return
      */
     abstract protected int getDisplayWeight();
-
-    /**
-     * DOC zshen Comment method "getTestData".
-     * 
-     * @return
-     */
-    abstract protected Object getinputData();
 
     /**
      * DOC zshen Comment method "getTableLabelProvider".
@@ -168,23 +155,13 @@ public abstract class AbstractMatchAnalysisTableViewer extends TableViewer {
      * @param columnName the name of column
      * @param analysis the context of this add operation perform on.
      */
-    abstract public boolean addElement(String columnName, Analysis analysis);
+    public abstract boolean addElement(String columnName, Analysis analysis);
 
     /**
      * remove Element
      * 
      * @param columnName
      */
-    abstract public void removeElement(String columnName);
+    public abstract void removeElement(String columnName, Analysis analysis);
 
-    public void setInputData(List<KeyDefinition> input) {
-        this.inputElements = input;
-        this.setInput(input);
-        this.refresh();
-
-    }
-
-    public List<KeyDefinition> getInputElements() {
-        return this.inputElements;
-    }
 }

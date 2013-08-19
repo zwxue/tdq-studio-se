@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -25,6 +26,7 @@ import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.indicators.columnset.RecordMatchingIndicator;
 import org.talend.dataquality.record.linkage.ui.action.ExecuteGenerateBlockingAction;
+import org.talend.dataquality.record.linkage.ui.composite.AbsMatchAnalysisTableComposite;
 import org.talend.dataquality.record.linkage.ui.composite.BlockingKeyTableComposite;
 import org.talend.dataquality.record.linkage.ui.composite.chart.BlockingKeyDataChart;
 import org.talend.dataquality.record.linkage.ui.composite.utils.MatchRuleAnlaysisUtils;
@@ -35,14 +37,14 @@ import org.talend.dataquality.rules.KeyDefinition;
  * created by zshen on Aug 6, 2013 Detailled comment
  * 
  */
-public class BlockingKeySection extends AbstractMatchTableSection {
+public class BlockingKeySection extends AbstractMatchAnaysisTableSection {
 
     // TODO zshen externalize the blocking key constant.
     private final String SECTION_NAME = "Blocking Key";
 
     private BlockingKeyDataChart blockingKeyDataChart = null;
 
-    private BlockingKeyTableComposite blockingKeyComposite = null;
+    private AbsMatchAnalysisTableComposite tableComposite = null;
 
     /**
      * DOC zshen BlockingKeySection constructor comment.
@@ -68,7 +70,6 @@ public class BlockingKeySection extends AbstractMatchTableSection {
 
     @Override
     protected void createSubContent(Composite sectionClient) {
-
         Composite ruleComp = toolkit.createComposite(sectionClient, SWT.NONE);
         GridData data = new GridData(GridData.FILL_BOTH);
         ruleComp.setLayoutData(data);
@@ -77,11 +78,11 @@ public class BlockingKeySection extends AbstractMatchTableSection {
         gridLayout.marginWidth = 0;
         gridLayout.marginHeight = 0;
         ruleComp.setLayout(gridLayout);
-        blockingKeyComposite = new BlockingKeyTableComposite(ruleComp, SWT.NO_FOCUS);
-        blockingKeyComposite.setLayout(gridLayout);
-        blockingKeyComposite.setLayoutData(data);
+        tableComposite = new BlockingKeyTableComposite(ruleComp, SWT.NO_FOCUS);
+        tableComposite.setLayout(gridLayout);
+        tableComposite.setLayoutData(data);
         initTableInput();
-        createRefrshButton(ruleComp);
+        createRefreshButton(ruleComp);
     }
 
     /**
@@ -92,7 +93,7 @@ public class BlockingKeySection extends AbstractMatchTableSection {
         List<BlockKeyDefinition> keyDefs = recordMatchingIndicator.getBuiltInMatchRuleDefinition().getBlockKeys();
         List<KeyDefinition> keyDefsCopy = new ArrayList<KeyDefinition>(keyDefs.size());
         keyDefsCopy.addAll(keyDefs);
-        blockingKeyComposite.setInput(keyDefsCopy);
+        tableComposite.setInput(keyDefsCopy);
     }
 
     /*
@@ -131,8 +132,8 @@ public class BlockingKeySection extends AbstractMatchTableSection {
      * @return
      */
     protected ExecuteGenerateBlockingAction computeResult() {
-        List<Map<String, String>> blockingKeyData = MatchRuleAnlaysisUtils.blockingKeyDataConvert(blockingKeyComposite
-                .getInputElement());
+        List<Map<String, String>> blockingKeyData = MatchRuleAnlaysisUtils
+                .blockingKeyDataConvert((List<KeyDefinition>) tableComposite.getInput());
         ExecuteGenerateBlockingAction executeGenerateBlockingAction = new ExecuteGenerateBlockingAction(blockingKeyData,
                 columnMap);
         if (hasBlockingKey()) {
@@ -148,32 +149,52 @@ public class BlockingKeySection extends AbstractMatchTableSection {
      * @return
      */
     private boolean hasBlockingKey() {
-        List<KeyDefinition> inputElement = blockingKeyComposite.getInputElement();
+        List<KeyDefinition> inputElement = (List<KeyDefinition>) tableComposite.getInput();
         if (inputElement.size() > 0) {
             return true;
         }
         return false;
     }
 
-    public boolean addElement(String columnName, Analysis anlaysis) {
-        return blockingKeyComposite.addElement(columnName, anlaysis);
+    public boolean createBlockingKey(String columnName) {
+        return tableComposite.addKeyDefinition(columnName, analysis);
     }
 
-    public void removeElement(String columnName) {
-        blockingKeyComposite.removeElement(columnName);
+    public void removeBlockingKey(String columnName) {
+        tableComposite.removeKeyDefinition(columnName, analysis);
     }
 
     /**
-     * TODO remove the mothod??<br>
+     * TODO yyin remove the mothod??<br>
      * DOC yyin Comment method "hasBlockKey".
      * 
      * @return
      */
     private boolean hasBlockKey() {
-        if (this.blockingKeyComposite.getInputElement().size() <= 0) {
+        if (((List<KeyDefinition>) tableComposite.getInput()).size() <= 0) {
             return false;
         }
         return true;
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * org.talend.dataquality.record.linkage.ui.section.AbstractMatchAnaysisTableSection#isKeyDefinitionAdded(java.lang
+     * .String)
+     */
+    @Override
+    public Boolean isKeyDefinitionAdded(String columnName) throws Exception {
+        Boolean isAdded = Boolean.FALSE;
+        RecordMatchingIndicator recordMatchingIndicator = MatchRuleAnlaysisUtils.getRecordMatchIndicatorFromAna(analysis);
+        List<BlockKeyDefinition> keyDefs = recordMatchingIndicator.getBuiltInMatchRuleDefinition().getBlockKeys();
+        for (KeyDefinition keyDef : keyDefs) {
+            if (StringUtils.equals(columnName, keyDef.getColumn())) {
+                isAdded = Boolean.TRUE;
+                break;
+            }
+        }
+        return isAdded;
+    }
 }

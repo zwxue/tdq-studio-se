@@ -17,6 +17,7 @@ import java.util.List;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
+import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.record.linkage.ui.composite.tableviewer.AbstractMatchAnalysisTableViewer;
 import org.talend.dataquality.rules.KeyDefinition;
 
@@ -56,15 +57,6 @@ public abstract class AbsMatchAnalysisTableComposite extends Composite {
     protected abstract void initHeaders();
 
     /**
-     * Getter for table viewer.
-     * 
-     * @return the table viewer
-     */
-    public AbstractMatchAnalysisTableViewer getTableViewer() {
-        return this.tableViewer;
-    }
-
-    /**
      * DOC zshen Comment method "createTable".
      */
     protected abstract void createTable();
@@ -74,12 +66,19 @@ public abstract class AbsMatchAnalysisTableComposite extends Composite {
         return style;
     }
 
-    public List<KeyDefinition> getInputElement() {
-        return tableViewer.getInputElements();
-    }
-
     public void setInput(List<KeyDefinition> inputs) {
-        tableViewer.setInputData(inputs);
+        tableViewer.setInput(inputs);
     }
 
+    public Object getInput() {
+        return tableViewer.getInput();
+    }
+
+    public Boolean addKeyDefinition(String column, Analysis anlaysis) {
+        return tableViewer.addElement(column, anlaysis);
+    }
+
+    public void removeKeyDefinition(String column, Analysis analysis) {
+        tableViewer.removeElement(column, analysis);
+    }
 }

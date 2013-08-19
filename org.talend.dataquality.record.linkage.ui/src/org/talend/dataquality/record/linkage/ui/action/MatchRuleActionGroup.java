@@ -36,7 +36,7 @@ public class MatchRuleActionGroup extends ActionGroup {
     @Override
     public void fillContextMenu(IMenuManager mgr) {
         MenuManager menuManager = (MenuManager) mgr;
-        menuManager.add(new DellTableItemAction(tv));
+        menuManager.add(new RemoveMatchKeyDefinitionAction(tv));
         menuManager.add(new RefreshTableViewAction(tv));
 
         Table table = tv.getTable();

@@ -17,15 +17,15 @@ import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
 import org.talend.dataquality.rules.BlockKeyDefinition;
 
-
 /**
- * created by zshen on Aug 6, 2013
- * Detailled comment
- *
+ * created by zshen on Aug 6, 2013 Detailled comment
+ * 
  */
 public class BlockingKeyTableLabelProvider extends LabelProvider implements ITableLabelProvider {
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.eclipse.jface.viewers.ITableLabelProvider#getColumnImage(java.lang.Object, int)
      */
     @Override
@@ -34,7 +34,9 @@ public class BlockingKeyTableLabelProvider extends LabelProvider implements ITab
         return null;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.eclipse.jface.viewers.ITableLabelProvider#getColumnText(java.lang.Object, int)
      */
     @Override
@@ -61,6 +63,7 @@ public class BlockingKeyTableLabelProvider extends LabelProvider implements ITab
             }
 
         }
+        // TODO zshen return empty is enough?
         return "";
     }
 
