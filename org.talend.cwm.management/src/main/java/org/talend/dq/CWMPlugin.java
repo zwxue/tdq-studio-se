@@ -39,6 +39,7 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
 import org.osgi.framework.BundleContext;
 import org.talend.commons.utils.io.FilesUtils;
+import org.talend.core.database.EDatabaseTypeName;
 import org.talend.core.database.conn.version.EDatabaseVersion4Drivers;
 import org.talend.core.language.ECodeLanguage;
 import org.talend.core.model.general.Project;
@@ -50,6 +51,8 @@ import org.talend.core.model.metadata.builder.database.PluginConstant;
 import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.SwitchHelpers;
+import org.talend.cwm.helper.TaggedValueHelper;
+import org.talend.cwm.management.i18n.Messages;
 import org.talend.dq.analysis.memory.AnalysisThreadMemoryChangeNotifier;
 import org.talend.dq.helper.PropertyHelper;
 import org.talend.librariesmanager.prefs.LibrariesManagerUtils;
@@ -143,8 +146,8 @@ public class CWMPlugin extends Plugin {
                         alias.setConnectAtStartup(true);
                         alias.setUrl(url);
 
-                        ManagedDriver manDr = driverManager
-                                .getDriver(EDriverName.getId(JavaSqlFactory.getDriverClass(connection)));
+
+                        ManagedDriver manDr = getManaDriverByDriverClass(connection, driverManager);
 
                         if (manDr != null) {
                             addJars(connection, manDr);
@@ -287,13 +290,15 @@ public class CWMPlugin extends Plugin {
                 manDr.getJars().clear();
                 manDr.getJars().addAll(allJarPath);
                 try {
-                    manDr.registerSQLDriver();
                     driverManager.saveDrivers();
-                } catch (ClassNotFoundException e) {
-                    log.error(e);
                 } catch (ExplorerException e) {
                     log.error(e);
                 }
+            }
+            try {
+                manDr.registerSQLDriver();
+            } catch (ClassNotFoundException e) {
+                log.error(e);
             }
         }
     }
@@ -370,6 +375,51 @@ public class CWMPlugin extends Plugin {
             log.error(e, e);
         }
         aliasManager.modelChanged();
+    }
+
+    /**
+     *
+     * find a ManaDriver based on driver class name.if not found and Type is General JDBC/ODBC ,create a new
+     * ManagedDriver.
+     *
+     * @param connection
+     * @param driverManager
+     * @return
+     */
+    private ManagedDriver getManaDriverByDriverClass(Connection connection, DriverManager driverManager) {
+        ManagedDriver manaDriver=null;
+        DatabaseConnection dbConn = SwitchHelpers.DATABASECONNECTION_SWITCH.doSwitch(connection);
+        if (dbConn == null || dbConn.getDatabaseType() == null) {
+            log.error(Messages.getString("CWMPlugin.DBOrTypeNull")); //$NON-NLS-1$
+            return null;
+        }
+        String databaseType = dbConn.getDatabaseType();
+        String id = EDriverName.getId(JavaSqlFactory.getDriverClass(connection));
+        if (EDriverName.ODBCDEFAULTURL.getSqlEid().equals(id)
+                && (EDatabaseTypeName.GENERAL_JDBC.getXmlName().equalsIgnoreCase(databaseType) || EDatabaseTypeName.GODBC
+                        .getXmlName().equalsIgnoreCase(databaseType))) {
+            manaDriver = new ManagedDriver(SQLExplorerPlugin.getDefault().getDriverModel().createUniqueId());
+            String dbType = dbConn.getDatabaseType();
+            // get Database type/version from TaggedValue
+            String dbTypeTagValue = TaggedValueHelper.getValueString(TaggedValueHelper.DB_PRODUCT_NAME, dbConn);
+            if (!PluginConstant.EMPTY_STRING.equals(dbTypeTagValue)) {
+                dbType = dbTypeTagValue;
+                String vesionTagValue = TaggedValueHelper.getValueString(TaggedValueHelper.DB_PRODUCT_VERSION, dbConn);
+                if (!PluginConstant.EMPTY_STRING.equals(vesionTagValue)) {
+                    dbType += org.talend.dataquality.PluginConstant.SPACE_STRING + vesionTagValue;
+
+                }
+            }
+            manaDriver.setName(dbType);
+            manaDriver.setDriverClassName(dbConn.getDriverClass());
+            manaDriver.setUrl(dbConn.getURL());
+            driverManager.addDriver(manaDriver);
+
+        } else {
+            manaDriver = driverManager.getDriver(EDriverName.getId(JavaSqlFactory.getDriverClass(connection)));
+        }
+
+        return manaDriver;
     }
 
 }
