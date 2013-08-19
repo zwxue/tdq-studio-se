@@ -133,7 +133,7 @@ public class ConnectionTypePage extends WizardPage {
         // make the next wizard do not open the created connection
         ITDQRepositoryService tdqRepService = (ITDQRepositoryService) GlobalServiceRegister.getDefault().getService(
                 ITDQRepositoryService.class);
-        tdqRepService.setNoNeedToOpenConnectionEditor(Boolean.TRUE);
+        tdqRepService.setIsOpenConnectionEditorAfterCreate(Boolean.TRUE);
 
         switch (getConnectionType()) {
         case 0:// db
@@ -161,6 +161,9 @@ public class ConnectionTypePage extends WizardPage {
         if (WizardDialog.OK == dialog.open()) {
             publishSelectDataEvent(nextWizard, tdqRepService);
         }
+        // make it back to initial value if cancel it
+        tdqRepService.setIsOpenConnectionEditorAfterCreate(Boolean.FALSE);
+
         return null;
     }
 
@@ -169,7 +172,7 @@ public class ConnectionTypePage extends WizardPage {
         Connection connection = connectionItem.getConnection();
         ((WizardDialog) getWizard().getContainer()).close();
         // make it back to initial value after finish creating
-        tdqRepService.setNoNeedToOpenConnectionEditor(Boolean.FALSE);
+        tdqRepService.setIsOpenConnectionEditorAfterCreate(Boolean.FALSE);
 
         EventManager.getInstance().publish(relatedComposite, EventEnum.DQ_MATCH_ANALYSIS_AFTER_CREATE_CONNECTION, connection);
     }

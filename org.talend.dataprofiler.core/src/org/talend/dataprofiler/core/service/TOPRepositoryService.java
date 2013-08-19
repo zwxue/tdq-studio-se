@@ -109,6 +109,8 @@ public class TOPRepositoryService implements ITDQRepositoryService {
 
     private static Logger log = Logger.getLogger(TOPRepositoryService.class);
 
+    // after creating the database connection, will open the connection editor when this parameter= false;
+    // will not open the connection editor when this parameter=true;
     private boolean noNeedToOpenConnectionEditor = Boolean.FALSE;
 
     public IViewPart getTDQRespositoryView() {
@@ -133,6 +135,11 @@ public class TOPRepositoryService implements ITDQRepositoryService {
     }
 
     public void openConnectionEditor(Item item) {
+        // Added TDQ-7504, TDQ-7770, yyin 20130819: when the db wizard is opened in the match analysis editor, no need
+        // to open the db edtior any more.
+        if (noNeedToOpenConnectionEditor) {
+            return;
+        }// ~
 
         Class<?> clazz = null;
         IEditorInput editorInput = null;
@@ -661,7 +668,7 @@ public class TOPRepositoryService implements ITDQRepositoryService {
                 databaseConnection);
     }
 
-    public void setNoNeedToOpenConnectionEditor(boolean noNeedToOpenConnectionEditor) {
+    public void setIsOpenConnectionEditorAfterCreate(boolean noNeedToOpenConnectionEditor) {
         this.noNeedToOpenConnectionEditor = noNeedToOpenConnectionEditor;
     }
 
