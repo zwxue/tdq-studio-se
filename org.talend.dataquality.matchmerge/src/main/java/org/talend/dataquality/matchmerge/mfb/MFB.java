@@ -25,18 +25,25 @@ public class MFB implements MatchMergeAlgorithm {
 
     private final MergeAlgorithm[] merges;
 
-    //
-    public MFB(MatchAlgorithm[] algorithms, float[] thresholds, MergeAlgorithm[] merges) {
+    private final int[] weights;
+
+    private int maxWeight;
+
+    public MFB(MatchAlgorithm[] algorithms, float[] thresholds, MergeAlgorithm[] merges, int[] weights) {
         this.algorithms = algorithms;
         this.thresholds = thresholds;
         this.merges = merges;
-        if (algorithms.length == 0 || thresholds.length == 0 || merges.length == 0) {
-            LOGGER.warn("Algorithm initialized with no matching algorithm/threshold/merge information");
+        this.weights = weights;
+        if (algorithms.length == 0 || thresholds.length == 0 || merges.length == 0 || weights.length == 0) {
+            LOGGER.warn("Algorithm initialized with no matching algorithm/threshold/merge/weight information");
+        }
+        for (int weight : weights) {
+            maxWeight += weight;
         }
     }
 
     public List<Record> execute(Iterator<Record> sourceRecords) {
-        if (algorithms.length == 0 || thresholds.length == 0 || merges.length == 0) {
+        if (algorithms.length == 0 || thresholds.length == 0 || merges.length == 0 || weights.length == 0) {
             List<Record> ret = new ArrayList<Record>();
             while (sourceRecords.hasNext()) {
                 ret.add(sourceRecords.next());
@@ -62,7 +69,7 @@ public class MFB implements MatchMergeAlgorithm {
             // MFB algorithm
             boolean hasCreatedNewMerge = false;
             for (Record mergedRecord : mergedRecords) {
-                if (MatchMerge.equals(currentRecord, mergedRecord) || matchRecords(mergedRecord, currentRecord)) {
+                if (matchRecords(mergedRecord, currentRecord)) { //  || MatchMerge.equals(currentRecord, mergedRecord)
                     Record newMergedRecord = MatchMerge.merge(currentRecord, mergedRecord, merges);
                     // Keep group id
                     newMergedRecord.setGroupId(mergedRecord.getGroupId());
@@ -98,17 +105,23 @@ public class MFB implements MatchMergeAlgorithm {
         if (mergedRecord.getAttributes().size() != currentRecord.getAttributes().size()) {
             throw new IllegalArgumentException("Records do not share same attribute count.");
         }
-        Iterator<Attribute> rPrimIterator = mergedRecord.getAttributes().iterator();
-        Iterator<Attribute> currentIterator = currentRecord.getAttributes().iterator();
+        Iterator<Attribute> mergedRecordAttributes = mergedRecord.getAttributes().iterator();
+        Iterator<Attribute> currentRecordAttributes = currentRecord.getAttributes().iterator();
+        double confidence = 0;
         int matchIndex = 0;
-        while (rPrimIterator.hasNext()) {
-            Attribute left = rPrimIterator.next();
-            Attribute right = currentIterator.next();
-            if (!MatchMerge.match(left, right, algorithms[matchIndex], thresholds[matchIndex])) {
+        while (mergedRecordAttributes.hasNext()) {
+            Attribute left = mergedRecordAttributes.next();
+            Attribute right = currentRecordAttributes.next();
+            double score = MatchMerge.matchScore(left, right, algorithms[matchIndex]);
+            if (score < thresholds[matchIndex]) {
                 return false;
+            } else {
+                confidence += score * weights[matchIndex];
             }
             matchIndex++;
         }
+        double normalizedConfidence = confidence > 0 ? confidence / maxWeight : confidence; // Normalize to 0..1 value
+        currentRecord.setConfidence(normalizedConfidence);
         return true;
     }
 }

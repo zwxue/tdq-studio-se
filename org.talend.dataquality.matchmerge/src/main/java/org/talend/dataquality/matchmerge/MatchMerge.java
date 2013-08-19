@@ -19,10 +19,8 @@ import org.talend.dataquality.record.linkage.attribute.AttributeMatcherFactory;
 import org.talend.dataquality.record.linkage.attribute.IAttributeMatcher;
 import org.talend.dataquality.record.linkage.constant.AttributeMatcherType;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.HashSet;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -33,12 +31,7 @@ public class MatchMerge {
         List<Attribute> r1 = record1.getAttributes();
         List<Attribute> r2 = record2.getAttributes();
         int i = 0;
-        int j;
-        Vector<String> l1 = new Vector<String>();
-        Vector<String> l2 = new Vector<String>();
-        String[] s1;
-        String[] s2;
-        Boolean find = true;
+        boolean find = true;
         while (i < r1.size() && find) {
             find = false;
             if ((r1.get(i).getValue() == null || r2.get(i).getValue() == null)) {
@@ -46,34 +39,6 @@ public class MatchMerge {
             } else {
                 if (r1.get(i).getValue().equals(r2.get(i).getValue())) {
                     find = true;
-                } else {
-                    if (r1.get(i).getValue().indexOf(',') > 0 && r2.get(i).getValue().indexOf(',') > 0) {
-                        StringTokenizer st1, st2;
-                        st1 = new StringTokenizer(r1.get(i).getValue(), ",");
-                        st2 = new StringTokenizer(r2.get(i).getValue(), ",");
-                        s1 = new String[st1.countTokens()];
-                        s2 = new String[st2.countTokens()];
-                        j = 0;
-                        while (st1.hasMoreTokens()) {
-                            s1[j] = st1.nextToken();
-                            j++;
-                        }
-                        for (j = 0; j < s1.length; j++)
-                            l1.add(s1[j]);
-                        j = 0;
-                        while (st2.hasMoreTokens()) {
-                            s2[j] = st2.nextToken();
-                            j++;
-                        }
-                        for (j = 0; j < s2.length; j++) {
-                            l2.add(s2[j]);
-                        }
-                        if (l1.containsAll(l2)) {
-                            find = true;
-                        }
-                    } else {
-                        find = false;
-                    }
                 }
             }
             i++;
@@ -89,73 +54,25 @@ public class MatchMerge {
             Attribute a = new Attribute(r1.get(k).getLabel(), null);
             mergedRecord.getAttributes().add(k, a);
         }
-        String[] s1;
-        String[] s2;
-        String s;
-        Boolean find;
-        int i, j;
-        for (i = 0; i < r1.size(); i++) {
-            if (mergedRecord.getAttributes().get(i).getLabel().equals("Fusion")) {
-                String valueFusion = addValueToFusion(r2.get(i).getValue(), r1.get(i).getValue());
-                mergedRecord.getAttributes().get(i).setValue(valueFusion);
-                continue;
-            }
-            if (r1.get(i).getValue() == null && r2.get(i).getValue() == null)
+        for (int i = 0; i < r1.size(); i++) {
+            if (r1.get(i).getValue() == null && r2.get(i).getValue() == null) {
                 mergedRecord.getAttributes().get(i).setValue(r1.get(i).getValue());
-
-            else {
-                if (r1.get(i).getValue() == null || r1.get(i).getValue().equals("null") || r1.get(i).getValue().length() == 0)
+            } else {
+                if (r1.get(i).getValue() == null || "null".equals(r1.get(i).getValue()) || r1.get(i).getValue().length() == 0) { //$NON-NLS-1$
                     mergedRecord.getAttributes().get(i).setValue(r2.get(i).getValue());
-                else {
-                    if (r2.get(i).getValue() == null || r2.get(i).getValue().equals("null") || r2.get(i).getValue().length() == 0)
+                } else {
+                    if (r2.get(i).getValue() == null || "null".equals(r2.get(i).getValue()) || r2.get(i).getValue().length() == 0) { //$NON-NLS-1$
                         mergedRecord.getAttributes().get(i).setValue(r1.get(i).getValue());
-                    else {
+                    } else {
                         if (r1.get(i).getValue().equals(r2.get(i).getValue())) {
                             mergedRecord.getAttributes().get(i).setValue(r1.get(i).getValue());
                         } else {
                             switch (typeMergeTable[i]) {
                                 case CONCAT:
-                                    StringTokenizer st1, st2;
-                                    if (r1.get(i).getValue().contains(",")) {
-                                        st1 = new StringTokenizer(r1.get(i).getValue(), ",");
-                                    } else {
-                                        st1 = new StringTokenizer(r1.get(i).getValue());
-                                    }
-                                    if (r2.get(i).getValue().contains(",")) {
-                                        st2 = new StringTokenizer(r2.get(i).getValue(), ",");
-                                    } else {
-                                        st2 = new StringTokenizer(r2.get(i).getValue());
-                                    }
-                                    s1 = new String[st1.countTokens()];
-                                    s2 = new String[st2.countTokens()];
-
-                                    j = 0;
-                                    while (st1.hasMoreTokens()) {
-                                        s1[j] = st1.nextToken();
-                                        j++;
-                                    }
-                                    j = 0;
-                                    while (st2.hasMoreTokens()) {
-                                        s2[j] = st2.nextToken();
-                                        j++;
-                                    }
-                                    s = r1.get(i).getValue();
-                                    int m;
-                                    for (m = 0; m < s2.length; m++) {
-                                        find = false;
-                                        for (j = 0; j < s1.length; j++) {
-                                            if (s2[m].equals(s1[j])) {
-                                                find = true;
-                                                j = s1.length;
-                                            }
-                                        }
-                                        if (find != null && !find)
-                                            s = s + "," + s2[m];
-                                    }
-                                    mergedRecord.getAttributes().get(i).setValue(s);
+                                    mergedRecord.getAttributes().get(i).setValue(r1.get(i).getValue() + r2.get(i).getValue());
                                     break;
                                 case UNIFY:
-                                    Pattern pattern = Pattern.compile("(\\D+)\\1$");
+                                    Pattern pattern = Pattern.compile("(\\D+)\\1$"); //$NON-NLS-1$
                                     if (r1.get(i).getValue().length() <= r2.get(i).getValue().length()) {
                                         Matcher matcher = pattern.matcher(r2.get(i).getValue());
                                         if (!matcher.find()) {
@@ -218,83 +135,13 @@ public class MatchMerge {
         mergedRecord.getRelatedIds().add(record2.getId());
         mergedRecord.getRelatedIds().addAll(record1.getRelatedIds());
         mergedRecord.getRelatedIds().addAll(record2.getRelatedIds());
+        mergedRecord.setConfidence(Math.min(record1.getConfidence(), record2.getConfidence()));
         return mergedRecord;
     }
 
-    public static boolean match(Attribute get, Attribute get0, MatchAlgorithm algorithm, float threshold) {
-        String leftValue = get.getValue();
-        String rightValue = get0.getValue();
-        if (leftValue == null || rightValue == null) {
-            return false;
-        }
-        if (leftValue.equals("null") || rightValue.equals("null")) {
-            return false;
-        }
-        boolean leftContainsComma = leftValue.indexOf(',') > 0;
-        boolean  rightContainsComma = rightValue.indexOf(',') > 0;
-        if (leftContainsComma || rightContainsComma) {
-            int j = 0;
-            Vector<String> list = new Vector<String>();
-            Vector<String> list2 = new Vector<String>();
-            if (leftContainsComma && rightContainsComma) {
-                StringTokenizer st1 = new StringTokenizer(rightValue, ",");
-                String[] s1 = new String[st1.countTokens()];
-                StringTokenizer st2 = new StringTokenizer(leftValue, ",");
-                String[] s2 = new String[st2.countTokens()];
-                while (st1.hasMoreTokens()) {
-                    s1[j] = st1.nextToken();
-                    j++;
-                }
-                for (j = 0; j < s1.length; j++) {
-                    list.add(s1[j]);
-                }
-                j = 0;
-                while (st2.hasMoreTokens()) {
-                    s2[j] = st2.nextToken();
-                    j++;
-                }
-                for (j = 0; j < s2.length; j++)
-                    list2.add(s2[j]);
-
-                if (list2.size() < list.size()) {
-                    if (list.containsAll(list2)) {
-                        return true;
-                    }
-                }
-                if (list.size() <= list2.size()) {
-                    if (list2.containsAll(list)) {
-                        return true;
-                    }
-                }
-            }
-            if (leftContainsComma) {
-                StringTokenizer st1 = new StringTokenizer(leftValue, ",");
-                String[] s = new String[st1.countTokens()];
-                j = 0;
-                while (st1.hasMoreTokens()) {
-                    s[j] = st1.nextToken();
-                    j++;
-                }
-                for (j = 0; j < s.length; j++) {
-                    list.add(s[j]);
-                }
-                if (list.contains(rightValue)) {
-                    return true;
-                }
-            } else {
-                StringTokenizer st1 = new StringTokenizer(rightValue, ",");
-                String[] s = new String[st1.countTokens()];
-                j = 0;
-                while (st1.hasMoreTokens()) {
-                    s[j] = st1.nextToken();
-                    j++;
-                }
-                for (j = 0; j < s.length; j++) {
-                    list.add(s[j]);
-                }
-                return list.contains(leftValue);
-            }
-        }
+    public static double matchScore(Attribute attribute0, Attribute attribute1, MatchAlgorithm algorithm) {
+        String leftValue = attribute0.getValue();
+        String rightValue = attribute1.getValue();
         IAttributeMatcher matcher;
         switch (algorithm) {
             case LEVENSHTEIN:
@@ -321,74 +168,10 @@ public class MatchMerge {
             case DATE_COMPARE_YEAR_MONTH_DAY:
                 throw new RuntimeException("Not supported " + algorithm);
             case COMPARE_DOUBLE:
-                return leftValue.equals(rightValue);
+                return leftValue.equals(rightValue) ? 1 : 0;
             default:
                 throw new RuntimeException("Not supported " + algorithm);
         }
-        return matcher.getMatchingWeight(leftValue, rightValue) >= threshold;
-    }
-
-    private static String addValueToFusion(String Fusion1, String Fusion2) {
-        String Plus = "\\+";
-        String[] temp1, temp2;
-        String resultFusion = "";
-        temp1 = (Fusion1 + "+" + Fusion2).split(Plus);
-        for (String aTemp1 : temp1) {
-            if (resultFusion.length() == 0) {
-                resultFusion = aTemp1;
-                continue;
-            }
-            temp2 = resultFusion.split(Plus);
-            if (!Arrays.asList(temp2).contains(aTemp1)) {
-                resultFusion = resultFusion + "+" + aTemp1;
-            }
-        }
-        return resultFusion;
-    }
-
-    public static String Conversion(Conversions conversion, String r) {
-        java.util.Date dateToConvert;
-        if (r == null) {
-            return null;
-        }
-        try {
-            switch (conversion) {
-                case NONE:
-                    break;
-                case UPPER_CASE:
-                    r = r.toUpperCase();
-                    break;
-                case LOWER_CASE:
-                    r = r.toLowerCase();
-                    break;
-                case FIRST_UPPER_CASE_CHARACTER:
-                    r = r.substring(0, 1).toUpperCase() + r.substring(1).toLowerCase();
-                    break;
-                case DATE_FORMAT:
-                    DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-                    dateToConvert = dateFormat.parse(r);
-                    r = dateFormat.format(dateToConvert);
-                    break;
-                case YEAR_FORMAT:
-                    dateFormat = new SimpleDateFormat("yyyy");
-                    dateToConvert = dateFormat.parse(r);
-                    r = dateFormat.format(dateToConvert);
-                    break;
-                case YEAR_MONTH_FORMAT:
-                    dateFormat = new SimpleDateFormat("yyyy-MM");
-                    dateToConvert = dateFormat.parse(r);
-                    r = dateFormat.format(dateToConvert);
-                    break;
-                case EMAIL_FORMAT:
-                    Pattern pattern = Pattern.compile("^[A-Za-z_0-9']+((-[A-Za-z_0-9']+)|(\\.[A-Za-z_0-9']+))*@[A-Za-z0-9]+((\\.|-)[A-Za-z0-9]+)*\\.[A-Za-z0-9]+$");
-                    Matcher matcher = pattern.matcher(r);
-                    if (!matcher.matches()) {
-                        r = "";
-                    }
-            }
-        } catch (ParseException e) {
-            return r;
-        }
-        return r;
+        return matcher.getMatchingWeight(leftValue, rightValue);
     }
 }

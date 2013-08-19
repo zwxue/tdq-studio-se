@@ -18,6 +18,8 @@ import java.util.Set;
 
 public class Record {
 
+    public static final double MAX_CONFIDENCE = 1.0;
+
     private final List<Attribute> attributes;
 
     private final String id;
@@ -25,6 +27,8 @@ public class Record {
     private String groupId;
 
     private Set<String> relatedIds = new HashSet<String>();
+
+    private double confidence = MAX_CONFIDENCE;
 
     public Record(String id) {
         this.id = id;
@@ -87,5 +91,16 @@ public class Record {
             builder.append(relatedId).append(' ');
         }
         return id + " ( " + builder + ")";
+    }
+
+    public double getConfidence() {
+        return confidence;
+    }
+
+    public void setConfidence(double confidence) {
+        if (confidence > MAX_CONFIDENCE) {
+            throw new IllegalArgumentException("Confidence value '" + confidence + "' is incorrect (>" + MAX_CONFIDENCE + ".");
+        }
+        this.confidence = confidence;
     }
 }

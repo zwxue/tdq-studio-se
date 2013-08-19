@@ -32,7 +32,8 @@ public class MFBTest extends TestCase {
     public void testArguments() throws Exception {
         MatchMergeAlgorithm algorithm = new MFB(new MatchAlgorithm[0],
                 new float[0],
-                new MergeAlgorithm[0]);
+                new MergeAlgorithm[0],
+                new int[0]);
         List<Record> list = algorithm.execute(Collections.<Record>emptyList().iterator());
         assertEquals(0, list.size());
     }
@@ -42,7 +43,8 @@ public class MFBTest extends TestCase {
         Iterator<Record> iterator = new ValuesIterator(100000, generators);
         MatchMergeAlgorithm algorithm = new MFB(new MatchAlgorithm[0],
                 new float[0],
-                new MergeAlgorithm[0]);
+                new MergeAlgorithm[0],
+                new int[0]);
         List<Record> list = algorithm.execute(iterator);
         assertEquals(100000, list.size());
     }
@@ -70,7 +72,8 @@ public class MFBTest extends TestCase {
         Iterator<Record> iterator = new ValuesIterator(totalCount, generators);
         MatchMergeAlgorithm algorithm = new MFB(new MatchAlgorithm[]{matchAlgorithm},
                 new float[]{1},
-                new MergeAlgorithm[]{MergeAlgorithm.UNIFY});
+                new MergeAlgorithm[]{MergeAlgorithm.UNIFY},
+                new int[]{1});
         List<Record> mergedRecords = algorithm.execute(iterator);
         assertEquals(constantNumber, mergedRecords.size());
         for (Record mergedRecord : mergedRecords) {
@@ -78,6 +81,41 @@ public class MFBTest extends TestCase {
             assertEquals(totalCount / constantNumber, mergedRecord.getRelatedIds().size());
         }
     }
+
+    public void testMatchWeight() throws Exception {
+        for (MatchAlgorithm matchAlgorithm : TESTS_MATCH) {
+            testWeight(1, 100000, matchAlgorithm);
+            testWeight(2, 100000, matchAlgorithm);
+            testWeight(4, 100000, matchAlgorithm);
+            testWeight(8, 100000, matchAlgorithm);
+        }
+    }
+
+    private static void testWeight(final int constantNumber, int totalCount, MatchAlgorithm matchAlgorithm) {
+        Map<String, ValueGenerator> generators = new HashMap<String, ValueGenerator>();
+        generators.put("name", new ValueGenerator() {
+            int index = 0;
+
+            @Override
+            public String newValue() {
+                return CONSTANTS[index++ % constantNumber];
+            }
+        });
+
+        Iterator<Record> iterator = new ValuesIterator(totalCount, generators);
+        MatchMergeAlgorithm algorithm = new MFB(new MatchAlgorithm[]{matchAlgorithm},
+                new float[]{1},
+                new MergeAlgorithm[]{MergeAlgorithm.UNIFY},
+                new int[]{0}); // Mark rule with no weight (-> match record should have a 0 confidence).
+        List<Record> mergedRecords = algorithm.execute(iterator);
+        assertEquals(constantNumber, mergedRecords.size());
+        for (Record mergedRecord : mergedRecords) {
+            assertNotNull(mergedRecord.getGroupId());
+            assertEquals(totalCount / constantNumber, mergedRecord.getRelatedIds().size());
+            assertEquals(0.0, mergedRecord.getConfidence());
+        }
+    }
+
 
     public void testSimilarValueRecords() throws Exception {
         testSimilar(1, 100000, MatchAlgorithm.LEVENSHTEIN);
@@ -100,7 +138,8 @@ public class MFBTest extends TestCase {
         Iterator<Record> iterator = new ValuesIterator(totalCount, generators);
         MatchMergeAlgorithm algorithm = new MFB(new MatchAlgorithm[]{matchAlgorithm},
                 new float[]{0.5f},
-                new MergeAlgorithm[]{MergeAlgorithm.UNIFY});
+                new MergeAlgorithm[]{MergeAlgorithm.UNIFY},
+                new int[]{1});
         List<Record> mergedRecords = algorithm.execute(iterator);
         assertEquals(1, mergedRecords.size());
         for (Record mergedRecord : mergedRecords) {
