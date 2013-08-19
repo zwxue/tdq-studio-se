@@ -9,10 +9,10 @@ Require-Bundle: org.apache.log4j,
  org.talend.utils
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-Vendor: .Talend SA.
-Export-Package: org.talend.dataquality.record.linkage.attribute;uses:="org.talend.dataquality.record.linkage.constant",
+Export-Package: org.talend.dataquality.record.linkage.attribute,
  org.talend.dataquality.record.linkage.constant,
  org.talend.dataquality.record.linkage.genkey,
  org.talend.dataquality.record.linkage.grouping,
- org.talend.dataquality.record.linkage.record;uses:="org.talend.dataquality.record.linkage.constant",
+ org.talend.dataquality.record.linkage.record,
  org.talend.dataquality.record.linkage.utils
 Bundle-ClassPath: .
