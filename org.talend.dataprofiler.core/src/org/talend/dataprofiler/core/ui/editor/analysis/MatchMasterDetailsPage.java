@@ -84,7 +84,7 @@ import orgomg.cwm.foundation.softwaredeployment.DataManager;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
- * DOC yyin class global comment. Detailled comment
+ * Detail Page of the match analysis
  */
 public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage implements PropertyChangeListener {
 
@@ -124,16 +124,10 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
 
     private boolean isDelimitedFile = false;
 
-    /**
-     * DOC yyin Comment method "createDataSampleSection".
-     * 
-     * @param form
-     * @param topComp
-     */
     private Composite dataSampleparentComposite;
 
     /**
-     * DOC yyin MatchMasterDetailsPage constructor comment.
+     * MatchMasterDetailsPage constructor.
      * 
      * @param editor
      * @param id
@@ -187,7 +181,7 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
     }
 
     /**
-     * DOC yyin Comment method "createMatchingKeySection".
+     * create Matching Key Section.
      * 
      * @param form
      * @param topComp
@@ -198,7 +192,7 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
     }
 
     /**
-     * DOC yyin Comment method "createBlockingKeySection".
+     * create Blocking Key Section.
      * 
      * @param form
      * @param topComp
@@ -228,7 +222,7 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
     }
 
     /**
-     * DOC yyin Comment method "createDataTableComposite".
+     * create DataTable Composite.
      * 
      * @param dataparent
      */
@@ -248,7 +242,7 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
             isMdm = RepNodeUtils.isMDM(node);
             isDelimitedFile = RepNodeUtils.isDelimitedFile(node);
 
-            createNatTable();
+            createNatTable(new ArrayList<Object[]>());
         }
 
     }
@@ -266,7 +260,7 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
     }
 
     /**
-     * DOC yyin Comment method "createKeySelectionButtonComp".
+     * create Key Selection Buttons.
      */
     private void createKeySelectionButtonComp(Composite parent) {
         Composite keySelectionComp = toolkit.createComposite(parent);
@@ -310,7 +304,6 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
                 // every time click the button, change its status
                 selectBlockKeyBtn.setEnabled(canSelectMatchingKey);
                 canSelectMatchingKey = !canSelectMatchingKey;
-
             }
 
             public void mouseUp(MouseEvent e) {
@@ -321,7 +314,7 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
 
     private void createDataSelectionButtonComp(Composite parent) {
         Composite dataSelectionComp = toolkit.createComposite(parent);
-        GridLayout dataSelectionCompLayout = new GridLayout(2, Boolean.TRUE);
+        GridLayout dataSelectionCompLayout = new GridLayout(3, Boolean.TRUE);
         dataSelectionComp.setLayout(dataSelectionCompLayout);
 
         Button createConnectionBtn = toolkit.createButton(dataSelectionComp,
@@ -330,6 +323,9 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
         Button selectDataBtn = toolkit.createButton(dataSelectionComp,
                 DefaultMessagesImpl.getString("MatchMasterDetailsPage.SelectDataButton"), SWT.BORDER);//$NON-NLS-1$
         GridDataFactory.fillDefaults().align(SWT.LEFT, SWT.TOP).applyTo(selectDataBtn);
+        Button refreshDataBtn = toolkit.createButton(dataSelectionComp,
+                DefaultMessagesImpl.getString("MatchMasterDetailsPage.RefreshDataButton"), SWT.BORDER);//$NON-NLS-1$
+        GridDataFactory.fillDefaults().align(SWT.LEFT, SWT.TOP).applyTo(refreshDataBtn);
 
         createConnectionBtn.addMouseListener(new MouseListener() {
 
@@ -351,8 +347,6 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
         selectDataBtn.addMouseListener(new MouseListener() {
 
             public void mouseDoubleClick(MouseEvent e) {
-                // TODO Auto-generated method stub
-
             }
 
             public void mouseDown(MouseEvent e) {
@@ -360,11 +354,35 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
             }
 
             public void mouseUp(MouseEvent e) {
-                // TODO Auto-generated method stub
+            }
+        });
 
+        refreshDataBtn.addMouseListener(new MouseListener() {
+
+            public void mouseDoubleClick(MouseEvent e) {
+            }
+
+            public void mouseDown(MouseEvent e) {
+                refreshDataFromConnection();
+            }
+
+            public void mouseUp(MouseEvent e) {
             }
         });
         registerCreateConnectionEvent(dataSampleparentComposite);
+    }
+
+    /**
+     * connect to db/file/mdm connection to fetch the newest data, and refresh the table to display.
+     */
+    protected void refreshDataFromConnection() {
+        // execute the query to fetch the data,
+        List<Object[]> listOfData = fetchDataForTable();
+
+        matchingKeySection.setDataInput(listOfData);
+        blockingKeySection.setDataInput(listOfData);
+
+        refreshTable(listOfData);
     }
 
     private void registerCreateConnectionEvent(Composite dataSampleComposite) {
@@ -386,7 +404,7 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
     }
 
     /**
-     * DOC yyin Comment method "setActivePage".
+     * make the current page as the active one
      */
     protected void setActivePage() {
         PlatformUI.getWorkbench().getActiveWorkbenchWindow().setActivePage((IWorkbenchPage) this);
@@ -424,7 +442,7 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
     }
 
     /**
-     * need to be called after the user selects some columns
+     * need to be called after the user selects some columns need to fetch the data and refresh the table
      * 
      * @param nodes
      */
@@ -432,23 +450,44 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
         selectedColumns = translateSelectedNodeIntoModelElement(nodes);
         this.analysisHandler.setColumnsToAnalyze(Arrays.asList(selectedColumns));
 
-        // dispose the data table composite
-        disposeDataTable();
-        // create the data table composite
-        createNatTable();
+        refreshDataFromConnection();
 
-        dataTableComp.getParent().layout();
-        dataTableComp.layout();
         this.setDirty(Boolean.TRUE);
     }
 
-    private void createNatTable() {
-        // fetch the data according to the connection type(db,file,mdm)
-        List<Object[]> listOfData = fetchDataForTable();
+    /**
+     * Refresh the table with new data
+     * 
+     * @param listOfData
+     */
+    private void refreshTable(List<Object[]> listOfData) {
+        // dispose the data table composite
+        disposeDataTable();
+        // create the data table composite
+        createNatTable(listOfData);
 
-        // TODO only when open the analysis and match key is not empty
-        matchingKeySection.setDataInput(listOfData);
-        blockingKeySection.setDataInput(listOfData);
+        dataTableComp.getParent().layout();
+        dataTableComp.layout();
+    }
+
+    // no need to fetch the data after select data, only do fetch when "refresh" or run analysis
+    private void createNatTable(List<Object[]> listOfData) {
+        setAllColumnsToKeySections();
+
+        Control natTable = sampleTable.createTable(dataTableComp, selectedColumns, listOfData);
+        GridDataFactory.fillDefaults().grab(true, true).applyTo(natTable);
+
+        addCustomSelectionBehaviour((NatTable) natTable);
+    }
+
+    /**
+     * The key sections need to know all columns as: column_index, column_name
+     */
+    private void setAllColumnsToKeySections() {
+        // only when open the analysis and match key is not empty
+        if (selectedColumns == null || selectedColumns.length < 1) {
+            return;
+        }
 
         Map<String, String> columnMap = new HashMap<String, String>();
         int index = 0;
@@ -457,12 +496,6 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
         }
         matchingKeySection.setColumnNameInput(columnMap);
         blockingKeySection.setColumnNameInput(columnMap);
-        // TODO addColumnMapToKeySection();
-
-        Control natTable = sampleTable.createTable(dataTableComp, selectedColumns, listOfData);
-        GridDataFactory.fillDefaults().grab(true, true).applyTo(natTable);
-
-        addCustomSelectionBehaviour((NatTable) natTable);
     }
 
     private void addCustomSelectionBehaviour(NatTable nattable) {
@@ -503,7 +536,7 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
     }
 
     /**
-     * DOC zhao Comment method "handleMatchKeySelection".
+     * handle the add/delete column for the Match Key Selection.
      * 
      * @param columnName
      */
@@ -523,7 +556,7 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
     }
 
     /**
-     * DOC zhao Comment method "handleBlockKeySelection".
+     * handle the add/delete column for the BlockKey Selection.
      * 
      * @param columnName
      */
@@ -675,7 +708,7 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
     }
 
     /**
-     * DOC yyin Comment method "findDataProvider".
+     * change the connection of the analysis after the user change the selected columns
      * 
      * @param modelElement
      * @return

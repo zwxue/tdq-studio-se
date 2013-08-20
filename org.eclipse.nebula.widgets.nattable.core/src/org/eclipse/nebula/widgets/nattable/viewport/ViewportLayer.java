@@ -10,10 +10,6 @@
  ******************************************************************************/
 package org.eclipse.nebula.widgets.nattable.viewport;
 
-import org.eclipse.swt.graphics.Rectangle;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.ScrollBar;
-
 import org.eclipse.nebula.widgets.nattable.command.ILayerCommand;
 import org.eclipse.nebula.widgets.nattable.coordinate.PixelCoordinate;
 import org.eclipse.nebula.widgets.nattable.coordinate.Range;
@@ -42,6 +38,9 @@ import org.eclipse.nebula.widgets.nattable.viewport.command.ViewportSelectColumn
 import org.eclipse.nebula.widgets.nattable.viewport.command.ViewportSelectRowCommandHandler;
 import org.eclipse.nebula.widgets.nattable.viewport.event.ScrollEvent;
 import org.eclipse.nebula.widgets.nattable.viewport.event.ViewportEventHandler;
+import org.eclipse.swt.graphics.Rectangle;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.ScrollBar;
 
 
 /**
@@ -429,7 +428,11 @@ public class ViewportLayer extends AbstractLayerTransform implements IUniqueInde
 
 	@Override
 	public int localToUnderlyingRowPosition(int localRowPosition) {
-		
+        // Added TDQ-7797 : when the data is empty, can not select column header
+        if (localRowPosition == 0) {
+            return 0;
+        }// ~
+
 		int underlyingPosition = getOriginRowPosition() + localRowPosition;
 		
 		if (underlyingPosition < getMinimumOriginRowPosition()) {
