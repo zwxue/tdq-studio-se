@@ -288,6 +288,8 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
                 selectMatchKeyBtn.setEnabled(canSelectBlockingKey);
                 canSelectBlockingKey = !canSelectBlockingKey;
 
+                // get the current match keys of the current Match Rule, to set the correct colors on table column
+
             }
 
             public void mouseUp(MouseEvent e) {
@@ -304,6 +306,9 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
                 // every time click the button, change its status
                 selectBlockKeyBtn.setEnabled(canSelectMatchingKey);
                 canSelectMatchingKey = !canSelectMatchingKey;
+
+                // get the current block keys, to set the correct colors on table column
+
             }
 
             public void mouseUp(MouseEvent e) {
@@ -524,7 +529,11 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
      * @param columnName
      */
     private void handleColumnSelectionChange(int index) {
-        String columnName = sampleTable.getColumnNameByPosition(index);
+        String columnName = sampleTable.getUserColumnNameByPosition(index);
+        if (columnName == null) {
+            // means that the user selected column is the additional ones,no need to process it
+            return;
+        }
         if (!canSelectBlockingKey && !canSelectMatchingKey) {
             return;
         } else if (canSelectBlockingKey) {

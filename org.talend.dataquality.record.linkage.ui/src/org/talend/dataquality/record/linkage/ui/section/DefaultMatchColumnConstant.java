@@ -18,7 +18,7 @@ package org.talend.dataquality.record.linkage.ui.section;
  */
 public final class DefaultMatchColumnConstant {
 
-    public static final int COLUMN_COUNT = 5;
+    public static final int COLUMN_COUNT = 6;
 
     public static final String GID = "GID";
 
@@ -29,4 +29,6 @@ public final class DefaultMatchColumnConstant {
     public static final String GRP_QUALITY = "GRP_QUALITY";
 
     public static final String ATTRIBUTE_SCORES = "ATTRIBUTE_SCORES";
+
+    public static final String BLOCK_KEY = "BLOCK_KEY";
 }

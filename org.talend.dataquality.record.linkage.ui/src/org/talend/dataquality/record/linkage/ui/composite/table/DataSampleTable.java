@@ -130,7 +130,7 @@ public class DataSampleTable {
         columnsName[i++] = DefaultMatchColumnConstant.SCORE;
         columnsName[i++] = DefaultMatchColumnConstant.GRP_QUALITY;
         columnsName[i++] = DefaultMatchColumnConstant.ATTRIBUTE_SCORES;
-
+        columnsName[i++] = DefaultMatchColumnConstant.BLOCK_KEY;
         return columnsName;
     }
 
@@ -161,7 +161,17 @@ public class DataSampleTable {
         natTable.configure();
     }
 
-    public String getColumnNameByPosition(int position) {
+    /**
+     * When the column is the user selected one, return its name; when the column is the default additional one, return
+     * null
+     * 
+     * @param position
+     * @return
+     */
+    public String getUserColumnNameByPosition(int position) {
+        if (position > propertyNames.length - DefaultMatchColumnConstant.COLUMN_COUNT) {
+            return null;
+        }
         return propertyNames[position - 1];
     }
 
