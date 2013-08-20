@@ -75,7 +75,8 @@ public class MatchRuleAnlaysisUtils {
 
         MatchKeyDefinition createMatchKeyDefinition1 = RulesFactory.eINSTANCE.createMatchKeyDefinition();
         AlgorithmDefinition createAlgorithmDefinition1 = RulesFactory.eINSTANCE.createAlgorithmDefinition();
-        createMatchKeyDefinition1.setName(MatchAnalysisConstant.MATCH_KEY_DEFAULT_VALUE);
+        // by default the name of the match attribute rule is the name of the selected column
+        createMatchKeyDefinition1.setName(columnName);
         createMatchKeyDefinition1.setColumn(columnName);
         createMatchKeyDefinition1.setConfidenceWeight(1);
         createMatchKeyDefinition1.setHandleNull(HandleNullEnum.NULL_MATCH_NULL.getValue());
