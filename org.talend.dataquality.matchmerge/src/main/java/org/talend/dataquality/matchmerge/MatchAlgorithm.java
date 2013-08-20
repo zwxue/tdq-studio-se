@@ -24,5 +24,21 @@ public enum MatchAlgorithm {
     DATE_COMPARE_YEAR_MONTH,
     DATE_COMPARE_YEAR_MONTH_DAY,
     COMPARE_DOUBLE,
-    DOUBLE_METAPHONE
+    DOUBLE_METAPHONE;
+
+    public static enum NullOption {
+        MATCH_NULL, // null = null
+        MATCH_ALL, // null = any string
+        MATCH_NONE // null != null
+    }
+
+    private NullOption option;
+
+    public void setNullOption(NullOption option) {
+        this.option = option;
+    }
+
+    public NullOption getOption() {
+        return option;
+    }
 }

@@ -172,6 +172,18 @@ public class MatchMerge {
             default:
                 throw new RuntimeException("Not supported " + algorithm);
         }
+        // Null match options
+        switch (algorithm.getOption()) {
+            case MATCH_NULL:
+                matcher.setNullOption(IAttributeMatcher.NullOption.nullMatchNull);
+                break;
+            case MATCH_ALL:
+                matcher.setNullOption(IAttributeMatcher.NullOption.nullMatchAll);
+                break;
+            case MATCH_NONE:
+                matcher.setNullOption(IAttributeMatcher.NullOption.nullMatchNone);
+                break;
+        }
         return matcher.getMatchingWeight(leftValue, rightValue);
     }
 }
