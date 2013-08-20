@@ -139,7 +139,7 @@ public class MatchMerge {
         return mergedRecord;
     }
 
-    public static double matchScore(Attribute attribute0, Attribute attribute1, MatchAlgorithm algorithm) {
+    public static double matchScore(Attribute attribute0, Attribute attribute1, MatchAlgorithm algorithm, NullOption nullOption) {
         String leftValue = attribute0.getValue();
         String rightValue = attribute1.getValue();
         IAttributeMatcher matcher;
@@ -173,7 +173,7 @@ public class MatchMerge {
                 throw new RuntimeException("Not supported " + algorithm);
         }
         // Null match options
-        switch (algorithm.getOption()) {
+        switch (nullOption) {
             case MATCH_NULL:
                 matcher.setNullOption(IAttributeMatcher.NullOption.nullMatchNull);
                 break;

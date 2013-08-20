@@ -11,18 +11,8 @@
 
 package org.talend.dataquality.matchmerge;
 
-/**
- *
- */
-public enum MatchAlgorithm {
-    LEVENSHTEIN,
-    JAROWINKLER,
-    JACCARD,
-    SOUNDEX,
-    DIFFERENCE,
-    DATE_COMPARE_YEAR,
-    DATE_COMPARE_YEAR_MONTH,
-    DATE_COMPARE_YEAR_MONTH_DAY,
-    COMPARE_DOUBLE,
-    DOUBLE_METAPHONE
+public enum NullOption {
+    MATCH_NULL, // null = null
+    MATCH_ALL, // null = any string
+    MATCH_NONE // null != null
 }

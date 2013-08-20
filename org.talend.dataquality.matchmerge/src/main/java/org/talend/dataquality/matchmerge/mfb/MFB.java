@@ -27,13 +27,16 @@ public class MFB implements MatchMergeAlgorithm {
 
     private final int[] weights;
 
+    private final NullOption[] nullOptions;
+
     private int maxWeight;
 
-    public MFB(MatchAlgorithm[] algorithms, float[] thresholds, MergeAlgorithm[] merges, int[] weights) {
+    public MFB(MatchAlgorithm[] algorithms, float[] thresholds, MergeAlgorithm[] merges, int[] weights, NullOption[] nullOptions) {
         this.algorithms = algorithms;
         this.thresholds = thresholds;
         this.merges = merges;
         this.weights = weights;
+        this.nullOptions = nullOptions;
         if (algorithms.length == 0 || thresholds.length == 0 || merges.length == 0 || weights.length == 0) {
             LOGGER.warn("Algorithm initialized with no matching algorithm/threshold/merge/weight information");
         }
@@ -69,7 +72,7 @@ public class MFB implements MatchMergeAlgorithm {
             // MFB algorithm
             boolean hasCreatedNewMerge = false;
             for (Record mergedRecord : mergedRecords) {
-                if (matchRecords(mergedRecord, currentRecord)) { //  || MatchMerge.equals(currentRecord, mergedRecord)
+                if (matchRecords(mergedRecord, currentRecord)) {
                     Record newMergedRecord = MatchMerge.merge(currentRecord, mergedRecord, merges);
                     // Keep group id
                     newMergedRecord.setGroupId(mergedRecord.getGroupId());
@@ -112,7 +115,7 @@ public class MFB implements MatchMergeAlgorithm {
         while (mergedRecordAttributes.hasNext()) {
             Attribute left = mergedRecordAttributes.next();
             Attribute right = currentRecordAttributes.next();
-            double score = MatchMerge.matchScore(left, right, algorithms[matchIndex]);
+            double score = MatchMerge.matchScore(left, right, algorithms[matchIndex], nullOptions[matchIndex]);
             if (score < thresholds[matchIndex]) {
                 return false;
             } else {
