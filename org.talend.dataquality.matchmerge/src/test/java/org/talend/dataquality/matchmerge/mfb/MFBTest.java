@@ -33,7 +33,8 @@ public class MFBTest extends TestCase {
         MatchMergeAlgorithm algorithm = new MFB(new MatchAlgorithm[0],
                 new float[0],
                 new MergeAlgorithm[0],
-                new int[0]);
+                new int[0],
+                new NullOption[0]);
         List<Record> list = algorithm.execute(Collections.<Record>emptyList().iterator());
         assertEquals(0, list.size());
     }
@@ -44,7 +45,8 @@ public class MFBTest extends TestCase {
         MatchMergeAlgorithm algorithm = new MFB(new MatchAlgorithm[0],
                 new float[0],
                 new MergeAlgorithm[0],
-                new int[0]);
+                new int[0],
+                new NullOption[0]);
         List<Record> list = algorithm.execute(iterator);
         assertEquals(100000, list.size());
     }
@@ -73,7 +75,8 @@ public class MFBTest extends TestCase {
         MatchMergeAlgorithm algorithm = new MFB(new MatchAlgorithm[]{matchAlgorithm},
                 new float[]{1},
                 new MergeAlgorithm[]{MergeAlgorithm.UNIFY},
-                new int[]{1});
+                new int[]{1},
+                new NullOption[]{NullOption.MATCH_ALL});
         List<Record> mergedRecords = algorithm.execute(iterator);
         assertEquals(constantNumber, mergedRecords.size());
         for (Record mergedRecord : mergedRecords) {
@@ -106,7 +109,8 @@ public class MFBTest extends TestCase {
         MatchMergeAlgorithm algorithm = new MFB(new MatchAlgorithm[]{matchAlgorithm},
                 new float[]{1},
                 new MergeAlgorithm[]{MergeAlgorithm.UNIFY},
-                new int[]{0}); // Mark rule with no weight (-> match record should have a 0 confidence).
+                new int[]{0}, // Mark rule with no weight (-> match record should have a 0 confidence).
+                new NullOption[] {NullOption.MATCH_ALL});
         List<Record> mergedRecords = algorithm.execute(iterator);
         assertEquals(constantNumber, mergedRecords.size());
         for (Record mergedRecord : mergedRecords) {
@@ -139,7 +143,8 @@ public class MFBTest extends TestCase {
         MatchMergeAlgorithm algorithm = new MFB(new MatchAlgorithm[]{matchAlgorithm},
                 new float[]{0.5f},
                 new MergeAlgorithm[]{MergeAlgorithm.UNIFY},
-                new int[]{1});
+                new int[]{1},
+                new NullOption[]{NullOption.MATCH_ALL});
         List<Record> mergedRecords = algorithm.execute(iterator);
         assertEquals(1, mergedRecords.size());
         for (Record mergedRecord : mergedRecords) {
