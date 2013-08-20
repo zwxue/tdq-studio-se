@@ -12,11 +12,11 @@ Require-Bundle: org.eclipse.swt;bundle-version="3.6.1",
  org.apache.commons.lang;bundle-version="2.4.0",
  org.talend.commons.runtime,
  org.talend.core.runtime,
- org.talend.repository.metadata,
  org.talend.libraries.jfreechart,
  org.talend.dataquality,
  org.eclipse.nebula.widgets.nattable.core,
- org.talend.dataquality.record.linkage
+ org.talend.dataquality.record.linkage,
+ org.eclipse.ui.forms;bundle-version="3.5.2"
 Import-Package: org.eclipse.ui.views.properties.tabbed
 Export-Package: org.talend.dataquality.record.linkage.ui.action,
  org.talend.dataquality.record.linkage.ui.composite.chart,
