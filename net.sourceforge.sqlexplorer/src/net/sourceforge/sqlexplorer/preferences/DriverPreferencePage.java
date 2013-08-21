@@ -23,6 +23,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
 
+import net.sourceforge.sqlexplorer.EDriverName;
 import net.sourceforge.sqlexplorer.ExplorerException;
 import net.sourceforge.sqlexplorer.IConstants;
 import net.sourceforge.sqlexplorer.Messages;
@@ -64,12 +65,12 @@ import org.eclipse.ui.PlatformUI;
 
 /**
  * This class is used to define a preference page for JDBC drivers.
- * 
+ *
  * The intention is to remove the need for the &quot;Driver&quot; view and to
  * replace this with a &quot;JDBC Drivers&quot; preference page. The UI is
  * identical to the view except for the removal of the toolbar and the addition
  * of Add, Edit, Copy, Remove and Set Default buttons.
- * 
+ *
  * @author <A HREF="mailto:dbulua@progress.com">Don Bulua</A>
  * @modified Davy Vanherbergen
  */
@@ -85,7 +86,7 @@ public class DriverPreferencePage extends PreferencePage implements IWorkbenchPr
 
 
     /**
-     * 
+     *
      */
     public DriverPreferencePage() {
         super();
@@ -112,13 +113,14 @@ public class DriverPreferencePage extends PreferencePage implements IWorkbenchPr
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.jface.preference.PreferencePage#createContents(org.eclipse.swt.widgets.Composite)
      *      The UI is defined in the DriverContainerGroup class. Note: The
      *      [Restore Default] and [Apply] buttons have been removed using the
      *      noDefaultandApplyButton method as these don't apply since all
      *      updates are made in the corresponding dialogs.
      */
+    @Override
     protected Control createContents(Composite parent) {
 
         noDefaultAndApplyButton();
@@ -133,7 +135,7 @@ public class DriverPreferencePage extends PreferencePage implements IWorkbenchPr
         parentLayout.marginHeight = 0;
         parentLayout.verticalSpacing = 10;
         parent.setLayout(parentLayout);
-        
+
         GridLayout layout;
 
         Composite myComposite = new Composite(parent, SWT.NONE);
@@ -147,7 +149,7 @@ public class DriverPreferencePage extends PreferencePage implements IWorkbenchPr
         myComposite.setLayout(layout);
 
         myComposite.setLayoutData(new GridData(SWT.FILL, SWT.LEFT, true, true));
-        
+
         GridData gid = new GridData(GridData.FILL_BOTH);
         gid.grabExcessHorizontalSpace = gid.grabExcessVerticalSpace = true;
         gid.horizontalAlignment = gid.verticalAlignment = GridData.FILL;
@@ -161,13 +163,15 @@ public class DriverPreferencePage extends PreferencePage implements IWorkbenchPr
 
             public void widgetDisposed(DisposeEvent e) {
                 dlp.dispose();
-                if (_boldfont != null)
+                if (_boldfont != null) {
                     _boldfont.dispose();
+                }
 
             }
         });
         _tableViewer.getTable().addMouseListener(new MouseAdapter() {
 
+            @Override
             public void mouseDoubleClick(MouseEvent e) {
                 changeDriver();
             }
@@ -188,6 +192,7 @@ public class DriverPreferencePage extends PreferencePage implements IWorkbenchPr
         add.setLayoutData(gid);
         add.addSelectionListener(new SelectionAdapter() {
 
+            @Override
             public void widgetSelected(SelectionEvent e) {
                 CreateDriverDlg dlg = new CreateDriverDlg(getShell(), CreateDriverDlg.Type.CREATE, null);
                 dlg.open();
@@ -204,6 +209,7 @@ public class DriverPreferencePage extends PreferencePage implements IWorkbenchPr
         edit.setLayoutData(gid);
         edit.addSelectionListener(new SelectionAdapter() {
 
+            @Override
             public void widgetSelected(SelectionEvent e) {
                 changeDriver();
                 _tableViewer.refresh();
@@ -217,6 +223,7 @@ public class DriverPreferencePage extends PreferencePage implements IWorkbenchPr
         copy.setLayoutData(gid);
         copy.addSelectionListener(new SelectionAdapter() {
 
+            @Override
             public void widgetSelected(SelectionEvent e) {
                 StructuredSelection sel = (StructuredSelection) _tableViewer.getSelection();
                 ManagedDriver dv = (ManagedDriver) sel.getFirstElement();
@@ -235,6 +242,7 @@ public class DriverPreferencePage extends PreferencePage implements IWorkbenchPr
         remove.setLayoutData(gid);
         remove.addSelectionListener(new SelectionAdapter() {
 
+            @Override
             public void widgetSelected(SelectionEvent e) {
 
                 boolean okToDelete = MessageDialog.openConfirm(getShell(), Messages.getString("Preferences.Drivers.ConfirmDelete.Title"),
@@ -260,6 +268,7 @@ public class DriverPreferencePage extends PreferencePage implements IWorkbenchPr
         // Remove bold font on all elements, and make selected element bold
         bdefault.addSelectionListener(new SelectionAdapter() {
 
+            @Override
             public void widgetSelected(SelectionEvent e) {
                 for (int i = 0; i < _tableViewer.getTable().getItemCount(); i++) {
 
@@ -277,6 +286,7 @@ public class DriverPreferencePage extends PreferencePage implements IWorkbenchPr
         bRestore.setText(Messages.getString("Preferences.Drivers.Button.RestoreDefault"));
         bRestore.addSelectionListener(new SelectionAdapter() {
 
+            @Override
             public void widgetSelected(SelectionEvent e) {
             	try {
 	                _driverModel.restoreDrivers();
@@ -289,7 +299,7 @@ public class DriverPreferencePage extends PreferencePage implements IWorkbenchPr
         });
 
         bRestore.setLayoutData(new GridData(SWT.RIGHT, SWT.BOTTOM, false, false));
-        
+
         selectDefault(table);
 
         return parent;
@@ -298,7 +308,7 @@ public class DriverPreferencePage extends PreferencePage implements IWorkbenchPr
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.ui.IWorkbenchPreferencePage#init(org.eclipse.ui.IWorkbench)
      */
     public void init(IWorkbench workbench) {
@@ -308,7 +318,7 @@ public class DriverPreferencePage extends PreferencePage implements IWorkbenchPr
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.jface.preference.PreferencePage#noDefaultAndApplyButton()
      */
 
@@ -318,9 +328,10 @@ public class DriverPreferencePage extends PreferencePage implements IWorkbenchPr
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.jface.preference.IPreferencePage#performOk()
      */
+    @Override
     public boolean performOk() {
 
         return super.performOk();
@@ -351,8 +362,9 @@ public class DriverPreferencePage extends PreferencePage implements IWorkbenchPr
     // Bold the default driver element
     void selectDefault(Table table) {
         String defaultDriver = _prefs.getString(IConstants.DEFAULT_DRIVER);
-        if (defaultDriver == null)
+        if (defaultDriver == null) {
             return;
+        }
 
         int index = 0;
         for (ManagedDriver driver : _driverModel.getDrivers()) {
@@ -399,7 +411,7 @@ class DriverLabelProvider extends LabelProvider implements ITableLabelProvider {
 
     public Image getColumnImage(Object element, int i) {
         ManagedDriver dv = (ManagedDriver) element;
-        
+
         try {
         	dv.registerSQLDriver();
         } catch(ClassNotFoundException e) {
@@ -413,29 +425,38 @@ class DriverLabelProvider extends LabelProvider implements ITableLabelProvider {
     }
 
 
+    @Override
     public void dispose() {
-        
+
         super.dispose();
-        ImageUtil.disposeImage("Images.OkDriver");    
+        ImageUtil.disposeImage("Images.OkDriver");
         ImageUtil.disposeImage("Images.ErrorDriver");
-        
+
     }
 
 
     public String getColumnText(Object element, int i) {
         ManagedDriver dv = (ManagedDriver) element;
-        return dv.getName();
+        // MOD qiongli,display different name for different vertica driver version.
+        String name = dv.getName();
+        if ("Vertica".equalsIgnoreCase(name) && EDriverName.VERTICA2.getSqlEid().equals(dv.getId())) {//$NON-NLS-1$
+            name = "Vertica 6";//$NON-NLS-1$
+        }
+        return name;
     }
 
 
+    @Override
     public boolean isLabelProperty(Object element, String property) {
         return true;
     }
 
+    @Override
     public void removeListener(ILabelProviderListener listener) {
     }
 
 
+    @Override
     public void addListener(ILabelProviderListener listener) {
     }
 

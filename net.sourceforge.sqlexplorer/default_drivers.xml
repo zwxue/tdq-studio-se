@@ -177,11 +177,22 @@
 		<url>jdbc:ingres://&lt;host&gt;/&lt;DBNAME&gt;</url>
 		<jars></jars>
 	</driver>
-		<driver id="-66">
-		<name>Netezza</name>
-		<url>jdbc:netezza://&lt;host&gt;:&lt;port&gt;/&lt;DBNAME&gt;</url>
-		<jars></jars>
-	</driver>
+	<driver id="-66">
+        <name>Netezza</name>
+        <url>jdbc:netezza://&lt;host&gt;:&lt;port&gt;/&lt;DBNAME&gt;</url>
+        <jars></jars>
+    </driver>
+    <!--vertica has two driver calss ,so add two Vertica tag at here--> 
+     <driver id="-70">
+        <name>Vertica</name>
+        <url>jdbc:vertica://&lt;host&gt;:&lt;port&gt;/&lt;DBNAME&gt;</url>
+        <jars></jars>
+    </driver>
+    <driver id="-71">
+        <name>Vertica</name>
+        <url>jdbc:vertica://&lt;host&gt;:&lt;port&gt;/&lt;DBNAME&gt;</url>
+        <jars></jars>
+    </driver>
 	<driver id="-55">
 		<name>Hive</name>
 		<url>jdbc:hive://&lt;host&gt;:&lt;port&gt;/&lt;DBNAME&gt;</url>

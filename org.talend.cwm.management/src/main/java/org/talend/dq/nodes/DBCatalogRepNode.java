@@ -22,6 +22,7 @@ import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.core.repository.model.repositoryObject.MetadataCatalogRepositoryObject;
 import org.talend.core.repository.model.repositoryObject.MetadataSchemaRepositoryObject;
 import org.talend.cwm.helper.CatalogHelper;
+import org.talend.dataquality.PluginConstant;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
 import orgomg.cwm.resource.relational.Catalog;
@@ -44,7 +45,7 @@ public class DBCatalogRepNode extends DQRepositoryNode {
 
     /**
      * DOC klliu DBCatalogRepNode constructor comment.
-     * 
+     *
      * @param viewObject
      * @param parent if parent is null will try to create new one to insert of old parent.
      * @param type
@@ -65,7 +66,7 @@ public class DBCatalogRepNode extends DQRepositoryNode {
 
     /**
      * create the node of parent.
-     * 
+     *
      * @param object
      * @return
      */
@@ -77,7 +78,7 @@ public class DBCatalogRepNode extends DQRepositoryNode {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.repository.model.RepositoryNode#getObject()
      */
     @Override
@@ -87,7 +88,7 @@ public class DBCatalogRepNode extends DQRepositoryNode {
 
     /*
      * (non-Jsdoc)
-     * 
+     *
      * @see org.talend.repository.model.RepositoryNode#getChildren()
      */
     @Override
@@ -109,7 +110,7 @@ public class DBCatalogRepNode extends DQRepositoryNode {
 
     /**
      * DOC klliu Comment method "createTableViewFolder".
-     * 
+     *
      * @param metadataCatalog
      * @return
      */
@@ -127,7 +128,7 @@ public class DBCatalogRepNode extends DQRepositoryNode {
 
     /**
      * Create SchemaRepositoryNode under CatalogRepositoryNode.
-     * 
+     *
      * @param node parent CatalogRepositoryNode
      * @param metadataCatalog parent CatalogViewObject
      * @param schema the schema should to be added under the catalog
@@ -150,7 +151,7 @@ public class DBCatalogRepNode extends DQRepositoryNode {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.repository.model.RepositoryNode#getLabel()
      */
     @Override
@@ -163,15 +164,20 @@ public class DBCatalogRepNode extends DQRepositoryNode {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.repository.model.RepositoryNode#getDisplayText()
      */
     @Override
     public String getDisplayText() {
         // MOD zshen to modify catalog name when connection is ODBC
         String catalogName = getObject().getLabel();
+        // MOD qiongli,vertica database is empty string when don't fill Database parameter in the creation wizard.
+        if (PluginConstant.EMPTY_STRING.endsWith(catalogName)) {
+            catalogName = PluginConstant.DEFAULT_STRING;
+        }
         IPath catalogPath = new Path(catalogName);
         catalogName = catalogPath.removeFileExtension().lastSegment();
+
         return catalogName;
     }
 }

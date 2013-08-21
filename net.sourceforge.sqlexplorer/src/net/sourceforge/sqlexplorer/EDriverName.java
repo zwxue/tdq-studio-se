@@ -34,14 +34,14 @@ import org.osgi.framework.Constants;
 
 /**
  * DOC qzhang class global comment. Detailled comment <br/>
- * 
+ *
  * $Id: talend.epf 1 2006-09-29 17:06:40Z qzhang $
- * 
+ *
  */
 public enum EDriverName {
     ODBCDEFAULTURL("Generic ODBC", //$NON-NLS-1$
                    "sun.jdbc.odbc.JdbcOdbcDriver", //$NON-NLS-1$
-                   "-1"), //$NON-NLS-1$ 
+                   "-1"), //$NON-NLS-1$
     MYSQLDEFAULTURL("Mysql", //$NON-NLS-1$
                     "org.gjt.mm.mysql.Driver", //$NON-NLS-1$
                     "-6",
@@ -89,7 +89,7 @@ public enum EDriverName {
     INFORMIXDEFAULTURL("Informix", //$NON-NLS-1$
                        "com.informix.jdbc.IfxDriver", //$NON-NLS-1$
                        "-26",
-                       "lib/ifxjdbc.jar"), //$NON-NLS-1$ 
+                       "lib/ifxjdbc.jar"), //$NON-NLS-1$
     FIREBIRDDEFAULTURL("FireBird", //$NON-NLS-1$
                        "org.firebirdsql.jdbc.FBDriver", //$NON-NLS-1$
                        "-25",
@@ -105,6 +105,8 @@ public enum EDriverName {
     // MOD klliu bug 14791 add ingres database url and modify default_driver.xml
     INGRESDEFAULTURL("Ingres", "ca.ingres.jdbc.IngresDriver", "-88", "lib/iijdbc.jar"),
     NETEZZADEFAULTURL("Netezza", "org.netezza.Driver", "-66", "lib/nzjdbc.jar"), //$NON-NLS-1$
+    VERTICA("Vertica", "com.vertica.Driver", "-70", "lib/vertica_4.1.14_jdk_5.jar"), //$NON-NLS-1$
+    VERTICA2("Vertica", "com.vertica.jdbc.Driver", "-71", "lib/vertica-jdk5-6.0.0-0.jar"), //$NON-NLS-1$
     HIVE("Hive", //$NON-NLS-1$
          "org.apache.hadoop.hive.jdbc.HiveDriver", //$NON-NLS-1$
          "-55", //$NON-NLS-1$
@@ -156,7 +158,7 @@ public enum EDriverName {
 
     /**
      * Getter for dbDriver.
-     * 
+     *
      * @return the dbDriver
      */
     public String getDbDriver() {
@@ -165,7 +167,7 @@ public enum EDriverName {
 
     /**
      * Getter for sqlEid.
-     * 
+     *
      * @return the sqlEid
      */
     public String getSqlEid() {
@@ -174,7 +176,7 @@ public enum EDriverName {
 
     /**
      * DOC qzhang Comment method "getJars".
-     * 
+     *
      * @return
      */
     public LinkedList<String> getJars() {
@@ -227,6 +229,10 @@ public enum EDriverName {
         case HIVE:
             plugins = "org.talend.libraries.apache.hive";
             break;
+        case VERTICA:
+        case VERTICA2:
+            plugins = "org.talend.libraries.jdbc.vertica";
+            break;
         default:
             return linkedList;
         }
@@ -262,7 +268,7 @@ public enum EDriverName {
 
     /**
      * DOC qzhang Comment method "getId".
-     * 
+     *
      * @param string
      */
     public static String getId(String driver) {
@@ -285,12 +291,12 @@ public enum EDriverName {
 
     /**
      * MOD gdbu 2011-4-20 bug : 18975
-     * 
+     *
      * DOC gdbu Comment method "getDriFromSpecialDB".
-     * 
+     *
      * If the above method : getId() can not return required driverclass, we can return by this method requires the
      * driverclass, but only if we have to fill specialdatabase instance
-     * 
+     *
      * @param driver
      * @return driverID
      */
