@@ -45,19 +45,19 @@ public final class ContextHelper {
     /**
      * get the context value if pass a context name, otherwise return the str directly.
      * 
-     * @param contexts
-     * @param defaultContextName
-     * @param str
+     * @param contexts the context list
+     * @param contextGroupName the name of the group which be used to get the context value
+     * @param contextVarName the context variable's name
      * @return
      */
-    public static String getContextValue(List<ContextType> contexts, String defaultContextName, String str) {
+    public static String getContextValue(List<ContextType> contexts, String contextGroupName, String contextVarName) {
         String value = EMPTY_STRING;
-        if (!StringUtils.isEmpty(str)) {
+        if (!StringUtils.isEmpty(contextVarName)) {
             boolean findContext = false;
-            if (str.startsWith(CONTEXT_PREFFIX)) {
-                String contextName = str.substring(CONTEXT_PREFFIX.length(), str.length());
+            if (contextVarName.startsWith(CONTEXT_PREFFIX)) {
+                String contextName = contextVarName.substring(CONTEXT_PREFFIX.length(), contextVarName.length());
                 for (ContextType ct : contexts) {
-                    if (ct.getName().equals(defaultContextName)) {
+                    if (ct.getName().equals(contextGroupName)) {
                         for (Object obj : ct.getContextParameter()) {
                             ContextParameterType cpt = (ContextParameterType) obj;
                             if (cpt.getName().equals(contextName)) {
@@ -71,10 +71,33 @@ public final class ContextHelper {
                 }
             }
             if (!findContext) {
-                value = str;
+                value = contextVarName;
             }
         }
         return value;
+    }
+
+    /**
+     * get the context's value from specified context group of the report.
+     * 
+     * @param tdReport the Report
+     * @param contextGroupName the name of the context group which be used to get the context value
+     * @param contextVarName the context variable's name
+     * @return
+     */
+    public static String getReportContextValue(TdReport tdReport, String contextGroupName, String contextVarName) {
+        return getContextValue(tdReport.getContext(), contextGroupName, contextVarName);
+    }
+
+    /**
+     * get the context's value from the last run context(or default context if last run context is empty) in the report.
+     * 
+     * @param tdReport the Report
+     * @param contextVarName the context variable's name
+     * @return
+     */
+    public static String getReportContextValue(TdReport tdReport, String contextVarName) {
+        return getReportContextValue(tdReport, ReportHelper.getContextGroupName(tdReport), contextVarName);
     }
 
     /**
@@ -106,8 +129,7 @@ public final class ContextHelper {
                     if (isContextMode) {
                         isContextMode = ContextHelper.isContextVar(ofNameAssinged);
                     }
-                    String ofName = ContextHelper
-                            .getContextValue(report.getContext(), report.getDefaultContext(), ofNameAssinged);
+                    String ofName = ContextHelper.getReportContextValue(report, ofNameAssinged);
                     if (StringUtils.isNotBlank(ofName)) {
                         temp.add(ofName);
                     }

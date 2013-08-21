@@ -775,6 +775,21 @@ public final class ReportHelper {
     }
 
     /**
+     * DOC xqliu Comment method "getLastRunContext".
+     * 
+     * @param report
+     * @return
+     */
+    public static String getLastRunContext(Report report) {
+        TaggedValue taggedValue = TaggedValueHelper.getTaggedValue(TaggedValueHelper.REP_LAST_RUN_CONTEXT,
+                report.getTaggedValue());
+        if (taggedValue == null) {
+            return PluginConstant.EMPTY_STRING;
+        }
+        return taggedValue.getValue();
+    }
+
+    /**
      * DOC xqliu Comment method "getPort".
      * 
      * @param report
@@ -896,6 +911,17 @@ public final class ReportHelper {
     }
 
     /**
+     * DOC xqliu Comment method "setLastRunContext".
+     * 
+     * @param lastRunContext
+     * @param report
+     * @return
+     */
+    public static boolean setLastRunContext(String lastRunContext, Report report) {
+        return TaggedValueHelper.setTaggedValue(report, TaggedValueHelper.REP_LAST_RUN_CONTEXT, lastRunContext);
+    }
+
+    /**
      * DOC xqliu Comment method "setPort".
      * 
      * @param port
@@ -951,5 +977,19 @@ public final class ReportHelper {
      */
     public static IPath getSubReportsPath() {
         return new Path(PROPS.getProperty("SUB_REPORT_FOLDER")); //$NON-NLS-1$
+    }
+
+    /**
+     * get the report last run context group name, if it is empty, return the default context group name.
+     * 
+     * @param tdReport
+     * @return
+     */
+    public static String getContextGroupName(TdReport tdReport) {
+        String contextGroupNameInUse = ReportHelper.getLastRunContext(tdReport);
+        if (StringUtils.isEmpty(contextGroupNameInUse)) {
+            contextGroupNameInUse = tdReport.getDefaultContext();
+        }
+        return contextGroupNameInUse;
     }
 }
