@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.EList;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.database.JavaSqlFactory;
@@ -28,6 +29,7 @@ import org.talend.dataquality.analysis.Analysis;
 import org.talend.dq.dbms.DbmsLanguage;
 import org.talend.dq.dbms.DbmsLanguageFactory;
 import org.talend.dq.helper.AnalysisExecutorHelper;
+import org.talend.utils.sugars.ReturnCode;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.foundation.softwaredeployment.DataManager;
 import orgomg.cwm.objectmodel.core.ModelElement;
@@ -36,6 +38,8 @@ import orgomg.cwm.objectmodel.core.ModelElement;
  * DOC yyin  class global comment. Detailled comment
  */
 public class DatabaseSQLExecutor implements ISQLExecutor {
+
+    private static Logger log = Logger.getLogger(DatabaseSQLExecutor.class);
 
     /* (non-Javadoc)
      * @see org.talend.cwm.db.connection.ISQLExecutor#executeQuery(org.talend.dataquality.analysis.Analysis)
@@ -46,20 +50,39 @@ public class DatabaseSQLExecutor implements ISQLExecutor {
         int columnListSize = analysis.getContext().getAnalysedElements().size();
 
         TypedReturnCode<java.sql.Connection> sqlconnection = JavaSqlFactory.createConnection((Connection) dataprovider);
-        Statement statement = sqlconnection.getObject().createStatement();
-        statement.execute(createSqlStatement(analysis));
-        ResultSet resultSet = statement.getResultSet();
-
-        while (resultSet.next()) {
-            Object[] oneRow = new Object[columnListSize];
-            // --- for each column
-            for (int i = 0; i < columnListSize; i++) {
-                // --- get content of column
-                oneRow[i] = resultSet.getObject(i + 1);
-            }
-            dataFromTable.add(oneRow);
+        if (!sqlconnection.isOk()) {
+            throw new SQLException(sqlconnection.getMessage());
         }
+        Statement statement = null;
+        ResultSet resultSet = null;
+        try {
+            statement = sqlconnection.getObject().createStatement();
+            statement.execute(createSqlStatement(analysis));
+            resultSet = statement.getResultSet();
 
+            while (resultSet.next()) {
+                Object[] oneRow = new Object[columnListSize];
+                // --- for each column
+                for (int i = 0; i < columnListSize; i++) {
+                    // --- get content of column
+                    oneRow[i] = resultSet.getObject(i + 1);
+                }
+                dataFromTable.add(oneRow);
+            }
+        } catch (SQLException e) {
+            log.error(e, e);
+        } finally {
+            if (resultSet != null) {
+                resultSet.close();
+            }
+            if (statement != null) {
+                statement.close();
+            }
+            ReturnCode closed = ConnectionUtils.closeConnection(sqlconnection.getObject());
+            if (!closed.isOk()) {
+                log.warn(closed.getMessage());
+            }
+        }
         return dataFromTable;
     }
 
