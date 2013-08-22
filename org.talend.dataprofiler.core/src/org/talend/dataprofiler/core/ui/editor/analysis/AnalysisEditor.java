@@ -363,8 +363,15 @@ public class AnalysisEditor extends CommonFormEditor {
 
             @Override
             public boolean handle(Object data) {
-                resultPage.refresh(masterPage);
-                return true;
+                // MOD TDQ-7816: when the result page are not created, no need to refresh, only refresh master page is
+                // enough
+                if (resultPage.getManagedForm() != null) {
+                    resultPage.refresh(masterPage);
+                    return true;
+                } else {
+                    masterPage.refresh();
+                    return true;
+                }
             }
         };
         EventManager.getInstance().register(masterPage.getAnalysis(), EventEnum.DQ_ANALYSIS_RUN_FROM_MENU, refreshReceiver);
