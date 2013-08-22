@@ -60,9 +60,11 @@ import org.talend.dataquality.properties.PropertiesFactory;
 import org.talend.dataquality.properties.TDQAnalysisItem;
 import org.talend.dataquality.properties.TDQBusinessRuleItem;
 import org.talend.dataquality.properties.TDQIndicatorDefinitionItem;
+import org.talend.dataquality.properties.TDQMatchRuleItem;
 import org.talend.dataquality.properties.TDQPatternItem;
 import org.talend.dataquality.properties.TDQReportItem;
 import org.talend.dataquality.rules.DQRule;
+import org.talend.dataquality.rules.MatchRuleDefinition;
 import org.talend.dataquality.rules.ParserRule;
 import org.talend.dataquality.rules.WhereRule;
 import org.talend.dq.helper.ListUtils;
@@ -87,7 +89,7 @@ public abstract class AElementPersistance {
 
     /**
      * Persist an element in the specified folder, the file name is created logically by the name of this element.
-     * 
+     *
      * @param element
      * @param folder
      * @return
@@ -118,7 +120,7 @@ public abstract class AElementPersistance {
 
     /**
      * DOC xqliu Comment method "getPath".
-     * 
+     *
      * @param element
      * @param itemPath
      * @return
@@ -138,6 +140,8 @@ public abstract class AElementPersistance {
                 path = itemPath.makeRelativeTo(ResourceManager.getRulesSQLFolder().getFullPath());
             } else if (element instanceof ParserRule) { // parserrule
                 path = itemPath.makeRelativeTo(ResourceManager.getRulesParserFolder().getFullPath());
+            } else if (element instanceof MatchRuleDefinition) {
+                path = itemPath.makeRelativeTo(ResourceManager.getRulesMatcherFolder().getFullPath());
             } else { // indicator definition
                 path = itemPath.makeRelativeTo(ResourceManager.getIndicatorFolder().getFullPath());
             }
@@ -149,7 +153,7 @@ public abstract class AElementPersistance {
 
     /**
      * DOC bZhou Comment method "createLogicalFileNmae".
-     * 
+     *
      * @param element
      * @param extension
      * @return
@@ -161,9 +165,9 @@ public abstract class AElementPersistance {
 
     /**
      * DOC bZhou Comment method "create".
-     * 
+     *
      * Persist the element into the specified file.
-     * 
+     *
      * @param element
      * @param file
      * @return
@@ -180,9 +184,9 @@ public abstract class AElementPersistance {
 
     /**
      * DOC bZhou Comment method "create".
-     * 
+     *
      * Persist the element into the specified path.
-     * 
+     *
      * @param element
      * @param file
      * @param withProperty
@@ -210,9 +214,9 @@ public abstract class AElementPersistance {
 
     /**
      * DOC bZhou Comment method "createProperty".
-     * 
+     *
      * Create and save a property from model element resource.
-     * 
+     *
      * @param modelElement
      * @return
      */
@@ -239,9 +243,9 @@ public abstract class AElementPersistance {
 
     /**
      * DOC bZhou Comment method "initProperty".
-     * 
+     *
      * Initialized a new property.
-     * 
+     *
      * @param modelElement
      * @return
      */
@@ -292,9 +296,9 @@ public abstract class AElementPersistance {
 
     /**
      * DOC bZhou Comment method "saveProperty".
-     * 
+     *
      * Save a property.
-     * 
+     *
      * @param property
      * @return
      */
@@ -316,7 +320,7 @@ public abstract class AElementPersistance {
 
     /**
      * DOC bZhou Comment method "saveProperty".
-     * 
+     *
      * @param property
      * @param uri
      * @return
@@ -334,9 +338,9 @@ public abstract class AElementPersistance {
 
     /**
      * DOC bZhou Comment method "save".
-     * 
+     *
      * Save a model element and update the related property by default.
-     * 
+     *
      * @param element
      * @return
      */
@@ -346,9 +350,9 @@ public abstract class AElementPersistance {
 
     /**
      * DOC bZhou Comment method "save".
-     * 
+     *
      * Save a model element and update the related property.
-     * 
+     *
      * @param element
      * @param withProperty
      * @return
@@ -382,9 +386,9 @@ public abstract class AElementPersistance {
 
     /**
      * DOC bZhou Comment method "updateProperty".
-     * 
+     *
      * Use model element's attribute to update the related property.
-     * 
+     *
      * @param element
      */
     public void updateProperty(ModelElement element) {
@@ -400,7 +404,7 @@ public abstract class AElementPersistance {
 
     /**
      * DOC bZhou Comment method "createItem".
-     * 
+     *
      * @param element
      * @return
      */
@@ -422,6 +426,10 @@ public abstract class AElementPersistance {
                 ((ConnectionItem) item).setConnection((MDMConnection) element);
             }
             ((ConnectionItem) item).setConnection((Connection) element);
+        } else if (ModelElementIdentifier.isMatchRule(element)) {
+            // this Condition must before the IndicatorDefinition one because MatchRule instance of it.
+            item = PropertiesFactory.eINSTANCE.createTDQMatchRuleItem();
+            ((TDQMatchRuleItem) item).setMatchRule((MatchRuleDefinition) element);
         } else if (ModelElementIdentifier.isID(element)) {
             item = PropertiesFactory.eINSTANCE.createTDQIndicatorDefinitionItem();
             ((TDQIndicatorDefinitionItem) item).setIndicatorDefinition((IndicatorDefinition) element);
@@ -464,7 +472,7 @@ public abstract class AElementPersistance {
 
     /**
      * Set the TDQ item file name, this file name will be usefull when commit changes to svn for example.
-     * 
+     *
      * @param element The element of which the name might have been renamed.
      * @param item
      */
@@ -476,7 +484,7 @@ public abstract class AElementPersistance {
 
     /**
      * DOC bZhou Comment method "check".
-     * 
+     *
      * @param file
      * @return
      */
@@ -486,21 +494,21 @@ public abstract class AElementPersistance {
 
     /**
      * DOC bZhou Comment method "addDependencies".
-     * 
+     *
      * @param element
      */
     protected abstract void addDependencies(ModelElement element);
 
     /**
      * DOC bZhou Comment method "updateDependencies".
-     * 
+     *
      * @param element
      */
     // protected abstract void updateDependencies(ModelElement element);
 
     /**
      * DOC bZhou Comment method "addResourceContent".
-     * 
+     *
      * @param element
      * @return
      */
@@ -532,14 +540,14 @@ public abstract class AElementPersistance {
 
     /**
      * DOC bZhou Comment method "getFileExtension".
-     * 
+     *
      * @return
      */
     protected abstract String getFileExtension();
 
     /**
      * Save item and it's dependencies(optional).
-     * 
+     *
      * @param item
      * @param careDependency Set explicitly <B>true</B> for needs to update dependencies of item.
      * @return
@@ -548,7 +556,7 @@ public abstract class AElementPersistance {
 
     /**
      * Save item with dependencies.
-     * 
+     *
      * @param element
      */
     protected ReturnCode saveWithDependencies(Item item, ModelElement element) {
@@ -595,7 +603,7 @@ public abstract class AElementPersistance {
 
     /**
      * Save item <B>without</B> dependencies.
-     * 
+     *
      * @param element
      */
     protected ReturnCode saveWithoutDependencies(Item item, ModelElement element) {

@@ -37,7 +37,7 @@ public class RulesFolderRepNode extends DQRepositoryNode {
 
     /**
      * DOC gdbu RulesFolderRepNode constructor comment.
-     * 
+     *
      * @param object
      * @param parent
      * @param type
@@ -73,6 +73,7 @@ public class RulesFolderRepNode extends DQRepositoryNode {
             Folder folder = null;
             boolean isSql = container.getLabel().equals("SQL"); //$NON-NLS-1$
             boolean isParser = container.getLabel().equals("Parser"); //$NON-NLS-1$
+            boolean isMatcher = container.getLabel().equals("Match"); //$NON-NLS-1$
             if (isSql) {
                 folder = new Folder((Property) container.getProperty(), ERepositoryObjectType.TDQ_RULES_SQL);
                 if (!withDeleted && folder.isDeleted()) {
@@ -85,6 +86,19 @@ public class RulesFolderRepNode extends DQRepositoryNode {
                 super.getChildren().add(systemIndicatorFolderNode);
 
             }
+
+            if (isMatcher) {
+                folder = new Folder((Property) container.getProperty(), ERepositoryObjectType.TDQ_RULES_MATCHER);
+                if (!withDeleted && folder.isDeleted()) {
+                    continue;
+                }
+                RulesMatcherFolderRepNode ruleMatcherFolder = new RulesMatcherFolderRepNode(folder, this, ENodeType.SYSTEM_FOLDER);
+                folder.setRepositoryNode(ruleMatcherFolder);
+                ruleMatcherFolder.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.TDQ_RULES_SQL);
+                ruleMatcherFolder.setProperties(EProperties.LABEL, ERepositoryObjectType.TDQ_RULES_SQL);
+                super.getChildren().add(ruleMatcherFolder);
+            }
+
             if (isParser && PluginChecker.isTDQLoaded()) {
                 folder = new Folder((Property) container.getProperty(), ERepositoryObjectType.TDQ_RULES_PARSER);
                 if (!withDeleted && folder.isDeleted()) {
@@ -97,6 +111,7 @@ public class RulesFolderRepNode extends DQRepositoryNode {
                 systemIndicatorFolderNode.setProperties(EProperties.LABEL, ERepositoryObjectType.TDQ_RULES_PARSER);
                 super.getChildren().add(systemIndicatorFolderNode);
             }
+
 
         }
     }

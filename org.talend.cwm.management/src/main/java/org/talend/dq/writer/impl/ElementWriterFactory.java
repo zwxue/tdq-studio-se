@@ -36,7 +36,7 @@ public final class ElementWriterFactory {
 
     /**
      * DOC bZhou Comment method "getInstance".
-     * 
+     *
      * @return
      */
     public static ElementWriterFactory getInstance() {
@@ -48,7 +48,7 @@ public final class ElementWriterFactory {
 
     /**
      * DOC bZhou Comment method "createAnalysisWrite".
-     * 
+     *
      * @return
      */
     public AnalysisWriter createAnalysisWrite() {
@@ -57,7 +57,7 @@ public final class ElementWriterFactory {
 
     /**
      * DOC bZhou Comment method "createReportWriter".
-     * 
+     *
      * @return
      */
     public ReportWriter createReportWriter() {
@@ -66,7 +66,7 @@ public final class ElementWriterFactory {
 
     /**
      * DOC bZhou Comment method "createDataProviderWriter".
-     * 
+     *
      * @return
      */
     public DataProviderWriter createDataProviderWriter() {
@@ -75,7 +75,7 @@ public final class ElementWriterFactory {
 
     /**
      * DOC bZhou Comment method "createPatternWriter".
-     * 
+     *
      * @return
      */
     public PatternWriter createPatternWriter() {
@@ -84,7 +84,7 @@ public final class ElementWriterFactory {
 
     /**
      * DOC bZhou Comment method "createdRuleWriter".
-     * 
+     *
      * @return
      */
     public DQRuleWriter createdRuleWriter() {
@@ -92,8 +92,18 @@ public final class ElementWriterFactory {
     }
 
     /**
-     * DOC bZhou Comment method "createSoftwareSystemWriter".
      * 
+     * create MatchRule writer
+     * 
+     * @return
+     */
+    public MatchRuleDefinitionWriter createdMatchRuleWriter() {
+        return new MatchRuleDefinitionWriter();
+    }
+
+    /**
+     * DOC bZhou Comment method "createSoftwareSystemWriter".
+     *
      * @return
      */
     public SoftwareSystemWriter createSoftwareSystemWriter() {
@@ -102,7 +112,7 @@ public final class ElementWriterFactory {
 
     /**
      * DOC bZhou Comment method "createIndicatorDefinitionWriter".
-     * 
+     *
      * @return
      */
     public IndicatorDefinitionWriter createIndicatorDefinitionWriter() {
@@ -111,7 +121,7 @@ public final class ElementWriterFactory {
 
     /**
      * DOC bZhou Comment method "create".
-     * 
+     *
      * @param fileExtension
      * @return
      */
@@ -138,7 +148,7 @@ public final class ElementWriterFactory {
 
     /**
      * DOC bZhou Comment method "create".
-     * 
+     *
      * @param element
      * @return
      */
