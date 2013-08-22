@@ -51,4 +51,11 @@ public class MatchAnalysisConstant {
 
     public static final String MATCH_KEY_DEFAULT_VALUE = "match key name"; //$NON-NLS-1$
 
+    public static final String BlOCKING_KEY_SECTION_NAME = "Blocking Key"; //$NON-NLS-1$
+
+    // match Rule definition
+
+    public static final String BlOCKING_KEY_DEFINITION_SECTION_NAME = "Generation of Blocking Key"; //$NON-NLS-1$
+
+    public static final String MATCHING_KEY_DEFINITION_SECTION_NAME = "Matching key"; //$NON-NLS-1$
 }
