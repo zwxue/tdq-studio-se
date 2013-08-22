@@ -99,6 +99,7 @@ Export-Package: org.eclipse.nebula.jface.tablecomboviewer,
  org.talend.dataprofiler.core.ui.wizard.analysis.provider,
  org.talend.dataprofiler.core.ui.wizard.database,
  org.talend.dataprofiler.core.ui.wizard.indicator,
+ org.talend.dataprofiler.core.ui.wizard.matchrule,
  org.talend.dataprofiler.core.ui.wizard.parserrule,
  org.talend.dataprofiler.core.ui.wizard.urlsetup
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
