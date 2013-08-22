@@ -24,7 +24,7 @@ import org.talend.dataquality.rules.MatchRule;
 
 /**
  * created by zshen on Jul 31, 2013 Detailled comment
- * 
+ *
  */
 public class MatchRuleTableComposite extends AbsMatchAnalysisTableComposite {
 
@@ -32,7 +32,7 @@ public class MatchRuleTableComposite extends AbsMatchAnalysisTableComposite {
 
     /**
      * DOC zshen MatchRuleComposite constructor comment.
-     * 
+     *
      * @param parent
      * @param style
      */
@@ -44,7 +44,7 @@ public class MatchRuleTableComposite extends AbsMatchAnalysisTableComposite {
 
     /**
      * DOC zhao Comment method "setInput".
-     * 
+     *
      * @param matchRule
      */
     private void setInput(MatchRule matchRule) {
@@ -60,7 +60,9 @@ public class MatchRuleTableComposite extends AbsMatchAnalysisTableComposite {
     @Override
     protected void initHeaders() {
         headers.add(MatchAnalysisConstant.MATCH_KEY_NAME); // 14
-        headers.add(MatchAnalysisConstant.COLUMN); // 14
+        if (isAddColumn()) {
+            headers.add(MatchAnalysisConstant.COLUMN); // 14
+        }
         headers.add(MatchAnalysisConstant.MATCHING_TYPE); // 12
         headers.add(MatchAnalysisConstant.CUSTOM_MATCHER_CLASS); // 20
         headers.add(MatchAnalysisConstant.CONFIDENCE_WEIGHT); // 17
@@ -72,7 +74,7 @@ public class MatchRuleTableComposite extends AbsMatchAnalysisTableComposite {
      */
     @Override
     protected void createTable() {
-        tableViewer = new MatchRuleTableViewer(this, getTableStyle());
+        tableViewer = new MatchRuleTableViewer(this, getTableStyle(), isAddColumn());
         tableViewer.initTable(headers);
     }
 
@@ -84,7 +86,7 @@ public class MatchRuleTableComposite extends AbsMatchAnalysisTableComposite {
 
     /**
      * Getter for matchRule.
-     * 
+     *
      * @return the matchRule
      */
     public MatchRule getMatchRule() {

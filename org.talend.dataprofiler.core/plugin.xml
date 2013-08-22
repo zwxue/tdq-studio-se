@@ -328,7 +328,7 @@
                      type="org.talend.dq.nodes.RulesSQLFolderRepNode">
                </adapt>
                <instanceof
-                     value="org.talend.dq.nodes.RulesParserSubFolderRepNode">
+                     value="org.talend.dq.nodes.RulesSQLSubFolderRepNode">
                </instanceof>
                <adapt
                      type="java.util.Collection">
@@ -798,6 +798,26 @@
             <instanceof
                   value="org.talend.repository.model.IRepositoryNode">
             </instanceof>
+         </enablement>
+      </actionProvider>
+      <actionProvider
+            class="org.talend.dataprofiler.core.ui.action.provider.CreateMatcherRuleActionProvider"
+            id="org.talend.dataprofiler.core.ui.action.provider.CreateMatcherRuleActionProvider">
+         <enablement>
+            <or>
+               <adapt
+                     type="org.talend.dq.nodes.RulesMatcherFolderRepNode">
+               </adapt>
+               <instanceof
+                     value="org.talend.dq.nodes.RulesMatcherSubFolderRepNode">
+               </instanceof>
+               <adapt
+                     type="java.util.Collection">
+                  <count
+                        value="0">
+                  </count>
+               </adapt>
+            </or>
          </enablement>
       </actionProvider>       
   </extension>

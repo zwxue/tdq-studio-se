@@ -32,24 +32,29 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.record.linkage.ui.action.MatchRuleActionGroup;
 import org.talend.dataquality.record.linkage.ui.action.RemoveMatchKeyDefinitionAction;
+import org.talend.dataquality.rules.KeyDefinition;
+import org.talend.dataquality.rules.MatchRuleDefinition;
 
 /**
  * created by zshen on Aug 6, 2013 Detailled comment
- * 
+ *
  */
 public abstract class AbstractMatchAnalysisTableViewer extends TableViewer {
 
     protected Table matchTable = null;
 
+    boolean isAddColumn = true;
+
     /**
      * DOC zshen MatchAnalysisTabveViewer constructor comment.
-     * 
+     *
      * @param parent
      * @param style
      */
-    public AbstractMatchAnalysisTableViewer(Composite parent, int style) {
+    public AbstractMatchAnalysisTableViewer(Composite parent, int style, boolean isAddColumn) {
         super(parent, style);
         matchTable = this.getTable();
+        this.isAddColumn = isAddColumn;
         initListener();
     }
 
@@ -77,9 +82,9 @@ public abstract class AbstractMatchAnalysisTableViewer extends TableViewer {
     }
 
     /**
-     * 
+     *
      * DOC zshen Comment method "initTable".
-     * 
+     *
      * @param headers the name of column
      * @param pixelDataOfHeaders the width of the column
      */
@@ -113,55 +118,87 @@ public abstract class AbstractMatchAnalysisTableViewer extends TableViewer {
     }
 
     /**
-     * DOC zshen Comment method "getDisplayWeight".
+     * Getter for isAddColumn.
      * 
+     * @return the isAddColumn
+     */
+    public boolean isAddColumn() {
+        return this.isAddColumn;
+    }
+
+    /**
+     * DOC zshen Comment method "getDisplayWeight".
+     *
      * @return
      */
     abstract protected int getDisplayWeight();
 
     /**
      * DOC zshen Comment method "getTableLabelProvider".
-     * 
+     *
      * @return
      */
     abstract protected IBaseLabelProvider getTableLabelProvider();
 
     /**
      * DOC zshen Comment method "getTableContentProvider".
-     * 
+     *
      * @return
      */
     abstract protected IContentProvider getTableContentProvider();
 
     /**
      * DOC zshen Comment method "getTableCellModifier".
-     * 
+     *
      * @return
      */
     abstract protected ICellModifier getTableCellModifier();
 
     /**
      * DOC zshen Comment method "getCellEditor".
-     * 
+     *
      * @param headers
      * @return
      */
     abstract protected CellEditor[] getCellEditor(List<String> headers);
 
     /**
-     * 
+     *
      * add new Element
-     * 
+     *
      * @param columnName the name of column
      * @param analysis the context of this add operation perform on.
      */
     public abstract boolean addElement(String columnName, Analysis analysis);
 
     /**
+     *
+     * add new Element
+     *
+     * @param columnName the name of column
+     * @param analysis the context of this add operation perform on.
+     */
+    public abstract boolean addElement(String columnName, MatchRuleDefinition matchRuleDef);
+
+    /**
      * remove Element
-     * 
-     * @param columnName
+     *
+     * @param columnName the name of column
      */
     public abstract void removeElement(String columnName, Analysis analysis);
+
+    /**
+     * remove Element
+     *
+     * @param columnName the element of column
+     */
+    public abstract void removeElement(KeyDefinition keyDef, Analysis analysis);
+
+    /**
+     * remove Element
+     *
+     * @param columnName the element of column
+     */
+    public abstract void removeElement(KeyDefinition keyDef, MatchRuleDefinition matchRuleDef);
 
 }

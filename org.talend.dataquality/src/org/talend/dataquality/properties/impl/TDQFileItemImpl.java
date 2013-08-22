@@ -31,12 +31,12 @@ import org.talend.dataquality.properties.TDQFileItem;
  * <p>
  * The following features are implemented:
  * <ul>
- * <li>{@link org.talend.dataquality.properties.impl.TDQFileItemImpl#getName <em>Name</em>}</li>
- * <li>{@link org.talend.dataquality.properties.impl.TDQFileItemImpl#getExtension <em>Extension</em>}</li>
- * <li>{@link org.talend.dataquality.properties.impl.TDQFileItemImpl#getContent <em>Content</em>}</li>
+ *   <li>{@link org.talend.dataquality.properties.impl.TDQFileItemImpl#getName <em>Name</em>}</li>
+ *   <li>{@link org.talend.dataquality.properties.impl.TDQFileItemImpl#getExtension <em>Extension</em>}</li>
+ *   <li>{@link org.talend.dataquality.properties.impl.TDQFileItemImpl#getContent <em>Content</em>}</li>
  * </ul>
  * </p>
- * 
+ *
  * @generated
  */
 public class TDQFileItemImpl extends TDQItemImpl implements TDQFileItem {
@@ -62,9 +62,9 @@ public class TDQFileItemImpl extends TDQItemImpl implements TDQFileItem {
     protected String name = NAME_EDEFAULT;
 
     /**
-     * The default value of the '{@link #getExtension() <em>Extension</em>}' attribute. <!-- begin-user-doc --> <!--
+     * The default value of the '{@link #getExtension() <em>Extension</em>}' attribute.
+     * <!-- begin-user-doc --> <!--
      * end-user-doc -->
-     * 
      * @see #getExtension()
      * @generated
      * @ordered
@@ -72,9 +72,9 @@ public class TDQFileItemImpl extends TDQItemImpl implements TDQFileItem {
     protected static final String EXTENSION_EDEFAULT = null;
 
     /**
-     * The cached value of the '{@link #getExtension() <em>Extension</em>}' attribute. <!-- begin-user-doc --> <!--
+     * The cached value of the '{@link #getExtension() <em>Extension</em>}' attribute.
+     * <!-- begin-user-doc --> <!--
      * end-user-doc -->
-     * 
      * @see #getExtension()
      * @generated
      * @ordered
@@ -82,9 +82,9 @@ public class TDQFileItemImpl extends TDQItemImpl implements TDQFileItem {
     protected String extension = EXTENSION_EDEFAULT;
 
     /**
-     * The cached value of the '{@link #getContent() <em>Content</em>}' reference. <!-- begin-user-doc --> <!--
+     * The cached value of the '{@link #getContent() <em>Content</em>}' reference.
+     * <!-- begin-user-doc --> <!--
      * end-user-doc -->
-     * 
      * @see #getContent()
      * @generated
      * @ordered
@@ -93,7 +93,6 @@ public class TDQFileItemImpl extends TDQItemImpl implements TDQFileItem {
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     protected TDQFileItemImpl() {
@@ -102,7 +101,6 @@ public class TDQFileItemImpl extends TDQItemImpl implements TDQFileItem {
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     @Override
@@ -112,7 +110,6 @@ public class TDQFileItemImpl extends TDQItemImpl implements TDQFileItem {
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     public String getName() {
@@ -133,7 +130,6 @@ public class TDQFileItemImpl extends TDQItemImpl implements TDQFileItem {
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     public String getExtension() {
@@ -142,15 +138,13 @@ public class TDQFileItemImpl extends TDQItemImpl implements TDQFileItem {
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     public void setExtension(String newExtension) {
         String oldExtension = extension;
         extension = newExtension;
         if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, PropertiesPackage.TDQ_FILE_ITEM__EXTENSION, oldExtension,
-                    extension));
+            eNotify(new ENotificationImpl(this, Notification.SET, PropertiesPackage.TDQ_FILE_ITEM__EXTENSION, oldExtension, extension));
     }
 
     private ByteArray getContentOld() {
@@ -247,7 +241,6 @@ public class TDQFileItemImpl extends TDQItemImpl implements TDQFileItem {
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     public ByteArray basicGetContent() {
@@ -256,7 +249,6 @@ public class TDQFileItemImpl extends TDQItemImpl implements TDQFileItem {
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     public void setContent(ByteArray newContent) {
@@ -268,93 +260,86 @@ public class TDQFileItemImpl extends TDQItemImpl implements TDQFileItem {
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     @Override
     public Object eGet(int featureID, boolean resolve, boolean coreType) {
         switch (featureID) {
-        case PropertiesPackage.TDQ_FILE_ITEM__NAME:
-            return getName();
-        case PropertiesPackage.TDQ_FILE_ITEM__EXTENSION:
-            return getExtension();
-        case PropertiesPackage.TDQ_FILE_ITEM__CONTENT:
-            if (resolve)
-                return getContent();
-            return basicGetContent();
+            case PropertiesPackage.TDQ_FILE_ITEM__NAME:
+                return getName();
+            case PropertiesPackage.TDQ_FILE_ITEM__EXTENSION:
+                return getExtension();
+            case PropertiesPackage.TDQ_FILE_ITEM__CONTENT:
+                if (resolve) return getContent();
+                return basicGetContent();
         }
         return super.eGet(featureID, resolve, coreType);
     }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     @Override
     public void eSet(int featureID, Object newValue) {
         switch (featureID) {
-        case PropertiesPackage.TDQ_FILE_ITEM__NAME:
-            setName((String) newValue);
-            return;
-        case PropertiesPackage.TDQ_FILE_ITEM__EXTENSION:
-            setExtension((String) newValue);
-            return;
-        case PropertiesPackage.TDQ_FILE_ITEM__CONTENT:
-            setContent((ByteArray) newValue);
-            return;
+            case PropertiesPackage.TDQ_FILE_ITEM__NAME:
+                setName((String)newValue);
+                return;
+            case PropertiesPackage.TDQ_FILE_ITEM__EXTENSION:
+                setExtension((String)newValue);
+                return;
+            case PropertiesPackage.TDQ_FILE_ITEM__CONTENT:
+                setContent((ByteArray)newValue);
+                return;
         }
         super.eSet(featureID, newValue);
     }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     @Override
     public void eUnset(int featureID) {
         switch (featureID) {
-        case PropertiesPackage.TDQ_FILE_ITEM__NAME:
-            setName(NAME_EDEFAULT);
-            return;
-        case PropertiesPackage.TDQ_FILE_ITEM__EXTENSION:
-            setExtension(EXTENSION_EDEFAULT);
-            return;
-        case PropertiesPackage.TDQ_FILE_ITEM__CONTENT:
-            setContent((ByteArray) null);
-            return;
+            case PropertiesPackage.TDQ_FILE_ITEM__NAME:
+                setName(NAME_EDEFAULT);
+                return;
+            case PropertiesPackage.TDQ_FILE_ITEM__EXTENSION:
+                setExtension(EXTENSION_EDEFAULT);
+                return;
+            case PropertiesPackage.TDQ_FILE_ITEM__CONTENT:
+                setContent((ByteArray)null);
+                return;
         }
         super.eUnset(featureID);
     }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     @Override
     public boolean eIsSet(int featureID) {
         switch (featureID) {
-        case PropertiesPackage.TDQ_FILE_ITEM__NAME:
-            return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
-        case PropertiesPackage.TDQ_FILE_ITEM__EXTENSION:
-            return EXTENSION_EDEFAULT == null ? extension != null : !EXTENSION_EDEFAULT.equals(extension);
-        case PropertiesPackage.TDQ_FILE_ITEM__CONTENT:
-            return content != null;
+            case PropertiesPackage.TDQ_FILE_ITEM__NAME:
+                return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
+            case PropertiesPackage.TDQ_FILE_ITEM__EXTENSION:
+                return EXTENSION_EDEFAULT == null ? extension != null : !EXTENSION_EDEFAULT.equals(extension);
+            case PropertiesPackage.TDQ_FILE_ITEM__CONTENT:
+                return content != null;
         }
         return super.eIsSet(featureID);
     }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
      * @generated
      */
     @Override
     public String toString() {
-        if (eIsProxy())
-            return super.toString();
+        if (eIsProxy()) return super.toString();
 
         StringBuffer result = new StringBuffer(super.toString());
         result.append(" (name: ");

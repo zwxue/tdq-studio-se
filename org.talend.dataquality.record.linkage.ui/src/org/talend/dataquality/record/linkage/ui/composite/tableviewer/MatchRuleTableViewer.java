@@ -36,10 +36,12 @@ import org.talend.dataquality.record.linkage.utils.MatchingTypeEnum;
 import org.talend.dataquality.rules.KeyDefinition;
 import org.talend.dataquality.rules.MatchKeyDefinition;
 import org.talend.dataquality.rules.MatchRule;
+import org.talend.dataquality.rules.MatchRuleDefinition;
+import org.talend.dataquality.rules.impl.RulesFactoryImpl;
 
 /**
  * created by zshen on Jul 31, 2013 Detailled comment
- * 
+ *
  */
 public class MatchRuleTableViewer extends AbstractMatchAnalysisTableViewer {
 
@@ -49,18 +51,18 @@ public class MatchRuleTableViewer extends AbstractMatchAnalysisTableViewer {
 
     /**
      * DOC zshen MatchRuleTableViewer constructor comment.
-     * 
+     *
      * @param parent
      * @param style
      */
-    public MatchRuleTableViewer(Composite parent, int style) {
-        super(parent, style);
+    public MatchRuleTableViewer(Composite parent, int style, boolean isAddColumn) {
+        super(parent, style, isAddColumn);
 
     }
 
     /**
      * DOC zshen Comment method "getCellEditor".
-     * 
+     *
      * @param headers
      * @return
      */
@@ -68,16 +70,30 @@ public class MatchRuleTableViewer extends AbstractMatchAnalysisTableViewer {
     protected CellEditor[] getCellEditor(List<String> headers) {
         CellEditor[] editors = new CellEditor[headers.size()];
         for (int i = 0; i < editors.length; ++i) {
-            switch (i) {
+            if (isAddColumn()) {
+                switch (i) {
 
-            case 2:
-                editors[i] = new ComboBoxCellEditor(matchTable, MatchingTypeEnum.getAllTypes(), SWT.READ_ONLY);
-                break;
-            case 5:
-                editors[i] = new ComboBoxCellEditor(matchTable, HandleNullEnum.getAllTypes(), SWT.READ_ONLY);
-                break;
-            default:
-                editors[i] = new TextCellEditor(matchTable);
+                case 2:
+                    editors[i] = new ComboBoxCellEditor(matchTable, MatchingTypeEnum.getAllTypes(), SWT.READ_ONLY);
+                    break;
+                case 5:
+                    editors[i] = new ComboBoxCellEditor(matchTable, HandleNullEnum.getAllTypes(), SWT.READ_ONLY);
+                    break;
+                default:
+                    editors[i] = new TextCellEditor(matchTable);
+                }
+            } else {
+                switch (i) {
+
+                case 1:
+                    editors[i] = new ComboBoxCellEditor(matchTable, MatchingTypeEnum.getAllTypes(), SWT.READ_ONLY);
+                    break;
+                case 4:
+                    editors[i] = new ComboBoxCellEditor(matchTable, HandleNullEnum.getAllTypes(), SWT.READ_ONLY);
+                    break;
+                default:
+                    editors[i] = new TextCellEditor(matchTable);
+                }
             }
         }
         return editors;
@@ -85,7 +101,7 @@ public class MatchRuleTableViewer extends AbstractMatchAnalysisTableViewer {
 
     /**
      * DOC zshen Comment method "getTableLabelProvider".
-     * 
+     *
      * @return
      */
     @Override
@@ -95,7 +111,7 @@ public class MatchRuleTableViewer extends AbstractMatchAnalysisTableViewer {
 
     /**
      * DOC zshen Comment method "getTableContentProvider".
-     * 
+     *
      * @return
      */
     @Override
@@ -105,7 +121,7 @@ public class MatchRuleTableViewer extends AbstractMatchAnalysisTableViewer {
 
     /**
      * DOC zshen Comment method "getCellModifier".
-     * 
+     *
      * @return
      */
     @Override
@@ -114,20 +130,20 @@ public class MatchRuleTableViewer extends AbstractMatchAnalysisTableViewer {
     }
 
     /**
-     * 
+     *
      * add new Element
-     * 
+     *
      * @param columnName the name of column
+     * @param analysis the context of this add operation perform on.
      */
     @Override
     public boolean addElement(String columnName, Analysis analysis) {
         if (matchRule == null) {
             log.error(DefaultMessagesImpl.getString("MatchRuleTableViewer.NULL_MATCH_RULE_INSTANCE") + analysis.getName()); //$NON-NLS-1$
+            return false;
         }
-        MatchKeyDefinition newMatchkey = MatchRuleAnlaysisUtils.createDefaultMatchRow(columnName);
-        matchRule.getMatchKeys().add(newMatchkey);
-        add(newMatchkey);
-        return true;
+        MatchRuleDefinition matchRuleDef = RulesFactoryImpl.eINSTANCE.createMatchRuleDefinition();
+        return addElement(columnName, matchRuleDef);
     }
 
     @Override
@@ -146,7 +162,7 @@ public class MatchRuleTableViewer extends AbstractMatchAnalysisTableViewer {
 
     /**
      * use this value to compute the vaule of column width
-     * 
+     *
      * @return
      */
     @Override
@@ -168,11 +184,62 @@ public class MatchRuleTableViewer extends AbstractMatchAnalysisTableViewer {
 
     /**
      * DOC zhao Comment method "setMatchRule".
-     * 
+     *
      * @param matchRule2
      */
     public void setMatchRule(MatchRule matchRule) {
         this.matchRule = matchRule;
+    }
+
+    /*
+     * (non-Javadoc)
+     *
+     * @see
+     * org.talend.dataquality.record.linkage.ui.composite.tableviewer.AbstractMatchAnalysisTableViewer#addElement(java
+     * .lang.String, org.talend.dataquality.rules.MatchRuleDefinition)
+     */
+    @Override
+    public boolean addElement(String columnName, MatchRuleDefinition matchRuleDef) {
+        MatchKeyDefinition newMatchkey = MatchRuleAnlaysisUtils.createDefaultMatchRow(columnName);
+        matchRule.getMatchKeys().add(newMatchkey);
+        add(newMatchkey);
+        return true;
+    }
+
+    /*
+     * (non-Javadoc)
+     *
+     * @see
+     * org.talend.dataquality.record.linkage.ui.composite.tableviewer.AbstractMatchAnalysisTableViewer#removeElement
+     * (org.talend.dataquality.rules.KeyDefinition, org.talend.dataquality.analysis.Analysis)
+     */
+    @Override
+    public void removeElement(KeyDefinition keyDef, Analysis analysis) {
+        MatchRuleDefinition matchRuleDef = RulesFactoryImpl.eINSTANCE.createMatchRuleDefinition();
+        removeElement(keyDef, matchRuleDef);
+
+    }
+
+    /*
+     * (non-Javadoc)
+     *
+     * @see
+     * org.talend.dataquality.record.linkage.ui.composite.tableviewer.AbstractMatchAnalysisTableViewer#removeElement
+     * (org.talend.dataquality.rules.KeyDefinition, org.talend.dataquality.rules.MatchRuleDefinition)
+     */
+    @Override
+    public void removeElement(KeyDefinition keyDef, MatchRuleDefinition matchRuleDef) {
+        EList<MatchKeyDefinition> matchKeys = matchRule.getMatchKeys();
+        Iterator<MatchKeyDefinition> matchKeyIterator = matchKeys.iterator();
+        while (matchKeyIterator.hasNext()) {
+            KeyDefinition tempkeyDef = matchKeyIterator.next();
+            if (StringUtils.equals(keyDef.getName(), tempkeyDef.getName())) {
+                matchKeys.remove(keyDef);
+                remove(keyDef);
+                break;
+            }
+        }
+
     }
 
 }

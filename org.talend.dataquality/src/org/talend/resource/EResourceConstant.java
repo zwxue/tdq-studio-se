@@ -115,6 +115,7 @@ public enum EResourceConstant {
     PATTERN_SQL("SQL", "TDQ_Libraries/Patterns/SQL", ResourceConstant.READONLY), //$NON-NLS-1$ $NON-NLS-2$
     RULES("Rules", "TDQ_Libraries/Rules", ResourceConstant.READONLY, ResourceConstant.NO_SUBFOLDER), //$NON-NLS-1$ $NON-NLS-2$
     RULES_SQL("SQL", "TDQ_Libraries/Rules/SQL", ResourceConstant.READONLY), //$NON-NLS-1$ $NON-NLS-2$
+    RULES_MATCHER("Match", "TDQ_Libraries/Rules/Match", ResourceConstant.READONLY), //$NON-NLS-1$ $NON-NLS-2$
     // MOD klliu feature 23019
     RULES_PARSER("Parser", "TDQ_Libraries/Rules/Parser", ResourceConstant.READONLY), //$NON-NLS-1$ $NON-NLS-2$
     SOURCE_FILES("Source Files", "TDQ_Libraries/Source Files", ResourceConstant.READONLY), //$NON-NLS-1$ $NON-NLS-2$
@@ -137,7 +138,7 @@ public enum EResourceConstant {
 
     /**
      * Getter for name.
-     * 
+     *
      * @return the name
      */
     public String getName() {
@@ -146,7 +147,7 @@ public enum EResourceConstant {
 
     /**
      * Getter for path.
-     * 
+     *
      * @return the path
      */
     public String getPath() {
@@ -155,7 +156,7 @@ public enum EResourceConstant {
 
     /**
      * Getter for qualifications.
-     * 
+     *
      * @return the qualifications
      */
     public QualifiedName[] getQualifications() {
@@ -164,7 +165,7 @@ public enum EResourceConstant {
 
     /**
      * DOC bzhou Comment method "getPathes".
-     * 
+     *
      * @return
      */
     public static IPath[] getPathes() {
@@ -180,9 +181,9 @@ public enum EResourceConstant {
     }
 
     /**
-     * 
+     *
      * This method is to find the matched Qualifications constant by path.
-     * 
+     *
      * @param path
      * @return
      */
@@ -198,7 +199,7 @@ public enum EResourceConstant {
 
     /**
      * DOC bZhou Comment method "getTypedConstantList".
-     * 
+     *
      * @return
      */
     public static List<EResourceConstant> getTypedConstantList() {
@@ -219,7 +220,7 @@ public enum EResourceConstant {
 
     /**
      * DOC bZhou Comment method "getTypedConstant".
-     * 
+     *
      * @param element
      * @return
      */
@@ -252,7 +253,7 @@ public enum EResourceConstant {
 
     /**
      * DOC bZhou Comment method "getTypedConstant".
-     * 
+     *
      * @param item
      * @return
      */
@@ -354,7 +355,7 @@ public enum EResourceConstant {
 
     /**
      * DOC bZhou Comment method "isMDMConnection".
-     * 
+     *
      * @param provider
      * @return
      */
@@ -364,9 +365,9 @@ public enum EResourceConstant {
     }
 
     /**
-     * 
+     *
      * This mehtod is to get the top level folder constant of TOP.
-     * 
+     *
      * @return An array of EResourceConstant.
      */
     public static EResourceConstant[] getTopConstants() {
@@ -375,7 +376,7 @@ public enum EResourceConstant {
 
     /**
      * DOC bZhou Comment method "getTopConstantIndexFromPath".
-     * 
+     *
      * @param inputPath
      * @return
      */
@@ -400,9 +401,9 @@ public enum EResourceConstant {
     }
 
     /**
-     * 
+     *
      * This method is to see whether the path is a current workspace constant path.
-     * 
+     *
      * @param path
      * @return true if it is, otherwise false.
      */

@@ -108,6 +108,10 @@ public class PropertiesAdapterFactory extends AdapterFactoryImpl {
                 return createTDQSourceFileItemAdapter();
             }
             @Override
+            public Adapter caseTDQMatchRuleItem(TDQMatchRuleItem object) {
+                return createTDQMatchRuleItemAdapter();
+            }
+            @Override
             public Adapter caseItem(Item object) {
                 return createItemAdapter();
             }
@@ -258,6 +262,20 @@ public class PropertiesAdapterFactory extends AdapterFactoryImpl {
      * @generated
      */
     public Adapter createTDQSourceFileItemAdapter() {
+        return null;
+    }
+
+    /**
+     * Creates a new adapter for an object of class '{@link org.talend.dataquality.properties.TDQMatchRuleItem <em>TDQ Match Rule Item</em>}'.
+     * <!-- begin-user-doc -->
+     * This default implementation returns null so that we can easily ignore cases;
+     * it's useful to ignore a case when inheritance will catch all the cases anyway.
+     * <!-- end-user-doc -->
+     * @return the new adapter.
+     * @see org.talend.dataquality.properties.TDQMatchRuleItem
+     * @generated
+     */
+    public Adapter createTDQMatchRuleItemAdapter() {
         return null;
     }
 

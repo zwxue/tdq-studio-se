@@ -18,13 +18,13 @@ import org.talend.dataquality.record.linkage.utils.MatchAnalysisConstant;
 
 /**
  * created by zshen on Aug 6, 2013 Detailled comment
- * 
+ *
  */
 public class BlockingKeyTableComposite extends AbsMatchAnalysisTableComposite {
 
     /**
      * DOC zshen BlockingKeyTableComposite constructor comment.
-     * 
+     *
      * @param parent
      * @param style
      */
@@ -34,13 +34,15 @@ public class BlockingKeyTableComposite extends AbsMatchAnalysisTableComposite {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataquality.record.linkage.ui.composite.MatchRuleTableComposite#initHeaders()
      */
     @Override
     protected void initHeaders() {
         headers.add(MatchAnalysisConstant.BLOCK_KEY_NAME); // 14
-        headers.add(MatchAnalysisConstant.COLUMN); // 14
+        if (isAddColumn()) {
+            headers.add(MatchAnalysisConstant.COLUMN); // 14
+        }
         headers.add(MatchAnalysisConstant.PRE_ALGORITHM); // 12
         headers.add(MatchAnalysisConstant.PRE_VALUE); // 20
         headers.add(MatchAnalysisConstant.ALGORITHM); // 17
@@ -51,12 +53,12 @@ public class BlockingKeyTableComposite extends AbsMatchAnalysisTableComposite {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataquality.record.linkage.ui.composite.MatchRuleTableComposite#createTable()
      */
     @Override
     protected void createTable() {
-        tableViewer = new BlockingKeyTableViewer(this, getTableStyle());
+        tableViewer = new BlockingKeyTableViewer(this, getTableStyle(), isAddColumn());
         ((BlockingKeyTableViewer) tableViewer).initTable(headers);
     }
 

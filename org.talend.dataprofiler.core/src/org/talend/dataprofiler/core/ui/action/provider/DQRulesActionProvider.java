@@ -21,8 +21,6 @@ import org.talend.dataprofiler.core.ui.action.actions.CreateDQRulesAction;
 import org.talend.dataprofiler.core.ui.utils.WorkbenchUtils;
 import org.talend.repository.model.IRepositoryNode.ENodeType;
 import org.talend.repository.model.RepositoryNode;
-import org.talend.resource.ResourceManager;
-import org.talend.resource.ResourceService;
 
 /**
  * DOC xqliu class global comment. Detailled comment
@@ -51,9 +49,7 @@ public class DQRulesActionProvider extends AbstractCommonActionProvider {
                 RepositoryNode node = (RepositoryNode) obj;
                 if (ENodeType.SYSTEM_FOLDER.equals(node.getType()) || ENodeType.SIMPLE_FOLDER.equals(node.getType())) {
                     IFolder folder = WorkbenchUtils.getFolder(node);
-                    if (ResourceService.isSubFolder(ResourceManager.getRulesSQLFolder(), folder)) {
                         menu.add(new CreateDQRulesAction(folder));
-                    }
                 }
             }
         }

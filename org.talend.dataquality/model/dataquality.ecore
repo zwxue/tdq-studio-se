@@ -1441,5 +1441,8 @@
     </eClassifiers>
     <eClassifiers xsi:type="ecore:EClass" name="TDQJrxmlItem" eSuperTypes="#//properties/TDQFileItem"/>
     <eClassifiers xsi:type="ecore:EClass" name="TDQSourceFileItem" eSuperTypes="#//properties/TDQFileItem"/>
+    <eClassifiers xsi:type="ecore:EClass" name="TDQMatchRuleItem" eSuperTypes="../../org.talend.model/model/properties.ecore#//TDQItem">
+      <eStructuralFeatures xsi:type="ecore:EReference" name="matchRule" eType="#//rules/MatchRuleDefinition"/>
+    </eClassifiers>
   </eSubpackages>
 </ecore:EPackage>

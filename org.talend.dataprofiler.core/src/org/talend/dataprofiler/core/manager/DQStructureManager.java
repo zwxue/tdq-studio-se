@@ -80,7 +80,7 @@ import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
  * Create the folder structure for the DQ Reponsitory view.
- * 
+ *
  */
 public final class DQStructureManager {
 
@@ -119,7 +119,7 @@ public final class DQStructureManager {
 
     /**
      * DOC bZhou Comment method "getCurrentProject".
-     * 
+     *
      * @return
      */
     public Project getCurrentProject() {
@@ -207,6 +207,12 @@ public final class DQStructureManager {
                         EResourceConstant.RULES_SQL.getName());
             } else {
                 rulesSQLFoler = instance.getObjectFolder(EResourceConstant.RULES_SQL);
+            }
+            if (!project.getFolder(EResourceConstant.RULES_MATCHER.getPath()).exists()) {
+                rulesSQLFoler = ProxyRepositoryFactory.getInstance().createFolder(ERepositoryObjectType.TDQ_RULES, Path.EMPTY,
+                        EResourceConstant.RULES_MATCHER.getName());
+            } else {
+                rulesSQLFoler = instance.getObjectFolder(EResourceConstant.RULES_MATCHER);
             }
             rulesSQLFoler.getProperty().getItem().getState().setPath(ERepositoryObjectType.TDQ_RULES_SQL.getFolder());
             Folder rulesParserFoler = null;
@@ -316,9 +322,9 @@ public final class DQStructureManager {
     }
 
     /**
-     * 
+     *
      * DOC klliu Comment method "copyFilesToFolder".
-     * 
+     *
      * @param plugin
      * @param srcPath
      * @param recurse
@@ -418,9 +424,9 @@ public final class DQStructureManager {
     }
 
     /**
-     * 
+     *
      * DOC klliu Comment method "copyFileToFolder".
-     * 
+     *
      * @param inputStream
      * @param fileName
      * @param folder
@@ -476,9 +482,9 @@ public final class DQStructureManager {
     }
 
     /**
-     * 
+     *
      * DOC qiongli Comment method "createSourceFileItem".
-     * 
+     *
      * @param content:cotanin sql sentence
      * @param path
      * @param label:file name
@@ -513,7 +519,7 @@ public final class DQStructureManager {
 
     /**
      * Method "isNeedCreateStructure" created by bzhou@talend.com.
-     * 
+     *
      * @return true if need to create new resource structure.
      */
     public boolean isNeedCreateStructure() {
@@ -536,7 +542,7 @@ public final class DQStructureManager {
 
     /**
      * DOC bZhou Comment method "isNeedMigration".
-     * 
+     *
      * @return
      */
     public boolean isNeedMigration() {
@@ -551,7 +557,7 @@ public final class DQStructureManager {
 
     /**
      * Method "isSecludedVersion" created by bzhou@talend.com.
-     * 
+     *
      * @return true if version is before 3.0.0
      */
     private boolean isSecludedVersion() {
@@ -561,7 +567,7 @@ public final class DQStructureManager {
     /**
      * Creates a new project resource with the special name.MOD mzhao 2009-03-18 make this method as public.For
      * {@link org.talend.dataprofiler.core.migration.impl.TDCPFolderMergeTask} use.
-     * 
+     *
      * @return the created project resource, or <code>null</code> if the project was not created
      * @throws InterruptedException
      * @throws InvocationTargetException
@@ -604,7 +610,7 @@ public final class DQStructureManager {
 
     /**
      * DOC bzhou Comment method "createNewFolder".
-     * 
+     *
      * @param parent
      * @param constant
      * @return
@@ -618,7 +624,7 @@ public final class DQStructureManager {
 
     /**
      * Method "createNewFolder" creates a new folder.
-     * 
+     *
      * @param parent
      * @param folderName
      * @return
@@ -644,7 +650,7 @@ public final class DQStructureManager {
 
     /**
      * Copy the files from srcPath to destination folder.
-     * 
+     *
      * @param srcPath The path name in which to look. The path is always relative to the root of this bundle and may
      * begin with &quot;/&quot;. A path value of &quot;/&quot; indicates the root of this bundle.
      * @param srcPath

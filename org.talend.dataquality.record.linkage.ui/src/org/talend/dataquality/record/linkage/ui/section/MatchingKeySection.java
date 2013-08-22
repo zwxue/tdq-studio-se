@@ -46,9 +46,9 @@ import org.talend.dataquality.rules.MatchRule;
 import org.talend.dataquality.rules.RulesFactory;
 
 /**
- * 
+ *
  * created by zhao on Aug 17, 2013 Detailled comment
- * 
+ *
  */
 public class MatchingKeySection extends AbstractMatchAnaysisTableSection {
 
@@ -66,7 +66,7 @@ public class MatchingKeySection extends AbstractMatchAnaysisTableSection {
 
     /**
      * DOC zshen MatchingKeySection constructor comment.
-     * 
+     *
      * @param parent
      * @param style
      * @param toolkit
@@ -77,7 +77,7 @@ public class MatchingKeySection extends AbstractMatchAnaysisTableSection {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataquality.record.linkage.ui.section.AbstractMatchTableSection#getSectionName()
      */
     @Override
@@ -87,13 +87,13 @@ public class MatchingKeySection extends AbstractMatchAnaysisTableSection {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.talend.dataquality.record.linkage.ui.section.AbstractMatchTableSection#createSubContext(org.eclipse.swt.widgets
      * .Composite)
      */
     @Override
-    protected void createSubContent(Composite sectionClient) {
+    protected Composite createSubContent(Composite sectionClient) {
 
         Composite parent = toolkit.createComposite(sectionClient);
         GridLayout tableLayout = new GridLayout(1, Boolean.TRUE);
@@ -135,13 +135,12 @@ public class MatchingKeySection extends AbstractMatchAnaysisTableSection {
 
         });
         initMatchRuleTabs();
-        createRefreshButton(parent);
-
+        return parent;
     }
 
     /**
      * DOC zhao Comment method "addMatchRuleToModel".
-     * 
+     *
      * @param newMatchRule
      */
     private void addMatchRuleToAnalysis(MatchRule newMatchRule) {
@@ -155,16 +154,17 @@ public class MatchingKeySection extends AbstractMatchAnaysisTableSection {
                 .getData(MatchAnalysisConstant.MATCH_RULE_TABLE_COMPOSITE);
         MatchRule matchRule = matchRuleTableComp.getMatchRule();
         // Remove it from anaysis.
-        RecordMatchingIndicator recordMatchingIndicator = MatchRuleAnlaysisUtils.getRecordMatchIndicatorFromAna(analysis);
-        recordMatchingIndicator.getBuiltInMatchRuleDefinition().getMatchRules().remove(matchRule);
+        getMatchRuleList().remove(matchRule);
+        // RecordMatchingIndicator recordMatchingIndicator =
+        // MatchRuleAnlaysisUtils.getRecordMatchIndicatorFromAna(analysis);
+        // recordMatchingIndicator.getBuiltInMatchRuleDefinition().getMatchRules().remove(matchRule);
     }
 
     /**
      * DOC zhao Comment method "initMatchRuleTabs".
      */
     private void initMatchRuleTabs() {
-        RecordMatchingIndicator recordMatchingIndicator = MatchRuleAnlaysisUtils.getRecordMatchIndicatorFromAna(analysis);
-        List<MatchRule> matchRules = recordMatchingIndicator.getBuiltInMatchRuleDefinition().getMatchRules();
+        List<MatchRule> matchRules = getMatchRuleList();
         for (MatchRule matchRule : matchRules) {
             addRuleTab(false, matchRule);
             tabCount++;
@@ -177,6 +177,11 @@ public class MatchingKeySection extends AbstractMatchAnaysisTableSection {
         }
     }
 
+    protected List<MatchRule> getMatchRuleList() {
+        RecordMatchingIndicator recordMatchingIndicator = MatchRuleAnlaysisUtils.getRecordMatchIndicatorFromAna(analysis);
+        return recordMatchingIndicator.getBuiltInMatchRuleDefinition().getMatchRules();
+    }
+
     /**
      * add properties tab
      */
@@ -185,9 +190,9 @@ public class MatchingKeySection extends AbstractMatchAnaysisTableSection {
     }
 
     /**
-     * 
+     *
      * Add a new key definition on current selected match rule.
-     * 
+     *
      * @param column
      */
     public void createMatchKeyFromCurrentMatchRule(String column) {
@@ -202,9 +207,9 @@ public class MatchingKeySection extends AbstractMatchAnaysisTableSection {
     }
 
     /**
-     * 
+     *
      * Remove the match key by column name from current selected match rule tab.
-     * 
+     *
      * @param column
      */
     public void removeMatchKeyFromCurrentMatchRule(String column) {
@@ -220,7 +225,7 @@ public class MatchingKeySection extends AbstractMatchAnaysisTableSection {
 
     /**
      * DOC zshen Comment method "createPropertyTab".
-     * 
+     *
      * @param tabName
      * @param reComputeMatchRule
      */
@@ -258,7 +263,7 @@ public class MatchingKeySection extends AbstractMatchAnaysisTableSection {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.talend.dataquality.record.linkage.ui.section.AbstractMatchTableSection#createSubChart(org.eclipse.swt.widgets
      * .Composite)
@@ -307,7 +312,7 @@ public class MatchingKeySection extends AbstractMatchAnaysisTableSection {
 
     /**
      * DOC zshen Comment method "getViewColumn".
-     * 
+     *
      * @return
      */
     private String[] getViewColumn() {
@@ -329,7 +334,7 @@ public class MatchingKeySection extends AbstractMatchAnaysisTableSection {
 
     /**
      * DOC zshen Comment method "getViewData".
-     * 
+     *
      * @return
      */
     private List<String[]> getViewData() {
@@ -344,7 +349,7 @@ public class MatchingKeySection extends AbstractMatchAnaysisTableSection {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataquality.record.linkage.ui.section.AbstractMatchAnaysisTableSection#isKeyDefinitionAdded()
      */
     @Override
@@ -365,5 +370,4 @@ public class MatchingKeySection extends AbstractMatchAnaysisTableSection {
         }
         return isAddded;
     }
-
 }

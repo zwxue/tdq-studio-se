@@ -64,6 +64,7 @@ import org.talend.dataprofiler.core.ui.editor.dqrules.BusinessRuleItemEditorInpu
 import org.talend.dataprofiler.core.ui.editor.dqrules.DQRuleEditor;
 import org.talend.dataprofiler.core.ui.editor.indicator.IndicatorDefinitionItemEditorInput;
 import org.talend.dataprofiler.core.ui.editor.indicator.IndicatorEditor;
+import org.talend.dataprofiler.core.ui.editor.matchrule.MatchRuleItemEditorInput;
 import org.talend.dataprofiler.core.ui.editor.parserrules.ParserRuleItemEditorInput;
 import org.talend.dataprofiler.core.ui.editor.pattern.PatternEditor;
 import org.talend.dataprofiler.core.ui.editor.pattern.PatternItemEditorInput;
@@ -197,7 +198,7 @@ public class OpenItemEditorAction extends Action implements IIntroAction {
 
     /**
      * get the ItemEditorInput according to the reposViewObj, if there no ItemEditorInput return null.
-     * 
+     *
      * @param isOpenItemEditorAction
      * @return
      */
@@ -291,6 +292,9 @@ public class OpenItemEditorAction extends Action implements IIntroAction {
             } else if (ERepositoryObjectType.TDQ_RULES_PARSER.getKey().equals(key)) {
                 result = new ParserRuleItemEditorInput(item);
                 editorID = DQRuleEditor.class.getName();
+            } else if (ERepositoryObjectType.TDQ_RULES_MATCHER.getKey().equals(key)) {
+                result = new MatchRuleItemEditorInput(item);
+                editorID = DQRuleEditor.class.getName();
             } else if (ERepositoryObjectType.TDQ_PATTERN_ELEMENT.getKey().equals(key)) {
                 result = new PatternItemEditorInput(item);
                 TDQPatternItem patternItem = (TDQPatternItem) item;
@@ -355,7 +359,7 @@ public class OpenItemEditorAction extends Action implements IIntroAction {
 
     /*
      * (non-Jsdoc)
-     * 
+     *
      * @see org.eclipse.ui.intro.config.IIntroAction#run(org.eclipse.ui.intro.IIntroSite, java.util.Properties)
      */
     public void run(IIntroSite site, Properties params) {
@@ -366,7 +370,7 @@ public class OpenItemEditorAction extends Action implements IIntroAction {
 
     /**
      * DOC xqliu Comment method "initRepositoryViewObject".
-     * 
+     *
      * @param params
      */
     private void initRepositoryViewObject(Properties params) {

@@ -15,16 +15,18 @@ package org.talend.dataquality.record.linkage.ui.composite;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.record.linkage.ui.composite.tableviewer.AbstractMatchAnalysisTableViewer;
 import org.talend.dataquality.rules.KeyDefinition;
+import org.talend.dataquality.rules.MatchRuleDefinition;
 
 /**
  * created by zhao on Aug 16, 2013 Abstract table compoiste. Blocking key, matching key survivorship key table are
  * intended to be extended.
- * 
+ *
  */
 public abstract class AbsMatchAnalysisTableComposite extends Composite {
 
@@ -32,9 +34,11 @@ public abstract class AbsMatchAnalysisTableComposite extends Composite {
 
     protected AbstractMatchAnalysisTableViewer tableViewer = null;
 
+    private boolean isAddColumn = true;
+
     /**
      * DOC zshen MatchRuleComposite constructor comment.
-     * 
+     *
      * @param parent
      * @param style
      */
@@ -78,7 +82,43 @@ public abstract class AbsMatchAnalysisTableComposite extends Composite {
         return tableViewer.addElement(column, anlaysis);
     }
 
+    public Boolean addKeyDefinition(String column, MatchRuleDefinition matchRuleDef) {
+        return tableViewer.addElement(column, matchRuleDef);
+    }
+
     public void removeKeyDefinition(String column, Analysis analysis) {
         tableViewer.removeElement(column, analysis);
     }
+
+    public void removeKeyDefinition(KeyDefinition keyDef, Analysis analysis) {
+        tableViewer.removeElement(keyDef, analysis);
+    }
+
+    public void removeKeyDefinition(KeyDefinition keyDef, MatchRuleDefinition matchRuleDef) {
+        tableViewer.removeElement(keyDef, matchRuleDef);
+    }
+
+    public ISelection getSelectItems() {
+        return tableViewer.getSelection();
+    }
+
+    /**
+     * Getter for isAddColumn.
+     *
+     * @return the isAddColumn
+     */
+    public boolean isAddColumn() {
+        return this.isAddColumn;
+    }
+
+    /**
+     * Sets the isAddColumn.
+     *
+     * @param isAddColumn the isAddColumn to set
+     */
+    public void setAddColumn(boolean isAddColumn) {
+        this.isAddColumn = isAddColumn;
+    }
+
+
 }

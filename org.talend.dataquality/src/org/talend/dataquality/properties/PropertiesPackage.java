@@ -770,6 +770,88 @@ public interface PropertiesPackage extends EPackage {
     int TDQ_SOURCE_FILE_ITEM_FEATURE_COUNT = TDQ_FILE_ITEM_FEATURE_COUNT + 0;
 
     /**
+     * The meta object id for the '{@link org.talend.dataquality.properties.impl.TDQMatchRuleItemImpl <em>TDQ Match Rule Item</em>}' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see org.talend.dataquality.properties.impl.TDQMatchRuleItemImpl
+     * @see org.talend.dataquality.properties.impl.PropertiesPackageImpl#getTDQMatchRuleItem()
+     * @generated
+     */
+    int TDQ_MATCH_RULE_ITEM = 8;
+
+    /**
+     * The feature id for the '<em><b>Property</b></em>' reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int TDQ_MATCH_RULE_ITEM__PROPERTY = org.talend.core.model.properties.PropertiesPackage.TDQ_ITEM__PROPERTY;
+
+    /**
+     * The feature id for the '<em><b>State</b></em>' reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int TDQ_MATCH_RULE_ITEM__STATE = org.talend.core.model.properties.PropertiesPackage.TDQ_ITEM__STATE;
+
+    /**
+     * The feature id for the '<em><b>Parent</b></em>' reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int TDQ_MATCH_RULE_ITEM__PARENT = org.talend.core.model.properties.PropertiesPackage.TDQ_ITEM__PARENT;
+
+    /**
+     * The feature id for the '<em><b>Reference Resources</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int TDQ_MATCH_RULE_ITEM__REFERENCE_RESOURCES = org.talend.core.model.properties.PropertiesPackage.TDQ_ITEM__REFERENCE_RESOURCES;
+
+    /**
+     * The feature id for the '<em><b>File Extension</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int TDQ_MATCH_RULE_ITEM__FILE_EXTENSION = org.talend.core.model.properties.PropertiesPackage.TDQ_ITEM__FILE_EXTENSION;
+
+    /**
+     * The feature id for the '<em><b>Filename</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int TDQ_MATCH_RULE_ITEM__FILENAME = org.talend.core.model.properties.PropertiesPackage.TDQ_ITEM__FILENAME;
+
+    /**
+     * The feature id for the '<em><b>Match Rule</b></em>' reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int TDQ_MATCH_RULE_ITEM__MATCH_RULE = org.talend.core.model.properties.PropertiesPackage.TDQ_ITEM_FEATURE_COUNT + 0;
+
+    /**
+     * The number of structural features of the '<em>TDQ Match Rule Item</em>' class.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int TDQ_MATCH_RULE_ITEM_FEATURE_COUNT = org.talend.core.model.properties.PropertiesPackage.TDQ_ITEM_FEATURE_COUNT + 1;
+
+    /**
      * Returns the meta object for class '{@link org.talend.dataquality.properties.TDQAnalysisItem <em>TDQ Analysis Item</em>}'.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -938,6 +1020,27 @@ public interface PropertiesPackage extends EPackage {
     EClass getTDQSourceFileItem();
 
     /**
+     * Returns the meta object for class '{@link org.talend.dataquality.properties.TDQMatchRuleItem <em>TDQ Match Rule Item</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for class '<em>TDQ Match Rule Item</em>'.
+     * @see org.talend.dataquality.properties.TDQMatchRuleItem
+     * @generated
+     */
+    EClass getTDQMatchRuleItem();
+
+    /**
+     * Returns the meta object for the reference '{@link org.talend.dataquality.properties.TDQMatchRuleItem#getMatchRule <em>Match Rule</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for the reference '<em>Match Rule</em>'.
+     * @see org.talend.dataquality.properties.TDQMatchRuleItem#getMatchRule()
+     * @see #getTDQMatchRuleItem()
+     * @generated
+     */
+    EReference getTDQMatchRuleItem_MatchRule();
+
+    /**
      * Returns the factory that creates the instances of the model.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -1102,6 +1205,24 @@ public interface PropertiesPackage extends EPackage {
          * @generated
          */
         EClass TDQ_SOURCE_FILE_ITEM = eINSTANCE.getTDQSourceFileItem();
+
+        /**
+         * The meta object literal for the '{@link org.talend.dataquality.properties.impl.TDQMatchRuleItemImpl <em>TDQ Match Rule Item</em>}' class.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @see org.talend.dataquality.properties.impl.TDQMatchRuleItemImpl
+         * @see org.talend.dataquality.properties.impl.PropertiesPackageImpl#getTDQMatchRuleItem()
+         * @generated
+         */
+        EClass TDQ_MATCH_RULE_ITEM = eINSTANCE.getTDQMatchRuleItem();
+
+        /**
+         * The meta object literal for the '<em><b>Match Rule</b></em>' reference feature.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @generated
+         */
+        EReference TDQ_MATCH_RULE_ITEM__MATCH_RULE = eINSTANCE.getTDQMatchRuleItem_MatchRule();
 
     }
 

@@ -226,12 +226,6 @@ public class ResourceViewContentProvider extends WorkbenchContentProvider {
                         instance.createRepositoryNodeSystemFolders(folderHelper, node, resContants);
                     }
 
-                    // else if (EResourceConstant.INDICATORS.getName().equals(label)) {
-                    // List<EResourceConstant> resContants = new ArrayList<EResourceConstant>();
-                    // resContants.add(EResourceConstant.SYSTEM_INDICATORS);
-                    // resContants.add(EResourceConstant.USER_DEFINED_INDICATORS);
-                    // instance.createRepositoryNodeSystemFolders(folderHelper, node, resContants);
-                    // }
                     else if (EResourceConstant.PATTERNS.getName().equals(label)) {// this case has been done in the
                                                                                   // PatternFolderRepNode.getChilren()
                                                                                   // So I think don't need it again now.

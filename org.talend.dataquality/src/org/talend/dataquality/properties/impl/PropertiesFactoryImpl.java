@@ -68,6 +68,7 @@ public class PropertiesFactoryImpl extends EFactoryImpl implements PropertiesFac
             case PropertiesPackage.TDQ_FILE_ITEM: return createTDQFileItem();
             case PropertiesPackage.TDQ_JRXML_ITEM: return createTDQJrxmlItem();
             case PropertiesPackage.TDQ_SOURCE_FILE_ITEM: return createTDQSourceFileItem();
+            case PropertiesPackage.TDQ_MATCH_RULE_ITEM: return createTDQMatchRuleItem();
             default:
                 throw new IllegalArgumentException("The class '" + eClass.getName() + "' is not a valid classifier");
         }
@@ -151,6 +152,16 @@ public class PropertiesFactoryImpl extends EFactoryImpl implements PropertiesFac
     public TDQSourceFileItem createTDQSourceFileItem() {
         TDQSourceFileItemImpl tdqSourceFileItem = new TDQSourceFileItemImpl();
         return tdqSourceFileItem;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public TDQMatchRuleItem createTDQMatchRuleItem() {
+        TDQMatchRuleItemImpl tdqMatchRuleItem = new TDQMatchRuleItemImpl();
+        return tdqMatchRuleItem;
     }
 
     /**

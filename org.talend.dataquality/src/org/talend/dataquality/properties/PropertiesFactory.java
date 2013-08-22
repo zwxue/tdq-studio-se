@@ -98,6 +98,15 @@ public interface PropertiesFactory extends EFactory {
     TDQSourceFileItem createTDQSourceFileItem();
 
     /**
+     * Returns a new object of class '<em>TDQ Match Rule Item</em>'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return a new object of class '<em>TDQ Match Rule Item</em>'.
+     * @generated
+     */
+    TDQMatchRuleItem createTDQMatchRuleItem();
+
+    /**
      * Returns the package supported by this factory.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->

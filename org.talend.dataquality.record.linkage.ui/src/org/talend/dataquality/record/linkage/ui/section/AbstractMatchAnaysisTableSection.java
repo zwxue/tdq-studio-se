@@ -23,31 +23,25 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Control;
-import org.eclipse.ui.forms.events.ExpansionAdapter;
-import org.eclipse.ui.forms.events.ExpansionEvent;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
-import org.eclipse.ui.forms.widgets.Section;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.record.linkage.ui.action.RefreshChartAction;
 import org.talend.dataquality.record.linkage.ui.composite.utils.ImageLib;
 
 /**
  * created by zshen on Jul 31, 2013 Detailled comment
- * 
+ *
  */
-public abstract class AbstractMatchAnaysisTableSection {
-
-    protected FormToolkit toolkit;
+public abstract class AbstractMatchAnaysisTableSection extends AbstractSectionComposite implements ITableEditOperation {
 
     protected List<String[]> tableData;
 
     protected Map<String, String> columnMap = null;
 
-    protected Section section = null;
-
     protected Analysis analysis = null;
+
+    protected Boolean isNeedSubChart = true;
 
     /**
      * @param parent
@@ -55,19 +49,7 @@ public abstract class AbstractMatchAnaysisTableSection {
      */
     public AbstractMatchAnaysisTableSection(final ScrolledForm form, Composite parent, int style, FormToolkit toolkit,
             Analysis analysis) {
-
-        this.toolkit = toolkit;
-        this.section = this.toolkit.createSection(parent, style);
-        section.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_BEGINNING));
-        section.addExpansionListener(new ExpansionAdapter() {
-
-            @Override
-            public void expansionStateChanged(ExpansionEvent e) {
-                form.reflow(true);
-            }
-
-        });
-        section.setExpanded(true);
+        super(form, parent, style, toolkit);
         this.analysis = analysis;
     }
 
@@ -77,17 +59,150 @@ public abstract class AbstractMatchAnaysisTableSection {
     public Composite createContent() {
         section.setText(getSectionName());
         Composite sectionClient = toolkit.createComposite(section, SWT.NONE);
-        sectionClient.setLayout(new GridLayout(2, true));
+        sectionClient.setLayout(new GridLayout(getColumnNum(), true));
         section.setClient(sectionClient);
-        createSubContent(sectionClient);
-        createSubChart(sectionClient);
+        Composite createSubContent = createSubContent(sectionClient);
+        createButtons(createSubContent);
+        if (isNeedSubChart()) {
+            createSubChart(sectionClient);
+        }
         return sectionClient;
     }
 
     /**
+     * Getter for isNeedSubChart.
+     *
+     * @return the isNeedSubChart
+     */
+    public Boolean isNeedSubChart() {
+        return this.isNeedSubChart;
+    }
+
+
+    /**
+     * Sets the isNeedSubChart.
+     *
+     * @param isNeedSubChart the isNeedSubChart to set
+     */
+    public void setIsNeedSubChart(Boolean isNeedSubChart) {
+        this.isNeedSubChart = isNeedSubChart;
+    }
+
+    /**
+     * DOC zshen Comment method "getColumnNum".
+     *
+     * @return
+     */
+    private int getColumnNum() {
+        if (isNeedSubChart()) {
+            return 2;
+        } else {
+            return 1;
+        }
+    }
+
+    protected void createButtons(Composite sectionClient) {
+        if (isNeedSubChart) {
+            createRefreshButton(sectionClient);
+        } else {
+            createEditOperationButtons(sectionClient);
+        }
+    }
+
+    /**
+     * DOC zshen Comment method "createEditOperationButtons".
+     *
+     * @param sectionClient
+     */
+    private void createEditOperationButtons(Composite parent) {
+        Composite buttonsComposite = new Composite(parent, SWT.NONE);
+        buttonsComposite.setLayout(new GridLayout(7, true));
+
+        GridData labelGd = new GridData();
+        labelGd.horizontalAlignment = SWT.LEFT;
+        labelGd.widthHint = 30;
+
+        final Button addButton = new Button(buttonsComposite, SWT.NONE);
+        addButton.setToolTipText("Add New Item");
+        addButton.setImage(ImageLib.getImage(ImageLib.ADD_ACTION));
+        addButton.setLayoutData(labelGd);
+        addButton.addSelectionListener(new SelectionAdapter() {
+
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                addTableItem();
+            }
+        });
+
+        final Button delButton = new Button(buttonsComposite, SWT.NONE);
+        delButton.setToolTipText("Delete Selcetion Item");
+        delButton.setImage(ImageLib.getImage(ImageLib.DELETE_ACTION));
+        delButton.setLayoutData(labelGd);
+        delButton.addSelectionListener(new SelectionAdapter() {
+
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                removeTableItem();
+            }
+        });
+        final Button upButton = new Button(buttonsComposite, SWT.NONE);
+        upButton.setToolTipText("Move Item Up");
+        upButton.setImage(ImageLib.getImage(ImageLib.UP_ACTION));
+        upButton.setLayoutData(labelGd);
+        upButton.addSelectionListener(new SelectionAdapter() {
+
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                moveUpTableItem();
+            }
+        });
+
+        final Button downButton = new Button(buttonsComposite, SWT.NONE);
+        downButton.setToolTipText("Move Item Down");
+        downButton.setImage(ImageLib.getImage(ImageLib.DOWN_ACTION));
+        downButton.setLayoutData(labelGd);
+        downButton.addSelectionListener(new SelectionAdapter() {
+
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                moveDownTableItem();
+            }
+        });
+        final Button copyButton = new Button(buttonsComposite, SWT.NONE);
+        copyButton.setToolTipText("Copy Selcetion Item");
+        copyButton.setImage(ImageLib.getImage(ImageLib.COPY_ACTION));
+        copyButton.setLayoutData(labelGd);
+        copyButton.addSelectionListener(new SelectionAdapter() {
+
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                copyTableItem();
+
+            }
+        });
+
+        final Button pasteButton = new Button(buttonsComposite, SWT.NONE);
+        pasteButton.setToolTipText("Paste Selcetion Item");
+        pasteButton.setImage(ImageLib.getImage(ImageLib.PASTE_ACTION));
+        pasteButton.setLayoutData(labelGd);
+        pasteButton.addSelectionListener(new SelectionAdapter() {
+
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                pasteTableItem();
+
+            }
+        });
+
+
+    }
+
+
+
+    /**
      * DOC zshen Comment method "createButtons".
      */
-    protected void createRefreshButton(Composite sectionClient) {
+    private void createRefreshButton(Composite sectionClient) {
 
         Composite buttonsComposite = new Composite(sectionClient, SWT.NONE);
         buttonsComposite.setLayout(new GridLayout(7, true));
@@ -130,37 +245,90 @@ public abstract class AbstractMatchAnaysisTableSection {
         this.columnMap = columnMap;
     }
 
-    /**
-     * Getter for section.
+    /*
+     * (non-Javadoc)
      * 
-     * @return the section
+     * @see org.talend.dataquality.record.linkage.ui.section.AbstractMatchAnaysisTableSection#pasteTableItem()
      */
-    public Section getSection() {
-        return this.section;
+    @Override
+    public void pasteTableItem() {
+        // TODO Auto-generated method stub
+
     }
 
-    public void setClient(Control client) {
-        this.section.setClient(client);
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataquality.record.linkage.ui.section.AbstractMatchAnaysisTableSection#copyTableItem()
+     */
+    @Override
+    public void copyTableItem() {
+        // TODO Auto-generated method stub
+
     }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataquality.record.linkage.ui.section.AbstractMatchAnaysisTableSection#moveDownTableItem()
+     */
+    @Override
+    public void moveDownTableItem() {
+        // TODO Auto-generated method stub
+
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataquality.record.linkage.ui.section.AbstractMatchAnaysisTableSection#moveUpTableItem()
+     */
+    @Override
+    public void moveUpTableItem() {
+        // TODO Auto-generated method stub
+
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataquality.record.linkage.ui.section.AbstractMatchAnaysisTableSection#removeTableItem()
+     */
+    @Override
+    public void removeTableItem() {
+
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataquality.record.linkage.ui.section.AbstractMatchAnaysisTableSection#addTableItem()
+     */
+    @Override
+    public void addTableItem() {
+
+    }
+
+
 
     /**
      * DOC zshen Comment method "createSubChart". TODO re-order the protected and abstract key word. let "protected"
      * first.
-     * 
+     *
      * @param sectionClient
      */
     abstract protected void createSubChart(Composite sectionClient);
 
     /**
      * DOC zshen Comment method "createSubContent".
-     * 
+     *
      * @param sectionClient
      */
-    abstract protected void createSubContent(Composite sectionClient);
+    abstract protected Composite createSubContent(Composite sectionClient);
 
     /**
      * DOC zshen Comment method "getSectionName".
-     * 
+     *
      * @return
      */
     abstract protected String getSectionName();

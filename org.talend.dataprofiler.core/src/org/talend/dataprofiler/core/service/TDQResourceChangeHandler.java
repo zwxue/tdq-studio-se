@@ -54,9 +54,11 @@ import org.talend.dataquality.properties.TDQAnalysisItem;
 import org.talend.dataquality.properties.TDQBusinessRuleItem;
 import org.talend.dataquality.properties.TDQFileItem;
 import org.talend.dataquality.properties.TDQIndicatorDefinitionItem;
+import org.talend.dataquality.properties.TDQMatchRuleItem;
 import org.talend.dataquality.properties.TDQPatternItem;
 import org.talend.dataquality.properties.TDQReportItem;
 import org.talend.dataquality.rules.DQRule;
+import org.talend.dataquality.rules.MatchRuleDefinition;
 import org.talend.dataquality.rules.WhereRule;
 import org.talend.dq.helper.DQDeleteHelper;
 import org.talend.dq.helper.EObjectHelper;
@@ -67,6 +69,7 @@ import org.talend.dq.writer.EMFSharedResources;
 import org.talend.dq.writer.impl.AnalysisWriter;
 import org.talend.dq.writer.impl.DQRuleWriter;
 import org.talend.dq.writer.impl.IndicatorDefinitionWriter;
+import org.talend.dq.writer.impl.MatchRuleDefinitionWriter;
 import org.talend.dq.writer.impl.PatternWriter;
 import org.talend.dq.writer.impl.ReportWriter;
 import org.talend.repository.model.IRepositoryNode;
@@ -79,7 +82,7 @@ import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwmx.analysis.informationreporting.Report;
 
 /**
- * 
+ *
  * DOC mzhao Handle resource unload events from TOS.
  */
 public class TDQResourceChangeHandler extends AbstractResourceChangesService {
@@ -209,6 +212,16 @@ public class TDQResourceChangeHandler extends AbstractResourceChangesService {
                 itemResource.getContents().add(((TDQFileItem) item).getContent());
 
                 break;
+            case org.talend.dataquality.properties.PropertiesPackage.TDQ_MATCH_RULE_ITEM:
+                fileExtension = FileConstants.RULE_EXTENSION;
+                itemResource = xmiResourceManager.createItemResourceWithExtension(project, item, path,
+                        ERepositoryObjectType.TDQ_RULES_MATCHER, false, fileExtension);
+                MatchRuleDefinition matchRuleDefinition = ((TDQMatchRuleItem) item).getMatchRule();
+                MatchRuleDefinitionWriter matchRuleDefinitionWriter = org.talend.dq.writer.impl.ElementWriterFactory
+                        .getInstance().createdMatchRuleWriter();
+                matchRuleDefinitionWriter.addResourceContent(itemResource, matchRuleDefinition);
+
+                break;
             default:
             }
 
@@ -280,7 +293,7 @@ public class TDQResourceChangeHandler extends AbstractResourceChangesService {
 
     /**
      * replace the oldVersion with newVersion in the file.
-     * 
+     *
      * @param name
      * @param clientFile
      * @param oldVersion
@@ -302,7 +315,7 @@ public class TDQResourceChangeHandler extends AbstractResourceChangesService {
 
     /**
      * DOC xqliu Comment method "reloadFile".
-     * 
+     *
      * @param file
      */
     private void reloadFile(File file) {
@@ -313,7 +326,7 @@ public class TDQResourceChangeHandler extends AbstractResourceChangesService {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.talend.core.repository.utils.AbstractResourceChangesService#saveResourceByEMFShared(org.talend.core.model
      * .properties.Item)
@@ -389,9 +402,9 @@ public class TDQResourceChangeHandler extends AbstractResourceChangesService {
     }
 
     /**
-     * 
+     *
      * get all connection nodes in recycle bin.
-     * 
+     *
      * @param parent
      * @param childNodes
      * @return

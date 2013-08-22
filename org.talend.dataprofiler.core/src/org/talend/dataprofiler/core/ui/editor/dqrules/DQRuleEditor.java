@@ -25,6 +25,8 @@ import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.action.actions.DefaultSaveAction;
 import org.talend.dataprofiler.core.ui.editor.CommonFormEditor;
 import org.talend.dataprofiler.core.ui.editor.TdEditorToolBar;
+import org.talend.dataprofiler.core.ui.editor.matchrule.MatchRuleItemEditorInput;
+import org.talend.dataprofiler.core.ui.editor.matchrule.MatchRuleMasterDetailsPage;
 import org.talend.dataprofiler.core.ui.editor.parserrules.ParserRuleItemEditorInput;
 import org.talend.dataquality.rules.DQRule;
 import org.talend.dataquality.rules.ParserRule;
@@ -39,6 +41,8 @@ public class DQRuleEditor extends CommonFormEditor {
 
     private ParserRuleMasterDetailsPage parserPage;
 
+    private MatchRuleMasterDetailsPage matchPage;
+
     private static final String ID = "DQRuleEditor.masterPage";//$NON-NLS-1$
 
     // MOD xqliu 2009-07-02 bug 7687
@@ -52,7 +56,8 @@ public class DQRuleEditor extends CommonFormEditor {
         try {
 
             if (editorInput instanceof ParserRuleItemEditorInput) {
-                parserPage = new ParserRuleMasterDetailsPage(this, ID, "Parser Rule Settings"); //$NON-NLS-1$ 
+                parserPage = new ParserRuleMasterDetailsPage(this, ID,
+                        DefaultMessagesImpl.getString("DQRuleEditor.parserRuleSettings")); //$NON-NLS-1$
                 addPage(parserPage);
                 setPartName(parserPage.getIntactElemenetName());
             } else if (editorInput instanceof FileEditorInput) {
@@ -63,19 +68,29 @@ public class DQRuleEditor extends CommonFormEditor {
                     findDQRule = DQRuleResourceFileHelper.getInstance().findDQRule(file);
                 }
                 if (findDQRule instanceof ParserRule) {
-                    parserPage = new ParserRuleMasterDetailsPage(this, ID, "Parser Rule Settings"); //$NON-NLS-1$ 
+                    parserPage = new ParserRuleMasterDetailsPage(this, ID,
+                            DefaultMessagesImpl.getString("DQRuleEditor.parserRuleSettings")); //$NON-NLS-1$
                     addPage(parserPage);
                     setPartName(parserPage.getIntactElemenetName());
-                } else {
+                } else if (findDQRule instanceof ParserRule) {
+                    matchPage = new MatchRuleMasterDetailsPage(this);
+                    addPage(matchPage);
+                    setPartName(matchPage.getIntactElemenetName());
+                }
+                else {
                     masterPage = new DQRuleMasterDetailsPage(this, ID,
-                            DefaultMessagesImpl.getString("DQRuleEditor.dqRuleSettings")); //$NON-NLS-1$ 
+                            DefaultMessagesImpl.getString("DQRuleEditor.dqRuleSettings")); //$NON-NLS-1$
                     addPage(masterPage);
                     setPartName(masterPage.getIntactElemenetName());
                 }
-            } else {
-                masterPage = new DQRuleMasterDetailsPage(this, ID, DefaultMessagesImpl.getString("DQRuleEditor.dqRuleSettings")); //$NON-NLS-1$ 
+            } else if (editorInput instanceof BusinessRuleItemEditorInput) {
+                masterPage = new DQRuleMasterDetailsPage(this, ID, DefaultMessagesImpl.getString("DQRuleEditor.dqRuleSettings")); //$NON-NLS-1$
                 addPage(masterPage);
                 setPartName(masterPage.getIntactElemenetName());
+            } else if (editorInput instanceof MatchRuleItemEditorInput) {
+                matchPage = new MatchRuleMasterDetailsPage(this);
+                addPage(matchPage);
+                setPartName(matchPage.getIntactElemenetName());
             }
             // MOD qiongli 2011-3-21,bug 19472.set method 'setPartName(...)' behind the method 'addPage(...)'
 
@@ -123,7 +138,7 @@ public class DQRuleEditor extends CommonFormEditor {
 
     /**
      * Getter for masterPage.
-     * 
+     *
      * @return the masterPage
      */
     public IFormPage getMasterPage() {
@@ -143,7 +158,7 @@ public class DQRuleEditor extends CommonFormEditor {
 
     /**
      * DOC xqliu 2009-07-02 bug 7687.
-     * 
+     *
      * @param state
      */
     public void setSaveActionButtonState(boolean state) {

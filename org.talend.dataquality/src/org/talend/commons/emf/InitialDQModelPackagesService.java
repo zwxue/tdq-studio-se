@@ -21,6 +21,7 @@ import org.talend.dataquality.properties.TDQAnalysisItem;
 import org.talend.dataquality.properties.TDQBusinessRuleItem;
 import org.talend.dataquality.properties.TDQIndicatorDefinitionItem;
 import org.talend.dataquality.properties.TDQJrxmlItem;
+import org.talend.dataquality.properties.TDQMatchRuleItem;
 import org.talend.dataquality.properties.TDQPatternItem;
 import org.talend.dataquality.properties.TDQReportItem;
 import org.talend.dataquality.properties.TDQSourceFileItem;
@@ -35,7 +36,7 @@ public class InitialDQModelPackagesService extends AbstractDQModelService {
 
     /*
      * (non-Jsdoc)
-     * 
+     *
      * @see org.talend.core.repository.utils.AbstractDQModelService#initTDQEMFResource()
      */
     @Override
@@ -45,9 +46,10 @@ public class InitialDQModelPackagesService extends AbstractDQModelService {
 
     /*
      * (non-Jsdoc)
-     * 
+     *
      * @see org.talend.core.ITDQItemService#getTDQRepObjType(org.talend.core.model.properties.Item)
      */
+    @Override
     public ERepositoryObjectType getTDQRepObjType(Item item) {
         return (ERepositoryObjectType) new org.talend.dataquality.properties.util.PropertiesSwitch() {
 
@@ -98,6 +100,17 @@ public class InitialDQModelPackagesService extends AbstractDQModelService {
             /*
              * (non-Javadoc)
              * 
+             * @see org.talend.dataquality.properties.util.PropertiesSwitch#caseTDQMatchRuleItem(org.talend.dataquality.
+             * properties.TDQMatchRuleItem)
+             */
+            @Override
+            public Object caseTDQMatchRuleItem(TDQMatchRuleItem object) {
+                return ERepositoryObjectType.TDQ_RULES_MATCHER;
+            }
+
+            /*
+             * (non-Javadoc)
+             *
              * @see
              * org.talend.dataquality.properties.util.PropertiesSwitch#caseTDQItem(org.talend.core.model.properties.
              * TDQItem)
@@ -107,6 +120,7 @@ public class InitialDQModelPackagesService extends AbstractDQModelService {
                 return ERepositoryObjectType.TDQ_ELEMENT;
             }
 
+            @Override
             public Object defaultCase(EObject object) {
                 return null;
             }

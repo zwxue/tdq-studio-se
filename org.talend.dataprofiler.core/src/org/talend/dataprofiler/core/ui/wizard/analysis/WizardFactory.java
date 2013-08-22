@@ -31,12 +31,14 @@ import org.talend.dataprofiler.core.ui.wizard.analysis.table.FunctionDependencyW
 import org.talend.dataprofiler.core.ui.wizard.analysis.table.TableAnalysisWizard;
 import org.talend.dataprofiler.core.ui.wizard.dqrules.NewDQRulesWizard;
 import org.talend.dataprofiler.core.ui.wizard.indicator.NewUDIndicatorWizard;
+import org.talend.dataprofiler.core.ui.wizard.matchrule.NewMatchRuleWizard;
 import org.talend.dataprofiler.core.ui.wizard.parserrule.NewParserRulesWizard;
 import org.talend.dataquality.analysis.AnalysisType;
 import org.talend.dataquality.domain.pattern.ExpressionType;
 import org.talend.dq.analysis.parameters.AnalysisFilterParameter;
 import org.talend.dq.analysis.parameters.AnalysisLabelParameter;
 import org.talend.dq.analysis.parameters.AnalysisParameter;
+import org.talend.dq.analysis.parameters.DQMatchRuleParameter;
 import org.talend.dq.analysis.parameters.DQParserRulesParameter;
 import org.talend.dq.analysis.parameters.DQRulesParameter;
 import org.talend.dq.analysis.parameters.FuncationDependencyParameter;
@@ -148,7 +150,7 @@ public final class WizardFactory {
 
     /**
      * DOC klliu Comment method "createNewAnalysisWizard".
-     * 
+     *
      * @param path
      * @param node
      * @return
@@ -158,9 +160,9 @@ public final class WizardFactory {
     }
 
     /**
-     * 
+     *
      * DOC xqliu Comment method "createNewDQRuleWizard".
-     * 
+     *
      * @param parameter
      * @return
      */
@@ -170,6 +172,10 @@ public final class WizardFactory {
 
     public static NewParserRulesWizard createNewParserRuleWizard(DQParserRulesParameter parameter) {
         return new NewParserRulesWizard(parameter);
+    }
+
+    public static NewMatchRuleWizard createNewMatchRuleWizard(DQMatchRuleParameter parameter) {
+        return new NewMatchRuleWizard(parameter);
     }
     public static NewUDIndicatorWizard createNewUDIWizard(UDIndicatorParameter parameter) {
         return new NewUDIndicatorWizard(parameter);
