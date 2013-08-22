@@ -49,7 +49,7 @@ public class WellFormNationalPhoneCountIndicatorImplTest {
         for (Object obj : data) {
             this.wellFormNationalPhoneCountIndicator.handle(obj);
         }
-        Assert.assertTrue(wellFormNationalPhoneCountIndicator.getWellFormNatiPhoneCount() == 3);
+        Assert.assertEquals(3, wellFormNationalPhoneCountIndicator.getWellFormNatiPhoneCount().intValue());
     }
 
 }

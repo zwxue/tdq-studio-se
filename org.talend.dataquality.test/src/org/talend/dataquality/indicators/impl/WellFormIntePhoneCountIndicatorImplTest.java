@@ -49,7 +49,7 @@ public class WellFormIntePhoneCountIndicatorImplTest {
         for (Object obj : data) {
             this.WellFormIntePhoneCountIndicator.handle(obj);
         }
-        Assert.assertTrue(WellFormIntePhoneCountIndicator.getWellFormIntePhoneCount() == 1);
+        Assert.assertEquals(1, WellFormIntePhoneCountIndicator.getWellFormIntePhoneCount().intValue());
     }
 
 }

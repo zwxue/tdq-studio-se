@@ -48,9 +48,9 @@ public class FormatFreqPieIndicatorImplTest {
         for (Object obj : data) {
             Assert.assertTrue(this.formatFreqPieIndicator.handle(obj));
         }
-        Assert.assertTrue(formatFreqPieIndicator.getWellFormE164Count() == 2);
-        Assert.assertTrue(formatFreqPieIndicator.getWellFormInteCount() == 1);
-        Assert.assertTrue(formatFreqPieIndicator.getWellFormNatiCount() == 3);
-        Assert.assertTrue(formatFreqPieIndicator.getCount() == 18);
+        Assert.assertEquals(2, formatFreqPieIndicator.getWellFormE164Count());
+        Assert.assertEquals(1, formatFreqPieIndicator.getWellFormInteCount());
+        Assert.assertEquals(3, formatFreqPieIndicator.getWellFormNatiCount());
+        Assert.assertEquals(18, formatFreqPieIndicator.getCount().intValue());
     }
 }
