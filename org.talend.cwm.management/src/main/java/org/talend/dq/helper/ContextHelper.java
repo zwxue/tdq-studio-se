@@ -145,4 +145,23 @@ public final class ContextHelper {
         }
         return result;
     }
+
+    /**
+     * if the report use any context variable return true, else return false.
+     * 
+     * @param tdReport the report using context or not
+     * @return
+     */
+    public static boolean usingContext(TdReport tdReport) {
+        String of = ReportHelper.getOutputFolderNameAssinged(tdReport);
+        String logo = tdReport.getLogo();
+        String host = ReportHelper.getHost(tdReport);
+        String port = ReportHelper.getPort(tdReport);
+        String sid = ReportHelper.getDbName(tdReport);
+        String schema = ReportHelper.getSchema(tdReport);
+        String user = ReportHelper.getUser(tdReport);
+        String password = ReportHelper.getPassword(tdReport);
+        return isContextVar(of) || isContextVar(logo) || isContextVar(host) || isContextVar(port) || isContextVar(sid)
+                || isContextVar(schema) || isContextVar(user) || isContextVar(password);
+    }
 }
