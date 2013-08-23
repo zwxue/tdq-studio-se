@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
+import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
 import org.powermock.api.mockito.PowerMockito;
@@ -132,15 +133,8 @@ public class ConnectionUtilsTest {
 
         when(dataProviderWriter.save(tempConnection)).thenReturn(returnCode);
 
-        // PowerMockito.mockStatic(CWMPlugin.class);
-        // CWMPlugin cwmPluginInstance = mock(CWMPlugin.class);
-        // when(CWMPlugin.getDefault()).thenReturn(cwmPluginInstance);
-        //
-        // Bundle bundle = mock(Bundle.class);
-        // stub(method(CWMPlugin.class, "getBundle")).toReturn(bundle); //$NON-NLS-1$
-        // when(bundle.getSymbolicName()).thenReturn("SymbolicName"); //$NON-NLS-1$
-
         ConnectionUtils.retrieveColumn((MetadataTable) tdTable);
+        Assert.assertTrue(returnCode.isOk());
     }
 
     /**
