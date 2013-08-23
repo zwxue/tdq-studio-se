@@ -76,7 +76,6 @@ public class RowMatchingAnalysisExecutor extends ColumnAnalysisSqlExecutor {
         this.reset();
 
         EList<Indicator> indicators = analysis.getResults().getIndicators();
-        // MOD qiongli 2011-12-22 TDQ-4240.revers the data filter just for the 2th Indicator(from right to left side).
         if (indiReversionMap == null) {
             indiReversionMap = new HashMap<Indicator, Boolean>();
         }
@@ -162,7 +161,7 @@ public class RowMatchingAnalysisExecutor extends ColumnAnalysisSqlExecutor {
         String whereClause = createWhereClause(aliasB, columnSetB);
         if (useNulls) {
             // add a where clause to avoid the equality of rows fully null (i.e. rows like "null,null,null"
-            whereClause += dbms().and() + '(' + createNotNullCondition(aliasA, columnSetA) + ')';//$NON-NLS-1$//$NON-NLS-1$
+            whereClause += dbms().and() + '(' + createNotNullCondition(aliasA, columnSetA) + ')';
         }
 
         String instantiatedSQL = dbms().fillGenericQueryWithJoin(genericSQL, tableNameA, tableNameB, joinClause, whereClause);
@@ -276,7 +275,7 @@ public class RowMatchingAnalysisExecutor extends ColumnAnalysisSqlExecutor {
             if (column != null && column.eIsProxy()) {
                 column = (TdColumn) EObjectHelper.resolveObject(column);
             }
-            if (belongToSameSchemata((TdColumn) column)) {
+            if (belongToSameSchemata(column)) {
                 ColumnSet columnSetOwner = ColumnHelper.getColumnOwnerAsColumnSet(column);
 
                 if (columnSetOwner == null) {
@@ -436,6 +435,7 @@ public class RowMatchingAnalysisExecutor extends ColumnAnalysisSqlExecutor {
         return analyzedTableName;
     }
 
+    @Override
     protected boolean checkAnalyzedElements(final Analysis analysis, AnalysisContext context) {
         AnalysisHandler analysisHandler = new AnalysisHandler();
         analysisHandler.setAnalysis(analysis);

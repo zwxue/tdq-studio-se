@@ -52,7 +52,7 @@ public final class AnalysisExecutorSelector {
             return null;
         }
         ExecutionLanguage executionEngine = AnalysisHelper.getExecutionEngine(analysis);
-        AnalysisExecutor exec = null;
+        IAnalysisExecutor exec = null;
         switch (analysisType) {
         case MULTIPLE_COLUMN:
             exec = getModelElementAnalysisExecutor(analysis, executionEngine);
@@ -81,6 +81,9 @@ public final class AnalysisExecutorSelector {
             break;
         case TABLE_FUNCTIONAL_DEPENDENCY:
             exec = new FunctionalDependencyExecutor();
+            break;
+        case MATCH_ANALYSIS:
+            exec = new MatchAnalysisExecutor();
             break;
         default:
             // this should not happen. This executor has not been tested for a long time.
