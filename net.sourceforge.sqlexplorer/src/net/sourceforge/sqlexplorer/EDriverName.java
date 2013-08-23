@@ -13,7 +13,6 @@
 
 package net.sourceforge.sqlexplorer;
 
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -26,11 +25,8 @@ import net.sourceforge.sqlexplorer.plugin.SQLExplorerPlugin;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.NumberUtils;
-import org.eclipse.core.runtime.FileLocator;
-import org.eclipse.core.runtime.Platform;
-import org.eclipse.osgi.util.ManifestElement;
-import org.osgi.framework.Bundle;
-import org.osgi.framework.Constants;
+import org.talend.core.GlobalServiceRegister;
+import org.talend.core.ILibraryManagerService;
 
 /**
  * DOC qzhang class global comment. Detailled comment <br/>
@@ -45,78 +41,78 @@ public enum EDriverName {
     MYSQLDEFAULTURL("Mysql", //$NON-NLS-1$
                     "org.gjt.mm.mysql.Driver", //$NON-NLS-1$
                     "-6",
-                    "lib/mysql-connector-java-5.1.22-bin.jar"),
+                    "mysql-connector-java-5.1.22-bin.jar"),
     HSQLDEFAULTURL("HSql", //$NON-NLS-1$
                    "org.hsqldb.jdbcDriver", //$NON-NLS-1$
                    "-18",
-                   "lib/hsqldb.jar"),
+                   "hsqldb.jar"),
     ORACLEDEFAULTURL("Oracle", //$NON-NLS-1$
                      // MOD scorreia 2008-08-22: oracle.jdbc.driver package is not
                      // supported anymore: replaced
                      "oracle.jdbc.OracleDriver", //$NON-NLS-1$
                      "-4",
-                     "lib/ojdbc14.jar"),
+                     "ojdbc14.jar"),
     MSSQLDEFAULTURL("MSSQL", //$NON-NLS-1$
                     "net.sourceforge.jtds.jdbc.Driver", //$NON-NLS-1$
-                    "-11", "lib/jtds-1.2.5.jar"), //$NON-NLS-1$
+                    "-11", "jtds-1.2.5.jar"), //$NON-NLS-1$
     MSSQL2008URL("MSSQL2008", //$NON-NLS-1$
                  "com.microsoft.sqlserver.jdbc.SQLServerDriver", //$NON-NLS-1$
-                 "-52", isAboveJDK15() ? "lib/sqljdbc4.jar" : "lib/sqljdbc.jar"), //$NON-NLS-1$
+                 "-52", isAboveJDK15() ? "sqljdbc4.jar" : "sqljdbc.jar"), //$NON-NLS-1$
     DB2DEFAULTURL("DB2", //$NON-NLS-1$
                   "com.ibm.db2.jcc.DB2Driver", //$NON-NLS-1$
                   "-24",
-                  "lib/db2jcc_license_cu.jar",
-                  "lib/db2jcc_license_cisuz.jar",
-                  "lib/db2jcc.jar"),
+                  "db2jcc_license_cu.jar",
+                  "db2jcc_license_cisuz.jar",
+                  "db2jcc.jar"),
     DB2ZOSDEFAULTURL("DB2", //$NON-NLS-1$
                      "COM.ibm.db2os390.sqlj.jdbc.DB2SQLJDriver", //$NON-NLS-1$
                      "-42",
-                     "lib/db2jcc_license_cu.jar",
-                     "lib/db2jcc_license_cisuz.jar",
-                     "lib/db2jcc.jar"),
+                     "db2jcc_license_cu.jar",
+                     "db2jcc_license_cisuz.jar",
+                     "db2jcc.jar"),
     POSTGRESQLEFAULTURL("PostgreSQL", //$NON-NLS-1$
                         "org.postgresql.Driver", //$NON-NLS-1$
                         "-7",
-                        "lib/postgresql-8.1-405.jdbc3.jar"),
+                        "postgresql-8.1-405.jdbc3.jar"),
     INTERBASEDEFAULTURL("Interbase", //$NON-NLS-1$
                         "interbase.interclient.Driver", //$NON-NLS-1$
                         "-3",
-                        "lib/interclient.jar"),
+                        "interclient.jar"),
     SYBASEDEFAULTURL("Sybase", //$NON-NLS-1$
                      "com.sybase.jdbc3.jdbc.SybDriver", //$NON-NLS-1$
                      "-9",
-                     "lib/jconn3.jar"),
+                     "jconn3.jar"),
     INFORMIXDEFAULTURL("Informix", //$NON-NLS-1$
                        "com.informix.jdbc.IfxDriver", //$NON-NLS-1$
                        "-26",
-                       "lib/ifxjdbc.jar"), //$NON-NLS-1$
+                       "ifxjdbc.jar"), //$NON-NLS-1$
     FIREBIRDDEFAULTURL("FireBird", //$NON-NLS-1$
                        "org.firebirdsql.jdbc.FBDriver", //$NON-NLS-1$
                        "-25",
-                       "lib/jaybird-2.1.1.jar"),
+                       "jaybird-2.1.1.jar"),
     TERADATADEFAULTURL("Teradata",
     // MOD klliu 2010-06-04 bug 12819: upgrade jdbc driver class used in sql explorer
                        "com.teradata.jdbc.TeraDriver",
                        "-50",
-                       "lib/terajdbc4.jar",
-                       "lib/tdgssconfig.jar"),
-    SQLITE3DEFAULTURL("SQLite", "org.sqlite.JDBC", "-30", "lib/sqlitejdbc-v056.jar"),
-    AS400DEFAULTURL("AS400", "com.ibm.as400.access.AS400JDBCDriver", "-51", "lib/jt400_V5R3.jar"),
+                       "terajdbc4.jar",
+                       "tdgssconfig.jar"),
+    SQLITE3DEFAULTURL("SQLite", "org.sqlite.JDBC", "-30", "sqlitejdbc-v056.jar"),
+    AS400DEFAULTURL("AS400", "com.ibm.as400.access.AS400JDBCDriver", "-51", "jt400_V5R3.jar"),
     // MOD klliu bug 14791 add ingres database url and modify default_driver.xml
-    INGRESDEFAULTURL("Ingres", "ca.ingres.jdbc.IngresDriver", "-88", "lib/iijdbc.jar"),
-    NETEZZADEFAULTURL("Netezza", "org.netezza.Driver", "-66", "lib/nzjdbc.jar"), //$NON-NLS-1$
-    VERTICA("Vertica", "com.vertica.Driver", "-70", "lib/vertica_4.1.14_jdk_5.jar"), //$NON-NLS-1$
-    VERTICA2("Vertica", "com.vertica.jdbc.Driver", "-71", "lib/vertica-jdk5-6.0.0-0.jar"), //$NON-NLS-1$
+    INGRESDEFAULTURL("Ingres", "ca.ingres.jdbc.IngresDriver", "-88", "iijdbc.jar"),
+    NETEZZADEFAULTURL("Netezza", "org.netezza.Driver", "-66", "nzjdbc.jar"), //$NON-NLS-1$
+    VERTICA("Vertica", "com.vertica.Driver", "-70", "vertica_4.1.14_jdk_5.jar"), //$NON-NLS-1$
+    VERTICA2("Vertica", "com.vertica.jdbc.Driver", "-71", "vertica-jdk5-6.0.0-0.jar"), //$NON-NLS-1$
     HIVE("Hive", //$NON-NLS-1$
          "org.apache.hadoop.hive.jdbc.HiveDriver", //$NON-NLS-1$
          "-55", //$NON-NLS-1$
-         "lib/hive-jdbc-0.9.0.jar", //$NON-NLS-1$
-         "lib/hive-metastore-0.9.0.jar", //$NON-NLS-1$
-         "lib/hive-exec-0.9.0.jar", //$NON-NLS-1$
-         "lib/hive-service-0.9.0.jar", //$NON-NLS-1$
-         "lib/libfb303_new.jar", //$NON-NLS-1$
-         "lib/hadoop-core-1.0.0.jar", //$NON-NLS-1$
-         "lib/commons-logging-1.0.4.jar", "lib/log4j-1.2.15.jar", "lib/slf4j-api-1.6.1.jar", "lib/slf4j-log4j12-1.6.1.jar") //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+         "hive-jdbc-0.9.0.jar", //$NON-NLS-1$
+         "hive-metastore-0.9.0.jar", //$NON-NLS-1$
+         "hive-exec-0.9.0.jar", //$NON-NLS-1$
+         "hive-service-0.9.0.jar", //$NON-NLS-1$
+         "libfb303_new.jar", //$NON-NLS-1$
+         "hadoop-core-1.0.0.jar", //$NON-NLS-1$
+         "commons-logging-1.0.4.jar", "log4j-1.2.15.jar", "slf4j-api-1.6.1.jar", "slf4j-log4j12-1.6.1.jar") //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
     ;
 
     private final String dbKey;
@@ -127,6 +123,7 @@ public enum EDriverName {
 
     private String[] jars;
 
+    private static ILibraryManagerService libManagerServic = null;
     // MOD gdbu 2011-4-20 bug : 18975
     private static Map<String, ArrayList<String>> special_database = new HashMap<String, ArrayList<String>>();
     static {
@@ -180,84 +177,23 @@ public enum EDriverName {
      * @return
      */
     public LinkedList<String> getJars() {
+        // find jdbc jar path from 'lib/java'.if not found,find it from "librariesIndex.xml"
         LinkedList<String> linkedList = new LinkedList<String>();
-        String plugins = "org.talend.libraries";
-        switch (this) {
-        case DB2DEFAULTURL:
-        case DB2ZOSDEFAULTURL:
-            plugins = "org.talend.libraries.jdbc.db2";
-            break;
-        case MSSQLDEFAULTURL:
-            plugins = "org.talend.libraries.jdbc.jtds";
-            break;
-        case MSSQL2008URL:
-            plugins = "org.talend.libraries.jdbc.mssql";
-            break;
-        case MYSQLDEFAULTURL:
-            plugins = "org.talend.libraries.jdbc.mysql";
-            break;
-        case ORACLEDEFAULTURL:
-            plugins = "org.talend.libraries.jdbc.oracle";
-            break;
-        case POSTGRESQLEFAULTURL:
-            plugins = "org.talend.libraries.jdbc.postgresql";
-            break;
-        case SYBASEDEFAULTURL:
-            plugins = "org.talend.libraries.jdbc.sybase";
-            break;
-        case HSQLDEFAULTURL:
-            plugins = "org.talend.libraries.jdbc.hsql";
-            break;
-        case TERADATADEFAULTURL:
-            plugins = "org.talend.libraries.jdbc.teradata";
-            break;
-        case INFORMIXDEFAULTURL:
-            plugins = "org.talend.libraries.jdbc.informix";
-            break;
-        case SQLITE3DEFAULTURL:
-            plugins = "org.talend.libraries.jdbc.sqlite3";
-            break;
-        case AS400DEFAULTURL:
-            plugins = "org.talend.libraries.jdbc.as400";
-            break;
-        case INGRESDEFAULTURL:
-            plugins = "org.talend.libraries.jdbc.ingres";
-            break;
-        case NETEZZADEFAULTURL:
-            plugins = "org.talend.libraries.jdbc.netezza";
-            break;
-        case HIVE:
-            plugins = "org.talend.libraries.apache.hive";
-            break;
-        case VERTICA:
-        case VERTICA2:
-            plugins = "org.talend.libraries.jdbc.vertica";
-            break;
-        default:
-            return linkedList;
-        }
-        Bundle bundle = Platform.getBundle(plugins);
-        if (bundle != null) {
-            try {
-                String requires = (String) bundle.getHeaders().get(Constants.BUNDLE_CLASSPATH);
-                ManifestElement[] elements = ManifestElement.parseHeader(Constants.BUNDLE_CLASSPATH, requires);
-                URL hsqldbJar = null;
-                if (jars != null) {
-                    for (String jar : jars) {
-                        String value = elements[0].getValue();
-                        for (ManifestElement element : elements) {
-                            if (jar.equals(element.getValue())) {
-                                value = element.getValue();
-                                hsqldbJar = FileLocator.toFileURL(bundle.getEntry(value));
-                                linkedList.add(hsqldbJar.getPath());
-                            }
-                        }
-                    }
+        if (this.getLibManagerServic() != null) {
+            boolean jarNotFound = false;
+            for (String jarName : jars) {
+                String libPath = libManagerServic.getJDBCJarPath(jarName);
+                if (libPath == null) {
+                    jarNotFound = true;
+                    break;
                 }
-            } catch (Exception e) {
-                e.printStackTrace();
+                linkedList.add(libPath);
+            }
+            if (jarNotFound) {
+                linkedList.clear();
             }
         }
+
         return linkedList;
     }
 
@@ -323,6 +259,17 @@ public enum EDriverName {
         }// ~
 
         return "";
+    }
+
+
+    private ILibraryManagerService getLibManagerServic() {
+        if (libManagerServic == null) {
+            if (GlobalServiceRegister.getDefault().isServiceRegistered(ILibraryManagerService.class)) {
+                libManagerServic = (ILibraryManagerService) GlobalServiceRegister.getDefault().getService(
+                        ILibraryManagerService.class);
+            }
+        }
+        return libManagerServic;
     }
 
 }
