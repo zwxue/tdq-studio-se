@@ -16,15 +16,18 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
 import org.apache.log4j.Logger;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.forms.widgets.Section;
-import org.talend.dataprofiler.core.ui.editor.composite.AnalysisTableTreeViewer;
+import org.talend.dataquality.record.linkage.ui.section.DuplicateRecordStatisticsSection;
+import org.talend.dataquality.record.linkage.ui.section.GroupStatisticsSection;
 import org.talend.dq.analysis.AnalysisHandler;
 
-
 /**
- * DOC yyin  class global comment. Detailled comment
+ * DOC yyin class global comment. Detailled comment
  */
 public class MatchAnalysisResultPage extends AbstractAnalysisResultPage implements PropertyChangeListener {
 
@@ -32,11 +35,11 @@ public class MatchAnalysisResultPage extends AbstractAnalysisResultPage implemen
 
     private Composite resultComp;
 
-    MatchMasterDetailsPage masterPage;
+    private MatchMasterDetailsPage matchAnalysisMasterPage;
 
-    AnalysisTableTreeViewer tableTreeViewer;
+    private DuplicateRecordStatisticsSection duplicateRecordStatisticsSection;
 
-    private Section resultSection = null;
+    private GroupStatisticsSection groupStatisticsSection;
 
     /**
      * DOC yyin MatchAnalysisResultPage constructor comment.
@@ -48,50 +51,71 @@ public class MatchAnalysisResultPage extends AbstractAnalysisResultPage implemen
     public MatchAnalysisResultPage(FormEditor editor, String id, String title) {
         super(editor, id, title);
         AnalysisEditor analysisEditor = (AnalysisEditor) editor;
-        this.masterPage = (MatchMasterDetailsPage) analysisEditor.getMasterPage();
+        this.matchAnalysisMasterPage = (MatchMasterDetailsPage) analysisEditor.getMasterPage();
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see java.beans.PropertyChangeListener#propertyChange(java.beans.PropertyChangeEvent)
      */
     public void propertyChange(PropertyChangeEvent evt) {
-        // TODO Auto-generated method stub
-
+        // No implementation
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisResultPage#getAnalysisHandler()
      */
     @Override
     protected AnalysisHandler getAnalysisHandler() {
-        // TODO Auto-generated method stub
-        return null;
+        return matchAnalysisMasterPage.getAnalysisHandler();
     }
 
-    /* (non-Javadoc)
-     * @see org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisResultPage#refresh(org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisMetadataPage)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisResultPage#refresh(org.talend.dataprofiler.core
+     * .ui.editor.analysis.AbstractAnalysisMetadataPage)
      */
     @Override
     public void refresh(AbstractAnalysisMetadataPage masterPage) {
-        // TODO Auto-generated method stub
-
+        duplicateRecordStatisticsSection.refreshChart();
+        groupStatisticsSection.refreshChart();
     }
 
-    /* (non-Javadoc)
-     * @see org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisResultPage#createResultSection(org.eclipse.swt.widgets.Composite)
-     */
+    @Override
+    protected void createFormContent(IManagedForm managedForm) {
+        super.createFormContent(managedForm);
+
+        resultComp = toolkit.createComposite(topComposite);
+        resultComp.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_BEGINNING));
+        resultComp.setLayout(new GridLayout());
+        createResultSection(resultComp);
+        form.reflow(true);
+    }
+
     @Override
     protected void createResultSection(Composite parent) {
-        // TODO Auto-generated method stub
+        duplicateRecordStatisticsSection = new DuplicateRecordStatisticsSection(form, parent, Section.TWISTIE | Section.TITLE_BAR
+                | Section.EXPANDED, toolkit, getAnalysisHandler().getAnalysis());
+        duplicateRecordStatisticsSection.createContent();
 
+        groupStatisticsSection = new GroupStatisticsSection(form, parent, Section.TWISTIE | Section.TITLE_BAR | Section.EXPANDED,
+                toolkit, getAnalysisHandler().getAnalysis());
+        groupStatisticsSection.createContent();
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.talend.dataprofiler.core.ui.editor.AbstractFormPage#setDirty(boolean)
      */
     @Override
     public void setDirty(boolean isDirty) {
-        // TODO Auto-generated method stub
+        // no dirty event in this result page.
 
     }
 

@@ -20,14 +20,12 @@ import java.util.Map;
 import org.eclipse.jface.action.Action;
 import org.talend.dataquality.record.linkage.genkey.AbstractGenerateKey;
 
-
 /**
- * DOC yyin  class global comment. Detailled comment
+ * DOC yyin class global comment. Detailled comment
  */
 public class ExecuteGenerateBlockingAction extends Action {
 
-
-    private List<String[]> inputData = new ArrayList<String[]>();
+    private List<Object[]> inputData = new ArrayList<Object[]>();
 
     private AbstractGenerateKey generateKeyAPI = new AbstractGenerateKey();
 
@@ -37,19 +35,19 @@ public class ExecuteGenerateBlockingAction extends Action {
 
     /**
      * Getter for inputData.
-     *
+     * 
      * @return the inputData
      */
-    public List<String[]> getInputData() {
+    public List<Object[]> getInputData() {
         return this.inputData;
     }
 
     /**
      * Sets the inputData.
-     *
+     * 
      * @param inputData the inputData to set
      */
-    public void setInputData(List<String[]> inputData) {
+    public void setInputData(List<Object[]> inputData) {
         this.inputData = inputData;
     }
 
@@ -60,7 +58,12 @@ public class ExecuteGenerateBlockingAction extends Action {
 
     @Override
     public void run() {
-        for(String[] inputString:this.inputData){
+        for (Object[] inputObject : this.inputData) {
+            String[] inputString = new String[inputObject.length];
+            int index = 0;
+            for (Object obj : inputObject) {
+                inputString[index++] = obj == null ? null : obj.toString();
+            }
             Map<String, String> ColumnValueMap = new HashMap<String, String>();
             for (String columnName : columnIndexMap.keySet()) {
                 ColumnValueMap.put(columnName, inputString[Integer.parseInt(columnIndexMap.get(columnName))]);

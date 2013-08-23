@@ -21,7 +21,6 @@ import org.eclipse.emf.common.util.EList;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.columnset.RecordMatchingIndicator;
-import org.talend.dataquality.record.linkage.grouping.IRecordGrouping;
 import org.talend.dataquality.record.linkage.utils.HandleNullEnum;
 import org.talend.dataquality.record.linkage.utils.MatchAnalysisConstant;
 import org.talend.dataquality.record.linkage.utils.MatchingTypeEnum;
@@ -45,23 +44,6 @@ public class MatchRuleAnlaysisUtils {
 
     public static List<String> getColumnFromBlockKey(BlockKeyDefinition blockKeyDefinition) {
         List<String> returnList = new ArrayList<String>();
-        return returnList;
-    }
-
-    public static List<Map<String, String>> ruleMatcherConvert(MatchRule matcher, Map<String, String> columnIndexMap) {
-        List<Map<String, String>> returnList = new ArrayList<Map<String, String>>();
-        if (matcher == null || columnIndexMap == null) {
-            return returnList;
-        }
-        // for (RuleMatcher matcher : matchers) {
-        for (MatchKeyDefinition matchDef : matcher.getMatchKeys()) {
-            Map<String, String> MatcherMap = new HashMap<String, String>();
-            MatcherMap.put(IRecordGrouping.COLUMN_IDX, columnIndexMap.get(matchDef.getColumn()));
-            MatcherMap.put(IRecordGrouping.MATCHING_TYPE, matchDef.getAlgorithm().getAlgorithmType());
-            MatcherMap.put(IRecordGrouping.CONFIDENCE_WEIGHT, String.valueOf(matchDef.getConfidenceWeight()));
-            returnList.add(MatcherMap);
-        }
-        // }
         return returnList;
     }
 

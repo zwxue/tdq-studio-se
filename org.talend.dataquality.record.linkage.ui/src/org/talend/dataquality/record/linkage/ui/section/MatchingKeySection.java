@@ -34,21 +34,24 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.indicators.columnset.RecordMatchingIndicator;
-import org.talend.dataquality.record.linkage.ui.action.ExecuteMatchRuleDoGroupAction;
+import org.talend.dataquality.record.linkage.grouping.AnalysisMatchRecordGrouping;
+import org.talend.dataquality.record.linkage.grouping.MatchGroupResultConsumer;
 import org.talend.dataquality.record.linkage.ui.composite.MatchRuleTableComposite;
 import org.talend.dataquality.record.linkage.ui.composite.chart.MatchRuleDataChart;
 import org.talend.dataquality.record.linkage.ui.composite.utils.ImageLib;
 import org.talend.dataquality.record.linkage.ui.composite.utils.MatchRuleAnlaysisUtils;
 import org.talend.dataquality.record.linkage.ui.i18n.internal.DefaultMessagesImpl;
+import org.talend.dataquality.record.linkage.utils.AnalysisRecordGroupingUtils;
 import org.talend.dataquality.record.linkage.utils.MatchAnalysisConstant;
 import org.talend.dataquality.rules.KeyDefinition;
+import org.talend.dataquality.rules.MatchKeyDefinition;
 import org.talend.dataquality.rules.MatchRule;
 import org.talend.dataquality.rules.RulesFactory;
 
 /**
- *
+ * 
  * created by zhao on Aug 17, 2013 Detailled comment
- *
+ * 
  */
 public class MatchingKeySection extends AbstractMatchAnaysisTableSection {
 
@@ -66,7 +69,7 @@ public class MatchingKeySection extends AbstractMatchAnaysisTableSection {
 
     /**
      * DOC zshen MatchingKeySection constructor comment.
-     *
+     * 
      * @param parent
      * @param style
      * @param toolkit
@@ -77,7 +80,7 @@ public class MatchingKeySection extends AbstractMatchAnaysisTableSection {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see org.talend.dataquality.record.linkage.ui.section.AbstractMatchTableSection#getSectionName()
      */
     @Override
@@ -87,7 +90,7 @@ public class MatchingKeySection extends AbstractMatchAnaysisTableSection {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see
      * org.talend.dataquality.record.linkage.ui.section.AbstractMatchTableSection#createSubContext(org.eclipse.swt.widgets
      * .Composite)
@@ -140,7 +143,7 @@ public class MatchingKeySection extends AbstractMatchAnaysisTableSection {
 
     /**
      * DOC zhao Comment method "addMatchRuleToModel".
-     *
+     * 
      * @param newMatchRule
      */
     private void addMatchRuleToAnalysis(MatchRule newMatchRule) {
@@ -190,9 +193,9 @@ public class MatchingKeySection extends AbstractMatchAnaysisTableSection {
     }
 
     /**
-     *
+     * 
      * Add a new key definition on current selected match rule.
-     *
+     * 
      * @param column
      */
     public void createMatchKeyFromCurrentMatchRule(String column) {
@@ -207,9 +210,9 @@ public class MatchingKeySection extends AbstractMatchAnaysisTableSection {
     }
 
     /**
-     *
+     * 
      * Remove the match key by column name from current selected match rule tab.
-     *
+     * 
      * @param column
      */
     public void removeMatchKeyFromCurrentMatchRule(String column) {
@@ -225,7 +228,7 @@ public class MatchingKeySection extends AbstractMatchAnaysisTableSection {
 
     /**
      * DOC zshen Comment method "createPropertyTab".
-     *
+     * 
      * @param tabName
      * @param reComputeMatchRule
      */
@@ -263,53 +266,67 @@ public class MatchingKeySection extends AbstractMatchAnaysisTableSection {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see
      * org.talend.dataquality.record.linkage.ui.section.AbstractMatchTableSection#createSubChart(org.eclipse.swt.widgets
      * .Composite)
      */
     @Override
     protected void createSubChart(Composite sectionClient) {
-        List<String[]> viewData = getViewData();
-        String[] viewColumn = getViewColumn();
-
-        List<String[]> resultStrList = null;
-        // if the data is empty , create an empty list for the chart to show itself
-        if (viewData == null || viewData.size() < 1) {
-            resultStrList = new ArrayList<String[]>();
-        } else {
-            resultStrList = computeMatchResult(viewData);
-        }
-
+        RecordMatchingIndicator recordMatchingIndicator = MatchRuleAnlaysisUtils.getRecordMatchIndicatorFromAna(analysis);
+        computeMatchResult(recordMatchingIndicator);
         Composite chartComposite = toolkit.createComposite(sectionClient);
         GridLayout tableLayout = new GridLayout(1, Boolean.TRUE);
         chartComposite.setLayout(tableLayout);
         GridData gridData = new GridData(GridData.FILL_BOTH);
         chartComposite.setLayoutData(gridData);
-
-        matchRuleChartComp = new MatchRuleDataChart(chartComposite, resultStrList, viewColumn);
+        matchRuleChartComp = new MatchRuleDataChart(chartComposite, recordMatchingIndicator.getGroupSize2groupFrequency());
 
     }
 
-    private List<String[]> computeMatchResult(List<String[]> viewData) {
-        ExecuteMatchRuleDoGroupAction executeMatchRuleDoGroupAction = new ExecuteMatchRuleDoGroupAction();
-        if (hasMatchKey()) {
-            RecordMatchingIndicator recordMatchingIndicator = MatchRuleAnlaysisUtils.getRecordMatchIndicatorFromAna(analysis);
+    private void computeMatchResult(final RecordMatchingIndicator recordMatchingIndicator) {
+        if (hasMatchKey() && columnMap != null && !matchRows.isEmpty()) {
+            recordMatchingIndicator.setMatchRowSchema(AnalysisRecordGroupingUtils.getCompleteColumnSchema(columnMap));
+            recordMatchingIndicator.reset();
+            MatchGroupResultConsumer matchResultConsumer = new MatchGroupResultConsumer() {
+
+                /*
+                 * (non-Javadoc)
+                 * 
+                 * @see org.talend.dataquality.record.linkage.grouping.MatchGroupResultConsumer#handle(java.lang.Object)
+                 */
+                @Override
+                public void handle(Object row) {
+                    recordMatchingIndicator.handle(row);
+
+                }
+            };
+
+            AnalysisMatchRecordGrouping analysisMatchRecordGrouping = new AnalysisMatchRecordGrouping(matchResultConsumer);
             List<MatchRule> matchRules = recordMatchingIndicator.getBuiltInMatchRuleDefinition().getMatchRules();
             for (MatchRule matcher : matchRules) {
-                List<Map<String, String>> ruleMatcherConvertResult = MatchRuleAnlaysisUtils
-                        .ruleMatcherConvert(matcher, columnMap);
-                executeMatchRuleDoGroupAction.addRuleMatcher(ruleMatcherConvertResult);
+                List<Map<String, String>> ruleMatcherConvertResult = new ArrayList<Map<String, String>>();
+                if (matcher == null) {
+                    continue;
+                }
+                for (MatchKeyDefinition matchDef : matcher.getMatchKeys()) {
+                    Map<String, String> matchKeyMap = AnalysisRecordGroupingUtils.getMatchKeyMap(matchDef.getColumn(), matchDef
+                            .getAlgorithm().getAlgorithmType(), matchDef.getConfidenceWeight(), columnMap);
+                    ruleMatcherConvertResult.add(matchKeyMap);
+                }
+                analysisMatchRecordGrouping.addRuleMatcher(ruleMatcherConvertResult);
             }
-            executeMatchRuleDoGroupAction.setInputList(viewData);
-            executeMatchRuleDoGroupAction.run();
+            analysisMatchRecordGrouping.setMatchRows(matchRows);
+            analysisMatchRecordGrouping.run();
         }
-        return executeMatchRuleDoGroupAction.getResultStrList();
     }
 
     private boolean hasMatchKey() {
         RecordMatchingIndicator recordMatchingIndicator = MatchRuleAnlaysisUtils.getRecordMatchIndicatorFromAna(analysis);
         List<MatchRule> matchRules = recordMatchingIndicator.getBuiltInMatchRuleDefinition().getMatchRules();
+        if (matchRules == null || matchRules.size() == 0) {
+            return Boolean.FALSE;
+        }
         for (MatchRule matchRule : matchRules) {
             if (matchRule.getMatchKeys().size() > 0) {
                 return true;
@@ -320,7 +337,7 @@ public class MatchingKeySection extends AbstractMatchAnaysisTableSection {
 
     /**
      * DOC zshen Comment method "getViewColumn".
-     *
+     * 
      * @return
      */
     private String[] getViewColumn() {
@@ -340,24 +357,16 @@ public class MatchingKeySection extends AbstractMatchAnaysisTableSection {
         return columnNameList.toArray(new String[columnNameList.size()]);
     }
 
-    /**
-     * DOC zshen Comment method "getViewData".
-     *
-     * @return
-     */
-    private List<String[]> getViewData() {
-
-        return tableData;
-    }
-
     @Override
     public void refreshChart() {
-        matchRuleChartComp.refresh(computeMatchResult(tableData));
+        RecordMatchingIndicator recordMatchingIndicator = MatchRuleAnlaysisUtils.getRecordMatchIndicatorFromAna(analysis);
+        computeMatchResult(recordMatchingIndicator);
+        matchRuleChartComp.refresh(recordMatchingIndicator.getGroupSize2groupFrequency());
     }
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see org.talend.dataquality.record.linkage.ui.section.AbstractMatchAnaysisTableSection#isKeyDefinitionAdded()
      */
     @Override

@@ -43,6 +43,16 @@ public final class PluginConstant {
 
     public static final String PROPERTIES_STRING = ".properties";//$NON-NLS-1$
 
+    public static final String NA_STRING = "N/A"; //$NON-NLS-1$
+
+    public static final String PERCENTAGE_STR = "%"; //$NON-NLS-1$
+
+    public static final String MASTER = "MASTER";//$NON-NLS-1$
+
+    public static final String GRP_SIZE = "GRP_SIZE";//$NON-NLS-1$
+
+    public static final String GRP_QUALITY = "GRP_QUALITY";//$NON-NLS-1$
+
     public static final String DEFAULT_STRING = "default";//$NON-NLS-1$
 
     private PluginConstant() {

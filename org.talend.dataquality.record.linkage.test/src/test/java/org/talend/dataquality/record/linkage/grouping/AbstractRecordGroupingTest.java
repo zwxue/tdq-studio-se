@@ -51,11 +51,12 @@ public class AbstractRecordGroupingTest {
 
             /*
              * (non-Javadoc)
-             *
+             * 
              * @see org.talend.dataquality.record.linkage.grouping.AbstractRecordGrouping#outputRow(java.lang.String)
              */
             @Override
             protected void outputRow(String row) {
+                System.out.println(row);
                 groupingRecords.add(StringUtils.splitByWholeSeparator(row, columnDelimiter));
             }
         };
@@ -82,7 +83,6 @@ public class AbstractRecordGroupingTest {
     }
 
     @Test
-    // TODO remove the ignore annotation when a hadoop environment is ready for Junit tests.
     public void testDoGroup() {
         recordGroup.setIsOutputDistDetails(true);
         recordGroup.setAcceptableThreshold(0.95f);
@@ -128,6 +128,28 @@ public class AbstractRecordGroupingTest {
             }
 
         }
-    }
 
+        // Test group quality
+        recordGroup.initialize();
+        groupingRecords.clear();
+        recordGroup.setSeperateOutput(Boolean.TRUE);
+        recordGroup.setIsOutputDistDetails(true);
+        try {
+            for (String[] inputRow : inputList) {
+                recordGroup.doGroup(inputRow);
+            }
+            recordGroup.end();
+        } catch (IOException e) {
+            log.error(e.getMessage(), e);
+        } catch (InterruptedException e) {
+            log.error(e.getMessage(), e);
+        }
+        for (String[] rds : groupingRecords) {
+            if (rds[0].equals("95006021900")) { //$NON-NLS-1$
+                // Assert group score
+                Assert.assertEquals(0.9814814858966403, Double.valueOf(rds[rds.length - 2]).doubleValue(), 0d);
+            }
+
+        }
+    }
 }

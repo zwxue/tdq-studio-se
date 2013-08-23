@@ -35,7 +35,7 @@ import org.talend.dataquality.record.linkage.ui.composite.utils.ImageLib;
  */
 public abstract class AbstractMatchAnaysisTableSection extends AbstractSectionComposite implements ITableEditOperation {
 
-    protected List<String[]> tableData;
+    protected List<Object[]> matchRows = new ArrayList<Object[]>();
 
     protected Map<String, String> columnMap = null;
 
@@ -60,12 +60,13 @@ public abstract class AbstractMatchAnaysisTableSection extends AbstractSectionCo
         section.setText(getSectionName());
         Composite sectionClient = toolkit.createComposite(section, SWT.NONE);
         sectionClient.setLayout(new GridLayout(getColumnNum(), true));
-        section.setClient(sectionClient);
+        sectionClient.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
         Composite createSubContent = createSubContent(sectionClient);
         createButtons(createSubContent);
         if (isNeedSubChart()) {
             createSubChart(sectionClient);
         }
+        section.setClient(sectionClient);
         return sectionClient;
     }
 
@@ -211,11 +212,11 @@ public abstract class AbstractMatchAnaysisTableSection extends AbstractSectionCo
         labelGd.horizontalAlignment = SWT.LEFT;
         labelGd.widthHint = 30;
 
-        final Button addButton = new Button(buttonsComposite, SWT.NONE);
-        addButton.setToolTipText("Add New Item"); //$NON-NLS-1$
-        addButton.setImage(ImageLib.getImage(ImageLib.SECTION_PREVIEW));
-        addButton.setLayoutData(labelGd);
-        addButton.addSelectionListener(new SelectionAdapter() {
+        final Button refresh = new Button(buttonsComposite, SWT.NONE);
+        refresh.setToolTipText("Add New Item"); //$NON-NLS-1$
+        refresh.setImage(ImageLib.getImage(ImageLib.SECTION_PREVIEW));
+        refresh.setLayoutData(labelGd);
+        refresh.addSelectionListener(new SelectionAdapter() {
 
             @Override
             public void widgetSelected(SelectionEvent e) {
@@ -226,19 +227,7 @@ public abstract class AbstractMatchAnaysisTableSection extends AbstractSectionCo
     }
 
     public void setDataInput(List<Object[]> allData) {
-        tableData = new ArrayList<String[]>();
-        for (Object[] row : allData) {
-            String[] stringRow = new String[row.length];
-            int i = 0;
-            for (Object data : row) {
-                if (data == null) {
-                    stringRow[i++] = "";
-                } else {
-                    stringRow[i++] = String.valueOf(data);
-                }
-            }
-            tableData.add(stringRow);
-        }
+        matchRows = allData;
     }
 
     public void setColumnNameInput(Map<String, String> columnMap) {
@@ -333,7 +322,7 @@ public abstract class AbstractMatchAnaysisTableSection extends AbstractSectionCo
      */
     abstract protected String getSectionName();
 
-    abstract public void refreshChart();
+    public abstract void refreshChart();
 
     public abstract Boolean isKeyDefinitionAdded(String columnName) throws Exception;
 

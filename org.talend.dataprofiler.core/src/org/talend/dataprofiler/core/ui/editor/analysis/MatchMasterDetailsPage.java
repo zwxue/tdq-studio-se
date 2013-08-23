@@ -69,10 +69,13 @@ import org.talend.dataprofiler.core.ui.utils.RepNodeUtils;
 import org.talend.dataprofiler.core.ui.wizard.analysis.connection.ConnectionWizard;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.exception.DataprofilerCoreException;
+import org.talend.dataquality.indicators.columnset.RecordMatchingIndicator;
 import org.talend.dataquality.properties.TDQAnalysisItem;
 import org.talend.dataquality.record.linkage.ui.composite.table.DataSampleTable;
+import org.talend.dataquality.record.linkage.ui.composite.utils.MatchRuleAnlaysisUtils;
 import org.talend.dataquality.record.linkage.ui.section.BlockingKeySection;
 import org.talend.dataquality.record.linkage.ui.section.MatchingKeySection;
+import org.talend.dataquality.rules.MatchRule;
 import org.talend.dq.analysis.MatchAnalysisHandler;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.nodes.DBColumnRepNode;
@@ -239,6 +242,7 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
 
         if (selectedColumns != null && selectedColumns.length > 0) {
             RepositoryNode node = RepositoryNodeHelper.recursiveFind(selectedColumns[0]);
+            // TODO use ModelElement instead of node to get the data source type directly. See MatchAnalysisExecutor.
             isMdm = RepNodeUtils.isMDM(node);
             isDelimitedFile = RepNodeUtils.isDelimitedFile(node);
 
@@ -715,8 +719,16 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
      */
     @Override
     protected ReturnCode canRun() {
-        // TODO Auto-generated method stub
-        return null;
+        ReturnCode rc = new ReturnCode(Boolean.FALSE);
+        RecordMatchingIndicator recordMatchingIndicator = MatchRuleAnlaysisUtils.getRecordMatchIndicatorFromAna(analysis);
+        EList<MatchRule> matchRules = recordMatchingIndicator.getBuiltInMatchRuleDefinition().getMatchRules();
+        if (matchRules.size() > 0) {
+            MatchRule matchRule = matchRules.get(0);
+            if (matchRule.getMatchKeys().size() > 0) {
+                rc.setOk(Boolean.TRUE);
+            }
+        }
+        return rc;
     }
 
     /*
@@ -726,7 +738,7 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
      */
     @Override
     public void refresh() {
-        // TODO Auto-generated method stub
+        // TODO yyin implement this method.
 
     }
 
@@ -784,6 +796,20 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
         // unregister the event after create the connection
         EventManager.getInstance().unRegister(this.dataSampleparentComposite,
                 EventEnum.DQ_MATCH_ANALYSIS_AFTER_CREATE_CONNECTION, afterCreateConnectionReceiver);
+        super.dispose();
 
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisMetadataPage#fireRuningItemChanged(boolean)
+     */
+    @Override
+    public void fireRuningItemChanged(boolean status) {
+        if (status) {
+            currentEditor.setActivePage(AnalysisEditor.RESULT_PAGE);
+            currentEditor.getResultPage().refresh(this);
+        }
     }
 }

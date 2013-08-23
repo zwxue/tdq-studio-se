@@ -126,7 +126,7 @@ public final class PluginConstant {
 
     public static final String EXPAND_TREE = "Tree_Expands"; //$NON-NLS-1$
 
-    public static final String NA_STRING = "N/A"; //$NON-NLS-1$
+    public static final String NA_STRING = org.talend.dataquality.PluginConstant.NA_STRING;
 
     public static final String UNSUPPORTED = "(Unsupported)"; //$NON-NLS-1$
 }

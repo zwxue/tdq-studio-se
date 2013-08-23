@@ -101,6 +101,13 @@ public interface IRecordGrouping {
     public void setIsOutputDistDetails(boolean isOutputDistDetails);
 
     /**
+     * Sets the isSeperateOutput.
+     * 
+     * @param isSeperateOutput the isSeperateOutput to set
+     */
+    public void setSeperateOutput(boolean isSeperateOutput);
+
+    /**
      * 
      * Set the column delimiter.
      * 

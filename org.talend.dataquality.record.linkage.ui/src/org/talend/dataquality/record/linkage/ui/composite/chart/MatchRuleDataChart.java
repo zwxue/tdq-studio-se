@@ -17,11 +17,9 @@ import java.awt.Paint;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.log4j.Logger;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
@@ -47,19 +45,13 @@ import org.talend.dataquality.record.linkage.ui.i18n.internal.DefaultMessagesImp
  */
 public class MatchRuleDataChart extends Composite {
 
-    private static Logger log = Logger.getLogger(MatchRuleDataChart.class);
-
     public static final Color[] COLOR_LIST = MatchRuleColorRegistry.getColorsForAwt();
-
-    private List<String[]> previewData;
 
     private ChartComposite jfreeChartComp;
 
-    private int gidColumn, grpSizeColumn, masterColumn, scoreColumn;
-
     private int times = 0;
 
-    private String[] viewColumn = null;
+    private Map<Object, Long> groupSize2GroupFrequency = null;
 
     /**
      * DOC yyi DataChart constructor comment.
@@ -67,9 +59,9 @@ public class MatchRuleDataChart extends Composite {
      * @param parent
      * @param style
      */
-    public MatchRuleDataChart(Composite parent, List<String[]> viewData, String[] viewColumn) {
+    public MatchRuleDataChart(Composite parent, Map<Object, Long> groupSize2GroupFrequency) {
         super(parent, SWT.NONE);
-
+        this.groupSize2GroupFrequency = groupSize2GroupFrequency;
         this.setLayout(new FillLayout());
         // make the size of the chart full fill the area
         if (this.getParent().getLayout() instanceof GridLayout) {
@@ -77,21 +69,11 @@ public class MatchRuleDataChart extends Composite {
             this.setLayoutData(data);
         }
 
-        this.viewColumn = viewColumn;
-        initChartData(viewData);
+        initChartData();
     }
 
-    public boolean initChartData(List<String[]> viewData) {
-        if (viewData != null && this.jfreeChartComp == null) {
-
-            this.previewData = viewData;
-
-            // MOD yyi 2012-01-11 TDQ-4362:fix the bug when checking the distance detail option
-            List<String> header = java.util.Arrays.asList(viewColumn);
-            this.gidColumn = header.indexOf("GID"); //$NON-NLS-1$
-            this.grpSizeColumn = header.indexOf("GRP_SIZE"); //$NON-NLS-1$
-            this.masterColumn = header.indexOf("MASTER"); //$NON-NLS-1$
-            this.scoreColumn = header.indexOf("SCORE"); //$NON-NLS-1$
+    public boolean initChartData() {
+        if (this.jfreeChartComp == null) {
             createChart();
             return true;
         }
@@ -155,26 +137,8 @@ public class MatchRuleDataChart extends Composite {
         String s = DefaultMessagesImpl.getString("DataChart.4"); //$NON-NLS-1$
         DefaultCategoryDataset defaultcategorydataset = new DefaultCategoryDataset();
 
-        // grp count, itmes
-        final Map<String, Integer> groupCounts = new HashMap<String, Integer>();
-
-        for (String[] values : this.previewData) {
-            if (values.length <= masterColumn) {
-                // TODO zshen check this exceptional case
-                log.error("Array size " + values.length + " less than " + masterColumn);
-            }
-            if (Boolean.valueOf(values[masterColumn])) {
-                if (null == groupCounts.get(values[grpSizeColumn])) {
-                    groupCounts.put(values[grpSizeColumn], 1);
-                } else {
-                    int i = groupCounts.get(values[grpSizeColumn]) + 1;
-                    groupCounts.put(values[grpSizeColumn], i);
-                }
-            }
-        }
-
         // sort dataset
-        String[] array = groupCounts.keySet().toArray(new String[0]);
+        String[] array = groupSize2GroupFrequency.keySet().toArray(new String[0]);
         List<String> groups = Arrays.asList(array);
         Collections.sort(groups, new Comparator<String>() {
 
@@ -186,7 +150,7 @@ public class MatchRuleDataChart extends Composite {
         });
         for (String count : groups) {
             if (Integer.parseInt(count) > times - 1) {
-                defaultcategorydataset.addValue(groupCounts.get(count), s, count);
+                defaultcategorydataset.addValue(groupSize2GroupFrequency.get(count), s, count);
             }
         }
         return defaultcategorydataset;
@@ -196,9 +160,9 @@ public class MatchRuleDataChart extends Composite {
         return jfreeChartComp;
     }
 
-    public void refresh(List<String[]> viewData) {
-        this.previewData = viewData;
-        initChartData(viewData);
+    public void refresh(Map<Object, Long> groupSize2GroupFrequencyNew) {
+        this.groupSize2GroupFrequency = groupSize2GroupFrequencyNew;
+        initChartData();
         jfreeChartComp.setChart(createChart(createDataset()));
         jfreeChartComp.forceRedraw();
     }

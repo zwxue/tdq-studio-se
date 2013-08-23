@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2012 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2013 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -10,13 +10,20 @@
 // 9 rue Pages 92150 Suresnes, France
 //
 // ============================================================================
-package org.talend.dataquality.record.linkage.ui.section;
+package org.talend.dataquality.record.linkage.grouping;
 
 /**
- * TODO remove this class by using DOC yyin class global comment. Detailled comment
+ * created by zhao on Aug 20, 2013 Detailled comment
+ * 
  */
-public final class DefaultMatchColumnConstant {
+public abstract class MatchGroupResultConsumer {
 
-    public static final int COLUMN_COUNT = 6;
+    /**
+     * 
+     * Handle a row from match grouping consumer
+     * 
+     * @param row
+     */
+    public abstract void handle(Object row);
 
 }

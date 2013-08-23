@@ -245,6 +245,7 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
                             if (listener != null) {
                                 listener.fireRuningItemChanged(true);
                             } else {
+                                // TODO yyin publish the event from listener.
                                 EventManager.getInstance().publish(analysis, EventEnum.DQ_ANALYSIS_RUN_FROM_MENU, null);
                             }
 

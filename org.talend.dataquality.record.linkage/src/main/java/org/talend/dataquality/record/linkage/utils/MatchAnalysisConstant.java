@@ -12,15 +12,28 @@
 // ============================================================================
 package org.talend.dataquality.record.linkage.utils;
 
-
 /**
- * created by zshen on Aug 5, 2013
- * Detailled comment
- *
+ * created by zshen on Aug 5, 2013 Detailled comment
+ * 
  */
 public class MatchAnalysisConstant {
 
     public static final String COLUMN = "Column"; //$NON-NLS-1$
+
+    public static final String LABEL = "Label"; //$NON-NLS-1$
+
+    public static final String COUNT = "Count"; //$NON-NLS-1$
+
+    public static final String PERCENTAGE = "%"; //$NON-NLS-1$
+
+    public static final String GROUP_SIZE = "Group Size"; //$NON-NLS-1$
+
+    public static final String GROUP_COUNT = "Group Count"; //$NON-NLS-1$
+
+    public static final String RECORD_COUNT = "Record Count"; //$NON-NLS-1$
+
+    public static final String RECORDS_PERCENTAGE = "% Records"; //$NON-NLS-1$
+
     // match key need
     public static final String MATCH_KEY_NAME = "Match Key Name"; //$NON-NLS-1$
 
@@ -50,6 +63,20 @@ public class MatchAnalysisConstant {
     public static final String POST_VALUE = "post-value"; //$NON-NLS-1$
 
     public static final String MATCH_KEY_DEFAULT_VALUE = "match key name"; //$NON-NLS-1$
+
+    public static final String GID = "GID";//$NON-NLS-1$
+
+    public static final String MASTER = "MASTER";//$NON-NLS-1$
+
+    public static final String GRP_SIZE = "GRP_SIZE";//$NON-NLS-1$
+
+    public static final String SCORE = "SCORE";//$NON-NLS-1$
+
+    public static final String GRP_QUALITY = "GRP_QUALITY";//$NON-NLS-1$
+
+    public static final String ATTRIBUTE_SCORES = "ATTRIBUTE_SCORES";//$NON-NLS-1$
+
+    public static final String BLOCK_KEY = "BLOCK_KEY";//$NON-NLS-1$
 
     public static final String BlOCKING_KEY_SECTION_NAME = "Blocking Key"; //$NON-NLS-1$
 

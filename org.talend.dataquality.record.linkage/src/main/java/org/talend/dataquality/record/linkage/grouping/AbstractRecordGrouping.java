@@ -45,6 +45,9 @@ public class AbstractRecordGrouping implements IRecordGrouping {
     // Output distance details or not.
     private boolean isOutputDistDetails = Boolean.FALSE;
 
+    // Allow seperate output give group score and the confidence threshold.
+    private boolean isSeperateOutput = Boolean.FALSE;
+
     private CombinedRecordMatcher combinedRecordMatcher = RecordMatcherFactory.createCombinedRecordMatcher();
 
     /**
@@ -93,10 +96,22 @@ public class AbstractRecordGrouping implements IRecordGrouping {
         this.isOutputDistDetails = isOutputDistDetails;
     }
 
+    /**
+     * Sets the isSeperateOutput.
+     * 
+     * @param isSeperateOutput the isSeperateOutput to set
+     */
+    @Override
+    public void setSeperateOutput(boolean isSeperateOutput) {
+        this.isSeperateOutput = isSeperateOutput;
+    }
+
     @Override
     public void doGroup(String[] inputRow) throws IOException, InterruptedException {
 
         extSize = isOutputDistDetails ? 5 : 4;
+        // extSize + 1 when isSeperateOutput is enabled.
+        extSize = isSeperateOutput ? extSize + 1 : extSize;
         // In case of current component is linked to previous, and the record is NOT master, just put it to the output
         // and continue;
         if (isLinkToPrevious && !inputRow[inputRow.length - extSize + 2].equalsIgnoreCase("true")) { //$NON-NLS-1$
@@ -132,23 +147,9 @@ public class AbstractRecordGrouping implements IRecordGrouping {
                 masterMatchRecord[idx] = masterRecord[Integer.parseInt(matchingRule.get(idx).get(IRecordGrouping.COLUMN_IDX))];
             }
             double matchingProba = combinedRecordMatcher.getMatchingWeight(masterMatchRecord, lookupDataArray);
-            String distanceDetails = ""; //$NON-NLS-1$
-            if (isOutputDistDetails) {
-                // Concatenate the matching distance details.
-                double[] currentAttrWeight = combinedRecordMatcher.getCurrentAttributeMatchingWeights();
-                if (currentAttrWeight != null && currentAttrWeight.length > 0) {
-                    for (double wt : currentAttrWeight) {
-                        if (!StringUtils.isEmpty(distanceDetails)) {
-                            distanceDetails += "|"; //$NON-NLS-1$
-                        }
-                        distanceDetails += wt;
-                    }
-                }
-
-            }
-
             // Similar
             if (matchingProba >= acceptableThreshold) {
+                String distanceDetails = computeOutputDetails();
                 isSimilar = true;
                 // Master GRP_SIZE ++
                 if (isLinkToPrevious) {
@@ -168,7 +169,6 @@ public class AbstractRecordGrouping implements IRecordGrouping {
                 // Duplicated record
                 updateWithExtendedColumn(inputRow, masterRecord, matchingProba, distanceDetails, columnDelimiter);
                 break;
-
             }
 
         }
@@ -190,14 +190,63 @@ public class AbstractRecordGrouping implements IRecordGrouping {
                 masterRow[masterRow.length - extSize + 2] = String.valueOf(true);
                 // Score
                 masterRow[masterRow.length - extSize + 3] = String.valueOf(1.0);
+
+                int extIdx = 3;
+                if (isSeperateOutput) {
+                    extIdx++;
+                    // Group quality
+                    masterRow[masterRow.length - extSize + extIdx] = String.valueOf(1.0);
+                }
+
                 if (isOutputDistDetails) {
+                    extIdx++;
                     // Match distance details in master record is null
-                    masterRow[masterRow.length - extSize + 4] = ""; //$NON-NLS-1$
+                    masterRow[masterRow.length - extSize + extIdx] = ""; //$NON-NLS-1$
                 }
             }
 
             masterRecords.add(masterRow);
         }
+    }
+
+    /**
+     * DOC zhao Comment method "computeGroupQuality".
+     * 
+     * @param matchingProba
+     * @return
+     */
+    private double computeGroupQuality(String[] masterRecord, double matchingProba) {
+
+        double groupQuality = Double.valueOf(masterRecord[masterRecord.length - extSize + 3]);
+        if (matchingProba < groupQuality) {
+            // Use the minimal match distance as the group score.
+            groupQuality = matchingProba;
+        }
+        return groupQuality;
+    }
+
+    /**
+     * DOC zhao Comment method "computeOutputDetails".
+     * 
+     * @param distanceDetails
+     * @return
+     */
+    private String computeOutputDetails() {
+        String distanceDetails = StringUtils.EMPTY;
+        if (isOutputDistDetails) {
+            // Concatenate the matching distance details.
+            double[] currentAttrWeight = combinedRecordMatcher.getCurrentAttributeMatchingWeights();
+            if (currentAttrWeight != null && currentAttrWeight.length > 0) {
+                for (double wt : currentAttrWeight) {
+                    if (!StringUtils.isEmpty(distanceDetails)) {
+                        distanceDetails += "|"; //$NON-NLS-1$
+                    }
+                    distanceDetails += wt;
+                }
+            }
+
+        }
+        return distanceDetails;
     }
 
     @Override
@@ -222,11 +271,19 @@ public class AbstractRecordGrouping implements IRecordGrouping {
         // Master
         duplicateRecord[duplicateRecord.length - extSize + 2] = String.valueOf(false);
         // Score
-
         duplicateRecord[duplicateRecord.length - extSize + 3] = String.valueOf(matchingProba);
+
+        int extIdx = 3;
+        // Group quality
+        if (isSeperateOutput) {
+            extIdx++;
+            double groupQuality = computeGroupQuality(masterRecord, matchingProba);
+            masterRecord[duplicateRecord.length - extSize + extIdx] = String.valueOf(groupQuality);
+        }
         if (isOutputDistDetails) {
+            extIdx++;
             // Match distance details
-            duplicateRecord[duplicateRecord.length - extSize + 4] = distanceDetails;
+            duplicateRecord[duplicateRecord.length - extSize + extIdx] = distanceDetails;
         }
         // output the duplicate record
         outputRow(StringUtils.join(duplicateRecord, delimiter));

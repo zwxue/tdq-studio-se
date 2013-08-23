@@ -58,6 +58,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.talend.dataquality.record.linkage.ui.composite.ListObjectDataProvider;
 import org.talend.dataquality.record.linkage.ui.section.DefaultMatchColumnConstant;
+import org.talend.dataquality.record.linkage.utils.MatchAnalysisConstant;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
@@ -145,12 +146,12 @@ public class DataSampleTable {
         for (ModelElement column : columns) {
             columnsName[i++] = column.getName();
         }
-        columnsName[i++] = DefaultMatchColumnConstant.GID;
-        columnsName[i++] = DefaultMatchColumnConstant.GRP_SIZE;
-        columnsName[i++] = DefaultMatchColumnConstant.SCORE;
-        columnsName[i++] = DefaultMatchColumnConstant.GRP_QUALITY;
-        columnsName[i++] = DefaultMatchColumnConstant.ATTRIBUTE_SCORES;
-        columnsName[i++] = DefaultMatchColumnConstant.BLOCK_KEY;
+        columnsName[i++] = MatchAnalysisConstant.GID;
+        columnsName[i++] = MatchAnalysisConstant.GRP_SIZE;
+        columnsName[i++] = MatchAnalysisConstant.SCORE;
+        columnsName[i++] = MatchAnalysisConstant.GRP_QUALITY;
+        columnsName[i++] = MatchAnalysisConstant.ATTRIBUTE_SCORES;
+        columnsName[i++] = MatchAnalysisConstant.BLOCK_KEY;
         return columnsName;
     }
 
@@ -347,12 +348,12 @@ public class DataSampleTable {
         }
     }
 
-
     class StyledColumnHeaderConfiguration extends DefaultColumnHeaderStyleConfiguration {
 
         public StyledColumnHeaderConfiguration() {
         }
 
+        @Override
         public void configureRegistry(IConfigRegistry configRegistry) {
             super.configureRegistry(configRegistry);
             addNormalModeStyling(configRegistry);

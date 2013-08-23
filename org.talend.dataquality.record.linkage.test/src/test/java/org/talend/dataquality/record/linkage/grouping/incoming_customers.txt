@@ -98,3 +98,4 @@
 99243944287|Amyotte|Carol|J.|6467 Buena Vista|San Jose|CA|62472|A6
 99440378546|Abston|Donald|R.|8950 Glenwood Dr.|Concord|CA|86348|A8
 99740051031|Alumbaugh|Carolyn||4469 Dellwood Court|Lemon Grove|CA|56203|A5
+95599685907|Alvaradu|Emilio|C.|9061 Isabel|Spokane|WA|93349|A9

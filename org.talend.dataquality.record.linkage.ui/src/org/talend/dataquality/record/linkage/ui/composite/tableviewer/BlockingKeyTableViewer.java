@@ -18,6 +18,7 @@ import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ComboBoxCellEditor;
 import org.eclipse.jface.viewers.IBaseLabelProvider;
@@ -28,8 +29,9 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.indicators.columnset.RecordMatchingIndicator;
+import org.talend.dataquality.record.linkage.ui.action.MatchRuleActionGroup;
 import org.talend.dataquality.record.linkage.ui.composite.tableviewer.provider.BlockingKeyTableLabelProvider;
-import org.talend.dataquality.record.linkage.ui.composite.tableviewer.provider.KeyDefinitionContentProvider;
+import org.talend.dataquality.record.linkage.ui.composite.tableviewer.provider.MatchAnalysisTableContentProvider;
 import org.talend.dataquality.record.linkage.ui.composite.utils.MatchRuleAnlaysisUtils;
 import org.talend.dataquality.record.linkage.utils.BlockingKeyAlgorithmEnum;
 import org.talend.dataquality.record.linkage.utils.BlockingKeyPostAlgorithmEnum;
@@ -43,7 +45,7 @@ import org.talend.dataquality.rules.RulesFactory;
 
 /**
  * created by zshen on Aug 6, 2013 Detailled comment
- *
+ * 
  */
 public class BlockingKeyTableViewer extends AbstractMatchAnalysisTableViewer {
 
@@ -53,7 +55,7 @@ public class BlockingKeyTableViewer extends AbstractMatchAnalysisTableViewer {
 
     /**
      * DOC zshen BlockingKeyTableViewer constructor comment.
-     *
+     * 
      * @param parent
      * @param style
      */
@@ -63,7 +65,7 @@ public class BlockingKeyTableViewer extends AbstractMatchAnalysisTableViewer {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see
      * org.talend.dataquality.record.linkage.ui.composite.tableviewer.MatchRuleTableViewer#getCellEditor(java.util.List)
      */
@@ -73,34 +75,33 @@ public class BlockingKeyTableViewer extends AbstractMatchAnalysisTableViewer {
         for (int i = 0; i < editors.length; ++i) {
             if (isAddColumn()) {
                 switch (i) {
-
                 case 2:
-                    editors[i] = new ComboBoxCellEditor(matchTable, BlockingKeyPreAlgorithmEnum.getAllTypes(), SWT.READ_ONLY);
+                    editors[i] = new ComboBoxCellEditor(innerTable, BlockingKeyPreAlgorithmEnum.getAllTypes(), SWT.READ_ONLY);
                     break;
                 case 4:
-                    editors[i] = new ComboBoxCellEditor(matchTable, BlockingKeyAlgorithmEnum.getAllTypes(), SWT.READ_ONLY);
+                    editors[i] = new ComboBoxCellEditor(innerTable, BlockingKeyAlgorithmEnum.getAllTypes(), SWT.READ_ONLY);
                     break;
                 case 6:
-                    editors[i] = new ComboBoxCellEditor(matchTable, BlockingKeyPostAlgorithmEnum.getAllTypes(), SWT.READ_ONLY);
+                    editors[i] = new ComboBoxCellEditor(innerTable, BlockingKeyPostAlgorithmEnum.getAllTypes(), SWT.READ_ONLY);
                     break;
                 default:
-                    editors[i] = new TextCellEditor(matchTable);
+                    editors[i] = new TextCellEditor(innerTable);
                 }
             } else {
                 switch (i) {
-
                 case 1:
-                    editors[i] = new ComboBoxCellEditor(matchTable, BlockingKeyPreAlgorithmEnum.getAllTypes(), SWT.READ_ONLY);
+                    editors[i] = new ComboBoxCellEditor(innerTable, BlockingKeyPreAlgorithmEnum.getAllTypes(), SWT.READ_ONLY);
                     break;
                 case 3:
-                    editors[i] = new ComboBoxCellEditor(matchTable, BlockingKeyAlgorithmEnum.getAllTypes(), SWT.READ_ONLY);
+                    editors[i] = new ComboBoxCellEditor(innerTable, BlockingKeyAlgorithmEnum.getAllTypes(), SWT.READ_ONLY);
                     break;
                 case 5:
-                    editors[i] = new ComboBoxCellEditor(matchTable, BlockingKeyPostAlgorithmEnum.getAllTypes(), SWT.READ_ONLY);
+                    editors[i] = new ComboBoxCellEditor(innerTable, BlockingKeyPostAlgorithmEnum.getAllTypes(), SWT.READ_ONLY);
                     break;
                 default:
-                    editors[i] = new TextCellEditor(matchTable);
+                    editors[i] = new TextCellEditor(innerTable);
                 }
+
             }
         }
         return editors;
@@ -108,7 +109,7 @@ public class BlockingKeyTableViewer extends AbstractMatchAnalysisTableViewer {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see org.talend.dataquality.record.linkage.ui.composite.tableviewer.MatchRuleTableViewer#getTableLabelProvider()
      */
     @Override
@@ -118,18 +119,18 @@ public class BlockingKeyTableViewer extends AbstractMatchAnalysisTableViewer {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see
      * org.talend.dataquality.record.linkage.ui.composite.tableviewer.MatchRuleTableViewer#getTableContentProvider()
      */
     @Override
     protected IContentProvider getTableContentProvider() {
-        return new KeyDefinitionContentProvider();
+        return new MatchAnalysisTableContentProvider();
     }
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see org.talend.dataquality.record.linkage.ui.composite.tableviewer.MatchRuleTableViewer#getTableCellModifier()
      */
     @Override
@@ -139,11 +140,11 @@ public class BlockingKeyTableViewer extends AbstractMatchAnalysisTableViewer {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see org.talend.dataquality.record.linkage.ui.composite.tableviewer.MatchRuleTableViewer#getDisplayWeight()
      */
     @Override
-    protected int getDisplayWeight() {
+    protected int getHeaderDisplayWeight() {
         return 8;
     }
 
@@ -189,9 +190,9 @@ public class BlockingKeyTableViewer extends AbstractMatchAnalysisTableViewer {
     }
 
     /**
-     *
+     * 
      * add new Element
-     *
+     * 
      * @param columnName the name of column
      * @param analysis the context of this add operation perform on.
      */
@@ -208,7 +209,7 @@ public class BlockingKeyTableViewer extends AbstractMatchAnalysisTableViewer {
 
     /**
      * DOC zshen Comment method "createDefaultRow".
-     *
+     * 
      * @param columnName
      * @return
      */
@@ -235,7 +236,7 @@ public class BlockingKeyTableViewer extends AbstractMatchAnalysisTableViewer {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see
      * org.talend.dataquality.record.linkage.ui.composite.tableviewer.AbstractMatchAnalysisTabveViewer#removeElement
      * (java.lang.String)
@@ -258,7 +259,7 @@ public class BlockingKeyTableViewer extends AbstractMatchAnalysisTableViewer {
 
     /**
      * DOC yyin Comment method "convertToList".
-     *
+     * 
      * @param asList
      * @return
      */
@@ -272,7 +273,19 @@ public class BlockingKeyTableViewer extends AbstractMatchAnalysisTableViewer {
 
     /*
      * (non-Javadoc)
-     *
+     * 
+     * @see
+     * org.talend.dataquality.record.linkage.ui.composite.tableviewer.AbstractMatchAnalysisTableViewer#addContextMenu()
+     */
+    @Override
+    public void addContextMenu() {
+        MatchRuleActionGroup actionGroup = new MatchRuleActionGroup(this);
+        actionGroup.fillContextMenu(new MenuManager());
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
      * @see
      * org.talend.dataquality.record.linkage.ui.composite.tableviewer.AbstractMatchAnalysisTableViewer#addElement(java
      * .lang.String, org.talend.dataquality.rules.MatchRuleDefinition)
@@ -288,7 +301,7 @@ public class BlockingKeyTableViewer extends AbstractMatchAnalysisTableViewer {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see
      * org.talend.dataquality.record.linkage.ui.composite.tableviewer.AbstractMatchAnalysisTableViewer#removeElement
      * (org.talend.dataquality.rules.KeyDefinition, org.talend.dataquality.analysis.Analysis)
@@ -302,7 +315,7 @@ public class BlockingKeyTableViewer extends AbstractMatchAnalysisTableViewer {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see
      * org.talend.dataquality.record.linkage.ui.composite.tableviewer.AbstractMatchAnalysisTableViewer#removeElement
      * (org.talend.dataquality.rules.KeyDefinition, org.talend.dataquality.rules.MatchRuleDefinition)
@@ -321,4 +334,5 @@ public class BlockingKeyTableViewer extends AbstractMatchAnalysisTableViewer {
             }
         }
     }
+
 }

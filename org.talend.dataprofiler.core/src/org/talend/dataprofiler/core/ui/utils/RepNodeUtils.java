@@ -68,7 +68,7 @@ public final class RepNodeUtils {
 
     private static Logger log = Logger.getLogger(RepNodeUtils.class);
 
-    private static String separator = File.separator;//$NON-NLS-1$
+    private static String separator = File.separator;
 
     private RepNodeUtils() {
     }

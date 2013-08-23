@@ -39,11 +39,9 @@ import org.talend.dataquality.rules.KeyDefinition;
 
 /**
  * created by zshen on Aug 6, 2013 Detailled comment
- *
+ * 
  */
 public class BlockingKeySection extends AbstractMatchAnaysisTableSection {
-
-
 
     private BlockingKeyDataChart blockingKeyDataChart = null;
 
@@ -51,7 +49,7 @@ public class BlockingKeySection extends AbstractMatchAnaysisTableSection {
 
     /**
      * DOC zshen BlockingKeySection constructor comment.
-     *
+     * 
      * @param parent
      * @param style
      * @param toolkit
@@ -63,7 +61,7 @@ public class BlockingKeySection extends AbstractMatchAnaysisTableSection {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see org.talend.dataquality.record.linkage.ui.section.AbstractMatchTableSection#getSectionName()
      */
     @Override
@@ -105,7 +103,7 @@ public class BlockingKeySection extends AbstractMatchAnaysisTableSection {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see
      * org.talend.dataquality.record.linkage.ui.section.AbstractMatchTableSection#createSubChart(org.eclipse.swt.widgets
      * .Composite)
@@ -118,7 +116,7 @@ public class BlockingKeySection extends AbstractMatchAnaysisTableSection {
         GridData gridData = new GridData(GridData.FILL_BOTH);
         blockComp.setLayoutData(gridData);
         // when there are no data, no need to compute.
-        if (tableData == null || tableData.size() < 1) {
+        if (matchRows == null || matchRows.isEmpty()) {
             blockingKeyDataChart = new BlockingKeyDataChart(blockComp, new ArrayList<String[]>());
         } else {
             ExecuteGenerateBlockingAction executeGenerateBlockingAction = computeResult();
@@ -129,7 +127,7 @@ public class BlockingKeySection extends AbstractMatchAnaysisTableSection {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see org.talend.dataquality.record.linkage.ui.section.AbstractMatchTableSection#RefreshChart()
      */
     @Override
@@ -140,7 +138,7 @@ public class BlockingKeySection extends AbstractMatchAnaysisTableSection {
 
     /**
      * DOC zshen Comment method "computeRusult".
-     *
+     * 
      * @return
      */
     protected ExecuteGenerateBlockingAction computeResult() {
@@ -149,7 +147,7 @@ public class BlockingKeySection extends AbstractMatchAnaysisTableSection {
         ExecuteGenerateBlockingAction executeGenerateBlockingAction = new ExecuteGenerateBlockingAction(blockingKeyData,
                 columnMap);
         if (hasBlockingKey()) {
-            executeGenerateBlockingAction.setInputData(tableData);
+            executeGenerateBlockingAction.setInputData(matchRows);
             executeGenerateBlockingAction.run();
         }
         return executeGenerateBlockingAction;
@@ -157,7 +155,7 @@ public class BlockingKeySection extends AbstractMatchAnaysisTableSection {
 
     /**
      * DOC zshen Comment method "hasBlockingKey".
-     *
+     * 
      * @return
      */
     private boolean hasBlockingKey() {
@@ -183,7 +181,7 @@ public class BlockingKeySection extends AbstractMatchAnaysisTableSection {
     /**
      * TODO yyin remove the mothod??<br>
      * DOC yyin Comment method "hasBlockKey".
-     *
+     * 
      * @return
      */
     private boolean hasBlockKey() {
@@ -195,7 +193,7 @@ public class BlockingKeySection extends AbstractMatchAnaysisTableSection {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see
      * org.talend.dataquality.record.linkage.ui.section.AbstractMatchAnaysisTableSection#isKeyDefinitionAdded(java.lang
      * .String)
@@ -216,7 +214,7 @@ public class BlockingKeySection extends AbstractMatchAnaysisTableSection {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see org.talend.dataquality.record.linkage.ui.section.AbstractMatchAnaysisTableSection#addTableItem()
      */
     @Override
@@ -226,7 +224,7 @@ public class BlockingKeySection extends AbstractMatchAnaysisTableSection {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see org.talend.dataquality.record.linkage.ui.section.AbstractMatchAnaysisTableSection#removeTableItem()
      */
     @Override
