@@ -428,11 +428,6 @@ public class ViewportLayer extends AbstractLayerTransform implements IUniqueInde
 
 	@Override
 	public int localToUnderlyingRowPosition(int localRowPosition) {
-        // Added TDQ-7797 : when the data is empty, can not select column header
-        if (localRowPosition == 0) {
-            return 0;
-        }// ~
-
 		int underlyingPosition = getOriginRowPosition() + localRowPosition;
 		
 		if (underlyingPosition < getMinimumOriginRowPosition()) {

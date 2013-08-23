@@ -117,8 +117,13 @@ public class BlockingKeySection extends AbstractMatchAnaysisTableSection {
         blockComp.setLayout(tableLayout);
         GridData gridData = new GridData(GridData.FILL_BOTH);
         blockComp.setLayoutData(gridData);
-        ExecuteGenerateBlockingAction executeGenerateBlockingAction = computeResult();
-        blockingKeyDataChart = new BlockingKeyDataChart(blockComp, executeGenerateBlockingAction.getResultDatas());
+        // when there are no data, no need to compute.
+        if (tableData == null || tableData.size() < 1) {
+            blockingKeyDataChart = new BlockingKeyDataChart(blockComp, new ArrayList<String[]>());
+        } else {
+            ExecuteGenerateBlockingAction executeGenerateBlockingAction = computeResult();
+            blockingKeyDataChart = new BlockingKeyDataChart(blockComp, executeGenerateBlockingAction.getResultDatas());
+        }
 
     }
 
@@ -240,5 +245,21 @@ public class BlockingKeySection extends AbstractMatchAnaysisTableSection {
         tableComposite.setAddColumn(isAddColumn);
     }
 
+    /**
+     * get all columns which is selected as blocking key
+     * 
+     * @return
+     */
+    public List<String> getSelectedColumnAsBlockKeys() {
+        List<String> keyColumns = new ArrayList<String>();
+        RecordMatchingIndicator recordMatchingIndicator = MatchRuleAnlaysisUtils.getRecordMatchIndicatorFromAna(analysis);
+        List<BlockKeyDefinition> keyDefs = recordMatchingIndicator.getBuiltInMatchRuleDefinition().getBlockKeys();
+        if (keyDefs.size() > 0) {
+            for (KeyDefinition keydef : keyDefs) {
+                keyColumns.add(keydef.getColumn());
+            }
+        }
 
+        return keyColumns;
+    }
 }

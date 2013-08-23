@@ -29,9 +29,9 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.nebula.widgets.nattable.NatTable;
 import org.eclipse.nebula.widgets.nattable.coordinate.Range;
+import org.eclipse.nebula.widgets.nattable.grid.layer.event.ColumnHeaderSelectionEvent;
 import org.eclipse.nebula.widgets.nattable.layer.ILayerListener;
 import org.eclipse.nebula.widgets.nattable.layer.event.ILayerEvent;
-import org.eclipse.nebula.widgets.nattable.selection.event.ColumnSelectionEvent;
 import org.eclipse.nebula.widgets.nattable.util.GUIHelper;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
@@ -110,9 +110,9 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
 
     private Button selectMatchKeyBtn = null;
 
-    private boolean canSelectBlockingKey = Boolean.FALSE;
+    private boolean isBlockingKeyButtonPushed = Boolean.FALSE;
 
-    private boolean canSelectMatchingKey = Boolean.FALSE;
+    private boolean isMatchingKeyButtonPushed = Boolean.FALSE;
 
     private SashForm sForm;
 
@@ -285,11 +285,16 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
 
             public void mouseDown(MouseEvent e) {
                 // every time click the button, change its status
-                selectMatchKeyBtn.setEnabled(canSelectBlockingKey);
-                canSelectBlockingKey = !canSelectBlockingKey;
+                selectMatchKeyBtn.setEnabled(isBlockingKeyButtonPushed);
+                isBlockingKeyButtonPushed = !isBlockingKeyButtonPushed;
 
-                // get the current match keys of the current Match Rule, to set the correct colors on table column
-
+                // get the current block keys, to set the correct colors on table column
+                if (isBlockingKeyButtonPushed) {
+                    changeColumnColorByCurrentKeys(blockingKeySection.getSelectedColumnAsBlockKeys(), false);
+                } else {
+                    // when switch out of the select block key mode, should change all columns color to original black.
+                    setAllColumnColorToBlack();
+                }
             }
 
             public void mouseUp(MouseEvent e) {
@@ -304,17 +309,53 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
 
             public void mouseDown(MouseEvent e) {
                 // every time click the button, change its status
-                selectBlockKeyBtn.setEnabled(canSelectMatchingKey);
-                canSelectMatchingKey = !canSelectMatchingKey;
+                selectBlockKeyBtn.setEnabled(isMatchingKeyButtonPushed);
+                isMatchingKeyButtonPushed = !isMatchingKeyButtonPushed;
 
                 // get the current block keys, to set the correct colors on table column
-
+                if (isMatchingKeyButtonPushed) {
+                    changeColumnColorByCurrentKeys(matchingKeySection.getCurrentMatchKeyColumn(), true);
+                } else {
+                    // when switch out of the select match key mode, should change all columns color to original black.
+                    setAllColumnColorToBlack();
+                }
             }
 
             public void mouseUp(MouseEvent e) {
             }
 
         });
+    }
+
+    /**
+     * change Column Color By Current selected Keys.
+     * 
+     * @param currentMatchKeyColumn
+     */
+    protected void changeColumnColorByCurrentKeys(List<String> currentKeyColumn, boolean isMatchKey) {
+        if (currentKeyColumn == null || currentKeyColumn.size() < 1) {
+            // set all columns' color to black
+            setAllColumnColorToBlack();
+            return;
+        }
+        // set all key's column into red/green columns
+        // set all not selected columns into black color
+        for (ModelElement column : selectedColumns) {
+            if (currentKeyColumn.contains(column.getName())) {
+                sampleTable.changeColumnHeaderLabelColor(column.getName(), isMatchKey ? GUIHelper.COLOR_RED
+                        : GUIHelper.COLOR_GREEN);
+            } else {
+                sampleTable.changeColumnHeaderLabelColor(column.getName(), GUIHelper.COLOR_BLACK);
+            }
+        }
+        sampleTable.refresh();
+    }
+
+    private void setAllColumnColorToBlack() {
+        for (ModelElement column : selectedColumns) {
+            sampleTable.changeColumnHeaderLabelColor(column.getName(), GUIHelper.COLOR_BLACK);
+        }
+        sampleTable.refresh();
     }
 
     private void createDataSelectionButtonComp(Composite parent) {
@@ -388,6 +429,14 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
         blockingKeySection.setDataInput(listOfData);
 
         refreshTable(listOfData);
+
+        // after refresh the table, need to check if it is in select key mode, then need also to set the column color
+        if (isBlockingKeyButtonPushed) {
+            changeColumnColorByCurrentKeys(blockingKeySection.getSelectedColumnAsBlockKeys(), false);
+        } else if (isMatchingKeyButtonPushed) {
+            changeColumnColorByCurrentKeys(matchingKeySection.getCurrentMatchKeyColumn(), true);
+        }
+
     }
 
     private void registerCreateConnectionEvent(Composite dataSampleComposite) {
@@ -507,8 +556,8 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
         nattable.addLayerListener(new ILayerListener() {
 
             public void handleLayerEvent(ILayerEvent event) {
-                if ((event instanceof ColumnSelectionEvent)) {
-                    ColumnSelectionEvent columnEvent = (ColumnSelectionEvent) event;
+                if ((event instanceof ColumnHeaderSelectionEvent)) {
+                    ColumnHeaderSelectionEvent columnEvent = (ColumnHeaderSelectionEvent) event;
                     Collection<Range> ranges = columnEvent.getColumnPositionRanges();
                     if (ranges.size() > 0) {
                         Range range = ranges.iterator().next();
@@ -534,11 +583,11 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
             // means that the user selected column is the additional ones,no need to process it
             return;
         }
-        if (!canSelectBlockingKey && !canSelectMatchingKey) {
+        if (!isBlockingKeyButtonPushed && !isMatchingKeyButtonPushed) {
             return;
-        } else if (canSelectBlockingKey) {
+        } else if (isBlockingKeyButtonPushed) {
             handleBlockKeySelection(columnName);
-        } else if (canSelectMatchingKey) {
+        } else if (isMatchingKeyButtonPushed) {
             handleMatchKeySelection(columnName);
         }
         this.setDirty(Boolean.TRUE);

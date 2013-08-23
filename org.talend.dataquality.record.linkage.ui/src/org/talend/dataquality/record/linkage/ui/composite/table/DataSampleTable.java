@@ -16,12 +16,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.nebula.widgets.nattable.NatTable;
 import org.eclipse.nebula.widgets.nattable.config.CellConfigAttributes;
 import org.eclipse.nebula.widgets.nattable.config.IConfigRegistry;
+import org.eclipse.nebula.widgets.nattable.config.IEditableRule;
 import org.eclipse.nebula.widgets.nattable.data.IColumnPropertyAccessor;
 import org.eclipse.nebula.widgets.nattable.data.IDataProvider;
 import org.eclipse.nebula.widgets.nattable.data.ReflectiveColumnPropertyAccessor;
+import org.eclipse.nebula.widgets.nattable.edit.EditConfigAttributes;
 import org.eclipse.nebula.widgets.nattable.grid.data.DefaultColumnHeaderDataProvider;
 import org.eclipse.nebula.widgets.nattable.grid.data.DefaultCornerDataProvider;
 import org.eclipse.nebula.widgets.nattable.grid.data.DefaultRowHeaderDataProvider;
@@ -114,8 +117,25 @@ public class DataSampleTable {
         }
         initTableProperty(columnsName, columnToLabelMap);
 
+        if (listOfData.size() < 1) {
+            listOfData.add(getEmptyRow());
+        }
         return createTableControl(parentContainer, listOfData);
 
+    }
+
+    /**
+     * when the data is empty, the column can not response the click event, so we need to add an empty row to it.
+     * 
+     * @return
+     */
+    private Object[] getEmptyRow() {
+        Object[] emptyRow = new Object[propertyNames.length];
+
+        for (int i = 0; i < propertyNames.length; i++) {
+            emptyRow[i] = StringUtils.EMPTY;
+        }
+        return emptyRow;
     }
 
     private String[] createColumnLabel(ModelElement[] columns) {
@@ -150,15 +170,36 @@ public class DataSampleTable {
         Style cellStyle = new Style();
         cellStyle.setAttributeValue(CellStyleAttributes.FOREGROUND_COLOR, color);
 
-        natTable.getConfigRegistry().registerConfigAttribute(CellConfigAttributes.CELL_STYLE, cellStyle, DisplayMode.NORMAL,
-                columnName);// "COLUMN_HEADER");
+        // unregister the old one
+        natTable.getConfigRegistry().unregisterConfigAttribute(CellConfigAttributes.CELL_STYLE, DisplayMode.NORMAL, columnName);
 
-        try {
-            natTable.addConfiguration(new StyledColumnHeaderConfiguration());
-        } catch (java.lang.IllegalStateException e) {
-            // no need to operate
-        }
+        natTable.getConfigRegistry().registerConfigAttribute(CellConfigAttributes.CELL_STYLE, cellStyle, DisplayMode.NORMAL,
+                columnName);
+
+        // TextPainter textPainter = new TextPainter();
+        //
+        // CellPainterDecorator painterDecorator = new CellPainterDecorator(
+        // new TextPainter(),CellEdgeEnum.TOP,new TextPainter(),false);
+        //
+        // natTable.getConfigRegistry().registerConfigAttribute(
+        // CellConfigAttributes.CELL_PAINTER,
+        // painterDecorator,
+        // DisplayMode.NORMAL, columnName);
         natTable.configure();
+
+        // ILayerCell layerCell = natTable.getCellByPosition(2, 2);
+        // TextPainter cellPainter = new TextPainter();
+        // Rectangle cellBounds = layerCell.getBounds();
+        // Image image = new Image(natTable.getDisplay(), cellBounds.width, cellBounds.height);
+        //
+        // GC gc = new GC(image);
+        // gc.setForeground(GUIHelper.COLOR_BLUE);
+        // if (cellPainter != null) {
+        // cellPainter.paintCell(layerCell, gc, cellBounds,
+        // natTable.getConfigRegistry());
+        // }
+        // gc.dispose();
+
     }
 
     /**
@@ -173,6 +214,10 @@ public class DataSampleTable {
             return null;
         }
         return propertyNames[position - 1];
+    }
+
+    public void refresh() {
+        natTable.forceFocus();
     }
 
     /**
@@ -201,9 +246,9 @@ public class DataSampleTable {
         GridLayer gridLayer = new GridLayer(bodyLayer, columnHeaderLayer, rowHeaderLayer, cornerLayer);
 
         // add control for each column header
-        ColumnOverrideLabelAccumulator columnLabelAccumulator = new ColumnOverrideLabelAccumulator(bodyLayer);
-        columnHeaderLayer.setConfigLabelAccumulator(columnLabelAccumulator);
-        registerColumnLabels(columnLabelAccumulator);
+        // ColumnOverrideLabelAccumulator columnLabelAccumulator = new ColumnOverrideLabelAccumulator(bodyLayer);
+        // columnHeaderLayer.setConfigLabelAccumulator(columnLabelAccumulator);
+        // registerColumnLabels(columnLabelAccumulator);
 
         // DummyBodyDataProvider bodyDataProvider = new DummyBodyDataProvider(500, 1000000);
         // SelectionLayer selectionLayer = new SelectionLayer(new DataLayer(bodyDataProvider));
@@ -221,6 +266,19 @@ public class DataSampleTable {
             natTable.dispose();
         }
         natTable = new NatTable(parent, gridLayer);
+
+        // no use for change color now
+        // try {
+        // natTable.addConfiguration(new StyledColumnHeaderConfiguration());
+        // } catch (java.lang.IllegalStateException e) {
+        // // no need to operate
+        // }
+
+        natTable.getConfigRegistry().registerConfigAttribute(EditConfigAttributes.CELL_EDITABLE_RULE,
+                IEditableRule.NEVER_EDITABLE, DisplayMode.EDIT, "ODD_BODY");
+        natTable.getConfigRegistry().registerConfigAttribute(EditConfigAttributes.CELL_EDITABLE_RULE,
+                IEditableRule.NEVER_EDITABLE, DisplayMode.EDIT, "EVEN_BODY");
+
         return natTable;
     }
 

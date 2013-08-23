@@ -272,7 +272,15 @@ public class MatchingKeySection extends AbstractMatchAnaysisTableSection {
     protected void createSubChart(Composite sectionClient) {
         List<String[]> viewData = getViewData();
         String[] viewColumn = getViewColumn();
-        List<String[]> resultStrList = computeMatchResult(viewData);
+
+        List<String[]> resultStrList = null;
+        // if the data is empty , create an empty list for the chart to show itself
+        if (viewData == null || viewData.size() < 1) {
+            resultStrList = new ArrayList<String[]>();
+        } else {
+            resultStrList = computeMatchResult(viewData);
+        }
+
         Composite chartComposite = toolkit.createComposite(sectionClient);
         GridLayout tableLayout = new GridLayout(1, Boolean.TRUE);
         chartComposite.setLayout(tableLayout);
@@ -355,13 +363,7 @@ public class MatchingKeySection extends AbstractMatchAnaysisTableSection {
     @Override
     public Boolean isKeyDefinitionAdded(String colummName) throws Exception {
         Boolean isAddded = Boolean.FALSE;
-        CTabItem currentTabItem = ruleFolder.getSelection();
-        if (currentTabItem == null) {
-            throw new Exception(DefaultMessagesImpl.getString("MatchingKeySection.ONE_MATCH_RULE_REQUIRED")); //$NON-NLS-1$
-        }
-        MatchRuleTableComposite matchRuleTableComp = (MatchRuleTableComposite) currentTabItem
-                .getData(MatchAnalysisConstant.MATCH_RULE_TABLE_COMPOSITE);
-        MatchRule matchRule = matchRuleTableComp.getMatchRule();
+        MatchRule matchRule = getCurrentMatchRule();
         for (KeyDefinition keyDef : matchRule.getMatchKeys()) {
             if (StringUtils.equals(colummName, keyDef.getColumn())) {
                 isAddded = Boolean.TRUE;
@@ -370,4 +372,36 @@ public class MatchingKeySection extends AbstractMatchAnaysisTableSection {
         }
         return isAddded;
     }
+
+    private MatchRule getCurrentMatchRule() throws Exception {
+        CTabItem currentTabItem = ruleFolder.getSelection();
+        if (currentTabItem == null) {
+            throw new Exception(DefaultMessagesImpl.getString("MatchingKeySection.ONE_MATCH_RULE_REQUIRED")); //$NON-NLS-1$
+        }
+        MatchRuleTableComposite matchRuleTableComp = (MatchRuleTableComposite) currentTabItem
+                .getData(MatchAnalysisConstant.MATCH_RULE_TABLE_COMPOSITE);
+        MatchRule matchRule = matchRuleTableComp.getMatchRule();
+        return matchRule;
+    }
+
+    /**
+     * find the current columns which has been selected as match key on the current Tab(Match rule)
+     * 
+     * @return
+     */
+    public List<String> getCurrentMatchKeyColumn() {
+        List<String> columnAsKey = new ArrayList<String>();
+
+        MatchRule matchRule;
+        try {
+            matchRule = getCurrentMatchRule();
+        } catch (Exception e) {
+            return columnAsKey;
+        }
+        for (KeyDefinition keyDef : matchRule.getMatchKeys()) {
+            columnAsKey.add(keyDef.getColumn());
+        }
+        return columnAsKey;
+    }
+
 }
