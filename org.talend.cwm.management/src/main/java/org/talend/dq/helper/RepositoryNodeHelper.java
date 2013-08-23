@@ -167,6 +167,8 @@ public final class RepositoryNodeHelper {
 
     public static final String DQRESPOSITORYVIEW = "org.talend.dataprofiler.core.ui.views.DQRespositoryView"; //$NON-NLS-1$
 
+    public static final String DQRESPOSITORY_DETAIL_VIEW = "org.talend.dataprofiler.core.ui.views.RespositoryDetailView"; //$NON-NLS-1$
+
     public static final String DI_REPOSITORY_NAME = "Repository"; //$NON-NLS-1$
 
     private static RecycleBinRepNode recycleBinRepNode;
@@ -1945,7 +1947,7 @@ public final class RepositoryNodeHelper {
             }
         }
         // ~
-        return getRootNode(nodeName, false);
+        return getRootNode(nodeName, true);
     }
 
     /**
@@ -1988,7 +1990,7 @@ public final class RepositoryNodeHelper {
      */
     public static RepositoryNode getRecycleBinRootNode() {
         RepositoryNode node = null;
-        CommonViewer commonViewer = getDQCommonViewer(false);
+        CommonViewer commonViewer = getDQCommonViewer(true);
         if (commonViewer != null) {
             TreeItem[] items = commonViewer.getTree().getItems();
             for (TreeItem item : items) {
@@ -2044,6 +2046,12 @@ public final class RepositoryNodeHelper {
                     if (open) {
                         try {
                             part = activePage.showView(DQRESPOSITORYVIEW);
+
+                            // open detail view at the same time
+                            IViewPart detailPart = activePage.findView(DQRESPOSITORY_DETAIL_VIEW);
+                            if (detailPart == null) {
+                                activePage.showView(DQRESPOSITORY_DETAIL_VIEW);
+                            }
                         } catch (PartInitException e) {
                             e.printStackTrace();
                         }

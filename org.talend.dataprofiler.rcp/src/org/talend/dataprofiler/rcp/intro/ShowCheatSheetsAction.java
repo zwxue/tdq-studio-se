@@ -21,6 +21,10 @@ import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.cheatsheets.OpenCheatSheetAction;
+import org.eclipse.ui.internal.PartPane;
+import org.eclipse.ui.internal.PartSite;
+import org.eclipse.ui.internal.cheatsheets.views.CheatSheetView;
+import org.eclipse.ui.internal.cheatsheets.views.ViewUtilities;
 import org.eclipse.ui.internal.intro.IIntroConstants;
 import org.eclipse.ui.intro.IIntroSite;
 import org.eclipse.ui.intro.config.IIntroAction;
@@ -54,5 +58,11 @@ public class ShowCheatSheetsAction extends Action implements IIntroAction {
         if (findView != null) {
             activePage.hideView(findView);
         }
+
+        // ADD msjian TDQ-7407 2013-8-23: Only display the Cheat Sheet view on new startup of the studio
+        CheatSheetView cheatSheetView = ViewUtilities.showCheatSheetView();
+        PartPane pane = ((PartSite) cheatSheetView.getSite()).getPane();
+        cheatSheetView.getSite().getPage().toggleZoom(pane.getPartReference());
+        // TDQ-7407~
     }
 }

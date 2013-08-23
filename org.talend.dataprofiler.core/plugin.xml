@@ -829,16 +829,25 @@
  <extension point="org.eclipse.ui.perspectiveExtensions">
   <perspectiveExtension
 	targetID="org.talend.dataprofiler.DataProfilingPerspective">
-    	<view id="org.talend.dataprofiler.core.ui.views.DQRespositoryView"
-        	relative="org.eclipse.ui.editorss"
-    		relationship="left"
-    		ratio="0.25"
-    		/>	
+	    <view
+              id="org.eclipse.ui.cheatsheets.views.CheatSheetView"
+              ratio="0.25"
+              relationship="left"
+              relative="org.eclipse.ui.editorss"
+              standalone="false"
+              visible="true">
+        </view>
+    	<view
+           id="org.talend.dataprofiler.core.ui.views.DQRespositoryView"
+           ratio="0.33"
+           relationship="left"
+           relative="org.eclipse.ui.editorss"> 
+    	</view>
        <!-- <view id="org.talend.dataprofiler.core.ui.views.GraphsView"
              relative="org.eclipse.ui.editorss"
              relationship="bottom"
              ratio="0.4"
-             />-->
+        />-->
         <view
               id="org.talend.dataprofiler.core.ui.views.RespositoryDetailView"
               ratio="0.7"
@@ -851,14 +860,6 @@
               relationship="stack"
               relative="org.talend.dataprofiler.core.ui.views.RespositoryDetailView"
               visible="false">
-        </view>
-        <view
-              id="org.eclipse.ui.cheatsheets.views.CheatSheetView"
-              ratio="0.6"
-              relationship="right"
-              relative="org.eclipse.ui.editorss"
-              standalone="false"
-              visible="true">
         </view>
       <!--  <view id="org.talend.dataprofiler.core.ui.views.QuanlityView"
               relative="org.talend.dataprofiler.core.ui.views.CheatSheetView"
