@@ -662,6 +662,7 @@ public class CorePlugin extends AbstractUIPlugin {
                                 ILibrariesService.class);
                         if (librariesService != null) {
                             librariesService.syncLibrariesFromApp();
+                            CWMPlugin.getDefault().createLibFolderIfNotExist();
                         }
                     }
                 }
