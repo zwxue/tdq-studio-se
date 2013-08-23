@@ -85,4 +85,18 @@ public class MatchAnalysisConstant {
     public static final String BlOCKING_KEY_DEFINITION_SECTION_NAME = "Generation of Blocking Key"; //$NON-NLS-1$
 
     public static final String MATCHING_KEY_DEFINITION_SECTION_NAME = "Matching key"; //$NON-NLS-1$
+
+    // survivorship
+    public static final String SURVIVORSHIP_KEY_NAME = "Survivor Rule Name"; //$NON-NLS-1$
+
+    public static final String FUNCTION = "Function"; //$NON-NLS-1$
+
+    public static final String ALLOW_MANUAL_RESOLUTION = "Allow Manual Resolution"; //$NON-NLS-1$
+
+    public static final String DATA_TYPE = "Data Type"; //$NON-NLS-1$
+
+    public static final String SURVIVIORSHIP_DEFINITION_SECTION_NAME = "Survivorship"; //$NON-NLS-1$
+
+    public static final String SURVIVIORSHIP_DEFAULT_DEFINITION_SECTION_NAME = "Default Survivorship Rules"; //$NON-NLS-1$
+
 }

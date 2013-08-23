@@ -25,18 +25,18 @@ import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.editor.AbstractMetadataFormPage;
 import org.talend.dataquality.record.linkage.ui.section.SelectAlgorithmSection;
 import org.talend.dataquality.record.linkage.ui.section.definition.BlockingKeyDefinitionSection;
+import org.talend.dataquality.record.linkage.ui.section.definition.DefaultSurvivorshipDefinitionSection;
 import org.talend.dataquality.record.linkage.ui.section.definition.MatchKeyDefinitionSection;
+import org.talend.dataquality.record.linkage.ui.section.definition.SurvivorshipDefinitionSection;
 import org.talend.dataquality.rules.BlockKeyDefinition;
 import org.talend.dataquality.rules.MatchRule;
 import org.talend.dataquality.rules.MatchRuleDefinition;
 import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
-
 /**
- * created by zshen on Aug 19, 2013
- * Detailled comment
- *
+ * created by zshen on Aug 19, 2013 Detailled comment
+ * 
  */
 public class MatchRuleMasterDetailsPage extends AbstractMetadataFormPage implements PropertyChangeListener {
 
@@ -49,9 +49,10 @@ public class MatchRuleMasterDetailsPage extends AbstractMetadataFormPage impleme
     BlockingKeyDefinitionSection blockingKeyDefinitionSection = null;
 
     private Composite blockKeyComp = null;
+
     /**
      * DOC zshen MatchRuleMasterDetailsPage constructor comment.
-     *
+     * 
      * @param editor
      */
     public MatchRuleMasterDetailsPage(FormEditor editor) {
@@ -60,7 +61,7 @@ public class MatchRuleMasterDetailsPage extends AbstractMetadataFormPage impleme
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see java.beans.PropertyChangeListener#propertyChange(java.beans.PropertyChangeEvent)
      */
     public void propertyChange(PropertyChangeEvent evt) {
@@ -70,7 +71,7 @@ public class MatchRuleMasterDetailsPage extends AbstractMetadataFormPage impleme
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see
      * org.talend.dataprofiler.core.ui.editor.AbstractMetadataFormPage#getCurrentModelElement(org.eclipse.ui.forms.editor
      * .FormEditor)
@@ -87,7 +88,7 @@ public class MatchRuleMasterDetailsPage extends AbstractMetadataFormPage impleme
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see org.talend.dataprofiler.core.ui.editor.AbstractMetadataFormPage#canSave()
      */
     @Override
@@ -98,7 +99,7 @@ public class MatchRuleMasterDetailsPage extends AbstractMetadataFormPage impleme
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see org.talend.dataprofiler.core.ui.editor.AbstractFormPage#setDirty(boolean)
      */
     @Override
@@ -109,7 +110,7 @@ public class MatchRuleMasterDetailsPage extends AbstractMetadataFormPage impleme
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see
      * org.talend.dataprofiler.core.ui.editor.AbstractMetadataFormPage#createFormContent(org.eclipse.ui.forms.IManagedForm
      * )
@@ -128,26 +129,49 @@ public class MatchRuleMasterDetailsPage extends AbstractMetadataFormPage impleme
         // blockKeyComp = new Composite(topComp, SWT.NONE);
         createGenerationOfBlockingKeySection();
         selectAlgorithmSection.setBk(blockingKeyDefinitionSection);
+
         createMatchingKeySection(topComp);
+        createSurvivorshipSection(topComp);
+        createDefaultSurvivorshipSection(topComp);
+
         // createDQRuleDefinitionSection(topComp);
         // createJoinConditionSection(topComp);
     }
 
     /**
      * DOC zshen Comment method "createMatchingKeySection".
-     *
+     * 
      * @param mainComp
      */
     private void createMatchingKeySection(Composite mainComp) {
         MatchKeyDefinitionSection matchingKeyDefinitionSection = new MatchKeyDefinitionSection(form, mainComp, toolkit);
         matchingKeyDefinitionSection.setMatchRules(getMatchRuleList());
         matchingKeyDefinitionSection.createContent();
+    }
+
+    /**
+     * DOC HHB Comment method "createSurvivorshipSection".
+     * 
+     * @param mainComp
+     */
+    private void createSurvivorshipSection(Composite mainComp) {
+        SurvivorshipDefinitionSection survivorshipDefinitionSection = new SurvivorshipDefinitionSection(form, mainComp, toolkit);
+        survivorshipDefinitionSection.setMatchRuleDef((MatchRuleDefinition) getCurrentModelElement(getEditor()));
+        survivorshipDefinitionSection.createContent();
+
+    }
+
+    private void createDefaultSurvivorshipSection(Composite mainComp) {
+        DefaultSurvivorshipDefinitionSection defaultSurvivorshipDefinitionSection = new DefaultSurvivorshipDefinitionSection(
+                form, mainComp, toolkit);
+        defaultSurvivorshipDefinitionSection.setMatchRuleDef((MatchRuleDefinition) getCurrentModelElement(getEditor()));
+        defaultSurvivorshipDefinitionSection.createContent();
 
     }
 
     /**
      * DOC zshen Comment method "getMatchRuleList".
-     *
+     * 
      * @return
      */
     private List<MatchRule> getMatchRuleList() {
@@ -160,17 +184,17 @@ public class MatchRuleMasterDetailsPage extends AbstractMetadataFormPage impleme
 
     /**
      * DOC zshen Comment method "createGenerationOfBlockingKey".
-     *
+     * 
      * @param topComp
      */
     private void createGenerationOfBlockingKeySection() {
-//        if (blockingKeyDefinitionSection != null) {
-//            blockingKeyDefinitionSection.getSection().dispose();
-//        }
+        // if (blockingKeyDefinitionSection != null) {
+        // blockingKeyDefinitionSection.getSection().dispose();
+        // }
         blockingKeyDefinitionSection = new BlockingKeyDefinitionSection(form, topComp, toolkit);
         blockingKeyDefinitionSection.setMatchRuleDef((MatchRuleDefinition) getCurrentModelElement(getEditor()));
         blockingKeyDefinitionSection.createContent();
-//        blockKeyComp.layout();
+        // blockKeyComp.layout();
     }
 
     private List<BlockKeyDefinition> getBlockKeyDefinitionList() {
@@ -183,13 +207,11 @@ public class MatchRuleMasterDetailsPage extends AbstractMetadataFormPage impleme
 
     /**
      * DOC zshen Comment method "createSelectRecordLinkageSection".
-     *
+     * 
      * @param topComp
      */
     private void createSelectRecordLinkageSection(Composite mainComp) {
         selectAlgorithmSection = new SelectAlgorithmSection(form, mainComp, toolkit);
     }
-
-
 
 }
