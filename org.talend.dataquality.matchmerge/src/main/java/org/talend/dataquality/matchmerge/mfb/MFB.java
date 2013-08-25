@@ -83,7 +83,10 @@ public class MFB implements MatchMergeAlgorithm {
                 }
             }
             if (!hasCreatedNewMerge) {
-                currentRecord.setGroupId(UUID.randomUUID().toString());
+                if (currentRecord.getGroupId() == null) {
+                    // Only add a group id if the record doesn't already hold one.
+                    currentRecord.setGroupId(UUID.randomUUID().toString());
+                }
                 currentRecord.getRelatedIds().add(currentRecord.getId());
                 mergedRecords.add(currentRecord);
             }
