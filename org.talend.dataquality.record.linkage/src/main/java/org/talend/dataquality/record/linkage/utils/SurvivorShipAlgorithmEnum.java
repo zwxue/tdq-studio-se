@@ -22,13 +22,15 @@ import java.util.List;
 public enum SurvivorShipAlgorithmEnum {
 
     CONCATENATE(0, "Concatenate", "Concatenate"),
-    MOST_COMMON(1, "Most common", "MostCommon"),
-    MOST_RECENT(2, "Most recent", "MostRecent"),
-    MOST_ANCIENT(3, "Most ancient", "MostAncient"),
-    LONGEST(4, "Longest (for strings)", "Longest"),
-    SHORTEST(5, "Shortest (for strings)", "Shortest"),
-    LARGEST(6, "Largest (for numbers)", "Largest"),
-    SMALLEST(7, "Smallest (for numbers)", "Smallest");
+    FORCE_TRUE(1, "force true (for booleans)", "ForceTrue"),
+    FORCE_FALSE(2, "force False (for booleans)", "ForceFalse"),
+    MOST_COMMON(3, "Most common", "MostCommon"),
+    MOST_RECENT(4, "Most recent", "MostRecent"),
+    MOST_ANCIENT(5, "Most ancient", "MostAncient"),
+    LONGEST(6, "Longest (for strings)", "Longest"),
+    SHORTEST(7, "Shortest (for strings)", "Shortest"),
+    LARGEST(8, "Largest (for numbers)", "Largest"),
+    SMALLEST(9, "Smallest (for numbers)", "Smallest");
 
     private int index;
 
