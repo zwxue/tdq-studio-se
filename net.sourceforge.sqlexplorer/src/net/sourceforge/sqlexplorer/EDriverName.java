@@ -182,7 +182,7 @@ public enum EDriverName {
         if (this.getLibManagerServic() != null) {
             boolean jarNotFound = false;
             for (String jarName : jars) {
-                String libPath = libManagerServic.getJDBCJarPath(jarName);
+                String libPath = libManagerServic.getJarPath(jarName);
                 if (libPath == null) {
                     jarNotFound = true;
                     break;
