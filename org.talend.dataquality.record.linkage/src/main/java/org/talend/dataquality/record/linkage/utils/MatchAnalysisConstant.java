@@ -14,7 +14,7 @@ package org.talend.dataquality.record.linkage.utils;
 
 /**
  * created by zshen on Aug 5, 2013 Detailled comment
- * 
+ *
  */
 public class MatchAnalysisConstant {
 
@@ -47,6 +47,7 @@ public class MatchAnalysisConstant {
 
     public static final String MATCH_RULE_TABLE_COMPOSITE = "Match Rule Table Composite"; //$NON-NLS-1$
 
+    public static final String THRESHOLD = "threshold"; //$NON-NLS-1$
     // block key need
     public static final String BLOCK_KEY_NAME = "Blocking Key Name"; //$NON-NLS-1$
 
@@ -86,6 +87,14 @@ public class MatchAnalysisConstant {
 
     public static final String MATCHING_KEY_DEFINITION_SECTION_NAME = "Matching key"; //$NON-NLS-1$
 
+
+    public static final String T_SWOOSH_ALGORITHM = "T-Swoosh algorithm"; //$NON-NLS-1$
+
+    public static final String VSR_ALGORITHM = "VSR algorithm"; //$NON-NLS-1$
+
+    public static final String ISDIRTY_PROPERTY = "ISDIRTY_PROPERTY"; //$NON-NLS-1$
+
+
     // survivorship
     public static final String SURVIVORSHIP_KEY_NAME = "Survivor Rule Name"; //$NON-NLS-1$
 
@@ -98,5 +107,6 @@ public class MatchAnalysisConstant {
     public static final String SURVIVIORSHIP_DEFINITION_SECTION_NAME = "Survivorship"; //$NON-NLS-1$
 
     public static final String SURVIVIORSHIP_DEFAULT_DEFINITION_SECTION_NAME = "Default Survivorship Rules"; //$NON-NLS-1$
+
 
 }
