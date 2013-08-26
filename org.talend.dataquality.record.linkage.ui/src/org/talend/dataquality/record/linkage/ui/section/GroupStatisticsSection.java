@@ -19,6 +19,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
@@ -33,17 +35,15 @@ import org.talend.dataquality.record.linkage.ui.i18n.internal.DefaultMessagesImp
 
 /**
  * created by zhao on Aug 19, 2013 Group statistics section
- * 
+ *
  */
-public class GroupStatisticsSection extends AbstractMatchAnaysisTableSection {
+public class GroupStatisticsSection extends AbstractMatchKeyWithChartTableSection {
 
     private GroupStatisticsTableViewer groupStatisticsTableViewer = null;
 
-    private MatchRuleDataChart matchRuleChartComp = null;
-
     /**
      * DOC zhao GroupStatisticsSection constructor comment.
-     * 
+     *
      * @param form
      * @param parent
      * @param style
@@ -56,7 +56,7 @@ public class GroupStatisticsSection extends AbstractMatchAnaysisTableSection {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.talend.dataquality.record.linkage.ui.section.AbstractMatchAnaysisTableSection#createSubChart(org.eclipse.
      * swt.widgets.Composite)
@@ -64,12 +64,19 @@ public class GroupStatisticsSection extends AbstractMatchAnaysisTableSection {
     @Override
     protected void createSubChart(Composite sectionClient) {
         RecordMatchingIndicator recordMatchingIndicator = MatchRuleAnlaysisUtils.getRecordMatchIndicatorFromAna(analysis);
-        matchRuleChartComp = new MatchRuleDataChart(sectionClient, recordMatchingIndicator.getGroupSize2groupFrequency());
+        Composite chartComposite = toolkit.createComposite(sectionClient);
+        GridLayout tableLayout = new GridLayout(1, Boolean.TRUE);
+        chartComposite.setLayout(tableLayout);
+        GridData gridData = new GridData(GridData.FILL_BOTH);
+        chartComposite.setLayoutData(gridData);
+
+        matchRuleChartComp = new MatchRuleDataChart(chartComposite, recordMatchingIndicator.getGroupSize2groupFrequency());
+        createHideGroupComposite(chartComposite);
     }
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.talend.dataquality.record.linkage.ui.section.AbstractMatchAnaysisTableSection#createSubContent(org.eclipse
      * .swt.widgets.Composite)
@@ -108,7 +115,7 @@ public class GroupStatisticsSection extends AbstractMatchAnaysisTableSection {
 
     /**
      * DOC zhao Comment method "setPercentage".
-     * 
+     *
      * @param count
      * @param rowCount
      * @param rowCountRow
@@ -125,7 +132,7 @@ public class GroupStatisticsSection extends AbstractMatchAnaysisTableSection {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataquality.record.linkage.ui.section.AbstractMatchAnaysisTableSection#getSectionName()
      */
     @Override
@@ -135,7 +142,7 @@ public class GroupStatisticsSection extends AbstractMatchAnaysisTableSection {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataquality.record.linkage.ui.section.AbstractMatchAnaysisTableSection#refreshChart()
      */
     @Override
@@ -148,7 +155,7 @@ public class GroupStatisticsSection extends AbstractMatchAnaysisTableSection {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.talend.dataquality.record.linkage.ui.section.AbstractMatchAnaysisTableSection#isKeyDefinitionAdded(java.lang
      * .String)
@@ -161,7 +168,7 @@ public class GroupStatisticsSection extends AbstractMatchAnaysisTableSection {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.talend.dataquality.record.linkage.ui.section.AbstractMatchAnaysisTableSection#createButtons(org.eclipse.swt
      * .widgets.Composite)
@@ -170,4 +177,5 @@ public class GroupStatisticsSection extends AbstractMatchAnaysisTableSection {
     protected void createButtons(Composite sectionClient) {
         // No implementation
     }
+
 }

@@ -13,11 +13,13 @@
 package org.talend.dataquality.record.linkage.ui.section;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.custom.CTabFolder2Adapter;
@@ -34,14 +36,11 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.indicators.columnset.RecordMatchingIndicator;
-import org.talend.dataquality.record.linkage.grouping.AnalysisMatchRecordGrouping;
-import org.talend.dataquality.record.linkage.grouping.MatchGroupResultConsumer;
 import org.talend.dataquality.record.linkage.ui.composite.MatchRuleTableComposite;
 import org.talend.dataquality.record.linkage.ui.composite.chart.MatchRuleDataChart;
 import org.talend.dataquality.record.linkage.ui.composite.utils.ImageLib;
 import org.talend.dataquality.record.linkage.ui.composite.utils.MatchRuleAnlaysisUtils;
 import org.talend.dataquality.record.linkage.ui.i18n.internal.DefaultMessagesImpl;
-import org.talend.dataquality.record.linkage.utils.AnalysisRecordGroupingUtils;
 import org.talend.dataquality.record.linkage.utils.MatchAnalysisConstant;
 import org.talend.dataquality.rules.KeyDefinition;
 import org.talend.dataquality.rules.MatchKeyDefinition;
@@ -49,11 +48,11 @@ import org.talend.dataquality.rules.MatchRule;
 import org.talend.dataquality.rules.RulesFactory;
 
 /**
- * 
+ *
  * created by zhao on Aug 17, 2013 Detailled comment
- * 
+ *
  */
-public class MatchingKeySection extends AbstractMatchAnaysisTableSection {
+public class MatchingKeySection extends AbstractMatchKeyWithChartTableSection {
 
     private static Logger log = Logger.getLogger(MatchingKeySection.class);
 
@@ -65,11 +64,11 @@ public class MatchingKeySection extends AbstractMatchAnaysisTableSection {
 
     private int tabCount = 1;
 
-    private MatchRuleDataChart matchRuleChartComp = null;
+
 
     /**
      * DOC zshen MatchingKeySection constructor comment.
-     * 
+     *
      * @param parent
      * @param style
      * @param toolkit
@@ -80,7 +79,7 @@ public class MatchingKeySection extends AbstractMatchAnaysisTableSection {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataquality.record.linkage.ui.section.AbstractMatchTableSection#getSectionName()
      */
     @Override
@@ -90,7 +89,7 @@ public class MatchingKeySection extends AbstractMatchAnaysisTableSection {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.talend.dataquality.record.linkage.ui.section.AbstractMatchTableSection#createSubContext(org.eclipse.swt.widgets
      * .Composite)
@@ -143,7 +142,7 @@ public class MatchingKeySection extends AbstractMatchAnaysisTableSection {
 
     /**
      * DOC zhao Comment method "addMatchRuleToModel".
-     * 
+     *
      * @param newMatchRule
      */
     private void addMatchRuleToAnalysis(MatchRule newMatchRule) {
@@ -158,9 +157,6 @@ public class MatchingKeySection extends AbstractMatchAnaysisTableSection {
         MatchRule matchRule = matchRuleTableComp.getMatchRule();
         // Remove it from anaysis.
         getMatchRuleList().remove(matchRule);
-        // RecordMatchingIndicator recordMatchingIndicator =
-        // MatchRuleAnlaysisUtils.getRecordMatchIndicatorFromAna(analysis);
-        // recordMatchingIndicator.getBuiltInMatchRuleDefinition().getMatchRules().remove(matchRule);
     }
 
     /**
@@ -193,42 +189,53 @@ public class MatchingKeySection extends AbstractMatchAnaysisTableSection {
     }
 
     /**
-     * 
+     *
      * Add a new key definition on current selected match rule.
-     * 
+     *
      * @param column
      */
     public void createMatchKeyFromCurrentMatchRule(String column) {
-        CTabItem currentTabItem = ruleFolder.getSelection();
-        if (currentTabItem == null) {
-            log.warn(DefaultMessagesImpl.getString("MatchingKeySection.ONE_MATCH_RULE_REQUIRED")); //$NON-NLS-1$
-            return;
-        }
-        MatchRuleTableComposite matchRuleTableComp = (MatchRuleTableComposite) currentTabItem
-                .getData(MatchAnalysisConstant.MATCH_RULE_TABLE_COMPOSITE);
+        MatchRuleTableComposite matchRuleTableComp = getCurrentMatchRuleTableComposite();
         matchRuleTableComp.addKeyDefinition(column, analysis);
     }
 
-    /**
-     * 
-     * Remove the match key by column name from current selected match rule tab.
-     * 
-     * @param column
-     */
-    public void removeMatchKeyFromCurrentMatchRule(String column) {
+    protected MatchRuleTableComposite getCurrentMatchRuleTableComposite() {
         CTabItem currentTabItem = ruleFolder.getSelection();
         if (currentTabItem == null) {
             log.warn(DefaultMessagesImpl.getString("MatchingKeySection.ONE_MATCH_RULE_REQUIRED")); //$NON-NLS-1$
-            return;
+            addRuleTab(false, getNewMatchRule());
+            currentTabItem = ruleFolder.getSelection();
         }
         MatchRuleTableComposite matchRuleTableComp = (MatchRuleTableComposite) currentTabItem
                 .getData(MatchAnalysisConstant.MATCH_RULE_TABLE_COMPOSITE);
+        return matchRuleTableComp;
+    }
+
+    /**
+     *
+     * Remove the match key by column name from current selected match rule tab.
+     *
+     * @param column
+     */
+    public void removeMatchKeyFromCurrentMatchRule(String column) {
+        MatchRuleTableComposite matchRuleTableComp = getCurrentMatchRuleTableComposite();
         matchRuleTableComp.removeKeyDefinition(column, analysis);
     }
 
     /**
+     *
+     * Remove the match key by column name from current selected match rule tab.
+     *
+     * @param column
+     */
+    public void removeMatchKeyFromCurrentMatchRule(MatchKeyDefinition columnkey) {
+        MatchRuleTableComposite matchRuleTableComp = getCurrentMatchRuleTableComposite();
+        matchRuleTableComp.removeKeyDefinition(columnkey, analysis);
+    }
+
+    /**
      * DOC zshen Comment method "createPropertyTab".
-     * 
+     *
      * @param tabName
      * @param reComputeMatchRule
      */
@@ -244,7 +251,10 @@ public class MatchingKeySection extends AbstractMatchAnaysisTableSection {
         gridLayout.marginWidth = 0;
         gridLayout.marginHeight = 0;
         ruleComp.setLayout(gridLayout);
-        MatchRuleTableComposite matchRuleComposite = new MatchRuleTableComposite(ruleComp, SWT.NO_FOCUS, matchRule);
+        MatchRuleTableComposite matchRuleComposite = createTableComposite(ruleComp, matchRule);
+        matchRuleComposite.setAddColumn(isAddColumn());
+        matchRuleComposite.createContent();
+        matchRuleComposite.setInput(matchRule);
         matchRuleComposite.setLayout(gridLayout);
         matchRuleComposite.setLayoutData(data);
         tabItem.setControl(ruleComp);
@@ -252,6 +262,10 @@ public class MatchingKeySection extends AbstractMatchAnaysisTableSection {
         tabItem.setData(MatchAnalysisConstant.MATCH_RULE_TABLE_COMPOSITE, matchRuleComposite);
 
         ruleFolder.setSelection(tabItem);
+    }
+
+    protected MatchRuleTableComposite createTableComposite(Composite parent, MatchRule matchRule) {
+        return new MatchRuleTableComposite(parent, SWT.NO_FOCUS, matchRule);
     }
 
     /**
@@ -266,7 +280,7 @@ public class MatchingKeySection extends AbstractMatchAnaysisTableSection {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.talend.dataquality.record.linkage.ui.section.AbstractMatchTableSection#createSubChart(org.eclipse.swt.widgets
      * .Composite)
@@ -282,62 +296,13 @@ public class MatchingKeySection extends AbstractMatchAnaysisTableSection {
         chartComposite.setLayoutData(gridData);
         matchRuleChartComp = new MatchRuleDataChart(chartComposite, recordMatchingIndicator.getGroupSize2groupFrequency());
 
-    }
+        createHideGroupComposite(chartComposite);
 
-    private void computeMatchResult(final RecordMatchingIndicator recordMatchingIndicator) {
-        if (hasMatchKey() && columnMap != null && !matchRows.isEmpty()) {
-            recordMatchingIndicator.setMatchRowSchema(AnalysisRecordGroupingUtils.getCompleteColumnSchema(columnMap));
-            recordMatchingIndicator.reset();
-            MatchGroupResultConsumer matchResultConsumer = new MatchGroupResultConsumer() {
-
-                /*
-                 * (non-Javadoc)
-                 * 
-                 * @see org.talend.dataquality.record.linkage.grouping.MatchGroupResultConsumer#handle(java.lang.Object)
-                 */
-                @Override
-                public void handle(Object row) {
-                    recordMatchingIndicator.handle(row);
-
-                }
-            };
-
-            AnalysisMatchRecordGrouping analysisMatchRecordGrouping = new AnalysisMatchRecordGrouping(matchResultConsumer);
-            List<MatchRule> matchRules = recordMatchingIndicator.getBuiltInMatchRuleDefinition().getMatchRules();
-            for (MatchRule matcher : matchRules) {
-                List<Map<String, String>> ruleMatcherConvertResult = new ArrayList<Map<String, String>>();
-                if (matcher == null) {
-                    continue;
-                }
-                for (MatchKeyDefinition matchDef : matcher.getMatchKeys()) {
-                    Map<String, String> matchKeyMap = AnalysisRecordGroupingUtils.getMatchKeyMap(matchDef.getColumn(), matchDef
-                            .getAlgorithm().getAlgorithmType(), matchDef.getConfidenceWeight(), columnMap);
-                    ruleMatcherConvertResult.add(matchKeyMap);
-                }
-                analysisMatchRecordGrouping.addRuleMatcher(ruleMatcherConvertResult);
-            }
-            analysisMatchRecordGrouping.setMatchRows(matchRows);
-            analysisMatchRecordGrouping.run();
-        }
-    }
-
-    private boolean hasMatchKey() {
-        RecordMatchingIndicator recordMatchingIndicator = MatchRuleAnlaysisUtils.getRecordMatchIndicatorFromAna(analysis);
-        List<MatchRule> matchRules = recordMatchingIndicator.getBuiltInMatchRuleDefinition().getMatchRules();
-        if (matchRules == null || matchRules.size() == 0) {
-            return Boolean.FALSE;
-        }
-        for (MatchRule matchRule : matchRules) {
-            if (matchRule.getMatchKeys().size() > 0) {
-                return true;
-            }
-        }
-        return false;
     }
 
     /**
      * DOC zshen Comment method "getViewColumn".
-     * 
+     *
      * @return
      */
     private String[] getViewColumn() {
@@ -366,7 +331,7 @@ public class MatchingKeySection extends AbstractMatchAnaysisTableSection {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataquality.record.linkage.ui.section.AbstractMatchAnaysisTableSection#isKeyDefinitionAdded()
      */
     @Override
@@ -395,7 +360,7 @@ public class MatchingKeySection extends AbstractMatchAnaysisTableSection {
 
     /**
      * find the current columns which has been selected as match key on the current Tab(Match rule)
-     * 
+     *
      * @return
      */
     public List<String> getCurrentMatchKeyColumn() {
@@ -412,5 +377,35 @@ public class MatchingKeySection extends AbstractMatchAnaysisTableSection {
         }
         return columnAsKey;
     }
+
+    /*
+     * (non-Javadoc)
+     *
+     * @see org.talend.dataquality.record.linkage.ui.section.AbstractMatchAnaysisTableSection#addTableItem()
+     */
+    @Override
+    public void addTableItem() {
+        createMatchKeyFromCurrentMatchRule(StringUtils.EMPTY);
+        listeners.firePropertyChange(MatchAnalysisConstant.ISDIRTY_PROPERTY, true, false);
+    }
+
+    /*
+     * (non-Javadoc)
+     *
+     * @see org.talend.dataquality.record.linkage.ui.section.AbstractMatchAnaysisTableSection#removeTableItem()
+     */
+    @Override
+    public void removeTableItem() {
+        ISelection selectItems = getCurrentMatchRuleTableComposite().getSelectItems();
+        if (selectItems instanceof StructuredSelection) {
+            Iterator<MatchKeyDefinition> iterator = ((StructuredSelection) selectItems).iterator();
+            while (iterator.hasNext()) {
+                MatchKeyDefinition next = iterator.next();
+                removeMatchKeyFromCurrentMatchRule(next);
+            }
+        }
+    }
+
+
 
 }

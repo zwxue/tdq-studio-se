@@ -12,6 +12,9 @@
 // ============================================================================
 package org.talend.dataquality.record.linkage.ui.section;
 
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
+
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -33,6 +36,8 @@ public abstract class AbstractSectionComposite {
     protected Section section = null;
 
     private ScrolledForm form = null;
+
+    protected PropertyChangeSupport listeners = new PropertyChangeSupport(this);
 
     public AbstractSectionComposite(final ScrolledForm form, Composite parent, int style, FormToolkit toolkit) {
         this.toolkit = toolkit;
@@ -65,11 +70,19 @@ public abstract class AbstractSectionComposite {
 
     /**
      * Getter for form.
-     * 
+     *
      * @return the form
      */
     public ScrolledForm getForm() {
         return this.form;
+    }
+
+    public void addPropertyChangeListener(PropertyChangeListener listener) {
+        listeners.addPropertyChangeListener(listener);
+    }
+
+    public void removePropertyChangeListener(PropertyChangeListener listener) {
+        listeners.addPropertyChangeListener(listener);
     }
 
 }

@@ -43,6 +43,12 @@ public abstract class AbstractMatchAnaysisTableSection extends AbstractSectionCo
 
     protected Boolean isNeedSubChart = true;
 
+    private Composite sectionClient = null;
+
+    private boolean isAddColumn = false;
+
+
+
     /**
      * @param parent
      * @param style
@@ -58,8 +64,8 @@ public abstract class AbstractMatchAnaysisTableSection extends AbstractSectionCo
      */
     public Composite createContent() {
         section.setText(getSectionName());
-        Composite sectionClient = toolkit.createComposite(section, SWT.NONE);
-        sectionClient.setLayout(new GridLayout(getColumnNum(), true));
+        sectionClient = toolkit.createComposite(section, SWT.NONE);
+        sectionClient.setLayout(new GridLayout(getGridColumnNum(), true));
         sectionClient.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
         Composite createSubContent = createSubContent(sectionClient);
         createButtons(createSubContent);
@@ -68,6 +74,15 @@ public abstract class AbstractMatchAnaysisTableSection extends AbstractSectionCo
         }
         section.setClient(sectionClient);
         return sectionClient;
+    }
+
+    public void redrawnContent() {
+        if (sectionClient != null && !sectionClient.isDisposed()) {
+            sectionClient.dispose();
+        }
+        createContent();
+        section.layout();
+
     }
 
     /**
@@ -94,7 +109,7 @@ public abstract class AbstractMatchAnaysisTableSection extends AbstractSectionCo
      *
      * @return
      */
-    private int getColumnNum() {
+    private int getGridColumnNum() {
         if (isNeedSubChart()) {
             return 2;
         } else {
@@ -234,9 +249,27 @@ public abstract class AbstractMatchAnaysisTableSection extends AbstractSectionCo
         this.columnMap = columnMap;
     }
 
+    /**
+     * Getter for isAddColumn.
+     *
+     * @return the isAddColumn
+     */
+    public boolean isAddColumn() {
+        return this.isAddColumn;
+    }
+
+    /**
+     * Sets the isAddColumn.
+     *
+     * @param isAddColumn the isAddColumn to set
+     */
+    public void setAddColumn(boolean isAddColumn) {
+        this.isAddColumn = isAddColumn;
+    }
+
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataquality.record.linkage.ui.section.AbstractMatchAnaysisTableSection#pasteTableItem()
      */
     @Override
@@ -247,7 +280,7 @@ public abstract class AbstractMatchAnaysisTableSection extends AbstractSectionCo
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataquality.record.linkage.ui.section.AbstractMatchAnaysisTableSection#copyTableItem()
      */
     @Override
@@ -258,7 +291,7 @@ public abstract class AbstractMatchAnaysisTableSection extends AbstractSectionCo
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataquality.record.linkage.ui.section.AbstractMatchAnaysisTableSection#moveDownTableItem()
      */
     @Override
@@ -269,7 +302,7 @@ public abstract class AbstractMatchAnaysisTableSection extends AbstractSectionCo
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataquality.record.linkage.ui.section.AbstractMatchAnaysisTableSection#moveUpTableItem()
      */
     @Override
@@ -280,7 +313,7 @@ public abstract class AbstractMatchAnaysisTableSection extends AbstractSectionCo
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataquality.record.linkage.ui.section.AbstractMatchAnaysisTableSection#removeTableItem()
      */
     @Override
@@ -290,7 +323,7 @@ public abstract class AbstractMatchAnaysisTableSection extends AbstractSectionCo
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataquality.record.linkage.ui.section.AbstractMatchAnaysisTableSection#addTableItem()
      */
     @Override
