@@ -47,7 +47,7 @@ public class MatchRuleTableComposite extends AbsMatchAnalysisTableComposite {
      *
      * @param matchRule
      */
-    private void setInput(MatchRule matchRule) {
+    public void setInput(MatchRule matchRule) {
         List<KeyDefinition> keyDefs = new ArrayList<KeyDefinition>();
         keyDefs.addAll(matchRule.getMatchKeys());
         ((MatchRuleTableViewer) tableViewer).setMatchRule(matchRule);
