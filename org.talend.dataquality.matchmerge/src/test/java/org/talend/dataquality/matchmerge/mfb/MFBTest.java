@@ -34,7 +34,8 @@ public class MFBTest extends TestCase {
                 new float[0],
                 new MergeAlgorithm[0],
                 new int[0],
-                new NullOption[0]);
+                new NullOption[0],
+                new SubString[0]);
         List<Record> list = algorithm.execute(Collections.<Record>emptyList().iterator());
         assertEquals(0, list.size());
     }
@@ -46,7 +47,8 @@ public class MFBTest extends TestCase {
                 new float[0],
                 new MergeAlgorithm[0],
                 new int[0],
-                new NullOption[0]);
+                new NullOption[0],
+                new SubString[0]);
         List<Record> list = algorithm.execute(iterator);
         assertEquals(100000, list.size());
     }
@@ -76,7 +78,8 @@ public class MFBTest extends TestCase {
                 new float[]{1},
                 new MergeAlgorithm[]{MergeAlgorithm.UNIFY},
                 new int[]{1},
-                new NullOption[]{NullOption.MATCH_ALL});
+                new NullOption[]{NullOption.MATCH_ALL},
+                new SubString[]{SubString.NO_SUBSTRING});
         List<Record> mergedRecords = algorithm.execute(iterator);
         assertEquals(constantNumber, mergedRecords.size());
         for (Record mergedRecord : mergedRecords) {
@@ -110,7 +113,8 @@ public class MFBTest extends TestCase {
                 new float[]{1},
                 new MergeAlgorithm[]{MergeAlgorithm.UNIFY},
                 new int[]{0}, // Mark rule with no weight (-> match record should have a 0 confidence).
-                new NullOption[] {NullOption.MATCH_ALL});
+                new NullOption[] {NullOption.MATCH_ALL},
+                new SubString[]{SubString.NO_SUBSTRING});
         List<Record> mergedRecords = algorithm.execute(iterator);
         assertEquals(constantNumber, mergedRecords.size());
         for (Record mergedRecord : mergedRecords) {
@@ -144,7 +148,8 @@ public class MFBTest extends TestCase {
                 new float[]{0.5f},
                 new MergeAlgorithm[]{MergeAlgorithm.UNIFY},
                 new int[]{1},
-                new NullOption[]{NullOption.MATCH_ALL});
+                new NullOption[]{NullOption.MATCH_ALL},
+                new SubString[]{SubString.NO_SUBSTRING});
         List<Record> mergedRecords = algorithm.execute(iterator);
         assertEquals(1, mergedRecords.size());
         for (Record mergedRecord : mergedRecords) {

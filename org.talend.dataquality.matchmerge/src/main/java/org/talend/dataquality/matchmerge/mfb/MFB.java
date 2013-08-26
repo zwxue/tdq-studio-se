@@ -29,14 +29,22 @@ public class MFB implements MatchMergeAlgorithm {
 
     private final NullOption[] nullOptions;
 
+    private final SubString[] subStrings;
+
     private int maxWeight;
 
-    public MFB(MatchAlgorithm[] algorithms, float[] thresholds, MergeAlgorithm[] merges, int[] weights, NullOption[] nullOptions) {
+    public MFB(MatchAlgorithm[] algorithms,
+               float[] thresholds,
+               MergeAlgorithm[] merges,
+               int[] weights,
+               NullOption[] nullOptions,
+               SubString[] subStrings) {
         this.algorithms = algorithms;
         this.thresholds = thresholds;
         this.merges = merges;
         this.weights = weights;
         this.nullOptions = nullOptions;
+        this.subStrings = subStrings;
         if (algorithms.length == 0 || thresholds.length == 0 || merges.length == 0 || weights.length == 0) {
             LOGGER.warn("Algorithm initialized with no matching algorithm/threshold/merge/weight information");
         }
@@ -118,7 +126,11 @@ public class MFB implements MatchMergeAlgorithm {
         while (mergedRecordAttributes.hasNext()) {
             Attribute left = mergedRecordAttributes.next();
             Attribute right = currentRecordAttributes.next();
-            double score = MatchMerge.matchScore(left, right, algorithms[matchIndex], nullOptions[matchIndex]);
+            double score = MatchMerge.matchScore(left,
+                    right,
+                    algorithms[matchIndex],
+                    nullOptions[matchIndex],
+                    subStrings[matchIndex]);
             if (score < thresholds[matchIndex]) {
                 return false;
             } else {

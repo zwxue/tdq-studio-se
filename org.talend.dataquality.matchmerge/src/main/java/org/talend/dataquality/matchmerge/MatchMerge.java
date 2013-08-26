@@ -17,6 +17,7 @@ package org.talend.dataquality.matchmerge;
 
 import org.talend.dataquality.record.linkage.attribute.AttributeMatcherFactory;
 import org.talend.dataquality.record.linkage.attribute.IAttributeMatcher;
+import org.talend.dataquality.record.linkage.attribute.SubstringAttributeMatcher;
 import org.talend.dataquality.record.linkage.constant.AttributeMatcherType;
 
 import java.util.HashSet;
@@ -135,11 +136,17 @@ public class MatchMerge {
         mergedRecord.getRelatedIds().add(record2.getId());
         mergedRecord.getRelatedIds().addAll(record1.getRelatedIds());
         mergedRecord.getRelatedIds().addAll(record2.getRelatedIds());
+        // Conservative strategy -> keeps the lowest confidence to avoid over-confidence in a group with many low-confidence
+        // records.
         mergedRecord.setConfidence(Math.min(record1.getConfidence(), record2.getConfidence()));
         return mergedRecord;
     }
 
-    public static double matchScore(Attribute attribute0, Attribute attribute1, MatchAlgorithm algorithm, NullOption nullOption) {
+    public static double matchScore(Attribute attribute0,
+                                    Attribute attribute1,
+                                    MatchAlgorithm algorithm,
+                                    NullOption nullOption,
+                                    SubString subString) {
         String leftValue = attribute0.getValue();
         String rightValue = attribute1.getValue();
         IAttributeMatcher matcher;
@@ -183,6 +190,10 @@ public class MatchMerge {
             case MATCH_NONE:
                 matcher.setNullOption(IAttributeMatcher.NullOption.nullMatchNone);
                 break;
+        }
+        // Sub string
+        if (subString.needSubStringOperation()) {
+            matcher = SubstringAttributeMatcher.decorate(matcher, subString.getBeginIndex(), subString.getEndIndex());
         }
         return matcher.getMatchingWeight(leftValue, rightValue);
     }
