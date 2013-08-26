@@ -64,8 +64,7 @@ public class AElementPersistanceTest {
         when(mockProxyRepositoryFactory.getRepositoryFactoryFromProvider()).thenReturn(mockIRepositoryFactory);
 
         PowerMockito.mockStatic(XmiResourceManager.class);
-        XmiResourceManager mockXmiResourceManager = PowerMockito.mock(XmiResourceManager.class);
-        when(mockIRepositoryFactory.getResourceManager()).thenReturn(mockXmiResourceManager);
+        when(mockIRepositoryFactory.getResourceManager()).thenReturn(new XmiResourceManager());
 
         AnalysisWriter createAnalysisWrite = ElementWriterFactory.getInstance().createAnalysisWrite();
         Analysis createAnalysis = AnalysisFactory.eINSTANCE.createAnalysis();
@@ -107,8 +106,7 @@ public class AElementPersistanceTest {
         when(mockProxyRepositoryFactory.getRepositoryFactoryFromProvider()).thenReturn(mockIRepositoryFactory);
 
         PowerMockito.mockStatic(XmiResourceManager.class);
-        XmiResourceManager mockXmiResourceManager = PowerMockito.mock(XmiResourceManager.class);
-        when(mockIRepositoryFactory.getResourceManager()).thenReturn(mockXmiResourceManager);
+        when(mockIRepositoryFactory.getResourceManager()).thenReturn(new XmiResourceManager());
 
         ReportWriter createReportWriter = ElementWriterFactory.getInstance().createReportWriter();
         TdReport createTdReport = ReportsFactory.eINSTANCE.createTdReport();
