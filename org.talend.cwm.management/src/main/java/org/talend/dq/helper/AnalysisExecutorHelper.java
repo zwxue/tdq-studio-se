@@ -142,8 +142,12 @@ public final class AnalysisExecutorHelper {
 
     public static FileInputDelimited createFileInputDelimited(DelimitedFileConnection delimitedFileconnection) throws IOException {
         String rowSeparator = delimitedFileconnection.getRowSeparatorValue();
+        String encoding = delimitedFileconnection.getEncoding();
+        String fieldSeparatorValue = delimitedFileconnection.getFieldSeparatorValue();
         if (delimitedFileconnection.isContextMode()) {
             rowSeparator = ConnectionUtils.getOriginalConntextValue(delimitedFileconnection, rowSeparator);
+            encoding = ConnectionUtils.getOriginalConntextValue(delimitedFileconnection, encoding);
+            fieldSeparatorValue = ConnectionUtils.getOriginalConntextValue(delimitedFileconnection, fieldSeparatorValue);
         }
         boolean isSpliteRecord = delimitedFileconnection.isSplitRecord();
         boolean isSkipeEmptyRow = delimitedFileconnection.isRemoveEmptyRow();
@@ -162,9 +166,9 @@ public final class AnalysisExecutorHelper {
             footValue = Integer.parseInt(footing == null || PluginConstant.EMPTY_STRING.equals(footing) ? zero : footing);
         }
 
-        return new FileInputDelimited(ParameterUtil.trimParameter(path), ParameterUtil.trimParameter(delimitedFileconnection
-                .getEncoding()), ParameterUtil.trimParameter(StringUtils.loadConvert(
-                delimitedFileconnection.getFieldSeparatorValue(), languageName)), ParameterUtil.trimParameter(StringUtils
+        return new FileInputDelimited(ParameterUtil.trimParameter(path), ParameterUtil.trimParameter(encoding),
+                ParameterUtil.trimParameter(StringUtils.loadConvert(fieldSeparatorValue, languageName)),
+                ParameterUtil.trimParameter(StringUtils
                 .loadConvert(rowSeparator, languageName)), isSkipeEmptyRow, headValue, footValue, limitValue, -1, isSpliteRecord);
     }
 
