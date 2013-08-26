@@ -83,14 +83,18 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
 
     public ColumnsSelectionDialog(AbstractAnalysisMetadataPage metadataFormPage, Shell parent, String message,
             List<? extends IRepositoryNode> checkedRepoNodes) {
-        super(metadataFormPage, parent, message);
+        this(metadataFormPage, parent, message, checkedRepoNodes, true);
+    }
+
+    public ColumnsSelectionDialog(AbstractAnalysisMetadataPage metadataFormPage, Shell parent, String message,
+            List<? extends IRepositoryNode> checkedRepoNodes,boolean addConnFilter) {
+        super(metadataFormPage, parent, message,addConnFilter);
         modelElementCheckedMap = new MultiValueMap();
         initCheckedElements(checkedRepoNodes);
         addFilter(new EMFObjFilter());
         addFilter(new DQFolderFliter(true));
         addFilter(new TDQEEConnectionFolderFilter());
     }
-
     @Override
     /**
      * DOC mzhao bug 9240 mzhao 2009-11-05.
@@ -261,7 +265,7 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
      * @param reposNode
      * @param checkedFlag
      */
-    private void handleTableElementsChecked(RepositoryNode reposNode, Boolean checkedFlag) {
+    protected void handleTableElementsChecked(RepositoryNode reposNode, Boolean checkedFlag) {
         // RepositoryNode tableParent = reposNode.getParent().getParent();
         IRepositoryNode tableParent = getParentNode(reposNode);
         if (checkedFlag) {
@@ -285,7 +289,7 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
      * @param repNode
      * @param checkedFlag
      */
-    private void handleTreeElementsChecked(RepositoryNode repNode, Boolean checkedFlag) {
+    protected void handleTreeElementsChecked(RepositoryNode repNode, Boolean checkedFlag) {
         if (checkedFlag) {
             // MOD klliu 2011-03-03 bug 19195 the MDM node is defferent from DF/DB connection Structure
             // MDM does not have Column folder

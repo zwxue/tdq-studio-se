@@ -160,6 +160,11 @@ public abstract class TwoPartCheckSelectionDialog extends SelectionStatusDialog 
      */
     @SuppressWarnings("unchecked")
     public TwoPartCheckSelectionDialog(AbstractAnalysisMetadataPage metadataFormPage, Shell parent, String message) {
+        this(metadataFormPage, parent, message, true);
+    }
+
+    public TwoPartCheckSelectionDialog(AbstractAnalysisMetadataPage metadataFormPage, Shell parent, String message,
+            boolean addConnFilter) {
         super(parent);
         setResult(new ArrayList(0));
         setStatusLineAboveButtons(true);
@@ -171,9 +176,11 @@ public abstract class TwoPartCheckSelectionDialog extends SelectionStatusDialog 
         setMessage(message);
         initProvider();
         // MOD mzhao 2009-05-05, bug 6587.
-        addConnFilterListener();
-    }
+        if (addConnFilter) {
+            addConnFilterListener();
+        }
 
+    }
     /**
      * Init the LabelProvider or ContentProvider for treeViewer and tableViewer.
      */
