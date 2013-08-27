@@ -57,4 +57,10 @@ public class VerticaDbmsLanguage extends DbmsLanguage {
     public String regexNotLike(String element, String regex) {
         return surroundWithSpaces("NOT REGEXP_LIKE(TO_CHAR(" + element + ") , " + regex + " )"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
     }
+
+    @Override
+    protected String getPatternFinderFunction(String expression, String charsToReplace, String replacementChars) {
+        assert charsToReplace != null && replacementChars != null && charsToReplace.length() == replacementChars.length();
+        return translateUsingPattern(expression, charsToReplace, replacementChars);
+    }
 }

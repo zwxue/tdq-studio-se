@@ -94,6 +94,9 @@ public final class ModelElementIndicatorRule {
         // MOD msjian 2013-5-15 TDQ-7275 need to disabled indicators for teradata with sql engine.
         boolean isTeradataSQL = connection == null ? false : ConnectionHelper.isTeradata(connection) && isSQLEngine;
 
+        // MOD qiongli 2013-8-27 TDQ-2104 disabled soundex indicators for hive with sql engine.
+        boolean isVerticaSQL = connection == null ? false : ConnectionHelper.isVertica(connection) && isSQLEngine;
+
         switch (indicatorType) {
         case CountsIndicatorEnum:
         case RowCountIndicatorEnum:
@@ -190,7 +193,7 @@ public final class ModelElementIndicatorRule {
         case SoundexLowIndicatorEnum:
             if (!Java2SqlType.isDateInSQL(javaType) && !Java2SqlType.isNumbericInSQL(javaType)
                     && (dataminingType == DataminingType.NOMINAL || dataminingType == DataminingType.INTERVAL)) {
-                if (isHiveSQL) {
+                if (isHiveSQL || isVerticaSQL) {
                     return false;
                 }
                 // Added yyin 20121212 TDQ-6099: disable for Teradata's interval_xx_to_xx type.
@@ -276,10 +279,10 @@ public final class ModelElementIndicatorRule {
     }
 
     /**
-     * 
+     *
      * just several indicator support longvarchar.because longvarchar dosn't support some sql query,.eg.,distinct,group
      * by,function...
-     * 
+     *
      * @param indicatorType
      * @param dataminingType
      * @return
