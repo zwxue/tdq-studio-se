@@ -10,69 +10,56 @@
 // 9 rue Pages 92150 Suresnes, France
 //
 // ============================================================================
-package org.talend.dataquality.record.linkage.ui.composite;
+package org.talend.dataquality.record.linkage.ui.composite.definition;
 
 import org.eclipse.swt.widgets.Composite;
+import org.talend.dataquality.record.linkage.ui.composite.BlockingKeyTableComposite;
 import org.talend.dataquality.record.linkage.ui.composite.tableviewer.AbstractMatchAnalysisTableViewer;
-import org.talend.dataquality.record.linkage.ui.composite.tableviewer.BlockingKeyTableViewer;
+import org.talend.dataquality.record.linkage.ui.composite.tableviewer.definition.BlockingKeyDefinitionTableViewer;
 import org.talend.dataquality.record.linkage.utils.MatchAnalysisConstant;
 
+
 /**
- * created by zshen on Aug 6, 2013 Detailled comment
+ * created by zshen on Aug 26, 2013
+ * Detailled comment
  *
  */
-public class BlockingKeyTableComposite extends AbsMatchAnalysisTableComposite {
+public class BlockingKeyTableDefinitionComposite extends BlockingKeyTableComposite {
 
     /**
-     * DOC zshen BlockingKeyTableComposite constructor comment.
+     * DOC zshen BlockingKeyTableDefinitionComposite constructor comment.
      *
      * @param parent
      * @param style
      */
-    public BlockingKeyTableComposite(Composite parent, int style) {
+    public BlockingKeyTableDefinitionComposite(Composite parent, int style) {
         super(parent, style);
     }
 
     /*
      * (non-Javadoc)
      *
-     * @see org.talend.dataquality.record.linkage.ui.composite.MatchRuleTableComposite#initHeaders()
+     * @see org.talend.dataquality.record.linkage.ui.composite.BlockingKeyTableComposite#initHeaders()
      */
     @Override
     protected void initHeaders() {
         headers.add(MatchAnalysisConstant.BLOCK_KEY_NAME); // 14
-        if (isAddColumn()) {
-            headers.add(MatchAnalysisConstant.COLUMN); // 14
-        }
         headers.add(MatchAnalysisConstant.PRE_ALGORITHM); // 12
         headers.add(MatchAnalysisConstant.PRE_VALUE); // 20
         headers.add(MatchAnalysisConstant.ALGORITHM); // 17
         headers.add(MatchAnalysisConstant.VALUE); // 11
         headers.add(MatchAnalysisConstant.POST_ALGORITHM); // 11
         headers.add(MatchAnalysisConstant.POST_VALUE); // 11
-
     }
 
     /*
      * (non-Javadoc)
      *
-     * @see org.talend.dataquality.record.linkage.ui.composite.MatchRuleTableComposite#createTable()
-     */
-    @Override
-    protected void createTable() {
-
-        tableViewer = createTableViewer();
-        ((BlockingKeyTableViewer) tableViewer).initTable(headers);
-    }
-
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.talend.dataquality.record.linkage.ui.composite.AbsMatchAnalysisTableComposite#createTableViewer()
+     * @see org.talend.dataquality.record.linkage.ui.composite.BlockingKeyTableComposite#createTableViewer()
      */
     @Override
     protected AbstractMatchAnalysisTableViewer createTableViewer() {
-        return new BlockingKeyTableViewer(this, getTableStyle(), isAddColumn());
+        return new BlockingKeyDefinitionTableViewer(this, getTableStyle(), isAddColumn());
     }
 
 }

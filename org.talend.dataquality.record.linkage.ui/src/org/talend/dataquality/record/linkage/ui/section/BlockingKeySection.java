@@ -32,24 +32,28 @@ import org.talend.dataquality.record.linkage.ui.action.ExecuteGenerateBlockingAc
 import org.talend.dataquality.record.linkage.ui.composite.AbsMatchAnalysisTableComposite;
 import org.talend.dataquality.record.linkage.ui.composite.BlockingKeyTableComposite;
 import org.talend.dataquality.record.linkage.ui.composite.chart.BlockingKeyDataChart;
+import org.talend.dataquality.record.linkage.ui.composite.tableviewer.sorter.BlockingKeyViewerSorter;
 import org.talend.dataquality.record.linkage.ui.composite.utils.MatchRuleAnlaysisUtils;
 import org.talend.dataquality.record.linkage.utils.MatchAnalysisConstant;
 import org.talend.dataquality.rules.BlockKeyDefinition;
 import org.talend.dataquality.rules.KeyDefinition;
+import org.talend.dataquality.rules.MatchRuleDefinition;
 
 /**
  * created by zshen on Aug 6, 2013 Detailled comment
- * 
+ *
  */
 public class BlockingKeySection extends AbstractMatchAnaysisTableSection {
 
     private BlockingKeyDataChart blockingKeyDataChart = null;
 
-    protected AbsMatchAnalysisTableComposite tableComposite = null;
+    public AbsMatchAnalysisTableComposite tableComposite = null;
+
+
 
     /**
      * DOC zshen BlockingKeySection constructor comment.
-     * 
+     *
      * @param parent
      * @param style
      * @param toolkit
@@ -61,7 +65,7 @@ public class BlockingKeySection extends AbstractMatchAnaysisTableSection {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataquality.record.linkage.ui.section.AbstractMatchTableSection#getSectionName()
      */
     @Override
@@ -79,11 +83,18 @@ public class BlockingKeySection extends AbstractMatchAnaysisTableSection {
         gridLayout.marginWidth = 0;
         gridLayout.marginHeight = 0;
         ruleComp.setLayout(gridLayout);
-        tableComposite = new BlockingKeyTableComposite(ruleComp, SWT.NO_FOCUS);
+        tableComposite = createTableComposite(ruleComp);
+        tableComposite.setAddColumn(isAddColumn());
+        tableComposite.createContent();
+        tableComposite.serViewerSorter(new BlockingKeyViewerSorter(getBlockKeyDefinitionList()));
         tableComposite.setLayout(gridLayout);
         tableComposite.setLayoutData(data);
         initTableInput();
         return ruleComp;
+    }
+
+    protected BlockingKeyTableComposite createTableComposite(Composite parent) {
+        return new BlockingKeyTableComposite(parent, SWT.NO_FOCUS);
     }
 
     /**
@@ -97,13 +108,17 @@ public class BlockingKeySection extends AbstractMatchAnaysisTableSection {
     }
 
     protected List<BlockKeyDefinition> getBlockKeyDefinitionList() {
+        return getMatchRuleDefinition().getBlockKeys();
+    }
+
+    protected MatchRuleDefinition getMatchRuleDefinition() {
         RecordMatchingIndicator recordMatchingIndicator = MatchRuleAnlaysisUtils.getRecordMatchIndicatorFromAna(analysis);
-        return recordMatchingIndicator.getBuiltInMatchRuleDefinition().getBlockKeys();
+        return recordMatchingIndicator.getBuiltInMatchRuleDefinition();
     }
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.talend.dataquality.record.linkage.ui.section.AbstractMatchTableSection#createSubChart(org.eclipse.swt.widgets
      * .Composite)
@@ -127,7 +142,7 @@ public class BlockingKeySection extends AbstractMatchAnaysisTableSection {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataquality.record.linkage.ui.section.AbstractMatchTableSection#RefreshChart()
      */
     @Override
@@ -138,7 +153,7 @@ public class BlockingKeySection extends AbstractMatchAnaysisTableSection {
 
     /**
      * DOC zshen Comment method "computeRusult".
-     * 
+     *
      * @return
      */
     protected ExecuteGenerateBlockingAction computeResult() {
@@ -155,7 +170,7 @@ public class BlockingKeySection extends AbstractMatchAnaysisTableSection {
 
     /**
      * DOC zshen Comment method "hasBlockingKey".
-     * 
+     *
      * @return
      */
     private boolean hasBlockingKey() {
@@ -181,7 +196,7 @@ public class BlockingKeySection extends AbstractMatchAnaysisTableSection {
     /**
      * TODO yyin remove the mothod??<br>
      * DOC yyin Comment method "hasBlockKey".
-     * 
+     *
      * @return
      */
     private boolean hasBlockKey() {
@@ -193,7 +208,7 @@ public class BlockingKeySection extends AbstractMatchAnaysisTableSection {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.talend.dataquality.record.linkage.ui.section.AbstractMatchAnaysisTableSection#isKeyDefinitionAdded(java.lang
      * .String)
@@ -214,17 +229,18 @@ public class BlockingKeySection extends AbstractMatchAnaysisTableSection {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataquality.record.linkage.ui.section.AbstractMatchAnaysisTableSection#addTableItem()
      */
     @Override
     public void addTableItem() {
         this.createBlockingKey(StringUtils.EMPTY);
+        listeners.firePropertyChange(MatchAnalysisConstant.ISDIRTY_PROPERTY, true, false);
     }
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataquality.record.linkage.ui.section.AbstractMatchAnaysisTableSection#removeTableItem()
      */
     @Override
@@ -232,6 +248,9 @@ public class BlockingKeySection extends AbstractMatchAnaysisTableSection {
         ISelection selectItems = tableComposite.getSelectItems();
         if (selectItems instanceof StructuredSelection) {
             Iterator<BlockKeyDefinition> iterator = ((StructuredSelection) selectItems).iterator();
+            if (iterator.hasNext()) {
+
+            }
             while (iterator.hasNext()) {
                 BlockKeyDefinition next = iterator.next();
                 removeBlockingKey(next);
@@ -239,13 +258,43 @@ public class BlockingKeySection extends AbstractMatchAnaysisTableSection {
         }
     }
 
-    public void setIsAddColumn(boolean isAddColumn) {
-        tableComposite.setAddColumn(isAddColumn);
+    /*
+     * (non-Javadoc)
+     *
+     * @see org.talend.dataquality.record.linkage.ui.section.AbstractMatchAnaysisTableSection#moveUpTableItem()
+     */
+    @Override
+    public void moveUpTableItem() {
+        ISelection selectItems = tableComposite.getSelectItems();
+        if (selectItems instanceof StructuredSelection) {
+            Iterator<BlockKeyDefinition> iterator = ((StructuredSelection) selectItems).iterator();
+            while (iterator.hasNext()) {
+                BlockKeyDefinition next = iterator.next();
+                tableComposite.moveUpKeyDefinition(next, getMatchRuleDefinition());
+            }
+        }
+    }
+
+    /*
+     * (non-Javadoc)
+     *
+     * @see org.talend.dataquality.record.linkage.ui.section.AbstractMatchAnaysisTableSection#moveDownTableItem()
+     */
+    @Override
+    public void moveDownTableItem() {
+        ISelection selectItems = tableComposite.getSelectItems();
+        if (selectItems instanceof StructuredSelection) {
+            Iterator<BlockKeyDefinition> iterator = ((StructuredSelection) selectItems).iterator();
+            while (iterator.hasNext()) {
+                BlockKeyDefinition next = iterator.next();
+                tableComposite.moveDownKeyDefinition(next, getMatchRuleDefinition());
+            }
+        }
     }
 
     /**
      * get all columns which is selected as blocking key
-     * 
+     *
      * @return
      */
     public List<String> getSelectedColumnAsBlockKeys() {
@@ -257,7 +306,6 @@ public class BlockingKeySection extends AbstractMatchAnaysisTableSection {
                 keyColumns.add(keydef.getColumn());
             }
         }
-
         return keyColumns;
     }
 }

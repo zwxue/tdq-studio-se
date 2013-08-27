@@ -43,4 +43,16 @@ public class MatchRuleActionGroup extends ActionGroup {
         Menu menu = menuManager.createContextMenu(table);
         table.setMenu(menu);
     }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.eclipse.ui.actions.ActionGroup#dispose()
+     */
+    @Override
+    public void dispose() {
+
+        super.dispose();
+    }
+
 }

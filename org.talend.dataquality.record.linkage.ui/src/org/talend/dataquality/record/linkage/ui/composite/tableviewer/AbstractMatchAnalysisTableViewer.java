@@ -134,7 +134,7 @@ public abstract class AbstractMatchAnalysisTableViewer extends TableViewer {
 
     /**
      * Getter for isAddColumn.
-     * 
+     *
      * @return the isAddColumn
      */
     public boolean isAddColumn() {
@@ -215,5 +215,23 @@ public abstract class AbstractMatchAnalysisTableViewer extends TableViewer {
      * @param columnName the element of column
      */
     public abstract void removeElement(KeyDefinition keyDef, MatchRuleDefinition matchRuleDef);
+
+    /**
+     *
+     * move up element
+     * 
+     * @param keyDef
+     * @param matchRuleDef
+     */
+    public abstract void moveUpElement(KeyDefinition keyDef, MatchRuleDefinition matchRuleDef);
+
+    /**
+     *
+     * move down element
+     * 
+     * @param keyDef
+     * @param matchRuleDef
+     */
+    public abstract void moveDownElement(KeyDefinition keyDef, MatchRuleDefinition matchRuleDef);
 
 }

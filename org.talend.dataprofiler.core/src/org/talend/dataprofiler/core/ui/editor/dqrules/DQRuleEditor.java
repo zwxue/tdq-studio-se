@@ -101,7 +101,7 @@ public class DQRuleEditor extends CommonFormEditor {
         // ADD xqliu 2009-07-02 bug 7687
         TdEditorToolBar toolbar = getToolBar();
         // MOD msjian 2011-9-22 TDQ-3372: Add a "save" button in the parser rule editor
-        if (toolbar != null && (masterPage != null || parserPage != null)) {
+        if (toolbar != null && (masterPage != null || parserPage != null || matchPage != null)) {
             // TDQ-3372 ~
             saveAction = new DefaultSaveAction(this);
             toolbar.addActions(saveAction);
@@ -123,13 +123,19 @@ public class DQRuleEditor extends CommonFormEditor {
                 setPartName(parserPage.getIntactElemenetName());
             }
             setEditorObject(parserPage.getRuleRepNode());
+        } else if (matchPage != null) {
+            if (matchPage.isDirty()) {
+                matchPage.doSave(monitor);
+                setPartName(matchPage.getIntactElemenetName());
+            }
+            // setEditorObject(matchPage.getRuleRepNode());
         }
         super.doSave(monitor);
 
     }
 
     @Override
-    protected void firePropertyChange(final int propertyId) {
+    public void firePropertyChange(final int propertyId) {
         // ADD xqliu 2009-07-02 bug 7687
         setSaveActionButtonState(isDirty());
         // ~
@@ -177,4 +183,7 @@ public class DQRuleEditor extends CommonFormEditor {
     public ParserRuleMasterDetailsPage getParserPage() {
         return this.parserPage;
     }
+
+
+
 }

@@ -33,7 +33,7 @@ import org.talend.dataquality.rules.MatchRuleDefinition;
 
 /**
  * created by HHB on 2013-8-23 Detailled comment
- * 
+ *
  */
 public class DefaultSurvivorshipDefinitionSection extends AbstractMatchAnaysisTableSection {
 
@@ -45,7 +45,7 @@ public class DefaultSurvivorshipDefinitionSection extends AbstractMatchAnaysisTa
 
     /**
      * DOC HHB SurvivorshipDefinitionTableSection constructor comment.
-     * 
+     *
      * @param form
      * @param parent
      * @param style
@@ -73,10 +73,11 @@ public class DefaultSurvivorshipDefinitionSection extends AbstractMatchAnaysisTa
         gridLayout.marginHeight = 0;
         ruleComp.setLayout(gridLayout);
         tableComposite = new DefaultSurvivorshipTableComposite(ruleComp, SWT.NO_FOCUS);
+        tableComposite.createContent();
+        initTableInput();
         tableComposite.setLayout(gridLayout);
         tableComposite.setLayoutData(data);
         section.setExpanded(true);
-        initTableInput();
         return ruleComp;
     }
 

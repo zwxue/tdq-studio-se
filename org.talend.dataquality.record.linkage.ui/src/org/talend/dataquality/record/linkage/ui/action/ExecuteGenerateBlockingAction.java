@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2012 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2013 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -35,7 +35,7 @@ public class ExecuteGenerateBlockingAction extends Action {
 
     /**
      * Getter for inputData.
-     * 
+     *
      * @return the inputData
      */
     public List<Object[]> getInputData() {
@@ -44,7 +44,7 @@ public class ExecuteGenerateBlockingAction extends Action {
 
     /**
      * Sets the inputData.
-     * 
+     *
      * @param inputData the inputData to set
      */
     public void setInputData(List<Object[]> inputData) {

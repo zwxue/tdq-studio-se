@@ -15,13 +15,20 @@ package org.talend.dataquality.record.linkage.ui.section.definition;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.log4j.Logger;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
+import org.talend.dataquality.record.linkage.ui.composite.MatchRuleTableComposite;
+import org.talend.dataquality.record.linkage.ui.composite.definition.MatchRuleTableDefinitionComposite;
 import org.talend.dataquality.record.linkage.ui.section.MatchingKeySection;
 import org.talend.dataquality.record.linkage.utils.MatchAnalysisConstant;
+import org.talend.dataquality.rules.MatchKeyDefinition;
 import org.talend.dataquality.rules.MatchRule;
+import org.talend.dataquality.rules.MatchRuleDefinition;
+import org.talend.dataquality.rules.RulesFactory;
 
 
 /**
@@ -32,6 +39,10 @@ import org.talend.dataquality.rules.MatchRule;
 public class MatchKeyDefinitionSection extends MatchingKeySection {
 
     private List<MatchRule> matchRules = new ArrayList<MatchRule>();
+
+    Logger log = Logger.getLogger(MatchKeyDefinitionSection.class);
+
+    private MatchRuleDefinition matchRuleDef = null;
     /**
      * DOC zshen MatchKeyDefinitionSection constructor comment.
      *
@@ -58,7 +69,7 @@ public class MatchKeyDefinitionSection extends MatchingKeySection {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataquality.record.linkage.ui.section.MatchingKeySection#getMatchRuleList()
      */
     @Override
@@ -79,14 +90,76 @@ public class MatchKeyDefinitionSection extends MatchingKeySection {
         // don't need the chart so do nothing at here
     }
 
-    /**
-     * Sets the matchRules.
+
+
+    /*
+     * (non-Javadoc)
      *
-     * @param matchRules the matchRules to set
+     * @see
+     * org.talend.dataquality.record.linkage.ui.section.MatchingKeySection#createMatchKeyFromCurrentMatchRule(java.lang
+     * .String)
      */
-    public void setMatchRules(List<MatchRule> matchRules) {
-        this.matchRules = matchRules;
+    @Override
+    public void createMatchKeyFromCurrentMatchRule(String column) {
+        MatchRuleTableComposite matchRuleTableComp = getCurrentMatchRuleTableComposite();
+        matchRuleTableComp.addKeyDefinition(column, matchRuleDef);
     }
 
+    /**
+     * Sets the matchRuleDef.
+     *
+     * @param matchRuleDef the matchRuleDef to set
+     */
+    public void setMatchRuleDef(MatchRuleDefinition matchRuleDef) {
+        this.matchRuleDef = RulesFactory.eINSTANCE.createMatchRuleDefinition();
+        this.matchRuleDef.getMatchRules().addAll(matchRuleDef.getMatchRules());
+        this.matchRules = this.matchRuleDef.getMatchRules();
+    }
+
+    /*
+     * (non-Javadoc)
+     *
+     * @see
+     * org.talend.dataquality.record.linkage.ui.section.MatchingKeySection#removeMatchKeyFromCurrentMatchRule(java.lang
+     * .String)
+     */
+    @Override
+    public void removeMatchKeyFromCurrentMatchRule(MatchKeyDefinition columnkey) {
+        MatchRuleTableComposite matchRuleTableComp = getCurrentMatchRuleTableComposite();
+        matchRuleTableComp.removeKeyDefinition(columnkey, matchRuleDef);
+    }
+
+    /**
+     * Getter for matchRules.
+     *
+     * @return the matchRules
+     */
+    public List<MatchRule> getMatchRules() {
+        return this.matchRules;
+    }
+
+    /*
+     * (non-Javadoc)
+     *
+     * @see
+     * org.talend.dataquality.record.linkage.ui.section.MatchingKeySection#createTableComposite(org.eclipse.swt.widgets
+     * .Composite, org.talend.dataquality.rules.MatchRule)
+     */
+    @Override
+    protected MatchRuleTableComposite createTableComposite(Composite parent, MatchRule matchRule) {
+        return new MatchRuleTableDefinitionComposite(parent, SWT.NO_FOCUS, matchRule);
+    }
+
+    /*
+     * (non-Javadoc)
+     *
+     * @see
+     * org.talend.dataquality.record.linkage.ui.section.MatchingKeySection#createGroupQualityThreshold(org.eclipse.swt
+     * .widgets.Composite)
+     */
+    @Override
+    protected void createGroupQualityThreshold(Composite parent) {
+        // here don't need do anything
+    }
 
 }

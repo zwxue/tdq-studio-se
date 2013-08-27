@@ -13,18 +13,19 @@
 package org.talend.dataquality.record.linkage.ui.composite;
 
 import org.eclipse.swt.widgets.Composite;
+import org.talend.dataquality.record.linkage.ui.composite.tableviewer.AbstractMatchAnalysisTableViewer;
 import org.talend.dataquality.record.linkage.ui.composite.tableviewer.SurvivorShipTableViewer;
 import org.talend.dataquality.record.linkage.utils.MatchAnalysisConstant;
 
 /**
  * created by HHB on 2013-8-23 Detailled comment
- * 
+ *
  */
 public class SurvivorshipTableComposite extends AbsMatchAnalysisTableComposite {
 
     /**
      * DOC HHB SurvivorshipTableComposite constructor comment.
-     * 
+     *
      * @param parent
      * @param style
      */
@@ -46,6 +47,17 @@ public class SurvivorshipTableComposite extends AbsMatchAnalysisTableComposite {
     protected void createTable() {
         tableViewer = new SurvivorShipTableViewer(this, getTableStyle(), isAddColumn());
         ((SurvivorShipTableViewer) tableViewer).initTable(headers);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataquality.record.linkage.ui.composite.AbsMatchAnalysisTableComposite#createTableViewer()
+     */
+    @Override
+    protected AbstractMatchAnalysisTableViewer createTableViewer() {
+        // TODO Auto-generated method stub
+        return null;
     }
 
 }

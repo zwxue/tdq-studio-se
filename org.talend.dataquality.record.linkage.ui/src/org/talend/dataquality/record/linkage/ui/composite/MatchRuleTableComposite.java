@@ -24,6 +24,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
+import org.talend.dataquality.record.linkage.ui.composite.tableviewer.AbstractMatchAnalysisTableViewer;
 import org.talend.dataquality.record.linkage.ui.composite.tableviewer.MatchRuleTableViewer;
 import org.talend.dataquality.record.linkage.ui.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataquality.record.linkage.utils.MatchAnalysisConstant;
@@ -32,7 +33,7 @@ import org.talend.dataquality.rules.MatchRule;
 
 /**
  * created by zshen on Jul 31, 2013 Detailled comment
- * 
+ *
  */
 public class MatchRuleTableComposite extends AbsMatchAnalysisTableComposite {
 
@@ -44,7 +45,7 @@ public class MatchRuleTableComposite extends AbsMatchAnalysisTableComposite {
 
     /**
      * DOC zshen MatchRuleComposite constructor comment.
-     * 
+     *
      * @param parent
      * @param style
      */
@@ -52,22 +53,19 @@ public class MatchRuleTableComposite extends AbsMatchAnalysisTableComposite {
         super(parent, style);
         this.matchRule = matchRule;
         this.listener = listener;
-        // Create match interval
-        createMatchIntervalComposite();
-        setInput(matchRule);
+
 
     }
 
     /**
      * DOC zhao Comment method "setInput".
-     * 
+     *
      * @param matchRule
      */
     public void setInput(MatchRule matchRule) {
         List<KeyDefinition> keyDefs = new ArrayList<KeyDefinition>();
         keyDefs.addAll(matchRule.getMatchKeys());
         ((MatchRuleTableViewer) tableViewer).setMatchRule(matchRule);
-        matchIntervalText.setText(String.valueOf(matchRule.getMatchInterval()));
         setInput(keyDefs);
     }
 
@@ -77,11 +75,12 @@ public class MatchRuleTableComposite extends AbsMatchAnalysisTableComposite {
     @Override
     protected void initHeaders() {
         headers.add(MatchAnalysisConstant.MATCH_KEY_NAME); // 14
-        if (isAddColumn()) {
-            headers.add(MatchAnalysisConstant.COLUMN); // 14
-        }
+        headers.add(MatchAnalysisConstant.COLUMN); // 14
         headers.add(MatchAnalysisConstant.MATCHING_TYPE); // 12
         headers.add(MatchAnalysisConstant.CUSTOM_MATCHER_CLASS); // 20
+        if (isAddColumn()) {
+            headers.add(MatchAnalysisConstant.THRESHOLD); // 14
+        }
         headers.add(MatchAnalysisConstant.CONFIDENCE_WEIGHT); // 17
         headers.add(MatchAnalysisConstant.HANDLE_NULL); // 11
     }
@@ -91,20 +90,24 @@ public class MatchRuleTableComposite extends AbsMatchAnalysisTableComposite {
      */
     @Override
     protected void createTable() {
-        tableViewer = new MatchRuleTableViewer(this, getTableStyle(), isAddColumn());
+        tableViewer = createTableViewer();
         tableViewer.initTable(headers);
+        // Create match interval
+        createMatchIntervalComposite();
+        // setInput(matchRule);
     }
 
     /**
      * DOC zhao Comment method "createMatchIntervalComposite".
-     * 
+     *
      */
-    private void createMatchIntervalComposite() {
+    protected void createMatchIntervalComposite() {
         Composite matchIntervalComposite = new Composite(this, SWT.NONE);
         matchIntervalComposite.setLayout(new GridLayout(2, Boolean.TRUE));
         Label matchIntervalLabel = new Label(matchIntervalComposite, SWT.NONE);
         matchIntervalLabel.setText(DefaultMessagesImpl.getString("MatchRuleTableComposite.MATCH_INTERVAL")); //$NON-NLS-1$
         matchIntervalText = new Text(matchIntervalComposite, SWT.BORDER);
+        matchIntervalText.setText(String.valueOf(matchRule.getMatchInterval()));
         GridData layoutData = new GridData();
         layoutData.widthHint = 80;
         matchIntervalText.setLayoutData(layoutData);
@@ -138,11 +141,24 @@ public class MatchRuleTableComposite extends AbsMatchAnalysisTableComposite {
 
     /**
      * Getter for matchRule.
-     * 
+     *
      * @return the matchRule
      */
     public MatchRule getMatchRule() {
         return this.matchRule;
     }
+
+
+    /*
+     * (non-Javadoc)
+     *
+     * @see org.talend.dataquality.record.linkage.ui.composite.AbsMatchAnalysisTableComposite#createTableViewer()
+     */
+    @Override
+    protected AbstractMatchAnalysisTableViewer createTableViewer() {
+        return new MatchRuleTableViewer(this, getTableStyle(), isAddColumn());
+    }
+
+
 
 }

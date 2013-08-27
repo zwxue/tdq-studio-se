@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.talend.dataquality.analysis.Analysis;
@@ -44,7 +45,7 @@ public abstract class AbsMatchAnalysisTableComposite extends Composite {
      */
     public AbsMatchAnalysisTableComposite(Composite parent, int style) {
         super(parent, style);
-        createContent();
+
     }
 
     /**
@@ -61,6 +62,7 @@ public abstract class AbsMatchAnalysisTableComposite extends Composite {
     abstract protected void initHeaders();
 
 
+    abstract protected AbstractMatchAnalysisTableViewer createTableViewer();
 
     /**
      * DOC zshen Comment method "createTable".
@@ -100,13 +102,21 @@ public abstract class AbsMatchAnalysisTableComposite extends Composite {
         tableViewer.removeElement(keyDef, matchRuleDef);
     }
 
+    public void moveUpKeyDefinition(KeyDefinition keyDef, MatchRuleDefinition matchRuleDef) {
+        tableViewer.moveUpElement(keyDef, matchRuleDef);
+    }
 
+    public void moveDownKeyDefinition(KeyDefinition keyDef, MatchRuleDefinition matchRuleDef) {
+        tableViewer.moveDownElement(keyDef, matchRuleDef);
+    }
 
     public ISelection getSelectItems() {
         return tableViewer.getSelection();
     }
 
-
+    public void serViewerSorter(ViewerSorter sorter) {
+        tableViewer.setSorter(sorter);
+    }
 
     /**
      * Getter for isAddColumn.

@@ -14,14 +14,18 @@ package org.talend.dataquality.record.linkage.ui.section.definition;
 
 import java.util.List;
 
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
+import org.talend.dataquality.record.linkage.ui.composite.BlockingKeyTableComposite;
+import org.talend.dataquality.record.linkage.ui.composite.definition.BlockingKeyTableDefinitionComposite;
 import org.talend.dataquality.record.linkage.ui.section.BlockingKeySection;
 import org.talend.dataquality.record.linkage.utils.MatchAnalysisConstant;
 import org.talend.dataquality.rules.BlockKeyDefinition;
 import org.talend.dataquality.rules.MatchRuleDefinition;
+import org.talend.dataquality.rules.RulesFactory;
 
 
 /**
@@ -56,8 +60,9 @@ public class BlockingKeyDefinitionSection extends BlockingKeySection {
      * @param matchRuleDef the matchRuleDef to set
      */
     public void setMatchRuleDef(MatchRuleDefinition matchRuleDef) {
-        this.matchRuleDef = matchRuleDef;
-        this.blockKeyList = matchRuleDef.getBlockKeys();
+        this.matchRuleDef = RulesFactory.eINSTANCE.createMatchRuleDefinition();
+        this.matchRuleDef.getBlockKeys().addAll(matchRuleDef.getBlockKeys());
+        this.blockKeyList = this.matchRuleDef.getBlockKeys();
     }
 
     /*
@@ -105,7 +110,7 @@ public class BlockingKeyDefinitionSection extends BlockingKeySection {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.talend.dataquality.record.linkage.ui.section.BlockingKeySection#removeBlockingKey(org.talend.dataquality.
      * rules.BlockKeyDefinition)
@@ -113,6 +118,35 @@ public class BlockingKeyDefinitionSection extends BlockingKeySection {
     @Override
     public void removeBlockingKey(BlockKeyDefinition blockKeyDef) {
         tableComposite.removeKeyDefinition(blockKeyDef, matchRuleDef);
+    }
+
+
+    /*
+     * (non-Javadoc)
+     *
+     * @see org.talend.dataquality.record.linkage.ui.section.BlockingKeySection#getMatchRuleDefinition()
+     */
+    @Override
+    protected MatchRuleDefinition getMatchRuleDefinition() {
+        return matchRuleDef;
+    }
+
+    /**
+     * Getter for blockKeyList.
+     *
+     * @return the blockKeyList
+     */
+    public List<BlockKeyDefinition> getBlockKeyList() {
+        return this.blockKeyList;
+    }
+
+
+    /* (non-Javadoc)
+     * @see org.talend.dataquality.record.linkage.ui.section.BlockingKeySection#createTableComposite(org.eclipse.swt.widgets.Composite)
+     */
+    @Override
+    protected BlockingKeyTableComposite createTableComposite(Composite parent) {
+        return new BlockingKeyTableDefinitionComposite(parent, SWT.NO_FOCUS);
     }
 
 

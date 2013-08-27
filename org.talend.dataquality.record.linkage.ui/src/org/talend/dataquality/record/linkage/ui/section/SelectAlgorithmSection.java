@@ -24,6 +24,11 @@ import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 import org.talend.dataquality.record.linkage.ui.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataquality.record.linkage.ui.section.definition.BlockingKeyDefinitionSection;
+import org.talend.dataquality.record.linkage.ui.section.definition.DefaultSurvivorshipDefinitionSection;
+import org.talend.dataquality.record.linkage.ui.section.definition.MatchKeyDefinitionSection;
+import org.talend.dataquality.record.linkage.ui.section.definition.SurvivorshipDefinitionSection;
+import org.talend.dataquality.record.linkage.utils.MatchAnalysisConstant;
+import org.talend.dataquality.rules.MatchRuleDefinition;
 
 /**
  * created by zshen on Aug 20, 2013
@@ -34,7 +39,18 @@ public class SelectAlgorithmSection extends AbstractSectionComposite {
 
     private boolean isVSRMode = true;
 
-    BlockingKeyDefinitionSection bk = null;
+    private BlockingKeyDefinitionSection blockKeySection = null;
+
+    private MatchKeyDefinitionSection matchKeySection = null;
+
+    private SurvivorshipDefinitionSection survivorshipDefinitionSection = null;
+
+    private DefaultSurvivorshipDefinitionSection defaultSurvivorshipDefinitionSection = null;
+
+    private String algorithmName = null;
+
+    private MatchRuleDefinition matchRuleDef = null;
+
 
 
     public SelectAlgorithmSection(ScrolledForm form, Composite parent, FormToolkit toolkit) {
@@ -51,7 +67,6 @@ public class SelectAlgorithmSection extends AbstractSectionComposite {
         super(form, parent, style, toolkit);
         section.setText(DefaultMessagesImpl.getString("SelectAlgorithmSection.record.linkage.algorithm")); //$NON-NLS-1$
         section.setDescription(DefaultMessagesImpl.getString("SelectAlgorithmSection.choose.algorithm")); //$NON-NLS-1$
-        createChooseAlgorithmCom(section);
     }
 
     /**
@@ -59,8 +74,8 @@ public class SelectAlgorithmSection extends AbstractSectionComposite {
      *
      * @param dqRuleDefinitionSection
      */
-    private void createChooseAlgorithmCom(Section dqRuleDefinitionSection) {
-        Composite mainComp = toolkit.createComposite(dqRuleDefinitionSection);
+    public void createChooseAlgorithmCom() {
+        Composite mainComp = toolkit.createComposite(section);
         mainComp.setLayout(new GridLayout());
 
         Composite container = toolkit.createComposite(mainComp, SWT.NONE);
@@ -68,54 +83,115 @@ public class SelectAlgorithmSection extends AbstractSectionComposite {
         GridDataFactory.fillDefaults().align(SWT.FILL, SWT.FILL).grab(true, true).applyTo(container);
         container.setLayout(gdLayout);
 
-        Button tSwooshButton = toolkit.createButton(container,
-                DefaultMessagesImpl.getString("SelectAlgorithmSection.t_swoosh.algorithm"), SWT.RADIO); //$NON-NLS-1$
+        Button tSwooshButton = toolkit.createButton(container, MatchAnalysisConstant.T_SWOOSH_ALGORITHM, SWT.RADIO);
+        if(this.algorithmName ==null){
+            this.algorithmName = MatchAnalysisConstant.VSR_ALGORITHM;
+        }
         tSwooshButton.setSelection(!isVSRMode());
         tSwooshButton.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent e) {
                 isVSRMode = false;
-                bk.setIsAddColumn(true);
-                bk.getSection().redraw();
-                bk.getSection().update();
-                // bk.getSection().setVisible(false);
-                bk.getSection().layout();
-                bk.getSection().dispose();
-                getForm().layout();
+                // blockKeySection.setAddColumn(true);
+                // blockKeySection.redrawnContent();
+                matchKeySection.setAddColumn(true);
+                noticeOtherSection();
+                algorithmName = MatchAnalysisConstant.T_SWOOSH_ALGORITHM;
+                listeners.firePropertyChange(MatchAnalysisConstant.ISDIRTY_PROPERTY,
+                        MatchAnalysisConstant.VSR_ALGORITHM, MatchAnalysisConstant.T_SWOOSH_ALGORITHM);
+
             }
 
+
+
         });
-        Button vsrButton = toolkit.createButton(container,
-                DefaultMessagesImpl.getString("SelectAlgorithmSection.vsr_algorithm"), SWT.RADIO); //$NON-NLS-1$
+        Button vsrButton = toolkit.createButton(container, MatchAnalysisConstant.VSR_ALGORITHM, SWT.RADIO);
         vsrButton.setSelection(isVSRMode());
         vsrButton.addSelectionListener(new SelectionAdapter() {
 
             @Override
             public void widgetSelected(SelectionEvent e) {
                 isVSRMode = true;
-                bk.setIsAddColumn(false);
-                bk.getSection().redraw();
-                bk.getSection().update();
-                bk.getSection().layout();
-                // getForm().redraw();
+                // blockKeySection.setAddColumn(false);
+                // blockKeySection.redrawnContent();
+                matchKeySection.setAddColumn(false);
+                noticeOtherSection();
+                algorithmName = MatchAnalysisConstant.VSR_ALGORITHM;
+                listeners.firePropertyChange(MatchAnalysisConstant.ISDIRTY_PROPERTY,
+                        MatchAnalysisConstant.T_SWOOSH_ALGORITHM, MatchAnalysisConstant.VSR_ALGORITHM);
             }
 
         });
-        dqRuleDefinitionSection.setClient(mainComp);
+        section.setClient(mainComp);
 
-    }
-
-    public boolean isVSRMode() {
-        return isVSRMode;
     }
 
     /**
-     * Sets the bk.
-     *
-     * @param bk the bk to set
+     * DOC zshen Comment method "noticeOtherSection".
      */
-    public void setBk(BlockingKeyDefinitionSection bk) {
-        this.bk = bk;
+    private void noticeOtherSection() {
+        matchKeySection.redrawnContent();
+        survivorshipDefinitionSection.getSection().setVisible(!isVSRMode);
+        defaultSurvivorshipDefinitionSection.getSection().setVisible(!isVSRMode);
+    }
+
+    public boolean isVSRMode() {
+        return MatchAnalysisConstant.VSR_ALGORITHM.equals(algorithmName);
+    }
+
+    /**
+     * Sets the blockKeySection.
+     *
+     * @param blockKeySection the blockKeySection to set
+     */
+    public void setBlockkeySection(BlockingKeyDefinitionSection blockKeySection) {
+        this.blockKeySection = blockKeySection;
+    }
+
+    /**
+     * Sets the matchKeySection.
+     *
+     * @param matchKeySection the matchKeySection to set
+     */
+    public void setMatchKeySection(MatchKeyDefinitionSection matchKeySection) {
+        this.matchKeySection = matchKeySection;
+    }
+
+    /**
+     * Getter for algorithmName.
+     *
+     * @return the algorithmName
+     */
+    public String getAlgorithmName() {
+        return this.algorithmName;
+    }
+
+    /**
+     * Sets the matchRuleDef.
+     *
+     * @param matchRuleDef the matchRuleDef to set
+     */
+    public void setMatchRuleDef(MatchRuleDefinition matchRuleDef) {
+        this.matchRuleDef = matchRuleDef;
+        this.algorithmName = this.matchRuleDef.getRecordLinkageAlgorithm();
+    }
+
+    /**
+     * Sets the survivorshipDefinitionSection.
+     *
+     * @param survivorshipDefinitionSection the survivorshipDefinitionSection to set
+     */
+    public void setSurvivorshipDefinitionSection(SurvivorshipDefinitionSection survivorshipDefinitionSection) {
+        this.survivorshipDefinitionSection = survivorshipDefinitionSection;
+    }
+
+    /**
+     * Sets the defaultSurvivorshipDefinitionSection.
+     *
+     * @param defaultSurvivorshipDefinitionSection the defaultSurvivorshipDefinitionSection to set
+     */
+    public void setDefaultSurvivorshipDefinitionSection(DefaultSurvivorshipDefinitionSection defaultSurvivorshipDefinitionSection) {
+        this.defaultSurvivorshipDefinitionSection = defaultSurvivorshipDefinitionSection;
     }
 
 

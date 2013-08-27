@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2012 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2013 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -105,7 +105,7 @@ public class DataSampleTable {
 
     /**
      * create the nattable every time when the user select some columns
-     * 
+     *
      * @param columns
      * @param listOfData
      */
@@ -127,7 +127,7 @@ public class DataSampleTable {
 
     /**
      * when the data is empty, the column can not response the click event, so we need to add an empty row to it.
-     * 
+     *
      * @return
      */
     private Object[] getEmptyRow() {
@@ -157,7 +157,7 @@ public class DataSampleTable {
 
     /**
      * before create the table control, need to init the property name and name to label map
-     * 
+     *
      * @param propertyNames
      * @param propertyToLabels : <property name, display label>
      */
@@ -206,7 +206,7 @@ public class DataSampleTable {
     /**
      * When the column is the user selected one, return its name; when the column is the default additional one, return
      * null
-     * 
+     *
      * @param position
      * @return
      */
@@ -223,7 +223,7 @@ public class DataSampleTable {
 
     /**
      * create the NatTable according to the property, and list of data to display
-     * 
+     *
      * @param parent
      * @param data
      * @return
@@ -285,7 +285,7 @@ public class DataSampleTable {
 
     /**
      * DOC yyin Comment method "registerColumnLabels".
-     * 
+     *
      * @param columnLabelAccumulator
      */
     private void registerColumnLabels(ColumnOverrideLabelAccumulator columnLabelAccumulator) {

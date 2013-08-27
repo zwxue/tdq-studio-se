@@ -40,13 +40,13 @@ import org.talend.dataquality.rules.SurvivorshipKeyDefinition;
 
 /**
  * created by HHB on 2013-8-23 Detailled comment
- * 
+ *
  */
 public class SurvivorShipTableViewer extends AbstractMatchAnalysisTableViewer {
 
     /**
      * DOC HHB SurvivorShipTableViewer constructor comment.
-     * 
+     *
      * @param parent
      * @param style
      * @param isAddColumn
@@ -72,7 +72,7 @@ public class SurvivorShipTableViewer extends AbstractMatchAnalysisTableViewer {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.talend.dataquality.record.linkage.ui.composite.tableviewer.AbstractMatchAnalysisTableViewer#getTableLabelProvider
      * ()
@@ -84,7 +84,7 @@ public class SurvivorShipTableViewer extends AbstractMatchAnalysisTableViewer {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataquality.record.linkage.ui.composite.tableviewer.AbstractMatchAnalysisTableViewer#
      * getTableContentProvider()
      */
@@ -95,7 +95,7 @@ public class SurvivorShipTableViewer extends AbstractMatchAnalysisTableViewer {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.talend.dataquality.record.linkage.ui.composite.tableviewer.AbstractMatchAnalysisTableViewer#getTableCellModifier
      * ()
@@ -107,7 +107,7 @@ public class SurvivorShipTableViewer extends AbstractMatchAnalysisTableViewer {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.talend.dataquality.record.linkage.ui.composite.tableviewer.AbstractMatchAnalysisTableViewer#getCellEditor
      * (java.util.List)
@@ -186,6 +186,32 @@ public class SurvivorShipTableViewer extends AbstractMatchAnalysisTableViewer {
                 break;
             }
         }
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * org.talend.dataquality.record.linkage.ui.composite.tableviewer.AbstractMatchAnalysisTableViewer#moveUpElement
+     * (org.talend.dataquality.rules.KeyDefinition, org.talend.dataquality.rules.MatchRuleDefinition)
+     */
+    @Override
+    public void moveUpElement(KeyDefinition keyDef, MatchRuleDefinition matchRuleDef) {
+        // TODO Auto-generated method stub
+
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * org.talend.dataquality.record.linkage.ui.composite.tableviewer.AbstractMatchAnalysisTableViewer#moveDownElement
+     * (org.talend.dataquality.rules.KeyDefinition, org.talend.dataquality.rules.MatchRuleDefinition)
+     */
+    @Override
+    public void moveDownElement(KeyDefinition keyDef, MatchRuleDefinition matchRuleDef) {
+        // TODO Auto-generated method stub
+
     }
 
 }

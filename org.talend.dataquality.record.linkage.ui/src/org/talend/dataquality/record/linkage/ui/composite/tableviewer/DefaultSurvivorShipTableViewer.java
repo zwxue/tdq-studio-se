@@ -39,13 +39,13 @@ import org.talend.dataquality.rules.RulesFactory;
 
 /**
  * created by HHB on 2013-8-23 Detailled comment
- * 
+ *
  */
 public class DefaultSurvivorShipTableViewer extends AbstractMatchAnalysisTableViewer {
 
     /**
      * DOC HHB SurvivorShipTableViewer constructor comment.
-     * 
+     *
      * @param parent
      * @param style
      * @param isAddColumn
@@ -64,7 +64,7 @@ public class DefaultSurvivorShipTableViewer extends AbstractMatchAnalysisTableVi
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.talend.dataquality.record.linkage.ui.composite.tableviewer.AbstractMatchAnalysisTableViewer#getTableLabelProvider
      * ()
@@ -76,7 +76,7 @@ public class DefaultSurvivorShipTableViewer extends AbstractMatchAnalysisTableVi
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataquality.record.linkage.ui.composite.tableviewer.AbstractMatchAnalysisTableViewer#
      * getTableContentProvider()
      */
@@ -87,7 +87,7 @@ public class DefaultSurvivorShipTableViewer extends AbstractMatchAnalysisTableVi
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.talend.dataquality.record.linkage.ui.composite.tableviewer.AbstractMatchAnalysisTableViewer#getTableCellModifier
      * ()
@@ -99,7 +99,7 @@ public class DefaultSurvivorShipTableViewer extends AbstractMatchAnalysisTableVi
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.talend.dataquality.record.linkage.ui.composite.tableviewer.AbstractMatchAnalysisTableViewer#getCellEditor
      * (java.util.List)
@@ -172,7 +172,7 @@ public class DefaultSurvivorShipTableViewer extends AbstractMatchAnalysisTableVi
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.talend.dataquality.record.linkage.ui.composite.tableviewer.AbstractMatchAnalysisTableViewer#removeElement
      * (org.talend.dataquality.rules.KeyDefinition, org.talend.dataquality.rules.MatchRuleDefinition)
@@ -185,12 +185,38 @@ public class DefaultSurvivorShipTableViewer extends AbstractMatchAnalysisTableVi
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataquality.record.linkage.ui.composite.tableviewer.AbstractMatchAnalysisTableViewer#
      * getHeaderDisplayWeight()
      */
     @Override
     protected int getHeaderDisplayWeight() {
         return 12;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * org.talend.dataquality.record.linkage.ui.composite.tableviewer.AbstractMatchAnalysisTableViewer#moveUpElement
+     * (org.talend.dataquality.rules.KeyDefinition, org.talend.dataquality.rules.MatchRuleDefinition)
+     */
+    @Override
+    public void moveUpElement(KeyDefinition keyDef, MatchRuleDefinition matchRuleDef) {
+        // TODO Auto-generated method stub
+
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * org.talend.dataquality.record.linkage.ui.composite.tableviewer.AbstractMatchAnalysisTableViewer#moveDownElement
+     * (org.talend.dataquality.rules.KeyDefinition, org.talend.dataquality.rules.MatchRuleDefinition)
+     */
+    @Override
+    public void moveDownElement(KeyDefinition keyDef, MatchRuleDefinition matchRuleDef) {
+        // TODO Auto-generated method stub
+
     }
 }

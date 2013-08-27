@@ -10,35 +10,26 @@
 // 9 rue Pages 92150 Suresnes, France
 //
 // ============================================================================
-package org.talend.dataquality.record.linkage.ui.composite.tableviewer.provider;
+package org.talend.dataquality.record.linkage.ui.composite.tableviewer.provider.definition;
 
 import org.apache.commons.lang.StringUtils;
-import org.eclipse.jface.viewers.ITableLabelProvider;
-import org.eclipse.jface.viewers.LabelProvider;
-import org.eclipse.swt.graphics.Image;
+import org.talend.dataquality.record.linkage.ui.composite.tableviewer.provider.BlockingKeyTableLabelProvider;
 import org.talend.dataquality.rules.BlockKeyDefinition;
 
+
 /**
- * created by zshen on Aug 6, 2013 Detailled comment
+ * created by zshen on Aug 27, 2013
+ * Detailled comment
  *
  */
-public class BlockingKeyTableLabelProvider extends LabelProvider implements ITableLabelProvider {
+public class BlockingKeyTableDefinitionLabelProvider extends BlockingKeyTableLabelProvider {
 
     /*
      * (non-Javadoc)
-     *
-     * @see org.eclipse.jface.viewers.ITableLabelProvider#getColumnImage(java.lang.Object, int)
-     */
-    @Override
-    public Image getColumnImage(Object element, int columnIndex) {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.eclipse.jface.viewers.ITableLabelProvider#getColumnText(java.lang.Object, int)
+     * 
+     * @see
+     * org.talend.dataquality.record.linkage.ui.composite.tableviewer.provider.BlockingKeyTableLabelProvider#getColumnText
+     * (java.lang.Object, int)
      */
     @Override
     public String getColumnText(Object element, int columnIndex) {
@@ -48,18 +39,16 @@ public class BlockingKeyTableLabelProvider extends LabelProvider implements ITab
             case 0:
                 return bkd.getName();
             case 1:
-                return bkd.getColumn();
-            case 2:
                 return bkd.getPreAlgorithm().getAlgorithmType();
-            case 3:
+            case 2:
                 return bkd.getPreAlgorithm().getAlgorithmParameters();
-            case 4:
+            case 3:
                 return bkd.getAlgorithm().getAlgorithmType();
-            case 5:
+            case 4:
                 return bkd.getAlgorithm().getAlgorithmParameters();
-            case 6:
+            case 5:
                 return bkd.getPostAlgorithm().getAlgorithmType();
-            case 7:
+            case 6:
                 return bkd.getPostAlgorithm().getAlgorithmParameters();
             }
 

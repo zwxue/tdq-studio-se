@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2012 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2013 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -141,7 +141,7 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
 
     /**
      * MatchMasterDetailsPage constructor.
-     * 
+     *
      * @param editor
      * @param id
      * @param title
@@ -195,7 +195,7 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
 
     /**
      * create Matching Key Section.
-     * 
+     *
      * @param form
      * @param topComp
      */
@@ -207,7 +207,7 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
 
     /**
      * create Blocking Key Section.
-     * 
+     *
      * @param form
      * @param topComp
      */
@@ -237,7 +237,7 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
 
     /**
      * create DataTable Composite.
-     * 
+     *
      * @param dataparent
      */
     private void createDataTableComposite(Composite dataparent) {
@@ -563,7 +563,7 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
 
     /**
      * need to be called after the user selects some columns need to fetch the data and refresh the table
-     * 
+     *
      * @param nodes
      */
     public void setSelectedNodes(Object[] nodes) {
@@ -577,7 +577,7 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
 
     /**
      * Refresh the table with new data
-     * 
+     *
      * @param listOfData
      */
     private void refreshTable(List<Object[]> listOfData) {
@@ -638,7 +638,7 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
      * when the user select one column, check: if the column is not selected before, add it(with color changed) else if
      * the column already be selected before, remove it(with color changed) Need to check: canSelectBlockingKey/
      * canSelectMatchingKey firstly,
-     * 
+     *
      * @param rowPosition
      * @param columnPosition
      * @param columnName
@@ -661,7 +661,7 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
 
     /**
      * handle the add/delete column for the Match Key Selection.
-     * 
+     *
      * @param columnName
      */
     private void handleMatchKeySelection(String columnName) {
@@ -681,7 +681,7 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
 
     /**
      * handle the add/delete column for the BlockKey Selection.
-     * 
+     *
      * @param columnName
      */
     private void handleBlockKeySelection(String columnName) {
@@ -705,7 +705,7 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
 
     /**
      * fetch the data according to the connection type(db,file,mdm)
-     * 
+     *
      * @return
      */
     private List<Object[]> fetchDataForTable() {
@@ -768,7 +768,7 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see java.beans.PropertyChangeListener#propertyChange(java.beans.PropertyChangeEvent)
      */
     public void propertyChange(PropertyChangeEvent evt) {
@@ -779,7 +779,7 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisMetadataPage#canRun()
      */
     @Override
@@ -798,7 +798,7 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisMetadataPage#refresh()
      */
     @Override
@@ -809,7 +809,7 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisMetadataPage#saveAnalysis()
      */
     @Override
@@ -861,7 +861,7 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
 
     /**
      * change the connection of the analysis after the user change the selected columns
-     * 
+     *
      * @param modelElement
      * @return
      */

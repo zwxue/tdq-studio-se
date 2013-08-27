@@ -43,7 +43,7 @@ import org.talend.dataquality.rules.impl.RulesFactoryImpl;
 
 /**
  * created by zshen on Jul 31, 2013 Detailled comment
- * 
+ *
  */
 public class MatchRuleTableViewer extends AbstractMatchAnalysisTableViewer {
 
@@ -53,7 +53,7 @@ public class MatchRuleTableViewer extends AbstractMatchAnalysisTableViewer {
 
     /**
      * DOC zshen MatchRuleTableViewer constructor comment.
-     * 
+     *
      * @param parent
      * @param style
      */
@@ -64,7 +64,7 @@ public class MatchRuleTableViewer extends AbstractMatchAnalysisTableViewer {
 
     /**
      * DOC zshen Comment method "getCellEditor".
-     * 
+     *
      * @param headers
      * @return
      */
@@ -72,30 +72,15 @@ public class MatchRuleTableViewer extends AbstractMatchAnalysisTableViewer {
     protected CellEditor[] getCellEditor(List<String> headers) {
         CellEditor[] editors = new CellEditor[headers.size()];
         for (int i = 0; i < editors.length; ++i) {
-            if (isAddColumn()) {
-                switch (i) {
-                case 2:
-                    editors[i] = new ComboBoxCellEditor(innerTable, MatchingTypeEnum.getAllTypes(), SWT.READ_ONLY);
-                    break;
-                case 5:
-                    editors[i] = new ComboBoxCellEditor(innerTable, HandleNullEnum.getAllTypes(), SWT.READ_ONLY);
-                    break;
-                default:
-                    editors[i] = new TextCellEditor(innerTable);
-                }
-            } else {
-                switch (i) {
-
-                case 1:
-                    editors[i] = new ComboBoxCellEditor(innerTable, MatchingTypeEnum.getAllTypes(), SWT.READ_ONLY);
-                    break;
-                case 4:
-                    editors[i] = new ComboBoxCellEditor(innerTable, HandleNullEnum.getAllTypes(), SWT.READ_ONLY);
-                    break;
-                default:
-                    editors[i] = new TextCellEditor(innerTable);
-                }
-
+            switch (i) {
+            case 2:
+                editors[i] = new ComboBoxCellEditor(innerTable, MatchingTypeEnum.getAllTypes(), SWT.READ_ONLY);
+                break;
+            case 5:
+                editors[i] = new ComboBoxCellEditor(innerTable, HandleNullEnum.getAllTypes(), SWT.READ_ONLY);
+                break;
+            default:
+                editors[i] = new TextCellEditor(innerTable);
             }
         }
         return editors;
@@ -103,7 +88,7 @@ public class MatchRuleTableViewer extends AbstractMatchAnalysisTableViewer {
 
     /**
      * DOC zshen Comment method "getTableLabelProvider".
-     * 
+     *
      * @return
      */
     @Override
@@ -113,7 +98,7 @@ public class MatchRuleTableViewer extends AbstractMatchAnalysisTableViewer {
 
     /**
      * DOC zshen Comment method "getTableContentProvider".
-     * 
+     *
      * @return
      */
     @Override
@@ -123,7 +108,7 @@ public class MatchRuleTableViewer extends AbstractMatchAnalysisTableViewer {
 
     /**
      * DOC zshen Comment method "getCellModifier".
-     * 
+     *
      * @return
      */
     @Override
@@ -132,9 +117,9 @@ public class MatchRuleTableViewer extends AbstractMatchAnalysisTableViewer {
     }
 
     /**
-     * 
+     *
      * add new Element
-     * 
+     *
      * @param columnName the name of column
      * @param analysis the context of this add operation perform on.
      */
@@ -164,7 +149,7 @@ public class MatchRuleTableViewer extends AbstractMatchAnalysisTableViewer {
 
     /**
      * use this value to compute the vaule of column width
-     * 
+     *
      * @return
      */
     @Override
@@ -186,7 +171,7 @@ public class MatchRuleTableViewer extends AbstractMatchAnalysisTableViewer {
 
     /**
      * DOC zhao Comment method "setMatchRule".
-     * 
+     *
      * @param matchRule2
      */
     public void setMatchRule(MatchRule matchRule) {
@@ -201,7 +186,7 @@ public class MatchRuleTableViewer extends AbstractMatchAnalysisTableViewer {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.talend.dataquality.record.linkage.ui.composite.tableviewer.AbstractMatchAnalysisTableViewer#addElement(java
      * .lang.String, org.talend.dataquality.rules.MatchRuleDefinition)
@@ -216,7 +201,7 @@ public class MatchRuleTableViewer extends AbstractMatchAnalysisTableViewer {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.talend.dataquality.record.linkage.ui.composite.tableviewer.AbstractMatchAnalysisTableViewer#removeElement
      * (org.talend.dataquality.rules.KeyDefinition, org.talend.dataquality.analysis.Analysis)
@@ -230,7 +215,7 @@ public class MatchRuleTableViewer extends AbstractMatchAnalysisTableViewer {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.talend.dataquality.record.linkage.ui.composite.tableviewer.AbstractMatchAnalysisTableViewer#removeElement
      * (org.talend.dataquality.rules.KeyDefinition, org.talend.dataquality.rules.MatchRuleDefinition)
@@ -247,6 +232,32 @@ public class MatchRuleTableViewer extends AbstractMatchAnalysisTableViewer {
                 break;
             }
         }
+
+    }
+
+    /*
+     * (non-Javadoc)
+     *
+     * @see
+     * org.talend.dataquality.record.linkage.ui.composite.tableviewer.AbstractMatchAnalysisTableViewer#moveUpElement
+     * (org.talend.dataquality.rules.KeyDefinition, org.talend.dataquality.rules.MatchRuleDefinition)
+     */
+    @Override
+    public void moveUpElement(KeyDefinition keyDef, MatchRuleDefinition matchRuleDef) {
+        // TODO Auto-generated method stub
+
+    }
+
+    /*
+     * (non-Javadoc)
+     *
+     * @see
+     * org.talend.dataquality.record.linkage.ui.composite.tableviewer.AbstractMatchAnalysisTableViewer#moveDownElement
+     * (org.talend.dataquality.rules.KeyDefinition, org.talend.dataquality.rules.MatchRuleDefinition)
+     */
+    @Override
+    public void moveDownElement(KeyDefinition keyDef, MatchRuleDefinition matchRuleDef) {
+        // TODO Auto-generated method stub
 
     }
 

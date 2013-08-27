@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2012 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2013 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -20,14 +20,14 @@ import org.eclipse.nebula.widgets.nattable.data.ListDataProvider;
 
 /**
  * DOC yyin class global comment. Detailled comment
- * 
+ *
  * @param <T>
  */
 public class ListObjectDataProvider<T> extends ListDataProvider<T> {
 
     /**
      * DOC yyin ListObjectDataProvider constructor comment.
-     * 
+     *
      * @param list
      * @param columnAccessor
      */
@@ -36,6 +36,7 @@ public class ListObjectDataProvider<T> extends ListDataProvider<T> {
         // TODO Auto-generated constructor stub
     }
 
+    @Override
     public Object getDataValue(int columnIndex, int rowIndex) {
         Object[] rowObj = (Object[]) list.get(rowIndex);
         if (columnIndex >= rowObj.length) {

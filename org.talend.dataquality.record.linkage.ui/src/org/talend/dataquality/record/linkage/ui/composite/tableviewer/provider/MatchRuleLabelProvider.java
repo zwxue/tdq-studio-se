@@ -12,6 +12,7 @@
 // ============================================================================
 package org.talend.dataquality.record.linkage.ui.composite.tableviewer.provider;
 
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
@@ -19,13 +20,13 @@ import org.talend.dataquality.rules.MatchKeyDefinition;
 
 /**
  * created by zshen on Aug 1, 2013 Detailled comment
- * 
+ *
  */
 public class MatchRuleLabelProvider extends LabelProvider implements ITableLabelProvider {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.jface.viewers.ITableLabelProvider#getColumnImage(java.lang.Object, int)
      */
     @Override
@@ -36,7 +37,7 @@ public class MatchRuleLabelProvider extends LabelProvider implements ITableLabel
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.jface.viewers.ITableLabelProvider#getColumnText(java.lang.Object, int)
      */
     @Override
@@ -59,8 +60,7 @@ public class MatchRuleLabelProvider extends LabelProvider implements ITableLabel
             }
 
         }
-        // TODO zshen return empty is enough?
-        return "";
+        return StringUtils.EMPTY;
     }
 
 }

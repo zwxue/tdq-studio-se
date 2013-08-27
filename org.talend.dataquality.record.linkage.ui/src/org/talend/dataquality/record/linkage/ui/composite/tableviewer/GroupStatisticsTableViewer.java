@@ -29,7 +29,7 @@ import org.talend.dataquality.rules.MatchRuleDefinition;
 
 /**
  * created by zhao on Aug 22, 2013 Detailled comment
- * 
+ *
  */
 public class GroupStatisticsTableViewer extends AbstractMatchAnalysisTableViewer {
 
@@ -37,7 +37,7 @@ public class GroupStatisticsTableViewer extends AbstractMatchAnalysisTableViewer
 
     /**
      * DOC zhao GroupStatisticsTableViewer constructor comment.
-     * 
+     *
      * @param parent
      * @param style
      */
@@ -59,7 +59,7 @@ public class GroupStatisticsTableViewer extends AbstractMatchAnalysisTableViewer
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.talend.dataquality.record.linkage.ui.composite.tableviewer.AbstractMatchAnalysisTableViewer#getTableHeightHint
      * ()
@@ -71,7 +71,7 @@ public class GroupStatisticsTableViewer extends AbstractMatchAnalysisTableViewer
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.talend.dataquality.record.linkage.ui.composite.tableviewer.AbstractMatchAnalysisTableViewer#addContextMenu()
      */
@@ -83,7 +83,7 @@ public class GroupStatisticsTableViewer extends AbstractMatchAnalysisTableViewer
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataquality.record.linkage.ui.composite.tableviewer.AbstractMatchAnalysisTableViewer#
      * getHeaderDisplayWeight()
      */
@@ -94,7 +94,7 @@ public class GroupStatisticsTableViewer extends AbstractMatchAnalysisTableViewer
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.talend.dataquality.record.linkage.ui.composite.tableviewer.AbstractMatchAnalysisTableViewer#getTableLabelProvider
      * ()
@@ -106,7 +106,7 @@ public class GroupStatisticsTableViewer extends AbstractMatchAnalysisTableViewer
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataquality.record.linkage.ui.composite.tableviewer.AbstractMatchAnalysisTableViewer#
      * getTableContentProvider()
      */
@@ -117,7 +117,7 @@ public class GroupStatisticsTableViewer extends AbstractMatchAnalysisTableViewer
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.talend.dataquality.record.linkage.ui.composite.tableviewer.AbstractMatchAnalysisTableViewer#getTableCellModifier
      * ()
@@ -129,7 +129,7 @@ public class GroupStatisticsTableViewer extends AbstractMatchAnalysisTableViewer
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.talend.dataquality.record.linkage.ui.composite.tableviewer.AbstractMatchAnalysisTableViewer#getCellEditor
      * (java.util.List)
@@ -141,7 +141,7 @@ public class GroupStatisticsTableViewer extends AbstractMatchAnalysisTableViewer
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.talend.dataquality.record.linkage.ui.composite.tableviewer.AbstractMatchAnalysisTableViewer#addElement(java
      * .lang.String, org.talend.dataquality.analysis.Analysis)
@@ -153,7 +153,7 @@ public class GroupStatisticsTableViewer extends AbstractMatchAnalysisTableViewer
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.talend.dataquality.record.linkage.ui.composite.tableviewer.AbstractMatchAnalysisTableViewer#removeElement
      * (java.lang.String, org.talend.dataquality.analysis.Analysis)
@@ -166,7 +166,7 @@ public class GroupStatisticsTableViewer extends AbstractMatchAnalysisTableViewer
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.talend.dataquality.record.linkage.ui.composite.tableviewer.AbstractMatchAnalysisTableViewer#addElement(java
      * .lang.String, org.talend.dataquality.rules.MatchRuleDefinition)
@@ -179,7 +179,7 @@ public class GroupStatisticsTableViewer extends AbstractMatchAnalysisTableViewer
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.talend.dataquality.record.linkage.ui.composite.tableviewer.AbstractMatchAnalysisTableViewer#removeElement
      * (org.talend.dataquality.rules.KeyDefinition, org.talend.dataquality.analysis.Analysis)
@@ -192,7 +192,7 @@ public class GroupStatisticsTableViewer extends AbstractMatchAnalysisTableViewer
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.talend.dataquality.record.linkage.ui.composite.tableviewer.AbstractMatchAnalysisTableViewer#removeElement
      * (org.talend.dataquality.rules.KeyDefinition, org.talend.dataquality.rules.MatchRuleDefinition)
@@ -200,6 +200,32 @@ public class GroupStatisticsTableViewer extends AbstractMatchAnalysisTableViewer
     @Override
     public void removeElement(KeyDefinition keyDef, MatchRuleDefinition matchRuleDef) {
         // No implementation
+
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * org.talend.dataquality.record.linkage.ui.composite.tableviewer.AbstractMatchAnalysisTableViewer#moveUpElement
+     * (org.talend.dataquality.rules.KeyDefinition, org.talend.dataquality.rules.MatchRuleDefinition)
+     */
+    @Override
+    public void moveUpElement(KeyDefinition keyDef, MatchRuleDefinition matchRuleDef) {
+        // TODO Auto-generated method stub
+
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * org.talend.dataquality.record.linkage.ui.composite.tableviewer.AbstractMatchAnalysisTableViewer#moveDownElement
+     * (org.talend.dataquality.rules.KeyDefinition, org.talend.dataquality.rules.MatchRuleDefinition)
+     */
+    @Override
+    public void moveDownElement(KeyDefinition keyDef, MatchRuleDefinition matchRuleDef) {
+        // TODO Auto-generated method stub
 
     }
 
