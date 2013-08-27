@@ -604,6 +604,18 @@ public final class ReportHelper {
     }
 
     /**
+     * set the password context to the report.
+     * 
+     * @param isContext the password is context or not
+     * @param report
+     * @return
+     */
+    public static boolean setPasswordContext(Boolean isContext, Report report) {
+        String statusStr = String.valueOf(isContext);
+        return TaggedValueHelper.setTaggedValue(report, TaggedValueHelper.REP_PASSWORD_CONTEXT, statusStr);
+    }
+
+    /**
      * DOC bZhou Comment method "getSingleGenReport".
      * 
      * @param report
@@ -611,6 +623,21 @@ public final class ReportHelper {
      */
     public static Boolean getSingleGenReport(Report report) {
         TaggedValue taggedValue = TaggedValueHelper.getTaggedValue(TaggedValueHelper.GEN_SINGLE_REPORT, report.getTaggedValue());
+        if (taggedValue == null) {
+            return false;
+        }
+        return Boolean.valueOf(taggedValue.getValue());
+    }
+
+    /**
+     * if the password is context return true, else return false.
+     * 
+     * @param report
+     * @return
+     */
+    public static Boolean getPasswordContext(Report report) {
+        TaggedValue taggedValue = TaggedValueHelper.getTaggedValue(TaggedValueHelper.REP_PASSWORD_CONTEXT,
+                report.getTaggedValue());
         if (taggedValue == null) {
             return false;
         }
