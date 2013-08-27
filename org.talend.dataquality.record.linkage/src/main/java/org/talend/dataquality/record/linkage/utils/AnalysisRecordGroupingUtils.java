@@ -48,11 +48,12 @@ public class AnalysisRecordGroupingUtils {
     }
 
     public static Map<String, String> getMatchKeyMap(String column, String algoType, int confidentWeight,
-            Map<String, String> columnIndexMap) {
+            Map<String, String> columnIndexMap, double matchInterval) {
         Map<String, String> matchKeyMap = new HashMap<String, String>();
         matchKeyMap.put(IRecordGrouping.COLUMN_IDX, columnIndexMap.get(column));
         matchKeyMap.put(IRecordGrouping.MATCHING_TYPE, algoType);
         matchKeyMap.put(IRecordGrouping.CONFIDENCE_WEIGHT, String.valueOf(confidentWeight));
+        matchKeyMap.put(IRecordGrouping.RECORD_MATCH_THRESHOLD, String.valueOf(matchInterval));
         return matchKeyMap;
     }
 }

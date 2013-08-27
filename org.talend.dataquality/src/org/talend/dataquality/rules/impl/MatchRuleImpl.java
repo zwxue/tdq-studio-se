@@ -8,6 +8,7 @@ package org.talend.dataquality.rules.impl;
 
 import java.util.Collection;
 
+import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
 
 import org.eclipse.emf.common.util.EList;
@@ -15,6 +16,7 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
 
+import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.util.EObjectContainmentEList;
 import org.eclipse.emf.ecore.util.InternalEList;
 
@@ -32,6 +34,7 @@ import orgomg.cwm.objectmodel.core.impl.ModelElementImpl;
  * The following features are implemented:
  * <ul>
  *   <li>{@link org.talend.dataquality.rules.impl.MatchRuleImpl#getMatchKeys <em>Match Keys</em>}</li>
+ *   <li>{@link org.talend.dataquality.rules.impl.MatchRuleImpl#getMatchInterval <em>Match Interval</em>}</li>
  * </ul>
  * </p>
  *
@@ -47,6 +50,25 @@ public class MatchRuleImpl extends ModelElementImpl implements MatchRule {
      * @ordered
      */
     protected EList<MatchKeyDefinition> matchKeys;
+
+    /**
+     * The default value of the '{@link #getMatchInterval() <em>Match Interval</em>}' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see #getMatchInterval()
+     * @generated
+     * @ordered
+     */
+    protected static final double MATCH_INTERVAL_EDEFAULT = 0.0;
+    /**
+     * The cached value of the '{@link #getMatchInterval() <em>Match Interval</em>}' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see #getMatchInterval()
+     * @generated
+     * @ordered
+     */
+    protected double matchInterval = MATCH_INTERVAL_EDEFAULT;
 
     /**
      * <!-- begin-user-doc -->
@@ -84,6 +106,27 @@ public class MatchRuleImpl extends ModelElementImpl implements MatchRule {
      * <!-- end-user-doc -->
      * @generated
      */
+    public double getMatchInterval() {
+        return matchInterval;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public void setMatchInterval(double newMatchInterval) {
+        double oldMatchInterval = matchInterval;
+        matchInterval = newMatchInterval;
+        if (eNotificationRequired())
+            eNotify(new ENotificationImpl(this, Notification.SET, RulesPackage.MATCH_RULE__MATCH_INTERVAL, oldMatchInterval, matchInterval));
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
     @Override
     public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
         switch (featureID) {
@@ -103,6 +146,8 @@ public class MatchRuleImpl extends ModelElementImpl implements MatchRule {
         switch (featureID) {
             case RulesPackage.MATCH_RULE__MATCH_KEYS:
                 return getMatchKeys();
+            case RulesPackage.MATCH_RULE__MATCH_INTERVAL:
+                return getMatchInterval();
         }
         return super.eGet(featureID, resolve, coreType);
     }
@@ -120,6 +165,9 @@ public class MatchRuleImpl extends ModelElementImpl implements MatchRule {
                 getMatchKeys().clear();
                 getMatchKeys().addAll((Collection<? extends MatchKeyDefinition>)newValue);
                 return;
+            case RulesPackage.MATCH_RULE__MATCH_INTERVAL:
+                setMatchInterval((Double)newValue);
+                return;
         }
         super.eSet(featureID, newValue);
     }
@@ -135,6 +183,9 @@ public class MatchRuleImpl extends ModelElementImpl implements MatchRule {
             case RulesPackage.MATCH_RULE__MATCH_KEYS:
                 getMatchKeys().clear();
                 return;
+            case RulesPackage.MATCH_RULE__MATCH_INTERVAL:
+                setMatchInterval(MATCH_INTERVAL_EDEFAULT);
+                return;
         }
         super.eUnset(featureID);
     }
@@ -149,8 +200,26 @@ public class MatchRuleImpl extends ModelElementImpl implements MatchRule {
         switch (featureID) {
             case RulesPackage.MATCH_RULE__MATCH_KEYS:
                 return matchKeys != null && !matchKeys.isEmpty();
+            case RulesPackage.MATCH_RULE__MATCH_INTERVAL:
+                return matchInterval != MATCH_INTERVAL_EDEFAULT;
         }
         return super.eIsSet(featureID);
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    @Override
+    public String toString() {
+        if (eIsProxy()) return super.toString();
+
+        StringBuffer result = new StringBuffer(super.toString());
+        result.append(" (matchInterval: ");
+        result.append(matchInterval);
+        result.append(')');
+        return result.toString();
     }
 
 } //MatchRuleImpl

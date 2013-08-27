@@ -60,6 +60,7 @@ import org.talend.cwm.db.connection.DatabaseSQLExecutor;
 import org.talend.cwm.db.connection.DelimitedFileSQLExecutor;
 import org.talend.cwm.db.connection.ISQLExecutor;
 import org.talend.cwm.db.connection.MDMSQLExecutor;
+import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.dialog.MetadataAndColumnSelectionDialog;
 import org.talend.dataprofiler.core.ui.events.EventEnum;
@@ -107,7 +108,7 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
 
     private BlockingKeySection blockingKeySection = null;
 
-    private MatchingKeySection matchingKeySection = null;
+    private MatchingKeySection matchingKeySection;
 
     private Button selectBlockKeyBtn = null;
 
@@ -190,6 +191,7 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
      * @param topComp
      */
     private void createMatchingKeySection(final ScrolledForm form, Composite topComp) {
+        matchingKeySection.addPropertyChangeListener(this);
         matchingKeySection.createContent();
         registerSection(matchingKeySection.getSection());
     }
@@ -708,8 +710,9 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
      * @see java.beans.PropertyChangeListener#propertyChange(java.beans.PropertyChangeEvent)
      */
     public void propertyChange(PropertyChangeEvent evt) {
-        // TODO Auto-generated method stub
-
+        if (PluginConstant.ISDIRTY_PROPERTY.equals(evt.getPropertyName())) {
+            setDirty(Boolean.TRUE);
+        }
     }
 
     /*

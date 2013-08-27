@@ -86,6 +86,10 @@ public class AbstractRecordGrouping implements IRecordGrouping {
         this.isLinkToPrevious = isLinkToPrevious;
     }
 
+    /**
+     * @deprecated {@link IRecordMatcher#setRecordMatchThreshold(double)}
+     */
+    @Deprecated
     @Override
     public void setAcceptableThreshold(float acceptableThreshold) {
         this.acceptableThreshold = acceptableThreshold;
@@ -148,7 +152,7 @@ public class AbstractRecordGrouping implements IRecordGrouping {
             }
             double matchingProba = combinedRecordMatcher.getMatchingWeight(masterMatchRecord, lookupDataArray);
             // Similar
-            if (matchingProba >= acceptableThreshold) {
+            if (matchingProba >= combinedRecordMatcher.getRecordMatchThreshold()) {
                 String distanceDetails = computeOutputDetails();
                 isSimilar = true;
                 // Master GRP_SIZE ++
@@ -334,12 +338,18 @@ public class AbstractRecordGrouping implements IRecordGrouping {
         double[] arrAttrWeights = new double[recordSize];
         String[][] algorithmName = new String[recordSize][2];
         String[] arrMatchHandleNull = new String[recordSize];
+        double recordMatchThreshold = acceptableThreshold;// keep compatibility to older version.
         int recordIdx = 0;
         for (Map<String, String> recordMap : matchRule) {
             arrAttrWeights[recordIdx] = Double.parseDouble(recordMap.get(IRecordGrouping.CONFIDENCE_WEIGHT));
             algorithmName[recordIdx][0] = recordMap.get(IRecordGrouping.MATCHING_TYPE);
             algorithmName[recordIdx][1] = recordMap.get(IRecordGrouping.CUSTOMER_MATCH_CLASS);
             arrMatchHandleNull[recordIdx] = recordMap.get(IRecordGrouping.HANDLE_NULL);
+            String rcdMathThresholdEach = recordMap.get(IRecordGrouping.RECORD_MATCH_THRESHOLD);
+            if (!StringUtils.isEmpty(rcdMathThresholdEach)) {
+                recordMatchThreshold = Double.valueOf(rcdMathThresholdEach);
+
+            }
             recordIdx++;
         }
         IAttributeMatcher[] attributeMatcher = new IAttributeMatcher[recordSize];
@@ -361,6 +371,7 @@ public class AbstractRecordGrouping implements IRecordGrouping {
         simpleRecordMatcher.setRecordSize(recordSize);
         simpleRecordMatcher.setAttributeWeights(arrAttrWeights);
         simpleRecordMatcher.setAttributeMatchers(attributeMatcher);
+        simpleRecordMatcher.setRecordMatchThreshold(recordMatchThreshold);
         combinedRecordMatcher.add(simpleRecordMatcher);
     }
 }

@@ -685,6 +685,15 @@ public class RulesPackageImpl extends EPackageImpl implements RulesPackage {
      * <!-- end-user-doc -->
      * @generated
      */
+    public EAttribute getMatchRule_MatchInterval() {
+        return (EAttribute)matchRuleEClass.getEStructuralFeatures().get(1);
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
     public EClass getAppliedBlockKey() {
         return appliedBlockKeyEClass;
     }
@@ -834,6 +843,7 @@ public class RulesPackageImpl extends EPackageImpl implements RulesPackage {
 
         matchRuleEClass = createEClass(MATCH_RULE);
         createEReference(matchRuleEClass, MATCH_RULE__MATCH_KEYS);
+        createEAttribute(matchRuleEClass, MATCH_RULE__MATCH_INTERVAL);
 
         appliedBlockKeyEClass = createEClass(APPLIED_BLOCK_KEY);
 
@@ -962,6 +972,7 @@ public class RulesPackageImpl extends EPackageImpl implements RulesPackage {
 
         initEClass(matchRuleEClass, MatchRule.class, "MatchRule", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
         initEReference(getMatchRule_MatchKeys(), this.getMatchKeyDefinition(), null, "matchKeys", null, 0, -1, MatchRule.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEAttribute(getMatchRule_MatchInterval(), theEcorePackage.getEDouble(), "matchInterval", null, 0, 1, MatchRule.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
         initEClass(appliedBlockKeyEClass, AppliedBlockKey.class, "AppliedBlockKey", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 

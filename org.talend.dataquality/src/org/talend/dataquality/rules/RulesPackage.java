@@ -2860,13 +2860,22 @@ public interface RulesPackage extends EPackage {
     int MATCH_RULE__MATCH_KEYS = CorePackage.MODEL_ELEMENT_FEATURE_COUNT + 0;
 
     /**
+     * The feature id for the '<em><b>Match Interval</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MATCH_RULE__MATCH_INTERVAL = CorePackage.MODEL_ELEMENT_FEATURE_COUNT + 1;
+
+    /**
      * The number of structural features of the '<em>Match Rule</em>' class.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int MATCH_RULE_FEATURE_COUNT = CorePackage.MODEL_ELEMENT_FEATURE_COUNT + 1;
+    int MATCH_RULE_FEATURE_COUNT = CorePackage.MODEL_ELEMENT_FEATURE_COUNT + 2;
 
     /**
      * The meta object id for the '{@link org.talend.dataquality.rules.impl.AppliedBlockKeyImpl <em>Applied Block Key</em>}' class.
@@ -3794,6 +3803,17 @@ public interface RulesPackage extends EPackage {
     EReference getMatchRule_MatchKeys();
 
     /**
+     * Returns the meta object for the attribute '{@link org.talend.dataquality.rules.MatchRule#getMatchInterval <em>Match Interval</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for the attribute '<em>Match Interval</em>'.
+     * @see org.talend.dataquality.rules.MatchRule#getMatchInterval()
+     * @see #getMatchRule()
+     * @generated
+     */
+    EAttribute getMatchRule_MatchInterval();
+
+    /**
      * Returns the meta object for class '{@link org.talend.dataquality.rules.AppliedBlockKey <em>Applied Block Key</em>}'.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -4267,6 +4287,14 @@ public interface RulesPackage extends EPackage {
          * @generated
          */
         EReference MATCH_RULE__MATCH_KEYS = eINSTANCE.getMatchRule_MatchKeys();
+
+        /**
+         * The meta object literal for the '<em><b>Match Interval</b></em>' attribute feature.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @generated
+         */
+        EAttribute MATCH_RULE__MATCH_INTERVAL = eINSTANCE.getMatchRule_MatchInterval();
 
         /**
          * The meta object literal for the '{@link org.talend.dataquality.rules.impl.AppliedBlockKeyImpl <em>Applied Block Key</em>}' class.

@@ -129,8 +129,9 @@ public class MatchAnalysisExecutor implements IAnalysisExecutor {
                 continue;
             }
             for (MatchKeyDefinition matchDef : matcher.getMatchKeys()) {
-                Map<String, String> matchKeyMap = AnalysisRecordGroupingUtils.getMatchKeyMap(matchDef.getColumn(), matchDef
-                        .getAlgorithm().getAlgorithmType(), matchDef.getConfidenceWeight(), columnMap);
+                Map<String, String> matchKeyMap = AnalysisRecordGroupingUtils
+                        .getMatchKeyMap(matchDef.getColumn(), matchDef.getAlgorithm().getAlgorithmType(),
+                                matchDef.getConfidenceWeight(), columnMap, matcher.getMatchInterval());
                 ruleMatcherConvertResult.add(matchKeyMap);
             }
             analysisMatchRecordGrouping.addRuleMatcher(ruleMatcherConvertResult);

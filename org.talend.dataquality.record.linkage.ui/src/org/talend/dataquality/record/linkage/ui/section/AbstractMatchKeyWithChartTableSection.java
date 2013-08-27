@@ -37,18 +37,17 @@ import org.talend.dataquality.record.linkage.utils.AnalysisRecordGroupingUtils;
 import org.talend.dataquality.rules.MatchKeyDefinition;
 import org.talend.dataquality.rules.MatchRule;
 
-
 /**
- * created by zshen on Aug 26, 2013
- * Detailled comment
- *
+ * created by zshen on Aug 26, 2013 Detailled comment
+ * 
  */
 abstract public class AbstractMatchKeyWithChartTableSection extends AbstractMatchAnaysisTableSection {
 
     protected MatchRuleDataChart matchRuleChartComp = null;
+
     /**
      * DOC zshen AbstractMatchKeyWithChartTableSection constructor comment.
-     *
+     * 
      * @param form
      * @param parent
      * @param style
@@ -62,7 +61,7 @@ abstract public class AbstractMatchKeyWithChartTableSection extends AbstractMatc
 
     /**
      * DOC zshen Comment method "createHideGroupComposite".
-     *
+     * 
      * @param chartComposite
      */
     protected void createHideGroupComposite(Composite chartComposite) {
@@ -111,7 +110,7 @@ abstract public class AbstractMatchKeyWithChartTableSection extends AbstractMatc
 
                 /*
                  * (non-Javadoc)
-                 *
+                 * 
                  * @see org.talend.dataquality.record.linkage.grouping.MatchGroupResultConsumer#handle(java.lang.Object)
                  */
                 @Override
@@ -130,7 +129,8 @@ abstract public class AbstractMatchKeyWithChartTableSection extends AbstractMatc
                 }
                 for (MatchKeyDefinition matchDef : matcher.getMatchKeys()) {
                     Map<String, String> matchKeyMap = AnalysisRecordGroupingUtils.getMatchKeyMap(matchDef.getColumn(), matchDef
-                            .getAlgorithm().getAlgorithmType(), matchDef.getConfidenceWeight(), columnMap);
+                            .getAlgorithm().getAlgorithmType(), matchDef.getConfidenceWeight(), columnMap, matcher
+                            .getMatchInterval());
                     ruleMatcherConvertResult.add(matchKeyMap);
                 }
                 analysisMatchRecordGrouping.addRuleMatcher(ruleMatcherConvertResult);

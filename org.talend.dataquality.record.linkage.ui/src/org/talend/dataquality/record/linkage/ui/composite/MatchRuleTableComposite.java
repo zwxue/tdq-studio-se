@@ -12,45 +12,62 @@
 // ============================================================================
 package org.talend.dataquality.record.linkage.ui.composite;
 
+import java.beans.PropertyChangeSupport;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Text;
 import org.talend.dataquality.record.linkage.ui.composite.tableviewer.MatchRuleTableViewer;
+import org.talend.dataquality.record.linkage.ui.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataquality.record.linkage.utils.MatchAnalysisConstant;
 import org.talend.dataquality.rules.KeyDefinition;
 import org.talend.dataquality.rules.MatchRule;
 
 /**
  * created by zshen on Jul 31, 2013 Detailled comment
- *
+ * 
  */
 public class MatchRuleTableComposite extends AbsMatchAnalysisTableComposite {
 
-    private MatchRule matchRule = null;
+    private Text matchIntervalText;
+
+    private MatchRule matchRule;
+
+    private PropertyChangeSupport listener = null;
 
     /**
      * DOC zshen MatchRuleComposite constructor comment.
-     *
+     * 
      * @param parent
      * @param style
      */
-    public MatchRuleTableComposite(Composite parent, int style, MatchRule matchRule) {
+    public MatchRuleTableComposite(Composite parent, int style, MatchRule matchRule, PropertyChangeSupport listener) {
         super(parent, style);
         this.matchRule = matchRule;
+        this.listener = listener;
+        // Create match interval
+        createMatchIntervalComposite();
         setInput(matchRule);
+
     }
 
     /**
      * DOC zhao Comment method "setInput".
-     *
+     * 
      * @param matchRule
      */
     public void setInput(MatchRule matchRule) {
         List<KeyDefinition> keyDefs = new ArrayList<KeyDefinition>();
         keyDefs.addAll(matchRule.getMatchKeys());
         ((MatchRuleTableViewer) tableViewer).setMatchRule(matchRule);
+        matchIntervalText.setText(String.valueOf(matchRule.getMatchInterval()));
         setInput(keyDefs);
     }
 
@@ -78,6 +95,41 @@ public class MatchRuleTableComposite extends AbsMatchAnalysisTableComposite {
         tableViewer.initTable(headers);
     }
 
+    /**
+     * DOC zhao Comment method "createMatchIntervalComposite".
+     * 
+     */
+    private void createMatchIntervalComposite() {
+        Composite matchIntervalComposite = new Composite(this, SWT.NONE);
+        matchIntervalComposite.setLayout(new GridLayout(2, Boolean.TRUE));
+        Label matchIntervalLabel = new Label(matchIntervalComposite, SWT.NONE);
+        matchIntervalLabel.setText(DefaultMessagesImpl.getString("MatchRuleTableComposite.MATCH_INTERVAL")); //$NON-NLS-1$
+        matchIntervalText = new Text(matchIntervalComposite, SWT.BORDER);
+        GridData layoutData = new GridData();
+        layoutData.widthHint = 80;
+        matchIntervalText.setLayoutData(layoutData);
+        matchIntervalText.addModifyListener(new ModifyListener() {
+
+            Double oldValue = matchRule.getMatchInterval();
+
+            @Override
+            public void modifyText(ModifyEvent e) {
+                try {
+                    String newValue = matchIntervalText.getText();
+                    Double value = Double.valueOf(newValue);
+                    if (value != oldValue) {
+                        matchRule.setMatchInterval(value);
+                        listener.firePropertyChange(MatchAnalysisConstant.ISDIRTY_PROPERTY, oldValue, value);
+                        oldValue = value;
+                    }
+                } catch (Exception exc) {
+                    // Invalid input
+                }
+            }
+        });
+
+    }
+
     @Override
     protected int getTableStyle() {
         int style = SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.HIDE_SELECTION;
@@ -86,7 +138,7 @@ public class MatchRuleTableComposite extends AbsMatchAnalysisTableComposite {
 
     /**
      * Getter for matchRule.
-     *
+     * 
      * @return the matchRule
      */
     public MatchRule getMatchRule() {

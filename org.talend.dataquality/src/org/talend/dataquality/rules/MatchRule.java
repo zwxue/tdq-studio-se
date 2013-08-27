@@ -23,6 +23,7 @@ import orgomg.cwm.objectmodel.core.ModelElement;
  * The following features are supported:
  * <ul>
  *   <li>{@link org.talend.dataquality.rules.MatchRule#getMatchKeys <em>Match Keys</em>}</li>
+ *   <li>{@link org.talend.dataquality.rules.MatchRule#getMatchInterval <em>Match Interval</em>}</li>
  * </ul>
  * </p>
  *
@@ -46,5 +47,31 @@ public interface MatchRule extends ModelElement {
      * @generated
      */
     EList<MatchKeyDefinition> getMatchKeys();
+
+    /**
+     * Returns the value of the '<em><b>Match Interval</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <p>
+     * If the meaning of the '<em>Match Interval</em>' attribute isn't clear,
+     * there really should be more of a description here...
+     * </p>
+     * <!-- end-user-doc -->
+     * @return the value of the '<em>Match Interval</em>' attribute.
+     * @see #setMatchInterval(double)
+     * @see org.talend.dataquality.rules.RulesPackage#getMatchRule_MatchInterval()
+     * @model
+     * @generated
+     */
+    double getMatchInterval();
+
+    /**
+     * Sets the value of the '{@link org.talend.dataquality.rules.MatchRule#getMatchInterval <em>Match Interval</em>}' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @param value the new value of the '<em>Match Interval</em>' attribute.
+     * @see #getMatchInterval()
+     * @generated
+     */
+    void setMatchInterval(double value);
 
 } // MatchRule
