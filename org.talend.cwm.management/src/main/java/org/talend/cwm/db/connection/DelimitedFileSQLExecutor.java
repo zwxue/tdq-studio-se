@@ -34,6 +34,8 @@ import com.csvreader.CsvReader;
  */
 public class DelimitedFileSQLExecutor implements ISQLExecutor {
 
+    private int limit;
+
     /* (non-Javadoc)
      * @see org.talend.cwm.db.connection.ISQLExecutor#executeQuery(org.talend.dataquality.analysis.Analysis)
      */
@@ -56,16 +58,20 @@ public class DelimitedFileSQLExecutor implements ISQLExecutor {
             } else {
                 // use TOSDelimitedReader in FileInputDelimited to parse.
                 FileInputDelimited fileInputDelimited = AnalysisExecutorHelper.createFileInputDelimited(delimitedFileconnection);
-                long currentRow = AnalysisExecutorHelper.getHeadValue(delimitedFileconnection);
-
+                // long currentRow = AnalysisExecutorHelper.getHeadValue(delimitedFileconnection);
+                int index = 0;
                 while (fileInputDelimited.nextRecord()) {
-                    currentRow++;
+                    index++;
                     int columsCount = fileInputDelimited.getColumnsCountOfCurrentRow();
                     String[] rowValues = new String[columsCount];
                     for (int i = 0; i < columsCount; i++) {
                         rowValues[i] = fileInputDelimited.get(i);
                     }
                     dataFromTable.add(rowValues);
+                    if (index >= limit) {
+                        break;
+                    }
+
                 }
                 fileInputDelimited.close();
             }
@@ -108,4 +114,13 @@ public class DelimitedFileSQLExecutor implements ISQLExecutor {
         }
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.cwm.db.connection.ISQLExecutor#setLimit(int)
+     */
+    public void setLimit(int limit) {
+        this.limit = limit;
+
+    }
 }

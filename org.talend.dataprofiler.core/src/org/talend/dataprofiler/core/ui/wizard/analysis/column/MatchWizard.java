@@ -19,6 +19,7 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.ui.PlatformUI;
 import org.talend.core.model.properties.Item;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.editor.analysis.AnalysisEditor;
 import org.talend.dataprofiler.core.ui.editor.analysis.MatchMasterDetailsPage;
 import org.talend.dataprofiler.core.ui.wizard.analysis.AnalysisMetadataWizardPage;
@@ -43,7 +44,7 @@ public class MatchWizard extends ColumnWizard {
     private ColumnAnalysisDOSelectionPage selectionPage;
 
     /**
-     * DOC yyin MatchWizard constructor comment.
+     * MatchWizard constructor comment.
      * 
      * @param parameter
      */
@@ -113,6 +114,11 @@ public class MatchWizard extends ColumnWizard {
         MatchRuleDefinition matchRuleDefinition = RulesFactory.eINSTANCE.createMatchRuleDefinition();
         matchRuleIndicator.setBuiltInMatchRuleDefinition(matchRuleDefinition);
         analysis.getResults().getIndicators().add(matchRuleIndicator);
+
+        // default loaded row count
+        analysis.getParameters().setMaxNumberRows(
+                Integer.valueOf(DefaultMessagesImpl.getString("MatchWizard.DefaultLoadedRowCount")));
+
         return analysis;
     }
 

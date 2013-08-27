@@ -41,6 +41,8 @@ public class DatabaseSQLExecutor implements ISQLExecutor {
 
     private static Logger log = Logger.getLogger(DatabaseSQLExecutor.class);
 
+    private int limit;
+
     /* (non-Javadoc)
      * @see org.talend.cwm.db.connection.ISQLExecutor#executeQuery(org.talend.dataquality.analysis.Analysis)
      */
@@ -103,12 +105,23 @@ public class DatabaseSQLExecutor implements ISQLExecutor {
 
         sql.append(dbms.from());
         sql.append(AnalysisExecutorHelper.getTableName(analysedElements.get(0), dbms));
+        String completedSqlString = sql.toString();
+        return dbms.getTopNQuery(completedSqlString, limit);
 
-        return sql.toString();
     }
 
     private DbmsLanguage createDbmsLanguage(Analysis analysis) {
         DataManager connection = analysis.getContext().getConnection();
         return DbmsLanguageFactory.createDbmsLanguage(connection);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.cwm.db.connection.ISQLExecutor#setLimit(int)
+     */
+    public void setLimit(int limit) {
+        this.limit = limit;
+
     }
 }

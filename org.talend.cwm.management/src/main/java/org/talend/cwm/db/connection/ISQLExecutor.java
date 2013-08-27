@@ -23,4 +23,6 @@ import org.talend.dataquality.analysis.Analysis;
 public interface ISQLExecutor {
 
     public List<Object[]> executeQuery(Analysis analysis) throws SQLException;
+
+    void setLimit(int limit);
 }

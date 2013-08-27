@@ -22,6 +22,8 @@ import org.talend.dataquality.analysis.Analysis;
  */
 public class MDMSQLExecutor implements ISQLExecutor {
 
+    private int limit;
+
     /* (non-Javadoc)
      * @see org.talend.cwm.db.connection.ISQLExecutor#executeQuery(org.talend.dataquality.analysis.Analysis)
      */
@@ -32,5 +34,15 @@ public class MDMSQLExecutor implements ISQLExecutor {
 
     private String createSqlStatement(Analysis analysis) {
         return null;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.cwm.db.connection.ISQLExecutor#setLimit(int)
+     */
+    public void setLimit(int limit) {
+        this.limit = limit;
+
     }
 }

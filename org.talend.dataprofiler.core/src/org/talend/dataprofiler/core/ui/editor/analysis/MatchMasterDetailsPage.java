@@ -22,8 +22,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.EList;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardDialog;
@@ -35,6 +37,8 @@ import org.eclipse.nebula.widgets.nattable.layer.event.ILayerEvent;
 import org.eclipse.nebula.widgets.nattable.util.GUIHelper;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.layout.GridData;
@@ -42,6 +46,8 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
@@ -52,7 +58,6 @@ import org.eclipse.ui.forms.widgets.Section;
 import org.talend.commons.utils.WorkspaceUtils;
 import org.talend.core.model.metadata.MetadataColumnRepositoryObject;
 import org.talend.core.model.metadata.builder.connection.Connection;
-import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
 import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.properties.Property;
 import org.talend.core.repository.model.repositoryObject.MetadataXmlElementTypeRepositoryObject;
@@ -129,6 +134,10 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
     private boolean isDelimitedFile = false;
 
     private Composite dataSampleparentComposite;
+
+    private Composite dataTableComp;
+
+    private Text rowLoadedText = null;
 
     /**
      * MatchMasterDetailsPage constructor.
@@ -231,8 +240,6 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
      * 
      * @param dataparent
      */
-    private Composite dataTableComp;
-
     private void createDataTableComposite(Composite dataparent) {
         dataTableComp = toolkit.createComposite(dataparent);
         GridLayout dataTableLayout = new GridLayout(1, Boolean.TRUE);
@@ -255,11 +262,14 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
 
     private void createButtonComposite(Composite dataparent) {
         Composite buttonComposite = toolkit.createComposite(dataparent);
-        GridLayout buttonCompositeLayout = new GridLayout(2, Boolean.TRUE);
+        GridLayout buttonCompositeLayout = new GridLayout(3, Boolean.FALSE);
         buttonComposite.setLayout(buttonCompositeLayout);
         GridDataFactory.fillDefaults().align(SWT.FILL, SWT.TOP).applyTo(buttonComposite);
         // Data selection button composite
         createDataSelectionButtonComp(buttonComposite);
+
+        // Data refresh, and row control composite
+        createDataQueryButtonComp(buttonComposite);
 
         // Key selection button composite
         createKeySelectionButtonComp(buttonComposite);
@@ -366,7 +376,7 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
 
     private void createDataSelectionButtonComp(Composite parent) {
         Composite dataSelectionComp = toolkit.createComposite(parent);
-        GridLayout dataSelectionCompLayout = new GridLayout(3, Boolean.TRUE);
+        GridLayout dataSelectionCompLayout = new GridLayout(2, Boolean.TRUE);
         dataSelectionComp.setLayout(dataSelectionCompLayout);
 
         Button createConnectionBtn = toolkit.createButton(dataSelectionComp,
@@ -375,9 +385,6 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
         Button selectDataBtn = toolkit.createButton(dataSelectionComp,
                 DefaultMessagesImpl.getString("MatchMasterDetailsPage.SelectDataButton"), SWT.BORDER);//$NON-NLS-1$
         GridDataFactory.fillDefaults().align(SWT.LEFT, SWT.TOP).applyTo(selectDataBtn);
-        Button refreshDataBtn = toolkit.createButton(dataSelectionComp,
-                DefaultMessagesImpl.getString("MatchMasterDetailsPage.RefreshDataButton"), SWT.BORDER);//$NON-NLS-1$
-        GridDataFactory.fillDefaults().align(SWT.LEFT, SWT.TOP).applyTo(refreshDataBtn);
 
         createConnectionBtn.addMouseListener(new MouseListener() {
 
@@ -408,6 +415,22 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
             public void mouseUp(MouseEvent e) {
             }
         });
+        registerCreateConnectionEvent(dataSampleparentComposite);
+    }
+
+    /**
+     * create "Refresh Button", and the row control input.
+     * 
+     * @param buttonComposite
+     */
+    private void createDataQueryButtonComp(Composite parent) {
+        Composite dataQueryComp = toolkit.createComposite(parent);
+        GridLayout dataQueryCompLayout = new GridLayout(3, Boolean.TRUE);
+        dataQueryComp.setLayout(dataQueryCompLayout);
+
+        Button refreshDataBtn = toolkit.createButton(dataQueryComp,
+                DefaultMessagesImpl.getString("MatchMasterDetailsPage.RefreshDataButton"), SWT.BORDER);//$NON-NLS-1$
+        GridDataFactory.fillDefaults().align(SWT.LEFT, SWT.CENTER).applyTo(refreshDataBtn);
 
         refreshDataBtn.addMouseListener(new MouseListener() {
 
@@ -415,13 +438,51 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
             }
 
             public void mouseDown(MouseEvent e) {
-                refreshDataFromConnection();
+                if (isValidateRowCount()) {
+                    refreshDataFromConnection();
+                } else {
+                    popupWarningNotValidate();
+                }
             }
 
             public void mouseUp(MouseEvent e) {
             }
         });
-        registerCreateConnectionEvent(dataSampleparentComposite);
+
+        // create the input to control how many rows will be loaded.
+        Label rowLoadedLabel = toolkit.createLabel(dataQueryComp,
+                DefaultMessagesImpl.getString("MatchMasterDetailsPage.ControlRowsLabel"), SWT.NONE);
+        GridDataFactory.fillDefaults().align(SWT.LEFT, SWT.CENTER).applyTo(rowLoadedLabel);
+        rowLoadedText = toolkit.createText(dataQueryComp, null, SWT.BORDER);
+        GridDataFactory.fillDefaults().align(SWT.LEFT, SWT.CENTER).applyTo(rowLoadedText);
+        rowLoadedText.setText(analysisHandler.getDefaultLoadedRowCount());
+        rowLoadedText.addModifyListener(new ModifyListener() {
+
+            public void modifyText(final ModifyEvent e) {
+                setDirty(true);
+            }
+        });
+    }
+
+    /**
+     * check if the row loaded value is valid or not
+     * 
+     * @return
+     */
+    private boolean isValidateRowCount() {
+        String text = rowLoadedText.getText();
+        if (StringUtils.isEmpty(text)) {
+            return false;
+        }
+        try {
+            int parseInt = Integer.parseInt(text);
+            if (parseInt < 1) {
+                return false;
+            }
+        } catch (NumberFormatException e) {
+            return false;
+        }
+        return true;
     }
 
     /**
@@ -474,7 +535,6 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
      * open the column selection dialog.
      */
     public void openColumnsSelectionDialog(DataManager dataManager) {
-        RepositoryNode connNode = RepositoryNodeHelper.recursiveFindDatabaseConnection((DatabaseConnection) dataManager);
         List<IRepositoryNode> reposViewObjList = findAllSelectedRepositoryNode();
 
         MetadataAndColumnSelectionDialog dialog = new MetadataAndColumnSelectionDialog(null,
@@ -658,6 +718,8 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
             sqlExecutor = new DatabaseSQLExecutor();
         }
         try {
+            // set limit
+            sqlExecutor.setLimit(Integer.valueOf(rowLoadedText.getText()));
             return sqlExecutor.executeQuery(this.analysisHandler.getAnalysis());
         } catch (SQLException e) {
             log.error(e, e);
@@ -752,16 +814,22 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
      */
     @Override
     protected void saveAnalysis() throws DataprofilerCoreException {
+        if (this.isValidateRowCount()) {
+            analysisHandler.changeDefaultRowLoaded(rowLoadedText.getText());
+        } else {
+            popupWarningNotValidate();
+            return;
+        }
+
         this.updateAnalysisClientDependency();
 
         if (selectedColumns != null && selectedColumns.length != 0) {
-
             // add the user selected columns into the analysis
             for (ModelElement selectedColumn : selectedColumns) {
                 analysisHandler.addColumnToAnalyze(selectedColumn);
             }
-
         }
+
         ReturnCode saved = new ReturnCode(false);
         IEditorInput editorInput = this.getEditorInput();
 
@@ -774,10 +842,21 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
             tdqAnalysisItem.getProperty().setDisplayName(analysisHandler.getName());
             tdqAnalysisItem.getProperty().setLabel(WorkspaceUtils.normalize(analysisHandler.getName()));
             this.nameText.setText(analysisHandler.getName());
+            // save the default loaded row count
+            // tdqAnalysisItem.getAnalysis().setParameters(analysisHandler.getParameters());
 
             saved = ElementWriterFactory.getInstance().createAnalysisWrite().save(tdqAnalysisItem, true);
         }
         logSaved(saved);
+    }
+
+    /**
+     * popupWarningNotValidate.
+     */
+    private void popupWarningNotValidate() {
+        MessageDialog.openWarning(null, DefaultMessagesImpl.getString("MatchMasterDetailsPage.NotValidate"), //$NON-NLS-1$
+                DefaultMessagesImpl.getString("MatchMasterDetailsPage.LoadedRowCountError")); //$NON-NLS-1$
+
     }
 
     /**

@@ -21,7 +21,7 @@ import orgomg.cwm.objectmodel.core.ModelElement;
  */
 public class MatchAnalysisHandler extends AnalysisHandler {
 
-
+    private String DEFAULT_LOADED_ROW_COUNT = "default_loaded_row_count";
 
     public boolean addColumnToAnalyze(ModelElement modelElement) {
         assert analysis != null;
@@ -42,6 +42,23 @@ public class MatchAnalysisHandler extends AnalysisHandler {
         return analysis.getContext().getAnalysedElements().addAll(modelElement);
     }
 
+    /**
+     * DOC yyin Comment method "changeDefaultRowLoaded".
+     * 
+     * @param text
+     */
+    public void changeDefaultRowLoaded(String text) {
+        analysis.getParameters().setMaxNumberRows(Integer.valueOf(text));
+    }
+
+    /**
+     * find in analysis's parameter if has: DefaultLoadedRowCount".if has:get its value, if not, create one
+     * 
+     * @return
+     */
+    public String getDefaultLoadedRowCount() {
+        return String.valueOf(analysis.getParameters().getMaxNumberRows());
+    }
 
 
 }
