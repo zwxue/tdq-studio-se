@@ -99,7 +99,8 @@ public enum PatternLanguageType {
          13,
          SupportDBUrlType.HIVEDEFAULTURL.getLanguage(),
          SupportDBUrlType.HIVEDEFAULTURL.getLanguage(),
-         PatternToExcelEnum.Hive);
+         PatternToExcelEnum.Hive),
+    VERTICA(13, SupportDBUrlType.VERTICA.getLanguage(), SupportDBUrlType.VERTICA.getLanguage(), PatternToExcelEnum.Vertica);
 
     private int index;
 
@@ -166,7 +167,7 @@ public enum PatternLanguageType {
 
     /**
      * DOC yyi 2009-09-28 Feature: 9289.
-     * 
+     *
      * @param hasJava set contains Java or not.
      * @return
      */
@@ -186,7 +187,7 @@ public enum PatternLanguageType {
 
     /**
      * DOC zshen 2011-06-29 bug: 22668.
-     * 
+     *
      * @param
      * @return
      */

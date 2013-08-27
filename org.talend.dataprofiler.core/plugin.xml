@@ -1614,6 +1614,12 @@
            id="org.talend.dataprofiler.core.migration.impl.CheckAndUpdateAnalysisDependencyTask"
            name="Check and Update Analysis Dependency if with more than one db dependency"
            version="5.4.0">
+     </workspacetask>
+     <workspacetask
+           class="org.talend.dataprofiler.core.migration.impl.UpdateIndicatorsForVertica"
+           id="org.talend.dataprofiler.core.migration.impl.UpdateIndicatorsForVertica"
+           name="Update Indicator For Vertica"
+           version="5.4.0">
      </workspacetask>  
      
   </extension>

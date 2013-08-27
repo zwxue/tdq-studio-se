@@ -20,7 +20,7 @@ import org.talend.utils.ProductVersion;
 
 /**
  * created by xqliu on Aug 7, 2013 Detailled comment
- * 
+ *
  */
 public class VerticaDbmsLanguage extends DbmsLanguage {
 
@@ -38,7 +38,7 @@ public class VerticaDbmsLanguage extends DbmsLanguage {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dq.dbms.DbmsLanguage#createStatement(java.sql.Connection)
      */
     @Override
@@ -46,5 +46,15 @@ public class VerticaDbmsLanguage extends DbmsLanguage {
         Statement statement = connection.createStatement();
         statement.setFetchSize(fetchSize);
         return statement;
+    }
+
+    @Override
+    public String regexLike(String element, String regex) {
+        return surroundWithSpaces("REGEXP_LIKE(TO_CHAR(" + element + ") , " + regex + " )"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+    }
+
+    @Override
+    public String regexNotLike(String element, String regex) {
+        return surroundWithSpaces("NOT REGEXP_LIKE(TO_CHAR(" + element + ") , " + regex + " )"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
     }
 }
