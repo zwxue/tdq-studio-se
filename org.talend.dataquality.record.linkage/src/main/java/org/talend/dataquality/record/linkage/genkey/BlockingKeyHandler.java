@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2013 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2012 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -10,32 +10,30 @@
 // 9 rue Pages 92150 Suresnes, France
 //
 // ============================================================================
-package org.talend.dataquality.record.linkage.ui.action;
+package org.talend.dataquality.record.linkage.genkey;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.eclipse.jface.action.Action;
-import org.talend.dataquality.record.linkage.genkey.AbstractGenerateKey;
 
 /**
  * DOC yyin class global comment. Detailled comment
  */
-public class ExecuteGenerateBlockingAction extends Action {
+public class BlockingKeyHandler {
 
     private List<Object[]> inputData = new ArrayList<Object[]>();
 
     private AbstractGenerateKey generateKeyAPI = new AbstractGenerateKey();
 
-    private List<Map<String, String>> BlockKeyDefinitions = null;
+    private List<Map<String, String>> blockKeyDefinitions = null;
 
     protected Map<String, String> columnIndexMap = null;
 
     /**
      * Getter for inputData.
-     *
+     * 
      * @return the inputData
      */
     public List<Object[]> getInputData() {
@@ -44,19 +42,18 @@ public class ExecuteGenerateBlockingAction extends Action {
 
     /**
      * Sets the inputData.
-     *
+     * 
      * @param inputData the inputData to set
      */
     public void setInputData(List<Object[]> inputData) {
         this.inputData = inputData;
     }
 
-    public ExecuteGenerateBlockingAction(List<Map<String, String>> BlockKeyDefinitions, Map<String, String> columnMap) {
-        this.BlockKeyDefinitions = BlockKeyDefinitions;
+    public BlockingKeyHandler(List<Map<String, String>> BlockKeyDefinitions, Map<String, String> columnMap) {
+        this.blockKeyDefinitions = BlockKeyDefinitions;
         this.columnIndexMap = columnMap;
     }
 
-    @Override
     public void run() {
         for (Object[] inputObject : this.inputData) {
             String[] inputString = new String[inputObject.length];
@@ -68,15 +65,15 @@ public class ExecuteGenerateBlockingAction extends Action {
             for (String columnName : columnIndexMap.keySet()) {
                 ColumnValueMap.put(columnName, inputString[Integer.parseInt(columnIndexMap.get(columnName))]);
             }
-            generateKeyAPI.generateKey(BlockKeyDefinitions, ColumnValueMap, inputString);
+            generateKeyAPI.generateKey(blockKeyDefinitions, ColumnValueMap, inputString);
         }
     }
 
     public List<Map<String, String>> getResultData() {
-        return BlockKeyDefinitions;
+        return blockKeyDefinitions;
     }
 
-    public List<String[]> getResultDatas() {
+    public Map<String, List<String[]>> getResultDatas() {
         return generateKeyAPI.getResultList();
     }
 

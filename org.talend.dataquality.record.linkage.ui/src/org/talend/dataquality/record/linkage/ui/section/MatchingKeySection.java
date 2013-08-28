@@ -355,6 +355,8 @@ public class MatchingKeySection extends AbstractMatchKeyWithChartTableSection {
         RecordMatchingIndicator recordMatchingIndicator = MatchRuleAnlaysisUtils.getRecordMatchIndicatorFromAna(analysis);
         computeMatchResult(recordMatchingIndicator);
         matchRuleChartComp.refresh(recordMatchingIndicator.getGroupSize2groupFrequency());
+        // Clear the match row data.
+        matchRows.clear();
     }
 
     /*

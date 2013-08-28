@@ -126,7 +126,7 @@ abstract public class AbstractMatchKeyWithChartTableSection extends AbstractMatc
                 for (MatchKeyDefinition matchDef : matcher.getMatchKeys()) {
                     Map<String, String> matchKeyMap = AnalysisRecordGroupingUtils.getMatchKeyMap(matchDef.getColumn(), matchDef
                             .getAlgorithm().getAlgorithmType(), matchDef.getConfidenceWeight(), columnMap, matcher
-                            .getMatchInterval());
+                            .getMatchInterval(), matchDef.getColumn());
                     ruleMatcherConvertResult.add(matchKeyMap);
                 }
                 analysisMatchRecordGrouping.addRuleMatcher(ruleMatcherConvertResult);

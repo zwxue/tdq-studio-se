@@ -49,6 +49,8 @@ public final class PluginConstant {
 
     public static final String MASTER = "MASTER";//$NON-NLS-1$
 
+    public static final String BLOCK_KEY = "BLOCK_KEY";//$NON-NLS-1$
+
     public static final String GRP_SIZE = "GRP_SIZE";//$NON-NLS-1$
 
     public static final String GRP_QUALITY = "GRP_QUALITY";//$NON-NLS-1$

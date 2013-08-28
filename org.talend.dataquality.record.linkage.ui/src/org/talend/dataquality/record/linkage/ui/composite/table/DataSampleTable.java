@@ -146,12 +146,13 @@ public class DataSampleTable {
         for (ModelElement column : columns) {
             columnsName[i++] = column.getName();
         }
+        columnsName[i++] = MatchAnalysisConstant.BLOCK_KEY;
         columnsName[i++] = MatchAnalysisConstant.GID;
         columnsName[i++] = MatchAnalysisConstant.GRP_SIZE;
+        columnsName[i++] = MatchAnalysisConstant.MASTER;
         columnsName[i++] = MatchAnalysisConstant.SCORE;
         columnsName[i++] = MatchAnalysisConstant.GRP_QUALITY;
         columnsName[i++] = MatchAnalysisConstant.ATTRIBUTE_SCORES;
-        columnsName[i++] = MatchAnalysisConstant.BLOCK_KEY;
         return columnsName;
     }
 

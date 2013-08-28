@@ -13,7 +13,6 @@
 package org.talend.dataquality.record.linkage.ui.composite.utils;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -21,6 +20,7 @@ import org.eclipse.emf.common.util.EList;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.columnset.RecordMatchingIndicator;
+import org.talend.dataquality.record.linkage.utils.AnalysisRecordGroupingUtils;
 import org.talend.dataquality.record.linkage.utils.HandleNullEnum;
 import org.talend.dataquality.record.linkage.utils.MatchAnalysisConstant;
 import org.talend.dataquality.record.linkage.utils.MatchingTypeEnum;
@@ -94,14 +94,15 @@ public class MatchRuleAnlaysisUtils {
         List<Map<String, String>> resultListData = new ArrayList<Map<String, String>>();
         for (KeyDefinition keyDef : blockKeyDefList) {
             BlockKeyDefinition blockKeydef = (BlockKeyDefinition) keyDef;
-            Map<String, String> blockKeyDefMap = new HashMap<String, String>();
-            blockKeyDefMap.put(MatchAnalysisConstant.COLUMN, blockKeydef.getColumn());
-            blockKeyDefMap.put(MatchAnalysisConstant.PRE_ALGORITHM, blockKeydef.getPreAlgorithm().getAlgorithmType());
-            blockKeyDefMap.put(MatchAnalysisConstant.PRE_VALUE, blockKeydef.getPreAlgorithm().getAlgorithmParameters());
-            blockKeyDefMap.put(MatchAnalysisConstant.ALGORITHM, blockKeydef.getAlgorithm().getAlgorithmType());
-            blockKeyDefMap.put(MatchAnalysisConstant.VALUE, blockKeydef.getAlgorithm().getAlgorithmParameters());
-            blockKeyDefMap.put(MatchAnalysisConstant.POST_ALGORITHM, blockKeydef.getPostAlgorithm().getAlgorithmType());
-            blockKeyDefMap.put(MatchAnalysisConstant.POST_VALUE, blockKeydef.getPostAlgorithm().getAlgorithmParameters());
+            String column = blockKeydef.getColumn();
+            String preAlgo = blockKeydef.getPreAlgorithm().getAlgorithmType();
+            String preAlgoValue = blockKeydef.getPreAlgorithm().getAlgorithmParameters();
+            String algorithm = blockKeydef.getAlgorithm().getAlgorithmType();
+            String algorithmValue = blockKeydef.getAlgorithm().getAlgorithmParameters();
+            String postAlgo = blockKeydef.getPostAlgorithm().getAlgorithmType();
+            String postAlgValue = blockKeydef.getPostAlgorithm().getAlgorithmParameters();
+            Map<String, String> blockKeyDefMap = AnalysisRecordGroupingUtils.getBlockingKeyMap(column, preAlgo, preAlgoValue,
+                    algorithm, algorithmValue, postAlgo, postAlgValue);
             resultListData.add(blockKeyDefMap);
         }
 

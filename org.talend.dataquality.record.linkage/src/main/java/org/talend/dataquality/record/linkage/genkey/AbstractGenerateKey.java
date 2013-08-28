@@ -15,6 +15,7 @@ package org.talend.dataquality.record.linkage.genkey;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -27,9 +28,8 @@ import org.talend.dataquality.record.linkage.utils.MatchAnalysisConstant;
 import org.talend.windowkey.AlgoBox;
 
 /**
- * created by zshen on Aug 7, 2013
- * Detailled comment
- *
+ * created by zshen on Aug 7, 2013 Detailled comment
+ * 
  */
 public class AbstractGenerateKey {
 
@@ -41,7 +41,7 @@ public class AbstractGenerateKey {
 
     public static final String ALGO_KEY_PREFIX = "algo";//$NON-NLS-1$
 
-    private List<String[]> resultList = new ArrayList<String[]>();
+    private Map<String, List<String[]>> genKeyToBlockResult = new HashMap<String, List<String[]>>();
 
     {
         listNoParamAlgo
@@ -50,6 +50,13 @@ public class AbstractGenerateKey {
                                 "lowerCase", "upperCase", "removeDiacriticalMarks", "removeDMAndLowerCase", "removeDMAndUpperCase", "fingerPrintKey", "nGramKey", "colognePhonetic")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$
     }
 
+    /**
+     * 
+     * 
+     * @param BlockKeyDefinitions
+     * @param dataMap
+     * @param inputString
+     */
     public void generateKey(List<Map<String, String>> BlockKeyDefinitions, Map<String, String> dataMap, String[] inputString) {
         String genKey = getGenKey(BlockKeyDefinitions, dataMap);
         String[] resultArray = new String[inputString.length + 1];
@@ -57,15 +64,20 @@ public class AbstractGenerateKey {
             resultArray[index] = inputString[index];
         }
         resultArray[inputString.length] = genKey;
-        resultList.add(resultArray);
-        // if (genKey.length() == 0) {
-        //            log.warn("can not generate the key for the data: " + value + " and column: " + key);//$NON-NLS-1$//$NON-NLS-2$
-        // }
+        if (genKeyToBlockResult.get(genKey) != null) {
+            List<String[]> resultInBlock = genKeyToBlockResult.get(genKey);
+            resultInBlock.add(resultArray);
+        } else {
+            // Put the result which has same generating key in one block
+            List<String[]> resultInNewBlock = new ArrayList<String[]>();
+            resultInNewBlock.add(resultArray);
+            genKeyToBlockResult.put(genKey, resultInNewBlock);
+        }
     }
 
     /**
      * DOC zshen Comment method "getGenKey".
-     *
+     * 
      * @param value
      */
     private String getGenKey(List<Map<String, String>> BlockKeyDefinitions, Map<String, String> dataMap) {
@@ -76,20 +88,20 @@ public class AbstractGenerateKey {
         // List<String> genKeySelectColumns = getGenKeySelectColumns(BlockKeyDefinitions);
 
         // get algos for each columns
-        for (Map<String, String> BlockKey : BlockKeyDefinitions) {
+        for (Map<String, String> blockKey : BlockKeyDefinitions) {
             //            algoKey = "algo" + col;//$NON-NLS-1$
             // Map<String, String> listKeyAlgo = context.getConfiguration().getValByRegex(algoKey);
             //            String colName = listKeyAlgo.get(algoKey + "PRECOLUMN");//$NON-NLS-1$
             //            if (colName == null || colName.equals("")) { //$NON-NLS-1$
             // continue;
             // }
-            String colName = BlockKey.get(MatchAnalysisConstant.COLUMN);
-            String preAlgoName = BlockKey.get(MatchAnalysisConstant.PRE_ALGORITHM);
-            String preAlgoPara = BlockKey.get(MatchAnalysisConstant.PRE_VALUE);
-            String keyAlgoName = BlockKey.get(MatchAnalysisConstant.ALGORITHM);
-            String keyAlgoPara = BlockKey.get(MatchAnalysisConstant.VALUE);
-            String postAlgoName = BlockKey.get(MatchAnalysisConstant.POST_ALGORITHM);
-            String postAlgoPara = BlockKey.get(MatchAnalysisConstant.POST_VALUE);
+            String colName = blockKey.get(MatchAnalysisConstant.COLUMN);
+            String preAlgoName = blockKey.get(MatchAnalysisConstant.PRE_ALGORITHM);
+            String preAlgoPara = blockKey.get(MatchAnalysisConstant.PRE_VALUE);
+            String keyAlgoName = blockKey.get(MatchAnalysisConstant.ALGORITHM);
+            String keyAlgoPara = blockKey.get(MatchAnalysisConstant.VALUE);
+            String postAlgoName = blockKey.get(MatchAnalysisConstant.POST_ALGORITHM);
+            String postAlgoPara = blockKey.get(MatchAnalysisConstant.POST_VALUE);
             String colValue = dataMap.get(colName);
             if (colValue == null) {
                 return winGenKey.toString();
@@ -120,10 +132,9 @@ public class AbstractGenerateKey {
 
     }
 
-
     /**
      * DOC zshen Comment method "getAlgoResult".
-     *
+     * 
      * @return
      */
     private Object getAlgoResult(String algoName, String algoPara, String colValue) {
@@ -153,8 +164,7 @@ public class AbstractGenerateKey {
             }
 
             try {
-                Method algoMethod = AlgoBox.class.getMethod(algoName,
-                        paraClassArray.toArray(new Class[paraClassArray.size()]));
+                Method algoMethod = AlgoBox.class.getMethod(algoName, paraClassArray.toArray(new Class[paraClassArray.size()]));
                 AlgoBox algoBoxInstance = new AlgoBox();
                 if (paraArray.size() == 2) {
                     if (paraClassArray.get(1).equals(int.class)) {
@@ -183,11 +193,11 @@ public class AbstractGenerateKey {
 
     /**
      * Getter for resultList.
-     *
+     * 
      * @return the resultList
      */
-    public List<String[]> getResultList() {
-        return this.resultList;
+    public Map<String, List<String[]>> getResultList() {
+        return this.genKeyToBlockResult;
     }
 
 }

@@ -17,6 +17,6 @@ package org.talend.dataquality.record.linkage.ui.section;
  */
 public final class DefaultMatchColumnConstant {
 
-    public static final int COLUMN_COUNT = 6;
+    public static final int COLUMN_COUNT = 7;
 
 }

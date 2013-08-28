@@ -485,7 +485,6 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
         // execute the query to fetch the data,
         List<Object[]> listOfData = fetchDataForTable();
 
-        matchingKeySection.setDataInput(listOfData);
         blockingKeySection.setDataInput(listOfData);
 
         refreshTable(listOfData);

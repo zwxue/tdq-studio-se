@@ -219,9 +219,8 @@ public class AbstractRecordGrouping implements IRecordGrouping {
      * @param matchingProba
      * @return
      */
-    private double computeGroupQuality(String[] masterRecord, double matchingProba) {
-
-        double groupQuality = Double.valueOf(masterRecord[masterRecord.length - extSize + 3]);
+    private double computeGroupQuality(String[] masterRecord, double matchingProba, int idx) {
+        double groupQuality = Double.valueOf(masterRecord[masterRecord.length - extSize + idx]);
         if (matchingProba < groupQuality) {
             // Use the minimal match distance as the group score.
             groupQuality = matchingProba;
@@ -238,17 +237,8 @@ public class AbstractRecordGrouping implements IRecordGrouping {
     private String computeOutputDetails() {
         String distanceDetails = StringUtils.EMPTY;
         if (isOutputDistDetails) {
-            // Concatenate the matching distance details.
-            double[] currentAttrWeight = combinedRecordMatcher.getCurrentAttributeMatchingWeights();
-            if (currentAttrWeight != null && currentAttrWeight.length > 0) {
-                for (double wt : currentAttrWeight) {
-                    if (!StringUtils.isEmpty(distanceDetails)) {
-                        distanceDetails += "|"; //$NON-NLS-1$
-                    }
-                    distanceDetails += wt;
-                }
-            }
-
+            combinedRecordMatcher.setDisplayLabels(Boolean.TRUE);
+            distanceDetails = combinedRecordMatcher.getLabeledAttributeMatchWeights();
         }
         return distanceDetails;
     }
@@ -281,7 +271,7 @@ public class AbstractRecordGrouping implements IRecordGrouping {
         // Group quality
         if (isSeperateOutput) {
             extIdx++;
-            double groupQuality = computeGroupQuality(masterRecord, matchingProba);
+            double groupQuality = computeGroupQuality(masterRecord, matchingProba, extIdx);
             masterRecord[duplicateRecord.length - extSize + extIdx] = String.valueOf(groupQuality);
         }
         if (isOutputDistDetails) {
@@ -336,12 +326,14 @@ public class AbstractRecordGrouping implements IRecordGrouping {
     private void createSimpleRecordMatcher(List<Map<String, String>> matchRule) {
         final int recordSize = matchRule.size();
         double[] arrAttrWeights = new double[recordSize];
+        String[] attributeNames = new String[recordSize];
         String[][] algorithmName = new String[recordSize][2];
         String[] arrMatchHandleNull = new String[recordSize];
         double recordMatchThreshold = acceptableThreshold;// keep compatibility to older version.
         int recordIdx = 0;
         for (Map<String, String> recordMap : matchRule) {
             arrAttrWeights[recordIdx] = Double.parseDouble(recordMap.get(IRecordGrouping.CONFIDENCE_WEIGHT));
+            attributeNames[recordIdx] = recordMap.get(IRecordGrouping.ATTRIBUTE_NAME);
             algorithmName[recordIdx][0] = recordMap.get(IRecordGrouping.MATCHING_TYPE);
             algorithmName[recordIdx][1] = recordMap.get(IRecordGrouping.CUSTOMER_MATCH_CLASS);
             arrMatchHandleNull[recordIdx] = recordMap.get(IRecordGrouping.HANDLE_NULL);
@@ -360,6 +352,7 @@ public class AbstractRecordGrouping implements IRecordGrouping {
                 attributeMatcher[indx] = org.talend.dataquality.record.linkage.attribute.AttributeMatcherFactory.createMatcher(
                         attrMatcherType, algorithmName[indx][1]);
                 attributeMatcher[indx].setNullOption(arrMatchHandleNull[indx]);
+                attributeMatcher[indx].setAttributeName(attributeNames[indx]);
             } catch (Throwable e) {
                 log.error(e);
                 // e.printStackTrace();

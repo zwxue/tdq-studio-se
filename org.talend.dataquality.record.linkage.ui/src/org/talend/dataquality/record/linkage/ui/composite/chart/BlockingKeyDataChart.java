@@ -15,7 +15,6 @@ package org.talend.dataquality.record.linkage.ui.composite.chart;
 import java.awt.Color;
 import java.awt.Font;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -45,9 +44,8 @@ import org.jfree.experimental.chart.swt.ChartComposite;
 import org.jfree.ui.TextAnchor;
 
 /**
- * created by zshen on Aug 7, 2013
- * Detailled comment
- *
+ * created by zshen on Aug 7, 2013 Detailled comment
+ * 
  */
 public class BlockingKeyDataChart extends Composite {
 
@@ -63,7 +61,7 @@ public class BlockingKeyDataChart extends Composite {
 
     private ChartComposite jfreeChartComp = null;
 
-    private List<String[]> prviewData = null;
+    private Map<String, List<String[]>> prviewData = null;
 
     /**
      * number of bins in the chart.
@@ -72,11 +70,11 @@ public class BlockingKeyDataChart extends Composite {
 
     /**
      * DOC zshen BlockingKeyDataChart constructor comment.
-     *
+     * 
      * @param parent
      * @param style
      */
-    public BlockingKeyDataChart(Composite parent, List<String[]> viewData) {
+    public BlockingKeyDataChart(Composite parent, Map<String, List<String[]>> viewData) {
         super(parent, SWT.NONE);
         this.prviewData = viewData;
         this.setLayout(new FillLayout());
@@ -148,14 +146,14 @@ public class BlockingKeyDataChart extends Composite {
 
     }
 
-    public void refresh(List<String[]> viewData) {
+    public void refresh(Map<String, List<String[]>> viewData) {
         this.prviewData = viewData;
         initChartData(viewData);
         jfreeChartComp.setChart(computeChart());
         jfreeChartComp.forceRedraw();
     }
 
-    protected boolean initChartData(List<String[]> viewData) {
+    protected boolean initChartData(Map<String, List<String[]>> viewData) {
         if (viewData != null && this.jfreeChartComp == null) {
             this.prviewData = viewData;
             createJFreeChartComposite();
@@ -174,13 +172,6 @@ public class BlockingKeyDataChart extends Composite {
     }
 
     private void fillCategorySet(HistogramDataset defaultcategorydataset) {
-        // map each block key with the number of rows
-        Map<String, Integer> blockToRowsMap = new HashMap<String, Integer>();
-        for (String[] strArray : prviewData) {
-            String key = strArray[strArray.length - 1];
-            Integer value = blockToRowsMap.get(key);
-            blockToRowsMap.put(key, value == null ? 1 : value + 1);
-        }
 
         // MOD scorreia 2011-02-10 code simplified in order to avoid unnecessary aggregation (it is now done in the
         // histogram dataset automatically)
@@ -188,10 +179,10 @@ public class BlockingKeyDataChart extends Composite {
         double maxValue = 0; // higher value of the x-axis of the chart
         List<Double> blockSizeValueList = new ArrayList<Double>();
         // add each block size (number of rows of the block) to the list
-        Iterator<String> iterator = blockToRowsMap.keySet().iterator();
+        Iterator<String> iterator = prviewData.keySet().iterator();
         while (iterator.hasNext()) {
             String key = iterator.next();
-            Integer blockSize = blockToRowsMap.get(key);
+            Integer blockSize = prviewData.get(key).size();
             assert blockSize != null : "no row found for block " + key;
             if (blockSize == null) { // should not happen
                 blockSize = 0;
@@ -205,8 +196,7 @@ public class BlockingKeyDataChart extends Composite {
 
         Double[] valueArray = new Double[blockSizeValueList.size()];
         blockSizeValueList.toArray(valueArray);
-        defaultcategorydataset.addSeries(
-"Key distribution", ArrayUtils.toPrimitive(valueArray), BINS, minValue, maxValue); //$NON-NLS-1$
+        defaultcategorydataset.addSeries("Key distribution", ArrayUtils.toPrimitive(valueArray), BINS, minValue, maxValue); //$NON-NLS-1$
 
     }
 
