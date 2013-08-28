@@ -661,7 +661,7 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
      *
      * @param listOfData
      */
-    private void refreshTable(List<Object[]> listOfData) {
+    public void refreshTable(List<Object[]> listOfData) {
         // dispose the data table composite
         disposeDataTable();
         // create the data table composite
