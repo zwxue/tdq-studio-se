@@ -885,10 +885,24 @@ public final class ReportHelper {
      * @return
      */
     public static boolean setPassword(String password, Report report) {
+        return setPassword(password, report, true);
+    }
+
+    /**
+     * DOC xqliu Comment method "setPassword".
+     * 
+     * @param password
+     * @param report
+     * @param encrypt encrypt the password or not
+     * @return
+     */
+    public static boolean setPassword(String password, Report report, boolean encrypt) {
         // encrypt the password
-        String encryptPassword = ConnectionHelper.getEncryptPassword(password);
-        if (encryptPassword != null) {
-            password = encryptPassword;
+        if (encrypt) {
+            String encryptPassword = ConnectionHelper.getEncryptPassword(password);
+            if (encryptPassword != null) {
+                password = encryptPassword;
+            }
         }
         return TaggedValueHelper.setTaggedValue(report, TaggedValueHelper.REP_DBINFO_PASSWORD, password);
     }

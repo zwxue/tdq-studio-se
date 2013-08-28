@@ -14,13 +14,23 @@ package org.talend.dq.helper;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
+import org.eclipse.emf.common.util.EList;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.window.Window;
+import org.eclipse.jface.wizard.WizardDialog;
+import org.eclipse.swt.widgets.Display;
+import org.talend.core.model.process.IContextParameter;
+import org.talend.core.model.properties.ContextItem;
 import org.talend.dataquality.helpers.ReportHelper;
 import org.talend.dataquality.reports.TdReport;
 import org.talend.designer.core.model.utils.emf.talendfile.ContextParameterType;
 import org.talend.designer.core.model.utils.emf.talendfile.ContextType;
+import org.talend.repository.ui.utils.ConnectionContextHelper;
+import org.talend.repository.ui.wizards.context.ContextWizard;
 
 /**
  * created by xqliu on Jul 24, 2013 Detailled comment
@@ -163,5 +173,67 @@ public final class ContextHelper {
         String password = ReportHelper.getPassword(tdReport);
         return isContextVar(of) || isContextVar(logo) || isContextVar(host) || isContextVar(port) || isContextVar(sid)
                 || isContextVar(schema) || isContextVar(user) || isContextVar(password);
+    }
+
+    /**
+     * export TdqPreferencePage as context.
+     * 
+     * @param paramSet
+     * @param contextValues
+     * @return
+     */
+    public static ContextItem exportAsContext(String contextItemName, List<IContextParameter> varList) {
+        if (varList == null || varList.isEmpty()) {
+            return null;
+        }
+
+        ISelection selection = ConnectionContextHelper.getRepositoryContext(contextItemName, false);
+
+        if (selection == null) {
+            return null;
+        }
+
+        ContextWizard contextWizard = new ContextWizard(contextItemName, selection.isEmpty(), selection, varList);
+        WizardDialog dlg = new WizardDialog(Display.getCurrent().getActiveShell(), contextWizard);
+        if (dlg.open() == Window.OK) {
+            ContextItem contextItem = contextWizard.getContextItem();
+            return contextItem;
+        }
+        return null;
+    }
+
+    /**
+     * in ctxString, replace the context variable name with the value from contextValues .
+     * 
+     * @param ctxString the string which contain several context variable names
+     * @param contextValues the context values map, key=ContextScriptCode, value=ContextValue
+     * @return
+     */
+    public static String getContextStringValue(String ctxString, Map<String, String> contextValues) {
+        String result = ctxString;
+        for (String key : contextValues.keySet()) {
+            result = StringUtils.replace(result, key, contextValues.get(key));
+        }
+        return result;
+    }
+
+    /**
+     * return default ContextType of the ContextItem, if ContextItem is null return null.
+     * 
+     * @param contextItem
+     * @return the default ContextType of the ContextItem
+     */
+    public static ContextType getDefaultContextType(ContextItem contextItem) {
+        ContextType contextType = null;
+        if (contextItem != null) {
+            EList<ContextType> contexts = contextItem.getContext();
+            for (ContextType ct : contexts) {
+                if (ct.getName().equals(contextItem.getDefaultContext())) {
+                    contextType = ct;
+                    break;
+                }
+            }
+        }
+        return contextType;
     }
 }
