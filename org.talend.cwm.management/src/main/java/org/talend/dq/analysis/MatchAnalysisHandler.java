@@ -17,6 +17,7 @@ import java.util.Collection;
 
 import org.eclipse.emf.common.util.EList;
 import org.talend.dataquality.analysis.Analysis;
+import orgomg.cwm.foundation.softwaredeployment.DataManager;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
@@ -24,14 +25,36 @@ import orgomg.cwm.objectmodel.core.ModelElement;
  */
 public class MatchAnalysisHandler extends AnalysisHandler {
 
-    private String DEFAULT_LOADED_ROW_COUNT = "default_loaded_row_count";
-
     private ModelElement[] selectedColumns = null;
+
+    private DataManager connection;
 
     @Override
     public void setAnalysis(Analysis columnAnalysis) {
         super.setAnalysis(columnAnalysis);
         initSelectedColumns();
+        initConnection();
+    }
+
+    /**
+     * DOC yyin Comment method "initConnection".
+     */
+    private void initConnection() {
+        connection = analysis.getContext().getConnection();
+    }
+
+    public void SetConnection(DataManager connection) {
+        this.connection = connection;
+    }
+
+    public DataManager getConnection() {
+        return this.connection;
+    }
+
+    public void saveConnection() {
+        assert analysis != null;
+        assert analysis.getContext() != null;
+        analysis.getContext().setConnection(connection);
     }
 
     /**

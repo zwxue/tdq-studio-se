@@ -801,7 +801,7 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
         try {
             // set limit
             sqlExecutor.setLimit(Integer.valueOf(rowLoadedText.getText()));
-            return sqlExecutor.executeQuery(this.analysisHandler.getAnalysis().getContext().getConnection(),
+            return sqlExecutor.executeQuery(this.analysisHandler.getConnection(),
                     Arrays.asList(analysisHandler.getSelectedColumns()));
         } catch (SQLException e) {
             log.error(e, e);
@@ -905,6 +905,7 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
         this.updateAnalysisClientDependency();
 
         analysisHandler.saveSelectedAnalyzedElements();
+        analysisHandler.saveConnection();
 
         ReturnCode saved = new ReturnCode(false);
         IEditorInput editorInput = this.getEditorInput();
@@ -936,7 +937,7 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
         Property property = node.getObject().getProperty();
         if (property != null && property.getItem() instanceof ConnectionItem) {
             Connection connection = ((ConnectionItem) property.getItem()).getConnection();
-            analysisHandler.getAnalysis().getContext().setConnection(connection);
+            analysisHandler.SetConnection(connection);
         }
     }
 
