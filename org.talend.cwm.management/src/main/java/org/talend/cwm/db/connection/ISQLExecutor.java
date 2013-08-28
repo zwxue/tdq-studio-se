@@ -15,14 +15,15 @@ package org.talend.cwm.db.connection;
 import java.sql.SQLException;
 import java.util.List;
 
-import org.talend.dataquality.analysis.Analysis;
+import orgomg.cwm.foundation.softwaredeployment.DataManager;
+import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
  * DOC yyin  class global comment. Detailled comment
  */
 public interface ISQLExecutor {
 
-    public List<Object[]> executeQuery(Analysis analysis) throws SQLException;
+    public List<Object[]> executeQuery(DataManager connection, List<ModelElement> analysedElements) throws SQLException;
 
     void setLimit(int limit);
 }

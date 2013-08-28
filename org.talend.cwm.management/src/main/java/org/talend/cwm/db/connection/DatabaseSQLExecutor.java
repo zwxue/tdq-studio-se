@@ -20,12 +20,10 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.apache.log4j.Logger;
-import org.eclipse.emf.common.util.EList;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.database.JavaSqlFactory;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.relational.TdColumn;
-import org.talend.dataquality.analysis.Analysis;
 import org.talend.dq.dbms.DbmsLanguage;
 import org.talend.dq.dbms.DbmsLanguageFactory;
 import org.talend.dq.helper.AnalysisExecutorHelper;
@@ -46,12 +44,11 @@ public class DatabaseSQLExecutor implements ISQLExecutor {
     /* (non-Javadoc)
      * @see org.talend.cwm.db.connection.ISQLExecutor#executeQuery(org.talend.dataquality.analysis.Analysis)
      */
-    public List<Object[]> executeQuery(Analysis analysis) throws SQLException {
+    public List<Object[]> executeQuery(DataManager connection, List<ModelElement> analysedElements) throws SQLException {
         List<Object[]> dataFromTable = new ArrayList<Object[]>();
-        DataManager dataprovider = analysis.getContext().getConnection();
-        int columnListSize = analysis.getContext().getAnalysedElements().size();
+        int columnListSize = analysedElements.size();
 
-        TypedReturnCode<java.sql.Connection> sqlconnection = JavaSqlFactory.createConnection((Connection) dataprovider);
+        TypedReturnCode<java.sql.Connection> sqlconnection = JavaSqlFactory.createConnection((Connection) connection);
         if (!sqlconnection.isOk()) {
             throw new SQLException(sqlconnection.getMessage());
         }
@@ -59,7 +56,7 @@ public class DatabaseSQLExecutor implements ISQLExecutor {
         ResultSet resultSet = null;
         try {
             statement = sqlconnection.getObject().createStatement();
-            statement.execute(createSqlStatement(analysis));
+            statement.execute(createSqlStatement(connection, analysedElements));
             resultSet = statement.getResultSet();
 
             while (resultSet.next()) {
@@ -88,9 +85,9 @@ public class DatabaseSQLExecutor implements ISQLExecutor {
         return dataFromTable;
     }
 
-    private String createSqlStatement(Analysis analysis) {
-        DbmsLanguage dbms = createDbmsLanguage(analysis);
-        EList<ModelElement> analysedElements = analysis.getContext().getAnalysedElements();
+    private String createSqlStatement(DataManager connection, List<ModelElement> analysedElements) {
+        DbmsLanguage dbms = createDbmsLanguage(connection);
+
         StringBuilder sql = new StringBuilder("SELECT ");//$NON-NLS-1$
         final Iterator<ModelElement> iterator = analysedElements.iterator();
         while (iterator.hasNext()) {
@@ -110,8 +107,8 @@ public class DatabaseSQLExecutor implements ISQLExecutor {
 
     }
 
-    private DbmsLanguage createDbmsLanguage(Analysis analysis) {
-        DataManager connection = analysis.getContext().getConnection();
+    private DbmsLanguage createDbmsLanguage(DataManager connection) {
+        // DataManager connection = analysis.getContext().getConnection();
         return DbmsLanguageFactory.createDbmsLanguage(connection);
     }
 

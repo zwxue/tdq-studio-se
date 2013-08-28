@@ -86,7 +86,8 @@ public class MatchAnalysisExecutor implements IAnalysisExecutor {
         }
         List<Object[]> matchRows = new ArrayList<Object[]>();
         try {
-            matchRows = sqlExecutor.executeQuery(analysis);
+            matchRows = sqlExecutor.executeQuery(analysis.getContext().getConnection(), analysis.getContext()
+                    .getAnalysedElements());
         } catch (SQLException e) {
             log.error(e, e);
             rc.setOk(Boolean.FALSE);

@@ -21,9 +21,9 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.talend.core.model.metadata.builder.connection.DelimitedFileConnection;
 import org.talend.core.model.metadata.builder.connection.Escape;
-import org.talend.dataquality.analysis.Analysis;
 import org.talend.dq.helper.AnalysisExecutorHelper;
 import org.talend.fileprocess.FileInputDelimited;
+import orgomg.cwm.foundation.softwaredeployment.DataManager;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
 import com.csvreader.CsvReader;
@@ -39,9 +39,9 @@ public class DelimitedFileSQLExecutor implements ISQLExecutor {
     /* (non-Javadoc)
      * @see org.talend.cwm.db.connection.ISQLExecutor#executeQuery(org.talend.dataquality.analysis.Analysis)
      */
-    public List<Object[]> executeQuery(Analysis analysis) {
+    public List<Object[]> executeQuery(DataManager connection,List<ModelElement> analysedElements) {
         List<Object[]> dataFromTable = new ArrayList<Object[]>();
-        DelimitedFileConnection delimitedFileconnection = (DelimitedFileConnection) analysis.getContext().getConnection();
+        DelimitedFileConnection delimitedFileconnection = (DelimitedFileConnection) connection;
         String path = AnalysisExecutorHelper.getFilePath(delimitedFileconnection);
         IPath iPath = new Path(path);
 
@@ -51,10 +51,9 @@ public class DelimitedFileSQLExecutor implements ISQLExecutor {
                 return null;
             }
 
-            List<ModelElement> analysisElementList = analysis.getContext().getAnalysedElements();
             // use CsvReader to parse.
             if (Escape.CSV.equals(delimitedFileconnection.getEscapeType())) {
-                useCsvReader(file, delimitedFileconnection, analysisElementList,dataFromTable);
+                useCsvReader(file, delimitedFileconnection, analysedElements, dataFromTable);
             } else {
                 // use TOSDelimitedReader in FileInputDelimited to parse.
                 FileInputDelimited fileInputDelimited = AnalysisExecutorHelper.createFileInputDelimited(delimitedFileconnection);

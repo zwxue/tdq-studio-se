@@ -249,6 +249,12 @@ public abstract class AbstractMatchAnaysisTableSection extends AbstractSectionCo
         this.columnMap = columnMap;
     }
 
+    public void updateColumnPosition(String column, int newPosition) {
+        columnMap.remove(column);
+        columnMap.put(column, String.valueOf(newPosition));
+    }
+
+
     /**
      * Getter for isAddColumn.
      *

@@ -455,4 +455,14 @@ public class MatchingKeySection extends AbstractMatchKeyWithChartTableSection {
         }
     }
 
+    public void removeKeyFromAllTab(String column) {
+        CTabItem[] tabItems = ruleFolder.getItems();
+        if (tabItems != null && tabItems.length > 0) {
+            for (CTabItem oneTab : tabItems) {
+                MatchRuleTableComposite matchRuleTableComp = (MatchRuleTableComposite) oneTab
+                        .getData(MatchAnalysisConstant.MATCH_RULE_TABLE_COMPOSITE);
+                matchRuleTableComp.removeKeyDefinition(column, analysis);
+            }
+        }
+    }
 }

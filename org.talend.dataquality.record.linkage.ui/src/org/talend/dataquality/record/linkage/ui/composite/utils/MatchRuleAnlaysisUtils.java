@@ -124,4 +124,20 @@ public class MatchRuleAnlaysisUtils {
         return null;
     }
 
+    /**
+     * check if the column name equals to these additional special columns
+     * 
+     * @param columnName
+     * @return
+     */
+    public static boolean isEqualsToAdditionalColumn(String columnName) {
+        if (MatchAnalysisConstant.GID.equals(columnName) || MatchAnalysisConstant.GRP_QUALITY.equals(columnName)
+                || MatchAnalysisConstant.GROUP_SIZE.equals(columnName) || MatchAnalysisConstant.SCORE.equals(columnName)
+                || MatchAnalysisConstant.ATTRIBUTE_SCORES.equals(columnName)
+                || MatchAnalysisConstant.BLOCK_KEY.equals(columnName)) {
+            return true;
+        }
+        return false;
+    }
+
 }

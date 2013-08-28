@@ -125,8 +125,6 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
 
     private SashForm sForm;
 
-    private ModelElement[] selectedColumns;
-
     private RepositoryNode[] selectedNodes;
 
     private boolean isMdm = false;
@@ -161,12 +159,6 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
         analysisHandler = new MatchAnalysisHandler();
         analysisHandler.setAnalysis((Analysis) this.currentModelElement);
 
-        EList<ModelElement> analyzedColumns = analysisHandler.getAnalyzedColumns();
-        selectedColumns = new ModelElement[analyzedColumns.size()];
-        int i = 0;
-        for (ModelElement element : analyzedColumns) {
-            selectedColumns[i++] = element;
-        }
     }
 
     @Override
@@ -248,6 +240,8 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
         gridData.heightHint = 250;
         dataTableComp.setLayoutData(gridData);
         sampleTable = new DataSampleTable(this.isMdm, this.isDelimitedFile);
+        // use handler to save selected columns
+        ModelElement[] selectedColumns = this.analysisHandler.getSelectedColumns();
 
         if (selectedColumns != null && selectedColumns.length > 0) {
             RepositoryNode node = RepositoryNodeHelper.recursiveFind(selectedColumns[0]);
@@ -295,10 +289,9 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
 
     private void addListenerForSelectKeyButton() {
         selectBlockKeyBtn.addMouseListener(new MouseListener() {
-
             public void mouseDoubleClick(MouseEvent e) {
+                // no need to implement
             }
-
             public void mouseDown(MouseEvent e) {
                 // every time click the button, change its status
                 selectMatchKeyBtn.setEnabled(isBlockingKeyButtonPushed);
@@ -312,17 +305,15 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
                     setAllColumnColorToBlack();
                 }
             }
-
             public void mouseUp(MouseEvent e) {
+                // no need to implement
             }
-
         });
 
         selectMatchKeyBtn.addMouseListener(new MouseListener() {
-
             public void mouseDoubleClick(MouseEvent e) {
+                // no need to implement
             }
-
             public void mouseDown(MouseEvent e) {
                 // every time click the button, change its status
                 selectBlockKeyBtn.setEnabled(isMatchingKeyButtonPushed);
@@ -336,10 +327,9 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
                     setAllColumnColorToBlack();
                 }
             }
-
             public void mouseUp(MouseEvent e) {
+                // no need to implement
             }
-
         });
     }
 
@@ -356,7 +346,7 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
         }
         // set all key's column into red/green columns
         // set all not selected columns into black color
-        for (ModelElement column : selectedColumns) {
+        for (ModelElement column : analysisHandler.getSelectedColumns()) {
             if (currentKeyColumn.contains(column.getName())) {
                 sampleTable.changeColumnHeaderLabelColor(column.getName(), isMatchKey ? GUIHelper.COLOR_RED
                         : GUIHelper.COLOR_GREEN);
@@ -368,7 +358,7 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
     }
 
     private void setAllColumnColorToBlack() {
-        for (ModelElement column : selectedColumns) {
+        for (ModelElement column : analysisHandler.getSelectedColumns()) {
             sampleTable.changeColumnHeaderLabelColor(column.getName(), GUIHelper.COLOR_BLACK);
         }
         sampleTable.refresh();
@@ -387,10 +377,9 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
         GridDataFactory.fillDefaults().align(SWT.LEFT, SWT.TOP).applyTo(selectDataBtn);
 
         createConnectionBtn.addMouseListener(new MouseListener() {
-
             public void mouseDoubleClick(MouseEvent e) {
+                // no need to implement
             }
-
             public void mouseDown(MouseEvent e) {
                 ConnectionWizard connectionWizard = new ConnectionWizard(PlatformUI.getWorkbench(), dataSampleparentComposite);
                 connectionWizard.setForcePreviousAndNextButtons(true);
@@ -398,21 +387,20 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
                 dialog.setPageSize(500, 200);
                 dialog.open();
             }
-
             public void mouseUp(MouseEvent e) {
+                // no need to implement
             }
-
         });
         selectDataBtn.addMouseListener(new MouseListener() {
 
             public void mouseDoubleClick(MouseEvent e) {
+                // no need to implement
             }
-
             public void mouseDown(MouseEvent e) {
                 openColumnsSelectionDialog(analysisHandler.getAnalysis().getContext().getConnection());
             }
-
             public void mouseUp(MouseEvent e) {
+                // no need to implement
             }
         });
         registerCreateConnectionEvent(dataSampleparentComposite);
@@ -425,7 +413,7 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
      */
     private void createDataQueryButtonComp(Composite parent) {
         Composite dataQueryComp = toolkit.createComposite(parent);
-        GridLayout dataQueryCompLayout = new GridLayout(3, Boolean.TRUE);
+        GridLayout dataQueryCompLayout = new GridLayout(3, Boolean.FALSE);
         dataQueryComp.setLayout(dataQueryCompLayout);
 
         Button refreshDataBtn = toolkit.createButton(dataQueryComp,
@@ -433,19 +421,19 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
         GridDataFactory.fillDefaults().align(SWT.LEFT, SWT.CENTER).applyTo(refreshDataBtn);
 
         refreshDataBtn.addMouseListener(new MouseListener() {
-
             public void mouseDoubleClick(MouseEvent e) {
+                // no need to implement
             }
-
             public void mouseDown(MouseEvent e) {
                 if (isValidateRowCount()) {
                     refreshDataFromConnection();
                 } else {
-                    popupWarningNotValidate();
+                    MessageDialog.openWarning(null, DefaultMessagesImpl.getString("MatchMasterDetailsPage.NotValidate"), //$NON-NLS-1$
+                            DefaultMessagesImpl.getString("MatchMasterDetailsPage.LoadedRowCountError")); //$NON-NLS-1$
                 }
             }
-
             public void mouseUp(MouseEvent e) {
+                // no need to implement
             }
         });
 
@@ -455,6 +443,10 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
         GridDataFactory.fillDefaults().align(SWT.LEFT, SWT.CENTER).applyTo(rowLoadedLabel);
         rowLoadedText = toolkit.createText(dataQueryComp, null, SWT.BORDER);
         GridDataFactory.fillDefaults().align(SWT.LEFT, SWT.CENTER).applyTo(rowLoadedText);
+        // fix the width of the text field
+        GridData textData = new GridData();
+        textData.widthHint = 100;
+        rowLoadedText.setLayoutData(textData);
         rowLoadedText.setText(analysisHandler.getDefaultLoadedRowCount());
         rowLoadedText.addModifyListener(new ModifyListener() {
 
@@ -509,11 +501,10 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
     private void registerCreateConnectionEvent(Composite dataSampleComposite) {
         // register: refresh the result page after running it from menu
         afterCreateConnectionReceiver = new EventReceiver() {
-
             @Override
             public boolean handle(Object data) {
                 selectedNodes = null;
-                selectedColumns = null;
+                analysisHandler.setSelectedColumns(null);
                 openColumnsSelectionDialog((DataManager) data);
                 setActivePage();
                 return true;
@@ -521,7 +512,6 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
         };
         EventManager.getInstance().register(dataSampleComposite, EventEnum.DQ_MATCH_ANALYSIS_AFTER_CREATE_CONNECTION,
                 afterCreateConnectionReceiver);
-
     }
 
     /**
@@ -535,14 +525,98 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
      * open the column selection dialog.
      */
     public void openColumnsSelectionDialog(DataManager dataManager) {
-        List<IRepositoryNode> reposViewObjList = findAllSelectedRepositoryNode();
+        List<IRepositoryNode> oldSelectedColumns = findAllSelectedRepositoryNode();
 
         MetadataAndColumnSelectionDialog dialog = new MetadataAndColumnSelectionDialog(null,
-                DefaultMessagesImpl.getString("ColumnMasterDetailsPage.columnSelections"), reposViewObjList); //$NON-NLS-1$
+                DefaultMessagesImpl.getString("ColumnMasterDetailsPage.columnSelections"), oldSelectedColumns); //$NON-NLS-1$
         if (dialog.open() == Window.OK) {
             Object[] selectedResult = dialog.getResult();
-            setSelectedNodes(selectedResult);
+            List<IRepositoryNode> reposList = RepNodeUtils.translateSelectedToStandardReposityoryNode(selectedResult);
+
+            // selectedNodes = reposList.toArray(new RepositoryNode[reposList.size()]);
+            if (selectedChanged(oldSelectedColumns, reposList)) {
+                this.setDirty(true);
+                // update all related keys in block and match section
+                updateAllKeys(oldSelectedColumns);
+
+                refreshColumnAndData();
+            }
         }
+    }
+
+    /**
+     * if some columns are deleted : remove the blocking/match key which used this column ; if some column still there :
+     * update the index info in their keys; if some new columns added : do nothing
+     * 
+     * @param oldSelectedColumns
+     */
+    private void updateAllKeys(List<IRepositoryNode> oldSelectedColumns) {
+        for (IRepositoryNode oldSelectNode : oldSelectedColumns) {
+            int newPosition = positionInNewSelectColumns(oldSelectNode);
+            if (newPosition > -1) {// update the position of the column
+                this.matchingKeySection.updateColumnPosition(oldSelectNode.getLabel(), newPosition);
+                this.blockingKeySection.updateColumnPosition(oldSelectNode.getLabel(), newPosition);
+            } else { // delete all keys which used this column
+                matchingKeySection.removeKeyFromAllTab(oldSelectNode.getLabel());
+                blockingKeySection.removeBlockingKey(oldSelectNode.getLabel());
+            }
+
+        }
+    }
+
+    /**
+     * loop the new selected columns to check if the old one still Contained: find the new position.
+     * 
+     * @param oldSelectNode
+     * @return
+     */
+    private int positionInNewSelectColumns(IRepositoryNode oldSelectNode) {
+        int position = 0;
+        for (RepositoryNode newColumn : selectedNodes) {
+            if (oldSelectNode.getLabel().equals(newColumn.getLabel())) {
+                return position;
+            }
+            position++;
+        }
+        return -1;
+    }
+
+    /**
+     * compare two array of objects, if them are same, return false, if any difference, return true. check for the
+     * column name of data table: when user select a column named "GID", "GRP_SIZE", "BLOCK_KEY", if has, remove them
+     * and give the user a warning
+     * 
+     * @param oldSelectedNodes : original selected columns
+     * @param selectedResult : new selected columns
+     * @return
+     */
+    private boolean selectedChanged(List<IRepositoryNode> oldSelectedNodes, List<IRepositoryNode> selectedResult) {
+        boolean isChanged = false;
+
+        List<IRepositoryNode> notRemovedNode = new ArrayList<IRepositoryNode>();
+        for (IRepositoryNode newSelectNode : selectedResult) {
+            if (!MatchRuleAnlaysisUtils.isEqualsToAdditionalColumn(newSelectNode.getLabel())) {
+                notRemovedNode.add(newSelectNode);
+            }
+            if (!oldSelectedNodes.contains(newSelectNode)) {
+                isChanged = true;
+            }
+        }
+        if (!isChanged) {// if not changed, check if the size of two list equals, if not equals, means that the user
+                         // remove some columns
+            isChanged = (oldSelectedNodes.size() != selectedResult.size());
+        }
+        // if the selected columns have some same name with Additional ones.
+        if (selectedResult.size() != notRemovedNode.size()) {
+            selectedNodes = notRemovedNode.toArray(new RepositoryNode[notRemovedNode.size()]);
+            // when the selected columns changed, need to popup the warning to tell the user
+            MessageDialog.openWarning(null, DefaultMessagesImpl.getString("MatchMasterDetailsPage.warning"), //$NON-NLS-1$
+                    DefaultMessagesImpl.getString("MatchMasterDetailsPage.RemoveSomeColumns")); //$NON-NLS-1$
+        } else {
+            // set the current selected nodes with new selected ones.
+            selectedNodes = selectedResult.toArray(new RepositoryNode[selectedResult.size()]);
+        }
+        return isChanged;
     }
 
     private List<IRepositoryNode> findAllSelectedRepositoryNode() {
@@ -551,9 +625,10 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
             for (RepositoryNode node : selectedNodes) {
                 reposViewObjList.add(node);
             }
-        } else if (selectedColumns != null) {// find the related nodes of the selected columns, when the first opened
+        } else if (analysisHandler.getSelectedColumns() != null) {// find the related nodes of the selected columns,
+                                                                  // when the first opened
                                              // analysis has noe selected nodes
-            for (ModelElement selectedColumn : this.selectedColumns) {
+            for (ModelElement selectedColumn : analysisHandler.getSelectedColumns()) {
                 RepositoryNode node = RepositoryNodeHelper.recursiveFind(selectedColumn);
                 reposViewObjList.add(node);
             }
@@ -564,11 +639,17 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
     /**
      * need to be called after the user selects some columns need to fetch the data and refresh the table
      *
+     * @param repositoryNodes
+     * 
      * @param nodes
      */
-    public void setSelectedNodes(Object[] nodes) {
-        selectedColumns = translateSelectedNodeIntoModelElement(nodes);
-        this.analysisHandler.setColumnsToAnalyze(Arrays.asList(selectedColumns));
+    public void setSelectedNodes(RepositoryNode[] repositoryNodes) {
+        this.selectedNodes = repositoryNodes;
+        refreshColumnAndData();
+    }
+
+    private void refreshColumnAndData() {
+        this.analysisHandler.setSelectedColumns(translateSelectedNodeIntoModelElement());
 
         refreshDataFromConnection();
 
@@ -594,7 +675,7 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
     private void createNatTable(List<Object[]> listOfData) {
         setAllColumnsToKeySections();
 
-        Control natTable = sampleTable.createTable(dataTableComp, selectedColumns, listOfData);
+        Control natTable = sampleTable.createTable(dataTableComp, analysisHandler.getSelectedColumns(), listOfData);
         GridDataFactory.fillDefaults().grab(true, true).applyTo(natTable);
 
         addCustomSelectionBehaviour((NatTable) natTable);
@@ -605,13 +686,13 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
      */
     private void setAllColumnsToKeySections() {
         // only when open the analysis and match key is not empty
-        if (selectedColumns == null || selectedColumns.length < 1) {
+        if (analysisHandler.getSelectedColumns() == null || analysisHandler.getSelectedColumns().length < 1) {
             return;
         }
 
         Map<String, String> columnMap = new HashMap<String, String>();
         int index = 0;
-        for (ModelElement column : selectedColumns) {
+        for (ModelElement column : analysisHandler.getSelectedColumns()) {
             columnMap.put(column.getName(), String.valueOf(index++));
         }
         matchingKeySection.setColumnNameInput(columnMap);
@@ -720,7 +801,8 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
         try {
             // set limit
             sqlExecutor.setLimit(Integer.valueOf(rowLoadedText.getText()));
-            return sqlExecutor.executeQuery(this.analysisHandler.getAnalysis());
+            return sqlExecutor.executeQuery(this.analysisHandler.getAnalysis().getContext().getConnection(),
+                    Arrays.asList(analysisHandler.getSelectedColumns()));
         } catch (SQLException e) {
             log.error(e, e);
             return null;
@@ -735,28 +817,26 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
         }
     }
 
-    private ModelElement[] translateSelectedNodeIntoModelElement(Object[] objs) {
-        List<IRepositoryNode> reposList = RepNodeUtils.translateSelectedToStandardReposityoryNode(objs);
-        selectedNodes = reposList.toArray(new RepositoryNode[reposList.size()]);
+    private ModelElement[] translateSelectedNodeIntoModelElement() {
         // change the connection in analysis according to the user's selection
         changeConnectionOfAnalysisByNewSelectedNode(selectedNodes[0]);
 
-        return translateNodeIntoModelElement(objs, reposList);
+        return translateNodeIntoModelElement();
     }
 
-    private ModelElement[] translateNodeIntoModelElement(Object[] objs, List<IRepositoryNode> reposList) {
-        if (reposList.size() == 0) {
+    private ModelElement[] translateNodeIntoModelElement() {
+        if (this.selectedNodes.length == 0) {
             return new ModelElement[0];
         }
-        if (objs != null && objs.length != 0) {
-            isMdm = RepNodeUtils.isMDM(objs[0]);
-            isDelimitedFile = RepNodeUtils.isDelimitedFile(objs[0]);
-            if (!(reposList.get(0) instanceof DBColumnRepNode || isMdm || isDelimitedFile)) {
+        if (selectedNodes != null && selectedNodes.length != 0) {
+            isMdm = RepNodeUtils.isMDM(selectedNodes[0]);
+            isDelimitedFile = RepNodeUtils.isDelimitedFile(selectedNodes[0]);
+            if (!(selectedNodes[0] instanceof DBColumnRepNode || isMdm || isDelimitedFile)) {
                 return null;
             }
         }
         List<ModelElement> modelElementList = new ArrayList<ModelElement>();
-        for (IRepositoryNode repObj : reposList) {
+        for (IRepositoryNode repObj : selectedNodes) {
             if (isMdm) {
                 modelElementList.add(((MetadataXmlElementTypeRepositoryObject) repObj.getObject()).getModelElement());
             } else {// delimited file or database
@@ -817,18 +897,14 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
         if (this.isValidateRowCount()) {
             analysisHandler.changeDefaultRowLoaded(rowLoadedText.getText());
         } else {
-            popupWarningNotValidate();
+            MessageDialog.openWarning(null, DefaultMessagesImpl.getString("MatchMasterDetailsPage.NotValidate"), //$NON-NLS-1$
+                    DefaultMessagesImpl.getString("MatchMasterDetailsPage.LoadedRowCountError")); //$NON-NLS-1$
             return;
         }
 
         this.updateAnalysisClientDependency();
 
-        if (selectedColumns != null && selectedColumns.length != 0) {
-            // add the user selected columns into the analysis
-            for (ModelElement selectedColumn : selectedColumns) {
-                analysisHandler.addColumnToAnalyze(selectedColumn);
-            }
-        }
+        analysisHandler.saveSelectedAnalyzedElements();
 
         ReturnCode saved = new ReturnCode(false);
         IEditorInput editorInput = this.getEditorInput();
@@ -848,15 +924,6 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
             saved = ElementWriterFactory.getInstance().createAnalysisWrite().save(tdqAnalysisItem, true);
         }
         logSaved(saved);
-    }
-
-    /**
-     * popupWarningNotValidate.
-     */
-    private void popupWarningNotValidate() {
-        MessageDialog.openWarning(null, DefaultMessagesImpl.getString("MatchMasterDetailsPage.NotValidate"), //$NON-NLS-1$
-                DefaultMessagesImpl.getString("MatchMasterDetailsPage.LoadedRowCountError")); //$NON-NLS-1$
-
     }
 
     /**

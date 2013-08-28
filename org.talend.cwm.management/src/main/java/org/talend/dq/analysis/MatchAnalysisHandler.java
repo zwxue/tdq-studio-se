@@ -12,8 +12,11 @@
 // ============================================================================
 package org.talend.dq.analysis;
 
+import java.util.Arrays;
 import java.util.Collection;
 
+import org.eclipse.emf.common.util.EList;
+import org.talend.dataquality.analysis.Analysis;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
@@ -22,6 +25,34 @@ import orgomg.cwm.objectmodel.core.ModelElement;
 public class MatchAnalysisHandler extends AnalysisHandler {
 
     private String DEFAULT_LOADED_ROW_COUNT = "default_loaded_row_count";
+
+    private ModelElement[] selectedColumns = null;
+
+    @Override
+    public void setAnalysis(Analysis columnAnalysis) {
+        super.setAnalysis(columnAnalysis);
+        initSelectedColumns();
+    }
+
+    /**
+     * DOC yyin Comment method "initSelectedColumns".
+     */
+    private void initSelectedColumns() {
+        EList<ModelElement> analyzedColumns = getAnalyzedColumns();
+        selectedColumns = new ModelElement[analyzedColumns.size()];
+        int i = 0;
+        for (ModelElement element : analyzedColumns) {
+            selectedColumns[i++] = element;
+        }
+    }
+
+    public ModelElement[] getSelectedColumns() {
+        return this.selectedColumns;
+    }
+
+    public void setSelectedColumns(ModelElement[] columns) {
+        this.selectedColumns = columns;
+    }
 
     public boolean addColumnToAnalyze(ModelElement modelElement) {
         assert analysis != null;
@@ -35,11 +66,12 @@ public class MatchAnalysisHandler extends AnalysisHandler {
         return analysis.getContext().getAnalysedElements().addAll(modelElement);
     }
 
-    public boolean setColumnsToAnalyze(Collection<ModelElement> modelElement) {
+    // modify the analysis's analyzed elements
+    public boolean saveSelectedAnalyzedElements() {
         assert analysis != null;
         assert analysis.getContext() != null;
         analysis.getContext().getAnalysedElements().clear();
-        return analysis.getContext().getAnalysedElements().addAll(modelElement);
+        return analysis.getContext().getAnalysedElements().addAll(Arrays.asList(selectedColumns));
     }
 
     /**

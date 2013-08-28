@@ -15,6 +15,8 @@ package org.talend.cwm.db.connection;
 import java.util.List;
 
 import org.talend.dataquality.analysis.Analysis;
+import orgomg.cwm.foundation.softwaredeployment.DataManager;
+import orgomg.cwm.objectmodel.core.ModelElement;
 
 
 /**
@@ -27,7 +29,7 @@ public class MDMSQLExecutor implements ISQLExecutor {
     /* (non-Javadoc)
      * @see org.talend.cwm.db.connection.ISQLExecutor#executeQuery(org.talend.dataquality.analysis.Analysis)
      */
-    public List<Object[]> executeQuery(Analysis analysis) {
+    public List<Object[]> executeQuery(DataManager connection, List<ModelElement> analysedElements) {
         // TODO Auto-generated method stub
         return null;
     }
