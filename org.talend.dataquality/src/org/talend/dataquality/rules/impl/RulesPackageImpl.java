@@ -982,7 +982,7 @@ public class RulesPackageImpl extends EPackageImpl implements RulesPackage {
 
         initEClass(defaultSurvivorshipDefinitionEClass, DefaultSurvivorshipDefinition.class, "DefaultSurvivorshipDefinition", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
         initEAttribute(getDefaultSurvivorshipDefinition_DataType(), theEcorePackage.getEString(), "dataType", null, 0, 1, DefaultSurvivorshipDefinition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-        initEReference(getDefaultSurvivorshipDefinition_Function(), this.getAlgorithmDefinition(), null, "function", null, 0, 1, DefaultSurvivorshipDefinition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEReference(getDefaultSurvivorshipDefinition_Function(), this.getAlgorithmDefinition(), null, "function", null, 0, 1, DefaultSurvivorshipDefinition.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
         // Initialize data types
         initEDataType(tdExpressionListEDataType, List.class, "TdExpressionList", IS_SERIALIZABLE, !IS_GENERATED_INSTANCE_CLASS, "java.util.List<org.talend.cwm.relational.TdExpression>");

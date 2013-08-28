@@ -105,6 +105,8 @@ public class BlockingKeyCellModeifier implements ICellModifier {
                 bkd.setColumn(newValue);
             } else if (MatchAnalysisConstant.BLOCK_KEY_NAME.equalsIgnoreCase(property)) {
                 bkd.setName(newValue);
+            } else {
+                return;
             }
             tableViewer.update(bkd, null);
         }

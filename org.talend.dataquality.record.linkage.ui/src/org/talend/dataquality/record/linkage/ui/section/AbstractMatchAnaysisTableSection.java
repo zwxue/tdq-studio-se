@@ -28,6 +28,7 @@ import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.record.linkage.ui.action.RefreshChartAction;
 import org.talend.dataquality.record.linkage.ui.composite.utils.ImageLib;
+import org.talend.dataquality.record.linkage.ui.i18n.internal.DefaultMessagesImpl;
 
 /**
  * created by zshen on Jul 31, 2013 Detailled comment
@@ -139,7 +140,7 @@ public abstract class AbstractMatchAnaysisTableSection extends AbstractSectionCo
         labelGd.widthHint = 30;
 
         final Button addButton = new Button(buttonsComposite, SWT.NONE);
-        addButton.setToolTipText("Add New Item");
+        addButton.setToolTipText(DefaultMessagesImpl.getString("AbstractMatchAnaysisTableSection.add_button_tooltip")); //$NON-NLS-1$
         addButton.setImage(ImageLib.getImage(ImageLib.ADD_ACTION));
         addButton.setLayoutData(labelGd);
         addButton.addSelectionListener(new SelectionAdapter() {
@@ -151,7 +152,7 @@ public abstract class AbstractMatchAnaysisTableSection extends AbstractSectionCo
         });
 
         final Button delButton = new Button(buttonsComposite, SWT.NONE);
-        delButton.setToolTipText("Delete Selcetion Item");
+        delButton.setToolTipText(DefaultMessagesImpl.getString("AbstractMatchAnaysisTableSection.delete_button_tooltip")); //$NON-NLS-1$
         delButton.setImage(ImageLib.getImage(ImageLib.DELETE_ACTION));
         delButton.setLayoutData(labelGd);
         delButton.addSelectionListener(new SelectionAdapter() {
@@ -161,54 +162,55 @@ public abstract class AbstractMatchAnaysisTableSection extends AbstractSectionCo
                 removeTableItem();
             }
         });
-        final Button upButton = new Button(buttonsComposite, SWT.NONE);
-        upButton.setToolTipText("Move Item Up");
-        upButton.setImage(ImageLib.getImage(ImageLib.UP_ACTION));
-        upButton.setLayoutData(labelGd);
-        upButton.addSelectionListener(new SelectionAdapter() {
-
-            @Override
-            public void widgetSelected(SelectionEvent e) {
-                moveUpTableItem();
-            }
-        });
-
-        final Button downButton = new Button(buttonsComposite, SWT.NONE);
-        downButton.setToolTipText("Move Item Down");
-        downButton.setImage(ImageLib.getImage(ImageLib.DOWN_ACTION));
-        downButton.setLayoutData(labelGd);
-        downButton.addSelectionListener(new SelectionAdapter() {
-
-            @Override
-            public void widgetSelected(SelectionEvent e) {
-                moveDownTableItem();
-            }
-        });
-        final Button copyButton = new Button(buttonsComposite, SWT.NONE);
-        copyButton.setToolTipText("Copy Selcetion Item");
-        copyButton.setImage(ImageLib.getImage(ImageLib.COPY_ACTION));
-        copyButton.setLayoutData(labelGd);
-        copyButton.addSelectionListener(new SelectionAdapter() {
-
-            @Override
-            public void widgetSelected(SelectionEvent e) {
-                copyTableItem();
-
-            }
-        });
-
-        final Button pasteButton = new Button(buttonsComposite, SWT.NONE);
-        pasteButton.setToolTipText("Paste Selcetion Item");
-        pasteButton.setImage(ImageLib.getImage(ImageLib.PASTE_ACTION));
-        pasteButton.setLayoutData(labelGd);
-        pasteButton.addSelectionListener(new SelectionAdapter() {
-
-            @Override
-            public void widgetSelected(SelectionEvent e) {
-                pasteTableItem();
-
-            }
-        });
+        // will be implemented later
+        // final Button upButton = new Button(buttonsComposite, SWT.NONE);
+        // upButton.setToolTipText("Move Item Up");
+        // upButton.setImage(ImageLib.getImage(ImageLib.UP_ACTION));
+        // upButton.setLayoutData(labelGd);
+        // upButton.addSelectionListener(new SelectionAdapter() {
+        //
+        // @Override
+        // public void widgetSelected(SelectionEvent e) {
+        // moveUpTableItem();
+        // }
+        // });
+        //
+        // final Button downButton = new Button(buttonsComposite, SWT.NONE);
+        // downButton.setToolTipText("Move Item Down");
+        // downButton.setImage(ImageLib.getImage(ImageLib.DOWN_ACTION));
+        // downButton.setLayoutData(labelGd);
+        // downButton.addSelectionListener(new SelectionAdapter() {
+        //
+        // @Override
+        // public void widgetSelected(SelectionEvent e) {
+        // moveDownTableItem();
+        // }
+        // });
+        // final Button copyButton = new Button(buttonsComposite, SWT.NONE);
+        // copyButton.setToolTipText("Copy Selcetion Item");
+        // copyButton.setImage(ImageLib.getImage(ImageLib.COPY_ACTION));
+        // copyButton.setLayoutData(labelGd);
+        // copyButton.addSelectionListener(new SelectionAdapter() {
+        //
+        // @Override
+        // public void widgetSelected(SelectionEvent e) {
+        // copyTableItem();
+        //
+        // }
+        // });
+        //
+        // final Button pasteButton = new Button(buttonsComposite, SWT.NONE);
+        // pasteButton.setToolTipText("Paste Selcetion Item");
+        // pasteButton.setImage(ImageLib.getImage(ImageLib.PASTE_ACTION));
+        // pasteButton.setLayoutData(labelGd);
+        // pasteButton.addSelectionListener(new SelectionAdapter() {
+        //
+        // @Override
+        // public void widgetSelected(SelectionEvent e) {
+        // pasteTableItem();
+        //
+        // }
+        // });
 
 
     }

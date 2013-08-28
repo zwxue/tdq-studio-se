@@ -12,10 +12,13 @@
 // ============================================================================
 package org.talend.dataquality.record.linkage.ui.section.definition;
 
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
@@ -30,6 +33,7 @@ import org.talend.dataquality.record.linkage.ui.section.AbstractMatchAnaysisTabl
 import org.talend.dataquality.record.linkage.utils.MatchAnalysisConstant;
 import org.talend.dataquality.rules.DefaultSurvivorshipDefinition;
 import org.talend.dataquality.rules.MatchRuleDefinition;
+import org.talend.dataquality.rules.RulesFactory;
 
 /**
  * created by HHB on 2013-8-23 Detailled comment
@@ -73,13 +77,16 @@ public class DefaultSurvivorshipDefinitionSection extends AbstractMatchAnaysisTa
         gridLayout.marginHeight = 0;
         ruleComp.setLayout(gridLayout);
         tableComposite = new DefaultSurvivorshipTableComposite(ruleComp, SWT.NO_FOCUS);
-        tableComposite.createContent();
-        initTableInput();
+        tableComposite.addPropertyChangeListener(this);
         tableComposite.setLayout(gridLayout);
         tableComposite.setLayoutData(data);
+        tableComposite.createContent();
         section.setExpanded(true);
+        initTableInput();
+
         return ruleComp;
     }
+
 
     private void initTableInput() {
 
@@ -102,25 +109,43 @@ public class DefaultSurvivorshipDefinitionSection extends AbstractMatchAnaysisTa
     }
 
     public void setMatchRuleDef(MatchRuleDefinition matchRuleDef) {
-        this.matchRuleDef = matchRuleDef;
+        this.matchRuleDef = RulesFactory.eINSTANCE.createMatchRuleDefinition();
+        this.matchRuleDef.getDefaultSurvivorshipDefinitions().addAll(matchRuleDef.getDefaultSurvivorshipDefinitions());
 
     }
 
     @Override
     public void addTableItem() {
         tableComposite.addKeyDefinition(StringUtils.EMPTY, matchRuleDef);
+        listeners.firePropertyChange(MatchAnalysisConstant.ISDIRTY_PROPERTY, true, false);
     }
 
     @Override
     public void removeTableItem() {
+        boolean success = false;
         ISelection selectItems = tableComposite.getSelectItems();
         if (selectItems instanceof StructuredSelection) {
             Iterator<DefaultSurvivorshipDefinition> iterator = ((StructuredSelection) selectItems).iterator();
             while (iterator.hasNext()) {
                 DefaultSurvivorshipDefinition next = iterator.next();
                 tableComposite.removeKeyDefinition(next, matchRuleDef);
+                success = true;
+            }
+            if (success) {
+                listeners.firePropertyChange(MatchAnalysisConstant.ISDIRTY_PROPERTY, true, false);
             }
         }
+    }
+
+    /**
+     * Getter for defaultSurvivorshipKeys.
+     *
+     * @return the defaultSurvivorshipKeys
+     */
+    public List<DefaultSurvivorshipDefinition> getDefaultSurvivorshipKeys() {
+        List<DefaultSurvivorshipDefinition> defaultSurvivorshipDefKeys = new ArrayList<DefaultSurvivorshipDefinition>();
+        defaultSurvivorshipDefKeys.addAll(EcoreUtil.copyAll(this.matchRuleDef.getDefaultSurvivorshipDefinitions()));
+        return defaultSurvivorshipDefKeys;
     }
 
 }

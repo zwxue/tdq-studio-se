@@ -61,8 +61,7 @@ public class MatchingKeySection extends AbstractMatchKeyWithChartTableSection {
 
     private static Logger log = Logger.getLogger(MatchingKeySection.class);
 
-    // TODO zshen externalize the string.
-    private final String SECTION_NAME = "Matching Key"; //$NON-NLS-1$
+    private final String SECTION_NAME = MatchAnalysisConstant.MATCHING_KEY;
 
     private CTabFolder ruleFolder;
 
@@ -127,8 +126,6 @@ public class MatchingKeySection extends AbstractMatchKeyWithChartTableSection {
         });
         Button button = new Button(ruleFolder, SWT.FLAT | SWT.CENTER);
         button.setImage(ADD_IMG);
-        button.pack();
-        button.setToolTipText("add"); //$NON-NLS-1$
         ruleFolder.setTopRight(button);
         button.addSelectionListener(new SelectionAdapter() {
 
@@ -158,8 +155,7 @@ public class MatchingKeySection extends AbstractMatchKeyWithChartTableSection {
         groupQualityThresholdComposite.setLayout(new GridLayout(2, Boolean.TRUE));
         Label groupQualityTresholdLabel = new Label(groupQualityThresholdComposite, SWT.NONE);
         groupQualityTresholdLabel.setText(DefaultMessagesImpl.getString("MatchRuleTableComposite.GROUP_QUALITY_THRESHOLD")); //$NON-NLS-1$
-        RecordMatchingIndicator recordMatchingIndicator = MatchRuleAnlaysisUtils.getRecordMatchIndicatorFromAna(analysis);
-        final MatchRuleDefinition ruleDefinition = recordMatchingIndicator.getBuiltInMatchRuleDefinition();
+        final MatchRuleDefinition ruleDefinition = getMatchRuleDefinition();
         final Text groupQualityThresholdText = new Text(groupQualityThresholdComposite, SWT.BORDER);
         GridData layoutData = new GridData();
         layoutData.widthHint = 80;
@@ -193,8 +189,7 @@ public class MatchingKeySection extends AbstractMatchKeyWithChartTableSection {
      * @param newMatchRule
      */
     private void addMatchRuleToAnalysis(MatchRule newMatchRule) {
-        RecordMatchingIndicator recordMatchingIndicator = MatchRuleAnlaysisUtils.getRecordMatchIndicatorFromAna(analysis);
-        List<MatchRule> matchRules = recordMatchingIndicator.getBuiltInMatchRuleDefinition().getMatchRules();
+        List<MatchRule> matchRules = getMatchRuleList();
         matchRules.add(newMatchRule);
     }
 
@@ -224,8 +219,12 @@ public class MatchingKeySection extends AbstractMatchKeyWithChartTableSection {
     }
 
     protected List<MatchRule> getMatchRuleList() {
+        return getMatchRuleDefinition().getMatchRules();
+    }
+
+    protected MatchRuleDefinition getMatchRuleDefinition() {
         RecordMatchingIndicator recordMatchingIndicator = MatchRuleAnlaysisUtils.getRecordMatchIndicatorFromAna(analysis);
-        return recordMatchingIndicator.getBuiltInMatchRuleDefinition().getMatchRules();
+        return recordMatchingIndicator.getBuiltInMatchRuleDefinition();
     }
 
     /**
@@ -300,6 +299,7 @@ public class MatchingKeySection extends AbstractMatchKeyWithChartTableSection {
         ruleComp.setLayout(gridLayout);
 
         MatchRuleTableComposite matchRuleComposite = createTableComposite(ruleComp, matchRule);
+        matchRuleComposite.addPropertyChangeListener(this);
         matchRuleComposite.setAddColumn(isAddColumn());
         matchRuleComposite.createContent();
         matchRuleComposite.setInput(matchRule);
@@ -314,7 +314,7 @@ public class MatchingKeySection extends AbstractMatchKeyWithChartTableSection {
     }
 
     protected MatchRuleTableComposite createTableComposite(Composite parent, MatchRule matchRule) {
-        return new MatchRuleTableComposite(parent, SWT.NO_FOCUS, matchRule, listeners);
+        return new MatchRuleTableComposite(parent, SWT.NO_FOCUS, matchRule);
     }
 
     /**
@@ -349,27 +349,6 @@ public class MatchingKeySection extends AbstractMatchKeyWithChartTableSection {
 
     }
 
-    /**
-     * DOC zshen Comment method "getViewColumn".
-     *
-     * @return
-     */
-    private String[] getViewColumn() {
-        List<String> columnNameList = new ArrayList<String>();
-        if (this.columnMap == null) {
-            return new String[0];
-        }
-        for (String columnName : columnMap.keySet()) {
-            columnNameList.add(columnName);
-        }
-        // TODO zshen, see with yyin to use the extracted constants.
-        columnNameList.add("GID");
-        columnNameList.add("GRP_SIZE");
-        columnNameList.add("MASTER");
-        columnNameList.add("SCORE");
-        columnNameList.add("ATTRIBUTE_SCORES");
-        return columnNameList.toArray(new String[columnNameList.size()]);
-    }
 
     @Override
     public void refreshChart() {
@@ -445,12 +424,17 @@ public class MatchingKeySection extends AbstractMatchKeyWithChartTableSection {
      */
     @Override
     public void removeTableItem() {
+        boolean success = false;
         ISelection selectItems = getCurrentMatchRuleTableComposite().getSelectItems();
         if (selectItems instanceof StructuredSelection) {
             Iterator<MatchKeyDefinition> iterator = ((StructuredSelection) selectItems).iterator();
             while (iterator.hasNext()) {
                 MatchKeyDefinition next = iterator.next();
                 removeMatchKeyFromCurrentMatchRule(next);
+                success = true;
+            }
+            if (success) {
+                listeners.firePropertyChange(MatchAnalysisConstant.ISDIRTY_PROPERTY, true, false);
             }
         }
     }

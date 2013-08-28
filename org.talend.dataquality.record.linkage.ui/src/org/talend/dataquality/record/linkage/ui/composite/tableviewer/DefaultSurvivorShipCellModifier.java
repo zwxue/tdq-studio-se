@@ -22,7 +22,7 @@ import org.talend.dataquality.rules.DefaultSurvivorshipDefinition;
 
 /**
  * created by HHB on 2013-8-23 Detailled comment
- * 
+ *
  */
 public class DefaultSurvivorShipCellModifier implements ICellModifier {
 
@@ -42,7 +42,7 @@ public class DefaultSurvivorShipCellModifier implements ICellModifier {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.jface.viewers.ICellModifier#getValue(java.lang.Object, java.lang.String)
      */
     @Override
@@ -58,7 +58,7 @@ public class DefaultSurvivorShipCellModifier implements ICellModifier {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.jface.viewers.ICellModifier#modify(java.lang.Object, java.lang.String, java.lang.Object)
      */
     @Override
@@ -74,6 +74,8 @@ public class DefaultSurvivorShipCellModifier implements ICellModifier {
                 SurvivorShipAlgorithmEnum valueByIndex = SurvivorShipAlgorithmEnum.getTypeByIndex(Integer.valueOf(newValue)
                         .intValue());
                 skd.getFunction().setAlgorithmType(valueByIndex.getValue());
+            } else {
+                return;
             }
             tableViewer.update(skd, null);
         }

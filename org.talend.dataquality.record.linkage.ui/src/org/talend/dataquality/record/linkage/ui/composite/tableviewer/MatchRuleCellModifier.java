@@ -93,6 +93,8 @@ public class MatchRuleCellModifier implements ICellModifier {
                 mkd.setConfidenceWeight(Integer.valueOf(newValue).intValue());
             } else if (MatchAnalysisConstant.MATCH_KEY_NAME.equalsIgnoreCase(property)) {
                 mkd.setName(newValue);
+            } else {
+                return;
             }
             tableViewer.update(mkd, null);
         }

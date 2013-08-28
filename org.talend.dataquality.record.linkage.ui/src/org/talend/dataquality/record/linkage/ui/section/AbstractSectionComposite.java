@@ -12,6 +12,7 @@
 // ============================================================================
 package org.talend.dataquality.record.linkage.ui.section;
 
+import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 
@@ -23,13 +24,14 @@ import org.eclipse.ui.forms.events.ExpansionEvent;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
+import org.talend.dataquality.record.linkage.utils.MatchAnalysisConstant;
 
 /**
  * created by zshen on Aug 20, 2013
  * Detailled comment
  *
  */
-public abstract class AbstractSectionComposite {
+public abstract class AbstractSectionComposite implements PropertyChangeListener {
 
     protected FormToolkit toolkit;
 
@@ -83,6 +85,13 @@ public abstract class AbstractSectionComposite {
 
     public void removePropertyChangeListener(PropertyChangeListener listener) {
         listeners.addPropertyChangeListener(listener);
+    }
+
+    @Override
+    public void propertyChange(PropertyChangeEvent evt) {
+        if (MatchAnalysisConstant.ISDIRTY_PROPERTY.equals(evt.getPropertyName())) {
+            listeners.firePropertyChange(MatchAnalysisConstant.ISDIRTY_PROPERTY, true, false);
+        }
     }
 
 }

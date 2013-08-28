@@ -12,6 +12,8 @@
 // ============================================================================
 package org.talend.dataquality.record.linkage.ui.composite.tableviewer;
 
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.util.List;
 
 import org.eclipse.jface.viewers.CellEditor;
@@ -30,12 +32,13 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.record.linkage.ui.action.RemoveMatchKeyDefinitionAction;
+import org.talend.dataquality.record.linkage.utils.MatchAnalysisConstant;
 import org.talend.dataquality.rules.KeyDefinition;
 import org.talend.dataquality.rules.MatchRuleDefinition;
 
 /**
  * created by zshen on Aug 6, 2013 Detailled comment
- * 
+ *
  */
 public abstract class AbstractMatchAnalysisTableViewer extends TableViewer {
 
@@ -45,9 +48,11 @@ public abstract class AbstractMatchAnalysisTableViewer extends TableViewer {
 
     boolean isAddColumn = true;
 
+    protected PropertyChangeSupport listeners = new PropertyChangeSupport(this);
+
     /**
      * DOC zshen MatchAnalysisTabveViewer constructor comment.
-     * 
+     *
      * @param parent
      * @param style
      */
@@ -82,9 +87,9 @@ public abstract class AbstractMatchAnalysisTableViewer extends TableViewer {
     }
 
     /**
-     * 
+     *
      * DOC zshen Comment method "initTable".
-     * 
+     *
      * @param headers the name of column
      * @param pixelDataOfHeaders the width of the column
      */
@@ -120,7 +125,7 @@ public abstract class AbstractMatchAnalysisTableViewer extends TableViewer {
     }
 
     /**
-     * 
+     *
      * @return
      */
     protected int getTableHeightHint() {
@@ -128,9 +133,29 @@ public abstract class AbstractMatchAnalysisTableViewer extends TableViewer {
     }
 
     /**
+     * DOC zshen Comment method "selectAllItem".
+     *
+     * @param bkdList
+     */
+    public void selectAllItem(List<KeyDefinition> bkdList) {
+        this.setSelectionToWidget(bkdList, true);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.eclipse.jface.viewers.ColumnViewer#update(java.lang.Object, java.lang.String[])
+     */
+    @Override
+    public void update(Object element, String[] properties) {
+        super.update(element, properties);
+        listeners.firePropertyChange(MatchAnalysisConstant.ISDIRTY_PROPERTY, true, false);
+    }
+
+    /**
      * DOC zhao Comment method "addContextMenu".
      */
-    public abstract void addContextMenu();
+    abstract public void addContextMenu();
 
     /**
      * Getter for isAddColumn.
@@ -141,97 +166,105 @@ public abstract class AbstractMatchAnalysisTableViewer extends TableViewer {
         return this.isAddColumn;
     }
 
+    public void addPropertyChangeListener(PropertyChangeListener listener) {
+        listeners.addPropertyChangeListener(listener);
+    }
+
+    public void removePropertyChangeListener(PropertyChangeListener listener) {
+        listeners.addPropertyChangeListener(listener);
+    }
+
     /**
      * DOC zshen Comment method "getDisplayWeight".
-     * 
+     *
      * @return
      */
-    protected abstract int getHeaderDisplayWeight();
+    abstract protected int getHeaderDisplayWeight();
 
     /**
      * DOC zshen Comment method "getTableLabelProvider".
-     * 
+     *
      * @return
      */
     abstract protected IBaseLabelProvider getTableLabelProvider();
 
     /**
      * DOC zshen Comment method "getTableContentProvider".
-     * 
+     *
      * @return
      */
     abstract protected IContentProvider getTableContentProvider();
 
     /**
      * DOC zshen Comment method "getTableCellModifier".
-     * 
+     *
      * @return
      */
     abstract protected ICellModifier getTableCellModifier();
 
     /**
      * DOC zshen Comment method "getCellEditor".
-     * 
+     *
      * @param headers
      * @return
      */
     abstract protected CellEditor[] getCellEditor(List<String> headers);
 
     /**
-     * 
+     *
      * add new Element
-     * 
+     *
      * @param columnName the name of column
      * @param analysis the context of this add operation perform on.
      */
-    public abstract boolean addElement(String columnName, Analysis analysis);
+    abstract public boolean addElement(String columnName, Analysis analysis);
 
     /**
-     * 
+     *
      * add new Element
-     * 
+     *
      * @param columnName the name of column
      * @param analysis the context of this add operation perform on.
      */
-    public abstract boolean addElement(String columnName, MatchRuleDefinition matchRuleDef);
+    abstract public boolean addElement(String columnName, MatchRuleDefinition matchRuleDef);
 
     /**
      * remove Element
-     * 
+     *
      * @param columnName the name of column
      */
-    public abstract void removeElement(String columnName, Analysis analysis);
+    abstract public void removeElement(String columnName, Analysis analysis);
 
     /**
      * remove Element
-     * 
+     *
      * @param columnName the element of column
      */
-    public abstract void removeElement(KeyDefinition keyDef, Analysis analysis);
+    abstract public void removeElement(KeyDefinition keyDef, Analysis analysis);
 
     /**
      * remove Element
-     * 
+     *
      * @param columnName the element of column
      */
-    public abstract void removeElement(KeyDefinition keyDef, MatchRuleDefinition matchRuleDef);
+    abstract public void removeElement(KeyDefinition keyDef, MatchRuleDefinition matchRuleDef);
 
     /**
      *
      * move up element
-     * 
+     *
      * @param keyDef
      * @param matchRuleDef
      */
-    public abstract void moveUpElement(KeyDefinition keyDef, MatchRuleDefinition matchRuleDef);
+    abstract public void moveUpElement(KeyDefinition keyDef, MatchRuleDefinition matchRuleDef);
 
     /**
      *
      * move down element
-     * 
+     *
      * @param keyDef
      * @param matchRuleDef
      */
-    public abstract void moveDownElement(KeyDefinition keyDef, MatchRuleDefinition matchRuleDef);
+    abstract public void moveDownElement(KeyDefinition keyDef, MatchRuleDefinition matchRuleDef);
 
 }

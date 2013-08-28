@@ -35,7 +35,7 @@ public class MatchRuleTableDefinitionComposite extends MatchRuleTableComposite {
      * @param matchRule
      */
     public MatchRuleTableDefinitionComposite(Composite parent, int style, MatchRule matchRule) {
-        super(parent, style, matchRule, null);
+        super(parent, style, matchRule);
     }
 
     /*
@@ -67,14 +67,5 @@ public class MatchRuleTableDefinitionComposite extends MatchRuleTableComposite {
 
 
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.talend.dataquality.record.linkage.ui.composite.MatchRuleTableComposite#createMatchIntervalComposite()
-     */
-    @Override
-    protected void createMatchIntervalComposite() {
-        // nothing need to do at here
-    }
 
 }

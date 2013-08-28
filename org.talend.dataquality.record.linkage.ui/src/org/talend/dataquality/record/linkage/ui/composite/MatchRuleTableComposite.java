@@ -12,7 +12,6 @@
 // ============================================================================
 package org.talend.dataquality.record.linkage.ui.composite;
 
-import java.beans.PropertyChangeSupport;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,20 +40,15 @@ public class MatchRuleTableComposite extends AbsMatchAnalysisTableComposite {
 
     private MatchRule matchRule;
 
-    private PropertyChangeSupport listener = null;
-
     /**
      * DOC zshen MatchRuleComposite constructor comment.
      *
      * @param parent
      * @param style
      */
-    public MatchRuleTableComposite(Composite parent, int style, MatchRule matchRule, PropertyChangeSupport listener) {
+    public MatchRuleTableComposite(Composite parent, int style, MatchRule matchRule) {
         super(parent, style);
         this.matchRule = matchRule;
-        this.listener = listener;
-
-
     }
 
     /**
@@ -78,9 +72,6 @@ public class MatchRuleTableComposite extends AbsMatchAnalysisTableComposite {
         headers.add(MatchAnalysisConstant.COLUMN); // 14
         headers.add(MatchAnalysisConstant.MATCHING_TYPE); // 12
         headers.add(MatchAnalysisConstant.CUSTOM_MATCHER_CLASS); // 20
-        if (isAddColumn()) {
-            headers.add(MatchAnalysisConstant.THRESHOLD); // 14
-        }
         headers.add(MatchAnalysisConstant.CONFIDENCE_WEIGHT); // 17
         headers.add(MatchAnalysisConstant.HANDLE_NULL); // 11
     }
@@ -91,6 +82,7 @@ public class MatchRuleTableComposite extends AbsMatchAnalysisTableComposite {
     @Override
     protected void createTable() {
         tableViewer = createTableViewer();
+        tableViewer.addPropertyChangeListener(this);
         tableViewer.initTable(headers);
         // Create match interval
         createMatchIntervalComposite();
@@ -122,7 +114,7 @@ public class MatchRuleTableComposite extends AbsMatchAnalysisTableComposite {
                     Double value = Double.valueOf(newValue);
                     if (value != oldValue) {
                         matchRule.setMatchInterval(value);
-                        listener.firePropertyChange(MatchAnalysisConstant.ISDIRTY_PROPERTY, oldValue, value);
+                        listeners.firePropertyChange(MatchAnalysisConstant.ISDIRTY_PROPERTY, oldValue, value);
                         oldValue = value;
                     }
                 } catch (Exception exc) {

@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2012 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2013 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -27,7 +27,7 @@ public class TDQFileEditorInput extends FileEditorInput {
     public static String DEFAULT_EDITOR_ID = "org.eclipse.ui.DefaultTextEditor";//$NON-NLS-1$
     /**
      * DOC yyin TDQFileEditorInput constructor comment.
-     * 
+     *
      * @param file
      */
     public TDQFileEditorInput(IFile file) {

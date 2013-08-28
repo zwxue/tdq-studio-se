@@ -1415,7 +1415,8 @@
     </eClassifiers>
     <eClassifiers xsi:type="ecore:EClass" name="DefaultSurvivorshipDefinition">
       <eStructuralFeatures xsi:type="ecore:EAttribute" name="dataType" eType="ecore:EDataType platform:/plugin/org.eclipse.emf.ecore/model/Ecore.ecore#//EString"/>
-      <eStructuralFeatures xsi:type="ecore:EReference" name="function" eType="#//rules/AlgorithmDefinition"/>
+      <eStructuralFeatures xsi:type="ecore:EReference" name="function" eType="#//rules/AlgorithmDefinition"
+          containment="true"/>
     </eClassifiers>
   </eSubpackages>
   <eSubpackages name="properties" nsURI="http://dataquality.properties" nsPrefix="dataquality.properties">

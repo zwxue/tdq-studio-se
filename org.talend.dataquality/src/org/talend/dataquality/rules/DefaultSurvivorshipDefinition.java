@@ -53,26 +53,26 @@ public interface DefaultSurvivorshipDefinition extends EObject {
     void setDataType(String value);
 
     /**
-     * Returns the value of the '<em><b>Function</b></em>' reference.
+     * Returns the value of the '<em><b>Function</b></em>' containment reference.
      * <!-- begin-user-doc -->
      * <p>
      * If the meaning of the '<em>Function</em>' reference isn't clear,
      * there really should be more of a description here...
      * </p>
      * <!-- end-user-doc -->
-     * @return the value of the '<em>Function</em>' reference.
+     * @return the value of the '<em>Function</em>' containment reference.
      * @see #setFunction(AlgorithmDefinition)
      * @see org.talend.dataquality.rules.RulesPackage#getDefaultSurvivorshipDefinition_Function()
-     * @model
+     * @model containment="true"
      * @generated
      */
     AlgorithmDefinition getFunction();
 
     /**
-     * Sets the value of the '{@link org.talend.dataquality.rules.DefaultSurvivorshipDefinition#getFunction <em>Function</em>}' reference.
+     * Sets the value of the '{@link org.talend.dataquality.rules.DefaultSurvivorshipDefinition#getFunction <em>Function</em>}' containment reference.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @param value the new value of the '<em>Function</em>' reference.
+     * @param value the new value of the '<em>Function</em>' containment reference.
      * @see #getFunction()
      * @generated
      */

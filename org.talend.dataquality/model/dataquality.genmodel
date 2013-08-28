@@ -830,6 +830,7 @@
       </genClasses>
       <genClasses ecoreClass="dataquality.ecore#//rules/MatchRule">
         <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference dataquality.ecore#//rules/MatchRule/matchKeys"/>
+        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dataquality.ecore#//rules/MatchRule/matchInterval"/>
       </genClasses>
       <genClasses ecoreClass="dataquality.ecore#//rules/AppliedBlockKey"/>
       <genClasses ecoreClass="dataquality.ecore#//rules/SurvivorshipKeyDefinition">
@@ -874,7 +875,7 @@
       <genClasses ecoreClass="dataquality.ecore#//properties/TDQSourceFileItem"/>
       <genClasses ecoreClass="dataquality.ecore#//properties/TDQMatchRuleItem">
         <genFeatures notify="false" createChild="false" propertySortChoices="true"
-            ecoreFeature="ecore:EReference dataquality.ecore#//properties/TDQMatchRuleItem/matchRuel"/>
+            ecoreFeature="ecore:EReference dataquality.ecore#//properties/TDQMatchRuleItem/matchRule"/>
       </genClasses>
     </nestedGenPackages>
   </genPackages>

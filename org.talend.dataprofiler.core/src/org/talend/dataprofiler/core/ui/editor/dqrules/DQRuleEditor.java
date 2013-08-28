@@ -104,6 +104,7 @@ public class DQRuleEditor extends CommonFormEditor {
         if (toolbar != null && (masterPage != null || parserPage != null || matchPage != null)) {
             // TDQ-3372 ~
             saveAction = new DefaultSaveAction(this);
+            saveAction.setEnabled(false);
             toolbar.addActions(saveAction);
         }
         // ~

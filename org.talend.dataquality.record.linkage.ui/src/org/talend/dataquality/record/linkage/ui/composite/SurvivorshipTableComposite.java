@@ -45,19 +45,19 @@ public class SurvivorshipTableComposite extends AbsMatchAnalysisTableComposite {
 
     @Override
     protected void createTable() {
-        tableViewer = new SurvivorShipTableViewer(this, getTableStyle(), isAddColumn());
+        tableViewer = createTableViewer();
+        tableViewer.addPropertyChangeListener(this);
         ((SurvivorShipTableViewer) tableViewer).initTable(headers);
     }
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataquality.record.linkage.ui.composite.AbsMatchAnalysisTableComposite#createTableViewer()
      */
     @Override
     protected AbstractMatchAnalysisTableViewer createTableViewer() {
-        // TODO Auto-generated method stub
-        return null;
+        return new SurvivorShipTableViewer(this, getTableStyle(), isAddColumn());
     }
 
 }

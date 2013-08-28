@@ -12,8 +12,10 @@
 // ============================================================================
 package org.talend.dataquality.record.linkage.ui.section.definition;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
@@ -34,8 +36,6 @@ import org.talend.dataquality.rules.RulesFactory;
  *
  */
 public class BlockingKeyDefinitionSection extends BlockingKeySection {
-
-    private List<BlockKeyDefinition> blockKeyList = null;
 
     private MatchRuleDefinition matchRuleDef = null;
 
@@ -62,7 +62,6 @@ public class BlockingKeyDefinitionSection extends BlockingKeySection {
     public void setMatchRuleDef(MatchRuleDefinition matchRuleDef) {
         this.matchRuleDef = RulesFactory.eINSTANCE.createMatchRuleDefinition();
         this.matchRuleDef.getBlockKeys().addAll(matchRuleDef.getBlockKeys());
-        this.blockKeyList = this.matchRuleDef.getBlockKeys();
     }
 
     /*
@@ -72,7 +71,7 @@ public class BlockingKeyDefinitionSection extends BlockingKeySection {
      */
     @Override
     protected List<BlockKeyDefinition> getBlockKeyDefinitionList() {
-        return this.blockKeyList;
+        return this.matchRuleDef.getBlockKeys();
     }
 
     /*
@@ -137,7 +136,9 @@ public class BlockingKeyDefinitionSection extends BlockingKeySection {
      * @return the blockKeyList
      */
     public List<BlockKeyDefinition> getBlockKeyList() {
-        return this.blockKeyList;
+        List<BlockKeyDefinition> blockKeys = new ArrayList<BlockKeyDefinition>();
+        blockKeys.addAll(EcoreUtil.copyAll(this.matchRuleDef.getBlockKeys()));
+        return blockKeys;
     }
 
 

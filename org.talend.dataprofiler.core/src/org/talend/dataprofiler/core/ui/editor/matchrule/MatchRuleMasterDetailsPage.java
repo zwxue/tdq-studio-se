@@ -191,6 +191,7 @@ public class MatchRuleMasterDetailsPage extends AbstractMetadataFormPage impleme
         matchingKeyDefinitionSection.setAddColumn(!selectAlgorithmSection.isVSRMode());
         matchingKeyDefinitionSection.createContent();
         matchingKeyDefinitionSection.addPropertyChangeListener(this);
+        matchingKeyDefinitionSection.getSection().setExpanded(true);
     }
 
     /**
@@ -204,6 +205,7 @@ public class MatchRuleMasterDetailsPage extends AbstractMetadataFormPage impleme
         survivorshipDefinitionSection.createContent();
         survivorshipDefinitionSection.addPropertyChangeListener(this);
         survivorshipDefinitionSection.getSection().setVisible(!selectAlgorithmSection.isVSRMode());
+        survivorshipDefinitionSection.getSection().setExpanded(true);
     }
 
     private void createDefaultSurvivorshipSection(Composite mainComp) {
@@ -213,7 +215,7 @@ public class MatchRuleMasterDetailsPage extends AbstractMetadataFormPage impleme
         defaultSurvivorshipDefinitionSection.createContent();
         defaultSurvivorshipDefinitionSection.addPropertyChangeListener(this);
         defaultSurvivorshipDefinitionSection.getSection().setVisible(!selectAlgorithmSection.isVSRMode());
-
+        defaultSurvivorshipDefinitionSection.getSection().setExpanded(true);
     }
 
     /**
@@ -239,6 +241,7 @@ public class MatchRuleMasterDetailsPage extends AbstractMetadataFormPage impleme
         blockingKeyDefinitionSection.setMatchRuleDef((MatchRuleDefinition) getCurrentModelElement(getEditor()));
         blockingKeyDefinitionSection.createContent();
         blockingKeyDefinitionSection.addPropertyChangeListener(this);
+        blockingKeyDefinitionSection.getSection().setExpanded(true);
     }
 
     private List<BlockKeyDefinition> getBlockKeyDefinitionList() {
@@ -259,6 +262,7 @@ public class MatchRuleMasterDetailsPage extends AbstractMetadataFormPage impleme
         selectAlgorithmSection.setMatchRuleDef((MatchRuleDefinition) getCurrentModelElement(getEditor()));
         selectAlgorithmSection.createChooseAlgorithmCom();
         selectAlgorithmSection.addPropertyChangeListener(this);
+        selectAlgorithmSection.getSection().setExpanded(true);
     }
 
     /*
@@ -278,6 +282,7 @@ public class MatchRuleMasterDetailsPage extends AbstractMetadataFormPage impleme
         }
     }
 
+
     /**
      * DOC zshen Comment method "saveMatchRule".
      *
@@ -293,10 +298,14 @@ public class MatchRuleMasterDetailsPage extends AbstractMetadataFormPage impleme
         // match key
         saveModelElement.getMatchRules().clear();
         saveModelElement.getMatchRules().addAll(matchingKeyDefinitionSection.getMatchRules());
+        saveModelElement.setMatchGroupQualityThreshold(matchingKeyDefinitionSection.getGroupQualityThreshold());
 
-        // TODO survivorship key
+        saveModelElement.getSurvivorshipKeys().clear();
+        saveModelElement.getSurvivorshipKeys().addAll(survivorshipDefinitionSection.getSurvivorshipKeys());
 
-        // TODO default survivorship key
+        saveModelElement.getDefaultSurvivorshipDefinitions().clear();
+        saveModelElement.getDefaultSurvivorshipDefinitions().addAll(
+                defaultSurvivorshipDefinitionSection.getDefaultSurvivorshipKeys());
 
         ReturnCode rc = ElementWriterFactory.getInstance().createdMatchRuleWriter().save(getInputItem(), Boolean.FALSE);
         if (!rc.isOk()) {

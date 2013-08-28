@@ -91,10 +91,6 @@ abstract public class AbstractMatchKeyWithChartTableSection extends AbstractMatc
                     matchRuleChartComp.refresh(recordMatchingIndicator.getGroupSize2groupFrequency());
                 }
 
-                // if (configSashForm.getTable() != null) {
-                // uiService.setNeedDisplayCount(times, configSashForm.getTable());
-                // uiService.refreshMatchRuleChart(viewData, configSashForm.getTable(), columnNames);
-                // }
             }
         });
 

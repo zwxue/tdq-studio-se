@@ -41,9 +41,7 @@ public class BlockingKeyTableComposite extends AbsMatchAnalysisTableComposite {
     @Override
     protected void initHeaders() {
         headers.add(MatchAnalysisConstant.BLOCK_KEY_NAME); // 14
-        if (isAddColumn()) {
-            headers.add(MatchAnalysisConstant.COLUMN); // 14
-        }
+        headers.add(MatchAnalysisConstant.COLUMN); // 14
         headers.add(MatchAnalysisConstant.PRE_ALGORITHM); // 12
         headers.add(MatchAnalysisConstant.PRE_VALUE); // 20
         headers.add(MatchAnalysisConstant.ALGORITHM); // 17
@@ -62,6 +60,7 @@ public class BlockingKeyTableComposite extends AbsMatchAnalysisTableComposite {
     protected void createTable() {
 
         tableViewer = createTableViewer();
+        tableViewer.addPropertyChangeListener(this);
         ((BlockingKeyTableViewer) tableViewer).initTable(headers);
     }
 

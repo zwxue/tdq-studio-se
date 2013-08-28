@@ -73,6 +73,8 @@ public class MatchRuleTableViewer extends AbstractMatchAnalysisTableViewer {
         CellEditor[] editors = new CellEditor[headers.size()];
         for (int i = 0; i < editors.length; ++i) {
             switch (i) {
+            case 1:
+                break;
             case 2:
                 editors[i] = new ComboBoxCellEditor(innerTable, MatchingTypeEnum.getAllTypes(), SWT.READ_ONLY);
                 break;

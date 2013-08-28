@@ -84,11 +84,12 @@ public class BlockingKeySection extends AbstractMatchAnaysisTableSection {
         gridLayout.marginHeight = 0;
         ruleComp.setLayout(gridLayout);
         tableComposite = createTableComposite(ruleComp);
+        tableComposite.addPropertyChangeListener(this);
         tableComposite.setAddColumn(isAddColumn());
-        tableComposite.createContent();
-        tableComposite.serViewerSorter(new BlockingKeyViewerSorter(getBlockKeyDefinitionList()));
         tableComposite.setLayout(gridLayout);
         tableComposite.setLayoutData(data);
+        tableComposite.createContent();
+        tableComposite.serViewerSorter(new BlockingKeyViewerSorter(getBlockKeyDefinitionList()));
         initTableInput();
         return ruleComp;
     }
@@ -245,17 +246,20 @@ public class BlockingKeySection extends AbstractMatchAnaysisTableSection {
      */
     @Override
     public void removeTableItem() {
+        boolean success = false;
         ISelection selectItems = tableComposite.getSelectItems();
         if (selectItems instanceof StructuredSelection) {
             Iterator<BlockKeyDefinition> iterator = ((StructuredSelection) selectItems).iterator();
-            if (iterator.hasNext()) {
-
-            }
             while (iterator.hasNext()) {
                 BlockKeyDefinition next = iterator.next();
                 removeBlockingKey(next);
+                success = true;
+            }
+            if (success) {
+                listeners.firePropertyChange(MatchAnalysisConstant.ISDIRTY_PROPERTY, true, false);
             }
         }
+
     }
 
     /*
@@ -267,11 +271,15 @@ public class BlockingKeySection extends AbstractMatchAnaysisTableSection {
     public void moveUpTableItem() {
         ISelection selectItems = tableComposite.getSelectItems();
         if (selectItems instanceof StructuredSelection) {
+            if (selectItems.isEmpty()) {
+                return;
+            }
             Iterator<BlockKeyDefinition> iterator = ((StructuredSelection) selectItems).iterator();
             while (iterator.hasNext()) {
                 BlockKeyDefinition next = iterator.next();
                 tableComposite.moveUpKeyDefinition(next, getMatchRuleDefinition());
             }
+            tableComposite.selectAllItem(((StructuredSelection) selectItems).toList());
         }
     }
 
@@ -284,11 +292,15 @@ public class BlockingKeySection extends AbstractMatchAnaysisTableSection {
     public void moveDownTableItem() {
         ISelection selectItems = tableComposite.getSelectItems();
         if (selectItems instanceof StructuredSelection) {
+            if (selectItems.isEmpty()) {
+                return;
+            }
             Iterator<BlockKeyDefinition> iterator = ((StructuredSelection) selectItems).iterator();
             while (iterator.hasNext()) {
                 BlockKeyDefinition next = iterator.next();
                 tableComposite.moveDownKeyDefinition(next, getMatchRuleDefinition());
             }
+            tableComposite.selectAllItem(((StructuredSelection) selectItems).toList());
         }
     }
 

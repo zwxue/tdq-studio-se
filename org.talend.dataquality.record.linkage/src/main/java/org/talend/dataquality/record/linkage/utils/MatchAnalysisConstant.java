@@ -79,6 +79,8 @@ public class MatchAnalysisConstant {
 
     public static final String BLOCK_KEY = "BLOCK_KEY";//$NON-NLS-1$
 
+    public static final String MATCHING_KEY = "Matching Key";//$NON-NLS-1$
+
     public static final String BlOCKING_KEY_SECTION_NAME = "Blocking Key"; //$NON-NLS-1$
 
     // match Rule definition

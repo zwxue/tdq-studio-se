@@ -8,6 +8,7 @@ package org.talend.dataquality.rules.impl;
 
 import org.eclipse.emf.common.notify.Notification;
 
+import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
 
@@ -54,7 +55,7 @@ public class DefaultSurvivorshipDefinitionImpl extends EObjectImpl implements De
     protected String dataType = DATA_TYPE_EDEFAULT;
 
     /**
-     * The cached value of the '{@link #getFunction() <em>Function</em>}' reference.
+     * The cached value of the '{@link #getFunction() <em>Function</em>}' containment reference.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @see #getFunction()
@@ -109,14 +110,6 @@ public class DefaultSurvivorshipDefinitionImpl extends EObjectImpl implements De
      * @generated
      */
     public AlgorithmDefinition getFunction() {
-        if (function != null && function.eIsProxy()) {
-            InternalEObject oldFunction = (InternalEObject)function;
-            function = (AlgorithmDefinition)eResolveProxy(oldFunction);
-            if (function != oldFunction) {
-                if (eNotificationRequired())
-                    eNotify(new ENotificationImpl(this, Notification.RESOLVE, RulesPackage.DEFAULT_SURVIVORSHIP_DEFINITION__FUNCTION, oldFunction, function));
-            }
-        }
         return function;
     }
 
@@ -125,8 +118,14 @@ public class DefaultSurvivorshipDefinitionImpl extends EObjectImpl implements De
      * <!-- end-user-doc -->
      * @generated
      */
-    public AlgorithmDefinition basicGetFunction() {
-        return function;
+    public NotificationChain basicSetFunction(AlgorithmDefinition newFunction, NotificationChain msgs) {
+        AlgorithmDefinition oldFunction = function;
+        function = newFunction;
+        if (eNotificationRequired()) {
+            ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, RulesPackage.DEFAULT_SURVIVORSHIP_DEFINITION__FUNCTION, oldFunction, newFunction);
+            if (msgs == null) msgs = notification; else msgs.add(notification);
+        }
+        return msgs;
     }
 
     /**
@@ -135,10 +134,31 @@ public class DefaultSurvivorshipDefinitionImpl extends EObjectImpl implements De
      * @generated
      */
     public void setFunction(AlgorithmDefinition newFunction) {
-        AlgorithmDefinition oldFunction = function;
-        function = newFunction;
-        if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, RulesPackage.DEFAULT_SURVIVORSHIP_DEFINITION__FUNCTION, oldFunction, function));
+        if (newFunction != function) {
+            NotificationChain msgs = null;
+            if (function != null)
+                msgs = ((InternalEObject)function).eInverseRemove(this, EOPPOSITE_FEATURE_BASE - RulesPackage.DEFAULT_SURVIVORSHIP_DEFINITION__FUNCTION, null, msgs);
+            if (newFunction != null)
+                msgs = ((InternalEObject)newFunction).eInverseAdd(this, EOPPOSITE_FEATURE_BASE - RulesPackage.DEFAULT_SURVIVORSHIP_DEFINITION__FUNCTION, null, msgs);
+            msgs = basicSetFunction(newFunction, msgs);
+            if (msgs != null) msgs.dispatch();
+        }
+        else if (eNotificationRequired())
+            eNotify(new ENotificationImpl(this, Notification.SET, RulesPackage.DEFAULT_SURVIVORSHIP_DEFINITION__FUNCTION, newFunction, newFunction));
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    @Override
+    public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
+        switch (featureID) {
+            case RulesPackage.DEFAULT_SURVIVORSHIP_DEFINITION__FUNCTION:
+                return basicSetFunction(null, msgs);
+        }
+        return super.eInverseRemove(otherEnd, featureID, msgs);
     }
 
     /**
@@ -152,8 +172,7 @@ public class DefaultSurvivorshipDefinitionImpl extends EObjectImpl implements De
             case RulesPackage.DEFAULT_SURVIVORSHIP_DEFINITION__DATA_TYPE:
                 return getDataType();
             case RulesPackage.DEFAULT_SURVIVORSHIP_DEFINITION__FUNCTION:
-                if (resolve) return getFunction();
-                return basicGetFunction();
+                return getFunction();
         }
         return super.eGet(featureID, resolve, coreType);
     }

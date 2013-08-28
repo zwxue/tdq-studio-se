@@ -220,9 +220,10 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
 
         blockingKeySection = new BlockingKeySection(form, topComp, Section.TWISTIE | Section.TITLE_BAR | Section.EXPANDED,
                 toolkit, analysis);
+        blockingKeySection.addPropertyChangeListener(this);
         matchingKeySection = new MatchingKeySection(form, topComp, Section.TWISTIE | Section.TITLE_BAR | Section.EXPANDED,
                 toolkit, analysis);
-
+        matchingKeySection.addPropertyChangeListener(this);
         // create the data table
         createDataTableComposite(dataSampleparentComposite);
     }
@@ -335,7 +336,7 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
 
     /**
      * change Column Color By Current selected Keys.
-     * 
+     *
      * @param currentMatchKeyColumn
      */
     protected void changeColumnColorByCurrentKeys(List<String> currentKeyColumn, boolean isMatchKey) {
@@ -408,7 +409,7 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
 
     /**
      * create "Refresh Button", and the row control input.
-     * 
+     *
      * @param buttonComposite
      */
     private void createDataQueryButtonComp(Composite parent) {
@@ -458,7 +459,7 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
 
     /**
      * check if the row loaded value is valid or not
-     * 
+     *
      * @return
      */
     private boolean isValidateRowCount() {
@@ -946,13 +947,14 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
         // unregister the event after create the connection
         EventManager.getInstance().unRegister(this.dataSampleparentComposite,
                 EventEnum.DQ_MATCH_ANALYSIS_AFTER_CREATE_CONNECTION, afterCreateConnectionReceiver);
+        this.getCurrentModelElement(this.getEditor()).eResource().unload();
         super.dispose();
 
     }
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisMetadataPage#fireRuningItemChanged(boolean)
      */
     @Override

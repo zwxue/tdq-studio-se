@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
@@ -38,7 +39,6 @@ import org.talend.dataquality.rules.RulesFactory;
  */
 public class MatchKeyDefinitionSection extends MatchingKeySection {
 
-    private List<MatchRule> matchRules = new ArrayList<MatchRule>();
 
     Logger log = Logger.getLogger(MatchKeyDefinitionSection.class);
 
@@ -70,13 +70,12 @@ public class MatchKeyDefinitionSection extends MatchingKeySection {
     /*
      * (non-Javadoc)
      *
-     * @see org.talend.dataquality.record.linkage.ui.section.MatchingKeySection#getMatchRuleList()
+     * @see org.talend.dataquality.record.linkage.ui.section.MatchingKeySection#getMatchRuleDefinition()
      */
     @Override
-    protected List<MatchRule> getMatchRuleList() {
-        return matchRules;
+    protected MatchRuleDefinition getMatchRuleDefinition() {
+        return this.matchRuleDef;
     }
-
 
     /*
      * (non-Javadoc)
@@ -113,7 +112,7 @@ public class MatchKeyDefinitionSection extends MatchingKeySection {
     public void setMatchRuleDef(MatchRuleDefinition matchRuleDef) {
         this.matchRuleDef = RulesFactory.eINSTANCE.createMatchRuleDefinition();
         this.matchRuleDef.getMatchRules().addAll(matchRuleDef.getMatchRules());
-        this.matchRules = this.matchRuleDef.getMatchRules();
+        this.matchRuleDef.setMatchGroupQualityThreshold(matchRuleDef.getMatchGroupQualityThreshold());
     }
 
     /*
@@ -135,7 +134,13 @@ public class MatchKeyDefinitionSection extends MatchingKeySection {
      * @return the matchRules
      */
     public List<MatchRule> getMatchRules() {
-        return this.matchRules;
+        List<MatchRule> matchRuleKeys = new ArrayList<MatchRule>();
+        matchRuleKeys.addAll(EcoreUtil.copyAll(this.matchRuleDef.getMatchRules()));
+        return matchRuleKeys;
+    }
+
+    public double getGroupQualityThreshold() {
+        return this.matchRuleDef.getMatchGroupQualityThreshold();
     }
 
     /*
@@ -150,16 +155,5 @@ public class MatchKeyDefinitionSection extends MatchingKeySection {
         return new MatchRuleTableDefinitionComposite(parent, SWT.NO_FOCUS, matchRule);
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see
-     * org.talend.dataquality.record.linkage.ui.section.MatchingKeySection#createGroupQualityThreshold(org.eclipse.swt
-     * .widgets.Composite)
-     */
-    @Override
-    protected void createGroupQualityThreshold(Composite parent) {
-        // here don't need do anything
-    }
 
 }

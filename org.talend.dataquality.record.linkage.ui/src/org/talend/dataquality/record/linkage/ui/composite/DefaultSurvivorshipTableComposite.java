@@ -46,7 +46,8 @@ public class DefaultSurvivorshipTableComposite extends AbsMatchAnalysisTableComp
 
     @Override
     protected void createTable() {
-        tableViewer = new DefaultSurvivorShipTableViewer(this, getTableStyle());
+        tableViewer = createTableViewer();
+        tableViewer.addPropertyChangeListener(this);
         ((DefaultSurvivorShipTableViewer) tableViewer).initTable(headers);
     }
 
@@ -71,13 +72,12 @@ public class DefaultSurvivorshipTableComposite extends AbsMatchAnalysisTableComp
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataquality.record.linkage.ui.composite.AbsMatchAnalysisTableComposite#createTableViewer()
      */
     @Override
     protected AbstractMatchAnalysisTableViewer createTableViewer() {
-        // TODO Auto-generated method stub
-        return null;
+        return new DefaultSurvivorShipTableViewer(this, getTableStyle());
     }
 
 }

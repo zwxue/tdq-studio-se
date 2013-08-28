@@ -74,6 +74,8 @@ public class BlockingKeyTableViewer extends AbstractMatchAnalysisTableViewer {
         CellEditor[] editors = new CellEditor[headers.size()];
         for (int i = 0; i < editors.length; ++i) {
             switch (i) {
+            case 1:
+                break;
             case 2:
                 editors[i] = new ComboBoxCellEditor(innerTable, BlockingKeyPreAlgorithmEnum.getAllTypes(), SWT.READ_ONLY);
                 break;
@@ -346,6 +348,8 @@ public class BlockingKeyTableViewer extends AbstractMatchAnalysisTableViewer {
             }
         }
     }
+
+
 
     /*
      * (non-Javadoc)

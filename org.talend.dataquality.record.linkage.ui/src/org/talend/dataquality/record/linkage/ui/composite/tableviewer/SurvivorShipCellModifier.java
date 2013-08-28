@@ -21,7 +21,7 @@ import org.talend.dataquality.rules.SurvivorshipKeyDefinition;
 
 /**
  * created by HHB on 2013-8-23 Detailled comment
- * 
+ *
  */
 public class SurvivorShipCellModifier implements ICellModifier {
 
@@ -41,7 +41,7 @@ public class SurvivorShipCellModifier implements ICellModifier {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.jface.viewers.ICellModifier#getValue(java.lang.Object, java.lang.String)
      */
     @Override
@@ -61,7 +61,7 @@ public class SurvivorShipCellModifier implements ICellModifier {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.jface.viewers.ICellModifier#modify(java.lang.Object, java.lang.String, java.lang.Object)
      */
     @Override
@@ -79,6 +79,8 @@ public class SurvivorShipCellModifier implements ICellModifier {
                 skd.getFunction().setAlgorithmType(valueByIndex.getValue());
             } else if (MatchAnalysisConstant.ALLOW_MANUAL_RESOLUTION.equalsIgnoreCase(property)) {
                 skd.setAllowManualResolution(Boolean.valueOf(newValue));
+            } else {
+                return;
             }
             tableViewer.update(skd, null);
         }

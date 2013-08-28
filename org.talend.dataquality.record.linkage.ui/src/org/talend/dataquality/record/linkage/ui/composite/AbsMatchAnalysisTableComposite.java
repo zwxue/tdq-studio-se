@@ -12,6 +12,9 @@
 // ============================================================================
 package org.talend.dataquality.record.linkage.ui.composite;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,6 +24,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.record.linkage.ui.composite.tableviewer.AbstractMatchAnalysisTableViewer;
+import org.talend.dataquality.record.linkage.utils.MatchAnalysisConstant;
 import org.talend.dataquality.rules.KeyDefinition;
 import org.talend.dataquality.rules.MatchRuleDefinition;
 
@@ -29,13 +33,16 @@ import org.talend.dataquality.rules.MatchRuleDefinition;
  * intended to be extended.
  *
  */
-public abstract class AbsMatchAnalysisTableComposite extends Composite {
+public abstract class AbsMatchAnalysisTableComposite extends Composite implements PropertyChangeListener {
 
     protected List<String> headers = new ArrayList<String>();
 
     protected AbstractMatchAnalysisTableViewer tableViewer = null;
 
     private boolean isAddColumn = true;
+
+    protected PropertyChangeSupport listeners = new PropertyChangeSupport(this);
+
 
     /**
      * DOC zshen MatchRuleComposite constructor comment.
@@ -118,6 +125,10 @@ public abstract class AbsMatchAnalysisTableComposite extends Composite {
         tableViewer.setSorter(sorter);
     }
 
+    public void selectAllItem(List<KeyDefinition> bkdList) {
+        tableViewer.selectAllItem(bkdList);
+    }
+
     /**
      * Getter for isAddColumn.
      *
@@ -136,5 +147,19 @@ public abstract class AbsMatchAnalysisTableComposite extends Composite {
         this.isAddColumn = isAddColumn;
     }
 
+    public void addPropertyChangeListener(PropertyChangeListener listener) {
+        listeners.addPropertyChangeListener(listener);
+    }
+
+    public void removePropertyChangeListener(PropertyChangeListener listener) {
+        listeners.addPropertyChangeListener(listener);
+    }
+
+    @Override
+    public void propertyChange(PropertyChangeEvent evt) {
+        if (MatchAnalysisConstant.ISDIRTY_PROPERTY.equals(evt.getPropertyName())) {
+            listeners.firePropertyChange(MatchAnalysisConstant.ISDIRTY_PROPERTY, true, false);
+        }
+    }
 
 }
