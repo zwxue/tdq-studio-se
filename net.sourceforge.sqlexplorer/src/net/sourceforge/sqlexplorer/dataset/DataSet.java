@@ -39,26 +39,26 @@ import net.sourceforge.sqlexplorer.plugin.SQLExplorerPlugin;
 
 /**
  * Generic DataSet to hold values for TableViewer.
- * 
+ *
  * This class has been changed to remove dependencies on a fixed list of data types;
  * this is to allow database-specific data types.  Since every row is represented as
- * Objects (typically instances of String, Integer, Double, etc), it is only a requirement 
+ * Objects (typically instances of String, Integer, Double, etc), it is only a requirement
  * that the cells implement the Comparable interface so that sorting works correctly.
  * The textual representation is obtained by calling toString() on the object.
- * 
+ *
  * Any code which used to use the TYPE_XXXX constants defined here should now use
  * instanceof if knowledge of the implementing type is required; however, be aware
- * that non-standard types (i.e. types not defined in java.lang) may be present.  
- * 
+ * that non-standard types (i.e. types not defined in java.lang) may be present.
+ *
  * @author Davy Vanherbergen
  * @modified John Spackman
  */
 public class DataSet {
-	
+
 	public static class Column {
 		private String caption;
 		private boolean rightJustify;
-		
+
 		public Column(String caption, boolean rightJustify) {
 			super();
 			this.caption = caption;
@@ -77,7 +77,7 @@ public class DataSet {
 			return null;
 		}
 	}
-	
+
 	public static class FormattedColumn extends Column {
 		private Format format;
 
@@ -86,32 +86,33 @@ public class DataSet {
 			this.format = format;
 		}
 
-		public Format getFormat() {
+		@Override
+        public Format getFormat() {
 			return format;
 		}
 	}
 
 	// Caption for the results tabs
 	private String caption;
-	
+
     private Column[] columns;
 
     private DataSetRow[] _rows;
 
     private DataSetTableSorter _sorter;
-    
+
     // Whether dates are formatted (from preferences)
     private Boolean formatDates;
 
     // Default date format (from preferences)
-	private SimpleDateFormat dateFormat; 
-	
+	private SimpleDateFormat dateFormat;
+
     /**
      * Create a new dataSet based on an existing ResultSet.
      * @param resultSet ResultSet with values [mandatory]
      * @param relevantIndeces int[] of all columns to add to the dataSet, use
      *            null if all columns should be included.
-     * 
+     *
      * @throws Exception if the dataset could not be created
      */
     public DataSet(ResultSet resultSet, int[] relevantIndeces, int maxRows) throws SQLException {
@@ -123,7 +124,7 @@ public class DataSet {
      * @param resultSet ResultSet with values [mandatory]
      * @param relevantIndeces int[] of all columns to add to the dataSet, use
      *            null if all columns should be included.
-     * 
+     *
      * @throws Exception if the dataset could not be created
      */
     public DataSet(ResultSet resultSet, int[] relevantIndeces) throws SQLException {
@@ -135,7 +136,7 @@ public class DataSet {
      * @param resultSet ResultSet with values [mandatory]
      * @param relevantIndeces int[] of all columns to add to the dataSet, use
      *            null if all columns should be included.
-     * 
+     *
      * @throws Exception if the dataset could not be created
      */
     public DataSet(String caption, ResultSet resultSet, int[] relevantIndeces, int maxRows) throws SQLException {
@@ -148,7 +149,7 @@ public class DataSet {
      * @param resultSet ResultSet with values [mandatory]
      * @param relevantIndeces int[] of all columns to add to the dataSet, use
      *            null if all columns should be included.
-     * 
+     *
      * @throws Exception if the dataset could not be created
      */
     public DataSet(String caption, ResultSet resultSet, int[] relevantIndeces) throws SQLException {
@@ -157,7 +158,7 @@ public class DataSet {
 
     /**
      * Create new dataset based on sql query.
-     * 
+     *
      * @param columnLabels string[] of columnLabels, use null if the column name
      *            can be used as label
      * @param sql query string
@@ -177,26 +178,29 @@ public class DataSet {
     		resultSet = statement.getResultSet();
     		initialize(columnLabels, resultSet, relevantIndeces, 0);
     	}finally {
-            if (resultSet != null)
-            	try {
+            if (resultSet != null) {
+                try {
             		resultSet.close();
             	}catch(SQLException e) {
                     SQLExplorerPlugin.error(Messages.getString("DataSet.errorCloseRs"), e);
             	}
-            if (statement != null)
+            }
+            if (statement != null) {
                 try {
                 	statement.close();
                 } catch (SQLException e) {
                     SQLExplorerPlugin.error(Messages.getString("DataSet.errorCloseStmt"), e);
                 }
-            if (connection != null)
-            	session.releaseConnection(connection);
+            }
+            if (connection != null) {
+                session.releaseConnection(connection);
+            }
     	}
     }
 
     /**
      * Create new dataset based on String[][].
-     * 
+     *
      * @param columnLabels string[] of columnLabels [mandatory]
      * @param data string[][] with values for dataset [mandatory]
      * @throws Exception if dataSet could not be created
@@ -207,7 +211,7 @@ public class DataSet {
 
     /**
      * Create new dataset based on String[][].
-     * @param caption 
+     * @param caption
      * @param columnLabels string[] of columnLabels [mandatory]
      * @param data string[][] with values for dataset [mandatory]
      * @throws Exception if dataSet could not be created
@@ -218,13 +222,14 @@ public class DataSet {
 
         _rows = new DataSetRow[data.length];
 
-        for (int i = 0; i < data.length; i++)
+        for (int i = 0; i < data.length; i++) {
             _rows[i] = new DataSetRow(this, data[i]);
+        }
     }
 
     /**
      * Initialize dataSet based on an existing ResultSet.
-     * 
+     *
      * @param columnLabels String[] of column labels [mandatory]
      * @param resultSet ResultSet with values [mandatory]
      * @param relevantIndeces int[] of all columns to add to the dataSet, use
@@ -236,7 +241,7 @@ public class DataSet {
         ResultSetMetaData metadata = resultSet.getMetaData();
 
         int[] ri = relevantIndeces;
-        
+
         // create default column indexes
         if (ri == null || ri.length == 0) {
             ri = new int[metadata.getColumnCount()];
@@ -258,7 +263,7 @@ public class DataSet {
 
         loadRows(resultSet, ri, maxRows);
     }
-    
+
     /**
      * Called to create a Column object from the given metadata; this is broken out into
      * a separate method so that database-specific implementations can override it
@@ -269,41 +274,46 @@ public class DataSet {
      */
     protected Column createColumn(ResultSetMetaData metadata, int columnIndex) throws SQLException {
     	int type = metadata.getColumnType(columnIndex);
-    	
+
     	// Numeric - figure out a display format
     	if (type == Types.DECIMAL || type == Types.NUMERIC || type == Types.DOUBLE || type == Types.FLOAT || type == Types.REAL) {
         	int precision = metadata.getPrecision(columnIndex);
         	int scale = metadata.getScale(columnIndex);
         	if (precision < 1 || scale > precision )
-            	return new FormattedColumn(metadata.getColumnName(columnIndex), true, null);//new DecimalFormat("#.#"));
-        	
+             {
+                return new FormattedColumn(metadata.getColumnName(columnIndex), true, null);//new DecimalFormat("#.#"));
+            }
+
     		/*
-    		 * NOTE: Scale can be negative (although possibly limited to Oracle), but we cope with 
-    		 * this by specifing # after the decimal place precision-1 times; eg a precision of 10 
+    		 * NOTE: Scale can be negative (although possibly limited to Oracle), but we cope with
+    		 * this by specifing # after the decimal place precision-1 times; eg a precision of 10
     		 * will return  #.#########
     		 */
         	StringBuffer sb = new StringBuffer(precision + 2);
-        	for (int j = 0; j < precision; j++)
-        		if (scale < 0 || j < precision - scale - 1)
-        			sb.append('#');
-        		else
-        			sb.append('0');
-        	
-        	if (scale > 0)
-        		sb.insert(precision - scale, '.');
-        	else if (scale < 0)
-        		sb.insert(1, '.');
-        	
+        	for (int j = 0; j < precision; j++) {
+                if (scale < 0 || j < precision - scale - 1) {
+                    sb.append('#');
+                } else {
+                    sb.append('0');
+                }
+            }
+
+        	if (scale > 0) {
+                sb.insert(precision - scale, '.');
+            } else if (scale < 0) {
+                sb.insert(1, '.');
+            }
+
         	return new FormattedColumn(metadata.getColumnName(columnIndex), true, new DecimalFormat(sb.toString()));
     	}
-    	
+
     	if (type == Types.DATE || type == Types.TIMESTAMP || type == Types.TIME) {
     		return new FormattedColumn(metadata.getColumnName(columnIndex), false, getDateFormat());
     	}
 
     	return new Column(metadata.getColumnName(columnIndex), false);
     }
-    
+
     /**
      * Creates an array of Column descriptors from an array of strings
      * @param columnLabels
@@ -311,21 +321,24 @@ public class DataSet {
      */
     private Column[] convertColumnLabels(String[] columnLabels) {
     	Column[] result = new Column[columnLabels.length];
-    	for (int i = 0; i < columnLabels.length; i++)
-    		result[i] = new Column(columnLabels[i], false);
+    	for (int i = 0; i < columnLabels.length; i++) {
+            result[i] = new Column(columnLabels[i], false);
+        }
     	return result;
     }
 
     /**
      * Get the column index for a given column name
-     * 
+     *
      * @param name
      * @return index of column whose name matches or 0 if none found
      */
     public int getColumnIndex(String name) {
-        for (int i = 0; i < columns.length; i++)
-            if (columns[i].getCaption().equalsIgnoreCase(name))
+        for (int i = 0; i < columns.length; i++) {
+            if (columns[i].getCaption().equalsIgnoreCase(name)) {
                 return i;
+            }
+        }
         return 0;
     }
 
@@ -358,8 +371,9 @@ public class DataSet {
      * @throws IndexOutOfBoundsException if row at index isn't present.
      */
     public DataSetRow getRow(int index) {
-    	if (index < 0 || index >= _rows.length)
+    	if (index < 0 || index >= _rows.length) {
             throw new IndexOutOfBoundsException(Messages.getString("DataSet.errorIndexOutOfRange") + index);
+        }
     	return _rows[index];
     }
 
@@ -373,26 +387,27 @@ public class DataSet {
      */
     protected void loadRows(ResultSet resultSet, int[] relevantIndeces, int maxRows) throws SQLException {
         ResultSetMetaData metadata = resultSet.getMetaData();
-        
+
         // create rows
         ArrayList rows = new ArrayList(maxRows > 0 ? maxRows : 100);
         int rowCount = 0;
         while (resultSet.next() && (maxRows == 0 || rowCount < maxRows)) {
             DataSetRow row = new DataSetRow(this);
             for (int i = 0; i < columns.length; i++) {
-            	int columnIndex = relevantIndeces != null ? relevantIndeces[i] : i;
-            	Comparable obj = loadCellValue(columnIndex, metadata.getColumnType(columnIndex), resultSet);
-                if (resultSet.wasNull())
+                int columnIndex = relevantIndeces != null ? relevantIndeces[i] : i;
+                Comparable obj = loadCellValue(columnIndex, metadata.getColumnType(columnIndex), resultSet);
+                if (resultSet.wasNull()) {
                     row.setValue(i, null);
-                else
-                	row.setValue(i, obj);
+                } else {
+                    row.setValue(i, obj);
+                }
             }
             rows.add(row);
             rowCount++;
         }
         _rows = (DataSetRow[]) rows.toArray(new DataSetRow[] {});
     }
-    
+
     /**
      * Loads a given column from the current row in a ResultSet; can be overridden to
      * provide database-specific implementation
@@ -404,66 +419,73 @@ public class DataSet {
      */
     protected Comparable loadCellValue(int columnIndex, int dataType, ResultSet resultSet) throws SQLException {
         switch (dataType) {
-	        case Types.INTEGER:
-	        case Types.SMALLINT:
-	        case Types.TINYINT:
-	            return new Long(resultSet.getInt(columnIndex));
-	
-	        case Types.BIGINT:
-	            return new Long(resultSet.getLong(columnIndex));
-		            
-	        case Types.DECIMAL:
-	        case Types.NUMERIC:
-	        case Types.DOUBLE:
-	        case Types.FLOAT:
-	        case Types.REAL:
-	        	int precision = resultSet.getMetaData().getPrecision(columnIndex);
-	        	if (precision > 16 || precision < 1)
-	        		return resultSet.getBigDecimal(columnIndex);
-	            return new Double(resultSet.getDouble(columnIndex));
-	
-	        case Types.DATE:
-	        case Types.TIMESTAMP:                    
-	            return resultSet.getTimestamp(columnIndex);
-	            
-	        case Types.TIME:
-	            return resultSet.getTime(columnIndex);
-	            
-            default:
-                // MOD yyi 2012-05-25 TDQ-5460 : Fix getString of JConnector(sybase).
-                try {
-                    return resultSet.getString(columnIndex);
-                } catch (SQLException e) {
-                    // MOD yyi 2012-04-17 TDQ-5176 : Change get string to get bytes for mess decode.
-                    return null == resultSet.getBytes(columnIndex) ? null : new String(resultSet.getBytes(columnIndex));
-                }
+        case Types.INTEGER:
+        case Types.SMALLINT:
+        case Types.TINYINT:
+            return new Long(resultSet.getInt(columnIndex));
+
+        case Types.BIGINT:
+            return new Long(resultSet.getLong(columnIndex));
+
+        case Types.DECIMAL:
+        case Types.NUMERIC:
+        case Types.DOUBLE:
+        case Types.FLOAT:
+        case Types.REAL:
+            int precision = resultSet.getMetaData().getPrecision(columnIndex);
+            if (precision > 16 || precision < 1) {
+                return resultSet.getBigDecimal(columnIndex);
             }
+            return new Double(resultSet.getDouble(columnIndex));
+
+            // MOD qiongli 2013-8-28 TDQ-7318,use 'getDate(...)' for Date type,instead of 'getTimestamp(...)'
+        case Types.DATE:
+            return resultSet.getDate(columnIndex);
+
+        case Types.TIMESTAMP:
+            return resultSet.getTimestamp(columnIndex);
+
+        case Types.TIME:
+            return resultSet.getTime(columnIndex);
+
+        default:
+            // MOD yyi 2012-05-25 TDQ-5460 : Fix getString of JConnector(sybase).
+            try {
+                return resultSet.getString(columnIndex);
+            } catch (SQLException e) {
+                // MOD yyi 2012-04-17 TDQ-5176 : Change get string to get bytes for mess decode.
+                return null == resultSet.getBytes(columnIndex) ? null : new String(resultSet.getBytes(columnIndex));
+            }
+        }
     }
-    
+
     /**
      * Resort the data using the given column and sortdirection.
      * @param columnIndex primary sort column index
      * @param sortDirection SWT.UP | SWT.DOWN
-     */    
+     */
 	public void sort(int columnIndex, int sortDirection) {
     	if (_sorter == null) {
     		_sorter = new DataSetTableSorter(this);
     	}
     	_sorter.setTopPriority(columnIndex, sortDirection);
-    	
+
     	Arrays.sort(_rows, _sorter);
     }
-	
+
 	private DateFormat getDateFormat() {
-		if (formatDates == null)
-		    formatDates = SQLExplorerPlugin.getDefault().getPluginPreferences().getBoolean(IConstants.DATASETRESULT_FORMAT_DATES);
-		if (!formatDates)
-			return null;
-		
-		if (dateFormat == null)
-			dateFormat = new SimpleDateFormat(
+		if (formatDates == null) {
+            formatDates = SQLExplorerPlugin.getDefault().getPluginPreferences().getBoolean(IConstants.DATASETRESULT_FORMAT_DATES);
+        }
+		if (!formatDates) {
+            return null;
+        }
+
+		if (dateFormat == null) {
+            dateFormat = new SimpleDateFormat(
 	            SQLExplorerPlugin.getDefault().getPluginPreferences().getString(IConstants.DATASETRESULT_DATE_FORMAT));
-		
+        }
+
 		return dateFormat;
 	}
 
