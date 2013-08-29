@@ -159,7 +159,7 @@ public class AbstractRecordGroupingTest {
         for (String[] rds : groupingRecords) {
             if (rds[0].equals("95006021900")) { //$NON-NLS-1$
                 // Assert group score
-                Assert.assertEquals(0.9814814858966403, Double.valueOf(rds[rds.length - 2]).doubleValue(), 0d);
+                Assert.assertEquals(0.9768518573708005, Double.valueOf(rds[rds.length - 2]).doubleValue(), 0d);
             }
 
         }
