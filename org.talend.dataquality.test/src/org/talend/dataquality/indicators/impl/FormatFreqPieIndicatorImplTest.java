@@ -25,10 +25,9 @@ public class FormatFreqPieIndicatorImplTest {
     private FormatFreqPieIndicator formatFreqPieIndicator;
 
     // test data
-    private Object data[] = {
-            "+41446681800", "+041446681800", "+044 668 18 00", "86 18611281173", "+8613521588310", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
+    private Object data[] = { "+41446681800", "+041446681800", "+044 668 18 00", "86 18611281173", "+8613521588310", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
             "086 13693273494", "+08618611281173", "+86 18611281173", "+41 44 668 18 00", "041 44 668 18 00", "+86 13521588310", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
-            "044 668 18 00", "446681800\\r\\n186 1128 1173", "186 1128 1173", "134 8877 8542", "158 1061 0794", "1581061 0794", null }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ 
+            "044 668 18 00", "446681800", "186 1128 1173", "134 8877 8542", "158 1061 0794", "1581061 0794", null }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ 
 
     /**
      * setUp method.
@@ -41,7 +40,8 @@ public class FormatFreqPieIndicatorImplTest {
     }
 
     /**
-     * Test method for {@link org.talend.dataquality.indicators.impl.FormatFreqPieIndicator#handle(java.lang.Object)}.
+     * Test method for
+     * {@link org.talend.dataquality.indicators.impl.FormatFreqPieIndicatorImpl#handle(java.lang.Object)}.
      */
     @Test
     public void testHandle() {
@@ -50,7 +50,7 @@ public class FormatFreqPieIndicatorImplTest {
         }
         Assert.assertEquals(2, formatFreqPieIndicator.getWellFormE164Count());
         Assert.assertEquals(1, formatFreqPieIndicator.getWellFormInteCount());
-        Assert.assertEquals(3, formatFreqPieIndicator.getWellFormNatiCount());
+        Assert.assertEquals(4, formatFreqPieIndicator.getWellFormNatiCount());
         Assert.assertEquals(18, formatFreqPieIndicator.getCount().intValue());
     }
 }

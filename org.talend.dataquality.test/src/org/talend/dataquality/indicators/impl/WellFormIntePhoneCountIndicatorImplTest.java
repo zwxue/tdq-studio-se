@@ -22,7 +22,7 @@ import org.talend.dataquality.indicators.WellFormIntePhoneCountIndicator;
  */
 public class WellFormIntePhoneCountIndicatorImplTest {
 
-    private WellFormIntePhoneCountIndicator WellFormIntePhoneCountIndicator;
+    private WellFormIntePhoneCountIndicator wellFormIntePhoneCountIndicator;
 
     // test data
     private Object data[] = {
@@ -37,7 +37,7 @@ public class WellFormIntePhoneCountIndicatorImplTest {
      */
     @Before
     public void setUp() throws Exception {
-        WellFormIntePhoneCountIndicator = new WellFormIntePhoneCountIndicatorImpl();
+        wellFormIntePhoneCountIndicator = new WellFormIntePhoneCountIndicatorImpl();
     }
 
     /**
@@ -47,9 +47,9 @@ public class WellFormIntePhoneCountIndicatorImplTest {
     @Test
     public void testHandle() {
         for (Object obj : data) {
-            this.WellFormIntePhoneCountIndicator.handle(obj);
+            this.wellFormIntePhoneCountIndicator.handle(obj);
         }
-        Assert.assertEquals(1, WellFormIntePhoneCountIndicator.getWellFormIntePhoneCount().intValue());
+        Assert.assertEquals(1, wellFormIntePhoneCountIndicator.getWellFormIntePhoneCount().intValue());
     }
 
 }

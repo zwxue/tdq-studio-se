@@ -42,7 +42,7 @@ public class WellFormE164PhoneCountIndicatorImplTest {
 
     /**
      * Test method for
-     * {@link org.talend.dataquality.indicators.impl.WellFormE164PhoneCountIndicator#handle(java.lang.Object)}.
+     * {@link org.talend.dataquality.indicators.impl.WellFormE164PhoneCountIndicatorImpl#handle(java.lang.Object)}.
      */
     @Test
     public void testHandle() {
