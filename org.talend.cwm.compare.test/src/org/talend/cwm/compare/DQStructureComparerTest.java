@@ -196,7 +196,7 @@ public class DQStructureComparerTest {
         Mockito.when(MetadataFillFactory.getDBInstance()).thenReturn(mockMetadataFillFactory);
         Mockito.when(MetadataFillFactory.getDBInstance()).thenCallRealMethod();
         Mockito.when(MetadataFillFactory.getDBInstance()).thenReturn(mockMetadataFillFactory);
-        Mockito.when(mockMetadataFillFactory.checkConnection((IMetadataConnection) Mockito.any())).thenReturn(returnCode);
+        Mockito.when(mockMetadataFillFactory.createConnection((IMetadataConnection) Mockito.any())).thenReturn(returnCode);
         Mockito.when(mockMetadataFillFactory.fillUIConnParams((IMetadataConnection) Mockito.any(), (Connection) Mockito.isNull()))
                 .thenReturn(dbProvider);
         Mockito.when(
@@ -313,7 +313,7 @@ public class DQStructureComparerTest {
         Mockito.when(MetadataFillFactory.getDBInstance()).thenReturn(mockMetadataFillFactory);
         Mockito.when(MetadataFillFactory.getDBInstance()).thenCallRealMethod();
         Mockito.when(MetadataFillFactory.getDBInstance()).thenReturn(mockMetadataFillFactory);
-        Mockito.when(mockMetadataFillFactory.checkConnection((IMetadataConnection) Mockito.any())).thenReturn(returnCode);
+        Mockito.when(mockMetadataFillFactory.createConnection((IMetadataConnection) Mockito.any())).thenReturn(returnCode);
         Mockito.when(mockMetadataFillFactory.fillUIConnParams((IMetadataConnection) Mockito.any(), (Connection) Mockito.isNull()))
                 .thenReturn(dbProvider);
         Mockito.when(
@@ -433,7 +433,7 @@ public class DQStructureComparerTest {
         Mockito.when(MetadataFillFactory.getDBInstance()).thenReturn(mockMetadataFillFactory);
         Mockito.when(MetadataFillFactory.getDBInstance()).thenCallRealMethod();
         Mockito.when(MetadataFillFactory.getDBInstance()).thenReturn(mockMetadataFillFactory);
-        Mockito.when(mockMetadataFillFactory.checkConnection((IMetadataConnection) Mockito.any())).thenReturn(returnCode);
+        Mockito.when(mockMetadataFillFactory.createConnection((IMetadataConnection) Mockito.any())).thenReturn(returnCode);
         Mockito.when(mockMetadataFillFactory.fillUIConnParams((IMetadataConnection) Mockito.any(), (Connection) Mockito.isNull()))
                 .thenReturn(dbProvider);
         Mockito.when(
