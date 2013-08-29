@@ -32,7 +32,7 @@ import org.talend.cwm.helper.CatalogHelper;
 import org.talend.cwm.management.api.FolderProvider;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.relational.TdTable;
-import org.talend.dataprofiler.core.helper.UnitTestBuildHelper;
+import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisType;
 import org.talend.dataquality.domain.sql.SqlPredicate;
@@ -63,11 +63,6 @@ import orgomg.cwm.resource.relational.Catalog;
  * DOC scorreia class global comment. Detailled comment
  */
 public class MultiColAnalysisCreationTest {
-
-    /**
-     * project name
-     */
-    private static final String PROJECT_NAME = "MultiColAnalysisCreationTestProject"; //$NON-NLS-1$\
 
     private static final String ANALYSIS_NAME = "My_test_MultiColAnalysis"; //$NON-NLS-1$\
 
@@ -111,12 +106,13 @@ public class MultiColAnalysisCreationTest {
 
     @Before
     public void setUp() throws Exception {
-        UnitTestBuildHelper.createRealProject(PROJECT_NAME);
+        if (DQStructureManager.getInstance().isNeedCreateStructure()) {
+            DQStructureManager.getInstance().createDQStructure();
+        }
     }
 
     @After
     public void tearDown() throws Exception {
-        UnitTestBuildHelper.deleteCurrentProject();
     }
 
     /**

@@ -34,6 +34,7 @@ import org.talend.cwm.relational.RelationalFactory;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.relational.TdExpression;
 import org.talend.cwm.relational.TdTable;
+import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisType;
 import org.talend.dataquality.domain.Domain;
@@ -54,7 +55,6 @@ import org.talend.dataquality.indicators.definition.IndicatorCategory;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dq.analysis.parameters.DBConnectionParameter;
 import org.talend.dq.helper.ParameterUtil;
-import org.talend.dq.helper.UnitTestBuildHelper;
 import org.talend.dq.indicators.IndicatorEvaluator;
 import org.talend.dq.sql.converters.CwmZExpression;
 import org.talend.dq.writer.impl.ElementWriterFactory;
@@ -71,11 +71,6 @@ import orgomg.cwm.resource.relational.Catalog;
  * DOC scorreia class global comment. Detailled comment
  */
 public class AnalysisCreationTest {
-
-    /**
-     * project name
-     */
-    private static final String PROJECT_NAME = "AnalysisCreationTestProject"; //$NON-NLS-1$\
 
     private static final String ANALYSIS_NAME = "My_test_analysis"; //$NON-NLS-1$\
 
@@ -116,12 +111,13 @@ public class AnalysisCreationTest {
 
     @Before
     public void setUp() throws Exception {
-        UnitTestBuildHelper.createRealProject(PROJECT_NAME);
+        if (DQStructureManager.getInstance().isNeedCreateStructure()) {
+            DQStructureManager.getInstance().createDQStructure();
+        }
     }
 
     @After
     public void tearDown() throws Exception {
-        UnitTestBuildHelper.deleteCurrentProject();
     }
 
     /**
