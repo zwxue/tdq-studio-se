@@ -24,6 +24,8 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.common.util.EList;
+import org.talend.core.GlobalServiceRegister;
+import org.talend.core.ITDQRepositoryService;
 import org.talend.core.model.metadata.builder.connection.MetadataColumn;
 import org.talend.cwm.db.connection.DatabaseSQLExecutor;
 import org.talend.cwm.db.connection.DelimitedFileSQLExecutor;
@@ -94,6 +96,9 @@ public class MatchAnalysisExecutor implements IAnalysisExecutor {
         MatchGroupResultConsumer matchResultConsumer = createMatchGroupResultConsumer(columnMap, recordMatchingIndicator);
 
         ISQLExecutor sqlExecutor = getSQLExectutor(anlayzedElements);
+        // need to set the limit in sql executor, from the analysis
+        sqlExecutor.setLimit(analysis.getParameters().getMaxNumberRows());
+
         if (sqlExecutor == null) {
             rc.setOk(Boolean.FALSE);
             return rc;
@@ -122,7 +127,29 @@ public class MatchAnalysisExecutor implements IAnalysisExecutor {
                 matchRows);
         monitor.worked(100);
         monitor.done();
+
+        refreshTableWithMatchFullResult(analysis, matchResultConsumer);
+
         return rc;
+    }
+
+    /**
+     * DOC yyin Comment method "refreshTableWithMatchFullResult".
+     * 
+     * @param analysis
+     * 
+     * @param matchResultConsumer
+     */
+    private void refreshTableWithMatchFullResult(Analysis analysis, MatchGroupResultConsumer matchResultConsumer) {
+        ITDQRepositoryService tdqRepService = null;
+
+        if (GlobalServiceRegister.getDefault().isServiceRegistered(ITDQRepositoryService.class)) {
+            tdqRepService = (ITDQRepositoryService) GlobalServiceRegister.getDefault().getService(ITDQRepositoryService.class);
+        }
+        if (tdqRepService != null) {
+            tdqRepService.refreshTableWithResult(analysis, matchResultConsumer.getFullMatchResult());
+        }
+
     }
 
     /**
@@ -205,16 +232,19 @@ public class MatchAnalysisExecutor implements IAnalysisExecutor {
             AppliedBlockKey appliedKeyDefinition = (AppliedBlockKey) keyDef;
             String column = appliedKeyDefinition.getColumn();
 
-            Map<String, String> blockKeyDefMap = new HashMap<String, String>();
-            blockKeyDefMap.put(MatchAnalysisConstant.COLUMN, column);
             if (StringUtils.equals(PluginConstant.BLOCK_KEY, column)) {
                 // If there exist customized block key defined, get the key parameters.
                 List<BlockKeyDefinition> blockKeyDefs = recordMatchingIndicator.getBuiltInMatchRuleDefinition().getBlockKeys();
                 for (BlockKeyDefinition blockKeyDef : blockKeyDefs) {
+                    Map<String, String> blockKeyDefMap = new HashMap<String, String>();
                     blockKeyDefMap.putAll(getCustomizedBlockKeyParameter(blockKeyDef, blockKeyDef.getColumn()));
+                    blockKeySchema.add(blockKeyDefMap);
                 }
+            } else {
+                Map<String, String> blockKeyDefMap = new HashMap<String, String>();
+                blockKeyDefMap.put(MatchAnalysisConstant.COLUMN, column);
+                blockKeySchema.add(blockKeyDefMap);
             }
-            blockKeySchema.add(blockKeyDefMap);
         }
 
         BlockingKeyHandler blockKeyHandler = new BlockingKeyHandler(blockKeySchema, columnMap);
@@ -294,7 +324,7 @@ public class MatchAnalysisExecutor implements IAnalysisExecutor {
             @Override
             public void handle(Object row) {
                 recordMatchingIndicator.handle(row);
-
+                addOneRowOfResult(row);
             }
         };
         return matchResultConsumer;

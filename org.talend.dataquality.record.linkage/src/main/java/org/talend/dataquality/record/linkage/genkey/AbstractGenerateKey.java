@@ -104,7 +104,7 @@ public class AbstractGenerateKey {
             String postAlgoPara = blockKey.get(MatchAnalysisConstant.POST_VALUE);
             String colValue = dataMap.get(colName);
             if (colValue == null) {
-                return winGenKey.toString();
+                colValue = StringUtils.EMPTY;
             }
 
             tempVar = getAlgoResult(BlockingKeyPreAlgorithmEnum.getTypeByValue(preAlgoName).getComponentValueName(), preAlgoPara,

@@ -672,4 +672,10 @@ public class TOPRepositoryService implements ITDQRepositoryService {
         this.noNeedToOpenConnectionEditor = noNeedToOpenConnectionEditor;
     }
 
+    public void refreshTableWithResult(ModelElement analysis, List<Object[]> result) {
+
+        EventManager.getInstance().publish(analysis, EventEnum.DQ_MATCH_ANALYSIS_REFRESH_WITH_RESULT, result);
+
+    }
+
 }

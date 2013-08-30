@@ -12,11 +12,17 @@
 // ============================================================================
 package org.talend.dataquality.record.linkage.grouping;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * created by zhao on Aug 20, 2013 Detailled comment
  * 
  */
 public abstract class MatchGroupResultConsumer {
+
+    // save the match result
+    protected List<Object[]> matchResult = null;
 
     /**
      * 
@@ -26,4 +32,16 @@ public abstract class MatchGroupResultConsumer {
      */
     public abstract void handle(Object row);
 
+    public void addOneRowOfResult(Object rowResult) {
+        if (matchResult == null) {
+            matchResult = new ArrayList<Object[]>();
+        }
+        if (rowResult instanceof String[]) {
+            matchResult.add((String[]) rowResult);
+        }
+    }
+
+    public List<Object[]> getFullMatchResult() {
+        return matchResult;
+    }
 }

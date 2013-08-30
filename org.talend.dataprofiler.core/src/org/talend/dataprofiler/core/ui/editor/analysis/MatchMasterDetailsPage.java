@@ -46,6 +46,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IEditorInput;
@@ -100,6 +101,8 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
     private static Logger log = Logger.getLogger(MatchMasterDetailsPage.class);
 
     private EventReceiver afterCreateConnectionReceiver = null;
+
+    private EventReceiver refreshTableDataReceiver = null;
 
     private MatchAnalysisHandler analysisHandler;
 
@@ -404,7 +407,7 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
                 // no need to implement
             }
         });
-        registerCreateConnectionEvent(dataSampleparentComposite);
+        registerEvents(dataSampleparentComposite);
     }
 
     /**
@@ -498,7 +501,7 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
 
     }
 
-    private void registerCreateConnectionEvent(Composite dataSampleComposite) {
+    private void registerEvents(Composite dataSampleComposite) {
         // register: refresh the result page after running it from menu
         afterCreateConnectionReceiver = new EventReceiver() {
             @Override
@@ -512,6 +515,26 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
         };
         EventManager.getInstance().register(dataSampleComposite, EventEnum.DQ_MATCH_ANALYSIS_AFTER_CREATE_CONNECTION,
                 afterCreateConnectionReceiver);
+
+        // register: refresh the data sample table to display the running result(with GID, SCORE, ...)
+         refreshTableDataReceiver = new EventReceiver() {
+        
+         @Override
+            public boolean handle(final Object data) {
+                Display.getDefault().asyncExec(new Runnable() {
+
+                    public void run() {
+                        refreshTable((List<Object[]>) data);
+                    }
+
+                });
+                return true;
+         }
+         };
+         EventManager.getInstance().register(analysisHandler.getAnalysis(),
+         EventEnum.DQ_MATCH_ANALYSIS_REFRESH_WITH_RESULT,
+         refreshTableDataReceiver);
+
     }
 
     /**
@@ -946,6 +969,9 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
         // unregister the event after create the connection
         EventManager.getInstance().unRegister(this.dataSampleparentComposite,
                 EventEnum.DQ_MATCH_ANALYSIS_AFTER_CREATE_CONNECTION, afterCreateConnectionReceiver);
+        EventManager.getInstance().unRegister(analysisHandler.getAnalysis(), EventEnum.DQ_MATCH_ANALYSIS_REFRESH_WITH_RESULT,
+                refreshTableDataReceiver);
+
         this.getCurrentModelElement(this.getEditor()).eResource().unload();
         super.dispose();
 
