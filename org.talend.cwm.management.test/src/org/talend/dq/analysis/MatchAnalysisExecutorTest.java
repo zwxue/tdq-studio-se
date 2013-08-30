@@ -73,6 +73,8 @@ public class MatchAnalysisExecutorTest {
         params.setMaxNumberRows(100);
         analysis.setParameters(params);
 
+        // analysisResult.setAnalysis(analysis);
+
         context.setConnection(delimitedFileconnection);
 
         URL fileUrl = this.getClass().getResource("match_test_data"); //$NON-NLS-1$
@@ -289,6 +291,8 @@ public class MatchAnalysisExecutorTest {
         BlockKeyIndicator blockKeyIndicator = ColumnsetPackage.eINSTANCE.getColumnsetFactory().createBlockKeyIndicator();
 
         AnalysisResult anaResult = AnalysisPackage.eINSTANCE.getAnalysisFactory().createAnalysisResult();
+        anaResult.setResultMetadata(AnalysisPackage.eINSTANCE.getAnalysisFactory().createExecutionInformations());
+
         analysis.setResults(anaResult);
         analysis.getResults().getIndicators().add(matchIndicator);
         analysis.getResults().getIndicators().add(blockKeyIndicator);
