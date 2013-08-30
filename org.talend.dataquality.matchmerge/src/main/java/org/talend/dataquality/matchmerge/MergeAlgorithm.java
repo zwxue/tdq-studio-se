@@ -24,5 +24,7 @@ public enum MergeAlgorithm {
     MOST_RECENT,
     OLDEST_DATE,
     REPEATED_VALUES,
-    MOST_COMMON
+    MOST_COMMON,
+    FALSE,
+    TRUE
 }
