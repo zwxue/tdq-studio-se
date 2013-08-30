@@ -18,7 +18,9 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
+import java.util.Date;
 
+import org.apache.log4j.Logger;
 import org.eclipse.emf.ecore.EObject;
 import org.talend.commons.utils.StringUtils;
 import org.talend.core.language.LanguageManager;
@@ -29,9 +31,17 @@ import org.talend.cwm.helper.CatalogHelper;
 import org.talend.cwm.helper.ColumnSetHelper;
 import org.talend.cwm.helper.SchemaHelper;
 import org.talend.cwm.helper.SwitchHelpers;
+import org.talend.cwm.management.i18n.Messages;
 import org.talend.dataquality.PluginConstant;
+import org.talend.dataquality.analysis.Analysis;
+import org.talend.dataquality.analysis.AnalysisContext;
+import org.talend.dataquality.analysis.AnalysisResult;
+import org.talend.dataquality.analysis.ExecutionInformations;
 import org.talend.dq.dbms.DbmsLanguage;
 import org.talend.fileprocess.FileInputDelimited;
+import org.talend.utils.sugars.ReturnCode;
+import orgomg.cwm.foundation.softwaredeployment.DataManager;
+import orgomg.cwm.foundation.softwaredeployment.SoftwaredeploymentPackage;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.resource.relational.Catalog;
 import orgomg.cwm.resource.relational.ColumnSet;
@@ -43,6 +53,8 @@ import com.csvreader.CsvReader;
  * DOC yyin  class global comment. Detailled comment
  */
 public final class AnalysisExecutorHelper {
+
+    private static Logger log = Logger.getLogger(AnalysisExecutorHelper.class);
 
     /**
      * get full name as: db.catalog.table, if has catalog/schema
@@ -206,4 +218,70 @@ public final class AnalysisExecutorHelper {
         return path;
     }
 
+    /**
+     * Method "check" checks that the analysis can be run.
+     * 
+     * @param analysis the analysis to prepare
+     * @return true if ok.
+     */
+    public static ReturnCode check(Analysis analysis) {
+        ReturnCode rc = new ReturnCode(Boolean.TRUE);
+        AnalysisContext context = analysis.getContext();
+        if (context == null) {
+            rc.setMessage(Messages.getString("AnalysisExecutor.ContextNull", analysis.getName())); //$NON-NLS-1$
+            rc.setOk(Boolean.FALSE);
+            return rc;
+        }
+        DataManager connection = context.getConnection();
+        if (connection == null) {
+            rc.setMessage(Messages.getString("AnalysisExecutor.NoConnectionFound", analysis.getName())); //$NON-NLS-1$
+            rc.setOk(Boolean.FALSE);
+            return rc;
+        }
+        if (log.isInfoEnabled()) {
+            if (SoftwaredeploymentPackage.eINSTANCE.getDataProvider().isInstance(connection)) {
+                // MOD 20130225 TDQ-6632 the name of the item should be given (not the pathname)
+                log.info(Messages.getString("AnalysisExecutor.CONNECTIONTO", connection.getName()));//$NON-NLS-1$
+            }
+        }
+        AnalysisResult results = analysis.getResults();
+        if (results == null) {
+            rc.setMessage(Messages.getString("AnalysisExecutor.AnalysisnotNotPrepareCorrect", analysis.getName())); //$NON-NLS-1$
+            rc.setOk(Boolean.FALSE);
+            return rc;
+        }
+        return rc;
+    }
+
+    public static long setExecutionDateInAnalysisResult(Analysis analysis) {
+        final ExecutionInformations resultMetadata = analysis.getResults().getResultMetadata();
+        final long startime = System.currentTimeMillis();
+        resultMetadata.setExecutionDate(new Date(startime));
+        return startime;
+    }
+
+    /**
+     * setExecutionNumberInAnalysisResult".
+     * 
+     * @param analysis
+     * @return error message if any
+     */
+    public static String setExecutionNumberInAnalysisResult(Analysis analysis, boolean ok, boolean isLowMemory, long usedMemory) {
+        final ExecutionInformations resultMetadata = analysis.getResults().getResultMetadata();
+        String errorMessage = null;
+        resultMetadata.setLastRunOk(ok);
+        int executionNumber = resultMetadata.getExecutionNumber() + 1;
+        resultMetadata.setExecutionNumber(executionNumber);
+        if (isLowMemory) {
+            errorMessage = Messages.getString("Evaluator.OutOfMomory", usedMemory);//$NON-NLS-1$
+            resultMetadata.setMessage(errorMessage);
+        } else if (ok) {
+            resultMetadata.setLastExecutionNumberOk(executionNumber);
+            resultMetadata.setMessage(null); // reset error message
+
+        } else {
+            resultMetadata.setMessage(errorMessage);
+        }
+        return errorMessage;
+    }
 }

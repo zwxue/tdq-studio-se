@@ -813,6 +813,9 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
      * @return
      */
     private List<Object[]> fetchDataForTable() {
+        if (this.selectedNodes == null || selectedNodes.length == 0) {
+            return new ArrayList<Object[]>();
+        }
         ISQLExecutor sqlExecutor = null;
         if (this.isMdm) {
             sqlExecutor = new MDMSQLExecutor();
@@ -842,7 +845,9 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
 
     private ModelElement[] translateSelectedNodeIntoModelElement() {
         // change the connection in analysis according to the user's selection
-        changeConnectionOfAnalysisByNewSelectedNode(selectedNodes[0]);
+        if (selectedNodes != null && selectedNodes.length > 0) {
+            changeConnectionOfAnalysisByNewSelectedNode(selectedNodes[0]);
+        }
 
         return translateNodeIntoModelElement();
     }
@@ -888,14 +893,24 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
     @Override
     protected ReturnCode canRun() {
         ReturnCode rc = new ReturnCode(Boolean.FALSE);
+
+        // when the user didnot select any columns, can not run
+        if (analysisHandler.getAnalyzedColumns() == null || analysisHandler.getAnalyzedColumns().size() < 1) {
+            rc.setMessage(DefaultMessagesImpl.getString("MatchMasterDetailsPage.NoSelectColumn"));
+            return rc;
+        }
+
         RecordMatchingIndicator recordMatchingIndicator = MatchRuleAnlaysisUtils.getRecordMatchIndicatorFromAna(analysis);
         EList<MatchRule> matchRules = recordMatchingIndicator.getBuiltInMatchRuleDefinition().getMatchRules();
         if (matchRules.size() > 0) {
             MatchRule matchRule = matchRules.get(0);
             if (matchRule.getMatchKeys().size() > 0) {
                 rc.setOk(Boolean.TRUE);
+            } else {
+                rc.setMessage(DefaultMessagesImpl.getString("MatchMasterDetailsPage.NoMatchKey"));
             }
         }
+
         return rc;
     }
 

@@ -12,6 +12,7 @@
 // ============================================================================
 package org.talend.dq.analysis;
 
+import java.lang.management.ManagementFactory;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -23,6 +24,7 @@ import java.util.TreeMap;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.common.util.EList;
 import org.talend.core.GlobalServiceRegister;
 import org.talend.core.ITDQRepositoryService;
@@ -36,6 +38,7 @@ import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.xml.TdXmlElementType;
 import org.talend.dataquality.PluginConstant;
 import org.talend.dataquality.analysis.Analysis;
+import org.talend.dataquality.analysis.ExecutionInformations;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.columnset.BlockKeyIndicator;
 import org.talend.dataquality.indicators.columnset.RecordMatchingIndicator;
@@ -50,6 +53,8 @@ import org.talend.dataquality.rules.KeyDefinition;
 import org.talend.dataquality.rules.MatchKeyDefinition;
 import org.talend.dataquality.rules.MatchRule;
 import org.talend.dataquality.rules.RulesPackage;
+import org.talend.dq.analysis.memory.AnalysisThreadMemoryChangeNotifier;
+import org.talend.dq.helper.AnalysisExecutorHelper;
 import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
@@ -63,12 +68,26 @@ public class MatchAnalysisExecutor implements IAnalysisExecutor {
 
     private IProgressMonitor monitor;
 
+    private long usedMemory;
+
+    private volatile boolean isLowMemory = false;
+
     /*
      * (non-Javadoc)
      * 
      * @see org.talend.dq.analysis.IAnalysisExecutor#execute(org.talend.dataquality.analysis.Analysis)
      */
     public ReturnCode execute(Analysis analysis) {
+        // --- preconditions
+        ReturnCode preRC = AnalysisExecutorHelper.check(analysis);
+        if (!preRC.isOk()) {
+            return preRC;
+        }
+        assert analysis != null;
+
+        // --- creation time
+        final long startime = AnalysisExecutorHelper.setExecutionDateInAnalysisResult(analysis);
+
         ReturnCode rc = new ReturnCode(Boolean.TRUE);
         EList<Indicator> indicators = analysis.getResults().getIndicators();
         RecordMatchingIndicator recordMatchingIndicator = null;
@@ -128,7 +147,18 @@ public class MatchAnalysisExecutor implements IAnalysisExecutor {
         monitor.worked(100);
         monitor.done();
 
+        // --- set metadata information of analysis
+        AnalysisExecutorHelper.setExecutionNumberInAnalysisResult(analysis, true, isLowMemory, usedMemory);
+
         refreshTableWithMatchFullResult(analysis, matchResultConsumer);
+
+        // --- compute execution duration
+        if (this.continueRun()) {
+            long endtime = System.currentTimeMillis();
+            final ExecutionInformations resultMetadata = analysis.getResults().getResultMetadata();
+            resultMetadata.setExecutionDuration((int) (endtime - startime));
+            resultMetadata.setOutThreshold(false);
+        }
 
         return rc;
     }
@@ -349,11 +379,27 @@ public class MatchAnalysisExecutor implements IAnalysisExecutor {
         return sqlExecutor;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.talend.dq.analysis.IAnalysisExecutor#setMonitor(org.eclipse.core.runtime.IProgressMonitor)
-     */
+    protected boolean continueRun() {
+        if (!Platform.isRunning()) { // reporting engine is working as library
+            return true;
+        }
+        boolean ret = true;
+        if (monitor != null && monitor.isCanceled()) {
+            ret = false;
+        } else if (this.isLowMemory) {
+            ret = false;
+        } else if (AnalysisThreadMemoryChangeNotifier.getInstance().isUsageThresholdExceeded()) {
+            this.usedMemory = AnalysisThreadMemoryChangeNotifier.convertToMB(ManagementFactory.getMemoryMXBean()
+                    .getHeapMemoryUsage().getUsed());
+            ret = false;
+            this.isLowMemory = true;
+        }
+        return ret;
+    } /*
+       * (non-Javadoc)
+       * 
+       * @see org.talend.dq.analysis.IAnalysisExecutor#setMonitor(org.eclipse.core.runtime.IProgressMonitor)
+       */
     public void setMonitor(IProgressMonitor monitor) {
         this.monitor = monitor;
     }

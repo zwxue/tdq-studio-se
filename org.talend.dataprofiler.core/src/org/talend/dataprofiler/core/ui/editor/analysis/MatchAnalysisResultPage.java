@@ -82,6 +82,15 @@ public class MatchAnalysisResultPage extends AbstractAnalysisResultPage implemen
      */
     @Override
     public void refresh(AbstractAnalysisMetadataPage masterPage) {
+        if (summaryComp != null && !summaryComp.isDisposed()) {
+            summaryComp.dispose();
+        }
+
+        if (resultComp != null && !resultComp.isDisposed()) {
+            resultComp.dispose();
+        }
+        createFormContent(getManagedForm());
+
         duplicateRecordStatisticsSection.refreshChart();
         groupStatisticsSection.refreshChart();
     }

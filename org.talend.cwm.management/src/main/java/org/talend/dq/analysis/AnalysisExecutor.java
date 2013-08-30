@@ -14,7 +14,6 @@ package org.talend.dq.analysis;
 
 import java.lang.management.ManagementFactory;
 import java.sql.SQLException;
-import java.util.Date;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -31,8 +30,6 @@ import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.management.i18n.Messages;
 import org.talend.dataquality.PluginConstant;
 import org.talend.dataquality.analysis.Analysis;
-import org.talend.dataquality.analysis.AnalysisContext;
-import org.talend.dataquality.analysis.AnalysisResult;
 import org.talend.dataquality.analysis.ExecutionInformations;
 import org.talend.dataquality.helpers.IndicatorHelper;
 import org.talend.dataquality.indicators.Indicator;
@@ -50,7 +47,6 @@ import org.talend.metadata.managment.connection.manager.HiveConnectionManager;
 import org.talend.utils.sugars.ReturnCode;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.foundation.softwaredeployment.DataManager;
-import orgomg.cwm.foundation.softwaredeployment.SoftwaredeploymentPackage;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
@@ -75,6 +71,7 @@ public abstract class AnalysisExecutor implements IAnalysisExecutor {
 
     private long usedMemory;
 
+    private volatile boolean isLowMemory = false;
     /**
      * Getter for usedMemory.
      * 
@@ -83,8 +80,6 @@ public abstract class AnalysisExecutor implements IAnalysisExecutor {
     public long getUsedMemory() {
         return this.usedMemory;
     }
-
-    private volatile boolean isLowMemory = false;
 
     /*
      * (non-Javadoc)
@@ -99,9 +94,8 @@ public abstract class AnalysisExecutor implements IAnalysisExecutor {
         assert analysis != null;
 
         // --- creation time
-        final ExecutionInformations resultMetadata = analysis.getResults().getResultMetadata();
-        final long startime = System.currentTimeMillis();
-        resultMetadata.setExecutionDate(new Date(startime));
+        final long startime = AnalysisExecutorHelper.setExecutionDateInAnalysisResult(analysis);
+
         // MOD qiongli 2012-3-14 TDQ-4433,if import from low vesion and not import SystemIdicator,should initionlize
         // these indicator.
         initializeIndicators(analysis.getResults().getIndicators());
@@ -140,23 +134,12 @@ public abstract class AnalysisExecutor implements IAnalysisExecutor {
         }
 
         // --- set metadata information of analysis
-        resultMetadata.setLastRunOk(ok);
-        int executionNumber = resultMetadata.getExecutionNumber() + 1;
-        resultMetadata.setExecutionNumber(executionNumber);
-        if (this.isLowMemory) {
-            errorMessage = Messages.getString("Evaluator.OutOfMomory", usedMemory);//$NON-NLS-1$
-            resultMetadata.setMessage(errorMessage);
-        } else if (ok) {
-            resultMetadata.setLastExecutionNumberOk(executionNumber);
-            resultMetadata.setMessage(null); // reset error message
-
-        } else {
-            resultMetadata.setMessage(errorMessage);
-        }
+        AnalysisExecutorHelper.setExecutionNumberInAnalysisResult(analysis, ok, isLowMemory, usedMemory);
 
         // --- compute execution duration
         if (this.continueRun()) {
             long endtime = System.currentTimeMillis();
+            final ExecutionInformations resultMetadata = analysis.getResults().getResultMetadata();
             resultMetadata.setExecutionDuration((int) (endtime - startime));
 
             // MOD qiongli 2010-8-10, feature 14252
@@ -228,35 +211,10 @@ public abstract class AnalysisExecutor implements IAnalysisExecutor {
         return ok ? new ReturnCode() : new ReturnCode(this.errorMessage, false);
     }
 
-    /**
-     * Method "check" checks that the analysis can be run.
-     * 
-     * @param analysis the analysis to prepare
-     * @return true if ok.
-     */
     protected boolean check(Analysis analysis) {
-        AnalysisContext context = analysis.getContext();
-        if (context == null) {
-            this.errorMessage = Messages.getString("AnalysisExecutor.ContextNull", analysis.getName()); //$NON-NLS-1$
-            return false;
-        }
-        DataManager connection = context.getConnection();
-        if (connection == null) {
-            this.errorMessage = Messages.getString("AnalysisExecutor.NoConnectionFound", analysis.getName()); //$NON-NLS-1$
-            return false;
-        }
-        if (log.isInfoEnabled()) {
-            if (SoftwaredeploymentPackage.eINSTANCE.getDataProvider().isInstance(connection)) {
-                // MOD 20130225 TDQ-6632 the name of the item should be given (not the pathname)
-                log.info(Messages.getString("AnalysisExecutor.CONNECTIONTO", connection.getName()));//$NON-NLS-1$
-            }
-        }
-        AnalysisResult results = analysis.getResults();
-        if (results == null) {
-            this.errorMessage = Messages.getString("AnalysisExecutor.AnalysisnotNotPrepareCorrect", analysis.getName()); //$NON-NLS-1$
-            return false;
-        }
-        return true;
+        ReturnCode rc = AnalysisExecutorHelper.check(analysis);
+        this.errorMessage = rc.getMessage();
+        return rc.isOk();
     }
 
     /**
