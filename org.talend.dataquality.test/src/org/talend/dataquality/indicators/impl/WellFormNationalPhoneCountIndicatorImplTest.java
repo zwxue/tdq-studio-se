@@ -48,7 +48,7 @@ public class WellFormNationalPhoneCountIndicatorImplTest {
         for (Object obj : data) {
             this.wellFormNationalPhoneCountIndicator.handle(obj);
         }
-        Assert.assertEquals(4, wellFormNationalPhoneCountIndicator.getWellFormNatiPhoneCount().intValue());
+        Assert.assertEquals(1, wellFormNationalPhoneCountIndicator.getWellFormNatiPhoneCount().intValue());
     }
 
 }

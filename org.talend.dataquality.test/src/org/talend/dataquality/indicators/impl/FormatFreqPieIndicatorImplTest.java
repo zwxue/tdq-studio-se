@@ -50,7 +50,7 @@ public class FormatFreqPieIndicatorImplTest {
         }
         Assert.assertEquals(2, formatFreqPieIndicator.getWellFormE164Count());
         Assert.assertEquals(1, formatFreqPieIndicator.getWellFormInteCount());
-        Assert.assertEquals(4, formatFreqPieIndicator.getWellFormNatiCount());
+        Assert.assertEquals(1, formatFreqPieIndicator.getWellFormNatiCount());
         Assert.assertEquals(18, formatFreqPieIndicator.getCount().intValue());
     }
 }
