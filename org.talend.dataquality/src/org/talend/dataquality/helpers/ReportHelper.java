@@ -24,6 +24,7 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.common.util.EList;
+import org.talend.core.model.process.IContext;
 import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.ResourceHelper;
 import org.talend.cwm.helper.TaggedValueHelper;
@@ -1030,6 +1031,9 @@ public final class ReportHelper {
         String contextGroupNameInUse = ReportHelper.getLastRunContext(tdReport);
         if (StringUtils.isEmpty(contextGroupNameInUse)) {
             contextGroupNameInUse = tdReport.getDefaultContext();
+        }
+        if (StringUtils.isEmpty(contextGroupNameInUse)) {
+            contextGroupNameInUse = IContext.DEFAULT;
         }
         return contextGroupNameInUse;
     }
