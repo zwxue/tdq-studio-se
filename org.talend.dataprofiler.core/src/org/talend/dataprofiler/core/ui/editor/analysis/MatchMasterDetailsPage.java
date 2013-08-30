@@ -282,10 +282,10 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
         keySelectionComp.setLayout(keySelectionCompLayout);
 
         selectBlockKeyBtn = toolkit.createButton(keySelectionComp,
-                DefaultMessagesImpl.getString("MatchMasterDetailsPage.SelectBlockingKeyButton"), SWT.BORDER | SWT.TOGGLE);//$NON-NLS-1$
+                DefaultMessagesImpl.getString("MatchMasterDetailsPage.SelectBlockingKeyButton"), SWT.NONE);//$NON-NLS-1$
         GridDataFactory.fillDefaults().align(SWT.FILL, SWT.TOP).applyTo(selectBlockKeyBtn);
         selectMatchKeyBtn = toolkit.createButton(keySelectionComp,
-                DefaultMessagesImpl.getString("MatchMasterDetailsPage.SelectMatchingKeyButton"), SWT.BORDER | SWT.TOGGLE); //$NON-NLS-1$
+                DefaultMessagesImpl.getString("MatchMasterDetailsPage.SelectMatchingKeyButton"), SWT.NONE); //$NON-NLS-1$
         GridDataFactory.fillDefaults().align(SWT.FILL, SWT.TOP).applyTo(selectMatchKeyBtn);
 
         addListenerForSelectKeyButton();
@@ -374,10 +374,10 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
         dataSelectionComp.setLayout(dataSelectionCompLayout);
 
         Button createConnectionBtn = toolkit.createButton(dataSelectionComp,
-                DefaultMessagesImpl.getString("MatchMasterDetailsPage.CreateConnectionButton"), SWT.BORDER);//$NON-NLS-1$
+                DefaultMessagesImpl.getString("MatchMasterDetailsPage.CreateConnectionButton"), SWT.NONE);//$NON-NLS-1$
         GridDataFactory.fillDefaults().align(SWT.LEFT, SWT.TOP).applyTo(createConnectionBtn);
         Button selectDataBtn = toolkit.createButton(dataSelectionComp,
-                DefaultMessagesImpl.getString("MatchMasterDetailsPage.SelectDataButton"), SWT.BORDER);//$NON-NLS-1$
+                DefaultMessagesImpl.getString("MatchMasterDetailsPage.SelectDataButton"), SWT.NONE);//$NON-NLS-1$
         GridDataFactory.fillDefaults().align(SWT.LEFT, SWT.TOP).applyTo(selectDataBtn);
 
         createConnectionBtn.addMouseListener(new MouseListener() {
@@ -421,7 +421,7 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
         dataQueryComp.setLayout(dataQueryCompLayout);
 
         Button refreshDataBtn = toolkit.createButton(dataQueryComp,
-                DefaultMessagesImpl.getString("MatchMasterDetailsPage.RefreshDataButton"), SWT.BORDER);//$NON-NLS-1$
+                DefaultMessagesImpl.getString("MatchMasterDetailsPage.RefreshDataButton"), SWT.NONE);//$NON-NLS-1$
         GridDataFactory.fillDefaults().align(SWT.LEFT, SWT.CENTER).applyTo(refreshDataBtn);
 
         refreshDataBtn.addMouseListener(new MouseListener() {
@@ -813,7 +813,7 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
      * @return
      */
     private List<Object[]> fetchDataForTable() {
-        if (this.selectedNodes == null || selectedNodes.length == 0) {
+        if (this.analysisHandler.getSelectedColumns() == null || analysisHandler.getSelectedColumns().length == 0) {
             return new ArrayList<Object[]>();
         }
         ISQLExecutor sqlExecutor = null;
