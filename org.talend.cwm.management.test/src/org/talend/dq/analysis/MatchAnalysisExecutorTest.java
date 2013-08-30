@@ -12,7 +12,7 @@
 // ============================================================================
 package org.talend.dq.analysis;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
 
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -28,6 +28,7 @@ import org.talend.core.model.metadata.builder.connection.MetadataColumn;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisContext;
 import org.talend.dataquality.analysis.AnalysisPackage;
+import org.talend.dataquality.analysis.AnalysisParameters;
 import org.talend.dataquality.analysis.AnalysisResult;
 import org.talend.dataquality.indicators.columnset.BlockKeyIndicator;
 import org.talend.dataquality.indicators.columnset.ColumnsetPackage;
@@ -67,6 +68,11 @@ public class MatchAnalysisExecutorTest {
         Analysis analysis = AnalysisPackage.eINSTANCE.getAnalysisFactory().createAnalysis();
         AnalysisContext context = AnalysisPackage.eINSTANCE.getAnalysisFactory().createAnalysisContext();
         analysis.setContext(context);
+
+        AnalysisParameters params = AnalysisPackage.eINSTANCE.getAnalysisFactory().createAnalysisParameters();
+        params.setMaxNumberRows(100);
+        analysis.setParameters(params);
+
         context.setConnection(delimitedFileconnection);
 
         URL fileUrl = this.getClass().getResource("match_test_data"); //$NON-NLS-1$
