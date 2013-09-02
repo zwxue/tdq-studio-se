@@ -140,6 +140,7 @@ public class DBCatalogRepNode extends DQRepositoryNode {
         for (Schema schema : schemas) {
             MetadataSchemaRepositoryObject metadataSchema = new MetadataSchemaRepositoryObject(
                     ((MetadataCatalogRepositoryObject) getObject()).getViewObject(), schema);
+            metadataSchema.setParentCatalogObject(metadataCatalogObject);
             RepositoryNode schemaNode = new DBSchemaRepNode(metadataSchema, this, ENodeType.TDQ_REPOSITORY_ELEMENT);
             schemaNode.setProperties(EProperties.LABEL, ERepositoryObjectType.METADATA_CON_SCHEMA);
             schemaNode.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.METADATA_CON_SCHEMA);
