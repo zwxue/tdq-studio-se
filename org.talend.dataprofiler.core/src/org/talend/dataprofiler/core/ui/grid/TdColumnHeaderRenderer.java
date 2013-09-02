@@ -113,6 +113,7 @@ public class TdColumnHeaderRenderer extends GridHeaderRenderer {
      */
     public void paint(GC gc, Object value) {
 
+        gc.setAntialias(SWT.ON);
         gc.setTransform(_transform);
 
         float[] original = { (float) getBounds().x - 2, (float) getBounds().y + (float) getBounds().height - 2 };

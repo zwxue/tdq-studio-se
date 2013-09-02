@@ -40,6 +40,7 @@ public class TdCellRenderer extends GridCellRenderer {
      */
     public void paint(GC gc, Object value) {
         GridItem item = (GridItem) value;
+        gc.setAntialias(SWT.ON);
 
         int column = getColumn();
         boolean checkable = item.getCheckable(column);
