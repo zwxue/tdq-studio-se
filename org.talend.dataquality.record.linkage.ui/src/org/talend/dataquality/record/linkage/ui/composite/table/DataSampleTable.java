@@ -12,6 +12,7 @@
 // ============================================================================
 package org.talend.dataquality.record.linkage.ui.composite.table;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -38,7 +39,7 @@ import org.eclipse.nebula.widgets.nattable.hideshow.ColumnHideShowLayer;
 import org.eclipse.nebula.widgets.nattable.layer.AbstractLayerTransform;
 import org.eclipse.nebula.widgets.nattable.layer.DataLayer;
 import org.eclipse.nebula.widgets.nattable.layer.LabelStack;
-import org.eclipse.nebula.widgets.nattable.layer.cell.ColumnOverrideLabelAccumulator;
+import org.eclipse.nebula.widgets.nattable.layer.cell.ILayerCell;
 import org.eclipse.nebula.widgets.nattable.layer.config.DefaultColumnHeaderStyleConfiguration;
 import org.eclipse.nebula.widgets.nattable.painter.cell.BackgroundImagePainter;
 import org.eclipse.nebula.widgets.nattable.painter.cell.ICellPainter;
@@ -80,28 +81,16 @@ public class DataSampleTable {
 
     private boolean isDelimitedFile = false;
 
+    public static final int COLUMN_COUNT = 7;
+
+    public static final String MATCH_EKY = "MATCH";
+
+    public static final String BLOCK_EKY = "BLOCK";
+
     public DataSampleTable(boolean isFile, boolean isMDM) {
         this.isMdm = isMDM;
         this.isDelimitedFile = isFile;
     }
-
-    // public Control createSelectedTableByConnection(Composite parentContainer, DataManager connection, Object[]
-    // columns) {
-    // if (columns == null || columns.length < 1) {
-    // return null;
-    // }
-    // // get the data from the columns
-    // String sqlStatement = ConnectionManager.createSqlStatement((ModelElement[]) columns);
-    // // create the NatTable
-    // try {
-    // return createTable(parentContainer, (ModelElement[]) columns,
-    // ConnectionManager.executeQuery(connection, sqlStatement, columns.length));
-    // } catch (SQLException e) {
-    // // TODO Auto-generated catch block
-    // e.printStackTrace();
-    // }
-    // return null;
-    // }
 
     /**
      * create the nattable every time when the user select some columns
@@ -140,7 +129,7 @@ public class DataSampleTable {
     }
 
     private String[] createColumnLabel(ModelElement[] columns) {
-        String[] columnsName = new String[columns.length + DefaultMatchColumnConstant.COLUMN_COUNT];
+        String[] columnsName = new String[columns.length + COLUMN_COUNT];
 
         int i = 0;
         for (ModelElement column : columns) {
@@ -167,47 +156,69 @@ public class DataSampleTable {
         this.propertyToLabels = propertyToLabels;
 
     }
+    
+    // record the columns which is used as block keys
+    private List<String> markedAsBlockKey=null;
 
-    public void changeColumnHeaderLabelColor(String columnName, Color color) {
+    // record the columns which is used as match keys
+    private List<String> markedAsMatchKey = null;
+
+    public void changeColumnHeaderLabelColor(String columnName, Color color, String keyName) {
+        updateMarkedKeys(columnName, color, keyName);
+
         Style cellStyle = new Style();
         cellStyle.setAttributeValue(CellStyleAttributes.FOREGROUND_COLOR, color);
-
-        // unregister the old one
-        natTable.getConfigRegistry().unregisterConfigAttribute(CellConfigAttributes.CELL_STYLE, DisplayMode.NORMAL, columnName);
 
         natTable.getConfigRegistry().registerConfigAttribute(CellConfigAttributes.CELL_STYLE, cellStyle, DisplayMode.NORMAL,
                 columnName);
 
-        // TextPainter textPainter = new TextPainter();
-        //
-        // CellPainterDecorator painterDecorator = new CellPainterDecorator(
-        // new TextPainter(),CellEdgeEnum.TOP,new TextPainter(),false);
-        //
-        // natTable.getConfigRegistry().registerConfigAttribute(
-        // CellConfigAttributes.CELL_PAINTER,
-        // painterDecorator,
-        // DisplayMode.NORMAL, columnName);
         natTable.configure();
 
-        // ILayerCell layerCell = natTable.getCellByPosition(2, 2);
-        // TextPainter cellPainter = new TextPainter();
-        // Rectangle cellBounds = layerCell.getBounds();
-        // Image image = new Image(natTable.getDisplay(), cellBounds.width, cellBounds.height);
-        //
-        // GC gc = new GC(image);
-        // gc.setForeground(GUIHelper.COLOR_BLUE);
-        // if (cellPainter != null) {
-        // cellPainter.paintCell(layerCell, gc, cellBounds,
-        // natTable.getConfigRegistry());
-        // }
-        // gc.dispose();
+    }
+
+    /**
+     * DOC yyin Comment method "updateMarkedKeys".
+     * 
+     * @param columnName
+     * @param color
+     * @param keyName
+     */
+    private void updateMarkedKeys(String columnName, Color color, String keyName) {
+        if (this.markedAsBlockKey == null) {
+            markedAsBlockKey = new ArrayList<String>();
+        }
+        if (this.markedAsMatchKey == null) {
+            markedAsMatchKey = new ArrayList<String>();
+        }
+        if (GUIHelper.COLOR_BLACK.equals(color)) {
+            removeMarkedKey(columnName, keyName);
+        } else if (GUIHelper.COLOR_GREEN.equals(color)) {
+            markedAsBlockKey.add(columnName);
+        } else if (GUIHelper.COLOR_RED.equals(color)) {
+            this.markedAsMatchKey.add(columnName);
+        }
+
+    }
+
+    /**
+     * DOC yyin Comment method "removeMarkedKey".
+     * 
+     * @param columnName
+     * @param keyName
+     */
+    private void removeMarkedKey(String columnName, String keyName) {
+        if (DataSampleTable.MATCH_EKY.equals(keyName)) {
+            this.markedAsMatchKey.remove(columnName);
+        } else if (DataSampleTable.BLOCK_EKY.endsWith(keyName)) {
+            this.markedAsBlockKey.remove(keyName);
+        }
 
     }
 
     /**
      * When the column is the user selected one, return its name; when the column is the default additional one, return
      * null
-     *
+     * 
      * @param position
      * @return
      */
@@ -265,16 +276,9 @@ public class DataSampleTable {
         // compositeLayer.setChildLayer("BODY", viewportLayer, 0, 1);
 
         if (natTable != null) {
-            natTable.dispose();
+            clearTable();
         }
         natTable = new NatTable(parent, gridLayer);
-
-        // no use for change color now
-        // try {
-        // natTable.addConfiguration(new StyledColumnHeaderConfiguration());
-        // } catch (java.lang.IllegalStateException e) {
-        // // no need to operate
-        // }
 
         natTable.getConfigRegistry().registerConfigAttribute(EditConfigAttributes.CELL_EDITABLE_RULE,
                 IEditableRule.NEVER_EDITABLE, DisplayMode.EDIT, "ODD_BODY");
@@ -284,17 +288,14 @@ public class DataSampleTable {
         return natTable;
     }
 
-    /**
-     * DOC yyin Comment method "registerColumnLabels".
-     *
-     * @param columnLabelAccumulator
-     */
-    private void registerColumnLabels(ColumnOverrideLabelAccumulator columnLabelAccumulator) {
-        int i = 0;
-        for (String column : this.propertyNames) {
-            columnLabelAccumulator.registerColumnOverrides(i++, new String[] { column });
+    private void clearTable() {
+        natTable.dispose();
+        if (this.markedAsBlockKey != null) {
+            this.markedAsBlockKey.clear();
         }
-
+        if (this.markedAsMatchKey != null) {
+            this.markedAsMatchKey.clear();
+        }
     }
 
     private IDataProvider setupBodyDataProvider(List<Object[]> data) {
@@ -333,10 +334,29 @@ public class DataSampleTable {
 
         @Override
         public LabelStack getConfigLabelsByPosition(int columnPosition, int rowPosition) {
-            if (columnPosition < propertyNames.length + 1) {
-                return new LabelStack(propertyNames[columnPosition] + columnPosition, propertyNames[columnPosition]);
+            // use columnPosition to get its property name, if the name is selected, return new LabelStack, else
+            // return super
+            String currentColumnName = getCurrentColumnName(columnPosition, rowPosition);
+            // if the current column is used as key, return its labelstack.(the color of it will keep)
+            if (isColumnMarkedAsKeys(currentColumnName)) {
+                if (columnPosition < propertyNames.length + 1) {
+                    return new LabelStack(currentColumnName);// + columnPosition);// ,
+                                                                                          // propertyNames[columnPosition]);
+                }
             }
             return super.getConfigLabelsByPosition(columnPosition, rowPosition);
+        }
+
+        /**
+         * DOC yyin Comment method "getCurrentColumnName".
+         * 
+         * @param columnPosition
+         * @return
+         */
+        private String getCurrentColumnName(int columnPosition, int rowPosition) {
+            ILayerCell cell = this.getCellByPosition(columnPosition, rowPosition);
+            Object dataValue = cell.getDataValue();
+            return String.valueOf(dataValue);
         }
     }
 
@@ -385,5 +405,26 @@ public class DataSampleTable {
             configRegistry.registerConfigAttribute(CellConfigAttributes.CELL_PAINTER, headerPainter, "NORMAL", "COLUMN_HEADER");
             configRegistry.registerConfigAttribute(CellConfigAttributes.CELL_PAINTER, headerPainter, "NORMAL", "CORNER");
         }
+    }
+
+    /**
+     * check if the current column is marked as block/match keys.
+     * 
+     * @param columnPosition
+     * @return
+     */
+    public boolean isColumnMarkedAsKeys(String column) {
+        boolean isMarked = false;
+        if (this.markedAsBlockKey != null && this.markedAsBlockKey.size() > 0) {
+            if (this.markedAsBlockKey.contains(column)) {
+                isMarked = true;
+            }
+        }
+        if (this.markedAsMatchKey != null && this.markedAsMatchKey.size() > 0) {
+            if (this.markedAsMatchKey.contains(column)) {
+                isMarked = true;
+            }
+        }
+        return isMarked;
     }
 }

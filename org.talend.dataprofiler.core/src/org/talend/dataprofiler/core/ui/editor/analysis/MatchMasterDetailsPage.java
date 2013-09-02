@@ -353,9 +353,10 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
         for (ModelElement column : analysisHandler.getSelectedColumns()) {
             if (currentKeyColumn.contains(column.getName())) {
                 sampleTable.changeColumnHeaderLabelColor(column.getName(), isMatchKey ? GUIHelper.COLOR_RED
-                        : GUIHelper.COLOR_GREEN);
+                        : GUIHelper.COLOR_GREEN, isMatchKey ? DataSampleTable.MATCH_EKY : DataSampleTable.BLOCK_EKY);
             } else {
-                sampleTable.changeColumnHeaderLabelColor(column.getName(), GUIHelper.COLOR_BLACK);
+                sampleTable.changeColumnHeaderLabelColor(column.getName(), GUIHelper.COLOR_BLACK,
+                        isMatchKey ? DataSampleTable.MATCH_EKY : DataSampleTable.BLOCK_EKY);
             }
         }
         sampleTable.refresh();
@@ -363,7 +364,7 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
 
     private void setAllColumnColorToBlack() {
         for (ModelElement column : analysisHandler.getSelectedColumns()) {
-            sampleTable.changeColumnHeaderLabelColor(column.getName(), GUIHelper.COLOR_BLACK);
+            sampleTable.changeColumnHeaderLabelColor(column.getName(), GUIHelper.COLOR_BLACK, "");
         }
         sampleTable.refresh();
     }
@@ -773,10 +774,10 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
             Boolean isAdded = matchingKeySection.isKeyDefinitionAdded(columnName);
             if (isAdded) {
                 matchingKeySection.removeMatchKeyFromCurrentMatchRule(columnName);
-                sampleTable.changeColumnHeaderLabelColor(columnName, GUIHelper.COLOR_BLACK);
+                sampleTable.changeColumnHeaderLabelColor(columnName, GUIHelper.COLOR_BLACK, DataSampleTable.MATCH_EKY);
             } else {
                 matchingKeySection.createMatchKeyFromCurrentMatchRule(columnName);
-                sampleTable.changeColumnHeaderLabelColor(columnName, GUIHelper.COLOR_RED);
+                sampleTable.changeColumnHeaderLabelColor(columnName, GUIHelper.COLOR_RED, DataSampleTable.MATCH_EKY);
             }
         } catch (Exception e) {
             // TODO yyin popup to notify user that at least one match rule tab is needed.
@@ -800,10 +801,10 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
 
         if (isAdded) {
             blockingKeySection.removeBlockingKey(columnName);
-            sampleTable.changeColumnHeaderLabelColor(columnName, GUIHelper.COLOR_BLACK);
+            sampleTable.changeColumnHeaderLabelColor(columnName, GUIHelper.COLOR_BLACK, DataSampleTable.BLOCK_EKY);
         } else {
             blockingKeySection.createBlockingKey(columnName);
-            sampleTable.changeColumnHeaderLabelColor(columnName, GUIHelper.COLOR_GREEN);
+            sampleTable.changeColumnHeaderLabelColor(columnName, GUIHelper.COLOR_GREEN, DataSampleTable.BLOCK_EKY);
         }
     }
 
