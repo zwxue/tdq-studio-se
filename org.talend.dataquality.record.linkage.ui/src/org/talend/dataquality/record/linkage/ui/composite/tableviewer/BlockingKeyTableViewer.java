@@ -12,7 +12,6 @@
 // ============================================================================
 package org.talend.dataquality.record.linkage.ui.composite.tableviewer;
 
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -33,13 +32,13 @@ import org.talend.dataquality.record.linkage.ui.action.MatchRuleActionGroup;
 import org.talend.dataquality.record.linkage.ui.composite.tableviewer.provider.BlockingKeyTableLabelProvider;
 import org.talend.dataquality.record.linkage.ui.composite.tableviewer.provider.MatchAnalysisTableContentProvider;
 import org.talend.dataquality.record.linkage.ui.composite.utils.MatchRuleAnlaysisUtils;
+import org.talend.dataquality.record.linkage.ui.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataquality.record.linkage.utils.BlockingKeyAlgorithmEnum;
 import org.talend.dataquality.record.linkage.utils.BlockingKeyPostAlgorithmEnum;
 import org.talend.dataquality.record.linkage.utils.BlockingKeyPreAlgorithmEnum;
 import org.talend.dataquality.rules.AlgorithmDefinition;
 import org.talend.dataquality.rules.BlockKeyDefinition;
 import org.talend.dataquality.rules.KeyDefinition;
-import org.talend.dataquality.rules.MatchRule;
 import org.talend.dataquality.rules.MatchRuleDefinition;
 import org.talend.dataquality.rules.RulesFactory;
 
@@ -51,7 +50,6 @@ public class BlockingKeyTableViewer extends AbstractMatchAnalysisTableViewer {
 
     private static Logger log = Logger.getLogger(BlockingKeyTableViewer.class);
 
-    private final String BLOCK_KEY_DEFAULT_VALUE = "blocking key name"; //$NON-NLS-1$
 
     /**
      * DOC zshen BlockingKeyTableViewer constructor comment.
@@ -133,46 +131,6 @@ public class BlockingKeyTableViewer extends AbstractMatchAnalysisTableViewer {
         return 8;
     }
 
-    private void initData(List<MatchRule> tempMatcherList) {
-        List<BlockKeyDefinition> matcherList = new ArrayList<BlockKeyDefinition>();
-        BlockKeyDefinition createBlockKeyDefinition1 = RulesFactory.eINSTANCE.createBlockKeyDefinition();
-        createBlockKeyDefinition1.setName("blocking key name 1");
-        createBlockKeyDefinition1.setColumn("column namd 1");
-        AlgorithmDefinition createAlgorithmDefinition1 = RulesFactory.eINSTANCE.createAlgorithmDefinition();
-        createAlgorithmDefinition1.setAlgorithmType(BlockingKeyPreAlgorithmEnum.UPPER_CASE.getValue());
-        createAlgorithmDefinition1.setAlgorithmParameters("1");
-        createBlockKeyDefinition1.setPreAlgorithm(createAlgorithmDefinition1);
-        createAlgorithmDefinition1 = RulesFactory.eINSTANCE.createAlgorithmDefinition();
-        createAlgorithmDefinition1.setAlgorithmType(BlockingKeyAlgorithmEnum.EXACT.getValue());
-        createAlgorithmDefinition1.setAlgorithmParameters("1");
-        createBlockKeyDefinition1.setAlgorithm(createAlgorithmDefinition1);
-        createAlgorithmDefinition1 = RulesFactory.eINSTANCE.createAlgorithmDefinition();
-        createAlgorithmDefinition1.setAlgorithmType(BlockingKeyPostAlgorithmEnum.LEFT_CHAR.getValue());
-        createAlgorithmDefinition1.setAlgorithmParameters("1");
-        createBlockKeyDefinition1.setPostAlgorithm(createAlgorithmDefinition1);
-        matcherList.add(createBlockKeyDefinition1);
-
-        BlockKeyDefinition createBlockKeyDefinition2 = RulesFactory.eINSTANCE.createBlockKeyDefinition();
-
-        createBlockKeyDefinition2.setName("blocking key name 2");
-        createBlockKeyDefinition2.setColumn("column namd 2");
-        AlgorithmDefinition createAlgorithmDefinition2 = RulesFactory.eINSTANCE.createAlgorithmDefinition();
-        createAlgorithmDefinition2.setAlgorithmType(BlockingKeyPreAlgorithmEnum.UPPER_CASE.getValue());
-        createAlgorithmDefinition2.setAlgorithmParameters("2");
-        createBlockKeyDefinition2.setPreAlgorithm(createAlgorithmDefinition2);
-        createAlgorithmDefinition2 = RulesFactory.eINSTANCE.createAlgorithmDefinition();
-        createAlgorithmDefinition2.setAlgorithmType(BlockingKeyAlgorithmEnum.EXACT.getValue());
-        createAlgorithmDefinition2.setAlgorithmParameters("2");
-        createBlockKeyDefinition2.setAlgorithm(createAlgorithmDefinition2);
-        createAlgorithmDefinition2 = RulesFactory.eINSTANCE.createAlgorithmDefinition();
-        createAlgorithmDefinition2.setAlgorithmType(BlockingKeyPostAlgorithmEnum.LEFT_CHAR.getValue());
-        createAlgorithmDefinition2.setAlgorithmParameters("2");
-        createBlockKeyDefinition2.setPostAlgorithm(createAlgorithmDefinition2);
-        matcherList.add(createBlockKeyDefinition2);
-
-        // return matcherList.toArray(new BlockKeyDefinition[matcherList.size()]);
-
-    }
 
     /**
      *
@@ -185,7 +143,7 @@ public class BlockingKeyTableViewer extends AbstractMatchAnalysisTableViewer {
     public boolean addElement(String columnName, Analysis analysis) {
         RecordMatchingIndicator recordMatchingIndiator = MatchRuleAnlaysisUtils.getRecordMatchIndicatorFromAna(analysis);
         if (recordMatchingIndiator == null) {
-            log.error("null record matching indicator for analysis: " + analysis.getName());
+            log.error(DefaultMessagesImpl.getString("BlockingKeyTableViewer.NULL_RECORD_MATCHING", analysis.getName())); //$NON-NLS-1$
             return Boolean.FALSE;
         }
         return addElement(columnName, recordMatchingIndiator.getBuiltInMatchRuleDefinition());
@@ -200,21 +158,21 @@ public class BlockingKeyTableViewer extends AbstractMatchAnalysisTableViewer {
      */
     private BlockKeyDefinition createNewBlockDefinition(String columnName) {
         BlockKeyDefinition createBlockKeyDefinition = RulesFactory.eINSTANCE.createBlockKeyDefinition();
-        createBlockKeyDefinition.setName(BLOCK_KEY_DEFAULT_VALUE);
+        createBlockKeyDefinition.setName(columnName);
         createBlockKeyDefinition.setColumn(columnName);
         AlgorithmDefinition createAlgorithmDefinition = RulesFactory.eINSTANCE.createAlgorithmDefinition();
         createAlgorithmDefinition.setAlgorithmType(BlockingKeyPreAlgorithmEnum.getTypeByIndex(0).getValue());
-        createAlgorithmDefinition.setAlgorithmParameters("");
+        createAlgorithmDefinition.setAlgorithmParameters(StringUtils.EMPTY);
         createBlockKeyDefinition.setPreAlgorithm(createAlgorithmDefinition);
 
         createAlgorithmDefinition = RulesFactory.eINSTANCE.createAlgorithmDefinition();
         createAlgorithmDefinition.setAlgorithmType(BlockingKeyAlgorithmEnum.EXACT.getValue());
-        createAlgorithmDefinition.setAlgorithmParameters("");
+        createAlgorithmDefinition.setAlgorithmParameters(StringUtils.EMPTY);
         createBlockKeyDefinition.setAlgorithm(createAlgorithmDefinition);
 
         createAlgorithmDefinition = RulesFactory.eINSTANCE.createAlgorithmDefinition();
         createAlgorithmDefinition.setAlgorithmType(BlockingKeyPostAlgorithmEnum.getTypeByIndex(0).getValue());
-        createAlgorithmDefinition.setAlgorithmParameters("");
+        createAlgorithmDefinition.setAlgorithmParameters(StringUtils.EMPTY);
         createBlockKeyDefinition.setPostAlgorithm(createAlgorithmDefinition);
         return createBlockKeyDefinition;
     }
@@ -242,19 +200,6 @@ public class BlockingKeyTableViewer extends AbstractMatchAnalysisTableViewer {
         }
     }
 
-    /**
-     * DOC yyin Comment method "convertToList".
-     *
-     * @param asList
-     * @return
-     */
-    private List<BlockKeyDefinition> convertToList(BlockKeyDefinition[] blockArray) {
-        List<BlockKeyDefinition> resultList = new ArrayList<BlockKeyDefinition>();
-        for (BlockKeyDefinition blocKey : blockArray) {
-            resultList.add(blocKey);
-        }
-        return resultList;
-    }
 
     /*
      * (non-Javadoc)

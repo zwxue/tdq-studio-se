@@ -17,25 +17,27 @@ import java.util.List;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.talend.dataquality.record.linkage.ui.composite.tableviewer.AbstractMatchAnalysisTableViewer;
+import org.talend.dataquality.record.linkage.ui.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataquality.rules.KeyDefinition;
+import org.talend.dataquality.rules.MatchRule;
+import org.talend.dataquality.rules.MatchRuleDefinition;
 
 /**
  * created by zshen on Aug 2, 2013 Detailled comment
- * 
+ *
  */
 public class RemoveMatchKeyDefinitionAction extends Action {
 
     private AbstractMatchAnalysisTableViewer tableViewer = null;
 
     public RemoveMatchKeyDefinitionAction(AbstractMatchAnalysisTableViewer tableViewer) {
-        // TODO zshen externalize the string below
-        setText("Delete");
+        setText(DefaultMessagesImpl.getString("RemoveMatchKeyDefinitionAction.delete")); //$NON-NLS-1$
         this.tableViewer = tableViewer;
     }
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.jface.action.Action#run()
      */
     @Override
@@ -44,12 +46,27 @@ public class RemoveMatchKeyDefinitionAction extends Action {
         List<?> selections = structuredSelection.toList();
         for (Object selection : selections) {
             KeyDefinition keyDef = (KeyDefinition) selection;
-            // The analysis parameter can be null when remove element from match key table, because the table viewer
-            // kept
-            // the reference of match rule already.
-            tableViewer.removeElement(keyDef.getColumn(), null);
-            // TODO zshen notify editor dirty.
+            tableViewer.removeElement(keyDef, getMatchRuleDefinition(keyDef));
         }
+    }
+
+    /**
+     * DOC zshen Comment method "getMatchRuleDefinition".
+     *
+     * @param keyDef
+     * @return
+     */
+    private MatchRuleDefinition getMatchRuleDefinition(KeyDefinition keyDef) {
+        if (keyDef == null) {
+            return null;
+        } else if (keyDef.eContainer() instanceof MatchRule) {
+            // keyDef is MatchKeyDefiniton case
+            return (MatchRuleDefinition) keyDef.eContainer().eContainer();
+        } else if (keyDef.eContainer() instanceof MatchRuleDefinition) {
+            // keyDef is BlockKeyDefiniton case
+            return (MatchRuleDefinition) keyDef.eContainer();
+        }
+        return null;
     }
 
 }

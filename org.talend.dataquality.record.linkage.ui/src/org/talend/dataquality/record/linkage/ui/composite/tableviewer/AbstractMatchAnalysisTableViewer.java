@@ -74,12 +74,13 @@ public abstract class AbstractMatchAnalysisTableViewer extends TableViewer {
                 char character = e.character;
                 if (SWT.DEL == character) {
                     new RemoveMatchKeyDefinitionAction(AbstractMatchAnalysisTableViewer.this).run();
+                    listeners.firePropertyChange(MatchAnalysisConstant.ISDIRTY_PROPERTY, true, false);
                 }
             }
 
             @Override
             public void keyReleased(KeyEvent e) {
-                // TODO Auto-generated method stub
+                // don't need to implement is now
 
             }
 
@@ -143,12 +144,23 @@ public abstract class AbstractMatchAnalysisTableViewer extends TableViewer {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.jface.viewers.ColumnViewer#update(java.lang.Object, java.lang.String[])
      */
     @Override
     public void update(Object element, String[] properties) {
         super.update(element, properties);
+        listeners.firePropertyChange(MatchAnalysisConstant.ISDIRTY_PROPERTY, true, false);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.eclipse.jface.viewers.AbstractTableViewer#remove(java.lang.Object)
+     */
+    @Override
+    public void remove(Object element) {
+        super.remove(element);
         listeners.firePropertyChange(MatchAnalysisConstant.ISDIRTY_PROPERTY, true, false);
     }
 

@@ -37,7 +37,6 @@ public class MatchRuleActionGroup extends ActionGroup {
     public void fillContextMenu(IMenuManager mgr) {
         MenuManager menuManager = (MenuManager) mgr;
         menuManager.add(new RemoveMatchKeyDefinitionAction(tv));
-        menuManager.add(new RefreshTableViewAction(tv));
 
         Table table = tv.getTable();
         Menu menu = menuManager.createContextMenu(table);
