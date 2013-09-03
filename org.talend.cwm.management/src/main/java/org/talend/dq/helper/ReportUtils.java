@@ -35,7 +35,6 @@ import org.talend.commons.exception.LoginException;
 import org.talend.commons.exception.PersistenceException;
 import org.talend.commons.utils.WorkspaceUtils;
 import org.talend.commons.utils.io.FilesUtils;
-import org.talend.core.model.metadata.builder.database.dburl.SupportDBUrlStore;
 import org.talend.core.model.properties.Item;
 import org.talend.core.model.properties.Property;
 import org.talend.core.model.repository.ERepositoryObjectType;
@@ -866,23 +865,5 @@ public final class ReportUtils {
         repositoryWorkUnit.setAvoidUnloadResources(true);
         ProxyRepositoryFactory.getInstance().executeRepositoryWorkUnit(repositoryWorkUnit);
         repositoryWorkUnit.throwPersistenceExceptionIfAny();
-    }
-
-    /**
-     * build the connection url.
-     * 
-     * @param dbType
-     * @param host
-     * @param port
-     * @param dbName
-     * @return
-     */
-    public static String buildConnectionUrl(String dbType, String host, String port, String dbName) {
-        String url = SupportDBUrlStore.getInstance().getDBUrl(dbType, host, port, dbName, PluginConstant.EMPTY_STRING,
-                PluginConstant.EMPTY_STRING);
-        if (ReportHelper.HSQL_DEFAULT_DBTYPE.equals(dbType)) {
-            url = "jdbc:hsqldb:file:/" + url; //$NON-NLS-1$
-        }
-        return url;
     }
 }
