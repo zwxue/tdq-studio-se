@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2012 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2013 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -29,6 +29,7 @@ import org.talend.core.PluginChecker;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.ui.IMDMProviderService;
+import org.talend.cwm.management.i18n.Messages;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.events.EventEnum;
 import org.talend.dataprofiler.core.ui.events.EventManager;
@@ -52,7 +53,7 @@ public class ConnectionTypePage extends WizardPage {
 
     /**
      * DOC yyin ConnectionTypePage constructor comment.
-     * 
+     *
      * @param pageName
      */
     protected ConnectionTypePage(String pageName) {
@@ -87,38 +88,12 @@ public class ConnectionTypePage extends WizardPage {
         connectionType.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
         connectionType.setEditable(false);
 
-        // String[] connectionTypeList = { EResourceConstant.DB_CONNECTIONS.getName(),
-        // EResourceConstant.MDM_CONNECTIONS.getName(),
-        // EResourceConstant.FILEDELIMITED.getName() };
-
-        connectionType.add(EResourceConstant.DB_CONNECTIONS.getName(), 0);
-        connectionType.add(EResourceConstant.MDM_CONNECTIONS.getName(), 1);
-        connectionType.add(EResourceConstant.FILEDELIMITED.getName(), 2);
+        // TODO support MDM later.
+        connectionType.add(Messages.getString("DQRepositoryViewLabelProvider.DBConnectionFolderName")); //$NON-NLS-1$
+        connectionType.add(Messages.getString("DQRepositoryViewLabelProvider.DFConnectionFolderName")); //$NON-NLS-1$
         connectionType.select(0);
-        // connectionType.setItems(connectionTypeList);
-        // connectionType.setText(connectionTypeList[0]);
-        // connectionType.addModifyListener(new ModifyListener() {
-        //
-        // public void modifyText(ModifyEvent e) {
-        // Object data = e.data;
-        //
-        // }
-        //
-        // });
-
         setControl(container);
         super.setPageComplete(true);
-    }
-
-    public int getConnectionType() {
-        connectionType.getSelectionIndex();
-        if (EResourceConstant.DB_CONNECTIONS.getName().equals(connectionType.getText())) {
-            return 0;
-        } else if (EResourceConstant.MDM_CONNECTIONS.getName().equals(connectionType.getText())) {
-            return 1;
-        } else {
-            return 2;
-        }
     }
 
     @Override
@@ -135,12 +110,17 @@ public class ConnectionTypePage extends WizardPage {
                 ITDQRepositoryService.class);
         tdqRepService.setIsOpenConnectionEditorAfterCreate(Boolean.TRUE);
 
-        switch (getConnectionType()) {
+        int selectionIndex = connectionType.getSelectionIndex();
+        switch (selectionIndex) {
         case 0:// db
             node = (RepositoryNode) RepositoryNodeHelper.getMetadataFolderNode(EResourceConstant.DB_CONNECTIONS);
             nextWizard = new DatabaseWizard(PlatformUI.getWorkbench(), true, node, null);
             break;
-        case 1:// MDM
+        case 1:// file
+            node = (RepositoryNode) RepositoryNodeHelper.getMetadataFolderNode(EResourceConstant.FILEDELIMITED);
+            nextWizard = new DelimitedFileWizard(PlatformUI.getWorkbench(), true, node, null);
+            break;
+        case 2:// MDM
             node = (RepositoryNode) RepositoryNodeHelper.getMetadataFolderNode(EResourceConstant.MDM_CONNECTIONS);
             if (PluginChecker.isMDMPluginLoaded()
                     && GlobalServiceRegister.getDefault().isServiceRegistered(IMDMProviderService.class)) {
@@ -151,9 +131,7 @@ public class ConnectionTypePage extends WizardPage {
                 }
             }
             break;
-        case 2: // file
-            node = (RepositoryNode) RepositoryNodeHelper.getMetadataFolderNode(EResourceConstant.FILEDELIMITED);
-            nextWizard = new DelimitedFileWizard(PlatformUI.getWorkbench(), true, node, null);
+        default:
             break;
         }
         WizardDialog dialog = new WizardDialog(null, nextWizard);
@@ -168,13 +146,26 @@ public class ConnectionTypePage extends WizardPage {
     }
 
     private void publishSelectDataEvent(IWizard nextWizard, ITDQRepositoryService tdqRepService) {
-        ConnectionItem connectionItem = ((DatabaseWizard) nextWizard).getConnectionItem();
-        Connection connection = connectionItem.getConnection();
-        ((WizardDialog) getWizard().getContainer()).close();
-        // make it back to initial value after finish creating
-        tdqRepService.setIsOpenConnectionEditorAfterCreate(Boolean.FALSE);
+        int selectionIndex = connectionType.getSelectionIndex();
+        ConnectionItem connectionItem = null;
+        switch (selectionIndex) {
+        case 0:
+            connectionItem = ((DatabaseWizard) nextWizard).getConnectionItem();
+            break;
+        case 1:
+            connectionItem = ((DelimitedFileWizard) nextWizard).getConnectionItem();
+            break;
+        default:
+            break;
+        }
+        if (connectionItem != null) {
+            Connection connection = connectionItem.getConnection();
+            ((WizardDialog) getWizard().getContainer()).close();
+            // make it back to initial value after finish creating
+            tdqRepService.setIsOpenConnectionEditorAfterCreate(Boolean.FALSE);
 
-        EventManager.getInstance().publish(relatedComposite, EventEnum.DQ_MATCH_ANALYSIS_AFTER_CREATE_CONNECTION, connection);
+            EventManager.getInstance().publish(relatedComposite, EventEnum.DQ_MATCH_ANALYSIS_AFTER_CREATE_CONNECTION, connection);
+        }
     }
 
     public void checkForCompletion() {

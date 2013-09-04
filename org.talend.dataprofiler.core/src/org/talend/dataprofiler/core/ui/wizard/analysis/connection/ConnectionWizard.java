@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2012 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2013 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -62,7 +62,7 @@ public class ConnectionWizard extends Wizard implements INewWizard {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.jface.wizard.IWizard#canFinish()
      */
     @Override
@@ -70,22 +70,10 @@ public class ConnectionWizard extends Wizard implements INewWizard {
         return false;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.eclipse.jface.wizard.IWizard#createPageControls(org.eclipse.swt.widgets.Composite)
-     */
-    @Override
-    public void createPageControls(Composite pageContainer) {
-        // add the first page to select the connection type
-        addPage(connectionTypePage);
-        super.createPageControls(pageContainer);
-    }
-
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.jface.wizard.IWizard#getContainer()
      */
     @Override
@@ -96,7 +84,7 @@ public class ConnectionWizard extends Wizard implements INewWizard {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.jface.wizard.IWizard#getPageCount()
      */
     @Override
@@ -106,7 +94,7 @@ public class ConnectionWizard extends Wizard implements INewWizard {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.jface.wizard.IWizard#getPages()
      */
     @Override
@@ -117,7 +105,7 @@ public class ConnectionWizard extends Wizard implements INewWizard {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.jface.wizard.IWizard#getStartingPage()
      */
     @Override
@@ -128,7 +116,7 @@ public class ConnectionWizard extends Wizard implements INewWizard {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.jface.wizard.IWizard#needsPreviousAndNextButtons()
      */
     @Override
@@ -139,7 +127,7 @@ public class ConnectionWizard extends Wizard implements INewWizard {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.jface.wizard.IWizard#needsProgressMonitor()
      */
     @Override
@@ -149,7 +137,7 @@ public class ConnectionWizard extends Wizard implements INewWizard {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.jface.wizard.IWizard#performCancel()
      */
     @Override
@@ -160,7 +148,7 @@ public class ConnectionWizard extends Wizard implements INewWizard {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.jface.wizard.IWizard#performFinish()
      */
     @Override
@@ -171,7 +159,7 @@ public class ConnectionWizard extends Wizard implements INewWizard {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.jface.wizard.IWizard#setContainer(org.eclipse.jface.wizard.IWizardContainer)
      */
     @Override
@@ -181,7 +169,7 @@ public class ConnectionWizard extends Wizard implements INewWizard {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.ui.IWorkbenchWizard#init(org.eclipse.ui.IWorkbench,
      * org.eclipse.jface.viewers.IStructuredSelection)
      */
