@@ -62,6 +62,7 @@ public class ConnectionTypePage extends WizardPage {
 
     public ConnectionTypePage(Composite relatedComposite) {
         super("");
+        setTitle(defaultInfor);
         this.relatedComposite = relatedComposite;
     }
 
@@ -73,15 +74,9 @@ public class ConnectionTypePage extends WizardPage {
         Composite container = new Composite(parent, SWT.NONE);
         container.setLayout(new GridLayout());
 
-        GridData gd = new GridData(GridData.FILL_HORIZONTAL);
-        gd.heightHint = 70;
-        Label inforLabel = new Label(container, SWT.BORDER);
-        inforLabel.setText(defaultInfor);
-        inforLabel.setLayoutData(gd);
-
         // COnnection type
-        Label statusLab = new Label(container, SWT.NONE);
-        statusLab.setText("Status"); //$NON-NLS-1$
+        Label selectionLab = new Label(container, SWT.NONE);
+        selectionLab.setText(DefaultMessagesImpl.getString("ConnnectionTypePage.typeSelect")); //$NON-NLS-1$
 
         connectionType = new CCombo(container, SWT.BORDER);
 
