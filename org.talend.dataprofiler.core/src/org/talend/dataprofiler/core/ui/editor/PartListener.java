@@ -29,7 +29,6 @@ import org.talend.dataprofiler.core.service.ITdqContextViewService;
 import org.talend.dq.helper.PropertyHelper;
 
 /**
- * 
  * DOC mzhao class global comment. Detailled comment
  */
 public class PartListener implements IPartListener {
@@ -81,20 +80,30 @@ public class PartListener implements IPartListener {
     }
 
     public void partActivated(IWorkbenchPart part) {
-
-    }
-
-    public void partBroughtToTop(IWorkbenchPart part) {
         if (GlobalServiceRegister.getDefault().isServiceRegistered(ITdqContextViewService.class)) {
             ITdqContextViewService tdqContextViewService = (ITdqContextViewService) GlobalServiceRegister.getDefault()
                     .getService(ITdqContextViewService.class);
             if (tdqContextViewService != null) {
-                tdqContextViewService.showContextView(part);
+                tdqContextViewService.updateContextView(part);
             }
         }
     }
 
+    public void partBroughtToTop(IWorkbenchPart part) {
+        // do nothing here
+    }
+
     public void partClosed(IWorkbenchPart part) {
+        if (GlobalServiceRegister.getDefault().isServiceRegistered(ITdqContextViewService.class)) {
+            ITdqContextViewService tdqContextViewService = (ITdqContextViewService) GlobalServiceRegister.getDefault()
+                    .getService(ITdqContextViewService.class);
+            if (tdqContextViewService != null) {
+                tdqContextViewService.hideContextView(part);
+            }
+        }
+    }
+
+    public void partDeactivated(IWorkbenchPart part) {
         if (GlobalServiceRegister.getDefault().isServiceRegistered(ITdqContextViewService.class)) {
             ITdqContextViewService tdqContextViewService = (ITdqContextViewService) GlobalServiceRegister.getDefault()
                     .getService(ITdqContextViewService.class);
@@ -104,11 +113,8 @@ public class PartListener implements IPartListener {
         }
     }
 
-    public void partDeactivated(IWorkbenchPart part) {
-
-    }
-
     public void partOpened(IWorkbenchPart part) {
+        // do nothing here
     }
 
     protected static IConfigurationElement getConfigurationElement() {

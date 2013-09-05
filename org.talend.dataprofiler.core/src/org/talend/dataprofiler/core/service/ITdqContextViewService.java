@@ -20,7 +20,9 @@ import org.eclipse.ui.IWorkbenchPart;
  */
 public interface ITdqContextViewService extends IService {
 
-    public void showContextView(IWorkbenchPart part);
+    public void updateContextView(IWorkbenchPart part);
+
+    public void hideContextView(IWorkbenchPart part);
 
     public void resetContextView();
 }
