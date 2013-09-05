@@ -18,7 +18,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
-import junit.framework.Assert;
 import net.sourceforge.sqlexplorer.plugin.SQLExplorerPlugin;
 
 import org.apache.log4j.Logger;
@@ -187,12 +186,13 @@ public class UnitTestBuildHelper {
      * @return
      */
     public static IProject createRealProject(String projectName) {
-        IProject rootProject = ResourcesPlugin.getWorkspace().getRoot().getProject(projectName);
-        if (!rootProject.exists()) {
-            initProxyRepository(rootProject);
-        }
-
-        return rootProject;
+        // IProject rootProject = ResourcesPlugin.getWorkspace().getRoot().getProject(projectName);
+        // if (!rootProject.exists()) {
+        // initProxyRepository(rootProject);
+        // }
+        //
+        // return rootProject;
+        return null;
     }
 
     /**
@@ -470,14 +470,14 @@ public class UnitTestBuildHelper {
      * delete the project which has been login else will effect the result of junit.
      */
     public static void deleteCurrentProject() {
-        IProject rootProject = ReponsitoryContextBridge.getRootProject();
-        if (rootProject.exists()) {
-            try {
-                rootProject.delete(true, true, null);
-            } catch (CoreException e) {
-                log.error(e, e);
-                Assert.fail(e.getMessage());
-            }
-        }
+        // IProject rootProject = ReponsitoryContextBridge.getRootProject();
+        // if (rootProject.exists()) {
+        // try {
+        // rootProject.delete(true, true, null);
+        // } catch (CoreException e) {
+        // log.error(e, e);
+        // Assert.fail(e.getMessage());
+        // }
+        // }
     }
 }
