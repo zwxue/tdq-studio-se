@@ -50,7 +50,6 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IEditorInput;
-import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.editor.FormEditor;
@@ -529,7 +528,6 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
                 selectedNodes = null;
                 analysisHandler.setSelectedColumns(null);
                 openColumnsSelectionDialog((DataManager) data);
-                setActivePage();
                 return true;
             }
         };
@@ -557,12 +555,6 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
 
     }
 
-    /**
-     * make the current page as the active one
-     */
-    protected void setActivePage() {
-        PlatformUI.getWorkbench().getActiveWorkbenchWindow().setActivePage((IWorkbenchPage) this);
-    }
 
     /**
      * open the column selection dialog.
