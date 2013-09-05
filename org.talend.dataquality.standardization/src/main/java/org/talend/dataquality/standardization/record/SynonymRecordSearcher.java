@@ -207,15 +207,18 @@ public class SynonymRecordSearcher {
                 // store all found words in a list of results for this field
                 for (int j = 0; j < nbDocs; j++) {
                     ScoreDoc scoreDoc = docs.scoreDocs[j];
-                    String foundWord = searcher.getWordByDocNumber(scoreDoc.doc);
-                    WordResult wordRes = new WordResult();
-                    wordRes.input = field;
-                    wordRes.word = foundWord;
-                    wordRes.score = scoreDoc.score;
-                    wResults.add(wordRes);
+                    // MOD sizhaoliu TDQ-3608 filter the results with matching threshold
+                    if (scoreDoc.score > searcher.getMatchingThreshold()) {
+                        String foundWord = searcher.getWordByDocNumber(scoreDoc.doc);
+                        WordResult wordRes = new WordResult();
+                        wordRes.input = field;
+                        wordRes.word = foundWord;
+                        wordRes.score = scoreDoc.score;
+                        wResults.add(wordRes);
+                    }
                 }
                 // handle case when nothing is found in the index
-                if (nbDocs == 0) {
+                if (wResults.size() == 0) {
                     WordResult wordRes = createEmptyWordResult(field);
                     wResults.add(wordRes);
                 }

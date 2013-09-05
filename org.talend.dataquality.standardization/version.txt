@@ -1,3 +1,8 @@
+2.5.0 # sizhaoliu 2013/09/05 (for V5.4)
+- add 6 search modes for synonym library.
+  MATCH_ANY MATCH_PARTIAL MATCH_ALL MATCH_EXACT MATCH_ANY_FUZZY MATCH_ALL_FUZZY
+- add Matching Threshold option in SynonymIndexSearcher
+
 2.0.2 # sizhaoliu 2012/07/17 
 - correct some issues to improve match results of tFirstnameMatch (TDQ-1576) :  
   for standard mode, removed the doc collector and augmented the similarity 

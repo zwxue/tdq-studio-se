@@ -114,7 +114,7 @@ public class CombinedQueryTest {
         for (String word_to_search : TEST_CASE_MAP.keySet()) {
             List<Integer> expectation = TEST_CASE_MAP.get(word_to_search);
             System.out.println("\n-----------Looking for <" + word_to_search + ">-----------");
-            TopDocs docs = searcher.searchDocumentBySynonym(word_to_search, false);
+            TopDocs docs = searcher.searchDocumentBySynonym(word_to_search);
             System.out.print(docs.totalHits + " documents found.");
             // assertEquals(3, docs.totalHits);
             // assertEquals(true, searcher.getTopDocLimit() >= docs.scoreDocs.length);

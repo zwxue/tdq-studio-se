@@ -47,8 +47,7 @@ public class SynonymIndexBuilderTest {
     // private SynonymIndexBuilder builder;
 
     @Before
-    public void setUp() throws Exception {
-        SynonymIndexBuilder builder = new SynonymIndexBuilder();
+    public void setUp() {
         // clear any existing files
         File folder = new File(path);
         if (folder.exists()) {
@@ -57,23 +56,6 @@ public class SynonymIndexBuilderTest {
             }
             folder.delete();
         }
-
-        // builder = new SynonymIndexBuilder();
-        //
-        // // start with a clean index: delete previous index
-        // // builder.closeIndex();
-        // builder.deleteIndexFromFS(path);
-        //
-        // builder.initIndexInFS(path);
-        //
-        // // insert docs
-        // insertDocuments(builder);
-
-        // no need because default is set
-        // builder.setSynonymSeparator('|');
-
-        // searcher = new SynonymIndexSearcher();
-        // searcher.initIndexInFS(path);
     }
 
     private void removePhisically(String path) {
@@ -108,11 +90,15 @@ public class SynonymIndexBuilderTest {
         // }
     }
 
-    void insertDocuments(SynonymIndexBuilder build) throws IOException {
+    void insertDocuments(SynonymIndexBuilder builder) throws IOException {
+        insertDocuments(builder, synonyms);
+    }
+
+    void insertDocuments(SynonymIndexBuilder builder, String[][] synonyms) throws IOException {
         for (String[] syns : synonyms) {
-            build.insertDocument(syns[0], syns[1]);
+            builder.insertDocument(syns[0], syns[1]);
         }
-        build.commit();
+        builder.commit();
     }
 
     private SynonymIndexBuilder createNewIndexBuilder(String p) {

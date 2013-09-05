@@ -14,18 +14,28 @@ package org.talend.dataquality.standardization.index;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.StringReader;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 
 import org.apache.lucene.analysis.Analyzer;
+import org.apache.lucene.analysis.LowerCaseFilter;
+import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
+import org.apache.lucene.analysis.standard.StandardFilter;
+import org.apache.lucene.analysis.standard.StandardTokenizer;
+import org.apache.lucene.analysis.tokenattributes.TermAttribute;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.CheckIndex;
 import org.apache.lucene.index.CheckIndex.Status;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.queryParser.ParseException;
-import org.apache.lucene.queryParser.QueryParser;
+import org.apache.lucene.search.BooleanClause;
+import org.apache.lucene.search.BooleanQuery;
 import org.apache.lucene.search.FuzzyQuery;
 import org.apache.lucene.search.IndexSearcher;
+import org.apache.lucene.search.PhraseQuery;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.TermQuery;
 import org.apache.lucene.search.TopDocs;
@@ -37,6 +47,42 @@ import org.talend.dataquality.standardization.i18n.Messages;
  * @author scorreia A class to create an index with synonyms.
  */
 public class SynonymIndexSearcher {
+
+    public enum SynonymSearchMode {
+
+        MATCH_ANY("MATCH_ANY"),
+        MATCH_PARTIAL("MATCH_PARTIAL"),
+        MATCH_ALL("MATCH_ALL"),
+        MATCH_EXACT("MATCH_EXACT"),
+        MATCH_ANY_FUZZY("MATCH_ANY_FUZZY"),
+        MATCH_ALL_FUZZY("MATCH_ALL_FUZZY");
+
+        private String label;
+
+        SynonymSearchMode(String label) {
+            this.label = label;
+        }
+
+        private String getLabel() {
+            // TODO Auto-generated method stub
+            return label;
+        }
+
+        /**
+         * Method "get".
+         * 
+         * @param label the label of the match mode
+         * @return the match mode type given the label or null
+         */
+        public static SynonymSearchMode get(String label) {
+            for (SynonymSearchMode type : SynonymSearchMode.values()) {
+                if (type.getLabel().equalsIgnoreCase(label)) {
+                    return type;
+                }
+            }
+            return MATCH_ANY; // default value
+        }
+    }
 
     public static final String F_WORD = "word";//$NON-NLS-1$
 
@@ -50,7 +96,7 @@ public class SynonymIndexSearcher {
 
     private int topDocLimit = 3;
 
-    private static final float MINIMUM_SIMILARITY = 0.8F;
+    private float minimumSimilarity = 0.8f;
 
     private static final float WORD_TERM_BOOST = 2F;
 
@@ -58,10 +104,19 @@ public class SynonymIndexSearcher {
 
     private Analyzer analyzer;
 
+    private SynonymSearchMode searchMode = SynonymSearchMode.MATCH_ANY;
+
+    private float matchingThreshold = 0f;
+
     /**
-     * by default, the slop factor is zero, meaning an exact phrase match.
+     * The slop is only used for {@link SynonymSearchMode#MATCH_PARTIAL}.
+     * <p>
+     * By default, the slop factor is one, meaning only one gap between the searched tokens is allowed.
+     * <p>
+     * For example: "the brown" can match "the quick brown fox", but "the fox" will not match it, except that we set the
+     * slop value to 2 or greater.
      */
-    private int slop = 0;
+    private int slop = 1;
 
     /**
      * instantiate an index searcher. A call to the index initialization method such as {@link #openIndexInFS(String)}
@@ -131,30 +186,41 @@ public class SynonymIndexSearcher {
     }
 
     /**
-     * search a document by one of the synonym (which may be the word).
+     * search for documents by one of the synonym (which may be the word).
      * 
      * @param synonym
      * @return
      * @throws ParseException if the given synonym cannot be parsed as a lucene query.
      * @throws IOException
      */
-    public TopDocs searchDocumentBySynonym(String synonym) throws ParseException, IOException {
-        Query query = createCombinedQueryFor(synonym, false);
-        return this.searcher.search(query, topDocLimit);
-    }
-
-    /**
-     * search a document by one of the synonym (which may be the word) with possibility to activate fuzzy option.
-     * 
-     * @param stringToSearch
-     * @param fuzzy
-     * @return
-     * @throws ParseException
-     * @throws IOException
-     */
-    public TopDocs searchDocumentBySynonym(String stringToSearch, boolean fuzzy) throws ParseException, IOException {
-        Query query = createCombinedQueryFor(stringToSearch, fuzzy);
-        return this.searcher.search(query, topDocLimit);
+    public TopDocs searchDocumentBySynonym(String stringToSearch) throws ParseException, IOException {
+        TopDocs topDocs = null;
+        Query query;
+        switch (searchMode) {
+        case MATCH_ANY:
+            query = createCombinedQueryFor(stringToSearch, false, false);
+            break;
+        case MATCH_PARTIAL:
+            query = createCombinedQueryForPartialMatch(stringToSearch);
+            break;
+        case MATCH_ALL:
+            query = createCombinedQueryFor(stringToSearch, false, true);
+            break;
+        case MATCH_EXACT:
+            query = createCombinedQueryForExactMatch(stringToSearch);
+            break;
+        case MATCH_ANY_FUZZY:
+            query = createCombinedQueryFor(stringToSearch, true, false);
+            break;
+        case MATCH_ALL_FUZZY:
+            query = createCombinedQueryFor(stringToSearch, true, true);
+            break;
+        default: // do the same as MATCH_ANY mode
+            query = createCombinedQueryFor(stringToSearch, false, false);
+            break;
+        }
+        topDocs = this.searcher.search(query, topDocLimit);
+        return topDocs;
     }
 
     /**
@@ -289,33 +355,90 @@ public class SynonymIndexSearcher {
         return query;
     }
 
+    private Query getTermQuery(String field, String text, boolean fuzzy) {
+        Term term = new Term(field, text);
+        return fuzzy ? new FuzzyQuery(term, minimumSimilarity) : new TermQuery(term);
+    }
+
     /**
-     * create a combined query who searches for the input tokens of as well as the entire string.
+     * create a combined query who searches for the input tokens separately (with QueryParser) and also the entire input
+     * string (with TermQuery or FuzzyQuery).
      * 
      * @param input
-     * @param fuzzy
+     * @param fuzzy this options decides whether output the fuzzy matches
+     * @param allMatch this options means the result should be returned only if all tokens are found in the index
      * @return
      * @throws IOException
      * @throws ParseException
      */
-    private Query createCombinedQueryFor(String input, boolean fuzzy) throws IOException, ParseException {
-        Query wordTermQuery, synTermQuery;
-        if (fuzzy) {
-            wordTermQuery = new FuzzyQuery(new Term(F_WORDTERM, input.toLowerCase()), MINIMUM_SIMILARITY);
-            synTermQuery = new FuzzyQuery(new Term(F_SYNTERM, input.toLowerCase()), MINIMUM_SIMILARITY);
-        } else {
-            wordTermQuery = new TermQuery(new Term(F_WORDTERM, input.toLowerCase()));
-            synTermQuery = new TermQuery(new Term(F_SYNTERM, input.toLowerCase()));
+    private Query createCombinedQueryFor(String input, boolean fuzzy, boolean allMatch) throws IOException, ParseException {
+        Query wordTermQuery, synTermQuery, wordQuery, synQuery;
+        wordTermQuery = getTermQuery(F_WORDTERM, input.toLowerCase(), fuzzy);
+        synTermQuery = getTermQuery(F_SYNTERM, input.toLowerCase(), fuzzy);
+
+        List<String> tokens = getTokensFromAnalyzer(input);
+        wordQuery = new BooleanQuery();
+        synQuery = new BooleanQuery();
+        for (String token : tokens) {
+            ((BooleanQuery) wordQuery).add(getTermQuery(F_WORD, token, fuzzy), allMatch ? BooleanClause.Occur.MUST
+                    : BooleanClause.Occur.SHOULD);
+            ((BooleanQuery) synQuery).add(getTermQuery(F_SYN, token, fuzzy), allMatch ? BooleanClause.Occur.MUST
+                    : BooleanClause.Occur.SHOULD);
         }
-        QueryParser parser = new QueryParser(Version.LUCENE_30, F_WORD, getAnalyzer());
-        Query wordQuery = parser.parse(input);
-        parser = new QueryParser(Version.LUCENE_30, F_SYN, getAnalyzer());
-        Query synQuery = parser.parse(input);
 
         // increase importance of the reference word
         wordTermQuery.setBoost(WORD_TERM_BOOST);
         wordQuery.setBoost(WORD_BOOST);
-        return wordTermQuery.combine(new Query[] { wordTermQuery, wordQuery, synTermQuery, synQuery });
+        return wordTermQuery.combine(new Query[] { wordTermQuery, synTermQuery, wordQuery, synQuery });
+    }
+
+    /**
+     * create a combined query who searches for the input tokens in order (with double quotes around the input) and also
+     * the entire input string (with TermQuery).
+     * 
+     * @param input
+     * @return
+     * @throws IOException
+     * @throws ParseException
+     */
+    private Query createCombinedQueryForPartialMatch(String input) throws IOException, ParseException {
+        Query wordTermQuery, synTermQuery, wordQuery, synQuery;
+        wordTermQuery = getTermQuery(F_WORDTERM, input.toLowerCase(), false);
+        synTermQuery = getTermQuery(F_SYNTERM, input.toLowerCase(), false);
+
+        List<String> tokens = getTokensFromAnalyzer(input);
+        wordQuery = new PhraseQuery();
+        ((PhraseQuery) wordQuery).setSlop(slop);
+        synQuery = new PhraseQuery();
+        ((PhraseQuery) synQuery).setSlop(slop);
+        for (String token : tokens) {
+            token = token.toLowerCase();
+            ((PhraseQuery) wordQuery).add(new Term(F_WORD, token));
+            ((PhraseQuery) synQuery).add(new Term(F_SYN, token));
+        }
+        // increase importance of the reference word
+        wordTermQuery.setBoost(WORD_TERM_BOOST);
+        wordQuery.setBoost(WORD_BOOST);
+        return wordTermQuery.combine(new Query[] { wordTermQuery, synTermQuery, wordQuery, synQuery });
+
+    }
+
+    /**
+     * create a combined query who searches for the input tokens in order (with double quotes around the input) and also
+     * the entire input string (with TermQuery).
+     * 
+     * @param input
+     * @return
+     * @throws IOException
+     * @throws ParseException
+     */
+    private Query createCombinedQueryForExactMatch(String input) throws IOException, ParseException {
+        Query wordTermQuery, synTermQuery;
+        wordTermQuery = getTermQuery(F_WORDTERM, input.toLowerCase(), false);
+        synTermQuery = getTermQuery(F_SYNTERM, input.toLowerCase(), false);
+        // increase importance of the reference word
+        wordTermQuery.setBoost(WORD_TERM_BOOST);
+        return wordTermQuery.combine(new Query[] { wordTermQuery, synTermQuery });
     }
 
     public void close() {
@@ -335,4 +458,45 @@ public class SynonymIndexSearcher {
         return searcher;
     }
 
+    public SynonymSearchMode getSearchMode() {
+        return searchMode;
+    }
+
+    public void setSearchMode(SynonymSearchMode searchMode) {
+        this.searchMode = searchMode;
+    }
+
+    public void setMinimumSimilarity(float minimumSimilarity) {
+        this.minimumSimilarity = minimumSimilarity;
+    }
+
+    public void setMinimumSimilarity(double minimumSimilarity) {
+        this.minimumSimilarity = (float) minimumSimilarity;
+    }
+
+    public float getMatchingThreshold() {
+        return matchingThreshold;
+    }
+
+    public void setMatchingThreshold(float matchingThreshold) {
+        this.matchingThreshold = matchingThreshold;
+    }
+
+    public void setMatchingThreshold(double matchingThreshold) {
+        this.matchingThreshold = (float) matchingThreshold;
+    }
+
+    private List<String> getTokensFromAnalyzer(String input) throws IOException {
+        StandardTokenizer tokenStream = new StandardTokenizer(Version.LUCENE_30, new StringReader(input));
+        TokenStream result = new StandardFilter(tokenStream);
+        result = new LowerCaseFilter(result);
+        TermAttribute termAttribute = result.addAttribute(TermAttribute.class);
+
+        List<String> termList = new ArrayList<String>();
+        while (result.incrementToken()) {
+            String term = termAttribute.term();
+            termList.add(term);
+        }
+        return termList;
+    }
 }
