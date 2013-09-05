@@ -66,6 +66,7 @@ import org.talend.cwm.db.connection.DatabaseSQLExecutor;
 import org.talend.cwm.db.connection.DelimitedFileSQLExecutor;
 import org.talend.cwm.db.connection.ISQLExecutor;
 import org.talend.cwm.db.connection.MDMSQLExecutor;
+import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.dialog.MetadataAndColumnSelectionDialog;
@@ -92,6 +93,7 @@ import org.talend.repository.model.RepositoryNode;
 import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.foundation.softwaredeployment.DataManager;
 import orgomg.cwm.objectmodel.core.ModelElement;
+import orgomg.cwm.objectmodel.core.TaggedValue;
 
 /**
  * Detail Page of the match analysis
@@ -140,6 +142,10 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
 
     private Text rowLoadedText = null;
 
+    private Label analyzeDataLabel;
+
+    private String analyzeDataDefaultInfo;
+
     /**
      * MatchMasterDetailsPage constructor.
      *
@@ -150,6 +156,7 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
     public MatchMasterDetailsPage(FormEditor editor, String id, String title) {
         super(editor, id, title);
         currentEditor = (AnalysisEditor) editor;
+        analyzeDataDefaultInfo = DefaultMessagesImpl.getString("MatchMasterDetailsPage.DataDefultInfor"); //$NON-NLS-1$
     }
 
     @Override
@@ -218,6 +225,8 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
         dataSampleparentComposite.setLayout(dataSampleLayout);
 
         dataSampleSection.setClient(dataSampleparentComposite);
+        // create analyze data title composite
+        createAnaDataLabelComposite(dataSampleparentComposite);
         // Button composite
         createButtonComposite(dataSampleparentComposite);
 
@@ -255,6 +264,16 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
 
             createNatTable(new ArrayList<Object[]>());
         }
+
+    }
+
+    private void createAnaDataLabelComposite(Composite dataparent) {
+        Composite titleComposite = toolkit.createComposite(dataparent);
+        GridLayout layout = new GridLayout(1, Boolean.TRUE);
+        titleComposite.setLayout(layout);
+        analyzeDataLabel = new Label(titleComposite, SWT.NONE);
+        String matchAnaTagValue = TaggedValueHelper.getValueString(TaggedValueHelper.MATCH_ANALYZE_DATA, analysis);
+        analyzeDataLabel.setText(analyzeDataDefaultInfo + matchAnaTagValue);
 
     }
 
@@ -364,7 +383,7 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
 
     private void setAllColumnColorToBlack() {
         for (ModelElement column : analysisHandler.getSelectedColumns()) {
-            sampleTable.changeColumnHeaderLabelColor(column.getName(), GUIHelper.COLOR_BLACK, "");
+            sampleTable.changeColumnHeaderLabelColor(column.getName(), GUIHelper.COLOR_BLACK, PluginConstant.EMPTY_STRING);
         }
         sampleTable.refresh();
     }
@@ -519,7 +538,7 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
 
         // register: refresh the data sample table to display the running result(with GID, SCORE, ...)
          refreshTableDataReceiver = new EventReceiver() {
-        
+
          @Override
             public boolean handle(final Object data) {
                 Display.getDefault().asyncExec(new Runnable() {
@@ -562,7 +581,9 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
                 this.setDirty(true);
                 // update all related keys in block and match section
                 updateAllKeys(oldSelectedColumns);
-
+                // update the analyzed data label with checked elements name.
+                String selectedElementNames = dialog.getSelectedElementNames();
+                updateAnalyzeDataLabel(selectedElementNames);
                 refreshColumnAndData();
             }
         }
@@ -571,7 +592,7 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
     /**
      * if some columns are deleted : remove the blocking/match key which used this column ; if some column still there :
      * update the index info in their keys; if some new columns added : do nothing
-     * 
+     *
      * @param oldSelectedColumns
      */
     private void updateAllKeys(List<IRepositoryNode> oldSelectedColumns) {
@@ -590,7 +611,7 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
 
     /**
      * loop the new selected columns to check if the old one still Contained: find the new position.
-     * 
+     *
      * @param oldSelectNode
      * @return
      */
@@ -609,7 +630,7 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
      * compare two array of objects, if them are same, return false, if any difference, return true. check for the
      * column name of data table: when user select a column named "GID", "GRP_SIZE", "BLOCK_KEY", if has, remove them
      * and give the user a warning
-     * 
+     *
      * @param oldSelectedNodes : original selected columns
      * @param selectedResult : new selected columns
      * @return
@@ -664,7 +685,7 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
      * need to be called after the user selects some columns need to fetch the data and refresh the table
      *
      * @param repositoryNodes
-     * 
+     *
      * @param nodes
      */
     public void setSelectedNodes(RepositoryNode[] repositoryNodes) {
@@ -1004,5 +1025,25 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
             currentEditor.setActivePage(AnalysisEditor.RESULT_PAGE);
             currentEditor.getResultPage().refresh(this);
         }
+    }
+
+    /**
+     *
+     * save/update the selected elements names as TaggedValue.
+     *
+     * @param selectedNames
+     */
+    private void updateAnalyzeDataLabel(String selectedNames) {
+
+        EList<TaggedValue> taggedValues = analysis.getTaggedValue();
+        TaggedValue taggedValue = TaggedValueHelper.getTaggedValue(TaggedValueHelper.MATCH_ANALYZE_DATA, taggedValues);
+        if (taggedValue == null) {
+            TaggedValue matchTaggedValue = TaggedValueHelper.createTaggedValue(TaggedValueHelper.MATCH_ANALYZE_DATA,
+                    selectedNames);
+            analysis.getTaggedValue().add(matchTaggedValue);
+        } else {
+            taggedValue.setValue(selectedNames);
+        }
+        this.analyzeDataLabel.setText(this.analyzeDataDefaultInfo + selectedNames);
     }
 }
