@@ -575,7 +575,7 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
                 // update all related keys in block and match section
                 updateAllKeys(oldSelectedColumns);
                 // update the analyzed data label with checked elements name.
-                String selectedElementNames = RepositoryNodeHelper.getAnalyzeDateaNames(reposList.get(0));
+                String selectedElementNames = RepositoryNodeHelper.getAnalyzeDataNames(reposList.get(0));
                 updateAnalyzeDataLabel(selectedElementNames);
                 refreshColumnAndData();
             }

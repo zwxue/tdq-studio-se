@@ -84,7 +84,7 @@ public class MatchWizard extends ColumnWizard {
         List<IRepositoryNode> nodes = selectionPage.nodes;
         if (nodes != null && nodes.size() > 0) {
             // update analyze data label by selected nodes names(don't cotain columnRepNode).
-            String checkedElementNames = RepositoryNodeHelper.getAnalyzeDateaNames(nodes.get(0));
+            String checkedElementNames = RepositoryNodeHelper.getAnalyzeDataNames(nodes.get(0));
             masterPage.updateAnalyzeDataLabel(checkedElementNames);
             // give the selected columns to the master page
             masterPage.setSelectedNodes(nodes.toArray(new RepositoryNode[nodes.size()]));
