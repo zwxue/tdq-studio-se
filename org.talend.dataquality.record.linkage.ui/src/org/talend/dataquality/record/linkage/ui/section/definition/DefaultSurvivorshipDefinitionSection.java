@@ -33,6 +33,7 @@ import org.talend.dataquality.record.linkage.ui.section.AbstractMatchAnaysisTabl
 import org.talend.dataquality.record.linkage.utils.MatchAnalysisConstant;
 import org.talend.dataquality.rules.DefaultSurvivorshipDefinition;
 import org.talend.dataquality.rules.MatchRuleDefinition;
+import org.talend.dataquality.rules.RulesFactory;
 
 /**
  * created by HHB on 2013-8-23 Detailled comment
@@ -109,7 +110,9 @@ public class DefaultSurvivorshipDefinitionSection extends AbstractMatchAnaysisTa
     }
 
     public void setMatchRuleDef(MatchRuleDefinition matchRuleDef) {
-        this.matchRuleDef = matchRuleDef;
+        this.matchRuleDef = RulesFactory.eINSTANCE.createMatchRuleDefinition();
+        this.matchRuleDef.getDefaultSurvivorshipDefinitions().addAll(
+                EcoreUtil.copyAll(matchRuleDef.getDefaultSurvivorshipDefinitions()));
     }
 
     @Override
