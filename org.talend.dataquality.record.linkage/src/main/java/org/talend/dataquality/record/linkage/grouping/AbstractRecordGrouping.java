@@ -32,7 +32,7 @@ import org.talend.dataquality.record.linkage.record.RecordMatcherFactory;
  * Abstract record grouping implementation without hadoop API included.
  * 
  */
-public class AbstractRecordGrouping implements IRecordGrouping {
+public abstract class AbstractRecordGrouping implements IRecordGrouping {
 
     private static Logger log = Logger.getLogger(AbstractRecordGrouping.class);
 
@@ -306,9 +306,7 @@ public class AbstractRecordGrouping implements IRecordGrouping {
      * 
      * @param row
      */
-    protected void outputRow(String row) {
-        // Subclass must implement the way of output.
-    }
+    protected abstract void outputRow(String row);
 
     /*
      * (non-Javadoc)

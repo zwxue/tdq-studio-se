@@ -12,13 +12,13 @@
 // ============================================================================
 package org.talend.dq.analysis;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.junit.Before;
 import org.junit.Test;
@@ -76,15 +76,14 @@ public class MatchAnalysisExecutorTest {
         // analysisResult.setAnalysis(analysis);
 
         context.setConnection(delimitedFileconnection);
-
         URL fileUrl = this.getClass().getResource("match_test_data"); //$NON-NLS-1$
         try {
-            delimitedFileconnection.setFilePath(fileUrl.toURI().getPath().toString());
+            delimitedFileconnection.setFilePath(FileLocator.toFileURL(fileUrl).toURI().getPath().toString());
             delimitedFileconnection.setRowSeparatorValue("\n");
             delimitedFileconnection.setEncoding("UTF-8");
             delimitedFileconnection.setFieldSeparatorValue(",");
 
-        } catch (URISyntaxException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 

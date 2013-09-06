@@ -12,7 +12,6 @@
 // ============================================================================
 package org.talend.dataquality.record.linkage.ui.section;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,6 +27,7 @@ import org.talend.dataquality.record.linkage.ui.composite.tableviewer.DuplicateR
 import org.talend.dataquality.record.linkage.ui.composite.tableviewer.provider.DuplicateStatisticsRow;
 import org.talend.dataquality.record.linkage.ui.composite.utils.MatchRuleAnlaysisUtils;
 import org.talend.dataquality.record.linkage.ui.i18n.internal.DefaultMessagesImpl;
+import org.talend.utils.format.StringFormatUtil;
 
 /**
  * created by zhao on Aug 19, 2013 Duplicate record statistics section.
@@ -101,9 +101,9 @@ public class DuplicateRecordStatisticsSection extends AbstractMatchAnaysisTableS
      */
     private void setPercentage(Long count, Long rowCount, DuplicateStatisticsRow statsRow) {
         if (rowCount != 0) {
-            BigDecimal bd = new BigDecimal(count * 100 / rowCount);
-            bd = bd.setScale(2, BigDecimal.ROUND_HALF_UP);
-            statsRow.setPercentage(bd.doubleValue() + PluginConstant.PERCENTAGE_STR);
+            double percValue = Double.valueOf(count) / Double.valueOf(rowCount);
+            String formatedStr = StringFormatUtil.format(percValue, StringFormatUtil.PERCENT).toString();
+            statsRow.setPercentage(formatedStr);
         } else {
             statsRow.setPercentage(PluginConstant.NA_STRING);
         }

@@ -12,7 +12,6 @@
 // ============================================================================
 package org.talend.dataquality.record.linkage.ui.section;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -32,10 +31,11 @@ import org.talend.dataquality.record.linkage.ui.composite.tableviewer.GroupStati
 import org.talend.dataquality.record.linkage.ui.composite.tableviewer.provider.GroupStatisticsRow;
 import org.talend.dataquality.record.linkage.ui.composite.utils.MatchRuleAnlaysisUtils;
 import org.talend.dataquality.record.linkage.ui.i18n.internal.DefaultMessagesImpl;
+import org.talend.utils.format.StringFormatUtil;
 
 /**
  * created by zhao on Aug 19, 2013 Group statistics section
- *
+ * 
  */
 public class GroupStatisticsSection extends AbstractMatchKeyWithChartTableSection {
 
@@ -43,7 +43,7 @@ public class GroupStatisticsSection extends AbstractMatchKeyWithChartTableSectio
 
     /**
      * DOC zhao GroupStatisticsSection constructor comment.
-     *
+     * 
      * @param form
      * @param parent
      * @param style
@@ -56,7 +56,7 @@ public class GroupStatisticsSection extends AbstractMatchKeyWithChartTableSectio
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see
      * org.talend.dataquality.record.linkage.ui.section.AbstractMatchAnaysisTableSection#createSubChart(org.eclipse.
      * swt.widgets.Composite)
@@ -76,7 +76,7 @@ public class GroupStatisticsSection extends AbstractMatchKeyWithChartTableSectio
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see
      * org.talend.dataquality.record.linkage.ui.section.AbstractMatchAnaysisTableSection#createSubContent(org.eclipse
      * .swt.widgets.Composite)
@@ -115,16 +115,16 @@ public class GroupStatisticsSection extends AbstractMatchKeyWithChartTableSectio
 
     /**
      * DOC zhao Comment method "setPercentage".
-     *
+     * 
      * @param count
      * @param rowCount
      * @param rowCountRow
      */
     private void setPercentage(Long count, Long rowCount, GroupStatisticsRow groupStatsRow) {
         if (rowCount != 0) {
-            BigDecimal bd = new BigDecimal(count * 100 / rowCount);
-            bd = bd.setScale(2, BigDecimal.ROUND_HALF_UP);
-            groupStatsRow.setRecordPercentage(bd.doubleValue() + PluginConstant.PERCENTAGE_STR);
+            double percValue = Double.valueOf(count) / Double.valueOf(rowCount);
+            String formatedStr = StringFormatUtil.format(percValue, StringFormatUtil.PERCENT).toString();
+            groupStatsRow.setRecordPercentage(formatedStr);
         } else {
             groupStatsRow.setRecordPercentage(PluginConstant.NA_STRING);
         }
@@ -132,7 +132,7 @@ public class GroupStatisticsSection extends AbstractMatchKeyWithChartTableSectio
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see org.talend.dataquality.record.linkage.ui.section.AbstractMatchAnaysisTableSection#getSectionName()
      */
     @Override
@@ -142,7 +142,7 @@ public class GroupStatisticsSection extends AbstractMatchKeyWithChartTableSectio
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see org.talend.dataquality.record.linkage.ui.section.AbstractMatchAnaysisTableSection#refreshChart()
      */
     @Override
@@ -155,7 +155,7 @@ public class GroupStatisticsSection extends AbstractMatchKeyWithChartTableSectio
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see
      * org.talend.dataquality.record.linkage.ui.section.AbstractMatchAnaysisTableSection#isKeyDefinitionAdded(java.lang
      * .String)
@@ -168,7 +168,7 @@ public class GroupStatisticsSection extends AbstractMatchKeyWithChartTableSectio
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see
      * org.talend.dataquality.record.linkage.ui.section.AbstractMatchAnaysisTableSection#createButtons(org.eclipse.swt
      * .widgets.Composite)
