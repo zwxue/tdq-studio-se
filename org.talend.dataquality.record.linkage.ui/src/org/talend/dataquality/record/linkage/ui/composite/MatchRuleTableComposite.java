@@ -28,13 +28,14 @@ import org.talend.dataquality.record.linkage.ui.composite.tableviewer.MatchRuleT
 import org.talend.dataquality.record.linkage.ui.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataquality.record.linkage.utils.MatchAnalysisConstant;
 import org.talend.dataquality.rules.KeyDefinition;
+import org.talend.dataquality.rules.MatchKeyDefinition;
 import org.talend.dataquality.rules.MatchRule;
 
 /**
  * created by zshen on Jul 31, 2013 Detailled comment
  *
  */
-public class MatchRuleTableComposite extends AbsMatchAnalysisTableComposite {
+public class MatchRuleTableComposite extends AbsMatchAnalysisTableComposite<MatchKeyDefinition> {
 
     private Text matchIntervalText;
 
@@ -147,7 +148,7 @@ public class MatchRuleTableComposite extends AbsMatchAnalysisTableComposite {
      * @see org.talend.dataquality.record.linkage.ui.composite.AbsMatchAnalysisTableComposite#createTableViewer()
      */
     @Override
-    protected AbstractMatchAnalysisTableViewer createTableViewer() {
+    protected AbstractMatchAnalysisTableViewer<MatchKeyDefinition> createTableViewer() {
         return new MatchRuleTableViewer(this, getTableStyle(), isAddColumn());
     }
 

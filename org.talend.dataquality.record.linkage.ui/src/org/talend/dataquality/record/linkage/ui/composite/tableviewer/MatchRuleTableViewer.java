@@ -17,7 +17,6 @@ import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-import org.eclipse.emf.common.util.EList;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ComboBoxCellEditor;
@@ -35,17 +34,14 @@ import org.talend.dataquality.record.linkage.ui.composite.utils.MatchRuleAnlaysi
 import org.talend.dataquality.record.linkage.ui.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataquality.record.linkage.utils.HandleNullEnum;
 import org.talend.dataquality.record.linkage.utils.MatchingTypeEnum;
-import org.talend.dataquality.rules.KeyDefinition;
 import org.talend.dataquality.rules.MatchKeyDefinition;
 import org.talend.dataquality.rules.MatchRule;
-import org.talend.dataquality.rules.MatchRuleDefinition;
-import org.talend.dataquality.rules.impl.RulesFactoryImpl;
 
 /**
  * created by zshen on Jul 31, 2013 Detailled comment
  *
  */
-public class MatchRuleTableViewer extends AbstractMatchAnalysisTableViewer {
+public class MatchRuleTableViewer extends AbstractMatchAnalysisTableViewer<MatchKeyDefinition> {
 
     private static Logger log = Logger.getLogger(MatchRuleTableViewer.class);
 
@@ -131,19 +127,16 @@ public class MatchRuleTableViewer extends AbstractMatchAnalysisTableViewer {
             log.error(DefaultMessagesImpl.getString("MatchRuleTableViewer.NULL_MATCH_RULE_INSTANCE") + analysis.getName()); //$NON-NLS-1$
             return false;
         }
-        MatchRuleDefinition matchRuleDef = RulesFactoryImpl.eINSTANCE.createMatchRuleDefinition();
-        return addElement(columnName, matchRuleDef);
+        return addElement(columnName, matchRule.getMatchKeys());
     }
 
     @Override
-    public void removeElement(String columnName, Analysis analysis) {
-        EList<MatchKeyDefinition> matchKeys = matchRule.getMatchKeys();
+    public void removeElement(String columnName, List<MatchKeyDefinition> matchKeys) {
         Iterator<MatchKeyDefinition> matchKeyIterator = matchKeys.iterator();
         while (matchKeyIterator.hasNext()) {
-            KeyDefinition keyDef = matchKeyIterator.next();
+            MatchKeyDefinition keyDef = matchKeyIterator.next();
             if (StringUtils.equals(keyDef.getColumn(), columnName)) {
-                matchKeys.remove(keyDef);
-                remove(keyDef);
+                this.removeElement(keyDef, matchKeys);
                 break;
             }
         }
@@ -159,17 +152,6 @@ public class MatchRuleTableViewer extends AbstractMatchAnalysisTableViewer {
         return 8;
     }
 
-    private boolean isAddedAlready(String columnName) {
-        if (this.getInput() instanceof MatchRule) {
-            MatchRule inputElement = (MatchRule) this.getInput();
-            for (MatchKeyDefinition element : inputElement.getMatchKeys()) {
-                if (element.getColumn().equals(columnName)) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
 
     /**
      * DOC zhao Comment method "setMatchRule".
@@ -186,81 +168,19 @@ public class MatchRuleTableViewer extends AbstractMatchAnalysisTableViewer {
         actionGroup.fillContextMenu(new MenuManager());
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see
-     * org.talend.dataquality.record.linkage.ui.composite.tableviewer.AbstractMatchAnalysisTableViewer#addElement(java
-     * .lang.String, org.talend.dataquality.rules.MatchRuleDefinition)
-     */
-    @Override
-    public boolean addElement(String columnName, MatchRuleDefinition matchRuleDef) {
-        MatchKeyDefinition newMatchkey = MatchRuleAnlaysisUtils.createDefaultMatchRow(columnName);
-        matchRule.getMatchKeys().add(newMatchkey);
-        add(newMatchkey);
-        return true;
-    }
+
 
     /*
      * (non-Javadoc)
      *
-     * @see
-     * org.talend.dataquality.record.linkage.ui.composite.tableviewer.AbstractMatchAnalysisTableViewer#removeElement
-     * (org.talend.dataquality.rules.KeyDefinition, org.talend.dataquality.analysis.Analysis)
+     * @see org.talend.dataquality.record.linkage.ui.composite.tableviewer.AbstractMatchAnalysisTableViewer#
+     * createNewKeyDefinition(java.lang.String)
      */
     @Override
-    public void removeElement(KeyDefinition keyDef, Analysis analysis) {
-        MatchRuleDefinition matchRuleDef = RulesFactoryImpl.eINSTANCE.createMatchRuleDefinition();
-        removeElement(keyDef, matchRuleDef);
-
+    protected MatchKeyDefinition createNewKeyDefinition(String columnName) {
+        return MatchRuleAnlaysisUtils.createDefaultMatchRow(columnName);
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see
-     * org.talend.dataquality.record.linkage.ui.composite.tableviewer.AbstractMatchAnalysisTableViewer#removeElement
-     * (org.talend.dataquality.rules.KeyDefinition, org.talend.dataquality.rules.MatchRuleDefinition)
-     */
-    @Override
-    public void removeElement(KeyDefinition keyDef, MatchRuleDefinition matchRuleDef) {
-        EList<MatchKeyDefinition> matchKeys = matchRule.getMatchKeys();
-        Iterator<MatchKeyDefinition> matchKeyIterator = matchKeys.iterator();
-        while (matchKeyIterator.hasNext()) {
-            KeyDefinition tempkeyDef = matchKeyIterator.next();
-            if (StringUtils.equals(keyDef.getName(), tempkeyDef.getName())) {
-                matchKeys.remove(keyDef);
-                remove(keyDef);
-                break;
-            }
-        }
 
-    }
-
-    /*
-     * (non-Javadoc)
-     *
-     * @see
-     * org.talend.dataquality.record.linkage.ui.composite.tableviewer.AbstractMatchAnalysisTableViewer#moveUpElement
-     * (org.talend.dataquality.rules.KeyDefinition, org.talend.dataquality.rules.MatchRuleDefinition)
-     */
-    @Override
-    public void moveUpElement(KeyDefinition keyDef, MatchRuleDefinition matchRuleDef) {
-        // TODO Auto-generated method stub
-
-    }
-
-    /*
-     * (non-Javadoc)
-     *
-     * @see
-     * org.talend.dataquality.record.linkage.ui.composite.tableviewer.AbstractMatchAnalysisTableViewer#moveDownElement
-     * (org.talend.dataquality.rules.KeyDefinition, org.talend.dataquality.rules.MatchRuleDefinition)
-     */
-    @Override
-    public void moveDownElement(KeyDefinition keyDef, MatchRuleDefinition matchRuleDef) {
-        // TODO Auto-generated method stub
-
-    }
 
 }

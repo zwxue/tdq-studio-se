@@ -12,11 +12,9 @@
 // ============================================================================
 package org.talend.dataquality.record.linkage.ui.composite.tableviewer;
 
-import java.util.Iterator;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.CheckboxCellEditor;
@@ -31,10 +29,9 @@ import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.record.linkage.ui.action.MatchRuleActionGroup;
 import org.talend.dataquality.record.linkage.ui.composite.tableviewer.provider.MatchAnalysisTableContentProvider;
 import org.talend.dataquality.record.linkage.ui.composite.tableviewer.provider.SurvivorshipLabelProvider;
+import org.talend.dataquality.record.linkage.utils.MatchAnalysisConstant;
 import org.talend.dataquality.record.linkage.utils.SurvivorShipAlgorithmEnum;
 import org.talend.dataquality.rules.AlgorithmDefinition;
-import org.talend.dataquality.rules.KeyDefinition;
-import org.talend.dataquality.rules.MatchRuleDefinition;
 import org.talend.dataquality.rules.RulesFactory;
 import org.talend.dataquality.rules.SurvivorshipKeyDefinition;
 
@@ -42,7 +39,7 @@ import org.talend.dataquality.rules.SurvivorshipKeyDefinition;
  * created by HHB on 2013-8-23 Detailled comment
  *
  */
-public class SurvivorShipTableViewer extends AbstractMatchAnalysisTableViewer {
+public class SurvivorShipTableViewer extends AbstractMatchAnalysisTableViewer<SurvivorshipKeyDefinition> {
 
     /**
      * DOC HHB SurvivorShipTableViewer constructor comment.
@@ -55,9 +52,6 @@ public class SurvivorShipTableViewer extends AbstractMatchAnalysisTableViewer {
         super(parent, style, isAddColumn);
     }
 
-    private static Logger log = Logger.getLogger(SurvivorShipTableViewer.class);
-
-    private final String KEY_DEFAULT_VALUE = "key name"; //$NON-NLS-1$
 
     @Override
     protected int getHeaderDisplayWeight() {
@@ -144,74 +138,41 @@ public class SurvivorShipTableViewer extends AbstractMatchAnalysisTableViewer {
         return false;
     }
 
-    @Override
-    public boolean addElement(String columnName, MatchRuleDefinition matchRuleDef) {
-        List<SurvivorshipKeyDefinition> skdList = matchRuleDef.getSurvivorshipKeys();
-        SurvivorshipKeyDefinition keyDef = createNewSurvivorshipDefinition(columnName);
-        skdList.add(keyDef);
-        add(keyDef);
-        return true;
-    }
 
-    private SurvivorshipKeyDefinition createNewSurvivorshipDefinition(String columnName) {
+
+
+    /*
+     * (non-Javadoc)
+     *
+     * @see org.talend.dataquality.record.linkage.ui.composite.tableviewer.AbstractMatchAnalysisTableViewer#
+     * createNewKeyDefinition(java.lang.String)
+     */
+    @Override
+    protected SurvivorshipKeyDefinition createNewKeyDefinition(String columnName) {
         SurvivorshipKeyDefinition skd = RulesFactory.eINSTANCE.createSurvivorshipKeyDefinition();
-        skd.setName(KEY_DEFAULT_VALUE);
+        skd.setName(MatchAnalysisConstant.SURVIVORSHIP_KEY_DEFAULT_VALUE);
         skd.setColumn(columnName);
         AlgorithmDefinition createAlgorithmDefinition = RulesFactory.eINSTANCE.createAlgorithmDefinition();
         createAlgorithmDefinition.setAlgorithmType(SurvivorShipAlgorithmEnum.getTypeByIndex(0).getValue());
-        createAlgorithmDefinition.setAlgorithmParameters("");
+        createAlgorithmDefinition.setAlgorithmParameters(StringUtils.EMPTY);
         skd.setFunction(createAlgorithmDefinition);
         skd.setAllowManualResolution(true);
         return skd;
     }
 
-    @Override
-    public void removeElement(String columnName, Analysis analysis) {
-    }
-
-    @Override
-    public void removeElement(KeyDefinition keyDef, Analysis analysis) {
-    }
-
-    @Override
-    public void removeElement(KeyDefinition keyDef, MatchRuleDefinition matchRuleDef) {
-        List<SurvivorshipKeyDefinition> skdList = matchRuleDef.getSurvivorshipKeys();
-        Iterator<SurvivorshipKeyDefinition> keyIterator = skdList.iterator();
-        while (keyIterator.hasNext()) {
-            KeyDefinition tmpKeyDef = keyIterator.next();
-            if (StringUtils.equals(keyDef.getName(), tmpKeyDef.getName())) {
-                skdList.remove(keyDef);
-                // Update table view.
-                remove(keyDef);
-                break;
-            }
-        }
-    }
 
     /*
      * (non-Javadoc)
      * 
      * @see
-     * org.talend.dataquality.record.linkage.ui.composite.tableviewer.AbstractMatchAnalysisTableViewer#moveUpElement
-     * (org.talend.dataquality.rules.KeyDefinition, org.talend.dataquality.rules.MatchRuleDefinition)
+     * org.talend.dataquality.record.linkage.ui.composite.tableviewer.AbstractMatchAnalysisTableViewer#removeElement
+     * (java.lang.String, java.util.List)
      */
     @Override
-    public void moveUpElement(KeyDefinition keyDef, MatchRuleDefinition matchRuleDef) {
-        // TODO Auto-generated method stub
+    public void removeElement(String columnName, List<SurvivorshipKeyDefinition> keyList) {
+        // don't need to do anything
 
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * org.talend.dataquality.record.linkage.ui.composite.tableviewer.AbstractMatchAnalysisTableViewer#moveDownElement
-     * (org.talend.dataquality.rules.KeyDefinition, org.talend.dataquality.rules.MatchRuleDefinition)
-     */
-    @Override
-    public void moveDownElement(KeyDefinition keyDef, MatchRuleDefinition matchRuleDef) {
-        // TODO Auto-generated method stub
-
-    }
 
 }

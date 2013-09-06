@@ -118,12 +118,40 @@ public abstract class AbstractMatchAnaysisTableSection extends AbstractSectionCo
         }
     }
 
-    protected void createButtons(Composite sectionClient) {
+    protected void createButtons(Composite currentSectionClient) {
         if (isNeedSubChart) {
-            createRefreshButton(sectionClient);
+            createRefreshButton(currentSectionClient);
         } else {
-            createEditOperationButtons(sectionClient);
+            createEditOperationButtons(currentSectionClient);
         }
+    }
+
+    protected void createMoveButton(Composite buttonsComposite, GridData labelGd) {
+
+        final Button upButton = new Button(buttonsComposite, SWT.NONE);
+        upButton.setToolTipText(DefaultMessagesImpl.getString("AbstractMatchAnaysisTableSection.MoveUp_button_tooltip")); //$NON-NLS-1$
+        upButton.setImage(ImageLib.getImage(ImageLib.UP_ACTION));
+        upButton.setLayoutData(labelGd);
+        upButton.addSelectionListener(new SelectionAdapter() {
+
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                moveUpTableItem();
+            }
+        });
+
+        final Button downButton = new Button(buttonsComposite, SWT.NONE);
+        downButton.setToolTipText(DefaultMessagesImpl.getString("AbstractMatchAnaysisTableSection.MoveDown_button_tooltip")); //$NON-NLS-1$
+        downButton.setImage(ImageLib.getImage(ImageLib.DOWN_ACTION));
+        downButton.setLayoutData(labelGd);
+        downButton.addSelectionListener(new SelectionAdapter() {
+
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                moveDownTableItem();
+            }
+        });
+
     }
 
     /**
@@ -162,55 +190,9 @@ public abstract class AbstractMatchAnaysisTableSection extends AbstractSectionCo
                 removeTableItem();
             }
         });
-        // will be implemented later
-        // final Button upButton = new Button(buttonsComposite, SWT.NONE);
-        // upButton.setToolTipText("Move Item Up");
-        // upButton.setImage(ImageLib.getImage(ImageLib.UP_ACTION));
-        // upButton.setLayoutData(labelGd);
-        // upButton.addSelectionListener(new SelectionAdapter() {
-        //
-        // @Override
-        // public void widgetSelected(SelectionEvent e) {
-        // moveUpTableItem();
-        // }
-        // });
-        //
-        // final Button downButton = new Button(buttonsComposite, SWT.NONE);
-        // downButton.setToolTipText("Move Item Down");
-        // downButton.setImage(ImageLib.getImage(ImageLib.DOWN_ACTION));
-        // downButton.setLayoutData(labelGd);
-        // downButton.addSelectionListener(new SelectionAdapter() {
-        //
-        // @Override
-        // public void widgetSelected(SelectionEvent e) {
-        // moveDownTableItem();
-        // }
-        // });
-        // final Button copyButton = new Button(buttonsComposite, SWT.NONE);
-        // copyButton.setToolTipText("Copy Selcetion Item");
-        // copyButton.setImage(ImageLib.getImage(ImageLib.COPY_ACTION));
-        // copyButton.setLayoutData(labelGd);
-        // copyButton.addSelectionListener(new SelectionAdapter() {
-        //
-        // @Override
-        // public void widgetSelected(SelectionEvent e) {
-        // copyTableItem();
-        //
-        // }
-        // });
-        //
-        // final Button pasteButton = new Button(buttonsComposite, SWT.NONE);
-        // pasteButton.setToolTipText("Paste Selcetion Item");
-        // pasteButton.setImage(ImageLib.getImage(ImageLib.PASTE_ACTION));
-        // pasteButton.setLayoutData(labelGd);
-        // pasteButton.addSelectionListener(new SelectionAdapter() {
-        //
-        // @Override
-        // public void widgetSelected(SelectionEvent e) {
-        // pasteTableItem();
-        //
-        // }
-        // });
+        createMoveButton(buttonsComposite, labelGd);
+        //TODO will be implemented later (copy and paste)
+        
 
 
     }
@@ -220,9 +202,9 @@ public abstract class AbstractMatchAnaysisTableSection extends AbstractSectionCo
     /**
      * DOC zshen Comment method "createButtons".
      */
-    private void createRefreshButton(Composite sectionClient) {
+    private void createRefreshButton(Composite currentSectionClient) {
 
-        Composite buttonsComposite = new Composite(sectionClient, SWT.NONE);
+        Composite buttonsComposite = new Composite(currentSectionClient, SWT.NONE);
         buttonsComposite.setLayout(new GridLayout(7, true));
 
         GridData labelGd = new GridData();
@@ -230,7 +212,7 @@ public abstract class AbstractMatchAnaysisTableSection extends AbstractSectionCo
         labelGd.widthHint = 30;
 
         final Button refresh = new Button(buttonsComposite, SWT.NONE);
-        refresh.setToolTipText("Add New Item"); //$NON-NLS-1$
+        refresh.setToolTipText("Add New Item"); 
         refresh.setImage(ImageLib.getImage(ImageLib.SECTION_PREVIEW));
         refresh.setLayoutData(labelGd);
         refresh.addSelectionListener(new SelectionAdapter() {
@@ -240,6 +222,8 @@ public abstract class AbstractMatchAnaysisTableSection extends AbstractSectionCo
                 new RefreshChartAction(AbstractMatchAnaysisTableSection.this).run();
             }
         });
+
+        createMoveButton(buttonsComposite, labelGd);
 
     }
 
@@ -275,6 +259,20 @@ public abstract class AbstractMatchAnaysisTableSection extends AbstractSectionCo
         this.isAddColumn = isAddColumn;
     }
 
+
+    /**
+     * DOC zshen Comment method "shouldMoveUp".
+     *
+     * @param blockKeyDefinition
+     * @param blockKeyDefinition2
+     * @return
+     */
+    protected boolean isSameWithCurrentModel(Object blockKeyDefinition, Object blockKeyDefinition2) {
+        if (blockKeyDefinition.equals(blockKeyDefinition2)) {
+            return false;
+        }
+        return true;
+    }
     /*
      * (non-Javadoc)
      *

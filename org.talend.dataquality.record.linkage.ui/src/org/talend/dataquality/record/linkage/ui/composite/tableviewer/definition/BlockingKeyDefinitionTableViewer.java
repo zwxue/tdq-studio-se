@@ -75,7 +75,7 @@ public class BlockingKeyDefinitionTableViewer extends BlockingKeyTableViewer {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.talend.dataquality.record.linkage.ui.composite.tableviewer.BlockingKeyTableViewer#getTableLabelProvider()
      */

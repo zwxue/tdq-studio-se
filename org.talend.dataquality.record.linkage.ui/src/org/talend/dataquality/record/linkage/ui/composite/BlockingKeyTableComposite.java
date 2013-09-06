@@ -17,13 +17,12 @@ import org.talend.dataquality.record.linkage.ui.composite.tableviewer.AbstractMa
 import org.talend.dataquality.record.linkage.ui.composite.tableviewer.BlockingKeyTableViewer;
 import org.talend.dataquality.record.linkage.utils.MatchAnalysisConstant;
 import org.talend.dataquality.rules.BlockKeyDefinition;
-import org.talend.dataquality.rules.MatchRuleDefinition;
 
 /**
  * created by zshen on Aug 6, 2013 Detailled comment
  *
  */
-public class BlockingKeyTableComposite extends AbsMatchAnalysisTableComposite {
+public class BlockingKeyTableComposite extends AbsMatchAnalysisTableComposite<BlockKeyDefinition> {
 
     /**
      * DOC zshen BlockingKeyTableComposite constructor comment.
@@ -66,9 +65,6 @@ public class BlockingKeyTableComposite extends AbsMatchAnalysisTableComposite {
         ((BlockingKeyTableViewer) tableViewer).initTable(headers);
     }
 
-    public Boolean addKeyDefinition(BlockKeyDefinition blockKeyDef, MatchRuleDefinition matchRuleDef) {
-        return ((BlockingKeyTableViewer) tableViewer).addElement(blockKeyDef, matchRuleDef);
-    }
 
     /*
      * (non-Javadoc)
@@ -76,7 +72,7 @@ public class BlockingKeyTableComposite extends AbsMatchAnalysisTableComposite {
      * @see org.talend.dataquality.record.linkage.ui.composite.AbsMatchAnalysisTableComposite#createTableViewer()
      */
     @Override
-    protected AbstractMatchAnalysisTableViewer createTableViewer() {
+    protected AbstractMatchAnalysisTableViewer<BlockKeyDefinition> createTableViewer() {
         return new BlockingKeyTableViewer(this, getTableStyle(), isAddColumn());
     }
 

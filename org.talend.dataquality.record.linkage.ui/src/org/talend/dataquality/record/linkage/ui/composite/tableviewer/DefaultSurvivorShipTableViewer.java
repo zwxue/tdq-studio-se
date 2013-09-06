@@ -16,7 +16,6 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.CellEditor;
@@ -33,7 +32,6 @@ import org.talend.dataquality.record.linkage.utils.DefaultSurvivorShipDataTypeEn
 import org.talend.dataquality.record.linkage.utils.SurvivorShipAlgorithmEnum;
 import org.talend.dataquality.rules.AlgorithmDefinition;
 import org.talend.dataquality.rules.DefaultSurvivorshipDefinition;
-import org.talend.dataquality.rules.KeyDefinition;
 import org.talend.dataquality.rules.MatchRuleDefinition;
 import org.talend.dataquality.rules.RulesFactory;
 
@@ -41,7 +39,7 @@ import org.talend.dataquality.rules.RulesFactory;
  * created by HHB on 2013-8-23 Detailled comment
  *
  */
-public class DefaultSurvivorShipTableViewer extends AbstractMatchAnalysisTableViewer {
+public class DefaultSurvivorShipTableViewer extends AbstractMatchAnalysisTableViewer<DefaultSurvivorshipDefinition> {
 
     /**
      * DOC HHB SurvivorShipTableViewer constructor comment.
@@ -54,7 +52,6 @@ public class DefaultSurvivorShipTableViewer extends AbstractMatchAnalysisTableVi
         super(parent, style, false);
     }
 
-    private static Logger log = Logger.getLogger(DefaultSurvivorShipTableViewer.class);
 
     @Override
     public void addContextMenu() {
@@ -129,32 +126,19 @@ public class DefaultSurvivorShipTableViewer extends AbstractMatchAnalysisTableVi
         return false;
     }
 
-    @Override
-    public boolean addElement(String columnName, MatchRuleDefinition matchRuleDef) {
-        List<DefaultSurvivorshipDefinition> skdList = matchRuleDef.getDefaultSurvivorshipDefinitions();
-        DefaultSurvivorshipDefinition keyDef = createNewDefaultSurvivorshipDefinition(columnName);
-        skdList.add(keyDef);
-        add(keyDef);
-        return true;
-    }
 
-    private DefaultSurvivorshipDefinition createNewDefaultSurvivorshipDefinition(String columnName) {
+    @Override
+    protected DefaultSurvivorshipDefinition createNewKeyDefinition(String columnName) {
         DefaultSurvivorshipDefinition skd = RulesFactory.eINSTANCE.createDefaultSurvivorshipDefinition();
         skd.setDataType(DefaultSurvivorShipDataTypeEnum.getTypeByIndex(0).getValue());
         AlgorithmDefinition createAlgorithmDefinition = RulesFactory.eINSTANCE.createAlgorithmDefinition();
         createAlgorithmDefinition.setAlgorithmType(SurvivorShipAlgorithmEnum.getTypeByIndex(0).getValue());
-        createAlgorithmDefinition.setAlgorithmParameters("");
+        createAlgorithmDefinition.setAlgorithmParameters(StringUtils.EMPTY);
         skd.setFunction(createAlgorithmDefinition);
         return skd;
     }
 
-    @Override
-    public void removeElement(String columnName, Analysis analysis) {
-    }
 
-    @Override
-    public void removeElement(KeyDefinition keyDef, Analysis analysis) {
-    }
 
     public void removeElement(DefaultSurvivorshipDefinition keyDef, MatchRuleDefinition matchRuleDef) {
         List<DefaultSurvivorshipDefinition> skdList = matchRuleDef.getDefaultSurvivorshipDefinitions();
@@ -170,18 +154,6 @@ public class DefaultSurvivorShipTableViewer extends AbstractMatchAnalysisTableVi
         }
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see
-     * org.talend.dataquality.record.linkage.ui.composite.tableviewer.AbstractMatchAnalysisTableViewer#removeElement
-     * (org.talend.dataquality.rules.KeyDefinition, org.talend.dataquality.rules.MatchRuleDefinition)
-     */
-    @Override
-    public void removeElement(KeyDefinition keyDef, MatchRuleDefinition matchRuleDef) {
-        // TODO Auto-generated method stub
-
-    }
 
     /*
      * (non-Javadoc)
@@ -194,29 +166,20 @@ public class DefaultSurvivorShipTableViewer extends AbstractMatchAnalysisTableVi
         return 12;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * org.talend.dataquality.record.linkage.ui.composite.tableviewer.AbstractMatchAnalysisTableViewer#moveUpElement
-     * (org.talend.dataquality.rules.KeyDefinition, org.talend.dataquality.rules.MatchRuleDefinition)
-     */
-    @Override
-    public void moveUpElement(KeyDefinition keyDef, MatchRuleDefinition matchRuleDef) {
-        // TODO Auto-generated method stub
 
-    }
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
-     * org.talend.dataquality.record.linkage.ui.composite.tableviewer.AbstractMatchAnalysisTableViewer#moveDownElement
-     * (org.talend.dataquality.rules.KeyDefinition, org.talend.dataquality.rules.MatchRuleDefinition)
+     * org.talend.dataquality.record.linkage.ui.composite.tableviewer.AbstractMatchAnalysisTableViewer#removeElement
+     * (java.lang.String, java.util.List)
      */
     @Override
-    public void moveDownElement(KeyDefinition keyDef, MatchRuleDefinition matchRuleDef) {
-        // TODO Auto-generated method stub
+    public void removeElement(String columnName, List<DefaultSurvivorshipDefinition> keyList) {
+        // don't need do anything
 
     }
+
+
 }

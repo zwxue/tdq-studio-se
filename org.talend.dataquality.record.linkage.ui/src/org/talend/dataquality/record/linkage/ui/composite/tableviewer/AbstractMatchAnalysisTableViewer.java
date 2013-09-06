@@ -14,6 +14,7 @@ package org.talend.dataquality.record.linkage.ui.composite.tableviewer;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
+import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.jface.viewers.CellEditor;
@@ -34,13 +35,12 @@ import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.record.linkage.ui.action.RemoveMatchKeyDefinitionAction;
 import org.talend.dataquality.record.linkage.utils.MatchAnalysisConstant;
 import org.talend.dataquality.rules.KeyDefinition;
-import org.talend.dataquality.rules.MatchRuleDefinition;
 
 /**
  * created by zshen on Aug 6, 2013 Detailled comment
  *
  */
-public abstract class AbstractMatchAnalysisTableViewer extends TableViewer {
+public abstract class AbstractMatchAnalysisTableViewer<T> extends TableViewer {
 
     private static final int DEFAULT_TABLE_HEIGHT_HIME = 130;
 
@@ -73,7 +73,7 @@ public abstract class AbstractMatchAnalysisTableViewer extends TableViewer {
             public void keyPressed(KeyEvent e) {
                 char character = e.character;
                 if (SWT.DEL == character) {
-                    new RemoveMatchKeyDefinitionAction(AbstractMatchAnalysisTableViewer.this).run();
+                    new RemoveMatchKeyDefinitionAction<T>(AbstractMatchAnalysisTableViewer.this).run();
                     listeners.firePropertyChange(MatchAnalysisConstant.ISDIRTY_PROPERTY, true, false);
                 }
             }
@@ -155,7 +155,7 @@ public abstract class AbstractMatchAnalysisTableViewer extends TableViewer {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.jface.viewers.AbstractTableViewer#remove(java.lang.Object)
      */
     @Override
@@ -222,6 +222,7 @@ public abstract class AbstractMatchAnalysisTableViewer extends TableViewer {
      */
     abstract protected CellEditor[] getCellEditor(List<String> headers);
 
+
     /**
      *
      * add new Element
@@ -238,28 +239,59 @@ public abstract class AbstractMatchAnalysisTableViewer extends TableViewer {
      * @param columnName the name of column
      * @param analysis the context of this add operation perform on.
      */
-    abstract public boolean addElement(String columnName, MatchRuleDefinition matchRuleDef);
+    public boolean addElement(String columnName, List<T> keyList) {
+        T keyDef = createNewKeyDefinition(columnName);
+        keyList.add(keyDef);
+        add(keyDef);
+        return true;
+    }
+
+    /**
+     * 
+     * add new Element
+     * 
+     * @param columnName the name of column
+     * @param analysis the context of this add operation perform on.
+     */
+    public boolean addElement(T keyDef, List<T> keyList) {
+        keyList.add(keyDef);
+        add(keyDef);
+        return true;
+    }
+
+    /**
+     * create a new KeyDefinition
+     *
+     * @param columnName
+     * @return
+     */
+    abstract protected T createNewKeyDefinition(String columnName);
 
     /**
      * remove Element
      *
      * @param columnName the name of column
      */
-    abstract public void removeElement(String columnName, Analysis analysis);
+    abstract public void removeElement(String columnName, List<T> keyList);
+
 
     /**
      * remove Element
      *
      * @param columnName the element of column
      */
-    abstract public void removeElement(KeyDefinition keyDef, Analysis analysis);
-
-    /**
-     * remove Element
-     *
-     * @param columnName the element of column
-     */
-    abstract public void removeElement(KeyDefinition keyDef, MatchRuleDefinition matchRuleDef);
+    public void removeElement(T keyDef, List<T> keyList) {
+        Iterator<T> keysIterator = keyList.iterator();
+        while (keysIterator.hasNext()) {
+            T tmpKeyDef = keysIterator.next();
+            if (keyDef.equals(tmpKeyDef)) {
+                keyList.remove(keyDef);
+                // Update table view.
+                remove(keyDef);
+                break;
+            }
+        }
+    }
 
     /**
      *
@@ -268,7 +300,24 @@ public abstract class AbstractMatchAnalysisTableViewer extends TableViewer {
      * @param keyDef
      * @param matchRuleDef
      */
-    abstract public void moveUpElement(KeyDefinition keyDef, MatchRuleDefinition matchRuleDef);
+    public void moveUpElement(T keyDef, List<T> keyList) {
+        Iterator<T> keysIterator = keyList.iterator();
+        while (keysIterator.hasNext()) {
+            T tmpKeyDef = keysIterator.next();
+            if (keyDef.equals(tmpKeyDef)) {
+                int indexForElement = indexForElement(tmpKeyDef);
+                if (indexForElement - 2 >= 0) {
+                    // modify model
+                    keyList.remove(keyDef);
+                    keyList.add(indexForElement - 2, keyDef);
+                    // modify table viewer
+                    remove(keyDef);
+                    insert(keyDef, indexForElement - 1);
+                }
+                break;
+            }
+        }
+    }
 
     /**
      *
@@ -277,7 +326,29 @@ public abstract class AbstractMatchAnalysisTableViewer extends TableViewer {
      * @param keyDef
      * @param matchRuleDef
      */
-    abstract public void moveDownElement(KeyDefinition keyDef, MatchRuleDefinition matchRuleDef);
+    public void moveDownElement(T keyDef, List<T> keyList) {
+        Iterator<T> keysIterator = keyList.iterator();
+        while (keysIterator.hasNext()) {
+            T tmpKeyDef = keysIterator.next();
+            if (keyDef.equals(tmpKeyDef)) {
+                int indexForElement = indexForElement(tmpKeyDef);
+                if (indexForElement < keyList.size()) {
+                    // modify model
+                    keyList.remove(keyDef);
+                    if (indexForElement == keyList.size()) {
+                        keyList.add(keyDef);
+                    } else {
+                        keyList.add(indexForElement, keyDef);
+                    }
+                    // modify table viewer
+                    remove(keyDef);
+                    insert(keyDef, indexForElement + 1);
+                }
+                break;
+            }
+        }
+    }
+
 
 
 }

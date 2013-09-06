@@ -12,6 +12,8 @@
 // ============================================================================
 package org.talend.dataquality.record.linkage.utils;
 
+import org.talend.dataquality.record.linkage.Messages;
+
 /**
  * created by zshen on Aug 5, 2013 Detailled comment
  *
@@ -109,6 +111,8 @@ public class MatchAnalysisConstant {
     public static final String SURVIVIORSHIP_DEFINITION_SECTION_NAME = "Survivorship"; //$NON-NLS-1$
 
     public static final String SURVIVIORSHIP_DEFAULT_DEFINITION_SECTION_NAME = "Default Survivorship Rules"; //$NON-NLS-1$
+
+    public static final String SURVIVORSHIP_KEY_DEFAULT_VALUE = Messages.getString("MatchAnalysisConstant.KEY_NAME"); //$NON-NLS-1$
 
 
 }

@@ -12,25 +12,29 @@
 // ============================================================================
 package org.talend.dataquality.record.linkage.ui.action;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.talend.dataquality.record.linkage.ui.composite.tableviewer.AbstractMatchAnalysisTableViewer;
 import org.talend.dataquality.record.linkage.ui.i18n.internal.DefaultMessagesImpl;
-import org.talend.dataquality.rules.KeyDefinition;
+import org.talend.dataquality.rules.BlockKeyDefinition;
+import org.talend.dataquality.rules.DefaultSurvivorshipDefinition;
+import org.talend.dataquality.rules.MatchKeyDefinition;
 import org.talend.dataquality.rules.MatchRule;
 import org.talend.dataquality.rules.MatchRuleDefinition;
+import org.talend.dataquality.rules.SurvivorshipKeyDefinition;
 
 /**
  * created by zshen on Aug 2, 2013 Detailled comment
  *
  */
-public class RemoveMatchKeyDefinitionAction extends Action {
+public class RemoveMatchKeyDefinitionAction<T> extends Action {
 
-    private AbstractMatchAnalysisTableViewer tableViewer = null;
+    private AbstractMatchAnalysisTableViewer<T> tableViewer = null;
 
-    public RemoveMatchKeyDefinitionAction(AbstractMatchAnalysisTableViewer tableViewer) {
+    public RemoveMatchKeyDefinitionAction(AbstractMatchAnalysisTableViewer<T> tableViewer) {
         setText(DefaultMessagesImpl.getString("RemoveMatchKeyDefinitionAction.delete")); //$NON-NLS-1$
         this.tableViewer = tableViewer;
     }
@@ -43,10 +47,10 @@ public class RemoveMatchKeyDefinitionAction extends Action {
     @Override
     public void run() {
         IStructuredSelection structuredSelection = (IStructuredSelection) tableViewer.getSelection();
-        List<?> selections = structuredSelection.toList();
-        for (Object selection : selections) {
-            KeyDefinition keyDef = (KeyDefinition) selection;
-            tableViewer.removeElement(keyDef, getMatchRuleDefinition(keyDef));
+        List<T> selections = structuredSelection.toList();
+        for (T selection : selections) {
+            T keyDef =  selection;
+            tableViewer.removeElement(keyDef, getNeedKeyDefinitionList(keyDef));
         }
     }
 
@@ -56,17 +60,37 @@ public class RemoveMatchKeyDefinitionAction extends Action {
      * @param keyDef
      * @return
      */
-    private MatchRuleDefinition getMatchRuleDefinition(KeyDefinition keyDef) {
+    @SuppressWarnings("unchecked")
+    private List<T> getNeedKeyDefinitionList(T keyDef) {
+        List<T> returnList = new ArrayList<T>();
         if (keyDef == null) {
-            return null;
-        } else if (keyDef.eContainer() instanceof MatchRule) {
+            // don't need to do anything at here
+        } else if (keyDef instanceof MatchKeyDefinition) {
             // keyDef is MatchKeyDefiniton case
-            return (MatchRuleDefinition) keyDef.eContainer().eContainer();
-        } else if (keyDef.eContainer() instanceof MatchRuleDefinition) {
+            for (MatchKeyDefinition tempKeyDef : ((MatchRule) ((MatchKeyDefinition) keyDef).eContainer()).getMatchKeys()) {
+                returnList.add((T) tempKeyDef);
+            }
+        } else if (keyDef instanceof BlockKeyDefinition) {
             // keyDef is BlockKeyDefiniton case
-            return (MatchRuleDefinition) keyDef.eContainer();
+            for (BlockKeyDefinition tempKeyDef : ((MatchRuleDefinition) ((BlockKeyDefinition) keyDef).eContainer())
+                    .getBlockKeys()) {
+                returnList.add((T) tempKeyDef);
+            }
+        } else if (keyDef instanceof SurvivorshipKeyDefinition) {
+            // keyDef is BlockKeyDefiniton case
+            for (SurvivorshipKeyDefinition tempKeyDef : ((MatchRuleDefinition) ((SurvivorshipKeyDefinition) keyDef).eContainer())
+                    .getSurvivorshipKeys()) {
+                returnList.add((T) tempKeyDef);
         }
-        return null;
+        } else if (keyDef instanceof DefaultSurvivorshipDefinition) {
+            // keyDef is BlockKeyDefiniton case
+            for (DefaultSurvivorshipDefinition tempKeyDef : ((MatchRuleDefinition) ((DefaultSurvivorshipDefinition) keyDef)
+                    .eContainer())
+                    .getDefaultSurvivorshipDefinitions()) {
+                returnList.add((T) tempKeyDef);
+            }
+        }
+        return returnList;
     }
 
 }

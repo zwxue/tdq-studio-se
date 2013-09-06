@@ -22,22 +22,20 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ViewerSorter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
-import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.record.linkage.ui.composite.tableviewer.AbstractMatchAnalysisTableViewer;
 import org.talend.dataquality.record.linkage.utils.MatchAnalysisConstant;
 import org.talend.dataquality.rules.KeyDefinition;
-import org.talend.dataquality.rules.MatchRuleDefinition;
 
 /**
  * created by zhao on Aug 16, 2013 Abstract table compoiste. Blocking key, matching key survivorship key table are
  * intended to be extended.
  *
  */
-public abstract class AbsMatchAnalysisTableComposite extends Composite implements PropertyChangeListener {
+public abstract class AbsMatchAnalysisTableComposite<T> extends Composite implements PropertyChangeListener {
 
     protected List<String> headers = new ArrayList<String>();
 
-    protected AbstractMatchAnalysisTableViewer tableViewer = null;
+    protected AbstractMatchAnalysisTableViewer<T> tableViewer = null;
 
     private boolean isAddColumn = true;
 
@@ -69,7 +67,7 @@ public abstract class AbsMatchAnalysisTableComposite extends Composite implement
     abstract protected void initHeaders();
 
 
-    abstract protected AbstractMatchAnalysisTableViewer createTableViewer();
+    abstract protected AbstractMatchAnalysisTableViewer<T> createTableViewer();
 
     /**
      * DOC zshen Comment method "createTable".
@@ -89,34 +87,28 @@ public abstract class AbsMatchAnalysisTableComposite extends Composite implement
         return tableViewer.getInput();
     }
 
-    public Boolean addKeyDefinition(String column, Analysis anlaysis) {
-        return tableViewer.addElement(column, anlaysis);
+    public Boolean addKeyDefinition(String column, List<T> keyDefs) {
+        return tableViewer.addElement(column, keyDefs);
     }
 
-
-
-    public Boolean addKeyDefinition(String column, MatchRuleDefinition matchRuleDef) {
-        return tableViewer.addElement(column, matchRuleDef);
+    public Boolean addKeyDefinition(T keyDef, List<T> keyList) {
+        return tableViewer.addElement(keyDef, keyList);
     }
 
-    public void removeKeyDefinition(String column, Analysis analysis) {
-        tableViewer.removeElement(column, analysis);
+    public void removeKeyDefinition(String column, List<T> keyDefs) {
+        tableViewer.removeElement(column, keyDefs);
     }
 
-    public void removeKeyDefinition(KeyDefinition keyDef, Analysis analysis) {
-        tableViewer.removeElement(keyDef, analysis);
+    public void removeKeyDefinition(T keyDef, List<T> keyDefs) {
+        tableViewer.removeElement(keyDef, keyDefs);
     }
 
-    public void removeKeyDefinition(KeyDefinition keyDef, MatchRuleDefinition matchRuleDef) {
-        tableViewer.removeElement(keyDef, matchRuleDef);
+    public void moveUpKeyDefinition(T keyDef, List<T> keyDefs) {
+        tableViewer.moveUpElement(keyDef, keyDefs);
     }
 
-    public void moveUpKeyDefinition(KeyDefinition keyDef, MatchRuleDefinition matchRuleDef) {
-        tableViewer.moveUpElement(keyDef, matchRuleDef);
-    }
-
-    public void moveDownKeyDefinition(KeyDefinition keyDef, MatchRuleDefinition matchRuleDef) {
-        tableViewer.moveDownElement(keyDef, matchRuleDef);
+    public void moveDownKeyDefinition(T keyDef, List<T> keyDefs) {
+        tableViewer.moveDownElement(keyDef, keyDefs);
     }
 
     public ISelection getSelectItems() {

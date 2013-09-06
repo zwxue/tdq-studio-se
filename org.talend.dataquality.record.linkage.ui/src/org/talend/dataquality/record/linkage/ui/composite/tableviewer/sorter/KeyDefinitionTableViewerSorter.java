@@ -15,7 +15,6 @@ package org.talend.dataquality.record.linkage.ui.composite.tableviewer.sorter;
 import java.util.List;
 
 import org.eclipse.jface.viewers.ViewerSorter;
-import org.talend.dataquality.rules.BlockKeyDefinition;
 
 
 /**
@@ -23,14 +22,16 @@ import org.talend.dataquality.rules.BlockKeyDefinition;
  * Detailled comment
  *
  */
-public class BlockingKeyViewerSorter extends ViewerSorter {
+public class KeyDefinitionTableViewerSorter<T> extends ViewerSorter {
 
-    List<BlockKeyDefinition> keyDefList = null;
+    List<T> keyDefList = null;
 
 
-    public BlockingKeyViewerSorter(List<BlockKeyDefinition> keyDefList) {
+
+    public KeyDefinitionTableViewerSorter(List<T> keyDefList) {
         this.keyDefList = keyDefList;
     }
+
 
     /*
      * (non-Javadoc)

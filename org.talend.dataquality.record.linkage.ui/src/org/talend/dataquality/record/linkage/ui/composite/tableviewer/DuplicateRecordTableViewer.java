@@ -25,7 +25,6 @@ import org.talend.dataquality.record.linkage.ui.composite.tableviewer.provider.D
 import org.talend.dataquality.record.linkage.ui.composite.tableviewer.provider.MatchAnalysisTableContentProvider;
 import org.talend.dataquality.record.linkage.utils.MatchAnalysisConstant;
 import org.talend.dataquality.rules.KeyDefinition;
-import org.talend.dataquality.rules.MatchRuleDefinition;
 
 /**
  * created by zhao on Aug 19, 2013 Detailled comment
@@ -125,17 +124,7 @@ public class DuplicateRecordTableViewer extends AbstractMatchAnalysisTableViewer
         return null;
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see
-     * org.talend.dataquality.record.linkage.ui.composite.tableviewer.AbstractMatchAnalysisTableViewer#getCellEditor
-     * (java.util.List)
-     */
-    @Override
-    protected CellEditor[] getCellEditor(List<String> headers) {
-        return null;
-    }
+
 
     /*
      * (non-Javadoc)
@@ -157,11 +146,7 @@ public class DuplicateRecordTableViewer extends AbstractMatchAnalysisTableViewer
      * org.talend.dataquality.record.linkage.ui.composite.tableviewer.AbstractMatchAnalysisTableViewer#removeElement
      * (java.lang.String, org.talend.dataquality.analysis.Analysis)
      */
-    @Override
-    public void removeElement(String columnName, Analysis analysis) {
-        // No implementation
 
-    }
 
     /*
      * (non-Javadoc)
@@ -175,30 +160,17 @@ public class DuplicateRecordTableViewer extends AbstractMatchAnalysisTableViewer
 
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see
-     * org.talend.dataquality.record.linkage.ui.composite.tableviewer.AbstractMatchAnalysisTableViewer#addElement(java
-     * .lang.String, org.talend.dataquality.rules.MatchRuleDefinition)
-     */
-    @Override
-    public boolean addElement(String columnName, MatchRuleDefinition matchRuleDef) {
-        // No implementation
-        return false;
-    }
+
 
     /*
      * (non-Javadoc)
      *
-     * @see
-     * org.talend.dataquality.record.linkage.ui.composite.tableviewer.AbstractMatchAnalysisTableViewer#removeElement
-     * (org.talend.dataquality.rules.KeyDefinition, org.talend.dataquality.analysis.Analysis)
+     * @see org.talend.dataquality.record.linkage.ui.composite.tableviewer.AbstractMatchAnalysisTableViewer#
+     * createNewKeyDefinition(java.lang.String)
      */
     @Override
-    public void removeElement(KeyDefinition keyDef, Analysis analysis) {
-        // No implementation
-
+    protected KeyDefinition createNewKeyDefinition(String columnName) {
+        return null;
     }
 
     /*
@@ -206,11 +178,11 @@ public class DuplicateRecordTableViewer extends AbstractMatchAnalysisTableViewer
      *
      * @see
      * org.talend.dataquality.record.linkage.ui.composite.tableviewer.AbstractMatchAnalysisTableViewer#removeElement
-     * (org.talend.dataquality.rules.KeyDefinition, org.talend.dataquality.rules.MatchRuleDefinition)
+     * (java.lang.String, java.util.List)
      */
     @Override
-    public void removeElement(KeyDefinition keyDef, MatchRuleDefinition matchRuleDef) {
-        // No implementation
+    public void removeElement(String columnName, List keyList) {
+        // don't need do anything
 
     }
 
@@ -218,26 +190,12 @@ public class DuplicateRecordTableViewer extends AbstractMatchAnalysisTableViewer
      * (non-Javadoc)
      * 
      * @see
-     * org.talend.dataquality.record.linkage.ui.composite.tableviewer.AbstractMatchAnalysisTableViewer#moveUpElement
-     * (org.talend.dataquality.rules.KeyDefinition, org.talend.dataquality.rules.MatchRuleDefinition)
+     * org.talend.dataquality.record.linkage.ui.composite.tableviewer.AbstractMatchAnalysisTableViewer#getCellEditor
+     * (java.util.List)
      */
     @Override
-    public void moveUpElement(KeyDefinition keyDef, MatchRuleDefinition matchRuleDef) {
-        // TODO Auto-generated method stub
-
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * org.talend.dataquality.record.linkage.ui.composite.tableviewer.AbstractMatchAnalysisTableViewer#moveDownElement
-     * (org.talend.dataquality.rules.KeyDefinition, org.talend.dataquality.rules.MatchRuleDefinition)
-     */
-    @Override
-    public void moveDownElement(KeyDefinition keyDef, MatchRuleDefinition matchRuleDef) {
-        // TODO Auto-generated method stub
-
+    protected CellEditor[] getCellEditor(List headers) {
+        return null;
     }
 
 }

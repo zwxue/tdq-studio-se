@@ -96,15 +96,6 @@ public class BlockingKeyDefinitionSection extends BlockingKeySection {
         // don't need do anything
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see org.talend.dataquality.record.linkage.ui.section.BlockingKeySection#createBlockingKey(java.lang.String)
-     */
-    @Override
-    public boolean createBlockingKey(String columnName) {
-        return tableComposite.addKeyDefinition(columnName, matchRuleDef);
-    }
 
 
     /*
@@ -116,7 +107,7 @@ public class BlockingKeyDefinitionSection extends BlockingKeySection {
      */
     @Override
     public void removeBlockingKey(BlockKeyDefinition blockKeyDef) {
-        tableComposite.removeKeyDefinition(blockKeyDef, matchRuleDef);
+        tableComposite.removeKeyDefinition(blockKeyDef, matchRuleDef.getBlockKeys());
     }
 
 

@@ -17,7 +17,6 @@ import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IEditorInput;
@@ -25,6 +24,7 @@ import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.editor.FormEditor;
 import org.talend.core.model.properties.Item;
+import org.talend.core.model.properties.Property;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.editor.AbstractMetadataFormPage;
@@ -62,10 +62,6 @@ public class MatchRuleMasterDetailsPage extends AbstractMetadataFormPage impleme
 
     private DefaultSurvivorshipDefinitionSection defaultSurvivorshipDefinitionSection = null;
 
-    private Composite blockKeyComp = null;
-
-    private Logger log = Logger.getLogger(MatchRuleMasterDetailsPage.class);
-
     /**
      * DOC zshen MatchRuleMasterDetailsPage constructor comment.
      *
@@ -95,7 +91,7 @@ public class MatchRuleMasterDetailsPage extends AbstractMetadataFormPage impleme
 
         if (PluginConstant.ISDIRTY_PROPERTY.equals(evt.getPropertyName())) {
             this.setDirty(true);
-            ((DQRuleEditor) this.getEditor()).firePropertyChange(IEditorPart.PROP_DIRTY);
+
         }
     }
 
@@ -118,7 +114,7 @@ public class MatchRuleMasterDetailsPage extends AbstractMetadataFormPage impleme
     private MatchRuleItemEditorInput getMatchRuleEditorInput() {
         IEditorInput editorInput = this.getEditor().getEditorInput();
         if (editorInput instanceof MatchRuleItemEditorInput) {
-            return (MatchRuleItemEditorInput) this.getEditor().getEditorInput();
+            return (MatchRuleItemEditorInput) editorInput;
         }
         return null;
     }
@@ -145,7 +141,9 @@ public class MatchRuleMasterDetailsPage extends AbstractMetadataFormPage impleme
     @Override
     public void setDirty(boolean isDirty) {
         this.isDirty = isDirty;
-
+        if (isDirty == true) {
+            ((DQRuleEditor) this.getEditor()).firePropertyChange(IEditorPart.PROP_DIRTY);
+        }
     }
 
     /*
@@ -306,7 +304,6 @@ public class MatchRuleMasterDetailsPage extends AbstractMetadataFormPage impleme
         saveModelElement.getDefaultSurvivorshipDefinitions().clear();
         saveModelElement.getDefaultSurvivorshipDefinitions().addAll(
                 defaultSurvivorshipDefinitionSection.getDefaultSurvivorshipKeys());
-
         ReturnCode rc = ElementWriterFactory.getInstance().createdMatchRuleWriter().save(getInputItem(), Boolean.FALSE);
         if (!rc.isOk()) {
             return false;
@@ -326,5 +323,14 @@ public class MatchRuleMasterDetailsPage extends AbstractMetadataFormPage impleme
         return null;
     }
 
+    /*
+     * (non-Javadoc)
+     *
+     * @see org.talend.dataprofiler.core.ui.editor.AbstractMetadataFormPage#getCurrentProperty()
+     */
+    @Override
+    protected Property getCurrentProperty() {
+        return this.getProperty();
+    }
 
 }

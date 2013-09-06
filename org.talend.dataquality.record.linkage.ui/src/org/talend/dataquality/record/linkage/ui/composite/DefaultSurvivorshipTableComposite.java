@@ -24,7 +24,7 @@ import org.talend.dataquality.rules.MatchRuleDefinition;
  * created by HHB on 2013-8-23 Detailled comment
  *
  */
-public class DefaultSurvivorshipTableComposite extends AbsMatchAnalysisTableComposite {
+public class DefaultSurvivorshipTableComposite extends AbsMatchAnalysisTableComposite<DefaultSurvivorshipDefinition> {
 
     /**
      * DOC HHB SurvivorshipTableComposite constructor comment.
@@ -76,7 +76,7 @@ public class DefaultSurvivorshipTableComposite extends AbsMatchAnalysisTableComp
      * @see org.talend.dataquality.record.linkage.ui.composite.AbsMatchAnalysisTableComposite#createTableViewer()
      */
     @Override
-    protected AbstractMatchAnalysisTableViewer createTableViewer() {
+    protected AbstractMatchAnalysisTableViewer<DefaultSurvivorshipDefinition> createTableViewer() {
         return new DefaultSurvivorShipTableViewer(this, getTableStyle());
     }
 

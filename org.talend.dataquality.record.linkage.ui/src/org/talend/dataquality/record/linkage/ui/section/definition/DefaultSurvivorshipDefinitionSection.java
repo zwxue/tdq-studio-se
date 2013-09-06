@@ -17,7 +17,6 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
@@ -29,11 +28,11 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 import org.talend.dataquality.record.linkage.ui.composite.DefaultSurvivorshipTableComposite;
+import org.talend.dataquality.record.linkage.ui.composite.tableviewer.sorter.KeyDefinitionTableViewerSorter;
 import org.talend.dataquality.record.linkage.ui.section.AbstractMatchAnaysisTableSection;
 import org.talend.dataquality.record.linkage.utils.MatchAnalysisConstant;
 import org.talend.dataquality.rules.DefaultSurvivorshipDefinition;
 import org.talend.dataquality.rules.MatchRuleDefinition;
-import org.talend.dataquality.rules.RulesFactory;
 
 /**
  * created by HHB on 2013-8-23 Detailled comment
@@ -45,7 +44,6 @@ public class DefaultSurvivorshipDefinitionSection extends AbstractMatchAnaysisTa
 
     private MatchRuleDefinition matchRuleDef;
 
-    private static Logger log = Logger.getLogger(DefaultSurvivorshipDefinitionSection.class);
 
     /**
      * DOC HHB SurvivorshipDefinitionTableSection constructor comment.
@@ -82,6 +80,8 @@ public class DefaultSurvivorshipDefinitionSection extends AbstractMatchAnaysisTa
         tableComposite.setLayoutData(data);
         tableComposite.createContent();
         section.setExpanded(true);
+        tableComposite.serViewerSorter(new KeyDefinitionTableViewerSorter<DefaultSurvivorshipDefinition>(this.matchRuleDef
+                .getDefaultSurvivorshipDefinitions()));
         initTableInput();
 
         return ruleComp;
@@ -109,14 +109,12 @@ public class DefaultSurvivorshipDefinitionSection extends AbstractMatchAnaysisTa
     }
 
     public void setMatchRuleDef(MatchRuleDefinition matchRuleDef) {
-        this.matchRuleDef = RulesFactory.eINSTANCE.createMatchRuleDefinition();
-        this.matchRuleDef.getDefaultSurvivorshipDefinitions().addAll(matchRuleDef.getDefaultSurvivorshipDefinitions());
-
+        this.matchRuleDef = matchRuleDef;
     }
 
     @Override
     public void addTableItem() {
-        tableComposite.addKeyDefinition(StringUtils.EMPTY, matchRuleDef);
+        tableComposite.addKeyDefinition(StringUtils.EMPTY, matchRuleDef.getDefaultSurvivorshipDefinitions());
         listeners.firePropertyChange(MatchAnalysisConstant.ISDIRTY_PROPERTY, true, false);
     }
 
@@ -146,6 +144,60 @@ public class DefaultSurvivorshipDefinitionSection extends AbstractMatchAnaysisTa
         List<DefaultSurvivorshipDefinition> defaultSurvivorshipDefKeys = new ArrayList<DefaultSurvivorshipDefinition>();
         defaultSurvivorshipDefKeys.addAll(EcoreUtil.copyAll(this.matchRuleDef.getDefaultSurvivorshipDefinitions()));
         return defaultSurvivorshipDefKeys;
+    }
+
+    /*
+     * (non-Javadoc)
+     *
+     * @see org.talend.dataquality.record.linkage.ui.section.AbstractMatchAnaysisTableSection#moveDownTableItem()
+     */
+    @Override
+    public void moveDownTableItem() {
+        ISelection selectItems = tableComposite.getSelectItems();
+        if (selectItems instanceof StructuredSelection) {
+            if (selectItems.isEmpty()) {
+                return;
+            }
+            List<DefaultSurvivorshipDefinition> currentElements = this.matchRuleDef.getDefaultSurvivorshipDefinitions();
+            List<DefaultSurvivorshipDefinition> defaultSurvivorshipKeyDefinitionlist = ((StructuredSelection) selectItems)
+                    .toList();
+            for (int index = defaultSurvivorshipKeyDefinitionlist.size() - 1; 0 <= index; index--) {
+                if (!isSameWithCurrentModel(
+                        currentElements.get(currentElements.size() - defaultSurvivorshipKeyDefinitionlist.size() + index),
+                        defaultSurvivorshipKeyDefinitionlist.get(index))) {
+                    continue;
+                }
+                DefaultSurvivorshipDefinition next = defaultSurvivorshipKeyDefinitionlist.get(index);
+                tableComposite.moveDownKeyDefinition(next, currentElements);
+            }
+            tableComposite.selectAllItem(((StructuredSelection) selectItems).toList());
+        }
+    }
+
+    /*
+     * (non-Javadoc)
+     *
+     * @see org.talend.dataquality.record.linkage.ui.section.AbstractMatchAnaysisTableSection#moveUpTableItem()
+     */
+    @Override
+    public void moveUpTableItem() {
+        ISelection selectItems = tableComposite.getSelectItems();
+        if (selectItems instanceof StructuredSelection) {
+            if (selectItems.isEmpty()) {
+                return;
+            }
+            List<DefaultSurvivorshipDefinition> currentElements = this.matchRuleDef.getDefaultSurvivorshipDefinitions();
+            List<DefaultSurvivorshipDefinition> defaultSurvivorshipKeyDefinitionlist = ((StructuredSelection) selectItems)
+                    .toList();
+            for (int index = 0; index < defaultSurvivorshipKeyDefinitionlist.size(); index++) {
+                if (!isSameWithCurrentModel(currentElements.get(index), defaultSurvivorshipKeyDefinitionlist.get(index))) {
+                    continue;
+                }
+                DefaultSurvivorshipDefinition next = defaultSurvivorshipKeyDefinitionlist.get(index);
+                tableComposite.moveUpKeyDefinition(next, currentElements);
+            }
+            tableComposite.selectAllItem(((StructuredSelection) selectItems).toList());
+        }
     }
 
 }
