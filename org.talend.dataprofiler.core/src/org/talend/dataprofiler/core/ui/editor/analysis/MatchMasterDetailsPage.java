@@ -575,7 +575,7 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
                 // update all related keys in block and match section
                 updateAllKeys(oldSelectedColumns);
                 // update the analyzed data label with checked elements name.
-                String selectedElementNames = dialog.getSelectedElementNames();
+                String selectedElementNames = RepositoryNodeHelper.getAnalyzeDateaNames(reposList.get(0));
                 updateAnalyzeDataLabel(selectedElementNames);
                 refreshColumnAndData();
             }
@@ -1034,7 +1034,7 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
      *
      * @param selectedNames
      */
-    private void updateAnalyzeDataLabel(String selectedNames) {
+    public void updateAnalyzeDataLabel(String selectedNames) {
 
         EList<TaggedValue> taggedValues = analysis.getTaggedValue();
         TaggedValue taggedValue = TaggedValueHelper.getTaggedValue(TaggedValueHelper.MATCH_ANALYZE_DATA, taggedValues);

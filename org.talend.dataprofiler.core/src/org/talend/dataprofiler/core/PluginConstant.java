@@ -42,6 +42,8 @@ public final class PluginConstant {
 
     public static final String SPACE_STRING = " "; //$NON-NLS-1$
 
+    public static final String SLASH_STRING = "/"; //$NON-NLS-1$
+
     public static final String PROJECTCREATED_FLAG = "PROJECTCREATED_FLAG"; //$NON-NLS-1$
 
     public static final String CONNECTION_URL_PROPERTY = "CONNECTION_URL_PROPERTY"; //$NON-NLS-1$
@@ -96,7 +98,7 @@ public final class PluginConstant {
 
     public static final String LANGUAGE_SELECTOR = "languageSelector"; //$NON-NLS-1$
 
-    public static final String UNIQUE_COUNT_ID = "_ccHq0RF2Ed2PKb6nEJEvhw";//$NON-NLS-1$ 
+    public static final String UNIQUE_COUNT_ID = "_ccHq0RF2Ed2PKb6nEJEvhw";//$NON-NLS-1$
 
     public static final String DISTINCT_COUNT_ID = "_ccHq0BF2Ed2PKb6nEJEvhw";//$NON-NLS-1$
 

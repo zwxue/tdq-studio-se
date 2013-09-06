@@ -24,13 +24,6 @@ import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisMetadataPage;
 import org.talend.dq.helper.RepositoryNodeHelper;
-import org.talend.dq.nodes.DBConnectionFolderRepNode;
-import org.talend.dq.nodes.DBTableFolderRepNode;
-import org.talend.dq.nodes.DBTableRepNode;
-import org.talend.dq.nodes.DBViewFolderRepNode;
-import org.talend.dq.nodes.DBViewRepNode;
-import org.talend.dq.nodes.DFConnectionFolderRepNode;
-import org.talend.dq.nodes.DFTableRepNode;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
 
@@ -39,8 +32,6 @@ import org.talend.repository.model.RepositoryNode;
  * DOC yyin  class global comment. Detailled comment
  */
 public class MetadataAndColumnSelectionDialog extends ColumnsSelectionDialog {
-
-    private String selectedElementNames = PluginConstant.EMPTY_STRING;
 
     public MetadataAndColumnSelectionDialog(AbstractAnalysisMetadataPage metadataFormPage, Shell parent, String message,
             List<? extends IRepositoryNode> checkedRepoNodes) {
@@ -66,7 +57,6 @@ public class MetadataAndColumnSelectionDialog extends ColumnsSelectionDialog {
     protected void handleTableElementsChecked(RepositoryNode reposNode, Boolean checkedFlag) {
         super.handleTableElementsChecked(reposNode, checkedFlag);
         updateStatusBySelection();
-        updateCheckedElementNames();
     }
 
     private void updateStatusBySelection() {
@@ -85,7 +75,6 @@ public class MetadataAndColumnSelectionDialog extends ColumnsSelectionDialog {
     protected void handleTreeElementsChecked(RepositoryNode repNode, Boolean checkedFlag) {
         super.handleTreeElementsChecked(repNode, checkedFlag);
         updateStatusBySelection();
-        updateCheckedElementNames();
     }
 
     // no need to create "select All " buttons
@@ -93,34 +82,6 @@ public class MetadataAndColumnSelectionDialog extends ColumnsSelectionDialog {
     protected Composite createSelectionButtons(Composite composite) {
         Composite buttonComposite = new Composite(composite, SWT.RIGHT);
         return buttonComposite;
-    }
-
-    /**
-     *
-     * update the all selected emlements name in the left tree and split them with "/".
-     *
-     * @return
-     */
-    private void updateCheckedElementNames() {
-        StringBuffer strBuf = new StringBuffer();
-        Object[] checkedElements = super.getTreeViewer().getCheckedElements();
-        for (Object obj : checkedElements) {
-            if (obj instanceof DBTableFolderRepNode || obj instanceof DBViewFolderRepNode
-                    || obj instanceof DBConnectionFolderRepNode || obj instanceof DFConnectionFolderRepNode) {
-                continue;
-            }
-            if (obj instanceof RepositoryNode) {
-                strBuf.append(((RepositoryNode) obj).getLabel());
-                if (!(obj instanceof DBTableRepNode || obj instanceof DFTableRepNode || obj instanceof DBViewRepNode)) {
-                    strBuf.append("/"); //$NON-NLS-1$
-                }
-            }
-        }
-        selectedElementNames = strBuf.toString();
-    }
-
-    public String getSelectedElementNames() {
-        return this.selectedElementNames;
     }
 
 }

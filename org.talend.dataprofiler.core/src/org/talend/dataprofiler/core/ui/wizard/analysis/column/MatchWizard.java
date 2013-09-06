@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2012 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2013 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -12,7 +12,6 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.wizard.analysis.column;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -45,7 +44,7 @@ public class MatchWizard extends ColumnWizard {
 
     /**
      * MatchWizard constructor comment.
-     * 
+     *
      * @param parameter
      */
     public MatchWizard(AnalysisParameter parameter) {
@@ -84,21 +83,18 @@ public class MatchWizard extends ColumnWizard {
         MatchMasterDetailsPage masterPage = (MatchMasterDetailsPage) editor.getMasterPage();
         List<IRepositoryNode> nodes = selectionPage.nodes;
         if (nodes != null && nodes.size() > 0) {
-            List<IRepositoryNode> nodeList = new ArrayList<IRepositoryNode>();
-            for (IRepositoryNode repNode : nodes) {
-                repNode = RepositoryNodeHelper.recursiveFind(RepositoryNodeHelper.getModelElementFromRepositoryNode(repNode));
-                nodeList.add(repNode);
-            }
-
+            // update analyze data label by selected nodes names(don't cotain columnRepNode).
+            String checkedElementNames = RepositoryNodeHelper.getAnalyzeDateaNames(nodes.get(0));
+            masterPage.updateAnalyzeDataLabel(checkedElementNames);
             // give the selected columns to the master page
-            masterPage.setSelectedNodes(nodeList.toArray(new RepositoryNode[nodeList.size()]));
+            masterPage.setSelectedNodes(nodes.toArray(new RepositoryNode[nodes.size()]));
             masterPage.doSave(new NullProgressMonitor());
         }
     }
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.wizard.analysis.column.ColumnSetWizard#initCWMResourceBuilder()
      */
     @Override
