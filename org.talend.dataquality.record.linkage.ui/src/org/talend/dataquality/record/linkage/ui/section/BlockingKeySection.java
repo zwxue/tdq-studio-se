@@ -19,6 +19,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
+import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
@@ -27,6 +29,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
+import org.talend.dataquality.PluginConstant;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.indicators.columnset.RecordMatchingIndicator;
 import org.talend.dataquality.record.linkage.genkey.BlockingKeyHandler;
@@ -35,6 +38,7 @@ import org.talend.dataquality.record.linkage.ui.composite.BlockingKeyTableCompos
 import org.talend.dataquality.record.linkage.ui.composite.chart.BlockingKeyDataChart;
 import org.talend.dataquality.record.linkage.ui.composite.tableviewer.sorter.BlockingKeyViewerSorter;
 import org.talend.dataquality.record.linkage.ui.composite.utils.MatchRuleAnlaysisUtils;
+import org.talend.dataquality.record.linkage.ui.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataquality.record.linkage.utils.MatchAnalysisConstant;
 import org.talend.dataquality.rules.BlockKeyDefinition;
 import org.talend.dataquality.rules.KeyDefinition;
@@ -202,12 +206,13 @@ public class BlockingKeySection extends AbstractMatchAnaysisTableSection {
      * .String)
      */
     @Override
-    public Boolean isKeyDefinitionAdded(String columnName) throws Exception {
+    public Boolean isKeyDefinitionAdded(String columnName) {
         Boolean isAdded = Boolean.FALSE;
         RecordMatchingIndicator recordMatchingIndicator = MatchRuleAnlaysisUtils.getRecordMatchIndicatorFromAna(analysis);
         List<BlockKeyDefinition> keyDefs = recordMatchingIndicator.getBuiltInMatchRuleDefinition().getBlockKeys();
         for (KeyDefinition keyDef : keyDefs) {
-            if (StringUtils.equals(columnName, keyDef.getColumn())) {
+            // the key's name can NOT be same, the column can be same
+            if (StringUtils.equals(columnName, keyDef.getName())) {
                 isAdded = Boolean.TRUE;
                 break;
             }
@@ -306,5 +311,45 @@ public class BlockingKeySection extends AbstractMatchAnaysisTableSection {
             }
         }
         return keyColumns;
+    }
+
+    /**
+     * if overwrite: need to delete all current keyss, and insert the keys according to the parameter:matchRule; else:
+     * only add the keys in the parameter matchrule, to the current keys.
+     * 
+     * @param matchRule
+     * @param overwrite
+     */
+    public void importMatchRule(MatchRuleDefinition matchRule, boolean overwrite) {
+        if (overwrite) {
+            // clear current keys
+            this.getBlockKeyDefinitionList().clear();
+            tableComposite.setInput(null);
+            this.tableComposite.redraw();
+        }
+        List<String> conflictKeys = new ArrayList<String>();
+        for (BlockKeyDefinition blockKey : matchRule.getBlockKeys()) {
+            if (!overwrite && isKeyDefinitionAdded(blockKey.getName())) {
+                // if conflict with current ones, do not import
+                conflictKeys.add(blockKey.getName());
+                continue;
+            }
+            ((BlockingKeyTableComposite) tableComposite)
+                    .addKeyDefinition(EcoreUtil.copy(blockKey), this.getMatchRuleDefinition());
+        }
+        // if there are some conflict keys, popup to let the user know
+        if (conflictKeys.size() > 0) {
+            StringBuffer names = new StringBuffer();//$NON-NLS-1$
+            for (String name : conflictKeys) {
+                names.append(name);
+                names.append(PluginConstant.COMMA_STRING);
+            }
+            if (names.length() > 0) {
+                names.deleteCharAt(names.lastIndexOf(PluginConstant.COMMA_STRING));//$NON-NLS-1$
+            }
+            MessageDialog.openWarning(null, DefaultMessagesImpl.getString("BlockingKeySection.conflictImport"), //$NON-NLS-1$
+                    DefaultMessagesImpl.getString("BlockingKeySection.conflictImportKeys") + names.toString()); //$NON-NLS-1$
+
+        }
     }
 }

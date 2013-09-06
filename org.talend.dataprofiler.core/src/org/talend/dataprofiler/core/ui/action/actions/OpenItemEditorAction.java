@@ -58,6 +58,7 @@ import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.editor.TDQFileEditorInput;
 import org.talend.dataprofiler.core.ui.editor.analysis.AnalysisEditor;
 import org.talend.dataprofiler.core.ui.editor.analysis.AnalysisItemEditorInput;
+import org.talend.dataprofiler.core.ui.editor.analysis.MatchAnalysisEditor;
 import org.talend.dataprofiler.core.ui.editor.connection.ConnectionEditor;
 import org.talend.dataprofiler.core.ui.editor.connection.ConnectionItemEditorInput;
 import org.talend.dataprofiler.core.ui.editor.dqrules.BusinessRuleItemEditorInput;
@@ -71,6 +72,7 @@ import org.talend.dataprofiler.core.ui.editor.pattern.PatternItemEditorInput;
 import org.talend.dataprofiler.core.ui.editor.report.ReportItemEditorInput;
 import org.talend.dataprofiler.core.ui.utils.WorkbenchUtils;
 import org.talend.dataquality.analysis.Analysis;
+import org.talend.dataquality.analysis.AnalysisType;
 import org.talend.dataquality.properties.TDQAnalysisItem;
 import org.talend.dataquality.properties.TDQFileItem;
 import org.talend.dataquality.properties.TDQIndicatorDefinitionItem;
@@ -270,7 +272,12 @@ public class OpenItemEditorAction extends Action implements IIntroAction {
 
                 ((AnalysisItemEditorInput) result).setConnectionNode(connectionRepositoryNode);
 
-                editorID = AnalysisEditor.class.getName();
+                if (analysis.getParameters() != null
+                        && analysis.getParameters().getAnalysisType().equals(AnalysisType.MATCH_ANALYSIS)) {
+                    editorID = MatchAnalysisEditor.class.getName();
+                } else {
+                    editorID = AnalysisEditor.class.getName();
+                }
             } else if (ERepositoryObjectType.TDQ_INDICATOR_ELEMENT.getKey().equals(key)) {
                 result = new IndicatorDefinitionItemEditorInput(item);
                 TDQIndicatorDefinitionItem definitionItem = (TDQIndicatorDefinitionItem) item;

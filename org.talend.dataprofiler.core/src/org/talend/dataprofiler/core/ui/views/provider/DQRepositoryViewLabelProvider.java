@@ -317,6 +317,8 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider i
             return ImageLib.getImage(ImageLib.DQ_RULE);
         } else if (type == ERepositoryObjectType.TDQ_RULES_SQL) {
             return ImageLib.getImage(ImageLib.DQ_RULE);
+        } else if (type == ERepositoryObjectType.TDQ_RULES_MATCHER) {
+            return ImageLib.getImage(ImageLib.MATCH_RULE_ICON);
         } else if (type == ERepositoryObjectType.TDQ_SOURCE_FILE_ELEMENT) {
             return ImageLib.getImage(ImageLib.SOURCE_FILE);
         } else if (type == ERepositoryObjectType.TDQ_EXCHANGE) {

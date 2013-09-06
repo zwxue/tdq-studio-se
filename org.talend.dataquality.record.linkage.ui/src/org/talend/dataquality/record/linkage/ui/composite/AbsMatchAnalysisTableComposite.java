@@ -93,6 +93,8 @@ public abstract class AbsMatchAnalysisTableComposite extends Composite implement
         return tableViewer.addElement(column, anlaysis);
     }
 
+
+
     public Boolean addKeyDefinition(String column, MatchRuleDefinition matchRuleDef) {
         return tableViewer.addElement(column, matchRuleDef);
     }

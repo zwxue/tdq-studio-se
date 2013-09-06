@@ -932,6 +932,14 @@
             id="org.talend.dataprofiler.core.ui.editor.analysis.drilldown.drillDownResultEditor"
             name="drillDownResultEditor">
       </editor>
+      <editor
+            class="org.talend.dataprofiler.core.ui.editor.analysis.MatchAnalysisEditor"
+            default="false"
+            extensions="ana"
+            icon="icons/chart_bar.png"
+            id="org.talend.dataprofiler.core.ui.editor.analysis.MatchAnalysisEditor"
+            name="%editor.name.MatchAnalysisEditor">
+      </editor>
    </extension>
   <extension
         point="org.eclipse.ui.cheatsheets.cheatSheetContent">

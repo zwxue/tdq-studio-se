@@ -265,6 +265,11 @@ public final class ImageLib {
 
     public static final String PK_ICON = "primary_key.png"; //$NON-NLS-1$
 
+    public static final String IMPORT_MATCH_RULE_ICON = "match_rule_import.png"; //$NON-NLS-1$
+
+    public static final String EXPORT_MATCH_RULE_ICON = "match_rule_export.png"; //$NON-NLS-1$
+
+    public static final String MATCH_RULE_ICON = "match_rule.png"; //$NON-NLS-1$
     /**
      * DOC bzhou ImageLib constructor comment.
      */

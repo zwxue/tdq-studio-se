@@ -108,6 +108,7 @@ import org.talend.dq.nodes.DBViewRepNode;
 import org.talend.dq.nodes.DQRepositoryNode;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
 import org.talend.repository.model.RepositoryNode;
+import org.talend.resource.EResourceConstant;
 import org.talend.resource.ResourceManager;
 import org.talend.resource.ResourceService;
 import orgomg.cwm.objectmodel.core.Expression;
@@ -412,6 +413,10 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
                     }
                 } else if (element instanceof IFolder) {
                     IFolder folder = (IFolder) element;
+                    // filter the match rule folder in table analysis
+                    if (EResourceConstant.RULES_MATCHER.getName().equals(folder.getName())) {
+                        return false;
+                    }// ~
                     return ResourceService.isSubFolder(ResourceManager.getRulesFolder(), folder);
                 }
                 return false;

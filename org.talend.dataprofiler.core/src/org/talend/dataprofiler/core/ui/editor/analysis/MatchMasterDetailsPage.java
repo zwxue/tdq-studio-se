@@ -83,6 +83,7 @@ import org.talend.dataquality.record.linkage.ui.composite.utils.MatchRuleAnlaysi
 import org.talend.dataquality.record.linkage.ui.section.BlockingKeySection;
 import org.talend.dataquality.record.linkage.ui.section.MatchingKeySection;
 import org.talend.dataquality.rules.MatchRule;
+import org.talend.dataquality.rules.MatchRuleDefinition;
 import org.talend.dq.analysis.MatchAnalysisHandler;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.nodes.DBColumnRepNode;
@@ -1019,6 +1020,14 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
         }
     }
 
+
+    public void importMatchRule(MatchRuleDefinition matchRule, boolean overwrite) {
+        this.matchingKeySection.importMatchRule(matchRule, overwrite);
+        this.blockingKeySection.importMatchRule(matchRule, overwrite);
+        this.setDirty(true);
+    }
+
+
     /**
      *
      * save/update the selected elements names as TaggedValue.
@@ -1038,4 +1047,5 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
         }
         this.analyzeDataLabel.setText(this.analyzeDataDefaultInfo + selectedNames);
     }
+
 }

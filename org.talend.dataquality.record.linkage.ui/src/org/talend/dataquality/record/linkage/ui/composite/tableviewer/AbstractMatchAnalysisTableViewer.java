@@ -279,4 +279,5 @@ public abstract class AbstractMatchAnalysisTableViewer extends TableViewer {
      */
     abstract public void moveDownElement(KeyDefinition keyDef, MatchRuleDefinition matchRuleDef);
 
+
 }

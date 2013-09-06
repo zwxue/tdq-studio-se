@@ -229,6 +229,12 @@ public class BlockingKeyTableViewer extends AbstractMatchAnalysisTableViewer {
         return true;
     }
 
+
+    public boolean addElement(BlockKeyDefinition blockKeyDef, MatchRuleDefinition matchRuleDef) {
+        matchRuleDef.getBlockKeys().add(blockKeyDef);
+        add(blockKeyDef);
+        return true;
+    }
     /*
      * (non-Javadoc)
      *

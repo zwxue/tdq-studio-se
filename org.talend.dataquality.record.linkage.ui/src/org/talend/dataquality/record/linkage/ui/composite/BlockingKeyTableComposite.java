@@ -16,6 +16,8 @@ import org.eclipse.swt.widgets.Composite;
 import org.talend.dataquality.record.linkage.ui.composite.tableviewer.AbstractMatchAnalysisTableViewer;
 import org.talend.dataquality.record.linkage.ui.composite.tableviewer.BlockingKeyTableViewer;
 import org.talend.dataquality.record.linkage.utils.MatchAnalysisConstant;
+import org.talend.dataquality.rules.BlockKeyDefinition;
+import org.talend.dataquality.rules.MatchRuleDefinition;
 
 /**
  * created by zshen on Aug 6, 2013 Detailled comment
@@ -62,6 +64,10 @@ public class BlockingKeyTableComposite extends AbsMatchAnalysisTableComposite {
         tableViewer = createTableViewer();
         tableViewer.addPropertyChangeListener(this);
         ((BlockingKeyTableViewer) tableViewer).initTable(headers);
+    }
+
+    public Boolean addKeyDefinition(BlockKeyDefinition blockKeyDef, MatchRuleDefinition matchRuleDef) {
+        return ((BlockingKeyTableViewer) tableViewer).addElement(blockKeyDef, matchRuleDef);
     }
 
     /*

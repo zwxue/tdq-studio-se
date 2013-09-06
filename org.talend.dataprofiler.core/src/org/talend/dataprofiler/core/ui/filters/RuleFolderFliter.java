@@ -19,6 +19,7 @@ import org.eclipse.jface.viewers.ViewerFilter;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.dataquality.rules.WhereRule;
 import org.talend.dq.helper.resourcehelper.DQRuleResourceFileHelper;
+import org.talend.resource.EResourceConstant;
 import org.talend.resource.ResourceManager;
 import org.talend.resource.ResourceService;
 
@@ -42,6 +43,10 @@ public class RuleFolderFliter extends ViewerFilter {
         if (element instanceof IFile) {
             IFile file = (IFile) element;
             if (FactoriesUtil.DQRULE.equals(file.getFileExtension())) {
+                // add support for match rule
+                if (EResourceConstant.RULES_MATCHER.getName().equals(file.getParent().getName())) {
+                    return true;
+                }// ~
                 WhereRule findWhereRule = DQRuleResourceFileHelper.getInstance().findWhereRule(file);
                 if (findWhereRule == null) {
                     return false;

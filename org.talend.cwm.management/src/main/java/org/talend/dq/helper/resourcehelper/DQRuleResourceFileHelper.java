@@ -22,7 +22,9 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.emf.ecore.EObject;
 import org.talend.commons.emf.FactoriesUtil;
+import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dataquality.rules.DQRule;
+import org.talend.dataquality.rules.MatchRuleDefinition;
 import org.talend.dataquality.rules.WhereRule;
 import org.talend.dataquality.rules.util.RulesSwitch;
 import org.talend.resource.ResourceManager;
@@ -50,6 +52,21 @@ public final class DQRuleResourceFileHelper extends ResourceFileMap {
         @Override
         public DQRule caseDQRule(DQRule object) {
             return object;
+        }
+
+    };
+
+    // add support for match rule
+    RulesSwitch<MatchRuleDefinition> matchRulesSwitch = new RulesSwitch<MatchRuleDefinition>() {
+
+        @Override
+        public MatchRuleDefinition caseMatchRuleDefinition(MatchRuleDefinition object) {
+            return object;
+        }
+
+        @Override
+        public MatchRuleDefinition caseIndicatorDefinition(IndicatorDefinition object) {
+            return (MatchRuleDefinition) object;
         }
     };
 
@@ -82,6 +99,14 @@ public final class DQRuleResourceFileHelper extends ResourceFileMap {
     public WhereRule findWhereRule(IFile file) {
         if (checkFile(file)) {
             return (WhereRule) getModelElement(file);
+        }
+
+        return null;
+    }
+
+    public MatchRuleDefinition findMatchRule(IFile file) {
+        if (checkFile(file)) {
+            return (MatchRuleDefinition) getModelElement(file);
         }
 
         return null;
@@ -127,7 +152,12 @@ public final class DQRuleResourceFileHelper extends ResourceFileMap {
      */
     @Override
     public ModelElement doSwitch(EObject object) {
-        return dqRulesSwitch.doSwitch(object);
+        DQRule rule = dqRulesSwitch.doSwitch(object);
+        if (rule != null) {
+            return rule;
+        } else {// add support for match rule
+            return matchRulesSwitch.doSwitch(object);
+        }
     }
 
     /*

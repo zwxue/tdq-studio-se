@@ -18,6 +18,7 @@ import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
@@ -68,6 +69,8 @@ public class MatchingKeySection extends AbstractMatchKeyWithChartTableSection {
     private static final Image ADD_IMG = ImageLib.getImage(ImageLib.ADD_ACTION);
 
     private int tabCount = 1;
+
+    private Text groupQualityThresholdText = null;
 
     /**
      * DOC zshen MatchingKeySection constructor comment.
@@ -156,7 +159,7 @@ public class MatchingKeySection extends AbstractMatchKeyWithChartTableSection {
         Label groupQualityTresholdLabel = new Label(groupQualityThresholdComposite, SWT.NONE);
         groupQualityTresholdLabel.setText(DefaultMessagesImpl.getString("MatchRuleTableComposite.GROUP_QUALITY_THRESHOLD")); //$NON-NLS-1$
         final MatchRuleDefinition ruleDefinition = getMatchRuleDefinition();
-        final Text groupQualityThresholdText = new Text(groupQualityThresholdComposite, SWT.BORDER);
+        groupQualityThresholdText = new Text(groupQualityThresholdComposite, SWT.BORDER);
         GridData layoutData = new GridData();
         layoutData.widthHint = 80;
         groupQualityThresholdText.setLayoutData(layoutData);
@@ -322,9 +325,13 @@ public class MatchingKeySection extends AbstractMatchKeyWithChartTableSection {
      */
     private MatchRule getNewMatchRule() {
         MatchRule ruleMatcher = RulesFactory.eINSTANCE.createMatchRule();
-        String tabName = "Match Rule " + tabCount++; //$NON-NLS-1$
+        String tabName = getMatchRuleNameByOrder(); //$NON-NLS-1$
         ruleMatcher.setName(tabName);
         return ruleMatcher;
+    }
+
+    private String getMatchRuleNameByOrder() {
+        return "Match Rule " + tabCount++;
     }
 
     /*
@@ -449,6 +456,45 @@ public class MatchingKeySection extends AbstractMatchKeyWithChartTableSection {
                         .getData(MatchAnalysisConstant.MATCH_RULE_TABLE_COMPOSITE);
                 matchRuleTableComp.removeKeyDefinition(column, analysis);
             }
+        }
+    }
+
+    /**
+     * if overwrite: need to delete all current tabs, and create the tab according to the parameter:matchRule else: only
+     * add the tab in the parameter matchrule, to the current matchrule.
+     * 
+     * @param matchRule
+     * @param overwrite
+     */
+    public void importMatchRule(MatchRuleDefinition matchRule, boolean overwrite) {
+        if (overwrite) {
+            // delete all tab in UI
+            CTabItem[] tabItems = ruleFolder.getItems();
+            if (tabItems != null && tabItems.length > 0) {
+                for (CTabItem oneTab : tabItems) {
+                    MatchRuleTableComposite matchRuleTableComp = (MatchRuleTableComposite) oneTab
+                            .getData(MatchAnalysisConstant.MATCH_RULE_TABLE_COMPOSITE);
+                    matchRuleTableComp.dispose();
+                    oneTab.dispose();
+                }
+            }
+            // clear all match rules in matchrule definition
+            getMatchRuleDefinition().getMatchRules().clear();
+
+            // overwrite the threshold
+            groupQualityThresholdText.setText(String.valueOf(matchRule.getMatchGroupQualityThreshold()));
+            // getMatchRuleDefinition().setMatchGroupQualityThreshold(matchRule.getMatchGroupQualityThreshold());
+
+        }
+        // create the tab from the parameter:matchRule
+        // TODO: find the same name of the column by key name
+        for (MatchRule oneMatchRule : matchRule.getMatchRules()) {
+            // set the name of the match rule by current rule count
+            String tabName = getMatchRuleNameByOrder();
+            oneMatchRule.setName(tabName);
+            // auto add the tab name order
+            addRuleTab(false, oneMatchRule);
+            getMatchRuleDefinition().getMatchRules().add(EcoreUtil.copy(oneMatchRule));
         }
     }
 }
