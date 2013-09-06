@@ -100,12 +100,13 @@ public class IndicatorUnit {
      * @return the indicatorName
      */
     public String getIndicatorName() {
-        Property property = PropertyHelper.getProperty(indicator.getIndicatorDefinition());
-        if (property != null) {
-            return property.getDisplayName();
-        } else {
-            return this.indicator.getName();
+        if (indicator.getIndicatorDefinition() != null) {
+            Property property = PropertyHelper.getProperty(indicator.getIndicatorDefinition());
+            if (property != null) {
+                return property.getDisplayName();
+            }
         }
+        return this.indicator.getName();
     }
 
     /**

@@ -25,10 +25,12 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.common.util.EMap;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Display;
+import org.talend.core.IRepositoryContextService;
 import org.talend.core.model.metadata.builder.connection.DelimitedFileConnection;
 import org.talend.core.model.metadata.builder.connection.Escape;
 import org.talend.core.model.metadata.builder.connection.MetadataColumn;
 import org.talend.core.model.metadata.builder.connection.MetadataTable;
+import org.talend.core.runtime.CoreRuntimePlugin;
 import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.management.i18n.Messages;
 import org.talend.dataquality.analysis.Analysis;
@@ -75,6 +77,11 @@ public class DelimitedFileIndicatorEvaluator extends IndicatorEvaluator {
         if (delimitedFileconnection == null) {
             delimitedFileconnection = (DelimitedFileConnection) analysis.getContext().getConnection();
         }
+        if (delimitedFileconnection.isContextMode()) {
+            IRepositoryContextService service = CoreRuntimePlugin.getInstance().getRepositoryContextService();
+            delimitedFileconnection = (DelimitedFileConnection) service.cloneOriginalValueConnection(delimitedFileconnection);
+        }
+
         String path = AnalysisExecutorHelper.getFilePath(delimitedFileconnection);
         IPath iPath = new Path(path);
 
@@ -235,8 +242,6 @@ public class DelimitedFileIndicatorEvaluator extends IndicatorEvaluator {
         }
         return new ReturnCode(true);
     }
-
-
 
     private void handleByARow(String[] rowValues, long currentRow, List<ModelElement> analysisElementList,
             List<MetadataColumn> columnElementList, EMap<Indicator, AnalyzedDataSet> indicToRowMap) {

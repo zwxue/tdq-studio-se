@@ -46,6 +46,9 @@ import org.eclipse.core.runtime.preferences.IPreferencesService;
 import org.eclipse.emf.common.util.EList;
 import org.talend.commons.exception.ExceptionHandler;
 import org.talend.commons.exception.PersistenceException;
+import org.talend.commons.utils.io.FilesUtils;
+import org.talend.core.IRepositoryContextService;
+import org.talend.core.database.EDatabase4DriverClassName;
 import org.talend.core.database.EDatabaseTypeName;
 import org.talend.core.database.conn.version.EDatabaseVersion4Drivers;
 import org.talend.core.model.context.ContextUtils;
@@ -76,6 +79,7 @@ import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.core.model.utils.CloneConnectionUtils;
 import org.talend.core.model.utils.ContextParameterUtils;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
+import org.talend.core.runtime.CoreRuntimePlugin;
 import org.talend.cwm.constants.DevelopmentStatus;
 import org.talend.cwm.helper.CatalogHelper;
 import org.talend.cwm.helper.ColumnSetHelper;
@@ -100,7 +104,6 @@ import org.talend.dq.nodes.DQRepositoryNode;
 import org.talend.dq.writer.impl.ElementWriterFactory;
 import org.talend.metadata.managment.connection.manager.HiveConnectionManager;
 import org.talend.repository.ui.utils.DBConnectionContextUtils;
-import org.talend.repository.ui.utils.FileConnectionContextUtils;
 import org.talend.utils.ProductVersion;
 import org.talend.utils.sql.metadata.constants.GetColumn;
 import org.talend.utils.sugars.ReturnCode;
@@ -182,13 +185,13 @@ public final class ConnectionUtils {
                 }
             }
             java.sql.Connection connection = null;
-            if (driverClassName.equals(EDriverName.HSQLDEFAULTURL.getDbDriver())) {
+            if (driverClassName.equals(EDatabase4DriverClassName.HSQLDB.getDriverClass())) {
                 // getClassDriver
                 // MOD mzhao 2009-04-13, Try to load driver first as there will
                 // cause exception: No suitable driver
                 // found... if not load.
                 try {
-                    Class.forName("org.hsqldb.jdbcDriver");//$NON-NLS-1$
+                    Class.forName(EDatabase4DriverClassName.HSQLDB.getDriverClass());//$NON-NLS-1$
                 } catch (ClassNotFoundException e) {
                     log.error(e, e);
                 }
@@ -299,12 +302,15 @@ public final class ConnectionUtils {
             FileConnection fileConn = (FileConnection) analysisDataProvider;
             // ADD msjian TDQ-4559 2012-2-28: when the fileconnection is context mode, getOriginalFileConnection.
             if (fileConn.isContextMode()) {
-                fileConn = getOriginalFileConnection(fileConn);
+                IRepositoryContextService service = CoreRuntimePlugin.getInstance().getRepositoryContextService();
+                if (service != null) {
+                    fileConn = service.cloneOriginalValueConnection(fileConn);
+                }
             }
             // TDQ-4559 ~
             String filePath = fileConn.getFilePath();
             try {
-                BufferedReader filePathAvalible = FileConnectionContextUtils.isFilePathAvailable(filePath, fileConn);
+                BufferedReader filePathAvalible = FilesUtils.isFilePathAvailable(filePath, fileConn);
                 if (filePathAvalible != null) {
                     returnCode.setOk(true);
                     return returnCode;
@@ -2041,4 +2047,5 @@ public final class ConnectionUtils {
 
         return version;
     }
+
 }
