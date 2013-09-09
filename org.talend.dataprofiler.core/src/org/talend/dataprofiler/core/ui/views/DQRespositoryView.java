@@ -23,7 +23,6 @@ import net.sourceforge.sqlexplorer.plugin.SQLExplorerPlugin;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -67,7 +66,6 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 import org.eclipse.swt.widgets.Tree;
-import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.IMemento;
 import org.eclipse.ui.IViewSite;
@@ -103,7 +101,6 @@ import org.talend.dataprofiler.core.model.nodes.foldernode.ViewFolderNode;
 import org.talend.dataprofiler.core.service.GlobalServiceRegister;
 import org.talend.dataprofiler.core.service.IService;
 import org.talend.dataprofiler.core.service.IViewerFilterService;
-import org.talend.dataprofiler.core.ui.ResoureceChangedListener;
 import org.talend.dataprofiler.core.ui.action.actions.EditDFTableAction;
 import org.talend.dataprofiler.core.ui.action.actions.EditFileDelimitedAction;
 import org.talend.dataprofiler.core.ui.action.actions.OpenItemEditorAction;
@@ -139,7 +136,6 @@ import org.talend.repository.ProjectManager;
 import org.talend.repository.RepositoryWorkUnit;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
-import org.talend.resource.ResourceManager;
 import org.talend.resource.ResourceService;
 import org.talend.utils.ProductVersion;
 import orgomg.cwm.objectmodel.core.ModelElement;
@@ -160,10 +156,6 @@ public class DQRespositoryView extends CommonNavigator {
     private ITreeContentProvider contentProvider = null;
 
     DQStructureManager manager;
-
-    private static boolean upDownStatus = false;// true : down ; fasle : up
-
-    private static boolean isOnUpDownStatus = false;
 
     public DQRespositoryView() {
         super();
@@ -206,18 +198,22 @@ public class DQRespositoryView extends CommonNavigator {
      * @see org.eclipse.ui.navigator.CommonNavigator#init(org.eclipse.ui.IViewSite, org.eclipse.ui.IMemento)
      */
     @Override
-    public void init(IViewSite site, IMemento memento) throws PartInitException {
-        super.init(site, memento);
-        if (memento == null) {
-            setLinkingEnabled(false);
+    public void init(IViewSite site, IMemento mem) throws PartInitException {
+        super.init(site, mem);
+
+        // MOD msjian TDQ-7840 2013-9-9: set the "Link with Editor" default value is "linked"
+        if (mem == null) {
+            setLinkingEnabled(true);
         }
+        // TDQ-7840~
+
         // MOD qiongli 2010-9-7,bug 14698,add 'try...catch'
         try {
             addPostWindowCloseListener();
+
             initToolBar();
 
             initWorkspace();
-
         } catch (Exception e) {
             log.error(e, e);
         }
@@ -264,13 +260,6 @@ public class DQRespositoryView extends CommonNavigator {
     private void initToolBar() {
         IToolBarManager toolBarManager = getViewSite().getActionBars().getToolBarManager();
         toolBarManager.add(new RefreshDQReponsitoryViewAction());
-
-        // toolBarManager.add((IAction) new FilterDQReponsitoryTreeAction());
-    }
-
-    private void addResourceChangedListener() {
-        IWorkspace workspace = ResourceManager.getRootProject().getWorkspace();
-        workspace.addResourceChangeListener(new ResoureceChangedListener());
     }
 
     /**
@@ -281,6 +270,7 @@ public class DQRespositoryView extends CommonNavigator {
         PlatformUI.getWorkbench().addWorkbenchListener(new IWorkbenchListener() {
 
             public void postShutdown(IWorkbench workbench) {
+                // do nothing here until now
             }
 
             public boolean preShutdown(IWorkbench workbench, boolean forced) {
@@ -323,11 +313,11 @@ public class DQRespositoryView extends CommonNavigator {
         menuMgr.setRemoveAllWhenShown(true);
         menuMgr.addMenuListener(new IMenuListener() {
 
-            public void menuAboutToShow(IMenuManager manager) {
+            public void menuAboutToShow(IMenuManager menuManager) {
                 ISelection selection = getCommonViewer().getSelection();
 
                 getNavigatorActionService().setContext(new ActionContext(selection));
-                getNavigatorActionService().fillContextMenu(manager);
+                getNavigatorActionService().fillContextMenu(menuManager);
             }
 
         });
@@ -437,7 +427,6 @@ public class DQRespositoryView extends CommonNavigator {
 
             public void keyPressed(KeyEvent e) {
                 if (e.keyCode == SWT.CR || e.keyCode == SWT.KEYPAD_CR) {
-                    Object source = e.getSource();
                     Tree tree = (Tree) e.getSource();
                     TreeItem[] selection = tree.getSelection();
                     for (TreeItem item : selection) {
@@ -453,16 +442,16 @@ public class DQRespositoryView extends CommonNavigator {
             }
 
             public void keyReleased(KeyEvent e) {
-
+                // do nothing here until now
             }
         });
+
         // ~ADD mzhao for feature 6233 Load columns when selecting a table (or
         // view) in DQ Repository view
         getCommonViewer().addSelectionChangedListener(new ISelectionChangedListener() {
 
             public void selectionChanged(SelectionChangedEvent event) {
                 TreeSelection selection = (TreeSelection) event.getSelection();
-                // MOD klliu 2011-12-19 TDQ-4197
                 Iterator<?> iterator = selection.iterator();
                 while (iterator.hasNext()) {
                     Object selectedElement = iterator.next();
@@ -736,13 +725,12 @@ public class DQRespositoryView extends CommonNavigator {
                                 DQRepositoryNode.setFilterStr(filterStr);
                                 if (filterStr.trim().equals(PluginConstant.EMPTY_STRING)) {
                                     DQRepositoryNode.setFiltering(false);
-
                                 } else {
                                     DQRepositoryNode.setFiltering(true);
                                     RepositoryNodeHelper.fillTreeList(monitor);
                                 }
                             } catch (Exception exception) {
-                                exception.printStackTrace();
+                                log.error(exception, exception);
                             } finally {
                                 final IRepositoryNode firstFilteredNode = RepositoryNodeHelper.getFirstFilteredNode();
                                 if (null != firstFilteredNode) {
@@ -758,9 +746,9 @@ public class DQRespositoryView extends CommonNavigator {
                     try {
                         progressDialog.executeProcess();
                     } catch (InvocationTargetException e) {
-                        // do nothing ???
+                        log.error(e, e);
                     } catch (InterruptedException e) {
-                        // do nothing ???
+                        log.error(e, e);
                     }
                 }
             });
@@ -770,30 +758,6 @@ public class DQRespositoryView extends CommonNavigator {
     private void runFilter(final String filterStr, final Shell shell) {
         RunFilterThread runFilterThread = new RunFilterThread(filterStr, shell);
         runFilterThread.run();
-    }
-
-    private void expandNodes(boolean expand) {
-        expandTreeItems(getCommonViewer().getTree().getItems(), expand);
-        packOtherColumns();
-    }
-
-    private void expandTreeItems(TreeItem[] items, boolean expandOrCollapse) {
-        for (TreeItem item : items) {
-            item.setExpanded(expandOrCollapse);
-            TreeItem[] its = item.getItems();
-            if (its != null && its.length > 0) {
-                expandTreeItems(its, expandOrCollapse);
-            }
-        }
-    }
-
-    private void packOtherColumns() {
-        TreeColumn[] columns = getCommonViewer().getTree().getColumns();
-        for (TreeColumn column : columns) {
-            column.pack();
-        }
-        getCommonViewer().getTree().pack();
-        getCommonViewer().getTree().getParent().layout();
     }
 
     protected void setContentAndLabelProviders(TreeViewer treeViewer) {
@@ -872,6 +836,7 @@ public class DQRespositoryView extends CommonNavigator {
             // MOD by zshen for bug 12940 refresh the viewer to collapse all the element.
             StructuredSelection structSel = new StructuredSelection(selectedElement);
             getCommonViewer().setSelection(structSel);
+
             // If not select,unfold tree structure to this column.
             StructuredSelection selectionTarge = (StructuredSelection) getCommonViewer().getSelection();
             if (!selectionTarge.equals(structSel)) {
@@ -998,22 +963,6 @@ public class DQRespositoryView extends CommonNavigator {
         } catch (PersistenceException e) {
             log.error(e, e);
         }
-    }
-
-    private static boolean getUpDownStatus() {
-        return upDownStatus;
-    }
-
-    private static void setUpDownStatus(boolean upDownStatus) {
-        DQRespositoryView.upDownStatus = upDownStatus;
-    }
-
-    private static boolean isOnUpDownStatus() {
-        return isOnUpDownStatus;
-    }
-
-    private static void setOnUpDownStatus(boolean isOnUpDownStatus) {
-        DQRespositoryView.isOnUpDownStatus = isOnUpDownStatus;
     }
 
 }
