@@ -29,7 +29,6 @@ import org.talend.dataquality.record.linkage.utils.MatchAnalysisConstant;
 import org.talend.dataquality.rules.MatchKeyDefinition;
 import org.talend.dataquality.rules.MatchRule;
 import org.talend.dataquality.rules.MatchRuleDefinition;
-import org.talend.dataquality.rules.RulesFactory;
 
 
 /**
@@ -110,9 +109,7 @@ public class MatchKeyDefinitionSection extends MatchingKeySection {
      * @param matchRuleDef the matchRuleDef to set
      */
     public void setMatchRuleDef(MatchRuleDefinition matchRuleDef) {
-        this.matchRuleDef = RulesFactory.eINSTANCE.createMatchRuleDefinition();
-        this.matchRuleDef.getMatchRules().addAll(EcoreUtil.copyAll(matchRuleDef.getMatchRules()));
-        this.matchRuleDef.setMatchGroupQualityThreshold(matchRuleDef.getMatchGroupQualityThreshold());
+        this.matchRuleDef = matchRuleDef;
     }
 
     /*

@@ -27,7 +27,6 @@ import org.talend.dataquality.record.linkage.ui.section.BlockingKeySection;
 import org.talend.dataquality.record.linkage.utils.MatchAnalysisConstant;
 import org.talend.dataquality.rules.BlockKeyDefinition;
 import org.talend.dataquality.rules.MatchRuleDefinition;
-import org.talend.dataquality.rules.RulesFactory;
 
 
 /**
@@ -60,8 +59,7 @@ public class BlockingKeyDefinitionSection extends BlockingKeySection {
      * @param matchRuleDef the matchRuleDef to set
      */
     public void setMatchRuleDef(MatchRuleDefinition matchRuleDef) {
-        this.matchRuleDef = RulesFactory.eINSTANCE.createMatchRuleDefinition();
-        this.matchRuleDef.getBlockKeys().addAll(matchRuleDef.getBlockKeys());
+        this.matchRuleDef = matchRuleDef;
     }
 
     /*

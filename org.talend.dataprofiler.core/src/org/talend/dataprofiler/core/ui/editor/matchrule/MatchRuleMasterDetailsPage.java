@@ -288,22 +288,9 @@ public class MatchRuleMasterDetailsPage extends AbstractMetadataFormPage impleme
      */
     private boolean saveMatchRule() {
         MatchRuleDefinition saveModelElement = (MatchRuleDefinition) getCurrentModelElement(this.getEditor());
-        // algorithm
+        // // algorithm
         saveModelElement.setRecordLinkageAlgorithm(selectAlgorithmSection.getAlgorithmName());
-        // block key
-        saveModelElement.getBlockKeys().clear();
-        saveModelElement.getBlockKeys().addAll(blockingKeyDefinitionSection.getBlockKeyList());
-        // match key
-        saveModelElement.getMatchRules().clear();
-        saveModelElement.getMatchRules().addAll(matchingKeyDefinitionSection.getMatchRules());
-        saveModelElement.setMatchGroupQualityThreshold(matchingKeyDefinitionSection.getGroupQualityThreshold());
-
-        saveModelElement.getSurvivorshipKeys().clear();
-        saveModelElement.getSurvivorshipKeys().addAll(survivorshipDefinitionSection.getSurvivorshipKeys());
-
-        saveModelElement.getDefaultSurvivorshipDefinitions().clear();
-        saveModelElement.getDefaultSurvivorshipDefinitions().addAll(
-                defaultSurvivorshipDefinitionSection.getDefaultSurvivorshipKeys());
+       
         ReturnCode rc = ElementWriterFactory.getInstance().createdMatchRuleWriter().save(getInputItem(), Boolean.FALSE);
         if (!rc.isOk()) {
             return false;

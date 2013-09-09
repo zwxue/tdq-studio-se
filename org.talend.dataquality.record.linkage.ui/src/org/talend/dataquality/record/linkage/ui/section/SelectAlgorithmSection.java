@@ -51,8 +51,6 @@ public class SelectAlgorithmSection extends AbstractSectionComposite {
 
     private MatchRuleDefinition matchRuleDef = null;
 
-
-
     public SelectAlgorithmSection(ScrolledForm form, Composite parent, FormToolkit toolkit) {
         this(form, parent, Section.TWISTIE | Section.TITLE_BAR | Section.EXPANDED, toolkit);
     }
@@ -92,11 +90,10 @@ public class SelectAlgorithmSection extends AbstractSectionComposite {
             @Override
             public void widgetSelected(SelectionEvent e) {
                 isVSRMode = false;
-                // blockKeySection.setAddColumn(true);
-                // blockKeySection.redrawnContent();
                 matchKeySection.setAddColumn(true);
                 noticeOtherSection();
                 algorithmName = MatchAnalysisConstant.T_SWOOSH_ALGORITHM;
+                matchRuleDef.setRecordLinkageAlgorithm(algorithmName);
                 listeners.firePropertyChange(MatchAnalysisConstant.ISDIRTY_PROPERTY,
                         MatchAnalysisConstant.VSR_ALGORITHM, MatchAnalysisConstant.T_SWOOSH_ALGORITHM);
 
@@ -112,11 +109,10 @@ public class SelectAlgorithmSection extends AbstractSectionComposite {
             @Override
             public void widgetSelected(SelectionEvent e) {
                 isVSRMode = true;
-                // blockKeySection.setAddColumn(false);
-                // blockKeySection.redrawnContent();
                 matchKeySection.setAddColumn(false);
                 noticeOtherSection();
                 algorithmName = MatchAnalysisConstant.VSR_ALGORITHM;
+                matchRuleDef.setRecordLinkageAlgorithm(algorithmName);
                 listeners.firePropertyChange(MatchAnalysisConstant.ISDIRTY_PROPERTY,
                         MatchAnalysisConstant.T_SWOOSH_ALGORITHM, MatchAnalysisConstant.VSR_ALGORITHM);
             }
