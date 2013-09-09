@@ -36,7 +36,7 @@ import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.cwm.relational.TdExpression;
-import org.talend.dataprofiler.core.helper.UnitTestBuildHelper;
+import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.ui.action.actions.ImportObject;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dataquality.indicators.definition.IndicatorDefinitionParameter;
@@ -85,8 +85,9 @@ public class ImportFactoryTest {
      */
     @Before
     public void setUp() throws Exception {
-        UnitTestBuildHelper.deleteCurrentProject();
-        UnitTestBuildHelper.createRealProject("testForImportFactoryTDQ"); //$NON-NLS-1$
+        if (DQStructureManager.getInstance().isNeedCreateStructure()) {
+            DQStructureManager.getInstance().createDQStructure();
+        }
     }
 
     /**
@@ -172,9 +173,9 @@ public class ImportFactoryTest {
 
         // the expect expression's values: name and body will add double quote after import, lang will not add double
         // quote after import
-        String name = "\"a\""; //$NON-NLS-1$
-        String lang = "Enumeration"; //$NON-NLS-1$
-        String body = "\"'a'|'b'\""; //$NON-NLS-1$
+        String name = "\"\"a\"\""; //$NON-NLS-1$
+        String lang = "\"Enumeration\""; //$NON-NLS-1$
+        String body = "\"\"'a'|'b'\"\""; //$NON-NLS-1$
 
         File dict = new File(""); //$NON-NLS-1$
         File importFile = new File(dict.getAbsolutePath() + File.separator + "paser_rule.csv"); //$NON-NLS-1$
@@ -227,7 +228,7 @@ public class ImportFactoryTest {
     @Test
     public void testImportParserRuleToStuctureEmptyWithDoubleQuote() throws IOException {
         // the parser rule name, use it to get the imported file name
-        String parserRuleName = "parserRule"; //$NON-NLS-1$
+        String parserRuleName = "parserRule1"; //$NON-NLS-1$
         String parserRuleFileName = parserRuleName + "_0.1.rules"; //$NON-NLS-1$
 
         // the expect expression's values: name and body will add double quote after import, lang will remove any double
@@ -287,7 +288,7 @@ public class ImportFactoryTest {
     @Test
     public void testImportParserRuleToStuctureEmptyWithoutDoubleQuote() throws IOException {
         // the parser rule name, use it to get the imported file name
-        String parserRuleName = "parserRule"; //$NON-NLS-1$
+        String parserRuleName = "parserRule2"; //$NON-NLS-1$
         String parserRuleFileName = parserRuleName + "_0.1.rules"; //$NON-NLS-1$
 
         // the expect expression's values: name and body will add double quote after import, lang will not add double
