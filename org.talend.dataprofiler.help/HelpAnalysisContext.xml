@@ -11,5 +11,6 @@
       <topic label="Column Correlation Analysis" href="$nl$/html/wizard/analysis/columnCorrelationAnalysis.html"/>
       <topic href="$nl$/html/wizard/analysis/columnDependencyAnalysis.html" label="Column Functional Dependency"/>
       <topic label="Column Set Analysis" href="$nl$/html/wizard/analysis/columnSetAnalysis.html"/>
+      <topic href="html/wizard/analysis/matchRuleAnalysis.html" label="Match Analysis"/>
    </context>
 </contexts>
