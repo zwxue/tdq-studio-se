@@ -20,34 +20,17 @@ import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.dataprofiler.core.ui.action.actions.DQDeleteAction;
 import org.talend.dataprofiler.core.ui.action.actions.RenameJrxmlFolderAction;
 import org.talend.dataprofiler.core.ui.action.actions.RenameTdqFolderAction;
-import org.talend.dataprofiler.core.ui.exchange.ExchangeCategoryRepNode;
-import org.talend.dataprofiler.core.ui.exchange.ExchangeComponentRepNode;
 import org.talend.dataprofiler.core.ui.utils.WorkbenchUtils;
 import org.talend.dataquality.properties.TDQIndicatorDefinitionItem;
 import org.talend.dq.nodes.AnalysisSubFolderRepNode;
-import org.talend.dq.nodes.DBCatalogRepNode;
-import org.talend.dq.nodes.DBColumnFolderRepNode;
-import org.talend.dq.nodes.DBColumnRepNode;
 import org.talend.dq.nodes.DBConnectionSubFolderRepNode;
-import org.talend.dq.nodes.DBSchemaRepNode;
-import org.talend.dq.nodes.DBTableFolderRepNode;
-import org.talend.dq.nodes.DBTableRepNode;
-import org.talend.dq.nodes.DBViewFolderRepNode;
-import org.talend.dq.nodes.DBViewRepNode;
-import org.talend.dq.nodes.DFColumnFolderRepNode;
-import org.talend.dq.nodes.DFColumnRepNode;
 import org.talend.dq.nodes.DFConnectionSubFolderRepNode;
-import org.talend.dq.nodes.DFTableRepNode;
 import org.talend.dq.nodes.JrxmlTempSubFolderNode;
 import org.talend.dq.nodes.MDMConnectionSubFolderRepNode;
-import org.talend.dq.nodes.MDMSchemaRepNode;
-import org.talend.dq.nodes.MDMXmlElementRepNode;
 import org.talend.dq.nodes.PatternRegexSubFolderRepNode;
 import org.talend.dq.nodes.PatternSqlSubFolderRepNode;
-import org.talend.dq.nodes.ReportAnalysisRepNode;
 import org.talend.dq.nodes.ReportFileRepNode;
 import org.talend.dq.nodes.ReportSubFolderRepNode;
-import org.talend.dq.nodes.ReportSubFolderRepNode.ReportSubFolderType;
 import org.talend.dq.nodes.RulesParserSubFolderRepNode;
 import org.talend.dq.nodes.RulesSQLSubFolderRepNode;
 import org.talend.dq.nodes.UserDefIndicatorSubFolderRepNode;
@@ -80,7 +63,7 @@ public class DeleteResourceProvider extends AbstractCommonActionProvider {
                 // menu.add(new DeleteObjectsAction());
                 menu.add(new DQDeleteAction());
                 if (shouldShowRenameFolderMenu(node)) {
-                    Object type = (ERepositoryObjectType) node.getProperties(EProperties.CONTENT_TYPE);
+                    Object type = node.getProperties(EProperties.CONTENT_TYPE);
                     if (ERepositoryObjectType.TDQ_JRAXML_ELEMENT.equals(type)) {
                         menu.add(new RenameJrxmlFolderAction(node));
                     } else {
@@ -117,34 +100,6 @@ public class DeleteResourceProvider extends AbstractCommonActionProvider {
 
     private boolean isSystemFolder(RepositoryNode node) {
         return ENodeType.SYSTEM_FOLDER.equals(node.getType());
-    }
-
-    private boolean isVirturalNode(RepositoryNode node) {
-        return node instanceof DBCatalogRepNode || node instanceof DBSchemaRepNode || node instanceof DBTableFolderRepNode
-                || node instanceof DBViewFolderRepNode || node instanceof DBTableRepNode || node instanceof DBViewRepNode
-                || node instanceof DBColumnFolderRepNode || node instanceof DBColumnRepNode || node instanceof MDMSchemaRepNode
-                || node instanceof MDMXmlElementRepNode || node instanceof DFTableRepNode
-                || node instanceof DFColumnFolderRepNode || node instanceof DFColumnRepNode
-                || node instanceof ExchangeCategoryRepNode || node instanceof ExchangeComponentRepNode
-                || isReportSubFolderVirtualNode(node) || isAnalysisSubFolderVirtualNode(node)
-                || node instanceof ReportAnalysisRepNode || node instanceof ReportFileRepNode;
-    }
-
-    private boolean isReportSubFolderVirtualNode(RepositoryNode node) {
-        if (node instanceof ReportSubFolderRepNode) {
-            ReportSubFolderRepNode subFolderNode = (ReportSubFolderRepNode) node;
-            return ReportSubFolderType.ANALYSIS.equals(subFolderNode.getReportSubFolderType())
-                    || ReportSubFolderType.GENERATED_DOCS.equals(subFolderNode.getReportSubFolderType());
-        }
-        return false;
-    }
-
-    private boolean isAnalysisSubFolderVirtualNode(RepositoryNode node) {
-        if (node instanceof AnalysisSubFolderRepNode) {
-            AnalysisSubFolderRepNode subFolderNode = (AnalysisSubFolderRepNode) node;
-            return subFolderNode.getObject() == null;
-        }
-        return false;
     }
 
     private boolean isSystemIndicator(RepositoryNode node) {

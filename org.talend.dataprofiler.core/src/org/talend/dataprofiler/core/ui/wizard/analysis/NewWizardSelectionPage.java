@@ -80,7 +80,7 @@ public class NewWizardSelectionPage extends AbstractAnalysisWizardPage {
 
     /**
      * DOC xqliu Comment method "initCurrentFolderProvider".
-     * 
+     *
      * @param path
      */
     private void initCurrentFolderProvider(IPath path) {
@@ -92,7 +92,7 @@ public class NewWizardSelectionPage extends AbstractAnalysisWizardPage {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
      */
     public void createControl(Composite parent) {
@@ -182,10 +182,13 @@ public class NewWizardSelectionPage extends AbstractAnalysisWizardPage {
                         parameter = correlationParam;
                         if (currentType == AnalysisType.MATCH_ANALYSIS) {// Added 20130724 TDQ-7504
                             type = currentType;
+                            href = relatedTopics[9].getHref();
                         } else {
                             type = currentType == AnalysisType.COLUMN_SET ? currentType : type;
+                            href = currentType == AnalysisType.COLUMN_SET ? relatedTopics[8].getHref() : relatedTopics[4]
+                                    .getHref();
                         }
-                        href = currentType == AnalysisType.COLUMN_SET ? relatedTopics[8].getHref() : relatedTopics[4].getHref();
+
                         break;
                     case COLUMNS_COMPARISON:
                         AnalysisParameter anaParam = new AnalysisParameter();
@@ -265,7 +268,7 @@ public class NewWizardSelectionPage extends AbstractAnalysisWizardPage {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.jface.wizard.WizardPage#getNextPage()
      */
     @Override
