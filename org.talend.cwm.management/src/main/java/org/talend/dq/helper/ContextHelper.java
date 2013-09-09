@@ -113,8 +113,9 @@ public final class ContextHelper {
         String result = null;
         if (reports != null && !reports.isEmpty()) {
             if (reports.size() == 1) {
-                String ofName = ReportHelper.getOutputFolderNameAssinged(reports.get(0));
-                if (StringUtils.isNotBlank(ofName)) {
+                TdReport report = reports.get(0);
+                String ofName = ReportHelper.getOutputFolderNameAssinged(report);
+                if (StringUtils.isNotBlank(ofName) && StringUtils.isNotBlank(ContextHelper.getReportContextValue(report, ofName))) {
                     result = ofName;
                 }
             } else {
@@ -125,7 +126,8 @@ public final class ContextHelper {
                     String ofNameAssinged = ReportHelper.getOutputFolderNameAssinged(report);
                     // if there exist the report which don't set the output folder, this mean use default output folder,
                     // so just return null
-                    if (StringUtils.isBlank(ofNameAssinged)) {
+                    if (StringUtils.isBlank(ofNameAssinged)
+                            || StringUtils.isBlank(ContextHelper.getReportContextValue(report, ofNameAssinged))) {
                         return null;
                     }
                     contextVar = ofNameAssinged;
