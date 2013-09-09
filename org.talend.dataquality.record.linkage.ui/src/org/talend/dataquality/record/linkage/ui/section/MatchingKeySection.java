@@ -540,14 +540,33 @@ public class MatchingKeySection extends AbstractMatchKeyWithChartTableSection {
 
         }
         // create the tab from the parameter:matchRule
-        // TODO: find the same name of the column by key name
         for (MatchRule oneMatchRule : matchRule.getMatchRules()) {
+            MatchRule matchRule2 = createMatchRuleByCopy(oneMatchRule);
             // set the name of the match rule by current rule count
             String tabName = getMatchRuleNameByOrder();
-            oneMatchRule.setName(tabName);
+            matchRule2.setName(tabName);
+
+            // if the key name= some column name, set the column to this key
+            for (MatchKeyDefinition key : matchRule2.getMatchKeys()) {
+                if (this.hasSameColumnWithKeyName(key.getName())) {
+                    key.setColumn(key.getName());
+                }
+            }
+
             // auto add the tab name order
-            addRuleTab(false, oneMatchRule);
-            getMatchRuleDefinition().getMatchRules().add(EcoreUtil.copy(oneMatchRule));
+            addRuleTab(false, matchRule2);
+            getMatchRuleDefinition().getMatchRules().add(matchRule2);
         }
+    }
+
+    // copy a match rule to a new one
+    private MatchRule createMatchRuleByCopy(MatchRule oldRule) {
+        MatchRule newRule = RulesFactory.eINSTANCE.createMatchRule();
+        if (oldRule.getMatchKeys() != null && oldRule.getMatchKeys().size() > 0) {
+            for (MatchKeyDefinition matchKey : oldRule.getMatchKeys()) {
+                newRule.getMatchKeys().add(EcoreUtil.copy(matchKey));
+            }
+        }
+        return newRule;
     }
 }

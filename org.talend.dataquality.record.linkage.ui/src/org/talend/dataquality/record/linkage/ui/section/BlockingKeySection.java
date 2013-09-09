@@ -345,7 +345,14 @@ public class BlockingKeySection extends AbstractMatchAnaysisTableSection {
                 conflictKeys.add(blockKey.getName());
                 continue;
             }
-            tableComposite.addKeyDefinition(EcoreUtil.copy(blockKey), this.getMatchRuleDefinition()
+
+            BlockKeyDefinition blockKeyDefinition = EcoreUtil.copy(blockKey);
+
+            // if the key name= some column name, set the column to this key
+            if (this.hasSameColumnWithKeyName(blockKeyDefinition.getName())) {
+                blockKeyDefinition.setColumn(blockKeyDefinition.getName());
+            }
+            tableComposite.addKeyDefinition(blockKeyDefinition, this.getMatchRuleDefinition()
                     .getBlockKeys());
         }
         // if there are some conflict keys, popup to let the user know

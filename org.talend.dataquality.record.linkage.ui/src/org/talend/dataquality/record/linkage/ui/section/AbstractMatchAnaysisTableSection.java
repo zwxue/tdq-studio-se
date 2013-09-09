@@ -38,6 +38,7 @@ public abstract class AbstractMatchAnaysisTableSection extends AbstractSectionCo
 
     protected List<Object[]> matchRows = new ArrayList<Object[]>();
 
+    // <column name, column index>
     protected Map<String, String> columnMap = null;
 
     protected Analysis analysis = null;
@@ -364,5 +365,18 @@ public abstract class AbstractMatchAnaysisTableSection extends AbstractSectionCo
     public abstract void refreshChart();
 
     public abstract Boolean isKeyDefinitionAdded(String columnName) throws Exception;
+
+    /**
+     * check if the key's name is same with some columns name
+     * 
+     * @param keyName
+     * @return
+     */
+    public boolean hasSameColumnWithKeyName(String keyName) {
+        if (this.columnMap == null) {
+            return false;
+        }
+        return columnMap.containsKey(keyName);
+    }
 
 }

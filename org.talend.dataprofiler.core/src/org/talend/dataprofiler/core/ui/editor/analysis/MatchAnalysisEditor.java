@@ -16,6 +16,7 @@ import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.action.actions.ExportMatchRuleAction;
 import org.talend.dataprofiler.core.ui.action.actions.ImportMatchRuleAction;
 import org.talend.dataprofiler.core.ui.editor.TdEditorToolBar;
+import org.talend.dataquality.record.linkage.ui.composite.utils.MatchRuleAnlaysisUtils;
 
 
 /**
@@ -38,7 +39,8 @@ public class MatchAnalysisEditor extends AnalysisEditor {
             
             // when there are some keys in the analysis
             if (getMasterPage().getAnalysis().getResults() != null) {
-                exportMatchRuleAction = new ExportMatchRuleAction(getMasterPage().getAnalysis().getResults().getIndicators());
+                exportMatchRuleAction = new ExportMatchRuleAction(
+                        MatchRuleAnlaysisUtils.getRecordMatchIndicatorFromAna(getMasterPage().getAnalysis()));
                 exportMatchRuleAction.setToolTipText(DefaultMessagesImpl.getString("MatchAnalysisEditor.exportMatchRule"));//$NON-NLS-1$
                 toolbar.addActions(exportMatchRuleAction);
             }

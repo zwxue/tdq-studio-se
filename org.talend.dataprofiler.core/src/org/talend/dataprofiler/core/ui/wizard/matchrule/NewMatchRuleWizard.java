@@ -13,6 +13,7 @@
 package org.talend.dataprofiler.core.ui.wizard.matchrule;
 
 import org.eclipse.core.resources.IFolder;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.talend.core.model.properties.Item;
 import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.dataprofiler.core.CorePlugin;
@@ -23,8 +24,11 @@ import org.talend.dataquality.rules.MatchRuleDefinition;
 import org.talend.dq.analysis.parameters.ConnectionParameter;
 import org.talend.dq.analysis.parameters.DQMatchRuleParameter;
 import org.talend.dq.dqrule.MatchRuleBuilder;
+import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.helper.resourcehelper.ResourceFileMap;
 import org.talend.dq.writer.impl.ElementWriterFactory;
+import org.talend.dq.writer.impl.MatchRuleDefinitionWriter;
+import org.talend.resource.EResourceConstant;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
@@ -40,6 +44,10 @@ public class NewMatchRuleWizard extends AbstractWizard {
 
 
     private DQMatchRuleParameter parameter;
+
+    private MatchRuleDefinition matchRule = null;
+
+    private boolean isExport = false;
 
     public NewMatchRuleWizard(DQMatchRuleParameter parameter) {
         this.parameter = parameter;
@@ -62,6 +70,11 @@ public class NewMatchRuleWizard extends AbstractWizard {
      * @see org.talend.dataprofiler.core.ui.wizard.ICWMResouceAdapter#initCWMResourceBuilder()
      */
     public ModelElement initCWMResourceBuilder() {
+        if (matchRule != null) {
+            MatchRuleDefinition copiedMatchRuleDefinition = EcoreUtil.copy(matchRule);
+            copiedMatchRuleDefinition.setName(parameter.getName());
+            return copiedMatchRuleDefinition;
+        }
         MatchRuleBuilder ruleBuilder = new MatchRuleBuilder();
         boolean ruleInitialized = ruleBuilder.initializeDqRuleBuilder(parameter.getName());
         if (ruleInitialized) {
@@ -77,19 +90,20 @@ public class NewMatchRuleWizard extends AbstractWizard {
      * ModelElement)
      */
     public TypedReturnCode<Object> createAndSaveCWMFile(ModelElement repositoryObject) {
-        MatchRuleDefinition matchRule = (MatchRuleDefinition) repositoryObject;
+        MatchRuleDefinition newMatchRule = (MatchRuleDefinition) repositoryObject;
 
-        TaggedValueHelper.setValidStatus(true, matchRule);
-        // setmatchRule
-
-        // MOD scorreia 2009-04-29 bug 7151: add the category
-        // IndicatorCategory ruleIndicatorCategory = DefinitionHandler.getInstance().getDQRuleIndicatorCategory();
-        // if (ruleIndicatorCategory != null && !whereRule.getCategories().contains(ruleIndicatorCategory)) {
-        // whereRule.getCategories().add(ruleIndicatorCategory);
-        // }
-
+        TaggedValueHelper.setValidStatus(true, newMatchRule);
+        
+        // Added for export an match rule created by the match analysis, which need to replace the rules in createdItem,
+        MatchRuleDefinitionWriter matchRuleWriter = ElementWriterFactory.getInstance().createdMatchRuleWriter();
+        if(isExport){
+            matchRuleWriter.copy(newMatchRule, this.matchRule);
+        }
         IFolder folder = parameter.getFolderProvider().getFolderResource();
-        return ElementWriterFactory.getInstance().createdMatchRuleWriter().create(matchRule, folder);
+        TypedReturnCode<Object> createdItem = matchRuleWriter.create(newMatchRule, folder);
+
+        return createdItem;
+
     }
 
     /*
@@ -101,7 +115,8 @@ public class NewMatchRuleWizard extends AbstractWizard {
     public void openEditor(Item item) {
         MatchRuleItemEditorInput matchRuleEditorInput = new MatchRuleItemEditorInput(item);
         CorePlugin.getDefault().openEditor(matchRuleEditorInput, DQRuleEditor.class.getName());
-
+        // refresh the view
+        CorePlugin.getDefault().refreshDQView(RepositoryNodeHelper.getLibrariesFolderNode(EResourceConstant.RULES_MATCHER));
     }
 
     /*
@@ -135,5 +150,9 @@ public class NewMatchRuleWizard extends AbstractWizard {
         return DQRuleEditor.class.getName();
     }
 
+    public void setMatchRule(MatchRuleDefinition matchRule) {
+        this.matchRule = matchRule;
+        isExport = true;
+    }
 
 }
