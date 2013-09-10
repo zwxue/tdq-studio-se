@@ -44,6 +44,7 @@ public class RemoveMatchKeyDefinitionAction<T> extends Action {
      *
      * @see org.eclipse.jface.action.Action#run()
      */
+    @SuppressWarnings("unchecked")
     @Override
     public void run() {
         IStructuredSelection structuredSelection = (IStructuredSelection) tableViewer.getSelection();
@@ -60,35 +61,24 @@ public class RemoveMatchKeyDefinitionAction<T> extends Action {
      * @param keyDef
      * @return
      */
-    @SuppressWarnings("unchecked")
-    private List<T> getNeedKeyDefinitionList(T keyDef) {
+    @SuppressWarnings({ "rawtypes" })
+    private List getNeedKeyDefinitionList(T keyDef) {
         List<T> returnList = new ArrayList<T>();
         if (keyDef == null) {
             // don't need to do anything at here
         } else if (keyDef instanceof MatchKeyDefinition) {
             // keyDef is MatchKeyDefiniton case
-            for (MatchKeyDefinition tempKeyDef : ((MatchRule) ((MatchKeyDefinition) keyDef).eContainer()).getMatchKeys()) {
-                returnList.add((T) tempKeyDef);
-            }
+            return ((MatchRule) ((MatchKeyDefinition) keyDef).eContainer()).getMatchKeys();
         } else if (keyDef instanceof BlockKeyDefinition) {
             // keyDef is BlockKeyDefiniton case
-            for (BlockKeyDefinition tempKeyDef : ((MatchRuleDefinition) ((BlockKeyDefinition) keyDef).eContainer())
-                    .getBlockKeys()) {
-                returnList.add((T) tempKeyDef);
-            }
+            return ((MatchRuleDefinition) ((BlockKeyDefinition) keyDef).eContainer()).getBlockKeys();
         } else if (keyDef instanceof SurvivorshipKeyDefinition) {
             // keyDef is BlockKeyDefiniton case
-            for (SurvivorshipKeyDefinition tempKeyDef : ((MatchRuleDefinition) ((SurvivorshipKeyDefinition) keyDef).eContainer())
-                    .getSurvivorshipKeys()) {
-                returnList.add((T) tempKeyDef);
-        }
+            return ((MatchRuleDefinition) ((SurvivorshipKeyDefinition) keyDef).eContainer()).getSurvivorshipKeys();
         } else if (keyDef instanceof DefaultSurvivorshipDefinition) {
             // keyDef is BlockKeyDefiniton case
-            for (DefaultSurvivorshipDefinition tempKeyDef : ((MatchRuleDefinition) ((DefaultSurvivorshipDefinition) keyDef)
-                    .eContainer())
-                    .getDefaultSurvivorshipDefinitions()) {
-                returnList.add((T) tempKeyDef);
-            }
+            return ((MatchRuleDefinition) ((DefaultSurvivorshipDefinition) keyDef).eContainer())
+                    .getDefaultSurvivorshipDefinitions();
         }
         return returnList;
     }

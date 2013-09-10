@@ -20,10 +20,10 @@ import org.eclipse.jface.viewers.IBaseLabelProvider;
 import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
+import org.talend.dataquality.record.linkage.constant.AttributeMatcherType;
 import org.talend.dataquality.record.linkage.ui.composite.tableviewer.MatchRuleTableViewer;
 import org.talend.dataquality.record.linkage.ui.composite.tableviewer.provider.definition.MatchRuleDefinitionLabelProvider;
 import org.talend.dataquality.record.linkage.utils.HandleNullEnum;
-import org.talend.dataquality.record.linkage.utils.MatchingTypeEnum;
 
 
 /**
@@ -57,7 +57,7 @@ public class MatchRuleDefinitionTableViewer extends MatchRuleTableViewer {
             if (isAddColumn()) {
                 switch (i) {
                 case 1:
-                    editors[i] = new ComboBoxCellEditor(innerTable, MatchingTypeEnum.getAllTypes(), SWT.READ_ONLY);
+                    editors[i] = new ComboBoxCellEditor(innerTable, AttributeMatcherType.getAllTypes(), SWT.READ_ONLY);
                     break;
                 case 5:
                     editors[i] = new ComboBoxCellEditor(innerTable, HandleNullEnum.getAllTypes(), SWT.READ_ONLY);
@@ -69,7 +69,7 @@ public class MatchRuleDefinitionTableViewer extends MatchRuleTableViewer {
                 switch (i) {
 
                 case 1:
-                    editors[i] = new ComboBoxCellEditor(innerTable, MatchingTypeEnum.getAllTypes(), SWT.READ_ONLY);
+                    editors[i] = new ComboBoxCellEditor(innerTable, AttributeMatcherType.getAllTypes(), SWT.READ_ONLY);
                     break;
                 case 4:
                     editors[i] = new ComboBoxCellEditor(innerTable, HandleNullEnum.getAllTypes(), SWT.READ_ONLY);

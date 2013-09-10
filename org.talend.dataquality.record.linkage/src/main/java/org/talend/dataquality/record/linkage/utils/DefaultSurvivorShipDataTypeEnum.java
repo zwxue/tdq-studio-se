@@ -17,13 +17,13 @@ import java.util.List;
 
 /**
  * created by HHB on 2013-8-23 Detailled comment
- * 
+ *
  */
 public enum DefaultSurvivorShipDataTypeEnum {
-    BOOLEAN(0, "Boolean", "Boolean"),
-    DATE(1, "Date", "Date"),
-    NUMBER(2, "Number", "Number"),
-    STRING(3, "String", "String");
+    BOOLEAN(0, "Boolean", "Boolean"), //$NON-NLS-1$ //$NON-NLS-2$
+    DATE(1, "Date", "Date"), //$NON-NLS-1$ //$NON-NLS-2$
+    NUMBER(2, "Number", "Number"), //$NON-NLS-1$ //$NON-NLS-2$
+    STRING(3, "String", "String"); //$NON-NLS-1$ //$NON-NLS-2$
 
     private int index;
 
@@ -68,8 +68,8 @@ public enum DefaultSurvivorShipDataTypeEnum {
     }
 
     /**
-     * 
-     * 
+     *
+     *
      * @param index
      * @return null can not find this index
      */

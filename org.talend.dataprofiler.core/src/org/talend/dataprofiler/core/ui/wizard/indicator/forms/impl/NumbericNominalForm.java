@@ -38,7 +38,7 @@ public class NumbericNominalForm extends AbstractIndicatorForm {
 
     /**
      * DOC zqin NumbericNominalForm constructor comment.
-     * 
+     *
      * @param parent
      * @param style
      * @param parameter
@@ -50,7 +50,7 @@ public class NumbericNominalForm extends AbstractIndicatorForm {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.utils.AbstractForm#addFields()
      */
     @Override
@@ -75,7 +75,7 @@ public class NumbericNominalForm extends AbstractIndicatorForm {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.utils.AbstractForm#addFieldsListeners()
      */
     @Override
@@ -98,12 +98,12 @@ public class NumbericNominalForm extends AbstractIndicatorForm {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.utils.AbstractForm#checkFieldsValue()
      */
     @Override
     protected boolean checkFieldsValue() {
-        if (numberTxt.getText() == "") { //$NON-NLS-1$
+        if (numberTxt.getText().equals(StringUtils.EMPTY)) {
             updateStatus(IStatus.ERROR, MSG_EMPTY);
             return false;
         }
@@ -119,7 +119,7 @@ public class NumbericNominalForm extends AbstractIndicatorForm {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.utils.AbstractForm#initialize()
      */
     @Override
@@ -137,7 +137,7 @@ public class NumbericNominalForm extends AbstractIndicatorForm {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.utils.AbstractIndicatorForm#getFormEnum()
      */
     @Override
@@ -147,7 +147,7 @@ public class NumbericNominalForm extends AbstractIndicatorForm {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.utils.AbstractForm#adaptFormToReadOnly()
      */
     @Override
@@ -156,7 +156,7 @@ public class NumbericNominalForm extends AbstractIndicatorForm {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.utils.AbstractForm#addUtilsButtonListeners()
      */
     @Override

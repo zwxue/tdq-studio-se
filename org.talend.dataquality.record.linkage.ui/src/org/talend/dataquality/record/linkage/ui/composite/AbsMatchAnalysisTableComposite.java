@@ -79,7 +79,7 @@ public abstract class AbsMatchAnalysisTableComposite<T> extends Composite implem
         return style;
     }
 
-    public void setInput(List<KeyDefinition> inputs) {
+    public void setInput(List<T> inputs) {
         tableViewer.setInput(inputs);
     }
 

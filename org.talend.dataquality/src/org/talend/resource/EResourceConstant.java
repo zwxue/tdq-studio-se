@@ -37,6 +37,7 @@ import org.talend.dataquality.properties.TDQAnalysisItem;
 import org.talend.dataquality.properties.TDQBusinessRuleItem;
 import org.talend.dataquality.properties.TDQIndicatorDefinitionItem;
 import org.talend.dataquality.properties.TDQJrxmlItem;
+import org.talend.dataquality.properties.TDQMatchRuleItem;
 import org.talend.dataquality.properties.TDQPatternItem;
 import org.talend.dataquality.properties.TDQReportItem;
 import org.talend.dataquality.properties.TDQSourceFileItem;
@@ -323,6 +324,19 @@ public enum EResourceConstant {
                 public Object caseTDQSourceFileItem(TDQSourceFileItem object) {
                     return SOURCE_FILES;
                 }
+
+                /*
+                 * (non-Javadoc)
+                 * 
+                 * @see
+                 * org.talend.dataquality.properties.util.PropertiesSwitch#caseTDQMatchRuleItem(org.talend.dataquality
+                 * .properties.TDQMatchRuleItem)
+                 */
+                @Override
+                public Object caseTDQMatchRuleItem(TDQMatchRuleItem object) {
+                    return RULES_MATCHER;
+                }
+
             }.doSwitch(item);
         }
 

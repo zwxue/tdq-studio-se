@@ -17,8 +17,9 @@ import java.util.List;
 
 import org.talend.core.model.properties.Item;
 import org.talend.core.model.repository.IRepositoryViewObject;
+import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dataquality.properties.TDQBusinessRuleItem;
-import org.talend.dataquality.rules.DQRule;
+import org.talend.dataquality.properties.TDQMatchRuleItem;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
 
@@ -27,15 +28,15 @@ import org.talend.repository.model.RepositoryNode;
  */
 public class RuleRepNode extends DQRepositoryNode {
 
-    private DQRule rule;
+    private IndicatorDefinition rule;
 
-    public DQRule getRule() {
+    public IndicatorDefinition getRule() {
         return this.rule;
     }
 
     /**
      * DOC klliu RuleRepNOde constructor comment.
-     * 
+     *
      * @param object
      * @param parent
      * @param type
@@ -46,6 +47,8 @@ public class RuleRepNode extends DQRepositoryNode {
             Item item = object.getProperty().getItem();
             if (item != null && item instanceof TDQBusinessRuleItem) {
                 this.rule = ((TDQBusinessRuleItem) item).getDqrule();
+            } else if (item != null && item instanceof TDQMatchRuleItem) {
+                this.rule = ((TDQMatchRuleItem) item).getMatchRule();
             }
         }
     }
@@ -71,7 +74,7 @@ public class RuleRepNode extends DQRepositoryNode {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.repository.model.RepositoryNode#getDisplayText()
      */
     @Override

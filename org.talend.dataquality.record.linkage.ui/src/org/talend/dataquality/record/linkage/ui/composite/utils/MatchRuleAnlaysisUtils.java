@@ -16,14 +16,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.emf.common.util.EList;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.columnset.RecordMatchingIndicator;
+import org.talend.dataquality.record.linkage.constant.AttributeMatcherType;
 import org.talend.dataquality.record.linkage.utils.AnalysisRecordGroupingUtils;
 import org.talend.dataquality.record.linkage.utils.HandleNullEnum;
 import org.talend.dataquality.record.linkage.utils.MatchAnalysisConstant;
-import org.talend.dataquality.record.linkage.utils.MatchingTypeEnum;
 import org.talend.dataquality.rules.AlgorithmDefinition;
 import org.talend.dataquality.rules.BlockKeyDefinition;
 import org.talend.dataquality.rules.KeyDefinition;
@@ -33,7 +34,7 @@ import org.talend.dataquality.rules.RulesFactory;
 
 /**
  * created by zshen on Aug 6, 2013 Detailled comment
- * 
+ *
  */
 public class MatchRuleAnlaysisUtils {
 
@@ -49,7 +50,7 @@ public class MatchRuleAnlaysisUtils {
 
     /**
      * DOC zshen Comment method "createDefaultRow".
-     * 
+     *
      * @param columnName
      * @return
      */
@@ -62,8 +63,8 @@ public class MatchRuleAnlaysisUtils {
         createMatchKeyDefinition1.setColumn(columnName);
         createMatchKeyDefinition1.setConfidenceWeight(1);
         createMatchKeyDefinition1.setHandleNull(HandleNullEnum.NULL_MATCH_NULL.getValue());
-        createAlgorithmDefinition1.setAlgorithmParameters(""); //$NON-NLS-1$
-        createAlgorithmDefinition1.setAlgorithmType(MatchingTypeEnum.EXACT.getValue());
+        createAlgorithmDefinition1.setAlgorithmParameters(StringUtils.EMPTY);
+        createAlgorithmDefinition1.setAlgorithmType(AttributeMatcherType.getTypeByIndex(0).getComponentName());
         createMatchKeyDefinition1.setAlgorithm(createAlgorithmDefinition1);
         return createMatchKeyDefinition1;
     }
@@ -85,7 +86,7 @@ public class MatchRuleAnlaysisUtils {
 
     /**
      * DOC yyin Comment method "ruleMatcherConvert".
-     * 
+     *
      * @param blockKeyDef
      * @param columnMap
      * @return
@@ -111,7 +112,7 @@ public class MatchRuleAnlaysisUtils {
 
     /**
      * Get recording matching indicator from analysis
-     * 
+     *
      * @param analysis
      * @return
      */
@@ -127,7 +128,7 @@ public class MatchRuleAnlaysisUtils {
 
     /**
      * check if the column name equals to these additional special columns
-     * 
+     *
      * @param columnName
      * @return
      */

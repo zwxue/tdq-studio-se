@@ -11,7 +11,6 @@
 //
 // ============================================================================
 package org.talend.dataprofiler.core.ui.utils;
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -347,31 +346,7 @@ public final class UDIUtils {
 
         IndicatorEnum indicatorType = IndicatorEnum.findIndicatorEnum(udi.eClass());
 
-        // MOD xqliu 2009-10-09 bug 9304
-        // create user defined matching indicator
-        // if (DefinitionHandler.getInstance().getUserDefinedMatchIndicatorCategory().equals(ic)) {
-        // IFolder libProject = ResourceManager.getLibrariesFolder();
-        // CheckedTreeSelectionDialog dialog = PatternUtilities.createPatternCheckedTreeSelectionDialog(libProject);
-        // if (dialog.open() == Window.OK) {
-        // for (Object obj : dialog.getResult()) {
-        // if (obj instanceof IFile) {
-        // IFile file = (IFile) obj;
-        // IndicatorUnit addIndicatorUnit = PatternUtilities.createIndicatorUnit(file, columnIndicator, analysis,
-        // udid);
-        // if (addIndicatorUnit == null) {
-        // Pattern pattern = PatternResourceFileHelper.getInstance().findPattern(file);
-        //                            MessageUI.openError(DefaultMessagesImpl.getString("UDIUtils.PatternSelected") //$NON-NLS-1$
-        // + pattern.getName());
-        // } else {
-        // addIndicatorUnits.add(addIndicatorUnit);
-        // }
-        // }
-        // }
-        // }
-        // } else {
         addIndicatorUnits.add(meIndicator.addSpecialIndicator(indicatorType, udi));
-        // }
-        // ~
 
         DependenciesHandler.getInstance().setUsageDependencyOn(analysis, udid);
         return addIndicatorUnits.toArray(new IndicatorUnit[addIndicatorUnits.size()]);

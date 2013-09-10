@@ -21,14 +21,14 @@ import java.util.List;
  *
  */
 public enum BlockingKeyPreAlgorithmEnum {
-    NON_ALGO(0, "-", "NON_ALGO"),
-    REMOVE_MARKS(1, "remove diacritical marks", "removeDiacriticalMarks"),
-    REMOVE_MARKS_THEN_LOWER_CASE(2, "remove diacritical marks and lower case", "removeDMAndLowerCase"),
-    REMOVE_MARKS_THEN_UPPER_CASE(3, "remove diacritical marks and upper case", "removeDMAndUpperCase"),
-    LOWER_CASE(4, "lower case", "lowerCase"),
-    UPPER_CASE(5, "upper case", "upperCase"),
-    LEFT_CHAR(6, "add left position character", "add_Left_Char"),
-    RIGHT_CHAR(7, "add right position character", "add_Right_Char");
+    NON_ALGO(0, "-", "NON_ALGO"), //$NON-NLS-1$//$NON-NLS-2$
+    REMOVE_MARKS(1, "remove diacritical marks", "removeDiacriticalMarks"), //$NON-NLS-1$ //$NON-NLS-2$
+    REMOVE_MARKS_THEN_LOWER_CASE(2, "remove diacritical marks and lower case", "removeDMAndLowerCase"), //$NON-NLS-1$ //$NON-NLS-2$
+    REMOVE_MARKS_THEN_UPPER_CASE(3, "remove diacritical marks and upper case", "removeDMAndUpperCase"), //$NON-NLS-1$ //$NON-NLS-2$
+    LOWER_CASE(4, "lower case", "lowerCase"), //$NON-NLS-1$ //$NON-NLS-2$
+    UPPER_CASE(5, "upper case", "upperCase"), //$NON-NLS-1$ //$NON-NLS-2$
+    LEFT_CHAR(6, "add left position character", "add_Left_Char"), //$NON-NLS-1$ //$NON-NLS-2$
+    RIGHT_CHAR(7, "add right position character", "add_Right_Char"); //$NON-NLS-1$ //$NON-NLS-2$
 
     private int index;
 
@@ -87,6 +87,23 @@ public enum BlockingKeyPreAlgorithmEnum {
     public static BlockingKeyPreAlgorithmEnum getTypeByValue(String value) {
         for (BlockingKeyPreAlgorithmEnum element : BlockingKeyPreAlgorithmEnum.values()) {
             if (element.getValue().equalsIgnoreCase(value)) {
+                return element;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     *
+     * get type of the value which in this Enum
+     *
+     * @param value
+     * @return null can not find this index
+     */
+    public static BlockingKeyPreAlgorithmEnum getTypeBySavedValue(String value) {
+        for (BlockingKeyPreAlgorithmEnum element : BlockingKeyPreAlgorithmEnum.values()) {
+            if (element.getComponentValueName().equalsIgnoreCase(value)) {
                 return element;
             }
         }

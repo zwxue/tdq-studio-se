@@ -56,15 +56,15 @@ public class BlockingKeyCellModeifier implements ICellModifier {
     public Object getValue(Object element, String property) {
         BlockKeyDefinition bkd = (BlockKeyDefinition) element;
         if (MatchAnalysisConstant.PRE_ALGORITHM.equalsIgnoreCase(property)) {
-            return BlockingKeyPreAlgorithmEnum.getTypeByValue(bkd.getPreAlgorithm().getAlgorithmType()).getIndex();
+            return BlockingKeyPreAlgorithmEnum.getTypeBySavedValue(bkd.getPreAlgorithm().getAlgorithmType()).getIndex();
         } else if (MatchAnalysisConstant.PRE_VALUE.equalsIgnoreCase(property)) {
             return bkd.getPreAlgorithm().getAlgorithmParameters();
         } else if (MatchAnalysisConstant.ALGORITHM.equalsIgnoreCase(property)) {
-            return BlockingKeyAlgorithmEnum.getTypeByValue(bkd.getAlgorithm().getAlgorithmType()).getIndex();
+            return BlockingKeyAlgorithmEnum.getTypeBySavedValue(bkd.getAlgorithm().getAlgorithmType()).getIndex();
         } else if (MatchAnalysisConstant.VALUE.equalsIgnoreCase(property)) {
             return bkd.getAlgorithm().getAlgorithmParameters();
         } else if (MatchAnalysisConstant.POST_ALGORITHM.equalsIgnoreCase(property)) {
-            return BlockingKeyPostAlgorithmEnum.getTypeByValue(bkd.getPostAlgorithm().getAlgorithmType()).getIndex();
+            return BlockingKeyPostAlgorithmEnum.getTypeBySavedValue(bkd.getPostAlgorithm().getAlgorithmType()).getIndex();
         } else if (MatchAnalysisConstant.POST_VALUE.equalsIgnoreCase(property)) {
             return bkd.getPostAlgorithm().getAlgorithmParameters();
         } else if (MatchAnalysisConstant.COLUMN.equalsIgnoreCase(property)) {
@@ -86,19 +86,19 @@ public class BlockingKeyCellModeifier implements ICellModifier {
             if (MatchAnalysisConstant.PRE_ALGORITHM.equalsIgnoreCase(property)) {
                 BlockingKeyPreAlgorithmEnum valueByIndex = BlockingKeyPreAlgorithmEnum.getTypeByIndex(Integer.valueOf(newValue)
                         .intValue());
-                bkd.getPreAlgorithm().setAlgorithmType(valueByIndex.getValue());
+                bkd.getPreAlgorithm().setAlgorithmType(valueByIndex.getComponentValueName());
             } else if (MatchAnalysisConstant.PRE_VALUE.equalsIgnoreCase(property)) {
                 bkd.getPreAlgorithm().setAlgorithmParameters(String.valueOf(value));
             } else if (MatchAnalysisConstant.ALGORITHM.equalsIgnoreCase(property)) {
                 BlockingKeyAlgorithmEnum valueByIndex = BlockingKeyAlgorithmEnum.getTypeByIndex(Integer.valueOf(newValue)
                         .intValue());
-                bkd.getAlgorithm().setAlgorithmType(valueByIndex.getValue());
+                bkd.getAlgorithm().setAlgorithmType(valueByIndex.getComponentValueName());
             } else if (MatchAnalysisConstant.VALUE.equalsIgnoreCase(property)) {
                 bkd.getAlgorithm().setAlgorithmParameters(newValue);
             } else if (MatchAnalysisConstant.POST_ALGORITHM.equalsIgnoreCase(property)) {
                 BlockingKeyPostAlgorithmEnum valueByIndex = BlockingKeyPostAlgorithmEnum.getTypeByIndex(Integer.valueOf(newValue)
                         .intValue());
-                bkd.getPostAlgorithm().setAlgorithmType(valueByIndex.getValue());
+                bkd.getPostAlgorithm().setAlgorithmType(valueByIndex.getComponentValueName());
             } else if (MatchAnalysisConstant.POST_VALUE.equalsIgnoreCase(property)) {
                 bkd.getPostAlgorithm().setAlgorithmParameters(newValue);
             } else if (MatchAnalysisConstant.COLUMN.equalsIgnoreCase(property)) {

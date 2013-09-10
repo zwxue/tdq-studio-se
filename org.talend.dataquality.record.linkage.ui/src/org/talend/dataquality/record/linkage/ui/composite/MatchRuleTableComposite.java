@@ -12,9 +12,6 @@
 // ============================================================================
 package org.talend.dataquality.record.linkage.ui.composite;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
@@ -27,7 +24,6 @@ import org.talend.dataquality.record.linkage.ui.composite.tableviewer.AbstractMa
 import org.talend.dataquality.record.linkage.ui.composite.tableviewer.MatchRuleTableViewer;
 import org.talend.dataquality.record.linkage.ui.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataquality.record.linkage.utils.MatchAnalysisConstant;
-import org.talend.dataquality.rules.KeyDefinition;
 import org.talend.dataquality.rules.MatchKeyDefinition;
 import org.talend.dataquality.rules.MatchRule;
 
@@ -58,10 +54,8 @@ public class MatchRuleTableComposite extends AbsMatchAnalysisTableComposite<Matc
      * @param matchRule
      */
     public void setInput(MatchRule matchRule) {
-        List<KeyDefinition> keyDefs = new ArrayList<KeyDefinition>();
-        keyDefs.addAll(matchRule.getMatchKeys());
         ((MatchRuleTableViewer) tableViewer).setMatchRule(matchRule);
-        setInput(keyDefs);
+        setInput(matchRule.getMatchKeys());
     }
 
     /**

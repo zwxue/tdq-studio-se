@@ -1,6 +1,6 @@
 /**
  * <copyright> </copyright>
- * 
+ *
  * $Id$
  */
 package org.talend.dataquality.rules.impl;
@@ -44,7 +44,7 @@ import org.talend.dataquality.rules.SurvivorshipKeyDefinition;
  * Quality Threshold</em>}</li>
  * </ul>
  * </p>
- * 
+ *
  * @generated
  */
 public class MatchRuleDefinitionImpl extends IndicatorDefinitionImpl implements MatchRuleDefinition {
@@ -52,7 +52,7 @@ public class MatchRuleDefinitionImpl extends IndicatorDefinitionImpl implements 
     /**
      * The cached value of the '{@link #getBlockKeys() <em>Block Keys</em>}' containment reference list. <!--
      * begin-user-doc --> <!-- end-user-doc -->
-     * 
+     *
      * @see #getBlockKeys()
      * @generated
      * @ordered
@@ -62,7 +62,7 @@ public class MatchRuleDefinitionImpl extends IndicatorDefinitionImpl implements 
     /**
      * The cached value of the '{@link #getMatchRules() <em>Match Rules</em>}' containment reference list. <!--
      * begin-user-doc --> <!-- end-user-doc -->
-     * 
+     *
      * @see #getMatchRules()
      * @generated
      * @ordered
@@ -72,7 +72,7 @@ public class MatchRuleDefinitionImpl extends IndicatorDefinitionImpl implements 
     /**
      * The default value of the '{@link #getXmiId() <em>Xmi Id</em>}' attribute. <!-- begin-user-doc --> <!--
      * end-user-doc -->
-     * 
+     *
      * @see #getXmiId()
      * @generated
      * @ordered
@@ -82,7 +82,7 @@ public class MatchRuleDefinitionImpl extends IndicatorDefinitionImpl implements 
     /**
      * The cached value of the '{@link #getXmiId() <em>Xmi Id</em>}' attribute. <!-- begin-user-doc --> <!--
      * end-user-doc -->
-     * 
+     *
      * @see #getXmiId()
      * @generated
      * @ordered
@@ -92,17 +92,17 @@ public class MatchRuleDefinitionImpl extends IndicatorDefinitionImpl implements 
     /**
      * The default value of the '{@link #getRecordLinkageAlgorithm() <em>Record Linkage Algorithm</em>}' attribute. <!--
      * begin-user-doc --> <!-- end-user-doc -->
-     * 
+     *
      * @see #getRecordLinkageAlgorithm()
-     * @generated
+     * @generated NOT
      * @ordered
      */
-    protected static final String RECORD_LINKAGE_ALGORITHM_EDEFAULT = null;
+    protected static final String RECORD_LINKAGE_ALGORITHM_EDEFAULT = "simpleVSRMatcher";//$NON-NLS-1$
 
     /**
      * The cached value of the '{@link #getRecordLinkageAlgorithm() <em>Record Linkage Algorithm</em>}' attribute. <!--
      * begin-user-doc --> <!-- end-user-doc -->
-     * 
+     *
      * @see #getRecordLinkageAlgorithm()
      * @generated
      * @ordered
@@ -112,7 +112,7 @@ public class MatchRuleDefinitionImpl extends IndicatorDefinitionImpl implements 
     /**
      * The cached value of the '{@link #getAppliedBlockKeys() <em>Applied Block Keys</em>}' containment reference list.
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
+     *
      * @see #getAppliedBlockKeys()
      * @generated
      * @ordered
@@ -122,7 +122,7 @@ public class MatchRuleDefinitionImpl extends IndicatorDefinitionImpl implements 
     /**
      * The cached value of the '{@link #getSurvivorshipKeys() <em>Survivorship Keys</em>}' containment reference list.
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
+     *
      * @see #getSurvivorshipKeys()
      * @generated
      * @ordered
@@ -132,7 +132,7 @@ public class MatchRuleDefinitionImpl extends IndicatorDefinitionImpl implements 
     /**
      * The cached value of the '{@link #getDefaultSurvivorshipDefinitions() <em>Default Survivorship Definitions</em>}'
      * containment reference list. <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
+     *
      * @see #getDefaultSurvivorshipDefinitions()
      * @generated
      * @ordered
@@ -142,7 +142,7 @@ public class MatchRuleDefinitionImpl extends IndicatorDefinitionImpl implements 
     /**
      * The default value of the '{@link #getMatchGroupQualityThreshold() <em>Match Group Quality Threshold</em>}'
      * attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
+     *
      * @see #getMatchGroupQualityThreshold()
      * @generated NOT
      * @ordered
@@ -152,7 +152,7 @@ public class MatchRuleDefinitionImpl extends IndicatorDefinitionImpl implements 
     /**
      * The cached value of the '{@link #getMatchGroupQualityThreshold() <em>Match Group Quality Threshold</em>}'
      * attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
+     *
      * @see #getMatchGroupQualityThreshold()
      * @generated
      * @ordered
@@ -161,7 +161,7 @@ public class MatchRuleDefinitionImpl extends IndicatorDefinitionImpl implements 
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
+     *
      * @generated
      */
     protected MatchRuleDefinitionImpl() {
@@ -170,7 +170,7 @@ public class MatchRuleDefinitionImpl extends IndicatorDefinitionImpl implements 
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
+     *
      * @generated
      */
     @Override
@@ -180,7 +180,7 @@ public class MatchRuleDefinitionImpl extends IndicatorDefinitionImpl implements 
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
+     *
      * @generated
      */
     @Override
@@ -194,7 +194,7 @@ public class MatchRuleDefinitionImpl extends IndicatorDefinitionImpl implements 
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
+     *
      * @generated
      */
     @Override
@@ -208,7 +208,7 @@ public class MatchRuleDefinitionImpl extends IndicatorDefinitionImpl implements 
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
+     *
      * @generated
      */
     @Override
@@ -218,7 +218,7 @@ public class MatchRuleDefinitionImpl extends IndicatorDefinitionImpl implements 
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
+     *
      * @generated
      */
     @Override
@@ -232,7 +232,7 @@ public class MatchRuleDefinitionImpl extends IndicatorDefinitionImpl implements 
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
+     *
      * @generated
      */
     @Override
@@ -242,7 +242,7 @@ public class MatchRuleDefinitionImpl extends IndicatorDefinitionImpl implements 
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
+     *
      * @generated
      */
     @Override
@@ -257,7 +257,7 @@ public class MatchRuleDefinitionImpl extends IndicatorDefinitionImpl implements 
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
+     *
      * @generated
      */
     @Override
@@ -271,7 +271,7 @@ public class MatchRuleDefinitionImpl extends IndicatorDefinitionImpl implements 
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
+     *
      * @generated
      */
     @Override
@@ -285,7 +285,7 @@ public class MatchRuleDefinitionImpl extends IndicatorDefinitionImpl implements 
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
+     *
      * @generated
      */
     @Override
@@ -300,7 +300,7 @@ public class MatchRuleDefinitionImpl extends IndicatorDefinitionImpl implements 
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
+     *
      * @generated
      */
     @Override
@@ -310,7 +310,7 @@ public class MatchRuleDefinitionImpl extends IndicatorDefinitionImpl implements 
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
+     *
      * @generated
      */
     @Override
@@ -326,7 +326,7 @@ public class MatchRuleDefinitionImpl extends IndicatorDefinitionImpl implements 
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
+     *
      * @generated
      */
     @Override
@@ -348,7 +348,7 @@ public class MatchRuleDefinitionImpl extends IndicatorDefinitionImpl implements 
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
+     *
      * @generated
      */
     @Override
@@ -376,7 +376,7 @@ public class MatchRuleDefinitionImpl extends IndicatorDefinitionImpl implements 
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
+     *
      * @generated
      */
     @SuppressWarnings("unchecked")
@@ -418,7 +418,7 @@ public class MatchRuleDefinitionImpl extends IndicatorDefinitionImpl implements 
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
+     *
      * @generated
      */
     @Override
@@ -454,7 +454,7 @@ public class MatchRuleDefinitionImpl extends IndicatorDefinitionImpl implements 
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
+     *
      * @generated
      */
     @Override
@@ -483,7 +483,7 @@ public class MatchRuleDefinitionImpl extends IndicatorDefinitionImpl implements 
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
-     * 
+     *
      * @generated
      */
     @Override

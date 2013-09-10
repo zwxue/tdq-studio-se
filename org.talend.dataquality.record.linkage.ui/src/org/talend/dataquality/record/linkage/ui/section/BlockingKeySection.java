@@ -105,10 +105,7 @@ public class BlockingKeySection extends AbstractMatchAnaysisTableSection {
      * DOC zhao Comment method "initTableInput".
      */
     private void initTableInput() {
-
-        List<KeyDefinition> keyDefsCopy = new ArrayList<KeyDefinition>();
-        keyDefsCopy.addAll(getBlockKeyDefinitionList());
-        tableComposite.setInput(keyDefsCopy);
+        tableComposite.setInput(getBlockKeyDefinitionList());
     }
 
     protected List<BlockKeyDefinition> getBlockKeyDefinitionList() {

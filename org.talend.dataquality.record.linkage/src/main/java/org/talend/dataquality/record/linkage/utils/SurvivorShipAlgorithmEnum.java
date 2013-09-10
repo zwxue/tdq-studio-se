@@ -17,20 +17,20 @@ import java.util.List;
 
 /**
  * created by HHB on 2013-8-23 Detailled comment
- * 
+ *
  */
 public enum SurvivorShipAlgorithmEnum {
 
-    CONCATENATE(0, "Concatenate", "Concatenate"),
-    FORCE_TRUE(1, "force true (for booleans)", "ForceTrue"),
-    FORCE_FALSE(2, "force False (for booleans)", "ForceFalse"),
-    MOST_COMMON(3, "Most common", "MostCommon"),
-    MOST_RECENT(4, "Most recent", "MostRecent"),
-    MOST_ANCIENT(5, "Most ancient", "MostAncient"),
-    LONGEST(6, "Longest (for strings)", "Longest"),
-    SHORTEST(7, "Shortest (for strings)", "Shortest"),
-    LARGEST(8, "Largest (for numbers)", "Largest"),
-    SMALLEST(9, "Smallest (for numbers)", "Smallest");
+    CONCATENATE(0, "Concatenate", "Concatenate"), //$NON-NLS-1$ //$NON-NLS-2$
+    FORCE_TRUE(1, "force true (for booleans)", "ForceTrue"), //$NON-NLS-1$ //$NON-NLS-2$
+    FORCE_FALSE(2, "force False (for booleans)", "ForceFalse"), //$NON-NLS-1$ //$NON-NLS-2$
+    MOST_COMMON(3, "Most common", "MostCommon"), //$NON-NLS-1$ //$NON-NLS-2$
+    MOST_RECENT(4, "Most recent", "MostRecent"), //$NON-NLS-1$ //$NON-NLS-2$
+    MOST_ANCIENT(5, "Most ancient", "MostAncient"), //$NON-NLS-1$ //$NON-NLS-2$
+    LONGEST(6, "Longest (for strings)", "Longest"), //$NON-NLS-1$ //$NON-NLS-2$
+    SHORTEST(7, "Shortest (for strings)", "Shortest"), //$NON-NLS-1$ //$NON-NLS-2$
+    LARGEST(8, "Largest (for numbers)", "Largest"), //$NON-NLS-1$ //$NON-NLS-2$
+    SMALLEST(9, "Smallest (for numbers)", "Smallest"); //$NON-NLS-1$ //$NON-NLS-2$
 
     private int index;
 
@@ -74,9 +74,19 @@ public enum SurvivorShipAlgorithmEnum {
         return null;
     }
 
+    public static SurvivorShipAlgorithmEnum getTypeBySavedValue(String value) {
+        for (SurvivorShipAlgorithmEnum element : SurvivorShipAlgorithmEnum.values()) {
+            if (element.getComponentValueName().equalsIgnoreCase(value)) {
+                return element;
+            }
+        }
+
+        return null;
+    }
+
     /**
-     * 
-     * 
+     *
+     *
      * @param index
      * @return null can not find this index
      */

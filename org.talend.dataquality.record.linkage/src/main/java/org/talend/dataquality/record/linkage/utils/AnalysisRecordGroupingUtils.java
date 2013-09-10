@@ -17,17 +17,18 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.talend.dataquality.record.linkage.constant.AttributeMatcherType;
 import org.talend.dataquality.record.linkage.grouping.IRecordGrouping;
 
 /**
  * created by zhao on Aug 20, 2013 Detailled comment
- * 
+ *
  */
 public class AnalysisRecordGroupingUtils {
 
     /**
      * DOC zshen Comment method "getCompleteColumnSchema".
-     * 
+     *
      * @return
      */
     public static String[] getCompleteColumnSchema(Map<String, String> columnMap) {
@@ -52,7 +53,7 @@ public class AnalysisRecordGroupingUtils {
             Map<String, String> columnIndexMap, double matchInterval, String attributeName) {
         Map<String, String> matchKeyMap = new HashMap<String, String>();
         matchKeyMap.put(IRecordGrouping.COLUMN_IDX, columnIndexMap.get(column));
-        matchKeyMap.put(IRecordGrouping.MATCHING_TYPE, algoType);
+        matchKeyMap.put(IRecordGrouping.MATCHING_TYPE, AttributeMatcherType.getTypeBySavedValue(algoType).getLabel());
         matchKeyMap.put(IRecordGrouping.CONFIDENCE_WEIGHT, String.valueOf(confidentWeight));
         matchKeyMap.put(IRecordGrouping.RECORD_MATCH_THRESHOLD, String.valueOf(matchInterval));
         matchKeyMap.put(IRecordGrouping.ATTRIBUTE_NAME, attributeName);
@@ -61,7 +62,7 @@ public class AnalysisRecordGroupingUtils {
 
     /**
      * Get blocking key map
-     * 
+     *
      * @return
      */
     public static Map<String, String> getBlockingKeyMap(String column, String preAlgo, String preAlgValue, String algorithm,

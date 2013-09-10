@@ -21,10 +21,10 @@ import java.util.List;
  *
  */
 public enum BlockingKeyPostAlgorithmEnum {
-    NON_ALGO(0, "-", "NON_ALGO"),
-    USE_DEFAULT(1, "use default value", "useDefault"),
-    LEFT_CHAR(2, "add left position character", "add_Left_Char"),
-    RIGHT_CHAR(3, "add right position character", "add_Right_Char");
+    NON_ALGO(0, "-", "NON_ALGO"), //$NON-NLS-1$//$NON-NLS-2$
+    USE_DEFAULT(1, "use default value", "useDefault"), //$NON-NLS-1$ //$NON-NLS-2$
+    LEFT_CHAR(2, "add left position character", "add_Left_Char"), //$NON-NLS-1$ //$NON-NLS-2$
+    RIGHT_CHAR(3, "add right position character", "add_Right_Char"); //$NON-NLS-1$ //$NON-NLS-2$
 
     private int index;
 
@@ -71,6 +71,23 @@ public enum BlockingKeyPostAlgorithmEnum {
             list.add(theType.getValue());
         }
         return list.toArray(new String[list.size()]);
+    }
+
+    /**
+     *
+     * get type of the value which in this Enum
+     *
+     * @param value
+     * @return null can not find this index
+     */
+    public static BlockingKeyPostAlgorithmEnum getTypeBySavedValue(String value) {
+        for (BlockingKeyPostAlgorithmEnum element : BlockingKeyPostAlgorithmEnum.values()) {
+            if (element.getComponentValueName().equalsIgnoreCase(value)) {
+                return element;
+            }
+        }
+
+        return null;
     }
 
     /**

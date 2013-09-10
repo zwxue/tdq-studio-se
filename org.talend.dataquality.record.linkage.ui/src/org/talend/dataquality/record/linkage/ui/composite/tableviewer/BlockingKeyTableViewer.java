@@ -133,17 +133,17 @@ public class BlockingKeyTableViewer extends AbstractMatchAnalysisTableViewer<Blo
         createBlockKeyDefinition.setName(columnName);
         createBlockKeyDefinition.setColumn(columnName);
         AlgorithmDefinition createAlgorithmDefinition = RulesFactory.eINSTANCE.createAlgorithmDefinition();
-        createAlgorithmDefinition.setAlgorithmType(BlockingKeyPreAlgorithmEnum.getTypeByIndex(0).getValue());
+        createAlgorithmDefinition.setAlgorithmType(BlockingKeyPreAlgorithmEnum.getTypeByIndex(0).getComponentValueName());
         createAlgorithmDefinition.setAlgorithmParameters(StringUtils.EMPTY);
         createBlockKeyDefinition.setPreAlgorithm(createAlgorithmDefinition);
 
         createAlgorithmDefinition = RulesFactory.eINSTANCE.createAlgorithmDefinition();
-        createAlgorithmDefinition.setAlgorithmType(BlockingKeyAlgorithmEnum.EXACT.getValue());
+        createAlgorithmDefinition.setAlgorithmType(BlockingKeyAlgorithmEnum.getTypeByIndex(0).getComponentValueName());
         createAlgorithmDefinition.setAlgorithmParameters(StringUtils.EMPTY);
         createBlockKeyDefinition.setAlgorithm(createAlgorithmDefinition);
 
         createAlgorithmDefinition = RulesFactory.eINSTANCE.createAlgorithmDefinition();
-        createAlgorithmDefinition.setAlgorithmType(BlockingKeyPostAlgorithmEnum.getTypeByIndex(0).getValue());
+        createAlgorithmDefinition.setAlgorithmType(BlockingKeyPostAlgorithmEnum.getTypeByIndex(0).getComponentValueName());
         createAlgorithmDefinition.setAlgorithmParameters(StringUtils.EMPTY);
         createBlockKeyDefinition.setPostAlgorithm(createAlgorithmDefinition);
         return createBlockKeyDefinition;

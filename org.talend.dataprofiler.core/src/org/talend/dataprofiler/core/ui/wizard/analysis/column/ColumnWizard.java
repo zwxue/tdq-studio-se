@@ -62,7 +62,7 @@ public class ColumnWizard extends AbstractAnalysisWizard {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataprofiler.core.ui.wizard.analysis.AbstractAnalysisWizard#initCWMResourceBuilder()
      */
     @Override
@@ -79,7 +79,7 @@ public class ColumnWizard extends AbstractAnalysisWizard {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.jface.wizard.Wizard#addPages()
      */
     @Override
@@ -99,7 +99,7 @@ public class ColumnWizard extends AbstractAnalysisWizard {
 
     /**
      * Sets the indicator.
-     * 
+     *
      * @param indicator the indicator to set
      */
     public void setIndicator(Indicator indicator) {
@@ -108,7 +108,7 @@ public class ColumnWizard extends AbstractAnalysisWizard {
 
     /**
      * Getter for indicator.
-     * 
+     *
      * @return the indicator
      */
     public Indicator getIndicator() {
@@ -117,7 +117,7 @@ public class ColumnWizard extends AbstractAnalysisWizard {
 
     /*
      * (non-Jsdoc)
-     * 
+     *
      * @see
      * org.talend.dataprofiler.core.ui.wizard.analysis.AbstractAnalysisWizard#openEditor(org.talend.core.model.properties
      * .Item)
@@ -134,9 +134,9 @@ public class ColumnWizard extends AbstractAnalysisWizard {
                 if (nodes != null && nodes.size() > 0) {
                     List<IRepositoryNode> nodeList = new ArrayList<IRepositoryNode>();
                     for (IRepositoryNode repNode : nodes) {
-                        repNode = RepositoryNodeHelper.recursiveFind(RepositoryNodeHelper
+                        RepositoryNode tempRepNode = RepositoryNodeHelper.recursiveFind(RepositoryNodeHelper
                                 .getModelElementFromRepositoryNode(repNode));
-                        nodeList.add(repNode);
+                        nodeList.add(tempRepNode);
                     }
 
                     // MOD msjian TDQ-6665 2013-1-7: after the wizard, make the editor is saved status

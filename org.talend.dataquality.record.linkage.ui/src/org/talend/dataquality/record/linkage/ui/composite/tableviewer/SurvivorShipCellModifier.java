@@ -76,7 +76,7 @@ public class SurvivorShipCellModifier implements ICellModifier {
             } else if (MatchAnalysisConstant.FUNCTION.equalsIgnoreCase(property)) {
                 SurvivorShipAlgorithmEnum valueByIndex = SurvivorShipAlgorithmEnum.getTypeByIndex(Integer.valueOf(newValue)
                         .intValue());
-                skd.getFunction().setAlgorithmType(valueByIndex.getValue());
+                skd.getFunction().setAlgorithmType(valueByIndex.getComponentValueName());
             } else if (MatchAnalysisConstant.ALLOW_MANUAL_RESOLUTION.equalsIgnoreCase(property)) {
                 skd.setAllowManualResolution(Boolean.valueOf(newValue));
             } else {

@@ -22,6 +22,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
+import org.talend.dataquality.record.linkage.constant.RecordMatcherType;
 import org.talend.dataquality.record.linkage.ui.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataquality.record.linkage.ui.section.definition.BlockingKeyDefinitionSection;
 import org.talend.dataquality.record.linkage.ui.section.definition.DefaultSurvivorshipDefinitionSection;
@@ -81,9 +82,9 @@ public class SelectAlgorithmSection extends AbstractSectionComposite {
         GridDataFactory.fillDefaults().align(SWT.FILL, SWT.FILL).grab(true, true).applyTo(container);
         container.setLayout(gdLayout);
 
-        Button tSwooshButton = toolkit.createButton(container, MatchAnalysisConstant.T_SWOOSH_ALGORITHM, SWT.RADIO);
+        Button tSwooshButton = toolkit.createButton(container, RecordMatcherType.T_SwooshAlgorithm.getLabel(), SWT.RADIO);
         if(this.algorithmName ==null){
-            this.algorithmName = MatchAnalysisConstant.VSR_ALGORITHM;
+            this.algorithmName = RecordMatcherType.simpleVSRMatcher.name();
         }
         tSwooshButton.setSelection(!isVSRMode());
         tSwooshButton.addSelectionListener(new SelectionAdapter() {
@@ -92,17 +93,18 @@ public class SelectAlgorithmSection extends AbstractSectionComposite {
                 isVSRMode = false;
                 matchKeySection.setAddColumn(true);
                 noticeOtherSection();
-                algorithmName = MatchAnalysisConstant.T_SWOOSH_ALGORITHM;
+                algorithmName = RecordMatcherType.T_SwooshAlgorithm.name();
                 matchRuleDef.setRecordLinkageAlgorithm(algorithmName);
                 listeners.firePropertyChange(MatchAnalysisConstant.ISDIRTY_PROPERTY,
-                        MatchAnalysisConstant.VSR_ALGORITHM, MatchAnalysisConstant.T_SWOOSH_ALGORITHM);
+ RecordMatcherType.simpleVSRMatcher.name(),
+                        RecordMatcherType.T_SwooshAlgorithm.name());
 
             }
 
 
 
         });
-        Button vsrButton = toolkit.createButton(container, MatchAnalysisConstant.VSR_ALGORITHM, SWT.RADIO);
+        Button vsrButton = toolkit.createButton(container, RecordMatcherType.simpleVSRMatcher.getLabel(), SWT.RADIO);
         vsrButton.setSelection(isVSRMode());
         vsrButton.addSelectionListener(new SelectionAdapter() {
 
@@ -111,10 +113,11 @@ public class SelectAlgorithmSection extends AbstractSectionComposite {
                 isVSRMode = true;
                 matchKeySection.setAddColumn(false);
                 noticeOtherSection();
-                algorithmName = MatchAnalysisConstant.VSR_ALGORITHM;
+                algorithmName = RecordMatcherType.simpleVSRMatcher.name();
                 matchRuleDef.setRecordLinkageAlgorithm(algorithmName);
                 listeners.firePropertyChange(MatchAnalysisConstant.ISDIRTY_PROPERTY,
-                        MatchAnalysisConstant.T_SWOOSH_ALGORITHM, MatchAnalysisConstant.VSR_ALGORITHM);
+ RecordMatcherType.T_SwooshAlgorithm.name(),
+                        RecordMatcherType.simpleVSRMatcher.name());
             }
 
         });
@@ -132,7 +135,7 @@ public class SelectAlgorithmSection extends AbstractSectionComposite {
     }
 
     public boolean isVSRMode() {
-        return MatchAnalysisConstant.VSR_ALGORITHM.equals(algorithmName);
+        return RecordMatcherType.simpleVSRMatcher.name().equals(algorithmName);
     }
 
     /**

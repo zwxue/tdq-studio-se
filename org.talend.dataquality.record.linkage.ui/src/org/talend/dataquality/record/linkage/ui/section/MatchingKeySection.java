@@ -202,7 +202,11 @@ public class MatchingKeySection extends AbstractMatchKeyWithChartTableSection {
                 .getData(MatchAnalysisConstant.MATCH_RULE_TABLE_COMPOSITE);
         MatchRule matchRule = matchRuleTableComp.getMatchRule();
         // Remove it from anaysis.
-        getMatchRuleList().remove(matchRule);
+        boolean removed = getMatchRuleList().remove(matchRule);
+        if (removed) {
+            listeners.firePropertyChange(MatchAnalysisConstant.ISDIRTY_PROPERTY, true, false);
+        }
+
     }
 
     /**
@@ -283,6 +287,8 @@ public class MatchingKeySection extends AbstractMatchKeyWithChartTableSection {
         matchRuleTableComp.removeKeyDefinition(columnkey, matchRuleTableComp.getMatchRule().getMatchKeys());
     }
 
+
+
     /**
      * DOC zshen Comment method "createPropertyTab".
      *
@@ -333,7 +339,7 @@ public class MatchingKeySection extends AbstractMatchKeyWithChartTableSection {
     }
 
     private String getMatchRuleNameByOrder() {
-        return "Match Rule " + tabCount++; 
+        return DefaultMessagesImpl.getString("MatchingKeySection.tabItemName", tabCount++); //$NON-NLS-1$
     }
 
     /*
@@ -515,7 +521,7 @@ public class MatchingKeySection extends AbstractMatchKeyWithChartTableSection {
     /**
      * if overwrite: need to delete all current tabs, and create the tab according to the parameter:matchRule else: only
      * add the tab in the parameter matchrule, to the current matchrule.
-     * 
+     *
      * @param matchRule
      * @param overwrite
      */
@@ -569,4 +575,5 @@ public class MatchingKeySection extends AbstractMatchKeyWithChartTableSection {
         }
         return newRule;
     }
+
 }

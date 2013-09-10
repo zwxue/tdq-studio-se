@@ -126,7 +126,6 @@ public class NewMatchRuleWizard extends AbstractWizard {
      */
     @Override
     protected ResourceFileMap getResourceFileMap() {
-        // TODO Auto-generated method stub
         return null;
     }
 

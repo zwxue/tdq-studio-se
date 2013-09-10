@@ -31,7 +31,6 @@ import org.talend.dataquality.record.linkage.ui.composite.SurvivorshipTableCompo
 import org.talend.dataquality.record.linkage.ui.composite.tableviewer.sorter.KeyDefinitionTableViewerSorter;
 import org.talend.dataquality.record.linkage.ui.section.AbstractMatchAnaysisTableSection;
 import org.talend.dataquality.record.linkage.utils.MatchAnalysisConstant;
-import org.talend.dataquality.rules.KeyDefinition;
 import org.talend.dataquality.rules.MatchRuleDefinition;
 import org.talend.dataquality.rules.SurvivorshipKeyDefinition;
 
@@ -89,9 +88,7 @@ public class SurvivorshipDefinitionSection extends AbstractMatchAnaysisTableSect
     }
 
     private void initTableInput() {
-        List<KeyDefinition> keyDefsCopy = new ArrayList<KeyDefinition>();
-        keyDefsCopy.addAll(matchRuleDef.getSurvivorshipKeys());
-        tableComposite.setInput(keyDefsCopy);
+        tableComposite.setInput(matchRuleDef.getSurvivorshipKeys());
     }
 
     @Override

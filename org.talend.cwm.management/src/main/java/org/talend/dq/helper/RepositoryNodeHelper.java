@@ -89,6 +89,7 @@ import org.talend.dataquality.properties.TDQReportItem;
 import org.talend.dataquality.properties.TDQSourceFileItem;
 import org.talend.dataquality.reports.TdReport;
 import org.talend.dataquality.rules.DQRule;
+import org.talend.dataquality.rules.MatchRuleDefinition;
 import org.talend.dataquality.rules.ParserRule;
 import org.talend.dataquality.rules.WhereRule;
 import org.talend.dq.nodes.AnalysisFolderRepNode;
@@ -131,6 +132,8 @@ import org.talend.dq.nodes.ReportFolderRepNode;
 import org.talend.dq.nodes.ReportRepNode;
 import org.talend.dq.nodes.ReportSubFolderRepNode;
 import org.talend.dq.nodes.RuleRepNode;
+import org.talend.dq.nodes.RulesMatcherFolderRepNode;
+import org.talend.dq.nodes.RulesMatcherSubFolderRepNode;
 import org.talend.dq.nodes.RulesParserFolderRepNode;
 import org.talend.dq.nodes.RulesParserSubFolderRepNode;
 import org.talend.dq.nodes.RulesSQLFolderRepNode;
@@ -539,10 +542,13 @@ public final class RepositoryNodeHelper {
                 node = recursiveFindRuleSql((WhereRule) modelElement);
             } else if (modelElement instanceof ParserRule) {
                 node = recursiveFindRuleParser((ParserRule) modelElement);
+            } else if (modelElement instanceof MatchRuleDefinition) {
+                node = recursiveFindMatcherRule((MatchRuleDefinition) modelElement);
             } else {
                 node = recursiveFindIndicatorDefinition((IndicatorDefinition) modelElement);
             }
             // ADD msjian TDQ-4209 2012-02-03: find the *.jrxml and *.sql file
+
         } else if (modelElement instanceof IFile) {
             node = recursiveFindFile((IFile) modelElement);
             // TDQ-4209 ~
@@ -745,6 +751,31 @@ public final class RepositoryNodeHelper {
         return null;
     }
 
+    /**
+     * recursiveFind MatcherRule
+     *
+     * @param modelElement
+     * @return
+     */
+    private static RepositoryNode recursiveFindMatcherRule(MatchRuleDefinition rule) {
+        if (rule == null) {
+            return null;
+        }
+        String uuid = getUUID(rule);
+        if (uuid == null) {
+            return null;
+        }
+        List<RuleRepNode> ruleRepNodes = getRuleRepNodes(getLibrariesFolderNode(EResourceConstant.RULES_MATCHER), true, true);
+        if (ruleRepNodes.size() > 0) {
+            for (RuleRepNode childNode : ruleRepNodes) {
+                if (uuid.equals(getUUID(childNode.getRule()))) {
+                    return childNode;
+                }
+            }
+        }
+        return null;
+    }
+
     public static List<DBConnectionRepNode> getDBConnectionRepNodes(IRepositoryNode parrentNode, boolean recursiveFind,
             boolean withDeleted) {
         List<DBConnectionRepNode> result = new ArrayList<DBConnectionRepNode>();
@@ -897,14 +928,15 @@ public final class RepositoryNodeHelper {
         List<RuleRepNode> result = new ArrayList<RuleRepNode>();
         if (parrentNode != null
                 && (parrentNode instanceof RulesSQLFolderRepNode || parrentNode instanceof RulesSQLSubFolderRepNode
-                        || parrentNode instanceof RulesParserSubFolderRepNode || parrentNode instanceof RulesParserFolderRepNode)) {
+                        || parrentNode instanceof RulesParserSubFolderRepNode || parrentNode instanceof RulesParserFolderRepNode
+                        || parrentNode instanceof RulesMatcherSubFolderRepNode || parrentNode instanceof RulesMatcherFolderRepNode)) {
             List<IRepositoryNode> children = parrentNode.getChildren(withDeleted);
             if (children.size() > 0) {
                 for (IRepositoryNode inode : children) {
                     if (inode instanceof RuleRepNode) {
                         result.add((RuleRepNode) inode);
                     } else if (inode instanceof RulesSQLFolderRepNode || inode instanceof RulesSQLSubFolderRepNode
-                            || inode instanceof RulesParserSubFolderRepNode) {
+                            || inode instanceof RulesParserSubFolderRepNode || inode instanceof RulesMatcherSubFolderRepNode) {
                         if (recursiveFind) {
                             result.addAll(getRuleRepNodes(inode, recursiveFind, withDeleted));
                         }

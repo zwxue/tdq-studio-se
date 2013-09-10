@@ -13,6 +13,7 @@
 package org.talend.dataquality.record.linkage.ui.composite.tableviewer.provider.definition;
 
 import org.apache.commons.lang.StringUtils;
+import org.talend.dataquality.record.linkage.constant.AttributeMatcherType;
 import org.talend.dataquality.record.linkage.ui.composite.tableviewer.provider.MatchRuleLabelProvider;
 import org.talend.dataquality.rules.MatchKeyDefinition;
 
@@ -46,7 +47,7 @@ public class MatchRuleDefinitionLabelProvider extends MatchRuleLabelProvider {
                 case 0:
                     return mkd.getName();
                 case 1:
-                    return mkd.getAlgorithm().getAlgorithmType();
+                    return AttributeMatcherType.getTypeBySavedValue(mkd.getAlgorithm().getAlgorithmType()).getLabel();
                 case 2:
                     return mkd.getAlgorithm().getAlgorithmParameters();
                 case 3:
@@ -61,7 +62,7 @@ public class MatchRuleDefinitionLabelProvider extends MatchRuleLabelProvider {
                 case 0:
                     return mkd.getName();
                 case 1:
-                    return mkd.getAlgorithm().getAlgorithmType();
+                    return AttributeMatcherType.getTypeBySavedValue(mkd.getAlgorithm().getAlgorithmType()).getLabel();
                 case 2:
                     return mkd.getAlgorithm().getAlgorithmParameters();
                 case 3:

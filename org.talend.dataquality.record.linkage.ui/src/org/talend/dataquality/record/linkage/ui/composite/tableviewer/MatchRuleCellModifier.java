@@ -15,9 +15,9 @@ package org.talend.dataquality.record.linkage.ui.composite.tableviewer;
 import org.eclipse.jface.viewers.ICellModifier;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.widgets.TableItem;
+import org.talend.dataquality.record.linkage.constant.AttributeMatcherType;
 import org.talend.dataquality.record.linkage.utils.HandleNullEnum;
 import org.talend.dataquality.record.linkage.utils.MatchAnalysisConstant;
-import org.talend.dataquality.record.linkage.utils.MatchingTypeEnum;
 import org.talend.dataquality.rules.MatchKeyDefinition;
 
 
@@ -57,7 +57,7 @@ public class MatchRuleCellModifier implements ICellModifier {
         if (MatchAnalysisConstant.HANDLE_NULL.equalsIgnoreCase(property)) {
             return HandleNullEnum.getTypeByValue(mkd.getHandleNull()).getIndex();
         } else if (MatchAnalysisConstant.MATCHING_TYPE.equalsIgnoreCase(property)) {
-            return MatchingTypeEnum.getTypeByValue(mkd.getAlgorithm().getAlgorithmType()).getIndex();
+            return AttributeMatcherType.getTypeByValue(mkd.getAlgorithm().getAlgorithmType()).getIndex();
         } else if (MatchAnalysisConstant.CUSTOM_MATCHER_CLASS.equalsIgnoreCase(property)) {
             return mkd.getAlgorithm().getAlgorithmParameters();
         } else if (MatchAnalysisConstant.COLUMN.equalsIgnoreCase(property)) {
@@ -66,6 +66,8 @@ public class MatchRuleCellModifier implements ICellModifier {
             return String.valueOf(mkd.getConfidenceWeight());
         } else if (MatchAnalysisConstant.MATCH_KEY_NAME.equalsIgnoreCase(property)) {
             return mkd.getName();
+        } else if (MatchAnalysisConstant.THRESHOLD.equalsIgnoreCase(property)) {
+            return String.valueOf(mkd.getThreshold());
         }
         return null;
 
@@ -83,8 +85,8 @@ public class MatchRuleCellModifier implements ICellModifier {
                 HandleNullEnum valueByIndex = HandleNullEnum.getTypeByIndex(Integer.valueOf(newValue).intValue());
                 mkd.setHandleNull(valueByIndex.getValue());
             } else if (MatchAnalysisConstant.MATCHING_TYPE.equalsIgnoreCase(property)) {
-                MatchingTypeEnum valueByIndex = MatchingTypeEnum.getTypeByIndex(Integer.valueOf(newValue).intValue());
-                mkd.getAlgorithm().setAlgorithmType(valueByIndex.getValue());
+                AttributeMatcherType valueByIndex = AttributeMatcherType.getTypeByIndex(Integer.valueOf(newValue).intValue());
+                mkd.getAlgorithm().setAlgorithmType(valueByIndex.getComponentName());
             } else if (MatchAnalysisConstant.CUSTOM_MATCHER_CLASS.equalsIgnoreCase(property)) {
                 mkd.getAlgorithm().setAlgorithmParameters(String.valueOf(value));
             } else if (MatchAnalysisConstant.COLUMN.equalsIgnoreCase(property)) {
@@ -93,6 +95,12 @@ public class MatchRuleCellModifier implements ICellModifier {
                 mkd.setConfidenceWeight(Integer.valueOf(newValue).intValue());
             } else if (MatchAnalysisConstant.MATCH_KEY_NAME.equalsIgnoreCase(property)) {
                 mkd.setName(newValue);
+            } else if (MatchAnalysisConstant.THRESHOLD.equalsIgnoreCase(property)) {
+                try {
+                    mkd.setThreshold(Double.parseDouble(newValue));
+                } catch (NumberFormatException e) {
+                    // revert user change at here so don't need do anything
+                }
             } else {
                 return;
             }

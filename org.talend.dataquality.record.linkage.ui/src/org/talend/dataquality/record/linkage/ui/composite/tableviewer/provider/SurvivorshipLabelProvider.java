@@ -15,11 +15,12 @@ package org.talend.dataquality.record.linkage.ui.composite.tableviewer.provider;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
+import org.talend.dataquality.record.linkage.utils.SurvivorShipAlgorithmEnum;
 import org.talend.dataquality.rules.SurvivorshipKeyDefinition;
 
 /**
  * created by HHB on 2013-8-23 Detailled comment
- * 
+ *
  */
 public class SurvivorshipLabelProvider extends LabelProvider implements ITableLabelProvider {
 
@@ -39,7 +40,7 @@ public class SurvivorshipLabelProvider extends LabelProvider implements ITableLa
             case 1:
                 return skd.getColumn();
             case 2:
-                return skd.getFunction().getAlgorithmType();
+                return SurvivorShipAlgorithmEnum.getTypeBySavedValue(skd.getFunction().getAlgorithmType()).getValue();
             case 3:
                 return skd.isAllowManualResolution() ? "True" : "False"; //$NON-NLS-1$//$NON-NLS-2$
             }

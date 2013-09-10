@@ -12,6 +12,7 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.wizard.indicator.forms.impl.freq;
 
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
@@ -89,7 +90,7 @@ public class FreqTextParametersForm extends TextParametersForm {
     @Override
     protected boolean checkFieldsValue() {
 
-        if (numberTxt.getText() == "") { //$NON-NLS-1$
+        if (numberTxt.getText().equals(StringUtils.EMPTY)) {
             updateStatus(IStatus.ERROR, MSG_EMPTY);
             return false;
         }

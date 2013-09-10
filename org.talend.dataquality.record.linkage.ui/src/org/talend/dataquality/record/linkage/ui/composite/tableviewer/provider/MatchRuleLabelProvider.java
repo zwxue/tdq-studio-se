@@ -16,6 +16,7 @@ import org.apache.commons.lang.StringUtils;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
+import org.talend.dataquality.record.linkage.constant.AttributeMatcherType;
 import org.talend.dataquality.rules.MatchKeyDefinition;
 
 /**
@@ -50,7 +51,7 @@ public class MatchRuleLabelProvider extends LabelProvider implements ITableLabel
             case 1:
                 return mkd.getColumn();
             case 2:
-                return mkd.getAlgorithm().getAlgorithmType();
+                return AttributeMatcherType.getTypeBySavedValue(mkd.getAlgorithm().getAlgorithmType()).getLabel();
             case 3:
                 return mkd.getAlgorithm().getAlgorithmParameters();
             case 4:

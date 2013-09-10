@@ -14,6 +14,9 @@ package org.talend.dataquality.record.linkage.ui.composite.tableviewer.provider.
 
 import org.apache.commons.lang.StringUtils;
 import org.talend.dataquality.record.linkage.ui.composite.tableviewer.provider.BlockingKeyTableLabelProvider;
+import org.talend.dataquality.record.linkage.utils.BlockingKeyAlgorithmEnum;
+import org.talend.dataquality.record.linkage.utils.BlockingKeyPostAlgorithmEnum;
+import org.talend.dataquality.record.linkage.utils.BlockingKeyPreAlgorithmEnum;
 import org.talend.dataquality.rules.BlockKeyDefinition;
 
 
@@ -26,7 +29,7 @@ public class BlockingKeyTableDefinitionLabelProvider extends BlockingKeyTableLab
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see
      * org.talend.dataquality.record.linkage.ui.composite.tableviewer.provider.BlockingKeyTableLabelProvider#getColumnText
      * (java.lang.Object, int)
@@ -39,15 +42,15 @@ public class BlockingKeyTableDefinitionLabelProvider extends BlockingKeyTableLab
             case 0:
                 return bkd.getName();
             case 1:
-                return bkd.getPreAlgorithm().getAlgorithmType();
+                return BlockingKeyPreAlgorithmEnum.getTypeBySavedValue(bkd.getPreAlgorithm().getAlgorithmType()).getValue();
             case 2:
                 return bkd.getPreAlgorithm().getAlgorithmParameters();
             case 3:
-                return bkd.getAlgorithm().getAlgorithmType();
+                return BlockingKeyAlgorithmEnum.getTypeBySavedValue(bkd.getAlgorithm().getAlgorithmType()).getValue();
             case 4:
                 return bkd.getAlgorithm().getAlgorithmParameters();
             case 5:
-                return bkd.getPostAlgorithm().getAlgorithmType();
+                return BlockingKeyPostAlgorithmEnum.getTypeBySavedValue(bkd.getPostAlgorithm().getAlgorithmType()).getValue();
             case 6:
                 return bkd.getPostAlgorithm().getAlgorithmParameters();
             }

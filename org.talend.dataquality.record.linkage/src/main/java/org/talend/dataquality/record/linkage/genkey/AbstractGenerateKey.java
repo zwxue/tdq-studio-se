@@ -21,15 +21,12 @@ import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-import org.talend.dataquality.record.linkage.utils.BlockingKeyAlgorithmEnum;
-import org.talend.dataquality.record.linkage.utils.BlockingKeyPostAlgorithmEnum;
-import org.talend.dataquality.record.linkage.utils.BlockingKeyPreAlgorithmEnum;
 import org.talend.dataquality.record.linkage.utils.MatchAnalysisConstant;
 import org.talend.windowkey.AlgoBox;
 
 /**
  * created by zshen on Aug 7, 2013 Detailled comment
- * 
+ *
  */
 public class AbstractGenerateKey {
 
@@ -51,8 +48,8 @@ public class AbstractGenerateKey {
     }
 
     /**
-     * 
-     * 
+     *
+     *
      * @param BlockKeyDefinitions
      * @param dataMap
      * @param inputString
@@ -77,7 +74,7 @@ public class AbstractGenerateKey {
 
     /**
      * DOC zshen Comment method "getGenKey".
-     * 
+     *
      * @param value
      */
     private String getGenKey(List<Map<String, String>> BlockKeyDefinitions, Map<String, String> dataMap) {
@@ -107,19 +104,19 @@ public class AbstractGenerateKey {
                 colValue = StringUtils.EMPTY;
             }
 
-            tempVar = getAlgoResult(BlockingKeyPreAlgorithmEnum.getTypeByValue(preAlgoName).getComponentValueName(), preAlgoPara,
+            tempVar = getAlgoResult(preAlgoName, preAlgoPara,
                     colValue).toString();
             if (StringUtils.isNotEmpty(tempVar)) {
                 colValue = tempVar;
             }
 
-            tempVar = getAlgoResult(BlockingKeyAlgorithmEnum.getTypeByValue(keyAlgoName).getComponentValueName(), keyAlgoPara,
+            tempVar = getAlgoResult(keyAlgoName, keyAlgoPara,
                     colValue).toString();
             if (StringUtils.isNotEmpty(tempVar)) {
                 colValue = tempVar;
             }
 
-            tempVar = getAlgoResult(BlockingKeyPostAlgorithmEnum.getTypeByValue(postAlgoName).getComponentValueName(),
+            tempVar = getAlgoResult(postAlgoName,
                     postAlgoPara, colValue).toString();
             if (StringUtils.isNotEmpty(tempVar)) {
                 colValue = tempVar;
@@ -134,7 +131,7 @@ public class AbstractGenerateKey {
 
     /**
      * DOC zshen Comment method "getAlgoResult".
-     * 
+     *
      * @return
      */
     private Object getAlgoResult(String algoName, String algoPara, String colValue) {
@@ -193,7 +190,7 @@ public class AbstractGenerateKey {
 
     /**
      * Getter for resultList.
-     * 
+     *
      * @return the resultList
      */
     public Map<String, List<String[]>> getResultList() {

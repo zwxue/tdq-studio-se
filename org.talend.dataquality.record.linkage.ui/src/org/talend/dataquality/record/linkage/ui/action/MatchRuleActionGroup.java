@@ -25,18 +25,18 @@ import org.talend.dataquality.record.linkage.ui.composite.tableviewer.AbstractMa
  * Detailled comment
  *
  */
-public class MatchRuleActionGroup extends ActionGroup {
+public class MatchRuleActionGroup<T> extends ActionGroup {
 
-    private AbstractMatchAnalysisTableViewer tv;
+    private AbstractMatchAnalysisTableViewer<T> tv;
 
-    public MatchRuleActionGroup(AbstractMatchAnalysisTableViewer tv) {
+    public MatchRuleActionGroup(AbstractMatchAnalysisTableViewer<T> tv) {
         this.tv = tv;
     }
 
     @Override
     public void fillContextMenu(IMenuManager mgr) {
         MenuManager menuManager = (MenuManager) mgr;
-        menuManager.add(new RemoveMatchKeyDefinitionAction(tv));
+        menuManager.add(new RemoveMatchKeyDefinitionAction<T>(tv));
 
         Table table = tv.getTable();
         Menu menu = menuManager.createContextMenu(table);
@@ -45,7 +45,7 @@ public class MatchRuleActionGroup extends ActionGroup {
 
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.eclipse.ui.actions.ActionGroup#dispose()
      */
     @Override

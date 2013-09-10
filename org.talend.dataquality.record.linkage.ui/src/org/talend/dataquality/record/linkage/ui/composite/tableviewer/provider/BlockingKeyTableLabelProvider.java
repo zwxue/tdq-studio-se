@@ -16,6 +16,9 @@ import org.apache.commons.lang.StringUtils;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
+import org.talend.dataquality.record.linkage.utils.BlockingKeyAlgorithmEnum;
+import org.talend.dataquality.record.linkage.utils.BlockingKeyPostAlgorithmEnum;
+import org.talend.dataquality.record.linkage.utils.BlockingKeyPreAlgorithmEnum;
 import org.talend.dataquality.rules.BlockKeyDefinition;
 
 /**
@@ -50,15 +53,15 @@ public class BlockingKeyTableLabelProvider extends LabelProvider implements ITab
             case 1:
                 return bkd.getColumn();
             case 2:
-                return bkd.getPreAlgorithm().getAlgorithmType();
+                return BlockingKeyPreAlgorithmEnum.getTypeBySavedValue(bkd.getPreAlgorithm().getAlgorithmType()).getValue();
             case 3:
                 return bkd.getPreAlgorithm().getAlgorithmParameters();
             case 4:
-                return bkd.getAlgorithm().getAlgorithmType();
+                return BlockingKeyAlgorithmEnum.getTypeBySavedValue(bkd.getAlgorithm().getAlgorithmType()).getValue();
             case 5:
                 return bkd.getAlgorithm().getAlgorithmParameters();
             case 6:
-                return bkd.getPostAlgorithm().getAlgorithmType();
+                return BlockingKeyPostAlgorithmEnum.getTypeBySavedValue(bkd.getPostAlgorithm().getAlgorithmType()).getValue();
             case 7:
                 return bkd.getPostAlgorithm().getAlgorithmParameters();
             }
