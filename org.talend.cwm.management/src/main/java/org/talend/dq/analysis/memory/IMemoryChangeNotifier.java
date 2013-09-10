@@ -14,7 +14,12 @@ package org.talend.dq.analysis.memory;
 
 /**
  * DOC yyi class global comment. Detailled comment
+ * 
+ * FIXME unused interface?
+ * 
+ * @deprecated this interface is not used. Will be removed.
  */
+@Deprecated
 public interface IMemoryChangeNotifier {
 
     public abstract boolean addListener(IMemoryChangeListener listener);

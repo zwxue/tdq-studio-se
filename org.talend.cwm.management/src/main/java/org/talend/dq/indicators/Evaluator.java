@@ -36,7 +36,6 @@ import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.IndicatorsPackage;
 import org.talend.dataquality.indicators.impl.RegexpMatchingIndicatorImpl;
 import org.talend.dq.analysis.memory.AnalysisThreadMemoryChangeNotifier;
-import org.talend.dq.analysis.memory.IMemoryChangeListener;
 import org.talend.dq.dbms.DbmsLanguageFactory;
 import org.talend.dq.helper.UDIHelper;
 import org.talend.utils.collections.MultiMapHelper;
@@ -47,10 +46,17 @@ import org.talend.utils.sugars.ReturnCode;
  * 
  * Abstract class for computing indicators.
  * @param <T> the type of the object identifying the analyzed element (usually a string).
+ * 
+ * FIXME remove the deprecated IMemoryChangeListener implementation.
  */
-public abstract class Evaluator<T> implements IMemoryChangeListener {
+public abstract class Evaluator<T> {
 
     private static Logger log = Logger.getLogger(Evaluator.class);
+
+    public static final int CHECK_EVERY_N_COUNT = Integer.valueOf(System.getProperty("talend.analysis.memory.check", //$NON-NLS-1$
+            "1000")); //$NON-NLS-1$
+
+    private long checkContinueCount = 0L;
 
     private volatile boolean isLowMemory = false;
 
@@ -77,6 +83,8 @@ public abstract class Evaluator<T> implements IMemoryChangeListener {
     private String javaPatternMessage = StringUtils.EMPTY;
 
     protected Analysis analysis = null;
+
+    private boolean keepRunning = true;
 
     /**
      * Getter for analysis.
@@ -305,29 +313,35 @@ public abstract class Evaluator<T> implements IMemoryChangeListener {
     }
 
     protected boolean continueRun() {
+        // MOD scorreia 2013-09-10 avoid checking for each analyzed row. Check only every 1000 rows
+        checkContinueCount++;
+        if (checkContinueCount % CHECK_EVERY_N_COUNT != 0) {
+            return keepRunning;
+        }
         if (!Platform.isRunning()) { // Reporting engine is working as library
             return true;
         }
-        boolean ret = true;
+
         if (getMonitor() != null && getMonitor().isCanceled()) {
-            ret = false;
+            keepRunning = false;
         } else if (this.isLowMemory) {
-            ret = false;
+            keepRunning = false;
         } else if (AnalysisThreadMemoryChangeNotifier.getInstance().isUsageThresholdExceeded()) {
             this.usedMemory = AnalysisThreadMemoryChangeNotifier.convertToMB(ManagementFactory.getMemoryMXBean()
                     .getHeapMemoryUsage().getUsed());
-            ret = false;
             this.isLowMemory = true;
+            keepRunning = false;
         }
-        return ret;
+        return keepRunning;
 
     }
 
-    /*
-     * (non-Javadoc)
+    /**
+     * FIXME remove this unused method.
      * 
-     * @see org.talend.dq.analysis.memory.IMemoryChangeListener#onLowMemory(long)
+     * @deprecated do not use
      */
+    @Deprecated
     public void onMemoryChange(long freeMemory) {
         this.isLowMemory = true;
     }

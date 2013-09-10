@@ -40,6 +40,7 @@ import org.talend.dq.dbms.DbmsLanguage;
 import org.talend.dq.dbms.DbmsLanguageFactory;
 import org.talend.dq.helper.AnalysisExecutorHelper;
 import org.talend.dq.helper.EObjectHelper;
+import org.talend.dq.indicators.Evaluator;
 import org.talend.dq.indicators.IndicatorCommonUtil;
 import org.talend.dq.indicators.ext.PatternMatchingExt;
 import org.talend.dq.indicators.preview.table.ChartDataEntity;
@@ -72,6 +73,11 @@ public abstract class AnalysisExecutor implements IAnalysisExecutor {
     private long usedMemory;
 
     private volatile boolean isLowMemory = false;
+
+    private long checkContinueCount = 0L;
+
+    private boolean keepRunning = true;
+
     /**
      * Getter for usedMemory.
      * 
@@ -425,22 +431,28 @@ public abstract class AnalysisExecutor implements IAnalysisExecutor {
         this.monitor = monitor;
     }
 
+    // FIXME this method is the same as Evaluator.continueRun(). Factorize code.
     protected boolean continueRun() {
-        if (!Platform.isRunning()) { // reporting engine is working as library
+        // MOD scorreia 2013-09-10 avoid checking for each analyzed row. Check only every 1000 rows
+        checkContinueCount++;
+        if (checkContinueCount % Evaluator.CHECK_EVERY_N_COUNT != 0) {
+            return keepRunning;
+        }
+        if (!Platform.isRunning()) { // Reporting engine is working as library
             return true;
         }
-        boolean ret = true;
+
         if (getMonitor() != null && getMonitor().isCanceled()) {
-            ret = false;
+            keepRunning = false;
         } else if (this.isLowMemory) {
-            ret = false;
+            keepRunning = false;
         } else if (AnalysisThreadMemoryChangeNotifier.getInstance().isUsageThresholdExceeded()) {
             this.usedMemory = AnalysisThreadMemoryChangeNotifier.convertToMB(ManagementFactory.getMemoryMXBean()
                     .getHeapMemoryUsage().getUsed());
-            ret = false;
             this.isLowMemory = true;
+            keepRunning = false;
         }
-        return ret;
+        return keepRunning;
     }
 
     /**

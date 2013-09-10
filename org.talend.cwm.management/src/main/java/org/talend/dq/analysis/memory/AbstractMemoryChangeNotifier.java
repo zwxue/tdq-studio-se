@@ -13,45 +13,36 @@
 package org.talend.dq.analysis.memory;
 
 import java.lang.management.ManagementFactory;
-import java.lang.management.MemoryMXBean;
-import java.lang.management.MemoryNotificationInfo;
 import java.lang.management.MemoryPoolMXBean;
 import java.lang.management.MemoryType;
-import java.util.ArrayList;
-import java.util.Collection;
 
-import javax.management.Notification;
-import javax.management.NotificationEmitter;
-import javax.management.NotificationFilter;
-import javax.management.NotificationListener;
+import org.eclipse.jface.util.IPropertyChangeListener;
+import org.eclipse.jface.util.PropertyChangeEvent;
+import org.eclipse.ui.PlatformUI;
 
 /**
  * DOC yyi class global comment. Detailled comment
  */
-public abstract class AbstractMemoryChangeNotifier implements IMemoryChangeNotifier {
+public abstract class AbstractMemoryChangeNotifier {
 
-    private Collection<IMemoryChangeListener> listeners = new ArrayList<IMemoryChangeListener>();
+    /**
+     * Key of the preference related to the activation of the memory control.
+     */
+    public static final String ANALYSIS_AUTOMATIC_MEMORY_CONTROL = "ANALYSIS_AUTOMATIC_MEMORY_CONTROL";//$NON-NLS-1$
+
+    /**
+     * Key of the preference related to the value set by the user for the memory control.
+     */
+    public static final String ANALYSIS_MEMORY_THRESHOLD = "ANALYSIS_MEMORY_THRESHOLD";//$NON-NLS-1$
 
     private MemoryPoolMXBean tenuredGenPoll;
 
+    private boolean isThresholdControl;
+
+    private int userDefineThreshold;
+
     protected AbstractMemoryChangeNotifier() {
-
         initialize();
-
-        final MemoryMXBean mbean = ManagementFactory.getMemoryMXBean();
-        final NotificationEmitter emitter = (NotificationEmitter) mbean;
-        emitter.addNotificationListener(new NotificationListener() {
-
-            public void handleNotification(Notification n, Object hb) {
-                if (n.getType().equals(MemoryNotificationInfo.MEMORY_THRESHOLD_EXCEEDED)) {
-                    long maxMemory = tenuredGenPoll.getUsage().getMax();
-                    long usedMemory = tenuredGenPoll.getUsage().getUsed();
-                    for (IMemoryChangeListener listener : listeners) {
-                        listener.onMemoryChange(maxMemory - usedMemory);
-                    }
-                }
-            }
-        }, getListenerFilter(), getListenerHandBack());
     }
 
     private MemoryPoolMXBean findTenuredGenPool() {
@@ -65,23 +56,45 @@ public abstract class AbstractMemoryChangeNotifier implements IMemoryChangeNotif
 
     protected boolean initialize() {
         tenuredGenPoll = findTenuredGenPool();
+        this.initializeThresholdsFromPreferences();
         return null != tenuredGenPoll;
     }
 
-    protected abstract NotificationFilter getListenerFilter();
+    private void initializeThresholdsFromPreferences() {
+        isThresholdControl = PlatformUI.getPreferenceStore().getBoolean(ANALYSIS_AUTOMATIC_MEMORY_CONTROL);
+        userDefineThreshold = PlatformUI.getPreferenceStore().getInt(ANALYSIS_MEMORY_THRESHOLD);
+        reloadPerference();
 
-    protected abstract NotificationFilter getListenerHandBack();
+        PlatformUI.getPreferenceStore().addPropertyChangeListener(new IPropertyChangeListener() {
 
-    public synchronized boolean addListener(IMemoryChangeListener listener) {
-        return listeners.add(listener);
+            public void propertyChange(PropertyChangeEvent event) {
+                // MOD scorreia 2013-09-10 update also isThresholdControl
+                if (event.getProperty() == ANALYSIS_AUTOMATIC_MEMORY_CONTROL) {
+                    isThresholdControl = Boolean.valueOf(event.getNewValue().toString());
+                    reloadPerference();
+                } else if (event.getProperty() == ANALYSIS_MEMORY_THRESHOLD) {
+                    userDefineThreshold = Integer.valueOf(event.getNewValue().toString());
+                    isThresholdControl = true;
+                    reloadPerference();
+                }
+            }
+        });
+
     }
 
-    public synchronized boolean removeListener(IMemoryChangeListener listener) {
-        return listeners.remove(listener);
+    private void reloadPerference() {
+        if (isThresholdControl) {
+            // The #userDefineThreshold changes to the free memory, if the free memory size less than
+            // userDefineThreshold vlaue the analysis shoud be stop.
+            setUsageThreshold(megaToByte(userDefineThreshold));
+        } else {
+            // Clear limit
+            setUsageThreshold(0);
+        }
     }
 
     // if threshold is greater than the maximum amount of memory for this memory pool if defined.
-    protected void setUsageThreshold(long threshold) {
+    private void setUsageThreshold(long threshold) {
         // MOD yyi 2012-04-12 TDQ-4916:The usage threshold crossing checking is disabled if it is set to zero.
         if (threshold <= 0) {
             tenuredGenPoll.setUsageThreshold(0);
@@ -91,8 +104,14 @@ public abstract class AbstractMemoryChangeNotifier implements IMemoryChangeNotif
         }
     }
 
+    /**
+     * Method "isUsageThresholdExceeded".
+     * 
+     * @return true when the memory control is activated and the used memory exceeds the threshold defined by the user
+     * in the preference page.
+     */
     public boolean isUsageThresholdExceeded() {
-        if (!AnalysisThreadMemoryChangeNotifier.isAnaMemControl()) {
+        if (!isThresholdControl) { // no control set in preference pages
             return false;
         }
         boolean isExceeded = tenuredGenPoll.isUsageThresholdExceeded();
@@ -101,6 +120,10 @@ public abstract class AbstractMemoryChangeNotifier implements IMemoryChangeNotif
             isExceeded = tenuredGenPoll.isUsageThresholdExceeded();
         }
         return isExceeded;
+    }
+
+    private static long megaToByte(int numMb) {
+        return numMb * 1024 * 1024 - 512 * 1024;
     }
 
 }

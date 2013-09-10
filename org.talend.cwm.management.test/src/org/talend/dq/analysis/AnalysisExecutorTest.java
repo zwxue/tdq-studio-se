@@ -12,10 +12,6 @@
 // ============================================================================
 package org.talend.dq.analysis;
 
-import java.lang.management.ManagementFactory;
-import java.lang.management.MemoryPoolMXBean;
-import java.lang.management.MemoryType;
-
 import junit.framework.Assert;
 
 import org.eclipse.ui.PlatformUI;
@@ -138,14 +134,5 @@ public class AnalysisExecutorTest {
     private void setMemoryControl(boolean isOpen) {
         PlatformUI.getPreferenceStore().setValue(AnalysisThreadMemoryChangeNotifier.ANALYSIS_AUTOMATIC_MEMORY_CONTROL, isOpen);
 
-    }
-
-    private MemoryPoolMXBean findTenuredGenPool() {
-        for (MemoryPoolMXBean pool : ManagementFactory.getMemoryPoolMXBeans()) {
-            if (pool.getType() == MemoryType.HEAP && pool.isUsageThresholdSupported()) {
-                return pool;
-            }
-        }
-        return null;
     }
 }
