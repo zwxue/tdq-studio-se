@@ -25,11 +25,11 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.talend.commons.utils.WorkspaceUtils;
-import org.talend.commons.utils.io.FilesUtils;
 import org.talend.core.model.properties.PropertiesFactory;
 import org.talend.core.model.properties.Property;
 import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.dq.helper.ReportUtils.ReportListParameters;
+import org.talend.resource.ResourceManager;
 import org.talend.utils.string.StringUtilities;
 import org.talend.utils.sugars.ReturnCode;
 
@@ -38,11 +38,7 @@ import org.talend.utils.sugars.ReturnCode;
  */
 public class ReportUtilsRealTest {
 
-    private String projectName = null;
-
     private IProject realProject = null;
-
-    private File projectFile = null;
 
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {
@@ -56,17 +52,12 @@ public class ReportUtilsRealTest {
 
     @Before
     public void setUp() throws Exception {
-        this.projectName = ("A" + StringUtilities.getRandomString(7)).toUpperCase(); //$NON-NLS-1$
-        this.realProject = UnitTestBuildHelper.createRealProject(this.projectName);
-        this.projectFile = this.realProject.getWorkspace().getRoot().getLocation().append(this.projectName).toFile();
+        realProject = ResourceManager.getRootProject();
     }
 
     @After
     public void tearDown() throws Exception {
-        if (this.projectFile != null) {
-            FilesUtils.deleteFile(this.projectFile, true);
-            assertFalse(this.projectFile.exists());
-        }
+        // do something here
     }
 
     /**
