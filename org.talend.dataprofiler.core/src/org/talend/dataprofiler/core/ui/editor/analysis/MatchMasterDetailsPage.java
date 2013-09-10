@@ -357,6 +357,16 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
     }
 
     /**
+     * Added TDQ-7954: After the "Create New connection" and "Run" action, the buttons should be reset.
+     */
+    private void resetSelectKeyButton() {
+        selectBlockKeyBtn.setEnabled(Boolean.TRUE);
+        selectMatchKeyBtn.setEnabled(Boolean.TRUE);
+        isBlockingKeyButtonPushed = Boolean.FALSE;
+        isMatchingKeyButtonPushed = Boolean.FALSE;
+    }
+
+    /**
      * change Column Color By Current selected Keys.
      *
      * @param currentMatchKeyColumn
@@ -529,6 +539,10 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
                 selectedNodes = null;
                 analysisHandler.setSelectedColumns(null);
                 openColumnsSelectionDialog((DataManager) data);
+
+                // reset the select key buttons status
+                resetSelectKeyButton();
+
                 return true;
             }
         };
@@ -575,8 +589,11 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
                 // update all related keys in block and match section
                 updateAllKeys(oldSelectedColumns);
                 // update the analyzed data label with checked elements name.
-                String selectedElementNames = RepositoryNodeHelper.getAnalyzeDataNames(reposList.get(0));
-                updateAnalyzeDataLabel(selectedElementNames);
+                if (reposList != null && reposList.size() > 0) {
+                    String selectedElementNames = RepositoryNodeHelper.getAnalyzeDataNames(reposList.get(0));
+                    updateAnalyzeDataLabel(selectedElementNames);
+                }
+
                 refreshColumnAndData();
             }
         }
@@ -1017,6 +1034,8 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
         if (status) {
             currentEditor.setActivePage(AnalysisEditor.RESULT_PAGE);
             currentEditor.getResultPage().refresh(this);
+            // after running the analysis, reset the select keys button
+            resetSelectKeyButton();
         }
     }
 
