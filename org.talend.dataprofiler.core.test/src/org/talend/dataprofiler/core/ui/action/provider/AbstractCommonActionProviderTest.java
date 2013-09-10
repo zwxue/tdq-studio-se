@@ -26,6 +26,7 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.ui.actions.ActionContext;
 import org.jfree.util.Log;
+import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -64,7 +65,7 @@ import org.talend.repository.model.RepositoryNode;
 
 /**
  * created by qiongli on 2012-9-18 Detailled comment
- * 
+ *
  */
 public class AbstractCommonActionProviderTest {
 
@@ -80,7 +81,7 @@ public class AbstractCommonActionProviderTest {
 
     /**
      * DOC qiongli Comment method "setUp".
-     * 
+     *
      * @throws java.lang.Exception
      */
     @Before
@@ -92,6 +93,16 @@ public class AbstractCommonActionProviderTest {
         absCommonActionProvider.setContext(context);
         UnitTestBuildHelper.deleteCurrentProject("testForDeleteActionTDQ"); //$NON-NLS-1$
         UnitTestBuildHelper.createRealProject("testForDeleteActionTDQ"); //$NON-NLS-1$
+    }
+
+    /**
+     * DOC zshen Comment method "tearDown".
+     *
+     * @throws java.lang.Exception
+     */
+    @After
+    public void tearDown() throws Exception {
+        UnitTestBuildHelper.deleteCurrentProject();
     }
 
     @BeforeClass

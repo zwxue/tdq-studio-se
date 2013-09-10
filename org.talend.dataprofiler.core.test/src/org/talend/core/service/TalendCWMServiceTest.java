@@ -13,6 +13,7 @@
 package org.talend.core.service;
 
 import org.eclipse.core.runtime.Path;
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -38,7 +39,7 @@ import org.talend.repository.ui.utils.DBConnectionContextUtils;
 
 /**
  * created by talend on Oct 9, 2012 Detailled comment
- * 
+ *
  */
 
 public class TalendCWMServiceTest {
@@ -47,13 +48,23 @@ public class TalendCWMServiceTest {
 
     /**
      * DOC talend Comment method "setUp".
-     * 
+     *
      * @throws java.lang.Exception
      */
     @Before
     public void setUp() throws Exception {
         UnitTestBuildHelper.deleteCurrentProject();
         UnitTestBuildHelper.createRealProject("testForSoftWareTDQ"); //$NON-NLS-1$
+    }
+
+    /**
+     * DOC zshen Comment method "tearDown".
+     * 
+     * @throws java.lang.Exception
+     */
+    @After
+    public void tearDown() throws Exception {
+        UnitTestBuildHelper.deleteCurrentProject();
     }
 
     @Test
@@ -100,7 +111,7 @@ public class TalendCWMServiceTest {
      * Test method for
      * {@link org.talend.core.service.TalendCWMService#getReadableName(orgomg.cwm.foundation.softwaredeployment.DataManager, java.lang.String)}
      * .
-     * 
+     *
      * @throws PersistenceException
      */
     @Test
@@ -162,7 +173,7 @@ public class TalendCWMServiceTest {
      * Test method for
      * {@link org.talend.core.service.TalendCWMService#getReadableName(orgomg.cwm.foundation.softwaredeployment.DataManager, java.lang.String)}
      * .
-     * 
+     *
      * @throws PersistenceException
      */
     @Test

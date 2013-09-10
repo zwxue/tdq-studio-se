@@ -20,6 +20,7 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.jfree.util.Log;
+import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -62,6 +63,16 @@ public class UpdateMsSqlToJdbcTaskTest {
     public void setUp() throws Exception {
         UnitTestBuildHelper.deleteCurrentProject("testForDeleteActionTDQ"); //$NON-NLS-1$
         UnitTestBuildHelper.createRealProject("testForDeleteActionTDQ"); //$NON-NLS-1$
+    }
+
+    /**
+     * DOC zshen Comment method "tearDown".
+     *
+     * @throws java.lang.Exception
+     */
+    @After
+    public void tearDown() throws Exception {
+        UnitTestBuildHelper.deleteCurrentProject();
     }
 
     @AfterClass

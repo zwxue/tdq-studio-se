@@ -47,7 +47,7 @@ public class ExportFactoryTest {
 
     /**
      * DOC xqliu Comment method "setUpBeforeClass".
-     * 
+     *
      * @throws java.lang.Exception
      */
     @BeforeClass
@@ -57,7 +57,7 @@ public class ExportFactoryTest {
 
     /**
      * DOC xqliu Comment method "tearDownAfterClass".
-     * 
+     *
      * @throws java.lang.Exception
      */
     @AfterClass
@@ -67,7 +67,7 @@ public class ExportFactoryTest {
 
     /**
      * DOC xqliu Comment method "setUp".
-     * 
+     *
      * @throws java.lang.Exception
      */
     @Before
@@ -78,12 +78,12 @@ public class ExportFactoryTest {
 
     /**
      * DOC xqliu Comment method "tearDown".
-     * 
+     *
      * @throws java.lang.Exception
      */
     @After
     public void tearDown() throws Exception {
-        // some code here
+        UnitTestBuildHelper.deleteCurrentProject();
     }
 
     /**
@@ -201,7 +201,7 @@ public class ExportFactoryTest {
 
     /**
      * create the IndicaorDefinition for test.
-     * 
+     *
      * @return
      */
     private IndicatorDefinition createExportIndicaorDefinition(IFolder folder) {
@@ -226,7 +226,7 @@ public class ExportFactoryTest {
 
     /**
      * get the IndicatorDefinitionParameter's key value map for test.
-     * 
+     *
      * @return
      */
     private Map<String, String> getIndDefParaMap() {

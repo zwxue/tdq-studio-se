@@ -12,11 +12,10 @@
 // ============================================================================
 package org.talend.dataprofiler.core.helper;
 
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-import static org.powermock.api.support.membermodification.MemberMatcher.method;
-import static org.powermock.api.support.membermodification.MemberModifier.stub;
+import static org.mockito.Matchers.*;
+import static org.mockito.Mockito.*;
+import static org.powermock.api.support.membermodification.MemberMatcher.*;
+import static org.powermock.api.support.membermodification.MemberModifier.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -174,15 +173,15 @@ public class UnitTestBuildHelper {
 
     /**
      * create project with a specified name.
-     * 
+     *
      * @param projectName specified project name
      * @return
      */
     public static IProject createRealProject(String projectName) {
-        // IProject rootProject = ResourcesPlugin.getWorkspace().getRoot().getProject(projectName);
-        // if (!rootProject.exists()) {
-        // initProxyRepository(rootProject);
-        // }
+        IProject rootProject = ResourcesPlugin.getWorkspace().getRoot().getProject(projectName);
+        if (!rootProject.exists()) {
+            initProxyRepository(rootProject);
+        }
 
         if (DQStructureManager.getInstance().isNeedCreateStructure()) {
             DQStructureManager.getInstance().createDQStructure();
@@ -244,7 +243,7 @@ public class UnitTestBuildHelper {
 
     /**
      * DOC talend Comment method "createRealReport".
-     * 
+     *
      * @param name the name of report
      * @param folder the path which report location
      * @param isDelete the report whether is logic delate
@@ -302,7 +301,7 @@ public class UnitTestBuildHelper {
 
     /**
      * DOC zshen Comment method "createFolder". create the subfolder under the parentFolder and named for folderName
-     * 
+     *
      * @param parentFolder
      * @param folderName
      * @return
@@ -321,10 +320,10 @@ public class UnitTestBuildHelper {
 
     /**
      * DOC zshen Comment method "checkFileName".
-     * 
+     *
      * @param fileName
      * @param pattern
-     * 
+     *
      * copy the method from ProxyRepositoryFactory to avoid tos migeration.
      */
     private static void checkFileName(String fileName, String pattern) {
@@ -355,7 +354,7 @@ public class UnitTestBuildHelper {
 
     /**
      * create the real RepositoryNode for DataProfiling.
-     * 
+     *
      * @return
      */
     public static RepositoryNode createRealDataProfilingNode(IProject project) {
@@ -383,7 +382,7 @@ public class UnitTestBuildHelper {
 
     /**
      * create the real ReportFolderRepNode.
-     * 
+     *
      * @param parentNode
      * @return
      */
@@ -401,7 +400,7 @@ public class UnitTestBuildHelper {
 
     /**
      * create a real ReportSubFolderRepNode.
-     * 
+     *
      * @param parentNode the parent node
      * @param folderName the folder name
      * @return
@@ -438,7 +437,7 @@ public class UnitTestBuildHelper {
 
     /**
      * create a real ReportRepNode.
-     * 
+     *
      * @param name report name
      * @param folder report's parent folder
      * @param isDelete delete flag
@@ -476,7 +475,7 @@ public class UnitTestBuildHelper {
 
     /**
      * create the real SourceFileFolderRepNode.
-     * 
+     *
      * @param parentNode
      * @return
      */
@@ -563,34 +562,34 @@ public class UnitTestBuildHelper {
      * delete the project which has been login else will effect the result of junit.
      */
     public static void deleteCurrentProject() {
-        // IProject rootProject = ReponsitoryContextBridge.getRootProject();
-        // if (rootProject.exists()) {
-        // try {
-        // rootProject.delete(true, true, null);
-        // } catch (CoreException e) {
-        // log.error(e, e);
-        // Assert.fail(e.getMessage());
-        // }
-        // }
+        IProject rootProject = ReponsitoryContextBridge.getRootProject();
+        if (rootProject.exists()) {
+            try {
+                rootProject.delete(true, true, null);
+            } catch (CoreException e) {
+                log.error(e, e);
+                Assert.fail(e.getMessage());
+            }
+        }
     }
 
     /**
      * delete the project which has been login else will effect the result of junit.
      */
     public static void deleteCurrentProject(String projectName) {
-        // IProject currProject = ReponsitoryContextBridge.findProject(projectName);
-        // if (currProject.exists()) {
-        // try {
-        // currProject.delete(true, true, null);
-        // } catch (CoreException e) {
-        // log.error(e, e);
-        // Assert.fail(e.getMessage());
-        // }
-        // }
+        IProject currProject = ReponsitoryContextBridge.findProject(projectName);
+        if (currProject.exists()) {
+            try {
+                currProject.delete(true, true, null);
+            } catch (CoreException e) {
+                log.error(e, e);
+                Assert.fail(e.getMessage());
+            }
+        }
     }
 
     /**
-     * 
+     *
      * mock LocalRepositoryObjectCRUD for RepNodeUtils.getRepositoryObjectCRUD().
      */
     public static void mockLocalRepositoryObjectCRUD() {

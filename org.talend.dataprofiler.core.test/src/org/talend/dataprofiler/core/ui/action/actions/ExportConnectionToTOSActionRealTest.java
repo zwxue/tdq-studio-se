@@ -58,7 +58,7 @@ import orgomg.cwm.resource.relational.Schema;
 
 /**
  * created by zshen on Apr 23, 2013 Detailled comment
- * 
+ *
  */
 public class ExportConnectionToTOSActionRealTest {
 
@@ -86,7 +86,7 @@ public class ExportConnectionToTOSActionRealTest {
 
     /**
      * DOC zshen Comment method "setUpBeforeClass".
-     * 
+     *
      * @throws java.lang.Exception
      */
     @BeforeClass
@@ -102,7 +102,7 @@ public class ExportConnectionToTOSActionRealTest {
 
     /**
      * DOC zshen Comment method "tearDownAfterClass".
-     * 
+     *
      * @throws java.lang.Exception
      */
     @AfterClass
@@ -117,7 +117,7 @@ public class ExportConnectionToTOSActionRealTest {
 
     /**
      * DOC zshen Comment method "setUp".
-     * 
+     *
      * @throws java.lang.Exception
      */
     @Before
@@ -170,7 +170,7 @@ public class ExportConnectionToTOSActionRealTest {
 
     /**
      * DOC zshen Comment method "initPackageList".
-     * 
+     *
      * @param packageList
      * @throws PersistenceException
      */
@@ -186,7 +186,7 @@ public class ExportConnectionToTOSActionRealTest {
 
     /**
      * DOC zshen Comment method "initPackageList".
-     * 
+     *
      * @param packageList
      * @throws PersistenceException
      */
@@ -198,7 +198,7 @@ public class ExportConnectionToTOSActionRealTest {
 
     /**
      * DOC zshen Comment method "initPackageList".
-     * 
+     *
      * @param packageList
      * @throws PersistenceException
      */
@@ -210,7 +210,7 @@ public class ExportConnectionToTOSActionRealTest {
 
     /**
      * DOC zshen Comment method "addSchePackage".
-     * 
+     *
      * @param string
      * @param catalog1
      * @return
@@ -223,7 +223,7 @@ public class ExportConnectionToTOSActionRealTest {
 
     /**
      * DOC zshen Comment method "addSchePackage".
-     * 
+     *
      * @param string
      * @param catalog1
      * @return
@@ -236,7 +236,7 @@ public class ExportConnectionToTOSActionRealTest {
 
     /**
      * DOC zshen Comment method "tearDown".
-     * 
+     *
      * @throws java.lang.Exception
      */
     @After
@@ -246,9 +246,9 @@ public class ExportConnectionToTOSActionRealTest {
 
     /**
      * Test method for {@link org.talend.dataprofiler.core.ui.action.actions.ExportConnectionToTOSAction#run()}.
-     * 
+     *
      * @throws PersistenceException
-     * 
+     *
      * case1: create new connection from catalog case
      */
     @Test
@@ -285,15 +285,15 @@ public class ExportConnectionToTOSActionRealTest {
 
     /**
      * Test method for {@link org.talend.dataprofiler.core.ui.action.actions.ExportConnectionToTOSAction#run()}.
-     * 
+     *
      * @throws PersistenceException
-     * 
+     *
      * case2: create new connection from schema case
      */
     @Test
     public void testRuncase2() throws PersistenceException {
         // connectionNode
-        DatabaseConnectionItem createOldConnectionItem = createConnectionItem("conn1", null, false, true);
+        DatabaseConnectionItem createOldConnectionItem = createConnectionItem("conn2", null, false, true);
         initCatalogList(createOldConnectionItem);
         initSchemaOfCagalogList(createOldConnectionItem);
         // ~connectionNode
@@ -323,15 +323,15 @@ public class ExportConnectionToTOSActionRealTest {
 
     /**
      * Test method for {@link org.talend.dataprofiler.core.ui.action.actions.ExportConnectionToTOSAction#run()}.
-     * 
+     *
      * @throws PersistenceException
-     * 
+     *
      * case3: create new connection from only schema case
      */
     @Test
     public void testRuncase3() throws PersistenceException {
         // connectionNode
-        DatabaseConnectionItem createOldConnectionItem = createConnectionItem("conn1", null, false, true);
+        DatabaseConnectionItem createOldConnectionItem = createConnectionItem("conn3", null, false, true);
         DatabaseConnection oldConnection = ((DatabaseConnection) createOldConnectionItem.getConnection());
         oldConnection.setSID("orcl"); //$NON-NLS-1$
         initSchemaList(createOldConnectionItem);
@@ -365,15 +365,15 @@ public class ExportConnectionToTOSActionRealTest {
 
     /**
      * Test method for {@link org.talend.dataprofiler.core.ui.action.actions.ExportConnectionToTOSAction#run()}.
-     * 
+     *
      * @throws PersistenceException
-     * 
+     *
      * case4: create new connection from only Catalog case
      */
     @Test
     public void testRuncase4() throws PersistenceException {
         // connectionNode
-        DatabaseConnectionItem createOldConnectionItem = createConnectionItem("conn1", null, false, true);
+        DatabaseConnectionItem createOldConnectionItem = createConnectionItem("conn4", null, false, true);
         DatabaseConnection oldConnection = ((DatabaseConnection) createOldConnectionItem.getConnection());
         oldConnection.setSID("orcl"); //$NON-NLS-1$
         initCatalogList(createOldConnectionItem);
@@ -415,7 +415,7 @@ public class ExportConnectionToTOSActionRealTest {
 
         /*
          * (non-Javadoc)
-         * 
+         *
          * @see org.hamcrest.Matcher#matches(java.lang.Object)
          */
         @Override
@@ -454,7 +454,7 @@ public class ExportConnectionToTOSActionRealTest {
 
         /*
          * (non-Javadoc)
-         * 
+         *
          * @see org.hamcrest.SelfDescribing#describeTo(org.hamcrest.Description)
          */
         @Override
