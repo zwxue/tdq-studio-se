@@ -53,13 +53,13 @@ import orgomg.cwm.resource.relational.Catalog;
 
 /**
  * created by zshen on Apr 18, 2013 Detailled comment
- * 
+ *
  */
 public class EMFResourceHandleTest {
 
     /**
      * DOC zshen Comment method "setUpBeforeClass".
-     * 
+     *
      * @throws java.lang.Exception
      */
 
@@ -81,7 +81,7 @@ public class EMFResourceHandleTest {
 
     /**
      * DOC zshen Comment method "tearDownAfterClass".
-     * 
+     *
      * @throws java.lang.Exception
      */
     @AfterClass
@@ -96,29 +96,18 @@ public class EMFResourceHandleTest {
 
     /**
      * DOC zshen Comment method "setUp".
-     * 
+     *
      * @throws java.lang.Exception
      */
     @Before
     public void setUp() throws Exception {
-        UnitTestBuildHelper.deleteCurrentProject("testForEMFSharedResourcesDuplicate"); //$NON-NLS-1$
-        UnitTestBuildHelper.createRealProject("testForEMFSharedResourcesDuplicate"); //$NON-NLS-1$
-    }
-
-    /**
-     * DOC zshen Comment method "tearDown".
-     * 
-     * @throws java.lang.Exception
-     */
-    @After
-    public void tearDown() throws Exception {
-        UnitTestBuildHelper.deleteCurrentProject();
+        UnitTestBuildHelper.initProjectStructure("testForEMFSharedResourcesDuplicate"); //$NON-NLS-1$
     }
 
     /**
      * Test method for
      * {@link org.talend.dataprofiler.core.ui.action.actions.handle.EMFResourceHandle#duplicate(java.lang.String)}.
-     * 
+     *
      * @throws BusinessException
      * @throws PersistenceException
      */
@@ -142,7 +131,7 @@ public class EMFResourceHandleTest {
 
     /**
      * DOC zshen Comment method "compareResult".
-     * 
+     *
      * @param newConnectionItem
      * @param oldConnectionItem
      */
@@ -160,7 +149,7 @@ public class EMFResourceHandleTest {
 
     /**
      * DOC zshen Comment method "createConnectionNode".
-     * 
+     *
      * @return
      */
     private RepositoryNode createConnectionNode(DatabaseConnectionItem createConnectionItem) {

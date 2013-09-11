@@ -72,19 +72,9 @@ public class ExportFactoryTest {
      */
     @Before
     public void setUp() throws Exception {
-        UnitTestBuildHelper.deleteCurrentProject();
-        UnitTestBuildHelper.createRealProject("testForEXportFactoryTDQ"); //$NON-NLS-1$
+        UnitTestBuildHelper.initProjectStructure("testForEXportFactoryTDQ"); //$NON-NLS-1$
     }
 
-    /**
-     * DOC xqliu Comment method "tearDown".
-     *
-     * @throws java.lang.Exception
-     */
-    @After
-    public void tearDown() throws Exception {
-        UnitTestBuildHelper.deleteCurrentProject();
-    }
 
     /**
      * Test method for

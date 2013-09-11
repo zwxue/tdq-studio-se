@@ -58,7 +58,7 @@ import orgomg.cwm.resource.relational.Schema;
 
 /**
  * created by talend on Oct 30, 2012 Detailled comment
- * 
+ *
  */
 public class SwitchContextGroupNameImplTest {
 
@@ -96,26 +96,16 @@ public class SwitchContextGroupNameImplTest {
 
     /**
      * DOC talend Comment method "setUp".
-     * 
+     *
      * @throws java.lang.Exception
      */
     @Before
     public void setUp() throws Exception {
-        UnitTestBuildHelper.deleteCurrentProject("testForContextGroupTDQ"); //$NON-NLS-1$
-        UnitTestBuildHelper.createRealProject("testForContextGroupTDQ"); //$NON-NLS-1$
+        UnitTestBuildHelper.initProjectStructure("testForContextGroupTDQ"); //$NON-NLS-1$
         createContextItem();
         Connectionlabel = ConnectionContextHelper.convertContextLabel(connectionName);
     }
 
-    /**
-     * DOC talend Comment method "tearDown".
-     * 
-     * @throws java.lang.Exception
-     */
-    @After
-    public void tearDown() throws Exception {
-        UnitTestBuildHelper.deleteCurrentProject();
-    }
 
     /**
      * Test method for
@@ -155,7 +145,7 @@ public class SwitchContextGroupNameImplTest {
 
     /**
      * DOC talend Comment method "createSchema".
-     * 
+     *
      * @param schemaOld2
      */
     private void createCatalogSchema(String schemaOld2) {
@@ -353,7 +343,7 @@ public class SwitchContextGroupNameImplTest {
 
     /**
      * DOC talend Comment method "createCatalog".
-     * 
+     *
      * @param catalogName
      */
     private void createCatalog(String catalogName) {

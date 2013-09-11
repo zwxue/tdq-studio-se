@@ -55,7 +55,7 @@ import common.Logger;
 
 /**
  * created by talend on Dec 19, 2012 Detailled comment
- * 
+ *
  */
 public class AbstractCommonActionProviderRealProjectTest {
 
@@ -69,24 +69,14 @@ public class AbstractCommonActionProviderRealProjectTest {
 
     /**
      * DOC talend Comment method "setUp".
-     * 
+     *
      * @throws java.lang.Exception
      */
     @Before
     public void setUp() throws Exception {
-        UnitTestBuildHelper.deleteCurrentProject("testForActionProviderTDQ"); //$NON-NLS-1$
-        UnitTestBuildHelper.createRealProject("testForActionProviderTDQ"); //$NON-NLS-1$
+        UnitTestBuildHelper.initProjectStructure("testForActionProviderTDQ"); //$NON-NLS-1$
     }
 
-    /**
-     * DOC talend Comment method "tearDown".
-     * 
-     * @throws java.lang.Exception
-     */
-    @After
-    public void tearDown() throws Exception {
-        UnitTestBuildHelper.deleteCurrentProject();
-    }
 
     /**
      * Test method for
@@ -182,7 +172,7 @@ public class AbstractCommonActionProviderRealProjectTest {
 
     /**
      * DOC talend Comment method "createCatalog".
-     * 
+     *
      * @param catalogName
      */
     private Catalog createCatalog(String catalogName) {

@@ -53,18 +53,16 @@ public class TalendCWMServiceTest {
      */
     @Before
     public void setUp() throws Exception {
-        UnitTestBuildHelper.deleteCurrentProject();
-        UnitTestBuildHelper.createRealProject("testForSoftWareTDQ"); //$NON-NLS-1$
+                UnitTestBuildHelper.initProjectStructure("testForSoftWareTDQ"); //$NON-NLS-1$
     }
 
     /**
      * DOC zshen Comment method "tearDown".
-     * 
+     *
      * @throws java.lang.Exception
      */
     @After
     public void tearDown() throws Exception {
-        UnitTestBuildHelper.deleteCurrentProject();
     }
 
     @Test

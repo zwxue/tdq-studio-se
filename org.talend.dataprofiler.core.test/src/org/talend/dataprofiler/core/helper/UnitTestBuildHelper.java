@@ -177,11 +177,7 @@ public class UnitTestBuildHelper {
      * @param projectName specified project name
      * @return
      */
-    public static IProject createRealProject(String projectName) {
-        IProject rootProject = ResourcesPlugin.getWorkspace().getRoot().getProject(projectName);
-        if (!rootProject.exists()) {
-            initProxyRepository(rootProject);
-        }
+    public static IProject initProjectStructure(String projectName) {
 
         if (DQStructureManager.getInstance().isNeedCreateStructure()) {
             DQStructureManager.getInstance().createDQStructure();
@@ -562,30 +558,30 @@ public class UnitTestBuildHelper {
      * delete the project which has been login else will effect the result of junit.
      */
     public static void deleteCurrentProject() {
-        IProject rootProject = ReponsitoryContextBridge.getRootProject();
-        if (rootProject.exists()) {
-            try {
-                rootProject.delete(true, true, null);
-            } catch (CoreException e) {
-                log.error(e, e);
-                Assert.fail(e.getMessage());
-            }
-        }
+        // IProject rootProject = ReponsitoryContextBridge.getRootProject();
+        // if (rootProject.exists()) {
+        // try {
+        // rootProject.delete(true, true, null);
+        // } catch (CoreException e) {
+        // log.error(e, e);
+        // Assert.fail(e.getMessage());
+        // }
+        // }
     }
 
     /**
      * delete the project which has been login else will effect the result of junit.
      */
     public static void deleteCurrentProject(String projectName) {
-        IProject currProject = ReponsitoryContextBridge.findProject(projectName);
-        if (currProject.exists()) {
-            try {
-                currProject.delete(true, true, null);
-            } catch (CoreException e) {
-                log.error(e, e);
-                Assert.fail(e.getMessage());
-            }
-        }
+        // IProject currProject = ReponsitoryContextBridge.findProject(projectName);
+        // if (currProject.exists()) {
+        // try {
+        // currProject.delete(true, true, null);
+        // } catch (CoreException e) {
+        // log.error(e, e);
+        // Assert.fail(e.getMessage());
+        // }
+        // }
     }
 
     /**

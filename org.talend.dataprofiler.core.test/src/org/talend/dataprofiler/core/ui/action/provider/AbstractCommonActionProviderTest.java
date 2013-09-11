@@ -91,19 +91,9 @@ public class AbstractCommonActionProviderTest {
         treeSel = mock(TreeSelection.class);
         when(context.getSelection()).thenReturn(treeSel);
         absCommonActionProvider.setContext(context);
-        UnitTestBuildHelper.deleteCurrentProject("testForDeleteActionTDQ"); //$NON-NLS-1$
-        UnitTestBuildHelper.createRealProject("testForDeleteActionTDQ"); //$NON-NLS-1$
+        UnitTestBuildHelper.initProjectStructure("testForDeleteActionTDQ"); //$NON-NLS-1$
     }
 
-    /**
-     * DOC zshen Comment method "tearDown".
-     *
-     * @throws java.lang.Exception
-     */
-    @After
-    public void tearDown() throws Exception {
-        UnitTestBuildHelper.deleteCurrentProject();
-    }
 
     @BeforeClass
     public static void beforeAllTests() {

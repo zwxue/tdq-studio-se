@@ -61,19 +61,9 @@ public class UpdateMsSqlToJdbcTaskTest {
 
     @Before
     public void setUp() throws Exception {
-        UnitTestBuildHelper.deleteCurrentProject("testForDeleteActionTDQ"); //$NON-NLS-1$
-        UnitTestBuildHelper.createRealProject("testForDeleteActionTDQ"); //$NON-NLS-1$
+        UnitTestBuildHelper.initProjectStructure("testForDeleteActionTDQ"); //$NON-NLS-1$
     }
 
-    /**
-     * DOC zshen Comment method "tearDown".
-     *
-     * @throws java.lang.Exception
-     */
-    @After
-    public void tearDown() throws Exception {
-        UnitTestBuildHelper.deleteCurrentProject();
-    }
 
     @AfterClass
     public static void afterAllTests() {
