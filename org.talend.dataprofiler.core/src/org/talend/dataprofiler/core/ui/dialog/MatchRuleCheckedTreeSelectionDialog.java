@@ -36,9 +36,8 @@ import org.talend.dq.helper.resourcehelper.DQRuleResourceFileHelper;
 import org.talend.resource.ResourceManager;
 import org.talend.resource.ResourceService;
 
-
 /**
- * DOC yyin  class global comment. Detailled comment
+ * DOC yyin class global comment. Detailled comment
  */
 public class MatchRuleCheckedTreeSelectionDialog extends IndicatorCheckedTreeSelectionDialog {
 
@@ -46,8 +45,7 @@ public class MatchRuleCheckedTreeSelectionDialog extends IndicatorCheckedTreeSel
 
     private boolean isOverwrite = false;
 
-    public static final String T_SWOOSH_ALGORITHM = "T-Swoosh algorithm"; //$NON-NLS-1$
-
+    public static final String T_SWOOSH_ALGORITHM = "T_SwooshAlgorithm"; //$NON-NLS-1$
 
     /**
      * DOC yyin DQRuleCheckedTreeSelectionDialog constructor comment.
@@ -77,19 +75,20 @@ public class MatchRuleCheckedTreeSelectionDialog extends IndicatorCheckedTreeSel
                             DefaultMessagesImpl.getString("MatchRuleCheckedTreeSelectionDialog.validate")); //$NON-NLS-1$
                 }
                 // when the selected rule has no match & block keys, not validate(has block,no match, can validate )
-                for(Object selectObject: selection){
-                    if(selectObject instanceof IFile){
+                for (Object selectObject : selection) {
+                    if (selectObject instanceof IFile) {
                         IFile file = (IFile) selectObject;
                         if (FactoriesUtil.DQRULE.equals(file.getFileExtension())) {
-                             MatchRuleDefinition matchRule = DQRuleResourceFileHelper.getInstance().findMatchRule(file);
-                             if((matchRule.getBlockKeys()==null || matchRule.getBlockKeys().size()<1) &&(matchRule.getMatchRules()==null || matchRule.getMatchRules().size()<1)){
+                            MatchRuleDefinition matchRule = DQRuleResourceFileHelper.getInstance().findMatchRule(file);
+                            if ((matchRule.getBlockKeys() == null || matchRule.getBlockKeys().size() < 1)
+                                    && (matchRule.getMatchRules() == null || matchRule.getMatchRules().size() < 1)) {
                                 status = new Status(IStatus.ERROR, CorePlugin.PLUGIN_ID,
                                         DefaultMessagesImpl.getString("MatchRuleCheckedTreeSelectionDialog.emptyRule")); //$NON-NLS-1$
-                             }
-                             
-                             // when the imported rule's algorithm is "T_Swoosh", warning
+                            }
+
+                            // when the imported rule's algorithm is "T_Swoosh", warning
                             if (T_SWOOSH_ALGORITHM.equals(matchRule.getRecordLinkageAlgorithm())) {
-                                status = new Status(IStatus.OK, CorePlugin.PLUGIN_ID,
+                                status = new Status(IStatus.WARNING, CorePlugin.PLUGIN_ID,
                                         DefaultMessagesImpl.getString("MatchRuleCheckedTreeSelectionDialog.tswoosh")); //$NON-NLS-1$
                             }
                         }
@@ -110,7 +109,7 @@ public class MatchRuleCheckedTreeSelectionDialog extends IndicatorCheckedTreeSel
         setContainerMode(true);
         setTitle(DefaultMessagesImpl.getString("DQRuleCheckedTreeSelectionDialog.title")); //$NON-NLS-1$
         setMessage(DefaultMessagesImpl.getString("DQRuleCheckedTreeSelectionDialog.rule")); //$NON-NLS-1$
-        setSize(80, 30);
+        setSize(120, 30);
     }
 
     /**
