@@ -39,7 +39,7 @@ import org.talend.dataquality.rules.MatchRule;
 
 /**
  * created by zshen on Jul 31, 2013 Detailled comment
- *
+ * 
  */
 public class MatchRuleTableViewer extends AbstractMatchAnalysisTableViewer<MatchKeyDefinition> {
 
@@ -49,7 +49,7 @@ public class MatchRuleTableViewer extends AbstractMatchAnalysisTableViewer<Match
 
     /**
      * DOC zshen MatchRuleTableViewer constructor comment.
-     *
+     * 
      * @param parent
      * @param style
      */
@@ -60,7 +60,7 @@ public class MatchRuleTableViewer extends AbstractMatchAnalysisTableViewer<Match
 
     /**
      * DOC zshen Comment method "getCellEditor".
-     *
+     * 
      * @param headers
      * @return
      */
@@ -86,7 +86,7 @@ public class MatchRuleTableViewer extends AbstractMatchAnalysisTableViewer<Match
 
     /**
      * DOC zshen Comment method "getTableLabelProvider".
-     *
+     * 
      * @return
      */
     @Override
@@ -96,7 +96,7 @@ public class MatchRuleTableViewer extends AbstractMatchAnalysisTableViewer<Match
 
     /**
      * DOC zshen Comment method "getTableContentProvider".
-     *
+     * 
      * @return
      */
     @Override
@@ -106,7 +106,7 @@ public class MatchRuleTableViewer extends AbstractMatchAnalysisTableViewer<Match
 
     /**
      * DOC zshen Comment method "getCellModifier".
-     *
+     * 
      * @return
      */
     @Override
@@ -115,9 +115,9 @@ public class MatchRuleTableViewer extends AbstractMatchAnalysisTableViewer<Match
     }
 
     /**
-     *
+     * 
      * add new Element
-     *
+     * 
      * @param columnName the name of column
      * @param analysis the context of this add operation perform on.
      */
@@ -144,18 +144,17 @@ public class MatchRuleTableViewer extends AbstractMatchAnalysisTableViewer<Match
 
     /**
      * use this value to compute the vaule of column width
-     *
+     * 
      * @return
      */
     @Override
     protected int getHeaderDisplayWeight() {
-        return 8;
+        return 10;
     }
-
 
     /**
      * DOC zhao Comment method "setMatchRule".
-     *
+     * 
      * @param matchRule2
      */
     public void setMatchRule(MatchRule matchRule) {
@@ -168,11 +167,9 @@ public class MatchRuleTableViewer extends AbstractMatchAnalysisTableViewer<Match
         actionGroup.fillContextMenu(new MenuManager());
     }
 
-
-
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see org.talend.dataquality.record.linkage.ui.composite.tableviewer.AbstractMatchAnalysisTableViewer#
      * createNewKeyDefinition(java.lang.String)
      */
@@ -180,7 +177,5 @@ public class MatchRuleTableViewer extends AbstractMatchAnalysisTableViewer<Match
     protected MatchKeyDefinition createNewKeyDefinition(String columnName) {
         return MatchRuleAnlaysisUtils.createDefaultMatchRow(columnName);
     }
-
-
 
 }

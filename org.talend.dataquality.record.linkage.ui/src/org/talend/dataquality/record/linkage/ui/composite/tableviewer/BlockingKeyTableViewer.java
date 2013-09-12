@@ -42,16 +42,15 @@ import org.talend.dataquality.rules.RulesFactory;
 
 /**
  * created by zshen on Aug 6, 2013 Detailled comment
- *
+ * 
  */
 public class BlockingKeyTableViewer extends AbstractMatchAnalysisTableViewer<BlockKeyDefinition> {
 
     private static Logger log = Logger.getLogger(BlockingKeyTableViewer.class);
 
-
     /**
      * DOC zshen BlockingKeyTableViewer constructor comment.
-     *
+     * 
      * @param parent
      * @param style
      */
@@ -59,11 +58,9 @@ public class BlockingKeyTableViewer extends AbstractMatchAnalysisTableViewer<Blo
         super(parent, style, isAddColumn);
     }
 
-
-
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see org.talend.dataquality.record.linkage.ui.composite.tableviewer.MatchRuleTableViewer#getTableLabelProvider()
      */
     @Override
@@ -73,7 +70,7 @@ public class BlockingKeyTableViewer extends AbstractMatchAnalysisTableViewer<Blo
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see
      * org.talend.dataquality.record.linkage.ui.composite.tableviewer.MatchRuleTableViewer#getTableContentProvider()
      */
@@ -84,7 +81,7 @@ public class BlockingKeyTableViewer extends AbstractMatchAnalysisTableViewer<Blo
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see org.talend.dataquality.record.linkage.ui.composite.tableviewer.MatchRuleTableViewer#getTableCellModifier()
      */
     @Override
@@ -94,19 +91,18 @@ public class BlockingKeyTableViewer extends AbstractMatchAnalysisTableViewer<Blo
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see org.talend.dataquality.record.linkage.ui.composite.tableviewer.MatchRuleTableViewer#getDisplayWeight()
      */
     @Override
     protected int getHeaderDisplayWeight() {
-        return 8;
+        return 12;
     }
 
-
     /**
-     *
+     * 
      * add new Element
-     *
+     * 
      * @param columnName the name of column
      * @param analysis the context of this add operation perform on.
      */
@@ -123,7 +119,7 @@ public class BlockingKeyTableViewer extends AbstractMatchAnalysisTableViewer<Blo
 
     /**
      * DOC zshen Comment method "createDefaultRow".
-     *
+     * 
      * @param columnName
      * @return
      */
@@ -151,7 +147,7 @@ public class BlockingKeyTableViewer extends AbstractMatchAnalysisTableViewer<Blo
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see
      * org.talend.dataquality.record.linkage.ui.composite.tableviewer.AbstractMatchAnalysisTabveViewer#removeElement
      * (java.lang.String)
@@ -168,10 +164,9 @@ public class BlockingKeyTableViewer extends AbstractMatchAnalysisTableViewer<Blo
         }
     }
 
-
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see
      * org.talend.dataquality.record.linkage.ui.composite.tableviewer.AbstractMatchAnalysisTableViewer#addContextMenu()
      */
@@ -181,13 +176,9 @@ public class BlockingKeyTableViewer extends AbstractMatchAnalysisTableViewer<Blo
         actionGroup.fillContextMenu(new MenuManager());
     }
 
-
-
-
-
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see
      * org.talend.dataquality.record.linkage.ui.composite.tableviewer.MatchRuleTableViewer#getCellEditor(java.util.List)
      */
@@ -213,6 +204,5 @@ public class BlockingKeyTableViewer extends AbstractMatchAnalysisTableViewer<Blo
         }
         return editors;
     }
-
 
 }

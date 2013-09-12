@@ -28,7 +28,7 @@ import org.talend.dataquality.rules.KeyDefinition;
 
 /**
  * created by zhao on Aug 19, 2013 Detailled comment
- *
+ * 
  */
 public class DuplicateRecordTableViewer extends AbstractMatchAnalysisTableViewer {
 
@@ -40,7 +40,7 @@ public class DuplicateRecordTableViewer extends AbstractMatchAnalysisTableViewer
 
     /**
      * DOC zhao DuplicateRecordTableViewer constructor comment.
-     *
+     * 
      * @param parent
      * @param style
      */
@@ -56,12 +56,12 @@ public class DuplicateRecordTableViewer extends AbstractMatchAnalysisTableViewer
     private void initHeaders() {
         tableHeaders.add(MatchAnalysisConstant.LABEL);
         tableHeaders.add(MatchAnalysisConstant.COUNT);
-        tableHeaders.add(MatchAnalysisConstant.PERCENTAGE);
+        tableHeaders.add(MatchAnalysisConstant.PERCENTAGE + "  "); //$NON-NLS-1$
     }
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see
      * org.talend.dataquality.record.linkage.ui.composite.tableviewer.AbstractMatchAnalysisTableViewer#getDisplayWeight
      * ()
@@ -73,7 +73,7 @@ public class DuplicateRecordTableViewer extends AbstractMatchAnalysisTableViewer
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see
      * org.talend.dataquality.record.linkage.ui.composite.tableviewer.AbstractMatchAnalysisTableViewer#getTableHeightHint
      * ()
@@ -85,7 +85,7 @@ public class DuplicateRecordTableViewer extends AbstractMatchAnalysisTableViewer
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see
      * org.talend.dataquality.record.linkage.ui.composite.tableviewer.AbstractMatchAnalysisTableViewer#getTableLabelProvider
      * ()
@@ -100,7 +100,7 @@ public class DuplicateRecordTableViewer extends AbstractMatchAnalysisTableViewer
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see org.talend.dataquality.record.linkage.ui.composite.tableviewer.AbstractMatchAnalysisTableViewer#
      * getTableContentProvider()
      */
@@ -114,7 +114,7 @@ public class DuplicateRecordTableViewer extends AbstractMatchAnalysisTableViewer
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see
      * org.talend.dataquality.record.linkage.ui.composite.tableviewer.AbstractMatchAnalysisTableViewer#getTableCellModifier
      * ()
@@ -124,11 +124,9 @@ public class DuplicateRecordTableViewer extends AbstractMatchAnalysisTableViewer
         return null;
     }
 
-
-
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see
      * org.talend.dataquality.record.linkage.ui.composite.tableviewer.AbstractMatchAnalysisTableViewer#addElement(java
      * .lang.String, org.talend.dataquality.analysis.Analysis)
@@ -141,16 +139,15 @@ public class DuplicateRecordTableViewer extends AbstractMatchAnalysisTableViewer
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see
      * org.talend.dataquality.record.linkage.ui.composite.tableviewer.AbstractMatchAnalysisTableViewer#removeElement
      * (java.lang.String, org.talend.dataquality.analysis.Analysis)
      */
 
-
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see
      * org.talend.dataquality.record.linkage.ui.composite.tableviewer.AbstractMatchAnalysisTableViewer#addContextMenu()
      */
@@ -160,11 +157,9 @@ public class DuplicateRecordTableViewer extends AbstractMatchAnalysisTableViewer
 
     }
 
-
-
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see org.talend.dataquality.record.linkage.ui.composite.tableviewer.AbstractMatchAnalysisTableViewer#
      * createNewKeyDefinition(java.lang.String)
      */
@@ -175,7 +170,7 @@ public class DuplicateRecordTableViewer extends AbstractMatchAnalysisTableViewer
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see
      * org.talend.dataquality.record.linkage.ui.composite.tableviewer.AbstractMatchAnalysisTableViewer#removeElement
      * (java.lang.String, java.util.List)
