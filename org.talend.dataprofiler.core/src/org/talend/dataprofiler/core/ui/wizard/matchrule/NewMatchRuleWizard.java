@@ -17,6 +17,7 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.talend.core.model.properties.Item;
 import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.dataprofiler.core.CorePlugin;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.editor.dqrules.DQRuleEditor;
 import org.talend.dataprofiler.core.ui.editor.matchrule.MatchRuleItemEditorInput;
 import org.talend.dataprofiler.core.ui.wizard.AbstractWizard;
@@ -32,16 +33,13 @@ import org.talend.resource.EResourceConstant;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
-
 /**
- * created by zshen on Aug 19, 2013
- * Detailled comment
- *
+ * created by zshen on Aug 19, 2013 Detailled comment
+ * 
  */
 public class NewMatchRuleWizard extends AbstractWizard {
 
     private NewMatchRuleMetadataPage newMatchRuleMetadataPage = null;
-
 
     private DQMatchRuleParameter parameter;
 
@@ -55,18 +53,24 @@ public class NewMatchRuleWizard extends AbstractWizard {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see org.eclipse.jface.wizard.Wizard#addPages()
      */
     @Override
     public void addPages() {
         newMatchRuleMetadataPage = new NewMatchRuleMetadataPage();
+        if (isExport) {
+            newMatchRuleMetadataPage.setTitle(DefaultMessagesImpl.getString("NewMatchRuleWizard.exportPage1_1")); //$NON-NLS-1$
+        } else {
+            newMatchRuleMetadataPage.setTitle(DefaultMessagesImpl.getString("NewMatchRuleWizard.createPage1_1")); //$NON-NLS-1$
+        }
+        newMatchRuleMetadataPage.setDescription(DefaultMessagesImpl.getString("NewMatchRuleWizard.defineProp")); //$NON-NLS-1$
         this.addPage(newMatchRuleMetadataPage);
     }
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see org.talend.dataprofiler.core.ui.wizard.ICWMResouceAdapter#initCWMResourceBuilder()
      */
     public ModelElement initCWMResourceBuilder() {
@@ -85,7 +89,7 @@ public class NewMatchRuleWizard extends AbstractWizard {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see org.talend.dataprofiler.core.ui.wizard.ICWMResouceAdapter#createAndSaveCWMFile(orgomg.cwm.objectmodel.core.
      * ModelElement)
      */
@@ -93,10 +97,10 @@ public class NewMatchRuleWizard extends AbstractWizard {
         MatchRuleDefinition newMatchRule = (MatchRuleDefinition) repositoryObject;
 
         TaggedValueHelper.setValidStatus(true, newMatchRule);
-        
+
         // Added for export an match rule created by the match analysis, which need to replace the rules in createdItem,
         MatchRuleDefinitionWriter matchRuleWriter = ElementWriterFactory.getInstance().createdMatchRuleWriter();
-        if(isExport){
+        if (isExport) {
             matchRuleWriter.copy(newMatchRule, this.matchRule);
         }
         IFolder folder = parameter.getFolderProvider().getFolderResource();
@@ -108,7 +112,7 @@ public class NewMatchRuleWizard extends AbstractWizard {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see org.talend.dataprofiler.core.ui.wizard.AbstractWizard#openEditor(org.talend.core.model.properties.Item)
      */
     @Override
@@ -121,7 +125,7 @@ public class NewMatchRuleWizard extends AbstractWizard {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see org.talend.dataprofiler.core.ui.wizard.AbstractWizard#getResourceFileMap()
      */
     @Override
@@ -131,7 +135,7 @@ public class NewMatchRuleWizard extends AbstractWizard {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see org.talend.dataprofiler.core.ui.wizard.AbstractWizard#getParameter()
      */
     @Override
@@ -141,7 +145,7 @@ public class NewMatchRuleWizard extends AbstractWizard {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see org.talend.dataprofiler.core.ui.wizard.AbstractWizard#getEditorName()
      */
     @Override

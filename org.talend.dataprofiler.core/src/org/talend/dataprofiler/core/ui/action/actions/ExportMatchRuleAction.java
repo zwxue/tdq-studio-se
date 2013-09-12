@@ -27,9 +27,8 @@ import org.talend.dataquality.rules.MatchRuleDefinition;
 import org.talend.dq.analysis.parameters.DQMatchRuleParameter;
 import org.talend.resource.ResourceManager;
 
-
 /**
- * DOC yyin  class global comment. Detailled comment
+ * DOC yyin class global comment. Detailled comment
  */
 public class ExportMatchRuleAction extends Action {
 
@@ -37,7 +36,7 @@ public class ExportMatchRuleAction extends Action {
 
     public ExportMatchRuleAction(RecordMatchingIndicator recordMatchingIndicator) {
         ImageDescriptor imageDescriptor = ImageLib.getImageDescriptor(ImageLib.EXPORT_MATCH_RULE_ICON);
-
+        setText(DefaultMessagesImpl.getString("MatchAnalysisEditor.exportMatchRule")); //$NON-NLS-1$
         this.setImageDescriptor(imageDescriptor);
 
         this.matchRule = recordMatchingIndicator.getBuiltInMatchRuleDefinition();

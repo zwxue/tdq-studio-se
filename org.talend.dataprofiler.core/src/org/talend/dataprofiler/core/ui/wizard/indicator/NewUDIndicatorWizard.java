@@ -20,6 +20,7 @@ import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.relational.RelationalFactory;
 import org.talend.cwm.relational.TdExpression;
 import org.talend.dataprofiler.core.CorePlugin;
+import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.editor.indicator.IndicatorDefinitionItemEditorInput;
 import org.talend.dataprofiler.core.ui.editor.indicator.IndicatorEditor;
@@ -58,7 +59,7 @@ public class NewUDIndicatorWizard extends AbstractWizard {
         String s = DefaultMessagesImpl.getString("NewUDIndicatorWizard.udi"); //$NON-NLS-1$
 
         mPage1 = new NewUDIndicatorWizardPage1();
-        mPage1.setTitle(s + DefaultMessagesImpl.getString("NewUDIndicatorWizard.createPage1_1")); //$NON-NLS-1$
+        mPage1.setTitle(s + PluginConstant.SPACE_STRING + DefaultMessagesImpl.getString("NewUDIndicatorWizard.createPage1_1")); //$NON-NLS-1$
         mPage1.setDescription(DefaultMessagesImpl.getString("NewUDIndicatorWizard.defineProp")); //$NON-NLS-1$
         mPage1.setPageComplete(false);
 

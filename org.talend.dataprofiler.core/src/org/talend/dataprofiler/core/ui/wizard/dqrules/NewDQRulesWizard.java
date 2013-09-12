@@ -19,6 +19,7 @@ import org.talend.core.model.properties.Item;
 import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.relational.TdExpression;
 import org.talend.dataprofiler.core.CorePlugin;
+import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.editor.dqrules.BusinessRuleItemEditorInput;
 import org.talend.dataprofiler.core.ui.editor.dqrules.DQRuleEditor;
@@ -61,12 +62,12 @@ public class NewDQRulesWizard extends AbstractWizard {
         String s = DefaultMessagesImpl.getString("NewDQRulesWizard.dqRule"); //$NON-NLS-1$
 
         mPage = new NewDQRulesWizardPage1();
-        mPage.setTitle(s + DefaultMessagesImpl.getString("NewDQRulesWizard.createPage1_2")); //$NON-NLS-1$
+        mPage.setTitle(s + PluginConstant.SPACE_STRING + DefaultMessagesImpl.getString("NewDQRulesWizard.createPage1_2")); //$NON-NLS-1$
         mPage.setDescription(DefaultMessagesImpl.getString("NewDQRulesWizard.defineProp")); //$NON-NLS-1$
         mPage.setPageComplete(false);
 
         mPage2 = new NewDQRulesWizardPage2();
-        mPage2.setTitle(s + DefaultMessagesImpl.getString("NewDQRulesWizard.createPage2_2")); //$NON-NLS-1$
+        mPage2.setTitle(s + PluginConstant.SPACE_STRING + DefaultMessagesImpl.getString("NewDQRulesWizard.createPage2_2")); //$NON-NLS-1$
         mPage2.setDescription(DefaultMessagesImpl.getString("NewDQRulesWizard.defineWhere")); //$NON-NLS-1$
 
         addPage(mPage);
@@ -102,7 +103,7 @@ public class NewDQRulesWizard extends AbstractWizard {
 
     public TdExpression getExpression() {
         if (expression == null) {
-            expression = (TdExpression) EcoreUtil.copy(DefinitionHandler.getInstance().getDQRuleDefaultIndicatorDefinition()
+            expression = EcoreUtil.copy(DefinitionHandler.getInstance().getDQRuleDefaultIndicatorDefinition()
                     .getSqlGenericExpression().get(0));
         }
         return expression;

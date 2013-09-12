@@ -18,6 +18,7 @@ import org.eclipse.core.runtime.IPath;
 import org.talend.core.model.properties.Item;
 import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.dataprofiler.core.CorePlugin;
+import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.editor.pattern.PatternEditor;
 import org.talend.dataprofiler.core.ui.editor.pattern.PatternItemEditorInput;
@@ -95,7 +96,7 @@ public class CreatePatternWizard extends AbstractWizard {
         }
 
         mPage = new CreatePatternWizardPage1();
-        mPage.setTitle(s + DefaultMessagesImpl.getString("CreatePatternWizard.createPage1_2")); //$NON-NLS-1$
+        mPage.setTitle(s + PluginConstant.SPACE_STRING + DefaultMessagesImpl.getString("CreatePatternWizard.createPage1_2")); //$NON-NLS-1$
         mPage.setDescription(DefaultMessagesImpl.getString("CreatePatternWizard.defProp")); //$NON-NLS-1$
         mPage.setPageComplete(false);
         mPage.setPurpose(purpose);
@@ -105,7 +106,7 @@ public class CreatePatternWizard extends AbstractWizard {
 
             mPage2 = new CreatePatternWizardPage2(type);
         }
-        mPage2.setTitle(s + DefaultMessagesImpl.getString("CreatePatternWizard.createPage2_2")); //$NON-NLS-1$
+        mPage2.setTitle(s + PluginConstant.SPACE_STRING + DefaultMessagesImpl.getString("CreatePatternWizard.createPage2_2")); //$NON-NLS-1$
         mPage2.setDescription(DefaultMessagesImpl.getString("CreatePatternWizard.defineProp")); //$NON-NLS-1$
         addPage(mPage);
         addPage(mPage2);
