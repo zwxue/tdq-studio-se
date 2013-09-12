@@ -13,11 +13,10 @@
 package org.talend.dataquality.record.linkage.utils;
 
 import org.talend.dataquality.record.linkage.Messages;
-import org.talend.dataquality.record.linkage.constant.RecordMatcherType;
 
 /**
  * created by zshen on Aug 5, 2013 Detailled comment
- *
+ * 
  */
 public class MatchAnalysisConstant {
 
@@ -51,6 +50,7 @@ public class MatchAnalysisConstant {
     public static final String MATCH_RULE_TABLE_COMPOSITE = "Match Rule Table Composite"; //$NON-NLS-1$
 
     public static final String THRESHOLD = "threshold"; //$NON-NLS-1$
+
     // block key need
     public static final String BLOCK_KEY_NAME = "Blocking Key Name"; //$NON-NLS-1$
 
@@ -109,5 +109,6 @@ public class MatchAnalysisConstant {
 
     public static final String SURVIVORSHIP_KEY_DEFAULT_VALUE = Messages.getString("MatchAnalysisConstant.KEY_NAME"); //$NON-NLS-1$
 
+    public static final String MARCH_RULE_TAB_SWITCH = "MARCH_RULE_TAB_SWITCH"; //$NON-NLS-1$
 
 }

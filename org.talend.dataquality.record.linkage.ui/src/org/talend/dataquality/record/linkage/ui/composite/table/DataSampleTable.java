@@ -230,7 +230,7 @@ public class DataSampleTable {
     }
 
     public void refresh() {
-        natTable.forceFocus();
+        natTable.refresh();
     }
 
     /**

@@ -58,6 +58,7 @@ import org.eclipse.ui.forms.widgets.Section;
 import org.talend.commons.utils.WorkspaceUtils;
 import org.talend.core.model.metadata.MetadataColumnRepositoryObject;
 import org.talend.core.model.metadata.builder.connection.Connection;
+import org.talend.core.model.metadata.builder.connection.MetadataColumn;
 import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.properties.Property;
 import org.talend.core.repository.model.repositoryObject.MetadataXmlElementTypeRepositoryObject;
@@ -66,6 +67,7 @@ import org.talend.cwm.db.connection.DelimitedFileSQLExecutor;
 import org.talend.cwm.db.connection.ISQLExecutor;
 import org.talend.cwm.db.connection.MDMSQLExecutor;
 import org.talend.cwm.helper.TaggedValueHelper;
+import org.talend.cwm.xml.TdXmlElementType;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.dialog.MetadataAndColumnSelectionDialog;
@@ -82,6 +84,7 @@ import org.talend.dataquality.record.linkage.ui.composite.table.DataSampleTable;
 import org.talend.dataquality.record.linkage.ui.composite.utils.MatchRuleAnlaysisUtils;
 import org.talend.dataquality.record.linkage.ui.section.BlockingKeySection;
 import org.talend.dataquality.record.linkage.ui.section.MatchingKeySection;
+import org.talend.dataquality.record.linkage.utils.MatchAnalysisConstant;
 import org.talend.dataquality.rules.MatchRule;
 import org.talend.dataquality.rules.MatchRuleDefinition;
 import org.talend.dq.analysis.MatchAnalysisHandler;
@@ -148,7 +151,7 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
 
     /**
      * MatchMasterDetailsPage constructor.
-     *
+     * 
      * @param editor
      * @param id
      * @param title
@@ -197,7 +200,7 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
 
     /**
      * create Matching Key Section.
-     *
+     * 
      * @param form
      * @param topComp
      */
@@ -209,7 +212,7 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
 
     /**
      * create Blocking Key Section.
-     *
+     * 
      * @param form
      * @param topComp
      */
@@ -242,7 +245,7 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
 
     /**
      * create DataTable Composite.
-     *
+     * 
      * @param dataparent
      */
     private void createDataTableComposite(Composite dataparent) {
@@ -257,10 +260,12 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
         ModelElement[] selectedColumns = this.analysisHandler.getSelectedColumns();
 
         if (selectedColumns != null && selectedColumns.length > 0) {
-            RepositoryNode node = RepositoryNodeHelper.recursiveFind(selectedColumns[0]);
-            // TODO use ModelElement instead of node to get the data source type directly. See MatchAnalysisExecutor.
-            isMdm = RepNodeUtils.isMDM(node);
-            isDelimitedFile = RepNodeUtils.isDelimitedFile(node);
+            // use ModelElement instead of node to get the data source type directly.
+            if (selectedColumns[0] instanceof TdXmlElementType) {
+                isMdm = true;
+            } else if (selectedColumns[0] instanceof MetadataColumn) {
+                isDelimitedFile = true;
+            }
 
             createNatTable(new ArrayList<Object[]>());
         }
@@ -312,9 +317,11 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
 
     private void addListenerForSelectKeyButton() {
         selectBlockKeyBtn.addMouseListener(new MouseListener() {
+
             public void mouseDoubleClick(MouseEvent e) {
                 // no need to implement
             }
+
             public void mouseDown(MouseEvent e) {
                 // every time click the button, change its status
                 selectMatchKeyBtn.setEnabled(isBlockingKeyButtonPushed);
@@ -328,15 +335,18 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
                     setAllColumnColorToBlack();
                 }
             }
+
             public void mouseUp(MouseEvent e) {
                 // no need to implement
             }
         });
 
         selectMatchKeyBtn.addMouseListener(new MouseListener() {
+
             public void mouseDoubleClick(MouseEvent e) {
                 // no need to implement
             }
+
             public void mouseDown(MouseEvent e) {
                 // every time click the button, change its status
                 selectBlockKeyBtn.setEnabled(isMatchingKeyButtonPushed);
@@ -350,6 +360,7 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
                     setAllColumnColorToBlack();
                 }
             }
+
             public void mouseUp(MouseEvent e) {
                 // no need to implement
             }
@@ -368,7 +379,7 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
 
     /**
      * change Column Color By Current selected Keys.
-     *
+     * 
      * @param currentMatchKeyColumn
      */
     protected void changeColumnColorByCurrentKeys(List<String> currentKeyColumn, boolean isMatchKey) {
@@ -411,9 +422,11 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
         GridDataFactory.fillDefaults().align(SWT.LEFT, SWT.TOP).applyTo(selectDataBtn);
 
         createConnectionBtn.addMouseListener(new MouseListener() {
+
             public void mouseDoubleClick(MouseEvent e) {
                 // no need to implement
             }
+
             public void mouseDown(MouseEvent e) {
                 ConnectionWizard connectionWizard = new ConnectionWizard(PlatformUI.getWorkbench(), dataSampleparentComposite);
                 connectionWizard.setForcePreviousAndNextButtons(true);
@@ -421,6 +434,7 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
                 dialog.setPageSize(500, 200);
                 dialog.open();
             }
+
             public void mouseUp(MouseEvent e) {
                 // no need to implement
             }
@@ -430,9 +444,11 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
             public void mouseDoubleClick(MouseEvent e) {
                 // no need to implement
             }
+
             public void mouseDown(MouseEvent e) {
                 openColumnsSelectionDialog(analysisHandler.getAnalysis().getContext().getConnection());
             }
+
             public void mouseUp(MouseEvent e) {
                 // no need to implement
             }
@@ -442,7 +458,7 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
 
     /**
      * create "Refresh Button", and the row control input.
-     *
+     * 
      * @param buttonComposite
      */
     private void createDataQueryButtonComp(Composite parent) {
@@ -455,9 +471,11 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
         GridDataFactory.fillDefaults().align(SWT.LEFT, SWT.CENTER).applyTo(refreshDataBtn);
 
         refreshDataBtn.addMouseListener(new MouseListener() {
+
             public void mouseDoubleClick(MouseEvent e) {
                 // no need to implement
             }
+
             public void mouseDown(MouseEvent e) {
                 if (isValidateRowCount()) {
                     refreshDataFromConnection();
@@ -466,6 +484,7 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
                             DefaultMessagesImpl.getString("MatchMasterDetailsPage.LoadedRowCountError")); //$NON-NLS-1$
                 }
             }
+
             public void mouseUp(MouseEvent e) {
                 // no need to implement
             }
@@ -492,7 +511,7 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
 
     /**
      * check if the row loaded value is valid or not
-     *
+     * 
      * @return
      */
     private boolean isValidateRowCount() {
@@ -534,6 +553,7 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
     private void registerEvents(Composite dataSampleComposite) {
         // register: refresh the result page after running it from menu
         afterCreateConnectionReceiver = new EventReceiver() {
+
             @Override
             public boolean handle(Object data) {
                 selectedNodes = null;
@@ -550,9 +570,9 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
                 afterCreateConnectionReceiver);
 
         // register: refresh the data sample table to display the running result(with GID, SCORE, ...)
-         refreshTableDataReceiver = new EventReceiver() {
+        refreshTableDataReceiver = new EventReceiver() {
 
-         @Override
+            @Override
             public boolean handle(final Object data) {
                 Display.getDefault().asyncExec(new Runnable() {
 
@@ -562,14 +582,11 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
 
                 });
                 return true;
-         }
-         };
-         EventManager.getInstance().register(analysisHandler.getAnalysis(),
-         EventEnum.DQ_MATCH_ANALYSIS_REFRESH_WITH_RESULT,
-         refreshTableDataReceiver);
-
+            }
+        };
+        EventManager.getInstance().register(analysisHandler.getAnalysis(), EventEnum.DQ_MATCH_ANALYSIS_REFRESH_WITH_RESULT,
+                refreshTableDataReceiver);
     }
-
 
     /**
      * open the column selection dialog.
@@ -602,7 +619,7 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
     /**
      * if some columns are deleted : remove the blocking/match key which used this column ; if some column still there :
      * update the index info in their keys; if some new columns added : do nothing
-     *
+     * 
      * @param oldSelectedColumns
      */
     private void updateAllKeys(List<IRepositoryNode> oldSelectedColumns) {
@@ -621,7 +638,7 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
 
     /**
      * loop the new selected columns to check if the old one still Contained: find the new position.
-     *
+     * 
      * @param oldSelectNode
      * @return
      */
@@ -640,7 +657,7 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
      * compare two array of objects, if them are same, return false, if any difference, return true. check for the
      * column name of data table: when user select a column named "GID", "GRP_SIZE", "BLOCK_KEY", if has, remove them
      * and give the user a warning
-     *
+     * 
      * @param oldSelectedNodes : original selected columns
      * @param selectedResult : new selected columns
      * @return
@@ -682,7 +699,7 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
             }
         } else if (analysisHandler.getSelectedColumns() != null) {// find the related nodes of the selected columns,
                                                                   // when the first opened
-                                             // analysis has noe selected nodes
+            // analysis has noe selected nodes
             for (ModelElement selectedColumn : analysisHandler.getSelectedColumns()) {
                 RepositoryNode node = RepositoryNodeHelper.recursiveFind(selectedColumn);
                 reposViewObjList.add(node);
@@ -693,9 +710,9 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
 
     /**
      * need to be called after the user selects some columns need to fetch the data and refresh the table
-     *
+     * 
      * @param repositoryNodes
-     *
+     * 
      * @param nodes
      */
     public void setSelectedNodes(RepositoryNode[] repositoryNodes) {
@@ -713,7 +730,7 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
 
     /**
      * Refresh the table with new data
-     *
+     * 
      * @param listOfData
      */
     public void refreshTable(List<Object[]> listOfData) {
@@ -774,7 +791,7 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
      * when the user select one column, check: if the column is not selected before, add it(with color changed) else if
      * the column already be selected before, remove it(with color changed) Need to check: canSelectBlockingKey/
      * canSelectMatchingKey firstly,
-     *
+     * 
      * @param rowPosition
      * @param columnPosition
      * @param columnName
@@ -797,7 +814,7 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
 
     /**
      * handle the add/delete column for the Match Key Selection.
-     *
+     * 
      * @param columnName
      */
     private void handleMatchKeySelection(String columnName) {
@@ -817,7 +834,7 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
 
     /**
      * handle the add/delete column for the BlockKey Selection.
-     *
+     * 
      * @param columnName
      */
     private void handleBlockKeySelection(String columnName) {
@@ -841,7 +858,7 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
 
     /**
      * fetch the data according to the connection type(db,file,mdm)
-     *
+     * 
      * @return
      */
     private List<Object[]> fetchDataForTable() {
@@ -908,18 +925,26 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see java.beans.PropertyChangeListener#propertyChange(java.beans.PropertyChangeEvent)
      */
     public void propertyChange(PropertyChangeEvent evt) {
         if (PluginConstant.ISDIRTY_PROPERTY.equals(evt.getPropertyName())) {
             setDirty(Boolean.TRUE);
         }
+        // when the user switch the matchrule tab, receive the event, here should change the table's column color
+        // according to current tab
+        if (MatchAnalysisConstant.MARCH_RULE_TAB_SWITCH.equals(evt.getPropertyName())) {
+            // find the current rule tab, and change the color of the table column
+            if (isMatchingKeyButtonPushed) {
+                changeColumnColorByCurrentKeys(matchingKeySection.getCurrentMatchKeyColumn(), true);
+            }
+        }
     }
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisMetadataPage#canRun()
      */
     @Override
@@ -948,7 +973,7 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisMetadataPage#refresh()
      */
     @Override
@@ -959,7 +984,7 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisMetadataPage#saveAnalysis()
      */
     @Override
@@ -999,7 +1024,7 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
 
     /**
      * change the connection of the analysis after the user change the selected columns
-     *
+     * 
      * @param modelElement
      * @return
      */
@@ -1026,7 +1051,7 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisMetadataPage#fireRuningItemChanged(boolean)
      */
     @Override
@@ -1039,18 +1064,16 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
         }
     }
 
-
     public void importMatchRule(MatchRuleDefinition matchRule, boolean overwrite) {
         this.matchingKeySection.importMatchRule(matchRule, overwrite);
         this.blockingKeySection.importMatchRule(matchRule, overwrite);
         this.setDirty(true);
     }
 
-
     /**
-     *
+     * 
      * save/update the selected elements names as TaggedValue.
-     *
+     * 
      * @param selectedNames
      */
     public void updateAnalyzeDataLabel(String selectedNames) {
