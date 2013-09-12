@@ -151,6 +151,8 @@ public abstract class TwoPartCheckSelectionDialog extends SelectionStatusDialog 
 
     protected IRepositoryNode selectedTreeRepoNode;
 
+    private boolean addConnFilter = true;
+
     /**
      * Constructs an instance of <code>ElementTreeSelectionDialog</code>.
      * 
@@ -171,6 +173,7 @@ public abstract class TwoPartCheckSelectionDialog extends SelectionStatusDialog 
         fContainerMode = true;
         fExpandedElements = null;
         this.metadataFormPage = metadataFormPage;
+        this.addConnFilter = addConnFilter;
         int shellStyle = getShellStyle();
         setShellStyle(shellStyle | SWT.MAX | SWT.RESIZE);
         setMessage(message);
@@ -466,6 +469,8 @@ public abstract class TwoPartCheckSelectionDialog extends SelectionStatusDialog 
         if (fContainerMode) {
             if (DIALOG_TYPE_TABLE == this.getDialogType()) {
                 fViewer = new TableSelectionViewer(parent, SWT.BORDER);
+            } else if (!this.addConnFilter) {
+                fViewer = new MatchColumnSelectionViewer(parent, SWT.BORDER);
             } else {
                 fViewer = new ColumnSelectionViewer(parent, SWT.BORDER);
             }

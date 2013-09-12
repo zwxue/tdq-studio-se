@@ -55,13 +55,17 @@ public class ColumnSelectionViewer extends ContainerCheckedTreeViewer {
             super.fireCheckStateChanged(event);
         }
         if (checked && !(isTable || isXmlElement)) {
-            if (MessageDialogWithToggle.openConfirm(null,
-                    DefaultMessagesImpl.getString("ColumnSelectionViewer.warning"), tooMuchItemSeleted)) { //$NON-NLS-1$
+            if (isNotTableCase(event, element)) {
                 super.fireCheckStateChanged(event);
             } else {
                 event.getCheckable().setChecked(element, false);
             }
         }
+    }
+
+    protected boolean isNotTableCase(CheckStateChangedEvent event, Object element) {
+       return MessageDialogWithToggle.openConfirm(null,
+                DefaultMessagesImpl.getString("ColumnSelectionViewer.warning"), tooMuchItemSeleted);//$NON-NLS-1$
     }
 
     @Override
