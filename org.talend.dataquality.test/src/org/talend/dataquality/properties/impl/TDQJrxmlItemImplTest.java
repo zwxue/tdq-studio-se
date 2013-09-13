@@ -12,12 +12,10 @@
 // ============================================================================
 package org.talend.dataquality.properties.impl;
 
-import java.io.BufferedOutputStream;
+import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 
 import junit.framework.Assert;
 
@@ -36,9 +34,8 @@ import org.talend.core.model.properties.helper.ByteArrayResource;
 import org.talend.dataquality.properties.PropertiesFactory;
 import org.talend.dataquality.properties.TDQJrxmlItem;
 
-
 /**
- * DOC yyin  class global comment. Detailled comment
+ * DOC yyin class global comment. Detailled comment
  */
 public class TDQJrxmlItemImplTest {
 
@@ -49,8 +46,10 @@ public class TDQJrxmlItemImplTest {
     File file;
 
     String modifiedContent = "modified jrxml content";
+
     /**
      * DOC yyin Comment method "setUp".
+     * 
      * @throws java.lang.Exception
      */
     @Before
@@ -60,8 +59,7 @@ public class TDQJrxmlItemImplTest {
         EMFUtil emfUtil = new EMFUtil();
         File position = new File(""); //$NON-NLS-1$
         file = new File(position.getAbsolutePath() + File.separator + "data/test_0.1.jrxml"); //$NON-NLS-1$
-        System.out.println("Loading file " + file.getAbsolutePath());
-        writeToFile("original jrxml content");
+        writeToFile("original jrxml content");//$NON-NLS-1$
 
         ResourceSet rs = emfUtil.getResourceSet();
         // init the bytearray resource
@@ -71,22 +69,22 @@ public class TDQJrxmlItemImplTest {
         byteArrayResource = new ByteArrayResource(URI.createFileURI(file.getAbsolutePath()));
         byteArrayResource.getContents().add(byteArray);
         rs.getResources().add(byteArrayResource);
-        
+
         org.talend.core.model.properties.Property fileProperty = org.talend.core.model.properties.PropertiesFactory.eINSTANCE
                 .createProperty();
 
         fileProperty.setId(EcoreUtil.generateUUID());
         fileProperty.setItem(jrxmlItem);
-        fileProperty.setLabel("test1");
-        jrxmlItem.setName("test1");
+        fileProperty.setLabel("test1");//$NON-NLS-1$
+        jrxmlItem.setName("test1");//$NON-NLS-1$
 
         jrxmlItem.setProperty(fileProperty);
         ItemState itemState = org.talend.core.model.properties.PropertiesFactory.eINSTANCE.createItemState();
-        itemState.setPath("data");
+        itemState.setPath("data");//$NON-NLS-1$
         jrxmlItem.setState(itemState);
 
         // get the eresource of the item without creating the real project
-        File property = new File(position.getAbsolutePath() + File.separator + "data/test_0.1.property");
+        File property = new File(position.getAbsolutePath() + File.separator + "data/test_0.1.property");//$NON-NLS-1$
         Resource propertyResource = emfUtil.getResourceSet().createResource(URI.createFileURI(property.getAbsolutePath()));
         propertyResource.getContents().add(jrxmlItem.getProperty());
         propertyResource.getContents().add(jrxmlItem.getState());
@@ -101,6 +99,7 @@ public class TDQJrxmlItemImplTest {
 
     /**
      * DOC yyin Comment method "tearDown".
+     * 
      * @throws java.lang.Exception
      */
     @After
@@ -115,12 +114,11 @@ public class TDQJrxmlItemImplTest {
      * 
      * Test method for {@link org.talend.dataquality.properties.impl.TDQFileItemImpl#getContent()}.
      * 
-     * @throws UnsupportedEncodingException
      * @throws CoreException
-     * @throws FileNotFoundException
+     * @throws IOException
      */
     @Test
-    public void testGetContent() throws UnsupportedEncodingException, CoreException, FileNotFoundException {
+    public void testGetContent() throws CoreException, IOException {
 
         // modify the related jrxml file outside
         writeToFile(this.modifiedContent);
@@ -138,21 +136,14 @@ public class TDQJrxmlItemImplTest {
         Assert.assertEquals(modifiedContent, new String(innerContent));
     }
 
-    private void writeToFile(String content) throws FileNotFoundException {
-        BufferedOutputStream stream = new BufferedOutputStream(new FileOutputStream(file.getAbsoluteFile()));
-        try {
-            stream.write(content.getBytes());
-        } catch (IOException e) {
-            Assert.fail("modify jrxml file exception");
-        } finally {
-            if (stream != null) {
-                try {
-                    stream.close();
-                } catch (IOException e) {
-                    Assert.fail("modify jrxml file exception");
-                }
-            }
+    private void writeToFile(String content) throws IOException {
+        if (file.exists()) {
+            file.delete();
         }
+        file.createNewFile();
+        BufferedWriter output = new BufferedWriter(new FileWriter(file));
+        output.write(content);
+        output.close();
     }
 
 }
