@@ -571,9 +571,7 @@ public class MatchingKeySection extends AbstractMatchKeyWithChartTableSection {
 
             // if the key name= some column name, set the column to this key
             for (MatchKeyDefinition key : matchRule2.getMatchKeys()) {
-                if (this.hasSameColumnWithKeyName(key.getName())) {
-                    key.setColumn(key.getName());
-                }
+                setColumnValueIfMatch(key);
             }
 
             // auto add the tab name order

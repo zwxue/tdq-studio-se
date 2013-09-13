@@ -12,7 +12,6 @@
 // ============================================================================
 package org.talend.dq.writer.impl;
 
-import org.apache.commons.lang.StringUtils;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.core.model.properties.Item;
@@ -92,8 +91,7 @@ public class MatchRuleDefinitionWriter extends AElementPersistance {
         if (matchRule.getBlockKeys() != null && matchRule.getBlockKeys().size() > 0) {
             for (BlockKeyDefinition blockKey : matchRule.getBlockKeys()) {
                 BlockKeyDefinition copy = EcoreUtil.copy(blockKey);
-                // should empty the column value when export it
-                copy.setColumn(StringUtils.EMPTY);
+                // should not empty the column value when export it
                 ruleDefinition.getBlockKeys().add(copy);
             }
         }
@@ -120,8 +118,7 @@ public class MatchRuleDefinitionWriter extends AElementPersistance {
         if (oldRule.getMatchKeys() != null && oldRule.getMatchKeys().size() > 0) {
             for (MatchKeyDefinition matchKey : oldRule.getMatchKeys()) {
                 MatchKeyDefinition copy = EcoreUtil.copy(matchKey);
-                // should empty the column value when export it
-                copy.setColumn(StringUtils.EMPTY);
+                // should not empty the column value when export it
                 newRule.getMatchKeys().add(copy);
             }
         }

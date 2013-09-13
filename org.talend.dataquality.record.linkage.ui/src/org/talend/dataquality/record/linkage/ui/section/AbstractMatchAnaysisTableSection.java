@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -29,10 +30,11 @@ import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.record.linkage.ui.action.RefreshChartAction;
 import org.talend.dataquality.record.linkage.ui.composite.utils.ImageLib;
 import org.talend.dataquality.record.linkage.ui.i18n.internal.DefaultMessagesImpl;
+import org.talend.dataquality.rules.KeyDefinition;
 
 /**
  * created by zshen on Jul 31, 2013 Detailled comment
- *
+ * 
  */
 public abstract class AbstractMatchAnaysisTableSection extends AbstractSectionComposite implements ITableEditOperation {
 
@@ -48,8 +50,6 @@ public abstract class AbstractMatchAnaysisTableSection extends AbstractSectionCo
     private Composite sectionClient = null;
 
     private boolean isAddColumn = false;
-
-
 
     /**
      * @param parent
@@ -89,17 +89,16 @@ public abstract class AbstractMatchAnaysisTableSection extends AbstractSectionCo
 
     /**
      * Getter for isNeedSubChart.
-     *
+     * 
      * @return the isNeedSubChart
      */
     public Boolean isNeedSubChart() {
         return this.isNeedSubChart;
     }
 
-
     /**
      * Sets the isNeedSubChart.
-     *
+     * 
      * @param isNeedSubChart the isNeedSubChart to set
      */
     public void setIsNeedSubChart(Boolean isNeedSubChart) {
@@ -108,7 +107,7 @@ public abstract class AbstractMatchAnaysisTableSection extends AbstractSectionCo
 
     /**
      * DOC zshen Comment method "getColumnNum".
-     *
+     * 
      * @return
      */
     private int getGridColumnNum() {
@@ -157,7 +156,7 @@ public abstract class AbstractMatchAnaysisTableSection extends AbstractSectionCo
 
     /**
      * DOC zshen Comment method "createEditOperationButtons".
-     *
+     * 
      * @param sectionClient
      */
     private void createEditOperationButtons(Composite parent) {
@@ -192,13 +191,9 @@ public abstract class AbstractMatchAnaysisTableSection extends AbstractSectionCo
             }
         });
         createMoveButton(buttonsComposite, labelGd);
-        //TODO will be implemented later (copy and paste)
-
-
+        // TODO will be implemented later (copy and paste)
 
     }
-
-
 
     /**
      * DOC zshen Comment method "createButtons".
@@ -207,7 +202,6 @@ public abstract class AbstractMatchAnaysisTableSection extends AbstractSectionCo
 
         Composite buttonsComposite = new Composite(currentSectionClient, SWT.NONE);
         buttonsComposite.setLayout(new GridLayout(7, true));
-
 
         GridData labelGd = new GridData();
         labelGd.horizontalAlignment = SWT.LEFT;
@@ -230,7 +224,6 @@ public abstract class AbstractMatchAnaysisTableSection extends AbstractSectionCo
             }
         });
 
-
     }
 
     public void setDataInput(List<Object[]> allData) {
@@ -246,10 +239,9 @@ public abstract class AbstractMatchAnaysisTableSection extends AbstractSectionCo
         columnMap.put(column, String.valueOf(newPosition));
     }
 
-
     /**
      * Getter for isAddColumn.
-     *
+     * 
      * @return the isAddColumn
      */
     public boolean isAddColumn() {
@@ -258,17 +250,16 @@ public abstract class AbstractMatchAnaysisTableSection extends AbstractSectionCo
 
     /**
      * Sets the isAddColumn.
-     *
+     * 
      * @param isAddColumn the isAddColumn to set
      */
     public void setAddColumn(boolean isAddColumn) {
         this.isAddColumn = isAddColumn;
     }
 
-
     /**
      * DOC zshen Comment method "shouldMoveUp".
-     *
+     * 
      * @param blockKeyDefinition
      * @param blockKeyDefinition2
      * @return
@@ -279,9 +270,10 @@ public abstract class AbstractMatchAnaysisTableSection extends AbstractSectionCo
         }
         return true;
     }
+
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see org.talend.dataquality.record.linkage.ui.section.AbstractMatchAnaysisTableSection#pasteTableItem()
      */
     @Override
@@ -292,7 +284,7 @@ public abstract class AbstractMatchAnaysisTableSection extends AbstractSectionCo
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see org.talend.dataquality.record.linkage.ui.section.AbstractMatchAnaysisTableSection#copyTableItem()
      */
     @Override
@@ -303,7 +295,7 @@ public abstract class AbstractMatchAnaysisTableSection extends AbstractSectionCo
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see org.talend.dataquality.record.linkage.ui.section.AbstractMatchAnaysisTableSection#moveDownTableItem()
      */
     @Override
@@ -314,7 +306,7 @@ public abstract class AbstractMatchAnaysisTableSection extends AbstractSectionCo
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see org.talend.dataquality.record.linkage.ui.section.AbstractMatchAnaysisTableSection#moveUpTableItem()
      */
     @Override
@@ -325,7 +317,7 @@ public abstract class AbstractMatchAnaysisTableSection extends AbstractSectionCo
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see org.talend.dataquality.record.linkage.ui.section.AbstractMatchAnaysisTableSection#removeTableItem()
      */
     @Override
@@ -335,7 +327,7 @@ public abstract class AbstractMatchAnaysisTableSection extends AbstractSectionCo
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see org.talend.dataquality.record.linkage.ui.section.AbstractMatchAnaysisTableSection#addTableItem()
      */
     @Override
@@ -343,26 +335,24 @@ public abstract class AbstractMatchAnaysisTableSection extends AbstractSectionCo
 
     }
 
-
-
     /**
      * DOC zshen Comment method "createSubChart". TODO re-order the protected and abstract key word. let "protected"
      * first.
-     *
+     * 
      * @param sectionClient
      */
     abstract protected void createSubChart(Composite sectionClient);
 
     /**
      * DOC zshen Comment method "createSubContent".
-     *
+     * 
      * @param sectionClient
      */
     abstract protected Composite createSubContent(Composite sectionClient);
 
     /**
      * DOC zshen Comment method "getSectionName".
-     *
+     * 
      * @return
      */
     abstract protected String getSectionName();
@@ -373,7 +363,7 @@ public abstract class AbstractMatchAnaysisTableSection extends AbstractSectionCo
 
     /**
      * check if the key's name is same with some columns name
-     *
+     * 
      * @param keyName
      * @return
      */
@@ -382,6 +372,22 @@ public abstract class AbstractMatchAnaysisTableSection extends AbstractSectionCo
             return false;
         }
         return columnMap.containsKey(keyName);
+    }
+
+    /**
+     * When import:1) use key's name & key's column to compare, 2) set it empty when no match
+     * 
+     * @param keyDefinition
+     */
+    protected void setColumnValueIfMatch(KeyDefinition keyDefinition) {
+        // if the key name= some column name, set the column to this key
+        if (hasSameColumnWithKeyName(keyDefinition.getName())) {
+            keyDefinition.setColumn(keyDefinition.getName());
+        } else if (!hasSameColumnWithKeyName(keyDefinition.getColumn())) {
+            // if the key's column = some column name, keep it
+            // when key's name and key's column both no match, set it empty
+            keyDefinition.setColumn(StringUtils.EMPTY);
+        }
     }
 
 }
