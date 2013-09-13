@@ -21,16 +21,14 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorReference;
 import org.eclipse.ui.IViewReference;
 import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PartInitException;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.FileEditorInput;
-import org.talend.commons.ui.runtime.exception.ExceptionHandler;
+import org.talend.commons.exception.ExceptionHandler;
 import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.repository.i18n.Messages;
 import org.talend.dataprofiler.core.CorePlugin;
@@ -71,6 +69,7 @@ public class RenameTdqFolderAction extends RenameFolderAction {
             IWorkbenchPage page = getActivePage();
             IEditorReference[] editorReferences = page.getEditorReferences();
             List<String> openEditor = new ArrayList<String>();
+            List<IRepositoryNode> children = node.getChildren();
             for (IEditorReference tmpInput : editorReferences) {
                 try {
                     IEditorInput editorInput = tmpInput.getEditorInput();
@@ -81,7 +80,7 @@ public class RenameTdqFolderAction extends RenameFolderAction {
                     } else if (editorInput instanceof FileEditorInput) {
                         if (editorInput instanceof FileEditorInput) {
                             FileEditorInput fileInput = (FileEditorInput) editorInput;
-                            for (IRepositoryNode currentNode : node.getChildren()) {
+                            for (IRepositoryNode currentNode : children) {
                                 IFile nodeFile = RepositoryNodeHelper.getIFile(currentNode);
                                 if (nodeFile != null
                                         && nodeFile.getFullPath().toString().equals(fileInput.getFile().getFullPath().toString())) {
@@ -95,7 +94,6 @@ public class RenameTdqFolderAction extends RenameFolderAction {
                 }
             }
 
-            List<IRepositoryNode> children = node.getChildren();
             for (IRepositoryNode currentNode : children) {
                 if (currentNode.getType() == ENodeType.REPOSITORY_ELEMENT) {
                     if (openEditor.contains(currentNode.getObject().getId())) {
@@ -120,8 +118,9 @@ public class RenameTdqFolderAction extends RenameFolderAction {
     @Override
     protected void openFolderWizard(RepositoryNode node, ERepositoryObjectType objectType, IPath path) {
         if (repositoryNode.getObject().isDeleted()) {
-            MessageDialog.openWarning(new Shell(), Messages.getString("RenameFolderAction.warning.cannotFind.title"), Messages //$NON-NLS-1$
-                    .getString("RenameFolderAction.warning.cannotFind.message")); //$NON-NLS-1$
+            MessageDialog.openWarning(Display.getCurrent().getActiveShell(),
+                    Messages.getString("RenameFolderAction.warning.cannotFind.title"), Messages //$NON-NLS-1$
+                            .getString("RenameFolderAction.warning.cannotFind.message")); //$NON-NLS-1$
             return;
         }
 
@@ -137,9 +136,7 @@ public class RenameTdqFolderAction extends RenameFolderAction {
 
     @Override
     public ISelection getSelection() {
-        CorePlugin.getDefault().refreshWorkSpace();
-        IWorkbenchPart activePart = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActivePart();
-        ((DQRespositoryView) activePart).refresh();
+        repositoryObjectCRUD.refreshDQViewForRemoteProject();
         return repositoryObjectCRUD.getUISelection();
     }
 
