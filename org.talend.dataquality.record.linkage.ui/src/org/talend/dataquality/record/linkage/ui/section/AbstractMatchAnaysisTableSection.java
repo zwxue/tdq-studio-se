@@ -13,6 +13,7 @@
 package org.talend.dataquality.record.linkage.ui.section;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -372,6 +373,13 @@ public abstract class AbstractMatchAnaysisTableSection extends AbstractSectionCo
             return false;
         }
         return columnMap.containsKey(keyName);
+    }
+
+    public void addColumn(String column, int index) {
+        if (this.columnMap == null) {
+            columnMap = new HashMap<String, String>();
+        }
+        columnMap.put(column, String.valueOf(index));
     }
 
     /**

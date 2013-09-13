@@ -21,7 +21,6 @@ import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ComboBoxCellEditor;
 import org.eclipse.jface.viewers.IBaseLabelProvider;
-import org.eclipse.jface.viewers.ICellModifier;
 import org.eclipse.jface.viewers.IContentProvider;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
@@ -37,13 +36,13 @@ import org.talend.dataquality.rules.RulesFactory;
 
 /**
  * created by HHB on 2013-8-23 Detailled comment
- *
+ * 
  */
 public class DefaultSurvivorShipTableViewer extends AbstractMatchAnalysisTableViewer<DefaultSurvivorshipDefinition> {
 
     /**
      * DOC HHB SurvivorShipTableViewer constructor comment.
-     *
+     * 
      * @param parent
      * @param style
      * @param isAddColumn
@@ -51,7 +50,6 @@ public class DefaultSurvivorShipTableViewer extends AbstractMatchAnalysisTableVi
     public DefaultSurvivorShipTableViewer(Composite parent, int style) {
         super(parent, style, false);
     }
-
 
     @Override
     public void addContextMenu() {
@@ -61,7 +59,7 @@ public class DefaultSurvivorShipTableViewer extends AbstractMatchAnalysisTableVi
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see
      * org.talend.dataquality.record.linkage.ui.composite.tableviewer.AbstractMatchAnalysisTableViewer#getTableLabelProvider
      * ()
@@ -73,7 +71,7 @@ public class DefaultSurvivorShipTableViewer extends AbstractMatchAnalysisTableVi
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see org.talend.dataquality.record.linkage.ui.composite.tableviewer.AbstractMatchAnalysisTableViewer#
      * getTableContentProvider()
      */
@@ -84,25 +82,25 @@ public class DefaultSurvivorShipTableViewer extends AbstractMatchAnalysisTableVi
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see
      * org.talend.dataquality.record.linkage.ui.composite.tableviewer.AbstractMatchAnalysisTableViewer#getTableCellModifier
      * ()
      */
     @Override
-    protected ICellModifier getTableCellModifier() {
+    protected AbstractMatchCellModifier<DefaultSurvivorshipDefinition> getTableCellModifier() {
         return new DefaultSurvivorShipCellModifier(this);
     }
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see
      * org.talend.dataquality.record.linkage.ui.composite.tableviewer.AbstractMatchAnalysisTableViewer#getCellEditor
      * (java.util.List)
      */
     @Override
-    protected CellEditor[] getCellEditor(List<String> headers) {
+    protected CellEditor[] getCellEditor(List<String> headers, List<String> columnList) {
         CellEditor[] editors = new CellEditor[headers.size()];
         for (int i = 0; i < editors.length; ++i) {
             {
@@ -126,7 +124,6 @@ public class DefaultSurvivorShipTableViewer extends AbstractMatchAnalysisTableVi
         return false;
     }
 
-
     @Override
     protected DefaultSurvivorshipDefinition createNewKeyDefinition(String columnName) {
         DefaultSurvivorshipDefinition skd = RulesFactory.eINSTANCE.createDefaultSurvivorshipDefinition();
@@ -137,8 +134,6 @@ public class DefaultSurvivorShipTableViewer extends AbstractMatchAnalysisTableVi
         skd.setFunction(createAlgorithmDefinition);
         return skd;
     }
-
-
 
     public void removeElement(DefaultSurvivorshipDefinition keyDef, MatchRuleDefinition matchRuleDef) {
         List<DefaultSurvivorshipDefinition> skdList = matchRuleDef.getDefaultSurvivorshipDefinitions();
@@ -154,10 +149,9 @@ public class DefaultSurvivorShipTableViewer extends AbstractMatchAnalysisTableVi
         }
     }
 
-
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see org.talend.dataquality.record.linkage.ui.composite.tableviewer.AbstractMatchAnalysisTableViewer#
      * getHeaderDisplayWeight()
      */
@@ -166,11 +160,9 @@ public class DefaultSurvivorShipTableViewer extends AbstractMatchAnalysisTableVi
         return 12;
     }
 
-
-
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see
      * org.talend.dataquality.record.linkage.ui.composite.tableviewer.AbstractMatchAnalysisTableViewer#removeElement
      * (java.lang.String, java.util.List)
@@ -180,6 +172,5 @@ public class DefaultSurvivorShipTableViewer extends AbstractMatchAnalysisTableVi
         // don't need do anything
 
     }
-
 
 }

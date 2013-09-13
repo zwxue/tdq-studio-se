@@ -20,7 +20,6 @@ import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.CheckboxCellEditor;
 import org.eclipse.jface.viewers.ComboBoxCellEditor;
 import org.eclipse.jface.viewers.IBaseLabelProvider;
-import org.eclipse.jface.viewers.ICellModifier;
 import org.eclipse.jface.viewers.IContentProvider;
 import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.swt.SWT;
@@ -37,13 +36,13 @@ import org.talend.dataquality.rules.SurvivorshipKeyDefinition;
 
 /**
  * created by HHB on 2013-8-23 Detailled comment
- *
+ * 
  */
 public class SurvivorShipTableViewer extends AbstractMatchAnalysisTableViewer<SurvivorshipKeyDefinition> {
 
     /**
      * DOC HHB SurvivorShipTableViewer constructor comment.
-     *
+     * 
      * @param parent
      * @param style
      * @param isAddColumn
@@ -51,7 +50,6 @@ public class SurvivorShipTableViewer extends AbstractMatchAnalysisTableViewer<Su
     public SurvivorShipTableViewer(Composite parent, int style, boolean isAddColumn) {
         super(parent, style, isAddColumn);
     }
-
 
     @Override
     protected int getHeaderDisplayWeight() {
@@ -66,7 +64,7 @@ public class SurvivorShipTableViewer extends AbstractMatchAnalysisTableViewer<Su
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see
      * org.talend.dataquality.record.linkage.ui.composite.tableviewer.AbstractMatchAnalysisTableViewer#getTableLabelProvider
      * ()
@@ -78,7 +76,7 @@ public class SurvivorShipTableViewer extends AbstractMatchAnalysisTableViewer<Su
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see org.talend.dataquality.record.linkage.ui.composite.tableviewer.AbstractMatchAnalysisTableViewer#
      * getTableContentProvider()
      */
@@ -89,25 +87,25 @@ public class SurvivorShipTableViewer extends AbstractMatchAnalysisTableViewer<Su
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see
      * org.talend.dataquality.record.linkage.ui.composite.tableviewer.AbstractMatchAnalysisTableViewer#getTableCellModifier
      * ()
      */
     @Override
-    protected ICellModifier getTableCellModifier() {
+    protected AbstractMatchCellModifier<SurvivorshipKeyDefinition> getTableCellModifier() {
         return new SurvivorShipCellModifier(this);
     }
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see
      * org.talend.dataquality.record.linkage.ui.composite.tableviewer.AbstractMatchAnalysisTableViewer#getCellEditor
      * (java.util.List)
      */
     @Override
-    protected CellEditor[] getCellEditor(List<String> headers) {
+    protected CellEditor[] getCellEditor(List<String> headers, List<String> columnList) {
         CellEditor[] editors = new CellEditor[headers.size()];
         for (int i = 0; i < editors.length; ++i) {
             if (isAddColumn() && i == 1) {
@@ -138,12 +136,9 @@ public class SurvivorShipTableViewer extends AbstractMatchAnalysisTableViewer<Su
         return false;
     }
 
-
-
-
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see org.talend.dataquality.record.linkage.ui.composite.tableviewer.AbstractMatchAnalysisTableViewer#
      * createNewKeyDefinition(java.lang.String)
      */
@@ -160,7 +155,6 @@ public class SurvivorShipTableViewer extends AbstractMatchAnalysisTableViewer<Su
         return skd;
     }
 
-
     /*
      * (non-Javadoc)
      * 
@@ -173,6 +167,5 @@ public class SurvivorShipTableViewer extends AbstractMatchAnalysisTableViewer<Su
         // don't need to do anything
 
     }
-
 
 }

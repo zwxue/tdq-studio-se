@@ -20,7 +20,6 @@ import java.util.List;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ColumnPixelData;
 import org.eclipse.jface.viewers.IBaseLabelProvider;
-import org.eclipse.jface.viewers.ICellModifier;
 import org.eclipse.jface.viewers.IContentProvider;
 import org.eclipse.jface.viewers.TableLayout;
 import org.eclipse.jface.viewers.TableViewer;
@@ -38,7 +37,7 @@ import org.talend.dataquality.rules.KeyDefinition;
 
 /**
  * created by zshen on Aug 6, 2013 Detailled comment
- *
+ * 
  */
 public abstract class AbstractMatchAnalysisTableViewer<T> extends TableViewer {
 
@@ -52,7 +51,7 @@ public abstract class AbstractMatchAnalysisTableViewer<T> extends TableViewer {
 
     /**
      * DOC zshen MatchAnalysisTabveViewer constructor comment.
-     *
+     * 
      * @param parent
      * @param style
      */
@@ -87,14 +86,19 @@ public abstract class AbstractMatchAnalysisTableViewer<T> extends TableViewer {
         });
     }
 
+    public void initTable(List<String> headers) {
+        initTable(headers, null);
+    }
+
     /**
-     *
+     * 
      * DOC zshen Comment method "initTable".
-     *
+     * 
      * @param headers the name of column
+     * @param columnMap all of columns which can be used by current Table
      * @param pixelDataOfHeaders the width of the column
      */
-    public void initTable(List<String> headers) {
+    public void initTable(List<String> headers, List<String> columnMap) {
         TableLayout tLayout = new TableLayout();
         innerTable.setLayout(tLayout);
         innerTable.setHeaderVisible(true);
@@ -108,11 +112,12 @@ public abstract class AbstractMatchAnalysisTableViewer<T> extends TableViewer {
             new TableColumn(innerTable, SWT.LEFT).setText(headers.get(index));
         }
 
-        CellEditor[] editors = getCellEditor(headers);
+        CellEditor[] editors = getCellEditor(headers, columnMap);
         // add menu
         addContextMenu();
-        ICellModifier cellModifier = getTableCellModifier();
+        AbstractMatchCellModifier<T> cellModifier = getTableCellModifier();
         if (cellModifier != null) {
+            cellModifier.setColumnMap(columnMap);
             this.setCellModifier(cellModifier);
         }
         this.setCellEditors(editors);
@@ -126,7 +131,7 @@ public abstract class AbstractMatchAnalysisTableViewer<T> extends TableViewer {
     }
 
     /**
-     *
+     * 
      * @return
      */
     protected int getTableHeightHint() {
@@ -135,7 +140,7 @@ public abstract class AbstractMatchAnalysisTableViewer<T> extends TableViewer {
 
     /**
      * DOC zshen Comment method "selectAllItem".
-     *
+     * 
      * @param bkdList
      */
     public void selectAllItem(List<KeyDefinition> bkdList) {
@@ -144,7 +149,7 @@ public abstract class AbstractMatchAnalysisTableViewer<T> extends TableViewer {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see org.eclipse.jface.viewers.ColumnViewer#update(java.lang.Object, java.lang.String[])
      */
     @Override
@@ -153,9 +158,13 @@ public abstract class AbstractMatchAnalysisTableViewer<T> extends TableViewer {
         listeners.firePropertyChange(MatchAnalysisConstant.ISDIRTY_PROPERTY, true, false);
     }
 
+    public void noticeColumnSelectChange() {
+        listeners.firePropertyChange(MatchAnalysisConstant.MARCH_RULE_TAB_SWITCH, true, false);
+    }
+
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see org.eclipse.jface.viewers.AbstractTableViewer#remove(java.lang.Object)
      */
     @Override
@@ -171,7 +180,7 @@ public abstract class AbstractMatchAnalysisTableViewer<T> extends TableViewer {
 
     /**
      * Getter for isAddColumn.
-     *
+     * 
      * @return the isAddColumn
      */
     public boolean isAddColumn() {
@@ -188,54 +197,53 @@ public abstract class AbstractMatchAnalysisTableViewer<T> extends TableViewer {
 
     /**
      * DOC zshen Comment method "getDisplayWeight".
-     *
+     * 
      * @return
      */
     abstract protected int getHeaderDisplayWeight();
 
     /**
      * DOC zshen Comment method "getTableLabelProvider".
-     *
+     * 
      * @return
      */
     abstract protected IBaseLabelProvider getTableLabelProvider();
 
     /**
      * DOC zshen Comment method "getTableContentProvider".
-     *
+     * 
      * @return
      */
     abstract protected IContentProvider getTableContentProvider();
 
     /**
      * DOC zshen Comment method "getTableCellModifier".
-     *
+     * 
      * @return
      */
-    abstract protected ICellModifier getTableCellModifier();
+    abstract protected AbstractMatchCellModifier<T> getTableCellModifier();
 
     /**
      * DOC zshen Comment method "getCellEditor".
-     *
+     * 
      * @param headers
      * @return
      */
-    abstract protected CellEditor[] getCellEditor(List<String> headers);
-
+    abstract protected CellEditor[] getCellEditor(List<String> headers, List<String> columnMap);
 
     /**
-     *
+     * 
      * add new Element
-     *
+     * 
      * @param columnName the name of column
      * @param analysis the context of this add operation perform on.
      */
     abstract public boolean addElement(String columnName, Analysis analysis);
 
     /**
-     *
+     * 
      * add new Element
-     *
+     * 
      * @param columnName the name of column
      * @param analysis the context of this add operation perform on.
      */
@@ -261,7 +269,7 @@ public abstract class AbstractMatchAnalysisTableViewer<T> extends TableViewer {
 
     /**
      * create a new KeyDefinition
-     *
+     * 
      * @param columnName
      * @return
      */
@@ -269,15 +277,14 @@ public abstract class AbstractMatchAnalysisTableViewer<T> extends TableViewer {
 
     /**
      * remove Element
-     *
+     * 
      * @param columnName the name of column
      */
     abstract public void removeElement(String columnName, List<T> keyList);
 
-
     /**
      * remove Element
-     *
+     * 
      * @param columnName the element of column
      */
     public void removeElement(T keyDef, List<T> keyList) {
@@ -294,9 +301,9 @@ public abstract class AbstractMatchAnalysisTableViewer<T> extends TableViewer {
     }
 
     /**
-     *
+     * 
      * move up element
-     *
+     * 
      * @param keyDef
      * @param matchRuleDef
      */
@@ -320,9 +327,9 @@ public abstract class AbstractMatchAnalysisTableViewer<T> extends TableViewer {
     }
 
     /**
-     *
+     * 
      * move down element
-     *
+     * 
      * @param keyDef
      * @param matchRuleDef
      */
@@ -348,7 +355,5 @@ public abstract class AbstractMatchAnalysisTableViewer<T> extends TableViewer {
             }
         }
     }
-
-
 
 }

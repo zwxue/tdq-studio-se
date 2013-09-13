@@ -13,8 +13,6 @@
 package org.talend.dataquality.record.linkage.ui.composite.tableviewer;
 
 import org.apache.commons.lang.StringUtils;
-import org.eclipse.jface.viewers.ICellModifier;
-import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.widgets.TableItem;
 import org.talend.dataquality.record.linkage.utils.BlockingKeyAlgorithmEnum;
 import org.talend.dataquality.record.linkage.utils.BlockingKeyPostAlgorithmEnum;
@@ -26,15 +24,13 @@ import org.talend.dataquality.rules.BlockKeyDefinition;
  * created by zshen on Aug 6, 2013 Detailled comment
  * 
  */
-public class BlockingKeyCellModeifier implements ICellModifier {
-
-    TableViewer tableViewer = null;
+public class BlockingKeyCellModeifier extends AbstractMatchCellModifier<BlockKeyDefinition> {
 
     /**
      * DOC zshen MatchRuleCellModifier constructor comment.
      */
-    public BlockingKeyCellModeifier(TableViewer tableViewer) {
-        this.tableViewer = tableViewer;
+    public BlockingKeyCellModeifier(AbstractMatchAnalysisTableViewer<BlockKeyDefinition> newTableViewer) {
+        this.tableViewer = newTableViewer;
     }
 
     /*
@@ -81,7 +77,7 @@ public class BlockingKeyCellModeifier implements ICellModifier {
         } else if (MatchAnalysisConstant.POST_VALUE.equalsIgnoreCase(property)) {
             return bkd.getPostAlgorithm().getAlgorithmParameters();
         } else if (MatchAnalysisConstant.COLUMN.equalsIgnoreCase(property)) {
-            return bkd.getColumn();
+            return columnList.indexOf(bkd.getColumn());
         } else if (MatchAnalysisConstant.BLOCK_KEY_NAME.equalsIgnoreCase(property)) {
             return bkd.getName();
         }
@@ -135,10 +131,12 @@ public class BlockingKeyCellModeifier implements ICellModifier {
                 }
                 bkd.getPostAlgorithm().setAlgorithmParameters(newValue);
             } else if (MatchAnalysisConstant.COLUMN.equalsIgnoreCase(property)) {
-                if (StringUtils.equals(bkd.getColumn(), newValue)) {
+                String columnName = columnList.get(Integer.parseInt(newValue));
+                if (StringUtils.equals(bkd.getColumn(), columnName)) {
                     return;
                 }
-                bkd.setColumn(newValue);
+                bkd.setColumn(columnName);
+                tableViewer.noticeColumnSelectChange();
             } else if (MatchAnalysisConstant.BLOCK_KEY_NAME.equalsIgnoreCase(property)) {
                 if (StringUtils.equals(bkd.getName(), newValue)) {
                     return;

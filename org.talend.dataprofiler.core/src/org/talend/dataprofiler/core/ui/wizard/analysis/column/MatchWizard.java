@@ -87,6 +87,9 @@ public class MatchWizard extends ColumnWizard {
         // When creating, the dialog get the IFolder, not get the node directly, so it need to be transfer to the node
         // on the repository view by the same model elements
         List<IRepositoryNode> nodeList = new ArrayList<IRepositoryNode>();
+        if (nodes == null) {
+            return;
+        }
         for (IRepositoryNode repNode : nodes) {
             RepositoryNode tempRepNode = RepositoryNodeHelper.recursiveFind(RepositoryNodeHelper
                     .getModelElementFromRepositoryNode(repNode));

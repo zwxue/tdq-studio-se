@@ -328,6 +328,11 @@ public class MatchingKeySection extends AbstractMatchKeyWithChartTableSection {
         MatchRuleTableComposite matchRuleComposite = createTableComposite(ruleComp, matchRule);
         matchRuleComposite.addPropertyChangeListener(this);
         matchRuleComposite.setAddColumn(isAddColumn());
+        if (columnMap != null) {
+            ArrayList<String> columnList = new ArrayList<String>();
+            columnList.addAll(columnMap.keySet());
+            matchRuleComposite.setColumnList(columnList);
+        }
         matchRuleComposite.createContent();
         matchRuleComposite.serViewerSorter(new KeyDefinitionTableViewerSorter<MatchKeyDefinition>(matchRule.getMatchKeys()));
         matchRuleComposite.setInput(matchRule);
@@ -533,6 +538,7 @@ public class MatchingKeySection extends AbstractMatchKeyWithChartTableSection {
                 matchRuleTableComp.removeKeyDefinition(column, getCurrentMatchRuleTableComposite().getMatchRule().getMatchKeys());
             }
         }
+        columnMap.remove(column);
     }
 
     /**

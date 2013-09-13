@@ -640,6 +640,19 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
             }
 
         }
+
+        // add new columns
+        for (RepositoryNode selectedOne : this.selectedNodes) {
+            if (!oldSelectedColumns.contains(selectedOne)) {
+                // the old doesnot contain the current, it need to be added to the columnMap
+                int positionInNewSelectColumns = positionInNewSelectColumns(selectedOne);
+                matchingKeySection.addColumn(selectedOne.getLabel(), positionInNewSelectColumns);
+                blockingKeySection.addColumn(selectedOne.getLabel(), positionInNewSelectColumns);
+            }
+        }
+
+        this.matchingKeySection.redrawnContent();
+        this.blockingKeySection.redrawnContent();
     }
 
     /**
@@ -944,6 +957,8 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
             // find the current rule tab, and change the color of the table column
             if (isMatchingKeyButtonPushed) {
                 changeColumnColorByCurrentKeys(matchingKeySection.getCurrentMatchKeyColumn(), true);
+            } else if (this.isBlockingKeyButtonPushed) {
+                changeColumnColorByCurrentKeys(blockingKeySection.getSelectedColumnAsBlockKeys(), false);
             }
         } else if (MatchAnalysisConstant.NEED_REFRESH_DATA.equals(evt.getPropertyName())) {
             refreshDataFromConnection();
@@ -961,7 +976,7 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
 
         // when the user didnot select any columns, can not run
         if (analysisHandler.getAnalyzedColumns() == null || analysisHandler.getAnalyzedColumns().size() < 1) {
-            rc.setMessage(DefaultMessagesImpl.getString("MatchMasterDetailsPage.NoSelectColumn"));
+            rc.setMessage(DefaultMessagesImpl.getString("MatchMasterDetailsPage.NoSelectColumn")); //$NON-NLS-1$
             return rc;
         }
 

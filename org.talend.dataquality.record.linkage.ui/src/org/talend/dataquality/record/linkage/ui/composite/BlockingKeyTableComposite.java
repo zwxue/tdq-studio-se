@@ -20,13 +20,13 @@ import org.talend.dataquality.rules.BlockKeyDefinition;
 
 /**
  * created by zshen on Aug 6, 2013 Detailled comment
- *
+ * 
  */
 public class BlockingKeyTableComposite extends AbsMatchAnalysisTableComposite<BlockKeyDefinition> {
 
     /**
      * DOC zshen BlockingKeyTableComposite constructor comment.
-     *
+     * 
      * @param parent
      * @param style
      */
@@ -36,7 +36,7 @@ public class BlockingKeyTableComposite extends AbsMatchAnalysisTableComposite<Bl
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see org.talend.dataquality.record.linkage.ui.composite.MatchRuleTableComposite#initHeaders()
      */
     @Override
@@ -54,7 +54,7 @@ public class BlockingKeyTableComposite extends AbsMatchAnalysisTableComposite<Bl
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see org.talend.dataquality.record.linkage.ui.composite.MatchRuleTableComposite#createTable()
      */
     @Override
@@ -62,13 +62,12 @@ public class BlockingKeyTableComposite extends AbsMatchAnalysisTableComposite<Bl
 
         tableViewer = createTableViewer();
         tableViewer.addPropertyChangeListener(this);
-        ((BlockingKeyTableViewer) tableViewer).initTable(headers);
+        ((BlockingKeyTableViewer) tableViewer).initTable(headers, columnList);
     }
-
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see org.talend.dataquality.record.linkage.ui.composite.AbsMatchAnalysisTableComposite#createTableViewer()
      */
     @Override

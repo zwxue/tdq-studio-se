@@ -29,7 +29,7 @@ import org.talend.dataquality.rules.KeyDefinition;
 /**
  * created by zhao on Aug 16, 2013 Abstract table compoiste. Blocking key, matching key survivorship key table are
  * intended to be extended.
- *
+ * 
  */
 public abstract class AbsMatchAnalysisTableComposite<T> extends Composite implements PropertyChangeListener {
 
@@ -39,12 +39,13 @@ public abstract class AbsMatchAnalysisTableComposite<T> extends Composite implem
 
     private boolean isAddColumn = true;
 
-    protected PropertyChangeSupport listeners = new PropertyChangeSupport(this);
+    protected List<String> columnList = new ArrayList<String>();
 
+    protected PropertyChangeSupport listeners = new PropertyChangeSupport(this);
 
     /**
      * DOC zshen MatchRuleComposite constructor comment.
-     *
+     * 
      * @param parent
      * @param style
      */
@@ -62,10 +63,18 @@ public abstract class AbsMatchAnalysisTableComposite<T> extends Composite implem
     }
 
     /**
+     * Sets the columnMap.
+     * 
+     * @param columnMap the columnMap to set
+     */
+    public void setColumnList(List<String> columnList) {
+        this.columnList.addAll(columnList);
+    }
+
+    /**
      * DOC zshen Comment method "initHeaders".
      */
     abstract protected void initHeaders();
-
 
     abstract protected AbstractMatchAnalysisTableViewer<T> createTableViewer();
 
@@ -125,7 +134,7 @@ public abstract class AbsMatchAnalysisTableComposite<T> extends Composite implem
 
     /**
      * Getter for isAddColumn.
-     *
+     * 
      * @return the isAddColumn
      */
     public boolean isAddColumn() {
@@ -134,7 +143,7 @@ public abstract class AbsMatchAnalysisTableComposite<T> extends Composite implem
 
     /**
      * Sets the isAddColumn.
-     *
+     * 
      * @param isAddColumn the isAddColumn to set
      */
     public void setAddColumn(boolean isAddColumn) {
@@ -153,6 +162,8 @@ public abstract class AbsMatchAnalysisTableComposite<T> extends Composite implem
     public void propertyChange(PropertyChangeEvent evt) {
         if (MatchAnalysisConstant.ISDIRTY_PROPERTY.equals(evt.getPropertyName())) {
             listeners.firePropertyChange(MatchAnalysisConstant.ISDIRTY_PROPERTY, true, false);
+        } else if (MatchAnalysisConstant.MARCH_RULE_TAB_SWITCH.equals(evt.getPropertyName())) {
+            listeners.firePropertyChange(MatchAnalysisConstant.MARCH_RULE_TAB_SWITCH, true, false);
         }
     }
 

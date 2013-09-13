@@ -27,9 +27,8 @@ import org.eclipse.ui.forms.widgets.Section;
 import org.talend.dataquality.record.linkage.utils.MatchAnalysisConstant;
 
 /**
- * created by zshen on Aug 20, 2013
- * Detailled comment
- *
+ * created by zshen on Aug 20, 2013 Detailled comment
+ * 
  */
 public abstract class AbstractSectionComposite implements PropertyChangeListener {
 
@@ -57,9 +56,10 @@ public abstract class AbstractSectionComposite implements PropertyChangeListener
         });
         section.setExpanded(true);
     }
+
     /**
      * Getter for section.
-     *
+     * 
      * @return the section
      */
     public Section getSection() {
@@ -72,7 +72,7 @@ public abstract class AbstractSectionComposite implements PropertyChangeListener
 
     /**
      * Getter for form.
-     *
+     * 
      * @return the form
      */
     public ScrolledForm getForm() {
@@ -91,7 +91,8 @@ public abstract class AbstractSectionComposite implements PropertyChangeListener
     public void propertyChange(PropertyChangeEvent evt) {
         if (MatchAnalysisConstant.ISDIRTY_PROPERTY.equals(evt.getPropertyName())) {
             listeners.firePropertyChange(MatchAnalysisConstant.ISDIRTY_PROPERTY, true, false);
+        } else if (MatchAnalysisConstant.MARCH_RULE_TAB_SWITCH.equals(evt.getPropertyName())) {
+            listeners.firePropertyChange(MatchAnalysisConstant.MARCH_RULE_TAB_SWITCH, true, false);
         }
     }
-
 }

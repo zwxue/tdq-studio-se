@@ -91,6 +91,11 @@ public class BlockingKeySection extends AbstractMatchAnaysisTableSection {
         tableComposite.setAddColumn(isAddColumn());
         tableComposite.setLayout(gridLayout);
         tableComposite.setLayoutData(data);
+        if (columnMap != null) {
+            ArrayList<String> columnList = new ArrayList<String>();
+            columnList.addAll(columnMap.keySet());
+            tableComposite.setColumnList(columnList);
+        }
         tableComposite.createContent();
         tableComposite.serViewerSorter(new KeyDefinitionTableViewerSorter<BlockKeyDefinition>(getBlockKeyDefinitionList()));
         initTableInput();

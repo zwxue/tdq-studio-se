@@ -29,7 +29,7 @@ import org.talend.dataquality.rules.MatchRule;
 
 /**
  * created by zshen on Jul 31, 2013 Detailled comment
- *
+ * 
  */
 public class MatchRuleTableComposite extends AbsMatchAnalysisTableComposite<MatchKeyDefinition> {
 
@@ -39,7 +39,7 @@ public class MatchRuleTableComposite extends AbsMatchAnalysisTableComposite<Matc
 
     /**
      * DOC zshen MatchRuleComposite constructor comment.
-     *
+     * 
      * @param parent
      * @param style
      */
@@ -50,7 +50,7 @@ public class MatchRuleTableComposite extends AbsMatchAnalysisTableComposite<Matc
 
     /**
      * DOC zhao Comment method "setInput".
-     *
+     * 
      * @param matchRule
      */
     public void setInput(MatchRule matchRule) {
@@ -78,7 +78,7 @@ public class MatchRuleTableComposite extends AbsMatchAnalysisTableComposite<Matc
     protected void createTable() {
         tableViewer = createTableViewer();
         tableViewer.addPropertyChangeListener(this);
-        tableViewer.initTable(headers);
+        tableViewer.initTable(headers, columnList);
         // Create match interval
         createMatchIntervalComposite();
         // setInput(matchRule);
@@ -86,7 +86,7 @@ public class MatchRuleTableComposite extends AbsMatchAnalysisTableComposite<Matc
 
     /**
      * DOC zhao Comment method "createMatchIntervalComposite".
-     *
+     * 
      */
     protected void createMatchIntervalComposite() {
         Composite matchIntervalComposite = new Composite(this, SWT.NONE);
@@ -128,24 +128,21 @@ public class MatchRuleTableComposite extends AbsMatchAnalysisTableComposite<Matc
 
     /**
      * Getter for matchRule.
-     *
+     * 
      * @return the matchRule
      */
     public MatchRule getMatchRule() {
         return this.matchRule;
     }
 
-
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see org.talend.dataquality.record.linkage.ui.composite.AbsMatchAnalysisTableComposite#createTableViewer()
      */
     @Override
     protected AbstractMatchAnalysisTableViewer<MatchKeyDefinition> createTableViewer() {
         return new MatchRuleTableViewer(this, getTableStyle(), isAddColumn());
     }
-
-
 
 }

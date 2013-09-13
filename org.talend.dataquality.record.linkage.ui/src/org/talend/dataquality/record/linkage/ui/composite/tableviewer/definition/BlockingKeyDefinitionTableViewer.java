@@ -26,17 +26,15 @@ import org.talend.dataquality.record.linkage.utils.BlockingKeyAlgorithmEnum;
 import org.talend.dataquality.record.linkage.utils.BlockingKeyPostAlgorithmEnum;
 import org.talend.dataquality.record.linkage.utils.BlockingKeyPreAlgorithmEnum;
 
-
 /**
- * created by zshen on Aug 26, 2013
- * Detailled comment
- *
+ * created by zshen on Aug 26, 2013 Detailled comment
+ * 
  */
 public class BlockingKeyDefinitionTableViewer extends BlockingKeyTableViewer {
 
     /**
      * DOC zshen BlockingKeyDefinitionTableViewer constructor comment.
-     *
+     * 
      * @param parent
      * @param style
      * @param isAddColumn
@@ -47,13 +45,13 @@ public class BlockingKeyDefinitionTableViewer extends BlockingKeyTableViewer {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see
      * org.talend.dataquality.record.linkage.ui.composite.tableviewer.BlockingKeyTableViewer#getCellEditor(java.util
      * .List)
      */
     @Override
-    protected CellEditor[] getCellEditor(List<String> headers) {
+    protected CellEditor[] getCellEditor(List<String> headers, List<String> columnList) {
         CellEditor[] editors = new CellEditor[headers.size()];
         for (int i = 0; i < editors.length; ++i) {
             switch (i) {
@@ -75,7 +73,7 @@ public class BlockingKeyDefinitionTableViewer extends BlockingKeyTableViewer {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see
      * org.talend.dataquality.record.linkage.ui.composite.tableviewer.BlockingKeyTableViewer#getTableLabelProvider()
      */

@@ -21,7 +21,6 @@ import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ComboBoxCellEditor;
 import org.eclipse.jface.viewers.IBaseLabelProvider;
-import org.eclipse.jface.viewers.ICellModifier;
 import org.eclipse.jface.viewers.IContentProvider;
 import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.swt.SWT;
@@ -65,11 +64,12 @@ public class MatchRuleTableViewer extends AbstractMatchAnalysisTableViewer<Match
      * @return
      */
     @Override
-    protected CellEditor[] getCellEditor(List<String> headers) {
+    protected CellEditor[] getCellEditor(List<String> headers, List<String> columnList) {
         CellEditor[] editors = new CellEditor[headers.size()];
         for (int i = 0; i < editors.length; ++i) {
             switch (i) {
             case 1:
+                editors[i] = new ComboBoxCellEditor(innerTable, columnList.toArray(new String[0]), SWT.READ_ONLY);
                 break;
             case 2:
                 editors[i] = new ComboBoxCellEditor(innerTable, AttributeMatcherType.getAllTypes(), SWT.READ_ONLY);
@@ -110,7 +110,7 @@ public class MatchRuleTableViewer extends AbstractMatchAnalysisTableViewer<Match
      * @return
      */
     @Override
-    protected ICellModifier getTableCellModifier() {
+    protected AbstractMatchCellModifier<MatchKeyDefinition> getTableCellModifier() {
         return new MatchRuleCellModifier(this);
     }
 

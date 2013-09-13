@@ -17,7 +17,6 @@ import java.util.List;
 
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.IBaseLabelProvider;
-import org.eclipse.jface.viewers.ICellModifier;
 import org.eclipse.jface.viewers.IContentProvider;
 import org.eclipse.swt.widgets.Composite;
 import org.talend.dataquality.analysis.Analysis;
@@ -30,7 +29,7 @@ import org.talend.dataquality.rules.KeyDefinition;
  * created by zhao on Aug 19, 2013 Detailled comment
  * 
  */
-public class DuplicateRecordTableViewer extends AbstractMatchAnalysisTableViewer {
+public class DuplicateRecordTableViewer extends AbstractMatchAnalysisTableViewer<Object> {
 
     private MatchAnalysisTableContentProvider contentProvider = null;
 
@@ -47,7 +46,7 @@ public class DuplicateRecordTableViewer extends AbstractMatchAnalysisTableViewer
     public DuplicateRecordTableViewer(Composite parent, int style) {
         super(parent, style, Boolean.TRUE);
         initHeaders();
-        initTable(tableHeaders);
+        initTable(tableHeaders, new ArrayList<String>());
     }
 
     /**
@@ -120,7 +119,7 @@ public class DuplicateRecordTableViewer extends AbstractMatchAnalysisTableViewer
      * ()
      */
     @Override
-    protected ICellModifier getTableCellModifier() {
+    protected AbstractMatchCellModifier<Object> getTableCellModifier() {
         return null;
     }
 
@@ -176,7 +175,7 @@ public class DuplicateRecordTableViewer extends AbstractMatchAnalysisTableViewer
      * (java.lang.String, java.util.List)
      */
     @Override
-    public void removeElement(String columnName, List keyList) {
+    public void removeElement(String columnName, List<Object> keyList) {
         // don't need do anything
 
     }
@@ -186,10 +185,10 @@ public class DuplicateRecordTableViewer extends AbstractMatchAnalysisTableViewer
      * 
      * @see
      * org.talend.dataquality.record.linkage.ui.composite.tableviewer.AbstractMatchAnalysisTableViewer#getCellEditor
-     * (java.util.List)
+     * (java.util.List, java.util.Map)
      */
     @Override
-    protected CellEditor[] getCellEditor(List headers) {
+    protected CellEditor[] getCellEditor(List<String> headers, List<String> columnMap) {
         return null;
     }
 

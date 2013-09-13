@@ -13,8 +13,6 @@
 package org.talend.dataquality.record.linkage.ui.composite.tableviewer;
 
 import org.apache.commons.lang.StringUtils;
-import org.eclipse.jface.viewers.ICellModifier;
-import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.widgets.TableItem;
 import org.talend.dataquality.record.linkage.utils.MatchAnalysisConstant;
 import org.talend.dataquality.record.linkage.utils.SurvivorShipAlgorithmEnum;
@@ -24,11 +22,9 @@ import org.talend.dataquality.rules.SurvivorshipKeyDefinition;
  * created by HHB on 2013-8-23 Detailled comment
  * 
  */
-public class SurvivorShipCellModifier implements ICellModifier {
+public class SurvivorShipCellModifier extends AbstractMatchCellModifier<SurvivorshipKeyDefinition> {
 
-    TableViewer tableViewer = null;
-
-    public SurvivorShipCellModifier(TableViewer tableViewer) {
+    public SurvivorShipCellModifier(AbstractMatchAnalysisTableViewer<SurvivorshipKeyDefinition> tableViewer) {
         this.tableViewer = tableViewer;
     }
 

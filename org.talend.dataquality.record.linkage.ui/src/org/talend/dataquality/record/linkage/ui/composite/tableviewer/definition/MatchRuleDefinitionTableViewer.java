@@ -25,17 +25,15 @@ import org.talend.dataquality.record.linkage.ui.composite.tableviewer.MatchRuleT
 import org.talend.dataquality.record.linkage.ui.composite.tableviewer.provider.definition.MatchRuleDefinitionLabelProvider;
 import org.talend.dataquality.record.linkage.utils.HandleNullEnum;
 
-
 /**
- * created by zshen on Aug 26, 2013
- * Detailled comment
- *
+ * created by zshen on Aug 26, 2013 Detailled comment
+ * 
  */
 public class MatchRuleDefinitionTableViewer extends MatchRuleTableViewer {
 
     /**
      * DOC zshen MatchRuleDefinitionTableViewer constructor comment.
-     *
+     * 
      * @param parent
      * @param style
      * @param isAddColumn
@@ -46,12 +44,12 @@ public class MatchRuleDefinitionTableViewer extends MatchRuleTableViewer {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see
      * org.talend.dataquality.record.linkage.ui.composite.tableviewer.MatchRuleTableViewer#getCellEditor(java.util.List)
      */
     @Override
-    protected CellEditor[] getCellEditor(List<String> headers) {
+    protected CellEditor[] getCellEditor(List<String> headers, List<String> columnList) {
         CellEditor[] editors = new CellEditor[headers.size()];
         for (int i = 0; i < editors.length; ++i) {
             if (isAddColumn()) {
@@ -85,7 +83,7 @@ public class MatchRuleDefinitionTableViewer extends MatchRuleTableViewer {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see org.talend.dataquality.record.linkage.ui.composite.tableviewer.MatchRuleTableViewer#getTableLabelProvider()
      */
     @Override

@@ -13,8 +13,6 @@
 package org.talend.dataquality.record.linkage.ui.composite.tableviewer;
 
 import org.apache.commons.lang.StringUtils;
-import org.eclipse.jface.viewers.ICellModifier;
-import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.widgets.TableItem;
 import org.talend.dataquality.record.linkage.constant.AttributeMatcherType;
 import org.talend.dataquality.record.linkage.utils.HandleNullEnum;
@@ -25,15 +23,13 @@ import org.talend.dataquality.rules.MatchKeyDefinition;
  * created by zshen on Aug 1, 2013 Detailled comment
  * 
  */
-public class MatchRuleCellModifier implements ICellModifier {
-
-    TableViewer tableViewer = null;
+public class MatchRuleCellModifier extends AbstractMatchCellModifier<MatchKeyDefinition> {
 
     /**
      * DOC zshen MatchRuleCellModifier constructor comment.
      */
-    public MatchRuleCellModifier(TableViewer tableViewer) {
-        this.tableViewer = tableViewer;
+    public MatchRuleCellModifier(AbstractMatchAnalysisTableViewer<MatchKeyDefinition> newTableViewer) {
+        this.tableViewer = newTableViewer;
     }
 
     /*
@@ -69,7 +65,7 @@ public class MatchRuleCellModifier implements ICellModifier {
         } else if (MatchAnalysisConstant.CUSTOM_MATCHER_CLASS.equalsIgnoreCase(property)) {
             return mkd.getAlgorithm().getAlgorithmParameters();
         } else if (MatchAnalysisConstant.COLUMN.equalsIgnoreCase(property)) {
-            return mkd.getColumn();
+            return columnList.indexOf(mkd.getColumn());
         } else if (MatchAnalysisConstant.CONFIDENCE_WEIGHT.equalsIgnoreCase(property)) {
             return String.valueOf(mkd.getConfidenceWeight());
         } else if (MatchAnalysisConstant.MATCH_KEY_NAME.equalsIgnoreCase(property)) {
@@ -109,10 +105,12 @@ public class MatchRuleCellModifier implements ICellModifier {
                 }
                 mkd.getAlgorithm().setAlgorithmParameters(String.valueOf(value));
             } else if (MatchAnalysisConstant.COLUMN.equalsIgnoreCase(property)) {
-                if (StringUtils.equals(mkd.getColumn(), newValue)) {
+                String columnName = columnList.get(Integer.parseInt(newValue));
+                if (StringUtils.equals(mkd.getColumn(), columnName)) {
                     return;
                 }
-                mkd.setColumn(newValue);
+                mkd.setColumn(columnName);
+                tableViewer.noticeColumnSelectChange();
             } else if (MatchAnalysisConstant.CONFIDENCE_WEIGHT.equalsIgnoreCase(property)) {
                 if (mkd.getConfidenceWeight() == Integer.valueOf(newValue).intValue()) {
                     return;
