@@ -57,7 +57,7 @@ public final class PluginConstant {
 
     public static final String GRP_QUALITY = "GRP_QUALITY";//$NON-NLS-1$
 
-    public static final String DEFAULT_STRING = "default";//$NON-NLS-1$
+    public static final String DEFAULT_STRING = "Default";//$NON-NLS-1$
 
     private PluginConstant() {
 

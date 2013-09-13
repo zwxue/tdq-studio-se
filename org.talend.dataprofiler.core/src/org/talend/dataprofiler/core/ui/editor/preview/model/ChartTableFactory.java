@@ -116,6 +116,7 @@ public final class ChartTableFactory {
         final boolean isMDMAnalysis = ConnectionUtils.isMdmConnection(tdDataProvider);
         final boolean isDelimitedFileAnalysis = ConnectionUtils.isDelimitedFileConnection(tdDataProvider);
         final boolean isHiveConnection = ConnectionHelper.isHive(tdDataProvider);
+        final boolean isVertica = ConnectionHelper.isVertica(tdDataProvider);
 
         if (PluginChecker.isTDCPLoaded() && !(isMDMAnalysis || isDelimitedFileAnalysis || isHiveConnection)) {
             final IDatabaseJobService service = (IDatabaseJobService) GlobalServiceRegister.getDefault().getService(
@@ -128,9 +129,9 @@ public final class ChartTableFactory {
                         && AnalysisType.COLUMN_SET != analysis.getParameters().getAnalysisType()) {
                     item = new MenuItem(menu, SWT.PUSH);
                     item.setText(DefaultMessagesImpl.getString("ChartTableFactory.RemoveDuplicate")); //$NON-NLS-1$
-                } else if (ChartTableFactory.isPatternMatchingIndicator(currentIndicator)) {
+                } else if (ChartTableFactory.isPatternMatchingIndicator(currentIndicator) && !isVertica) {
                     item = new MenuItem(menu, SWT.PUSH);
-                    item.setText(DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.generateJob"));//$NON-NLS-1$ 
+                    item.setText(DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.generateJob"));//$NON-NLS-1$
                 } else if (ChartTableFactory.isAllMatchIndicator(currentIndicator)) {
                     item = new MenuItem(menu, SWT.PUSH);
                     item.setText(DefaultMessagesImpl.getString("ChartTableFactory.gen_etl_job_row")); //$NON-NLS-1$
@@ -139,7 +140,7 @@ public final class ChartTableFactory {
                     item.setText(DefaultMessagesImpl.getString("ChartTableFactory.gen_std_phone_job")); //$NON-NLS-1$
                 } else if (ChartTableFactory.isDqRule(currentIndicator)) {
                     item = new MenuItem(menu, SWT.PUSH);
-                    item.setText(DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.generateJob"));//$NON-NLS-1$ 
+                    item.setText(DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.generateJob"));//$NON-NLS-1$
                 }
 
                 if (item != null) {
@@ -436,7 +437,7 @@ public final class ChartTableFactory {
                                         new CreatePatternAction(
                                                 folder,
                                                 ExpressionType.REGEXP,
-                                                "'" + regex + "'", model == null ? "" : "match \"" + model + "\"", language.getDbmsName()).run(); //$NON-NLS-1$ //$NON-NLS-2$//$NON-NLS-3$ //$NON-NLS-4$//$NON-NLS-5$ 
+                                                "'" + regex + "'", model == null ? "" : "match \"" + model + "\"", language.getDbmsName()).run(); //$NON-NLS-1$ //$NON-NLS-2$//$NON-NLS-3$ //$NON-NLS-4$//$NON-NLS-5$
                                     }
 
                                 });

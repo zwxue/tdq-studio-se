@@ -13,9 +13,7 @@
 package org.talend.dq.analysis.explore;
 
 import org.talend.core.model.metadata.builder.database.dburl.SupportDBUrlType;
-
-
-
+import org.talend.dq.dbms.DbmsLanguageFactory;
 
 /**
  * return the where clause for benford law indicator, but for different DB type, the clause is different.
@@ -24,7 +22,7 @@ public class BenfordLawFrequencyExplorer extends FrequencyStatisticsExplorer {
 
     @Override
     protected String getInstantiatedClause() {
-        if (entity.getKey().toString().equals("invalid")) {//$NON-NLS-1$ //$NON-NLS-2$
+        if (entity.getKey().toString().equals("invalid")) {//$NON-NLS-1$
             return getInvalidClause();
         }
         Object value = "'" + entity.getKey() + "%'"; //$NON-NLS-1$ //$NON-NLS-2$
@@ -33,7 +31,7 @@ public class BenfordLawFrequencyExplorer extends FrequencyStatisticsExplorer {
                 + value;
 
         if (isInformix()) {
-            return " SUBSTR( " + getColumnName() + " ,0,1)" + dbmsLanguage.like() + value;
+            return " SUBSTR( " + getColumnName() + " ,0,1)" + dbmsLanguage.like() + value; //$NON-NLS-1$ //$NON-NLS-2$
         }
         return clause;
     }
@@ -45,26 +43,37 @@ public class BenfordLawFrequencyExplorer extends FrequencyStatisticsExplorer {
      * @return
      */
     private String getInvalidClause() {
-        String value = " not REGEXP '^[0-9]'";
+        String value = " not REGEXP '^[0-9]'"; //$NON-NLS-1$
         if (isSybase()) {
             return columnName
-                    + " is null or left(convert(char(15)," + this.columnName + "),1) not " + dbmsLanguage.like() + "'%[0-9]%'";//$NON-NLS-1$ //$NON-NLS-2$
+                    + " is null or left(convert(char(15)," + this.columnName + "),1) not " + dbmsLanguage.like() + "'%[0-9]%'";//$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
         } else if (isPostGreSQL()) {
             return columnName + " is null or SUBSTRING(" + columnName + ", 1,1)  ~ '[^0-9]'";//$NON-NLS-1$ //$NON-NLS-2$
         } else if (isTeradata()) {
             return columnName
                     + " is null or cast(" + columnName + " as char(1)) not in ('0','1','2','3','4','5','6','7','8','9')";//$NON-NLS-1$ //$NON-NLS-2$
         } else if (isOracle()) {
-            return columnName + " is null or " + "  regexp_like(SUBSTR(" + columnName + ",0,1),'^[^[:digit:]]+$')";//$NON-NLS-1$ //$NON-NLS-2$
+            return columnName + " is null or " + "  regexp_like(SUBSTR(" + columnName + ",0,1),'^[^[:digit:]]+$')";//$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
         } else if (isDB2()) {
-            return columnName + " is null or LEFT(" + columnName + ",1)" + " not in ('0','1','2','3','4','5','6','7','8','9')";//$NON-NLS-1$ //$NON-NLS-2$
+            return columnName + " is null or LEFT(" + columnName + ",1)" + " not in ('0','1','2','3','4','5','6','7','8','9')";//$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
         } else if (isSqlServer()) {
-            return columnName + " is null or LEFT(" + columnName + ",1) not" + dbmsLanguage.like() + "'%[0-9]%'";//$NON-NLS-1$ //$NON-NLS-2$
+            return columnName + " is null or LEFT(" + columnName + ",1) not" + dbmsLanguage.like() + "'%[0-9]%'";//$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
         } else if (isInformix()) {
             return columnName + " is null or SUBSTR(" + columnName + ",0,1) not in ('0','1','2','3','4','5','6','7','8','9')";//$NON-NLS-1$ //$NON-NLS-2$
+        } else if (isVertica()) {
+            return columnName + " is null or " + " regexp_like(to_char(" + columnName + "),'^[^[:digit:]]')";//$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
         }
 
-        return columnName + " is null or " + columnName + value;
+        return columnName + " is null or " + columnName + value; //$NON-NLS-1$
+    }
+
+    /**
+     * DOC qiongli Comment method "isVertica".
+     * 
+     * @return
+     */
+    private boolean isVertica() {
+        return DbmsLanguageFactory.isVertica(dbmsLanguage.getDbmsName());
     }
 
     /**
@@ -117,6 +126,8 @@ public class BenfordLawFrequencyExplorer extends FrequencyStatisticsExplorer {
             return "convert(char(15)," + this.columnName + ")";//$NON-NLS-1$ //$NON-NLS-2$
         } else if (isPostGreSQL() || isTeradata()) {
             return "cast(" + this.columnName + " as char)";//$NON-NLS-1$ //$NON-NLS-2$
+        } else if (isVertica()) {
+            return "to_char(" + columnName + ")"; //$NON-NLS-1$//$NON-NLS-2$
         }
         return this.columnName;
     }

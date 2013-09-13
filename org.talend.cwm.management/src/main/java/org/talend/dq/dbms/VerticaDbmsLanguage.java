@@ -63,4 +63,9 @@ public class VerticaDbmsLanguage extends DbmsLanguage {
         assert charsToReplace != null && replacementChars != null && charsToReplace.length() == replacementChars.length();
         return translateUsingPattern(expression, charsToReplace, replacementChars);
     }
+
+    @Override
+    public String getTopNQuery(String query, int n) {
+        return query + " LIMIT " + n; //$NON-NLS-1$
+    }
 }
