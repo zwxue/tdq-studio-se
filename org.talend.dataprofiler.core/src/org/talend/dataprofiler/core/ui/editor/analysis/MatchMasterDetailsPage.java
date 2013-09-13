@@ -67,6 +67,7 @@ import org.talend.cwm.db.connection.DelimitedFileSQLExecutor;
 import org.talend.cwm.db.connection.ISQLExecutor;
 import org.talend.cwm.db.connection.MDMSQLExecutor;
 import org.talend.cwm.helper.TaggedValueHelper;
+import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.xml.TdXmlElementType;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
@@ -263,7 +264,7 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
             // use ModelElement instead of node to get the data source type directly.
             if (selectedColumns[0] instanceof TdXmlElementType) {
                 isMdm = true;
-            } else if (selectedColumns[0] instanceof MetadataColumn) {
+            } else if (selectedColumns[0] instanceof MetadataColumn && !(selectedColumns[0] instanceof TdColumn)) {
                 isDelimitedFile = true;
             }
 
