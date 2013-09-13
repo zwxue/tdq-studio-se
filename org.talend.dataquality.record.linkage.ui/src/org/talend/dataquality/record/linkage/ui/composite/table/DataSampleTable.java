@@ -52,6 +52,7 @@ import org.eclipse.nebula.widgets.nattable.style.DisplayMode;
 import org.eclipse.nebula.widgets.nattable.style.Style;
 import org.eclipse.nebula.widgets.nattable.util.GUIHelper;
 import org.eclipse.nebula.widgets.nattable.viewport.ViewportLayer;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
@@ -77,24 +78,18 @@ public class DataSampleTable {
 
     private NatTable natTable;
 
-    private boolean isMdm = false;
-
-    private boolean isDelimitedFile = false;
-
     public static final int COLUMN_COUNT = 7;
 
-    public static final String MATCH_EKY = "MATCH";
+    public static final String MATCH_EKY = "MATCH"; //$NON-NLS-1$
 
-    public static final String BLOCK_EKY = "BLOCK";
+    public static final String BLOCK_EKY = "BLOCK"; //$NON-NLS-1$
 
-    public DataSampleTable(boolean isFile, boolean isMDM) {
-        this.isMdm = isMDM;
-        this.isDelimitedFile = isFile;
+    public DataSampleTable() {
     }
 
     /**
      * create the nattable every time when the user select some columns
-     *
+     * 
      * @param columns
      * @param listOfData
      */
@@ -116,7 +111,7 @@ public class DataSampleTable {
 
     /**
      * when the data is empty, the column can not response the click event, so we need to add an empty row to it.
-     *
+     * 
      * @return
      */
     private Object[] getEmptyRow() {
@@ -147,18 +142,18 @@ public class DataSampleTable {
 
     /**
      * before create the table control, need to init the property name and name to label map
-     *
-     * @param propertyNames
-     * @param propertyToLabels : <property name, display label>
+     * 
+     * @param proNames
+     * @param proToLabels : <property name, display label>
      */
-    public void initTableProperty(String[] propertyNames, Map<String, String> propertyToLabels) {
-        this.propertyNames = propertyNames;
-        this.propertyToLabels = propertyToLabels;
+    public void initTableProperty(String[] proNames, Map<String, String> proToLabels) {
+        this.propertyNames = proNames;
+        this.propertyToLabels = proToLabels;
 
     }
-    
+
     // record the columns which is used as block keys
-    private List<String> markedAsBlockKey=null;
+    private List<String> markedAsBlockKey = null;
 
     // record the columns which is used as match keys
     private List<String> markedAsMatchKey = null;
@@ -235,7 +230,7 @@ public class DataSampleTable {
 
     /**
      * create the NatTable according to the property, and list of data to display
-     *
+     * 
      * @param parent
      * @param data
      * @return
@@ -281,10 +276,11 @@ public class DataSampleTable {
         natTable = new NatTable(parent, gridLayer);
 
         natTable.getConfigRegistry().registerConfigAttribute(EditConfigAttributes.CELL_EDITABLE_RULE,
-                IEditableRule.NEVER_EDITABLE, DisplayMode.EDIT, "ODD_BODY");
+                IEditableRule.NEVER_EDITABLE, DisplayMode.EDIT, "ODD_BODY"); //$NON-NLS-1$
         natTable.getConfigRegistry().registerConfigAttribute(EditConfigAttributes.CELL_EDITABLE_RULE,
-                IEditableRule.NEVER_EDITABLE, DisplayMode.EDIT, "EVEN_BODY");
+                IEditableRule.NEVER_EDITABLE, DisplayMode.EDIT, "EVEN_BODY"); //$NON-NLS-1$
 
+        natTable.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_LIST_BACKGROUND));
         return natTable;
     }
 
@@ -341,7 +337,7 @@ public class DataSampleTable {
             if (isColumnMarkedAsKeys(currentColumnName)) {
                 if (columnPosition < propertyNames.length + 1) {
                     return new LabelStack(currentColumnName);// + columnPosition);// ,
-                                                                                          // propertyNames[columnPosition]);
+                                                             // propertyNames[columnPosition]);
                 }
             }
             return super.getConfigLabelsByPosition(columnPosition, rowPosition);
@@ -383,7 +379,7 @@ public class DataSampleTable {
 
         private void addSelectedModeStyling(IConfigRegistry configRegistry) {
             Image selectedBgImage = new Image(Display.getDefault(), getClass().getResourceAsStream(
-                    "selected_column_header_bg.png"));
+                    "selected_column_header_bg.png")); //$NON-NLS-1$
 
             TextPainter txtPainter = new TextPainter(false, false);
             ICellPainter selectedCellPainter = new BackgroundImagePainter(txtPainter, selectedBgImage, GUIHelper.COLOR_BLUE);
@@ -391,19 +387,19 @@ public class DataSampleTable {
             ColumnGroupHeaderTextPainter selectedHeaderPainter = new ColumnGroupHeaderTextPainter(new ColumnGroupModel(),
                     selectedCellPainter);
 
-            configRegistry.registerConfigAttribute(CellConfigAttributes.CELL_PAINTER, selectedHeaderPainter, "SELECT",
-                    "COLUMN_HEADER");
+            configRegistry.registerConfigAttribute(CellConfigAttributes.CELL_PAINTER, selectedHeaderPainter, "SELECT", //$NON-NLS-1$
+                    "COLUMN_HEADER"); //$NON-NLS-1$
         }
 
         private void addNormalModeStyling(IConfigRegistry configRegistry) {
-            Image bgImage = new Image(Display.getDefault(), getClass().getResourceAsStream("column_header_bg.png"));
+            Image bgImage = new Image(Display.getDefault(), getClass().getResourceAsStream("column_header_bg.png")); //$NON-NLS-1$
 
             TextPainter txtPainter = new TextPainter(false, false);
             ICellPainter bgImagePainter = new BackgroundImagePainter(txtPainter, bgImage, GUIHelper.getColor(192, 192, 192));
             SortableHeaderTextPainter headerPainter = new SortableHeaderTextPainter(bgImagePainter, false, true);
 
-            configRegistry.registerConfigAttribute(CellConfigAttributes.CELL_PAINTER, headerPainter, "NORMAL", "COLUMN_HEADER");
-            configRegistry.registerConfigAttribute(CellConfigAttributes.CELL_PAINTER, headerPainter, "NORMAL", "CORNER");
+            configRegistry.registerConfigAttribute(CellConfigAttributes.CELL_PAINTER, headerPainter, "NORMAL", "COLUMN_HEADER"); //$NON-NLS-1$ //$NON-NLS-2$
+            configRegistry.registerConfigAttribute(CellConfigAttributes.CELL_PAINTER, headerPainter, "NORMAL", "CORNER"); //$NON-NLS-1$ //$NON-NLS-2$
         }
     }
 

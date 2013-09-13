@@ -255,7 +255,7 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
         GridData gridData = new GridData(GridData.FILL_BOTH);
         gridData.heightHint = 250;
         dataTableComp.setLayoutData(gridData);
-        sampleTable = new DataSampleTable(this.isMdm, this.isDelimitedFile);
+        sampleTable = new DataSampleTable();
         // use handler to save selected columns
         ModelElement[] selectedColumns = this.analysisHandler.getSelectedColumns();
 
