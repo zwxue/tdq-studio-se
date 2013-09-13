@@ -26,6 +26,7 @@ import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.common.util.EList;
+import org.talend.commons.exception.BusinessException;
 import org.talend.core.GlobalServiceRegister;
 import org.talend.core.ITDQRepositoryService;
 import org.talend.core.model.metadata.builder.connection.MetadataColumn;
@@ -147,8 +148,11 @@ public class MatchAnalysisExecutor implements IAnalysisExecutor {
         createAppliedBlockKeyByGenKey(recordMatchingIndicator, appliedBlockKeys);
 
         // Blocking key specified.
-        computeMatchGroupWithBlockKey(analysis, recordMatchingIndicator, blockKeyIndicator, columnMap, matchResultConsumer,
-                matchRows);
+        ReturnCode returnCode = computeMatchGroupWithBlockKey(analysis, recordMatchingIndicator, blockKeyIndicator, columnMap,
+                matchResultConsumer, matchRows);
+        if (!returnCode.isOk()) {
+            return returnCode;
+        }
         monitor.worked(100);
         monitor.done();
 
@@ -214,9 +218,11 @@ public class MatchAnalysisExecutor implements IAnalysisExecutor {
      * @param matchResultConsumer
      * @param matchRows
      */
-    private void computeMatchGroupWithBlockKey(Analysis analysis, RecordMatchingIndicator recordMatchingIndicator,
+    private ReturnCode computeMatchGroupWithBlockKey(Analysis analysis, RecordMatchingIndicator recordMatchingIndicator,
             BlockKeyIndicator blockKeyIndicator, Map<String, String> columnMap, MatchGroupResultConsumer matchResultConsumer,
             List<Object[]> matchRows) {
+        ReturnCode rc = new ReturnCode(Boolean.TRUE);
+
         Map<String, List<String[]>> resultWithBlockKey = computeBlockingKey(analysis, columnMap, matchRows,
                 recordMatchingIndicator);
         Iterator<String> keyIterator = resultWithBlockKey.keySet().iterator();
@@ -227,7 +233,14 @@ public class MatchAnalysisExecutor implements IAnalysisExecutor {
             List<String[]> matchRowsInBlock = resultWithBlockKey.get(keyIterator.next());
             List<Object[]> objList = new ArrayList<Object[]>();
             objList.addAll(matchRowsInBlock);
-            computeMatchGroupResult(columnMap, matchResultConsumer, objList, recordMatchingIndicator);
+            // Add check match key
+            try {
+                computeMatchGroupResult(columnMap, matchResultConsumer, objList, recordMatchingIndicator);
+            } catch (BusinessException e) {
+                rc.setOk(Boolean.FALSE);
+                rc.setMessage(e.getAdditonalMessage());
+                return rc;
+            }
 
             // Store indicator
             Integer blockSize = matchRowsInBlock.size();
@@ -241,6 +254,7 @@ public class MatchAnalysisExecutor implements IAnalysisExecutor {
             blockSize2Freq.put(Long.valueOf(blockSize), freq + 1);
         }
         blockKeyIndicator.setBlockSize2frequency(blockSize2Freq);
+        return rc;
     }
 
     /**
@@ -316,9 +330,10 @@ public class MatchAnalysisExecutor implements IAnalysisExecutor {
      * @param columnMap
      * @param matchResultConsumer
      * @param matchRows
+     * @return
      */
     private void computeMatchGroupResult(Map<String, String> columnMap, MatchGroupResultConsumer matchResultConsumer,
-            List<Object[]> matchRows, RecordMatchingIndicator recordMatchingIndicator) {
+            List<Object[]> matchRows, RecordMatchingIndicator recordMatchingIndicator) throws BusinessException {
         AnalysisMatchRecordGrouping analysisMatchRecordGrouping = new AnalysisMatchRecordGrouping(matchResultConsumer);
         List<MatchRule> matchRules = recordMatchingIndicator.getBuiltInMatchRuleDefinition().getMatchRules();
         for (MatchRule matcher : matchRules) {
@@ -327,6 +342,13 @@ public class MatchAnalysisExecutor implements IAnalysisExecutor {
                 continue;
             }
             for (MatchKeyDefinition matchDef : matcher.getMatchKeys()) {
+                // check if the current match key does not contain any column,throw exception, do not continue
+                if (matchDef.getColumn() == null || StringUtils.EMPTY.equals(matchDef.getColumn())) {
+                    BusinessException businessException = new BusinessException();
+                    businessException.setAdditonalMessage(Messages.getString("MatchAnalysisExecutor.NoColumnInMatchKey",
+                            matchDef.getName()));
+                    throw businessException;
+                }
                 Map<String, String> matchKeyMap = AnalysisRecordGroupingUtils.getMatchKeyMap(matchDef.getColumn(), matchDef
                         .getAlgorithm().getAlgorithmType(), matchDef.getConfidenceWeight(), columnMap,
                         matcher.getMatchInterval(), matchDef.getColumn());

@@ -12,6 +12,7 @@
 // ============================================================================
 package org.talend.dq.writer.impl;
 
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.core.model.properties.Item;
@@ -27,15 +28,15 @@ import org.talend.dq.writer.AElementPersistance;
 import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
-
 /**
- * created by zshen on Aug 20, 2013
- * Detailled comment
- *
+ * created by zshen on Aug 20, 2013 Detailled comment
+ * 
  */
 public class MatchRuleDefinitionWriter extends AElementPersistance {
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.talend.dq.writer.AElementPersistance#notifyResourceChanges()
      */
     @Override
@@ -44,7 +45,9 @@ public class MatchRuleDefinitionWriter extends AElementPersistance {
 
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.talend.dq.writer.AElementPersistance#addDependencies(orgomg.cwm.objectmodel.core.ModelElement)
      */
     @Override
@@ -53,7 +56,9 @@ public class MatchRuleDefinitionWriter extends AElementPersistance {
 
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.talend.dq.writer.AElementPersistance#getFileExtension()
      */
     @Override
@@ -61,7 +66,9 @@ public class MatchRuleDefinitionWriter extends AElementPersistance {
         return FactoriesUtil.DQRULE;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.talend.dq.writer.AElementPersistance#save(org.talend.core.model.properties.Item, boolean)
      */
     @Override
@@ -84,7 +91,10 @@ public class MatchRuleDefinitionWriter extends AElementPersistance {
         ruleDefinition.getBlockKeys().clear();
         if (matchRule.getBlockKeys() != null && matchRule.getBlockKeys().size() > 0) {
             for (BlockKeyDefinition blockKey : matchRule.getBlockKeys()) {
-                ruleDefinition.getBlockKeys().add(EcoreUtil.copy(blockKey));
+                BlockKeyDefinition copy = EcoreUtil.copy(blockKey);
+                // should empty the column value when export it
+                copy.setColumn(StringUtils.EMPTY);
+                ruleDefinition.getBlockKeys().add(copy);
             }
         }
         // copy match keys in each match rules
@@ -109,7 +119,10 @@ public class MatchRuleDefinitionWriter extends AElementPersistance {
         newRule.setMatchInterval(oldRule.getMatchInterval());
         if (oldRule.getMatchKeys() != null && oldRule.getMatchKeys().size() > 0) {
             for (MatchKeyDefinition matchKey : oldRule.getMatchKeys()) {
-                newRule.getMatchKeys().add(EcoreUtil.copy(matchKey));
+                MatchKeyDefinition copy = EcoreUtil.copy(matchKey);
+                // should empty the column value when export it
+                copy.setColumn(StringUtils.EMPTY);
+                newRule.getMatchKeys().add(copy);
             }
         }
         return newRule;
