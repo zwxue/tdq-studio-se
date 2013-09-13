@@ -197,6 +197,9 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
         createBlockingKeySection(form, topComp);
 
         createMatchingKeySection(form, topComp);
+
+        // we must do this, this will recompute the layout and scroll bars
+        form.reflow(true);
     }
 
     /**
@@ -242,6 +245,7 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
         matchingKeySection.addPropertyChangeListener(this);
         // create the data table
         createDataTableComposite(dataSampleparentComposite);
+
     }
 
     /**
