@@ -12,6 +12,7 @@
 // ============================================================================
 package org.talend.dataquality.record.linkage.ui.composite.tableviewer;
 
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.jface.viewers.ICellModifier;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.widgets.TableItem;
@@ -20,11 +21,9 @@ import org.talend.dataquality.record.linkage.utils.HandleNullEnum;
 import org.talend.dataquality.record.linkage.utils.MatchAnalysisConstant;
 import org.talend.dataquality.rules.MatchKeyDefinition;
 
-
 /**
- * created by zshen on Aug 1, 2013
- * Detailled comment
- *
+ * created by zshen on Aug 1, 2013 Detailled comment
+ * 
  */
 public class MatchRuleCellModifier implements ICellModifier {
 
@@ -37,7 +36,9 @@ public class MatchRuleCellModifier implements ICellModifier {
         this.tableViewer = tableViewer;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.eclipse.jface.viewers.ICellModifier#canModify(java.lang.Object, java.lang.String)
      */
     @Override
@@ -53,7 +54,9 @@ public class MatchRuleCellModifier implements ICellModifier {
         return false;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.eclipse.jface.viewers.ICellModifier#getValue(java.lang.Object, java.lang.String)
      */
     @Override
@@ -78,7 +81,9 @@ public class MatchRuleCellModifier implements ICellModifier {
 
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.eclipse.jface.viewers.ICellModifier#modify(java.lang.Object, java.lang.String, java.lang.Object)
      */
     @Override
@@ -88,19 +93,40 @@ public class MatchRuleCellModifier implements ICellModifier {
             String newValue = String.valueOf(value);
             if (MatchAnalysisConstant.HANDLE_NULL.equalsIgnoreCase(property)) {
                 HandleNullEnum valueByIndex = HandleNullEnum.getTypeByIndex(Integer.valueOf(newValue).intValue());
+                if (StringUtils.equals(mkd.getHandleNull(), valueByIndex.getValue())) {
+                    return;
+                }
                 mkd.setHandleNull(valueByIndex.getValue());
             } else if (MatchAnalysisConstant.MATCHING_TYPE.equalsIgnoreCase(property)) {
                 AttributeMatcherType valueByIndex = AttributeMatcherType.getTypeByIndex(Integer.valueOf(newValue).intValue());
+                if (StringUtils.equals(mkd.getAlgorithm().getAlgorithmType(), valueByIndex.getComponentName())) {
+                    return;
+                }
                 mkd.getAlgorithm().setAlgorithmType(valueByIndex.getComponentName());
             } else if (MatchAnalysisConstant.CUSTOM_MATCHER_CLASS.equalsIgnoreCase(property)) {
+                if (StringUtils.equals(mkd.getAlgorithm().getAlgorithmParameters(), newValue)) {
+                    return;
+                }
                 mkd.getAlgorithm().setAlgorithmParameters(String.valueOf(value));
             } else if (MatchAnalysisConstant.COLUMN.equalsIgnoreCase(property)) {
+                if (StringUtils.equals(mkd.getColumn(), newValue)) {
+                    return;
+                }
                 mkd.setColumn(newValue);
             } else if (MatchAnalysisConstant.CONFIDENCE_WEIGHT.equalsIgnoreCase(property)) {
+                if (mkd.getConfidenceWeight() == Integer.valueOf(newValue).intValue()) {
+                    return;
+                }
                 mkd.setConfidenceWeight(Integer.valueOf(newValue).intValue());
             } else if (MatchAnalysisConstant.MATCH_KEY_NAME.equalsIgnoreCase(property)) {
+                if (StringUtils.equals(mkd.getName(), newValue)) {
+                    return;
+                }
                 mkd.setName(newValue);
             } else if (MatchAnalysisConstant.THRESHOLD.equalsIgnoreCase(property)) {
+                if (mkd.getThreshold() == Double.parseDouble(newValue)) {
+                    return;
+                }
                 try {
                     mkd.setThreshold(Double.parseDouble(newValue));
                 } catch (NumberFormatException e) {

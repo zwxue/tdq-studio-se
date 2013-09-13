@@ -12,6 +12,7 @@
 // ============================================================================
 package org.talend.dataquality.record.linkage.ui.composite.tableviewer;
 
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.jface.viewers.ICellModifier;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.widgets.TableItem;
@@ -21,11 +22,9 @@ import org.talend.dataquality.record.linkage.utils.BlockingKeyPreAlgorithmEnum;
 import org.talend.dataquality.record.linkage.utils.MatchAnalysisConstant;
 import org.talend.dataquality.rules.BlockKeyDefinition;
 
-
 /**
- * created by zshen on Aug 6, 2013
- * Detailled comment
- *
+ * created by zshen on Aug 6, 2013 Detailled comment
+ * 
  */
 public class BlockingKeyCellModeifier implements ICellModifier {
 
@@ -38,7 +37,9 @@ public class BlockingKeyCellModeifier implements ICellModifier {
         this.tableViewer = tableViewer;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.eclipse.jface.viewers.ICellModifier#canModify(java.lang.Object, java.lang.String)
      */
     @Override
@@ -59,7 +60,9 @@ public class BlockingKeyCellModeifier implements ICellModifier {
         return false;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.eclipse.jface.viewers.ICellModifier#getValue(java.lang.Object, java.lang.String)
      */
     @Override
@@ -85,7 +88,9 @@ public class BlockingKeyCellModeifier implements ICellModifier {
         return null;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.eclipse.jface.viewers.ICellModifier#modify(java.lang.Object, java.lang.String, java.lang.Object)
      */
     @Override
@@ -96,24 +101,48 @@ public class BlockingKeyCellModeifier implements ICellModifier {
             if (MatchAnalysisConstant.PRE_ALGORITHM.equalsIgnoreCase(property)) {
                 BlockingKeyPreAlgorithmEnum valueByIndex = BlockingKeyPreAlgorithmEnum.getTypeByIndex(Integer.valueOf(newValue)
                         .intValue());
+                if (StringUtils.equals(bkd.getPreAlgorithm().getAlgorithmType(), valueByIndex.getComponentValueName())) {
+                    return;
+                }
                 bkd.getPreAlgorithm().setAlgorithmType(valueByIndex.getComponentValueName());
             } else if (MatchAnalysisConstant.PRE_VALUE.equalsIgnoreCase(property)) {
+                if (StringUtils.equals(bkd.getPreAlgorithm().getAlgorithmParameters(), newValue)) {
+                    return;
+                }
                 bkd.getPreAlgorithm().setAlgorithmParameters(String.valueOf(value));
             } else if (MatchAnalysisConstant.ALGORITHM.equalsIgnoreCase(property)) {
                 BlockingKeyAlgorithmEnum valueByIndex = BlockingKeyAlgorithmEnum.getTypeByIndex(Integer.valueOf(newValue)
                         .intValue());
+                if (StringUtils.equals(bkd.getAlgorithm().getAlgorithmType(), valueByIndex.getComponentValueName())) {
+                    return;
+                }
                 bkd.getAlgorithm().setAlgorithmType(valueByIndex.getComponentValueName());
             } else if (MatchAnalysisConstant.VALUE.equalsIgnoreCase(property)) {
+                if (StringUtils.equals(bkd.getAlgorithm().getAlgorithmParameters(), newValue)) {
+                    return;
+                }
                 bkd.getAlgorithm().setAlgorithmParameters(newValue);
             } else if (MatchAnalysisConstant.POST_ALGORITHM.equalsIgnoreCase(property)) {
                 BlockingKeyPostAlgorithmEnum valueByIndex = BlockingKeyPostAlgorithmEnum.getTypeByIndex(Integer.valueOf(newValue)
                         .intValue());
+                if (StringUtils.equals(bkd.getPostAlgorithm().getAlgorithmType(), valueByIndex.getComponentValueName())) {
+                    return;
+                }
                 bkd.getPostAlgorithm().setAlgorithmType(valueByIndex.getComponentValueName());
             } else if (MatchAnalysisConstant.POST_VALUE.equalsIgnoreCase(property)) {
+                if (StringUtils.equals(bkd.getPostAlgorithm().getAlgorithmParameters(), newValue)) {
+                    return;
+                }
                 bkd.getPostAlgorithm().setAlgorithmParameters(newValue);
             } else if (MatchAnalysisConstant.COLUMN.equalsIgnoreCase(property)) {
+                if (StringUtils.equals(bkd.getColumn(), newValue)) {
+                    return;
+                }
                 bkd.setColumn(newValue);
             } else if (MatchAnalysisConstant.BLOCK_KEY_NAME.equalsIgnoreCase(property)) {
+                if (StringUtils.equals(bkd.getName(), newValue)) {
+                    return;
+                }
                 bkd.setName(newValue);
             } else {
                 return;

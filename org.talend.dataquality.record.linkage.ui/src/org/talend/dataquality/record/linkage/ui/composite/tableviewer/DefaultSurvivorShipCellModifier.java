@@ -12,6 +12,7 @@
 // ============================================================================
 package org.talend.dataquality.record.linkage.ui.composite.tableviewer;
 
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.jface.viewers.ICellModifier;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.widgets.TableItem;
@@ -22,7 +23,7 @@ import org.talend.dataquality.rules.DefaultSurvivorshipDefinition;
 
 /**
  * created by HHB on 2013-8-23 Detailled comment
- *
+ * 
  */
 public class DefaultSurvivorShipCellModifier implements ICellModifier {
 
@@ -42,7 +43,7 @@ public class DefaultSurvivorShipCellModifier implements ICellModifier {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see org.eclipse.jface.viewers.ICellModifier#getValue(java.lang.Object, java.lang.String)
      */
     @Override
@@ -58,7 +59,7 @@ public class DefaultSurvivorShipCellModifier implements ICellModifier {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see org.eclipse.jface.viewers.ICellModifier#modify(java.lang.Object, java.lang.String, java.lang.Object)
      */
     @Override
@@ -69,10 +70,16 @@ public class DefaultSurvivorShipCellModifier implements ICellModifier {
             if (MatchAnalysisConstant.DATA_TYPE.equalsIgnoreCase(property)) {
                 DefaultSurvivorShipDataTypeEnum valueByIndex = DefaultSurvivorShipDataTypeEnum.getTypeByIndex(Integer.valueOf(
                         newValue).intValue());
+                if (StringUtils.equals(skd.getDataType(), valueByIndex.getValue())) {
+                    return;
+                }
                 skd.setDataType(valueByIndex.getValue());
             } else if (MatchAnalysisConstant.FUNCTION.equalsIgnoreCase(property)) {
                 SurvivorShipAlgorithmEnum valueByIndex = SurvivorShipAlgorithmEnum.getTypeByIndex(Integer.valueOf(newValue)
                         .intValue());
+                if (StringUtils.equals(skd.getFunction().getAlgorithmType(), valueByIndex.getValue())) {
+                    return;
+                }
                 skd.getFunction().setAlgorithmType(valueByIndex.getValue());
             } else {
                 return;
