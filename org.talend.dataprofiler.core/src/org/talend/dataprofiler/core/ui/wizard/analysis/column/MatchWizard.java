@@ -12,6 +12,7 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.wizard.analysis.column;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -44,7 +45,7 @@ public class MatchWizard extends ColumnWizard {
 
     /**
      * MatchWizard constructor comment.
-     *
+     * 
      * @param parameter
      */
     public MatchWizard(AnalysisParameter parameter) {
@@ -82,19 +83,29 @@ public class MatchWizard extends ColumnWizard {
     private void updateAnalysisBySelectedNode(AnalysisEditor editor) {
         MatchMasterDetailsPage masterPage = (MatchMasterDetailsPage) editor.getMasterPage();
         List<IRepositoryNode> nodes = selectionPage.nodes;
-        if (nodes != null && nodes.size() > 0) {
+
+        // When creating, the dialog get the IFolder, not get the node directly, so it need to be transfer to the node
+        // on the repository view by the same model elements
+        List<IRepositoryNode> nodeList = new ArrayList<IRepositoryNode>();
+        for (IRepositoryNode repNode : nodes) {
+            RepositoryNode tempRepNode = RepositoryNodeHelper.recursiveFind(RepositoryNodeHelper
+                    .getModelElementFromRepositoryNode(repNode));
+            nodeList.add(tempRepNode);
+        }
+
+        if (nodeList != null && nodeList.size() > 0) {
             // update analyze data label by selected nodes names(don't cotain columnRepNode).
-            String checkedElementNames = RepositoryNodeHelper.getAnalyzeDataNames(nodes.get(0));
+            String checkedElementNames = RepositoryNodeHelper.getAnalyzeDataNames(nodeList.get(0));
             masterPage.updateAnalyzeDataLabel(checkedElementNames);
             // give the selected columns to the master page
-            masterPage.setSelectedNodes(nodes.toArray(new RepositoryNode[nodes.size()]));
+            masterPage.setSelectedNodes(nodeList.toArray(new RepositoryNode[nodeList.size()]));
             masterPage.doSave(new NullProgressMonitor());
         }
     }
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see org.talend.dataprofiler.core.ui.wizard.analysis.column.ColumnSetWizard#initCWMResourceBuilder()
      */
     @Override
