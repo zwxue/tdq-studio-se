@@ -44,6 +44,16 @@ public class BlockingKeyCellModeifier implements ICellModifier {
     @Override
     public boolean canModify(Object element, String property) {
         if (element != null && element instanceof BlockKeyDefinition) {
+            BlockKeyDefinition bkd = (BlockKeyDefinition) element;
+            if (MatchAnalysisConstant.PRE_VALUE.equalsIgnoreCase(property)) {
+                return BlockingKeyPreAlgorithmEnum.getTypeBySavedValue(bkd.getPreAlgorithm().getAlgorithmType())
+                        .isTakeParameter();
+            } else if (MatchAnalysisConstant.VALUE.equalsIgnoreCase(property)) {
+                return BlockingKeyAlgorithmEnum.getTypeBySavedValue(bkd.getAlgorithm().getAlgorithmType()).isTakeParameter();
+            } else if (MatchAnalysisConstant.POST_VALUE.equalsIgnoreCase(property)) {
+                return BlockingKeyPostAlgorithmEnum.getTypeBySavedValue(bkd.getPostAlgorithm().getAlgorithmType())
+                        .isTakeParameter();
+            }
             return true;
         }
         return false;

@@ -22,13 +22,13 @@ import org.talend.dataquality.record.linkage.grouping.IRecordGrouping;
 
 /**
  * created by zhao on Aug 20, 2013 Detailled comment
- *
+ * 
  */
 public class AnalysisRecordGroupingUtils {
 
     /**
      * DOC zshen Comment method "getCompleteColumnSchema".
-     *
+     * 
      * @return
      */
     public static String[] getCompleteColumnSchema(Map<String, String> columnMap) {
@@ -40,6 +40,28 @@ public class AnalysisRecordGroupingUtils {
             columnNameList.add(columnName);
         }
         columnNameList.add(MatchAnalysisConstant.BLOCK_KEY);
+        columnNameList.add(MatchAnalysisConstant.GID);
+        columnNameList.add(MatchAnalysisConstant.GRP_SIZE);
+        columnNameList.add(MatchAnalysisConstant.MASTER);
+        columnNameList.add(MatchAnalysisConstant.SCORE);
+        columnNameList.add(MatchAnalysisConstant.GRP_QUALITY);
+        columnNameList.add(MatchAnalysisConstant.ATTRIBUTE_SCORES);
+        return columnNameList.toArray(new String[columnNameList.size()]);
+    }
+
+    /**
+     * DOC zshen Comment method "getCompleteColumnSchema".
+     * when refresh match chart by click refresh button
+     * @return
+     */
+    public static String[] getCompleteColumnSchemaWithoutBlockKey(Map<String, String> columnMap) {
+        List<String> columnNameList = new ArrayList<String>();
+        if (columnMap == null) {
+            return new String[0];
+        }
+        for (String columnName : columnMap.keySet()) {
+            columnNameList.add(columnName);
+        }
         columnNameList.add(MatchAnalysisConstant.GID);
         columnNameList.add(MatchAnalysisConstant.GRP_SIZE);
         columnNameList.add(MatchAnalysisConstant.MASTER);
@@ -62,7 +84,7 @@ public class AnalysisRecordGroupingUtils {
 
     /**
      * Get blocking key map
-     *
+     * 
      * @return
      */
     public static Map<String, String> getBlockingKeyMap(String column, String preAlgo, String preAlgValue, String algorithm,

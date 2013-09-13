@@ -539,6 +539,7 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
         List<Object[]> listOfData = fetchDataForTable();
 
         blockingKeySection.setDataInput(listOfData);
+        matchingKeySection.setDataInput(listOfData);
 
         refreshTable(listOfData);
 
@@ -932,7 +933,7 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
     public void propertyChange(PropertyChangeEvent evt) {
         if (PluginConstant.ISDIRTY_PROPERTY.equals(evt.getPropertyName())) {
             setDirty(Boolean.TRUE);
-        }
+        } else
         // when the user switch the matchrule tab, receive the event, here should change the table's column color
         // according to current tab
         if (MatchAnalysisConstant.MARCH_RULE_TAB_SWITCH.equals(evt.getPropertyName())) {
@@ -940,6 +941,8 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
             if (isMatchingKeyButtonPushed) {
                 changeColumnColorByCurrentKeys(matchingKeySection.getCurrentMatchKeyColumn(), true);
             }
+        } else if (MatchAnalysisConstant.NEED_REFRESH_DATA.equals(evt.getPropertyName())) {
+            refreshDataFromConnection();
         }
     }
 
@@ -965,7 +968,7 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
             if (matchRule.getMatchKeys().size() > 0) {
                 rc.setOk(Boolean.TRUE);
             } else {
-                rc.setMessage(DefaultMessagesImpl.getString("MatchMasterDetailsPage.NoMatchKey"));
+                rc.setMessage(DefaultMessagesImpl.getString("MatchMasterDetailsPage.NoMatchKey")); //$NON-NLS-1$
             }
         }
 

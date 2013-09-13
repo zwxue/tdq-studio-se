@@ -20,6 +20,7 @@ import org.talend.dataquality.record.linkage.Messages;
  */
 public class MatchAnalysisConstant {
 
+    // general need
     public static final String COLUMN = "Column"; //$NON-NLS-1$
 
     public static final String LABEL = "Label"; //$NON-NLS-1$
@@ -35,6 +36,10 @@ public class MatchAnalysisConstant {
     public static final String RECORD_COUNT = "Record Count"; //$NON-NLS-1$
 
     public static final String RECORDS_PERCENTAGE = "% Records"; //$NON-NLS-1$
+
+    public static final String ISDIRTY_PROPERTY = "ISDIRTY_PROPERTY"; //$NON-NLS-1$
+
+    public static final String NEED_REFRESH_DATA = "Need_Refresh_Data"; //$NON-NLS-1$
 
     // match key need
     public static final String MATCH_KEY_NAME = "Match Key Name"; //$NON-NLS-1$
@@ -68,21 +73,21 @@ public class MatchAnalysisConstant {
 
     public static final String MATCH_KEY_DEFAULT_VALUE = "match key name"; //$NON-NLS-1$
 
-    public static final String GID = "GID";//$NON-NLS-1$
+    public static final String GID = "GID"; //$NON-NLS-1$
 
-    public static final String MASTER = "MASTER";//$NON-NLS-1$
+    public static final String MASTER = "MASTER"; //$NON-NLS-1$
 
-    public static final String GRP_SIZE = "GRP_SIZE";//$NON-NLS-1$
+    public static final String GRP_SIZE = "GRP_SIZE"; //$NON-NLS-1$
 
-    public static final String SCORE = "SCORE";//$NON-NLS-1$
+    public static final String SCORE = "SCORE"; //$NON-NLS-1$
 
-    public static final String GRP_QUALITY = "GRP_QUALITY";//$NON-NLS-1$
+    public static final String GRP_QUALITY = "GRP_QUALITY"; //$NON-NLS-1$
 
-    public static final String ATTRIBUTE_SCORES = "ATTRIBUTE_SCORES";//$NON-NLS-1$
+    public static final String ATTRIBUTE_SCORES = "ATTRIBUTE_SCORES"; //$NON-NLS-1$
 
-    public static final String BLOCK_KEY = "BLOCK_KEY";//$NON-NLS-1$
+    public static final String BLOCK_KEY = "BLOCK_KEY"; //$NON-NLS-1$
 
-    public static final String MATCHING_KEY = "Matching Key";//$NON-NLS-1$
+    public static final String MATCHING_KEY = "Matching Key"; //$NON-NLS-1$
 
     public static final String BlOCKING_KEY_SECTION_NAME = "Blocking Key"; //$NON-NLS-1$
 
@@ -91,8 +96,6 @@ public class MatchAnalysisConstant {
     public static final String BlOCKING_KEY_DEFINITION_SECTION_NAME = "Generation of Blocking Key"; //$NON-NLS-1$
 
     public static final String MATCHING_KEY_DEFINITION_SECTION_NAME = "Matching key"; //$NON-NLS-1$
-
-    public static final String ISDIRTY_PROPERTY = "ISDIRTY_PROPERTY"; //$NON-NLS-1$
 
     // survivorship
     public static final String SURVIVORSHIP_KEY_NAME = "Survivor Rule Name"; //$NON-NLS-1$

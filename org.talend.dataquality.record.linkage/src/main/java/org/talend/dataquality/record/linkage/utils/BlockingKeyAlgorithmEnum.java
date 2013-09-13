@@ -22,21 +22,21 @@ import java.util.List;
  */
 public enum BlockingKeyAlgorithmEnum {
 
-    FIRST_CHAR_EW(0, "first character of each word", "first_Char_EW"), //$NON-NLS-1$ //$NON-NLS-2$
-    FIRST_N_CHAR_EW(1, "N first characters of each word", "first_N_Char_EW"), //$NON-NLS-1$ //$NON-NLS-2$
-    FIRST_N_CHAR(2, "first N characters of the string", "first_N_Char"), //$NON-NLS-1$ //$NON-NLS-2$
-    LAST_N_CHAR(3, "last N characters of the string", "last_N_Char"), //$NON-NLS-1$ //$NON-NLS-2$
-    FIRST_N_CONSONANTS(4, "first N consonants of the string", "first_N_Consonants"), //$NON-NLS-1$ //$NON-NLS-2$
-    FIRST_N_VOWELS(5, "first N vowels of the string", "first_N_Vowels"), //$NON-NLS-1$ //$NON-NLS-2$
-    PICK_CHAR(6, "pick characters", "pick_Char"), //$NON-NLS-1$ //$NON-NLS-2$
-    SUBSTR(7, "substring(a,b)", "subStr"), //$NON-NLS-1$ //$NON-NLS-2$
-    SOUNDEX(8, "soundex code", "soundex"), //$NON-NLS-1$ //$NON-NLS-2$
-    METAPHONE(9, "metaphone code", "metaphone"), //$NON-NLS-1$ //$NON-NLS-2$
-    D_METAPHONE(10, "double-metaphone code", "doublemetaphone"), //$NON-NLS-1$ //$NON-NLS-2$
-    EXACT(11, "exact", "exact"), //$NON-NLS-1$ //$NON-NLS-2$
-    FINGERPRINTKEY(12, "fingerPrintKey", "fingerPrintKey"), //$NON-NLS-1$ //$NON-NLS-2$
-    NGRAMKEY(13, "nGramKey", "nGramKey"), //$NON-NLS-1$ //$NON-NLS-2$
-    COLOGNEPHONETIC(14, "colognePhonetic", "colognePhonetic");//$NON-NLS-1$ //$NON-NLS-2$
+    FIRST_CHAR_EW(0, "first character of each word", "first_Char_EW", false), //$NON-NLS-1$ //$NON-NLS-2$
+    FIRST_N_CHAR_EW(1, "N first characters of each word", "first_N_Char_EW", true), //$NON-NLS-1$ //$NON-NLS-2$
+    FIRST_N_CHAR(2, "first N characters of the string", "first_N_Char", true), //$NON-NLS-1$ //$NON-NLS-2$
+    LAST_N_CHAR(3, "last N characters of the string", "last_N_Char", true), //$NON-NLS-1$ //$NON-NLS-2$
+    FIRST_N_CONSONANTS(4, "first N consonants of the string", "first_N_Consonants", true), //$NON-NLS-1$ //$NON-NLS-2$
+    FIRST_N_VOWELS(5, "first N vowels of the string", "first_N_Vowels", true), //$NON-NLS-1$ //$NON-NLS-2$
+    PICK_CHAR(6, "pick characters", "pick_Char", true), //$NON-NLS-1$ //$NON-NLS-2$
+    SUBSTR(7, "substring(a,b)", "subStr", true), //$NON-NLS-1$ //$NON-NLS-2$
+    SOUNDEX(8, "soundex code", "soundex", false), //$NON-NLS-1$ //$NON-NLS-2$
+    METAPHONE(9, "metaphone code", "metaphone", false), //$NON-NLS-1$ //$NON-NLS-2$
+    D_METAPHONE(10, "double-metaphone code", "doublemetaphone", false), //$NON-NLS-1$ //$NON-NLS-2$
+    EXACT(11, "exact", "exact", false), //$NON-NLS-1$ //$NON-NLS-2$
+    FINGERPRINTKEY(12, "fingerPrintKey", "fingerPrintKey", false), //$NON-NLS-1$ //$NON-NLS-2$
+    NGRAMKEY(13, "nGramKey", "nGramKey", false), //$NON-NLS-1$ //$NON-NLS-2$
+    COLOGNEPHONETIC(14, "colognePhonetic", "colognePhonetic", false);//$NON-NLS-1$ //$NON-NLS-2$
 
 
     private int index;
@@ -45,10 +45,13 @@ public enum BlockingKeyAlgorithmEnum {
 
     private String componentValueName;
 
-    BlockingKeyAlgorithmEnum(int index, String value, String componentValueName) {
+    private boolean isTakeParameter;
+
+    BlockingKeyAlgorithmEnum(int index, String value, String componentValueName, boolean isTakeParameter) {
         this.index = index;
         this.value = value;
         this.componentValueName = componentValueName;
+        this.isTakeParameter = isTakeParameter;
     }
 
     /**
@@ -67,6 +70,15 @@ public enum BlockingKeyAlgorithmEnum {
      */
     public String getValue() {
         return this.value;
+    }
+
+    /**
+     * Getter for isTakeParameter.
+     * 
+     * @return the isTakeParameter
+     */
+    public boolean isTakeParameter() {
+        return this.isTakeParameter;
     }
 
     /**

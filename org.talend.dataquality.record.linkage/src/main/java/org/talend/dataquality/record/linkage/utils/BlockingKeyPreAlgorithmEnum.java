@@ -21,14 +21,14 @@ import java.util.List;
  *
  */
 public enum BlockingKeyPreAlgorithmEnum {
-    NON_ALGO(0, "-", "NON_ALGO"), //$NON-NLS-1$//$NON-NLS-2$
-    REMOVE_MARKS(1, "remove diacritical marks", "removeDiacriticalMarks"), //$NON-NLS-1$ //$NON-NLS-2$
-    REMOVE_MARKS_THEN_LOWER_CASE(2, "remove diacritical marks and lower case", "removeDMAndLowerCase"), //$NON-NLS-1$ //$NON-NLS-2$
-    REMOVE_MARKS_THEN_UPPER_CASE(3, "remove diacritical marks and upper case", "removeDMAndUpperCase"), //$NON-NLS-1$ //$NON-NLS-2$
-    LOWER_CASE(4, "lower case", "lowerCase"), //$NON-NLS-1$ //$NON-NLS-2$
-    UPPER_CASE(5, "upper case", "upperCase"), //$NON-NLS-1$ //$NON-NLS-2$
-    LEFT_CHAR(6, "add left position character", "add_Left_Char"), //$NON-NLS-1$ //$NON-NLS-2$
-    RIGHT_CHAR(7, "add right position character", "add_Right_Char"); //$NON-NLS-1$ //$NON-NLS-2$
+    NON_ALGO(0, "-", "NON_ALGO",false), //$NON-NLS-1$//$NON-NLS-2$
+    REMOVE_MARKS(1, "remove diacritical marks", "removeDiacriticalMarks",false), //$NON-NLS-1$ //$NON-NLS-2$
+    REMOVE_MARKS_THEN_LOWER_CASE(2, "remove diacritical marks and lower case", "removeDMAndLowerCase",false), //$NON-NLS-1$ //$NON-NLS-2$
+    REMOVE_MARKS_THEN_UPPER_CASE(3, "remove diacritical marks and upper case", "removeDMAndUpperCase",false), //$NON-NLS-1$ //$NON-NLS-2$
+    LOWER_CASE(4, "lower case", "lowerCase",false), //$NON-NLS-1$ //$NON-NLS-2$
+    UPPER_CASE(5, "upper case", "upperCase",false), //$NON-NLS-1$ //$NON-NLS-2$
+    LEFT_CHAR(6, "add left position character", "add_Left_Char",true), //$NON-NLS-1$ //$NON-NLS-2$
+    RIGHT_CHAR(7, "add right position character", "add_Right_Char", true); //$NON-NLS-1$ //$NON-NLS-2$
 
     private int index;
 
@@ -36,10 +36,13 @@ public enum BlockingKeyPreAlgorithmEnum {
 
     private String componentValueName;
 
-    BlockingKeyPreAlgorithmEnum(int index, String value, String componentValueName) {
+    private boolean isTakeParameter;
+
+    BlockingKeyPreAlgorithmEnum(int index, String value, String componentValueName, boolean isTakeParameter) {
         this.index = index;
         this.value = value;
         this.componentValueName = componentValueName;
+        this.isTakeParameter = isTakeParameter;
     }
 
     /**
@@ -67,6 +70,15 @@ public enum BlockingKeyPreAlgorithmEnum {
      */
     public String getValue() {
         return this.value;
+    }
+
+    /**
+     * Getter for isTakeParameter.
+     * 
+     * @return the isTakeParameter
+     */
+    public boolean isTakeParameter() {
+        return this.isTakeParameter;
     }
 
     public static String[] getAllTypes() {

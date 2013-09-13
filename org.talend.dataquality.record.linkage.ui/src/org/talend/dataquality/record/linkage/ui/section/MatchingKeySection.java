@@ -383,6 +383,7 @@ public class MatchingKeySection extends AbstractMatchKeyWithChartTableSection {
 
     @Override
     public void refreshChart() {
+        listeners.firePropertyChange(MatchAnalysisConstant.NEED_REFRESH_DATA, true, false);
         RecordMatchingIndicator recordMatchingIndicator = MatchRuleAnlaysisUtils.getRecordMatchIndicatorFromAna(analysis);
         computeMatchResult(recordMatchingIndicator);
         matchRuleChartComp.refresh(recordMatchingIndicator.getGroupSize2groupFrequency());

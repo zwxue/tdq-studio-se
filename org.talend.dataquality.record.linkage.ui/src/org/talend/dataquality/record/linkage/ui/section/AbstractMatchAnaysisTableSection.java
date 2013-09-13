@@ -193,7 +193,7 @@ public abstract class AbstractMatchAnaysisTableSection extends AbstractSectionCo
         });
         createMoveButton(buttonsComposite, labelGd);
         //TODO will be implemented later (copy and paste)
-        
+
 
 
     }
@@ -208,13 +208,19 @@ public abstract class AbstractMatchAnaysisTableSection extends AbstractSectionCo
         Composite buttonsComposite = new Composite(currentSectionClient, SWT.NONE);
         buttonsComposite.setLayout(new GridLayout(7, true));
 
+
         GridData labelGd = new GridData();
         labelGd.horizontalAlignment = SWT.LEFT;
         labelGd.widthHint = 30;
-
+        createMoveButton(buttonsComposite, labelGd);
+        labelGd = new GridData();
+        labelGd.horizontalAlignment = SWT.CENTER;
+        labelGd.horizontalSpan = 5;
+        String buttonText = DefaultMessagesImpl.getString("AbstractMatchAnaysisTableSection.visulize_button_text"); //$NON-NLS-1$
+        labelGd.widthHint = buttonText.length() * 8;
         final Button refresh = new Button(buttonsComposite, SWT.NONE);
-        refresh.setToolTipText("Add New Item"); 
-        refresh.setImage(ImageLib.getImage(ImageLib.SECTION_PREVIEW));
+        refresh.setToolTipText(DefaultMessagesImpl.getString("AbstractMatchAnaysisTableSection.visulize_button_tooltip")); //$NON-NLS-1$
+        refresh.setText(buttonText);
         refresh.setLayoutData(labelGd);
         refresh.addSelectionListener(new SelectionAdapter() {
 
@@ -224,12 +230,11 @@ public abstract class AbstractMatchAnaysisTableSection extends AbstractSectionCo
             }
         });
 
-        createMoveButton(buttonsComposite, labelGd);
 
     }
 
     public void setDataInput(List<Object[]> allData) {
-        matchRows = allData;
+        matchRows.addAll(allData);
     }
 
     public void setColumnNameInput(Map<String, String> columnMap) {
@@ -368,7 +373,7 @@ public abstract class AbstractMatchAnaysisTableSection extends AbstractSectionCo
 
     /**
      * check if the key's name is same with some columns name
-     * 
+     *
      * @param keyName
      * @return
      */

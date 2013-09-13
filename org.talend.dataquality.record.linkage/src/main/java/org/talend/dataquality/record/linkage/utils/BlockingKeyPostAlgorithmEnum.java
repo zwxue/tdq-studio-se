@@ -21,10 +21,10 @@ import java.util.List;
  *
  */
 public enum BlockingKeyPostAlgorithmEnum {
-    NON_ALGO(0, "-", "NON_ALGO"), //$NON-NLS-1$//$NON-NLS-2$
-    USE_DEFAULT(1, "use default value", "useDefault"), //$NON-NLS-1$ //$NON-NLS-2$
-    LEFT_CHAR(2, "add left position character", "add_Left_Char"), //$NON-NLS-1$ //$NON-NLS-2$
-    RIGHT_CHAR(3, "add right position character", "add_Right_Char"); //$NON-NLS-1$ //$NON-NLS-2$
+    NON_ALGO(0, "-", "NON_ALGO",false), //$NON-NLS-1$//$NON-NLS-2$
+    USE_DEFAULT(1, "use default value", "useDefault", true), //$NON-NLS-1$ //$NON-NLS-2$
+    LEFT_CHAR(2, "add left position character", "add_Left_Char",false), //$NON-NLS-1$ //$NON-NLS-2$
+    RIGHT_CHAR(3, "add right position character", "add_Right_Char", false); //$NON-NLS-1$ //$NON-NLS-2$
 
     private int index;
 
@@ -32,10 +32,13 @@ public enum BlockingKeyPostAlgorithmEnum {
 
     private String componentValueName;
 
-    BlockingKeyPostAlgorithmEnum(int index, String value, String componentValueName) {
+    private boolean isTakeParameter;
+
+    BlockingKeyPostAlgorithmEnum(int index, String value, String componentValueName, boolean isTakeParameter) {
         this.index = index;
         this.value = value;
         this.componentValueName = componentValueName;
+        this.isTakeParameter = isTakeParameter;
     }
 
     /**
@@ -63,6 +66,15 @@ public enum BlockingKeyPostAlgorithmEnum {
      */
     public String getValue() {
         return this.value;
+    }
+
+    /**
+     * Getter for isTakeParameter.
+     * 
+     * @return the isTakeParameter
+     */
+    public boolean isTakeParameter() {
+        return this.isTakeParameter;
     }
 
     public static String[] getAllTypes() {

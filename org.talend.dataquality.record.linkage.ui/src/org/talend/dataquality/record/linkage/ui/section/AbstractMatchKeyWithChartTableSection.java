@@ -100,7 +100,8 @@ abstract public class AbstractMatchKeyWithChartTableSection extends AbstractMatc
 
     protected void computeMatchResult(final RecordMatchingIndicator recordMatchingIndicator) {
         if (hasMatchKey() && columnMap != null && !matchRows.isEmpty()) {
-            recordMatchingIndicator.setMatchRowSchema(AnalysisRecordGroupingUtils.getCompleteColumnSchema(columnMap));
+            recordMatchingIndicator.setMatchRowSchema(AnalysisRecordGroupingUtils
+                    .getCompleteColumnSchemaWithoutBlockKey(columnMap));
             recordMatchingIndicator.reset();
             MatchGroupResultConsumer matchResultConsumer = new MatchGroupResultConsumer() {
 

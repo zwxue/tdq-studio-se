@@ -43,8 +43,13 @@ public class MatchRuleCellModifier implements ICellModifier {
     @Override
     public boolean canModify(Object element, String property) {
         if (element != null && element instanceof MatchKeyDefinition) {
+            MatchKeyDefinition mkd = (MatchKeyDefinition) element;
+            if (MatchAnalysisConstant.CUSTOM_MATCHER_CLASS.equalsIgnoreCase(property)) {
+                return AttributeMatcherType.getTypeByValue(mkd.getAlgorithm().getAlgorithmType()).isTakeParameter();
+            }
             return true;
         }
+
         return false;
     }
 
