@@ -69,6 +69,7 @@ public class AnalysisEditor extends CommonFormEditor {
 
     // MOD xqliu 2009-07-02 bug 7687
     private DefaultSaveAction saveAction;
+
     // ~
 
     // Added 20130725 TDQ-7639 yyin
@@ -94,8 +95,13 @@ public class AnalysisEditor extends CommonFormEditor {
         if (toolbar != null) {
             saveAction = new DefaultSaveAction(this);
             runAction = new RunAnalysisAction();
-            refreshAction = new RefreshChartAction();
-            toolbar.addActions(saveAction, runAction, refreshAction);
+            // do not use the refresh on match analysis
+            if (analysisType.equals(AnalysisType.MATCH_ANALYSIS)) {
+                toolbar.addActions(saveAction, runAction);
+            } else {
+                refreshAction = new RefreshChartAction();
+                toolbar.addActions(saveAction, runAction, refreshAction);
+            }
         }
 
         switch (analysisType) {
