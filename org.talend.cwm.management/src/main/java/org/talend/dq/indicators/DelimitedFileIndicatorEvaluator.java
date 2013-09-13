@@ -33,6 +33,7 @@ import org.talend.core.model.metadata.builder.connection.DelimitedFileConnection
 import org.talend.core.model.metadata.builder.connection.Escape;
 import org.talend.core.model.metadata.builder.connection.MetadataColumn;
 import org.talend.core.model.metadata.builder.connection.MetadataTable;
+import org.talend.core.runtime.CoreRuntimePlugin;
 import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.management.i18n.Messages;
@@ -46,6 +47,7 @@ import org.talend.dataquality.indicators.RowCountIndicator;
 import org.talend.dataquality.indicators.UniqueCountIndicator;
 import org.talend.dq.helper.ParameterUtil;
 import org.talend.fileprocess.FileInputDelimited;
+import org.talend.repository.model.IRepositoryService;
 import org.talend.utils.sql.TalendTypeConvert;
 import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
@@ -81,11 +83,11 @@ public class DelimitedFileIndicatorEvaluator extends IndicatorEvaluator {
         if (delimitedFileconnection == null) {
             delimitedFileconnection = (DelimitedFileConnection) analysis.getContext().getConnection();
         }
-        boolean isContextMode = delimitedFileconnection.isContextMode();
-        String path = delimitedFileconnection.getFilePath();
-        if (isContextMode) {
-            path = ConnectionUtils.getOriginalConntextValue(delimitedFileconnection, path);
+        if (delimitedFileconnection.isContextMode()) {
+            IRepositoryService service = CoreRuntimePlugin.getInstance().getRepositoryService();
+            delimitedFileconnection = (DelimitedFileConnection) service.cloneOriginalValueConnection(delimitedFileconnection);
         }
+        String path = delimitedFileconnection.getFilePath();
         IPath iPath = new Path(path);
 
         CsvReader csvReader = null;
@@ -94,10 +96,6 @@ public class DelimitedFileIndicatorEvaluator extends IndicatorEvaluator {
             File file = iPath.toFile();
             String separator = delimitedFileconnection.getFieldSeparatorValue();
             String encoding = delimitedFileconnection.getEncoding();
-            if (isContextMode) {
-                separator = ConnectionUtils.getOriginalConntextValue(delimitedFileconnection, separator);
-                encoding = ConnectionUtils.getOriginalConntextValue(delimitedFileconnection, encoding);
-            }
             if (!file.exists()) {
                 returnCode.setReturnCode(Messages.getString("System can not find the file specified"), false); //$NON-NLS-1$
                 return returnCode;
@@ -127,23 +125,15 @@ public class DelimitedFileIndicatorEvaluator extends IndicatorEvaluator {
             String heading = delimitedFileconnection.getHeaderValue();
             String footing = delimitedFileconnection.getFooterValue();
             String limiting = delimitedFileconnection.getLimitValue();
-            if (isContextMode) {
-                heading = ConnectionUtils.getOriginalConntextValue(delimitedFileconnection, heading);
-                footing = ConnectionUtils.getOriginalConntextValue(delimitedFileconnection, footing);
-                limiting = ConnectionUtils.getOriginalConntextValue(delimitedFileconnection, limiting);
-                headValue = Integer.parseInt(heading == PluginConstant.EMPTY_STRING ? zero : heading);
-                footValue = Integer.parseInt(footing == PluginConstant.EMPTY_STRING ? zero : footing);
-                limitValue = Integer
-                        .parseInt(PluginConstant.EMPTY_STRING.equals(limiting) || zero.equals(limiting) ? "-1" : limiting); //$NON-NLS-1$
-            } else {// ~ 5346
-                // MOD qionlgi 2011-5-12,bug 21115.
-                headValue = Integer.parseInt(heading == null || PluginConstant.EMPTY_STRING.equals(heading) ? zero : heading);
-                footValue = Integer.parseInt(footing == null || PluginConstant.EMPTY_STRING.equals(footing) ? zero : footing);
-                if (limiting == null || PluginConstant.EMPTY_STRING.equals(limiting) || zero.equals(limiting)) {
-                    limiting = "-1"; //$NON-NLS-1$
-                }
-                limitValue = Integer.parseInt(limiting);
+
+            // MOD qionlgi 2011-5-12,bug 21115.
+            headValue = Integer.parseInt(heading == null || PluginConstant.EMPTY_STRING.equals(heading) ? zero : heading);
+            footValue = Integer.parseInt(footing == null || PluginConstant.EMPTY_STRING.equals(footing) ? zero : footing);
+            if (limiting == null || PluginConstant.EMPTY_STRING.equals(limiting) || zero.equals(limiting)) {
+                limiting = "-1"; //$NON-NLS-1$
             }
+            limitValue = Integer.parseInt(limiting);
+
             // use CsvReader to parse.
             if (Escape.CSV.equals(delimitedFileconnection.getEscapeType())) {
                 csvReader = new CsvReader(new BufferedReader(new InputStreamReader(new java.io.FileInputStream(file),
@@ -171,9 +161,6 @@ public class DelimitedFileIndicatorEvaluator extends IndicatorEvaluator {
             } else {
                 // use TOSDelimitedReader in FileInputDelimited to parse.
                 String rowSeparator = delimitedFileconnection.getRowSeparatorValue();
-                if (isContextMode) {
-                    rowSeparator = ConnectionUtils.getOriginalConntextValue(delimitedFileconnection, rowSeparator);
-                }
                 boolean isSpliteRecord = delimitedFileconnection.isSplitRecord();
                 boolean isSkipeEmptyRow = delimitedFileconnection.isRemoveEmptyRow();
                 String languageName = LanguageManager.getCurrentLanguage().getName();
