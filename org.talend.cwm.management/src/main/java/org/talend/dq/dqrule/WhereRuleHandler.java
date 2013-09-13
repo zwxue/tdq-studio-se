@@ -14,9 +14,9 @@ package org.talend.dq.dqrule;
 
 import java.util.List;
 
-import org.talend.dataquality.rules.DQRule;
 import org.talend.dataquality.rules.WhereRule;
 import org.talend.dq.helper.resourcehelper.DQRuleResourceFileHelper;
+import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
  * DOC xqliu class global comment. Detailled comment
@@ -48,9 +48,8 @@ public final class WhereRuleHandler {
      */
     public WhereRule getWhereRule(String name) {
         WhereRule result = null;
-        @SuppressWarnings("unchecked")
-        List<DQRule> rules = (List<DQRule>) DQRuleResourceFileHelper.getInstance().getAllElement();
-        for (DQRule rule : rules) {
+        List<? extends ModelElement> rules = DQRuleResourceFileHelper.getInstance().getAllElement();
+        for (ModelElement rule : rules) {
             if (rule instanceof WhereRule && name.equals(rule.getName())) {
                 result = (WhereRule) rule;
                 break;
