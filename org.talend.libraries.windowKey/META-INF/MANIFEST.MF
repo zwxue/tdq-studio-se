@@ -15,3 +15,4 @@ Export-Package: org.apache.commons.codec,
  org.apache.commons.codec.net,
  org.talend.windowkey
 Bundle-Vendor: .Talend SA.
+Require-Bundle: org.apache.commons.lang
