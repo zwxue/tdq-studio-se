@@ -66,7 +66,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.talend.dataquality.record.linkage.ui.composite.ListObjectDataProvider;
-import org.talend.dataquality.record.linkage.ui.section.DefaultMatchColumnConstant;
 import org.talend.dataquality.record.linkage.utils.MatchAnalysisConstant;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
@@ -119,6 +118,10 @@ public class DataSampleTable {
         }
         initTableProperty(columnsName, columnToLabelMap);
 
+        // initial the data if it is empty
+        if (listOfData == null) {
+            listOfData = new ArrayList<Object[]>();
+        }
         if (listOfData.size() < 1) {
             listOfData.add(getEmptyRow());
         }
@@ -265,7 +268,7 @@ public class DataSampleTable {
      * @return
      */
     public String getUserColumnNameByPosition(int position) {
-        if (position > propertyNames.length - DefaultMatchColumnConstant.COLUMN_COUNT) {
+        if (position > propertyNames.length - MatchAnalysisConstant.DEFAULT_COLUMN_COUNT) {
             return null;
         }
         return propertyNames[position - 1];
