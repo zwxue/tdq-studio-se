@@ -91,8 +91,8 @@ public abstract class AbstractSectionComposite implements PropertyChangeListener
     public void propertyChange(PropertyChangeEvent evt) {
         if (MatchAnalysisConstant.ISDIRTY_PROPERTY.equals(evt.getPropertyName())) {
             listeners.firePropertyChange(MatchAnalysisConstant.ISDIRTY_PROPERTY, true, false);
-        } else if (MatchAnalysisConstant.MARCH_RULE_TAB_SWITCH.equals(evt.getPropertyName())) {
-            listeners.firePropertyChange(MatchAnalysisConstant.MARCH_RULE_TAB_SWITCH, true, false);
+        } else if (MatchAnalysisConstant.MATCH_RULE_TAB_SWITCH.equals(evt.getPropertyName())) {
+            listeners.firePropertyChange(MatchAnalysisConstant.MATCH_RULE_TAB_SWITCH, true, false);
         }
     }
 }

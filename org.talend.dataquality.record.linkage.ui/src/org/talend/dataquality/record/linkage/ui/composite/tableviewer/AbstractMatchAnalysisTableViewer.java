@@ -159,7 +159,7 @@ public abstract class AbstractMatchAnalysisTableViewer<T> extends TableViewer {
     }
 
     public void noticeColumnSelectChange() {
-        listeners.firePropertyChange(MatchAnalysisConstant.MARCH_RULE_TAB_SWITCH, true, false);
+        listeners.firePropertyChange(MatchAnalysisConstant.MATCH_RULE_TAB_SWITCH, true, false);
     }
 
     /*

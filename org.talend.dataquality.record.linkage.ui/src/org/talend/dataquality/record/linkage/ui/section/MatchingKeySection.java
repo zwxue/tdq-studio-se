@@ -258,7 +258,7 @@ public class MatchingKeySection extends AbstractMatchKeyWithChartTableSection {
 
     private void fireSwitchRuleTabEvent() {
         // when create a rule tab, should notify the match analysis's master page: table column color
-        listeners.firePropertyChange(MatchAnalysisConstant.MARCH_RULE_TAB_SWITCH, true, false);
+        listeners.firePropertyChange(MatchAnalysisConstant.MATCH_RULE_TAB_SWITCH, true, false);
     }
 
     /**

@@ -929,7 +929,7 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
         } else
         // when the user switch the matchrule tab, receive the event, here should change the table's column color
         // according to current tab
-        if (MatchAnalysisConstant.MARCH_RULE_TAB_SWITCH.equals(evt.getPropertyName())) {
+        if (MatchAnalysisConstant.MATCH_RULE_TAB_SWITCH.equals(evt.getPropertyName())) {
             // find the current rule tab, and change the color of the table column
             if (isMatchingKeyButtonPushed) {
                 changeColumnColorByCurrentKeys(matchingKeySection.getCurrentMatchKeyColumn(), true);

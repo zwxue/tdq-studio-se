@@ -112,7 +112,7 @@ public class MatchAnalysisConstant {
 
     public static final String SURVIVORSHIP_KEY_DEFAULT_VALUE = Messages.getString("MatchAnalysisConstant.KEY_NAME"); //$NON-NLS-1$
 
-    public static final String MARCH_RULE_TAB_SWITCH = "MARCH_RULE_TAB_SWITCH"; //$NON-NLS-1$
+    public static final String MATCH_RULE_TAB_SWITCH = "MATCH_RULE_TAB_SWITCH"; //$NON-NLS-1$
 
     public static final String DATA_SAMPLE_TABLE_COLUMN_SELECTION = "DATA_SAMPLE_TABLE_COLUMN_SELECTION"; //$NON-NLS-1$
 
