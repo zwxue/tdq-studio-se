@@ -40,7 +40,6 @@ Require-Bundle: net.sourceforge.sqlexplorer;resolution:=optional,
  org.eclipse.nebula.widgets.grid,
  org.apache.log4j,
  org.talend.dataquality.record.linkage.ui,
- org.eclipse.nebula.widgets.nattable.core,
  org.talend.dataprofiler.migration
 Bundle-ActivationPolicy: lazy
 Export-Package: org.eclipse.nebula.jface.tablecomboviewer,

@@ -17,7 +17,6 @@ import java.beans.PropertyChangeListener;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -29,12 +28,6 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardDialog;
-import org.eclipse.nebula.widgets.nattable.NatTable;
-import org.eclipse.nebula.widgets.nattable.coordinate.Range;
-import org.eclipse.nebula.widgets.nattable.grid.layer.event.ColumnHeaderSelectionEvent;
-import org.eclipse.nebula.widgets.nattable.layer.ILayerListener;
-import org.eclipse.nebula.widgets.nattable.layer.event.ILayerEvent;
-import org.eclipse.nebula.widgets.nattable.util.GUIHelper;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.events.ModifyEvent;
@@ -197,9 +190,6 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
         createBlockingKeySection(form, topComp);
 
         createMatchingKeySection(form, topComp);
-
-        // we must do this, this will recompute the layout and scroll bars
-        form.reflow(true);
     }
 
     /**
@@ -245,7 +235,6 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
         matchingKeySection.addPropertyChangeListener(this);
         // create the data table
         createDataTableComposite(dataSampleparentComposite);
-
     }
 
     /**
@@ -274,7 +263,7 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
 
             createNatTable(new ArrayList<Object[]>());
         }
-
+        sampleTable.addPropertyChangeListener(this);
     }
 
     private void createAnaDataLabelComposite(Composite dataparent) {
@@ -397,10 +386,10 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
         // set all not selected columns into black color
         for (ModelElement column : analysisHandler.getSelectedColumns()) {
             if (currentKeyColumn.contains(column.getName())) {
-                sampleTable.changeColumnHeaderLabelColor(column.getName(), isMatchKey ? GUIHelper.COLOR_RED
-                        : GUIHelper.COLOR_GREEN, isMatchKey ? DataSampleTable.MATCH_EKY : DataSampleTable.BLOCK_EKY);
+                sampleTable.changeColumnHeaderLabelColor(column.getName(), isMatchKey ? DataSampleTable.COLOR_RED
+                        : DataSampleTable.COLOR_GREEN, isMatchKey ? DataSampleTable.MATCH_EKY : DataSampleTable.BLOCK_EKY);
             } else {
-                sampleTable.changeColumnHeaderLabelColor(column.getName(), GUIHelper.COLOR_BLACK,
+                sampleTable.changeColumnHeaderLabelColor(column.getName(), DataSampleTable.COLOR_BLACK,
                         isMatchKey ? DataSampleTable.MATCH_EKY : DataSampleTable.BLOCK_EKY);
             }
         }
@@ -409,7 +398,7 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
 
     private void setAllColumnColorToBlack() {
         for (ModelElement column : analysisHandler.getSelectedColumns()) {
-            sampleTable.changeColumnHeaderLabelColor(column.getName(), GUIHelper.COLOR_BLACK, PluginConstant.EMPTY_STRING);
+            sampleTable.changeColumnHeaderLabelColor(column.getName(), DataSampleTable.COLOR_BLACK, PluginConstant.EMPTY_STRING);
         }
         sampleTable.refresh();
     }
@@ -582,6 +571,7 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
             public boolean handle(final Object data) {
                 Display.getDefault().asyncExec(new Runnable() {
 
+                    @SuppressWarnings("unchecked")
                     public void run() {
                         refreshTable((List<Object[]>) data);
                     }
@@ -769,7 +759,6 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
         Control natTable = sampleTable.createTable(dataTableComp, analysisHandler.getSelectedColumns(), listOfData);
         GridDataFactory.fillDefaults().grab(true, true).applyTo(natTable);
 
-        addCustomSelectionBehaviour((NatTable) natTable);
     }
 
     /**
@@ -790,22 +779,6 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
         blockingKeySection.setColumnNameInput(columnMap);
     }
 
-    private void addCustomSelectionBehaviour(NatTable nattable) {
-        nattable.addLayerListener(new ILayerListener() {
-
-            public void handleLayerEvent(ILayerEvent event) {
-                if ((event instanceof ColumnHeaderSelectionEvent)) {
-                    ColumnHeaderSelectionEvent columnEvent = (ColumnHeaderSelectionEvent) event;
-                    Collection<Range> ranges = columnEvent.getColumnPositionRanges();
-                    if (ranges.size() > 0) {
-                        Range range = ranges.iterator().next();
-                        handleColumnSelectionChange(range.start);
-                    }
-                }
-            }
-        });
-    }
-
     /**
      * when the user select one column, check: if the column is not selected before, add it(with color changed) else if
      * the column already be selected before, remove it(with color changed) Need to check: canSelectBlockingKey/
@@ -815,8 +788,8 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
      * @param columnPosition
      * @param columnName
      */
-    private void handleColumnSelectionChange(int index) {
-        String columnName = sampleTable.getUserColumnNameByPosition(index);
+    private void handleColumnSelectionChange() {
+        String columnName = sampleTable.getCurrentSelectedColumn();
         if (columnName == null) {
             // means that the user selected column is the additional ones,no need to process it
             return;
@@ -841,13 +814,16 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
             Boolean isAdded = matchingKeySection.isKeyDefinitionAdded(columnName);
             if (isAdded) {
                 matchingKeySection.removeMatchKeyFromCurrentMatchRule(columnName);
-                sampleTable.changeColumnHeaderLabelColor(columnName, GUIHelper.COLOR_BLACK, DataSampleTable.MATCH_EKY);
+                sampleTable.changeColumnHeaderLabelColor(columnName, DataSampleTable.COLOR_BLACK, DataSampleTable.MATCH_EKY);
             } else {
                 matchingKeySection.createMatchKeyFromCurrentMatchRule(columnName);
-                sampleTable.changeColumnHeaderLabelColor(columnName, GUIHelper.COLOR_RED, DataSampleTable.MATCH_EKY);
+                sampleTable.changeColumnHeaderLabelColor(columnName, DataSampleTable.COLOR_RED, DataSampleTable.MATCH_EKY);
             }
         } catch (Exception e) {
-            // TODO yyin popup to notify user that at least one match rule tab is needed.
+            // popup to notify user that at least one match rule tab is needed.
+            MessageDialog.openWarning(null, DefaultMessagesImpl.getString("MatchMasterDetailsPage.warning"), //$NON-NLS-1$
+                    DefaultMessagesImpl.getString("MatchMasterDetailsPage.NoMatchRuleTabError")); //$NON-NLS-1$
+
         }
     }
 
@@ -868,10 +844,10 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
 
         if (isAdded) {
             blockingKeySection.removeBlockingKey(columnName);
-            sampleTable.changeColumnHeaderLabelColor(columnName, GUIHelper.COLOR_BLACK, DataSampleTable.BLOCK_EKY);
+            sampleTable.changeColumnHeaderLabelColor(columnName, DataSampleTable.COLOR_BLACK, DataSampleTable.BLOCK_EKY);
         } else {
             blockingKeySection.createBlockingKey(columnName);
-            sampleTable.changeColumnHeaderLabelColor(columnName, GUIHelper.COLOR_GREEN, DataSampleTable.BLOCK_EKY);
+            sampleTable.changeColumnHeaderLabelColor(columnName, DataSampleTable.COLOR_GREEN, DataSampleTable.BLOCK_EKY);
         }
     }
 
@@ -1001,7 +977,7 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
      */
     @Override
     public void refresh() {
-        // TODO yyin implement this method.
+        // no need for refresh in match analysis now.
 
     }
 

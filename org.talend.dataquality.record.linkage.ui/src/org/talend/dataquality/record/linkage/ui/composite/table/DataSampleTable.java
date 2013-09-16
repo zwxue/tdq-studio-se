@@ -12,7 +12,10 @@
 // ============================================================================
 package org.talend.dataquality.record.linkage.ui.composite.table;
 
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,6 +25,7 @@ import org.eclipse.nebula.widgets.nattable.NatTable;
 import org.eclipse.nebula.widgets.nattable.config.CellConfigAttributes;
 import org.eclipse.nebula.widgets.nattable.config.IConfigRegistry;
 import org.eclipse.nebula.widgets.nattable.config.IEditableRule;
+import org.eclipse.nebula.widgets.nattable.coordinate.Range;
 import org.eclipse.nebula.widgets.nattable.data.IColumnPropertyAccessor;
 import org.eclipse.nebula.widgets.nattable.data.IDataProvider;
 import org.eclipse.nebula.widgets.nattable.data.ReflectiveColumnPropertyAccessor;
@@ -33,14 +37,17 @@ import org.eclipse.nebula.widgets.nattable.grid.layer.ColumnHeaderLayer;
 import org.eclipse.nebula.widgets.nattable.grid.layer.CornerLayer;
 import org.eclipse.nebula.widgets.nattable.grid.layer.GridLayer;
 import org.eclipse.nebula.widgets.nattable.grid.layer.RowHeaderLayer;
+import org.eclipse.nebula.widgets.nattable.grid.layer.event.ColumnHeaderSelectionEvent;
 import org.eclipse.nebula.widgets.nattable.group.ColumnGroupModel;
 import org.eclipse.nebula.widgets.nattable.group.painter.ColumnGroupHeaderTextPainter;
 import org.eclipse.nebula.widgets.nattable.hideshow.ColumnHideShowLayer;
 import org.eclipse.nebula.widgets.nattable.layer.AbstractLayerTransform;
 import org.eclipse.nebula.widgets.nattable.layer.DataLayer;
+import org.eclipse.nebula.widgets.nattable.layer.ILayerListener;
 import org.eclipse.nebula.widgets.nattable.layer.LabelStack;
 import org.eclipse.nebula.widgets.nattable.layer.cell.ILayerCell;
 import org.eclipse.nebula.widgets.nattable.layer.config.DefaultColumnHeaderStyleConfiguration;
+import org.eclipse.nebula.widgets.nattable.layer.event.ILayerEvent;
 import org.eclipse.nebula.widgets.nattable.painter.cell.BackgroundImagePainter;
 import org.eclipse.nebula.widgets.nattable.painter.cell.ICellPainter;
 import org.eclipse.nebula.widgets.nattable.painter.cell.TextPainter;
@@ -84,6 +91,16 @@ public class DataSampleTable {
 
     public static final String BLOCK_EKY = "BLOCK"; //$NON-NLS-1$
 
+    public static final Color COLOR_BLACK = Display.getDefault().getSystemColor(SWT.COLOR_BLACK);
+
+    public static final Color COLOR_RED = Display.getDefault().getSystemColor(SWT.COLOR_RED);
+
+    public static final Color COLOR_GREEN = Display.getDefault().getSystemColor(SWT.COLOR_GREEN);
+
+    protected PropertyChangeSupport listeners = new PropertyChangeSupport(this);
+
+    private String currentSelectedColumn = null;
+
     public DataSampleTable() {
     }
 
@@ -107,6 +124,36 @@ public class DataSampleTable {
         }
         return createTableControl(parentContainer, listOfData);
 
+    }
+
+    private void addCustomSelectionBehaviour() {
+        natTable.addLayerListener(new ILayerListener() {
+
+            public void handleLayerEvent(ILayerEvent event) {
+                if ((event instanceof ColumnHeaderSelectionEvent)) {
+                    ColumnHeaderSelectionEvent columnEvent = (ColumnHeaderSelectionEvent) event;
+                    Collection<Range> ranges = columnEvent.getColumnPositionRanges();
+                    if (ranges.size() > 0) {
+                        Range range = ranges.iterator().next();
+                        handleColumnSelectionChange(range.start);
+                    }
+                }
+            }
+        });
+    }
+
+    private void handleColumnSelectionChange(int index) {
+        currentSelectedColumn = this.getUserColumnNameByPosition(index);
+        listeners.firePropertyChange(MatchAnalysisConstant.DATA_SAMPLE_TABLE_COLUMN_SELECTION, true, false);
+
+    }
+
+    public String getCurrentSelectedColumn() {
+        return this.currentSelectedColumn;
+    }
+
+    public void addPropertyChangeListener(PropertyChangeListener listener) {
+        listeners.addPropertyChangeListener(listener);
     }
 
     /**
@@ -172,7 +219,7 @@ public class DataSampleTable {
     }
 
     /**
-     * DOC yyin Comment method "updateMarkedKeys".
+     * update Marked Keys
      * 
      * @param columnName
      * @param color
@@ -196,7 +243,7 @@ public class DataSampleTable {
     }
 
     /**
-     * DOC yyin Comment method "removeMarkedKey".
+     * remove Marked Key".
      * 
      * @param columnName
      * @param keyName
@@ -281,6 +328,10 @@ public class DataSampleTable {
                 IEditableRule.NEVER_EDITABLE, DisplayMode.EDIT, "EVEN_BODY"); //$NON-NLS-1$
 
         natTable.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_LIST_BACKGROUND));
+
+        // add the listener for the column header selection
+        addCustomSelectionBehaviour();
+
         return natTable;
     }
 
@@ -294,6 +345,7 @@ public class DataSampleTable {
         }
     }
 
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     private IDataProvider setupBodyDataProvider(List<Object[]> data) {
         IColumnPropertyAccessor columnPropertyAccessor = new ReflectiveColumnPropertyAccessor(propertyNames);
         return new ListObjectDataProvider(data, columnPropertyAccessor);
@@ -344,7 +396,7 @@ public class DataSampleTable {
         }
 
         /**
-         * DOC yyin Comment method "getCurrentColumnName".
+         * get Current Column Name.
          * 
          * @param columnPosition
          * @return
