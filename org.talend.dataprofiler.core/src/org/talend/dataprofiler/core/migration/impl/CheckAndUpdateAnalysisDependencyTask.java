@@ -26,6 +26,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.talend.commons.emf.EMFUtil;
 import org.talend.commons.utils.io.FilesUtils;
+import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
 import org.talend.cwm.dependencies.DependenciesHandler;
 import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.SwitchHelpers;
@@ -38,6 +39,8 @@ import orgomg.cwm.foundation.softwaredeployment.DataManager;
 import orgomg.cwm.foundation.softwaredeployment.DataProvider;
 import orgomg.cwm.objectmodel.core.Dependency;
 import orgomg.cwm.objectmodel.core.ModelElement;
+import orgomg.cwm.objectmodel.core.Package;
+import orgomg.cwm.resource.relational.Catalog;
 
 /**
  * created by yyin on 2013-7-10 check the client dependency of the analysis according to TDQ-7327 if there are more than
@@ -74,25 +77,40 @@ public class CheckAndUpdateAnalysisDependencyTask extends AbstractWorksapceUpdat
      */
     @Override
     protected boolean doExecute() throws Exception {
+        // load all connections and check if any catelog has more than one datamanager
+        checkAndRemoveWrongDataManager(getConnections());
+
         // load all analyses and check their dependency correct or not.
         checkAndRemoveWrongDependencies(getAnalyses());
 
         return true;
     }
 
+    /**
+     * DOC yyin Comment method "getConnections".
+     * 
+     * @return
+     */
+    private List<DataManager> getConnections() {
+        List<DataManager> connections = new ArrayList<DataManager>();
+        File sysIndsFolder = getWorkspacePath().append(EResourceConstant.DB_CONNECTIONS.getPath()).toFile();
+        ArrayList<File> fileList = new ArrayList<File>();
+        FilesUtils.getAllFilesFromFolder(sysIndsFolder, fileList, getFilenameFilter("item"));
+        for (File file : fileList) {
+            DataManager indDef = getDataManagerFromFile(file);
+            if (indDef != null) {
+                connections.add(indDef);
+            }
+        }
+
+        return connections;
+    }
+
     private List<Analysis> getAnalyses() {
         List<Analysis> analyses = new ArrayList<Analysis>();
         File sysIndsFolder = getWorkspacePath().append(EResourceConstant.ANALYSIS.getPath()).toFile();
         ArrayList<File> fileList = new ArrayList<File>();
-        FilesUtils.getAllFilesFromFolder(sysIndsFolder, fileList, new FilenameFilter() {
-
-            public boolean accept(File dir, String name) {
-                if (name.endsWith("ana")) {//$NON-NLS-1$
-                    return true;
-                }
-                return false;
-            }
-        });
+        FilesUtils.getAllFilesFromFolder(sysIndsFolder, fileList, getFilenameFilter("ana"));
         for (File file : fileList) {
             Analysis indDef = getAnalysisFromFile(file);
             if (indDef != null) {
@@ -103,14 +121,45 @@ public class CheckAndUpdateAnalysisDependencyTask extends AbstractWorksapceUpdat
         return analyses;
     }
 
+    private FilenameFilter getFilenameFilter(final String ends) {
+        return new FilenameFilter() {
+
+            public boolean accept(File dir, String name) {
+                if (name.endsWith(ends)) {//$NON-NLS-1$
+                    return true;
+                }
+                return false;
+            }
+        };
+    }
+
     /**
-     * DOC xqliu Comment method "getIndicatorDefinitionFromFile".
-     * 
+     * @param file
+     * @return
+     */
+    private DataManager getDataManagerFromFile(File file) {
+        Resource itemResource = getResource(file);
+        if (itemResource == null) {
+            return null;
+        }
+        for (EObject object : itemResource.getContents()) {
+            if (object instanceof DataManager) {
+                return (DataManager) object;
+            }
+        }
+
+        return null;
+    }
+
+    /**
      * @param file
      * @return
      */
     private Analysis getAnalysisFromFile(File file) {
         Resource itemResource = getResource(file);
+        if (itemResource == null) {
+            return null;
+        }
         for (EObject object : itemResource.getContents()) {
             if (object instanceof Analysis) {
                 return (Analysis) object;
@@ -118,6 +167,50 @@ public class CheckAndUpdateAnalysisDependencyTask extends AbstractWorksapceUpdat
         }
 
         return null;
+    }
+
+    /**
+     * only need to check database connection
+     * 
+     * @param connections
+     */
+    private void checkAndRemoveWrongDataManager(List<DataManager> connections) {
+        for (DataManager connection : connections) {
+            if (connection instanceof DatabaseConnection) {
+                EList<Package> packages = connection.getDataPackage();
+                for (EObject obj : packages) {
+                    Catalog catalog = SwitchHelpers.CATALOG_SWITCH.doSwitch(obj);
+                    // if catelog has more than one data manager
+                    if (catalog != null && catalog.getDataManager().size() > 1) {
+                        List<DataManager> wrongManagers = new ArrayList<DataManager>();
+                        // remove the wrong datamanger from the catelog;
+                        for (DataManager manager : catalog.getDataManager()) {
+                            // if the name of the manager does not equal with the parent of the catalog,it is the wrong
+                            // one
+                            if (!StringUtils.equals(((DatabaseConnection) manager).getName(),
+                                    ((DatabaseConnection) connection).getName())) {
+                                wrongManagers.add(manager);
+                            }
+                        }
+                        removeWrongDataManager(catalog, wrongManagers, connection);
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * remove the Wrong Data Manager,and save the connection
+     * 
+     * @param catalog
+     * @param connection
+     * @param parent
+     */
+    private void removeWrongDataManager(Catalog catalog, List<DataManager> wrongManagers, DataManager parent) {
+        for (DataManager wrongone : wrongManagers) {
+            catalog.getDataManager().remove(wrongone);
+        }
+        EMFSharedResources.getInstance().saveResource(parent.eResource());
     }
 
     /**
@@ -132,12 +225,20 @@ public class CheckAndUpdateAnalysisDependencyTask extends AbstractWorksapceUpdat
             if (analysis != null) {
                 boolean isAnalysisModified = false;
 
+                if (analysis.getContext().getAnalysedElements() == null || analysis.getContext().getAnalysedElements().size() < 1) {
+                    continue;
+                }
+
                 TdColumn tdColumn = SwitchHelpers.COLUMN_SWITCH.doSwitch(analysis.getContext().getAnalysedElements().get(0));
+                if (tdColumn == null) {
+                    continue;
+                }
                 // find the correct db connection from analyzed element
                 DataManager correctDB = ConnectionHelper.getConnection(tdColumn);
+
                 // check if the connection is correct or not
                 DataManager connection = analysis.getContext().getConnection();
-                if (!correctDB.getName().equals(connection.getName())) {
+                if (connection == null || !correctDB.getName().equals(connection.getName())) {
                     analysis.getContext().setConnection(correctDB);
                     isAnalysisModified = true;
                 }
