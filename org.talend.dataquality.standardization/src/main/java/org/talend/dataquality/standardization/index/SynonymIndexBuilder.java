@@ -491,9 +491,11 @@ public class SynonymIndexBuilder {
     private Document generateDocument(String word, String synonyms) {
         // System.out.println("\t Generating doc for " + word + " and " + synonyms);
         Set<String> set = new HashSet<String>();
-        StringTokenizer tokenizer = new StringTokenizer(synonyms, String.valueOf(separator));
-        while (tokenizer.hasMoreTokens()) {
-            set.add(tokenizer.nextToken());
+        if (synonyms != null) {
+            StringTokenizer tokenizer = new StringTokenizer(synonyms, String.valueOf(separator));
+            while (tokenizer.hasMoreTokens()) {
+                set.add(tokenizer.nextToken());
+            }
         }
         return generateDocument(word, set);
     }
