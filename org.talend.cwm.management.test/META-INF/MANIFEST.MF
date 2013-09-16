@@ -9,8 +9,7 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Require-Bundle: org.junit4,
  org.talend.testutils,
  org.talend.model
-Export-Package: org.talend.core.model.metadata.builder.database,
- org.talend.cwm.db.connection;uses:="org.apache.log4j",
+Export-Package: org.talend.cwm.db.connection;uses:="org.apache.log4j",
  org.talend.cwm.dependencies,
  org.talend.cwm.management.api,
  org.talend.cwm.management.i18n,
