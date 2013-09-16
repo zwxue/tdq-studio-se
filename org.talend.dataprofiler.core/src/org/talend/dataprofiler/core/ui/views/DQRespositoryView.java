@@ -33,6 +33,8 @@ import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.preference.PreferenceContentProvider;
+import org.eclipse.jface.viewers.ColumnViewer;
+import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
 import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -43,7 +45,9 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.viewers.ViewerCell;
 import org.eclipse.jface.viewers.ViewerFilter;
+import org.eclipse.jface.window.ToolTip;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyAdapter;
 import org.eclipse.swt.events.KeyEvent;
@@ -56,10 +60,13 @@ import org.eclipse.swt.events.TreeAdapter;
 import org.eclipse.swt.events.TreeEvent;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.CoolBar;
 import org.eclipse.swt.widgets.CoolItem;
+import org.eclipse.swt.widgets.DateTime;
 import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
@@ -113,7 +120,7 @@ import org.talend.dataprofiler.core.ui.filters.ReportingFilter;
 import org.talend.dataprofiler.core.ui.progress.ProgressUI;
 import org.talend.dataprofiler.core.ui.utils.WorkbenchUtils;
 import org.talend.dataprofiler.core.ui.views.layout.BorderLayout;
-import org.talend.dataprofiler.core.ui.views.provider.DQRepositoryViewLabelProvider;
+import org.talend.dataprofiler.core.ui.views.provider.DQRepositoryViewCellLableProvider;
 import org.talend.dataprofiler.migration.manager.MigrationTaskManager;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dq.CWMPlugin;
@@ -476,7 +483,6 @@ public class DQRespositoryView extends CommonNavigator {
 
         });
         // ~
-
     }
 
     /**
@@ -761,11 +767,38 @@ public class DQRespositoryView extends CommonNavigator {
     }
 
     protected void setContentAndLabelProviders(TreeViewer treeViewer) {
-        treeViewer.setLabelProvider(new DQRepositoryViewLabelProvider());
+        treeViewer.setLabelProvider(new DQRepositoryViewCellLableProvider(null, null, null));
         IContributionService cs = (IContributionService) PlatformUI.getWorkbench().getActiveWorkbenchWindow()
                 .getService(IContributionService.class);
         treeViewer.setComparator(cs.getComparatorFor(IContributionService.TYPE_PREFERENCE));
         treeViewer.setContentProvider(new PreferenceContentProvider());
+
+    }
+
+    static class ViewColumnViewerToolTipSupport extends ColumnViewerToolTipSupport {
+
+        protected ViewColumnViewerToolTipSupport(ColumnViewer viewer, int style, boolean manualActivation) {
+            super(viewer, style, manualActivation);
+        }
+
+        @Override
+        protected Composite createViewerToolTipContentArea(Event event, ViewerCell cell, Composite parent) {
+            final Composite composite = new Composite(parent, SWT.NONE);
+            composite.setLayout(new RowLayout(SWT.VERTICAL));
+            Text text = new Text(composite, SWT.SINGLE);
+            text.setText(getText(event));
+            text.setSize(100, 60);
+            DateTime calendar = new DateTime(composite, SWT.CALENDAR);
+            calendar.setEnabled(false);
+            calendar.setSize(100, 100);
+            composite.pack();
+            return composite;
+        }
+
+        public static final void enableFor(final ColumnViewer viewer) {
+            new ViewColumnViewerToolTipSupport(viewer, ToolTip.NO_RECREATE, false);
+        }
+
     }
 
     /**
