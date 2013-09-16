@@ -21,7 +21,12 @@ import java.io.UnsupportedEncodingException;
 import java.util.Date;
 
 import org.apache.log4j.Logger;
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IFolder;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.viewers.ViewerFilter;
+import org.talend.commons.emf.FactoriesUtil;
 import org.talend.commons.utils.StringUtils;
 import org.talend.core.language.LanguageManager;
 import org.talend.core.model.metadata.builder.connection.DelimitedFileConnection;
@@ -39,6 +44,9 @@ import org.talend.dataquality.analysis.AnalysisResult;
 import org.talend.dataquality.analysis.ExecutionInformations;
 import org.talend.dq.dbms.DbmsLanguage;
 import org.talend.fileprocess.FileInputDelimited;
+import org.talend.resource.EResourceConstant;
+import org.talend.resource.ResourceManager;
+import org.talend.resource.ResourceService;
 import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.foundation.softwaredeployment.DataManager;
 import orgomg.cwm.foundation.softwaredeployment.SoftwaredeploymentPackage;
@@ -50,7 +58,7 @@ import orgomg.cwm.resource.relational.Schema;
 import com.csvreader.CsvReader;
 
 /**
- * DOC yyin  class global comment. Detailled comment
+ * DOC yyin class global comment. Detailled comment
  */
 public final class AnalysisExecutorHelper {
 
@@ -106,7 +114,6 @@ public final class AnalysisExecutorHelper {
         return (parentSchema == null) ? null : dbmsLanguage.quote(parentSchema.getName());
     }
 
-
     public static CsvReader createCsvReader(File file, DelimitedFileConnection delimitedFileconnection)
             throws UnsupportedEncodingException, FileNotFoundException {
         String separator = delimitedFileconnection.getFieldSeparatorValue();
@@ -120,6 +127,7 @@ public final class AnalysisExecutorHelper {
                 encoding == null ? "UTF-8" : encoding)), ParameterUtil //$NON-NLS-1$
                 .trimParameter(separator).charAt(0));
     }
+
     /**
      * 
      * DOC qiongli Comment method "initializeCsvReader".
@@ -180,8 +188,8 @@ public final class AnalysisExecutorHelper {
 
         return new FileInputDelimited(ParameterUtil.trimParameter(path), ParameterUtil.trimParameter(encoding),
                 ParameterUtil.trimParameter(StringUtils.loadConvert(fieldSeparatorValue, languageName)),
-                ParameterUtil.trimParameter(StringUtils
-                .loadConvert(rowSeparator, languageName)), isSkipeEmptyRow, headValue, footValue, limitValue, -1, isSpliteRecord);
+                ParameterUtil.trimParameter(StringUtils.loadConvert(rowSeparator, languageName)), isSkipeEmptyRow, headValue,
+                footValue, limitValue, -1, isSpliteRecord);
     }
 
     public static int getHeadValue(DelimitedFileConnection fileconnection) {
@@ -283,5 +291,33 @@ public final class AnalysisExecutorHelper {
             resultMetadata.setMessage(errorMessage);
         }
         return errorMessage;
+    }
+
+    /**
+     * used for table analysis-- select dq rules, add filter for match rule folder
+     * TDQ-8001
+     * @return
+     */
+    public static ViewerFilter createRuleFilter() {
+        return new ViewerFilter() {
+
+            @Override
+            public boolean select(Viewer viewer, Object parentElement, Object element) {
+                if (element instanceof IFile) {
+                    IFile file = (IFile) element;
+                    if (FactoriesUtil.DQRULE.equals(file.getFileExtension())) {
+                        return true;
+                    }
+                } else if (element instanceof IFolder) {
+                    IFolder folder = (IFolder) element;
+                    // filter the match rule folder in table analysis
+                    if (EResourceConstant.RULES_MATCHER.getName().equals(folder.getName())) {
+                        return false;
+                    }// ~
+                    return ResourceService.isSubFolder(ResourceManager.getRulesFolder(), folder);
+                }
+                return false;
+            }
+        };
     }
 }

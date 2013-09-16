@@ -12,23 +12,18 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.wizard.analysis.table;
 
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IFolder;
 import org.eclipse.jface.viewers.CheckboxTreeViewer;
-import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.dialogs.ContainerCheckedTreeViewer;
 import org.eclipse.ui.model.WorkbenchContentProvider;
-import org.talend.commons.emf.FactoriesUtil;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.filters.DQFolderFliter;
 import org.talend.dataprofiler.core.ui.filters.RuleFolderFliter;
 import org.talend.dataprofiler.core.ui.wizard.analysis.AbstractAnalysisWizardPage;
+import org.talend.dq.helper.AnalysisExecutorHelper;
 import org.talend.resource.ResourceManager;
-import org.talend.resource.ResourceService;
 
 /**
  * DOC xqliu class global comment. Detailled comment
@@ -66,22 +61,7 @@ public class DQRuleSelectPage extends AbstractAnalysisWizardPage {
         // ADD mzhao bug TDQ-4188 hide the .svn folders.
         cViewer.addFilter(new DQFolderFliter(true));
         cViewer.addFilter(new RuleFolderFliter(true));
-        cViewer.addFilter(new ViewerFilter() {
-
-            @Override
-            public boolean select(Viewer viewer, Object parentElement, Object element) {
-                if (element instanceof IFile) {
-                    IFile file = (IFile) element;
-                    if (FactoriesUtil.DQRULE.equals(file.getFileExtension())) {
-                        return true;
-                    }
-                } else if (element instanceof IFolder) {
-                    IFolder folder = (IFolder) element;
-                    return ResourceService.isSubFolder(ResourceManager.getRulesFolder(), folder);
-                }
-                return false;
-            }
-        });
+        cViewer.addFilter(AnalysisExecutorHelper.createRuleFilter());
 
         setControl(container);
     }

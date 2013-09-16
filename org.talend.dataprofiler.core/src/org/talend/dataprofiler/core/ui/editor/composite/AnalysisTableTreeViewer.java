@@ -27,8 +27,6 @@ import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.viewers.TreePath;
 import org.eclipse.jface.viewers.TreeSelection;
-import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.TreeEditor;
@@ -98,6 +96,7 @@ import org.talend.dataquality.indicators.sql.WhereRuleIndicator;
 import org.talend.dataquality.rules.WhereRule;
 import org.talend.dq.dbms.DbmsLanguage;
 import org.talend.dq.dbms.DbmsLanguageFactory;
+import org.talend.dq.helper.AnalysisExecutorHelper;
 import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.helper.RepositoryNodeHelper;
@@ -108,9 +107,7 @@ import org.talend.dq.nodes.DBViewRepNode;
 import org.talend.dq.nodes.DQRepositoryNode;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
 import org.talend.repository.model.RepositoryNode;
-import org.talend.resource.EResourceConstant;
 import org.talend.resource.ResourceManager;
-import org.talend.resource.ResourceService;
 import orgomg.cwm.objectmodel.core.Expression;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.resource.relational.NamedColumnSet;
@@ -402,26 +399,7 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
             }
 
         });
-        dialog.addFilter(new ViewerFilter() {
-
-            @Override
-            public boolean select(Viewer viewer, Object parentElement, Object element) {
-                if (element instanceof IFile) {
-                    IFile file = (IFile) element;
-                    if (FactoriesUtil.DQRULE.equals(file.getFileExtension())) {
-                        return true;
-                    }
-                } else if (element instanceof IFolder) {
-                    IFolder folder = (IFolder) element;
-                    // filter the match rule folder in table analysis
-                    if (EResourceConstant.RULES_MATCHER.getName().equals(folder.getName())) {
-                        return false;
-                    }// ~
-                    return ResourceService.isSubFolder(ResourceManager.getRulesFolder(), folder);
-                }
-                return false;
-            }
-        });
+        dialog.addFilter(AnalysisExecutorHelper.createRuleFilter());
         dialog.setContainerMode(true);
         dialog.setTitle(DefaultMessagesImpl.getString("AnalysisTableTreeViewer.dqruleSelector")); //$NON-NLS-1$
         dialog.setMessage(DefaultMessagesImpl.getString("AnalysisTableTreeViewer.dqrules")); //$NON-NLS-1$
