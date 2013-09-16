@@ -21,7 +21,7 @@ import orgomg.cwm.foundation.softwaredeployment.DataManager;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
- * DOC yyin  class global comment. Detailled comment
+ * DOC yyin class global comment. Detailled comment
  */
 public class MatchAnalysisHandler extends AnalysisHandler {
 
@@ -94,6 +94,9 @@ public class MatchAnalysisHandler extends AnalysisHandler {
         assert analysis != null;
         assert analysis.getContext() != null;
         analysis.getContext().getAnalysedElements().clear();
+        if (selectedColumns == null) {
+            return true;
+        }
         return analysis.getContext().getAnalysedElements().addAll(Arrays.asList(selectedColumns));
     }
 
@@ -114,6 +117,5 @@ public class MatchAnalysisHandler extends AnalysisHandler {
     public String getDefaultLoadedRowCount() {
         return String.valueOf(analysis.getParameters().getMaxNumberRows());
     }
-
 
 }

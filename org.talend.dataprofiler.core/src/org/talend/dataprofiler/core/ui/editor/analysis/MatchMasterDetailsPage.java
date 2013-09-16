@@ -904,6 +904,7 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
             isMdm = RepNodeUtils.isMDM(selectedNodes[0]);
             isDelimitedFile = RepNodeUtils.isDelimitedFile(selectedNodes[0]);
             if (!(selectedNodes[0] instanceof DBColumnRepNode || isMdm || isDelimitedFile)) {
+                selectedNodes = null;
                 return null;
             }
         }

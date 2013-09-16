@@ -84,8 +84,6 @@ public class DataSampleTable {
 
     private NatTable natTable;
 
-    public static final int COLUMN_COUNT = 7;
-
     public static final String MATCH_EKY = "MATCH"; //$NON-NLS-1$
 
     public static final String BLOCK_EKY = "BLOCK"; //$NON-NLS-1$
@@ -174,11 +172,17 @@ public class DataSampleTable {
     }
 
     private String[] createColumnLabel(ModelElement[] columns) {
-        String[] columnsName = new String[columns.length + COLUMN_COUNT];
+        int columnCount = MatchAnalysisConstant.DEFAULT_COLUMN_COUNT;
+        if (columns != null) {
+            columnCount = columns.length + columnCount;
+        }
+        String[] columnsName = new String[columnCount];
 
         int i = 0;
-        for (ModelElement column : columns) {
-            columnsName[i++] = column.getName();
+        if (columns != null) {
+            for (ModelElement column : columns) {
+                columnsName[i++] = column.getName();
+            }
         }
         columnsName[i++] = MatchAnalysisConstant.BLOCK_KEY;
         columnsName[i++] = MatchAnalysisConstant.GID;
