@@ -13,6 +13,8 @@
 package org.talend.dataquality.record.linkage.ui.action;
 
 import org.eclipse.jface.action.Action;
+import org.eclipse.jface.dialogs.MessageDialog;
+import org.talend.dataquality.record.linkage.ui.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataquality.record.linkage.ui.section.MatchingKeySection;
 
 /**
@@ -40,7 +42,9 @@ public class AddMatchingKeyAction extends Action {
     @Override
     public void run() {
         if (columnName == null) {
-            // TODO yyin popup to notify user that no column name specified
+            // popup to notify user that no column name specified
+            MessageDialog.openWarning(null, DefaultMessagesImpl.getString("AddMatchingKeyAction.warning"), //$NON-NLS-1$
+                    DefaultMessagesImpl.getString("AddMatchingKeyAction.NoColumnInMatchKey"));
             return;
         }
         matchingKeySection.createMatchKeyFromCurrentMatchRule(columnName);

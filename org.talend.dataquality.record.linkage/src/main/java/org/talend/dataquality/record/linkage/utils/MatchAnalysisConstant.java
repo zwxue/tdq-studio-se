@@ -116,4 +116,6 @@ public class MatchAnalysisConstant {
 
     public static final String DATA_SAMPLE_TABLE_COLUMN_SELECTION = "DATA_SAMPLE_TABLE_COLUMN_SELECTION"; //$NON-NLS-1$
 
+    public static final int DEFAULT_COLUMN_COUNT = 7;
+
 }

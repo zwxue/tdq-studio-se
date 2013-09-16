@@ -26,6 +26,7 @@ import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.common.util.EList;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.talend.commons.exception.BusinessException;
 import org.talend.core.GlobalServiceRegister;
 import org.talend.core.ITDQRepositoryService;
@@ -113,7 +114,10 @@ public class MatchAnalysisExecutor implements IAnalysisExecutor {
         List<ModelElement> anlayzedElements = analysis.getContext().getAnalysedElements();
         if (anlayzedElements == null || anlayzedElements.size() == 0) {
             rc.setOk(Boolean.FALSE);
-            // TODO yyin popup message to notify empty analyzed element
+            // popup message to notify empty analyzed element
+            MessageDialog.openWarning(null, Messages.getString("MatchAnalysisExecutor.warning"), //$NON-NLS-1$
+                    Messages.getString("MatchAnalysisExecutor.EmptyAnalyzedElement")); //$NON-NLS-1$
+
             return rc;
         }
         Map<String, String> columnMap = getColumn2IndexMap(anlayzedElements);
@@ -121,13 +125,13 @@ public class MatchAnalysisExecutor implements IAnalysisExecutor {
         MatchGroupResultConsumer matchResultConsumer = createMatchGroupResultConsumer(columnMap, recordMatchingIndicator);
 
         ISQLExecutor sqlExecutor = getSQLExectutor(anlayzedElements);
-        // need to set the limit in sql executor, from the analysis
-        sqlExecutor.setLimit(analysis.getParameters().getMaxNumberRows());
-
         if (sqlExecutor == null) {
             rc.setOk(Boolean.FALSE);
             return rc;
         }
+        // need to set the limit in sql executor, from the analysis
+        sqlExecutor.setLimit(analysis.getParameters().getMaxNumberRows());
+
         List<Object[]> matchRows = new ArrayList<Object[]>();
         try {
             monitor.beginTask(Messages.getString("MatchAnalysisExecutor.FETCH_DATA"), 0); //$NON-NLS-1$
@@ -173,7 +177,7 @@ public class MatchAnalysisExecutor implements IAnalysisExecutor {
     }
 
     /**
-     * DOC yyin Comment method "refreshTableWithMatchFullResult".
+     * refresh Table With Match Full Result .
      * 
      * @param analysis
      * 
@@ -192,7 +196,7 @@ public class MatchAnalysisExecutor implements IAnalysisExecutor {
     }
 
     /**
-     * DOC zhao Comment method "createAppliedBlockKeyByGenKey".
+     * create Applied BlockKey By GenKey.
      * 
      * @param recordMatchingIndicator
      * @param appliedBlockKeys
@@ -209,7 +213,7 @@ public class MatchAnalysisExecutor implements IAnalysisExecutor {
     }
 
     /**
-     * DOC zhao Comment method "computeMatchGroupWithBlockKey".
+     * compute Match Group With BlockKey .
      * 
      * @param analysis
      * @param recordMatchingIndicator
@@ -258,7 +262,7 @@ public class MatchAnalysisExecutor implements IAnalysisExecutor {
     }
 
     /**
-     * DOC zhao Comment method "getColumn2IndexMap".
+     * get Column2Index Map".
      * 
      * @param anlayzedElements
      * @return
@@ -306,7 +310,7 @@ public class MatchAnalysisExecutor implements IAnalysisExecutor {
     }
 
     /**
-     * DOC zhao Comment method "getCustomizedBlockKeyParameter".
+     * get Customized BlockKey Parameter".
      * 
      * @param appliedKeyDefinition
      * @param column
@@ -325,7 +329,7 @@ public class MatchAnalysisExecutor implements IAnalysisExecutor {
     }
 
     /**
-     * DOC zhao Comment method "computeMatchGroupResult".
+     * compute Match Group Result .
      * 
      * @param columnMap
      * @param matchResultConsumer
@@ -362,7 +366,7 @@ public class MatchAnalysisExecutor implements IAnalysisExecutor {
     }
 
     /**
-     * DOC zhao Comment method "initRecordMatchIndicator".
+     * initRecordMatchIndicator.
      * 
      * @param columnMap
      * @return
@@ -388,7 +392,7 @@ public class MatchAnalysisExecutor implements IAnalysisExecutor {
     }
 
     /**
-     * DOC zhao Comment method "getSQLExectutor".
+     * getSQLExectutor .
      * 
      * @param modelElement
      * @return
