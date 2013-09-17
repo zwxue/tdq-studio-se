@@ -24,7 +24,7 @@ import org.talend.dataquality.record.linkage.utils.MatchAnalysisConstant;
 
 /**
  * created by zshen on Aug 7, 2013 Detailled comment
- *
+ * 
  */
 public class AbstractGenerateKey {
 
@@ -36,10 +36,13 @@ public class AbstractGenerateKey {
 
     private Map<String, List<String[]>> genKeyToBlockResult = new HashMap<String, List<String[]>>();
 
+    private String[] parameters = { MatchAnalysisConstant.PRE_ALGORITHM, MatchAnalysisConstant.PRE_VALUE,
+            MatchAnalysisConstant.ALGORITHM, MatchAnalysisConstant.VALUE, MatchAnalysisConstant.POST_ALGORITHM,
+            MatchAnalysisConstant.POST_VALUE };
 
     /**
-     *
-     *
+     * 
+     * 
      * @param BlockKeyDefinitions
      * @param dataMap
      * @param inputString
@@ -64,41 +67,16 @@ public class AbstractGenerateKey {
 
     /**
      * DOC zshen Comment method "getGenKey".
-     *
+     * 
      * @param value
      */
     private String getGenKey(List<Map<String, String>> BlockKeyDefinitions, Map<String, String> dataMap) {
         StringBuffer winGenKey = new StringBuffer();
-        String tempVar = null;
-
         // get algos for each columns
         for (Map<String, String> blockKey : BlockKeyDefinitions) {
             String colName = blockKey.get(MatchAnalysisConstant.COLUMN);
-            String preAlgoName = blockKey.get(MatchAnalysisConstant.PRE_ALGORITHM);
-            String preAlgoPara = blockKey.get(MatchAnalysisConstant.PRE_VALUE);
-            String keyAlgoName = blockKey.get(MatchAnalysisConstant.ALGORITHM);
-            String keyAlgoPara = blockKey.get(MatchAnalysisConstant.VALUE);
-            String postAlgoName = blockKey.get(MatchAnalysisConstant.POST_ALGORITHM);
-            String postAlgoPara = blockKey.get(MatchAnalysisConstant.POST_VALUE);
-            String colValue = dataMap.get(colName);
-            if (colValue == null) {
-                colValue = StringUtils.EMPTY;
-            }
 
-            tempVar = AlgorithmSwitch.getPreAlgoResult(preAlgoName, preAlgoPara, colValue).toString();
-            if (StringUtils.isNotEmpty(tempVar)) {
-                colValue = tempVar;
-            }
-
-            tempVar = AlgorithmSwitch.getAlgoResult(keyAlgoName, keyAlgoPara, colValue).toString();
-            if (StringUtils.isNotEmpty(tempVar)) {
-                colValue = tempVar;
-            }
-
-            tempVar = AlgorithmSwitch.getPostAlgoResult(postAlgoName, postAlgoPara, colValue).toString();
-            if (StringUtils.isNotEmpty(tempVar)) {
-                colValue = tempVar;
-            }
+            String colValue = getAlgoForEachColumn(dataMap.get(colName), blockKey, parameters);
 
             winGenKey.append(colValue);
 
@@ -107,11 +85,40 @@ public class AbstractGenerateKey {
 
     }
 
+    public String getAlgoForEachColumn(String originalValue, Map<String, String> blockKey, String[] parameters) {
+        String tempVar = null;
+        String colValue = originalValue;
+        String preAlgoName = blockKey.get(parameters[0]);
+        String preAlgoPara = blockKey.get(parameters[1]);
+        String keyAlgoName = blockKey.get(parameters[2]);
+        String keyAlgoPara = blockKey.get(parameters[3]);
+        String postAlgoName = blockKey.get(parameters[4]);
+        String postAlgoPara = blockKey.get(parameters[5]);
 
+        if (colValue == null) {
+            colValue = StringUtils.EMPTY;
+        }
+
+        tempVar = AlgorithmSwitch.getPreAlgoResult(preAlgoName, preAlgoPara, colValue).toString();
+        if (StringUtils.isNotEmpty(tempVar)) {
+            colValue = tempVar;
+        }
+
+        tempVar = AlgorithmSwitch.getAlgoResult(keyAlgoName, keyAlgoPara, colValue).toString();
+        if (StringUtils.isNotEmpty(tempVar)) {
+            colValue = tempVar;
+        }
+
+        tempVar = AlgorithmSwitch.getPostAlgoResult(postAlgoName, postAlgoPara, colValue).toString();
+        if (StringUtils.isNotEmpty(tempVar)) {
+            colValue = tempVar;
+        }
+        return colValue;
+    }
 
     /**
      * Getter for resultList.
-     *
+     * 
      * @return the resultList
      */
     public Map<String, List<String[]>> getResultList() {
