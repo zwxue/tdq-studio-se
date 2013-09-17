@@ -939,6 +939,8 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
             }
         } else if (MatchAnalysisConstant.NEED_REFRESH_DATA.equals(evt.getPropertyName())) {
             refreshDataFromConnection();
+        } else if (MatchAnalysisConstant.DATA_SAMPLE_TABLE_COLUMN_SELECTION.equals(evt.getPropertyName())) {
+            handleColumnSelectionChange();
         }
     }
 
