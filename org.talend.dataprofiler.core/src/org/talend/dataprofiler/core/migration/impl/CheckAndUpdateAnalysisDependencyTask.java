@@ -19,7 +19,7 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
-import org.apache.log4j.Logger;
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
@@ -49,8 +49,6 @@ import orgomg.cwm.resource.relational.Catalog;
  * 
  */
 public class CheckAndUpdateAnalysisDependencyTask extends AbstractWorksapceUpdateTask {
-
-    private static Logger log = Logger.getLogger(CheckAndUpdateAnalysisDependencyTask.class);
 
     /*
      * (non-Javadoc)
@@ -95,7 +93,7 @@ public class CheckAndUpdateAnalysisDependencyTask extends AbstractWorksapceUpdat
         List<DataManager> connections = new ArrayList<DataManager>();
         File sysIndsFolder = getWorkspacePath().append(EResourceConstant.DB_CONNECTIONS.getPath()).toFile();
         ArrayList<File> fileList = new ArrayList<File>();
-        FilesUtils.getAllFilesFromFolder(sysIndsFolder, fileList, getFilenameFilter("item"));
+        FilesUtils.getAllFilesFromFolder(sysIndsFolder, fileList, getFilenameFilter("item")); //$NON-NLS-1$
         for (File file : fileList) {
             DataManager indDef = getDataManagerFromFile(file);
             if (indDef != null) {
@@ -110,7 +108,7 @@ public class CheckAndUpdateAnalysisDependencyTask extends AbstractWorksapceUpdat
         List<Analysis> analyses = new ArrayList<Analysis>();
         File sysIndsFolder = getWorkspacePath().append(EResourceConstant.ANALYSIS.getPath()).toFile();
         ArrayList<File> fileList = new ArrayList<File>();
-        FilesUtils.getAllFilesFromFolder(sysIndsFolder, fileList, getFilenameFilter("ana"));
+        FilesUtils.getAllFilesFromFolder(sysIndsFolder, fileList, getFilenameFilter("ana")); //$NON-NLS-1$
         for (File file : fileList) {
             Analysis indDef = getAnalysisFromFile(file);
             if (indDef != null) {
@@ -125,7 +123,7 @@ public class CheckAndUpdateAnalysisDependencyTask extends AbstractWorksapceUpdat
         return new FilenameFilter() {
 
             public boolean accept(File dir, String name) {
-                if (name.endsWith(ends)) {//$NON-NLS-1$
+                if (name.endsWith(ends)) {
                     return true;
                 }
                 return false;
