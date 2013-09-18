@@ -162,10 +162,6 @@ public class RecordMatchingIndicatorImpl extends ColumnSetMultiValueIndicatorImp
     @Override
     public boolean handle(Object data) {
         String[] values = (String[]) data;
-        if (values.length <= masterColumnIndex) {
-            // TODO zshen check this exceptional case
-            return Boolean.FALSE;
-        }
         if (Boolean.valueOf(values[masterColumnIndex])) { // Find the master row
             if (null == groupSize2groupFrequency.get(values[groupSizeColumnIndex])) {
                 groupSize2groupFrequency.put(values[groupSizeColumnIndex], 1l);

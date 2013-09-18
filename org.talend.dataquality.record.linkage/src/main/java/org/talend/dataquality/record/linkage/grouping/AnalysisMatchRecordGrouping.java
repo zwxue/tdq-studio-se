@@ -40,8 +40,6 @@ public class AnalysisMatchRecordGrouping extends AbstractRecordGrouping {
         this.matchResultConsumer = matchResultConsumer;
         setColumnDelimiter(columnDelimiter);
         setIsOutputDistDetails(true);
-        // TODO zshen use the user specified threshold.
-        setAcceptableThreshold(0.95f);
         setSeperateOutput(Boolean.TRUE);
     }
 
