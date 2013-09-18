@@ -16,8 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * created by zhao on Aug 20, 2013 Detailled comment
- * 
+ * Used for computing match grouping and store match result
  */
 public abstract class MatchGroupResultConsumer {
 
@@ -32,6 +31,11 @@ public abstract class MatchGroupResultConsumer {
      */
     public abstract void handle(Object row);
 
+    /**
+     * handle the data by one row of data
+     * 
+     * @param rowResult
+     */
     public void addOneRowOfResult(Object rowResult) {
         if (matchResult == null) {
             matchResult = new ArrayList<Object[]>();
@@ -41,6 +45,11 @@ public abstract class MatchGroupResultConsumer {
         }
     }
 
+    /**
+     * get the final match result data
+     * 
+     * @return
+     */
     public List<Object[]> getFullMatchResult() {
         return matchResult;
     }

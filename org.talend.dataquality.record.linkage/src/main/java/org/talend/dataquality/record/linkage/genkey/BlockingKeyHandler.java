@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2012 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2013 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -17,9 +17,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-
 /**
- * DOC yyin class global comment. Detailled comment
+ * generate the blocking key for each selected columns
  */
 public class BlockingKeyHandler {
 
@@ -54,6 +53,9 @@ public class BlockingKeyHandler {
         this.columnIndexMap = columnMap;
     }
 
+    /**
+     * generate the blocking key for each columns
+     */
     public void run() {
         for (Object[] inputObject : this.inputData) {
             String[] inputString = new String[inputObject.length];
@@ -69,10 +71,20 @@ public class BlockingKeyHandler {
         }
     }
 
+    /**
+     * get the Result Data of block key definition.
+     * 
+     * @return
+     */
     public List<Map<String, String>> getResultData() {
         return blockKeyDefinitions;
     }
 
+    /**
+     * get all keys of columns
+     * 
+     * @return
+     */
     public Map<String, List<String[]>> getResultDatas() {
         return generateKeyAPI.getResultList();
     }

@@ -16,8 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * created by HHB on 2013-8-23 Detailled comment
- *
+ * (index, displayed value, value used in code only)
  */
 public enum DefaultSurvivorShipDataTypeEnum {
     BOOLEAN(0, "Boolean", "Boolean"), //$NON-NLS-1$ //$NON-NLS-2$
@@ -68,8 +67,8 @@ public enum DefaultSurvivorShipDataTypeEnum {
     }
 
     /**
-     *
-     *
+     * 
+     * 
      * @param index
      * @return null can not find this index
      */

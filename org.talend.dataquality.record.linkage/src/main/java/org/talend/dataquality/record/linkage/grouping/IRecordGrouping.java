@@ -92,6 +92,7 @@ public interface IRecordGrouping {
      * 
      * @param acceptableThreshold
      */
+    @Deprecated
     public void setAcceptableThreshold(float acceptableThreshold);
 
     /**
@@ -131,6 +132,11 @@ public interface IRecordGrouping {
      */
     public void setIsLinkToPrevious(Boolean isLinkToPrevious);
 
+    /**
+     * add one match rule
+     * 
+     * @param matchRule
+     */
     public void addMatchRule(List<Map<String, String>> matchRule);
 
 }

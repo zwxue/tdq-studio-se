@@ -18,8 +18,8 @@ import java.util.List;
 import org.apache.commons.lang.StringUtils;
 
 /**
- * created by zshen on Aug 6, 2013 Detailled comment
- * 
+ * the algorithms used by the blocking key: (index, displayed value, value used in code only, use parameter or
+ * not,default value)
  */
 public enum BlockingKeyPreAlgorithmEnum {
     NON_ALGO(0, "-", "NON_ALGO", false, StringUtils.EMPTY), //$NON-NLS-1$//$NON-NLS-2$

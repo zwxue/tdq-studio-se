@@ -21,13 +21,12 @@ import org.talend.dataquality.record.linkage.constant.AttributeMatcherType;
 import org.talend.dataquality.record.linkage.grouping.IRecordGrouping;
 
 /**
- * created by zhao on Aug 20, 2013 Detailled comment
- * 
+ * used for some utility functions
  */
 public class AnalysisRecordGroupingUtils {
 
     /**
-     * DOC zshen Comment method "getCompleteColumnSchema".
+     * get Complete Column Schema.
      * 
      * @return
      */
@@ -50,7 +49,7 @@ public class AnalysisRecordGroupingUtils {
     }
 
     /**
-     * DOC zshen Comment method "getCompleteColumnSchema". when refresh match chart by click refresh button
+     * getCompleteColumnSchema: when refresh match chart by click refresh button
      * 
      * @return
      */
@@ -71,6 +70,18 @@ public class AnalysisRecordGroupingUtils {
         return columnNameList.toArray(new String[columnNameList.size()]);
     }
 
+    /**
+     * get the key map of the match table's columns(<column, index>)
+     * 
+     * @param column
+     * @param algoType
+     * @param algoParameter
+     * @param confidentWeight
+     * @param columnIndexMap
+     * @param matchInterval
+     * @param attributeName
+     * @return
+     */
     public static Map<String, String> getMatchKeyMap(String column, String algoType, String algoParameter, int confidentWeight,
             Map<String, String> columnIndexMap, double matchInterval, String attributeName) {
         Map<String, String> matchKeyMap = new HashMap<String, String>();

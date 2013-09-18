@@ -16,9 +16,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * created by zshen on Aug 1, 2013
- * Detailled comment
- *
+ * the values of the match key's handle null field
+ * 
  */
 public enum HandleNullEnum {
     NULL_MATCH_NULL(0, "nullMatchNull"), //$NON-NLS-1$
@@ -36,7 +35,7 @@ public enum HandleNullEnum {
 
     /**
      * Getter for index.
-     *
+     * 
      * @return the index
      */
     public int getIndex() {
@@ -45,7 +44,7 @@ public enum HandleNullEnum {
 
     /**
      * Getter for value.
-     *
+     * 
      * @return the value
      */
     public String getValue() {
@@ -61,9 +60,9 @@ public enum HandleNullEnum {
     }
 
     /**
-     *
+     * 
      * get type of the value which in this Enum
-     *
+     * 
      * @param value
      * @return null can not find this index
      */
@@ -78,8 +77,8 @@ public enum HandleNullEnum {
     }
 
     /**
-     *
-     *
+     * 
+     * 
      * @param index
      * @return null can not find this index
      */

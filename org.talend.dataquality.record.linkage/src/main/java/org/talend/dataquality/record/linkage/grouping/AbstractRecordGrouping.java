@@ -19,7 +19,6 @@ import java.util.Map;
 import java.util.UUID;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
 import org.talend.dataquality.record.linkage.attribute.IAttributeMatcher;
 import org.talend.dataquality.record.linkage.constant.AttributeMatcherType;
 import org.talend.dataquality.record.linkage.constant.RecordMatcherType;
@@ -33,8 +32,6 @@ import org.talend.dataquality.record.linkage.record.RecordMatcherFactory;
  * 
  */
 public abstract class AbstractRecordGrouping implements IRecordGrouping {
-
-    private static Logger log = Logger.getLogger(AbstractRecordGrouping.class);
 
     private List<String[]> masterRecords = new ArrayList<String[]>();
 
@@ -284,7 +281,7 @@ public abstract class AbstractRecordGrouping implements IRecordGrouping {
 
     }
 
-    @SuppressWarnings("deprecation")
+    @Deprecated
     @Override
     public void add(Map<String, String> matchingColumn) {
         matchingColumns.add(matchingColumn);

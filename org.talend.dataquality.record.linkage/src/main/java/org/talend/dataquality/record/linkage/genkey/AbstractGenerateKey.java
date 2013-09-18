@@ -18,17 +18,14 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
 import org.talend.dataquality.record.linkage.utils.AlgorithmSwitch;
 import org.talend.dataquality.record.linkage.utils.MatchAnalysisConstant;
 
 /**
- * created by zshen on Aug 7, 2013 Detailled comment
+ * created by zshen on Aug 7, 2013 generating the blocking keys.
  * 
  */
 public class AbstractGenerateKey {
-
-    private static Logger log = Logger.getLogger(AbstractGenerateKey.class);
 
     public static String TGENKEY_ALL_COLUMN_NAMES = "tgenkey_all_column_names";//$NON-NLS-1$
 
@@ -41,7 +38,7 @@ public class AbstractGenerateKey {
             MatchAnalysisConstant.POST_VALUE };
 
     /**
-     * 
+     * generate the blocking key for each columns
      * 
      * @param BlockKeyDefinitions
      * @param dataMap
@@ -66,7 +63,7 @@ public class AbstractGenerateKey {
     }
 
     /**
-     * DOC zshen Comment method "getGenKey".
+     * get the block key of each column.
      * 
      * @param value
      */
@@ -85,6 +82,15 @@ public class AbstractGenerateKey {
 
     }
 
+    /**
+     * 
+     * getthe Algo value For Each Column.
+     * 
+     * @param originalValue
+     * @param blockKey
+     * @param parameters
+     * @return
+     */
     public String getAlgoForEachColumn(String originalValue, Map<String, String> blockKey, String[] parameters) {
         String tempVar = null;
         String colValue = originalValue;

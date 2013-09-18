@@ -15,8 +15,7 @@ package org.talend.dataquality.record.linkage.utils;
 import org.talend.dataquality.record.linkage.Messages;
 
 /**
- * created by zshen on Aug 5, 2013 Detailled comment
- * 
+ * some fixed string: Strings which not BE EXTERNALIZED are used only in code, not on UI.
  */
 public class MatchAnalysisConstant {
 
