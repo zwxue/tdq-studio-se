@@ -178,4 +178,16 @@ public class GroupStatisticsSection extends AbstractMatchKeyWithChartTableSectio
         // No implementation
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * org.talend.dataquality.record.linkage.ui.section.AbstractMatchKeyWithChartTableSection#createHideGroupComposite
+     * (org.eclipse.swt.widgets.Composite)
+     */
+    @Override
+    protected void createHideGroupComposite(Composite chartComposite) {
+        // No implementation
+    }
+
 }

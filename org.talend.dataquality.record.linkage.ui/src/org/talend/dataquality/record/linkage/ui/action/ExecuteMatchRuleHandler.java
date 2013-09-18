@@ -256,15 +256,6 @@ public class ExecuteMatchRuleHandler {
             isOpenWarningDialog = true;
         } finally {
             if (isOpenWarningDialog) {
-                // Display.getDefault().syncExec(new Runnable() {
-                //
-                // @Override
-                // public void run() {
-                // MessageDialog.openError(Display.getCurrent().getActiveShell(),
-                //                                DefaultMessagesImpl.getString("ExecuteMatchRuleHandler.run_Error_Titile"), //$NON-NLS-1$
-                //                                DefaultMessagesImpl.getString("ExecuteMatchRuleHandler.run_Error_Content")); //$NON-NLS-1$
-                // }
-                // });
                 BusinessException businessException = new BusinessException();
                 businessException.setAdditonalMessage(DefaultMessagesImpl.getString("ExecuteMatchRuleHandler.run_Error_Content")); //$NON-NLS-1$
                 throw businessException;
