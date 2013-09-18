@@ -33,15 +33,17 @@ import orgomg.cwm.foundation.softwaredeployment.DataManager;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
- * DOC yyin  class global comment. Detailled comment
+ * DOC yyin class global comment. Detailled comment
  */
 public class DatabaseSQLExecutor implements ISQLExecutor {
 
     private static Logger log = Logger.getLogger(DatabaseSQLExecutor.class);
 
-    private int limit;
+    private int limit = 0;
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.talend.cwm.db.connection.ISQLExecutor#executeQuery(org.talend.dataquality.analysis.Analysis)
      */
     public List<Object[]> executeQuery(DataManager connection, List<ModelElement> analysedElements) throws SQLException {
@@ -85,6 +87,14 @@ public class DatabaseSQLExecutor implements ISQLExecutor {
         return dataFromTable;
     }
 
+    /**
+     * 
+     * createSqlStatement: if has limit, add it, else do not use limit
+     * 
+     * @param connection
+     * @param analysedElements
+     * @return
+     */
     private String createSqlStatement(DataManager connection, List<ModelElement> analysedElements) {
         DbmsLanguage dbms = createDbmsLanguage(connection);
 
@@ -102,8 +112,11 @@ public class DatabaseSQLExecutor implements ISQLExecutor {
 
         sql.append(dbms.from());
         sql.append(AnalysisExecutorHelper.getTableName(analysedElements.get(0), dbms));
-        String completedSqlString = sql.toString();
-        return dbms.getTopNQuery(completedSqlString, limit);
+        if (limit > 0) {
+            return dbms.getTopNQuery(sql.toString(), limit);
+        } else {
+            return sql.toString();
+        }
 
     }
 

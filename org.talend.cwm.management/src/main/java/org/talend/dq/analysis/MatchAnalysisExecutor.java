@@ -113,8 +113,6 @@ public class MatchAnalysisExecutor implements IAnalysisExecutor {
             rc.setOk(Boolean.FALSE);
             return rc;
         }
-        // need to set the limit in sql executor, from the analysis
-        sqlExecutor.setLimit(analysis.getParameters().getMaxNumberRows());
 
         List<Object[]> matchRows = new ArrayList<Object[]>();
         try {

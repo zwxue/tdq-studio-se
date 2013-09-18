@@ -33,23 +33,24 @@ import orgomg.cwm.objectmodel.core.ModelElement;
 
 import com.csvreader.CsvReader;
 
-
 /**
- * DOC yyin  class global comment. Detailled comment
+ * DOC yyin class global comment. Detailled comment
  */
 public class DelimitedFileSQLExecutor implements ISQLExecutor {
 
-    private int limit;
+    // if limit = 0. do not use the limit, only when it is set >0, use the limit
+    private int limit = 0;
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.talend.cwm.db.connection.ISQLExecutor#executeQuery(org.talend.dataquality.analysis.Analysis)
      */
-    public List<Object[]> executeQuery(DataManager connection,List<ModelElement> analysedElements) {
+    public List<Object[]> executeQuery(DataManager connection, List<ModelElement> analysedElements) {
         List<Object[]> dataFromTable = new ArrayList<Object[]>();
         DelimitedFileConnection delimitedFileconnection = (DelimitedFileConnection) connection;
         String path = AnalysisExecutorHelper.getFilePath(delimitedFileconnection);
         IPath iPath = new Path(path);
-
 
         try {
             File file = iPath.toFile();
@@ -77,7 +78,7 @@ public class DelimitedFileSQLExecutor implements ISQLExecutor {
                         rowValues[i] = fileInputDelimited.get(analysedColumnIndex[i]);
                     }
                     dataFromTable.add(rowValues);
-                    if (index >= limit) {
+                    if (limit > 0 && index >= limit) {
                         break;
                     }
 
