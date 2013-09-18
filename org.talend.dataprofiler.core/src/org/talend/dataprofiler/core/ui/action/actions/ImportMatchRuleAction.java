@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2012 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2013 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -27,13 +27,14 @@ import org.talend.dataquality.rules.MatchRuleDefinition;
 import org.talend.dq.helper.resourcehelper.DQRuleResourceFileHelper;
 
 /**
- * DOC yyin  class global comment. Detailled comment
+ * DOC yyin class global comment. Detailled comment
  */
 public class ImportMatchRuleAction extends Action {
 
     protected static Logger log = Logger.getLogger(ImportMatchRuleAction.class);
 
     private AbstractAnalysisMetadataPage masterPage;
+
     public ImportMatchRuleAction(AbstractAnalysisMetadataPage masterPage) {
         this.masterPage = masterPage;
         ImageDescriptor imageDescriptor = ImageLib.getImageDescriptor(ImageLib.IMPORT_MATCH_RULE_ICON);
@@ -74,6 +75,5 @@ public class ImportMatchRuleAction extends Action {
     private void updateMatchRule(MatchRuleDefinition matchRule, boolean overwrite) {
         ((MatchMasterDetailsPage) masterPage).importMatchRule(matchRule, overwrite);
     }
-
 
 }

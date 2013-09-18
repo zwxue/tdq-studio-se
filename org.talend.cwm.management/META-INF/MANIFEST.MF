@@ -36,7 +36,8 @@ Require-Bundle: org.eclipse.ui,
  org.talend.metadata.managment.ui,
  org.apache.log4j,
  org.talend.librariesmanager,
- org.talend.dataquality.record.linkage
+ org.talend.dataquality.record.linkage,
+ org.talend.dataquality.record.linkage.ui
 Bundle-Vendor: .Talend SA.
 Bundle-ClassPath: .,
  lib/commons-discovery-0.2.jar,

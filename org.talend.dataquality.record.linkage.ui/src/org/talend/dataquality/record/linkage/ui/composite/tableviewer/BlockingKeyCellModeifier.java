@@ -50,6 +50,8 @@ public class BlockingKeyCellModeifier extends AbstractMatchCellModifier<BlockKey
             } else if (MatchAnalysisConstant.POST_VALUE.equalsIgnoreCase(property)) {
                 return BlockingKeyPostAlgorithmEnum.getTypeBySavedValue(bkd.getPostAlgorithm().getAlgorithmType())
                         .isTakeParameter();
+            } else if (MatchAnalysisConstant.COLUMN.equalsIgnoreCase(property)) {
+                return columnList.size() > 0;
             }
             return true;
         }
@@ -100,9 +102,16 @@ public class BlockingKeyCellModeifier extends AbstractMatchCellModifier<BlockKey
                 if (StringUtils.equals(bkd.getPreAlgorithm().getAlgorithmType(), valueByIndex.getComponentValueName())) {
                     return;
                 }
+
                 bkd.getPreAlgorithm().setAlgorithmType(valueByIndex.getComponentValueName());
+                bkd.getPreAlgorithm().setAlgorithmParameters(valueByIndex.getDefaultValue());
             } else if (MatchAnalysisConstant.PRE_VALUE.equalsIgnoreCase(property)) {
                 if (StringUtils.equals(bkd.getPreAlgorithm().getAlgorithmParameters(), newValue)) {
+                    return;
+                }
+                BlockingKeyPreAlgorithmEnum valueBySavedValue = BlockingKeyPreAlgorithmEnum.getTypeBySavedValue(bkd
+                        .getPreAlgorithm().getAlgorithmType());
+                if (isParameterInValid(valueBySavedValue.getDefaultValue(), newValue)) {
                     return;
                 }
                 bkd.getPreAlgorithm().setAlgorithmParameters(String.valueOf(value));
@@ -113,8 +122,14 @@ public class BlockingKeyCellModeifier extends AbstractMatchCellModifier<BlockKey
                     return;
                 }
                 bkd.getAlgorithm().setAlgorithmType(valueByIndex.getComponentValueName());
+                bkd.getAlgorithm().setAlgorithmParameters(valueByIndex.getDefaultValue());
             } else if (MatchAnalysisConstant.VALUE.equalsIgnoreCase(property)) {
                 if (StringUtils.equals(bkd.getAlgorithm().getAlgorithmParameters(), newValue)) {
+                    return;
+                }
+                BlockingKeyAlgorithmEnum valueBySavedValue = BlockingKeyAlgorithmEnum.getTypeBySavedValue(bkd.getAlgorithm()
+                        .getAlgorithmType());
+                if (isParameterInValid(valueBySavedValue.getDefaultValue(), newValue)) {
                     return;
                 }
                 bkd.getAlgorithm().setAlgorithmParameters(newValue);
@@ -125,8 +140,14 @@ public class BlockingKeyCellModeifier extends AbstractMatchCellModifier<BlockKey
                     return;
                 }
                 bkd.getPostAlgorithm().setAlgorithmType(valueByIndex.getComponentValueName());
+                bkd.getPostAlgorithm().setAlgorithmParameters(valueByIndex.getDefaultValue());
             } else if (MatchAnalysisConstant.POST_VALUE.equalsIgnoreCase(property)) {
                 if (StringUtils.equals(bkd.getPostAlgorithm().getAlgorithmParameters(), newValue)) {
+                    return;
+                }
+                BlockingKeyPostAlgorithmEnum valueBySavedValue = BlockingKeyPostAlgorithmEnum.getTypeBySavedValue(bkd
+                        .getPostAlgorithm().getAlgorithmType());
+                if (isParameterInValid(valueBySavedValue.getDefaultValue(), newValue)) {
                     return;
                 }
                 bkd.getPostAlgorithm().setAlgorithmParameters(newValue);
@@ -147,6 +168,35 @@ public class BlockingKeyCellModeifier extends AbstractMatchCellModifier<BlockKey
             }
             tableViewer.update(bkd, null);
         }
+    }
+
+    /**
+     * DOC zshen Comment method "isParameterInValid".
+     * 
+     * @param defaultValue
+     * @param newValue
+     * @return
+     */
+    private boolean isParameterInValid(String defaultValue, String newValue) {
+        if (isIntegerType(defaultValue)) {
+            return !isIntegerType(newValue);
+        }
+        return false;
+    }
+
+    /**
+     * DOC zshen Comment method "isIntegerType".
+     * 
+     * @param defaultValue
+     * @return
+     */
+    private boolean isIntegerType(String value) {
+        try {
+            Integer.parseInt(value);
+        } catch (NumberFormatException e) {
+            return false;
+        }
+        return true;
     }
 
 }

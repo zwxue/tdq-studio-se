@@ -42,7 +42,9 @@ public class MatchRuleCellModifier extends AbstractMatchCellModifier<MatchKeyDef
         if (element != null && element instanceof MatchKeyDefinition) {
             MatchKeyDefinition mkd = (MatchKeyDefinition) element;
             if (MatchAnalysisConstant.CUSTOM_MATCHER_CLASS.equalsIgnoreCase(property)) {
-                return AttributeMatcherType.getTypeByValue(mkd.getAlgorithm().getAlgorithmType()).isTakeParameter();
+                return AttributeMatcherType.getTypeBySavedValue(mkd.getAlgorithm().getAlgorithmType()).isTakeParameter();
+            } else if (MatchAnalysisConstant.COLUMN.equalsIgnoreCase(property)) {
+                return columnList.size() > 0;
             }
             return true;
         }
@@ -61,7 +63,7 @@ public class MatchRuleCellModifier extends AbstractMatchCellModifier<MatchKeyDef
         if (MatchAnalysisConstant.HANDLE_NULL.equalsIgnoreCase(property)) {
             return HandleNullEnum.getTypeByValue(mkd.getHandleNull()).getIndex();
         } else if (MatchAnalysisConstant.MATCHING_TYPE.equalsIgnoreCase(property)) {
-            return AttributeMatcherType.getTypeByValue(mkd.getAlgorithm().getAlgorithmType()).getIndex();
+            return AttributeMatcherType.getTypeBySavedValue(mkd.getAlgorithm().getAlgorithmType()).getIndex();
         } else if (MatchAnalysisConstant.CUSTOM_MATCHER_CLASS.equalsIgnoreCase(property)) {
             return mkd.getAlgorithm().getAlgorithmParameters();
         } else if (MatchAnalysisConstant.COLUMN.equalsIgnoreCase(property)) {
@@ -99,6 +101,7 @@ public class MatchRuleCellModifier extends AbstractMatchCellModifier<MatchKeyDef
                     return;
                 }
                 mkd.getAlgorithm().setAlgorithmType(valueByIndex.getComponentName());
+                mkd.getAlgorithm().setAlgorithmParameters(StringUtils.EMPTY);
             } else if (MatchAnalysisConstant.CUSTOM_MATCHER_CLASS.equalsIgnoreCase(property)) {
                 if (StringUtils.equals(mkd.getAlgorithm().getAlgorithmParameters(), newValue)) {
                     return;

@@ -52,6 +52,7 @@ import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataprofiler.core.ui.exchange.ExchangeCategoryRepNode;
 import org.talend.dataprofiler.core.ui.exchange.ExchangeComponentRepNode;
+import org.talend.dataquality.rules.MatchRuleDefinition;
 import org.talend.dq.CWMPlugin;
 import org.talend.dq.nodes.AnalysisRepNode;
 import org.talend.dq.nodes.DBCatalogRepNode;
@@ -178,7 +179,11 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider i
                 } else if (node instanceof PatternRepNode) {
                     image = ImageLib.getImage(ImageLib.PATTERN_REG);
                 } else if (node instanceof RuleRepNode) {
-                    image = ImageLib.getImage(ImageLib.DQ_RULE);
+                    if(((RuleRepNode) node).getRule() instanceof MatchRuleDefinition){
+                        image = ImageLib.getImage(ImageLib.MATCH_RULE_ICON);
+                    }else{
+                        image = ImageLib.getImage(ImageLib.DQ_RULE);
+                    }
                 } else if (node instanceof SourceFileRepNode) {
                     image = ImageLib.getImage(ImageLib.SOURCE_FILE);
                 } else if (node instanceof ExchangeCategoryRepNode || node instanceof ExchangeComponentRepNode) {

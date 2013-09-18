@@ -74,7 +74,7 @@ public interface IRecordGrouping {
      * 
      * Initialize parameters before grouping.
      */
-    public void initialize();
+    public void initialize() throws InstantiationException, IllegalAccessException, ClassNotFoundException;
 
     /**
      * 

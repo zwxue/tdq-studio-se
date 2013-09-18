@@ -44,7 +44,7 @@ public class AddMatchingKeyAction extends Action {
         if (columnName == null) {
             // popup to notify user that no column name specified
             MessageDialog.openWarning(null, DefaultMessagesImpl.getString("AddMatchingKeyAction.warning"), //$NON-NLS-1$
-                    DefaultMessagesImpl.getString("AddMatchingKeyAction.NoColumnInMatchKey"));
+                    DefaultMessagesImpl.getString("AddMatchingKeyAction.NoColumnInMatchKey")); //$NON-NLS-1$
             return;
         }
         matchingKeySection.createMatchKeyFromCurrentMatchRule(columnName);

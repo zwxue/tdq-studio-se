@@ -32,7 +32,6 @@ import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.operation.IRunnableWithProgress;
-import org.eclipse.jface.preference.PreferenceContentProvider;
 import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.jface.viewers.ColumnViewerToolTipSupport;
 import org.eclipse.jface.viewers.DoubleClickEvent;
@@ -43,7 +42,6 @@ import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeSelection;
-import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerCell;
 import org.eclipse.jface.viewers.ViewerFilter;
@@ -83,7 +81,6 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.ActionContext;
 import org.eclipse.ui.actions.RefreshAction;
 import org.eclipse.ui.contexts.IContextService;
-import org.eclipse.ui.model.IContributionService;
 import org.eclipse.ui.navigator.CommonNavigator;
 import org.eclipse.ui.progress.UIJob;
 import org.talend.commons.exception.PersistenceException;
@@ -120,7 +117,6 @@ import org.talend.dataprofiler.core.ui.filters.ReportingFilter;
 import org.talend.dataprofiler.core.ui.progress.ProgressUI;
 import org.talend.dataprofiler.core.ui.utils.WorkbenchUtils;
 import org.talend.dataprofiler.core.ui.views.layout.BorderLayout;
-import org.talend.dataprofiler.core.ui.views.provider.DQRepositoryViewCellLableProvider;
 import org.talend.dataprofiler.migration.manager.MigrationTaskManager;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dq.CWMPlugin;
@@ -764,15 +760,6 @@ public class DQRespositoryView extends CommonNavigator {
     private void runFilter(final String filterStr, final Shell shell) {
         RunFilterThread runFilterThread = new RunFilterThread(filterStr, shell);
         runFilterThread.run();
-    }
-
-    protected void setContentAndLabelProviders(TreeViewer treeViewer) {
-        treeViewer.setLabelProvider(new DQRepositoryViewCellLableProvider(null, null, null));
-        IContributionService cs = (IContributionService) PlatformUI.getWorkbench().getActiveWorkbenchWindow()
-                .getService(IContributionService.class);
-        treeViewer.setComparator(cs.getComparatorFor(IContributionService.TYPE_PREFERENCE));
-        treeViewer.setContentProvider(new PreferenceContentProvider());
-
     }
 
     static class ViewColumnViewerToolTipSupport extends ColumnViewerToolTipSupport {

@@ -314,14 +314,15 @@ public abstract class AbstractRecordGrouping implements IRecordGrouping {
      * @see org.talend.dataquality.hadoop.group.IRecordGrouping#initialize()
      */
     @Override
-    public void initialize() {
+    public void initialize() throws InstantiationException, IllegalAccessException, ClassNotFoundException {
         masterRecords.clear();
         for (List<Map<String, String>> matchRule : multiMatchRules) {
             createSimpleRecordMatcher(matchRule);
         }
     }
 
-    private void createSimpleRecordMatcher(List<Map<String, String>> matchRule) {
+    private void createSimpleRecordMatcher(List<Map<String, String>> matchRule) throws InstantiationException,
+            IllegalAccessException, ClassNotFoundException {
         final int recordSize = matchRule.size();
         double[] arrAttrWeights = new double[recordSize];
         String[] attributeNames = new String[recordSize];
@@ -346,17 +347,11 @@ public abstract class AbstractRecordGrouping implements IRecordGrouping {
 
         for (int indx = 0; indx < recordSize; indx++) {
             AttributeMatcherType attrMatcherType = AttributeMatcherType.get(algorithmName[indx][0]);
-            try {
-                attributeMatcher[indx] = org.talend.dataquality.record.linkage.attribute.AttributeMatcherFactory.createMatcher(
-                        attrMatcherType, algorithmName[indx][1]);
-                attributeMatcher[indx].setNullOption(arrMatchHandleNull[indx]);
-                attributeMatcher[indx].setAttributeName(attributeNames[indx]);
-            } catch (Throwable e) {
-                log.error(e);
-                // e.printStackTrace();
-                // Exception occurred during the matcher class initializing.
-                return;
-            }
+            attributeMatcher[indx] = org.talend.dataquality.record.linkage.attribute.AttributeMatcherFactory.createMatcher(
+                    attrMatcherType, algorithmName[indx][1]);
+            attributeMatcher[indx].setNullOption(arrMatchHandleNull[indx]);
+            attributeMatcher[indx].setAttributeName(attributeNames[indx]);
+
         }
         IRecordMatcher simpleRecordMatcher = RecordMatcherFactory.createMatcher(RecordMatcherType.simpleVSRMatcher);
         simpleRecordMatcher.setRecordSize(recordSize);

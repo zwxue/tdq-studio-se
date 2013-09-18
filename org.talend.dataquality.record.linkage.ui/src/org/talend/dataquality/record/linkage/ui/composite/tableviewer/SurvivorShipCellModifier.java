@@ -49,7 +49,7 @@ public class SurvivorShipCellModifier extends AbstractMatchCellModifier<Survivor
         } else if (MatchAnalysisConstant.COLUMN.equalsIgnoreCase(property)) {
             return skd.getColumn();
         } else if (MatchAnalysisConstant.FUNCTION.equalsIgnoreCase(property)) {
-            return SurvivorShipAlgorithmEnum.getTypeByValue(skd.getFunction().getAlgorithmType()).getIndex();
+            return SurvivorShipAlgorithmEnum.getTypeBySavedValue(skd.getFunction().getAlgorithmType()).getIndex();
         } else if (MatchAnalysisConstant.ALLOW_MANUAL_RESOLUTION.equalsIgnoreCase(property)) {
             return skd.isAllowManualResolution();
         }

@@ -69,7 +69,7 @@ public class AnalysisMatchRecordGrouping extends AbstractRecordGrouping {
         this.inputList = inputRows;
     }
 
-    public void run() {
+    public void run() throws InstantiationException, IllegalAccessException, ClassNotFoundException {
 
         initialize();
         try {

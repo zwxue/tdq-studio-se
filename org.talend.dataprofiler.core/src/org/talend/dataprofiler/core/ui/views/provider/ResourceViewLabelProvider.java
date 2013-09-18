@@ -57,8 +57,10 @@ public class ResourceViewLabelProvider extends WorkbenchLabelProvider implements
     private static Logger log = Logger.getLogger(ResourceViewLabelProvider.class);
 
     public void init(ICommonContentExtensionSite aConfig) {
+        // don't need do anything
     }
 
+    @Override
     protected ImageDescriptor decorateImage(ImageDescriptor input, Object element) {
         ImageDescriptor image = super.decorateImage(input, element);
 
@@ -153,12 +155,14 @@ public class ResourceViewLabelProvider extends WorkbenchLabelProvider implements
     }
 
     public void restoreState(IMemento aMemento) {
-
+        // don't need do anything
     }
 
     public void saveState(IMemento aMemento) {
+        // don't need do anything
     }
 
+    @Override
     protected String decorateText(String input, Object element) {
         if (element instanceof IFile) {
             IFile file = (IFile) element;
@@ -177,22 +181,22 @@ public class ResourceViewLabelProvider extends WorkbenchLabelProvider implements
                 return DqRepositoryViewService.buildElementName(property);
             }
         }
-        input = DQStructureMessage.getString(super.decorateText(input, element));
+        String tempInput = DQStructureMessage.getString(super.decorateText(input, element));
 
         if (element instanceof IFolder) {
-            if (input.startsWith(DQStructureManager.PREFIX_TDQ)) {
-                input = input.replaceFirst(DQStructureManager.PREFIX_TDQ, ""); //$NON-NLS-1$
+            if (tempInput.startsWith(DQStructureManager.PREFIX_TDQ)) {
+                tempInput = tempInput.replaceFirst(DQStructureManager.PREFIX_TDQ, ""); //$NON-NLS-1$
             }
 
             IFolder folder = (IFolder) element;
             if (ResourceManager.isAnalysisFolder(folder)) {
-                input += "(" + getFileCount(folder, new String[] { "ana" }) + ")"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                tempInput += "(" + getFileCount(folder, new String[] { "ana" }) + ")"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
             } else if (ResourceManager.isReportsFolder(folder)) {
-                input += "(" + getFileCount(folder, new String[] { "rep" }) + ")"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                tempInput += "(" + getFileCount(folder, new String[] { "rep" }) + ")"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
             }
         }
 
-        return super.decorateText(input, element);
+        return super.decorateText(tempInput, element);
     }
 
     protected int getFileCount(IFolder parent, String[] filterExtensions) {
@@ -213,8 +217,9 @@ public class ResourceViewLabelProvider extends WorkbenchLabelProvider implements
                                                 .addFileExtension(FactoriesUtil.PROPERTIES_EXTENSION));
                         if (propFile.exists()) {
                             Property property = PropertyHelper.getProperty(propFile);
-                            if (!property.getItem().getState().isDeleted())
+                            if (!property.getItem().getState().isDeleted()) {
                                 i++;
+                            }
                         }
 
                     }

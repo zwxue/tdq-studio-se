@@ -20,6 +20,7 @@ import org.apache.commons.lang.StringUtils;
 import org.eclipse.emf.common.util.EList;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.indicators.Indicator;
+import org.talend.dataquality.indicators.columnset.BlockKeyIndicator;
 import org.talend.dataquality.indicators.columnset.RecordMatchingIndicator;
 import org.talend.dataquality.record.linkage.constant.AttributeMatcherType;
 import org.talend.dataquality.record.linkage.utils.AnalysisRecordGroupingUtils;
@@ -34,7 +35,7 @@ import org.talend.dataquality.rules.RulesFactory;
 
 /**
  * created by zshen on Aug 6, 2013 Detailled comment
- *
+ * 
  */
 public class MatchRuleAnlaysisUtils {
 
@@ -50,7 +51,7 @@ public class MatchRuleAnlaysisUtils {
 
     /**
      * DOC zshen Comment method "createDefaultRow".
-     *
+     * 
      * @param columnName
      * @return
      */
@@ -86,7 +87,7 @@ public class MatchRuleAnlaysisUtils {
 
     /**
      * DOC yyin Comment method "ruleMatcherConvert".
-     *
+     * 
      * @param blockKeyDef
      * @param columnMap
      * @return
@@ -112,7 +113,7 @@ public class MatchRuleAnlaysisUtils {
 
     /**
      * Get recording matching indicator from analysis
-     *
+     * 
      * @param analysis
      * @return
      */
@@ -127,8 +128,27 @@ public class MatchRuleAnlaysisUtils {
     }
 
     /**
+     * Get recording matching indicator and Blocking Indicator from analysis
+     * 
+     * @param analysis
+     * @return the index 0 will be RecordMatchingIndicator and index 1 will be BlockKeyIndicator
+     */
+    public static Object[] getNeedIndicatorFromAna(Analysis analysis) {
+        Object[] returnList = new Object[2];
+        EList<Indicator> indicators = analysis.getResults().getIndicators();
+        for (Indicator ind : indicators) {
+            if (ind instanceof RecordMatchingIndicator) {
+                returnList[0] = ind;
+            } else if (ind instanceof BlockKeyIndicator) {
+                returnList[1] = ind;
+            }
+        }
+        return returnList;
+    }
+
+    /**
      * check if the column name equals to these additional special columns
-     *
+     * 
      * @param columnName
      * @return
      */

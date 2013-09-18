@@ -13,6 +13,7 @@
 package org.talend.dataquality.record.linkage.ui.section;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
@@ -373,14 +374,12 @@ public class MatchingKeySection extends AbstractMatchKeyWithChartTableSection {
      */
     @Override
     protected void createSubChart(Composite sectionClient) {
-        RecordMatchingIndicator recordMatchingIndicator = MatchRuleAnlaysisUtils.getRecordMatchIndicatorFromAna(analysis);
-        computeMatchResult(recordMatchingIndicator);
         Composite chartComposite = toolkit.createComposite(sectionClient);
         GridLayout tableLayout = new GridLayout(1, Boolean.TRUE);
         chartComposite.setLayout(tableLayout);
         GridData gridData = new GridData(GridData.FILL_BOTH);
         chartComposite.setLayoutData(gridData);
-        matchRuleChartComp = new MatchRuleDataChart(chartComposite, recordMatchingIndicator.getGroupSize2groupFrequency());
+        matchRuleChartComp = new MatchRuleDataChart(chartComposite, new HashMap<Object, Long>());
 
         createHideGroupComposite(chartComposite);
 
@@ -389,8 +388,7 @@ public class MatchingKeySection extends AbstractMatchKeyWithChartTableSection {
     @Override
     public void refreshChart() {
         listeners.firePropertyChange(MatchAnalysisConstant.NEED_REFRESH_DATA, true, false);
-        RecordMatchingIndicator recordMatchingIndicator = MatchRuleAnlaysisUtils.getRecordMatchIndicatorFromAna(analysis);
-        computeMatchResult(recordMatchingIndicator);
+        RecordMatchingIndicator recordMatchingIndicator = computeMatchResult();
         matchRuleChartComp.refresh(recordMatchingIndicator.getGroupSize2groupFrequency());
         // Clear the match row data.
         matchRows.clear();

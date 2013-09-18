@@ -50,8 +50,8 @@ public class AnalysisRecordGroupingUtils {
     }
 
     /**
-     * DOC zshen Comment method "getCompleteColumnSchema".
-     * when refresh match chart by click refresh button
+     * DOC zshen Comment method "getCompleteColumnSchema". when refresh match chart by click refresh button
+     * 
      * @return
      */
     public static String[] getCompleteColumnSchemaWithoutBlockKey(Map<String, String> columnMap) {
@@ -71,11 +71,12 @@ public class AnalysisRecordGroupingUtils {
         return columnNameList.toArray(new String[columnNameList.size()]);
     }
 
-    public static Map<String, String> getMatchKeyMap(String column, String algoType, int confidentWeight,
+    public static Map<String, String> getMatchKeyMap(String column, String algoType, String algoParameter, int confidentWeight,
             Map<String, String> columnIndexMap, double matchInterval, String attributeName) {
         Map<String, String> matchKeyMap = new HashMap<String, String>();
         matchKeyMap.put(IRecordGrouping.COLUMN_IDX, columnIndexMap.get(column));
         matchKeyMap.put(IRecordGrouping.MATCHING_TYPE, AttributeMatcherType.getTypeBySavedValue(algoType).getLabel());
+        matchKeyMap.put(IRecordGrouping.CUSTOMER_MATCH_CLASS, algoParameter);
         matchKeyMap.put(IRecordGrouping.CONFIDENCE_WEIGHT, String.valueOf(confidentWeight));
         matchKeyMap.put(IRecordGrouping.RECORD_MATCH_THRESHOLD, String.valueOf(matchInterval));
         matchKeyMap.put(IRecordGrouping.ATTRIBUTE_NAME, attributeName);

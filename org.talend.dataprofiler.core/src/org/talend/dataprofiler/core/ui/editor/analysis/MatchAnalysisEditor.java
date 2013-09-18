@@ -1,6 +1,6 @@
 // ============================================================================
 //
-// Copyright (C) 2006-2012 Talend Inc. - www.talend.com
+// Copyright (C) 2006-2013 Talend Inc. - www.talend.com
 //
 // This source code is available under agreement available at
 // %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
@@ -18,15 +18,15 @@ import org.talend.dataprofiler.core.ui.action.actions.ImportMatchRuleAction;
 import org.talend.dataprofiler.core.ui.editor.TdEditorToolBar;
 import org.talend.dataquality.record.linkage.ui.composite.utils.MatchRuleAnlaysisUtils;
 
-
 /**
- * DOC yyin  class global comment. Detailled comment
+ * DOC yyin class global comment. Detailled comment
  */
 public class MatchAnalysisEditor extends AnalysisEditor {
 
     ImportMatchRuleAction importMatchRuleAction = null;
 
     ExportMatchRuleAction exportMatchRuleAction = null;
+
     @Override
     protected void addPages() {
         super.addPages();
@@ -36,7 +36,7 @@ public class MatchAnalysisEditor extends AnalysisEditor {
             importMatchRuleAction = new ImportMatchRuleAction(getMasterPage());
             importMatchRuleAction.setToolTipText(DefaultMessagesImpl.getString("MatchAnalysisEditor.importMatchRule"));//$NON-NLS-1$
             toolbar.addActions(importMatchRuleAction);
-            
+
             // when there are some keys in the analysis
             if (getMasterPage().getAnalysis().getResults() != null) {
                 exportMatchRuleAction = new ExportMatchRuleAction(

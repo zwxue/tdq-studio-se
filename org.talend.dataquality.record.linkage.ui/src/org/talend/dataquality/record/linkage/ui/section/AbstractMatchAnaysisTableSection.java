@@ -226,8 +226,12 @@ public abstract class AbstractMatchAnaysisTableSection extends AbstractSectionCo
         });
 
     }
-
+/**
+ * need clear the old data every time 
+ * 
+ */
     public void setDataInput(List<Object[]> allData) {
+        matchRows.clear();
         matchRows.addAll(allData);
     }
 

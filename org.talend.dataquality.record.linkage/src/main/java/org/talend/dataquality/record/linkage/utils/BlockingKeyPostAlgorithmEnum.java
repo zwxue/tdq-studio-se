@@ -15,16 +15,17 @@ package org.talend.dataquality.record.linkage.utils;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
+
 /**
- * created by zshen on Aug 6, 2013
- * Detailled comment
- *
+ * created by zshen on Aug 6, 2013 Detailled comment
+ * 
  */
 public enum BlockingKeyPostAlgorithmEnum {
-    NON_ALGO(0, "-", "NON_ALGO",false), //$NON-NLS-1$//$NON-NLS-2$
-    USE_DEFAULT(1, "use default value", "useDefault", true), //$NON-NLS-1$ //$NON-NLS-2$
-    LEFT_CHAR(2, "add left position character", "add_Left_Char",false), //$NON-NLS-1$ //$NON-NLS-2$
-    RIGHT_CHAR(3, "add right position character", "add_Right_Char", false); //$NON-NLS-1$ //$NON-NLS-2$
+    NON_ALGO(0, "-", "NON_ALGO", false, StringUtils.EMPTY), //$NON-NLS-1$//$NON-NLS-2$
+    USE_DEFAULT(1, "use default value", "useDefault", true, StringUtils.EMPTY), //$NON-NLS-1$ //$NON-NLS-2$
+    LEFT_CHAR(2, "add left position character", "add_Left_Char", false, StringUtils.EMPTY), //$NON-NLS-1$ //$NON-NLS-2$
+    RIGHT_CHAR(3, "add right position character", "add_Right_Char", false, StringUtils.EMPTY); //$NON-NLS-1$ //$NON-NLS-2$
 
     private int index;
 
@@ -34,16 +35,37 @@ public enum BlockingKeyPostAlgorithmEnum {
 
     private boolean isTakeParameter;
 
-    BlockingKeyPostAlgorithmEnum(int index, String value, String componentValueName, boolean isTakeParameter) {
+    private String defaultValue;
+
+    BlockingKeyPostAlgorithmEnum(int index, String value, String componentValueName, boolean isTakeParameter, String defaultValue) {
         this.index = index;
         this.value = value;
         this.componentValueName = componentValueName;
         this.isTakeParameter = isTakeParameter;
+        this.defaultValue = defaultValue;
+    }
+
+    /**
+     * Getter for defaultValue.
+     * 
+     * @return the defaultValue
+     */
+    public String getDefaultValue() {
+        return this.defaultValue;
+    }
+
+    /**
+     * Sets the defaultValue.
+     * 
+     * @param defaultValue the defaultValue to set
+     */
+    public void setDefaultValue(String defaultValue) {
+        this.defaultValue = defaultValue;
     }
 
     /**
      * Getter for index.
-     *
+     * 
      * @return the index
      */
     public int getIndex() {
@@ -52,7 +74,7 @@ public enum BlockingKeyPostAlgorithmEnum {
 
     /**
      * Getter for componentValueName.
-     *
+     * 
      * @return the componentValueName
      */
     public String getComponentValueName() {
@@ -61,7 +83,7 @@ public enum BlockingKeyPostAlgorithmEnum {
 
     /**
      * Getter for value.
-     *
+     * 
      * @return the value
      */
     public String getValue() {
@@ -86,9 +108,9 @@ public enum BlockingKeyPostAlgorithmEnum {
     }
 
     /**
-     *
+     * 
      * get type of the value which in this Enum
-     *
+     * 
      * @param value
      * @return null can not find this index
      */
@@ -103,9 +125,9 @@ public enum BlockingKeyPostAlgorithmEnum {
     }
 
     /**
-     *
+     * 
      * get type of the value which in this Enum
-     *
+     * 
      * @param value
      * @return null can not find this index
      */
@@ -120,8 +142,8 @@ public enum BlockingKeyPostAlgorithmEnum {
     }
 
     /**
-     *
-     *
+     * 
+     * 
      * @param index
      * @return null can not find this index
      */
