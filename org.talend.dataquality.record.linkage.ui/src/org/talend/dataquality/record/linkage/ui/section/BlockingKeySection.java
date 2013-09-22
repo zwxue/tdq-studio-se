@@ -153,8 +153,10 @@ public class BlockingKeySection extends AbstractMatchAnaysisTableSection {
      */
     @Override
     public void refreshChart() {
+        listeners.firePropertyChange(MatchAnalysisConstant.NEED_REFRESH_DATA, true, false);
         BlockingKeyHandler executeGenerateBlockingAction = computeResult();
         blockingKeyDataChart.refresh(executeGenerateBlockingAction.getResultDatas());
+        MatchRuleAnlaysisUtils.refreshDataTable(analysis, executeGenerateBlockingAction.getResultDataList());
         executeGenerateBlockingAction.getResultDatas().clear();
     }
 

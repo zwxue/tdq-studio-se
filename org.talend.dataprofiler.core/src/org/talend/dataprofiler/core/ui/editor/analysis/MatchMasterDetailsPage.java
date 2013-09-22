@@ -486,7 +486,7 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
 
         // create the input to control how many rows will be loaded.
         Label rowLoadedLabel = toolkit.createLabel(dataQueryComp,
-                DefaultMessagesImpl.getString("MatchMasterDetailsPage.ControlRowsLabel"), SWT.NONE);
+                DefaultMessagesImpl.getString("MatchMasterDetailsPage.ControlRowsLabel"), SWT.NONE); //$NON-NLS-1$
         GridDataFactory.fillDefaults().align(SWT.LEFT, SWT.CENTER).applyTo(rowLoadedLabel);
         rowLoadedText = toolkit.createText(dataQueryComp, null, SWT.BORDER);
         GridDataFactory.fillDefaults().align(SWT.LEFT, SWT.CENTER).applyTo(rowLoadedText);

@@ -89,4 +89,20 @@ public class BlockingKeyHandler {
         return generateKeyAPI.getResultList();
     }
 
+    /**
+     * get all keys of columns
+     * 
+     * @return
+     */
+    public List<Object[]> getResultDataList() {
+        List<Object[]> returnList = new ArrayList<Object[]>();
+        for (String genKey : generateKeyAPI.getResultList().keySet()) {
+            List<String[]> resultDatalistForGenKey = generateKeyAPI.getResultList().get(genKey);
+            if (resultDatalistForGenKey != null) {
+                returnList.addAll(resultDatalistForGenKey);
+            }
+        }
+        return returnList;
+    }
+
 }

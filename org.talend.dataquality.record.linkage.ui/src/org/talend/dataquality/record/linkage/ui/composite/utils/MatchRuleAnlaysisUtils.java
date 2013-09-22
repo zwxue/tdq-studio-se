@@ -18,6 +18,8 @@ import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.emf.common.util.EList;
+import org.talend.core.GlobalServiceRegister;
+import org.talend.core.ITDQRepositoryService;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.columnset.BlockKeyIndicator;
@@ -32,6 +34,7 @@ import org.talend.dataquality.rules.KeyDefinition;
 import org.talend.dataquality.rules.MatchKeyDefinition;
 import org.talend.dataquality.rules.MatchRule;
 import org.talend.dataquality.rules.RulesFactory;
+import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
  * created by zshen on Aug 6, 2013 Detailled comment
@@ -160,6 +163,25 @@ public class MatchRuleAnlaysisUtils {
             return true;
         }
         return false;
+    }
+
+    /**
+     * refresh data Table.
+     * 
+     * @param analysis
+     * 
+     * @param matchResultConsumer
+     */
+    public static void refreshDataTable(ModelElement analysis, List<Object[]> resultData) {
+        ITDQRepositoryService tdqRepService = null;
+
+        if (GlobalServiceRegister.getDefault().isServiceRegistered(ITDQRepositoryService.class)) {
+            tdqRepService = (ITDQRepositoryService) GlobalServiceRegister.getDefault().getService(ITDQRepositoryService.class);
+        }
+        if (tdqRepService != null) {
+            tdqRepService.refreshTableWithResult(analysis, resultData);
+        }
+
     }
 
 }

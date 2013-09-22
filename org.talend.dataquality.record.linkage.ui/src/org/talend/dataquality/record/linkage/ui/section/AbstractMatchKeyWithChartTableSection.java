@@ -133,6 +133,8 @@ abstract public class AbstractMatchKeyWithChartTableSection extends AbstractMatc
                     .openError(
                             shell,
                             DefaultMessagesImpl.getString("RunAnalysisAction.runAnalysis"), DefaultMessagesImpl.getString("RunAnalysisAction.failRunAnalysis", analysis.getName(), execute.getMessage())); //$NON-NLS-1$ //$NON-NLS-2$
+        }else{
+            MatchRuleAnlaysisUtils.refreshDataTable(analysis, execute.getObject().getFullMatchResult());
         }
         return recordMatchingIndicator;
 
