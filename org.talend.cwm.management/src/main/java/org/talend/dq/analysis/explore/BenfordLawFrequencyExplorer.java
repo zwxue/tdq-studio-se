@@ -61,7 +61,7 @@ public class BenfordLawFrequencyExplorer extends FrequencyStatisticsExplorer {
         } else if (isInformix()) {
             return columnName + " is null or SUBSTR(" + columnName + ",0,1) not in ('0','1','2','3','4','5','6','7','8','9')";//$NON-NLS-1$ //$NON-NLS-2$
         } else if (isVertica()) {
-            return columnName + " is null or " + " regexp_like(to_char(" + columnName + "),'^[^[:digit:]]')";//$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+            return columnName + " is null or " + "not regexp_like(to_char(" + columnName + "),'^[[:digit:]]')";//$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
         }
 
         return columnName + " is null or " + columnName + value; //$NON-NLS-1$
