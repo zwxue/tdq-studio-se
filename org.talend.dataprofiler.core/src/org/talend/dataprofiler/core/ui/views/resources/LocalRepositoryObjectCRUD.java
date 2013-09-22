@@ -33,7 +33,6 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PlatformUI;
-import org.jfree.util.Log;
 import org.talend.commons.exception.BusinessException;
 import org.talend.commons.exception.PersistenceException;
 import org.talend.commons.utils.WorkspaceUtils;
@@ -70,6 +69,7 @@ import org.talend.dq.nodes.RuleRepNode;
 import org.talend.dq.nodes.SourceFileRepNode;
 import org.talend.dq.nodes.SourceFileSubFolderNode;
 import org.talend.dq.nodes.SysIndicatorDefinitionRepNode;
+import org.talend.repository.RepositoryWorkUnit;
 import org.talend.repository.model.ERepositoryStatus;
 import org.talend.repository.model.IProxyRepositoryFactory;
 import org.talend.repository.model.IRepositoryNode;
@@ -447,22 +447,10 @@ public class LocalRepositoryObjectCRUD extends AbstractRepObjectCRUDAction {
         // MOD yyin 20121127, TDQ-6302, when back from DI's expanded Metadata, can not move the connections.
         final IRepositoryNode finalSourceNode = sourceNode;
         final IRepositoryNode finalTargetNode = targetNode;
-        IWorkspace workspace = ResourcesPlugin.getWorkspace();
-        IWorkspaceRunnable operation = new IWorkspaceRunnable() {
-
-            public void run(IProgressMonitor monitor) throws CoreException {
-                if (finalTargetNode.getType() == ENodeType.SIMPLE_FOLDER) {
-                    moveObject(finalSourceNode, finalTargetNode, getMakeRelativeTo(finalSourceNode));
-                } else if (finalTargetNode.getType() == ENodeType.SYSTEM_FOLDER) {
-                    moveObject(finalSourceNode, finalTargetNode, Path.EMPTY);
-                }
-            }
-        };
-        // ISchedulingRule schedulingRule = workspace.getRoot();
-        try {
-            workspace.run(operation, new NullProgressMonitor());
-        } catch (CoreException e) {
-            log.error(e, e);
+        if (finalTargetNode.getType() == ENodeType.SIMPLE_FOLDER) {
+            moveObject(finalSourceNode, finalTargetNode, getMakeRelativeTo(finalSourceNode));
+        } else if (finalTargetNode.getType() == ENodeType.SYSTEM_FOLDER) {
+            moveObject(finalSourceNode, finalTargetNode, Path.EMPTY);
         }
     }
 
@@ -580,7 +568,7 @@ public class LocalRepositoryObjectCRUD extends AbstractRepObjectCRUDAction {
         // MOD yyin 20130125 TDQ-5392
         IPath oldPath = null;
         List<String> jrxmlFileNames = null;
-        List<JrxmlTempleteRepNode> jrxmlFileRepNodes = null;
+        List<JrxmlTempleteRepNode> jrxmlFileRepNodes = new ArrayList<JrxmlTempleteRepNode>();
 
         if (sourceNode instanceof JrxmlTempSubFolderNode) {
             // remeber the old path
@@ -606,8 +594,6 @@ public class LocalRepositoryObjectCRUD extends AbstractRepObjectCRUDAction {
             // use two array :old file names and new file names, to call the method.
             IPath newPath = RepositoryNodeHelper.getPath(targetNode);
             List<String> jrxmlFileNamesAfterMove = new ArrayList<String>();
-            IPath basePath = ResourceManager.getRootProject().getLocation().removeFirstSegments(1);
-
             for (JrxmlTempleteRepNode jrxml : jrxmlFileRepNodes) {
                 // check it there some sub folder under the source node
                 IPath relativeTo = RepositoryNodeHelper.getPath(jrxml.getParent()).makeRelativeTo(oldPath);
@@ -702,8 +688,33 @@ public class LocalRepositoryObjectCRUD extends AbstractRepObjectCRUDAction {
         IPath makeRelativeTo = getMakeRelativeTo(targetNode);
         final IPath sourceMakeRelativeTo = sourcePath.makeRelativeTo(makeRelativeTo);
         final IPath targetMakeRelativeTo = targetPath.makeRelativeTo(makeRelativeTo);
+        RepositoryWorkUnit<Object> workUnit = new RepositoryWorkUnit<Object>(
+                DefaultMessagesImpl.getString("LocalRepositoryObjectCRUD.MOVE_FOLDER") //$NON-NLS-1$
+                        + sourceNode.getObject().getProperty().getDisplayName()) {
 
-        factory.moveFolder(targetNode.getContentType(), sourceMakeRelativeTo, targetMakeRelativeTo);
+            @Override
+            protected void run() {
+
+                IWorkspace workspace = ResourcesPlugin.getWorkspace();
+                IWorkspaceRunnable operation = new IWorkspaceRunnable() {
+
+                    public void run(IProgressMonitor monitor) throws CoreException {
+                        try {
+                            factory.moveFolder(targetNode.getContentType(), sourceMakeRelativeTo, targetMakeRelativeTo);
+                        } catch (PersistenceException e) {
+                            log.error(e.getMessage(), e);
+                        }
+                    }
+                };
+                try {
+                    workspace.run(operation, new NullProgressMonitor());
+                } catch (CoreException e) {
+                    log.error(e, e);
+                }
+            }
+        };
+        workUnit.setAvoidUnloadResources(true);
+        ProxyRepositoryFactory.getInstance().executeRepositoryWorkUnit(workUnit);
     }
 
     /**
@@ -715,18 +726,41 @@ public class LocalRepositoryObjectCRUD extends AbstractRepObjectCRUDAction {
      * @param basePath
      */
     private void moveObject(final IRepositoryNode sourceNode, final IRepositoryNode targetNode, final IPath basePath) {
-        IPath targetPath = WorkbenchUtils.getPath(targetNode);
-        try {
-            IPath makeRelativeTo = Path.EMPTY;
-            if (!basePath.isEmpty()) {
-                makeRelativeTo = targetPath.makeRelativeTo(basePath);
+        final IPath targetPath = WorkbenchUtils.getPath(targetNode);
+        RepositoryWorkUnit<Object> workUnit = new RepositoryWorkUnit<Object>(
+                DefaultMessagesImpl.getString("LocalRepositoryObjectCRUD.MOVE_ITEM") //$NON-NLS-1$
+                        + sourceNode.getObject().getProperty().getDisplayName()) {
+
+            @Override
+            protected void run() {
+
+                IWorkspace workspace = ResourcesPlugin.getWorkspace();
+                IWorkspaceRunnable operation = new IWorkspaceRunnable() {
+
+                    public void run(IProgressMonitor monitor) throws CoreException {
+                        IPath makeRelativeTo = Path.EMPTY;
+                        if (!basePath.isEmpty()) {
+                            makeRelativeTo = targetPath.makeRelativeTo(basePath);
+                        }
+                        try {
+                            factory.moveObject(sourceNode.getObject(), makeRelativeTo, Path.EMPTY);
+                        } catch (PersistenceException e) {
+                            log.error(sourceNode, e);
+                        } catch (BusinessException e) {
+                            log.error(sourceNode, e);
+                        }
+                    }
+                };
+                try {
+                    workspace.run(operation, new NullProgressMonitor());
+                } catch (CoreException e) {
+                    log.error(e, e);
+                }
             }
-            factory.moveObject(sourceNode.getObject(), makeRelativeTo, Path.EMPTY);
-        } catch (PersistenceException e) {
-            Log.error(sourceNode, e);
-        } catch (BusinessException e) {
-            Log.error(sourceNode, e);
-        }
+        };
+        workUnit.setAvoidUnloadResources(true);
+        ProxyRepositoryFactory.getInstance().executeRepositoryWorkUnit(workUnit);
+
     }
 
     @Override

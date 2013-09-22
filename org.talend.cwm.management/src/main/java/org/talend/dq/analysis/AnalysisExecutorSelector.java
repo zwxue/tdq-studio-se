@@ -22,7 +22,10 @@ import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisType;
 import org.talend.dataquality.analysis.ExecutionLanguage;
 import org.talend.dataquality.helpers.AnalysisHelper;
+import org.talend.dataquality.properties.TDQAnalysisItem;
 import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
+import org.talend.dq.writer.impl.AnalysisWriter;
+import org.talend.dq.writer.impl.ElementWriterFactory;
 import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.foundation.softwaredeployment.DataProvider;
 
@@ -144,6 +147,33 @@ public final class AnalysisExecutorSelector {
         return executeAnalysis(analysis, null);
     }
 
+    public static ReturnCode executeAnalysis(final TDQAnalysisItem analysisItem, IProgressMonitor monitor) {
+
+        IAnalysisExecutor analysisExecutor = getAnalysisExecutor(analysisItem.getAnalysis());
+        if (analysisExecutor != null) {
+            // MOD xqliu 2009-02-09 bug 6237
+            analysisExecutor.setMonitor(monitor);
+            ReturnCode execute = analysisExecutor.execute(analysisItem.getAnalysis());
+
+            // save analysis.
+            if (Platform.isRunning()) {
+                Display.getDefault().asyncExec(new Runnable() {
+
+                    public void run() {
+                        AnalysisWriter writer = ElementWriterFactory.getInstance().createAnalysisWrite();
+                        writer.save(analysisItem, Boolean.FALSE);
+                    }
+                });
+            }
+
+            return execute;
+        }
+        // else
+        return new ReturnCode(Messages.getString(
+                "AnalysisExecutorSelector.NotFindHowExecute", analysisItem.getAnalysis().getName()), false); //$NON-NLS-1$
+
+    }
+
     /**
      * 
      * DOC xqliu Comment method "executeAnalysis".
@@ -151,7 +181,9 @@ public final class AnalysisExecutorSelector {
      * @param analysis
      * @param monitor
      * @return
+     * @deprecated use {@link #executeAnalysis(TDQAnalysisItem, IProgressMonitor)} instead.
      */
+    @Deprecated
     public static ReturnCode executeAnalysis(final Analysis analysis, IProgressMonitor monitor) {
         IAnalysisExecutor analysisExecutor = getAnalysisExecutor(analysis);
         if (analysisExecutor != null) {

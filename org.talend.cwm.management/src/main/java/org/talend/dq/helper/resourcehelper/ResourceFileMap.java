@@ -38,6 +38,7 @@ import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
  * DOC rli class global comment. Detailled comment
+ * 
  */
 public abstract class ResourceFileMap {
 
@@ -182,7 +183,9 @@ public abstract class ResourceFileMap {
      * 
      * @param dqrule
      * @return
+     * @deprecated use {@link AElementPersistance#save(org.talend.core.model.properties.Item, boolean)} class instead
      */
+    @Deprecated
     public ReturnCode save(ModelElement element) {
         AElementPersistance writer = ElementWriterFactory.getInstance().create(element);
         return writer.save(element);

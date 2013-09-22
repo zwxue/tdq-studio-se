@@ -88,14 +88,14 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
 
     private static final DecimalFormat FORMAT_SECONDS = new DecimalFormat("0.00"); //$NON-NLS-1$
 
-    private Analysis analysis = null;
-
     private IRuningStatusListener listener;
 
     @Deprecated
     private IFile selectionFile;// no one used
 
     private AnalysisRepNode node;
+
+    private TDQAnalysisItem item;
 
     // Added TDQ-7551 20130704: for lock/unlock in SVN ask user mode
     private IEditorPart editor = null;
@@ -135,12 +135,11 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
     public void run() {
         try {
             editor = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
-            Item item = null;
 
             if (node != null) {
                 // means it from the context menu "run" which need to select a node
                 // then find the analysis from the node, and not fromt the editor(only one way)
-                item = node.getObject().getProperty().getItem();
+                item = (TDQAnalysisItem) node.getObject().getProperty().getItem();
                 if (item == null) {
                     log.error("Analysis item is null"); //$NON-NLS-1$
                     return;
@@ -149,10 +148,9 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
                 if (ifLockByOthers(item)) {
                     return;
                 }
-                analysis = this.node.getAnalysis();
 
                 // check if the analysis need to be saved or can run before real running by the event
-                if (!EventManager.getInstance().publish(analysis, EventEnum.DQ_ANALYSIS_CHECK_BEFORERUN, null)) {
+                if (!EventManager.getInstance().publish(item.getAnalysis(), EventEnum.DQ_ANALYSIS_CHECK_BEFORERUN, null)) {
                     // if the analysis need save but can not be saved, return without continue;
                     // or the analysis can not run, return without continue
                     return;
@@ -169,15 +167,15 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
                 }
 
                 IEditorInput editorInput = anaEditor.getEditorInput();
-                analysis = findAnalysisFromEditorInput(editorInput);
+                item = findAnalysisFromEditorInput(editorInput);
                 // find the listener by the editor
                 listener = findAnalysisListenerFromAnalysisEditor(anaEditor);
             }
 
-            if (analysis == null || !isConnectedAvailable()) {
+            if (item == null || !isConnectedAvailable()) {
                 return;
             }
-            AnalysisType analysisType = analysis.getParameters().getAnalysisType();
+            AnalysisType analysisType = item.getAnalysis().getParameters().getAnalysisType();
             if (AnalysisType.COLUMNS_COMPARISON.equals(analysisType)) {
                 // If the analysis type is column comparison, ask user to continue to run or not.
                 if (!isContinueRun()) {
@@ -210,7 +208,7 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
                 public IStatus runInWorkspace(IProgressMonitor monitor) throws CoreException {
 
                     monitor.beginTask(
-                            DefaultMessagesImpl.getString("RunAnalysisAction.running", analysis.getName()), IProgressMonitor.UNKNOWN); //$NON-NLS-1$ 
+                            DefaultMessagesImpl.getString("RunAnalysisAction.running", item.getAnalysis().getName()), IProgressMonitor.UNKNOWN); //$NON-NLS-1$ 
 
                     Display.getDefault().asyncExec(new Runnable() {
 
@@ -222,10 +220,10 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
 
                     });
 
-                    ReturnCode executed = AnalysisExecutorSelector.executeAnalysis(analysis, monitor);
+                    ReturnCode executed = AnalysisExecutorSelector.executeAnalysis(item, monitor);
 
                     if (monitor.isCanceled()) {
-                        TdqAnalysisConnectionPool.closeConnectionPool(analysis);
+                        TdqAnalysisConnectionPool.closeConnectionPool(item.getAnalysis());
                         executed = new ReturnCode(DefaultMessagesImpl.getString("RunAnalysisAction.TaskCancel"), false); //$NON-NLS-1$
                         monitor.done();
                         if (isNeedUnlock) {
@@ -246,7 +244,7 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
                                 listener.fireRuningItemChanged(true);
                             } else {
                                 // TODO yyin publish the event from listener.
-                                EventManager.getInstance().publish(analysis, EventEnum.DQ_ANALYSIS_RUN_FROM_MENU, null);
+                                EventManager.getInstance().publish(item.getAnalysis(), EventEnum.DQ_ANALYSIS_RUN_FROM_MENU, null);
                             }
 
                         }
@@ -268,18 +266,21 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
     }
 
     /**
-     * find Analysis From EditorInput.
+     * find TDQAnalysisItem From EditorInput.
      * 
      * @param editorInput
      * @return
      */
-    private Analysis findAnalysisFromEditorInput(IEditorInput editorInput) {
-        Analysis analysisToFind = null;
+    private TDQAnalysisItem findAnalysisFromEditorInput(IEditorInput editorInput) {
+        TDQAnalysisItem analysisToFind = null;
         if (editorInput instanceof FileEditorInput) {
             IFile afile = ((FileEditorInput) editorInput).getFile();
-            analysisToFind = AnaResourceFileHelper.getInstance().findAnalysis(afile);
+            Analysis analysis = AnaResourceFileHelper.getInstance().findAnalysis(afile);
+            analysisToFind = (TDQAnalysisItem) RepositoryNodeHelper.recursiveFindAnalysis(analysis).getObject().getProperty()
+                    .getItem();
+
         } else if (editorInput instanceof AnalysisItemEditorInput) {
-            analysisToFind = ((TDQAnalysisItem) ((AnalysisItemEditorInput) editorInput).getItem()).getAnalysis();
+            analysisToFind = ((TDQAnalysisItem) ((AnalysisItemEditorInput) editorInput).getItem());
         }
         return analysisToFind;
     }
@@ -315,8 +316,8 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
      * reload analysis connection.
      */
     private void reloadConnection() {
-        if (AnalysisHelper.getReloadDatabases(analysis)) {
-            Connection conntion = (Connection) analysis.getContext().getConnection();
+        if (AnalysisHelper.getReloadDatabases(item.getAnalysis())) {
+            Connection conntion = (Connection) item.getAnalysis().getContext().getConnection();
             if (conntion != null) {
                 try {
                     RepositoryNode connectionNode = RepositoryNodeHelper.recursiveFind(conntion);
@@ -334,7 +335,7 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
      * @return true when the connection is well connected
      */
     private boolean isConnectedAvailable() {
-        DataManager datamanager = analysis.getContext().getConnection();
+        DataManager datamanager = item.getAnalysis().getContext().getConnection();
         Connection analysisDataProvider = ConnectionUtils.getConnectionFromDatamanager(datamanager);
 
         // MOD klliu bug 4584 Filtering the file connection when checking connection is successful,before real
@@ -498,8 +499,8 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
     public void run(String[] params, ICheatSheetManager manager) {
         // ADD mzhao 2009-02-03 If there is no active editor opened, run
         // analysis action from cheat sheets will do nothing.
-        IEditorPart editor = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
-        if (editor == null) {
+        IEditorPart activateEditor = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
+        if (activateEditor == null) {
             return;
         }
         AnalysisEditor anaEditor = (AnalysisEditor) editor;
@@ -516,10 +517,10 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
      */
     private void displayResultStatus(final ReturnCode executed) {
         if (log.isInfoEnabled()) {
-            int executionDuration = analysis.getResults().getResultMetadata().getExecutionDuration();
+            int executionDuration = item.getAnalysis().getResults().getResultMetadata().getExecutionDuration();
             log.info(DefaultMessagesImpl
                     .getString(
-                            "RunAnalysisAction.displayInformation", new Object[] { analysis.getName(), executed, FORMAT_SECONDS.format(Double.valueOf(executionDuration) / 1000) })); //$NON-NLS-1$ 
+                            "RunAnalysisAction.displayInformation", new Object[] { item.getAnalysis().getName(), executed, FORMAT_SECONDS.format(Double.valueOf(executionDuration) / 1000) })); //$NON-NLS-1$ 
 
         }
 
@@ -536,7 +537,7 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
                     }
                     MessageDialogWithToggle.openError(
                             shell,
-                            DefaultMessagesImpl.getString("RunAnalysisAction.runAnalysis"), DefaultMessagesImpl.getString("RunAnalysisAction.failRunAnalysis", analysis.getName(), executed.getMessage())); //$NON-NLS-1$ //$NON-NLS-2$
+                            DefaultMessagesImpl.getString("RunAnalysisAction.runAnalysis"), DefaultMessagesImpl.getString("RunAnalysisAction.failRunAnalysis", item.getAnalysis().getName(), executed.getMessage())); //$NON-NLS-1$ //$NON-NLS-2$
                 }
             });
         }
