@@ -253,6 +253,7 @@ public class BlockingKeySection extends AbstractMatchAnaysisTableSection {
             }
             if (success) {
                 listeners.firePropertyChange(MatchAnalysisConstant.ISDIRTY_PROPERTY, true, false);
+                listeners.firePropertyChange(MatchAnalysisConstant.MATCH_RULE_TAB_SWITCH, true, false);
             }
         }
 

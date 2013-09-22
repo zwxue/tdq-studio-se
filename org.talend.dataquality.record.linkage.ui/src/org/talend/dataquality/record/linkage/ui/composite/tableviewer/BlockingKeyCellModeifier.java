@@ -152,6 +152,9 @@ public class BlockingKeyCellModeifier extends AbstractMatchCellModifier<BlockKey
                 }
                 bkd.getPostAlgorithm().setAlgorithmParameters(newValue);
             } else if (MatchAnalysisConstant.COLUMN.equalsIgnoreCase(property)) {
+                if (Integer.parseInt(newValue) == -1) {
+                    return;
+                }
                 String columnName = columnList.get(Integer.parseInt(newValue));
                 if (StringUtils.equals(bkd.getColumn(), columnName)) {
                     return;

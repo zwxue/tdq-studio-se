@@ -168,6 +168,20 @@ public abstract class AbstractMatchAnaysisTableSection extends AbstractSectionCo
         labelGd.horizontalAlignment = SWT.LEFT;
         labelGd.widthHint = 30;
 
+        createAddAndRemoveButton(buttonsComposite, labelGd);
+
+        createMoveButton(buttonsComposite, labelGd);
+        // TODO will be implemented later (copy and paste)
+
+    }
+
+    /**
+     * DOC zshen Comment method "createAddAndRemoveButton".
+     * 
+     * @param buttonsComposite
+     * @param labelGd
+     */
+    private void createAddAndRemoveButton(Composite buttonsComposite, GridData labelGd) {
         final Button addButton = new Button(buttonsComposite, SWT.NONE);
         addButton.setToolTipText(DefaultMessagesImpl.getString("AbstractMatchAnaysisTableSection.add_button_tooltip")); //$NON-NLS-1$
         addButton.setImage(ImageLib.getImage(ImageLib.ADD_ACTION));
@@ -191,8 +205,6 @@ public abstract class AbstractMatchAnaysisTableSection extends AbstractSectionCo
                 removeTableItem();
             }
         });
-        createMoveButton(buttonsComposite, labelGd);
-        // TODO will be implemented later (copy and paste)
 
     }
 
@@ -202,11 +214,12 @@ public abstract class AbstractMatchAnaysisTableSection extends AbstractSectionCo
     private void createRefreshButton(Composite currentSectionClient) {
 
         Composite buttonsComposite = new Composite(currentSectionClient, SWT.NONE);
-        buttonsComposite.setLayout(new GridLayout(7, true));
+        buttonsComposite.setLayout(new GridLayout(10, true));
 
         GridData labelGd = new GridData();
         labelGd.horizontalAlignment = SWT.LEFT;
         labelGd.widthHint = 30;
+        createAddAndRemoveButton(buttonsComposite, labelGd);
         createMoveButton(buttonsComposite, labelGd);
         labelGd = new GridData();
         labelGd.horizontalAlignment = SWT.CENTER;
@@ -226,10 +239,11 @@ public abstract class AbstractMatchAnaysisTableSection extends AbstractSectionCo
         });
 
     }
-/**
- * need clear the old data every time 
- * 
- */
+
+    /**
+     * need clear the old data every time
+     * 
+     */
     public void setDataInput(List<Object[]> allData) {
         matchRows.clear();
         matchRows.addAll(allData);

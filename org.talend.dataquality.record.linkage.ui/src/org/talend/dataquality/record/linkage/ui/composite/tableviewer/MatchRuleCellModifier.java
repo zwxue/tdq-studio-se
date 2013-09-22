@@ -108,6 +108,9 @@ public class MatchRuleCellModifier extends AbstractMatchCellModifier<MatchKeyDef
                 }
                 mkd.getAlgorithm().setAlgorithmParameters(String.valueOf(value));
             } else if (MatchAnalysisConstant.COLUMN.equalsIgnoreCase(property)) {
+                if (Integer.parseInt(newValue) == -1) {
+                    return;
+                }
                 String columnName = columnList.get(Integer.parseInt(newValue));
                 if (StringUtils.equals(mkd.getColumn(), columnName)) {
                     return;

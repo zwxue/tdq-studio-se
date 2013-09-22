@@ -472,6 +472,7 @@ public class MatchingKeySection extends AbstractMatchKeyWithChartTableSection {
             }
             if (success) {
                 listeners.firePropertyChange(MatchAnalysisConstant.ISDIRTY_PROPERTY, true, false);
+                listeners.firePropertyChange(MatchAnalysisConstant.MATCH_RULE_TAB_SWITCH, true, false);
             }
         }
     }

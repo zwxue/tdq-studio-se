@@ -295,6 +295,7 @@ public abstract class AbstractMatchAnalysisTableViewer<T> extends TableViewer {
                 keyList.remove(keyDef);
                 // Update table view.
                 remove(keyDef);
+                listeners.firePropertyChange(MatchAnalysisConstant.MATCH_RULE_TAB_SWITCH, true, false);
                 break;
             }
         }
