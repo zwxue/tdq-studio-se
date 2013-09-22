@@ -37,7 +37,6 @@ import org.talend.dataquality.record.linkage.ui.action.ExecuteMatchRuleHandler;
 import org.talend.dataquality.record.linkage.ui.composite.chart.MatchRuleDataChart;
 import org.talend.dataquality.record.linkage.ui.composite.utils.MatchRuleAnlaysisUtils;
 import org.talend.dataquality.record.linkage.ui.i18n.internal.DefaultMessagesImpl;
-import org.talend.dataquality.record.linkage.utils.MatchAnalysisConstant;
 import org.talend.dataquality.rules.MatchRule;
 import org.talend.utils.sugars.TypedReturnCode;
 
@@ -91,13 +90,7 @@ abstract public class AbstractMatchKeyWithChartTableSection extends AbstractMatc
                 int times = Integer.parseInt(lessSpin.getText());
                 if (matchRuleChartComp != null) {
                     matchRuleChartComp.setTimes(times);
-                    listeners.firePropertyChange(MatchAnalysisConstant.NEED_REFRESH_DATA, true, false);
-                    RecordMatchingIndicator recordMatchingIndicator = computeMatchResult();
-                    if (recordMatchingIndicator != null) {
-                        matchRuleChartComp.refresh(recordMatchingIndicator.getGroupSize2groupFrequency());
-                    } else {
-                        log.error("Can not get rusult data after AbstractMatchKeyWithChartTableSection.computeMatchResult()"); //$NON-NLS-1$
-                    }
+                    matchRuleChartComp.refresh();
                     matchRows.clear();
                 }
 
@@ -133,7 +126,7 @@ abstract public class AbstractMatchKeyWithChartTableSection extends AbstractMatc
                     .openError(
                             shell,
                             DefaultMessagesImpl.getString("RunAnalysisAction.runAnalysis"), DefaultMessagesImpl.getString("RunAnalysisAction.failRunAnalysis", analysis.getName(), execute.getMessage())); //$NON-NLS-1$ //$NON-NLS-2$
-        }else{
+        } else {
             MatchRuleAnlaysisUtils.refreshDataTable(analysis, execute.getObject().getFullMatchResult());
         }
         return recordMatchingIndicator;

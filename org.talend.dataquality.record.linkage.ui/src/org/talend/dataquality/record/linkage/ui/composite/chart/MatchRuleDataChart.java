@@ -162,6 +162,13 @@ public class MatchRuleDataChart extends Composite {
 
     public void refresh(Map<Object, Long> groupSize2GroupFrequencyNew) {
         this.groupSize2GroupFrequency = groupSize2GroupFrequencyNew;
+        refresh();
+    }
+/**
+ * refresh the chart by old data
+ * 
+ */
+    public void refresh() {
         initChartData();
         jfreeChartComp.setChart(createChart(createDataset()));
         jfreeChartComp.forceRedraw();
@@ -210,6 +217,15 @@ public class MatchRuleDataChart extends Composite {
             int m = Integer.parseInt(categorydataset.getColumnKeys().get(j).toString());
             return colors[m % colors.length];
         }
+    }
+
+    /**
+     * Getter for groupSize2GroupFrequency.
+     * 
+     * @return the groupSize2GroupFrequency
+     */
+    public Map<Object, Long> getGroupSize2GroupFrequency() {
+        return this.groupSize2GroupFrequency;
     }
 
 }
