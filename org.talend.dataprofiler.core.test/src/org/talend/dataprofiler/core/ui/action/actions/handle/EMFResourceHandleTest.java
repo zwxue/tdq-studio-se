@@ -20,7 +20,6 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.jfree.util.Log;
-import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -43,7 +42,6 @@ import org.talend.core.runtime.CoreRuntimePlugin;
 import org.talend.cwm.helper.CatalogHelper;
 import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.ResourceHelper;
-import org.talend.dataprofiler.core.helper.UnitTestBuildHelper;
 import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.nodes.DBConnectionRepNode;
 import org.talend.repository.localprovider.model.LocalRepositoryFactory;
@@ -53,13 +51,13 @@ import orgomg.cwm.resource.relational.Catalog;
 
 /**
  * created by zshen on Apr 18, 2013 Detailled comment
- *
+ * 
  */
 public class EMFResourceHandleTest {
 
     /**
      * DOC zshen Comment method "setUpBeforeClass".
-     *
+     * 
      * @throws java.lang.Exception
      */
 
@@ -81,7 +79,7 @@ public class EMFResourceHandleTest {
 
     /**
      * DOC zshen Comment method "tearDownAfterClass".
-     *
+     * 
      * @throws java.lang.Exception
      */
     @AfterClass
@@ -96,18 +94,18 @@ public class EMFResourceHandleTest {
 
     /**
      * DOC zshen Comment method "setUp".
-     *
+     * 
      * @throws java.lang.Exception
      */
     @Before
     public void setUp() throws Exception {
-        UnitTestBuildHelper.initProjectStructure("testForEMFSharedResourcesDuplicate"); //$NON-NLS-1$
+        //        UnitTestBuildHelper.initProjectStructure("testForEMFSharedResourcesDuplicate"); //$NON-NLS-1$
     }
 
     /**
      * Test method for
      * {@link org.talend.dataprofiler.core.ui.action.actions.handle.EMFResourceHandle#duplicate(java.lang.String)}.
-     *
+     * 
      * @throws BusinessException
      * @throws PersistenceException
      */
@@ -131,13 +129,16 @@ public class EMFResourceHandleTest {
 
     /**
      * DOC zshen Comment method "compareResult".
-     *
+     * 
      * @param newConnectionItem
      * @param oldConnectionItem
      */
     private void compareResult(DatabaseConnectionItem newConnectionItem, DatabaseConnectionItem oldConnectionItem) {
         Connection newConnection = newConnectionItem.getConnection();
         Connection oldConnection = oldConnectionItem.getConnection();
+        Assert.assertTrue(newConnection != null);
+        Assert.assertTrue(newConnection.eResource() != null);
+        Assert.assertTrue(!newConnection.eIsProxy());
         boolean isConnUUIDSame = ResourceHelper.getUUID(newConnection).equalsIgnoreCase(ResourceHelper.getUUID(oldConnection));
         Catalog oldCatalog = CatalogHelper.getCatalog(oldConnection, "catalog1"); //$NON-NLS-1$
         Catalog newCatalog = CatalogHelper.getCatalog(newConnection, "catalog1"); //$NON-NLS-1$
@@ -149,7 +150,7 @@ public class EMFResourceHandleTest {
 
     /**
      * DOC zshen Comment method "createConnectionNode".
-     *
+     * 
      * @return
      */
     private RepositoryNode createConnectionNode(DatabaseConnectionItem createConnectionItem) {
