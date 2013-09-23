@@ -94,6 +94,7 @@ public class AnalysisExecutorTest {
         // ~connection
         spy = Mockito.spy(new ColumnAnalysisExecutor());
         Mockito.doReturn(true).when(spy).runAnalysis(((Analysis) Mockito.anyObject()), Mockito.anyString());
+        Mockito.doReturn(1000L).when(spy).getCheckContinueCount();
 
     }
 
@@ -109,7 +110,7 @@ public class AnalysisExecutorTest {
     @Test
     public void testExecute2() {
         setMemoryControl(true);
-        setMemoryValue(5);
+        setMemoryValue(0);
         ReturnCode execute2 = spy.execute(createAnalysis);
 
         Assert.assertFalse(execute2.isOk());

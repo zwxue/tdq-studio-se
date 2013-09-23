@@ -140,7 +140,7 @@ public abstract class AnalysisExecutor implements IAnalysisExecutor {
         }
 
         // --- set metadata information of analysis
-        AnalysisExecutorHelper.setExecutionNumberInAnalysisResult(analysis, ok, isLowMemory, usedMemory);
+        this.errorMessage = AnalysisExecutorHelper.setExecutionNumberInAnalysisResult(analysis, ok, isLowMemory, usedMemory);
 
         // --- compute execution duration
         if (this.continueRun()) {
@@ -435,7 +435,7 @@ public abstract class AnalysisExecutor implements IAnalysisExecutor {
     protected boolean continueRun() {
         // MOD scorreia 2013-09-10 avoid checking for each analyzed row. Check only every 1000 rows
         checkContinueCount++;
-        if (checkContinueCount % Evaluator.CHECK_EVERY_N_COUNT != 0) {
+        if (getCheckContinueCount() % Evaluator.CHECK_EVERY_N_COUNT != 0) {
             return keepRunning;
         }
         if (!Platform.isRunning()) { // Reporting engine is working as library
@@ -453,6 +453,15 @@ public abstract class AnalysisExecutor implements IAnalysisExecutor {
             keepRunning = false;
         }
         return keepRunning;
+    }
+
+    /**
+     * Getter for checkContinueCount.
+     * 
+     * @return the checkContinueCount
+     */
+    public long getCheckContinueCount() {
+        return this.checkContinueCount;
     }
 
     /**
