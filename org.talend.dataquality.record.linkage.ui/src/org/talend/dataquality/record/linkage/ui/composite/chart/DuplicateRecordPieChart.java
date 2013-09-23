@@ -115,6 +115,9 @@ public class DuplicateRecordPieChart {
         plot.setOutlineVisible(false);
         plot.setMaximumLabelWidth(0.2D);
         plot.setCircular(false);
+        // remove the shadow of the pie chart
+        plot.setShadowXOffset(0);
+        plot.setShadowYOffset(0);
     }
 
     private static final int BASE_ITEM_LABEL_SIZE = 10;

@@ -100,6 +100,7 @@ public class BlockingKeyDataChart extends Composite {
         renderer.setBaseItemLabelGenerator(new StandardXYItemLabelGenerator());
         renderer.setBasePositiveItemLabelPosition(new ItemLabelPosition(ItemLabelAnchor.OUTSIDE12, TextAnchor.BASELINE_LEFT));
         renderer.setBaseNegativeItemLabelPosition(new ItemLabelPosition(ItemLabelAnchor.OUTSIDE12, TextAnchor.BASELINE_LEFT));
+        renderer.setShadowVisible(Boolean.FALSE);
 
         return chart;
     }

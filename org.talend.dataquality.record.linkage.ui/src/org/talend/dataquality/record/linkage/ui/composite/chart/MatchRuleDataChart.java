@@ -103,6 +103,9 @@ public class MatchRuleDataChart extends Composite {
         CustomRenderer customrenderer = new CustomRenderer(COLOR_LIST);
         customrenderer.setBaseItemLabelGenerator(new StandardCategoryItemLabelGenerator());
         customrenderer.setBaseItemLabelsVisible(true);
+        // remove the shadow
+        customrenderer.setShadowVisible(Boolean.FALSE);
+
         plot.setRenderer(customrenderer);
 
         CategoryAxis localCategoryAxis = plot.getDomainAxis();
@@ -164,10 +167,11 @@ public class MatchRuleDataChart extends Composite {
         this.groupSize2GroupFrequency = groupSize2GroupFrequencyNew;
         refresh();
     }
-/**
- * refresh the chart by old data
- * 
- */
+
+    /**
+     * refresh the chart by old data
+     * 
+     */
     public void refresh() {
         initChartData();
         jfreeChartComp.setChart(createChart(createDataset()));
