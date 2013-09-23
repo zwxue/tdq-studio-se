@@ -8,25 +8,24 @@ import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
-import org.talend.dataquality.record.linkage.utils.MatchAnalysisConstant;
 
 public class BlockingKeysTableLabelProvider extends LabelProvider implements ITableLabelProvider {
 
-    public static final String BLOCKING_KEY_NAME = MatchAnalysisConstant.BLOCKING_KEY_NAME;
+    public static final String BLOCKING_KEY_NAME = "BLOCKING_KEY_NAME";
 
-    public static final String PRECOLUMN = MatchAnalysisConstant.PRECOLUMN;
+    public static final String PRECOLUMN = "PRECOLUMN";
 
-    public static final String PRE_ALGO = MatchAnalysisConstant.PRE_ALGO;
+    public static final String PRE_ALGO = "PRE_ALGO";
 
-    public static final String PRE_VALUE = MatchAnalysisConstant.PRE_VALUE;
+    public static final String PRE_VALUE = "PRE_VALUE";
 
-    public static final String KEY_ALGO = MatchAnalysisConstant.KEY_ALGO;
+    public static final String KEY_ALGO = "KEY_ALGO";
 
-    public static final String KEY_VALUE = MatchAnalysisConstant.KEY_VALUE;
+    public static final String KEY_VALUE = "KEY_VALUE";
 
-    public static final String POST_ALGO = MatchAnalysisConstant.POST_ALGO;
+    public static final String POST_ALGO = "POST_ALGO";
 
-    public static final String POST_VALUE = MatchAnalysisConstant.POST_VALUE;
+    public static final String POST_VALUE = "POST_VALUE";
 
     public Image getColumnImage(Object element, int columnIndex) {
         Image warn = null;

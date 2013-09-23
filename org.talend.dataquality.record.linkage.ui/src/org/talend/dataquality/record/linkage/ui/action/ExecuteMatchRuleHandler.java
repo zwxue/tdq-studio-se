@@ -177,7 +177,7 @@ public class ExecuteMatchRuleHandler {
                 }
             } else {
                 Map<String, String> blockKeyDefMap = new HashMap<String, String>();
-                blockKeyDefMap.put(MatchAnalysisConstant.COLUMN, column);
+                blockKeyDefMap.put(MatchAnalysisConstant.PRECOLUMN, column);
                 blockKeySchema.add(blockKeyDefMap);
             }
         }

@@ -71,7 +71,7 @@ public class AbstractGenerateKey {
         StringBuffer winGenKey = new StringBuffer();
         // get algos for each columns
         for (Map<String, String> blockKey : BlockKeyDefinitions) {
-            String colName = blockKey.get(MatchAnalysisConstant.COLUMN);
+            String colName = blockKey.get(MatchAnalysisConstant.PRECOLUMN);
 
             String colValue = getAlgoForEachColumn(dataMap.get(colName), blockKey, parameters);
 

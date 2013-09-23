@@ -45,7 +45,7 @@ public class MatchRuleCellModifier extends AbstractMatchCellModifier<MatchKeyDef
                 if (!AttributeMatcherType.CUSTOM.name().equals(mkd.getAlgorithm().getAlgorithmType())) {
                     return false;
                 }
-            } else if (MatchAnalysisConstant.COLUMN.equalsIgnoreCase(property)) {
+            } else if (MatchAnalysisConstant.INPUT_COLUMN.equalsIgnoreCase(property)) {
                 return columnList.size() > 0;
             }
             return true;
@@ -114,7 +114,7 @@ public class MatchRuleCellModifier extends AbstractMatchCellModifier<MatchKeyDef
                     return;
                 }
                 mkd.getAlgorithm().setAlgorithmParameters(String.valueOf(value));
-            } else if (MatchAnalysisConstant.COLUMN.equalsIgnoreCase(property)) {
+            } else if (MatchAnalysisConstant.INPUT_COLUMN.equalsIgnoreCase(property)) {
                 if (Integer.parseInt(newValue) == -1) {
                     return;
                 }

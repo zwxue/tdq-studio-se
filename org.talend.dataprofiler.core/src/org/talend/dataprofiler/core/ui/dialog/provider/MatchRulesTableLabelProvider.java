@@ -9,21 +9,20 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
 import org.talend.dataquality.record.linkage.constant.AttributeMatcherType;
-import org.talend.dataquality.record.linkage.utils.MatchAnalysisConstant;
 
 public class MatchRulesTableLabelProvider extends LabelProvider implements ITableLabelProvider {
 
-    public static final String MATCH_KEY_NAME = MatchAnalysisConstant.MATCH_KEY_NAME;
+    public static final String MATCH_KEY_NAME = "MATCH_KEY_NAME";
 
-    public static final String INPUT_COLUMN = MatchAnalysisConstant.INPUT_COLUMN;
+    public static final String INPUT_COLUMN = "INPUT_COLUMN";
 
-    public static final String MATCHING_TYPE = MatchAnalysisConstant.MATCHING_TYPE;
+    public static final String MATCHING_TYPE = "MATCHING_TYPE";
 
-    public static final String CUSTOM_MATCHER = MatchAnalysisConstant.CUSTOM_MATCHER;
+    public static final String CUSTOM_MATCHER = "CUSTOM_MATCHER";
 
-    public static final String CONFIDENCE_WEIGHT = MatchAnalysisConstant.CONFIDENCE_WEIGHT;
+    public static final String CONFIDENCE_WEIGHT = "CONFIDENCE_WEIGHT";
 
-    public static final String HANDLE_NULL = MatchAnalysisConstant.HANDLE_NULL;
+    public static final String HANDLE_NULL = "HANDLE_NULL";
 
     public Image getColumnImage(Object element, int columnIndex) {
         Image warn = null;

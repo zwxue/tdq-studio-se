@@ -12,7 +12,7 @@
 // ============================================================================
 package org.talend.dq.analysis;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
 
 import java.net.URL;
 import java.util.List;
@@ -247,7 +247,7 @@ public class MatchAnalysisExecutorTest {
         // Add a blocking key: country
         BlockKeyDefinition blockKeyDef = RulesPackage.eINSTANCE.getRulesFactory().createBlockKeyDefinition();
         AlgorithmDefinition algoDef = RulesPackage.eINSTANCE.getRulesFactory().createAlgorithmDefinition();
-        algoDef.setAlgorithmType(AttributeMatcherType.exact.getLabel());
+        algoDef.setAlgorithmType(AttributeMatcherType.EXACT.name());
         blockKeyDef.setAlgorithm(algoDef);
         blockKeyDef.setColumn("country");
         blockKeyDef.setName("country");
@@ -320,7 +320,7 @@ public class MatchAnalysisExecutorTest {
         matchkeyDef.setColumn(nameVar);
 
         AlgorithmDefinition algoDef = RulesPackage.eINSTANCE.getRulesFactory().createAlgorithmDefinition();
-        algoDef.setAlgorithmType(AttributeMatcherType.levenshtein.getLabel());
+        algoDef.setAlgorithmType(AttributeMatcherType.LEVENSHTEIN.name());
         matchkeyDef.setAlgorithm(algoDef);
         matchkeyDef.setConfidenceWeight(1);
         matchRule.getMatchKeys().add(matchkeyDef);

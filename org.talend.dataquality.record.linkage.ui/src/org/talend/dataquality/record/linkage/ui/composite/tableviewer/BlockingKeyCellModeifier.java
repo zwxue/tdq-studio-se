@@ -50,7 +50,7 @@ public class BlockingKeyCellModeifier extends AbstractMatchCellModifier<BlockKey
             } else if (MatchAnalysisConstant.POST_VALUE.equalsIgnoreCase(property)) {
                 return BlockingKeyPostAlgorithmEnum.getTypeBySavedValue(bkd.getPostAlgorithm().getAlgorithmType())
                         .isTakeParameter();
-            } else if (MatchAnalysisConstant.COLUMN.equalsIgnoreCase(property)) {
+            } else if (MatchAnalysisConstant.PRECOLUMN.equalsIgnoreCase(property)) {
                 return columnList.size() > 0;
             }
             return true;
@@ -151,7 +151,7 @@ public class BlockingKeyCellModeifier extends AbstractMatchCellModifier<BlockKey
                     return;
                 }
                 bkd.getPostAlgorithm().setAlgorithmParameters(newValue);
-            } else if (MatchAnalysisConstant.COLUMN.equalsIgnoreCase(property)) {
+            } else if (MatchAnalysisConstant.PRECOLUMN.equalsIgnoreCase(property)) {
                 if (Integer.parseInt(newValue) == -1) {
                     return;
                 }
