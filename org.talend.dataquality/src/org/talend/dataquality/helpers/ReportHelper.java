@@ -24,7 +24,6 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.common.util.EList;
-import org.talend.core.model.process.IContext;
 import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.ResourceHelper;
 import org.talend.cwm.helper.TaggedValueHelper;
@@ -60,6 +59,8 @@ public final class ReportHelper {
     public static final String EVOLUTION = "Evolution"; // TODO externalize
 
     public static final String USER_DEFINED = "User defined"; // TODO externalize
+
+    private static final String DEFAULT = "Default"; //$NON-NLS-1$
 
     private static final TypedProperties PROPS = PropertiesLoader
             .getProperties(ReportHelper.class, "predefined_jrxml.properties"); //$NON-NLS-1$
@@ -1033,7 +1034,7 @@ public final class ReportHelper {
             contextGroupNameInUse = tdReport.getDefaultContext();
         }
         if (StringUtils.isEmpty(contextGroupNameInUse)) {
-            contextGroupNameInUse = IContext.DEFAULT;
+            contextGroupNameInUse = DEFAULT;
         }
         return contextGroupNameInUse;
     }

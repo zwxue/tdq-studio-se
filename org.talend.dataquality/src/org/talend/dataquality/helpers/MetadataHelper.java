@@ -18,7 +18,7 @@ import java.util.List;
 import org.apache.commons.lang.StringUtils;
 import org.talend.commons.bridge.ReponsitoryContextBridge;
 import org.talend.commons.emf.FactoriesUtil;
-import org.talend.commons.utils.VersionUtils;
+import org.talend.commons.utils.WorkspaceUtils;
 import org.talend.core.model.metadata.builder.connection.MetadataColumn;
 import org.talend.core.model.properties.Project;
 import org.talend.core.model.properties.Status;
@@ -295,7 +295,7 @@ public final class MetadataHelper {
     public static String getVersion(ModelElement element) {
         TaggedValue tv = TaggedValueHelper.getTaggedValue(TaggedValueHelper.VERSION, element.getTaggedValue());
         if (tv == null) {
-            return VersionUtils.DEFAULT_VERSION;
+            return WorkspaceUtils.DEFAULT_VERSION;
         }
         return tv.getValue();
     }

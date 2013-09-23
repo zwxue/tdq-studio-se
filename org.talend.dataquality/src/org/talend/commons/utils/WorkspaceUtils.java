@@ -13,20 +13,14 @@
 package org.talend.commons.utils;
 
 import java.io.File;
-import java.io.FileInputStream;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.common.util.URI;
-import org.talend.commons.exception.ExceptionHandler;
-import org.talend.core.repository.model.ProxyRepositoryFactory;
-import org.talend.repository.RepositoryWorkUnit;
-import org.talend.repository.model.RepositoryConstants;
 import org.talend.resource.ResourceManager;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
@@ -34,6 +28,19 @@ import orgomg.cwm.objectmodel.core.ModelElement;
  * DOC mzhao class global comment. Detailled comment
  */
 public final class WorkspaceUtils {
+
+    private static final String RESOURCE = "resource"; //$NON-NLS-1$
+
+    private static final String PLATFORM = "platform"; //$NON-NLS-1$
+
+    public static String SQL_EXTENSION = "sql"; //$NON-NLS-1$
+
+    public static final String NULL_FIELD = "Null field"; //$NON-NLS-1$
+
+    public static final String DEFAULT_VERSION = "0.1"; //$NON-NLS-1$
+
+    public static final String[] ITEM_FORBIDDEN_IN_LABEL = { "~", "!", "`", "#", "^", "&", "*", "\\", "/", "?", ":", ";", "\"", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$ //$NON-NLS-9$ //$NON-NLS-10$ //$NON-NLS-11$ //$NON-NLS-12$ //$NON-NLS-13$
+            ".", "(", ")", "，", "。", "'", "￥", "‘", "”", "、", "《", "，", "》", "<", ">", " " }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$ //$NON-NLS-9$ //$NON-NLS-10$ //$NON-NLS-11$ //$NON-NLS-12$ //$NON-NLS-13$ //$NON-NLS-14$ //$NON-NLS-15$ //$NON-NLS-16$
 
     private WorkspaceUtils() {
     }
@@ -72,9 +79,9 @@ public final class WorkspaceUtils {
     }
 
     /**
-     *
+     * 
      * Comment method "toFile".
-     *
+     * 
      * @param object
      * @return turn URI to File
      */
@@ -91,9 +98,9 @@ public final class WorkspaceUtils {
     }
 
     /**
-     *
+     * 
      * DOC mzhao convert emf resource to workspace resource.
-     *
+     * 
      * @param me ,modelElement of EObject
      * @return File this element links.
      */
@@ -104,9 +111,9 @@ public final class WorkspaceUtils {
     }
 
     /**
-     *
+     * 
      * convert emf resource to workspace resource.
-     *
+     * 
      * @param uri ,URI of EObject
      * @return File this element links.
      */
@@ -126,7 +133,7 @@ public final class WorkspaceUtils {
 
     /**
      * make the pathName to normal(replace the special forbidden chars to "_").
-     *
+     * 
      * @param pathName
      * @return
      */
@@ -135,41 +142,32 @@ public final class WorkspaceUtils {
             return pathName;
         }
         String label = pathName;
-        for (String toReplace : RepositoryConstants.ITEM_FORBIDDEN_IN_LABEL) {
+        for (String toReplace : ITEM_FORBIDDEN_IN_LABEL) {
             label = label.replace(toReplace, "_"); //$NON-NLS-1$
         }
         return label;
 
     }
 
-    /**
-     *
-     * create a IFile from File inputStream.
-     *
-     * @param sourceFile
-     * @param targetIFile
-     * @param message
-     */
-    public static void createIFileFromFile(File sourceFile, IFile targetIFile, String message) {
-        final IFile ifile = targetIFile;
-        final File srcFile = sourceFile;
-        RepositoryWorkUnit<Object> workUnit = new RepositoryWorkUnit<Object>(message) {
-            @Override
-            protected void run() {
-                try {
-                    File targetfile = ifileToFile(ifile);
-                    if (!targetfile.exists() || srcFile.lastModified() > targetfile.lastModified()) {
-                        FileInputStream fileInputStream = new FileInputStream(srcFile);
-                        ifile.create(fileInputStream, Boolean.TRUE, new NullProgressMonitor());
-                        fileInputStream.close();
-                    }
-                } catch (Exception e) {
-                    ExceptionHandler.process(e);
-                }
-            }
-        };
-        workUnit.setAvoidUnloadResources(true);
-        ProxyRepositoryFactory.getInstance().executeRepositoryWorkUnit(workUnit);
+    public static IFile getFile(URI uri) {
+        IPath path = convert(uri);
+        if (path != null) {
+            return ResourcesPlugin.getWorkspace().getRoot().getFile(path);
+        }
+        return null;
+    }
 
+    public static IPath convert(URI uri) {
+        if (PLATFORM.equals(uri.scheme()) && uri.segmentCount() > 1 && RESOURCE.equals(uri.segment(0))) {
+            StringBuffer platformResourcePath = new StringBuffer();
+            for (int i = 1, size = uri.segmentCount(); i < size; ++i) {
+                platformResourcePath.append('/');
+                platformResourcePath.append(URI.decode(uri.segment(i)));
+            }
+
+            return new Path(platformResourcePath.toString());
+        }
+
+        return null;
     }
 }

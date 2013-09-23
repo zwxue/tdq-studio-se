@@ -65,8 +65,6 @@ Require-Bundle: org.talend.utils,
  org.apache.commons.lang,
  org.talend.model;visibility:=reexport,
  org.talend.dataquality.matching,
- org.talend.core.repository,
- org.talend.core.runtime,
  org.talend.libraries.google.libphonumber
 Bundle-ActivationPolicy: lazy
 Eclipse-RegisterBuddy: org.apache.log4j,org.talend.testutils

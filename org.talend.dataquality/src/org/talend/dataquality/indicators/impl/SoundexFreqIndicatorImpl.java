@@ -15,7 +15,7 @@ import org.apache.log4j.Logger;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
-import org.talend.commons.utils.SpecialValueDisplay;
+import org.talend.commons.utils.WorkspaceUtils;
 import org.talend.dataquality.PluginConstant;
 import org.talend.dataquality.helpers.IndicatorHelper;
 import org.talend.dataquality.indicators.IndicatorsPackage;
@@ -28,10 +28,11 @@ import org.talend.utils.collections.MapValueSorter;
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link org.talend.dataquality.indicators.impl.SoundexFreqIndicatorImpl#getValueToDistinctFreq <em>Value To Distinct Freq</em>}</li>
+ * <li>{@link org.talend.dataquality.indicators.impl.SoundexFreqIndicatorImpl#getValueToDistinctFreq <em>Value To
+ * Distinct Freq</em>}</li>
  * </ul>
  * </p>
- *
+ * 
  * @generated
  */
 public class SoundexFreqIndicatorImpl extends FrequencyIndicatorImpl implements SoundexFreqIndicator {
@@ -60,6 +61,7 @@ public class SoundexFreqIndicatorImpl extends FrequencyIndicatorImpl implements 
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     protected SoundexFreqIndicatorImpl() {
@@ -68,6 +70,7 @@ public class SoundexFreqIndicatorImpl extends FrequencyIndicatorImpl implements 
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
@@ -77,6 +80,7 @@ public class SoundexFreqIndicatorImpl extends FrequencyIndicatorImpl implements 
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public HashMap<Object, Long> getValueToDistinctFreq() {
@@ -85,13 +89,15 @@ public class SoundexFreqIndicatorImpl extends FrequencyIndicatorImpl implements 
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     public void setValueToDistinctFreq(HashMap<Object, Long> newValueToDistinctFreq) {
         HashMap<Object, Long> oldValueToDistinctFreq = valueToDistinctFreq;
         valueToDistinctFreq = newValueToDistinctFreq;
         if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, IndicatorsPackage.SOUNDEX_FREQ_INDICATOR__VALUE_TO_DISTINCT_FREQ, oldValueToDistinctFreq, valueToDistinctFreq));
+            eNotify(new ENotificationImpl(this, Notification.SET,
+                    IndicatorsPackage.SOUNDEX_FREQ_INDICATOR__VALUE_TO_DISTINCT_FREQ, oldValueToDistinctFreq, valueToDistinctFreq));
     }
 
     /**
@@ -101,7 +107,8 @@ public class SoundexFreqIndicatorImpl extends FrequencyIndicatorImpl implements 
      */
     public Long getDistinctCount(Object dataValue) {
         // MOD xqliu 2009-07-01 bug 7068
-        Long freq = this.valueToDistinctFreq == null || this.valueToDistinctFreq.size() ==0 ? null : this.valueToDistinctFreq.get(dataValue);
+        Long freq = this.valueToDistinctFreq == null || this.valueToDistinctFreq.size() == 0 ? null : this.valueToDistinctFreq
+                .get(dataValue);
         // ~
         return (freq == null) ? 0L : freq;
 
@@ -109,66 +116,73 @@ public class SoundexFreqIndicatorImpl extends FrequencyIndicatorImpl implements 
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
     public Object eGet(int featureID, boolean resolve, boolean coreType) {
         switch (featureID) {
-            case IndicatorsPackage.SOUNDEX_FREQ_INDICATOR__VALUE_TO_DISTINCT_FREQ:
-                return getValueToDistinctFreq();
+        case IndicatorsPackage.SOUNDEX_FREQ_INDICATOR__VALUE_TO_DISTINCT_FREQ:
+            return getValueToDistinctFreq();
         }
         return super.eGet(featureID, resolve, coreType);
     }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @SuppressWarnings("unchecked")
     @Override
     public void eSet(int featureID, Object newValue) {
         switch (featureID) {
-            case IndicatorsPackage.SOUNDEX_FREQ_INDICATOR__VALUE_TO_DISTINCT_FREQ:
-                setValueToDistinctFreq((HashMap<Object, Long>)newValue);
-                return;
+        case IndicatorsPackage.SOUNDEX_FREQ_INDICATOR__VALUE_TO_DISTINCT_FREQ:
+            setValueToDistinctFreq((HashMap<Object, Long>) newValue);
+            return;
         }
         super.eSet(featureID, newValue);
     }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
     public void eUnset(int featureID) {
         switch (featureID) {
-            case IndicatorsPackage.SOUNDEX_FREQ_INDICATOR__VALUE_TO_DISTINCT_FREQ:
-                setValueToDistinctFreq(VALUE_TO_DISTINCT_FREQ_EDEFAULT);
-                return;
+        case IndicatorsPackage.SOUNDEX_FREQ_INDICATOR__VALUE_TO_DISTINCT_FREQ:
+            setValueToDistinctFreq(VALUE_TO_DISTINCT_FREQ_EDEFAULT);
+            return;
         }
         super.eUnset(featureID);
     }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
     public boolean eIsSet(int featureID) {
         switch (featureID) {
-            case IndicatorsPackage.SOUNDEX_FREQ_INDICATOR__VALUE_TO_DISTINCT_FREQ:
-                return VALUE_TO_DISTINCT_FREQ_EDEFAULT == null ? valueToDistinctFreq != null : !VALUE_TO_DISTINCT_FREQ_EDEFAULT.equals(valueToDistinctFreq);
+        case IndicatorsPackage.SOUNDEX_FREQ_INDICATOR__VALUE_TO_DISTINCT_FREQ:
+            return VALUE_TO_DISTINCT_FREQ_EDEFAULT == null ? valueToDistinctFreq != null : !VALUE_TO_DISTINCT_FREQ_EDEFAULT
+                    .equals(valueToDistinctFreq);
         }
         return super.eIsSet(featureID);
     }
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
     public String toString() {
-        if (eIsProxy()) return super.toString();
+        if (eIsProxy())
+            return super.toString();
 
         StringBuffer result = new StringBuffer(super.toString());
         result.append(" (valueToDistinctFreq: ");
@@ -189,9 +203,7 @@ public class SoundexFreqIndicatorImpl extends FrequencyIndicatorImpl implements 
         // handle case when no row is returned because there is no value.
         if (objects.isEmpty()) {
             if (log.isInfoEnabled()) {
-                log
-                        .info("Query for soundex frequency table did not return any result. "
-                                + "Check the options of this indicator.");
+                log.info("Query for soundex frequency table did not return any result. " + "Check the options of this indicator.");
             }
             this.setValueToFreq(new HashMap<Object, Long>());
             return true;
@@ -238,7 +250,7 @@ public class SoundexFreqIndicatorImpl extends FrequencyIndicatorImpl implements 
 
         this.setValueToFreq(mapVal2Freq);
         this.setValueToDistinctFreq(mapVal2DistinctFreq);
-        
+
         return true;
     }
 
@@ -261,85 +273,82 @@ public class SoundexFreqIndicatorImpl extends FrequencyIndicatorImpl implements 
     }
 
     /*
-     * Run as JavaEngine.Set ValueToFreq and ValueToDistinctFreq
-     * Add by qiongli 2010-6-22,bug 13654
+     * Run as JavaEngine.Set ValueToFreq and ValueToDistinctFreq Add by qiongli 2010-6-22,bug 13654
      */
 
-    protected void soundexForJavaEngine(){
-		Iterator<Object> iterator = this.getValueToFreq().keySet().iterator();
-		Soundex sd = new Soundex();
-		HashMap<Object, Long> disctinctVfMap = new HashMap<Object, Long>();
-		List<String[]> valueToFreqLs = new ArrayList<String[]>();
-		
-		while (iterator.hasNext()) {
-			String array[] = new String[3];
-			Object obj = iterator.next();
-			if (obj == null) {
-				array[0] = null;
-				array[2] = String.valueOf(0);// distinct count
-			} else {
-				array[0] = obj.toString();
-				array[2] = String.valueOf(1);
-			}
-			try {
-				array[1] = sd.soundex(array[0]);// soundex value
-			} catch (IllegalArgumentException ex) {
-				log.warn("Soundex algorithm do not support the charactors: "
-						+ array[0]);
-				continue;
-			}
-			valueToFreqLs.add(array);
-		}
-		
-		String foreArray[] = null;
-		String afterArray[] = null;
-		HashMap<Object, Long> vfMap = new HashMap<Object, Long>();
-		// remove duplicate key of valueToFreqLs, and get total count every key for valueToFreq.
-		for (int i = 0; i < valueToFreqLs.size(); i++) {
-			foreArray = (String[]) valueToFreqLs.get(i);
-			//MOD qiongli 7-21
-			if (foreArray[0] == null) {
-				disctinctVfMap.put(SpecialValueDisplay.NULL_FIELD, Long
-						.valueOf(foreArray[2]));
-				vfMap.put(SpecialValueDisplay.NULL_FIELD, valueToFreq
-						.get(foreArray[0]));
-				continue;
-			}
-			vfMap.put(foreArray[0], valueToFreq.get(foreArray[0]));
-			for (int j = i + 1; j < valueToFreqLs.size(); j++) {
-				afterArray = (String[]) valueToFreqLs.get(j);
-				if (afterArray[0] == null) {
-					continue;
-				}
-				if (afterArray[1].equals(foreArray[1])) {
-					foreArray[2] = Long.valueOf(foreArray[2]).intValue() + 1+ "";
-					valueToFreqLs.remove(afterArray);
-					j--;
-					Long newLong = Long.valueOf(vfMap.get(foreArray[0])
-							.longValue()+ valueToFreq.get(afterArray[0]).longValue());
-					vfMap.remove(foreArray[0]);
-					//same as function max in sql engine
-					if(foreArray[0].compareTo(afterArray[0])<0)
-						foreArray[0]=afterArray[0];
-					vfMap.put(foreArray[0], newLong);
-				}
-			}
-			disctinctVfMap.put(foreArray[0], Long.valueOf(foreArray[2]));
-		}
-		setValueToFreq(vfMap);
-		setValueToDistinctFreq(disctinctVfMap);
+    protected void soundexForJavaEngine() {
+        Iterator<Object> iterator = this.getValueToFreq().keySet().iterator();
+        Soundex sd = new Soundex();
+        HashMap<Object, Long> disctinctVfMap = new HashMap<Object, Long>();
+        List<String[]> valueToFreqLs = new ArrayList<String[]>();
+
+        while (iterator.hasNext()) {
+            String array[] = new String[3];
+            Object obj = iterator.next();
+            if (obj == null) {
+                array[0] = null;
+                array[2] = String.valueOf(0);// distinct count
+            } else {
+                array[0] = obj.toString();
+                array[2] = String.valueOf(1);
+            }
+            try {
+                array[1] = sd.soundex(array[0]);// soundex value
+            } catch (IllegalArgumentException ex) {
+                log.warn("Soundex algorithm do not support the charactors: " + array[0]);
+                continue;
+            }
+            valueToFreqLs.add(array);
+        }
+
+        String foreArray[] = null;
+        String afterArray[] = null;
+        HashMap<Object, Long> vfMap = new HashMap<Object, Long>();
+        // remove duplicate key of valueToFreqLs, and get total count every key for valueToFreq.
+        for (int i = 0; i < valueToFreqLs.size(); i++) {
+            foreArray = (String[]) valueToFreqLs.get(i);
+            // MOD qiongli 7-21
+            if (foreArray[0] == null) {
+                disctinctVfMap.put(WorkspaceUtils.NULL_FIELD, Long.valueOf(foreArray[2]));
+                vfMap.put(WorkspaceUtils.NULL_FIELD, valueToFreq.get(foreArray[0]));
+                continue;
+            }
+            vfMap.put(foreArray[0], valueToFreq.get(foreArray[0]));
+            for (int j = i + 1; j < valueToFreqLs.size(); j++) {
+                afterArray = (String[]) valueToFreqLs.get(j);
+                if (afterArray[0] == null) {
+                    continue;
+                }
+                if (afterArray[1].equals(foreArray[1])) {
+                    foreArray[2] = Long.valueOf(foreArray[2]).intValue() + 1 + "";
+                    valueToFreqLs.remove(afterArray);
+                    j--;
+                    Long newLong = Long.valueOf(vfMap.get(foreArray[0]).longValue() + valueToFreq.get(afterArray[0]).longValue());
+                    vfMap.remove(foreArray[0]);
+                    // same as function max in sql engine
+                    if (foreArray[0].compareTo(afterArray[0]) < 0)
+                        foreArray[0] = afterArray[0];
+                    vfMap.put(foreArray[0], newLong);
+                }
+            }
+            disctinctVfMap.put(foreArray[0], Long.valueOf(foreArray[2]));
+        }
+        setValueToFreq(vfMap);
+        setValueToDistinctFreq(disctinctVfMap);
     }
+
     /*
      * (non-Javadoc)
+     * 
      * @see org.talend.dataquality.indicators.impl.FrequencyIndicatorImpl#finalizeComputation()
      */
     @Override
     public boolean finalizeComputation() {
         final int topN = (parameters != null) ? parameters.getTopN() : PluginConstant.DEFAULT_TOP_N;
         soundexForJavaEngine();
-		MapValueSorter mvs = new MapValueSorter();
-		List<Object> ls = mvs.sortMap(this.valueToDistinctFreq, false);
-		List<Object> mostDistinctFrequent = getOrderElements(ls, topN, false);
+        MapValueSorter mvs = new MapValueSorter();
+        List<Object> ls = mvs.sortMap(this.valueToDistinctFreq, false);
+        List<Object> mostDistinctFrequent = getOrderElements(ls, topN, false);
         HashMap<Object, Long> map = new HashMap<Object, Long>();
         for (Object object : mostDistinctFrequent) {
             map.put(object, valueToFreq.get(object));
@@ -347,44 +356,39 @@ public class SoundexFreqIndicatorImpl extends FrequencyIndicatorImpl implements 
         this.setValueToFreq(map);
         return true;
     }
-    
+
     /*
-     * ADD qiongli 2010-6-22,bug 13654
-     * For java engine:Order by valueToDistinctFreq ,then order by valueToFreq
+     * ADD qiongli 2010-6-22,bug 13654 For java engine:Order by valueToDistinctFreq ,then order by valueToFreq
      */
-    
-    protected List<Object> getOrderElements(final List<Object> sortedMap, int bottomN,boolean asc) {
-		List<Object> frequentLs = new ArrayList<Object>();
-		int i = 0;
-		Object obj1 = null;
-		Object obj2 = null;
-		Object temp = null;
-		for (int m = 0; m < sortedMap.size(); m++) {
-			obj1 = sortedMap.get(m);
-			for (int n = m + 1; n < sortedMap.size(); n++) {
-				obj2 = sortedMap.get(n);
-				if (this.valueToDistinctFreq.get(obj1).equals(
-						this.valueToDistinctFreq.get(obj2))) {
-					if (!asc && valueToFreq.get(obj1) < valueToFreq.get(obj2)
-							|| asc
-							&& valueToFreq.get(obj1) > valueToFreq.get(obj2)) {
-						temp = obj1;
-						obj1 = obj2;
-						obj2 = temp;
-						sortedMap.set(n, temp);
-						sortedMap.set(m, obj1);
-					}
-				}
-			}
-			frequentLs.add(obj1);
-			i++;
-			if (i == bottomN) {
-				break;
-			}
-		}
-		return frequentLs;
+
+    protected List<Object> getOrderElements(final List<Object> sortedMap, int bottomN, boolean asc) {
+        List<Object> frequentLs = new ArrayList<Object>();
+        int i = 0;
+        Object obj1 = null;
+        Object obj2 = null;
+        Object temp = null;
+        for (int m = 0; m < sortedMap.size(); m++) {
+            obj1 = sortedMap.get(m);
+            for (int n = m + 1; n < sortedMap.size(); n++) {
+                obj2 = sortedMap.get(n);
+                if (this.valueToDistinctFreq.get(obj1).equals(this.valueToDistinctFreq.get(obj2))) {
+                    if (!asc && valueToFreq.get(obj1) < valueToFreq.get(obj2) || asc
+                            && valueToFreq.get(obj1) > valueToFreq.get(obj2)) {
+                        temp = obj1;
+                        obj1 = obj2;
+                        obj2 = temp;
+                        sortedMap.set(n, temp);
+                        sortedMap.set(m, obj1);
+                    }
+                }
+            }
+            frequentLs.add(obj1);
+            i++;
+            if (i == bottomN) {
+                break;
+            }
+        }
+        return frequentLs;
     }
-
-
 
 } // SoundexFreqIndicatorImpl

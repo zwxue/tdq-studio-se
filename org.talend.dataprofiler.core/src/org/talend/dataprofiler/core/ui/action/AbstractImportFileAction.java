@@ -22,7 +22,6 @@ import org.eclipse.ui.cheatsheets.ICheatSheetAction;
 import org.eclipse.ui.cheatsheets.ICheatSheetManager;
 import org.talend.commons.exception.ExceptionHandler;
 import org.talend.commons.utils.VersionUtils;
-import org.talend.commons.utils.WorkspaceUtils;
 import org.talend.core.model.properties.Item;
 import org.talend.core.model.properties.PropertiesFactory;
 import org.talend.core.model.properties.Property;
@@ -31,6 +30,7 @@ import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
+import org.talend.dataprofiler.core.helper.WorkspaceResourceHelper;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dq.helper.FileUtils;
 import org.talend.repository.model.IProxyRepositoryFactory;
@@ -39,9 +39,9 @@ import org.talend.resource.ResourceManager;
 
 /**
  * DOC bZhou class global comment. Detailled comment <br/>
- *
+ * 
  * $Id: talend.epf 55206 2011-02-15 17:32:14Z bzhou $
- *
+ * 
  */
 public abstract class AbstractImportFileAction extends Action implements ICheatSheetAction {
 
@@ -54,7 +54,7 @@ public abstract class AbstractImportFileAction extends Action implements ICheatS
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see org.eclipse.jface.action.Action#run()
      */
     @Override
@@ -72,7 +72,7 @@ public abstract class AbstractImportFileAction extends Action implements ICheatS
                         if (file.getName().endsWith(PluginConstant.JASPER_STRING)) {
                             // TDQ-7451 Replace File copy with eclipse IFile create.make svn could syn and control.
                             IFile targetFile = ResourceManager.getJRXMLFolder().getFile(path.append(file.getName()));
-                            WorkspaceUtils.createIFileFromFile(file, targetFile,
+                            WorkspaceResourceHelper.createIFileFromFile(file, targetFile,
                                     DefaultMessagesImpl.getString("AbstractImportFileAction.importJasperFile", file.getName())); //$NON-NLS-1$
                         } else {
                             createItem(file, path);
@@ -92,7 +92,7 @@ public abstract class AbstractImportFileAction extends Action implements ICheatS
 
     /**
      * DOC bZhou Comment method "createItem".
-     *
+     * 
      * @param initFile
      * @param path
      * @return
@@ -128,7 +128,7 @@ public abstract class AbstractImportFileAction extends Action implements ICheatS
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see org.eclipse.ui.cheatsheets.ICheatSheetAction#run(java.lang.String[],
      * org.eclipse.ui.cheatsheets.ICheatSheetManager)
      */

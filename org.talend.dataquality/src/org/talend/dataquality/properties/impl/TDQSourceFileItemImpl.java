@@ -6,7 +6,7 @@
 package org.talend.dataquality.properties.impl;
 
 import org.eclipse.emf.ecore.EClass;
-import org.talend.core.repository.constants.FileConstants;
+import org.talend.commons.utils.WorkspaceUtils;
 import org.talend.dataquality.properties.PropertiesPackage;
 import org.talend.dataquality.properties.TDQSourceFileItem;
 
@@ -15,13 +15,14 @@ import org.talend.dataquality.properties.TDQSourceFileItem;
  * end-user-doc -->
  * <p>
  * </p>
- *
+ * 
  * @generated
  */
 public class TDQSourceFileItemImpl extends TDQFileItemImpl implements TDQSourceFileItem {
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     protected TDQSourceFileItemImpl() {
@@ -30,6 +31,7 @@ public class TDQSourceFileItemImpl extends TDQFileItemImpl implements TDQSourceF
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
@@ -39,7 +41,7 @@ public class TDQSourceFileItemImpl extends TDQFileItemImpl implements TDQSourceF
 
     @Override
     public String getFileExtension() {
-        return FileConstants.SQL_EXTENSION;
+        return WorkspaceUtils.SQL_EXTENSION;
     }
 
 } // TDQSourceFileItemImpl

@@ -13,6 +13,7 @@
 package org.talend.dataprofiler.core.helper;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.net.URL;
 import java.util.Enumeration;
 import java.util.List;
@@ -24,6 +25,7 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Plugin;
@@ -34,6 +36,7 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.navigator.CommonViewer;
 import org.eclipse.ui.part.FileEditorInput;
+import org.talend.commons.exception.ExceptionHandler;
 import org.talend.commons.utils.WorkspaceUtils;
 import org.talend.core.model.properties.FolderItem;
 import org.talend.core.model.properties.Item;
@@ -50,6 +53,7 @@ import org.talend.dq.nodes.JrxmlTempleteRepNode;
 import org.talend.dq.nodes.SourceFileRepNode;
 import org.talend.dq.nodes.SourceFileSubFolderNode;
 import org.talend.repository.ProjectManager;
+import org.talend.repository.RepositoryWorkUnit;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.resource.ResourceManager;
@@ -290,5 +294,37 @@ public final class WorkspaceResourceHelper {
         } else {
             CorePlugin.getDefault().refreshDQView(recursiveFind);
         }
+    }
+
+    /**
+     * 
+     * create a IFile from File inputStream.
+     * 
+     * @param sourceFile
+     * @param targetIFile
+     * @param message
+     */
+    public static void createIFileFromFile(File sourceFile, IFile targetIFile, String message) {
+        final IFile ifile = targetIFile;
+        final File srcFile = sourceFile;
+        RepositoryWorkUnit<Object> workUnit = new RepositoryWorkUnit<Object>(message) {
+
+            @Override
+            protected void run() {
+                try {
+                    File targetfile = WorkspaceUtils.ifileToFile(ifile);
+                    if (!targetfile.exists() || srcFile.lastModified() > targetfile.lastModified()) {
+                        FileInputStream fileInputStream = new FileInputStream(srcFile);
+                        ifile.create(fileInputStream, Boolean.TRUE, new NullProgressMonitor());
+                        fileInputStream.close();
+                    }
+                } catch (Exception e) {
+                    ExceptionHandler.process(e);
+                }
+            }
+        };
+        workUnit.setAvoidUnloadResources(true);
+        ProxyRepositoryFactory.getInstance().executeRepositoryWorkUnit(workUnit);
+
     }
 }

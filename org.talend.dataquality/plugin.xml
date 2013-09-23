@@ -103,12 +103,6 @@
       </parser>
    </extension>
    <extension
-         point="org.talend.core.runtime.dq_EMFModel_provider">
-      <dqEMFModel
-            class="org.talend.commons.emf.InitialDQModelPackagesService">
-      </dqEMFModel>
-   </extension>
-   <extension
          point="org.eclipse.emf.ecore.generated_package">
       <package
             class="org.talend.dataquality.indicators.definition.userdefine.UserdefinePackage"
