@@ -83,7 +83,18 @@ public class AbstractRecordGroupingTest {
         matchingRule.add(accountRecords);
 
         recordGroup.addMatchRule(matchingRule);
-        recordGroup.initialize();
+        try {
+            recordGroup.initialize();
+        } catch (InstantiationException e) {
+            log.error(e.getMessage(), e);
+            Assert.fail();
+        } catch (IllegalAccessException e) {
+            log.error(e.getMessage(), e);
+            Assert.fail();
+        } catch (ClassNotFoundException e) {
+            log.error(e.getMessage(), e);
+            Assert.fail();
+        }
 
         recordGroup.setIsOutputDistDetails(true);
         recordGroup.setAcceptableThreshold(0.95f);
@@ -142,7 +153,18 @@ public class AbstractRecordGroupingTest {
      */
     private void testGroupQuality() {
         // Test group quality
-        recordGroup.initialize();
+        try {
+            recordGroup.initialize();
+        } catch (InstantiationException e) {
+            log.error(e.getMessage(), e);
+            Assert.fail();
+        } catch (IllegalAccessException e) {
+            log.error(e.getMessage(), e);
+            Assert.fail();
+        } catch (ClassNotFoundException e) {
+            log.error(e.getMessage(), e);
+            Assert.fail();
+        }
         groupingRecords.clear();
         recordGroup.setSeperateOutput(Boolean.TRUE);
         recordGroup.setIsOutputDistDetails(true);
@@ -209,7 +231,18 @@ public class AbstractRecordGroupingTest {
 
         recordGroup.addMatchRule(matchingRule);
         recordGroup.setIsOutputDistDetails(true);
-        recordGroup.initialize();
+        try {
+            recordGroup.initialize();
+        } catch (InstantiationException e) {
+            log.error(e.getMessage(), e);
+            Assert.fail();
+        } catch (IllegalAccessException e) {
+            log.error(e.getMessage(), e);
+            Assert.fail();
+        } catch (ClassNotFoundException e) {
+            log.error(e.getMessage(), e);
+            Assert.fail();
+        }
 
         // loop on all input rows.
         try {
