@@ -24,8 +24,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.talend.core.GlobalServiceRegister;
-import org.talend.core.ITDQRepositoryService;
 import org.talend.core.model.metadata.builder.connection.MetadataColumn;
 import org.talend.cwm.db.connection.DatabaseSQLExecutor;
 import org.talend.cwm.db.connection.DelimitedFileSQLExecutor;
@@ -49,7 +47,7 @@ import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
- * created by zhao on Aug 20, 2013 Detailled comment
+ * execute the match analysis
  * 
  */
 public class MatchAnalysisExecutor implements IAnalysisExecutor {
@@ -140,8 +138,6 @@ public class MatchAnalysisExecutor implements IAnalysisExecutor {
         // --- set metadata information of analysis
         AnalysisExecutorHelper.setExecutionNumberInAnalysisResult(analysis, true, isLowMemory, usedMemory);
 
-        refreshTableWithMatchFullResult(analysis, returnCode.getObject());
-
         // --- compute execution duration
         if (this.continueRun()) {
             long endtime = System.currentTimeMillis();
@@ -151,25 +147,6 @@ public class MatchAnalysisExecutor implements IAnalysisExecutor {
         }
 
         return rc;
-    }
-
-    /**
-     * refresh Table With Match Full Result .
-     * 
-     * @param analysis
-     * 
-     * @param matchResultConsumer
-     */
-    private void refreshTableWithMatchFullResult(Analysis analysis, MatchGroupResultConsumer matchResultConsumer) {
-        ITDQRepositoryService tdqRepService = null;
-
-        if (GlobalServiceRegister.getDefault().isServiceRegistered(ITDQRepositoryService.class)) {
-            tdqRepService = (ITDQRepositoryService) GlobalServiceRegister.getDefault().getService(ITDQRepositoryService.class);
-        }
-        if (tdqRepService != null) {
-            tdqRepService.refreshTableWithResult(analysis, matchResultConsumer.getFullMatchResult());
-        }
-
     }
 
     /**
