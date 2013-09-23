@@ -25,7 +25,7 @@ import org.talend.dataquality.record.linkage.constant.RecordMatcherType;
 
 /**
  * created by scorreia on Jan 17, 2013 Detailled comment
- *
+ * 
  */
 public class CombinedRecordMatcherTest {
 
@@ -147,7 +147,7 @@ public class CombinedRecordMatcherTest {
 
     /**
      * DOC scorreia Comment method "compare".
-     *
+     * 
      * @param m1
      * @param m2
      */
@@ -264,6 +264,9 @@ public class CombinedRecordMatcherTest {
     public void testSetAttributeMatchers() {
         for (RecordMatcherType type : RecordMatcherType.values()) {
             IRecordMatcher recMatcher = RecordMatcherFactory.createMatcher(type, ATTRIBUTEMATCHERALGORITHMS, ATTRIBUTEWEIGHTS_1);
+            if (recMatcher == null) {
+                continue;
+            }
             checkAttributeMatching(1.0d, recMatcher);
             Assert.assertTrue(recMatcher.setAttributeWeights(new double[] { 3, 2, 0, 3 }));
             CombinedRecordMatcher combMatcher = RecordMatcherFactory.createCombinedRecordMatcher();
