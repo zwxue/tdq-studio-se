@@ -54,7 +54,7 @@ import orgomg.cwm.resource.relational.Schema;
 
 /**
  * created by zshen on Apr 23, 2013 Detailled comment
- *
+ * 
  */
 public class ExportConnectionToTOSActionRealTest {
 
@@ -82,7 +82,7 @@ public class ExportConnectionToTOSActionRealTest {
 
     /**
      * DOC zshen Comment method "setUpBeforeClass".
-     *
+     * 
      * @throws java.lang.Exception
      */
     @BeforeClass
@@ -98,7 +98,7 @@ public class ExportConnectionToTOSActionRealTest {
 
     /**
      * DOC zshen Comment method "tearDownAfterClass".
-     *
+     * 
      * @throws java.lang.Exception
      */
     @AfterClass
@@ -110,9 +110,6 @@ public class ExportConnectionToTOSActionRealTest {
             repositoryContext.setProject(originalProject);
         }
     }
-
-
-
 
     private static Catalog addCataPackage(String packageName, DatabaseConnectionItem connItem) throws PersistenceException {
         Connection connection = connItem.getConnection();
@@ -158,7 +155,7 @@ public class ExportConnectionToTOSActionRealTest {
 
     /**
      * DOC zshen Comment method "initPackageList".
-     *
+     * 
      * @param packageList
      * @throws PersistenceException
      */
@@ -174,7 +171,7 @@ public class ExportConnectionToTOSActionRealTest {
 
     /**
      * DOC zshen Comment method "initPackageList".
-     *
+     * 
      * @param packageList
      * @throws PersistenceException
      */
@@ -186,7 +183,7 @@ public class ExportConnectionToTOSActionRealTest {
 
     /**
      * DOC zshen Comment method "initPackageList".
-     *
+     * 
      * @param packageList
      * @throws PersistenceException
      */
@@ -198,7 +195,7 @@ public class ExportConnectionToTOSActionRealTest {
 
     /**
      * DOC zshen Comment method "addSchePackage".
-     *
+     * 
      * @param string
      * @param catalog1
      * @return
@@ -211,7 +208,7 @@ public class ExportConnectionToTOSActionRealTest {
 
     /**
      * DOC zshen Comment method "addSchePackage".
-     *
+     * 
      * @param string
      * @param catalog1
      * @return
@@ -222,12 +219,11 @@ public class ExportConnectionToTOSActionRealTest {
         return createSchema;
     }
 
-
     /**
      * Test method for {@link org.talend.dataprofiler.core.ui.action.actions.ExportConnectionToTOSAction#run()}.
-     *
+     * 
      * @throws PersistenceException
-     *
+     * 
      * case1: create new connection from catalog case
      */
     @Test
@@ -245,13 +241,14 @@ public class ExportConnectionToTOSActionRealTest {
         createAction.run();
 
         List<IRepositoryViewObject> all = factory.getAll(ERepositoryObjectType.METADATA_CONNECTIONS, false);
+        Assert.assertTrue(all.size() == 2);
         IRepositoryViewObject lastVersion = all.get(1);
         DatabaseConnectionItem item = (DatabaseConnectionItem) lastVersion.getProperty().getItem();
         Connection newConnection = item.getConnection();
         Catalog exportedCatalog = CatalogHelper.getCatalog(newConnection, catalog1.getName());
-        Assert.assertTrue(exportedCatalog != null);
         Assert.assertTrue(newConnection.getLabel().equals(
                 createOldConnectionItem.getConnection().getLabel() + "_" + catalog1.getName())); //$NON-NLS-1$
+        Assert.assertTrue(exportedCatalog != null);
         Assert.assertTrue(exportedCatalog != catalog1);
         factory.deleteObjectPhysical(lastVersion);
         factory.deleteObjectPhysical(all.get(0));
@@ -259,9 +256,9 @@ public class ExportConnectionToTOSActionRealTest {
 
     /**
      * Test method for {@link org.talend.dataprofiler.core.ui.action.actions.ExportConnectionToTOSAction#run()}.
-     *
+     * 
      * @throws PersistenceException
-     *
+     * 
      * case2: create new connection from schema below catalog case
      */
     @Test
@@ -294,9 +291,9 @@ public class ExportConnectionToTOSActionRealTest {
 
     /**
      * Test method for {@link org.talend.dataprofiler.core.ui.action.actions.ExportConnectionToTOSAction#run()}.
-     *
+     * 
      * @throws PersistenceException
-     *
+     * 
      * case3: create new connection from only schema case
      */
     @Test
@@ -331,8 +328,6 @@ public class ExportConnectionToTOSActionRealTest {
         factory.deleteObjectPhysical(all.get(0));
     }
 
-
-
     class MetadataConnectionMatcher extends BaseMatcher<IMetadataConnection> {
 
         private Package comparePackage = null;
@@ -343,7 +338,7 @@ public class ExportConnectionToTOSActionRealTest {
 
         /*
          * (non-Javadoc)
-         *
+         * 
          * @see org.hamcrest.Matcher#matches(java.lang.Object)
          */
         @Override
@@ -382,7 +377,7 @@ public class ExportConnectionToTOSActionRealTest {
 
         /*
          * (non-Javadoc)
-         *
+         * 
          * @see org.hamcrest.SelfDescribing#describeTo(org.hamcrest.Description)
          */
         @Override
