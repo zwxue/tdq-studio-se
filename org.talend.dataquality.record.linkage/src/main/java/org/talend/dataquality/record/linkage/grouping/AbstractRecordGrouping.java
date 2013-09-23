@@ -281,6 +281,9 @@ public abstract class AbstractRecordGrouping implements IRecordGrouping {
 
     }
 
+    /**
+     * @deprecated use {{@link #addMatchRule}
+     */
     @Deprecated
     @Override
     public void add(Map<String, String> matchingColumn) {
