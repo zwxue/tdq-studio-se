@@ -20,55 +20,59 @@ import org.talend.dataquality.record.linkage.Messages;
 public class MatchAnalysisConstant {
 
     // general need
-    public static final String COLUMN = "Column"; //$NON-NLS-1$
+    public static final String COLUMN = "MatchAnalysisConstant.Column"; //$NON-NLS-1$
 
-    public static final String LABEL = "Label"; //$NON-NLS-1$
+    public static final String LABEL = "MatchAnalysisConstant.Label"; //$NON-NLS-1$
 
-    public static final String COUNT = "Count"; //$NON-NLS-1$
+    public static final String COUNT = "MatchAnalysisConstant.Count"; //$NON-NLS-1$
 
-    public static final String PERCENTAGE = "%"; //$NON-NLS-1$
+    public static final String PERCENTAGE = "MatchAnalysisConstant.Percentage"; //$NON-NLS-1$
 
-    public static final String GROUP_SIZE = "Group Size"; //$NON-NLS-1$
+    public static final String GROUP_SIZE = "MatchAnalysisConstant.Group_Size"; //$NON-NLS-1$
 
-    public static final String GROUP_COUNT = "Group Count"; //$NON-NLS-1$
+    public static final String GROUP_COUNT = "MatchAnalysisConstant.Group_Count"; //$NON-NLS-1$
 
-    public static final String RECORD_COUNT = "Record Count"; //$NON-NLS-1$
+    public static final String RECORD_COUNT = "MatchAnalysisConstant.Record_Count"; //$NON-NLS-1$
 
-    public static final String RECORDS_PERCENTAGE = "% Records"; //$NON-NLS-1$
+    public static final String RECORDS_PERCENTAGE = "MatchAnalysisConstant.Records_Percentage"; //$NON-NLS-1$
 
     public static final String ISDIRTY_PROPERTY = "ISDIRTY_PROPERTY"; //$NON-NLS-1$
 
     public static final String NEED_REFRESH_DATA = "Need_Refresh_Data"; //$NON-NLS-1$
 
     // match key need
-    public static final String MATCH_KEY_NAME = "Match Key Name"; //$NON-NLS-1$
+    public static final String MATCH_KEY_NAME = "MatchAnalysisConstant.MATCH_KEY_NAME"; //$NON-NLS-1$
 
-    public static final String MATCHING_TYPE = "Matching Type"; //$NON-NLS-1$
+    public static final String INPUT_COLUMN = "MatchAnalysisConstant.INPUT_COLUMN"; //$NON-NLS-1$ 
 
-    public static final String CUSTOM_MATCHER_CLASS = "Custom Matcher Class"; //$NON-NLS-1$
+    public static final String MATCHING_TYPE = "MatchAnalysisConstant.MATCHING_TYPE"; //$NON-NLS-1$
 
-    public static final String CONFIDENCE_WEIGHT = "Confidence Weight"; //$NON-NLS-1$
+    public static final String CUSTOM_MATCHER = "MatchAnalysisConstant.CUSTOM_MATCHER"; //$NON-NLS-1$
 
-    public static final String HANDLE_NULL = "Handle Null"; //$NON-NLS-1$
+    public static final String CONFIDENCE_WEIGHT = "MatchAnalysisConstant.CONFIDENCE_WEIGHT"; //$NON-NLS-1$
 
-    public static final String MATCH_RULE_TABLE_COMPOSITE = "Match Rule Table Composite"; //$NON-NLS-1$
+    public static final String HANDLE_NULL = "MatchAnalysisConstant.HANDLE_NULL"; //$NON-NLS-1$
+
+    public static final String MATCH_RULE_TABLE_COMPOSITE = "MATCH_RULE_TABLE_COMPOSITE"; //$NON-NLS-1$
 
     public static final String THRESHOLD = "threshold"; //$NON-NLS-1$
 
     // block key need
-    public static final String BLOCK_KEY_NAME = "Blocking Key Name"; //$NON-NLS-1$
+    public static final String BLOCKING_KEY_NAME = "MatchAnalysisConstant.BLOCKING_KEY_NAME"; //$NON-NLS-1$
 
-    public static final String PRE_ALGORITHM = "pre-"; //$NON-NLS-1$
+    public static final String PRECOLUMN = "MatchAnalysisConstant.PRECOLUMN"; //$NON-NLS-1$ 
 
-    public static final String ALGORITHM = "algorithm"; //$NON-NLS-1$
+    public static final String PRE_ALGO = "MatchAnalysisConstant.PRE_ALGO"; //$NON-NLS-1$
 
-    public static final String POST_ALGORITHM = "post-"; //$NON-NLS-1$
+    public static final String KEY_ALGO = "MatchAnalysisConstant.KEY_ALGO"; //$NON-NLS-1$
 
-    public static final String PRE_VALUE = "pre-value"; //$NON-NLS-1$
+    public static final String POST_ALGO = "MatchAnalysisConstant.POST_ALGO"; //$NON-NLS-1$
 
-    public static final String VALUE = "value"; //$NON-NLS-1$
+    public static final String PRE_VALUE = "MatchAnalysisConstant.PRE_VALUE"; //$NON-NLS-1$
 
-    public static final String POST_VALUE = "post-value"; //$NON-NLS-1$
+    public static final String KEY_VALUE = "MatchAnalysisConstant.KEY_VALUE"; //$NON-NLS-1$
+
+    public static final String POST_VALUE = "MatchAnalysisConstant.POST_VALUE"; //$NON-NLS-1$
 
     public static final String MATCH_KEY_DEFAULT_VALUE = "match key name"; //$NON-NLS-1$
 
@@ -86,7 +90,7 @@ public class MatchAnalysisConstant {
 
     public static final String BLOCK_KEY = "BLOCK_KEY"; //$NON-NLS-1$
 
-    public static final String MATCHING_KEY = "Matching Key"; //$NON-NLS-1$
+    public static final String MATCHING_KEY_SECTION_NAME = "Matching Key"; //$NON-NLS-1$
 
     public static final String BlOCKING_KEY_SECTION_NAME = "Blocking Key"; //$NON-NLS-1$
 

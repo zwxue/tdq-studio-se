@@ -86,7 +86,7 @@ public class AnalysisRecordGroupingUtils {
             Map<String, String> columnIndexMap, double matchInterval, String attributeName) {
         Map<String, String> matchKeyMap = new HashMap<String, String>();
         matchKeyMap.put(IRecordGrouping.COLUMN_IDX, columnIndexMap.get(column));
-        matchKeyMap.put(IRecordGrouping.MATCHING_TYPE, AttributeMatcherType.getTypeBySavedValue(algoType).getLabel());
+        matchKeyMap.put(IRecordGrouping.MATCHING_TYPE, AttributeMatcherType.valueOf(algoType).name());
         matchKeyMap.put(IRecordGrouping.CUSTOMER_MATCH_CLASS, algoParameter);
         matchKeyMap.put(IRecordGrouping.CONFIDENCE_WEIGHT, String.valueOf(confidentWeight));
         matchKeyMap.put(IRecordGrouping.RECORD_MATCH_THRESHOLD, String.valueOf(matchInterval));
@@ -102,12 +102,12 @@ public class AnalysisRecordGroupingUtils {
     public static Map<String, String> getBlockingKeyMap(String column, String preAlgo, String preAlgValue, String algorithm,
             String algorithmValue, String postAlgo, String postAlgoValue) {
         Map<String, String> blockKeyDefMap = new HashMap<String, String>();
-        blockKeyDefMap.put(MatchAnalysisConstant.COLUMN, column);
-        blockKeyDefMap.put(MatchAnalysisConstant.PRE_ALGORITHM, preAlgo);
+        blockKeyDefMap.put(MatchAnalysisConstant.PRECOLUMN, column);
+        blockKeyDefMap.put(MatchAnalysisConstant.PRE_ALGO, preAlgo);
         blockKeyDefMap.put(MatchAnalysisConstant.PRE_VALUE, preAlgValue);
-        blockKeyDefMap.put(MatchAnalysisConstant.ALGORITHM, algorithm);
-        blockKeyDefMap.put(MatchAnalysisConstant.VALUE, algorithmValue);
-        blockKeyDefMap.put(MatchAnalysisConstant.POST_ALGORITHM, postAlgo);
+        blockKeyDefMap.put(MatchAnalysisConstant.KEY_ALGO, algorithm);
+        blockKeyDefMap.put(MatchAnalysisConstant.KEY_VALUE, algorithmValue);
+        blockKeyDefMap.put(MatchAnalysisConstant.POST_ALGO, postAlgo);
         blockKeyDefMap.put(MatchAnalysisConstant.POST_VALUE, postAlgoValue);
         return blockKeyDefMap;
     }

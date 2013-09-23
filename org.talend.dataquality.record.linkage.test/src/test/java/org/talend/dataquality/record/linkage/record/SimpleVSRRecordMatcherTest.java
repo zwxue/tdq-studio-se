@@ -12,6 +12,10 @@
 // ============================================================================
 package org.talend.dataquality.record.linkage.record;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.fail;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -26,8 +30,6 @@ import org.talend.dataquality.record.linkage.attribute.IAttributeMatcher;
 import org.talend.dataquality.record.linkage.attribute.JaroWinklerMatcher;
 import org.talend.dataquality.record.linkage.constant.AttributeMatcherType;
 import org.talend.dataquality.record.linkage.constant.RecordMatcherType;
-
-import static org.junit.Assert.*;
 
 /**
  * DOC scorreia class global comment. Detailled comment
@@ -56,7 +58,7 @@ public class SimpleVSRRecordMatcherTest {
             { "sebas", "taland", "suresnes", null }, };
 
     // the algorithms selected by the user for each of the 3 join keys
-    private static final String[] ATTRIBUTEMATCHERALGORITHMS = { "Exact", "Double Metaphone", "Levenshtein" };
+    private static final String[] ATTRIBUTEMATCHERALGORITHMS = { "Exact", "DOUBLE_METAPHONE", "LEVENSHTEIN" };
 
     // the weights given by the user to each of the 3 join key.
     private static final double[] ATTRIBUTEWEIGHTS = { 1, 1, 1 };
@@ -149,7 +151,7 @@ public class SimpleVSRRecordMatcherTest {
         List<Integer> listIndices = new ArrayList<Integer>();
         for (int i = 0; i < attributeMatchers.length; i++) {
             AttributeMatcherType matchType = attributeMatchers[i].getMatchType();
-            if (AttributeMatcherType.exact.equals(matchType) || AttributeMatcherType.exactIgnoreCase.equals(matchType)) {
+            if (AttributeMatcherType.EXACT.equals(matchType) || AttributeMatcherType.EXACT_IGNORE_CASE.equals(matchType)) {
                 listIndices.add(i);
             }
         }
@@ -357,7 +359,7 @@ public class SimpleVSRRecordMatcherTest {
     @Test
     public void testgetLabeledAttributeMatchWeights() {
         // create attribute matchers with names
-        AttributeMatcherType type = AttributeMatcherType.jaro;
+        AttributeMatcherType type = AttributeMatcherType.JARO;
         IAttributeMatcher attMatcher = AttributeMatcherFactory.createMatcher(type);
         final String colName = "EMAIL";
         attMatcher.setAttributeName(colName);

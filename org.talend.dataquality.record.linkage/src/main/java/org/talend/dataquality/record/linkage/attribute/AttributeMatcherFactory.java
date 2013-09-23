@@ -20,7 +20,7 @@ import org.talend.dataquality.record.linkage.constant.AttributeMatcherType;
 
 /**
  * @author scorreia
- * 
+ *
  * Factory that helps to create attribute matchers from their label or type.
  */
 public final class AttributeMatcherFactory {
@@ -37,13 +37,13 @@ public final class AttributeMatcherFactory {
 
     /**
      * Method "createMatcher".
-     * 
+     *
      * @param matcherLabel the type of attribute matcher
      * @return the attribute matcher or null if the input type is null
      */
     public static IAttributeMatcher createMatcher(String matcherLabel) {
         for (AttributeMatcherType type : AttributeMatcherType.values()) {
-            if (type.getLabel().equalsIgnoreCase(matcherLabel)) {
+            if (type.name().equalsIgnoreCase(matcherLabel)) {
                 return createMatcher(type);
             }
         }
@@ -52,10 +52,10 @@ public final class AttributeMatcherFactory {
     }
 
     /**
-     * Method "createMatcher". If the type is {@link AttributeMatcherType#custom}, then the resulting IAttributeMatcher
+     * Method "createMatcher". If the type is {@link AttributeMatcherType#CUSTOM}, then the resulting IAttributeMatcher
      * class is instantiated given the className argument. If the type is different, then the
      * {@link AttributeMatcherFactory#createMatcher(AttributeMatcherType)} method is called.
-     * 
+     *
      * @param type the type of the attribute matcher
      * @param className the class name that implements IAttributeMatcher
      * @return the instantiated Attribute Matcher class
@@ -67,7 +67,7 @@ public final class AttributeMatcherFactory {
             IllegalAccessException, ClassNotFoundException {
         if (type != null) {
             switch (type) {
-            case custom:
+            case CUSTOM:
                 return (IAttributeMatcher) Class.forName(className).newInstance();
             default:
                 return createMatcher(type);
@@ -79,34 +79,34 @@ public final class AttributeMatcherFactory {
 
     /**
      * Method "createMatcher".
-     * 
+     *
      * @param type the type of attribute matcher
      * @return the attribute matcher or null if the input type is null
      */
     public static IAttributeMatcher createMatcher(AttributeMatcherType type) {
         if (type != null) {
             switch (type) {
-            case dummy:
+            case DUMMY:
                 return new DummyMatcher();
-            case exact:
+            case EXACT:
                 return new ExactMatcher();
-            case levenshtein:
+            case LEVENSHTEIN:
                 return new LevenshteinMatcher();
-            case soundex:
+            case SOUNDEX:
                 return new SoundexMatcher();
-            case doubleMetaphone:
+            case DOUBLE_METAPHONE:
                 return new DoubleMetaphoneMatcher();
-            case exactIgnoreCase:
+            case EXACT_IGNORE_CASE:
                 return new ExactIgnoreCaseMatcher();
-            case metaphone:
+            case METAPHONE:
                 return new MetaphoneMatcher();
-            case jaro:
+            case JARO:
                 return new JaroMatcher();
-            case jaroWinkler:
+            case JARO_WINKLER:
                 return new JaroWinklerMatcher();
-            case soundexFR:
+            case SOUNDEX_FR:
                 return new SoundexFRMatcher();
-            case qgrams:
+            case Q_GRAMS:
                 return new QGramsMatcher();
             default:
                 break;

@@ -38,7 +38,7 @@ public class DummyMatcher extends AbstractAttributeMatcher {
      * @see org.talend.dataquality.record.linkage.attribute.IAttributeMatcher#getMatchType()
      */
     public AttributeMatcherType getMatchType() {
-        return AttributeMatcherType.dummy;
+        return AttributeMatcherType.DUMMY;
     }
 
 }

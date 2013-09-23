@@ -47,7 +47,7 @@ public class MatchRuleDefinitionLabelProvider extends MatchRuleLabelProvider {
                 case 0:
                     return mkd.getName();
                 case 1:
-                    return AttributeMatcherType.getTypeBySavedValue(mkd.getAlgorithm().getAlgorithmType()).getLabel();
+                    return AttributeMatcherType.valueOf(mkd.getAlgorithm().getAlgorithmType()).getLabel();
                 case 2:
                     return mkd.getAlgorithm().getAlgorithmParameters();
                 case 3:
@@ -62,7 +62,7 @@ public class MatchRuleDefinitionLabelProvider extends MatchRuleLabelProvider {
                 case 0:
                     return mkd.getName();
                 case 1:
-                    return AttributeMatcherType.getTypeBySavedValue(mkd.getAlgorithm().getAlgorithmType()).getLabel();
+                    return AttributeMatcherType.valueOf(mkd.getAlgorithm().getAlgorithmType()).getLabel();
                 case 2:
                     return mkd.getAlgorithm().getAlgorithmParameters();
                 case 3:

@@ -20,26 +20,14 @@ import java.util.List;
  * 
  */
 public enum HandleNullEnum {
-    NULL_MATCH_NULL(0, "nullMatchNull"), //$NON-NLS-1$
-    NULL_MATCH_NONE(1, "nullMatchNone"), //$NON-NLS-1$
-    NULL_MATCH_ALL(2, "nullMatchAll"); //$NON-NLS-1$
-
-    private int index;
+    NULL_MATCH_NULL("nullMatchNull"), //$NON-NLS-1$
+    NULL_MATCH_NONE("nullMatchNone"), //$NON-NLS-1$
+    NULL_MATCH_ALL("nullMatchAll"); //$NON-NLS-1$
 
     private String value;
 
-    HandleNullEnum(int index, String value) {
-        this.index = index;
+    HandleNullEnum(String value) {
         this.value = value;
-    }
-
-    /**
-     * Getter for index.
-     * 
-     * @return the index
-     */
-    public int getIndex() {
-        return this.index;
     }
 
     /**
@@ -76,19 +64,4 @@ public enum HandleNullEnum {
         return null;
     }
 
-    /**
-     * 
-     * 
-     * @param index
-     * @return null can not find this index
-     */
-    public static HandleNullEnum getTypeByIndex(int index) {
-        for (HandleNullEnum element : HandleNullEnum.values()) {
-            if (element.getIndex() == index) {
-                return element;
-            }
-        }
-
-        return null;
-    }
 }

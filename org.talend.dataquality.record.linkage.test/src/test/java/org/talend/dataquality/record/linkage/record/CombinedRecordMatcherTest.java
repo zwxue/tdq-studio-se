@@ -37,7 +37,7 @@ public class CombinedRecordMatcherTest {
             { "babass", "Atlend", "sursene", null }, { "Sebastião", "talènd", "Suresnes", "comment" }, };
 
     // the algorithms selected by the user for each of the 3 match keys
-    private static final String[] ATTRIBUTEMATCHERALGORITHMS = { "Exact", "Double Metaphone", "Levenshtein", "soundex" };
+    private static final String[] ATTRIBUTEMATCHERALGORITHMS = { "EXACT", "DOUBLE_METAPHONE", "LEVENSHTEIN", "SOUNDEX" };
 
     // the weights given by the user to each of the 3 match key.
     private static final double[] ATTRIBUTEWEIGHTS_1 = { 30, 10, 0, 0 };
@@ -83,7 +83,7 @@ public class CombinedRecordMatcherTest {
 
         // create a third simple matcher and do the same
         IRecordMatcher recMatcher3 = RecordMatcherFactory.createMatcher(RecordMatcherType.simpleVSRMatcher, new String[] {
-                "dummy", "dummy", "dummy", "exact" }, new double[] { 0, 0, 0, 1 });
+                "DUMMY", "DUMMY", "DUMMY", "EXACT" }, new double[] { 0, 0, 0, 1 });
         recMatcher3.setRecordMatchThreshold(MATCH_THRESHOLD);
         matcherWeigths = computeWeights(recMatcher3);
 
@@ -245,12 +245,12 @@ public class CombinedRecordMatcherTest {
         IRecordMatcher recMatcher2 = RecordMatcherFactory.createMatcher(RecordMatcherType.simpleVSRMatcher,
                 ATTRIBUTEMATCHERALGORITHMS, new double[] { 1.0, 3.0 });
         Assert.assertNull("cannot create a matcher like this", recMatcher2);
-        recMatcher2 = RecordMatcherFactory.createMatcher(RecordMatcherType.simpleVSRMatcher, new String[] { "exact", "exact" },
+        recMatcher2 = RecordMatcherFactory.createMatcher(RecordMatcherType.simpleVSRMatcher, new String[] { "EXACT", "EXACT" },
                 new double[] { 1.0, 3.0 });
         Assert.assertFalse("cannot add a matcher with a different size", combMatcher1.add(recMatcher2));
 
-        recMatcher2 = RecordMatcherFactory.createMatcher(RecordMatcherType.simpleVSRMatcher, new String[] { "exact", "exact",
-                "exact", "exact" }, ATTRIBUTEWEIGHTS_1);
+        recMatcher2 = RecordMatcherFactory.createMatcher(RecordMatcherType.simpleVSRMatcher, new String[] { "EXACT", "EXACT",
+                "EXACT", "EXACT" }, ATTRIBUTEWEIGHTS_1);
         Assert.assertTrue(combMatcher1.add(recMatcher2));
 
     }
@@ -263,6 +263,10 @@ public class CombinedRecordMatcherTest {
     @Test
     public void testSetAttributeMatchers() {
         for (RecordMatcherType type : RecordMatcherType.values()) {
+            // FIXME no RecordMatcher exists for T_SwooshAlgorithm currently
+            if (RecordMatcherType.T_SwooshAlgorithm.equals(type)) {
+                continue;
+            }
             IRecordMatcher recMatcher = RecordMatcherFactory.createMatcher(type, ATTRIBUTEMATCHERALGORITHMS, ATTRIBUTEWEIGHTS_1);
             if (recMatcher == null) {
                 continue;
@@ -294,8 +298,8 @@ public class CombinedRecordMatcherTest {
 
     @Test
     public void testgetLabeledAttributeMatchWeights() {
-        IAttributeMatcher attMatcher1 = AttributeMatcherFactory.createMatcher("exact");
-        IAttributeMatcher attMatcher2 = AttributeMatcherFactory.createMatcher("exact");
+        IAttributeMatcher attMatcher1 = AttributeMatcherFactory.createMatcher("EXACT");
+        IAttributeMatcher attMatcher2 = AttributeMatcherFactory.createMatcher("EXACT");
 
         IRecordMatcher recordMatcher = RecordMatcherFactory.createMatcher("Simple VSR Matcher");
 

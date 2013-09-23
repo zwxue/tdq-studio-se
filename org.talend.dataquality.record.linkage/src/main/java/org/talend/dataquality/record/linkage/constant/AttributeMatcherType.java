@@ -15,156 +15,63 @@ package org.talend.dataquality.record.linkage.constant;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.talend.dataquality.record.linkage.Messages;
+
 /**
  * @author scorreia
- *
+ * 
  * Enumeration of all available attribute matcher algorithms.
  */
 public enum AttributeMatcherType {
-    exact(0, "Exact", "exact", false), //$NON-NLS-1$ //$NON-NLS-2$
-    exactIgnoreCase(1, "Exact - ignore case", "exact_ignore_case", false), //$NON-NLS-1$ //$NON-NLS-2$
-    soundex(2, "Soundex", "soundex", false), //$NON-NLS-1$ //$NON-NLS-2$
-    soundexFR(3, "Soundex FR", "soundex_fr", false), //$NON-NLS-1$ //$NON-NLS-2$
-    levenshtein(4, "Levenshtein", "levenshtein", false), //$NON-NLS-1$ //$NON-NLS-2$
-    metaphone(5, "Metaphone", "metaphone", false), //$NON-NLS-1$ //$NON-NLS-2$
-    doubleMetaphone(6, "Double Metaphone", "double_metaphone", false), //$NON-NLS-1$ //$NON-NLS-2$
-    jaro(7, "Jaro", "JARO", false), //$NON-NLS-1$ //$NON-NLS-2$
-    jaroWinkler(8, "Jaro-Winkler", "jaro_winkler", false), //$NON-NLS-1$ //$NON-NLS-2$
-    qgrams(9, "q-grams", "q_grams", false), //$NON-NLS-1$ //$NON-NLS-2$
-    dummy(10, "Dummy", "dummy", false), //$NON-NLS-1$ //$NON-NLS-2$
-    custom(11, "Custom", "CUSTOM", true); //$NON-NLS-1$ //$NON-NLS-2$
+    EXACT("Exact"), //$NON-NLS-1$
+    EXACT_IGNORE_CASE("Exact - ignore case"), //$NON-NLS-1$
+    SOUNDEX("Soundex"), //$NON-NLS-1$
+    SOUNDEX_FR("Soundex FR"), //$NON-NLS-1$
+    LEVENSHTEIN("Levenshtein"), //$NON-NLS-1$
+    METAPHONE("Metaphone"), //$NON-NLS-1$
+    DOUBLE_METAPHONE("Double Metaphone"), //$NON-NLS-1$
+    JARO("Jaro"), //$NON-NLS-1$
+    JARO_WINKLER("Jaro-Winkler"), //$NON-NLS-1$
+    Q_GRAMS("q-grams"), //$NON-NLS-1$
+    DUMMY("Dummy"), //$NON-NLS-1$
+    CUSTOM("custom"); //$NON-NLS-1$
 
-    private final String label;
+    private final String componentValue;
 
-    private final String componentName;
+    private static final String CLASSNAME_PREFIX = "AttributeMatcherType."; //$NON-NLS-1$
 
-    private final int index;
-
-    private boolean isTakeParameter;
-
-    AttributeMatcherType(int index, String label, String componentName, boolean isTakeParameter) {
-        this.label = label;
-        this.index = index;
-        this.componentName = componentName;
-        this.isTakeParameter = isTakeParameter;
+    AttributeMatcherType(String componentValue) {
+        this.componentValue = componentValue;
     }
 
     /**
-     * Getter for isTakeParameter.
-     *
-     * @return the isTakeParameter
+     * Getter for componentValue.
+     * 
+     * @return the componentValue
      */
-    public boolean isTakeParameter() {
-        return this.isTakeParameter;
-    }
-
-    /**
-     * Getter for componentName.
-     *
-     * @return the componentName
-     */
-    public String getComponentName() {
-        return this.componentName;
+    public String getComponentValue() {
+        return this.componentValue;
     }
 
     /**
      * Getter for label.
-     *
-     * @return the label
+     * 
+     * @return the internationalized label
      */
     public String getLabel() {
-        return this.label;
+        return Messages.getString(CLASSNAME_PREFIX + this.name());
     }
 
     /**
-     * Getter for index.
-     *
-     * @return the index
+     * @return all Attribute Matcher Types except the internal DUMMY algorithm.
      */
-    public int getIndex() {
-        return this.index;
-    }
-
-    /*
-     * (non-Javadoc)
-     *
-     * @see java.lang.Enum#toString()
-     */
-    @Override
-    public String toString() {
-        return this.label;
-    }
-
-    /**
-     * Method "get"
-     *
-     * @param label the label of the matcher
-     * @return the matcher type given the label or null
-     */
-    public static AttributeMatcherType get(String label) {
-        for (AttributeMatcherType type : AttributeMatcherType.values()) {
-            if (type.getLabel().equalsIgnoreCase(label)) {
-                return type;
-            }
-        }
-        return null;
-    }
-
     public static String[] getAllTypes() {
-        List<String> list = new ArrayList<String>();
-        for (AttributeMatcherType theType : AttributeMatcherType.values()) {
-            list.add(theType.getLabel());
-        }
-        return list.toArray(new String[list.size()]);
-    }
-
-    /**
-     *
-     * get type of the value which in this Enum
-     *
-     * @param value
-     * @return null can not find this index
-     */
-    public static AttributeMatcherType getTypeByValue(String value) {
-        for (AttributeMatcherType element : AttributeMatcherType.values()) {
-            if (element.getLabel().equalsIgnoreCase(value)) {
-                return element;
+        List<String> types = new ArrayList<String>();
+        for (int i = 0; i < AttributeMatcherType.values().length; i++) {
+            if (i != DUMMY.ordinal()) {
+                types.add(AttributeMatcherType.values()[i].getLabel());
             }
         }
-
-        return null;
-    }
-
-    /**
-     *
-     * get type of the value which in this Enum
-     *
-     * @param value
-     * @return null can not find this index
-     */
-    public static AttributeMatcherType getTypeBySavedValue(String value) {
-        for (AttributeMatcherType element : AttributeMatcherType.values()) {
-            if (element.getComponentName().equalsIgnoreCase(value)) {
-                return element;
-            }
-        }
-
-        return null;
-    }
-
-    /**
-     *
-     *
-     * @param index
-     * @return null can not find this index
-     */
-    public static AttributeMatcherType getTypeByIndex(int index) {
-        for (AttributeMatcherType element : AttributeMatcherType.values()) {
-            if (element.getIndex() == index) {
-                return element;
-            }
-        }
-
-        return null;
+        return types.toArray(new String[types.size() - 1]);
     }
 }

@@ -32,6 +32,7 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.record.linkage.ui.action.RemoveMatchKeyDefinitionAction;
+import org.talend.dataquality.record.linkage.ui.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataquality.record.linkage.utils.MatchAnalysisConstant;
 import org.talend.dataquality.rules.KeyDefinition;
 
@@ -107,9 +108,9 @@ public abstract class AbstractMatchAnalysisTableViewer<T> extends TableViewer {
         innerTable.setLayoutData(gd);
 
         for (int index = 0; index < headers.size(); index++) {
-            tLayout.addColumnData(new ColumnPixelData(headers.get(index).length() * getHeaderDisplayWeight()));
-
-            new TableColumn(innerTable, SWT.LEFT).setText(headers.get(index));
+            String columnLabel = getInternationalizedLabel(headers.get(index));
+            tLayout.addColumnData(new ColumnPixelData(columnLabel.length() * getHeaderDisplayWeight()));
+            new TableColumn(innerTable, SWT.LEFT).setText(columnLabel);
         }
 
         CellEditor[] editors = getCellEditor(headers, columnMap);
@@ -128,6 +129,10 @@ public abstract class AbstractMatchAnalysisTableViewer<T> extends TableViewer {
         tableGD.heightHint = getTableHeightHint();
         innerTable.setLayoutData(tableGD);
 
+    }
+
+    private String getInternationalizedLabel(String str) {
+        return DefaultMessagesImpl.getString(str);
     }
 
     /**

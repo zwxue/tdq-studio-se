@@ -40,7 +40,7 @@ public class QGramsMatcher extends AbstractAttributeMatcher {
      * @see org.talend.dataquality.record.linkage.attribute.IAttributeMatcher#getMatchType()
      */
     public AttributeMatcherType getMatchType() {
-        return AttributeMatcherType.qgrams;
+        return AttributeMatcherType.Q_GRAMS;
     }
 
     /*

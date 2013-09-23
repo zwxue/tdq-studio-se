@@ -64,7 +64,7 @@ public class MatchingKeySection extends AbstractMatchKeyWithChartTableSection {
 
     private static Logger log = Logger.getLogger(MatchingKeySection.class);
 
-    private final String SECTION_NAME = MatchAnalysisConstant.MATCHING_KEY;
+    private final String SECTION_NAME = MatchAnalysisConstant.MATCHING_KEY_SECTION_NAME;
 
     private CTabFolder ruleFolder;
 
@@ -593,6 +593,7 @@ public class MatchingKeySection extends AbstractMatchKeyWithChartTableSection {
                 newRule.getMatchKeys().add(EcoreUtil.copy(matchKey));
             }
         }
+        newRule.setMatchInterval(oldRule.getMatchInterval());
         return newRule;
     }
 

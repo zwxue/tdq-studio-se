@@ -27,7 +27,7 @@ import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataquality.rules.MatchRuleDefinition;
 import org.talend.dataquality.rules.WhereRule;
 import org.talend.dq.helper.resourcehelper.DQRuleResourceFileHelper;
-import org.talend.resource.EResourceConstant;
+import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
  * DOC xqliu class global comment. Detailled comment
@@ -42,14 +42,11 @@ public class DQRuleLabelProvider extends LabelProvider {
 
         if (element instanceof IFile && FactoriesUtil.DQRULE.equals(((IFile) element).getFileExtension())) {
             IFile file = (IFile) element;
-
+            ModelElement me = DQRuleResourceFileHelper.getInstance().getModelElement(file);
             // add support for match rule
-            if (EResourceConstant.RULES_MATCHER.getName().equals(file.getParent().getName())) {
-                MatchRuleDefinition matchRule = DQRuleResourceFileHelper.getInstance().findMatchRule(file);
-                if (matchRule != null) {
-                    ImageDescriptor imageDescriptor = ImageLib.getImageDescriptor(ImageLib.MATCH_RULE_ICON);
-                    return imageDescriptor.createImage();
-                }
+            if (me instanceof MatchRuleDefinition) {
+                ImageDescriptor imageDescriptor = ImageLib.getImageDescriptor(ImageLib.MATCH_RULE_ICON);
+                return imageDescriptor.createImage();
             }// ~
 
             ImageDescriptor imageDescriptor = ImageLib.getImageDescriptor(ImageLib.DQ_RULE);
@@ -74,18 +71,7 @@ public class DQRuleLabelProvider extends LabelProvider {
     public String getText(Object element) {
         if (element instanceof IFile && FactoriesUtil.DQRULE.equals(((IFile) element).getFileExtension())) {
             IFile file = (IFile) element;
-            // add support for match rule
-            if (EResourceConstant.RULES_MATCHER.getName().equals(file.getParent().getName())) {
-                MatchRuleDefinition matchRule = DQRuleResourceFileHelper.getInstance().findMatchRule(file);
-                if (matchRule != null) {
-                    return matchRule.getName();
-                }
-            }// ~
-
-            WhereRule whereRule = DQRuleResourceFileHelper.getInstance().findWhereRule(file);
-            if (whereRule != null) {
-                return whereRule.getName();
-            }
+            return DQRuleResourceFileHelper.getInstance().getModelElement(file).getName();
         }
 
         if (element instanceof IFolder) {

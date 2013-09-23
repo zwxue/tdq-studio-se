@@ -51,7 +51,7 @@ public class MatchRuleLabelProvider extends LabelProvider implements ITableLabel
             case 1:
                 return mkd.getColumn();
             case 2:
-                return AttributeMatcherType.getTypeBySavedValue(mkd.getAlgorithm().getAlgorithmType()).getLabel();
+                return AttributeMatcherType.valueOf(mkd.getAlgorithm().getAlgorithmType()).getLabel();
             case 3:
                 return mkd.getAlgorithm().getAlgorithmParameters();
             case 4:

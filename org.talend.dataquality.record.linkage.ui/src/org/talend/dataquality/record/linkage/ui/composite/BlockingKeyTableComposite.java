@@ -41,13 +41,13 @@ public class BlockingKeyTableComposite extends AbsMatchAnalysisTableComposite<Bl
      */
     @Override
     protected void initHeaders() {
-        headers.add(MatchAnalysisConstant.BLOCK_KEY_NAME); // 14
-        headers.add(MatchAnalysisConstant.COLUMN); // 14
-        headers.add(MatchAnalysisConstant.PRE_ALGORITHM); // 12
+        headers.add(MatchAnalysisConstant.BLOCKING_KEY_NAME); // 14
+        headers.add(MatchAnalysisConstant.PRECOLUMN); // 14
+        headers.add(MatchAnalysisConstant.PRE_ALGO); // 12
         headers.add(MatchAnalysisConstant.PRE_VALUE); // 20
-        headers.add(MatchAnalysisConstant.ALGORITHM); // 17
-        headers.add(MatchAnalysisConstant.VALUE); // 11
-        headers.add(MatchAnalysisConstant.POST_ALGORITHM); // 11
+        headers.add(MatchAnalysisConstant.KEY_ALGO); // 17
+        headers.add(MatchAnalysisConstant.KEY_VALUE); // 11
+        headers.add(MatchAnalysisConstant.POST_ALGO); // 11
         headers.add(MatchAnalysisConstant.POST_VALUE); // 11
 
     }

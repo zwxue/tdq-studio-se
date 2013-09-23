@@ -19,10 +19,9 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.window.Window;
 import org.eclipse.ui.model.WorkbenchContentProvider;
 import org.talend.dataprofiler.core.ImageLib;
-import org.talend.dataprofiler.core.ui.dialog.MatchRuleCheckedTreeSelectionDialog;
+import org.talend.dataprofiler.core.ui.dialog.MatchRuleElementTreeSelectionDialog;
 import org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisMetadataPage;
 import org.talend.dataprofiler.core.ui.editor.analysis.MatchMasterDetailsPage;
-import org.talend.dataprofiler.core.ui.wizard.analysis.table.DQRuleLabelProvider;
 import org.talend.dataquality.rules.MatchRuleDefinition;
 import org.talend.dq.helper.resourcehelper.DQRuleResourceFileHelper;
 
@@ -44,8 +43,9 @@ public class ImportMatchRuleAction extends Action {
 
     @Override
     public void run() {
-        MatchRuleCheckedTreeSelectionDialog dialog = new MatchRuleCheckedTreeSelectionDialog(null, new DQRuleLabelProvider(),
-                new WorkbenchContentProvider());
+        MatchRuleElementTreeSelectionDialog dialog = new MatchRuleElementTreeSelectionDialog(null,
+                new ImportMatchRuleLabelProvider(), new WorkbenchContentProvider(),
+                MatchRuleElementTreeSelectionDialog.MATCH_ANALYSIS_TYPE);
 
         dialog.create();
 

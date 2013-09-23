@@ -26,7 +26,7 @@ public class JaroMatcher extends AbstractAttributeMatcher {
      * @see org.talend.dataquality.record.linkage.attribute.IAttributeMatcher#getMatchType()
      */
     public AttributeMatcherType getMatchType() {
-        return AttributeMatcherType.jaro;
+        return AttributeMatcherType.JARO;
     }
 
     /*

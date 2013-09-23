@@ -47,7 +47,7 @@ public class MatchRuleTableDefinitionComposite extends MatchRuleTableComposite {
     protected void initHeaders() {
         headers.add(MatchAnalysisConstant.MATCH_KEY_NAME); // 14
         headers.add(MatchAnalysisConstant.MATCHING_TYPE); // 12
-        headers.add(MatchAnalysisConstant.CUSTOM_MATCHER_CLASS); // 20
+        headers.add(MatchAnalysisConstant.CUSTOM_MATCHER); // 20
         if (isAddColumn()) {
             headers.add(MatchAnalysisConstant.THRESHOLD); // 14
         }

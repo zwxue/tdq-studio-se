@@ -50,7 +50,7 @@ public class SoundexMatcher extends AbstractAttributeMatcher {
      * @see org.talend.dataquality.record.linkage.attribute.IAttributeMatcher#getMatchType()
      */
     public AttributeMatcherType getMatchType() {
-        return AttributeMatcherType.soundex;
+        return AttributeMatcherType.SOUNDEX;
     }
 
 }

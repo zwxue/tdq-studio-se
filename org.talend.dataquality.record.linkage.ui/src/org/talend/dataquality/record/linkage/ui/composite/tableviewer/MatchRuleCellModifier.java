@@ -41,14 +41,15 @@ public class MatchRuleCellModifier extends AbstractMatchCellModifier<MatchKeyDef
     public boolean canModify(Object element, String property) {
         if (element != null && element instanceof MatchKeyDefinition) {
             MatchKeyDefinition mkd = (MatchKeyDefinition) element;
-            if (MatchAnalysisConstant.CUSTOM_MATCHER_CLASS.equalsIgnoreCase(property)) {
-                return AttributeMatcherType.getTypeBySavedValue(mkd.getAlgorithm().getAlgorithmType()).isTakeParameter();
+            if (MatchAnalysisConstant.CUSTOM_MATCHER.equalsIgnoreCase(property)) {
+                if (!AttributeMatcherType.CUSTOM.name().equals(mkd.getAlgorithm().getAlgorithmType())) {
+                    return false;
+                }
             } else if (MatchAnalysisConstant.COLUMN.equalsIgnoreCase(property)) {
                 return columnList.size() > 0;
             }
             return true;
         }
-
         return false;
     }
 
@@ -61,12 +62,12 @@ public class MatchRuleCellModifier extends AbstractMatchCellModifier<MatchKeyDef
     public Object getValue(Object element, String property) {
         MatchKeyDefinition mkd = (MatchKeyDefinition) element;
         if (MatchAnalysisConstant.HANDLE_NULL.equalsIgnoreCase(property)) {
-            return HandleNullEnum.getTypeByValue(mkd.getHandleNull()).getIndex();
+            return HandleNullEnum.getTypeByValue(mkd.getHandleNull()).ordinal();
         } else if (MatchAnalysisConstant.MATCHING_TYPE.equalsIgnoreCase(property)) {
-            return AttributeMatcherType.getTypeBySavedValue(mkd.getAlgorithm().getAlgorithmType()).getIndex();
-        } else if (MatchAnalysisConstant.CUSTOM_MATCHER_CLASS.equalsIgnoreCase(property)) {
+            return AttributeMatcherType.valueOf(mkd.getAlgorithm().getAlgorithmType()).ordinal();
+        } else if (MatchAnalysisConstant.CUSTOM_MATCHER.equalsIgnoreCase(property)) {
             return mkd.getAlgorithm().getAlgorithmParameters();
-        } else if (MatchAnalysisConstant.COLUMN.equalsIgnoreCase(property)) {
+        } else if (MatchAnalysisConstant.INPUT_COLUMN.equalsIgnoreCase(property)) {
             return columnList.indexOf(mkd.getColumn());
         } else if (MatchAnalysisConstant.CONFIDENCE_WEIGHT.equalsIgnoreCase(property)) {
             return String.valueOf(mkd.getConfidenceWeight());
@@ -90,19 +91,25 @@ public class MatchRuleCellModifier extends AbstractMatchCellModifier<MatchKeyDef
             MatchKeyDefinition mkd = (MatchKeyDefinition) ((TableItem) element).getData();
             String newValue = String.valueOf(value);
             if (MatchAnalysisConstant.HANDLE_NULL.equalsIgnoreCase(property)) {
-                HandleNullEnum valueByIndex = HandleNullEnum.getTypeByIndex(Integer.valueOf(newValue).intValue());
+                HandleNullEnum valueByIndex = HandleNullEnum.values()[Integer.valueOf(newValue)];
                 if (StringUtils.equals(mkd.getHandleNull(), valueByIndex.getValue())) {
                     return;
                 }
                 mkd.setHandleNull(valueByIndex.getValue());
             } else if (MatchAnalysisConstant.MATCHING_TYPE.equalsIgnoreCase(property)) {
-                AttributeMatcherType valueByIndex = AttributeMatcherType.getTypeByIndex(Integer.valueOf(newValue).intValue());
-                if (StringUtils.equals(mkd.getAlgorithm().getAlgorithmType(), valueByIndex.getComponentName())) {
+                int idx = Integer.valueOf(newValue);
+                if (idx == AttributeMatcherType.DUMMY.ordinal()) {
+                    idx += 1; // The DUMMY algorithm is internal and does not exist in the combo lists of
+                              // MatchRuleItemEditor or MatchRuleAnalysisEditor. So we increment the index by 1 in order
+                              // to get the correct Matcher.
+                }
+                AttributeMatcherType valueByIndex = AttributeMatcherType.values()[idx];
+                if (StringUtils.equals(mkd.getAlgorithm().getAlgorithmType(), valueByIndex.name())) {
                     return;
                 }
-                mkd.getAlgorithm().setAlgorithmType(valueByIndex.getComponentName());
+                mkd.getAlgorithm().setAlgorithmType(valueByIndex.name());
                 mkd.getAlgorithm().setAlgorithmParameters(StringUtils.EMPTY);
-            } else if (MatchAnalysisConstant.CUSTOM_MATCHER_CLASS.equalsIgnoreCase(property)) {
+            } else if (MatchAnalysisConstant.CUSTOM_MATCHER.equalsIgnoreCase(property)) {
                 if (StringUtils.equals(mkd.getAlgorithm().getAlgorithmParameters(), newValue)) {
                     return;
                 }
@@ -142,5 +149,4 @@ public class MatchRuleCellModifier extends AbstractMatchCellModifier<MatchKeyDef
             tableViewer.update(mkd, null);
         }
     }
-
 }

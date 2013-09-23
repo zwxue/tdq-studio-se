@@ -346,7 +346,7 @@ public abstract class AbstractRecordGrouping implements IRecordGrouping {
         IAttributeMatcher[] attributeMatcher = new IAttributeMatcher[recordSize];
 
         for (int indx = 0; indx < recordSize; indx++) {
-            AttributeMatcherType attrMatcherType = AttributeMatcherType.get(algorithmName[indx][0]);
+            AttributeMatcherType attrMatcherType = AttributeMatcherType.valueOf(algorithmName[indx][0]);
             attributeMatcher[indx] = org.talend.dataquality.record.linkage.attribute.AttributeMatcherFactory.createMatcher(
                     attrMatcherType, algorithmName[indx][1]);
             attributeMatcher[indx].setNullOption(arrMatchHandleNull[indx]);

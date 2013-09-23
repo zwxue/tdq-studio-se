@@ -36,7 +36,7 @@ public class ExactIgnoreCaseMatcher extends AbstractAttributeMatcher {
      * @see org.talend.dataquality.record.linkage.attribute.IAttributeMatcher#getMatchType()
      */
     public AttributeMatcherType getMatchType() {
-        return AttributeMatcherType.exactIgnoreCase;
+        return AttributeMatcherType.EXACT_IGNORE_CASE;
     }
 
 }

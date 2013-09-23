@@ -31,7 +31,7 @@ public class JaroWinklerMatcher extends JaroMatcher {
      * @see org.talend.dataquality.record.linkage.attribute.IAttributeMatcher#getMatchType()
      */
     public AttributeMatcherType getMatchType() {
-        return AttributeMatcherType.jaroWinkler;
+        return AttributeMatcherType.JARO_WINKLER;
     }
 
     /*

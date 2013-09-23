@@ -45,7 +45,7 @@ public class BlockingKeyCellModeifier extends AbstractMatchCellModifier<BlockKey
             if (MatchAnalysisConstant.PRE_VALUE.equalsIgnoreCase(property)) {
                 return BlockingKeyPreAlgorithmEnum.getTypeBySavedValue(bkd.getPreAlgorithm().getAlgorithmType())
                         .isTakeParameter();
-            } else if (MatchAnalysisConstant.VALUE.equalsIgnoreCase(property)) {
+            } else if (MatchAnalysisConstant.KEY_VALUE.equalsIgnoreCase(property)) {
                 return BlockingKeyAlgorithmEnum.getTypeBySavedValue(bkd.getAlgorithm().getAlgorithmType()).isTakeParameter();
             } else if (MatchAnalysisConstant.POST_VALUE.equalsIgnoreCase(property)) {
                 return BlockingKeyPostAlgorithmEnum.getTypeBySavedValue(bkd.getPostAlgorithm().getAlgorithmType())
@@ -66,21 +66,21 @@ public class BlockingKeyCellModeifier extends AbstractMatchCellModifier<BlockKey
     @Override
     public Object getValue(Object element, String property) {
         BlockKeyDefinition bkd = (BlockKeyDefinition) element;
-        if (MatchAnalysisConstant.PRE_ALGORITHM.equalsIgnoreCase(property)) {
-            return BlockingKeyPreAlgorithmEnum.getTypeBySavedValue(bkd.getPreAlgorithm().getAlgorithmType()).getIndex();
+        if (MatchAnalysisConstant.PRE_ALGO.equalsIgnoreCase(property)) {
+            return BlockingKeyPreAlgorithmEnum.getTypeBySavedValue(bkd.getPreAlgorithm().getAlgorithmType()).ordinal();
         } else if (MatchAnalysisConstant.PRE_VALUE.equalsIgnoreCase(property)) {
             return bkd.getPreAlgorithm().getAlgorithmParameters();
-        } else if (MatchAnalysisConstant.ALGORITHM.equalsIgnoreCase(property)) {
-            return BlockingKeyAlgorithmEnum.getTypeBySavedValue(bkd.getAlgorithm().getAlgorithmType()).getIndex();
-        } else if (MatchAnalysisConstant.VALUE.equalsIgnoreCase(property)) {
+        } else if (MatchAnalysisConstant.KEY_ALGO.equalsIgnoreCase(property)) {
+            return BlockingKeyAlgorithmEnum.getTypeBySavedValue(bkd.getAlgorithm().getAlgorithmType()).ordinal();
+        } else if (MatchAnalysisConstant.KEY_VALUE.equalsIgnoreCase(property)) {
             return bkd.getAlgorithm().getAlgorithmParameters();
-        } else if (MatchAnalysisConstant.POST_ALGORITHM.equalsIgnoreCase(property)) {
-            return BlockingKeyPostAlgorithmEnum.getTypeBySavedValue(bkd.getPostAlgorithm().getAlgorithmType()).getIndex();
+        } else if (MatchAnalysisConstant.POST_ALGO.equalsIgnoreCase(property)) {
+            return BlockingKeyPostAlgorithmEnum.getTypeBySavedValue(bkd.getPostAlgorithm().getAlgorithmType()).ordinal();
         } else if (MatchAnalysisConstant.POST_VALUE.equalsIgnoreCase(property)) {
             return bkd.getPostAlgorithm().getAlgorithmParameters();
-        } else if (MatchAnalysisConstant.COLUMN.equalsIgnoreCase(property)) {
+        } else if (MatchAnalysisConstant.PRECOLUMN.equalsIgnoreCase(property)) {
             return columnList.indexOf(bkd.getColumn());
-        } else if (MatchAnalysisConstant.BLOCK_KEY_NAME.equalsIgnoreCase(property)) {
+        } else if (MatchAnalysisConstant.BLOCKING_KEY_NAME.equalsIgnoreCase(property)) {
             return bkd.getName();
         }
         return null;
@@ -96,7 +96,7 @@ public class BlockingKeyCellModeifier extends AbstractMatchCellModifier<BlockKey
         if (element instanceof TableItem) {
             BlockKeyDefinition bkd = (BlockKeyDefinition) ((TableItem) element).getData();
             String newValue = String.valueOf(value);
-            if (MatchAnalysisConstant.PRE_ALGORITHM.equalsIgnoreCase(property)) {
+            if (MatchAnalysisConstant.PRE_ALGO.equalsIgnoreCase(property)) {
                 BlockingKeyPreAlgorithmEnum valueByIndex = BlockingKeyPreAlgorithmEnum.getTypeByIndex(Integer.valueOf(newValue)
                         .intValue());
                 if (StringUtils.equals(bkd.getPreAlgorithm().getAlgorithmType(), valueByIndex.getComponentValueName())) {
@@ -115,7 +115,7 @@ public class BlockingKeyCellModeifier extends AbstractMatchCellModifier<BlockKey
                     return;
                 }
                 bkd.getPreAlgorithm().setAlgorithmParameters(String.valueOf(value));
-            } else if (MatchAnalysisConstant.ALGORITHM.equalsIgnoreCase(property)) {
+            } else if (MatchAnalysisConstant.KEY_ALGO.equalsIgnoreCase(property)) {
                 BlockingKeyAlgorithmEnum valueByIndex = BlockingKeyAlgorithmEnum.getTypeByIndex(Integer.valueOf(newValue)
                         .intValue());
                 if (StringUtils.equals(bkd.getAlgorithm().getAlgorithmType(), valueByIndex.getComponentValueName())) {
@@ -123,7 +123,7 @@ public class BlockingKeyCellModeifier extends AbstractMatchCellModifier<BlockKey
                 }
                 bkd.getAlgorithm().setAlgorithmType(valueByIndex.getComponentValueName());
                 bkd.getAlgorithm().setAlgorithmParameters(valueByIndex.getDefaultValue());
-            } else if (MatchAnalysisConstant.VALUE.equalsIgnoreCase(property)) {
+            } else if (MatchAnalysisConstant.KEY_VALUE.equalsIgnoreCase(property)) {
                 if (StringUtils.equals(bkd.getAlgorithm().getAlgorithmParameters(), newValue)) {
                     return;
                 }
@@ -133,7 +133,7 @@ public class BlockingKeyCellModeifier extends AbstractMatchCellModifier<BlockKey
                     return;
                 }
                 bkd.getAlgorithm().setAlgorithmParameters(newValue);
-            } else if (MatchAnalysisConstant.POST_ALGORITHM.equalsIgnoreCase(property)) {
+            } else if (MatchAnalysisConstant.POST_ALGO.equalsIgnoreCase(property)) {
                 BlockingKeyPostAlgorithmEnum valueByIndex = BlockingKeyPostAlgorithmEnum.getTypeByIndex(Integer.valueOf(newValue)
                         .intValue());
                 if (StringUtils.equals(bkd.getPostAlgorithm().getAlgorithmType(), valueByIndex.getComponentValueName())) {
@@ -161,7 +161,7 @@ public class BlockingKeyCellModeifier extends AbstractMatchCellModifier<BlockKey
                 }
                 bkd.setColumn(columnName);
                 tableViewer.noticeColumnSelectChange();
-            } else if (MatchAnalysisConstant.BLOCK_KEY_NAME.equalsIgnoreCase(property)) {
+            } else if (MatchAnalysisConstant.BLOCKING_KEY_NAME.equalsIgnoreCase(property)) {
                 if (StringUtils.equals(bkd.getName(), newValue)) {
                     return;
                 }

@@ -37,7 +37,7 @@ public class ExactMatcher extends AbstractAttributeMatcher {
      * @see org.talend.dataquality.record.linkage.attribute.IAttributeMatcher#getMatchType()
      */
     public AttributeMatcherType getMatchType() {
-        return AttributeMatcherType.exact;
+        return AttributeMatcherType.EXACT;
     }
 
 }

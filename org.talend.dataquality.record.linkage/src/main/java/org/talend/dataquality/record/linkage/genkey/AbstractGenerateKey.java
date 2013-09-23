@@ -33,8 +33,8 @@ public class AbstractGenerateKey {
 
     private Map<String, List<String[]>> genKeyToBlockResult = new HashMap<String, List<String[]>>();
 
-    private String[] parameters = { MatchAnalysisConstant.PRE_ALGORITHM, MatchAnalysisConstant.PRE_VALUE,
-            MatchAnalysisConstant.ALGORITHM, MatchAnalysisConstant.VALUE, MatchAnalysisConstant.POST_ALGORITHM,
+    private String[] parameters = { MatchAnalysisConstant.PRE_ALGO, MatchAnalysisConstant.PRE_VALUE,
+            MatchAnalysisConstant.KEY_ALGO, MatchAnalysisConstant.KEY_VALUE, MatchAnalysisConstant.POST_ALGO,
             MatchAnalysisConstant.POST_VALUE };
 
     /**

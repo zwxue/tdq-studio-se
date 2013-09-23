@@ -34,7 +34,7 @@ public class MetaphoneMatcher extends AbstractAttributeMatcher {
      */
     @Override
     public AttributeMatcherType getMatchType() {
-        return AttributeMatcherType.metaphone;
+        return AttributeMatcherType.METAPHONE;
     }
 
     /*
