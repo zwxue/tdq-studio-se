@@ -28,9 +28,10 @@ public class MyDistance extends AbstractAttributeMatcher {
      * 
      * @see org.talend.dataquality.record.linkage.attribute.IAttributeMatcher#getMatchType()
      */
+    @Override
     public AttributeMatcherType getMatchType() {
         // a custom implementation should return this type AttributeMatcherType.custom
-        return AttributeMatcherType.custom;
+        return AttributeMatcherType.CUSTOM;
     }
 
     /*
@@ -39,6 +40,7 @@ public class MyDistance extends AbstractAttributeMatcher {
      * @see org.talend.dataquality.record.linkage.attribute.IAttributeMatcher#getMatchingWeight(java.lang.String,
      * java.lang.String)
      */
+    @Override
     public double getWeight(String arg0, String arg1) {
         // Here goes the custom implementation of the matching distance between the two given strings.
         // the algorithm should return a value between 0 and 1.

@@ -31,7 +31,7 @@ public class NoMatchDistance extends AbstractAttributeMatcher {
     @Override
     public AttributeMatcherType getMatchType() {
         // a custom implementation should return this type AttributeMatcherType.custom
-        return AttributeMatcherType.custom;
+        return AttributeMatcherType.CUSTOM;
     }
 
     /*
