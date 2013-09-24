@@ -12,7 +12,6 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.action.actions;
 
-import java.sql.SQLException;
 import java.text.DecimalFormat;
 
 import org.apache.log4j.Level;
@@ -38,11 +37,7 @@ import org.eclipse.ui.part.FileEditorInput;
 import org.talend.commons.exception.BusinessException;
 import org.talend.commons.exception.LoginException;
 import org.talend.commons.exception.PersistenceException;
-import org.talend.core.database.EDatabaseTypeName;
-import org.talend.core.model.metadata.IMetadataConnection;
-import org.talend.core.model.metadata.builder.ConvertionHelper;
 import org.talend.core.model.metadata.builder.connection.Connection;
-import org.talend.core.model.properties.Item;
 import org.talend.core.repository.model.IRepositoryFactory;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.core.repository.model.RepositoryFactoryProvider;
@@ -70,7 +65,6 @@ import org.talend.dq.helper.ProxyRepositoryManager;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
 import org.talend.dq.nodes.AnalysisRepNode;
-import org.talend.metadata.managment.connection.manager.HiveConnectionManager;
 import org.talend.repository.model.RepositoryConstants;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.utils.sugars.ReturnCode;
@@ -144,8 +138,8 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
                     log.error("Analysis item is null"); //$NON-NLS-1$
                     return;
                 }
-                validateAnalysis(item);
-                if (ifLockByOthers(item)) {
+                validateAnalysis();
+                if (ifLockByOthers()) {
                     return;
                 }
 
@@ -338,35 +332,9 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
         DataManager datamanager = item.getAnalysis().getContext().getConnection();
         Connection analysisDataProvider = ConnectionUtils.getConnectionFromDatamanager(datamanager);
 
-        // MOD klliu bug 4584 Filtering the file connection when checking connection is successful,before real
-        // running analysis.
-        // MOD 20130313 TDQ-6524 avoid popup context select dialog when running analysis,yyin
-        IMetadataConnection metadataConnection = ConvertionHelper.convert(analysisDataProvider, false,
-                analysisDataProvider.getContextName());
-        // ~
-
         ReturnCode connectionAvailable = new ReturnCode(false);
 
-        if (metadataConnection != null && EDatabaseTypeName.HIVE.getXmlName().equalsIgnoreCase(metadataConnection.getDbType())) {
-            try {
-                HiveConnectionManager.getInstance().checkConnection(metadataConnection);
-                connectionAvailable.setOk(true);
-            } catch (ClassNotFoundException e) {
-                connectionAvailable.setOk(false);
-                log.error(e);
-            } catch (InstantiationException e) {
-                connectionAvailable.setOk(false);
-                log.error(e);
-            } catch (IllegalAccessException e) {
-                connectionAvailable.setOk(false);
-                log.error(e);
-            } catch (SQLException e) {
-                connectionAvailable.setOk(false);
-                log.error(e);
-            }
-        } else {
-            connectionAvailable = ConnectionUtils.isConnectionAvailable(analysisDataProvider);
-        }
+        connectionAvailable = ConnectionUtils.isConnectionAvailable(analysisDataProvider);
 
         if (!connectionAvailable.isOk()) {
             MessageDialogWithToggle.openWarning(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
@@ -459,10 +427,9 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
     /**
      * check whether the item is locked by Others.
      * 
-     * @param item
      * @return
      */
-    private boolean ifLockByOthers(Item item) {
+    private boolean ifLockByOthers() {
         // MOD sizhaoliu TDQ-5452 verify the lock status before running an analysis
         if (ProxyRepositoryManager.getInstance().isLockByOthers(item)) {
             CorePlugin.getDefault().refreshDQView(node.getParent());
@@ -477,14 +444,13 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
     /**
      * validate analysis.
      * 
-     * @param item
      * @throws BusinessException
      */
-    private void validateAnalysis(Item item) throws BusinessException {
-        if (item instanceof TDQAnalysisItem) {
-            if (((TDQAnalysisItem) item).getAnalysis() == null || ((TDQAnalysisItem) item).getAnalysis().getParameters() == null) {
+    private void validateAnalysis() throws BusinessException {
+        if (item != null) {
+            if (item.getAnalysis() == null || item.getAnalysis().getParameters() == null) {
                 BusinessException createBusinessException = ExceptionFactory.getInstance().createBusinessException(
-                        ((TDQAnalysisItem) item).getFilename());
+                        item.getFilename());
                 throw createBusinessException;
             }
         }

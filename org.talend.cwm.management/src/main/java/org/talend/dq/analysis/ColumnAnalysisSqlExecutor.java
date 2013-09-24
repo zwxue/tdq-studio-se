@@ -993,7 +993,7 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
         List<Indicator> indicators = IndicatorHelper.getIndicatorLeaves(analysis.getResults());
 
         try {
-            if (canParallel()) {
+            if (canParallel(connection)) {
                 ok = runAnalysisIndicatorsParallel(analysis, elementToIndicator, indicators, POOLED_CONNECTION);
             } else {
                 ok = runAnalysisIndicators(connection, elementToIndicator, indicators);
@@ -1354,11 +1354,8 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
      * 
      * @return
      */
-    private boolean canParallel() {
-        Connection connection = null;
+    private boolean canParallel(Connection connection) {
         try {
-            TypedReturnCode<Connection> typedReturnCode = this.getConnection(cachedAnalysis);
-            connection = typedReturnCode.getObject();
             @SuppressWarnings("deprecation")
             DatabaseMetaData connectionMetadata = org.talend.utils.sql.ConnectionUtils.getConnectionMetadata(connection);
             if (connectionMetadata.getDriverName() != null
@@ -1376,8 +1373,6 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
             }
         } catch (SQLException e) {
             log.warn(e, e);
-        } finally {
-            ConnectionUtils.closeConnection(connection);
         }
         return this.parallel;
     }
