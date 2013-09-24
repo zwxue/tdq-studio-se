@@ -17,8 +17,8 @@ import junit.framework.Assert;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.talend.commons.utils.WorkspaceUtils;
 import org.talend.core.model.properties.ByteArray;
-import org.talend.core.repository.constants.FileConstants;
 import org.talend.dataquality.PluginConstant;
 import org.talend.dataquality.properties.PropertiesFactory;
 import org.talend.dataquality.properties.TDQSourceFileItem;
@@ -99,6 +99,6 @@ public class TDQSourceFileItemImplTest {
 
     @Test
     public void testGetFileExtension() {
-        Assert.assertEquals(FileConstants.SQL_EXTENSION, sqlItem.getFileExtension());
+        Assert.assertEquals(WorkspaceUtils.SQL_EXTENSION, sqlItem.getFileExtension());
     }
 }
