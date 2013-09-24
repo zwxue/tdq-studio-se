@@ -77,7 +77,7 @@ public class ExportConnectionToTOSAction extends Action {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see org.eclipse.jface.action.Action#run()
      */
     @Override
@@ -133,7 +133,7 @@ public class ExportConnectionToTOSAction extends Action {
 
     /**
      * DOC bZhou Comment method "initConnectionProperty".
-     *
+     * 
      * @param tdDataProvider
      * @return
      */
@@ -144,7 +144,7 @@ public class ExportConnectionToTOSAction extends Action {
         String description = MetadataHelper.getDescription(tdDataProvider);
         String status = MetadataHelper.getDevStatus(tdDataProvider);
 
-        connectionProperty.setLabel(tdDataProvider.getName() + "_" + pack.getName());//$NON-NLS-1$
+        connectionProperty.setLabel(tdDataProvider.getName());
         connectionProperty.setAuthor(((RepositoryContext) CoreRuntimePlugin.getInstance().getContext()
                 .getProperty(Context.REPOSITORY_CONTEXT_KEY)).getUser());
         connectionProperty.setPurpose(purpose);
@@ -157,7 +157,7 @@ public class ExportConnectionToTOSAction extends Action {
 
     /**
      * DOC bZhou Comment method "initConnectionItem".
-     *
+     * 
      * @param tdDataProvider
      * @return
      */
@@ -181,7 +181,7 @@ public class ExportConnectionToTOSAction extends Action {
 
     /**
      * DOC zshen Comment method "filterPackage".
-     *
+     * 
      * @param pack
      * @param exportedConn
      */
@@ -228,13 +228,13 @@ public class ExportConnectionToTOSAction extends Action {
 
     /**
      * DOC zshen Comment method "updateConnectionParameter".
-     *
+     * 
      * @param exportedConn
      */
     private void updateConnectionParameter(DatabaseConnection exportedConn, Package pack) {
         String connName = exportedConn.getName();
         exportedConn.setLabel(connName + "_" + pack.getName()); //$NON-NLS-1$
-
+        exportedConn.setName(connName + "_" + pack.getName()); //$NON-NLS-1$
         String database = pack.getName();
         // schema case
         if (pack instanceof Schema) {
@@ -257,9 +257,9 @@ public class ExportConnectionToTOSAction extends Action {
     }
 
     /**
-     *
+     * 
      * DOC gdbu Comment method "fillCatalogSchema".
-     *
+     * 
      * @deprecated Won't be used.
      * @param tdDataProvider
      */
@@ -301,7 +301,7 @@ public class ExportConnectionToTOSAction extends Action {
 
     /**
      * DOC bZhou Comment method "retrieveDBVersion".
-     *
+     * 
      * @param product
      * @return
      */
