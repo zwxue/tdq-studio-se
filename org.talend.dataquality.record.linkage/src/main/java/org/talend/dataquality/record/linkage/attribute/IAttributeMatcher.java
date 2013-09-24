@@ -62,6 +62,11 @@ public interface IAttributeMatcher {
     void setNullOption(String option);
 
     /**
+     * @return Return the option about the comparison of null values.
+     */
+    NullOption getNullOption();
+
+    /**
      * Method "getAttributeName" returns the attribute name.
      * 
      * @return the attribute name or null when not set.

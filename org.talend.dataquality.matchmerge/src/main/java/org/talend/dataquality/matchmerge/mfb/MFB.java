@@ -10,8 +10,11 @@
  */
 package org.talend.dataquality.matchmerge.mfb;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.talend.dataquality.matchmerge.*;
+import org.talend.dataquality.record.linkage.attribute.IAttributeMatcher;
+import org.talend.dataquality.record.linkage.constant.AttributeMatcherType;
 
 import java.util.*;
 
@@ -19,25 +22,37 @@ public class MFB implements MatchMergeAlgorithm {
 
     private static final Logger LOGGER = Logger.getLogger(MFB.class);
 
-    private final MatchAlgorithm[] algorithms;
+    private AttributeMatcherType[] algorithms;
 
-    private final float[] thresholds;
+    private float[] thresholds;
 
-    private final MergeAlgorithm[] merges;
+    private MergeAlgorithm[] merges;
 
-    private final int[] weights;
+    private double[] weights;
 
-    private final NullOption[] nullOptions;
+    private IAttributeMatcher.NullOption[] nullOptions;
 
-    private final SubString[] subStrings;
+    private SubString[] subStrings;
 
     private int maxWeight;
 
-    public MFB(MatchAlgorithm[] algorithms,
+    private double recordMatchThreshold;
+
+    public MFB() {
+        algorithms = new AttributeMatcherType[0];
+        this.thresholds = new float[0];
+        this.merges = new MergeAlgorithm[0];
+        this.weights = new double[0];
+        this.nullOptions = new IAttributeMatcher.NullOption[0];
+        this.subStrings = new SubString[0];
+        maxWeight = 0;
+    }
+
+    public MFB(AttributeMatcherType[] algorithms,
                float[] thresholds,
                MergeAlgorithm[] merges,
-               int[] weights,
-               NullOption[] nullOptions,
+               double[] weights,
+               IAttributeMatcher.NullOption[] nullOptions,
                SubString[] subStrings) {
         this.algorithms = algorithms;
         this.thresholds = thresholds;
@@ -48,7 +63,7 @@ public class MFB implements MatchMergeAlgorithm {
         if (algorithms.length == 0 || thresholds.length == 0 || merges.length == 0 || weights.length == 0) {
             LOGGER.warn("Algorithm initialized with no matching algorithm/threshold/merge/weight information");
         }
-        for (int weight : weights) {
+        for (double weight : weights) {
             maxWeight += weight;
         }
     }
@@ -141,6 +156,121 @@ public class MFB implements MatchMergeAlgorithm {
         double normalizedConfidence = confidence > 0 ? confidence / maxWeight : confidence; // Normalize to 0..1 value
         currentRecord.setConfidence(normalizedConfidence);
         return true;
+    }
+
+    @Override
+    public void setRecordSize(int numberOfAttributes) {
+        if (numberOfAttributes != algorithms.length) {
+            algorithms = new AttributeMatcherType[numberOfAttributes];
+            thresholds = new float[numberOfAttributes];
+            merges = new MergeAlgorithm[numberOfAttributes];
+            weights = new double[numberOfAttributes];
+            nullOptions = new IAttributeMatcher.NullOption[numberOfAttributes];
+            subStrings = new SubString[numberOfAttributes];
+        }
+    }
+
+    @Override
+    public int getRecordSize() {
+        return algorithms.length;
+    }
+
+    @Override
+    public boolean setAttributeWeights(double[] weights) {
+        if (this.weights.length > weights.length) {
+            return false;
+        }
+        this.weights = weights;
+        return true;
+    }
+
+    @Override
+    public boolean setAttributeGroups(int[][] groups) {
+        // All values are compared in this algorithm
+        return true;
+    }
+
+    @Override
+    public boolean setAttributeMatchers(IAttributeMatcher[] attributeMatchers) {
+        if (attributeMatchers.length > algorithms.length) {
+            return false;
+        }
+        int i = 0;
+        for (IAttributeMatcher attributeMatcher : attributeMatchers) {
+            algorithms[i] = attributeMatcher.getMatchType();
+            nullOptions[i] = attributeMatcher.getNullOption();
+            i++;
+        }
+        return true;
+    }
+
+    @Override
+    public double getMatchingWeight(String[] record1, String[] record2) {
+        List<String[]> records = new ArrayList<String[]>(2);
+        records.add(record1);
+        records.add(record2);
+        final Iterator<String[]> iterator = records.iterator();
+        // Performs a match&merge on these 2 records -> Only one record at the end = match.
+        List<Record> list = execute(new Iterator<Record>() {
+            @Override
+            public boolean hasNext() {
+                return iterator.hasNext();
+            }
+
+            @Override
+            public Record next() {
+                String[] values = iterator.next();
+                ArrayList<Attribute> attributes = new ArrayList<Attribute>();
+                int i = 0;
+                for (String value : values) {
+                    attributes.add(new Attribute(String.valueOf(i++), value));
+                }
+                return new Record(attributes, StringUtils.EMPTY);
+            }
+
+            @Override
+            public void remove() {
+                iterator.remove();
+            }
+        });
+        return list.size() == 1 ? 1 : 0;
+    }
+
+    @Override
+    public double[] getCurrentAttributeMatchingWeights() {
+        return new double[0];
+    }
+
+    @Override
+    public String getLabeledAttributeMatchWeights() {
+        return StringUtils.EMPTY;
+    }
+
+    @Override
+    public boolean setBlockingAttributeMatchers(int[] attrMatcherIndices) {
+        // This implementation does not perform blocking -> block construction is expected to be done by caller.
+        return false;
+    }
+
+    @Override
+    public boolean setblockingThreshold(double threshold) {
+        // This implementation does not perform blocking -> block construction is expected to be done by caller.
+        return false;
+    }
+
+    @Override
+    public double getRecordMatchThreshold() {
+        return recordMatchThreshold;
+    }
+
+    @Override
+    public void setRecordMatchThreshold(double recordMatchThreshold) {
+        this.recordMatchThreshold = recordMatchThreshold;
+    }
+
+    @Override
+    public void setDisplayLabels(boolean displayLabels) {
+        // TODO Nothing to do here?
     }
 }
 

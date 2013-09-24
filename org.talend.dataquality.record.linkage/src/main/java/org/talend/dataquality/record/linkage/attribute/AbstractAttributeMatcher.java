@@ -83,9 +83,14 @@ public abstract class AbstractAttributeMatcher implements IAttributeMatcher {
         this.nullOption = option;
     }
 
+    @Override
+    public NullOption getNullOption() {
+        return nullOption;
+    }
+
     /*
      * (non-Javadoc)
-     * 
+     *
      * @see org.talend.dataquality.record.linkage.attribute.IAttributeMatcher#getAttributeName()
      */
     @Override

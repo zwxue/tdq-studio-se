@@ -90,6 +90,11 @@ public class SubstringAttributeMatcher implements IAttributeMatcher {
     }
 
     @Override
+    public NullOption getNullOption() {
+        return delegate.getNullOption();
+    }
+
+    @Override
     public String getAttributeName() {
         return delegate.getAttributeName();
     }

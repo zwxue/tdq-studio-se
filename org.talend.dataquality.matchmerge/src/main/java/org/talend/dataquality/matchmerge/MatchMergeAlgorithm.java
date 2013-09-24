@@ -11,6 +11,8 @@
 
 package org.talend.dataquality.matchmerge;
 
+import org.talend.dataquality.record.linkage.record.IRecordMatcher;
+
 import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
@@ -18,7 +20,7 @@ import java.util.Vector;
 /**
  *
  */
-public interface MatchMergeAlgorithm {
+public interface MatchMergeAlgorithm extends IRecordMatcher {
 
     List<Record> execute(Iterator<Record> sourceRecords);
 

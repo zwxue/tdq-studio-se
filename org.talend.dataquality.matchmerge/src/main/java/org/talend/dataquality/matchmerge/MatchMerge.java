@@ -144,53 +144,14 @@ public class MatchMerge {
 
     public static double matchScore(Attribute attribute0,
                                     Attribute attribute1,
-                                    MatchAlgorithm algorithm,
-                                    NullOption nullOption,
+                                    AttributeMatcherType algorithm,
+                                    IAttributeMatcher.NullOption nullOption,
                                     SubString subString) {
         String leftValue = attribute0.getValue();
         String rightValue = attribute1.getValue();
-        IAttributeMatcher matcher;
-        switch (algorithm) {
-            case LEVENSHTEIN:
-                matcher = AttributeMatcherFactory.createMatcher(AttributeMatcherType.levenshtein);
-                break;
-            case JAROWINKLER:
-                matcher = AttributeMatcherFactory.createMatcher(AttributeMatcherType.jaroWinkler);
-                break;
-            case JACCARD:
-                throw new RuntimeException("Not supported " + algorithm);
-            case SOUNDEX:
-                matcher = AttributeMatcherFactory.createMatcher(AttributeMatcherType.soundex);
-                break;
-            case DOUBLE_METAPHONE:
-                matcher = AttributeMatcherFactory.createMatcher(AttributeMatcherType.doubleMetaphone);
-                break;
-            case DIFFERENCE:
-                matcher = AttributeMatcherFactory.createMatcher(AttributeMatcherType.exact);
-                break;
-            case DATE_COMPARE_YEAR:
-                throw new RuntimeException("Not supported " + algorithm);
-            case DATE_COMPARE_YEAR_MONTH:
-                throw new RuntimeException("Not supported " + algorithm);
-            case DATE_COMPARE_YEAR_MONTH_DAY:
-                throw new RuntimeException("Not supported " + algorithm);
-            case COMPARE_DOUBLE:
-                return leftValue.equals(rightValue) ? 1 : 0;
-            default:
-                throw new RuntimeException("Not supported " + algorithm);
-        }
+        IAttributeMatcher matcher = AttributeMatcherFactory.createMatcher(algorithm);
         // Null match options
-        switch (nullOption) {
-            case MATCH_NULL:
-                matcher.setNullOption(IAttributeMatcher.NullOption.nullMatchNull);
-                break;
-            case MATCH_ALL:
-                matcher.setNullOption(IAttributeMatcher.NullOption.nullMatchAll);
-                break;
-            case MATCH_NONE:
-                matcher.setNullOption(IAttributeMatcher.NullOption.nullMatchNone);
-                break;
-        }
+        matcher.setNullOption(nullOption);
         // Sub string
         if (subString.needSubStringOperation()) {
             matcher = SubstringAttributeMatcher.decorate(matcher, subString.getBeginIndex(), subString.getEndIndex());

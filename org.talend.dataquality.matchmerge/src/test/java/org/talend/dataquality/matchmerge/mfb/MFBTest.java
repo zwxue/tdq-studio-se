@@ -13,6 +13,8 @@ package org.talend.dataquality.matchmerge.mfb;
 
 import junit.framework.TestCase;
 import org.talend.dataquality.matchmerge.*;
+import org.talend.dataquality.record.linkage.attribute.IAttributeMatcher;
+import org.talend.dataquality.record.linkage.constant.AttributeMatcherType;
 
 import java.util.*;
 
@@ -22,19 +24,19 @@ public class MFBTest extends TestCase {
 
     private final static String[] SIMILARS = {"constant", "constan", "ocnstant", "constnat", "constnta", "oncstant", "constatn", "consttan"};
 
-    private final static MatchAlgorithm[] TESTS_MATCH = {
-            MatchAlgorithm.LEVENSHTEIN,
-            MatchAlgorithm.SOUNDEX,
-            MatchAlgorithm.JAROWINKLER,
-            MatchAlgorithm.DOUBLE_METAPHONE
+    private final static AttributeMatcherType[] TESTS_MATCH = {
+            AttributeMatcherType.levenshtein,
+            AttributeMatcherType.soundex,
+            AttributeMatcherType.jaroWinkler,
+            AttributeMatcherType.doubleMetaphone
     };
 
     public void testArguments() throws Exception {
-        MatchMergeAlgorithm algorithm = new MFB(new MatchAlgorithm[0],
+        MatchMergeAlgorithm algorithm = new MFB(new AttributeMatcherType[0],
                 new float[0],
                 new MergeAlgorithm[0],
-                new int[0],
-                new NullOption[0],
+                new double[0],
+                new IAttributeMatcher.NullOption[0],
                 new SubString[0]);
         List<Record> list = algorithm.execute(Collections.<Record>emptyList().iterator());
         assertEquals(0, list.size());
@@ -43,18 +45,18 @@ public class MFBTest extends TestCase {
     public void testEmptyRecords() throws Exception {
         Map<String, ValueGenerator> generators = new HashMap<String, ValueGenerator>();
         Iterator<Record> iterator = new ValuesIterator(100000, generators);
-        MatchMergeAlgorithm algorithm = new MFB(new MatchAlgorithm[0],
+        MatchMergeAlgorithm algorithm = new MFB(new AttributeMatcherType[0],
                 new float[0],
                 new MergeAlgorithm[0],
-                new int[0],
-                new NullOption[0],
+                new double[0],
+                new IAttributeMatcher.NullOption[0],
                 new SubString[0]);
         List<Record> list = algorithm.execute(iterator);
         assertEquals(100000, list.size());
     }
 
     public void testConstantValueRecords() throws Exception {
-        for (MatchAlgorithm matchAlgorithm : TESTS_MATCH) {
+        for (AttributeMatcherType matchAlgorithm : TESTS_MATCH) {
             testConstant(1, 100000, matchAlgorithm);
             testConstant(2, 100000, matchAlgorithm);
             testConstant(4, 100000, matchAlgorithm);
@@ -62,7 +64,7 @@ public class MFBTest extends TestCase {
         }
     }
 
-    private static void testConstant(final int constantNumber, int totalCount, MatchAlgorithm matchAlgorithm) {
+    private static void testConstant(final int constantNumber, int totalCount, AttributeMatcherType matchAlgorithm) {
         Map<String, ValueGenerator> generators = new HashMap<String, ValueGenerator>();
         generators.put("name", new ValueGenerator() {
             int index = 0;
@@ -74,11 +76,11 @@ public class MFBTest extends TestCase {
         });
 
         Iterator<Record> iterator = new ValuesIterator(totalCount, generators);
-        MatchMergeAlgorithm algorithm = new MFB(new MatchAlgorithm[]{matchAlgorithm},
+        MatchMergeAlgorithm algorithm = new MFB(new AttributeMatcherType[]{matchAlgorithm},
                 new float[]{1},
                 new MergeAlgorithm[]{MergeAlgorithm.UNIFY},
-                new int[]{1},
-                new NullOption[]{NullOption.MATCH_ALL},
+                new double[]{1},
+                new IAttributeMatcher.NullOption[]{IAttributeMatcher.NullOption.nullMatchAll},
                 new SubString[]{SubString.NO_SUBSTRING});
         List<Record> mergedRecords = algorithm.execute(iterator);
         assertEquals(constantNumber, mergedRecords.size());
@@ -89,7 +91,7 @@ public class MFBTest extends TestCase {
     }
 
     public void testMatchWeight() throws Exception {
-        for (MatchAlgorithm matchAlgorithm : TESTS_MATCH) {
+        for (AttributeMatcherType matchAlgorithm : TESTS_MATCH) {
             testWeight(1, 100000, matchAlgorithm);
             testWeight(2, 100000, matchAlgorithm);
             testWeight(4, 100000, matchAlgorithm);
@@ -97,7 +99,7 @@ public class MFBTest extends TestCase {
         }
     }
 
-    private static void testWeight(final int constantNumber, int totalCount, MatchAlgorithm matchAlgorithm) {
+    private static void testWeight(final int constantNumber, int totalCount, AttributeMatcherType matchAlgorithm) {
         Map<String, ValueGenerator> generators = new HashMap<String, ValueGenerator>();
         generators.put("name", new ValueGenerator() {
             int index = 0;
@@ -109,11 +111,11 @@ public class MFBTest extends TestCase {
         });
 
         Iterator<Record> iterator = new ValuesIterator(totalCount, generators);
-        MatchMergeAlgorithm algorithm = new MFB(new MatchAlgorithm[]{matchAlgorithm},
+        MatchMergeAlgorithm algorithm = new MFB(new AttributeMatcherType[]{matchAlgorithm},
                 new float[]{1},
                 new MergeAlgorithm[]{MergeAlgorithm.UNIFY},
-                new int[]{0}, // Mark rule with no weight (-> match record should have a 0 confidence).
-                new NullOption[] {NullOption.MATCH_ALL},
+                new double[]{0}, // Mark rule with no weight (-> match record should have a 0 confidence).
+                new IAttributeMatcher.NullOption[] {IAttributeMatcher.NullOption.nullMatchAll},
                 new SubString[]{SubString.NO_SUBSTRING});
         List<Record> mergedRecords = algorithm.execute(iterator);
         assertEquals(constantNumber, mergedRecords.size());
@@ -126,13 +128,13 @@ public class MFBTest extends TestCase {
 
 
     public void testSimilarValueRecords() throws Exception {
-        testSimilar(1, 100000, MatchAlgorithm.LEVENSHTEIN);
-        testSimilar(2, 100000, MatchAlgorithm.LEVENSHTEIN);
-        testSimilar(4, 100000, MatchAlgorithm.LEVENSHTEIN);
-        testSimilar(8, 100000, MatchAlgorithm.LEVENSHTEIN);
+        testSimilar(1, 100000, AttributeMatcherType.levenshtein);
+        testSimilar(2, 100000, AttributeMatcherType.levenshtein);
+        testSimilar(4, 100000, AttributeMatcherType.levenshtein);
+        testSimilar(8, 100000, AttributeMatcherType.levenshtein);
     }
 
-    private static void testSimilar(final int similarNumber, int totalCount, MatchAlgorithm matchAlgorithm) {
+    private static void testSimilar(final int similarNumber, int totalCount, AttributeMatcherType matchAlgorithm) {
         Map<String, ValueGenerator> generators = new HashMap<String, ValueGenerator>();
         generators.put("name", new ValueGenerator() {
             int index = 0;
@@ -144,11 +146,11 @@ public class MFBTest extends TestCase {
         });
 
         Iterator<Record> iterator = new ValuesIterator(totalCount, generators);
-        MatchMergeAlgorithm algorithm = new MFB(new MatchAlgorithm[]{matchAlgorithm},
+        MatchMergeAlgorithm algorithm = new MFB(new AttributeMatcherType[]{matchAlgorithm},
                 new float[]{0.5f},
                 new MergeAlgorithm[]{MergeAlgorithm.UNIFY},
-                new int[]{1},
-                new NullOption[]{NullOption.MATCH_ALL},
+                new double[]{1},
+                new IAttributeMatcher.NullOption[]{IAttributeMatcher.NullOption.nullMatchAll},
                 new SubString[]{SubString.NO_SUBSTRING});
         List<Record> mergedRecords = algorithm.execute(iterator);
         assertEquals(1, mergedRecords.size());
