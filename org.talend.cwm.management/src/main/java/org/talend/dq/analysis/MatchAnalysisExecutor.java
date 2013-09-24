@@ -24,6 +24,8 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.talend.core.GlobalServiceRegister;
+import org.talend.core.ITDQRepositoryService;
 import org.talend.core.model.metadata.builder.connection.MetadataColumn;
 import org.talend.cwm.db.connection.DatabaseSQLExecutor;
 import org.talend.cwm.db.connection.DelimitedFileSQLExecutor;
@@ -138,6 +140,9 @@ public class MatchAnalysisExecutor implements IAnalysisExecutor {
         // --- set metadata information of analysis
         AnalysisExecutorHelper.setExecutionNumberInAnalysisResult(analysis, true, isLowMemory, usedMemory);
 
+        // nodify the master page
+        refreshTableWithMatchFullResult(analysis);
+
         // --- compute execution duration
         if (this.continueRun()) {
             long endtime = System.currentTimeMillis();
@@ -147,6 +152,25 @@ public class MatchAnalysisExecutor implements IAnalysisExecutor {
         }
 
         return rc;
+    }
+
+    /**
+     * refresh Table With Match Full Result .
+     * 
+     * @param analysis
+     * 
+     * @param matchResultConsumer
+     */
+    private void refreshTableWithMatchFullResult(Analysis analysis) {
+        ITDQRepositoryService tdqRepService = null;
+
+        if (GlobalServiceRegister.getDefault().isServiceRegistered(ITDQRepositoryService.class)) {
+            tdqRepService = (ITDQRepositoryService) GlobalServiceRegister.getDefault().getService(ITDQRepositoryService.class);
+        }
+        if (tdqRepService != null) {
+            tdqRepService.refreshTableWithResult(analysis, null);
+        }
+
     }
 
     /**

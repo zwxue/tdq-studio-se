@@ -743,6 +743,11 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
      * @param listOfData
      */
     public void refreshTable(List<Object[]> listOfData) {
+        // if come from the run, the color should back to black
+        if (listOfData == null) {
+            this.setAllColumnColorToBlack();
+            return;
+        }
         // dispose the data table composite
         disposeDataTable();
         // create the data table composite
