@@ -25,10 +25,10 @@ public class MFBTest extends TestCase {
     private final static String[] SIMILARS = {"constant", "constan", "ocnstant", "constnat", "constnta", "oncstant", "constatn", "consttan"};
 
     private final static AttributeMatcherType[] TESTS_MATCH = {
-            AttributeMatcherType.levenshtein,
-            AttributeMatcherType.soundex,
-            AttributeMatcherType.jaroWinkler,
-            AttributeMatcherType.doubleMetaphone
+            AttributeMatcherType.LEVENSHTEIN,
+            AttributeMatcherType.SOUNDEX,
+            AttributeMatcherType.JARO_WINKLER,
+            AttributeMatcherType.DOUBLE_METAPHONE
     };
 
     public void testArguments() throws Exception {
@@ -126,12 +126,11 @@ public class MFBTest extends TestCase {
         }
     }
 
-
     public void testSimilarValueRecords() throws Exception {
-        testSimilar(1, 100000, AttributeMatcherType.levenshtein);
-        testSimilar(2, 100000, AttributeMatcherType.levenshtein);
-        testSimilar(4, 100000, AttributeMatcherType.levenshtein);
-        testSimilar(8, 100000, AttributeMatcherType.levenshtein);
+        testSimilar(1, 100000, AttributeMatcherType.LEVENSHTEIN);
+        testSimilar(2, 100000, AttributeMatcherType.LEVENSHTEIN);
+        testSimilar(4, 100000, AttributeMatcherType.LEVENSHTEIN);
+        testSimilar(8, 100000, AttributeMatcherType.LEVENSHTEIN);
     }
 
     private static void testSimilar(final int similarNumber, int totalCount, AttributeMatcherType matchAlgorithm) {
