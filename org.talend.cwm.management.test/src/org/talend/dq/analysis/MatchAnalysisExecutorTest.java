@@ -15,16 +15,15 @@ package org.talend.dq.analysis;
 import static org.junit.Assert.assertTrue;
 
 import java.net.URL;
-import java.util.List;
 import java.util.Map;
 
-import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.junit.Before;
 import org.junit.Test;
 import org.talend.core.model.metadata.builder.connection.ConnectionPackage;
 import org.talend.core.model.metadata.builder.connection.DelimitedFileConnection;
 import org.talend.core.model.metadata.builder.connection.MetadataColumn;
+import org.talend.core.model.metadata.builder.connection.MetadataTable;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisContext;
 import org.talend.dataquality.analysis.AnalysisPackage;
@@ -41,7 +40,7 @@ import org.talend.dataquality.rules.MatchKeyDefinition;
 import org.talend.dataquality.rules.MatchRule;
 import org.talend.dataquality.rules.MatchRuleDefinition;
 import org.talend.dataquality.rules.RulesPackage;
-import orgomg.cwm.objectmodel.core.ModelElement;
+import org.talend.dq.helper.UnitTestBuildHelper;
 
 /**
  * created by zhao on Aug 28, 2013 Detailled comment
@@ -50,6 +49,10 @@ import orgomg.cwm.objectmodel.core.ModelElement;
 public class MatchAnalysisExecutorTest {
 
     private DelimitedFileConnection delimitedFileconnection = null;
+
+    private MetadataTable metadataTable = null;
+
+    private MetadataColumn name = null;
 
     @Before
     public void setUp() throws Exception {
@@ -77,57 +80,28 @@ public class MatchAnalysisExecutorTest {
 
         context.setConnection(delimitedFileconnection);
         URL fileUrl = this.getClass().getResource("match_test_data"); //$NON-NLS-1$
-        try {
-            delimitedFileconnection.setFilePath(FileLocator.toFileURL(fileUrl).toURI().getPath().toString());
-            delimitedFileconnection.setRowSeparatorValue("\n");
-            delimitedFileconnection.setEncoding("UTF-8");
-            delimitedFileconnection.setFieldSeparatorValue(",");
+        metadataTable = UnitTestBuildHelper.getDefault().initFileConnection(fileUrl, delimitedFileconnection);
 
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        List<ModelElement> anaElements = context.getAnalysedElements();
-        // Name
-        MetadataColumn name = ConnectionPackage.eINSTANCE.getConnectionFactory().createMetadataColumn();
-        String nameVar = "name";
-        name.setName(nameVar);
-        anaElements.add(name);
-        // Company
-        MetadataColumn company = ConnectionPackage.eINSTANCE.getConnectionFactory().createMetadataColumn();
-        company.setName("company");
-        anaElements.add(company);
-        // City
-        MetadataColumn city = ConnectionPackage.eINSTANCE.getConnectionFactory().createMetadataColumn();
-        city.setName("city");
-        anaElements.add(city);
-        // Country
-        MetadataColumn country = ConnectionPackage.eINSTANCE.getConnectionFactory().createMetadataColumn();
-        country.setName("country");
-        anaElements.add(country);
-        // comment
-        MetadataColumn comment = ConnectionPackage.eINSTANCE.getConnectionFactory().createMetadataColumn();
-        comment.setName("comment");
-        anaElements.add(comment);
+        this.name = UnitTestBuildHelper.getDefault().initColumns(context, this.metadataTable);
 
         // Scenario 1
         // - Match key: name, no block key, levenshtein attribute algorithm. groupQualityThreshold = 0.9d, matchInterval
         // = 0.95d .
         double groupQualityThreshold = 0.9d;
         double matchInterval = 0.95d;
-        assertScenario1(matchAnalysisExecutor, analysis, name, nameVar, groupQualityThreshold, matchInterval);
+        assertScenario1(matchAnalysisExecutor, analysis, name, "name", groupQualityThreshold, matchInterval);
         // Scenario 2
         // - Same to scenario 1, EXCEPT matchInterval = 0.8d .
         matchInterval = 0.8d;
-        assertScenario2(matchAnalysisExecutor, analysis, name, nameVar, groupQualityThreshold, matchInterval);
+        assertScenario2(matchAnalysisExecutor, analysis, name, "name", groupQualityThreshold, matchInterval);
         // Scenario 3
         // - Same to scenario 2, EXCEPT groupQualityThreshold = 0.95d.
         groupQualityThreshold = 0.95d;
-        assertScenario3(matchAnalysisExecutor, analysis, name, nameVar, groupQualityThreshold, matchInterval);
+        assertScenario3(matchAnalysisExecutor, analysis, name, "name", groupQualityThreshold, matchInterval);
         // Scenario 4
         // - Same to scenario 3, EXCEPT a new blocking key = country.
 
-        assertScenario4(matchAnalysisExecutor, analysis, name, nameVar, groupQualityThreshold, matchInterval);
+        assertScenario4(matchAnalysisExecutor, analysis, name, "name", groupQualityThreshold, matchInterval);
 
     }
 
@@ -253,10 +227,10 @@ public class MatchAnalysisExecutorTest {
         blockKeyDef.setName("country");
 
         AlgorithmDefinition dummyAlgoPre = RulesPackage.eINSTANCE.getRulesFactory().createAlgorithmDefinition();
-        dummyAlgoPre.setAlgorithmType(BlockingKeyPreAlgorithmEnum.NON_ALGO.getValue());
+        dummyAlgoPre.setAlgorithmType(BlockingKeyPreAlgorithmEnum.NON_ALGO.getComponentValueName());
         blockKeyDef.setPreAlgorithm(dummyAlgoPre);
         AlgorithmDefinition dummyAlgoPost = RulesPackage.eINSTANCE.getRulesFactory().createAlgorithmDefinition();
-        dummyAlgoPost.setAlgorithmType(BlockingKeyPreAlgorithmEnum.NON_ALGO.getValue());
+        dummyAlgoPost.setAlgorithmType(BlockingKeyPreAlgorithmEnum.NON_ALGO.getComponentValueName());
         blockKeyDef.setPostAlgorithm(dummyAlgoPost);
 
         matchIndicator.getBuiltInMatchRuleDefinition().getBlockKeys().add(blockKeyDef);
