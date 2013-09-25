@@ -191,7 +191,7 @@ public final class ConnectionUtils {
                 // cause exception: No suitable driver
                 // found... if not load.
                 try {
-                    Class.forName(EDatabase4DriverClassName.HSQLDB.getDriverClass());//$NON-NLS-1$
+                    Class.forName(EDatabase4DriverClassName.HSQLDB.getDriverClass());
                 } catch (ClassNotFoundException e) {
                     log.error(e, e);
                 }
@@ -274,6 +274,10 @@ public final class ConnectionUtils {
         if (metadataConnection != null) {
             if (EDatabaseTypeName.HIVE.getXmlName().equalsIgnoreCase(metadataConnection.getDbType())) {
                 try {
+                    // need to do this first when check for hive embed connection.
+                    if (isHiveEmbedded(analysisDataProvider)) {
+                        JavaSqlFactory.doHivePreSetup(analysisDataProvider);
+                    }
                     HiveConnectionManager.getInstance().checkConnection(metadataConnection);
                     returnCode.setOk(true);
                     return returnCode;
@@ -360,10 +364,6 @@ public final class ConnectionUtils {
                 props.put(TaggedValueHelper.DB_PRODUCT_VERSION, dbVersionString);
             }
 
-        }
-
-        if (isHiveEmbedded(analysisDataProvider)) {
-            JavaSqlFactory.doHivePreSetup(analysisDataProvider);
         }
 
         returnCode = ConnectionUtils.checkConnection(url, JavaSqlFactory.getDriverClass(analysisDataProvider), props);
