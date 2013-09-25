@@ -55,7 +55,7 @@ public class MatchAnalysisConstant {
 
     public static final String MATCH_RULE_TABLE_COMPOSITE = "MATCH_RULE_TABLE_COMPOSITE"; //$NON-NLS-1$
 
-    public static final String THRESHOLD = "threshold"; //$NON-NLS-1$
+    public static final String THRESHOLD = "MatchAnalysisConstant.THRESHOLD"; //$NON-NLS-1$
 
     // block key need
     public static final String BLOCKING_KEY_NAME = "MatchAnalysisConstant.BLOCKING_KEY_NAME"; //$NON-NLS-1$
@@ -101,13 +101,13 @@ public class MatchAnalysisConstant {
     public static final String MATCHING_KEY_DEFINITION_SECTION_NAME = "Matching key"; //$NON-NLS-1$
 
     // survivorship
-    public static final String SURVIVORSHIP_KEY_NAME = "Survivor Rule Name"; //$NON-NLS-1$
+    public static final String SURVIVORSHIP_KEY_NAME = "MatchAnalysisConstant.SurvivorshipRuleName"; //$NON-NLS-1$
 
-    public static final String FUNCTION = "Function"; //$NON-NLS-1$
+    public static final String FUNCTION = "MatchAnalysisConstant.Function"; //$NON-NLS-1$
 
-    public static final String ALLOW_MANUAL_RESOLUTION = "Allow Manual Resolution"; //$NON-NLS-1$
+    public static final String ALLOW_MANUAL_RESOLUTION = "MatchAnalysisConstant.AllowManualResolution"; //$NON-NLS-1$
 
-    public static final String DATA_TYPE = "Data Type"; //$NON-NLS-1$
+    public static final String DATA_TYPE = "MatchAnalysisConstant.DataType"; //$NON-NLS-1$
 
     public static final String SURVIVIORSHIP_DEFINITION_SECTION_NAME = "Survivorship"; //$NON-NLS-1$
 
