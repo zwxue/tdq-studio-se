@@ -21,7 +21,6 @@ import java.util.Map;
 
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.emf.common.util.EList;
-import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -43,11 +42,13 @@ import com.csvreader.CsvReader;
  */
 public class ExportFactoryTest {
 
-    private static final String UDI_NAME = "UDI1"; //$NON-NLS-1$
+    private String getRandomUdiName() {
+        return StringUtilities.getRandomString(8);
+    }
 
     /**
      * DOC xqliu Comment method "setUpBeforeClass".
-     *
+     * 
      * @throws java.lang.Exception
      */
     @BeforeClass
@@ -57,7 +58,7 @@ public class ExportFactoryTest {
 
     /**
      * DOC xqliu Comment method "tearDownAfterClass".
-     *
+     * 
      * @throws java.lang.Exception
      */
     @AfterClass
@@ -67,14 +68,13 @@ public class ExportFactoryTest {
 
     /**
      * DOC xqliu Comment method "setUp".
-     *
+     * 
      * @throws java.lang.Exception
      */
     @Before
     public void setUp() throws Exception {
         UnitTestBuildHelper.initProjectStructure("testForEXportFactoryTDQ"); //$NON-NLS-1$
     }
-
 
     /**
      * Test method for
@@ -86,7 +86,7 @@ public class ExportFactoryTest {
         File exportFile = new File(
                 System.getProperty("java.io.tmpdir") + File.separator + StringUtilities.getRandomString(8) + ".csv"); //$NON-NLS-1$ //$NON-NLS-2$
         IFolder udiFolder = ResourceManager.getUDIFolder();
-        IndicatorDefinition indDef = createExportIndicaorDefinition(udiFolder);
+        IndicatorDefinition indDef = createExportIndicaorDefinition(udiFolder, getRandomUdiName());
         ExportFactory.export(exportFile, udiFolder, indDef);
 
         assertTrue(exportFile.exists());
@@ -122,15 +122,16 @@ public class ExportFactoryTest {
      */
     @Test
     public void testExportFolderIFolderIndicatorDefinitionArray() throws Exception {
+        String udiName = getRandomUdiName();
         File exportFolder = new File(System.getProperty("java.io.tmpdir") + File.separator + StringUtilities.getRandomString(8)); //$NON-NLS-1$
         if (!exportFolder.exists()) {
             exportFolder.mkdirs();
         }
         IFolder udiFolder = ResourceManager.getUDIFolder();
-        IndicatorDefinition indDef = createExportIndicaorDefinition(udiFolder);
+        IndicatorDefinition indDef = createExportIndicaorDefinition(udiFolder, udiName);
         ExportFactory.export(exportFolder, udiFolder, indDef);
 
-        File exportFile = new File(exportFolder.getAbsolutePath() + File.separator + UDI_NAME + ".csv"); //$NON-NLS-1$
+        File exportFile = new File(exportFolder.getAbsolutePath() + File.separator + udiName + ".csv"); //$NON-NLS-1$
         assertTrue(exportFile.exists());
         assertTrue(exportFile.isFile());
         assertTrue(exportFile.length() > 0);
@@ -164,12 +165,13 @@ public class ExportFactoryTest {
      */
     @Test
     public void testExportFolderIFolderIndicatorDefinitionArrayNonNormalFolderNotExist() throws Exception {
+        String udiName = getRandomUdiName();
         File exportFolder = new File(File.separator + StringUtilities.getRandomString(8));
         IFolder udiFolder = ResourceManager.getUDIFolder();
-        IndicatorDefinition indDef = createExportIndicaorDefinition(udiFolder);
+        IndicatorDefinition indDef = createExportIndicaorDefinition(udiFolder, udiName);
         ExportFactory.export(exportFolder, udiFolder, indDef);
 
-        File exportFile = new File(exportFolder.getAbsolutePath() + File.separator + UDI_NAME + ".csv"); //$NON-NLS-1$
+        File exportFile = new File(exportFolder.getAbsolutePath() + File.separator + udiName + ".csv"); //$NON-NLS-1$
         assertFalse(exportFile.exists());
     }
 
@@ -183,7 +185,7 @@ public class ExportFactoryTest {
         File exportFile = new File(
                 System.getProperty("java.io.tmpdir") + File.separator + StringUtilities.getRandomString(8) + ".abc"); //$NON-NLS-1$ //$NON-NLS-2$
         IFolder udiFolder = ResourceManager.getUDIFolder();
-        IndicatorDefinition indDef = createExportIndicaorDefinition(udiFolder);
+        IndicatorDefinition indDef = createExportIndicaorDefinition(udiFolder, getRandomUdiName());
         ExportFactory.export(exportFile, udiFolder, indDef);
 
         assertFalse(exportFile.exists());
@@ -191,13 +193,13 @@ public class ExportFactoryTest {
 
     /**
      * create the IndicaorDefinition for test.
-     *
+     * 
      * @return
      */
-    private IndicatorDefinition createExportIndicaorDefinition(IFolder folder) {
+    private IndicatorDefinition createExportIndicaorDefinition(IFolder folder, String udiName) {
         IndicatorDefinition indDef = DefinitionFactory.eINSTANCE.createIndicatorDefinition();
 
-        indDef.setName(UDI_NAME);
+        indDef.setName(udiName);
 
         Map<String, String> indDefParaMap = getIndDefParaMap();
         for (String key : indDefParaMap.keySet()) {
@@ -216,7 +218,7 @@ public class ExportFactoryTest {
 
     /**
      * get the IndicatorDefinitionParameter's key value map for test.
-     *
+     * 
      * @return
      */
     private Map<String, String> getIndDefParaMap() {
