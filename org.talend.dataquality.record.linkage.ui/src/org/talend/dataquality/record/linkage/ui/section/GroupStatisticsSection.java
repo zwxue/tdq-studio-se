@@ -71,6 +71,7 @@ public class GroupStatisticsSection extends AbstractMatchKeyWithChartTableSectio
         chartComposite.setLayoutData(gridData);
 
         matchRuleChartComp = new MatchRuleDataChart(chartComposite, recordMatchingIndicator.getGroupSize2groupFrequency());
+
         createHideGroupComposite(chartComposite);
     }
 
@@ -83,9 +84,14 @@ public class GroupStatisticsSection extends AbstractMatchKeyWithChartTableSectio
      */
     @Override
     protected Composite createSubContent(Composite sectionClient) {
-        groupStatisticsTableViewer = new GroupStatisticsTableViewer(sectionClient, SWT.NONE);
+        Composite parent = toolkit.createComposite(sectionClient);
+        GridLayout tableLayout = new GridLayout(1, Boolean.TRUE);
+        parent.setLayout(tableLayout);
+        GridData gridData = new GridData(GridData.FILL_BOTH);
+        parent.setLayoutData(gridData);
+        groupStatisticsTableViewer = new GroupStatisticsTableViewer(parent, SWT.NONE);
         setGroupStatisticsTableInput();
-        return sectionClient;
+        return parent;
     }
 
     /**

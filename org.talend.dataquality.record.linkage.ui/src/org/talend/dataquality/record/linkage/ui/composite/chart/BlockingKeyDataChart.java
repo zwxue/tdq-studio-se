@@ -28,6 +28,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
+import org.jfree.chart.StandardChartTheme;
 import org.jfree.chart.axis.ValueAxis;
 import org.jfree.chart.labels.ItemLabelAnchor;
 import org.jfree.chart.labels.ItemLabelPosition;
@@ -85,6 +86,7 @@ public class BlockingKeyDataChart extends Composite {
     }
 
     public static JFreeChart createBarChart(String titile, HistogramDataset dataset, boolean showLegend) {
+        ChartFactory.setChartTheme(StandardChartTheme.createLegacyTheme());
         JFreeChart chart = ChartFactory.createHistogram(null, titile,
                 "Key frequency", dataset, PlotOrientation.VERTICAL, showLegend, //$NON-NLS-1$
                 true, false);

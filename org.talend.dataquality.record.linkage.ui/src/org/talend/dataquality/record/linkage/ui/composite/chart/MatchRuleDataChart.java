@@ -27,6 +27,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
+import org.jfree.chart.StandardChartTheme;
 import org.jfree.chart.axis.CategoryAxis;
 import org.jfree.chart.axis.NumberAxis;
 import org.jfree.chart.labels.StandardCategoryItemLabelGenerator;
@@ -92,6 +93,7 @@ public class MatchRuleDataChart extends Composite {
     }
 
     private JFreeChart createChart(CategoryDataset categorydataset) {
+        ChartFactory.setChartTheme(StandardChartTheme.createLegacyTheme());
         JFreeChart localJFreeChart = ChartFactory.createBarChart(null,
                 DefaultMessagesImpl.getString("DataChart.0"), "#group", categorydataset, PlotOrientation.VERTICAL, //$NON-NLS-1$ //$NON-NLS-2$
                 false, true, false);
