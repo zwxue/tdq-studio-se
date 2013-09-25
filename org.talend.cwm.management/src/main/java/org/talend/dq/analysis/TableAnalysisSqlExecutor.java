@@ -417,7 +417,7 @@ public class TableAnalysisSqlExecutor extends TableAnalysisExecutor {
         try {
             if (!(ConnectionUtils.isOdbcMssql(connection) || ConnectionUtils.isOdbcOracle(connection)
                     || ConnectionUtils.isOdbcProgress(connection) || ConnectionUtils.isOdbcTeradata(connection) || ExtractMetaDataUtils
-                        .isHiveConnection(connection))) {
+                    .getInstance().isHiveConnection(connection))) {
                 connection.setCatalog(catalogName);
             }
             return true;

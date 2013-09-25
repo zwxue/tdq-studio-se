@@ -1336,7 +1336,7 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
             // MOD xqliu 2009-12-09 bug 9822
             if (!(ConnectionUtils.isOdbcMssql(connection) || ConnectionUtils.isOdbcOracle(connection)
                     || ConnectionUtils.isOdbcProgress(connection) || ConnectionUtils.isOdbcTeradata(connection) || ExtractMetaDataUtils
-                        .isHiveConnection(connection))) {
+                    .getInstance().isHiveConnection(connection))) {
                 // MOD scorreia 2008-08-01 MSSQL does not support quoted catalog's name
                 connection.setCatalog(catalogName);
             }
@@ -1368,7 +1368,7 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
             if ("SQLite".equals(connection.getMetaData().getDatabaseProductName())) { //$NON-NLS-1$ 
                 return false;
             }
-            if (ExtractMetaDataUtils.isHiveConnection(connection)) {
+            if (ExtractMetaDataUtils.getInstance().isHiveConnection(connection)) {
                 return false;
             }
         } catch (SQLException e) {

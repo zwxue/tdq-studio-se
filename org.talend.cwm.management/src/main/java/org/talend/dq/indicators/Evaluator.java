@@ -288,7 +288,7 @@ public abstract class Evaluator<T> {
         }
         try {
             // MOD qiongli 2012-8-9,Method 'Method not supported' not supported for HiveConnection
-            if (!(ConnectionUtils.isOdbcProgress(connection) || ExtractMetaDataUtils.isHiveConnection(connection))) {
+            if (!(ConnectionUtils.isOdbcProgress(connection) || ExtractMetaDataUtils.getInstance().isHiveConnection(connection))) {
                 connection.setCatalog(catalogName);
             }
             return true;

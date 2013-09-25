@@ -82,7 +82,7 @@ public class CWMPlugin extends Plugin {
 
     /**
      * DOC xqliu Comment method "initPreferences".
-     *
+     * 
      * @param cwm
      */
     private void initPreferences(CWMPlugin cwm) {
@@ -94,7 +94,7 @@ public class CWMPlugin extends Plugin {
 
     /**
      * DOC bZhou Comment method "getDefault".
-     *
+     * 
      * @return
      */
     public static CWMPlugin getDefault() {
@@ -103,7 +103,7 @@ public class CWMPlugin extends Plugin {
 
     /**
      * DOC bZhou Comment method "addConnetionAliasToSQLPlugin".
-     *
+     * 
      * @param dataproviders
      */
     public void addConnetionAliasToSQLPlugin(ModelElement... dataproviders) {
@@ -146,7 +146,6 @@ public class CWMPlugin extends Plugin {
                         alias.setConnectAtStartup(true);
                         alias.setUrl(url);
 
-
                         ManagedDriver manDr = getManaDriverByDriverClass(connection, driverManager);
 
                         if (manDr != null) {
@@ -182,9 +181,9 @@ public class CWMPlugin extends Plugin {
     }
 
     /**
-     *
+     * 
      * DOC qiongli Comment method "updateConnetionAliasByName".
-     *
+     * 
      * @param connection
      * @param aliasName
      */
@@ -222,7 +221,7 @@ public class CWMPlugin extends Plugin {
 
     }
 
-    private void addJars(Connection connection, ManagedDriver manDr){
+    private void addJars(Connection connection, ManagedDriver manDr) {
         DatabaseConnection dbConnnection = (DatabaseConnection) connection;
         String driverJarPath = dbConnnection.getDriverJarPath();
 
@@ -238,9 +237,9 @@ public class CWMPlugin extends Plugin {
     }
 
     /**
-     *
+     * 
      * update ManagedDriver driver jars.
-     *
+     * 
      * @param connection
      */
     public void loadDriverByLibManageSystem(DatabaseConnection connection) {
@@ -251,9 +250,9 @@ public class CWMPlugin extends Plugin {
     }
 
     /**
-     *
+     * 
      * Load the driver by lib management system , which will configure the SQL Explorer driver classpath from xml.
-     *
+     * 
      * @param dbType
      * @param dbVersion
      * @param driverClassName
@@ -273,7 +272,7 @@ public class CWMPlugin extends Plugin {
             Set<String> allJarPath = findAllJarPath(new File(librariesPath), jarNames);
             // if not found jars from installation path,find driver jars from workspace 'temp/dbWizard' folder.
             if (allJarPath.isEmpty()) {
-                librariesPath = ExtractMetaDataUtils.getJavaLibPath();
+                librariesPath = ExtractMetaDataUtils.getInstance().getJavaLibPath();
                 allJarPath = findAllJarPath(new File(librariesPath), jarNames);
             }
             // if not found jars from installation path and folder 'temp/dbWizard',find driver jars from workspace
@@ -304,9 +303,9 @@ public class CWMPlugin extends Plugin {
     }
 
     /**
-     *
+     * 
      * find all jar pathes by jar names.
-     *
+     * 
      * @param root
      * @param jarNames
      * @return if return an empty Set,indicate that it find failed.
@@ -340,7 +339,7 @@ public class CWMPlugin extends Plugin {
 
     /**
      * DOC bZhou Comment method "removeAliasInSQLExplorer".
-     *
+     * 
      * @param dataproviders
      */
     public void removeAliasInSQLExplorer(DataProvider... dataproviders) {
@@ -378,16 +377,16 @@ public class CWMPlugin extends Plugin {
     }
 
     /**
-     *
+     * 
      * find a ManaDriver based on driver class name.if not found and Type is General JDBC/ODBC ,create a new
      * ManagedDriver.
-     *
+     * 
      * @param connection
      * @param driverManager
      * @return
      */
     private ManagedDriver getManaDriverByDriverClass(Connection connection, DriverManager driverManager) {
-        ManagedDriver manaDriver=null;
+        ManagedDriver manaDriver = null;
         DatabaseConnection dbConn = SwitchHelpers.DATABASECONNECTION_SWITCH.doSwitch(connection);
         if (dbConn == null || dbConn.getDatabaseType() == null) {
             log.error(Messages.getString("CWMPlugin.DBOrTypeNull")); //$NON-NLS-1$
@@ -423,7 +422,7 @@ public class CWMPlugin extends Plugin {
     }
 
     /**
-     *
+     * 
      * when you start TOP ,the 'lib/java' dosen't exist,should create it.
      */
     public void createLibFolderIfNotExist() {

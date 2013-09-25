@@ -278,7 +278,7 @@ public class ExportConnectionToTOSAction extends Action {
                     Object sqlConnObject = ((TypedReturnCode) rc).getObject();
                     if (sqlConnObject instanceof java.sql.Connection) {
                         sqlConn = (java.sql.Connection) sqlConnObject;
-                        dbMetadata = ExtractMetaDataUtils.getConnectionMetadata(sqlConn);
+                        dbMetadata = ExtractMetaDataUtils.getInstance().getConnectionMetadata(sqlConn);
                     }
                 }
                 List<String> packageFilterCatalog = MetadataConnectionUtils.getPackageFilter(dbConn, dbMetadata, true);

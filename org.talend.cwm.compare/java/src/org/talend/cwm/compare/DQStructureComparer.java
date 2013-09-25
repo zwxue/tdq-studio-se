@@ -320,7 +320,8 @@ public final class DQStructureComparer {
 
                 // MOD sizhaoliu 2012-5-21 TDQ-4884 reload structure issue
                 // dbJDBCMetadata = org.talend.utils.sql.ConnectionUtils.getConnectionMetadata(sqlConn);
-                dbJDBCMetadata = ExtractMetaDataUtils.getDatabaseMetaData(sqlConn, (DatabaseConnection) prevDataProvider);
+                dbJDBCMetadata = ExtractMetaDataUtils.getInstance().getDatabaseMetaData(sqlConn,
+                        (DatabaseConnection) prevDataProvider);
 
                 conn = MetadataFillFactory.getDBInstance().fillUIConnParams(metadataConnection, null);
                 // MOD zshen the parameter for packageFiler need to differnent isCatalog or not.

@@ -540,7 +540,7 @@ public final class ConnectionUtils {
             IllegalAccessException {
         // MOD mzhao 2009-06-05,Bug 7571 Get driver from catch first, if not
         // exist then get a new instance.
-        Driver driver = ExtractMetaDataUtils.getDriverCache().get(driverClassName);
+        Driver driver = ExtractMetaDataUtils.getInstance().getDriverCache().get(driverClassName);
         if (driver == null) {
             driver = MetadataConnectionUtils.getDriverCache().get(driverClassName);
         }
@@ -624,7 +624,8 @@ public final class ConnectionUtils {
                                     // catch first, if not
                                     // exist then get a new instance.
                                     MetadataConnectionUtils.getDriverCache().put(driverClassName, driver);
-                                    ExtractMetaDataUtils.getDriverCache().put(driverClassName, new DriverShim(driver));
+                                    ExtractMetaDataUtils.getInstance().getDriverCache()
+                                            .put(driverClassName, new DriverShim(driver));
                                     return driver; // driver is found
                                 }
                             } catch (ClassNotFoundException e) {
@@ -1430,7 +1431,7 @@ public final class ConnectionUtils {
                 sqlConn = MetadataConnectionUtils.checkConnection(metaConnection).getObject();
 
                 if (sqlConn != null) {
-                    DatabaseMetaData dm = ExtractMetaDataUtils.getDatabaseMetaData(sqlConn, dbConn, false);
+                    DatabaseMetaData dm = ExtractMetaDataUtils.getInstance().getDatabaseMetaData(sqlConn, dbConn, false);
                     MetadataFillFactory.getDBInstance().fillCatalogs(dbConn, dm,
                             MetadataConnectionUtils.getPackageFilter(dbConn, dm, true));
                     MetadataFillFactory.getDBInstance().fillSchemas(dbConn, dm,
