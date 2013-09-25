@@ -176,7 +176,7 @@ public class DQStructureComparerTest {
 
         // mock ExtractMetaDataUtils
         PowerMockito.mock(ExtractMetaDataUtils.class);
-        Mockito.when(ExtractMetaDataUtils.getConnectionMetadata(mockSqlConn)).thenReturn(mockDatabaseMetaData);
+        Mockito.when(ExtractMetaDataUtils.getInstance().getConnectionMetadata(mockSqlConn)).thenReturn(mockDatabaseMetaData);
         // ~mock
 
         // mock ConnectionHelper
@@ -284,11 +284,11 @@ public class DQStructureComparerTest {
 
         // mock ExtractMetaDataUtils
         PowerMockito.mockStatic(ExtractMetaDataUtils.class);
-        Mockito.when(ExtractMetaDataUtils.getConnectionMetadata(mockSqlConn)).thenReturn(mockDatabaseMetaData);
-        Mockito.when(ExtractMetaDataUtils.createDB2ForZosFakeDatabaseMetaData(mockSqlConn)).thenReturn(mockDatabaseMetaData);
-        Mockito.when(ExtractMetaDataUtils.getDatabaseMetaData(mockSqlConn, dbProvider)).thenCallRealMethod();
-        Mockito.when(ExtractMetaDataUtils.getDatabaseMetaData(mockSqlConn, dbProvider, false)).thenCallRealMethod();
-        Mockito.when(ExtractMetaDataUtils.getDatabaseMetaData(mockSqlConn, EDatabaseTypeName.IBMDB2ZOS.getXmlName(), false, ""))
+        Mockito.when(ExtractMetaDataUtils.getInstance().getConnectionMetadata(mockSqlConn)).thenReturn(mockDatabaseMetaData);
+        Mockito.when(ExtractMetaDataUtils.getInstance().createDB2ForZosFakeDatabaseMetaData(mockSqlConn)).thenReturn(mockDatabaseMetaData);
+        Mockito.when(ExtractMetaDataUtils.getInstance().getDatabaseMetaData(mockSqlConn, dbProvider)).thenCallRealMethod();
+        Mockito.when(ExtractMetaDataUtils.getInstance().getDatabaseMetaData(mockSqlConn, dbProvider, false)).thenCallRealMethod();
+        Mockito.when(ExtractMetaDataUtils.getInstance().getDatabaseMetaData(mockSqlConn, EDatabaseTypeName.IBMDB2ZOS.getXmlName(), false, ""))
                 .thenCallRealMethod();
         // ~mock
 
@@ -404,11 +404,11 @@ public class DQStructureComparerTest {
 
         // mock ExtractMetaDataUtils
         PowerMockito.mockStatic(ExtractMetaDataUtils.class);
-        Mockito.when(ExtractMetaDataUtils.getConnectionMetadata(mockSqlConn)).thenReturn(mockDatabaseMetaData);
-        Mockito.when(ExtractMetaDataUtils.createDB2ForZosFakeDatabaseMetaData(mockSqlConn)).thenReturn(mockDatabaseMetaData);
-        Mockito.when(ExtractMetaDataUtils.getDatabaseMetaData(mockSqlConn, dbProvider)).thenCallRealMethod();
-        Mockito.when(ExtractMetaDataUtils.getDatabaseMetaData(mockSqlConn, dbProvider, false)).thenCallRealMethod();
-        Mockito.when(ExtractMetaDataUtils.getDatabaseMetaData(mockSqlConn, EDatabaseTypeName.IBMDB2.getXmlName(), false, ""))
+        Mockito.when(ExtractMetaDataUtils.getInstance().getConnectionMetadata(mockSqlConn)).thenReturn(mockDatabaseMetaData);
+        Mockito.when(ExtractMetaDataUtils.getInstance().createDB2ForZosFakeDatabaseMetaData(mockSqlConn)).thenReturn(mockDatabaseMetaData);
+        Mockito.when(ExtractMetaDataUtils.getInstance().getDatabaseMetaData(mockSqlConn, dbProvider)).thenCallRealMethod();
+        Mockito.when(ExtractMetaDataUtils.getInstance().getDatabaseMetaData(mockSqlConn, dbProvider, false)).thenCallRealMethod();
+        Mockito.when(ExtractMetaDataUtils.getInstance().getDatabaseMetaData(mockSqlConn, EDatabaseTypeName.IBMDB2.getXmlName(), false, ""))
                 .thenCallRealMethod();
         // ~mock
 
