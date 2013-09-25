@@ -12,15 +12,15 @@
 // ============================================================================
 package org.talend.dq.analysis.explore;
 
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-import static org.powermock.api.support.membermodification.MemberMatcher.method;
-import static org.powermock.api.support.membermodification.MemberModifier.stub;
+import static org.mockito.Matchers.*;
+import static org.mockito.Mockito.*;
+import static org.powermock.api.support.membermodification.MemberMatcher.*;
+import static org.powermock.api.support.membermodification.MemberModifier.*;
 
 import java.util.ResourceBundle;
 
 import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.talend.cwm.management.i18n.Messages;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisContext;
@@ -30,8 +30,9 @@ import org.talend.dq.dbms.DbmsLanguageFactory;
 import orgomg.cwm.foundation.softwaredeployment.DataManager;
 
 /**
- * DOC yyin  class global comment. Detailled comment
+ * DOC yyin class global comment. Detailled comment
  */
+@PrepareForTest({ DbmsLanguageFactory.class, Messages.class })
 public class DataExplorerTestHelper {
 
     // use this before new a Explorer
@@ -54,8 +55,7 @@ public class DataExplorerTestHelper {
         when(indicator.eClass()).thenReturn(null);
 
         // MOCKING STATIC METHODS
-        PowerMockito.mockStatic(DbmsLanguageFactory.class);
-        when(DbmsLanguageFactory.createDbmsLanguage(dataManager)).thenReturn(dbmsLanguage);
+        stub(method(DbmsLanguageFactory.class, "createDbmsLanguage", DataManager.class)).toReturn(dbmsLanguage);
 
         return analysis;
     }

@@ -12,10 +12,9 @@
 // ============================================================================
 package org.talend.dq.analysis.explore;
 
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-import static org.powermock.api.support.membermodification.MemberMatcher.method;
-import static org.powermock.api.support.membermodification.MemberModifier.stub;
+import static org.mockito.Mockito.*;
+import static org.powermock.api.support.membermodification.MemberMatcher.*;
+import static org.powermock.api.support.membermodification.MemberModifier.*;
 import junit.framework.Assert;
 
 import org.junit.After;
@@ -34,19 +33,22 @@ import org.talend.dq.indicators.preview.table.ChartDataEntity;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
 import orgomg.cwm.foundation.softwaredeployment.DataManager;
 
-
 /**
- * DOC yyin  class global comment. Detailled comment
+ * DOC yyin class global comment. Detailled comment
  */
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({ DbmsLanguageFactory.class, Messages.class, IndicatorEnum.class })
+@PrepareForTest({ DbmsLanguageFactory.class, Messages.class, IndicatorEnum.class, DataExplorer.class })
 public class BenfordLawFrequencyExplorerTest {
 
     BenfordLawFrequencyExplorer benExp;
 
     DbmsLanguage mockDbLanguage;
+
+    BenfordLawFrequencyIndicator benfordIndicator;
+
     /**
      * DOC yyin Comment method "setUp".
+     * 
      * @throws java.lang.Exception
      */
     @Before
@@ -57,15 +59,17 @@ public class BenfordLawFrequencyExplorerTest {
         mockDbLanguage = mock(DbmsLanguage.class);
         when(mockDbLanguage.like()).thenReturn(" like ");
         stub(method(DbmsLanguageFactory.class, "createDbmsLanguage", DataManager.class)).toReturn(mockDbLanguage);
-        BenfordLawFrequencyIndicator indicator = mock(BenfordLawFrequencyIndicator.class);
-        when(indicator.eClass()).thenReturn(null);
-        Analysis analysis = DataExplorerTestHelper.getAnalysis(indicator, mockDbLanguage);
+
+        benfordIndicator = mock(BenfordLawFrequencyIndicator.class);
+        when(benfordIndicator.eClass()).thenReturn(null);
+        Analysis analysis = DataExplorerTestHelper.getAnalysis(benfordIndicator, mockDbLanguage);
         benExp.setAnalysis(analysis);
 
         ChartDataEntity entity = mock(ChartDataEntity.class);
-        when(entity.getIndicator()).thenReturn(indicator);
+        when(entity.getIndicator()).thenReturn(benfordIndicator);
         PowerMockito.mockStatic(IndicatorEnum.class);
-        when(IndicatorEnum.findIndicatorEnum(indicator.eClass())).thenReturn(IndicatorEnum.BenfordLawFrequencyIndicatorEnum);
+        when(IndicatorEnum.findIndicatorEnum(benfordIndicator.eClass())).thenReturn(
+                IndicatorEnum.BenfordLawFrequencyIndicatorEnum);
 
         benExp.setEnitty(entity);
         when(entity.getKey()).thenReturn("1");
@@ -74,6 +78,7 @@ public class BenfordLawFrequencyExplorerTest {
 
     /**
      * DOC yyin Comment method "tearDown".
+     * 
      * @throws java.lang.Exception
      */
     @After
@@ -145,6 +150,32 @@ public class BenfordLawFrequencyExplorerTest {
 
         String clause = benExp.getInstantiatedClause();
         Assert.assertEquals(" SUBSTR(  ,0,1) like '1%'", clause);
+    }
+
+    /**
+     * test for vertica invalid clause
+     */
+    @Test
+    public void testGetInstantiatedClause_7() {
+
+        setInvalidClauseEntity("isVertica", "Vertica"); //$NON-NLS-1$//$NON-NLS-2$
+        String clause = benExp.getInstantiatedClause();
+        Assert.assertEquals("firstName is null or not regexp_like(to_char(firstName),'^[[:digit:]]')", clause); //$NON-NLS-1$
+    }
+
+    private void setInvalidClauseEntity(String mockMethodName, String dbmsName) {
+        stub(method(DbmsLanguageFactory.class, mockMethodName, String.class)).toReturn(true);
+        when(mockDbLanguage.getDbmsName()).thenReturn(dbmsName);
+
+        ChartDataEntity entity = mock(ChartDataEntity.class);
+        when(entity.getIndicator()).thenReturn(benfordIndicator);
+        // mock the column name is "firstName"
+        stub(method(DataExplorer.class, "getAnalyzedElementName", BenfordLawFrequencyIndicator.class)).toReturn("firstName"); //$NON-NLS-1$ //$NON-NLS-2$
+
+        benExp.setEnitty(entity);
+        when(entity.getKey()).thenReturn("invalid"); //$NON-NLS-1$
+        when(entity.isLabelNull()).thenReturn(false);
+
     }
 
 }
