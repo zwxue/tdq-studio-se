@@ -52,11 +52,6 @@ public class HiveDbmsLanguage extends DbmsLanguage {
         super(dbmsType, dbVersion);
     }
 
-    @Override
-    public String toQualifiedName(String catalog, String schema, String table) {
-        return super.toQualifiedName(null, null, table);
-    }
-
     /*
      * (non-Javadoc)
      * 
