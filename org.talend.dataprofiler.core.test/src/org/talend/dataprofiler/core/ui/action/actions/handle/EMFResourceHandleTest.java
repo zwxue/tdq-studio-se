@@ -14,6 +14,7 @@ package org.talend.dataprofiler.core.ui.action.actions.handle;
 
 import junit.framework.Assert;
 
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.IPath;
@@ -139,10 +140,13 @@ public class EMFResourceHandleTest {
         Assert.assertTrue(newConnection != null);
         Assert.assertTrue(newConnection.eResource() != null);
         Assert.assertTrue(!newConnection.eIsProxy());
-        boolean isConnUUIDSame = ResourceHelper.getUUID(newConnection).equalsIgnoreCase(ResourceHelper.getUUID(oldConnection));
+
+        boolean isConnUUIDSame = StringUtils.equalsIgnoreCase(ResourceHelper.getUUID(newConnection),
+                ResourceHelper.getUUID(oldConnection));
         Catalog oldCatalog = CatalogHelper.getCatalog(oldConnection, "catalog1"); //$NON-NLS-1$
         Catalog newCatalog = CatalogHelper.getCatalog(newConnection, "catalog1"); //$NON-NLS-1$
-        boolean isCatalogUUIDSame = ResourceHelper.getUUID(oldCatalog).equalsIgnoreCase(ResourceHelper.getUUID(newCatalog));
+        boolean isCatalogUUIDSame = StringUtils.equalsIgnoreCase(ResourceHelper.getUUID(oldCatalog),
+                ResourceHelper.getUUID(newCatalog));
         Assert.assertFalse(isConnUUIDSame);
         Assert.assertFalse(isCatalogUUIDSame);
 

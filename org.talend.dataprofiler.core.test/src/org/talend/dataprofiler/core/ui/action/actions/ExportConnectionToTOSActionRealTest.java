@@ -231,6 +231,10 @@ public class ExportConnectionToTOSActionRealTest {
         // connectionNode
         DatabaseConnectionItem createOldConnectionItem = createConnectionItem(
                 "ExportConnectionToTOSActionRealTest1", null, false, true); //$NON-NLS-1$
+        Assert.assertTrue(createOldConnectionItem.getConnection() != null);
+        Assert.assertTrue(createOldConnectionItem.getConnection().eResource() != null);
+        Assert.assertTrue(!createOldConnectionItem.getConnection().eIsProxy());
+
         initCatalogList(createOldConnectionItem);
         // ~connectionNode
         List<Package> packageList = new ArrayList<Package>();
@@ -241,6 +245,7 @@ public class ExportConnectionToTOSActionRealTest {
         createAction.run();
 
         List<IRepositoryViewObject> all = factory.getAll(ERepositoryObjectType.METADATA_CONNECTIONS, false);
+        Assert.assertTrue(all != null);
         Assert.assertTrue(all.size() == 2);
         IRepositoryViewObject lastVersion = all.get(1);
         DatabaseConnectionItem item = (DatabaseConnectionItem) lastVersion.getProperty().getItem();
