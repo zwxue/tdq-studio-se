@@ -21,14 +21,10 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.jfree.util.Log;
-import org.junit.AfterClass;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.talend.commons.exception.BusinessException;
 import org.talend.commons.exception.PersistenceException;
-import org.talend.core.context.Context;
-import org.talend.core.context.RepositoryContext;
 import org.talend.core.database.EDatabaseTypeName;
 import org.talend.core.model.general.Project;
 import org.talend.core.model.metadata.builder.connection.Connection;
@@ -39,7 +35,6 @@ import org.talend.core.model.properties.PropertiesFactory;
 import org.talend.core.model.properties.Property;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
-import org.talend.core.runtime.CoreRuntimePlugin;
 import org.talend.cwm.helper.CatalogHelper;
 import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.ResourceHelper;
@@ -67,31 +62,6 @@ public class EMFResourceHandleTest {
     ProxyRepositoryFactory factory = ProxyRepositoryFactory.getInstance();
 
     private static Project originalProject;
-
-    @BeforeClass
-    public static void setUpBeforeClass() throws Exception {
-        Context ctx = CoreRuntimePlugin.getInstance().getContext();
-        RepositoryContext repositoryContext = (RepositoryContext) ctx.getProperty(Context.REPOSITORY_CONTEXT_KEY);
-        if (repositoryContext != null) {
-            originalProject = repositoryContext.getProject();
-        }
-        repositoryFactory = new LocalRepositoryFactory();
-    }
-
-    /**
-     * DOC zshen Comment method "tearDownAfterClass".
-     * 
-     * @throws java.lang.Exception
-     */
-    @AfterClass
-    public static void tearDownAfterClass() throws Exception {
-        repositoryFactory = null;
-        if (originalProject != null) {
-            Context ctx = CoreRuntimePlugin.getInstance().getContext();
-            RepositoryContext repositoryContext = (RepositoryContext) ctx.getProperty(Context.REPOSITORY_CONTEXT_KEY);
-            repositoryContext.setProject(originalProject);
-        }
-    }
 
     /**
      * DOC zshen Comment method "setUp".

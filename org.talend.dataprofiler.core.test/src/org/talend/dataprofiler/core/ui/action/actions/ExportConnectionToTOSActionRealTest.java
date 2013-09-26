@@ -24,13 +24,9 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
 import org.jfree.util.Log;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.powermock.api.mockito.PowerMockito;
 import org.talend.commons.exception.PersistenceException;
-import org.talend.core.context.Context;
-import org.talend.core.context.RepositoryContext;
 import org.talend.core.database.EDatabaseTypeName;
 import org.talend.core.model.general.Project;
 import org.talend.core.model.metadata.IMetadataConnection;
@@ -42,7 +38,6 @@ import org.talend.core.model.properties.PropertiesFactory;
 import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
-import org.talend.core.runtime.CoreRuntimePlugin;
 import org.talend.cwm.helper.CatalogHelper;
 import org.talend.cwm.helper.ColumnSetHelper;
 import org.talend.cwm.helper.ConnectionHelper;
@@ -79,37 +74,6 @@ public class ExportConnectionToTOSActionRealTest {
     private static Schema schema1 = null;
 
     private static Schema schema2 = null;
-
-    /**
-     * DOC zshen Comment method "setUpBeforeClass".
-     * 
-     * @throws java.lang.Exception
-     */
-    @BeforeClass
-    public static void setUpBeforeClass() throws Exception {
-        Context ctx = CoreRuntimePlugin.getInstance().getContext();
-        RepositoryContext repositoryContext = (RepositoryContext) ctx.getProperty(Context.REPOSITORY_CONTEXT_KEY);
-        if (repositoryContext != null) {
-            originalProject = repositoryContext.getProject();
-        }
-        repositoryFactory = new LocalRepositoryFactory();
-
-    }
-
-    /**
-     * DOC zshen Comment method "tearDownAfterClass".
-     * 
-     * @throws java.lang.Exception
-     */
-    @AfterClass
-    public static void tearDownAfterClass() throws Exception {
-        repositoryFactory = null;
-        if (originalProject != null) {
-            Context ctx = CoreRuntimePlugin.getInstance().getContext();
-            RepositoryContext repositoryContext = (RepositoryContext) ctx.getProperty(Context.REPOSITORY_CONTEXT_KEY);
-            repositoryContext.setProject(originalProject);
-        }
-    }
 
     private static Catalog addCataPackage(String packageName, DatabaseConnectionItem connItem) throws PersistenceException {
         Connection connection = connItem.getConnection();
