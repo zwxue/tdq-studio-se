@@ -69,6 +69,14 @@ public class MFB implements MatchMergeAlgorithm {
     }
 
     public List<Record> execute(Iterator<Record> sourceRecords) {
+        return execute(sourceRecords, DefaultCallback.INSTANCE);
+    }
+
+    @Override
+    public List<Record> execute(Iterator<Record> sourceRecords, Callback callback) {
+        if (callback == null) {
+            throw new IllegalArgumentException("Callback cannot be null.");
+        }
         if (algorithms.length == 0 || thresholds.length == 0 || merges.length == 0 || weights.length == 0) {
             List<Record> ret = new ArrayList<Record>();
             while (sourceRecords.hasNext()) {
@@ -80,11 +88,13 @@ public class MFB implements MatchMergeAlgorithm {
         int index = 0;
         // Read source record per record
         Queue<Record> queue = new ProcessQueue<Record>(sourceRecords);
-        while (!queue.isEmpty()) {
+        callback.onBeginProcessing();
+        while (!queue.isEmpty() && !callback.isInterrupted()) {
             if (LOGGER.isDebugEnabled() && index % 10000 == 0) {
                 LOGGER.debug("Current index: " + index);
             }
             Record currentRecord = queue.poll();
+            callback.onBeginRecord(currentRecord);
             // Sanity checks
             if (currentRecord == null) {
                 throw new IllegalArgumentException("Record cannot be null.");
@@ -95,14 +105,20 @@ public class MFB implements MatchMergeAlgorithm {
             // MFB algorithm
             boolean hasCreatedNewMerge = false;
             for (Record mergedRecord : mergedRecords) {
-                if (matchRecords(mergedRecord, currentRecord)) {
+                MatchResult matchResult = matchRecords(mergedRecord, currentRecord);
+                if (matchResult.isMatch()) {
+                    callback.onMatch(mergedRecord, currentRecord, matchResult);
                     Record newMergedRecord = MatchMerge.merge(currentRecord, mergedRecord, merges);
                     // Keep group id
                     newMergedRecord.setGroupId(mergedRecord.getGroupId());
                     queue.offer(newMergedRecord);
+                    callback.onNewMerge(newMergedRecord);
                     mergedRecords.remove(mergedRecord);
+                    callback.onRemoveMerge(mergedRecord);
                     hasCreatedNewMerge = true;
                     break;
+                } else {
+                    callback.onDifferent(mergedRecord, currentRecord, matchResult);
                 }
             }
             if (!hasCreatedNewMerge) {
@@ -112,9 +128,12 @@ public class MFB implements MatchMergeAlgorithm {
                 }
                 currentRecord.getRelatedIds().add(currentRecord.getId());
                 mergedRecords.add(currentRecord);
+                callback.onNewMerge(currentRecord);
             }
+            callback.onEndRecord(currentRecord);
             index++;
         }
+        callback.onEndProcessing();
         return mergedRecords;
     }
 
@@ -130,7 +149,7 @@ public class MFB implements MatchMergeAlgorithm {
         }
     }
 
-    boolean matchRecords(Record mergedRecord, Record currentRecord) {
+    private MatchResult matchRecords(Record mergedRecord, Record currentRecord) {
         if (mergedRecord.getAttributes().size() != currentRecord.getAttributes().size()) {
             throw new IllegalArgumentException("Records do not share same attribute count.");
         }
@@ -138,6 +157,7 @@ public class MFB implements MatchMergeAlgorithm {
         Iterator<Attribute> currentRecordAttributes = currentRecord.getAttributes().iterator();
         double confidence = 0;
         int matchIndex = 0;
+        MatchResult result = new MatchResult();
         while (mergedRecordAttributes.hasNext()) {
             Attribute left = mergedRecordAttributes.next();
             Attribute right = currentRecordAttributes.next();
@@ -146,16 +166,14 @@ public class MFB implements MatchMergeAlgorithm {
                     algorithms[matchIndex],
                     nullOptions[matchIndex],
                     subStrings[matchIndex]);
-            if (score < thresholds[matchIndex]) {
-                return false;
-            } else {
-                confidence += score * weights[matchIndex];
-            }
+            result.setScore(matchIndex, algorithms[matchIndex], score);
+            result.setThreshold(matchIndex, thresholds[matchIndex]);
+            confidence += score * weights[matchIndex];
             matchIndex++;
         }
         double normalizedConfidence = confidence > 0 ? confidence / maxWeight : confidence; // Normalize to 0..1 value
         currentRecord.setConfidence(normalizedConfidence);
-        return true;
+        return result;
     }
 
     @Override
