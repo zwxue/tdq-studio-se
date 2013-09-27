@@ -31,7 +31,7 @@ public class BenfordLawFrequencyExplorer extends FrequencyStatisticsExplorer {
                 + value;
 
         if (isInformix()) {
-            return " SUBSTR( " + getColumnName() + " ,0,1)" + dbmsLanguage.like() + value; //$NON-NLS-1$ //$NON-NLS-2$
+            return " SUBSTR(" + getColumnName() + ",0,1)" + dbmsLanguage.like() + value; //$NON-NLS-1$ //$NON-NLS-2$
         }
         return clause;
     }
@@ -39,6 +39,8 @@ public class BenfordLawFrequencyExplorer extends FrequencyStatisticsExplorer {
     /**
      * when the drill down is : invalid, should find all rows which not start with 1~9,and 0. this include: null, and
      * not digitals.
+     * 
+     * FIXME use object language instead of if/else!!
      * 
      * @return
      */

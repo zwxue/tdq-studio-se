@@ -65,15 +65,7 @@ public class BenfordLawFrequencyExplorerTest {
         Analysis analysis = DataExplorerTestHelper.getAnalysis(benfordIndicator, mockDbLanguage);
         benExp.setAnalysis(analysis);
 
-        ChartDataEntity entity = mock(ChartDataEntity.class);
-        when(entity.getIndicator()).thenReturn(benfordIndicator);
-        PowerMockito.mockStatic(IndicatorEnum.class);
-        when(IndicatorEnum.findIndicatorEnum(benfordIndicator.eClass())).thenReturn(
-                IndicatorEnum.BenfordLawFrequencyIndicatorEnum);
-
-        benExp.setEnitty(entity);
-        when(entity.getKey()).thenReturn("1");
-        when(entity.isLabelNull()).thenReturn(false);
+        setValueToDrillDown("1");
     }
 
     /**
@@ -94,7 +86,7 @@ public class BenfordLawFrequencyExplorerTest {
         when(mockDbLanguage.getDbmsName()).thenReturn("SQL");
 
         String clause = benExp.getInstantiatedClause();
-        Assert.assertEquals(" like '1%'", clause);
+        Assert.assertEquals("firstName like '1%'", clause);
     }
 
     /**
@@ -105,7 +97,7 @@ public class BenfordLawFrequencyExplorerTest {
         when(mockDbLanguage.getDbmsName()).thenReturn("Teradata");
 
         String clause = benExp.getInstantiatedClause();
-        Assert.assertEquals("cast( as char) like '1%'", clause);
+        Assert.assertEquals("cast(firstName as char) like '1%'", clause);
     }
 
     /**
@@ -116,7 +108,7 @@ public class BenfordLawFrequencyExplorerTest {
         when(mockDbLanguage.getDbmsName()).thenReturn("PostgreSQL");
 
         String clause = benExp.getInstantiatedClause();
-        Assert.assertEquals("cast( as char) like '1%'", clause);
+        Assert.assertEquals("cast(firstName as char) like '1%'", clause);
     }
 
     /**
@@ -127,7 +119,7 @@ public class BenfordLawFrequencyExplorerTest {
         when(mockDbLanguage.getDbmsName()).thenReturn("Adaptive Server Enterprise | Sybase Adaptive Server IQ");
 
         String clause = benExp.getInstantiatedClause();
-        Assert.assertEquals("convert(char(15),) like '1%'", clause);
+        Assert.assertEquals("convert(char(15),firstName) like '1%'", clause);
     }
 
     /**
@@ -138,7 +130,7 @@ public class BenfordLawFrequencyExplorerTest {
         when(mockDbLanguage.getDbmsName()).thenReturn("Oracle");
 
         String clause = benExp.getInstantiatedClause();
-        Assert.assertEquals(" like '1%'", clause);
+        Assert.assertEquals("firstName like '1%'", clause);
     }
 
     /**
@@ -149,33 +141,53 @@ public class BenfordLawFrequencyExplorerTest {
         when(mockDbLanguage.getDbmsName()).thenReturn("Informix");
 
         String clause = benExp.getInstantiatedClause();
-        Assert.assertEquals(" SUBSTR(  ,0,1) like '1%'", clause);
+        Assert.assertEquals(" SUBSTR(firstName,0,1) like '1%'", clause);
+    }
+
+    /**
+     * test for Vertica
+     */
+    @Test
+    public void testGetInstantiatedClauseVertica() {
+        when(mockDbLanguage.getDbmsName()).thenReturn("Vertica");
+
+        String clause = benExp.getInstantiatedClause();
+        Assert.assertEquals("to_char(firstName) like '1%'", clause);
     }
 
     /**
      * test for vertica invalid clause
      */
     @Test
-    public void testGetInstantiatedClause_7() {
+    public void testGetInvalidClauses() {
+        setValueToDrillDown("invalid");
 
-        setInvalidClauseEntity("isVertica", "Vertica"); //$NON-NLS-1$//$NON-NLS-2$
+        when(mockDbLanguage.getDbmsName()).thenReturn("Vertica");
+        // setInvalidClauseEntity("isVertica", "Vertica"); //$NON-NLS-1$//$NON-NLS-2$
         String clause = benExp.getInstantiatedClause();
         Assert.assertEquals("firstName is null or not regexp_like(to_char(firstName),'^[[:digit:]]')", clause); //$NON-NLS-1$
+
+        when(mockDbLanguage.getDbmsName()).thenReturn("MySQL");
+        clause = benExp.getInstantiatedClause();
+        Assert.assertEquals("firstName is null or firstName not REGEXP '^[0-9]'", clause); //$NON-NLS-1$
+
+        // TODO add other databases here
+
     }
 
-    private void setInvalidClauseEntity(String mockMethodName, String dbmsName) {
-        stub(method(DbmsLanguageFactory.class, mockMethodName, String.class)).toReturn(true);
-        when(mockDbLanguage.getDbmsName()).thenReturn(dbmsName);
-
+    private void setValueToDrillDown(String value) {
         ChartDataEntity entity = mock(ChartDataEntity.class);
         when(entity.getIndicator()).thenReturn(benfordIndicator);
+        PowerMockito.mockStatic(IndicatorEnum.class);
+        when(IndicatorEnum.findIndicatorEnum(benfordIndicator.eClass())).thenReturn(
+                IndicatorEnum.BenfordLawFrequencyIndicatorEnum);
+
         // mock the column name is "firstName"
         stub(method(DataExplorer.class, "getAnalyzedElementName", BenfordLawFrequencyIndicator.class)).toReturn("firstName"); //$NON-NLS-1$ //$NON-NLS-2$
 
         benExp.setEnitty(entity);
-        when(entity.getKey()).thenReturn("invalid"); //$NON-NLS-1$
+        when(entity.getKey()).thenReturn(value);
         when(entity.isLabelNull()).thenReturn(false);
-
     }
 
 }
