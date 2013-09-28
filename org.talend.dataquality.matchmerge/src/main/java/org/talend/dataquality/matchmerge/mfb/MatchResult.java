@@ -22,9 +22,17 @@ public class MatchResult {
 
     private final List<Float> thresholds = new LinkedList<Float>();
 
-    private static class Score {
-        AttributeMatcherType algorithm;
-        double score;
+    public static class Score {
+        public AttributeMatcherType algorithm;
+        public double score;
+    }
+
+    public List<Score> getScores() {
+        return scores;
+    }
+
+    public List<Float> getThresholds() {
+        return thresholds;
     }
 
     public void setScore(int index, AttributeMatcherType algorithm, double score) {
