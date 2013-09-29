@@ -55,7 +55,7 @@ public class DuplicateRecordTableViewer extends AbstractMatchAnalysisTableViewer
     private void initHeaders() {
         tableHeaders.add(MatchAnalysisConstant.LABEL);
         tableHeaders.add(MatchAnalysisConstant.COUNT);
-        tableHeaders.add(MatchAnalysisConstant.PERCENTAGE); //$NON-NLS-1$
+        tableHeaders.add(MatchAnalysisConstant.PERCENTAGE);
     }
 
     /*

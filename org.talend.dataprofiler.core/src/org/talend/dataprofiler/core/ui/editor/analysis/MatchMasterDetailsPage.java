@@ -46,7 +46,6 @@ import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.editor.FormEditor;
-import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 import org.talend.commons.utils.WorkspaceUtils;
 import org.talend.core.model.metadata.MetadataColumnRepositoryObject;
@@ -185,20 +184,21 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
         metadataSection.setText(DefaultMessagesImpl.getString("TableMasterDetailsPage.analysisMeta")); //$NON-NLS-1$
         metadataSection.setDescription(DefaultMessagesImpl.getString("TableMasterDetailsPage.setPropOfAnalysis")); //$NON-NLS-1$
 
-        createDataSampleSection(form, topComp);
+        createDataSection();
 
-        createBlockingKeySection(form, topComp);
+        createBlockingKeySection();
 
-        createMatchingKeySection(form, topComp);
+        createMatchingKeySection();
+
+        // TDQ-7781: we must do this, this will recompute the layout and scroll bars
+        form.reflow(true);
     }
 
     /**
      * create Matching Key Section.
      * 
-     * @param form
-     * @param topComp
      */
-    private void createMatchingKeySection(final ScrolledForm form, Composite topComp) {
+    private void createMatchingKeySection() {
         matchingKeySection.addPropertyChangeListener(this);
         matchingKeySection.createContent();
         registerSection(matchingKeySection.getSection());
@@ -207,32 +207,37 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
     /**
      * create Blocking Key Section.
      * 
-     * @param form
-     * @param topComp
      */
-    private void createBlockingKeySection(final ScrolledForm form, Composite topComp) {
+    private void createBlockingKeySection() {
         blockingKeySection.createContent();
         registerSection(blockingKeySection.getSection());
     }
 
-    private void createDataSampleSection(ScrolledForm form, Composite topComp) {
+    /**
+     * create Data Section.
+     */
+    private void createDataSection() {
         dataSampleSection = createSection(form, topComp, DefaultMessagesImpl.getString("MatchMasterDetailsPage.DataSample"));//$NON-NLS-1$
         dataSampleparentComposite = toolkit.createComposite(dataSampleSection);
         GridLayout dataSampleLayout = new GridLayout(1, Boolean.TRUE);
         dataSampleparentComposite.setLayout(dataSampleLayout);
 
         dataSampleSection.setClient(dataSampleparentComposite);
+
         // create analyze data title composite
         createAnaDataLabelComposite(dataSampleparentComposite);
-        // Button composite
+
+        // create Button composite
         createButtonComposite(dataSampleparentComposite);
 
         blockingKeySection = new BlockingKeySection(form, topComp, Section.TWISTIE | Section.TITLE_BAR | Section.EXPANDED,
                 toolkit, analysis);
         blockingKeySection.addPropertyChangeListener(this);
+
         matchingKeySection = new MatchingKeySection(form, topComp, Section.TWISTIE | Section.TITLE_BAR | Section.EXPANDED,
                 toolkit, analysis);
         matchingKeySection.addPropertyChangeListener(this);
+
         // create the data table
         createDataTableComposite(dataSampleparentComposite);
     }
@@ -266,6 +271,11 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
         sampleTable.addPropertyChangeListener(this);
     }
 
+    /**
+     * create Analysis Data Label Composite.
+     * 
+     * @param dataparent
+     */
     private void createAnaDataLabelComposite(Composite dataparent) {
         Composite titleComposite = toolkit.createComposite(dataparent);
         GridLayout layout = new GridLayout(1, Boolean.TRUE);
@@ -273,14 +283,19 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
         analyzeDataLabel = new Label(titleComposite, SWT.NONE);
         String matchAnaTagValue = TaggedValueHelper.getValueString(TaggedValueHelper.MATCH_ANALYZE_DATA, analysis);
         analyzeDataLabel.setText(analyzeDataDefaultInfo + matchAnaTagValue);
-
     }
 
+    /**
+     * create Button Composite.
+     * 
+     * @param dataparent
+     */
     private void createButtonComposite(Composite dataparent) {
         Composite buttonComposite = toolkit.createComposite(dataparent);
         GridLayout buttonCompositeLayout = new GridLayout(3, Boolean.FALSE);
         buttonComposite.setLayout(buttonCompositeLayout);
         GridDataFactory.fillDefaults().align(SWT.FILL, SWT.TOP).applyTo(buttonComposite);
+
         // Data selection button composite
         createDataSelectionButtonComp(buttonComposite);
 
@@ -302,6 +317,7 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
         selectBlockKeyBtn = toolkit.createButton(keySelectionComp,
                 DefaultMessagesImpl.getString("MatchMasterDetailsPage.SelectBlockingKeyButton"), SWT.NONE);//$NON-NLS-1$
         GridDataFactory.fillDefaults().align(SWT.FILL, SWT.TOP).applyTo(selectBlockKeyBtn);
+
         selectMatchKeyBtn = toolkit.createButton(keySelectionComp,
                 DefaultMessagesImpl.getString("MatchMasterDetailsPage.SelectMatchingKeyButton"), SWT.NONE); //$NON-NLS-1$
         GridDataFactory.fillDefaults().align(SWT.FILL, SWT.TOP).applyTo(selectMatchKeyBtn);
