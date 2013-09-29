@@ -48,7 +48,6 @@ import org.talend.dq.nodes.SourceFileSubFolderNode;
 import org.talend.repository.ProjectManager;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
-import org.talend.utils.sugars.ReturnCode;
 
 /**
  * DOC xqliu class global comment. Detailled comment
@@ -97,11 +96,8 @@ public class RenameJrxmlTemplateFileAction extends Action {
 
                 // update the related reports which use it as user defined template
                 String filenameAfterRename = RepNodeUtils.getSeparator() + RepositoryNodeHelper.getFileNameOfTheNode(jrxmlNode);
-                ReturnCode returnCode = RepNodeUtils.updateJrxmlRelatedReport(path.append(filenameBeforeRename),
-                        path.append(filenameAfterRename));
-                if (!returnCode.isOk()) {
-                    MessageUI.openWarning(returnCode.getMessage());
-                }
+                RepNodeUtils.updateJrxmlRelatedReport(path.append(filenameBeforeRename), path.append(filenameAfterRename));
+
                 CorePlugin.getDefault().refreshDQView(parentNode);
             } catch (PersistenceException e) {
                 log.error(e, e);
@@ -168,6 +164,7 @@ public class RenameJrxmlTemplateFileAction extends Action {
             newName = text.getText();
             text.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
             text.addModifyListener(new ModifyListener() {
+
                 public void modifyText(ModifyEvent e) {
                     newName = text.getText();
                     if (newName.length() == 0) {

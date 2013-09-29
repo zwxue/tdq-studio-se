@@ -430,11 +430,8 @@ public class LocalRepositoryObjectCRUD extends AbstractRepObjectCRUDAction {
         this.moveObject(sourceNode, targetNode, makeRelativeTo);
 
         // update the depended reports
-        ReturnCode returnCode = RepNodeUtils.updateJrxmlRelatedReport(oldPath,
+        RepNodeUtils.updateJrxmlRelatedReport(oldPath,
                 RepositoryNodeHelper.getPath(targetNode).append(RepNodeUtils.getSeparator()).append(filename));
-        if (!returnCode.isOk()) {
-            MessageUI.openWarning(returnCode.getMessage());
-        }
     }
 
     /**
@@ -619,10 +616,7 @@ public class LocalRepositoryObjectCRUD extends AbstractRepObjectCRUDAction {
                 jrxmlFileNamesAfterMove.add(tempPath.append(RepositoryNodeHelper.getFileNameOfTheNode(jrxml)).toOSString());
             }
             // update the depended reports
-            ReturnCode returnCode = RepNodeUtils.updateJrxmlRelatedReport(jrxmlFileNames, jrxmlFileNamesAfterMove);
-            if (!returnCode.isOk()) {
-                MessageUI.openWarning(returnCode.getMessage());
-            }
+            RepNodeUtils.updateJrxmlRelatedReport(jrxmlFileNames, jrxmlFileNamesAfterMove);
         }// ~
     }
 

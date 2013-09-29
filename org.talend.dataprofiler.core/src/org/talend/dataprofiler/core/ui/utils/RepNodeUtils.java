@@ -27,6 +27,7 @@ import org.eclipse.ui.part.FileEditorInput;
 import org.talend.commons.exception.PersistenceException;
 import org.talend.core.model.general.Project;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
+import org.talend.cwm.helper.ModelElementHelper;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.editor.AbstractItemEditorInput;
@@ -47,7 +48,7 @@ import org.talend.repository.ProjectManager;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.resource.EResourceConstant;
 import org.talend.resource.ResourceManager;
-import org.talend.utils.sugars.ReturnCode;
+import orgomg.cwmx.analysis.informationreporting.Report;
 
 /**
  * RepositoryNode's UI utils.
@@ -167,12 +168,9 @@ public final class RepNodeUtils {
      * @param newPath
      * @throws PersistenceException
      */
-    public static ReturnCode updateJrxmlRelatedReport(IPath oldPath, IPath newPath) {
+    public static void updateJrxmlRelatedReport(IPath oldPath, IPath newPath) {
         if (oldPath == null || newPath == null) {
-            ReturnCode rc = new ReturnCode();
-            rc.setOk(Boolean.FALSE);
-            rc.setMessage(DefaultMessagesImpl.getString("RepNodeUtils.updateReport.empty"));//$NON-NLS-1$ 
-            return rc;
+            return;
         }
 
         List<String> jrxmlFileNames = new ArrayList<String>();
@@ -180,7 +178,7 @@ public final class RepNodeUtils {
         jrxmlFileNames.add(oldPath.toString());
         jrxmlFileNamesAfterMove.add(newPath.toString());
 
-        return updateJrxmlRelatedReport(jrxmlFileNames, jrxmlFileNamesAfterMove);
+        updateJrxmlRelatedReport(jrxmlFileNames, jrxmlFileNamesAfterMove);
     }
 
     /**
@@ -211,15 +209,11 @@ public final class RepNodeUtils {
      * @param jrxmlFileNames : the whole path with whole name of the jrxml, e.g./TDQ_Libraries/JRXML
      * Template/columnset/column_set_basic_0.1.jrxml
      * @param jrxmlFileNamesAfterMove
-     * @return ReturnCode.ok if suceed; ko, if any exception.
      */
-    public static ReturnCode updateJrxmlRelatedReport(List<String> jrxmlFileNames, List<String> jrxmlFileNamesAfterMove) {
-        ReturnCode rc = new ReturnCode();
-
-        if (jrxmlFileNames.size() == 0 || jrxmlFileNamesAfterMove.size() < jrxmlFileNames.size()) {
-            rc.setOk(Boolean.FALSE);
-            rc.setMessage(DefaultMessagesImpl.getString("RepNodeUtils.updateReport.empty"));//$NON-NLS-1$ 
-            return rc;
+    public static void updateJrxmlRelatedReport(List<String> jrxmlFileNames, List<String> jrxmlFileNamesAfterMove) {
+        if (jrxmlFileNames.size() == 0 || jrxmlFileNamesAfterMove.size() == 0
+                || jrxmlFileNamesAfterMove.size() < jrxmlFileNames.size()) {
+            return;
         }
 
         Project project = ProjectManager.getInstance().getCurrentProject();
@@ -234,13 +228,15 @@ public final class RepNodeUtils {
                 for (int i = 0; i < jrxmlFileNames.size(); i++) {
                     String oldPath = jrxmlFileNames.get(i);
                     if (isUsedByJrxml(new Path(oldPath), anaMap)) {
-                        String before = anaMap.getJrxmlSource().substring(0,
-                                anaMap.getJrxmlSource().lastIndexOf(".." + separator) + 3);
+
+                        // like: ../../../TDQ_Libraries/JRXML Template/column1/b01_column_basic_0.1.jrxml
+                        String newPath = getRelativeJrxmlPath(report.getReport(), jrxmlFileNamesAfterMove.get(i));
 
                         // Added 20130128, using event/listener to refresh the page if opening
-                        EventManager.getInstance().publish(report, EventEnum.DQ_JRXML_RENAME,
-                                before + jrxmlFileNamesAfterMove.get(i));
-                        anaMap.setJrxmlSource(before + jrxmlFileNamesAfterMove.get(i));
+                        EventManager.getInstance().publish(report, EventEnum.DQ_JRXML_RENAME, newPath);
+
+                        // save the new jrxml path.
+                        anaMap.setJrxmlSource(newPath);
                         isUpdated = true;
                     }
                 }
@@ -249,12 +245,22 @@ public final class RepNodeUtils {
                 try {
                     ProxyRepositoryFactory.getInstance().save(project, report.getObject().getProperty().getItem());
                 } catch (PersistenceException e) {
-                    rc.setOk(Boolean.FALSE);
-                    rc.setMessage(DefaultMessagesImpl.getString("RepNodeUtils.updateReport.fail", report.getLabel()));//$NON-NLS-1$ 
+                    MessageUI.openError(DefaultMessagesImpl.getString("RepNodeUtils.updateReport.fail", report.getLabel())); //$NON-NLS-1$
                 }
             }
         }
-        return rc;
+    }
+
+    /**
+     * get the Relative path of Jrxml file.
+     * 
+     * @param Report report
+     * @param String path
+     * @return String
+     */
+    public static String getRelativeJrxmlPath(Report report, String path) {
+        return ResourceManager.getRootProject().getFile(path).getLocation()
+                .makeRelativeTo(ModelElementHelper.getIFile(report).getLocation()).toString();
     }
 
     /**
@@ -266,8 +272,6 @@ public final class RepNodeUtils {
      */
     public static List<String> getListOfJrxmlNameWithPath(IPath path, List<JrxmlTempleteRepNode> jrxmlFileRepNodes) {
         List<String> jrxmlFileNames = new ArrayList<String>();
-        IPath basePath = ResourceManager.getRootProject().getLocation().removeFirstSegments(1);
-
         for (JrxmlTempleteRepNode jrxml : jrxmlFileRepNodes) {
             // if the parent of the jrxml is not the current folder,
             IPath parentPath = RepositoryNodeHelper.getPath(jrxml.getParent());
@@ -292,7 +296,6 @@ public final class RepNodeUtils {
      */
     public static List<String> getListOfJrxmlNewNameWithPath(IPath oldPath, IPath newPath,
             List<JrxmlTempleteRepNode> jrxmlFileRepNodes) {
-        IPath basePath = ResourceManager.getRootProject().getLocation().removeFirstSegments(1);
         List<String> jrxmlFileNames = new ArrayList<String>();
         for (JrxmlTempleteRepNode jrxml : jrxmlFileRepNodes) {
             // if the parent of the jrxml is not the current folder,
@@ -303,7 +306,7 @@ public final class RepNodeUtils {
             } else {
                 // change the old folder name in parent path to new path:
                 // e.g. /tdq_libraries/JRXML Template/c01/(sub/) to -->/tdq_libraries/JRXML Template/c01_new/sub/
-                IPath replacedPath = new Path("");
+                IPath replacedPath = new Path(""); //$NON-NLS-1$
                 for (int i = 0; i < parentPath.segmentCount(); i++) {
                     if (i < newPath.segmentCount() && !newPath.segment(i).equals(parentPath.segment(i))) {
                         replacedPath = replacedPath.append(newPath.segment(i)).append(separator);
