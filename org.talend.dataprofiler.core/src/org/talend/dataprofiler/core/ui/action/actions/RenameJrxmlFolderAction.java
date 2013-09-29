@@ -15,13 +15,10 @@ package org.talend.dataprofiler.core.ui.action.actions;
 import java.util.List;
 
 import org.eclipse.core.runtime.IPath;
-import org.talend.dataprofiler.core.ui.utils.MessageUI;
 import org.talend.dataprofiler.core.ui.utils.RepNodeUtils;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.nodes.JrxmlTempleteRepNode;
 import org.talend.repository.model.RepositoryNode;
-import org.talend.utils.sugars.ReturnCode;
-
 
 /**
  * Update all reports if them used the jrxml files in this renamed folder.
@@ -67,19 +64,19 @@ public class RenameJrxmlFolderAction extends RenameTdqFolderAction {
     @Override
     public void run() {
         super.run();
-        if (newNameOfFolder == null) {// means that the action is cancelled
+
+        // means that the action is cancelled
+        if (newNameOfFolder == null) {
             return;
         }
+
         // get the new folder name
         IPath newPath = oldPath.removeLastSegments(1).append(newNameOfFolder);
 
         // use two array :old file names and new file names, to call the method.
         List<String> jrxmlFileNamesAfterMove = RepNodeUtils.getListOfJrxmlNewNameWithPath(oldPath, newPath, jrxmlFileRepNodes);
-        // update the depended reports
-        ReturnCode returnCode = RepNodeUtils.updateJrxmlRelatedReport(jrxmlFileNames, jrxmlFileNamesAfterMove);
-        if (!returnCode.isOk()) {
-            MessageUI.openWarning(returnCode.getMessage());
-        }// ~
 
+        // update the depended reports
+        RepNodeUtils.updateJrxmlRelatedReport(jrxmlFileNames, jrxmlFileNamesAfterMove);
     }
 }

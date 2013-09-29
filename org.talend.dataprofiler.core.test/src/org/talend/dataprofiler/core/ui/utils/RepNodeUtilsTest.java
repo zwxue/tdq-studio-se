@@ -12,14 +12,14 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.utils;
 
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-import static org.powermock.api.support.membermodification.MemberMatcher.method;
-import static org.powermock.api.support.membermodification.MemberModifier.stub;
+import static org.mockito.Mockito.*;
+import static org.powermock.api.support.membermodification.MemberMatcher.*;
+import static org.powermock.api.support.membermodification.MemberModifier.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.Path;
 import org.junit.After;
@@ -35,6 +35,7 @@ import org.talend.core.model.properties.Item;
 import org.talend.core.model.properties.Property;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
+import org.talend.cwm.helper.ModelElementHelper;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataquality.helpers.AnalysisHelper;
 import org.talend.dataquality.helpers.ReportHelper;
@@ -48,12 +49,11 @@ import org.talend.repository.model.IRepositoryNode;
 import org.talend.resource.EResourceConstant;
 import org.talend.resource.ResourceManager;
 
-
 /**
- * DOC yyin  class global comment. Detailled comment
+ * DOC yyin class global comment. Detailled comment
  */
 @PrepareForTest({ ProjectManager.class, ResourceManager.class, RepositoryNodeHelper.class, CorePlugin.class,
-        ProxyRepositoryFactory.class })
+        ProxyRepositoryFactory.class, ModelElementHelper.class })
 public class RepNodeUtilsTest {
 
     @Rule
@@ -61,13 +61,13 @@ public class RepNodeUtilsTest {
 
     TdReport realReport;
 
-    String oldJrxmlPath = "../../../TDQ_Libraries/JRXML Template/column/column_basic_0.1.jrxml";
+    String oldJrxmlPath = "../../../TDQ_Libraries/JRXML Template/column/column_basic_0.1.jrxml"; //$NON-NLS-1$
 
-    String newJrxmlPath = "TDQ_Libraries/JRXML Template/column/new_column_basic_new_0.1.jrxml";
+    String newJrxmlPath = "TDQ_Libraries/JRXML Template/column/new_column_basic_new_0.1.jrxml"; //$NON-NLS-1$
 
-    String moveJrxmlPath = "TDQ_Libraries/JRXML Template/column_move/new_column_basic_new_0.1.jrxml";
+    String moveJrxmlPath = "TDQ_Libraries/JRXML Template/column_move/new_column_basic_new_0.1.jrxml"; //$NON-NLS-1$
 
-    String newJrxmlResource = "../../../TDQ_Libraries/JRXML Template/column/new_column_basic_new_0.1.jrxml";
+    String newJrxmlResource = "../../../TDQ_Libraries/JRXML Template/column/new_column_basic_new_0.1.jrxml"; //$NON-NLS-1$
 
     /**
      * can not use the real project to test, because the method RepositoryNodeHelper.getDataProfilingFolderNode will use
@@ -78,12 +78,12 @@ public class RepNodeUtilsTest {
      */
     @Before
     public void setUp() throws Exception {
-        
+
         // create a report with user defined jrxml
-        realReport = ReportHelper.createReport("report20130124");
+        realReport = ReportHelper.createReport("report20130124"); //$NON-NLS-1$
         AnalysisMap analysisMap = ReportsFactory.eINSTANCE.createAnalysisMap();
         analysisMap.setReportType(ReportHelper.ReportType.USER_MADE.getLabel());
-        analysisMap.setAnalysis(AnalysisHelper.createAnalysis("analysis20130124"));
+        analysisMap.setAnalysis(AnalysisHelper.createAnalysis("analysis20130124")); //$NON-NLS-1$
         analysisMap.setJrxmlSource(oldJrxmlPath);
         realReport.getAnalysisMap().add(analysisMap);
 
@@ -98,24 +98,37 @@ public class RepNodeUtilsTest {
         when(view.getProperty()).thenReturn(prop);
         when(repNode.getObject()).thenReturn(view);
         when(repNode.getReport()).thenReturn(realReport);
-        
-        // PowerMockito.mock(ProjectManager.class);
+
         ProjectManager manager = mock(ProjectManager.class);
-        stub(method(ProjectManager.class, "getInstance")).toReturn(manager);
+        stub(method(ProjectManager.class, "getInstance")).toReturn(manager); //$NON-NLS-1$
 
         Project project = mock(Project.class);
         when(manager.getCurrentProject()).thenReturn(project);
-        
+
         PowerMockito.mock(ResourceManager.class);
         IProject iproject = mock(IProject.class);
-        when(iproject.getLocation()).thenReturn(new Path("/opt/runtime/tdqee/a1/"));
-        stub(method(ResourceManager.class, "getRootProject")).toReturn(iproject);
-        
+        when(iproject.getLocation()).thenReturn(new Path("/opt/runtime/tdqee/a1/")); //$NON-NLS-1$
+        stub(method(ResourceManager.class, "getRootProject")).toReturn(iproject); //$NON-NLS-1$
+
+        IFile ifile = mock(IFile.class);
+        when(iproject.getFile(newJrxmlPath)).thenReturn(ifile);
+        when(ifile.getLocation()).thenReturn(new Path("/opt/runtime/tdqee/a1/" + newJrxmlPath)); //$NON-NLS-1$
+
+        PowerMockito.mockStatic(ModelElementHelper.class);
+        IFile ifile2 = mock(IFile.class);
+        when(ModelElementHelper.getIFile(realReport)).thenReturn(ifile2);
+        when(ifile2.getLocation())
+                .thenReturn(new Path("/opt/runtime/tdqee/a1/TDQ_Data Profiling/Reports/report20130124_0.1.rep")); //$NON-NLS-1$
+
+        IFile ifile3 = mock(IFile.class);
+        when(iproject.getFile(moveJrxmlPath)).thenReturn(ifile3);
+        when(ifile3.getLocation()).thenReturn(new Path("/opt/runtime/tdqee/a1/" + moveJrxmlPath)); //$NON-NLS-1$
+
         PowerMockito.mock(RepositoryNodeHelper.class);
         IRepositoryNode ReportRootFolderNode = mock(IRepositoryNode.class);
-        stub(method(RepositoryNodeHelper.class, "getDataProfilingFolderNode", EResourceConstant.class)).toReturn(
+        stub(method(RepositoryNodeHelper.class, "getDataProfilingFolderNode", EResourceConstant.class)).toReturn( //$NON-NLS-1$
                 ReportRootFolderNode);
-        stub(method(RepositoryNodeHelper.class, "getReportRepNodes", IRepositoryNode.class, boolean.class, boolean.class))
+        stub(method(RepositoryNodeHelper.class, "getReportRepNodes", IRepositoryNode.class, boolean.class, boolean.class)) //$NON-NLS-1$
                 .toReturn(repNodes);
 
         ProxyRepositoryFactory repFactory = mock(ProxyRepositoryFactory.class);
@@ -126,10 +139,12 @@ public class RepNodeUtilsTest {
 
     /**
      * DOC yyin Comment method "tearDown".
+     * 
      * @throws java.lang.Exception
      */
     @After
     public void tearDown() throws Exception {
+        // do nothing until now
     }
 
     /**
@@ -158,7 +173,7 @@ public class RepNodeUtilsTest {
      */
     @Test
     public void testUpdateJrxmlRelatedReportIPath_2() {
-        String jrxmlPath = "TDQ_Libraries/JRXML Template/column/column_0.1.jrxml";
+        String jrxmlPath = "TDQ_Libraries/JRXML Template/column/column_0.1.jrxml"; //$NON-NLS-1$
         // before update, the jrxml in the report
         for (AnalysisMap anaMap : realReport.getAnalysisMap()) {
             Assert.assertTrue(anaMap.getJrxmlSource().equals(oldJrxmlPath));
@@ -187,7 +202,7 @@ public class RepNodeUtilsTest {
         RepNodeUtils.updateJrxmlRelatedReport(new Path(oldJrxmlPath), new Path(this.moveJrxmlPath));
         // after update, the jrxml in the report should be changed to new
         for (AnalysisMap anaMap : realReport.getAnalysisMap()) {
-            Assert.assertTrue(anaMap.getJrxmlSource().equals("../../../" + this.moveJrxmlPath));
+            Assert.assertTrue(anaMap.getJrxmlSource().equals("../../../" + this.moveJrxmlPath)); //$NON-NLS-1$
         }
     }
 

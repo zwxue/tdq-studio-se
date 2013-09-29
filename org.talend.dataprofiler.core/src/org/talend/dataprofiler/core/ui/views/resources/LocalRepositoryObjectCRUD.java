@@ -43,7 +43,6 @@ import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.helper.WorkspaceResourceHelper;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
-import org.talend.dataprofiler.core.ui.utils.MessageUI;
 import org.talend.dataprofiler.core.ui.utils.RepNodeUtils;
 import org.talend.dataprofiler.core.ui.utils.WorkbenchUtils;
 import org.talend.dataprofiler.core.ui.views.DQRespositoryView;
@@ -430,11 +429,8 @@ public class LocalRepositoryObjectCRUD extends AbstractRepObjectCRUDAction {
         this.moveObject(sourceNode, targetNode, makeRelativeTo);
 
         // update the depended reports
-        ReturnCode returnCode = RepNodeUtils.updateJrxmlRelatedReport(oldPath,
+        RepNodeUtils.updateJrxmlRelatedReport(oldPath,
                 RepositoryNodeHelper.getPath(targetNode).append(RepNodeUtils.getSeparator()).append(filename));
-        if (!returnCode.isOk()) {
-            MessageUI.openWarning(returnCode.getMessage());
-        }
     }
 
     /**
@@ -605,10 +601,7 @@ public class LocalRepositoryObjectCRUD extends AbstractRepObjectCRUDAction {
                 jrxmlFileNamesAfterMove.add(tempPath.append(RepositoryNodeHelper.getFileNameOfTheNode(jrxml)).toOSString());
             }
             // update the depended reports
-            ReturnCode returnCode = RepNodeUtils.updateJrxmlRelatedReport(jrxmlFileNames, jrxmlFileNamesAfterMove);
-            if (!returnCode.isOk()) {
-                MessageUI.openWarning(returnCode.getMessage());
-            }
+            RepNodeUtils.updateJrxmlRelatedReport(jrxmlFileNames, jrxmlFileNamesAfterMove);
         }// ~
     }
 
