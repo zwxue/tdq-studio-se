@@ -19,11 +19,10 @@ import org.talend.dataquality.record.linkage.attribute.AttributeMatcherFactory;
 import org.talend.dataquality.record.linkage.attribute.IAttributeMatcher;
 import org.talend.dataquality.record.linkage.attribute.SubstringAttributeMatcher;
 import org.talend.dataquality.record.linkage.constant.AttributeMatcherType;
+import org.talend.dataquality.record.linkage.utils.SurvivorShipAlgorithmEnum;
 
 import java.util.HashSet;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 
 public class MatchMerge {
@@ -47,10 +46,10 @@ public class MatchMerge {
         return find;
     }
 
-    public static Record merge(Record record1, Record record2, MergeAlgorithm[] typeMergeTable) {
+    public static Record merge(Record record1, Record record2, SurvivorShipAlgorithmEnum[] typeMergeTable) {
         List<Attribute> r1 = record1.getAttributes();
         List<Attribute> r2 = record2.getAttributes();
-        Record mergedRecord = new Record(record1.getId());
+        Record mergedRecord = new Record(record1.getId(), System.currentTimeMillis()); // TODO What's the best timestamp for a merged record?
         for (int k = 0; k < r1.size(); k++) {
             Attribute a = new Attribute(r1.get(k).getLabel(), null);
             mergedRecord.getAttributes().add(k, a);
@@ -69,62 +68,83 @@ public class MatchMerge {
                             mergedRecord.getAttributes().get(i).setValue(r1.get(i).getValue());
                         } else {
                             switch (typeMergeTable[i]) {
-                                case CONCAT:
+                                case CONCATENATE:
                                     mergedRecord.getAttributes().get(i).setValue(r1.get(i).getValue() + r2.get(i).getValue());
                                     break;
-                                case UNIFY:
-                                    Pattern pattern = Pattern.compile("(\\D+)\\1$"); //$NON-NLS-1$
-                                    if (r1.get(i).getValue().length() <= r2.get(i).getValue().length()) {
-                                        Matcher matcher = pattern.matcher(r2.get(i).getValue());
-                                        if (!matcher.find()) {
-                                            mergedRecord.getAttributes().get(i).setValue(r2.get(i).getValue());
-                                        } else {
-                                            mergedRecord.getAttributes().get(i).setValue(r1.get(i).getValue());
-                                        }
-                                    } else {
-                                        Matcher matcher = pattern.matcher(r1.get(i).getValue());
-                                        if (!matcher.find()) {
-                                            mergedRecord.getAttributes().get(i).setValue(r1.get(i).getValue());
-                                        } else {
-                                            mergedRecord.getAttributes().get(i).setValue(r2.get(i).getValue());
-                                        }
-                                    }
-                                    break;
-                                case MAX:
+                                case LARGEST:
                                     if (Integer.parseInt(r1.get(i).getValue()) <= Integer.parseInt(r2.get(i).getValue())) {
                                         mergedRecord.getAttributes().get(i).setValue(r2.get(i).getValue());
                                     } else {
                                         mergedRecord.getAttributes().get(i).setValue(r1.get(i).getValue());
                                     }
                                     break;
-                                case MIN:
+                                case SMALLEST:
                                     if (Integer.parseInt(r1.get(i).getValue()) <= Integer.parseInt(r2.get(i).getValue())) {
                                         mergedRecord.getAttributes().get(i).setValue(r1.get(i).getValue());
                                     } else {
                                         mergedRecord.getAttributes().get(i).setValue(r2.get(i).getValue());
                                     }
-                                    break;
-                                case MEAN:
-                                    mergedRecord.getAttributes().get(i).setValue(Integer.toString((Integer.parseInt(r1.get(i).getValue())) + (Integer.parseInt(r2.get(i).getValue())) / 2));
-                                    break;
-                                case SUM:
-                                    mergedRecord.getAttributes().get(i).setValue(Integer.toString((Integer.parseInt(r1.get(i).getValue())) + (Integer.parseInt(r2.get(i).getValue()))));
                                     break;
                                 case MOST_RECENT:
-                                    if (r1.get(i).getValue().compareTo(r2.get(i).getValue()) <= 0) {
+                                    if(record1.getTimestamp() > record2.getTimestamp()) {
+                                        mergedRecord.getAttributes().get(i).setValue(r1.get(i).getValue());
+                                    } else if(record1.getTimestamp() < record2.getTimestamp()) {
                                         mergedRecord.getAttributes().get(i).setValue(r2.get(i).getValue());
                                     } else {
-                                        mergedRecord.getAttributes().get(i).setValue(r1.get(i).getValue());
+                                        // Both r1 and r2 have same timestamp, concatenate both to preserve data
+                                        mergedRecord.getAttributes().get(i).setValue(r1.get(i).getValue() + r2.get(i).getValue());
                                     }
                                     break;
-                                case OLDEST_DATE:
-                                    if (r1.get(i).getValue().compareTo(r2.get(i).getValue()) <= 0) {
+                                case MOST_ANCIENT:
+                                    if(record1.getTimestamp() < record2.getTimestamp()) {
                                         mergedRecord.getAttributes().get(i).setValue(r1.get(i).getValue());
-                                    } else {
+                                    } else if(record1.getTimestamp() > record2.getTimestamp()) {
                                         mergedRecord.getAttributes().get(i).setValue(r2.get(i).getValue());
+                                    } else {
+                                        // Both r1 and r2 have same timestamp, concatenate both to preserve data
+                                        mergedRecord.getAttributes().get(i).setValue(r1.get(i).getValue() + r2.get(i).getValue());
                                     }
-                                case REPEATED_VALUES:
-                                    mergedRecord.getAttributes().get(i).setValue(r2.get(i).getValue());
+                                    break;
+                                case FORCE_TRUE:
+                                    mergedRecord.getAttributes().get(i).setValue("true"); //$NON-NLS-1$
+                                    break;
+                                case FORCE_FALSE:
+                                    mergedRecord.getAttributes().get(i).setValue("false"); //$NON-NLS-1$
+                                    break;
+                                case MOST_COMMON:
+                                    mergedRecord.getAttributes().get(i).addValue(r1.get(i).getValue());
+                                    mergedRecord.getAttributes().get(i).addValue(r2.get(i).getValue());
+                                    break;
+                                case LONGEST:
+                                    if (r1.get(i).getValue().length() > r2.get(i).getValue().length()) {
+                                        mergedRecord.getAttributes().get(i).setValue(r1.get(i).getValue());
+                                    } else if (r1.get(i).getValue().length() < r2.get(i).getValue().length()) {
+                                        mergedRecord.getAttributes().get(i).setValue(r2.get(i).getValue());
+                                    } else {
+                                        if (r1.get(i).getValue().equals(r2.get(i).getValue())) {
+                                            // Same length and equals
+                                            mergedRecord.getAttributes().get(i).setValue(r1.get(i).getValue());
+                                        } else {
+                                            // Both r1 and r2 have same length, concatenate both to preserve data
+                                            mergedRecord.getAttributes().get(i).setValue(r1.get(i).getValue() + r2.get(i).getValue());
+                                        }
+                                    }
+                                    break;
+                                case SHORTEST:
+                                    if (r1.get(i).getValue().length() < r2.get(i).getValue().length()) {
+                                        mergedRecord.getAttributes().get(i).setValue(r1.get(i).getValue());
+                                    } else if (r1.get(i).getValue().length() > r2.get(i).getValue().length()) {
+                                        mergedRecord.getAttributes().get(i).setValue(r2.get(i).getValue());
+                                    } else {
+                                        if (r1.get(i).getValue().equals(r2.get(i).getValue())) {
+                                            // Same length and equals
+                                            mergedRecord.getAttributes().get(i).setValue(r1.get(i).getValue());
+                                        } else {
+                                            // Both r1 and r2 have same length, concatenate both to preserve data
+                                            mergedRecord.getAttributes().get(i).setValue(r1.get(i).getValue() + r2.get(i).getValue());
+                                        }
+                                    }
+                                    break;
                             }
                         }
                     }

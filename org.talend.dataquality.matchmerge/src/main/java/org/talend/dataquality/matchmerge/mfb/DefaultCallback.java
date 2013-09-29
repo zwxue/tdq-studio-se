@@ -57,4 +57,12 @@ class DefaultCallback implements MatchMergeAlgorithm.Callback {
     @Override
     public void onEndProcessing() {
     }
+
+    @Override
+    public void onBeginPostMergeProcess() {
+    }
+
+    @Override
+    public void onEndPostMergeProcess() {
+    }
 }

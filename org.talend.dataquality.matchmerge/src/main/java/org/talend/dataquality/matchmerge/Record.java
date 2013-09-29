@@ -24,20 +24,24 @@ public class Record {
 
     private final String id;
 
+    private final long timestamp;
+
     private String groupId;
 
     private Set<String> relatedIds = new HashSet<String>();
 
     private double confidence = MAX_CONFIDENCE;
 
-    public Record(String id) {
+    public Record(String id, long timestamp) {
         this.id = id;
+        this.timestamp = timestamp;
         this.attributes = new ArrayList<Attribute>();
     }
 
-    public Record(List<Attribute> attributes, String id) {
+    public Record(List<Attribute> attributes, String id, long timestamp) {
         this.attributes = attributes;
         this.id = id;
+        this.timestamp = timestamp;
     }
 
     public String getGroupId() {
@@ -102,5 +106,9 @@ public class Record {
             throw new IllegalArgumentException("Confidence value '" + confidence + "' is incorrect (>" + MAX_CONFIDENCE + ".");
         }
         this.confidence = confidence;
+    }
+
+    public long getTimestamp() {
+        return timestamp;
     }
 }

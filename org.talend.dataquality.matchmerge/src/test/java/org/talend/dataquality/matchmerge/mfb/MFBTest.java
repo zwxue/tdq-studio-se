@@ -15,6 +15,7 @@ import junit.framework.TestCase;
 import org.talend.dataquality.matchmerge.*;
 import org.talend.dataquality.record.linkage.attribute.IAttributeMatcher;
 import org.talend.dataquality.record.linkage.constant.AttributeMatcherType;
+import org.talend.dataquality.record.linkage.utils.SurvivorShipAlgorithmEnum;
 
 import java.util.*;
 
@@ -34,7 +35,7 @@ public class MFBTest extends TestCase {
     public void testArguments() throws Exception {
         MatchMergeAlgorithm algorithm = new MFB(new AttributeMatcherType[0],
                 new float[0],
-                new MergeAlgorithm[0],
+                new SurvivorShipAlgorithmEnum[0],
                 new double[0],
                 new IAttributeMatcher.NullOption[0],
                 new SubString[0]);
@@ -47,7 +48,7 @@ public class MFBTest extends TestCase {
         Iterator<Record> iterator = new ValuesIterator(100000, generators);
         MatchMergeAlgorithm algorithm = new MFB(new AttributeMatcherType[0],
                 new float[0],
-                new MergeAlgorithm[0],
+                new SurvivorShipAlgorithmEnum[0],
                 new double[0],
                 new IAttributeMatcher.NullOption[0],
                 new SubString[0]);
@@ -78,7 +79,7 @@ public class MFBTest extends TestCase {
         Iterator<Record> iterator = new ValuesIterator(totalCount, generators);
         MatchMergeAlgorithm algorithm = new MFB(new AttributeMatcherType[]{matchAlgorithm},
                 new float[]{1},
-                new MergeAlgorithm[]{MergeAlgorithm.UNIFY},
+                new SurvivorShipAlgorithmEnum[]{SurvivorShipAlgorithmEnum.LONGEST},
                 new double[]{1},
                 new IAttributeMatcher.NullOption[]{IAttributeMatcher.NullOption.nullMatchAll},
                 new SubString[]{SubString.NO_SUBSTRING});
@@ -113,7 +114,7 @@ public class MFBTest extends TestCase {
         Iterator<Record> iterator = new ValuesIterator(totalCount, generators);
         MatchMergeAlgorithm algorithm = new MFB(new AttributeMatcherType[]{matchAlgorithm},
                 new float[]{1},
-                new MergeAlgorithm[]{MergeAlgorithm.UNIFY},
+                new SurvivorShipAlgorithmEnum[]{SurvivorShipAlgorithmEnum.LONGEST},
                 new double[]{0}, // Mark rule with no weight (-> match record should have a 0 confidence).
                 new IAttributeMatcher.NullOption[] {IAttributeMatcher.NullOption.nullMatchAll},
                 new SubString[]{SubString.NO_SUBSTRING});
@@ -147,7 +148,7 @@ public class MFBTest extends TestCase {
         Iterator<Record> iterator = new ValuesIterator(totalCount, generators);
         MatchMergeAlgorithm algorithm = new MFB(new AttributeMatcherType[]{matchAlgorithm},
                 new float[]{0.5f},
-                new MergeAlgorithm[]{MergeAlgorithm.UNIFY},
+                new SurvivorShipAlgorithmEnum[]{SurvivorShipAlgorithmEnum.CONCATENATE},
                 new double[]{1},
                 new IAttributeMatcher.NullOption[]{IAttributeMatcher.NullOption.nullMatchAll},
                 new SubString[]{SubString.NO_SUBSTRING});
@@ -171,6 +172,8 @@ public class MFBTest extends TestCase {
 
         private final Map<String, ValueGenerator> generators;
 
+        private long timestamp = 0;
+
         private ValuesIterator(int size, Map<String, ValueGenerator> generators) {
             this.size = size;
             this.generators = generators;
@@ -188,7 +191,7 @@ public class MFBTest extends TestCase {
                 record.add(new Attribute(generator.getKey(), generator.getValue().newValue()));
             }
             currentIndex++;
-            return new Record(record, String.valueOf(currentIndex - 1));
+            return new Record(record, String.valueOf(currentIndex - 1), timestamp++);
         }
 
         @Override

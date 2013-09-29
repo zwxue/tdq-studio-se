@@ -45,6 +45,10 @@ public interface MatchMergeAlgorithm extends IRecordMatcher {
         void onBeginProcessing();
 
         void onEndProcessing();
+
+        void onBeginPostMergeProcess();
+
+        void onEndPostMergeProcess();
     }
 
 }

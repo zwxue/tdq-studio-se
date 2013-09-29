@@ -15,6 +15,7 @@ import org.apache.log4j.Logger;
 import org.talend.dataquality.matchmerge.*;
 import org.talend.dataquality.record.linkage.attribute.IAttributeMatcher;
 import org.talend.dataquality.record.linkage.constant.AttributeMatcherType;
+import org.talend.dataquality.record.linkage.utils.SurvivorShipAlgorithmEnum;
 
 import java.util.*;
 
@@ -26,7 +27,7 @@ public class MFB implements MatchMergeAlgorithm {
 
     private float[] thresholds;
 
-    private MergeAlgorithm[] merges;
+    private SurvivorShipAlgorithmEnum[] merges;
 
     private double[] weights;
 
@@ -41,7 +42,7 @@ public class MFB implements MatchMergeAlgorithm {
     public MFB() {
         algorithms = new AttributeMatcherType[0];
         this.thresholds = new float[0];
-        this.merges = new MergeAlgorithm[0];
+        this.merges = new SurvivorShipAlgorithmEnum[0];
         this.weights = new double[0];
         this.nullOptions = new IAttributeMatcher.NullOption[0];
         this.subStrings = new SubString[0];
@@ -50,7 +51,7 @@ public class MFB implements MatchMergeAlgorithm {
 
     public MFB(AttributeMatcherType[] algorithms,
                float[] thresholds,
-               MergeAlgorithm[] merges,
+               SurvivorShipAlgorithmEnum[] merges,
                double[] weights,
                IAttributeMatcher.NullOption[] nullOptions,
                SubString[] subStrings) {
@@ -133,8 +134,78 @@ public class MFB implements MatchMergeAlgorithm {
             callback.onEndRecord(currentRecord);
             index++;
         }
+        // Post merge processing (most common values...)
+        Map<Integer, SurvivorShipAlgorithmEnum> indexToMerge = getPostProcessIndexes(merges);
+        if (!indexToMerge.isEmpty()) {
+            callback.onBeginPostMergeProcess();
+            for (Record mergedRecord : mergedRecords) {
+                for (Map.Entry<Integer, SurvivorShipAlgorithmEnum> entry : indexToMerge.entrySet()) {
+                    SurvivorShipAlgorithmEnum algorithm = entry.getValue();
+                    switch (algorithm) {
+                        case MOST_COMMON:
+                            Attribute attribute = mergedRecord.getAttributes().get(entry.getKey());
+                            List<String> values = attribute.getValues();
+                            if (LOGGER.isDebugEnabled()) {
+                                LOGGER.debug("Most common merge: input {" + values + "}");
+                            }
+                            if (!values.isEmpty()) {
+                                String mostCommon = getMostCommonValue(values);
+                                if (LOGGER.isDebugEnabled()) {
+                                    LOGGER.debug("Most common merge: output {" + mostCommon + "}");
+                                }
+                                attribute.setValue(mostCommon);
+                            }
+                            break;
+                        default:
+                            throw new IllegalStateException("No post process should be needed for '" + algorithm + "'.");
+                    }
+                }
+                callback.onNewMerge(mergedRecord);
+            }
+            callback.onEndPostMergeProcess();
+        }
         callback.onEndProcessing();
         return mergedRecords;
+    }
+
+    // TODO This method does not belong here: should be in linkage (maybe?)
+    // TODO Duplicated code with org.talend.mdm.core -> bad
+    public static String getMostCommonValue(Collection<String> values) {
+        String[] strings = values.toArray(new String[values.size()]);
+        Arrays.sort(strings); // Sorts items to ensure all similar strings are grouped together
+        int occurrenceCount = 1;
+        int maxOccurrenceCount = 0;
+        String mostCommon = strings[0];
+        String previousString = strings[0];
+        for(int i = 1; i < strings.length; i++) {
+            String current = strings[i];
+            if(!previousString.equals(current)) {
+                if(occurrenceCount > maxOccurrenceCount) {
+                    mostCommon = current;
+                    maxOccurrenceCount = occurrenceCount;
+                    if(maxOccurrenceCount > i) {
+                        break; // Not enough item left to have a new max for occurrence count.
+                    }
+                }
+                occurrenceCount = 0;
+            } else {
+                occurrenceCount++;
+            }
+            previousString = current;
+        }
+        return mostCommon;
+    }
+
+    private static Map<Integer, SurvivorShipAlgorithmEnum> getPostProcessIndexes(SurvivorShipAlgorithmEnum[] merges) {
+        Map<Integer, SurvivorShipAlgorithmEnum> indexToMerge = new HashMap<Integer, SurvivorShipAlgorithmEnum>();
+        int i = 0;
+        for (SurvivorShipAlgorithmEnum merge : merges) {
+            if (merge == SurvivorShipAlgorithmEnum.MOST_COMMON) {
+                indexToMerge.put(i, merge);
+            }
+            i++;
+        }
+        return indexToMerge;
     }
 
     private void performAsserts(Record currentRecord) {
@@ -181,7 +252,7 @@ public class MFB implements MatchMergeAlgorithm {
         if (numberOfAttributes != algorithms.length) {
             algorithms = new AttributeMatcherType[numberOfAttributes];
             thresholds = new float[numberOfAttributes];
-            merges = new MergeAlgorithm[numberOfAttributes];
+            merges = new SurvivorShipAlgorithmEnum[numberOfAttributes];
             weights = new double[numberOfAttributes];
             nullOptions = new IAttributeMatcher.NullOption[numberOfAttributes];
             subStrings = new SubString[numberOfAttributes];
@@ -243,7 +314,7 @@ public class MFB implements MatchMergeAlgorithm {
                 for (String value : values) {
                     attributes.add(new Attribute(String.valueOf(i++), value));
                 }
-                return new Record(attributes, StringUtils.EMPTY);
+                return new Record(attributes, StringUtils.EMPTY, 0);
             }
 
             @Override

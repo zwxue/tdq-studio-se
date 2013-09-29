@@ -63,4 +63,14 @@ class LoggerCallback implements MatchMergeAlgorithm.Callback {
     public void onEndProcessing() {
         LOGGER.info("End match & merge.");
     }
+
+    @Override
+    public void onBeginPostMergeProcess() {
+        LOGGER.info("Begin post processing for merge");
+    }
+
+    @Override
+    public void onEndPostMergeProcess() {
+        LOGGER.info("End post processing for merge");
+    }
 }

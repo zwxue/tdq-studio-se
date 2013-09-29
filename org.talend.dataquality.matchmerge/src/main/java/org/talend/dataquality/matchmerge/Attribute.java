@@ -15,6 +15,9 @@
  */
 package org.talend.dataquality.matchmerge;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * @author adjout
  */
@@ -23,6 +26,8 @@ public class Attribute {
     private final String label;
 
     private String value;
+
+    private List<String> values;
 
     public Attribute(String label, String value) {
         this.label = label;
@@ -39,5 +44,16 @@ public class Attribute {
 
     public void setValue(String value) {
         this.value = value;
+    }
+
+    public void addValue(String value) {
+        if(values == null) {
+            values = new ArrayList<String>();
+        }
+        values.add(value);
+    }
+
+    public List<String> getValues() {
+        return values;
     }
 }
