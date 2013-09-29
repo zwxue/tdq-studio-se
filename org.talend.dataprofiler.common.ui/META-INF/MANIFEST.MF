@@ -9,7 +9,8 @@ Bundle-ActivationPolicy: lazy
 Require-Bundle: org.talend.libraries.jfreechart,
  org.talend.core.ui,
  org.talend.dataquality,
- org.talend.cwm.management
+ org.talend.cwm.management,
+ org.talend.commons.runtime
 Export-Package: org.talend.dataprofiler.common.ui.editor.preview,
  org.talend.dataprofiler.common.ui.editor.preview.chart,
  org.talend.dataprofiler.common.ui.editor.preview.chart.utils
