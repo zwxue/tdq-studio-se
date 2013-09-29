@@ -9,4 +9,4 @@ Bundle-ActivationPolicy: lazy
 Export-Package: org.talend.dataquality.matching.date.pattern
 Bundle-ClassPath: .
 Require-Bundle: org.apache.log4j,
- org.talend.commons.runtime
+ org.talend.commons.runtime;visibility:=reexport

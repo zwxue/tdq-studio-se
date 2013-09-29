@@ -60,11 +60,11 @@ Export-Package: org.talend.algorithms,
  org.talend.dataquality.rules.util,
  org.talend.i18n,
  org.talend.resource
-Require-Bundle: org.talend.utils,
+Require-Bundle: org.talend.utils;visibility:=reexport,
  org.apache.log4j,
  org.apache.commons.lang,
  org.talend.model;visibility:=reexport,
- org.talend.dataquality.matching,
+ org.talend.dataquality.matching;visibility:=reexport,
  org.talend.libraries.google.libphonumber
 Bundle-ActivationPolicy: lazy
 Eclipse-RegisterBuddy: org.apache.log4j,org.talend.testutils
