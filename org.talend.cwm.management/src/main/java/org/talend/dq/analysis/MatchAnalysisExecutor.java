@@ -40,7 +40,6 @@ import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.columnset.BlockKeyIndicator;
 import org.talend.dataquality.indicators.columnset.RecordMatchingIndicator;
 import org.talend.dataquality.record.linkage.grouping.MatchGroupResultConsumer;
-import org.talend.dataquality.record.linkage.ui.action.ExecuteMatchRuleHandler;
 import org.talend.dq.analysis.memory.AnalysisThreadMemoryChangeNotifier;
 import org.talend.dq.helper.AnalysisExecutorHelper;
 import org.talend.dq.indicators.Evaluator;

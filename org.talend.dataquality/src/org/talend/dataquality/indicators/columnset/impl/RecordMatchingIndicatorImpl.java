@@ -133,6 +133,11 @@ public class RecordMatchingIndicatorImpl extends ColumnSetMultiValueIndicatorImp
         this.matchRowSchema = matchRowSchema;
     }
 
+    @Override
+    public String[] getMatchRowSchema() {
+        return this.matchRowSchema;
+    }
+
     /*
      * (non-Javadoc)
      * 

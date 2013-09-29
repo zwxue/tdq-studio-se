@@ -33,11 +33,11 @@ import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.indicators.columnset.BlockKeyIndicator;
 import org.talend.dataquality.indicators.columnset.RecordMatchingIndicator;
 import org.talend.dataquality.record.linkage.grouping.MatchGroupResultConsumer;
-import org.talend.dataquality.record.linkage.ui.action.ExecuteMatchRuleHandler;
 import org.talend.dataquality.record.linkage.ui.composite.chart.MatchRuleDataChart;
 import org.talend.dataquality.record.linkage.ui.composite.utils.MatchRuleAnlaysisUtils;
 import org.talend.dataquality.record.linkage.ui.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataquality.rules.MatchRule;
+import org.talend.dq.analysis.ExecuteMatchRuleHandler;
 import org.talend.utils.sugars.TypedReturnCode;
 
 /**
@@ -127,6 +127,9 @@ abstract public class AbstractMatchKeyWithChartTableSection extends AbstractMatc
                             shell,
                             DefaultMessagesImpl.getString("RunAnalysisAction.runAnalysis"), DefaultMessagesImpl.getString("RunAnalysisAction.failRunAnalysis", analysis.getName(), execute.getMessage())); //$NON-NLS-1$ //$NON-NLS-2$
         } else {
+            // sort the result before refresh
+            MatchRuleAnlaysisUtils.sortResultByGID(recordMatchingIndicator.getMatchRowSchema(), execute.getObject()
+                    .getFullMatchResult());
             MatchRuleAnlaysisUtils.refreshDataTable(analysis, execute.getObject().getFullMatchResult());
         }
         return recordMatchingIndicator;

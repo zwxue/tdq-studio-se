@@ -13,6 +13,7 @@
 package org.talend.dataquality.record.linkage.ui.composite.utils;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
@@ -181,7 +182,40 @@ public class MatchRuleAnlaysisUtils {
         if (tdqRepService != null) {
             tdqRepService.refreshTableWithResult(analysis, resultData);
         }
-
     }
 
+    /**
+     * sorting the result data by GID,master
+     * 
+     * @param allColumns
+     * @param resultData
+     * @return
+     */
+    public static List<Object[]> sortResultByGID(String[] allColumns, List<Object[]> resultData) {
+        int gidIndex = -1;
+        int masterIndex = -1;
+        for (int i = 0; i < allColumns.length; i++) {
+            if (StringUtils.endsWithIgnoreCase(allColumns[i], MatchAnalysisConstant.GID)) {
+                gidIndex = i;
+            } else if (StringUtils.endsWithIgnoreCase(allColumns[i], MatchAnalysisConstant.MASTER)) {
+                masterIndex = i;
+            }
+        }
+        final int GID_index = gidIndex;
+        final int MASTER_index = masterIndex;
+
+        Comparator<Object[]> comparator = new Comparator<Object[]>() {
+
+            public int compare(Object[] row1, Object[] row2) {
+                if (!StringUtils.endsWithIgnoreCase((String) row1[GID_index], (String) row2[GID_index])) {
+                    return ((String) row1[GID_index]).compareTo((String) row2[GID_index]);
+                } else {// false < true
+                    return ((String) row2[MASTER_index]).compareTo((String) row1[MASTER_index]);
+                }
+            }
+
+        };
+        java.util.Collections.sort(resultData, comparator);
+        return resultData;
+    }
 }

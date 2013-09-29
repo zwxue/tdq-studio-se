@@ -5,7 +5,6 @@
  */
 package org.talend.dataquality.indicators.columnset;
 
-import java.util.HashMap;
 import java.util.TreeMap;
 
 import org.talend.dataquality.rules.MatchRuleDefinition;
@@ -13,22 +12,24 @@ import org.talend.dataquality.rules.MatchRuleDefinition;
 /**
  * <!-- begin-user-doc --> A representation of the model object '<em><b>Record Matching Indicator</b></em>'. <!--
  * end-user-doc -->
- *
- * <!-- begin-model-doc -->
- * This class will also store the counts of unique records, duplicate records.
- * Duplicate count = matched record count + suspect record count. 
- * <!-- end-model-doc -->
- *
+ * 
+ * <!-- begin-model-doc --> This class will also store the counts of unique records, duplicate records. Duplicate count
+ * = matched record count + suspect record count. <!-- end-model-doc -->
+ * 
  * <p>
  * The following features are supported:
  * <ul>
- *   <li>{@link org.talend.dataquality.indicators.columnset.RecordMatchingIndicator#getGroupSize2groupFrequency <em>Group Size2group Frequency</em>}</li>
- *   <li>{@link org.talend.dataquality.indicators.columnset.RecordMatchingIndicator#getMatchedRecordCount <em>Matched Record Count</em>}</li>
- *   <li>{@link org.talend.dataquality.indicators.columnset.RecordMatchingIndicator#getSuspectRecordCount <em>Suspect Record Count</em>}</li>
- *   <li>{@link org.talend.dataquality.indicators.columnset.RecordMatchingIndicator#getBuiltInMatchRuleDefinition <em>Built In Match Rule Definition</em>}</li>
+ * <li>{@link org.talend.dataquality.indicators.columnset.RecordMatchingIndicator#getGroupSize2groupFrequency <em>Group
+ * Size2group Frequency</em>}</li>
+ * <li>{@link org.talend.dataquality.indicators.columnset.RecordMatchingIndicator#getMatchedRecordCount <em>Matched
+ * Record Count</em>}</li>
+ * <li>{@link org.talend.dataquality.indicators.columnset.RecordMatchingIndicator#getSuspectRecordCount <em>Suspect
+ * Record Count</em>}</li>
+ * <li>{@link org.talend.dataquality.indicators.columnset.RecordMatchingIndicator#getBuiltInMatchRuleDefinition <em>
+ * Built In Match Rule Definition</em>}</li>
  * </ul>
  * </p>
- *
+ * 
  * @see org.talend.dataquality.indicators.columnset.ColumnsetPackage#getRecordMatchingIndicator()
  * @model
  * @generated
@@ -49,9 +50,10 @@ public interface RecordMatchingIndicator extends ColumnSetMultiValueIndicator {
     TreeMap<Object, Long> getGroupSize2groupFrequency();
 
     /**
-     * Sets the value of the '{@link org.talend.dataquality.indicators.columnset.RecordMatchingIndicator#getGroupSize2groupFrequency <em>Group Size2group Frequency</em>}' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * Sets the value of the '
+     * {@link org.talend.dataquality.indicators.columnset.RecordMatchingIndicator#getGroupSize2groupFrequency
+     * <em>Group Size2group Frequency</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @param value the new value of the '<em>Group Size2group Frequency</em>' attribute.
      * @see #getGroupSize2groupFrequency()
      * @generated
@@ -72,8 +74,10 @@ public interface RecordMatchingIndicator extends ColumnSetMultiValueIndicator {
     long getMatchedRecordCount();
 
     /**
-     * Sets the value of the '{@link org.talend.dataquality.indicators.columnset.RecordMatchingIndicator#getMatchedRecordCount <em>Matched Record Count</em>}' attribute.
-     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * Sets the value of the '
+     * {@link org.talend.dataquality.indicators.columnset.RecordMatchingIndicator#getMatchedRecordCount
+     * <em>Matched Record Count</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @param value the new value of the '<em>Matched Record Count</em>' attribute.
      * @see #getMatchedRecordCount()
      * @generated
@@ -94,8 +98,10 @@ public interface RecordMatchingIndicator extends ColumnSetMultiValueIndicator {
     long getSuspectRecordCount();
 
     /**
-     * Sets the value of the '{@link org.talend.dataquality.indicators.columnset.RecordMatchingIndicator#getSuspectRecordCount <em>Suspect Record Count</em>}' attribute.
-     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * Sets the value of the '
+     * {@link org.talend.dataquality.indicators.columnset.RecordMatchingIndicator#getSuspectRecordCount
+     * <em>Suspect Record Count</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @param value the new value of the '<em>Suspect Record Count</em>' attribute.
      * @see #getSuspectRecordCount()
      * @generated
@@ -109,7 +115,7 @@ public interface RecordMatchingIndicator extends ColumnSetMultiValueIndicator {
      * If the meaning of the '<em>Built In Match Rule Definition</em>' containment reference isn't clear, there really
      * should be more of a description here...
      * </p>
-     * <!-- end-user-doc -->
+     * <!-- end-user-doc -->development
      * 
      * @return the value of the '<em>Built In Match Rule Definition</em>' containment reference.
      * @see #setBuiltInMatchRuleDefinition(MatchRuleDefinition)
@@ -120,8 +126,10 @@ public interface RecordMatchingIndicator extends ColumnSetMultiValueIndicator {
     MatchRuleDefinition getBuiltInMatchRuleDefinition();
 
     /**
-     * Sets the value of the '{@link org.talend.dataquality.indicators.columnset.RecordMatchingIndicator#getBuiltInMatchRuleDefinition <em>Built In Match Rule Definition</em>}' containment reference.
-     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * Sets the value of the '
+     * {@link org.talend.dataquality.indicators.columnset.RecordMatchingIndicator#getBuiltInMatchRuleDefinition
+     * <em>Built In Match Rule Definition</em>}' containment reference. <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @param value the new value of the '<em>Built In Match Rule Definition</em>' containment reference.
      * @see #getBuiltInMatchRuleDefinition()
      * @generated
@@ -133,4 +141,11 @@ public interface RecordMatchingIndicator extends ColumnSetMultiValueIndicator {
      * @param matchRowSchema
      */
     public void setMatchRowSchema(String[] matchRowSchema);
+
+    /**
+     * get the schema
+     * 
+     * @return
+     */
+    String[] getMatchRowSchema();
 } // RecordMatchingIndicator
