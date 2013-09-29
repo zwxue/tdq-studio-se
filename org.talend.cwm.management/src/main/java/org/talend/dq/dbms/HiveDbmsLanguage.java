@@ -12,10 +12,10 @@
 // ============================================================================
 package org.talend.dq.dbms;
 
-import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import org.talend.cwm.relational.TdColumn;
 import org.talend.utils.ProductVersion;
 
 /**
@@ -118,8 +118,18 @@ public class HiveDbmsLanguage extends DbmsLanguage {
      * @see org.talend.dq.dbms.DbmsLanguage#createStatement(java.sql.Connection)
      */
     @Override
-    public Statement createStatement(Connection connection, int fetchSize) throws SQLException {
+    public Statement createStatement(java.sql.Connection connection, int fetchSize) throws SQLException {
         // hive don't need to set fetch size
         return connection.createStatement();
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dq.dbms.DbmsLanguage#getQueryColumnsWithPrefix(org.talend.cwm.relational.TdColumn[])
+     */
+    @Override
+    public String getQueryColumnsWithPrefix(TdColumn[] columns) {
+        return getQueryColumns(columns);
     }
 }
