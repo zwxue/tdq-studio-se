@@ -12,6 +12,7 @@
 // ============================================================================
 package org.talend.dq.dbms;
 
+import org.talend.cwm.relational.TdColumn;
 import org.talend.utils.ProductVersion;
 
 /**
@@ -46,10 +47,6 @@ public class HiveDbmsLanguage extends DbmsLanguage {
      */
     public HiveDbmsLanguage(String dbmsType, ProductVersion dbVersion) {
         super(dbmsType, dbVersion);
-    }
-
-    public String toQualifiedName(String catalog, String schema, String table) {
-        return super.toQualifiedName(null, null, table);
     }
 
     /*
@@ -110,6 +107,16 @@ public class HiveDbmsLanguage extends DbmsLanguage {
     @Override
     public boolean supportCatalogSelection() {
         return false;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dq.dbms.DbmsLanguage#getQueryColumnsWithPrefix(org.talend.cwm.relational.TdColumn[])
+     */
+    @Override
+    public String getQueryColumnsWithPrefix(TdColumn[] columns) {
+        return getQueryColumns(columns);
     }
 
 }

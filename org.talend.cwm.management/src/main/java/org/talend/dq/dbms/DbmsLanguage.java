@@ -22,6 +22,7 @@ import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.EList;
 import org.talend.core.model.metadata.builder.database.dburl.SupportDBUrlType;
 import org.talend.cwm.db.connection.ConnectionUtils;
+import org.talend.cwm.helper.CatalogHelper;
 import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.helper.ColumnSetHelper;
 import org.talend.cwm.helper.ResourceHelper;
@@ -48,7 +49,10 @@ import org.talend.dataquality.rules.JoinElement;
 import org.talend.utils.ProductVersion;
 import orgomg.cwm.objectmodel.core.Expression;
 import orgomg.cwm.objectmodel.core.ModelElement;
+import orgomg.cwm.objectmodel.core.Package;
+import orgomg.cwm.resource.relational.Catalog;
 import orgomg.cwm.resource.relational.ColumnSet;
+import orgomg.cwm.resource.relational.RelationalPackage;
 
 /**
  * @author scorreia
@@ -1524,6 +1528,71 @@ public class DbmsLanguage {
     public String getAverageLengthWithNullRows() {
         String whereExpression = "WHERE(<%=__COLUMN_NAMES__%> IS NULL OR " + isNotBlank("<%=__COLUMN_NAMES__%>") + ")";
         return "SELECT * FROM <%=__TABLE_NAME__%> " + whereExpression + "AND LENGTH(<%=__COLUMN_NAMES__%>) BETWEEN (SELECT FLOOR(SUM(LENGTH(<%=__COLUMN_NAMES__%> )) / COUNT( * )) FROM <%=__TABLE_NAME__%> " + whereExpression + ") AND (SELECT CEIL(SUM(LENGTH(<%=__COLUMN_NAMES__%> )) / COUNT(*)) FROM <%=__TABLE_NAME__%>  " + whereExpression + ")"; //$NON-NLS-1$
+    }
+
+    /**
+     * 
+     * Get query string with prefix (catalog/schema.table.column) given column array.
+     * 
+     * @param columns
+     * @return
+     */
+    public String getQueryColumnsWithPrefix(TdColumn[] columns) {
+        String columnClause = PluginConstant.EMPTY_STRING;
+        if (columns.length == 0) {
+            return columnClause;
+        }
+        ColumnSet columnSet = ColumnHelper.getColumnOwnerAsColumnSet(columns[0]);
+        String tableName = getQueryColumnSetWithPrefix(columnSet);
+        for (TdColumn column : columns) {
+            columnClause += tableName + DOT + quote(column.getName()) + PluginConstant.COMMA_STRING;
+        }
+        columnClause = columnClause.substring(0, columnClause.length() - 1);
+        return columnClause;
+    }
+
+    /**
+     * 
+     * move this method from ColumnSetNameHelper.getColumnSetQualifiedName().
+     * 
+     * @param columnset
+     * @return
+     */
+    public String getQueryColumnSetWithPrefix(ColumnSet columnset) {
+        Package catalogOrSchema = ColumnSetHelper.getParentCatalogOrSchema(columnset);
+        if (catalogOrSchema == null) {
+            return columnset.getName();
+        }
+        // else
+        String catalogName = null;
+        String schemaName = null;
+        if (catalogOrSchema != null && RelationalPackage.eINSTANCE.getSchema().equals(catalogOrSchema.eClass())) {
+            schemaName = catalogOrSchema.getName();
+            Catalog parentCatalog = CatalogHelper.getParentCatalog(catalogOrSchema);
+            if (parentCatalog != null) {
+                catalogName = parentCatalog.getName();
+            }
+        } else {
+            catalogName = catalogOrSchema.getName();
+
+        }
+        // MOD by zshen: change schemaName of sybase database to Table's owner.
+        if (ConnectionUtils.isSybaseeDBProducts(getDbmsName())) {
+            schemaName = ColumnSetHelper.getTableOwner(columnset);
+        }
+        // ~11934
+
+        return toQualifiedName(catalogName, schemaName, columnset.getName());
+
+    }
+
+    protected String getQueryColumns(TdColumn[] columns) {
+        String columnClause = PluginConstant.EMPTY_STRING;
+        for (TdColumn column : columns) {
+            columnClause += quote(column.getName()) + PluginConstant.COMMA_STRING;
+        }
+        columnClause = columnClause.substring(0, columnClause.length() - 1);
+        return columnClause;
     }
 
 }
