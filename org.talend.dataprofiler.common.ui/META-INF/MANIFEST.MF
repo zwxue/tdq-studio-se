@@ -1,0 +1,15 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Dataprofiler Common Ui
+Bundle-SymbolicName: org.talend.dataprofiler.common.ui;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-Vendor: .Talend SA.
+Bundle-ActivationPolicy: lazy
+Require-Bundle: org.talend.libraries.jfreechart,
+ org.talend.core.ui,
+ org.talend.dataquality,
+ org.talend.cwm.management
+Export-Package: org.talend.dataprofiler.common.ui.editor.preview,
+ org.talend.dataprofiler.common.ui.editor.preview.chart,
+ org.talend.dataprofiler.common.ui.editor.preview.chart.utils
