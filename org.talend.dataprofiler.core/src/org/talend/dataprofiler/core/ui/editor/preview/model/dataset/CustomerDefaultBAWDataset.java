@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.jfree.data.statistics.DefaultBoxAndWhiskerCategoryDataset;
-import org.talend.dataprofiler.core.ui.editor.preview.model.ICustomerDataset;
+import org.talend.dataprofiler.common.ui.editor.preview.ICustomerDataset;
 import org.talend.dq.indicators.preview.table.ChartDataEntity;
 
 /**

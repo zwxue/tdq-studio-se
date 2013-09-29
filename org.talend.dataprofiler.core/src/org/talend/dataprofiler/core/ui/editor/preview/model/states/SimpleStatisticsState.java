@@ -17,11 +17,11 @@ import java.util.List;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.jfree.chart.JFreeChart;
+import org.talend.dataprofiler.common.ui.editor.preview.CustomerDefaultCategoryDataset;
+import org.talend.dataprofiler.common.ui.editor.preview.ICustomerDataset;
+import org.talend.dataprofiler.common.ui.editor.preview.chart.TopChartFactory;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
-import org.talend.dataprofiler.core.ui.editor.preview.TopChartFactory;
-import org.talend.dataprofiler.core.ui.editor.preview.model.ICustomerDataset;
-import org.talend.dataprofiler.core.ui.editor.preview.model.dataset.CustomerDefaultCategoryDataset;
 import org.talend.dataprofiler.core.ui.editor.preview.model.entity.TableStructureEntity;
 import org.talend.dataprofiler.core.ui.editor.preview.model.states.ChartTableProviderClassSet.BaseChartTableLabelProvider;
 import org.talend.dataprofiler.core.ui.editor.preview.model.states.ChartTableProviderClassSet.CommonContenteProvider;
@@ -50,7 +50,7 @@ public class SimpleStatisticsState extends AbstractChartTypeStates {
             double value = unitValue != null ? Double.parseDouble(unitValue.toString()) : Double.NaN;
             String label = unit.getIndicatorName();
 
-            customerdataset.addValue(value, label, label); //$NON-NLS-1$
+            customerdataset.addValue(value, label, label);
 
             ChartDataEntity entity = new ChartDataEntity();
             entity.setIndicator(unit.getIndicator());
@@ -77,9 +77,8 @@ public class SimpleStatisticsState extends AbstractChartTypeStates {
     protected TableStructureEntity getTableStructure() {
 
         TableStructureEntity entity = new TableStructureEntity();
-        entity
-                .setFieldNames(new String[] {
-                        DefaultMessagesImpl.getString("SimpleStatisticsState.Label"), DefaultMessagesImpl.getString("SimpleStatisticsState.Count"), "%" }); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+        entity.setFieldNames(new String[] {
+                DefaultMessagesImpl.getString("SimpleStatisticsState.Label"), DefaultMessagesImpl.getString("SimpleStatisticsState.Count"), "%" }); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
         entity.setFieldWidths(new Integer[] { 200, 150, 150 });
         return entity;
     }

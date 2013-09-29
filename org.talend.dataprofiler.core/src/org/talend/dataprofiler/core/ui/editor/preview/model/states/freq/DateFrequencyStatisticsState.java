@@ -15,10 +15,10 @@ package org.talend.dataprofiler.core.ui.editor.preview.model.states.freq;
 import java.util.List;
 
 import org.talend.commons.utils.SpecialValueDisplay;
+import org.talend.dataprofiler.common.ui.editor.preview.CustomerDefaultCategoryDataset;
+import org.talend.dataprofiler.common.ui.editor.preview.ICustomerDataset;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
-import org.talend.dataprofiler.core.ui.editor.preview.model.ICustomerDataset;
-import org.talend.dataprofiler.core.ui.editor.preview.model.dataset.CustomerDefaultCategoryDataset;
 import org.talend.dataquality.indicators.IndicatorParameters;
 import org.talend.dq.indicators.ext.FrequencyExt;
 import org.talend.dq.indicators.preview.EIndicatorChartType;

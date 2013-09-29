@@ -17,11 +17,11 @@ import java.util.List;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.jfree.chart.JFreeChart;
+import org.talend.dataprofiler.common.ui.editor.preview.CustomerDefaultCategoryDataset;
+import org.talend.dataprofiler.common.ui.editor.preview.ICustomerDataset;
+import org.talend.dataprofiler.common.ui.editor.preview.chart.TopChartFactory;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
-import org.talend.dataprofiler.core.ui.editor.preview.TopChartFactory;
-import org.talend.dataprofiler.core.ui.editor.preview.model.ICustomerDataset;
-import org.talend.dataprofiler.core.ui.editor.preview.model.dataset.CustomerDefaultCategoryDataset;
 import org.talend.dataprofiler.core.ui.editor.preview.model.entity.TableStructureEntity;
 import org.talend.dataprofiler.core.ui.editor.preview.model.states.ChartTableProviderClassSet.BaseChartTableLabelProvider;
 import org.talend.dataprofiler.core.ui.editor.preview.model.states.ChartTableProviderClassSet.CommonContenteProvider;
@@ -44,7 +44,9 @@ public class PhoneNumbStatisticsState extends AbstractChartTypeStates {
         // TODO Auto-generated constructor stub
     }
 
-    /* (non-Jsdoc)
+    /*
+     * (non-Jsdoc)
+     * 
      * @see org.talend.dataprofiler.core.ui.editor.preview.model.states.IChartTypeStates#getCustomerDataset()
      */
     public ICustomerDataset getCustomerDataset() {
@@ -55,7 +57,7 @@ public class PhoneNumbStatisticsState extends AbstractChartTypeStates {
             double value = unitValue != null ? Double.parseDouble(unitValue.toString()) : Double.NaN;
             String label = unit.getIndicatorName();
 
-            customerdataset.addValue(value, label, label); //$NON-NLS-1$
+            customerdataset.addValue(value, label, label);
 
             ChartDataEntity entity = new ChartDataEntity();
             entity.setIndicator(unit.getIndicator());
@@ -69,7 +71,9 @@ public class PhoneNumbStatisticsState extends AbstractChartTypeStates {
 
     }
 
-    /* (non-Jsdoc)
+    /*
+     * (non-Jsdoc)
+     * 
      * @see org.talend.dataprofiler.core.ui.editor.preview.model.states.IChartTypeStates#getChart()
      */
     public JFreeChart getChart() {
@@ -77,7 +81,9 @@ public class PhoneNumbStatisticsState extends AbstractChartTypeStates {
                 DefaultMessagesImpl.getString("PhoneNumbStatisticsState.PhoneNumbStatistics"), getDataset(), false); //$NON-NLS-1$
     }
 
-    /* (non-Jsdoc)
+    /*
+     * (non-Jsdoc)
+     * 
      * @see org.talend.dataprofiler.core.ui.editor.preview.model.states.IChartTypeStates#getExampleChart()
      */
     public JFreeChart getExampleChart() {
@@ -85,14 +91,18 @@ public class PhoneNumbStatisticsState extends AbstractChartTypeStates {
         return null;
     }
 
-    /* (non-Jsdoc)
+    /*
+     * (non-Jsdoc)
+     * 
      * @see org.talend.dataprofiler.core.ui.editor.preview.model.states.IChartTypeStates#getDataExplorer()
      */
     public DataExplorer getDataExplorer() {
         return new PhoneNumbStatisticsExplorer();
     }
 
-    /* (non-Jsdoc)
+    /*
+     * (non-Jsdoc)
+     * 
      * @see org.talend.dataprofiler.core.ui.editor.preview.model.states.IChartTypeStates#getReferenceLink()
      */
     public String getReferenceLink() {
@@ -100,7 +110,9 @@ public class PhoneNumbStatisticsState extends AbstractChartTypeStates {
         return null;
     }
 
-    /* (non-Jsdoc)
+    /*
+     * (non-Jsdoc)
+     * 
      * @see org.talend.dataprofiler.core.ui.editor.preview.model.states.AbstractChartTypeStates#getTableStructure()
      */
     @Override
@@ -112,7 +124,9 @@ public class PhoneNumbStatisticsState extends AbstractChartTypeStates {
         return entity;
     }
 
-    /* (non-Jsdoc)
+    /*
+     * (non-Jsdoc)
+     * 
      * @see org.talend.dataprofiler.core.ui.editor.preview.model.states.AbstractChartTypeStates#getLabelProvider()
      */
     @Override
@@ -120,7 +134,9 @@ public class PhoneNumbStatisticsState extends AbstractChartTypeStates {
         return new BaseChartTableLabelProvider();
     }
 
-    /* (non-Jsdoc)
+    /*
+     * (non-Jsdoc)
+     * 
      * @see org.talend.dataprofiler.core.ui.editor.preview.model.states.AbstractChartTypeStates#getContentProvider()
      */
     @Override

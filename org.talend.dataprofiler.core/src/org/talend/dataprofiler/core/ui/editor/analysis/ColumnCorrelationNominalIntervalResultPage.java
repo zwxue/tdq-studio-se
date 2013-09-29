@@ -51,11 +51,11 @@ import org.jfree.chart.JFreeChart;
 import org.jfree.experimental.chart.swt.ChartComposite;
 import org.talend.core.model.metadata.builder.connection.MetadataColumn;
 import org.talend.cwm.relational.TdColumn;
+import org.talend.dataprofiler.common.ui.editor.preview.chart.ChartDecorator;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.ColumnSortListener;
-import org.talend.dataprofiler.core.ui.chart.ChartDecorator;
 import org.talend.dataprofiler.core.ui.chart.jung.JungGraphGenerator;
 import org.talend.dataprofiler.core.ui.editor.preview.HideSeriesChartComposite;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
@@ -126,10 +126,11 @@ public class ColumnCorrelationNominalIntervalResultPage extends AbstractAnalysis
         return this.masterPage.getColumnCorrelationAnalysisHandler();
     }
 
+    @Override
     protected void createResultSection(Composite parent) {
         executeData = getAnalysisHandler().getExecuteData();
-        graphicsAndTableSection = this.createSection(form, parent, DefaultMessagesImpl
-                .getString("ColumnCorrelationNominalIntervalResultPage.AnalysisResult"), null); //$NON-NLS-1$
+        graphicsAndTableSection = this.createSection(form, parent,
+                DefaultMessagesImpl.getString("ColumnCorrelationNominalIntervalResultPage.AnalysisResult"), null); //$NON-NLS-1$
         Composite sectionClient = toolkit.createComposite(graphicsAndTableSection);
         sectionClient.setLayout(new GridLayout());
         sectionClient.setLayoutData(new GridData(GridData.FILL_BOTH));
@@ -150,8 +151,9 @@ public class ColumnCorrelationNominalIntervalResultPage extends AbstractAnalysis
         if (executeData == null || executeData.equals(PluginConstant.EMPTY_STRING)) {
             return;
         } else {
-            this.createSimpleStatisticsPart(sectionClient, DefaultMessagesImpl
-                    .getString("ColumnCorrelationNominalIntervalResultPage.SimpleStatistics"), columnSetMultiIndicator); //$NON-NLS-1$
+            this.createSimpleStatisticsPart(
+                    sectionClient,
+                    DefaultMessagesImpl.getString("ColumnCorrelationNominalIntervalResultPage.SimpleStatistics"), columnSetMultiIndicator); //$NON-NLS-1$
         }
 
         Composite tableComp = toolkit.createComposite(sectionClient);
@@ -160,8 +162,8 @@ public class ColumnCorrelationNominalIntervalResultPage extends AbstractAnalysis
         if (executeData == null || executeData.equals(PluginConstant.EMPTY_STRING)) {
             return;
         } else {
-            this.createTableSectionPart(sectionClient, DefaultMessagesImpl
-                    .getString("ColumnCorrelationNominalIntervalResultPage.Data"), columnSetMultiIndicator); //$NON-NLS-1$
+            this.createTableSectionPart(sectionClient,
+                    DefaultMessagesImpl.getString("ColumnCorrelationNominalIntervalResultPage.Data"), columnSetMultiIndicator); //$NON-NLS-1$
         }
         graphicsAndTableSection.setExpanded(true);
         graphicsAndTableSection.setClient(sectionClient);
@@ -230,10 +232,9 @@ public class ColumnCorrelationNominalIntervalResultPage extends AbstractAnalysis
                 IRunnableWithProgress rwp = new IRunnableWithProgress() {
 
                     public void run(final IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-                        monitor
-                                .beginTask(
-                                        DefaultMessagesImpl.getString(
-                                                "ColumnCorrelationNominalIntervalResultPage.CreatePreview", tdColumn.getName()), IProgressMonitor.UNKNOWN); //$NON-NLS-1$
+                        monitor.beginTask(
+                                DefaultMessagesImpl.getString(
+                                        "ColumnCorrelationNominalIntervalResultPage.CreatePreview", tdColumn.getName()), IProgressMonitor.UNKNOWN); //$NON-NLS-1$
                         Display.getDefault().asyncExec(new Runnable() {
 
                             public void run() {

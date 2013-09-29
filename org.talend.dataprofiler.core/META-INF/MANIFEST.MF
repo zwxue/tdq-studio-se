@@ -39,6 +39,7 @@ Require-Bundle: net.sourceforge.sqlexplorer;resolution:=optional,
  org.talend.repository.metadata,
  org.eclipse.nebula.widgets.grid,
  org.apache.log4j,
+ org.talend.dataprofiler.common.ui,
  org.talend.dataquality.record.linkage.ui,
  org.talend.dataprofiler.migration
 Bundle-ActivationPolicy: lazy

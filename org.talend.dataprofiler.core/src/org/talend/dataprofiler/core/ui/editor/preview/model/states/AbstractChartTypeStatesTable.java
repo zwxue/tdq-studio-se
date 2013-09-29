@@ -33,8 +33,8 @@ import org.jfree.chart.renderer.category.CategoryItemRenderer;
 import org.jfree.chart.title.LegendTitle;
 import org.jfree.data.category.CategoryDataset;
 import org.jfree.data.xy.XYDataset;
+import org.talend.dataprofiler.common.ui.editor.preview.ICustomerDataset;
 import org.talend.dataprofiler.core.ui.editor.preview.TableIndicatorUnit;
-import org.talend.dataprofiler.core.ui.editor.preview.model.ICustomerDataset;
 import org.talend.dataprofiler.core.ui.editor.preview.model.entity.TableStructureEntity;
 import org.talend.dq.indicators.preview.table.ChartDataEntity;
 
@@ -83,7 +83,7 @@ public abstract class AbstractChartTypeStatesTable implements IChartTypeStates {
 
             font = new Font("Arail", Font.BOLD, 12); //$NON-NLS-1$
 
-            render.setBaseItemLabelFont(font); //$NON-NLS-1$
+            render.setBaseItemLabelFont(font);
 
             font = new Font("Verdana", Font.BOLD, 12); //$NON-NLS-1$
             domainAxis.setLabelFont(font);

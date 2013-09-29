@@ -15,9 +15,9 @@ package org.talend.dataprofiler.core.ui.editor.preview.model.states;
 import java.util.List;
 
 import org.jfree.chart.JFreeChart;
+import org.talend.dataprofiler.common.ui.editor.preview.chart.TopChartFactory;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
-import org.talend.dataprofiler.core.ui.editor.preview.TopChartFactory;
 import org.talend.dq.analysis.explore.DataExplorer;
 
 /**

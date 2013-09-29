@@ -12,8 +12,7 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.editor.preview.model.states.freq;
 
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,12 +25,12 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.powermock.modules.junit4.rule.PowerMockRule;
+import org.talend.dataprofiler.common.ui.editor.preview.CustomerDefaultCategoryDataset;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
-import org.talend.dataprofiler.core.ui.editor.preview.model.dataset.CustomerDefaultCategoryDataset;
 import org.talend.dq.indicators.ext.FrequencyExt;
 
 /**
- * DOC yyin  class global comment. Detailled comment
+ * DOC yyin class global comment. Detailled comment
  */
 @SuppressWarnings("deprecation")
 public class BenfordLawFrequencyStateTest {
@@ -42,7 +41,7 @@ public class BenfordLawFrequencyStateTest {
     private BenfordLawFrequencyState benState;
 
     private FrequencyExt[] frequencyExt;
-    
+
     /**
      * init the state.
      * 
@@ -72,6 +71,7 @@ public class BenfordLawFrequencyStateTest {
 
     /**
      * DOC yyin Comment method "tearDown".
+     * 
      * @throws java.lang.Exception
      */
     @After

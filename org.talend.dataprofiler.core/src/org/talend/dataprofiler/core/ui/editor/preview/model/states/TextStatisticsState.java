@@ -17,11 +17,11 @@ import java.util.List;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.jfree.chart.JFreeChart;
+import org.talend.dataprofiler.common.ui.editor.preview.CustomerDefaultCategoryDataset;
+import org.talend.dataprofiler.common.ui.editor.preview.ICustomerDataset;
+import org.talend.dataprofiler.common.ui.editor.preview.chart.TopChartFactory;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
-import org.talend.dataprofiler.core.ui.editor.preview.TopChartFactory;
-import org.talend.dataprofiler.core.ui.editor.preview.model.ICustomerDataset;
-import org.talend.dataprofiler.core.ui.editor.preview.model.dataset.CustomerDefaultCategoryDataset;
 import org.talend.dataprofiler.core.ui.editor.preview.model.entity.TableStructureEntity;
 import org.talend.dataprofiler.core.ui.editor.preview.model.states.ChartTableProviderClassSet.BaseChartTableLabelProvider;
 import org.talend.dataprofiler.core.ui.editor.preview.model.states.ChartTableProviderClassSet.CommonContenteProvider;
@@ -40,7 +40,7 @@ public class TextStatisticsState extends AbstractChartTypeStates {
     }
 
     public JFreeChart getChart() {
-        return TopChartFactory.createBarChart( 
+        return TopChartFactory.createBarChart(
                 DefaultMessagesImpl.getString("TextStatisticsState.TextStatistics"), getDataset(), false); //$NON-NLS-1$ 
     }
 
@@ -54,7 +54,7 @@ public class TextStatisticsState extends AbstractChartTypeStates {
             double value = Double.parseDouble(unit.getValue().toString());
             String label = unit.getIndicatorName();
 
-            customerdataset.addValue(value, label, label); //$NON-NLS-1$
+            customerdataset.addValue(value, label, label);
 
             ChartDataEntity entity = new ChartDataEntity();
             entity.setIndicator(unit.getIndicator());
@@ -80,9 +80,8 @@ public class TextStatisticsState extends AbstractChartTypeStates {
     @Override
     protected TableStructureEntity getTableStructure() {
         TableStructureEntity entity = new TableStructureEntity();
-        entity
-                .setFieldNames(new String[] {
-                        DefaultMessagesImpl.getString("TextStatisticsState.Label"), DefaultMessagesImpl.getString("TextStatisticsState.Value") }); //$NON-NLS-1$ //$NON-NLS-2$
+        entity.setFieldNames(new String[] {
+                DefaultMessagesImpl.getString("TextStatisticsState.Label"), DefaultMessagesImpl.getString("TextStatisticsState.Value") }); //$NON-NLS-1$ //$NON-NLS-2$
         entity.setFieldWidths(new Integer[] { 200, 300 });
         return entity;
     }

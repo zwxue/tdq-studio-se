@@ -57,11 +57,12 @@ import org.jfree.ui.TextAnchor;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.helper.SwitchHelpers;
+import org.talend.dataprofiler.common.ui.editor.preview.chart.ChartDatasetUtils;
+import org.talend.dataprofiler.common.ui.editor.preview.chart.ChartDatasetUtils.ValueAggregator;
+import org.talend.dataprofiler.common.ui.editor.preview.chart.ChartDecorator;
+import org.talend.dataprofiler.common.ui.editor.preview.chart.TopChartFactory;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
-import org.talend.dataprofiler.core.ui.chart.ChartDatasetUtils;
-import org.talend.dataprofiler.core.ui.chart.ChartDatasetUtils.ValueAggregator;
-import org.talend.dataprofiler.core.ui.chart.ChartDecorator;
 import org.talend.dataprofiler.core.ui.chart.ChartUtils;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.indicators.columnset.ColumnSetMultiValueIndicator;
@@ -404,7 +405,7 @@ public class HideSeriesChartComposite extends ChartComposite {
                     pair.setColumn(columnCount);
                     hightlightSeriesMap.put(String.valueOf(seriesCount) + String.valueOf(columnCount), pair);
                     an = new CategoryTextAnnotation("#nulls = " + (rowList.get(indexOfRow))[multiDateColumn], //$NON-NLS-1$
-                            (Comparable<String>) taskDescription, task.getDuration().getStart().getTime());
+                            taskDescription, task.getDuration().getStart().getTime());
                     an.setTextAnchor(TextAnchor.CENTER_LEFT);
                     an.setCategoryAnchor(CategoryAnchor.MIDDLE);
                     xyplot.addAnnotation(an);
@@ -438,6 +439,7 @@ public class HideSeriesChartComposite extends ChartComposite {
          * 
          * @param colors
          */
+        @Override
         public Paint getItemPaint(int row, int column) {
             Paint itemPaint = super.getItemPaint(row, column);
             String key = String.valueOf(row) + String.valueOf(column);
@@ -477,6 +479,7 @@ public class HideSeriesChartComposite extends ChartComposite {
             this.column = column;
         }
 
+        @Override
         public String toString() {
             return "row = " + row + ", column = " + column; //$NON-NLS-1$ //$NON-NLS-2$
         }

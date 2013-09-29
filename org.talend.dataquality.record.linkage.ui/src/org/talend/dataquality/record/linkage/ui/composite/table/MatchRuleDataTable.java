@@ -36,7 +36,7 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 import org.jfree.util.Log;
-import org.talend.dataquality.record.linkage.ui.composite.utils.MatchRuleColorRegistry;
+import org.talend.dataprofiler.common.ui.editor.preview.chart.utils.MatchRuleColorRegistry;
 import org.talend.dataquality.record.linkage.ui.i18n.internal.DefaultMessagesImpl;
 
 /**
@@ -58,7 +58,7 @@ public class MatchRuleDataTable extends Composite {
 
     public static final Color[] COLOR_LIST = MatchRuleColorRegistry.getColorsForSwt();
 
-    private int gidColumn, grpSizeColumn, masterColumn, scoreColumn;
+    private int gidColumn, grpSizeColumn, masterColumn;
 
     private int page = 0;
 
@@ -105,7 +105,6 @@ public class MatchRuleDataTable extends Composite {
         this.gidColumn = header.indexOf("GID"); //$NON-NLS-1$
         this.grpSizeColumn = header.indexOf("GRP_SIZE"); //$NON-NLS-1$
         this.masterColumn = header.indexOf("MASTER"); //$NON-NLS-1$
-        this.scoreColumn = header.indexOf("SCORE"); //$NON-NLS-1$
         createTable();
         createPagination();
         refresh(viewData);
@@ -173,7 +172,7 @@ public class MatchRuleDataTable extends Composite {
 
     /**
      * Getter for displayViewData.
-     *
+     * 
      * @return the displayViewData
      */
     private List<String[]> getDisplayViewData() {
@@ -207,7 +206,7 @@ public class MatchRuleDataTable extends Composite {
 
     /**
      * Getter for disGIDList.
-     *
+     * 
      * @return the disGIDList
      */
     public List<Integer> getDisGIDList() {
@@ -216,7 +215,7 @@ public class MatchRuleDataTable extends Composite {
 
     /**
      * Getter for disGroupSize.
-     *
+     * 
      * @return the disGroupSize
      */
     private int getDisGroupSize() {
@@ -225,7 +224,7 @@ public class MatchRuleDataTable extends Composite {
 
     /**
      * Sets the disGroupSize.
-     *
+     * 
      * @param disGroupSize the disGroupSize to set
      */
     public void setDisGroupSize(int disGroupSize) {
@@ -346,7 +345,8 @@ public class MatchRuleDataTable extends Composite {
         previousBtn.setEnabled(true);
         lastBtn.setEnabled(true);
         nextBtn.setEnabled(true);
-        //When the first time the wizard is opened, the table is empty, the next and last button should be in disable status.
+        // When the first time the wizard is opened, the table is empty, the next and last button should be in disable
+        // status.
         if (totalPage == 0 || 0 == page) {
             firstBtn.setEnabled(false);
             previousBtn.setEnabled(false);
@@ -375,7 +375,7 @@ public class MatchRuleDataTable extends Composite {
 
         /*
          * (non-Javadoc)
-         *
+         * 
          * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse.swt.events.SelectionEvent)
          */
         @Override

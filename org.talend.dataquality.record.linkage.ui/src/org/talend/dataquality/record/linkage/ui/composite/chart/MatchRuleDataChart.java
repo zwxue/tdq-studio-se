@@ -12,8 +12,6 @@
 // ============================================================================
 package org.talend.dataquality.record.linkage.ui.composite.chart;
 
-import java.awt.Color;
-import java.awt.Paint;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
@@ -25,20 +23,12 @@ import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
-import org.jfree.chart.StandardChartTheme;
-import org.jfree.chart.axis.CategoryAxis;
-import org.jfree.chart.axis.NumberAxis;
-import org.jfree.chart.labels.StandardCategoryItemLabelGenerator;
-import org.jfree.chart.plot.CategoryPlot;
 import org.jfree.chart.plot.PlotOrientation;
-import org.jfree.chart.renderer.category.BarRenderer;
-import org.jfree.chart.title.TextTitle;
 import org.jfree.data.category.CategoryDataset;
 import org.jfree.data.category.DefaultCategoryDataset;
 import org.jfree.experimental.chart.swt.ChartComposite;
-import org.talend.dataquality.record.linkage.ui.composite.utils.MatchRuleColorRegistry;
+import org.talend.dataprofiler.common.ui.editor.preview.chart.TopChartFactory;
 import org.talend.dataquality.record.linkage.ui.i18n.internal.DefaultMessagesImpl;
 
 /**
@@ -46,7 +36,9 @@ import org.talend.dataquality.record.linkage.ui.i18n.internal.DefaultMessagesImp
  */
 public class MatchRuleDataChart extends Composite {
 
-    public static final Color[] COLOR_LIST = MatchRuleColorRegistry.getColorsForAwt();
+    public static final int CHART_STANDARD_WIDHT = 600;
+
+    public static final int CHART_STANDARD_HEIGHT = 275;
 
     private ChartComposite jfreeChartComp;
 
@@ -54,6 +46,7 @@ public class MatchRuleDataChart extends Composite {
 
     private Map<Object, Long> groupSize2GroupFrequency = null;
 
+    
     /**
      * DOC yyi DataChart constructor comment.
      * 
@@ -86,38 +79,19 @@ public class MatchRuleDataChart extends Composite {
      */
     private void createChart() {
         Composite composite = new Composite(this, SWT.NONE);
-        composite.setLayout(new FillLayout());
+        composite.setLayout(new GridLayout(1, true));
         JFreeChart jfreechart = createChart(createDataset());
         this.jfreeChartComp = new ChartComposite(composite, SWT.NONE, jfreechart, true);
+        GridData gd = new GridData(GridData.FILL_BOTH);
+        gd.widthHint = CHART_STANDARD_WIDHT;
+        gd.heightHint = CHART_STANDARD_HEIGHT;
+        this.jfreeChartComp.setLayoutData(gd);
 
     }
 
     private JFreeChart createChart(CategoryDataset categorydataset) {
-        ChartFactory.setChartTheme(StandardChartTheme.createLegacyTheme());
-        JFreeChart localJFreeChart = ChartFactory.createBarChart(null,
-                DefaultMessagesImpl.getString("DataChart.0"), "#group", categorydataset, PlotOrientation.VERTICAL, //$NON-NLS-1$ //$NON-NLS-2$
-                false, true, false);
-
-        localJFreeChart.addSubtitle(new TextTitle(DefaultMessagesImpl.getString(
-                "DataChart.title", sumItemCount(categorydataset), sumGroupCount(categorydataset)))); //$NON-NLS-1$
-        CategoryPlot plot = (CategoryPlot) localJFreeChart.getPlot();
-
-        CustomRenderer customrenderer = new CustomRenderer(COLOR_LIST);
-        customrenderer.setBaseItemLabelGenerator(new StandardCategoryItemLabelGenerator());
-        customrenderer.setBaseItemLabelsVisible(true);
-        // remove the shadow
-        customrenderer.setShadowVisible(Boolean.FALSE);
-
-        plot.setRenderer(customrenderer);
-
-        CategoryAxis localCategoryAxis = plot.getDomainAxis();
-        localCategoryAxis.setCategoryMargin(0.25D);
-        localCategoryAxis.setUpperMargin(0.02D);
-        localCategoryAxis.setLowerMargin(0.02D);
-
-        NumberAxis localNumberAxis = (NumberAxis) plot.getRangeAxis();
-        localNumberAxis.setStandardTickUnits(NumberAxis.createIntegerTickUnits());
-        localNumberAxis.setUpperMargin(0.1D);
+        JFreeChart localJFreeChart = TopChartFactory.createMatchRuleBarChart(null, DefaultMessagesImpl.getString("DataChart.0"), //$NON-NLS-1$
+                "#group", categorydataset, PlotOrientation.VERTICAL, false, true, false); //$NON-NLS-1$
         return localJFreeChart;
     }
 
@@ -203,25 +177,6 @@ public class MatchRuleDataChart extends Composite {
         super.dispose();
         if (jfreeChartComp != null) {
             jfreeChartComp.dispose();
-        }
-    }
-
-    /**
-     * DOC yyi DataChart class global comment. Detailled comment
-     */
-    class CustomRenderer extends BarRenderer {
-
-        private Paint[] colors;
-
-        public CustomRenderer(Paint[] apaint) {
-            colors = apaint;
-        }
-
-        @Override
-        public Paint getItemPaint(int i, int j) {
-            CategoryDataset categorydataset = getPlot().getDataset();
-            int m = Integer.parseInt(categorydataset.getColumnKeys().get(j).toString());
-            return colors[m % colors.length];
         }
     }
 

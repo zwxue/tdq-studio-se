@@ -16,7 +16,7 @@ package org.talend.dataprofiler.core.ui;
 import org.apache.log4j.Logger;
 import org.jfree.chart.ChartFrame;
 import org.jfree.chart.JFreeChart;
-import org.talend.dataprofiler.core.ui.editor.preview.TopChartFactory;
+import org.talend.dataprofiler.common.ui.editor.preview.chart.TopChartFactory;
 import org.talend.dataquality.indicators.columnset.ColumnSetMultiValueIndicator;
 import org.talend.utils.exceptions.TalendException;
 

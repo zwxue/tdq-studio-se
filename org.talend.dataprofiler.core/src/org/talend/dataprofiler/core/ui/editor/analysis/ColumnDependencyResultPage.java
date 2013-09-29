@@ -13,7 +13,6 @@
 package org.talend.dataprofiler.core.ui.editor.analysis;
 
 import java.awt.event.MouseEvent;
-import java.util.Iterator;
 
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -42,15 +41,15 @@ import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.experimental.chart.swt.ChartComposite;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.cwm.helper.SwitchHelpers;
+import org.talend.dataprofiler.common.ui.editor.preview.CustomerDefaultCategoryDataset;
+import org.talend.dataprofiler.common.ui.editor.preview.chart.ChartDecorator;
+import org.talend.dataprofiler.common.ui.editor.preview.chart.TopChartFactory;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
-import org.talend.dataprofiler.core.ui.chart.ChartDecorator;
-import org.talend.dataprofiler.core.ui.editor.preview.TopChartFactory;
 import org.talend.dataprofiler.core.ui.editor.preview.model.ChartTableFactory;
 import org.talend.dataprofiler.core.ui.editor.preview.model.ChartTableMenuGenerator;
 import org.talend.dataprofiler.core.ui.editor.preview.model.MenuItemEntity;
-import org.talend.dataprofiler.core.ui.editor.preview.model.dataset.CustomerDefaultCategoryDataset;
 import org.talend.dataprofiler.core.ui.editor.preview.model.entity.TableStructureEntity;
 import org.talend.dataprofiler.core.ui.pref.EditorPreferencePage;
 import org.talend.dataquality.analysis.Analysis;
@@ -166,8 +165,8 @@ public class ColumnDependencyResultPage extends AbstractAnalysisResultPage {
 
     @Override
     protected void createResultSection(Composite parent) {
-        resultSection = createSection(form, parent, DefaultMessagesImpl
-                .getString("ColumnsComparisonAnalysisResultPage.analysisResults"), ""); //$NON-NLS-1$ //$NON-NLS-2$
+        resultSection = createSection(form, parent,
+                DefaultMessagesImpl.getString("ColumnsComparisonAnalysisResultPage.analysisResults"), ""); //$NON-NLS-1$ //$NON-NLS-2$
         Composite sectionClient = toolkit.createComposite(resultSection);
         sectionClient.setLayout(new GridLayout(2, false));
         sectionClient.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
@@ -199,8 +198,9 @@ public class ColumnDependencyResultPage extends AbstractAnalysisResultPage {
     private void createChart(Composite sectionClient, Analysis analysis) {
         CustomerDefaultCategoryDataset dataset = initCustomerDataset();
 
-        JFreeChart createChart = TopChartFactory.createStackedBarChart(DefaultMessagesImpl
-                .getString("ColumnDependencyResultPage.dependencyStrength"), dataset, PlotOrientation.HORIZONTAL, true); //$NON-NLS-1$
+        JFreeChart createChart = TopChartFactory
+                .createStackedBarChart(
+                        DefaultMessagesImpl.getString("ColumnDependencyResultPage.dependencyStrength"), dataset, PlotOrientation.HORIZONTAL, true); //$NON-NLS-1$
         ChartDecorator.decorateColumnDependency(createChart);
 
         GridData gd = new GridData();
@@ -259,6 +259,7 @@ public class ColumnDependencyResultPage extends AbstractAnalysisResultPage {
                             menuItem.setImage(ImageLib.getImage(ImageLib.EXPLORE_IMAGE));
                             menuItem.addSelectionListener(new SelectionAdapter() {
 
+                                @Override
                                 public void widgetSelected(SelectionEvent e) {
                                     Display.getDefault().asyncExec(new Runnable() {
 
@@ -332,8 +333,10 @@ public class ColumnDependencyResultPage extends AbstractAnalysisResultPage {
 
                     item.setText(0, dataset.getColumnKey(i).toString());
                     item.setText(1, String.valueOf(match.intValue()));
-                    item.setText(2, StringFormatUtil.format(String.valueOf(match.doubleValue() / row.doubleValue()),
-                            StringFormatUtil.PERCENT).toString());
+                    item.setText(
+                            2,
+                            StringFormatUtil.format(String.valueOf(match.doubleValue() / row.doubleValue()),
+                                    StringFormatUtil.PERCENT).toString());
                     item.setText(3, String.valueOf(row));
 
                     item.setData(dataEntity);
@@ -386,8 +389,8 @@ public class ColumnDependencyResultPage extends AbstractAnalysisResultPage {
 
         Analysis analysis = this.getAnalysisHandler().getAnalysis();
 
-        for (Iterator<Indicator> iterator = analysis.getResults().getIndicators().iterator(); iterator.hasNext();) {
-            ColumnDependencyIndicator indicator = (ColumnDependencyIndicator) iterator.next();
+        for (Indicator indicator2 : analysis.getResults().getIndicators()) {
+            ColumnDependencyIndicator indicator = (ColumnDependencyIndicator) indicator2;
             String label = ColumnDependencyHelper.getIndicatorName(indicator);
             if (getAnalysisHandler().getResultMetadata().getExecutionNumber() > 0) {
                 Long matchCount = indicator.getDistinctACount() == null ? 0 : indicator.getDistinctACount();
@@ -425,11 +428,11 @@ public class ColumnDependencyResultPage extends AbstractAnalysisResultPage {
     //        return indicator.getColumnA().getName() + "-->" + indicator.getColumnB().getName(); //$NON-NLS-1$
     // }
 
+    @Deprecated
     private TableStructureEntity getTableStructure() {
         TableStructureEntity entity = new TableStructureEntity();
-        entity
-                .setFieldNames(new String[] {
-                        DefaultMessagesImpl.getString("ColumnDependencyState.Label"), DefaultMessagesImpl.getString("ColumnDependencyState.Match"), DefaultMessagesImpl.getString("ColumnDependencyState.%Match"), DefaultMessagesImpl.getString("ColumnDependencyState.rows") }); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+        entity.setFieldNames(new String[] {
+                DefaultMessagesImpl.getString("ColumnDependencyState.Label"), DefaultMessagesImpl.getString("ColumnDependencyState.Match"), DefaultMessagesImpl.getString("ColumnDependencyState.%Match"), DefaultMessagesImpl.getString("ColumnDependencyState.rows") }); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
         entity.setFieldWidths(new Integer[] { 200, 85, 85, 85 });
         return entity;
     }

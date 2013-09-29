@@ -16,11 +16,11 @@ import java.util.List;
 
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.PlotOrientation;
+import org.talend.dataprofiler.common.ui.editor.preview.CustomerDefaultCategoryDataset;
+import org.talend.dataprofiler.common.ui.editor.preview.ICustomerDataset;
+import org.talend.dataprofiler.common.ui.editor.preview.chart.TopChartFactory;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
-import org.talend.dataprofiler.core.ui.editor.preview.TopChartFactory;
-import org.talend.dataprofiler.core.ui.editor.preview.model.ICustomerDataset;
-import org.talend.dataprofiler.core.ui.editor.preview.model.dataset.CustomerDefaultCategoryDataset;
 import org.talend.dataprofiler.core.ui.utils.ComparatorsFactory;
 import org.talend.dq.indicators.preview.table.ChartDataEntity;
 
@@ -38,13 +38,15 @@ public class SimpleTextStatisticsState extends TextStatisticsState {
         super(units);
     }
 
+    @Override
     public JFreeChart getChart() {
-        JFreeChart chart = TopChartFactory.createBarChart(DefaultMessagesImpl
-.getString("SimpleTextStatisticsState.SimpleTextStatistics"), getDataset(), false);//$NON-NLS-1$
+        JFreeChart chart = TopChartFactory.createBarChart(
+                DefaultMessagesImpl.getString("SimpleTextStatisticsState.SimpleTextStatistics"), getDataset(), false);//$NON-NLS-1$
         chart.getCategoryPlot().setOrientation(PlotOrientation.HORIZONTAL);
         return chart;
     }
 
+    @Override
     public ICustomerDataset getCustomerDataset() {
 
         // sort these indicators.
@@ -76,7 +78,7 @@ public class SimpleTextStatisticsState extends TextStatisticsState {
                 break;
             }
 
-            customerdataset.addValue(value, type, label); //$NON-NLS-1$
+            customerdataset.addValue(value, type, label);
 
             ChartDataEntity entity = new ChartDataEntity();
             entity.setIndicator(unit.getIndicator());
