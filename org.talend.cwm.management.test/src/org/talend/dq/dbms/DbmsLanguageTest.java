@@ -21,8 +21,14 @@ import org.apache.commons.lang.StringUtils;
 import org.eclipse.emf.common.util.EList;
 import org.junit.Assert;
 import org.junit.Test;
+import org.talend.core.model.metadata.builder.connection.Connection;
+import org.talend.core.model.metadata.builder.connection.ConnectionFactory;
 import org.talend.core.model.metadata.builder.database.dburl.SupportDBUrlType;
+import org.talend.cwm.helper.CatalogHelper;
+import org.talend.cwm.helper.ColumnSetHelper;
+import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.relational.RelationalFactory;
+import org.talend.cwm.relational.RelationalPackage;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.relational.TdExpression;
 import org.talend.cwm.relational.TdTable;
@@ -39,6 +45,7 @@ import org.talend.dataquality.indicators.sql.IndicatorSqlFactory;
 import org.talend.dataquality.indicators.sql.UserDefIndicator;
 import org.talend.utils.dates.DateUtils;
 import orgomg.cwm.objectmodel.core.Expression;
+import orgomg.cwm.resource.relational.Catalog;
 
 /**
  * DOC scorreia class global comment. Detailled comment
@@ -1836,6 +1843,49 @@ public class DbmsLanguageTest {
         } catch (Exception e) {
             fail(e.getMessage());
         }
+    }
+
+    @Test
+    public void testGetQueryColumnsWithPrefix() {
+        DbmsLanguage dbms = getMysqlDbmsLanguage();
+        TdColumn col1 = RelationalPackage.eINSTANCE.getRelationalFactory().createTdColumn();
+        col1.setName("myCol1"); //$NON-NLS-1$
+        TdColumn col2 = RelationalPackage.eINSTANCE.getRelationalFactory().createTdColumn();
+        col2.setName("myCol2"); //$NON-NLS-1$
+        TdColumn[] columns = new TdColumn[] { col1, col2 };
+        TdTable tdTable = createTdTable();
+        ColumnSetHelper.addColumn(col1, tdTable);
+        ColumnSetHelper.addColumn(col2, tdTable);
+
+        String queryColWithPrefix = dbms.getQueryColumnsWithPrefix(columns);
+        Assert.assertEquals("`myCatalog`.`myTable`.`myCol1`,`myCatalog`.`myTable`.`myCol2`", queryColWithPrefix); //$NON-NLS-1$
+
+        // Assert hive
+        dbms = DbmsLanguageFactory.createDbmsLanguage(DbmsLanguage.HIVE, DATABASE_VERSION);
+        queryColWithPrefix = dbms.getQueryColumnsWithPrefix(columns);
+        Assert.assertEquals("myCol1,myCol2", queryColWithPrefix); //$NON-NLS-1$
+
+    }
+
+    @Test
+    public void testGetQueryColumnSetWithPrefix() {
+        DbmsLanguage dbms = getMysqlDbmsLanguage();
+        TdTable tdTable = createTdTable();
+        String queryColWithPrefix = dbms.getQueryColumnSetWithPrefix(tdTable);
+        Assert.assertEquals("`myCatalog`.`myTable`", queryColWithPrefix); //$NON-NLS-1$
+
+    }
+
+    private TdTable createTdTable() {
+        Connection conn = ConnectionFactory.eINSTANCE.createConnection();
+        Catalog catalog = CatalogHelper.createCatalog("myCatalog"); //$NON-NLS-1$
+        ConnectionHelper.addCatalog(catalog, conn);
+        List<TdTable> tables = new ArrayList<TdTable>();
+        TdTable tdTable = RelationalFactory.eINSTANCE.createTdTable();
+        tdTable.setName("myTable"); //$NON-NLS-1$
+        tables.add(tdTable);
+        CatalogHelper.addTables(tables, catalog);
+        return tdTable;
     }
 
 }
