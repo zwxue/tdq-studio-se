@@ -26,22 +26,26 @@ public class Record {
 
     private final long timestamp;
 
+    private final String source;
+
     private String groupId;
 
     private Set<String> relatedIds = new HashSet<String>();
 
     private double confidence = MAX_CONFIDENCE;
 
-    public Record(String id, long timestamp) {
+    public Record(String id, long timestamp, String source) {
         this.id = id;
         this.timestamp = timestamp;
+        this.source = source;
         this.attributes = new ArrayList<Attribute>();
     }
 
-    public Record(List<Attribute> attributes, String id, long timestamp) {
+    public Record(List<Attribute> attributes, String id, long timestamp, String source) {
         this.attributes = attributes;
         this.id = id;
         this.timestamp = timestamp;
+        this.source = source;
     }
 
     public String getGroupId() {
@@ -110,5 +114,9 @@ public class Record {
 
     public long getTimestamp() {
         return timestamp;
+    }
+
+    public String getSource() {
+        return source;
     }
 }

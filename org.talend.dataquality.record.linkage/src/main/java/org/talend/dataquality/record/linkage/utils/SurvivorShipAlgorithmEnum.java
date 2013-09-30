@@ -29,7 +29,8 @@ public enum SurvivorShipAlgorithmEnum {
     LONGEST(6, "Longest (for strings)", "Longest"), //$NON-NLS-1$ //$NON-NLS-2$
     SHORTEST(7, "Shortest (for strings)", "Shortest"), //$NON-NLS-1$ //$NON-NLS-2$
     LARGEST(8, "Largest (for numbers)", "Largest"), //$NON-NLS-1$ //$NON-NLS-2$
-    SMALLEST(9, "Smallest (for numbers)", "Smallest"); //$NON-NLS-1$ //$NON-NLS-2$
+    SMALLEST(9, "Smallest (for numbers)", "Smallest"), //$NON-NLS-1$ //$NON-NLS-2$
+    MOST_TRUSTED_SOURCE(10, "Most trusted source", "MostTrustedSource"); //$NON-NLS-1$ //$NON-NLS-2$
 
     private int index;
 

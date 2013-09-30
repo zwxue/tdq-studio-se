@@ -46,10 +46,16 @@ public class MatchMerge {
         return find;
     }
 
-    public static Record merge(Record record1, Record record2, SurvivorShipAlgorithmEnum[] typeMergeTable) {
+    public static Record merge(Record record1,
+                               Record record2,
+                               SurvivorShipAlgorithmEnum[] typeMergeTable,
+                               String[] parameters,
+                               String mergedRecordSource) {
         List<Attribute> r1 = record1.getAttributes();
         List<Attribute> r2 = record2.getAttributes();
-        Record mergedRecord = new Record(record1.getId(), System.currentTimeMillis()); // TODO What's the best timestamp for a merged record?
+        // Takes most recent as timestamp for the merged record.
+        long mergedRecordTimestamp = record1.getTimestamp() > record2.getTimestamp() ? record1.getTimestamp() : record2.getTimestamp();
+        Record mergedRecord = new Record(record1.getId(), mergedRecordTimestamp, mergedRecordSource);
         for (int k = 0; k < r1.size(); k++) {
             Attribute a = new Attribute(r1.get(k).getLabel(), null);
             mergedRecord.getAttributes().add(k, a);
@@ -86,9 +92,9 @@ public class MatchMerge {
                                     }
                                     break;
                                 case MOST_RECENT:
-                                    if(record1.getTimestamp() > record2.getTimestamp()) {
+                                    if (record1.getTimestamp() > record2.getTimestamp()) {
                                         mergedRecord.getAttributes().get(i).setValue(r1.get(i).getValue());
-                                    } else if(record1.getTimestamp() < record2.getTimestamp()) {
+                                    } else if (record1.getTimestamp() < record2.getTimestamp()) {
                                         mergedRecord.getAttributes().get(i).setValue(r2.get(i).getValue());
                                     } else {
                                         // Both r1 and r2 have same timestamp, concatenate both to preserve data
@@ -96,9 +102,9 @@ public class MatchMerge {
                                     }
                                     break;
                                 case MOST_ANCIENT:
-                                    if(record1.getTimestamp() < record2.getTimestamp()) {
+                                    if (record1.getTimestamp() < record2.getTimestamp()) {
                                         mergedRecord.getAttributes().get(i).setValue(r1.get(i).getValue());
-                                    } else if(record1.getTimestamp() > record2.getTimestamp()) {
+                                    } else if (record1.getTimestamp() > record2.getTimestamp()) {
                                         mergedRecord.getAttributes().get(i).setValue(r2.get(i).getValue());
                                     } else {
                                         // Both r1 and r2 have same timestamp, concatenate both to preserve data
@@ -153,6 +159,19 @@ public class MatchMerge {
                                             // Both r1 and r2 have same length, concatenate both to preserve data
                                             mergedRecord.getAttributes().get(i).setValue(r1.get(i).getValue() + r2.get(i).getValue());
                                         }
+                                    }
+                                    break;
+                                case MOST_TRUSTED_SOURCE:
+                                    String mostTrustedSourceName = parameters[i];
+                                    if (mostTrustedSourceName == null) {
+                                        throw new IllegalStateException("Survivorship 'most trusted source' must specify a trusted source.");
+                                    }
+                                    if (mostTrustedSourceName.equals(record1.getSource())) {
+                                        mergedRecord.getAttributes().get(i).setValue(r1.get(i).getValue());
+                                    } else if (mostTrustedSourceName.equals(record1.getSource())) {
+                                        mergedRecord.getAttributes().get(i).setValue(r2.get(i).getValue());
+                                    } else {
+                                        mergedRecord.getAttributes().get(i).setValue(null);
                                     }
                                     break;
                             }

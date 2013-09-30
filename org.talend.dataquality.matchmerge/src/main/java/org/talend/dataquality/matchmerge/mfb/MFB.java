@@ -39,28 +39,38 @@ public class MFB implements MatchMergeAlgorithm {
 
     private double recordMatchThreshold;
 
+    private String mergedRecordSource;
+
+    private String[] mergesParameters;
+
     public MFB() {
         algorithms = new AttributeMatcherType[0];
         this.thresholds = new float[0];
         this.merges = new SurvivorShipAlgorithmEnum[0];
+        this.mergesParameters = new String[0];
         this.weights = new double[0];
         this.nullOptions = new IAttributeMatcher.NullOption[0];
         this.subStrings = new SubString[0];
+        this.mergedRecordSource = StringUtils.EMPTY;
         maxWeight = 0;
     }
 
     public MFB(AttributeMatcherType[] algorithms,
                float[] thresholds,
                SurvivorShipAlgorithmEnum[] merges,
+               String[] mergesParameters,
                double[] weights,
                IAttributeMatcher.NullOption[] nullOptions,
-               SubString[] subStrings) {
+               SubString[] subStrings,
+               String mergedRecordSource) {
         this.algorithms = algorithms;
         this.thresholds = thresholds;
         this.merges = merges;
+        this.mergesParameters = mergesParameters;
         this.weights = weights;
         this.nullOptions = nullOptions;
         this.subStrings = subStrings;
+        this.mergedRecordSource = mergedRecordSource;
         if (algorithms.length == 0 || thresholds.length == 0 || merges.length == 0 || weights.length == 0) {
             LOGGER.warn("Algorithm initialized with no matching algorithm/threshold/merge/weight information");
         }
@@ -109,7 +119,11 @@ public class MFB implements MatchMergeAlgorithm {
                 MatchResult matchResult = matchRecords(mergedRecord, currentRecord);
                 if (matchResult.isMatch()) {
                     callback.onMatch(mergedRecord, currentRecord, matchResult);
-                    Record newMergedRecord = MatchMerge.merge(currentRecord, mergedRecord, merges);
+                    Record newMergedRecord = MatchMerge.merge(currentRecord,
+                            mergedRecord,
+                            merges,
+                            mergesParameters,
+                            mergedRecordSource);
                     // Keep group id
                     newMergedRecord.setGroupId(mergedRecord.getGroupId());
                     queue.offer(newMergedRecord);
@@ -314,7 +328,7 @@ public class MFB implements MatchMergeAlgorithm {
                 for (String value : values) {
                     attributes.add(new Attribute(String.valueOf(i++), value));
                 }
-                return new Record(attributes, StringUtils.EMPTY, 0);
+                return new Record(attributes, StringUtils.EMPTY, 0, StringUtils.EMPTY);
             }
 
             @Override

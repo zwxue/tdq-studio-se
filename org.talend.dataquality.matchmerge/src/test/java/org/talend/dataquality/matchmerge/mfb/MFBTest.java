@@ -36,9 +36,11 @@ public class MFBTest extends TestCase {
         MatchMergeAlgorithm algorithm = new MFB(new AttributeMatcherType[0],
                 new float[0],
                 new SurvivorShipAlgorithmEnum[0],
+                new String[0],
                 new double[0],
                 new IAttributeMatcher.NullOption[0],
-                new SubString[0]);
+                new SubString[0],
+                "MFB");
         List<Record> list = algorithm.execute(Collections.<Record>emptyList().iterator());
         assertEquals(0, list.size());
     }
@@ -49,9 +51,11 @@ public class MFBTest extends TestCase {
         MatchMergeAlgorithm algorithm = new MFB(new AttributeMatcherType[0],
                 new float[0],
                 new SurvivorShipAlgorithmEnum[0],
+                new String[0],
                 new double[0],
                 new IAttributeMatcher.NullOption[0],
-                new SubString[0]);
+                new SubString[0],
+                "MFB");
         List<Record> list = algorithm.execute(iterator);
         assertEquals(100000, list.size());
     }
@@ -80,9 +84,11 @@ public class MFBTest extends TestCase {
         MatchMergeAlgorithm algorithm = new MFB(new AttributeMatcherType[]{matchAlgorithm},
                 new float[]{1},
                 new SurvivorShipAlgorithmEnum[]{SurvivorShipAlgorithmEnum.LONGEST},
+                new String[] {""},
                 new double[]{1},
                 new IAttributeMatcher.NullOption[]{IAttributeMatcher.NullOption.nullMatchAll},
-                new SubString[]{SubString.NO_SUBSTRING});
+                new SubString[]{SubString.NO_SUBSTRING},
+                "MFB");
         List<Record> mergedRecords = algorithm.execute(iterator);
         assertEquals(constantNumber, mergedRecords.size());
         for (Record mergedRecord : mergedRecords) {
@@ -115,9 +121,11 @@ public class MFBTest extends TestCase {
         MatchMergeAlgorithm algorithm = new MFB(new AttributeMatcherType[]{matchAlgorithm},
                 new float[]{1},
                 new SurvivorShipAlgorithmEnum[]{SurvivorShipAlgorithmEnum.LONGEST},
+                new String[] {""},
                 new double[]{0}, // Mark rule with no weight (-> match record should have a 0 confidence).
                 new IAttributeMatcher.NullOption[] {IAttributeMatcher.NullOption.nullMatchAll},
-                new SubString[]{SubString.NO_SUBSTRING});
+                new SubString[]{SubString.NO_SUBSTRING},
+                "MFB");
         List<Record> mergedRecords = algorithm.execute(iterator);
         assertEquals(constantNumber, mergedRecords.size());
         for (Record mergedRecord : mergedRecords) {
@@ -149,9 +157,11 @@ public class MFBTest extends TestCase {
         MatchMergeAlgorithm algorithm = new MFB(new AttributeMatcherType[]{matchAlgorithm},
                 new float[]{0.5f},
                 new SurvivorShipAlgorithmEnum[]{SurvivorShipAlgorithmEnum.CONCATENATE},
+                new String[] {""},
                 new double[]{1},
                 new IAttributeMatcher.NullOption[]{IAttributeMatcher.NullOption.nullMatchAll},
-                new SubString[]{SubString.NO_SUBSTRING});
+                new SubString[]{SubString.NO_SUBSTRING},
+                "MFB");
         List<Record> mergedRecords = algorithm.execute(iterator);
         assertEquals(1, mergedRecords.size());
         for (Record mergedRecord : mergedRecords) {
@@ -191,7 +201,7 @@ public class MFBTest extends TestCase {
                 record.add(new Attribute(generator.getKey(), generator.getValue().newValue()));
             }
             currentIndex++;
-            return new Record(record, String.valueOf(currentIndex - 1), timestamp++);
+            return new Record(record, String.valueOf(currentIndex - 1), timestamp++, "MFB");
         }
 
         @Override
