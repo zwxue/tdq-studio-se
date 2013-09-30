@@ -20,23 +20,16 @@ import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.INewWizard;
 import org.eclipse.ui.IWorkbench;
-
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 
 /**
- * DOC yyin  class global comment. Detailled comment
+ * DOC yyin class global comment. Detailled comment
  */
 public class ConnectionWizard extends Wizard implements INewWizard {
 
-
     private ConnectionTypePage connectionTypePage;
 
-    private IWorkbench workbench;
-
     protected ISelection selection;
-
-    private boolean creation;
-
-    private boolean forceReadOnly;
 
     public ConnectionWizard(IWorkbench workbench, Composite relatedComposite) {
 
@@ -46,10 +39,7 @@ public class ConnectionWizard extends Wizard implements INewWizard {
 
     public ConnectionWizard(IWorkbench workbench, boolean creation, boolean forceReadOnly) {
         super();
-        this.workbench = workbench;
-        this.creation = creation;
-        this.forceReadOnly = forceReadOnly;
-
+        setWindowTitle(DefaultMessagesImpl.getString("ConnectionWizard.createConnection")); //$NON-NLS-1$
     }
 
     /*
@@ -62,7 +52,7 @@ public class ConnectionWizard extends Wizard implements INewWizard {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see org.eclipse.jface.wizard.IWizard#canFinish()
      */
     @Override
@@ -70,10 +60,9 @@ public class ConnectionWizard extends Wizard implements INewWizard {
         return false;
     }
 
-
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see org.eclipse.jface.wizard.IWizard#getContainer()
      */
     @Override
@@ -81,10 +70,9 @@ public class ConnectionWizard extends Wizard implements INewWizard {
         return super.getContainer();
     }
 
-
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see org.eclipse.jface.wizard.IWizard#getPageCount()
      */
     @Override
@@ -94,7 +82,7 @@ public class ConnectionWizard extends Wizard implements INewWizard {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see org.eclipse.jface.wizard.IWizard#getPages()
      */
     @Override
@@ -102,10 +90,9 @@ public class ConnectionWizard extends Wizard implements INewWizard {
         return super.getPages();
     }
 
-
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see org.eclipse.jface.wizard.IWizard#getStartingPage()
      */
     @Override
@@ -113,10 +100,9 @@ public class ConnectionWizard extends Wizard implements INewWizard {
         return connectionTypePage;
     }
 
-
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see org.eclipse.jface.wizard.IWizard#needsPreviousAndNextButtons()
      */
     @Override
@@ -127,7 +113,7 @@ public class ConnectionWizard extends Wizard implements INewWizard {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see org.eclipse.jface.wizard.IWizard#needsProgressMonitor()
      */
     @Override
@@ -137,7 +123,7 @@ public class ConnectionWizard extends Wizard implements INewWizard {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see org.eclipse.jface.wizard.IWizard#performCancel()
      */
     @Override
@@ -148,7 +134,7 @@ public class ConnectionWizard extends Wizard implements INewWizard {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see org.eclipse.jface.wizard.IWizard#performFinish()
      */
     @Override
@@ -159,7 +145,7 @@ public class ConnectionWizard extends Wizard implements INewWizard {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see org.eclipse.jface.wizard.IWizard#setContainer(org.eclipse.jface.wizard.IWizardContainer)
      */
     @Override
@@ -169,12 +155,11 @@ public class ConnectionWizard extends Wizard implements INewWizard {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see org.eclipse.ui.IWorkbenchWizard#init(org.eclipse.ui.IWorkbench,
      * org.eclipse.jface.viewers.IStructuredSelection)
      */
     public void init(IWorkbench workbench, IStructuredSelection selection) {
-        this.workbench = workbench;
         this.selection = selection;
 
     }
