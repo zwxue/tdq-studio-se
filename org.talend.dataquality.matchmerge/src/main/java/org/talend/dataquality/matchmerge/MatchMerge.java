@@ -105,11 +105,21 @@ public class MatchMerge {
                                         mergedRecord.getAttributes().get(i).setValue(r1.get(i).getValue() + r2.get(i).getValue());
                                     }
                                     break;
-                                case FORCE_TRUE:
-                                    mergedRecord.getAttributes().get(i).setValue("true"); //$NON-NLS-1$
+                                case PREFER_TRUE:
+                                    if (!Boolean.parseBoolean(mergedRecord.getAttributes().get(i).getValue())
+                                            && !Boolean.parseBoolean(mergedRecord.getAttributes().get(i).getValue())) {
+                                        mergedRecord.getAttributes().get(i).setValue("false"); //$NON-NLS-1$
+                                    } else {
+                                        mergedRecord.getAttributes().get(i).setValue("true"); //$NON-NLS-1$
+                                    }
                                     break;
-                                case FORCE_FALSE:
-                                    mergedRecord.getAttributes().get(i).setValue("false"); //$NON-NLS-1$
+                                case PREFER_FALSE:
+                                    if (Boolean.parseBoolean(mergedRecord.getAttributes().get(i).getValue())
+                                            && Boolean.parseBoolean(mergedRecord.getAttributes().get(i).getValue())) {
+                                        mergedRecord.getAttributes().get(i).setValue("true"); //$NON-NLS-1$
+                                    } else {
+                                        mergedRecord.getAttributes().get(i).setValue("false"); //$NON-NLS-1$
+                                    }
                                     break;
                                 case MOST_COMMON:
                                     mergedRecord.getAttributes().get(i).addValue(r1.get(i).getValue());
