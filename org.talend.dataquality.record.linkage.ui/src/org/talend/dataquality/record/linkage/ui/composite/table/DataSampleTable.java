@@ -67,8 +67,8 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
+import org.talend.dataprofiler.common.ui.editor.preview.chart.utils.MatchRuleColorRegistry;
 import org.talend.dataquality.record.linkage.ui.composite.ListObjectDataProvider;
-import org.talend.dataquality.record.linkage.ui.composite.utils.MatchRuleColorRegistry;
 import org.talend.dataquality.record.linkage.utils.MatchAnalysisConstant;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
