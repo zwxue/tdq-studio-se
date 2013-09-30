@@ -633,4 +633,20 @@
          version="0.0.0"
          unpack="false"/>
 
+   <plugin
+         id="org.talend.dataquality.record.linkage.ui.nl"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         fragment="true"
+         unpack="false"/>
+
+   <plugin
+         id="org.talend.dataprofiler.common.ui.nl"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         fragment="true"
+         unpack="false"/>
+
 </feature>
