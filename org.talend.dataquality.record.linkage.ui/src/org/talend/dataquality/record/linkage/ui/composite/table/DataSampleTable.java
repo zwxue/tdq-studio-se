@@ -390,17 +390,23 @@ public class DataSampleTable {
             // if the row record contains the group size info, continue
             if (rowObject != null && rowObject.length > groupSizeIndex) {
                 // find the group size from the map first, GID index = grp_size_index-1
-                Integer grpSizeInMap = rowOfGIDWithColor.get(rowObject[groupSizeIndex - 1]);
-                if (grpSizeInMap != null) {
-                    return grpSizeInMap;
+                Integer groupSize = rowOfGIDWithColor.get(rowObject[groupSizeIndex - 1]);
+
+                if (groupSize != null) {
+                    return groupSize;
                 }
-                // if the group id has no related group size, get it
-                Integer ownGroupSize = Integer.valueOf((String) ((Object[]) rowObject)[groupSizeIndex]);
+                try {
+                    // if the group id has no related group size, get it
+                    groupSize = Integer.valueOf((String) ((Object[]) rowObject)[groupSizeIndex]);
+                } catch (java.lang.NumberFormatException nfe) {
+                    // no need to handle--when no column given
+                    return 0;
+                }
                 // if the current row is a master row, record its group size
                 if (Boolean.valueOf((String) rowObject[groupSizeIndex + 1])) {
                     // put the group size of this group id into the map
-                    rowOfGIDWithColor.put((String) rowObject[groupSizeIndex - 1], ownGroupSize);
-                    return ownGroupSize;
+                    rowOfGIDWithColor.put((String) rowObject[groupSizeIndex - 1], groupSize);
+                    return groupSize;
                 } else {
                     // if the current row is not a master one,get its group size by its group id
                     return rowOfGIDWithColor.get(rowObject[groupSizeIndex - 1]);
