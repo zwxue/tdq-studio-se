@@ -13,15 +13,14 @@
 package org.talend.dataquality.record.linkage.ui.composite.tableviewer.provider.definition;
 
 import org.apache.commons.lang.StringUtils;
+import org.eclipse.swt.graphics.Color;
 import org.talend.dataquality.record.linkage.constant.AttributeMatcherType;
 import org.talend.dataquality.record.linkage.ui.composite.tableviewer.provider.MatchRuleLabelProvider;
 import org.talend.dataquality.rules.MatchKeyDefinition;
 
-
 /**
- * created by zshen on Aug 27, 2013
- * Detailled comment
- *
+ * created by zshen on Aug 27, 2013 Detailled comment
+ * 
  */
 public class MatchRuleDefinitionLabelProvider extends MatchRuleLabelProvider {
 
@@ -33,7 +32,7 @@ public class MatchRuleDefinitionLabelProvider extends MatchRuleLabelProvider {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see
      * org.talend.dataquality.record.linkage.ui.composite.tableviewer.provider.MatchRuleLabelProvider#getColumnText(
      * java.lang.Object, int)
@@ -74,6 +73,16 @@ public class MatchRuleDefinitionLabelProvider extends MatchRuleLabelProvider {
 
         }
         return StringUtils.EMPTY;
+    }
+
+    /*
+     * (non-Javadoc) differents with parent: lost one column: "column" , so columnIndex+1
+     * 
+     * @see org.eclipse.jface.viewers.ITableColorProvider#getBackground(java.lang.Object, int)
+     */
+    @Override
+    public Color getBackground(Object element, int columnIndex) {
+        return super.getBackground(element, columnIndex + 1);
     }
 
 }

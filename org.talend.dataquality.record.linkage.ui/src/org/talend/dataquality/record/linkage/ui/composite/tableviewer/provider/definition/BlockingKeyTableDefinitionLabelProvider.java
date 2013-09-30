@@ -13,23 +13,22 @@
 package org.talend.dataquality.record.linkage.ui.composite.tableviewer.provider.definition;
 
 import org.apache.commons.lang.StringUtils;
+import org.eclipse.swt.graphics.Color;
 import org.talend.dataquality.record.linkage.ui.composite.tableviewer.provider.BlockingKeyTableLabelProvider;
 import org.talend.dataquality.record.linkage.utils.BlockingKeyAlgorithmEnum;
 import org.talend.dataquality.record.linkage.utils.BlockingKeyPostAlgorithmEnum;
 import org.talend.dataquality.record.linkage.utils.BlockingKeyPreAlgorithmEnum;
 import org.talend.dataquality.rules.BlockKeyDefinition;
 
-
 /**
- * created by zshen on Aug 27, 2013
- * Detailled comment
- *
+ * created by zshen on Aug 27, 2013 Detailled comment
+ * 
  */
 public class BlockingKeyTableDefinitionLabelProvider extends BlockingKeyTableLabelProvider {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see
      * org.talend.dataquality.record.linkage.ui.composite.tableviewer.provider.BlockingKeyTableLabelProvider#getColumnText
      * (java.lang.Object, int)
@@ -57,6 +56,16 @@ public class BlockingKeyTableDefinitionLabelProvider extends BlockingKeyTableLab
 
         }
         return element == null ? StringUtils.EMPTY : element.toString();
+    }
+
+    /*
+     * (non-Javadoc)
+     * differents with parent: lost one column: "column" , so columnIndex+1
+     * @see org.eclipse.jface.viewers.ITableColorProvider#getBackground(java.lang.Object, int)
+     */
+    @Override
+    public Color getBackground(Object element, int columnIndex) {
+        return super.getBackground(element, columnIndex+1);
     }
 
 }
