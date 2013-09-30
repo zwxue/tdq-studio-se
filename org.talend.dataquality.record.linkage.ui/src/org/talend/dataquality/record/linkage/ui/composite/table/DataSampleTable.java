@@ -23,6 +23,7 @@ import java.util.Map;
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.nebula.widgets.nattable.NatTable;
 import org.eclipse.nebula.widgets.nattable.config.CellConfigAttributes;
+import org.eclipse.nebula.widgets.nattable.config.DefaultNatTableStyleConfiguration;
 import org.eclipse.nebula.widgets.nattable.config.IConfigRegistry;
 import org.eclipse.nebula.widgets.nattable.config.IEditableRule;
 import org.eclipse.nebula.widgets.nattable.coordinate.Range;
@@ -49,6 +50,7 @@ import org.eclipse.nebula.widgets.nattable.layer.cell.ILayerCell;
 import org.eclipse.nebula.widgets.nattable.layer.config.DefaultColumnHeaderStyleConfiguration;
 import org.eclipse.nebula.widgets.nattable.layer.event.ILayerEvent;
 import org.eclipse.nebula.widgets.nattable.painter.cell.BackgroundImagePainter;
+import org.eclipse.nebula.widgets.nattable.painter.cell.BackgroundPainter;
 import org.eclipse.nebula.widgets.nattable.painter.cell.ICellPainter;
 import org.eclipse.nebula.widgets.nattable.painter.cell.TextPainter;
 import org.eclipse.nebula.widgets.nattable.reorder.ColumnReorderLayer;
@@ -66,6 +68,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.talend.dataquality.record.linkage.ui.composite.ListObjectDataProvider;
+import org.talend.dataquality.record.linkage.ui.composite.utils.MatchRuleColorRegistry;
 import org.talend.dataquality.record.linkage.utils.MatchAnalysisConstant;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
@@ -77,6 +80,9 @@ import orgomg.cwm.objectmodel.core.ModelElement;
 public class DataSampleTable {
 
     private BodyLayerStack bodyLayer;
+
+    @SuppressWarnings("rawtypes")
+    private ListObjectDataProvider bodyDataProvider;
 
     private String[] propertyNames;
 
@@ -97,6 +103,10 @@ public class DataSampleTable {
     protected PropertyChangeSupport listeners = new PropertyChangeSupport(this);
 
     private String currentSelectedColumn = null;
+
+    private int groupSizeIndex;
+
+    private final static Color[] COLOR_LIST = MatchRuleColorRegistry.getColorsForSwt();
 
     public DataSampleTable() {
     }
@@ -123,6 +133,7 @@ public class DataSampleTable {
         if (listOfData.size() < 1) {
             listOfData.add(getEmptyRow());
         }
+
         return createTableControl(parentContainer, listOfData);
 
     }
@@ -186,6 +197,8 @@ public class DataSampleTable {
         }
         columnsName[i++] = MatchAnalysisConstant.BLOCK_KEY;
         columnsName[i++] = MatchAnalysisConstant.GID;
+        // record the index of the GRP_SIZE
+        groupSizeIndex = i;
         columnsName[i++] = MatchAnalysisConstant.GRP_SIZE;
         columnsName[i++] = MatchAnalysisConstant.MASTER;
         columnsName[i++] = MatchAnalysisConstant.SCORE;
@@ -290,16 +303,14 @@ public class DataSampleTable {
      * @return
      */
     public NatTable createTableControl(Composite parent, List<Object[]> data) {
-        IDataProvider bodyDataProvider = setupBodyDataProvider(data);
+        bodyDataProvider = setupBodyDataProvider(data);
+        bodyLayer = new BodyLayerStack(bodyDataProvider);
 
         DefaultColumnHeaderDataProvider colHeaderDataProvider = new DefaultColumnHeaderDataProvider(propertyNames,
                 propertyToLabels);
-
-        DefaultRowHeaderDataProvider rowHeaderDataProvider = new DefaultRowHeaderDataProvider(bodyDataProvider);
-
-        bodyLayer = new BodyLayerStack(bodyDataProvider);
         ColumnHeaderLayerStack columnHeaderLayer = new ColumnHeaderLayerStack(colHeaderDataProvider);
 
+        DefaultRowHeaderDataProvider rowHeaderDataProvider = new DefaultRowHeaderDataProvider(bodyDataProvider);
         RowHeaderLayerStack rowHeaderLayer = new RowHeaderLayerStack(rowHeaderDataProvider);
 
         DefaultCornerDataProvider cornerDataProvider = new DefaultCornerDataProvider(colHeaderDataProvider, rowHeaderDataProvider);
@@ -307,27 +318,17 @@ public class DataSampleTable {
 
         GridLayer gridLayer = new GridLayer(bodyLayer, columnHeaderLayer, rowHeaderLayer, cornerLayer);
 
-        // add control for each column header
-        // ColumnOverrideLabelAccumulator columnLabelAccumulator = new ColumnOverrideLabelAccumulator(bodyLayer);
-        // columnHeaderLayer.setConfigLabelAccumulator(columnLabelAccumulator);
-        // registerColumnLabels(columnLabelAccumulator);
-
-        // DummyBodyDataProvider bodyDataProvider = new DummyBodyDataProvider(500, 1000000);
-        // SelectionLayer selectionLayer = new SelectionLayer(new DataLayer(bodyDataProvider));
-        // ViewportLayer viewportLayer = new ViewportLayer(selectionLayer);
-        //
-        // ILayer columnHeaderLayer = new ColumnHeaderLayer(new DataLayer(new
-        // DummyColumnHeaderDataProvider(bodyDataProvider)),
-        // viewportLayer, selectionLayer);
-
-        // CompositeLayer compositeLayer = new CompositeLayer(1, 2);
-        // compositeLayer.setChildLayer("COLUMN_HEADER", columnHeaderLayer, 0, 0);
-        // compositeLayer.setChildLayer("BODY", viewportLayer, 0, 1);
-
         if (natTable != null) {
             clearTable();
         }
-        natTable = new NatTable(parent, gridLayer);
+        natTable = new NatTable(parent, gridLayer, false);
+        natTable.addConfiguration(new DefaultNatTableStyleConfiguration() {
+
+            {// use the own painter to paint the group color
+                cellPainter = new RowBackgroundGroupPainter(new TextPainter(false, false, false));
+            }
+        });
+        natTable.configure();
 
         natTable.getConfigRegistry().registerConfigAttribute(EditConfigAttributes.CELL_EDITABLE_RULE,
                 IEditableRule.NEVER_EDITABLE, DisplayMode.EDIT, "ODD_BODY"); //$NON-NLS-1$
@@ -353,9 +354,62 @@ public class DataSampleTable {
     }
 
     @SuppressWarnings({ "unchecked", "rawtypes" })
-    private IDataProvider setupBodyDataProvider(List<Object[]> data) {
+    private ListObjectDataProvider setupBodyDataProvider(List<Object[]> data) {
         IColumnPropertyAccessor columnPropertyAccessor = new ReflectiveColumnPropertyAccessor(propertyNames);
         return new ListObjectDataProvider(data, columnPropertyAccessor);
+    }
+
+    // for different data group, use different background color
+    private class RowBackgroundGroupPainter extends BackgroundPainter {// GradientBackgroundPainter {
+
+        // <groupid, related color>
+        private Map<String, Integer> rowOfGIDWithColor = null;
+
+        public RowBackgroundGroupPainter(ICellPainter painter) {
+            super(painter);
+            rowOfGIDWithColor = new HashMap<String, Integer>();
+        }
+
+        protected Color getBackgroundColour(ILayerCell cell, IConfigRegistry configRegistry) {
+            int grpSizeValue = getGrpSize(cell);
+            if (grpSizeValue == 0) {// default color when no
+                return GUIHelper.COLOR_WHITE;
+            }
+            return COLOR_LIST[grpSizeValue % COLOR_LIST.length];
+        }
+
+        /**
+         * first: if the row of the cell is a master row, return its group size second: if the row of the cell is not a
+         * master one, return the previous one
+         * 
+         * @param cell
+         * @return
+         */
+        private int getGrpSize(ILayerCell cell) {
+            Object[] rowObject = (Object[]) bodyDataProvider.getRowObject(cell.getRowIndex());
+            // if the row record contains the group size info, continue
+            if (rowObject != null && rowObject.length > groupSizeIndex) {
+                // find the group size from the map first, GID index = grp_size_index-1
+                Integer grpSizeInMap = rowOfGIDWithColor.get(rowObject[groupSizeIndex - 1]);
+                if (grpSizeInMap != null) {
+                    return grpSizeInMap;
+                }
+                // if the group id has no related group size, get it
+                Integer ownGroupSize = Integer.valueOf((String) ((Object[]) rowObject)[groupSizeIndex]);
+                // if the current row is a master row, record its group size
+                if (Boolean.valueOf((String) rowObject[groupSizeIndex + 1])) {
+                    // put the group size of this group id into the map
+                    rowOfGIDWithColor.put((String) rowObject[groupSizeIndex - 1], ownGroupSize);
+                    return ownGroupSize;
+                } else {
+                    // if the current row is not a master one,get its group size by its group id
+                    return rowOfGIDWithColor.get(rowObject[groupSizeIndex - 1]);
+                }
+            } else {
+                return 0;
+            }
+        }
+
     }
 
     class BodyLayerStack extends AbstractLayerTransform {
