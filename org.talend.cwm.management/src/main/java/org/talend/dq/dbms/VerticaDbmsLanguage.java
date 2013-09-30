@@ -20,7 +20,7 @@ import org.talend.utils.ProductVersion;
 
 /**
  * created by xqliu on Aug 7, 2013 Detailled comment
- *
+ * 
  */
 public class VerticaDbmsLanguage extends DbmsLanguage {
 
@@ -38,7 +38,7 @@ public class VerticaDbmsLanguage extends DbmsLanguage {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see org.talend.dq.dbms.DbmsLanguage#createStatement(java.sql.Connection)
      */
     @Override
@@ -62,10 +62,5 @@ public class VerticaDbmsLanguage extends DbmsLanguage {
     protected String getPatternFinderFunction(String expression, String charsToReplace, String replacementChars) {
         assert charsToReplace != null && replacementChars != null && charsToReplace.length() == replacementChars.length();
         return translateUsingPattern(expression, charsToReplace, replacementChars);
-    }
-
-    @Override
-    public String getTopNQuery(String query, int n) {
-        return query + " LIMIT " + n; //$NON-NLS-1$
     }
 }

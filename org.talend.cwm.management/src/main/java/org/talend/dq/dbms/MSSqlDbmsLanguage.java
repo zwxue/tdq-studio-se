@@ -16,10 +16,10 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import org.apache.commons.lang.StringUtils;
 import org.talend.cwm.management.i18n.Messages;
+import org.talend.dataquality.PluginConstant;
 import org.talend.dataquality.indicators.DateGrain;
 import org.talend.utils.ProductVersion;
 
@@ -27,8 +27,6 @@ import org.talend.utils.ProductVersion;
  * DOC scorreia class global comment. Detailled comment
  */
 public class MSSqlDbmsLanguage extends DbmsLanguage {
-
-    private static final Pattern SELECT_PATTERN = Pattern.compile("SELECT", Pattern.CASE_INSENSITIVE); //$NON-NLS-1$
 
     /**
      * DOC scorreia MSSqlDbmsLanguage constructor comment.
@@ -131,7 +129,7 @@ public class MSSqlDbmsLanguage extends DbmsLanguage {
     @Override
     public String getTopNQuery(String query, int n) {
         Matcher m = SELECT_PATTERN.matcher(query);
-        return m.replaceFirst("SELECT TOP " + n + " "); //$NON-NLS-1$ //$NON-NLS-2$
+        return m.replaceFirst("SELECT TOP " + n + PluginConstant.SPACE_STRING); //$NON-NLS-1$ 
     }
 
     /*

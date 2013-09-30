@@ -129,6 +129,9 @@ public class DbmsLanguage {
 
     protected static final String JOIN_FULL = "FULL"; //$NON-NLS-1$
 
+    static final java.util.regex.Pattern SELECT_PATTERN = java.util.regex.Pattern.compile(
+            "SELECT", java.util.regex.Pattern.CASE_INSENSITIVE); //$NON-NLS-1$
+
     /**
      * in upper case.
      */
@@ -493,7 +496,7 @@ public class DbmsLanguage {
      * @return the n first row of the given query
      */
     public String getTopNQuery(String query, int n) {
-        return query;
+        return query + " LIMIT " + n; //$NON-NLS-1$
     }
 
     /**

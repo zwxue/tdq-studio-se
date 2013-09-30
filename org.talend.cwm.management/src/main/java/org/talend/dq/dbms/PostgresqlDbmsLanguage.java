@@ -74,22 +74,10 @@ public class PostgresqlDbmsLanguage extends DbmsLanguage {
                 + ",'9') || RPAD('A'," + UPPER.length() + ",'A')||RPAD('a'," + LOWER.length() + ",'a'))"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
     }
 
-    
     @Override
     protected String getPatternFinderFunction(String expression, String charsToReplace, String replacementChars) {
         assert charsToReplace != null && replacementChars != null && charsToReplace.length() == replacementChars.length();
         return translateUsingPattern(expression, charsToReplace, replacementChars);
-    }
-
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.talend.cwm.management.api.DbmsLanguage#getTopNQuery(java.lang.String, int)
-     */
-    @Override
-    public String getTopNQuery(String query, int n) {
-        return query + " LIMIT " + n; //$NON-NLS-1$
     }
 
     /*

@@ -12,6 +12,9 @@
 // ============================================================================
 package org.talend.dq.dbms;
 
+import java.util.regex.Matcher;
+
+import org.talend.dataquality.PluginConstant;
 import org.talend.utils.ProductVersion;
 
 /**
@@ -54,6 +57,7 @@ public class SybaseASEDbmsLanguage extends DbmsLanguage {
      * 
      * @return average length sql statement
      */
+    @Override
     public String getAverageLengthRows() {
         return "SELECT * FROM <%=__TABLE_NAME__%> WHERE CHAR_LENGTH(<%=__COLUMN_NAMES__%>) BETWEEN (SELECT FLOOR(SUM(CHAR_LENGTH(<%=__COLUMN_NAMES__%>)) / COUNT(<%=__COLUMN_NAMES__%>)) FROM <%=__TABLE_NAME__%>) AND (SELECT CEILING(SUM(CHAR_LENGTH(<%=__COLUMN_NAMES__%>)) / COUNT(<%=__COLUMN_NAMES__%>)) FROM <%=__TABLE_NAME__%>)"; //$NON-NLS-1$
     }
@@ -98,5 +102,18 @@ public class SybaseASEDbmsLanguage extends DbmsLanguage {
     public String getAverageLengthWithNullRows() {
         String whereExpression = "WHERE(<%=__COLUMN_NAMES__%> IS NULL OR " + isNotBlank("<%=__COLUMN_NAMES__%>") + ")";
         return "SELECT * FROM <%=__TABLE_NAME__%> " + whereExpression + "AND " + charLength("<%=__COLUMN_NAMES__%>") + " BETWEEN (SELECT FLOOR(SUM(" + charLength("<%=__COLUMN_NAMES__%>") + ") / COUNT( * )) FROM <%=__TABLE_NAME__%> " + whereExpression + ") AND (SELECT CEILING(SUM(" + charLength("<%=__COLUMN_NAMES__%>") + ") / COUNT(*)) FROM <%=__TABLE_NAME__%>  " + whereExpression + ")"; //$NON-NLS-1$
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dq.dbms.DbmsLanguage#getTopNQuery(java.lang.String, int)
+     */
+    @Override
+    public String getTopNQuery(String query, int n) {
+
+        Matcher m = SELECT_PATTERN.matcher(query);
+        return m.replaceFirst("SELECT TOP " + n + PluginConstant.SPACE_STRING); //$NON-NLS-1$ 
+
     }
 }
