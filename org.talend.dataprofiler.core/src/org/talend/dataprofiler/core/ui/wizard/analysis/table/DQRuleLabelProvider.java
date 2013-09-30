@@ -44,15 +44,16 @@ public class DQRuleLabelProvider extends LabelProvider {
             IFile file = (IFile) element;
             ModelElement me = DQRuleResourceFileHelper.getInstance().getModelElement(file);
             // add support for match rule
-            if (me instanceof MatchRuleDefinition) {
+            ModelElement modelElement = DQRuleResourceFileHelper.getInstance().getModelElement(file);
+            ModelElement rule = DQRuleResourceFileHelper.getInstance().doSwitch(modelElement);
+            if (rule != null && rule instanceof MatchRuleDefinition) {
                 ImageDescriptor imageDescriptor = ImageLib.getImageDescriptor(ImageLib.MATCH_RULE_ICON);
                 return imageDescriptor.createImage();
             }// ~
 
             ImageDescriptor imageDescriptor = ImageLib.getImageDescriptor(ImageLib.DQ_RULE);
-            WhereRule findWhereRule = DQRuleResourceFileHelper.getInstance().findWhereRule(file);
-            if (findWhereRule != null) {
-                boolean validStatus = TaggedValueHelper.getValidStatus(findWhereRule);
+            if (rule != null && rule instanceof WhereRule) {
+                boolean validStatus = TaggedValueHelper.getValidStatus(rule);
                 if (!validStatus) {
                     ImageDescriptor warnImg = PlatformUI.getWorkbench().getSharedImages()
                             .getImageDescriptor(ISharedImages.IMG_OBJS_WARN_TSK);
@@ -71,7 +72,12 @@ public class DQRuleLabelProvider extends LabelProvider {
     public String getText(Object element) {
         if (element instanceof IFile && FactoriesUtil.DQRULE.equals(((IFile) element).getFileExtension())) {
             IFile file = (IFile) element;
+            ModelElement modelElement = DQRuleResourceFileHelper.getInstance().getModelElement(file);
+            if (DQRuleResourceFileHelper.getInstance().doSwitch(modelElement) != null) {
+                return modelElement.getName();
+            }
             return DQRuleResourceFileHelper.getInstance().getModelElement(file).getName();
+
         }
 
         if (element instanceof IFolder) {

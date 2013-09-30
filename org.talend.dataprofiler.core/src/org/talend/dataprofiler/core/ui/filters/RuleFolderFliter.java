@@ -17,11 +17,12 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.talend.commons.emf.FactoriesUtil;
+import org.talend.dataquality.rules.MatchRuleDefinition;
 import org.talend.dataquality.rules.WhereRule;
 import org.talend.dq.helper.resourcehelper.DQRuleResourceFileHelper;
-import org.talend.resource.EResourceConstant;
 import org.talend.resource.ResourceManager;
 import org.talend.resource.ResourceService;
+import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
  * DOC klliu class global comment. Detailled comment
@@ -37,6 +38,7 @@ public class RuleFolderFliter extends ViewerFilter {
     public RuleFolderFliter(boolean isShowFile) {
         this.isShowFile = isShowFile;
     }
+
     @Override
     public boolean select(Viewer viewer, Object parentElement, Object element) {
         // MOD klliu bug TDQ-3202 filter Parser Rule folder and item.
@@ -44,7 +46,12 @@ public class RuleFolderFliter extends ViewerFilter {
             IFile file = (IFile) element;
             if (FactoriesUtil.DQRULE.equals(file.getFileExtension())) {
                 // add support for match rule
-                if (EResourceConstant.RULES_MATCHER.getName().equals(file.getParent().getName())) {
+                ModelElement modelElement = DQRuleResourceFileHelper.getInstance().getModelElement(file);
+                if (modelElement == null) {
+                    return false;
+                }
+                ModelElement rule = DQRuleResourceFileHelper.getInstance().doSwitch(modelElement);
+                if (rule != null && rule instanceof MatchRuleDefinition) {
                     return true;
                 }// ~
                 WhereRule findWhereRule = DQRuleResourceFileHelper.getInstance().findWhereRule(file);
