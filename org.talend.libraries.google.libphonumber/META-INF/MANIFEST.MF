@@ -8,3 +8,4 @@ Bundle-ClassPath: lib/libphonenumber-2.6.jar,
  .
 Export-Package: com.google.i18n.phonenumbers
 Require-Bundle: org.junit;bundle-version="3.8.2";resolution:=optional
+Bundle-ActivationPolicy: lazy

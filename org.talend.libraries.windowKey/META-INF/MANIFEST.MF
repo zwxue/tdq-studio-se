@@ -16,3 +16,4 @@ Export-Package: org.apache.commons.codec,
  org.talend.windowkey
 Bundle-Vendor: .Talend SA.
 Require-Bundle: org.apache.commons.lang
+Bundle-ActivationPolicy: lazy
