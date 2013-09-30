@@ -92,7 +92,7 @@ public class BlockingKeyTableLabelProvider extends LabelProvider implements ITab
     public Color getBackground(Object element, int columnIndex) {
         if (element instanceof BlockKeyDefinition) {
             BlockKeyDefinition bkd = (BlockKeyDefinition) element;
-            boolean takeParameter =true;
+            boolean takeParameter = true;
             switch (columnIndex) {
 
             case 3:
@@ -122,7 +122,7 @@ public class BlockingKeyTableLabelProvider extends LabelProvider implements ITab
      * @return
      */
     protected Color getCellColor(boolean takeParameter) {
-        return Display.getDefault().getSystemColor(takeParameter?SWT.COLOR_GRAY:SWT.COLOR_WHITE);
+        return Display.getDefault().getSystemColor(takeParameter ? SWT.COLOR_WHITE : SWT.COLOR_GRAY);
     }
 
 }

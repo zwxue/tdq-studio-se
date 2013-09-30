@@ -106,7 +106,7 @@ public class MatchRuleLabelProvider extends LabelProvider implements ITableLabel
      * @return
      */
     protected Color getCellColor(boolean takeParameter) {
-        return Display.getDefault().getSystemColor(takeParameter ? SWT.COLOR_GRAY : SWT.COLOR_WHITE);
+        return Display.getDefault().getSystemColor(takeParameter ? SWT.COLOR_WHITE : SWT.COLOR_GRAY);
     }
 
 }
