@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Jung Plug-in
-Bundle-SymbolicName: org.talend.libraries.jung
+Bundle-SymbolicName: org.talend.libraries.jung;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-Vendor: .Talend SA.
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
@@ -41,5 +41,6 @@ Export-Package: EDU.oswego.cs.dl.util.concurrent,
  edu.uci.ics.jung.visualization.transform,
  edu.uci.ics.jung.visualization.transform.shape
 Require-Bundle: org.talend.libraries.apache,
- org.apache.commons.collections
+ org.apache.commons.collections,
+ org.talend.core.runtime
 Bundle-ActivationPolicy: lazy
