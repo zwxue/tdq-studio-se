@@ -7,6 +7,7 @@ package org.talend.dataquality.indicators.impl;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -32,10 +33,12 @@ import org.talend.dataquality.matching.date.pattern.ModelMatcher;
  * end-user-doc -->
  * <p>
  * </p>
- *
+ * 
  * @generated
  */
 public class DatePatternFreqIndicatorImpl extends FrequencyIndicatorImpl implements DatePatternFreqIndicator {
+
+    private static final String PATTERNS_FILENAME = "PatternsNameAndRegularExpressions.txt";
 
     private DatePatternRetriever dateRetriever;
 
@@ -43,6 +46,7 @@ public class DatePatternFreqIndicatorImpl extends FrequencyIndicatorImpl impleme
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     protected DatePatternFreqIndicatorImpl() {
@@ -51,6 +55,7 @@ public class DatePatternFreqIndicatorImpl extends FrequencyIndicatorImpl impleme
 
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
@@ -66,16 +71,22 @@ public class DatePatternFreqIndicatorImpl extends FrequencyIndicatorImpl impleme
     @Override
     public boolean prepare() {
         dateRetriever = new DatePatternRetriever();
-        Bundle bundle = Platform.getBundle("org.talend.dataquality.matching"); //$NON-NLS-1$
-        URL url = bundle.getResource("PatternsNameAndRegularExpressions.txt"); //$NON-NLS-1$
-        String filepath = null;
-        try {
-            filepath = FileLocator.toFileURL(url).getFile();
-        } catch (IOException e) {
-            e.printStackTrace();
+        URL url = null;
+        if (Platform.isRunning()) {
+            Bundle bundle = Platform.getBundle("org.talend.dataquality.matching"); //$NON-NLS-1$
+            url = bundle.getResource(PATTERNS_FILENAME);
+            String filepath = null;
+            try {
+                filepath = FileLocator.toFileURL(url).getFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            File file = new File(filepath);
+            dateRetriever.initModel2Regex(file);
+        } else {
+            InputStream inStream = Thread.currentThread().getContextClassLoader().getResourceAsStream(PATTERNS_FILENAME);
+            dateRetriever.initModel2Regex(inStream);
         }
-        File file = new File(filepath);
-        dateRetriever.initModel2Regex(file);
 
         // MOD qiongli 2011-11-15 TDQ-3864,judge if it is file connection.
         MetadataColumn mdColumn = SwitchHelpers.METADATA_COLUMN_SWITCH.doSwitch(this.getAnalyzedElement());
@@ -143,6 +154,7 @@ public class DatePatternFreqIndicatorImpl extends FrequencyIndicatorImpl impleme
         return super.storeSqlResults(objects2);
     }
 
+    @Override
     public List<ModelMatcher> getModelMatcherList() {
         return dateRetriever.getModelMatchers();
     }
@@ -150,6 +162,7 @@ public class DatePatternFreqIndicatorImpl extends FrequencyIndicatorImpl impleme
     /**
      * return List for ModelMatcher which Score more than 1.
      */
+    @Override
     public List<Object> getRealModelMatcherList() {
         List<Object> realModelMatcherList = new ArrayList<Object>();
         for (ModelMatcher matcher : dateRetriever.getModelMatchers()) {
@@ -160,6 +173,7 @@ public class DatePatternFreqIndicatorImpl extends FrequencyIndicatorImpl impleme
         return realModelMatcherList;
     }
 
+    @Override
     public String getModel(Object matcher) {
         if (matcher instanceof ModelMatcher) {
             return ((ModelMatcher) matcher).getModel();
@@ -168,6 +182,7 @@ public class DatePatternFreqIndicatorImpl extends FrequencyIndicatorImpl impleme
         }
     }
 
+    @Override
     public int getScore(Object matcher) {
         if (matcher instanceof ModelMatcher) {
             return ((ModelMatcher) matcher).getScore();
@@ -183,6 +198,7 @@ public class DatePatternFreqIndicatorImpl extends FrequencyIndicatorImpl impleme
      * @param model the model of matcher.
      * @return if can find corresponding to matcher return it's the Regex of matcher else return null;
      */
+    @Override
     public String getRegex(String model) {
         return this.dateRetriever.getRegex(model);
     }
