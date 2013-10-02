@@ -12,41 +12,58 @@
 package org.talend.dataquality.matchmerge.mfb;
 
 import org.apache.log4j.Logger;
+import org.talend.dataquality.matchmerge.Attribute;
 import org.talend.dataquality.matchmerge.MatchMergeAlgorithm;
 import org.talend.dataquality.matchmerge.Record;
 
-class LoggerCallback implements MatchMergeAlgorithm.Callback {
+public class LoggerCallback implements MatchMergeAlgorithm.Callback {
 
-    private static Logger LOGGER = Logger.getLogger(MatchMergeAlgorithm.Callback.class);
+    private static Logger LOGGER = Logger.getLogger(MatchMergeAlgorithm.class);
 
     @Override
     public void onBeginRecord(Record record) {
-        LOGGER.info("-> Record " + record.getId());
+        LOGGER.info("-> Record #" + record.getId());
     }
 
     @Override
     public void onMatch(Record record1, Record record2, MatchResult matchResult) {
-        LOGGER.info("\t(+) Positive match: " + record1.getId() + " / " + record2.getId());
+        LOGGER.info("\t(+) Positive match: #" + record1.getId() + " <---> #" + record2.getId());
+        if (LOGGER.isDebugEnabled()) {
+            int i = 0;
+            for (MatchResult.Score score : matchResult.getScores()) {
+                LOGGER.debug("\t\t" + score.algorithm.getComponentValue() + ": " + score.score + " (threshold: " + matchResult.getThresholds().get(i) + ")");
+                i++;
+            }
+        }
     }
 
     @Override
     public void onNewMerge(Record record) {
-        LOGGER.info("\t(+) New merge: " + record.getId() + " (groups " + record.getRelatedIds().size() + " records).");
+        if (record.getRelatedIds().size() > 1) {
+            LOGGER.info("\t(+) New merge: #" + record.getId() + " (groups " + record.getRelatedIds().size() + " records).");
+        } else {
+            LOGGER.info("\t(+) New merge: #" + record.getId() + " (unique record).");
+        }
+        if (LOGGER.isDebugEnabled()) {
+            for (Attribute attribute : record.getAttributes()) {
+                LOGGER.debug("\t\t" + attribute.getLabel() + ": '" + attribute.getValue() + "'");
+            }
+        }
     }
 
     @Override
     public void onRemoveMerge(Record record) {
-        LOGGER.info("\t(-) Removed merge: " + record.getId());
+        LOGGER.info("\t(-) Removed merge: #" + record.getId());
     }
 
     @Override
     public void onDifferent(Record record1, Record record2, MatchResult matchResult) {
-        LOGGER.info("\t(-) Negative match: " + record1.getId() + " / " + record2.getId());
+        LOGGER.info("\t(-) Negative match: #" + record1.getId() + " <-/-> #" + record2.getId());
     }
 
     @Override
     public void onEndRecord(Record record) {
-        LOGGER.info("<- Record " + record.getId());
+        LOGGER.info("<- Record #" + record.getId());
     }
 
     @Override
