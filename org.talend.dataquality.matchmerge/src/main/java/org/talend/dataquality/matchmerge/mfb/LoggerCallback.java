@@ -31,7 +31,9 @@ public class LoggerCallback implements MatchMergeAlgorithm.Callback {
         if (LOGGER.isDebugEnabled()) {
             int i = 0;
             for (MatchResult.Score score : matchResult.getScores()) {
-                LOGGER.debug("\t\t" + score.algorithm.getComponentValue() + ": " + score.score + " (threshold: " + matchResult.getThresholds().get(i) + ")");
+                LOGGER.debug("\t\t" + score.algorithm.getComponentValue()
+                        + "('" + score.values[0] + "', '" + score.values[1] + "') = " + score.score
+                        + " (threshold: " + matchResult.getThresholds().get(i) + ")");
                 i++;
             }
         }
@@ -59,6 +61,15 @@ public class LoggerCallback implements MatchMergeAlgorithm.Callback {
     @Override
     public void onDifferent(Record record1, Record record2, MatchResult matchResult) {
         LOGGER.info("\t(-) Negative match: #" + record1.getId() + " <-/-> #" + record2.getId());
+        if (LOGGER.isDebugEnabled()) {
+            int i = 0;
+            for (MatchResult.Score score : matchResult.getScores()) {
+                LOGGER.debug("\t\t" + score.algorithm.getComponentValue()
+                        + "('" + score.values[0] + "', '" + score.values[1] + "') = " + score.score
+                        + " (threshold: " + matchResult.getThresholds().get(i) + ")");
+                i++;
+            }
+        }
     }
 
     @Override

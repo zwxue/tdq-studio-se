@@ -25,6 +25,7 @@ public class MatchResult {
     public static class Score {
         public AttributeMatcherType algorithm;
         public double score;
+        public String[] values = new String[2];
     }
 
     public List<Score> getScores() {
@@ -35,13 +36,15 @@ public class MatchResult {
         return thresholds;
     }
 
-    public void setScore(int index, AttributeMatcherType algorithm, double score) {
+    public void setScore(int index, AttributeMatcherType algorithm, double score, String value1, String value2) {
         while (index >= scores.size()) {
             scores.add(new Score());
         }
         Score currentScore = scores.get(index);
         currentScore.algorithm = algorithm;
         currentScore.score = score;
+        currentScore.values[0] = value1;
+        currentScore.values[1] = value2;
     }
 
     public void setThreshold(int index, float threshold) {
