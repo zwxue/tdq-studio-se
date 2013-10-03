@@ -162,7 +162,7 @@ public class MFB implements MatchMergeAlgorithm {
                             if (LOGGER.isDebugEnabled()) {
                                 LOGGER.debug("Most common merge: input {" + values + "}");
                             }
-                            if (!values.isEmpty()) {
+                            if (values != null && !values.isEmpty()) {
                                 String mostCommon = getMostCommonValue(values);
                                 if (LOGGER.isDebugEnabled()) {
                                     LOGGER.debug("Most common merge: output {" + mostCommon + "}");
@@ -185,19 +185,22 @@ public class MFB implements MatchMergeAlgorithm {
     // TODO This method does not belong here: should be in linkage (maybe?)
     // TODO Duplicated code with org.talend.mdm.core -> bad
     public static String getMostCommonValue(Collection<String> values) {
+        if (values.isEmpty()) {
+            return null;
+        }
         String[] strings = values.toArray(new String[values.size()]);
         Arrays.sort(strings); // Sorts items to ensure all similar strings are grouped together
         int occurrenceCount = 1;
         int maxOccurrenceCount = 0;
         String mostCommon = strings[0];
         String previousString = strings[0];
-        for(int i = 1; i < strings.length; i++) {
+        for (int i = 1; i < strings.length; i++) {
             String current = strings[i];
-            if(!previousString.equals(current)) {
-                if(occurrenceCount > maxOccurrenceCount) {
+            if (!previousString.equals(current)) {
+                if (occurrenceCount > maxOccurrenceCount) {
                     mostCommon = current;
                     maxOccurrenceCount = occurrenceCount;
-                    if(maxOccurrenceCount > i) {
+                    if (maxOccurrenceCount > i) {
                         break; // Not enough item left to have a new max for occurrence count.
                     }
                 }
@@ -251,7 +254,7 @@ public class MFB implements MatchMergeAlgorithm {
                     algorithms[matchIndex],
                     nullOptions[matchIndex],
                     subStrings[matchIndex]);
-            result.setScore(matchIndex, algorithms[matchIndex], score);
+            result.setScore(matchIndex, algorithms[matchIndex], score, left.getValue(), right.getValue());
             result.setThreshold(matchIndex, thresholds[matchIndex]);
             confidence += score * weights[matchIndex];
             matchIndex++;
