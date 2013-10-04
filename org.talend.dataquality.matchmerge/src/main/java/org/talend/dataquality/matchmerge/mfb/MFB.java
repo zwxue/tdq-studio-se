@@ -196,13 +196,10 @@ public class MFB implements MatchMergeAlgorithm {
         String previousString = strings[0];
         for (int i = 1; i < strings.length; i++) {
             String current = strings[i];
-            if (!previousString.equals(current)) {
+            if (!areEquals(previousString, current)) {
                 if (occurrenceCount > maxOccurrenceCount) {
                     mostCommon = current;
                     maxOccurrenceCount = occurrenceCount;
-                    if (maxOccurrenceCount > i) {
-                        break; // Not enough item left to have a new max for occurrence count.
-                    }
                 }
                 occurrenceCount = 0;
             } else {
@@ -211,6 +208,13 @@ public class MFB implements MatchMergeAlgorithm {
             previousString = current;
         }
         return mostCommon;
+    }
+
+    private static boolean areEquals(String previousString, String current) {
+        if (previousString == null) {
+            return current == null;
+        }
+        return previousString.equals(current);
     }
 
     private static Map<Integer, SurvivorShipAlgorithmEnum> getPostProcessIndexes(SurvivorShipAlgorithmEnum[] merges) {
