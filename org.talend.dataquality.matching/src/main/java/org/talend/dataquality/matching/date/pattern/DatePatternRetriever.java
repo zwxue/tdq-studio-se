@@ -14,9 +14,11 @@ package org.talend.dataquality.matching.date.pattern;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -39,10 +41,6 @@ public class DatePatternRetriever {
         return modelMatchers;
     }
 
-    public void setModelMatchers(List<ModelMatcher> modelMatchers) {
-        this.modelMatchers = modelMatchers;
-    }
-
     private static Logger logger = Logger.getLogger(DatePatternRetriever.class);
 
     // constructor
@@ -50,33 +48,44 @@ public class DatePatternRetriever {
 
     }
 
-    // initialization method of modelMatchers
-    public void initModel2Regex(File patternFile) {
+    public void initModel2Regex(InputStream inStream) {
         BufferedReader br = null;
         try {
-            FileReader fr = new FileReader(patternFile);
-            br = new BufferedReader(fr);
+            br = new BufferedReader(new InputStreamReader(inStream));
             String line;
             while ((line = br.readLine()) != null) {
                 StringTokenizer string = new StringTokenizer(line, "=\n");//$NON-NLS-1$
                 while (string.hasMoreTokens()) {
                     String key = string.nextToken().replace("\"", "");//$NON-NLS-1$ //$NON-NLS-2$
                     String val = string.nextToken().replace("\"", "");//$NON-NLS-1$ //$NON-NLS-2$
-                    // System.out.print(key+"\n");
                     modelMatchers.add(new ModelMatcher(key, val));
                 }
             }
-        } catch (FileNotFoundException e) {
-            logger.warn(Messages.getString("DatePatternRetriever.warn1"));//$NON-NLS-1$
         } catch (IOException e) {
             logger.warn(Messages.getString("DatePatternRetriever.warn2"));//$NON-NLS-1$
+        }
+        if (inStream != null) {
+            try {
+                inStream.close();
+            } catch (IOException e) {
+                logger.warn("Error closing input stream");//$NON-NLS-1$
+            }
         }
         if (br != null) {
             try {
                 br.close();
             } catch (IOException e) {
-                logger.warn("Error closing buffered reader of file " + patternFile);//$NON-NLS-1$
+                logger.warn("Error closing buffered reader");//$NON-NLS-1$
             }
+        }
+    }
+
+    // initialization method of modelMatchers
+    public void initModel2Regex(File patternFile) {
+        try {
+            initModel2Regex(new FileInputStream(patternFile));
+        } catch (FileNotFoundException e) {
+            logger.warn(Messages.getString("DatePatternRetriever.warn1"));//$NON-NLS-1$
         }
     }
 
@@ -94,13 +103,11 @@ public class DatePatternRetriever {
     /**
      * method to show results on screen console.
      */
-    public void showResults() {
+    void showResults() {
         this.getOrderedModelMatchers();
         for (ModelMatcher patternMatcher : this.modelMatchers) {
             if (patternMatcher.getScore() > 0) {
-                if (logger.isInfoEnabled()) {
-                    logger.info(patternMatcher.getModel() + " : " + patternMatcher.getScore() + "\n");//$NON-NLS-1$ //$NON-NLS-2$
-                }
+                logger.info(patternMatcher.getModel() + " : " + patternMatcher.getScore() + "\n");//$NON-NLS-1$ //$NON-NLS-2$
             }
         }
     }
@@ -108,7 +115,7 @@ public class DatePatternRetriever {
     /**
      * sort pattern (ModelMatchers) according to their score.
      */
-    public void getOrderedModelMatchers() {
+    private void getOrderedModelMatchers() {
         Collections.sort(this.modelMatchers);
     }
 
