@@ -12,6 +12,7 @@ import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
@@ -140,18 +141,15 @@ public class DatePatternFreqIndicatorImpl extends FrequencyIndicatorImpl impleme
         return super.getFrequency(dataValue);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.talend.dataquality.indicators.impl.FrequencyIndicatorImpl#storeSqlResults(java.util.List)
-     */
     @Override
-    public boolean storeSqlResults(List<Object[]> objects) {
+    public boolean finalizeComputation() {
         List<ModelMatcher> modelMatchers = dateRetriever.getModelMatchers();
-        ModelMatcher[] matchersArray = modelMatchers.toArray(new ModelMatcher[modelMatchers.size()]);
-        ArrayList<Object[]> objects2 = new ArrayList<Object[]>();
-        objects2.add(matchersArray);
-        return super.storeSqlResults(objects2);
+        HashMap<Object, Long> map = new HashMap<Object, Long>();
+        for (ModelMatcher matcher : modelMatchers) {
+            map.put(matcher.getModel(), (long) matcher.getScore());
+        }
+        setValueToFreq(map);
+        return super.finalizeComputation();
     }
 
     public List<ModelMatcher> getModelMatcherList() {
