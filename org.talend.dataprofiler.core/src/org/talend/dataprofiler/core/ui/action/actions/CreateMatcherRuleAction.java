@@ -28,11 +28,9 @@ import org.talend.dq.analysis.parameters.DQMatchRuleParameter;
 import org.talend.dq.helper.ProxyRepositoryManager;
 import org.talend.resource.ResourceManager;
 
-
 /**
- * created by zshen on Aug 19, 2013
- * Detailled comment
- *
+ * created by zshen on Aug 19, 2013 Detailled comment
+ * 
  */
 public class CreateMatcherRuleAction extends Action implements ICheatSheetAction {
 
@@ -40,20 +38,19 @@ public class CreateMatcherRuleAction extends Action implements ICheatSheetAction
 
     public CreateMatcherRuleAction() {
         setText(DefaultMessagesImpl.getString("CreateMatcherRuleAction.newMatchRule")); //$NON-NLS-1$
-        setImageDescriptor(ImageLib.getImageDescriptor(ImageLib.ADD_DQ));
+        setImageDescriptor(ImageLib.getImageDescriptor(ImageLib.ADD_MATCH_RULE));
         this.folder = ResourceManager.getRulesMatcherFolder();
     }
 
     public CreateMatcherRuleAction(IFolder folder) {
         setText(DefaultMessagesImpl.getString("CreateMatcherRuleAction.newMatchRule")); //$NON-NLS-1$
-        setImageDescriptor(ImageLib.getImageDescriptor(ImageLib.ADD_DQ));
+        setImageDescriptor(ImageLib.getImageDescriptor(ImageLib.ADD_MATCH_RULE));
         this.folder = folder;
     }
 
-
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see org.eclipse.jface.action.Action#run()
      */
     @Override
