@@ -70,7 +70,7 @@ public class AbstractRecordGroupingTest {
 
         Map<String, String> lnameRecords = new HashMap<String, String>();
         lnameRecords.put(IRecordGrouping.COLUMN_IDX, String.valueOf(1));
-        lnameRecords.put(IRecordGrouping.MATCHING_TYPE, "Jaro-Winkler"); //$NON-NLS-1$
+        lnameRecords.put(IRecordGrouping.MATCHING_TYPE, "JARO_WINKLER"); //$NON-NLS-1$
         lnameRecords.put(IRecordGrouping.CONFIDENCE_WEIGHT, String.valueOf(1));
 
         matchingRule.add(lnameRecords);
@@ -78,7 +78,7 @@ public class AbstractRecordGroupingTest {
         // matching parameters for state_province
         Map<String, String> accountRecords = new HashMap<String, String>();
         accountRecords.put(IRecordGrouping.COLUMN_IDX, String.valueOf(6));
-        accountRecords.put(IRecordGrouping.MATCHING_TYPE, "Levenshtein"); //$NON-NLS-1$
+        accountRecords.put(IRecordGrouping.MATCHING_TYPE, "LEVENSHTEIN"); //$NON-NLS-1$
         accountRecords.put(IRecordGrouping.CONFIDENCE_WEIGHT, String.valueOf(0.8));
         matchingRule.add(accountRecords);
 
@@ -214,7 +214,7 @@ public class AbstractRecordGroupingTest {
 
         lnameRecords = new HashMap<String, String>();
         lnameRecords.put(IRecordGrouping.COLUMN_IDX, String.valueOf(1));
-        lnameRecords.put(IRecordGrouping.MATCHING_TYPE, "Jaro-Winkler"); //$NON-NLS-1$
+        lnameRecords.put(IRecordGrouping.MATCHING_TYPE, "JARO_WINKLER"); //$NON-NLS-1$
         lnameRecords.put(IRecordGrouping.CONFIDENCE_WEIGHT, String.valueOf(1));
         lnameRecords.put(IRecordGrouping.RECORD_MATCH_THRESHOLD, String.valueOf(0.95f));
         matchingRule.add(lnameRecords);
@@ -222,7 +222,7 @@ public class AbstractRecordGroupingTest {
         // matching parameters for state_province
         accountRecords = new HashMap<String, String>();
         accountRecords.put(IRecordGrouping.COLUMN_IDX, String.valueOf(6));
-        accountRecords.put(IRecordGrouping.MATCHING_TYPE, "Levenshtein"); //$NON-NLS-1$
+        accountRecords.put(IRecordGrouping.MATCHING_TYPE, "LEVENSHTEIN"); //$NON-NLS-1$
         accountRecords.put(IRecordGrouping.CONFIDENCE_WEIGHT, String.valueOf(0.8));
         accountRecords.put(IRecordGrouping.RECORD_MATCH_THRESHOLD, String.valueOf(0.95f));// Duplicate set of threshold,
                                                                                           // this is because the data

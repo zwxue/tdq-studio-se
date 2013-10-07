@@ -19,7 +19,7 @@ import org.talend.dataquality.record.linkage.constant.AttributeMatcherType;
 
 /**
  * created by zhao on Apr 16, 2013 Detailled comment
- *
+ * 
  */
 public class DoubleMetaphoneMatcherTest {
 
@@ -30,22 +30,22 @@ public class DoubleMetaphoneMatcherTest {
      */
     @Test
     public void testGetWeight() {
-        DoubleMetaphoneMatcher metaphoneMatcher = new DoubleMetaphoneMatcher();
+        DoubleMetaphoneMatcher doubleMetaphoneMatcher = new DoubleMetaphoneMatcher();
         String a = "John"; //$NON-NLS-1$
         String b = "Jon"; //$NON-NLS-1$
-        double matchingWeight = metaphoneMatcher.getMatchingWeight(a, b);
+        double matchingWeight = doubleMetaphoneMatcher.getMatchingWeight(a, b);
         Assert.assertEquals(1.0d, matchingWeight);
         a = "23";
-        matchingWeight = metaphoneMatcher.getMatchingWeight(a, a);
+        matchingWeight = doubleMetaphoneMatcher.getMatchingWeight(a, a);
         Assert.assertEquals("input strings are the same => result should be 1.", 1.0d, matchingWeight);
         b = "64";
-        matchingWeight = metaphoneMatcher.getMatchingWeight(a, b);
+        matchingWeight = doubleMetaphoneMatcher.getMatchingWeight(a, b);
         Assert.assertNotSame("input strings are the same => result should NOT be 1.", 1.0d, matchingWeight);
 
         // test long strings
         a = "JohnFit";
         b = "JohnFitzgeraldKennedy";
-        matchingWeight = metaphoneMatcher.getMatchingWeight(a, b);
+        matchingWeight = doubleMetaphoneMatcher.getMatchingWeight(a, b);
         Assert.assertTrue("input strings are not the same but DoubleMetaphone should not be able to distinguish between " + a
                 + " and " + b, 1.0d == matchingWeight);
     }
@@ -56,10 +56,10 @@ public class DoubleMetaphoneMatcherTest {
     @Test
     public void testGetMatchType() {
 
-        Assert.assertEquals(AttributeMatcherType.METAPHONE, new MetaphoneMatcher().getMatchType());
-        Assert.assertEquals("METAPHONE", new MetaphoneMatcher().getMatchType().name()); //$NON-NLS-1$
-        Assert.assertEquals("Metaphone", new MetaphoneMatcher().getMatchType().getLabel()); //$NON-NLS-1$
-        Assert.assertEquals("Metaphone", new MetaphoneMatcher().getMatchType().toString()); //$NON-NLS-1$
+        Assert.assertEquals(AttributeMatcherType.DOUBLE_METAPHONE, new DoubleMetaphoneMatcher().getMatchType());
+        Assert.assertEquals("DOUBLE_METAPHONE", new DoubleMetaphoneMatcher().getMatchType().name()); //$NON-NLS-1$
+        Assert.assertEquals("Double Metaphone", new DoubleMetaphoneMatcher().getMatchType().getLabel()); //$NON-NLS-1$
+        Assert.assertEquals("DOUBLE_METAPHONE", new DoubleMetaphoneMatcher().getMatchType().toString()); //$NON-NLS-1$
     }
 
 }

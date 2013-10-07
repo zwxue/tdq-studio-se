@@ -19,7 +19,7 @@ import org.talend.dataquality.record.linkage.constant.AttributeMatcherType;
 
 /**
  * created by zhao on Apr 16, 2013 Detailled comment
- *
+ * 
  */
 public class MetaphoneMatcherTest {
 
@@ -60,7 +60,7 @@ public class MetaphoneMatcherTest {
         Assert.assertEquals(AttributeMatcherType.METAPHONE, new MetaphoneMatcher().getMatchType());
         Assert.assertEquals("METAPHONE", new MetaphoneMatcher().getMatchType().name()); //$NON-NLS-1$
         Assert.assertEquals("Metaphone", new MetaphoneMatcher().getMatchType().getLabel()); //$NON-NLS-1$
-        Assert.assertEquals("Metaphone", new MetaphoneMatcher().getMatchType().toString()); //$NON-NLS-1$
+        Assert.assertEquals("METAPHONE", new MetaphoneMatcher().getMatchType().toString()); //$NON-NLS-1$
     }
 
 }

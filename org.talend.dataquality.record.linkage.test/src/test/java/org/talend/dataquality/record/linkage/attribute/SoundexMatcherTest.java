@@ -19,7 +19,7 @@ import org.talend.dataquality.record.linkage.constant.AttributeMatcherType;
 
 /**
  * created by scorreia on Jan 7, 2013 Detailled comment
- *
+ * 
  */
 public class SoundexMatcherTest {
 
@@ -45,7 +45,7 @@ public class SoundexMatcherTest {
         Assert.assertEquals(AttributeMatcherType.SOUNDEX, new SoundexMatcher().getMatchType());
         Assert.assertEquals("SOUNDEX", new SoundexMatcher().getMatchType().name()); //$NON-NLS-1$
         Assert.assertEquals("Soundex", new SoundexMatcher().getMatchType().getLabel()); //$NON-NLS-1$
-        Assert.assertEquals("Soundex", new SoundexMatcher().getMatchType().toString()); //$NON-NLS-1$
+        Assert.assertEquals("SOUNDEX", new SoundexMatcher().getMatchType().toString()); //$NON-NLS-1$
     }
 
 }
