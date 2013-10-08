@@ -16,11 +16,11 @@ import org.apache.log4j.Logger;
 import org.talend.cwm.management.i18n.Messages;
 import org.talend.dataquality.rules.MatchRuleDefinition;
 import org.talend.dataquality.rules.RulesFactory;
+import org.talend.dq.analysis.parameters.DQMatchRuleParameter;
 
 /**
- * created by zshen on Aug 19, 2013
- * Detailled comment
- *
+ * created by zshen on Aug 19, 2013 Detailled comment
+ * 
  */
 public class MatchRuleBuilder {
 
@@ -44,6 +44,15 @@ public class MatchRuleBuilder {
         // matchRule.getCategories().add(ruleIndicatorCategory);
         // }
         return true;
+    }
+
+    public boolean initializeDqRuleBuilder(DQMatchRuleParameter parameter) {
+
+        boolean initializeDqRuleBuilder = initializeDqRuleBuilder(parameter.getName());
+        if (initializeDqRuleBuilder && matchRule != null) {
+            matchRule.setRecordLinkageAlgorithm(parameter.getDefaultAlgorithmType().name());
+        }
+        return initializeDqRuleBuilder;
     }
 
     public MatchRuleDefinition getMatchRule() {

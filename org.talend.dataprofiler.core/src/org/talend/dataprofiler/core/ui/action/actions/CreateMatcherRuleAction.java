@@ -24,6 +24,7 @@ import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.action.CheatSheetActionHelper;
 import org.talend.dataprofiler.core.ui.wizard.analysis.WizardFactory;
 import org.talend.dataprofiler.core.ui.wizard.matchrule.NewMatchRuleWizard;
+import org.talend.dataquality.record.linkage.constant.RecordMatcherType;
 import org.talend.dq.analysis.parameters.DQMatchRuleParameter;
 import org.talend.dq.helper.ProxyRepositoryManager;
 import org.talend.resource.ResourceManager;
@@ -36,16 +37,21 @@ public class CreateMatcherRuleAction extends Action implements ICheatSheetAction
 
     private IFolder folder;
 
+    private RecordMatcherType defaultAlgorithmType;
+
     public CreateMatcherRuleAction() {
-        setText(DefaultMessagesImpl.getString("CreateMatcherRuleAction.newMatchRule")); //$NON-NLS-1$
-        setImageDescriptor(ImageLib.getImageDescriptor(ImageLib.ADD_MATCH_RULE));
-        this.folder = ResourceManager.getRulesMatcherFolder();
+        this(ResourceManager.getRulesMatcherFolder());
     }
 
     public CreateMatcherRuleAction(IFolder folder) {
+        this(folder, RecordMatcherType.simpleVSRMatcher);
+    }
+
+    public CreateMatcherRuleAction(IFolder folder, RecordMatcherType defaultAlgorithmType) {
         setText(DefaultMessagesImpl.getString("CreateMatcherRuleAction.newMatchRule")); //$NON-NLS-1$
         setImageDescriptor(ImageLib.getImageDescriptor(ImageLib.ADD_MATCH_RULE));
         this.folder = folder;
+        this.defaultAlgorithmType = defaultAlgorithmType;
     }
 
     /*
@@ -59,6 +65,7 @@ public class CreateMatcherRuleAction extends Action implements ICheatSheetAction
         FolderProvider folderProvider = new FolderProvider();
         folderProvider.setFolderResource(folder);
         parameter.setFolderProvider(folderProvider);
+        parameter.setDefaultAlgorithmType(defaultAlgorithmType);
         NewMatchRuleWizard matchWizard = WizardFactory.createNewMatchRuleWizard(parameter);
         matchWizard.setWindowTitle(getText());
         WizardDialog dialog = new WizardDialog(Display.getDefault().getActiveShell(), matchWizard);

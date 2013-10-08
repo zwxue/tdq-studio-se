@@ -80,7 +80,7 @@ public class NewMatchRuleWizard extends AbstractWizard {
             return copiedMatchRuleDefinition;
         }
         MatchRuleBuilder ruleBuilder = new MatchRuleBuilder();
-        boolean ruleInitialized = ruleBuilder.initializeDqRuleBuilder(parameter.getName());
+        boolean ruleInitialized = ruleBuilder.initializeDqRuleBuilder(parameter);
         if (ruleInitialized) {
             return ruleBuilder.getMatchRule();
         }
