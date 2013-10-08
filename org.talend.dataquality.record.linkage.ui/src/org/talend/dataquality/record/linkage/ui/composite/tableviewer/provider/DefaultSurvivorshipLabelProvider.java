@@ -15,6 +15,7 @@ package org.talend.dataquality.record.linkage.ui.composite.tableviewer.provider;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
+import org.talend.dataquality.record.linkage.utils.SurvivorShipAlgorithmEnum;
 import org.talend.dataquality.rules.DefaultSurvivorshipDefinition;
 
 /**
@@ -37,7 +38,7 @@ public class DefaultSurvivorshipLabelProvider extends LabelProvider implements I
                 return skd.getDataType();
             case 1:
 
-                return skd.getFunction().getAlgorithmType();
+                return SurvivorShipAlgorithmEnum.getTypeBySavedValue(skd.getFunction().getAlgorithmType()).getValue();
             }
         }
 

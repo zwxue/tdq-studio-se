@@ -48,7 +48,7 @@ public class DefaultSurvivorShipCellModifier extends AbstractMatchCellModifier<D
         if (MatchAnalysisConstant.DATA_TYPE.equalsIgnoreCase(property)) {
             return DefaultSurvivorShipDataTypeEnum.getTypeByValue(skd.getDataType()).getIndex();
         } else if (MatchAnalysisConstant.FUNCTION.equalsIgnoreCase(property)) {
-            return SurvivorShipAlgorithmEnum.getTypeByValue(skd.getFunction().getAlgorithmType()).getIndex();
+            return SurvivorShipAlgorithmEnum.getTypeBySavedValue(skd.getFunction().getAlgorithmType()).getIndex();
         }
         return null;
     }
@@ -73,10 +73,10 @@ public class DefaultSurvivorShipCellModifier extends AbstractMatchCellModifier<D
             } else if (MatchAnalysisConstant.FUNCTION.equalsIgnoreCase(property)) {
                 SurvivorShipAlgorithmEnum valueByIndex = SurvivorShipAlgorithmEnum.getTypeByIndex(Integer.valueOf(newValue)
                         .intValue());
-                if (StringUtils.equals(skd.getFunction().getAlgorithmType(), valueByIndex.getValue())) {
+                if (StringUtils.equals(skd.getFunction().getAlgorithmType(), valueByIndex.getComponentValueName())) {
                     return;
                 }
-                skd.getFunction().setAlgorithmType(valueByIndex.getValue());
+                skd.getFunction().setAlgorithmType(valueByIndex.getComponentValueName());
             } else {
                 return;
             }
