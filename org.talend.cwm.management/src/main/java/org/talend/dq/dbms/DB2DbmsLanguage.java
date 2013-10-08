@@ -101,4 +101,14 @@ public class DB2DbmsLanguage extends DbmsLanguage {
         // ADD qiongli 2012-6-7 TDQ-5559
         return " LENGTH(" + trim(colName) + ")!=0";//$NON-NLS-1$ //$NON-NLS-2$
     }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dq.dbms.DbmsLanguage#getInvalidClauseBenFord(java.lang.String)
+     */
+    @Override
+    public String getInvalidClauseBenFord(String columnName) {
+        return columnName + " is null or LEFT(" + columnName + ",1)" + " not in ('0','1','2','3','4','5','6','7','8','9')";//$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+    }
 }

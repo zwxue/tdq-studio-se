@@ -145,4 +145,24 @@ public class PostgresqlDbmsLanguage extends DbmsLanguage {
     public boolean supportRegexp() {
         return true;
     }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dq.dbms.DbmsLanguage#getInvalidClauseBenFord(java.lang.String)
+     */
+    @Override
+    public String getInvalidClauseBenFord(String columnName) {
+        return columnName + " is null or SUBSTRING(" + columnName + ", 1,1)  ~ '[^0-9]'";//$NON-NLS-1$ //$NON-NLS-2$
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dq.dbms.DbmsLanguage#getColumnNameInQueryClause(java.lang.String)
+     */
+    @Override
+    public String castColumnNameToChar(String columnName) {
+        return "cast(" + columnName + " as char)";//$NON-NLS-1$ //$NON-NLS-2$
+    }
 }

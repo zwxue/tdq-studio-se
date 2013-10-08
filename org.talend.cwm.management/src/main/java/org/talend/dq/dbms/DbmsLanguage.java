@@ -1616,4 +1616,26 @@ public class DbmsLanguage {
         columnClause = columnClause.substring(0, columnClause.length() - 1);
         return columnClause;
     }
+
+    /**
+     * 
+     * Get invalid clause for Benford indicator.
+     * 
+     * @param columnName
+     * @return
+     */
+    public String getInvalidClauseBenFord(String columnName) {
+        return columnName + " is null or " + columnName + " not REGEXP '^[0-9]'"; //$NON-NLS-1$ //$NON-NLS-2$
+    }
+
+    /**
+     * 
+     * Cast column name to char type. .e.g.vertica column name is to_char(columnName) in query clause.
+     * 
+     * @param columnName
+     * @return
+     */
+    public String castColumnNameToChar(String columnName) {
+        return columnName;
+    }
 }

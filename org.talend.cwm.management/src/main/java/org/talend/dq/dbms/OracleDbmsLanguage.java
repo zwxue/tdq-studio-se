@@ -244,6 +244,7 @@ public class OracleDbmsLanguage extends DbmsLanguage {
      * 
      * @return average length sql statement
      */
+    @Override
     public String getAverageLengthRows() {
         return "SELECT * FROM <%=__TABLE_NAME__%> WHERE LENGTH(<%=__COLUMN_NAMES__%>) BETWEEN (SELECT FLOOR(SUM(LENGTH(<%=__COLUMN_NAMES__%>)) / COUNT(<%=__COLUMN_NAMES__%>)) FROM <%=__TABLE_NAME__%>) AND (SELECT CEIL(SUM(LENGTH(<%=__COLUMN_NAMES__%>)) / COUNT(<%=__COLUMN_NAMES__%>)) FROM <%=__TABLE_NAME__%>)"; //$NON-NLS-1$ 
     }
@@ -251,5 +252,15 @@ public class OracleDbmsLanguage extends DbmsLanguage {
     @Override
     public String trimIfBlank(String colName) {
         return " CASE WHEN " + colName + " IS NOT NULL AND  LENGTH(" + trim(colName) + ") IS NULL  THEN '' ELSE  " + colName + " END"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dq.dbms.DbmsLanguage#getInvalidClauseBenFord(java.lang.String)
+     */
+    @Override
+    public String getInvalidClauseBenFord(String columnName) {
+        return columnName + " is null or " + "  regexp_like(SUBSTR(" + columnName + ",0,1),'^[^[:digit:]]+$')";//$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
     }
 }

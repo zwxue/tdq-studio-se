@@ -12,6 +12,7 @@
 // ============================================================================
 package org.talend.dq.analysis.explore;
 
+import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.*;
 import static org.powermock.api.support.membermodification.MemberMatcher.*;
 import static org.powermock.api.support.membermodification.MemberModifier.*;
@@ -84,6 +85,7 @@ public class BenfordLawFrequencyExplorerTest {
     @Test
     public void testGetInstantiatedClause_1() {
         when(mockDbLanguage.getDbmsName()).thenReturn("SQL");
+        when(mockDbLanguage.castColumnNameToChar(anyString())).thenReturn("firstName");
 
         String clause = benExp.getInstantiatedClause();
         Assert.assertEquals("firstName like '1%'", clause);
@@ -95,6 +97,7 @@ public class BenfordLawFrequencyExplorerTest {
     @Test
     public void testGetInstantiatedClause_2() {
         when(mockDbLanguage.getDbmsName()).thenReturn("Teradata");
+        when(mockDbLanguage.castColumnNameToChar(anyString())).thenReturn("cast(firstName as char)");
 
         String clause = benExp.getInstantiatedClause();
         Assert.assertEquals("cast(firstName as char) like '1%'", clause);
@@ -106,6 +109,7 @@ public class BenfordLawFrequencyExplorerTest {
     @Test
     public void testGetInstantiatedClause_3() {
         when(mockDbLanguage.getDbmsName()).thenReturn("PostgreSQL");
+        when(mockDbLanguage.castColumnNameToChar(anyString())).thenReturn("cast(firstName as char)");
 
         String clause = benExp.getInstantiatedClause();
         Assert.assertEquals("cast(firstName as char) like '1%'", clause);
@@ -117,6 +121,7 @@ public class BenfordLawFrequencyExplorerTest {
     @Test
     public void testGetInstantiatedClause_4() {
         when(mockDbLanguage.getDbmsName()).thenReturn("Adaptive Server Enterprise | Sybase Adaptive Server IQ");
+        when(mockDbLanguage.castColumnNameToChar(anyString())).thenReturn("convert(char(15),firstName)");
 
         String clause = benExp.getInstantiatedClause();
         Assert.assertEquals("convert(char(15),firstName) like '1%'", clause);
@@ -128,6 +133,7 @@ public class BenfordLawFrequencyExplorerTest {
     @Test
     public void testGetInstantiatedClause_5() {
         when(mockDbLanguage.getDbmsName()).thenReturn("Oracle");
+        when(mockDbLanguage.castColumnNameToChar(anyString())).thenReturn("firstName");
 
         String clause = benExp.getInstantiatedClause();
         Assert.assertEquals("firstName like '1%'", clause);
@@ -139,6 +145,7 @@ public class BenfordLawFrequencyExplorerTest {
     @Test
     public void testGetInstantiatedClause_6() {
         when(mockDbLanguage.getDbmsName()).thenReturn("Informix");
+        when(mockDbLanguage.castColumnNameToChar(anyString())).thenReturn("firstName");
 
         String clause = benExp.getInstantiatedClause();
         Assert.assertEquals(" SUBSTR(firstName,0,1) like '1%'", clause);
@@ -150,29 +157,10 @@ public class BenfordLawFrequencyExplorerTest {
     @Test
     public void testGetInstantiatedClauseVertica() {
         when(mockDbLanguage.getDbmsName()).thenReturn("Vertica");
+        when(mockDbLanguage.castColumnNameToChar(anyString())).thenReturn("to_char(firstName)");
 
         String clause = benExp.getInstantiatedClause();
         Assert.assertEquals("to_char(firstName) like '1%'", clause);
-    }
-
-    /**
-     * test for vertica invalid clause
-     */
-    @Test
-    public void testGetInvalidClauses() {
-        setValueToDrillDown("invalid");
-
-        when(mockDbLanguage.getDbmsName()).thenReturn("Vertica");
-        // setInvalidClauseEntity("isVertica", "Vertica"); //$NON-NLS-1$//$NON-NLS-2$
-        String clause = benExp.getInstantiatedClause();
-        Assert.assertEquals("firstName is null or not regexp_like(to_char(firstName),'^[[:digit:]]')", clause); //$NON-NLS-1$
-
-        when(mockDbLanguage.getDbmsName()).thenReturn("MySQL");
-        clause = benExp.getInstantiatedClause();
-        Assert.assertEquals("firstName is null or firstName not REGEXP '^[0-9]'", clause); //$NON-NLS-1$
-
-        // TODO add other databases here
-
     }
 
     private void setValueToDrillDown(String value) {

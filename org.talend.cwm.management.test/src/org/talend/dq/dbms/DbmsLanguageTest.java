@@ -1888,4 +1888,160 @@ public class DbmsLanguageTest {
         return tdTable;
     }
 
+    @Test
+    public void testGetInvalidClauseBenFord() {
+        // MYSQL
+        DbmsLanguage dbms = getMysqlDbmsLanguage();
+        String benfordClause = dbms.getInvalidClauseBenFord(COLUMN_A_NAME);
+        Assert.assertEquals(benfordClause, COLUMN_A_NAME + " is null or " + COLUMN_A_NAME + " not REGEXP '^[0-9]'"); //$NON-NLS-1$//$NON-NLS-2$
+
+        // SYBASE
+        dbms = getSybaseDbmsLanguage();
+        benfordClause = dbms.getInvalidClauseBenFord(COLUMN_A_NAME);
+        Assert.assertEquals(benfordClause, COLUMN_A_NAME + " is null or left(convert(char(15)," + COLUMN_A_NAME + "),1) not " //$NON-NLS-1$ //$NON-NLS-2$
+                + dbms.like() + "'%[0-9]%'"); //$NON-NLS-1$
+
+        // POSTGRESQL
+        dbms = getPostgresqlDbmsLanguage();
+        benfordClause = dbms.getInvalidClauseBenFord(COLUMN_A_NAME);
+        Assert.assertEquals(benfordClause, COLUMN_A_NAME + " is null or SUBSTRING(" + COLUMN_A_NAME + ", 1,1)  ~ '[^0-9]'"); //$NON-NLS-1$//$NON-NLS-2$
+
+        // INFORMIX
+        dbms = getInformixDbmsLanguage();
+        benfordClause = dbms.getInvalidClauseBenFord(COLUMN_A_NAME);
+        Assert.assertEquals(benfordClause, COLUMN_A_NAME + " is null or SUBSTR(" + COLUMN_A_NAME //$NON-NLS-1$
+                + ",0,1) not in ('0','1','2','3','4','5','6','7','8','9')"); //$NON-NLS-1$
+
+        // DB2
+        dbms = getDB2DbmsLanguage();
+        benfordClause = dbms.getInvalidClauseBenFord(COLUMN_A_NAME);
+        Assert.assertEquals(benfordClause, COLUMN_A_NAME + " is null or LEFT(" + COLUMN_A_NAME + ",1)" //$NON-NLS-1$//$NON-NLS-2$
+                + " not in ('0','1','2','3','4','5','6','7','8','9')"); //$NON-NLS-1$
+
+        // MSSQL
+        dbms = getMsSqlDbmsLanguage();
+        benfordClause = dbms.getInvalidClauseBenFord(COLUMN_A_NAME);
+        Assert.assertEquals(benfordClause, COLUMN_A_NAME + " is null or LEFT(" + COLUMN_A_NAME + ",1) not" + dbms.like() //$NON-NLS-1$//$NON-NLS-2$
+                + "'%[0-9]%'"); //$NON-NLS-1$
+
+        // ORACLE
+        dbms = getOracleDbmsLanguage();
+        benfordClause = dbms.getInvalidClauseBenFord(COLUMN_A_NAME);
+        Assert.assertEquals(benfordClause, COLUMN_A_NAME + " is null or " + "  regexp_like(SUBSTR(" + COLUMN_A_NAME //$NON-NLS-1$//$NON-NLS-2$
+                + ",0,1),'^[^[:digit:]]+$')"); //$NON-NLS-1$
+
+        // TERDATA
+        dbms = getTeradataDbmsLanguage();
+        benfordClause = dbms.getInvalidClauseBenFord(COLUMN_A_NAME);
+        Assert.assertEquals(benfordClause, COLUMN_A_NAME + " is null or cast(" + COLUMN_A_NAME //$NON-NLS-1$
+                + " as char(1)) not in ('0','1','2','3','4','5','6','7','8','9')"); //$NON-NLS-1$
+
+        // VERTICA
+        dbms = getVerticaDbmsLanguage();
+        benfordClause = dbms.getInvalidClauseBenFord(COLUMN_A_NAME);
+        Assert.assertEquals(benfordClause, COLUMN_A_NAME + " is null or " + "not regexp_like(to_char(" + COLUMN_A_NAME //$NON-NLS-1$ //$NON-NLS-2$
+                + "),'^[[:digit:]]')"); //$NON-NLS-1$
+    }
+
+    /**
+     * DOC qiongli Comment method "getVerticaDbmsLanguage".
+     * 
+     * @return
+     */
+    private DbmsLanguage getVerticaDbmsLanguage() {
+        return DbmsLanguageFactory.createDbmsLanguage(DbmsLanguage.VERTICA, DATABASE_VERSION);
+    }
+
+    /**
+     * DOC qiongli Comment method "getTeradataDbmsLanguage".
+     * 
+     * @return
+     */
+    private DbmsLanguage getTeradataDbmsLanguage() {
+        return DbmsLanguageFactory.createDbmsLanguage(DbmsLanguage.TERADATA, DATABASE_VERSION);
+    }
+
+    /**
+     * DOC qiongli Comment method "getOracleDbmsLanguage".
+     * 
+     * @return
+     */
+    private DbmsLanguage getOracleDbmsLanguage() {
+        return DbmsLanguageFactory.createDbmsLanguage(DbmsLanguage.ORACLE, DATABASE_VERSION);
+    }
+
+    /**
+     * DOC qiongli Comment method "getMsSqlDbmsLanguage".
+     * 
+     * @return
+     */
+    private DbmsLanguage getMsSqlDbmsLanguage() {
+        return DbmsLanguageFactory.createDbmsLanguage(DbmsLanguage.MSSQL, DATABASE_VERSION);
+    }
+
+    /**
+     * DOC qiongli Comment method "getDB2DbmsLanguage".
+     * 
+     * @return
+     */
+    private DbmsLanguage getDB2DbmsLanguage() {
+        return DbmsLanguageFactory.createDbmsLanguage(DbmsLanguage.DB2, DATABASE_VERSION);
+    }
+
+    /**
+     * DOC qiongli Comment method "getInformixDbmsLanguage".
+     * 
+     * @return
+     */
+    private DbmsLanguage getInformixDbmsLanguage() {
+        return DbmsLanguageFactory.createDbmsLanguage(DbmsLanguage.INFOMIX, DATABASE_VERSION);
+    }
+
+    /**
+     * DOC qiongli Comment method "getPostgresqlDbmsLanguage".
+     * 
+     * @return
+     */
+    private DbmsLanguage getPostgresqlDbmsLanguage() {
+        return DbmsLanguageFactory.createDbmsLanguage(DbmsLanguage.POSTGRESQL, DATABASE_VERSION);
+    }
+
+    /**
+     * DOC qiongli Comment method "getSybaseDbmsLanguage".
+     * 
+     * @return
+     */
+    private DbmsLanguage getSybaseDbmsLanguage() {
+        return DbmsLanguageFactory.createDbmsLanguage(DbmsLanguage.SYBASE, DATABASE_VERSION);
+    }
+
+    @Test
+    public void testGetColumnNameForClause() {
+        // MYSQL
+        DbmsLanguage dbms = getMysqlDbmsLanguage();
+        String columnName = dbms.castColumnNameToChar(COLUMN_A_NAME);
+        Assert.assertEquals(columnName, COLUMN_A_NAME);
+
+        // TERADATA
+        dbms = getTeradataDbmsLanguage();
+        columnName = dbms.castColumnNameToChar(COLUMN_A_NAME);
+        Assert.assertEquals(columnName, "cast(" + COLUMN_A_NAME + " as char)"); //$NON-NLS-1$ //$NON-NLS-2$
+
+        // POSTGRESQL
+
+        dbms = getPostgresqlDbmsLanguage();
+        columnName = dbms.castColumnNameToChar(COLUMN_A_NAME);
+        Assert.assertEquals(columnName, "cast(" + COLUMN_A_NAME + " as char)"); //$NON-NLS-1$ //$NON-NLS-2$
+
+        // SYBASE
+        dbms = getSybaseDbmsLanguage();
+        columnName = dbms.castColumnNameToChar(COLUMN_A_NAME);
+        Assert.assertEquals(columnName, "convert(char(15)," + COLUMN_A_NAME + ")"); //$NON-NLS-1$ //$NON-NLS-2$
+        // VERTICA
+        dbms = getVerticaDbmsLanguage();
+        columnName = dbms.castColumnNameToChar(COLUMN_A_NAME);
+        Assert.assertEquals(columnName, "to_char(" + COLUMN_A_NAME + ")"); //$NON-NLS-1$ //$NON-NLS-2$
+
+    }
+
 }

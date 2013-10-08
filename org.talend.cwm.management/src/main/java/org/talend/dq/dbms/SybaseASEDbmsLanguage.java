@@ -116,4 +116,24 @@ public class SybaseASEDbmsLanguage extends DbmsLanguage {
         return m.replaceFirst("SELECT TOP " + n + PluginConstant.SPACE_STRING); //$NON-NLS-1$ 
 
     }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dq.dbms.DbmsLanguage#getInvalidClauseBenFord(java.lang.String)
+     */
+    @Override
+    public String getInvalidClauseBenFord(String columnName) {
+        return columnName + " is null or left(convert(char(15)," + columnName + "),1) not " + this.like() + "'%[0-9]%'";//$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dq.dbms.DbmsLanguage#getColumnNameInQueryClause(java.lang.String)
+     */
+    @Override
+    public String castColumnNameToChar(String columnName) {
+        return "convert(char(15)," + columnName + ")";//$NON-NLS-1$ //$NON-NLS-2$
+    }
 }

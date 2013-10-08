@@ -63,4 +63,24 @@ public class VerticaDbmsLanguage extends DbmsLanguage {
         assert charsToReplace != null && replacementChars != null && charsToReplace.length() == replacementChars.length();
         return translateUsingPattern(expression, charsToReplace, replacementChars);
     }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dq.dbms.DbmsLanguage#getInvalidClauseBenFord(java.lang.String)
+     */
+    @Override
+    public String getInvalidClauseBenFord(String columnName) {
+        return columnName + " is null or " + "not regexp_like(to_char(" + columnName + "),'^[[:digit:]]')";//$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dq.dbms.DbmsLanguage#getColumnNameInQueryClause(java.lang.String)
+     */
+    @Override
+    public String castColumnNameToChar(String columnName) {
+        return "to_char(" + columnName + ")"; //$NON-NLS-1$//$NON-NLS-2$
+    }
 }
