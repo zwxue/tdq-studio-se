@@ -41,6 +41,7 @@ import org.talend.commons.emf.EmfHelper;
 import org.talend.commons.exception.BusinessException;
 import org.talend.commons.utils.WorkspaceUtils;
 import org.talend.core.model.metadata.builder.database.DqRepositoryViewService;
+import org.talend.core.model.properties.Item;
 import org.talend.core.model.properties.Property;
 import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.model.repository.RepositoryViewObject;
@@ -52,7 +53,6 @@ import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataquality.helpers.MetadataHelper;
 import org.talend.dataquality.indicators.definition.DefinitionPackage;
 import org.talend.dq.helper.PropertyHelper;
-import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.objectmodel.core.CorePackage;
@@ -104,8 +104,18 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
 
     protected ModelElement currentModelElement;
 
+    /**
+     * should not use this parameter because we can not make sure this parameter is synchornized with the node on the
+     * repository View
+     */
+    @Deprecated
     protected RepositoryNode repositoryNode;
 
+    /**
+     * should not use this parameter because we can not make sure this parameter is synchornized with the node on the
+     * repository View
+     */
+    @Deprecated
     protected RepositoryViewObject repositoryViewObject;
 
     protected ScrolledForm form;
@@ -128,13 +138,6 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
     public void initialize(FormEditor editor) {
         super.initialize(editor);
         this.currentModelElement = getCurrentModelElement(editor);
-        RepositoryNode recursiveFind = RepositoryNodeHelper.recursiveFind(currentModelElement);
-        if (recursiveFind != null) {
-            this.repositoryNode = recursiveFind;
-            if (this.repositoryNode.getObject() != null) {
-                this.repositoryViewObject = (RepositoryViewObject) this.repositoryNode.getObject();
-            }
-        }
 
     }
 
@@ -156,7 +159,7 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
 
     /**
      * DOC bZhou Comment method "getIntactElemenetName".
-     *
+     * 
      * @return
      * @throws BusinessException
      */
@@ -295,7 +298,7 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
 
     /**
      * DOC bZhou Comment method "createMetadataTextFiled".
-     *
+     * 
      * @param text
      * @param parent
      * @return MOD sgandon 16/03/2010 bug 11760 : unecessary parameter removed
@@ -406,9 +409,11 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
      * DOC zshen Comment method "getCurrentProperty".
      * 
      * @return
+     * @deprecated use getProperty() instead of it
      */
+    @Deprecated
     protected Property getCurrentProperty() {
-        return this.repositoryViewObject == null ? null : this.repositoryViewObject.getProperty();
+        return getProperty();
     }
 
     public boolean performGlobalAction(String actionId) {
@@ -460,7 +465,7 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
 
     /**
      * Sets the formTitle.
-     *
+     * 
      * @param formTitle the formTitle to set
      */
     public void setFormTitle(String formTitle) {
@@ -469,7 +474,7 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
 
     /**
      * Getter for formTitle.
-     *
+     * 
      * @return the formTitle
      */
     public String getFormTitle() {
@@ -478,7 +483,7 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
 
     /**
      * Sets the metadataTitle.
-     *
+     * 
      * @param metadataTitle the metadataTitle to set
      */
     protected void setMetadataTitle(String metadataTitle) {
@@ -487,7 +492,7 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
 
     /**
      * Getter for metadataTitle.
-     *
+     * 
      * @return the metadataTitle
      */
     protected String getMetadataTitle() {
@@ -514,7 +519,7 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
 
     /**
      * ADD yyi 2011-05-31 16158:add whitespace check for text fields.
-     *
+     * 
      * @param fields
      */
     public void addWhitespaceValidate(Text... fields) {
@@ -557,18 +562,17 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
     public abstract ReturnCode canSave();
 
     /**
-     *
+     * 
      * check if the nameText is a dupilcate name.
-     *
+     * 
      * @return
      */
     protected ReturnCode canModifyName(ERepositoryObjectType objectType) {
 
         String elementName = this.nameText.getText();
         Property oldProperty = null;
-        if (repositoryViewObject != null) {
-            oldProperty = this.repositoryViewObject.getProperty();
-        }
+
+        oldProperty = getProperty();
         ReturnCode ret = new ReturnCode();
         if (oldProperty == null || objectType == null) {
             return ret;

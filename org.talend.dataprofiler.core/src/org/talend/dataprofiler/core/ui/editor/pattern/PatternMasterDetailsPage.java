@@ -35,11 +35,13 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
+import org.eclipse.ui.part.FileEditorInput;
 import org.talend.core.model.properties.Property;
 import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.cwm.helper.TaggedValueHelper;
@@ -61,6 +63,7 @@ import org.talend.dataquality.helpers.DomainHelper;
 import org.talend.dataquality.properties.TDQPatternItem;
 import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.helper.RepositoryNodeHelper;
+import org.talend.dq.helper.resourcehelper.PatternResourceFileHelper;
 import org.talend.dq.nodes.PatternRepNode;
 import org.talend.dq.writer.impl.ElementWriterFactory;
 import org.talend.repository.model.RepositoryNode;
@@ -151,8 +154,14 @@ public class PatternMasterDetailsPage extends AbstractMetadataFormPage implement
 
     @Override
     protected ModelElement getCurrentModelElement(FormEditor editor) {
-        PatternItemEditorInput input = (PatternItemEditorInput) editor.getEditorInput();
-        this.pattern = input.getTDQPatternItem().getPattern();
+        IEditorInput editorInput = editor.getEditorInput();
+        if (editorInput instanceof PatternItemEditorInput) {
+            PatternItemEditorInput input = (PatternItemEditorInput) editorInput;
+            this.pattern = input.getTDQPatternItem().getPattern();
+        } else if (editorInput instanceof FileEditorInput) {
+            FileEditorInput input = (FileEditorInput) this.getEditor().getEditorInput();
+            this.pattern = PatternResourceFileHelper.getInstance().findPattern(input.getFile());
+        }
         this.currentModelElement = pattern;
         initPatternRepNode(pattern);
         return pattern;

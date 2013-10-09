@@ -284,8 +284,12 @@ public final class WorkspaceResourceHelper {
      * @param item
      */
     public static void refreshItem(Item item) {
-        RepositoryNode recursiveFind = RepositoryNodeHelper.recursiveFind(item.getProperty());
-        CorePlugin.getDefault().refreshDQView(recursiveFind);
+        // if repository view don't open we will not need to do it
+        CommonViewer dqCommonViewer = RepositoryNodeHelper.getDQCommonViewer();
+        if (dqCommonViewer != null) {
+            RepositoryNode recursiveFind = RepositoryNodeHelper.recursiveFind(item.getProperty());
+            CorePlugin.getDefault().refreshDQView(recursiveFind);
+        }
     }
 
     /**

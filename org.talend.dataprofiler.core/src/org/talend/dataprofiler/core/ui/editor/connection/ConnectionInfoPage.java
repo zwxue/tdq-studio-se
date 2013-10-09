@@ -278,7 +278,7 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
         if (connItem != null) {
             // MOD mzhao bug:19288
             if (connItem.eIsProxy()) {
-                Property property = this.repositoryViewObject == null ? null : this.repositoryViewObject.getProperty();
+                Property property = this.getProperty();
                 if (property != null && property.getItem() != null) {
                     connItem = (ConnectionItem) property.getItem();
                 }
@@ -449,7 +449,7 @@ public class ConnectionInfoPage extends AbstractMetadataFormPage {
                 return false;
             }
             if (connItem.eIsProxy()) {
-                Property property = this.repositoryViewObject == null ? null : this.repositoryViewObject.getProperty();
+                Property property = this.getProperty();
                 if (property != null && property.getItem() != null) {
                     connItem = (ConnectionItem) property.getItem();
                 }
