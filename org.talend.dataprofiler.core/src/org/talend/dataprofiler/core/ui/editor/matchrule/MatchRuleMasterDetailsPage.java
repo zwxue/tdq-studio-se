@@ -23,6 +23,7 @@ import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.editor.FormEditor;
+import org.eclipse.ui.part.FileEditorInput;
 import org.talend.core.model.properties.Item;
 import org.talend.core.model.properties.Property;
 import org.talend.dataprofiler.core.PluginConstant;
@@ -38,13 +39,14 @@ import org.talend.dataquality.record.linkage.ui.section.definition.SurvivorshipD
 import org.talend.dataquality.rules.BlockKeyDefinition;
 import org.talend.dataquality.rules.MatchRule;
 import org.talend.dataquality.rules.MatchRuleDefinition;
+import org.talend.dq.helper.resourcehelper.DQRuleResourceFileHelper;
 import org.talend.dq.writer.impl.ElementWriterFactory;
 import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
  * created by zshen on Aug 19, 2013 Detailled comment
- *
+ * 
  */
 public class MatchRuleMasterDetailsPage extends AbstractMetadataFormPage implements PropertyChangeListener {
 
@@ -64,7 +66,7 @@ public class MatchRuleMasterDetailsPage extends AbstractMetadataFormPage impleme
 
     /**
      * DOC zshen MatchRuleMasterDetailsPage constructor comment.
-     *
+     * 
      * @param editor
      */
     public MatchRuleMasterDetailsPage(FormEditor editor) {
@@ -73,7 +75,7 @@ public class MatchRuleMasterDetailsPage extends AbstractMetadataFormPage impleme
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see org.eclipse.ui.forms.editor.FormPage#dispose()
      */
     @Override
@@ -84,7 +86,7 @@ public class MatchRuleMasterDetailsPage extends AbstractMetadataFormPage impleme
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see java.beans.PropertyChangeListener#propertyChange(java.beans.PropertyChangeEvent)
      */
     public void propertyChange(PropertyChangeEvent evt) {
@@ -97,7 +99,7 @@ public class MatchRuleMasterDetailsPage extends AbstractMetadataFormPage impleme
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see
      * org.talend.dataprofiler.core.ui.editor.AbstractMetadataFormPage#getCurrentModelElement(org.eclipse.ui.forms.editor
      * .FormEditor)
@@ -107,6 +109,9 @@ public class MatchRuleMasterDetailsPage extends AbstractMetadataFormPage impleme
         MatchRuleItemEditorInput editorInput = getMatchRuleEditorInput();
         if (editorInput != null) {
             this.currentModelElement = editorInput.getMatchRule();
+        } else if (this.getEditor().getEditorInput() instanceof FileEditorInput) {
+            FileEditorInput input = (FileEditorInput) this.getEditor().getEditorInput();
+            this.currentModelElement = DQRuleResourceFileHelper.getInstance().findMatchRule(input.getFile());
         }
         return this.currentModelElement;
     }
@@ -121,7 +126,7 @@ public class MatchRuleMasterDetailsPage extends AbstractMetadataFormPage impleme
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see org.talend.dataprofiler.core.ui.editor.AbstractMetadataFormPage#canSave()
      */
     @Override
@@ -135,7 +140,7 @@ public class MatchRuleMasterDetailsPage extends AbstractMetadataFormPage impleme
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see org.talend.dataprofiler.core.ui.editor.AbstractFormPage#setDirty(boolean)
      */
     @Override
@@ -148,7 +153,7 @@ public class MatchRuleMasterDetailsPage extends AbstractMetadataFormPage impleme
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see
      * org.talend.dataprofiler.core.ui.editor.AbstractMetadataFormPage#createFormContent(org.eclipse.ui.forms.IManagedForm
      * )
@@ -180,7 +185,7 @@ public class MatchRuleMasterDetailsPage extends AbstractMetadataFormPage impleme
 
     /**
      * DOC zshen Comment method "createMatchingKeySection".
-     *
+     * 
      * @param mainComp
      */
     private void createMatchingKeySection(Composite mainComp) {
@@ -194,7 +199,7 @@ public class MatchRuleMasterDetailsPage extends AbstractMetadataFormPage impleme
 
     /**
      * DOC HHB Comment method "createSurvivorshipSection".
-     *
+     * 
      * @param mainComp
      */
     private void createSurvivorshipSection(Composite mainComp) {
@@ -207,8 +212,7 @@ public class MatchRuleMasterDetailsPage extends AbstractMetadataFormPage impleme
     }
 
     private void createDefaultSurvivorshipSection(Composite mainComp) {
-        defaultSurvivorshipDefinitionSection = new DefaultSurvivorshipDefinitionSection(
-                form, mainComp, toolkit);
+        defaultSurvivorshipDefinitionSection = new DefaultSurvivorshipDefinitionSection(form, mainComp, toolkit);
         defaultSurvivorshipDefinitionSection.setMatchRuleDef((MatchRuleDefinition) getCurrentModelElement(getEditor()));
         defaultSurvivorshipDefinitionSection.createContent();
         defaultSurvivorshipDefinitionSection.addPropertyChangeListener(this);
@@ -218,7 +222,7 @@ public class MatchRuleMasterDetailsPage extends AbstractMetadataFormPage impleme
 
     /**
      * DOC zshen Comment method "getMatchRuleList".
-     *
+     * 
      * @return
      */
     private List<MatchRule> getMatchRuleList() {
@@ -231,7 +235,7 @@ public class MatchRuleMasterDetailsPage extends AbstractMetadataFormPage impleme
 
     /**
      * DOC zshen Comment method "createGenerationOfBlockingKey".
-     *
+     * 
      * @param topComp
      */
     private void createGenerationOfBlockingKeySection(Composite mainComp) {
@@ -252,7 +256,7 @@ public class MatchRuleMasterDetailsPage extends AbstractMetadataFormPage impleme
 
     /**
      * DOC zshen Comment method "createSelectRecordLinkageSection".
-     *
+     * 
      * @param topComp
      */
     private void createSelectRecordLinkageSection(Composite mainComp) {
@@ -265,7 +269,7 @@ public class MatchRuleMasterDetailsPage extends AbstractMetadataFormPage impleme
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see
      * org.talend.dataprofiler.core.ui.editor.AbstractMetadataFormPage#doSave(org.eclipse.core.runtime.IProgressMonitor)
      */
@@ -280,17 +284,16 @@ public class MatchRuleMasterDetailsPage extends AbstractMetadataFormPage impleme
         }
     }
 
-
     /**
      * DOC zshen Comment method "saveMatchRule".
-     *
+     * 
      * @return
      */
     private boolean saveMatchRule() {
         MatchRuleDefinition saveModelElement = (MatchRuleDefinition) getCurrentModelElement(this.getEditor());
         // // algorithm
         saveModelElement.setRecordLinkageAlgorithm(selectAlgorithmSection.getAlgorithmName());
-       
+
         ReturnCode rc = ElementWriterFactory.getInstance().createdMatchRuleWriter().save(getInputItem(), Boolean.FALSE);
         if (!rc.isOk()) {
             return false;
@@ -312,7 +315,7 @@ public class MatchRuleMasterDetailsPage extends AbstractMetadataFormPage impleme
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see org.talend.dataprofiler.core.ui.editor.AbstractMetadataFormPage#getCurrentProperty()
      */
     @Override

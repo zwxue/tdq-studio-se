@@ -12,6 +12,8 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.editor.dqrules;
 
+import java.util.List;
+
 import org.apache.log4j.Level;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -28,9 +30,10 @@ import org.talend.dataprofiler.core.ui.editor.TdEditorToolBar;
 import org.talend.dataprofiler.core.ui.editor.matchrule.MatchRuleItemEditorInput;
 import org.talend.dataprofiler.core.ui.editor.matchrule.MatchRuleMasterDetailsPage;
 import org.talend.dataprofiler.core.ui.editor.parserrules.ParserRuleItemEditorInput;
-import org.talend.dataquality.rules.DQRule;
+import org.talend.dataquality.rules.MatchRuleDefinition;
 import org.talend.dataquality.rules.ParserRule;
 import org.talend.dq.helper.resourcehelper.DQRuleResourceFileHelper;
+import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
  * DOC xqliu class global comment. Detailled comment
@@ -52,48 +55,25 @@ public class DQRuleEditor extends CommonFormEditor {
 
     @Override
     protected void addPages() {
-        IEditorInput editorInput = this.getEditorInput();
+        ModelElement currentRuleModelElement = getCurrentModelElement();
         try {
-
-            if (editorInput instanceof ParserRuleItemEditorInput) {
-                parserPage = new ParserRuleMasterDetailsPage(this, ID,
-                        DefaultMessagesImpl.getString("DQRuleEditor.parserRuleSettings")); //$NON-NLS-1$
-                addPage(parserPage);
-                setPartName(parserPage.getIntactElemenetName());
-            } else if (editorInput instanceof FileEditorInput) {
-                DQRule findDQRule = null;
-                FileEditorInput fileEditorInput = (FileEditorInput) editorInput;
-                IFile file = fileEditorInput.getFile();
-                if (FactoriesUtil.isDQRuleFile(file.getFileExtension())) {
-                    findDQRule = DQRuleResourceFileHelper.getInstance().findDQRule(file);
-                }
-                if (findDQRule instanceof ParserRule) {
+            if (currentRuleModelElement != null) {
+                if (currentRuleModelElement instanceof ParserRule) {
                     parserPage = new ParserRuleMasterDetailsPage(this, ID,
                             DefaultMessagesImpl.getString("DQRuleEditor.parserRuleSettings")); //$NON-NLS-1$
                     addPage(parserPage);
                     setPartName(parserPage.getIntactElemenetName());
-                } else if (findDQRule instanceof ParserRule) {
+                } else if (currentRuleModelElement instanceof MatchRuleDefinition) {
                     matchPage = new MatchRuleMasterDetailsPage(this);
                     addPage(matchPage);
                     setPartName(matchPage.getIntactElemenetName());
-                }
-                else {
+                } else {
                     masterPage = new DQRuleMasterDetailsPage(this, ID,
                             DefaultMessagesImpl.getString("DQRuleEditor.dqRuleSettings")); //$NON-NLS-1$
                     addPage(masterPage);
                     setPartName(masterPage.getIntactElemenetName());
                 }
-            } else if (editorInput instanceof BusinessRuleItemEditorInput) {
-                masterPage = new DQRuleMasterDetailsPage(this, ID, DefaultMessagesImpl.getString("DQRuleEditor.dqRuleSettings")); //$NON-NLS-1$
-                addPage(masterPage);
-                setPartName(masterPage.getIntactElemenetName());
-            } else if (editorInput instanceof MatchRuleItemEditorInput) {
-                matchPage = new MatchRuleMasterDetailsPage(this);
-                addPage(matchPage);
-                setPartName(matchPage.getIntactElemenetName());
             }
-            // MOD qiongli 2011-3-21,bug 19472.set method 'setPartName(...)' behind the method 'addPage(...)'
-
         } catch (PartInitException e) {
             ExceptionHandler.process(e, Level.ERROR);
         }
@@ -108,6 +88,30 @@ public class DQRuleEditor extends CommonFormEditor {
             toolbar.addActions(saveAction);
         }
         // ~
+    }
+
+    /**
+     * DOC zshen Comment method "getCurrentModelElement".
+     */
+    private ModelElement getCurrentModelElement() {
+        IEditorInput editorInput = this.getEditorInput();
+        ModelElement ruleElement = null;
+
+        if (editorInput instanceof ParserRuleItemEditorInput) {
+            ruleElement = ((ParserRuleItemEditorInput) editorInput).getTDQBusinessRuleItem().getDqrule();
+        } else if (editorInput instanceof FileEditorInput) {
+            FileEditorInput fileEditorInput = (FileEditorInput) editorInput;
+            IFile file = fileEditorInput.getFile();
+            if (FactoriesUtil.isDQRuleFile(file.getFileExtension())) {
+                ruleElement = DQRuleResourceFileHelper.getInstance().findIndicatorDefinition(file);
+            }
+
+        } else if (editorInput instanceof BusinessRuleItemEditorInput) {
+            ruleElement = ((BusinessRuleItemEditorInput) editorInput).getTDQBusinessRuleItem().getDqrule();
+        } else if (editorInput instanceof MatchRuleItemEditorInput) {
+            ruleElement = ((MatchRuleItemEditorInput) editorInput).getMatchRule();
+        }
+        return ruleElement;
     }
 
     @Override
@@ -145,7 +149,7 @@ public class DQRuleEditor extends CommonFormEditor {
 
     /**
      * Getter for masterPage.
-     *
+     * 
      * @return the masterPage
      */
     public IFormPage getMasterPage() {
@@ -165,7 +169,7 @@ public class DQRuleEditor extends CommonFormEditor {
 
     /**
      * DOC xqliu 2009-07-02 bug 7687.
-     *
+     * 
      * @param state
      */
     public void setSaveActionButtonState(boolean state) {
@@ -185,6 +189,26 @@ public class DQRuleEditor extends CommonFormEditor {
         return this.parserPage;
     }
 
+    private boolean isMatchRuleEditor() {
+        ModelElement currentModelElement = getCurrentModelElement();
+        if (currentModelElement != null && currentModelElement instanceof MatchRuleDefinition) {
+            return true;
+        }
+        return false;
+    }
 
-
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataprofiler.core.ui.editor.CommonFormEditor#getPreferredPerspectiveId()
+     */
+    @Override
+    public List<String> getPreferredPerspectiveId() {
+        // we will use this editor on the Di perspective and MDM perspective so return null to disable this function
+        if (isMatchRuleEditor()) {
+            return null;
+        } else {
+            return super.getPreferredPerspectiveId();
+        }
+    }
 }

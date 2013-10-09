@@ -36,6 +36,7 @@ import orgomg.cwm.objectmodel.core.ModelElement;
 public final class DQRuleResourceFileHelper extends ResourceFileMap {
 
     private static Logger log = Logger.getLogger(DQRuleResourceFileHelper.class);
+
     private static DQRuleResourceFileHelper instance;
 
     RulesSwitch<WhereRule> rulesSwitch = new RulesSwitch<WhereRule>() {
@@ -99,6 +100,14 @@ public final class DQRuleResourceFileHelper extends ResourceFileMap {
     public WhereRule findWhereRule(IFile file) {
         if (checkFile(file)) {
             return (WhereRule) getModelElement(file);
+        }
+
+        return null;
+    }
+
+    public IndicatorDefinition findIndicatorDefinition(IFile file) {
+        if (checkFile(file)) {
+            return (IndicatorDefinition) getModelElement(file);
         }
 
         return null;
