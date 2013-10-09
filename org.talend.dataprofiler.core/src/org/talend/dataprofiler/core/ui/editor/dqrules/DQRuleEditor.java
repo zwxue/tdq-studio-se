@@ -23,6 +23,7 @@ import org.eclipse.ui.forms.editor.IFormPage;
 import org.eclipse.ui.part.FileEditorInput;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.commons.exception.ExceptionHandler;
+import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.action.actions.DefaultSaveAction;
 import org.talend.dataprofiler.core.ui.editor.CommonFormEditor;
@@ -67,6 +68,7 @@ public class DQRuleEditor extends CommonFormEditor {
                     matchPage = new MatchRuleMasterDetailsPage(this);
                     addPage(matchPage);
                     setPartName(matchPage.getIntactElemenetName());
+                    setTitleImage(ImageLib.getImage(ImageLib.MATCH_RULE_ICON));
                 } else {
                     masterPage = new DQRuleMasterDetailsPage(this, ID,
                             DefaultMessagesImpl.getString("DQRuleEditor.dqRuleSettings")); //$NON-NLS-1$

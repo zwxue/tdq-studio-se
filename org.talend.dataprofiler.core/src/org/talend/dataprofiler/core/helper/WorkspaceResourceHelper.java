@@ -285,15 +285,7 @@ public final class WorkspaceResourceHelper {
      */
     public static void refreshItem(Item item) {
         RepositoryNode recursiveFind = RepositoryNodeHelper.recursiveFind(item.getProperty());
-        if (recursiveFind == null) {
-            return;
-        }
-        CommonViewer dqCommonViewer = RepositoryNodeHelper.getDQCommonViewer();
-        if (dqCommonViewer != null && null != recursiveFind) {
-            dqCommonViewer.refresh(recursiveFind);
-        } else {
-            CorePlugin.getDefault().refreshDQView(recursiveFind);
-        }
+        CorePlugin.getDefault().refreshDQView(recursiveFind);
     }
 
     /**

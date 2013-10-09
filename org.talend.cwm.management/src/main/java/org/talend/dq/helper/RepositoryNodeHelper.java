@@ -84,6 +84,7 @@ import org.talend.dataquality.properties.TDQAnalysisItem;
 import org.talend.dataquality.properties.TDQBusinessRuleItem;
 import org.talend.dataquality.properties.TDQIndicatorDefinitionItem;
 import org.talend.dataquality.properties.TDQJrxmlItem;
+import org.talend.dataquality.properties.TDQMatchRuleItem;
 import org.talend.dataquality.properties.TDQPatternItem;
 import org.talend.dataquality.properties.TDQReportItem;
 import org.talend.dataquality.properties.TDQSourceFileItem;
@@ -484,7 +485,7 @@ public final class RepositoryNodeHelper {
 
     /**
      * find RepositoryNode by property, if no RepositoryNode, return null.
-     *
+     * 
      * @param property
      * @return
      */
@@ -499,7 +500,7 @@ public final class RepositoryNodeHelper {
 
     /**
      * find RepositoryNode by ModelElement, if no RepositoryNode, return null.
-     *
+     * 
      * @param modelElement
      * @param isCreate whether create new one when can't find the node from RepositoryView
      * @return
@@ -569,7 +570,7 @@ public final class RepositoryNodeHelper {
 
     /**
      * create a new RepositoryNode when the node is hide on the repositoryView.
-     *
+     * 
      * @param findModelElement
      * @throws PersistenceException
      */
@@ -607,7 +608,7 @@ public final class RepositoryNodeHelper {
 
     /**
      * DOC talend Comment method "createDBViewRepNode".
-     *
+     * 
      * @param findModelElement
      * @param lastVersion
      * @return
@@ -625,7 +626,7 @@ public final class RepositoryNodeHelper {
 
     /**
      * DOC talend Comment method "createDBTableRepNode".
-     *
+     * 
      * @param findModelElement
      * @return
      */
@@ -671,7 +672,7 @@ public final class RepositoryNodeHelper {
     // }
     /**
      * create a temp RepNode there is a lack of parent attribute
-     *
+     * 
      * @param findColumn
      */
     private static DBColumnRepNode createMetadataColumnRepNode(TdColumn findColumn, IRepositoryViewObject lastVersion) {
@@ -687,7 +688,7 @@ public final class RepositoryNodeHelper {
 
     /**
      * DOC msjian Comment method "recursiveFindFile".
-     *
+     * 
      * @param file
      * @return
      */
@@ -728,7 +729,7 @@ public final class RepositoryNodeHelper {
 
     /**
      * DOC klliu Comment method "recursiveFindRuleParser".
-     *
+     * 
      * @param modelElement
      * @return
      */
@@ -753,7 +754,7 @@ public final class RepositoryNodeHelper {
 
     /**
      * recursiveFind MatcherRule
-     *
+     * 
      * @param modelElement
      * @return
      */
@@ -1139,10 +1140,10 @@ public final class RepositoryNodeHelper {
     }
 
     /**
-     *
+     * 
      * DOC gdbu Comment method "getUUID". Rewrite ResourceHelper.getUUID() method , the difference is that the new
      * method includes the handling proxy situation. ADD for bug TDQ-3735.
-     *
+     * 
      * @param object
      * @return
      */
@@ -1395,9 +1396,9 @@ public final class RepositoryNodeHelper {
     }
 
     /**
-     *
+     * 
      * find a node from recycle bin.
-     *
+     * 
      * @param modelElement
      * @return
      */
@@ -1632,7 +1633,7 @@ public final class RepositoryNodeHelper {
 
     /**
      * recursive find the ReopsitoryNode accroding to xmlElementType under nodes.
-     *
+     * 
      * @param nodes
      * @param xmlElementType
      * @return
@@ -1761,9 +1762,9 @@ public final class RepositoryNodeHelper {
     }
 
     /**
-     *
+     * 
      * zshen Comment method "getRepositoryFolderNode".
-     *
+     * 
      * @param folderConstant
      * @return one RepositoryFolderNode which corresponding to the value of folderConstant
      */
@@ -1875,9 +1876,9 @@ public final class RepositoryNodeHelper {
     }
 
     /**
-     *
+     * 
      * get all of UDI
-     *
+     * 
      * @param withDeleted care about which move into recycle bin
      * @return the list of UDI
      */
@@ -1903,9 +1904,9 @@ public final class RepositoryNodeHelper {
     }
 
     /**
-     *
+     * 
      * Add zshen 15750 get all the Connection Node from one folder node.
-     *
+     * 
      * @param folderNode any node
      * @return
      */
@@ -1923,9 +1924,9 @@ public final class RepositoryNodeHelper {
     }
 
     /**
-     *
+     * 
      * Add zshen 15750 Decided whether one node is a Folder Node.
-     *
+     * 
      * @param nodeType the Type of nodes
      * @return
      */
@@ -1942,7 +1943,7 @@ public final class RepositoryNodeHelper {
 
     /**
      * get the metadata element from a node, if there have not metadata element, return null.
-     *
+     * 
      * @param repositoryNode
      * @return
      */
@@ -1966,7 +1967,7 @@ public final class RepositoryNodeHelper {
 
     /**
      * DOC klliu Comment method "getRootNode".
-     *
+     * 
      * @return
      */
     public static RepositoryNode getRootNode(ERepositoryObjectType nodeName) {
@@ -1986,7 +1987,7 @@ public final class RepositoryNodeHelper {
 
     /**
      * get the RepositoryNode according to the nodeName.
-     *
+     * 
      * @param nodeName the node name
      * @param open if the DQView is not show, show it or not
      * @return
@@ -2017,9 +2018,9 @@ public final class RepositoryNodeHelper {
     }
 
     /**
-     *
+     * 
      * get recycle bin node.
-     *
+     * 
      * @return
      */
     public static RepositoryNode getRecycleBinRootNode() {
@@ -2039,7 +2040,7 @@ public final class RepositoryNodeHelper {
 
     /**
      * DOC klliu 15750 Comment method "getDQRespositoryView".
-     *
+     * 
      * @return
      */
     public static CommonViewer getDQCommonViewer() {
@@ -2153,7 +2154,7 @@ public final class RepositoryNodeHelper {
     /**
      * get the (Resource) ModelElement from a node(include: connection, analysis, business rule, indicator definition,
      * pattern, report), if there have not ModelElement return null.
-     *
+     * 
      * @param node
      * @return
      */
@@ -2176,7 +2177,7 @@ public final class RepositoryNodeHelper {
     /**
      * get the (Resource) ModelElement from a item(include: connection, analysis, business rule, indicator definition,
      * pattern, report), if there have not ModelElement return null.
-     *
+     * 
      * @param item
      * @return
      */
@@ -2192,6 +2193,8 @@ public final class RepositoryNodeHelper {
                 return ((TDQPatternItem) item).getPattern();
             } else if (item instanceof TDQReportItem) {
                 return ((TDQReportItem) item).getReport();
+            } else if (item instanceof TDQMatchRuleItem) {
+                return ((TDQMatchRuleItem) item).getMatchRule();
             }
         } else if (item != null && item instanceof ConnectionItem) {
             return ((ConnectionItem) item).getConnection();
@@ -2202,7 +2205,7 @@ public final class RepositoryNodeHelper {
     /**
      * get the (Sub) ModelElement from a node(include: catalog, schema, table, view, column, xmlSchema, xmlElement), if
      * there have not ModelElement return null.
-     *
+     * 
      * @param node
      * @return
      */
@@ -2233,7 +2236,7 @@ public final class RepositoryNodeHelper {
 
     /**
      * get ModelElement from IRepositoryNode, if there no ModelElement, return null.
-     *
+     * 
      * @param node
      * @return
      */
@@ -2266,9 +2269,9 @@ public final class RepositoryNodeHelper {
     }
 
     /**
-     *
+     * 
      * if logical delete state is true .
-     *
+     * 
      * @param node
      * @return
      */
@@ -2297,7 +2300,7 @@ public final class RepositoryNodeHelper {
 
     /**
      * find the RepositoryNode according to the ModelElement.
-     *
+     * 
      * @param modelElement
      * @return a RepositoryNode or null
      * @deprecated use recursiveFind(ModelElement) instead
@@ -2332,7 +2335,7 @@ public final class RepositoryNodeHelper {
 
     /**
      * find the RepositoryNode according to the ModelElement's uuid.
-     *
+     * 
      * @param uuid
      * @return a RepositoryNode or null
      * @deprecated this method is too slow, please use recursiveFindByUuid(String uuid, List<IRepositoryNode> nodes)
@@ -2345,7 +2348,7 @@ public final class RepositoryNodeHelper {
 
     /**
      * find the RepositoryNode according to the ModelElement's uuid which be included in the nodes and those children.
-     *
+     * 
      * @param uuid
      * @param nodes
      * @return a RepositoryNode or null
@@ -2371,7 +2374,7 @@ public final class RepositoryNodeHelper {
 
     /**
      * should to find ModelElement in the node's children or not.
-     *
+     * 
      * @param node
      * @return
      */
@@ -2390,7 +2393,7 @@ public final class RepositoryNodeHelper {
 
     /**
      * find the RepositoryNode according to the nodeId.
-     *
+     * 
      * @param nodeId
      * @return a RepositoryNode or null
      */
@@ -2400,7 +2403,7 @@ public final class RepositoryNodeHelper {
 
     /**
      * find the RepositoryNode according to the nodeId which be included in the nodes and those children..
-     *
+     * 
      * @param nodeId
      * @return a RepositoryNode or null
      */
@@ -2432,7 +2435,7 @@ public final class RepositoryNodeHelper {
 
     /**
      * DOC xqliu Comment method "getMdmChildren".
-     *
+     * 
      * @param parentElement
      * @param hasChildren
      * @return
@@ -2455,9 +2458,9 @@ public final class RepositoryNodeHelper {
     }
 
     /**
-     *
+     * 
      * DOC qiongli Comment method "hasDependences".
-     *
+     * 
      * @param node
      * @return
      */
@@ -2470,9 +2473,9 @@ public final class RepositoryNodeHelper {
     }
 
     /**
-     *
+     * 
      * Add qiongli:find all REPOSITORY_ELEMENT by folderNode.
-     *
+     * 
      * @param folderNode
      * @param withDelted
      * @return
@@ -2512,7 +2515,7 @@ public final class RepositoryNodeHelper {
 
     /**
      * get JrxmlTempleteRepNodes which under the parentNode.
-     *
+     * 
      * @param parentNode
      * @param recursive
      * @return
@@ -2534,7 +2537,7 @@ public final class RepositoryNodeHelper {
 
     /**
      * get SourceFileRepNodes which under the parentNode.
-     *
+     * 
      * @param parentNode
      * @param recursive
      * @return
@@ -2557,7 +2560,7 @@ public final class RepositoryNodeHelper {
     /**
      * get RepositoryNode which contains a ModelElment(include: Analysis, Report, IndicatorDefinition, Pattern, DqRule)
      * under the parentNode.
-     *
+     * 
      * @param parentNode
      * @param recursive
      * @return
@@ -2592,7 +2595,7 @@ public final class RepositoryNodeHelper {
 
     /**
      * get the ModelElement uuid list from RepositoryNode list.
-     *
+     * 
      * @param nodes
      * @return
      */
@@ -2612,7 +2615,7 @@ public final class RepositoryNodeHelper {
 
     /**
      * get the ERepositoryObjectType of the RepositoryNode.
-     *
+     * 
      * @param node
      * @return
      */
@@ -2623,7 +2626,7 @@ public final class RepositoryNodeHelper {
 
     /**
      * get the relative path of the RepositoryNode.
-     *
+     * 
      * @param node
      * @return
      */
@@ -2633,7 +2636,7 @@ public final class RepositoryNodeHelper {
 
     /**
      * judge the nodeList contains the node, the node must own a ModelElement.
-     *
+     * 
      * @param nodeList
      * @param node
      * @return
@@ -2671,9 +2674,9 @@ public final class RepositoryNodeHelper {
     }
 
     /**
-     *
+     * 
      * DOC klliu Comment method "getTableFilter".
-     *
+     * 
      * @param catalog
      * @param schema
      * @return
@@ -2692,9 +2695,9 @@ public final class RepositoryNodeHelper {
     }
 
     /**
-     *
+     * 
      * DOC klliu Comment method "getViewFilter".
-     *
+     * 
      * @param catalog
      * @param schema
      * @return
@@ -2713,9 +2716,9 @@ public final class RepositoryNodeHelper {
     }
 
     /**
-     *
+     * 
      * DOC klliu Comment method "filterTables".
-     *
+     * 
      * @param tables
      * @param columnSetPattern
      * @return
@@ -2733,9 +2736,9 @@ public final class RepositoryNodeHelper {
     }
 
     /**
-     *
+     * 
      * DOC klliu Comment method "filterViews".
-     *
+     * 
      * @param views
      * @param columnSetPattern
      * @return
@@ -2766,7 +2769,7 @@ public final class RepositoryNodeHelper {
 
     /**
      * DOC klliu Comment method "filterMatchingColumns".
-     *
+     * 
      * @param columns
      * @param patterns
      * @return
@@ -2798,9 +2801,9 @@ public final class RepositoryNodeHelper {
     }
 
     /**
-     *
+     * 
      * This method is used for filtering packages by patterns.
-     *
+     * 
      * @param dataPackage
      * @param packageFilter
      * @return
@@ -2884,7 +2887,7 @@ public final class RepositoryNodeHelper {
 
     /**
      * DOC gdbu Comment method "getFirstFilteredNode".
-     *
+     * 
      * @return
      */
     public static IRepositoryNode getFirstFilteredNode() {
@@ -2903,7 +2906,7 @@ public final class RepositoryNodeHelper {
 
     /**
      * DOC gdbu Comment method "getNextFilteredNode".
-     *
+     * 
      * @param repoNode
      * @return
      */
@@ -2942,7 +2945,7 @@ public final class RepositoryNodeHelper {
 
     /**
      * DOC gdbu Comment method "getPreviouFilteredNode".
-     *
+     * 
      * @param repoNode
      * @return
      */
@@ -3004,9 +3007,9 @@ public final class RepositoryNodeHelper {
     }
 
     /**
-     *
+     * 
      * DOC gdbu Comment method "fillTreeList". Filter's entry method.
-     *
+     * 
      * @param monitor
      */
     public static void fillTreeList(IProgressMonitor monitor) {
@@ -3031,7 +3034,7 @@ public final class RepositoryNodeHelper {
 
     /**
      * ADD gdbu 2011-11-15 TDQ-3969
-     *
+     * 
      * DOC gdbu Comment method "regainRecycleBinFilteredNode". updates recycle bin node.
      */
     public static void regainRecycleBinFilteredNode() {
@@ -3043,10 +3046,10 @@ public final class RepositoryNodeHelper {
 
     /**
      * ADD gdbu 2011-11-15 TDQ-3969
-     *
+     * 
      * DOC gdbu Comment method "getRecycleBinFilteredNodes". This method could return a list contains recycle bin node
      * and all of it's children.
-     *
+     * 
      * @return
      */
     private static List<IRepositoryNode> getRecycleBinFilteredNodes() {
@@ -3055,10 +3058,10 @@ public final class RepositoryNodeHelper {
 
     /**
      * ADD gdbu 2011-11-17 TDQ-3969
-     *
+     * 
      * DOC gdbu Comment method "removeChildrenNodesWhenFiltering". When delete an element in the tree , also need delete
      * this element in filter-list.
-     *
+     * 
      * @param node
      * @return
      */
@@ -3078,9 +3081,9 @@ public final class RepositoryNodeHelper {
 
     /**
      * ADD gdbu 2011-11-24 TDQ-4068 To get all children nodes.
-     *
+     * 
      * DOC gdbu Comment method "findRecycleBinNodeWhenFiltering".
-     *
+     * 
      * @param recycleBinNodes
      * @return
      */
@@ -3095,7 +3098,7 @@ public final class RepositoryNodeHelper {
 
     /**
      * DOC gdbu Comment method "isEmptyRecycleBin".
-     *
+     * 
      * @param needToDeleteNodes
      * @param shownNodes
      * @return
@@ -3113,9 +3116,9 @@ public final class RepositoryNodeHelper {
     }
 
     /**
-     *
+     * 
      * DOC gdbu Comment method "getTreeList".
-     *
+     * 
      * @param node
      * @return
      */
@@ -3171,10 +3174,10 @@ public final class RepositoryNodeHelper {
     }
 
     /**
-     *
+     * 
      * find the nearest system folder node by the given node(.eg.,give an AnalysisRepNode,will find the root node
      * AnalysisFolderNode).
-     *
+     * 
      * @param node
      * @return
      */
@@ -3191,7 +3194,7 @@ public final class RepositoryNodeHelper {
 
     /**
      * get the IFolder according to the RepositoryNode, if the RepositoryNode is not a folder, return null.
-     *
+     * 
      * @param node
      * @return an IFolder or null
      */
@@ -3211,7 +3214,7 @@ public final class RepositoryNodeHelper {
 
     /**
      * get the IFile according to the RepositoryNode.
-     *
+     * 
      * @param node
      * @return an IFile or null
      */
@@ -3250,7 +3253,7 @@ public final class RepositoryNodeHelper {
 
     /**
      * DOC xqliu Comment method "getFileExtension".
-     *
+     * 
      * @param item
      * @return
      */
@@ -3266,7 +3269,7 @@ public final class RepositoryNodeHelper {
 
     /**
      * restore Connection which is corrupted.
-     *
+     * 
      * @param property
      */
     public static void restoreCorruptedConn(Property property) {
@@ -3300,7 +3303,7 @@ public final class RepositoryNodeHelper {
 
     /**
      * replace old Connection which contain in it.
-     *
+     * 
      * @param folderItem
      * @param property
      * @return which should be remove object. null mean that replace is faile.
@@ -3332,7 +3335,7 @@ public final class RepositoryNodeHelper {
 
     /**
      * if the IRepositoryNode is locked by current user, return true, else return false.
-     *
+     * 
      * @param node
      * @return
      * @deprecated use instead of
@@ -3360,7 +3363,7 @@ public final class RepositoryNodeHelper {
 
     /**
      * if the ModelElement is locked by current user, return true, else return false.
-     *
+     * 
      * @param modelElement
      * @return
      * @deprecated use instead of
@@ -3373,7 +3376,7 @@ public final class RepositoryNodeHelper {
 
     /**
      * if the IRepositoryNode is locked by other user, return true, else return false.
-     *
+     * 
      * @param node
      * @return
      * @deprecated use instead of
@@ -3401,7 +3404,7 @@ public final class RepositoryNodeHelper {
 
     /**
      * if the ModelElement is locked by other user, return true, else return false.
-     *
+     * 
      * @param modelElement
      * @return
      * @deprecated use instead of
@@ -3414,7 +3417,7 @@ public final class RepositoryNodeHelper {
 
     /**
      * plus the label +"_"+ version +"." + file extension
-     *
+     * 
      * @param node
      * @return
      */
@@ -3427,9 +3430,9 @@ public final class RepositoryNodeHelper {
     }
 
     /**
-     *
+     * 
      * Get selected names and split with "/". .e.g,onnection/catalog/schema/table.
-     *
+     * 
      * @param columnNode
      * @return
      */
@@ -3476,9 +3479,9 @@ public final class RepositoryNodeHelper {
     }
 
     /**
-     *
+     * 
      * Sort the List Strings from back to front and split them with split.
-     *
+     * 
      * @param nameLs
      * @param splitStr
      * @return

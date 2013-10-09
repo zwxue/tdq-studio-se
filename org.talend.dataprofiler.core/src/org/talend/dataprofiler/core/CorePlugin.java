@@ -122,7 +122,7 @@ public class CorePlugin extends AbstractUIPlugin {
 
     /**
      * Getter for repositoryInitialized.
-     *
+     * 
      * @return the repositoryInitialized
      */
     public boolean isRepositoryInitialized() {
@@ -137,7 +137,7 @@ public class CorePlugin extends AbstractUIPlugin {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see org.eclipse.ui.plugin.AbstractUIPlugin#start(org.osgi.framework.BundleContext )
      */
     @SuppressWarnings("restriction")
@@ -159,7 +159,7 @@ public class CorePlugin extends AbstractUIPlugin {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see org.eclipse.ui.plugin.AbstractUIPlugin#stop(org.osgi.framework.BundleContext )
      */
     @Override
@@ -170,7 +170,7 @@ public class CorePlugin extends AbstractUIPlugin {
 
     /**
      * Returns the shared instance.
-     *
+     * 
      * @return the shared instance
      */
     public static CorePlugin getDefault() {
@@ -179,7 +179,7 @@ public class CorePlugin extends AbstractUIPlugin {
 
     /**
      * Returns an image descriptor for the image file at the given plug-in relative path.
-     *
+     * 
      * @param path the path
      * @return the image descriptor
      */
@@ -189,7 +189,7 @@ public class CorePlugin extends AbstractUIPlugin {
 
     /**
      * DOC Zqin Comment method "getCurrentActiveEditor".
-     *
+     * 
      * @return the current active editor;
      */
     public IEditorPart getCurrentActiveEditor() {
@@ -198,7 +198,7 @@ public class CorePlugin extends AbstractUIPlugin {
 
     /**
      * DOC Zqin Comment method "runInDQViewer". this method open DQ responsitory view and run the specified query.
-     *
+     * 
      * @param tdDataProvider
      * @param query
      */
@@ -211,7 +211,7 @@ public class CorePlugin extends AbstractUIPlugin {
 
     /**
      * DOC bZhou Comment method "openInSqlEditor".
-     *
+     * 
      * @param tdDataProvider
      * @param query
      * @param editorName
@@ -318,7 +318,7 @@ public class CorePlugin extends AbstractUIPlugin {
 
     /**
      * if the sqlexplorer driver is unRegisted,load the driver jar by lib manage system.
-     *
+     * 
      * @param sqlPlugin
      * @param connection
      * @param databaseConnection
@@ -337,7 +337,7 @@ public class CorePlugin extends AbstractUIPlugin {
 
     /**
      * DOC bZhou Comment method "openEditor".
-     *
+     * 
      * @param file
      * @param editorId
      * @return
@@ -357,7 +357,7 @@ public class CorePlugin extends AbstractUIPlugin {
 
     /**
      * DOC mzhao open editor with editor input.
-     *
+     * 
      * @param editorInput
      * @param editorId
      * @return
@@ -373,7 +373,7 @@ public class CorePlugin extends AbstractUIPlugin {
 
     /**
      * DOC bzhou Comment method "getRepositoryView".
-     *
+     * 
      * @return
      */
     public DQRespositoryView getRepositoryView() {
@@ -383,7 +383,7 @@ public class CorePlugin extends AbstractUIPlugin {
 
     /**
      * DOC bzhou Comment method "getPatternTestView".
-     *
+     * 
      * @return
      */
     public PatternTestView getPatternTestView() {
@@ -422,8 +422,9 @@ public class CorePlugin extends AbstractUIPlugin {
     }
 
     /**
-     * refresh the object of DQReposirotyView.
-     *
+     * refresh the object's status in the DQReposirotyView(if this object is null, then refresh all the
+     * DQReposirotyView).
+     * 
      * @param object
      */
     public void refreshDQView(Object object) {
@@ -441,7 +442,7 @@ public class CorePlugin extends AbstractUIPlugin {
 
     /**
      * DOC bzhou Comment method "getProductVersion".
-     *
+     * 
      * @return
      */
     public ProductVersion getProductVersion() {
@@ -451,7 +452,7 @@ public class CorePlugin extends AbstractUIPlugin {
 
     /**
      * DOC qiongli close editor by file.
-     *
+     * 
      * @param fileRes
      */
     public void closeEditorIfOpened(Item item) {
@@ -460,7 +461,7 @@ public class CorePlugin extends AbstractUIPlugin {
 
     /**
      * check the item's editor is opening or not.
-     *
+     * 
      * @param item
      * @return
      */
@@ -470,7 +471,7 @@ public class CorePlugin extends AbstractUIPlugin {
 
     /**
      * check the item's editor is opening or not.
-     *
+     * 
      * @param item
      * @param closeEditor close the editor if it is opening
      * @return
@@ -536,9 +537,9 @@ public class CorePlugin extends AbstractUIPlugin {
     }
 
     /**
-     *
+     * 
      * refresh the related connection which is opened in DQ side.
-     *
+     * 
      * @param item
      */
     public void refreshOpenedEditor(Item item) {
@@ -696,7 +697,7 @@ public class CorePlugin extends AbstractUIPlugin {
 
     /**
      * copy the method from ProxyRepositoryFactory to avoid tos migeration.
-     *
+     * 
      * @param fileName
      * @param pattern
      */
