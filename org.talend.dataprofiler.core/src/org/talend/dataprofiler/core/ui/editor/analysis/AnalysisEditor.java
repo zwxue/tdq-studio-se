@@ -146,11 +146,18 @@ public class AnalysisEditor extends CommonFormEditor {
         default:
 
         }
-
         try {
             if (masterPage != null) {
                 addPage(masterPage);
                 setPartName(masterPage.getIntactElemenetName());
+                // Added 20130930 TDQ-8117, yyin
+                // init the run analysis action, to give it the analysis item and listener
+                TDQAnalysisItem item = (TDQAnalysisItem) masterPage.getAnalysisRepNode().getObject().getProperty().getItem();
+                this.runAction.setAnalysisItem(item);
+                // activePageInstance = getActivePageInstance();
+                // if (activePageInstance instanceof IRuningStatusListener) {
+                runAction.setListener(masterPage);
+                // }
             }
 
             if (resultPage != null) {
@@ -163,6 +170,7 @@ public class AnalysisEditor extends CommonFormEditor {
         }
         // Added 20130725 TDQ-7639 yyin : register the run analysis event, which need to refresh the pages
         registerUpdateExecutionEvent();
+
     }
 
     @Override
@@ -347,6 +355,7 @@ public class AnalysisEditor extends CommonFormEditor {
                     if (masterPage.canSave().isOk()) {
                         // save the analysis before running
                         doSave(null);
+                        setDirty(false);
                     } else {
                         return false;
                     }

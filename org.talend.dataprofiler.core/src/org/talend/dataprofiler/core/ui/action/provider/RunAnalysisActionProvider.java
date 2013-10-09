@@ -17,7 +17,6 @@ import org.eclipse.jface.viewers.TreeSelection;
 import org.talend.core.model.properties.Item;
 import org.talend.dataprofiler.core.ui.action.actions.RunAnalysisAction;
 import org.talend.dataquality.properties.TDQAnalysisItem;
-import org.talend.dq.nodes.AnalysisRepNode;
 import org.talend.dq.nodes.ReportSubFolderRepNode;
 import org.talend.repository.model.RepositoryNode;
 
@@ -36,12 +35,6 @@ public class RunAnalysisActionProvider extends AbstractCommonActionProvider {
         if (!isShowMenu()) {
             return;
         }
-        // Object obj = ((TreeSelection) this.getContext().getSelection()).getFirstElement();
-        // if (obj instanceof IFile) {
-        // runAnalysisAction = new RunAnalysisAction();
-        // runAnalysisAction.setSelectionFile((IFile) obj);
-        // menu.add(runAnalysisAction);
-        // }
         Object obj = ((TreeSelection) this.getContext().getSelection()).getFirstElement();
         RepositoryNode node = (RepositoryNode) obj;
         RepositoryNode parent = node.getParent();
@@ -52,7 +45,7 @@ public class RunAnalysisActionProvider extends AbstractCommonActionProvider {
                 // IFile file = ResourceManager.getRootProject().getFile(append);
                 runAnalysisAction = new RunAnalysisAction();
                 // runAnalysisAction.setSelectionFile(file);
-                runAnalysisAction.setSelectionNode((AnalysisRepNode) node);
+                runAnalysisAction.setAnalysisItem((TDQAnalysisItem) item);
                 menu.add(runAnalysisAction);
             }
         }

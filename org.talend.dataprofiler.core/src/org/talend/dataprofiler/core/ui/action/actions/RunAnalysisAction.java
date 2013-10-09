@@ -32,15 +32,11 @@ import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.cheatsheets.ICheatSheetAction;
 import org.eclipse.ui.cheatsheets.ICheatSheetManager;
-import org.eclipse.ui.forms.editor.IFormPage;
-import org.eclipse.ui.part.FileEditorInput;
 import org.talend.commons.exception.BusinessException;
 import org.talend.commons.exception.LoginException;
 import org.talend.commons.exception.PersistenceException;
 import org.talend.core.model.metadata.builder.connection.Connection;
-import org.talend.core.repository.model.IRepositoryFactory;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
-import org.talend.core.repository.model.RepositoryFactoryProvider;
 import org.talend.cwm.compare.exception.ReloadCompareException;
 import org.talend.cwm.compare.factory.ComparisonLevelFactory;
 import org.talend.cwm.db.connection.ConnectionUtils;
@@ -55,7 +51,6 @@ import org.talend.dataprofiler.core.ui.editor.analysis.AnalysisEditor;
 import org.talend.dataprofiler.core.ui.editor.analysis.AnalysisItemEditorInput;
 import org.talend.dataprofiler.core.ui.events.EventEnum;
 import org.talend.dataprofiler.core.ui.events.EventManager;
-import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisType;
 import org.talend.dataquality.helpers.AnalysisHelper;
 import org.talend.dataquality.properties.TDQAnalysisItem;
@@ -63,9 +58,7 @@ import org.talend.dq.analysis.AnalysisExecutorSelector;
 import org.talend.dq.analysis.connpool.TdqAnalysisConnectionPool;
 import org.talend.dq.helper.ProxyRepositoryManager;
 import org.talend.dq.helper.RepositoryNodeHelper;
-import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
 import org.talend.dq.nodes.AnalysisRepNode;
-import org.talend.repository.model.RepositoryConstants;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.foundation.softwaredeployment.DataManager;
@@ -87,16 +80,12 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
     @Deprecated
     private IFile selectionFile;// no one used
 
-    private AnalysisRepNode node;
-
     private TDQAnalysisItem item;
-
-    // Added TDQ-7551 20130704: for lock/unlock in SVN ask user mode
-    private IEditorPart editor = null;
 
     private boolean isNeedUnlock = false;
 
-    // ~
+    @Deprecated
+    private AnalysisRepNode node;// no need to used
 
     @Deprecated
     public IFile getSelectionFile() {
@@ -108,8 +97,22 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
         this.selectionFile = selectionFile;
     }
 
+    @Deprecated
     public void setSelectionNode(AnalysisRepNode node) {
         this.node = node;
+    }
+
+    /**
+     * DOC yyin Comment method "setAnalysisItem".
+     * 
+     * @param item2
+     */
+    public void setAnalysisItem(TDQAnalysisItem item) {
+        this.item = item;
+    }
+
+    public void setListener(IRuningStatusListener listener) {
+        this.listener = listener;
     }
 
     /**
@@ -128,42 +131,20 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
     @Override
     public void run() {
         try {
-            editor = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
+            if (item == null) {
+                log.error("Analysis item is null"); //$NON-NLS-1$
+                return;
+            }
+            validateAnalysis();
+            if (ifLockByOthers()) {
+                return;
+            }
 
-            if (node != null) {
-                // means it from the context menu "run" which need to select a node
-                // then find the analysis from the node, and not fromt the editor(only one way)
-                item = (TDQAnalysisItem) node.getObject().getProperty().getItem();
-                if (item == null) {
-                    log.error("Analysis item is null"); //$NON-NLS-1$
-                    return;
-                }
-                validateAnalysis();
-                if (ifLockByOthers()) {
-                    return;
-                }
-
-                // check if the analysis need to be saved or can run before real running by the event
-                if (!EventManager.getInstance().publish(item.getAnalysis(), EventEnum.DQ_ANALYSIS_CHECK_BEFORERUN, null)) {
-                    // if the analysis need save but can not be saved, return without continue;
-                    // or the analysis can not run, return without continue
-                    return;
-                }
-
-                // if not from the context menu, then find the analysis from the editor
-            } else if (editor != null && editor instanceof AnalysisEditor) {
-                // only when the current opened editor is the analysis editor type
-                // editor already opened, the run comes from the run button in the editor
-                AnalysisEditor anaEditor = (AnalysisEditor) editor;
-                // check if the analysis editor is dirty or not, if dirty save it before continue running
-                if (!saveAnalysisIfNeeded(anaEditor) || !isAnalysisCanRun(anaEditor)) {
-                    return;
-                }
-
-                IEditorInput editorInput = anaEditor.getEditorInput();
-                item = findAnalysisFromEditorInput(editorInput);
-                // find the listener by the editor
-                listener = findAnalysisListenerFromAnalysisEditor(anaEditor);
+            // check if the analysis need to be saved or can run before real running by the event
+            if (!EventManager.getInstance().publish(item.getAnalysis(), EventEnum.DQ_ANALYSIS_CHECK_BEFORERUN, null)) {
+                // if the analysis need save but can not be saved, return without continue;
+                // or the analysis can not run, return without continue
+                return;
             }
 
             if (item == null || !isConnectedAvailable()) {
@@ -182,9 +163,9 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
             }
 
             // lock the analysis before running it if it is not locked yet.(whenever the editor is not opened)
-            // when the run comes from the button in editor, the node is null;
-            // when the run comes from context menu, the node is not null
-            if (node != null && !ProxyRepositoryManager.getInstance().isLocked(item)) {
+            // when the run comes from the button in editor, the listener is not null;
+            // when the run comes from context menu, the listener is null
+            if (this.listener == null && !ProxyRepositoryManager.getInstance().isLocked(item)) {
                 if (!ProxyRepositoryFactory.getInstance().isEditableAndLockIfPossible(item)) {
                     // if the analysis is not editable , return without running.
                     isNeedUnlock = false;
@@ -260,31 +241,11 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
     }
 
     /**
-     * find TDQAnalysisItem From EditorInput.
-     * 
-     * @param editorInput
-     * @return
-     */
-    private TDQAnalysisItem findAnalysisFromEditorInput(IEditorInput editorInput) {
-        TDQAnalysisItem analysisToFind = null;
-        if (editorInput instanceof FileEditorInput) {
-            IFile afile = ((FileEditorInput) editorInput).getFile();
-            Analysis analysis = AnaResourceFileHelper.getInstance().findAnalysis(afile);
-            analysisToFind = (TDQAnalysisItem) RepositoryNodeHelper.recursiveFindAnalysis(analysis).getObject().getProperty()
-                    .getItem();
-
-        } else if (editorInput instanceof AnalysisItemEditorInput) {
-            analysisToFind = ((TDQAnalysisItem) ((AnalysisItemEditorInput) editorInput).getItem());
-        }
-        return analysisToFind;
-    }
-
-    /**
      * unlock analysis.
      */
     private void unlockAnalysis() {
         try {
-            ProxyRepositoryFactory.getInstance().unlock(node.getObject().getProperty().getItem());
+            ProxyRepositoryFactory.getInstance().unlock(this.item);
         } catch (PersistenceException e) {
             log.error(e, e);
         } catch (LoginException e) {
@@ -346,85 +307,6 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
     }
 
     /**
-     * find Analysis Listener From AnalysisEditor.
-     * 
-     * @param anaEditor
-     * @return
-     */
-    private IRuningStatusListener findAnalysisListenerFromAnalysisEditor(AnalysisEditor anaEditor) {
-        IRuningStatusListener listenerToFind = null;
-        IFormPage activePageInstance = anaEditor.getActivePageInstance();
-        if (activePageInstance instanceof IRuningStatusListener) {
-            listenerToFind = (IRuningStatusListener) activePageInstance;
-        }
-        return listenerToFind;
-    }
-
-    /**
-     * check if the analysis can run when editor is opened, if can not, popup dialog
-     * 
-     * @param anaEditor
-     * @return
-     */
-    private boolean isAnalysisCanRun(AnalysisEditor anaEditor) {
-        ReturnCode canRun = anaEditor.canRun();
-        if (!canRun.isOk()) {
-            MessageDialogWithToggle.openError(null, DefaultMessagesImpl.getString("RunAnalysisAction.runAnalysis"), canRun//$NON-NLS-1$
-                    .getMessage());
-            return false;
-        }
-        return true;
-    }
-
-    /**
-     * save analysis when needed.
-     * 
-     * @param anaEditor
-     * @return
-     */
-    private boolean saveAnalysisIfNeeded(AnalysisEditor anaEditor) {
-        if (anaEditor.isDirty()) {
-            // MOD qiongli 2011-6-20 bug 21533,can save should before method doSave()
-            ReturnCode canSave = anaEditor.getMasterPage().canSave();
-            if (!canSave.isOk()) {
-                MessageDialog.openError(editor.getSite().getShell(),
-                        DefaultMessagesImpl.getString("RunAnalysisAction.runAnalysis"), //$NON-NLS-1$
-                        canSave.getMessage());
-                return false;
-            }
-            // ~
-            try {
-                saveBeforeRun(anaEditor);
-            } catch (Exception e) {
-                log.error(e, e);
-                return false;
-            }
-        }
-        return true;
-    }
-
-    /**
-     * Save the analysis before run the analysis.
-     * 
-     * @param anaEditor
-     * @throws Exception
-     */
-    private void saveBeforeRun(AnalysisEditor anaEditor) throws Exception {
-        IRepositoryFactory localRepository = RepositoryFactoryProvider
-                .getRepositoriyById(RepositoryConstants.REPOSITORY_LOCAL_ID);
-        IRepositoryFactory oldRepository = ProxyRepositoryFactory.getInstance().getRepositoryFactoryFromProvider();
-        ProxyRepositoryFactory.getInstance().setRepositoryFactoryFromProvider(localRepository);
-        // This save action won't invoke any remote repository action such as svn commit. TDQ-7508
-        try {
-            anaEditor.doSave(null);
-        } catch (Exception e) {
-            throw e;
-        } finally {
-            ProxyRepositoryFactory.getInstance().setRepositoryFactoryFromProvider(oldRepository);
-        }
-    }
-
-    /**
      * check whether the item is locked by Others.
      * 
      * @return
@@ -432,7 +314,10 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
     private boolean ifLockByOthers() {
         // MOD sizhaoliu TDQ-5452 verify the lock status before running an analysis
         if (ProxyRepositoryManager.getInstance().isLockByOthers(item)) {
-            CorePlugin.getDefault().refreshDQView(node.getParent());
+            RepositoryNode node = RepositoryNodeHelper.recursiveFind(this.item.getProperty());
+            if (node != null) {
+                CorePlugin.getDefault().refreshDQView(node.getParent());
+            }
             MessageDialog.openError(PlatformUI.getWorkbench().getDisplay().getActiveShell(),
                     DefaultMessagesImpl.getString("RunAnalysisAction.runAnalysis"), //$NON-NLS-1$
                     DefaultMessagesImpl.getString("RunAnalysisAction.error.lockByOthers")); //$NON-NLS-1$
@@ -466,11 +351,15 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
         // ADD mzhao 2009-02-03 If there is no active editor opened, run
         // analysis action from cheat sheets will do nothing.
         IEditorPart activateEditor = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
-        if (activateEditor == null) {
+        if (activateEditor == null || !(activateEditor instanceof AnalysisEditor)) {
             return;
         }
-        AnalysisEditor anaEditor = (AnalysisEditor) editor;
-        AbstractAnalysisMetadataPage masterPage = anaEditor.getMasterPage();
+        // MOD TDQ-8117 20131008 yyin: find the analysis item from the editor
+        IEditorInput editorInput = activateEditor.getEditorInput();
+        if (editorInput instanceof AnalysisItemEditorInput) {
+            this.item = ((TDQAnalysisItem) ((AnalysisItemEditorInput) editorInput).getItem());
+        }
+        AbstractAnalysisMetadataPage masterPage = ((AnalysisEditor) activateEditor).getMasterPage();
         listener = masterPage;
         // ~
         run();
@@ -508,4 +397,5 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
             });
         }
     }
+
 }
