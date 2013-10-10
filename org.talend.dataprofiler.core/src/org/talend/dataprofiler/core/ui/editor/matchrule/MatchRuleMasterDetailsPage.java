@@ -14,8 +14,6 @@ package org.talend.dataprofiler.core.ui.editor.matchrule;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.util.ArrayList;
-import java.util.List;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.swt.widgets.Composite;
@@ -25,7 +23,6 @@ import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.part.FileEditorInput;
 import org.talend.core.model.properties.Item;
-import org.talend.core.model.properties.Property;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.editor.AbstractMetadataFormPage;
@@ -36,8 +33,6 @@ import org.talend.dataquality.record.linkage.ui.section.definition.BlockingKeyDe
 import org.talend.dataquality.record.linkage.ui.section.definition.DefaultSurvivorshipDefinitionSection;
 import org.talend.dataquality.record.linkage.ui.section.definition.MatchKeyDefinitionSection;
 import org.talend.dataquality.record.linkage.ui.section.definition.SurvivorshipDefinitionSection;
-import org.talend.dataquality.rules.BlockKeyDefinition;
-import org.talend.dataquality.rules.MatchRule;
 import org.talend.dataquality.rules.MatchRuleDefinition;
 import org.talend.dq.helper.resourcehelper.DQRuleResourceFileHelper;
 import org.talend.dq.writer.impl.ElementWriterFactory;
@@ -93,7 +88,6 @@ public class MatchRuleMasterDetailsPage extends AbstractMetadataFormPage impleme
 
         if (PluginConstant.ISDIRTY_PROPERTY.equals(evt.getPropertyName())) {
             this.setDirty(true);
-
         }
     }
 
@@ -146,7 +140,7 @@ public class MatchRuleMasterDetailsPage extends AbstractMetadataFormPage impleme
     @Override
     public void setDirty(boolean isDirty) {
         this.isDirty = isDirty;
-        if (isDirty == true) {
+        if (isDirty) {
             ((DQRuleEditor) this.getEditor()).firePropertyChange(IEditorPart.PROP_DIRTY);
         }
     }
@@ -181,6 +175,7 @@ public class MatchRuleMasterDetailsPage extends AbstractMetadataFormPage impleme
 
         createDefaultSurvivorshipSection(topComp);
         selectAlgorithmSection.setDefaultSurvivorshipDefinitionSection(defaultSurvivorshipDefinitionSection);
+
     }
 
     /**
@@ -207,7 +202,7 @@ public class MatchRuleMasterDetailsPage extends AbstractMetadataFormPage impleme
         survivorshipDefinitionSection.setMatchRuleDef((MatchRuleDefinition) getCurrentModelElement(getEditor()));
         survivorshipDefinitionSection.createContent();
         survivorshipDefinitionSection.addPropertyChangeListener(this);
-        survivorshipDefinitionSection.getSection().setVisible(!selectAlgorithmSection.isVSRMode());
+        survivorshipDefinitionSection.changeSectionDisStatus(!selectAlgorithmSection.isVSRMode());
         survivorshipDefinitionSection.getSection().setExpanded(true);
     }
 
@@ -216,21 +211,8 @@ public class MatchRuleMasterDetailsPage extends AbstractMetadataFormPage impleme
         defaultSurvivorshipDefinitionSection.setMatchRuleDef((MatchRuleDefinition) getCurrentModelElement(getEditor()));
         defaultSurvivorshipDefinitionSection.createContent();
         defaultSurvivorshipDefinitionSection.addPropertyChangeListener(this);
-        defaultSurvivorshipDefinitionSection.getSection().setVisible(!selectAlgorithmSection.isVSRMode());
+        defaultSurvivorshipDefinitionSection.changeSectionDisStatus(!selectAlgorithmSection.isVSRMode());
         defaultSurvivorshipDefinitionSection.getSection().setExpanded(true);
-    }
-
-    /**
-     * DOC zshen Comment method "getMatchRuleList".
-     * 
-     * @return
-     */
-    private List<MatchRule> getMatchRuleList() {
-        getCurrentModelElement(this.getEditor());
-        if (this.currentModelElement != null && this.currentModelElement instanceof MatchRuleDefinition) {
-            return ((MatchRuleDefinition) this.currentModelElement).getMatchRules();
-        }
-        return new ArrayList<MatchRule>();
     }
 
     /**
@@ -243,15 +225,8 @@ public class MatchRuleMasterDetailsPage extends AbstractMetadataFormPage impleme
         blockingKeyDefinitionSection.setMatchRuleDef((MatchRuleDefinition) getCurrentModelElement(getEditor()));
         blockingKeyDefinitionSection.createContent();
         blockingKeyDefinitionSection.addPropertyChangeListener(this);
+        blockingKeyDefinitionSection.changeSectionDisStatus(selectAlgorithmSection.isVSRMode());
         blockingKeyDefinitionSection.getSection().setExpanded(true);
-    }
-
-    private List<BlockKeyDefinition> getBlockKeyDefinitionList() {
-        getCurrentModelElement(this.getEditor());
-        if (this.currentModelElement != null && this.currentModelElement instanceof MatchRuleDefinition) {
-            return ((MatchRuleDefinition) this.currentModelElement).getBlockKeys();
-        }
-        return new ArrayList<BlockKeyDefinition>();
     }
 
     /**
@@ -311,16 +286,6 @@ public class MatchRuleMasterDetailsPage extends AbstractMetadataFormPage impleme
             return (TDQMatchRuleItem) item;
         }
         return null;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.talend.dataprofiler.core.ui.editor.AbstractMetadataFormPage#getCurrentProperty()
-     */
-    @Override
-    protected Property getCurrentProperty() {
-        return this.getProperty();
     }
 
 }

@@ -14,12 +14,12 @@ package org.talend.dataquality.record.linkage.constant;
 
 /**
  * @author scorreia
- *
+ * 
  * The names of the available record matchers.
  */
 public enum RecordMatcherType {
     simpleVSRMatcher("Simple VSR Matcher"), //$NON-NLS-1$
-    T_SwooshAlgorithm("T-Swoosh algorithm"); //$NON-NLS-1$
+    MDMT_SwooshAlgorithm("MDM T-Swoosh Algorithm"); //$NON-NLS-1$
 
     private final String label;
 
@@ -29,7 +29,7 @@ public enum RecordMatcherType {
 
     /**
      * Getter for label.
-     *
+     * 
      * @return the label
      */
     public String getLabel() {
@@ -38,7 +38,7 @@ public enum RecordMatcherType {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see java.lang.Enum#toString()
      */
     @Override

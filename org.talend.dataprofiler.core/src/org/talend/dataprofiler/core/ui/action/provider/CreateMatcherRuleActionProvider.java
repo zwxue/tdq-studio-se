@@ -21,13 +21,11 @@ import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.IRepositoryNode.ENodeType;
 import org.talend.repository.model.RepositoryNode;
 
-
-
 public class CreateMatcherRuleActionProvider extends AbstractCommonActionProvider {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see org.eclipse.ui.actions.ActionGroup#fillContextMenu(org.eclipse.jface.action.IMenuManager)
      */
     @Override

@@ -31,13 +31,13 @@ public class CombinedRecordMatcherTest {
 
     private static final boolean DEBUG = false;
 
-    private static final String[][] MAINRECORDS = { { "seb", "talend", "suresnes", "data not used in record matching" },
-            { "seb", "talend", "suresns", null }, { "seb", "tlend", "sursnes", null }, { "sebas", "taland", "suresnes", null },
-            { "seb", "tlend", "sursnes", null }, { "sebas", "taland", "suresnes", null },
-            { "babass", "Atlend", "sursene", null }, { "Sebastião", "talènd", "Suresnes", "comment" }, };
+    private static final String[][] MAINRECORDS = { { "seb", "talend", "suresnes", "data not used in record matching" }, //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+            { "seb", "talend", "suresns", null }, { "seb", "tlend", "sursnes", null }, { "sebas", "taland", "suresnes", null }, //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$ //$NON-NLS-9$
+            { "seb", "tlend", "sursnes", null }, { "sebas", "taland", "suresnes", null }, //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
+            { "babass", "Atlend", "sursene", null }, { "Sebastião", "talènd", "Suresnes", "comment" }, }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$
 
     // the algorithms selected by the user for each of the 3 match keys
-    private static final String[] ATTRIBUTEMATCHERALGORITHMS = { "EXACT", "DOUBLE_METAPHONE", "LEVENSHTEIN", "SOUNDEX" };
+    private static final String[] ATTRIBUTEMATCHERALGORITHMS = { "EXACT", "DOUBLE_METAPHONE", "LEVENSHTEIN", "SOUNDEX" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 
     // the weights given by the user to each of the 3 match key.
     private static final double[] ATTRIBUTEWEIGHTS_1 = { 30, 10, 0, 0 };
@@ -79,11 +79,11 @@ public class CombinedRecordMatcherTest {
 
         // compare the number of matches for each matcher
         int nbMatch2 = countMatches(matcherWeigths);
-        Assert.assertNotSame("The two matchers should not have the same match count", nbMatch1, nbMatch2);
+        Assert.assertNotSame("The two matchers should not have the same match count", nbMatch1, nbMatch2); //$NON-NLS-1$
 
         // create a third simple matcher and do the same
         IRecordMatcher recMatcher3 = RecordMatcherFactory.createMatcher(RecordMatcherType.simpleVSRMatcher, new String[] {
-                "DUMMY", "DUMMY", "DUMMY", "EXACT" }, new double[] { 0, 0, 0, 1 });
+                "DUMMY", "DUMMY", "DUMMY", "EXACT" }, new double[] { 0, 0, 0, 1 }); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
         recMatcher3.setRecordMatchThreshold(MATCH_THRESHOLD);
         matcherWeigths = computeWeights(recMatcher3);
 
@@ -94,8 +94,8 @@ public class CombinedRecordMatcherTest {
 
         // compare the number of matches for each matcher
         int nbMatch3 = countMatches(matcherWeigths);
-        Assert.assertNotSame("The two matchers should not have the same match count. " + nbMatch1, nbMatch1, nbMatch3);
-        Assert.assertNotSame("The two matchers should not have the same match count. " + nbMatch2, nbMatch2, nbMatch3);
+        Assert.assertNotSame("The two matchers should not have the same match count. " + nbMatch1, nbMatch1, nbMatch3); //$NON-NLS-1$
+        Assert.assertNotSame("The two matchers should not have the same match count. " + nbMatch2, nbMatch2, nbMatch3); //$NON-NLS-1$
 
         // combine them
         CombinedRecordMatcher combMatcher = RecordMatcherFactory.createCombinedRecordMatcher();
@@ -118,7 +118,7 @@ public class CombinedRecordMatcherTest {
         System.out.println(reverseCombMatcher);
 
         int nbMatchReverse = countMatches(combMatcher);
-        Assert.assertEquals("The order of matcher should not change the number of matches", nbMatch, nbMatchReverse);
+        Assert.assertEquals("The order of matcher should not change the number of matches", nbMatch, nbMatchReverse); //$NON-NLS-1$
 
     }
 
@@ -184,14 +184,14 @@ public class CombinedRecordMatcherTest {
                 }
 
                 System.out.print(NumberFormat.getNumberInstance().format(value));
-                System.out.print("\t");
+                System.out.print("\t"); //$NON-NLS-1$
                 if (useThreshold && i == j) {
-                    Assert.assertEquals("Diagonal weights should be one", 1.0d, value);
+                    Assert.assertEquals("Diagonal weights should be one", 1.0d, value); //$NON-NLS-1$
                 }
             }
             System.out.println();
         }
-        System.out.println("nb match = " + nbMatch + " over " + MAINRECORDS.length * MAINRECORDS.length + " comparisons");
+        System.out.println("nb match = " + nbMatch + " over " + MAINRECORDS.length * MAINRECORDS.length + " comparisons"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
         System.out.println();
         return nbMatch;
     }
@@ -213,9 +213,9 @@ public class CombinedRecordMatcherTest {
                     // print details
                     StringBuffer buf = new StringBuffer();
                     buf.append(SimpleVSRRecordMatcherTest.printRecord(record1));
-                    buf.append(" ~ ");
+                    buf.append(" ~ "); //$NON-NLS-1$
                     buf.append(SimpleVSRRecordMatcherTest.printRecord(record2));
-                    buf.append(" ; \tweight= " + matchingWeight);
+                    buf.append(" ; \tweight= " + matchingWeight); //$NON-NLS-1$
                     System.out.println(buf.toString());
                 }
             }
@@ -244,13 +244,13 @@ public class CombinedRecordMatcherTest {
 
         IRecordMatcher recMatcher2 = RecordMatcherFactory.createMatcher(RecordMatcherType.simpleVSRMatcher,
                 ATTRIBUTEMATCHERALGORITHMS, new double[] { 1.0, 3.0 });
-        Assert.assertNull("cannot create a matcher like this", recMatcher2);
-        recMatcher2 = RecordMatcherFactory.createMatcher(RecordMatcherType.simpleVSRMatcher, new String[] { "EXACT", "EXACT" },
+        Assert.assertNull("cannot create a matcher like this", recMatcher2); //$NON-NLS-1$
+        recMatcher2 = RecordMatcherFactory.createMatcher(RecordMatcherType.simpleVSRMatcher, new String[] { "EXACT", "EXACT" }, //$NON-NLS-1$ //$NON-NLS-2$
                 new double[] { 1.0, 3.0 });
-        Assert.assertFalse("cannot add a matcher with a different size", combMatcher1.add(recMatcher2));
+        Assert.assertFalse("cannot add a matcher with a different size", combMatcher1.add(recMatcher2)); //$NON-NLS-1$
 
-        recMatcher2 = RecordMatcherFactory.createMatcher(RecordMatcherType.simpleVSRMatcher, new String[] { "EXACT", "EXACT",
-                "EXACT", "EXACT" }, ATTRIBUTEWEIGHTS_1);
+        recMatcher2 = RecordMatcherFactory.createMatcher(RecordMatcherType.simpleVSRMatcher, new String[] { "EXACT", "EXACT", //$NON-NLS-1$ //$NON-NLS-2$
+                "EXACT", "EXACT" }, ATTRIBUTEWEIGHTS_1); //$NON-NLS-1$ //$NON-NLS-2$
         Assert.assertTrue(combMatcher1.add(recMatcher2));
 
     }
@@ -264,7 +264,7 @@ public class CombinedRecordMatcherTest {
     public void testSetAttributeMatchers() {
         for (RecordMatcherType type : RecordMatcherType.values()) {
             // FIXME no RecordMatcher exists for T_SwooshAlgorithm currently
-            if (RecordMatcherType.T_SwooshAlgorithm.equals(type)) {
+            if (RecordMatcherType.MDMT_SwooshAlgorithm.equals(type)) {
                 continue;
             }
             IRecordMatcher recMatcher = RecordMatcherFactory.createMatcher(type, ATTRIBUTEMATCHERALGORITHMS, ATTRIBUTEWEIGHTS_1);
@@ -275,10 +275,10 @@ public class CombinedRecordMatcherTest {
             Assert.assertTrue(recMatcher.setAttributeWeights(new double[] { 3, 2, 0, 3 }));
             CombinedRecordMatcher combMatcher = RecordMatcherFactory.createCombinedRecordMatcher();
             checkAttributeMatching(0.0d, combMatcher);
-            Assert.assertFalse("the attribute weights of a combined matcher cannot be modified",
+            Assert.assertFalse("the attribute weights of a combined matcher cannot be modified", //$NON-NLS-1$
                     combMatcher.setAttributeWeights(new double[] { 3, 2, 0, 3 }));
             combMatcher.add(recMatcher);
-            Assert.assertFalse("the attribute weights of a combined matcher cannot be modified",
+            Assert.assertFalse("the attribute weights of a combined matcher cannot be modified", //$NON-NLS-1$
                     combMatcher.setAttributeWeights(new double[] { 3, 2, 0, 3 }));
         }
 
@@ -287,7 +287,7 @@ public class CombinedRecordMatcherTest {
     private void checkAttributeMatching(double expectedValue, IRecordMatcher recMatcher) {
         Assert.assertFalse(recMatcher.setAttributeWeights(new double[] { 3, 2, 0 }));
 
-        String[][] records = { { "a", "a", "a", "a" }, { "a", "a", null, "a" }, { "a", "a", "", "a" }, { "a", "a", "b", "a" } };
+        String[][] records = { { "a", "a", "a", "a" }, { "a", "a", null, "a" }, { "a", "a", "", "a" }, { "a", "a", "b", "a" } }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$ //$NON-NLS-9$ //$NON-NLS-10$ //$NON-NLS-11$ //$NON-NLS-12$ //$NON-NLS-13$ //$NON-NLS-14$ //$NON-NLS-15$
         for (String[] rec1 : records) {
             for (String[] rec2 : records) {
                 double matchingWeight = recMatcher.getMatchingWeight(rec1, rec2);
@@ -298,19 +298,19 @@ public class CombinedRecordMatcherTest {
 
     @Test
     public void testgetLabeledAttributeMatchWeights() {
-        IAttributeMatcher attMatcher1 = AttributeMatcherFactory.createMatcher("EXACT");
-        IAttributeMatcher attMatcher2 = AttributeMatcherFactory.createMatcher("EXACT");
+        IAttributeMatcher attMatcher1 = AttributeMatcherFactory.createMatcher("EXACT"); //$NON-NLS-1$
+        IAttributeMatcher attMatcher2 = AttributeMatcherFactory.createMatcher("EXACT"); //$NON-NLS-1$
 
-        IRecordMatcher recordMatcher = RecordMatcherFactory.createMatcher("Simple VSR Matcher");
+        IRecordMatcher recordMatcher = RecordMatcherFactory.createMatcher("Simple VSR Matcher"); //$NON-NLS-1$
 
         IAttributeMatcher[] attrMatchers = new IAttributeMatcher[] { attMatcher1, attMatcher2 };
-        Assert.assertFalse("record size is not set. It's not allowed to set the attribute matchers",
+        Assert.assertFalse("record size is not set. It's not allowed to set the attribute matchers", //$NON-NLS-1$
                 recordMatcher.setAttributeMatchers(attrMatchers));
         recordMatcher.setRecordSize(2);
-        Assert.assertTrue("The record size is now set. It's allowed to set the attribute matchers",
+        Assert.assertTrue("The record size is now set. It's allowed to set the attribute matchers", //$NON-NLS-1$
                 recordMatcher.setAttributeMatchers(attrMatchers));
 
-        String[] record1 = { "toto@free.fr", "Tota" };
+        String[] record1 = { "toto@free.fr", "Tota" }; //$NON-NLS-1$ //$NON-NLS-2$
         double[] emptyAttributeMatchingWeights = recordMatcher.getCurrentAttributeMatchingWeights();
         for (double d : emptyAttributeMatchingWeights) {
             Assert.assertEquals(0.0d, d);
@@ -326,15 +326,15 @@ public class CombinedRecordMatcherTest {
         for (double d : currentAttributeMatchingWeights) {
             Assert.assertEquals(1.0, d);
         }
-        Assert.assertEquals("1.0|1.0", recordMatcher.getLabeledAttributeMatchWeights());
+        Assert.assertEquals("1.0|1.0", recordMatcher.getLabeledAttributeMatchWeights()); //$NON-NLS-1$
 
-        attMatcher1.setAttributeName("EMAIL");
-        attMatcher2.setAttributeName("NAME");
+        attMatcher1.setAttributeName("EMAIL"); //$NON-NLS-1$
+        attMatcher2.setAttributeName("NAME"); //$NON-NLS-1$
         recordMatcher.setDisplayLabels(true);
-        Assert.assertEquals("EMAIL: 1.0|NAME: 1.0", recordMatcher.getLabeledAttributeMatchWeights());
+        Assert.assertEquals("EMAIL: 1.0|NAME: 1.0", recordMatcher.getLabeledAttributeMatchWeights()); //$NON-NLS-1$
 
         CombinedRecordMatcher combMatcher = RecordMatcherFactory.createCombinedRecordMatcher();
-        IRecordMatcher recordMatcher2 = RecordMatcherFactory.createMatcher("Simple VSR Matcher");
+        IRecordMatcher recordMatcher2 = RecordMatcherFactory.createMatcher("Simple VSR Matcher"); //$NON-NLS-1$
         recordMatcher2.setRecordSize(2);
         recordMatcher2.setAttributeMatchers(attrMatchers);
         combMatcher.add(recordMatcher);
@@ -342,9 +342,9 @@ public class CombinedRecordMatcherTest {
 
         Assert.assertEquals(1.0d, combMatcher.getMatchingWeight(record1, record1));
         combMatcher.setDisplayLabels(Boolean.FALSE);
-        Assert.assertEquals("1.0|1.0", combMatcher.getLabeledAttributeMatchWeights());
+        Assert.assertEquals("1.0|1.0", combMatcher.getLabeledAttributeMatchWeights()); //$NON-NLS-1$
         combMatcher.setDisplayLabels(Boolean.TRUE);
-        Assert.assertEquals("EMAIL: 1.0|NAME: 1.0", combMatcher.getLabeledAttributeMatchWeights());
+        Assert.assertEquals("EMAIL: 1.0|NAME: 1.0", combMatcher.getLabeledAttributeMatchWeights()); //$NON-NLS-1$
 
     }
 }

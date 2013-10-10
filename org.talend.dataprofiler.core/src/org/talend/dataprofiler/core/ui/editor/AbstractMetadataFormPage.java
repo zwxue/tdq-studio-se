@@ -41,7 +41,6 @@ import org.talend.commons.emf.EmfHelper;
 import org.talend.commons.exception.BusinessException;
 import org.talend.commons.utils.WorkspaceUtils;
 import org.talend.core.model.metadata.builder.database.DqRepositoryViewService;
-import org.talend.core.model.properties.Item;
 import org.talend.core.model.properties.Property;
 import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.model.repository.RepositoryViewObject;
@@ -174,8 +173,8 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
 
     protected abstract ModelElement getCurrentModelElement(FormEditor editor);
 
-    protected Section creatMetadataSection(final ScrolledForm form, Composite topComp) {
-        Section section = createSection(form, topComp, getMetadataTitle(), ""); //$NON-NLS-1$
+    protected Section creatMetadataSection(final ScrolledForm currentform, Composite parentCom) {
+        Section section = createSection(currentform, topComp, getMetadataTitle(), ""); //$NON-NLS-1$
         Composite parent = toolkit.createComposite(section);
         parent.setLayout(new GridLayout(2, false));
 
@@ -332,7 +331,7 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
             // MOD sizhaoliu TDQ-7454 disallow the system indicator renaming to avoid i18n problems
             if (DefinitionPackage.eINSTANCE.getIndicatorDefinition().equals(currentModelElement.eClass())) {
                 nameText.setEditable(false);
-                nameText.setText(name == null ? PluginConstant.EMPTY_STRING : Messages.getString(name.replace(" ", ".")));
+                nameText.setText(name == null ? PluginConstant.EMPTY_STRING : Messages.getString(name.replace(" ", "."))); //$NON-NLS-1$ //$NON-NLS-2$
             } else {
                 // MOD klliu 2010-04-21 bug 20204 get the init value
                 setOldDataproviderName(nameText.getText());
@@ -383,7 +382,7 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
 
         // if (currentModelElement instanceof Connection) {
         // Property property = PropertyHelper.getProperty(currentModelElement);
-        Property property = getCurrentProperty();
+        Property property = getProperty();
         if (property != null) {
             // MOD sizhaoliu TDQ-7454 disallow the system indicator renaming to avoid i18n problems
             if (!DefinitionPackage.eINSTANCE.getIndicatorDefinition().equals(currentModelElement.eClass())) {
@@ -429,11 +428,11 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
     }
 
     protected Control getFocusControl() {
-        IManagedForm form = getManagedForm();
-        if (form == null) {
+        IManagedForm managedForm = getManagedForm();
+        if (managedForm == null) {
             return null;
         }
-        Control control = form.getForm();
+        Control control = managedForm.getForm();
         if (control == null || control.isDisposed()) {
             return null;
         }
@@ -468,8 +467,8 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
      * 
      * @param formTitle the formTitle to set
      */
-    public void setFormTitle(String formTitle) {
-        this.formTitle = formTitle;
+    public void setFormTitle(String formTitleParameter) {
+        this.formTitle = formTitleParameter;
     }
 
     /**
@@ -486,8 +485,8 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
      * 
      * @param metadataTitle the metadataTitle to set
      */
-    protected void setMetadataTitle(String metadataTitle) {
-        this.metadataTitle = metadataTitle;
+    protected void setMetadataTitle(String metadataTitleParameter) {
+        this.metadataTitle = metadataTitleParameter;
     }
 
     /**
@@ -503,8 +502,8 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
         return this.oldDataproviderName;
     }
 
-    public void setOldDataproviderName(String oldDataproviderName) {
-        this.oldDataproviderName = oldDataproviderName;
+    public void setOldDataproviderName(String oldName) {
+        this.oldDataproviderName = oldName;
     }
 
     public boolean isNameTextUpdate() {
@@ -599,7 +598,7 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
         return ret;
     }
 
-    public void setModify(boolean modify) {
-        this.modify = modify;
+    public void setModify(boolean modifyValue) {
+        this.modify = modifyValue;
     }
 }
