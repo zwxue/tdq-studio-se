@@ -1,12 +1,11 @@
 /*
  * Copyright (C) 2006-2013 Talend Inc. - www.talend.com
- *
+ * 
  * This source code is available under agreement available at
  * %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
- *
- * You should have received a copy of the agreement
- * along with this program; if not, write to Talend SA
- * 9 rue Pages 92150 Suresnes, France
+ * 
+ * You should have received a copy of the agreement along with this program; if not, write to Talend SA 9 rue Pages
+ * 92150 Suresnes, France
  */
 
 package org.talend.dataquality.record.linkage.attribute;
@@ -39,20 +38,20 @@ public class SubstringAttributeMatcher implements IAttributeMatcher {
      * <p>
      * If <code>endIndex</code> is greater than the provided string, it is replaced by the size of the string.
      * </p>
-     *
-     * @param delegate   An other {@link IAttributeMatcher} implementation.
+     * 
+     * @param delegate An other {@link IAttributeMatcher} implementation.
      * @param beginIndex The begin index for the substring (inclusive).
-     * @param endIndex   The end index for the substring (exclusive).
+     * @param endIndex The end index for the substring (exclusive).
      * @return A {@link IAttributeMatcher} that performs a substring on provided values.
      * @throws IndexOutOfBoundsException If <code>beginIndex</code> is lower than 0 or if <code>beginIndex</code> is
-     *                                   greater than <code>endIndex</code>.
+     * greater than <code>endIndex</code>.
      */
     public static IAttributeMatcher decorate(IAttributeMatcher delegate, int beginIndex, int endIndex) {
         if (beginIndex < 0) {
-            throw new IndexOutOfBoundsException("Begin index must be greater than 0.");
+            throw new IndexOutOfBoundsException("Begin index must be greater than 0."); //$NON-NLS-1$
         }
         if (beginIndex > endIndex) {
-            throw new IndexOutOfBoundsException("Begin index is greater than end index.");
+            throw new IndexOutOfBoundsException("Begin index is greater than end index."); //$NON-NLS-1$
         }
         return new SubstringAttributeMatcher(delegate, beginIndex, endIndex);
     }

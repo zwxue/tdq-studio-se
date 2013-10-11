@@ -21,6 +21,7 @@ import org.talend.dataquality.record.linkage.constant.AttributeMatcherType;
  * created by scorreia on Jan 7, 2013 Detailled comment
  * 
  */
+@SuppressWarnings("nls")
 public class SoundexMatcherTest {
 
     /**
@@ -35,6 +36,12 @@ public class SoundexMatcherTest {
         String b = "Jon"; //$NON-NLS-1$
         double matchingWeight = soundexMatcher.getMatchingWeight(a, b);
         Assert.assertEquals(1.0d, matchingWeight);
+
+        a = "\n";
+        b = "Hulme";
+        matchingWeight = soundexMatcher.getMatchingWeight(a, b);
+        Assert.assertTrue("input strings are not the same " + a + " and " + b, 0.0d == matchingWeight);
+
     }
 
     /**

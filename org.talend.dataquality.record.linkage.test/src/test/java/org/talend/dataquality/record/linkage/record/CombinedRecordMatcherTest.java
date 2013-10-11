@@ -27,6 +27,7 @@ import org.talend.dataquality.record.linkage.constant.RecordMatcherType;
  * created by scorreia on Jan 17, 2013 Detailled comment
  * 
  */
+@SuppressWarnings("nls")
 public class CombinedRecordMatcherTest {
 
     private static final boolean DEBUG = false;
@@ -262,7 +263,7 @@ public class CombinedRecordMatcherTest {
      */
     @Test
     public void testSetAttributeMatchers() {
-        for (RecordMatcherType type : RecordMatcherType.values()) {
+        for (RecordMatcherType type : RecordMatcherType.values()) { // FIXME handle t-swoosh
             // FIXME no RecordMatcher exists for T_SwooshAlgorithm currently
             if (RecordMatcherType.T_SwooshAlgorithm.equals(type)) {
                 continue;
@@ -294,6 +295,12 @@ public class CombinedRecordMatcherTest {
                 Assert.assertEquals(expectedValue, matchingWeight);
             }
         }
+    }
+
+    @Test
+    public void testCreateMatcherString() {
+        IRecordMatcher recordMatcher = RecordMatcherFactory.createMatcher("Simple VSR Matcher"); //$NON-NLS-1$
+        Assert.assertNotNull("Simple VSR Matcher not created!", recordMatcher);
     }
 
     @Test

@@ -354,7 +354,7 @@ abstract class AbstractRecordMatcher implements IRecordMatcher {
         buf.append(this.getClass().getSimpleName()).append(" Record size:"); //$NON-NLS-1$
         buf.append(this.recordSize).append("\n"); //$NON-NLS-1$
         for (int i = 0; i < usedIndices.length; i++) {
-            buf.append(this.attributeMatchers[i].getMatchType()).append("/"); //$NON-NLS-1$
+            buf.append(this.attributeMatchers[usedIndices[i]].getMatchType()).append("/"); //$NON-NLS-1$
         }
         return buf.toString();
     }

@@ -21,6 +21,7 @@ import org.talend.dataquality.record.linkage.constant.AttributeMatcherType;
  * created by zhao on Apr 16, 2013 Detailled comment
  * 
  */
+@SuppressWarnings("nls")
 public class MetaphoneMatcherTest {
 
     /**
@@ -48,6 +49,11 @@ public class MetaphoneMatcherTest {
         matchingWeight = metaphoneMatcher.getMatchingWeight(a, b);
         Assert.assertTrue("input strings are not the same but Metaphone should not be able to distinguish between " + a + " and "
                 + b, 1.0d == matchingWeight);
+
+        a = "\n";
+        b = "Hulme";
+        matchingWeight = metaphoneMatcher.getMatchingWeight(a, b);
+        Assert.assertTrue("input strings are not the same " + a + " and " + b, 0.0d == matchingWeight);
 
     }
 
