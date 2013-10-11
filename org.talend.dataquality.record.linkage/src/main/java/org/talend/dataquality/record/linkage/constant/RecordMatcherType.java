@@ -19,7 +19,7 @@ package org.talend.dataquality.record.linkage.constant;
  */
 public enum RecordMatcherType {
     simpleVSRMatcher("Simple VSR Matcher"), //$NON-NLS-1$
-    MDMT_SwooshAlgorithm("MDM T-Swoosh Algorithm"); //$NON-NLS-1$
+    T_SwooshAlgorithm("MDM T-Swoosh Algorithm"); //$NON-NLS-1$
 
     private final String label;
 

@@ -264,7 +264,7 @@ public class CombinedRecordMatcherTest {
     public void testSetAttributeMatchers() {
         for (RecordMatcherType type : RecordMatcherType.values()) {
             // FIXME no RecordMatcher exists for T_SwooshAlgorithm currently
-            if (RecordMatcherType.MDMT_SwooshAlgorithm.equals(type)) {
+            if (RecordMatcherType.T_SwooshAlgorithm.equals(type)) {
                 continue;
             }
             IRecordMatcher recMatcher = RecordMatcherFactory.createMatcher(type, ATTRIBUTEMATCHERALGORITHMS, ATTRIBUTEWEIGHTS_1);

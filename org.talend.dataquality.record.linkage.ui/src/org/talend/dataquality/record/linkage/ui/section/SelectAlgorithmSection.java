@@ -82,7 +82,7 @@ public class SelectAlgorithmSection extends AbstractSectionComposite {
         GridDataFactory.fillDefaults().align(SWT.FILL, SWT.FILL).grab(true, true).applyTo(container);
         container.setLayout(gdLayout);
 
-        Button tSwooshButton = toolkit.createButton(container, RecordMatcherType.MDMT_SwooshAlgorithm.getLabel(), SWT.RADIO);
+        Button tSwooshButton = toolkit.createButton(container, RecordMatcherType.T_SwooshAlgorithm.getLabel(), SWT.RADIO);
         if (this.algorithmName == null) {
             this.algorithmName = RecordMatcherType.simpleVSRMatcher.name();
         }
@@ -94,10 +94,10 @@ public class SelectAlgorithmSection extends AbstractSectionComposite {
                 isVSRMode = false;
                 matchKeySection.setAddColumn(true);
                 noticeOtherSection();
-                algorithmName = RecordMatcherType.MDMT_SwooshAlgorithm.name();
+                algorithmName = RecordMatcherType.T_SwooshAlgorithm.name();
                 matchRuleDef.setRecordLinkageAlgorithm(algorithmName);
                 listeners.firePropertyChange(MatchAnalysisConstant.ISDIRTY_PROPERTY, RecordMatcherType.simpleVSRMatcher.name(),
-                        RecordMatcherType.MDMT_SwooshAlgorithm.name());
+                        RecordMatcherType.T_SwooshAlgorithm.name());
 
             }
 
@@ -113,8 +113,8 @@ public class SelectAlgorithmSection extends AbstractSectionComposite {
                 noticeOtherSection();
                 algorithmName = RecordMatcherType.simpleVSRMatcher.name();
                 matchRuleDef.setRecordLinkageAlgorithm(algorithmName);
-                listeners.firePropertyChange(MatchAnalysisConstant.ISDIRTY_PROPERTY,
-                        RecordMatcherType.MDMT_SwooshAlgorithm.name(), RecordMatcherType.simpleVSRMatcher.name());
+                listeners.firePropertyChange(MatchAnalysisConstant.ISDIRTY_PROPERTY, RecordMatcherType.T_SwooshAlgorithm.name(),
+                        RecordMatcherType.simpleVSRMatcher.name());
             }
 
         });
