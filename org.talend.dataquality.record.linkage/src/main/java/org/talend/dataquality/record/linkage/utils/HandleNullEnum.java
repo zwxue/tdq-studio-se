@@ -15,19 +15,25 @@ package org.talend.dataquality.record.linkage.utils;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.talend.dataquality.record.linkage.Messages;
+
 /**
  * the values of the match key's handle null field
  * 
  */
 public enum HandleNullEnum {
-    NULL_MATCH_NULL("nullMatchNull"), //$NON-NLS-1$
-    NULL_MATCH_NONE("nullMatchNone"), //$NON-NLS-1$
-    NULL_MATCH_ALL("nullMatchAll"); //$NON-NLS-1$
+    NULL_MATCH_NULL("nullMatchNull", Messages.getString("HandleNullEnum.NULL_MATCH_NULL")), //$NON-NLS-1$ //$NON-NLS-2$
+    NULL_MATCH_NONE("nullMatchNone", Messages.getString("HandleNullEnum.NULL_MATCH_NONE")), //$NON-NLS-1$ //$NON-NLS-2$
+    NULL_MATCH_ALL("nullMatchAll", Messages.getString("HandleNullEnum.NULL_MATCH_ALL")); //$NON-NLS-1$ //$NON-NLS-2$
 
     private String value;
 
-    HandleNullEnum(String value) {
+    private String label;
+
+    HandleNullEnum(String value, String displayValue) {
         this.value = value;
+        this.label = displayValue;
+
     }
 
     /**
@@ -42,7 +48,7 @@ public enum HandleNullEnum {
     public static String[] getAllTypes() {
         List<String> list = new ArrayList<String>();
         for (HandleNullEnum theType : values()) {
-            list.add(theType.getValue());
+            list.add(theType.getLabel());
         }
         return list.toArray(new String[list.size()]);
     }
@@ -62,6 +68,15 @@ public enum HandleNullEnum {
         }
 
         return null;
+    }
+
+    /**
+     * Getter for label.
+     * 
+     * @return the label
+     */
+    public String getLabel() {
+        return this.label;
     }
 
 }

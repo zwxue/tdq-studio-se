@@ -95,13 +95,15 @@ public abstract class AbstractSectionComposite implements PropertyChangeListener
             listeners.firePropertyChange(MatchAnalysisConstant.MATCH_RULE_TAB_SWITCH, true, false);
         }
     }
-/**
- * change Section Display status when we switch different algorithm
- * 
- */
+
+    /**
+     * change Section Display status when we switch different algorithm
+     * 
+     */
     public void changeSectionDisStatus(boolean isHide) {
         GridData gd = (GridData) getSection().getLayoutData();
         gd.exclude = !isHide;
+        getSection().setExpanded(true);
         getSection().setVisible(isHide);
         getSection().getParent().layout();
     }

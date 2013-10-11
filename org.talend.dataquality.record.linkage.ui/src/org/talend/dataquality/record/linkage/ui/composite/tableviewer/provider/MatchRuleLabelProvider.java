@@ -21,6 +21,7 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
 import org.talend.dataquality.record.linkage.constant.AttributeMatcherType;
+import org.talend.dataquality.record.linkage.utils.HandleNullEnum;
 import org.talend.dataquality.rules.MatchKeyDefinition;
 
 /**
@@ -60,7 +61,7 @@ public class MatchRuleLabelProvider extends LabelProvider implements ITableLabel
             case 4:
                 return String.valueOf(mkd.getConfidenceWeight());
             case 5:
-                return mkd.getHandleNull();
+                return HandleNullEnum.getTypeByValue(mkd.getHandleNull()).getLabel();
             }
 
         }

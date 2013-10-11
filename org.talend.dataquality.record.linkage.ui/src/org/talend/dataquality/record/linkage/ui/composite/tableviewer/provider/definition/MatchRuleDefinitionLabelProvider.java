@@ -16,6 +16,7 @@ import org.apache.commons.lang.StringUtils;
 import org.eclipse.swt.graphics.Color;
 import org.talend.dataquality.record.linkage.constant.AttributeMatcherType;
 import org.talend.dataquality.record.linkage.ui.composite.tableviewer.provider.MatchRuleLabelProvider;
+import org.talend.dataquality.record.linkage.utils.HandleNullEnum;
 import org.talend.dataquality.rules.MatchKeyDefinition;
 
 /**
@@ -54,7 +55,7 @@ public class MatchRuleDefinitionLabelProvider extends MatchRuleLabelProvider {
                 case 4:
                     return String.valueOf(mkd.getConfidenceWeight());
                 case 5:
-                    return mkd.getHandleNull();
+                    return HandleNullEnum.getTypeByValue(mkd.getHandleNull()).getLabel();
                 }
             } else {
                 switch (columnIndex) {
@@ -67,7 +68,7 @@ public class MatchRuleDefinitionLabelProvider extends MatchRuleLabelProvider {
                 case 3:
                     return String.valueOf(mkd.getConfidenceWeight());
                 case 4:
-                    return mkd.getHandleNull();
+                    return HandleNullEnum.getTypeByValue(mkd.getHandleNull()).getLabel();
                 }
             }
 
