@@ -23,6 +23,7 @@ import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
+import org.eclipse.nebula.widgets.nattable.util.GUIHelper;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -37,6 +38,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 import org.jfree.util.Log;
 import org.talend.dataprofiler.common.ui.editor.preview.chart.utils.MatchRuleColorRegistry;
+import org.talend.dataquality.record.linkage.ui.composite.utils.ImageLib;
 import org.talend.dataquality.record.linkage.ui.i18n.internal.DefaultMessagesImpl;
 
 /**
@@ -296,7 +298,6 @@ public class MatchRuleDataTable extends Composite {
      */
     private void clearDisGIDList() {
         getDisGIDList().clear();
-
     }
 
     /**
@@ -309,9 +310,20 @@ public class MatchRuleDataTable extends Composite {
          */
         private static final String GRP_SIZE = "GRP_SIZE"; //$NON-NLS-1$
 
+        private Image masterImage = ImageLib.getImage(ImageLib.MASTER_IMAGE);
+
         @Override
         public Image getColumnImage(Object element, int columnIndex) {
-            return null;
+            String size = ((String[]) element)[grpSizeColumn];
+            if (columnIndex == 0) {
+                if ("0".equals(size)) {//$NON-NLS-1$
+                    return null;
+                } else {
+                    return masterImage;
+                }
+            } else {
+                return null;
+            }
         }
 
         @Override
@@ -323,9 +335,18 @@ public class MatchRuleDataTable extends Composite {
             }
         }
 
+        Color textColor = GUIHelper.COLOR_BLACK;
+
+        Color grey = new Color(null, 112, 111, 115);
+
         @Override
-        public org.eclipse.swt.graphics.Color getForeground(Object element, int columnIndex) {
-            return null;
+        public Color getForeground(Object element, int columnIndex) {
+            String size = ((String[]) element)[grpSizeColumn];
+            if ("0".equals(size)) {//$NON-NLS-1$
+                return grey;
+            } else {
+                return GUIHelper.COLOR_BLACK;
+            }
         }
 
         @Override
@@ -335,6 +356,9 @@ public class MatchRuleDataTable extends Composite {
         }
 
         private int getGrpSize(String grpId) {
+            if (itemCount == null) {
+                return 0;
+            }
             return itemCount.get(grpId);
         }
 

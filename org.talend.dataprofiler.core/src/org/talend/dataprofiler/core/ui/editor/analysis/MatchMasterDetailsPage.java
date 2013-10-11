@@ -315,11 +315,11 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
         keySelectionComp.setLayout(keySelectionCompLayout);
 
         selectBlockKeyBtn = toolkit.createButton(keySelectionComp,
-                DefaultMessagesImpl.getString("MatchMasterDetailsPage.SelectBlockingKeyButton"), SWT.NONE);//$NON-NLS-1$
+                DefaultMessagesImpl.getString("MatchMasterDetailsPage.SelectBlockingKeyButton"), SWT.PUSH);//$NON-NLS-1$
         GridDataFactory.fillDefaults().align(SWT.FILL, SWT.TOP).applyTo(selectBlockKeyBtn);
 
         selectMatchKeyBtn = toolkit.createButton(keySelectionComp,
-                DefaultMessagesImpl.getString("MatchMasterDetailsPage.SelectMatchingKeyButton"), SWT.NONE); //$NON-NLS-1$
+                DefaultMessagesImpl.getString("MatchMasterDetailsPage.SelectMatchingKeyButton"), SWT.PUSH); //$NON-NLS-1$
         GridDataFactory.fillDefaults().align(SWT.FILL, SWT.TOP).applyTo(selectMatchKeyBtn);
 
         addListenerForSelectKeyButton();

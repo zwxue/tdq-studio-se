@@ -63,7 +63,9 @@ import org.eclipse.nebula.widgets.nattable.util.GUIHelper;
 import org.eclipse.nebula.widgets.nattable.viewport.ViewportLayer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
@@ -365,9 +367,30 @@ public class DataSampleTable {
         // <groupid, related color>
         private Map<String, Integer> rowOfGIDWithColor = null;
 
+        private String previousGID = null;
+
         public RowBackgroundGroupPainter(ICellPainter painter) {
             super(painter);
             rowOfGIDWithColor = new HashMap<String, Integer>();
+        }
+
+        @Override
+        public void paintCell(ILayerCell cell, GC gc, Rectangle bounds, IConfigRegistry configRegistry) {
+            super.paintCell(cell, gc, bounds, configRegistry);
+
+            // when the GID changed, draw a line
+            String currentGID = getGID(cell);
+            if (currentGID != null) {
+                // only draw a line when the group with same size neighbour with each other
+                if (!StringUtils.equals(previousGID, currentGID) && isEqualGroupSize(previousGID, currentGID)) {
+                    gc.setLineWidth(gc.getLineWidth() * 2);
+                    gc.setLineStyle(SWT.LINE_DOT);
+                    gc.setForeground(GUIHelper.COLOR_BLUE);
+                    gc.drawLine(bounds.x, bounds.y, bounds.x + bounds.width, bounds.y);
+                }
+
+                previousGID = currentGID;
+            }
         }
 
         protected Color getBackgroundColour(ILayerCell cell, IConfigRegistry configRegistry) {
@@ -414,6 +437,33 @@ public class DataSampleTable {
             } else {
                 return 0;
             }
+        }
+
+        // get the group id of the cell if any
+        private String getGID(ILayerCell cell) {
+            Object[] rowObject = (Object[]) bodyDataProvider.getRowObject(cell.getRowIndex());
+            // if the row record contains the group size info, continue
+            if (rowObject != null && rowObject.length > groupSizeIndex) {
+                return (String) rowObject[groupSizeIndex - 1];
+            } else {
+                return null;
+            }
+        }
+
+        /**
+         * check if the group size of the two group is equal or not.
+         * 
+         * @param previousGID2
+         * @param currentGID
+         * @return
+         */
+        private boolean isEqualGroupSize(String groupId1, String groupId2) {
+            Integer size1 = rowOfGIDWithColor.get(groupId1);
+            Integer size2 = rowOfGIDWithColor.get(groupId2);
+            if (size1 != null && size2 != null && size1 == size2) {
+                return true;
+            }
+            return false;
         }
 
     }

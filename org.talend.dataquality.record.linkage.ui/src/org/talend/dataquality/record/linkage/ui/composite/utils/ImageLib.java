@@ -235,6 +235,8 @@ public final class ImageLib {
 
     public static final String PLUGIN_ID = "org.talend.dataquality.record.linkage.ui"; //$NON-NLS-1$
 
+    public static final String MASTER_IMAGE = "star_tMatchGroup_master.png";//$NON-NLS-1$
+
     /**
      * DOC bzhou ImageLib constructor comment.
      */
