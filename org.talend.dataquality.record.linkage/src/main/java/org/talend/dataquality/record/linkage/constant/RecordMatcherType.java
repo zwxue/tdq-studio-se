@@ -12,14 +12,16 @@
 // ============================================================================
 package org.talend.dataquality.record.linkage.constant;
 
+import org.talend.dataquality.record.linkage.Messages;
+
 /**
  * @author scorreia
  * 
  * The names of the available record matchers.
  */
 public enum RecordMatcherType {
-    simpleVSRMatcher("Simple VSR Matcher"), //$NON-NLS-1$
-    T_SwooshAlgorithm("MDM T-Swoosh Algorithm"); //$NON-NLS-1$
+    simpleVSRMatcher(Messages.getString("RecordMatcherType.simpleVSRMatcher")), //$NON-NLS-1$
+    T_SwooshAlgorithm(Messages.getString("RecordMatcherType.T_SwooshAlgorithm")); //$NON-NLS-1$
 
     private final String label;
 
