@@ -22,13 +22,17 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.FileEditorInput;
 import org.talend.commons.exception.LoginException;
 import org.talend.commons.exception.PersistenceException;
+import org.talend.commons.ui.utils.CheatSheetPerspectiveAdapter;
 import org.talend.core.model.properties.Item;
 import org.talend.core.model.properties.Property;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
+import org.talend.core.ui.branding.IBrandingConfiguration;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.helper.WorkspaceResourceHelper;
 import org.talend.dq.helper.ProxyRepositoryManager;
@@ -80,13 +84,32 @@ public class CommonEditorPartListener extends PartListener {
 
     @Override
     public void partClosed(IWorkbenchPart part) {
+        // ADD msjian TDQ-7888 2013-10-12: if the default perspective is DQ, then make the cheat sheet view full screen
+        // the first time
+        if (part instanceof org.eclipse.ui.internal.ViewIntroAdapterPart && part.getTitle().equals("Welcome")) { //$NON-NLS-1$
+            IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+            if (activePage != null) {
+                if (activePage.getPerspective().getId().equals(IBrandingConfiguration.PERSPECTIVE_DQ_ID)) {
+
+                    CheatSheetPerspectiveAdapter.getInstance().cheetSheetInPerspective.put(
+                            IBrandingConfiguration.PERSPECTIVE_DQ_ID, true);
+
+                    CheatSheetPerspectiveAdapter.getInstance().perspectiveActivated(
+                            activePage,
+                            PlatformUI.getWorkbench().getPerspectiveRegistry()
+                                    .findPerspectiveWithId(IBrandingConfiguration.PERSPECTIVE_DQ_ID));
+                }
+            }
+        }
+        // TDQ-7888~
+
         // Added TDQ-7531 20130718 add unlock support for sql source file/jrxml file
         if (part instanceof SQLEditor) {
             unlockFile(part);
             super.partClosed(part);
             return;
         }// ~
-        // MOD mzhao bug 12497 Firstly check if the part is TDQ common form editor.
+         // MOD mzhao bug 12497 Firstly check if the part is TDQ common form editor.
         if (!isCommonFormEditor(part)) {
             return;
         }
