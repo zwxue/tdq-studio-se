@@ -622,7 +622,6 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
                     String selectedElementNames = RepositoryNodeHelper.getAnalyzeDataNames(reposList.get(0));
                     updateAnalyzeDataLabel(selectedElementNames);
                 }
-
                 refreshColumnAndData();
             }
         }
@@ -657,8 +656,8 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
             }
         }
 
-        this.matchingKeySection.redrawnContent();
-        this.blockingKeySection.redrawnContent();
+        this.matchingKeySection.redrawnSubTableContent();
+        this.blockingKeySection.redrawnSubTableContent();
     }
 
     /**
@@ -780,6 +779,16 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
         Control natTable = sampleTable.createTable(dataTableComp, analysisHandler.getSelectedColumns(), listOfData);
         GridDataFactory.fillDefaults().grab(true, true).applyTo(natTable);
 
+    }
+
+    /**
+     * this method will change the value of column list and adapt when section is emprty case. other case should use
+     * updateAllKeys method
+     */
+    public void updateAllColumnsToKeySection() {
+        setAllColumnsToKeySections();
+        this.matchingKeySection.redrawnSubTableContent();
+        this.blockingKeySection.redrawnSubTableContent();
     }
 
     /**

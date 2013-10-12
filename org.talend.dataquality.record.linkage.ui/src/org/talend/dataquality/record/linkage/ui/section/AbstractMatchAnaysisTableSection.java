@@ -52,6 +52,12 @@ public abstract class AbstractMatchAnaysisTableSection extends AbstractSectionCo
 
     private boolean isAddColumn = false;
 
+    private Composite subTableContent = null;
+
+    private Composite subTableContentParent = null;
+
+    private Composite subChartContent = null;
+
     /**
      * @param parent
      * @param style
@@ -70,13 +76,38 @@ public abstract class AbstractMatchAnaysisTableSection extends AbstractSectionCo
         sectionClient = toolkit.createComposite(section, SWT.NONE);
         sectionClient.setLayout(new GridLayout(getGridColumnNum(), true));
         sectionClient.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-        Composite createSubContent = createSubContent(sectionClient);
-        createButtons(createSubContent);
+
+        subTableContentParent = toolkit.createComposite(sectionClient, SWT.NONE);
+
+        GridData data = new GridData(GridData.FILL_BOTH);
+        data.heightHint = getTableDefaultHeight();
+        subTableContentParent.setLayoutData(data);
+
+        GridLayout gridLayout = new GridLayout(1, false);
+        gridLayout.marginWidth = 0;
+        gridLayout.marginHeight = 0;
+
+        subTableContentParent.setLayout(gridLayout);
+
+        subTableContent = createSubContent(subTableContentParent);
+        createButtons(subTableContent);
         if (isNeedSubChart()) {
-            createSubChart(sectionClient);
+            subChartContent = toolkit.createComposite(sectionClient, SWT.NONE);
+            subChartContent.setLayout(gridLayout);
+            subChartContent.setLayoutData(data);
+            createSubChart(subChartContent);
         }
         section.setClient(sectionClient);
         return sectionClient;
+    }
+
+    /**
+     * DOC zshen Comment method "getTableDefaultHeight".
+     * 
+     * @return
+     */
+    protected int getTableDefaultHeight() {
+        return 300;
     }
 
     public void redrawnContent() {
@@ -85,6 +116,15 @@ public abstract class AbstractMatchAnaysisTableSection extends AbstractSectionCo
         }
         createContent();
         section.layout();
+    }
+
+    public void redrawnSubTableContent() {
+        if (subTableContent != null && !subTableContent.isDisposed()) {
+            subTableContent.dispose();
+        }
+        subTableContent = createSubContent(subTableContentParent);
+        createButtons(subTableContent);
+        subTableContentParent.layout();
 
     }
 

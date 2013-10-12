@@ -103,6 +103,7 @@ public class MatchWizard extends ColumnWizard {
             // give the selected columns to the master page
             masterPage.setSelectedNodes(nodeList.toArray(new RepositoryNode[nodeList.size()]));
             masterPage.doSave(new NullProgressMonitor());
+            masterPage.updateAllColumnsToKeySection();
         }
     }
 

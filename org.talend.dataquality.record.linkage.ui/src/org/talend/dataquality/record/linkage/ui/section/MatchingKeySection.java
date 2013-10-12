@@ -161,6 +161,16 @@ public class MatchingKeySection extends AbstractMatchKeyWithChartTableSection {
         return parent;
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataquality.record.linkage.ui.section.AbstractMatchAnaysisTableSection#getTableDefaultHeight()
+     */
+    @Override
+    protected int getTableDefaultHeight() {
+        return 400;
+    }
+
     /**
      * DOC zhao Comment method "createGroupQualityThreshold".
      * 

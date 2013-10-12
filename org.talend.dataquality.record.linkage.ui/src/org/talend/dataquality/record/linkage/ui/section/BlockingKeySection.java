@@ -136,13 +136,7 @@ public class BlockingKeySection extends AbstractMatchAnaysisTableSection {
         blockComp.setLayout(tableLayout);
         GridData gridData = new GridData(GridData.FILL_BOTH);
         blockComp.setLayoutData(gridData);
-        // when there are no data, no need to compute.
-        if (matchRows == null || matchRows.isEmpty()) {
-            blockingKeyDataChart = new BlockingKeyDataChart(blockComp, new HashMap<String, List<String[]>>());
-        } else {
-            BlockingKeyHandler executeGenerateBlockingAction = computeResult();
-            blockingKeyDataChart = new BlockingKeyDataChart(blockComp, executeGenerateBlockingAction.getResultDatas());
-        }
+        blockingKeyDataChart = new BlockingKeyDataChart(blockComp, new HashMap<String, List<String[]>>());
 
     }
 
