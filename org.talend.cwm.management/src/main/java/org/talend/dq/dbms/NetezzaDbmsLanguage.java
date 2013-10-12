@@ -85,16 +85,6 @@ public class NetezzaDbmsLanguage extends DbmsLanguage {
     /*
      * (non-Javadoc)
      * 
-     * @see org.talend.cwm.management.api.DbmsLanguage#getTopNQuery(java.lang.String, int)
-     */
-    @Override
-    public String getTopNQuery(String query, int n) {
-        return query + " LIMIT " + n; //$NON-NLS-1$
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
      * @see org.talend.cwm.management.api.DbmsLanguage#extract(org.talend.dataquality.indicators.DateGrain,
      * java.lang.String)
      */
