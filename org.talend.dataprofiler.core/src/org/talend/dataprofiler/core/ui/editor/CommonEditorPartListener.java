@@ -28,7 +28,8 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.FileEditorInput;
 import org.talend.commons.exception.LoginException;
 import org.talend.commons.exception.PersistenceException;
-import org.talend.commons.ui.utils.CheatSheetPerspectiveAdapter;
+import org.talend.commons.ui.utils.CheatSheetUtils;
+import org.talend.commons.utils.platform.PluginChecker;
 import org.talend.core.model.properties.Item;
 import org.talend.core.model.properties.Property;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
@@ -86,18 +87,16 @@ public class CommonEditorPartListener extends PartListener {
     public void partClosed(IWorkbenchPart part) {
         // ADD msjian TDQ-7888 2013-10-12: if the default perspective is DQ, then make the cheat sheet view full screen
         // the first time
-        if (part instanceof org.eclipse.ui.internal.ViewIntroAdapterPart && part.getTitle().equals("Welcome")) { //$NON-NLS-1$
-            IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-            if (activePage != null) {
-                if (activePage.getPerspective().getId().equals(IBrandingConfiguration.PERSPECTIVE_DQ_ID)) {
+        // this is only for tdq, for top, see ShowCheatSheetsAction
+        if (!PluginChecker.isOnlyTopLoaded()) {
+            if (part instanceof org.eclipse.ui.internal.ViewIntroAdapterPart && part.getTitle().equals("Welcome")) { //$NON-NLS-1$
+                IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+                if (activePage != null) {
+                    if (activePage.getPerspective().getId().equals(IBrandingConfiguration.PERSPECTIVE_DQ_ID)) {
 
-                    CheatSheetPerspectiveAdapter.getInstance().cheetSheetInPerspective.put(
-                            IBrandingConfiguration.PERSPECTIVE_DQ_ID, true);
-
-                    CheatSheetPerspectiveAdapter.getInstance().perspectiveActivated(
-                            activePage,
-                            PlatformUI.getWorkbench().getPerspectiveRegistry()
-                                    .findPerspectiveWithId(IBrandingConfiguration.PERSPECTIVE_DQ_ID));
+                        // if the cheat sheet view can be find, then do maximum display
+                        CheatSheetUtils.getInstance().findAndmaxDisplayCheatSheet();
+                    }
                 }
             }
         }

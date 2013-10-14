@@ -21,13 +21,10 @@ import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.cheatsheets.OpenCheatSheetAction;
-import org.eclipse.ui.internal.PartPane;
-import org.eclipse.ui.internal.PartSite;
-import org.eclipse.ui.internal.cheatsheets.views.CheatSheetView;
-import org.eclipse.ui.internal.cheatsheets.views.ViewUtilities;
 import org.eclipse.ui.internal.intro.IIntroConstants;
 import org.eclipse.ui.intro.IIntroSite;
 import org.eclipse.ui.intro.config.IIntroAction;
+import org.talend.commons.ui.utils.CheatSheetUtils;
 
 /**
  * DOC qzhang class global comment. Detailled comment <br/>
@@ -38,8 +35,6 @@ import org.eclipse.ui.intro.config.IIntroAction;
 @SuppressWarnings("restriction")
 public class ShowCheatSheetsAction extends Action implements IIntroAction {
 
-    private static final String PERSPECTIVE_ID = "org.talend.dataprofiler.DataProfilingPerspective"; //$NON-NLS-1$
-
     /*
      * (non-Javadoc)
      * 
@@ -48,7 +43,7 @@ public class ShowCheatSheetsAction extends Action implements IIntroAction {
     @Override
     public void run(IIntroSite site, Properties params) {
         IPerspectiveDescriptor persDescription1 = PlatformUI.getWorkbench().getPerspectiveRegistry()
-                .findPerspectiveWithId(PERSPECTIVE_ID);
+                .findPerspectiveWithId(CheatSheetUtils.DQ_PERSPECTIVE_ID);
         PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().setPerspective(persDescription1);
         String property = params.getProperty("id"); //$NON-NLS-1$
         OpenCheatSheetAction action = new OpenCheatSheetAction(property);
@@ -60,9 +55,7 @@ public class ShowCheatSheetsAction extends Action implements IIntroAction {
         }
 
         // ADD msjian TDQ-7407 2013-8-23: Only display the Cheat Sheet view on new startup of the studio
-        CheatSheetView cheatSheetView = ViewUtilities.showCheatSheetView();
-        PartPane pane = ((PartSite) cheatSheetView.getSite()).getPane();
-        cheatSheetView.getSite().getPage().toggleZoom(pane.getPartReference());
+        CheatSheetUtils.getInstance().findAndmaxDisplayCheatSheet();
         // TDQ-7407~
     }
 }
