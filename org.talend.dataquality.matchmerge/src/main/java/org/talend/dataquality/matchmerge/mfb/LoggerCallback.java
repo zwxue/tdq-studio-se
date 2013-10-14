@@ -29,13 +29,17 @@ public class LoggerCallback implements MatchMergeAlgorithm.Callback {
     public void onMatch(Record record1, Record record2, MatchResult matchResult) {
         LOGGER.info("\t(+) Positive match: #" + record1.getId() + " <---> #" + record2.getId());
         if (LOGGER.isDebugEnabled()) {
+            StringBuilder messagesBuilder = new StringBuilder();
             int i = 0;
             for (MatchResult.Score score : matchResult.getScores()) {
-                LOGGER.debug("\t\t" + score.algorithm.getComponentValue()
-                        + "('" + score.values[0] + "', '" + score.values[1] + "') = " + score.score
-                        + " (threshold: " + matchResult.getThresholds().get(i) + ")");
+                messagesBuilder.append("\t\t")
+                        .append(score.algorithm.getComponentValue())
+                        .append("('").append(score.values[0]).append("', '")
+                        .append(score.values[1]).append("') = ")
+                        .append(score.score).append(" (>= ").append(matchResult.getThresholds().get(i)).append(")");
                 i++;
             }
+            LOGGER.debug(messagesBuilder.toString());
         }
     }
 
@@ -47,9 +51,12 @@ public class LoggerCallback implements MatchMergeAlgorithm.Callback {
             LOGGER.info("\t(+) New merge: #" + record.getId() + " (unique record).");
         }
         if (LOGGER.isDebugEnabled()) {
+            StringBuilder messageBuilder = new StringBuilder();
             for (Attribute attribute : record.getAttributes()) {
-                LOGGER.debug("\t\t" + attribute.getLabel() + ": '" + attribute.getValue() + "'");
+                messageBuilder.append("\t\t").append(attribute.getLabel()).append(": '")
+                        .append(attribute.getValue()).append("'");
             }
+            LOGGER.debug(messageBuilder.toString());
         }
     }
 
@@ -62,13 +69,17 @@ public class LoggerCallback implements MatchMergeAlgorithm.Callback {
     public void onDifferent(Record record1, Record record2, MatchResult matchResult) {
         LOGGER.info("\t(-) Negative match: #" + record1.getId() + " <-/-> #" + record2.getId());
         if (LOGGER.isDebugEnabled()) {
+            StringBuilder messagesBuilder = new StringBuilder();
             int i = 0;
             for (MatchResult.Score score : matchResult.getScores()) {
-                LOGGER.debug("\t\t" + score.algorithm.getComponentValue()
-                        + "('" + score.values[0] + "', '" + score.values[1] + "') = " + score.score
-                        + " (threshold: " + matchResult.getThresholds().get(i) + ")");
+                messagesBuilder.append("\t\t")
+                        .append(score.algorithm.getComponentValue())
+                        .append("('").append(score.values[0]).append("', '")
+                        .append(score.values[1]).append("') = ")
+                        .append(score.score).append(" (< ").append(matchResult.getThresholds().get(i)).append(")");
                 i++;
             }
+            LOGGER.debug(messagesBuilder.toString());
         }
     }
 
