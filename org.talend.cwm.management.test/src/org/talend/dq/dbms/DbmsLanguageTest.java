@@ -622,11 +622,49 @@ public class DbmsLanguageTest {
     @Test
     public void testGetTopNQuery() {
         try {
+            String limitStr = " LIMIT "; //$NON-NLS-1$
             DbmsLanguage dbms = getMysqlDbmsLanguage();
-            Assert.assertNotNull(dbms.getTopNQuery(QUERY_STR, TOP_N));
+            Assert.assertEquals(QUERY_STR + limitStr + TOP_N, dbms.getTopNQuery(QUERY_STR, TOP_N));
+
+            dbms = getPostgresqlDbmsLanguage();
+            Assert.assertEquals(QUERY_STR + limitStr + TOP_N, dbms.getTopNQuery(QUERY_STR, TOP_N));
+
+            dbms = getVerticaDbmsLanguage();
+            Assert.assertEquals(QUERY_STR + limitStr + TOP_N, dbms.getTopNQuery(QUERY_STR, TOP_N));
+
+            dbms = getNetzzaDbmsLanguage();
+            Assert.assertEquals(QUERY_STR + limitStr + TOP_N, dbms.getTopNQuery(QUERY_STR, TOP_N));
+
+            dbms = getHiveDbmsLanguage();
+            Assert.assertEquals(QUERY_STR + limitStr + TOP_N, dbms.getTopNQuery(QUERY_STR, TOP_N));
+
+            dbms = getMsSqlDbmsLanguage();
+            Assert.assertEquals(
+                    "SELECT TOP " + TOP_N + "  " + GenericSQLHandler.COLUMN_NAMES + " from " + GenericSQLHandler.TABLE_NAME, dbms.getTopNQuery(QUERY_STR, TOP_N)); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+
+            dbms = getSybaseDbmsLanguage();
+            Assert.assertEquals("SELECT TOP " + TOP_N + "  " + GenericSQLHandler.COLUMN_NAMES + " from " //$NON-NLS-1$ //$NON-NLS-2$
+                    + GenericSQLHandler.TABLE_NAME, dbms.getTopNQuery(QUERY_STR, TOP_N)); // $NON
+
         } catch (Exception e) {
             fail(e.getMessage());
         }
+    }
+
+    /**
+     * DOC qiongli Comment method "getHiveDbmsLanguage".
+     * 
+     * @return
+     */
+    private DbmsLanguage getHiveDbmsLanguage() {
+        return DbmsLanguageFactory.createDbmsLanguage(DbmsLanguage.HIVE, DATABASE_VERSION);
+    }
+
+    /**
+     * DOC qiongli Comment method "getNetzzaDbmsLanguage".
+     */
+    private DbmsLanguage getNetzzaDbmsLanguage() {
+        return DbmsLanguageFactory.createDbmsLanguage(DbmsLanguage.NETEZZA, DATABASE_VERSION);
     }
 
     /**
@@ -1861,7 +1899,7 @@ public class DbmsLanguageTest {
         Assert.assertEquals("`myCatalog`.`myTable`.`myCol1`,`myCatalog`.`myTable`.`myCol2`", queryColWithPrefix); //$NON-NLS-1$
 
         // Assert hive
-        dbms = DbmsLanguageFactory.createDbmsLanguage(DbmsLanguage.HIVE, DATABASE_VERSION);
+        dbms = getHiveDbmsLanguage();
         queryColWithPrefix = dbms.getQueryColumnsWithPrefix(columns);
         Assert.assertEquals("myCol1,myCol2", queryColWithPrefix); //$NON-NLS-1$
 
