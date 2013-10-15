@@ -124,8 +124,6 @@ public class MFB implements MatchMergeAlgorithm {
                             merges,
                             mergesParameters,
                             mergedRecordSource);
-                    // Keep group id
-                    newMergedRecord.setGroupId(mergedRecord.getGroupId());
                     queue.offer(newMergedRecord);
                     callback.onNewMerge(newMergedRecord);
                     mergedRecords.remove(mergedRecord);
@@ -137,10 +135,6 @@ public class MFB implements MatchMergeAlgorithm {
                 }
             }
             if (!hasCreatedNewMerge) {
-                if (currentRecord.getGroupId() == null) {
-                    // Only add a group id if the record doesn't already hold one.
-                    currentRecord.setGroupId(UUID.randomUUID().toString());
-                }
                 currentRecord.getRelatedIds().add(currentRecord.getId());
                 mergedRecords.add(currentRecord);
                 callback.onNewMerge(currentRecord);

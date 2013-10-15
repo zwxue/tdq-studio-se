@@ -189,6 +189,13 @@ public class MatchMerge {
         // Conservative strategy -> keeps the lowest confidence to avoid over-confidence in a group with many low-confidence
         // records.
         mergedRecord.setConfidence(Math.min(record1.getConfidence(), record2.getConfidence()));
+        if (record1.getGroupId() != null) {
+            mergedRecord.setGroupId(record1.getGroupId());
+        } else if (record2.getGroupId() != null) {
+            mergedRecord.setGroupId(record2.getGroupId());
+        } else if (record1.getGroupId() != null && record2.getGroupId() != null) {
+            throw new IllegalStateException("Trying to merge two groups together.");
+        }
         return mergedRecord;
     }
 
