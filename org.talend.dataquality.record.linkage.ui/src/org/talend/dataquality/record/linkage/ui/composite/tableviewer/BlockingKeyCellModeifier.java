@@ -13,6 +13,7 @@
 package org.talend.dataquality.record.linkage.ui.composite.tableviewer;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.math.NumberUtils;
 import org.eclipse.swt.widgets.TableItem;
 import org.talend.dataquality.record.linkage.utils.BlockingKeyAlgorithmEnum;
 import org.talend.dataquality.record.linkage.utils.BlockingKeyPostAlgorithmEnum;
@@ -194,12 +195,7 @@ public class BlockingKeyCellModeifier extends AbstractMatchCellModifier<BlockKey
      * @return
      */
     private boolean isIntegerType(String value) {
-        try {
-            Integer.parseInt(value);
-        } catch (NumberFormatException e) {
-            return false;
-        }
-        return true;
+        return NumberUtils.isDigits(value);
     }
 
 }

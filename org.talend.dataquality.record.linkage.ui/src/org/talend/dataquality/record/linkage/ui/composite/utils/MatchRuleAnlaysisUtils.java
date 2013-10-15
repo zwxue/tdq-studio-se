@@ -24,6 +24,7 @@ import org.talend.core.ITDQRepositoryService;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.columnset.BlockKeyIndicator;
+import org.talend.dataquality.indicators.columnset.ColumnsetPackage;
 import org.talend.dataquality.indicators.columnset.RecordMatchingIndicator;
 import org.talend.dataquality.record.linkage.constant.AttributeMatcherType;
 import org.talend.dataquality.record.linkage.utils.AnalysisRecordGroupingUtils;
@@ -147,6 +148,14 @@ public class MatchRuleAnlaysisUtils {
                 returnList[1] = ind;
             }
         }
+        // If match rule definition is null, create a default.
+        if (returnList[0] == null) {
+            returnList[0] = ColumnsetPackage.eINSTANCE.getColumnsetFactory().createRecordMatchingIndicator();
+        }
+        // If blocking key indicator is nul, create a default.
+        if (returnList[1] == null) {
+            returnList[1] = ColumnsetPackage.eINSTANCE.getColumnsetFactory().createBlockKeyIndicator();
+        }
         return returnList;
     }
 
@@ -206,6 +215,7 @@ public class MatchRuleAnlaysisUtils {
 
         Comparator<Object[]> comparator = new Comparator<Object[]>() {
 
+            @Override
             public int compare(Object[] row1, Object[] row2) {
                 if (!StringUtils.endsWithIgnoreCase((String) row1[GID_index], (String) row2[GID_index])) {
                     return ((String) row1[GID_index]).compareTo((String) row2[GID_index]);

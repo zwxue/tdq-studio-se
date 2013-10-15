@@ -16,9 +16,11 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.part.FileEditorInput;
@@ -130,6 +132,17 @@ public class MatchRuleMasterDetailsPage extends AbstractMetadataFormPage impleme
     public ReturnCode canSave() {
         ReturnCode rc = new ReturnCode(false);
         if (this.isDirty) {
+            ReturnCode checkResultStatus = blockingKeyDefinitionSection.checkResultStatus();
+            if (checkResultStatus.isOk()) {
+                checkResultStatus = matchingKeyDefinitionSection.checkResultStatus();
+            }
+            // if (checkResultStatus.isOk()) {
+            // checkResultStatus = survivorshipDefinitionSection.checkResultStatus();
+            // }
+
+            if (!checkResultStatus.isOk()) {
+                return checkResultStatus;
+            }
             rc.setOk(true);
         }
         return rc;
@@ -219,15 +232,14 @@ public class MatchRuleMasterDetailsPage extends AbstractMetadataFormPage impleme
      * DOC HHB Comment method "createSurvivorshipSection".
      * 
      * @param mainComp
-    
-    private void createSurvivorshipSection(Composite mainComp) {
-        survivorshipDefinitionSection = new SurvivorshipDefinitionSection(form, mainComp, toolkit);
-        survivorshipDefinitionSection.setMatchRuleDef((MatchRuleDefinition) getCurrentModelElement(getEditor()));
-        survivorshipDefinitionSection.createContent();
-        survivorshipDefinitionSection.addPropertyChangeListener(this);
-        survivorshipDefinitionSection.changeSectionDisStatus(!selectAlgorithmSection.isVSRMode());
-        survivorshipDefinitionSection.getSection().setExpanded(true);
-    } */
+     * 
+     * private void createSurvivorshipSection(Composite mainComp) { survivorshipDefinitionSection = new
+     * SurvivorshipDefinitionSection(form, mainComp, toolkit);
+     * survivorshipDefinitionSection.setMatchRuleDef((MatchRuleDefinition) getCurrentModelElement(getEditor()));
+     * survivorshipDefinitionSection.createContent(); survivorshipDefinitionSection.addPropertyChangeListener(this);
+     * survivorshipDefinitionSection.changeSectionDisStatus(!selectAlgorithmSection.isVSRMode());
+     * survivorshipDefinitionSection.getSection().setExpanded(true); }
+     */
 
     private void createDefaultSurvivorshipSection(Composite mainComp) {
         defaultSurvivorshipDefinitionSection = new DefaultSurvivorshipDefinitionSection(form, mainComp, toolkit);
@@ -273,7 +285,10 @@ public class MatchRuleMasterDetailsPage extends AbstractMetadataFormPage impleme
      */
     @Override
     public void doSave(IProgressMonitor monitor) {
-        if (!canSave().isOk()) {
+        ReturnCode rc = canSave();
+        if (!rc.isOk()) {
+            MessageDialogWithToggle.openError(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
+                    DefaultMessagesImpl.getString("AbstractAnalysisMetadataPage.SaveAnalysis"), rc.getMessage()); //$NON-NLS-1$
             return;
         }
         super.doSave(monitor);
@@ -288,6 +303,7 @@ public class MatchRuleMasterDetailsPage extends AbstractMetadataFormPage impleme
      * @return
      */
     private boolean saveMatchRule() {
+
         MatchRuleDefinition saveModelElement = (MatchRuleDefinition) getCurrentModelElement(this.getEditor());
         // // algorithm
         saveModelElement.setRecordLinkageAlgorithm(selectAlgorithmSection.getAlgorithmName());

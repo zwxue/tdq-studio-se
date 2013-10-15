@@ -21,12 +21,14 @@ import java.util.Map;
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.talend.dataquality.PluginConstant;
@@ -43,6 +45,7 @@ import org.talend.dataquality.record.linkage.utils.MatchAnalysisConstant;
 import org.talend.dataquality.rules.BlockKeyDefinition;
 import org.talend.dataquality.rules.KeyDefinition;
 import org.talend.dataquality.rules.MatchRuleDefinition;
+import org.talend.utils.sugars.ReturnCode;
 
 /**
  * created by zshen on Aug 6, 2013 Detailled comment
@@ -147,8 +150,20 @@ public class BlockingKeySection extends AbstractMatchAnaysisTableSection {
      */
     @Override
     public void refreshChart() {
+
+        ReturnCode checkResultStatus = checkResultStatus();
+        if (!checkResultStatus.isOk()) {
+            if (checkResultStatus.getMessage() != null && !checkResultStatus.getMessage().equals(StringUtils.EMPTY)) {
+                MessageDialogWithToggle.openError(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
+                        DefaultMessagesImpl.getString("BlockingKeySection.RefreshChartError"), checkResultStatus.getMessage()); //$NON-NLS-1$
+            }
+            return;
+        }
         listeners.firePropertyChange(MatchAnalysisConstant.NEED_REFRESH_DATA, true, false);
         BlockingKeyHandler executeGenerateBlockingAction = computeResult();
+        if (executeGenerateBlockingAction.getResultDataList().size() == 0) {
+            return;
+        }
         blockingKeyDataChart.refresh(executeGenerateBlockingAction.getResultDatas());
         MatchRuleAnlaysisUtils.refreshDataTable(analysis, executeGenerateBlockingAction.getResultDataList());
         executeGenerateBlockingAction.getResultDatas().clear();
@@ -194,6 +209,11 @@ public class BlockingKeySection extends AbstractMatchAnaysisTableSection {
 
     public void removeBlockingKey(BlockKeyDefinition blockKeyDef) {
         tableComposite.removeKeyDefinition(blockKeyDef, getBlockKeyDefinitionList());
+    }
+
+    public void removeAllBlockingKey() {
+        getBlockKeyDefinitionList().clear();
+        redrawnSubTableContent();
     }
 
     /*
@@ -363,6 +383,61 @@ public class BlockingKeySection extends AbstractMatchAnaysisTableSection {
                     DefaultMessagesImpl.getString("BlockingKeySection.conflictImportKeys") + names.toString()); //$NON-NLS-1$
 
         }
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataquality.record.linkage.ui.section.AbstractMatchAnaysisTableSection#checkResultStatus()
+     */
+    @Override
+    public ReturnCode checkResultStatus() {
+        ReturnCode returnCode = new ReturnCode(false);
+        List<String> uniqueNameList = new ArrayList<String>();
+        List<String> duplicateNameList = new ArrayList<String>();
+        for (BlockKeyDefinition bdk : getBlockKeyDefinitionList()) {
+            String currentName = bdk.getName();
+            if (currentName.equals(StringUtils.EMPTY)) {
+                returnCode.setMessage(DefaultMessagesImpl.getString("BlockingKeySection.emptyKeys.message", getSectionName())); //$NON-NLS-1$
+                return returnCode;
+            }
+            if (checkColumnNameIsEmpty(bdk)) {
+                returnCode.setMessage(DefaultMessagesImpl.getString("BlockingKeySection.emptyColumn.message", getSectionName())); //$NON-NLS-1$
+                return returnCode;
+            }
+
+            boolean currentNameIsDuplicate = false;
+            for (String uniqueName : uniqueNameList) {
+                if (currentName.equals(uniqueName)) {
+                    duplicateNameList.add(currentName);
+                    currentNameIsDuplicate = true;
+                }
+            }
+            if (!currentNameIsDuplicate) {
+                uniqueNameList.add(currentName);
+            }
+        }
+        if (duplicateNameList.size() > 0) {
+            returnCode.setMessage(DefaultMessagesImpl.getString("BlockingKeySection.duplicateKeys.message", getSectionName())); //$NON-NLS-1$
+            return returnCode;
+        } else {
+            returnCode.setOk(true);
+            return returnCode;
+        }
+
+    }
+
+    /**
+     * DOC zshen Comment method "checkColumnName".
+     * 
+     * @param bdk
+     */
+    protected boolean checkColumnNameIsEmpty(BlockKeyDefinition bdk) {
+        String columnName = bdk.getColumn();
+        if (columnName == null || columnName.equals(StringUtils.EMPTY)) {
+            return true;
+        }
+        return false;
     }
 
 }

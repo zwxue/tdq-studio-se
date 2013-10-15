@@ -12,6 +12,7 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.editor.analysis;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
@@ -20,6 +21,7 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.part.FileEditorInput;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.commons.exception.ExceptionHandler;
@@ -267,8 +269,8 @@ public class AnalysisEditor extends CommonFormEditor {
         }
     }
 
-    public void setRefreshResultPage(boolean isRefreshResultPage) {
-        this.isRefreshResultPage = isRefreshResultPage;
+    public void setRefreshResultPage(boolean isRefreshRP) {
+        this.isRefreshResultPage = isRefreshRP;
     }
 
     public AnalysisType getAnalysisType() {
@@ -352,11 +354,18 @@ public class AnalysisEditor extends CommonFormEditor {
             @Override
             public boolean handle(Object data) {
                 if (isDirty()) {
-                    if (masterPage.canSave().isOk()) {
+                    ReturnCode canSave = masterPage.canSave();
+                    if (canSave.isOk()) {
                         // save the analysis before running
                         doSave(null);
                         setDirty(false);
                     } else {
+                        if (canSave.getMessage() != null && !canSave.getMessage().equals(StringUtils.EMPTY)) {
+                            MessageDialogWithToggle
+                                    .openError(
+                                            PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
+                                            DefaultMessagesImpl.getString("AbstractAnalysisMetadataPage.SaveAnalysis"), canSave.getMessage()); //$NON-NLS-1$
+                        }
                         return false;
                     }
                 }

@@ -42,6 +42,7 @@ import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.forms.editor.IFormPage;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
@@ -163,13 +164,13 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
         ReturnCode rc = canSave();
         if (!rc.isOk()) {
             // MOD yyi 2012-02-29 TDQ-3605 Pop an error if rc is not ok.
-            MessageDialogWithToggle.openError(null,
+            MessageDialogWithToggle.openError(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
                     DefaultMessagesImpl.getString("AbstractAnalysisMetadataPage.SaveAnalysis"), rc.getMessage()); //$NON-NLS-1$
             return;
         } else if (!checkWhithspace()) {
             MessageDialogWithToggle
                     .openError(
-                            null,
+                            PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
                             DefaultMessagesImpl.getString("AbstractAnalysisMetadataPage.SaveAnalysis"), DefaultMessagesImpl.getString("AbstractMetadataFormPage.whitespace")); //$NON-NLS-1$ //$NON-NLS-2$
         } else {
             super.doSave(monitor);
@@ -182,7 +183,7 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
                 ((AnalysisEditor) this.getEditor()).firePropertyChange(IEditorPart.PROP_DIRTY);
                 this.updateAnalysisConnectionVersionInfo();
             } catch (DataprofilerCoreException e) {
-                MessageDialogWithToggle.openError(null,
+                MessageDialogWithToggle.openError(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
                         DefaultMessagesImpl.getString("AbstractAnalysisMetadataPage.SaveAnalysis"), e.getMessage()); //$NON-NLS-1$ 
                 ExceptionHandler.process(e, Level.ERROR);
             }

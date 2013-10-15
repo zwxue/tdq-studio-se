@@ -32,6 +32,7 @@ import org.talend.dataquality.record.linkage.ui.action.RefreshChartAction;
 import org.talend.dataquality.record.linkage.ui.composite.utils.ImageLib;
 import org.talend.dataquality.record.linkage.ui.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataquality.rules.KeyDefinition;
+import org.talend.utils.sugars.ReturnCode;
 
 /**
  * created by zshen on Jul 31, 2013 Detailled comment
@@ -63,9 +64,9 @@ public abstract class AbstractMatchAnaysisTableSection extends AbstractSectionCo
      * @param style
      */
     public AbstractMatchAnaysisTableSection(final ScrolledForm form, Composite parent, int style, FormToolkit toolkit,
-            Analysis analysis) {
+            Analysis newAnalysis) {
         super(form, parent, style, toolkit);
-        this.analysis = analysis;
+        this.analysis = newAnalysis;
     }
 
     /**
@@ -142,8 +143,8 @@ public abstract class AbstractMatchAnaysisTableSection extends AbstractSectionCo
      * 
      * @param isNeedSubChart the isNeedSubChart to set
      */
-    public void setIsNeedSubChart(Boolean isNeedSubChart) {
-        this.isNeedSubChart = isNeedSubChart;
+    public void setIsNeedSubChart(Boolean isNeedASubChart) {
+        this.isNeedSubChart = isNeedASubChart;
     }
 
     /**
@@ -289,8 +290,8 @@ public abstract class AbstractMatchAnaysisTableSection extends AbstractSectionCo
         matchRows.addAll(allData);
     }
 
-    public void setColumnNameInput(Map<String, String> columnMap) {
-        this.columnMap = columnMap;
+    public void setColumnNameInput(Map<String, String> newColumnMap) {
+        this.columnMap = newColumnMap;
     }
 
     public void updateColumnPosition(String column, int newPosition) {
@@ -312,8 +313,8 @@ public abstract class AbstractMatchAnaysisTableSection extends AbstractSectionCo
      * 
      * @param isAddColumn the isAddColumn to set
      */
-    public void setAddColumn(boolean isAddColumn) {
-        this.isAddColumn = isAddColumn;
+    public void setAddColumn(boolean isNeedAddColumn) {
+        this.isAddColumn = isNeedAddColumn;
     }
 
     /**
@@ -381,7 +382,7 @@ public abstract class AbstractMatchAnaysisTableSection extends AbstractSectionCo
      */
     @Override
     public void removeTableItem() {
-
+        // not need implement
     }
 
     /*
@@ -391,7 +392,7 @@ public abstract class AbstractMatchAnaysisTableSection extends AbstractSectionCo
      */
     @Override
     public void addTableItem() {
-
+        // not need implement
     }
 
     /**
@@ -400,14 +401,14 @@ public abstract class AbstractMatchAnaysisTableSection extends AbstractSectionCo
      * 
      * @param sectionClient
      */
-    abstract protected void createSubChart(Composite sectionClient);
+    abstract protected void createSubChart(Composite parent);
 
     /**
      * DOC zshen Comment method "createSubContent".
      * 
      * @param sectionClient
      */
-    abstract protected Composite createSubContent(Composite sectionClient);
+    abstract protected Composite createSubContent(Composite parent);
 
     /**
      * DOC zshen Comment method "getSectionName".
@@ -454,6 +455,18 @@ public abstract class AbstractMatchAnaysisTableSection extends AbstractSectionCo
             // when key's name and key's column both no match, set it empty
             keyDefinition.setColumn(StringUtils.EMPTY);
         }
+    }
+
+    /**
+     * 
+     * check dirty status of current Section
+     * 
+     * @return
+     */
+    public ReturnCode checkResultStatus() {
+        ReturnCode rc = new ReturnCode(true);
+        return rc;
+
     }
 
 }

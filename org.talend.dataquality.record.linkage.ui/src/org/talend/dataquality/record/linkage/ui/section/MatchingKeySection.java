@@ -19,7 +19,9 @@ import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
@@ -38,6 +40,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.talend.dataquality.analysis.Analysis;
@@ -54,6 +57,8 @@ import org.talend.dataquality.rules.MatchKeyDefinition;
 import org.talend.dataquality.rules.MatchRule;
 import org.talend.dataquality.rules.MatchRuleDefinition;
 import org.talend.dataquality.rules.RulesFactory;
+import org.talend.utils.sugars.ReturnCode;
+import org.talend.utils.sugars.TypedReturnCode;
 
 /**
  * 
@@ -151,6 +156,7 @@ public class MatchingKeySection extends AbstractMatchKeyWithChartTableSection {
                 MatchRule newMatchRule = getNewMatchRule();
                 addRuleTab(true, newMatchRule);
                 addMatchRuleToAnalysis(newMatchRule);
+                listeners.firePropertyChange(MatchAnalysisConstant.ISDIRTY_PROPERTY, true, false);
             }
 
         });
@@ -287,7 +293,9 @@ public class MatchingKeySection extends AbstractMatchKeyWithChartTableSection {
         CTabItem currentTabItem = ruleFolder.getSelection();
         if (currentTabItem == null) {
             log.warn(DefaultMessagesImpl.getString("MatchingKeySection.ONE_MATCH_RULE_REQUIRED")); //$NON-NLS-1$
-            addRuleTab(false, getNewMatchRule());
+            MatchRule newMatchRule = getNewMatchRule();
+            addRuleTab(false, newMatchRule);
+            addMatchRuleToAnalysis(newMatchRule);
             currentTabItem = ruleFolder.getSelection();
         }
         MatchRuleTableComposite matchRuleTableComp = (MatchRuleTableComposite) currentTabItem
@@ -397,8 +405,24 @@ public class MatchingKeySection extends AbstractMatchKeyWithChartTableSection {
 
     @Override
     public void refreshChart() {
+
+        ReturnCode checkResultStatus = checkResultStatus();
+        if (!checkResultStatus.isOk()) {
+            MessageDialogWithToggle.openError(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
+                    DefaultMessagesImpl.getString("BlockingKeySection.RefreshChartError"), checkResultStatus.getMessage()); //$NON-NLS-1$
+            return;
+        }
         listeners.firePropertyChange(MatchAnalysisConstant.NEED_REFRESH_DATA, true, false);
-        RecordMatchingIndicator recordMatchingIndicator = computeMatchResult();
+        TypedReturnCode<RecordMatchingIndicator> computeMatchResult = computeMatchResult();
+
+        if (!computeMatchResult.isOk()) {
+            if (computeMatchResult.getMessage() != null && !computeMatchResult.getMessage().equals(StringUtils.EMPTY)) {
+                MessageDialogWithToggle.openError(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
+                        DefaultMessagesImpl.getString("RunAnalysisAction.runAnalysis"), computeMatchResult.getMessage()); //$NON-NLS-1$
+            }
+            return;
+        }
+        RecordMatchingIndicator recordMatchingIndicator = computeMatchResult.getObject();
         matchRuleChartComp.refresh(recordMatchingIndicator.getGroupSize2groupFrequency());
         // Clear the match row data.
         matchRows.clear();
@@ -605,6 +629,85 @@ public class MatchingKeySection extends AbstractMatchKeyWithChartTableSection {
         }
         newRule.setMatchInterval(oldRule.getMatchInterval());
         return newRule;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataquality.record.linkage.ui.section.AbstractMatchAnaysisTableSection#checkResultStatus()
+     */
+    @Override
+    public ReturnCode checkResultStatus() {
+        ReturnCode returnCode = new ReturnCode(false);
+        List<String> uniqueNameList = new ArrayList<String>();
+        List<String> duplicateNameList = new ArrayList<String>();
+        if (!hasMatchKey()) {
+
+            returnCode.setMessage(DefaultMessagesImpl.getString("MatchMasterDetailsPage.NoMatchKey")); //$NON-NLS-1$
+            return returnCode;
+        }
+        for (MatchRule CurrentRule : getMatchRuleList()) {
+            EList<MatchKeyDefinition> matchKeys = CurrentRule.getMatchKeys();
+            for (MatchKeyDefinition mdk : matchKeys) {
+                String currentName = mdk.getName();
+                if (currentName.equals(StringUtils.EMPTY)) {
+                    returnCode
+                            .setMessage(DefaultMessagesImpl.getString("BlockingKeySection.emptyKeys.message", getSectionName())); //$NON-NLS-1$
+                    return returnCode;
+                }
+                if (checkColumnNameIsEmpty(mdk)) {
+                    returnCode.setMessage(DefaultMessagesImpl.getString(
+                            "BlockingKeySection.emptyColumn.message", getSectionName())); //$NON-NLS-1$
+                    return returnCode;
+                }
+                boolean currentNameIsDuplicate = false;
+                for (String uniqueName : uniqueNameList) {
+                    if (currentName.equals(uniqueName)) {
+                        duplicateNameList.add(currentName);
+                        currentNameIsDuplicate = true;
+                    }
+                }
+                if (!currentNameIsDuplicate) {
+                    uniqueNameList.add(currentName);
+                }
+            }
+        }
+        if (duplicateNameList.size() > 0) {
+            returnCode.setMessage(DefaultMessagesImpl.getString("BlockingKeySection.duplicateKeys.message", getSectionName())); //$NON-NLS-1$
+            return returnCode;
+        } else {
+            returnCode.setOk(true);
+            return returnCode;
+        }
+    }
+
+    private boolean hasMatchKey() {
+        List<MatchRule> matchRules = getMatchRuleDefinition().getMatchRules();
+        if (matchRules == null || matchRules.size() == 0) {
+            return Boolean.FALSE;
+        }
+        for (int index = 0; matchRules.size() > index; index++) {
+
+            if (matchRules.get(index).getMatchKeys().size() <= 0) {
+                ruleFolder.setSelection(index);
+                return Boolean.FALSE;
+            }
+        }
+        return Boolean.TRUE;
+    }
+
+    /**
+     * DOC zshen Comment method "checkColumnNameIsEmpty".
+     * 
+     * @param mdk
+     * @return
+     */
+    protected boolean checkColumnNameIsEmpty(MatchKeyDefinition mdk) {
+        String columnName = mdk.getColumn();
+        if (columnName == null || columnName.equals(StringUtils.EMPTY)) {
+            return true;
+        }
+        return false;
     }
 
 }

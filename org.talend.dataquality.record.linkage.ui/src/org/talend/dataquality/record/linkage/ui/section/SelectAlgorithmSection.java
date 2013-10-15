@@ -26,8 +26,8 @@ import org.talend.dataquality.record.linkage.constant.RecordMatcherType;
 import org.talend.dataquality.record.linkage.ui.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataquality.record.linkage.ui.section.definition.BlockingKeyDefinitionSection;
 import org.talend.dataquality.record.linkage.ui.section.definition.DefaultSurvivorshipDefinitionSection;
-import org.talend.dataquality.record.linkage.ui.section.definition.MatchKeyDefinitionSection;
 import org.talend.dataquality.record.linkage.ui.section.definition.MatchAndSurvivorKeySection;
+import org.talend.dataquality.record.linkage.ui.section.definition.MatchKeyDefinitionSection;
 import org.talend.dataquality.record.linkage.utils.MatchAnalysisConstant;
 import org.talend.dataquality.rules.MatchRuleDefinition;
 
@@ -98,6 +98,7 @@ public class SelectAlgorithmSection extends AbstractSectionComposite {
                 noticeOtherSection();
                 algorithmName = RecordMatcherType.T_SwooshAlgorithm.name();
                 matchRuleDef.setRecordLinkageAlgorithm(algorithmName);
+                blockKeySection.removeAllBlockingKey();
                 listeners.firePropertyChange(MatchAnalysisConstant.ISDIRTY_PROPERTY, RecordMatcherType.simpleVSRMatcher.name(),
                         RecordMatcherType.T_SwooshAlgorithm.name());
 
@@ -115,6 +116,8 @@ public class SelectAlgorithmSection extends AbstractSectionComposite {
                 noticeOtherSection();
                 algorithmName = RecordMatcherType.simpleVSRMatcher.name();
                 matchRuleDef.setRecordLinkageAlgorithm(algorithmName);
+                matchAndSurvivorKeySection.removeAllSurvivorship();
+                // survivorshipDefinitionSection.removeAllSurvivorship();
                 listeners.firePropertyChange(MatchAnalysisConstant.ISDIRTY_PROPERTY, RecordMatcherType.T_SwooshAlgorithm.name(),
                         RecordMatcherType.simpleVSRMatcher.name());
             }

@@ -17,7 +17,6 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
-import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
@@ -29,14 +28,16 @@ import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 import org.talend.dataquality.record.linkage.ui.composite.SurvivorshipTableComposite;
 import org.talend.dataquality.record.linkage.ui.composite.tableviewer.sorter.KeyDefinitionTableViewerSorter;
+import org.talend.dataquality.record.linkage.ui.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataquality.record.linkage.ui.section.AbstractMatchAnaysisTableSection;
 import org.talend.dataquality.record.linkage.utils.MatchAnalysisConstant;
 import org.talend.dataquality.rules.MatchRuleDefinition;
 import org.talend.dataquality.rules.SurvivorshipKeyDefinition;
+import org.talend.utils.sugars.ReturnCode;
 
 /**
  * created by HHB on 2013-8-23 Detailled comment
- *
+ * 
  */
 public class SurvivorshipDefinitionSection extends AbstractMatchAnaysisTableSection {
 
@@ -44,10 +45,9 @@ public class SurvivorshipDefinitionSection extends AbstractMatchAnaysisTableSect
 
     private MatchRuleDefinition matchRuleDef;
 
-
     /**
      * DOC HHB SurvivorshipDefinitionTableSection constructor comment.
-     *
+     * 
      * @param form
      * @param parent
      * @param style
@@ -111,7 +111,6 @@ public class SurvivorshipDefinitionSection extends AbstractMatchAnaysisTableSect
 
     }
 
-
     @Override
     public void addTableItem() {
         tableComposite.addKeyDefinition(StringUtils.EMPTY, matchRuleDef.getSurvivorshipKeys());
@@ -135,20 +134,23 @@ public class SurvivorshipDefinitionSection extends AbstractMatchAnaysisTableSect
         }
     }
 
+    public void removeAllSurvivorship() {
+        getSurvivorshipKeys().clear();
+        redrawnSubTableContent();
+    }
+
     /**
      * Getter for survivorshipKeys.
-     *
+     * 
      * @return the survivorshipKeys
      */
     public List<SurvivorshipKeyDefinition> getSurvivorshipKeys() {
-        List<SurvivorshipKeyDefinition> survivorshipDefKeys = new ArrayList<SurvivorshipKeyDefinition>();
-        survivorshipDefKeys.addAll(EcoreUtil.copyAll(this.matchRuleDef.getSurvivorshipKeys()));
-        return survivorshipDefKeys;
+        return this.matchRuleDef.getSurvivorshipKeys();
     }
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see org.talend.dataquality.record.linkage.ui.section.AbstractMatchAnaysisTableSection#moveDownTableItem()
      */
     @Override
@@ -173,7 +175,7 @@ public class SurvivorshipDefinitionSection extends AbstractMatchAnaysisTableSect
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see org.talend.dataquality.record.linkage.ui.section.AbstractMatchAnaysisTableSection#moveUpTableItem()
      */
     @Override
@@ -195,6 +197,42 @@ public class SurvivorshipDefinitionSection extends AbstractMatchAnaysisTableSect
                 tableComposite.moveDownKeyDefinition(next, currentElements);
             }
             tableComposite.selectAllItem(((StructuredSelection) selectItems).toList());
+        }
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataquality.record.linkage.ui.section.AbstractMatchAnaysisTableSection#checkResultStatus()
+     */
+    @Override
+    public ReturnCode checkResultStatus() {
+        ReturnCode returnCode = new ReturnCode(false);
+        List<String> uniqueNameList = new ArrayList<String>();
+        List<String> duplicateNameList = new ArrayList<String>();
+        for (SurvivorshipKeyDefinition ssdk : getSurvivorshipKeys()) {
+            String currentName = ssdk.getName();
+            if (currentName.equals(StringUtils.EMPTY)) {
+                returnCode.setMessage(DefaultMessagesImpl.getString("BlockingKeySection.emptyKeys.message", getSectionName())); //$NON-NLS-1$
+                return returnCode;
+            }
+            boolean currentNameIsDuplicate = false;
+            for (String uniqueName : uniqueNameList) {
+                if (currentName.equals(uniqueName)) {
+                    duplicateNameList.add(currentName);
+                    currentNameIsDuplicate = true;
+                }
+            }
+            if (!currentNameIsDuplicate) {
+                uniqueNameList.add(currentName);
+            }
+        }
+        if (duplicateNameList.size() > 0) {
+            returnCode.setMessage(DefaultMessagesImpl.getString("BlockingKeySection.duplicateKeys.message", getSectionName())); //$NON-NLS-1$
+            return returnCode;
+        } else {
+            returnCode.setOk(true);
+            return returnCode;
         }
     }
 

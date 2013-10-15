@@ -148,6 +148,11 @@ public class MatchAndSurvivorKeySection extends AbstractMatchKeyWithChartTableSe
         matchRuleDef.getSurvivorshipKeys().remove(definition.getSurvivorShipKey());
     }
 
+    public void removeAllSurvivorship() {
+        matchRuleDef.getSurvivorshipKeys().clear();
+        redrawnSubTableContent();
+    }
+
     @SuppressWarnings("unchecked")
     @Override
     public void moveDownTableItem() {
@@ -390,8 +395,7 @@ public class MatchAndSurvivorKeySection extends AbstractMatchKeyWithChartTableSe
         tableComposite.setInput(getKeyList(isClearSurvivor));
         EList<MatchRule> matchRules = matchRuleDef.getMatchRules();
         if (!matchRules.isEmpty()) {
-            ((MatchKeyAndSurvivorTableComposite) tableComposite).setMatchIntervalText(String.valueOf(matchRules.get(0)
-                    .getMatchInterval()));
+            tableComposite.setMatchIntervalText(String.valueOf(matchRules.get(0).getMatchInterval()));
         }
         groupQualityThresholdText.setText(String.valueOf(this.matchRuleDef.getMatchGroupQualityThreshold()));
     }

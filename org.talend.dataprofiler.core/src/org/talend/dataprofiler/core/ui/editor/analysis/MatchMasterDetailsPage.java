@@ -998,9 +998,32 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
             } else {
                 rc.setMessage(DefaultMessagesImpl.getString("MatchMasterDetailsPage.NoMatchKey")); //$NON-NLS-1$
             }
+        } else {
+            rc.setMessage(DefaultMessagesImpl.getString("MatchMasterDetailsPage.NoMatchKey")); //$NON-NLS-1$
         }
 
         return rc;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisMetadataPage#canSave()
+     */
+    @Override
+    public ReturnCode canSave() {
+        if (this.isDirty) {
+            ReturnCode checkResultStatus = blockingKeySection.checkResultStatus();
+            if (checkResultStatus.isOk()) {
+                checkResultStatus = matchingKeySection.checkResultStatus();
+            }
+
+            if (!checkResultStatus.isOk()) {
+                return checkResultStatus;
+            }
+        }
+        return super.canSave();
+
     }
 
     /*

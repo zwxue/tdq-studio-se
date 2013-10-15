@@ -28,11 +28,9 @@ import org.talend.dataquality.record.linkage.utils.MatchAnalysisConstant;
 import org.talend.dataquality.rules.BlockKeyDefinition;
 import org.talend.dataquality.rules.MatchRuleDefinition;
 
-
 /**
- * created by zshen on Aug 20, 2013
- * Detailled comment
- *
+ * created by zshen on Aug 20, 2013 Detailled comment
+ * 
  */
 public class BlockingKeyDefinitionSection extends BlockingKeySection {
 
@@ -40,7 +38,7 @@ public class BlockingKeyDefinitionSection extends BlockingKeySection {
 
     /**
      * DOC zshen BlockingKeyDefinitionSection constructor comment.
-     *
+     * 
      * @param form
      * @param parent
      * @param style
@@ -52,10 +50,9 @@ public class BlockingKeyDefinitionSection extends BlockingKeySection {
         super.setIsNeedSubChart(false);
     }
 
-
     /**
      * Sets the matchRuleDef.
-     *
+     * 
      * @param matchRuleDef the matchRuleDef to set
      */
     public void setMatchRuleDef(MatchRuleDefinition matchRuleDef) {
@@ -64,7 +61,7 @@ public class BlockingKeyDefinitionSection extends BlockingKeySection {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see org.talend.dataquality.record.linkage.ui.section.BlockingKeySection#getBlockKeyDefinitionList()
      */
     @Override
@@ -74,7 +71,7 @@ public class BlockingKeyDefinitionSection extends BlockingKeySection {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see org.talend.dataquality.record.linkage.ui.section.BlockingKeySection#getSectionName()
      */
     @Override
@@ -84,7 +81,7 @@ public class BlockingKeyDefinitionSection extends BlockingKeySection {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see
      * org.talend.dataquality.record.linkage.ui.section.BlockingKeySection#createSubChart(org.eclipse.swt.widgets.Composite
      * )
@@ -94,11 +91,9 @@ public class BlockingKeyDefinitionSection extends BlockingKeySection {
         // don't need do anything
     }
 
-
-
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see
      * org.talend.dataquality.record.linkage.ui.section.BlockingKeySection#removeBlockingKey(org.talend.dataquality.
      * rules.BlockKeyDefinition)
@@ -108,10 +103,9 @@ public class BlockingKeyDefinitionSection extends BlockingKeySection {
         tableComposite.removeKeyDefinition(blockKeyDef, matchRuleDef.getBlockKeys());
     }
 
-
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see org.talend.dataquality.record.linkage.ui.section.BlockingKeySection#getMatchRuleDefinition()
      */
     @Override
@@ -121,7 +115,7 @@ public class BlockingKeyDefinitionSection extends BlockingKeySection {
 
     /**
      * Getter for blockKeyList.
-     *
+     * 
      * @return the blockKeyList
      */
     public List<BlockKeyDefinition> getBlockKeyList() {
@@ -130,14 +124,28 @@ public class BlockingKeyDefinitionSection extends BlockingKeySection {
         return blockKeys;
     }
 
-
-    /* (non-Javadoc)
-     * @see org.talend.dataquality.record.linkage.ui.section.BlockingKeySection#createTableComposite(org.eclipse.swt.widgets.Composite)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * org.talend.dataquality.record.linkage.ui.section.BlockingKeySection#createTableComposite(org.eclipse.swt.widgets
+     * .Composite)
      */
     @Override
     protected BlockingKeyTableComposite createTableComposite(Composite parent) {
         return new BlockingKeyTableDefinitionComposite(parent, SWT.NO_FOCUS);
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * org.talend.dataquality.record.linkage.ui.section.BlockingKeySection#checkColumnNameIsEmpty(org.talend.dataquality
+     * .rules.BlockKeyDefinition)
+     */
+    @Override
+    protected boolean checkColumnNameIsEmpty(BlockKeyDefinition bdk) {
+        return false;
+    }
 
 }

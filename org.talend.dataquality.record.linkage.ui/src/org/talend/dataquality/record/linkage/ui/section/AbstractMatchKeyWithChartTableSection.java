@@ -12,11 +12,7 @@
 // ============================================================================
 package org.talend.dataquality.record.linkage.ui.section;
 
-import java.util.List;
-
-import org.apache.log4j.Logger;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
@@ -24,9 +20,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Spinner;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.talend.dataquality.analysis.Analysis;
@@ -36,7 +30,6 @@ import org.talend.dataquality.record.linkage.grouping.MatchGroupResultConsumer;
 import org.talend.dataquality.record.linkage.ui.composite.chart.MatchRuleDataChart;
 import org.talend.dataquality.record.linkage.ui.composite.utils.MatchRuleAnlaysisUtils;
 import org.talend.dataquality.record.linkage.ui.i18n.internal.DefaultMessagesImpl;
-import org.talend.dataquality.rules.MatchRule;
 import org.talend.dq.analysis.ExecuteMatchRuleHandler;
 import org.talend.utils.sugars.TypedReturnCode;
 
@@ -47,8 +40,6 @@ import org.talend.utils.sugars.TypedReturnCode;
 abstract public class AbstractMatchKeyWithChartTableSection extends AbstractMatchAnaysisTableSection {
 
     protected MatchRuleDataChart matchRuleChartComp = null;
-
-    private Logger log = Logger.getLogger(AbstractMatchKeyWithChartTableSection.class);
 
     /**
      * DOC zshen AbstractMatchKeyWithChartTableSection constructor comment.
@@ -101,53 +92,30 @@ abstract public class AbstractMatchKeyWithChartTableSection extends AbstractMatc
         lessText2.setText(DefaultMessagesImpl.getString("AbstractMatchKeyWithChartTableSection.items")); //$NON-NLS-1$
     }
 
-    protected RecordMatchingIndicator computeMatchResult() {
+    protected TypedReturnCode<RecordMatchingIndicator> computeMatchResult() {
+        TypedReturnCode<RecordMatchingIndicator> rc = new TypedReturnCode<RecordMatchingIndicator>(false);
         final Object[] IndicatorList = MatchRuleAnlaysisUtils.getNeedIndicatorFromAna(analysis);
-        if (IndicatorList.length != 2) {
-            return null;
-        }
         final RecordMatchingIndicator recordMatchingIndicator = EcoreUtil.copy((RecordMatchingIndicator) IndicatorList[0]);
         BlockKeyIndicator blockKeyIndicator = EcoreUtil.copy((BlockKeyIndicator) IndicatorList[1]);
-        if (!hasMatchKey()) {
-            MessageDialogWithToggle
-                    .openError(
-                            null,
-                            DefaultMessagesImpl.getString("RunAnalysisAction.runAnalysis"), DefaultMessagesImpl.getString("MatchMasterDetailsPage.NoMatchKey")); //$NON-NLS-1$//$NON-NLS-2$
-            return recordMatchingIndicator;
-        }
         TypedReturnCode<MatchGroupResultConsumer> execute = ExecuteMatchRuleHandler.execute(analysis, columnMap,
                 recordMatchingIndicator, matchRows, blockKeyIndicator);
         if (!execute.isOk()) {
-            Shell shell = null;
-            if (PlatformUI.getWorkbench().getActiveWorkbenchWindow() != null) {
-                shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
-            }
-            MessageDialogWithToggle
-                    .openError(
-                            shell,
-                            DefaultMessagesImpl.getString("RunAnalysisAction.runAnalysis"), DefaultMessagesImpl.getString("RunAnalysisAction.failRunAnalysis", analysis.getName(), execute.getMessage())); //$NON-NLS-1$ //$NON-NLS-2$
+            rc.setMessage(DefaultMessagesImpl.getString(
+                    "RunAnalysisAction.failRunAnalysis", analysis.getName(), execute.getMessage())); //$NON-NLS-1$ 
+            return rc;
         } else {
+            if (execute.getObject().getFullMatchResult() == null) {
+                return rc;
+            }
             // sort the result before refresh
             MatchRuleAnlaysisUtils.sortResultByGID(recordMatchingIndicator.getMatchRowSchema(), execute.getObject()
                     .getFullMatchResult());
             MatchRuleAnlaysisUtils.refreshDataTable(analysis, execute.getObject().getFullMatchResult());
         }
-        return recordMatchingIndicator;
+        rc.setOk(true);
+        rc.setObject(recordMatchingIndicator);
+        return rc;
 
-    }
-
-    private boolean hasMatchKey() {
-        RecordMatchingIndicator recordMatchingIndicator = MatchRuleAnlaysisUtils.getRecordMatchIndicatorFromAna(analysis);
-        List<MatchRule> matchRules = recordMatchingIndicator.getBuiltInMatchRuleDefinition().getMatchRules();
-        if (matchRules == null || matchRules.size() == 0) {
-            return Boolean.FALSE;
-        }
-        for (MatchRule matchRule : matchRules) {
-            if (matchRule.getMatchKeys().size() > 0) {
-                return true;
-            }
-        }
-        return false;
     }
 
 }

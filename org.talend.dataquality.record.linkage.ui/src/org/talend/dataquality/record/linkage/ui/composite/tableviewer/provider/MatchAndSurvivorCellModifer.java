@@ -44,7 +44,7 @@ public class MatchAndSurvivorCellModifer extends AbstractMatchCellModifier<Match
                 if (!AttributeMatcherType.CUSTOM.name().equals(mkd.getMatchKey().getAlgorithm().getAlgorithmType())) {
                     return false;
                 }
-            } 
+            }
             return true;
         }
         return false;
@@ -116,7 +116,10 @@ public class MatchAndSurvivorCellModifer extends AbstractMatchCellModifier<Match
                     return;
                 }
                 mkd.getMatchKey().getAlgorithm().setAlgorithmParameters(String.valueOf(value));
-            }else if (MatchAnalysisConstant.CONFIDENCE_WEIGHT.equalsIgnoreCase(property)) {
+            } else if (MatchAnalysisConstant.CONFIDENCE_WEIGHT.equalsIgnoreCase(property)) {
+                if (!org.apache.commons.lang.math.NumberUtils.isDigits(newValue)) {
+                    return;
+                }
                 if (mkd.getMatchKey().getConfidenceWeight() == Integer.valueOf(newValue).intValue()) {
                     return;
                 }
@@ -127,6 +130,9 @@ public class MatchAndSurvivorCellModifer extends AbstractMatchCellModifier<Match
                 }
                 mkd.getMatchKey().setName(newValue);
             } else if (MatchAnalysisConstant.THRESHOLD.equalsIgnoreCase(property)) {
+                if (!org.apache.commons.lang.math.NumberUtils.isNumber(newValue)) {
+                    return;
+                }
                 if (mkd.getMatchKey().getThreshold() == Double.parseDouble(newValue)) {
                     return;
                 }
