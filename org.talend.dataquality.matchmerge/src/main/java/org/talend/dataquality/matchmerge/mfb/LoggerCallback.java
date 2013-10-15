@@ -72,11 +72,18 @@ public class LoggerCallback implements MatchMergeAlgorithm.Callback {
             StringBuilder messagesBuilder = new StringBuilder();
             int i = 0;
             for (MatchResult.Score score : matchResult.getScores()) {
+                Float threshold = matchResult.getThresholds().get(i);
+                String compareSymbol;
+                if (score.score < threshold) {
+                    compareSymbol = "<"; //$NON-NLS-1$
+                } else {
+                    compareSymbol = ">="; //$NON-NLS-1$
+                }
                 messagesBuilder.append("\t\t")
                         .append(score.algorithm.getComponentValue())
                         .append("('").append(score.values[0]).append("', '")
                         .append(score.values[1]).append("') = ")
-                        .append(score.score).append(" (< ").append(matchResult.getThresholds().get(i)).append(")");
+                        .append(score.score).append(" (").append(compareSymbol).append(" ").append(threshold).append(")");
                 i++;
             }
             LOGGER.debug(messagesBuilder.toString());
