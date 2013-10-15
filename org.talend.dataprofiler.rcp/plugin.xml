@@ -16,4 +16,776 @@
            serviceId="org.talend.core.ILibrariesService">
      </Service>
    </extension>
+   <extension
+         point="org.talend.core.runtime.librariesNeeded">
+      <libraryNeeded
+            context="HSQL wizard"
+            language="java"
+            message="wizard for TOP"
+            name="hsqldb.jar"
+            required="true"
+            uripath="platform:/plugin/org.talend.libraries.jdbc.hsql/lib/hsqldb.jar">
+      </libraryNeeded>
+      <libraryNeeded
+            context="Sqlite wizard"
+            language="java"
+            message="Wizard use for TOP"
+            name="sqlitejdbc-v056.jar"
+            required="true"
+            uripath="platform:/plugin/org.talend.libraries.jdbc.sqlite3/lib/sqlitejdbc-v056.jar">
+      </libraryNeeded>
+      <libraryNeeded
+            context="Postgresql wizard"
+            language="java"
+            message="Wizard use for TOP"
+            name="postgresql-8.3-603.jdbc3.jar"
+            required="true"
+            uripath="platform:/plugin/org.talend.libraries.jdbc.postgresql/lib/postgresql-8.3-603.jdbc3.jar">
+      </libraryNeeded>
+       <libraryNeeded
+            context="Jtds wizard"
+            language="java"
+            message="Wizard use for TOP"
+            name="jtds-1.2.5.jar"
+            required="true"
+            uripath="platform:/plugin/org.talend.libraries.jdbc.jtds/lib/jtds-1.2.5.jar">
+      </libraryNeeded>
+      <libraryNeeded
+            context="Hive wizard"
+            language="java"
+            message="Wizard use for TOP"
+            name="log4j-1.2.16.jar"
+            required="true"
+            uripath="platform:/plugin/org.talend.libraries.apache/lib/log4j-1.2.16.jar">
+      </libraryNeeded>
+      <libraryNeeded
+            context="Hive wizard"
+            language="java"
+            message="Wizard use for TOP"
+            name="commons-logging-1.0.4.jar"
+            required="true"
+            uripath="platform:/plugin/org.talend.libraries.apache.common/lib/commons-logging-api-1.0.4.jar">
+      </libraryNeeded>
+      <libraryNeeded
+            context="Hive wizard"
+            language="java"
+            message="Wizard use for TOP"
+            name="commons-configuration-1.6.jar"
+            required="true"
+            uripath="platform:/plugin/org.talend.libraries.apache.common/lib/commons-configuration-1.6.jar">
+      </libraryNeeded>
+      <libraryNeeded
+            context="Hive wizard"
+            language="java"
+            message="Wizard use for TOP"
+            name="commons-lang-2.4.jar"
+            required="true"
+            uripath="platform:/plugin/org.talend.libraries.apache.common/lib/commons-lang-2.5.jar">
+      </libraryNeeded>
+      <libraryNeeded
+            context="Hive wizard"
+            language="java"
+            message="Wizard use for TOP"
+            name="hadoop-0.20.2-core.jar"
+            required="true"
+            uripath="platform:/plugin/org.talend.libraries.hadoop.apache.0.20.2/lib/hadoop-0.20.2-core.jar">
+      </libraryNeeded>
+      <libraryNeeded
+            context="Hive wizard"
+            language="java"
+            message="Wizard use for TOP"
+            name="hadoop-core-0.20.204.0.jar"
+            required="true"
+            uripath="platform:/plugin/org.talend.libraries.hadoop.apache.0.20.204/lib/hadoop-core-0.20.204.0.jar">
+      </libraryNeeded>
+      <libraryNeeded
+            context="Hive wizard"
+            language="java"
+            message="Wizard use for TOP"
+            name="hadoop-core-1.0.0.jar"
+            required="true"
+            uripath="platform:/plugin/org.talend.libraries.hadoop.apache.1.0.0/lib/hadoop-core-1.0.0.jar">
+      </libraryNeeded>
+      <libraryNeeded
+            context="Hive wizard"
+            language="java"
+            message="Wizard use for TOP"
+            name="hive-builtins-0.4.0.jar"
+            required="true"
+            uripath="platform:/plugin/org.talend.libraries.hadoop.apache.1.0.0/lib/hive-builtins-0.4.0.jar">
+      </libraryNeeded>
+      <libraryNeeded
+            context="Hive wizard"
+            language="java"
+            message="Wizard use for TOP"
+            name="hive-exec-0.8.1.jar"
+            required="true"
+            uripath="platform:/plugin/org.talend.libraries.hadoop.apache.1.0.0/lib/hive-exec-0.8.1.jar">
+      </libraryNeeded>
+      <libraryNeeded
+            context="Hive wizard"
+            language="java"
+            message="Wizard use for TOP"
+            name="hive-jdbc-0.8.1.jar"
+            required="true"
+            uripath="platform:/plugin/org.talend.libraries.hadoop.apache.1.0.0/lib/hive-jdbc-0.8.1.jar">
+      </libraryNeeded>
+      <libraryNeeded
+            context="Hive wizard"
+            language="java"
+            message="Wizard use for TOP"
+            name="hive-metastore-0.8.1.jar"
+            required="true"
+            uripath="platform:/plugin/org.talend.libraries.hadoop.apache.1.0.0/lib/hive-metastore-0.8.1.jar">
+      </libraryNeeded>
+      <libraryNeeded
+            context="Hive wizard"
+            language="java"
+            message="Wizard use for TOP"
+            name="hive-service-0.8.1.jar"
+            required="true"
+            uripath="platform:/plugin/org.talend.libraries.hadoop.apache.1.0.0/lib/hive-service-0.8.1.jar">
+      </libraryNeeded>
+      <libraryNeeded
+            context="Hive wizard"
+            language="java"
+            message="Wizard use for TOP"
+            name="hadoop-0.20.2-cdh3u1-core.jar"
+            required="true"
+            uripath="platform:/plugin/org.talend.libraries.hadoop.cloudera.0.20.cdh3/lib/hadoop-0.20.2-cdh3u1-core.jar">
+      </libraryNeeded>
+      <libraryNeeded
+            context="Hive wizard"
+            language="java"
+            message="Wizard use for TOP"
+            name="hbase-0.90.1-cdh3u0.jar"
+            required="true"
+            uripath="platform:/plugin/org.talend.libraries.hadoop.cloudera.0.20.cdh3/lib/hbase-0.90.1-cdh3u0.jar">
+      </libraryNeeded>
+      <libraryNeeded
+            context="Hive wizard"
+            language="java"
+            message="Wizard use for TOP"
+            name="hive-hbase-handler-0.7.1-cdh3u3.jar"
+            required="true"
+            uripath="platform:/plugin/org.talend.libraries.hadoop.cloudera.0.20.cdh3/lib/hive-hbase-handler-0.7.1-cdh3u3.jar">
+      </libraryNeeded>
+      <libraryNeeded
+            context="Hive wizard"
+            language="java"
+            message="Wizard use for TOP"
+            name="hadoop-auth-2.0.0-cdh4.0.1.jar"
+            required="true"
+            uripath="platform:/plugin/org.talend.libraries.hadoop.cloudera.cdh4/lib/hadoop-auth-2.0.0-cdh4.0.1.jar">
+      </libraryNeeded>
+      <libraryNeeded
+            context="Hive wizard"
+            language="java"
+            message="Wizard use for TOP"
+            name="hadoop-common-2.0.0-cdh4.0.1.jar"
+            required="true"
+            uripath="platform:/plugin/org.talend.libraries.hadoop.cloudera.cdh4/lib/hadoop-common-2.0.0-cdh4.0.1.jar">
+      </libraryNeeded>
+      <libraryNeeded
+            context="Hive wizard"
+            language="java"
+            message="Wizard use for TOP"
+            name="hadoop-core-2.0.0-mr1-cdh4.0.1.jar"
+            required="true"
+            uripath="platform:/plugin/org.talend.libraries.hadoop.cloudera.cdh4/lib/hadoop-core-2.0.0-mr1-cdh4.0.1.jar">
+      </libraryNeeded>
+      <libraryNeeded
+            context="Hive wizard"
+            language="java"
+            message="Wizard use for TOP"
+            name="hadoop-hdfs-2.0.0-cdh4.0.1.jar"
+            required="true"
+            uripath="platform:/plugin/org.talend.libraries.hadoop.cloudera.cdh4/lib/hadoop-hdfs-2.0.0-cdh4.0.1.jar">
+      </libraryNeeded>
+      <libraryNeeded
+            context="Hive wizard"
+            language="java"
+            message="Wizard use for TOP"
+            name="hbase-0.92.1-cdh4.0.1-security.jar"
+            required="true"
+            uripath="platform:/plugin/org.talend.libraries.hadoop.cloudera.cdh4/lib/hbase-0.92.1-cdh4.0.1-security.jar">
+      </libraryNeeded>
+      <libraryNeeded
+            context="Hive wizard"
+            language="java"
+            message="Wizard use for TOP"
+            name="hive-builtins-0.8.1-cdh4.0.1.jar"
+            required="true"
+            uripath="platform:/plugin/org.talend.libraries.hadoop.cloudera.cdh4/lib/hive-builtins-0.8.1-cdh4.0.1.jar">
+      </libraryNeeded>
+      <libraryNeeded
+            context="Hive wizard"
+            language="java"
+            message="Wizard use for TOP"
+            name="hive-exec-0.8.1-cdh4.0.1.jar"
+            required="true"
+            uripath="platform:/plugin/org.talend.libraries.hadoop.cloudera.cdh4/lib/hive-exec-0.8.1-cdh4.0.1.jar">
+      </libraryNeeded>
+      <libraryNeeded
+            context="Hive wizard"
+            language="java"
+            message="Wizard use for TOP"
+            name="hive-hbase-handler-0.8.1-cdh4.0.0.jar"
+            required="true"
+            uripath="platform:/plugin/org.talend.libraries.hadoop.cloudera.cdh4/lib/hive-hbase-handler-0.8.1-cdh4.0.0.jar">
+      </libraryNeeded>
+      <libraryNeeded
+            context="Hive wizard"
+            language="java"
+            message="Wizard use for TOP"
+            name="hive-jdbc-0.8.1-cdh4.0.1.jar"
+            required="true"
+            uripath="platform:/plugin/org.talend.libraries.hadoop.cloudera.cdh4/lib/hive-jdbc-0.8.1-cdh4.0.1.jar">
+      </libraryNeeded>
+      <libraryNeeded
+            context="Hive wizard"
+            language="java"
+            message="Wizard use for TOP"
+            name="hive-metastore-0.8.1-cdh4.0.1.jar"
+            required="true"
+            uripath="platform:/plugin/org.talend.libraries.hadoop.cloudera.cdh4/lib/hive-metastore-0.8.1-cdh4.0.1.jar">
+      </libraryNeeded>
+      <libraryNeeded
+            context="Hive wizard"
+            language="java"
+            message="Wizard use for TOP"
+            name="hive-service-0.8.1-cdh4.0.1.jar"
+            required="true"
+            uripath="platform:/plugin/org.talend.libraries.hadoop.cloudera.cdh4/lib/hive-service-0.8.1-cdh4.0.1.jar">
+      </libraryNeeded>
+      <libraryNeeded
+            context="Hive wizard"
+            language="java"
+            message="Wizard use for TOP"
+            name="protobuf-java-2.4.0a.jar"
+            required="true"
+            uripath="platform:/plugin/org.talend.libraries.hadoop.cloudera.cdh4/lib/protobuf-java-2.4.0a.jar">
+      </libraryNeeded>
+      <libraryNeeded
+            context="Hive wizard"
+            language="java"
+            message="Wizard use for TOP"
+            name="datanucleus-api-jdo-3.0.7.jar"
+            required="true"
+            uripath="platform:/plugin/org.talend.libraries.hadoop.hdp.1.0/lib/datanucleus-api-jdo-3.0.7.jar">
+      </libraryNeeded>
+      <libraryNeeded
+            context="Hive wizard"
+            language="java"
+            message="Wizard use for TOP"
+            name="datanucleus-core-3.0.9.jar"
+            required="true"
+            uripath="platform:/plugin/org.talend.libraries.hadoop.hdp.1.0/lib/datanucleus-core-3.0.9.jar">
+      </libraryNeeded>
+      <libraryNeeded
+            context="Hive wizard"
+            language="java"
+            message="Wizard use for TOP"
+            name="datanucleus-rdbms-3.0.8.jar"
+            required="true"
+            uripath="platform:/plugin/org.talend.libraries.hadoop.hdp.1.0/lib/datanucleus-rdbms-3.0.8.jar">
+      </libraryNeeded>
+      <libraryNeeded
+            context="Hive wizard"
+            language="java"
+            message="Wizard use for TOP"
+            name="hadoop-core-1.0.3.jar"
+            required="true"
+            uripath="platform:/plugin/org.talend.libraries.hadoop.hdp.1.0/lib/hadoop-core-1.0.3.jar">
+      </libraryNeeded>
+      <libraryNeeded
+            context="Hive wizard"
+            language="java"
+            message="Wizard use for TOP"
+            name="hive-builtins-0.9.0.jar"
+            required="true"
+            uripath="platform:/plugin/org.talend.libraries.hadoop.hdp.1.0/lib/hive-builtins-0.9.0.jar">
+      </libraryNeeded>
+      <libraryNeeded
+            context="Hive wizard"
+            language="java"
+            message="Wizard use for TOP"
+            name="hive-exec-0.9.0_hdp.jar"
+            required="true"
+            uripath="platform:/plugin/org.talend.libraries.hadoop.hdp.1.0/lib/hive-exec-0.9.0_hdp.jar">
+      </libraryNeeded>
+      <libraryNeeded
+            context="Hive wizard"
+            language="java"
+            message="Wizard use for TOP"
+            name="hive-jdbc-0.9.0_hdp.jar"
+            required="true"
+            uripath="platform:/plugin/org.talend.libraries.hadoop.hdp.1.0/lib/hive-jdbc-0.9.0_hdp.jar">
+      </libraryNeeded>
+      <libraryNeeded
+            context="Hive wizard"
+            language="java"
+            message="Wizard use for TOP"
+            name="hive-metastore-0.9.0_hdp.jar"
+            required="true"
+            uripath="platform:/plugin/org.talend.libraries.hadoop.hdp.1.0/lib/hive-metastore-0.9.0_hdp.jar">
+      </libraryNeeded>
+      <libraryNeeded
+            context="Hive wizard"
+            language="java"
+            message="Wizard use for TOP"
+            name="hive-service-0.9.0_hdp.jar"
+            required="true"
+            uripath="platform:/plugin/org.talend.libraries.hadoop.hdp.1.0/lib/hive-service-0.9.0_hdp.jar">
+      </libraryNeeded>
+      <libraryNeeded
+            context="Hive wizard"
+            language="java"
+            message="Wizard use for TOP"
+            name="libfb303-0.7.0.jar"
+            required="true"
+            uripath="platform:/plugin/org.talend.libraries.hadoop.hdp.1.0/lib/libfb303-0.7.0.jar">
+      </libraryNeeded>
+      <libraryNeeded
+            context="Hive wizard"
+            language="java"
+            message="Wizard use for TOP"
+            name="libthrift-0.7.0.jar"
+            required="true"
+            uripath="platform:/plugin/org.talend.libraries.hadoop.hdp.1.0/lib/libthrift-0.7.0.jar">
+      </libraryNeeded>
+      <libraryNeeded
+            context="Hive wizard"
+            language="java"
+            message="Wizard use for TOP"
+            name="hadoop-core-1.1.2.21.jar"
+            required="true"
+            uripath="platform:/plugin/org.talend.libraries.hadoop.hdp.1.2/lib/hadoop-core-1.1.2.21.jar">
+      </libraryNeeded>
+      <libraryNeeded
+            context="Hive wizard"
+            language="java"
+            message="Wizard use for TOP"
+            name="hbase-0.94.2.21.jar"
+            required="true"
+            uripath="platform:/plugin/org.talend.libraries.hadoop.hdp.1.2/lib/hbase-0.94.2.21.jar">
+      </libraryNeeded>
+      <libraryNeeded
+            context="Hive wizard"
+            language="java"
+            message="Wizard use for TOP"
+            name="hive-builtins-0.10.0.21.jar"
+            required="true"
+            uripath="platform:/plugin/org.talend.libraries.hadoop.hdp.1.2/lib/hive-builtins-0.10.0.21.jar">
+      </libraryNeeded>
+      <libraryNeeded
+            context="Hive wizard"
+            language="java"
+            message="Wizard use for TOP"
+            name="hive-exec-0.10.0.21.jar"
+            required="true"
+            uripath="platform:/plugin/org.talend.libraries.hadoop.hdp.1.2/lib/hive-exec-0.10.0.21.jar">
+      </libraryNeeded>
+      <libraryNeeded
+            context="Hive wizard"
+            language="java"
+            message="Wizard use for TOP"
+            name="hive-hbase-handler-0.10.0.21.jar"
+            required="true"
+            uripath="platform:/plugin/org.talend.libraries.hadoop.hdp.1.2/lib/hive-hbase-handler-0.10.0.21.jar">
+      </libraryNeeded>
+      <libraryNeeded
+            context="Hive wizard"
+            language="java"
+            message="Wizard use for TOP"
+            name="hive-jdbc-0.10.0.21.jar"
+            required="true"
+            uripath="platform:/plugin/org.talend.libraries.hadoop.hdp.1.2/lib/hive-jdbc-0.10.0.21.jar">
+      </libraryNeeded>
+      <libraryNeeded
+            context="Hive wizard"
+            language="java"
+            message="Wizard use for TOP"
+            name="hive-metastore-0.10.0.21.jar"
+            required="true"
+            uripath="platform:/plugin/org.talend.libraries.hadoop.hdp.1.2/lib/hive-metastore-0.10.0.21.jar">
+      </libraryNeeded>
+      <libraryNeeded
+            context="Hive wizard"
+            language="java"
+            message="Wizard use for TOP"
+            name="hive-service-0.10.0.21.jar"
+            required="true"
+            uripath="platform:/plugin/org.talend.libraries.hadoop.hdp.1.2/lib/hive-service-0.10.0.21.jar">
+      </libraryNeeded>
+      <libraryNeeded
+            context="Hive wizard"
+            language="java"
+            message="Wizard use for TOP"
+            name="libfb303-0.9.0.jar"
+            required="true"
+            uripath="platform:/plugin/org.talend.libraries.hadoop.hdp.1.2/lib/libfb303-0.9.0.jar">
+      </libraryNeeded>
+      <libraryNeeded
+            context="Hive wizard"
+            language="java"
+            message="Wizard use for TOP"
+            name="libthrift-0.9.0.jar"
+            required="true"
+            uripath="platform:/plugin/org.talend.libraries.hadoop.hdp.1.2/lib/libthrift-0.9.0.jar">
+      </libraryNeeded>
+      <libraryNeeded
+            context="Hive wizard"
+            language="java"
+            message="Wizard use for TOP"
+            name="hadoop-0.20.2-dev-core.jar"
+            required="true"
+            uripath="platform:/plugin/org.talend.libraries.hadoop.mapr/lib/hadoop-0.20.2-dev-core.jar">
+      </libraryNeeded>
+      <libraryNeeded
+            context="Hive wizard"
+            language="java"
+            message="Wizard use for TOP"
+            name="maprfs-0.1.jar"
+            required="true"
+            uripath="platform:/plugin/org.talend.libraries.hadoop.mapr/lib/maprfs-0.1.jar">
+      </libraryNeeded>
+      
+      <libraryNeeded
+            context="Hive wizard"
+            language="java"
+            message="Wizard use for TOP"
+            name="datanucleus-connectionpool-2.0.3.jar"
+            required="true"
+            uripath="platform:/plugin/org.talend.libraries.hadoop.mapr2/lib/datanucleus-connectionpool-2.0.3.jar">
+      </libraryNeeded>
+      <libraryNeeded
+            context="Hive wizard"
+            language="java"
+            message="Wizard use for TOP"
+            name="datanucleus-core-2.0.3.jar"
+            required="true"
+            uripath="platform:/plugin/org.talend.libraries.hadoop.mapr2/lib/datanucleus-core-2.0.3.jar">
+      </libraryNeeded>
+      <libraryNeeded
+            context="Hive wizard"
+            language="java"
+            message="Wizard use for TOP"
+            name="datanucleus-enhancer-2.0.3.jar"
+            required="true"
+            uripath="platform:/plugin/org.talend.libraries.hadoop.mapr2/lib/datanucleus-enhancer-2.0.3.jar">
+      </libraryNeeded>
+      <libraryNeeded
+            context="Hive wizard"
+            language="java"
+            message="Wizard use for TOP"
+            name="datanucleus-rdbms-2.0.3.jar"
+            required="true"
+            uripath="platform:/plugin/org.talend.libraries.hadoop.mapr2/lib/datanucleus-rdbms-2.0.3.jar">
+      </libraryNeeded>
+      <libraryNeeded
+            context="Hive wizard"
+            language="java"
+            message="Wizard use for TOP"
+            name="hadoop-0.20.2-dev-core-mapr2.jar"
+            required="true"
+            uripath="platform:/plugin/org.talend.libraries.hadoop.mapr2/lib/hadoop-0.20.2-dev-core-mapr2.jar">
+      </libraryNeeded>
+      <libraryNeeded
+            context="Hive wizard"
+            language="java"
+            message="Wizard use for TOP"
+            name="hadoop-conf-kerberos.jar"
+            required="true"
+            uripath="platform:/plugin/org.talend.libraries.hadoop.mapr2/lib/hadoop-conf-kerberos.jar">
+      </libraryNeeded>
+      <libraryNeeded
+            context="Hive wizard"
+            language="java"
+            message="Wizard use for TOP"
+            name="hbase-0.92.0.jar"
+            required="true"
+            uripath="platform:/plugin/org.talend.libraries.hadoop.mapr2/lib/hbase-0.92.0.jar">
+      </libraryNeeded>
+      <libraryNeeded
+            context="Hive wizard"
+            language="java"
+            message="Wizard use for TOP"
+            name="hbase-0.92.1.jar"
+            required="true"
+            uripath="platform:/plugin/org.talend.libraries.hadoop.mapr2/lib/hbase-0.92.1.jar">
+      </libraryNeeded>
+      <libraryNeeded
+            context="Hive wizard"
+            language="java"
+            message="Wizard use for TOP"
+            name="hive-builtins-0.9.0-mapr2.jar"
+            required="true"
+            uripath="platform:/plugin/org.talend.libraries.hadoop.mapr2/lib/hive-builtins-0.9.0-mapr2.jar">
+      </libraryNeeded>
+      <libraryNeeded
+            context="Hive wizard"
+            language="java"
+            message="Wizard use for TOP"
+            name="hive-exec-0.9.0-mapr2.jar"
+            required="true"
+            uripath="platform:/plugin/org.talend.libraries.hadoop.mapr2/lib/hive-exec-0.9.0-mapr2.jar">
+      </libraryNeeded>
+      <libraryNeeded
+            context="Hive wizard"
+            language="java"
+            message="Wizard use for TOP"
+            name="hive-hbase-handler-0.9.0.jar"
+            required="true"
+            uripath="platform:/plugin/org.talend.libraries.hadoop.mapr2/lib/hive-hbase-handler-0.9.0.jar">
+      </libraryNeeded>
+      <libraryNeeded
+            context="Hive wizard"
+            language="java"
+            message="Wizard use for TOP"
+            name="hive-jdbc-0.9.0-mapr2.jar"
+            required="true"
+            uripath="platform:/plugin/org.talend.libraries.hadoop.mapr2/lib/hive-jdbc-0.9.0-mapr2.jar">
+      </libraryNeeded>
+      <libraryNeeded
+            context="Hive wizard"
+            language="java"
+            message="Wizard use for TOP"
+            name="hive-metastore-0.9.0-mapr2.jar"
+            required="true"
+            uripath="platform:/plugin/org.talend.libraries.hadoop.mapr2/lib/hive-metastore-0.9.0-mapr2.jar">
+      </libraryNeeded>
+      <libraryNeeded
+            context="Hive wizard"
+            language="java"
+            message="Wizard use for TOP"
+            name="hive-service-0.9.0-mapr2.jar"
+            required="true"
+            uripath="platform:/plugin/org.talend.libraries.hadoop.mapr2/lib/hive-service-0.9.0-mapr2.jar">
+      </libraryNeeded>
+      <libraryNeeded
+            context="Hive wizard"
+            language="java"
+            message="Wizard use for TOP"
+            name="jdo2-api-2.3-ec.jar"
+            required="true"
+            uripath="platform:/plugin/org.talend.libraries.hadoop.mapr2/lib/jdo2-api-2.3-ec.jar">
+      </libraryNeeded>
+      <libraryNeeded
+            context="Hive wizard"
+            language="java"
+            message="Wizard use for TOP"
+            name="libfb303_new.jar"
+            required="true"
+            uripath="platform:/plugin/org.talend.libraries.hadoop.mapr2/lib/libfb303_new.jar">
+      </libraryNeeded>
+      <libraryNeeded
+            context="Hive wizard"
+            language="java"
+            message="Wizard use for TOP"
+            name="libthrift.jar"
+            required="true"
+            uripath="platform:/plugin/org.talend.libraries.hadoop.mapr2/lib/libthrift.jar">
+      </libraryNeeded>
+      <libraryNeeded
+            context="Hive wizard"
+            language="java"
+            message="Wizard use for TOP"
+            name="jackson-mapper-asl-1.8.8.jar"
+            required="true"
+            uripath="platform:/plugin/org.talend.libraries.jackson/lib/jackson-mapper-asl-1.8.8.jar">
+      </libraryNeeded>
+      <libraryNeeded
+            context="Hive wizard"
+            language="java"
+            message="Wizard use for TOP"
+            name="jackson-core-asl-1.8.8.jar"
+            required="true"
+            uripath="platform:/plugin/org.talend.libraries.jackson/lib/jackson-core-asl-1.8.8.jar">
+      </libraryNeeded>
+      <libraryNeeded
+            context="Hive wizard"
+            language="java"
+            message="Wizard use for TOP"
+            name="derby-10.4.2.0.jar"
+            required="true"
+            uripath="platform:/plugin/org.talend.libraries.jdbc.derby/lib/derby-10.4.2.0.jar">
+      </libraryNeeded>
+      <libraryNeeded
+            context="Hive wizard"
+            language="java"
+            message="Wizard use for TOP"
+            name="derby.jar"
+            required="true"
+            uripath="platform:/plugin/org.talend.libraries.jdbc.derby/lib/derby.jar">
+      </libraryNeeded>
+      <libraryNeeded
+            context="Hive wizard"
+            language="java"
+            message="Wizard use for TOP"
+            name="derbyclient.jar"
+            required="true"
+            uripath="platform:/plugin/org.talend.libraries.jdbc.derby/lib/derbyclient.jar">
+      </libraryNeeded>
+      <libraryNeeded
+            context="Hive wizard"
+            language="java"
+            message="Wizard use for TOP"
+            name="derbynet.jar"
+            required="true"
+            uripath="platform:/plugin/org.talend.libraries.jdbc.derby/lib/derbynet.jar">
+      </libraryNeeded>
+      <libraryNeeded
+            context="Hive wizard"
+            language="java"
+            message="Wizard use for TOP"
+            name="antlr-runtime-3.0.1.jar"
+            required="true"
+            uripath="platform:/plugin/org.talend.libraries.apache.axis2/lib/antlr-runtime-3.0.1.jar">
+      </libraryNeeded>
+      <libraryNeeded
+            context="Hive wizard"
+            language="java"
+            message="Wizard use for TOP"
+            name="commons-dbcp-1.4.jar"
+            required="true"
+            uripath="platform:/plugin/org.talend.libraries.apache.common/lib/commons-dbcp-1.4.jar">
+      </libraryNeeded>
+      <libraryNeeded
+            context="Hive wizard"
+            language="java"
+            message="Wizard use for TOP"
+            name="commons-pool-1.5.4.jar"
+            required="true"
+            uripath="platform:/plugin/org.talend.libraries.apache.common/lib/commons-pool-1.5.4.jar">
+      </libraryNeeded>
+      <libraryNeeded
+            context="Hive wizard"
+            language="java"
+            message="Wizard use for TOP"
+            name="commons-logging-1.1.1.jar"
+            required="true"
+            uripath="platform:/plugin/org.talend.libraries.apache.common/lib/commons-logging-1.1.jar">
+      </libraryNeeded>
+      <libraryNeeded
+            context="Hive wizard"
+            language="java"
+            message="Wizard use for TOP"
+            name="log4j-1.2.15.jar"
+            required="true"
+            uripath="platform:/plugin/org.talend.libraries.apache/lib/log4j-1.2.16.jar">
+      </libraryNeeded>
+      <libraryNeeded
+            context="Hive wizard"
+            language="java"
+            message="Wizard use for TOP"
+            name="hadoop-core-0.20.203.0.jar"
+            required="true"
+            uripath="platform:/plugin/org.talend.libraries.hadoop.apache.0.20.203/lib/hadoop-core-0.20.203.0.jar">
+      </libraryNeeded>
+      <libraryNeeded
+            context="Hive wizard"
+            language="java"
+            message="Wizard use for TOP"
+            name="hive-exec-0.7.1.jar"
+            required="true"
+            uripath="platform:/plugin/org.talend.libraries.hadoop.apache.0.20.203/lib/hive-exec-0.7.1.jar">
+      </libraryNeeded>
+      <libraryNeeded
+            context="Hive wizard"
+            language="java"
+            message="Wizard use for TOP"
+            name="hive-jdbc-0.7.1.jar"
+            required="true"
+            uripath="platform:/plugin/org.talend.libraries.hadoop.apache.0.20.203/lib/hive-jdbc-0.7.1.jar">
+      </libraryNeeded>
+      <libraryNeeded
+            context="Hive wizard"
+            language="java"
+            message="Wizard use for TOP"
+            name="hive-metastore-0.7.1.jar"
+            required="true"
+            uripath="platform:/plugin/org.talend.libraries.hadoop.apache.0.20.203/lib/hive-metastore-0.7.1.jar">
+      </libraryNeeded>
+      <libraryNeeded
+            context="Hive wizard"
+            language="java"
+            message="Wizard use for TOP"
+            name="hive-service-0.7.1.jar"
+            required="true"
+            uripath="platform:/plugin/org.talend.libraries.hadoop.apache.0.20.203/lib/hive-service-0.7.1.jar">
+      </libraryNeeded>
+      <libraryNeeded
+            context="Hive wizard"
+            language="java"
+            message="Wizard use for TOP"
+            name="libfb303.jar"
+            required="true"
+            uripath="platform:/plugin/org.talend.libraries.hadoop.apache.0.20.203/lib/libfb303.jar">
+      </libraryNeeded>
+      <libraryNeeded
+            context="Hive wizard"
+            language="java"
+            message="Wizard use for TOP"
+            name="slf4j-api-1.6.1.jar"
+            required="true"
+            uripath="platform:/plugin/org.talend.libraries.slf4j/lib/slf4j-api-1.6.1.jar">
+      </libraryNeeded>
+      <libraryNeeded
+            context="Hive wizard"
+            language="java"
+            message="Wizard use for TOP"
+            name="slf4j-log4j12-1.6.1.jar"
+            required="true"
+            uripath="platform:/plugin/org.talend.libraries.slf4j/lib/slf4j-log4j12-1.6.1.jar">
+      </libraryNeeded>
+      <libraryNeeded
+            context="Hive wizard"
+            language="java"
+            message="Wizard use for TOP"
+            name="guava-11.0.2.jar"
+            required="true"
+            uripath="platform:/plugin/org.talend.libraries.guava/lib/guava-11.0.2.jar">
+      </libraryNeeded>
+      <libraryNeeded
+            context="Hive wizard"
+            language="java"
+            message="Wizard use for TOP"
+            name="hive-builtins-0.9.0-cdh4.1.2.jar"
+            required="true"
+            uripath="platform:/plugin/org.talend.libraries.hadoop.cloudera.cdh4/lib/hive-builtins-0.9.0-cdh4.1.2.jar">
+      </libraryNeeded>
+      <libraryNeeded
+            context="Hive wizard"
+            language="java"
+            message="Wizard use for TOP"
+            name="hive-exec-0.9.0-cdh4.1.2.jar"
+            required="true"
+            uripath="platform:/plugin/org.talend.libraries.hadoop.cloudera.cdh4/lib/hive-exec-0.9.0-cdh4.1.2.jar">
+      </libraryNeeded>
+      <libraryNeeded
+            context="Hive wizard"
+            language="java"
+            message="Wizard use for TOP"
+            name="hive-jdbc-0.9.0-cdh4.1.2.jar"
+            required="true"
+            uripath="platform:/plugin/org.talend.libraries.hadoop.cloudera.cdh4/lib/hive-jdbc-0.9.0-cdh4.1.2.jar">
+      </libraryNeeded>
+      <libraryNeeded
+            context="Hive wizard"
+            language="java"
+            message="Wizard use for TOP"
+            name="hive-metastore-0.9.0-cdh4.1.2.jar"
+            required="true"
+            uripath="platform:/plugin/org.talend.libraries.hadoop.cloudera.cdh4/lib/hive-metastore-0.9.0-cdh4.1.2.jar">
+      </libraryNeeded>
+      <libraryNeeded
+            context="Hive wizard"
+            language="java"
+            message="Wizard use for TOP"
+            name="hive-service-0.9.0-cdh4.1.2.jar"
+            required="true"
+            uripath="platform:/plugin/org.talend.libraries.hadoop.cloudera.cdh4/lib/hive-service-0.9.0-cdh4.1.2.jar">
+      </libraryNeeded>
+   </extension>
 </plugin>
