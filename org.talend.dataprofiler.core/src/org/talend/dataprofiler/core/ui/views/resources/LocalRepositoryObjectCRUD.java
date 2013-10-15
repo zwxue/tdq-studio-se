@@ -664,6 +664,8 @@ public class LocalRepositoryObjectCRUD extends AbstractRepObjectCRUDAction {
             fullPath = ResourceManager.getMDMConnectionFolder().getFullPath();
         } else if (objectType == ERepositoryObjectType.TDQ_RULES_PARSER) {
             fullPath = ResourceManager.getRulesParserFolder().getFullPath();
+        } else if (objectType == ERepositoryObjectType.TDQ_RULES_MATCHER) {
+            fullPath = ResourceManager.getRulesMatcherFolder().getFullPath();
         }
         return fullPath;
     }
