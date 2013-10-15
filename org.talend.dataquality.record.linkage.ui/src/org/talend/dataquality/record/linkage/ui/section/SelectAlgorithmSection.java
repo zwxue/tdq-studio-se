@@ -27,7 +27,7 @@ import org.talend.dataquality.record.linkage.ui.i18n.internal.DefaultMessagesImp
 import org.talend.dataquality.record.linkage.ui.section.definition.BlockingKeyDefinitionSection;
 import org.talend.dataquality.record.linkage.ui.section.definition.DefaultSurvivorshipDefinitionSection;
 import org.talend.dataquality.record.linkage.ui.section.definition.MatchKeyDefinitionSection;
-import org.talend.dataquality.record.linkage.ui.section.definition.SurvivorshipDefinitionSection;
+import org.talend.dataquality.record.linkage.ui.section.definition.MatchAndSurvivorKeySection;
 import org.talend.dataquality.record.linkage.utils.MatchAnalysisConstant;
 import org.talend.dataquality.rules.MatchRuleDefinition;
 
@@ -43,7 +43,9 @@ public class SelectAlgorithmSection extends AbstractSectionComposite {
 
     private MatchKeyDefinitionSection matchKeySection = null;
 
-    private SurvivorshipDefinitionSection survivorshipDefinitionSection = null;
+    // private SurvivorshipDefinitionSection survivorshipDefinitionSection = null;
+
+    private MatchAndSurvivorKeySection matchAndSurvivorKeySection = null;
 
     private DefaultSurvivorshipDefinitionSection defaultSurvivorshipDefinitionSection = null;
 
@@ -126,11 +128,17 @@ public class SelectAlgorithmSection extends AbstractSectionComposite {
      * DOC zshen Comment method "noticeOtherSection".
      */
     private void noticeOtherSection() {
-        matchKeySection.redrawnContent();
+        // matchKeySection.redrawnContent();
+        matchKeySection.changeSectionDisStatus(isVSRMode);
         blockKeySection.changeSectionDisStatus(isVSRMode);
-        survivorshipDefinitionSection.changeSectionDisStatus(!isVSRMode);
+        // survivorshipDefinitionSection.changeSectionDisStatus(!isVSRMode);
         defaultSurvivorshipDefinitionSection.changeSectionDisStatus(!isVSRMode);
-
+        matchAndSurvivorKeySection.changeSectionDisStatus(!isVSRMode);
+        if (!isVSRMode) {
+            matchAndSurvivorKeySection.initTableInput(Boolean.TRUE);
+        } else {
+            matchKeySection.redrawnContent();
+        }
     }
 
     public boolean isVSRMode() {
@@ -155,6 +163,10 @@ public class SelectAlgorithmSection extends AbstractSectionComposite {
         this.matchKeySection = matchKeySection;
     }
 
+    public void setMatchAndSurvivorKeySection(MatchAndSurvivorKeySection matchAndSurvivorKeySection) {
+        this.matchAndSurvivorKeySection = matchAndSurvivorKeySection;
+    }
+
     /**
      * Getter for algorithmName.
      * 
@@ -174,14 +186,14 @@ public class SelectAlgorithmSection extends AbstractSectionComposite {
         this.algorithmName = this.matchRuleDef.getRecordLinkageAlgorithm();
     }
 
-    /**
-     * Sets the survivorshipDefinitionSection.
-     * 
-     * @param survivorshipDefinitionSection the survivorshipDefinitionSection to set
-     */
-    public void setSurvivorshipDefinitionSection(SurvivorshipDefinitionSection survivorshipDefinitionSection) {
-        this.survivorshipDefinitionSection = survivorshipDefinitionSection;
-    }
+    // /**
+    // * Sets the survivorshipDefinitionSection.
+    // *
+    // * @param survivorshipDefinitionSection the survivorshipDefinitionSection to set
+    // */
+    // public void setSurvivorshipDefinitionSection(SurvivorshipDefinitionSection survivorshipDefinitionSection) {
+    // this.survivorshipDefinitionSection = survivorshipDefinitionSection;
+    // }
 
     /**
      * Sets the defaultSurvivorshipDefinitionSection.

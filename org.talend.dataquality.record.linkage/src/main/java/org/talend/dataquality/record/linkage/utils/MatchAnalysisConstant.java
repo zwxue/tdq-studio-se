@@ -121,4 +121,6 @@ public class MatchAnalysisConstant {
 
     public static final int DEFAULT_COLUMN_COUNT = 7;
 
+    public static final String MATCHING_KEY_AND_SURVIVOR_DEFINITION_SECTION_NAME = "Match and Survivor";
+
 }

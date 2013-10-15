@@ -22,11 +22,11 @@ import org.eclipse.jface.viewers.ICellModifier;
  * 
  * Abstract class for cell Modifier in match key and block key table
  */
- public abstract class AbstractMatchCellModifier<T> implements ICellModifier {
+public abstract class AbstractMatchCellModifier<T> implements ICellModifier {
 
     protected AbstractMatchAnalysisTableViewer<T> tableViewer = null;
 
-    List<String> columnList = new ArrayList<String>();
+    protected List<String> columnList = new ArrayList<String>();
 
     /**
      * Getter for columnList.

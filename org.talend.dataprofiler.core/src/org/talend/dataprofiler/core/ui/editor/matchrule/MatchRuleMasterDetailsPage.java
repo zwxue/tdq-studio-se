@@ -31,6 +31,7 @@ import org.talend.dataquality.properties.TDQMatchRuleItem;
 import org.talend.dataquality.record.linkage.ui.section.SelectAlgorithmSection;
 import org.talend.dataquality.record.linkage.ui.section.definition.BlockingKeyDefinitionSection;
 import org.talend.dataquality.record.linkage.ui.section.definition.DefaultSurvivorshipDefinitionSection;
+import org.talend.dataquality.record.linkage.ui.section.definition.MatchAndSurvivorKeySection;
 import org.talend.dataquality.record.linkage.ui.section.definition.MatchKeyDefinitionSection;
 import org.talend.dataquality.record.linkage.ui.section.definition.SurvivorshipDefinitionSection;
 import org.talend.dataquality.rules.MatchRuleDefinition;
@@ -56,6 +57,8 @@ public class MatchRuleMasterDetailsPage extends AbstractMetadataFormPage impleme
     private MatchKeyDefinitionSection matchingKeyDefinitionSection = null;
 
     private SurvivorshipDefinitionSection survivorshipDefinitionSection = null;
+
+    private MatchAndSurvivorKeySection matchAndSurvivorKeySection = null;
 
     private DefaultSurvivorshipDefinitionSection defaultSurvivorshipDefinitionSection = null;
 
@@ -170,11 +173,30 @@ public class MatchRuleMasterDetailsPage extends AbstractMetadataFormPage impleme
         createMatchingKeySection(topComp);
         selectAlgorithmSection.setMatchKeySection(matchingKeyDefinitionSection);
 
-        createSurvivorshipSection(topComp);
-        selectAlgorithmSection.setSurvivorshipDefinitionSection(survivorshipDefinitionSection);
+        createMatchAndSurvivorKeySection(topComp);
+        selectAlgorithmSection.setMatchAndSurvivorKeySection(matchAndSurvivorKeySection);
+
+        // createSurvivorshipSection(topComp);
+        // selectAlgorithmSection.setSurvivorshipDefinitionSection(survivorshipDefinitionSection);
 
         createDefaultSurvivorshipSection(topComp);
         selectAlgorithmSection.setDefaultSurvivorshipDefinitionSection(defaultSurvivorshipDefinitionSection);
+
+    }
+
+    /**
+     * DOC yyin Comment method "createMatchAndSurvivorKeySection".
+     * 
+     * @param topComp
+     */
+    private void createMatchAndSurvivorKeySection(Composite mainComp) {
+        matchAndSurvivorKeySection = new MatchAndSurvivorKeySection(form, mainComp, toolkit);
+        matchAndSurvivorKeySection.setMatchRuleDef((MatchRuleDefinition) getCurrentModelElement(getEditor()));
+        matchAndSurvivorKeySection.setAddColumn(!selectAlgorithmSection.isVSRMode());
+        matchAndSurvivorKeySection.createContent();
+        matchAndSurvivorKeySection.addPropertyChangeListener(this);
+        matchAndSurvivorKeySection.changeSectionDisStatus(!selectAlgorithmSection.isVSRMode());
+        matchAndSurvivorKeySection.getSection().setExpanded(true);
 
     }
 
@@ -189,6 +211,7 @@ public class MatchRuleMasterDetailsPage extends AbstractMetadataFormPage impleme
         matchingKeyDefinitionSection.setAddColumn(!selectAlgorithmSection.isVSRMode());
         matchingKeyDefinitionSection.createContent();
         matchingKeyDefinitionSection.addPropertyChangeListener(this);
+        matchingKeyDefinitionSection.changeSectionDisStatus(selectAlgorithmSection.isVSRMode());
         matchingKeyDefinitionSection.getSection().setExpanded(true);
     }
 
@@ -196,7 +219,7 @@ public class MatchRuleMasterDetailsPage extends AbstractMetadataFormPage impleme
      * DOC HHB Comment method "createSurvivorshipSection".
      * 
      * @param mainComp
-     */
+    
     private void createSurvivorshipSection(Composite mainComp) {
         survivorshipDefinitionSection = new SurvivorshipDefinitionSection(form, mainComp, toolkit);
         survivorshipDefinitionSection.setMatchRuleDef((MatchRuleDefinition) getCurrentModelElement(getEditor()));
@@ -204,7 +227,7 @@ public class MatchRuleMasterDetailsPage extends AbstractMetadataFormPage impleme
         survivorshipDefinitionSection.addPropertyChangeListener(this);
         survivorshipDefinitionSection.changeSectionDisStatus(!selectAlgorithmSection.isVSRMode());
         survivorshipDefinitionSection.getSection().setExpanded(true);
-    }
+    } */
 
     private void createDefaultSurvivorshipSection(Composite mainComp) {
         defaultSurvivorshipDefinitionSection = new DefaultSurvivorshipDefinitionSection(form, mainComp, toolkit);
