@@ -646,6 +646,10 @@ public class DbmsLanguageTest {
             Assert.assertEquals("SELECT TOP " + TOP_N + "  " + GenericSQLHandler.COLUMN_NAMES + " from " //$NON-NLS-1$ //$NON-NLS-2$
                     + GenericSQLHandler.TABLE_NAME, dbms.getTopNQuery(QUERY_STR, TOP_N)); // $NON
 
+            dbms = getTeradataDbmsLanguage();
+            Assert.assertEquals("SELECT TOP " + TOP_N + "  " + GenericSQLHandler.COLUMN_NAMES + " from " //$NON-NLS-1$ //$NON-NLS-2$
+                    + GenericSQLHandler.TABLE_NAME, dbms.getTopNQuery(QUERY_STR, TOP_N)); // $NON
+
         } catch (Exception e) {
             fail(e.getMessage());
         }
