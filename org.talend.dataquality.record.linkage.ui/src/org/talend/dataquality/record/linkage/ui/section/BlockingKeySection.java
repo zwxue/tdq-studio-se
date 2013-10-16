@@ -150,7 +150,13 @@ public class BlockingKeySection extends AbstractMatchAnaysisTableSection {
      */
     @Override
     public void refreshChart() {
-
+        if (getBlockKeyDefinitionList().size() <= 0) {
+            MessageDialogWithToggle
+                    .openError(
+                            PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
+                            DefaultMessagesImpl.getString("BlockingKeySection.RefreshChartError"), DefaultMessagesImpl.getString("BlockingKeySection.NoBlockKey")); //$NON-NLS-1$ //$NON-NLS-2$
+            return;
+        }
         ReturnCode checkResultStatus = checkResultStatus();
         if (!checkResultStatus.isOk()) {
             if (checkResultStatus.getMessage() != null && !checkResultStatus.getMessage().equals(StringUtils.EMPTY)) {

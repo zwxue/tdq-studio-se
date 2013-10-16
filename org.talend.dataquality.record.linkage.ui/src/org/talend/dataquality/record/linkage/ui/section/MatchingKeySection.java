@@ -405,7 +405,13 @@ public class MatchingKeySection extends AbstractMatchKeyWithChartTableSection {
 
     @Override
     public void refreshChart() {
-
+        if (!hasMatchKey(true)) {
+            MessageDialogWithToggle
+                    .openError(
+                            PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
+                            DefaultMessagesImpl.getString("BlockingKeySection.RefreshChartError"), DefaultMessagesImpl.getString("MatchMasterDetailsPage.NoMatchKey")); //$NON-NLS-1$ //$NON-NLS-2$
+            return;
+        }
         ReturnCode checkResultStatus = checkResultStatus();
         if (!checkResultStatus.isOk()) {
             MessageDialogWithToggle.openError(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
@@ -641,7 +647,7 @@ public class MatchingKeySection extends AbstractMatchKeyWithChartTableSection {
         ReturnCode returnCode = new ReturnCode(false);
         List<String> uniqueNameList = new ArrayList<String>();
         List<String> duplicateNameList = new ArrayList<String>();
-        if (!hasMatchKey()) {
+        if (!hasMatchKey(false)) {
 
             returnCode.setMessage(DefaultMessagesImpl.getString("MatchMasterDetailsPage.NoMatchKey")); //$NON-NLS-1$
             return returnCode;
@@ -681,10 +687,16 @@ public class MatchingKeySection extends AbstractMatchKeyWithChartTableSection {
         }
     }
 
-    private boolean hasMatchKey() {
+    private boolean hasMatchKey(boolean isCareAboutFirstMatchRuleCase) {
         List<MatchRule> matchRules = getMatchRuleDefinition().getMatchRules();
-        if (matchRules == null || matchRules.size() == 0) {
-            return Boolean.FALSE;
+        if (isCareAboutFirstMatchRuleCase) {//no match rule tab case
+            if (matchRules == null || matchRules.size() == 0) {
+                return Boolean.FALSE;
+            }
+        } else {
+            if (matchRules == null || matchRules.size() == 1) {
+                return Boolean.TRUE;
+            }
         }
         for (int index = 0; matchRules.size() > index; index++) {
 
