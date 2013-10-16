@@ -24,7 +24,6 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.jfree.util.Log;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.talend.commons.exception.PersistenceException;
@@ -58,7 +57,7 @@ import orgomg.cwm.resource.relational.Schema;
 
 /**
  * created by talend on Oct 30, 2012 Detailled comment
- *
+ * 
  */
 public class SwitchContextGroupNameImplTest {
 
@@ -84,6 +83,8 @@ public class SwitchContextGroupNameImplTest {
                                 // connection property when
                                 // use
 
+    static int index = 0;
+
     String prefixName = Connectionlabel + ConnectionContextHelper.LINE;
 
     String paramNameCatalog = prefixName + DBConnectionContextUtils.EDBParamName.Database;
@@ -96,16 +97,15 @@ public class SwitchContextGroupNameImplTest {
 
     /**
      * DOC talend Comment method "setUp".
-     *
+     * 
      * @throws java.lang.Exception
      */
     @Before
     public void setUp() throws Exception {
         UnitTestBuildHelper.initProjectStructure("testForContextGroupTDQ"); //$NON-NLS-1$
-        createContextItem();
+        createContextItem("contentName" + index++); //$NON-NLS-1$
         Connectionlabel = ConnectionContextHelper.convertContextLabel(connectionName);
     }
-
 
     /**
      * Test method for
@@ -145,7 +145,7 @@ public class SwitchContextGroupNameImplTest {
 
     /**
      * DOC talend Comment method "createSchema".
-     *
+     * 
      * @param schemaOld2
      */
     private void createCatalogSchema(String schemaOld2) {
@@ -286,7 +286,7 @@ public class SwitchContextGroupNameImplTest {
         }
     }
 
-    public void createContextItem() throws PersistenceException {
+    public void createContextItem(String name) throws PersistenceException {
 
         // ContextType--default
         ContextType createContextDefault = TalendFileFactory.eINSTANCE.createContextType();
@@ -319,7 +319,7 @@ public class SwitchContextGroupNameImplTest {
                 .getProperty(Context.REPOSITORY_CONTEXT_KEY)).getUser());
         contextProperty.setVersion(VersionUtils.DEFAULT_VERSION);
         contextProperty.setStatusCode(""); //$NON-NLS-1$
-        contextProperty.setLabel("context1"); //$NON-NLS-1$
+        contextProperty.setLabel(name);
         contextItem.setProperty(contextProperty);
         JobContextManager contextManager = new JobContextManager();
         String nextId = factory.getNextId();
@@ -343,7 +343,7 @@ public class SwitchContextGroupNameImplTest {
 
     /**
      * DOC talend Comment method "createCatalog".
-     *
+     * 
      * @param catalogName
      */
     private void createCatalog(String catalogName) {

@@ -39,7 +39,7 @@ import org.talend.repository.ui.utils.DBConnectionContextUtils;
 
 /**
  * created by talend on Oct 9, 2012 Detailled comment
- *
+ * 
  */
 
 public class TalendCWMServiceTest {
@@ -48,17 +48,17 @@ public class TalendCWMServiceTest {
 
     /**
      * DOC talend Comment method "setUp".
-     *
+     * 
      * @throws java.lang.Exception
      */
     @Before
     public void setUp() throws Exception {
-                UnitTestBuildHelper.initProjectStructure("testForSoftWareTDQ"); //$NON-NLS-1$
+        UnitTestBuildHelper.initProjectStructure("testForSoftWareTDQ"); //$NON-NLS-1$
     }
 
     /**
      * DOC zshen Comment method "tearDown".
-     *
+     * 
      * @throws java.lang.Exception
      */
     @After
@@ -109,7 +109,7 @@ public class TalendCWMServiceTest {
      * Test method for
      * {@link org.talend.core.service.TalendCWMService#getReadableName(orgomg.cwm.foundation.softwaredeployment.DataManager, java.lang.String)}
      * .
-     *
+     * 
      * @throws PersistenceException
      */
     @Test
@@ -171,7 +171,7 @@ public class TalendCWMServiceTest {
      * Test method for
      * {@link org.talend.core.service.TalendCWMService#getReadableName(orgomg.cwm.foundation.softwaredeployment.DataManager, java.lang.String)}
      * .
-     *
+     * 
      * @throws PersistenceException
      */
     @Test
@@ -204,7 +204,7 @@ public class TalendCWMServiceTest {
                 .getProperty(Context.REPOSITORY_CONTEXT_KEY)).getUser());
         contextProperty.setVersion(VersionUtils.DEFAULT_VERSION);
         contextProperty.setStatusCode(""); //$NON-NLS-1$
-        contextProperty.setLabel("context1"); //$NON-NLS-1$
+        contextProperty.setLabel("context2"); //$NON-NLS-1$
         contextItem.setProperty(contextProperty);
         JobContextManager contextManager = new JobContextManager();
         String nextId = factory.getNextId();
