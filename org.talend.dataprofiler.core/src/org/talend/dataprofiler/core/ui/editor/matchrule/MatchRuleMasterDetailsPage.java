@@ -24,6 +24,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.part.FileEditorInput;
+import org.talend.commons.utils.platform.PluginChecker;
 import org.talend.core.model.properties.Item;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
@@ -63,6 +64,8 @@ public class MatchRuleMasterDetailsPage extends AbstractMetadataFormPage impleme
     private MatchAndSurvivorKeySection matchAndSurvivorKeySection = null;
 
     private DefaultSurvivorshipDefinitionSection defaultSurvivorshipDefinitionSection = null;
+
+    private static final String TOP_BRANDING = "org.talend.rcp.branding.top"; //$NON-NLS-1$
 
     /**
      * DOC zshen MatchRuleMasterDetailsPage constructor comment.
@@ -274,6 +277,9 @@ public class MatchRuleMasterDetailsPage extends AbstractMetadataFormPage impleme
         selectAlgorithmSection.setMatchRuleDef((MatchRuleDefinition) getCurrentModelElement(getEditor()));
         selectAlgorithmSection.createChooseAlgorithmCom();
         selectAlgorithmSection.addPropertyChangeListener(this);
+        // Added TDQ-8163: In TOS DQ, hide the "record linkage" section.
+        selectAlgorithmSection.changeSectionDisStatus(!PluginChecker.isPluginLoaded(TOP_BRANDING));
+
         selectAlgorithmSection.getSection().setExpanded(true);
     }
 
