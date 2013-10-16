@@ -1646,6 +1646,12 @@
            id="org.talend.dataprofiler.core.migration.impl.UpdateIndicatorsForVertica"
            name="Update Indicator For Vertica"
            version="5.4.0">
+     </workspacetask>
+     <workspacetask
+           class="org.talend.dataprofiler.core.migration.impl.CreateMatchRuleFolderTask"
+           id="org.talend.dataprofiler.core.migration.impl.CreateMatchRuleFolderTask"
+           name="create sub folder &quot;match&quot; on the &quot;rule&quot; folder"
+           version="5.4.0">
      </workspacetask>  
      
   </extension>
