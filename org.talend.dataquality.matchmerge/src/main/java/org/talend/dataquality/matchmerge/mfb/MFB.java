@@ -192,7 +192,7 @@ public class MFB implements MatchMergeAlgorithm {
             String current = strings[i];
             if (!areEquals(previousString, current)) {
                 if (occurrenceCount > maxOccurrenceCount) {
-                    mostCommon = current;
+                    mostCommon = previousString;
                     maxOccurrenceCount = occurrenceCount;
                 }
                 occurrenceCount = 0;

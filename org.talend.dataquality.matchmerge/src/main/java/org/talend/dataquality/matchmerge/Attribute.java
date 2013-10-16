@@ -46,14 +46,13 @@ public class Attribute {
         this.value = value;
     }
 
-    public void addValue(String value) {
-        if(values == null) {
-            values = new ArrayList<String>();
-        }
-        values.add(value);
-    }
-
     public List<String> getValues() {
+        if (values == null) {
+            values = new ArrayList<String>();
+            if (value != null) {
+                values.add(value);
+            }
+        }
         return values;
     }
 }

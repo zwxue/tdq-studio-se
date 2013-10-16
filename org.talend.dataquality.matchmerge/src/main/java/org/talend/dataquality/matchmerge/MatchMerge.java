@@ -15,6 +15,7 @@
  */
 package org.talend.dataquality.matchmerge;
 
+import org.apache.commons.lang.StringUtils;
 import org.talend.dataquality.record.linkage.attribute.AttributeMatcherFactory;
 import org.talend.dataquality.record.linkage.attribute.IAttributeMatcher;
 import org.talend.dataquality.record.linkage.attribute.SubstringAttributeMatcher;
@@ -64,119 +65,115 @@ public class MatchMerge {
             if (r1.get(i).getValue() == null && r2.get(i).getValue() == null) {
                 mergedRecord.getAttributes().get(i).setValue(r1.get(i).getValue());
             } else {
-                if (r1.get(i).getValue() == null || "null".equals(r1.get(i).getValue()) || r1.get(i).getValue().length() == 0) { //$NON-NLS-1$
-                    mergedRecord.getAttributes().get(i).setValue(r2.get(i).getValue());
-                } else {
-                    if (r2.get(i).getValue() == null || "null".equals(r2.get(i).getValue()) || r2.get(i).getValue().length() == 0) { //$NON-NLS-1$
-                        mergedRecord.getAttributes().get(i).setValue(r1.get(i).getValue());
+                if (StringUtils.equals(r1.get(i).getValue(), r2.get(i).getValue())) {
+                    if (typeMergeTable[i] == SurvivorShipAlgorithmEnum.MOST_COMMON) {
+                        mergedRecord.getAttributes().get(i).getValues().addAll(r1.get(i).getValues());
                     } else {
-                        if (r1.get(i).getValue().equals(r2.get(i).getValue())) {
-                            mergedRecord.getAttributes().get(i).setValue(r1.get(i).getValue());
-                        } else {
-                            switch (typeMergeTable[i]) {
-                                case CONCATENATE:
-                                    mergedRecord.getAttributes().get(i).setValue(r1.get(i).getValue() + r2.get(i).getValue());
-                                    break;
-                                case LARGEST:
-                                    if (Integer.parseInt(r1.get(i).getValue()) <= Integer.parseInt(r2.get(i).getValue())) {
-                                        mergedRecord.getAttributes().get(i).setValue(r2.get(i).getValue());
-                                    } else {
-                                        mergedRecord.getAttributes().get(i).setValue(r1.get(i).getValue());
-                                    }
-                                    break;
-                                case SMALLEST:
-                                    if (Integer.parseInt(r1.get(i).getValue()) <= Integer.parseInt(r2.get(i).getValue())) {
-                                        mergedRecord.getAttributes().get(i).setValue(r1.get(i).getValue());
-                                    } else {
-                                        mergedRecord.getAttributes().get(i).setValue(r2.get(i).getValue());
-                                    }
-                                    break;
-                                case MOST_RECENT:
-                                    if (record1.getTimestamp() > record2.getTimestamp()) {
-                                        mergedRecord.getAttributes().get(i).setValue(r1.get(i).getValue());
-                                    } else if (record1.getTimestamp() < record2.getTimestamp()) {
-                                        mergedRecord.getAttributes().get(i).setValue(r2.get(i).getValue());
-                                    } else {
-                                        // Both r1 and r2 have same timestamp, return first value
-                                        mergedRecord.getAttributes().get(i).setValue(r1.get(i).getValue());
-                                    }
-                                    break;
-                                case MOST_ANCIENT:
-                                    if (record1.getTimestamp() < record2.getTimestamp()) {
-                                        mergedRecord.getAttributes().get(i).setValue(r1.get(i).getValue());
-                                    } else if (record1.getTimestamp() > record2.getTimestamp()) {
-                                        mergedRecord.getAttributes().get(i).setValue(r2.get(i).getValue());
-                                    } else {
-                                        // Both r1 and r2 have same timestamp, return first value
-                                        mergedRecord.getAttributes().get(i).setValue(r1.get(i).getValue());
-                                    }
-                                    break;
-                                case PREFER_TRUE:
-                                    if (!Boolean.parseBoolean(mergedRecord.getAttributes().get(i).getValue())
-                                            && !Boolean.parseBoolean(mergedRecord.getAttributes().get(i).getValue())) {
-                                        mergedRecord.getAttributes().get(i).setValue("false"); //$NON-NLS-1$
-                                    } else {
-                                        mergedRecord.getAttributes().get(i).setValue("true"); //$NON-NLS-1$
-                                    }
-                                    break;
-                                case PREFER_FALSE:
-                                    if (Boolean.parseBoolean(mergedRecord.getAttributes().get(i).getValue())
-                                            && Boolean.parseBoolean(mergedRecord.getAttributes().get(i).getValue())) {
-                                        mergedRecord.getAttributes().get(i).setValue("true"); //$NON-NLS-1$
-                                    } else {
-                                        mergedRecord.getAttributes().get(i).setValue("false"); //$NON-NLS-1$
-                                    }
-                                    break;
-                                case MOST_COMMON:
-                                    mergedRecord.getAttributes().get(i).addValue(r1.get(i).getValue());
-                                    mergedRecord.getAttributes().get(i).addValue(r2.get(i).getValue());
-                                    break;
-                                case LONGEST:
-                                    if (r1.get(i).getValue().length() > r2.get(i).getValue().length()) {
-                                        mergedRecord.getAttributes().get(i).setValue(r1.get(i).getValue());
-                                    } else if (r1.get(i).getValue().length() < r2.get(i).getValue().length()) {
-                                        mergedRecord.getAttributes().get(i).setValue(r2.get(i).getValue());
-                                    } else {
-                                        if (r1.get(i).getValue().equals(r2.get(i).getValue())) {
-                                            // Same length and equals
-                                            mergedRecord.getAttributes().get(i).setValue(r1.get(i).getValue());
-                                        } else {
-                                            // Both r1 and r2 have same length, return first value
-                                            mergedRecord.getAttributes().get(i).setValue(r1.get(i).getValue());
-                                        }
-                                    }
-                                    break;
-                                case SHORTEST:
-                                    if (r1.get(i).getValue().length() < r2.get(i).getValue().length()) {
-                                        mergedRecord.getAttributes().get(i).setValue(r1.get(i).getValue());
-                                    } else if (r1.get(i).getValue().length() > r2.get(i).getValue().length()) {
-                                        mergedRecord.getAttributes().get(i).setValue(r2.get(i).getValue());
-                                    } else {
-                                        if (r1.get(i).getValue().equals(r2.get(i).getValue())) {
-                                            // Same length and equals
-                                            mergedRecord.getAttributes().get(i).setValue(r1.get(i).getValue());
-                                        } else {
-                                            // Both r1 and r2 have same length, return first value
-                                            mergedRecord.getAttributes().get(i).setValue(r1.get(i).getValue());
-                                        }
-                                    }
-                                    break;
-                                case MOST_TRUSTED_SOURCE:
-                                    String mostTrustedSourceName = parameters[i];
-                                    if (mostTrustedSourceName == null) {
-                                        throw new IllegalStateException("Survivorship 'most trusted source' must specify a trusted source.");
-                                    }
-                                    if (mostTrustedSourceName.equals(record1.getSource())) {
-                                        mergedRecord.getAttributes().get(i).setValue(r1.get(i).getValue());
-                                    } else if (mostTrustedSourceName.equals(record2.getSource())) {
-                                        mergedRecord.getAttributes().get(i).setValue(r2.get(i).getValue());
-                                    } else {
-                                        // r1 and r2 are not from a trusted source, return first value
-                                        mergedRecord.getAttributes().get(i).setValue(r1.get(i).getValue());
-                                    }
-                                    break;
+                        mergedRecord.getAttributes().get(i).setValue(r1.get(i).getValue());
+                    }
+                } else {
+                    switch (typeMergeTable[i]) {
+                        case CONCATENATE:
+                            mergedRecord.getAttributes().get(i).setValue(r1.get(i).getValue() + r2.get(i).getValue());
+                            break;
+                        case LARGEST:
+                            if (Integer.parseInt(r1.get(i).getValue()) <= Integer.parseInt(r2.get(i).getValue())) {
+                                mergedRecord.getAttributes().get(i).setValue(r2.get(i).getValue());
+                            } else {
+                                mergedRecord.getAttributes().get(i).setValue(r1.get(i).getValue());
                             }
-                        }
+                            break;
+                        case SMALLEST:
+                            if (Integer.parseInt(r1.get(i).getValue()) <= Integer.parseInt(r2.get(i).getValue())) {
+                                mergedRecord.getAttributes().get(i).setValue(r1.get(i).getValue());
+                            } else {
+                                mergedRecord.getAttributes().get(i).setValue(r2.get(i).getValue());
+                            }
+                            break;
+                        case MOST_RECENT:
+                            if (record1.getTimestamp() > record2.getTimestamp()) {
+                                mergedRecord.getAttributes().get(i).setValue(r1.get(i).getValue());
+                            } else if (record1.getTimestamp() < record2.getTimestamp()) {
+                                mergedRecord.getAttributes().get(i).setValue(r2.get(i).getValue());
+                            } else {
+                                // Both r1 and r2 have same timestamp, return first value
+                                mergedRecord.getAttributes().get(i).setValue(r1.get(i).getValue());
+                            }
+                            break;
+                        case MOST_ANCIENT:
+                            if (record1.getTimestamp() < record2.getTimestamp()) {
+                                mergedRecord.getAttributes().get(i).setValue(r1.get(i).getValue());
+                            } else if (record1.getTimestamp() > record2.getTimestamp()) {
+                                mergedRecord.getAttributes().get(i).setValue(r2.get(i).getValue());
+                            } else {
+                                // Both r1 and r2 have same timestamp, return first value
+                                mergedRecord.getAttributes().get(i).setValue(r1.get(i).getValue());
+                            }
+                            break;
+                        case PREFER_TRUE:
+                            if (!Boolean.parseBoolean(mergedRecord.getAttributes().get(i).getValue())
+                                    && !Boolean.parseBoolean(mergedRecord.getAttributes().get(i).getValue())) {
+                                mergedRecord.getAttributes().get(i).setValue("false"); //$NON-NLS-1$
+                            } else {
+                                mergedRecord.getAttributes().get(i).setValue("true"); //$NON-NLS-1$
+                            }
+                            break;
+                        case PREFER_FALSE:
+                            if (Boolean.parseBoolean(mergedRecord.getAttributes().get(i).getValue())
+                                    && Boolean.parseBoolean(mergedRecord.getAttributes().get(i).getValue())) {
+                                mergedRecord.getAttributes().get(i).setValue("true"); //$NON-NLS-1$
+                            } else {
+                                mergedRecord.getAttributes().get(i).setValue("false"); //$NON-NLS-1$
+                            }
+                            break;
+                        case MOST_COMMON:
+                            mergedRecord.getAttributes().get(i).getValues().addAll(r1.get(i).getValues());
+                            mergedRecord.getAttributes().get(i).getValues().addAll(r2.get(i).getValues());
+                            break;
+                        case LONGEST:
+                            if (r1.get(i).getValue().length() > r2.get(i).getValue().length()) {
+                                mergedRecord.getAttributes().get(i).setValue(r1.get(i).getValue());
+                            } else if (r1.get(i).getValue().length() < r2.get(i).getValue().length()) {
+                                mergedRecord.getAttributes().get(i).setValue(r2.get(i).getValue());
+                            } else {
+                                if (r1.get(i).getValue().equals(r2.get(i).getValue())) {
+                                    // Same length and equals
+                                    mergedRecord.getAttributes().get(i).setValue(r1.get(i).getValue());
+                                } else {
+                                    // Both r1 and r2 have same length, return first value
+                                    mergedRecord.getAttributes().get(i).setValue(r1.get(i).getValue());
+                                }
+                            }
+                            break;
+                        case SHORTEST:
+                            if (r1.get(i).getValue().length() < r2.get(i).getValue().length()) {
+                                mergedRecord.getAttributes().get(i).setValue(r1.get(i).getValue());
+                            } else if (r1.get(i).getValue().length() > r2.get(i).getValue().length()) {
+                                mergedRecord.getAttributes().get(i).setValue(r2.get(i).getValue());
+                            } else {
+                                if (r1.get(i).getValue().equals(r2.get(i).getValue())) {
+                                    // Same length and equals
+                                    mergedRecord.getAttributes().get(i).setValue(r1.get(i).getValue());
+                                } else {
+                                    // Both r1 and r2 have same length, return first value
+                                    mergedRecord.getAttributes().get(i).setValue(r1.get(i).getValue());
+                                }
+                            }
+                            break;
+                        case MOST_TRUSTED_SOURCE:
+                            String mostTrustedSourceName = parameters[i];
+                            if (mostTrustedSourceName == null) {
+                                throw new IllegalStateException("Survivorship 'most trusted source' must specify a trusted source.");
+                            }
+                            if (mostTrustedSourceName.equals(record1.getSource())) {
+                                mergedRecord.getAttributes().get(i).setValue(r1.get(i).getValue());
+                            } else if (mostTrustedSourceName.equals(record2.getSource())) {
+                                mergedRecord.getAttributes().get(i).setValue(r2.get(i).getValue());
+                            } else {
+                                // r1 and r2 are not from a trusted source, return first value
+                                mergedRecord.getAttributes().get(i).setValue(r1.get(i).getValue());
+                            }
+                            break;
                     }
                 }
             }
