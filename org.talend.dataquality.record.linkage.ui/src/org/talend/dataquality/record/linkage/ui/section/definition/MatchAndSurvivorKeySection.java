@@ -299,10 +299,9 @@ public class MatchAndSurvivorKeySection extends AbstractMatchKeyWithChartTableSe
         return null;
     }
 
-    private SurvivorshipKeyDefinition createNewSurvivorshipKeyDefinition(String columnName) {
+    private SurvivorshipKeyDefinition createNewSurvivorshipKeyDefinition(String matchKeyName) {
         SurvivorshipKeyDefinition skd = RulesFactory.eINSTANCE.createSurvivorshipKeyDefinition();
-        skd.setName(MatchAnalysisConstant.SURVIVORSHIP_KEY_DEFAULT_VALUE);
-        skd.setColumn(columnName);
+        skd.setName(matchKeyName);
         AlgorithmDefinition createAlgorithmDefinition = RulesFactory.eINSTANCE.createAlgorithmDefinition();
         createAlgorithmDefinition.setAlgorithmType(SurvivorShipAlgorithmEnum.getTypeByIndex(0).getValue());
         createAlgorithmDefinition.setAlgorithmParameters(StringUtils.EMPTY);

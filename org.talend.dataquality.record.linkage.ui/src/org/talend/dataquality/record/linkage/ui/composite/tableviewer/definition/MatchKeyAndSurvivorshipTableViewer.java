@@ -37,7 +37,6 @@ import org.talend.dataquality.record.linkage.ui.composite.tableviewer.provider.M
 import org.talend.dataquality.record.linkage.ui.composite.tableviewer.provider.definition.MatchKeyAndSurvivorLabelProvider;
 import org.talend.dataquality.record.linkage.ui.composite.utils.MatchRuleAnlaysisUtils;
 import org.talend.dataquality.record.linkage.utils.HandleNullEnum;
-import org.talend.dataquality.record.linkage.utils.MatchAnalysisConstant;
 import org.talend.dataquality.record.linkage.utils.SurvivorShipAlgorithmEnum;
 import org.talend.dataquality.rules.AlgorithmDefinition;
 import org.talend.dataquality.rules.MatchKeyDefinition;
@@ -137,8 +136,7 @@ public class MatchKeyAndSurvivorshipTableViewer extends AbstractMatchAnalysisTab
 
     private SurvivorshipKeyDefinition createNewSurvivorshipKeyDefinition(String columnName) {
         SurvivorshipKeyDefinition skd = RulesFactory.eINSTANCE.createSurvivorshipKeyDefinition();
-        skd.setName(MatchAnalysisConstant.SURVIVORSHIP_KEY_DEFAULT_VALUE);
-        skd.setColumn(columnName);
+        skd.setName(StringUtils.EMPTY);
         AlgorithmDefinition createAlgorithmDefinition = RulesFactory.eINSTANCE.createAlgorithmDefinition();
         createAlgorithmDefinition.setAlgorithmType(SurvivorShipAlgorithmEnum.getTypeByIndex(0).getValue());
         createAlgorithmDefinition.setAlgorithmParameters(StringUtils.EMPTY);

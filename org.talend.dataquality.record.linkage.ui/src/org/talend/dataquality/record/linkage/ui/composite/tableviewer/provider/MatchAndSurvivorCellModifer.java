@@ -129,6 +129,7 @@ public class MatchAndSurvivorCellModifer extends AbstractMatchCellModifier<Match
                     return;
                 }
                 mkd.getMatchKey().setName(newValue);
+                mkd.getSurvivorShipKey().setName(newValue);
             } else if (MatchAnalysisConstant.THRESHOLD.equalsIgnoreCase(property)) {
                 if (!org.apache.commons.lang.math.NumberUtils.isNumber(newValue)) {
                     return;
