@@ -14,6 +14,8 @@ package org.talend.dq;
 
 import java.io.File;
 import java.net.MalformedURLException;
+import java.sql.Driver;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
@@ -39,10 +41,13 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
 import org.osgi.framework.BundleContext;
 import org.talend.commons.utils.io.FilesUtils;
+import org.talend.core.classloader.DynamicClassLoader;
 import org.talend.core.database.EDatabaseTypeName;
 import org.talend.core.database.conn.version.EDatabaseVersion4Drivers;
 import org.talend.core.language.ECodeLanguage;
 import org.talend.core.model.general.Project;
+import org.talend.core.model.metadata.IMetadataConnection;
+import org.talend.core.model.metadata.builder.ConvertionHelper;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
 import org.talend.core.model.metadata.builder.database.ExtractMetaDataUtils;
@@ -56,6 +61,7 @@ import org.talend.cwm.management.i18n.Messages;
 import org.talend.dq.analysis.memory.AnalysisThreadMemoryChangeNotifier;
 import org.talend.dq.helper.PropertyHelper;
 import org.talend.librariesmanager.prefs.LibrariesManagerUtils;
+import org.talend.metadata.managment.hive.HiveClassLoaderFactory;
 import org.talend.repository.ProjectManager;
 import orgomg.cwm.foundation.softwaredeployment.DataProvider;
 import orgomg.cwm.objectmodel.core.ModelElement;
@@ -226,7 +232,7 @@ public class CWMPlugin extends Plugin {
         String driverJarPath = dbConnnection.getDriverJarPath();
 
         if (ConnectionHelper.isJDBC(dbConnnection) && driverJarPath != null) {
-            String[] pathArray = driverJarPath.split(";");
+            String[] pathArray = driverJarPath.split(";"); //$NON-NLS-1$
             for (String path : pathArray) {
                 path = new Path(path).toPortableString();
                 if (!manDr.getJars().contains(path)) {
@@ -246,7 +252,11 @@ public class CWMPlugin extends Plugin {
         String dbType = connection.getDatabaseType();
         String dbVersion = connection.getDbVersionString();
         String driverClassName = JavaSqlFactory.getDriverClass(connection);
-        loadDriverByLibManageSystem(dbType, dbVersion, driverClassName);
+        if (ConnectionHelper.isHive(connection)) {
+            loadDriverForHive(connection, driverClassName);
+        } else {
+            loadDriverByLibManageSystem(dbType, dbVersion, driverClassName);
+        }
     }
 
     /**
@@ -430,6 +440,44 @@ public class CWMPlugin extends Plugin {
         File libFile = new File(installLocation);
         if (!libFile.exists()) {
             org.talend.utils.io.FilesUtils.createFoldersIfNotExists(installLocation, false);
+        }
+    }
+
+    /**
+     * TDDQ-8113 load hive drive by DynamicClassLoader,then set the attribute for Hive ManagedDriver.
+     * 
+     * @param connection
+     * @param driverClassName
+     */
+    private void loadDriverForHive(DatabaseConnection connection, String driverClassName) {
+        DriverManager driverManager = SQLExplorerPlugin.getDefault().getDriverModel();
+        ManagedDriver manDr = driverManager.getDriver(EDriverName.getId(driverClassName));
+        IMetadataConnection metadataConnection = ConvertionHelper.convert(connection);
+        ClassLoader classLoader = HiveClassLoaderFactory.getInstance().getClassLoader(metadataConnection);
+        if (classLoader != null && classLoader instanceof DynamicClassLoader) {
+            DynamicClassLoader dynClassLoader = (DynamicClassLoader) classLoader;
+            String libStorePath = dynClassLoader.getLibStorePath();
+            File libFolder = new File(libStorePath);
+            if (libFolder.exists()) {
+                List<String> relaPathLs = new ArrayList<String>();
+                relaPathLs.addAll(dynClassLoader.getLibraries());
+                Set<String> findAllJarPath = findAllJarPath(libFolder, relaPathLs);
+                if (!findAllJarPath.isEmpty()) {
+                    manDr.getJars().addAll(findAllJarPath);
+                    try {
+                        Class<?> driverClass = Class.forName(manDr.getDriverClassName(), true, classLoader);
+                        Driver driver = (Driver) driverClass.newInstance();
+                        manDr.setJdbcDriver(driver);
+                    } catch (ClassNotFoundException e) {
+                        log.error(e);
+                    } catch (InstantiationException e) {
+                        log.error(e);
+                    } catch (IllegalAccessException e) {
+                        log.error(e);
+                    }
+
+                }
+            }
         }
     }
 
