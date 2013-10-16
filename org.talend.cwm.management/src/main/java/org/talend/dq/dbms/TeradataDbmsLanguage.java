@@ -12,6 +12,9 @@
 // ============================================================================
 package org.talend.dq.dbms;
 
+import java.util.regex.Matcher;
+
+import org.talend.dataquality.PluginConstant;
 import org.talend.utils.ProductVersion;
 
 /**
@@ -98,5 +101,16 @@ public class TeradataDbmsLanguage extends DbmsLanguage {
     protected String getPatternFinderFunction(String expression, String charsToReplace, String replacementChars) {
         assert charsToReplace != null && replacementChars != null && charsToReplace.length() == replacementChars.length();
         return expression;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dq.dbms.DbmsLanguage#getTopNQuery(java.lang.String, int)
+     */
+    @Override
+    public String getTopNQuery(String query, int n) {
+        Matcher m = SELECT_PATTERN.matcher(query);
+        return m.replaceFirst("SELECT TOP " + n + PluginConstant.SPACE_STRING); //$NON-NLS-1$ 
     }
 }
