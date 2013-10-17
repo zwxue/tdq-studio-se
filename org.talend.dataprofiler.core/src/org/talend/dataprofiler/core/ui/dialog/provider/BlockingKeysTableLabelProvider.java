@@ -1,6 +1,7 @@
 package org.talend.dataprofiler.core.ui.dialog.provider;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.eclipse.jface.viewers.ITableLabelProvider;
@@ -8,37 +9,52 @@ import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
+import org.talend.dataquality.record.linkage.utils.BlockingKeyAlgorithmEnum;
+import org.talend.dataquality.record.linkage.utils.BlockingKeyPostAlgorithmEnum;
+import org.talend.dataquality.record.linkage.utils.BlockingKeyPreAlgorithmEnum;
 
 public class BlockingKeysTableLabelProvider extends LabelProvider implements ITableLabelProvider {
 
-    public static final String BLOCKING_KEY_NAME = "BLOCKING_KEY_NAME";
+    public static final String BLOCKING_KEY_NAME = "BLOCKING_KEY_NAME"; //$NON-NLS-1$
 
-    public static final String PRECOLUMN = "PRECOLUMN";
+    public static final String PRECOLUMN = "PRECOLUMN"; //$NON-NLS-1$
 
-    public static final String PRE_ALGO = "PRE_ALGO";
+    public static final String PRE_ALGO = "PRE_ALGO"; //$NON-NLS-1$
 
-    public static final String PRE_VALUE = "PRE_VALUE";
+    public static final String PRE_VALUE = "PRE_VALUE"; //$NON-NLS-1$
 
-    public static final String KEY_ALGO = "KEY_ALGO";
+    public static final String KEY_ALGO = "KEY_ALGO"; //$NON-NLS-1$
 
-    public static final String KEY_VALUE = "KEY_VALUE";
+    public static final String KEY_VALUE = "KEY_VALUE"; //$NON-NLS-1$
 
-    public static final String POST_ALGO = "POST_ALGO";
+    public static final String POST_ALGO = "POST_ALGO"; //$NON-NLS-1$
 
-    public static final String POST_VALUE = "POST_VALUE";
+    public static final String POST_VALUE = "POST_VALUE"; //$NON-NLS-1$
+
+    List<String> inputColumnNames;
+
+    public BlockingKeysTableLabelProvider(List<String> inputColumnNames) {
+        this.inputColumnNames = inputColumnNames;
+    }
 
     public Image getColumnImage(Object element, int columnIndex) {
         Image warn = null;
         Map<String, String> rule = (HashMap<String, String>) element;
-        if (0 == columnIndex && containsRule(rule)) {
+        if (0 == columnIndex && !hasColumnMatch(rule)) {
             warn = PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJS_WARN_TSK);
         }
         return warn;
     }
 
-    protected boolean containsRule(Map<String, String> rule) {
+    private boolean hasColumnMatch(Map<String, String> rule) {
+        if (inputColumnNames != null) {
+            for (String str : inputColumnNames) {
+                if (str.equalsIgnoreCase(rule.get(BLOCKING_KEY_NAME)) || str.equalsIgnoreCase(rule.get(PRECOLUMN))) {
+                    return true;
+                }
+            }
+        }
         return false;
-        // return getRuleNames().contains(rule.get(MATCH_KEY_NAME));
     }
 
     public String getColumnText(Object element, int columnIndex) {
@@ -52,19 +68,19 @@ public class BlockingKeysTableLabelProvider extends LabelProvider implements ITa
             result = rule.get(PRECOLUMN);
             break;
         case 2:
-            result = rule.get(PRE_ALGO);
+            result = BlockingKeyPreAlgorithmEnum.getTypeBySavedValue(rule.get(PRE_ALGO)).getValue();
             break;
         case 3:
             result = rule.get(PRE_VALUE);
             break;
         case 4:
-            result = rule.get(KEY_ALGO);
+            result = BlockingKeyAlgorithmEnum.getTypeBySavedValue(rule.get(KEY_ALGO)).getValue();
             break;
         case 5:
             result = rule.get(KEY_VALUE);
             break;
         case 6:
-            result = rule.get(POST_ALGO);
+            result = BlockingKeyPostAlgorithmEnum.getTypeBySavedValue(rule.get(POST_ALGO)).getValue();
             break;
         case 7:
             result = rule.get(POST_VALUE);

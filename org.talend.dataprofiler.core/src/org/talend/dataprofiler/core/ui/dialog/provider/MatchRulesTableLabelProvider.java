@@ -1,6 +1,7 @@
 package org.talend.dataprofiler.core.ui.dialog.provider;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.eclipse.jface.viewers.ITableLabelProvider;
@@ -12,30 +13,42 @@ import org.talend.dataquality.record.linkage.constant.AttributeMatcherType;
 
 public class MatchRulesTableLabelProvider extends LabelProvider implements ITableLabelProvider {
 
-    public static final String MATCH_KEY_NAME = "MATCH_KEY_NAME";
+    public static final String MATCH_KEY_NAME = "MATCH_KEY_NAME"; //$NON-NLS-1$
 
-    public static final String INPUT_COLUMN = "INPUT_COLUMN";
+    public static final String INPUT_COLUMN = "INPUT_COLUMN"; //$NON-NLS-1$
 
-    public static final String MATCHING_TYPE = "MATCHING_TYPE";
+    public static final String MATCHING_TYPE = "MATCHING_TYPE"; //$NON-NLS-1$
 
-    public static final String CUSTOM_MATCHER = "CUSTOM_MATCHER";
+    public static final String CUSTOM_MATCHER = "CUSTOM_MATCHER"; //$NON-NLS-1$
 
-    public static final String CONFIDENCE_WEIGHT = "CONFIDENCE_WEIGHT";
+    public static final String CONFIDENCE_WEIGHT = "CONFIDENCE_WEIGHT"; //$NON-NLS-1$
 
-    public static final String HANDLE_NULL = "HANDLE_NULL";
+    public static final String HANDLE_NULL = "HANDLE_NULL"; //$NON-NLS-1$
+
+    List<String> inputColumnNames;
+
+    public MatchRulesTableLabelProvider(List<String> inputColumnNames) {
+        this.inputColumnNames = inputColumnNames;
+    }
 
     public Image getColumnImage(Object element, int columnIndex) {
         Image warn = null;
         Map<String, String> rule = (HashMap<String, String>) element;
-        if (0 == columnIndex && containsRule(rule)) {
+        if (0 == columnIndex && !hasColumnMatch(rule)) {
             warn = PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJS_WARN_TSK);
         }
         return warn;
     }
 
-    protected boolean containsRule(Map<String, String> rule) {
+    private boolean hasColumnMatch(Map<String, String> rule) {
+        if (inputColumnNames != null) {
+            for (String str : inputColumnNames) {
+                if (str.equalsIgnoreCase(rule.get(MATCH_KEY_NAME)) || str.equalsIgnoreCase(rule.get(INPUT_COLUMN))) {
+                    return true;
+                }
+            }
+        }
         return false;
-        // return getRuleNames().contains(rule.get(MATCH_KEY_NAME));
     }
 
     public String getColumnText(Object element, int columnIndex) {

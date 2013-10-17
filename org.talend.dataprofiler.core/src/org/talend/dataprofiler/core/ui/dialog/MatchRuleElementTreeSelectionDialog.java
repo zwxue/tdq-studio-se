@@ -22,6 +22,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.ColumnWeightData;
@@ -110,7 +111,7 @@ public class MatchRuleElementTreeSelectionDialog extends ElementTreeSelectionDia
         setValidator(new ISelectionStatusValidator() {
 
             public IStatus validate(Object[] selection) {
-                IStatus status = Status.OK_STATUS;
+                IStatus status = new Status(IStatus.OK, CorePlugin.PLUGIN_ID, StringUtils.EMPTY);
                 if (selection != null && selection.length > 2) {
                     status = new Status(IStatus.ERROR, CorePlugin.PLUGIN_ID,
                             DefaultMessagesImpl.getString("MatchRuleCheckedTreeSelectionDialog.validate")); //$NON-NLS-1$
@@ -125,12 +126,56 @@ public class MatchRuleElementTreeSelectionDialog extends ElementTreeSelectionDia
                                     && (matchRule.getMatchRules() == null || matchRule.getMatchRules().size() < 1)) {
                                 status = new Status(IStatus.ERROR, CorePlugin.PLUGIN_ID,
                                         DefaultMessagesImpl.getString("MatchRuleCheckedTreeSelectionDialog.emptyRule")); //$NON-NLS-1$
+                                return status;
                             }
+
+                            String warningMsg = StringUtils.EMPTY;
 
                             // when the imported rule's algorithm is "T_Swoosh", warning
                             if (T_SWOOSH_ALGORITHM.equals(matchRule.getRecordLinkageAlgorithm())) {
-                                status = new Status(IStatus.WARNING, CorePlugin.PLUGIN_ID,
-                                        DefaultMessagesImpl.getString("MatchRuleCheckedTreeSelectionDialog.tswoosh")); //$NON-NLS-1$
+                                warningMsg = DefaultMessagesImpl.getString("MatchRuleCheckedTreeSelectionDialog.tswoosh");
+                            }
+
+                            boolean needColumnWarning = false;
+                            if (dialogType != MATCHGROUP_TYPE) {
+                                for (BlockKeyDefinition bkd : matchRule.getBlockKeys()) {
+                                    for (String col : inputColumnNames) {
+                                        if (!col.equalsIgnoreCase(bkd.getColumn()) && !col.equalsIgnoreCase(bkd.getName())) {
+                                            needColumnWarning = true;
+                                            break;
+                                        }
+                                    }
+                                    if (needColumnWarning) {
+                                        break;
+                                    }
+                                }
+                            }
+                            if (dialogType != GENKEY_TYPE) {
+                                for (MatchRule rule : matchRule.getMatchRules()) {
+                                    EList<MatchKeyDefinition> matchKeys = rule.getMatchKeys();
+                                    for (MatchKeyDefinition mkd : matchKeys) {
+                                        for (String col : inputColumnNames) {
+                                            if (!col.equalsIgnoreCase(mkd.getColumn()) && !col.equalsIgnoreCase(mkd.getName())) {
+                                                needColumnWarning = true;
+                                                break;
+                                            }
+                                        }
+                                        if (needColumnWarning) {
+                                            break;
+                                        }
+                                    }
+                                    if (needColumnWarning) {
+                                        break;
+                                    }
+                                }
+                            }
+                            if (needColumnWarning) {
+                                warningMsg = DefaultMessagesImpl
+                                        .getString("MatchRuleCheckedTreeSelectionDialog.noColumnMatchWarning"); //$NON-NLS-1$
+                            }
+
+                            if (!StringUtils.EMPTY.equals(warningMsg)) {
+                                status = new Status(IStatus.WARNING, CorePlugin.PLUGIN_ID, warningMsg);
                             }
                         }
                     }
@@ -166,7 +211,7 @@ public class MatchRuleElementTreeSelectionDialog extends ElementTreeSelectionDia
                     }
                 } else if (element instanceof IFolder) {
                     IFolder folder = (IFolder) element;
-                    if (folder.getName().startsWith(".")) {
+                    if (folder.getName().startsWith(".")) { //$NON-NLS-1$
                         return false;
                     }
                     return ResourceService.isSubFolder(ResourceManager.getRulesMatcherFolder(), folder);// getRulesMatcherFolder,getRulesFolder
@@ -223,7 +268,7 @@ public class MatchRuleElementTreeSelectionDialog extends ElementTreeSelectionDia
         composite.setFont(parent.getFont());
 
         overwriteBTN = new Button(composite, SWT.CHECK);
-        overwriteBTN.setText(DefaultMessagesImpl.getString("DQRuleCheckedTreeSelectionDialog.isOverwrite"));
+        overwriteBTN.setText(DefaultMessagesImpl.getString("DQRuleCheckedTreeSelectionDialog.isOverwrite")); //$NON-NLS-1$
         overwriteBTN.addSelectionListener(new SelectionAdapter() {
 
             @Override
@@ -245,33 +290,34 @@ public class MatchRuleElementTreeSelectionDialog extends ElementTreeSelectionDia
         blockingKeysTable = new TableViewer(composite, SWT.BORDER);
         Table table = blockingKeysTable.getTable();
         TableColumn c1 = new TableColumn(table, SWT.NULL);
-        c1.setText(DefaultMessagesImpl.getString("BlockingKeyTableComposite.BLOCKING_KEY_NAME"));
+        c1.setText(DefaultMessagesImpl.getString("BlockingKeyTableComposite.BLOCKING_KEY_NAME")); //$NON-NLS-1$
         TableColumn c2 = new TableColumn(table, SWT.NULL);
-        c2.setText(DefaultMessagesImpl.getString("BlockingKeyTableComposite.PRECOLUMN"));
+        c2.setText(DefaultMessagesImpl.getString("BlockingKeyTableComposite.PRECOLUMN")); //$NON-NLS-1$
         TableColumn c3 = new TableColumn(table, SWT.NULL);
-        c3.setText(DefaultMessagesImpl.getString("BlockingKeyTableComposite.PRE_ALGO"));
+        c3.setText(DefaultMessagesImpl.getString("BlockingKeyTableComposite.PRE_ALGO")); //$NON-NLS-1$
         TableColumn c4 = new TableColumn(table, SWT.NULL);
-        c4.setText(DefaultMessagesImpl.getString("BlockingKeyTableComposite.PRE_VALUE"));
+        c4.setText(DefaultMessagesImpl.getString("BlockingKeyTableComposite.PRE_VALUE")); //$NON-NLS-1$
         TableColumn c5 = new TableColumn(table, SWT.NULL);
-        c5.setText(DefaultMessagesImpl.getString("BlockingKeyTableComposite.KEY_ALGO"));
+        c5.setText(DefaultMessagesImpl.getString("BlockingKeyTableComposite.KEY_ALGO")); //$NON-NLS-1$
         TableColumn c6 = new TableColumn(table, SWT.NULL);
-        c6.setText(DefaultMessagesImpl.getString("BlockingKeyTableComposite.KEY_VALUE"));
+        c6.setText(DefaultMessagesImpl.getString("BlockingKeyTableComposite.KEY_VALUE")); //$NON-NLS-1$
         TableColumn c7 = new TableColumn(table, SWT.NULL);
-        c7.setText(DefaultMessagesImpl.getString("BlockingKeyTableComposite.POST_ALGO"));
+        c7.setText(DefaultMessagesImpl.getString("BlockingKeyTableComposite.POST_ALGO")); //$NON-NLS-1$
         TableColumn c8 = new TableColumn(table, SWT.NULL);
-        c8.setText(DefaultMessagesImpl.getString("BlockingKeyTableComposite.POST_VALUE"));
+        c8.setText(DefaultMessagesImpl.getString("BlockingKeyTableComposite.POST_VALUE")); //$NON-NLS-1$
         table.setLinesVisible(true);
         table.setHeaderVisible(true);
         TableLayout tableLayout = new TableLayout();
-        for (int i = 0; i < 8; i++)
+        for (int i = 0; i < 8; i++) {
             tableLayout.addColumnData(new ColumnWeightData(1, 120, true));
+        }
         table.setLayout(tableLayout);
 
         GridData data = new GridData(SWT.FILL, SWT.FILL, true, true, 0, 0);
         table.setLayoutData(data);
 
         blockingKeysTable.setContentProvider(new ArrayContentProvider());
-        blockingKeysTable.setLabelProvider(new BlockingKeysTableLabelProvider());
+        blockingKeysTable.setLabelProvider(new BlockingKeysTableLabelProvider(inputColumnNames));
     }
 
     private void createSelectMatchRulesTable(Composite parent) {
@@ -283,29 +329,30 @@ public class MatchRuleElementTreeSelectionDialog extends ElementTreeSelectionDia
         matchingRulesTable = new TableViewer(composite, SWT.BORDER);
         Table table = matchingRulesTable.getTable();
         TableColumn c1 = new TableColumn(table, SWT.NULL);
-        c1.setText(DefaultMessagesImpl.getString("MatchRuleTableComposite.MATCH_KEY_NAME"));
+        c1.setText(DefaultMessagesImpl.getString("MatchRuleTableComposite.MATCH_KEY_NAME")); //$NON-NLS-1$
         TableColumn c2 = new TableColumn(table, SWT.NULL);
-        c2.setText(DefaultMessagesImpl.getString("MatchRuleTableComposite.INPUT_COLUMN"));
+        c2.setText(DefaultMessagesImpl.getString("MatchRuleTableComposite.INPUT_COLUMN")); //$NON-NLS-1$
         TableColumn c3 = new TableColumn(table, SWT.NULL);
-        c3.setText(DefaultMessagesImpl.getString("MatchRuleTableComposite.MATCHING_TYPE"));
+        c3.setText(DefaultMessagesImpl.getString("MatchRuleTableComposite.MATCHING_TYPE")); //$NON-NLS-1$
         TableColumn c4 = new TableColumn(table, SWT.NULL);
-        c4.setText(DefaultMessagesImpl.getString("MatchRuleTableComposite.CUSTOM_MATCHER_CLASS"));
+        c4.setText(DefaultMessagesImpl.getString("MatchRuleTableComposite.CUSTOM_MATCHER_CLASS")); //$NON-NLS-1$
         TableColumn c5 = new TableColumn(table, SWT.NULL);
-        c5.setText(DefaultMessagesImpl.getString("MatchRuleTableComposite.CONFIDENCE_WEIGHT"));
+        c5.setText(DefaultMessagesImpl.getString("MatchRuleTableComposite.CONFIDENCE_WEIGHT")); //$NON-NLS-1$
         TableColumn c6 = new TableColumn(table, SWT.NULL);
-        c6.setText(DefaultMessagesImpl.getString("MatchRuleTableComposite.HANDLE_NULL"));
+        c6.setText(DefaultMessagesImpl.getString("MatchRuleTableComposite.HANDLE_NULL")); //$NON-NLS-1$
         table.setLinesVisible(true);
         table.setHeaderVisible(true);
         TableLayout tableLayout = new TableLayout();
-        for (int i = 0; i < 6; i++)
+        for (int i = 0; i < 6; i++) {
             tableLayout.addColumnData(new ColumnWeightData(1, 150, true));
+        }
         table.setLayout(tableLayout);
 
         GridData data = new GridData(SWT.FILL, SWT.FILL, true, true, 0, 0);
         table.setLayoutData(data);
 
         matchingRulesTable.setContentProvider(new ArrayContentProvider());
-        matchingRulesTable.setLabelProvider(new MatchRulesTableLabelProvider());
+        matchingRulesTable.setLabelProvider(new MatchRulesTableLabelProvider(inputColumnNames));
     }
 
     public boolean isOverwrite() {
@@ -423,7 +470,7 @@ public class MatchRuleElementTreeSelectionDialog extends ElementTreeSelectionDia
         return null;
     }
 
-    private List<String> getInputColumnNames() {
+    public List<String> getInputColumnNames() {
         if (inputColumnNames == null) {
             inputColumnNames = new ArrayList<String>();
         }

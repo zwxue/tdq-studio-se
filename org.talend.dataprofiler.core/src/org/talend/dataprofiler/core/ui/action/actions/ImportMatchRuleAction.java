@@ -12,8 +12,12 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.action.actions;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.window.Window;
@@ -22,8 +26,10 @@ import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.ui.dialog.MatchRuleElementTreeSelectionDialog;
 import org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisMetadataPage;
 import org.talend.dataprofiler.core.ui.editor.analysis.MatchMasterDetailsPage;
+import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.rules.MatchRuleDefinition;
 import org.talend.dq.helper.resourcehelper.DQRuleResourceFileHelper;
+import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
  * DOC yyin class global comment. Detailled comment
@@ -47,6 +53,13 @@ public class ImportMatchRuleAction extends Action {
                 new ImportMatchRuleLabelProvider(), new WorkbenchContentProvider(),
                 MatchRuleElementTreeSelectionDialog.MATCH_ANALYSIS_TYPE);
 
+        List<String> inputColumnNames = new ArrayList<String>();
+        Analysis analysis = masterPage.getAnalysis();
+        EList<ModelElement> elements = analysis.getContext().getAnalysedElements();
+        for (ModelElement me : elements) {
+            inputColumnNames.add(me.getName());
+        }
+        dialog.setInputColumnNames(inputColumnNames);
         dialog.create();
 
         // dialog.setExpandedElements(getAllMatchRules());
