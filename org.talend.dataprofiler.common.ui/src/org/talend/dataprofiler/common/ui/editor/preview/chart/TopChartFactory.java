@@ -17,7 +17,6 @@ import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Rectangle2D;
-import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.Iterator;
 import java.util.Map;
@@ -33,12 +32,10 @@ import org.jfree.chart.entity.EntityCollection;
 import org.jfree.chart.labels.ItemLabelAnchor;
 import org.jfree.chart.labels.ItemLabelPosition;
 import org.jfree.chart.labels.StandardCategoryItemLabelGenerator;
-import org.jfree.chart.labels.StandardPieSectionLabelGenerator;
 import org.jfree.chart.labels.StandardXYItemLabelGenerator;
 import org.jfree.chart.labels.StandardXYZToolTipGenerator;
 import org.jfree.chart.plot.CategoryPlot;
 import org.jfree.chart.plot.CrosshairState;
-import org.jfree.chart.plot.PiePlot;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.chart.plot.PlotRenderingInfo;
 import org.jfree.chart.plot.XYPlot;
@@ -692,42 +689,7 @@ public final class TopChartFactory {
             boolean toolTips, boolean urls) {
         ChartFactory.setChartTheme(StandardChartTheme.createLegacyTheme());
         JFreeChart pieChart = ChartFactory.createPieChart(title, dataset, showLegend, toolTips, urls);
-        decoratePiePlot(pieChart);
+        ChartDecorator.decorate(pieChart, null);
         return pieChart;
-    }
-
-    /**
-     * 
-     * 
-     * @param chart
-     */
-    private static void decoratePiePlot(JFreeChart chart) {
-
-        Font font = new Font("sans-serif", Font.BOLD, BASE_TITLE_LABEL_SIZE);//$NON-NLS-1$
-        TextTitle textTitle = chart.getTitle();
-        if (textTitle != null) {
-            textTitle.setFont(font);
-        }
-        font = new Font("Tahoma", Font.PLAIN, BASE_ITEM_LABEL_SIZE);//$NON-NLS-1$
-        LegendTitle legend = chart.getLegend();
-        if (legend != null) {
-            legend.setItemFont(font);
-        }
-        PiePlot plot = (PiePlot) chart.getPlot();
-        font = new Font("Monospaced", Font.PLAIN, 10);//$NON-NLS-1$
-        plot.setLabelFont(font);
-        plot.setNoDataMessage("No data available"); //$NON-NLS-1$
-        StandardPieSectionLabelGenerator standardPieSectionLabelGenerator = new StandardPieSectionLabelGenerator(("{0}:{2}"),//$NON-NLS-1$
-                NumberFormat.getNumberInstance(), new DecimalFormat("0.00%")); //$NON-NLS-1$
-        plot.setLabelGenerator(standardPieSectionLabelGenerator);
-        plot.setLabelLinkPaint(Color.GRAY);
-        plot.setLabelOutlinePaint(Color.WHITE);
-        plot.setLabelGap(0.02D);
-        plot.setOutlineVisible(false);
-        plot.setMaximumLabelWidth(0.2D);
-        plot.setCircular(false);
-        // remove the shadow of the pie chart
-        plot.setShadowXOffset(0);
-        plot.setShadowYOffset(0);
     }
 }

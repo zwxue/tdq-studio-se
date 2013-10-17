@@ -47,6 +47,7 @@ import org.jfree.chart.title.LegendTitle;
 import org.jfree.chart.title.TextTitle;
 import org.jfree.data.category.CategoryDataset;
 import org.jfree.data.category.DefaultCategoryDataset;
+import org.jfree.data.general.PieDataset;
 import org.jfree.ui.TextAnchor;
 
 /**
@@ -115,6 +116,21 @@ public final class ChartDecorator {
 
             if (plot instanceof PiePlot) {
                 decoratePiePlot(chart);
+
+                // ADD msjian TDQ-8046 2013-10-17: add the color's control for pie chart
+                PieDataset piedataset = ((PiePlot) plot).getDataset();
+                for (int i = 0; i < piedataset.getItemCount(); i++) {
+                    List<Color> colors = new ArrayList<Color>();
+                    colors.add(COLOR_2);
+                    colors.add(COLOR_7);
+                    colors.add(COLOR_0);;
+                    if (i >= colors.size()) {
+                        colors.add(generalRandomColor());
+                    }
+                    Comparable<?> key = piedataset.getKey(i);
+                    ((PiePlot) plot).setSectionPaint(key, colors.get(i));
+                }
+                // TDQ-8046~
             }
         }
     }
@@ -289,6 +305,9 @@ public final class ChartDecorator {
         plot.setOutlineVisible(false);
         plot.setMaximumLabelWidth(0.2D);
         plot.setCircular(false);
+        // remove the shadow of the pie chart
+        plot.setShadowXOffset(0);
+        plot.setShadowYOffset(0);
     }
 
     /**
