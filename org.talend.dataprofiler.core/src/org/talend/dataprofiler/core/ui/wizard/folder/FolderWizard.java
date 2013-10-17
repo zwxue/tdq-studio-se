@@ -94,9 +94,10 @@ public class FolderWizard extends Wizard {
                 }
                 folder.refreshLocal(IResource.DEPTH_INFINITE, null);
                 DQRespositoryView findView = CorePlugin.getDefault().getRepositoryView();
-                findView.getCommonViewer().setExpandedState(newFolder, true);
-                findView.getCommonViewer().refresh(currentSelectionNode);
-
+                if (findView != null) {
+                    findView.getCommonViewer().setExpandedState(newFolder, true);
+                    findView.getCommonViewer().refresh(currentSelectionNode);
+                }
                 // MOD gdbu 2011-11-18 TDQ-3969 : after create folder re-filter the tree , to create a new list .
                 if (DQRepositoryNode.isOnFilterring()) {
                     RepositoryNodeHelper.fillTreeList(null);

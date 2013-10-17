@@ -465,7 +465,7 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart {
 
     /**
      * DOC rli Comment method "moveElement".
-     *
+     * 
      * @param columnList
      * @param columnsElementViewer
      */
@@ -513,9 +513,9 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart {
     }
 
     /**
-     *
+     * 
      * DOC xqliu Comment method "sortElement".
-     *
+     * 
      * @param columnList
      * @param columnsElementViewer
      * @param asc
@@ -526,9 +526,9 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart {
     }
 
     /**
-     *
+     * 
      * DOC xqliu ColumnsComparisonMasterDetailsPage class global comment. Detailled comment
-     *
+     * 
      * FIXME this inner class should be static. Confirm and fix the error.
      */
     private class CaseInsensitiveComparator implements Comparator<Object> {
@@ -633,7 +633,7 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart {
 
             /*
              * (non-Javadoc)
-             *
+             * 
              * @see org.eclipse.swt.events.SelectionAdapter#widgetSelected(org.eclipse .swt.events.SelectionEvent)
              */
             @Override
@@ -647,19 +647,21 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart {
     }
 
     /**
-     *
+     * 
      * DOC mzhao Comment method "showSelectedElements".
-     *
+     * 
      * @param newTree
      */
     private void showSelectedElements(TableViewer tableView) {
         TableItem[] selection = tableView.getTable().getSelection();
 
-        DQRespositoryView dqview = CorePlugin.getDefault().getRepositoryView();
         if (selection.length == 1) {
             try {
-                // DBColumnRepNode column = (DBColumnRepNode) selection[0].getData();
-                dqview.showSelectedElements(selection[0].getData());
+                // if DqRepository view is not openning we will not do anything
+                DQRespositoryView dqview = CorePlugin.getDefault().getRepositoryView();
+                if (dqview != null) {
+                    dqview.showSelectedElements(selection[0].getData());
+                }
             } catch (Exception e) {
                 log.error(e, e);
             }
@@ -719,7 +721,7 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart {
     }
 
     /**
-     *
+     * 
      * DOC mzhao Open column selection dialog for left column set. this method is intended to use from cheat sheets.
      */
     public void openColumnsSetASelectionDialog() {
@@ -727,7 +729,7 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart {
     }
 
     /**
-     *
+     * 
      * DOC mzhao Open column selection dialog for right column set. this method is intended to use from cheat sheets.
      */
     public void openColumnsSetBSelectionDialog() {
@@ -800,7 +802,7 @@ public class AnalysisColumnCompareTreeViewer extends AbstractPagePart {
     }
 
     /**
-     *
+     * 
      * DOC mzhao feature 11387, 2010-03-08, AnalysisColumnCompareTreeViewer class global comment. Detailled comment
      */
     private void handleColumnReverseAction() {

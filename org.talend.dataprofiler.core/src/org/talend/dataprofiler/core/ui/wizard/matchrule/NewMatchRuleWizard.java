@@ -25,11 +25,9 @@ import org.talend.dataquality.rules.MatchRuleDefinition;
 import org.talend.dq.analysis.parameters.ConnectionParameter;
 import org.talend.dq.analysis.parameters.DQMatchRuleParameter;
 import org.talend.dq.dqrule.MatchRuleBuilder;
-import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.helper.resourcehelper.ResourceFileMap;
 import org.talend.dq.writer.impl.ElementWriterFactory;
 import org.talend.dq.writer.impl.MatchRuleDefinitionWriter;
-import org.talend.resource.EResourceConstant;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
@@ -119,8 +117,6 @@ public class NewMatchRuleWizard extends AbstractWizard {
     public void openEditor(Item item) {
         MatchRuleItemEditorInput matchRuleEditorInput = new MatchRuleItemEditorInput(item);
         CorePlugin.getDefault().openEditor(matchRuleEditorInput, DQRuleEditor.class.getName());
-        // refresh the view
-        CorePlugin.getDefault().refreshDQView(RepositoryNodeHelper.getLibrariesFolderNode(EResourceConstant.RULES_MATCHER));
     }
 
     /*

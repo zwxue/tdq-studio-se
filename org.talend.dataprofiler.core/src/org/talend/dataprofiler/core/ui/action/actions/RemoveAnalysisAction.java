@@ -42,7 +42,8 @@ import org.talend.dq.nodes.ReportAnalysisRepNode;
 import org.talend.resource.ResourceManager;
 
 /**
- * DOC rli RemoveAnalysisActionProvider class global comment. Detailled comment
+ * DOC rli RemoveAnalysisActionProvider class global comment. Detailled comment This action only be used when we had
+ * opened DqRepository view case
  */
 public class RemoveAnalysisAction extends Action {
 
@@ -61,14 +62,17 @@ public class RemoveAnalysisAction extends Action {
     @Override
     public void run() {
         DQRespositoryView findView = CorePlugin.getDefault().getRepositoryView();
+        if (findView == null) {
+            return;
+        }
         TreeSelection treeSelection = (TreeSelection) findView.getCommonViewer().getSelection();
         TreePath[] paths = treeSelection.getPaths();
         TdReport parentReport;
         List<Analysis> analysisList;
         Analysis analysisObj = null;
         Map<TdReport, List<Analysis>> removeMap = new HashMap<TdReport, List<Analysis>>();
-        for (int i = 0; i < paths.length; i++) {
-            Object lastSegment = paths[i].getLastSegment();
+        for (TreePath path : paths) {
+            Object lastSegment = path.getLastSegment();
             if (!(lastSegment instanceof ReportAnalysisRepNode)) {
                 return;
             }
@@ -89,8 +93,8 @@ public class RemoveAnalysisAction extends Action {
             return;
         }
         String message = paths.length > 1 ? DefaultMessagesImpl.getString(
-                "RemoveAnalysisAction.areYouDeleteElement0", paths.length) //$NON-NLS-1$ //$NON-NLS-2$
-                : DefaultMessagesImpl.getString("RemoveAnalysisAction.areYouDeleteElement2", analysisObj.getName()); //$NON-NLS-1$ //$NON-NLS-2$
+                "RemoveAnalysisAction.areYouDeleteElement0", paths.length) //$NON-NLS-1$ 
+                : DefaultMessagesImpl.getString("RemoveAnalysisAction.areYouDeleteElement2", analysisObj.getName()); //$NON-NLS-1$ 
         boolean openConfirm = MessageDialog.openConfirm(null,
                 DefaultMessagesImpl.getString("RemoveAnalysisAction.confirmResourceDelete"), message); //$NON-NLS-1$
 

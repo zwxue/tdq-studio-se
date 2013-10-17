@@ -572,6 +572,18 @@ public final class WorkbenchUtils {
      * @return
      */
     public static IViewPart getAndOpenView(String viewId) {
+        return getView(viewId, true);
+    }
+
+    /**
+     * Get viewPart with special partId. If the active page doesn't exsit, the method will return null; Else, it will
+     * get the viewPart and focus it. if the viewPart closed, it will return null too.
+     * 
+     * @param viewId the identifier of viewPart
+     * @param openIfClose decide whether we will open the view when it is closing
+     * @return
+     */
+    public static IViewPart getView(String viewId, boolean openIfClose) {
         IWorkbenchWindow activeWorkbenchWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
         if (activeWorkbenchWindow == null) {
             return null;
@@ -583,13 +595,16 @@ public final class WorkbenchUtils {
         IViewPart part = page.findView(viewId);
         if (part == null) {
             try {
-                part = page.showView(viewId);
+                if (openIfClose) {
+                    part = page.showView(viewId);
+                }
             } catch (Exception e) {
                 ExceptionHandler.process(e, Level.ERROR);
             }
         } else {
             page.bringToTop(part);
         }
+
         return part;
     }
 }

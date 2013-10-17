@@ -386,8 +386,12 @@ public abstract class ModelElementTreeMenuProvider {
     private void showSelectedElements(Tree newTree) {
         TreeItem[] selection = newTree.getSelection();
 
-        DQRespositoryView dqview = CorePlugin.getDefault().getRepositoryView();
         if (selection.length == 1) {
+            DQRespositoryView dqview = CorePlugin.getDefault().getRepositoryView();
+            // if DqRepository view is not openning we will not do anything
+            if (dqview == null) {
+                return;
+            }
             try {
                 ModelElementIndicator meIndicator = (ModelElementIndicator) selection[0]
                         .getData(AbstractColumnDropTree.MODELELEMENT_INDICATOR_KEY);

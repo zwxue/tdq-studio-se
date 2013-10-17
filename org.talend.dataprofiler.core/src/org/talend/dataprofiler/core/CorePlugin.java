@@ -377,7 +377,7 @@ public class CorePlugin extends AbstractUIPlugin {
      * @return
      */
     public DQRespositoryView getRepositoryView() {
-        IViewPart view = WorkbenchUtils.getAndOpenView(DQRespositoryView.ID);
+        IViewPart view = WorkbenchUtils.getView(DQRespositoryView.ID, false);
         return view != null ? (DQRespositoryView) view : null;
     }
 
@@ -405,13 +405,15 @@ public class CorePlugin extends AbstractUIPlugin {
         DQRespositoryView repositoryView = getRepositoryView();
         if (repositoryView != null && repositoryView.getCommonViewer() != null) {
             repositoryView.getCommonViewer().refresh();
-        } else {
-            log.error(DefaultMessagesImpl.getString("CorePlugin.nullViewWhenRefresh")); //$NON-NLS-1$
         }
     }
 
     public IRepositoryNode getCurrentSelectionNode() {
-        TreeItem[] selectionTreeItem = getRepositoryView().getCommonViewer().getTree().getSelection();
+        DQRespositoryView repositoryView = getRepositoryView();
+        if (repositoryView == null) {
+            return null;
+        }
+        TreeItem[] selectionTreeItem = repositoryView.getCommonViewer().getTree().getSelection();
         if (null != selectionTreeItem && selectionTreeItem.length > 0 && null != selectionTreeItem[0]) {
             IRepositoryNode repoNode = (IRepositoryNode) selectionTreeItem[0].getData();
             return repoNode;

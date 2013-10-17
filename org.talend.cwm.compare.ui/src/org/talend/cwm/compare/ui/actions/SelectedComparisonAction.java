@@ -28,6 +28,7 @@ import org.talend.cwm.compare.ui.ImageLib;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ui.progress.ProgressUI;
 import org.talend.dataprofiler.core.ui.utils.MessageUI;
+import org.talend.dataprofiler.core.ui.views.DQRespositoryView;
 
 /**
  * DOC mzhao class global comment. Compare selected model elements action.
@@ -77,7 +78,10 @@ public class SelectedComparisonAction extends Action {
         try {
             ProgressUI.popProgressDialog(op);
             if (selectedObj1 instanceof Connection && selectedObj2 instanceof Connection) {
-                CorePlugin.getDefault().getRepositoryView().refresh();
+                DQRespositoryView repositoryView = CorePlugin.getDefault().getRepositoryView();
+                if (repositoryView != null) {
+                    repositoryView.refresh();
+                }
             }
         } catch (InvocationTargetException e) {
             MessageUI.openError(Messages.getString("PopComparisonUIAction.checkConnectionFailure", e.getCause().getMessage())); //$NON-NLS-1$

@@ -78,6 +78,7 @@ import org.talend.dataprofiler.core.ui.events.EventManager;
 import org.talend.dataprofiler.core.ui.events.EventReceiver;
 import org.talend.dataprofiler.core.ui.events.SoftwareSystemUpdateEventReceiver;
 import org.talend.dataprofiler.core.ui.utils.WorkbenchUtils;
+import org.talend.dataprofiler.core.ui.views.DQRespositoryView;
 import org.talend.dataquality.indicators.definition.IndicatorCategory;
 import org.talend.dataquality.rules.ParserRule;
 import org.talend.dq.CWMPlugin;
@@ -176,12 +177,16 @@ public class TOPRepositoryService implements ITDQRepositoryService {
         // the metadata folder when refreshing the tree to save time.
         IRepositoryNode metadataNode = RepositoryNodeHelper.getMetadataFolderNode(EResourceConstant.DB_CONNECTIONS);
         // MOD msjian TUP-274 2012-11-14: avoid NPE of metadataNode
-        CommonViewer commonViewer = CorePlugin.getDefault().getRepositoryView().getCommonViewer();
-        if (commonViewer != null) {
-            if (metadataNode != null) {
-                commonViewer.collapseToLevel(metadataNode, AbstractTreeViewer.ALL_LEVELS);
-            } else {
-                commonViewer.collapseAll();
+        // getRepositoryView() maybe return null when DqRepository veiw not be opened
+        DQRespositoryView repositoryView = CorePlugin.getDefault().getRepositoryView();
+        if (repositoryView != null) {
+            CommonViewer commonViewer = repositoryView.getCommonViewer();
+            if (commonViewer != null) {
+                if (metadataNode != null) {
+                    commonViewer.collapseToLevel(metadataNode, AbstractTreeViewer.ALL_LEVELS);
+                } else {
+                    commonViewer.collapseAll();
+                }
             }
         }
         // TUP-274~

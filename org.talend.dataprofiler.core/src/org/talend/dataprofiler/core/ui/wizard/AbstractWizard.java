@@ -54,7 +54,7 @@ public abstract class AbstractWizard extends Wizard implements ICWMResouceAdapte
 
     @Override
     public boolean performFinish() {
-        IRepositoryNode currentSelectionNode = CorePlugin.getDefault().getCurrentSelectionNode();
+
         // MOD mzhao feature 15750 Use repository object represent ModelElement.
         modelElement = initCWMResourceBuilder();
         if (modelElement != null) {
@@ -68,11 +68,13 @@ public abstract class AbstractWizard extends Wizard implements ICWMResouceAdapte
                 }
 
                 if (modelElement instanceof AnalysisImpl || modelElement instanceof TdReportImpl) {
-                    // MOD by zshen refresh the folder which contain the modelElement neither nor which one be
-                    // select current.
+                    // MOD by zshen refresh the folder which contain the modelElement but not select it
                     CorePlugin.getDefault().refreshDQView(
                             RepositoryNodeHelper.findNearestSystemFolderNode(RepositoryNodeHelper.recursiveFind(modelElement)));
                 } else {
+                    IRepositoryNode currentSelectionNode = CorePlugin.getDefault().getCurrentSelectionNode();
+                    // if DqRepositoryView is not opened currentSelectionNode will be null and refreshDQView method will
+                    // get one error log.
                     CorePlugin.getDefault().refreshDQView(currentSelectionNode);
                 }
                 CorePlugin.getDefault().refreshWorkSpace();
