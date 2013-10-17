@@ -16,12 +16,14 @@
 package org.talend.dataquality.matchmerge;
 
 import org.apache.commons.lang.StringUtils;
+import org.talend.dataquality.matchmerge.mfb.MFB;
 import org.talend.dataquality.record.linkage.attribute.AttributeMatcherFactory;
 import org.talend.dataquality.record.linkage.attribute.IAttributeMatcher;
 import org.talend.dataquality.record.linkage.attribute.SubstringAttributeMatcher;
 import org.talend.dataquality.record.linkage.constant.AttributeMatcherType;
 import org.talend.dataquality.record.linkage.utils.SurvivorShipAlgorithmEnum;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
@@ -68,9 +70,8 @@ public class MatchMerge {
                 if (StringUtils.equals(r1.get(i).getValue(), r2.get(i).getValue())) {
                     if (typeMergeTable[i] == SurvivorShipAlgorithmEnum.MOST_COMMON) {
                         mergedRecord.getAttributes().get(i).getValues().addAll(r1.get(i).getValues());
-                    } else {
-                        mergedRecord.getAttributes().get(i).setValue(r1.get(i).getValue());
                     }
+                    mergedRecord.getAttributes().get(i).setValue(r1.get(i).getValue());
                 } else {
                     switch (typeMergeTable[i]) {
                         case CONCATENATE:
@@ -127,8 +128,14 @@ public class MatchMerge {
                             }
                             break;
                         case MOST_COMMON:
-                            mergedRecord.getAttributes().get(i).getValues().addAll(r1.get(i).getValues());
-                            mergedRecord.getAttributes().get(i).getValues().addAll(r2.get(i).getValues());
+                            List<String> r1Values = r1.get(i).getValues();
+                            List<String> r2Values = r2.get(i).getValues();
+                            List<String> unionValues = new ArrayList<String>(r1Values.size() + r2Values.size());
+                            unionValues.addAll(r1Values);
+                            unionValues.addAll(r2Values);
+                            mergedRecord.getAttributes().get(i).getValues().addAll(unionValues);
+                            String mostCommonValue = MFB.getMostCommonValue(unionValues);
+                            mergedRecord.getAttributes().get(i).setValue(mostCommonValue);
                             break;
                         case LONGEST:
                             if (r1.get(i).getValue().length() > r2.get(i).getValue().length()) {

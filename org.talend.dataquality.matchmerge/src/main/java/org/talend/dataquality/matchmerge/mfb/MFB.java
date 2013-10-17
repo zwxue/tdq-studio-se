@@ -143,35 +143,6 @@ public class MFB implements MatchMergeAlgorithm {
             index++;
         }
         // Post merge processing (most common values...)
-        Map<Integer, SurvivorShipAlgorithmEnum> indexToMerge = getPostProcessIndexes(merges);
-        if (!indexToMerge.isEmpty()) {
-            callback.onBeginPostMergeProcess();
-            for (Record mergedRecord : mergedRecords) {
-                for (Map.Entry<Integer, SurvivorShipAlgorithmEnum> entry : indexToMerge.entrySet()) {
-                    SurvivorShipAlgorithmEnum algorithm = entry.getValue();
-                    switch (algorithm) {
-                        case MOST_COMMON:
-                            Attribute attribute = mergedRecord.getAttributes().get(entry.getKey());
-                            List<String> values = attribute.getValues();
-                            if (LOGGER.isDebugEnabled()) {
-                                LOGGER.debug("Most common merge: input {" + values + "}");
-                            }
-                            if (values != null && !values.isEmpty()) {
-                                String mostCommon = getMostCommonValue(values);
-                                if (LOGGER.isDebugEnabled()) {
-                                    LOGGER.debug("Most common merge: output {" + mostCommon + "}");
-                                }
-                                attribute.setValue(mostCommon);
-                            }
-                            break;
-                        default:
-                            throw new IllegalStateException("No post process should be needed for '" + algorithm + "'.");
-                    }
-                }
-                callback.onNewMerge(mergedRecord);
-            }
-            callback.onEndPostMergeProcess();
-        }
         callback.onEndProcessing();
         return mergedRecords;
     }
@@ -211,18 +182,6 @@ public class MFB implements MatchMergeAlgorithm {
         return previousString.equals(current);
     }
 
-    private static Map<Integer, SurvivorShipAlgorithmEnum> getPostProcessIndexes(SurvivorShipAlgorithmEnum[] merges) {
-        Map<Integer, SurvivorShipAlgorithmEnum> indexToMerge = new HashMap<Integer, SurvivorShipAlgorithmEnum>();
-        int i = 0;
-        for (SurvivorShipAlgorithmEnum merge : merges) {
-            if (merge == SurvivorShipAlgorithmEnum.MOST_COMMON) {
-                indexToMerge.put(i, merge);
-            }
-            i++;
-        }
-        return indexToMerge;
-    }
-
     private void performAsserts(Record currentRecord) {
         if (currentRecord.getAttributes().size() != algorithms.length) {
             throw new IllegalArgumentException("All record columns should have a matching algorithm.");
@@ -239,6 +198,36 @@ public class MFB implements MatchMergeAlgorithm {
         if (mergedRecord.getAttributes().size() != currentRecord.getAttributes().size()) {
             throw new IllegalArgumentException("Records do not share same attribute count.");
         }
+        if (mergedRecord.getGroupId() != null && currentRecord.getGroupId() != null) {
+            if (LOGGER.isDebugEnabled()) {
+                LOGGER.debug("Cannot match record: already different groups.");
+            }
+            return new MatchResult() {
+                @Override
+                public List<Score> getScores() {
+                    return Collections.emptyList();
+                }
+
+                @Override
+                public List<Float> getThresholds() {
+                    return Collections.emptyList();
+                }
+
+                @Override
+                public void setScore(int index, AttributeMatcherType algorithm, double score, String value1, String value2) {
+                }
+
+                @Override
+                public void setThreshold(int index, float threshold) {
+                }
+
+                @Override
+                public boolean isMatch() {
+                    return false;
+                }
+            };
+        }
+
         Iterator<Attribute> mergedRecordAttributes = mergedRecord.getAttributes().iterator();
         Iterator<Attribute> currentRecordAttributes = currentRecord.getAttributes().iterator();
         double confidence = 0;
