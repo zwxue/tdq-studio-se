@@ -170,7 +170,7 @@ public class MatchKeyAndSurvivorshipTableViewer extends AbstractMatchAnalysisTab
             case 6:
                 editors[i] = new ComboBoxCellEditor(innerTable, SurvivorShipAlgorithmEnum.getAllTypes(), SWT.READ_ONLY);
                 break;
-            case 7:
+            case 8:
                 editors[i] = new CheckboxCellEditor(innerTable);
                 break;
 

@@ -56,6 +56,7 @@ public class MatchKeyAndSurvivorTableComposite extends AbsMatchAnalysisTableComp
         headers.add(MatchAnalysisConstant.CONFIDENCE_WEIGHT); // 17
         headers.add(MatchAnalysisConstant.HANDLE_NULL); // 11
         headers.add(MatchAnalysisConstant.FUNCTION);
+        headers.add(MatchAnalysisConstant.PARAMETER);
         headers.add(MatchAnalysisConstant.ALLOW_MANUAL_RESOLUTION);
     }
 

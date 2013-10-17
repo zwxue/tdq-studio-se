@@ -58,7 +58,10 @@ public class MatchKeyAndSurvivorLabelProvider extends MatchRuleLabelProvider {
             case 6:
                 return SurvivorShipAlgorithmEnum.getTypeBySavedValue(mkd.getSurvivorShipKey().getFunction().getAlgorithmType())
                         .getValue();
+
             case 7:
+                return mkd.getSurvivorShipKey().getFunction().getAlgorithmParameters();
+            case 8:
                 return mkd.getSurvivorShipKey().isAllowManualResolution() ? "True" : "False"; //$NON-NLS-1$//$NON-NLS-2$
 
             }

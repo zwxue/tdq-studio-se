@@ -13,6 +13,7 @@
 package org.talend.dataquality.record.linkage.ui.composite.tableviewer.provider;
 
 import org.apache.commons.lang.StringUtils;
+import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.swt.widgets.TableItem;
 import org.talend.dataquality.record.linkage.constant.AttributeMatcherType;
 import org.talend.dataquality.record.linkage.ui.composite.tableviewer.AbstractMatchAnalysisTableViewer;
@@ -44,10 +45,17 @@ public class MatchAndSurvivorCellModifer extends AbstractMatchCellModifier<Match
                 if (!AttributeMatcherType.CUSTOM.name().equals(mkd.getMatchKey().getAlgorithm().getAlgorithmType())) {
                     return false;
                 }
+            } else if (MatchAnalysisConstant.PARAMETER.equalsIgnoreCase(property)) {
+                return isMostTrustedSourceAlgorithm(mkd);
             }
             return true;
         }
         return false;
+    }
+
+    private boolean isMostTrustedSourceAlgorithm(MatchKeyAndSurvivorDefinition mkd) {
+        return mkd.getSurvivorShipKey().getFunction().getAlgorithmType()
+                .equals(SurvivorShipAlgorithmEnum.MOST_TRUSTED_SOURCE.getComponentValueName());
     }
 
     /*
@@ -77,6 +85,8 @@ public class MatchAndSurvivorCellModifer extends AbstractMatchCellModifier<Match
                     .getIndex();
         } else if (MatchAnalysisConstant.ALLOW_MANUAL_RESOLUTION.equalsIgnoreCase(property)) {
             return mkd.getSurvivorShipKey().isAllowManualResolution();
+        } else if (MatchAnalysisConstant.PARAMETER.equalsIgnoreCase(property)) {
+            return mkd.getSurvivorShipKey().getFunction().getAlgorithmParameters();
         }
         return null;
 
@@ -150,11 +160,20 @@ public class MatchAndSurvivorCellModifer extends AbstractMatchCellModifier<Match
                     return;
                 }
                 mkd.getSurvivorShipKey().getFunction().setAlgorithmType(valueByIndex.getComponentValueName());
+                if (!isMostTrustedSourceAlgorithm(mkd)) {
+                    mkd.getSurvivorShipKey().getFunction().setAlgorithmParameters(StringUtils.EMPTY);
+                    CellEditor[] cellEditors = tableViewer.getCellEditors();
+                    if (cellEditors.length == 9) {
+                        cellEditors[7].setValue(StringUtils.EMPTY);
+                    }
+                }
             } else if (MatchAnalysisConstant.ALLOW_MANUAL_RESOLUTION.equalsIgnoreCase(property)) {
                 if (mkd.getSurvivorShipKey().isAllowManualResolution() == Boolean.valueOf(newValue)) {
                     return;
                 }
                 mkd.getSurvivorShipKey().setAllowManualResolution(Boolean.valueOf(newValue));
+            } else if (MatchAnalysisConstant.PARAMETER.equalsIgnoreCase(property)) {
+                mkd.getSurvivorShipKey().getFunction().setAlgorithmParameters(newValue);
             } else {
                 return;
             }

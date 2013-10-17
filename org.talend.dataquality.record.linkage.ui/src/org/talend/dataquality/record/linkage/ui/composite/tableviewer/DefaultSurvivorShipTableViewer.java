@@ -22,6 +22,7 @@ import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ComboBoxCellEditor;
 import org.eclipse.jface.viewers.IBaseLabelProvider;
 import org.eclipse.jface.viewers.IContentProvider;
+import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.talend.dataquality.analysis.Analysis;
@@ -112,6 +113,8 @@ public class DefaultSurvivorShipTableViewer extends AbstractMatchAnalysisTableVi
                 case 1:
                     editors[i] = new ComboBoxCellEditor(innerTable, SurvivorShipAlgorithmEnum.getAllTypes(), SWT.READ_ONLY);
                     break;
+                case 2:
+                    editors[i] = new TextCellEditor(innerTable);
 
                 }
             }
