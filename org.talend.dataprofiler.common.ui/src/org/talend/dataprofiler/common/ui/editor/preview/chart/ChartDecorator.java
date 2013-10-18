@@ -92,7 +92,7 @@ public final class ChartDecorator {
                 for (int i = 0; i < rowCount; i++) {
                     // by zshen bug 14173 add the color in the colorList when chart neend more the color than 8.
                     if (i >= colorList.size()) {
-                        colorList.add(generalRandomColor());
+                        colorList.add(generateRandomColor(colorList));
                     }
                     // ~14173
                     ((CategoryPlot) plot).getRenderer().setSeriesPaint(i, colorList.get(i));
@@ -105,9 +105,9 @@ public final class ChartDecorator {
 
                 int count = chart.getXYPlot().getDataset().getSeriesCount();
                 for (int i = 0; i < count; i++) {
-                    // by zshen bug 14173 add the color in the colorList when chart neend more the color than 8.
+                    // by zshen bug 14173 add the color in the colorList when chart need the colors more than 8.
                     if (i >= colorList.size()) {
-                        colorList.add(generalRandomColor());
+                        colorList.add(generateRandomColor(colorList));
                     }
                     // ~14173
                     ((XYPlot) plot).getRenderer().setSeriesPaint(i, colorList.get(i));
@@ -121,7 +121,7 @@ public final class ChartDecorator {
                 PieDataset piedataset = ((PiePlot) plot).getDataset();
                 for (int i = 0; i < piedataset.getItemCount(); i++) {
                     if (i >= pieColorList.size()) {
-                        pieColorList.add(generalRandomColor());
+                        pieColorList.add(generateRandomColor(pieColorList));
                     }
                     Comparable<?> key = piedataset.getKey(i);
                     ((PiePlot) plot).setSectionPaint(key, pieColorList.get(i));
@@ -133,17 +133,17 @@ public final class ChartDecorator {
 
     /**
      * 
-     * DOC zshen Comment method "generalRandomColor".
+     * generate a Random Color.
      * 
-     * @return a object of color and don't contain into colorList
+     * @return a object of color which don't contain in list
      */
-    private static Color generalRandomColor() {
+    private static Color generateRandomColor(List<Color> list) {
         Random rad = new Random();
         Color newColor = null;
         do {
             newColor = new Color(rad.nextInt(255), rad.nextInt(255), rad.nextInt(255));
-        } while (colorList.contains(newColor) || Color.white.equals(newColor));
-        return new Color(rad.nextInt(255), rad.nextInt(255), rad.nextInt(255));
+        } while (list.contains(newColor) || Color.white.equals(newColor));
+        return newColor;
     }
 
     /**
@@ -156,7 +156,6 @@ public final class ChartDecorator {
         CategoryItemRenderer renderer = ((CategoryPlot) chart.getPlot()).getRenderer();
         renderer.setSeriesPaint(0, colorList.get(1));
         renderer.setSeriesPaint(1, colorList.get(0));
-
     }
 
     /**
@@ -292,7 +291,7 @@ public final class ChartDecorator {
         font = new Font("Monospaced", Font.PLAIN, 10);//$NON-NLS-1$
         plot.setLabelFont(font);
         plot.setNoDataMessage("No data available"); //$NON-NLS-1$
-        StandardPieSectionLabelGenerator standardPieSectionLabelGenerator = new StandardPieSectionLabelGenerator(("{0}:{2}"),
+        StandardPieSectionLabelGenerator standardPieSectionLabelGenerator = new StandardPieSectionLabelGenerator(("{0}:{2}"),//$NON-NLS-1$
                 NumberFormat.getNumberInstance(), new DecimalFormat("0.00%")); //$NON-NLS-1$
         plot.setLabelGenerator(standardPieSectionLabelGenerator);
         plot.setLabelLinkPaint(Color.GRAY);
@@ -486,12 +485,13 @@ public final class ChartDecorator {
         pieColorList.add(COLOR_2);
         pieColorList.add(COLOR_7);
         pieColorList.add(COLOR_0);
+        pieColorList.add(COLOR_1);
+        pieColorList.add(COLOR_3);
+        pieColorList.add(COLOR_4);
+        pieColorList.add(COLOR_5);
+        pieColorList.add(COLOR_6);
+        pieColorList.add(COLOR_8);
     }
-
-    // private static Color randomColorPicker() {
-    // int i = RandomUtils.nextInt(colorList.size());
-    // return colorList.get(i);
-    // }
 
     /**
      * Returns true if this string contains the chinese char values. DOC yyi Comment method
