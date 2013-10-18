@@ -35,6 +35,9 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
+import org.talend.core.database.EDatabaseTypeName;
+import org.talend.core.model.metadata.IMetadataConnection;
+import org.talend.core.model.metadata.builder.ConvertionHelper;
 import org.talend.core.model.metadata.builder.database.ExtractMetaDataUtils;
 import org.talend.core.model.metadata.builder.database.dburl.SupportDBUrlType;
 import org.talend.core.model.metadata.builder.util.DatabaseConstant;
@@ -74,6 +77,7 @@ import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.UDIHelper;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
+import org.talend.metadata.managment.hive.HiveClassLoaderFactory;
 import org.talend.utils.collections.MultiMapHelper;
 import org.talend.utils.sql.Java2SqlType;
 import org.talend.utils.sugars.ReturnCode;
@@ -1284,43 +1288,55 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
      * @throws SQLException
      */
     protected List<Object[]> executeQuery(String catalogName, Connection connection, String queryStmt) throws SQLException {
-        if (catalogName != null) { // check whether null argument can be given
-            changeCatalog(catalogName, connection);
-        }
-        // create query statement
-        Statement statement = connection.createStatement();
-        // statement.setFetchSize(fetchSize);
-        if (log.isInfoEnabled()) {
-            log.info(Messages.getString("ColumnAnalysisSqlExecutor.EXECUTINGQUERY", queryStmt));//$NON-NLS-1$  
+        // set current thread classLoader if it is hive connection
+        ClassLoader currClassLoader = Thread.currentThread().getContextClassLoader();
+        org.talend.core.model.metadata.builder.connection.Connection dbConn = this.getAnalysisDataProvider(cachedAnalysis);
+        IMetadataConnection metadataBean = ConvertionHelper.convert(dbConn);
+        if (EDatabaseTypeName.HIVE.getXmlName().equalsIgnoreCase(metadataBean.getDbType())) {
+            ClassLoader hiveClassLoader = HiveClassLoaderFactory.getInstance().getClassLoader(metadataBean);
+            Thread.currentThread().setContextClassLoader(hiveClassLoader);
         }
         List<Object[]> myResultSet = new ArrayList<Object[]>();
-        // MOD xqliu 2009-02-09 bug 6237
-        if (continueRun()) {
-            statement.execute(queryStmt);
-
-            // get the results
-            ResultSet resultSet = statement.getResultSet();
-            if (resultSet == null) {
-                String mess = Messages.getString("ColumnAnalysisSqlExecutor.NORESULTSETFORTHISSTATEMENT") + queryStmt;//$NON-NLS-1$  
-                log.warn(mess);
-                return null;
+        try {
+            if (catalogName != null) { // check whether null argument can be given
+                changeCatalog(catalogName, connection);
             }
-            ResultSetMetaData metaData = resultSet.getMetaData();
-            int columnCount = metaData.getColumnCount();
+            // create query statement
+            Statement statement = connection.createStatement();
+            // statement.setFetchSize(fetchSize);
+            if (log.isInfoEnabled()) {
+                log.info(Messages.getString("ColumnAnalysisSqlExecutor.EXECUTINGQUERY", queryStmt));//$NON-NLS-1$  
+            }
 
-            while (resultSet.next()) {
-                Object[] result = new Object[columnCount];
-                for (int i = 0; i < columnCount; i++) {
-                    result[i] = resultSet.getObject(i + 1);
+            // MOD xqliu 2009-02-09 bug 6237
+            if (continueRun()) {
+                statement.execute(queryStmt);
+
+                // get the results
+                ResultSet resultSet = statement.getResultSet();
+                if (resultSet == null) {
+                    String mess = Messages.getString("ColumnAnalysisSqlExecutor.NORESULTSETFORTHISSTATEMENT") + queryStmt;//$NON-NLS-1$  
+                    log.warn(mess);
+                    return null;
                 }
-                myResultSet.add(result);
+                ResultSetMetaData metaData = resultSet.getMetaData();
+                int columnCount = metaData.getColumnCount();
+
+                while (resultSet.next()) {
+                    Object[] result = new Object[columnCount];
+                    for (int i = 0; i < columnCount; i++) {
+                        result[i] = resultSet.getObject(i + 1);
+                    }
+                    myResultSet.add(result);
+                }
+                resultSet.close();
             }
-            resultSet.close();
+            // -- release resources
+
+            statement.close();
+        } finally {
+            Thread.currentThread().setContextClassLoader(currClassLoader);
         }
-        // -- release resources
-
-        statement.close();
-
         return myResultSet;
     }
 
