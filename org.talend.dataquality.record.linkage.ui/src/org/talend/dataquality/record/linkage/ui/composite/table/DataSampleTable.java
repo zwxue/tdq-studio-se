@@ -294,6 +294,9 @@ public class DataSampleTable {
     }
 
     public void refresh() {
+        if (natTable == null) {
+            return;
+        }
         natTable.refresh();
     }
 
