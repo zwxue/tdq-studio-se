@@ -80,7 +80,9 @@ import org.talend.dataquality.properties.TDQBusinessRuleItem;
 import org.talend.dataquality.properties.TDQIndicatorDefinitionItem;
 import org.talend.dataquality.properties.TDQPatternItem;
 import org.talend.dataquality.rules.DQRule;
+import org.talend.dataquality.rules.MatchRuleDefinition;
 import org.talend.dataquality.rules.ParserRule;
+import org.talend.dataquality.rules.WhereRule;
 import org.talend.dq.CWMPlugin;
 import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.PropertyHelper;
@@ -139,10 +141,10 @@ public class FileSystemImportWriter implements IImportWriter {
             record.getErrors().clear();
 
             // modify: if it is a indicator and used in analysis, do not add errors
-            checkConflict(record, isIndicator(record.getElement()) || isPattern(record.getElement()));
+            checkConflict(record, isIndicatorDefinition(record.getElement()) || isPattern(record.getElement()));
 
             // Added 20120809 yyin TDQ-4189, when it is indicator, can be overwrite
-            if (!checkExisted && (isIndicator(record.getElement()) || isPattern(record.getElement()))) {
+            if (!checkExisted && (isIndicatorDefinition(record.getElement()) || isPattern(record.getElement()))) {
                 continue;
             }// ~
 
@@ -161,13 +163,23 @@ public class FileSystemImportWriter implements IImportWriter {
     }
 
     /**
-     * judge if the record is a indicator or not.
+     * judge if the record is a IndicatorDefinition or not.
      * 
      * @param element
      * @return
      */
-    private boolean isIndicator(ModelElement element) {
-        return element instanceof IndicatorDefinition && !(element instanceof DQRule);
+    private boolean isIndicatorDefinition(ModelElement element) {
+        return element instanceof IndicatorDefinition;
+    }
+
+    /**
+     * judge if the record is a DQRule or not.
+     * 
+     * @param element
+     * @return
+     */
+    private boolean isDQRule(ModelElement element) {
+        return element instanceof DQRule;
     }
 
     /**
@@ -178,6 +190,26 @@ public class FileSystemImportWriter implements IImportWriter {
      */
     private boolean isParserRule(ModelElement element) {
         return element instanceof ParserRule;
+    }
+
+    /**
+     * judge if the record is a WhereRule or not.
+     * 
+     * @param element
+     * @return
+     */
+    private boolean isWhereRule(ModelElement element) {
+        return element instanceof WhereRule;
+    }
+
+    /**
+     * judge if the record is a MatchRuleDefinition or not.
+     * 
+     * @param element
+     * @return
+     */
+    private boolean isMatchRuleDefinition(ModelElement element) {
+        return element instanceof MatchRuleDefinition;
     }
 
     /**
@@ -459,13 +491,22 @@ public class FileSystemImportWriter implements IImportWriter {
                             if (object != null) {
                                 // added 20120808 yyin TDQ-4189
                                 // when record is valid&conflict, means it need to be merged with the current one if it
-                                // is a system indicator, (using its UUid to find this SI not label)
-                                if (isIndicator(modEle)) {
-                                    mergeSystemIndicator(record, (TDQIndicatorDefinitionItem) object.getProperty().getItem());
-                                    isDelete = false;
-                                } else if (isParserRule(modEle)) {
-                                    mergeParserRule(record, (TDQBusinessRuleItem) object.getProperty().getItem());
-                                    isDelete = false;
+                                // is a system indicator definition, (using its UUid to find this SI not label)
+                                if (isIndicatorDefinition(modEle)) {
+                                    if (isDQRule(modEle)) {
+                                        if (isParserRule(modEle)) {
+                                            mergeParserRule(record, (TDQBusinessRuleItem) object.getProperty().getItem());
+                                            isDelete = false;
+                                        } else if (isWhereRule(modEle)) {
+                                            // do nothing here now
+                                        }
+                                    } else if (isMatchRuleDefinition(modEle)) {
+                                        // do nothing here now
+                                    } else {
+                                        // System Indicator and UDI need merge
+                                        mergeSystemIndicator(record, (TDQIndicatorDefinitionItem) object.getProperty().getItem());
+                                        isDelete = false;
+                                    }
                                 } else if (isPattern(modEle)) {
                                     mergePattern(record, (TDQPatternItem) object.getProperty().getItem());
                                     isDelete = false;

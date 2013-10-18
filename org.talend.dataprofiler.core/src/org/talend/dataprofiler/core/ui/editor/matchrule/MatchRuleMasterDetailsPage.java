@@ -84,7 +84,9 @@ public class MatchRuleMasterDetailsPage extends AbstractMetadataFormPage impleme
     @Override
     public void dispose() {
         super.dispose();
-        this.currentModelElement.eResource().unload();
+        if (this.currentModelElement != null && this.currentModelElement.eResource() != null) {
+            this.currentModelElement.eResource().unload();
+        }
     }
 
     /*
