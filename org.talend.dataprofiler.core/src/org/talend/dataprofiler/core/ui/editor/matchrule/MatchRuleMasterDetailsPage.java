@@ -65,8 +65,6 @@ public class MatchRuleMasterDetailsPage extends AbstractMetadataFormPage impleme
 
     private DefaultSurvivorshipDefinitionSection defaultSurvivorshipDefinitionSection = null;
 
-    private static final String TOP_BRANDING = "org.talend.rcp.branding.top"; //$NON-NLS-1$
-
     /**
      * DOC zshen MatchRuleMasterDetailsPage constructor comment.
      * 
@@ -280,7 +278,7 @@ public class MatchRuleMasterDetailsPage extends AbstractMetadataFormPage impleme
         selectAlgorithmSection.createChooseAlgorithmCom();
         selectAlgorithmSection.addPropertyChangeListener(this);
         // Added TDQ-8163: In TOS DQ, hide the "record linkage" section.
-        selectAlgorithmSection.changeSectionDisStatus(!PluginChecker.isPluginLoaded(TOP_BRANDING));
+        selectAlgorithmSection.changeSectionDisStatus(!PluginChecker.isOnlyTopLoaded());
 
         selectAlgorithmSection.getSection().setExpanded(true);
     }
