@@ -120,15 +120,11 @@ public final class ChartDecorator {
                 // ADD msjian TDQ-8046 2013-10-17: add the color's control for pie chart
                 PieDataset piedataset = ((PiePlot) plot).getDataset();
                 for (int i = 0; i < piedataset.getItemCount(); i++) {
-                    List<Color> colors = new ArrayList<Color>();
-                    colors.add(COLOR_2);
-                    colors.add(COLOR_7);
-                    colors.add(COLOR_0);;
-                    if (i >= colors.size()) {
-                        colors.add(generalRandomColor());
+                    if (i >= pieColorList.size()) {
+                        pieColorList.add(generalRandomColor());
                     }
                     Comparable<?> key = piedataset.getKey(i);
-                    ((PiePlot) plot).setSectionPaint(key, colors.get(i));
+                    ((PiePlot) plot).setSectionPaint(key, pieColorList.get(i));
                 }
                 // TDQ-8046~
             }
@@ -297,7 +293,7 @@ public final class ChartDecorator {
         plot.setLabelFont(font);
         plot.setNoDataMessage("No data available"); //$NON-NLS-1$
         StandardPieSectionLabelGenerator standardPieSectionLabelGenerator = new StandardPieSectionLabelGenerator(("{0}:{2}"),
-                NumberFormat.getNumberInstance(), new DecimalFormat("0.00%"));
+                NumberFormat.getNumberInstance(), new DecimalFormat("0.00%")); //$NON-NLS-1$
         plot.setLabelGenerator(standardPieSectionLabelGenerator);
         plot.setLabelLinkPaint(Color.GRAY);
         plot.setLabelOutlinePaint(Color.WHITE);
@@ -447,6 +443,8 @@ public final class ChartDecorator {
 
     private static List<Color> colorList = new ArrayList<Color>();
 
+    private static List<Color> pieColorList = new ArrayList<Color>();
+
     /**
      * 
      * DOC mzhao 2009-07-28 Bind the indicator with specific color.
@@ -482,6 +480,12 @@ public final class ChartDecorator {
         colorList.add(COLOR_5);
         colorList.add(COLOR_6);
         colorList.add(COLOR_8);
+    }
+
+    static {
+        pieColorList.add(COLOR_2);
+        pieColorList.add(COLOR_7);
+        pieColorList.add(COLOR_0);
     }
 
     // private static Color randomColorPicker() {
