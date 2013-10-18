@@ -1279,7 +1279,7 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
 
             if (selection.length == 1) {
                 // if DqRepository view is not openning we will not do anything
-                DQRespositoryView dqview = CorePlugin.getDefault().getRepositoryView();
+                DQRespositoryView dqview = CorePlugin.getDefault().findAndOpenRepositoryView();
                 if (dqview == null) {
                     return;
                 }

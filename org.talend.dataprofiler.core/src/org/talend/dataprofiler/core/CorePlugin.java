@@ -372,12 +372,22 @@ public class CorePlugin extends AbstractUIPlugin {
     }
 
     /**
-     * DOC bzhou Comment method "getRepositoryView".
+     * get DQ repository view if the view is opening else retru null
      * 
      * @return
      */
     public DQRespositoryView getRepositoryView() {
         IViewPart view = WorkbenchUtils.getView(DQRespositoryView.ID, false);
+        return view != null ? (DQRespositoryView) view : null;
+    }
+
+    /**
+     * get DQ repository view if the view is opening else will open it firstly
+     * 
+     * @return
+     */
+    public DQRespositoryView findAndOpenRepositoryView() {
+        IViewPart view = WorkbenchUtils.getView(DQRespositoryView.ID, true);
         return view != null ? (DQRespositoryView) view : null;
     }
 

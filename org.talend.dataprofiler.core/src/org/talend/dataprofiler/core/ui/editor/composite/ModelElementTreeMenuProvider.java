@@ -387,7 +387,7 @@ public abstract class ModelElementTreeMenuProvider {
         TreeItem[] selection = newTree.getSelection();
 
         if (selection.length == 1) {
-            DQRespositoryView dqview = CorePlugin.getDefault().getRepositoryView();
+            DQRespositoryView dqview = CorePlugin.getDefault().findAndOpenRepositoryView();
             // if DqRepository view is not openning we will not do anything
             if (dqview == null) {
                 return;

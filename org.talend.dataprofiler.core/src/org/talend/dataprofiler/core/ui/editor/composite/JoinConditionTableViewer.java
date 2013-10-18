@@ -236,7 +236,7 @@ public class JoinConditionTableViewer extends AbstractColumnDropTree {
                 if (COLUMN_B.equals(ab)) {
                     column = join.getColB();
                 }
-                DQRespositoryView dqview = CorePlugin.getDefault().getRepositoryView();
+                DQRespositoryView dqview = CorePlugin.getDefault().findAndOpenRepositoryView();
                 // if DqRepository view is not openning will don'st should show the element immediately
                 if (dqview != null) {
                     dqview.showSelectedElements(column);
