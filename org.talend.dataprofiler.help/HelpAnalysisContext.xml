@@ -9,8 +9,8 @@
       <topic label="Column Analysis" href="$nl$/html/wizard/analysis/columnAnalysis.html"/>
       <topic label="Redundancy Analysis" href="$nl$/html/wizard/analysis/redundancyAnalysis.html"/>
       <topic label="Column Correlation Analysis" href="$nl$/html/wizard/analysis/columnCorrelationAnalysis.html"/>
-      <topic href="$nl$/html/wizard/analysis/columnDependencyAnalysis.html" label="Column Functional Dependency"/>
+      <topic label="Column Functional Dependency" href="$nl$/html/wizard/analysis/columnDependencyAnalysis.html"/>
       <topic label="Column Set Analysis" href="$nl$/html/wizard/analysis/columnSetAnalysis.html"/>
-      <topic href="$nl$/html/wizard/analysis/matchRuleAnalysis.html" label="Match Analysis"/>
+      <topic label="Match Analysis" href="$nl$/html/wizard/analysis/matchRuleAnalysis.html"/>
    </context>
 </contexts>

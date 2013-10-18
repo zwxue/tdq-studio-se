@@ -80,7 +80,7 @@ public class NewWizardSelectionPage extends AbstractAnalysisWizardPage {
 
     /**
      * DOC xqliu Comment method "initCurrentFolderProvider".
-     *
+     * 
      * @param path
      */
     private void initCurrentFolderProvider(IPath path) {
@@ -92,7 +92,7 @@ public class NewWizardSelectionPage extends AbstractAnalysisWizardPage {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see org.eclipse.jface.dialogs.IDialogPage#createControl(org.eclipse.swt.widgets.Composite)
      */
     public void createControl(Composite parent) {
@@ -216,26 +216,34 @@ public class NewWizardSelectionPage extends AbstractAnalysisWizardPage {
                         href = relatedTopics[2].getHref();
                         break;
                     case TABLE:
-                        if (currentType == AnalysisType.COLUMN_SET) {
+                        switch (currentType) {
+                        case MATCH_ANALYSIS:
+                            parameter = new AnalysisParameter();
+                            parameter.setFolderProvider(folderProvider);
+                            href = relatedTopics[9].getHref();
+                            type = currentType;
+                            break;
+                        case COLUMN_SET:
                             AnalysisParameter corrParam = new AnalysisParameter();
                             corrParam.setFolderProvider(folderProvider);
                             parameter = corrParam;
                             href = relatedTopics[8].getHref();
                             type = currentType;
                             break;
-                        }
-                        if (currentType == AnalysisType.TABLE_FUNCTIONAL_DEPENDENCY) {
+                        case TABLE_FUNCTIONAL_DEPENDENCY:
                             FuncationDependencyParameter funcationDependency = new FuncationDependencyParameter();
                             funcationDependency.setFolderProvider(folderProvider);
                             parameter = funcationDependency;
                             href = relatedTopics[7].getHref();
                             type = currentType;
                             break;
+                        default:
+                            NamedColumnSetAnalysisParameter tableParam = new NamedColumnSetAnalysisParameter();
+                            tableParam.setFolderProvider(folderProvider);
+                            parameter = tableParam;
+                            href = relatedTopics[3].getHref();
+                            break;
                         }
-                        NamedColumnSetAnalysisParameter tableParam = new NamedColumnSetAnalysisParameter();
-                        tableParam.setFolderProvider(folderProvider);
-                        parameter = tableParam;
-                        href = relatedTopics[3].getHref();
                         break;
                     default:
                         parameter = new AnalysisParameter();
@@ -268,7 +276,7 @@ public class NewWizardSelectionPage extends AbstractAnalysisWizardPage {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see org.eclipse.jface.wizard.WizardPage#getNextPage()
      */
     @Override

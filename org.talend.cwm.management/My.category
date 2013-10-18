@@ -10,6 +10,7 @@
     <subCategories analysisType="Schema Analysis" label="Schema Structure Overview"/>
   </categories>
   <categories analysisType="Table Analysis" label="Table Analysis">
+    <subCategories analysisType="Match Analysis" label="Match Analysis"/>
     <subCategories analysisType="Table Analysis" label="Business Rule Analysis"/>
     <subCategories analysisType="Functional Dependency" label="Functional Dependency"/>
     <subCategories analysisType="Column Set Analysis" label="Column Set Analysis"/>
