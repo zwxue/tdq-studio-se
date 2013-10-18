@@ -74,8 +74,6 @@ public class MatchAnalysisConstant {
 
     public static final String POST_VALUE = "MatchAnalysisConstant.POST_VALUE"; //$NON-NLS-1$
 
-    public static final String MATCH_KEY_DEFAULT_VALUE = "match key name"; //$NON-NLS-1$
-
     public static final String GID = "GID"; //$NON-NLS-1$
 
     public static final String MASTER = "MASTER"; //$NON-NLS-1$
@@ -90,15 +88,17 @@ public class MatchAnalysisConstant {
 
     public static final String BLOCK_KEY = "BLOCK_KEY"; //$NON-NLS-1$
 
-    public static final String MATCHING_KEY_SECTION_NAME = "Matching Key"; //$NON-NLS-1$
+    public static final String MATCHING_KEY_SECTION_NAME = Messages.getString("MatchAnalysisConstant.MATCHING_KEY_SECTION_NAME"); //$NON-NLS-1$
 
-    public static final String BlOCKING_KEY_SECTION_NAME = "Blocking Key"; //$NON-NLS-1$
+    public static final String BlOCKING_KEY_SECTION_NAME = Messages.getString("MatchAnalysisConstant.BlOCKING_KEY_SECTION_NAME"); //$NON-NLS-1$
 
     // match Rule definition
 
-    public static final String BlOCKING_KEY_DEFINITION_SECTION_NAME = "Generation of Blocking Key"; //$NON-NLS-1$
+    public static final String BlOCKING_KEY_DEFINITION_SECTION_NAME = Messages
+            .getString("MatchAnalysisConstant.BlOCKING_KEY_DEFINITION_SECTION_NAME"); //$NON-NLS-1$
 
-    public static final String MATCHING_KEY_DEFINITION_SECTION_NAME = "Matching key"; //$NON-NLS-1$
+    public static final String MATCHING_KEY_DEFINITION_SECTION_NAME = Messages
+            .getString("MatchAnalysisConstant.MATCHING_KEY_DEFINITION_SECTION_NAME"); //$NON-NLS-1$
 
     // survivorship
     public static final String SURVIVORSHIP_KEY_NAME = "MatchAnalysisConstant.SurvivorshipRuleName"; //$NON-NLS-1$
@@ -111,9 +111,11 @@ public class MatchAnalysisConstant {
 
     public static final String DATA_TYPE = "MatchAnalysisConstant.DataType"; //$NON-NLS-1$
 
-    public static final String SURVIVIORSHIP_DEFINITION_SECTION_NAME = "Survivorship"; //$NON-NLS-1$
+    public static final String SURVIVIORSHIP_DEFINITION_SECTION_NAME = Messages
+            .getString("MatchAnalysisConstant.SURVIVIORSHIP_DEFINITION_SECTION_NAME"); //$NON-NLS-1$
 
-    public static final String SURVIVIORSHIP_DEFAULT_DEFINITION_SECTION_NAME = "Default Survivorship Rules"; //$NON-NLS-1$
+    public static final String SURVIVIORSHIP_DEFAULT_DEFINITION_SECTION_NAME = Messages
+            .getString("MatchAnalysisConstant.SURVIVIORSHIP_DEFAULT_DEFINITION_SECTION_NAME"); //$NON-NLS-1$
 
     public static final String SURVIVORSHIP_KEY_DEFAULT_VALUE = Messages.getString("MatchAnalysisConstant.KEY_NAME"); //$NON-NLS-1$
 
@@ -123,6 +125,7 @@ public class MatchAnalysisConstant {
 
     public static final int DEFAULT_COLUMN_COUNT = 7;
 
-    public static final String MATCHING_KEY_AND_SURVIVOR_DEFINITION_SECTION_NAME = "Match and Survivor";
+    public static final String MATCHING_KEY_AND_SURVIVOR_DEFINITION_SECTION_NAME = Messages
+            .getString("MatchAnalysisConstant.MATCHING_KEY_AND_SURVIVOR_DEFINITION_SECTION_NAME"); //$NON-NLS-1$
 
 }
