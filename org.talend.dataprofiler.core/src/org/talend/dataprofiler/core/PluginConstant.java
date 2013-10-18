@@ -131,4 +131,6 @@ public final class PluginConstant {
     public static final String NA_STRING = org.talend.dataquality.PluginConstant.NA_STRING;
 
     public static final String UNSUPPORTED = "(Unsupported)"; //$NON-NLS-1$
+
+    public static final String MAX_NB_ROWS_ANALYSIS_EDITOR = "MAX_NB_ROWS_ANALYSIS_EDITOR"; //$NON-NLS-1$
 }

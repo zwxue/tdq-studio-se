@@ -148,6 +148,7 @@ public class CorePlugin extends AbstractUIPlugin {
         getPreferenceStore().setDefault(PluginConstant.CHEAT_SHEET_VIEW, true);
         getPreferenceStore().setValue(ITalendCorePrefConstants.PREVIEW_LIMIT, "50");//$NON-NLS-1$
         getPreferenceStore().setValue(ITalendCorePrefConstants.LANGUAGE_SELECTOR, Locale.getDefault().getLanguage());
+        getPreferenceStore().setDefault(PluginConstant.MAX_NB_ROWS_ANALYSIS_EDITOR, 10000);
         try {
             for (BookMarkEnum bookMark : BookMarkEnum.VALUES) {
                 BaseHelpSystem.getBookmarkManager().addBookmark(bookMark.getHref(), bookMark.getLabel());
