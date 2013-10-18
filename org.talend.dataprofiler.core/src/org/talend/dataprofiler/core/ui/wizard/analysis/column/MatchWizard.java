@@ -15,6 +15,7 @@ package org.talend.dataprofiler.core.ui.wizard.analysis.column;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.ui.PlatformUI;
@@ -40,6 +41,8 @@ import orgomg.cwm.objectmodel.core.ModelElement;
  * DOC yyin class global comment. Detailled comment
  */
 public class MatchWizard extends ColumnWizard {
+
+    private static Logger log = Logger.getLogger(MatchWizard.class);
 
     private ColumnAnalysisDOSelectionPage selectionPage;
 
@@ -127,8 +130,15 @@ public class MatchWizard extends ColumnWizard {
         analysis.getResults().getIndicators().add(matchRuleIndicator);
 
         // default loaded row count
-        analysis.getParameters().setMaxNumberRows(
-                Integer.valueOf(DefaultMessagesImpl.getString("MatchWizard.DefaultLoadedRowCount")));
+        Integer maxRows = 10000;
+        try {
+            maxRows = Integer.valueOf(DefaultMessagesImpl.getString("MatchWizard.DefaultLoadedRowCount")); //$NON-NLS-1$
+        } catch (NumberFormatException e) {
+            log.warn(DefaultMessagesImpl.getString("MatchWizard.Parsing.error", //$NON-NLS-1$
+                    DefaultMessagesImpl.getString("MatchWizard.DefaultLoadedRowCount"))); //$NON-NLS-1$
+        }
+
+        analysis.getParameters().setMaxNumberRows(maxRows);
 
         return analysis;
     }
