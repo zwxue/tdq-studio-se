@@ -25,6 +25,7 @@ import org.talend.commons.exception.BusinessException;
 import org.talend.commons.exception.ExceptionHandler;
 import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.properties.Item;
+import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ui.action.actions.OpenItemEditorAction;
 import org.talend.dataquality.properties.TDQAnalysisItem;
 import org.talend.dataquality.properties.TDQBusinessRuleItem;
@@ -41,6 +42,10 @@ import org.talend.repository.model.RepositoryNode;
 public class DQEditorLinkHelper implements ILinkHelper {
 
     public IStructuredSelection findSelection(IEditorInput editorInput) {
+        // if RepositoryView is not opened we will return null
+        if (CorePlugin.getDefault().getRepositoryView() == null) {
+            return null;
+        }
         RepositoryNode node = null;
         if (editorInput instanceof AbstractItemEditorInput) {
             Item item = ((AbstractItemEditorInput) editorInput).getItem();
