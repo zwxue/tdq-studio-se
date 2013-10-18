@@ -47,6 +47,8 @@ import orgomg.cwm.objectmodel.core.Package;
 import orgomg.cwm.resource.relational.Catalog;
 import orgomg.cwm.resource.relational.Schema;
 
+import common.Logger;
+
 /**
  * created by zshen on Apr 23, 2013 Detailled comment
  * 
@@ -74,6 +76,8 @@ public class ExportConnectionToTOSActionRealTest {
     private static Schema schema1 = null;
 
     private static Schema schema2 = null;
+
+    Logger log = Logger.getLogger(ExportConnectionToTOSActionRealTest.class);
 
     private static Catalog addCataPackage(String packageName, DatabaseConnectionItem connItem) throws PersistenceException {
         Connection connection = connItem.getConnection();
@@ -198,7 +202,9 @@ public class ExportConnectionToTOSActionRealTest {
         Assert.assertTrue(createOldConnectionItem.getConnection() != null);
         Assert.assertTrue(createOldConnectionItem.getConnection().eResource() != null);
         Assert.assertTrue(!createOldConnectionItem.getConnection().eIsProxy());
-
+        List<IRepositoryViewObject> all = factory.getAll(ERepositoryObjectType.METADATA_CONNECTIONS, false);
+        Assert.assertTrue(all != null);
+        Assert.assertTrue("ExportConnectionToTOSActionRealTest1".equals(all.get(0).getLabel())); //$NON-NLS-1$
         initCatalogList(createOldConnectionItem);
         // ~connectionNode
         List<Package> packageList = new ArrayList<Package>();
@@ -208,9 +214,8 @@ public class ExportConnectionToTOSActionRealTest {
         PowerMockito.doNothing().when(createAction).refreshViewerAndNode();
         createAction.run();
 
-        List<IRepositoryViewObject> all = factory.getAll(ERepositoryObjectType.METADATA_CONNECTIONS, false);
+        all = factory.getAll(ERepositoryObjectType.METADATA_CONNECTIONS, false);
         Assert.assertTrue(all != null);
-        Assert.assertTrue(all.size() == 2);
         IRepositoryViewObject lastVersion = all.get(1);
         DatabaseConnectionItem item = (DatabaseConnectionItem) lastVersion.getProperty().getItem();
         Connection newConnection = item.getConnection();
