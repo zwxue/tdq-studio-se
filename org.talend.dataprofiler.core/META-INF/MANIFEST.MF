@@ -5,7 +5,8 @@ Bundle-SymbolicName: org.talend.dataprofiler.core; singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: org.talend.dataprofiler.core.CorePlugin
 Bundle-Vendor: .Talend SA.
-Require-Bundle: net.sourceforge.sqlexplorer;resolution:=optional,
+Require-Bundle: org.eclipse.nebula.widgets.tablecombo,
+ net.sourceforge.sqlexplorer;resolution:=optional,
  org.eclipse.ui.ide,
  org.apache.commons.logging,
  org.apache.commons.collections,
@@ -43,9 +44,7 @@ Require-Bundle: net.sourceforge.sqlexplorer;resolution:=optional,
  org.talend.dataquality.record.linkage.ui,
  org.talend.dataprofiler.migration
 Bundle-ActivationPolicy: lazy
-Export-Package: org.eclipse.nebula.jface.tablecomboviewer,
- org.eclipse.nebula.widgets.tablecombo,
- org.talend.dataprofiler.core,
+Export-Package: org.talend.dataprofiler.core,
  org.talend.dataprofiler.core.exception,
  org.talend.dataprofiler.core.helper,
  org.talend.dataprofiler.core.i18n.internal,
@@ -107,5 +106,4 @@ Export-Package: org.eclipse.nebula.jface.tablecomboviewer,
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Eclipse-RegisterBuddy: org.apache.log4j, org.talend.testutils
 Bundle-Localization: plugin
-Bundle-ClassPath: .,
- lib/org.eclipse.nebula.widgets.tablecombo_1.0.0.201203301341.jar
+Bundle-ClassPath: .
