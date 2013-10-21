@@ -23,7 +23,6 @@ import org.apache.commons.lang.StringUtils;
 import org.talend.commons.exception.BusinessException;
 import org.talend.cwm.management.i18n.Messages;
 import org.talend.dataquality.PluginConstant;
-import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.indicators.columnset.BlockKeyIndicator;
 import org.talend.dataquality.indicators.columnset.RecordMatchingIndicator;
 import org.talend.dataquality.record.linkage.genkey.BlockingKeyHandler;
@@ -37,6 +36,9 @@ import org.talend.dataquality.rules.KeyDefinition;
 import org.talend.dataquality.rules.MatchKeyDefinition;
 import org.talend.dataquality.rules.MatchRule;
 import org.talend.dataquality.rules.RulesPackage;
+import org.talend.designer.components.lookup.persistent.IPersistentLookupManager;
+import org.talend.dq.analysis.persistent.BlockKey;
+import org.talend.dq.analysis.persistent.MatchRow;
 import org.talend.utils.sugars.ReturnCode;
 import org.talend.utils.sugars.TypedReturnCode;
 
@@ -46,22 +48,75 @@ import org.talend.utils.sugars.TypedReturnCode;
  */
 public class ExecuteMatchRuleHandler {
 
-    public static TypedReturnCode<MatchGroupResultConsumer> execute(Analysis analysis, Map<String, String> columnMap,
+    public static TypedReturnCode<MatchGroupResultConsumer> execute(Map<String, String> columnMap,
             RecordMatchingIndicator recordMatchingIndicator, List<Object[]> matchRows, BlockKeyIndicator blockKeyIndicator) {
         TypedReturnCode<MatchGroupResultConsumer> returnCode = new TypedReturnCode<MatchGroupResultConsumer>(false);
-        MatchGroupResultConsumer matchResultConsumer = createMatchGroupResultConsumer(columnMap, recordMatchingIndicator);
+        MatchGroupResultConsumer matchResultConsumer = createMatchGroupResultConsumer(columnMap, recordMatchingIndicator,
+                Boolean.TRUE);
         returnCode.setObject(matchResultConsumer);
-        List<AppliedBlockKey> appliedBlockKeys = recordMatchingIndicator.getBuiltInMatchRuleDefinition().getAppliedBlockKeys();
-        appliedBlockKeys.clear();
+
         // By default for analysis, the applied blocking key will be the key from key generation definition. This
         // will be refined when there is a need to define the applied blocking key manually by user later.
-        createAppliedBlockKeyByGenKey(recordMatchingIndicator, appliedBlockKeys);
+        createAppliedBlockKeyByGenKey(recordMatchingIndicator);
 
         // Blocking key specified.
-        ReturnCode computeMatchGroupReturnCode = computeMatchGroupWithBlockKey(analysis, recordMatchingIndicator,
-                blockKeyIndicator, columnMap, matchResultConsumer, matchRows);
+        ReturnCode computeMatchGroupReturnCode = computeMatchGroupWithBlockKey(recordMatchingIndicator, blockKeyIndicator,
+                columnMap, matchResultConsumer, matchRows);
         returnCode.setOk(computeMatchGroupReturnCode.isOk());
         returnCode.setMessage(computeMatchGroupReturnCode.getMessage());
+
+        return returnCode;
+    }
+
+    @SuppressWarnings({ "rawtypes", "unchecked" })
+    public static TypedReturnCode<MatchGroupResultConsumer> executeWithStoreOnDisk(Map<String, String> columnMap,
+            RecordMatchingIndicator recordMatchingIndicator, BlockKeyIndicator blockKeyIndicator,
+            IPersistentLookupManager persistentLookupManager, List<BlockKey> blockKeys) throws Exception {
+        TypedReturnCode<MatchGroupResultConsumer> returnCode = new TypedReturnCode<MatchGroupResultConsumer>(false);
+        // The parameter of "isKeepDataInMemory" should be false in "store on disk" option.
+        MatchGroupResultConsumer matchResultConsumer = createMatchGroupResultConsumer(columnMap, recordMatchingIndicator,
+                Boolean.FALSE);
+        returnCode.setObject(matchResultConsumer);
+
+        // By default for analysis, the applied blocking key will be the key from key generation definition. This
+        // will be refined when there is a need to define the applied blocking key manually by user later.
+        createAppliedBlockKeyByGenKey(recordMatchingIndicator);
+
+        persistentLookupManager.initGet();
+        TreeMap<Object, Long> blockSize2Freq = new TreeMap<Object, Long>();
+
+        MatchRow matchRow = null;
+        for (BlockKey blockKey : blockKeys) {
+            AnalysisMatchRecordGrouping analysisMatchRecordGrouping = new AnalysisMatchRecordGrouping(matchResultConsumer);
+            // Set rule matcher for record grouping API.
+            setRuleMatcher(columnMap, recordMatchingIndicator, analysisMatchRecordGrouping);
+            analysisMatchRecordGrouping.initialize();
+            // Lookup rows given blocking key
+            if (matchRow == null) {
+                matchRow = new MatchRow(columnMap.size(), blockKey.getBlockKey().size());
+            }
+            matchRow.setKey(blockKey.getBlockKey());
+            matchRow.hashCodeDirty = true;
+            persistentLookupManager.lookup(matchRow);
+            Integer blockSize = 0;
+            while (persistentLookupManager.hasNext()) {
+                // Match within one block
+                MatchRow row = (MatchRow) persistentLookupManager.next();
+                List<String> rowWithBlockKey = row.getRowWithBlockKey();
+                analysisMatchRecordGrouping.doGroup(rowWithBlockKey.toArray(new String[rowWithBlockKey.size()]));
+                blockSize++;
+            }
+            analysisMatchRecordGrouping.end();
+
+            // Store indicator
+            Long freq = blockSize2Freq.get(Long.valueOf(blockSize));
+            if (freq == null) {
+                freq = 0l;
+            }
+            blockSize2Freq.put(Long.valueOf(blockSize), freq + 1);
+        }
+        persistentLookupManager.endGet();
+        blockKeyIndicator.setBlockSize2frequency(blockSize2Freq);
 
         return returnCode;
     }
@@ -73,10 +128,10 @@ public class ExecuteMatchRuleHandler {
      * @return
      */
     private static MatchGroupResultConsumer createMatchGroupResultConsumer(Map<String, String> columnMap,
-            final RecordMatchingIndicator recordMatchingIndicator) {
+            final RecordMatchingIndicator recordMatchingIndicator, Boolean isKeepDataInMemory) {
         recordMatchingIndicator.setMatchRowSchema(AnalysisRecordGroupingUtils.getCompleteColumnSchema(columnMap));
         recordMatchingIndicator.reset();
-        MatchGroupResultConsumer matchResultConsumer = new MatchGroupResultConsumer() {
+        MatchGroupResultConsumer matchResultConsumer = new MatchGroupResultConsumer(isKeepDataInMemory) {
 
             /*
              * (non-Javadoc)
@@ -86,7 +141,9 @@ public class ExecuteMatchRuleHandler {
             @Override
             public void handle(Object row) {
                 recordMatchingIndicator.handle(row);
-                addOneRowOfResult(row);
+                if (this.isKeepDataInMemory) {
+                    addOneRowOfResult(row);
+                }
             }
         };
         return matchResultConsumer;
@@ -96,10 +153,10 @@ public class ExecuteMatchRuleHandler {
      * DOC zhao Comment method "createAppliedBlockKeyByGenKey".
      * 
      * @param recordMatchingIndicator
-     * @param appliedBlockKeys
      */
-    private static void createAppliedBlockKeyByGenKey(RecordMatchingIndicator recordMatchingIndicator,
-            List<AppliedBlockKey> appliedBlockKeys) {
+    private static void createAppliedBlockKeyByGenKey(RecordMatchingIndicator recordMatchingIndicator) {
+        List<AppliedBlockKey> appliedBlockKeys = recordMatchingIndicator.getBuiltInMatchRuleDefinition().getAppliedBlockKeys();
+        appliedBlockKeys.clear();
         List<BlockKeyDefinition> blockKeyDefs = recordMatchingIndicator.getBuiltInMatchRuleDefinition().getBlockKeys();
         if (blockKeyDefs != null && blockKeyDefs.size() > 0) {
             AppliedBlockKey appliedBlockKey = RulesPackage.eINSTANCE.getRulesFactory().createAppliedBlockKey();
@@ -112,20 +169,18 @@ public class ExecuteMatchRuleHandler {
     /**
      * DOC zhao Comment method "computeMatchGroupWithBlockKey".
      * 
-     * @param analysis
      * @param recordMatchingIndicator
      * @param blockKeyIndicator
      * @param columnMap
      * @param matchResultConsumer
      * @param matchRows
      */
-    private static ReturnCode computeMatchGroupWithBlockKey(Analysis analysis, RecordMatchingIndicator recordMatchingIndicator,
+    private static ReturnCode computeMatchGroupWithBlockKey(RecordMatchingIndicator recordMatchingIndicator,
             BlockKeyIndicator blockKeyIndicator, Map<String, String> columnMap, MatchGroupResultConsumer matchResultConsumer,
             List<Object[]> matchRows) {
         ReturnCode rc = new ReturnCode(Boolean.TRUE);
 
-        Map<String, List<String[]>> resultWithBlockKey = computeBlockingKey(analysis, columnMap, matchRows,
-                recordMatchingIndicator);
+        Map<String, List<String[]>> resultWithBlockKey = computeBlockingKey(columnMap, matchRows, recordMatchingIndicator);
         Iterator<String> keyIterator = resultWithBlockKey.keySet().iterator();
 
         TreeMap<Object, Long> blockSize2Freq = new TreeMap<Object, Long>();
@@ -158,8 +213,26 @@ public class ExecuteMatchRuleHandler {
         return rc;
     }
 
-    private static Map<String, List<String[]>> computeBlockingKey(Analysis analysis, Map<String, String> columnMap,
-            List<Object[]> matchRows, RecordMatchingIndicator recordMatchingIndicator) {
+    private static Map<String, List<String[]>> computeBlockingKey(Map<String, String> columnMap, List<Object[]> matchRows,
+            RecordMatchingIndicator recordMatchingIndicator) {
+        List<Map<String, String>> blockKeySchema = getBlockKeySchema(recordMatchingIndicator);
+
+        BlockingKeyHandler blockKeyHandler = new BlockingKeyHandler(blockKeySchema, columnMap);
+        blockKeyHandler.setInputData(matchRows);
+        blockKeyHandler.run();
+        Map<String, List<String[]>> resultData = blockKeyHandler.getResultDatas();
+
+        return resultData;
+
+    }
+
+    /**
+     * mzhao Get block key schema given the record matching indicator.
+     * 
+     * @param recordMatchingIndicator
+     * @return
+     */
+    public static List<Map<String, String>> getBlockKeySchema(RecordMatchingIndicator recordMatchingIndicator) {
         List<AppliedBlockKey> appliedBlockKeys = recordMatchingIndicator.getBuiltInMatchRuleDefinition().getAppliedBlockKeys();
 
         List<Map<String, String>> blockKeySchema = new ArrayList<Map<String, String>>();
@@ -181,14 +254,7 @@ public class ExecuteMatchRuleHandler {
                 blockKeySchema.add(blockKeyDefMap);
             }
         }
-
-        BlockingKeyHandler blockKeyHandler = new BlockingKeyHandler(blockKeySchema, columnMap);
-        blockKeyHandler.setInputData(matchRows);
-        blockKeyHandler.run();
-        Map<String, List<String[]>> resultData = blockKeyHandler.getResultDatas();
-
-        return resultData;
-
+        return blockKeySchema;
     }
 
     /**
@@ -222,6 +288,37 @@ public class ExecuteMatchRuleHandler {
             List<Object[]> matchRows, RecordMatchingIndicator recordMatchingIndicator) throws BusinessException {
         boolean isOpenWarningDialog = false;
         AnalysisMatchRecordGrouping analysisMatchRecordGrouping = new AnalysisMatchRecordGrouping(matchResultConsumer);
+        setRuleMatcher(columnMap, recordMatchingIndicator, analysisMatchRecordGrouping);
+        analysisMatchRecordGrouping.setMatchRows(matchRows);
+        // the case for matching key custom Algorithm can not be loaded normal.
+        try {
+            analysisMatchRecordGrouping.run();
+        } catch (InstantiationException e1) {
+            isOpenWarningDialog = true;
+        } catch (IllegalAccessException e1) {
+            isOpenWarningDialog = true;
+        } catch (ClassNotFoundException e1) {
+            isOpenWarningDialog = true;
+        } finally {
+            if (isOpenWarningDialog) {
+                BusinessException businessException = new BusinessException();
+                throw businessException;
+
+            }
+        }
+
+    }
+
+    /**
+     * DOC zhao Comment method "setRuleMatcher".
+     * 
+     * @param columnMap
+     * @param recordMatchingIndicator
+     * @param analysisMatchRecordGrouping
+     * @throws BusinessException
+     */
+    private static void setRuleMatcher(Map<String, String> columnMap, RecordMatchingIndicator recordMatchingIndicator,
+            AnalysisMatchRecordGrouping analysisMatchRecordGrouping) throws BusinessException {
         List<MatchRule> matchRules = recordMatchingIndicator.getBuiltInMatchRuleDefinition().getMatchRules();
         for (MatchRule matcher : matchRules) {
             List<Map<String, String>> ruleMatcherConvertResult = new ArrayList<Map<String, String>>();
@@ -243,24 +340,5 @@ public class ExecuteMatchRuleHandler {
             }
             analysisMatchRecordGrouping.addRuleMatcher(ruleMatcherConvertResult);
         }
-        analysisMatchRecordGrouping.setMatchRows(matchRows);
-        // the case for matching key custom Algorithm can not be loaded normal.
-        try {
-            analysisMatchRecordGrouping.run();
-        } catch (InstantiationException e1) {
-            isOpenWarningDialog = true;
-        } catch (IllegalAccessException e1) {
-            isOpenWarningDialog = true;
-        } catch (ClassNotFoundException e1) {
-            isOpenWarningDialog = true;
-        } finally {
-            if (isOpenWarningDialog) {
-                BusinessException businessException = new BusinessException();
-                businessException.setAdditonalMessage(Messages.getString("ExecuteMatchRuleHandler.run_Error_Content")); //$NON-NLS-1$
-                throw businessException;
-
-            }
-        }
-
     }
 }

@@ -23,6 +23,12 @@ public abstract class MatchGroupResultConsumer {
     // save the match result
     protected List<Object[]> matchResult = null;
 
+    protected boolean isKeepDataInMemory = Boolean.FALSE;
+
+    public MatchGroupResultConsumer(boolean isKeepDataInMemory) {
+        this.isKeepDataInMemory = isKeepDataInMemory;
+    }
+
     /**
      * 
      * Handle a row from match grouping consumer

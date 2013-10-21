@@ -31,6 +31,8 @@ import org.talend.cwm.db.connection.DatabaseSQLExecutor;
 import org.talend.cwm.db.connection.DelimitedFileSQLExecutor;
 import org.talend.cwm.db.connection.ISQLExecutor;
 import org.talend.cwm.db.connection.MDMSQLExecutor;
+import org.talend.cwm.db.connection.SQLExecutor;
+import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.management.i18n.Messages;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.xml.TdXmlElementType;
@@ -40,7 +42,9 @@ import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.columnset.BlockKeyIndicator;
 import org.talend.dataquality.indicators.columnset.RecordMatchingIndicator;
 import org.talend.dataquality.record.linkage.grouping.MatchGroupResultConsumer;
+import org.talend.designer.components.lookup.persistent.IPersistentLookupManager;
 import org.talend.dq.analysis.memory.AnalysisThreadMemoryChangeNotifier;
+import org.talend.dq.analysis.persistent.BlockKey;
 import org.talend.dq.helper.AnalysisExecutorHelper;
 import org.talend.dq.indicators.Evaluator;
 import org.talend.utils.sugars.ReturnCode;
@@ -107,7 +111,10 @@ public class MatchAnalysisExecutor implements IAnalysisExecutor {
             return rc;
         }
 
-        ISQLExecutor sqlExecutor = getSQLExectutor(anlayzedElements);
+        Map<String, String> columnMap = getColumn2IndexMap(anlayzedElements);
+
+        ISQLExecutor sqlExecutor = null;
+        sqlExecutor = getSQLExectutor(analysis, recordMatchingIndicator, columnMap);
         if (sqlExecutor == null) {
             rc.setOk(Boolean.FALSE);
             return rc;
@@ -126,10 +133,21 @@ public class MatchAnalysisExecutor implements IAnalysisExecutor {
 
         monitor.worked(20);
 
-        Map<String, String> columnMap = getColumn2IndexMap(anlayzedElements);
+        TypedReturnCode<MatchGroupResultConsumer> returnCode = new TypedReturnCode<MatchGroupResultConsumer>();
+        if (sqlExecutor.getStoreOnDisk()) {
+            List<BlockKey> blockKeys = sqlExecutor.getStoreOnDiskHandler().getBlockKeys();
+            @SuppressWarnings("rawtypes")
+            IPersistentLookupManager persistentLookupManager = (sqlExecutor.getStoreOnDiskHandler()).getPersistentLookupManager();
+            try {
+                returnCode = ExecuteMatchRuleHandler.executeWithStoreOnDisk(columnMap, recordMatchingIndicator,
+                        blockKeyIndicator, persistentLookupManager, blockKeys);
+            } catch (Exception e) {
+                log.error(e.getMessage(), e);
+            }
+        } else {
+            returnCode = ExecuteMatchRuleHandler.execute(columnMap, recordMatchingIndicator, matchRows, blockKeyIndicator);
+        }
 
-        TypedReturnCode<MatchGroupResultConsumer> returnCode = ExecuteMatchRuleHandler.execute(analysis, columnMap,
-                recordMatchingIndicator, matchRows, blockKeyIndicator);
         if (!returnCode.isOk()) {
             return returnCode;
         }
@@ -193,8 +211,9 @@ public class MatchAnalysisExecutor implements IAnalysisExecutor {
      * @param modelElement
      * @return
      */
-    private ISQLExecutor getSQLExectutor(List<ModelElement> anlayzedElements) {
-        ModelElement modelElement = anlayzedElements.get(0);
+    private ISQLExecutor getSQLExectutor(Analysis analysis, RecordMatchingIndicator recordMatchingIndicator,
+            Map<String, String> columnMap) {
+        ModelElement modelElement = analysis.getContext().getAnalysedElements().get(0);
         ISQLExecutor sqlExecutor = null;
         if (modelElement instanceof TdColumn) {
             sqlExecutor = new DatabaseSQLExecutor();
@@ -202,6 +221,12 @@ public class MatchAnalysisExecutor implements IAnalysisExecutor {
             sqlExecutor = new MDMSQLExecutor();
         } else if (modelElement instanceof MetadataColumn) {
             sqlExecutor = new DelimitedFileSQLExecutor();
+        }
+        // Tune on store on disk option when needed.
+        Boolean isStoreOnDisk = TaggedValueHelper.getValueBoolean(SQLExecutor.STORE_ON_DISK_KEY, analysis);
+        if (sqlExecutor != null && isStoreOnDisk) {
+            sqlExecutor.setStoreOnDisk(Boolean.TRUE);
+            sqlExecutor.initStoreOnDiskHandler(analysis, recordMatchingIndicator, columnMap);
         }
         return sqlExecutor;
     }

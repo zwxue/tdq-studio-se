@@ -12,6 +12,7 @@
 // ============================================================================
 package org.talend.dataquality.record.linkage.utils;
 
+import org.apache.commons.lang.StringUtils;
 import org.talend.windowkey.AlgoBox;
 
 /**
@@ -46,6 +47,9 @@ public class AlgorithmSwitch {
 
     public static String getAlgoResult(String algoName, String algoPara, String colValue) {
         BlockingKeyAlgorithmEnum typeBySavedValue = BlockingKeyAlgorithmEnum.getTypeBySavedValue(algoName);
+        if (typeBySavedValue == null) {
+            return StringUtils.EMPTY;
+        }
         switch (typeBySavedValue) {
         case COLOGNEPHONETIC:
             return AlgoBox.colognePhonetic(colValue);
@@ -83,6 +87,9 @@ public class AlgorithmSwitch {
 
     public static String getPostAlgoResult(String algoName, String algoPara, String colValue) {
         BlockingKeyPostAlgorithmEnum typeBySavedValue = BlockingKeyPostAlgorithmEnum.getTypeBySavedValue(algoName);
+        if (typeBySavedValue == null) {
+            return StringUtils.EMPTY;
+        }
         switch (typeBySavedValue) {
         case LEFT_CHAR:
             return AlgoBox.add_Left_Char(algoPara, colValue);

@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.common.util.EList;
@@ -36,7 +37,9 @@ import com.csvreader.CsvReader;
 /**
  * DOC yyin class global comment. Detailled comment
  */
-public class DelimitedFileSQLExecutor implements ISQLExecutor {
+public class DelimitedFileSQLExecutor extends SQLExecutor {
+
+    private static Logger log = Logger.getLogger(DelimitedFileSQLExecutor.class);
 
     // if limit = 0. do not use the limit, only when it is set >0, use the limit
     private int limit = 0;
@@ -47,7 +50,13 @@ public class DelimitedFileSQLExecutor implements ISQLExecutor {
      * @see org.talend.cwm.db.connection.ISQLExecutor#executeQuery(org.talend.dataquality.analysis.Analysis)
      */
     public List<Object[]> executeQuery(DataManager connection, List<ModelElement> analysedElements) {
-        List<Object[]> dataFromTable = new ArrayList<Object[]>();
+        dataFromTable.clear();
+        try {
+            beginQuery();
+        } catch (Exception e1) {
+            log.error(e1.getMessage(), e1);
+            return dataFromTable;
+        }
         DelimitedFileConnection delimitedFileconnection = (DelimitedFileConnection) connection;
         String path = AnalysisExecutorHelper.getFilePath(delimitedFileconnection);
         IPath iPath = new Path(path);
@@ -60,7 +69,7 @@ public class DelimitedFileSQLExecutor implements ISQLExecutor {
 
             // use CsvReader to parse.
             if (Escape.CSV.equals(delimitedFileconnection.getEscapeType())) {
-                useCsvReader(file, delimitedFileconnection, analysedElements, dataFromTable);
+                useCsvReader(file, delimitedFileconnection, analysedElements);
             } else {
                 int[] analysedColumnIndex = getAnalysedColumnPositionInFileTable(analysedElements, delimitedFileconnection);
                 // use TOSDelimitedReader in FileInputDelimited to parse.
@@ -77,7 +86,7 @@ public class DelimitedFileSQLExecutor implements ISQLExecutor {
 
                         rowValues[i] = fileInputDelimited.get(analysedColumnIndex[i]);
                     }
-                    dataFromTable.add(rowValues);
+                    handleRow(rowValues);
                     if (limit > 0 && index >= limit) {
                         break;
                     }
@@ -85,8 +94,11 @@ public class DelimitedFileSQLExecutor implements ISQLExecutor {
                 }
                 fileInputDelimited.close();
             }
+            endQuery();
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
         }
         return dataFromTable;
     }
@@ -112,8 +124,7 @@ public class DelimitedFileSQLExecutor implements ISQLExecutor {
         return analysedColumnIndex;
     }
 
-    private void useCsvReader(File file, DelimitedFileConnection delimitedFileconnection, List<ModelElement> analysisElementList,
-            List<Object[]> dataFromTable) {
+    private void useCsvReader(File file, DelimitedFileConnection delimitedFileconnection, List<ModelElement> analysisElementList) {
         int limitValue = AnalysisExecutorHelper.getLimitValue(delimitedFileconnection);
         int headValue = AnalysisExecutorHelper.getHeadValue(delimitedFileconnection);
         CsvReader csvReader = null;
@@ -147,10 +158,12 @@ public class DelimitedFileSQLExecutor implements ISQLExecutor {
                 for (int i = 0; i < analysedColumnIndex.length; i++) {
                     analysedValues[i] = values[analysedColumnIndex[i]];
                 }
-                dataFromTable.add(analysedValues);
+                handleRow(analysedValues);
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error(e.getMessage(), e);
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
         } finally {
             if (csvReader != null) {
                 csvReader.close();

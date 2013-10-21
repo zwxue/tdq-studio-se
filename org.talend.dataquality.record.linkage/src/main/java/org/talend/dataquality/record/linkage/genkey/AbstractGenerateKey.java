@@ -33,7 +33,7 @@ public class AbstractGenerateKey {
 
     private Map<String, List<String[]>> genKeyToBlockResult = new HashMap<String, List<String[]>>();
 
-    private String[] parameters = { MatchAnalysisConstant.PRE_ALGO, MatchAnalysisConstant.PRE_VALUE,
+    public static String[] parameters = { MatchAnalysisConstant.PRE_ALGO, MatchAnalysisConstant.PRE_VALUE,
             MatchAnalysisConstant.KEY_ALGO, MatchAnalysisConstant.KEY_VALUE, MatchAnalysisConstant.POST_ALGO,
             MatchAnalysisConstant.POST_VALUE };
 
@@ -60,26 +60,41 @@ public class AbstractGenerateKey {
             resultInNewBlock.add(resultArray);
             genKeyToBlockResult.put(genKey, resultInNewBlock);
         }
+
     }
 
     /**
      * get the block key of each column.
      * 
-     * @param value
+     * @param blockKeyDefinitions the key defintion.
+     * @param dataMap the column to valueOfColumn map.
+     * @return the concatenated string of blocking keys.
      */
-    private String getGenKey(List<Map<String, String>> BlockKeyDefinitions, Map<String, String> dataMap) {
-        StringBuffer winGenKey = new StringBuffer();
+    public String getGenKey(List<Map<String, String>> blockKeyDefinitions, Map<String, String> dataMap) {
+        String[] blockKeys = getGenKeyArray(blockKeyDefinitions, dataMap);
+        return StringUtils.join(blockKeys);
+
+    }
+
+    /**
+     * get the block key of each column.
+     * 
+     * @param blockKeyDefinitions the key defintion.
+     * @param dataMap the column to valueOfColumn map.
+     * @return the array of blocking keys.
+     */
+    public String[] getGenKeyArray(List<Map<String, String>> blockKeyDefinitions, Map<String, String> dataMap) {
+        String[] blockKeyArray = new String[blockKeyDefinitions.size()];
         // get algos for each columns
-        for (Map<String, String> blockKey : BlockKeyDefinitions) {
+        int idx = 0;
+        for (Map<String, String> blockKey : blockKeyDefinitions) {
             String colName = blockKey.get(MatchAnalysisConstant.PRECOLUMN);
-
+            // TODO zshen Check if the parameter can be internally set.
             String colValue = getAlgoForEachColumn(dataMap.get(colName), blockKey, parameters);
-
-            winGenKey.append(colValue);
-
+            blockKeyArray[idx] = colValue;
+            idx++;
         }
-        return winGenKey.toString();
-
+        return blockKeyArray;
     }
 
     /**
@@ -88,18 +103,18 @@ public class AbstractGenerateKey {
      * 
      * @param originalValue
      * @param blockKey
-     * @param parameters
+     * @param params
      * @return
      */
-    public String getAlgoForEachColumn(String originalValue, Map<String, String> blockKey, String[] parameters) {
+    public String getAlgoForEachColumn(String originalValue, Map<String, String> blockKey, String[] params) {
         String tempVar = null;
         String colValue = originalValue;
-        String preAlgoName = blockKey.get(parameters[0]);
-        String preAlgoPara = blockKey.get(parameters[1]);
-        String keyAlgoName = blockKey.get(parameters[2]);
-        String keyAlgoPara = blockKey.get(parameters[3]);
-        String postAlgoName = blockKey.get(parameters[4]);
-        String postAlgoPara = blockKey.get(parameters[5]);
+        String preAlgoName = blockKey.get(params[0]);
+        String preAlgoPara = blockKey.get(params[1]);
+        String keyAlgoName = blockKey.get(params[2]);
+        String keyAlgoPara = blockKey.get(params[3]);
+        String postAlgoName = blockKey.get(params[4]);
+        String postAlgoPara = blockKey.get(params[5]);
 
         if (colValue == null) {
             colValue = StringUtils.EMPTY;

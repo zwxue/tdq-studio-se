@@ -21,7 +21,7 @@ import orgomg.cwm.objectmodel.core.ModelElement;
 /**
  * DOC yyin class global comment. Detailled comment
  */
-public class MDMSQLExecutor implements ISQLExecutor {
+public class MDMSQLExecutor extends SQLExecutor {
 
     @SuppressWarnings("unused")
     private int limit;

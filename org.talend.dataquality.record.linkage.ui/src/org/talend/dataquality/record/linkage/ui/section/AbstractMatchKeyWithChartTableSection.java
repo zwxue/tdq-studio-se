@@ -97,8 +97,8 @@ abstract public class AbstractMatchKeyWithChartTableSection extends AbstractMatc
         final Object[] IndicatorList = MatchRuleAnlaysisUtils.getNeedIndicatorFromAna(analysis);
         final RecordMatchingIndicator recordMatchingIndicator = EcoreUtil.copy((RecordMatchingIndicator) IndicatorList[0]);
         BlockKeyIndicator blockKeyIndicator = EcoreUtil.copy((BlockKeyIndicator) IndicatorList[1]);
-        TypedReturnCode<MatchGroupResultConsumer> execute = ExecuteMatchRuleHandler.execute(analysis, columnMap,
-                recordMatchingIndicator, matchRows, blockKeyIndicator);
+        TypedReturnCode<MatchGroupResultConsumer> execute = ExecuteMatchRuleHandler.execute(columnMap, recordMatchingIndicator,
+                matchRows, blockKeyIndicator);
         if (!execute.isOk()) {
             rc.setMessage(DefaultMessagesImpl.getString(
                     "RunAnalysisAction.failRunAnalysis", analysis.getName(), execute.getMessage())); //$NON-NLS-1$ 

@@ -48,8 +48,8 @@ public class BlockingKeyHandler {
         this.inputData = inputData;
     }
 
-    public BlockingKeyHandler(List<Map<String, String>> BlockKeyDefinitions, Map<String, String> columnMap) {
-        this.blockKeyDefinitions = BlockKeyDefinitions;
+    public BlockingKeyHandler(List<Map<String, String>> blockKeyDefinitions, Map<String, String> columnMap) {
+        this.blockKeyDefinitions = blockKeyDefinitions;
         this.columnIndexMap = columnMap;
     }
 

@@ -37,10 +37,13 @@ Require-Bundle: org.eclipse.ui,
  org.talend.metadata.managment.ui,
  org.apache.log4j,
  org.talend.librariesmanager,
- org.talend.dataquality.record.linkage
+ org.talend.dataquality.record.linkage,
+ org.talend.libraries.jboss
 Bundle-Vendor: .Talend SA.
-Bundle-ClassPath: .
-Eclipse-RegisterBuddy: org.talend.utils, org.apache.log4j,org.talend.libraries.eXist,org.talend.testutils
+Bundle-ClassPath: .,
+ lib/advancedPersistentLookupLib-1.0.jar,
+ lib/trove.jar
+Eclipse-RegisterBuddy: org.talend.utils, org.apache.log4j,org.talend.libraries.eXist,org.talend.testutils,org.talend.libraries.jboss
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Bundle-ActivationPolicy: lazy
 Bundle-Activator: org.talend.dq.CWMPlugin

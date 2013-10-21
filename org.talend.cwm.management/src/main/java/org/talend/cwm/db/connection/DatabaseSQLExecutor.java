@@ -15,7 +15,6 @@ package org.talend.cwm.db.connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -33,9 +32,9 @@ import orgomg.cwm.foundation.softwaredeployment.DataManager;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
- * DOC yyin class global comment. Detailled comment
+ * SQL executor dedicated for relational database query.
  */
-public class DatabaseSQLExecutor implements ISQLExecutor {
+public class DatabaseSQLExecutor extends SQLExecutor {
 
     private static Logger log = Logger.getLogger(DatabaseSQLExecutor.class);
 
@@ -47,7 +46,13 @@ public class DatabaseSQLExecutor implements ISQLExecutor {
      * @see org.talend.cwm.db.connection.ISQLExecutor#executeQuery(org.talend.dataquality.analysis.Analysis)
      */
     public List<Object[]> executeQuery(DataManager connection, List<ModelElement> analysedElements) throws SQLException {
-        List<Object[]> dataFromTable = new ArrayList<Object[]>();
+        dataFromTable.clear();
+        try {
+            beginQuery();
+        } catch (Exception e1) {
+            log.error(e1.getMessage(), e1);
+            return dataFromTable;
+        }
         int columnListSize = analysedElements.size();
 
         TypedReturnCode<java.sql.Connection> sqlconnection = JavaSqlFactory.createConnection((Connection) connection);
@@ -68,9 +73,9 @@ public class DatabaseSQLExecutor implements ISQLExecutor {
                     // --- get content of column
                     oneRow[i] = resultSet.getObject(i + 1);
                 }
-                dataFromTable.add(oneRow);
+                handleRow(oneRow);
             }
-        } catch (SQLException e) {
+        } catch (Exception e) {
             log.error(e, e);
         } finally {
             if (resultSet != null) {
@@ -83,6 +88,12 @@ public class DatabaseSQLExecutor implements ISQLExecutor {
             if (!closed.isOk()) {
                 log.warn(closed.getMessage());
             }
+        }
+
+        try {
+            endQuery();
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
         }
         return dataFromTable;
     }
@@ -106,7 +117,7 @@ public class DatabaseSQLExecutor implements ISQLExecutor {
             sql.append(dbms.quote(col.getName()));
             // append comma if more columns exist
             if (iterator.hasNext()) {
-                sql.append(',');//$NON-NLS-1$
+                sql.append(',');
             }
         }
 
