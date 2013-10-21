@@ -21,7 +21,7 @@ import java.util.TreeMap;
 
 import org.apache.commons.lang.StringUtils;
 import org.talend.commons.exception.BusinessException;
-import org.talend.commons.i18n.internal.DefaultMessagesImpl;
+import org.talend.cwm.management.i18n.Messages;
 import org.talend.dataquality.PluginConstant;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.indicators.columnset.BlockKeyIndicator;
@@ -232,8 +232,7 @@ public class ExecuteMatchRuleHandler {
                 // check if the current match key does not contain any column,throw exception, do not continue
                 if (matchDef.getColumn() == null || StringUtils.EMPTY.equals(matchDef.getColumn())) {
                     BusinessException businessException = new BusinessException();
-                    businessException.setAdditonalMessage(DefaultMessagesImpl.getString(
-                            "MatchAnalysisExecutor.NoColumnInMatchKey", //$NON-NLS-1$
+                    businessException.setAdditonalMessage(Messages.getString("MatchAnalysisExecutor.NoColumnInMatchKey", //$NON-NLS-1$
                             matchDef.getName()));
                     throw businessException;
                 }
@@ -257,7 +256,7 @@ public class ExecuteMatchRuleHandler {
         } finally {
             if (isOpenWarningDialog) {
                 BusinessException businessException = new BusinessException();
-                businessException.setAdditonalMessage(DefaultMessagesImpl.getString("ExecuteMatchRuleHandler.run_Error_Content")); //$NON-NLS-1$
+                businessException.setAdditonalMessage(Messages.getString("ExecuteMatchRuleHandler.run_Error_Content")); //$NON-NLS-1$
                 throw businessException;
 
             }
