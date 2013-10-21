@@ -13,9 +13,7 @@
 package org.talend.dataprofiler.core.ui.views.provider;
 
 import java.sql.Driver;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import net.sourceforge.sqlexplorer.EDriverName;
 import net.sourceforge.sqlexplorer.dbproduct.DriverManager;
@@ -25,7 +23,6 @@ import net.sourceforge.sqlexplorer.plugin.SQLExplorerPlugin;
 import org.apache.log4j.Logger;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.IFontProvider;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Font;
@@ -103,8 +100,6 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider i
 
     private Logger log = Logger.getLogger(DQRepositoryViewLabelProvider.class);
 
-    private static Map<ERepositoryObjectType, Image[]> lockImageMap = new HashMap<ERepositoryObjectType, Image[]>();
-
     public DQRepositoryViewLabelProvider() {
         super(MNComposedAdapterFactory.getAdapterFactory());
 
@@ -154,40 +149,43 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider i
             } else if (type.equals(ENodeType.SIMPLE_FOLDER)) {
                 image = ImageLib.getImage(ImageLib.FOLDERNODE_IMAGE);
             } else if (type.equals(ENodeType.REPOSITORY_ELEMENT)) {
+                // TDQ-7560 when the image is a overlay image,use originalImageName to get the corresponding one.
+                String originalImageName = null;
                 if (node instanceof DBConnectionRepNode) {
+                    originalImageName = ImageLib.TD_DATAPROVIDER;
                     if (!isSupportedConnection(node) || isNeedAddDriverConnection(node)) {
-                        image = ImageLib.createErrorIcon(ImageLib.TD_DATAPROVIDER).createImage();
+                        image = ImageLib.createErrorIcon(originalImageName).createImage();
                     } else if (isInvalidJDBCConnection(node)) {
-                        image = ImageLib.createInvalidIcon(ImageLib.TD_DATAPROVIDER).createImage();
+                        image = ImageLib.createInvalidIcon(originalImageName).createImage();
                     } else {
                         image = ImageLib.getImage(ImageLib.TD_DATAPROVIDER);
                     }
                 } else if (node instanceof MDMConnectionRepNode) {
-                    image = ImageLib.getImage(ImageLib.MDM_CONNECTION);
+                    originalImageName = ImageLib.MDM_CONNECTION;
                 } else if (node instanceof MDMSchemaRepNode) {
-                    image = ImageLib.getImage(ImageLib.XML_DOC);
+                    originalImageName = ImageLib.XML_DOC;
                 } else if (node instanceof MDMXmlElementRepNode) {
-                    image = ImageLib.getImage(ImageLib.XML_ELEMENT_DOC);
+                    originalImageName = ImageLib.XML_ELEMENT_DOC;
                 } else if (node instanceof DFConnectionRepNode) {
-                    image = ImageLib.getImage(ImageLib.FILE_DELIMITED);
+                    originalImageName = ImageLib.FILE_DELIMITED;
                 } else if (node instanceof AnalysisRepNode) {
-                    image = ImageLib.getImage(ImageLib.ANALYSIS_OBJECT);
+                    originalImageName = ImageLib.ANALYSIS_OBJECT;
                 } else if (node instanceof ReportRepNode) {
-                    image = ImageLib.getImage(ImageLib.REPORT_OBJECT);
+                    originalImageName = ImageLib.REPORT_OBJECT;
                 } else if (node instanceof SysIndicatorDefinitionRepNode) {
-                    image = ImageLib.getImage(ImageLib.IND_DEFINITION);
+                    originalImageName = ImageLib.IND_DEFINITION;
                 } else if (node instanceof PatternRepNode) {
-                    image = ImageLib.getImage(ImageLib.PATTERN_REG);
+                    originalImageName = ImageLib.PATTERN_REG;
                 } else if (node instanceof RuleRepNode) {
-                    if(((RuleRepNode) node).getRule() instanceof MatchRuleDefinition){
-                        image = ImageLib.getImage(ImageLib.MATCH_RULE_ICON);
-                    }else{
-                        image = ImageLib.getImage(ImageLib.DQ_RULE);
+                    if (((RuleRepNode) node).getRule() instanceof MatchRuleDefinition) {
+                        originalImageName = ImageLib.MATCH_RULE_ICON;
+                    } else {
+                        originalImageName = ImageLib.DQ_RULE;
                     }
                 } else if (node instanceof SourceFileRepNode) {
-                    image = ImageLib.getImage(ImageLib.SOURCE_FILE);
+                    originalImageName = ImageLib.SOURCE_FILE;
                 } else if (node instanceof ExchangeCategoryRepNode || node instanceof ExchangeComponentRepNode) {
-                    image = ImageLib.getImage(ImageLib.EXCHANGE);
+                    originalImageName = ImageLib.EXCHANGE;
                 } else if (node instanceof RepositoryNode) {
                     // MOD qiongli 2011-1-18 get image for nodes in recycle bin
                     Image imageNode = getImageByContentType((RepositoryNode) node);
@@ -195,25 +193,19 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider i
                         image = imageNode;
                     }
                 }
+                if (originalImageName != null && !(node instanceof DBConnectionRepNode)) {
+                    image = ImageLib.getImage(originalImageName);
+                }
                 // MOD klliu 2010-04-11 20468: Unfolder "exchange",get many NPE
                 // exchange folder did not contain viewObject.
                 if (viewObject != null) {
                     // MOD yyi 2011-04-07 19696: "Lock element"
                     ERepositoryStatus status = ProxyRepositoryFactory.getInstance().getStatus(viewObject);
-                    if (ERepositoryStatus.DEFAULT != status) {
-                        ERepositoryObjectType repositoryObjectType = viewObject.getRepositoryObjectType();
-                        if (lockImageMap.get(repositoryObjectType) == null) {
-                            ImageDescriptor imageDescriptor = ImageDescriptor.createFromImage(image);
-                            Image[] imageTemp = new Image[2];
-                            imageTemp[0] = ImageLib.createLockedIcon(imageDescriptor).createImage();
-                            imageTemp[1] = ImageLib.createLockedByOtherIcon(imageDescriptor).createImage();
-                            lockImageMap.put(repositoryObjectType, imageTemp);
-                        }
-
+                    if (ERepositoryStatus.DEFAULT != status && originalImageName != null) {
                         if (ERepositoryStatus.LOCK_BY_USER == status) {
-                            image = lockImageMap.get(repositoryObjectType)[0];
+                            image = ImageLib.createLockedByOwnIcon(originalImageName).createImage();
                         } else if (ERepositoryStatus.LOCK_BY_OTHER == status) {
-                            image = lockImageMap.get(repositoryObjectType)[1];
+                            image = ImageLib.createLockedByOtherIcon(originalImageName).createImage();
                         }
                     }
                 }
@@ -291,9 +283,9 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider i
     }
 
     /**
-     *
+     * 
      * DOC qiongli Comment method "getImageByContentType".
-     *
+     * 
      * @param repositoryNode
      * @return
      */
@@ -391,7 +383,7 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider i
 
     /**
      * ADD qiongli TDQ-5801 if it is a invalid jdbc connection.
-     *
+     * 
      * @param repNode
      * @return
      */
@@ -415,7 +407,7 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider i
 
     /*
      * yyi 2011-04-14 20362:connection modified
-     *
+     * 
      * @see org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider#getFont(java.lang.Object)
      */
     @Override

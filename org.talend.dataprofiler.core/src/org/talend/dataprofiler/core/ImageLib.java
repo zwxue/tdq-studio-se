@@ -366,7 +366,7 @@ public final class ImageLib {
      * @return
      */
     public static ImageDescriptor createInvalidIcon(String originalImgName) {
-        return createInvalidIcon(getImageDescriptor(originalImgName));
+        return getOverlayIcon(originalImgName, WARN_OVR);
     }
 
     /**
@@ -374,7 +374,9 @@ public final class ImageLib {
      * 
      * @param originalImg
      * @return
+     * @deprecated use createInvalidIcon(String originalImgName) and avoid to create image ervery time.
      */
+    @Deprecated
     public static ImageDescriptor createInvalidIcon(ImageDescriptor originalImg) {
         ImageDescriptor warnImg = getImageDescriptor(WARN_OVR);
         return originalImg != null ? createIcon(originalImg, warnImg) : null;
@@ -385,9 +387,11 @@ public final class ImageLib {
      * 
      * @param originalImgName
      * @return
+     * @deprecated use createLockedByOwnIcon(String originalImgName) and avoid to create image ervery time.
      */
+    @Deprecated
     public static ImageDescriptor createLockedIcon(String originalImgName) {
-        return createLockedIcon(getImageDescriptor(originalImgName));
+        return getOverlayIcon(originalImgName, ICON_LOCK);
     }
 
     /**
@@ -395,7 +399,9 @@ public final class ImageLib {
      * 
      * @param originalImg
      * @return
+     * @deprecated use createLockedByOwnIcon(String originalImgName) and avoid to create image ervery time.
      */
+    @Deprecated
     public static ImageDescriptor createLockedIcon(ImageDescriptor originalImg) {
         ImageDescriptor lockImg = getImageDescriptor(ICON_LOCK);
 
@@ -408,9 +414,39 @@ public final class ImageLib {
      * @param originalImg
      * @param decorateImg
      * @return
+     * @deprecated use getOverlayIcon(String originalImgName, String overImgName) and avoid to create image ervery time.
      */
+    @Deprecated
     public static ImageDescriptor createIcon(ImageDescriptor originalImg, ImageDescriptor decorateImg) {
         return createIcon(originalImg.createImage(), decorateImg);
+    }
+
+    /**
+     * 
+     * make the original image name and overlay image name as a key, find the image from ImageLib.imageRegistry by this
+     * key. if not found,create a new Overlay image and put it into imageRegistry.
+     * 
+     * @param originalName
+     * @param overImgName
+     * @return
+     */
+    public static ImageDescriptor getOverlayIcon(String originalName, String overImgName) {
+        String orininal_over_name = originalName + PluginConstant.UNDER_LINE + overImgName;
+        if (imageRegistry == null) {
+            initialize();
+        }
+        ImageDescriptor originalOverImg = imageRegistry.getDescriptor(orininal_over_name);
+        if (originalOverImg == null) {
+            ImageDescriptor orignalImg = getImageDescriptor(originalName);
+            ImageDescriptor overImg = getImageDescriptor(overImgName);
+            if (orignalImg != null && overImg != null) {
+                originalOverImg = createIcon(orignalImg.createImage(), overImg);
+                imageRegistry.put(orininal_over_name, originalOverImg);
+            }
+
+        }
+        return originalOverImg;
+
     }
 
     /**
@@ -470,7 +506,7 @@ public final class ImageLib {
      * @return
      */
     public static ImageDescriptor createErrorIcon(String originalImgName) {
-        return createErrorIcon(getImageDescriptor(originalImgName));
+        return getOverlayIcon(originalImgName, ICON_ERROR_VAR);
     }
 
     /**
@@ -478,7 +514,9 @@ public final class ImageLib {
      * 
      * @param originalImg
      * @return
+     * @deprecated use createErrorIcon(String originalImgName) and avoid to create image ervery time.
      */
+    @Deprecated
     public static ImageDescriptor createErrorIcon(ImageDescriptor originalImg) {
         ImageDescriptor lockImg = getImageDescriptor(ICON_ERROR_VAR);
 
@@ -493,7 +531,7 @@ public final class ImageLib {
      * @return
      */
     public static ImageDescriptor createAddedIcon(String originalImgName) {
-        return createAddedIcon(getImageDescriptor(originalImgName));
+        return getOverlayIcon(originalImgName, ICON_ADD_VAR);
     }
 
     /**
@@ -501,35 +539,57 @@ public final class ImageLib {
      * 
      * @param originalImg
      * @return
+     * @deprecated use createAddedIcon(String originalImgName) and avoid to create image ervery time.
      */
+    @Deprecated
     public static ImageDescriptor createAddedIcon(ImageDescriptor originalImg) {
         ImageDescriptor addImg = getImageDescriptor(ICON_ADD_VAR);
         return originalImg != null ? new DecorationOverlayIcon(originalImg.createImage(), addImg, IDecoration.TOP_RIGHT) : null;
     }
 
     public static ImageDescriptor createLockedByOtherIcon(String originalImgName) {
-        return createLockedByOtherIcon(getImageDescriptor(originalImgName));
+        return getOverlayIcon(originalImgName, ICON_LOCK_BYOTHER);
     }
 
+    /**
+     * 
+     * @deprecated use createLockedByOtherIcon(String originalImgName) and avoid to create image ervery
+     */
+    @Deprecated
     public static ImageDescriptor createLockedByOtherIcon(ImageDescriptor originalImg) {
         ImageDescriptor lockImg = getImageDescriptor(ICON_LOCK_BYOTHER);
         return originalImg != null ? createIcon(originalImg, lockImg) : null;
     }
 
+    /**
+     * 
+     * @deprecated use createLockedByOtherIcon(String originalImgName) and avoid to create image ervery
+     */
+    @Deprecated
     public static ImageDescriptor createLockedByOtherIcon(Image originalImg) {
         ImageDescriptor lockImg = getImageDescriptor(ICON_LOCK_BYOTHER);
         return originalImg != null ? createIcon(originalImg, lockImg) : null;
     }
 
     public static ImageDescriptor createLockedByOwnIcon(String originalImgName) {
-        return createLockedByOtherIcon(getImageDescriptor(originalImgName));
+        return getOverlayIcon(originalImgName, ICON_LOCK);
     }
 
+    /**
+     * 
+     * @deprecated use createLockedByOwnIcon(String originalImgName) and avoid to create image ervery
+     */
+    @Deprecated
     public static ImageDescriptor createLockedByOwnIcon(ImageDescriptor originalImg) {
         ImageDescriptor lockImg = getImageDescriptor(ICON_LOCK);
         return originalImg != null ? createIcon(originalImg, lockImg) : null;
     }
 
+    /**
+     * 
+     * @deprecated use createLockedByOwnIcon(String originalImgName) and avoid to create image ervery
+     */
+    @Deprecated
     public static ImageDescriptor createLockedByOwnIcon(Image originalImg) {
         ImageDescriptor lockImg = getImageDescriptor(ICON_LOCK);
         return originalImg != null ? createIcon(originalImg, lockImg) : null;

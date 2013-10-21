@@ -44,6 +44,8 @@ public final class PluginConstant {
 
     public static final String SLASH_STRING = "/"; //$NON-NLS-1$
 
+    public static final String UNDER_LINE = "_"; //$NON-NLS-1$
+
     public static final String PROJECTCREATED_FLAG = "PROJECTCREATED_FLAG"; //$NON-NLS-1$
 
     public static final String CONNECTION_URL_PROPERTY = "CONNECTION_URL_PROPERTY"; //$NON-NLS-1$

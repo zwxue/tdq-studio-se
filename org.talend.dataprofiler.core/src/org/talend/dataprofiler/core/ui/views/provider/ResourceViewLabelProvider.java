@@ -51,7 +51,9 @@ import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
  * @author rli
+ * @deprecated use DQRepositoryViewLabelProvider
  */
+@Deprecated
 public class ResourceViewLabelProvider extends WorkbenchLabelProvider implements ICommonLabelProvider {
 
     private static Logger log = Logger.getLogger(ResourceViewLabelProvider.class);

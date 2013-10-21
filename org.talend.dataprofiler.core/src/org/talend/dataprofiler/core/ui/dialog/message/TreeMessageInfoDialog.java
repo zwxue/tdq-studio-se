@@ -200,29 +200,33 @@ public class TreeMessageInfoDialog extends MessageDialog {
                     }
 
                     Image modelElementImage = null;
+                    String imgName = null;
                     if (modelElement instanceof Analysis) {
-                        modelElementImage = ImageLib.getImage(ImageLib.ANALYSIS_OBJECT);
+                        imgName = ImageLib.ANALYSIS_OBJECT;
                     }
                     if (modelElement instanceof TdReport) {
-                        modelElementImage = ImageLib.getImage(ImageLib.REPORT_OBJECT);
+                        imgName = ImageLib.REPORT_OBJECT;
                     }
                     if (modelElement instanceof DatabaseConnection) {
-                        modelElementImage = ImageLib.getImage(ImageLib.CONNECTION);
+                        imgName = ImageLib.CONNECTION;
                     }
                     if (modelElement instanceof MDMConnection) {
-                        modelElementImage = ImageLib.getImage(ImageLib.MDM_CONNECTION);
+                        imgName = ImageLib.MDM_CONNECTION;
                     }
                     if (modelElement instanceof DelimitedFileConnection) {
-                        modelElementImage = ImageLib.getImage(ImageLib.FILE_DELIMITED);
+                        imgName = ImageLib.FILE_DELIMITED;
                     }
                     if (modelElement instanceof Pattern) {
-                        modelElementImage = ImageLib.getImage(ImageLib.PATTERN_REG);
+                        imgName = ImageLib.PATTERN_REG;
                     }
                     if (modelElement instanceof IndicatorDefinition) {
-                        modelElementImage = ImageLib.getImage(ImageLib.IND_DEFINITION);
+                        imgName = ImageLib.IND_DEFINITION;
                     }
                     if (modelElement instanceof DQRule) {
-                        modelElementImage = ImageLib.getImage(ImageLib.DQ_RULE);
+                        imgName = ImageLib.DQ_RULE;
+                    }
+                    if (imgName != null) {
+                        modelElementImage = ImageLib.getImage(imgName);
                     }
 
                     // add lock icon on the image
@@ -233,10 +237,10 @@ public class TreeMessageInfoDialog extends MessageDialog {
                                 Item item = property.getItem();
                                 if (item != null) {
                                     if (ProxyRepositoryManager.getInstance().isLockByUserOwn(item)) {
-                                        modelElementImage = ImageLib.createLockedByOwnIcon(modelElementImage).createImage();
+                                        modelElementImage = ImageLib.createLockedByOwnIcon(imgName).createImage();
                                         imagesNeedDisposedList.add(modelElementImage);
                                     } else if (ProxyRepositoryManager.getInstance().isLockByOthers(item)) {
-                                        modelElementImage = ImageLib.createLockedByOtherIcon(modelElementImage).createImage();
+                                        modelElementImage = ImageLib.createLockedByOtherIcon(imgName).createImage();
                                         imagesNeedDisposedList.add(modelElementImage);
                                     }
                                 }
