@@ -55,6 +55,7 @@ import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.dialog.provider.BlockingKeysTableLabelProvider;
 import org.talend.dataprofiler.core.ui.dialog.provider.MatchRulesTableLabelProvider;
+import org.talend.dataquality.record.linkage.constant.AttributeMatcherType;
 import org.talend.dataquality.rules.BlockKeyDefinition;
 import org.talend.dataquality.rules.MatchKeyDefinition;
 import org.talend.dataquality.rules.MatchRule;
@@ -139,13 +140,15 @@ public class MatchRuleElementTreeSelectionDialog extends ElementTreeSelectionDia
                             boolean needColumnWarning = false;
                             if (dialogType != MATCHGROUP_TYPE) {
                                 for (BlockKeyDefinition bkd : matchRule.getBlockKeys()) {
+                                    boolean hasColumnMatch = false;
                                     for (String col : inputColumnNames) {
-                                        if (!col.equalsIgnoreCase(bkd.getColumn()) && !col.equalsIgnoreCase(bkd.getName())) {
-                                            needColumnWarning = true;
+                                        if (col.equalsIgnoreCase(bkd.getColumn()) || col.equalsIgnoreCase(bkd.getName())) {
+                                            hasColumnMatch = true;
                                             break;
                                         }
                                     }
-                                    if (needColumnWarning) {
+                                    if (!hasColumnMatch) {
+                                        needColumnWarning = true;
                                         break;
                                     }
                                 }
@@ -154,13 +157,15 @@ public class MatchRuleElementTreeSelectionDialog extends ElementTreeSelectionDia
                                 for (MatchRule rule : matchRule.getMatchRules()) {
                                     EList<MatchKeyDefinition> matchKeys = rule.getMatchKeys();
                                     for (MatchKeyDefinition mkd : matchKeys) {
+                                        boolean hasColumnMatch = false;
                                         for (String col : inputColumnNames) {
-                                            if (!col.equalsIgnoreCase(mkd.getColumn()) && !col.equalsIgnoreCase(mkd.getName())) {
-                                                needColumnWarning = true;
+                                            if (col.equalsIgnoreCase(mkd.getColumn()) || col.equalsIgnoreCase(mkd.getName())) {
+                                                hasColumnMatch = true;
                                                 break;
                                             }
                                         }
-                                        if (needColumnWarning) {
+                                        if (!hasColumnMatch) {
+                                            needColumnWarning = true;
                                             break;
                                         }
                                     }
@@ -443,7 +448,7 @@ public class MatchRuleElementTreeSelectionDialog extends ElementTreeSelectionDia
 
     private List<Map<String, String>> getMatchRulesFromRules(MatchRuleDefinition matchRuleDefinition) {
 
-        if (matchRuleDefinition != null && matchRuleDefinition instanceof MatchRuleDefinition) {
+        if (matchRuleDefinition != null) {
             List<Map<String, String>> ruleValues = new ArrayList<Map<String, String>>();
             for (MatchRule matchRule : matchRuleDefinition.getMatchRules()) {
                 for (MatchKeyDefinition matchKey : matchRule.getMatchKeys()) {
@@ -454,8 +459,8 @@ public class MatchRuleElementTreeSelectionDialog extends ElementTreeSelectionDia
                             null == matchKey.getColumn() ? StringUtils.EMPTY : matchKey.getColumn());
 
                     pr.put(MatchRulesTableLabelProvider.MATCHING_TYPE,
-                            null == matchKey.getAlgorithm().getAlgorithmType() ? StringUtils.EMPTY : matchKey.getAlgorithm()
-                                    .getAlgorithmType());
+                            null == matchKey.getAlgorithm().getAlgorithmType() ? StringUtils.EMPTY : AttributeMatcherType
+                                    .valueOf(matchKey.getAlgorithm().getAlgorithmType()).getComponentValue());
                     pr.put(MatchRulesTableLabelProvider.CUSTOM_MATCHER,
                             null == matchKey.getAlgorithm().getAlgorithmParameters() ? StringUtils.EMPTY : matchKey
                                     .getAlgorithm().getAlgorithmParameters());

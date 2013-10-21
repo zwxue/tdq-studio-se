@@ -62,7 +62,7 @@ public class MatchRulesTableLabelProvider extends LabelProvider implements ITabl
             result = rule.get(INPUT_COLUMN);
             break;
         case 2: // matching type
-            result = AttributeMatcherType.valueOf(rule.get(MATCHING_TYPE)).getLabel();
+            result = AttributeMatcherType.getTypeByComponentValue(rule.get(MATCHING_TYPE)).getLabel();
             break;
         case 3: // custom matcher class
             result = rule.get(CUSTOM_MATCHER);
