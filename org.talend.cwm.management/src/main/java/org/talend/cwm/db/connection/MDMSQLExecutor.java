@@ -18,15 +18,17 @@ import org.talend.dataquality.analysis.Analysis;
 import orgomg.cwm.foundation.softwaredeployment.DataManager;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
-
 /**
- * DOC yyin  class global comment. Detailled comment
+ * DOC yyin class global comment. Detailled comment
  */
 public class MDMSQLExecutor implements ISQLExecutor {
 
+    @SuppressWarnings("unused")
     private int limit;
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.talend.cwm.db.connection.ISQLExecutor#executeQuery(org.talend.dataquality.analysis.Analysis)
      */
     public List<Object[]> executeQuery(DataManager connection, List<ModelElement> analysedElements) {
@@ -34,6 +36,7 @@ public class MDMSQLExecutor implements ISQLExecutor {
         return null;
     }
 
+    @SuppressWarnings("unused")
     private String createSqlStatement(Analysis analysis) {
         return null;
     }

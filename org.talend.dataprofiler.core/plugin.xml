@@ -952,6 +952,7 @@
       </editor>
       <editor
             class="org.talend.dataprofiler.core.ui.editor.analysis.MatchAnalysisEditor"
+            contributorClass="org.talend.dataprofiler.core.ui.editor.AnalysisFormEditorContributor"
             default="false"
             extensions="ana"
             icon="icons/chart_bar.png"

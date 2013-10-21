@@ -1052,10 +1052,10 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
             return;
         }
 
-        this.updateAnalysisClientDependency();
-
         analysisHandler.saveSelectedAnalyzedElements();
         analysisHandler.saveConnection();
+
+        this.updateAnalysisClientDependency();
 
         ReturnCode saved = new ReturnCode(false);
         IEditorInput editorInput = this.getEditorInput();

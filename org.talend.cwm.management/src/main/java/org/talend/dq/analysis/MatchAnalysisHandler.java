@@ -15,15 +15,22 @@ package org.talend.dq.analysis;
 import java.util.Arrays;
 import java.util.Collection;
 
+import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.EList;
+import org.talend.commons.emf.EMFUtil;
+import org.talend.cwm.dependencies.DependenciesHandler;
 import org.talend.dataquality.analysis.Analysis;
+import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.foundation.softwaredeployment.DataManager;
+import orgomg.cwm.objectmodel.core.Dependency;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
  * DOC yyin class global comment. Detailled comment
  */
 public class MatchAnalysisHandler extends AnalysisHandler {
+
+    private static Logger log = Logger.getLogger(MatchAnalysisHandler.class);
 
     private ModelElement[] selectedColumns = null;
 
@@ -43,8 +50,13 @@ public class MatchAnalysisHandler extends AnalysisHandler {
         connection = analysis.getContext().getConnection();
     }
 
-    public void SetConnection(DataManager connection) {
-        this.connection = connection;
+    public void SetConnection(DataManager newConnection) {
+        // remove the old dependencies if any
+        if (this.connection != null) {
+            DependenciesHandler.getInstance().removeDependenciesBetweenModel(connection, analysis);
+            EMFUtil.saveSingleResource(connection.eResource());
+        }// ~
+        this.connection = newConnection;
     }
 
     public DataManager getConnection() {
@@ -55,6 +67,12 @@ public class MatchAnalysisHandler extends AnalysisHandler {
         assert analysis != null;
         assert analysis.getContext() != null;
         analysis.getContext().setConnection(connection);
+
+        // Added TDQ-8183 add db dependency on match analysis
+        TypedReturnCode<Dependency> rc = DependenciesHandler.getInstance().setDependencyOn(analysis, connection);
+        if (!rc.isOk()) {
+            log.info("fail to save dependency analysis:" + analysis.getFileName());//$NON-NLS-1$
+        }// ~
     }
 
     /**
