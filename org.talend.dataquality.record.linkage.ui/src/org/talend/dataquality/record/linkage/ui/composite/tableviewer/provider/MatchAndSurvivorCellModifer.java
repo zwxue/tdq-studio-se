@@ -83,8 +83,6 @@ public class MatchAndSurvivorCellModifer extends AbstractMatchCellModifier<Match
         } else if (MatchAnalysisConstant.FUNCTION.equalsIgnoreCase(property)) {
             return SurvivorShipAlgorithmEnum.getTypeBySavedValue(mkd.getSurvivorShipKey().getFunction().getAlgorithmType())
                     .getIndex();
-        } else if (MatchAnalysisConstant.ALLOW_MANUAL_RESOLUTION.equalsIgnoreCase(property)) {
-            return mkd.getSurvivorShipKey().isAllowManualResolution();
         } else if (MatchAnalysisConstant.PARAMETER.equalsIgnoreCase(property)) {
             return mkd.getSurvivorShipKey().getFunction().getAlgorithmParameters();
         }
@@ -167,11 +165,6 @@ public class MatchAndSurvivorCellModifer extends AbstractMatchCellModifier<Match
                         cellEditors[7].setValue(StringUtils.EMPTY);
                     }
                 }
-            } else if (MatchAnalysisConstant.ALLOW_MANUAL_RESOLUTION.equalsIgnoreCase(property)) {
-                if (mkd.getSurvivorShipKey().isAllowManualResolution() == Boolean.valueOf(newValue)) {
-                    return;
-                }
-                mkd.getSurvivorShipKey().setAllowManualResolution(Boolean.valueOf(newValue));
             } else if (MatchAnalysisConstant.PARAMETER.equalsIgnoreCase(property)) {
                 mkd.getSurvivorShipKey().getFunction().setAlgorithmParameters(newValue);
             } else {
