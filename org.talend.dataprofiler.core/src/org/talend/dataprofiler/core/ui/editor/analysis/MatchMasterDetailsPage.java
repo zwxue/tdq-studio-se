@@ -126,7 +126,7 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
 
     private SashForm sForm;
 
-    private RepositoryNode[] selectedNodes;
+    private IRepositoryNode[] selectedNodes;
 
     private boolean isMdm = false;
 
@@ -647,7 +647,7 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
         }
 
         // add new columns
-        for (RepositoryNode selectedOne : this.selectedNodes) {
+        for (IRepositoryNode selectedOne : this.selectedNodes) {
             if (!oldSelectedColumns.contains(selectedOne)) {
                 // the old doesnot contain the current, it need to be added to the columnMap
                 int positionInNewSelectColumns = positionInNewSelectColumns(selectedOne);
@@ -668,7 +668,7 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
      */
     private int positionInNewSelectColumns(IRepositoryNode oldSelectNode) {
         int position = 0;
-        for (RepositoryNode newColumn : selectedNodes) {
+        for (IRepositoryNode newColumn : selectedNodes) {
             if (oldSelectNode.getLabel().equals(newColumn.getLabel())) {
                 return position;
             }
@@ -718,7 +718,7 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
     private List<IRepositoryNode> findAllSelectedRepositoryNode() {
         List<IRepositoryNode> reposViewObjList = new ArrayList<IRepositoryNode>();
         if (selectedNodes != null) {
-            for (RepositoryNode node : selectedNodes) {
+            for (IRepositoryNode node : selectedNodes) {
                 reposViewObjList.add(node);
             }
         } else if (analysisHandler.getSelectedColumns() != null) {// find the related nodes of the selected columns,
@@ -739,7 +739,7 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
      * 
      * @param nodes
      */
-    public void setSelectedNodes(RepositoryNode[] repositoryNodes) {
+    public void setSelectedNodes(IRepositoryNode[] repositoryNodes) {
         this.selectedNodes = repositoryNodes;
         refreshColumnAndData();
     }
@@ -1083,7 +1083,7 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
      * @param modelElement
      * @return
      */
-    private void changeConnectionOfAnalysisByNewSelectedNode(RepositoryNode node) {
+    private void changeConnectionOfAnalysisByNewSelectedNode(IRepositoryNode node) {
         Property property = node.getObject().getProperty();
         if (property != null && property.getItem() instanceof ConnectionItem) {
             Connection connection = ((ConnectionItem) property.getItem()).getConnection();
