@@ -57,6 +57,16 @@
          <param name="path" value="ColumnAnalysis_cheat.xml">
          </param>
       </task>
+      <task kind="cheatsheet" name="Create a new Match Analysis" skip="false">
+         <intro>
+            This tutorial guides you through the creation of a Match Analysis.
+         </intro>
+         <onCompletion>
+            <b>Conclusion</b>
+         </onCompletion>
+         <param name="path" value="MatchAnalysis_cheat.xml">
+         </param>
+      </task>
       <task kind="cheatsheet" name="Create a columns comparison analysis" skip="false">
          <intro>
             This tutorial guides you through the creation of a Column Comparison Analysis.

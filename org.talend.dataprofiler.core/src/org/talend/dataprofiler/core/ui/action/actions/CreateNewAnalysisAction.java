@@ -109,8 +109,9 @@ public class CreateNewAnalysisAction extends Action implements ICheatSheetAction
         wizard.setForcePreviousAndNextButtons(true);
         WizardDialog dialog = new OpeningHelpWizardDialog(null, wizard, null);
         wizard.setContainer(dialog);
-        if (WizardDialog.OK == dialog.open())
+        if (WizardDialog.OK == dialog.open()) {
             ProxyRepositoryManager.getInstance().save();
+        }
     }
 
     /*
@@ -185,6 +186,10 @@ public class CreateNewAnalysisAction extends Action implements ICheatSheetAction
                     }
                 }
                 break;
+            case AnalysisType.MATCH_ANALYSIS_VALUE:
+                analysisType = AnalysisType.MATCH_ANALYSIS;
+                wizard = WizardFactory.createAnalysisWizard(analysisType);
+                break;
             default:
                 break;
             }
@@ -196,8 +201,9 @@ public class CreateNewAnalysisAction extends Action implements ICheatSheetAction
         WizardDialog dialog = new WizardDialog(null, wizard);
         dialog.setPageSize(500, 340);
 
-        if (WizardDialog.OK == dialog.open())
+        if (WizardDialog.OK == dialog.open()) {
             ProxyRepositoryManager.getInstance().save();
+        }
     }
 
     /*

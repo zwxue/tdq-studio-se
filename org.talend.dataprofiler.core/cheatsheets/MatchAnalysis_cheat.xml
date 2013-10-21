@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<cheatsheet title="Create a new Match Analysis">
+	<intro>
+		<description>
+			This kind of analysis analyzes duplicate and similar records. It
+			helps you define
+			<b>Match Rules</b>
+			that can be used in analyses or in match components.
+			This kind of
+			analysis analyzes duplicate and similar records.
+		</description>
+	</intro>
+	<item title="Set the analysis metadata.">
+		<description>
+			To open the
+			<b>Create New Analysis</b>
+			wizard, right click
+			<b>Analyses</b>
+			on the
+			<b>DQ Repository</b>
+			view and select
+			<b>New Analysis</b>
+			. Then browse to and select
+			<b>Match Analysis</b>
+			. The wizard prompts you to provide the analysis metadata (name,
+			purpose, description...). Upon completion, an editor opens in which
+			you can modify the analysis metadata and define the analysis
+			settings.
+		</description>
+		<action class="org.talend.dataprofiler.core.ui.action.actions.CreateNewAnalysisAction" pluginId="org.talend.dataprofiler.core" confirm="false" param1="12">
+        </action>
+	</item>
+	<item skip="true" title="Connect to a data source">
+		<description>
+			Create the
+			<b>connection</b>
+			to the data source to analyze. If you already defined some metadata
+			that you want to reuse, just skip this step.
+			To create a metadata
+			connection, you can click on the
+			<b>New Connection</b>
+			button in the
+			<b>Match Analysis</b>
+			editor.
+			You can also right-click on the subfolders of the
+			<b>Metadata</b>
+			folder in the
+			<b>DQ Repository view.</b>
+			During this step, you will be invited to select the columns to
+			analyze.
+		</description>
+        <action class="org.talend.dataprofiler.core.ui.action.actions.CreateNewConnectionForMatchAnalysisAction" pluginId="org.talend.dataprofiler.core">
+        </action>
+	</item>
+
+	<item skip="true" title="Select data to analyze">
+		<description>
+			If you already selected the data to analyze in the previous step, you
+			may skip this step.
+			In the editor, click the &quot;Select Data&quot;
+			button. Then browse
+			and
+			select the
+			<b>columns to analyze</b>
+		</description>
+        <action class="org.talend.dataprofiler.core.ui.action.actions.SelectDataForMatchAnalysisAction" pluginId="org.talend.dataprofiler.core">
+        </action>
+	</item>
+
+	<item title="Generate a blocking key">
+		<description>
+			Select the columns that will be used to generate a blocking key. A
+			blocking key is required when you have a lot of data
+			to analyze. Click
+			on the
+			<b>Select Blocking Key</b>
+			button and select the header in the data table to add columns to the
+			blocking key section. Then choose how to generate the key (choose
+			characters to extract, algorithms to apply on the column, etc). The
+			concatenation of the results of the algorithms will generate a key.
+			When complete, you can view the key profile on the data sample. This
+			profile shows how data are partitionned. It&apos;s advised that the
+			size of the partition is as small as possible (the horizontal
+			coordinate).
+		</description>
+	</item>
+	<item title="Define the Match Rule">
+		<description>
+			In the editor, click the &quot;Select Matching Key&quot; button. Then
+			select the columns by clicking in the data table header.
+			When all
+			attribute required to match are selected, choose the algorithms
+			to
+			apply for the comparison (
+			<b>Match Function</b>
+			) and the other match parameters. When done, you can visualize the
+			result of the configuration applied to the data sample by clicking on
+			the
+			<b>Chart</b>
+			button. Repeat this step until the configuration is satisfying.
+
+		</description>
+	</item>
+	<item skip="true" title="Export the Match Rule">
+        <description>
+            Once the Match Rule correctly identifies duplicates, you can export it as a <b>Match Rule</b> item in the <b>DQ Repository</b>. The exported Match Rule will be reusable in other analyses or in Data Quality matching components.  
+        </description>
+        <action class="org.talend.dataprofiler.core.ui.action.actions.ExportMatchRuleAction" pluginId="org.talend.dataprofiler.core">
+        </action>
+	</item>
+	<item title="Analyze">
+		<description>
+			Click the
+			<b>Run</b>
+			icon, located towards the top left of the editor, to execute the
+			analysis. The
+			<b>editor result</b>
+			tab will be displayed after the analysis is executed on the whole
+			data set.
+		</description>
+      <action class="org.talend.dataprofiler.core.ui.action.actions.RunAnalysisAction" pluginId="org.talend.dataprofiler.core" confirm="false">
+      </action>
+
+	</item>
+</cheatsheet>
