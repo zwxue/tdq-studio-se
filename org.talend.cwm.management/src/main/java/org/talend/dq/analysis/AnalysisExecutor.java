@@ -44,7 +44,6 @@ import org.talend.dq.indicators.Evaluator;
 import org.talend.dq.indicators.IndicatorCommonUtil;
 import org.talend.dq.indicators.ext.PatternMatchingExt;
 import org.talend.dq.indicators.preview.table.ChartDataEntity;
-import org.talend.metadata.managment.connection.manager.HiveConnectionManager;
 import org.talend.utils.sugars.ReturnCode;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.foundation.softwaredeployment.DataManager;
@@ -341,7 +340,7 @@ public abstract class AnalysisExecutor implements IAnalysisExecutor {
         IMetadataConnection metadataConnection = ConvertionHelper.convert(dataprovider);
         if (EDatabaseTypeName.HIVE.getXmlName().equalsIgnoreCase(metadataConnection.getDbType())) {
             try {
-                java.sql.Connection createConnection = HiveConnectionManager.getInstance().createConnection(metadataConnection);
+                java.sql.Connection createConnection = AnalysisExecutorHelper.createHiveConnection(metadataConnection);
                 rc.setOk(true);
                 rc.setObject(createConnection);
             } catch (ClassNotFoundException e) {

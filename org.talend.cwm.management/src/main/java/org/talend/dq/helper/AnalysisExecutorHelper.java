@@ -18,6 +18,8 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.Date;
 
 import org.apache.log4j.Logger;
@@ -28,7 +30,10 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.commons.utils.StringUtils;
+import org.talend.core.database.conn.ConnParameterKeys;
+import org.talend.core.database.hbase.conn.version.EHBaseDistribution4Versions;
 import org.talend.core.language.LanguageManager;
+import org.talend.core.model.metadata.IMetadataConnection;
 import org.talend.core.model.metadata.builder.connection.DelimitedFileConnection;
 import org.talend.core.model.metadata.builder.connection.MetadataTable;
 import org.talend.cwm.db.connection.ConnectionUtils;
@@ -44,6 +49,7 @@ import org.talend.dataquality.analysis.AnalysisResult;
 import org.talend.dataquality.analysis.ExecutionInformations;
 import org.talend.dq.dbms.DbmsLanguage;
 import org.talend.fileprocess.FileInputDelimited;
+import org.talend.metadata.managment.connection.manager.HiveConnectionManager;
 import org.talend.resource.EResourceConstant;
 import org.talend.resource.ResourceManager;
 import org.talend.resource.ResourceService;
@@ -294,8 +300,8 @@ public final class AnalysisExecutorHelper {
     }
 
     /**
-     * used for table analysis-- select dq rules, add filter for match rule folder
-     * TDQ-8001
+     * used for table analysis-- select dq rules, add filter for match rule folder TDQ-8001
+     * 
      * @return
      */
     public static ViewerFilter createRuleFilter() {
@@ -320,4 +326,34 @@ public final class AnalysisExecutorHelper {
             }
         };
     }
+
+    /**
+     * create a Hive connection.
+     * 
+     * @param metadataConnection
+     * @return
+     * @throws ClassNotFoundException
+     * @throws InstantiationException
+     * @throws IllegalAccessException
+     * @throws SQLException
+     */
+    public static java.sql.Connection createHiveConnection(IMetadataConnection metadataConnection) throws ClassNotFoundException,
+            InstantiationException, IllegalAccessException, SQLException {
+        java.sql.Connection createConnection = HiveConnectionManager.getInstance().createConnection(metadataConnection);
+        // if it is HDP1.2/1.3, need to set some parameters before run the analysis
+        String version = (String) metadataConnection.getParameter(ConnParameterKeys.CONN_PARA_KEY_HIVE_VERSION);
+        if (EHBaseDistribution4Versions.HDP_1_2.getVersionValue().equals(version)
+                || EHBaseDistribution4Versions.HDP_1_3.getVersionValue().equals(version)) {
+            try {
+                Statement createStatement = createConnection.createStatement();
+                // FIXME TUP-1149 should get the value from the connection
+                createStatement.execute("SET mapred.job.map.memory.mb=1000"); //$NON-NLS-1$
+                createStatement.execute("SET mapred.job.reduce.memory.mb=1000"); //$NON-NLS-1$
+            } catch (SQLException e) {
+                log.error(e);
+            }
+        }
+        return createConnection;
+    }
+
 }
