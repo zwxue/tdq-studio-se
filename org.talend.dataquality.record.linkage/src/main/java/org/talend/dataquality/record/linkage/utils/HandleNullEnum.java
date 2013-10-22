@@ -26,12 +26,12 @@ public enum HandleNullEnum {
     NULL_MATCH_NONE("nullMatchNone", Messages.getString("HandleNullEnum.NULL_MATCH_NONE")), //$NON-NLS-1$ //$NON-NLS-2$
     NULL_MATCH_ALL("nullMatchAll", Messages.getString("HandleNullEnum.NULL_MATCH_ALL")); //$NON-NLS-1$ //$NON-NLS-2$
 
-    private String value;
+    private String componentValue;
 
     private String label;
 
-    HandleNullEnum(String value, String displayValue) {
-        this.value = value;
+    HandleNullEnum(String componentValue, String displayValue) {
+        this.componentValue = componentValue;
         this.label = displayValue;
 
     }
@@ -42,7 +42,7 @@ public enum HandleNullEnum {
      * @return the value
      */
     public String getValue() {
-        return this.value;
+        return this.componentValue;
     }
 
     public static String[] getAllTypes() {

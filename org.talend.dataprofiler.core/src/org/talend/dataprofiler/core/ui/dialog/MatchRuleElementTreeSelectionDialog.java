@@ -56,6 +56,7 @@ import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.dialog.provider.BlockingKeysTableLabelProvider;
 import org.talend.dataprofiler.core.ui.dialog.provider.MatchRulesTableLabelProvider;
 import org.talend.dataquality.record.linkage.constant.AttributeMatcherType;
+import org.talend.dataquality.record.linkage.utils.HandleNullEnum;
 import org.talend.dataquality.rules.BlockKeyDefinition;
 import org.talend.dataquality.rules.MatchKeyDefinition;
 import org.talend.dataquality.rules.MatchRule;
@@ -239,10 +240,10 @@ public class MatchRuleElementTreeSelectionDialog extends ElementTreeSelectionDia
             public void selectionChanged(SelectionChangedEvent event) {
                 IStructuredSelection selection = (IStructuredSelection) event.getSelection();
                 if (blockingKeysTable != null) {
-                    blockingKeysTable.setInput(getBlockingKeysFromFiles(selection.toArray()));
+                    blockingKeysTable.setInput(getBlockingKeysFromFiles(selection.toArray(), true));
                 }
                 if (matchingRulesTable != null) {
-                    matchingRulesTable.setInput(getMatchRulesFromFiles(selection.toArray()));
+                    matchingRulesTable.setInput(getMatchRulesFromFiles(selection.toArray(), true));
                 }
             }
 
@@ -365,12 +366,16 @@ public class MatchRuleElementTreeSelectionDialog extends ElementTreeSelectionDia
     }
 
     public List<Map<String, String>> getBlockingKeysFromFiles(Object[] files) {
+        return getBlockingKeysFromFiles(files, false);
+    }
+
+    public List<Map<String, String>> getBlockingKeysFromFiles(Object[] files, boolean retrieveDisplayValue) {
         List<Map<String, String>> ruleValues = new ArrayList<Map<String, String>>();
         for (Object rule : files) {
             if (rule instanceof IFile) {
                 MatchRuleDefinition matchRuleDefinition = DQRuleResourceFileHelper.getInstance().findMatchRule((IFile) rule);
                 matchExistingColumnForBlockingKeys(matchRuleDefinition);
-                ruleValues.addAll(getBlockingKeysFromRules(matchRuleDefinition));
+                ruleValues.addAll(getBlockingKeysFromRules(matchRuleDefinition, retrieveDisplayValue));
             }
         }
         return ruleValues;
@@ -389,12 +394,24 @@ public class MatchRuleElementTreeSelectionDialog extends ElementTreeSelectionDia
     }
 
     public List<Map<String, String>> getMatchRulesFromFiles(Object[] files) {
+        return getMatchRulesFromFiles(files, false);
+    }
+
+    /**
+     * DOC sizhaoliu Comment method "getMatchRulesFromFiles".
+     * 
+     * @param files
+     * @param retrieveDisplayValue get the display value when this parameter is set to true, otherwise, get the
+     * component value.
+     * @return
+     */
+    public List<Map<String, String>> getMatchRulesFromFiles(Object[] files, boolean retrieveDisplayValue) {
         List<Map<String, String>> ruleValues = new ArrayList<Map<String, String>>();
         for (Object rule : files) {
             if (rule instanceof IFile) {
                 MatchRuleDefinition matchRuleDefinition = DQRuleResourceFileHelper.getInstance().findMatchRule((IFile) rule);
                 matchExistingColumnForMatchRules(matchRuleDefinition);
-                ruleValues.addAll(getMatchRulesFromRules(matchRuleDefinition));
+                ruleValues.addAll(getMatchRulesFromRules(matchRuleDefinition, retrieveDisplayValue));
             }
         }
         return ruleValues;
@@ -414,7 +431,8 @@ public class MatchRuleElementTreeSelectionDialog extends ElementTreeSelectionDia
         }
     }
 
-    private List<Map<String, String>> getBlockingKeysFromRules(MatchRuleDefinition matchRuleDefinition) {
+    private List<Map<String, String>> getBlockingKeysFromRules(MatchRuleDefinition matchRuleDefinition,
+            boolean retrieveDisplayValue) {
 
         if (matchRuleDefinition != null) {
             List<Map<String, String>> ruleValues = new ArrayList<Map<String, String>>();
@@ -446,7 +464,7 @@ public class MatchRuleElementTreeSelectionDialog extends ElementTreeSelectionDia
         return null;
     }
 
-    private List<Map<String, String>> getMatchRulesFromRules(MatchRuleDefinition matchRuleDefinition) {
+    private List<Map<String, String>> getMatchRulesFromRules(MatchRuleDefinition matchRuleDefinition, boolean retrieveDisplayValue) {
 
         if (matchRuleDefinition != null) {
             List<Map<String, String>> ruleValues = new ArrayList<Map<String, String>>();
@@ -457,16 +475,27 @@ public class MatchRuleElementTreeSelectionDialog extends ElementTreeSelectionDia
                             null == matchKey.getName() ? StringUtils.EMPTY : matchKey.getName());
                     pr.put(MatchRulesTableLabelProvider.INPUT_COLUMN,
                             null == matchKey.getColumn() ? StringUtils.EMPTY : matchKey.getColumn());
-
-                    pr.put(MatchRulesTableLabelProvider.MATCHING_TYPE,
-                            null == matchKey.getAlgorithm().getAlgorithmType() ? StringUtils.EMPTY : AttributeMatcherType
-                                    .valueOf(matchKey.getAlgorithm().getAlgorithmType()).getComponentValue());
+                    if (retrieveDisplayValue) {
+                        pr.put(MatchRulesTableLabelProvider.MATCHING_TYPE,
+                                null == matchKey.getAlgorithm().getAlgorithmType() ? StringUtils.EMPTY : AttributeMatcherType
+                                        .valueOf(matchKey.getAlgorithm().getAlgorithmType()).getLabel());
+                    } else {
+                        pr.put(MatchRulesTableLabelProvider.MATCHING_TYPE,
+                                null == matchKey.getAlgorithm().getAlgorithmType() ? StringUtils.EMPTY : AttributeMatcherType
+                                        .valueOf(matchKey.getAlgorithm().getAlgorithmType()).getComponentValue());
+                    }
                     pr.put(MatchRulesTableLabelProvider.CUSTOM_MATCHER,
                             null == matchKey.getAlgorithm().getAlgorithmParameters() ? StringUtils.EMPTY : matchKey
                                     .getAlgorithm().getAlgorithmParameters());
                     pr.put(MatchRulesTableLabelProvider.CONFIDENCE_WEIGHT, String.valueOf(matchKey.getConfidenceWeight()));
-                    pr.put(MatchRulesTableLabelProvider.HANDLE_NULL, null == matchKey.getHandleNull() ? StringUtils.EMPTY
-                            : matchKey.getHandleNull());
+
+                    if (retrieveDisplayValue) {
+                        pr.put(MatchRulesTableLabelProvider.HANDLE_NULL, null == matchKey.getHandleNull() ? StringUtils.EMPTY
+                                : HandleNullEnum.getTypeByValue(matchKey.getHandleNull()).getLabel());
+                    } else {
+                        pr.put(MatchRulesTableLabelProvider.HANDLE_NULL, null == matchKey.getHandleNull() ? StringUtils.EMPTY
+                                : matchKey.getHandleNull());
+                    }
                     ruleValues.add(pr);
                 }
             }
