@@ -14,6 +14,7 @@ package org.talend.dataprofiler.core.ui.wizard.matchrule;
 
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.talend.commons.utils.platform.PluginChecker;
 import org.talend.core.model.properties.Item;
 import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.dataprofiler.core.CorePlugin;
@@ -47,7 +48,7 @@ public class NewMatchRuleWizard extends AbstractWizard {
 
     public NewMatchRuleWizard(DQMatchRuleParameter parameter) {
         this.parameter = parameter;
-        setHelpAvailable(true);
+        setHelpAvailable(!PluginChecker.isOnlyTopLoaded());
     }
 
     /*
