@@ -21,11 +21,9 @@ import org.talend.dataprofiler.core.ui.wizard.MetadataWizardPage;
 import org.talend.dataprofiler.help.HelpPlugin;
 import org.talend.resource.ResourceManager;
 
-
 /**
- * created by zshen on Aug 19, 2013
- * Detailled comment
- *
+ * created by zshen on Aug 19, 2013 Detailled comment
+ * 
  */
 public class NewMatchRuleMetadataPage extends MetadataWizardPage {
 
@@ -56,20 +54,37 @@ public class NewMatchRuleMetadataPage extends MetadataWizardPage {
         }
     }
 
-    /* (non-Javadoc)
-     * @see org.talend.dataprofiler.core.ui.wizard.MetadataWizardPage#createExtendedControl(org.eclipse.swt.widgets.Composite)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * org.talend.dataprofiler.core.ui.wizard.MetadataWizardPage#createExtendedControl(org.eclipse.swt.widgets.Composite
+     * )
      */
     @Override
     protected void createExtendedControl(Composite container) {
 
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.talend.dataprofiler.core.ui.wizard.MetadataWizardPage#getStoredFolder()
      */
     @Override
     protected IFolder getStoredFolder() {
         return ResourceManager.getRulesMatcherFolder();
+    }
+
+    /*
+     * Added TDQ-8236 Eclipse help view for the Match rule wizard. TO show the help in the create match rule wizard.
+     * 20131022 yyin
+     * 
+     * @see org.eclipse.jface.dialogs.DialogPage#performHelp()
+     */
+    @Override
+    public void performHelp() {
+        PlatformUI.getWorkbench().getHelpSystem().displayHelp("org.talend.help.match_rule");
     }
 
 }

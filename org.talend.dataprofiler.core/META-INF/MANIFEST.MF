@@ -42,7 +42,8 @@ Require-Bundle: org.eclipse.nebula.widgets.tablecombo,
  org.apache.log4j,
  org.talend.dataprofiler.common.ui,
  org.talend.dataquality.record.linkage.ui,
- org.talend.dataprofiler.migration
+ org.talend.dataprofiler.migration,
+ org.eclipse.help
 Bundle-ActivationPolicy: lazy
 Export-Package: org.talend.dataprofiler.core,
  org.talend.dataprofiler.core.exception,

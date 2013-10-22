@@ -47,6 +47,7 @@ public class NewMatchRuleWizard extends AbstractWizard {
 
     public NewMatchRuleWizard(DQMatchRuleParameter parameter) {
         this.parameter = parameter;
+        setHelpAvailable(true);
     }
 
     /*
