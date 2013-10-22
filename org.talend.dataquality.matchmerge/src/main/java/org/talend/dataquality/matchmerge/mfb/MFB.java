@@ -166,11 +166,14 @@ public class MFB implements MatchMergeAlgorithm {
                     mostCommon = previousString;
                     maxOccurrenceCount = occurrenceCount;
                 }
-                occurrenceCount = 0;
+                occurrenceCount = 1;
             } else {
                 occurrenceCount++;
             }
             previousString = current;
+        }
+        if (occurrenceCount > maxOccurrenceCount) {
+            mostCommon = previousString;
         }
         return mostCommon;
     }
