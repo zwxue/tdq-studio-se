@@ -14,11 +14,14 @@ package org.talend.dataprofiler.core.ui.action.actions;
 
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.wizard.WizardDialog;
+import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.cheatsheets.ICheatSheetAction;
 import org.eclipse.ui.cheatsheets.ICheatSheetManager;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
+import org.talend.dataprofiler.core.ui.editor.analysis.MatchAnalysisEditor;
+import org.talend.dataprofiler.core.ui.editor.analysis.MatchMasterDetailsPage;
 import org.talend.dataprofiler.core.ui.wizard.analysis.connection.ConnectionWizard;
 
 public class CreateNewConnectionForMatchAnalysisAction extends Action implements ICheatSheetAction {
@@ -40,6 +43,14 @@ public class CreateNewConnectionForMatchAnalysisAction extends Action implements
         WizardDialog dialog = new WizardDialog(null, connectionWizard);
         dialog.setPageSize(500, 200);
         dialog.open();
+
+        IEditorPart editor = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().getActiveEditor();
+        if (editor instanceof MatchAnalysisEditor) {
+            MatchMasterDetailsPage masterPage = (MatchMasterDetailsPage) ((MatchAnalysisEditor) editor).getMasterPage();
+            if (masterPage.getAnalysisHandler() != null) {
+                masterPage.openColumnsSelectionDialog(masterPage.getAnalysisHandler().getConnection());
+            }
+        }
     }
 
 }

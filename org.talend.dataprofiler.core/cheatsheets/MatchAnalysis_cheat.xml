@@ -6,8 +6,6 @@
 			helps you define
 			<b>Match Rules</b>
 			that can be used in analyses or in match components.
-			This kind of
-			analysis analyzes duplicate and similar records.
 		</description>
 	</intro>
 	<item title="Set the analysis metadata.">
@@ -75,7 +73,8 @@
 			on the
 			<b>Select Blocking Key</b>
 			button and select the header in the data table to add columns to the
-			blocking key section. Then choose how to generate the key (choose
+			blocking key section, then click on the
+			<b>Select Blocking Key</b> again to finish the selection. Then choose how to generate the key (choose
 			characters to extract, algorithms to apply on the column, etc). The
 			concatenation of the results of the algorithms will generate a key.
 			When complete, you can view the key profile on the data sample. This
