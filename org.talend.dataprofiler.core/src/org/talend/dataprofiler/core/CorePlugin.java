@@ -447,8 +447,6 @@ public class CorePlugin extends AbstractUIPlugin {
             DQRespositoryView repositoryView = getRepositoryView();
             if (repositoryView != null && repositoryView.getCommonViewer() != null) {
                 repositoryView.getCommonViewer().refresh(object);
-            } else {
-                log.error(DefaultMessagesImpl.getString("CorePlugin.nullViewWhenRefresh")); //$NON-NLS-1$
             }
         }
     }

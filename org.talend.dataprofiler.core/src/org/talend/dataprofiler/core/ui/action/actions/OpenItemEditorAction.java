@@ -200,7 +200,7 @@ public class OpenItemEditorAction extends Action implements IIntroAction {
 
     /**
      * get the ItemEditorInput according to the reposViewObj, if there no ItemEditorInput return null.
-     *
+     * 
      * @param isOpenItemEditorAction
      * @return
      */
@@ -218,8 +218,8 @@ public class OpenItemEditorAction extends Action implements IIntroAction {
                     throw createBusinessException;
                 }
             }
-            if (ERepositoryObjectType.METADATA_CONNECTIONS.getKey().equals(key)) {
-                // || ERepositoryObjectType.METADATA_MDMCONNECTION.getKey().equals(key)) {
+            if (ERepositoryObjectType.METADATA_CONNECTIONS.getKey().equals(key)
+                    || ERepositoryObjectType.METADATA_MDMCONNECTION.getKey().equals(key)) {
                 result = new ConnectionItemEditorInput(item);
                 editorID = ConnectionEditor.class.getName();
             } else if (ERepositoryObjectType.TDQ_ANALYSIS_ELEMENT.getKey().equals(key)) {
@@ -366,7 +366,7 @@ public class OpenItemEditorAction extends Action implements IIntroAction {
 
     /*
      * (non-Jsdoc)
-     *
+     * 
      * @see org.eclipse.ui.intro.config.IIntroAction#run(org.eclipse.ui.intro.IIntroSite, java.util.Properties)
      */
     public void run(IIntroSite site, Properties params) {
@@ -377,7 +377,7 @@ public class OpenItemEditorAction extends Action implements IIntroAction {
 
     /**
      * DOC xqliu Comment method "initRepositoryViewObject".
-     *
+     * 
      * @param params
      */
     private void initRepositoryViewObject(Properties params) {

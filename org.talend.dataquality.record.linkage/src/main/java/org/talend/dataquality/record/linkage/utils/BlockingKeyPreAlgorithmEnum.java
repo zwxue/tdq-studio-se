@@ -28,8 +28,8 @@ public enum BlockingKeyPreAlgorithmEnum {
     REMOVE_MARKS_THEN_UPPER_CASE(3, "remove diacritical marks and upper case", "removeDMAndUpperCase", false, StringUtils.EMPTY), //$NON-NLS-1$ //$NON-NLS-2$
     LOWER_CASE(4, "lower case", "lowerCase", false, StringUtils.EMPTY), //$NON-NLS-1$ //$NON-NLS-2$
     UPPER_CASE(5, "upper case", "upperCase", false, StringUtils.EMPTY), //$NON-NLS-1$ //$NON-NLS-2$
-    LEFT_CHAR(6, "add left position character", "add_Left_Char", true, "1"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-    RIGHT_CHAR(7, "add right position character", "add_Right_Char", true, "1"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+    LEFT_CHAR(6, "add left position character", "add_Left_Char", true, StringUtils.EMPTY), //$NON-NLS-1$ //$NON-NLS-2$ 
+    RIGHT_CHAR(7, "add right position character", "add_Right_Char", true, StringUtils.EMPTY); //$NON-NLS-1$ //$NON-NLS-2$ 
 
     private int index;
 

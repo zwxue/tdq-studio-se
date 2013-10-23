@@ -24,8 +24,8 @@ import org.apache.commons.lang.StringUtils;
 public enum BlockingKeyPostAlgorithmEnum {
     NON_ALGO(0, "-", "NON_ALGO", false, StringUtils.EMPTY), //$NON-NLS-1$//$NON-NLS-2$
     USE_DEFAULT(1, "use default value", "useDefault", true, StringUtils.EMPTY), //$NON-NLS-1$ //$NON-NLS-2$
-    LEFT_CHAR(2, "add left position character", "add_Left_Char", false, StringUtils.EMPTY), //$NON-NLS-1$ //$NON-NLS-2$
-    RIGHT_CHAR(3, "add right position character", "add_Right_Char", false, StringUtils.EMPTY); //$NON-NLS-1$ //$NON-NLS-2$
+    LEFT_CHAR(2, "add left position character", "add_Left_Char", true, StringUtils.EMPTY), //$NON-NLS-1$ //$NON-NLS-2$
+    RIGHT_CHAR(3, "add right position character", "add_Right_Char", true, StringUtils.EMPTY); //$NON-NLS-1$ //$NON-NLS-2$
 
     private int index;
 

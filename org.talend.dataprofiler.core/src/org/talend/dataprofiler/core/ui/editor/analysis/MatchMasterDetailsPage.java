@@ -76,6 +76,7 @@ import org.talend.dataquality.properties.TDQAnalysisItem;
 import org.talend.dataquality.record.linkage.ui.composite.table.DataSampleTable;
 import org.talend.dataquality.record.linkage.ui.composite.utils.MatchRuleAnlaysisUtils;
 import org.talend.dataquality.record.linkage.ui.section.BlockingKeySection;
+import org.talend.dataquality.record.linkage.ui.section.MatchParameterSection;
 import org.talend.dataquality.record.linkage.ui.section.MatchingKeySection;
 import org.talend.dataquality.record.linkage.utils.MatchAnalysisConstant;
 import org.talend.dataquality.rules.MatchRule;
@@ -190,8 +191,21 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
 
         createMatchingKeySection();
 
+        createMatchParameterSection();
+
         // TDQ-7781: we must do this, this will recompute the layout and scroll bars
         form.reflow(true);
+    }
+
+    /**
+     * DOC zshen Comment method "createMatchParameterSection".
+     */
+    private void createMatchParameterSection() {
+        MatchParameterSection matchParameterSection = new MatchParameterSection(form, topComp, Section.TWISTIE
+                | Section.TITLE_BAR | Section.EXPANDED, toolkit, analysis);
+        matchParameterSection.addPropertyChangeListener(this);
+        matchParameterSection.createParameterCom();
+        registerSection(matchParameterSection.getSection());
     }
 
     /**
