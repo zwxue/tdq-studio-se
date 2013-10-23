@@ -71,7 +71,7 @@ public class ExecuteMatchRuleHandler {
     @SuppressWarnings({ "rawtypes", "unchecked" })
     public static TypedReturnCode<MatchGroupResultConsumer> executeWithStoreOnDisk(Map<String, String> columnMap,
             RecordMatchingIndicator recordMatchingIndicator, BlockKeyIndicator blockKeyIndicator,
-            IPersistentLookupManager persistentLookupManager, List<BlockKey> blockKeys) throws Exception {
+            IPersistentLookupManager persistentLookupManager, Map<BlockKey, String> blockKeys) throws Exception {
         TypedReturnCode<MatchGroupResultConsumer> returnCode = new TypedReturnCode<MatchGroupResultConsumer>(false);
         // The parameter of "isKeepDataInMemory" should be false in "store on disk" option.
         MatchGroupResultConsumer matchResultConsumer = createMatchGroupResultConsumer(columnMap, recordMatchingIndicator,
@@ -86,17 +86,27 @@ public class ExecuteMatchRuleHandler {
         TreeMap<Object, Long> blockSize2Freq = new TreeMap<Object, Long>();
 
         MatchRow matchRow = null;
-        for (BlockKey blockKey : blockKeys) {
+        boolean isBlockKeyEmpty = blockKeys.isEmpty();
+        Iterator<BlockKey> blockKeyIterator = blockKeys.keySet().iterator();
+        while (blockKeyIterator.hasNext() || isBlockKeyEmpty) {
+            if (isBlockKeyEmpty) {
+                // If the block key is empty, only handle the data in one loop. Treat it in one and only one block.
+                isBlockKeyEmpty = Boolean.FALSE;
+                matchRow = new MatchRow(columnMap.size(), 0);
+            } else {
+                // Lookup rows given blocking key
+                BlockKey blockKey = blockKeyIterator.next();
+                if (matchRow == null) {
+                    matchRow = new MatchRow(columnMap.size(), blockKey.getBlockKey().size());
+                }
+                matchRow.setKey(blockKey.getBlockKey());
+                matchRow.hashCodeDirty = true;
+            }
             AnalysisMatchRecordGrouping analysisMatchRecordGrouping = new AnalysisMatchRecordGrouping(matchResultConsumer);
             // Set rule matcher for record grouping API.
             setRuleMatcher(columnMap, recordMatchingIndicator, analysisMatchRecordGrouping);
             analysisMatchRecordGrouping.initialize();
-            // Lookup rows given blocking key
-            if (matchRow == null) {
-                matchRow = new MatchRow(columnMap.size(), blockKey.getBlockKey().size());
-            }
-            matchRow.setKey(blockKey.getBlockKey());
-            matchRow.hashCodeDirty = true;
+
             persistentLookupManager.lookup(matchRow);
             Integer blockSize = 0;
             while (persistentLookupManager.hasNext()) {

@@ -135,7 +135,7 @@ public class MatchAnalysisExecutor implements IAnalysisExecutor {
 
         TypedReturnCode<MatchGroupResultConsumer> returnCode = new TypedReturnCode<MatchGroupResultConsumer>();
         if (sqlExecutor.getStoreOnDisk()) {
-            List<BlockKey> blockKeys = sqlExecutor.getStoreOnDiskHandler().getBlockKeys();
+            Map<BlockKey, String> blockKeys = sqlExecutor.getStoreOnDiskHandler().getBlockKeys();
             @SuppressWarnings("rawtypes")
             IPersistentLookupManager persistentLookupManager = (sqlExecutor.getStoreOnDiskHandler()).getPersistentLookupManager();
             try {

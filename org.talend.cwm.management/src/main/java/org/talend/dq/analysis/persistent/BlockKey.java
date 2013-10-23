@@ -17,15 +17,16 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.ArrayList;
 import java.util.List;
 
-import routines.system.IPersistableLookupRow;
+import routines.system.IPersistableComparableLookupRow;
 
 /**
  * created by zhao on Oct 16, 2013 Detailled comment
  * 
  */
-public class BlockKey implements IPersistableLookupRow<BlockKey> {
+public class BlockKey implements IPersistableComparableLookupRow<BlockKey> {
 
     public static final int DEFAULT_HASHCODE = 1;
 
@@ -48,11 +49,11 @@ public class BlockKey implements IPersistableLookupRow<BlockKey> {
     }
 
     public List<String> getBlockKey() {
-        return this.blockKey;
+        return new ArrayList<String>(blockKey);
     }
 
     public void setBlockKey(List<String> blockKey) {
-        this.blockKey = blockKey;
+        this.blockKey = new ArrayList<String>(blockKey);
     }
 
     @Override
@@ -173,7 +174,7 @@ public class BlockKey implements IPersistableLookupRow<BlockKey> {
      * @see routines.system.IPersistableLookupRow#copyDataTo(java.lang.Object)
      */
     public void copyDataTo(BlockKey other) {
-        other.blockKey = this.blockKey;
+        other.blockKey = new ArrayList<String>(this.blockKey);
 
     }
 
@@ -183,7 +184,7 @@ public class BlockKey implements IPersistableLookupRow<BlockKey> {
      * @see routines.system.IPersistableLookupRow#copyKeysDataTo(java.lang.Object)
      */
     public void copyKeysDataTo(BlockKey other) {
-        other.blockKey = this.blockKey;
+        other.blockKey = new ArrayList<String>(this.blockKey);
     }
 
     /*

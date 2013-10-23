@@ -18,6 +18,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 import org.talend.dataquality.indicators.columnset.RecordMatchingIndicator;
 import org.talend.dataquality.record.linkage.genkey.AbstractGenerateKey;
@@ -41,7 +42,7 @@ public class StoreOnDiskHandler {
 
     private RecordMatchingIndicator recordMatchingIndicator;
 
-    private List<BlockKey> blockKeys = new ArrayList<BlockKey>();
+    private Map<BlockKey, String> blockKeys = new TreeMap<BlockKey, String>();
 
     /**
      * The field map<columnName,columnIndex>
@@ -58,7 +59,7 @@ public class StoreOnDiskHandler {
      * 
      * @return the blockKeys
      */
-    public List<BlockKey> getBlockKeys() {
+    public Map<BlockKey, String> getBlockKeys() {
         return this.blockKeys;
     }
 
@@ -122,15 +123,15 @@ public class StoreOnDiskHandler {
         for (Object obj : oneRow) {
             rowArray[index++] = obj == null ? null : obj.toString();
         }
-        BlockKey blockKey = genBlockKey(rowArray);
         MatchRow matchRow = new MatchRow(columnMap.size(), blockKeyDefinitions.size());
         matchRow.setRow(Arrays.asList(rowArray));
-        // Set the block key to match row.
-        matchRow.setKey(blockKey.getBlockKey());
         persistentLookupManager.put(matchRow);
-        // Add the block key to a list.
-        if (!blockKeys.contains(blockKey)) {
-            blockKeys.add(blockKey);
+        if (blockKeyDefinitions.size() > 0) {
+            BlockKey blockKey = genBlockKey(rowArray);
+            // Set the block key to match row.
+            matchRow.setKey(blockKey.getBlockKey());
+            // Add the block key to a map.
+            blockKeys.put(blockKey, null);
         }
 
     }

@@ -70,7 +70,7 @@ public class MatchRow implements IPersistableComparableLookupRow, IPersistableRo
      * @return the row
      */
     public List<String> getRow() {
-        return rowList;
+        return new ArrayList<String>(rowList);
     }
 
     /**
@@ -83,9 +83,9 @@ public class MatchRow implements IPersistableComparableLookupRow, IPersistableRo
         List<String> rowWithBlockKeyList = new ArrayList<String>(rowList);
         if (blockKeyList.size() != 0) {
             String joinedBlockKey = StringUtils.join(blockKeyList.toArray(new String[blockKeyList.size()]));
-            if (!StringUtils.isEmpty(joinedBlockKey)) {
-                rowWithBlockKeyList.add(joinedBlockKey);
-            }
+            rowWithBlockKeyList.add(joinedBlockKey);
+        } else {
+            rowWithBlockKeyList.add(StringUtils.EMPTY);
         }
         return rowWithBlockKeyList;
 
@@ -97,7 +97,7 @@ public class MatchRow implements IPersistableComparableLookupRow, IPersistableRo
      * @param row the row to set
      */
     public void setRow(List<String> rowList) {
-        this.rowList = rowList;
+        this.rowList = new ArrayList<String>(rowList);
     }
 
     /**
@@ -106,7 +106,7 @@ public class MatchRow implements IPersistableComparableLookupRow, IPersistableRo
      * @param key the key to set
      */
     public void setKey(List<String> key) {
-        this.blockKeyList = key;
+        blockKeyList = new ArrayList<String>(key);
     }
 
     /**
@@ -115,7 +115,7 @@ public class MatchRow implements IPersistableComparableLookupRow, IPersistableRo
      * @return the key
      */
     public List<String> getKey() {
-        return this.blockKeyList;
+        return new ArrayList<String>(blockKeyList);
     }
 
     @Override
@@ -227,7 +227,7 @@ public class MatchRow implements IPersistableComparableLookupRow, IPersistableRo
      * @see routines.system.IPersistableLookupRow#copyKeysDataTo(java.lang.Object)
      */
     public void copyKeysDataTo(Object other) {
-        ((MatchRow) other).blockKeyList = this.blockKeyList;
+        ((MatchRow) other).blockKeyList = new ArrayList<String>(blockKeyList);
     }
 
     /*
@@ -256,7 +256,7 @@ public class MatchRow implements IPersistableComparableLookupRow, IPersistableRo
      * @see routines.system.IPersistableLookupRow#copyDataTo(java.lang.Object)
      */
     public void copyDataTo(Object other) {
-        ((MatchRow) other).rowList = this.rowList;
+        ((MatchRow) other).rowList = new ArrayList<String>(rowList);
     }
 
     /*

@@ -19,6 +19,7 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -58,8 +59,7 @@ public class StoreOnDiskHandlerTest {
     }
 
     /**
-     * Test method for {@link org.talend.cwm.db.connection.StoreOnDiskHandler#handleRow(java.lang.Object[])}
-     * .
+     * Test method for {@link org.talend.cwm.db.connection.StoreOnDiskHandler#handleRow(java.lang.Object[])} .
      * 
      * @throws Exception
      */
@@ -139,8 +139,8 @@ public class StoreOnDiskHandlerTest {
         }
         int buffSize = 2;
 
-        StoreOnDiskHandler storeOnDiskSQLExecutor = new StoreOnDiskHandler(recordMatchingIndicator,
-                columnMap, container, buffSize);
+        StoreOnDiskHandler storeOnDiskSQLExecutor = new StoreOnDiskHandler(recordMatchingIndicator, columnMap, container,
+                buffSize);
         storeOnDiskSQLExecutor.beginQuery();
         for (Object[] d : data) {
             storeOnDiskSQLExecutor.handleRow(d);
@@ -149,11 +149,20 @@ public class StoreOnDiskHandlerTest {
 
         IPersistentLookupManager<MatchRow> persistentLookupManager = storeOnDiskSQLExecutor.getPersistentLookupManager();
         persistentLookupManager.initGet();
-        List<BlockKey> blockKeyList = storeOnDiskSQLExecutor.getBlockKeys();
-        MatchRow mr = new MatchRow(columnMap.size(), blockKeyList.get(0).getBlockKey().size());
+        Map<BlockKey, String> blockKeyList = storeOnDiskSQLExecutor.getBlockKeys();
         Map<String, List<String[]>> blockToRowList = new HashMap<String, List<String[]>>();
-        for (BlockKey bk : blockKeyList) {
-            mr.setKey(bk.getBlockKey());
+        Iterator<BlockKey> it = blockKeyList.keySet().iterator();
+        Boolean isBKEmpty = blockKeyList.isEmpty();
+        MatchRow mr = null;
+        while (it.hasNext() || isBKEmpty) {
+            if (isBKEmpty) {
+                isBKEmpty = Boolean.FALSE;
+                mr = new MatchRow(columnMap.size(), 0);
+            } else {
+                BlockKey blockKey = it.next();
+                mr = new MatchRow(columnMap.size(), blockKey.getBlockKey().size());
+                mr.setKey(blockKey.getBlockKey());
+            }
             mr.hashCodeDirty = true;
             persistentLookupManager.lookup(mr);
             // Find the block records from a block
