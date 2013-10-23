@@ -54,20 +54,6 @@ public enum AttributeMatcherType {
     }
 
     /**
-     * Getter for componentValue.
-     * 
-     * @return the componentValue
-     */
-    public static AttributeMatcherType getTypeByComponentValue(String value) {
-        for (AttributeMatcherType type : AttributeMatcherType.values()) {
-            if (type.getComponentValue().equals(value)) {
-                return type;
-            }
-        }
-        return null;
-    }
-
-    /**
      * Getter for label.
      * 
      * @return the internationalized label

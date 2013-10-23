@@ -9,7 +9,6 @@ import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
-import org.talend.dataquality.record.linkage.constant.AttributeMatcherType;
 
 public class MatchRulesTableLabelProvider extends LabelProvider implements ITableLabelProvider {
 
@@ -62,7 +61,7 @@ public class MatchRulesTableLabelProvider extends LabelProvider implements ITabl
             result = rule.get(INPUT_COLUMN);
             break;
         case 2: // matching type
-            result = AttributeMatcherType.getTypeByComponentValue(rule.get(MATCHING_TYPE)).getLabel();
+            result = rule.get(MATCHING_TYPE);
             break;
         case 3: // custom matcher class
             result = rule.get(CUSTOM_MATCHER);
