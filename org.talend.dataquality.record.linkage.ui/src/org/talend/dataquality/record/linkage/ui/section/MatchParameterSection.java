@@ -12,6 +12,8 @@
 // ============================================================================
 package org.talend.dataquality.record.linkage.ui.section;
 
+import java.io.File;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.NumberUtils;
 import org.eclipse.jface.layout.GridDataFactory;
@@ -79,14 +81,20 @@ public class MatchParameterSection extends AbstractSectionComposite {
         TaggedValue taggedValue = TaggedValueHelper.getTaggedValue(SQLExecutor.TEMP_DATA_DIR, currAnalysis.getTaggedValue());
         if (taggedValue != null) {
             tempPath = taggedValue.getValue();
+        } else {
+            TaggedValueHelper.setTaggedValue(currAnalysis, SQLExecutor.TEMP_DATA_DIR, tempPath);
         }
         taggedValue = TaggedValueHelper.getTaggedValue(SQLExecutor.MAX_BUFFER_SIZE, currAnalysis.getTaggedValue());
         if (taggedValue != null) {
             MaxSize = taggedValue.getValue();
+        } else {
+            TaggedValueHelper.setTaggedValue(currAnalysis, SQLExecutor.MAX_BUFFER_SIZE, MaxSize);
         }
         taggedValue = TaggedValueHelper.getTaggedValue(SQLExecutor.STORE_ON_DISK_KEY, currAnalysis.getTaggedValue());
         if (taggedValue != null) {
             isStoreOnDisk = Boolean.valueOf(taggedValue.getValue());
+        } else {
+            TaggedValueHelper.setTaggedValue(currAnalysis, SQLExecutor.STORE_ON_DISK_KEY, isStoreOnDisk.toString());
         }
 
     }
@@ -173,7 +181,7 @@ public class MatchParameterSection extends AbstractSectionComposite {
 
             @Override
             public void modifyText(ModifyEvent e) {
-                String text = ((Text) e.widget).getText();
+                String text = ((Text) e.widget).getText() + File.separator;
                 TaggedValueHelper.setTaggedValue(currAnalysis, SQLExecutor.TEMP_DATA_DIR, text);
                 listeners.firePropertyChange(MatchAnalysisConstant.ISDIRTY_PROPERTY, true, false);
             }
