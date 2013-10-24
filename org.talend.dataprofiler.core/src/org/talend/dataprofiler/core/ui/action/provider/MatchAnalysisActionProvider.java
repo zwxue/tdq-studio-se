@@ -19,6 +19,7 @@ import org.eclipse.ui.navigator.ICommonViewerWorkbenchSite;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.action.actions.MatchAnalysisAction;
 import org.talend.dq.nodes.DBTableRepNode;
+import org.talend.dq.nodes.DBViewRepNode;
 import org.talend.repository.model.RepositoryNode;
 
 public class MatchAnalysisActionProvider extends AbstractCommonActionProvider {
@@ -60,8 +61,7 @@ public class MatchAnalysisActionProvider extends AbstractCommonActionProvider {
         matchAnalysisAction.setColumnSelection(currentSelection);
         if (isSelectedTableLevel(currentSelection)) {
             matchAnalysisAction.setText(DefaultMessagesImpl.getString("MatchAnalysisAction.matchAnalysis"));
-        }else 
-        if (isSelectedColumnLevel(currentSelection)) {
+        } else if (isSelectedColumnLevel(currentSelection)) {
             matchAnalysisAction.setText(DefaultMessagesImpl.getString("MatchAnalysisAction.analyzeMatches"));
         }
         menu.add(matchAnalysisAction);
@@ -76,7 +76,7 @@ public class MatchAnalysisActionProvider extends AbstractCommonActionProvider {
     private boolean isSelectedTableLevel(TreeSelection currentSelection) {
         if (currentSelection.size() == 1) {
             for (Object obj : currentSelection.toList()) {
-                if (obj instanceof DBTableRepNode) {
+                if (obj instanceof DBTableRepNode || obj instanceof DBViewRepNode) {
                     return true;
                 }
             }
