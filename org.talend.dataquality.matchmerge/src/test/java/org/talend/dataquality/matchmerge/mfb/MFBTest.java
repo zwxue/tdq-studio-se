@@ -35,6 +35,7 @@ public class MFBTest extends TestCase {
     public void testArguments() throws Exception {
         MatchMergeAlgorithm algorithm = new MFB(new AttributeMatcherType[0],
                 new float[0],
+                0,
                 new SurvivorShipAlgorithmEnum[0],
                 new String[0],
                 new double[0],
@@ -50,6 +51,7 @@ public class MFBTest extends TestCase {
         Iterator<Record> iterator = new ValuesIterator(100000, generators);
         MatchMergeAlgorithm algorithm = new MFB(new AttributeMatcherType[0],
                 new float[0],
+                0,
                 new SurvivorShipAlgorithmEnum[0],
                 new String[0],
                 new double[0],
@@ -83,6 +85,7 @@ public class MFBTest extends TestCase {
         Iterator<Record> iterator = new ValuesIterator(totalCount, generators);
         MatchMergeAlgorithm algorithm = new MFB(new AttributeMatcherType[]{matchAlgorithm},
                 new float[]{1},
+                0,
                 new SurvivorShipAlgorithmEnum[]{SurvivorShipAlgorithmEnum.LONGEST},
                 new String[] {""},
                 new double[]{1},
@@ -120,6 +123,7 @@ public class MFBTest extends TestCase {
         Iterator<Record> iterator = new ValuesIterator(totalCount, generators);
         MatchMergeAlgorithm algorithm = new MFB(new AttributeMatcherType[]{matchAlgorithm},
                 new float[]{1},
+                0,
                 new SurvivorShipAlgorithmEnum[]{SurvivorShipAlgorithmEnum.LONGEST},
                 new String[] {""},
                 new double[]{0}, // Mark rule with no weight (-> match record should have a 0 confidence).
@@ -156,6 +160,7 @@ public class MFBTest extends TestCase {
         Iterator<Record> iterator = new ValuesIterator(totalCount, generators);
         MatchMergeAlgorithm algorithm = new MFB(new AttributeMatcherType[]{matchAlgorithm},
                 new float[]{0.5f},
+                0,
                 new SurvivorShipAlgorithmEnum[]{SurvivorShipAlgorithmEnum.CONCATENATE},
                 new String[] {""},
                 new double[]{1},

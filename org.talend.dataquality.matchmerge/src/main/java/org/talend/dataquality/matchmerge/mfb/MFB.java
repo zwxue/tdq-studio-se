@@ -43,6 +43,8 @@ public class MFB implements MatchMergeAlgorithm {
 
     private String[] mergesParameters;
 
+    private double minConfidenceValue;
+
     public MFB() {
         algorithms = new AttributeMatcherType[0];
         this.thresholds = new float[0];
@@ -52,11 +54,13 @@ public class MFB implements MatchMergeAlgorithm {
         this.nullOptions = new IAttributeMatcher.NullOption[0];
         this.subStrings = new SubString[0];
         this.mergedRecordSource = StringUtils.EMPTY;
+        this.minConfidenceValue = 0;
         maxWeight = 0;
     }
 
     public MFB(AttributeMatcherType[] algorithms,
                float[] thresholds,
+               double minConfidenceValue,
                SurvivorShipAlgorithmEnum[] merges,
                String[] mergesParameters,
                double[] weights,
@@ -65,6 +69,7 @@ public class MFB implements MatchMergeAlgorithm {
                String mergedRecordSource) {
         this.algorithms = algorithms;
         this.thresholds = thresholds;
+        this.minConfidenceValue = minConfidenceValue;
         this.merges = merges;
         this.mergesParameters = mergesParameters;
         this.weights = weights;
@@ -205,32 +210,8 @@ public class MFB implements MatchMergeAlgorithm {
             if (LOGGER.isDebugEnabled()) {
                 LOGGER.debug("Cannot match record: already different groups.");
             }
-            return new MatchResult() {
-                @Override
-                public List<Score> getScores() {
-                    return Collections.emptyList();
-                }
-
-                @Override
-                public List<Float> getThresholds() {
-                    return Collections.emptyList();
-                }
-
-                @Override
-                public void setScore(int index, AttributeMatcherType algorithm, double score, String value1, String value2) {
-                }
-
-                @Override
-                public void setThreshold(int index, float threshold) {
-                }
-
-                @Override
-                public boolean isMatch() {
-                    return false;
-                }
-            };
+            return NonMatchResult.INSTANCE;
         }
-
         Iterator<Attribute> mergedRecordAttributes = mergedRecord.getAttributes().iterator();
         Iterator<Attribute> currentRecordAttributes = currentRecord.getAttributes().iterator();
         double confidence = 0;
@@ -250,6 +231,15 @@ public class MFB implements MatchMergeAlgorithm {
             matchIndex++;
         }
         double normalizedConfidence = confidence > 0 ? confidence / maxWeight : confidence; // Normalize to 0..1 value
+        result.setConfidence(normalizedConfidence, minConfidenceValue);
+        if (normalizedConfidence < minConfidenceValue) {
+            if (LOGGER.isDebugEnabled()) {
+                LOGGER.debug("Cannot match record: merged record has a too low confidence value ("
+                        + normalizedConfidence
+                        + " < " + minConfidenceValue + ")");
+            }
+            return NonMatchResult.wrap(result);
+        }
         currentRecord.setConfidence(normalizedConfidence);
         return result;
     }
@@ -367,6 +357,46 @@ public class MFB implements MatchMergeAlgorithm {
     @Override
     public void setDisplayLabels(boolean displayLabels) {
         // TODO Nothing to do here?
+    }
+
+    public static class NonMatchResult extends MatchResult {
+
+        public static final MatchResult INSTANCE = wrap(new MatchResult());
+
+        private final MatchResult result;
+
+        private NonMatchResult(MatchResult result) {
+            this.result = result;
+        }
+
+        public static MatchResult wrap(MatchResult result) {
+            return new NonMatchResult(result);
+        }
+
+        @Override
+        public List<Score> getScores() {
+            return result.getScores();
+        }
+
+        @Override
+        public List<Float> getThresholds() {
+            return result.getThresholds();
+        }
+
+        @Override
+        public void setScore(int index, AttributeMatcherType algorithm, double score, String value1, String value2) {
+            result.setScore(index, algorithm, score, value1, value2);
+        }
+
+        @Override
+        public void setThreshold(int index, float threshold) {
+            result.setThreshold(index, threshold);
+        }
+
+        @Override
+        public boolean isMatch() {
+            return false;
+        }
     }
 }
 
