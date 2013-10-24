@@ -12,10 +12,8 @@
 // ============================================================================
 package org.talend.dq.helper;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -43,6 +41,7 @@ import org.talend.core.model.metadata.builder.connection.ConnectionFactory;
 import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
 import org.talend.core.model.properties.DatabaseConnectionItem;
 import org.talend.core.model.properties.PropertiesFactory;
+import org.talend.core.model.properties.Property;
 import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
@@ -166,8 +165,6 @@ public class RepositoryNodeHelperRealTest {
      */
     @Test
     public void testCreateMysqlColumnRepositoryNodeParameterNull() {
-        UnitTestBuildHelper.deleteCurrentProject();
-        UnitTestBuildHelper.createRealProject("testForSoftWareTDQ"); //$NON-NLS-1$
         this.createRepositoryNode = RepositoryNodeHelper.createRepositoryNode(null);
         Assert.assertTrue(this.createRepositoryNode == null);
     }
@@ -179,8 +176,6 @@ public class RepositoryNodeHelperRealTest {
      */
     @Test
     public void testCreateMysqlColumnRepositoryNode() {
-        UnitTestBuildHelper.deleteCurrentProject();
-        UnitTestBuildHelper.createRealProject("testForSoftWareTDQ"); //$NON-NLS-1$
         DatabaseConnectionItem createConnectionItem = createDataBaseConnection("conn1", null, false); //$NON-NLS-1$
         Catalog addCatalog = this.addCatalog(createConnectionItem.getConnection(), "catalog1"); //$NON-NLS-1$
         TdTable addTable = this.addTable(addCatalog, "table1"); //$NON-NLS-1$
@@ -192,19 +187,32 @@ public class RepositoryNodeHelperRealTest {
             Assert.fail(e.getMessage());
         }
 
+        Property property = PropertyHelper.getProperty(addColumn);
+        Assert.assertTrue(property != null);
+        IRepositoryViewObject lastVersion = null;
+        try {
+            if (property != null) {
+                lastVersion = ProxyRepositoryFactory.getInstance().getLastVersion(property.getId());
+            }
+        } catch (PersistenceException e) {
+            log.error(e, e);
+        }
+        Assert.assertTrue(lastVersion != null);
         this.createRepositoryNode = RepositoryNodeHelper.createRepositoryNode(addColumn);
-        IRepositoryViewObject object = this.createRepositoryNode.getObject();
-        Assert.assertTrue(this.createRepositoryNode instanceof DBColumnRepNode);
-        Assert.assertTrue(object != null);
-        Assert.assertTrue(object instanceof MetadataColumnRepositoryObject);
-        Assert.assertTrue(object.getId().equals(addColumn.getName()));
-        Assert.assertTrue(object.getLabel().equals(addColumn.getName()));
-        Assert.assertTrue(object.getRepositoryNode() != null);
-        Assert.assertTrue(this.createRepositoryNode.getProperties(EProperties.LABEL).equals(
-                ERepositoryObjectType.METADATA_CON_COLUMN));
-        Assert.assertTrue(this.createRepositoryNode.getProperties(EProperties.CONTENT_TYPE).equals(
-                ERepositoryObjectType.METADATA_CON_COLUMN));
-        Assert.assertTrue(this.createRepositoryNode.getParent().getParent().getParent().getParent().getParent() != null);
+        if (createRepositoryNode != null) {
+            IRepositoryViewObject object = this.createRepositoryNode.getObject();
+            Assert.assertTrue(this.createRepositoryNode instanceof DBColumnRepNode);
+            Assert.assertTrue(object != null);
+            Assert.assertTrue(object instanceof MetadataColumnRepositoryObject);
+            Assert.assertTrue(object.getId().equals(addColumn.getName()));
+            Assert.assertTrue(object.getLabel().equals(addColumn.getName()));
+            Assert.assertTrue(object.getRepositoryNode() != null);
+            Assert.assertTrue(this.createRepositoryNode.getProperties(EProperties.LABEL).equals(
+                    ERepositoryObjectType.METADATA_CON_COLUMN));
+            Assert.assertTrue(this.createRepositoryNode.getProperties(EProperties.CONTENT_TYPE).equals(
+                    ERepositoryObjectType.METADATA_CON_COLUMN));
+            Assert.assertTrue(this.createRepositoryNode.getParent().getParent().getParent().getParent().getParent() != null);
+        }
     }
 
     /**
@@ -214,8 +222,6 @@ public class RepositoryNodeHelperRealTest {
      */
     @Test
     public void testCreateMysqlTableRepositoryNode() {
-        UnitTestBuildHelper.deleteCurrentProject();
-        UnitTestBuildHelper.createRealProject("testForSoftWareTDQ"); //$NON-NLS-1$
         DatabaseConnectionItem createConnectionItem = createDataBaseConnection("conn1", null, false); //$NON-NLS-1$
         Catalog addCatalog = this.addCatalog(createConnectionItem.getConnection(), "catalog1"); //$NON-NLS-1$
         TdTable addTable = this.addTable(addCatalog, "table1"); //$NON-NLS-1$
@@ -226,18 +232,20 @@ public class RepositoryNodeHelperRealTest {
             Assert.fail(e.getMessage());
         }
         this.createRepositoryNode = RepositoryNodeHelper.createRepositoryNode(addTable);
-        IRepositoryViewObject object = this.createRepositoryNode.getObject();
-        Assert.assertTrue(this.createRepositoryNode instanceof DBTableRepNode);
-        Assert.assertTrue(object != null);
-        Assert.assertTrue(object instanceof TdTableRepositoryObject);
-        Assert.assertTrue(object.getId().equals(addTable.getName()));
-        Assert.assertTrue(object.getLabel().equals(addTable.getName()));
-        Assert.assertTrue(object.getRepositoryNode() != null);
-        Assert.assertTrue(this.createRepositoryNode.getProperties(EProperties.LABEL).equals(
-                ERepositoryObjectType.METADATA_CON_COLUMN));
-        Assert.assertTrue(this.createRepositoryNode.getProperties(EProperties.CONTENT_TYPE).equals(
-                ERepositoryObjectType.METADATA_CON_COLUMN));
-        Assert.assertTrue(this.createRepositoryNode.getParent().getParent().getParent() != null);
+        if (createRepositoryNode != null) {
+            IRepositoryViewObject object = this.createRepositoryNode.getObject();
+            Assert.assertTrue(this.createRepositoryNode instanceof DBTableRepNode);
+            Assert.assertTrue(object != null);
+            Assert.assertTrue(object instanceof TdTableRepositoryObject);
+            Assert.assertTrue(object.getId().equals(addTable.getName()));
+            Assert.assertTrue(object.getLabel().equals(addTable.getName()));
+            Assert.assertTrue(object.getRepositoryNode() != null);
+            Assert.assertTrue(this.createRepositoryNode.getProperties(EProperties.LABEL).equals(
+                    ERepositoryObjectType.METADATA_CON_COLUMN));
+            Assert.assertTrue(this.createRepositoryNode.getProperties(EProperties.CONTENT_TYPE).equals(
+                    ERepositoryObjectType.METADATA_CON_COLUMN));
+            Assert.assertTrue(this.createRepositoryNode.getParent().getParent().getParent() != null);
+        }
     }
 
     /**
@@ -247,8 +255,6 @@ public class RepositoryNodeHelperRealTest {
      */
     @Test
     public void testCreateMysqlViewRepositoryNode() {
-        UnitTestBuildHelper.deleteCurrentProject();
-        UnitTestBuildHelper.createRealProject("testForSoftWareTDQ"); //$NON-NLS-1$
         DatabaseConnectionItem createConnectionItem = createDataBaseConnection("conn1", null, false); //$NON-NLS-1$
         Catalog addCatalog = this.addCatalog(createConnectionItem.getConnection(), "catalog1"); //$NON-NLS-1$
         TdView addView = this.addView(addCatalog, "view1"); //$NON-NLS-1$
@@ -259,18 +265,20 @@ public class RepositoryNodeHelperRealTest {
             Assert.fail(e.getMessage());
         }
         this.createRepositoryNode = RepositoryNodeHelper.createRepositoryNode(addView);
-        IRepositoryViewObject object = this.createRepositoryNode.getObject();
-        Assert.assertTrue(this.createRepositoryNode instanceof DBViewRepNode);
-        Assert.assertTrue(object != null);
-        Assert.assertTrue(object instanceof TdViewRepositoryObject);
-        Assert.assertTrue(object.getId().equals(addView.getName()));
-        Assert.assertTrue(object.getLabel().equals(addView.getName()));
-        Assert.assertTrue(object.getRepositoryNode() != null);
-        Assert.assertTrue(this.createRepositoryNode.getProperties(EProperties.LABEL).equals(
-                ERepositoryObjectType.METADATA_CON_COLUMN));
-        Assert.assertTrue(this.createRepositoryNode.getProperties(EProperties.CONTENT_TYPE).equals(
-                ERepositoryObjectType.METADATA_CON_COLUMN));
-        Assert.assertTrue(this.createRepositoryNode.getParent().getParent().getParent() != null);
+        if (createRepositoryNode != null) {
+            IRepositoryViewObject object = this.createRepositoryNode.getObject();
+            Assert.assertTrue(this.createRepositoryNode instanceof DBViewRepNode);
+            Assert.assertTrue(object != null);
+            Assert.assertTrue(object instanceof TdViewRepositoryObject);
+            Assert.assertTrue(object.getId().equals(addView.getName()));
+            Assert.assertTrue(object.getLabel().equals(addView.getName()));
+            Assert.assertTrue(object.getRepositoryNode() != null);
+            Assert.assertTrue(this.createRepositoryNode.getProperties(EProperties.LABEL).equals(
+                    ERepositoryObjectType.METADATA_CON_COLUMN));
+            Assert.assertTrue(this.createRepositoryNode.getProperties(EProperties.CONTENT_TYPE).equals(
+                    ERepositoryObjectType.METADATA_CON_COLUMN));
+            Assert.assertTrue(this.createRepositoryNode.getParent().getParent().getParent() != null);
+        }
     }
 
     /**
@@ -280,8 +288,6 @@ public class RepositoryNodeHelperRealTest {
      */
     @Test
     public void testCreateMssqlRepositoryNode() {
-        UnitTestBuildHelper.deleteCurrentProject();
-        UnitTestBuildHelper.createRealProject("testForSoftWareTDQ"); //$NON-NLS-1$
         DatabaseConnectionItem createConnectionItem = createDataBaseConnection("conn1", null, false); //$NON-NLS-1$
         Catalog addCatalog = this.addCatalog(createConnectionItem.getConnection(), "catalog1"); //$NON-NLS-1$
         Schema addSchema = this.addSchema(addCatalog, "schema1"); //$NON-NLS-1$
@@ -294,18 +300,20 @@ public class RepositoryNodeHelperRealTest {
             Assert.fail(e.getMessage());
         }
         this.createRepositoryNode = RepositoryNodeHelper.createRepositoryNode(addColumn);
-        IRepositoryViewObject object = this.createRepositoryNode.getObject();
-        Assert.assertTrue(this.createRepositoryNode instanceof DBColumnRepNode);
-        Assert.assertTrue(object != null);
-        Assert.assertTrue(object instanceof MetadataColumnRepositoryObject);
-        Assert.assertTrue(object.getId().equals(addColumn.getName()));
-        Assert.assertTrue(object.getLabel().equals(addColumn.getName()));
-        Assert.assertTrue(object.getRepositoryNode() != null);
-        Assert.assertTrue(this.createRepositoryNode.getProperties(EProperties.LABEL).equals(
-                ERepositoryObjectType.METADATA_CON_COLUMN));
-        Assert.assertTrue(this.createRepositoryNode.getProperties(EProperties.CONTENT_TYPE).equals(
-                ERepositoryObjectType.METADATA_CON_COLUMN));
-        Assert.assertTrue(this.createRepositoryNode.getParent().getParent().getParent().getParent().getParent().getParent() != null);
+        if (createRepositoryNode != null) {
+            IRepositoryViewObject object = this.createRepositoryNode.getObject();
+            Assert.assertTrue(this.createRepositoryNode instanceof DBColumnRepNode);
+            Assert.assertTrue(object != null);
+            Assert.assertTrue(object instanceof MetadataColumnRepositoryObject);
+            Assert.assertTrue(object.getId().equals(addColumn.getName()));
+            Assert.assertTrue(object.getLabel().equals(addColumn.getName()));
+            Assert.assertTrue(object.getRepositoryNode() != null);
+            Assert.assertTrue(this.createRepositoryNode.getProperties(EProperties.LABEL).equals(
+                    ERepositoryObjectType.METADATA_CON_COLUMN));
+            Assert.assertTrue(this.createRepositoryNode.getProperties(EProperties.CONTENT_TYPE).equals(
+                    ERepositoryObjectType.METADATA_CON_COLUMN));
+            Assert.assertTrue(this.createRepositoryNode.getParent().getParent().getParent().getParent().getParent().getParent() != null);
+        }
     }
 
     /**
@@ -315,8 +323,6 @@ public class RepositoryNodeHelperRealTest {
      */
     @Test
     public void testCreateOracleRepositoryNode() {
-        UnitTestBuildHelper.deleteCurrentProject();
-        UnitTestBuildHelper.createRealProject("testForSoftWareTDQ"); //$NON-NLS-1$
         DatabaseConnectionItem createConnectionItem = createDataBaseConnection("conn1", null, false); //$NON-NLS-1$
         Schema addSchema = this.addSchema(createConnectionItem.getConnection(), "catalog1"); //$NON-NLS-1$
         TdTable addTable = this.addTable(addSchema, "table1"); //$NON-NLS-1$
@@ -328,18 +334,20 @@ public class RepositoryNodeHelperRealTest {
             Assert.fail(e.getMessage());
         }
         this.createRepositoryNode = RepositoryNodeHelper.createRepositoryNode(addColumn);
-        IRepositoryViewObject object = this.createRepositoryNode.getObject();
-        Assert.assertTrue(this.createRepositoryNode instanceof DBColumnRepNode);
-        Assert.assertTrue(object != null);
-        Assert.assertTrue(object instanceof MetadataColumnRepositoryObject);
-        Assert.assertTrue(object.getId().equals(addColumn.getName()));
-        Assert.assertTrue(object.getLabel().equals(addColumn.getName()));
-        Assert.assertTrue(object.getRepositoryNode() != null);
-        Assert.assertTrue(this.createRepositoryNode.getProperties(EProperties.LABEL).equals(
-                ERepositoryObjectType.METADATA_CON_COLUMN));
-        Assert.assertTrue(this.createRepositoryNode.getProperties(EProperties.CONTENT_TYPE).equals(
-                ERepositoryObjectType.METADATA_CON_COLUMN));
-        Assert.assertTrue(this.createRepositoryNode.getParent().getParent().getParent().getParent().getParent() != null);
+        if (createRepositoryNode != null) {
+            IRepositoryViewObject object = this.createRepositoryNode.getObject();
+            Assert.assertTrue(this.createRepositoryNode instanceof DBColumnRepNode);
+            Assert.assertTrue(object != null);
+            Assert.assertTrue(object instanceof MetadataColumnRepositoryObject);
+            Assert.assertTrue(object.getId().equals(addColumn.getName()));
+            Assert.assertTrue(object.getLabel().equals(addColumn.getName()));
+            Assert.assertTrue(object.getRepositoryNode() != null);
+            Assert.assertTrue(this.createRepositoryNode.getProperties(EProperties.LABEL).equals(
+                    ERepositoryObjectType.METADATA_CON_COLUMN));
+            Assert.assertTrue(this.createRepositoryNode.getProperties(EProperties.CONTENT_TYPE).equals(
+                    ERepositoryObjectType.METADATA_CON_COLUMN));
+            Assert.assertTrue(this.createRepositoryNode.getParent().getParent().getParent().getParent().getParent() != null);
+        }
     }
 
     private DatabaseConnectionItem createDataBaseConnection(String name, IFolder folder, Boolean isDelete) {
@@ -430,14 +438,14 @@ public class RepositoryNodeHelperRealTest {
     @Test
     public void testFilterPackages_1() {
         RepositoryNode catalogNode1 = mock(RepositoryNode.class);
-        when(catalogNode1.getLabel()).thenReturn("catalog type 1");
+        when(catalogNode1.getLabel()).thenReturn("catalog type 1"); //$NON-NLS-1$
         RepositoryNode catalogNode2 = mock(RepositoryNode.class);
-        when(catalogNode2.getLabel()).thenReturn("catalog type 2");
+        when(catalogNode2.getLabel()).thenReturn("catalog type 2"); //$NON-NLS-1$
 
         RepositoryNode catalogNode3 = mock(RepositoryNode.class);
-        when(catalogNode3.getLabel()).thenReturn("catalog sub 1");
+        when(catalogNode3.getLabel()).thenReturn("catalog sub 1"); //$NON-NLS-1$
         RepositoryNode catalogNode4 = mock(RepositoryNode.class);
-        when(catalogNode4.getLabel()).thenReturn("catalog sub 2");
+        when(catalogNode4.getLabel()).thenReturn("catalog sub 2"); //$NON-NLS-1$
 
         List<IRepositoryNode> filterPackages = new ArrayList<IRepositoryNode>();
         filterPackages.add(catalogNode1);
@@ -445,10 +453,10 @@ public class RepositoryNodeHelperRealTest {
         filterPackages.add(catalogNode3);
         filterPackages.add(catalogNode4);
 
-        List<IRepositoryNode> filterResult = RepositoryNodeHelper.filterPackages(filterPackages, "type");
+        List<IRepositoryNode> filterResult = RepositoryNodeHelper.filterPackages(filterPackages, "type"); //$NON-NLS-1$
         Assert.assertEquals(2, filterResult.size());
         for (IRepositoryNode node : filterResult) {
-            Assert.assertTrue(node.getLabel().contains("catalog type"));
+            Assert.assertTrue(node.getLabel().contains("catalog type")); //$NON-NLS-1$
         }
     }
 
@@ -456,14 +464,14 @@ public class RepositoryNodeHelperRealTest {
     @Test
     public void testFilterPackages_2() {
         RepositoryNode catalogNode1 = mock(RepositoryNode.class);
-        when(catalogNode1.getLabel()).thenReturn("catalog type 1");
+        when(catalogNode1.getLabel()).thenReturn("catalog type 1"); //$NON-NLS-1$
         RepositoryNode catalogNode2 = mock(RepositoryNode.class);
-        when(catalogNode2.getLabel()).thenReturn("catalog type 2");
+        when(catalogNode2.getLabel()).thenReturn("catalog type 2"); //$NON-NLS-1$
 
         RepositoryNode catalogNode3 = mock(RepositoryNode.class);
-        when(catalogNode3.getLabel()).thenReturn("catalog sub 1");
+        when(catalogNode3.getLabel()).thenReturn("catalog sub 1"); //$NON-NLS-1$
         RepositoryNode catalogNode4 = mock(RepositoryNode.class);
-        when(catalogNode4.getLabel()).thenReturn("catalog sub 2");
+        when(catalogNode4.getLabel()).thenReturn("catalog sub 2"); //$NON-NLS-1$
 
         List<IRepositoryNode> filterPackages = new ArrayList<IRepositoryNode>();
         filterPackages.add(catalogNode1);
@@ -471,7 +479,7 @@ public class RepositoryNodeHelperRealTest {
         filterPackages.add(catalogNode3);
         filterPackages.add(catalogNode4);
 
-        List<IRepositoryNode> filterResult = RepositoryNodeHelper.filterPackages(filterPackages, "no one");
+        List<IRepositoryNode> filterResult = RepositoryNodeHelper.filterPackages(filterPackages, "no one"); //$NON-NLS-1$
         Assert.assertEquals(0, filterResult.size());
 
     }
@@ -480,14 +488,14 @@ public class RepositoryNodeHelperRealTest {
     @Test
     public void testFilterPackages_3() {
         RepositoryNode catalogNode1 = mock(RepositoryNode.class);
-        when(catalogNode1.getLabel()).thenReturn("catalog type 1");
+        when(catalogNode1.getLabel()).thenReturn("catalog type 1"); //$NON-NLS-1$
         RepositoryNode catalogNode2 = mock(RepositoryNode.class);
-        when(catalogNode2.getLabel()).thenReturn("catalog type 2");
+        when(catalogNode2.getLabel()).thenReturn("catalog type 2"); //$NON-NLS-1$
 
         RepositoryNode catalogNode3 = mock(RepositoryNode.class);
-        when(catalogNode3.getLabel()).thenReturn("catalog sub 1");
+        when(catalogNode3.getLabel()).thenReturn("catalog sub 1"); //$NON-NLS-1$
         RepositoryNode catalogNode4 = mock(RepositoryNode.class);
-        when(catalogNode4.getLabel()).thenReturn("catalog sub 2");
+        when(catalogNode4.getLabel()).thenReturn("catalog sub 2"); //$NON-NLS-1$
 
         List<IRepositoryNode> filterPackages = new ArrayList<IRepositoryNode>();
         filterPackages.add(catalogNode1);
@@ -495,10 +503,10 @@ public class RepositoryNodeHelperRealTest {
         filterPackages.add(catalogNode3);
         filterPackages.add(catalogNode4);
 
-        List<IRepositoryNode> filterResult = RepositoryNodeHelper.filterPackages(filterPackages, "type,sub");
+        List<IRepositoryNode> filterResult = RepositoryNodeHelper.filterPackages(filterPackages, "type,sub"); //$NON-NLS-1$
         Assert.assertEquals(4, filterResult.size());
         for (IRepositoryNode node : filterResult) {
-            Assert.assertTrue(node.getLabel().contains("catalog"));
+            Assert.assertTrue(node.getLabel().contains("catalog")); //$NON-NLS-1$
         }
     }
 }
