@@ -22,10 +22,19 @@ public class MatchResult {
 
     private final List<Float> thresholds = new LinkedList<Float>();
 
+    private double normalizedConfidence;
+
+    private double minConfidenceValue;
+
     public static class Score {
         public AttributeMatcherType algorithm;
         public double score;
         public String[] values = new String[2];
+    }
+
+    public void setConfidence(double normalizedConfidence, double minConfidenceValue) {
+        this.normalizedConfidence = normalizedConfidence;
+        this.minConfidenceValue = minConfidenceValue;
     }
 
     public List<Score> getScores() {
@@ -34,6 +43,14 @@ public class MatchResult {
 
     public List<Float> getThresholds() {
         return thresholds;
+    }
+
+    public double getNormalizedConfidence() {
+        return normalizedConfidence;
+    }
+
+    public double getMinConfidenceValue() {
+        return minConfidenceValue;
     }
 
     public void setScore(int index, AttributeMatcherType algorithm, double score, String value1, String value2) {

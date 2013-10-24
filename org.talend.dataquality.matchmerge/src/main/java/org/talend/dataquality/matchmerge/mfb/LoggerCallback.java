@@ -39,6 +39,9 @@ public class LoggerCallback implements MatchMergeAlgorithm.Callback {
                         .append(score.score).append(" (>= ").append(matchResult.getThresholds().get(i)).append(")");
                 i++;
             }
+            messagesBuilder.append('\n');
+            messagesBuilder.append("\t\tconfidence: ").append(matchResult.getNormalizedConfidence());
+            messagesBuilder.append("(min: ").append(matchResult.getMinConfidenceValue()).append(")");
             LOGGER.debug(messagesBuilder.toString());
         }
     }
@@ -86,6 +89,9 @@ public class LoggerCallback implements MatchMergeAlgorithm.Callback {
                         .append(score.score).append(" (").append(compareSymbol).append(" ").append(threshold).append(")");
                 i++;
             }
+            messagesBuilder.append('\n');
+            messagesBuilder.append("\t\tconfidence: ").append(matchResult.getNormalizedConfidence());
+            messagesBuilder.append("(min: ").append(matchResult.getMinConfidenceValue()).append(")");
             LOGGER.debug(messagesBuilder.toString());
         }
     }
