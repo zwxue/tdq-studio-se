@@ -16,26 +16,16 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-
-import net.sourceforge.sqlexplorer.plugin.SQLExplorerPlugin;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.FileLocator;
-import org.talend.commons.bridge.ReponsitoryContextBridge;
-import org.talend.commons.emf.EMFUtil;
-import org.talend.commons.exception.PersistenceException;
 import org.talend.commons.ui.runtime.exception.ExceptionHandler;
 import org.talend.commons.utils.WorkspaceUtils;
-import org.talend.core.context.Context;
-import org.talend.core.context.RepositoryContext;
-import org.talend.core.language.ECodeLanguage;
 import org.talend.core.model.general.Project;
 import org.talend.core.model.metadata.builder.connection.ConnectionFactory;
 import org.talend.core.model.metadata.builder.connection.ConnectionPackage;
@@ -48,26 +38,18 @@ import org.talend.core.model.properties.InformationLevel;
 import org.talend.core.model.properties.ItemState;
 import org.talend.core.model.properties.PropertiesFactory;
 import org.talend.core.model.properties.Property;
-import org.talend.core.model.properties.Status;
 import org.talend.core.model.properties.User;
-import org.talend.core.model.properties.helper.StatusHelper;
 import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.model.repository.Folder;
 import org.talend.core.model.repository.IRepositoryViewObject;
-import org.talend.core.repository.constants.FileConstants;
-import org.talend.core.repository.model.IRepositoryFactory;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
-import org.talend.core.repository.model.RepositoryFactoryProvider;
-import org.talend.core.repository.utils.ProjectHelper;
-import org.talend.core.repository.utils.XmiResourceManager;
-import org.talend.core.runtime.CoreRuntimePlugin;
 import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.PackageHelper;
+import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataquality.analysis.AnalysisContext;
 import org.talend.repository.ProjectManager;
 import org.talend.repository.model.IProxyRepositoryFactory;
 import org.talend.repository.model.IRepositoryNode.ENodeType;
-import org.talend.repository.model.RepositoryConstants;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.utils.string.StringUtilities;
 import orgomg.cwm.objectmodel.core.ModelElement;
@@ -164,36 +146,6 @@ public class UnitTestBuildHelper {
     }
 
     /**
-     * create a real project, init the default structure for TDQ.
-     * 
-     * @param projectName
-     */
-    public void initTdqProject(String projectName) {
-        IProject realProject = UnitTestBuildHelper.createRealProject(projectName);
-        if (realProject != null) {
-            this.setiProject(realProject);
-            if (ProjectManager.getInstance().getCurrentProject() == null) {
-                this.settProject(UnitTestBuildHelper.initProxyRepository(this.getiProject()));
-            } else {
-                this.settProject(ProjectManager.getInstance().getCurrentProject());
-            }
-            if (this.gettProject() != null && this.gettProject().getEmfProject() != null) {
-                this.setDataProfilingNode(UnitTestBuildHelper.createRealDataProfilingNode(this.getiProject()));
-                this.setLibrariesNode(UnitTestBuildHelper.createRealLibrariesNode(this.getiProject()));
-                this.setMetadataNode(UnitTestBuildHelper.createRealMetadataNode(this.getiProject()));
-                this.setProjectFile(this.getiProject().getWorkspace().getRoot().getLocation()
-                        .append(this.gettProject().getEmfProject().getTechnicalLabel()).toFile());
-            }
-        }
-        if (this.getiProject() != null && this.gettProject() != null && this.gettProject().getEmfProject() != null
-                && this.getDataProfilingNode() != null && this.getLibrariesNode() != null && this.getMetadataNode() != null) {
-            this.setInit(true);
-        } else {
-            setInit(false);
-        }
-    }
-
-    /**
      * create project with a specified name.
      * 
      * @param projectName specified project name
@@ -210,55 +162,15 @@ public class UnitTestBuildHelper {
     }
 
     /**
-     * DOC xqliu Comment method "initProxyRepository".
+     * init project.
      * 
-     * @param rootProject
+     * @return
      */
-    private static Project initProxyRepository(IProject rootProject) {
-        Project project = null;
-
-        ProxyRepositoryFactory proxyRepository = ProxyRepositoryFactory.getInstance();
-        IRepositoryFactory repository = RepositoryFactoryProvider.getRepositoriyById(RepositoryConstants.REPOSITORY_LOCAL_ID);
-        if (repository == null) {
-            log.fatal("No local Repository found! Probably due to a missing plugin in the product."); //$NON-NLS-1$
+    public static IProject initProjectStructure() {
+        if (DQStructureManager.getInstance().isNeedCreateStructure()) {
+            DQStructureManager.getInstance().createDQStructure();
         }
-        proxyRepository.setRepositoryFactoryFromProvider(repository);
-        try {
-            proxyRepository.checkAvailability();
-            proxyRepository.initialize();
-
-            XmiResourceManager xmiResourceManager = new XmiResourceManager();
-
-            if (rootProject.getFile(FileConstants.LOCAL_PROJECT_FILENAME).exists()) {
-                new EMFUtil();
-                project = new Project(xmiResourceManager.loadProject(rootProject));
-            } else {
-                User user = org.talend.core.model.properties.impl.PropertiesFactoryImpl.eINSTANCE.createUser();
-                user.setLogin("test@talend.com"); //$NON-NLS-1$
-                user.setPassword("password".getBytes()); //$NON-NLS-1$
-                user.setLanguage(ECodeLanguage.JAVA.getName());
-                String projectName = rootProject.getName();
-                String projectDesc = ResourcesPlugin.getWorkspace().newProjectDescription(projectName).getComment();
-                Project projectInfor = ProjectHelper.createProject(projectName, projectDesc, ECodeLanguage.JAVA.getName(), user);
-
-                checkFileName(projectInfor.getLabel(), RepositoryConstants.PROJECT_PATTERN);
-
-                project = proxyRepository.getRepositoryFactoryFromProvider().createProject(projectInfor);
-
-            }
-
-            if (project != null) {
-                initRepositoryContext(project);
-
-                String defaultTechnicalStatusList = "DEV development;TEST testing;PROD production"; //$NON-NLS-1$
-                List<Status> statusList = StatusHelper.parse(defaultTechnicalStatusList);
-                proxyRepository.setTechnicalStatus(statusList);
-            }
-        } catch (PersistenceException e) {
-            ExceptionHandler.process(e);
-            log.error(e, e);
-        }
-        return project;
+        return null;
     }
 
     /**
@@ -350,27 +262,6 @@ public class UnitTestBuildHelper {
         if (!java.util.regex.Pattern.matches(pattern, fileName)) {
             throw new IllegalArgumentException("the file name [" + fileName + "] is invalid of the pattern [" + pattern + "]"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
         }
-    }
-
-    /**
-     * DOC xqliu Comment method "initRepositoryContext".
-     * 
-     * @param project
-     */
-    private static void initRepositoryContext(Project project) {
-        RepositoryContext repositoryContext = new RepositoryContext();
-        Context ctx = CoreRuntimePlugin.getInstance().getContext();
-        ctx.putProperty(Context.REPOSITORY_CONTEXT_KEY, repositoryContext);
-
-        repositoryContext.setUser(project.getAuthor());
-        repositoryContext.setClearPassword(project.getLabel());
-        repositoryContext.setProject(project);
-        repositoryContext.setFields(new HashMap<String, String>());
-        //        repositoryContext.getFields().put(IProxyRepositoryFactory.BRANCH_SELECTION + "_" + project.getTechnicalLabel(), ""); //$NON-NLS-1$ //$NON-NLS-2$
-        ProjectManager.getInstance().setMainProjectBranch(project, null);
-
-        ReponsitoryContextBridge.initialized(project.getEmfProject(), project.getAuthor());
-        SQLExplorerPlugin.getDefault().setRootProject(ReponsitoryContextBridge.getRootProject());
     }
 
     /**
@@ -505,9 +396,9 @@ public class UnitTestBuildHelper {
     public MetadataTable initFileConnection(URL fileUrl, DelimitedFileConnection delimitedFileconnection) {
         try {
             delimitedFileconnection.setFilePath(FileLocator.toFileURL(fileUrl).toURI().getPath().toString());
-            delimitedFileconnection.setRowSeparatorValue("\n");
-            delimitedFileconnection.setEncoding("UTF-8");
-            delimitedFileconnection.setFieldSeparatorValue(",");
+            delimitedFileconnection.setRowSeparatorValue("\n"); //$NON-NLS-1$
+            delimitedFileconnection.setEncoding("UTF-8"); //$NON-NLS-1$
+            delimitedFileconnection.setFieldSeparatorValue(","); //$NON-NLS-1$
             delimitedFileconnection.setName(ERepositoryObjectType.METADATA_FILE_DELIMITED.getKey());
 
             MetadataTable metadataTable = ConnectionFactory.eINSTANCE.createMetadataTable();
@@ -541,34 +432,34 @@ public class UnitTestBuildHelper {
 
         // // Name
         MetadataColumn name = ConnectionPackage.eINSTANCE.getConnectionFactory().createMetadataColumn();
-        name.setName("name");
-        name.setLabel("name");
+        name.setName("name"); //$NON-NLS-1$
+        name.setLabel("name"); //$NON-NLS-1$
         anaElements.add(name);
         metadataTable.getColumns().add(name);
 
         // Company
         MetadataColumn company = ConnectionPackage.eINSTANCE.getConnectionFactory().createMetadataColumn();
-        company.setName("company");
-        company.setLabel("company");
+        company.setName("company"); //$NON-NLS-1$
+        company.setLabel("company"); //$NON-NLS-1$
         anaElements.add(company);
         metadataTable.getColumns().add(company);
         // City
         MetadataColumn city = ConnectionPackage.eINSTANCE.getConnectionFactory().createMetadataColumn();
-        city.setName("city");
-        city.setLabel("city");
+        city.setName("city"); //$NON-NLS-1$
+        city.setLabel("city"); //$NON-NLS-1$
         anaElements.add(city);
         metadataTable.getColumns().add(city);
         // Country
         MetadataColumn country = ConnectionPackage.eINSTANCE.getConnectionFactory().createMetadataColumn();
-        country.setName("country");
-        country.setLabel("country");
+        country.setName("country"); //$NON-NLS-1$
+        country.setLabel("country"); //$NON-NLS-1$
         anaElements.add(country);
         metadataTable.getColumns().add(country);
 
         // comment
         MetadataColumn comment = ConnectionPackage.eINSTANCE.getConnectionFactory().createMetadataColumn();
-        comment.setName("comment");
-        comment.setLabel("comment");
+        comment.setName("comment"); //$NON-NLS-1$
+        comment.setLabel("comment"); //$NON-NLS-1$
         anaElements.add(comment);
         metadataTable.getColumns().add(comment);
 

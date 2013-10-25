@@ -34,7 +34,6 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.talend.commons.exception.PersistenceException;
 import org.talend.commons.utils.WorkspaceUtils;
-import org.talend.commons.utils.io.FilesUtils;
 import org.talend.core.model.metadata.MetadataColumnRepositoryObject;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.connection.ConnectionFactory;
@@ -61,7 +60,6 @@ import org.talend.dq.nodes.DBViewRepNode;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.IRepositoryNode.EProperties;
 import org.talend.repository.model.RepositoryNode;
-import org.talend.utils.string.StringUtilities;
 import orgomg.cwm.resource.relational.Catalog;
 import orgomg.cwm.resource.relational.Schema;
 
@@ -75,8 +73,6 @@ public class RepositoryNodeHelperRealTest {
 
     private UnitTestBuildHelper unitTestBuildHelper;
 
-    private RepositoryNode createRepositoryNode;
-
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {
         // do something here
@@ -89,18 +85,11 @@ public class RepositoryNodeHelperRealTest {
 
     @Before
     public void setUp() throws Exception {
-        this.unitTestBuildHelper = UnitTestBuildHelper.getDefault();
-        if (this.unitTestBuildHelper != null) {
-            this.unitTestBuildHelper.initTdqProject(("A" + StringUtilities.getRandomString(7)).toUpperCase());//$NON-NLS-1$
-        }
+        UnitTestBuildHelper.initProjectStructure();
     }
 
     @After
     public void tearDown() throws Exception {
-        if (this.unitTestBuildHelper != null && this.unitTestBuildHelper.getProjectFile() != null) {
-            FilesUtils.deleteFile(this.unitTestBuildHelper.getProjectFile(), true);
-            assertFalse(this.unitTestBuildHelper.getProjectFile().exists());
-        }
     }
 
     /**
@@ -165,8 +154,8 @@ public class RepositoryNodeHelperRealTest {
      */
     @Test
     public void testCreateMysqlColumnRepositoryNodeParameterNull() {
-        this.createRepositoryNode = RepositoryNodeHelper.createRepositoryNode(null);
-        Assert.assertTrue(this.createRepositoryNode == null);
+        RepositoryNode createRepositoryNode = RepositoryNodeHelper.createRepositoryNode(null);
+        Assert.assertTrue(createRepositoryNode == null);
     }
 
     /**
@@ -198,21 +187,18 @@ public class RepositoryNodeHelperRealTest {
             log.error(e, e);
         }
         Assert.assertTrue(lastVersion != null);
-        this.createRepositoryNode = RepositoryNodeHelper.createRepositoryNode(addColumn);
-        if (createRepositoryNode != null) {
-            IRepositoryViewObject object = this.createRepositoryNode.getObject();
-            Assert.assertTrue(this.createRepositoryNode instanceof DBColumnRepNode);
-            Assert.assertTrue(object != null);
-            Assert.assertTrue(object instanceof MetadataColumnRepositoryObject);
-            Assert.assertTrue(object.getId().equals(addColumn.getName()));
-            Assert.assertTrue(object.getLabel().equals(addColumn.getName()));
-            Assert.assertTrue(object.getRepositoryNode() != null);
-            Assert.assertTrue(this.createRepositoryNode.getProperties(EProperties.LABEL).equals(
-                    ERepositoryObjectType.METADATA_CON_COLUMN));
-            Assert.assertTrue(this.createRepositoryNode.getProperties(EProperties.CONTENT_TYPE).equals(
-                    ERepositoryObjectType.METADATA_CON_COLUMN));
-            Assert.assertTrue(this.createRepositoryNode.getParent().getParent().getParent().getParent().getParent() != null);
-        }
+        RepositoryNode createRepositoryNode = RepositoryNodeHelper.createRepositoryNode(addColumn);
+        IRepositoryViewObject object = createRepositoryNode.getObject();
+        Assert.assertTrue(createRepositoryNode instanceof DBColumnRepNode);
+        Assert.assertTrue(object != null);
+        Assert.assertTrue(object instanceof MetadataColumnRepositoryObject);
+        Assert.assertTrue(object.getId().equals(addColumn.getName()));
+        Assert.assertTrue(object.getLabel().equals(addColumn.getName()));
+        Assert.assertTrue(object.getRepositoryNode() != null);
+        Assert.assertTrue(createRepositoryNode.getProperties(EProperties.LABEL).equals(ERepositoryObjectType.METADATA_CON_COLUMN));
+        Assert.assertTrue(createRepositoryNode.getProperties(EProperties.CONTENT_TYPE).equals(
+                ERepositoryObjectType.METADATA_CON_COLUMN));
+        Assert.assertTrue(createRepositoryNode.getParent().getParent().getParent().getParent().getParent() != null);
     }
 
     /**
@@ -231,21 +217,18 @@ public class RepositoryNodeHelperRealTest {
             log.error(e, e);
             Assert.fail(e.getMessage());
         }
-        this.createRepositoryNode = RepositoryNodeHelper.createRepositoryNode(addTable);
-        if (createRepositoryNode != null) {
-            IRepositoryViewObject object = this.createRepositoryNode.getObject();
-            Assert.assertTrue(this.createRepositoryNode instanceof DBTableRepNode);
-            Assert.assertTrue(object != null);
-            Assert.assertTrue(object instanceof TdTableRepositoryObject);
-            Assert.assertTrue(object.getId().equals(addTable.getName()));
-            Assert.assertTrue(object.getLabel().equals(addTable.getName()));
-            Assert.assertTrue(object.getRepositoryNode() != null);
-            Assert.assertTrue(this.createRepositoryNode.getProperties(EProperties.LABEL).equals(
-                    ERepositoryObjectType.METADATA_CON_COLUMN));
-            Assert.assertTrue(this.createRepositoryNode.getProperties(EProperties.CONTENT_TYPE).equals(
-                    ERepositoryObjectType.METADATA_CON_COLUMN));
-            Assert.assertTrue(this.createRepositoryNode.getParent().getParent().getParent() != null);
-        }
+        RepositoryNode createRepositoryNode = RepositoryNodeHelper.createRepositoryNode(addTable);
+        IRepositoryViewObject object = createRepositoryNode.getObject();
+        Assert.assertTrue(createRepositoryNode instanceof DBTableRepNode);
+        Assert.assertTrue(object != null);
+        Assert.assertTrue(object instanceof TdTableRepositoryObject);
+        Assert.assertTrue(object.getId().equals(addTable.getName()));
+        Assert.assertTrue(object.getLabel().equals(addTable.getName()));
+        Assert.assertTrue(object.getRepositoryNode() != null);
+        Assert.assertTrue(createRepositoryNode.getProperties(EProperties.LABEL).equals(ERepositoryObjectType.METADATA_CON_COLUMN));
+        Assert.assertTrue(createRepositoryNode.getProperties(EProperties.CONTENT_TYPE).equals(
+                ERepositoryObjectType.METADATA_CON_COLUMN));
+        Assert.assertTrue(createRepositoryNode.getParent().getParent().getParent() != null);
     }
 
     /**
@@ -264,21 +247,18 @@ public class RepositoryNodeHelperRealTest {
             log.error(e, e);
             Assert.fail(e.getMessage());
         }
-        this.createRepositoryNode = RepositoryNodeHelper.createRepositoryNode(addView);
-        if (createRepositoryNode != null) {
-            IRepositoryViewObject object = this.createRepositoryNode.getObject();
-            Assert.assertTrue(this.createRepositoryNode instanceof DBViewRepNode);
-            Assert.assertTrue(object != null);
-            Assert.assertTrue(object instanceof TdViewRepositoryObject);
-            Assert.assertTrue(object.getId().equals(addView.getName()));
-            Assert.assertTrue(object.getLabel().equals(addView.getName()));
-            Assert.assertTrue(object.getRepositoryNode() != null);
-            Assert.assertTrue(this.createRepositoryNode.getProperties(EProperties.LABEL).equals(
-                    ERepositoryObjectType.METADATA_CON_COLUMN));
-            Assert.assertTrue(this.createRepositoryNode.getProperties(EProperties.CONTENT_TYPE).equals(
-                    ERepositoryObjectType.METADATA_CON_COLUMN));
-            Assert.assertTrue(this.createRepositoryNode.getParent().getParent().getParent() != null);
-        }
+        RepositoryNode createRepositoryNode = RepositoryNodeHelper.createRepositoryNode(addView);
+        IRepositoryViewObject object = createRepositoryNode.getObject();
+        Assert.assertTrue(createRepositoryNode instanceof DBViewRepNode);
+        Assert.assertTrue(object != null);
+        Assert.assertTrue(object instanceof TdViewRepositoryObject);
+        Assert.assertTrue(object.getId().equals(addView.getName()));
+        Assert.assertTrue(object.getLabel().equals(addView.getName()));
+        Assert.assertTrue(object.getRepositoryNode() != null);
+        Assert.assertTrue(createRepositoryNode.getProperties(EProperties.LABEL).equals(ERepositoryObjectType.METADATA_CON_COLUMN));
+        Assert.assertTrue(createRepositoryNode.getProperties(EProperties.CONTENT_TYPE).equals(
+                ERepositoryObjectType.METADATA_CON_COLUMN));
+        Assert.assertTrue(createRepositoryNode.getParent().getParent().getParent() != null);
     }
 
     /**
@@ -299,21 +279,18 @@ public class RepositoryNodeHelperRealTest {
             log.error(e, e);
             Assert.fail(e.getMessage());
         }
-        this.createRepositoryNode = RepositoryNodeHelper.createRepositoryNode(addColumn);
-        if (createRepositoryNode != null) {
-            IRepositoryViewObject object = this.createRepositoryNode.getObject();
-            Assert.assertTrue(this.createRepositoryNode instanceof DBColumnRepNode);
-            Assert.assertTrue(object != null);
-            Assert.assertTrue(object instanceof MetadataColumnRepositoryObject);
-            Assert.assertTrue(object.getId().equals(addColumn.getName()));
-            Assert.assertTrue(object.getLabel().equals(addColumn.getName()));
-            Assert.assertTrue(object.getRepositoryNode() != null);
-            Assert.assertTrue(this.createRepositoryNode.getProperties(EProperties.LABEL).equals(
-                    ERepositoryObjectType.METADATA_CON_COLUMN));
-            Assert.assertTrue(this.createRepositoryNode.getProperties(EProperties.CONTENT_TYPE).equals(
-                    ERepositoryObjectType.METADATA_CON_COLUMN));
-            Assert.assertTrue(this.createRepositoryNode.getParent().getParent().getParent().getParent().getParent().getParent() != null);
-        }
+        RepositoryNode createRepositoryNode = RepositoryNodeHelper.createRepositoryNode(addColumn);
+        IRepositoryViewObject object = createRepositoryNode.getObject();
+        Assert.assertTrue(createRepositoryNode instanceof DBColumnRepNode);
+        Assert.assertTrue(object != null);
+        Assert.assertTrue(object instanceof MetadataColumnRepositoryObject);
+        Assert.assertTrue(object.getId().equals(addColumn.getName()));
+        Assert.assertTrue(object.getLabel().equals(addColumn.getName()));
+        Assert.assertTrue(object.getRepositoryNode() != null);
+        Assert.assertTrue(createRepositoryNode.getProperties(EProperties.LABEL).equals(ERepositoryObjectType.METADATA_CON_COLUMN));
+        Assert.assertTrue(createRepositoryNode.getProperties(EProperties.CONTENT_TYPE).equals(
+                ERepositoryObjectType.METADATA_CON_COLUMN));
+        Assert.assertTrue(createRepositoryNode.getParent().getParent().getParent().getParent().getParent().getParent() != null);
     }
 
     /**
@@ -333,21 +310,18 @@ public class RepositoryNodeHelperRealTest {
             log.error(e, e);
             Assert.fail(e.getMessage());
         }
-        this.createRepositoryNode = RepositoryNodeHelper.createRepositoryNode(addColumn);
-        if (createRepositoryNode != null) {
-            IRepositoryViewObject object = this.createRepositoryNode.getObject();
-            Assert.assertTrue(this.createRepositoryNode instanceof DBColumnRepNode);
-            Assert.assertTrue(object != null);
-            Assert.assertTrue(object instanceof MetadataColumnRepositoryObject);
-            Assert.assertTrue(object.getId().equals(addColumn.getName()));
-            Assert.assertTrue(object.getLabel().equals(addColumn.getName()));
-            Assert.assertTrue(object.getRepositoryNode() != null);
-            Assert.assertTrue(this.createRepositoryNode.getProperties(EProperties.LABEL).equals(
-                    ERepositoryObjectType.METADATA_CON_COLUMN));
-            Assert.assertTrue(this.createRepositoryNode.getProperties(EProperties.CONTENT_TYPE).equals(
-                    ERepositoryObjectType.METADATA_CON_COLUMN));
-            Assert.assertTrue(this.createRepositoryNode.getParent().getParent().getParent().getParent().getParent() != null);
-        }
+        RepositoryNode createRepositoryNode = RepositoryNodeHelper.createRepositoryNode(addColumn);
+        IRepositoryViewObject object = createRepositoryNode.getObject();
+        Assert.assertTrue(createRepositoryNode instanceof DBColumnRepNode);
+        Assert.assertTrue(object != null);
+        Assert.assertTrue(object instanceof MetadataColumnRepositoryObject);
+        Assert.assertTrue(object.getId().equals(addColumn.getName()));
+        Assert.assertTrue(object.getLabel().equals(addColumn.getName()));
+        Assert.assertTrue(object.getRepositoryNode() != null);
+        Assert.assertTrue(createRepositoryNode.getProperties(EProperties.LABEL).equals(ERepositoryObjectType.METADATA_CON_COLUMN));
+        Assert.assertTrue(createRepositoryNode.getProperties(EProperties.CONTENT_TYPE).equals(
+                ERepositoryObjectType.METADATA_CON_COLUMN));
+        Assert.assertTrue(createRepositoryNode.getParent().getParent().getParent().getParent().getParent() != null);
     }
 
     private DatabaseConnectionItem createDataBaseConnection(String name, IFolder folder, Boolean isDelete) {
