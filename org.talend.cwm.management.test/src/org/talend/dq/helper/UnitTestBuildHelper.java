@@ -45,7 +45,6 @@ import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.PackageHelper;
-import org.talend.dataprofiler.core.manager.DQStructureManager;
 import org.talend.dataquality.analysis.AnalysisContext;
 import org.talend.repository.ProjectManager;
 import org.talend.repository.model.IProxyRepositoryFactory;
@@ -158,18 +157,6 @@ public class UnitTestBuildHelper {
         // }
         //
         // return rootProject;
-        return null;
-    }
-
-    /**
-     * init project.
-     * 
-     * @return
-     */
-    public static IProject initProjectStructure() {
-        if (DQStructureManager.getInstance().isNeedCreateStructure()) {
-            DQStructureManager.getInstance().createDQStructure();
-        }
         return null;
     }
 

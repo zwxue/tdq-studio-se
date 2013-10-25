@@ -85,11 +85,12 @@ public class RepositoryNodeHelperRealTest {
 
     @Before
     public void setUp() throws Exception {
-        UnitTestBuildHelper.initProjectStructure();
+        // do something here
     }
 
     @After
     public void tearDown() throws Exception {
+        // do something here
     }
 
     /**
