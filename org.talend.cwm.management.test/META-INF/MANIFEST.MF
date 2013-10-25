@@ -8,8 +8,7 @@ Fragment-Host: org.talend.cwm.management;bundle-version="1.0.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Require-Bundle: org.junit4,
  org.talend.testutils,
- org.talend.model,
- org.talend.dataprofiler.core
+ org.talend.model
 Export-Package: org.talend.cwm.db.connection;uses:="org.apache.log4j",
  org.talend.cwm.dependencies,
  org.talend.cwm.management.api,
