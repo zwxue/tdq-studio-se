@@ -22,10 +22,12 @@ import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.forms.editor.IFormPage;
 import org.eclipse.ui.part.FileEditorInput;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.commons.exception.ExceptionHandler;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
+import org.talend.dataprofiler.core.ui.IRuningStatusListener;
 import org.talend.dataprofiler.core.ui.action.actions.DefaultSaveAction;
 import org.talend.dataprofiler.core.ui.action.actions.RefreshChartAction;
 import org.talend.dataprofiler.core.ui.action.actions.RunAnalysisAction;
@@ -156,10 +158,6 @@ public class AnalysisEditor extends CommonFormEditor {
                 // init the run analysis action, to give it the analysis item and listener
                 TDQAnalysisItem item = (TDQAnalysisItem) masterPage.getAnalysisRepNode().getObject().getProperty().getItem();
                 this.runAction.setAnalysisItem(item);
-                // activePageInstance = getActivePageInstance();
-                // if (activePageInstance instanceof IRuningStatusListener) {
-                runAction.setListener(masterPage);
-                // }
             }
 
             if (resultPage != null) {
@@ -340,6 +338,14 @@ public class AnalysisEditor extends CommonFormEditor {
         return this.getMasterPage().getUIExecuteEngin();
     }
 
+    private void changeListener() {
+        IFormPage activePageInstance = getActivePageInstance();
+        if (activePageInstance instanceof IRuningStatusListener) {
+            runAction.setListener((IRuningStatusListener) activePageInstance);
+        }
+
+    }
+
     /**
      * currently will not open the editor of the analysis when running from menu, so, if the editor is opened and not
      * the current active one, the page will not know that the result is changed. so we need to add the event/listener
@@ -376,6 +382,8 @@ public class AnalysisEditor extends CommonFormEditor {
                                     .getMessage());
                     return false;
                 }
+                // TDQ-8220 change the listener every time( master page or result page)
+                changeListener();
                 return true;
             }
         };
