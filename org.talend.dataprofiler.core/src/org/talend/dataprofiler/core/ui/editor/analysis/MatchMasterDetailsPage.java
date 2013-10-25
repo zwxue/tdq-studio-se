@@ -395,6 +395,10 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
      * Added TDQ-7954: After the "Create New connection" and "Run" action, the buttons should be reset.
      */
     private void resetSelectKeyButton() {
+        // Because they are TOGGLE button, so, when re-initial them, should make them as not pushed.
+        selectMatchKeyBtn.setSelection(Boolean.FALSE);
+        selectBlockKeyBtn.setSelection(Boolean.FALSE);
+        // ~
         selectBlockKeyBtn.setEnabled(Boolean.TRUE);
         selectMatchKeyBtn.setEnabled(Boolean.TRUE);
         isBlockingKeyButtonPushed = Boolean.FALSE;
