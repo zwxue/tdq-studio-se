@@ -24,8 +24,8 @@ import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.IPartListener;
 import org.eclipse.ui.IWorkbenchPart;
-import org.talend.dataprofiler.core.service.GlobalServiceRegister;
-import org.talend.dataprofiler.core.service.ITdqContextViewService;
+import org.talend.core.GlobalServiceRegister;
+import org.talend.core.ITdqContextService;
 import org.talend.dq.helper.PropertyHelper;
 
 /**
@@ -80,9 +80,9 @@ public class PartListener implements IPartListener {
     }
 
     public void partActivated(IWorkbenchPart part) {
-        if (GlobalServiceRegister.getDefault().isServiceRegistered(ITdqContextViewService.class)) {
-            ITdqContextViewService tdqContextViewService = (ITdqContextViewService) GlobalServiceRegister.getDefault()
-                    .getService(ITdqContextViewService.class);
+        if (GlobalServiceRegister.getDefault().isServiceRegistered(ITdqContextService.class)) {
+            ITdqContextService tdqContextViewService = (ITdqContextService) GlobalServiceRegister.getDefault().getService(
+                    ITdqContextService.class);
             if (tdqContextViewService != null) {
                 tdqContextViewService.updateContextView(part);
             }
@@ -94,9 +94,9 @@ public class PartListener implements IPartListener {
     }
 
     public void partClosed(IWorkbenchPart part) {
-        if (GlobalServiceRegister.getDefault().isServiceRegistered(ITdqContextViewService.class)) {
-            ITdqContextViewService tdqContextViewService = (ITdqContextViewService) GlobalServiceRegister.getDefault()
-                    .getService(ITdqContextViewService.class);
+        if (GlobalServiceRegister.getDefault().isServiceRegistered(ITdqContextService.class)) {
+            ITdqContextService tdqContextViewService = (ITdqContextService) GlobalServiceRegister.getDefault().getService(
+                    ITdqContextService.class);
             if (tdqContextViewService != null) {
                 tdqContextViewService.hideContextView(part);
             }
@@ -104,9 +104,9 @@ public class PartListener implements IPartListener {
     }
 
     public void partDeactivated(IWorkbenchPart part) {
-        if (GlobalServiceRegister.getDefault().isServiceRegistered(ITdqContextViewService.class)) {
-            ITdqContextViewService tdqContextViewService = (ITdqContextViewService) GlobalServiceRegister.getDefault()
-                    .getService(ITdqContextViewService.class);
+        if (GlobalServiceRegister.getDefault().isServiceRegistered(ITdqContextService.class)) {
+            ITdqContextService tdqContextViewService = (ITdqContextService) GlobalServiceRegister.getDefault().getService(
+                    ITdqContextService.class);
             if (tdqContextViewService != null) {
                 tdqContextViewService.resetContextView();
             }
