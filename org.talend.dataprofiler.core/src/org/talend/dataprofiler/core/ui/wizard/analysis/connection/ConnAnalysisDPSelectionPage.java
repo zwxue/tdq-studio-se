@@ -68,22 +68,6 @@ public class ConnAnalysisDPSelectionPage extends AnalysisDPSelectionPage {
                 // get the dataprovider from the seleted connection
                 Object object = ((IStructuredSelection) event.getSelection()).getFirstElement();
                 AnalysisFilterParameter connPanameter = (AnalysisFilterParameter) getConnectionParams();
-                // if (object instanceof IRepositoryViewObject) {
-                // IRepositoryViewObject reposViewObj = (IRepositoryViewObject) object;
-                // // MOD mzhao 2010-3-30, bug 12037, Currently make it unable to use for MDM Connection overview
-                // // analysis.
-                // if (ConnectionUtils.isMdmConnection(reposViewObj)) {
-                // setPageComplete(false);
-                // return;
-                // }
-                //
-                // Connection connection = ((ConnectionItem) reposViewObj.getProperty().getItem()).getConnection();
-                // if (connection != null && connPanameter != null) {
-                // connPanameter.setTdDataProvider(connection);
-                // }
-                //
-                // setPageComplete(true);
-                // }
                 if (object instanceof DBConnectionRepNode) {
                     DBConnectionRepNode connNode = (DBConnectionRepNode) object;
                     IRepositoryViewObject reposViewObj = connNode.getObject();

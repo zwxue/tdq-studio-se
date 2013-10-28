@@ -38,6 +38,7 @@ import orgomg.cwm.resource.relational.NamedColumnSet;
 /**
  * DOC xqliu class global comment. Detailled comment
  */
+@Deprecated
 public class TableAnalysisDPSelectionPage extends AnalysisDPSelectionPage {
 
     private static String newAnaStr = DefaultMessagesImpl.getString("TableAnalysisPageStep0.newAnalysis"); //$NON-NLS-1$

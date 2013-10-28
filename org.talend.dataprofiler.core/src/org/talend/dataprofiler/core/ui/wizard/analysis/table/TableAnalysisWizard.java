@@ -48,6 +48,7 @@ public class TableAnalysisWizard extends AbstractAnalysisWizard {
 
     private TableAnalysisMetadataWizardPage analysisMetadataWizardPage = null;
 
+    @SuppressWarnings("deprecation")
     private TableAnalysisDPSelectionPage tableAnalysisDPSelectionPage = null;
 
     private DQRuleSelectPage dqruleSelectPage = null;
@@ -96,12 +97,14 @@ public class TableAnalysisWizard extends AbstractAnalysisWizard {
         super(parameter);
     }
 
+    @SuppressWarnings("deprecation")
     public void addPages() {
         this.getParameter().setName(""); //$NON-NLS-1$
 
         analysisMetadataWizardPage = new TableAnalysisMetadataWizardPage();
         this.addPage(analysisMetadataWizardPage);
 
+        // never set true currently
         if (isShowTableSelectPage()) {
             tableAnalysisDPSelectionPage = new TableAnalysisDPSelectionPage();
             addPage(tableAnalysisDPSelectionPage);

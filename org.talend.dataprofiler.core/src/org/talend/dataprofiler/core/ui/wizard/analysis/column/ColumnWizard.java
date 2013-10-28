@@ -12,7 +12,6 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.wizard.analysis.column;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -28,7 +27,6 @@ import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisType;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dq.analysis.parameters.AnalysisParameter;
-import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
@@ -62,7 +60,7 @@ public class ColumnWizard extends AbstractAnalysisWizard {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see org.talend.dataprofiler.core.ui.wizard.analysis.AbstractAnalysisWizard#initCWMResourceBuilder()
      */
     @Override
@@ -79,7 +77,7 @@ public class ColumnWizard extends AbstractAnalysisWizard {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see org.eclipse.jface.wizard.Wizard#addPages()
      */
     @Override
@@ -99,7 +97,7 @@ public class ColumnWizard extends AbstractAnalysisWizard {
 
     /**
      * Sets the indicator.
-     *
+     * 
      * @param indicator the indicator to set
      */
     public void setIndicator(Indicator indicator) {
@@ -108,7 +106,7 @@ public class ColumnWizard extends AbstractAnalysisWizard {
 
     /**
      * Getter for indicator.
-     *
+     * 
      * @return the indicator
      */
     public Indicator getIndicator() {
@@ -117,7 +115,7 @@ public class ColumnWizard extends AbstractAnalysisWizard {
 
     /*
      * (non-Jsdoc)
-     *
+     * 
      * @see
      * org.talend.dataprofiler.core.ui.wizard.analysis.AbstractAnalysisWizard#openEditor(org.talend.core.model.properties
      * .Item)
@@ -132,19 +130,11 @@ public class ColumnWizard extends AbstractAnalysisWizard {
                 AbstractAnalysisMetadataPage masterPage = editor.getMasterPage();
                 List<IRepositoryNode> nodes = this.selectionPage.nodes;
                 if (nodes != null && nodes.size() > 0) {
-                    List<IRepositoryNode> nodeList = new ArrayList<IRepositoryNode>();
-                    for (IRepositoryNode repNode : nodes) {
-                        RepositoryNode tempRepNode = RepositoryNodeHelper.recursiveFind(RepositoryNodeHelper
-                                .getModelElementFromRepositoryNode(repNode));
-                        nodeList.add(tempRepNode);
-                    }
-
                     // MOD msjian TDQ-6665 2013-1-7: after the wizard, make the editor is saved status
                     if (masterPage instanceof ColumnMasterDetailsPage) {
-                        ((ColumnMasterDetailsPage) masterPage).setTreeViewInput(nodeList.toArray(new RepositoryNode[nodeList
-                                .size()]));
+                        ((ColumnMasterDetailsPage) masterPage).setTreeViewInput(nodes.toArray(new RepositoryNode[nodes.size()]));
                     } else {
-                        masterPage.getTreeViewer().setInput(nodeList.toArray(new RepositoryNode[nodeList.size()]));
+                        masterPage.getTreeViewer().setInput(nodes.toArray(new RepositoryNode[nodes.size()]));
                     }
                     masterPage.doSave(new NullProgressMonitor());
                     // TDQ-6665~

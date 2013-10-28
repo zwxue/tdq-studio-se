@@ -82,19 +82,6 @@ public class SchemaAnalysisWizard extends AnalysisFilterWizard {
                 i++;
             }
 
-            // PackagesAnalyisParameter packageParameter = getParameter();
-            // Connection tdProvider = packageParameter.getTdDataProvider();
-            // getAnalysisBuilder().setAnalysisConnection(tdProvider);
-            // Indicator[] indicators = new Indicator[packageParameter.getPackages().length];
-            // int i = 0;
-            // for (Package tdSchema : packageParameter.getPackages()) {
-            // SchemaIndicator createSchemaIndicator = SchemaFactory.eINSTANCE.createSchemaIndicator();
-            // // MOD xqliu 2009-1-21 feature 4715
-            // DefinitionHandler.getInstance().setDefaultIndicatorDefinition(createSchemaIndicator);
-            // createSchemaIndicator.setAnalyzedElement(tdSchema);
-            // indicators[i] = createSchemaIndicator;
-            // i++;
-            // }
             getAnalysisBuilder().addElementsToAnalyze(modelElement, indicators);
         }
 

@@ -12,7 +12,6 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.wizard.analysis.column;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -86,24 +85,12 @@ public class MatchWizard extends ColumnWizard {
         MatchMasterDetailsPage masterPage = (MatchMasterDetailsPage) editor.getMasterPage();
         List<IRepositoryNode> nodes = selectionPage.nodes;
 
-        // When creating, the dialog get the IFolder, not get the node directly, so it need to be transfer to the node
-        // on the repository view by the same model elements
-        List<IRepositoryNode> nodeList = new ArrayList<IRepositoryNode>();
-        if (nodes == null) {
-            return;
-        }
-        for (IRepositoryNode repNode : nodes) {
-            RepositoryNode tempRepNode = RepositoryNodeHelper.recursiveFind(RepositoryNodeHelper
-                    .getModelElementFromRepositoryNode(repNode));
-            nodeList.add(tempRepNode);
-        }
-
-        if (nodeList != null && nodeList.size() > 0) {
+        if (nodes != null && nodes.size() > 0) {
             // update analyze data label by selected nodes names(don't cotain columnRepNode).
-            String checkedElementNames = RepositoryNodeHelper.getAnalyzeDataNames(nodeList.get(0));
+            String checkedElementNames = RepositoryNodeHelper.getAnalyzeDataNames(nodes.get(0));
             masterPage.updateAnalyzeDataLabel(checkedElementNames);
             // give the selected columns to the master page
-            masterPage.setSelectedNodes(nodeList.toArray(new RepositoryNode[nodeList.size()]));
+            masterPage.setSelectedNodes(nodes.toArray(new RepositoryNode[nodes.size()]));
             masterPage.doSave(new NullProgressMonitor());
             masterPage.updateAllColumnsToKeySection();
         }

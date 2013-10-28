@@ -12,7 +12,6 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.wizard.analysis;
 
-import org.eclipse.core.resources.IFolder;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -25,13 +24,14 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
+import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.dataprofiler.core.ui.dialog.provider.DBTablesViewLabelProvider;
 import org.talend.dataprofiler.core.ui.filters.DQFolderFliter;
 import org.talend.dataprofiler.core.ui.filters.EMFObjFilter;
 import org.talend.dataprofiler.core.ui.filters.RecycleBinFilter;
 import org.talend.dataprofiler.core.ui.filters.TDQEEConnectionFolderFilter;
 import org.talend.dataprofiler.core.ui.views.provider.ResourceViewContentProvider;
-import org.talend.resource.ResourceManager;
+import org.talend.dq.helper.RepositoryNodeHelper;
 
 /**
  * DOC mzhao class global comment. This class provide abstract methods for client to add different filter and listener.
@@ -47,15 +47,6 @@ public abstract class AnalysisDPSelectionPage extends AbstractAnalysisWizardPage
     private String nameLabTxt = null;
 
     private boolean multiSelect;
-
-    private IFolder metadataFolder;
-
-    private IFolder getMetadataFolder() {
-        if (this.metadataFolder == null) {
-            this.metadataFolder = ResourceManager.getMetadataFolder();
-        }
-        return this.metadataFolder;
-    }
 
     public AnalysisDPSelectionPage(String labText, ResourceViewContentProvider contentProvider) {
         init("", "", contentProvider, labText); //$NON-NLS-1$ //$NON-NLS-2$
@@ -102,7 +93,7 @@ public abstract class AnalysisDPSelectionPage extends AbstractAnalysisWizardPage
         fViewer = new TreeViewer(treeContainer, style);
         fViewer.setContentProvider(fContentProvider);
         fViewer.setLabelProvider(fLabelProvider);
-        fViewer.setInput(this.getMetadataFolder());
+        fViewer.setInput(RepositoryNodeHelper.getRootNode(ERepositoryObjectType.METADATA, true));
         // MOD gdbu 2011-7-25 bug : 23220
         ((ResourceViewContentProvider) fContentProvider).setTreeViewer(fViewer);
         // ~23220
@@ -123,4 +114,5 @@ public abstract class AnalysisDPSelectionPage extends AbstractAnalysisWizardPage
     protected void addListener(ISelectionChangedListener selectionChangedListener) {
         fViewer.addSelectionChangedListener(selectionChangedListener);
     }
+
 }
