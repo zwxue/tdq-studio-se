@@ -53,7 +53,6 @@ import org.talend.commons.emf.FactoriesUtil;
 import org.talend.commons.exception.ExceptionHandler;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.database.PluginConstant;
-import org.talend.core.model.properties.Item;
 import org.talend.core.model.properties.Property;
 import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.cwm.dependencies.DependenciesHandler;
@@ -61,6 +60,7 @@ import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.IRuningStatusListener;
 import org.talend.dataprofiler.core.ui.editor.AbstractMetadataFormPage;
 import org.talend.dataprofiler.core.ui.editor.composite.AbstractColumnDropTree;
+import org.talend.dataprofiler.core.ui.utils.AnalysisUtils;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.ExecutionLanguage;
 import org.talend.dataquality.exception.DataprofilerCoreException;
@@ -76,8 +76,6 @@ import org.talend.dq.nodes.AnalysisRepNode;
 import org.talend.dq.nodes.DBConnectionRepNode;
 import org.talend.dq.nodes.DFConnectionRepNode;
 import org.talend.dq.nodes.MDMConnectionRepNode;
-import org.talend.dq.writer.AElementPersistance;
-import org.talend.dq.writer.impl.ElementWriterFactory;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.utils.sugars.ReturnCode;
@@ -561,21 +559,8 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
      * 
      * delete the dependency between analysis and connection
      */
-    public boolean deleteConnectionDependency(Analysis analysis) {
-        Connection tdProvider = (Connection) analysis.getContext().getConnection();
-        if (tdProvider != null && tdProvider.getSupplierDependency().size() > 0) {
-            List<Property> clintDependency = DependenciesHandler.getInstance().getClintDependency(analysis);
-            tdProvider.getSupplierDependency().get(0).getClient().remove(analysis);
-            for (Property clintProperty : clintDependency) {
-                Item item = clintProperty.getItem();
-                AElementPersistance create = ElementWriterFactory.getInstance().create(item);
-                create.save(item, false);
-            }
-        }
-        // always clean the connection info from the analysis
-        analysis.getContext().setConnection(null);
-        analysis.getClientDependency().clear();
-        return true;
+    public boolean deleteConnectionDependency(Analysis ana) {
+        return AnalysisUtils.deleteConnectionDependency(ana);
     }
 
     /**
