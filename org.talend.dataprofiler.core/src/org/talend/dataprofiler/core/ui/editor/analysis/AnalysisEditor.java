@@ -26,6 +26,9 @@ import org.eclipse.ui.forms.editor.IFormPage;
 import org.eclipse.ui.part.FileEditorInput;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.commons.exception.ExceptionHandler;
+import org.talend.core.repository.model.IRepositoryFactory;
+import org.talend.core.repository.model.ProxyRepositoryFactory;
+import org.talend.core.repository.model.RepositoryFactoryProvider;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.IRuningStatusListener;
 import org.talend.dataprofiler.core.ui.action.actions.DefaultSaveAction;
@@ -41,6 +44,7 @@ import org.talend.dataquality.analysis.AnalysisType;
 import org.talend.dataquality.analysis.ExecutionLanguage;
 import org.talend.dataquality.properties.TDQAnalysisItem;
 import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
+import org.talend.repository.model.RepositoryConstants;
 import org.talend.utils.sugars.ReturnCode;
 
 /**
@@ -363,7 +367,23 @@ public class AnalysisEditor extends CommonFormEditor {
                     ReturnCode canSave = masterPage.canSave();
                     if (canSave.isOk()) {
                         // save the analysis before running
-                        doSave(null);
+
+                        // MOD msjian TDQ-8225 : This save action won't invoke any remote repository action such as svn
+                        // commit. TDQ-7508
+                        IRepositoryFactory localRepository = RepositoryFactoryProvider
+                                .getRepositoriyById(RepositoryConstants.REPOSITORY_LOCAL_ID);
+                        IRepositoryFactory oldRepository = ProxyRepositoryFactory.getInstance()
+                                .getRepositoryFactoryFromProvider();
+                        ProxyRepositoryFactory.getInstance().setRepositoryFactoryFromProvider(localRepository);
+                        try {
+                            doSave(null);
+                        } catch (Exception e) {
+                            log.error(e, e);
+                        } finally {
+                            ProxyRepositoryFactory.getInstance().setRepositoryFactoryFromProvider(oldRepository);
+                        }
+                        // TDQ-8225~
+
                         setDirty(false);
                     } else {
                         if (canSave.getMessage() != null && !canSave.getMessage().equals(StringUtils.EMPTY)) {
