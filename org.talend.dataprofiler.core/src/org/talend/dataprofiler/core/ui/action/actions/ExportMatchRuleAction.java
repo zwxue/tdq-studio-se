@@ -78,13 +78,14 @@ public class ExportMatchRuleAction extends Action implements ICheatSheetAction {
         parameter.setFolderProvider(folderProvider);
         NewMatchRuleWizard matchWizard = WizardFactory.createNewMatchRuleWizard(parameter);
         matchWizard.setWindowTitle(getText());
+        // TDQ-8236 used for display related help
+        matchWizard.setHelpContextId("org.talend.help.export_match_rule");//$NON-NLS-1$
 
         matchWizard.setMatchRule(matchRule);
 
         WizardDialog dialog = new WizardDialog(Display.getDefault().getActiveShell(), matchWizard);
         dialog.open();
     }
-
     /*
      * (non-Javadoc)
      * 

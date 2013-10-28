@@ -46,6 +46,8 @@ public class NewMatchRuleWizard extends AbstractWizard {
 
     private boolean isExport = false;
 
+    private String helpContextId = "org.talend.help.match_rule";//$NON-NLS-1$
+
     public NewMatchRuleWizard(DQMatchRuleParameter parameter) {
         this.parameter = parameter;
         setHelpAvailable(!PluginChecker.isOnlyTopLoaded());
@@ -65,6 +67,7 @@ public class NewMatchRuleWizard extends AbstractWizard {
             newMatchRuleMetadataPage.setTitle(DefaultMessagesImpl.getString("NewMatchRuleWizard.createPage1_1")); //$NON-NLS-1$
         }
         newMatchRuleMetadataPage.setDescription(DefaultMessagesImpl.getString("NewMatchRuleWizard.defineProp")); //$NON-NLS-1$
+        newMatchRuleMetadataPage.setHelpContextId(helpContextId);
         this.addPage(newMatchRuleMetadataPage);
     }
 
@@ -156,4 +159,8 @@ public class NewMatchRuleWizard extends AbstractWizard {
         isExport = true;
     }
 
+    // the context id will change from different entry: new match rule, or export match rule
+    public void setHelpContextId(String newContextId) {
+        helpContextId = newContextId;
+    }
 }

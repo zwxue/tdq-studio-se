@@ -48,9 +48,11 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.ElementTreeSelectionDialog;
 import org.eclipse.ui.dialogs.ISelectionStatusValidator;
 import org.talend.commons.emf.FactoriesUtil;
+import org.talend.commons.utils.platform.PluginChecker;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.dialog.provider.BlockingKeysTableLabelProvider;
@@ -104,6 +106,22 @@ public class MatchRuleElementTreeSelectionDialog extends ElementTreeSelectionDia
         init();
         addFilter();
         addValidator();
+        setHelpAvailable(Boolean.FALSE);
+    }
+
+    // override this method for add the talend help. TDQ-8236
+    @Override
+    protected void createButtonsForButtonBar(Composite parent) {
+        super.createButtonsForButtonBar(parent);
+        if (PluginChecker.isTDQLoaded()) {
+            Button help = createButton(parent, IDialogConstants.HELP_ID, IDialogConstants.HELP_LABEL, false);
+            help.addSelectionListener(new SelectionAdapter() {
+
+                public void widgetSelected(SelectionEvent e) {
+                    PlatformUI.getWorkbench().getHelpSystem().displayHelp("org.talend.help.match_rule_selector");//$NON-NLS-1$
+                }
+            });
+        }
     }
 
     /**

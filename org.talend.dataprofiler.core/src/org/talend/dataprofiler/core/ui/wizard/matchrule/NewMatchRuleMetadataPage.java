@@ -27,6 +27,8 @@ import org.talend.resource.ResourceManager;
  */
 public class NewMatchRuleMetadataPage extends MetadataWizardPage {
 
+    private String helpContextId;//$NON-NLS-1$
+
     /*
      * (non-Javadoc)
      * 
@@ -84,7 +86,11 @@ public class NewMatchRuleMetadataPage extends MetadataWizardPage {
      */
     @Override
     public void performHelp() {
-        PlatformUI.getWorkbench().getHelpSystem().displayHelp("org.talend.help.match_rule");
+        PlatformUI.getWorkbench().getHelpSystem().displayHelp(helpContextId);
+    }
+
+    public void setHelpContextId(String newHelpContextId) {
+        this.helpContextId = newHelpContextId;
     }
 
 }
