@@ -566,14 +566,15 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
         if (tdProvider != null && tdProvider.getSupplierDependency().size() > 0) {
             List<Property> clintDependency = DependenciesHandler.getInstance().getClintDependency(analysis);
             tdProvider.getSupplierDependency().get(0).getClient().remove(analysis);
-            analysis.getContext().setConnection(null);
-            analysis.getClientDependency().clear();
             for (Property clintProperty : clintDependency) {
                 Item item = clintProperty.getItem();
                 AElementPersistance create = ElementWriterFactory.getInstance().create(item);
                 create.save(item, false);
             }
         }
+        // always clean the connection info from the analysis
+        analysis.getContext().setConnection(null);
+        analysis.getClientDependency().clear();
         return true;
     }
 
