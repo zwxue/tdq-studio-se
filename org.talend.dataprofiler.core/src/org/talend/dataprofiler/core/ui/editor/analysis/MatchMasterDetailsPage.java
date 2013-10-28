@@ -624,8 +624,9 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
     public void openColumnsSelectionDialog(DataManager dataManager) {
         List<IRepositoryNode> oldSelectedColumns = findAllSelectedRepositoryNode();
 
-        MetadataAndColumnSelectionDialog dialog = new MetadataAndColumnSelectionDialog(null,
-                DefaultMessagesImpl.getString("ColumnMasterDetailsPage.columnSelections"), oldSelectedColumns); //$NON-NLS-1$
+        MetadataAndColumnSelectionDialog dialog = new MetadataAndColumnSelectionDialog(
+                null,
+                DefaultMessagesImpl.getString("ColumnMasterDetailsPage.columnSelection"), oldSelectedColumns, DefaultMessagesImpl.getString("ColumnMasterDetailsPage.columnSelections")); //$NON-NLS-1$ //$NON-NLS-2$
         if (dialog.open() == Window.OK) {
             Object[] selectedResult = dialog.getResult();
             List<IRepositoryNode> reposList = RepNodeUtils.translateSelectedToStandardReposityoryNode(selectedResult);

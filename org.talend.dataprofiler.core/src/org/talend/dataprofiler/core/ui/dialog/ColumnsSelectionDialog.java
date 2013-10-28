@@ -59,8 +59,6 @@ import org.talend.repository.model.RepositoryNode;
  */
 public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
 
-    // private static Logger log = Logger.getLogger(ColumnsSelectionDialog.class);
-
     // Multiple map: one left checked element map to multiple right checked map. (e.g:
     // tableA->columnA,columnB,columnC...)
     protected MultiMap modelElementCheckedMap = null;
@@ -71,30 +69,32 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
     public ColumnsSelectionDialog(AbstractAnalysisMetadataPage metadataFormPage, Shell parent, String title,
             List<? extends IRepositoryNode> checkedRepoNodes, RepositoryNode rootNode, String message) {
         super(metadataFormPage, parent, message);
+        initDialog(title, checkedRepoNodes);
         connNode = rootNode;
+        setInput(connNode);
+    }
+
+    public ColumnsSelectionDialog(AbstractAnalysisMetadataPage metadataFormPage, Shell parent, String title,
+            List<? extends IRepositoryNode> checkedRepoNodes, String message, boolean addConnFilter) {
+        super(metadataFormPage, parent, message, addConnFilter);
+        initDialog(title, checkedRepoNodes);
+    }
+
+    /**
+     * init this Dialog.
+     * 
+     * @param title
+     * @param checkedRepoNodes
+     */
+    private void initDialog(String title, List<? extends IRepositoryNode> checkedRepoNodes) {
         modelElementCheckedMap = new MultiValueMap();
         initCheckedElements(checkedRepoNodes);
         addFilter(new EMFObjFilter());
         addFilter(new DQFolderFliter(true));
         addFilter(new TDQEEConnectionFolderFilter());
-        setInput(connNode);
         setTitle(title);
     }
 
-    public ColumnsSelectionDialog(AbstractAnalysisMetadataPage metadataFormPage, Shell parent, String message,
-            List<? extends IRepositoryNode> checkedRepoNodes) {
-        this(metadataFormPage, parent, message, checkedRepoNodes, true);
-    }
-
-    public ColumnsSelectionDialog(AbstractAnalysisMetadataPage metadataFormPage, Shell parent, String message,
-            List<? extends IRepositoryNode> checkedRepoNodes,boolean addConnFilter) {
-        super(metadataFormPage, parent, message,addConnFilter);
-        modelElementCheckedMap = new MultiValueMap();
-        initCheckedElements(checkedRepoNodes);
-        addFilter(new EMFObjFilter());
-        addFilter(new DQFolderFliter(true));
-        addFilter(new TDQEEConnectionFolderFilter());
-    }
     @Override
     /**
      * DOC mzhao bug 9240 mzhao 2009-11-05.
@@ -527,8 +527,6 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
                 if (parentElement instanceof MDMSchemaRepNode || parentElement instanceof MDMXmlElementRepNode) {
                     return RepositoryNodeHelper.getMdmChildren(parentElement, true);
                 }
-                // IRepositoryNode repoNode = (IRepositoryNode) parentElement;
-                // return repoNode.getChildren().toArray();
             }
             return super.getChildren(parentElement);
         }

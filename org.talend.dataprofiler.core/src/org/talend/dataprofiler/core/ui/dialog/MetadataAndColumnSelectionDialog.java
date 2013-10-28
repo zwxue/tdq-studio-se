@@ -22,30 +22,23 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.dataprofiler.core.PluginConstant;
-import org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisMetadataPage;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
 
-
 /**
- * DOC yyin  class global comment. Detailled comment
+ * DOC yyin class global comment. Detailled comment
  */
 public class MetadataAndColumnSelectionDialog extends ColumnsSelectionDialog {
-
-    public MetadataAndColumnSelectionDialog(AbstractAnalysisMetadataPage metadataFormPage, Shell parent, String message,
-            List<? extends IRepositoryNode> checkedRepoNodes) {
-        super(metadataFormPage, parent, message, checkedRepoNodes);
-    }
 
     /**
      * MetadataAndColumnSelectionDialog constructor: the last parameter:false means no need to:addConnFilterListener, in
      * the super class.
-     *
+     * 
      * @param parent
      */
-    public MetadataAndColumnSelectionDialog(Shell parent, String title, List<IRepositoryNode> checkedRepoNodes) {
-        super(null, parent, title, checkedRepoNodes, false);
+    public MetadataAndColumnSelectionDialog(Shell parent, String title, List<IRepositoryNode> checkedRepoNodes, String message) {
+        super(null, parent, title, checkedRepoNodes, message, false);
         // set the root of the tree, must use the RepositoryNode type.
         setInput(RepositoryNodeHelper.getRootNode(ERepositoryObjectType.METADATA, true));// ResourceManager.getMetadataFolder());
     }

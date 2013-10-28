@@ -160,7 +160,6 @@ public abstract class TwoPartCheckSelectionDialog extends SelectionStatusDialog 
      * @param labelProvider the label provider to render the entries
      * @param contentProvider the content provider to evaluate the tree structure
      */
-    @SuppressWarnings("unchecked")
     public TwoPartCheckSelectionDialog(AbstractAnalysisMetadataPage metadataFormPage, Shell parent, String message) {
         this(metadataFormPage, parent, message, true);
     }
@@ -184,6 +183,7 @@ public abstract class TwoPartCheckSelectionDialog extends SelectionStatusDialog 
         }
 
     }
+
     /**
      * Init the LabelProvider or ContentProvider for treeViewer and tableViewer.
      */
