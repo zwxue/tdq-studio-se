@@ -74,6 +74,7 @@ import org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisMetadataP
 import org.talend.dataprofiler.core.ui.editor.analysis.TableMasterDetailsPage;
 import org.talend.dataprofiler.core.ui.editor.dqrules.BusinessRuleItemEditorInput;
 import org.talend.dataprofiler.core.ui.editor.preview.TableIndicatorUnit;
+import org.talend.dataprofiler.core.ui.utils.AnalysisUtils;
 import org.talend.dataprofiler.core.ui.utils.MessageUI;
 import org.talend.dataprofiler.core.ui.utils.OpeningHelpWizardDialog;
 import org.talend.dataprofiler.core.ui.views.DQRespositoryView;
@@ -96,7 +97,6 @@ import org.talend.dataquality.indicators.sql.WhereRuleIndicator;
 import org.talend.dataquality.rules.WhereRule;
 import org.talend.dq.dbms.DbmsLanguage;
 import org.talend.dq.dbms.DbmsLanguageFactory;
-import org.talend.dq.helper.AnalysisExecutorHelper;
 import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.helper.RepositoryNodeHelper;
@@ -399,7 +399,7 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
             }
 
         });
-        dialog.addFilter(AnalysisExecutorHelper.createRuleFilter());
+        dialog.addFilter(AnalysisUtils.createRuleFilter());
         dialog.setContainerMode(true);
         dialog.setTitle(DefaultMessagesImpl.getString("AnalysisTableTreeViewer.dqruleSelector")); //$NON-NLS-1$
         dialog.setMessage(DefaultMessagesImpl.getString("AnalysisTableTreeViewer.dqrules")); //$NON-NLS-1$

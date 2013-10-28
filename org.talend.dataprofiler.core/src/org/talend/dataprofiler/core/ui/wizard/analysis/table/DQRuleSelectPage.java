@@ -21,8 +21,8 @@ import org.eclipse.ui.model.WorkbenchContentProvider;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.filters.DQFolderFliter;
 import org.talend.dataprofiler.core.ui.filters.RuleFolderFliter;
+import org.talend.dataprofiler.core.ui.utils.AnalysisUtils;
 import org.talend.dataprofiler.core.ui.wizard.analysis.AbstractAnalysisWizardPage;
-import org.talend.dq.helper.AnalysisExecutorHelper;
 import org.talend.resource.ResourceManager;
 
 /**
@@ -61,7 +61,7 @@ public class DQRuleSelectPage extends AbstractAnalysisWizardPage {
         // ADD mzhao bug TDQ-4188 hide the .svn folders.
         cViewer.addFilter(new DQFolderFliter(true));
         cViewer.addFilter(new RuleFolderFliter(true));
-        cViewer.addFilter(AnalysisExecutorHelper.createRuleFilter());
+        cViewer.addFilter(AnalysisUtils.createRuleFilter());
 
         setControl(container);
     }

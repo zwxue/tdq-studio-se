@@ -23,12 +23,7 @@ import java.sql.Statement;
 import java.util.Date;
 
 import org.apache.log4j.Logger;
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IFolder;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.jface.viewers.ViewerFilter;
-import org.talend.commons.emf.FactoriesUtil;
 import org.talend.commons.utils.StringUtils;
 import org.talend.core.database.conn.ConnParameterKeys;
 import org.talend.core.database.hbase.conn.version.EHBaseDistribution4Versions;
@@ -50,9 +45,6 @@ import org.talend.dataquality.analysis.ExecutionInformations;
 import org.talend.dq.dbms.DbmsLanguage;
 import org.talend.fileprocess.FileInputDelimited;
 import org.talend.metadata.managment.connection.manager.HiveConnectionManager;
-import org.talend.resource.EResourceConstant;
-import org.talend.resource.ResourceManager;
-import org.talend.resource.ResourceService;
 import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.foundation.softwaredeployment.DataManager;
 import orgomg.cwm.foundation.softwaredeployment.SoftwaredeploymentPackage;
@@ -297,34 +289,6 @@ public final class AnalysisExecutorHelper {
             resultMetadata.setMessage(errorMessage);
         }
         return errorMessage;
-    }
-
-    /**
-     * used for table analysis-- select dq rules, add filter for match rule folder TDQ-8001
-     * 
-     * @return
-     */
-    public static ViewerFilter createRuleFilter() {
-        return new ViewerFilter() {
-
-            @Override
-            public boolean select(Viewer viewer, Object parentElement, Object element) {
-                if (element instanceof IFile) {
-                    IFile file = (IFile) element;
-                    if (FactoriesUtil.DQRULE.equals(file.getFileExtension())) {
-                        return true;
-                    }
-                } else if (element instanceof IFolder) {
-                    IFolder folder = (IFolder) element;
-                    // filter the match rule folder in table analysis
-                    if (EResourceConstant.RULES_MATCHER.getName().equals(folder.getName())) {
-                        return false;
-                    }// ~
-                    return ResourceService.isSubFolder(ResourceManager.getRulesFolder(), folder);
-                }
-                return false;
-            }
-        };
     }
 
     /**
