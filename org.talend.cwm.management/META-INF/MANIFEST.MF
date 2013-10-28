@@ -38,7 +38,8 @@ Require-Bundle: org.eclipse.ui,
  org.apache.log4j,
  org.talend.librariesmanager,
  org.talend.dataquality.record.linkage,
- org.talend.libraries.jboss
+ org.talend.libraries.jboss,
+ org.talend.repository.items.importexport;bundle-version="1.0.0"
 Bundle-Vendor: .Talend SA.
 Bundle-ClassPath: .,
  lib/advancedPersistentLookupLib-1.0.jar,

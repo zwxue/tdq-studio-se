@@ -865,12 +865,7 @@
         <genFeatures notify="false" createChild="false" propertySortChoices="true"
             ecoreFeature="ecore:EReference dataquality.ecore#//properties/TDQPatternItem/pattern"/>
       </genClasses>
-      <genClasses ecoreClass="dataquality.ecore#//properties/TDQFileItem">
-        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dataquality.ecore#//properties/TDQFileItem/name"/>
-        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dataquality.ecore#//properties/TDQFileItem/extension"/>
-        <genFeatures notify="false" createChild="false" propertySortChoices="true"
-            ecoreFeature="ecore:EReference dataquality.ecore#//properties/TDQFileItem/content"/>
-      </genClasses>
+      <genClasses ecoreClass="dataquality.ecore#//properties/TDQFileItem"/>
       <genClasses ecoreClass="dataquality.ecore#//properties/TDQJrxmlItem"/>
       <genClasses ecoreClass="dataquality.ecore#//properties/TDQSourceFileItem"/>
       <genClasses ecoreClass="dataquality.ecore#//properties/TDQMatchRuleItem">

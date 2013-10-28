@@ -10,6 +10,7 @@ import java.util.List;
 
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
+import org.talend.core.model.properties.FileItem;
 import org.talend.core.model.properties.Item;
 import org.talend.core.model.properties.TDQItem;
 import org.talend.dataquality.properties.*;
@@ -138,6 +139,7 @@ public class PropertiesSwitch<T> {
                 TDQFileItem tdqFileItem = (TDQFileItem)theEObject;
                 T result = caseTDQFileItem(tdqFileItem);
                 if (result == null) result = caseTDQItem(tdqFileItem);
+                if (result == null) result = caseFileItem(tdqFileItem);
                 if (result == null) result = caseItem(tdqFileItem);
                 if (result == null) result = defaultCase(theEObject);
                 return result;
@@ -147,6 +149,7 @@ public class PropertiesSwitch<T> {
                 T result = caseTDQJrxmlItem(tdqJrxmlItem);
                 if (result == null) result = caseTDQFileItem(tdqJrxmlItem);
                 if (result == null) result = caseTDQItem(tdqJrxmlItem);
+                if (result == null) result = caseFileItem(tdqJrxmlItem);
                 if (result == null) result = caseItem(tdqJrxmlItem);
                 if (result == null) result = defaultCase(theEObject);
                 return result;
@@ -156,6 +159,7 @@ public class PropertiesSwitch<T> {
                 T result = caseTDQSourceFileItem(tdqSourceFileItem);
                 if (result == null) result = caseTDQFileItem(tdqSourceFileItem);
                 if (result == null) result = caseTDQItem(tdqSourceFileItem);
+                if (result == null) result = caseFileItem(tdqSourceFileItem);
                 if (result == null) result = caseItem(tdqSourceFileItem);
                 if (result == null) result = defaultCase(theEObject);
                 return result;
@@ -184,6 +188,21 @@ public class PropertiesSwitch<T> {
      * @generated
      */
     public T caseTDQItem(TDQItem object) {
+        return null;
+    }
+
+    /**
+     * Returns the result of interpreting the object as an instance of '<em>File Item</em>'.
+     * <!-- begin-user-doc -->
+     * This implementation returns null;
+     * returning a non-null result will terminate the switch.
+     * <!-- end-user-doc -->
+     * @param object the target of the switch.
+     * @return the result of interpreting the object as an instance of '<em>File Item</em>'.
+     * @see #doSwitch(org.eclipse.emf.ecore.EObject) doSwitch(EObject)
+     * @generated
+     */
+    public T caseFileItem(FileItem object) {
         return null;
     }
 

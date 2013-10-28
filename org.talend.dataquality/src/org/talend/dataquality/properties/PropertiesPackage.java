@@ -115,6 +115,15 @@ public interface PropertiesPackage extends EPackage {
     int TDQ_ANALYSIS_ITEM__FILE_EXTENSION = org.talend.core.model.properties.PropertiesPackage.TDQ_ITEM__FILE_EXTENSION;
 
     /**
+     * The feature id for the '<em><b>Need Version</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int TDQ_ANALYSIS_ITEM__NEED_VERSION = org.talend.core.model.properties.PropertiesPackage.TDQ_ITEM__NEED_VERSION;
+
+    /**
      * The feature id for the '<em><b>Filename</b></em>' attribute.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -195,6 +204,15 @@ public interface PropertiesPackage extends EPackage {
      * @ordered
      */
     int TDQ_REPORT_ITEM__FILE_EXTENSION = org.talend.core.model.properties.PropertiesPackage.TDQ_ITEM__FILE_EXTENSION;
+
+    /**
+     * The feature id for the '<em><b>Need Version</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int TDQ_REPORT_ITEM__NEED_VERSION = org.talend.core.model.properties.PropertiesPackage.TDQ_ITEM__NEED_VERSION;
 
     /**
      * The feature id for the '<em><b>Filename</b></em>' attribute.
@@ -279,6 +297,15 @@ public interface PropertiesPackage extends EPackage {
     int TDQ_INDICATOR_DEFINITION_ITEM__FILE_EXTENSION = org.talend.core.model.properties.PropertiesPackage.TDQ_ITEM__FILE_EXTENSION;
 
     /**
+     * The feature id for the '<em><b>Need Version</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int TDQ_INDICATOR_DEFINITION_ITEM__NEED_VERSION = org.talend.core.model.properties.PropertiesPackage.TDQ_ITEM__NEED_VERSION;
+
+    /**
      * The feature id for the '<em><b>Filename</b></em>' attribute.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -359,6 +386,15 @@ public interface PropertiesPackage extends EPackage {
      * @ordered
      */
     int TDQ_BUSINESS_RULE_ITEM__FILE_EXTENSION = org.talend.core.model.properties.PropertiesPackage.TDQ_ITEM__FILE_EXTENSION;
+
+    /**
+     * The feature id for the '<em><b>Need Version</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int TDQ_BUSINESS_RULE_ITEM__NEED_VERSION = org.talend.core.model.properties.PropertiesPackage.TDQ_ITEM__NEED_VERSION;
 
     /**
      * The feature id for the '<em><b>Filename</b></em>' attribute.
@@ -443,6 +479,15 @@ public interface PropertiesPackage extends EPackage {
     int TDQ_PATTERN_ITEM__FILE_EXTENSION = org.talend.core.model.properties.PropertiesPackage.TDQ_ITEM__FILE_EXTENSION;
 
     /**
+     * The feature id for the '<em><b>Need Version</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int TDQ_PATTERN_ITEM__NEED_VERSION = org.talend.core.model.properties.PropertiesPackage.TDQ_ITEM__NEED_VERSION;
+
+    /**
      * The feature id for the '<em><b>Filename</b></em>' attribute.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -523,6 +568,15 @@ public interface PropertiesPackage extends EPackage {
      * @ordered
      */
     int TDQ_FILE_ITEM__FILE_EXTENSION = org.talend.core.model.properties.PropertiesPackage.TDQ_ITEM__FILE_EXTENSION;
+
+    /**
+     * The feature id for the '<em><b>Need Version</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int TDQ_FILE_ITEM__NEED_VERSION = org.talend.core.model.properties.PropertiesPackage.TDQ_ITEM__NEED_VERSION;
 
     /**
      * The feature id for the '<em><b>Filename</b></em>' attribute.
@@ -625,6 +679,15 @@ public interface PropertiesPackage extends EPackage {
     int TDQ_JRXML_ITEM__FILE_EXTENSION = TDQ_FILE_ITEM__FILE_EXTENSION;
 
     /**
+     * The feature id for the '<em><b>Need Version</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int TDQ_JRXML_ITEM__NEED_VERSION = TDQ_FILE_ITEM__NEED_VERSION;
+
+    /**
      * The feature id for the '<em><b>Filename</b></em>' attribute.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -725,6 +788,15 @@ public interface PropertiesPackage extends EPackage {
     int TDQ_SOURCE_FILE_ITEM__FILE_EXTENSION = TDQ_FILE_ITEM__FILE_EXTENSION;
 
     /**
+     * The feature id for the '<em><b>Need Version</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int TDQ_SOURCE_FILE_ITEM__NEED_VERSION = TDQ_FILE_ITEM__NEED_VERSION;
+
+    /**
      * The feature id for the '<em><b>Filename</b></em>' attribute.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -823,6 +895,15 @@ public interface PropertiesPackage extends EPackage {
      * @ordered
      */
     int TDQ_MATCH_RULE_ITEM__FILE_EXTENSION = org.talend.core.model.properties.PropertiesPackage.TDQ_ITEM__FILE_EXTENSION;
+
+    /**
+     * The feature id for the '<em><b>Need Version</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int TDQ_MATCH_RULE_ITEM__NEED_VERSION = org.talend.core.model.properties.PropertiesPackage.TDQ_ITEM__NEED_VERSION;
 
     /**
      * The feature id for the '<em><b>Filename</b></em>' attribute.
@@ -965,39 +1046,6 @@ public interface PropertiesPackage extends EPackage {
      * @generated
      */
     EClass getTDQFileItem();
-
-    /**
-     * Returns the meta object for the attribute '{@link org.talend.dataquality.properties.TDQFileItem#getName <em>Name</em>}'.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @return the meta object for the attribute '<em>Name</em>'.
-     * @see org.talend.dataquality.properties.TDQFileItem#getName()
-     * @see #getTDQFileItem()
-     * @generated
-     */
-    EAttribute getTDQFileItem_Name();
-
-    /**
-     * Returns the meta object for the attribute '{@link org.talend.dataquality.properties.TDQFileItem#getExtension <em>Extension</em>}'.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @return the meta object for the attribute '<em>Extension</em>'.
-     * @see org.talend.dataquality.properties.TDQFileItem#getExtension()
-     * @see #getTDQFileItem()
-     * @generated
-     */
-    EAttribute getTDQFileItem_Extension();
-
-    /**
-     * Returns the meta object for the reference '{@link org.talend.dataquality.properties.TDQFileItem#getContent <em>Content</em>}'.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @return the meta object for the reference '<em>Content</em>'.
-     * @see org.talend.dataquality.properties.TDQFileItem#getContent()
-     * @see #getTDQFileItem()
-     * @generated
-     */
-    EReference getTDQFileItem_Content();
 
     /**
      * Returns the meta object for class '{@link org.talend.dataquality.properties.TDQJrxmlItem <em>TDQ Jrxml Item</em>}'.
@@ -1161,30 +1209,6 @@ public interface PropertiesPackage extends EPackage {
          * @generated
          */
         EClass TDQ_FILE_ITEM = eINSTANCE.getTDQFileItem();
-
-        /**
-         * The meta object literal for the '<em><b>Name</b></em>' attribute feature.
-         * <!-- begin-user-doc -->
-         * <!-- end-user-doc -->
-         * @generated
-         */
-        EAttribute TDQ_FILE_ITEM__NAME = eINSTANCE.getTDQFileItem_Name();
-
-        /**
-         * The meta object literal for the '<em><b>Extension</b></em>' attribute feature.
-         * <!-- begin-user-doc -->
-         * <!-- end-user-doc -->
-         * @generated
-         */
-        EAttribute TDQ_FILE_ITEM__EXTENSION = eINSTANCE.getTDQFileItem_Extension();
-
-        /**
-         * The meta object literal for the '<em><b>Content</b></em>' reference feature.
-         * <!-- begin-user-doc -->
-         * <!-- end-user-doc -->
-         * @generated
-         */
-        EReference TDQ_FILE_ITEM__CONTENT = eINSTANCE.getTDQFileItem_Content();
 
         /**
          * The meta object literal for the '{@link org.talend.dataquality.properties.impl.TDQJrxmlItemImpl <em>TDQ Jrxml Item</em>}' class.

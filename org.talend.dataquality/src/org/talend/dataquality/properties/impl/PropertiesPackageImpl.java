@@ -315,33 +315,6 @@ public class PropertiesPackageImpl extends EPackageImpl implements PropertiesPac
      * <!-- end-user-doc -->
      * @generated
      */
-    public EAttribute getTDQFileItem_Name() {
-        return (EAttribute)tdqFileItemEClass.getEStructuralFeatures().get(0);
-    }
-
-    /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    public EAttribute getTDQFileItem_Extension() {
-        return (EAttribute)tdqFileItemEClass.getEStructuralFeatures().get(1);
-    }
-
-    /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    public EReference getTDQFileItem_Content() {
-        return (EReference)tdqFileItemEClass.getEStructuralFeatures().get(2);
-    }
-
-    /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
     public EClass getTDQJrxmlItem() {
         return tdqJrxmlItemEClass;
     }
@@ -414,9 +387,6 @@ public class PropertiesPackageImpl extends EPackageImpl implements PropertiesPac
         createEReference(tdqPatternItemEClass, TDQ_PATTERN_ITEM__PATTERN);
 
         tdqFileItemEClass = createEClass(TDQ_FILE_ITEM);
-        createEAttribute(tdqFileItemEClass, TDQ_FILE_ITEM__NAME);
-        createEAttribute(tdqFileItemEClass, TDQ_FILE_ITEM__EXTENSION);
-        createEReference(tdqFileItemEClass, TDQ_FILE_ITEM__CONTENT);
 
         tdqJrxmlItemEClass = createEClass(TDQ_JRXML_ITEM);
 
@@ -454,7 +424,6 @@ public class PropertiesPackageImpl extends EPackageImpl implements PropertiesPac
         DefinitionPackage theDefinitionPackage = (DefinitionPackage)EPackage.Registry.INSTANCE.getEPackage(DefinitionPackage.eNS_URI);
         RulesPackage theRulesPackage = (RulesPackage)EPackage.Registry.INSTANCE.getEPackage(RulesPackage.eNS_URI);
         PatternPackage thePatternPackage = (PatternPackage)EPackage.Registry.INSTANCE.getEPackage(PatternPackage.eNS_URI);
-        EcorePackage theEcorePackage = (EcorePackage)EPackage.Registry.INSTANCE.getEPackage(EcorePackage.eNS_URI);
 
         // Create type parameters
 
@@ -467,6 +436,7 @@ public class PropertiesPackageImpl extends EPackageImpl implements PropertiesPac
         tdqBusinessRuleItemEClass.getESuperTypes().add(thePropertiesPackage_1.getTDQItem());
         tdqPatternItemEClass.getESuperTypes().add(thePropertiesPackage_1.getTDQItem());
         tdqFileItemEClass.getESuperTypes().add(thePropertiesPackage_1.getTDQItem());
+        tdqFileItemEClass.getESuperTypes().add(thePropertiesPackage_1.getFileItem());
         tdqJrxmlItemEClass.getESuperTypes().add(this.getTDQFileItem());
         tdqSourceFileItemEClass.getESuperTypes().add(this.getTDQFileItem());
         tdqMatchRuleItemEClass.getESuperTypes().add(thePropertiesPackage_1.getTDQItem());
@@ -488,9 +458,6 @@ public class PropertiesPackageImpl extends EPackageImpl implements PropertiesPac
         initEReference(getTDQPatternItem_Pattern(), thePatternPackage.getPattern(), null, "pattern", null, 0, 1, TDQPatternItem.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
         initEClass(tdqFileItemEClass, TDQFileItem.class, "TDQFileItem", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-        initEAttribute(getTDQFileItem_Name(), theEcorePackage.getEString(), "name", null, 0, 1, TDQFileItem.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-        initEAttribute(getTDQFileItem_Extension(), theEcorePackage.getEString(), "extension", null, 0, 1, TDQFileItem.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-        initEReference(getTDQFileItem_Content(), thePropertiesPackage_1.getByteArray(), null, "content", null, 0, 1, TDQFileItem.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
         initEClass(tdqJrxmlItemEClass, TDQJrxmlItem.class, "TDQJrxmlItem", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 

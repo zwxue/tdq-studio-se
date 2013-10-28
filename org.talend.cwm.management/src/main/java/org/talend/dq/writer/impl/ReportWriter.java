@@ -61,21 +61,24 @@ public class ReportWriter extends AElementPersistance {
         TdReport report = (TdReport) element;
         List<Analysis> analyses = ReportHelper.getAnalyses(report);
         for (Analysis ana : analyses) {
-            TypedReturnCode<Dependency> dependencyReturn = DependenciesHandler.getInstance().setDependencyOn(report, ana);
-            if (dependencyReturn.isOk()) {
-                try {
-                    Property property = PropertyHelper.getProperty(ana);
-                    if (property != null) {
-                        Item item = property.getItem();
-                        if (item instanceof TDQAnalysisItem) {
-                            TDQAnalysisItem anaItem = (TDQAnalysisItem) item;
-                            anaItem.setAnalysis(ana);
+            // TDQ-7999,filter the proxy.
+            if (!ana.eIsProxy()) {
+                TypedReturnCode<Dependency> dependencyReturn = DependenciesHandler.getInstance().setDependencyOn(report, ana);
+                if (dependencyReturn.isOk()) {
+                    try {
+                        Property property = PropertyHelper.getProperty(ana);
+                        if (property != null) {
+                            Item item = property.getItem();
+                            if (item instanceof TDQAnalysisItem) {
+                                TDQAnalysisItem anaItem = (TDQAnalysisItem) item;
+                                anaItem.setAnalysis(ana);
+                            }
                         }
+                        ProxyRepositoryFactory.getInstance().getRepositoryFactoryFromProvider().getResourceManager()
+                                .saveResource(ana.eResource());
+                    } catch (PersistenceException e) {
+                        log.error(e, e);
                     }
-                    ProxyRepositoryFactory.getInstance().getRepositoryFactoryFromProvider().getResourceManager()
-                            .saveResource(ana.eResource());
-                } catch (PersistenceException e) {
-                    log.error(e, e);
                 }
             }
         }
