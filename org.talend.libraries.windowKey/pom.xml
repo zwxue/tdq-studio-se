@@ -14,13 +14,13 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>org.talend.libraries.windowKey</artifactId>
-    <version>5.4.0</version>
+    <version>5.4.1-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <parent>
         <groupId>org.talend</groupId>
         <artifactId>org.talend.tos</artifactId>
-        <version>5.4.0</version>
+        <version>5.4.1-SNAPSHOT</version>
     </parent>
 
     <name>org.talend.libraries.windowKey</name>
