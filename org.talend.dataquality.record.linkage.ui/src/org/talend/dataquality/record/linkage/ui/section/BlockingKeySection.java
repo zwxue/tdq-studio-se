@@ -358,7 +358,6 @@ public class BlockingKeySection extends AbstractMatchAnaysisTableSection {
         if (overwrite) {
             // clear current keys
             this.getBlockKeyDefinitionList().clear();
-            tableComposite.setInput(null);
             this.tableComposite.redraw();
         }
         List<String> conflictKeys = new ArrayList<String>();
@@ -368,11 +367,8 @@ public class BlockingKeySection extends AbstractMatchAnaysisTableSection {
                 conflictKeys.add(blockKey.getName());
                 continue;
             }
-
             BlockKeyDefinition blockKeyDefinition = EcoreUtil.copy(blockKey);
-
             setColumnValueIfMatch(blockKeyDefinition);
-
             tableComposite.addKeyDefinition(blockKeyDefinition, this.getMatchRuleDefinition().getBlockKeys());
         }
         // if there are some conflict keys, popup to let the user know
