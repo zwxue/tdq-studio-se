@@ -308,6 +308,9 @@
                <instanceof
                      value="org.talend.dq.nodes.DBViewRepNode">
                </instanceof>
+               <instanceof
+                     value="org.talend.dq.nodes.DFColumnRepNode">
+               </instanceof>
             </or>
          </enablement>
       </actionProvider> 

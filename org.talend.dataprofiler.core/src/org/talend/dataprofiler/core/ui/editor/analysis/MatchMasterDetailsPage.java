@@ -774,7 +774,7 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
 
     private void refreshColumnAndData() {
         this.analysisHandler.setSelectedColumns(translateSelectedNodeIntoModelElement());
-
+        updateAllColumnsToKeySection();
         refreshDataFromConnection(true);
 
         this.setDirty(Boolean.TRUE);
