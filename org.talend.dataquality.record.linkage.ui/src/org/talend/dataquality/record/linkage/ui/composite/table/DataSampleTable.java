@@ -425,7 +425,7 @@ public class DataSampleTable {
             String currentGID = getGID(cell);
 
             // if the row is not a master row, make the text color grey.
-            if (currentGID != null) {
+            if (currentGID != null && !StringUtils.EMPTY.equals(currentGID)) {
                 ((ForegroundTextPainter) getWrappedPainter()).setDrawImage(true);
                 Object[] rowObject = (Object[]) bodyDataProvider.getRowObject(cell.getRowIndex());
                 if ("0".equals(rowObject[groupSizeIndex])) {
