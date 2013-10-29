@@ -58,6 +58,7 @@ import org.eclipse.nebula.widgets.nattable.selection.SelectionLayer;
 import org.eclipse.nebula.widgets.nattable.sort.painter.SortableHeaderTextPainter;
 import org.eclipse.nebula.widgets.nattable.style.CellStyleAttributes;
 import org.eclipse.nebula.widgets.nattable.style.DisplayMode;
+import org.eclipse.nebula.widgets.nattable.style.IStyle;
 import org.eclipse.nebula.widgets.nattable.style.Style;
 import org.eclipse.nebula.widgets.nattable.util.GUIHelper;
 import org.eclipse.nebula.widgets.nattable.viewport.ViewportLayer;
@@ -71,6 +72,7 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.talend.dataprofiler.common.ui.editor.preview.chart.utils.MatchRuleColorRegistry;
 import org.talend.dataquality.record.linkage.ui.composite.ListObjectDataProvider;
+import org.talend.dataquality.record.linkage.ui.composite.utils.ImageLib;
 import org.talend.dataquality.record.linkage.utils.MatchAnalysisConstant;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
@@ -330,9 +332,13 @@ public class DataSampleTable {
         natTable.addConfiguration(new DefaultNatTableStyleConfiguration() {
 
             {// use the own painter to paint the group color
-                cellPainter = new RowBackgroundGroupPainter(new TextPainter(false, false, false));
+                cellPainter = new RowBackgroundGroupPainter(new ForegroundTextPainter(false, false, false));
             }
         });
+
+        // add sort data function
+        // natTable.addConfiguration(new SingleClickSortConfiguration());
+
         natTable.configure();
 
         natTable.getConfigRegistry().registerConfigAttribute(EditConfigAttributes.CELL_EDITABLE_RULE,
@@ -364,6 +370,43 @@ public class DataSampleTable {
         return new ListObjectDataProvider(data, columnPropertyAccessor);
     }
 
+    private class ForegroundTextPainter extends TextPainter {
+
+        private boolean changeForegroundColor = false;
+
+        private boolean drawImage = false;
+
+        private Image masterImage = ImageLib.getImage(ImageLib.MASTER_IMAGE);
+
+        public ForegroundTextPainter(boolean wrapText, boolean paintBg, boolean calculate) {
+            super(wrapText, paintBg, calculate);
+        }
+
+        @Override
+        public void paintCell(ILayerCell cell, GC gc, Rectangle rectangle, IConfigRegistry configRegistry) {
+            super.paintCell(cell, gc, rectangle, configRegistry);
+            if (drawImage && !changeForegroundColor & cell.getColumnIndex() == 0) {
+                gc.drawImage(masterImage, rectangle.x, rectangle.y);
+            }
+        }
+
+        @Override
+        public void setupGCFromConfig(GC gc, IStyle cellStyle) {
+            super.setupGCFromConfig(gc, cellStyle);
+            if (changeForegroundColor) {
+                gc.setForeground(ImageLib.COLOR_GREY);
+            }
+        }
+
+        public void setChangeForegroundColor(boolean isChange) {
+            changeForegroundColor = isChange;
+        }
+
+        protected void setDrawImage(boolean isDraw) {
+            drawImage = isDraw;
+        }
+    }
+
     // for different data group, use different background color
     private class RowBackgroundGroupPainter extends BackgroundPainter {// GradientBackgroundPainter {
 
@@ -379,10 +422,23 @@ public class DataSampleTable {
 
         @Override
         public void paintCell(ILayerCell cell, GC gc, Rectangle bounds, IConfigRegistry configRegistry) {
-            super.paintCell(cell, gc, bounds, configRegistry);
-
-            // when the GID changed, draw a line
             String currentGID = getGID(cell);
+
+            // if the row is not a master row, make the text color grey.
+            if (currentGID != null) {
+                ((ForegroundTextPainter) getWrappedPainter()).setDrawImage(true);
+                Object[] rowObject = (Object[]) bodyDataProvider.getRowObject(cell.getRowIndex());
+                if ("0".equals(rowObject[groupSizeIndex])) {
+                    ((ForegroundTextPainter) getWrappedPainter()).setChangeForegroundColor(true);
+                } else {
+                    ((ForegroundTextPainter) getWrappedPainter()).setChangeForegroundColor(false);
+                }
+            } else {
+                ((ForegroundTextPainter) getWrappedPainter()).setDrawImage(false);
+            }
+
+            super.paintCell(cell, gc, bounds, configRegistry);
+            // when the GID changed, draw a line
             if (currentGID != null) {
                 // only draw a line when the group with same size neighbour with each other
                 if (!StringUtils.equals(previousGID, currentGID) && isEqualGroupSize(previousGID, currentGID)) {
@@ -394,6 +450,7 @@ public class DataSampleTable {
 
                 previousGID = currentGID;
             }
+
         }
 
         protected Color getBackgroundColour(ILayerCell cell, IConfigRegistry configRegistry) {

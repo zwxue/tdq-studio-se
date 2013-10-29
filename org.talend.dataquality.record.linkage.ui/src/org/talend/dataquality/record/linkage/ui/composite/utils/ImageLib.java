@@ -21,6 +21,7 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.jface.viewers.DecorationOverlayIcon;
 import org.eclipse.jface.viewers.IDecoration;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.PlatformUI;
 
@@ -236,6 +237,8 @@ public final class ImageLib {
     public static final String PLUGIN_ID = "org.talend.dataquality.record.linkage.ui"; //$NON-NLS-1$
 
     public static final String MASTER_IMAGE = "star_tMatchGroup_master.png";//$NON-NLS-1$
+
+    public static final Color COLOR_GREY = new Color(null, 112, 111, 115);
 
     /**
      * DOC bzhou ImageLib constructor comment.

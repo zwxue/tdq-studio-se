@@ -337,13 +337,11 @@ public class MatchRuleDataTable extends Composite {
 
         Color textColor = GUIHelper.COLOR_BLACK;
 
-        Color grey = new Color(null, 112, 111, 115);
-
         @Override
         public Color getForeground(Object element, int columnIndex) {
             String size = ((String[]) element)[grpSizeColumn];
             if ("0".equals(size)) {//$NON-NLS-1$
-                return grey;
+                return ImageLib.COLOR_GREY;
             } else {
                 return GUIHelper.COLOR_BLACK;
             }
