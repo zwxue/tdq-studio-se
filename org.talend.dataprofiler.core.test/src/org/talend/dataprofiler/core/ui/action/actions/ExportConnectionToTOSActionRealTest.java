@@ -202,9 +202,9 @@ public class ExportConnectionToTOSActionRealTest {
         Assert.assertTrue(createOldConnectionItem.getConnection() != null);
         Assert.assertTrue(createOldConnectionItem.getConnection().eResource() != null);
         Assert.assertTrue(!createOldConnectionItem.getConnection().eIsProxy());
-        List<IRepositoryViewObject> all = factory.getAll(ERepositoryObjectType.METADATA_CONNECTIONS, false);
-        Assert.assertTrue(all != null);
-        Assert.assertTrue("ExportConnectionToTOSActionRealTest1".equals(all.get(0).getLabel())); //$NON-NLS-1$
+        IRepositoryViewObject createdByUs = factory.getLastVersion(createOldConnectionItem.getProperty().getId());
+        Assert.assertTrue(createdByUs != null);
+        Assert.assertTrue("ExportConnectionToTOSActionRealTest1".equals(createdByUs.getLabel())); //$NON-NLS-1$
         initCatalogList(createOldConnectionItem);
         // ~connectionNode
         List<Package> packageList = new ArrayList<Package>();
@@ -214,18 +214,36 @@ public class ExportConnectionToTOSActionRealTest {
         PowerMockito.doNothing().when(createAction).refreshViewerAndNode();
         createAction.run();
 
-        all = factory.getAll(ERepositoryObjectType.METADATA_CONNECTIONS, false);
-        Assert.assertTrue(all != null);
-        IRepositoryViewObject lastVersion = all.get(1);
-        DatabaseConnectionItem item = (DatabaseConnectionItem) lastVersion.getProperty().getItem();
+        IRepositoryViewObject createByAction = getNewCreatedConnectionByName(createOldConnectionItem.getConnection().getLabel()
+                + "_" + catalog1.getName()); //$NON-NLS-1$
+        Assert.assertTrue(createByAction != null);
+        DatabaseConnectionItem item = (DatabaseConnectionItem) createByAction.getProperty().getItem();
         Connection newConnection = item.getConnection();
         Catalog exportedCatalog = CatalogHelper.getCatalog(newConnection, catalog1.getName());
         Assert.assertTrue(newConnection.getLabel().equals(
                 createOldConnectionItem.getConnection().getLabel() + "_" + catalog1.getName())); //$NON-NLS-1$
         Assert.assertTrue(exportedCatalog != null);
         Assert.assertTrue(exportedCatalog != catalog1);
-        factory.deleteObjectPhysical(lastVersion);
-        factory.deleteObjectPhysical(all.get(0));
+        factory.deleteObjectPhysical(createByAction);
+        factory.deleteObjectPhysical(createdByUs);
+    }
+
+    /**
+     * DOC zshen Comment method "getNewCreatedConnectionByName".
+     * 
+     * @param string
+     * @throws PersistenceException
+     */
+    private IRepositoryViewObject getNewCreatedConnectionByName(String NewConnectionLabel) throws PersistenceException {
+        List<IRepositoryViewObject> all = factory.getAll(ERepositoryObjectType.METADATA_CONNECTIONS, false);
+        Assert.assertTrue(all != null);
+        for (IRepositoryViewObject conn : all) {
+            if (NewConnectionLabel.equalsIgnoreCase(conn.getLabel())) {
+                return conn;
+            }
+        }
+        return null;
+
     }
 
     /**
@@ -242,6 +260,10 @@ public class ExportConnectionToTOSActionRealTest {
                 "ExportConnectionToTOSActionRealTest2", null, false, true); //$NON-NLS-1$
         initCatalogList(createOldConnectionItem);
         initSchemaOfCagalogList(createOldConnectionItem);
+
+        IRepositoryViewObject createdByUs = factory.getLastVersion(createOldConnectionItem.getProperty().getId());
+        Assert.assertTrue(createdByUs != null);
+        Assert.assertTrue("ExportConnectionToTOSActionRealTest2".equals(createdByUs.getLabel())); //$NON-NLS-1$
         // ~connectionNode
         List<Package> packageList = new ArrayList<Package>();
         packageList.add(schema1);
@@ -250,17 +272,17 @@ public class ExportConnectionToTOSActionRealTest {
         PowerMockito.doNothing().when(createAction).refreshViewerAndNode();
         createAction.run();
 
-        List<IRepositoryViewObject> all = factory.getAll(ERepositoryObjectType.METADATA_CONNECTIONS, false);
-        IRepositoryViewObject lastVersion = all.get(1);
-        DatabaseConnectionItem item = (DatabaseConnectionItem) lastVersion.getProperty().getItem();
+        IRepositoryViewObject createByAction = getNewCreatedConnectionByName(createOldConnectionItem.getConnection().getLabel()
+                + "_" + schema1.getName()); //$NON-NLS-1$
+        DatabaseConnectionItem item = (DatabaseConnectionItem) createByAction.getProperty().getItem();
         Connection newConnection = item.getConnection();
         Catalog exportedCatalog = CatalogHelper.getCatalog(newConnection, catalog1.getName());
         Assert.assertTrue(exportedCatalog != null);
         Assert.assertTrue(newConnection.getLabel().equals(
                 createOldConnectionItem.getConnection().getLabel() + "_" + schema1.getName())); //$NON-NLS-1$
         Assert.assertTrue(exportedCatalog != catalog1);
-        factory.deleteObjectPhysical(lastVersion);
-        factory.deleteObjectPhysical(all.get(0));
+        factory.deleteObjectPhysical(createByAction);
+        factory.deleteObjectPhysical(createdByUs);
     }
 
     /**
@@ -279,6 +301,10 @@ public class ExportConnectionToTOSActionRealTest {
         oldConnection.setSID("orcl"); //$NON-NLS-1$
         initSchemaList(createOldConnectionItem);
 
+        IRepositoryViewObject createdByUs = factory.getLastVersion(createOldConnectionItem.getProperty().getId());
+        Assert.assertTrue(createdByUs != null);
+        Assert.assertTrue("ExportConnectionToTOSActionRealTest3".equals(createdByUs.getLabel())); //$NON-NLS-1$
+
         // ~connectionNode
         List<Package> packageList = new ArrayList<Package>();
         packageList.add(schema1);
@@ -287,9 +313,9 @@ public class ExportConnectionToTOSActionRealTest {
         PowerMockito.doNothing().when(createAction).refreshViewerAndNode();
         createAction.run();
 
-        List<IRepositoryViewObject> all = factory.getAll(ERepositoryObjectType.METADATA_CONNECTIONS, false);
-        IRepositoryViewObject lastVersion = all.get(1);
-        DatabaseConnectionItem item = (DatabaseConnectionItem) lastVersion.getProperty().getItem();
+        IRepositoryViewObject createByAction = getNewCreatedConnectionByName(createOldConnectionItem.getConnection().getLabel()
+                + "_" + schema1.getName()); //$NON-NLS-1$
+        DatabaseConnectionItem item = (DatabaseConnectionItem) createByAction.getProperty().getItem();
         DatabaseConnection newConnection = (DatabaseConnection) item.getConnection();
         Assert.assertTrue(newConnection.getSID().equalsIgnoreCase(oldConnection.getSID()));
         Assert.assertTrue(newConnection.getUiSchema().equalsIgnoreCase(schema1.getName()));
@@ -298,8 +324,8 @@ public class ExportConnectionToTOSActionRealTest {
         Assert.assertTrue(newConnection.getLabel().equals(
                 createOldConnectionItem.getConnection().getLabel() + "_" + schema1.getName())); //$NON-NLS-1$
         Assert.assertTrue(exportedSchema != schema1);
-        factory.deleteObjectPhysical(lastVersion);
-        factory.deleteObjectPhysical(all.get(0));
+        factory.deleteObjectPhysical(createByAction);
+        factory.deleteObjectPhysical(createdByUs);
     }
 
     class MetadataConnectionMatcher extends BaseMatcher<IMetadataConnection> {
