@@ -30,6 +30,7 @@ import org.talend.dataquality.record.linkage.grouping.MatchGroupResultConsumer;
 import org.talend.dataquality.record.linkage.ui.composite.chart.MatchRuleDataChart;
 import org.talend.dataquality.record.linkage.ui.composite.utils.MatchRuleAnlaysisUtils;
 import org.talend.dataquality.record.linkage.ui.i18n.internal.DefaultMessagesImpl;
+import org.talend.dataquality.record.linkage.utils.MatchAnalysisConstant;
 import org.talend.dq.analysis.ExecuteMatchRuleHandler;
 import org.talend.utils.sugars.TypedReturnCode;
 
@@ -80,8 +81,10 @@ abstract public class AbstractMatchKeyWithChartTableSection extends AbstractMatc
             public void modifyText(ModifyEvent e) {
                 int times = Integer.parseInt(lessSpin.getText());
                 if (matchRuleChartComp != null) {
+                    int oldValue = matchRuleChartComp.getTimes();
                     matchRuleChartComp.setTimes(times);
                     matchRuleChartComp.refresh();
+                    listeners.firePropertyChange(MatchAnalysisConstant.NEED_REFRESH_DATA_SAMPLE_TABLE, oldValue, times);
                     matchRows.clear();
                 }
 

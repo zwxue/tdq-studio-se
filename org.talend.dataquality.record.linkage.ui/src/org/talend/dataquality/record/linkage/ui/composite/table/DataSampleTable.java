@@ -137,7 +137,27 @@ public class DataSampleTable {
         if (listOfData.size() < 1) {
             listOfData.add(getEmptyRow());
         }
-
+        if (minGrpSize > 1 && listOfData.get(0).length > groupSizeIndex) {
+            List<Object[]> filteredList = new ArrayList<Object[]>();
+            boolean flag = false;
+            for (Object[] row : listOfData) {
+                String currentGrpSize = (String) row[groupSizeIndex];
+                if (currentGrpSize.length() > 0) {
+                    int grpSize = Integer.valueOf(currentGrpSize);
+                    if (grpSize == 0) {
+                        if (flag) {
+                            filteredList.add(row);
+                        }
+                    } else if (grpSize >= minGrpSize) {
+                        flag = true;
+                        filteredList.add(row);
+                    } else {
+                        flag = false;
+                    }
+                }
+            }
+            return createTableControl(parentContainer, filteredList);
+        }
         return createTableControl(parentContainer, listOfData);
 
     }
@@ -145,6 +165,7 @@ public class DataSampleTable {
     private void addCustomSelectionBehaviour() {
         natTable.addLayerListener(new ILayerListener() {
 
+            @Override
             public void handleLayerEvent(ILayerEvent event) {
                 if ((event instanceof ColumnHeaderSelectionEvent)) {
                     ColumnHeaderSelectionEvent columnEvent = (ColumnHeaderSelectionEvent) event;
@@ -228,6 +249,8 @@ public class DataSampleTable {
 
     // record the columns which is used as match keys
     private List<String> markedAsMatchKey = null;
+
+    private int minGrpSize;
 
     public void changeColumnHeaderLabelColor(String columnName, Color color, String keyName) {
         updateMarkedKeys(columnName, color, keyName);
@@ -453,6 +476,7 @@ public class DataSampleTable {
 
         }
 
+        @Override
         protected Color getBackgroundColour(ILayerCell cell, IConfigRegistry configRegistry) {
             int grpSizeValue = getGrpSize(cell);
             if (grpSizeValue == 0) {// default color when no
@@ -480,7 +504,7 @@ public class DataSampleTable {
                 }
                 try {
                     // if the group id has no related group size, get it
-                    groupSize = Integer.valueOf((String) ((Object[]) rowObject)[groupSizeIndex]);
+                    groupSize = Integer.valueOf((String) rowObject[groupSizeIndex]);
                 } catch (java.lang.NumberFormatException nfe) {
                     // no need to handle--when no column given
                     return 0;
@@ -492,7 +516,8 @@ public class DataSampleTable {
                     return groupSize;
                 } else {
                     // if the current row is not a master one,get its group size by its group id
-                    return rowOfGIDWithColor.get(rowObject[groupSizeIndex - 1]);
+                    Integer size = rowOfGIDWithColor.get(rowObject[groupSizeIndex - 1]);
+                    return size == null ? 0 : rowOfGIDWithColor.get(rowObject[groupSizeIndex - 1]);
                 }
             } else {
                 return 0;
@@ -651,5 +676,14 @@ public class DataSampleTable {
             }
         }
         return isMarked;
+    }
+
+    /**
+     * DOC sizhaoliu Comment method "setMinGroupSize".
+     * 
+     * @param valueOf
+     */
+    public void setMinGroupSize(int size) {
+        this.minGrpSize = size;
     }
 }

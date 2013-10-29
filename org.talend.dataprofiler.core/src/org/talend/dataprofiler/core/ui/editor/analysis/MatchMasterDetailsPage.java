@@ -213,7 +213,6 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
      * 
      */
     private void createMatchingKeySection() {
-        matchingKeySection.addPropertyChangeListener(this);
         matchingKeySection.createContent();
         registerSection(matchingKeySection.getSection());
     }
@@ -254,6 +253,7 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
 
         // create the data table
         createDataTableComposite(dataSampleparentComposite);
+
     }
 
     /**
@@ -506,7 +506,7 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
 
             public void mouseDown(MouseEvent e) {
                 if (isValidateRowCount()) {
-                    refreshDataFromConnection();
+                    refreshDataFromConnection(true);
                 } else {
                     MessageDialog.openWarning(null, DefaultMessagesImpl.getString("MatchMasterDetailsPage.NotValidate"), //$NON-NLS-1$
                             DefaultMessagesImpl.getString("MatchMasterDetailsPage.LoadedRowCountError")); //$NON-NLS-1$
@@ -562,13 +562,22 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
      * connect to db/file/mdm connection to fetch the newest data, and refresh the table to display.
      */
     protected void refreshDataFromConnection() {
+        refreshDataFromConnection(false);
+    }
+
+    /**
+     * connect to db/file/mdm connection to fetch the newest data, and refresh the table to display.
+     */
+    protected void refreshDataFromConnection(boolean refreshDataSample) {
         // execute the query to fetch the data,
         List<Object[]> listOfData = fetchDataForTable();
 
         blockingKeySection.setDataInput(listOfData);
         matchingKeySection.setDataInput(listOfData);
 
-        refreshTable(listOfData);
+        if (refreshDataSample) {
+            refreshTable(listOfData);
+        }
 
         // after refresh the table, need to check if it is in select key mode, then need also to set the column color
         if (isBlockingKeyButtonPushed) {
@@ -766,7 +775,7 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
     private void refreshColumnAndData() {
         this.analysisHandler.setSelectedColumns(translateSelectedNodeIntoModelElement());
 
-        refreshDataFromConnection();
+        refreshDataFromConnection(true);
 
         this.setDirty(Boolean.TRUE);
     }
@@ -990,6 +999,10 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
             refreshDataFromConnection();
         } else if (MatchAnalysisConstant.DATA_SAMPLE_TABLE_COLUMN_SELECTION.equals(evt.getPropertyName())) {
             handleColumnSelectionChange();
+        } else if (MatchAnalysisConstant.NEED_REFRESH_DATA_SAMPLE_TABLE.equals(evt.getPropertyName())) {
+            String minGrpSizeText = evt.getNewValue().toString();
+            sampleTable.setMinGroupSize(Integer.valueOf(minGrpSizeText));
+            matchingKeySection.refreshChart();
         }
     }
 
