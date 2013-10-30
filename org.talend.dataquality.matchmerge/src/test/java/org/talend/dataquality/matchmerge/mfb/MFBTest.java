@@ -95,7 +95,6 @@ public class MFBTest extends TestCase {
         List<Record> mergedRecords = algorithm.execute(iterator);
         assertEquals(constantNumber, mergedRecords.size());
         for (Record mergedRecord : mergedRecords) {
-            assertNotNull(mergedRecord.getGroupId());
             assertEquals(totalCount / constantNumber, mergedRecord.getRelatedIds().size());
         }
     }
@@ -133,7 +132,6 @@ public class MFBTest extends TestCase {
         List<Record> mergedRecords = algorithm.execute(iterator);
         assertEquals(constantNumber, mergedRecords.size());
         for (Record mergedRecord : mergedRecords) {
-            assertNotNull(mergedRecord.getGroupId());
             assertEquals(totalCount / constantNumber, mergedRecord.getRelatedIds().size());
             assertEquals(0.0, mergedRecord.getConfidence());
         }
@@ -170,7 +168,6 @@ public class MFBTest extends TestCase {
         List<Record> mergedRecords = algorithm.execute(iterator);
         assertEquals(1, mergedRecords.size());
         for (Record mergedRecord : mergedRecords) {
-            assertNotNull(mergedRecord.getGroupId());
             assertEquals(totalCount, mergedRecord.getRelatedIds().size());
         }
     }
