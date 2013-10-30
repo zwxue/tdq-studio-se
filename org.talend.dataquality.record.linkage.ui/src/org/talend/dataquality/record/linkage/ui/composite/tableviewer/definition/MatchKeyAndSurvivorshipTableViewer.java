@@ -40,6 +40,7 @@ import org.talend.dataquality.record.linkage.utils.SurvivorShipAlgorithmEnum;
 import org.talend.dataquality.rules.AlgorithmDefinition;
 import org.talend.dataquality.rules.MatchKeyDefinition;
 import org.talend.dataquality.rules.MatchRule;
+import org.talend.dataquality.rules.MatchRuleDefinition;
 import org.talend.dataquality.rules.RulesFactory;
 import org.talend.dataquality.rules.SurvivorshipKeyDefinition;
 
@@ -91,6 +92,13 @@ public class MatchKeyAndSurvivorshipTableViewer extends AbstractMatchAnalysisTab
             MatchKeyAndSurvivorDefinition keyDef = matchKeyIterator.next();
             if (StringUtils.equals(keyDef.getMatchKey().getName(), msDedefinition.getMatchKey().getName())) {
                 super.removeElement(keyDef, matchKeys);
+                // link the added MatchKeyAndSurvivorDefinition's match and survivor key with matchRuleDef's matchkey
+                // and
+                // survivorkey list;
+                SurvivorshipKeyDefinition survivorShipKey = msDedefinition.getSurvivorShipKey();
+                MatchRuleDefinition matchRuleDef = (MatchRuleDefinition) survivorShipKey.eContainer();
+                matchRuleDef.getMatchRules().get(0).getMatchKeys().remove(msDedefinition.getMatchKey());
+                matchRuleDef.getSurvivorshipKeys().remove(survivorShipKey);
                 break;
             }
         }

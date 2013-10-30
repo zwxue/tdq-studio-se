@@ -18,6 +18,7 @@ import java.util.List;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.talend.dataquality.record.linkage.ui.composite.tableviewer.AbstractMatchAnalysisTableViewer;
+import org.talend.dataquality.record.linkage.ui.composite.tableviewer.definition.MatchKeyAndSurvivorDefinition;
 import org.talend.dataquality.record.linkage.ui.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataquality.rules.BlockKeyDefinition;
 import org.talend.dataquality.rules.DefaultSurvivorshipDefinition;
@@ -28,7 +29,7 @@ import org.talend.dataquality.rules.SurvivorshipKeyDefinition;
 
 /**
  * created by zshen on Aug 2, 2013 Detailled comment
- *
+ * 
  */
 public class RemoveMatchKeyDefinitionAction<T> extends Action {
 
@@ -41,7 +42,7 @@ public class RemoveMatchKeyDefinitionAction<T> extends Action {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see org.eclipse.jface.action.Action#run()
      */
     @SuppressWarnings("unchecked")
@@ -50,14 +51,14 @@ public class RemoveMatchKeyDefinitionAction<T> extends Action {
         IStructuredSelection structuredSelection = (IStructuredSelection) tableViewer.getSelection();
         List<T> selections = structuredSelection.toList();
         for (T selection : selections) {
-            T keyDef =  selection;
+            T keyDef = selection;
             tableViewer.removeElement(keyDef, getNeedKeyDefinitionList(keyDef));
         }
     }
 
     /**
      * DOC zshen Comment method "getMatchRuleDefinition".
-     *
+     * 
      * @param keyDef
      * @return
      */
@@ -79,7 +80,11 @@ public class RemoveMatchKeyDefinitionAction<T> extends Action {
             // keyDef is BlockKeyDefiniton case
             return ((MatchRuleDefinition) ((DefaultSurvivorshipDefinition) keyDef).eContainer())
                     .getDefaultSurvivorshipDefinitions();
+        } else if (keyDef instanceof MatchKeyAndSurvivorDefinition) {
+            // keyDef is MatchKeyDefinition+SurvivorshipKeyDefinition
+            return (List) tableViewer.getInput();
         }
+
         return returnList;
     }
 

@@ -142,10 +142,6 @@ public class MatchAndSurvivorKeySection extends AbstractMatchKeyWithChartTableSe
      */
     private void removeMatchAndSurvivorKey(MatchKeyAndSurvivorDefinition definition) {
         tableComposite.removeKeyDefinition(definition, matchAndSurvivorKeyList);
-        // link the added MatchKeyAndSurvivorDefinition's match and survivor key with matchRuleDef's matchkey and
-        // survivorkey list;
-        matchRuleDef.getMatchRules().get(0).getMatchKeys().remove(definition.getMatchKey());
-        matchRuleDef.getSurvivorshipKeys().remove(definition.getSurvivorShipKey());
     }
 
     public void removeAllSurvivorship() {
