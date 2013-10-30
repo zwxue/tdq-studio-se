@@ -117,8 +117,7 @@ public class MatchWizard extends ColumnWizard {
 
         // default loaded row count
         IPreferenceStore preferenceStore = CorePlugin.getDefault().getPreferenceStore();
-        Integer maxRows = (preferenceStore != null) ? preferenceStore.getDefaultInt(PluginConstant.MAX_NB_ROWS_ANALYSIS_EDITOR)
-                : 10000;
+        int maxRows = preferenceStore.getInt(PluginConstant.MAX_NB_ROWS_ANALYSIS_EDITOR);
         analysis.getParameters().setMaxNumberRows(maxRows);
 
         return analysis;
