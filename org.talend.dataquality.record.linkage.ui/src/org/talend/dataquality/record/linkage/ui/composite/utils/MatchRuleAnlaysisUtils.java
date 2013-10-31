@@ -72,6 +72,7 @@ public class MatchRuleAnlaysisUtils {
         createAlgorithmDefinition1.setAlgorithmParameters(StringUtils.EMPTY);
         createAlgorithmDefinition1.setAlgorithmType(AttributeMatcherType.values()[0].name());
         createMatchKeyDefinition1.setAlgorithm(createAlgorithmDefinition1);
+        createMatchKeyDefinition1.setThreshold(1.0);
         return createMatchKeyDefinition1;
     }
 

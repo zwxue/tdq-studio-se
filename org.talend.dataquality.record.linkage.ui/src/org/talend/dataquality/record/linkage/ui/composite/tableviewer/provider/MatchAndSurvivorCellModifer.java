@@ -22,6 +22,7 @@ import org.talend.dataquality.record.linkage.ui.composite.tableviewer.definition
 import org.talend.dataquality.record.linkage.utils.HandleNullEnum;
 import org.talend.dataquality.record.linkage.utils.MatchAnalysisConstant;
 import org.talend.dataquality.record.linkage.utils.SurvivorShipAlgorithmEnum;
+import org.talend.dataquality.rules.MatchKeyDefinition;
 
 /**
  * DOC yyin class global comment. Detailled comment
@@ -46,16 +47,21 @@ public class MatchAndSurvivorCellModifer extends AbstractMatchCellModifier<Match
                     return false;
                 }
             } else if (MatchAnalysisConstant.PARAMETER.equalsIgnoreCase(property)) {
-                return isMostTrustedSourceAlgorithm(mkd);
+                return isSurvivorShipAlgorithm(mkd, SurvivorShipAlgorithmEnum.MOST_TRUSTED_SOURCE);
+            } else if (MatchAnalysisConstant.THRESHOLD.equalsIgnoreCase(property)) {
+                return !isMatcherType(mkd, AttributeMatcherType.EXACT);
             }
             return true;
         }
         return false;
     }
 
-    private boolean isMostTrustedSourceAlgorithm(MatchKeyAndSurvivorDefinition mkd) {
-        return mkd.getSurvivorShipKey().getFunction().getAlgorithmType()
-                .equals(SurvivorShipAlgorithmEnum.MOST_TRUSTED_SOURCE.getComponentValueName());
+    private boolean isMatcherType(MatchKeyAndSurvivorDefinition mkd, AttributeMatcherType matcherType) {
+        return mkd.getMatchKey().getAlgorithm().getAlgorithmType().equals(matcherType.name());
+    }
+
+    private boolean isSurvivorShipAlgorithm(MatchKeyAndSurvivorDefinition mkd, SurvivorShipAlgorithmEnum algorithm) {
+        return mkd.getSurvivorShipKey().getFunction().getAlgorithmType().equals(algorithm.getComponentValueName());
     }
 
     /*
@@ -100,12 +106,13 @@ public class MatchAndSurvivorCellModifer extends AbstractMatchCellModifier<Match
         if (element instanceof TableItem) {
             MatchKeyAndSurvivorDefinition mkd = (MatchKeyAndSurvivorDefinition) ((TableItem) element).getData();
             String newValue = String.valueOf(value);
+            MatchKeyDefinition matchKey = mkd.getMatchKey();
             if (MatchAnalysisConstant.HANDLE_NULL.equalsIgnoreCase(property)) {
                 HandleNullEnum valueByIndex = HandleNullEnum.values()[Integer.valueOf(newValue)];
-                if (StringUtils.equals(mkd.getMatchKey().getHandleNull(), valueByIndex.getValue())) {
+                if (StringUtils.equals(matchKey.getHandleNull(), valueByIndex.getValue())) {
                     return;
                 }
-                mkd.getMatchKey().setHandleNull(valueByIndex.getValue());
+                matchKey.setHandleNull(valueByIndex.getValue());
             } else if (MatchAnalysisConstant.MATCHING_TYPE.equalsIgnoreCase(property)) {
                 int idx = Integer.valueOf(newValue);
                 if (idx == AttributeMatcherType.DUMMY.ordinal()) {
@@ -114,39 +121,42 @@ public class MatchAndSurvivorCellModifer extends AbstractMatchCellModifier<Match
                               // to get the correct Matcher.
                 }
                 AttributeMatcherType valueByIndex = AttributeMatcherType.values()[idx];
-                if (StringUtils.equals(mkd.getMatchKey().getAlgorithm().getAlgorithmType(), valueByIndex.name())) {
+                if (StringUtils.equals(matchKey.getAlgorithm().getAlgorithmType(), valueByIndex.name())) {
                     return;
                 }
-                mkd.getMatchKey().getAlgorithm().setAlgorithmType(valueByIndex.name());
-                mkd.getMatchKey().getAlgorithm().setAlgorithmParameters(StringUtils.EMPTY);
+                matchKey.getAlgorithm().setAlgorithmType(valueByIndex.name());
+                matchKey.getAlgorithm().setAlgorithmParameters(StringUtils.EMPTY);
+                if (isMatcherType(mkd, AttributeMatcherType.EXACT)) {
+                    matchKey.setThreshold(1.0d);
+                }
             } else if (MatchAnalysisConstant.CUSTOM_MATCHER.equalsIgnoreCase(property)) {
-                if (StringUtils.equals(mkd.getMatchKey().getAlgorithm().getAlgorithmParameters(), newValue)) {
+                if (StringUtils.equals(matchKey.getAlgorithm().getAlgorithmParameters(), newValue)) {
                     return;
                 }
-                mkd.getMatchKey().getAlgorithm().setAlgorithmParameters(String.valueOf(value));
+                matchKey.getAlgorithm().setAlgorithmParameters(String.valueOf(value));
             } else if (MatchAnalysisConstant.CONFIDENCE_WEIGHT.equalsIgnoreCase(property)) {
                 if (!org.apache.commons.lang.math.NumberUtils.isDigits(newValue)) {
                     return;
                 }
-                if (mkd.getMatchKey().getConfidenceWeight() == Integer.valueOf(newValue).intValue()) {
+                if (matchKey.getConfidenceWeight() == Integer.valueOf(newValue).intValue()) {
                     return;
                 }
-                mkd.getMatchKey().setConfidenceWeight(Integer.valueOf(newValue).intValue());
+                matchKey.setConfidenceWeight(Integer.valueOf(newValue).intValue());
             } else if (MatchAnalysisConstant.MATCH_KEY_NAME.equalsIgnoreCase(property)) {
-                if (StringUtils.equals(mkd.getMatchKey().getName(), newValue)) {
+                if (StringUtils.equals(matchKey.getName(), newValue)) {
                     return;
                 }
-                mkd.getMatchKey().setName(newValue);
+                matchKey.setName(newValue);
                 mkd.getSurvivorShipKey().setName(newValue);
             } else if (MatchAnalysisConstant.THRESHOLD.equalsIgnoreCase(property)) {
                 if (!org.apache.commons.lang.math.NumberUtils.isNumber(newValue)) {
                     return;
                 }
-                if (mkd.getMatchKey().getThreshold() == Double.parseDouble(newValue)) {
+                if (matchKey.getThreshold() == Double.parseDouble(newValue)) {
                     return;
                 }
                 try {
-                    mkd.getMatchKey().setThreshold(Double.parseDouble(newValue));
+                    matchKey.setThreshold(Double.parseDouble(newValue));
                 } catch (NumberFormatException e) {
                     // revert user change at here so don't need do anything
                 }
@@ -158,7 +168,7 @@ public class MatchAndSurvivorCellModifer extends AbstractMatchCellModifier<Match
                     return;
                 }
                 mkd.getSurvivorShipKey().getFunction().setAlgorithmType(valueByIndex.getComponentValueName());
-                if (!isMostTrustedSourceAlgorithm(mkd)) {
+                if (!isSurvivorShipAlgorithm(mkd, SurvivorShipAlgorithmEnum.MOST_TRUSTED_SOURCE)) {
                     mkd.getSurvivorShipKey().getFunction().setAlgorithmParameters(StringUtils.EMPTY);
                     CellEditor[] cellEditors = tableViewer.getCellEditors();
                     if (cellEditors.length == 9) {
