@@ -83,7 +83,7 @@ public class EMFResourceHandleTest {
     @Test
     public void testDuplicate() throws BusinessException, PersistenceException {
         // connectionNode
-        DatabaseConnectionItem oldConnectionItem = createConnectionItem("conn1", null, false);
+        DatabaseConnectionItem oldConnectionItem = createConnectionItem("EMFResourceHandleTest_conn1", null, false); //$NON-NLS-1$
         Catalog oldCatalog = addDatapackage("catalog1", oldConnectionItem);
         RepositoryNode dbParentRepNode = createConnectionNode(oldConnectionItem);
 
@@ -91,7 +91,7 @@ public class EMFResourceHandleTest {
 
         IDuplicateHandle createDuplicateHandle = ActionHandleFactory.createDuplicateHandle(dbParentRepNode);
 
-        IFile duplicate = createDuplicateHandle.duplicate("copy_of_conn1"); //$NON-NLS-1$
+        IFile duplicate = createDuplicateHandle.duplicate("copy_of_EMFResourceHandleTest_conn1"); //$NON-NLS-1$
         Property newProperty = PropertyHelper.getProperty(duplicate);
         DatabaseConnectionItem newConnectionItem = (DatabaseConnectionItem) newProperty.getItem();
         compareResult(newConnectionItem, oldConnectionItem);
@@ -111,12 +111,10 @@ public class EMFResourceHandleTest {
         Assert.assertTrue(newConnection.eResource() != null);
         Assert.assertTrue(!newConnection.eIsProxy());
 
-        boolean isConnUUIDSame = StringUtils.equalsIgnoreCase(ResourceHelper.getUUID(newConnection),
-                ResourceHelper.getUUID(oldConnection));
+        boolean isConnUUIDSame = StringUtils.equals(ResourceHelper.getUUID(newConnection), ResourceHelper.getUUID(oldConnection));
         Catalog oldCatalog = CatalogHelper.getCatalog(oldConnection, "catalog1"); //$NON-NLS-1$
         Catalog newCatalog = CatalogHelper.getCatalog(newConnection, "catalog1"); //$NON-NLS-1$
-        boolean isCatalogUUIDSame = StringUtils.equalsIgnoreCase(ResourceHelper.getUUID(oldCatalog),
-                ResourceHelper.getUUID(newCatalog));
+        boolean isCatalogUUIDSame = StringUtils.equals(ResourceHelper.getUUID(oldCatalog), ResourceHelper.getUUID(newCatalog));
         Assert.assertFalse(isConnUUIDSame);
         Assert.assertFalse(isCatalogUUIDSame);
 
