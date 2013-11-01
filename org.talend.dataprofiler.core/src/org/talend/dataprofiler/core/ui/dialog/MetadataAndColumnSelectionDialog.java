@@ -12,6 +12,7 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.dialog;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.runtime.IStatus;
@@ -25,6 +26,7 @@ import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
+import orgomg.cwm.foundation.softwaredeployment.DataManager;
 
 /**
  * DOC yyin class global comment. Detailled comment
@@ -41,6 +43,13 @@ public class MetadataAndColumnSelectionDialog extends ColumnsSelectionDialog {
         super(null, parent, title, checkedRepoNodes, message, false);
         // set the root of the tree, must use the RepositoryNode type.
         setInput(RepositoryNodeHelper.getRootNode(ERepositoryObjectType.METADATA, true));// ResourceManager.getMetadataFolder());
+    }
+
+    // TDQ-8248: to only show the datamanager in the dialog, after just created this datamanager
+    public MetadataAndColumnSelectionDialog(Shell parent, String title, DataManager dataManager, String message) {
+        super(null, parent, title, new ArrayList<IRepositoryNode>(), message, false);
+        // set the root of the tree, must use the RepositoryNode type.
+        setInput(RepositoryNodeHelper.recursiveFind(dataManager));// ResourceManager.getMetadataFolder());
     }
 
     /**

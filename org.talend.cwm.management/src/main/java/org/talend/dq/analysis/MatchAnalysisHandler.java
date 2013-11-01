@@ -36,6 +36,8 @@ public class MatchAnalysisHandler extends AnalysisHandler {
 
     private DataManager connection;
 
+    private boolean isChangeConnection = false;
+
     @Override
     public void setAnalysis(Analysis columnAnalysis) {
         super.setAnalysis(columnAnalysis);
@@ -51,12 +53,8 @@ public class MatchAnalysisHandler extends AnalysisHandler {
     }
 
     public void SetConnection(DataManager newConnection) {
-        // remove the old dependencies if any
-        if (this.connection != null) {
-            DependenciesHandler.getInstance().removeDependenciesBetweenModel(connection, analysis);
-            EMFUtil.saveSingleResource(connection.eResource());
-        }// ~
         this.connection = newConnection;
+        isChangeConnection = Boolean.TRUE;
     }
 
     public DataManager getConnection() {
@@ -66,13 +64,20 @@ public class MatchAnalysisHandler extends AnalysisHandler {
     public void saveConnection() {
         assert analysis != null;
         assert analysis.getContext() != null;
+        // remove the old dependencies if any
+        if (isChangeConnection && analysis.getContext().getConnection() != null) {
+            DependenciesHandler.getInstance().removeDependenciesBetweenModel(analysis.getContext().getConnection(), analysis);
+            EMFUtil.saveSingleResource(analysis.getContext().getConnection().eResource());
+        }// ~
         analysis.getContext().setConnection(connection);
 
         // Added TDQ-8183 add db dependency on match analysis
-        TypedReturnCode<Dependency> rc = DependenciesHandler.getInstance().setDependencyOn(analysis, connection);
-        if (!rc.isOk()) {
-            log.info("fail to save dependency analysis:" + analysis.getFileName());//$NON-NLS-1$
-        }// ~
+        if (connection != null) {
+            TypedReturnCode<Dependency> rc = DependenciesHandler.getInstance().setDependencyOn(analysis, connection);
+            if (!rc.isOk()) {
+                log.info("fail to save dependency analysis:" + analysis.getFileName());//$NON-NLS-1$
+            }// ~
+        }
     }
 
     /**

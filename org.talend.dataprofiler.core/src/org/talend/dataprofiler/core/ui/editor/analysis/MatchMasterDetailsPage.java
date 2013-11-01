@@ -474,7 +474,8 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
             }
 
             public void mouseDown(MouseEvent e) {
-                openColumnsSelectionDialog(analysisHandler.getAnalysis().getContext().getConnection());
+                // no need to give the current connection, the called method will find the current selected nodes auto
+                openColumnsSelectionDialog(null);
             }
 
             public void mouseUp(MouseEvent e) {
@@ -594,8 +595,7 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
 
             @Override
             public boolean handle(Object data) {
-                selectedNodes = null;
-                analysisHandler.setSelectedColumns(null);
+                // need to give the new connection to the dialog to show only this new one in the dialog.
                 openColumnsSelectionDialog((DataManager) data);
 
                 // reset the select key buttons status
@@ -631,11 +631,18 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
      * open the column selection dialog.
      */
     public void openColumnsSelectionDialog(DataManager dataManager) {
+        MetadataAndColumnSelectionDialog dialog = null;
         List<IRepositoryNode> oldSelectedColumns = findAllSelectedRepositoryNode();
-
-        MetadataAndColumnSelectionDialog dialog = new MetadataAndColumnSelectionDialog(
-                null,
-                DefaultMessagesImpl.getString("ColumnMasterDetailsPage.columnSelection"), oldSelectedColumns, DefaultMessagesImpl.getString("ColumnMasterDetailsPage.columnSelections")); //$NON-NLS-1$ //$NON-NLS-2$
+        if (dataManager != null) {
+            // only when "new connection" will give the new connection to this method
+            dialog = new MetadataAndColumnSelectionDialog(
+                    null,
+                    DefaultMessagesImpl.getString("ColumnMasterDetailsPage.columnSelections"), dataManager, DefaultMessagesImpl.getString("ColumnMasterDetailsPage.columnSelections")); //$NON-NLS-1$
+        } else {
+            dialog = new MetadataAndColumnSelectionDialog(
+                    null,
+                    DefaultMessagesImpl.getString("ColumnMasterDetailsPage.columnSelections"), oldSelectedColumns, DefaultMessagesImpl.getString("ColumnMasterDetailsPage.columnSelections")); //$NON-NLS-1$
+        }
         if (dialog.open() == Window.OK) {
             Object[] selectedResult = dialog.getResult();
             List<IRepositoryNode> reposList = RepNodeUtils.translateSelectedToStandardReposityoryNode(selectedResult);
@@ -949,6 +956,8 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
         // change the connection in analysis according to the user's selection
         if (selectedNodes != null && selectedNodes.length > 0) {
             changeConnectionOfAnalysisByNewSelectedNode(selectedNodes[0]);
+        } else {
+            changeConnectionOfAnalysisByNewSelectedNode(null);
         }
 
         return translateNodeIntoModelElement();
@@ -1087,8 +1096,6 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
         analysisHandler.saveSelectedAnalyzedElements();
         analysisHandler.saveConnection();
 
-        this.updateAnalysisClientDependency();
-
         ReturnCode saved = new ReturnCode(false);
         IEditorInput editorInput = this.getEditorInput();
 
@@ -1116,10 +1123,14 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
      * @return
      */
     private void changeConnectionOfAnalysisByNewSelectedNode(IRepositoryNode node) {
-        Property property = node.getObject().getProperty();
-        if (property != null && property.getItem() instanceof ConnectionItem) {
-            Connection connection = ((ConnectionItem) property.getItem()).getConnection();
-            analysisHandler.SetConnection(connection);
+        if (node == null) {// clear the connection when the user select no columns
+            analysisHandler.SetConnection(null);
+        } else {
+            Property property = node.getObject().getProperty();
+            if (property != null && property.getItem() instanceof ConnectionItem) {
+                Connection connection = ((ConnectionItem) property.getItem()).getConnection();
+                analysisHandler.SetConnection(connection);
+            }
         }
     }
 
