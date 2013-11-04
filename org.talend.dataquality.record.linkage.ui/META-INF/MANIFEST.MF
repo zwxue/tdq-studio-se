@@ -25,5 +25,6 @@ Export-Package: org.talend.dataquality.record.linkage.ui.action,
  org.talend.dataquality.record.linkage.ui.composite.table,
  org.talend.dataquality.record.linkage.ui.composite.utils,
  org.talend.dataquality.record.linkage.ui.section,
- org.talend.dataquality.record.linkage.ui.section.definition
+ org.talend.dataquality.record.linkage.ui.section.definition,
+ org.talend.dataquality.record.linkage.ui.service
 Bundle-ClassPath: .

@@ -25,6 +25,7 @@ import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.part.FileEditorInput;
 import org.talend.commons.utils.platform.PluginChecker;
+import org.talend.core.GlobalServiceRegister;
 import org.talend.core.model.properties.Item;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
@@ -37,6 +38,7 @@ import org.talend.dataquality.record.linkage.ui.section.definition.DefaultSurviv
 import org.talend.dataquality.record.linkage.ui.section.definition.MatchAndSurvivorKeySection;
 import org.talend.dataquality.record.linkage.ui.section.definition.MatchKeyDefinitionSection;
 import org.talend.dataquality.record.linkage.ui.section.definition.SurvivorshipDefinitionSection;
+import org.talend.dataquality.record.linkage.ui.service.IMatchRuleChangeService;
 import org.talend.dataquality.rules.MatchRuleDefinition;
 import org.talend.dq.helper.resourcehelper.DQRuleResourceFileHelper;
 import org.talend.dq.writer.impl.ElementWriterFactory;
@@ -291,16 +293,47 @@ public class MatchRuleMasterDetailsPage extends AbstractMetadataFormPage impleme
      */
     @Override
     public void doSave(IProgressMonitor monitor) {
+
         ReturnCode rc = canSave();
         if (!rc.isOk()) {
             MessageDialogWithToggle.openError(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
                     DefaultMessagesImpl.getString("AbstractAnalysisMetadataPage.SaveAnalysis"), rc.getMessage()); //$NON-NLS-1$
             return;
         }
+        //handle rename before saving it
+        if (!handleRenameEvent()) {
+            return;
+        }
+        //
         super.doSave(monitor);
         if (saveMatchRule()) {
             this.isDirty = false;
         }
+    }
+
+    private IMatchRuleChangeService getMatchRuleChangeService() {
+        if (GlobalServiceRegister.getDefault().isServiceRegistered(IMatchRuleChangeService.class)) {
+            IMatchRuleChangeService service = (IMatchRuleChangeService) GlobalServiceRegister.getDefault().getService(
+                    IMatchRuleChangeService.class);
+            return service;
+        }
+        return null;
+    }
+
+    private boolean handleRenameEvent() {
+        String oldName = ((MatchRuleDefinition) getCurrentModelElement(getEditor())).getName();
+        String newName = nameText.getText();
+        if (oldName != null && newName != null && !oldName.equals(newName)) {
+            IMatchRuleChangeService changeService = getMatchRuleChangeService();
+            if (changeService == null) {
+                return true;
+            } else {
+                boolean isOk = changeService.objectChange((MatchRuleDefinition) getCurrentModelElement(getEditor()), oldName,
+                        newName, IMatchRuleChangeService.ChangeEvent.BEFORE_RENAME);
+                return isOk;
+            }
+        }
+        return true;
     }
 
     /**
