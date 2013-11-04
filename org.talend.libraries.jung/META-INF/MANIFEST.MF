@@ -41,6 +41,5 @@ Export-Package: EDU.oswego.cs.dl.util.concurrent,
  edu.uci.ics.jung.visualization.transform,
  edu.uci.ics.jung.visualization.transform.shape
 Require-Bundle: org.talend.libraries.apache,
- org.apache.commons.collections,
- org.talend.core.runtime
+ org.apache.commons.collections
 Bundle-ActivationPolicy: lazy
