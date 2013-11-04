@@ -12,7 +12,6 @@
 // ============================================================================
 package org.talend.dataquality.record.linkage.ui.composite.tableviewer.definition;
 
-import org.apache.commons.lang.StringUtils;
 import org.talend.dataquality.rules.MatchKeyDefinition;
 import org.talend.dataquality.rules.SurvivorshipKeyDefinition;
 
@@ -34,10 +33,11 @@ public class MatchKeyAndSurvivorDefinition {
     }
 
     // when the Table viewer remove a row, need to compare if it is equals
+    // TDQ-8264: modify: use the match key to judge if equals or not, but not only use the name of the match key
     @Override
     public boolean equals(Object obj) {
-        if (obj instanceof MatchKeyAndSurvivorDefinition
-                && StringUtils.equals(((MatchKeyAndSurvivorDefinition) obj).getMatchKey().getName(), this.matchKey.getName())) {
+        if (obj instanceof MatchKeyAndSurvivorDefinition && matchKey != null
+                && matchKey.equals(((MatchKeyAndSurvivorDefinition) obj).getMatchKey())) {
             return true;
         } else {
             return false;
