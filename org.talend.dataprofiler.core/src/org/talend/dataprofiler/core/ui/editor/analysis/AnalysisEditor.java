@@ -416,8 +416,8 @@ public class AnalysisEditor extends CommonFormEditor {
             @Override
             public boolean handle(Object data) {
                 // MOD TDQ-7816: when the result page are not created, no need to refresh, only refresh master page is
-                // enough
-                if (resultPage.getManagedForm() != null) {
+                // enough;TDQ-8270 resultpage is null for overview type
+                if (resultPage != null && resultPage.getManagedForm() != null) {
                     resultPage.refresh(masterPage);
                     return true;
                 } else {
