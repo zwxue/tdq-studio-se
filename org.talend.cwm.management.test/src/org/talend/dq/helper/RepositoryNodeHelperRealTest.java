@@ -40,7 +40,6 @@ import org.talend.core.model.metadata.builder.connection.ConnectionFactory;
 import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
 import org.talend.core.model.properties.DatabaseConnectionItem;
 import org.talend.core.model.properties.PropertiesFactory;
-import org.talend.core.model.properties.Property;
 import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
@@ -176,18 +175,6 @@ public class RepositoryNodeHelperRealTest {
             log.error(e, e);
             Assert.fail(e.getMessage());
         }
-
-        Property property = PropertyHelper.getProperty(addColumn);
-        Assert.assertTrue(property != null);
-        IRepositoryViewObject lastVersion = null;
-        try {
-            if (property != null) {
-                lastVersion = ProxyRepositoryFactory.getInstance().getLastVersion(property.getId());
-            }
-        } catch (PersistenceException e) {
-            log.error(e, e);
-        }
-        Assert.assertTrue(lastVersion != null);
         RepositoryNode createRepositoryNode = RepositoryNodeHelper.createRepositoryNode(addColumn);
         if (createRepositoryNode != null) {
             IRepositoryViewObject object = createRepositoryNode.getObject();
