@@ -38,13 +38,13 @@ import org.talend.dq.analysis.connpool.TdqAnalysisConnectionPool;
 import org.talend.dq.analysis.memory.AnalysisThreadMemoryChangeNotifier;
 import org.talend.dq.dbms.DbmsLanguage;
 import org.talend.dq.dbms.DbmsLanguageFactory;
+import org.talend.dq.handler.HiveConnectionHandler;
 import org.talend.dq.helper.AnalysisExecutorHelper;
 import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.indicators.Evaluator;
 import org.talend.dq.indicators.IndicatorCommonUtil;
 import org.talend.dq.indicators.ext.PatternMatchingExt;
 import org.talend.dq.indicators.preview.table.ChartDataEntity;
-import org.talend.metadata.managment.connection.manager.HiveConnectionManager;
 import org.talend.utils.sugars.ReturnCode;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.foundation.softwaredeployment.DataManager;
@@ -341,7 +341,8 @@ public abstract class AnalysisExecutor implements IAnalysisExecutor {
         IMetadataConnection metadataConnection = ConvertionHelper.convert(dataprovider);
         if (EDatabaseTypeName.HIVE.getXmlName().equalsIgnoreCase(metadataConnection.getDbType())) {
             try {
-                java.sql.Connection createConnection = HiveConnectionManager.getInstance().createConnection(metadataConnection);
+                java.sql.Connection createConnection = HiveConnectionHandler.createHandler(metadataConnection)
+                        .createHiveConnection();
                 rc.setOk(true);
                 rc.setObject(createConnection);
             } catch (ClassNotFoundException e) {
