@@ -25,6 +25,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.IDialogConstants;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.CheckStateChangedEvent;
 import org.eclipse.jface.viewers.CheckboxTreeViewer;
 import org.eclipse.jface.viewers.ICheckStateListener;
@@ -625,11 +626,17 @@ public class JavaUdiJarSelectDialog extends SelectionStatusDialog {
                             ReturnCode rc = UDIUtils.checkUDIDependency(definition, (File) delFile);
                             if (selectedJars.containsKey(delFile)) {
                                 rc.setOk(false);
-                                rc.setMessage("the File " + ((File) delFile).getName() + " has been select by the UDI");//$NON-NLS-1$
+                                rc.setMessage(DefaultMessagesImpl.getString(
+                                        "JavaUdiJarSelectDialog.fileHasBeenSelected", ((File) delFile).getName()));//$NON-NLS-1$ 
                             }
                             // MOD end
                             if (rc.isOk()) {
-                                ((File) delFile).delete();
+                                boolean delete = ((File) delFile).delete();
+                                if (!delete) {
+                                    MessageDialog.openWarning(getParentShell(),
+                                            DefaultMessagesImpl.getString("JavaUdiJarSelectDialog.delete"), //$NON-NLS-1$
+                                            DefaultMessagesImpl.getString("JavaUdiJarSelectDialog.deleteFail")); //$NON-NLS-1$
+                                }
                             } else {
                                 MessageUI.openWarning(rc.getMessage());
                             }

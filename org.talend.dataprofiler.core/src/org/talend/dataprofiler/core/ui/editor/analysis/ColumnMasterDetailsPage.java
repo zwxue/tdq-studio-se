@@ -759,7 +759,7 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
 
         });
         Label maxNumLabel = toolkit.createLabel(numberSection,
-                DefaultMessagesImpl.getString("ColumnMasterDetailsPage.maxNumberLabel"));
+                DefaultMessagesImpl.getString("ColumnMasterDetailsPage.maxNumberLabel")); //$NON-NLS-1$
         maxNumText = toolkit.createText(numberSection, null, SWT.BORDER);
         maxNumText.setText(String.valueOf(anaParameters.getMaxNumberRows()));
         maxNumText.addModifyListener(new ModifyListener() {
@@ -837,11 +837,9 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
             // check whether the field has integer value
             Integer.valueOf(numberOfConnectionsPerAnalysisText.getText());
         } catch (NumberFormatException nfe) {
-            MessageDialogWithToggle.openError(
-                    null,
-                    DefaultMessagesImpl.getString("AbstractAnalysisMetadataPage.SaveAnalysis"),
-                    DefaultMessagesImpl.getString("ColumnMasterDetailsPage.emptyField",
-                            DefaultMessagesImpl.getString("AnalysisTuningPreferencePage.NumberOfConnectionsPerAnalysis"))); //$NON-NLS-1$ //$NON-NLS-2$
+            MessageDialogWithToggle.openError(null, DefaultMessagesImpl.getString("AbstractAnalysisMetadataPage.SaveAnalysis"), //$NON-NLS-1$
+                    DefaultMessagesImpl.getString("ColumnMasterDetailsPage.emptyField", //$NON-NLS-1$
+                            DefaultMessagesImpl.getString("AnalysisTuningPreferencePage.NumberOfConnectionsPerAnalysis"))); //$NON-NLS-1$ 
 
             String originalValue = TaggedValueHelper.getTaggedValue(TdqAnalysisConnectionPool.NUMBER_OF_CONNECTIONS_PER_ANALYSIS,
                     this.analysis.getTaggedValue()).getValue();
@@ -854,11 +852,9 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
             // MOD zshen feature 12919 to save analysisParameter.
             analysis.getParameters().setMaxNumberRows(Integer.parseInt(maxNumText.getText()));
         } catch (NumberFormatException nfe) {
-            MessageDialogWithToggle.openError(
-                    null,
-                    DefaultMessagesImpl.getString("AbstractAnalysisMetadataPage.SaveAnalysis"),
-                    DefaultMessagesImpl.getString("ColumnMasterDetailsPage.emptyField",
-                            DefaultMessagesImpl.getString("ColumnMasterDetailsPage.maxNumberLabel"))); //$NON-NLS-1$ //$NON-NLS-2$
+            MessageDialogWithToggle.openError(null, DefaultMessagesImpl.getString("AbstractAnalysisMetadataPage.SaveAnalysis"), //$NON-NLS-1$
+                    DefaultMessagesImpl.getString("ColumnMasterDetailsPage.emptyField", //$NON-NLS-1$
+                            DefaultMessagesImpl.getString("ColumnMasterDetailsPage.maxNumberLabel"))); //$NON-NLS-1$ 
             maxNumText.setText(String.valueOf(analysis.getParameters().getMaxNumberRows()));
         }
         analysis.getParameters().setMaxNumberRows(analysis.getParameters().getMaxNumberRows());
@@ -1061,6 +1057,11 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
         if (!checkMdmExecutionEngine.isOk()) {
             return checkMdmExecutionEngine;
         }
+
+        if (checkJUDIUpdate()) {
+            recomputeIndicators();
+            computePagination();
+        }
         // ~
         ModelElementIndicator[] modelElementIndicators = treeViewer.getModelElementIndicator();
         if (modelElementIndicators == null || modelElementIndicators.length == 0) {
@@ -1073,6 +1074,25 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
         }
 
         return new ReturnCode(true);
+    }
+
+    /**
+     * check whether JUDI need to update
+     * 
+     * @return
+     */
+    private boolean checkJUDIUpdate() {
+        ModelElementIndicator[] modelElementIndicators = this.getTreeViewer().getModelElementIndicator();
+        for (ModelElementIndicator modelElementIndicator : modelElementIndicators) {
+            Indicator[] indicators = modelElementIndicator.getIndicators();
+            for (Indicator indicator : indicators) {
+                if (UDIHelper.isJavaUDI(indicator) && UDIHelper.needUpdateJUDI(indicator)) {
+                    return true;
+                }
+
+            }
+        }
+        return false;
     }
 
     @Override
