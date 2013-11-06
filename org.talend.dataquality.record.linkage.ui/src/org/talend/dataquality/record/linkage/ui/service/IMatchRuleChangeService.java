@@ -22,7 +22,7 @@ import org.talend.dataquality.rules.MatchRuleDefinition;
 public interface IMatchRuleChangeService extends IService {
 
     enum ChangeEvent {
-        AFTER_DELETE,
+        BEFORE_DELETE,
         BEFORE_RENAME
     }
 

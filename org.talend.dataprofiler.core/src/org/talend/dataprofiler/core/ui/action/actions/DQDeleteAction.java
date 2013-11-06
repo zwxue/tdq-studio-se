@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -46,9 +47,12 @@ import org.eclipse.ui.actions.ActionFactory;
 import org.talend.commons.exception.ExceptionHandler;
 import org.talend.commons.exception.LoginException;
 import org.talend.commons.exception.PersistenceException;
+import org.talend.core.GlobalServiceRegister;
 import org.talend.core.model.properties.Item;
 import org.talend.core.model.properties.Property;
 import org.talend.core.model.repository.ERepositoryObjectType;
+import org.talend.core.model.repository.Folder;
+import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.PluginConstant;
@@ -59,6 +63,7 @@ import org.talend.dataprofiler.core.ui.utils.RepNodeUtils;
 import org.talend.dataprofiler.core.ui.views.DQRespositoryView;
 import org.talend.dataprofiler.core.ui.views.resources.IRepositoryObjectCRUDAction;
 import org.talend.dataquality.properties.TDQReportItem;
+import org.talend.dataquality.record.linkage.ui.service.IMatchRuleChangeService;
 import org.talend.dq.helper.DQDeleteHelper;
 import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.PropertyHelper;
@@ -433,6 +438,11 @@ public class DQDeleteAction extends DeleteAction {
      * 
      */
     private void logicDelete() {
+        // handle delete event for match rule object
+        if (!handleDeleteEvent()) {
+            return;
+        }
+        //
         for (int i = selectedNodes.size() - 1; i >= 0; i--) {
             RepositoryNode node = selectedNodes.get(i);
             // handle generating report file.bug 18805 .
@@ -449,6 +459,45 @@ public class DQDeleteAction extends DeleteAction {
         RepositoryNode parent = selectedNodes.get(0).getParent();
         // only need to run one time, because in the super.run() can handle all selected node.
         excuteSuperRun(null, parent);
+    }
+
+    private void collectSelectedMatchRuleObjs(IRepositoryNode node, List<IRepositoryViewObject> matchRules) {
+        IRepositoryViewObject viewObj = node.getObject();
+        if (viewObj instanceof Folder) {
+            for (IRepositoryNode childNode : node.getChildren()) {
+                collectSelectedMatchRuleObjs(childNode, matchRules);
+            }
+        } else if (viewObj.getRepositoryObjectType() == ERepositoryObjectType.TDQ_RULES_MATCHER) {
+            matchRules.add(viewObj);
+        }
+    }
+
+    private boolean handleDeleteEvent() {
+        List<IRepositoryViewObject> matchRules = new LinkedList<IRepositoryViewObject>();
+        for (RepositoryNode node : selectedNodes) {
+            collectSelectedMatchRuleObjs(node, matchRules);
+        }
+
+        if (!matchRules.isEmpty()) {
+            IMatchRuleChangeService changeService = getMatchRuleChangeService();
+            if (changeService == null) {
+                return true;
+            } else {
+                boolean isOk = changeService.objectChange(null, matchRules, null,
+                        IMatchRuleChangeService.ChangeEvent.BEFORE_DELETE);
+                return isOk;
+            }
+        }
+        return true;
+    }
+
+    private IMatchRuleChangeService getMatchRuleChangeService() {
+        if (GlobalServiceRegister.getDefault().isServiceRegistered(IMatchRuleChangeService.class)) {
+            IMatchRuleChangeService service = (IMatchRuleChangeService) GlobalServiceRegister.getDefault().getService(
+                    IMatchRuleChangeService.class);
+            return service;
+        }
+        return null;
     }
 
     /**
