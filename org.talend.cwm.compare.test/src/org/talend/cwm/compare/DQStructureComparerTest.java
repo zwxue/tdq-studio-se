@@ -50,6 +50,7 @@ import org.talend.core.runtime.CoreRuntimePlugin;
 import org.talend.cwm.helper.CatalogHelper;
 import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.SchemaHelper;
+import org.talend.test.utils.SingletonUtil;
 import org.talend.utils.sql.metadata.constants.MetaDataConstants;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.resource.relational.Catalog;
@@ -117,7 +118,7 @@ public class DQStructureComparerTest {
     }
 
     @Test
-    public void testGetRefreshedDataProvider() throws SQLException {
+    public void testGetRefreshedDataProvider() throws Exception {
         DatabaseConnection dbProvider = ConnectionFactory.eINSTANCE.createDatabaseConnection();
         setJDBCMysqlConnection(dbProvider);
         List<Catalog> catalogPackageFilter = new ArrayList<Catalog>();
@@ -176,8 +177,8 @@ public class DQStructureComparerTest {
         // ~CoreRuntimePlugin
 
         // mock ExtractMetaDataUtils
+        ExtractMetaDataUtils extract = SingletonUtil.spySingleton(ExtractMetaDataUtils.class);
         PowerMockito.mockStatic(ExtractMetaDataUtils.class);
-        ExtractMetaDataUtils extract = Mockito.mock(ExtractMetaDataUtils.class);
         Mockito.when(ExtractMetaDataUtils.getInstance()).thenReturn(extract);
         Mockito.when(extract.getConnectionMetadata(mockSqlConn)).thenReturn(mockDatabaseMetaData);
 
