@@ -25,6 +25,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.IDialogConstants;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.CheckStateChangedEvent;
 import org.eclipse.jface.viewers.CheckboxTreeViewer;
 import org.eclipse.jface.viewers.ICheckStateListener;
@@ -66,7 +67,7 @@ import org.talend.utils.sugars.ReturnCode;
 
 /**
  * @author zshen
- *
+ * 
  */
 public class JavaUdiJarSelectDialog extends SelectionStatusDialog {
 
@@ -106,6 +107,7 @@ public class JavaUdiJarSelectDialog extends SelectionStatusDialog {
     private int tableFolderHeight = 25;
 
     private CheckboxTreeViewer fManageViewer;
+
     // ADD end
 
     // ADD msjian 2011-8-9 TDQ-3199 fixed: Make it convenient to delete the jar which is used already.
@@ -114,11 +116,12 @@ public class JavaUdiJarSelectDialog extends SelectionStatusDialog {
     private Map<Object, Boolean> selectedJars;
 
     private IndicatorDefinition definition;
+
     // ADD end
 
     /**
      * Constructs an instance of <code>ElementTreeSelectionDialog</code>.
-     *
+     * 
      * @param parent The shell to parent from.
      * @param labelProvider the label provider to render the entries
      * @param contentProvider the content provider to evaluate the tree structure
@@ -139,7 +142,7 @@ public class JavaUdiJarSelectDialog extends SelectionStatusDialog {
 
     /**
      * If set, the checked /gray state of containers (inner nodes) is derived from the checked state of its leaf nodes.
-     *
+     * 
      * @param containerMode The containerMode to set
      */
     public void setContainerMode(boolean containerMode) {
@@ -148,7 +151,7 @@ public class JavaUdiJarSelectDialog extends SelectionStatusDialog {
 
     /**
      * Sets the initial selection. Convenience method.
-     *
+     * 
      * @param selection the initial selection.
      */
     public void setInitialSelection(Object selection) {
@@ -157,7 +160,7 @@ public class JavaUdiJarSelectDialog extends SelectionStatusDialog {
 
     /**
      * Sets the message to be displayed if the list is empty.
-     *
+     * 
      * @param message the message to be displayed.
      */
     public void setEmptyListMessage(String message) {
@@ -166,7 +169,7 @@ public class JavaUdiJarSelectDialog extends SelectionStatusDialog {
 
     /**
      * Sets the sorter used by the tree viewer.
-     *
+     * 
      * @param sorter
      * @deprecated since 3.3, use {@link CheckedTreeSelectionDialog#setComparator(ViewerComparator)} instead
      */
@@ -177,7 +180,7 @@ public class JavaUdiJarSelectDialog extends SelectionStatusDialog {
 
     /**
      * Sets the comparator used by the tree viewer.
-     *
+     * 
      * @param comparator
      * @since 3.3
      */
@@ -187,7 +190,7 @@ public class JavaUdiJarSelectDialog extends SelectionStatusDialog {
 
     /**
      * Adds a filter to the tree viewer.
-     *
+     * 
      * @param filter a filter.
      */
     public void addFilter(ViewerFilter filter) {
@@ -200,7 +203,7 @@ public class JavaUdiJarSelectDialog extends SelectionStatusDialog {
     /**
      * Sets an optional validator to check if the selection is valid. The validator is invoked whenever the selection
      * changes.
-     *
+     * 
      * @param validator the validator to validate the selection.
      */
     public void setValidator(ISelectionStatusValidator validator) {
@@ -209,7 +212,7 @@ public class JavaUdiJarSelectDialog extends SelectionStatusDialog {
 
     /**
      * Sets the tree input.
-     *
+     * 
      * @param input the tree input.
      */
     public void setInput(Object input) {
@@ -218,7 +221,7 @@ public class JavaUdiJarSelectDialog extends SelectionStatusDialog {
 
     /**
      * Expands elements in the tree.
-     *
+     * 
      * @param elements The elements that will be expanded.
      */
     public void setExpandedElements(Object[] elements) {
@@ -227,7 +230,7 @@ public class JavaUdiJarSelectDialog extends SelectionStatusDialog {
 
     /**
      * Sets the size of the tree in unit of characters.
-     *
+     * 
      * @param width the width of the tree.
      * @param height the height of the tree.
      */
@@ -238,7 +241,7 @@ public class JavaUdiJarSelectDialog extends SelectionStatusDialog {
 
     /**
      * Validate the receiver and update the status with the result.
-     *
+     * 
      */
     protected void updateOKStatus() {
         if (!fIsEmpty) {
@@ -257,7 +260,7 @@ public class JavaUdiJarSelectDialog extends SelectionStatusDialog {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see org.eclipse.jface.window.Window#open()
      */
     @Override
@@ -290,7 +293,7 @@ public class JavaUdiJarSelectDialog extends SelectionStatusDialog {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see org.eclipse.jface.window.Window#create()
      */
     @Override
@@ -315,7 +318,7 @@ public class JavaUdiJarSelectDialog extends SelectionStatusDialog {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see org.eclipse.jface.dialogs.Dialog#createDialogArea(org.eclipse.swt.widgets.Composite)
      */
     @Override
@@ -342,6 +345,7 @@ public class JavaUdiJarSelectDialog extends SelectionStatusDialog {
         selectTabItem.setControl(selectComposite);
 
         tabFolder.addSelectionListener(new SelectionListener() {
+
             public void widgetSelected(SelectionEvent e) {
                 if (DefaultMessagesImpl.getString("JavaUdiJarSelectDialog.SelectLib").equals(
                         tabFolder.getSelection()[0].toString())) {
@@ -350,6 +354,7 @@ public class JavaUdiJarSelectDialog extends SelectionStatusDialog {
                     isSelectTab = false;
                 }
             }
+
             public void widgetDefaultSelected(SelectionEvent e) {
                 widgetSelected(e);
             }
@@ -368,7 +373,7 @@ public class JavaUdiJarSelectDialog extends SelectionStatusDialog {
 
         /**
          * Create the composite.
-         *
+         * 
          * @param parent
          * @param style
          * @param isSelect (if true, createTreeViewer, else createManageTreeViewer)
@@ -403,7 +408,7 @@ public class JavaUdiJarSelectDialog extends SelectionStatusDialog {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see org.eclipse.ui.dialogs.SelectionDialog#createButtonsForButtonBar(org.eclipse.swt.widgets.Composite)
      */
     @Override
@@ -414,7 +419,7 @@ public class JavaUdiJarSelectDialog extends SelectionStatusDialog {
 
     /**
      * Creates the tree viewer.
-     *
+     * 
      * @param parent the parent composite
      * @return the tree viewer
      */
@@ -459,7 +464,7 @@ public class JavaUdiJarSelectDialog extends SelectionStatusDialog {
 
     /**
      * DOC msjian Comment method "createManageTreeViewer".
-     *
+     * 
      * @param parent
      * @return
      */
@@ -472,6 +477,7 @@ public class JavaUdiJarSelectDialog extends SelectionStatusDialog {
         fManageViewer.setContentProvider(fContentProvider);
         fManageViewer.setLabelProvider(fLabelProvider);
         fManageViewer.addCheckStateListener(new ICheckStateListener() {
+
             public void checkStateChanged(CheckStateChangedEvent event) {
                 updateOKStatus();
             }
@@ -488,7 +494,7 @@ public class JavaUdiJarSelectDialog extends SelectionStatusDialog {
 
     /**
      * Returns the tree viewer.
-     *
+     * 
      * @return the tree viewer
      */
     protected CheckboxTreeViewer getTreeViewer() {
@@ -498,7 +504,7 @@ public class JavaUdiJarSelectDialog extends SelectionStatusDialog {
 
     /**
      * Adds the selection and deselection buttons to the dialog.
-     *
+     * 
      * @param composite the parent composite
      * @return Composite the composite the buttons were created in.
      */
@@ -517,6 +523,7 @@ public class JavaUdiJarSelectDialog extends SelectionStatusDialog {
         Button selectButton = createButton(buttonComposite, IDialogConstants.SELECT_ALL_ID,
                 WorkbenchMessages.CheckedTreeSelectionDialog_select_all, false);
         SelectionListener listener = new SelectionAdapter() {
+
             @Override
             public void widgetSelected(SelectionEvent e) {
                 Object[] viewerElements = fContentProvider.getElements(fInput);
@@ -547,6 +554,7 @@ public class JavaUdiJarSelectDialog extends SelectionStatusDialog {
         Button deselectButton = createButton(buttonComposite, IDialogConstants.DESELECT_ALL_ID,
                 WorkbenchMessages.CheckedTreeSelectionDialog_deselect_all, false);
         listener = new SelectionAdapter() {
+
             @Override
             public void widgetSelected(SelectionEvent e) {
                 if (isSelect) {
@@ -607,6 +615,7 @@ public class JavaUdiJarSelectDialog extends SelectionStatusDialog {
             Button delButton = createButton(buttonComposite, 23, DefaultMessagesImpl.getString("JavaUdiJarSelectDialog.delete"),
                     false);
             SelectionListener listenerDel = new SelectionAdapter() {
+
                 @Override
                 public void widgetSelected(SelectionEvent e) {
                     for (Object delFile : fManageViewer.getCheckedElements()) {
@@ -617,11 +626,17 @@ public class JavaUdiJarSelectDialog extends SelectionStatusDialog {
                             ReturnCode rc = UDIUtils.checkUDIDependency(definition, (File) delFile);
                             if (selectedJars.containsKey(delFile)) {
                                 rc.setOk(false);
-                                rc.setMessage("the File " + ((File) delFile).getName() + " has been select by the UDI");//$NON-NLS-1$
+                                rc.setMessage(DefaultMessagesImpl.getString(
+                                        "JavaUdiJarSelectDialog.fileHasBeenSelected", ((File) delFile).getName()));//$NON-NLS-1$ 
                             }
                             // MOD end
                             if (rc.isOk()) {
-                                ((File) delFile).delete();
+                                boolean delete = ((File) delFile).delete();
+                                if (!delete) {
+                                    MessageDialog.openWarning(getParentShell(),
+                                            DefaultMessagesImpl.getString("JavaUdiJarSelectDialog.delete"), //$NON-NLS-1$
+                                            DefaultMessagesImpl.getString("JavaUdiJarSelectDialog.deleteFail")); //$NON-NLS-1$
+                                }
                             } else {
                                 MessageUI.openWarning(rc.getMessage());
                             }
@@ -641,6 +656,7 @@ public class JavaUdiJarSelectDialog extends SelectionStatusDialog {
             // ADD msjian 2011-11-17 TDQ-3556 : add ok/cancel button to the selecter window
             Button okButton = createButton(buttonComposite, IDialogConstants.OK_ID, IDialogConstants.OK_LABEL, true);
             SelectionListener listenerOK = new SelectionAdapter() {
+
                 @Override
                 public void widgetSelected(SelectionEvent e) {
                     String path = "";//$NON-NLS-1$
@@ -661,6 +677,7 @@ public class JavaUdiJarSelectDialog extends SelectionStatusDialog {
 
             Button cancelButton = createButton(buttonComposite, IDialogConstants.CANCEL_ID, IDialogConstants.CANCEL_LABEL, false);
             SelectionListener listenerCancel = new SelectionAdapter() {
+
                 @Override
                 public void widgetSelected(SelectionEvent e) {
                     cancelPressed();
@@ -707,7 +724,7 @@ public class JavaUdiJarSelectDialog extends SelectionStatusDialog {
 
     /**
      * DOC msjian Comment method "setControl".
-     *
+     * 
      * @param jarPathText
      */
     public void setControl(Text jarPathText) {
