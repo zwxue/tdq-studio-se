@@ -84,7 +84,7 @@ public class EMFResourceHandleTest {
     public void testDuplicate() throws BusinessException, PersistenceException {
         // connectionNode
         DatabaseConnectionItem oldConnectionItem = createConnectionItem("EMFResourceHandleTest_conn1", null, false); //$NON-NLS-1$
-        Catalog oldCatalog = addDatapackage("catalog1", oldConnectionItem);
+        addDatapackage("catalog1", oldConnectionItem); //$NON-NLS-1$
         RepositoryNode dbParentRepNode = createConnectionNode(oldConnectionItem);
 
         // ~connectionNode
@@ -93,7 +93,8 @@ public class EMFResourceHandleTest {
 
         IFile duplicate = createDuplicateHandle.duplicate("copy_of_EMFResourceHandleTest_conn1"); //$NON-NLS-1$
         Property newProperty = PropertyHelper.getProperty(duplicate);
-        DatabaseConnectionItem newConnectionItem = (DatabaseConnectionItem) newProperty.getItem();
+        IRepositoryViewObject newViewObject = factory.getLastVersion(newProperty.getId());
+        DatabaseConnectionItem newConnectionItem = (DatabaseConnectionItem) newViewObject.getProperty().getItem();
         compareResult(newConnectionItem, oldConnectionItem);
 
     }
@@ -110,6 +111,10 @@ public class EMFResourceHandleTest {
         Assert.assertTrue(newConnection != null);
         Assert.assertTrue(newConnection.eResource() != null);
         Assert.assertTrue(!newConnection.eIsProxy());
+
+        Assert.assertTrue(oldConnection != null);
+        Assert.assertTrue(oldConnection.eResource() != null);
+        Assert.assertTrue(!oldConnection.eIsProxy());
 
         boolean isConnUUIDSame = StringUtils.equals(ResourceHelper.getUUID(newConnection), ResourceHelper.getUUID(oldConnection));
         Catalog oldCatalog = CatalogHelper.getCatalog(oldConnection, "catalog1"); //$NON-NLS-1$
