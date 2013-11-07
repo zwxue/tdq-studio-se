@@ -438,7 +438,7 @@ public class DQDeleteAction extends DeleteAction {
      * 
      */
     private void logicDelete() {
-        // handle delete event for match rule object
+        // TMDM-6549,handle delete event for match rule object
         if (!handleDeleteEvent()) {
             return;
         }
@@ -461,6 +461,12 @@ public class DQDeleteAction extends DeleteAction {
         excuteSuperRun(null, parent);
     }
 
+    /**
+     * TMDM-6549,Check and collect match rule objects from deleted objects.
+     * 
+     * @param node
+     * @param matchRules
+     */
     private void collectSelectedMatchRuleObjs(IRepositoryNode node, List<IRepositoryViewObject> matchRules) {
         IRepositoryViewObject viewObj = node.getObject();
         if (viewObj instanceof Folder) {
@@ -472,6 +478,12 @@ public class DQDeleteAction extends DeleteAction {
         }
     }
 
+    /**
+     * TMDM-6549,handle the logic delete event, which only works for MDM and forcus match rule object, before deleting
+     * remove all references from MDM data model object
+     * 
+     * @return
+     */
     private boolean handleDeleteEvent() {
         List<IRepositoryViewObject> matchRules = new LinkedList<IRepositoryViewObject>();
         for (RepositoryNode node : selectedNodes) {
@@ -491,6 +503,11 @@ public class DQDeleteAction extends DeleteAction {
         return true;
     }
 
+    /**
+     * TMDM-6549, get registerd IMatchRuleChangeService instance
+     * 
+     * @return IMatchRuleChangeService instance
+     */
     private IMatchRuleChangeService getMatchRuleChangeService() {
         if (GlobalServiceRegister.getDefault().isServiceRegistered(IMatchRuleChangeService.class)) {
             IMatchRuleChangeService service = (IMatchRuleChangeService) GlobalServiceRegister.getDefault().getService(
