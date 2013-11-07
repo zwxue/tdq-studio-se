@@ -280,9 +280,9 @@ public class MatchRuleAnlaysisUtils {
                 } else if (value1 instanceof Timestamp) {
                     return ((Timestamp) value1).compareTo((Timestamp) value2);
                 } else if (value1 instanceof Long) {
-                    return Long.compare((Long) value1, (Long) value2);
+                    return ((Long) value1).compareTo((Long) value2);
                 } else if (value1 instanceof Double) {
-                    return Double.compare((Double) value1, (Double) value2);
+                    return ((Double) value1).compareTo((Double) value2);
                 } else {
                     return String.valueOf(value1).compareTo(String.valueOf(value2));
                 }
