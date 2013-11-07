@@ -23,13 +23,13 @@ import org.talend.core.model.metadata.IMetadataConnection;
  */
 public class HDP_1_3_0_Handler extends HortonWorksHandler {
 
-    private static final String MAP_MB = "mapred.job.map.memory.mb"; //$NON-NLS-1$
+    private final String MAP_MB = "mapred.job.map.memory.mb"; //$NON-NLS-1$
 
-    private static final String REDUCE_MB = "mapred.job.reduce.memory.mb"; //$NON-NLS-1$
+    private final String REDUCE_MB = "mapred.job.reduce.memory.mb"; //$NON-NLS-1$
 
-    private static final String MAP_MB_VALUE = "1000"; //$NON-NLS-1$
+    private final String MAP_MB_VALUE = "1000"; //$NON-NLS-1$
 
-    private static final String REDUCE_MB_VALUE = "1000"; //$NON-NLS-1$
+    private final String REDUCE_MB_VALUE = "1000"; //$NON-NLS-1$
 
     public HDP_1_3_0_Handler(IMetadataConnection metadataConnection) {
         super(metadataConnection);

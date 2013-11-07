@@ -23,6 +23,7 @@ import org.talend.core.database.conn.ConnParameterKeys;
 import org.talend.core.database.hbase.conn.version.EHBaseDistribution4Versions;
 import org.talend.core.hadoop.repository.HadoopRepositoryUtil;
 import org.talend.core.model.metadata.IMetadataConnection;
+import org.talend.core.utils.TalendQuoteUtils;
 import org.talend.metadata.managment.connection.manager.HiveConnectionManager;
 import org.talend.utils.json.JSONException;
 
@@ -95,32 +96,14 @@ public class HiveConnectionHandler {
                 Object objProp = map.get(PROPERTY);
                 Object objValue = map.get(VALUE);
                 if (objProp != null && objValue != null) {
-                    String key = removeQuotes(objProp.toString());
-                    String value = removeQuotes(objValue.toString());
+                    String key = TalendQuoteUtils.removeQuotes(objProp.toString());
+                    String value = TalendQuoteUtils.removeQuotes(objValue.toString());
                     getHadoopPropertiesMap().put(key, value);
                 }
             }
         } catch (JSONException e) {
             log.equals(e);
         }
-    }
-
-    /**
-     * if the first/last character of the string is quotes, remove it from the string
-     * 
-     * @param string
-     * @return
-     */
-    protected static String removeQuotes(String string) {
-        String quote = "\""; //$NON-NLS-1$
-        String result = string;
-        if (result.startsWith(quote)) {
-            result = result.substring(1);
-        }
-        if (result.endsWith(quote)) {
-            result = result.substring(0, result.length() - 1);
-        }
-        return result;
     }
 
     /**
@@ -171,6 +154,8 @@ public class HiveConnectionHandler {
         String version = (String) metadataConnection.getParameter(ConnParameterKeys.CONN_PARA_KEY_HIVE_VERSION);
         if (EHBaseDistribution4Versions.HDP_1_3.getVersionValue().equals(version)) {
             handler = new HDP_1_3_0_Handler(metadataConnection);
+        }else if (EHBaseDistribution4Versions.HDP_2_0.getVersionValue().equals(version)) {
+            handler = new HDP_2_0_0_Handler(metadataConnection);
         } else {
             handler = new HiveConnectionHandler(metadataConnection);
         }
