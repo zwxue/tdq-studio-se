@@ -270,7 +270,7 @@ public class MatchRuleAnlaysisUtils {
                 }
 
                 if (value1 instanceof Integer) {
-                    return Integer.compare((Integer) value1, (Integer) value2);
+                    return ((Integer) value1).compareTo((Integer) value2);
                 } else if (value1 instanceof String) {
                     return ((String) value1).compareTo((String) value2);
                 } else if (value1 instanceof BigDecimal) {
