@@ -1951,6 +1951,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
             return;
         }
         super.doSave(monitor);
+        boolean needReloadJUDIJar = false;
         // ADD klliu 2010-06-01 bug 13451: Class name of Java User Define Indicator must be validated
         if (!checkJavaUDIBeforeSave()) {
             ((IndicatorEditor) this.getEditor()).setSaveActionButtonState(false);
@@ -1992,12 +1993,16 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
                 boolean isNewTaggedValue = true;
                 for (TaggedValue tv : tvs) {
                     if (tv.getTag().equals(TaggedValueHelper.CLASS_NAME_TEXT)) {
-                        tv.setValue(((Text) javaUIDCombo.getData(TaggedValueHelper.CLASS_NAME_TEXT)).getText());
+                        String newTagValue = ((Text) javaUIDCombo.getData(TaggedValueHelper.CLASS_NAME_TEXT)).getText();
+                        needReloadJUDIJar |= !StringUtils.equals(tv.getValue(), newTagValue);
+                        tv.setValue(newTagValue);
                         isNewTaggedValue = false;
                         continue;
                     }
                     if (tv.getTag().equals(TaggedValueHelper.JAR_FILE_PATH)) {
-                        tv.setValue(((Text) javaUIDCombo.getData(TaggedValueHelper.JAR_FILE_PATH)).getText());
+                        String newTagValue = ((Text) javaUIDCombo.getData(TaggedValueHelper.JAR_FILE_PATH)).getText();
+                        needReloadJUDIJar |= !StringUtils.equals(tv.getValue(), newTagValue);
+                        tv.setValue(newTagValue);
                     }
                 }
                 if (isNewTaggedValue) {
@@ -2083,6 +2088,8 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
         if (!rc.isOk()) {
             this.isDirty = true;
             MessageDialog.openError(null, "error", rc.getMessage());//$NON-NLS-1$
+        } else if (UDIHelper.isJUDIValid(definition) && needReloadJUDIJar) {
+            UDIHelper.clearJAVAUDIMAPByIndicatorDefinition(definition);
         }
     }
 

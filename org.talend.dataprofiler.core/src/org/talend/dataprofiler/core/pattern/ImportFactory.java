@@ -44,6 +44,7 @@ import org.eclipse.jface.wizard.WizardDialog;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.commons.utils.io.FilesUtils;
 import org.talend.core.exception.TalendInternalPersistenceException;
+import org.talend.core.model.metadata.builder.database.DqRepositoryViewService;
 import org.talend.core.model.properties.TDQItem;
 import org.talend.cwm.constants.DevelopmentStatus;
 import org.talend.cwm.helper.TaggedValueHelper;
@@ -873,6 +874,8 @@ public final class ImportFactory {
                 indDef.getIndicatorDefinitionParameter().add(idPara);
             }
         }
+
+        String fname = DqRepositoryViewService.createFilename(parameters.name, FactoriesUtil.DEFINITION);
 
         try {
 

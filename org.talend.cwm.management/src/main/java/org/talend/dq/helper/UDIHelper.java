@@ -29,10 +29,12 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.emf.common.util.EList;
+import org.talend.commons.ui.runtime.exception.ExceptionHandler;
 import org.talend.commons.utils.TalendURLClassLoader;
 import org.talend.core.model.metadata.builder.database.PluginConstant;
 import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.management.i18n.Messages;
+import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.domain.pattern.Pattern;
 import org.talend.dataquality.helpers.MetadataHelper;
 import org.talend.dataquality.indicators.Indicator;
@@ -322,13 +324,9 @@ public final class UDIHelper {
      * @throws Exception
      */
     public static Indicator adaptToJavaUDI(Indicator indicator) throws Throwable {
-        // If the JUDI already been initiatated
-        if (JAVAUDIMAP.get(indicator) != null) {
-            return JAVAUDIMAP.get(indicator);
-        }
-        // indicator itself already be a java user define indicator.
-        if (JAVAUDIMAP.values().contains(indicator)) {
-            return indicator;
+        Indicator returnIndicator = getUDIFromMap(indicator);
+        if (returnIndicator != null) {
+            return returnIndicator;
         }
         UserDefIndicator adaptedUDI = null;
         if (userDefIndSwitch.doSwitch(indicator) != null) {
@@ -369,6 +367,23 @@ public final class UDIHelper {
             }
         }
         return adaptedUDI;
+    }
+
+    /**
+     * DOC zshen Comment method "getUDIFromMap".
+     * 
+     * @param indicator
+     */
+    private static Indicator getUDIFromMap(Indicator indicator) {
+        // If the JUDI already been initiatated
+        if (JAVAUDIMAP.get(indicator) != null) {
+            return JAVAUDIMAP.get(indicator);
+        }
+        // indicator itself already be a java user define indicator.
+        if (JAVAUDIMAP.values().contains(indicator)) {
+            return indicator;
+        }
+        return null;
     }
 
     private static boolean validateJavaUDI(String className, String jarPath) {
@@ -450,5 +465,62 @@ public final class UDIHelper {
             }
         }
         return fileList;
+    }
+
+    public static void updateJUDIsForAnalysis(Analysis analysis) {
+        EList<Indicator> allIndics = analysis.getResults().getIndicators();
+        List<Indicator> updatedIndWithJUDI = new ArrayList<Indicator>();
+        for (Indicator indicator : allIndics) {
+            if (UDIHelper.isJUDIValid(indicator.getIndicatorDefinition())) {
+                try {
+                    indicator = UDIHelper.adaptToJavaUDI(indicator);
+                    updatedIndWithJUDI.add(indicator);
+                } catch (Throwable e) {
+                    ExceptionHandler.process(e);
+                }
+            } else {
+                updatedIndWithJUDI.add(indicator);
+            }
+        }
+        allIndics.clear();
+        allIndics.addAll(updatedIndWithJUDI);
+    }
+
+    /**
+     * 
+     * If oldUDI == null mean that jar is changed so need to update
+     * 
+     * @param udi
+     * @return
+     */
+    public static boolean needUpdateJUDI(Indicator udi) {
+        if (UDIHelper.isJUDIValid(udi.getIndicatorDefinition())) {
+            Indicator oldUDI = UDIHelper.getUDIFromMap(udi);
+            if (oldUDI == null) {
+                return true;
+            }
+        }
+        return false;
+
+    }
+
+    /**
+     * 
+     * clear special element from JAVAUDIMAP
+     * 
+     * @param indDef
+     */
+    public static void clearJAVAUDIMAPByIndicatorDefinition(IndicatorDefinition indDef) {
+        if (indDef == null || !isJUDIValid(indDef)) {
+            return;
+        }
+        for (Indicator indicator : JAVAUDIMAP.keySet()) {
+            if (indDef.equals(indicator.getIndicatorDefinition())
+                    || indDef.equals(JAVAUDIMAP.get(indicator).getIndicatorDefinition())) {
+                // if the jar used by UDI is changed need to set null then adaptToJavaUDI() will reload again
+                JAVAUDIMAP.put(indicator, null);
+            }
+        }
+
     }
 }

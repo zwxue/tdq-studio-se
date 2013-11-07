@@ -103,8 +103,6 @@ import org.talend.repository.model.RepositoryNode;
 import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
-import com.informix.util.stringUtil;
-
 /**
  * @author rli
  */
@@ -1052,6 +1050,11 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
         if (!checkMdmExecutionEngine.isOk()) {
             return checkMdmExecutionEngine;
         }
+
+        if (checkJUDIUpdate()) {
+            recomputeIndicators();
+            computePagination();
+        }
         // ~
         ModelElementIndicator[] modelElementIndicators = treeViewer.getModelElementIndicator();
         if (modelElementIndicators == null || modelElementIndicators.length == 0) {
@@ -1064,6 +1067,25 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
         }
 
         return new ReturnCode(true);
+    }
+
+    /**
+     * check whether JUDI need to update
+     * 
+     * @return
+     */
+    private boolean checkJUDIUpdate() {
+        ModelElementIndicator[] modelElementIndicators = this.getTreeViewer().getModelElementIndicator();
+        for (ModelElementIndicator modelElementIndicator : modelElementIndicators) {
+            Indicator[] indicators = modelElementIndicator.getIndicators();
+            for (Indicator indicator : indicators) {
+                if (UDIHelper.isJavaUDI(indicator) && UDIHelper.needUpdateJUDI(indicator)) {
+                    return true;
+                }
+
+            }
+        }
+        return false;
     }
 
     @Override
