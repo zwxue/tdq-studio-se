@@ -12,6 +12,9 @@
 // ============================================================================
 package org.talend.dataquality.record.linkage.ui.composite.utils;
 
+import java.math.BigDecimal;
+import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -27,6 +30,7 @@ import org.talend.dataquality.indicators.columnset.BlockKeyIndicator;
 import org.talend.dataquality.indicators.columnset.ColumnsetPackage;
 import org.talend.dataquality.indicators.columnset.RecordMatchingIndicator;
 import org.talend.dataquality.record.linkage.constant.AttributeMatcherType;
+import org.talend.dataquality.record.linkage.ui.composite.table.SortState;
 import org.talend.dataquality.record.linkage.utils.AnalysisRecordGroupingUtils;
 import org.talend.dataquality.record.linkage.utils.HandleNullEnum;
 import org.talend.dataquality.record.linkage.utils.MatchAnalysisConstant;
@@ -226,6 +230,66 @@ public class MatchRuleAnlaysisUtils {
             }
 
         };
+        java.util.Collections.sort(resultData, comparator);
+        return resultData;
+    }
+
+    public static List<Object[]> sortDataByColumn(final SortState sortState, List<Object[]> resultData) {
+
+        Comparator<Object[]> comparator = new Comparator<Object[]>() {
+
+            @Override
+            public int compare(Object[] row1, Object[] row2) {
+                // when the user select the special column which has no result yet
+                if ((row1.length - 1) < sortState.getSelectedColumnIndex()) {
+                    return 0;
+                }
+
+                Object value1 = row1[sortState.getSelectedColumnIndex()];
+                Object value2 = row2[sortState.getSelectedColumnIndex()];
+                switch (sortState.getCurrentSortDirection()) {
+                case ASC:
+                    return compareTwo(value1, value2);
+                case DESC:
+                    return compareTwo(value2, value1);
+                default:
+                    return 0;
+                }
+            }
+
+            private int compareTwo(Object value1, Object value2) {
+                if (value1 == null) {
+                    return -1;
+                } else if (value2 == null) {
+                    return 1;
+                }
+                // when the column is group_size, should use integer to compare, which is String originally
+                if (sortState.isGroupSizeColumn()) {
+                    value1 = Integer.parseInt((String) value1);
+                    value2 = Integer.parseInt((String) value2);
+                }
+
+                if (value1 instanceof Integer) {
+                    return Integer.compare((Integer) value1, (Integer) value2);
+                } else if (value1 instanceof String) {
+                    return ((String) value1).compareTo((String) value2);
+                } else if (value1 instanceof BigDecimal) {
+                    return ((BigDecimal) value1).compareTo((BigDecimal) value2);
+                } else if (value1 instanceof Date) {
+                    return ((Date) value1).compareTo((Date) value2);
+                } else if (value1 instanceof Timestamp) {
+                    return ((Timestamp) value1).compareTo((Timestamp) value2);
+                } else if (value1 instanceof Long) {
+                    return Long.compare((Long) value1, (Long) value2);
+                } else if (value1 instanceof Double) {
+                    return Double.compare((Double) value1, (Double) value2);
+                } else {
+                    return String.valueOf(value1).compareTo(String.valueOf(value2));
+                }
+            }
+
+        };
+
         java.util.Collections.sort(resultData, comparator);
         return resultData;
     }

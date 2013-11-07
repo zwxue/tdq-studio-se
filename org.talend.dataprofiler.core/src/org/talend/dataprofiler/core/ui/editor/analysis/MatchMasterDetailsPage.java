@@ -813,7 +813,7 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
 
         Control natTable = sampleTable.createTable(dataTableComp, analysisHandler.getSelectedColumns(), listOfData);
         GridDataFactory.fillDefaults().grab(true, true).applyTo(natTable);
-
+        natTable.redraw();
     }
 
     /**
@@ -849,19 +849,24 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
      * the column already be selected before, remove it(with color changed) Need to check: canSelectBlockingKey/
      * canSelectMatchingKey firstly,
      * 
+     * Added: sort by the column. when selecting keys, the sort will not work; when sort, the select keys not work
+     * 
      * @param rowPosition
      * @param columnPosition
      * @param columnName
      */
     private void handleColumnSelectionChange() {
         String columnName = sampleTable.getCurrentSelectedColumn();
+        if (!isBlockingKeyButtonPushed && !isMatchingKeyButtonPushed) {
+            // sort by column
+            sampleTable.sortByColumn();
+            return;
+        }
         if (columnName == null) {
             // means that the user selected column is the additional ones,no need to process it
             return;
         }
-        if (!isBlockingKeyButtonPushed && !isMatchingKeyButtonPushed) {
-            return;
-        } else if (isBlockingKeyButtonPushed) {
+        if (isBlockingKeyButtonPushed) {
             handleBlockKeySelection(columnName);
         } else if (isMatchingKeyButtonPushed) {
             handleMatchKeySelection(columnName);

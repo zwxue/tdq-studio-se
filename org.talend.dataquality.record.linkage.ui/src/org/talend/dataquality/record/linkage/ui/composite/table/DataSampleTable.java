@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
+import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.nebula.widgets.nattable.NatTable;
 import org.eclipse.nebula.widgets.nattable.config.CellConfigAttributes;
 import org.eclipse.nebula.widgets.nattable.config.DefaultNatTableStyleConfiguration;
@@ -39,23 +40,20 @@ import org.eclipse.nebula.widgets.nattable.grid.layer.CornerLayer;
 import org.eclipse.nebula.widgets.nattable.grid.layer.GridLayer;
 import org.eclipse.nebula.widgets.nattable.grid.layer.RowHeaderLayer;
 import org.eclipse.nebula.widgets.nattable.grid.layer.event.ColumnHeaderSelectionEvent;
-import org.eclipse.nebula.widgets.nattable.group.ColumnGroupModel;
-import org.eclipse.nebula.widgets.nattable.group.painter.ColumnGroupHeaderTextPainter;
 import org.eclipse.nebula.widgets.nattable.hideshow.ColumnHideShowLayer;
 import org.eclipse.nebula.widgets.nattable.layer.AbstractLayerTransform;
 import org.eclipse.nebula.widgets.nattable.layer.DataLayer;
 import org.eclipse.nebula.widgets.nattable.layer.ILayerListener;
 import org.eclipse.nebula.widgets.nattable.layer.LabelStack;
 import org.eclipse.nebula.widgets.nattable.layer.cell.ILayerCell;
-import org.eclipse.nebula.widgets.nattable.layer.config.DefaultColumnHeaderStyleConfiguration;
 import org.eclipse.nebula.widgets.nattable.layer.event.ILayerEvent;
-import org.eclipse.nebula.widgets.nattable.painter.cell.BackgroundImagePainter;
 import org.eclipse.nebula.widgets.nattable.painter.cell.BackgroundPainter;
 import org.eclipse.nebula.widgets.nattable.painter.cell.ICellPainter;
 import org.eclipse.nebula.widgets.nattable.painter.cell.TextPainter;
 import org.eclipse.nebula.widgets.nattable.reorder.ColumnReorderLayer;
 import org.eclipse.nebula.widgets.nattable.selection.SelectionLayer;
-import org.eclipse.nebula.widgets.nattable.sort.painter.SortableHeaderTextPainter;
+import org.eclipse.nebula.widgets.nattable.sort.SortDirectionEnum;
+import org.eclipse.nebula.widgets.nattable.sort.config.DefaultSortConfiguration;
 import org.eclipse.nebula.widgets.nattable.style.CellStyleAttributes;
 import org.eclipse.nebula.widgets.nattable.style.DisplayMode;
 import org.eclipse.nebula.widgets.nattable.style.IStyle;
@@ -73,6 +71,7 @@ import org.eclipse.swt.widgets.Display;
 import org.talend.dataprofiler.common.ui.editor.preview.chart.utils.MatchRuleColorRegistry;
 import org.talend.dataquality.record.linkage.ui.composite.ListObjectDataProvider;
 import org.talend.dataquality.record.linkage.ui.composite.utils.ImageLib;
+import org.talend.dataquality.record.linkage.ui.composite.utils.MatchRuleAnlaysisUtils;
 import org.talend.dataquality.record.linkage.utils.MatchAnalysisConstant;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
@@ -108,7 +107,10 @@ public class DataSampleTable {
 
     private String currentSelectedColumn = null;
 
-    private int groupSizeIndex;
+    private SortState sortState = new SortState();
+
+    // <groupid, related color>
+    private Map<String, Integer> rowOfGIDWithColor = new HashMap<String, Integer>();
 
     private final static Color[] COLOR_LIST = MatchRuleColorRegistry.getColorsForSwt();
 
@@ -122,6 +124,7 @@ public class DataSampleTable {
      * @param listOfData
      */
     public Control createTable(Composite parentContainer, ModelElement[] columns, List<Object[]> listOfData) {
+        reset();
         String[] columnsName = createColumnLabel(columns);
 
         Map<String, String> columnToLabelMap = new HashMap<String, String>();
@@ -137,29 +140,42 @@ public class DataSampleTable {
         if (listOfData.size() < 1) {
             listOfData.add(getEmptyRow());
         }
-        if (minGrpSize > 1 && listOfData.get(0).length > groupSizeIndex) {
-            List<Object[]> filteredList = new ArrayList<Object[]>();
-            boolean flag = false;
-            for (Object[] row : listOfData) {
-                String currentGrpSize = (String) row[groupSizeIndex];
-                if (currentGrpSize.length() > 0) {
-                    int grpSize = Integer.valueOf(currentGrpSize);
-                    if (grpSize == 0) {
-                        if (flag) {
-                            filteredList.add(row);
-                        }
-                    } else if (grpSize >= minGrpSize) {
-                        flag = true;
-                        filteredList.add(row);
-                    } else {
-                        flag = false;
-                    }
-                }
-            }
-            return createTableControl(parentContainer, filteredList);
+        if (minGrpSize > 1 && listOfData.get(0).length > sortState.getGrpSizeIndex()) {
+            return hideGroup(parentContainer, listOfData);
         }
         return createTableControl(parentContainer, listOfData);
 
+    }
+
+    /**
+     * DOC yyin Comment method "reset".
+     */
+    private void reset() {
+        // reset some properties: sort state, GID-Grpsize map,
+        this.sortState.reset();
+        this.rowOfGIDWithColor.clear();
+    }
+
+    private Control hideGroup(Composite parentContainer, List<Object[]> listOfData) {
+        List<Object[]> filteredList = new ArrayList<Object[]>();
+        boolean flag = false;
+        for (Object[] row : listOfData) {
+            String currentGrpSize = (String) row[sortState.getGrpSizeIndex()];
+            if (currentGrpSize.length() > 0) {
+                int grpSize = Integer.valueOf(currentGrpSize);
+                if (grpSize == 0) {
+                    if (flag) {
+                        filteredList.add(row);
+                    }
+                } else if (grpSize >= minGrpSize) {
+                    flag = true;
+                    filteredList.add(row);
+                } else {
+                    flag = false;
+                }
+            }
+        }
+        return createTableControl(parentContainer, filteredList);
     }
 
     private void addCustomSelectionBehaviour() {
@@ -180,6 +196,7 @@ public class DataSampleTable {
     }
 
     private void handleColumnSelectionChange(int index) {
+        sortState.setSelectedColumnIndex(index - 1);
         currentSelectedColumn = this.getUserColumnNameByPosition(index);
         listeners.firePropertyChange(MatchAnalysisConstant.DATA_SAMPLE_TABLE_COLUMN_SELECTION, true, false);
 
@@ -191,6 +208,35 @@ public class DataSampleTable {
 
     public void addPropertyChangeListener(PropertyChangeListener listener) {
         listeners.addPropertyChangeListener(listener);
+    }
+
+    // sort by the current selected column
+    public void sortByColumn() {
+        // if the next sort direction is back to original
+        SortDirectionEnum nextSortDirection = sortState.getNextSortDirection();
+
+        @SuppressWarnings("unchecked")
+        List<Object[]> sortedData = (List<Object[]>) bodyDataProvider.getList();
+        if (SortDirectionEnum.NONE.equals(nextSortDirection) && sortedData.get(0).length > sortState.getGrpSizeIndex()) {
+            // if the data has GID, back to order by GID
+            sortedData = MatchRuleAnlaysisUtils.sortResultByGID(propertyNames, sortedData);
+        } else {
+            sortedData = MatchRuleAnlaysisUtils.sortDataByColumn(sortState, sortedData);
+        }
+        // refresh the table by the sorted data
+        Composite parent = this.natTable.getParent();
+        createTableControl(parent, sortedData);
+        GridDataFactory.fillDefaults().grab(true, true).applyTo(natTable);
+        // add sort data function
+        natTable.addConfiguration(new DefaultSortConfiguration());
+        natTable.configure();
+
+        this.natTable.redraw();
+        parent.getParent().layout();
+        parent.layout();
+
+        // add the sort icon to the column label
+
     }
 
     /**
@@ -223,7 +269,7 @@ public class DataSampleTable {
         columnsName[i++] = MatchAnalysisConstant.BLOCK_KEY;
         columnsName[i++] = MatchAnalysisConstant.GID;
         // record the index of the GRP_SIZE
-        groupSizeIndex = i;
+        this.sortState.setGrpSizeIndex(i);
         columnsName[i++] = MatchAnalysisConstant.GRP_SIZE;
         columnsName[i++] = MatchAnalysisConstant.MASTER;
         columnsName[i++] = MatchAnalysisConstant.SCORE;
@@ -241,7 +287,6 @@ public class DataSampleTable {
     public void initTableProperty(String[] proNames, Map<String, String> proToLabels) {
         this.propertyNames = proNames;
         this.propertyToLabels = proToLabels;
-
     }
 
     // record the columns which is used as block keys
@@ -359,9 +404,6 @@ public class DataSampleTable {
             }
         });
 
-        // add sort data function
-        // natTable.addConfiguration(new SingleClickSortConfiguration());
-
         natTable.configure();
 
         natTable.getConfigRegistry().registerConfigAttribute(EditConfigAttributes.CELL_EDITABLE_RULE,
@@ -433,14 +475,10 @@ public class DataSampleTable {
     // for different data group, use different background color
     private class RowBackgroundGroupPainter extends BackgroundPainter {// GradientBackgroundPainter {
 
-        // <groupid, related color>
-        private Map<String, Integer> rowOfGIDWithColor = null;
-
         private String previousGID = null;
 
         public RowBackgroundGroupPainter(ICellPainter painter) {
             super(painter);
-            rowOfGIDWithColor = new HashMap<String, Integer>();
         }
 
         @Override
@@ -451,7 +489,7 @@ public class DataSampleTable {
             if (currentGID != null && !StringUtils.EMPTY.equals(currentGID)) {
                 ((ForegroundTextPainter) getWrappedPainter()).setDrawImage(true);
                 Object[] rowObject = (Object[]) bodyDataProvider.getRowObject(cell.getRowIndex());
-                if ("0".equals(rowObject[groupSizeIndex])) {
+                if ("0".equals(rowObject[sortState.getGrpSizeIndex()])) {
                     ((ForegroundTextPainter) getWrappedPainter()).setChangeForegroundColor(true);
                 } else {
                     ((ForegroundTextPainter) getWrappedPainter()).setChangeForegroundColor(false);
@@ -495,29 +533,29 @@ public class DataSampleTable {
         private int getGrpSize(ILayerCell cell) {
             Object[] rowObject = (Object[]) bodyDataProvider.getRowObject(cell.getRowIndex());
             // if the row record contains the group size info, continue
-            if (rowObject != null && rowObject.length > groupSizeIndex) {
+            if (rowObject != null && rowObject.length > sortState.getGrpSizeIndex()) {
                 // find the group size from the map first, GID index = grp_size_index-1
-                Integer groupSize = rowOfGIDWithColor.get(rowObject[groupSizeIndex - 1]);
+                Integer groupSize = rowOfGIDWithColor.get(rowObject[sortState.getGrpSizeIndex() - 1]);
 
                 if (groupSize != null) {
                     return groupSize;
                 }
                 try {
                     // if the group id has no related group size, get it
-                    groupSize = Integer.valueOf((String) rowObject[groupSizeIndex]);
+                    groupSize = Integer.valueOf((String) rowObject[sortState.getGrpSizeIndex()]);
                 } catch (java.lang.NumberFormatException nfe) {
                     // no need to handle--when no column given
                     return 0;
                 }
                 // if the current row is a master row, record its group size
-                if (Boolean.valueOf((String) rowObject[groupSizeIndex + 1])) {
+                if (Boolean.valueOf((String) rowObject[sortState.getGrpSizeIndex() + 1])) {
                     // put the group size of this group id into the map
-                    rowOfGIDWithColor.put((String) rowObject[groupSizeIndex - 1], groupSize);
+                    rowOfGIDWithColor.put((String) rowObject[sortState.getGrpSizeIndex() - 1], groupSize);
                     return groupSize;
                 } else {
                     // if the current row is not a master one,get its group size by its group id
-                    Integer size = rowOfGIDWithColor.get(rowObject[groupSizeIndex - 1]);
-                    return size == null ? 0 : rowOfGIDWithColor.get(rowObject[groupSizeIndex - 1]);
+                    Integer size = rowOfGIDWithColor.get(rowObject[sortState.getGrpSizeIndex() - 1]);
+                    return size == null ? 0 : rowOfGIDWithColor.get(rowObject[sortState.getGrpSizeIndex() - 1]);
                 }
             } else {
                 return 0;
@@ -528,8 +566,8 @@ public class DataSampleTable {
         private String getGID(ILayerCell cell) {
             Object[] rowObject = (Object[]) bodyDataProvider.getRowObject(cell.getRowIndex());
             // if the row record contains the group size info, continue
-            if (rowObject != null && rowObject.length > groupSizeIndex) {
-                return (String) rowObject[groupSizeIndex - 1];
+            if (rowObject != null && rowObject.length > sortState.getGrpSizeIndex()) {
+                return (String) rowObject[sortState.getGrpSizeIndex() - 1];
             } else {
                 return null;
             }
@@ -590,11 +628,27 @@ public class DataSampleTable {
             // if the current column is used as key, return its labelstack.(the color of it will keep)
             if (isColumnMarkedAsKeys(currentColumnName)) {
                 if (columnPosition < propertyNames.length + 1) {
-                    return new LabelStack(currentColumnName);// + columnPosition);// ,
-                                                             // propertyNames[columnPosition]);
+                    return addSortArrow(columnPosition, new LabelStack(currentColumnName));
                 }
             }
-            return super.getConfigLabelsByPosition(columnPosition, rowPosition);
+            return addSortArrow(columnPosition, super.getConfigLabelsByPosition(columnPosition, rowPosition));
+
+        }
+
+        private LabelStack addSortArrow(int columnPosition, LabelStack configLabels) {
+
+            // if sorted, add sort icon
+            if (sortState.getSelectedColumnIndex() != -1 && sortState.getSelectedColumnIndex() == columnPosition) {
+                switch (sortState.getCurrentSortDirection()) {
+                case ASC:
+                    configLabels.addLabelOnTop(DefaultSortConfiguration.SORT_UP_CONFIG_TYPE);
+                    break;
+                case DESC:
+                    configLabels.addLabelOnTop(DefaultSortConfiguration.SORT_DOWN_CONFIG_TYPE);
+                    break;
+                }
+            }
+            return configLabels;
         }
 
         /**
@@ -616,44 +670,6 @@ public class DataSampleTable {
             DataLayer dataLayer = new DataLayer(dataProvider, 50, 20);
             RowHeaderLayer rowHeaderLayer = new RowHeaderLayer(dataLayer, bodyLayer, bodyLayer.getSelectionLayer());
             setUnderlyingLayer(rowHeaderLayer);
-        }
-    }
-
-    class StyledColumnHeaderConfiguration extends DefaultColumnHeaderStyleConfiguration {
-
-        public StyledColumnHeaderConfiguration() {
-        }
-
-        @Override
-        public void configureRegistry(IConfigRegistry configRegistry) {
-            super.configureRegistry(configRegistry);
-            addNormalModeStyling(configRegistry);
-            addSelectedModeStyling(configRegistry);
-        }
-
-        private void addSelectedModeStyling(IConfigRegistry configRegistry) {
-            Image selectedBgImage = new Image(Display.getDefault(), getClass().getResourceAsStream(
-                    "selected_column_header_bg.png")); //$NON-NLS-1$
-
-            TextPainter txtPainter = new TextPainter(false, false);
-            ICellPainter selectedCellPainter = new BackgroundImagePainter(txtPainter, selectedBgImage, GUIHelper.COLOR_BLUE);
-
-            ColumnGroupHeaderTextPainter selectedHeaderPainter = new ColumnGroupHeaderTextPainter(new ColumnGroupModel(),
-                    selectedCellPainter);
-
-            configRegistry.registerConfigAttribute(CellConfigAttributes.CELL_PAINTER, selectedHeaderPainter, "SELECT", //$NON-NLS-1$
-                    "COLUMN_HEADER"); //$NON-NLS-1$
-        }
-
-        private void addNormalModeStyling(IConfigRegistry configRegistry) {
-            Image bgImage = new Image(Display.getDefault(), getClass().getResourceAsStream("column_header_bg.png")); //$NON-NLS-1$
-
-            TextPainter txtPainter = new TextPainter(false, false);
-            ICellPainter bgImagePainter = new BackgroundImagePainter(txtPainter, bgImage, GUIHelper.getColor(192, 192, 192));
-            SortableHeaderTextPainter headerPainter = new SortableHeaderTextPainter(bgImagePainter, false, true);
-
-            configRegistry.registerConfigAttribute(CellConfigAttributes.CELL_PAINTER, headerPainter, "NORMAL", "COLUMN_HEADER"); //$NON-NLS-1$ //$NON-NLS-2$
-            configRegistry.registerConfigAttribute(CellConfigAttributes.CELL_PAINTER, headerPainter, "NORMAL", "CORNER"); //$NON-NLS-1$ //$NON-NLS-2$
         }
     }
 
