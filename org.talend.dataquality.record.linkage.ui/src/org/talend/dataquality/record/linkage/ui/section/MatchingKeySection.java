@@ -574,10 +574,26 @@ public class MatchingKeySection extends AbstractMatchKeyWithChartTableSection {
             for (CTabItem oneTab : tabItems) {
                 MatchRuleTableComposite matchRuleTableComp = (MatchRuleTableComposite) oneTab
                         .getData(MatchAnalysisConstant.MATCH_RULE_TABLE_COMPOSITE);
-                matchRuleTableComp.removeKeyDefinition(column, getCurrentMatchRuleTableComposite().getMatchRule().getMatchKeys());
+                matchRuleTableComp.removeKeyDefinition(column, matchRuleTableComp.getMatchRule().getMatchKeys());
+                checkAndRemoveEmptyMatchRule(oneTab);
             }
+            this.redrawnContent();
+
         }
         columnMap.remove(column);
+    }
+
+    /**
+     * check and remove empty match rule
+     */
+    private void checkAndRemoveEmptyMatchRule(CTabItem theTab) {
+        MatchRuleTableComposite matchRuleTableComp = (MatchRuleTableComposite) theTab
+                .getData(MatchAnalysisConstant.MATCH_RULE_TABLE_COMPOSITE);
+        EList<MatchKeyDefinition> matchKeys = matchRuleTableComp.getMatchRule().getMatchKeys();
+        if (matchKeys.size() <= 0) {
+            getMatchRuleList().remove(matchRuleTableComp.getMatchRule());
+        }
+
     }
 
     /**
@@ -689,7 +705,7 @@ public class MatchingKeySection extends AbstractMatchKeyWithChartTableSection {
 
     private boolean hasMatchKey(boolean isCareAboutFirstMatchRuleCase) {
         List<MatchRule> matchRules = getMatchRuleDefinition().getMatchRules();
-        if (isCareAboutFirstMatchRuleCase) {//no match rule tab case
+        if (isCareAboutFirstMatchRuleCase) {// no match rule tab case
             if (matchRules == null || matchRules.size() == 0) {
                 return Boolean.FALSE;
             }

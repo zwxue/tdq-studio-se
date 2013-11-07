@@ -256,18 +256,26 @@ public abstract class AbstractMatchAnaysisTableSection extends AbstractSectionCo
 
         Composite buttonsComposite = new Composite(currentSectionClient, SWT.NONE);
         buttonsComposite.setLayout(new GridLayout(10, true));
+        buttonsComposite.setLayoutData(new GridData(SWT.FILL, SWT.NONE, true, false));
+
+        Composite commonButtonsComposite = new Composite(buttonsComposite, SWT.NONE);
+        commonButtonsComposite.setLayout(new GridLayout(10, true));
+        commonButtonsComposite.setLayoutData(new GridData(SWT.FILL, SWT.NONE, true, false, 8, 1));
 
         GridData labelGd = new GridData();
         labelGd.horizontalAlignment = SWT.LEFT;
         labelGd.widthHint = 30;
-        createAddAndRemoveButton(buttonsComposite, labelGd);
-        createMoveButton(buttonsComposite, labelGd);
+        createAddAndRemoveButton(commonButtonsComposite, labelGd);
+        createMoveButton(commonButtonsComposite, labelGd);
+
+        Composite refreshButtonComposite = new Composite(buttonsComposite, SWT.NONE);
+        refreshButtonComposite.setLayoutData(new GridData(SWT.FILL, SWT.NONE, true, false, 2, 1));
+        refreshButtonComposite.setLayout(new GridLayout(1, true));
         labelGd = new GridData();
-        labelGd.horizontalAlignment = SWT.CENTER;
-        labelGd.horizontalSpan = 5;
+        labelGd.horizontalAlignment = SWT.RIGHT;
         String buttonText = DefaultMessagesImpl.getString("AbstractMatchAnaysisTableSection.visulize_button_text"); //$NON-NLS-1$
         labelGd.widthHint = buttonText.length() * 10;
-        final Button refresh = new Button(buttonsComposite, SWT.NONE);
+        final Button refresh = new Button(refreshButtonComposite, SWT.NONE);
         refresh.setToolTipText(DefaultMessagesImpl.getString("AbstractMatchAnaysisTableSection.visulize_button_tooltip")); //$NON-NLS-1$
         refresh.setText(buttonText);
         refresh.setLayoutData(labelGd);
