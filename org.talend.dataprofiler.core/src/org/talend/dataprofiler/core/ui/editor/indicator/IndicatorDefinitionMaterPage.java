@@ -2275,14 +2275,14 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
                 for (TaggedValue tv : tvs) {
                     if (tv.getTag().equals(TaggedValueHelper.CLASS_NAME_TEXT)) {
                         String newTagValue = ((Text) javaUIDCombo.getData(TaggedValueHelper.CLASS_NAME_TEXT)).getText();
-                        needReloadJUDIJar = !StringUtils.equals(tv.getValue(), newTagValue);
+                        needReloadJUDIJar |= !StringUtils.equals(tv.getValue(), newTagValue);
                         tv.setValue(newTagValue);
                         isNewTaggedValue = false;
                         continue;
                     }
                     if (tv.getTag().equals(TaggedValueHelper.JAR_FILE_PATH)) {
                         String newTagValue = ((Text) javaUIDCombo.getData(TaggedValueHelper.JAR_FILE_PATH)).getText();
-                        needReloadJUDIJar = !StringUtils.equals(tv.getValue(), newTagValue);
+                        needReloadJUDIJar |= !StringUtils.equals(tv.getValue(), newTagValue);
                         tv.setValue(newTagValue);
                     }
                 }
