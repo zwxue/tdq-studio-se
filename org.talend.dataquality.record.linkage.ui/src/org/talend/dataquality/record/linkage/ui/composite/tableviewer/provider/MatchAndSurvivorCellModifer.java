@@ -75,7 +75,14 @@ public class MatchAndSurvivorCellModifer extends AbstractMatchCellModifier<Match
         if (MatchAnalysisConstant.HANDLE_NULL.equalsIgnoreCase(property)) {
             return HandleNullEnum.getTypeByValue(mkd.getMatchKey().getHandleNull()).ordinal();
         } else if (MatchAnalysisConstant.MATCHING_TYPE.equalsIgnoreCase(property)) {
-            return AttributeMatcherType.valueOf(mkd.getMatchKey().getAlgorithm().getAlgorithmType()).ordinal();
+            int idx = AttributeMatcherType.valueOf(mkd.getMatchKey().getAlgorithm().getAlgorithmType()).ordinal();
+            // TMDM-6572
+            if (idx == AttributeMatcherType.CUSTOM.ordinal()) {
+                idx -= 1; // The DUMMY algorithm is internal and does not exist in the combo lists of
+                          // MatchRuleItemEditor or MatchRuleAnalysisEditor. So we decrease the index by 1 in order
+                          // to get the correct Matcher.
+            }
+            return idx;
         } else if (MatchAnalysisConstant.CUSTOM_MATCHER.equalsIgnoreCase(property)) {
             return mkd.getMatchKey().getAlgorithm().getAlgorithmParameters();
         } else if (MatchAnalysisConstant.INPUT_COLUMN.equalsIgnoreCase(property)) {
