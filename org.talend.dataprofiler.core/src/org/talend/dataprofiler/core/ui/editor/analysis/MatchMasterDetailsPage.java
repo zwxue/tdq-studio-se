@@ -46,6 +46,9 @@ import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.editor.FormEditor;
+import org.eclipse.ui.forms.events.HyperlinkAdapter;
+import org.eclipse.ui.forms.events.HyperlinkEvent;
+import org.eclipse.ui.forms.widgets.ImageHyperlink;
 import org.eclipse.ui.forms.widgets.Section;
 import org.talend.commons.utils.WorkspaceUtils;
 import org.talend.core.model.metadata.MetadataColumnRepositoryObject;
@@ -61,6 +64,8 @@ import org.talend.cwm.db.connection.MDMSQLExecutor;
 import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.xml.TdXmlElementType;
+import org.talend.dataprofiler.core.CorePlugin;
+import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.dialog.MetadataAndColumnSelectionDialog;
@@ -68,6 +73,7 @@ import org.talend.dataprofiler.core.ui.events.EventEnum;
 import org.talend.dataprofiler.core.ui.events.EventManager;
 import org.talend.dataprofiler.core.ui.events.EventReceiver;
 import org.talend.dataprofiler.core.ui.utils.RepNodeUtils;
+import org.talend.dataprofiler.core.ui.views.DQRespositoryView;
 import org.talend.dataprofiler.core.ui.wizard.analysis.connection.ConnectionWizard;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.exception.DataprofilerCoreException;
@@ -292,11 +298,43 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
      */
     private void createAnaDataLabelComposite(Composite dataparent) {
         Composite titleComposite = toolkit.createComposite(dataparent);
-        GridLayout layout = new GridLayout(1, Boolean.TRUE);
+        GridLayout layout = new GridLayout(2, Boolean.TRUE);
         titleComposite.setLayout(layout);
         analyzeDataLabel = new Label(titleComposite, SWT.NONE);
         String matchAnaTagValue = TaggedValueHelper.getValueString(TaggedValueHelper.MATCH_ANALYZE_DATA, analysis);
         analyzeDataLabel.setText(analyzeDataDefaultInfo + matchAnaTagValue);
+
+        // ADD msjian TDQ-8040 2013-11-8: Add a button "show in repository view"
+        ImageHyperlink showInDQViewLink = toolkit.createImageHyperlink(titleComposite, SWT.NONE);
+        showInDQViewLink.setToolTipText(DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.showDQElement")); //$NON-NLS-1$
+        showInDQViewLink.setImage(ImageLib.getImage(ImageLib.APPLICATION_HOME));
+        showInDQViewLink.addHyperlinkListener(new HyperlinkAdapter() {
+
+            @Override
+            public void linkActivated(HyperlinkEvent e) {
+                EList<ModelElement> analysedElements = analysis.getContext().getAnalysedElements();
+                if (analysedElements != null && analysedElements.size() > 0) {
+                    ModelElement container = (ModelElement) (analysedElements.get(0).eContainer());
+
+                    DQRespositoryView dqview = CorePlugin.getDefault().findAndOpenRepositoryView();
+                    // if DqRepository view is not openning we will not do anything
+                    if (dqview == null) {
+                        return;
+                    }
+                    try {
+                        RepositoryNode recursiveFind = RepositoryNodeHelper.recursiveFind(container);
+                        if (recursiveFind == null) {
+                            recursiveFind = RepositoryNodeHelper.createRepositoryNode(container);
+                        }
+                        dqview.showSelectedElements(recursiveFind);
+                    } catch (Exception ex) {
+                        log.error(ex, ex);
+                    }
+                }
+
+            }
+        });
+        // TDQ-8040~
     }
 
     /**
@@ -637,11 +675,11 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
             // only when "new connection" will give the new connection to this method
             dialog = new MetadataAndColumnSelectionDialog(
                     null,
-                    DefaultMessagesImpl.getString("ColumnMasterDetailsPage.columnSelections"), dataManager, DefaultMessagesImpl.getString("ColumnMasterDetailsPage.columnSelections")); //$NON-NLS-1$
+                    DefaultMessagesImpl.getString("ColumnMasterDetailsPage.columnSelections"), dataManager, DefaultMessagesImpl.getString("ColumnMasterDetailsPage.columnSelections")); //$NON-NLS-1$ //$NON-NLS-2$
         } else {
             dialog = new MetadataAndColumnSelectionDialog(
                     null,
-                    DefaultMessagesImpl.getString("ColumnMasterDetailsPage.columnSelections"), oldSelectedColumns, DefaultMessagesImpl.getString("ColumnMasterDetailsPage.columnSelections")); //$NON-NLS-1$
+                    DefaultMessagesImpl.getString("ColumnMasterDetailsPage.columnSelections"), oldSelectedColumns, DefaultMessagesImpl.getString("ColumnMasterDetailsPage.columnSelections")); //$NON-NLS-1$ //$NON-NLS-2$
         }
         if (dialog.open() == Window.OK) {
             Object[] selectedResult = dialog.getResult();
