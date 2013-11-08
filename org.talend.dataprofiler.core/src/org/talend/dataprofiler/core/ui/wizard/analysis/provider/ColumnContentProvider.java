@@ -21,6 +21,7 @@ import org.eclipse.core.resources.IResource;
 import org.talend.core.model.repository.Folder;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.dataprofiler.core.ui.views.provider.ResourceViewContentProvider;
+import org.talend.dq.nodes.DBColumnRepNode;
 import org.talend.repository.model.IRepositoryNode.ENodeType;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.resource.ResourceManager;
@@ -46,7 +47,7 @@ public class ColumnContentProvider extends ResourceViewContentProvider {
         if (parentElement instanceof IContainer) {
             if (ResourceManager.isMetadataFolder((IResource) parentElement)) {
                 IFolder container = (IFolder) parentElement;
-                IRepositoryViewObject viewObject = new Folder(((IFolder) container).getName(), ((IFolder) container).getName());
+                IRepositoryViewObject viewObject = new Folder(container.getName(), container.getName());
                 RepositoryNode node = new RepositoryNode(viewObject, null, ENodeType.SYSTEM_FOLDER);
                 viewObject.setRepositoryNode(node);
                 Object[] children = super.getChildren(node);
@@ -75,6 +76,9 @@ public class ColumnContentProvider extends ResourceViewContentProvider {
 
     @Override
     public boolean hasChildren(Object element) {
+        if (element instanceof DBColumnRepNode) {
+            return false;
+        }
         return true;
     }
 }

@@ -24,6 +24,7 @@ import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.ui.editor.analysis.AnalysisEditor;
 import org.talend.dataprofiler.core.ui.editor.analysis.MatchMasterDetailsPage;
 import org.talend.dataprofiler.core.ui.wizard.analysis.AnalysisMetadataWizardPage;
+import org.talend.dataprofiler.core.ui.wizard.analysis.provider.MatchAnaColumnContentProvider;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisType;
 import org.talend.dataquality.indicators.Indicator;
@@ -59,7 +60,7 @@ public class MatchWizard extends ColumnWizard {
         addPage(new AnalysisMetadataWizardPage());
         AnalysisParameter parameter = (AnalysisParameter) getParameter();
         if (parameter.getConnectionRepNode() == null && parameter.getAnalysisType().equals(AnalysisType.MATCH_ANALYSIS)) {
-            selectionPage = new ColumnAnalysisDOSelectionPage();
+            selectionPage = new ColumnAnalysisDOSelectionPage(new MatchAnaColumnContentProvider(true));
             addPage(selectionPage);
         }
         for (WizardPage page : getExtenalPages()) {

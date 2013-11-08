@@ -22,6 +22,7 @@ import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
+import org.talend.dataprofiler.core.ui.views.provider.ResourceViewContentProvider;
 import org.talend.dataprofiler.core.ui.wizard.analysis.AnalysisDPSelectionPage;
 import org.talend.dataprofiler.core.ui.wizard.analysis.provider.ColumnContentProvider;
 import org.talend.repository.model.IRepositoryNode;
@@ -46,7 +47,16 @@ public class ColumnAnalysisDOSelectionPage extends AnalysisDPSelectionPage {
      * @param pageName
      */
     public ColumnAnalysisDOSelectionPage() {
-        super(newAnaStr, chooseConnStr, connsStr, new ColumnContentProvider(), true); //$NON-NLS-1$
+        super(newAnaStr, chooseConnStr, connsStr, new ColumnContentProvider(), true);
+
+        setPageComplete(true);
+    }
+
+    /**
+     * @param contentProvider, use diffirent ContentProvider for Match analysis and column analysis.
+     */
+    public ColumnAnalysisDOSelectionPage(ResourceViewContentProvider contentProvider) {
+        super(newAnaStr, chooseConnStr, connsStr, contentProvider, true);
 
         setPageComplete(true);
     }

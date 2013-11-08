@@ -23,6 +23,8 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.PlatformUI;
 import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.dataprofiler.core.PluginConstant;
+import org.talend.dataprofiler.core.ui.dialog.provider.DBTablesViewLabelProvider;
+import org.talend.dataprofiler.core.ui.wizard.analysis.provider.MatchAnaColumnContentProvider;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
@@ -84,6 +86,15 @@ public class MetadataAndColumnSelectionDialog extends ColumnsSelectionDialog {
     protected Composite createSelectionButtons(Composite composite) {
         Composite buttonComposite = new Composite(composite, SWT.RIGHT);
         return buttonComposite;
+    }
+
+    @Override
+    protected void initProvider() {
+        fLabelProvider = new DBTablesViewLabelProvider();
+        // use the contenprovider of MatchAnaColumnContentProvider for match analysis
+        fContentProvider = new MatchAnaColumnContentProvider(false);
+        sLabelProvider = new DBTablesViewLabelProvider();
+        sContentProvider = new ModelElementContentProvider();
     }
 
 }
