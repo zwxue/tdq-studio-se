@@ -357,8 +357,7 @@ public class BlockingKeySection extends AbstractMatchAnaysisTableSection {
     public void importMatchRule(MatchRuleDefinition matchRule, boolean overwrite) {
         if (overwrite) {
             // clear current keys
-            this.getBlockKeyDefinitionList().clear();
-            this.tableComposite.redraw();
+            this.removeAllBlockingKey();
         }
         List<String> conflictKeys = new ArrayList<String>();
         for (BlockKeyDefinition blockKey : matchRule.getBlockKeys()) {

@@ -577,7 +577,7 @@ public class MatchingKeySection extends AbstractMatchKeyWithChartTableSection {
                 matchRuleTableComp.removeKeyDefinition(column, matchRuleTableComp.getMatchRule().getMatchKeys());
                 checkAndRemoveEmptyMatchRule(oneTab);
             }
-            this.redrawnContent();
+            this.redrawnSubTableContent();
 
         }
         columnMap.remove(column);
@@ -617,11 +617,9 @@ public class MatchingKeySection extends AbstractMatchKeyWithChartTableSection {
             }
             // clear all match rules in matchrule definition
             getMatchRuleDefinition().getMatchRules().clear();
-
             // overwrite the threshold
             groupQualityThresholdText.setText(String.valueOf(matchRule.getMatchGroupQualityThreshold()));
             // getMatchRuleDefinition().setMatchGroupQualityThreshold(matchRule.getMatchGroupQualityThreshold());
-
         }
         // create the tab from the parameter:matchRule
         for (MatchRule oneMatchRule : matchRule.getMatchRules()) {
