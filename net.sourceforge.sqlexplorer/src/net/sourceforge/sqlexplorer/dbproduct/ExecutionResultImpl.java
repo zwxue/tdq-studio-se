@@ -67,6 +67,9 @@ public final class ExecutionResultImpl implements ExecutionResults {
 
     private ResultSet currentResultSet;
 
+    // calss name of hive statement,DO NOT modify the string of "HivePreparedStatement".
+    private final String hiveStatementClassName = "HivePreparedStatement";
+
     public ExecutionResultImpl(AbstractDatabaseProduct product, Statement stmt, boolean hasResults,
             LinkedList<NamedParameter> parameters, int maxRows) throws SQLException {
         super();
@@ -108,16 +111,20 @@ public final class ExecutionResultImpl implements ExecutionResults {
             if ("org.sqlite.PrepStmt".equals(stmt.getClass().getName())) {
                 return null;
             }
-            
-            // MOD qiongli TDQ-5907, HivePreparedStatement dosenot support method 'getResultSet()'.
-            if (!("org.apache.hadoop.hive.jdbc.HivePreparedStatement".equals(stmt.getClass().getName())) && stmt.getMoreResults()) {
+
+            // MOD qiongli TDQ-5907, HivePreparedStatement doesn't support method 'getMoreResults()'.
+            if (stmt.getClass().getName().contains(hiveStatementClassName)) {
                 currentResultSet = stmt.getResultSet();
             } else {
-                int updateCount = stmt.getUpdateCount();
-                if (updateCount != -1 && updateCount != 0) {
-                    this.updateCount += updateCount;
+                if (stmt.getMoreResults()) {
+                    currentResultSet = stmt.getResultSet();
                 } else {
-                    state = State.PARAMETER_RESULTS;
+                    int updateCount = stmt.getUpdateCount();
+                    if (updateCount != -1 && updateCount != 0) {
+                        this.updateCount += updateCount;
+                    } else {
+                        state = State.PARAMETER_RESULTS;
+                    }
                 }
             }
         }
