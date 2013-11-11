@@ -83,7 +83,7 @@ public class AnalysisRecordGroupingUtils {
      * @return
      */
     public static Map<String, String> getMatchKeyMap(String column, String algoType, String algoParameter, int confidentWeight,
-            Map<String, String> columnIndexMap, double matchInterval, String attributeName) {
+            Map<String, String> columnIndexMap, double matchInterval, String attributeName, String handleNull) {
         Map<String, String> matchKeyMap = new HashMap<String, String>();
         matchKeyMap.put(IRecordGrouping.COLUMN_IDX, columnIndexMap.get(column));
         matchKeyMap.put(IRecordGrouping.MATCHING_TYPE, AttributeMatcherType.valueOf(algoType).name());
@@ -91,6 +91,7 @@ public class AnalysisRecordGroupingUtils {
         matchKeyMap.put(IRecordGrouping.CONFIDENCE_WEIGHT, String.valueOf(confidentWeight));
         matchKeyMap.put(IRecordGrouping.RECORD_MATCH_THRESHOLD, String.valueOf(matchInterval));
         matchKeyMap.put(IRecordGrouping.ATTRIBUTE_NAME, attributeName);
+        matchKeyMap.put(IRecordGrouping.HANDLE_NULL, handleNull);
         return matchKeyMap;
     }
 

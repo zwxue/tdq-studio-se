@@ -345,7 +345,8 @@ public class ExecuteMatchRuleHandler {
                 }
                 Map<String, String> matchKeyMap = AnalysisRecordGroupingUtils.getMatchKeyMap(matchDef.getColumn(), matchDef
                         .getAlgorithm().getAlgorithmType(), matchDef.getAlgorithm().getAlgorithmParameters(), matchDef
-                        .getConfidenceWeight(), columnMap, matcher.getMatchInterval(), matchDef.getColumn());
+                        .getConfidenceWeight(), columnMap, matcher.getMatchInterval(), matchDef.getColumn(), matchDef
+                        .getHandleNull());
                 ruleMatcherConvertResult.add(matchKeyMap);
             }
             analysisMatchRecordGrouping.addRuleMatcher(ruleMatcherConvertResult);
