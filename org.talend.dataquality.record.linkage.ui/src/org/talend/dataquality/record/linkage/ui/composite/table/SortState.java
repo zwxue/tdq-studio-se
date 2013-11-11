@@ -23,6 +23,8 @@ public class SortState {
 
     private int selectedColumnIndex = -1;
 
+    private String selectedColumnName = null;
+
     // because the grp_size is String type, so need special operation before sorting
     private int grpSizeIndex = -1;
 
@@ -30,11 +32,23 @@ public class SortState {
     // if the clicked column=current selected column, only need to get next direction
     private boolean isColumnChanged = Boolean.FALSE;
 
+    private boolean isSortEnable = Boolean.FALSE;
+
     public void reset() {
         sortDirection = SortDirectionEnum.NONE;
         selectedColumnIndex = -1;
         isColumnChanged = Boolean.FALSE;
         grpSizeIndex = -1;
+        isSortEnable = Boolean.FALSE;
+        selectedColumnName = null;
+    }
+
+    public String getSelectedColumnName() {
+        return this.selectedColumnName;
+    }
+
+    public void setSelectedColumnName(String selectedColumnName) {
+        this.selectedColumnName = selectedColumnName;
     }
 
     public SortDirectionEnum getNextSortDirection() {
@@ -44,6 +58,8 @@ public class SortState {
         } else {
             sortDirection = sortDirection.getNextSortDirection();
         }
+        // only when get direction, means that current is sort enabled.
+        isSortEnable = Boolean.TRUE;
         return this.sortDirection;
     }
 
@@ -63,6 +79,8 @@ public class SortState {
             isColumnChanged = Boolean.FALSE;
         }
         this.selectedColumnIndex = clickedColumnIndex;
+        // every column header click will set the column index
+        isSortEnable = Boolean.FALSE;
     }
 
     public void setGrpSizeIndex(int grpSizeIndex) {
@@ -75,5 +93,27 @@ public class SortState {
 
     public boolean isGroupSizeColumn() {
         return grpSizeIndex == selectedColumnIndex;
+    }
+
+    public boolean isSortActive() {
+        return this.isSortEnable;
+    }
+
+    /**
+     * check if the given column is the current selected column
+     * 
+     * @param currentColumnName
+     * @return
+     */
+    public boolean isSelectedColumn(String columnName) {
+        if (this.selectedColumnName != null) {
+            return this.selectedColumnName.equalsIgnoreCase(columnName);
+        }
+        return false;
+    }
+
+    public void resetSelectedColumn() {
+        this.selectedColumnIndex = -1;
+        this.selectedColumnName = null;
     }
 }

@@ -900,6 +900,7 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
             sampleTable.sortByColumn();
             return;
         }
+        sampleTable.resetSortSelection();
         if (columnName == null) {
             // means that the user selected column is the additional ones,no need to process it
             return;

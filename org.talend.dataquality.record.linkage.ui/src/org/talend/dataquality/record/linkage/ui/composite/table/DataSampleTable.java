@@ -107,6 +107,14 @@ public class DataSampleTable {
 
     private String currentSelectedColumn = null;
 
+    // record the columns which is used as block keys
+    private List<String> markedAsBlockKey = null;
+
+    // record the columns which is used as match keys
+    private List<String> markedAsMatchKey = null;
+
+    private int minGrpSize;
+
     private SortState sortState = new SortState();
 
     // <groupid, related color>
@@ -140,10 +148,31 @@ public class DataSampleTable {
         if (listOfData.size() < 1) {
             listOfData.add(getEmptyRow());
         }
-        if (minGrpSize > 1 && listOfData.get(0).length > sortState.getGrpSizeIndex()) {
-            return hideGroup(parentContainer, listOfData);
+        if (listOfData.get(0).length > sortState.getGrpSizeIndex()) {
+            initGIDMap(listOfData);
+            if (minGrpSize > 1) {
+                return hideGroup(parentContainer, listOfData);
+            }
         }
         return createTableControl(parentContainer, listOfData);
+
+    }
+
+    /**
+     * store the GID's group size.
+     * 
+     * @param listOfData
+     */
+    private void initGIDMap(List<Object[]> listOfData) {
+        for (Object[] row : listOfData) {
+            String currentGrpSize = (String) row[sortState.getGrpSizeIndex()];
+            if (currentGrpSize.length() > 0) {
+                int grpSize = Integer.valueOf(currentGrpSize);
+                if (grpSize > 0) {
+                    this.rowOfGIDWithColor.put((String) row[sortState.getGrpSizeIndex() - 1], grpSize);
+                }
+            }
+        }
 
     }
 
@@ -197,6 +226,8 @@ public class DataSampleTable {
 
     private void handleColumnSelectionChange(int index) {
         sortState.setSelectedColumnIndex(index - 1);
+        // need also to remember the selected column name, for fix the arrow on the column when scrolling
+        sortState.setSelectedColumnName(this.propertyNames[index - 1]);
         currentSelectedColumn = this.getUserColumnNameByPosition(index);
         listeners.firePropertyChange(MatchAnalysisConstant.DATA_SAMPLE_TABLE_COLUMN_SELECTION, true, false);
 
@@ -234,9 +265,6 @@ public class DataSampleTable {
         this.natTable.redraw();
         parent.getParent().layout();
         parent.layout();
-
-        // add the sort icon to the column label
-
     }
 
     /**
@@ -288,14 +316,6 @@ public class DataSampleTable {
         this.propertyNames = proNames;
         this.propertyToLabels = proToLabels;
     }
-
-    // record the columns which is used as block keys
-    private List<String> markedAsBlockKey = null;
-
-    // record the columns which is used as match keys
-    private List<String> markedAsMatchKey = null;
-
-    private int minGrpSize;
 
     public void changeColumnHeaderLabelColor(String columnName, Color color, String keyName) {
         updateMarkedKeys(columnName, color, keyName);
@@ -547,19 +567,9 @@ public class DataSampleTable {
                     // no need to handle--when no column given
                     return 0;
                 }
-                // if the current row is a master row, record its group size
-                if (Boolean.valueOf((String) rowObject[sortState.getGrpSizeIndex() + 1])) {
-                    // put the group size of this group id into the map
-                    rowOfGIDWithColor.put((String) rowObject[sortState.getGrpSizeIndex() - 1], groupSize);
-                    return groupSize;
-                } else {
-                    // if the current row is not a master one,get its group size by its group id
-                    Integer size = rowOfGIDWithColor.get(rowObject[sortState.getGrpSizeIndex() - 1]);
-                    return size == null ? 0 : rowOfGIDWithColor.get(rowObject[sortState.getGrpSizeIndex() - 1]);
-                }
-            } else {
-                return 0;
+                return groupSize;
             }
+            return 0;
         }
 
         // get the group id of the cell if any
@@ -628,24 +638,26 @@ public class DataSampleTable {
             // if the current column is used as key, return its labelstack.(the color of it will keep)
             if (isColumnMarkedAsKeys(currentColumnName)) {
                 if (columnPosition < propertyNames.length + 1) {
-                    return addSortArrow(columnPosition, new LabelStack(currentColumnName));
+                    return addSortArrow(currentColumnName, new LabelStack(currentColumnName));
                 }
             }
-            return addSortArrow(columnPosition, super.getConfigLabelsByPosition(columnPosition, rowPosition));
+            return addSortArrow(currentColumnName, super.getConfigLabelsByPosition(columnPosition, rowPosition));
 
         }
 
-        private LabelStack addSortArrow(int columnPosition, LabelStack configLabels) {
+        private LabelStack addSortArrow(String currentColumnName, LabelStack configLabels) {
 
-            // if sorted, add sort icon
-            if (sortState.getSelectedColumnIndex() != -1 && sortState.getSelectedColumnIndex() == columnPosition) {
-                switch (sortState.getCurrentSortDirection()) {
-                case ASC:
-                    configLabels.addLabelOnTop(DefaultSortConfiguration.SORT_UP_CONFIG_TYPE);
-                    break;
-                case DESC:
-                    configLabels.addLabelOnTop(DefaultSortConfiguration.SORT_DOWN_CONFIG_TYPE);
-                    break;
+            // if current is sorting, add sort icon, else no need to add
+            if (sortState.isSortActive()) {
+                if (sortState.getSelectedColumnIndex() != -1 && sortState.isSelectedColumn(currentColumnName)) {
+                    switch (sortState.getCurrentSortDirection()) {
+                    case ASC:
+                        configLabels.addLabelOnTop(DefaultSortConfiguration.SORT_UP_CONFIG_TYPE);
+                        break;
+                    case DESC:
+                        configLabels.addLabelOnTop(DefaultSortConfiguration.SORT_DOWN_CONFIG_TYPE);
+                        break;
+                    }
                 }
             }
             return configLabels;
@@ -701,5 +713,9 @@ public class DataSampleTable {
      */
     public void setMinGroupSize(int size) {
         this.minGrpSize = size;
+    }
+
+    public void resetSortSelection() {
+        this.sortState.resetSelectedColumn();
     }
 }
