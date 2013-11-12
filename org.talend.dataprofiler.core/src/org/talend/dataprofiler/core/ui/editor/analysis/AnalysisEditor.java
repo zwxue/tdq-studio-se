@@ -69,6 +69,7 @@ public class AnalysisEditor extends CommonFormEditor {
 
     // MOD xqliu 2009-07-02 bug 7687
     private DefaultSaveAction saveAction;
+
     // ~
 
     // Added 20130725 TDQ-7639 yyin
@@ -361,7 +362,7 @@ public class AnalysisEditor extends CommonFormEditor {
             public boolean handle(Object data) {
                 // MOD TDQ-7816: when the result page are not created, no need to refresh, only refresh master page is
                 // enough
-                if (resultPage.getManagedForm() != null) {
+                if (resultPage != null && resultPage.getManagedForm() != null) {
                     resultPage.refresh(masterPage);
                     return true;
                 } else {
