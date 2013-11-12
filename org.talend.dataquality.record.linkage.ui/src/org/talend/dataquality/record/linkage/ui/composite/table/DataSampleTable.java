@@ -242,7 +242,10 @@ public class DataSampleTable {
     }
 
     // sort by the current selected column
-    public void sortByColumn() {
+    public void sortByColumn(List<ModelElement> columns) {
+        if (columns == null || columns.size() < 1) {
+            return;
+        }
         // if the next sort direction is back to original
         SortDirectionEnum nextSortDirection = sortState.getNextSortDirection();
 
@@ -252,7 +255,7 @@ public class DataSampleTable {
             // if the data has GID, back to order by GID
             sortedData = MatchRuleAnlaysisUtils.sortResultByGID(propertyNames, sortedData);
         } else {
-            sortedData = MatchRuleAnlaysisUtils.sortDataByColumn(sortState, sortedData);
+            sortedData = MatchRuleAnlaysisUtils.sortDataByColumn(sortState, sortedData, columns);
         }
         // refresh the table by the sorted data
         Composite parent = this.natTable.getParent();

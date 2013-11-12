@@ -897,7 +897,7 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
         String columnName = sampleTable.getCurrentSelectedColumn();
         if (!isBlockingKeyButtonPushed && !isMatchingKeyButtonPushed) {
             // sort by column
-            sampleTable.sortByColumn();
+            sampleTable.sortByColumn(Arrays.asList(analysisHandler.getSelectedColumns()));
             return;
         }
         sampleTable.resetSortSelection();

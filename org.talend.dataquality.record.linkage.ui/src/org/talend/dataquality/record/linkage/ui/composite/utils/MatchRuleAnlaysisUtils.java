@@ -12,9 +12,8 @@
 // ============================================================================
 package org.talend.dataquality.record.linkage.ui.composite.utils;
 
-import java.math.BigDecimal;
-import java.sql.Date;
-import java.sql.Timestamp;
+import java.sql.Types;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -24,12 +23,15 @@ import org.apache.commons.lang.StringUtils;
 import org.eclipse.emf.common.util.EList;
 import org.talend.core.GlobalServiceRegister;
 import org.talend.core.ITDQRepositoryService;
+import org.talend.cwm.relational.TdColumn;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.columnset.BlockKeyIndicator;
 import org.talend.dataquality.indicators.columnset.ColumnsetPackage;
 import org.talend.dataquality.indicators.columnset.RecordMatchingIndicator;
 import org.talend.dataquality.record.linkage.constant.AttributeMatcherType;
+import org.talend.dataquality.record.linkage.ui.composite.table.ISortComparator;
+import org.talend.dataquality.record.linkage.ui.composite.table.SortComparator;
 import org.talend.dataquality.record.linkage.ui.composite.table.SortState;
 import org.talend.dataquality.record.linkage.utils.AnalysisRecordGroupingUtils;
 import org.talend.dataquality.record.linkage.utils.HandleNullEnum;
@@ -234,9 +236,12 @@ public class MatchRuleAnlaysisUtils {
         return resultData;
     }
 
-    public static List<Object[]> sortDataByColumn(final SortState sortState, List<Object[]> resultData) {
+    public static List<Object[]> sortDataByColumn(final SortState sortState, List<Object[]> resultData,
+            final List<ModelElement> columns) {
 
         Comparator<Object[]> comparator = new Comparator<Object[]>() {
+
+            ISortComparator sortComparator = null;
 
             @Override
             public int compare(Object[] row1, Object[] row2) {
@@ -244,48 +249,44 @@ public class MatchRuleAnlaysisUtils {
                 if ((row1.length - 1) < sortState.getSelectedColumnIndex()) {
                     return 0;
                 }
-
                 Object value1 = row1[sortState.getSelectedColumnIndex()];
                 Object value2 = row2[sortState.getSelectedColumnIndex()];
+
+                // get the sort comparator according to its type.
+                try {
+                    if (sortComparator == null) {
+                        sortComparator = getSortComparator(value1, sortState.getSelectedColumnIndex());
+                    }
+                } catch (ParseException e) {
+                    return 0;
+                }
+                if (sortComparator == null) {
+                    return 0;
+                }
                 switch (sortState.getCurrentSortDirection()) {
                 case ASC:
-                    return compareTwo(value1, value2);
+                    return sortComparator.compareTwo(value1, value2);
                 case DESC:
-                    return compareTwo(value2, value1);
+                    return sortComparator.compareTwo(value2, value1);
                 default:
                     return 0;
                 }
             }
 
-            private int compareTwo(Object value1, Object value2) {
-                if (value1 == null) {
-                    return -1;
-                } else if (value2 == null) {
-                    return 1;
+            // when the columns is TdColumn, use its sqlType to compare
+            private ISortComparator getSortComparator(Object object, int index) throws ParseException {
+                if (!(columns.get(0) instanceof TdColumn)) {// if not a db column
+                    return SortComparator.getSortComparator(Types.VARCHAR);
                 }
-                // when the column is group_size, should use integer to compare, which is String originally
-                if (sortState.isGroupSizeColumn()) {
-                    value1 = Integer.parseInt((String) value1);
-                    value2 = Integer.parseInt((String) value2);
+                if (columns.size() <= index) {// special columns
+                    if (sortState.isGroupSizeColumn()) {// group size is integer type
+                        return SortComparator.getSortComparator(Types.INTEGER);
+                    } else {
+                        return SortComparator.getSortComparator(Types.VARCHAR);
+                    }
                 }
-
-                if (value1 instanceof Integer) {
-                    return ((Integer) value1).compareTo((Integer) value2);
-                } else if (value1 instanceof String) {
-                    return ((String) value1).compareTo((String) value2);
-                } else if (value1 instanceof BigDecimal) {
-                    return ((BigDecimal) value1).compareTo((BigDecimal) value2);
-                } else if (value1 instanceof Date) {
-                    return ((Date) value1).compareTo((Date) value2);
-                } else if (value1 instanceof Timestamp) {
-                    return ((Timestamp) value1).compareTo((Timestamp) value2);
-                } else if (value1 instanceof Long) {
-                    return ((Long) value1).compareTo((Long) value2);
-                } else if (value1 instanceof Double) {
-                    return ((Double) value1).compareTo((Double) value2);
-                } else {
-                    return String.valueOf(value1).compareTo(String.valueOf(value2));
-                }
+                TdColumn element = (TdColumn) columns.get(index);
+                return SortComparator.getSortComparator(element.getSqlDataType().getJavaDataType());
             }
 
         };
