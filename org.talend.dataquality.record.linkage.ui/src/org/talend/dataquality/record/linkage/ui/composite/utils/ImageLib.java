@@ -62,6 +62,8 @@ public final class ImageLib {
 
     public static final String ADD_ACTION = "add.gif"; //$NON-NLS-1$
 
+    public static final String EDIT_ACTION = "edit.png"; //$NON-NLS-1$
+
     public static final String UP_ACTION = "up.gif"; //$NON-NLS-1$
 
     public static final String DOWN_ACTION = "down.gif"; //$NON-NLS-1$

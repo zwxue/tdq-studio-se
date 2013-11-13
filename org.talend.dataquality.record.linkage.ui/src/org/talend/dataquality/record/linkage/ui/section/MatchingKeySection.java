@@ -24,6 +24,7 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.custom.CTabFolder2Adapter;
@@ -38,6 +39,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.PlatformUI;
@@ -74,6 +76,8 @@ public class MatchingKeySection extends AbstractMatchKeyWithChartTableSection {
     private CTabFolder ruleFolder;
 
     private static final Image ADD_IMG = ImageLib.getImage(ImageLib.ADD_ACTION);
+
+    private static final Image EDIT_IMG = ImageLib.getImage(ImageLib.EDIT_ACTION);
 
     private int tabCount = 1;
 
@@ -120,8 +124,11 @@ public class MatchingKeySection extends AbstractMatchKeyWithChartTableSection {
         ruleFolder.setRenderer(new MatchRuleCTabFolderRenderer(ruleFolder));
         ruleFolder.setMaximizeVisible(false);
         ruleFolder.setMinimizeVisible(false);
-        ruleFolder.setTabHeight(28);
+        // set higher than before, because add a edit button.
+        ruleFolder.setTabHeight(35);
         ruleFolder.setSimple(false);
+        ruleFolder.setDragDetect(true);
+
         GridData folderData = new GridData(GridData.FILL_BOTH);
         // folderData.verticalIndent = -26;
         ruleFolder.setLayoutData(folderData);
@@ -146,10 +153,34 @@ public class MatchingKeySection extends AbstractMatchKeyWithChartTableSection {
 
         });
 
-        Button button = new Button(ruleFolder, SWT.FLAT | SWT.CENTER);
-        button.setImage(ADD_IMG);
-        ruleFolder.setTopRight(button);
-        button.addSelectionListener(new SelectionAdapter() {
+        // ADD msjian TDQ-8090: add a edit button
+        Composite com = toolkit.createComposite(ruleFolder);
+        GridLayout comTableLayout = new GridLayout(2, Boolean.TRUE);
+        com.setLayout(comTableLayout);
+
+        Button editButton = new Button(com, SWT.FLAT | SWT.CENTER);
+        editButton.setImage(EDIT_IMG);
+        editButton.setToolTipText(DefaultMessagesImpl.getString("EditSortMatchRuleNamesDialog.Title")); //$NON-NLS-1$
+        editButton.addSelectionListener(new SelectionAdapter() {
+
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                EditSortMatchRuleNamesDialog dialog = new EditSortMatchRuleNamesDialog(Display.getCurrent().getActiveShell(),
+                        getMatchRuleList());
+                if (dialog.open() == Window.OK) {
+                    // only when something is changed, do redraw and set the dirty.
+                    if (dialog.isDirty()) {
+                        redrawnSubTableContent();
+                        listeners.firePropertyChange(MatchAnalysisConstant.ISDIRTY_PROPERTY, true, false);
+                    }
+                }
+            }
+        });
+
+        Button addButton = new Button(com, SWT.FLAT | SWT.CENTER);
+        addButton.setImage(ADD_IMG);
+        addButton.setToolTipText(DefaultMessagesImpl.getString("MatchingKeySection.Add_rule_hint")); //$NON-NLS-1$
+        addButton.addSelectionListener(new SelectionAdapter() {
 
             @Override
             public void widgetSelected(SelectionEvent e) {
@@ -160,6 +191,10 @@ public class MatchingKeySection extends AbstractMatchKeyWithChartTableSection {
             }
 
         });
+
+        ruleFolder.setTopRight(com);
+        // TDQ-8090~
+        
         initMatchRuleTabs();
 
         createGroupQualityThreshold(parent);
