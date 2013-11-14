@@ -446,7 +446,7 @@ public class AnalysisCreationTest {
         try {
             rc = instance.checkConnection(metaConnection);
         } catch (java.lang.RuntimeException e) {
-            log.error("connect to " + dbUrl + "failed,", e);
+            Assert.fail("connect to " + dbUrl + "failed," + e.getMessage());
         }
         Connection dataProvider = null;
         if (rc.isOk()) {

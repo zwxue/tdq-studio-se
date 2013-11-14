@@ -297,7 +297,12 @@ public class MultiColAnalysisCreationTest {
 
         MetadataFillFactory instance = MetadataFillFactory.getDBInstance();
         IMetadataConnection metaConnection = instance.fillUIParams(ParameterUtil.toMap(params));
-        ReturnCode rc = instance.checkConnection(metaConnection);
+        ReturnCode rc = null;
+        try {
+            rc = instance.checkConnection(metaConnection);
+        } catch (java.lang.RuntimeException e) {
+            Assert.fail("connect to " + dbUrl + "failed," + e.getMessage());
+        }
         Connection dataProvider = null;
         if (rc.isOk()) {
             dataProvider = instance.fillUIConnParams(metaConnection, null);
