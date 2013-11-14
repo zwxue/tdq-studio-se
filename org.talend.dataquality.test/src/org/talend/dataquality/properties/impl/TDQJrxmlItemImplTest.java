@@ -137,10 +137,6 @@ public class TDQJrxmlItemImplTest {
     }
 
     private void writeToFile(String content) throws IOException {
-        if (file.exists()) {
-            file.delete();
-        }
-        file.createNewFile();
         BufferedWriter output = new BufferedWriter(new FileWriter(file));
         output.write(content);
         output.close();
