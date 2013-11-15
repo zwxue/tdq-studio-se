@@ -23,6 +23,7 @@ import org.talend.dataquality.record.linkage.attribute.SubstringAttributeMatcher
 import org.talend.dataquality.record.linkage.constant.AttributeMatcherType;
 import org.talend.dataquality.record.linkage.utils.SurvivorShipAlgorithmEnum;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -73,22 +74,28 @@ public class MatchMerge {
                     }
                     mergedRecord.getAttributes().get(i).setValue(r1.get(i).getValue());
                 } else {
+                    BigDecimal r1Value;
+                    BigDecimal r2Value;
                     switch (typeMergeTable[i]) {
                         case CONCATENATE:
                             mergedRecord.getAttributes().get(i).setValue(r1.get(i).getValue() + r2.get(i).getValue());
                             break;
                         case LARGEST:
-                            if (Integer.parseInt(r1.get(i).getValue()) <= Integer.parseInt(r2.get(i).getValue())) {
+                            r1Value = parseNumberValue(r1, i);
+                            r2Value = parseNumberValue(r2, i);
+                            if (r1Value.compareTo(r2Value) >= 0) {
                                 mergedRecord.getAttributes().get(i).setValue(r2.get(i).getValue());
                             } else {
                                 mergedRecord.getAttributes().get(i).setValue(r1.get(i).getValue());
                             }
                             break;
                         case SMALLEST:
-                            if (Integer.parseInt(r1.get(i).getValue()) <= Integer.parseInt(r2.get(i).getValue())) {
-                                mergedRecord.getAttributes().get(i).setValue(r1.get(i).getValue());
-                            } else {
+                            r1Value = parseNumberValue(r1, i);
+                            r2Value = parseNumberValue(r2, i);
+                            if (r1Value.compareTo(r2Value) <= 0) {
                                 mergedRecord.getAttributes().get(i).setValue(r2.get(i).getValue());
+                            } else {
+                                mergedRecord.getAttributes().get(i).setValue(r1.get(i).getValue());
                             }
                             break;
                         case MOST_RECENT:
@@ -201,6 +208,11 @@ public class MatchMerge {
             throw new IllegalStateException("Trying to merge two groups together.");
         }
         return mergedRecord;
+    }
+
+    private static BigDecimal parseNumberValue(List<Attribute> record, int i) {
+        String value = record.get(i).getValue();
+        return value == null || value.isEmpty() ? BigDecimal.ZERO : new BigDecimal(value);
     }
 
     public static double matchScore(Attribute attribute0,

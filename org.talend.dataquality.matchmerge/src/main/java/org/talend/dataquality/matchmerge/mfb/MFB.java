@@ -207,10 +207,16 @@ public class MFB implements MatchMergeAlgorithm {
             throw new IllegalArgumentException("Records do not share same attribute count.");
         }
         if (mergedRecord.getGroupId() != null && currentRecord.getGroupId() != null) {
-            if (LOGGER.isDebugEnabled()) {
-                LOGGER.debug("Cannot match record: already different groups.");
+            if (!mergedRecord.getGroupId().equals(currentRecord.getGroupId())) {
+                if (LOGGER.isDebugEnabled()) {
+                    LOGGER.debug("Cannot match record: already different groups.");
+                }
+                return NonMatchResult.INSTANCE;
+            } else { // Two records of same group
+                if (LOGGER.isDebugEnabled()) {
+                    LOGGER.debug("Merging already merged records (same group id).");
+                }
             }
-            return NonMatchResult.INSTANCE;
         }
         Iterator<Attribute> mergedRecordAttributes = mergedRecord.getAttributes().iterator();
         Iterator<Attribute> currentRecordAttributes = currentRecord.getAttributes().iterator();
