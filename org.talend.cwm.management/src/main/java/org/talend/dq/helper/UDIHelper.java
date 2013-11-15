@@ -279,6 +279,9 @@ public final class UDIHelper {
      * @return
      */
     public static boolean isJUDIValid(IndicatorDefinition indicatorDefinition) {
+        if (indicatorDefinition == null) {
+            return false;
+        }
         boolean valid = true;
         String classNameText = TaggedValueHelper.getClassNameText(indicatorDefinition);
         String jarFilePath = TaggedValueHelper.getJarFilePath(indicatorDefinition);
@@ -427,6 +430,9 @@ public final class UDIHelper {
      */
     public static boolean isJavaUDI(Indicator indicator) {
         IndicatorDefinition definition = indicator.getIndicatorDefinition();
+        if (definition == null) {
+            return false;
+        }
         return containsJavaUDI(definition);
     }
 
@@ -576,20 +582,24 @@ public final class UDIHelper {
         return autoGenSql;
     }
 
+    /**
+     * check all the indicators, convert common udi to a Java UDI if needed.
+     * 
+     * @param analysis
+     */
     public static void updateJUDIsForAnalysis(Analysis analysis) {
         EList<Indicator> allIndics = analysis.getResults().getIndicators();
         List<Indicator> updatedIndWithJUDI = new ArrayList<Indicator>();
         for (Indicator indicator : allIndics) {
-            if (UDIHelper.isJUDIValid(indicator.getIndicatorDefinition())) {
+            // MOD TDQ-8177 sizhaoliu update only the UDIs
+            if (UDIHelper.isUDI(indicator) && UDIHelper.needUpdateJUDI(indicator)) {
                 try {
                     indicator = UDIHelper.adaptToJavaUDI(indicator);
-                    updatedIndWithJUDI.add(indicator);
                 } catch (Throwable e) {
                     ExceptionHandler.process(e);
                 }
-            } else {
-                updatedIndWithJUDI.add(indicator);
             }
+            updatedIndWithJUDI.add(indicator);
         }
         allIndics.clear();
         allIndics.addAll(updatedIndWithJUDI);
