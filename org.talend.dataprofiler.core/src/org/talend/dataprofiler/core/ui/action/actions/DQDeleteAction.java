@@ -469,6 +469,9 @@ public class DQDeleteAction extends DeleteAction {
      */
     private void collectSelectedMatchRuleObjs(IRepositoryNode node, List<IRepositoryViewObject> matchRules) {
         IRepositoryViewObject viewObj = node.getObject();
+        if (viewObj == null) {
+            return; // For TDQ-8341, the generated DQ report file has no view object.
+        }
         if (viewObj instanceof Folder) {
             for (IRepositoryNode childNode : node.getChildren()) {
                 collectSelectedMatchRuleObjs(childNode, matchRules);
