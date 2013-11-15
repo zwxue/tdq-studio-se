@@ -93,6 +93,18 @@ public final class PropertyHelper {
     }
 
     /**
+     * get the companion property of an item file
+     * 
+     * @param itemFile
+     * @return
+     */
+    public static Property getCompanionProperty(File itemFile) {
+        File propertyFile = new Path(itemFile.getAbsolutePath()).removeFileExtension()
+                .addFileExtension(FactoriesUtil.PROPERTIES_EXTENSION).toFile();
+        return getProperty(propertyFile);
+    }
+
+    /**
      * DOC bZhou Comment method "getPropertyFile".
      *
      * @param modelElement
