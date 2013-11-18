@@ -13,6 +13,8 @@
 package org.talend.dataprofiler.rcp.intro;
 
 import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.graphics.Rectangle;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.application.ActionBarAdvisor;
 import org.eclipse.ui.application.IActionBarConfigurer;
 import org.eclipse.ui.application.IWorkbenchWindowConfigurer;
@@ -41,7 +43,8 @@ public class ApplicationWorkbenchWindowAdvisor extends WorkbenchWindowAdvisor {
     @Override
     public void preWindowOpen() {
         IWorkbenchWindowConfigurer configurer = getWindowConfigurer();
-        configurer.setInitialSize(new Point(1024, 768));
+        Rectangle screenSize = Display.getDefault().getClientArea();
+        configurer.setInitialSize(new Point(screenSize.width, screenSize.height));
         configurer.setShowCoolBar(true);
         configurer.setShowStatusLine(false);
         String buildId = VersionUtils.getVersion();
