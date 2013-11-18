@@ -78,6 +78,8 @@ public class MatchRuleElementTreeSelectionDialog extends ElementTreeSelectionDia
 
     private List<String> inputColumnNames;
 
+    private List<String> lookupColumnNames;
+
     private Button overwriteBTN;
 
     private boolean isOverwrite = false;
@@ -117,6 +119,7 @@ public class MatchRuleElementTreeSelectionDialog extends ElementTreeSelectionDia
             Button help = createButton(parent, IDialogConstants.HELP_ID, IDialogConstants.HELP_LABEL, false);
             help.addSelectionListener(new SelectionAdapter() {
 
+                @Override
                 public void widgetSelected(SelectionEvent e) {
                     PlatformUI.getWorkbench().getHelpSystem().displayHelp("org.talend.help.match_rule_selector");//$NON-NLS-1$
                 }
@@ -153,7 +156,7 @@ public class MatchRuleElementTreeSelectionDialog extends ElementTreeSelectionDia
 
                             // when the imported rule's algorithm is "T_Swoosh", warning
                             if (T_SWOOSH_ALGORITHM.equals(matchRule.getRecordLinkageAlgorithm())) {
-                                warningMsg = DefaultMessagesImpl.getString("MatchRuleCheckedTreeSelectionDialog.tswoosh");
+                                warningMsg = DefaultMessagesImpl.getString("MatchRuleCheckedTreeSelectionDialog.tswoosh"); //$NON-NLS-1$
                             }
 
                             boolean needColumnWarning = false;
@@ -493,6 +496,17 @@ public class MatchRuleElementTreeSelectionDialog extends ElementTreeSelectionDia
                             null == matchKey.getName() ? StringUtils.EMPTY : matchKey.getName());
                     pr.put(MatchRulesTableLabelProvider.INPUT_COLUMN,
                             null == matchKey.getColumn() ? StringUtils.EMPTY : matchKey.getColumn());
+
+                    if (getLookupColumnNames().size() > 0) {
+                        for (String lookupColumnName : getLookupColumnNames()) {
+                            if (lookupColumnName.equalsIgnoreCase(matchKey.getColumn())
+                                    || lookupColumnName.equalsIgnoreCase(matchKey.getName())) {
+                                pr.put("LOOKUP_COLUMN", null == matchKey.getColumn() ? StringUtils.EMPTY : lookupColumnName); //$NON-NLS-1$
+                                break;
+                            }
+                        }
+                    }
+
                     if (retrieveDisplayValue) {
                         pr.put(MatchRulesTableLabelProvider.MATCHING_TYPE,
                                 null == matchKey.getAlgorithm().getAlgorithmType() ? StringUtils.EMPTY : AttributeMatcherType
@@ -531,6 +545,17 @@ public class MatchRuleElementTreeSelectionDialog extends ElementTreeSelectionDia
 
     public void setInputColumnNames(List<String> inputColumnNames) {
         this.inputColumnNames = inputColumnNames;
+    }
+
+    public List<String> getLookupColumnNames() {
+        if (lookupColumnNames == null) {
+            lookupColumnNames = new ArrayList<String>();
+        }
+        return lookupColumnNames;
+    }
+
+    public void setLookupColumnNames(List<String> lookupColumnNames) {
+        this.lookupColumnNames = lookupColumnNames;
     }
 
 }
