@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<cheatsheet title="Create a new Match Analysis">
+<cheatsheet title="Create a new match analysis">
 	<intro>
 		<description>
 			Match Analysis analyzes duplicates and similar records in a data set. It

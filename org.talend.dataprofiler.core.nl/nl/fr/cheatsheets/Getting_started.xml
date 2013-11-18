@@ -7,7 +7,7 @@
       <onCompletion>
          <b>Conclusion</b>
       </onCompletion>
-      <task kind="cheatsheet" name="Créer une nouvelle connexion à une base de données" skip="false">
+      <task kind="cheatsheet" name="Créer une connexion à une base de données" skip="false">
          <intro>
             Ce tutorial vous guide à travers la création d&apos;une connexion à une base de données.
          </intro>
@@ -17,7 +17,7 @@
          <param name="path" value="DBconnection_cheat.xml">
          </param>
       </task>
-      <task kind="cheatsheet" name="Créer une nouvelle analyse de colonnes" skip="false">
+      <task kind="cheatsheet" name="Créer une analyse de colonnes" skip="false">
          <intro>
             Ce tutorial vous guide à travers la création d&apos;une analyse de colonnes.
          </intro>
@@ -27,7 +27,17 @@
          <param name="path" value="ColumnAnalysis_cheat.xml">
          </param>
       </task>
-      <task kind="cheatsheet" name="Créer une nouvelle analyse de connexion" skip="false">
+      <task kind="cheatsheet" name="Créer une analyse de rapprochement" skip="false">
+         <intro>
+            Ce tutorial vous guide à travers la création d&apos;une analyse de rapprochement.
+         </intro>
+         <onCompletion>
+            <b>Conclusion</b>
+         </onCompletion>
+         <param name="path" value="MatchAnalysis_cheat.xml">
+         </param>
+      </task>
+      <task kind="cheatsheet" name="Créer une analyse de connexion" skip="false">
          <intro>
             Ce tutorial vous guide à travers la création d&apos;une analyse de contenu de base de données.
          </intro>
@@ -37,7 +47,7 @@
          <param name="path" value="ConnectionAnalysis_cheat.xml">
          </param>
       </task>
-      <task kind="cheatsheet" name="Créer une nouvelle analyse de catalogue" skip="false">
+      <task kind="cheatsheet" name="Créer une analyse de catalogue" skip="false">
          <intro>
             Ce tutorial vous guide à travers la création d&apos;une analyse de catalogue.
          </intro>
@@ -47,7 +57,7 @@
          <param name="path" value="CatalogAnalysis_cheat.xml">
          </param>
       </task>
-      <task kind="cheatsheet" name="Créer une nouvelle analyse de schéma" skip="false">
+      <task kind="cheatsheet" name="Créer une analyse de schéma" skip="false">
          <intro>
             Ce tutorial vous guide à travers la création d&apos;une analyse de schéma.
          </intro>
@@ -57,7 +67,7 @@
          <param name="path" value="SchemaAnalysis_cheat.xml">
          </param>
       </task>
-      <task kind="cheatsheet" name="Créer une nouvelle analyse de comparaison de colonnes" skip="false">
+      <task kind="cheatsheet" name="Créer une analyse de comparaison de colonnes" skip="false">
          <intro>
             Ce tutorial vous guide à travers la création d&apos;une analyse de comparaison de colonnes.
          </intro>
@@ -97,7 +107,7 @@
          <param name="path" value="TimeColumnCorrelationAnalysis_cheat.xml">
          </param>
       </task>
-      <task kind="cheatsheet" name="Créer un nouvel indicateur personnalisé" skip="false">
+      <task kind="cheatsheet" name="Créer un indicateur personnalisé" skip="false">
          <intro>
             Ce tutorial vous guide à travers la création d&apos;un indicateur personnalisé.
          </intro>
@@ -107,7 +117,7 @@
          <param name="path" value="UDI_cheat.xml">
          </param>
       </task>
-      <task kind="cheatsheet" name="Créer une nouvelle connexion MDM" skip="false">
+      <task kind="cheatsheet" name="Créer une connexion MDM" skip="false">
          <intro>
             Ce tutorial vous guide à travers la création d&apos;une connexion MDM.
          </intro>
@@ -117,7 +127,7 @@
          <param name="path" value="MdmConnection_cheat.xml">
          </param>
       </task>
-      <task kind="cheatsheet" name="Créer une nouvelle analyse d&apos;un ensemble de colonnes" skip="false">
+      <task kind="cheatsheet" name="Créer une analyse d&apos;un ensemble de colonnes" skip="false">
          <intro>
             Ce tutorial vous guide à travers la création d&apos;une analyse de contenu d&apos;un ensemble de colonnes. L&apos;analyse calcule le nombre de lignes, le nombre de valeurs distinctes, le nombre de valeurs uniques et le nombre de valeurs en doublon.
          </intro>
@@ -127,7 +137,7 @@
          <param name="path" value="ColumnSetAnalysis_cheat.xml">
          </param>
       </task>
-      <task kind="cheatsheet" name="Créer une nouvelle analyse de dépendance fonctionnelle" skip="false">
+      <task kind="cheatsheet" name="Créer une analyse de dépendance fonctionnelle" skip="false">
          <intro>
             Cette analys vous permet de détecter des anomalies dans les dépendances de vos colonnes.
          </intro>
@@ -137,7 +147,7 @@
          <param name="path" value="FunctionalDependAnalysis_cheat.xml">
          </param>
       </task>
-      <task kind="cheatsheet" name="Créer une nouvelle analyse avec règle métier" skip="false">
+      <task kind="cheatsheet" name="Créer une analyse avec règle métier" skip="false">
          <intro>
             Ce type d&apos;analyse vous permet d&apos;appliquer vos Règles métier sur une table sélectionnée.
          </intro>
@@ -147,7 +157,7 @@
          <param name="path" value="BusinessRuleAnalysis_cheat.xml">
          </param>
       </task>
-      <task kind="cheatsheet" name="Créer un nouveau modèle SQL" skip="false">
+      <task kind="cheatsheet" name="Créer un modèle SQL" skip="false">
          <intro>
             Ce tutorial vous guide à travers la création d&apos;un modèle SQL.
          </intro>
@@ -157,7 +167,7 @@
          <param name="path" value="PatternSql_cheat.xml">
          </param>
       </task>
-      <task kind="cheatsheet" name="Créer un nouveau modèle regex" skip="false">
+      <task kind="cheatsheet" name="Créer un modèle regex" skip="false">
          <intro>
             Ce tutorial vous guide à travers la création d&apos;un modèle régulier.
          </intro>
@@ -167,7 +177,7 @@
          <param name="path" value="PatternRegex_cheat.xml">
          </param>
       </task>
-      <task kind="cheatsheet" name="Créer une nouvelle Règle métier" skip="false">
+      <task kind="cheatsheet" name="Créer une Règle métier" skip="false">
          <intro>
             This tutorial guides you through the creation of an Business Rule.
          </intro>
@@ -177,7 +187,7 @@
          <param name="path" value="DqRule_cheat.xml">
          </param>
       </task>
-      <task kind="cheatsheet" name="Créer un nouveau fichier SQL" skip="false">
+      <task kind="cheatsheet" name="Créer un fichier SQL" skip="false">
          <intro>
             Ce tutorial vous guide à travers la création d&apos;un fichier source.
          </intro>

@@ -57,7 +57,7 @@
          <param name="path" value="ColumnAnalysis_cheat.xml">
          </param>
       </task>
-      <task kind="cheatsheet" name="Create a new Match Analysis" skip="false">
+      <task kind="cheatsheet" name="Create a match analysis" skip="false">
          <intro>
             This tutorial guides you through the creation of a Match Analysis.
          </intro>
