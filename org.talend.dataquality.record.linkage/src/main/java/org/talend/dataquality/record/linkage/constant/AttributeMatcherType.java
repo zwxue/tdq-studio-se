@@ -74,4 +74,19 @@ public enum AttributeMatcherType {
         }
         return types.toArray(new String[types.size() - 1]);
     }
+
+    /**
+     * Get AttributeMatcherType by component value, keep the short method name for components
+     * 
+     * @param componentValue
+     * @return the AttributeMatcherType
+     */
+    public static AttributeMatcherType get(String componentValue) {
+        for (AttributeMatcherType type : AttributeMatcherType.values()) {
+            if (type.getComponentValue().equals(componentValue)) {
+                return type;
+            }
+        }
+        return null;
+    }
 }
