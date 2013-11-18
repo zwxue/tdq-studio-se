@@ -240,7 +240,7 @@ public final class ImageLib {
 
     public static final String MASTER_IMAGE = "star_tMatchGroup_master.png";//$NON-NLS-1$
 
-    public static final Color COLOR_GREY = new Color(null, 112, 111, 115);
+    public static final Color COLOR_GREY = new Color(null, 56, 55, 58);
 
     /**
      * DOC bzhou ImageLib constructor comment.
