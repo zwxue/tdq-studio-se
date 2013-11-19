@@ -13,18 +13,23 @@ package org.talend.dataquality.matchmerge.mfb;
 
 import org.talend.dataquality.record.linkage.constant.AttributeMatcherType;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 
 public class MatchResult {
 
-    private final List<Score> scores = new LinkedList<Score>();
+    private final List<Score> scores;
 
-    private final List<Float> thresholds = new LinkedList<Float>();
+    private final List<Float> thresholds;
 
     private double normalizedConfidence;
 
     private double minConfidenceValue;
+
+    public MatchResult(int size) {
+        scores = new ArrayList<Score>(size + 1);
+        thresholds = new ArrayList<Float>(size + 1);
+    }
 
     public static class Score {
         public AttributeMatcherType algorithm;

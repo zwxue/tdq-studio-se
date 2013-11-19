@@ -222,7 +222,7 @@ public class MFB implements MatchMergeAlgorithm {
         Iterator<Attribute> currentRecordAttributes = currentRecord.getAttributes().iterator();
         double confidence = 0;
         int matchIndex = 0;
-        MatchResult result = new MatchResult();
+        MatchResult result = new MatchResult(mergedRecord.getAttributes().size());
         while (mergedRecordAttributes.hasNext()) {
             Attribute left = mergedRecordAttributes.next();
             Attribute right = currentRecordAttributes.next();
@@ -367,11 +367,12 @@ public class MFB implements MatchMergeAlgorithm {
 
     public static class NonMatchResult extends MatchResult {
 
-        public static final MatchResult INSTANCE = wrap(new MatchResult());
+        public static final MatchResult INSTANCE = wrap(new MatchResult(0));
 
         private final MatchResult result;
 
         private NonMatchResult(MatchResult result) {
+            super(result.getScores().size());
             this.result = result;
         }
 

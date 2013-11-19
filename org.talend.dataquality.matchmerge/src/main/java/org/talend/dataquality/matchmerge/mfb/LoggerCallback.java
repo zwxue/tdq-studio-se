@@ -22,12 +22,16 @@ public class LoggerCallback implements MatchMergeAlgorithm.Callback {
 
     @Override
     public void onBeginRecord(Record record) {
-        LOGGER.info("-> Record #" + record.getId());
+        if (LOGGER.isInfoEnabled()) {
+            LOGGER.info("-> Record #" + record.getId());
+        }
     }
 
     @Override
     public void onMatch(Record record1, Record record2, MatchResult matchResult) {
-        LOGGER.info("\t(+) Positive match: #" + record1.getId() + " <---> #" + record2.getId());
+        if (LOGGER.isInfoEnabled()) {
+            LOGGER.info("\t(+) Positive match: #" + record1.getId() + " <---> #" + record2.getId());
+        }
         if (LOGGER.isDebugEnabled()) {
             StringBuilder messagesBuilder = new StringBuilder();
             int i = 0;
@@ -48,10 +52,12 @@ public class LoggerCallback implements MatchMergeAlgorithm.Callback {
 
     @Override
     public void onNewMerge(Record record) {
-        if (record.getRelatedIds().size() > 1) {
-            LOGGER.info("\t(+) New merge: #" + record.getId() + " (groups " + record.getRelatedIds().size() + " records).");
-        } else {
-            LOGGER.info("\t(+) New merge: #" + record.getId() + " (unique record).");
+        if (LOGGER.isInfoEnabled()) {
+            if (record.getRelatedIds().size() > 1) {
+                LOGGER.info("\t(+) New merge: #" + record.getId() + " (groups " + record.getRelatedIds().size() + " records).");
+            } else {
+                LOGGER.info("\t(+) New merge: #" + record.getId() + " (unique record).");
+            }
         }
         if (LOGGER.isDebugEnabled()) {
             StringBuilder messageBuilder = new StringBuilder();
@@ -65,12 +71,16 @@ public class LoggerCallback implements MatchMergeAlgorithm.Callback {
 
     @Override
     public void onRemoveMerge(Record record) {
-        LOGGER.info("\t(-) Removed merge: #" + record.getId());
+        if (LOGGER.isInfoEnabled()) {
+            LOGGER.info("\t(-) Removed merge: #" + record.getId());
+        }
     }
 
     @Override
     public void onDifferent(Record record1, Record record2, MatchResult matchResult) {
-        LOGGER.info("\t(-) Negative match: #" + record1.getId() + " <-/-> #" + record2.getId());
+        if (LOGGER.isInfoEnabled()) {
+            LOGGER.info("\t(-) Negative match: #" + record1.getId() + " <-/-> #" + record2.getId());
+        }
         if (LOGGER.isDebugEnabled()) {
             StringBuilder messagesBuilder = new StringBuilder();
             int i = 0;
@@ -98,7 +108,9 @@ public class LoggerCallback implements MatchMergeAlgorithm.Callback {
 
     @Override
     public void onEndRecord(Record record) {
-        LOGGER.info("<- Record #" + record.getId());
+        if (LOGGER.isInfoEnabled()) {
+            LOGGER.info("<- Record #" + record.getId());
+        }
     }
 
     @Override
@@ -108,21 +120,29 @@ public class LoggerCallback implements MatchMergeAlgorithm.Callback {
 
     @Override
     public void onBeginProcessing() {
-        LOGGER.info("Begin match & merge.");
+        if (LOGGER.isInfoEnabled()) {
+            LOGGER.info("Begin match & merge.");
+        }
     }
 
     @Override
     public void onEndProcessing() {
-        LOGGER.info("End match & merge.");
+        if (LOGGER.isInfoEnabled()) {
+            LOGGER.info("End match & merge.");
+        }
     }
 
     @Override
     public void onBeginPostMergeProcess() {
-        LOGGER.info("Begin post processing for merge");
+        if (LOGGER.isInfoEnabled()) {
+            LOGGER.info("Begin post processing for merge");
+        }
     }
 
     @Override
     public void onEndPostMergeProcess() {
-        LOGGER.info("End post processing for merge");
+        if (LOGGER.isInfoEnabled()) {
+            LOGGER.info("End post processing for merge");
+        }
     }
 }
