@@ -30,6 +30,7 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
+import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.MouseEvent;
@@ -849,9 +850,36 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
     private void createNatTable(List<Object[]> listOfData) {
         setAllColumnsToKeySections();
 
-        Control natTable = sampleTable.createTable(dataTableComp, analysisHandler.getSelectedColumns(), listOfData);
-        GridDataFactory.fillDefaults().grab(true, true).applyTo(natTable);
-        natTable.redraw();
+        ScrolledComposite panel = new ScrolledComposite(dataTableComp, SWT.NONE | SWT.V_SCROLL | SWT.H_SCROLL);
+        GridDataFactory.fillDefaults().align(SWT.LEFT, SWT.TOP).applyTo(panel);
+        panel.setLayout(new GridLayout(1, Boolean.FALSE));
+        panel.setExpandHorizontal(true);
+        panel.setExpandVertical(true);
+
+        GridData layoutDataFillBoth = new GridData(GridData.FILL_BOTH);
+        Composite subPanel = new Composite(panel, SWT.NONE);
+        subPanel.setLayoutData(layoutDataFillBoth);
+        subPanel.setLayout(new GridLayout(1, true));
+
+        DataSampleTable.TControl tControl = sampleTable.createTable(subPanel, analysisHandler.getSelectedColumns(), listOfData);
+        GridDataFactory.fillDefaults().grab(true, true).applyTo(tControl.getControl());
+
+        // when refresh the data, the dataSampleSection's width is not 0
+        if (dataSampleSection.getBounds().width > 0) {
+            GridData gridData = new GridData(GridData.FILL_VERTICAL);
+            // get the min value between the NatTable's width and dataSampleSection's width
+            // if the NatTable's width larger than dataSampleSection's width, should minus 40 to let the vertical scroll
+            // bar show
+            int width = Math.min(tControl.getWidth(), dataSampleSection.getBounds().width - 40);
+            // the width must langer than 0
+            width = width > 0 ? width : dataSampleSection.getBounds().width - 40;
+            gridData.widthHint = width;
+            panel.setLayoutData(gridData);
+        } else { // when open the editor, the dataSampleSection's width is 0, just set the layout fill both.
+            panel.setLayoutData(layoutDataFillBoth);
+        }
+
+        panel.setContent(subPanel);
     }
 
     /**

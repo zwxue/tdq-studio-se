@@ -131,7 +131,7 @@ public class DataSampleTable {
      * @param columns
      * @param listOfData
      */
-    public Control createTable(Composite parentContainer, ModelElement[] columns, List<Object[]> listOfData) {
+    public TControl createTable(Composite parentContainer, ModelElement[] columns, List<Object[]> listOfData) {
         reset();
         String[] columnsName = createColumnLabel(columns);
 
@@ -185,7 +185,7 @@ public class DataSampleTable {
         this.rowOfGIDWithColor.clear();
     }
 
-    private Control hideGroup(Composite parentContainer, List<Object[]> listOfData) {
+    private TControl hideGroup(Composite parentContainer, List<Object[]> listOfData) {
         List<Object[]> filteredList = new ArrayList<Object[]>();
         boolean flag = false;
         for (Object[] row : listOfData) {
@@ -249,8 +249,7 @@ public class DataSampleTable {
         // if the next sort direction is back to original
         SortDirectionEnum nextSortDirection = sortState.getNextSortDirection();
 
-        @SuppressWarnings("unchecked")
-        List<Object[]> sortedData = (List<Object[]>) bodyDataProvider.getList();
+        List<Object[]> sortedData = bodyDataProvider.getList();
         if (SortDirectionEnum.NONE.equals(nextSortDirection) && sortedData.get(0).length > sortState.getGrpSizeIndex()) {
             // if the data has GID, back to order by GID
             sortedData = MatchRuleAnlaysisUtils.sortResultByGID(propertyNames, sortedData);
@@ -400,7 +399,7 @@ public class DataSampleTable {
      * @param data
      * @return
      */
-    public NatTable createTableControl(Composite parent, List<Object[]> data) {
+    public TControl createTableControl(Composite parent, List<Object[]> data) {
         bodyDataProvider = setupBodyDataProvider(data);
         bodyLayer = new BodyLayerStack(bodyDataProvider);
 
@@ -439,7 +438,11 @@ public class DataSampleTable {
         // add the listener for the column header selection
         addCustomSelectionBehaviour();
 
-        return natTable;
+        TControl retObj = new TControl();
+        retObj.setControl(natTable);
+        // the width = (columnCount * DEFAULT_COLUMN_WIDTH) + 60, 60 is the width of first sequence number column
+        retObj.setWidth(colHeaderDataProvider.getColumnCount() * DataLayer.DEFAULT_COLUMN_WIDTH + 60);
+        return retObj;
     }
 
     private void clearTable() {
@@ -720,5 +723,51 @@ public class DataSampleTable {
 
     public void resetSortSelection() {
         this.sortState.resetSelectedColumn();
+    }
+
+    /**
+     * A control and it's width.
+     */
+    public class TControl {
+
+        Control control;
+
+        Integer width;
+
+        /**
+         * Getter for control.
+         * 
+         * @return the control
+         */
+        public Control getControl() {
+            return this.control;
+        }
+
+        /**
+         * Sets the control.
+         * 
+         * @param control the control to set
+         */
+        public void setControl(Control control) {
+            this.control = control;
+        }
+
+        /**
+         * Getter for width.
+         * 
+         * @return the width
+         */
+        public Integer getWidth() {
+            return this.width;
+        }
+
+        /**
+         * Sets the width.
+         * 
+         * @param width the width to set
+         */
+        public void setWidth(Integer width) {
+            this.width = width;
+        }
     }
 }
