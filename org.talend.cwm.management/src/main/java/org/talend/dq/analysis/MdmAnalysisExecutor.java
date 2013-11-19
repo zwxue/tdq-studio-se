@@ -62,6 +62,7 @@ public class MdmAnalysisExecutor extends AnalysisExecutor {
         return ResourceHelper.areSame(dataprovider, dp);
     }
 
+    @Override
     protected boolean runAnalysis(Analysis analysis, String sqlStatement) {
         MdmIndicatorEvaluator eval = new MdmIndicatorEvaluator(analysis);
         eval.setMonitor(getMonitor());
@@ -242,27 +243,16 @@ public class MdmAnalysisExecutor extends AnalysisExecutor {
             this.errorMessage = Messages.getString("ColumnAnalysisExecutor.AnalysisIsNull"); //$NON-NLS-1$
             return false;
         }
+
         if (!super.check(analysis)) {
             // error message already set in super method.
             return false;
         }
 
-        // --- check existence of context
-        AnalysisContext context = analysis.getContext();
-        if (context == null) {
-            this.errorMessage = Messages.getString("ColumnAnalysisExecutor.NoContextSet", analysis.getName()); //$NON-NLS-1$
-            return false;
-        }
-
         // --- check that there exists at least on element to analyze
+        AnalysisContext context = analysis.getContext();
         if (context.getAnalysedElements().size() == 0) {
             this.errorMessage = Messages.getString("ColumnAnalysisExecutor.AnalysisHaveAtLeastOneColumn"); //$NON-NLS-1$
-            return false;
-        }
-
-        // --- check that the connection has been set
-        if (context.getConnection() == null) {
-            this.errorMessage = Messages.getString("ColumnAnalysisExecutor.NoConnectionSet"); //$NON-NLS-1$
             return false;
         }
 

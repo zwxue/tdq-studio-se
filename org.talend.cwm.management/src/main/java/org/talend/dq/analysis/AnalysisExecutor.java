@@ -41,6 +41,7 @@ import org.talend.dq.dbms.DbmsLanguageFactory;
 import org.talend.dq.handler.HiveConnectionHandler;
 import org.talend.dq.helper.AnalysisExecutorHelper;
 import org.talend.dq.helper.EObjectHelper;
+import org.talend.dq.helper.UDIHelper;
 import org.talend.dq.indicators.Evaluator;
 import org.talend.dq.indicators.IndicatorCommonUtil;
 import org.talend.dq.indicators.ext.PatternMatchingExt;
@@ -104,10 +105,11 @@ public abstract class AnalysisExecutor implements IAnalysisExecutor {
 
         // MOD qiongli 2012-3-14 TDQ-4433,if import from low vesion and not import SystemIdicator,should initionlize
         // these indicator.
-        initializeIndicators(analysis.getResults().getIndicators());
+        initializeIndicators(analysis);
+
         // --- create SQL statement
         if (this.getMonitor() != null) {
-            this.getMonitor().setTaskName(Messages.getString("AnalysisExecutor.CreateSQLStatements"));
+            this.getMonitor().setTaskName(Messages.getString("AnalysisExecutor.CreateSQLStatements")); //$NON-NLS-1$
         }
         String sql = createSqlStatement(analysis);
         if (sql == null) {
@@ -174,7 +176,7 @@ public abstract class AnalysisExecutor implements IAnalysisExecutor {
         Object obj = IndicatorCommonUtil.getIndicatorValue(indicator);
         if (indicatorThreshold != null || indiPercentThreshold != null) {
             // MOD qiongli 2011-11-15 TDQ-3690 avoid String "null",and get the value for ValueIndicator to transfer.
-            if (obj != null && !PluginConstant.EMPTY_STRING.equals(obj.toString()) && !"null".equalsIgnoreCase(obj.toString())) {
+            if (obj != null && !PluginConstant.EMPTY_STRING.equals(obj.toString()) && !"null".equalsIgnoreCase(obj.toString())) { //$NON-NLS-1$
                 String value = PluginConstant.EMPTY_STRING;
                 if (indicator instanceof ValueIndicator) {
                     value = ((ValueIndicator) indicator).getValue();
@@ -516,10 +518,15 @@ public abstract class AnalysisExecutor implements IAnalysisExecutor {
     /**
      * 2012-3-14 TDQ-4433,reset indicatorDefinition for indicator if needed(indicatorDefinition is null or proxy).
      */
-    protected void initializeIndicators(List<Indicator> indicators) {
+    protected void initializeIndicators(Analysis analysis) {
         ModelElementAnalysisHandler modHandler = new ModelElementAnalysisHandler();
-        for (Indicator ind : indicators) {
+        for (Indicator ind : analysis.getResults().getIndicators()) {
             modHandler.initializeIndicator(ind);
         }
+
+        // ADD msjian TDQ-8202 2013-11-19: when import a judi indicator, should update JUDIs For Analysis.
+        // else when the user do generate report directly, will can not load udi jars
+        UDIHelper.updateJUDIsForAnalysis(analysis);
+        // TDQ-8202~
     }
 }

@@ -37,7 +37,6 @@ import org.talend.dataquality.indicators.Indicator;
 import org.talend.dq.dbms.GenericSQLHandler;
 import org.talend.dq.helper.AnalysisExecutorHelper;
 import org.talend.dq.helper.EObjectHelper;
-import org.talend.dq.helper.UDIHelper;
 import org.talend.dq.indicators.IndicatorEvaluator;
 import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.objectmodel.core.Classifier;
@@ -69,10 +68,6 @@ public class ColumnAnalysisExecutor extends AnalysisExecutor {
 
     @Override
     protected ReturnCode evaluate(Analysis analysis, java.sql.Connection connection, String sqlStatement) {
-        // ADD sizhaoliu TDQ-7216 update JUDI indicators while running a tDqReportRun job.
-        // ADD zshen TDQ-8177 update JUDI indicators while runing a analysis
-        UDIHelper.updateJUDIsForAnalysis(analysis);
-
         IndicatorEvaluator eval = new IndicatorEvaluator(analysis);
         // MOD xqliu 2009-02-09 bug 6237
         eval.setMonitor(getMonitor());
@@ -233,27 +228,16 @@ public class ColumnAnalysisExecutor extends AnalysisExecutor {
             this.errorMessage = Messages.getString("ColumnAnalysisExecutor.AnalysisIsNull"); //$NON-NLS-1$
             return false;
         }
+
         if (!super.check(analysis)) {
             // error message already set in super method.
             return false;
         }
 
-        // --- check existence of context
-        AnalysisContext context = analysis.getContext();
-        if (context == null) {
-            this.errorMessage = Messages.getString("ColumnAnalysisExecutor.NoContextSet", analysis.getName()); //$NON-NLS-1$
-            return false;
-        }
-
         // --- check that there exists at least on element to analyze
+        AnalysisContext context = analysis.getContext();
         if (context.getAnalysedElements().size() == 0) {
             this.errorMessage = Messages.getString("ColumnAnalysisExecutor.AnalysisHaveAtLeastOneColumn"); //$NON-NLS-1$
-            return false;
-        }
-
-        // --- check that the connection has been set
-        if (context.getConnection() == null) {
-            this.errorMessage = Messages.getString("ColumnAnalysisExecutor.NoConnectionSet"); //$NON-NLS-1$
             return false;
         }
 

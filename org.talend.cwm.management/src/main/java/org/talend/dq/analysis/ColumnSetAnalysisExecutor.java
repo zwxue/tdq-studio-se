@@ -284,8 +284,7 @@ public class ColumnSetAnalysisExecutor extends AnalysisExecutor {
     @Override
     protected boolean check(Analysis analysis) {
 
-        boolean check = super.check(analysis);
-        if (!check) {
+        if (!super.check(analysis)) {
             return false;
         } else {
             EList<Indicator> indicators = analysis.getResults().getIndicators();

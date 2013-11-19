@@ -226,12 +226,16 @@ public final class AnalysisExecutorHelper {
      */
     public static ReturnCode check(Analysis analysis) {
         ReturnCode rc = new ReturnCode(Boolean.TRUE);
+
+        // --- check existence of context
         AnalysisContext context = analysis.getContext();
         if (context == null) {
             rc.setMessage(Messages.getString("AnalysisExecutor.ContextNull", analysis.getName())); //$NON-NLS-1$
             rc.setOk(Boolean.FALSE);
             return rc;
         }
+
+        // --- check that the connection has been set
         DataManager connection = context.getConnection();
         if (connection == null) {
             rc.setMessage(Messages.getString("AnalysisExecutor.NoConnectionFound", analysis.getName())); //$NON-NLS-1$
@@ -244,12 +248,14 @@ public final class AnalysisExecutorHelper {
                 log.info(Messages.getString("AnalysisExecutor.CONNECTIONTO", connection.getName()));//$NON-NLS-1$
             }
         }
+
         AnalysisResult results = analysis.getResults();
         if (results == null) {
             rc.setMessage(Messages.getString("AnalysisExecutor.AnalysisnotNotPrepareCorrect", analysis.getName())); //$NON-NLS-1$
             rc.setOk(Boolean.FALSE);
             return rc;
         }
+
         return rc;
     }
 

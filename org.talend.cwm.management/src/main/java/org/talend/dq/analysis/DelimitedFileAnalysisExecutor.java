@@ -37,6 +37,7 @@ public class DelimitedFileAnalysisExecutor extends AnalysisExecutor {
     private Connection dataprovider;
 
     private static Logger log = Logger.getLogger(ColumnAnalysisExecutor.class);
+
     @Override
     protected String createSqlStatement(Analysis analysis) {
         return PluginConstant.EMPTY_STRING;
@@ -83,22 +84,10 @@ public class DelimitedFileAnalysisExecutor extends AnalysisExecutor {
             return false;
         }
 
-        // --- check existence of context
-        AnalysisContext context = analysis.getContext();
-        if (context == null) {
-            this.errorMessage = Messages.getString("ColumnAnalysisExecutor.NoContextSet", analysis.getName()); //$NON-NLS-1$
-            return false;
-        }
-
         // --- check that there exists at least on element to analyze
+        AnalysisContext context = analysis.getContext();
         if (context.getAnalysedElements().size() == 0) {
             this.errorMessage = Messages.getString("ColumnAnalysisExecutor.AnalysisHaveAtLeastOneColumn"); //$NON-NLS-1$
-            return false;
-        }
-
-        // --- check that the connection has been set
-        if (context.getConnection() == null) {
-            this.errorMessage = Messages.getString("ColumnAnalysisExecutor.NoConnectionSet"); //$NON-NLS-1$
             return false;
         }
 
@@ -119,7 +108,7 @@ public class DelimitedFileAnalysisExecutor extends AnalysisExecutor {
             }
 
             // --- get the data provider
-            Connection dp = ConnectionHelper.getTdDataProvider((MetadataColumn) column);
+            Connection dp = ConnectionHelper.getTdDataProvider(column);
             if (!isAccessWith(dp)) {
                 this.errorMessage = Messages.getString("ColumnAnalysisExecutor.AllColumnsBelongSameConnection", //$NON-NLS-1$
                         column.getName(), dataprovider.getName());
