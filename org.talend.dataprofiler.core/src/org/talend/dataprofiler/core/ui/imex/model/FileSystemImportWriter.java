@@ -90,6 +90,7 @@ import org.talend.dq.helper.resourcehelper.PrvResourceFileHelper;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.dq.writer.EMFSharedResources;
 import org.talend.dq.writer.impl.ElementWriterFactory;
+import org.talend.repository.ProjectManager;
 import org.talend.repository.RepositoryWorkUnit;
 import org.talend.repository.model.ERepositoryStatus;
 import org.talend.repository.model.IProxyRepositoryFactory;
@@ -817,6 +818,11 @@ public class FileSystemImportWriter implements IImportWriter {
     private boolean mergeClientDependency2Pattern(boolean isModified, Pattern pattern, Pattern recordPattern) {
         EList<Dependency> supplierDependency = recordPattern.getSupplierDependency();
         if (supplierDependency != null) {
+            // TDQ-8105 if the new pattern doesn't have any client dependences,add all dependences from old pattern's.
+            if (pattern.getSupplierDependency().isEmpty()) {
+                pattern.getSupplierDependency().addAll(recordPattern.getSupplierDependency());
+                return true;
+            }
             for (Dependency dependency : supplierDependency) {
                 for (ModelElement client : dependency.getClient()) {
                     // avoid to merge the invalid client
@@ -824,26 +830,58 @@ public class FileSystemImportWriter implements IImportWriter {
                         continue;
                     }
                     URI uri = client.eResource().getURI();
-                    if (!uri.isRelative()) {
-                        IPath anaPath = new Path(ResourceManager.getRootProject().getLocation() + File.separator
-                                + uri.devicePath().substring(uri.devicePath().indexOf(EResourceConstant.ANALYSIS.getPath())));
-
-                        // make the analysis' path relative.
-                        IPath makeRelativeTo = anaPath.makeRelativeTo(ResourceManager.getRootProject().getLocation()
-                                .removeLastSegments(1));
-                        uri = URI.createPlatformResourceURI(makeRelativeTo.toString(), false);
-
-                        // set the client's uri with relative path.
-                        client.eResource().setURI(uri);
+                    IPath anaPath = new Path(ResourceManager.getRootProject().getLocation() + File.separator
+                            + uri.devicePath().substring(uri.devicePath().indexOf(EResourceConstant.ANALYSIS.getPath())));
+                    File file = anaPath.removeFileExtension().addFileExtension(FactoriesUtil.PROPERTIES_EXTENSION).toFile();
+                    if (file.exists()) {
+                        Property property = PropertyHelper.getProperty(file);
+                        try {
+                            if (property != null) {
+                                IRepositoryViewObject viewObject = ProxyRepositoryFactory.getInstance().getLastVersion(
+                                        ProjectManager.getInstance().getCurrentProject(), property.getId());
+                                if (viewObject != null) {
+                                    updateAnalysisAndPattern(pattern, viewObject.getProperty());
+                                }
+                            }
+                        } catch (PersistenceException e) {
+                            log.warn(e);
+                        }
                     }
 
-                    // set client to the old pattern.
-                    DependenciesHandler.getInstance().setUsageDependencyOn(client, pattern);
-                    isModified = true;
                 }
+
+                isModified = true;
+
             }
+
         }
         return isModified;
+    }
+
+    /**
+     * remove the old client dependency add a new one in Anlaysis.
+     * 
+     * @param pattern
+     * @param modelElement
+     */
+    private void updateAnalysisAndPattern(Pattern pattern, Property property) {
+        ModelElement analysis = PropertyHelper.getModelElement(property);
+        if (analysis != null) {
+
+            EList<Dependency> clientDependency = analysis.getClientDependency();
+            List<Dependency> newClientDependenceLs = new ArrayList<Dependency>();
+            for (Dependency clientDep : clientDependency) {
+                if (clientDep.eResource() != null) {
+                    newClientDependenceLs.add(clientDep);
+                }
+
+            }
+            analysis.getClientDependency().clear();
+            analysis.getClientDependency().addAll(newClientDependenceLs);
+            DependenciesHandler.getInstance().setUsageDependencyOn(analysis, pattern);
+            ElementWriterFactory.getInstance().createAnalysisWrite().save(property.getItem(), false);
+        }
+
     }
 
     private PatternComponent createPatternComponent(PatternComponent oldComponent) {
