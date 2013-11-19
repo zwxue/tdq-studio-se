@@ -66,6 +66,7 @@ import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.action.actions.OpenItemEditorAction;
 import org.talend.dataprofiler.core.ui.editor.AbstractItemEditorInput;
 import org.talend.dataprofiler.core.ui.editor.analysis.AnalysisEditor;
+import org.talend.dataprofiler.core.ui.editor.analysis.MatchAnalysisEditor;
 import org.talend.dataprofiler.core.ui.editor.connection.ConnectionEditor;
 import org.talend.dataprofiler.core.ui.views.DQRespositoryView;
 import org.talend.dataquality.analysis.Analysis;
@@ -414,8 +415,10 @@ public final class WorkbenchUtils {
      */
     public static void refreshCurrentAnalysisEditor() {
         List<IEditorReference> iEditorReference = getIEditorReference(AnalysisEditor.class.getName());
-        closeAndOpenEditor(iEditorReference);
+        // update match analysis if any opened:TDQ-8267 added by yyin
+        iEditorReference.addAll(getIEditorReference(MatchAnalysisEditor.class.getName()));
 
+        closeAndOpenEditor(iEditorReference);
     }
 
     /**
