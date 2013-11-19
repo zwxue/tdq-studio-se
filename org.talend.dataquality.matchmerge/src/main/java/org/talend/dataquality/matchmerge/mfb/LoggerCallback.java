@@ -18,7 +18,7 @@ import org.talend.dataquality.matchmerge.Record;
 
 public class LoggerCallback implements MatchMergeAlgorithm.Callback {
 
-    private static Logger LOGGER = Logger.getLogger(MatchMergeAlgorithm.class);
+    protected static Logger LOGGER = Logger.getLogger(MatchMergeAlgorithm.class);
 
     @Override
     public void onBeginRecord(Record record) {
