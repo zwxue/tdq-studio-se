@@ -35,6 +35,7 @@ import org.talend.dataquality.indicators.PatternMatchingIndicator;
 import org.talend.dataquality.indicators.RegexpMatchingIndicator;
 import org.talend.dataquality.indicators.columnset.AllMatchIndicator;
 import org.talend.dataquality.indicators.columnset.ColumnsetPackage;
+import org.talend.dataquality.indicators.columnset.RecordMatchingIndicator;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dataquality.indicators.sql.UserDefIndicator;
 import orgomg.cwm.objectmodel.core.Expression;
@@ -42,7 +43,7 @@ import orgomg.cwm.objectmodel.core.TaggedValue;
 
 /**
  * @author scorreia
- *
+ * 
  * Helper class.
  */
 public final class AnalysisHelper {
@@ -56,7 +57,7 @@ public final class AnalysisHelper {
 
     /**
      * Method "createAnalysis".
-     *
+     * 
      * @param name the name of the analysis
      * @return the new analysis with the given name
      */
@@ -68,7 +69,7 @@ public final class AnalysisHelper {
 
     /**
      * Method "getAnalysisType".
-     *
+     * 
      * @param analysis
      * @return the analysis type or null if not set
      */
@@ -83,7 +84,7 @@ public final class AnalysisHelper {
 
     /**
      * Method "getExecutionEngine".
-     *
+     * 
      * @param analysis the analysis
      * @return the execution language (SQL by default)
      */
@@ -98,7 +99,7 @@ public final class AnalysisHelper {
 
     /**
      * Method "setAnalysisType".
-     *
+     * 
      * @param analysis an analysis
      * @param analysisType the type to set to the analysis
      */
@@ -113,7 +114,7 @@ public final class AnalysisHelper {
 
     /**
      * Method "getDataFilter".
-     *
+     * 
      * @param analysis
      * @return the list of domains or null
      */
@@ -127,7 +128,7 @@ public final class AnalysisHelper {
 
     /**
      * Method "getStringDataFilter".
-     *
+     * 
      * @param analysis
      * @return the data filter as a string or null if none.
      */
@@ -137,7 +138,7 @@ public final class AnalysisHelper {
 
     /**
      * DOC xqliu Comment method "getStringDataFilter".
-     *
+     * 
      * @param analysis
      * @param index 0 for DataFilterA, 1 for DataFilterB
      * @return
@@ -214,7 +215,7 @@ public final class AnalysisHelper {
 
     /**
      * DOC xqliu Comment method "setStringDataFilter".
-     *
+     * 
      * @param analysis
      * @param datafilterString
      * @param index 0 for DataFilterA, 1 for DataFilterB
@@ -259,7 +260,7 @@ public final class AnalysisHelper {
 
     /**
      * Method "containsRowCount".
-     *
+     * 
      * @param analysis
      * @return true if this analysis contains the row count indicator
      */
@@ -350,7 +351,7 @@ public final class AnalysisHelper {
 
     /**
      * DOC xqliu Comment method "getReloadDatabases".
-     *
+     * 
      * @param analysis
      * @return
      */
@@ -368,7 +369,7 @@ public final class AnalysisHelper {
 
     /**
      * DOC xqliu Comment method "setReloadDatabases".
-     *
+     * 
      * @param analysis
      * @param reloadDatabases
      * @return
@@ -379,7 +380,7 @@ public final class AnalysisHelper {
 
     /**
      * DOC xqliu Comment method "getPurpose".
-     *
+     * 
      * @param analysis
      * @return
      */
@@ -396,7 +397,7 @@ public final class AnalysisHelper {
 
     /**
      * DOC xqliu Comment method "getDescription".
-     *
+     * 
      * @param analysis
      * @return
      */
@@ -412,9 +413,9 @@ public final class AnalysisHelper {
     }
 
     /**
-     *
+     * 
      * judge the type of analysis whether is Match Rule Analysis
-     *
+     * 
      * @param analysis
      * @return
      */
@@ -425,11 +426,28 @@ public final class AnalysisHelper {
     /**
      * 
      * judge the type of analysis whether is COLUMN CORRELATION Analysis
-     *
+     * 
      * @param analysis
      * @return
      */
     public static boolean isColumnCorrelationAnalysis(Analysis analysis) {
         return AnalysisType.COLUMN_CORRELATION == analysis.getParameters().getAnalysisType();
     }
+
+    /**
+     * Get recording matching indicator from analysis
+     * 
+     * @param analysis
+     * @return
+     */
+    public static RecordMatchingIndicator getRecordMatchIndicatorFromAna(Analysis analysis) {
+        EList<Indicator> indicators = analysis.getResults().getIndicators();
+        for (Indicator ind : indicators) {
+            if (ind instanceof RecordMatchingIndicator) {
+                return (RecordMatchingIndicator) ind;
+            }
+        }
+        return null;
+    }
+
 }
