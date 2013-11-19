@@ -23,6 +23,7 @@ import org.eclipse.swt.widgets.Display;
 import org.talend.dataquality.record.linkage.constant.AttributeMatcherType;
 import org.talend.dataquality.record.linkage.utils.HandleNullEnum;
 import org.talend.dataquality.rules.MatchKeyDefinition;
+import org.talend.dq.helper.CustomAttributeMatcherHelper;
 
 /**
  * created by zshen on Aug 1, 2013 Detailled comment
@@ -57,7 +58,7 @@ public class MatchRuleLabelProvider extends LabelProvider implements ITableLabel
             case 2:
                 return AttributeMatcherType.valueOf(mkd.getAlgorithm().getAlgorithmType()).getLabel();
             case 3:
-                return mkd.getAlgorithm().getAlgorithmParameters();
+                return CustomAttributeMatcherHelper.getClassName(mkd.getAlgorithm().getAlgorithmParameters());
             case 4:
                 return String.valueOf(mkd.getConfidenceWeight());
             case 5:

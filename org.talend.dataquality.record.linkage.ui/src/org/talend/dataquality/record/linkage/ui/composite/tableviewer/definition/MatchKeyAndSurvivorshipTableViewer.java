@@ -31,6 +31,7 @@ import org.talend.dataquality.record.linkage.ui.action.MatchRuleActionGroup;
 import org.talend.dataquality.record.linkage.ui.composite.tableviewer.AbstractMatchAnalysisTableViewer;
 import org.talend.dataquality.record.linkage.ui.composite.tableviewer.AbstractMatchCellModifier;
 import org.talend.dataquality.record.linkage.ui.composite.tableviewer.MatchRuleTableViewer;
+import org.talend.dataquality.record.linkage.ui.composite.tableviewer.cellEditor.jarFileCellEditor;
 import org.talend.dataquality.record.linkage.ui.composite.tableviewer.provider.MatchAnalysisTableContentProvider;
 import org.talend.dataquality.record.linkage.ui.composite.tableviewer.provider.MatchAndSurvivorCellModifer;
 import org.talend.dataquality.record.linkage.ui.composite.tableviewer.provider.definition.MatchKeyAndSurvivorLabelProvider;
@@ -170,6 +171,9 @@ public class MatchKeyAndSurvivorshipTableViewer extends AbstractMatchAnalysisTab
             switch (i) {
             case 1:
                 editors[i] = new ComboBoxCellEditor(innerTable, AttributeMatcherType.getAllTypes(), SWT.READ_ONLY);
+                break;
+            case 2:
+                editors[i] = new jarFileCellEditor(innerTable, SWT.READ_ONLY);
                 break;
             case 5:
                 editors[i] = new ComboBoxCellEditor(innerTable, HandleNullEnum.getAllTypes(), SWT.READ_ONLY);

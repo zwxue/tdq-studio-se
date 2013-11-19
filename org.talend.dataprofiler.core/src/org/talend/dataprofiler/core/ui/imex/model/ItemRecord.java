@@ -41,12 +41,22 @@ import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.utils.UDIUtils;
+import org.talend.dataquality.analysis.Analysis;
+import org.talend.dataquality.analysis.AnalysisType;
+import org.talend.dataquality.helpers.AnalysisHelper;
 import org.talend.dataquality.helpers.ReportHelper;
 import org.talend.dataquality.helpers.ReportHelper.ReportType;
+import org.talend.dataquality.indicators.columnset.RecordMatchingIndicator;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dataquality.indicators.definition.userdefine.UDIndicatorDefinition;
+import org.talend.dataquality.record.linkage.constant.AttributeMatcherType;
+import org.talend.dataquality.record.linkage.utils.CustomAttributeMatcherClassNameConvert;
 import org.talend.dataquality.reports.AnalysisMap;
 import org.talend.dataquality.reports.TdReport;
+import org.talend.dataquality.rules.MatchKeyDefinition;
+import org.talend.dataquality.rules.MatchRule;
+import org.talend.dataquality.rules.MatchRuleDefinition;
+import org.talend.dq.helper.CustomAttributeMatcherHelper;
 import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.helper.resourcehelper.RepResourceFileHelper;
@@ -244,8 +254,55 @@ public class ItemRecord {
                         includeAggregatedDependencies(defInd);
                     }
                 }
+                if (element instanceof MatchRuleDefinition) {
+                    includeCustomMatcherJarDependencies((MatchRuleDefinition) element);
+                }
+
+            } else if (element instanceof Analysis
+                    && AnalysisType.MATCH_ANALYSIS == AnalysisHelper.getAnalysisType((Analysis) element)) {
+                includeCustomMatcherJarDependencies((Analysis) element);
             }
         }
+    }
+
+    /**
+     * DOC zshen Comment method "includeCustomMatcherJarDependencies".
+     * 
+     * @param element2
+     */
+    private void includeCustomMatcherJarDependencies(MatchRuleDefinition matchRuleDef) {
+        for (MatchRule matchRule : matchRuleDef.getMatchRules()) {
+            for (MatchKeyDefinition matchKeyDefinition : matchRule.getMatchKeys()) {
+                if (AttributeMatcherType.CUSTOM.getComponentValue().equalsIgnoreCase(
+                        matchKeyDefinition.getAlgorithm().getAlgorithmType())) {
+
+                    IPath libFolderPath = ResourceManager.getUDIJarFolder().getLocation();
+                    File libFolder = libFolderPath.toFile();
+                    if (libFolder.exists()) {
+                        for (File udiJarFile : UDIUtils.getLibJarFileList(libFolder)) {
+                            for (String str : CustomAttributeMatcherHelper.splitJarPath(matchKeyDefinition.getAlgorithm()
+                                    .getAlgorithmParameters())) {
+                                if (udiJarFile.getName().equals(str)) {
+                                    dependencyMap.put(udiJarFile, null);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+    }
+
+    /**
+     * DOC zshen Comment method "includeCustomMatcherJarDependencies".
+     * 
+     * @param element2
+     */
+    private void includeCustomMatcherJarDependencies(Analysis matchAnalysis) {
+        RecordMatchingIndicator recordMatchIndicatorFromAna = AnalysisHelper.getRecordMatchIndicatorFromAna(matchAnalysis);
+        MatchRuleDefinition builtInMatchRuleDefinition = recordMatchIndicatorFromAna.getBuiltInMatchRuleDefinition();
+        includeCustomMatcherJarDependencies(builtInMatchRuleDefinition);
     }
 
     /**
@@ -274,11 +331,12 @@ public class ItemRecord {
         TaggedValue tv = TaggedValueHelper.getTaggedValue(TaggedValueHelper.JAR_FILE_PATH, definition.getTaggedValue());
         if (tv != null) {
             IPath definitionPath = Path.fromOSString(definition.eResource().getURI().toFileString());
-            IPath libFolderPath = definitionPath.removeLastSegments(1).append("lib"); //$NON-NLS-1$
+            IPath libFolderPath = definitionPath.removeLastSegments(1).append(
+                    EResourceConstant.USER_DEFINED_INDICATORS_LIB.getName());
             File libFolder = libFolderPath.toFile();
             if (libFolder.exists()) {
                 for (File udiJarFile : UDIUtils.getLibJarFileList(libFolder)) {
-                    for (String str : tv.getValue().split("\\|\\|")) {//$NON-NLS-1$
+                    for (String str : tv.getValue().split(CustomAttributeMatcherClassNameConvert.REGEXKEY)) {
                         if (udiJarFile.getName().equals(str)) {
                             dependencyMap.put(udiJarFile, null);
                         }

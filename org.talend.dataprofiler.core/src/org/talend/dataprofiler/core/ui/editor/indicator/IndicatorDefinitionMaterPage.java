@@ -45,6 +45,7 @@ import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CCombo;
 import org.eclipse.swt.events.ModifyEvent;
@@ -1921,9 +1922,10 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
         String jarpathStr = jarPathText.getText();
         JavaUdiJarSelectDialog selectDialog = UDIUtils.createUdiJarCheckedTreeSelectionDialog(definition,
                 ResourceManager.getUDIJarFolder(), jarpathStr.split("\\|\\|"));//$NON-NLS-1$
-        selectDialog.setControl(jarPathText);
-        selectDialog.open();
-
+        selectDialog.setControls(jarPathText, classNameText);
+        if (Window.OK == selectDialog.open()) {
+            classNameText.setText(selectDialog.getSelectResult());
+        }
         // MOD klliu 2010-05-31 13451: Class name of Java User Define Indicator must be validated
         validateJavaUDI(classNameText, jarPathText);
         ProxyRepositoryManager.getInstance().save();

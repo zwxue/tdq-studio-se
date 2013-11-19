@@ -17,10 +17,11 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.talend.dataquality.record.linkage.constant.AttributeMatcherType;
+import org.talend.dataquality.record.linkage.utils.CustomAttributeMatcherClassNameConvert;
 
 /**
  * @author scorreia
- *
+ * 
  * Factory that helps to create attribute matchers from their label or type.
  */
 public final class AttributeMatcherFactory {
@@ -37,7 +38,7 @@ public final class AttributeMatcherFactory {
 
     /**
      * Method "createMatcher".
-     *
+     * 
      * @param matcherLabel the type of attribute matcher
      * @return the attribute matcher or null if the input type is null
      */
@@ -55,7 +56,7 @@ public final class AttributeMatcherFactory {
      * Method "createMatcher". If the type is {@link AttributeMatcherType#CUSTOM}, then the resulting IAttributeMatcher
      * class is instantiated given the className argument. If the type is different, then the
      * {@link AttributeMatcherFactory#createMatcher(AttributeMatcherType)} method is called.
-     *
+     * 
      * @param type the type of the attribute matcher
      * @param className the class name that implements IAttributeMatcher
      * @return the instantiated Attribute Matcher class
@@ -68,7 +69,8 @@ public final class AttributeMatcherFactory {
         if (type != null) {
             switch (type) {
             case CUSTOM:
-                return (IAttributeMatcher) Class.forName(className).newInstance();
+                return (IAttributeMatcher) Thread.currentThread().getContextClassLoader()
+                        .loadClass(CustomAttributeMatcherClassNameConvert.getClassName(className)).newInstance();
             default:
                 return createMatcher(type);
             }
@@ -79,7 +81,7 @@ public final class AttributeMatcherFactory {
 
     /**
      * Method "createMatcher".
-     *
+     * 
      * @param type the type of attribute matcher
      * @return the attribute matcher or null if the input type is null
      */

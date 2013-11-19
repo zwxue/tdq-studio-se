@@ -1,3 +1,15 @@
+// ============================================================================
+//
+// Copyright (C) 2006-2013 Talend Inc. - www.talend.com
+//
+// This source code is available under agreement available at
+// %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
+//
+// You should have received a copy of the agreement
+// along with this program; if not, write to Talend SA
+// 9 rue Pages 92150 Suresnes, France
+//
+// ============================================================================
 package org.talend.dataprofiler.core.ui.dialog.provider;
 
 import java.util.HashMap;
@@ -9,6 +21,7 @@ import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
+import org.talend.dataquality.record.linkage.utils.CustomAttributeMatcherClassNameConvert;
 
 public class MatchRulesTableLabelProvider extends LabelProvider implements ITableLabelProvider {
 
@@ -64,7 +77,7 @@ public class MatchRulesTableLabelProvider extends LabelProvider implements ITabl
             result = rule.get(MATCHING_TYPE);
             break;
         case 3: // custom matcher class
-            result = rule.get(CUSTOM_MATCHER);
+            result = CustomAttributeMatcherClassNameConvert.getClassName(rule.get(CUSTOM_MATCHER));
             break;
         case 4: // confidence weight
             result = rule.get(CONFIDENCE_WEIGHT);

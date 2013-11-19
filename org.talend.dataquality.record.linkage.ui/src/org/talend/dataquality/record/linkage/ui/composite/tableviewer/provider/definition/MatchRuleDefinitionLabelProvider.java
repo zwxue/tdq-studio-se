@@ -18,6 +18,7 @@ import org.talend.dataquality.record.linkage.constant.AttributeMatcherType;
 import org.talend.dataquality.record.linkage.ui.composite.tableviewer.provider.MatchRuleLabelProvider;
 import org.talend.dataquality.record.linkage.utils.HandleNullEnum;
 import org.talend.dataquality.rules.MatchKeyDefinition;
+import org.talend.dq.helper.CustomAttributeMatcherHelper;
 
 /**
  * created by zshen on Aug 27, 2013 Detailled comment
@@ -49,7 +50,7 @@ public class MatchRuleDefinitionLabelProvider extends MatchRuleLabelProvider {
                 case 1:
                     return AttributeMatcherType.valueOf(mkd.getAlgorithm().getAlgorithmType()).getLabel();
                 case 2:
-                    return mkd.getAlgorithm().getAlgorithmParameters();
+                    return CustomAttributeMatcherHelper.getClassName(mkd.getAlgorithm().getAlgorithmParameters());
                 case 3:
                     return String.valueOf(mkd.getThreshold());
                 case 4:
@@ -64,7 +65,7 @@ public class MatchRuleDefinitionLabelProvider extends MatchRuleLabelProvider {
                 case 1:
                     return AttributeMatcherType.valueOf(mkd.getAlgorithm().getAlgorithmType()).getLabel();
                 case 2:
-                    return mkd.getAlgorithm().getAlgorithmParameters();
+                    return CustomAttributeMatcherHelper.getClassName(mkd.getAlgorithm().getAlgorithmParameters());
                 case 3:
                     return String.valueOf(mkd.getConfidenceWeight());
                 case 4:

@@ -28,6 +28,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.record.linkage.constant.AttributeMatcherType;
 import org.talend.dataquality.record.linkage.ui.action.MatchRuleActionGroup;
+import org.talend.dataquality.record.linkage.ui.composite.tableviewer.cellEditor.jarFileCellEditor;
 import org.talend.dataquality.record.linkage.ui.composite.tableviewer.provider.MatchAnalysisTableContentProvider;
 import org.talend.dataquality.record.linkage.ui.composite.tableviewer.provider.MatchRuleLabelProvider;
 import org.talend.dataquality.record.linkage.ui.composite.utils.MatchRuleAnlaysisUtils;
@@ -73,6 +74,9 @@ public class MatchRuleTableViewer extends AbstractMatchAnalysisTableViewer<Match
                 break;
             case 2:
                 editors[i] = new ComboBoxCellEditor(innerTable, AttributeMatcherType.getAllTypes(), SWT.READ_ONLY);
+                break;
+            case 3:
+                editors[i] = new jarFileCellEditor(innerTable, SWT.READ_ONLY);
                 break;
             case 5:
                 editors[i] = new ComboBoxCellEditor(innerTable, HandleNullEnum.getAllTypes(), SWT.READ_ONLY);

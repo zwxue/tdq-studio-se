@@ -11,11 +11,13 @@
 //
 // ============================================================================
 package org.talend.dataprofiler.core.ui.utils;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
@@ -26,16 +28,9 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.jface.viewers.DecorationOverlayIcon;
-import org.eclipse.jface.viewers.IDecoration;
-import org.eclipse.jface.viewers.ITreeContentProvider;
-import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.IEditorPart;
-import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.CheckedTreeSelectionDialog;
 import org.eclipse.ui.dialogs.ISelectionStatusValidator;
@@ -48,7 +43,6 @@ import org.talend.cwm.dependencies.DependenciesHandler;
 import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.relational.TdExpression;
 import org.talend.dataprofiler.core.CorePlugin;
-import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.model.ModelElementIndicator;
@@ -78,6 +72,7 @@ import org.talend.dataquality.properties.TDQIndicatorDefinitionItem;
 import org.talend.dq.dbms.DbmsLanguage;
 import org.talend.dq.dbms.DbmsLanguageFactory;
 import org.talend.dq.dbms.GenericSQLHandler;
+import org.talend.dq.helper.CustomAttributeMatcherHelper;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.helper.UDIHelper;
 import org.talend.dq.helper.resourcehelper.IndicatorResourceFileHelper;
@@ -473,33 +468,9 @@ public final class UDIUtils {
             IFolder udiJarProject, String[] selectionPath) {
         JavaUdiJarSelectDialog dialog = new JavaUdiJarSelectDialog(definition, null, new UdiLabelProvider(),
                 new UdiJarContentProvider());
-        // MOD end
-        // dialog.addFilter(new RecycleBinFilter());
-        // dialog.addFilter(new FolderObjFilter());
+        dialog.setCheckValue(convertToString(selectionPath));
         dialog.setInput(udiJarProject);
         dialog.setCheckedElements(selectionPath);
-        dialog.setValidator(new ISelectionStatusValidator() {
-
-            public IStatus validate(Object[] selection) {
-                IStatus status = Status.OK_STATUS;
-                for (Object udi : selection) {
-                    if (udi instanceof IFile) {
-                        IFile file = (IFile) udi;
-                        if (FactoriesUtil.DEFINITION.equals(file.getFileExtension())) {
-                            IndicatorDefinition findUdi = IndicatorResourceFileHelper.getInstance().findIndDefinition(file);
-                            boolean validStatus = TaggedValueHelper.getValidStatus(findUdi);
-                            if (!validStatus) {
-                                status = new Status(IStatus.ERROR, CorePlugin.PLUGIN_ID, DefaultMessagesImpl
-                                        .getString("AnalysisColumnTreeViewer.chooseValidUdis")); //$NON-NLS-1$
-                            }
-                        }
-                    }
-                }
-                return status;
-            }
-
-        });
-        // dialog.addFilter(new DQFolderFliter(true));
         dialog.addFilter(new ViewerFilter() {
 
             @Override
@@ -518,6 +489,24 @@ public final class UDIUtils {
         dialog.setMessage(DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.udis")); //$NON-NLS-1$
         dialog.setSize(80, 30);
         return dialog;
+    }
+
+    /**
+     * convert the string array to String({a,b,c}==>a||b||c)
+     * 
+     * @param selectionPath
+     * @return
+     */
+    private static String convertToString(String[] selectionPath) {
+        String result = StringUtils.EMPTY;
+        if (selectionPath == null || selectionPath.length <= 0) {
+            return result;
+        }
+        result = selectionPath[0];
+        for (int index = 1; index < selectionPath.length; index++) {
+            result += CustomAttributeMatcherHelper.SEPARATOR + selectionPath[index];
+        }
+        return result;
     }
 
     /**
@@ -622,128 +611,4 @@ public final class UDIUtils {
         }
         return result;
     }
-}
-
-/**
- * DOC xqliu class global comment. Detailled comment
- */
-class UdiLabelProvider extends LabelProvider {
-
-    @Override
-    public Image getImage(Object element) {
-        if (element instanceof IFolder) {
-            return ImageLib.getImage(ImageLib.FOLDERNODE_IMAGE);
-        }
-
-        if (element instanceof IFile) {
-            IndicatorDefinition findUdi = IndicatorResourceFileHelper.getInstance().findIndDefinition((IFile) element);
-            boolean validStatus = TaggedValueHelper.getValidStatus(findUdi);
-            ImageDescriptor imageDescriptor = ImageLib.getImageDescriptor(ImageLib.IND_DEFINITION);
-            if (!validStatus) {
-                ImageDescriptor warnImg = PlatformUI.getWorkbench().getSharedImages()
-                        .getImageDescriptor(ISharedImages.IMG_OBJS_WARN_TSK);
-                DecorationOverlayIcon icon = new DecorationOverlayIcon(imageDescriptor.createImage(), warnImg,
-                        IDecoration.BOTTOM_RIGHT);
-                imageDescriptor = icon;
-            }
-            return imageDescriptor.createImage();
-        }
-
-        if (element instanceof File) {
-            return ImageLib.getImage(ImageLib.JAR_FILE);
-        }
-
-        return null;
-    }
-
-    @Override
-    public String getText(Object element) {
-        if (element instanceof IFile) {
-            IFile file = (IFile) element;
-            IndicatorDefinition udi = IndicatorResourceFileHelper.getInstance().findIndDefinition(file);
-            if (udi != null) {
-                return udi.getName();
-            }
-        }
-
-        if (element instanceof IFolder) {
-            return ((IFolder) element).getName();
-        }
-
-        if (element instanceof File) {
-            File file = (File) element;
-            return file.getName();
-        }
-
-        return ""; //$NON-NLS-1$
-    }
-
-}
-
-/**
- * 
- * @author zshen
- * 
- */
-class UdiJarContentProvider implements ITreeContentProvider {
-
-    /*
-     * (non-Jsdoc)
-     * 
-     * @see org.eclipse.jface.viewers.IContentProvider#dispose()
-     */
-    public void dispose() {
-
-    }
-
-    /*
-     * (non-Jsdoc)
-     * 
-     * @see org.eclipse.jface.viewers.IContentProvider#inputChanged(org.eclipse.jface.viewers.Viewer, java.lang.Object,
-     * java.lang.Object)
-     */
-    public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
-
-    }
-
-    /*
-     * (non-Jsdoc)
-     * 
-     * @see org.eclipse.jface.viewers.IStructuredContentProvider#getElements(java.lang.Object)
-     */
-    public Object[] getElements(Object inputElement) {
-
-        return getChildren(inputElement);
-    }
-
-    /*
-     * (non-Jsdoc)
-     * 
-     * @see org.eclipse.jface.viewers.ITreeContentProvider#getChildren(java.lang.Object)
-     */
-    public Object[] getChildren(Object parentElement) {
-        if (parentElement instanceof IFolder) {
-            return Arrays.asList(((IFolder) parentElement).getLocation().toFile().listFiles()).toArray();
-        }
-        return null;
-    }
-
-    /*
-     * (non-Jsdoc)
-     * 
-     * @see org.eclipse.jface.viewers.ITreeContentProvider#getParent(java.lang.Object)
-     */
-    public Object getParent(Object element) {
-        return null;
-    }
-
-    /*
-     * (non-Jsdoc)
-     * 
-     * @see org.eclipse.jface.viewers.ITreeContentProvider#hasChildren(java.lang.Object)
-     */
-    public boolean hasChildren(Object element) {
-        return false;
-    }
-
 }
