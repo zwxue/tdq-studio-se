@@ -22,7 +22,7 @@ import org.talend.core.model.metadata.IMetadataConnection;
  * created by qiongli on 2013-11-7 Detailled comment
  * 
  */
-public class HDP_2_0_0_Handler extends HortonWorksHandler {
+public class HIVE_YARN_Handler extends HortonWorksHandler {
 
     private final String MAP_FM_NAME = "mapreduce.framework.name"; //$NON-NLS-1$
 
@@ -35,7 +35,7 @@ public class HDP_2_0_0_Handler extends HortonWorksHandler {
      * 
      * @param metadataConnection
      */
-    public HDP_2_0_0_Handler(IMetadataConnection metadataConnection) {
+    public HIVE_YARN_Handler(IMetadataConnection metadataConnection) {
         super(metadataConnection);
     }
 

@@ -154,8 +154,9 @@ public class HiveConnectionHandler {
         String version = (String) metadataConnection.getParameter(ConnParameterKeys.CONN_PARA_KEY_HIVE_VERSION);
         if (EHBaseDistribution4Versions.HDP_1_3.getVersionValue().equals(version)) {
             handler = new HDP_1_3_0_Handler(metadataConnection);
-        } else if (EHBaseDistribution4Versions.HDP_2_0.getVersionValue().equals(version)) {
-            handler = new HDP_2_0_0_Handler(metadataConnection);
+        } else if (EHBaseDistribution4Versions.HDP_2_0.getVersionValue().equals(version)
+                || EHBaseDistribution4Versions.CLOUDERA_CDH4_YARN.getVersionValue().equals(version)) {
+            handler = new HIVE_YARN_Handler(metadataConnection);
         } else if (EHBaseDistribution4Versions.MAPR_2_1_2.getVersionValue().equals(version)) {
             handler = new Mapr_2_1_2_Handler(metadataConnection);
         } else {
