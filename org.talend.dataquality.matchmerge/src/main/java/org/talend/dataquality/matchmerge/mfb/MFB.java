@@ -121,7 +121,7 @@ public class MFB implements MatchMergeAlgorithm {
             // MFB algorithm
             boolean hasCreatedNewMerge = false;
             for (Record mergedRecord : mergedRecords) {
-                MatchResult matchResult = matchRecords(mergedRecord, currentRecord);
+                MatchResult matchResult = matchRecords(mergedRecord, currentRecord, algorithms, thresholds, nullOptions, subStrings, weights, minConfidenceValue);
                 if (matchResult.isMatch()) {
                     callback.onMatch(mergedRecord, currentRecord, matchResult);
                     Record newMergedRecord = MatchMerge.merge(currentRecord,
@@ -202,7 +202,14 @@ public class MFB implements MatchMergeAlgorithm {
         }
     }
 
-    private MatchResult matchRecords(Record mergedRecord, Record currentRecord) {
+    public static MatchResult matchRecords(Record mergedRecord,
+                                           Record currentRecord,
+                                           AttributeMatcherType[] algorithms,
+                                           float[] thresholds,
+                                           IAttributeMatcher.NullOption[] nullOptions,
+                                           SubString[] subStrings,
+                                           double[] weights,
+                                           double minConfidenceValue) {
         if (mergedRecord.getAttributes().size() != currentRecord.getAttributes().size()) {
             throw new IllegalArgumentException("Records do not share same attribute count.");
         }
@@ -235,6 +242,10 @@ public class MFB implements MatchMergeAlgorithm {
             result.setThreshold(matchIndex, thresholds[matchIndex]);
             confidence += score * weights[matchIndex];
             matchIndex++;
+        }
+        int maxWeight = 0;
+        for (double weight : weights) {
+            maxWeight += weight;
         }
         double normalizedConfidence = confidence > 0 ? confidence / maxWeight : confidence; // Normalize to 0..1 value
         result.setConfidence(normalizedConfidence, minConfidenceValue);
