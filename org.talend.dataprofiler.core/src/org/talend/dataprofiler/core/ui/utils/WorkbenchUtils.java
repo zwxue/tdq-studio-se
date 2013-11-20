@@ -356,6 +356,7 @@ public final class WorkbenchUtils {
     public static void refreshCurrentAnalysisAndConnectionEditor() {
         List<IEditorReference> iEditorReference = getIEditorReference(AnalysisEditor.class.getName());
         iEditorReference.addAll(getIEditorReference(ConnectionEditor.class.getName()));
+        iEditorReference.addAll(getIEditorReference(MatchAnalysisEditor.class.getName()));
         closeAndOpenEditor(iEditorReference);
     }
 

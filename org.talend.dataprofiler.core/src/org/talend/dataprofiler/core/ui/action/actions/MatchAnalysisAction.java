@@ -110,8 +110,7 @@ public class MatchAnalysisAction extends Action {
                 MatchMasterDetailsPage page = (MatchMasterDetailsPage) editor.getMasterPage();
                 IRepositoryNode[] columns = getColumns();
                 if (this.needselection && columns.length > 0) {
-                    String checkedElementNames = RepositoryNodeHelper.getAnalyzeDataNames(columns[0]);
-                    page.updateAnalyzeDataLabel(checkedElementNames);
+                    page.updateAnalyzeDataLabel(columns[0]);
                     page.setSelectedNodes(columns);
                 }
                 page.doSave(null);

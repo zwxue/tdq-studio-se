@@ -33,7 +33,6 @@ import org.talend.dataquality.indicators.columnset.RecordMatchingIndicator;
 import org.talend.dataquality.rules.MatchRuleDefinition;
 import org.talend.dataquality.rules.RulesFactory;
 import org.talend.dq.analysis.parameters.AnalysisParameter;
-import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
 import orgomg.cwm.objectmodel.core.ModelElement;
@@ -88,8 +87,7 @@ public class MatchWizard extends ColumnWizard {
 
         if (nodes != null && nodes.size() > 0) {
             // update analyze data label by selected nodes names(don't cotain columnRepNode).
-            String checkedElementNames = RepositoryNodeHelper.getAnalyzeDataNames(nodes.get(0));
-            masterPage.updateAnalyzeDataLabel(checkedElementNames);
+            masterPage.updateAnalyzeDataLabel(nodes.get(0));
             // give the selected columns to the master page
             masterPage.setSelectedNodes(nodes.toArray(new RepositoryNode[nodes.size()]));
             masterPage.doSave(new NullProgressMonitor());

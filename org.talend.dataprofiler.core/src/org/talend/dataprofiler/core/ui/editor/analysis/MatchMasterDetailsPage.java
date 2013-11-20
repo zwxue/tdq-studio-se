@@ -62,7 +62,6 @@ import org.talend.cwm.db.connection.DatabaseSQLExecutor;
 import org.talend.cwm.db.connection.DelimitedFileSQLExecutor;
 import org.talend.cwm.db.connection.ISQLExecutor;
 import org.talend.cwm.db.connection.MDMSQLExecutor;
-import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.xml.TdXmlElementType;
 import org.talend.dataprofiler.core.CorePlugin;
@@ -89,6 +88,7 @@ import org.talend.dataquality.record.linkage.utils.MatchAnalysisConstant;
 import org.talend.dataquality.rules.MatchRule;
 import org.talend.dataquality.rules.MatchRuleDefinition;
 import org.talend.dq.analysis.MatchAnalysisHandler;
+import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.nodes.DBColumnRepNode;
 import org.talend.dq.writer.impl.ElementWriterFactory;
@@ -97,7 +97,6 @@ import org.talend.repository.model.RepositoryNode;
 import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.foundation.softwaredeployment.DataManager;
 import orgomg.cwm.objectmodel.core.ModelElement;
-import orgomg.cwm.objectmodel.core.TaggedValue;
 
 /**
  * Detail Page of the match analysis
@@ -302,8 +301,12 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
         GridLayout layout = new GridLayout(2, Boolean.TRUE);
         titleComposite.setLayout(layout);
         analyzeDataLabel = new Label(titleComposite, SWT.NONE);
-        String matchAnaTagValue = TaggedValueHelper.getValueString(TaggedValueHelper.MATCH_ANALYZE_DATA, analysis);
-        analyzeDataLabel.setText(analyzeDataDefaultInfo + matchAnaTagValue);
+        if (analysisHandler.getAnalyzedColumns().size() > 0) {
+            RepositoryNode node = RepositoryNodeHelper.recursiveFind(analysisHandler.getAnalyzedColumns().get(0));
+            updateAnalyzeDataLabel(node);
+        } else {
+            analyzeDataLabel.setText(analyzeDataDefaultInfo);
+        }
 
         // ADD msjian TDQ-8040 2013-11-8: Add a button "show in repository view"
         ImageHyperlink showInDQViewLink = toolkit.createImageHyperlink(titleComposite, SWT.NONE);
@@ -693,8 +696,10 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
                 updateAllKeys(oldSelectedColumns);
                 // update the analyzed data label with checked elements name.
                 if (reposList != null && reposList.size() > 0) {
-                    String selectedElementNames = RepositoryNodeHelper.getAnalyzeDataNames(reposList.get(0));
-                    updateAnalyzeDataLabel(selectedElementNames);
+                    // String selectedElementNames = RepositoryNodeHelper.getAnalyzeDataNames(reposList.get(0));
+                    updateAnalyzeDataLabel(reposList.get(0));
+                } else {
+                    analyzeDataLabel.setText(analyzeDataDefaultInfo);
                 }
                 refreshColumnAndData();
             }
@@ -994,6 +999,10 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
      * @return
      */
     private List<Object[]> fetchDataForTable() {
+        // TDQ-8267 when the file is changed, and the columns cleared, the analysis is unloaded
+        if (analysisHandler.getAnalysis().eIsProxy()) {
+            analysisHandler.setAnalysis((Analysis) EObjectHelper.resolveObject(analysisHandler.getAnalysis()));
+        }
         if (this.analysisHandler.getSelectedColumns() == null || analysisHandler.getSelectedColumns().length == 0) {
             return new ArrayList<Object[]>();
         }
@@ -1244,20 +1253,10 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
      * 
      * save/update the selected elements names as TaggedValue.
      * 
-     * @param selectedNames
+     * @param iRepositoryNode
      */
-    public void updateAnalyzeDataLabel(String selectedNames) {
-
-        EList<TaggedValue> taggedValues = analysis.getTaggedValue();
-        TaggedValue taggedValue = TaggedValueHelper.getTaggedValue(TaggedValueHelper.MATCH_ANALYZE_DATA, taggedValues);
-        if (taggedValue == null) {
-            TaggedValue matchTaggedValue = TaggedValueHelper.createTaggedValue(TaggedValueHelper.MATCH_ANALYZE_DATA,
-                    selectedNames);
-            analysis.getTaggedValue().add(matchTaggedValue);
-        } else {
-            taggedValue.setValue(selectedNames);
-        }
-        this.analyzeDataLabel.setText(this.analyzeDataDefaultInfo + selectedNames);
+    public void updateAnalyzeDataLabel(IRepositoryNode node) {
+        analyzeDataLabel.setText(analyzeDataDefaultInfo + RepositoryNodeHelper.getAnalyzeDataNames(node));
     }
 
 }

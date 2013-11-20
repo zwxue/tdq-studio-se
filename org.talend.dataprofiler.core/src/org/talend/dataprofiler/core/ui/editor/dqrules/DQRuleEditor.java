@@ -166,6 +166,8 @@ public class DQRuleEditor extends CommonFormEditor {
             setSaveActionButtonState(false);
         } else if (parserPage != null) {
             setSaveActionButtonState(false);
+        } else if (matchPage != null) {
+            setSaveActionButtonState(false);
         }
     }
 
