@@ -16,6 +16,7 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.talend.commons.utils.platform.PluginChecker;
 import org.talend.core.model.properties.Item;
+import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
@@ -26,6 +27,7 @@ import org.talend.dataquality.rules.MatchRuleDefinition;
 import org.talend.dq.analysis.parameters.ConnectionParameter;
 import org.talend.dq.analysis.parameters.DQMatchRuleParameter;
 import org.talend.dq.dqrule.MatchRuleBuilder;
+import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.helper.resourcehelper.ResourceFileMap;
 import org.talend.dq.writer.impl.ElementWriterFactory;
 import org.talend.dq.writer.impl.MatchRuleDefinitionWriter;
@@ -163,4 +165,16 @@ public class NewMatchRuleWizard extends AbstractWizard {
     public void setHelpContextId(String newContextId) {
         helpContextId = newContextId;
     }
+
+    @Override
+    public boolean performFinish() {
+        boolean finished = super.performFinish();
+        // when export the match rule, the selected node must not be the match rule folder, so, it can not be refreshed
+        // and shown in repository view:
+        if (isExport) {
+            CorePlugin.getDefault().refreshDQView(RepositoryNodeHelper.getRootNode(ERepositoryObjectType.TDQ_LIBRARIES));
+        }
+        return finished;
+    }
+
 }
