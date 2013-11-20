@@ -120,6 +120,8 @@ public class DataSampleTable {
     // <groupid, related color>
     private Map<String, Integer> rowOfGIDWithColor = new HashMap<String, Integer>();
 
+    private int masterColumn;
+
     private final static Color[] COLOR_LIST = MatchRuleColorRegistry.getColorsForSwt();
 
     public DataSampleTable() {
@@ -301,6 +303,8 @@ public class DataSampleTable {
         // record the index of the GRP_SIZE
         this.sortState.setGrpSizeIndex(i);
         columnsName[i++] = MatchAnalysisConstant.GRP_SIZE;
+        this.masterColumn = i;
+
         columnsName[i++] = MatchAnalysisConstant.MASTER;
         columnsName[i++] = MatchAnalysisConstant.SCORE;
         columnsName[i++] = MatchAnalysisConstant.GRP_QUALITY;
@@ -515,10 +519,12 @@ public class DataSampleTable {
             if (currentGID != null && !StringUtils.EMPTY.equals(currentGID)) {
                 ((ForegroundTextPainter) getWrappedPainter()).setDrawImage(true);
                 Object[] rowObject = (Object[]) bodyDataProvider.getRowObject(cell.getRowIndex());
-                if ("0".equals(rowObject[sortState.getGrpSizeIndex()])) {
-                    ((ForegroundTextPainter) getWrappedPainter()).setChangeForegroundColor(true);
-                } else {
+                // use master to judge instead of "0"
+                Boolean isMaster = Boolean.parseBoolean(rowObject[masterColumn].toString());
+                if (isMaster) {
                     ((ForegroundTextPainter) getWrappedPainter()).setChangeForegroundColor(false);
+                } else {
+                    ((ForegroundTextPainter) getWrappedPainter()).setChangeForegroundColor(true);
                 }
             } else {
                 ((ForegroundTextPainter) getWrappedPainter()).setDrawImage(false);

@@ -314,12 +314,12 @@ public class MatchRuleDataTable extends Composite {
 
         @Override
         public Image getColumnImage(Object element, int columnIndex) {
-            String size = ((String[]) element)[grpSizeColumn];
+            String isMaster = ((String[]) element)[masterColumn];
             if (columnIndex == 0) {
-                if ("0".equals(size)) {//$NON-NLS-1$
-                    return null;
-                } else {
+                if (Boolean.parseBoolean(isMaster)) {//$NON-NLS-1$
                     return masterImage;
+                } else {
+                    return null;
                 }
             } else {
                 return null;
@@ -339,11 +339,11 @@ public class MatchRuleDataTable extends Composite {
 
         @Override
         public Color getForeground(Object element, int columnIndex) {
-            String size = ((String[]) element)[grpSizeColumn];
-            if ("0".equals(size)) {//$NON-NLS-1$
-                return ImageLib.COLOR_GREY;
-            } else {
+            String isMaster = ((String[]) element)[masterColumn];
+            if (Boolean.parseBoolean(isMaster)) {//$NON-NLS-1$
                 return GUIHelper.COLOR_BLACK;
+            } else {
+                return ImageLib.COLOR_GREY;
             }
         }
 
