@@ -40,7 +40,6 @@ import org.talend.dataquality.analysis.AnalysisContext;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dq.dbms.GenericSQLHandler;
 import org.talend.dq.helper.EObjectHelper;
-import org.talend.dq.helper.UDIHelper;
 import org.talend.dq.indicators.IndicatorEvaluator;
 import org.talend.utils.sugars.ReturnCode;
 import org.talend.utils.sugars.TypedReturnCode;
@@ -75,7 +74,6 @@ public class ColumnAnalysisExecutor extends AnalysisExecutor {
 
     @Override
     protected boolean runAnalysis(Analysis analysis, String sqlStatement) {
-        UDIHelper.updateJUDIsForAnalysis(analysis);
         IndicatorEvaluator eval = new IndicatorEvaluator(analysis);
         // MOD xqliu 2009-02-09 bug 6237
         eval.setMonitor(getMonitor());
