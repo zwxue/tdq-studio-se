@@ -120,12 +120,15 @@ public abstract class AbstractSchemaEvaluator<T> extends Evaluator<T> {
     protected void evalAllCounts(String catalog, String schema, NamedColumnSet t, SchemaIndicator schemaIndic, boolean isTable,
             ReturnCode ok) throws SQLException {
         // MOD klliu 2011-02-17 bug 18961
-        // TDQ-8277 shouldn't use the AnalyzedElement's eContainer instanceof Catalog,just AnalyzedElement instanceof
-        // Catalog.
+        // TDQ-8277 should consider tha database just has catalog(like hive/mysal).then get the quCatalog.
         ModelElement analyzedElement = schemaIndic.getAnalyzedElement();
+        EObject eContainer = analyzedElement.eContainer();
         String quCatalog = null;
-        if (analyzedElement instanceof Catalog) {
+
+        if (SwitchHelpers.CATALOG_SWITCH.doSwitch(analyzedElement) != null) {
             quCatalog = dbms().quote(((Catalog) analyzedElement).getName());
+        } else if (SwitchHelpers.CATALOG_SWITCH.doSwitch(eContainer) != null) {
+            quCatalog = dbms().quote(((Catalog) eContainer).getName());
         }
         String quSchema = schema == null ? null : dbms().quote(schema);
         final String table = t.getName();
