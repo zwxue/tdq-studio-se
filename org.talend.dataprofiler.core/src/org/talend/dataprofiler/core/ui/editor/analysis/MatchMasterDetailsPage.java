@@ -316,16 +316,16 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
 
             @Override
             public void linkActivated(HyperlinkEvent e) {
-                EList<ModelElement> analysedElements = analysis.getContext().getAnalysedElements();
+                List<IRepositoryNode> analysedElements = findAllSelectedRepositoryNode();
                 if (analysedElements != null && analysedElements.size() > 0) {
-                    ModelElement container = (ModelElement) (analysedElements.get(0).eContainer());
-
                     DQRespositoryView dqview = CorePlugin.getDefault().findAndOpenRepositoryView();
                     // if DqRepository view is not openning we will not do anything
                     if (dqview == null) {
                         return;
                     }
                     try {
+                        ModelElement column = RepositoryNodeHelper.getModelElementFromRepositoryNode(analysedElements.get(0));
+                        ModelElement container = (ModelElement) (column.eContainer());
                         RepositoryNode recursiveFind = RepositoryNodeHelper.recursiveFind(container);
                         if (recursiveFind == null) {
                             recursiveFind = RepositoryNodeHelper.createRepositoryNode(container);
