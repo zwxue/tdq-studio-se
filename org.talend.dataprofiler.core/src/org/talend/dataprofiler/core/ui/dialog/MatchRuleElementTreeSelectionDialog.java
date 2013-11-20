@@ -155,7 +155,8 @@ public class MatchRuleElementTreeSelectionDialog extends ElementTreeSelectionDia
                             String warningMsg = StringUtils.EMPTY;
 
                             // when the imported rule's algorithm is "T_Swoosh", warning
-                            if (T_SWOOSH_ALGORITHM.equals(matchRule.getRecordLinkageAlgorithm())) {
+                            if (dialogType == MATCH_ANALYSIS_TYPE
+                                    && T_SWOOSH_ALGORITHM.equals(matchRule.getRecordLinkageAlgorithm())) {
                                 warningMsg = DefaultMessagesImpl.getString("MatchRuleCheckedTreeSelectionDialog.tswoosh"); //$NON-NLS-1$
                             }
 
