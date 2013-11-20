@@ -57,8 +57,8 @@ public class TDQJrxmlItemImplTest {
         jrxmlItem = PropertiesFactory.eINSTANCE.createTDQJrxmlItem();
 
         EMFUtil emfUtil = new EMFUtil();
-        File position = new File(""); //$NON-NLS-1$
-        file = new File(position.getAbsolutePath() + File.separator + "data/test_0.1.jrxml"); //$NON-NLS-1$
+        //        File position = new File(""); //$NON-NLS-1$
+        file = new File("test_0.1.jrxml"); //$NON-NLS-1$
         writeToFile("original jrxml content");//$NON-NLS-1$
 
         ResourceSet rs = emfUtil.getResourceSet();
@@ -84,7 +84,7 @@ public class TDQJrxmlItemImplTest {
         jrxmlItem.setState(itemState);
 
         // get the eresource of the item without creating the real project
-        File property = new File(position.getAbsolutePath() + File.separator + "data/test_0.1.property");//$NON-NLS-1$
+        File property = new File("test_0.1.property");//$NON-NLS-1$
         Resource propertyResource = emfUtil.getResourceSet().createResource(URI.createFileURI(property.getAbsolutePath()));
         propertyResource.getContents().add(jrxmlItem.getProperty());
         propertyResource.getContents().add(jrxmlItem.getState());
