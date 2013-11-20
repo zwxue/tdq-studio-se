@@ -234,7 +234,12 @@ public final class AnalysisExecutorHelper {
             rc.setOk(Boolean.FALSE);
             return rc;
         }
-
+        // --- check that there exists at least on element to analyze
+        if (context.getAnalysedElements().size() == 0) {
+            rc.setMessage(Messages.getString("ColumnAnalysisExecutor.AnalysisHaveAtLeastOneColumn")); //$NON-NLS-1$
+            rc.setOk(Boolean.FALSE);
+            return rc;
+        }
         // --- check that the connection has been set
         DataManager connection = context.getConnection();
         if (connection == null) {
