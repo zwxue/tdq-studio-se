@@ -272,7 +272,7 @@ public class FileSystemImportWriter implements IImportWriter {
     }
 
     private boolean isConflict(Property p1, Property p2) {
-        if (WorkspaceUtils.normalize(p1.getLabel()).equals(p2.getLabel())) {
+        if (WorkspaceUtils.normalize(p1.getLabel()).equalsIgnoreCase(p2.getLabel())) {
             return true;
         } else if (p1.getId().equals(p2.getId())) {
             return true;
@@ -385,6 +385,9 @@ public class FileSystemImportWriter implements IImportWriter {
 
         boolean isCovered = desFile.exists();
         if (isCovered) {
+            // we'd better delete the old file first to make the file name case sensitive to avoid causing get resource
+            // error
+            desFile.delete();
             log.warn(desFile.getAbsoluteFile() + " is overwritten!");//$NON-NLS-1$ 
         }
 
