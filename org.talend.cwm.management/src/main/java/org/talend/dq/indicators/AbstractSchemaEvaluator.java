@@ -50,6 +50,7 @@ import org.talend.utils.sugars.ReturnCode;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.foundation.softwaredeployment.DataManager;
 import orgomg.cwm.foundation.softwaredeployment.DataProvider;
+import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.objectmodel.core.Package;
 import orgomg.cwm.resource.relational.Catalog;
 import orgomg.cwm.resource.relational.NamedColumnSet;
@@ -119,10 +120,12 @@ public abstract class AbstractSchemaEvaluator<T> extends Evaluator<T> {
     protected void evalAllCounts(String catalog, String schema, NamedColumnSet t, SchemaIndicator schemaIndic, boolean isTable,
             ReturnCode ok) throws SQLException {
         // MOD klliu 2011-02-17 bug 18961
-        EObject eContainer = schemaIndic.getAnalyzedElement().eContainer();
+        // TDQ-8277 shouldn't use the AnalyzedElement's eContainer instanceof Catalog,just AnalyzedElement instanceof
+        // Catalog.
+        ModelElement analyzedElement = schemaIndic.getAnalyzedElement();
         String quCatalog = null;
-        if (eContainer instanceof Catalog) {
-            quCatalog = dbms().quote(((Catalog) eContainer).getName());
+        if (analyzedElement instanceof Catalog) {
+            quCatalog = dbms().quote(((Catalog) analyzedElement).getName());
         }
         String quSchema = schema == null ? null : dbms().quote(schema);
         final String table = t.getName();
