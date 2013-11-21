@@ -121,15 +121,7 @@ public abstract class AbstractSchemaEvaluator<T> extends Evaluator<T> {
             ReturnCode ok) throws SQLException {
         // MOD klliu 2011-02-17 bug 18961
         // TDQ-8277 should consider tha database just has catalog(like hive/mysal).then get the quCatalog.
-        ModelElement analyzedElement = schemaIndic.getAnalyzedElement();
-        EObject eContainer = analyzedElement.eContainer();
-        String quCatalog = null;
-
-        if (SwitchHelpers.CATALOG_SWITCH.doSwitch(analyzedElement) != null) {
-            quCatalog = dbms().quote(((Catalog) analyzedElement).getName());
-        } else if (SwitchHelpers.CATALOG_SWITCH.doSwitch(eContainer) != null) {
-            quCatalog = dbms().quote(((Catalog) eContainer).getName());
-        }
+        String quCatalog = getCatalogNameWithQuote(schemaIndic);
         String quSchema = schema == null ? null : dbms().quote(schema);
         final String table = t.getName();
         String quTable = dbms().quote(table);
@@ -167,6 +159,25 @@ public abstract class AbstractSchemaEvaluator<T> extends Evaluator<T> {
         }
         // --- triggers (JDBC API cannot get triggers)
 
+    }
+
+    /**
+     * just extract this method from evalAllCounts,and need to junit.
+     * 
+     * @param SchemaIndicator
+     */
+    protected String getCatalogNameWithQuote(SchemaIndicator schemaIndic) {
+        String quCatalog = null;
+        ModelElement analyzedElement = schemaIndic.getAnalyzedElement();
+        if (analyzedElement != null) {
+            EObject eContainer = analyzedElement.eContainer();
+            if (SwitchHelpers.CATALOG_SWITCH.doSwitch(analyzedElement) != null) {
+                quCatalog = dbms().quote(((Catalog) analyzedElement).getName());
+            } else if (eContainer != null && SwitchHelpers.CATALOG_SWITCH.doSwitch(eContainer) != null) {
+                quCatalog = dbms().quote(((Catalog) eContainer).getName());
+            }
+        }
+        return quCatalog;
     }
 
     /**
