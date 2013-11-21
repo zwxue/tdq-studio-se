@@ -146,6 +146,8 @@ public class AbstractRecordGroupingTest {
         // Test record match threshold
 
         testMatchThreshold();
+
+        testMatchThreshold_0();
     }
 
     /**
@@ -219,14 +221,19 @@ public class AbstractRecordGroupingTest {
         lnameRecords.put(IRecordGrouping.RECORD_MATCH_THRESHOLD, String.valueOf(0.95f));
         matchingRule.add(lnameRecords);
 
+        lnameRecords = new HashMap<String, String>();
+        lnameRecords.put(IRecordGrouping.COLUMN_IDX, String.valueOf(1));
+        lnameRecords.put(IRecordGrouping.MATCHING_TYPE, "JARO_WINKLER"); //$NON-NLS-1$
+        lnameRecords.put(IRecordGrouping.CONFIDENCE_WEIGHT, String.valueOf(1));
+        lnameRecords.put(IRecordGrouping.RECORD_MATCH_THRESHOLD, String.valueOf(0.0f));
+        matchingRule.add(lnameRecords);
+
         // matching parameters for state_province
         accountRecords = new HashMap<String, String>();
         accountRecords.put(IRecordGrouping.COLUMN_IDX, String.valueOf(6));
         accountRecords.put(IRecordGrouping.MATCHING_TYPE, "LEVENSHTEIN"); //$NON-NLS-1$
         accountRecords.put(IRecordGrouping.CONFIDENCE_WEIGHT, String.valueOf(0.8));
         accountRecords.put(IRecordGrouping.RECORD_MATCH_THRESHOLD, String.valueOf(0.95f));// Duplicate set of threshold,
-                                                                                          // this is because the data
-                                                                                          // structure is a array.
         matchingRule.add(accountRecords);
 
         recordGroup.addMatchRule(matchingRule);
@@ -274,11 +281,98 @@ public class AbstractRecordGroupingTest {
             }
             if (rds[0].equals("13758354187")) { //$NON-NLS-1$
                 // The group size should be 2 for account 13758354187
-                Assert.assertEquals(2, Integer.valueOf(rds[rds.length - 4]).intValue());
+                Assert.assertEquals(1, Integer.valueOf(rds[rds.length - 4]).intValue());
             }
             if (rds[0].equals("15114446900")) { //$NON-NLS-1$
                 // The group size should be 2 for account 15114446900
                 Assert.assertEquals(2, Integer.valueOf(rds[rds.length - 4]).intValue());
+            }
+
+            for (String rd : rds) {
+                log.info(rd + ","); //$NON-NLS-1$
+            }
+
+        }
+    }
+
+    /**
+     * when RECORD_MATCH_THRESHOLD=0, all records should be in one group
+     */
+    private void testMatchThreshold_0() {
+        List<Map<String, String>> matchingRule;
+        Map<String, String> lnameRecords;
+        Map<String, String> accountRecords;
+        groupingRecords.clear();
+        recordGroup = new AbstractRecordGrouping() {
+
+            /*
+             * (non-Javadoc)
+             * 
+             * @see org.talend.dataquality.record.linkage.grouping.AbstractRecordGrouping#outputRow(java.lang.String)
+             */
+            @Override
+            protected void outputRow(String row) {
+                System.out.println(row);
+                groupingRecords.add(StringUtils.splitByWholeSeparator(row, columnDelimiter));
+            }
+        };
+        recordGroup.setColumnDelimiter(columnDelimiter);
+        recordGroup.setIsLinkToPrevious(Boolean.FALSE);
+        matchingRule = new ArrayList<Map<String, String>>();
+
+        lnameRecords = new HashMap<String, String>();
+        lnameRecords.put(IRecordGrouping.COLUMN_IDX, String.valueOf(1));
+        lnameRecords.put(IRecordGrouping.MATCHING_TYPE, "JARO_WINKLER"); //$NON-NLS-1$
+        lnameRecords.put(IRecordGrouping.CONFIDENCE_WEIGHT, String.valueOf(1));
+        lnameRecords.put(IRecordGrouping.RECORD_MATCH_THRESHOLD, String.valueOf(0.0f));
+        matchingRule.add(lnameRecords);
+
+        recordGroup.addMatchRule(matchingRule);
+        recordGroup.setIsOutputDistDetails(true);
+        try {
+            recordGroup.initialize();
+        } catch (InstantiationException e) {
+            log.error(e.getMessage(), e);
+            Assert.fail();
+        } catch (IllegalAccessException e) {
+            log.error(e.getMessage(), e);
+            Assert.fail();
+        } catch (ClassNotFoundException e) {
+            log.error(e.getMessage(), e);
+            Assert.fail();
+        }
+
+        // loop on all input rows.
+        try {
+            for (String[] inputRow : inputList) {
+                recordGroup.doGroup(inputRow);
+            }
+            recordGroup.end();
+        } catch (IOException e) {
+            log.error(e.getMessage(), e);
+        } catch (InterruptedException e) {
+            log.error(e.getMessage(), e);
+        }
+
+        for (String[] rds : groupingRecords) {
+            if (rds[0].equals("26997914900")) { //$NON-NLS-1$
+                Assert.assertEquals(0, Integer.valueOf(rds[rds.length - 4]).intValue());
+            }
+            if (rds[0].equals("13700177100")) { //$NON-NLS-1$
+                Assert.assertEquals(0, Integer.valueOf(rds[rds.length - 4]).intValue());
+            }
+            if (rds[0].equals("12083684802")) { //$NON-NLS-1$
+                Assert.assertEquals(0, Integer.valueOf(rds[rds.length - 4]).intValue());
+            }
+            if (rds[0].equals("13758354187")) { //$NON-NLS-1$
+                Assert.assertEquals(0, Integer.valueOf(rds[rds.length - 4]).intValue());
+            }
+            if (rds[0].equals("15114446900")) { //$NON-NLS-1$
+                Assert.assertEquals(0, Integer.valueOf(rds[rds.length - 4]).intValue());
+            }
+            if (rds[0].equals("10389564000")) { //$NON-NLS-1$
+                // The group size should be 101 , all records in one group
+                Assert.assertEquals(101, Integer.valueOf(rds[rds.length - 4]).intValue());
             }
 
             for (String rd : rds) {
