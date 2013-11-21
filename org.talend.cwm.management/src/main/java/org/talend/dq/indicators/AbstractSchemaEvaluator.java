@@ -120,13 +120,8 @@ public abstract class AbstractSchemaEvaluator<T> extends Evaluator<T> {
     protected void evalAllCounts(String catalog, String schema, NamedColumnSet t, SchemaIndicator schemaIndic, boolean isTable,
             ReturnCode ok) throws SQLException {
         // MOD klliu 2011-02-17 bug 18961
-        // TDQ-8277 shouldn't use the AnalyzedElement's eContainer instanceof Catalog,just AnalyzedElement instanceof
-        // Catalog.
-        ModelElement analyzedElement = schemaIndic.getAnalyzedElement();
-        String quCatalog = null;
-        if (analyzedElement instanceof Catalog) {
-            quCatalog = dbms().quote(((Catalog) analyzedElement).getName());
-        }
+        // TDQ-8277 should consider tha database just has catalog(like hive/mysal).then get the quCatalog.
+        String quCatalog = getCatalogNameWithQuote(schemaIndic);
         String quSchema = schema == null ? null : dbms().quote(schema);
         final String table = t.getName();
         String quTable = dbms().quote(table);
@@ -192,6 +187,25 @@ public abstract class AbstractSchemaEvaluator<T> extends Evaluator<T> {
      */
     @Override
     protected abstract ReturnCode executeSqlQuery(String sqlStatement) throws SQLException;
+
+    /**
+     * just extract this method from evalAllCounts,and need to junit.
+     * 
+     * @param SchemaIndicator
+     */
+    protected String getCatalogNameWithQuote(SchemaIndicator schemaIndic) {
+        String quCatalog = null;
+        ModelElement analyzedElement = schemaIndic.getAnalyzedElement();
+        if (analyzedElement != null) {
+            EObject eContainer = analyzedElement.eContainer();
+            if (SwitchHelpers.CATALOG_SWITCH.doSwitch(analyzedElement) != null) {
+                quCatalog = dbms().quote(((Catalog) analyzedElement).getName());
+            } else if (eContainer != null && SwitchHelpers.CATALOG_SWITCH.doSwitch(eContainer) != null) {
+                quCatalog = dbms().quote(((Catalog) eContainer).getName());
+            }
+        }
+        return quCatalog;
+    }
 
     /**
      * DOC scorreia Comment method "createTableIndicator".
