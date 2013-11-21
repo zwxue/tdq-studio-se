@@ -821,34 +821,25 @@ public class FileSystemImportWriter implements IImportWriter {
     private boolean mergeClientDependency2Pattern(boolean isModified, Pattern pattern, Pattern recordPattern) {
         EList<Dependency> supplierDependency = recordPattern.getSupplierDependency();
         if (supplierDependency != null) {
-            // TDQ-8105 if the new pattern doesn't have any client dependences,add all dependences from old pattern's.
-            if (pattern.getSupplierDependency().isEmpty()) {
-                pattern.getSupplierDependency().addAll(recordPattern.getSupplierDependency());
-                return true;
-            }
+            // TDQ-8105 should add dependces between the pattern and System's analyis,not the old analysis from the temp
+            // folder.need to remove the old client dependence in the System's analysis.
             for (Dependency dependency : supplierDependency) {
                 for (ModelElement client : dependency.getClient()) {
                     // avoid to merge the invalid client
                     if (client.eIsProxy()) {
                         continue;
                     }
-                    URI uri = client.eResource().getURI();
-                    IPath anaPath = new Path(ResourceManager.getRootProject().getLocation() + File.separator
-                            + uri.devicePath().substring(uri.devicePath().indexOf(EResourceConstant.ANALYSIS.getPath())));
-                    File file = anaPath.removeFileExtension().addFileExtension(FactoriesUtil.PROPERTIES_EXTENSION).toFile();
-                    if (file.exists()) {
-                        Property property = PropertyHelper.getProperty(file);
-                        try {
-                            if (property != null) {
-                                IRepositoryViewObject viewObject = ProxyRepositoryFactory.getInstance().getLastVersion(
-                                        ProjectManager.getInstance().getCurrentProject(), property.getId());
-                                if (viewObject != null) {
-                                    updateAnalysisAndPattern(pattern, viewObject.getProperty());
-                                }
+                    Property property = PropertyHelper.getProperty(client);
+                    try {
+                        if (property != null) {
+                            IRepositoryViewObject viewObject = ProxyRepositoryFactory.getInstance().getLastVersion(
+                                    ProjectManager.getInstance().getCurrentProject(), property.getId());
+                            if (viewObject != null) {
+                                updateAnalysisPatternDependence(pattern, viewObject.getProperty());
                             }
-                        } catch (PersistenceException e) {
-                            log.warn(e);
                         }
+                    } catch (PersistenceException e) {
+                        log.warn(e);
                     }
 
                 }
@@ -866,23 +857,31 @@ public class FileSystemImportWriter implements IImportWriter {
      * 
      * @param pattern
      * @param modelElement
+     * @throws PersistenceException
      */
-    private void updateAnalysisAndPattern(Pattern pattern, Property property) {
+    private void updateAnalysisPatternDependence(Pattern pattern, Property property) throws PersistenceException {
         ModelElement analysis = PropertyHelper.getModelElement(property);
         if (analysis != null) {
 
             EList<Dependency> clientDependency = analysis.getClientDependency();
-            List<Dependency> newClientDependenceLs = new ArrayList<Dependency>();
-            for (Dependency clientDep : clientDependency) {
-                if (clientDep.eResource() != null) {
-                    newClientDependenceLs.add(clientDep);
+            Iterator<Dependency> it = clientDependency.iterator();
+            Resource patternResource = pattern.eResource();
+            while (it.hasNext()) {
+                Dependency clientDep = it.next();
+                // when the client dependence is proxy and its lastSegment of uri is same as pattern's,remove it.
+                if (clientDep.eResource() == null) {
+                    URI clientDepURI = ((InternalEObject) clientDep).eProxyURI();
+                    if (patternResource != null
+                            && clientDepURI.path().contains(
+                                    ResourceManager.getPatternFolder().getProjectRelativePath().toString())
+                            && clientDepURI.lastSegment().equals(patternResource.getURI().lastSegment())) {
+                        it.remove();
+                    }
                 }
-
             }
-            analysis.getClientDependency().clear();
-            analysis.getClientDependency().addAll(newClientDependenceLs);
             DependenciesHandler.getInstance().setUsageDependencyOn(analysis, pattern);
-            ElementWriterFactory.getInstance().createAnalysisWrite().save(property.getItem(), false);
+            // only save analysis item at here.
+            ProxyRepositoryFactory.getInstance().save(property.getItem(), true);
         }
 
     }
