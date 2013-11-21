@@ -18,20 +18,20 @@ import java.util.Map;
 import org.talend.core.model.metadata.IMetadataConnection;
 
 /**
- * created by msjian on 2013-11-7 Detailled comment
+ * created by xqliu on 2013-11-1 Detailled comment
  * 
  */
-public class Mapr_2_1_2_Handler extends MaprHandler {
+public class HDP130Handler extends HortonWorksHandler {
 
-    private static final String MAP_MB = "mapred.map.child.java.opts"; //$NON-NLS-1$
+    private final String MAP_MB = "mapred.job.map.memory.mb"; //$NON-NLS-1$
 
-    private static final String REDUCE_MB = "mapred.reduce.child.java.opts"; //$NON-NLS-1$
+    private final String REDUCE_MB = "mapred.job.reduce.memory.mb"; //$NON-NLS-1$
 
-    private static final String MAP_MB_VALUE = "-Xmx512m"; //$NON-NLS-1$
+    private final String MAP_MB_VALUE = "1000"; //$NON-NLS-1$
 
-    private static final String REDUCE_MB_VALUE = "-Xmx512m"; //$NON-NLS-1$
+    private final String REDUCE_MB_VALUE = "1000"; //$NON-NLS-1$
 
-    public Mapr_2_1_2_Handler(IMetadataConnection metadataConnection) {
+    public HDP130Handler(IMetadataConnection metadataConnection) {
         super(metadataConnection);
     }
 
