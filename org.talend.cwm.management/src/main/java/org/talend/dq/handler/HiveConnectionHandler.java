@@ -157,7 +157,8 @@ public class HiveConnectionHandler {
         } else if (EHBaseDistribution4Versions.HDP_2_0.getVersionValue().equals(version)
                 || EHBaseDistribution4Versions.CLOUDERA_CDH4_YARN.getVersionValue().equals(version)) {
             handler = new HiveYarnHandler(metadataConnection);
-        } else if (EHBaseDistribution4Versions.MAPR_2_1_2.getVersionValue().equals(version)) {
+        } else if (EHBaseDistribution4Versions.MAPR_2_1_2.getVersionValue().equals(version)
+                || EHBaseDistribution4Versions.MAPR_3_0_1.getVersionValue().equals(version)) {
             handler = new Mapr_2_1_2_Handler(metadataConnection);
         } else {
             handler = new HiveConnectionHandler(metadataConnection);

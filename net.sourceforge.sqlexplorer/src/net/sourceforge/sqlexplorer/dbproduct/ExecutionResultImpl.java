@@ -114,18 +114,11 @@ public final class ExecutionResultImpl implements ExecutionResults {
 
             // MOD qiongli TDQ-5907, HivePreparedStatement doesn't support method 'getMoreResults()'.
             if (stmt.getClass().getName().contains(hiveStatementClassName)) {
+                updateCountState();
+            } else if (stmt.getMoreResults()) {
                 currentResultSet = stmt.getResultSet();
             } else {
-                if (stmt.getMoreResults()) {
-                    currentResultSet = stmt.getResultSet();
-                } else {
-                    int updateCount = stmt.getUpdateCount();
-                    if (updateCount != -1 && updateCount != 0) {
-                        this.updateCount += updateCount;
-                    } else {
-                        state = State.PARAMETER_RESULTS;
-                    }
-                }
+                updateCountState();
             }
         }
 
@@ -201,6 +194,20 @@ public final class ExecutionResultImpl implements ExecutionResults {
         }
         return new DataSet(Messages.getString("DataSet.Parameters"), new String[] {
                 Messages.getString("SQLExecution.ParameterName"), Messages.getString("SQLExecution.ParameterValue") }, rows);
+    }
+
+    /**
+     * update the count or state.
+     * 
+     * @throws SQLException
+     */
+    private void updateCountState() throws SQLException {
+        int updateCount = stmt.getUpdateCount();
+        if (updateCount != -1 && updateCount != 0) {
+            this.updateCount += updateCount;
+        } else {
+            state = State.PARAMETER_RESULTS;
+        }
     }
 
     public void close() throws SQLException {
