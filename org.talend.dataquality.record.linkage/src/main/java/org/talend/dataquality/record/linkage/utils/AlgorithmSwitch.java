@@ -37,9 +37,9 @@ public class AlgorithmSwitch {
         case UPPER_CASE:
             return AlgoBox.upperCase(colValue);
         case LEFT_CHAR:
-            return AlgoBox.add_Left_Char(algoPara, colValue);
+            return AlgoBox.add_Left_Char(colValue, algoPara);
         case RIGHT_CHAR:
-            return AlgoBox.add_Right_Char(algoPara, colValue);
+            return AlgoBox.add_Right_Char(colValue, algoPara);
         }
 
         return ""; //$NON-NLS-1$
@@ -70,16 +70,17 @@ public class AlgorithmSwitch {
         case FIRST_N_VOWELS:
             return AlgoBox.first_N_Vowels(colValue, Integer.parseInt(algoPara));
         case LAST_N_CHAR:
+            return AlgoBox.last_N_Char(colValue, Integer.parseInt(algoPara));
         case METAPHONE:
             return AlgoBox.metaphone(colValue);
         case NGRAMKEY:
             return AlgoBox.nGramKey(colValue);
         case PICK_CHAR:
-            return AlgoBox.pick_Char(algoPara, colValue);
+            return AlgoBox.pick_Char(colValue, algoPara);
         case SOUNDEX:
             return AlgoBox.soundex(colValue);
         case SUBSTR:
-            return AlgoBox.subStr(algoPara, colValue);
+            return AlgoBox.subStr(colValue, algoPara);
         }
 
         return ""; //$NON-NLS-1$
@@ -92,13 +93,13 @@ public class AlgorithmSwitch {
         }
         switch (typeBySavedValue) {
         case LEFT_CHAR:
-            return AlgoBox.add_Left_Char(algoPara, colValue);
+            return AlgoBox.add_Left_Char(colValue, algoPara);
         case RIGHT_CHAR:
-            return AlgoBox.add_Right_Char(algoPara, colValue);
+            return AlgoBox.add_Right_Char(colValue, algoPara);
         case NON_ALGO:
             break;
         case USE_DEFAULT:
-            return AlgoBox.useDefault(algoPara, colValue);
+            return AlgoBox.useDefault(colValue, algoPara);
         }
         return ""; //$NON-NLS-1$
     }

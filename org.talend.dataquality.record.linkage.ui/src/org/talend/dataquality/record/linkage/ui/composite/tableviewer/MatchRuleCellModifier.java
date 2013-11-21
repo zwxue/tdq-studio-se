@@ -13,6 +13,7 @@
 package org.talend.dataquality.record.linkage.ui.composite.tableviewer;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.math.NumberUtils;
 import org.eclipse.swt.widgets.TableItem;
 import org.talend.dataquality.record.linkage.constant.AttributeMatcherType;
 import org.talend.dataquality.record.linkage.utils.HandleNullEnum;
@@ -125,6 +126,9 @@ public class MatchRuleCellModifier extends AbstractMatchCellModifier<MatchKeyDef
                 mkd.setColumn(columnName);
                 tableViewer.noticeColumnSelectChange();
             } else if (MatchAnalysisConstant.CONFIDENCE_WEIGHT.equalsIgnoreCase(property)) {
+                if (!validIntegerType(newValue)) {
+                    return;
+                }
                 if (mkd.getConfidenceWeight() == Integer.valueOf(newValue).intValue()) {
                     return;
                 }
@@ -148,5 +152,15 @@ public class MatchRuleCellModifier extends AbstractMatchCellModifier<MatchKeyDef
             }
             tableViewer.update(mkd, null);
         }
+    }
+
+    /**
+     * DOC zshen Comment method "validIntegerType".
+     * 
+     * @param newValue
+     */
+    private boolean validIntegerType(String newValue) {
+        return NumberUtils.isDigits(newValue);
+
     }
 }
