@@ -271,12 +271,14 @@ public class ItemRecord {
      * @param element2
      */
     private void includeCustomMatcherJarDependencies(MatchRuleDefinition matchRuleDef) {
+
         for (MatchRule matchRule : matchRuleDef.getMatchRules()) {
             for (MatchKeyDefinition matchKeyDefinition : matchRule.getMatchKeys()) {
                 if (AttributeMatcherType.CUSTOM.getComponentValue().equalsIgnoreCase(
                         matchKeyDefinition.getAlgorithm().getAlgorithmType())) {
 
-                    IPath libFolderPath = ResourceManager.getUDIJarFolder().getLocation();
+                    IPath libFolderPath = new Path(matchRuleDef.eResource().getURI().toFileString()).removeLastSegments(3)
+                            .append(EResourceConstant.USER_DEFINED_INDICATORS_LIB.getName());
                     File libFolder = libFolderPath.toFile();
                     if (libFolder.exists()) {
                         for (File udiJarFile : UDIUtils.getLibJarFileList(libFolder)) {
@@ -291,6 +293,24 @@ public class ItemRecord {
                 }
             }
         }
+
+        // TaggedValue tv = TaggedValueHelper.getTaggedValue(TaggedValueHelper.JAR_FILE_PATH,
+        // definition.getTaggedValue());
+        // if (tv != null) {
+        // IPath definitionPath = Path.fromOSString(definition.eResource().getURI().toFileString());
+        // IPath libFolderPath = definitionPath.removeLastSegments(1).append(
+        // EResourceConstant.USER_DEFINED_INDICATORS_LIB.getName());
+        // File libFolder = libFolderPath.toFile();
+        // if (libFolder.exists()) {
+        // for (File udiJarFile : UDIUtils.getLibJarFileList(libFolder)) {
+        // for (String str : tv.getValue().split(CustomAttributeMatcherClassNameConvert.REGEXKEY)) {
+        // if (udiJarFile.getName().equals(str)) {
+        // dependencyMap.put(udiJarFile, null);
+        // }
+        // }
+        // }
+        // }
+        // }
 
     }
 
