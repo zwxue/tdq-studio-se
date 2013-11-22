@@ -67,11 +67,13 @@ import org.talend.dataprofiler.core.migration.helper.WorkspaceVersionHelper;
 import org.talend.dataprofiler.migration.IMigrationTask;
 import org.talend.dataprofiler.migration.IWorkspaceMigrationTask.MigrationTaskType;
 import org.talend.dataprofiler.migration.manager.MigrationTaskManager;
+import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.domain.pattern.Pattern;
 import org.talend.dataquality.domain.pattern.PatternComponent;
 import org.talend.dataquality.domain.pattern.PatternFactory;
 import org.talend.dataquality.domain.pattern.RegularExpression;
 import org.talend.dataquality.helpers.IndicatorCategoryHelper;
+import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.definition.IndicatorCategory;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dataquality.indicators.definition.IndicatorDefinitionParameter;
@@ -83,6 +85,7 @@ import org.talend.dataquality.rules.ParserRule;
 import org.talend.dq.CWMPlugin;
 import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.PropertyHelper;
+import org.talend.dq.helper.UDIHelper;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.dq.writer.EMFSharedResources;
 import org.talend.dq.writer.impl.ElementWriterFactory;
@@ -665,6 +668,13 @@ public class FileSystemImportWriter implements IImportWriter {
             siParameter.addAll(tempParameter);
         }
 
+        // TDQ-8105 update client dependence for analyssi and udi.
+        IPath udiFolderPath = ResourceManager.getUDIFolder().getProjectRelativePath();
+        IPath recordFilePath = record.getFilePath();
+        if (recordFilePath != null && recordFilePath.toString().contains(udiFolderPath.toString())) {
+            isModified = mergeClientDependency2PatternOrUdi(isModified, siDef, indDef);
+        }
+
         // replace the name (using the imported name incase of modify the name), and save the SI
         // siDef.setName(record.getElement().getName());
 
@@ -738,7 +748,7 @@ public class FileSystemImportWriter implements IImportWriter {
         // siDef.setName(record.getElement().getName());
 
         // ADD msjian TDQ-7534 2013-8-13: merge ClientDependency to pattern when import pattern
-        isModified = mergeClientDependency2Pattern(isModified, pattern, recordPattern);
+        isModified = mergeClientDependency2PatternOrUdi(isModified, pattern, recordPattern);
         // TDQ-7534~
 
         if (isModified) {
@@ -750,41 +760,33 @@ public class FileSystemImportWriter implements IImportWriter {
      * merge ClientDependency to Pattern.
      * 
      * @param isModified
-     * @param pattern
-     * @param recordPattern
+     * @param systemModelElement
+     * @param recordModelElement
      * @return
      */
-    private boolean mergeClientDependency2Pattern(boolean isModified, Pattern pattern, Pattern recordPattern) {
-        EList<Dependency> supplierDependency = recordPattern.getSupplierDependency();
+    private boolean mergeClientDependency2PatternOrUdi(boolean isModified, ModelElement systemModelElement,
+            ModelElement recordModelElement) {
+        EList<Dependency> supplierDependency = recordModelElement.getSupplierDependency();
         if (supplierDependency != null) {
-            // TDQ-8105 if the new pattern doesn't have any client dependences,add all dependences from old pattern's.
-            if (pattern.getSupplierDependency().isEmpty()) {
-                pattern.getSupplierDependency().addAll(recordPattern.getSupplierDependency());
-                return true;
-            }
+            // TDQ-8105 should add dependces between the pattern and System's analyis,not the old analysis from the temp
+            // folder.need to remove the old client dependence in the System's analysis.
             for (Dependency dependency : supplierDependency) {
                 for (ModelElement client : dependency.getClient()) {
                     // avoid to merge the invalid client
                     if (client.eIsProxy()) {
                         continue;
                     }
-                    URI uri = client.eResource().getURI();
-                    IPath anaPath = new Path(ResourceManager.getRootProject().getLocation() + File.separator
-                            + uri.devicePath().substring(uri.devicePath().indexOf(EResourceConstant.ANALYSIS.getPath())));
-                    File file = anaPath.removeFileExtension().addFileExtension(FactoriesUtil.PROPERTIES_EXTENSION).toFile();
-                    if (file.exists()) {
-                        Property property = PropertyHelper.getProperty(file);
-                        try {
-                            if (property != null) {
-                                IRepositoryViewObject viewObject = ProxyRepositoryFactory.getInstance().getLastVersion(
-                                        ProjectManager.getInstance().getCurrentProject(), property.getId());
-                                if (viewObject != null) {
-                                    updateAnalysisAndPattern(pattern, viewObject.getProperty());
-                                }
+                    Property property = PropertyHelper.getProperty(client);
+                    try {
+                        if (property != null) {
+                            IRepositoryViewObject viewObject = ProxyRepositoryFactory.getInstance().getLastVersion(
+                                    ProjectManager.getInstance().getCurrentProject(), property.getId());
+                            if (viewObject != null) {
+                                updateAnalysisClientDependence(systemModelElement, viewObject.getProperty());
                             }
-                        } catch (PersistenceException e) {
-                            log.warn(e);
                         }
+                    } catch (PersistenceException e) {
+                        log.warn(e);
                     }
 
                 }
@@ -798,27 +800,60 @@ public class FileSystemImportWriter implements IImportWriter {
     }
 
     /**
+     * 
      * remove the old client dependency add a new one in Anlaysis.
      * 
-     * @param pattern
-     * @param modelElement
+     * @param systemSupplyModelElement
+     * @param property
+     * @throws PersistenceException
      */
-    private void updateAnalysisAndPattern(Pattern pattern, Property property) {
-        ModelElement analysis = PropertyHelper.getModelElement(property);
-        if (analysis != null) {
-
-            EList<Dependency> clientDependency = analysis.getClientDependency();
-            List<Dependency> newClientDependenceLs = new ArrayList<Dependency>();
-            for (Dependency clientDep : clientDependency) {
-                if (clientDep.eResource() != null) {
-                    newClientDependenceLs.add(clientDep);
+    private void updateAnalysisClientDependence(ModelElement systemSupplyModelElement, Property property)
+            throws PersistenceException {
+        ModelElement anaModelElement = PropertyHelper.getModelElement(property);
+        if (anaModelElement != null) {
+            Analysis analyis = (Analysis) anaModelElement;
+            EList<Dependency> clientDependency = anaModelElement.getClientDependency();
+            Iterator<Dependency> it = clientDependency.iterator();
+            Resource supModeResource = systemSupplyModelElement.eResource();
+            while (it.hasNext()) {
+                Dependency clientDep = it.next();
+                // when the client dependence is proxy and its lastSegment of uri is same as
+                // systemSupplyModelElement,remove it.
+                if (clientDep.eResource() == null) {
+                    URI clientDepURI = ((InternalEObject) clientDep).eProxyURI();
+                    boolean isUDI = clientDepURI.path().contains(
+                            ResourceManager.getUDIFolder().getProjectRelativePath().toString());
+                    boolean isPattern = clientDepURI.path().contains(
+                            ResourceManager.getPatternFolder().getProjectRelativePath().toString());
+                    if (supModeResource != null && (isUDI || isPattern)
+                            && clientDepURI.lastSegment().equals(supModeResource.getURI().lastSegment())) {
+                        it.remove();
+                        break;
+                    }
                 }
-
             }
-            analysis.getClientDependency().clear();
-            analysis.getClientDependency().addAll(newClientDependenceLs);
-            DependenciesHandler.getInstance().setUsageDependencyOn(analysis, pattern);
-            ElementWriterFactory.getInstance().createAnalysisWrite().save(property.getItem(), false);
+            DependenciesHandler.getInstance().setUsageDependencyOn(anaModelElement, systemSupplyModelElement);
+
+            // remove old udi and set a new one in the analysis indicators.
+            if (systemSupplyModelElement instanceof IndicatorDefinition) {
+                EList<Indicator> indicators = analyis.getResults().getIndicators();
+                Iterator<Indicator> itIndicators = indicators.iterator();
+                while (itIndicators.hasNext()) {
+                    Indicator indicator = itIndicators.next();
+                    IndicatorDefinition indicatorDefinition = indicator.getIndicatorDefinition();
+                    if (indicatorDefinition.eResource() == null) {
+                        URI indicatorDefURI = ((InternalEObject) indicatorDefinition).eProxyURI();
+                        if (supModeResource != null && UDIHelper.isUDI(indicator)
+                                && indicatorDefURI.lastSegment().equals(supModeResource.getURI().lastSegment())) {
+                            indicator.setIndicatorDefinition((IndicatorDefinition) systemSupplyModelElement);
+                            break;
+                        }
+                    }
+                }
+            }
+
+            // only save analysis item at here.
+            ProxyRepositoryFactory.getInstance().save(property.getItem(), true);
         }
 
     }
@@ -871,7 +906,6 @@ public class FileSystemImportWriter implements IImportWriter {
         deleteTempProjectFolder();
         // MOD qiongli 2012-11-8 TDQ-6166.
         notifySQLExplorerForConnection();
-
 
     }
 
