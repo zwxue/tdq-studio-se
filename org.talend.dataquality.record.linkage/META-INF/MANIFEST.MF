@@ -14,5 +14,6 @@ Export-Package: org.talend.dataquality.record.linkage.attribute,
  org.talend.dataquality.record.linkage.grouping,
  org.talend.dataquality.record.linkage.record,
  org.talend.dataquality.record.linkage.utils
-Bundle-ClassPath: .
+Bundle-ClassPath: .,
+ jar/org.talend.dataquality.record.linkage.jar
 Import-Package: org.apache.commons.lang
