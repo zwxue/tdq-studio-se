@@ -17,7 +17,7 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.talend.dataquality.record.linkage.constant.AttributeMatcherType;
-import org.talend.dataquality.record.linkage.utils.CustomAttributeMatcherClassNameConvert;
+import org.talend.dataquality.record.linkage.utils.CustomMatcherLoaderHandler;
 
 /**
  * @author scorreia
@@ -69,8 +69,7 @@ public final class AttributeMatcherFactory {
         if (type != null) {
             switch (type) {
             case CUSTOM:
-                return (IAttributeMatcher) Thread.currentThread().getContextClassLoader()
-                        .loadClass(CustomAttributeMatcherClassNameConvert.getClassName(className)).newInstance();
+                return CustomMatcherLoaderHandler.createInstance(className);
             default:
                 return createMatcher(type);
             }

@@ -20,7 +20,6 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
 import org.talend.commons.exception.BusinessException;
 import org.talend.cwm.management.i18n.Messages;
 import org.talend.dataquality.PluginConstant;
@@ -51,12 +50,6 @@ import org.talend.utils.sugars.TypedReturnCode;
  */
 public class ExecuteMatchRuleHandler {
 
-    private static ClassLoader oldClassLoader = null;
-
-    private static boolean hasUsedUrlClassLoader = false;
-
-    private static Logger log = Logger.getLogger(ExecuteMatchRuleHandler.class);
-
     public static TypedReturnCode<MatchGroupResultConsumer> execute(Map<String, String> columnMap,
             RecordMatchingIndicator recordMatchingIndicator, List<Object[]> matchRows, BlockKeyIndicator blockKeyIndicator) {
 
@@ -68,35 +61,13 @@ public class ExecuteMatchRuleHandler {
         // By default for analysis, the applied blocking key will be the key from key generation definition. This
         // will be refined when there is a need to define the applied blocking key manually by user later.
         createAppliedBlockKeyByGenKey(recordMatchingIndicator);
-        initThreadClassLoader();
         ReturnCode computeMatchGroupReturnCode = null;
-        try {
-            // Blocking key specified.
-            computeMatchGroupReturnCode = computeMatchGroupWithBlockKey(recordMatchingIndicator, blockKeyIndicator, columnMap,
-                    matchResultConsumer, matchRows);
-            returnCode.setOk(computeMatchGroupReturnCode.isOk());
-            returnCode.setMessage(computeMatchGroupReturnCode.getMessage());
-        } catch (Exception e) {
-            log.error(e, e);
-        } finally {
-            revertThreadClassLoader();
-        }
+        // Blocking key specified.
+        computeMatchGroupReturnCode = computeMatchGroupWithBlockKey(recordMatchingIndicator, blockKeyIndicator, columnMap,
+                matchResultConsumer, matchRows);
+        returnCode.setOk(computeMatchGroupReturnCode.isOk());
+        returnCode.setMessage(computeMatchGroupReturnCode.getMessage());
         return returnCode;
-    }
-
-    /**
-     * DOC zshen Comment method "revertThreadClassLoader".
-     */
-    private static void revertThreadClassLoader() {
-        Thread.currentThread().setContextClassLoader(oldClassLoader);
-
-    }
-
-    /**
-     * DOC zshen Comment method "initThreadClassLoader".
-     */
-    private static void initThreadClassLoader() {
-        oldClassLoader = Thread.currentThread().getContextClassLoader();
     }
 
     @SuppressWarnings({ "rawtypes", "unchecked" })
@@ -120,49 +91,42 @@ public class ExecuteMatchRuleHandler {
         MatchRow matchRow = null;
         boolean isBlockKeyEmpty = blockKeys.isEmpty();
         Iterator<BlockKey> blockKeyIterator = blockKeys.keySet().iterator();
-        initThreadClassLoader();
-        try {
-            while (blockKeyIterator.hasNext() || isBlockKeyEmpty) {
-                if (isBlockKeyEmpty) {
-                    // If the block key is empty, only handle the data in one loop. Treat it in one and only one block.
-                    isBlockKeyEmpty = Boolean.FALSE;
-                    matchRow = new MatchRow(columnMap.size(), 0);
-                } else {
-                    // Lookup rows given blocking key
-                    BlockKey blockKey = blockKeyIterator.next();
-                    if (matchRow == null) {
-                        matchRow = new MatchRow(columnMap.size(), blockKey.getBlockKey().size());
-                    }
-                    matchRow.setKey(blockKey.getBlockKey());
-                    matchRow.hashCodeDirty = true;
+        while (blockKeyIterator.hasNext() || isBlockKeyEmpty) {
+            if (isBlockKeyEmpty) {
+                // If the block key is empty, only handle the data in one loop. Treat it in one and only one block.
+                isBlockKeyEmpty = Boolean.FALSE;
+                matchRow = new MatchRow(columnMap.size(), 0);
+            } else {
+                // Lookup rows given blocking key
+                BlockKey blockKey = blockKeyIterator.next();
+                if (matchRow == null) {
+                    matchRow = new MatchRow(columnMap.size(), blockKey.getBlockKey().size());
                 }
-                AnalysisMatchRecordGrouping analysisMatchRecordGrouping = new AnalysisMatchRecordGrouping(matchResultConsumer);
-                // Set rule matcher for record grouping API.
-                setRuleMatcher(columnMap, recordMatchingIndicator, analysisMatchRecordGrouping);
-                analysisMatchRecordGrouping.initialize();
-
-                persistentLookupManager.lookup(matchRow);
-                Integer blockSize = 0;
-                while (persistentLookupManager.hasNext()) {
-                    // Match within one block
-                    MatchRow row = (MatchRow) persistentLookupManager.next();
-                    List<String> rowWithBlockKey = row.getRowWithBlockKey();
-                    analysisMatchRecordGrouping.doGroup(rowWithBlockKey.toArray(new String[rowWithBlockKey.size()]));
-                    blockSize++;
-                }
-                analysisMatchRecordGrouping.end();
-
-                // Store indicator
-                Long freq = blockSize2Freq.get(Long.valueOf(blockSize));
-                if (freq == null) {
-                    freq = 0l;
-                }
-                blockSize2Freq.put(Long.valueOf(blockSize), freq + 1);
+                matchRow.setKey(blockKey.getBlockKey());
+                matchRow.hashCodeDirty = true;
             }
-        } catch (Exception e) {
-            throw e;
-        } finally {
-            revertThreadClassLoader();
+            AnalysisMatchRecordGrouping analysisMatchRecordGrouping = new AnalysisMatchRecordGrouping(matchResultConsumer);
+            // Set rule matcher for record grouping API.
+            setRuleMatcher(columnMap, recordMatchingIndicator, analysisMatchRecordGrouping);
+            analysisMatchRecordGrouping.initialize();
+
+            persistentLookupManager.lookup(matchRow);
+            Integer blockSize = 0;
+            while (persistentLookupManager.hasNext()) {
+                // Match within one block
+                MatchRow row = (MatchRow) persistentLookupManager.next();
+                List<String> rowWithBlockKey = row.getRowWithBlockKey();
+                analysisMatchRecordGrouping.doGroup(rowWithBlockKey.toArray(new String[rowWithBlockKey.size()]));
+                blockSize++;
+            }
+            analysisMatchRecordGrouping.end();
+
+            // Store indicator
+            Long freq = blockSize2Freq.get(Long.valueOf(blockSize));
+            if (freq == null) {
+                freq = 0l;
+            }
+            blockSize2Freq.put(Long.valueOf(blockSize), freq + 1);
         }
         persistentLookupManager.endGet();
         blockKeyIndicator.setBlockSize2frequency(blockSize2Freq);
@@ -369,7 +333,6 @@ public class ExecuteMatchRuleHandler {
     private static void setRuleMatcher(Map<String, String> columnMap, RecordMatchingIndicator recordMatchingIndicator,
             AnalysisMatchRecordGrouping analysisMatchRecordGrouping) throws BusinessException {
         List<MatchRule> matchRules = recordMatchingIndicator.getBuiltInMatchRuleDefinition().getMatchRules();
-        hasUsedUrlClassLoader = false;
         for (MatchRule matcher : matchRules) {
             List<Map<String, String>> ruleMatcherConvertResult = new ArrayList<Map<String, String>>();
             if (matcher == null) {
@@ -389,9 +352,8 @@ public class ExecuteMatchRuleHandler {
                         .getHandleNull());
                 ruleMatcherConvertResult.add(matchKeyMap);
                 // if matcher is custom should use URLClassLoader to load class
-                if (!hasUsedUrlClassLoader && isCustomMatcher(matchDef)) {
-                    Thread.currentThread().setContextClassLoader(CustomAttributeMatcherHelper.getUrlClassLoader());
-                    hasUsedUrlClassLoader = true;
+                if (isCustomMatcher(matchDef)) {
+                    CustomAttributeMatcherHelper.getUrlClassLoader(matchDef.getAlgorithm().getAlgorithmParameters());
                 }
 
             }

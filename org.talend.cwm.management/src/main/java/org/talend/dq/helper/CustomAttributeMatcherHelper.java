@@ -26,21 +26,20 @@ import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
 import org.talend.dataquality.record.linkage.attribute.IAttributeMatcher;
 import org.talend.dataquality.record.linkage.utils.CustomAttributeMatcherClassNameConvert;
+import org.talend.dataquality.record.linkage.utils.CustomMatcherLoaderHandler;
 import org.talend.resource.ResourceManager;
 
 /**
  * created by zshen on Nov 14, 2013 Detailled comment
  * 
  */
-public class CustomAttributeMatcherHelper {
 
+public class CustomAttributeMatcherHelper {
     public static final String FILEPROTOCOL = "File"; //$NON-NLS-1$
 
     public static final String SEPARATOR = "||"; //$NON-NLS-1$
 
     private static final Map<String, IAttributeMatcher> customMatcherMAP = new HashMap<String, IAttributeMatcher>();
-
-    private static URLClassLoader urlClassLoader = null;
 
     private static Logger log = Logger.getLogger(CustomAttributeMatcherHelper.class);
 
@@ -55,13 +54,11 @@ public class CustomAttributeMatcherHelper {
         if (customMatcherMAP.get(classPathParameter) != null) {
             return customMatcherMAP.get(classPathParameter);
         }
-        List<URL> listURL = getClassURLList(classPathParameter);
-        return loadClass(classPathParameter, listURL);
+        return loadClass(classPathParameter);
     }
 
     public static void updateCustomMatcherMap(String classPathParameter) {
-        List<URL> listURL = getClassURLList(classPathParameter);
-        loadClass(classPathParameter, listURL);
+        loadClass(classPathParameter);
     }
 
     /**
@@ -94,8 +91,8 @@ public class CustomAttributeMatcherHelper {
      * @param classPathParameter
      * @param listURL
      */
-    private static IAttributeMatcher loadClass(String classPathParameter, List<URL> listURL) {
-        urlClassLoader = new URLClassLoader(listURL.toArray(new URL[0]), CustomAttributeMatcherHelper.class.getClassLoader());
+    private static IAttributeMatcher loadClass(String classPathParameter) {
+        URLClassLoader urlClassLoader = getUrlClassLoader(classPathParameter);
         IAttributeMatcher newInstance = null;
         try {
             Class<?> loadClass = urlClassLoader.loadClass(getClassName(classPathParameter));
@@ -131,11 +128,39 @@ public class CustomAttributeMatcherHelper {
     }
 
     /**
+     * 
+     * create classLoader
+     * 
+     * @param key
+     * @return
+     */
+    public static URLClassLoader createClassLoader(String key) {
+        URLClassLoader urlClassLoader = initClassLoader(key);
+        CustomMatcherLoaderHandler.getCustommatcherClassLoaderMap().put(key, urlClassLoader);
+        return urlClassLoader;
+    }
+
+    /**
      * Getter for urlClassLoader.
      * 
      * @return the urlClassLoader
      */
-    public static URLClassLoader getUrlClassLoader() {
+    public static URLClassLoader getUrlClassLoader(String key) {
+        URLClassLoader urlClassLoader = CustomMatcherLoaderHandler.getCustommatcherClassLoaderMap().get(key);
+        if (urlClassLoader == null) {
+            urlClassLoader = createClassLoader(key);
+        }
         return urlClassLoader;
+    }
+
+    /**
+     * DOC zshen Comment method "initClassLoader".
+     */
+    private static URLClassLoader initClassLoader(String key) {
+        List<URL> listURL = getClassURLList(key);
+        URLClassLoader urlClassLoader = new URLClassLoader(listURL.toArray(new URL[0]),
+                CustomAttributeMatcherHelper.class.getClassLoader());
+        return urlClassLoader;
+
     }
 }
