@@ -15,13 +15,13 @@ package org.talend.dataprofiler.common.ui.dialog;
 import java.io.File;
 import java.net.URL;
 
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.dialogs.ISelectionStatusValidator;
-import org.talend.commons.utils.StringUtils;
 import org.talend.dataprofiler.common.ui.i18n.Messages;
 import org.talend.dataquality.record.linkage.attribute.IAttributeMatcher;
 import org.talend.dq.helper.CustomAttributeMatcherHelper;

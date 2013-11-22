@@ -22,6 +22,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
@@ -64,7 +65,6 @@ import org.eclipse.ui.internal.WorkbenchMessages;
 import org.jfree.util.Log;
 import org.talend.commons.exception.ExceptionHandler;
 import org.talend.commons.ui.utils.loader.MyURLClassLoader;
-import org.talend.commons.utils.StringUtils;
 import org.talend.commons.utils.WorkspaceUtils;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.dataprofiler.common.ui.i18n.Messages;
