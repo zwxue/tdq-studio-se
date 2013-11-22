@@ -675,6 +675,10 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
     public void openColumnsSelectionDialog(DataManager dataManager) {
         MetadataAndColumnSelectionDialog dialog = null;
         List<IRepositoryNode> oldSelectedColumns = findAllSelectedRepositoryNode();
+        if (oldSelectedColumns == null || oldSelectedColumns.size() == 0) {
+            clearAllKeys();
+        }
+
         if (dataManager != null) {
             // only when "new connection" will give the new connection to this method
             dialog = new MetadataAndColumnSelectionDialog(
@@ -704,6 +708,17 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
                 refreshColumnAndData();
             }
         }
+    }
+
+    private void clearAllKeys() {
+        selectedNodes = null;
+
+        // clear all keys if the old selection is null
+        analysisHandler.clearAllKeys();
+        matchingKeySection.resolveAnalysis();
+        blockingKeySection.resolveAnalysis();
+        this.matchingKeySection.redrawnSubTableContent();
+        this.blockingKeySection.redrawnSubTableContent();
     }
 
     /**
@@ -1002,6 +1017,10 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
         // TDQ-8267 when the file is changed, and the columns cleared, the analysis is unloaded
         if (analysisHandler.getAnalysis().eIsProxy()) {
             analysisHandler.setAnalysis((Analysis) EObjectHelper.resolveObject(analysisHandler.getAnalysis()));
+            if (analysisHandler.getAnalysis().getContext().getConnection() == null) {
+                // when all columns cleared, keys also need to be cleared.
+                this.clearAllKeys();
+            }
         }
         if (this.analysisHandler.getSelectedColumns() == null || analysisHandler.getSelectedColumns().length == 0) {
             return new ArrayList<Object[]>();

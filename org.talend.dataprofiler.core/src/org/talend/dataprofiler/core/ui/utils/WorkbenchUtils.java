@@ -537,8 +537,11 @@ public final class WorkbenchUtils {
                     }
                     // only when all elements of the data provider are removed from the analysis, the dependency between
                     // them should be removed too. If only parts of them removed, the dependendy should not be removed.
+                    // TDQ-8267, since the dependency is removed, the connection in the analysis context should also be
+                    // removed
                     if (tempAnalysis.getContext().getAnalysedElements().isEmpty()) {
                         removeDependenciesBetweenAnaCon(oldDataProvider, tempAnalysis);
+                        tempAnalysis.getContext().setConnection(null);
                     }
                     // ~
                     AnaResourceFileHelper.getInstance().save(tempAnalysis);

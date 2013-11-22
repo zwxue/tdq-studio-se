@@ -20,6 +20,8 @@ import org.eclipse.emf.common.util.EList;
 import org.talend.commons.emf.EMFUtil;
 import org.talend.cwm.dependencies.DependenciesHandler;
 import org.talend.dataquality.analysis.Analysis;
+import org.talend.dataquality.indicators.Indicator;
+import org.talend.dataquality.indicators.columnset.RecordMatchingIndicator;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.foundation.softwaredeployment.DataManager;
 import orgomg.cwm.objectmodel.core.Dependency;
@@ -50,6 +52,10 @@ public class MatchAnalysisHandler extends AnalysisHandler {
      */
     private void initConnection() {
         connection = analysis.getContext().getConnection();
+        // Added TDQ-8267, when the connection is null, need to clear keys
+        if (connection == null) {
+            clearAllKeys();
+        }
     }
 
     public void SetConnection(DataManager newConnection) {
@@ -139,6 +145,21 @@ public class MatchAnalysisHandler extends AnalysisHandler {
      */
     public String getDefaultLoadedRowCount() {
         return String.valueOf(analysis.getParameters().getMaxNumberRows());
+    }
+
+    /**
+     * when the columns is empty, clear all keys.
+     */
+    public void clearAllKeys() {
+        EList<Indicator> indicators = this.analysis.getResults().getIndicators();
+        for (Indicator indicator : indicators) {
+            if (indicator instanceof RecordMatchingIndicator) {
+                RecordMatchingIndicator matchIndicator = (RecordMatchingIndicator) indicator;
+                matchIndicator.getBuiltInMatchRuleDefinition().getBlockKeys().clear();
+                matchIndicator.getBuiltInMatchRuleDefinition().getMatchRules().clear();
+            }
+        }
+
     }
 
 }

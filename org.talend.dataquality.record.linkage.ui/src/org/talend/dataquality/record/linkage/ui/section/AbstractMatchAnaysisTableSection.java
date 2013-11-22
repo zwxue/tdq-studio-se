@@ -32,6 +32,7 @@ import org.talend.dataquality.record.linkage.ui.action.RefreshChartAction;
 import org.talend.dataquality.record.linkage.ui.composite.utils.ImageLib;
 import org.talend.dataquality.record.linkage.ui.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataquality.rules.KeyDefinition;
+import org.talend.dq.helper.EObjectHelper;
 import org.talend.utils.sugars.ReturnCode;
 
 /**
@@ -477,4 +478,9 @@ public abstract class AbstractMatchAnaysisTableSection extends AbstractSectionCo
 
     }
 
+    public void resolveAnalysis() {
+        if (this.analysis.eIsProxy()) {
+            analysis = (Analysis) EObjectHelper.resolveObject(analysis);
+        }
+    }
 }
