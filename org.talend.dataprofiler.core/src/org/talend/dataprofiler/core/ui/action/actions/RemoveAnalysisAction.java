@@ -35,10 +35,11 @@ import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.views.DQRespositoryView;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.helpers.ReportHelper;
+import org.talend.dataquality.properties.TDQReportItem;
 import org.talend.dataquality.reports.TdReport;
 import org.talend.dq.helper.ProxyRepositoryManager;
-import org.talend.dq.helper.resourcehelper.RepResourceFileHelper;
 import org.talend.dq.nodes.ReportAnalysisRepNode;
+import org.talend.dq.writer.impl.ElementWriterFactory;
 import org.talend.resource.ResourceManager;
 
 /**
@@ -63,10 +64,9 @@ public class RemoveAnalysisAction extends Action {
         DQRespositoryView findView = CorePlugin.getDefault().getRepositoryView();
         TreeSelection treeSelection = (TreeSelection) findView.getCommonViewer().getSelection();
         TreePath[] paths = treeSelection.getPaths();
-        TdReport parentReport;
         List<Analysis> analysisList;
         Analysis analysisObj = null;
-        Map<TdReport, List<Analysis>> removeMap = new HashMap<TdReport, List<Analysis>>();
+        Map<TDQReportItem, List<Analysis>> removeMap = new HashMap<TDQReportItem, List<Analysis>>();
         for (int i = 0; i < paths.length; i++) {
             Object lastSegment = paths[i].getLastSegment();
             if (!(lastSegment instanceof ReportAnalysisRepNode)) {
@@ -75,12 +75,12 @@ public class RemoveAnalysisAction extends Action {
             // MOD sizhaoliu 2012-06-12 TDQ-5051 "Remove Anaysis" menu item is not in the right place
             ReportAnalysisRepNode repNode = (ReportAnalysisRepNode) lastSegment;
             analysisObj = repNode.getAnalysis();
-            parentReport = (TdReport) repNode.getReport();
-            analysisList = removeMap.get(parentReport);
+            TDQReportItem reportItem = repNode.getReportItem();
+            analysisList = removeMap.get(reportItem);
             if (analysisList == null) {
                 analysisList = new ArrayList<Analysis>();
                 analysisList.add(analysisObj);
-                removeMap.put(parentReport, analysisList);
+                removeMap.put(reportItem, analysisList);
             } else {
                 analysisList.add(analysisObj);
             }
@@ -95,20 +95,20 @@ public class RemoveAnalysisAction extends Action {
                 DefaultMessagesImpl.getString("RemoveAnalysisAction.confirmResourceDelete"), message); //$NON-NLS-1$
 
         if (openConfirm) {
-            Iterator<TdReport> iterator = removeMap.keySet().iterator();
+            Iterator<TDQReportItem> iterator = removeMap.keySet().iterator();
             while (iterator.hasNext()) {
-                TdReport report = iterator.next();
-                ReportHelper.removeAnalyses(report, removeMap.get(report));
+                TDQReportItem reportItem = iterator.next();
+                ReportHelper.removeAnalyses((TdReport) reportItem.getReport(), removeMap.get(reportItem));
 
                 // save now modified resources (that contain the Dependency
                 // objects)
-                List<Resource> modifiedResources = DependenciesHandler.getInstance().removeDependenciesBetweenModels(report,
-                        removeMap.get(report));
+                List<Resource> modifiedResources = DependenciesHandler.getInstance().removeDependenciesBetweenModels(
+                        reportItem.getReport(), removeMap.get(reportItem));
                 for (int i = 0; i < modifiedResources.size(); i++) {
                     EMFUtil.saveSingleResource(modifiedResources.get(i));
                 }
 
-                RepResourceFileHelper.getInstance().save(report);
+                ElementWriterFactory.getInstance().createReportWriter().save(reportItem, true);
             }
 
             IFolder reportsFolder = ResourceManager.getReportsFolder();
