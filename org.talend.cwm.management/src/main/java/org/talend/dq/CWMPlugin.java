@@ -13,6 +13,7 @@
 package org.talend.dq;
 
 import java.util.Collection;
+import java.util.List;
 
 import net.sourceforge.sqlexplorer.EDriverName;
 import net.sourceforge.sqlexplorer.dbproduct.Alias;
@@ -35,6 +36,7 @@ import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
 import org.talend.core.model.metadata.builder.database.JavaSqlFactory;
 import org.talend.core.model.metadata.builder.database.PluginConstant;
+import org.talend.core.model.metadata.builder.util.MetadataConnectionUtils;
 import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.dq.analysis.memory.AnalysisThreadMemoryChangeNotifier;
@@ -93,12 +95,18 @@ public class CWMPlugin extends Plugin {
         AliasManager aliasManager = sqlPlugin.getAliasManager();
         DriverManager driverManager = sqlPlugin.getDriverModel();
 
+        List<String> tdqSupportDBType = MetadataConnectionUtils.getTDQSupportDBTemplate();
         for (ModelElement dataProvider : dataproviders) {
             try {
                 Connection connection = SwitchHelpers.CONNECTION_SWITCH.doSwitch(dataProvider);
                 // MOD bug mzhao filter the other connections except database connection.
                 if (connection != null && connection instanceof DatabaseConnection) {
 
+                    // TDQ-8379 do nothing if the database type isn't supproted on DQ side.
+                    String databaseType = ((DatabaseConnection) connection).getDatabaseType();
+                    if (!tdqSupportDBType.contains(databaseType)) {
+                        continue;
+                    }
                     // only new Alias when it is not in aliasManager
                     Alias alias = aliasManager.getAlias(dataProvider.getName());
                     if (alias == null) {
