@@ -289,10 +289,11 @@ public final class AnalysisExecutorHelper {
         } else if (ok) {
             resultMetadata.setLastExecutionNumberOk(executionNumber);
             resultMetadata.setMessage(null); // reset error message
-
-        } else {
-            resultMetadata.setMessage(errorMessage);
         }
         return errorMessage;
+    }
+
+    public static void setExecuteErrorMessage(Analysis analysis, String errorMessage) {
+        analysis.getResults().getResultMetadata().setMessage(errorMessage);
     }
 }

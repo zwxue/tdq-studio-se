@@ -142,7 +142,13 @@ public abstract class AnalysisExecutor implements IAnalysisExecutor {
         }
 
         // --- set metadata information of analysis
-        this.errorMessage = AnalysisExecutorHelper.setExecutionNumberInAnalysisResult(analysis, ok, isLowMemory, usedMemory);
+        // MOD TDQ-8374 when the setExecutionNumberInAnalysisResult return message is null, should not make the null
+        // overwrite the current error messages
+        String resultMessage = AnalysisExecutorHelper.setExecutionNumberInAnalysisResult(analysis, ok, isLowMemory, usedMemory);
+        if (resultMessage != null) {
+            this.errorMessage = resultMessage;
+        }
+        AnalysisExecutorHelper.setExecuteErrorMessage(analysis, errorMessage);
 
         // --- compute execution duration
         if (this.continueRun()) {
