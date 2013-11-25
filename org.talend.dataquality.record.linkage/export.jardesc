@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <jardesc>
-    <jar path="org.talend.designer.components.tdqprovider/components/tRecordMatching/org.talend.dataquality.record.linkage.jar"/>
+    <jar path="org.talend.dataquality.record.linkage/jar/org.talend.dataquality.record.linkage.jar"/>
     <options buildIfNeeded="true" compress="true" descriptionLocation="/org.talend.dataquality.record.linkage/export.jardesc" exportErrors="true" exportWarnings="true" includeDirectoryEntries="false" overwrite="false" saveDescription="true" storeRefactorings="false" useSourceFolders="false"/>
     <storedRefactorings deprecationInfo="true" structuralOnly="false"/>
     <selectedProjects/>
@@ -11,12 +11,8 @@
         </sealing>
     </manifest>
     <selectedElements exportClassFiles="true" exportJavaFiles="false" exportOutputFolder="false">
-        <folder path="/org.talend.dataquality.record.linkage/META-INF"/>
-        <javaElement handleIdentifier="=org.talend.libraries.apache.common/src"/>
-        <folder path="/org.talend.libraries.apache.common/META-INF"/>
+        <file path="/org.talend.dataquality.record.linkage/META-INF/MANIFEST.MF"/>
         <javaElement handleIdentifier="=org.talend.dataquality.record.linkage/src\/main\/java"/>
         <file path="/org.talend.dataquality.record.linkage/version.txt"/>
-        <javaElement handleIdentifier="=org.talend.utils/src\/main\/java&lt;org.talend.utils.string{AsciiUtils.java"/>
-        <folder path="/org.talend.libraries.apache.common/lib"/>
     </selectedElements>
 </jardesc>
