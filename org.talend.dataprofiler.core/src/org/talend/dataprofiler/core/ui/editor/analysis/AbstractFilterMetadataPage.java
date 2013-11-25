@@ -497,7 +497,16 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
         toolkit.createLabel(leftComp, labelContent == null ? PluginConstant.EMPTY_STRING : labelContent);
 
         List<Catalog> tdCatalogs = getCatalogs();
-        List<Schema> tdSchema = ConnectionHelper.getSchema(tdDataProvider);
+        // TDQ-6735 get the correct numbers of schema.
+        List<Schema> tdSchema = new ArrayList<Schema>();
+        if (!tdCatalogs.isEmpty()) {
+            for (Catalog catalog : tdCatalogs) {
+                tdSchema.addAll(CatalogHelper.getSchemas(catalog));
+            }
+        }
+        if (tdSchema.isEmpty()) {
+            tdSchema = ConnectionHelper.getSchema(tdDataProvider);
+        }
         toolkit.createLabel(leftComp,
                 DefaultMessagesImpl.getString("ConnectionMasterDetailsPage.catalogs", PluginConstant.EMPTY_STRING)); //$NON-NLS-1$
         toolkit.createLabel(leftComp, PluginConstant.EMPTY_STRING + tdCatalogs.size());
