@@ -53,6 +53,7 @@ import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
 import org.talend.core.model.metadata.builder.database.ExtractMetaDataUtils;
 import org.talend.core.model.metadata.builder.database.JavaSqlFactory;
 import org.talend.core.model.metadata.builder.database.PluginConstant;
+import org.talend.core.model.metadata.builder.util.MetadataConnectionUtils;
 import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.SwitchHelpers;
@@ -117,12 +118,18 @@ public class CWMPlugin extends Plugin {
         AliasManager aliasManager = sqlPlugin.getAliasManager();
         DriverManager driverManager = sqlPlugin.getDriverModel();
 
+        List<String> tdqSupportDBType = MetadataConnectionUtils.getTDQSupportDBTemplate();
         for (ModelElement dataProvider : dataproviders) {
             try {
                 Connection connection = SwitchHelpers.CONNECTION_SWITCH.doSwitch(dataProvider);
                 // MOD bug mzhao filter the other connections except database connection.
                 if (connection != null && connection instanceof DatabaseConnection) {
 
+                    // TDQ-8379 do nothing if the database type isn't supproted on DQ side.
+                    String databaseType = ((DatabaseConnection) connection).getDatabaseType();
+                    if (!tdqSupportDBType.contains(databaseType)) {
+                        continue;
+                    }
                     // only new Alias when it is not in aliasManager
                     Alias alias = aliasManager.getAlias(dataProvider.getName());
                     if (alias == null) {
@@ -398,12 +405,13 @@ public class CWMPlugin extends Plugin {
     private ManagedDriver getManaDriverByDriverClass(Connection connection, DriverManager driverManager) {
         ManagedDriver manaDriver = null;
         DatabaseConnection dbConn = SwitchHelpers.DATABASECONNECTION_SWITCH.doSwitch(connection);
-        if (dbConn == null || dbConn.getDatabaseType() == null) {
+        String driverClass = JavaSqlFactory.getDriverClass(connection);
+        if (dbConn == null || dbConn.getDatabaseType() == null || driverClass == null) {
             log.error(Messages.getString("CWMPlugin.DBOrTypeNull")); //$NON-NLS-1$
             return null;
         }
         String databaseType = dbConn.getDatabaseType();
-        String id = EDriverName.getId(JavaSqlFactory.getDriverClass(connection));
+        String id = EDriverName.getId(driverClass);
         if (EDriverName.ODBCDEFAULTURL.getSqlEid().equals(id)
                 && (EDatabaseTypeName.GENERAL_JDBC.getXmlName().equalsIgnoreCase(databaseType) || EDatabaseTypeName.GODBC
                         .getXmlName().equalsIgnoreCase(databaseType))) {
