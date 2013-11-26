@@ -12,9 +12,13 @@
 // ============================================================================
 package org.talend.cwm.management.handler;
 
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.talend.core.GlobalServiceRegister;
+import org.talend.core.ITDQItemService;
 import org.talend.core.repository.constants.FileConstants;
 import org.talend.repository.items.importexport.handlers.imports.ImportRepTypeHandler;
 import org.talend.repository.items.importexport.handlers.model.ItemRecord;
@@ -30,6 +34,25 @@ public class TOPImportHandler extends ImportRepTypeHandler {
      * (non-Javadoc)
      * 
      * @see
+     * org.talend.repository.items.importexport.handlers.imports.ImportRepTypeHandler#setInitializationData(org.eclipse
+     * .core.runtime.IConfigurationElement, java.lang.String, java.lang.Object)
+     */
+    @Override
+    public void setInitializationData(IConfigurationElement config, String propertyName, Object data) throws CoreException {
+        super.setInitializationData(config, propertyName, data);
+        // TUP-1374 create dq structure if the structure doesn't exsit.
+        if (GlobalServiceRegister.getDefault().isServiceRegistered(ITDQItemService.class)) {
+            ITDQItemService tdqService = (ITDQItemService) GlobalServiceRegister.getDefault().getService(ITDQItemService.class);
+            if (tdqService != null) {
+                tdqService.createDQStructor();
+            }
+        }
+    }
+
+    /*
+     * (non-Javadoc) .
+     * 
+     * @see
      * org.talend.repository.items.importexport.handlers.imports.ImportBasicHandler#computeItemRecord(org.talend.repository
      * .items.importexport.manager.ResourcesManager, org.eclipse.core.runtime.IPath)
      */
@@ -43,7 +66,7 @@ public class TOPImportHandler extends ImportRepTypeHandler {
 
         IPath propertyPath = path.removeFileExtension().addFileExtension(FileConstants.PROPERTIES_EXTENSION);
         ResourceSet resSet = itemRecord.getResourceSet();
-        itemRecord = new ItemRecord(propertyPath); 
+        itemRecord = new ItemRecord(propertyPath);
         itemRecord.setResourceSet(resSet);
 
         // Load property resource.
