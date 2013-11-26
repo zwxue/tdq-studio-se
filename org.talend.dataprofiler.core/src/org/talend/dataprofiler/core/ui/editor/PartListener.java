@@ -23,14 +23,23 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.IPartListener;
+import org.eclipse.ui.IViewPart;
+import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.cheatsheets.OpenCheatSheetAction;
+import org.eclipse.ui.internal.intro.IIntroConstants;
+import org.talend.commons.ui.utils.CheatSheetUtils;
+import org.talend.commons.utils.platform.PluginChecker;
 import org.talend.core.GlobalServiceRegister;
 import org.talend.core.ITdqContextService;
+import org.talend.core.ui.branding.IBrandingConfiguration;
 import org.talend.dq.helper.PropertyHelper;
 
 /**
  * DOC mzhao class global comment. Detailled comment
  */
+@SuppressWarnings("restriction")
 public class PartListener implements IPartListener {
 
     private static Logger log = Logger.getLogger(PartListener.class);
@@ -109,6 +118,33 @@ public class PartListener implements IPartListener {
                     ITdqContextService.class);
             if (tdqContextViewService != null) {
                 tdqContextViewService.resetContextView();
+            }
+        }
+
+        if (part instanceof org.eclipse.ui.internal.ViewIntroAdapterPart) {
+            if (PluginChecker.isOnlyTopLoaded()) {
+                IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+                if (activePage != null) {
+                    if (activePage.getPerspective().getId().equals(IBrandingConfiguration.PERSPECTIVE_DQ_ID)) {
+
+                        // only the first time Open CheatSheet view
+                        if (CheatSheetUtils.getInstance().isFirstTime()) {
+                            OpenCheatSheetAction action = new OpenCheatSheetAction(
+                                    "org.talend.dataprofiler.core.talenddataprofiler"); //$NON-NLS-1$
+                            action.run();
+                            CheatSheetUtils.getInstance().setFirstTime(false);
+                        }
+
+                        // hide the welcome view
+                        IViewPart findView = activePage.findView(IIntroConstants.INTRO_VIEW_ID);
+                        if (findView != null) {
+                            activePage.hideView(findView);
+                        }
+
+                        // show CheatSheet view if needed
+                        CheatSheetUtils.getInstance().findAndmaxDisplayCheatSheet();
+                    }
+                }
             }
         }
     }

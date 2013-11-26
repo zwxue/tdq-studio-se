@@ -83,13 +83,14 @@ public class CommonEditorPartListener extends PartListener {
         return tdqItem;
     }
 
+    @SuppressWarnings("restriction")
     @Override
     public void partClosed(IWorkbenchPart part) {
         // ADD msjian TDQ-7888 2013-10-12: if the default perspective is DQ, then make the cheat sheet view full screen
         // the first time
         // this is only for tdq, for top, see ShowCheatSheetsAction
-        if (!PluginChecker.isOnlyTopLoaded()) {
-            if (part instanceof org.eclipse.ui.internal.ViewIntroAdapterPart && part.getTitle().equals("Welcome")) { //$NON-NLS-1$
+        if (part instanceof org.eclipse.ui.internal.ViewIntroAdapterPart) {
+            if (!PluginChecker.isOnlyTopLoaded()) {
                 IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
                 if (activePage != null) {
                     if (activePage.getPerspective().getId().equals(IBrandingConfiguration.PERSPECTIVE_DQ_ID)) {

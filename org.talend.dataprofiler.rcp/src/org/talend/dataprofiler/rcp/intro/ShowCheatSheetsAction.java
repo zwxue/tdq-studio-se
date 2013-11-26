@@ -32,7 +32,6 @@ import org.talend.commons.ui.utils.CheatSheetUtils;
  * $Id: talend.epf 1 2006-09-29 17:06:40Z qzhang $
  * 
  */
-@SuppressWarnings("restriction")
 public class ShowCheatSheetsAction extends Action implements IIntroAction {
 
     /*
@@ -46,15 +45,21 @@ public class ShowCheatSheetsAction extends Action implements IIntroAction {
                 .findPerspectiveWithId(CheatSheetUtils.DQ_PERSPECTIVE_ID);
         PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().setPerspective(persDescription1);
         String property = params.getProperty("id"); //$NON-NLS-1$
-        OpenCheatSheetAction action = new OpenCheatSheetAction(property);
-        action.run();
+
+        if (CheatSheetUtils.getInstance().isFirstTime()) {
+            OpenCheatSheetAction action = new OpenCheatSheetAction(property);
+            action.run();
+            CheatSheetUtils.getInstance().setFirstTime(false);
+        }
+
         IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+        @SuppressWarnings("restriction")
         IViewPart findView = activePage.findView(IIntroConstants.INTRO_VIEW_ID);
         if (findView != null) {
             activePage.hideView(findView);
         }
 
-        // ADD msjian TDQ-7407 2013-8-23: Only display the Cheat Sheet view on new startup of the studio
+        // ADD msjian TDQ-7407 2013-8-23: if the cheat sheet view can be find, then do maximum display
         CheatSheetUtils.getInstance().findAndmaxDisplayCheatSheet();
         // TDQ-7407~
     }
