@@ -103,6 +103,8 @@ public class DataSampleTable {
 
     public static final Color COLOR_GREEN = Display.getDefault().getSystemColor(SWT.COLOR_GREEN);
 
+    private static final Color SYSTEM_COLOR = Display.getCurrent().getSystemColor(SWT.COLOR_LIST_BACKGROUND);
+
     protected PropertyChangeSupport listeners = new PropertyChangeSupport(this);
 
     private String currentSelectedColumn = null;
@@ -437,7 +439,7 @@ public class DataSampleTable {
         natTable.getConfigRegistry().registerConfigAttribute(EditConfigAttributes.CELL_EDITABLE_RULE,
                 IEditableRule.NEVER_EDITABLE, DisplayMode.EDIT, "EVEN_BODY"); //$NON-NLS-1$
 
-        natTable.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_LIST_BACKGROUND));
+        natTable.setBackground(SYSTEM_COLOR);
 
         // add the listener for the column header selection
         addCustomSelectionBehaviour();
@@ -514,6 +516,9 @@ public class DataSampleTable {
         @Override
         public void paintCell(ILayerCell cell, GC gc, Rectangle bounds, IConfigRegistry configRegistry) {
             String currentGID = getGID(cell);
+            if (currentGID == null) {// when only show the data without match, use the grey color for the text
+                ((ForegroundTextPainter) getWrappedPainter()).setChangeForegroundColor(true);
+            }
 
             // if the row is not a master row, make the text color grey.
             if (currentGID != null && !StringUtils.EMPTY.equals(currentGID)) {
@@ -550,7 +555,7 @@ public class DataSampleTable {
         protected Color getBackgroundColour(ILayerCell cell, IConfigRegistry configRegistry) {
             int grpSizeValue = getGrpSize(cell);
             if (grpSizeValue == 0) {// default color when no
-                return GUIHelper.COLOR_WHITE;
+                return GUIHelper.COLOR_LIST_BACKGROUND;
             }
             return COLOR_LIST[grpSizeValue % COLOR_LIST.length];
         }
