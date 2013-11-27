@@ -34,6 +34,7 @@ public class MFBTest extends TestCase {
 
     public void testArguments() throws Exception {
         MatchMergeAlgorithm algorithm = new MFB(new AttributeMatcherType[0],
+                new String[0],
                 new float[0],
                 0,
                 new SurvivorShipAlgorithmEnum[0],
@@ -50,6 +51,7 @@ public class MFBTest extends TestCase {
         Map<String, ValueGenerator> generators = new HashMap<String, ValueGenerator>();
         Iterator<Record> iterator = new ValuesIterator(100000, generators);
         MatchMergeAlgorithm algorithm = new MFB(new AttributeMatcherType[0],
+                new String[0],
                 new float[0],
                 0,
                 new SurvivorShipAlgorithmEnum[0],
@@ -84,6 +86,7 @@ public class MFBTest extends TestCase {
 
         Iterator<Record> iterator = new ValuesIterator(totalCount, generators);
         MatchMergeAlgorithm algorithm = new MFB(new AttributeMatcherType[]{matchAlgorithm},
+                new String[] {""},
                 new float[]{1},
                 0,
                 new SurvivorShipAlgorithmEnum[]{SurvivorShipAlgorithmEnum.LONGEST},
@@ -121,6 +124,7 @@ public class MFBTest extends TestCase {
 
         Iterator<Record> iterator = new ValuesIterator(totalCount, generators);
         MatchMergeAlgorithm algorithm = new MFB(new AttributeMatcherType[]{matchAlgorithm},
+                new String[] {""},
                 new float[]{1},
                 0,
                 new SurvivorShipAlgorithmEnum[]{SurvivorShipAlgorithmEnum.LONGEST},
@@ -157,6 +161,7 @@ public class MFBTest extends TestCase {
 
         Iterator<Record> iterator = new ValuesIterator(totalCount, generators);
         MatchMergeAlgorithm algorithm = new MFB(new AttributeMatcherType[]{matchAlgorithm},
+                new String[] {""},
                 new float[]{0.5f},
                 0,
                 new SurvivorShipAlgorithmEnum[]{SurvivorShipAlgorithmEnum.CONCATENATE},

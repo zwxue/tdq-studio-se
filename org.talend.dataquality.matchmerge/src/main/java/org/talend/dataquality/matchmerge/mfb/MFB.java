@@ -25,6 +25,8 @@ public class MFB implements MatchMergeAlgorithm {
 
     private AttributeMatcherType[] algorithms;
 
+    private final String[] algorithmParameters;
+
     private float[] thresholds;
 
     private SurvivorShipAlgorithmEnum[] merges;
@@ -46,7 +48,8 @@ public class MFB implements MatchMergeAlgorithm {
     private double minConfidenceValue;
 
     public MFB() {
-        algorithms = new AttributeMatcherType[0];
+        this.algorithms = new AttributeMatcherType[0];
+        this.algorithmParameters = new String[0];
         this.thresholds = new float[0];
         this.merges = new SurvivorShipAlgorithmEnum[0];
         this.mergesParameters = new String[0];
@@ -59,6 +62,7 @@ public class MFB implements MatchMergeAlgorithm {
     }
 
     public MFB(AttributeMatcherType[] algorithms,
+               String[] algorithmParameters,
                float[] thresholds,
                double minConfidenceValue,
                SurvivorShipAlgorithmEnum[] merges,
@@ -68,6 +72,7 @@ public class MFB implements MatchMergeAlgorithm {
                SubString[] subStrings,
                String mergedRecordSource) {
         this.algorithms = algorithms;
+        this.algorithmParameters = algorithmParameters;
         this.thresholds = thresholds;
         this.minConfidenceValue = minConfidenceValue;
         this.merges = merges;
@@ -121,7 +126,15 @@ public class MFB implements MatchMergeAlgorithm {
             // MFB algorithm
             boolean hasCreatedNewMerge = false;
             for (Record mergedRecord : mergedRecords) {
-                MatchResult matchResult = matchRecords(mergedRecord, currentRecord, algorithms, thresholds, nullOptions, subStrings, weights, minConfidenceValue);
+                MatchResult matchResult = matchRecords(mergedRecord,
+                        currentRecord,
+                        algorithms,
+                        algorithmParameters,
+                        thresholds,
+                        nullOptions,
+                        subStrings,
+                        weights,
+                        minConfidenceValue);
                 if (matchResult.isMatch()) {
                     callback.onMatch(mergedRecord, currentRecord, matchResult);
                     Record newMergedRecord = MatchMerge.merge(currentRecord,
@@ -205,6 +218,7 @@ public class MFB implements MatchMergeAlgorithm {
     public static MatchResult matchRecords(Record mergedRecord,
                                            Record currentRecord,
                                            AttributeMatcherType[] algorithms,
+                                           String[] algorithmParameters,
                                            float[] thresholds,
                                            IAttributeMatcher.NullOption[] nullOptions,
                                            SubString[] subStrings,
@@ -236,6 +250,7 @@ public class MFB implements MatchMergeAlgorithm {
             double score = MatchMerge.matchScore(left,
                     right,
                     algorithms[matchIndex],
+                    algorithmParameters[matchIndex],
                     nullOptions[matchIndex],
                     subStrings[matchIndex]);
             result.setScore(matchIndex, algorithms[matchIndex], score, left.getValue(), right.getValue());

@@ -218,11 +218,28 @@ public class MatchMerge {
     public static double matchScore(Attribute attribute0,
                                     Attribute attribute1,
                                     AttributeMatcherType algorithm,
+                                    String parameter,
                                     IAttributeMatcher.NullOption nullOption,
                                     SubString subString) {
         String leftValue = attribute0.getValue();
         String rightValue = attribute1.getValue();
-        IAttributeMatcher matcher = AttributeMatcherFactory.createMatcher(algorithm);
+        IAttributeMatcher matcher;
+        if (algorithm == AttributeMatcherType.CUSTOM) {
+            try {
+                matcher = AttributeMatcherFactory.createMatcher(algorithm, parameter);
+            } catch (Exception e) {
+                throw new RuntimeException("Could not initialize custom matcher '" + parameter + "'.", e);
+            }
+            if(matcher == null) {
+                throw new IllegalStateException("Could not initialize matcher '" + algorithm + "' (class '" + parameter + "' can't be found).");
+            }
+        } else {
+            matcher = AttributeMatcherFactory.createMatcher(algorithm);
+        }
+        // Sanity check
+        if (matcher == null) {
+            throw new IllegalStateException("Could not initialize matcher '" + algorithm + "' (not recognized as valid choice).");
+        }
         // Null match options
         matcher.setNullOption(nullOption);
         // Sub string
