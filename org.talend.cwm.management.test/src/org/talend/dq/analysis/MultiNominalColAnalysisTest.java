@@ -18,6 +18,7 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.junit.Assert;
+import org.junit.Test;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.database.DqRepositoryViewService;
 import org.talend.cwm.db.connection.ConnectionUtils;
@@ -28,11 +29,6 @@ import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.relational.TdTable;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisType;
-import org.talend.dataquality.domain.Domain;
-import org.talend.dataquality.domain.DomainFactory;
-import org.talend.dataquality.domain.RangeRestriction;
-import org.talend.dataquality.domain.sql.SqlPredicate;
-import org.talend.dataquality.expressions.BooleanExpressionNode;
 import org.talend.dataquality.helpers.MetadataHelper;
 import org.talend.dataquality.indicators.DataminingType;
 import org.talend.dataquality.indicators.columnset.ColumnSetMultiValueIndicator;
@@ -40,11 +36,6 @@ import org.talend.dataquality.indicators.columnset.ColumnsetFactory;
 import org.talend.dq.analysis.parameters.DBConnectionParameter;
 import org.talend.dq.indicators.IndicatorEvaluator;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
-import org.talend.dq.indicators.graph.GraphBuilder;
-import org.talend.dq.indicators.graph.tests.MyFirstMain;
-import org.talend.dq.sql.converters.CwmZExpression;
-import org.talend.dq.writer.impl.ElementWriterFactory;
-import org.talend.utils.exceptions.TalendException;
 import org.talend.utils.properties.PropertiesLoader;
 import org.talend.utils.properties.TypedProperties;
 import org.talend.utils.sql.Java2SqlType;
@@ -54,63 +45,38 @@ import orgomg.cwm.resource.relational.Catalog;
 /**
  * DOC scorreia class global comment. Detailled comment
  */
-public class MultiNominalColAnalysisMain {
+@SuppressWarnings("deprecation")
+public class MultiNominalColAnalysisTest {
 
-    /**
-     * 
-     */
-    private static final DomainFactory DOMAIN = DomainFactory.eINSTANCE;
-
-    private static Logger log = Logger.getLogger(MultiNominalColAnalysisMain.class);
+    private static Logger log = Logger.getLogger(MultiNominalColAnalysisTest.class);
 
     private AnalysisBuilder analysisBuilder;
 
-    private static final String[] COLUMNS = new String[] { "city", "houseowner", "occupation", "country", "marital_status",
-            "member_card" };
+    private static final String[] COLUMNS = new String[] { "city", "houseowner", "occupation", "country", "marital_status", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
+            "member_card" }; //$NON-NLS-1$
 
     private static final String[] NUMERICFUNC = new String[] {};
 
-    private static final String CATALOG = "tbi";
+    private static final String CATALOG = "tbi"; //$NON-NLS-1$
 
-    private static final String TABLE = "customer";
-
-    /**
-     * DOC scorreia Comment method "main".
-     * 
-     * @param args
-     */
-    public static void main(String[] args) {
-        try {
-            MultiNominalColAnalysisMain myTest = new MultiNominalColAnalysisMain();
-            final ColumnSetMultiValueIndicator indicator = myTest.run();
-            final List<Object[]> listRows = indicator.getListRows();
-            final MyFirstMain myFirstMain = new MyFirstMain();
-            myFirstMain.setAllData(listRows);
-            GraphBuilder g = new GraphBuilder();
-            g.setTotalWeight(indicator.getCount());
-            myFirstMain.run(g);
-        } catch (TalendException e) {
-            // TODO Auto-generated catch block
-            log.error(e, e);
-        }
-    }
+    private static final String TABLE = "customer"; //$NON-NLS-1$
 
     /**
      * DOC scorreia Comment method "run".
      * 
-     * @throws TalendException
      */
-    public ColumnSetMultiValueIndicator run() throws TalendException {
-        String outputFolder = "ANA";
+    @Test
+    public void testRun() {
+        String outputFolder = "ANA"; //$NON-NLS-1$
         analysisBuilder = new AnalysisBuilder();
-        String analysisName = "My test analysis";
+        String analysisName = "My test analysis"; //$NON-NLS-1$
 
         boolean analysisInitialized = analysisBuilder.initializeAnalysis(analysisName, AnalysisType.MULTIPLE_COLUMN);
-        Assert.assertTrue(analysisName + " failed to initialize!", analysisInitialized);
+        Assert.assertTrue(analysisName + " failed to initialize!", analysisInitialized); //$NON-NLS-1$
 
         // get the connection
         Connection dataManager = getDataManager();
-        Assert.assertNotNull("No datamanager found!", dataManager);
+        Assert.assertNotNull("No datamanager found!", dataManager); //$NON-NLS-1$
         analysisBuilder.setAnalysisConnection(dataManager);
 
         // get a column to analyze
@@ -134,79 +100,7 @@ public class MultiNominalColAnalysisMain {
 
         IAnalysisExecutor exec = new MultiColumnAnalysisExecutor();
         ReturnCode executed = exec.execute(analysis);
-        Assert.assertTrue("Problem executing analysis: " + analysisName + ": " + executed.getMessage(), executed.isOk());
-
-        // save data provider
-        ElementWriterFactory.getInstance().createDataProviderWriter().create(dataManager, folderProvider.getFolderResource());
-
-        return indicator;
-        // Need workspace context
-        // AnalysisWriter writer = new AnalysisWriter();
-        // File file = new File(outputFolder + File.separator + "analysis.ana");
-        // ReturnCode saved = writer.save(analysis, file);
-        // Assert.assertTrue(saved.getMessage(), saved.isOk());
-        // if (saved.isOk()) {
-        // log.info("Saved in " + file.getAbsolutePath());
-        // }
-    }
-
-    //
-    // public Analysis createAndRunAnalysis() throws TalendException {
-    // analysisBuilder = new AnalysisBuilder();
-    // String analysisName = "My test analysis";
-    //
-    // boolean analysisInitialized = analysisBuilder.initializeAnalysis(analysisName, AnalysisType.COLUMN);
-    // Assert.assertTrue(analysisName + " failed to initialize!", analysisInitialized);
-    //
-    // // get the connection
-    // TdDataProvider dataManager = getDataManager();
-    // Assert.assertNotNull("No datamanager found!", dataManager);
-    // analysisBuilder.setAnalysisConnection(dataManager);
-    //
-    // // get a column to analyze
-    // List<TdColumn> columns = getColumns(dataManager);
-    // Indicator indicator = getIndicator(columns);
-    // for (TdColumn tdColumn : columns) {
-    // analysisBuilder.addElementToAnalyze(tdColumn, indicator);
-    // }
-    //
-    //
-    // // run analysis
-    // Analysis analysis = analysisBuilder.getAnalysis();
-    // final boolean useSql = true;
-    // IAnalysisExecutor exec = useSql ? new ColumnAnalysisSqlExecutor() : new ColumnAnalysisExecutor();
-    // ReturnCode executed = exec.execute(analysis);
-    // Assert.assertTrue("Problem executing analysis: " + analysisName + ": " + executed.getMessage(), executed.isOk());
-    // return analysis;
-    // }
-
-    /**
-     * DOC scorreia Comment method "getDataFilter".
-     * 
-     * @param dataManager
-     * @param column
-     * @return
-     */
-    private Domain getDataFilter(Connection dataManager, TdColumn column) {
-        Domain domain = DOMAIN.createDomain();
-        RangeRestriction rangeRestriction = DOMAIN.createRangeRestriction();
-        domain.getRanges().add(rangeRestriction);
-        BooleanExpressionNode expr = getExpression(column);
-        rangeRestriction.setExpressions(expr);
-        return domain;
-    }
-
-    /**
-     * DOC scorreia Comment method "getExpression".
-     * 
-     * @param column
-     * 
-     * @return
-     */
-    private BooleanExpressionNode getExpression(TdColumn column) {
-        CwmZExpression<String> expre = new CwmZExpression<String>(SqlPredicate.EQUAL);
-        expre.setOperands(column, "\"sunny\"");
-        return expre.generateExpressions();
+        Assert.assertTrue("Problem executing analysis: " + analysisName + ": " + executed.getMessage(), executed.isOk()); //$NON-NLS-1$ //$NON-NLS-2$
     }
 
     /**
@@ -221,11 +115,10 @@ public class MultiNominalColAnalysisMain {
 
         boolean definitionSet = DefinitionHandler.getInstance().setDefaultIndicatorDefinition(ind);
         if (log.isDebugEnabled()) {
-            log.debug("Definition set for " + ind.getName() + ": " + definitionSet);
+            log.debug("Definition set for " + ind.getName() + ": " + definitionSet); //$NON-NLS-1$ //$NON-NLS-2$
         }
 
-        for (int i = 0; i < NUMERICFUNC.length; i++) {
-            String f = NUMERICFUNC[i];
+        for (String f : NUMERICFUNC) {
             ind.getNumericFunctions().add(f);
         }
 
@@ -239,6 +132,7 @@ public class MultiNominalColAnalysisMain {
      * @return
      * @throws Exception
      */
+    @SuppressWarnings({ "null" })
     private List<TdColumn> getColumns(Connection dataManager) throws Exception {
         List<Catalog> tdCatalogs = CatalogHelper.getCatalogs(dataManager.getDataPackage());
         Catalog catalog = null;
@@ -250,7 +144,7 @@ public class MultiNominalColAnalysisMain {
         }
         Assert.assertNotNull(catalog);
         Assert.assertFalse(tdCatalogs.isEmpty());
-        System.out.println("analysed Catalog: " + catalog.getName());
+        System.out.println("analysed Catalog: " + catalog.getName()); //$NON-NLS-1$
 
         List<TdTable> tables = DqRepositoryViewService.getTables(dataManager, catalog, TABLE, true);
 
@@ -259,7 +153,7 @@ public class MultiNominalColAnalysisMain {
 
         Assert.assertFalse(tables.isEmpty());
         TdTable tdTable = tables.get(0);
-        System.out.println("analyzed Table: " + tdTable.getName());
+        System.out.println("analyzed Table: " + tdTable.getName()); //$NON-NLS-1$
         List<TdColumn> columns;
         columns = DqRepositoryViewService.getColumns(dataManager, tdTable, null, true);
         // MOD scorreia 2009-01-29 columns are stored in the table
@@ -269,8 +163,7 @@ public class MultiNominalColAnalysisMain {
 
         List<TdColumn> usedCols = new ArrayList<TdColumn>();
         for (TdColumn tdColumn : columns) {
-            for (int i = 0; i < COLUMNS.length; i++) {
-                String c = COLUMNS[i];
+            for (String c : COLUMNS) {
                 if (tdColumn.getName().equals(c)) {
                     usedCols.add(tdColumn);
                 }
