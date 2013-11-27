@@ -13,7 +13,6 @@
 package org.talend.dq.analysis;
 
 import java.io.File;
-import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,6 +25,7 @@ import org.junit.Test;
 import org.talend.core.model.metadata.IMetadataConnection;
 import org.talend.core.model.metadata.MetadataFillFactory;
 import org.talend.core.model.metadata.builder.connection.Connection;
+import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
 import org.talend.core.model.metadata.builder.database.DqRepositoryViewService;
 import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.helper.CatalogHelper;
@@ -58,12 +58,12 @@ import org.talend.dq.helper.ParameterUtil;
 import org.talend.dq.indicators.IndicatorEvaluator;
 import org.talend.dq.sql.converters.CwmZExpression;
 import org.talend.dq.writer.impl.ElementWriterFactory;
+import org.talend.repository.model.ProjectNodeHelper;
 import org.talend.resource.ResourceManager;
 import org.talend.utils.exceptions.TalendException;
 import org.talend.utils.properties.PropertiesLoader;
 import org.talend.utils.properties.TypedProperties;
 import org.talend.utils.sugars.ReturnCode;
-import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.resource.relational.Catalog;
 
@@ -453,29 +453,24 @@ public class AnalysisCreationTest {
             dataProvider = instance.fillUIConnParams(metaConnection, null);
             dataProvider.setName(DATA_PROVIDER_NAME);
 
-            DatabaseMetaData dbMetadata = null;
-            List<String> packageFilter = ConnectionUtils.getPackageFilter(params);
-            java.sql.Connection sqlConn = null;
+            // because the DI side code is changed, modify the following code.
+            metaConnection.setCurrentConnection(dataProvider);
             try {
-                if (rc instanceof TypedReturnCode) {
-                    Object sqlConnObject = ((TypedReturnCode) rc).getObject();
-                    if (sqlConnObject instanceof java.sql.Connection) {
-                        sqlConn = (java.sql.Connection) sqlConnObject;
-                        dbMetadata = org.talend.utils.sql.ConnectionUtils.getConnectionMetadata(sqlConn);
-                    }
-                }
-
-                instance.fillCatalogs(dataProvider, dbMetadata, packageFilter);
-                instance.fillSchemas(dataProvider, dbMetadata, packageFilter);
+                ProjectNodeHelper.fillCatalogAndSchemas(metaConnection, (DatabaseConnection) dataProvider);
+            } catch (ClassNotFoundException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            } catch (InstantiationException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            } catch (IllegalAccessException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
             } catch (SQLException e) {
-                log.error(e.getMessage(), e);
-                Assert.fail(e.getMessage());
-            } finally {
-                if (sqlConn != null) {
-                    ConnectionUtils.closeConnection(sqlConn);
-                }
-
+                // TODO Auto-generated catch block
+                e.printStackTrace();
             }
+
         }
         Assert.assertNotNull(dataProvider);
         return dataProvider;
