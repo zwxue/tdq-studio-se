@@ -52,8 +52,10 @@ public class CustomMatcherLoaderHandler {
 
             return (IAttributeMatcher) classLoader.loadClass(CustomAttributeMatcherClassNameConvert.getClassName(className))
                     .newInstance();
+        } else {
+            // for the case which custom matcher need to be use on the tmatchGroup component
+            return (IAttributeMatcher) Class.forName(className).newInstance();
         }
-        return null;
     }
 
 }

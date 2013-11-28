@@ -47,15 +47,30 @@ public class MyDistance extends AbstractAttributeMatcher {
 
         // in this example, we consider that 2 strings match if their first 4 characters are identical
         // the arguments are not null (the check for nullity is done by the caller)
-        final int max = 4;
-        int nbIdenticalChar = Math.min(max, Math.min(arg0.length(), arg1.length()));
-        for (int c = 0; c < max; c++) {
-            if (arg0.charAt(c) != arg1.charAt(c)) {
-                nbIdenticalChar = c;
+        int MAX_CHAR = 4;
+        final int max = Math.min(MAX_CHAR, Math.min(arg0.length(), arg1.length()));
+        int nbIdenticalChar = 0;
+        for (; nbIdenticalChar < max; nbIdenticalChar++) {
+            if (arg0.charAt(nbIdenticalChar) != arg1.charAt(nbIdenticalChar)) {
                 break;
             }
         }
-        return (max - nbIdenticalChar) / ((double) max);
+        if (arg0.length() < MAX_CHAR && arg1.length() < MAX_CHAR) {
+            MAX_CHAR = Math.max(arg0.length(), arg1.length());
+        }
+        return (nbIdenticalChar) / ((double) MAX_CHAR);
     }
 
+    // This method is only for testing the class. It's not required when developping a new distance.
+    // Delete it if you reuse this code to build your own library.
+    public static void main(String[] args) {
+        MyDistance dist = new MyDistance();
+        String[] strings = { "testlong", "testlon", "bad", "testlong", "test", "te", "te", "mad" };
+        for (String a : strings) {
+            for (String b : strings) {
+                System.out.println("Dist(" + a + "," + b + ")= " + dist.getWeight(a, b));
+            }
+        }
+
+    }
 }
