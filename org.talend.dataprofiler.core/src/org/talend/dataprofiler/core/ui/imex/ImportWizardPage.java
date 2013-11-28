@@ -612,7 +612,7 @@ public class ImportWizardPage extends WizardPage {
                             && meanIndicatorUuid.equals(ResourceHelper.getUUID(element))) {
                         File sumIndicatorFile = getSumIndicatorFile(element);
                         if (sumIndicatorFile != null) {
-                            itemRecords.add(new ItemRecord(sumIndicatorFile));
+                            itemRecords.add(new ItemRecord(sumIndicatorFile, record.getRootFolderPath()));
                         }
                     }
                 }
@@ -707,7 +707,7 @@ public class ImportWizardPage extends WizardPage {
             }
             // add the same name jasper file when the sub-report jrxml is checked on UI.
             if (fName.equalsIgnoreCase(nameWithoutVersion + PluginConstant.DOT_STRING + PluginConstant.JASPER_STRING)) {
-                ItemRecord itemRecord = new ItemRecord(f);
+                ItemRecord itemRecord = new ItemRecord(f, record.getRootFolderPath());
                 itemRecords.add(itemRecord);
                 continue;
             }
@@ -716,7 +716,7 @@ public class ImportWizardPage extends WizardPage {
             if (subLsFromMap != null) {
                 for (String name : subLsFromMap) {
                     if (fName.startsWith(name)) {
-                        ItemRecord itemRecord = new ItemRecord(f);
+                        ItemRecord itemRecord = new ItemRecord(f, record.getRootFolderPath());
                         itemRecords.add(itemRecord);
                     }
                 }

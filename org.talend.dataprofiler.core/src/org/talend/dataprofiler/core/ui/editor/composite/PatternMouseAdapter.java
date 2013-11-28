@@ -135,8 +135,8 @@ public class PatternMouseAdapter extends MouseAdapter {
                 Indicator indicator = indicatorUnit.getIndicator();
                 if (indicator instanceof PatternMatchingIndicator) {
                     if (!allSelectedNodeNames.contains(indicator.getName())) {
-                        meIndicator.removeIndicatorUnit(indicatorUnit);
-
+                        // this method will deal dependency with same time
+                        columnDropTree.deleteIndicatorItems(meIndicator, indicatorUnit);
                         if (!columnDropTree.isDirty()) {
                             columnDropTree.setDirty(true);
                         }
@@ -153,14 +153,14 @@ public class PatternMouseAdapter extends MouseAdapter {
                 addOldSelected = true;
             }
             if (addOldSelected) {
-                for(TreeItem child:treeItem.getItems()){
-                masterPage.getTreeViewer().removeItemBranch(child);
+                for (TreeItem child : treeItem.getItems()) {
+                    masterPage.getTreeViewer().removeItemBranch(child);
                 }
             }// ~
 
             treeItem.removeAll();
 
-           for (PatternRepNode patternNode : allSelectedPatternNodes) {
+            for (PatternRepNode patternNode : allSelectedPatternNodes) {
                 if (oldSelectedNodeNames.contains(patternNode.getLabel()) && !addOldSelected) {
                     continue;
                 }

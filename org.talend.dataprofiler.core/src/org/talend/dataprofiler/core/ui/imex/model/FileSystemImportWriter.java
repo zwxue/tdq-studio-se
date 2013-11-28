@@ -1081,7 +1081,7 @@ public class FileSystemImportWriter implements IImportWriter {
             } else {
                 projectName = ReponsitoryContextBridge.getProjectName();
             }
-            return new ItemRecord(tempFolder);
+            return new ItemRecord(tempFolder, tempBasePath);
         }
         return null;
     }

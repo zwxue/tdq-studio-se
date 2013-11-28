@@ -94,8 +94,24 @@ public class ItemRecord {
 
     private static List<ItemRecord> allItemRecords;
 
+    // when we do import action this folder is the Path of temp folder. when we do export action this folder is Empty so
+    // we get rootFolder of current project
+    private IPath rootFolder = Path.EMPTY;
+
     public ItemRecord(File file) {
+        this(file, ResourceManager.getRootProject().getLocation());
+    }
+
+    /**
+     * file the file which we want to import or export
+     * 
+     * rootFolder the location which file is come from
+     * 
+     */
+    public ItemRecord(File file, IPath rootFolder) {
+
         this.file = file;
+        this.rootFolder = rootFolder;
 
         if (resourceSet == null) {
             resourceSet = new ResourceSetImpl();
@@ -157,6 +173,17 @@ public class ItemRecord {
      */
     public IPath getFilePath() {
         return new Path(file.getAbsolutePath());
+    }
+
+    /**
+     * 
+     * when we do import action this folder is the Path of temp folder. when we do export action this folder is Empty so
+     * we get rootFolder of current project
+     * 
+     * @return
+     */
+    public IPath getRootFolderPath() {
+        return rootFolder;
     }
 
     /**
@@ -254,12 +281,16 @@ public class ItemRecord {
                         includeAggregatedDependencies(defInd);
                     }
                 }
+                // MatchRule and match Analysis come from different location so that we must recompute the path of jar
+                // folder
                 if (element instanceof MatchRuleDefinition) {
+                    IPath libFolderPath = ResourceManager.getUDIJarFolder().getLocation();
                     includeCustomMatcherJarDependencies((MatchRuleDefinition) element);
                 }
 
             } else if (element instanceof Analysis
                     && AnalysisType.MATCH_ANALYSIS == AnalysisHelper.getAnalysisType((Analysis) element)) {
+
                 includeCustomMatcherJarDependencies((Analysis) element);
             }
         }
@@ -271,15 +302,11 @@ public class ItemRecord {
      * @param element2
      */
     private void includeCustomMatcherJarDependencies(MatchRuleDefinition matchRuleDef) {
-
+        IPath libFolderPath = getRootFolderPath().append(EResourceConstant.USER_DEFINED_INDICATORS_LIB.getPath());
         for (MatchRule matchRule : matchRuleDef.getMatchRules()) {
             for (MatchKeyDefinition matchKeyDefinition : matchRule.getMatchKeys()) {
                 if (AttributeMatcherType.CUSTOM.getComponentValue().equalsIgnoreCase(
                         matchKeyDefinition.getAlgorithm().getAlgorithmType())) {
-                    //libFolderPath this Path must be the location of matchRuleDef.eResource()
-                    //note that the path is different between import and export case 
-                    IPath libFolderPath = new Path(matchRuleDef.eResource().getURI().toFileString()).removeLastSegments(3)
-                            .append(EResourceConstant.USER_DEFINED_INDICATORS_LIB.getName());
                     File libFolder = libFolderPath.toFile();
                     if (libFolder.exists()) {
                         for (File udiJarFile : UDIUtils.getLibJarFileList(libFolder)) {
@@ -290,8 +317,11 @@ public class ItemRecord {
                                 }
                             }
                         }
+                    } else {
+                        log.error(libFolder + " does not exist. Dependent match rule is " + matchRuleDef.getLabel()); //$NON-NLS-1$
                     }
                 }
+
             }
         }
 
@@ -404,10 +434,8 @@ public class ItemRecord {
      * @param error
      */
     public void addError(String error) {
-        if (elementEName != null) {
-            error = "[" + elementEName.name() + "]" + error;//$NON-NLS-1$ //$NON-NLS-2$
-        }
-        this.errors.add(error);
+        String err = (elementEName != null) ? "[" + elementEName.name() + "]" + error : error; //$NON-NLS-1$ //$NON-NLS-2$
+        this.errors.add(err);
     }
 
     /**
@@ -481,7 +509,7 @@ public class ItemRecord {
             if (listFiles != null) {
                 for (File aFile : listFiles) {
                     if (isValid(aFile)) {
-                        ItemRecord itemRecord = new ItemRecord(aFile);
+                        ItemRecord itemRecord = new ItemRecord(aFile, rootFolder);
                         if (itemRecord.isValid()) {
                             recordList.add(itemRecord);
                         }
