@@ -702,6 +702,9 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
 
             @Override
             public void widgetSelected(SelectionEvent e) {
+                if (!storeDataCheck.getSelection()) {
+                    drillDownCheck.setSelection(storeDataCheck.getSelection());
+                }
                 setDirty(true);
             }
         });
@@ -738,7 +741,9 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
 
             @Override
             public void widgetSelected(SelectionEvent e) {
-                storeDataCheck.setSelection(drillDownCheck.getSelection());
+                if (drillDownCheck.getSelection()) {
+                    storeDataCheck.setSelection(drillDownCheck.getSelection());
+                }
                 simpleStatIndicator.setStoreData(drillDownCheck.getSelection());
                 columnSetAnalysisHandler.getAnalysis().getParameters().setStoreData(drillDownCheck.getSelection());
                 setDirty(true);
