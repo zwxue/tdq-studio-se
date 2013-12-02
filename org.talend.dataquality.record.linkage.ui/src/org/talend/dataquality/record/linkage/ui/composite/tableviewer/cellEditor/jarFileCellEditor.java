@@ -67,7 +67,6 @@ public class jarFileCellEditor extends DialogCellEditor {
         String path = null;
         if (Window.OK == returnCode) {
             path = dialog.getSelectResult();
-            CustomAttributeMatcherHelper.updateCustomMatcherMap(path);
         }
         return path;
     }

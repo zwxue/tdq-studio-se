@@ -21,6 +21,7 @@ import org.talend.dataquality.record.linkage.attribute.AttributeMatcherFactory;
 import org.talend.dataquality.record.linkage.attribute.IAttributeMatcher;
 import org.talend.dataquality.record.linkage.attribute.SubstringAttributeMatcher;
 import org.talend.dataquality.record.linkage.constant.AttributeMatcherType;
+import org.talend.dataquality.record.linkage.utils.CustomAttributeMatcherClassNameConvert;
 import org.talend.dataquality.record.linkage.utils.SurvivorShipAlgorithmEnum;
 
 import java.math.BigDecimal;
@@ -226,7 +227,8 @@ public class MatchMerge {
         IAttributeMatcher matcher;
         if (algorithm == AttributeMatcherType.CUSTOM) {
             try {
-                matcher = AttributeMatcherFactory.createMatcher(algorithm, parameter);
+                String className=CustomAttributeMatcherClassNameConvert.getClassName(parameter);
+                matcher = AttributeMatcherFactory.createMatcher(algorithm, className);
             } catch (Exception e) {
                 throw new RuntimeException("Could not initialize custom matcher '" + parameter + "'.", e);
             }
