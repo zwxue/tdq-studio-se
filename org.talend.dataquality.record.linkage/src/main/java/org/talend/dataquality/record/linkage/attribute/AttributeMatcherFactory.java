@@ -17,7 +17,6 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.talend.dataquality.record.linkage.constant.AttributeMatcherType;
-import org.talend.dataquality.record.linkage.utils.CustomMatcherLoaderHandler;
 
 /**
  * @author scorreia
@@ -59,6 +58,33 @@ public final class AttributeMatcherFactory {
      * 
      * @param type the type of the attribute matcher
      * @param className the class name that implements IAttributeMatcher
+     * @param classLoader the class loader used to load customized class.
+     * @return the instantiated Attribute Matcher class
+     * @throws InstantiationException
+     * @throws IllegalAccessException
+     * @throws ClassNotFoundException
+     */
+    public static IAttributeMatcher createMatcher(AttributeMatcherType type, String className, ClassLoader classLoader)
+            throws InstantiationException, IllegalAccessException, ClassNotFoundException {
+        if (type != null) {
+            switch (type) {
+            case CUSTOM:
+                return (IAttributeMatcher) Class.forName(className, true, classLoader).newInstance();
+            default:
+                return createMatcher(type);
+            }
+        }
+        log.warn("matcher not found: [type=" + type + "][className=" + className + "]"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+        return null;
+    }
+
+    /**
+     * Method "createMatcher". If the type is {@link AttributeMatcherType#CUSTOM}, then the resulting IAttributeMatcher
+     * class is instantiated given the className argument. If the type is different, then the
+     * {@link AttributeMatcherFactory#createMatcher(AttributeMatcherType)} method is called.
+     * 
+     * @param type the type of the attribute matcher
+     * @param className the class name that implements IAttributeMatcher
      * @return the instantiated Attribute Matcher class
      * @throws InstantiationException
      * @throws IllegalAccessException
@@ -66,16 +92,7 @@ public final class AttributeMatcherFactory {
      */
     public static IAttributeMatcher createMatcher(AttributeMatcherType type, String className) throws InstantiationException,
             IllegalAccessException, ClassNotFoundException {
-        if (type != null) {
-            switch (type) {
-            case CUSTOM:
-                return CustomMatcherLoaderHandler.createInstance(className);
-            default:
-                return createMatcher(type);
-            }
-        }
-        log.warn("matcher not found: [type=" + type + "][className=" + className + "]"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-        return null;
+        return createMatcher(type, className, AttributeMatcherFactory.class.getClassLoader());
     }
 
     /**

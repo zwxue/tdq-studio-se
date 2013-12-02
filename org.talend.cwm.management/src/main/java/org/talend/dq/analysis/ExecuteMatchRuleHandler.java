@@ -346,31 +346,23 @@ public class ExecuteMatchRuleHandler {
                             matchDef.getName()));
                     throw businessException;
                 }
-                Map<String, String> matchKeyMap = AnalysisRecordGroupingUtils.getMatchKeyMap(matchDef.getColumn(), matchDef
-                        .getAlgorithm().getAlgorithmType(), matchDef.getAlgorithm().getAlgorithmParameters(), matchDef
-                        .getConfidenceWeight(), columnMap, matcher.getMatchInterval(), matchDef.getColumn(), matchDef
-                        .getHandleNull());
-                ruleMatcherConvertResult.add(matchKeyMap);
-                // if matcher is custom should use URLClassLoader to load class
-                if (isCustomMatcher(matchDef)) {
-                    CustomAttributeMatcherHelper.getUrlClassLoader(matchDef.getAlgorithm().getAlgorithmParameters());
+                String algorithmType = matchDef.getAlgorithm().getAlgorithmType();
+                Map<String, String> matchKeyMap = null;
+                if (AttributeMatcherType.get(algorithmType) == AttributeMatcherType.CUSTOM) {
+                    matchKeyMap = AnalysisRecordGroupingUtils.getMatchKeyMap(matchDef.getColumn(), algorithmType, matchDef
+                            .getAlgorithm().getAlgorithmParameters(), matchDef.getConfidenceWeight(), columnMap, matcher
+                            .getMatchInterval(), matchDef.getColumn(), matchDef.getHandleNull(), CustomAttributeMatcherHelper
+                            .getFullJarPath(matchDef.getAlgorithm().getAlgorithmParameters()));
+                } else {
+                    matchKeyMap = AnalysisRecordGroupingUtils.getMatchKeyMap(matchDef.getColumn(), algorithmType, matchDef
+                            .getAlgorithm().getAlgorithmParameters(), matchDef.getConfidenceWeight(), columnMap, matcher
+                            .getMatchInterval(), matchDef.getColumn(), matchDef.getHandleNull());
                 }
+                ruleMatcherConvertResult.add(matchKeyMap);
 
             }
             analysisMatchRecordGrouping.addRuleMatcher(ruleMatcherConvertResult);
         }
     }
 
-    /**
-     * DOC zshen Comment method "hasCustomMatcher".
-     * 
-     * @param matchDef
-     * @return
-     */
-    private static boolean isCustomMatcher(MatchKeyDefinition matchDef) {
-        if (AttributeMatcherType.CUSTOM.name().equals(matchDef.getAlgorithm().getAlgorithmType())) {
-            return true;
-        }
-        return false;
-    }
 }

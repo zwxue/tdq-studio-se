@@ -12,11 +12,21 @@
 // ============================================================================
 package org.talend.dataquality.record.linkage.utils;
 
+import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.log4j.Logger;
+
 /**
  * created by zshen on Nov 14, 2013 Detailled comment
  * 
  */
 public class CustomAttributeMatcherClassNameConvert {
+
+    private static Logger log = Logger.getLogger(CustomAttributeMatcherClassNameConvert.class);
 
     public static final String REGEXKEY = "\\|\\|"; //$NON-NLS-1$
 
@@ -65,6 +75,27 @@ public class CustomAttributeMatcherClassNameConvert {
             result += QUTO;
         }
         return result;
+    }
+
+    /**
+     * A helper method to convert the concatenated pathes to URL arrays.
+     * 
+     * @param concatenatedPathes the absolute path delimited by {@link CustomAttributeMatcherClassNameConvert#REGEXKEY}
+     * @return the URL array of each jar.
+     */
+    public static URL[] changeJarPathToURLArray(String concatenatedPathes) {
+
+        String[] allElements = concatenatedPathes.split(CustomAttributeMatcherClassNameConvert.REGEXKEY);
+        List<URL> jarURLs = new ArrayList<URL>();
+        for (String allElement : allElements) {
+            try {
+                jarURLs.add((new File(allElement)).toURI().toURL());
+            } catch (MalformedURLException e) {
+                log.error(e, e);
+            }
+        }
+        return jarURLs.toArray(new URL[0]);
+
     }
 
 }

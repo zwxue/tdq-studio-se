@@ -19,12 +19,15 @@ import java.util.Map;
 import java.util.UUID;
 
 import org.apache.commons.lang.StringUtils;
+import org.talend.dataquality.record.linkage.attribute.AttributeMatcherFactory;
 import org.talend.dataquality.record.linkage.attribute.IAttributeMatcher;
 import org.talend.dataquality.record.linkage.constant.AttributeMatcherType;
 import org.talend.dataquality.record.linkage.constant.RecordMatcherType;
 import org.talend.dataquality.record.linkage.record.CombinedRecordMatcher;
 import org.talend.dataquality.record.linkage.record.IRecordMatcher;
 import org.talend.dataquality.record.linkage.record.RecordMatcherFactory;
+import org.talend.dataquality.record.linkage.utils.CustomAttributeMatcherClassNameConvert;
+import org.talend.utils.classloader.TalendURLClassLoader;
 
 /**
  * created by zhao on Jul 19, 2013 <br>
@@ -328,6 +331,7 @@ public abstract class AbstractRecordGrouping implements IRecordGrouping {
         String[] attributeNames = new String[recordSize];
         String[][] algorithmName = new String[recordSize][2];
         String[] arrMatchHandleNull = new String[recordSize];
+        String[] customizedJarPath = new String[recordSize];
         double recordMatchThreshold = acceptableThreshold;// keep compatibility to older version.
         int recordIdx = 0;
         for (Map<String, String> recordMap : matchRule) {
@@ -337,6 +341,7 @@ public abstract class AbstractRecordGrouping implements IRecordGrouping {
             algorithmName[recordIdx][1] = recordMap.get(IRecordGrouping.CUSTOMER_MATCH_CLASS);
             arrMatchHandleNull[recordIdx] = recordMap.get(IRecordGrouping.HANDLE_NULL);
             String rcdMathThresholdEach = recordMap.get(IRecordGrouping.RECORD_MATCH_THRESHOLD);
+            customizedJarPath[recordIdx] = recordMap.get(IRecordGrouping.JAR_PATH);
             if (!StringUtils.isEmpty(rcdMathThresholdEach)) {
                 recordMatchThreshold = Double.valueOf(rcdMathThresholdEach);
 
@@ -347,8 +352,17 @@ public abstract class AbstractRecordGrouping implements IRecordGrouping {
 
         for (int indx = 0; indx < recordSize; indx++) {
             AttributeMatcherType attrMatcherType = AttributeMatcherType.get(algorithmName[indx][0]);
-            attributeMatcher[indx] = org.talend.dataquality.record.linkage.attribute.AttributeMatcherFactory.createMatcher(
-                    attrMatcherType, algorithmName[indx][1]);
+
+            if (attrMatcherType == AttributeMatcherType.CUSTOM && customizedJarPath[indx] != null) {
+                // Put the jar into class path so that the class can be loaded.
+                TalendURLClassLoader cl = new TalendURLClassLoader(
+                        CustomAttributeMatcherClassNameConvert.changeJarPathToURLArray(customizedJarPath[indx]));
+                attributeMatcher[indx] = AttributeMatcherFactory.createMatcher(attrMatcherType,
+                        CustomAttributeMatcherClassNameConvert.getClassName(algorithmName[indx][1]), cl);
+            } else {
+                // Use the default class loader to load the class.
+                attributeMatcher[indx] = AttributeMatcherFactory.createMatcher(attrMatcherType, algorithmName[indx][1]);
+            }
             attributeMatcher[indx].setNullOption(arrMatchHandleNull[indx]);
             attributeMatcher[indx].setAttributeName(attributeNames[indx]);
 
