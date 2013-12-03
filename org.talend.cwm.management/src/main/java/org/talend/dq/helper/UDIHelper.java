@@ -362,9 +362,9 @@ public final class UDIHelper {
                     jarUrls.add(file.toURI().toURL());
                 }
                 TalendURLClassLoader cl;
-                cl = new TalendURLClassLoader(jarUrls.toArray(new URL[jarUrls.size()]));// new URL[] {
-                                                                                        // file.getLocation().toFile().toURI().toURL()
-                                                                                        // });
+                //Note that the 2nd parameter (classloader) is needed to load class UserDefinitionIndicator from org.talend.dataquality plugin.
+                cl = new TalendURLClassLoader(jarUrls.toArray(new URL[jarUrls.size()]), UDIHelper.class.getClassLoader());
+
                 Class<?> clazz = null;
                 clazz = cl.findClass(userJavaClassName);
                 if (clazz != null) {

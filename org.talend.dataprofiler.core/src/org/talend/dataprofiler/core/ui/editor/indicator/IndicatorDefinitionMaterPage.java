@@ -2471,7 +2471,9 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
             for (IFile file : UDIUtils.getContainJarFile(jarPath)) {
                 TalendURLClassLoader cl;
                 try {
-                    cl = new TalendURLClassLoader(new URL[] { file.getLocation().toFile().toURI().toURL() });
+                  //Note that the 2nd parameter (classloader) is needed to load class UserDefinitionIndicator from org.talend.dataquality plugin.
+                    cl = new TalendURLClassLoader(new URL[] { file.getLocation().toFile().toURI().toURL() },
+                            IndicatorDefinitionMaterPage.class.getClassLoader());
                     Class<?> theClass = cl.findClass(className);
                     if (theClass != null) {
                         return true;
