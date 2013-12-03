@@ -30,15 +30,25 @@ public class TalendURLClassLoader extends URLClassLoader {
      * @param urls
      */
     public TalendURLClassLoader(URL[] urls) {
-        super(urls, TalendURLClassLoader.class.getClassLoader());
+        this(urls, TalendURLClassLoader.class.getClassLoader());
     }
 
     /**
-     *ADD mzhao 11128, try to load by current thread loader.
+     * 
+     * The classloader initiated by this contractor will load the class from urls class path , if not find it will use the given classloader to load it.
+     * @param urls The url array used to load class.
+     * @param classLoader when the class is not found from class path of urls, this classloader will be employeed to load it again.
+     */
+    public TalendURLClassLoader(URL[] urls, ClassLoader classLoader) {
+        super(urls, classLoader);
+    }
+
+    /**
+     * ADD mzhao 11128, try to load by current thread loader.
      */
     @Override
     public Class<?> findClass(String className) throws ClassNotFoundException {
-        Class<?> cls = (Class<?>) classesMap.get(className);
+        Class<?> cls = classesMap.get(className);
         if (cls == null) {
             try {
                 cls = super.findClass(className);
