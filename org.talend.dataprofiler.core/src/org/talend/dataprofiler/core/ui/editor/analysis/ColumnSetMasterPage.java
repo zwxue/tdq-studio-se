@@ -735,7 +735,7 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
         numberSection.setLayout(gridLayout);
         toolkit.createLabel(checkSection, DefaultMessagesImpl.getString("ColumnMasterDetailsPage.allowDrillDownLabel"));
         drillDownCheck = toolkit.createButton(checkSection, "", SWT.CHECK);
-        drillDownCheck.setSelection(true);
+        drillDownCheck.setSelection(false);
         drillDownCheck.setSelection(anaParameters.isStoreData());
         drillDownCheck.addSelectionListener(new SelectionAdapter() {
 
