@@ -65,6 +65,7 @@ import org.talend.dataquality.indicators.DuplicateCountIndicator;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.RowCountIndicator;
 import org.talend.dataquality.indicators.UniqueCountIndicator;
+import org.talend.dataquality.indicators.columnset.AllMatchIndicator;
 import org.talend.dataquality.indicators.columnset.ColumnSetMultiValueIndicator;
 import org.talend.dataquality.indicators.columnset.ColumnsetPackage;
 import org.talend.dataquality.indicators.columnset.SimpleStatIndicator;
@@ -741,7 +742,7 @@ public class ColumnSetIndicatorEvaluator extends Evaluator<String> {
             if (indicator instanceof SimpleStatIndicator) {
                 SimpleStatIndicator simpleIndicator = (SimpleStatIndicator) indicator;
                 List<Object[]> listRows = simpleIndicator.getListRows();
-                if (!indicator.isStoreData() || listRows == null || listRows.isEmpty()) {
+                if (!analysis.getParameters().isStoreData() || listRows == null || listRows.isEmpty()) {
                     break;
                 }
                 for (Indicator leafIndicator : simpleIndicator.getLeafIndicators()) {
@@ -778,6 +779,17 @@ public class ColumnSetIndicatorEvaluator extends Evaluator<String> {
                         }
                     }
                     analyzedDataSet.setData(dataList);
+                }
+                // MOD sizhaoliu TDQ-7144 clear the listRows after usage for drill down
+                if (!simpleIndicator.isStoreData()) {
+                    simpleIndicator.setListRows(new ArrayList<Object[]>());
+                }
+            }
+
+            if (indicator instanceof AllMatchIndicator) {
+                AllMatchIndicator allMatchIndicator = (AllMatchIndicator) indicator;
+                if (!allMatchIndicator.isStoreData()) {
+                    allMatchIndicator.setListRows(new ArrayList<Object[]>());
                 }
             }
         }

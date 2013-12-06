@@ -702,9 +702,8 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
 
             @Override
             public void widgetSelected(SelectionEvent e) {
-                if (!storeDataCheck.getSelection()) {
-                    drillDownCheck.setSelection(storeDataCheck.getSelection());
-                }
+                simpleStatIndicator.setStoreData(storeDataCheck.getSelection());
+                allMatchIndicator.setStoreData(storeDataCheck.getSelection());
                 setDirty(true);
             }
         });
@@ -741,11 +740,7 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
 
             @Override
             public void widgetSelected(SelectionEvent e) {
-                if (drillDownCheck.getSelection()) {
-                    storeDataCheck.setSelection(drillDownCheck.getSelection());
-                }
-                simpleStatIndicator.setStoreData(drillDownCheck.getSelection());
-                columnSetAnalysisHandler.getAnalysis().getParameters().setStoreData(drillDownCheck.getSelection());
+                analysis.getParameters().setStoreData(drillDownCheck.getSelection());
                 setDirty(true);
             }
 
@@ -804,7 +799,9 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
         Analysis analysis = columnSetAnalysisHandler.getAnalysis();
         analysis.getParameters().setExecutionLanguage(ExecutionLanguage.get(execLang));
         analysis.getParameters().setMaxNumberRows(Integer.valueOf(maxNumText.getText()));
-        simpleStatIndicator.setStoreData(storeDataCheck.getSelection());
+
+        // MOD sizhaoliu TDQ-7144 save result data for drill down
+        simpleStatIndicator.setMustStoreRow(drillDownCheck.getSelection());
 
         // set data filter
         columnSetAnalysisHandler.setStringDataFilter(dataFilterComp.getDataFilterString());

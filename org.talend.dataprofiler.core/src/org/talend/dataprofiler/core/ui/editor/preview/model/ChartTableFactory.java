@@ -367,14 +367,15 @@ public final class ChartTableFactory {
                             }
                         } else {
                             AnalyzedDataSet analyDataSet = analysis.getResults().getIndicToRowMap().get(indicator);
-                            if (analysis.getParameters().isStoreData()) {
+                            if (analysis.getParameters().isStoreData()) { // if allow drill down
 
-                                boolean isNoData = !(analyDataSet != null && (analyDataSet.getData() != null
+                                boolean hasData = analyDataSet != null
+                                        && (analyDataSet.getData() != null
                                         && analyDataSet.getData().size() > 0 || analyDataSet.getFrequencyData() != null
                                         && analyDataSet.getFrequencyData().size() > 0 || analyDataSet.getPatternData() != null
-                                        && analyDataSet.getPatternData().size() > 0));
+                                                && analyDataSet.getPatternData().size() > 0);
 
-                                if (!isNoData) {
+                                if (hasData) {
                                     for (final MenuItemEntity itemEntity : itemEntities) {
                                         MenuItem item = new MenuItem(menu, SWT.PUSH);
                                         item.setText(itemEntity.getLabel());

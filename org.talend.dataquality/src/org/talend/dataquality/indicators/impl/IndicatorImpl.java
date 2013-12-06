@@ -870,6 +870,16 @@ public class IndicatorImpl extends ModelElementImpl implements Indicator {
     /**
      * <!-- begin-user-doc --> <!-- end-user-doc -->
      * 
+     * @generated NOT
+     */
+    @Override
+    public void setMustStoreRow(boolean mustStoreRow) {
+        this.mustStoreRow = mustStoreRow;
+    }
+
+    /**
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @generated
      */
     @Override
