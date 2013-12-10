@@ -476,6 +476,7 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
             if (connection != null && masterPage.getExecCombo() != null) {
                 if (ConnectionUtils.isDelimitedFileConnection((DataProvider) connection)) {
                     masterPage.setWhereClauseDisabled();
+                    // when the selected column is not DB type,will disable the execute engine combobox.
                     masterPage.changeExecuteLanguageToJava(true);
 
                     enableWhereClauseFlag = false;
@@ -484,6 +485,8 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
                     masterPage.setWhereClauseDisabled();
 
                     enableWhereClauseFlag = false;
+                } else {// when the selected column is back to DB type, should enable the execute engine combobox again.
+                    masterPage.enableExecuteLanguage();
                 }
             }
         }

@@ -294,21 +294,22 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
     @Override
     public void setInput(Object[] objs) {
         if (objs != null && objs.length != 0) {
-            // for file connection, here is : DFColumnRepNode
             List<DBColumnRepNode> columnList = new ArrayList<DBColumnRepNode>();
             for (Object obj : objs) {
                 if (obj instanceof DBColumnRepNode) {
                     columnList.add((DBColumnRepNode) obj);
                 }
-
             }
             // MOD yyi 2010-05-13 12828
             Collections.reverse(columnList);
             // MOD qiongli 2011-3-15 set DataFilterText disabled except TdColumn.
             if (masterPage.getDataFilterComp() != null) {
                 masterPage.getDataFilterComp().getDataFilterText().setEnabled(!columnList.isEmpty());
-                if (columnList.isEmpty()) {
+                if (columnList.isEmpty()) {// when the selected column is not DB type,will disable the execute engine
+                                           // combobox.
                     masterPage.changeExecuteLanguageToJava(true);
+                } else {// when the selected column is back to DB type, should enable the execute engine combobox again.
+                    masterPage.enableExecuteLanguage();
                 }
             }
 
@@ -322,7 +323,7 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
                     // to ColumnIndicatorList
                     boolean isOld = false;
                     for (ModelElementIndicator oldColumn : modelElementIndicators) {
-                        if (oldColumn.getElementName().equals(column.getElementName())) {
+                        if (oldColumn.getModelElementRepositoryNode().equals(column.getModelElementRepositoryNode())) {
                             indicatorList.add(oldColumn);
                             isOld = true;
                             break;

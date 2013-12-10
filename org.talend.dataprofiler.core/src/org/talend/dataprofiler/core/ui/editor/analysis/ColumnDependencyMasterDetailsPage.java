@@ -89,10 +89,6 @@ public class ColumnDependencyMasterDetailsPage extends AbstractAnalysisMetadataP
 
     List<RepositoryNode> columnListB = null;
 
-    DataFilterComp dataFilterComp;
-
-    private Section dataFilterSection = null;
-
     private String stringDataFilter;
 
     private AnalysisColumnCompareTreeViewer anaColumnCompareViewer;

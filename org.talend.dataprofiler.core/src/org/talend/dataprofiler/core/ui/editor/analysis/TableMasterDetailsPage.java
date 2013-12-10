@@ -110,8 +110,6 @@ public class TableMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
 
     AnalysisTableTreeViewer treeViewer;
 
-    DataFilterComp dataFilterComp;
-
     TableAnalysisHandler analysisHandler;
 
     public TableAnalysisHandler getAnalysisHandler() {
@@ -146,8 +144,6 @@ public class TableMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
     public void setPreviewChartCompsites(Composite[] previewChartCompsites) {
         this.previewChartCompsites = previewChartCompsites;
     }
-
-    private Section dataFilterSection = null;
 
     private Section analysisTableSection = null;
 

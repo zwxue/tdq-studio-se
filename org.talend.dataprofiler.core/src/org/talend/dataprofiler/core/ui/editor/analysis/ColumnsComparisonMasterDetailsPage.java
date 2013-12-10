@@ -92,8 +92,6 @@ public class ColumnsComparisonMasterDetailsPage extends AbstractAnalysisMetadata
 
     DataFilterComp dataFilterCompB;
 
-    private Section dataFilterSection = null;
-
     private String stringDataFilterA;
 
     private String stringDataFilterB;

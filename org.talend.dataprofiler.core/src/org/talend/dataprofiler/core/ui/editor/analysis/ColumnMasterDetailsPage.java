@@ -18,9 +18,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
-import java.util.regex.Pattern;
 
-import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.MessageDialogWithToggle;
@@ -31,20 +29,12 @@ import org.eclipse.swt.custom.CCombo;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.events.ControlAdapter;
 import org.eclipse.swt.events.ControlEvent;
-import org.eclipse.swt.events.ModifyEvent;
-import org.eclipse.swt.events.ModifyListener;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.VerifyEvent;
-import org.eclipse.swt.events.VerifyListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.swt.widgets.Widget;
@@ -82,10 +72,8 @@ import org.talend.dataprofiler.core.ui.editor.composite.AbstractColumnDropTree;
 import org.talend.dataprofiler.core.ui.editor.composite.AnalysisColumnTreeViewer;
 import org.talend.dataprofiler.core.ui.editor.composite.DataFilterComp;
 import org.talend.dataprofiler.core.ui.pref.EditorPreferencePage;
-import org.talend.dataprofiler.core.ui.utils.MessageUI;
 import org.talend.dataprofiler.core.ui.utils.pagination.UIPagination;
 import org.talend.dataquality.analysis.Analysis;
-import org.talend.dataquality.analysis.AnalysisParameters;
 import org.talend.dataquality.analysis.ExecutionLanguage;
 import org.talend.dataquality.domain.Domain;
 import org.talend.dataquality.exception.DataprofilerCoreException;
@@ -111,23 +99,11 @@ import orgomg.cwm.objectmodel.core.ModelElement;
  */
 public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implements PropertyChangeListener {
 
-    private static Logger log = Logger.getLogger(ColumnMasterDetailsPage.class);
-
     private Composite tree;
 
     private Composite navigationComposite;
 
-    private String execLang;
-
-    private Button drillDownCheck;
-
-    private Text maxNumText;
-
-    private CCombo execCombo;
-
     AnalysisColumnTreeViewer treeViewer;
-
-    DataFilterComp dataFilterComp;
 
     ModelElementAnalysisHandler analysisHandler;
 
@@ -140,8 +116,6 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
     private static final int TREE_MAX_LENGTH = 400;
 
     private ExpandableComposite[] previewChartCompsites;
-
-    private Section dataFilterSection = null;
 
     private Section analysisColumnSection = null;
 
@@ -231,7 +205,8 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
         createDataFilterSection(form, topComp);
 
         // MOD xqliu 2009-07-01 bug 7068
-        createAnalysisParamSection(form, topComp);
+        createExecuteEngineSection(form, topComp, analysisHandler.getAnalyzedColumns(), analysisHandler.getAnalysis()
+                .getParameters());
         // ~
         if (!EditorPreferencePage.isHideGraphics()) {
             previewComp = toolkit.createComposite(sForm);
@@ -648,145 +623,6 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
      * @param form
      * @param anasisDataComp
      */
-    @Override
-    protected void createAnalysisParamSection(final ScrolledForm form, Composite anasisDataComp) {
-        analysisParamSection = createSection(form, anasisDataComp,
-                DefaultMessagesImpl.getString("ColumnMasterDetailsPage.AnalysisParameter"), null); //$NON-NLS-1$
-        Composite sectionClient = toolkit.createComposite(analysisParamSection);
-        sectionClient.setLayout(new GridLayout(1, false));
-
-        Composite comp1 = new Composite(sectionClient, SWT.NONE);
-        this.createAnalysisLimitComposite(comp1);
-
-        Composite comp2 = new Composite(sectionClient, SWT.NONE);
-        comp2.setLayout(new GridLayout(2, false));
-        GridDataFactory.fillDefaults().grab(true, true).applyTo(comp2);
-        toolkit.createLabel(comp2, DefaultMessagesImpl.getString("ColumnMasterDetailsPage.ExecutionEngine")); //$NON-NLS-1$
-        // MOD zshen:need to use the component with finish indicator Selection.
-        execCombo = new CCombo(comp2, SWT.BORDER);
-        // ~
-        execCombo.setEditable(false);
-
-        for (ExecutionLanguage language : ExecutionLanguage.VALUES) {
-            String temp = language.getLiteral();
-            execCombo.add(temp);
-        }
-        // MOD qiongli 2011-3-17 set DataFilterText disabled except TdColumn.
-        if (analysisHandler.getAnalyzedColumns() != null && !analysisHandler.getAnalyzedColumns().isEmpty()) {
-            ModelElement mod = analysisHandler.getAnalyzedColumns().get(0);
-            TdColumn tdColumn = SwitchHelpers.COLUMN_SWITCH.doSwitch(mod);
-            TdXmlElementType xmlElement = SwitchHelpers.XMLELEMENTTYPE_SWITCH.doSwitch(mod);
-            dataFilterComp.getDataFilterText().setEnabled((xmlElement != null || tdColumn != null) ? true : false);
-            if (xmlElement != null) {
-                setWhereClauseDisabled();
-            } else if (tdColumn == null) {
-                setWhereClauseDisabled();
-                changeExecuteLanguageToJava(true);
-            }
-        }
-        ExecutionLanguage executionLanguage = analysis.getParameters().getExecutionLanguage();
-        // MOD zshen feature 12919 : add allow drill down and max number row component for java engin.
-        final Composite javaEnginSection = createjavaEnginSection(comp2);
-        if (ExecutionLanguage.SQL.equals(executionLanguage)) {
-            javaEnginSection.setVisible(false);
-        }
-        execCombo.setText(executionLanguage.getLiteral());
-        execLang = executionLanguage.getLiteral();
-        // ADD xqliu 2009-08-24 bug 8776
-        treeViewer.setLanguage(ExecutionLanguage.get(executionLanguage.getLiteral()));
-        // ~
-        execCombo.addModifyListener(new ModifyListener() {
-
-            public void modifyText(ModifyEvent e) {
-                // MOD xqliu 2009-08-24 bug 8776
-                execLang = execCombo.getText();
-
-                // MOD zshen 11104 2010-01-27: when have a datePatternFreqIndicator in the
-                // "analyzed Columns",ExecutionLanguage only is Java.
-                if (ExecutionLanguage.SQL.equals(ExecutionLanguage.get(execLang)) && includeDatePatternFreqIndicator()) {
-                    MessageUI.openWarning(DefaultMessagesImpl
-                            .getString("ColumnMasterDetailsPage.DatePatternFreqIndicatorWarning")); //$NON-NLS-1$
-                    execCombo.setText(ExecutionLanguage.JAVA.getLiteral());
-                    execLang = execCombo.getText();
-                    return;
-                }
-                // ~11104
-                // MOD zshen feature 12919 : hidden or display parameter of java engin.
-                if (ExecutionLanguage.SQL.equals(ExecutionLanguage.get(execLang))) {
-                    javaEnginSection.setVisible(false);
-                } else {
-                    javaEnginSection.setVisible(true);
-                }
-                // 12919~
-                setDirty(true);
-                treeViewer.setLanguage(ExecutionLanguage.get(execLang));
-                // ~
-            }
-
-        });
-        analysisParamSection.setClient(sectionClient);
-    }
-
-    /**
-     * add zshen feature 12919.
-     */
-    protected Composite createjavaEnginSection(Composite sectionClient) {
-
-        AnalysisParameters anaParameters = analysisHandler.getAnalysis().getParameters();
-        Composite javaEnginSection = toolkit.createComposite(sectionClient);
-        Composite checkSection = toolkit.createComposite(javaEnginSection);
-        Composite numberSection = toolkit.createComposite(javaEnginSection);
-        GridLayout gridLayout = new GridLayout(2, false);
-        gridLayout.marginWidth = 0;
-
-        GridDataFactory.fillDefaults().grab(true, false).span(2, 0).align(SWT.FILL, SWT.BEGINNING).applyTo(javaEnginSection);
-        GridDataFactory.fillDefaults().grab(true, false).span(2, 0).align(SWT.FILL, SWT.BEGINNING).applyTo(checkSection);
-        GridDataFactory.fillDefaults().grab(true, false).span(2, 0).align(SWT.FILL, SWT.BEGINNING).applyTo(numberSection);
-
-        javaEnginSection.setLayout(gridLayout);
-        checkSection.setLayout(gridLayout);
-        numberSection.setLayout(gridLayout);
-        toolkit.createLabel(checkSection, DefaultMessagesImpl.getString("ColumnMasterDetailsPage.allowDrillDownLabel"));//$NON-NLS-1$
-        drillDownCheck = toolkit.createButton(checkSection, "", SWT.CHECK);//$NON-NLS-1$
-        drillDownCheck.setSelection(true);
-        drillDownCheck.setSelection(anaParameters.isStoreData());
-        drillDownCheck.addSelectionListener(new SelectionAdapter() {
-
-            @Override
-            public void widgetSelected(SelectionEvent e) {
-                setDirty(true);
-            }
-
-        });
-        Label maxNumLabel = toolkit.createLabel(numberSection,
-                DefaultMessagesImpl.getString("ColumnMasterDetailsPage.maxNumberLabel")); //$NON-NLS-1$
-        maxNumText = toolkit.createText(numberSection, null, SWT.BORDER);
-        maxNumText.setText(String.valueOf(anaParameters.getMaxNumberRows()));
-        maxNumText.addModifyListener(new ModifyListener() {
-
-            public void modifyText(ModifyEvent e) {
-                setDirty(true);
-            }
-
-        });
-        maxNumText.addVerifyListener(new VerifyListener() {
-
-            public void verifyText(VerifyEvent e) {
-                String inputValue = e.text;
-                Pattern pattern = Pattern.compile("^[0-9]"); //$NON-NLS-1$
-                char[] charArray = inputValue.toCharArray();
-                for (char c : charArray) {
-                    if (!pattern.matcher(String.valueOf(c)).matches()) {
-                        e.doit = false;
-                    }
-                }
-            }
-        });
-        GridDataFactory.fillDefaults().grab(true, false).applyTo(maxNumText);
-        GridDataFactory.fillDefaults().align(SWT.BEGINNING, SWT.BEGINNING).applyTo(maxNumLabel);
-        GridDataFactory.fillDefaults().grab(true, false).align(SWT.FILL, SWT.BEGINNING).applyTo(drillDownCheck);
-        return javaEnginSection;
-    }
 
     /**
      * ADD xqliu 2009-08-24 bug 8776.
@@ -1153,35 +989,13 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
      * 
      * @return whether have a datePatternFreqIndicator in the "analyzed Columns"
      */
-    public boolean includeDatePatternFreqIndicator() {
+    protected boolean includeDatePatternFreqIndicator() {
         for (ModelElementIndicator modelElementIndicator : this.treeViewer.getModelElementIndicator()) {
             if (modelElementIndicator.contains(IndicatorEnum.DatePatternFreqIndicatorEnum)) {
                 return true;
             }
         }
         return false;
-    }
-
-    /**
-     * DOC zshen Comment method "chageExecuteLanguageToJava". change ExecutionLanuage to Java.
-     */
-    public void changeExecuteLanguageToJava(boolean isDisabled) {
-        if (this.execCombo == null) {
-            return;
-        }
-        if (!(ExecutionLanguage.JAVA.getLiteral().equals(this.execLang))) {
-            int i = 0;
-            for (ExecutionLanguage language : ExecutionLanguage.VALUES) {
-                if (language.compareTo(ExecutionLanguage.JAVA) == 0) {
-                    this.execCombo.select(i);
-                } else {
-                    i++;
-                }
-            }
-        }
-        if (isDisabled) {
-            execCombo.setEnabled(false);
-        }
     }
 
     /**
@@ -1239,4 +1053,15 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
     public ExecutionLanguage getUIExecuteEngin() {
         return ExecutionLanguage.get(execCombo.getText());
     }
+
+    /**
+     * set the Language To TreeViewer.
+     * 
+     * @param executionLanguage
+     */
+    protected void setLanguageToTreeViewer(ExecutionLanguage executionLanguage) {
+        treeViewer.setLanguage(executionLanguage);
+
+    }
+
 }

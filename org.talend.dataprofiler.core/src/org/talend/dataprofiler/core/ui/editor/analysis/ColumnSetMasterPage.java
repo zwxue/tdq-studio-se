@@ -19,7 +19,6 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.regex.Pattern;
 
 import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.EList;
@@ -28,16 +27,11 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.CCombo;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.events.ControlAdapter;
 import org.eclipse.swt.events.ControlEvent;
-import org.eclipse.swt.events.ModifyEvent;
-import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.VerifyEvent;
-import org.eclipse.swt.events.VerifyListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -45,7 +39,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.forms.IManagedForm;
@@ -87,9 +80,7 @@ import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
 import org.talend.dataprofiler.core.ui.editor.preview.model.ChartTypeStatesOperator;
 import org.talend.dataprofiler.core.ui.editor.preview.model.states.IChartTypeStates;
 import org.talend.dataprofiler.core.ui.pref.EditorPreferencePage;
-import org.talend.dataprofiler.core.ui.utils.MessageUI;
 import org.talend.dataquality.analysis.Analysis;
-import org.talend.dataquality.analysis.AnalysisParameters;
 import org.talend.dataquality.analysis.ExecutionLanguage;
 import org.talend.dataquality.domain.Domain;
 import org.talend.dataquality.exception.DataprofilerCoreException;
@@ -128,8 +119,6 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
 
     IndicatorsComp indicatorsViewer;
 
-    DataFilterComp dataFilterComp;
-
     ColumnSetAnalysisHandler columnSetAnalysisHandler;
 
     private SimpleStatIndicator simpleStatIndicator;
@@ -150,22 +139,11 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
 
     private Section analysisColSection;
 
-    private Section dataFilterSection;
-
     private Section previewSection;
 
     private Section indicatorsSection;
 
     private ModelElementIndicator[] currentModelElementIndicators;
-
-    // MOD qiongli 2011-1-25.add java engine for columnSet.
-    private String execLang;
-
-    private CCombo execCombo;
-
-    private Button drillDownCheck;
-
-    private Text maxNumText;
 
     private Button storeDataCheck;
 
@@ -289,7 +267,10 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
 
         createDataFilterSection(form, topComp);
 
-        createAnalysisParamSection(form, topComp);
+        Composite exeEngineComp = createExecuteEngineSection(form, topComp, analyzedColumns, columnSetAnalysisHandler
+                .getAnalysis().getParameters());
+
+        createStoreDataCheck(exeEngineComp);
 
         if (!EditorPreferencePage.isHideGraphics()) {
             previewComp = toolkit.createComposite(sForm);
@@ -596,95 +577,6 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
     }
 
     /**
-     * DOC qiongli Comment method "createAnalysisParamSection".
-     * 
-     * @param form
-     * @param anasisDataComp
-     */
-    @Override
-    protected void createAnalysisParamSection(final ScrolledForm form, Composite anasisDataComp) {
-        analysisParamSection = createSection(form, anasisDataComp,
-                DefaultMessagesImpl.getString("ColumnMasterDetailsPage.AnalysisParameter"), null); //$NON-NLS-1$
-        Composite sectionClient = toolkit.createComposite(analysisParamSection);
-        sectionClient.setLayout(new GridLayout(1, false));
-
-        Composite comp1 = new Composite(sectionClient, SWT.NONE);
-        this.createAnalysisLimitComposite(comp1);
-
-        Composite comp2 = new Composite(sectionClient, SWT.NONE);
-        comp2.setLayout(new GridLayout(2, false));
-        GridDataFactory.fillDefaults().grab(true, true).applyTo(comp2);
-        toolkit.createLabel(comp2, DefaultMessagesImpl.getString("ColumnMasterDetailsPage.ExecutionEngine")); //$NON-NLS-1$
-        // MOD zshen:need to use the component with finish indicator Selection.
-        execCombo = new CCombo(comp2, SWT.BORDER);
-        // ~
-        execCombo.setEditable(false);
-
-        for (ExecutionLanguage language : ExecutionLanguage.VALUES) {
-            String temp = language.getLiteral();
-            execCombo.add(temp);
-        }
-        ExecutionLanguage executionLanguage = analysis.getParameters().getExecutionLanguage();
-        // MOD qiongli 2011-2-28,feature 19192.create 'storeDataSection' only for sql engine.
-        final Composite javaEnginSection = createjavaEnginSection(comp2);
-        final Composite storeDataSection = createStoreDataCheck(comp2);
-        // MOD qiongli 2011-3-15 set DataFilterText disabled except TdColumn.
-        if (analyzedColumns != null && !analyzedColumns.isEmpty()) {
-            TdColumn tdColumn = SwitchHelpers.COLUMN_SWITCH.doSwitch(analyzedColumns.get(0));
-            dataFilterComp.getDataFilterText().setEnabled(tdColumn != null);
-            if (tdColumn == null) {
-                changeExecuteLanguageToJava(true);
-            }
-        }
-        if (ExecutionLanguage.SQL.equals(executionLanguage)) {
-            javaEnginSection.setVisible(false);
-            GridData data = (GridData) javaEnginSection.getLayoutData();
-            data.heightHint = 10;
-            javaEnginSection.setLayoutData(data);
-            analysisParamSection.setExpanded(true);
-        }
-        execCombo.setText(executionLanguage.getLiteral());
-        execLang = executionLanguage.getLiteral();
-        treeViewer.setLanguage(ExecutionLanguage.get(executionLanguage.getLiteral()));
-        // ~
-        execCombo.addModifyListener(new ModifyListener() {
-
-            public void modifyText(ModifyEvent e) {
-                execLang = execCombo.getText();
-                // when have a datePatternFreqIndicator in the "analyzed Columns",ExecutionLanguage only is Java.
-                if (ExecutionLanguage.SQL.equals(ExecutionLanguage.get(execLang)) && includeDatePatternFreqIndicator()) {
-                    MessageUI.openWarning(DefaultMessagesImpl
-                            .getString("ColumnMasterDetailsPage.DatePatternFreqIndicatorWarning")); //$NON-NLS-1$
-                    execCombo.setText(ExecutionLanguage.JAVA.getLiteral());
-                    execLang = execCombo.getText();
-                    return;
-                }
-                // hidden or display parameter of java engin.
-                if (ExecutionLanguage.SQL.equals(ExecutionLanguage.get(execLang))) {
-                    javaEnginSection.setVisible(false);
-                    GridData data = (GridData) javaEnginSection.getLayoutData();
-                    data.heightHint = 10;
-                    javaEnginSection.setLayoutData(data);
-                    analysisParamSection.setExpanded(true);
-                } else {
-                    javaEnginSection.setVisible(true);
-                    GridData data = (GridData) javaEnginSection.getLayoutData();
-                    data.heightHint = 100;
-                    javaEnginSection.setLayoutData(data);
-                    analysisParamSection.setExpanded(true);
-                }
-                // 12919~
-                setDirty(true);
-                treeViewer.setLanguage(ExecutionLanguage.get(execLang));
-                // ~
-            }
-
-        });
-
-        analysisParamSection.setClient(sectionClient);
-    }
-
-    /**
      * DOC qiongli Comment method "createStoreDataCheck".
      * 
      * @param sectionClient
@@ -710,69 +602,14 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
     }
 
     /**
-     * DOC qiongli Comment method "createjavaEnginSection".
+     * DOC yyin Comment method "setStoreData".
      * 
-     * @param sectionClient
-     * @return
+     * @param selection
      */
-    protected Composite createjavaEnginSection(Composite sectionClient) {
-        AnalysisParameters anaParameters = columnSetAnalysisHandler.getAnalysis().getParameters();
-        Composite javaEnginSection = toolkit.createComposite(sectionClient);
-        Composite checkSection = toolkit.createComposite(javaEnginSection);
-        Composite numberSection = toolkit.createComposite(javaEnginSection);
-        GridLayout gridLayout = new GridLayout(2, false);
-        gridLayout.marginWidth = 0;
-
-        GridDataFactory.fillDefaults().grab(true, false).span(2, 0).align(SWT.FILL, SWT.BEGINNING).applyTo(javaEnginSection);
-        GridDataFactory.fillDefaults().grab(true, false).span(2, 0).align(SWT.FILL, SWT.BEGINNING).applyTo(checkSection);
-        GridDataFactory.fillDefaults().grab(true, false).span(2, 0).align(SWT.FILL, SWT.BEGINNING).applyTo(numberSection);
-
-        javaEnginSection.setLayout(gridLayout);
-        checkSection.setLayout(gridLayout);
-        numberSection.setLayout(gridLayout);
-        toolkit.createLabel(checkSection, DefaultMessagesImpl.getString("ColumnMasterDetailsPage.allowDrillDownLabel"));
-        drillDownCheck = toolkit.createButton(checkSection, "", SWT.CHECK);
-        drillDownCheck.setSelection(true);
-        drillDownCheck.setSelection(anaParameters.isStoreData());
-        drillDownCheck.addSelectionListener(new SelectionAdapter() {
-
-            @Override
-            public void widgetSelected(SelectionEvent e) {
-                storeDataCheck.setSelection(drillDownCheck.getSelection());
-                simpleStatIndicator.setStoreData(drillDownCheck.getSelection());
-                columnSetAnalysisHandler.getAnalysis().getParameters().setStoreData(drillDownCheck.getSelection());
-                setDirty(true);
-            }
-
-        });
-        Label maxNumLabel = toolkit.createLabel(numberSection,
-                DefaultMessagesImpl.getString("ColumnMasterDetailsPage.maxNumberLabel"));
-        maxNumText = toolkit.createText(numberSection, null, SWT.BORDER);
-        maxNumText.setText(String.valueOf(anaParameters.getMaxNumberRows()));
-        maxNumText.addModifyListener(new ModifyListener() {
-
-            public void modifyText(ModifyEvent e) {
-                setDirty(true);
-            }
-
-        });
-        maxNumText.addVerifyListener(new VerifyListener() {
-
-            public void verifyText(VerifyEvent e) {
-                String inputValue = e.text;
-                Pattern pattern = Pattern.compile("^[0-9]"); //$NON-NLS-1$
-                char[] charArray = inputValue.toCharArray();
-                for (char c : charArray) {
-                    if (!pattern.matcher(String.valueOf(c)).matches()) {
-                        e.doit = false;
-                    }
-                }
-            }
-        });
-        GridDataFactory.fillDefaults().grab(true, false).applyTo(maxNumText);
-        GridDataFactory.fillDefaults().align(SWT.BEGINNING, SWT.BEGINNING).applyTo(maxNumLabel);
-        GridDataFactory.fillDefaults().grab(true, false).align(SWT.FILL, SWT.BEGINNING).applyTo(drillDownCheck);
-        return javaEnginSection;
+    protected void setStoreData(boolean selection) {
+        storeDataCheck.setSelection(selection);
+        simpleStatIndicator.setStoreData(selection);
+        columnSetAnalysisHandler.getAnalysis().getParameters().setStoreData(selection);
     }
 
     /**
@@ -1051,7 +888,8 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
      * 
      * @return
      */
-    private boolean includeDatePatternFreqIndicator() {
+    @Override
+    protected boolean includeDatePatternFreqIndicator() {
         for (ModelElementIndicator modelElementIndicator : this.treeViewer.getModelElementIndicator()) {
             if (modelElementIndicator.contains(IndicatorEnum.DatePatternFreqIndicatorEnum)) {
                 return true;
@@ -1069,28 +907,6 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
         return this.dataFilterComp;
     }
 
-    /**
-     * DOC qiongli Comment method "chageExecuteLanguageToJava".
-     */
-    public void changeExecuteLanguageToJava(boolean isDisabled) {
-        if (execCombo == null) {
-            return;
-        }
-        if (!(ExecutionLanguage.JAVA.getLiteral().equals(this.execLang))) {
-            int i = 0;
-            for (ExecutionLanguage language : ExecutionLanguage.VALUES) {
-                if (language.compareTo(ExecutionLanguage.JAVA) == 0) {
-                    execCombo.select(i);
-                } else {
-                    i++;
-                }
-            }
-        }
-        if (isDisabled) {
-            execCombo.setEnabled(false);
-        }
-    }
-
     @Override
     public ExecutionLanguage getUIExecuteEngin() {
         return ExecutionLanguage.get(execCombo.getText());
@@ -1103,6 +919,17 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
      */
     public void removeItem(IndicatorUnit indicatorUnit) {
         this.treeViewer.removeItemByUnit(indicatorUnit);
+
+    }
+
+    /**
+     * set the Language To TreeViewer.
+     * 
+     * @param executionLanguage
+     */
+    @Override
+    protected void setLanguageToTreeViewer(ExecutionLanguage executionLanguage) {
+        treeViewer.setLanguage(executionLanguage);
 
     }
 }

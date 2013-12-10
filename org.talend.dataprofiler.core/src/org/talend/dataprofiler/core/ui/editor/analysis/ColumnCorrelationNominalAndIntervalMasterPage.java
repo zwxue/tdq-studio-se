@@ -103,8 +103,6 @@ public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnaly
 
     AnalysisColumnNominalIntervalTreeViewer treeViewer;
 
-    DataFilterComp dataFilterComp;
-
     ColumnCorrelationAnalysisHandler correlationAnalysisHandler;
 
     private ColumnSetMultiValueIndicator columnSetMultiIndicator;
@@ -124,8 +122,6 @@ public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnaly
     private EList<ModelElement> analyzedColumns;
 
     private Section analysisColSection;
-
-    private Section dataFilterSection;
 
     private Section previewSection;
 

@@ -84,16 +84,17 @@ public class PatternMouseAdapter extends MouseAdapter {
 
         // MOD qiongli 2011-6-16 bug 21768,pattern in columnset just support java engine.
         AnalysisType analysisType = analysis.getParameters().getAnalysisType();
-        ExecutionLanguage executionLanguage = analysis.getParameters().getExecutionLanguage();
+        // MOD yyin 20131204 TDQ-8413, use the current selected value to judge, no need to save the analysis
+        String executionLanguage = masterPage.getCurrentExecuteLanguage();
         if (AnalysisType.COLUMN_SET.equals(analysisType)) {
-            if (ExecutionLanguage.SQL.equals(executionLanguage)) {
+            if (ExecutionLanguage.SQL.getLiteral().equals(executionLanguage)) {
                 MessageUI.openWarning(DefaultMessagesImpl.getString("PatternMouseAdapter.noSupportForSqlEngine"));
                 return;
-            } else if (ExecutionLanguage.JAVA.equals(executionLanguage)) {
+            } else if (ExecutionLanguage.JAVA.getLiteral().equals(executionLanguage)) {
                 patternFolderNode = RepositoryNodeHelper.getLibrariesFolderNode(EResourceConstant.PATTERN_REGEX);
             }
         } else if (AnalysisType.MULTIPLE_COLUMN.equals(analysisType)) {
-            if (ExecutionLanguage.JAVA.equals(executionLanguage)) {
+            if (ExecutionLanguage.JAVA.getLiteral().equals(executionLanguage)) {
                 patternFolderNode = RepositoryNodeHelper.getLibrariesFolderNode(EResourceConstant.PATTERN_REGEX);
             }
         }
