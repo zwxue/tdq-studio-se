@@ -632,4 +632,14 @@ public class TOPRepositoryService implements ITDQRepositoryService {
 
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.core.ITDQRepositoryService#updateAliasInSQLExplorer(java.sql.Connection, java.lang.String)
+     */
+    public void updateAliasInSQLExplorer(ConnectionItem connectionItem, String oldConnName) {
+        Connection connection = connectionItem.getConnection();
+        CWMPlugin.getDefault().updateConnetionAliasByName(connection, oldConnName);
+    }
+
 }
