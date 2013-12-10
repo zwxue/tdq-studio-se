@@ -96,7 +96,8 @@ public class FunctionalDependencyExecutor extends ColumnAnalysisSqlExecutor {
             ok = traceError(e.getMessage());
         } finally {
             ReturnCode rc = closeConnection(analysis, connection);
-            ok = rc.isOk();
+            // MOD TDQ-8388 ok status should not be overwrite by the close return code.
+            ok = ok && rc.isOk();
         }
         return ok;
     }
@@ -109,7 +110,8 @@ public class FunctionalDependencyExecutor extends ColumnAnalysisSqlExecutor {
 
         } catch (SQLException e) {
             log.error(e, e);
-            return false;
+            // MOD TDQ-8388 return the exact error message
+            throw new AnalysisExecutionException(e.getMessage());
         }
 
         return true;
