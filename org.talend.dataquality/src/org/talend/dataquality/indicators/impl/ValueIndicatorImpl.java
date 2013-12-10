@@ -5,6 +5,7 @@
  */
 package org.talend.dataquality.indicators.impl;
 
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -257,6 +258,12 @@ public class ValueIndicatorImpl extends IndicatorImpl implements ValueIndicator 
                 log.error("Value is null of " + this.getName() + " !!");
                 return false;
             }
+            // ADD msjian TDQ-5673 2013-12-5: format the Timestamp type display
+            if (objects.get(0)[0] instanceof java.sql.Timestamp) {
+                SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                med = df.format(objects.get(0)[0]);
+            }
+            // TDQ-5673~
             this.setValue(med);
             // set datatype here
             this.setDatatype(this.getColumnType());
