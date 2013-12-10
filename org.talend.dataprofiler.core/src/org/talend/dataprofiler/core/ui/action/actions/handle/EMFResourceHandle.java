@@ -134,12 +134,19 @@ public class EMFResourceHandle implements IDuplicateHandle {
                 if (elementWriter != null) {
                     elementWriter.create(newObject, folder);
 
+                    boolean isNeedToSaveNewObject = false;
                     for (Dependency dependency : modelElement.getClientDependency()) {
                         for (ModelElement supplyier : dependency.getSupplier()) {
                             TypedReturnCode<Dependency> rc = DependenciesHandler.getInstance().setUsageDependencyOn(newObject,
                                     supplyier);
                             EMFSharedResources.getInstance().saveResource(rc.getObject().eResource());
+                            isNeedToSaveNewObject = true;
                         }
+                    }
+                    // TDQ-6298 if called 'setUsageDependencyOn',should save the newObject too ,so that the dependecy
+                    // persistence into the newObject file.
+                    if (isNeedToSaveNewObject) {
+                        EMFSharedResources.getInstance().saveResource(newObject.eResource());
                     }
 
                     URI uri;
