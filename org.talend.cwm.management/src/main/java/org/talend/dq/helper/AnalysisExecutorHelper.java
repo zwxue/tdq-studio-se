@@ -24,11 +24,13 @@ import org.apache.log4j.Logger;
 import org.eclipse.emf.ecore.EObject;
 import org.talend.commons.utils.StringUtils;
 import org.talend.core.language.LanguageManager;
+import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
 import org.talend.core.model.metadata.builder.connection.DelimitedFileConnection;
 import org.talend.core.model.metadata.builder.connection.MetadataTable;
 import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.helper.CatalogHelper;
 import org.talend.cwm.helper.ColumnSetHelper;
+import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.SchemaHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.management.i18n.Messages;
@@ -80,7 +82,23 @@ public final class AnalysisExecutorHelper {
             schemaName = ColumnSetHelper.getTableOwner(columnSetOwner);
         }
         // ~11934
-        return dbmsLanguage.toQualifiedName(catalogName, schemaName, tableName);
+        DatabaseConnection dbConn = ConnectionHelper.getTdDataProvider(SwitchHelpers.COLUMN_SWITCH.doSwitch(analyzedColumn));
+        if (dbConn.isContextMode()) {
+            return getTableNameFromContext(dbConn, catalogName, schemaName, tableName, dbmsLanguage);
+        } else {
+            return dbmsLanguage.toQualifiedName(catalogName, schemaName, tableName);
+        }
+    }
+
+    private static String getTableNameFromContext(DatabaseConnection dbConn, String catalogName, String schemaName,
+            String tableName, DbmsLanguage dbmsLanguage) {
+        String catalogNameFromContext = dbmsLanguage.getCatalogNameFromContext(dbConn);
+        String schemaNameFromContext = dbmsLanguage.getSchemaNameFromContext(dbConn);
+        String cName = catalogNameFromContext != null && catalogNameFromContext.trim().length() > 0 ? catalogNameFromContext
+                : catalogName;
+        String sName = schemaNameFromContext != null && schemaNameFromContext.trim().length() > 0 ? schemaNameFromContext
+                : schemaName;
+        return dbmsLanguage.toQualifiedName(cName, sName, tableName);
     }
 
     public static ModelElement findColumnSetOwner(ModelElement column) {
