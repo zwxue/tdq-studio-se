@@ -322,7 +322,8 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
                     // to ColumnIndicatorList
                     boolean isOld = false;
                     for (ModelElementIndicator oldColumn : modelElementIndicators) {
-                        if (oldColumn.getElementName().equals(column.getElementName())) {
+                        //MOD TDQ-7724 yyin 20131210 use node insteadof only use name to judge
+                        if (oldColumn.getModelElementRepositoryNode().equals(column.getModelElementRepositoryNode())) {
                             indicatorList.add(oldColumn);
                             isOld = true;
                             break;
