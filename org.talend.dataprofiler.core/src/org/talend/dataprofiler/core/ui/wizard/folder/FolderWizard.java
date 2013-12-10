@@ -86,41 +86,46 @@ public class FolderWizard extends Wizard {
 
             @Override
             protected void run() throws LoginException, PersistenceException {
-                 String folderName = mainPage.getName();
+                String folderName = mainPage.getName();
 
                 if (defaultLabel == null) {
                     IRepositoryNode currentSelectionNode = CorePlugin.getDefault().getCurrentSelectionNode();
-                     IFolder folder = ResourcesPlugin.getWorkspace().getRoot().getFolder(path);
-                     IFolder newFolder = folder.getFolder(folderName);
-                    if (ResourceManager.getConnectionFolder().getFullPath().isPrefixOf(folder.getFullPath())) {
-                        ProxyRepositoryFactory.getInstance().createFolder(ERepositoryObjectType.METADATA_CONNECTIONS,
-                                path.makeRelativeTo(ResourceManager.getConnectionFolder().getFullPath()), folderName);
-                    } else if (ResourceManager.getMDMConnectionFolder().getFullPath().isPrefixOf(folder.getFullPath())) {
-                        ProxyRepositoryFactory.getInstance().createFolder(ERepositoryObjectType.METADATA_MDMCONNECTION,
-                                path.makeRelativeTo(ResourceManager.getMDMConnectionFolder().getFullPath()), folderName);
-                    } else {
-                        try {
+                    IFolder folder = ResourcesPlugin.getWorkspace().getRoot().getFolder(path);
+                    IFolder newFolder = folder.getFolder(folderName);
+                    try {
+                        if (ResourceManager.getConnectionFolder().getFullPath().isPrefixOf(folder.getFullPath())) {
+                            // when create folder under dbconnections
+                            ProxyRepositoryFactory.getInstance().createFolder(ERepositoryObjectType.METADATA_CONNECTIONS,
+                                    path.makeRelativeTo(ResourceManager.getConnectionFolder().getFullPath()), folderName);
+                        } else if (ResourceManager.getMDMConnectionFolder().getFullPath().isPrefixOf(folder.getFullPath())) {
+                            // when create folder under MDMconnections
+                            ProxyRepositoryFactory.getInstance().createFolder(ERepositoryObjectType.METADATA_MDMCONNECTION,
+                                    path.makeRelativeTo(ResourceManager.getMDMConnectionFolder().getFullPath()), folderName);
+                        } else {
+                            // when create folder under other nodes
                             newFolder.create(false, true, null);
-                            folder.refreshLocal(IResource.DEPTH_INFINITE, null);
-                            DQRespositoryView findView = CorePlugin.getDefault().getRepositoryView();
-                            if (findView != null) {
-                                findView.getCommonViewer().setExpandedState(newFolder, true);
-                                findView.getCommonViewer().refresh(currentSelectionNode);
-                            }
-                            // MOD gdbu 2011-11-18 TDQ-3969 : after create folder re-filter the tree , to create a new
-                            // list .
-                            if (DQRepositoryNode.isOnFilterring()) {
-                                RepositoryNodeHelper.fillTreeList(null);
-                                RepositoryNodeHelper.setFilteredNode(RepositoryNodeHelper.getRootNode(
-                                        ERepositoryObjectType.TDQ_DATA_PROFILING, true));
-                            }
-                        } catch (CoreException e) {
-                            MessageDialog.openError(getShell(), DefaultMessagesImpl.getString("FolderWizard.error"), //$NON-NLS-1$
-                                    DefaultMessagesImpl.getString("FolderWizard.folderCreatedError")); //$NON-NLS-1$
-                            ExceptionHandler.process(e);
-                            returncode.setOk(false);
-                            return;
                         }
+
+                        // do refresh
+                        folder.refreshLocal(IResource.DEPTH_INFINITE, null);
+                        DQRespositoryView findView = CorePlugin.getDefault().getRepositoryView();
+                        if (findView != null) {
+                            findView.getCommonViewer().setExpandedState(newFolder, true);
+                            findView.getCommonViewer().refresh(currentSelectionNode);
+                        }
+                        // MOD gdbu 2011-11-18 TDQ-3969 : after create folder re-filter the tree , to create a new
+                        // list .
+                        if (DQRepositoryNode.isOnFilterring()) {
+                            RepositoryNodeHelper.fillTreeList(null);
+                            RepositoryNodeHelper.setFilteredNode(RepositoryNodeHelper.getRootNode(
+                                    ERepositoryObjectType.TDQ_DATA_PROFILING, true));
+                        }
+                    } catch (CoreException e) {
+                        MessageDialog.openError(getShell(), DefaultMessagesImpl.getString("FolderWizard.error"), //$NON-NLS-1$
+                                DefaultMessagesImpl.getString("FolderWizard.folderCreatedError")); //$NON-NLS-1$
+                        ExceptionHandler.process(e);
+                        returncode.setOk(false);
+                        return;
                     }
                 }
 
