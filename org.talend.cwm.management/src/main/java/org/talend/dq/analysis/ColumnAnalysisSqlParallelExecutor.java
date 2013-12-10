@@ -17,6 +17,7 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 
+import org.talend.cwm.management.i18n.Messages;
 import org.talend.dataquality.indicators.CompositeIndicator;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dq.analysis.connpool.TdqAnalysisConnectionPool;
@@ -78,6 +79,7 @@ public final class ColumnAnalysisSqlParallelExecutor extends ColumnAnalysisSqlEx
      * run analysis when SqlParallelExecutor.
      */
     public void run() {
+        Expression query = null;
         try {
             // skip composite indicators that do not require a sql execution
             if (indicator instanceof CompositeIndicator) {
@@ -93,10 +95,9 @@ public final class ColumnAnalysisSqlParallelExecutor extends ColumnAnalysisSqlEx
                 }
             }
 
-            Expression query = dbms().getInstantiatedExpression(indicator);
+            query = dbms().getInstantiatedExpression(indicator);
             if (query == null || !executeQuery(indicator, connection, query.getBody())) {
-                ok = traceError("Query not executed for indicator: \"" + indicator.getName() + "\" "//$NON-NLS-1$//$NON-NLS-2$
-                        + ((query == null) ? "query is null" : "SQL query: " + query.getBody()));//$NON-NLS-1$//$NON-NLS-2$
+                ok = traceError(getErrorMessageForQuery(query));
             } else {
                 // set computation done
                 indicator.setComputed(true);
@@ -107,16 +108,19 @@ public final class ColumnAnalysisSqlParallelExecutor extends ColumnAnalysisSqlEx
                 MultiMapHelper.addUniqueObjectToListMap(indicator.getAnalyzedElement(), indicator, elementToIndicator);
             }
         } catch (SQLException e) {
+            ok = traceError(getErrorMessageForQuery(query));
             this.setException(e);
         } finally {
-            // MOD gdbu 2011-6-10 bug : 21273
-            // connPool.returnConnection(connection); // return the connection in the ExecutiveAnalysisJob.run()
-            // ~21273
-
             // return the connection after run
             if (POOLED_CONNECTION) {
                 TdqAnalysisConnectionPool.returnPooledConnection(cachedAnalysis, connection);
             }
         }
+    }
+
+    private String getErrorMessageForQuery(Expression query) {
+        return Messages.getString("ColumnAnalysisSqlParallelExecutor.QueryNotExecute", indicator.getName()) + "\" "//$NON-NLS-1$
+                + ((query == null) ? Messages.getString("ColumnAnalysisSqlParallelExecutor.QueryIsNull") : Messages.getString(
+                        "ColumnAnalysisSqlParallelExecutor.SQLQuery", query.getBody()));
     }
 }
