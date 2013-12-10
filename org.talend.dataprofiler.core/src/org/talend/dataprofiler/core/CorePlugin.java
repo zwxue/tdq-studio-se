@@ -69,6 +69,7 @@ import org.talend.core.model.metadata.builder.ConvertionHelper;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
 import org.talend.core.model.metadata.builder.database.JavaSqlFactory;
+import org.talend.core.model.metadata.builder.util.MetadataConnectionUtils;
 import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.properties.Item;
 import org.talend.core.model.properties.Property;
@@ -229,11 +230,12 @@ public class CorePlugin extends AbstractUIPlugin {
         if (dbConn != null) {
             dbType = dbConn.getDatabaseType();
         }
-
+        // MOD qiongli 2013-12-9,TDQ-8442,if the database type is not supported on DQ side,ruturn null.
+        List<String> tdqSupportDBType = MetadataConnectionUtils.getTDQSupportDBTemplate();
         String username = JavaSqlFactory.getUsername(tdDataProvider);
         boolean notSupport = (EDatabaseTypeName.HIVE.getXmlName().equalsIgnoreCase(dbType) && !"STANDALONE".equals(dbConn //$NON-NLS-1$
                 .getDbVersionString())) || EDatabaseTypeName.MSSQL.getDisplayName().equalsIgnoreCase(dbType)
-                && (username == null || PluginConstant.EMPTY_STRING.equals(username));
+                && (username == null || PluginConstant.EMPTY_STRING.equals(username)) || !tdqSupportDBType.contains(dbType);
         if (notSupport) {
             MessageUI.openWarning(DefaultMessagesImpl.getString("CorePlugin.cantPreview")); //$NON-NLS-1$
             return null;
