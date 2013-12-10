@@ -17,6 +17,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 import org.apache.commons.lang.StringUtils;
+import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
 import org.talend.utils.ProductVersion;
 
 /**
@@ -130,5 +131,27 @@ public class SQLiteDbmsLanguage extends DbmsLanguage {
         Statement statement = connection.createStatement();
         statement.setFetchSize(fetchSize);
         return statement;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dq.dbms.DbmsLanguage#getCatalogNameFromContext(org.talend.core.model.metadata.builder.connection.
+     * DatabaseConnection)
+     */
+    @Override
+    public String getCatalogNameFromContext(DatabaseConnection dbConn) {
+        return null;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dq.dbms.DbmsLanguage#getSchemaNameFromContext(org.talend.core.model.metadata.builder.connection.
+     * DatabaseConnection)
+     */
+    @Override
+    public String getSchemaNameFromContext(DatabaseConnection dbConn) {
+        return null;
     }
 }

@@ -14,6 +14,7 @@ package org.talend.dq.dbms;
 
 import java.util.regex.Matcher;
 
+import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
 import org.talend.dataquality.PluginConstant;
 import org.talend.utils.ProductVersion;
 
@@ -133,5 +134,16 @@ public class TeradataDbmsLanguage extends DbmsLanguage {
     public String getTopNQuery(String query, int n) {
         Matcher m = SELECT_PATTERN.matcher(query);
         return m.replaceFirst("SELECT TOP " + n + PluginConstant.SPACE_STRING); //$NON-NLS-1$ 
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dq.dbms.DbmsLanguage#getCatalogNameFromContext(org.talend.core.model.metadata.builder.connection.
+     * DatabaseConnection)
+     */
+    @Override
+    public String getCatalogNameFromContext(DatabaseConnection dbConn) {
+        return null;
     }
 }

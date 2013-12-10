@@ -13,6 +13,7 @@
 package org.talend.dq.dbms;
 
 import org.apache.commons.lang.StringUtils;
+import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
 import org.talend.dataquality.indicators.DateGrain;
 import org.talend.utils.ProductVersion;
 
@@ -175,4 +176,14 @@ public class MySQLDbmsLanguage extends DbmsLanguage {
         return false;
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dq.dbms.DbmsLanguage#getSchemaNameFromContext(org.talend.core.model.metadata.builder.connection.
+     * DatabaseConnection)
+     */
+    @Override
+    public String getSchemaNameFromContext(DatabaseConnection dbConn) {
+        return null;
+    }
 }
