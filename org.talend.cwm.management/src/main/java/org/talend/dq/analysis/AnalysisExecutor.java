@@ -144,9 +144,9 @@ public abstract class AnalysisExecutor implements IAnalysisExecutor {
         // --- set metadata information of analysis
         // MOD TDQ-8374 when the setExecutionNumberInAnalysisResult return message is null, should not make the null
         // overwrite the current error messages
-        String resultMessage = AnalysisExecutorHelper.setExecutionNumberInAnalysisResult(analysis, ok, isLowMemory, usedMemory);
-        if (resultMessage != null) {
-            this.errorMessage = resultMessage;
+        AnalysisExecutorHelper.setExecutionNumberInAnalysisResult(analysis, ok);
+        if (isLowMemory) {
+            errorMessage = Messages.getString("Evaluator.OutOfMomory", usedMemory);//$NON-NLS-1$
         }
         AnalysisExecutorHelper.setExecuteErrorMessage(analysis, errorMessage);
 

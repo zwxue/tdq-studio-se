@@ -272,25 +272,19 @@ public final class AnalysisExecutorHelper {
     }
 
     /**
-     * setExecutionNumberInAnalysisResult".
+     * set the execution number of the analysis, if the running result is ok
      * 
-     * @param analysis
-     * @return error message if any
+     * @param analysis - which need to update the execution number
+     * @param isRunAnaResultok - the running result of the analysis is ok or not
      */
-    public static String setExecutionNumberInAnalysisResult(Analysis analysis, boolean ok, boolean isLowMemory, long usedMemory) {
+    public static void setExecutionNumberInAnalysisResult(Analysis analysis, boolean isRunAnaResultok) {
         final ExecutionInformations resultMetadata = analysis.getResults().getResultMetadata();
-        String errorMessage = null;
-        resultMetadata.setLastRunOk(ok);
+        resultMetadata.setLastRunOk(isRunAnaResultok);
         int executionNumber = resultMetadata.getExecutionNumber() + 1;
         resultMetadata.setExecutionNumber(executionNumber);
-        if (isLowMemory) {
-            errorMessage = Messages.getString("Evaluator.OutOfMomory", usedMemory);//$NON-NLS-1$
-            resultMetadata.setMessage(errorMessage);
-        } else if (ok) {
+        if (isRunAnaResultok) {
             resultMetadata.setLastExecutionNumberOk(executionNumber);
-            resultMetadata.setMessage(null); // reset error message
         }
-        return errorMessage;
     }
 
     public static void setExecuteErrorMessage(Analysis analysis, String errorMessage) {
