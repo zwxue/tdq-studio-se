@@ -360,4 +360,13 @@ public abstract class Evaluator<T> {
         }
         return statement;
     }
+
+    protected ReturnCode checkConnectionBeforeGetTableView() throws Exception {
+        ReturnCode isValid = checkConnection();
+        if (!isValid.isOk()) {
+            log.error(isValid.getMessage());
+            throw new Exception(isValid.getMessage());
+        }
+        return isValid;
+    }
 }
