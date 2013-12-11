@@ -83,7 +83,7 @@ public final class AnalysisExecutorHelper {
         }
         // ~11934
         DatabaseConnection dbConn = ConnectionHelper.getTdDataProvider(SwitchHelpers.COLUMN_SWITCH.doSwitch(analyzedColumn));
-        if (dbConn.isContextMode()) {
+        if (dbConn != null && dbConn.isContextMode()) {
             return getTableNameFromContext(dbConn, catalogName, schemaName, tableName, dbmsLanguage);
         } else {
             return dbmsLanguage.toQualifiedName(catalogName, schemaName, tableName);
