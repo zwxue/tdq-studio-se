@@ -753,7 +753,10 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
             TdColumn tdColumn = SwitchHelpers.COLUMN_SWITCH.doSwitch(mod);
             TdXmlElementType xmlElement = SwitchHelpers.XMLELEMENTTYPE_SWITCH.doSwitch(mod);
             dataFilterComp.getDataFilterText().setEnabled((xmlElement != null || tdColumn != null) ? true : false);
-            if (tdColumn == null) {
+            if (xmlElement != null) {
+                dataFilterComp.getDataFilterText().setEnabled(false);
+            } else if (tdColumn == null) {
+                dataFilterComp.getDataFilterText().setEnabled(false);
                 changeExecuteLanguageToJava(true);
             }
         }
