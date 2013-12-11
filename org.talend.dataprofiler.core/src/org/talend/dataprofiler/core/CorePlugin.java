@@ -233,10 +233,11 @@ public class CorePlugin extends AbstractUIPlugin {
         // MOD qiongli 2013-12-9,TDQ-8442,if the database type is not supported on DQ side,ruturn null.
         List<String> tdqSupportDBType = MetadataConnectionUtils.getTDQSupportDBTemplate();
         String username = JavaSqlFactory.getUsername(tdDataProvider);
-        boolean notSupport = (EDatabaseTypeName.HIVE.getXmlName().equalsIgnoreCase(dbType) && !"STANDALONE".equals(dbConn //$NON-NLS-1$
-                .getDbVersionString())) || EDatabaseTypeName.MSSQL.getDisplayName().equalsIgnoreCase(dbType)
-                && (username == null || PluginConstant.EMPTY_STRING.equals(username)) || !tdqSupportDBType.contains(dbType);
-        if (notSupport) {
+        boolean isHiveEmbeded = dbConn != null && EDatabaseTypeName.HIVE.getXmlName().equalsIgnoreCase(dbType)
+                && !"STANDALONE".equals(dbConn.getDbVersionString()); //$NON-NLS-1$
+        boolean isInvalidUserForMsSql = EDatabaseTypeName.MSSQL.getDisplayName().equalsIgnoreCase(dbType)
+                && (username == null || PluginConstant.EMPTY_STRING.equals(username));
+        if (isHiveEmbeded || isInvalidUserForMsSql || !tdqSupportDBType.contains(dbType)) {
             MessageUI.openWarning(DefaultMessagesImpl.getString("CorePlugin.cantPreview")); //$NON-NLS-1$
             return null;
         }
