@@ -12,7 +12,6 @@
 // ============================================================================
 package org.talend.dq.helper;
 
-import org.apache.log4j.Logger;
 import org.eclipse.emf.ecore.EObject;
 import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
 import org.talend.core.model.metadata.builder.connection.MetadataTable;
@@ -58,7 +57,7 @@ public final class AnalysisExecutorHelper {
         }
         // ~11934
         DatabaseConnection dbConn = ConnectionHelper.getTdDataProvider(SwitchHelpers.COLUMN_SWITCH.doSwitch(analyzedColumn));
-        if (dbConn.isContextMode()) {
+        if (dbConn != null && dbConn.isContextMode()) {
             return getTableNameFromContext(dbConn, catalogName, schemaName, tableName, dbmsLanguage);
         } else {
             return dbmsLanguage.toQualifiedName(catalogName, schemaName, tableName);
