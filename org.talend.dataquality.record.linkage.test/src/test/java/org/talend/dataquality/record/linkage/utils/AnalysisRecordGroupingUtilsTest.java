@@ -55,7 +55,8 @@ public class AnalysisRecordGroupingUtilsTest {
      * @param matchKeyMap
      */
     private void judgeMatchMapResult(Map<String, String> matchKeyMap) {
-        Assert.assertTrue(matchKeyMap.size() == 7);
+        //this line will check the size of return map, any change will cause fail
+        Assert.assertTrue(matchKeyMap.size() == 8);
         Assert.assertNotNull(matchKeyMap.get(IRecordGrouping.COLUMN_IDX));
         Assert.assertNotNull(matchKeyMap.get(IRecordGrouping.MATCHING_TYPE));
         Assert.assertNotNull(matchKeyMap.get(IRecordGrouping.CUSTOMER_MATCH_CLASS));
@@ -63,6 +64,7 @@ public class AnalysisRecordGroupingUtilsTest {
         Assert.assertNotNull(matchKeyMap.get(IRecordGrouping.RECORD_MATCH_THRESHOLD));
         Assert.assertNotNull(matchKeyMap.get(IRecordGrouping.ATTRIBUTE_NAME));
         Assert.assertNotNull(matchKeyMap.get(IRecordGrouping.HANDLE_NULL));
+        Assert.assertNull(matchKeyMap.get(IRecordGrouping.JAR_PATH));
     }
 
 }

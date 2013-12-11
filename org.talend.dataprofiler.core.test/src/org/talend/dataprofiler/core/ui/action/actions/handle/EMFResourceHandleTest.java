@@ -12,9 +12,10 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.action.actions.handle;
 
+import java.util.List;
+
 import junit.framework.Assert;
 
-import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.IPath;
@@ -37,7 +38,6 @@ import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.cwm.helper.CatalogHelper;
 import org.talend.cwm.helper.ConnectionHelper;
-import org.talend.cwm.helper.ResourceHelper;
 import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.nodes.DBConnectionRepNode;
 import org.talend.repository.localprovider.model.LocalRepositoryFactory;
@@ -57,11 +57,11 @@ public class EMFResourceHandleTest {
      * @throws java.lang.Exception
      */
 
-    private static LocalRepositoryFactory repositoryFactory;
-
     ProxyRepositoryFactory factory = ProxyRepositoryFactory.getInstance();
 
-    private static Project originalProject;
+    private static final String oldConnectionName = "EMFResourceHandleTest_conn1"; //$NON-NLS-1$
+
+    private static final String newConnectionName = "copy_of_EMFResourceHandleTest_conn1"; //$NON-NLS-1$
 
     /**
      * DOC zshen Comment method "setUp".
@@ -79,19 +79,21 @@ public class EMFResourceHandleTest {
      * 
      * @throws BusinessException
      * @throws PersistenceException
+     * @throws InterruptedException
      */
     @Test
-    public void testDuplicate() throws BusinessException, PersistenceException {
+    public void testDuplicate() throws BusinessException, PersistenceException, InterruptedException {
         // connectionNode
-        DatabaseConnectionItem oldConnectionItem = createConnectionItem("EMFResourceHandleTest_conn1", null, false); //$NON-NLS-1$
+        DatabaseConnectionItem oldConnectionItem = createConnectionItem(oldConnectionName, null, false);
         addDatapackage("catalog1", oldConnectionItem); //$NON-NLS-1$
+        addDatapackage("catalog2", oldConnectionItem); //$NON-NLS-1$
         RepositoryNode dbParentRepNode = createConnectionNode(oldConnectionItem);
 
         // ~connectionNode
 
         IDuplicateHandle createDuplicateHandle = ActionHandleFactory.createDuplicateHandle(dbParentRepNode);
 
-        IFile duplicate = createDuplicateHandle.duplicate("copy_of_EMFResourceHandleTest_conn1"); //$NON-NLS-1$
+        IFile duplicate = createDuplicateHandle.duplicate(newConnectionName);
         Property newProperty = PropertyHelper.getProperty(duplicate);
         IRepositoryViewObject newViewObject = factory.getLastVersion(newProperty.getId());
         DatabaseConnectionItem newConnectionItem = (DatabaseConnectionItem) newViewObject.getProperty().getItem();
@@ -108,6 +110,8 @@ public class EMFResourceHandleTest {
     private void compareResult(DatabaseConnectionItem newConnectionItem, DatabaseConnectionItem oldConnectionItem) {
         Connection newConnection = newConnectionItem.getConnection();
         Connection oldConnection = oldConnectionItem.getConnection();
+
+        // check connection has been persistenced
         Assert.assertTrue(newConnection != null);
         Assert.assertTrue(newConnection.eResource() != null);
         Assert.assertTrue(!newConnection.eIsProxy());
@@ -116,12 +120,28 @@ public class EMFResourceHandleTest {
         Assert.assertTrue(oldConnection.eResource() != null);
         Assert.assertTrue(!oldConnection.eIsProxy());
 
-        boolean isConnUUIDSame = StringUtils.equals(ResourceHelper.getUUID(newConnection), ResourceHelper.getUUID(oldConnection));
-        Catalog oldCatalog = CatalogHelper.getCatalog(oldConnection, "catalog1"); //$NON-NLS-1$
-        Catalog newCatalog = CatalogHelper.getCatalog(newConnection, "catalog1"); //$NON-NLS-1$
-        boolean isCatalogUUIDSame = StringUtils.equals(ResourceHelper.getUUID(oldCatalog), ResourceHelper.getUUID(newCatalog));
-        Assert.assertFalse(isConnUUIDSame);
-        Assert.assertFalse(isCatalogUUIDSame);
+        // check name and label has been set
+        Assert.assertEquals(oldConnection.getName(), oldConnectionName);
+        Assert.assertEquals(oldConnection.getLabel(), oldConnectionName);
+        Assert.assertEquals(newConnection.getName(), newConnectionName);
+        Assert.assertEquals(newConnection.getLabel(), newConnectionName);
+
+        // check catalog size is same
+        List<Catalog> newCatalogs = ConnectionHelper.getCatalogs(newConnection);
+        List<Catalog> oldCatalogs = ConnectionHelper.getCatalogs(oldConnection);
+        Assert.assertTrue(newCatalogs.size() == 2);
+        Assert.assertTrue(oldCatalogs.size() == 2);
+
+        // check the structor of connection is valid
+        Catalog oldCatalog1 = CatalogHelper.getCatalog(oldConnection, "catalog1"); //$NON-NLS-1$
+        Catalog newCatalog1 = CatalogHelper.getCatalog(newConnection, "catalog1"); //$NON-NLS-1$
+        Catalog oldCatalog2 = CatalogHelper.getCatalog(oldConnection, "catalog2"); //$NON-NLS-1$
+        Catalog newCatalog2 = CatalogHelper.getCatalog(newConnection, "catalog2"); //$NON-NLS-1$
+
+        Assert.assertTrue(oldCatalog1 != null);
+        Assert.assertTrue(newCatalog1 != null);
+        Assert.assertTrue(oldCatalog2 != null);
+        Assert.assertTrue(newCatalog2 != null);
 
     }
 
@@ -151,6 +171,7 @@ public class EMFResourceHandleTest {
         // connection
         DatabaseConnection createConnection = ConnectionFactory.eINSTANCE.createDatabaseConnection();
         createConnection.setName(name);
+        createConnection.setLabel(name);
         createConnection.setUsername("UserName"); //$NON-NLS-1$
         createConnection.setPassword("Password"); //$NON-NLS-1$
         createConnection.setURL("URL"); //$NON-NLS-1$
