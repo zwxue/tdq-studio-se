@@ -20,13 +20,16 @@ import java.util.List;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.EList;
+import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
 import org.talend.core.model.metadata.builder.database.dburl.SupportDBUrlType;
+import org.talend.core.runtime.CoreRuntimePlugin;
 import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.helper.CatalogHelper;
 import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.helper.ColumnSetHelper;
 import org.talend.cwm.helper.ResourceHelper;
 import org.talend.cwm.helper.SwitchHelpers;
+import org.talend.cwm.management.i18n.Messages;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.relational.TdExpression;
 import org.talend.dataquality.PluginConstant;
@@ -46,6 +49,7 @@ import org.talend.dataquality.indicators.definition.CharactersMapping;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dataquality.indicators.sql.UserDefIndicator;
 import org.talend.dataquality.rules.JoinElement;
+import org.talend.repository.model.IRepositoryService;
 import org.talend.utils.ProductVersion;
 import orgomg.cwm.objectmodel.core.Expression;
 import orgomg.cwm.objectmodel.core.ModelElement;
@@ -1598,4 +1602,42 @@ public class DbmsLanguage {
         return columnClause;
     }
 
+    /**
+     * get the catalog name from the context in the DatabaseConnection.
+     * 
+     * @param dbConn
+     * @return catalog name or null
+     */
+    public String getCatalogNameFromContext(DatabaseConnection dbConn) {
+        return cloneOriginalValueConnection(dbConn).getSID();
+    }
+
+    /**
+     * get the schema name from the context in the DatabaseConnection.
+     * 
+     * @param dbConn
+     * @return schema name or null
+     */
+    public String getSchemaNameFromContext(DatabaseConnection dbConn) {
+        return cloneOriginalValueConnection(dbConn).getUiSchema();
+    }
+
+    private DatabaseConnection cloneOriginalValueConnection(DatabaseConnection dbConn) {
+        IRepositoryService repositoryContextService = CoreRuntimePlugin.getInstance().getRepositoryService();
+        if (repositoryContextService != null) {
+            String contextName = dbConn.getContextName();
+            if (contextName == null) {
+                String msg = Messages.getString("DbmsLanguage.ContextNameIsNull"); //$NON-NLS-1$
+                RuntimeException exp = new RuntimeException(msg);
+                log.error(msg, exp);
+                throw exp;
+            }
+            return repositoryContextService.cloneOriginalValueConnection(dbConn, false, contextName);
+        } else {
+            String msg = Messages.getString("DbmsLanguage.IRepositoryContextServiceIsNull"); //$NON-NLS-1$
+            RuntimeException exp = new RuntimeException(msg);
+            log.error(msg, exp);
+            throw exp;
+        }
+    }
 }

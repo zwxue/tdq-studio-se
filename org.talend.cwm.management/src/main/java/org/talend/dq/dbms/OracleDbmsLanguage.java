@@ -12,6 +12,7 @@
 // ============================================================================
 package org.talend.dq.dbms;
 
+import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
 import org.talend.dataquality.domain.sql.SqlPredicate;
 import org.talend.dataquality.indicators.DateGrain;
 import org.talend.utils.ProductVersion;
@@ -244,6 +245,7 @@ public class OracleDbmsLanguage extends DbmsLanguage {
      * 
      * @return average length sql statement
      */
+    @Override
     public String getAverageLengthRows() {
         return "SELECT * FROM <%=__TABLE_NAME__%> WHERE LENGTH(<%=__COLUMN_NAMES__%>) BETWEEN (SELECT FLOOR(SUM(LENGTH(<%=__COLUMN_NAMES__%>)) / COUNT(<%=__COLUMN_NAMES__%>)) FROM <%=__TABLE_NAME__%>) AND (SELECT CEIL(SUM(LENGTH(<%=__COLUMN_NAMES__%>)) / COUNT(<%=__COLUMN_NAMES__%>)) FROM <%=__TABLE_NAME__%>)"; //$NON-NLS-1$ 
     }
@@ -251,5 +253,16 @@ public class OracleDbmsLanguage extends DbmsLanguage {
     @Override
     public String trimIfBlank(String colName) {
         return " CASE WHEN " + colName + " IS NOT NULL AND  LENGTH(" + trim(colName) + ") IS NULL  THEN '' ELSE  " + colName + " END"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dq.dbms.DbmsLanguage#getCatalogNameFromContext(org.talend.core.model.metadata.builder.connection.
+     * DatabaseConnection)
+     */
+    @Override
+    public String getCatalogNameFromContext(DatabaseConnection dbConn) {
+        return null;
     }
 }

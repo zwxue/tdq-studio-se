@@ -36,6 +36,7 @@ import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.columnset.ColumnsetPackage;
 import org.talend.dataquality.indicators.columnset.RowMatchingIndicator;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
+import org.talend.dq.helper.AnalysisExecutorHelper;
 import org.talend.dq.helper.EObjectHelper;
 import org.talend.utils.sugars.ReturnCode;
 import org.talend.utils.sugars.TypedReturnCode;
@@ -161,7 +162,7 @@ public class RowMatchingAnalysisExecutor extends ColumnAnalysisSqlExecutor {
         String whereClause = createWhereClause(aliasB, columnSetB);
         if (useNulls) {
             // add a where clause to avoid the equality of rows fully null (i.e. rows like "null,null,null"
-            whereClause += dbms().and() + '(' + createNotNullCondition(aliasA, columnSetA) + ')';//$NON-NLS-1$//$NON-NLS-1$
+            whereClause += dbms().and() + '(' + createNotNullCondition(aliasA, columnSetA) + ')';
         }
 
         String instantiatedSQL = dbms().fillGenericQueryWithJoin(genericSQL, tableNameA, tableNameB, joinClause, whereClause);
@@ -275,33 +276,17 @@ public class RowMatchingAnalysisExecutor extends ColumnAnalysisSqlExecutor {
             if (column != null && column.eIsProxy()) {
                 column = (TdColumn) EObjectHelper.resolveObject(column);
             }
-            if (belongToSameSchemata((TdColumn) column)) {
+            if (belongToSameSchemata(column)) {
                 ColumnSet columnSetOwner = ColumnHelper.getColumnOwnerAsColumnSet(column);
 
                 if (columnSetOwner == null) {
                     log.error(Messages.getString("FunctionalDependencyExecutor.COLUMNSETOWNERISNULL", column.getName()));//$NON-NLS-1$
                     continue;
                 } else {
-                    // MOD zshen 11005: SQL syntax error for all analysis on Informix databases in Talend Open Profiler
-                    String schemaName = getQuotedSchemaName(columnSetOwner);
-                    String table = getQuotedTableName(column);
-                    String catalogName = getQuotedCatalogName(columnSetOwner);
-
-                    if (catalogName == null && schemaName != null) {
-                        // try to get catalog above schema
-                        final Schema parentSchema = SchemaHelper.getParentSchema(columnSetOwner);
-                        final Catalog parentCatalog = CatalogHelper.getParentCatalog(parentSchema);
-                        catalogName = parentCatalog != null ? parentCatalog.getName() : null;
-                    }
-                    // MOD by zshen: change schemaName of sybase database to Table's owner.
-                    if (ConnectionUtils.isSybaseeDBProducts(dbms().getDbmsName())) {
-                        schemaName = ColumnSetHelper.getTableOwner(columnSetOwner);
-                    }
-                    // ~11934
-                    tableName = dbms().toQualifiedName(catalogName, schemaName, table);
-                    // ~11005
+                    tableName = AnalysisExecutorHelper.getTableName(column, dbms());
                     this.catalogOrSchema = getCatalogOrSchemaName(column);
                     break; // all columns should belong to the same table
+                    // ~ TDQ-7376
                 }
             } else {
                 log.error(this.errorMessage);
@@ -450,6 +435,7 @@ public class RowMatchingAnalysisExecutor extends ColumnAnalysisSqlExecutor {
         return analyzedTableName;
     }
 
+    @Override
     protected boolean checkAnalyzedElements(final Analysis analysis, AnalysisContext context) {
         AnalysisHandler analysisHandler = new AnalysisHandler();
         analysisHandler.setAnalysis(analysis);

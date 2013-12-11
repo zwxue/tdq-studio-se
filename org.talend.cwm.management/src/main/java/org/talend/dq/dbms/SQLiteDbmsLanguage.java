@@ -13,6 +13,7 @@
 package org.talend.dq.dbms;
 
 import org.apache.commons.lang.StringUtils;
+import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
 import org.talend.utils.ProductVersion;
 
 /**
@@ -114,5 +115,27 @@ public class SQLiteDbmsLanguage extends DbmsLanguage {
                 + ")) / (COUNT(*)*1.00) as int) f " + "FROM <%=__TABLE_NAME__%> ) e, <%=__TABLE_NAME__%> t " + "WHERE LENGTH("
                 + trimIfBlank("<%=__COLUMN_NAMES__%>") + ") BETWEEN f AND c";
         return sql;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dq.dbms.DbmsLanguage#getCatalogNameFromContext(org.talend.core.model.metadata.builder.connection.
+     * DatabaseConnection)
+     */
+    @Override
+    public String getCatalogNameFromContext(DatabaseConnection dbConn) {
+        return null;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dq.dbms.DbmsLanguage#getSchemaNameFromContext(org.talend.core.model.metadata.builder.connection.
+     * DatabaseConnection)
+     */
+    @Override
+    public String getSchemaNameFromContext(DatabaseConnection dbConn) {
+        return null;
     }
 }

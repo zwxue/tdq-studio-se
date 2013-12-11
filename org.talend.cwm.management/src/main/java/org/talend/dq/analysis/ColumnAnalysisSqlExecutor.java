@@ -20,7 +20,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.MessageFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -46,9 +45,7 @@ import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.exception.AnalysisExecutionException;
 import org.talend.cwm.helper.CatalogHelper;
 import org.talend.cwm.helper.ColumnHelper;
-import org.talend.cwm.helper.ColumnSetHelper;
 import org.talend.cwm.helper.ResourceHelper;
-import org.talend.cwm.helper.SchemaHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.management.i18n.Messages;
 import org.talend.cwm.relational.TdColumn;
@@ -75,6 +72,7 @@ import org.talend.dataquality.indicators.TextParameters;
 import org.talend.dataquality.indicators.definition.CharactersMapping;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dq.dbms.GenericSQLHandler;
+import org.talend.dq.helper.AnalysisExecutorHelper;
 import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.UDIHelper;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
@@ -90,7 +88,6 @@ import orgomg.cwm.objectmodel.core.Package;
 import orgomg.cwm.resource.relational.Catalog;
 import orgomg.cwm.resource.relational.ColumnSet;
 import orgomg.cwm.resource.relational.RelationalPackage;
-import orgomg.cwm.resource.relational.Schema;
 
 import Zql.ParseException;
 
@@ -274,30 +271,7 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
             }
         }
 
-        final ColumnSet columnSetOwner = ColumnHelper.getColumnOwnerAsColumnSet(tdColumn);
-        String schemaName = getQuotedSchemaName(columnSetOwner);
-
-        String table = getQuotedTableName(tdColumn);
-
-        // --- normalize table name
-        String catalogName = getQuotedCatalogName(columnSetOwner);
-        if (catalogName == null && schemaName != null) {
-            // try to get catalog above schema
-            final Schema parentSchema = SchemaHelper.getParentSchema(columnSetOwner);
-            final Catalog parentCatalog = CatalogHelper.getParentCatalog(parentSchema);
-            catalogName = parentCatalog != null ? parentCatalog.getName() : null;
-        }
-
-        // MOD by zshen: change schemaName of sybase database to Table's owner.
-        boolean isSybase = false;
-        if (Arrays.asList(org.talend.utils.sql.ConnectionUtils.getSybaseDBProductsName()).contains(dbms().getDbmsName())) {
-            isSybase = true;
-        }
-        if (isSybase) {
-            schemaName = ColumnSetHelper.getTableOwner(columnSetOwner);
-        }
-        table = dbms().toQualifiedName(catalogName, schemaName, table);
-        // ~11934
+        String table = AnalysisExecutorHelper.getTableName(tdColumn, this.dbms());
 
         // ### evaluate SQL Statement depending on indicators ###
         String completedSqlString = null;
@@ -454,7 +428,9 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
         } finally {
             // MOD qiongli 2011-5-20,don't print error in error log view and use finnaly to close Statement.
             try {
-                stat.close();
+                if (stat != null) {
+                    stat.close();
+                }
             } catch (SQLException e) {
                 log.error(e, e);
             }
@@ -464,11 +440,12 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
     }
 
     private String addFunctionTypeConvert(String colName) {
-        if (colName == null) {
-            return colName;
+        String name = colName;
+        if (name == null) {
+            return name;
         }
-        colName = " CAST(" + colName + " AS CHAR(20)) ";//$NON-NLS-1$//$NON-NLS-2$
-        return colName;
+        name = " CAST(" + name + " AS CHAR(20)) ";//$NON-NLS-1$//$NON-NLS-2$
+        return name;
     }
 
     /**

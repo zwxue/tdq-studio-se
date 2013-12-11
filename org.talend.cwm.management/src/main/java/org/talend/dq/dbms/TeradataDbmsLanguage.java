@@ -14,6 +14,7 @@ package org.talend.dq.dbms;
 
 import java.util.regex.Matcher;
 
+import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
 import org.talend.dataquality.PluginConstant;
 import org.talend.utils.ProductVersion;
 
@@ -45,6 +46,7 @@ public class TeradataDbmsLanguage extends DbmsLanguage {
      * 
      * @return average length sql statement
      */
+    @Override
     public String getAverageLengthRows() {
         return "SELECT t.* FROM(" + "SELECT "
                 + "CAST(SUM(CHARACTER_LENGTH(<%=__COLUMN_NAMES__%>)) / (COUNT(<%=__COLUMN_NAMES__%>)*1.00)+0.99 as int) c, "
@@ -112,5 +114,16 @@ public class TeradataDbmsLanguage extends DbmsLanguage {
     public String getTopNQuery(String query, int n) {
         Matcher m = SELECT_PATTERN.matcher(query);
         return m.replaceFirst("SELECT TOP " + n + PluginConstant.SPACE_STRING); //$NON-NLS-1$ 
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dq.dbms.DbmsLanguage#getCatalogNameFromContext(org.talend.core.model.metadata.builder.connection.
+     * DatabaseConnection)
+     */
+    @Override
+    public String getCatalogNameFromContext(DatabaseConnection dbConn) {
+        return null;
     }
 }

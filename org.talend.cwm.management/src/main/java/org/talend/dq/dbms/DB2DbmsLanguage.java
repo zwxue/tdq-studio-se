@@ -12,6 +12,7 @@
 // ============================================================================
 package org.talend.dq.dbms;
 
+import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
 import org.talend.dataquality.indicators.DateGrain;
 import org.talend.utils.ProductVersion;
 
@@ -100,5 +101,16 @@ public class DB2DbmsLanguage extends DbmsLanguage {
     public String isNotBlank(String colName) {
         // ADD qiongli 2012-6-7 TDQ-5559
         return " LENGTH(" + trim(colName) + ")!=0";//$NON-NLS-1$ //$NON-NLS-2$
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dq.dbms.DbmsLanguage#getCatalogNameFromContext(org.talend.core.model.metadata.builder.connection.
+     * DatabaseConnection)
+     */
+    @Override
+    public String getCatalogNameFromContext(DatabaseConnection dbConn) {
+        return null;
     }
 }
