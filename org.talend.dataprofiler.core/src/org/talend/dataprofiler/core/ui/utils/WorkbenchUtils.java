@@ -44,7 +44,6 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.WorkbenchException;
-import org.talend.commons.emf.EMFUtil;
 import org.talend.commons.exception.ExceptionHandler;
 import org.talend.commons.exception.PersistenceException;
 import org.talend.core.model.general.Project;
@@ -540,7 +539,7 @@ public final class WorkbenchUtils {
                     // TDQ-8267, since the dependency is removed, the connection in the analysis context should also be
                     // removed
                     if (tempAnalysis.getContext().getAnalysedElements().isEmpty()) {
-                        removeDependenciesBetweenAnaCon(oldDataProvider, tempAnalysis);
+                        DependenciesHandler.getInstance().removeConnDependencyAndSave(tempAnalysis);
                         tempAnalysis.getContext().setConnection(null);
                     }
                     // ~
@@ -552,23 +551,6 @@ public final class WorkbenchUtils {
 
         // Refresh current opened editors.
         refreshCurrentAnalysisEditor();
-    }
-
-    private static void removeDependenciesBetweenAnaCon(DataProvider oldDataProvider, Analysis tempAnalysis) {
-        List<ModelElement> tempList = new ArrayList<ModelElement>();
-        tempList.add(oldDataProvider);
-        // remove the cliend dependency in the analysis
-        List<Resource> modified = DependenciesHandler.getInstance().removeDependenciesBetweenModels(tempAnalysis, tempList);
-        for (Resource me : modified) {
-            EMFUtil.saveSingleResource(me);
-        }
-        // remove the supplier dependency in the dataprovider
-        tempList.clear();
-        tempList.add(tempAnalysis);
-        modified = DependenciesHandler.getInstance().removeSupplierDependenciesBetweenModels(oldDataProvider, tempList);
-        for (Resource me : modified) {
-            EMFUtil.saveSingleResource(me);
-        }
     }
 
     /**

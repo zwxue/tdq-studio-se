@@ -81,14 +81,8 @@ public class ColumnSetAnalysisHandler extends AnalysisHandler {
             }
         }
         TypedReturnCode<Dependency> rc = DependenciesHandler.getInstance().setDependencyOn(analysis, connection);
-        if (rc.isOk()) {
-            // DependenciesHandler.getInstance().addDependency(rc.getObject());
 
-            // if (resource != null) {
-            // this.modifiedResources.add(resource);
-            // }
-        }
-        return true;
+        return rc.isOk();
     }
 
     // MOD mzhao bug 10706,Set indicator definition.

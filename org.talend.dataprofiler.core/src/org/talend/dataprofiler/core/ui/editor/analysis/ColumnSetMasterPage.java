@@ -606,6 +606,7 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
      * 
      * @param selection
      */
+    @Override
     protected void setStoreData(boolean selection) {
         storeDataCheck.setSelection(selection);
         simpleStatIndicator.setStoreData(selection);
@@ -693,9 +694,6 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
         } else {
             deleteConnectionDependency(analysis);
         }
-        // ADD xqliu 2010-07-19 bug 14014
-        this.updateAnalysisClientDependency();
-        // ~ 14014
 
         // save the number of connections per analysis
         this.saveNumberOfConnectionsPerAnalysis();

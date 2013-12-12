@@ -17,7 +17,6 @@ import java.util.Collection;
 
 import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.EList;
-import org.talend.commons.emf.EMFUtil;
 import org.talend.cwm.dependencies.DependenciesHandler;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.indicators.Indicator;
@@ -72,13 +71,12 @@ public class MatchAnalysisHandler extends AnalysisHandler {
         assert analysis.getContext() != null;
         // remove the old dependencies if any
         if (isChangeConnection && analysis.getContext().getConnection() != null) {
-            DependenciesHandler.getInstance().removeDependenciesBetweenModel(analysis.getContext().getConnection(), analysis);
-            EMFUtil.saveSingleResource(analysis.getContext().getConnection().eResource());
+            DependenciesHandler.getInstance().deleteConnectionDependency(analysis);
         }// ~
         analysis.getContext().setConnection(connection);
 
         // Added TDQ-8183 add db dependency on match analysis
-        if (connection != null) {
+        if (isChangeConnection && connection != null) {
             TypedReturnCode<Dependency> rc = DependenciesHandler.getInstance().setDependencyOn(analysis, connection);
             if (!rc.isOk()) {
                 log.info("fail to save dependency analysis:" + analysis.getFileName());//$NON-NLS-1$

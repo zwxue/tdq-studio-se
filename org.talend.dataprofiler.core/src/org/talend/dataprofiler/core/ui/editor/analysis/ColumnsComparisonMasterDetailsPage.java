@@ -266,9 +266,6 @@ public class ColumnsComparisonMasterDetailsPage extends AbstractAnalysisMetadata
         }
         anaBuilder.addElementsToAnalyze(analysedElements.toArray(new ModelElement[analysedElements.size()]), new Indicator[] {
                 rowMatchingIndicatorA, rowMatchingIndicatorB });
-        // ADD xqliu 2010-07-19 bug 14014
-        this.updateAnalysisClientDependency();
-        // ~ 14014
 
         // save the number of connections per analysis
         this.saveNumberOfConnectionsPerAnalysis();

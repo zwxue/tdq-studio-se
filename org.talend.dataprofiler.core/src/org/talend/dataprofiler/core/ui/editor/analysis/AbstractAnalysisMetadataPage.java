@@ -67,7 +67,6 @@ import org.talend.dataprofiler.core.ui.IRuningStatusListener;
 import org.talend.dataprofiler.core.ui.editor.AbstractMetadataFormPage;
 import org.talend.dataprofiler.core.ui.editor.composite.AbstractColumnDropTree;
 import org.talend.dataprofiler.core.ui.editor.composite.DataFilterComp;
-import org.talend.dataprofiler.core.ui.utils.AnalysisUtils;
 import org.talend.dataprofiler.core.ui.utils.MessageUI;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisParameters;
@@ -453,13 +452,6 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
     }
 
     /**
-     * DOC Update the client dependency of the analysis. bug 14014
-     */
-    public void updateAnalysisClientDependency() {
-        DependenciesHandler.getInstance().updateAnalysisClientDependencyConnection(analysis);
-    }
-
-    /**
      * ADD gdbu 2011-6-1 bug : 19833
      * 
      * DOC gdbu Comment method "updateDQRuleDependency".
@@ -584,7 +576,7 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
      * delete the dependency between analysis and connection
      */
     public boolean deleteConnectionDependency(Analysis ana) {
-        return AnalysisUtils.deleteConnectionDependency(ana);
+        return DependenciesHandler.getInstance().deleteConnectionDependency(ana);
     }
 
     /**

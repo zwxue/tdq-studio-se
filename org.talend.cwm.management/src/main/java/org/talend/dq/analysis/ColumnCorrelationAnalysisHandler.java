@@ -31,6 +31,7 @@ import org.talend.dataquality.indicators.DataminingType;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.utils.sugars.TypedReturnCode;
+
 import orgomg.cwm.foundation.softwaredeployment.DataManager;
 import orgomg.cwm.objectmodel.core.Dependency;
 import orgomg.cwm.objectmodel.core.ModelElement;
@@ -72,20 +73,14 @@ public class ColumnCorrelationAnalysisHandler extends AnalysisHandler {
                 TdColumn tdColumn = SwitchHelpers.COLUMN_SWITCH.doSwitch(element);
                 log.error(Messages.getString("ColumnCorrelationAnalysisHandler.CONNNOTBEENSETINANALYSIS"));//$NON-NLS-1$
                 connection = ConnectionHelper.getTdDataProvider(tdColumn);
-                if(connection!=null){
+                if (connection != null) {
                     analysis.getContext().setConnection(connection);
                 }
             }
-        }
-        TypedReturnCode<Dependency> rc = DependenciesHandler.getInstance().setDependencyOn(analysis, connection);
-        if (rc.isOk()) {
-            // DependenciesHandler.getInstance().addDependency(rc.getObject());
+         }
+        TypedReturnCode<Dependency> rc =  DependenciesHandler.getInstance().setDependencyOn(analysis, connection);
 
-            // if (resource != null) {
-            // this.modifiedResources.add(resource);
-            // }
-        }
-        return true;
+        return rc.isOk();
     }
 
     private void initializeIndicator(Indicator indicator, List<TdColumn> columns) {
@@ -146,8 +141,9 @@ public class ColumnCorrelationAnalysisHandler extends AnalysisHandler {
         Indicator indicator = null;
         EList<Indicator> allIndics = analysis.getResults().getIndicators();
         for (Indicator indic : allIndics) {
-            if (indic != null)
+            if (indic != null) {
                 indicator = indic;
+            }
         }
         return indicator;
     }

@@ -724,9 +724,6 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
             deleteConnectionDependency(analysis);
         }
         analysisHandler.setStringDataFilter(dataFilterComp.getDataFilterString());
-        // ADD xqliu 2010-07-19 bug 14014
-        this.updateAnalysisClientDependency();
-        // ~ 14014
         // 2011.1.12 MOD by zhsne to unify anlysis and connection id when saving.
 
         ReturnCode saved = new ReturnCode(false);
@@ -989,6 +986,7 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
      * 
      * @return whether have a datePatternFreqIndicator in the "analyzed Columns"
      */
+    @Override
     protected boolean includeDatePatternFreqIndicator() {
         for (ModelElementIndicator modelElementIndicator : this.treeViewer.getModelElementIndicator()) {
             if (modelElementIndicator.contains(IndicatorEnum.DatePatternFreqIndicatorEnum)) {
@@ -1059,6 +1057,7 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
      * 
      * @param executionLanguage
      */
+    @Override
     protected void setLanguageToTreeViewer(ExecutionLanguage executionLanguage) {
         treeViewer.setLanguage(executionLanguage);
 

@@ -30,6 +30,7 @@ import org.talend.core.model.repository.RepositoryViewObject;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.cwm.helper.ModelElementHelper;
 import org.talend.cwm.helper.ResourceHelper;
+import org.talend.cwm.management.i18n.Messages;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.domain.pattern.Pattern;
 import org.talend.dataquality.helpers.IndicatorHelper;
@@ -43,6 +44,7 @@ import org.talend.dataquality.properties.impl.TDQIndicatorDefinitionItemImpl;
 import org.talend.dataquality.reports.TdReport;
 import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.PropertyHelper;
+import org.talend.dq.writer.impl.ElementWriterFactory;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.foundation.softwaredeployment.DataManager;
 import orgomg.cwm.objectmodel.core.Dependency;
@@ -315,40 +317,6 @@ public final class DependenciesHandler {
     }
 
     /**
-     * DOC xqliu Comment method "updateAnalysisClientDependencyConnection". bug 14014
-     * 
-     * @param analysis
-     */
-    public void updateAnalysisClientDependencyConnection(Analysis analysis) {
-        List<Dependency> realDependency = new ArrayList<Dependency>();
-        EList<Dependency> clientDependency = analysis.getClientDependency();
-        // DataManager connection = analysis.getContext().getConnection();
-        if (clientDependency != null) {
-            for (Dependency dependency : clientDependency) {
-                // MOD qiongli bug 15587
-                if (dependency.eIsProxy()) {
-                    dependency = (Dependency) EObjectHelper.resolveObject(dependency);
-                }
-                EList<ModelElement> supplier = dependency.getSupplier();
-                if (supplier != null && supplier.size() > 0) {
-                    ModelElement modelElement = supplier.get(0);
-                    if (modelElement != null) {
-                        if (modelElement instanceof Connection) {
-                            // if (modelElement.equals(connection)) {
-                            realDependency.add(dependency);
-                            // }
-                        } else {
-                            realDependency.add(dependency);
-                        }
-                    }
-                }
-            }
-            clientDependency.clear();
-            clientDependency.addAll(realDependency);
-        }
-    }
-
-    /**
      * 
      * @param object
      * @return SupplierDependency
@@ -553,4 +521,60 @@ public final class DependenciesHandler {
 
     }
 
+    /**
+     * 
+     * delete the dependency between analysis and connection
+     * 
+     * @param analysis
+     * @return whether it has been deleted
+     * 
+     */
+    public boolean deleteConnectionDependency(Analysis analysis) {
+        Connection oldDataProvider = (Connection) analysis.getContext().getConnection();
+        boolean isSuccessful = Boolean.TRUE;
+        // Remove old dependencies.
+        if (oldDataProvider != null) {
+            TypedReturnCode<?> rc = removeConnDependencyAndSave(analysis);
+            if (rc.isOk()) {
+                // always clean the connection info from the analysis
+                analysis.getContext().setConnection(null);
+                analysis.getClientDependency().clear();
+            } else {
+                isSuccessful = rc.isOk();
+                log.error(rc.getMessage());
+            }
+        } else {
+            isSuccessful = Boolean.FALSE;
+            log.error(Messages.getString("DependenciesHandler.removeDependFailByNull", "oldDataProvider")); //$NON-NLS-1$ //$NON-NLS-2$
+        }
+        return isSuccessful;
+    }
+
+    /**
+     * 
+     * remove the dependency between analysis and connection,then save the connection.
+     * 
+     * @param analysis
+     * @return whether the connection dependency is removed
+     */
+    public TypedReturnCode<Object> removeConnDependencyAndSave(Analysis analysis) {
+        Connection connection = (Connection) analysis.getContext().getConnection();
+        TypedReturnCode<Object> rect = new TypedReturnCode<Object>(Boolean.TRUE);
+        if (connection != null) {
+            List<ModelElement> tempList = new ArrayList<ModelElement>();
+            tempList.add(connection);
+            DependenciesHandler.getInstance().removeDependenciesBetweenModels(analysis, tempList);
+            Property property = PropertyHelper.getProperty(connection);
+            if (property != null) {
+                ElementWriterFactory.getInstance().createDataProviderWriter().save(property.getItem(), false);
+            } else {
+                rect.setOk(Boolean.FALSE);
+                rect.setMessage(Messages.getString("DependenciesHandler.removeDependFailByNull", "property")); //$NON-NLS-1$ //$NON-NLS-2$
+            }
+        } else {
+            rect.setOk(Boolean.FALSE);
+            rect.setMessage(Messages.getString("DependenciesHandler.removeDependFailByNull", "connection")); //$NON-NLS-1$ //$NON-NLS-2$
+        }
+        return rect;
+    }
 }

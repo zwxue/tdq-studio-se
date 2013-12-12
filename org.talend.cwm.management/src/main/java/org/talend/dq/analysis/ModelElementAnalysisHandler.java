@@ -14,7 +14,6 @@ package org.talend.dq.analysis;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
 
 import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.EList;
@@ -45,11 +44,6 @@ import orgomg.cwm.objectmodel.core.ModelElement;
 public class ModelElementAnalysisHandler extends AnalysisHandler {
 
     private static Logger log = Logger.getLogger(ModelElementAnalysisHandler.class);
-
-    /**
-     * The resources that are connected to this analysis and that are potentially modified.
-     */
-    private Collection<Resource> modifiedResources = new HashSet<Resource>();
 
     /**
      * Method "addColumnToAnalyze".
@@ -92,14 +86,8 @@ public class ModelElementAnalysisHandler extends AnalysisHandler {
             analysis.getContext().setConnection(connection);
         }
         TypedReturnCode<Dependency> rc = DependenciesHandler.getInstance().setDependencyOn(analysis, connection);
-        if (rc.isOk()) {
-            // DependenciesHandler.getInstance().addDependency(rc.getObject());
-            Resource resource = connection.eResource();
-            if (resource != null) {
-                this.modifiedResources.add(resource);
-            }
-        }
-        return true;
+
+        return rc.isOk();
     }
 
     private void initializeIndicator(Indicator indicator, ModelElement modelElement) {
@@ -227,7 +215,6 @@ public class ModelElementAnalysisHandler extends AnalysisHandler {
         if (resource != null) {
             resource.setModified(true); // tell that the resource has been modified.
             // it would be better to handle modifications with EMF Commands
-            this.modifiedResources.add(resource);
         }
     }
 }
