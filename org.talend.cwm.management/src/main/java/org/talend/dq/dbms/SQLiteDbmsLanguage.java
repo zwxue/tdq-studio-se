@@ -19,6 +19,9 @@ import java.sql.Statement;
 import org.apache.commons.lang.StringUtils;
 import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
 import org.talend.utils.ProductVersion;
+import orgomg.cwm.objectmodel.core.ModelElement;
+import orgomg.cwm.resource.relational.Catalog;
+import orgomg.cwm.resource.relational.Schema;
 
 /**
  * DOC scorreia class global comment. Detailled comment
@@ -152,6 +155,36 @@ public class SQLiteDbmsLanguage extends DbmsLanguage {
      */
     @Override
     public String getSchemaNameFromContext(DatabaseConnection dbConn) {
+        return null;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dq.dbms.DbmsLanguage#getCatalogOrSchemaName(orgomg.cwm.objectmodel.core.ModelElement)
+     */
+    @Override
+    public String getCatalogOrSchemaName(ModelElement analyzedColumn) {
+        return null;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dq.dbms.DbmsLanguage#getCatalog(orgomg.cwm.objectmodel.core.ModelElement)
+     */
+    @Override
+    protected Catalog getCatalog(ModelElement columnSetOwner) {
+        return null;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dq.dbms.DbmsLanguage#getSchema(orgomg.cwm.objectmodel.core.ModelElement)
+     */
+    @Override
+    protected Schema getSchema(ModelElement columnSetOwner) {
         return null;
     }
 }

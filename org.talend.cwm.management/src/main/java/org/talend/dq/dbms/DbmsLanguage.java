@@ -32,6 +32,7 @@ import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.helper.CatalogHelper;
 import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.helper.ColumnSetHelper;
+import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.ResourceHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.relational.TdColumn;
@@ -53,6 +54,7 @@ import org.talend.dataquality.indicators.definition.CharactersMapping;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dataquality.indicators.sql.UserDefIndicator;
 import org.talend.dataquality.rules.JoinElement;
+import org.talend.dq.helper.AnalysisExecutorHelper;
 import org.talend.metadata.managment.ui.i18n.Messages;
 import org.talend.utils.ProductVersion;
 import orgomg.cwm.objectmodel.core.Expression;
@@ -61,6 +63,7 @@ import orgomg.cwm.objectmodel.core.Package;
 import orgomg.cwm.resource.relational.Catalog;
 import orgomg.cwm.resource.relational.ColumnSet;
 import orgomg.cwm.resource.relational.RelationalPackage;
+import orgomg.cwm.resource.relational.Schema;
 
 /**
  * @author scorreia
@@ -352,8 +355,8 @@ public class DbmsLanguage {
      * @return
      */
     private String handleContextModeOrAddQuotes(String param) {
-        if (param.startsWith("context.")) {
-            return "<%=" + param + "%>";
+        if (param.startsWith("context.")) { //$NON-NLS-1$
+            return "<%=" + param + "%>"; //$NON-NLS-1$ //$NON-NLS-2$
         }
         return this.quote(param);
     }
@@ -622,21 +625,21 @@ public class DbmsLanguage {
      * @return the new statement
      */
     public String addWhereToStatement(String statement, String whereClause) {
-        final GenericSQLHandler genericSQLHandler = new GenericSQLHandler(statement);
+        String tempStatement = statement;
+        String tempWhereClause = whereClause;
+        final GenericSQLHandler genericSQLHandler = new GenericSQLHandler(tempStatement);
         if (genericSQLHandler.containsWhereClause()) {
-            whereClause = whereClause.length() != 0 ? where() + whereClause : whereClause;
-            statement = genericSQLHandler.replaceWhere(whereClause).getSqlString();
+            tempWhereClause = tempWhereClause.length() != 0 ? where() + tempWhereClause : tempWhereClause;
+            tempStatement = genericSQLHandler.replaceWhere(tempWhereClause).getSqlString();
         }
-
         if (genericSQLHandler.containsAndClause()) {
-            whereClause = whereClause.length() != 0 ? and() + whereClause : whereClause;
-            statement = genericSQLHandler.replaceAndClause(whereClause).getSqlString();
+            tempWhereClause = tempWhereClause.length() != 0 ? and() + tempWhereClause : tempWhereClause;
+            tempStatement = genericSQLHandler.replaceAndClause(tempWhereClause).getSqlString();
         }
-
         if (genericSQLHandler.containsUDIWhere()) {
-            statement = genericSQLHandler.replaceUDIWhere(whereClause).getSqlString();
+            tempStatement = genericSQLHandler.replaceUDIWhere(tempWhereClause).getSqlString();
         }
-        return statement;
+        return tempStatement;
     }
 
     public String where() {
@@ -1149,7 +1152,7 @@ public class DbmsLanguage {
         Expression query = indicator.getInstantiatedExpressions(this.getDbmsName());
         if (query == null) {
             // try to get a default sql expression
-            query = indicator.getInstantiatedExpressions(this.getDefaultLanguage());
+            query = indicator.getInstantiatedExpressions(getDefaultLanguage());
         }
         return query;
     }
@@ -1298,6 +1301,7 @@ public class DbmsLanguage {
             return PluginConstant.EMPTY_STRING;
         }
         // else
+        String tempSchemaName = schemaName;
         StringBuilder builder = new StringBuilder();
         for (JoinElement joinElement : joinElements) {
 
@@ -1327,11 +1331,11 @@ public class DbmsLanguage {
                     // MOD by klliu bug 20926 #c82152
                     // schemaName = ColumnSetHelper.getTableOwner(colA);
                     ColumnSet columnOwnerAsColumnSet = ColumnHelper.getColumnOwnerAsColumnSet(colA);
-                    schemaName = ColumnSetHelper.getTableOwner(columnOwnerAsColumnSet);
+                    tempSchemaName = ColumnSetHelper.getTableOwner(columnOwnerAsColumnSet);
                 }
                 // ~11934
                 // ~MOD mzhao 2010-2-24 bug 11753. Add prefix catalog or schema in case of join tables.
-                tableA = toQualifiedName(catalogName, schemaName, tableA);
+                tableA = toQualifiedName(catalogName, tempSchemaName, tableA);
                 // ~
                 buildJoinClause(builder, tableB, tableAliasB, columnBName, hasTableAliasB, tableA, tableAliasA, columnAName,
                         hasTableAliasA, operator, joinType);
@@ -1340,11 +1344,11 @@ public class DbmsLanguage {
                 if (ConnectionUtils.isSybaseeDBProducts(getDbmsName())) {
                     // MOD by klliu bug 20926 #c82152
                     ColumnSet columnOwnerAsColumnSet = ColumnHelper.getColumnOwnerAsColumnSet(colB);
-                    schemaName = ColumnSetHelper.getTableOwner(columnOwnerAsColumnSet);
+                    tempSchemaName = ColumnSetHelper.getTableOwner(columnOwnerAsColumnSet);
                 }
                 // ~11934
                 // ~MOD mzhao 2010-2-24 bug 11753. Add prefix catalog or schema in case of join tables.
-                tableB = toQualifiedName(catalogName, schemaName, tableB);
+                tableB = toQualifiedName(catalogName, tempSchemaName, tableB);
                 // ~
                 buildJoinClause(builder, tableA, tableAliasA, columnAName, hasTableAliasA, tableB, tableAliasB, columnBName,
                         hasTableAliasB, operator, joinType);
@@ -1520,8 +1524,8 @@ public class DbmsLanguage {
      * @return average length with blank sql statement
      */
     public String getAverageLengthWithBlankRows() {
-        String whereExpression = "WHERE <%=__COLUMN_NAMES__%> IS NOT NULL ";
-        return "SELECT * FROM <%=__TABLE_NAME__%> WHERE LENGTH(" + trimIfBlank("<%=__COLUMN_NAMES__%>") + ") BETWEEN (SELECT FLOOR(SUM(LENGTH(" + trimIfBlank("<%=__COLUMN_NAMES__%>") + ")) / COUNT(*)) FROM <%=__TABLE_NAME__%> " + whereExpression + ") AND (SELECT CEIL(SUM(LENGTH(" + trimIfBlank("<%=__COLUMN_NAMES__%>") + " )) / COUNT(* )) FROM <%=__TABLE_NAME__%> " + whereExpression + ")"; //$NON-NLS-1$
+        String whereExpression = "WHERE <%=__COLUMN_NAMES__%> IS NOT NULL "; //$NON-NLS-1$
+        return "SELECT * FROM <%=__TABLE_NAME__%> WHERE LENGTH(" + trimIfBlank("<%=__COLUMN_NAMES__%>") + ") BETWEEN (SELECT FLOOR(SUM(LENGTH(" + trimIfBlank("<%=__COLUMN_NAMES__%>") + ")) / COUNT(*)) FROM <%=__TABLE_NAME__%> " + whereExpression + ") AND (SELECT CEIL(SUM(LENGTH(" + trimIfBlank("<%=__COLUMN_NAMES__%>") + " )) / COUNT(* )) FROM <%=__TABLE_NAME__%> " + whereExpression + ")"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$ //$NON-NLS-9$
     }
 
     /**
@@ -1530,7 +1534,7 @@ public class DbmsLanguage {
      * @return average length with null blank sql statement
      */
     public String getAverageLengthWithNullBlankRows() {
-        return "SELECT * FROM <%=__TABLE_NAME__%> WHERE LENGTH(" + trimIfBlank("<%=__COLUMN_NAMES__%>") + ") BETWEEN (SELECT FLOOR(SUM(LENGTH(" + trimIfBlank("<%=__COLUMN_NAMES__%>") + ")) / COUNT(*)) FROM <%=__TABLE_NAME__%>) AND (SELECT CEIL(SUM(LENGTH(" + trimIfBlank("<%=__COLUMN_NAMES__%>") + " )) / COUNT(* )) FROM <%=__TABLE_NAME__%>)"; //$NON-NLS-1$
+        return "SELECT * FROM <%=__TABLE_NAME__%> WHERE LENGTH(" + trimIfBlank("<%=__COLUMN_NAMES__%>") + ") BETWEEN (SELECT FLOOR(SUM(LENGTH(" + trimIfBlank("<%=__COLUMN_NAMES__%>") + ")) / COUNT(*)) FROM <%=__TABLE_NAME__%>) AND (SELECT CEIL(SUM(LENGTH(" + trimIfBlank("<%=__COLUMN_NAMES__%>") + " )) / COUNT(* )) FROM <%=__TABLE_NAME__%>)"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$
     }
 
     /**
@@ -1539,8 +1543,8 @@ public class DbmsLanguage {
      * @return average length with null sql statement
      */
     public String getAverageLengthWithNullRows() {
-        String whereExpression = "WHERE(<%=__COLUMN_NAMES__%> IS NULL OR " + isNotBlank("<%=__COLUMN_NAMES__%>") + ")";
-        return "SELECT * FROM <%=__TABLE_NAME__%> " + whereExpression + "AND LENGTH(<%=__COLUMN_NAMES__%>) BETWEEN (SELECT FLOOR(SUM(LENGTH(<%=__COLUMN_NAMES__%> )) / COUNT( * )) FROM <%=__TABLE_NAME__%> " + whereExpression + ") AND (SELECT CEIL(SUM(LENGTH(<%=__COLUMN_NAMES__%> )) / COUNT(*)) FROM <%=__TABLE_NAME__%>  " + whereExpression + ")"; //$NON-NLS-1$
+        String whereExpression = "WHERE(<%=__COLUMN_NAMES__%> IS NULL OR " + isNotBlank("<%=__COLUMN_NAMES__%>") + ")"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+        return "SELECT * FROM <%=__TABLE_NAME__%> " + whereExpression + "AND LENGTH(<%=__COLUMN_NAMES__%>) BETWEEN (SELECT FLOOR(SUM(LENGTH(<%=__COLUMN_NAMES__%> )) / COUNT( * )) FROM <%=__TABLE_NAME__%> " + whereExpression + ") AND (SELECT CEIL(SUM(LENGTH(<%=__COLUMN_NAMES__%> )) / COUNT(*)) FROM <%=__TABLE_NAME__%>  " + whereExpression + ")"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
     }
 
     /**
@@ -1644,7 +1648,7 @@ public class DbmsLanguage {
     }
 
     /**
-     * get the catalog name from the context in the DatabaseConnection.
+     * get the catalog name from the context in the DatabaseConnection(the database connection must be context mode).
      * 
      * @param dbConn
      * @return catalog name or null
@@ -1654,7 +1658,7 @@ public class DbmsLanguage {
     }
 
     /**
-     * get the schema name from the context in the DatabaseConnection.
+     * get the schema name from the context in the DatabaseConnection(the database connection must be context mode).
      * 
      * @param dbConn
      * @return schema name or null
@@ -1663,6 +1667,13 @@ public class DbmsLanguage {
         return cloneOriginalValueConnection(dbConn).getUiSchema();
     }
 
+    /**
+     * clone the database connection with original value according to the context(the database connection must be
+     * context mode).
+     * 
+     * @param dbConn
+     * @return
+     */
     private DatabaseConnection cloneOriginalValueConnection(DatabaseConnection dbConn) {
         IRepositoryContextService repositoryContextService = CoreRuntimePlugin.getInstance().getRepositoryContextService();
         if (repositoryContextService != null) {
@@ -1680,5 +1691,75 @@ public class DbmsLanguage {
             log.error(msg, exp);
             throw exp;
         }
+    }
+
+    /**
+     * get the catalog or schema name according to the analyzed column.
+     * 
+     * @param analyzedColumn
+     * @return if the catalog is not null, return catalog's name, else if schema is not null, return schema's name, else
+     * return null
+     */
+    public String getCatalogOrSchemaName(ModelElement analyzedColumn) {
+        String name = null;
+
+        // get the catalog/schema name from the context
+        DatabaseConnection dbConn = ConnectionHelper.getTdDataProvider(SwitchHelpers.COLUMN_SWITCH.doSwitch(analyzedColumn));
+        if (dbConn != null && dbConn.isContextMode()) {
+            name = getCatalogNameFromContext(dbConn);
+            if (!StringUtils.isEmpty(name)) {
+                return name;
+            }
+            name = getSchemaNameFromContext(dbConn);
+            if (!StringUtils.isEmpty(name)) {
+                return name;
+            }
+        }
+
+        // if the catalog/schema name from the context is empty, get it by the column
+        if (StringUtils.isEmpty(name)) {
+            ModelElement columnSetOwner = AnalysisExecutorHelper.findColumnSetOwner(analyzedColumn);
+            // Get catalog
+            Catalog catalog = getCatalog(columnSetOwner);
+            if (catalog != null) {
+                return catalog.getName();
+            }
+            // Get schema
+            Schema schema = getSchema(columnSetOwner);
+            if (schema != null) {
+                return schema.getName();
+            }
+            // no catalog and schema
+            log.error(Messages.getString("DbmsLanguage.NoCatalogOrSchema", columnSetOwner.getName()));//$NON-NLS-1$
+        }
+        return name;
+    }
+
+    /**
+     * get the schema from the columnSetOwner.
+     * 
+     * @param columnSetOwner
+     * @return
+     */
+    protected Schema getSchema(ModelElement columnSetOwner) {
+        Package pack = ColumnSetHelper.getParentCatalogOrSchema(columnSetOwner);
+        if (pack instanceof Schema) {
+            return (Schema) pack;
+        }
+        return null;
+    }
+
+    /**
+     * get the catalog from the columnSetOwner.
+     * 
+     * @param columnSetOwner it should be a table or schema
+     * @return
+     */
+    protected Catalog getCatalog(ModelElement columnSetOwner) {
+        Package pack = ColumnSetHelper.getParentCatalogOrSchema(columnSetOwner);
+        if (pack instanceof Catalog) {
+            return (Catalog) pack;
+        }
+        return null;
     }
 }

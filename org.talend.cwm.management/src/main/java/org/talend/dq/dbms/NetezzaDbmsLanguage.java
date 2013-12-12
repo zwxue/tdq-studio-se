@@ -15,6 +15,9 @@ package org.talend.dq.dbms;
 import org.apache.commons.lang.StringUtils;
 import org.talend.dataquality.indicators.DateGrain;
 import org.talend.utils.ProductVersion;
+import orgomg.cwm.objectmodel.core.ModelElement;
+import orgomg.cwm.resource.relational.Catalog;
+import orgomg.cwm.resource.relational.Schema;
 
 /**
  * DOC klliu class global comment. Detailled comment
@@ -173,5 +176,19 @@ public class NetezzaDbmsLanguage extends DbmsLanguage {
         }
 
         return false;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dq.dbms.DbmsLanguage#getCatalog(orgomg.cwm.objectmodel.core.ModelElement)
+     */
+    @Override
+    protected Catalog getCatalog(ModelElement columnSetOwner) {
+        // get the schema first
+        Schema schema = getSchema(columnSetOwner);
+        // get the catalog according to the schema
+        Catalog catalog = super.getCatalog(schema);
+        return catalog;
     }
 }

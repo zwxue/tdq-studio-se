@@ -15,6 +15,9 @@ package org.talend.dq.dbms;
 import org.talend.dataquality.indicators.DateGrain;
 import org.talend.utils.ProductVersion;
 import org.talend.utils.properties.PropertiesLoader;
+import orgomg.cwm.objectmodel.core.ModelElement;
+import orgomg.cwm.resource.relational.Catalog;
+import orgomg.cwm.resource.relational.Schema;
 
 /**
  * DOC scorreia class global comment. Detailled comment
@@ -164,5 +167,19 @@ public class PostgresqlDbmsLanguage extends DbmsLanguage {
     @Override
     public String castColumnNameToChar(String columnName) {
         return "cast(" + columnName + " as char)";//$NON-NLS-1$ //$NON-NLS-2$
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dq.dbms.DbmsLanguage#getCatalog(orgomg.cwm.objectmodel.core.ModelElement)
+     */
+    @Override
+    protected Catalog getCatalog(ModelElement columnSetOwner) {
+        // get the schema first
+        Schema schema = getSchema(columnSetOwner);
+        // get the catalog according to the schema
+        Catalog catalog = super.getCatalog(schema);
+        return catalog;
     }
 }
