@@ -45,6 +45,7 @@ import org.talend.dataquality.reports.TdReport;
 import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.writer.impl.ElementWriterFactory;
+import org.talend.utils.sugars.ReturnCode;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.foundation.softwaredeployment.DataManager;
 import orgomg.cwm.objectmodel.core.Dependency;
@@ -534,7 +535,7 @@ public final class DependenciesHandler {
         boolean isSuccessful = Boolean.TRUE;
         // Remove old dependencies.
         if (oldDataProvider != null) {
-            TypedReturnCode<?> rc = removeConnDependencyAndSave(analysis);
+            ReturnCode rc = removeConnDependencyAndSave(analysis);
             if (rc.isOk()) {
                 // always clean the connection info from the analysis
                 analysis.getContext().setConnection(null);
@@ -557,16 +558,16 @@ public final class DependenciesHandler {
      * @param analysis
      * @return whether the connection dependency is removed
      */
-    public TypedReturnCode<Object> removeConnDependencyAndSave(Analysis analysis) {
+    public ReturnCode removeConnDependencyAndSave(Analysis analysis) {
         Connection connection = (Connection) analysis.getContext().getConnection();
-        TypedReturnCode<Object> rect = new TypedReturnCode<Object>(Boolean.TRUE);
+        ReturnCode rect = new TypedReturnCode<Object>(Boolean.TRUE);
         if (connection != null) {
             List<ModelElement> tempList = new ArrayList<ModelElement>();
             tempList.add(connection);
             DependenciesHandler.getInstance().removeDependenciesBetweenModels(analysis, tempList);
             Property property = PropertyHelper.getProperty(connection);
             if (property != null) {
-                ElementWriterFactory.getInstance().createDataProviderWriter().save(property.getItem(), false);
+                rect = ElementWriterFactory.getInstance().createDataProviderWriter().save(property.getItem(), false);
             } else {
                 rect.setOk(Boolean.FALSE);
                 rect.setMessage(Messages.getString("DependenciesHandler.removeDependFailByNull", "property")); //$NON-NLS-1$ //$NON-NLS-2$

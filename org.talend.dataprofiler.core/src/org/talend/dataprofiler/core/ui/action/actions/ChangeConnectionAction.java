@@ -68,7 +68,6 @@ import org.talend.dq.writer.impl.ElementWriterFactory;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.resource.EResourceConstant;
 import org.talend.utils.sugars.ReturnCode;
-import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.objectmodel.core.Package;
 import orgomg.cwm.resource.relational.ColumnSet;
@@ -319,7 +318,7 @@ public class ChangeConnectionAction extends Action implements ICheatSheetAction 
         AnalysisBuilder anaBuilder = new AnalysisBuilder();
         anaBuilder.setAnalysis(synAnalysis);
         // Remove old dependencies.
-        TypedReturnCode<Object> rc = DependenciesHandler.getInstance().removeConnDependencyAndSave(synAnalysis);
+        ReturnCode rc = DependenciesHandler.getInstance().removeConnDependencyAndSave(synAnalysis);
         if (!rc.isOk()) {
             log.error(rc.getMessage());
             return false;

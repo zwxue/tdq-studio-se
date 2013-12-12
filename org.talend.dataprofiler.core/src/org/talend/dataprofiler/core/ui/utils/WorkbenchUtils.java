@@ -80,6 +80,7 @@ import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.resource.EResourceConstant;
 import org.talend.resource.ResourceManager;
+import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.foundation.softwaredeployment.DataProvider;
 import orgomg.cwm.objectmodel.core.Dependency;
 import orgomg.cwm.objectmodel.core.ModelElement;
@@ -539,8 +540,10 @@ public final class WorkbenchUtils {
                     // TDQ-8267, since the dependency is removed, the connection in the analysis context should also be
                     // removed
                     if (tempAnalysis.getContext().getAnalysedElements().isEmpty()) {
-                        DependenciesHandler.getInstance().removeConnDependencyAndSave(tempAnalysis);
-                        tempAnalysis.getContext().setConnection(null);
+                        ReturnCode rc = DependenciesHandler.getInstance().removeConnDependencyAndSave(tempAnalysis);
+                        if (rc.isOk()) {
+                            tempAnalysis.getContext().setConnection(null);
+                        }
                     }
                     // ~
                     AnaResourceFileHelper.getInstance().save(tempAnalysis);
