@@ -88,7 +88,7 @@ public class PatternMouseAdapter extends MouseAdapter {
         String executionLanguage = masterPage.getCurrentExecuteLanguage();
         if (AnalysisType.COLUMN_SET.equals(analysisType)) {
             if (ExecutionLanguage.SQL.getLiteral().equals(executionLanguage)) {
-                MessageUI.openWarning(DefaultMessagesImpl.getString("PatternMouseAdapter.noSupportForSqlEngine"));
+                MessageUI.openWarning(DefaultMessagesImpl.getString("PatternMouseAdapter.noSupportForSqlEngine")); //$NON-NLS-1$
                 return;
             } else if (ExecutionLanguage.JAVA.getLiteral().equals(executionLanguage)) {
                 patternFolderNode = RepositoryNodeHelper.getLibrariesFolderNode(EResourceConstant.PATTERN_REGEX);

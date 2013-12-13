@@ -292,48 +292,43 @@ public abstract class AbstractColumnDropTree extends AbstractPagePart {
     }
 
     /**
-     * DOC rli Comment method "deleteIndicatorItems".
+     * remove special indicatorUnit which in the ModelElementIndicator.
      * 
-     * @param treeItem
-     * @param inidicatorUnit
+     * @param meIndicator remove from here
+     * @param inidicatorUnit should be removed
      */
     protected void deleteIndicatorItems(ModelElementIndicator meIndicator, IndicatorUnit inidicatorUnit) {
         meIndicator.removeIndicatorUnit(inidicatorUnit);
-        // add removed dependency
-        addRemovedElements(absMasterPage.getAnalysis(), inidicatorUnit);
+        // update removedElements list when save editor dependency will be removed
+        removedElements(absMasterPage.getAnalysis(), inidicatorUnit);
     }
 
     /**
      * 
-     * DOC zshen Comment method "deleteIndicatorItems".
+     * remove all the indicatorUnit which in the ModelElementIndicator.
      * 
      * @param meIndicator
-     * @param inidicatorUnit remove all the indicatorUnit which in the ModelElementIndicator.
+     * 
      */
     protected void deleteIndicatorItems(ModelElementIndicator meIndicator) {
         for (IndicatorUnit indiUnit : meIndicator.getIndicatorUnits()) {
-            meIndicator.removeIndicatorUnit(indiUnit);
-            // add removed dependency
-            addRemovedElements(absMasterPage.getAnalysis(), indiUnit);
+            deleteIndicatorItems(meIndicator, indiUnit);
         }
     }
 
     /**
-     * rename method "removeDependency" to addRemovedElements.
+     *  Insert all of elements into removedElements list when the
+     * editor be saved will deal with all of depandency
      * 
      * @param analysis
      * @param unit
      */
-    protected void addRemovedElements(Analysis analysis, IndicatorUnit unit) {
+    protected void removedElements(Analysis analysis, IndicatorUnit unit) {
         List<ModelElement> reomveElements = new ArrayList<ModelElement>();
         Indicator indicator = unit.getIndicator();
         if (indicator instanceof UserDefIndicator) {
             reomveElements.add(indicator.getIndicatorDefinition());
             // MOD xqliu 2009-10-09 bug 9304
-            // if (IndicatorCategoryHelper.isUserDefMatching(UDIHelper.getUDICategory(indicator))) {
-            // reomveElements.addAll(indicator.getParameters().getDataValidDomain().getPatterns());
-            // }
-            // ~
         } else if (indicator instanceof PatternMatchingIndicator) {
             reomveElements.addAll(indicator.getParameters().getDataValidDomain().getPatterns());
         }
