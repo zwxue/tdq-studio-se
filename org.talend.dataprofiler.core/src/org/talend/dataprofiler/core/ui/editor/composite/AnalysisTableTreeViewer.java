@@ -480,9 +480,9 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
                 for (Object obj : removeList) {
                     IFile file = (IFile) obj;
                     if (whereRuleFile.equals(file)) {
-                        tableIndicator.removeIndicatorUnit(unit);
+                     // the order can not be changed 
                         removeItemBranch(this.indicatorTreeItemMap.get(unit));
-                        this.indicatorTreeItemMap.remove(unit);
+                        deleteIndicatorItems(tableIndicator, unit);
                         break;
                     }
                 }
@@ -1018,8 +1018,8 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
         deleteIndicatorAideItems(tableIndicator, inidicatorUnit);
         tableIndicator.removeIndicatorUnit(inidicatorUnit);
         this.indicatorTreeItemMap.remove(inidicatorUnit);
-        // add removed dependency
-        addRemovedElements(masterPage.getAnalysis(), inidicatorUnit);
+     // add the element which need to be removed from dependency when the editor save 
+        removedElements(masterPage.getAnalysis(), inidicatorUnit);
     }
 
     /**
@@ -1030,8 +1030,8 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
             deleteIndicatorAideItems(tableIndicator, indiUnit);
             tableIndicator.removeIndicatorUnit(indiUnit);
             this.indicatorTreeItemMap.remove(indiUnit);
-            // add removed dependency
-            addRemovedElements(masterPage.getAnalysis(), indiUnit);
+         // add the element which need to be removed from dependency when the editor save 
+            removedElements(masterPage.getAnalysis(), indiUnit);
         }
     }
 
