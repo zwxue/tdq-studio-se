@@ -2363,14 +2363,17 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
         if (this.definitionItem != null) {
             this.definitionItem.setIndicatorDefinition(definition);
         }
-        // MOD yyi 2012-02-08 TDQ-4621:Explicitly set true for updating dependencies.
-        ElementWriterFactory.getInstance().createIndicatorDefinitionWriter().save(definitionItem, true);
-        this.isDirty = false;
-        if (!rc.isOk()) {
-            this.isDirty = true;
-            MessageDialog.openError(null, "error", rc.getMessage());//$NON-NLS-1$
-        } else if (UDIHelper.isJUDIValid(definition) && needReloadJUDIJar) {
-            UDIHelper.clearJAVAUDIMAPByIndicatorDefinition(definition);
+        if (rc.isOk()) {
+            this.isDirty = false;
+            // Mod TDQ-7474, only when rc is ok, should save the definition
+            // MOD yyi 2012-02-08 TDQ-4621:Explicitly set true for updating dependencies.
+            ElementWriterFactory.getInstance().createIndicatorDefinitionWriter().save(definitionItem, true);
+
+            if (UDIHelper.isJUDIValid(definition) && needReloadJUDIJar) {
+                UDIHelper.clearJAVAUDIMAPByIndicatorDefinition(definition);
+            }
+        } else {
+            MessageUI.openError(rc.getMessage());
         }
     }
 
@@ -2544,6 +2547,15 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
      */
     private ReturnCode checkBeforeSave() {
         ReturnCode rc = new ReturnCode();
+
+        // Added TDQ-7474 20131213 yyin
+        // check the size of the tempExpressionMap, if size=0(means no expression), return false
+        if (tempExpressionMap.size() == 0) {
+            rc.setOk(false);
+            rc.setMessage(DefaultMessagesImpl.getString("IndicatorDefinitionMaterPage.validateNoExpression"));//$NON-NLS-1$
+            return rc;
+        }// ~
+
         Map<String, Integer> languageVersionCountMap = new HashMap<String, Integer>();
         Iterator<CCombo> it = tempExpressionMap.keySet().iterator();
         while (it.hasNext()) {
