@@ -51,6 +51,7 @@ public class ConnectionMasterDetailsPage extends AbstractFilterMetadataPage {
         super(editor, id, title);
     }
 
+    @Override
     protected void fillDataProvider() {
         connectionNode = (ConnectionRepNode) getCurrentRepNodeOnUI();
         if (connectionNode != null) {
@@ -67,7 +68,7 @@ public class ConnectionMasterDetailsPage extends AbstractFilterMetadataPage {
             ConnectionItem item = (ConnectionItem) connectionNode.getObject().getProperty().getItem();
             tdDataProvider = item.getConnection();
         } else {
-            EList<ModelElement> analysedElements = this.analysis.getContext().getAnalysedElements();
+            EList<ModelElement> analysedElements = this.analysisItem.getAnalysis().getContext().getAnalysedElements();
             tdDataProvider = null;
             if (analysedElements.size() > 0) {
                 tdDataProvider = (Connection) analysedElements.get(0);
@@ -76,13 +77,15 @@ public class ConnectionMasterDetailsPage extends AbstractFilterMetadataPage {
 
     }
 
+    @Override
     protected List<Catalog> getCatalogs() {
         List<Catalog> catalogs = ConnectionHelper.getCatalogs(tdDataProvider);
         return catalogs;
     }
 
+    @Override
     public List<OverviewIndUIElement> getSchemaIndicators() {
-        ConnectionIndicator conIndicator = (ConnectionIndicator) analysis.getResults().getIndicators().get(0);
+        ConnectionIndicator conIndicator = (ConnectionIndicator) analysisItem.getAnalysis().getResults().getIndicators().get(0);
         Connection analyzedElement = (Connection) conIndicator.getAnalyzedElement();
         EList<SchemaIndicator> schemaIndicators = conIndicator.getSchemaIndicators();
         List<OverviewIndUIElement> cataUIEleList = new ArrayList<OverviewIndUIElement>();
@@ -103,8 +106,9 @@ public class ConnectionMasterDetailsPage extends AbstractFilterMetadataPage {
         return cataUIEleList;
     }
 
+    @Override
     public List<OverviewIndUIElement> getCatalogIndicators() {
-        ConnectionIndicator conIndicator = (ConnectionIndicator) analysis.getResults().getIndicators().get(0);
+        ConnectionIndicator conIndicator = (ConnectionIndicator) analysisItem.getAnalysis().getResults().getIndicators().get(0);
         Connection analyzedElement = (Connection) conIndicator.getAnalyzedElement();
         EList<CatalogIndicator> catalogIndicators = conIndicator.getCatalogIndicators();
         List<OverviewIndUIElement> cataUIEleList = new ArrayList<OverviewIndUIElement>();

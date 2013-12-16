@@ -524,58 +524,39 @@ public final class DependenciesHandler {
 
     /**
      * 
-     * delete the dependency between analysis and connection
+     * delete the dependency between analysis and connection,then save the connection and analysis.
      * 
      * @param analysis
      * @return whether it has been deleted
      * 
      */
-    public boolean deleteConnectionDependency(Analysis analysis) {
+    public boolean removeConnDependencyAndSave(TDQAnalysisItem analysisItem) {
+        Analysis analysis = analysisItem.getAnalysis();
         Connection oldDataProvider = (Connection) analysis.getContext().getConnection();
-        boolean isSuccessful = Boolean.TRUE;
+        ReturnCode rect = new TypedReturnCode<Object>(Boolean.TRUE);
         // Remove old dependencies.
         if (oldDataProvider != null) {
-            ReturnCode rc = removeConnDependencyAndSave(analysis);
-            if (rc.isOk()) {
-                // always clean the connection info from the analysis
-                analysis.getContext().setConnection(null);
-                analysis.getClientDependency().clear();
-            } else {
-                isSuccessful = rc.isOk();
-                log.error(rc.getMessage());
-            }
-        } else {
-            isSuccessful = Boolean.FALSE;
-            log.error(Messages.getString("DependenciesHandler.removeDependFailByNull", "oldDataProvider")); //$NON-NLS-1$ //$NON-NLS-2$
-        }
-        return isSuccessful;
-    }
-
-    /**
-     * 
-     * remove the dependency between analysis and connection,then save the connection.
-     * 
-     * @param analysis
-     * @return whether the connection dependency is removed
-     */
-    public ReturnCode removeConnDependencyAndSave(Analysis analysis) {
-        Connection connection = (Connection) analysis.getContext().getConnection();
-        ReturnCode rect = new TypedReturnCode<Object>(Boolean.TRUE);
-        if (connection != null) {
             List<ModelElement> tempList = new ArrayList<ModelElement>();
-            tempList.add(connection);
+            tempList.add(oldDataProvider);
             DependenciesHandler.getInstance().removeDependenciesBetweenModels(analysis, tempList);
-            Property property = PropertyHelper.getProperty(connection);
+            Property property = PropertyHelper.getProperty(oldDataProvider);
             if (property != null) {
                 rect = ElementWriterFactory.getInstance().createDataProviderWriter().save(property.getItem(), false);
             } else {
                 rect.setOk(Boolean.FALSE);
-                rect.setMessage(Messages.getString("DependenciesHandler.removeDependFailByNull", "property")); //$NON-NLS-1$ //$NON-NLS-2$
+            }
+            if (!rect.isOk()) {
+                rect.setMessage(Messages.getString("DependenciesHandler.removeDependFailed")); //$NON-NLS-1$
+                log.error(rect.getMessage());
+            } else {
+                analysis.getContext().setConnection(null);
+                analysis.getClientDependency().clear();
+                rect = ElementWriterFactory.getInstance().createAnalysisWrite().save(analysisItem, false);
             }
         } else {
-            rect.setOk(Boolean.FALSE);
-            rect.setMessage(Messages.getString("DependenciesHandler.removeDependFailByNull", "connection")); //$NON-NLS-1$ //$NON-NLS-2$
+            log.warn(Messages.getString("DependenciesHandler.removeDependFailByNull", "oldDataProvider")); //$NON-NLS-1$ //$NON-NLS-2$
         }
-        return rect;
+
+        return rect.isOk();
     }
 }

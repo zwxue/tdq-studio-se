@@ -59,6 +59,7 @@ import org.talend.core.repository.constants.FileConstants;
 import org.talend.core.repository.model.FolderHelper;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.cwm.dependencies.DependenciesHandler;
+import org.talend.cwm.management.i18n.Messages;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
@@ -71,16 +72,18 @@ import org.talend.dataprofiler.core.ui.views.DQRespositoryView;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisContext;
 import org.talend.dataquality.indicators.Indicator;
+import org.talend.dataquality.properties.TDQAnalysisItem;
+import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
 import org.talend.dq.writer.EMFSharedResources;
+import org.talend.dq.writer.impl.ElementWriterFactory;
 import org.talend.repository.ProjectManager;
 import org.talend.repository.localprovider.model.LocalFolderHelper;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.resource.EResourceConstant;
 import org.talend.resource.ResourceManager;
-import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.foundation.softwaredeployment.DataProvider;
 import orgomg.cwm.objectmodel.core.Dependency;
 import orgomg.cwm.objectmodel.core.ModelElement;
@@ -535,18 +538,23 @@ public final class WorkbenchUtils {
                         }
 
                     }
+                    Property tempAnaProperty = PropertyHelper.getProperty(file);
+
                     // only when all elements of the data provider are removed from the analysis, the dependency between
                     // them should be removed too. If only parts of them removed, the dependendy should not be removed.
                     // TDQ-8267, since the dependency is removed, the connection in the analysis context should also be
                     // removed
-                    if (tempAnalysis.getContext().getAnalysedElements().isEmpty()) {
-                        ReturnCode rc = DependenciesHandler.getInstance().removeConnDependencyAndSave(tempAnalysis);
-                        if (rc.isOk()) {
-                            tempAnalysis.getContext().setConnection(null);
-                        }
+                    if (tempAnaProperty == null) {
+                        log.error(Messages.getString("WorkbenchUtils.fialToSaveImapctAnalysis", tempAnalysis.getName())); //$NON-NLS-1$
+                        return;
                     }
-                    // ~
-                    AnaResourceFileHelper.getInstance().save(tempAnalysis);
+                    if (tempAnalysis.getContext().getAnalysedElements().isEmpty()) {
+                        DependenciesHandler.getInstance()
+                                .removeConnDependencyAndSave((TDQAnalysisItem) tempAnaProperty.getItem());
+
+                    } else {
+                        ElementWriterFactory.getInstance().createAnalysisWrite().save(tempAnaProperty.getItem(), false);
+                    }
 
                 }
             }

@@ -307,7 +307,7 @@ public class ColumnSetResultPage extends AbstractAnalysisResultPage implements P
                 }
 
                 public void mouseDown(MouseEvent e) {
-                    List<Indicator> indicatorsList = masterPage.analysis.getResults().getIndicators();
+                    List<Indicator> indicatorsList = masterPage.analysisItem.getAnalysis().getResults().getIndicators();
                     SelectPatternsWizard wizard = new SelectPatternsWizard(indicatorsList);
                     wizard.setFilterType(filterType);
                     wizard.setOldTableInputList(ColumnSetResultPage.this.tableFilterResult);
@@ -548,7 +548,7 @@ public class ColumnSetResultPage extends AbstractAnalysisResultPage implements P
     }
 
     private boolean containAllMatchIndicator() {
-        List<Indicator> indicatorsList = masterPage.analysis.getResults().getIndicators();
+        List<Indicator> indicatorsList = masterPage.analysisItem.getAnalysis().getResults().getIndicators();
         for (Indicator theIndicator : indicatorsList) {
             if (theIndicator instanceof AllMatchIndicatorImpl) {
                 return true;

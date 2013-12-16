@@ -25,13 +25,11 @@ import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
-import org.talend.commons.utils.WorkspaceUtils;
 import org.talend.core.model.metadata.MetadataColumnRepositoryObject;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.properties.ConnectionItem;
@@ -51,7 +49,6 @@ import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.columnset.ColumnDependencyIndicator;
 import org.talend.dataquality.indicators.columnset.ColumnsetFactory;
 import org.talend.dataquality.indicators.columnset.ColumnsetPackage;
-import org.talend.dataquality.properties.TDQAnalysisItem;
 import org.talend.dq.analysis.AnalysisBuilder;
 import org.talend.dq.analysis.AnalysisHandler;
 import org.talend.dq.analysis.ColumnDependencyAnalysisHandler;
@@ -103,7 +100,7 @@ public class ColumnDependencyMasterDetailsPage extends AbstractAnalysisMetadataP
     @Override
     public void initialize(FormEditor editor) {
         super.initialize(editor);
-        stringDataFilter = AnalysisHelper.getStringDataFilter(analysis);
+        stringDataFilter = AnalysisHelper.getStringDataFilter(analysisItem.getAnalysis());
     }
 
     @Override
@@ -156,7 +153,7 @@ public class ColumnDependencyMasterDetailsPage extends AbstractAnalysisMetadataP
         dataFilterComp.addModifyListener(new ModifyListener() {
 
             public void modifyText(ModifyEvent e) {
-                AnalysisHelper.setStringDataFilter(analysis, dataFilterComp.getDataFilterString());
+                AnalysisHelper.setStringDataFilter(analysisItem.getAnalysis(), dataFilterComp.getDataFilterString());
             }
         });
 
@@ -213,7 +210,7 @@ public class ColumnDependencyMasterDetailsPage extends AbstractAnalysisMetadataP
 
     public AnalysisHandler getAnalysisHandler() {
         ColumnDependencyAnalysisHandler analysisHandler = new ColumnDependencyAnalysisHandler();
-        analysisHandler.setAnalysis(this.analysis);
+        analysisHandler.setAnalysis(this.analysisItem.getAnalysis());
         return analysisHandler;
     }
 
@@ -227,8 +224,8 @@ public class ColumnDependencyMasterDetailsPage extends AbstractAnalysisMetadataP
         // ADD gdbu 2011-3-3 bug 19179
         // remove the space from analysis name
         //        analysis.setName(analysis.getName().replace(" ", ""));//$NON-NLS-1$ //$NON-NLS-2$
-        for (Domain domain : this.analysis.getParameters().getDataFilter()) {
-            domain.setName(this.analysis.getName());
+        for (Domain domain : this.analysisItem.getAnalysis().getParameters().getDataFilter()) {
+            domain.setName(this.analysisItem.getAnalysis().getName());
         }
         // ~
 
@@ -239,7 +236,7 @@ public class ColumnDependencyMasterDetailsPage extends AbstractAnalysisMetadataP
         List<RepositoryNode> columnListBBNode = anaColumnCompareViewer.getColumnListB();
 
         AnalysisBuilder anaBuilder = new AnalysisBuilder();
-        anaBuilder.setAnalysis(this.analysis);
+        anaBuilder.setAnalysis(this.analysisItem.getAnalysis());
         Connection tdDataProvider = null;
 
         for (int i = 0; i < columnListAANode.size(); i++) {
@@ -252,7 +249,7 @@ public class ColumnDependencyMasterDetailsPage extends AbstractAnalysisMetadataP
                 indicator.setColumnA(columnA);
                 indicator.setColumnB(columnB);
                 indicator.setIndicatorDefinition(DefinitionHandler.getInstance().getFDRuleDefaultIndicatorDefinition());
-                analysis.getResults().getIndicators().add(indicator);
+                analysisItem.getAnalysis().getResults().getIndicators().add(indicator);
                 anaBuilder.addElementToAnalyze(columnA, indicator);
                 // ADD this line qiongli 2010-6-8
                 anaBuilder.addElementToAnalyze(columnB, indicator);
@@ -263,13 +260,14 @@ public class ColumnDependencyMasterDetailsPage extends AbstractAnalysisMetadataP
             reposObject = columnListAANode.get(0).getObject();
             tdDataProvider = ((ConnectionItem) reposObject.getProperty().getItem()).getConnection();
             // MOD qiongli bug 14437:Add dependency
-            analysis.getContext().setConnection(tdDataProvider);
-            TypedReturnCode<Dependency> rc = DependenciesHandler.getInstance().setDependencyOn(analysis, tdDataProvider);
+            analysisItem.getAnalysis().getContext().setConnection(tdDataProvider);
+            TypedReturnCode<Dependency> rc = DependenciesHandler.getInstance().setDependencyOn(analysisItem.getAnalysis(),
+                    tdDataProvider);
             if (!rc.isOk()) {
-                log.info("fail to save dependency analysis:" + analysis.getFileName());//$NON-NLS-1$
+                log.info("fail to save dependency analysis:" + analysisItem.getAnalysis().getFileName());//$NON-NLS-1$
             }
         } else {
-            deleteConnectionDependency(analysis);
+            deleteConnectionDependency(analysisItem);
         }
 
         // save the number of connections per analysis
@@ -277,19 +275,9 @@ public class ColumnDependencyMasterDetailsPage extends AbstractAnalysisMetadataP
 
         // 2011.1.12 MOD by zhsne to unify anlysis and connection id when saving.
         ReturnCode saved = new ReturnCode(false);
-        IEditorInput editorInput = this.getEditorInput();
-        if (editorInput instanceof AnalysisItemEditorInput) {
-            AnalysisItemEditorInput analysisInput = (AnalysisItemEditorInput) editorInput;
-            TDQAnalysisItem tdqAnalysisItem = analysisInput.getTDQAnalysisItem();
-
-            // ADD gdbu 2011-3-3 bug 19179
-            tdqAnalysisItem.getProperty().setDisplayName(analysis.getName());
-            tdqAnalysisItem.getProperty().setLabel(WorkspaceUtils.normalize(analysis.getName()));
-            this.nameText.setText(analysis.getName());
-            // ~
-            // MOD yyi 2012-02-08 TDQ-4621:Explicitly set true for updating dependencies.
-            saved = ElementWriterFactory.getInstance().createAnalysisWrite().save(tdqAnalysisItem, true);
-        }
+        this.nameText.setText(analysisItem.getAnalysis().getName());
+        // MOD yyi 2012-02-08 TDQ-4621:Explicitly set true for updating dependencies.
+        saved = ElementWriterFactory.getInstance().createAnalysisWrite().save(analysisItem, true);
         // MOD yyi 2012-02-03 TDQ-3602:Avoid to rewriting all analyzes after saving, no reason to update all analyzes
         // which is depended in the referred connection.
         // Extract saving log function.
@@ -324,7 +312,7 @@ public class ColumnDependencyMasterDetailsPage extends AbstractAnalysisMetadataP
 
     private List<RepositoryNode> getColumnSet(EReference reference) {
         List<RepositoryNode> columns = new ArrayList<RepositoryNode>();
-        EList<Indicator> indicators = analysis.getResults().getIndicators();
+        EList<Indicator> indicators = analysisItem.getAnalysis().getResults().getIndicators();
         for (Indicator indicator : indicators) {
             TdColumn findColumn = (TdColumn) indicator.eGet(reference);
             RepositoryNode recursiveFind = RepositoryNodeHelper.recursiveFind(findColumn);

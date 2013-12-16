@@ -21,6 +21,7 @@ import org.talend.cwm.dependencies.DependenciesHandler;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.columnset.RecordMatchingIndicator;
+import org.talend.dataquality.properties.TDQAnalysisItem;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.foundation.softwaredeployment.DataManager;
 import orgomg.cwm.objectmodel.core.Dependency;
@@ -66,18 +67,19 @@ public class MatchAnalysisHandler extends AnalysisHandler {
         return this.connection;
     }
 
-    public void saveConnection() {
-        assert analysis != null;
-        assert analysis.getContext() != null;
+    public void saveConnection(TDQAnalysisItem analysisItem) {
+        assert analysisItem.getAnalysis() != null;
+        assert analysisItem.getAnalysis() != null;
         // remove the old dependencies if any
-        if (isChangeConnection && analysis.getContext().getConnection() != null) {
-            DependenciesHandler.getInstance().deleteConnectionDependency(analysis);
+        if (isChangeConnection && analysisItem.getAnalysis().getContext().getConnection() != null) {
+            DependenciesHandler.getInstance().removeConnDependencyAndSave(analysisItem);
         }// ~
-        analysis.getContext().setConnection(connection);
+        analysisItem.getAnalysis().getContext().setConnection(connection);
 
         // Added TDQ-8183 add db dependency on match analysis
         if (isChangeConnection && connection != null) {
-            TypedReturnCode<Dependency> rc = DependenciesHandler.getInstance().setDependencyOn(analysis, connection);
+            TypedReturnCode<Dependency> rc = DependenciesHandler.getInstance().setDependencyOn(analysisItem.getAnalysis(),
+                    connection);
             if (!rc.isOk()) {
                 log.info("fail to save dependency analysis:" + analysis.getFileName());//$NON-NLS-1$
             }// ~

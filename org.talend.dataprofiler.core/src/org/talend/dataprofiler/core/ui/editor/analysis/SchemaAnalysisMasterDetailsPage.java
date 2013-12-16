@@ -41,7 +41,7 @@ public class SchemaAnalysisMasterDetailsPage extends AbstractFilterMetadataPage 
 
     @Override
     protected void fillDataProvider() {
-        EList<ModelElement> analysedElements = this.analysis.getContext().getAnalysedElements();
+        EList<ModelElement> analysedElements = this.analysisItem.getAnalysis().getContext().getAnalysedElements();
         tdDataProvider = null;
         if (analysedElements.size() > 0) {
             ModelElement modelElement = analysedElements.get(0);
@@ -62,7 +62,7 @@ public class SchemaAnalysisMasterDetailsPage extends AbstractFilterMetadataPage 
     @Override
     protected List<OverviewIndUIElement> getSchemaIndicators() {
         List<OverviewIndUIElement> cataUIEleList = new ArrayList<OverviewIndUIElement>();
-        EList<Indicator> indicators = analysis.getResults().getIndicators();
+        EList<Indicator> indicators = analysisItem.getAnalysis().getResults().getIndicators();
         Connection connection = ConnectionHelper.getConnection(SwitchHelpers.SCHEMA_SWITCH.caseSchema((Schema) indicators.get(0)
                 .getAnalyzedElement()));
         RepositoryNode connNode = RepositoryNodeHelper.recursiveFind(connection);

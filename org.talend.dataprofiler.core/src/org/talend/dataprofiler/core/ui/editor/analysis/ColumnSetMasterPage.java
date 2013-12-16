@@ -39,7 +39,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.editor.FormEditor;
@@ -52,7 +51,6 @@ import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 import org.jfree.chart.JFreeChart;
 import org.jfree.experimental.chart.swt.ChartComposite;
-import org.talend.commons.utils.WorkspaceUtils;
 import org.talend.core.model.metadata.MetadataColumnRepositoryObject;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.connection.MetadataColumn;
@@ -93,7 +91,6 @@ import org.talend.dataquality.indicators.RegexpMatchingIndicator;
 import org.talend.dataquality.indicators.columnset.AllMatchIndicator;
 import org.talend.dataquality.indicators.columnset.ColumnsetFactory;
 import org.talend.dataquality.indicators.columnset.SimpleStatIndicator;
-import org.talend.dataquality.properties.TDQAnalysisItem;
 import org.talend.dq.analysis.ColumnSetAnalysisHandler;
 import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.RepositoryNodeHelper;
@@ -624,8 +621,9 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
 
         // remove the space from analysis name
         // columnSetAnalysisHandler.setName(columnSetAnalysisHandler.getName().replace(" ", ""));
-        for (Domain domain : this.analysis.getParameters().getDataFilter()) {
-            domain.setName(this.analysis.getName());
+        Analysis ana = analysisItem.getAnalysis();
+        for (Domain domain : ana.getParameters().getDataFilter()) {
+            domain.setName(ana.getName());
         }
         // ~
 
@@ -692,7 +690,7 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
             }
             // ~
         } else {
-            deleteConnectionDependency(analysis);
+            deleteConnectionDependency(analysisItem);
         }
 
         // save the number of connections per analysis
@@ -700,27 +698,17 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
 
         // 2011.1.12 MOD by zhsne to unify anlysis and connection id when saving.
         ReturnCode saved = new ReturnCode(false);
-        IEditorInput editorInput = this.getEditorInput();
-        if (editorInput instanceof AnalysisItemEditorInput) {
-            AnalysisItemEditorInput analysisInput = (AnalysisItemEditorInput) editorInput;
-            TDQAnalysisItem tdqAnalysisItem = analysisInput.getTDQAnalysisItem();
-
-            // ADD gdbu 2011-3-2 bug 19179
-            tdqAnalysisItem.getProperty().setDisplayName(columnSetAnalysisHandler.getName());
-            tdqAnalysisItem.getProperty().setLabel(WorkspaceUtils.normalize(columnSetAnalysisHandler.getName()));
-            this.nameText.setText(columnSetAnalysisHandler.getName());
-            // ~
-            // TDQ-5581,if has removed emlements(patten),should remove dependency each other before saving.
-            HashSet<ModelElement> removedElements = treeViewer.getRemovedElements();
-            if (!removedElements.isEmpty()) {
-                DependenciesHandler.getInstance().removeDependenciesBetweenModels(analysis,
-                        new ArrayList<ModelElement>(removedElements));
-            }
-            // MOD yyi 2012-02-08 TDQ-4621:Explicitly set true for updating dependencies.
-            saved = ElementWriterFactory.getInstance().createAnalysisWrite().save(tdqAnalysisItem, true);
-            if (saved.isOk() && !removedElements.isEmpty()) {
-                saveRemovedElements();
-            }
+        this.nameText.setText(columnSetAnalysisHandler.getName());
+        // TDQ-5581,if has removed emlements(patten),should remove dependency each other before saving.
+        HashSet<ModelElement> removedElements = treeViewer.getRemovedElements();
+        if (!removedElements.isEmpty()) {
+            DependenciesHandler.getInstance().removeDependenciesBetweenModels(analysis,
+                    new ArrayList<ModelElement>(removedElements));
+        }
+        // MOD yyi 2012-02-08 TDQ-4621:Explicitly set true for updating dependencies.
+        saved = ElementWriterFactory.getInstance().createAnalysisWrite().save(analysisItem, true);
+        if (saved.isOk() && !removedElements.isEmpty()) {
+            saveRemovedElements();
         }
         // MOD yyi 2012-02-03 TDQ-3602:Avoid to rewriting all analyzes after saving, no reason to update all analyzes
         // which is depended in the referred connection.

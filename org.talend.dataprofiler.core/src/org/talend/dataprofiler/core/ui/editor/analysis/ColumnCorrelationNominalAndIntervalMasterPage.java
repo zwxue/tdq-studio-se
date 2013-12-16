@@ -37,7 +37,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.editor.FormEditor;
@@ -50,7 +49,6 @@ import org.eclipse.ui.forms.widgets.Hyperlink;
 import org.eclipse.ui.forms.widgets.ImageHyperlink;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
-import org.talend.commons.utils.WorkspaceUtils;
 import org.talend.core.model.metadata.MetadataColumnRepositoryObject;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.connection.MetadataColumn;
@@ -82,7 +80,6 @@ import org.talend.dataquality.indicators.columnset.ColumnSetMultiValueIndicator;
 import org.talend.dataquality.indicators.columnset.ColumnsetFactory;
 import org.talend.dataquality.indicators.columnset.ColumnsetPackage;
 import org.talend.dataquality.indicators.columnset.CountAvgNullIndicator;
-import org.talend.dataquality.properties.TDQAnalysisItem;
 import org.talend.dq.analysis.ColumnCorrelationAnalysisHandler;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
@@ -445,7 +442,8 @@ public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnaly
                             Display.getDefault().asyncExec(new Runnable() {
 
                                 public void run() {
-                                    new HideSeriesChartComposite(comp, analysis, columnSetMultiIndicator, tdColumn, false);
+                                    new HideSeriesChartComposite(comp, analysisItem.getAnalysis(), columnSetMultiIndicator,
+                                            tdColumn, false);
                                 }
 
                             });
@@ -577,8 +575,8 @@ public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnaly
         // remove the space from analysis name
         // this.analysis.setName(this.analysis.getName().replace(" ", ""));
         // change 'ana' field's 'dataquality' tag content
-        for (Domain domain : this.analysis.getParameters().getDataFilter()) {
-            domain.setName(this.analysis.getName());
+        for (Domain domain : this.analysisItem.getAnalysis().getParameters().getDataFilter()) {
+            domain.setName(this.analysisItem.getAnalysis().getName());
         }
         // ~
 
@@ -612,7 +610,7 @@ public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnaly
             columnSetMultiIndicator.getAnalyzedColumns().addAll(columnLst);
             correlationAnalysisHandler.addIndicator(columnLst, columnSetMultiIndicator);
         } else {
-            deleteConnectionDependency(analysis);
+            deleteConnectionDependency(analysisItem);
             // MOD by zshen for bug 12042.
             ColumnsetFactory columnsetFactory = ColumnsetFactory.eINSTANCE;
             ColumnSetMultiValueIndicator columnSetMultiValueIndicator = null;
@@ -638,19 +636,10 @@ public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnaly
 
         // 2011.1.12 MOD by zhsne to unify anlysis and connection id when saving.
         ReturnCode saved = new ReturnCode(false);
-        IEditorInput editorInput = this.getEditorInput();
-        if (editorInput instanceof AnalysisItemEditorInput) {
-            AnalysisItemEditorInput analysisInput = (AnalysisItemEditorInput) editorInput;
-            TDQAnalysisItem tdqAnalysisItem = analysisInput.getTDQAnalysisItem();
-
-            // ADD gdbu 2011-3-2 bug 19179
-            tdqAnalysisItem.getProperty().setDisplayName(analysis.getName());
-            tdqAnalysisItem.getProperty().setLabel(WorkspaceUtils.normalize(analysis.getName()));
-            this.nameText.setText(analysis.getName());
-            // ~
-            // MOD yyi 2012-02-08 TDQ-4621:Explicitly set true for updating dependencies.
-            saved = ElementWriterFactory.getInstance().createAnalysisWrite().save(tdqAnalysisItem, true);
-        }
+        this.nameText.setText(analysis.getName());
+        // ~
+        // MOD yyi 2012-02-08 TDQ-4621:Explicitly set true for updating dependencies.
+        saved = ElementWriterFactory.getInstance().createAnalysisWrite().save(analysisItem, true);
         // MOD yyi 2012-02-03 TDQ-3602:Avoid to rewriting all analyzes after saving, no reason to update all analyzes
         // which is depended in the referred connection.
         // Extract saving log function.

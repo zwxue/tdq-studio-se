@@ -78,6 +78,7 @@ import org.talend.dataquality.properties.TDQAnalysisItem;
 import org.talend.dataquality.rules.DQRule;
 import org.talend.dq.analysis.AnalysisHandler;
 import org.talend.dq.helper.EObjectHelper;
+import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
 import org.talend.dq.nodes.AnalysisRepNode;
@@ -98,7 +99,7 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
 
     private static Logger log = Logger.getLogger(AbstractAnalysisMetadataPage.class);
 
-    protected Analysis analysis;
+    protected TDQAnalysisItem analysisItem;
 
     protected AnalysisRepNode analysisRepNode;
 
@@ -144,7 +145,7 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
     }
 
     public Analysis getAnalysis() {
-        return analysis;
+        return analysisItem.getAnalysis();
     }
 
     public AbstractAnalysisMetadataPage(FormEditor editor, String id, String title) {
@@ -158,13 +159,14 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
         IEditorInput editorInput = editor.getEditorInput();
         if (editorInput instanceof AnalysisItemEditorInput) {
             AnalysisItemEditorInput fileEditorInput = (AnalysisItemEditorInput) editorInput;
-            TDQAnalysisItem tdqAnalysisItem = fileEditorInput.getTDQAnalysisItem();
-            analysis = tdqAnalysisItem.getAnalysis();
+            analysisItem = fileEditorInput.getTDQAnalysisItem();
         } else if (editorInput instanceof FileEditorInput) {
             FileEditorInput input = (FileEditorInput) editorInput;
             currentModelElement = AnaResourceFileHelper.getInstance().findAnalysis(input.getFile());
-            analysis = (Analysis) currentModelElement;
+            Property property = PropertyHelper.getProperty(input.getFile());
+            analysisItem = (TDQAnalysisItem) property.getItem();
         }
+        Analysis analysis = analysisItem.getAnalysis();
         initAnalysisRepNode(analysis);
         return analysis;
     }
@@ -328,8 +330,8 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
      */
     public String getConnectionVersion() {
         String version = null;
-        if (this.analysis != null) {
-            DataManager dm = this.analysis.getContext().getConnection();
+        if (this.analysisItem.getAnalysis() != null) {
+            DataManager dm = this.analysisItem.getAnalysis().getContext().getConnection();
             if (dm != null) {
                 if (dm instanceof Connection) {
                     Connection connection = (Connection) dm;
@@ -421,7 +423,7 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
         // connCombo.defineColumns(new String[] { "Id", "Name", "Metadata Type" });// , new int[] { 5, SWT.DEFAULT,
         // MOD qiongli 2011-5-16,filter the logical delete connection except the analysis dependen on.
         Property property = null;
-        DataManager connection = analysis.getContext().getConnection();
+        DataManager connection = analysisItem.getAnalysis().getContext().getConnection();
         for (IRepositoryNode repNode : allConnectionReposNodes) {
             property = repNode.getObject().getProperty();
             ModelElement modelElement = RepositoryNodeHelper.getModelElementFromRepositoryNode(repNode);
@@ -544,6 +546,7 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
      * @throws DataprofilerCoreException
      */
     protected void logSaved(ReturnCode saved) throws DataprofilerCoreException {
+        Analysis analysis = analysisItem.getAnalysis();
         String urlString = analysis.eResource() != null ? (analysis.eResource().getURI().isFile() ? analysis.eResource().getURI()
                 .toFileString() : analysis.eResource().getURI().toString()) : PluginConstant.EMPTY_STRING;
         if (!saved.isOk()) {
@@ -568,15 +571,14 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
 
     /**
      * 
-     * DOC zshen Comment method "deleteConnectionDependency".
      * 
-     * @param analysis
+     * @param TDQAnalysisItem
      * @return whether it has been deleted
      * 
      * delete the dependency between analysis and connection
      */
-    public boolean deleteConnectionDependency(Analysis ana) {
-        return DependenciesHandler.getInstance().deleteConnectionDependency(ana);
+    protected boolean deleteConnectionDependency(TDQAnalysisItem anaItem) {
+        return DependenciesHandler.getInstance().removeConnDependencyAndSave(anaItem);
     }
 
     /**
@@ -753,7 +755,7 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
             }
         }
 
-        ExecutionLanguage executionLanguage = analysis.getParameters().getExecutionLanguage();
+        ExecutionLanguage executionLanguage = analysisItem.getAnalysis().getParameters().getExecutionLanguage();
         // MOD zshen feature 12919 : add allow drill down and max number row component for java engin.
         final Composite javaEnginSection = createjavaEnginSection(comp2, anaParameters);
         if (ExecutionLanguage.SQL.equals(executionLanguage)) {
@@ -919,5 +921,9 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
     // analysis.
     public String getCurrentExecuteLanguage() {
         return this.execLang;
+    }
+
+    public TDQAnalysisItem getAnalysisItem() {
+        return this.analysisItem;
     }
 }

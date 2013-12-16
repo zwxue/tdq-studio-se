@@ -58,7 +58,6 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.editor.FormEditor;
@@ -92,7 +91,6 @@ import org.talend.dataquality.indicators.schema.CatalogIndicator;
 import org.talend.dataquality.indicators.schema.SchemaIndicator;
 import org.talend.dataquality.indicators.schema.TableIndicator;
 import org.talend.dataquality.indicators.schema.ViewIndicator;
-import org.talend.dataquality.properties.TDQAnalysisItem;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.nodes.DBTableFolderRepNode;
 import org.talend.dq.nodes.DBViewRepNode;
@@ -363,7 +361,7 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
         tableFilterLabel.setText(DefaultMessagesImpl.getString("ConnectionMasterDetailsPage.filterOnTable")); //$NON-NLS-1$
         tableFilterLabel.setLayoutData(new GridData());
         tableFilterText = new Text(comp2, SWT.BORDER);
-        EList<Domain> dataFilters = analysis.getParameters().getDataFilter();
+        EList<Domain> dataFilters = analysisItem.getAnalysis().getParameters().getDataFilter();
         String tablePattern = DomainHelper.getTablePattern(dataFilters);
         latestTableFilterValue = tablePattern == null ? PluginConstant.EMPTY_STRING : tablePattern;
         tableFilterText.setText(latestTableFilterValue);
@@ -411,7 +409,7 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
             reloadDatabasesBtn = new Button(sectionClient, SWT.CHECK);
             reloadDatabasesBtn.setText(DefaultMessagesImpl.getString("AbstractFilterMetadataPage.ReloadDatabases"));//$NON-NLS-1$
 
-            reloadDatabasesBtn.setSelection(AnalysisHelper.getReloadDatabases(analysis));
+            reloadDatabasesBtn.setSelection(AnalysisHelper.getReloadDatabases(analysisItem.getAnalysis()));
             reloadDatabasesBtn.addMouseListener(new MouseListener() {
 
                 public void mouseDoubleClick(MouseEvent e) {
@@ -433,8 +431,8 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
      * @return
      */
     private boolean isConnectionAnalysis() {
-        if (analysis != null) {
-            return AnalysisType.CONNECTION.equals(AnalysisHelper.getAnalysisType(analysis));
+        if (analysisItem.getAnalysis() != null) {
+            return AnalysisType.CONNECTION.equals(AnalysisHelper.getAnalysisType(analysisItem.getAnalysis()));
         }
         return false;
     }
@@ -515,11 +513,11 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
                 DefaultMessagesImpl.getString("ConnectionMasterDetailsPage.schemata", PluginConstant.EMPTY_STRING)); //$NON-NLS-1$
         toolkit.createLabel(leftComp, PluginConstant.EMPTY_STRING + tdSchema.size());
 
-        ExecutionInformations resultMetadata = analysis.getResults().getResultMetadata();
+        ExecutionInformations resultMetadata = analysisItem.getAnalysis().getResults().getResultMetadata();
 
         toolkit.createLabel(rightComp,
                 DefaultMessagesImpl.getString("ConnectionMasterDetailsPage.createionDate", PluginConstant.EMPTY_STRING)); //$NON-NLS-1$
-        toolkit.createLabel(rightComp, getFormatDateStr(analysis.getCreationDate()));
+        toolkit.createLabel(rightComp, getFormatDateStr(analysisItem.getAnalysis().getCreationDate()));
         toolkit.createLabel(rightComp,
                 DefaultMessagesImpl.getString("AbstractAnalysisResultPage.executionDate", PluginConstant.EMPTY_STRING)); //$NON-NLS-1$
         toolkit.createLabel(rightComp, getFormatDateStr(resultMetadata.getExecutionDate()));
@@ -545,7 +543,7 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
                 DefaultMessagesImpl.getString("AbstractAnalysisResultPage.lastSucessfulExecution", PluginConstant.EMPTY_STRING)); //$NON-NLS-1$
         toolkit.createLabel(rightComp, PluginConstant.EMPTY_STRING + resultMetadata.getLastExecutionNumberOk());
         // MOD qiongli 2011-5-16
-        DataManager connection = this.analysis.getContext().getConnection();
+        DataManager connection = this.analysisItem.getAnalysis().getContext().getConnection();
         if (connection != null) {
             RepositoryNode connNode = RepositoryNodeHelper.recursiveFind(connection);
             if (connNode != null && connNode.getObject().isDeleted()) {
@@ -692,7 +690,7 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
      */
     public void doSetInput() {
         List<OverviewIndUIElement> indicatorList = null;
-        if (this.analysis.getResults().getIndicators().size() > 0) {
+        if (this.analysisItem.getAnalysis().getResults().getIndicators().size() > 0) {
             indicatorList = getCatalogIndicators();
             if (indicatorList.size() == 0) {
                 catalogTableViewer.setInput(getSchemaIndicators());
@@ -823,11 +821,11 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
 
         // ADD xqliu 2010-01-04 bug 10190
         if (isConnectionAnalysis()) { // MOD zshen 2010-03-19 bug 12041
-            AnalysisHelper.setReloadDatabases(analysis, reloadDatabasesBtn.getSelection());
+            AnalysisHelper.setReloadDatabases(analysisItem.getAnalysis(), reloadDatabasesBtn.getSelection());
         }
         // ~
 
-        EList<Domain> dataFilters = analysis.getParameters().getDataFilter();
+        EList<Domain> dataFilters = analysisItem.getAnalysis().getParameters().getDataFilter();
         if (!this.tableFilterText.getText().equals(DomainHelper.getTablePattern(dataFilters))) {
             DomainHelper.setDataFilterTablePattern(dataFilters, tableFilterText.getText());
             latestTableFilterValue = this.tableFilterText.getText();
@@ -842,19 +840,10 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
 
         // 2011.1.12 MOD by zhsne to unify anlysis and connection id when saving.
         ReturnCode saved = new ReturnCode(false);
-        IEditorInput editorInput = this.getEditorInput();
-        if (editorInput instanceof AnalysisItemEditorInput) {
-            AnalysisItemEditorInput analysisInput = (AnalysisItemEditorInput) editorInput;
-            TDQAnalysisItem tdqAnalysisItem = analysisInput.getTDQAnalysisItem();
-
-            // ADD gdbu 2011-3-3 bug 19179
-            tdqAnalysisItem.getProperty().setDisplayName(analysis.getName());
-            tdqAnalysisItem.getProperty().setLabel(analysis.getName());
-            this.nameText.setText(analysis.getName());
-            // ~
-            // MOD yyi 2012-02-08 TDQ-4621:Explicitly set true for updating dependencies.
-            saved = ElementWriterFactory.getInstance().createAnalysisWrite().save(tdqAnalysisItem, true);
-        }
+        this.nameText.setText(analysisItem.getAnalysis().getName());
+        // ~
+        // MOD yyi 2012-02-08 TDQ-4621:Explicitly set true for updating dependencies.
+        saved = ElementWriterFactory.getInstance().createAnalysisWrite().save(analysisItem, true);
         // MOD yyi 2012-02-03 TDQ-3602:Avoid to rewriting all analyzes after saving, no reason to update all analyzes
         // which is depended in the referred connection.
         // Extract saving log function.

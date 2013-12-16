@@ -352,7 +352,7 @@ public class ColumnDependencyResultPage extends AbstractAnalysisResultPage {
         resultTable.setLayoutData(gd);
 
         // add menus
-        ChartTableFactory.addMenuAndTip(tableViewer, new ColumnDependencyExplorer(), this.masterPage.analysis);
+        ChartTableFactory.addMenuAndTip(tableViewer, new ColumnDependencyExplorer(), this.masterPage.analysisItem.getAnalysis());
     }
 
     /**

@@ -57,9 +57,9 @@ import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.columnset.ColumnDependencyIndicator;
 import org.talend.dataquality.indicators.columnset.ColumnSetMultiValueIndicator;
 import org.talend.dataquality.indicators.columnset.ColumnsCompareIndicator;
+import org.talend.dataquality.properties.TDQAnalysisItem;
 import org.talend.dq.analysis.AnalysisBuilder;
 import org.talend.dq.helper.RepositoryNodeHelper;
-import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
 import org.talend.dq.nodes.DBConnectionRepNode;
 import org.talend.dq.nodes.DFConnectionRepNode;
 import org.talend.dq.nodes.MDMConnectionRepNode;
@@ -83,7 +83,7 @@ public class ChangeConnectionAction extends Action implements ICheatSheetAction 
 
     private Connection newDataProvider;
 
-    private Analysis synAnalysis = null;
+    private TDQAnalysisItem analysisItem = null;
 
     private AnalyzedElementSynDialog anaEleSynDialog = null;
 
@@ -101,14 +101,7 @@ public class ChangeConnectionAction extends Action implements ICheatSheetAction 
         }
 
         this.oldDataProvider = tdProvider;
-        this.synAnalysis = masterPage.getAnalysis();
-        this.changeActionStatus = new ReturnCode(Boolean.FALSE);
-    }
-
-    public ChangeConnectionAction(Connection oldDataProvider, Connection newDataProvider, Analysis analysis) {
-        this.oldDataProvider = oldDataProvider;
-        this.newDataProvider = newDataProvider;
-        this.synAnalysis = analysis;
+        this.analysisItem = masterPage.getAnalysisItem();
         this.changeActionStatus = new ReturnCode(Boolean.FALSE);
     }
 
@@ -135,10 +128,10 @@ public class ChangeConnectionAction extends Action implements ICheatSheetAction 
 
         Shell shell = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell();
 
-        final EList<ModelElement> analyzedElements = synAnalysis.getContext() == null ? null : synAnalysis.getContext()
-                .getAnalysedElements();
+        final EList<ModelElement> analyzedElements = analysisItem.getAnalysis().getContext() == null ? null : analysisItem
+                .getAnalysis().getContext().getAnalysedElements();
         if (analyzedElements == null || analyzedElements.size() == 0) {
-            synAnalysis.getContext().setConnection(newDataProvider);
+            analysisItem.getAnalysis().getContext().setConnection(newDataProvider);
             return new ReturnCode(Boolean.TRUE);
         }
 
@@ -159,11 +152,14 @@ public class ChangeConnectionAction extends Action implements ICheatSheetAction 
                 DefaultMessagesImpl.getString("ChangeConnectionAction.MayCauseAsynProblem")); //$NON-NLS-1$
         if (retCode) {
             if (analyzedElements.get(0) instanceof TdColumn) {
-                anaEleSynDialog = new AnalyzedColumnsSynDialog(shell, synAnalysis, newDataProvider, analyzedElements);
+                anaEleSynDialog = new AnalyzedColumnsSynDialog(shell, analysisItem.getAnalysis(), newDataProvider,
+                        analyzedElements);
             } else if (analyzedElements.get(0) instanceof ColumnSet) {
-                anaEleSynDialog = new AnalyzedColumnSetsSynDialog(shell, synAnalysis, newDataProvider, analyzedElements);
+                anaEleSynDialog = new AnalyzedColumnSetsSynDialog(shell, analysisItem.getAnalysis(), newDataProvider,
+                        analyzedElements);
             } else if (analyzedElements.get(0) instanceof Package) {
-                anaEleSynDialog = new AnalyzedPackageSynDialog(shell, synAnalysis, newDataProvider, analyzedElements);
+                anaEleSynDialog = new AnalyzedPackageSynDialog(shell, analysisItem.getAnalysis(), newDataProvider,
+                        analyzedElements);
             }
 
             final List<SynTreeModel> treeModelLs = anaEleSynDialog == null ? null : anaEleSynDialog.getSynInputModel();
@@ -241,14 +237,15 @@ public class ChangeConnectionAction extends Action implements ICheatSheetAction 
                 }
             }
             // Synchronize analyzed elements.
-            boolean isExistSynedElement = synAnalyzedElements(anaEleSynDialog, synAnalysis, oldDataProvider, newDataProvider);
+            boolean isExistSynedElement = synAnalyzedElements(anaEleSynDialog, analysisItem.getAnalysis(), oldDataProvider,
+                    newDataProvider);
             // Add new dependencies.
             if (isExistSynedElement) {
-                DependenciesHandler.getInstance().setDependencyOn(synAnalysis, newDataProvider);
+                DependenciesHandler.getInstance().setDependencyOn(analysisItem.getAnalysis(), newDataProvider);
                 ElementWriterFactory.getInstance().createDataProviderWriter().save(newDataProvider);
             }
             // Refresh analysis editor viewer.
-            AnaResourceFileHelper.getInstance().save(synAnalysis);
+            ElementWriterFactory.getInstance().createAnalysisWrite().save(analysisItem, false);
             // Refresh the repository tree view to adapt for the new analysis
             CorePlugin.getDefault().refreshDQView(RepositoryNodeHelper.getDataProfilingFolderNode(EResourceConstant.ANALYSIS));
         } else {
@@ -318,9 +315,8 @@ public class ChangeConnectionAction extends Action implements ICheatSheetAction 
         AnalysisBuilder anaBuilder = new AnalysisBuilder();
         anaBuilder.setAnalysis(synAnalysis);
         // Remove old dependencies.
-        ReturnCode rc = DependenciesHandler.getInstance().removeConnDependencyAndSave(synAnalysis);
-        if (!rc.isOk()) {
-            log.error(rc.getMessage());
+        boolean isRemovedDependency = DependenciesHandler.getInstance().removeConnDependencyAndSave(analysisItem);
+        if (!isRemovedDependency) {
             return false;
         }
         synAnalysis.getContext().setConnection(newDataProv);

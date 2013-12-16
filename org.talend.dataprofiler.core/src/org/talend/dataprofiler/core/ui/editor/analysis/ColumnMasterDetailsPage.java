@@ -38,7 +38,6 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.swt.widgets.Widget;
-import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.editor.FormEditor;
@@ -49,7 +48,6 @@ import org.eclipse.ui.forms.widgets.Hyperlink;
 import org.eclipse.ui.forms.widgets.ImageHyperlink;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
-import org.talend.commons.utils.WorkspaceUtils;
 import org.talend.core.model.metadata.MetadataColumnRepositoryObject;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.connection.MetadataColumn;
@@ -81,7 +79,6 @@ import org.talend.dataquality.helpers.MetadataHelper;
 import org.talend.dataquality.indicators.DataminingType;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.sql.UserDefIndicator;
-import org.talend.dataquality.properties.TDQAnalysisItem;
 import org.talend.dq.analysis.ModelElementAnalysisHandler;
 import org.talend.dq.analysis.connpool.TdqAnalysisConnectionPool;
 import org.talend.dq.helper.EObjectHelper;
@@ -144,7 +141,7 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
         analysisHandler = new ModelElementAnalysisHandler();
         analysisHandler.setAnalysis((Analysis) this.currentModelElement);
         // Handle JUDIs
-        UDIHelper.updateJUDIsForAnalysis(analysis);
+        UDIHelper.updateJUDIsForAnalysis(analysisItem.getAnalysis());
 
         stringDataFilter = analysisHandler.getStringDataFilter();
         EList<ModelElement> analyzedColumns = analysisHandler.getAnalyzedColumns();
@@ -661,8 +658,8 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
         // remove the space from analysis name
         //        this.analysis.setName(this.analysis.getName().replace(" ", ""));//$NON-NLS-1$ //$NON-NLS-2$
 
-        for (Domain domain : this.analysis.getParameters().getDataFilter()) {
-            domain.setName(this.analysis.getName());
+        for (Domain domain : this.analysisItem.getAnalysis().getParameters().getDataFilter()) {
+            domain.setName(this.analysisItem.getAnalysis().getName());
         }
 
         // ~
@@ -678,7 +675,7 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
                             DefaultMessagesImpl.getString("AnalysisTuningPreferencePage.NumberOfConnectionsPerAnalysis"))); //$NON-NLS-1$ 
 
             String originalValue = TaggedValueHelper.getTaggedValue(TdqAnalysisConnectionPool.NUMBER_OF_CONNECTIONS_PER_ANALYSIS,
-                    this.analysis.getTaggedValue()).getValue();
+                    this.analysisItem.getAnalysis().getTaggedValue()).getValue();
             numberOfConnectionsPerAnalysisText.setText(originalValue);
         }
         // save the number of connections per analysis
@@ -721,36 +718,23 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
                 analysisHandler.setDatamingType(type.getLiteral(), modelEle);
             }
         } else {
-            deleteConnectionDependency(analysis);
+            deleteConnectionDependency(analysisItem);
         }
         analysisHandler.setStringDataFilter(dataFilterComp.getDataFilterString());
         // 2011.1.12 MOD by zhsne to unify anlysis and connection id when saving.
 
         ReturnCode saved = new ReturnCode(false);
-        IEditorInput editorInput = this.getEditorInput();
-
-        if (editorInput instanceof AnalysisItemEditorInput) {
-
-            AnalysisItemEditorInput analysisInput = (AnalysisItemEditorInput) editorInput;
-
-            TDQAnalysisItem tdqAnalysisItem = analysisInput.getTDQAnalysisItem();
-
-            // ADD gdbu 2011-3-2 bug 19179
-            tdqAnalysisItem.getProperty().setDisplayName(analysisHandler.getName());
-            tdqAnalysisItem.getProperty().setLabel(WorkspaceUtils.normalize(analysisHandler.getName()));
-            this.nameText.setText(analysisHandler.getName());
-            // ~
-            // TDQ-5581,if has removed emlements(patten/udi),should remove dependency each other before saving.
-            HashSet<ModelElement> removedElements = treeViewer.getRemovedElements();
-            if (!removedElements.isEmpty()) {
-                DependenciesHandler.getInstance().removeDependenciesBetweenModels(analysis,
-                        new ArrayList<ModelElement>(removedElements));
-            }
-            // MOD yyi 2012-02-08 TDQ-4621:Explicitly set true for updating dependencies.
-            saved = ElementWriterFactory.getInstance().createAnalysisWrite().save(tdqAnalysisItem, true);
-            if (saved.isOk() && !removedElements.isEmpty()) {
-                saveRemovedElements();
-            }
+        this.nameText.setText(analysisHandler.getName());
+        // TDQ-5581,if has removed emlements(patten/udi),should remove dependency each other before saving.
+        HashSet<ModelElement> removedElements = treeViewer.getRemovedElements();
+        if (!removedElements.isEmpty()) {
+            DependenciesHandler.getInstance().removeDependenciesBetweenModels(analysis,
+                    new ArrayList<ModelElement>(removedElements));
+        }
+        // MOD yyi 2012-02-08 TDQ-4621:Explicitly set true for updating dependencies.
+        saved = ElementWriterFactory.getInstance().createAnalysisWrite().save(analysisItem, true);
+        if (saved.isOk() && !removedElements.isEmpty()) {
+            saveRemovedElements();
         }
         // MOD yyi 2012-02-03 TDQ-3602:Avoid to rewriting all analyzes after saving, no reason to update all analyzes
         // which is depended in the referred connection.
@@ -940,7 +924,8 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
         // MOD klliu 2011-04-18 code cleaning.
         ModelElementIndicator[] modelElementIndicators = treeViewer.getModelElementIndicator();
         if (modelElementIndicators != null && modelElementIndicators.length != 0) {
-            analysis.getContext().setConnection(ModelElementIndicatorHelper.getTdDataProvider(modelElementIndicators[0]));
+            analysisItem.getAnalysis().getContext()
+                    .setConnection(ModelElementIndicatorHelper.getTdDataProvider(modelElementIndicators[0]));
         }
         // ~
         List<ModelElement> analyzedElement = new ArrayList<ModelElement>();
@@ -967,7 +952,8 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
     private ReturnCode checkMdmExecutionEngine() {
         ModelElementIndicator[] modelElementIndicators = treeViewer.getModelElementIndicator();
         if (modelElementIndicators != null && modelElementIndicators.length != 0) {
-            analysis.getContext().setConnection(ModelElementIndicatorHelper.getTdDataProvider(modelElementIndicators[0]));
+            analysisItem.getAnalysis().getContext()
+                    .setConnection(ModelElementIndicatorHelper.getTdDataProvider(modelElementIndicators[0]));
         }
         return new ReturnCode(true);
     }

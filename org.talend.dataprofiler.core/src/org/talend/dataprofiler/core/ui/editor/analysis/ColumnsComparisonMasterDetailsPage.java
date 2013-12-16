@@ -26,13 +26,11 @@ import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
-import org.talend.commons.utils.WorkspaceUtils;
 import org.talend.core.model.metadata.MetadataColumnRepositoryObject;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.repository.IRepositoryViewObject;
@@ -52,7 +50,6 @@ import org.talend.dataquality.helpers.AnalysisHelper;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.columnset.ColumnsetFactory;
 import org.talend.dataquality.indicators.columnset.RowMatchingIndicator;
-import org.talend.dataquality.properties.TDQAnalysisItem;
 import org.talend.dq.analysis.AnalysisBuilder;
 import org.talend.dq.analysis.AnalysisHandler;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
@@ -175,7 +172,7 @@ public class ColumnsComparisonMasterDetailsPage extends AbstractAnalysisMetadata
         dataFilterCompA.addModifyListener(new ModifyListener() {
 
             public void modifyText(ModifyEvent e) {
-                AnalysisHelper.setStringDataFilter(analysis, dataFilterCompA.getDataFilterString(), 0);
+                AnalysisHelper.setStringDataFilter(analysisItem.getAnalysis(), dataFilterCompA.getDataFilterString(), 0);
             }
         });
 
@@ -187,7 +184,7 @@ public class ColumnsComparisonMasterDetailsPage extends AbstractAnalysisMetadata
         dataFilterCompB.addModifyListener(new ModifyListener() {
 
             public void modifyText(ModifyEvent e) {
-                AnalysisHelper.setStringDataFilter(analysis, dataFilterCompB.getDataFilterString(), 1);
+                AnalysisHelper.setStringDataFilter(analysisItem.getAnalysis(), dataFilterCompB.getDataFilterString(), 1);
             }
         });
 
@@ -214,7 +211,7 @@ public class ColumnsComparisonMasterDetailsPage extends AbstractAnalysisMetadata
 
     public AnalysisHandler getAnalysisHandler() {
         AnalysisHandler analysisHandler = new AnalysisHandler();
-        analysisHandler.setAnalysis(this.analysis);
+        analysisHandler.setAnalysis(this.analysisItem.getAnalysis());
         return analysisHandler;
     }
 
@@ -225,8 +222,8 @@ public class ColumnsComparisonMasterDetailsPage extends AbstractAnalysisMetadata
         // remove the space from analysis name
         //        this.analysis.setName(this.analysis.getName().replace(" ", ""));//$NON-NLS-1$//$NON-NLS-2$
         // change 'ana' field's 'dataquality' tag content
-        for (Domain domain : this.analysis.getParameters().getDataFilter()) {
-            domain.setName(this.analysis.getName());
+        for (Domain domain : this.analysisItem.getAnalysis().getParameters().getDataFilter()) {
+            domain.setName(this.analysisItem.getAnalysis().getName());
         }
         // ~
         IRepositoryViewObject reposObject = null;
@@ -247,22 +244,23 @@ public class ColumnsComparisonMasterDetailsPage extends AbstractAnalysisMetadata
         }
         if (analysedElements.size() > 0) {
             tdDataProvider = ConnectionHelper.getTdDataProvider((TdColumn) analysedElements.get(0));
-            analysis.getContext().setConnection(tdDataProvider);
+            analysisItem.getAnalysis().getContext().setConnection(tdDataProvider);
             // MOD qiongli bug 14437:Add dependency
-            analysis.getContext().setConnection(tdDataProvider);
-            TypedReturnCode<Dependency> rc = DependenciesHandler.getInstance().setDependencyOn(analysis, tdDataProvider);
+            analysisItem.getAnalysis().getContext().setConnection(tdDataProvider);
+            TypedReturnCode<Dependency> rc = DependenciesHandler.getInstance().setDependencyOn(analysisItem.getAnalysis(),
+                    tdDataProvider);
             if (!rc.isOk()) {
-                log.info("fail to save dependency analysis:" + analysis.getFileName());//$NON-NLS-1$
+                log.info("fail to save dependency analysis:" + analysisItem.getAnalysis().getFileName());//$NON-NLS-1$
             }
         } else {
-            deleteConnectionDependency(analysis);
+            deleteConnectionDependency(analysisItem);
         }
         AnalysisBuilder anaBuilder = new AnalysisBuilder();
-        anaBuilder.setAnalysis(this.analysis);
+        anaBuilder.setAnalysis(this.analysisItem.getAnalysis());
         if (anaColumnCompareViewer.getCheckComputeButton().getSelection()) {
-            analysis.getParameters().getDeactivatedIndicators().add(rowMatchingIndicatorB);
+            analysisItem.getAnalysis().getParameters().getDeactivatedIndicators().add(rowMatchingIndicatorB);
         } else {
-            analysis.getParameters().getDeactivatedIndicators().clear();
+            analysisItem.getAnalysis().getParameters().getDeactivatedIndicators().clear();
         }
         anaBuilder.addElementsToAnalyze(analysedElements.toArray(new ModelElement[analysedElements.size()]), new Indicator[] {
                 rowMatchingIndicatorA, rowMatchingIndicatorB });
@@ -272,19 +270,9 @@ public class ColumnsComparisonMasterDetailsPage extends AbstractAnalysisMetadata
 
         // 2011.1.12 MOD by zhsne to unify anlysis and connection id when saving.
         ReturnCode saved = new ReturnCode(false);
-        IEditorInput editorInput = this.getEditorInput();
-        if (editorInput instanceof AnalysisItemEditorInput) {
-            AnalysisItemEditorInput analysisInput = (AnalysisItemEditorInput) editorInput;
-            TDQAnalysisItem tdqAnalysisItem = analysisInput.getTDQAnalysisItem();
-
-            // ADD gdbu 2011-3-3 bug 19179
-            tdqAnalysisItem.getProperty().setDisplayName(analysis.getName());
-            tdqAnalysisItem.getProperty().setLabel(WorkspaceUtils.normalize(analysis.getName()));
-            this.nameText.setText(analysis.getName());
-            // ~
-            // MOD yyi 2012-02-08 TDQ-4621:Explicitly set true for updating dependencies.
-            saved = ElementWriterFactory.getInstance().createAnalysisWrite().save(tdqAnalysisItem, true);
-        }
+        this.nameText.setText(analysisItem.getAnalysis().getName());
+        // MOD yyi 2012-02-08 TDQ-4621:Explicitly set true for updating dependencies.
+        saved = ElementWriterFactory.getInstance().createAnalysisWrite().save(analysisItem, true);
         // MOD yyi 2012-02-03 TDQ-3602:Avoid to rewriting all analyzes after saving, no reason to update all analyzes
         // which is depended in the referred connection.
         // Extract saving log function.

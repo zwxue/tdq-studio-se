@@ -379,7 +379,7 @@ public class ColumnsComparisonAnalysisResultPage extends AbstractAnalysisResultP
                 public void handleEvent(Event event) {
 
                     RowMatchExplorer rowMatchExplorer = new RowMatchExplorer();
-                    rowMatchExplorer.setAnalysis(masterPage.analysis);
+                    rowMatchExplorer.setAnalysis(masterPage.analysisItem.getAnalysis());
                     rowMatchExplorer.setEnitty(new ChartDataEntity(indicator, "", "")); //$NON-NLS-1$ //$NON-NLS-2$
 
                     String query = rowMatchExplorer.getRowsMatchStatement();
@@ -402,7 +402,7 @@ public class ColumnsComparisonAnalysisResultPage extends AbstractAnalysisResultP
             public void handleEvent(Event event) {
 
                 RowMatchExplorer rowMatchExplorer = new RowMatchExplorer();
-                rowMatchExplorer.setAnalysis(masterPage.analysis);
+                rowMatchExplorer.setAnalysis(masterPage.analysisItem.getAnalysis());
                 rowMatchExplorer.setEnitty(new ChartDataEntity(indicator, "", "")); //$NON-NLS-1$ //$NON-NLS-2$
 
                 String query = rowMatchExplorer.getRowsNotMatchStatement();
@@ -418,7 +418,7 @@ public class ColumnsComparisonAnalysisResultPage extends AbstractAnalysisResultP
 
                 // MOD 10913 zshen:unify the method that get sql query
                 RowMatchExplorer rowMatchExplorer = new RowMatchExplorer();
-                rowMatchExplorer.setAnalysis(masterPage.analysis);
+                rowMatchExplorer.setAnalysis(masterPage.analysisItem.getAnalysis());
                 rowMatchExplorer.setEnitty(new ChartDataEntity(indicator, "", "")); //$NON-NLS-1$ //$NON-NLS-2$
 
                 String query = rowMatchExplorer.getAllRowsStatement();

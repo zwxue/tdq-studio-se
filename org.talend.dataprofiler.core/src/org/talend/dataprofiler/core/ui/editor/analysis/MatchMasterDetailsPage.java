@@ -43,7 +43,6 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.editor.FormEditor;
@@ -51,7 +50,6 @@ import org.eclipse.ui.forms.events.HyperlinkAdapter;
 import org.eclipse.ui.forms.events.HyperlinkEvent;
 import org.eclipse.ui.forms.widgets.ImageHyperlink;
 import org.eclipse.ui.forms.widgets.Section;
-import org.talend.commons.utils.WorkspaceUtils;
 import org.talend.core.model.metadata.MetadataColumnRepositoryObject;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.connection.MetadataColumn;
@@ -78,7 +76,6 @@ import org.talend.dataprofiler.core.ui.wizard.analysis.connection.ConnectionWiza
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.exception.DataprofilerCoreException;
 import org.talend.dataquality.indicators.columnset.RecordMatchingIndicator;
-import org.talend.dataquality.properties.TDQAnalysisItem;
 import org.talend.dataquality.record.linkage.ui.composite.table.DataSampleTable;
 import org.talend.dataquality.record.linkage.ui.composite.utils.MatchRuleAnlaysisUtils;
 import org.talend.dataquality.record.linkage.ui.section.BlockingKeySection;
@@ -208,7 +205,7 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
      */
     private void createMatchParameterSection() {
         MatchParameterSection matchParameterSection = new MatchParameterSection(form, topComp, Section.TWISTIE
-                | Section.TITLE_BAR | Section.EXPANDED, toolkit, analysis);
+                | Section.TITLE_BAR | Section.EXPANDED, toolkit, analysisItem.getAnalysis());
         matchParameterSection.addPropertyChangeListener(this);
         matchParameterSection.createParameterCom();
         registerSection(matchParameterSection.getSection());
@@ -250,11 +247,11 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
         createButtonComposite(dataSampleparentComposite);
 
         blockingKeySection = new BlockingKeySection(form, topComp, Section.TWISTIE | Section.TITLE_BAR | Section.EXPANDED,
-                toolkit, analysis);
+                toolkit, analysisItem.getAnalysis());
         blockingKeySection.addPropertyChangeListener(this);
 
         matchingKeySection = new MatchingKeySection(form, topComp, Section.TWISTIE | Section.TITLE_BAR | Section.EXPANDED,
-                toolkit, analysis);
+                toolkit, analysisItem.getAnalysis());
         matchingKeySection.addPropertyChangeListener(this);
 
         // create the data table
@@ -1130,7 +1127,8 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
             return rc;
         }
 
-        RecordMatchingIndicator recordMatchingIndicator = MatchRuleAnlaysisUtils.getRecordMatchIndicatorFromAna(analysis);
+        RecordMatchingIndicator recordMatchingIndicator = MatchRuleAnlaysisUtils.getRecordMatchIndicatorFromAna(analysisItem
+                .getAnalysis());
         EList<MatchRule> matchRules = recordMatchingIndicator.getBuiltInMatchRuleDefinition().getMatchRules();
         if (matchRules.size() > 0) {
             MatchRule matchRule = matchRules.get(0);
@@ -1194,25 +1192,14 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
         }
 
         analysisHandler.saveSelectedAnalyzedElements();
-        analysisHandler.saveConnection();
+        analysisHandler.saveConnection(analysisItem);
 
         ReturnCode saved = new ReturnCode(false);
-        IEditorInput editorInput = this.getEditorInput();
+        this.nameText.setText(analysisHandler.getName());
+        // save the default loaded row count
+        // tdqAnalysisItem.getAnalysis().setParameters(analysisHandler.getParameters());
 
-        if (editorInput instanceof AnalysisItemEditorInput) {
-
-            AnalysisItemEditorInput analysisInput = (AnalysisItemEditorInput) editorInput;
-
-            TDQAnalysisItem tdqAnalysisItem = analysisInput.getTDQAnalysisItem();
-
-            tdqAnalysisItem.getProperty().setDisplayName(analysisHandler.getName());
-            tdqAnalysisItem.getProperty().setLabel(WorkspaceUtils.normalize(analysisHandler.getName()));
-            this.nameText.setText(analysisHandler.getName());
-            // save the default loaded row count
-            // tdqAnalysisItem.getAnalysis().setParameters(analysisHandler.getParameters());
-
-            saved = ElementWriterFactory.getInstance().createAnalysisWrite().save(tdqAnalysisItem, true);
-        }
+        saved = ElementWriterFactory.getInstance().createAnalysisWrite().save(this.analysisItem, true);
         logSaved(saved);
     }
 
