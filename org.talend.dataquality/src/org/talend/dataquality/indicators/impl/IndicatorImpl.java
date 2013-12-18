@@ -1153,6 +1153,7 @@ public class IndicatorImpl extends ModelElementImpl implements Indicator {
             TdColumn col = SwitchHelpers.COLUMN_SWITCH.doSwitch(elt);
             if (col != null) {
                 javaType = col.getSqlDataType().getJavaDataType();
+                return javaType;
             }
             MetadataColumn mdCol = SwitchHelpers.METADATA_COLUMN_SWITCH.doSwitch(elt);
             if (mdCol != null) {
