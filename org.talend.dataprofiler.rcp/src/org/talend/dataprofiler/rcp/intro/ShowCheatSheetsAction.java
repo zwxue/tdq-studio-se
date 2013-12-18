@@ -27,11 +27,10 @@ import org.eclipse.ui.intro.config.IIntroAction;
 import org.talend.commons.ui.utils.CheatSheetUtils;
 
 /**
- * DOC qzhang class global comment. Detailled comment <br/>
- * 
- * $Id: talend.epf 1 2006-09-29 17:06:40Z qzhang $
+ * after welcome page, show the cheat cheet view action.
  * 
  */
+@SuppressWarnings("restriction")
 public class ShowCheatSheetsAction extends Action implements IIntroAction {
 
     /*
@@ -49,11 +48,9 @@ public class ShowCheatSheetsAction extends Action implements IIntroAction {
         if (CheatSheetUtils.getInstance().isFirstTime()) {
             OpenCheatSheetAction action = new OpenCheatSheetAction(property);
             action.run();
-            CheatSheetUtils.getInstance().setFirstTime(false);
         }
 
         IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-        @SuppressWarnings("restriction")
         IViewPart findView = activePage.findView(IIntroConstants.INTRO_VIEW_ID);
         if (findView != null) {
             activePage.hideView(findView);

@@ -132,7 +132,6 @@ public class PartListener implements IPartListener {
                             OpenCheatSheetAction action = new OpenCheatSheetAction(
                                     "org.talend.dataprofiler.core.talenddataprofiler"); //$NON-NLS-1$
                             action.run();
-                            CheatSheetUtils.getInstance().setFirstTime(false);
                         }
 
                         // hide the welcome view
