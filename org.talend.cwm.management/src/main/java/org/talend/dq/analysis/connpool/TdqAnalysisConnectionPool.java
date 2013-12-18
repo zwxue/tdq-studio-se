@@ -14,6 +14,7 @@ package org.talend.dq.analysis.connpool;
 
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
+import java.sql.Driver;
 import java.sql.SQLException;
 import java.util.Collections;
 import java.util.Enumeration;
@@ -22,10 +23,12 @@ import java.util.Map;
 import java.util.Vector;
 
 import org.apache.log4j.Logger;
+import org.talend.core.database.EDatabase4DriverClassName;
 import org.talend.core.database.EDatabaseTypeName;
 import org.talend.core.model.metadata.IMetadataConnection;
 import org.talend.core.model.metadata.builder.ConvertionHelper;
 import org.talend.core.model.metadata.builder.database.JavaSqlFactory;
+import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.management.i18n.Messages;
 import org.talend.dataquality.analysis.Analysis;
@@ -99,6 +102,35 @@ public class TdqAnalysisConnectionPool {
         TdqAnalysisConnectionPool connectionPool = INSTANCE_ANA_TO_POOL_MAP.get(analysis);
         if (connectionPool != null) {
             connectionPool.closeConnectionPool();
+        }
+
+        deregisterHiveDriver(analysis);
+    }
+
+    /**
+     * because in the HiveDriver class have done registerDriver, and sometimes caused the DriverManager to find the
+     * error driver(e.g: need to find a hsql driver, but get a hive driver), so need to deregister it.
+     * 
+     * @param analysis
+     */
+    private static void deregisterHiveDriver(Analysis analysis) {
+        org.talend.core.model.metadata.builder.connection.Connection tdDataProvider = (org.talend.core.model.metadata.builder.connection.Connection) analysis
+                .getContext().getConnection();
+        if (ConnectionHelper.isHive(tdDataProvider)) {
+            Enumeration<Driver> drivers = java.sql.DriverManager.getDrivers();
+            while (drivers.hasMoreElements()) {
+                Driver driver = drivers.nextElement();
+                String name = driver.getClass().getName();
+                // if have other hive drivers, need to remove it here.
+                if (name.equals(EDatabase4DriverClassName.HIVE.getDriverClass())
+                        || name.equals(EDatabase4DriverClassName.HIVE2.getDriverClass())) {
+                    try {
+                        java.sql.DriverManager.deregisterDriver(driver);
+                    } catch (SQLException e) {
+                        log.error(e, e);
+                    }
+                }
+            }
         }
     }
 
