@@ -22,7 +22,6 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
-import org.talend.cwm.helper.ColumnSetHelper;
 import org.talend.cwm.management.i18n.Messages;
 import org.talend.dataquality.PluginConstant;
 import org.talend.dataquality.analysis.Analysis;
@@ -41,9 +40,6 @@ import org.talend.utils.sugars.ReturnCode;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.objectmodel.core.Expression;
 import orgomg.cwm.objectmodel.core.ModelElement;
-import orgomg.cwm.objectmodel.core.Package;
-import orgomg.cwm.resource.relational.Catalog;
-import orgomg.cwm.resource.relational.Schema;
 
 /**
  * DOC scorreia class global comment. Detailled comment
@@ -145,7 +141,7 @@ public class MultiColumnAnalysisExecutor extends ColumnAnalysisSqlExecutor {
 
             // all columns must belong to the same table
             String tableName = AnalysisExecutorHelper.getTableName(analyzedColumns.get(0), dbms());
-            getCatalogOrSchema(AnalysisExecutorHelper.findColumnSetOwner(analyzedColumns.get(0)));
+            this.catalogOrSchema = dbms().getCatalogOrSchemaName(analyzedColumns.get(0));
             // definition is SELECT &lt;%=__COLUMN_NAMES__%> FROM &lt;%=__TABLE_NAME__%> GROUP BY
             // &lt;%=__GROUP_BY_ALIAS__%>
             String sqlExpr = dbms().fillGenericQueryWithColumnTableAndAlias(sqlGenericExpression.getBody(), selectItems,
@@ -178,19 +174,6 @@ public class MultiColumnAnalysisExecutor extends ColumnAnalysisSqlExecutor {
         }
     }
 
-    private void getCatalogOrSchema(ModelElement columnSetOwner) {
-        Package pack = ColumnSetHelper.getParentCatalogOrSchema(columnSetOwner);
-        // ~ MOD mzhao feature 10082. Here differentiate case of MS SQL Sever(Catalog/schema).
-        if (pack instanceof Schema && ColumnSetHelper.getParentCatalogOrSchema(pack) instanceof Catalog) {
-            pack = ColumnSetHelper.getParentCatalogOrSchema(pack);
-        }
-        // ~
-        if (pack == null) {
-            log.error(Messages.getString("MultiColumnAnalysisExecutor.NOCATALOGORSCHEMAFOUNDFORCOLUMN", columnSetOwner.getName()));//$NON-NLS-1$
-        } else {
-            this.catalogOrSchema = pack.getName();
-        }
-    }
     /**
      * DOC scorreia Comment method "initializeNumericFunctions".
      * 

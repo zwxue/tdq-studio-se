@@ -14,6 +14,7 @@ package org.talend.dq.dbms;
 
 import java.util.regex.Matcher;
 
+import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
 import org.talend.dataquality.PluginConstant;
 import org.talend.utils.ProductVersion;
 
@@ -47,11 +48,11 @@ public class TeradataDbmsLanguage extends DbmsLanguage {
      */
     @Override
     public String getAverageLengthRows() {
-        return "SELECT t.* FROM(" + "SELECT "
-                + "CAST(SUM(CHARACTER_LENGTH(<%=__COLUMN_NAMES__%>)) / (COUNT(<%=__COLUMN_NAMES__%>)*1.00)+0.99 as int) c, "
-                + "CAST(SUM(CHARACTER_LENGTH(<%=__COLUMN_NAMES__%>)) / (COUNT(<%=__COLUMN_NAMES__%>)*1.00) as int) f "
-                + "FROM <%=__TABLE_NAME__%>) e, <%=__TABLE_NAME__%> t "
-                + "where character_length(<%=__COLUMN_NAMES__%>) between f and c";
+        return "SELECT t.* FROM(" + "SELECT " //$NON-NLS-1$//$NON-NLS-2$
+                + "CAST(SUM(CHARACTER_LENGTH(<%=__COLUMN_NAMES__%>)) / (COUNT(<%=__COLUMN_NAMES__%>)*1.00)+0.99 as int) c, " //$NON-NLS-1$
+                + "CAST(SUM(CHARACTER_LENGTH(<%=__COLUMN_NAMES__%>)) / (COUNT(<%=__COLUMN_NAMES__%>)*1.00) as int) f " //$NON-NLS-1$
+                + "FROM <%=__TABLE_NAME__%>) e, <%=__TABLE_NAME__%> t " //$NON-NLS-1$
+                + "where character_length(<%=__COLUMN_NAMES__%>) between f and c"; //$NON-NLS-1$
     }
 
     /*
@@ -61,11 +62,11 @@ public class TeradataDbmsLanguage extends DbmsLanguage {
      */
     @Override
     public String getAverageLengthWithBlankRows() {
-        String sql = "SELECT t.* FROM(SELECT CAST(SUM(" + charLength(trimIfBlank("<%=__COLUMN_NAMES__%>"))
-                + ") / (COUNT(<%=__COLUMN_NAMES__%> )*1.00)+0.99 as int) c," + "CAST(SUM("
-                + charLength(trimIfBlank("<%=__COLUMN_NAMES__%>")) + ") / (COUNT(<%=__COLUMN_NAMES__%>)*1.00) as int) f "
-                + "FROM <%=__TABLE_NAME__%> WHERE(<%=__COLUMN_NAMES__%> IS NOT NULL)) e, <%=__TABLE_NAME__%> t " + "WHERE "
-                + charLength(trimIfBlank("<%=__COLUMN_NAMES__%>")) + " BETWEEN f AND c";
+        String sql = "SELECT t.* FROM(SELECT CAST(SUM(" + charLength(trimIfBlank("<%=__COLUMN_NAMES__%>")) //$NON-NLS-1$ //$NON-NLS-2$
+                + ") / (COUNT(<%=__COLUMN_NAMES__%> )*1.00)+0.99 as int) c," + "CAST(SUM(" //$NON-NLS-1$ //$NON-NLS-2$
+                + charLength(trimIfBlank("<%=__COLUMN_NAMES__%>")) + ") / (COUNT(<%=__COLUMN_NAMES__%>)*1.00) as int) f " //$NON-NLS-1$ //$NON-NLS-2$
+                + "FROM <%=__TABLE_NAME__%> WHERE(<%=__COLUMN_NAMES__%> IS NOT NULL)) e, <%=__TABLE_NAME__%> t " + "WHERE " //$NON-NLS-1$ //$NON-NLS-2$
+                + charLength(trimIfBlank("<%=__COLUMN_NAMES__%>")) + " BETWEEN f AND c"; //$NON-NLS-1$ //$NON-NLS-2$
         return sql;
     }
 
@@ -76,10 +77,10 @@ public class TeradataDbmsLanguage extends DbmsLanguage {
      */
     @Override
     public String getAverageLengthWithNullBlankRows() {
-        String sql = "SELECT t.* FROM(SELECT CAST(SUM(" + charLength(trimIfBlank("<%=__COLUMN_NAMES__%>"))
-                + ") / (COUNT(*)*1.00)+0.99 as int) c," + "CAST(SUM(" + charLength(trimIfBlank("<%=__COLUMN_NAMES__%>"))
-                + ") / (COUNT(*)*1.00) as int) f " + "FROM <%=__TABLE_NAME__%> ) e, <%=__TABLE_NAME__%> t " + "WHERE "
-                + charLength(trimIfBlank("<%=__COLUMN_NAMES__%>")) + " BETWEEN f AND c";
+        String sql = "SELECT t.* FROM(SELECT CAST(SUM(" + charLength(trimIfBlank("<%=__COLUMN_NAMES__%>")) //$NON-NLS-1$ //$NON-NLS-2$
+                + ") / (COUNT(*)*1.00)+0.99 as int) c," + "CAST(SUM(" + charLength(trimIfBlank("<%=__COLUMN_NAMES__%>")) //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                + ") / (COUNT(*)*1.00) as int) f " + "FROM <%=__TABLE_NAME__%> ) e, <%=__TABLE_NAME__%> t " + "WHERE " //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$
+                + charLength(trimIfBlank("<%=__COLUMN_NAMES__%>")) + " BETWEEN f AND c"; //$NON-NLS-1$ //$NON-NLS-2$
         return sql;
     }
 
@@ -90,11 +91,11 @@ public class TeradataDbmsLanguage extends DbmsLanguage {
      */
     @Override
     public String getAverageLengthWithNullRows() {
-        String whereExp = "WHERE(<%=__COLUMN_NAMES__%> IS NULL OR " + isNotBlank("<%=__COLUMN_NAMES__%>") + ")";
-        String sql = "SELECT t.* FROM(SELECT " + "CAST(SUM(" + charLength("<%=__COLUMN_NAMES__%>")
-                + ") / (COUNT(<%=__COLUMN_NAMES__%> )*1.00)+0.99 as int) c," + "CAST(SUM(" + charLength("<%=__COLUMN_NAMES__%>")
-                + ") / (COUNT(<%=__COLUMN_NAMES__%>)*1.00) as int) f " + "FROM <%=__TABLE_NAME__%> " + whereExp
-                + ") e, <%=__TABLE_NAME__%> t " + whereExp + "AND " + charLength("<%=__COLUMN_NAMES__%>") + " BETWEEN f AND c";
+        String whereExp = "WHERE(<%=__COLUMN_NAMES__%> IS NULL OR " + isNotBlank("<%=__COLUMN_NAMES__%>") + ")"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+        String sql = "SELECT t.* FROM(SELECT " + "CAST(SUM(" + charLength("<%=__COLUMN_NAMES__%>") //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                + ") / (COUNT(<%=__COLUMN_NAMES__%> )*1.00)+0.99 as int) c," + "CAST(SUM(" + charLength("<%=__COLUMN_NAMES__%>") //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                + ") / (COUNT(<%=__COLUMN_NAMES__%>)*1.00) as int) f " + "FROM <%=__TABLE_NAME__%> " + whereExp //$NON-NLS-1$ //$NON-NLS-2$
+                + ") e, <%=__TABLE_NAME__%> t " + whereExp + "AND " + charLength("<%=__COLUMN_NAMES__%>") + " BETWEEN f AND c"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
         return sql;
     }
 
@@ -133,5 +134,16 @@ public class TeradataDbmsLanguage extends DbmsLanguage {
     public String getTopNQuery(String query, int n) {
         Matcher m = SELECT_PATTERN.matcher(query);
         return m.replaceFirst("SELECT TOP " + n + PluginConstant.SPACE_STRING); //$NON-NLS-1$ 
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dq.dbms.DbmsLanguage#getCatalogNameFromContext(org.talend.core.model.metadata.builder.connection.
+     * DatabaseConnection)
+     */
+    @Override
+    public String getCatalogNameFromContext(DatabaseConnection dbConn) {
+        return null;
     }
 }

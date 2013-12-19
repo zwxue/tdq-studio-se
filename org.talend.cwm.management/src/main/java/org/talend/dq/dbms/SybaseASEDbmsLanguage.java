@@ -16,6 +16,9 @@ import java.util.regex.Matcher;
 
 import org.talend.dataquality.PluginConstant;
 import org.talend.utils.ProductVersion;
+import orgomg.cwm.objectmodel.core.ModelElement;
+import orgomg.cwm.resource.relational.Catalog;
+import orgomg.cwm.resource.relational.Schema;
 
 /**
  * DOC scorreia class global comment. Detailled comment
@@ -135,5 +138,19 @@ public class SybaseASEDbmsLanguage extends DbmsLanguage {
     @Override
     public String castColumnNameToChar(String columnName) {
         return "convert(char(15)," + columnName + ")";//$NON-NLS-1$ //$NON-NLS-2$
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dq.dbms.DbmsLanguage#getCatalog(orgomg.cwm.objectmodel.core.ModelElement)
+     */
+    @Override
+    protected Catalog getCatalog(ModelElement columnSetOwner) {
+        // get the schema first
+        Schema schema = getSchema(columnSetOwner);
+        // get the catalog according to the schema
+        Catalog catalog = super.getCatalog(schema);
+        return catalog;
     }
 }

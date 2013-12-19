@@ -128,6 +128,7 @@ public class MatchAnalysisExecutor implements IAnalysisExecutor {
         } catch (SQLException e) {
             log.error(e, e);
             rc.setOk(Boolean.FALSE);
+            rc.setMessage(e.getMessage());
             return rc;
         }
 
@@ -155,7 +156,10 @@ public class MatchAnalysisExecutor implements IAnalysisExecutor {
         monitor.done();
 
         // --- set metadata information of analysis
-        AnalysisExecutorHelper.setExecutionNumberInAnalysisResult(analysis, true, isLowMemory, usedMemory);
+        AnalysisExecutorHelper.setExecutionNumberInAnalysisResult(analysis, true);
+        if (isLowMemory) {
+            rc.setMessage(Messages.getString("Evaluator.OutOfMomory", usedMemory));//$NON-NLS-1$
+        }
 
         // nodify the master page
         refreshTableWithMatchFullResult(analysis);

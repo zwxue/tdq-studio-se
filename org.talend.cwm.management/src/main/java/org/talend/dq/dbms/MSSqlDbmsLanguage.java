@@ -22,6 +22,9 @@ import org.talend.cwm.management.i18n.Messages;
 import org.talend.dataquality.PluginConstant;
 import org.talend.dataquality.indicators.DateGrain;
 import org.talend.utils.ProductVersion;
+import orgomg.cwm.objectmodel.core.ModelElement;
+import orgomg.cwm.resource.relational.Catalog;
+import orgomg.cwm.resource.relational.Schema;
 
 /**
  * DOC scorreia class global comment. Detailled comment
@@ -267,5 +270,19 @@ public class MSSqlDbmsLanguage extends DbmsLanguage {
     @Override
     public String getInvalidClauseBenFord(String columnName) {
         return columnName + " is null or LEFT(" + columnName + ",1) not" + this.like() + "'%[0-9]%'";//$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dq.dbms.DbmsLanguage#getCatalog(orgomg.cwm.objectmodel.core.ModelElement)
+     */
+    @Override
+    protected Catalog getCatalog(ModelElement columnSetOwner) {
+        // get the schema first
+        Schema schema = getSchema(columnSetOwner);
+        // get the catalog according to the schema
+        Catalog catalog = super.getCatalog(schema);
+        return catalog;
     }
 }
