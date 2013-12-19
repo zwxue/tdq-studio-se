@@ -75,6 +75,10 @@ import org.talend.dataquality.domain.pattern.PatternFactory;
 import org.talend.dataquality.domain.pattern.RegularExpression;
 import org.talend.dataquality.helpers.IndicatorCategoryHelper;
 import org.talend.dataquality.indicators.Indicator;
+import org.talend.dataquality.indicators.IndicatorParameters;
+import org.talend.dataquality.indicators.PatternMatchingIndicator;
+import org.talend.dataquality.indicators.RegexpMatchingIndicator;
+import org.talend.dataquality.indicators.columnset.AllMatchIndicator;
 import org.talend.dataquality.indicators.definition.IndicatorCategory;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dataquality.indicators.definition.IndicatorDefinitionParameter;
@@ -872,7 +876,7 @@ public class FileSystemImportWriter implements IImportWriter {
             throws PersistenceException {
         ModelElement anaModelElement = PropertyHelper.getModelElement(property);
         if (anaModelElement != null) {
-            Analysis analyis = (Analysis) anaModelElement;
+            Analysis analysis = (Analysis) anaModelElement;
             EList<Dependency> clientDependency = anaModelElement.getClientDependency();
             Iterator<Dependency> it = clientDependency.iterator();
             Resource supModeResource = systemSupplyModelElement.eResource();
@@ -894,10 +898,14 @@ public class FileSystemImportWriter implements IImportWriter {
                 }
             }
             DependenciesHandler.getInstance().setUsageDependencyOn(anaModelElement, systemSupplyModelElement);
+            // TDQ-8436 remove the old pattern and add the new pattern in analysis Indicator Parameters.
+            if (isPattern(systemSupplyModelElement)) {
+                updatePatternInAnaParams(systemSupplyModelElement, analysis);
+            }
 
             // remove old udi and set a new one in the analysis indicators.
             if (systemSupplyModelElement instanceof UDIndicatorDefinition) {
-                EList<Indicator> indicators = analyis.getResults().getIndicators();
+                EList<Indicator> indicators = analysis.getResults().getIndicators();
                 Iterator<Indicator> itIndicators = indicators.iterator();
                 while (itIndicators.hasNext()) {
                     Indicator indicator = itIndicators.next();
@@ -917,6 +925,60 @@ public class FileSystemImportWriter implements IImportWriter {
             ProxyRepositoryFactory.getInstance().save(property.getItem(), true);
         }
 
+    }
+
+    /**
+     * if there is a same name pattern in current workspace,update the pattern in imported analysis IndicatorParameters.
+     * 
+     * @param systemSupplyModelElement
+     * @param analysis
+     */
+    private void updatePatternInAnaParams(ModelElement systemSupplyModelElement, Analysis analysis) {
+        EList<Indicator> indicators = analysis.getResults().getIndicators();
+        IndicatorParameters parameters = null;
+        for (Indicator indicator : indicators) {
+            // AllMatchIndicator is in column set analysis.
+            if (indicator instanceof AllMatchIndicator) {
+                EList<RegexpMatchingIndicator> list = ((AllMatchIndicator) indicator).getCompositeRegexMatchingIndicators();
+                for (RegexpMatchingIndicator regMatchIndicator : list) {
+                    parameters = regMatchIndicator.getParameters();
+                    removOldAddSysPatternInAnaParams(parameters, (Pattern) systemSupplyModelElement, analysis);
+                }
+            } else if (indicator instanceof PatternMatchingIndicator) {
+                parameters = ((PatternMatchingIndicator) indicator).getParameters();
+                removOldAddSysPatternInAnaParams(parameters, (Pattern) systemSupplyModelElement, analysis);
+            }
+        }
+    }
+
+    /**
+     * 
+     * remove the old pattern from IndicatorParameters of imported analysis ,then add the current workspace pattern into IndicatorParameters.
+     * 
+     * @param indParameters
+     * @param sysPattern
+     * @param analysis
+     */
+    private void removOldAddSysPatternInAnaParams(IndicatorParameters indParameters, Pattern sysPattern, Analysis analysis) {
+        if (null == indParameters || null == indParameters.getDataValidDomain()) {
+            return;
+        }
+        EList<Pattern> patterns = indParameters.getDataValidDomain().getPatterns();
+        Iterator<Pattern> itPatterns = patterns.iterator();
+        while (itPatterns.hasNext()) {
+            Pattern oldPattern = itPatterns.next();
+            if (oldPattern.eResource() == null) {
+                URI oldPatternUri = EObjectHelper.getURI(oldPattern);
+                URI sysPatternUri = EObjectHelper.getURI(sysPattern);
+                if (oldPatternUri != null && sysPatternUri != null
+                        && oldPatternUri.lastSegment().equals(oldPatternUri.lastSegment())) {
+                    itPatterns.remove();
+                    indParameters.getDataValidDomain().getPatterns().add(sysPattern);
+                    log.info("Pattern '" + sysPattern.getName() + "' is updated in Analysis '" + analysis.getName() + "'"); //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$
+                    break;
+                }
+            }
+        }
     }
 
     private PatternComponent createPatternComponent(PatternComponent oldComponent) {
