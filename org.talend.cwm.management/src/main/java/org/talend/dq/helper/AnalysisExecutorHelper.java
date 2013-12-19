@@ -13,6 +13,7 @@
 package org.talend.dq.helper;
 
 import org.eclipse.emf.ecore.EObject;
+import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
 import org.talend.core.model.metadata.builder.connection.MetadataTable;
 import org.talend.cwm.db.connection.ConnectionUtils;
@@ -21,6 +22,7 @@ import org.talend.cwm.helper.ColumnSetHelper;
 import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.SchemaHelper;
 import org.talend.cwm.helper.SwitchHelpers;
+import org.talend.cwm.relational.TdColumn;
 import org.talend.dq.dbms.DbmsLanguage;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.resource.relational.Catalog;
@@ -56,7 +58,18 @@ public final class AnalysisExecutorHelper {
             schemaName = ColumnSetHelper.getTableOwner(columnSetOwner);
         }
         // ~11934
-        DatabaseConnection dbConn = ConnectionHelper.getTdDataProvider(SwitchHelpers.COLUMN_SWITCH.doSwitch(analyzedColumn));
+        //analyzedColumn could be Tdcolumn or ColumnSet(TableAnalysisExecutor case by now)
+        TdColumn tdColumn = SwitchHelpers.COLUMN_SWITCH.doSwitch(analyzedColumn);
+        ColumnSet columnSet = SwitchHelpers.COLUMN_SET_SWITCH.doSwitch(analyzedColumn);
+        DatabaseConnection dbConn = null;
+        if (tdColumn != null) {
+            dbConn = ConnectionHelper.getTdDataProvider(tdColumn);
+        }else if (columnSet != null) {
+            Connection connection = ConnectionHelper.getConnection(columnSet);
+            if(connection!=null){
+                dbConn = (DatabaseConnection)connection ;
+            }
+        }
         if (dbConn != null && dbConn.isContextMode()) {
             return getTableNameFromContext(dbConn, catalogName, schemaName, tableName, dbmsLanguage);
         } else {
