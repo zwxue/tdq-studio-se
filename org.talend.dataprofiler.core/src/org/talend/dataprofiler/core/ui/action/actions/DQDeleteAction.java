@@ -313,7 +313,7 @@ public class DQDeleteAction extends DeleteAction {
     private void physicalDelete(List deleteNodes, List<IRepositoryNode> shownNodes, List<IRepositoryNode> findAllRecycleBinNodes) {
         // when physical deleting object with dependencies, do not popup
         // confirm anymore. and after dealing with it, store back to its default value.
-        confirmFromDialog = true;
+        confirmForDQ = true;
         List<IRepositoryNode> folderNodeWhichChildHadDepend = null;
 
         for (int i = selectedNodes.size() - 1; i >= 0; i--) {
@@ -397,7 +397,7 @@ public class DQDeleteAction extends DeleteAction {
 
         // Added 20130227 TDQ-6901 yyin, when physical deleting object with dependencies, do not popup
         // confirm anymore. and after dealing with it, store back to its default value.
-        confirmFromDialog = false;
+        confirmForDQ = false;
     }
 
     /**
