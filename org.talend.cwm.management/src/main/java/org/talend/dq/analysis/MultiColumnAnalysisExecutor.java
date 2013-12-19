@@ -22,7 +22,9 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
+import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.management.i18n.Messages;
+import org.talend.cwm.relational.TdColumn;
 import org.talend.dataquality.PluginConstant;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisContext;
@@ -35,7 +37,6 @@ import org.talend.dataquality.indicators.columnset.ColumnSetMultiValueIndicator;
 import org.talend.dataquality.indicators.columnset.ColumnsetPackage;
 import org.talend.dataquality.indicators.columnset.SimpleStatIndicator;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
-import org.talend.dq.helper.AnalysisExecutorHelper;
 import org.talend.utils.sugars.ReturnCode;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.objectmodel.core.Expression;
@@ -140,8 +141,9 @@ public class MultiColumnAnalysisExecutor extends ColumnAnalysisSqlExecutor {
             String grpByClause = createGroupBy(columns);
 
             // all columns must belong to the same table
-            String tableName = AnalysisExecutorHelper.getTableName(analyzedColumns.get(0), dbms());
-            this.catalogOrSchema = dbms().getCatalogOrSchemaName(analyzedColumns.get(0));
+            TdColumn firstColumn = SwitchHelpers.COLUMN_SWITCH.doSwitch(analyzedColumns.get(0));
+            String tableName = dbms().getQueryColumnSetWithPrefix(firstColumn);
+            this.catalogOrSchema = dbms().getCatalogOrSchemaName(firstColumn);
             // definition is SELECT &lt;%=__COLUMN_NAMES__%> FROM &lt;%=__TABLE_NAME__%> GROUP BY
             // &lt;%=__GROUP_BY_ALIAS__%>
             String sqlExpr = dbms().fillGenericQueryWithColumnTableAndAlias(sqlGenericExpression.getBody(), selectItems,

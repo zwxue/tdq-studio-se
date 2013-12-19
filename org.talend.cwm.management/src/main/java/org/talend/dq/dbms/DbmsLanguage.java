@@ -29,7 +29,6 @@ import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
 import org.talend.core.model.metadata.builder.database.dburl.SupportDBUrlType;
 import org.talend.core.runtime.CoreRuntimePlugin;
 import org.talend.cwm.db.connection.ConnectionUtils;
-import org.talend.cwm.helper.CatalogHelper;
 import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.helper.ColumnSetHelper;
 import org.talend.cwm.helper.ConnectionHelper;
@@ -54,7 +53,6 @@ import org.talend.dataquality.indicators.definition.CharactersMapping;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dataquality.indicators.sql.UserDefIndicator;
 import org.talend.dataquality.rules.JoinElement;
-import org.talend.dq.helper.AnalysisExecutorHelper;
 import org.talend.metadata.managment.ui.i18n.Messages;
 import org.talend.utils.ProductVersion;
 import orgomg.cwm.objectmodel.core.Expression;
@@ -62,7 +60,6 @@ import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.objectmodel.core.Package;
 import orgomg.cwm.resource.relational.Catalog;
 import orgomg.cwm.resource.relational.ColumnSet;
-import orgomg.cwm.resource.relational.RelationalPackage;
 import orgomg.cwm.resource.relational.Schema;
 
 /**
@@ -1589,30 +1586,63 @@ public class DbmsLanguage {
      * @return
      */
     public String getQueryColumnSetWithPrefix(ColumnSet columnset) {
-        Package catalogOrSchema = ColumnSetHelper.getParentCatalogOrSchema(columnset);
-        if (catalogOrSchema == null) {
-            return columnset.getName();
-        }
-        // else
+        Catalog catalog = getCatalog(columnset);
+        Schema schema = getSchema(columnset);
         String catalogName = null;
         String schemaName = null;
-        if (catalogOrSchema != null && RelationalPackage.eINSTANCE.getSchema().equals(catalogOrSchema.eClass())) {
-            schemaName = catalogOrSchema.getName();
-            Catalog parentCatalog = CatalogHelper.getParentCatalog(catalogOrSchema);
-            if (parentCatalog != null) {
-                catalogName = parentCatalog.getName();
-            }
-        } else {
-            catalogName = catalogOrSchema.getName();
+        if (catalog != null) {
+            catalogName = catalog.getName();
+        }
+        if (schema != null) {
+            schemaName = schema.getName();
+        }
+        return getQualifiedColumnSetName(columnset, catalogName, schemaName);
 
+    }
+
+    /**
+     * DOC qiongli Comment method "getQualifiedColumnSetName".
+     * 
+     * @param columnset
+     * @param catalogName
+     * @param schemaName
+     * @return
+     */
+    protected String getQualifiedColumnSetName(ColumnSet columnset, String catalogName, String schemaName) {
+        DatabaseConnection dbConn = (DatabaseConnection) ConnectionHelper.getConnection(columnset);
+        if (dbConn != null && dbConn.isContextMode()) {
+            return getQueryColumnSetWithPrefixFromContext(dbConn, catalogName, schemaName, columnset.getName());
         }
-        // MOD by zshen: change schemaName of sybase database to Table's owner.
-        if (ConnectionUtils.isSybaseeDBProducts(getDbmsName())) {
-            schemaName = ColumnSetHelper.getTableOwner(columnset);
-        }
-        // ~11934
 
         return toQualifiedName(catalogName, schemaName, columnset.getName());
+    }
+
+    protected String getQueryColumnSetWithPrefixFromContext(DatabaseConnection dbConn, String catalogName, String schemaName,
+            String tableName) {
+        String catalogNameFromContext = getCatalogNameFromContext(dbConn);
+        String schemaNameFromContext = getSchemaNameFromContext(dbConn);
+        String cName = catalogNameFromContext != null && catalogNameFromContext.trim().length() > 0 ? catalogNameFromContext
+                : catalogName;
+        String sName = schemaNameFromContext != null && schemaNameFromContext.trim().length() > 0 ? schemaNameFromContext
+                : schemaName;
+        return toQualifiedName(cName, sName, tableName);
+    }
+
+    /**
+     * 
+     * move this method from ColumnSetNameHelper.getColumnSetQualifiedName().
+     * 
+     * @param columnset
+     * @return
+     */
+    public String getQueryColumnSetWithPrefix(TdColumn tdColumn) {
+        ColumnSet columnSet = ColumnHelper.getColumnOwnerAsColumnSet(tdColumn);
+        if (columnSet == null) {
+            log.error("Can not find table by column"); //$NON-NLS-1$
+            return PluginConstant.EMPTY_STRING;
+
+        }
+        return getQueryColumnSetWithPrefix(columnSet);
 
     }
 
@@ -1700,11 +1730,10 @@ public class DbmsLanguage {
      * @return if the catalog is not null, return catalog's name, else if schema is not null, return schema's name, else
      * return null
      */
-    public String getCatalogOrSchemaName(ModelElement analyzedColumn) {
+    public String getCatalogOrSchemaName(TdColumn tdColumn) {
         String name = null;
-
         // get the catalog/schema name from the context
-        DatabaseConnection dbConn = ConnectionHelper.getTdDataProvider(SwitchHelpers.COLUMN_SWITCH.doSwitch(analyzedColumn));
+        DatabaseConnection dbConn = ConnectionHelper.getTdDataProvider(tdColumn);
         if (dbConn != null && dbConn.isContextMode()) {
             name = getCatalogNameFromContext(dbConn);
             if (!StringUtils.isEmpty(name)) {
@@ -1718,19 +1747,19 @@ public class DbmsLanguage {
 
         // if the catalog/schema name from the context is empty, get it by the column
         if (StringUtils.isEmpty(name)) {
-            ModelElement columnSetOwner = AnalysisExecutorHelper.findColumnSetOwner(analyzedColumn);
+            ColumnSet columnSet = ColumnHelper.getColumnOwnerAsColumnSet(tdColumn);
             // Get catalog
-            Catalog catalog = getCatalog(columnSetOwner);
+            Catalog catalog = getCatalog(columnSet);
             if (catalog != null) {
                 return catalog.getName();
             }
             // Get schema
-            Schema schema = getSchema(columnSetOwner);
+            Schema schema = getSchema(columnSet);
             if (schema != null) {
                 return schema.getName();
             }
             // no catalog and schema
-            log.error(Messages.getString("DbmsLanguage.NoCatalogOrSchema", columnSetOwner.getName()));//$NON-NLS-1$
+            log.error(Messages.getString("DbmsLanguage.NoCatalogOrSchema", columnSet.getName()));//$NON-NLS-1$
         }
         return name;
     }
@@ -1762,4 +1791,5 @@ public class DbmsLanguage {
         }
         return null;
     }
+
 }

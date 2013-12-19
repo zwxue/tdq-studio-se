@@ -25,7 +25,6 @@ import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.dq.dbms.DbmsLanguage;
 import org.talend.dq.dbms.DbmsLanguageFactory;
-import org.talend.dq.helper.AnalysisExecutorHelper;
 import org.talend.utils.sugars.ReturnCode;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.foundation.softwaredeployment.DataManager;
@@ -108,21 +107,20 @@ public class DatabaseSQLExecutor extends SQLExecutor {
      */
     private String createSqlStatement(DataManager connection, List<ModelElement> analysedElements) {
         DbmsLanguage dbms = createDbmsLanguage(connection);
-
+        TdColumn col = null;
         StringBuilder sql = new StringBuilder("SELECT ");//$NON-NLS-1$
         final Iterator<ModelElement> iterator = analysedElements.iterator();
         while (iterator.hasNext()) {
             ModelElement modelElement = iterator.next();
-            TdColumn col = SwitchHelpers.COLUMN_SWITCH.doSwitch(modelElement);
+            col = SwitchHelpers.COLUMN_SWITCH.doSwitch(modelElement);
             sql.append(dbms.quote(col.getName()));
             // append comma if more columns exist
             if (iterator.hasNext()) {
                 sql.append(',');
             }
         }
-
         sql.append(dbms.from());
-        sql.append(AnalysisExecutorHelper.getTableName(analysedElements.get(0), dbms));
+        sql.append(dbms.getQueryColumnSetWithPrefix(col));
         if (limit > 0) {
             return dbms.getTopNQuery(sql.toString(), limit);
         } else {

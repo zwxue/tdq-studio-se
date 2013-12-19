@@ -13,11 +13,9 @@
 package org.talend.dq.analysis;
 
 import java.sql.Connection;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
-import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.EList;
@@ -41,7 +39,6 @@ import org.talend.dataquality.indicators.columnset.AllMatchIndicator;
 import org.talend.dataquality.indicators.columnset.ColumnSetMultiValueIndicator;
 import org.talend.dataquality.indicators.columnset.ColumnsetPackage;
 import org.talend.dq.dbms.GenericSQLHandler;
-import org.talend.dq.helper.AnalysisExecutorHelper;
 import org.talend.dq.indicators.ColumnSetIndicatorEvaluator;
 import org.talend.utils.sugars.ReturnCode;
 import org.talend.utils.sugars.TypedReturnCode;
@@ -186,7 +183,6 @@ public class ColumnSetAnalysisExecutor extends AnalysisExecutor {
                     analysis.getName());
             return null;
         }
-        Set<ColumnSet> fromPart = new HashSet<ColumnSet>();
         // MOD yyi 2011-02-22 17871:delimitefile, indiactor changed
         final Iterator<ModelElement> iterator = analysedElements.iterator();
         while (iterator.hasNext()) { // for (ModelElement modelElement : analysedElements) {
@@ -215,19 +211,13 @@ public class ColumnSetAnalysisExecutor extends AnalysisExecutor {
                     sql.append(',');
                 }
             }
-            // add from
-            fromPart.add(colSet);
 
         }
-        if (fromPart.size() != 1) {
-            log.error(Messages.getString("ColumnSetAnalysisExecutor.JAVAANALYSISMUSTBERUNONONETABLE", fromPart.size()));//$NON-NLS-1$
-            this.errorMessage = Messages.getString("ColumnSetAnalysisExecutor.CANNOTRUNONSEVERALTABLES");//$NON-NLS-1$
-            return null;
-        }
+        TdColumn firstColumn = SwitchHelpers.COLUMN_SWITCH.doSwitch(analysedElements.get(0));
         // select all the column to be prepare for drill down.
         if (analysis.getParameters().isStoreData()) {
             // MOD klliu 2011-06-30 bug 22523 whichever is Table or View,that finds columns should ues columnset
-            EObject eContainer = analysedElements.get(0).eContainer();
+            EObject eContainer = firstColumn.eContainer();
             List<TdColumn> columnList = ColumnSetHelper.getColumns(SwitchHelpers.COLUMN_SET_SWITCH.doSwitch(eContainer));
             // ~
             Iterator<TdColumn> iter = columnList.iterator();
@@ -243,7 +233,7 @@ public class ColumnSetAnalysisExecutor extends AnalysisExecutor {
 
         // add from clause
         sql.append(dbms().from());
-        sql.append(AnalysisExecutorHelper.getTableName(fromPart.iterator().next(), dbms()));
+        sql.append(dbms().getQueryColumnSetWithPrefix(firstColumn));
 
         // add where clause
         // --- get data filter

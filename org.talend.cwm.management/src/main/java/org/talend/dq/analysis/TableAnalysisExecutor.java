@@ -26,7 +26,6 @@ import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.management.i18n.Messages;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.indicators.Indicator;
-import org.talend.dq.helper.AnalysisExecutorHelper;
 import org.talend.dq.indicators.IndicatorEvaluator;
 import org.talend.dq.sql.converters.CwmZQuery;
 import org.talend.utils.sugars.ReturnCode;
@@ -107,7 +106,7 @@ public class TableAnalysisExecutor extends AnalysisExecutor {
                 this.errorMessage = Messages.getString("TableAnalysisExecutor.GivenTable", set.getName()); //$NON-NLS-1$
                 return new ReturnCode(errorMessage, Boolean.FALSE);
             }
-            String setName = AnalysisExecutorHelper.getTableName(set, dbms());
+            String setName = dbms().getQueryColumnSetWithPrefix(set);
 
             eval.storeIndicator(setName, indicator);
         }

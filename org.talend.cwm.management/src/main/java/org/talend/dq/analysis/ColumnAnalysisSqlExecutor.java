@@ -72,7 +72,6 @@ import org.talend.dataquality.indicators.TextParameters;
 import org.talend.dataquality.indicators.definition.CharactersMapping;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dq.dbms.GenericSQLHandler;
-import org.talend.dq.helper.AnalysisExecutorHelper;
 import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.UDIHelper;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
@@ -271,10 +270,7 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
             }
         }
 
-        final ColumnSet columnSetOwner = ColumnHelper.getColumnOwnerAsColumnSet(tdColumn);
-        String schemaName = getQuotedSchemaName(columnSetOwner);
-
-        String table = AnalysisExecutorHelper.getTableName(tdColumn, this.dbms());
+        String table = dbms().getQueryColumnSetWithPrefix(tdColumn);
 
         // ### evaluate SQL Statement depending on indicators ###
         String completedSqlString = null;

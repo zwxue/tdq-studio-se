@@ -18,6 +18,7 @@ import java.sql.Statement;
 
 import org.apache.commons.lang.StringUtils;
 import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
+import org.talend.cwm.relational.TdColumn;
 import org.talend.utils.ProductVersion;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.resource.relational.Catalog;
@@ -164,7 +165,7 @@ public class SQLiteDbmsLanguage extends DbmsLanguage {
      * @see org.talend.dq.dbms.DbmsLanguage#getCatalogOrSchemaName(orgomg.cwm.objectmodel.core.ModelElement)
      */
     @Override
-    public String getCatalogOrSchemaName(ModelElement analyzedColumn) {
+    public String getCatalogOrSchemaName(TdColumn analyzedColumn) {
         return null;
     }
 

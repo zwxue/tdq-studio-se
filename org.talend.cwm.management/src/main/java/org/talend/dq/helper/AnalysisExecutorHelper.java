@@ -24,16 +24,15 @@ import org.apache.log4j.Logger;
 import org.eclipse.emf.ecore.EObject;
 import org.talend.commons.utils.StringUtils;
 import org.talend.core.language.LanguageManager;
-import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
 import org.talend.core.model.metadata.builder.connection.DelimitedFileConnection;
 import org.talend.core.model.metadata.builder.connection.MetadataTable;
 import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.helper.CatalogHelper;
-import org.talend.cwm.helper.ColumnSetHelper;
-import org.talend.cwm.helper.ConnectionHelper;
+import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.helper.SchemaHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.management.i18n.Messages;
+import org.talend.cwm.relational.TdColumn;
 import org.talend.dataquality.PluginConstant;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisContext;
@@ -61,46 +60,35 @@ public final class AnalysisExecutorHelper {
     /**
      * get full name as: db.catalog.table, if has catalog/schema
      * 
-     * @param analyzedColumns
+     * @param analyzedElement only for TdColumn and ColumnSet.
      * @param dbmsLanguage
      * @return
+     * @deprecated instead of it by {@link DbmsLanguage#getQueryColumnSetWithPrefix(ColumnSet) or
+     * DbmsLanguage#getQueryColumnSetWithPrefix(TdColumn)}
      */
-    public static String getTableName(ModelElement analyzedColumn, DbmsLanguage dbmsLanguage) {
-        ModelElement columnSetOwner = findColumnSetOwner(analyzedColumn);
-        String tableName = columnSetOwner.getName();
-
-        String schemaName = getQuotedSchemaName(columnSetOwner, dbmsLanguage);
-        String catalogName = getQuotedCatalogName(columnSetOwner, dbmsLanguage);
-        if (catalogName == null && schemaName != null) {
-            // try to get catalog above schema
-            final Schema parentSchema = SchemaHelper.getParentSchema(columnSetOwner);
-            final Catalog parentCatalog = CatalogHelper.getParentCatalog(parentSchema);
-            catalogName = parentCatalog != null ? parentCatalog.getName() : null;
+    @Deprecated
+    public static String getTableName(ModelElement analyzedElement, DbmsLanguage dbmsLanguage) {
+        TdColumn tdColumn = SwitchHelpers.COLUMN_SWITCH.doSwitch(analyzedElement);
+        if (tdColumn != null) {
+            return dbmsLanguage.getQueryColumnSetWithPrefix(tdColumn);
         }
-        // MOD by zshen: change schemaName of sybase database to Table's owner.
-        if (ConnectionUtils.isSybaseeDBProducts(dbmsLanguage.getDbmsName())) {
-            schemaName = ColumnSetHelper.getTableOwner(columnSetOwner);
+        ColumnSet columnSet = SwitchHelpers.COLUMN_SET_SWITCH.doSwitch(analyzedElement);
+        if (columnSet != null) {
+            return dbmsLanguage.getQueryColumnSetWithPrefix(columnSet);
         }
-        // ~11934
-        DatabaseConnection dbConn = ConnectionHelper.getTdDataProvider(SwitchHelpers.COLUMN_SWITCH.doSwitch(analyzedColumn));
-        if (dbConn != null && dbConn.isContextMode()) {
-            return getTableNameFromContext(dbConn, catalogName, schemaName, tableName, dbmsLanguage);
-        } else {
-            return dbmsLanguage.toQualifiedName(catalogName, schemaName, tableName);
-        }
+        log.error(Messages.getString("AnalysisExecutorHelper.TableEmpty")); //$NON-NLS-1$
+        return PluginConstant.EMPTY_STRING;
     }
 
-    private static String getTableNameFromContext(DatabaseConnection dbConn, String catalogName, String schemaName,
-            String tableName, DbmsLanguage dbmsLanguage) {
-        String catalogNameFromContext = dbmsLanguage.getCatalogNameFromContext(dbConn);
-        String schemaNameFromContext = dbmsLanguage.getSchemaNameFromContext(dbConn);
-        String cName = catalogNameFromContext != null && catalogNameFromContext.trim().length() > 0 ? catalogNameFromContext
-                : catalogName;
-        String sName = schemaNameFromContext != null && schemaNameFromContext.trim().length() > 0 ? schemaNameFromContext
-                : schemaName;
-        return dbmsLanguage.toQualifiedName(cName, sName, tableName);
-    }
-
+    /**
+     * 
+     * DOC qiongli Comment method "findColumnSetOwner".
+     * 
+     * @param column
+     * @return
+     * @deprecated instead of it by {@link ColumnHelper#getColumnOwnerAsColumnSet(ModelElement)}
+     */
+    @Deprecated
     public static ModelElement findColumnSetOwner(ModelElement column) {
         EObject owner = column.eContainer();
         ColumnSet set = SwitchHelpers.COLUMN_SET_SWITCH.doSwitch(owner);
