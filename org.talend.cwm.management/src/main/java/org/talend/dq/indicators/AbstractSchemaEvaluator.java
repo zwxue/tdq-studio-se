@@ -356,7 +356,6 @@ public abstract class AbstractSchemaEvaluator<T> extends Evaluator<T> {
             statement = conn.createStatement();
         } else {
             statement = conn.createStatement(ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
-
         }
         // not needed here statement.setFetchSize(fetchSize);
         try {
@@ -473,23 +472,24 @@ public abstract class AbstractSchemaEvaluator<T> extends Evaluator<T> {
             try {
                 Package pacage = tdSchema == null ? tdCatalog : tdSchema;
                 // MOD gdbu 2011-9-22 TDQ-3607
-                List<? extends NamedColumnSet> tables = DqRepositoryViewService
-                        .getTables(getDataManager(), pacage, trimPat, true);
+                checkConnectionBeforeGetTableView();
+                List<? extends NamedColumnSet> tables = DqRepositoryViewService.getTables(getConnection(), getDataManager(),
+                        pacage, trimPat, true);
                 // ~TDQ-3607
                 for (NamedColumnSet t : tables) {
                     if (this.getMonitor() != null) {
                         StringBuilder taskName = new StringBuilder();
                         if (catName != null) {
-                            taskName.append(Messages.getString("ColumnAnalysisSqlExecutor.AnalyzedElementCatalog", catName))
-                                    .append(", ");
+                            taskName.append(Messages.getString("ColumnAnalysisSqlExecutor.AnalyzedElementCatalog", catName)) //$NON-NLS-1$
+                                    .append(", "); //$NON-NLS-1$
                         }
                         if (schemaName != null) {
-                            taskName.append(Messages.getString("ColumnAnalysisSqlExecutor.AnalyzedElementSchema", schemaName))
-                                    .append(", ");
+                            taskName.append(Messages.getString("ColumnAnalysisSqlExecutor.AnalyzedElementSchema", schemaName)) //$NON-NLS-1$
+                                    .append(", "); //$NON-NLS-1$
                         }
-                        taskName.append(Messages.getString("ColumnAnalysisSqlExecutor.AnalyzedElementTable", t.getName()));
+                        taskName.append(Messages.getString("ColumnAnalysisSqlExecutor.AnalyzedElementTable", t.getName())); //$NON-NLS-1$
                         this.getMonitor().setTaskName(
-                                Messages.getString("ColumnAnalysisSqlExecutor.AnalyzedElement", taskName.toString()));
+                                Messages.getString("ColumnAnalysisSqlExecutor.AnalyzedElement", taskName.toString())); //$NON-NLS-1$
                     }
                     tableCount++;
                     evalAllCounts(catName, schemaName, t, schemaIndic, true, ok);
@@ -512,7 +512,9 @@ public abstract class AbstractSchemaEvaluator<T> extends Evaluator<T> {
             try {
                 Package pacage = tdSchema == null ? tdCatalog : tdSchema;
                 // MOD gdbu 2011-9-22 TDQ-3607
-                List<? extends NamedColumnSet> views = DqRepositoryViewService.getViews(getDataManager(), pacage, trimPat, true);
+                checkConnectionBeforeGetTableView();
+                List<? extends NamedColumnSet> views = DqRepositoryViewService.getViews(getConnection(), getDataManager(),
+                        pacage, trimPat, true);
                 // ~TDQ-3607
                 for (NamedColumnSet t : views) {
                     viewCount++;
