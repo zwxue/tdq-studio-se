@@ -67,7 +67,7 @@ public class MatchAnalysisHandler extends AnalysisHandler {
         return this.connection;
     }
 
-    public void saveConnection(TDQAnalysisItem analysisItem) {
+    public void updateAnaConnRelationship(TDQAnalysisItem analysisItem) {
         assert analysisItem.getAnalysis() != null;
         assert analysisItem.getAnalysis() != null;
         // remove the old dependencies if any
@@ -81,7 +81,7 @@ public class MatchAnalysisHandler extends AnalysisHandler {
             TypedReturnCode<Dependency> rc = DependenciesHandler.getInstance().setDependencyOn(analysisItem.getAnalysis(),
                     connection);
             if (!rc.isOk()) {
-                log.info("fail to save dependency analysis:" + analysis.getFileName());//$NON-NLS-1$
+                log.info("fail to save dependency analysis:" + analysisItem.getAnalysis().getFileName());//$NON-NLS-1$
             }// ~
         }
     }

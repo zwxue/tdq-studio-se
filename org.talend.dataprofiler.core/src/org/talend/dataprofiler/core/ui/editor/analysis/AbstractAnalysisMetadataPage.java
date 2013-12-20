@@ -80,7 +80,6 @@ import org.talend.dq.analysis.AnalysisHandler;
 import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.helper.RepositoryNodeHelper;
-import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
 import org.talend.dq.nodes.AnalysisRepNode;
 import org.talend.dq.nodes.DBConnectionRepNode;
 import org.talend.dq.nodes.DFConnectionRepNode;
@@ -162,7 +161,6 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
             analysisItem = fileEditorInput.getTDQAnalysisItem();
         } else if (editorInput instanceof FileEditorInput) {
             FileEditorInput input = (FileEditorInput) editorInput;
-            currentModelElement = AnaResourceFileHelper.getInstance().findAnalysis(input.getFile());
             Property property = PropertyHelper.getProperty(input.getFile());
             analysisItem = (TDQAnalysisItem) property.getItem();
         }

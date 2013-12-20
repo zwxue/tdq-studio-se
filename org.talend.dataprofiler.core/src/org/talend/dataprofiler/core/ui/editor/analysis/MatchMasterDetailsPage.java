@@ -1192,7 +1192,7 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
         }
 
         analysisHandler.saveSelectedAnalyzedElements();
-        analysisHandler.saveConnection(analysisItem);
+        analysisHandler.updateAnaConnRelationship(analysisItem);
 
         ReturnCode saved = new ReturnCode(false);
         this.nameText.setText(analysisHandler.getName());
