@@ -668,7 +668,8 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
                             if (allSelectedIndNames.contains(indicator.getName())) {
                                 oldSelectedIndNames.add(indicator.getName());
                             } else {
-                                meIndicator.removeIndicatorUnit(indicatorUnit);
+                                //remove the UDI from UI need to insert this UDI into removeList
+                                deleteIndicatorItems(meIndicator,indicatorUnit);
                                 if (!isDirty()) {
                                     setDirty(true);
                                 }
