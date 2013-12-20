@@ -119,6 +119,9 @@ public class CWMPlugin extends Plugin {
         DriverManager driverManager = sqlPlugin.getDriverModel();
 
         List<String> tdqSupportDBType = MetadataConnectionUtils.getTDQSupportDBTemplate();
+        // if all dataproviders are not supported on DQ side,don't save files SQLAliases.xml and
+        // SQLDrivers.xml.Otherwise,save it.
+        Boolean isNeedSave = Boolean.FALSE;
         for (ModelElement dataProvider : dataproviders) {
             try {
                 Connection connection = SwitchHelpers.CONNECTION_SWITCH.doSwitch(dataProvider);
@@ -166,6 +169,7 @@ public class CWMPlugin extends Plugin {
 
                             alias.setDriver(manDr);
                         }
+                        isNeedSave = true;
                     }
                     if (!aliasManager.contains(alias) && alias.getName() != null) {
                         aliasManager.addAlias(alias);
@@ -184,13 +188,15 @@ public class CWMPlugin extends Plugin {
             }
         }
 
-        try {
-            aliasManager.saveAliases();
-            driverManager.saveDrivers();
-        } catch (Exception e) { // MOD scorreia 2010-07-24 catch all exceptions
-            log.error(e, e);
+        if (isNeedSave) {
+            try {
+                aliasManager.saveAliases();
+                driverManager.saveDrivers();
+            } catch (Exception e) { // MOD scorreia 2010-07-24 catch all exceptions
+                log.error(e, e);
+            }
+            aliasManager.modelChanged();
         }
-        aliasManager.modelChanged();
     }
 
     /**
