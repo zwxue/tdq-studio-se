@@ -79,12 +79,12 @@ public abstract class AbstractTableDropTree extends AbstractColumnDropTree {
     }
 
     /**
-     * rename method "removeDependency" to addRemovedElements.
+     * insert element into removeElements so that dependency can be update when save the editor
      * 
      * @param analysis
      * @param unit
      */
-    protected void addRemovedElements(Analysis analysis, TableIndicatorUnit unit) {
+    protected void removedElements(Analysis analysis, TableIndicatorUnit unit) {
         List<ModelElement> reomveElements = new ArrayList<ModelElement>();
         Indicator indicator = unit.getIndicator();
         if (indicator instanceof WhereRuleIndicator) {
