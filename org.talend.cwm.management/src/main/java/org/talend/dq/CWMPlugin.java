@@ -12,6 +12,7 @@
 // ============================================================================
 package org.talend.dq;
 
+import java.io.File;
 import java.util.Collection;
 import java.util.List;
 
@@ -31,6 +32,7 @@ import org.eclipse.core.runtime.preferences.DefaultScope;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.ui.PlatformUI;
 import org.osgi.framework.BundleContext;
+import org.talend.core.language.ECodeLanguage;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
 import org.talend.core.model.metadata.builder.database.JavaSqlFactory;
@@ -40,6 +42,7 @@ import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.dq.analysis.memory.AnalysisThreadMemoryChangeNotifier;
 import org.talend.dq.helper.PropertyHelper;
+import org.talend.librariesmanager.prefs.LibrariesManagerUtils;
 import orgomg.cwm.foundation.softwaredeployment.DataProvider;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
@@ -266,7 +269,7 @@ public class CWMPlugin extends Plugin {
     }
 
     /**
-     *
+     * 
      * when you start TOP ,the 'lib/java' dosen't exist,should create it.
      */
     public void createLibFolderIfNotExist() {
