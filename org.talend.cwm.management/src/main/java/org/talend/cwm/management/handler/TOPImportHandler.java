@@ -19,6 +19,8 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.talend.core.GlobalServiceRegister;
 import org.talend.core.ITDQItemService;
+import org.talend.core.model.properties.FileItem;
+import org.talend.core.model.properties.Item;
 import org.talend.core.repository.constants.FileConstants;
 import org.talend.repository.items.importexport.handlers.imports.ImportRepTypeHandler;
 import org.talend.repository.items.importexport.handlers.model.ItemRecord;
@@ -71,7 +73,11 @@ public class TOPImportHandler extends ImportRepTypeHandler {
 
         // Load property resource.
         super.computeProperty(resManager, itemRecord);
-        EcoreUtil.resolveAll(itemRecord.getResourceSet());
+        Item item = itemRecord.getItem();
+        // only resolveAll EMF-Model items.
+        if (item != null && !(item instanceof FileItem)) {
+            EcoreUtil.resolveAll(itemRecord.getResourceSet());
+        }
 
         return itemRecord;
     }
@@ -114,6 +120,7 @@ public class TOPImportHandler extends ImportRepTypeHandler {
     @Override
     protected String[] getResourceNeededExtensions() {
         return new String[] { FileConstants.ITEM_EXTENSION, FileConstants.ANA_EXTENSION, FileConstants.REP_EXTENSION,
-                FileConstants.PAT_EXTENSION, FileConstants.RULE_EXTENSION, FileConstants.DEF_EXTENSION };
+                FileConstants.PAT_EXTENSION, FileConstants.RULE_EXTENSION, FileConstants.DEF_EXTENSION,
+                FileConstants.SQL_EXTENSION };
     }
 }
