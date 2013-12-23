@@ -265,4 +265,16 @@ public class CWMPlugin extends Plugin {
         aliasManager.modelChanged();
     }
 
+    /**
+     *
+     * when you start TOP ,the 'lib/java' dosen't exist,should create it.
+     */
+    public void createLibFolderIfNotExist() {
+        String installLocation = LibrariesManagerUtils.getLibrariesPath(ECodeLanguage.JAVA);
+        File libFile = new File(installLocation);
+        if (!libFile.exists()) {
+            org.talend.utils.io.FilesUtils.createFoldersIfNotExists(installLocation, false);
+        }
+    }
+
 }
