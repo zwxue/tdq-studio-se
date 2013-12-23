@@ -13,21 +13,26 @@
 package org.talend.dataprofiler.core.ui.editor.indicator;
 
 import org.apache.log4j.Level;
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.FileEditorInput;
+import org.talend.commons.emf.FactoriesUtil;
 import org.talend.commons.exception.ExceptionHandler;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.action.actions.DefaultSaveAction;
 import org.talend.dataprofiler.core.ui.editor.CommonFormEditor;
 import org.talend.dataprofiler.core.ui.editor.TdEditorToolBar;
+import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dataquality.indicators.definition.IndicatorsDefinitions;
+import org.talend.dataquality.indicators.definition.userdefine.UDIndicatorDefinition;
+import org.talend.dataquality.properties.TDQIndicatorDefinitionItem;
 import org.talend.dq.helper.resourcehelper.IndicatorResourceFileHelper;
 
 /**
- * DOC bZhou class global comment. Detailled comment
+ * The Editor of Indicator Definitions, include system and user defined indicators.
  */
 public class IndicatorEditor extends CommonFormEditor {
 
@@ -53,12 +58,6 @@ public class IndicatorEditor extends CommonFormEditor {
         setPartName(getName(input));
     }
 
-    /**
-     * DOC xqliu Comment method "getName".
-     * 
-     * @param input
-     * @return
-     */
     private String getName(IEditorInput input) {
         if (input instanceof IndicatorEditorInput) {
             return input.getName();
@@ -77,8 +76,12 @@ public class IndicatorEditor extends CommonFormEditor {
      */
     @Override
     protected void addPages() {
-
-        masterPage = new IndicatorDefinitionMaterPage(this, "Master Page", "Indicator Definition");//$NON-NLS-1$//$NON-NLS-2$
+        // TDQ-8453 according to the type to use IndicatorDefinition or UDI master page
+        if (isSystemIndicator()) {
+            masterPage = new IndicatorDefinitionMaterPage(this, "Master Page", "Indicator Definition");//$NON-NLS-1$//$NON-NLS-2$
+        } else {
+            masterPage = new UDIMasterPage(this, "Master Page", "User Define Indicator Definition");//$NON-NLS-1$//$NON-NLS-2$
+        }
         try {
             addPage(masterPage);
             setPartName(masterPage.getIntactElemenetName());
@@ -92,7 +95,38 @@ public class IndicatorEditor extends CommonFormEditor {
             toolbar.addActions(saveAction);
             setSaveActionButtonState(false);
         }
-        // super.addPages();
+    }
+
+    /**
+     * Judge if the current indicator definition is a system indicator
+     * 
+     * @return true if it is system indicator false if it is UDI
+     */
+    private boolean isSystemIndicator() {
+        IEditorInput editorInput = this.getEditorInput();
+        IndicatorDefinition definition = null;
+        if (editorInput instanceof IndicatorEditorInput) {// from DQRespositoryView double click
+            definition = ((IndicatorEditorInput) editorInput).getIndicatorDefinition();
+        } else if (editorInput instanceof IndicatorDefinitionItemEditorInput) {// from OpenItemEditorAction
+            TDQIndicatorDefinitionItem definitionItem = ((IndicatorDefinitionItemEditorInput) editorInput)
+                    .getTDQIndicatorDefinitionItem();
+            if (definitionItem != null) {
+                definition = definitionItem.getIndicatorDefinition();
+            }
+        } else if (editorInput instanceof FileEditorInput) {
+            // when open the indicator inside an analysis
+            FileEditorInput fileEditorInput = (FileEditorInput) editorInput;
+            IFile file = fileEditorInput.getFile();
+            if (FactoriesUtil.isUDIFile(file.getFileExtension())) {
+                definition = IndicatorResourceFileHelper.getInstance().findIndDefinition(file);
+            }
+
+        }
+        if (definition instanceof UDIndicatorDefinition) {
+            return false;
+        } else {
+            return true;
+        }
     }
 
     /*

@@ -12,8 +12,6 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.editor.indicator;
 
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -22,30 +20,21 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.lang.StringUtils;
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.common.util.EList;
-import org.eclipse.emf.common.util.URI;
-import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.viewers.CellEditor;
-import org.eclipse.jface.viewers.ColumnWeightData;
 import org.eclipse.jface.viewers.ICellModifier;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
-import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
-import org.eclipse.jface.viewers.TableLayout;
 import org.eclipse.jface.viewers.TableViewer;
-import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CCombo;
 import org.eclipse.swt.events.ModifyEvent;
@@ -55,20 +44,14 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.VerifyEvent;
 import org.eclipse.swt.events.VerifyListener;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
-import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
@@ -78,14 +61,12 @@ import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.part.FileEditorInput;
 import org.jfree.util.Log;
 import org.talend.core.model.repository.ERepositoryObjectType;
-import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.relational.TdExpression;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.pattern.PatternLanguageType;
 import org.talend.dataprofiler.core.ui.dialog.ExpressionEditDialog;
-import org.talend.dataprofiler.core.ui.dialog.JavaUdiJarSelectDialog;
 import org.talend.dataprofiler.core.ui.editor.AbstractMetadataFormPage;
 import org.talend.dataprofiler.core.ui.utils.MessageUI;
 import org.talend.dataprofiler.core.ui.utils.UDIUtils;
@@ -95,23 +76,16 @@ import org.talend.dataquality.indicators.definition.CharactersMapping;
 import org.talend.dataquality.indicators.definition.DefinitionFactory;
 import org.talend.dataquality.indicators.definition.IndicatorCategory;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
-import org.talend.dataquality.indicators.definition.IndicatorDefinitionParameter;
 import org.talend.dataquality.indicators.definition.userdefine.UDIndicatorDefinition;
 import org.talend.dataquality.properties.TDQIndicatorDefinitionItem;
-import org.talend.dq.helper.ProxyRepositoryManager;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.helper.UDIHelper;
 import org.talend.dq.helper.resourcehelper.IndicatorResourceFileHelper;
-import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.dq.nodes.SysIndicatorDefinitionRepNode;
 import org.talend.dq.writer.impl.ElementWriterFactory;
 import org.talend.repository.model.RepositoryNode;
-import org.talend.resource.EResourceConstant;
-import org.talend.resource.ResourceManager;
-import org.talend.utils.classloader.TalendURLClassLoader;
 import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
-import orgomg.cwm.objectmodel.core.TaggedValue;
 
 /**
  * DOC bZhou class global comment. Detailled comment
@@ -120,53 +94,35 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
 
     private static final String ADDITIONAL_FUNCTIONS_SPLIT = PluginConstant.SEMICOLON_STRING;
 
-    private Section definitionSection;
+    protected Section definitionSection;
 
     private Composite definitionComp;
 
-    private Composite categoryComp;
+    protected List<String> allDBTypeList;
 
-    private List<String> allDBTypeList;
+    protected Map<CCombo, TdExpression> tempExpressionMap;
 
-    private Map<CCombo, TdExpression> tempExpressionMap;
+    protected Map<CCombo, TdExpression> tempViewRowsExpressionMap;
 
-    private Map<CCombo, TdExpression> tempViewRowsExpressionMap;
+    protected Map<CCombo, TdExpression> tempViewValidRowsExpressionMap;
 
-    private Map<CCombo, TdExpression> tempViewValidRowsExpressionMap;
+    protected Map<CCombo, TdExpression> tempViewInvalidRowsExpressionMap;
 
-    private Map<CCombo, TdExpression> tempViewInvalidRowsExpressionMap;
+    protected Map<CCombo, TdExpression> tempViewValidValuesExpressionMap;
 
-    private Map<CCombo, TdExpression> tempViewValidValuesExpressionMap;
+    protected Map<CCombo, TdExpression> tempViewInvalidValuesExpressionMap;
 
-    private Map<CCombo, TdExpression> tempViewInvalidValuesExpressionMap;
+    protected Map<CCombo, Composite> widgetMap;
 
-    private Map<CCombo, Composite> widgetMap;
+    protected Composite expressionComp;
 
-    private Composite expressionComp;
-
-    private Combo comboCategory;
-
-    private Label labelDetail;
-
-    private IndicatorDefinition definition;
+    protected IndicatorDefinition definition;
 
     private TDQIndicatorDefinitionItem definitionItem;
 
     protected SysIndicatorDefinitionRepNode indicatorDefinitionRepNode;
 
-    public SysIndicatorDefinitionRepNode getIndicatorDefinitionRepNode() {
-        return this.indicatorDefinitionRepNode;
-    }
-
-    private void initIndicatorDefinitionRepNode(IndicatorDefinition indicatorDefinition) {
-        // RepositoryNode recursiveFind = RepositoryNodeHelper.recursiveFind(indicatorDefinition);
-        RepositoryNode recursiveFind = RepositoryNodeHelper.recursiveFind2(definition);
-        if (recursiveFind != null && recursiveFind instanceof SysIndicatorDefinitionRepNode) {
-            this.indicatorDefinitionRepNode = (SysIndicatorDefinitionRepNode) recursiveFind;
-        }
-    }
-
-    private IndicatorCategory category;
+    protected IndicatorCategory category;
 
     private Section additionalFunctionsSection;
 
@@ -180,70 +136,19 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
 
     private boolean hasAggregateExpression, hasDateExpression, hasCharactersMapping;
 
-    private boolean systemIndicator;
-
-    // used to when change the category changed, whether need the confirm dialog
-    private boolean needConfirm = true;
-
     // ADD xqliu 2010-03-23 feature 11201
     private List<TdExpression> tempExpressionList;
 
-    // ADD klliu 2010-06-03 bug 13451
-    private String classNameForSave;
-
-    private String jarPathForSave;
-
     // ADD klliu 2011-08-08 bug 0022994
-    private Composite dataBaseComp;
-
-    private Composite javaLanguageComp;
+    protected Composite dataBaseComp;
 
     private Composite dataBaseTitleComp;
-
-    private Composite javaTitleComp;
-
-    // ~
-    // MOD klliu 2010-06-03 bug 13451
-    private String getClassNameForSave() {
-        return this.classNameForSave;
-    }
-
-    private void setClassNameForSave(String classNameForSave) {
-        this.classNameForSave = classNameForSave;
-    }
-
-    private String getJarPathForSave() {
-        return this.jarPathForSave;
-    }
-
-    private void setJarPathForSave(String jarPathForSave) {
-        this.jarPathForSave = jarPathForSave;
-    }
-
-    public boolean isSystemIndicator() {
-        return systemIndicator;
-    }
-
-    // Add klliu figure 13429
-    private List<IndicatorDefinitionParameter> tempParameters;
-
-    private IndicatorDefinitionParameter element = null;
-
-    private Section parametersSection;
-
-    private Composite parametersComp;
-
-    private TableViewer parView;
-
-    // End klliu figure 13429
 
     private static final String BODY_AGGREGATE = "AVG({0});COUNT({0});SUM(CASE WHEN {0} IS NULL THEN 1 ELSE 0 END)"; //$NON-NLS-1$
 
     private static final String BODY_DATE = "MIN({0});MAX({0});COUNT({0});SUM(CASE WHEN {0} IS NULL THEN 1 ELSE 0 END)"; //$NON-NLS-1$
 
     private Section charactersMappingSection;
-
-    private Section categorySection;
 
     private Composite charactersMappingComp;
 
@@ -270,6 +175,17 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
         super(editor, id, title);
     }
 
+    public SysIndicatorDefinitionRepNode getIndicatorDefinitionRepNode() {
+        return this.indicatorDefinitionRepNode;
+    }
+
+    private void initIndicatorDefinitionRepNode(IndicatorDefinition indicatorDefinition) {
+        RepositoryNode recursiveFind = RepositoryNodeHelper.recursiveFind(definition);
+        if (recursiveFind != null && recursiveFind instanceof SysIndicatorDefinitionRepNode) {
+            this.indicatorDefinitionRepNode = (SysIndicatorDefinitionRepNode) recursiveFind;
+        }
+    }
+
     /*
      * (non-Javadoc)
      * 
@@ -287,22 +203,9 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
         allDBTypeList = new ArrayList<String>();
         allDBTypeList.addAll(Arrays.asList(databaseTypes));
         // MOD klliu 13104: Do not allow the user to add a java language in the system indicators
-        URI uri = null;
-        if (definition.eIsProxy()) {
-            uri = ((InternalEObject) definition).eProxyURI();
+        removeJavaType();
 
-        } else {
-            uri = definition.eResource().getURI();
-        }
-        systemIndicator = definition != null && uri.toString().contains(EResourceConstant.SYSTEM_INDICATORS.getName());
-        if (systemIndicator) {
-            allDBTypeList.remove(PatternLanguageType.JAVA.getLiteral());
-
-        }
         // MOD xqliu 2010-03-23 feature 11201
-        // remainDBTypeList = new ArrayList<String>();
-        // remainDBTypeList.addAll(allDBTypeList);
-
         remainDBTypeListAF = new ArrayList<String>();
         remainDBTypeListAF.addAll(allDBTypeList);
 
@@ -320,8 +223,6 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
 
         if (definition != null && definition.getCategories().size() > 0) {
             category = definition.getCategories().get(0);
-        } else {
-            category = DefinitionHandler.getInstance().getUserDefinedCountIndicatorCategory();
         }
 
         if (definition != null) {
@@ -338,15 +239,16 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
         // ADD xqliu 2010-03-23 feature 11201
         initTempExpressionList(definition);
 
-        // ADD klliu 2010-07-14 feature 13429
-        initTempIndicatorDefinitionParameter(definition);
-
         initIndicatorDefinitionRepNode(definition);
 
         if (this.indicatorDefinitionRepNode != null) {
             this.definitionItem = (TDQIndicatorDefinitionItem) this.indicatorDefinitionRepNode.getObject().getProperty()
                     .getItem();
         }
+    }
+
+    protected void removeJavaType() {
+        allDBTypeList.remove(PatternLanguageType.JAVA.getLiteral());
     }
 
     /**
@@ -359,49 +261,6 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
         tempViewValidValuesExpressionMap = initTempMap(tempViewValidValuesExpressionMap);
         tempViewInvalidValuesExpressionMap = initTempMap(tempViewInvalidValuesExpressionMap);
         tempViewRowsExpressionMap = initTempMap(tempViewRowsExpressionMap);
-    }
-
-    /**
-     * DOC klliu Comment method "initTempIndicatorDefinitionParameter". ADD klliu 2010-07-12 bug 13429.
-     * 
-     * @param definition2
-     */
-    private void initTempIndicatorDefinitionParameter(IndicatorDefinition definition2) {
-        if (definition != null) {
-            tempParameters = cloneIndicatorDefParameter(definition.getIndicatorDefinitionParameter());
-        } else {
-            tempParameters.clear();
-        }
-    }
-
-    /**
-     * DOC klliu Comment method "cloneIndicatorDefParameter".ADD klliu 2010-07-12 bug 13429.
-     * 
-     * @param indicatorDefParameter
-     * @return
-     */
-    private List<IndicatorDefinitionParameter> cloneIndicatorDefParameter(
-            EList<IndicatorDefinitionParameter> indicatorDefParameter) {
-        List<IndicatorDefinitionParameter> result = new ArrayList<IndicatorDefinitionParameter>();
-        for (IndicatorDefinitionParameter param : indicatorDefParameter) {
-            result.add(param.clone());
-        }
-        return result;
-    }
-
-    /**
-     * DOC klliu 2Comment method "checkJavaUDIBeforeOpen".ADD klliu 2010-06-02 bug 13451.
-     * 
-     * @return
-     */
-    private boolean checkJavaUDIBeforeOpen() {
-        EList<TaggedValue> tvs = definition.getTaggedValue();
-        for (TaggedValue tv : tvs) {
-            if (tv.getTag().equals(TaggedValueHelper.CLASS_NAME_TEXT) || tv.getTag().equals(TaggedValueHelper.JAR_FILE_PATH)) {
-                return true;
-            }
-        }
-        return false;
     }
 
     /**
@@ -453,197 +312,19 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
 
         metadataSection.setDescription(DefaultMessagesImpl.getString("IndicatorDefinitionMaterPage.formDescript")); //$NON-NLS-1$
         // MOD by zshen move CategorySection before of DefinitionSection on UDI Editor
-        if (isSystemIndicator()) {
-            createDefinitionSection(topComp);
-            if (IndicatorCategoryHelper.isCorrelation(category)) {
-                createAdditionalFunctionsSection(topComp);
-            }
-            if (this.hasCharactersMapping) {
-                createCharactersMappingSection(topComp);
-            }
-        } else {
-            createCategorySection(topComp);
-            createDefinitionSection(topComp);
-            createDefinitionParametersSection(topComp);
-
-        }
+        createIndicatorContent();
 
         form.reflow(true);
     }
 
-    /**
-     * DOC klliu Comment method "createDefinitionParametersSection". ADD klliu figure 13429 2010-07-12
-     * 
-     * @param topComp
-     */
-    private void createDefinitionParametersSection(Composite topComp) {
-        parametersSection = createSection(form, topComp,
-                DefaultMessagesImpl.getString("IndicatorDefinitionMaterPage.parameters"), null); //$NON-NLS-1$
-
-        Label label = new Label(parametersSection, SWT.WRAP);
-        label.setText(DefaultMessagesImpl.getString("IndicatorDefinitionMaterPage.parametersDecription")); //$NON-NLS-1$
-        parametersSection.setDescriptionControl(label);
-
-        parametersComp = createDefinitionParametersComp(parametersSection);
-
-        parametersSection.setClient(parametersComp);
-    }
-
-    /**
-     * DOC klliu Comment method "createDefinitionParametersComp" ADD klliu figure 13429 2010-07-12.
-     * 
-     * @param definitionSection2
-     * @return
-     */
-    private Composite createDefinitionParametersComp(Section parametersSection) {
-        Composite composite = toolkit.createComposite(parametersSection);
-        GridData parData = new GridData(GridData.FILL_BOTH);
-        composite.setLayoutData(parData);
-        GridLayout layout = new GridLayout(2, false);
-        composite.setLayout(layout);
-
-        parView = new TableViewer(composite);
-        createDefiniationParameterColumns(parView);
-        IndicatorParametersContentProvider provider = new IndicatorParametersContentProvider();
-        parView.setContentProvider(provider);
-        parView.setLabelProvider(new IndicatorParametersLabelProvider());
-        parView.setInput(tempParameters);
-        createDefinitionParametersButton(composite, parView);
-        return composite;
-
-    }
-
-    /**
-     * DOC klliu Comment method "createDefinitionParametersButton".ADD klliu figure 13429 2010-07-12.
-     * 
-     * @param composite
-     * @param parView
-     */
-    private void createDefinitionParametersButton(Composite comp, final TableViewer parView) {
-        Composite composite = toolkit.createComposite(comp);
-        GridData gd = new GridData();
-        gd.horizontalSpan = 2;
-        gd.horizontalAlignment = SWT.CENTER;
-        composite.setLayout(new GridLayout(2, false));
-        composite.setLayoutData(gd);
-        final Button addButton = new Button(composite, SWT.NONE);
-        addButton.setImage(ImageLib.getImage(ImageLib.ADD_ACTION));
-        addButton.setToolTipText(DefaultMessagesImpl.getString("PatternMasterDetailsPage.add")); //$NON-NLS-1$
-        GridData labelGd = new GridData(GridData.HORIZONTAL_ALIGN_CENTER);
-        labelGd.horizontalAlignment = SWT.RIGHT;
-        labelGd.widthHint = 65;
-        addButton.setLayoutData(labelGd);
-        addButton.addListener(SWT.MouseDown, new Listener() {
-
-            public void handleEvent(Event event) {
-                IndicatorDefinitionParameter ip = DefinitionFactory.eINSTANCE.createIndicatorDefinitionParameter();
-                ip.setKey("paraKey");//$NON-NLS-1$
-                ip.setValue("paraValue");//$NON-NLS-1$
-                tempParameters.add(ip);
-                if (parView != null) {
-                    parView.refresh(tempParameters);
-                    setDirty(true);
-                }
-            }
-        });
-        final Button romveButton = new Button(composite, SWT.NONE);
-        romveButton.setImage(ImageLib.getImage(ImageLib.DELETE_ACTION));
-        romveButton.setToolTipText(DefaultMessagesImpl.getString("PatternMasterDetailsPage.del")); //$NON-NLS-1$
-        GridData reGd = new GridData();
-        reGd.horizontalAlignment = SWT.LEFT;
-        reGd.widthHint = 65;
-        romveButton.setLayoutData(reGd);
-        romveButton.addListener(SWT.MouseDown, new Listener() {
-
-            public void handleEvent(Event event) {
-                IStructuredSelection selection = (IStructuredSelection) parView.getSelection();
-                Object o = selection.getFirstElement();
-                if (o instanceof IndicatorDefinitionParameter) {
-                    element = (IndicatorDefinitionParameter) o;
-                    tempParameters.remove(element);
-                    parView.refresh(tempParameters);
-                    setDirty(true);
-                }
-            }
-        });
-    }
-
-    /**
-     * DOC klliu Comment method "createDefiniationParameterColumns". ADD klliu figure 13429 2010-07-12
-     * 
-     * @param viewer
-     */
-    private void createDefiniationParameterColumns(TableViewer viewer) {
-
-        String[] titles = { "Parameters Key", "Parameters Value" };//$NON-NLS-1$ //$NON-NLS-2$
-        int[] bounds = { 200, 200 };
-        for (int i = 0; i < titles.length; i++) {
-            TableViewerColumn column = new TableViewerColumn(viewer, SWT.NONE);
-            column.getColumn().setText(titles[i]);
-            column.getColumn().setWidth(bounds[i]);
-            column.getColumn().setResizable(false);
-            column.getColumn().setMoveable(true);
+    protected void createIndicatorContent() {
+        createDefinitionSection(topComp);
+        if (IndicatorCategoryHelper.isCorrelation(category)) {
+            createAdditionalFunctionsSection(topComp);
         }
-        Table table = viewer.getTable();
-        table.setLayout(new FillLayout(SWT.VERTICAL | SWT.V_SCROLL));
-        GridData tableData = new GridData(GridData.FILL_VERTICAL);
-        tableData.horizontalSpan = 2;
-        tableData.heightHint = 150;
-        table.setLayoutData(tableData);
-        table.setHeaderVisible(true);
-        table.setLinesVisible(true);
-        TableLayout tl = new TableLayout();
-        tl.addColumnData(new ColumnWeightData(60));
-        tl.addColumnData(new ColumnWeightData(60));
-        table.setLayout(tl);
-        attachDefiniationParameterCellEditors(viewer, table, titles);
-    }
-
-    /**
-     * DOC klliu Comment method "attachDefiniationParameterCellEditors". ADD klliu figure 13429 2010-07-12
-     * 
-     * @param viewer
-     * @param table
-     * @param titles
-     */
-    private void attachDefiniationParameterCellEditors(final TableViewer viewer, Composite table, String[] titles) {
-        viewer.setCellModifier(new ICellModifier() {
-
-            public boolean canModify(Object element, String property) {
-                return true;
-            }
-
-            public Object getValue(Object element, String property) {
-                if ("Parameters Key".equals(property)) {//$NON-NLS-1$
-                    return ((IndicatorDefinitionParameter) element).getKey();
-                } else if ("Parameters Value".equals(property)) {//$NON-NLS-1$
-                    return ((IndicatorDefinitionParameter) element).getValue();
-                }
-                return null;
-            }
-
-            public void modify(Object element, String property, Object value) {
-                TableItem tableItem = (TableItem) element;
-                IndicatorDefinitionParameter data = (IndicatorDefinitionParameter) tableItem.getData();
-                if ("Parameters Key".equals(property)) {//$NON-NLS-1$
-                    if (!data.getKey().equals(value.toString())) {
-                        data.setKey(value.toString());
-                        viewer.refresh(data);
-                        setDirty(true);
-                    }
-                } else if ("Parameters Value".equals(property)) {//$NON-NLS-1$
-                    if (!data.getValue().equals(value)) {
-                        data.setValue((String) value);
-                        viewer.refresh(data);
-                        setDirty(true);
-                    }
-                }
-            }
-        });
-        viewer.setColumnProperties(titles);
-
-        viewer.setCellEditors(new CellEditor[] { new TextCellEditor(table), new TextCellEditor(table) });
-
+        if (this.hasCharactersMapping) {
+            createCharactersMappingSection(topComp);
+        }
     }
 
     /**
@@ -1127,133 +808,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
 
     }
 
-    /**
-     * DOC xqliu Comment method "createCategorySection".
-     * 
-     * @param topComp
-     */
-    private void createCategorySection(Composite topComp) {
-        categorySection = createSection(form, topComp, "Indicator Category", null);//$NON-NLS-1$
-
-        Label label = new Label(categorySection, SWT.WRAP);
-        label.setText("This section is for indicator category.");//$NON-NLS-1$
-        categorySection.setDescriptionControl(label);
-
-        categoryComp = createCategoryComp(categorySection);
-
-        categorySection.setClient(categoryComp);
-    }
-
-    /**
-     * DOC xqliu Comment method "createCategoryComp".
-     * 
-     * @param categorySection
-     * @return
-     */
-    private Composite createCategoryComp(Section categorySection) {
-        Composite composite = toolkit.createComposite(categorySection);
-        composite.setLayout(new GridLayout(2, false));
-
-        Collection<String> categories = DefinitionHandler.getInstance().getUserDefinedIndicatorCategoryLabels();
-        comboCategory = new Combo(composite, SWT.READ_ONLY);
-        GridData data = new GridData();
-        data.verticalAlignment = GridData.BEGINNING;
-        comboCategory.setLayoutData(data);
-        comboCategory.setItems(categories.toArray(new String[categories.size()]));
-        if (categories.size() > 0 && category == null) {
-            category = DefinitionHandler.getInstance().getUserDefinedCountIndicatorCategory();
-        }
-        comboCategory.setText(category.getLabel());
-        comboCategory.addModifyListener(new ModifyListener() {
-
-            public void modifyText(ModifyEvent e) {
-                if (needConfirm) {
-                    boolean openQuestion = MessageDialogWithToggle.openQuestion(Display.getCurrent().getActiveShell(),
-                            DefaultMessagesImpl.getString("IndicatorDefinitionMaterPage.changeCategoryTitle"), //$NON-NLS-1$
-                            DefaultMessagesImpl.getString("IndicatorDefinitionMaterPage.changeCategory")); //$NON-NLS-1$
-
-                    if (openQuestion) {
-                        setDirty(true);
-                        category = DefinitionHandler.getInstance().getIndicatorCategoryByLabel(comboCategory.getText());
-                        updateDetailList();
-                        // clear all the temp maps
-                        initTempMaps();
-
-                        if (dataBaseComp != null) {
-                            Control[] children = dataBaseComp.getChildren();
-                            for (Control con : children) {
-                                con.dispose();
-                            }
-
-                        }
-                        if (javaLanguageComp != null) {
-                            Control[] children = javaLanguageComp.getChildren();
-                            for (Control con : children) {
-                                con.dispose();
-                            }
-                        }
-                        definitionSection.setExpanded(false);
-                        definitionSection.setExpanded(true);
-                    } else {
-                        needConfirm = false;
-                        comboCategory.setText(category.getLabel());
-                        needConfirm = true;
-                    }
-                }
-            }
-
-        });
-
-        // ADD yyi 2009-09-23 Feature 9059
-        createDetailList(composite);
-        updateDetailList();
-        return composite;
-    }
-
-    /**
-     * DOC yyi 2009-09-23 Feature 9059
-     * 
-     * @param composite
-     */
-    protected void updateDetailList() {
-        String categoryLabel = comboCategory.getText();
-        if (StringUtils.isNotBlank(categoryLabel)) {
-            IndicatorCategory ic = DefinitionHandler.getInstance().getIndicatorCategoryByLabel(categoryLabel);
-            if (ic != null) {
-                String purposeString = PluginConstant.EMPTY_STRING;
-                String descriptionString = PluginConstant.EMPTY_STRING;
-                for (TaggedValue value : ic.getTaggedValue()) {
-                    if ("Purpose".equals(value.getTag())) {//$NON-NLS-1$
-                        purposeString = DefaultMessagesImpl.getString("IndicatorDefinitionMaterPage.Purpose") + value.getValue();//$NON-NLS-1$
-                    } else if ("Description".equals(value.getTag())) { //$NON-NLS-1$
-                        descriptionString = DefaultMessagesImpl.getString("IndicatorDefinitionMaterPage.Description")//$NON-NLS-1$
-                                + value.getValue();
-                    }
-                }
-                labelDetail.setText(purposeString + System.getProperty("line.separator") + System.getProperty("line.separator")//$NON-NLS-1$//$NON-NLS-2$
-                        + descriptionString);
-            }
-        }
-    }
-
-    /**
-     * DOC yyi 2009-09-23 Feature 9059
-     * 
-     * @param composite
-     */
-    private void createDetailList(Composite composite) {
-        Composite compoDetail = new Composite(composite, SWT.NONE);
-        compoDetail.setLayout(new GridLayout(1, false));
-        GridData data = new GridData(SWT.FILL, SWT.FILL, true, true);
-        data.heightHint = 150;
-        data.widthHint = 300;
-        compoDetail.setLayoutData(data);
-
-        labelDetail = new Label(compoDetail, SWT.WRAP);
-        labelDetail.setLayoutData(data);
-    }
-
-    private void createDefinitionSection(Composite topCmp) {
+    protected void createDefinitionSection(Composite topCmp) {
         definitionSection = createSection(form, topCmp,
                 DefaultMessagesImpl.getString("IndicatorDefinitionMaterPage.definition"), null); //$NON-NLS-1$
 
@@ -1274,7 +829,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
      * 
      * @return
      */
-    private Composite createDefinitionComp(Composite definitionSection) {
+    protected Composite createDefinitionComp(Composite definitionSection) {
         Composite composite = toolkit.createComposite(definitionSection);
         composite.setLayout(new GridLayout());
 
@@ -1287,19 +842,18 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
         dataBaseComp.setLayoutData(new GridData(GridData.FILL_BOTH));
 
         // ADD xqliu 2010-02-26 bug 11201
-        if (tempExpressionList.size() > 0 || !checkJavaUDIBeforeOpen()) {
+        if (tempExpressionList.size() > 0) {// || !checkJavaUDIBeforeOpen()) {
             addTitleComp(dataBaseComp);
         }
         // ADD klliu 2010-06-02 bug 13451: Class name of Java User Define Indicator must be validated
         // MOD backport klliu2010-06-10
-        // if (!checkJavaUDIBeforeOpen()) {
         if (tempExpressionMap.size() == 0) {
             if (definition != null) {
                 // MOD xqliu 2010-03-23 feature 11201
                 for (TdExpression expression : tempExpressionList) {
                     createNewLineWithExpression(expression);
                 }
-                createNewLineWithJavaUDI();
+                // createNewLineWithJavaUDI();
             }
         }
         createAddButton(composite);
@@ -1313,7 +867,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
      * @param expressionComp
      * @return
      */
-    private Composite addTitleComp(Composite parentComp) {
+    protected Composite addTitleComp(Composite parentComp) {
         dataBaseTitleComp = new Composite(parentComp, SWT.NONE);
         dataBaseTitleComp.setLayout(new GridLayout(3, false));
         Label databaseLabel = new Label(dataBaseTitleComp, SWT.NONE);
@@ -1330,138 +884,11 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
         return dataBaseTitleComp;
     }
 
-    private void createNewLineWithJavaUDI() {
-        // MOD klliu 2011-08-08 bug 22994: Headers are wrong for Java option in indicator editor.
-        if (javaLanguageComp == null && checkJavaUDIBeforeOpen()) {
-            addJavaTitleComp(expressionComp);
-        }
-        // ~
-        EList<TaggedValue> tvs = definition.getTaggedValue();
-        String classNameStr = null;
-        String jarPathStr = PluginConstant.EMPTY_STRING;
-        for (TaggedValue tv : tvs) {
-            if (tv.getTag().equals(TaggedValueHelper.CLASS_NAME_TEXT)) {
-                classNameStr = tv.getValue();
-                continue;
-            }
-            if (tv.getTag().equals(TaggedValueHelper.JAR_FILE_PATH)) {
-                jarPathStr = tv.getValue();
-            }
-        }
-        if (classNameStr == null) {
-            return;
-        }
-
-        final Composite lineComp = new Composite(expressionComp, SWT.NONE);
-        lineComp.setLayout(new GridLayout(2, false));
-        final CCombo javaCombo = new CCombo(lineComp, SWT.BORDER);
-        javaCombo.setLayoutData(new GridData());
-        ((GridData) javaCombo.getLayoutData()).widthHint = 150;
-        javaCombo.setEditable(false);
-        // MOD klliu 2010-06-10 bug 13104
-        // combo.setEnabled(false);
-        // MOD xqliu 2010-03-23 feature 11201
-        // combo.setItems(remainDBTypeList.toArray(new String[remainDBTypeList.size()]));
-        javaCombo.setItems(allDBTypeList.toArray(new String[allDBTypeList.size()]));
-        // ~11201
-        javaCombo.setText(PatternLanguageType.JAVA.getName());
-        javaCombo.addSelectionListener(new LangCombSelectionListener());
-        putTdExpressToTempMap(javaCombo,
-                BooleanExpressionHelper.createTdExpression(PatternLanguageType.findLanguageByName(javaCombo.getText()), null));
-        final Composite detailComp = new Composite(javaCombo.getParent(), SWT.NONE);
-        widgetMap.put(javaCombo, detailComp);
-        detailComp.setLayout(new GridLayout(4, false));
-        final Text classNameText = new Text(detailComp, SWT.BORDER);
-        classNameText.setLayoutData(new GridData(GridData.FILL_BOTH));
-        ((GridData) classNameText.getLayoutData()).widthHint = 250;
-        classNameText.setText(classNameStr);
-        classNameText.addModifyListener(new NeedToSetDirtyListener());
-        final Text jarPathText = new Text(detailComp, SWT.BORDER);
-        jarPathText.setLayoutData(new GridData(GridData.FILL_BOTH));
-        ((GridData) jarPathText.getLayoutData()).widthHint = 350;
-        jarPathText.setText(jarPathStr);
-        jarPathText.addModifyListener(new NeedToSetDirtyListener());
-        Button button = new Button(detailComp, SWT.PUSH);
-        button.setLayoutData(new GridData(GridData.FILL_BOTH));
-        button.setText(DefaultMessagesImpl.getString("IndicatorDefinitionMaterPage.editExpression")); //$NON-NLS-1$
-        button.setToolTipText(DefaultMessagesImpl.getString("IndicatorDefinitionMaterPage.editExpression")); //$NON-NLS-1$
-        button.addSelectionListener(new SelectionAdapter() {
-
-            // MOD by zshen for bug 18724 2011.02.23
-            @Override
-            public void widgetSelected(SelectionEvent e) {
-                // MOD msjian 2011-8-9 TDQ-3199 fixed: define a new method use the exsit sourse, because there are two
-                // places used the same sourse
-                openJarSelectDialog(jarPathText, classNameText);
-            }
-        });
-        // MOD klliu 2010-05-31 13451: Class name of Java User Define Indicator must be validated
-
-        classNameText.addListener(SWT.Modify, new Listener() {
-
-            public void handleEvent(Event event) {
-                setClassNameForSave(classNameText.getText().toString());
-                setJarPathForSave(jarPathText.getText().toString());
-            }
-
-        });
-        javaCombo.setData(TaggedValueHelper.CLASS_NAME_TEXT, classNameText);
-        javaCombo.setData(TaggedValueHelper.JAR_FILE_PATH, jarPathText);
-
-        createExpressionDelButton(detailComp, javaCombo);
-
-        GridDataFactory.fillDefaults().align(SWT.FILL, SWT.FILL).grab(true, false).applyTo(detailComp);
-    }
-
-    /**
-     * DOC klliu Comment method "addJavaTitleComp".
-     * 
-     * @param expressionComp
-     */
-    private Composite addJavaTitleComp(Composite expressionComp) {
-        // MOD klliu 2011-07-09 bug 22994: Headers are wrong for Java option in indicator editor.
-        javaLanguageComp = new Composite(expressionComp, SWT.NONE);
-        javaLanguageComp.setLayout(new GridLayout());
-        javaLanguageComp.setLayoutData(new GridData(GridData.FILL_BOTH));
-        javaTitleComp = new Composite(javaLanguageComp, SWT.NONE);
-        javaTitleComp.setLayout(new GridLayout(3, false));
-        Label languageLabel = new Label(javaTitleComp, SWT.NONE);
-        languageLabel.setText(DefaultMessagesImpl.getString("IndicatorDefinitionMaterPage.language")); //$NON-NLS-1$
-        languageLabel.setLayoutData(new GridData());
-        ((GridData) languageLabel.getLayoutData()).widthHint = 250;
-        Label classLabel = new Label(javaTitleComp, SWT.NONE);
-        classLabel.setText(DefaultMessagesImpl.getString("IndicatorDefinitionMaterPage.javaClass")); //$NON-NLS-1$
-        classLabel.setLayoutData(new GridData(GridData.BEGINNING));
-        ((GridData) classLabel.getLayoutData()).widthHint = 380;
-        Label jarLabel = new Label(javaTitleComp, SWT.NONE);
-        jarLabel.setText(DefaultMessagesImpl.getString("IndicatorDefinitionMaterPage.jars")); //$NON-NLS-1$
-        GridDataFactory.fillDefaults().align(SWT.FILL, SWT.FILL).grab(true, false).applyTo(javaTitleComp);
-        return javaTitleComp;
-    }
-
-    // MOD klliu 2010-05-31 13451: Class name of Java User Define Indicator must be validated
-    /**
-     * DOC klliu Comment method "alidateJavaUDI". ADD klliu 2010-05-31 bug 13451
-     * 
-     * @param detailComp
-     * @param classNameText
-     * @param jarPathText
-     */
-    private boolean validateJavaUDI(Text classNameText, Text jarPathText) {
-        if (!isSystemIndicator()) {
-            String className = classNameText.getText().toString();
-            String jarPath = jarPathText.getText().toString();
-            this.setClassNameForSave(className);
-            this.setJarPathForSave(jarPath);
-        }
-        return false;
-    }
-
     /**
      * 
      * DOC mzhao IndicatorDefinitionMaterPage class global comment. Detailled comment
      */
-    private class NeedToSetDirtyListener implements ModifyListener {
+    protected class NeedToSetDirtyListener implements ModifyListener {
 
         public void modifyText(ModifyEvent e) {
             setDirty(true);
@@ -1508,42 +935,10 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
      */
     public void putTdExpressToTempMap(final CCombo combo, final TdExpression expression) {
         tempExpressionMap.put(combo, expression);
-        if (definition instanceof UDIndicatorDefinition) {
-            UDIndicatorDefinition definition2 = (UDIndicatorDefinition) definition;
-            if (IndicatorCategoryHelper.isUserDefMatching(category)) {
-                tempViewValidRowsExpressionMap = setToTempMap(expression, combo, definition2.getViewValidRowsExpression(),
-                        tempViewValidRowsExpressionMap);
-
-                tempViewInvalidRowsExpressionMap = setToTempMap(expression, combo, definition2.getViewInvalidRowsExpression(),
-                        tempViewInvalidRowsExpressionMap);
-
-                tempViewValidValuesExpressionMap = setToTempMap(expression, combo, definition2.getViewValidValuesExpression(),
-                        tempViewValidValuesExpressionMap);
-
-                tempViewInvalidValuesExpressionMap = setToTempMap(expression, combo,
-                        definition2.getViewInvalidValuesExpression(), tempViewInvalidValuesExpressionMap);
-            } else {
-                // get view rows tdExpress list, and set currect tdexpress to temp map
-                tempViewRowsExpressionMap = setToTempMap(expression, combo, definition2.getViewRowsExpression(),
-                        tempViewRowsExpressionMap);
-            }
-        }
     }
 
     public void removeFromTempMap(final CCombo combo) {
         tempExpressionMap.remove(combo);
-        if (definition instanceof UDIndicatorDefinition) {
-
-            if (IndicatorCategoryHelper.isUserDefMatching(category)) {
-                tempViewValidRowsExpressionMap.remove(combo);
-                tempViewInvalidRowsExpressionMap.remove(combo);
-                tempViewValidValuesExpressionMap.remove(combo);
-                tempViewInvalidValuesExpressionMap.remove(combo);
-
-            } else {
-                tempViewRowsExpressionMap.remove(combo);
-            }
-        }
     }
 
     /**
@@ -1590,7 +985,6 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
 
         combo.setEditable(false);
         // MOD xqliu 2010-02-25 feature 11201
-        // combo.setItems(remainDBTypeList.toArray(new String[remainDBTypeList.size()]));
         combo.setItems(allDBTypeList.toArray(new String[allDBTypeList.size()]));
         // ~
         combo.select(0);
@@ -1618,24 +1012,12 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
      * @param oldLanguage
      */
     public void updateLineAndOtherCombos(final CCombo combo, TdExpression expression, String oldLanguage) {
-        if (combo.getText().equals(PatternLanguageType.JAVA.getName())) {
-            updateLineForJava(combo);
-        } else {
-            // MOD xqliu 2010-03-23 feature 11201
-            updateLineForExpression(combo, expression, oldLanguage);
-            // ~11201
-        }
+        // MOD xqliu 2010-03-23 feature 11201
+        updateLineForExpression(combo, expression, oldLanguage);
+        // ~11201
         updateOtherCombos(combo);
     }
 
-    /**
-     * DOC xqliu Comment method "createDbVersionText". ADD xqliu 2010-02-25 feature 11201
-     * 
-     * @param combo
-     * @param composite
-     * @param value
-     * @param width
-     */
     private void createDbVersionText(final CCombo combo, final Composite composite, String value, int width) {
         final Text dbVersionText = new Text(composite, SWT.BORDER);
         dbVersionText.setText(value == null ? PluginConstant.EMPTY_STRING : value);
@@ -1648,7 +1030,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
      * 
      * DOC mzhao IndicatorDefinitionMaterPage class global comment. Detailled comment
      */
-    private class ExpressTextModListener implements ModifyListener {
+    protected class ExpressTextModListener implements ModifyListener {
 
         private CCombo combo;
 
@@ -1712,7 +1094,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
      * 
      * DOC mzhao IndicatorDefinitionMaterPage class global comment. Detailled comment
      */
-    private class LangCombSelectionListener extends SelectionAdapter {
+    protected class LangCombSelectionListener extends SelectionAdapter {
 
         @Override
         public void widgetSelected(SelectionEvent e) {
@@ -1754,13 +1136,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
         }
     }
 
-    /**
-     * DOC xqliu Comment method "updateLineForExpression". // MOD xqliu 2010-03-23 feature 11201
-     * 
-     * @param combo
-     * @param expression
-     */
-    private void updateLineForExpression(final CCombo combo, TdExpression expression, String oldLanguage) {
+    protected void updateLineForExpression(final CCombo combo, TdExpression expression, String oldLanguage) {
         // MOD klliu 2011-07-09 bug 22994: Headers are wrong for Java option in indicator editor.
         if (dataBaseTitleComp == null || dataBaseTitleComp.isDisposed()) {
             addTitleComp(dataBaseComp);
@@ -1777,39 +1153,18 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
             createDataBaseLineComponent(combo, expression, detailComp);
             // ~
         } else {
-            final Composite lineComp = new Composite(dataBaseComp, SWT.NONE);
-            lineComp.setLayout(new GridLayout(3, false));
-            final CCombo dataBaseCombo = new CCombo(lineComp, SWT.BORDER);
-            // add listener
-            dataBaseCombo.setLayoutData(new GridData());
-            ((GridData) dataBaseCombo.getLayoutData()).widthHint = 150;
-            dataBaseCombo.setEditable(false);
-            dataBaseCombo.setItems(allDBTypeList.toArray(new String[allDBTypeList.size()]));
-            dataBaseCombo.addSelectionListener(new LangCombSelectionListener());
-            dataBaseCombo.select(combo.getSelectionIndex());
-            putTdExpressToTempMap(dataBaseCombo, expression);
-            detailComp = new Composite(lineComp, SWT.NONE);
-            detailComp.setLayout(new GridLayout(4, false));
-            widgetMap.put(dataBaseCombo, detailComp);
-            createDataBaseLineComponent(dataBaseCombo, expression, detailComp);
-            // remove the combo in the widgetMap then add new javacombo
-            widgetMap.remove(combo);
-
-            removeFromTempMap(combo);
-            // line comp dispose
-            combo.getParent().dispose();
-            // java title dispose
-            if (javaLanguageComp.getChildren().length == 1) {
-                Control[] children = javaLanguageComp.getChildren();
-                children[0].dispose();
-            }
+            updateDatabaseLineForJava(combo, expression);
         }
         definitionSection.setExpanded(false);
         definitionSection.setExpanded(true);
 
     }
 
-    private void createDataBaseLineComponent(final CCombo combo, TdExpression expression, Composite detailComp) {
+    protected void updateDatabaseLineForJava(final CCombo combo, TdExpression expression) {
+        // only needed in UDI master page
+    }
+
+    protected void createDataBaseLineComponent(final CCombo combo, TdExpression expression, Composite detailComp) {
         createDbVersionText(combo, detailComp, expression.getVersion(), 30);
         final Text patternText = new Text(detailComp, SWT.BORDER);
         patternText.setLayoutData(new GridData(GridData.FILL_BOTH));
@@ -1819,9 +1174,9 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
         // ~11201
         patternText.addModifyListener(new ExpressTextModListener(combo));
         // ADD msjian TDQ-6841: set the pattern text can not input when the indicator is UDI
-        if (!isSystemIndicator()) {
-            patternText.setEditable(false);
-        }
+        // if (definition instanceof UDIndicatorDefinition) {
+        patternText.setEditable(isPatternTextEditable());
+        // }
         // TDQ-6841~
         createExpressionEditButton(detailComp, patternText, combo, expression.getVersion());
         createExpressionDelButton(detailComp, combo);
@@ -1830,106 +1185,12 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
     }
 
     /**
-     * DOC mzhao Comment method "updateLineForJava".
+     * DOC yyin Comment method "isPatternTextEditable".
      * 
-     * @param combo
+     * @return
      */
-    private void updateLineForJava(final CCombo combo) {
-        if (javaTitleComp == null || javaTitleComp.isDisposed()) {
-            addJavaTitleComp(expressionComp);
-        }
-        final Composite lineComp = new Composite(javaLanguageComp, SWT.NONE);
-        lineComp.setLayout(new GridLayout(2, false));
-        // create a new java combo
-        final CCombo javaCombo = new CCombo(lineComp, SWT.BORDER);
-        javaCombo.setLayoutData(new GridData());
-        ((GridData) javaCombo.getLayoutData()).widthHint = 150;
-        javaCombo.setEditable(false);
-        javaCombo.addSelectionListener(new LangCombSelectionListener());
-        javaCombo.setItems(allDBTypeList.toArray(new String[allDBTypeList.size()]));
-        javaCombo.select(combo.getSelectionIndex());
-        // ~~~~
-        Composite detailComp = new Composite(lineComp, SWT.NONE);
-        detailComp.setLayout(new GridLayout(5, false));
-        final Text classNameText = new Text(detailComp, SWT.BORDER);
-        classNameText.setLayoutData(new GridData(GridData.FILL_BOTH));
-        classNameText.addModifyListener(new NeedToSetDirtyListener());
-        ((GridData) classNameText.getLayoutData()).widthHint = 250;
-        classNameText.addModifyListener(new ExpressTextModListener(javaCombo));
-        final Text jarPathText = new Text(detailComp, SWT.BORDER);
-        jarPathText.setLayoutData(new GridData(GridData.FILL_BOTH));
-        jarPathText.addModifyListener(new NeedToSetDirtyListener());
-        GridData layoutData = (GridData) jarPathText.getLayoutData();
-        layoutData.horizontalSpan = 2;
-        layoutData.widthHint = 380;
-        Button button = new Button(detailComp, SWT.PUSH);
-        button.setLayoutData(new GridData(GridData.FILL_BOTH));
-        button.setText(DefaultMessagesImpl.getString("IndicatorDefinitionMaterPage.editExpression")); //$NON-NLS-1$
-        button.setToolTipText(DefaultMessagesImpl.getString("IndicatorDefinitionMaterPage.editExpression")); //$NON-NLS-1$
-        // ((GridData) button.getLayoutData()).widthHint = 100;
-        button.addSelectionListener(new SelectionAdapter() {
-
-            // MOD by zshen for bug 18724 2011.02.23
-            @Override
-            public void widgetSelected(SelectionEvent e) {
-                // MOD msjian 2011-8-9 TDQ-3199 fixed: define a new method use the exsit sourse, because there are two
-                // places used the same sourse
-                openJarSelectDialog(jarPathText, classNameText);
-            }
-        });
-        // MOD klliu 2010-05-31 13451: Class name of Java User Define Indicator must be validated
-        classNameText.addListener(SWT.Modify, new Listener() {
-
-            public void handleEvent(Event event) {
-                setClassNameForSave(classNameText.getText().toString());
-                setJarPathForSave(jarPathText.getText().toString());
-
-            }
-        });
-        javaCombo.setData(TaggedValueHelper.CLASS_NAME_TEXT, classNameText);
-        javaCombo.setData(TaggedValueHelper.JAR_FILE_PATH, jarPathText);
-        createExpressionDelButton(detailComp, javaCombo);
-        GridDataFactory.fillDefaults().align(SWT.FILL, SWT.FILL).grab(true, false).applyTo(detailComp);
-        detailComp.getParent().layout();
-        // remove the data base combo in the widgetMap then add new javacombo
-        widgetMap.put(javaCombo, detailComp);
-        widgetMap.remove(combo);
-        removeFromTempMap(combo);
-        TdExpression expression = tempExpressionMap.get(combo);
-        if (expression == null) {
-            expression = BooleanExpressionHelper.createTdExpression(PatternLanguageType.findLanguageByName(javaCombo.getText()),
-                    null);
-            putTdExpressToTempMap(javaCombo, expression);
-        }
-        combo.getParent().dispose();
-
-        if (dataBaseComp.getChildren().length == 1) {
-            Control[] children = dataBaseComp.getChildren();
-            children[0].dispose();
-        }
-        definitionSection.setExpanded(false);
-        definitionSection.setExpanded(true);
-    }
-
-    // ADD msjian 2011-8-9 TDQ-3199 fixed: Make it convenient to delete the jar which is used already.
-    /**
-     * DOC msjian Comment method "openJarSelectDialog".
-     * 
-     * @param jarPathText
-     * @param classNameText
-     */
-    private void openJarSelectDialog(Text jarPathText, Text classNameText) {
-        String jarpathStr = jarPathText.getText();
-        JavaUdiJarSelectDialog selectDialog = UDIUtils.createUdiJarCheckedTreeSelectionDialog(definition,
-                ResourceManager.getUDIJarFolder(), jarpathStr.split("\\|\\|"));//$NON-NLS-1$
-        selectDialog.setControls(jarPathText, classNameText);
-        if (Window.OK == selectDialog.open()) {
-            classNameText.setText(selectDialog.getSelectResult());
-        }
-        // MOD klliu 2010-05-31 13451: Class name of Java User Define Indicator must be validated
-        validateJavaUDI(classNameText, jarPathText);
-        ProxyRepositoryManager.getInstance().save();
-
+    protected boolean isPatternTextEditable() {
+        return true;
     }
 
     /**
@@ -1937,7 +1198,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
      * 
      * @param combo
      */
-    private void updateOtherCombos(CCombo combo) {
+    protected void updateOtherCombos(CCombo combo) {
         // MOD xqliu 2010-03-23 feature 11201
         // rebuildRemainDBTypeList();
         // ~11201
@@ -1954,13 +1215,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
 
     }
 
-    /**
-     * DOC xqliu Comment method "createExpressionDelButton".
-     * 
-     * @param expressComp
-     * @param expression
-     */
-    private void createExpressionDelButton(final Composite expressComp, final CCombo languageCombo) {
+    protected void createExpressionDelButton(final Composite expressComp, final CCombo languageCombo) {
         Button delButton = new Button(expressComp, SWT.PUSH);
         delButton.setImage(ImageLib.getImage(ImageLib.DELETE_ACTION));
         delButton.setToolTipText(DefaultMessagesImpl.getString("IndicatorDefinitionMaterPage.deleteExpression"));//$NON-NLS-1$
@@ -1980,23 +1235,23 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
                     Control[] children = parent.getChildren();
                     children[0].dispose();
                 }
-                int languageLength = javaLanguageComp == null ? 0 : javaLanguageComp.getChildren().length;
-                int dataBaseLength = dataBaseComp == null ? 0 : dataBaseComp.getChildren().length;
-                if (languageLength == 0 && dataBaseLength == 0) {
-                    addTitleComp(dataBaseComp);
-                }
-                if (languageLength == 1) {
-                    Control[] children = javaLanguageComp.getChildren();
-                    children[0].dispose();
-                }
+                disposeExpressionChild();
                 // ~
                 checkCComboIsDisposed();
                 definitionSection.setExpanded(false);
                 definitionSection.setExpanded(true);
                 setDirty(true);
             }
+
         });
 
+    }
+
+    protected void disposeExpressionChild() {
+        int dataBaseLength = dataBaseComp == null ? 0 : dataBaseComp.getChildren().length;
+        if (dataBaseLength == 0) {
+            addTitleComp(dataBaseComp);
+        }
     }
 
     /**
@@ -2018,89 +1273,44 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
             public void widgetSelected(SelectionEvent e) {
 
                 definition = (IndicatorDefinition) getCurrentModelElement(getEditor());
-
-                // if it is dirty, get value from tempMap, else from definition
-                TdExpression tdExpression = getCurrentLanguageExp(definition.getSqlGenericExpression(),
-                        PatternLanguageType.findLanguageByName(combo.getText()), version);
-                if (isDirty()) {
-                    tdExpression = tempExpressionMap.get(combo);
-                }
-
-                String language = tdExpression.getLanguage();
-
-                boolean isUDIndicatorDefinition = definition instanceof UDIndicatorDefinition;
-                final ExpressionEditDialog editDialog = new ExpressionEditDialog(null, patternText.getText(),
-                        isUDIndicatorDefinition, cloneExpression(tdExpression));
-                editDialog.setVersion(version);
-                editDialog.setLanguage(language);
-                editDialog.setCategory(category);
-
-                if (isUDIndicatorDefinition) {
-                    if (IndicatorCategoryHelper.isUserDefMatching(category)) {
-                        EList<TdExpression> viewValidRowsExpression = ((UDIndicatorDefinition) definition)
-                                .getViewValidRowsExpression();
-                        TdExpression viewValidRows = getCurrentLanguageExp(viewValidRowsExpression, language, version);
-                        if (isDirty()) {
-                            viewValidRows = tempViewValidRowsExpressionMap.get(combo);
-                        }
-                        editDialog.setTempViewValidRowsExp(cloneExpression(viewValidRows));
-
-                        EList<TdExpression> viewInvalidRowsExpression = ((UDIndicatorDefinition) definition)
-                                .getViewInvalidRowsExpression();
-                        TdExpression viewInvalidRows = getCurrentLanguageExp(viewInvalidRowsExpression, language, version);
-                        if (isDirty()) {
-                            viewInvalidRows = tempViewInvalidRowsExpressionMap.get(combo);
-                        }
-                        editDialog.setTempViewInvalidRowsExp(cloneExpression(viewInvalidRows));
-
-                        EList<TdExpression> viewValidValuesExpression = ((UDIndicatorDefinition) definition)
-                                .getViewValidValuesExpression();
-                        TdExpression viewValidValues = getCurrentLanguageExp(viewValidValuesExpression, language, version);
-                        if (isDirty()) {
-                            viewValidValues = tempViewValidValuesExpressionMap.get(combo);
-                        }
-                        editDialog.setTempViewValidValuesExp(cloneExpression(viewValidValues));
-
-                        EList<TdExpression> viewInvalidValuesExpression = ((UDIndicatorDefinition) definition)
-                                .getViewInvalidValuesExpression();
-                        TdExpression viewInvalidValues = getCurrentLanguageExp(viewInvalidValuesExpression, language, version);
-                        if (isDirty()) {
-                            viewInvalidValues = tempViewInvalidValuesExpressionMap.get(combo);
-                        }
-                        editDialog.setTempViewInvalidValuesExp(cloneExpression(viewInvalidValues));
-
-                    } else {
-                        EList<TdExpression> viewRowsExpression = ((UDIndicatorDefinition) definition).getViewRowsExpression();
-                        TdExpression viewRows = getCurrentLanguageExp(viewRowsExpression, language, version);
-                        if (isDirty()) {
-                            viewRows = tempViewRowsExpressionMap.get(combo);
-                        }
-                        editDialog.setTempViewRowsExp(cloneExpression(viewRows));
-                    }
-                }
-
+                final ExpressionEditDialog editDialog = initExpresstionEditDialog(combo, version, patternText.getText());
                 if (Dialog.OK == editDialog.open()) {
                     patternText.setText(editDialog.getTempExpression().getBody());
-                    tempExpressionMap.put(combo, editDialog.getTempExpression());
-
-                    if (isUDIndicatorDefinition) {
-                        if (IndicatorCategoryHelper.isUserDefMatching(category)) {
-                            tempViewValidRowsExpressionMap.put(combo, editDialog.getTempViewValidRowsExp());
-                            tempViewInvalidRowsExpressionMap.put(combo, editDialog.getTempViewInvalidRowsExp());
-                            tempViewValidValuesExpressionMap.put(combo, editDialog.getTempViewValidValuesExp());
-                            tempViewInvalidValuesExpressionMap.put(combo, editDialog.getTempViewInvalidValuesExp());
-
-                        } else {
-                            // get view rows tdExpress list, and set currect tdexpress to temp map
-                            tempViewRowsExpressionMap.put(combo, editDialog.getTempViewRowsExp());
-                        }
-                    }
-
+                    handleSelectExpression(combo, editDialog);
                     setDirty(true);
                 }
             }
+
         });
 
+    }
+
+    protected ExpressionEditDialog initExpresstionEditDialog(final CCombo combo, final String version, String patternText) {
+        TdExpression tdExpression = getTdExpression(combo, version);
+        String language = tdExpression.getLanguage();
+
+        ExpressionEditDialog editDialog = new ExpressionEditDialog(null, patternText, false, cloneExpression(tdExpression));
+        editDialog.setVersion(version);
+        editDialog.setLanguage(language);
+        editDialog.setCategory(category);
+
+        return editDialog;
+    }
+
+    // if it is dirty, get value from tempMap, else from definition
+    protected TdExpression getTdExpression(final CCombo combo, final String version) {
+        TdExpression tdExpression = null;
+        if (isDirty()) {
+            tdExpression = tempExpressionMap.get(combo);
+        } else {
+            tdExpression = getCurrentLanguageExp(definition.getSqlGenericExpression(),
+                    PatternLanguageType.findLanguageByName(combo.getText()), version);
+        }
+        return tdExpression;
+    }
+
+    protected void handleSelectExpression(final CCombo combo, final ExpressionEditDialog editDialog) {
+        tempExpressionMap.put(combo, editDialog.getTempExpression());
     }
 
     /**
@@ -2202,162 +1412,26 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
         }
         super.doSave(monitor);
         boolean needReloadJUDIJar = false;
-        // ADD klliu 2010-06-01 bug 13451: Class name of Java User Define Indicator must be validated
-        if (!checkJavaUDIBeforeSave()) {
-            ((IndicatorEditor) this.getEditor()).setSaveActionButtonState(false);
-            String message = DefaultMessagesImpl.getString("IndicatorDefinitionMaterPage.classPathError");//$NON-NLS-1$
-            MessageUI.openWarning(message);
-            return;
-        }
-
-        // ADD yyi 2011-05-31 16158:add whitespace check for text fields.
-        if (!checkWhithspace()) {
-            MessageUI.openError(DefaultMessagesImpl.getString("AbstractMetadataFormPage.whitespace")); //$NON-NLS-1$
-            return;
-        }
         // ADD xqliu 2010-02-25 feature 11201
         rc = checkBeforeSave();
         if (rc.isOk()) {
+            CCombo javaUDICombo = updateExpressions();
 
-            if (definition instanceof UDIndicatorDefinition) {
-                UDIndicatorDefinition def = (UDIndicatorDefinition) definition;
-                EList<TdExpression> viewValidRowsExpression = def.getViewValidRowsExpression();
-                viewValidRowsExpression.clear();
-                viewValidRowsExpression = saveFromTempMapToDefinition(viewValidRowsExpression, tempViewValidRowsExpressionMap);
+            updateUDIValues(javaUDICombo);
 
-                EList<TdExpression> viewInvalidRowsExpression = def.getViewInvalidRowsExpression();
-                viewInvalidRowsExpression.clear();
-                viewInvalidRowsExpression = saveFromTempMapToDefinition(viewInvalidRowsExpression,
-                        tempViewInvalidRowsExpressionMap);
-
-                EList<TdExpression> viewValidValuesExpression = def.getViewValidValuesExpression();
-                viewValidValuesExpression.clear();
-                viewValidValuesExpression = saveFromTempMapToDefinition(viewValidValuesExpression,
-                        tempViewValidValuesExpressionMap);
-
-                EList<TdExpression> viewInvalidValuesExpression = def.getViewInvalidValuesExpression();
-                viewInvalidValuesExpression.clear();
-                viewInvalidValuesExpression = saveFromTempMapToDefinition(viewInvalidValuesExpression,
-                        tempViewInvalidValuesExpressionMap);
-
-                EList<TdExpression> viewRowsExpression = def.getViewRowsExpression();
-                viewRowsExpression.clear();
-                viewRowsExpression = saveFromTempMapToDefinition(viewRowsExpression, tempViewRowsExpressionMap);
-
-                if (category != null) {
-                    UDIHelper.setUDICategory(definition, category);
-                }
-            }
-
-            EList<TdExpression> expressions = definition.getSqlGenericExpression();
-            expressions.clear();
-            Iterator<CCombo> it = tempExpressionMap.keySet().iterator();
-
-            CCombo javaUIDCombo = null;
-            while (it.hasNext()) {
-                CCombo cb = it.next();
-                // MOD MOD mzhao feature 11128 Be able to add Java UDI, 2010-01-28
-                if (cb.getText().equals(PatternLanguageType.JAVA.getName())) {
-                    javaUIDCombo = cb;
-                } else {
-                    TdExpression exp = tempExpressionMap.get(cb);
-                    if (exp.getBody() != null && !PluginConstant.EMPTY_STRING.equals(exp.getBody())) {
-                        // MOD xqliu 2010-04-01 bug 11892
-                        TdExpression cloneExpression = cloneExpression(exp);
-                        expressions.add(cloneExpression);
-                        // ~11892
-                    }
-                }
-            }
-
-            // Save Java UID
-            EList<TaggedValue> tvs = definition.getTaggedValue();
-            if (javaUIDCombo != null) {
-                boolean isNewTaggedValue = true;
-                for (TaggedValue tv : tvs) {
-                    if (tv.getTag().equals(TaggedValueHelper.CLASS_NAME_TEXT)) {
-                        String newTagValue = ((Text) javaUIDCombo.getData(TaggedValueHelper.CLASS_NAME_TEXT)).getText();
-                        needReloadJUDIJar |= !StringUtils.equals(tv.getValue(), newTagValue);
-                        tv.setValue(newTagValue);
-                        isNewTaggedValue = false;
-                        continue;
-                    }
-                    if (tv.getTag().equals(TaggedValueHelper.JAR_FILE_PATH)) {
-                        String newTagValue = ((Text) javaUIDCombo.getData(TaggedValueHelper.JAR_FILE_PATH)).getText();
-                        needReloadJUDIJar |= !StringUtils.equals(tv.getValue(), newTagValue);
-                        tv.setValue(newTagValue);
-                    }
-                }
-                if (isNewTaggedValue) {
-                    TaggedValue classNameTV = TaggedValueHelper.createTaggedValue(TaggedValueHelper.CLASS_NAME_TEXT,
-                            ((Text) javaUIDCombo.getData(TaggedValueHelper.CLASS_NAME_TEXT)).getText());
-                    TaggedValue jarPathTV = TaggedValueHelper.createTaggedValue(TaggedValueHelper.JAR_FILE_PATH,
-                            ((Text) javaUIDCombo.getData(TaggedValueHelper.JAR_FILE_PATH)).getText());
-                    definition.getTaggedValue().add(classNameTV);
-                    definition.getTaggedValue().add(jarPathTV);
-                }
-            } else {
-                // Remove Java UDI tagged values if there have.
-                TaggedValue tvCN = null;
-                TaggedValue tvJARP = null;
-                for (TaggedValue tv : tvs) {
-                    if (tv.getTag().equals(TaggedValueHelper.CLASS_NAME_TEXT)) {
-                        tvCN = tv;
-                        continue;
-                    }
-                    if (tv.getTag().equals(TaggedValueHelper.JAR_FILE_PATH)) {
-                        tvJARP = tv;
-                    }
-                }
-                if (tvCN != null) {
-                    tvs.remove(tvCN);
-                }
-                if (tvJARP != null) {
-                    tvs.remove(tvJARP);
-                }
-
-            }
             if (hasAggregateExpression) {
-                EList<TdExpression> aggregate1argFunctions = definition.getAggregate1argFunctions();
-                aggregate1argFunctions.clear();
-                for (AggregateDateExpression ade : afExpressionMapTemp.values()) {
-                    TdExpression expression = ade.getAggregateExpression();
-                    if (expression.getBody() != null && !PluginConstant.EMPTY_STRING.equals(expression.getBody())) {
-                        aggregate1argFunctions.add(expression);
-                    }
-                }
+                updateAggregateExpression();
             }
 
             if (hasDateExpression) {
-                EList<TdExpression> date1argFunctions = definition.getDate1argFunctions();
-                date1argFunctions.clear();
-                for (AggregateDateExpression ade : afExpressionMapTemp.values()) {
-                    TdExpression expression = ade.getDateExpression();
-                    if (expression.getBody() != null && !PluginConstant.EMPTY_STRING.equals(expression.getBody())) {
-                        date1argFunctions.add(expression);
-                    }
-                }
+                updateDateExpression();
             }
 
             if (hasCharactersMapping) {
-                EList<CharactersMapping> charactersMappings = definition.getCharactersMapping();
-                charactersMappings.clear();
-                for (CharactersMapping cm : charactersMappingMapTemp.values()) {
-                    String c = cm.getCharactersToReplace();
-                    String r = cm.getReplacementCharacters();
-                    if (checkMappingString(c, r)) {
-                        charactersMappings.add(cm);
-                    } else {
-                        MessageUI.openError("[" + cm.getLanguage()//$NON-NLS-1$
-                                + "] INPUT ERROR:\nThe length of two inputed strings are not equal.");//$NON-NLS-1$
-                        return;
-                    }
+                if (!updateCharactersMapping()) {
+                    return;
                 }
             }
-
-            // Save difinition UDI Parameters
-            saveDefinitionParameters(definition);
-
             rc = UDIHelper.validate(definition);
         }
 
@@ -2376,6 +1450,79 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
             }
         } else {
             MessageUI.openError(rc.getMessage());
+        }
+    }
+
+    /**
+     * currently mainly used for save some UDI special related values.
+     * 
+     * @param javaUDICombo
+     */
+    protected void updateUDIValues(CCombo javaUDICombo) {
+        // save some other related values, current only need in UDI
+
+    }
+
+    private CCombo updateExpressions() {
+        EList<TdExpression> expressions = definition.getSqlGenericExpression();
+        expressions.clear();
+        Iterator<CCombo> it = tempExpressionMap.keySet().iterator();
+
+        CCombo javaUDICombo = null;
+        while (it.hasNext()) {
+            CCombo cb = it.next();
+            // MOD MOD mzhao feature 11128 Be able to add Java UDI, 2010-01-28
+            if (cb.getText().equals(PatternLanguageType.JAVA.getName())) {
+                javaUDICombo = cb;
+            } else {
+                TdExpression exp = tempExpressionMap.get(cb);
+                if (exp.getBody() != null && !PluginConstant.EMPTY_STRING.equals(exp.getBody())) {
+                    // MOD xqliu 2010-04-01 bug 11892
+                    TdExpression cloneExpression = cloneExpression(exp);
+                    expressions.add(cloneExpression);
+                    // ~11892
+                }
+            }
+        }
+        return javaUDICombo;
+    }
+
+    private boolean updateCharactersMapping() {
+        EList<CharactersMapping> charactersMappings = definition.getCharactersMapping();
+        charactersMappings.clear();
+        for (CharactersMapping cm : charactersMappingMapTemp.values()) {
+            String c = cm.getCharactersToReplace();
+            String r = cm.getReplacementCharacters();
+            if (checkMappingString(c, r)) {
+                charactersMappings.add(cm);
+            } else {
+                MessageUI.openError("[" + cm.getLanguage()//$NON-NLS-1$
+                        + "] INPUT ERROR:\nThe length of two inputed strings are not equal.");//$NON-NLS-1$
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private void updateDateExpression() {
+        EList<TdExpression> date1argFunctions = definition.getDate1argFunctions();
+        date1argFunctions.clear();
+        for (AggregateDateExpression ade : afExpressionMapTemp.values()) {
+            TdExpression expression = ade.getDateExpression();
+            if (expression.getBody() != null && !PluginConstant.EMPTY_STRING.equals(expression.getBody())) {
+                date1argFunctions.add(expression);
+            }
+        }
+    }
+
+    private void updateAggregateExpression() {
+        EList<TdExpression> aggregate1argFunctions = definition.getAggregate1argFunctions();
+        aggregate1argFunctions.clear();
+        for (AggregateDateExpression ade : afExpressionMapTemp.values()) {
+            TdExpression expression = ade.getAggregateExpression();
+            if (expression.getBody() != null && !PluginConstant.EMPTY_STRING.equals(expression.getBody())) {
+                aggregate1argFunctions.add(expression);
+            }
         }
     }
 
@@ -2401,155 +1548,11 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
     }
 
     /**
-     * DDOC klliu Comment method "saveDefinitionParameters". ADD klliu figure 13429 2010-07-12
-     * 
-     * @param definitionUDI
-     */
-    private void saveDefinitionParameters(IndicatorDefinition definitionUDI) {
-        EList<IndicatorDefinitionParameter> params = definitionUDI.getIndicatorDefinitionParameter();
-        if (params != null) {
-            params.clear();
-            params.addAll(tempParameters);
-        }
-    }
-
-    /**
-     * DOC klliu Comment method "checkJavaUDIBeforeSave".
-     * 
-     * @return
-     */
-    private boolean checkJavaUDIBeforeSave() {
-        if (!systemIndicator) {
-
-            EList<TaggedValue> tvs = definition.getTaggedValue();
-            boolean isHaveJavaComb = checkIsHaveJavaComb();
-            boolean isHaveJavaTag = checkContainsJavaUDI(definition);
-            boolean isHaveSqlExpr = checkIsHaveSqlExcepretion();
-            String className = this.getClassNameForSave();
-            String jarPath = this.getJarPathForSave();
-            volidateNameAndPath(className, jarPath, tvs);
-            boolean cj2e = checkJavaIndicatorIsEixt();
-            if (isHaveJavaComb == true && isHaveSqlExpr == true && isHaveJavaTag == false) {
-                return cj2e;
-            } else if (isHaveJavaComb == false && isHaveSqlExpr == true) {
-                return true;
-            } else if (isHaveJavaComb == true && isHaveSqlExpr == false) {
-                return cj2e;
-            } else if (isHaveJavaComb == true && isHaveSqlExpr == true) {
-                return cj2e;
-            }
-        }
-        return true;
-
-    }
-
-    /**
-     * DOC klliu Comment method "checkContainsJavaUDI".
-     * 
-     * @param definition2
-     * @return
-     */
-    private boolean checkContainsJavaUDI(IndicatorDefinition definition2) {
-        EList<TaggedValue> tvs = definition.getTaggedValue();
-        for (TaggedValue tv : tvs) {
-            if (tv.getTag().equals(TaggedValueHelper.CLASS_NAME_TEXT)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    /**
-     * DOC klliu Comment method "checkJavaIndicatorIsEixt".
-     * 
-     * @return
-     */
-    private boolean checkJavaIndicatorIsEixt() {
-        String className = this.getClassNameForSave();
-        String jarPath = this.getJarPathForSave();
-
-        if (className != null && jarPath != null && !className.trim().equals(PluginConstant.EMPTY_STRING)
-                && !jarPath.trim().equals(PluginConstant.EMPTY_STRING)) {
-            // MOD by zshen for bug 18724 2011.02.23
-            for (IFile file : UDIUtils.getContainJarFile(jarPath)) {
-                TalendURLClassLoader cl;
-                try {
-                  //Note that the 2nd parameter (classloader) is needed to load class UserDefinitionIndicator from org.talend.dataquality plugin.
-                    cl = new TalendURLClassLoader(new URL[] { file.getLocation().toFile().toURI().toURL() },
-                            IndicatorDefinitionMaterPage.class.getClassLoader());
-                    Class<?> theClass = cl.findClass(className);
-                    if (theClass != null) {
-                        return true;
-                    }
-                } catch (MalformedURLException e1) {
-                    Log.error(e1.getStackTrace());
-                } catch (ClassNotFoundException e1) {
-                    Log.error(e1.getStackTrace());
-                }
-            }
-            return false;
-        } else {
-            return false;
-        }
-    }
-
-    /**
-     * DOC klliu Comment method "checkIsHaveSqlExcepretion".
-     * 
-     * @return
-     */
-    private boolean checkIsHaveSqlExcepretion() {
-        EList<TdExpression> expression = definition.getSqlGenericExpression();
-        if (!expression.isEmpty()) {
-            return true;
-        }
-        return false;
-    }
-
-    /**
-     * DOC klliu Comment method "checkIsHavaJavaComb".
-     * 
-     * @return
-     */
-    private boolean checkIsHaveJavaComb() {
-        Iterator<CCombo> it = tempExpressionMap.keySet().iterator();
-        while (it.hasNext()) {
-            CCombo cb = it.next();
-            // MOD MOD mzhao feature 11128 Be able to add Java UDI, 2010-01-28
-            if (cb.getText().equals(PatternLanguageType.JAVA.getName())) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    /**
-     * DOC klliu Comment method "volidateNameAndPath".
-     * 
-     * @param className
-     * @param jarPath
-     */
-    private void volidateNameAndPath(String className, String jarPath, EList<TaggedValue> tvs) {
-        if (className == null || jarPath == null) {
-            for (TaggedValue tv : tvs) {
-                if (tv.getTag().equals(TaggedValueHelper.CLASS_NAME_TEXT)) {
-                    this.setClassNameForSave(tv.getValue());
-                    continue;
-                }
-                if (tv.getTag().equals(TaggedValueHelper.JAR_FILE_PATH)) {
-                    this.setJarPathForSave(tv.getValue());
-                }
-            }
-        }
-
-    }
-
-    /**
      * DOC xqliu Comment method "checkBeforeSave". ADD xqliu 2010-02-25 feature 11201
      * 
      * @return
      */
-    private ReturnCode checkBeforeSave() {
+    protected ReturnCode checkBeforeSave() {
         ReturnCode rc = new ReturnCode();
 
         // Added TDQ-7474 20131213 yyin
@@ -2559,6 +1562,13 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
             rc.setMessage(DefaultMessagesImpl.getString("IndicatorDefinitionMaterPage.validateNoExpression"));//$NON-NLS-1$
             return rc;
         }// ~
+
+        // ADD yyi 2011-05-31 16158:add whitespace check for text fields.
+        if (!checkWhithspace()) {
+            rc.setOk(false);
+            rc.setMessage(DefaultMessagesImpl.getString("AbstractMetadataFormPage.whitespace"));//$NON-NLS-1$
+            return rc;
+        }
 
         Map<String, Integer> languageVersionCountMap = new HashMap<String, Integer>();
         Iterator<CCombo> it = tempExpressionMap.keySet().iterator();
@@ -2594,58 +1604,6 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
                 rc.setOk(false);
                 rc.setMessage(DefaultMessagesImpl.getString("IndicatorDefinitionMaterPage.isRepeated", key));//$NON-NLS-1$
                 return rc;
-            }
-        }
-
-        if (tempParameters != null) {
-            // detecting the IndicatorDefinitionParameter whether include duplicate keywords
-            Map<String, Integer> paraMap = new HashMap<String, Integer>();
-            for (IndicatorDefinitionParameter para : tempParameters) {
-                String key = para.getKey();
-                Integer keyCount = paraMap.get(key);
-                if (keyCount == null) {
-                    paraMap.put(key, Integer.valueOf(1));
-                } else {
-                    paraMap.put(key, Integer.valueOf(keyCount.intValue() + 1));
-                }
-            }
-
-            if (paraMap.size() != tempParameters.size()) {
-                StringBuffer duplicateKeywords = new StringBuffer();
-                for (String key : paraMap.keySet()) {
-                    Integer value = paraMap.get(key);
-                    if (value.intValue() > 1) {
-                        duplicateKeywords.append("\n" + key); //$NON-NLS-1$
-                    }
-                }
-                rc.setOk(false);
-                rc.setMessage(DefaultMessagesImpl.getString(
-                        "IndicatorDefinitionMaterPage.includeDuplicateKeywords", duplicateKeywords.toString()));//$NON-NLS-1$
-                return rc;
-            }
-
-            // detecting the IndicatorDefinitionParameter whether include special characters
-            for (IndicatorDefinitionParameter para : tempParameters) {
-                String key = para.getKey();
-                String value = para.getValue();
-
-                if (!StringUtils.isBlank(key)
-                        && (key.indexOf(UDIHelper.PARA_SEPARATE_1) > -1 || key.indexOf(UDIHelper.PARA_SEPARATE_2) > -1)) {
-                    rc.setOk(false);
-                    rc.setMessage(DefaultMessagesImpl
-                            .getString(
-                                    "IndicatorDefinitionMaterPage.includeSpecialCharacter", "\n" + UDIHelper.PARA_SEPARATE_1 + "\n" + UDIHelper.PARA_SEPARATE_2));//$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-                    return rc;
-                }
-
-                if (!StringUtils.isBlank(value)
-                        && (value.indexOf(UDIHelper.PARA_SEPARATE_1) > -1 || value.indexOf(UDIHelper.PARA_SEPARATE_2) > -1)) {
-                    rc.setOk(false);
-                    rc.setMessage(DefaultMessagesImpl
-                            .getString(
-                                    "IndicatorDefinitionMaterPage.includeSpecialCharacter", "\n" + UDIHelper.PARA_SEPARATE_1 + "\n" + UDIHelper.PARA_SEPARATE_2));//$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-                    return rc;
-                }
             }
         }
 
@@ -2730,32 +1688,6 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
             return PluginConstant.EMPTY_STRING;
         }
 
-        public void setAggregateBody(String body) {
-            if (aggregateExpression != null) {
-                aggregateExpression.setBody(body);
-            }
-        }
-
-        public String getAggregateBody() {
-            if (aggregateExpression != null) {
-                return aggregateExpression.getBody();
-            }
-            return PluginConstant.EMPTY_STRING;
-        }
-
-        public void setDateBody(String body) {
-            if (dateExpression != null) {
-                dateExpression.setBody(body);
-            }
-        }
-
-        public String getDateBody() {
-            if (dateExpression != null) {
-                return dateExpression.getBody();
-            }
-            return PluginConstant.EMPTY_STRING;
-        }
-
         public boolean haveAggregateExpression() {
             return aggregateExpression != null;
         }
@@ -2792,15 +1724,6 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
             }
         }
 
-        public String getModificationDate() {
-            if (aggregateExpression != null) {
-                return aggregateExpression.getModificationDate();
-            }
-            if (dateExpression != null) {
-                return dateExpression.getModificationDate();
-            }
-            return null;
-        }
     }
 
     /**
@@ -2897,16 +1820,6 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
         @Override
         public int hashCode() {
             return this.getLanguage().concat(this.getBody()).hashCode();
-        }
-
-        public String getModificationDate() {
-            return aggreagetExpression == null ? null : aggreagetExpression.getModificationDate();
-        }
-
-        public void setModificationDate(String dateValue) {
-            if (aggreagetExpression != null) {
-                aggreagetExpression.setModificationDate(dateValue);
-            }
         }
 
     }
@@ -3093,6 +2006,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
                             + this.getHighlightedValues());
                 }
             }
+
         }
 
         public DateVO(TdExpression dateExpression) {
@@ -3140,15 +2054,15 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
             return this.getLanguage().concat(this.getBody()).hashCode();
         }
 
-        public void setModificationDate(String dateValue) {
-            if (dateExpression != null) {
-                dateExpression.setModificationDate(dateValue);
-            }
-        }
-
-        public String getModificationDate() {
-            return dateExpression == null ? null : dateExpression.getModificationDate();
-        }
+        // public void setModificationDate(String dateValue) {
+        // if (dateExpression != null) {
+        // dateExpression.setModificationDate(dateValue);
+        // }
+        // }
+        //
+        // public String getModificationDate() {
+        // return dateExpression == null ? null : dateExpression.getModificationDate();
+        // }
 
     }
 
@@ -3360,6 +2274,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
      * @param exp
      * @return
      */
+    @SuppressWarnings("unchecked")
     public static final TdExpression cloneExpression(TdExpression exp) {
         if (exp == null) {
             return null;
