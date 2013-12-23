@@ -565,25 +565,17 @@
          </enablement>
       </actionProvider>
       <actionProvider
-            class="org.talend.dataprofiler.core.ui.action.provider.predefined.PreviewTableProvider"
-            id="org.talend.dataprofiler.core.ui.action.provider.predefined.PreviewTableProvider">
+            class="org.talend.dataprofiler.core.ui.action.provider.predefined.PreviewProvider"
+            id="org.talend.dataprofiler.core.ui.action.provider.predefined.PreviewProvider">
          <enablement>
-            <and>
+            <or>
                <instanceof
                      value="org.talend.dq.nodes.DBTableRepNode">
                </instanceof>
-            </and>
-         </enablement>
-      </actionProvider>
-      <actionProvider
-            class="org.talend.dataprofiler.core.ui.action.provider.predefined.PreviewViewProvider"
-            id="org.talend.dataprofiler.core.ui.action.provider.predefined.PreviewViewProvider">
-         <enablement>
-            <and>
                <instanceof
                      value="org.talend.dq.nodes.DBViewRepNode">
                </instanceof>
-            </and>
+            </or>
          </enablement>
       </actionProvider>
       <actionProvider

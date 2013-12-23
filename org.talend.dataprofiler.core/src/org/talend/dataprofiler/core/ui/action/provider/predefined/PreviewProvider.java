@@ -14,9 +14,11 @@ package org.talend.dataprofiler.core.ui.action.provider.predefined;
 
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.viewers.TreeSelection;
-import org.talend.dataprofiler.core.ui.action.actions.predefined.PreviewTableAction;
+import org.talend.dataprofiler.core.ui.action.actions.predefined.PreviewAction;
 import org.talend.dataprofiler.core.ui.action.provider.AbstractCommonActionProvider;
 import org.talend.dq.nodes.DBTableRepNode;
+import org.talend.dq.nodes.DBViewRepNode;
+import orgomg.cwm.resource.relational.NamedColumnSet;
 
 /**
  * DOC qzhang class global comment. Detailled comment <br/>
@@ -24,12 +26,12 @@ import org.talend.dq.nodes.DBTableRepNode;
  * $Id: talend.epf 1 2006-09-29 17:06:40Z nrousseau $
  * 
  */
-public class PreviewTableProvider extends AbstractCommonActionProvider {
+public class PreviewProvider extends AbstractCommonActionProvider {
 
     /**
-     * DOC qzhang PreviewTableProvider constructor comment.
+     * PreviewProvider constructor.
      */
-    public PreviewTableProvider() {
+    public PreviewProvider() {
     }
 
     /*
@@ -45,11 +47,16 @@ public class PreviewTableProvider extends AbstractCommonActionProvider {
         }
         TreeSelection treeSelection = ((TreeSelection) this.getContext().getSelection());
         Object firstElement = treeSelection.getFirstElement();
-        // MOD msjian 2011-12-7 TDQ-4091: the tdTable info is not correct
+
+        NamedColumnSet set = null;
         if (firstElement instanceof DBTableRepNode) {
-            PreviewTableAction action = new PreviewTableAction(((DBTableRepNode) firstElement).getTdTable());
+            set = ((DBTableRepNode) firstElement).getTdTable();
+        } else if (firstElement instanceof DBViewRepNode) {
+            set = ((DBViewRepNode) firstElement).getTdView();
+        }
+        if (set != null) {
+            PreviewAction action = new PreviewAction(set);
             menu.add(action);
         }
-        // TDQ-4091 ~
     }
 }
