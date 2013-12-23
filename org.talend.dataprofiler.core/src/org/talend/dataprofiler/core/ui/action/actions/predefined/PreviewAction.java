@@ -22,12 +22,9 @@ import org.talend.dq.helper.ColumnSetNameHelper;
 import orgomg.cwm.resource.relational.NamedColumnSet;
 
 /**
- * DOC qzhang class global comment. Detailled comment <br/>
- * 
- * $Id: talend.epf 1 2006-09-29 17:06:40Z nrousseau $
- * 
+ * the PreviewAction can used for both table and view.
  */
-public class PreviewTableAction extends Action {
+public class PreviewAction extends Action {
 
     private NamedColumnSet set;
 
@@ -36,8 +33,8 @@ public class PreviewTableAction extends Action {
      * 
      * @param table
      */
-    public PreviewTableAction(NamedColumnSet set) {
-        super(DefaultMessagesImpl.getString("PreviewTableAction.previewTable")); //$NON-NLS-1$
+    public PreviewAction(NamedColumnSet set) {
+        super(DefaultMessagesImpl.getString("PreviewAction.previewMenu")); //$NON-NLS-1$
         setImageDescriptor(ImageLib.getImageDescriptor(ImageLib.EXPLORE_IMAGE));
         this.set = set;
     }

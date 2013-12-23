@@ -65,7 +65,7 @@ import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.model.TableIndicator;
 import org.talend.dataprofiler.core.ui.action.actions.TdAddTaskAction;
 import org.talend.dataprofiler.core.ui.action.actions.predefined.CreateColumnAnalysisAction;
-import org.talend.dataprofiler.core.ui.action.actions.predefined.PreviewTableAction;
+import org.talend.dataprofiler.core.ui.action.actions.predefined.PreviewAction;
 import org.talend.dataprofiler.core.ui.dialog.IndicatorCheckedTreeSelectionDialog;
 import org.talend.dataprofiler.core.ui.dialog.composite.TooltipTree;
 import org.talend.dataprofiler.core.ui.editor.AbstractAnalysisActionHandler;
@@ -1248,7 +1248,7 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
                 sets[i] = tableIndicator.getColumnSet();
             }
 
-            new PreviewTableAction(sets[0]).run();
+            new PreviewAction(sets[0]).run();
         }
 
         private void viewQueryForSelectedElement(Tree newTree) {
