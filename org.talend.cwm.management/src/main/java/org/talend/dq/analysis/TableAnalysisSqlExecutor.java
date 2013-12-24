@@ -350,8 +350,8 @@ public class TableAnalysisSqlExecutor extends TableAnalysisExecutor {
         } finally {
             ReturnCode rc = closeConnection(analysis, connection);
             ok = ok && rc.isOk();
-            if (!ok) {
-                this.errorMessage = rc.getMessage();
+            if (!ok && rc.getMessage() != null) {
+                this.errorMessage = this.errorMessage + "," + rc.getMessage();//$NON-NLS-1$
             }
 
         }
