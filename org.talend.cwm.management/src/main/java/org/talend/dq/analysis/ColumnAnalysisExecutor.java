@@ -35,7 +35,6 @@ import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisContext;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dq.dbms.GenericSQLHandler;
-import org.talend.dq.helper.AnalysisExecutorHelper;
 import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.indicators.IndicatorEvaluator;
 import org.talend.utils.sugars.ReturnCode;
@@ -189,10 +188,11 @@ public class ColumnAnalysisExecutor extends AnalysisExecutor {
             this.errorMessage = Messages.getString("ColumnAnalysisExecutor.ANALYSISMUSTRUNONONETABLEERRORMESSAGE");//$NON-NLS-1$
             return null;
         }
+        TdColumn firstColumn = SwitchHelpers.COLUMN_SWITCH.doSwitch(analysedElements.get(0));
         // MOD zshen feature 12919 select all the column to be prepare for drill down.
         if (analysis.getParameters().isStoreData()) {
             // MOD klliu 2011-06-30 bug 22523 whichever is Table or View,that finds columns should ues columnset
-            EObject eContainer = analysedElements.get(0).eContainer();
+            EObject eContainer = firstColumn.eContainer();
             List<TdColumn> columnList = ColumnSetHelper.getColumns(SwitchHelpers.COLUMN_SET_SWITCH.doSwitch(eContainer));
             // ~
             Iterator<TdColumn> iter = columnList.iterator();
@@ -208,7 +208,7 @@ public class ColumnAnalysisExecutor extends AnalysisExecutor {
 
         // add from clause
         sql.append(dbms().from());
-        sql.append(AnalysisExecutorHelper.getTableName(analysedElements.get(0), this.dbms()));
+        sql.append(dbms().getQueryColumnSetWithPrefix(firstColumn));
         // add where clause
         // --- get data filter
         ModelElementAnalysisHandler handler = new ModelElementAnalysisHandler();

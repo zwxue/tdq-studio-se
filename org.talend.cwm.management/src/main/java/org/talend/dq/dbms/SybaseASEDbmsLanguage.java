@@ -14,10 +14,12 @@ package org.talend.dq.dbms;
 
 import java.util.regex.Matcher;
 
+import org.talend.cwm.helper.ColumnSetHelper;
 import org.talend.dataquality.PluginConstant;
 import org.talend.utils.ProductVersion;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.resource.relational.Catalog;
+import orgomg.cwm.resource.relational.ColumnSet;
 import orgomg.cwm.resource.relational.Schema;
 
 /**
@@ -153,4 +155,23 @@ public class SybaseASEDbmsLanguage extends DbmsLanguage {
         Catalog catalog = super.getCatalog(schema);
         return catalog;
     }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dq.dbms.DbmsLanguage#getQueryColumnSetWithPrefix(orgomg.cwm.resource.relational.ColumnSet)
+     */
+    @Override
+    public String getQueryColumnSetWithPrefix(ColumnSet columnset) {
+        String catalogName = getCatalog(columnset).getName();
+        Schema schema = getSchema(columnset);
+        String schemaName = null;
+        if (schema != null) {
+            schemaName = schema.getName();
+        } else {
+            schemaName = ColumnSetHelper.getTableOwner(columnset);
+        }
+        return getQualifiedColumnSetName(columnset, catalogName, schemaName);
+    }
+
 }
