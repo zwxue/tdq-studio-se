@@ -202,22 +202,6 @@ public class ItemRecord {
             }
         } else if (element != null) {
 
-            // MOD by zshen for bug 18724 2011.02.23
-            TaggedValue tv = TaggedValueHelper.getTaggedValue(TaggedValueHelper.JAR_FILE_PATH, element.getTaggedValue());
-            if (tv != null) {
-                IPath libFolderPath = getFilePath().removeLastSegments(1).append("lib"); //$NON-NLS-1$
-                File libFolder = libFolderPath.toFile();
-                if (libFolder.exists()) {
-                    for (File udiJarFile : UDIUtils.getLibJarFileList(libFolder)) {
-                        for (String str : tv.getValue().split("\\|\\|")) {//$NON-NLS-1$
-                            if (udiJarFile.getName().equals(str)) {
-                                dependencyMap.put(udiJarFile, null);
-                            }
-                        }
-                    }
-                }
-            }
-
             List<Property> dependencyProperty = DependenciesHandler.getInstance().getClintDependency(element);
             for (Property depElement : dependencyProperty) {
                 ModelElement modelElement = PropertyHelper.getModelElement(depElement);
@@ -231,8 +215,17 @@ public class ItemRecord {
 
                 // MOD sizhaoliu 2013-04-13 TDQ-7082
                 if (modelElement instanceof IndicatorDefinition) {
-                    for (IndicatorDefinition definition : ((IndicatorDefinition) modelElement).getAggregatedDefinitions()) {
-                        includeAggregatedDependencies(definition);
+                    // MOD qiongli 2013-12-24 TDQ-8105 sholud also add the jar file as a dependency when the element is
+                    // a column analysis with java udi.
+                    TaggedValue tv = TaggedValueHelper.getTaggedValue(TaggedValueHelper.JAR_FILE_PATH,
+                            modelElement.getTaggedValue());
+                    if (tv != null) {
+                        includeJUDIDependencies((IndicatorDefinition) modelElement, tv);
+                    } else {
+                        for (IndicatorDefinition definition : ((IndicatorDefinition) modelElement).getAggregatedDefinitions()) {
+                            includeAggregatedDependencies(definition);
+                        }
+
                     }
                 }
             }
@@ -246,9 +239,16 @@ public class ItemRecord {
                         traverseFolderAndAddJrxmlDependencies(getJrxmlFolderFromReport(rep, ResourceManager.getJRXMLFolder()));
                     }
                 }
-            } else if (element instanceof IndicatorDefinition) { // MOD sizhaoliu 2013-04-13 TDQ-7082
-                for (IndicatorDefinition definition : ((IndicatorDefinition) element).getAggregatedDefinitions()) {
-                    includeAggregatedDependencies(definition);
+            } else if (element instanceof IndicatorDefinition) {
+                // MOD qiongli 2013-12-24 TDQ-8105 add the jar file as a dependency if the elment is UDI.
+                TaggedValue tv = TaggedValueHelper.getTaggedValue(TaggedValueHelper.JAR_FILE_PATH, element.getTaggedValue());
+                if (tv != null) {
+                    includeJUDIDependencies((IndicatorDefinition) element, tv);
+                } else {
+                    // MOD sizhaoliu 2013-04-13 TDQ-7082
+                    for (IndicatorDefinition definition : ((IndicatorDefinition) element).getAggregatedDefinitions()) {
+                        includeAggregatedDependencies(definition);
+                    }
                 }
             }
         }
@@ -303,6 +303,21 @@ public class ItemRecord {
 
         for (IndicatorDefinition aggregatedDefinition : definition.getAggregatedDefinitions()) {
             includeAggregatedDependencies(aggregatedDefinition);
+        }
+    }
+
+    private void includeJUDIDependencies(IndicatorDefinition definition, TaggedValue tv) {
+            IPath definitionPath = Path.fromOSString(definition.eResource().getURI().toFileString());
+            IPath libFolderPath = definitionPath.removeLastSegments(1).append("lib"); //$NON-NLS-1$
+            File libFolder = libFolderPath.toFile();
+            if (libFolder.exists()) {
+                for (File udiJarFile : UDIUtils.getLibJarFileList(libFolder)) {
+                    for (String str : tv.getValue().split("\\|\\|")) {//$NON-NLS-1$
+                        if (udiJarFile.getName().equals(str)) {
+                            dependencyMap.put(udiJarFile, null);
+                        }
+                    }
+                }
         }
     }
 
