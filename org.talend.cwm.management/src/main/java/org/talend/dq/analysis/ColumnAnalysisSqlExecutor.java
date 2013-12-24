@@ -1089,13 +1089,18 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
         protected IStatus run(IProgressMonitor monitor) {
             ColumnAnalysisSqlParallelExecutor columnSqlParallel = ColumnAnalysisSqlParallelExecutor.createInstance(parent,
                     connection, elementToIndicator, indicator);
-
             columnSqlParallel.run();
 
             if (columnSqlParallel.ok) {
                 return Status.OK_STATUS;
             } else {
-                this.errorMessage = Messages.getString("ColumnAnalysisSqlExecutor.AnalysisExecutionFailed"); //$NON-NLS-1$
+                if (columnSqlParallel.getException() != null) {
+                    this.errorMessage = columnSqlParallel.getException().getMessage();
+                } else if (columnSqlParallel.errorMessage != null && !StringUtils.EMPTY.equals(columnSqlParallel.errorMessage)) {
+                    this.errorMessage = columnSqlParallel.errorMessage;
+                } else {
+                    this.errorMessage = Messages.getString("ColumnAnalysisSqlExecutor.AnalysisExecutionFailed"); //$NON-NLS-1$
+                }
                 return Status.CANCEL_STATUS;
             }
         }
@@ -1263,15 +1268,11 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
         }
         // give result to indicator so that it handles the results
         boolean ret = false;
-        try {
-
-            // MOD qiongli 2012-3-7 TDQ-4632 delete some redundancy code for DistinctIndicator.modify directly the sql
-            // expression in definition file.
-            List<Object[]> myResultSet = executeQuery(cat, connection, queryStmt);
-            ret = indicator.storeSqlResults(myResultSet);
-        } catch (Exception e) {
-            log.warn(e, e);
-        }
+        // MOD qiongli 2012-3-7 TDQ-4632 delete some redundancy code for DistinctIndicator.modify directly the sql
+        // expression in definition file.
+        List<Object[]> myResultSet = executeQuery(cat, connection, queryStmt);
+        ret = indicator.storeSqlResults(myResultSet);
+        // MOD delete the try/catch TDQ-8388
         return ret;
     }
 
