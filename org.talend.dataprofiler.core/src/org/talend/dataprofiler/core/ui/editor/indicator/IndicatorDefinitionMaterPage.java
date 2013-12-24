@@ -1352,7 +1352,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
             return;
         }
 
-        final Composite lineComp = new Composite(expressionComp, SWT.NONE);
+        final Composite lineComp = new Composite(javaLanguageComp, SWT.NONE);
         lineComp.setLayout(new GridLayout(2, false));
         final CCombo javaCombo = new CCombo(lineComp, SWT.BORDER);
         javaCombo.setLayoutData(new GridData());
