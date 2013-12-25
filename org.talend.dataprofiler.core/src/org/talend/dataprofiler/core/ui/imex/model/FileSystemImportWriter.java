@@ -911,7 +911,8 @@ public class FileSystemImportWriter implements IImportWriter {
 
     /**
      * 
-     * remove the old pattern from IndicatorParameters of imported analysis ,then add the current workspace pattern into IndicatorParameters.
+     * remove the old pattern from IndicatorParameters of imported analysis ,then add the current workspace pattern into
+     * IndicatorParameters.
      * 
      * @param indParameters
      * @param sysPattern
@@ -929,10 +930,10 @@ public class FileSystemImportWriter implements IImportWriter {
                 URI oldPatternUri = EObjectHelper.getURI(oldPattern);
                 URI sysPatternUri = EObjectHelper.getURI(sysPattern);
                 if (oldPatternUri != null && sysPatternUri != null
-                        && oldPatternUri.lastSegment().equals(oldPatternUri.lastSegment())) {
+                        && sysPatternUri.lastSegment().equals(oldPatternUri.lastSegment())) {
                     itPatterns.remove();
                     indParameters.getDataValidDomain().getPatterns().add(sysPattern);
-                    log.info("Pattern '" + sysPattern.getName() + "' is updated in Analysis '" + analysis.getName() + "'"); //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$
+                    log.info("Pattern '" + sysPattern.getName() + "' is updated in Analysis '" + analysis.getName() + "'");
                     break;
                 }
             }
