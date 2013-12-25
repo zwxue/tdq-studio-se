@@ -20,6 +20,7 @@ import java.util.List;
 
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.talend.commons.exception.PersistenceException;
 import org.talend.core.context.Context;
@@ -29,6 +30,7 @@ import org.talend.core.model.properties.FolderItem;
 import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.model.repository.Folder;
 import org.talend.core.model.repository.IRepositoryViewObject;
+import org.talend.core.repository.model.AbstractEMFRepositoryFactory;
 import org.talend.core.repository.model.FolderHelper;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.core.runtime.CoreRuntimePlugin;
@@ -50,6 +52,7 @@ import org.talend.dq.nodes.PatternFolderRepNode;
 import org.talend.dq.nodes.ReportFolderRepNode;
 import org.talend.dq.nodes.RulesFolderRepNode;
 import org.talend.dq.nodes.SourceFileFolderRepNode;
+import org.talend.repository.ProjectManager;
 import org.talend.repository.localprovider.model.LocalFolderHelper;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.IRepositoryNode.ENodeType;
@@ -81,17 +84,32 @@ public final class RepositoryNodeBuilder {
     }
 
     /**
+     * get parent path
+     * 
+     * @param path relative path to current project
+     * @return if path is empty will return {@link Path#EMPTY}
+     */
+    private String getParentPath(String path) {
+        if (path == null) {
+            return Path.EMPTY.toOSString();
+        }
+        IPath removeLastSegments = new Path(path).removeLastSegments(1);
+        return removeLastSegments.toString();
+    }
+
+    /**
      * DOC klliu Comment method "createSystemFolder".
      * 
      * @param node
      * @param resConstant
      * @return
      * @throws PersistenceException
+     * @deprecated instead of it ues {@link #createRepositoryNodeSubSystemFolder(RepositoryNode, EResourceConstant)}
      */
+    @Deprecated
     public RepositoryNode createRepositoryNodeSystemFolder(FolderHelper folderHelper, RepositoryNode node,
             EResourceConstant resConstant) throws PersistenceException {
         IRepositoryViewObject folder = null;
-        DQRepositoryNode subFolderNode = null;
         if (folderHelper != null) {
             FolderItem folder2 = folderHelper.getFolder(resConstant.getPath());
             folder = new Folder(folder2.getProperty(), retrieveRepObjectTypeByPath(resConstant.getPath()));
@@ -99,98 +117,107 @@ public final class RepositoryNodeBuilder {
             folder = ProxyRepositoryFactory.getInstance().createFolder(retrieveRepObjectTypeByPath(resConstant.getPath()),
                     Path.EMPTY, resConstant.getName());
         }
+        return createRepositoryNode(folder, node, resConstant);
+    }
+
+    /**
+     * create repository node for sub system folder
+     * 
+     * @param node create repository node
+     * @param resConstant sub folder type
+     * @return sub node
+     * @throws PersistenceException
+     */
+    public RepositoryNode createRepositoryNodeSubSystemFolder(RepositoryNode node, EResourceConstant resConstant)
+            throws PersistenceException {
+        IRepositoryViewObject folder = null;
+        Project currentProject = ProjectManager.getInstance().getCurrentProject();
+        ERepositoryObjectType repositoryObjectType = retrieveRepObjectTypeByPath(resConstant.getPath());
+        FolderItem folderItem = ProxyRepositoryFactory.getInstance().getFolderItem(currentProject, repositoryObjectType,
+                Path.EMPTY);
+        if (folderItem != null) {
+            folder = new Folder(folderItem.getProperty(), retrieveRepObjectTypeByPath(resConstant.getPath()));
+        } else {
+            folder = ProxyRepositoryFactory.getInstance().createFolder(
+                    retrieveRepObjectTypeByPath(getParentPath(resConstant.getPath())), Path.EMPTY, resConstant.getName());
+        }
+        return createRepositoryNode(folder, node, resConstant);
+    }
+
+    private RepositoryNode createRepositoryNode(IRepositoryViewObject folder, RepositoryNode parentNode,
+            EResourceConstant resConstant) throws PersistenceException {
+        DQRepositoryNode subFolderNode = null;
+
         switch (resConstant) {
         case ANALYSIS:
-            AnalysisFolderRepNode anaFolderNode = new AnalysisFolderRepNode(folder, node, ENodeType.SYSTEM_FOLDER);
+            AnalysisFolderRepNode anaFolderNode = new AnalysisFolderRepNode(folder, parentNode, ENodeType.SYSTEM_FOLDER);
             folder.setRepositoryNode(anaFolderNode);
-            node.getChildren().add(anaFolderNode);
+            parentNode.getChildren().add(anaFolderNode);
             return anaFolderNode;
         case REPORTS:
-            ReportFolderRepNode repFolderNode = new ReportFolderRepNode(folder, node, ENodeType.SYSTEM_FOLDER);
+            ReportFolderRepNode repFolderNode = new ReportFolderRepNode(folder, parentNode, ENodeType.SYSTEM_FOLDER);
             folder.setRepositoryNode(repFolderNode);
-            node.getChildren().add(repFolderNode);
+            parentNode.getChildren().add(repFolderNode);
             return repFolderNode;
-            // case SYSTEM_INDICATORS:
-            // SysIndicatorFolderRepNode systemIndicatorFolderNode = new SysIndicatorFolderRepNode(folder, node,
-            // ENodeType.SYSTEM_FOLDER);
-            // folder.setRepositoryNode(systemIndicatorFolderNode);
-            // node.getChildren().add(systemIndicatorFolderNode);
-            // return systemIndicatorFolderNode;
         case INDICATORS:
-            IndicatorFolderRepNode indicatorFolderRepNode = new IndicatorFolderRepNode(folder, node, ENodeType.SYSTEM_FOLDER);
+            IndicatorFolderRepNode indicatorFolderRepNode = new IndicatorFolderRepNode(folder, parentNode,
+                    ENodeType.SYSTEM_FOLDER);
             folder.setRepositoryNode(indicatorFolderRepNode);
-            node.getChildren().add(indicatorFolderRepNode);
+            parentNode.getChildren().add(indicatorFolderRepNode);
             return indicatorFolderRepNode;
-            // case USER_DEFINED_INDICATORS:
-            // UserDefIndicatorFolderRepNode userDefIndicatorFolderNode = new UserDefIndicatorFolderRepNode(folder,
-            // node,
-            // ENodeType.SYSTEM_FOLDER);
-            // folder.setRepositoryNode(userDefIndicatorFolderNode);
-            // node.getChildren().add(userDefIndicatorFolderNode);
-            // return userDefIndicatorFolderNode;
         case JRXML_TEMPLATE:
-            JrxmlTempFolderRepNode jrxmlFolderNode = new JrxmlTempFolderRepNode(folder, node, ENodeType.SYSTEM_FOLDER);
+            JrxmlTempFolderRepNode jrxmlFolderNode = new JrxmlTempFolderRepNode(folder, parentNode, ENodeType.SYSTEM_FOLDER);
             folder.setRepositoryNode(jrxmlFolderNode);
-            node.getChildren().add(jrxmlFolderNode);
+            parentNode.getChildren().add(jrxmlFolderNode);
             return jrxmlFolderNode;
         case SOURCE_FILES:
-            SourceFileFolderRepNode sourceFileFolder = new SourceFileFolderRepNode(folder, node, ENodeType.SYSTEM_FOLDER);
+            SourceFileFolderRepNode sourceFileFolder = new SourceFileFolderRepNode(folder, parentNode, ENodeType.SYSTEM_FOLDER);
             folder.setRepositoryNode(sourceFileFolder);
-            node.getChildren().add(sourceFileFolder);
+            parentNode.getChildren().add(sourceFileFolder);
             return sourceFileFolder;
-            // case PATTERN_REGEX:
-            // PatternRegexFolderRepNode regexFolder = new PatternRegexFolderRepNode(folder, node,
-            // ENodeType.SYSTEM_FOLDER);
-            // folder.setRepositoryNode(regexFolder);
-            // node.getChildren().add(regexFolder);
-            // return regexFolder;
         case PATTERNS:
-            PatternFolderRepNode regexFolder2 = new PatternFolderRepNode(folder, node, ENodeType.SYSTEM_FOLDER);
+            PatternFolderRepNode regexFolder2 = new PatternFolderRepNode(folder, parentNode, ENodeType.SYSTEM_FOLDER);
             folder.setRepositoryNode(regexFolder2);
-            node.getChildren().add(regexFolder2);
+            parentNode.getChildren().add(regexFolder2);
             return regexFolder2;
-            // case PATTERN_SQL:
-            // PatternSqlFolderRepNode sqlFolder = new PatternSqlFolderRepNode(folder, node, ENodeType.SYSTEM_FOLDER);
-            // folder.setRepositoryNode(sqlFolder);
-            // node.getChildren().add(sqlFolder);
-            // return sqlFolder;
         case RULES:
-            RulesFolderRepNode ruleFolder = new RulesFolderRepNode(folder, node, ENodeType.SYSTEM_FOLDER);
+            RulesFolderRepNode ruleFolder = new RulesFolderRepNode(folder, parentNode, ENodeType.SYSTEM_FOLDER);
             folder.setRepositoryNode(ruleFolder);
-            node.getChildren().add(ruleFolder);
+            parentNode.getChildren().add(ruleFolder);
             return ruleFolder;
         case DB_CONNECTIONS:
-            DBConnectionFolderRepNode dbFolder = new DBConnectionFolderRepNode(folder, node, ENodeType.SYSTEM_FOLDER);
+            DBConnectionFolderRepNode dbFolder = new DBConnectionFolderRepNode(folder, parentNode, ENodeType.SYSTEM_FOLDER);
             folder.setRepositoryNode(dbFolder);
-            node.getChildren().add(dbFolder);
+            parentNode.getChildren().add(dbFolder);
             return dbFolder;
         case MDM_CONNECTIONS:
-            MDMConnectionFolderRepNode mdmFolder = new MDMConnectionFolderRepNode(folder, node, ENodeType.SYSTEM_FOLDER);
+            MDMConnectionFolderRepNode mdmFolder = new MDMConnectionFolderRepNode(folder, parentNode, ENodeType.SYSTEM_FOLDER);
             folder.setRepositoryNode(mdmFolder);
-            node.getChildren().add(mdmFolder);
+            parentNode.getChildren().add(mdmFolder);
             return mdmFolder;
         case FILEDELIMITED:
-            DFConnectionFolderRepNode dfmFolder = new DFConnectionFolderRepNode(folder, node, ENodeType.SYSTEM_FOLDER);
+            DFConnectionFolderRepNode dfmFolder = new DFConnectionFolderRepNode(folder, parentNode, ENodeType.SYSTEM_FOLDER);
             folder.setRepositoryNode(dfmFolder);
-            node.getChildren().add(dfmFolder);
+            parentNode.getChildren().add(dfmFolder);
             return dfmFolder;
         case EXCHANGE:
-            ExchangeFolderRepNode exchangeFolder = new ExchangeFolderRepNode(folder, node, ENodeType.SYSTEM_FOLDER);
+            ExchangeFolderRepNode exchangeFolder = new ExchangeFolderRepNode(folder, parentNode, ENodeType.SYSTEM_FOLDER);
             folder.setRepositoryNode(exchangeFolder);
-            node.getChildren().add(exchangeFolder);
+            parentNode.getChildren().add(exchangeFolder);
             return exchangeFolder;
         default:
-            subFolderNode = new DQRepositoryNode(folder, node, ENodeType.SYSTEM_FOLDER);
+            subFolderNode = new DQRepositoryNode(folder, parentNode, ENodeType.SYSTEM_FOLDER);
             folder.setRepositoryNode(subFolderNode);
-            node.getChildren().add(subFolderNode);
+            parentNode.getChildren().add(subFolderNode);
             if (resConstant.equals(EResourceConstant.PATTERNS)) {
                 // MOD gdbu 2011-8-26 bug 23303 : initialization regex and sql folder when initialization pattern folder
-                createRepositoryNodeSystemFolder(folderHelper, subFolderNode, EResourceConstant.PATTERN_REGEX);
-                createRepositoryNodeSystemFolder(folderHelper, subFolderNode, EResourceConstant.PATTERN_SQL);
+                createRepositoryNodeSubSystemFolder(subFolderNode, EResourceConstant.PATTERN_REGEX);
+                createRepositoryNodeSubSystemFolder(subFolderNode, EResourceConstant.PATTERN_SQL);
             }
             break;
         }
         return subFolderNode;
+
     }
 
     /**
@@ -200,12 +227,31 @@ public final class RepositoryNodeBuilder {
      * @param resConstants
      * @return
      * @throws PersistenceException
+     * @deprecated use {@link #createRepositoryNodeSystemFolders(RepositoryNode, List)} instead
      */
+    @Deprecated
     public List<RepositoryNode> createRepositoryNodeSystemFolders(FolderHelper folderHelper, RepositoryNode node,
             List<EResourceConstant> resConstants) throws PersistenceException {
         List<RepositoryNode> repositoryNodes = new ArrayList<RepositoryNode>();
         for (EResourceConstant resConstant : resConstants) {
             repositoryNodes.add(createRepositoryNodeSystemFolder(folderHelper, node, resConstant));
+        }
+        return repositoryNodes;
+    }
+
+    /**
+     * create repository node for a system folder
+     * 
+     * @param node
+     * @param resConstants
+     * @return sub node list
+     * @throws PersistenceException
+     */
+    public List<RepositoryNode> createRepositoryNodeSystemFolders(RepositoryNode node, List<EResourceConstant> resConstants)
+            throws PersistenceException {
+        List<RepositoryNode> repositoryNodes = new ArrayList<RepositoryNode>();
+        for (EResourceConstant resConstant : resConstants) {
+            repositoryNodes.add(createRepositoryNodeSubSystemFolder(node, resConstant));
         }
         return repositoryNodes;
     }
@@ -272,6 +318,15 @@ public final class RepositoryNodeBuilder {
         return list;
     }
 
+    /**
+     * 
+     * create a Local folder Helper
+     * 
+     * @return Local Folder helper
+     * 
+     * @deprecated use {@link AbstractEMFRepositoryFactory#getFolderHelper()} instead.
+     */
+    @Deprecated
     public FolderHelper getFolderHelper() {
         RepositoryContext repositoryContext = (RepositoryContext) CoreRuntimePlugin.getInstance().getContext()
                 .getProperty(Context.REPOSITORY_CONTEXT_KEY);
@@ -330,9 +385,11 @@ public final class RepositoryNodeBuilder {
     }
 
     public Folder getObjectFolder(EResourceConstant resConstant) {
-        FolderHelper folderHelper = getFolderHelper();
-        FolderItem folder2 = folderHelper.getFolder(resConstant.getPath());
-        Folder folder = new Folder(folder2.getProperty(), retrieveRepObjectTypeByPath(resConstant.getPath()));
+        Project currentProject = ProjectManager.getInstance().getCurrentProject();
+        ERepositoryObjectType repositoryObjectType = retrieveRepObjectTypeByPath(resConstant.getPath());
+        FolderItem folderItem = ProxyRepositoryFactory.getInstance().getFolderItem(currentProject, repositoryObjectType,
+                Path.EMPTY);
+        Folder folder = new Folder(folderItem.getProperty(), retrieveRepObjectTypeByPath(resConstant.getPath()));
         return folder;
     }
 }
