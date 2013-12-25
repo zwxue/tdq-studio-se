@@ -52,6 +52,7 @@ import org.talend.core.model.metadata.builder.connection.MetadataTable;
 import org.talend.core.model.metadata.builder.connection.impl.ConnectionImpl;
 import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.properties.FolderItem;
+import org.talend.core.model.properties.FolderType;
 import org.talend.core.model.properties.Item;
 import org.talend.core.model.properties.Property;
 import org.talend.core.model.properties.TDQItem;
@@ -2005,15 +2006,22 @@ public final class RepositoryNodeHelper {
                 if (node.isBin()) {
                     continue;
                 }
-                String viewFolderID = node.getObject().getProperty().getId();
+                // sometimes the systemFolderItem will be recreate so we compare label attribute instead of compare
+                // id(for example, SvnBaseRepositoryFactory#updateProject() line:1277)
                 if (folderItem != null) {
-                    String folderID = folderItem.getProperty().getId();
-                    if (viewFolderID.equals(folderID)) {
-                        return node;
+                    boolean isSysFolder = ENodeType.SYSTEM_FOLDER == node.getType()
+                            && FolderType.SYSTEM_FOLDER_LITERAL == folderItem.getType();
+                    if (isSysFolder) {
+                        String viewFolderLabel = folderItem.getProperty().getLabel();
+                        String folderLabel = node.getObject().getProperty().getLabel();
+                        if (viewFolderLabel.equals(folderLabel)) {
+                            return node;
+                        }
                     }
                 }
             }
         }
+        log.error(Messages.getString("RepositoryNodeHelper.canNotFindRootNode") + nodeName.getLabel()); //$NON-NLS-1$
         return node;
     }
 
