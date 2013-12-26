@@ -9,7 +9,6 @@ import java.math.BigInteger;
 import java.util.List;
 
 import org.eclipse.emf.common.util.EList;
-import org.eclipse.emf.ecore.EObject;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dataquality.rules.JoinElement;
 import orgomg.cwm.objectmodel.core.Expression;
@@ -481,19 +480,28 @@ public interface Indicator extends ModelElement {
     String getInstanceValue();
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * <!-- begin-model-doc -->
-     * Returns true if the previously handled data must be added to the list of data to be viewable. For example, if this indicator is the null count indicator and the previous data passed to the handle(data) method was null, then this method must return true because the row containing this null value must be stored in order the user to be able to drill down in the rows which contain nulls.
-     * <!-- end-model-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc --> <!-- begin-model-doc --> Returns true if the previously handled
+     * data must be added to the list of data to be viewable. For example, if this indicator is the null count indicator
+     * and the previous data passed to the handle(data) method was null, then this method must return true because the
+     * row containing this null value must be stored in order the user to be able to drill down in the rows which
+     * contain nulls. <!-- end-model-doc -->
+     * 
      * @model
-     * @generated
+     * @generated NOT
      */
     boolean mustStoreRow();
 
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
+     * @model
+     * @generated NOT
+     */
+    void setMustStoreRow(boolean mustStoreRow);
+
+    /**
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * 
      * @model datasMany="true"
      * @generated
      */
