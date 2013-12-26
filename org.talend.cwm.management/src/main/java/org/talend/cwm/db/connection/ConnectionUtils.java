@@ -1976,7 +1976,7 @@ public final class ConnectionUtils {
                     DatabaseConnection dbConn = (DatabaseConnection) dataProvider;
                     IMetadataConnection metaConnection = ConvertionHelper.convert(dbConn);
                     dbConn = (DatabaseConnection) MetadataFillFactory.getDBInstance().fillUIConnParams(metaConnection, dbConn);
-                    if (dbConn != null) {
+                    if (dbConn != null && Platform.isRunning()) {
                         try {
                             ProxyRepositoryFactory.getInstance().save(item);
                         } catch (PersistenceException e) {
