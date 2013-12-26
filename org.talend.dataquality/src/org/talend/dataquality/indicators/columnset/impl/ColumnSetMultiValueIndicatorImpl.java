@@ -755,7 +755,7 @@ public class ColumnSetMultiValueIndicatorImpl extends CompositeIndicatorImpl imp
      */
     @Override
     public boolean storeSqlResults(List<Object[]> objects) {
-        if (this.isStoreData()) {
+        if (this.isStoreData() || this.mustStoreRow()) {
             this.setListRows(objects);
         } else {
             this.setListRows(new ArrayList<Object[]>());
