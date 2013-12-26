@@ -140,9 +140,10 @@ public final class PropertyHelper {
 
         return null;
     }
-/**
- * getItemFile from the resource of property
- */
+
+    /**
+     * getItemFile from the resource of property
+     */
     public static IFile getModelElementFile(Resource propertyResource) {
         assert propertyResource != null;
         if (propertyResource.getURI().isPlatform()) {
@@ -246,6 +247,9 @@ public final class PropertyHelper {
      * @return property or null
      */
     public static Property getProperty(ModelElement element) {
+        if (element.eIsProxy()) {
+            element = (ModelElement) EObjectHelper.resolveObject(element);
+        }
         URI uri = element.eResource() == null ? null : element.eResource().getURI();
         if (uri != null) {
             if (uri.isPlatform()) {
