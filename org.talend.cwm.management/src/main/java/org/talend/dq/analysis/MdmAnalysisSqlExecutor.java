@@ -106,12 +106,13 @@ public class MdmAnalysisSqlExecutor extends MdmAnalysisExecutor {
             AnalysisExecutionException {
         ModelElement analyzedElement = indicator.getAnalyzedElement();
         if (analyzedElement == null) {
-            return traceError(Messages.getString("ColumnAnalysisSqlExecutor.ANALYSISELEMENTISNULL", indicator.getName()));//$NON-NLS-1$
+            traceError(Messages.getString("ColumnAnalysisSqlExecutor.ANALYSISELEMENTISNULL", indicator.getName()));//$NON-NLS-1$
+            return Boolean.FALSE;
         }
         TdXmlElementType xmlElement = SwitchHelpers.XMLELEMENTTYPE_SWITCH.doSwitch(indicator.getAnalyzedElement());
         if (xmlElement == null) {
-            return traceError(Messages
-                    .getString("MdmAnalysisSqlExecutor.   ANALYZEDELEMENTISNOTAXMLELEMENT", indicator.getName()));//$NON-NLS-1$
+            traceError(Messages.getString("MdmAnalysisSqlExecutor.   ANALYZEDELEMENTISNOTAXMLELEMENT", indicator.getName()));//$NON-NLS-1$
+            return Boolean.FALSE;
         }
         // String elementName = XmlElementHelper.getFullName(xmlElement);
         String elementName = xmlElement.getName();
@@ -128,7 +129,8 @@ public class MdmAnalysisSqlExecutor extends MdmAnalysisExecutor {
             indicatorDefinition = DefinitionHandler.getInstance().getIndicatorDefinition(label);
         }
         if (indicatorDefinition == null) {
-            return traceError(Messages.getString("ColumnAnalysisSqlExecutor.INTERNALERROR", indicator.getName()));//$NON-NLS-1$
+            traceError(Messages.getString("ColumnAnalysisSqlExecutor.INTERNALERROR", indicator.getName()));//$NON-NLS-1$
+            return Boolean.FALSE;
         }
         sqlGenericExpression = dbms().getSqlExpression(indicatorDefinition);
         final EClass indicatorEclass = indicator.eClass();
@@ -136,11 +138,13 @@ public class MdmAnalysisSqlExecutor extends MdmAnalysisExecutor {
             // when the indicator is a pattern indicator, a possible cause is that the DB does not support regular
             // expressions.
             if (IndicatorsPackage.eINSTANCE.getRegexpMatchingIndicator().equals(indicatorEclass)) {
-                return traceError(Messages.getString("ColumnAnalysisSqlExecutor.PLEASEREMOVEALLPATTEN", language));//$NON-NLS-1$
+                traceError(Messages.getString("ColumnAnalysisSqlExecutor.PLEASEREMOVEALLPATTEN", language));//$NON-NLS-1$
+                return Boolean.FALSE;
             }
-            return traceError(Messages
+            traceError(Messages
                     .getString(
                             "ColumnAnalysisSqlExecutor.UNSUPPORTEDINDICATOR", (indicator.getName() != null ? indicator.getName() : indicatorEclass.getName()), ResourceHelper.getUUID(indicatorDefinition)));//$NON-NLS-1$
+            return Boolean.FALSE;
         }
         // --- get indicator parameters and convert them into sql expression
         List<String> whereExpression = new ArrayList<String>();
@@ -184,8 +188,9 @@ public class MdmAnalysisSqlExecutor extends MdmAnalysisExecutor {
         boolean ok = true;
         TypedReturnCode<MdmWebserviceConnection> trc = this.getMdmConnection(analysis);
         if (!trc.isOk()) {
-            return traceError(Messages.getString(
+            traceError(Messages.getString(
                     "FunctionalDependencyExecutor.CANNOTEXECUTEANALYSIS", analysis.getName(), trc.getMessage()));//$NON-NLS-1$
+            return Boolean.FALSE;
         }
 
         MdmWebserviceConnection connection = trc.getObject();
@@ -203,15 +208,19 @@ public class MdmAnalysisSqlExecutor extends MdmAnalysisExecutor {
 
         } catch (RemoteException e) {
             log.error(e.getMessage(), e);
-            this.errorMessage = e.getMessage();
+            setError(e.getMessage());
             // FIXME remove the following information once profiling of SQL mode MDM is supported
-            if (this.errorMessage.contains("Unable to perform a direct query")) { //$NON-NLS-1$
-                this.errorMessage = Messages.getString("MdmAnalysisSqlExecutor.SQLMODEUNSUPPORTED");
+            String unableDirectQueryStr = "Unable to perform a direct query";
+            if (getErrorMessage().contains(unableDirectQueryStr)) {
+                String sqlModeUnsupportedStr = Messages.getString("MdmAnalysisSqlExecutor.SQLMODEUNSUPPORTED"); //$NON-NLS-1$
+                String refactoredErrorMessage = StringUtils.replace(getErrorMessage(), unableDirectQueryStr,
+                        sqlModeUnsupportedStr, -1);
+                setError(refactoredErrorMessage);
             }
             ok = false;
         } catch (ServiceException e) {
             log.error(e.getMessage(), e);
-            this.errorMessage = e.getMessage();
+            setError(e.getMessage());
             ok = false;
         } finally {
             // ConnectionUtils.closeConnection(connection);
@@ -232,27 +241,36 @@ public class MdmAnalysisSqlExecutor extends MdmAnalysisExecutor {
     private boolean runAnalysisIndicators(MdmWebserviceConnection connection,
             Map<ModelElement, List<Indicator>> elementToIndicator, Collection<Indicator> indicators) throws RemoteException,
             ServiceException {
-        boolean ok = true;
+        boolean isSuccess = Boolean.TRUE;
         for (Indicator indicator : indicators) {
             // skip composite indicators that do not require a sql execution
             if (indicator instanceof CompositeIndicator) {
                 // options of composite indicators are handled elsewhere
                 continue;
             }
-
-            Expression query = dbms().getInstantiatedExpression(indicator);
-            if (query == null || !executeQuery(indicator, connection, query.getBody())) {
-                ok = traceError("Query not executed for indicator: \"" + indicator.getName() + "\" "//$NON-NLS-1$//$NON-NLS-2$
-                        + ((query == null) ? "query is null" : "SQL query: " + query.getBody()));//$NON-NLS-1$//$NON-NLS-2$
-            } else {
-                // set computation done
-                indicator.setComputed(true);
-            }
-
             // add mapping of analyzed elements to their indicators
             MultiMapHelper.addUniqueObjectToListMap(indicator.getAnalyzedElement(), indicator, elementToIndicator);
+
+            Expression query = dbms().getInstantiatedExpression(indicator);
+            if (query == null) {
+                // TODO externalize the strings.
+                traceError("Query not executed for indicator: \"" + indicator.getName() + "\" "//$NON-NLS-1$//$NON-NLS-2$
+                        + "query is null");//$NON-NLS-1$
+                isSuccess = Boolean.FALSE;
+                continue;
+            }
+            Boolean isExeSuccess = executeQuery(indicator, connection, query.getBody());
+            if (!isExeSuccess) {
+                traceError("Query not executed for indicator: \"" + indicator.getName() + "\" "//$NON-NLS-1$//$NON-NLS-2$
+                        + "SQL query: " + query.getBody());//$NON-NLS-1$
+                isSuccess = Boolean.FALSE;
+                continue;
+            }
+            // set computation done
+            indicator.setComputed(true);
+
         }
-        return ok;
+        return isSuccess;
     }
 
     /**

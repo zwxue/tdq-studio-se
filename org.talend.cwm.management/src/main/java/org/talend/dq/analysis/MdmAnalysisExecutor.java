@@ -75,7 +75,7 @@ public class MdmAnalysisExecutor extends AnalysisExecutor {
             }
             // --- get the schema owner
             if (!belongToSameDocument(tdXmlElement)) {
-                this.errorMessage = Messages.getString("ColumnAnalysisExecutor.GivenColumn", tdXmlElement.getName()); //$NON-NLS-1$
+                setError(Messages.getString("ColumnAnalysisExecutor.GivenColumn", tdXmlElement.getName()));//$NON-NLS-1$
                 return false;
             }
             // String columnName = ColumnHelper.getFullName(tdColumn);
@@ -86,7 +86,7 @@ public class MdmAnalysisExecutor extends AnalysisExecutor {
         // open a connection
         if (!mdmReturnObj.isOk()) {
             log.error(mdmReturnObj.getMessage());
-            this.errorMessage = mdmReturnObj.getMessage();
+            setError(mdmReturnObj.getMessage());
             return false;
         }
         eval.setMdmconn(mdmReturnObj.getObject());
@@ -94,7 +94,7 @@ public class MdmAnalysisExecutor extends AnalysisExecutor {
         ReturnCode rc = eval.evaluateIndicators(sqlStatement, closeAtTheEnd);
         if (!rc.isOk()) {
             log.warn(rc.getMessage());
-            this.errorMessage = rc.getMessage();
+            setError(rc.getMessage());
         }
         return true;
     }
@@ -117,8 +117,8 @@ public class MdmAnalysisExecutor extends AnalysisExecutor {
         StringBuilder selectElement = new StringBuilder();
         EList<ModelElement> analysedElements = analysis.getContext().getAnalysedElements();
         if (analysedElements.isEmpty()) {
-            this.errorMessage = Messages.getString("ColumnAnalysisExecutor.CannotCreateSQLStatement",//$NON-NLS-1$
-                    analysis.getName());
+            setError(Messages.getString("ColumnAnalysisExecutor.CannotCreateSQLStatement",//$NON-NLS-1$
+                    analysis.getName()));
             return null;
         }
         Set<TdXmlSchema> fromPart = new HashSet<TdXmlSchema>();
@@ -131,17 +131,17 @@ public class MdmAnalysisExecutor extends AnalysisExecutor {
             // --- preconditions
             TdXmlElementType tdXmlElement = SwitchHelpers.XMLELEMENTTYPE_SWITCH.doSwitch(modelElement);
             if (tdXmlElement == null) {
-                this.errorMessage = Messages.getString("MdmAnalysisExecutor.GIVENELEMENTCANNOTUSE");//$NON-NLS-1$
+                setError(Messages.getString("MdmAnalysisExecutor.GIVENELEMENTCANNOTUSE"));//$NON-NLS-1$
                 return null;
             }
             ModelElement parentElement = XmlElementHelper.getParentElement(tdXmlElement);
             if (parentElement == null) {
-                this.errorMessage = Messages.getString("ColumnAnalysisExecutor.NoOwnerFound", tdXmlElement.getName()); //$NON-NLS-1$
+                setError(Messages.getString("ColumnAnalysisExecutor.NoOwnerFound", tdXmlElement.getName())); //$NON-NLS-1$
                 return null;
             }
             TdXmlElementType parentXmlElement = SwitchHelpers.XMLELEMENTTYPE_SWITCH.doSwitch(parentElement);
             if (parentXmlElement == null) {
-                this.errorMessage = Messages.getString("ColumnAnalysisExecutor.NoContainerFound", parentElement.getName()); //$NON-NLS-1$
+                setError(Messages.getString("ColumnAnalysisExecutor.NoContainerFound", parentElement.getName())); //$NON-NLS-1$
                 return null;
             }
             xmlDocument = parentXmlElement.getOwnedDocument();
@@ -163,7 +163,7 @@ public class MdmAnalysisExecutor extends AnalysisExecutor {
         }
         if (fromPart.size() != 1) {
             log.error(Messages.getString("ColumnAnalysisExecutor.ANALYSISMUSTRUNONONETABLE") + fromPart.size());//$NON-NLS-1$
-            this.errorMessage = Messages.getString("ColumnAnalysisExecutor.ANALYSISMUSTRUNONONETABLEERRORMESSAGE");//$NON-NLS-1$
+            setError(Messages.getString("ColumnAnalysisExecutor.ANALYSISMUSTRUNONONETABLEERRORMESSAGE"));//$NON-NLS-1$
             return null;
         }
         if (analysis.getParameters().isStoreData()) {
@@ -191,7 +191,7 @@ public class MdmAnalysisExecutor extends AnalysisExecutor {
         }
 
         if (selectElement.length() <= 0) {
-            this.errorMessage = Messages.getString("MdmAnalysisExecutor.NOTANAELEMENTTOBECHOICE");//$NON-NLS-1$
+            setError(Messages.getString("MdmAnalysisExecutor.NOTANAELEMENTTOBECHOICE")); //$NON-NLS-1$
             return null;
         }
         // MOD qiongli 2012-6-19 TDQ-5139.in order to query accurately,should use like
@@ -231,7 +231,7 @@ public class MdmAnalysisExecutor extends AnalysisExecutor {
         sql.append(parentAnalyzedElementName);
         sql.append(") then ");//$NON-NLS-1$
         // replace 'selectElement' with 'parentAnalyzedElementName',parentAnalyzedElementName contain all elements
-        sql.append("$").append(parentAnalyzedElementName);
+        sql.append("$").append(parentAnalyzedElementName); //$NON-NLS-1$
         // sql.append(selectElement);
         sql.append(" else <null/>}</result> return insert-before($_page_,0,<totalCount>{count($_leres1_)}</totalCount>)");//$NON-NLS-1$
         return sql.toString();
@@ -240,7 +240,7 @@ public class MdmAnalysisExecutor extends AnalysisExecutor {
     @Override
     protected boolean check(final Analysis analysis) {
         if (analysis == null) {
-            this.errorMessage = Messages.getString("ColumnAnalysisExecutor.AnalysisIsNull"); //$NON-NLS-1$
+            setError(Messages.getString("ColumnAnalysisExecutor.AnalysisIsNull")); //$NON-NLS-1$
             return false;
         }
 
@@ -252,7 +252,7 @@ public class MdmAnalysisExecutor extends AnalysisExecutor {
         // --- check that there exists at least on element to analyze
         AnalysisContext context = analysis.getContext();
         if (context.getAnalysedElements().size() == 0) {
-            this.errorMessage = Messages.getString("ColumnAnalysisExecutor.AnalysisHaveAtLeastOneColumn"); //$NON-NLS-1$
+            setError(Messages.getString("ColumnAnalysisExecutor.AnalysisHaveAtLeastOneColumn")); //$NON-NLS-1$
             return false;
         }
 
@@ -275,15 +275,15 @@ public class MdmAnalysisExecutor extends AnalysisExecutor {
 
             // --- Check that each analyzed element has at least one indicator
             if (analysisHandler.getIndicators(xmlElement).size() == 0) {
-                this.errorMessage = Messages.getString("ColumnAnalysisExecutor.EachColumnHaveOneIndicator"); //$NON-NLS-1$
+                setError(Messages.getString("ColumnAnalysisExecutor.EachColumnHaveOneIndicator")); //$NON-NLS-1$
                 return false;
             }
 
             // --- get the data provider
             Connection dp = ConnectionHelper.getTdDataProvider(xmlElement.getOwnedDocument());
             if (!isAccessWith(dp)) {
-                this.errorMessage = Messages.getString("ColumnAnalysisExecutor.AllColumnsBelongSameConnection", //$NON-NLS-1$
-                        xmlElement.getName(), dataprovider.getName());
+                setError(Messages.getString("ColumnAnalysisExecutor.AllColumnsBelongSameConnection", //$NON-NLS-1$
+                        xmlElement.getName(), dataprovider.getName()));
                 return false;
             }
         }

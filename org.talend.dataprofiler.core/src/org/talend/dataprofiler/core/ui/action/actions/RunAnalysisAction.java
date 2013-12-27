@@ -14,6 +14,7 @@ package org.talend.dataprofiler.core.ui.action.actions;
 
 import java.text.DecimalFormat;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
@@ -84,6 +85,7 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
 
     private boolean isNeedUnlock = false;
 
+    @SuppressWarnings("unused")
     @Deprecated
     private AnalysisRepNode node;// no need to used
 
@@ -379,7 +381,7 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
 
         }
 
-        if (executed.getMessage() != null) {
+        if (!StringUtils.isEmpty(executed.getMessage())) {
             Display.getDefault().asyncExec(new Runnable() {
 
                 public void run() {

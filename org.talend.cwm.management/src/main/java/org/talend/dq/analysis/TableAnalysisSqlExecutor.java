@@ -109,11 +109,13 @@ public class TableAnalysisSqlExecutor extends TableAnalysisExecutor {
             AnalysisExecutionException {
         ModelElement analyzedElement = indicator.getAnalyzedElement();
         if (analyzedElement == null) {
-            return traceError("Analyzed element is null for indicator " + indicator.getName());//$NON-NLS-1$
+            traceError("Analyzed element is null for indicator " + indicator.getName());//$NON-NLS-1$
+            return Boolean.FALSE;
         }
         NamedColumnSet set = SwitchHelpers.NAMED_COLUMN_SET_SWITCH.doSwitch(indicator.getAnalyzedElement());
         if (set == null) {
-            return traceError("Analyzed element is not a table for indicator " + indicator.getName());//$NON-NLS-1$
+            traceError("Analyzed element is not a table for indicator " + indicator.getName());//$NON-NLS-1$
+            return Boolean.FALSE;
         }
         // --- get the schema owner
         String setName = quote(set.getName());
@@ -136,16 +138,18 @@ public class TableAnalysisSqlExecutor extends TableAnalysisExecutor {
 
         IndicatorDefinition indicatorDefinition = indicator.getIndicatorDefinition();
         if (indicatorDefinition == null) {
-            return traceError(Messages.getString("ColumnAnalysisSqlExecutor.INTERNALERROR", indicator.getName()));//$NON-NLS-1$
+            traceError(Messages.getString("ColumnAnalysisSqlExecutor.INTERNALERROR", indicator.getName()));//$NON-NLS-1$
+            return Boolean.FALSE;
         }
         sqlGenericExpression = dbms().getSqlExpression(indicatorDefinition);
 
         final EClass indicatorEclass = indicator.eClass();
         if (sqlGenericExpression == null || sqlGenericExpression.getBody() == null) {
-            return traceError(Messages.getString(
+            traceError(Messages.getString(
                     "ColumnAnalysisSqlExecutor.UNSUPPORTEDINDICATOR",//$NON-NLS-1$
                     (indicator.getName() != null ? indicator.getName() : indicatorEclass.getName()),
                     ResourceHelper.getUUID(indicatorDefinition)));
+            return Boolean.FALSE;
         }
 
         // --- get indicator parameters and convert them into sql expression
@@ -213,26 +217,22 @@ public class TableAnalysisSqlExecutor extends TableAnalysisExecutor {
         return true;
     }
 
-    @Override
-    protected boolean traceError(String error) {
-        this.errorMessage = error;
-        log.error(this.errorMessage);
-        return false;
-    }
-
-    protected boolean belongToSameSchemata(final TdTable tdTable) {
+    protected TypedReturnCode<Boolean> belongToSameSchemata(final TdTable tdTable) {
+        TypedReturnCode<Boolean> returnCode = new TypedReturnCode<Boolean>(Boolean.TRUE);
         assert tdTable != null;
         if (schemata.get(tdTable) != null) {
-            return true;
+            return returnCode;
         }
         // get catalog or schema
         Package schema = ColumnSetHelper.getParentCatalogOrSchema(tdTable);
         if (schema == null) {
-            this.errorMessage = Messages.getString("TableAnalysisSqlExecutor.NoSchemaOrCatalogFound", tdTable.getName()); //$NON-NLS-1$
-            return false;
+            String errorMessage = Messages.getString("TableAnalysisSqlExecutor.NoSchemaOrCatalogFound", tdTable.getName()); //$NON-NLS-1$
+            returnCode.setMessage(errorMessage);
+            returnCode.setOk(Boolean.FALSE);
+            return returnCode;
         }
         schemata.put(tdTable, schema);
-        return true;
+        return returnCode;
     }
 
     @Override
@@ -296,15 +296,15 @@ public class TableAnalysisSqlExecutor extends TableAnalysisExecutor {
 
     @Override
     protected boolean runAnalysis(Analysis analysis, String sqlStatement) {
-        boolean ok = true;
+        boolean isSuccess = true;
 
         TypedReturnCode<java.sql.Connection> trc = this.getConnectionBeforeRun(analysis);
 
         if (!trc.isOk()) {
             log.error(trc.getMessage());
-            this.errorMessage = trc.getMessage();
-            return traceError(Messages.getString(
+            traceError(Messages.getString(
                     "FunctionalDependencyExecutor.CANNOTEXECUTEANALYSIS", analysis.getName(), trc.getMessage()));//$NON-NLS-1$
+            return Boolean.FALSE;
         }
 
         Connection connection = trc.getObject();
@@ -327,12 +327,27 @@ public class TableAnalysisSqlExecutor extends TableAnalysisExecutor {
                 }
 
                 Expression query = dbms().getInstantiatedExpression(indicator);
-                if (query == null || !executeQuery(indicator, connection, query.getBody())) {
-                    ok = traceError("Query not executed for indicator: \"" + indicator.getName() + "\" "//$NON-NLS-1$//$NON-NLS-2$
-                            + ((query == null) ? "query is null" : "SQL query: " + query.getBody()));//$NON-NLS-1$//$NON-NLS-2$
-                } else {
-                    indicator.setComputed(true);
+                if (query == null) {
+                    traceError("Query not executed for indicator: \"" + indicator.getName() + "\" "//$NON-NLS-1$//$NON-NLS-2$
+                            + "query is null");//$NON-NLS-1$
+                    isSuccess = Boolean.FALSE;
+                    continue;
                 }
+                try {
+                    Boolean isExecSuccess = executeQuery(indicator, connection, query.getBody());
+                    if (!isExecSuccess) {
+                        traceError("Query not executed for indicator: \"" + indicator.getName() + "\" "//$NON-NLS-1$//$NON-NLS-2$
+                                + "SQL query: " + query.getBody());//$NON-NLS-1$
+                        isSuccess = Boolean.FALSE;
+                        continue;
+                    }
+                } catch (Exception e) {
+                    log.error(e, e);
+                    setError(e.getMessage());
+                    isSuccess = Boolean.FALSE;
+                    continue;
+                }
+                indicator.setComputed(true);
 
                 // add mapping of analyzed elements to their indicators
                 MultiMapHelper.addUniqueObjectToListMap(indicator.getAnalyzedElement(), indicator, elementToIndicator);
@@ -343,19 +358,15 @@ public class TableAnalysisSqlExecutor extends TableAnalysisExecutor {
             // set the aide count for the DQRule indicator
             setDQRuleAideCount(elementToIndicator);
             // ~ TDQ-5057
-        } catch (Exception e) {
-            log.error(e, e);
-            this.errorMessage = e.getMessage();
-            ok = false;
         } finally {
             ReturnCode rc = closeConnection(analysis, connection);
-            ok = ok && rc.isOk();
-            if (!ok && rc.getMessage() != null) {
-                this.errorMessage = this.errorMessage + "," + rc.getMessage();//$NON-NLS-1$
+            if (!rc.isOk()) {
+                appendError(rc.getMessage());
+                isSuccess = Boolean.FALSE;
             }
 
         }
-        return ok;
+        return isSuccess;
     }
 
     /**
@@ -422,9 +433,11 @@ public class TableAnalysisSqlExecutor extends TableAnalysisExecutor {
             }
             return true;
         } catch (RuntimeException e) {
-            return traceError(Messages.getString("ColumnAnalysisSqlExecutor.ERRORWHENSETCATALOG", catalogName, e.getMessage()));//$NON-NLS-1$
+            traceError(Messages.getString("ColumnAnalysisSqlExecutor.ERRORWHENSETCATALOG", catalogName, e.getMessage()));//$NON-NLS-1$
+            return Boolean.FALSE;
         } catch (SQLException e) {
-            return traceError(Messages.getString("ColumnAnalysisSqlExecutor.ERRORWHENSETCATALOGSQL", catalogName, e.getMessage()));//$NON-NLS-1$
+            traceError(Messages.getString("ColumnAnalysisSqlExecutor.ERRORWHENSETCATALOGSQL", catalogName, e.getMessage()));//$NON-NLS-1$
+            return Boolean.FALSE;
         }
     }
 

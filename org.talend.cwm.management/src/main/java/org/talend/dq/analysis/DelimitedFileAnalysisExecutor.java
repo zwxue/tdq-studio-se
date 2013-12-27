@@ -68,7 +68,7 @@ public class DelimitedFileAnalysisExecutor extends AnalysisExecutor {
         ReturnCode rc = eval.evaluateIndicators(sqlStatement, true);
         if (!rc.isOk()) {
             log.warn(rc.getMessage());
-            this.errorMessage = rc.getMessage();
+            setError(rc.getMessage());
         }
         return rc.isOk();
     }
@@ -76,7 +76,7 @@ public class DelimitedFileAnalysisExecutor extends AnalysisExecutor {
     @Override
     protected boolean check(final Analysis analysis) {
         if (analysis == null) {
-            this.errorMessage = Messages.getString("ColumnAnalysisExecutor.AnalysisIsNull"); //$NON-NLS-1$
+            setError(Messages.getString("ColumnAnalysisExecutor.AnalysisIsNull")); //$NON-NLS-1$
             return false;
         }
         if (!super.check(analysis)) {
@@ -87,7 +87,7 @@ public class DelimitedFileAnalysisExecutor extends AnalysisExecutor {
         // --- check that there exists at least on element to analyze
         AnalysisContext context = analysis.getContext();
         if (context.getAnalysedElements().size() == 0) {
-            this.errorMessage = Messages.getString("ColumnAnalysisExecutor.AnalysisHaveAtLeastOneColumn"); //$NON-NLS-1$
+            setError(Messages.getString("ColumnAnalysisExecutor.AnalysisHaveAtLeastOneColumn")); //$NON-NLS-1$
             return false;
         }
 
@@ -103,15 +103,15 @@ public class DelimitedFileAnalysisExecutor extends AnalysisExecutor {
 
             // --- Check that each analyzed element has at least one indicator
             if (analysisHandler.getIndicators(column).size() == 0) {
-                this.errorMessage = Messages.getString("ColumnAnalysisExecutor.EachColumnHaveOneIndicator"); //$NON-NLS-1$
+                setError(Messages.getString("ColumnAnalysisExecutor.EachColumnHaveOneIndicator")); //$NON-NLS-1$
                 return false;
             }
 
             // --- get the data provider
             Connection dp = ConnectionHelper.getTdDataProvider(column);
             if (!isAccessWith(dp)) {
-                this.errorMessage = Messages.getString("ColumnAnalysisExecutor.AllColumnsBelongSameConnection", //$NON-NLS-1$
-                        column.getName(), dataprovider.getName());
+                setError(Messages.getString("ColumnAnalysisExecutor.AllColumnsBelongSameConnection", //$NON-NLS-1$
+                        column.getName(), dataprovider.getName()));
                 return false;
             }
         }

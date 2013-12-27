@@ -16,6 +16,7 @@ import java.lang.management.ManagementFactory;
 import java.sql.SQLException;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Platform;
@@ -58,8 +59,6 @@ public abstract class AnalysisExecutor implements IAnalysisExecutor {
 
     private static Logger log = Logger.getLogger(AnalysisExecutor.class);
 
-    protected String errorMessage;
-
     protected Boolean parallelExeStatus = Boolean.TRUE;
 
     protected static final boolean POOLED_CONNECTION = Boolean.TRUE;
@@ -78,6 +77,8 @@ public abstract class AnalysisExecutor implements IAnalysisExecutor {
     private long checkContinueCount = 0L;
 
     private boolean keepRunning = true;
+
+    private StringBuffer errorMessage = new StringBuffer();
 
     /**
      * Getter for usedMemory.
@@ -146,9 +147,9 @@ public abstract class AnalysisExecutor implements IAnalysisExecutor {
         // overwrite the current error messages
         AnalysisExecutorHelper.setExecutionNumberInAnalysisResult(analysis, ok);
         if (isLowMemory) {
-            errorMessage = Messages.getString("Evaluator.OutOfMomory", usedMemory);//$NON-NLS-1$
+            setError(Messages.getString("Evaluator.OutOfMomory", usedMemory));//$NON-NLS-1$
         }
-        AnalysisExecutorHelper.setExecuteErrorMessage(analysis, errorMessage);
+        AnalysisExecutorHelper.setExecuteErrorMessage(analysis, errorMessage.toString());
 
         // --- compute execution duration
         if (this.continueRun()) {
@@ -166,7 +167,7 @@ public abstract class AnalysisExecutor implements IAnalysisExecutor {
                 }
             }// ~
         }
-        return new ReturnCode(this.errorMessage, ok);
+        return new ReturnCode(this.errorMessage.toString(), ok);
     }
 
     /**
@@ -222,12 +223,12 @@ public abstract class AnalysisExecutor implements IAnalysisExecutor {
      * @return a return code with the last error message
      */
     protected ReturnCode getReturnCode(boolean ok) {
-        return ok ? new ReturnCode() : new ReturnCode(this.errorMessage, false);
+        return ok ? new ReturnCode() : new ReturnCode(this.errorMessage.toString(), false);
     }
 
     protected boolean check(Analysis analysis) {
         ReturnCode rc = AnalysisExecutorHelper.check(analysis);
-        this.errorMessage = rc.getMessage();
+        setError(rc.getMessage());
         return rc.isOk();
     }
 
@@ -242,7 +243,8 @@ public abstract class AnalysisExecutor implements IAnalysisExecutor {
         // Open connection
         TypedReturnCode<java.sql.Connection> connection = this.getConnectionBeforeRun(analysis);
         if (!connection.isOk()) {
-            return this.traceError(connection.getMessage());
+            traceError(connection.getMessage());
+            return Boolean.FALSE;
         }
 
         // abstract method
@@ -295,7 +297,7 @@ public abstract class AnalysisExecutor implements IAnalysisExecutor {
             } else {
                 rc = ConnectionUtils.closeConnection(connection);
                 if (!rc.isOk()) {
-                    this.errorMessage = rc.getMessage();
+                    setError(rc.getMessage());
                 }
             }
         } else {
@@ -307,15 +309,44 @@ public abstract class AnalysisExecutor implements IAnalysisExecutor {
     }
 
     /**
+     * Set the error.
+     * 
+     * @param error to be set.
+     */
+    protected void setError(String error) {
+        if (!StringUtils.isEmpty(error)) {
+            errorMessage = new StringBuffer(error);
+        }else{
+            errorMessage = new StringBuffer(PluginConstant.EMPTY_STRING);
+        }
+    }
+
+    /**
+     * 
+     * Append the error to error message buffer.
+     * 
+     * @param error the error message to be appended.
+     */
+    protected void appendError(String error) {
+        if (!StringUtils.isEmpty(errorMessage.toString())) {
+             errorMessage.append(PluginConstant.ENTER_STRING);
+        }
+        this.errorMessage.append(error);
+
+    }
+
+    protected String getErrorMessage() {
+        return errorMessage.toString();
+    }
+
+    /**
      * Method "traceError".
      * 
      * @param error the message to set in errorMessage
-     * @return always false
      */
-    protected boolean traceError(String error) {
-        this.errorMessage = error;
-        log.error(this.errorMessage);
-        return false;
+    protected void traceError(String error) {
+        log.error(error);
+        setError(error);
     }
 
     /**

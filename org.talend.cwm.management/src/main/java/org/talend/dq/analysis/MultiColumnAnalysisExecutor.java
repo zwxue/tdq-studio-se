@@ -86,12 +86,12 @@ public class MultiColumnAnalysisExecutor extends ColumnAnalysisSqlExecutor {
             final String caseStr = "SUM(CASE WHEN {0} IS NULL THEN 1 ELSE 0 END)";//$NON-NLS-1$
             if ("EXCEL".equals(dbms().getDbmsName()) //$NON-NLS-1$
                     && (dateFunctions.contains(caseStr) || numericFunctions.contains(caseStr))) {
-                this.errorMessage = Messages.getString("MultiColumnAnalysisExecutor.errMessage");//$NON-NLS-1$
+                setError(Messages.getString("MultiColumnAnalysisExecutor.errMessage")); //$NON-NLS-1$
                 Display.getDefault().syncExec(new Runnable() {
 
                     public void run() {
                         MessageDialog.openWarning(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
-                                Messages.getString("MultiColumnAnalysisExecutor.errTitle"), errorMessage); //$NON-NLS-1$
+                                Messages.getString("MultiColumnAnalysisExecutor.errTitle"), getErrorMessage()); //$NON-NLS-1$
                         return;
                     }
                 });
@@ -231,14 +231,15 @@ public class MultiColumnAnalysisExecutor extends ColumnAnalysisSqlExecutor {
      */
     @Override
     protected boolean runAnalysis(Analysis analysis, String sqlStatement) {
-        boolean ok = true;
+        boolean isSuccess = true;
 
         TypedReturnCode<java.sql.Connection> trc = this.getConnectionBeforeRun(analysis);
         if (!trc.isOk()) {
             log.error(trc.getMessage());
-            this.errorMessage = trc.getMessage();
-            return traceError(Messages.getString(
+            setError(trc.getMessage());
+            traceError(Messages.getString(
                     "FunctionalDependencyExecutor.CANNOTEXECUTEANALYSIS", analysis.getName(), trc.getMessage()));//$NON-NLS-1$
+            return Boolean.FALSE;
         }
 
         Connection connection = trc.getObject();
@@ -253,22 +254,36 @@ public class MultiColumnAnalysisExecutor extends ColumnAnalysisSqlExecutor {
                 }
                 Expression query = dbms().getInstantiatedExpression(indicator);
 
-                if (query == null || !executeQuery(indicator, connection, query)) {
-                    ok = traceError("Query not executed for indicator: \"" + indicator.getName() + "\" "//$NON-NLS-1$//$NON-NLS-2$
-                            + ((query == null) ? "query is null" : "SQL query: " + query.getBody()));//$NON-NLS-1$//$NON-NLS-2$
-                } else {
-                    indicator.setComputed(true);
+                if (query == null) {
+                    traceError("Query not executed for indicator: \"" + indicator.getName() + "\" "//$NON-NLS-1$//$NON-NLS-2$
+                            + "query is null");//$NON-NLS-1$
+                    isSuccess = Boolean.FALSE;
+                    continue;
+                }
+                try {
+                    Boolean isExeSuccess = executeQuery(indicator, connection, query);
+                    if (!isExeSuccess) {
+                        traceError("Query not executed for indicator: \"" + indicator.getName() + "\" "//$NON-NLS-1$//$NON-NLS-2$
+                                + ((query == null) ? "query is null" : "SQL query: " + query.getBody()));//$NON-NLS-1$//$NON-NLS-2$
+                        isSuccess = Boolean.FALSE;
+                        continue;
+                    }
+                } catch (Exception e) {
+                    traceError(e.getMessage());
+                    isSuccess = Boolean.FALSE;
+                    continue;
                 }
 
+                indicator.setComputed(true);
             }
 
-        } catch (Exception e) {
-            ok = traceError(e.getMessage());
         } finally {
             ReturnCode rc = closeConnection(analysis, connection);
-            ok = ok && rc.isOk();
+            if (!rc.isOk()) {
+                isSuccess = Boolean.FALSE;
+            }
         }
-        return ok;
+        return isSuccess;
     }
 
     /**
@@ -366,7 +381,7 @@ public class MultiColumnAnalysisExecutor extends ColumnAnalysisSqlExecutor {
             for (Indicator indicator : indicators) {
                 if (indicator instanceof AllMatchIndicator) {
                     // MOD qiongli 2011-6-16 bug 21768,column set dosen't support pattern in sql engine.
-                    this.errorMessage = Messages.getString("MultiColumnAnalysisExecutor.noSupportSqlEngine");//$NON-NLS-1$ 
+                    setError(Messages.getString("MultiColumnAnalysisExecutor.noSupportSqlEngine")); //$NON-NLS-1$ 
                     return false;
                 }
             }

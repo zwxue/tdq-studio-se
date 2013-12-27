@@ -61,18 +61,18 @@ public class FunctionalDependencyExecutor extends ColumnAnalysisSqlExecutor {
 
     }
 
+    @Override
     protected boolean runAnalysis(Analysis analysis, String sqlStatement) {
-        boolean ok = true;
-
+        Boolean runStatus = Boolean.TRUE;
         TypedReturnCode<java.sql.Connection> trc = this.getConnectionBeforeRun(analysis);
 
         if (!trc.isOk()) {
             log.error(trc.getMessage());
-            this.errorMessage = trc.getMessage();
-            return traceError(Messages.getString(
+            setError(trc.getMessage());
+            traceError(Messages.getString(
                     "FunctionalDependencyExecutor.CANNOTEXECUTEANALYSIS", analysis.getName(), trc.getMessage()));//$NON-NLS-1$
+            return Boolean.FALSE;
         }
-
         Connection connection = trc.getObject();
         try {
             // execute the sql statement for each indicator
@@ -84,22 +84,38 @@ public class FunctionalDependencyExecutor extends ColumnAnalysisSqlExecutor {
                 }
 
                 Expression query = dbms().getInstantiatedExpression(indicator);
-
-                if (query == null || !executeQuery(indicator, connection, query)) {
-                    ok = traceError("Query not executed for indicator: \"" + indicator.getName() + "\" "//$NON-NLS-1$//$NON-NLS-2$
-                            + ((query == null) ? "query is null" : "SQL query: " + query.getBody()));//$NON-NLS-1$//$NON-NLS-2$
-                } else {
-                    indicator.setComputed(true);
+                if (query == null) {
+                    // TODO internationalize the string.
+                    traceError("Query not executed for indicator: \"" + indicator.getName() + "\" "//$NON-NLS-1$//$NON-NLS-2$
+                            + "query is null");//$NON-NLS-1$
+                    runStatus = Boolean.FALSE;
+                    continue;
                 }
+
+                try {
+                    boolean exeStatus = executeQuery(indicator, connection, query);
+                    if (!exeStatus) {
+                        // TODO internationalize the string.
+                        traceError("Query not executed for indicator: \"" + indicator.getName() + "\" "//$NON-NLS-1$//$NON-NLS-2$
+                                + "SQL query: " + query.getBody());//$NON-NLS-1$
+                        runStatus = Boolean.FALSE;
+                        continue;
+                    }
+                } catch (AnalysisExecutionException e) {
+                    traceError(e.getMessage());
+                    runStatus = Boolean.FALSE;
+                    continue;
+                }
+                indicator.setComputed(true);
+
             }
-        } catch (AnalysisExecutionException e) {
-            ok = traceError(e.getMessage());
         } finally {
             ReturnCode rc = closeConnection(analysis, connection);
-            // MOD TDQ-8388 ok status should not be overwrite by the close return code.
-            ok = ok && rc.isOk();
+            if (!rc.isOk()) {
+                runStatus = Boolean.FALSE;
+            }
         }
-        return ok;
+        return runStatus;
     }
 
     private boolean executeQuery(Indicator indicator, Connection connection, Expression query) throws AnalysisExecutionException {
@@ -153,7 +169,8 @@ public class FunctionalDependencyExecutor extends ColumnAnalysisSqlExecutor {
             indicator.setInstantiatedExpression(instantiatedSqlExpression);
             return true;
         }
-        return traceError(Messages.getString("FunctionalDependencyExecutor.UNHANDLEDGIVENINDICATOR", indicator.getName()));//$NON-NLS-1$
+        traceError(Messages.getString("FunctionalDependencyExecutor.UNHANDLEDGIVENINDICATOR", indicator.getName()));//$NON-NLS-1$
+        return Boolean.FALSE;
     }
 
     /**

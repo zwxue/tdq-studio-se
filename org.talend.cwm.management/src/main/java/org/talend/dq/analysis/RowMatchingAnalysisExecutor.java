@@ -106,7 +106,8 @@ public class RowMatchingAnalysisExecutor extends ColumnAnalysisSqlExecutor {
             EList<TdColumn> columnSetA = rowMatchingIndicator.getColumnSetA();
             EList<TdColumn> columnSetB = rowMatchingIndicator.getColumnSetB();
             if (columnSetA.size() != columnSetB.size()) {
-                return traceError("Cannot compare two column sets with different size");//$NON-NLS-1$ 
+                traceError("Cannot compare two column sets with different size");//$NON-NLS-1$ 
+                return Boolean.FALSE;
                 // break;
             }
 
@@ -119,7 +120,8 @@ public class RowMatchingAnalysisExecutor extends ColumnAnalysisSqlExecutor {
             indicator.setInstantiatedExpression(instantiatedSqlExpression);
             return true;
         }
-        return traceError("Unhandled given indicator: " + indicator.getName());//$NON-NLS-1$
+        traceError("Unhandled given indicator: " + indicator.getName());//$NON-NLS-1$
+        return Boolean.FALSE;
     }
 
     /**
@@ -271,7 +273,10 @@ public class RowMatchingAnalysisExecutor extends ColumnAnalysisSqlExecutor {
     private String getTableName(EList<TdColumn> columnSetA) {
         String tableName = null;
         for (TdColumn column : columnSetA) {
-            if (column != null && column.eIsProxy()) {
+            if (column == null) {
+                continue;
+            }
+            if (column.eIsProxy()) {
                 column = (TdColumn) EObjectHelper.resolveObject(column);
             }
             if (belongToSameSchemata(column)) {
@@ -288,7 +293,7 @@ public class RowMatchingAnalysisExecutor extends ColumnAnalysisSqlExecutor {
                     break; // all columns should belong to the same table
                 }
             } else {
-                log.error(this.errorMessage);
+                log.error(getErrorMessage());
             }
         }
         return quote(tableName);
@@ -302,15 +307,16 @@ public class RowMatchingAnalysisExecutor extends ColumnAnalysisSqlExecutor {
      */
     @Override
     protected boolean runAnalysis(Analysis analysis, String sqlStatement) {
-        boolean ok = true;
+        boolean isSuccess = Boolean.TRUE;
 
         TypedReturnCode<java.sql.Connection> trc = this.getConnectionBeforeRun(analysis);
 
         if (!trc.isOk()) {
             log.error(trc.getMessage());
-            this.errorMessage = trc.getMessage();
-            return traceError(Messages.getString(
+            setError(trc.getMessage());
+            traceError(Messages.getString(
                     "FunctionalDependencyExecutor.CANNOTEXECUTEANALYSIS", analysis.getName(), trc.getMessage()));//$NON-NLS-1$
+            return Boolean.FALSE;
         }
 
         Connection connection = trc.getObject();
@@ -329,23 +335,37 @@ public class RowMatchingAnalysisExecutor extends ColumnAnalysisSqlExecutor {
                 }
                 Expression query = dbms().getInstantiatedExpression(indicator);
 
-                if (query == null || !executeQuery(indicator, connection, query)) {
-                    ok = traceError("Query not executed for indicator: \"" + indicator.getName() + "\" "//$NON-NLS-1$//$NON-NLS-2$
-                            + ((query == null) ? "query is null" : "SQL query: " + query.getBody()));//$NON-NLS-1$//$NON-NLS-2$
-                } else {
+                if (query == null) {
+                    traceError("Query not executed for indicator: \"" + indicator.getName() + "\" "//$NON-NLS-1$//$NON-NLS-2$
+                            + "query is null");//$NON-NLS-1$
+                    isSuccess = Boolean.FALSE;
+                    continue;
+                }
+
+                try {
+                    Boolean isExecSuccess = executeQuery(indicator, connection, query);
                     indicator.setComputed(true);
+                    if (!isExecSuccess) {
+                        traceError("Query not executed for indicator: \"" + indicator.getName() + "\" "//$NON-NLS-1$//$NON-NLS-2$
+                                + "SQL query: " + query.getBody());//$NON-NLS-1$
+                        isSuccess = Boolean.FALSE;
+                        continue;
+                    }
+                } catch (AnalysisExecutionException e) {
+                    traceError(e.getMessage());
+                    isSuccess = Boolean.FALSE;
+                    continue;
                 }
 
             }
 
-        } catch (AnalysisExecutionException e) {
-            ok = traceError(e.getMessage());
         } finally {
             ReturnCode rc = closeConnection(analysis, connection);
-            // MOD TDQ-8388 ok status should not be overwrite by the close return code.
-            ok = ok && rc.isOk();
+            if (rc.isOk()) {
+                isSuccess = Boolean.FALSE;
+            }
         }
-        return ok;
+        return isSuccess;
     }
 
     /**

@@ -36,8 +36,6 @@ public final class ColumnAnalysisSqlParallelExecutor extends ColumnAnalysisSqlEx
 
     protected Indicator indicator;
 
-    protected boolean ok = true;
-
     private Exception exception;
 
     public Exception getException() {
@@ -55,7 +53,7 @@ public final class ColumnAnalysisSqlParallelExecutor extends ColumnAnalysisSqlEx
     public static ColumnAnalysisSqlParallelExecutor createInstance(ColumnAnalysisSqlExecutor parent) {
         ColumnAnalysisSqlParallelExecutor inst = new ColumnAnalysisSqlParallelExecutor();
         if (parent != null) {
-            inst.errorMessage = parent.errorMessage;
+            inst.setError(parent.getErrorMessage());
             // MOD scorreia 2009-08-20 line commented out: use protected method dbms() instead
             // inst.dbmsLanguage = parent.dbmsLanguage;
             inst.cachedAnalysis = parent.cachedAnalysis;
@@ -77,14 +75,16 @@ public final class ColumnAnalysisSqlParallelExecutor extends ColumnAnalysisSqlEx
 
     /**
      * run analysis when SqlParallelExecutor.
+     * 
+     * @return true if successfull , false otherwise.
      */
-    public void run() {
+    public Boolean run() {
         Expression query = null;
         try {
             // skip composite indicators that do not require a sql execution
             if (indicator instanceof CompositeIndicator) {
                 // options of composite indicators are handled elsewhere
-                return;
+                return Boolean.TRUE;
             }
 
             synchronized (schemata) {
@@ -95,27 +95,38 @@ public final class ColumnAnalysisSqlParallelExecutor extends ColumnAnalysisSqlEx
                 }
             }
 
-            query = dbms().getInstantiatedExpression(indicator);
-            if (query == null || !executeQuery(indicator, connection, query.getBody())) {
-                ok = traceError(getErrorMessageForQuery(query));
-            } else {
-                // set computation done
-                indicator.setComputed(true);
-            }
-
             synchronized (elementToIndicator) {
                 // add mapping of analyzed elements to their indicators
                 MultiMapHelper.addUniqueObjectToListMap(indicator.getAnalyzedElement(), indicator, elementToIndicator);
             }
-        } catch (SQLException e) {
-            ok = traceError(getErrorMessageForQuery(query));
-            this.setException(e);
+
+            query = dbms().getInstantiatedExpression(indicator);
+            if (query == null) {
+                traceError(getErrorMessageForQuery(query));
+                return Boolean.FALSE;
+            }
+
+            try {
+                boolean execStatus = executeQuery(indicator, connection, query.getBody());
+                if (!execStatus) {
+                    traceError(getErrorMessageForQuery(query));
+                    return Boolean.FALSE;
+                }
+            } catch (SQLException e) {
+                traceError(getErrorMessageForQuery(query));
+                this.setException(e);
+                return Boolean.FALSE;
+            }
+            // set computation done
+            indicator.setComputed(true);
+
         } finally {
             // return the connection after run
             if (POOLED_CONNECTION) {
                 TdqAnalysisConnectionPool.returnPooledConnection(cachedAnalysis, connection);
             }
         }
+        return Boolean.TRUE;
     }
 
     private String getErrorMessageForQuery(Expression query) {

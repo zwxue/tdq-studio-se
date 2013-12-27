@@ -109,7 +109,8 @@ public class ColumnSetAnalysisExecutor extends AnalysisExecutor {
         } else if (!isDelimitedFile) {
             connection = getConnectionBeforeRun(analysis);
             if (!connection.isOk()) {
-                return this.traceError(connection.getMessage());
+                this.traceError(connection.getMessage());
+                return Boolean.FALSE;
             }
 
             // set it into the evaluator
@@ -154,8 +155,8 @@ public class ColumnSetAnalysisExecutor extends AnalysisExecutor {
         } else if (isMdm) {
             EList<ModelElement> analysedElements = analysis.getContext().getAnalysedElements();
             if (analysedElements.isEmpty()) {
-                this.errorMessage = Messages.getString("ColumnAnalysisExecutor.CannotCreateSQLStatement",//$NON-NLS-1$
-                        analysis.getName());
+                setError(Messages.getString("ColumnAnalysisExecutor.CannotCreateSQLStatement",//$NON-NLS-1$
+                        analysis.getName()));
                 return null;
             }
             return createSqlForMDM(analysedElements);
@@ -179,8 +180,8 @@ public class ColumnSetAnalysisExecutor extends AnalysisExecutor {
         }
 
         if (analysedElements == null || analysedElements.isEmpty()) {
-            this.errorMessage = Messages.getString("ColumnAnalysisExecutor.CannotCreateSQLStatement",//$NON-NLS-1$
-                    analysis.getName());
+            setError(Messages.getString("ColumnAnalysisExecutor.CannotCreateSQLStatement",//$NON-NLS-1$
+                    analysis.getName()));
             return null;
         }
         // MOD yyi 2011-02-22 17871:delimitefile, indiactor changed
@@ -190,16 +191,16 @@ public class ColumnSetAnalysisExecutor extends AnalysisExecutor {
             // --- preconditions
             TdColumn col = SwitchHelpers.COLUMN_SWITCH.doSwitch(modelElement);
             if (col == null) {
-                this.errorMessage = Messages.getString("ColumnAnalysisExecutor.GivenElementIsNotColumn", modelElement); //$NON-NLS-1$
+                setError(Messages.getString("ColumnAnalysisExecutor.GivenElementIsNotColumn", modelElement)); //$NON-NLS-1$
                 return null;
             }
             Classifier owner = col.getOwner();
             if (owner == null) {
-                this.errorMessage = Messages.getString("ColumnAnalysisExecutor.NoOwnerFound", col.getName()); //$NON-NLS-1$
+                setError(Messages.getString("ColumnAnalysisExecutor.NoOwnerFound", col.getName())); //$NON-NLS-1$
             }
             ColumnSet colSet = SwitchHelpers.COLUMN_SET_SWITCH.doSwitch(owner);
             if (colSet == null) {
-                this.errorMessage = Messages.getString("ColumnAnalysisExecutor.NoContainerFound", col.getName()); //$NON-NLS-1$
+                setError(Messages.getString("ColumnAnalysisExecutor.NoContainerFound", col.getName()));//$NON-NLS-1$
                 return null;
             }
             // else add into select
@@ -253,16 +254,17 @@ public class ColumnSetAnalysisExecutor extends AnalysisExecutor {
         for (ModelElement modelElement : analysedElements) {
             TdXmlElementType tdXmlElement = SwitchHelpers.XMLELEMENTTYPE_SWITCH.doSwitch(modelElement);
             if (tdXmlElement == null) {
-                this.errorMessage = "given element can't be used.";//$NON-NLS-1$
+                setError("given element can't be used.");
                 return null;
             }
             ModelElement parentElement = XmlElementHelper.getParentElement(tdXmlElement);
             if (parentElement == null) {
-                this.errorMessage = Messages.getString("ColumnAnalysisExecutor.NoOwnerFound", tdXmlElement.getName()); //$NON-NLS-1$
+                setError(Messages.getString("ColumnAnalysisExecutor.NoOwnerFound", tdXmlElement.getName()));//$NON-NLS-1$
+                return null;
             }
             TdXmlElementType parentXmlElement = SwitchHelpers.XMLELEMENTTYPE_SWITCH.doSwitch(parentElement);
             if (parentXmlElement == null) {
-                this.errorMessage = Messages.getString("ColumnAnalysisExecutor.NoContainerFound", parentElement.getName()); //$NON-NLS-1$
+                setError(Messages.getString("ColumnAnalysisExecutor.NoContainerFound", parentElement.getName())); //$NON-NLS-1$
                 return null;
             }
             sql.append(parentXmlElement.getName());
@@ -301,7 +303,7 @@ public class ColumnSetAnalysisExecutor extends AnalysisExecutor {
             }
         }
         if (PluginConstant.EMPTY_STRING != patternNames) {
-            this.errorMessage = Messages.getString("MultiColumnAnalysisExecutor.checkAllMatchIndicatorForDbType", patternNames);//$NON-NLS-1$
+            setError(Messages.getString("MultiColumnAnalysisExecutor.checkAllMatchIndicatorForDbType", patternNames)); //$NON-NLS-1$
             return false;
         }
         return true;

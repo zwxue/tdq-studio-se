@@ -85,8 +85,8 @@ public class ColumnAnalysisExecutor extends AnalysisExecutor {
             }
             // --- get the schema owner
             if (!belongToSameSchemata(tdColumn)) {
-                this.errorMessage = Messages.getString("ColumnAnalysisExecutor.GivenColumn", tdColumn.getName()); //$NON-NLS-1$
-                return new ReturnCode(errorMessage, Boolean.FALSE);
+                setError(Messages.getString("ColumnAnalysisExecutor.GivenColumn", tdColumn.getName())); //$NON-NLS-1$
+                return new ReturnCode(getErrorMessage(), Boolean.FALSE);
             }
             String columnName = ColumnHelper.getFullName(tdColumn);
             eval.storeIndicator(columnName, indicator);
@@ -116,14 +116,13 @@ public class ColumnAnalysisExecutor extends AnalysisExecutor {
         // get table or view
         ColumnSet owner = ColumnHelper.getColumnOwnerAsColumnSet(tdColumn);
         if (owner == null) {
-            this.errorMessage = Messages.getString("ColumnAnalysisExecutor.NotFoundColumn", tdColumn.getName()); //$NON-NLS-1$
+            setError(Messages.getString("ColumnAnalysisExecutor.NotFoundColumn", tdColumn.getName())); //$NON-NLS-1$
             return false;
         }
         // get catalog or schema
         Package schema = ColumnSetHelper.getParentCatalogOrSchema(owner);
         if (schema == null) {
-            this.errorMessage = Messages.getString(
-                    "ColumnAnalysisExecutor.NoSchemaOrCatalogFound", owner.getName(), tdColumn.getName()); //$NON-NLS-1$
+            setError(Messages.getString("ColumnAnalysisExecutor.NoSchemaOrCatalogFound", owner.getName(), tdColumn.getName())); //$NON-NLS-1$
             return false;
         }
 
@@ -146,8 +145,8 @@ public class ColumnAnalysisExecutor extends AnalysisExecutor {
         // From here to the end of the method is as same as the part in ColumnSetAnalysisExecutor(line 184),
         // so if you modify the code here, please also modify the same part.
         if (analysedElements.isEmpty()) {
-            this.errorMessage = Messages.getString("ColumnAnalysisExecutor.CannotCreateSQLStatement",//$NON-NLS-1$
-                    analysis.getName());
+            setError(Messages.getString("ColumnAnalysisExecutor.CannotCreateSQLStatement",//$NON-NLS-1$
+                    analysis.getName()));
             return null;
         }
         Set<ColumnSet> fromPart = new HashSet<ColumnSet>();
@@ -157,16 +156,16 @@ public class ColumnAnalysisExecutor extends AnalysisExecutor {
             // --- preconditions
             TdColumn col = SwitchHelpers.COLUMN_SWITCH.doSwitch(modelElement);
             if (col == null) {
-                this.errorMessage = Messages.getString("ColumnAnalysisExecutor.GivenElementIsNotColumn", modelElement); //$NON-NLS-1$
+                setError(Messages.getString("ColumnAnalysisExecutor.GivenElementIsNotColumn", modelElement)); //$NON-NLS-1$
                 return null;
             }
             Classifier owner = col.getOwner();
             if (owner == null) {
-                this.errorMessage = Messages.getString("ColumnAnalysisExecutor.NoOwnerFound", col.getName()); //$NON-NLS-1$
+                setError(Messages.getString("ColumnAnalysisExecutor.NoOwnerFound", col.getName())); //$NON-NLS-1$
             }
             ColumnSet colSet = SwitchHelpers.COLUMN_SET_SWITCH.doSwitch(owner);
             if (colSet == null) {
-                this.errorMessage = Messages.getString("ColumnAnalysisExecutor.NoContainerFound", col.getName()); //$NON-NLS-1$
+                setError(Messages.getString("ColumnAnalysisExecutor.NoContainerFound", col.getName())); //$NON-NLS-1$
                 return null;
             }
             // else add into select
@@ -185,7 +184,7 @@ public class ColumnAnalysisExecutor extends AnalysisExecutor {
         }
         if (fromPart.size() != 1) {
             log.error(Messages.getString("ColumnAnalysisExecutor.ANALYSISMUSTRUNONONETABLE") + fromPart.size() + PluginConstant.DOT_STRING);//$NON-NLS-1$
-            this.errorMessage = Messages.getString("ColumnAnalysisExecutor.ANALYSISMUSTRUNONONETABLEERRORMESSAGE");//$NON-NLS-1$
+            setError(Messages.getString("ColumnAnalysisExecutor.ANALYSISMUSTRUNONONETABLEERRORMESSAGE")); //$NON-NLS-1$
             return null;
         }
         TdColumn firstColumn = SwitchHelpers.COLUMN_SWITCH.doSwitch(analysedElements.get(0));
@@ -225,7 +224,7 @@ public class ColumnAnalysisExecutor extends AnalysisExecutor {
     @Override
     protected boolean check(final Analysis analysis) {
         if (analysis == null) {
-            this.errorMessage = Messages.getString("ColumnAnalysisExecutor.AnalysisIsNull"); //$NON-NLS-1$
+            setError(Messages.getString("ColumnAnalysisExecutor.AnalysisIsNull")); //$NON-NLS-1$
             return false;
         }
 
@@ -237,7 +236,7 @@ public class ColumnAnalysisExecutor extends AnalysisExecutor {
         // --- check that there exists at least on element to analyze
         AnalysisContext context = analysis.getContext();
         if (context.getAnalysedElements().size() == 0) {
-            this.errorMessage = Messages.getString("ColumnAnalysisExecutor.AnalysisHaveAtLeastOneColumn"); //$NON-NLS-1$
+            setError(Messages.getString("ColumnAnalysisExecutor.AnalysisHaveAtLeastOneColumn")); //$NON-NLS-1$
             return false;
         }
 
@@ -259,15 +258,15 @@ public class ColumnAnalysisExecutor extends AnalysisExecutor {
 
             // --- Check that each analyzed element has at least one indicator
             if (analysisHandler.getIndicators(column).size() == 0) {
-                this.errorMessage = Messages.getString("ColumnAnalysisExecutor.EachColumnHaveOneIndicator"); //$NON-NLS-1$
+                setError(Messages.getString("ColumnAnalysisExecutor.EachColumnHaveOneIndicator")); //$NON-NLS-1$
                 return false;
             }
 
             // --- get the data provider
             Connection dp = ConnectionHelper.getTdDataProvider(column);
             if (!isAccessWith(dp)) {
-                this.errorMessage = Messages.getString("ColumnAnalysisExecutor.AllColumnsBelongSameConnection", //$NON-NLS-1$
-                        column.getName(), dataprovider.getName());
+                setError(Messages.getString("ColumnAnalysisExecutor.AllColumnsBelongSameConnection", //$NON-NLS-1$
+                        column.getName(), dataprovider.getName()));
                 return false;
             }
         }

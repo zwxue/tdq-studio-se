@@ -160,11 +160,13 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
             AnalysisExecutionException {
         ModelElement analyzedElement = indicator.getAnalyzedElement();
         if (analyzedElement == null) {
-            return traceError(Messages.getString("ColumnAnalysisSqlExecutor.ANALYSISELEMENTISNULL", indicator.getName()));//$NON-NLS-1$
+            traceError(Messages.getString("ColumnAnalysisSqlExecutor.ANALYSISELEMENTISNULL", indicator.getName()));//$NON-NLS-1$
+            return Boolean.FALSE;
         }
         TdColumn tdColumn = SwitchHelpers.COLUMN_SWITCH.doSwitch(indicator.getAnalyzedElement());
         if (tdColumn == null) {
-            return traceError(Messages.getString("ColumnAnalysisSqlExecutor.ANALYZEDISNOTCOLUMNINDICATOR", indicator.getName()));//$NON-NLS-1$
+            traceError(Messages.getString("ColumnAnalysisSqlExecutor.ANALYZEDISNOTCOLUMNINDICATOR", indicator.getName()));//$NON-NLS-1$
+            return Boolean.FALSE;
         }
         if (tdColumn.eIsProxy()) {
             tdColumn = (TdColumn) EObjectHelper.resolveObject(tdColumn);
@@ -198,22 +200,30 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
         }
 
         if (indicatorDefinition == null) {
-            return traceError(Messages.getString("ColumnAnalysisSqlExecutor.INTERNALERROR", indicator.getName()));//$NON-NLS-1$
+            traceError(Messages.getString("ColumnAnalysisSqlExecutor.INTERNALERROR", indicator.getName()));//$NON-NLS-1$
+            return Boolean.FALSE;
         }
         sqlGenericExpression = dbms().getSqlExpression(indicatorDefinition);
 
         final EClass indicatorEclass = indicator.eClass();
         if (sqlGenericExpression == null || sqlGenericExpression.getBody() == null) {
-            // when the indicator is a pattern indicator, a possible cause is that the DB does not support regular
-            // expressions.
+            // Added TDQ-8468 yyin 20131227 : if the used UDI already has its correct expression instance in the
+            // analysis, will not check the sql expression and create again(from the definition).
+            if (UDIHelper.isUDI(indicator) && indicator.getInstantiatedExpressions().size() > 0) {
+                return Boolean.TRUE;
+            }// ~
+             // when the indicator is a pattern indicator, a possible cause is that the DB does not support regular
+             // expressions.
             if (IndicatorsPackage.eINSTANCE.getRegexpMatchingIndicator().equals(indicatorEclass)) {
-                return traceError(Messages.getString("ColumnAnalysisSqlExecutor.PLEASEREMOVEALLPATTEN", language));//$NON-NLS-1$
+                traceError(Messages.getString("ColumnAnalysisSqlExecutor.PLEASEREMOVEALLPATTEN", language));//$NON-NLS-1$
+                return Boolean.FALSE;
             }
             // MOD klliu 2011-06-28 bug 22555
             Object[] args = new Object[] { (indicator.getName() != null ? indicator.getName() : indicatorEclass.getName()),
                     ResourceHelper.getUUID(indicatorDefinition) };
             String warnInfo = Messages.getString("ColumnAnalysisSqlExecutor.UNSUPPORTEDINDICATOR", args) + Messages.getString("ColumnAnalysisSqlExecutor.ADDEXPREEIONINFOMATION", language);//$NON-NLS-1$ ////$NON-NLS-2$
-            return traceError(warnInfo);
+            traceError(warnInfo);
+            return Boolean.FALSE;
             // ~
         }
 
@@ -239,13 +249,6 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
 
             TextParameters textParameter = parameters.getTextParameter();
             if (textParameter != null) {
-                if (textParameter.isUseNulls()) {
-                    // MOD xqliu 2012-01-15 TDQ-6378, replace the nulls with string in the sql template
-                    // colName = dbms().replaceNullsWithString(colName, "''");//$NON-NLS-1$
-                } else {
-                    // MOD xqliu 2012-01-14 TDQ-6378, add the where clause in the sql template
-                    // whereExpression.add(colName.concat(dbms().isNotNull()));
-                }
                 if (textParameter.isIgnoreCase()) {
                     colName = dbms().toUpperCase(colName);
                 }
@@ -254,18 +257,10 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
 
                     String tdColName = getQuotedColumnName(tdColumn);
                     tdColName = dbms().replaceNullsWithString(tdColName, "'NULL TALEND'");//$NON-NLS-1$
-                    // MOD xqliu 2012-01-14 TDQ-6378, add the where clause in the sql template
-                    // whereExpression.add(dbms().isNotBlank(tdColName));
 
                 } else if (textParameter.isUseBlank()
                         && IndicatorsPackage.eINSTANCE.getFrequencyIndicator().isSuperTypeOf(indicatorEclass)) {
                     colName = dbms().trim(colName);
-                } else if (textParameter.isUseBlank()
-                        && IndicatorsPackage.eINSTANCE.getAverageLengthIndicator().isSuperTypeOf(indicatorEclass)
-                        && !IndicatorsPackage.eINSTANCE.getAverageLengthIndicator().equals(indicatorEclass)) {
-                    // MOD xqliu 2012-01-15 TDQ-6378, trim the blank data in the sql template
-                    // MOD qiongli 2011-8-10 TDQ-2474,trim for blank data.
-                    // colName = dbms().trimIfBlank(colName);
                 }
             }
         }
@@ -337,8 +332,9 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
                         // no replacement found, try the default one
                         colName = dbms().getPatternFinderDefaultFunction(colName);
                         if (colName == null) {
-                            return traceError(Messages.getString(
+                            traceError(Messages.getString(
                                     "ColumnAnalysisSqlExecutor.NOREPLACEMENTFOUNDFORDBTYPE", language, indicator.getName()));//$NON-NLS-1$
+                            return Boolean.FALSE;
                         }
                     }
                     // ~
@@ -357,8 +353,14 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
             // --- handle case of matching pattern count
             List<String> patterns = getPatterns(indicator);
             if (patterns.isEmpty()) {
-                return traceError(Messages.getString(
-                        "ColumnAnalysisSqlExecutor.NOPATTERNFOUNDFORDBTYPE", language, indicator.getName()));//$NON-NLS-1$
+                // Added TDQ-8468 yyin 20131227 : if the used SQL pattern already has its correct expression instance in
+                // the analysis, will not check the expression and create again(from the definition).
+                if (indicator.getInstantiatedExpressions().size() > 0) {
+                    return Boolean.TRUE;
+                }// ~
+
+                traceError(Messages.getString("ColumnAnalysisSqlExecutor.NOPATTERNFOUNDFORDBTYPE", language, indicator.getName()));//$NON-NLS-1$
+                return Boolean.FALSE;
             }
             completedSqlString = replaceVariables(sqlGenericExpression.getBody(), colName, table, patterns);
             completedSqlString = addWhereToSqlStringStatement(whereExpression, completedSqlString);
@@ -367,8 +369,8 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
             if (IndicatorsPackage.eINSTANCE.getDefValueCountIndicator().equals(indicatorEclass)) {
                 String defValue = ColumnHelper.getDefaultValue(tdColumn);
                 if (defValue == null) {
-                    return traceError(Messages
-                            .getString("ColumnAnalysisSqlExecutor.NODEFAULTVALUE", colName, indicator.getName()));//$NON-NLS-1$
+                    traceError(Messages.getString("ColumnAnalysisSqlExecutor.NODEFAULTVALUE", colName, indicator.getName()));//$NON-NLS-1$
+                    return Boolean.FALSE;
                 }
                 // need to generate different SQL where clause for each type.
                 int javaType = tdColumn.getSqlDataType().getJavaDataType();
@@ -814,8 +816,8 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
         String catalogOrSchema = getCatalogOrSchemaName(indicator.getAnalyzedElement());
         long count = getCount(cachedAnalysis, colName, table, catalogOrSchema, whereExpression);
         if (count == -1) {
-            this.errorMessage = Messages.getString("ColumnAnalysisSqlExecutor.GotInvalidResultSet", //$NON-NLS-1$
-                    dbms().toQualifiedName(catalogOrSchema, null, colName));
+            setError(Messages.getString("ColumnAnalysisSqlExecutor.GotInvalidResultSet", //$NON-NLS-1$
+                    dbms().toQualifiedName(catalogOrSchema, null, colName)));
             return null;
             //            throw new AnalysisExecutionException(Messages.getString("ColumnAnalysisSqlExecutor.GotInvalidResultSet", //$NON-NLS-1$
             // dbms().toQualifiedName(catalogOrSchema, null, colName)));
@@ -1002,11 +1004,11 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
             setRowCountAndNullCount(elementToIndicator);
         } catch (SQLException e) {
             log.error(e, e);
-            this.errorMessage = e.getMessage();
+            setError(e.getMessage());
             ok = false;
         }
 
-        return new ReturnCode(this.errorMessage, ok);
+        return new ReturnCode(getErrorMessage(), ok);
 
     }
 
@@ -1021,7 +1023,7 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
      */
     private boolean runAnalysisIndicators(Connection connection, Map<ModelElement, List<Indicator>> elementToIndicator,
             Collection<Indicator> indicators) throws SQLException {
-        boolean ok = true;
+        boolean runStatus = Boolean.TRUE;
         for (Indicator indicator : indicators) {
             // skip composite indicators that do not require a sql execution
             if (indicator instanceof CompositeIndicator) {
@@ -1036,8 +1038,9 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
 
             Expression query = dbms().getInstantiatedExpression(indicator);
             if (query == null || !executeQuery(indicator, connection, query.getBody())) {
-                ok = traceError("Query not executed for indicator: \"" + indicator.getName() + "\" " //$NON-NLS-1$//$NON-NLS-2$
+                traceError("Query not executed for indicator: \"" + indicator.getName() + "\" " //$NON-NLS-1$//$NON-NLS-2$
                         + ((query == null) ? "query is null" : "SQL query: " + query.getBody())); //$NON-NLS-1$//$NON-NLS-2$  
+                runStatus = Boolean.FALSE;
             } else {
                 // set computation done
                 indicator.setComputed(true);
@@ -1046,7 +1049,7 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
             // add mapping of analyzed elements to their indicators
             MultiMapHelper.addUniqueObjectToListMap(indicator.getAnalyzedElement(), indicator, elementToIndicator);
         }
-        return ok;
+        return runStatus;
     }
 
     /**
@@ -1089,15 +1092,17 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
         protected IStatus run(IProgressMonitor monitor) {
             ColumnAnalysisSqlParallelExecutor columnSqlParallel = ColumnAnalysisSqlParallelExecutor.createInstance(parent,
                     connection, elementToIndicator, indicator);
-            columnSqlParallel.run();
+            Boolean isSuccess = columnSqlParallel.run();
 
-            if (columnSqlParallel.ok) {
+            if (isSuccess) {
                 return Status.OK_STATUS;
             } else {
                 if (columnSqlParallel.getException() != null) {
                     this.errorMessage = columnSqlParallel.getException().getMessage();
-                } else if (columnSqlParallel.errorMessage != null && !StringUtils.EMPTY.equals(columnSqlParallel.errorMessage)) {
-                    this.errorMessage = columnSqlParallel.errorMessage;
+                } else if (columnSqlParallel.getErrorMessage() != null
+                        && !StringUtils.EMPTY.equals(columnSqlParallel.getErrorMessage())) {
+                    this.errorMessage = columnSqlParallel.getErrorMessage();
+
                 } else {
                     this.errorMessage = Messages.getString("ColumnAnalysisSqlExecutor.AnalysisExecutionFailed"); //$NON-NLS-1$
                 }
@@ -1164,7 +1169,7 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
                 }
 
                 if (eaj.errorMessage != null) {
-                    ColumnAnalysisSqlExecutor.this.errorMessage = eaj.errorMessage;
+                    ColumnAnalysisSqlExecutor.this.setError(eaj.errorMessage);
                     ColumnAnalysisSqlExecutor.this.parallelExeStatus = false;
                 }
 
@@ -1356,9 +1361,11 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
             // ~
             return true;
         } catch (RuntimeException e) {
-            return traceError(Messages.getString("ColumnAnalysisSqlExecutor.ERRORWHENSETCATALOG", catalogName, e.getMessage()));//$NON-NLS-1$  
+            traceError(Messages.getString("ColumnAnalysisSqlExecutor.ERRORWHENSETCATALOG", catalogName, e.getMessage()));//$NON-NLS-1$  
+            return Boolean.FALSE;
         } catch (SQLException e) {
-            return traceError(Messages.getString("ColumnAnalysisSqlExecutor.ERRORWHENSETCATALOGSQL", catalogName, e.getMessage()));//$NON-NLS-1$  
+            traceError(Messages.getString("ColumnAnalysisSqlExecutor.ERRORWHENSETCATALOGSQL", catalogName, e.getMessage()));//$NON-NLS-1$
+            return Boolean.FALSE;
         }
     }
 

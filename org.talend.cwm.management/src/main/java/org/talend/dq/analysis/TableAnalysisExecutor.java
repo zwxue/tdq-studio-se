@@ -60,8 +60,8 @@ public class TableAnalysisExecutor extends AnalysisExecutor {
         CwmZQuery query = new CwmZQuery();
         EList<ModelElement> analysedElements = analysis.getContext().getAnalysedElements();
         if (analysedElements.isEmpty()) {
-            this.errorMessage = Messages.getString("ColumnAnalysisExecutor.CannotCreateSQLStatement",//$NON-NLS-1$
-                    analysis.getName());
+            setError(Messages.getString("ColumnAnalysisExecutor.CannotCreateSQLStatement",//$NON-NLS-1$
+                    analysis.getName()));
             return null;
         }
         Set<ColumnSet> fromPart = new HashSet<ColumnSet>();
@@ -69,12 +69,12 @@ public class TableAnalysisExecutor extends AnalysisExecutor {
         for (ModelElement modelElement : analysedElements) {
             NamedColumnSet set = SwitchHelpers.NAMED_COLUMN_SET_SWITCH.doSwitch(modelElement);
             if (set == null) {
-                this.errorMessage = Messages.getString("TableAnalysisExecutor.NoContainerFound", modelElement.getName()); //$NON-NLS-1$
+                setError(Messages.getString("TableAnalysisExecutor.NoContainerFound", modelElement.getName()));//$NON-NLS-1$
                 return null;
             }
             // else add into select
             if (!query.addSelect(set)) {
-                this.errorMessage = Messages.getString("TableAnalysisExecutor.Problem"); //$NON-NLS-1$
+                setError(Messages.getString("TableAnalysisExecutor.Problem"));//$NON-NLS-1$
                 return null;
             }
             // add from
@@ -83,7 +83,7 @@ public class TableAnalysisExecutor extends AnalysisExecutor {
         }
 
         if (!query.addFrom(fromPart)) {
-            this.errorMessage = Messages.getString("TableAnalysisExecutor.ProblemAddFromPart"); //$NON-NLS-1$
+            setError(Messages.getString("TableAnalysisExecutor.ProblemAddFromPart"));//$NON-NLS-1$
             return null;
         }
         return query.generateStatement();
@@ -103,8 +103,8 @@ public class TableAnalysisExecutor extends AnalysisExecutor {
             }
             // --- get the schema owner
             if (!belongToSameSchemata(set)) {
-                this.errorMessage = Messages.getString("TableAnalysisExecutor.GivenTable", set.getName()); //$NON-NLS-1$
-                return new ReturnCode(errorMessage, Boolean.FALSE);
+                setError(Messages.getString("TableAnalysisExecutor.GivenTable", set.getName()));//$NON-NLS-1$
+                return new ReturnCode(getErrorMessage(), Boolean.FALSE);
             }
             String setName = dbms().getQueryColumnSetWithPrefix(set);
 
@@ -132,7 +132,7 @@ public class TableAnalysisExecutor extends AnalysisExecutor {
         // get catalog or schema
         Package schema = ColumnSetHelper.getParentCatalogOrSchema(set);
         if (schema == null) {
-            this.errorMessage = Messages.getString("TableAnalysisExecutor.NoSchemaOrCatalogFound", set.getName()); //$NON-NLS-1$
+            setError(Messages.getString("TableAnalysisExecutor.NoSchemaOrCatalogFound", set.getName())); //$NON-NLS-1$
             return false;
         }
         schemata.put(set, schema);
