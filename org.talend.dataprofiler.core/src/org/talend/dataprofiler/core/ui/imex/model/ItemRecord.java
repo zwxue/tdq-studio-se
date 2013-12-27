@@ -307,17 +307,19 @@ public class ItemRecord {
     }
 
     private void includeJUDIDependencies(IndicatorDefinition definition, TaggedValue tv) {
-            IPath definitionPath = Path.fromOSString(definition.eResource().getURI().toFileString());
-            IPath libFolderPath = definitionPath.removeLastSegments(1).append("lib"); //$NON-NLS-1$
-            File libFolder = libFolderPath.toFile();
-            if (libFolder.exists()) {
-                for (File udiJarFile : UDIUtils.getLibJarFileList(libFolder)) {
-                    for (String str : tv.getValue().split("\\|\\|")) {//$NON-NLS-1$
-                        if (udiJarFile.getName().equals(str)) {
-                            dependencyMap.put(udiJarFile, null);
-                        }
+        IPath definitionPath = Path.fromOSString(definition.eResource().getURI().toFileString());
+        IPath libFolderPath = definitionPath.removeLastSegments(1).append("lib"); //$NON-NLS-1$
+        File libFolder = libFolderPath.toFile();
+        if (libFolder.exists()) {
+            List<File> libJarFileList = UDIUtils.getLibJarFileList(libFolder);
+            String[] splitTagValues = tv.getValue().split("\\|\\|"); //$NON-NLS-1$
+            for (File udiJarFile : libJarFileList) {
+                for (String str : splitTagValues) {
+                    if (udiJarFile.getName().equals(str)) {
+                        dependencyMap.put(udiJarFile, null);
                     }
                 }
+            }
         }
     }
 
