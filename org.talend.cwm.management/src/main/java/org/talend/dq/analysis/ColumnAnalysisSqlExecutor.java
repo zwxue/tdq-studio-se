@@ -203,8 +203,13 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
 
         final EClass indicatorEclass = indicator.eClass();
         if (sqlGenericExpression == null || sqlGenericExpression.getBody() == null) {
-            // when the indicator is a pattern indicator, a possible cause is that the DB does not support regular
-            // expressions.
+            // Added TDQ-8468 yyin 20131227 : if the used UDI already has its correct expression instance in the
+            // analysis, will not check the sql expression and create again(from the definition).
+            if (UDIHelper.isUDI(indicator) && indicator.getInstantiatedExpressions().size() > 0) {
+                return Boolean.TRUE;
+            }// ~
+             // when the indicator is a pattern indicator, a possible cause is that the DB does not support regular
+             // expressions.
             if (IndicatorsPackage.eINSTANCE.getRegexpMatchingIndicator().equals(indicatorEclass)) {
                 return traceError(Messages.getString("ColumnAnalysisSqlExecutor.PLEASEREMOVEALLPATTEN", language));//$NON-NLS-1$
             }
@@ -378,6 +383,11 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
         if (IndicatorsPackage.eINSTANCE.getPatternMatchingIndicator().isSuperTypeOf(indicatorEclass)) {
             List<String> patterns = getPatterns(indicator);
             if (patterns.isEmpty()) {
+                // Added TDQ-8468 yyin 20131227 : if the used SQL pattern already has its correct expression instance in
+                // the analysis, will not check the expression and create again(from the definition).
+                if (indicator.getInstantiatedExpressions().size() > 0) {
+                    return Boolean.TRUE;
+                }// ~
                 return traceError(Messages.getString(
                         "ColumnAnalysisSqlExecutor.NOPATTERNFOUNDFORDBTYPE", language, indicator.getName()));//$NON-NLS-1$
             }

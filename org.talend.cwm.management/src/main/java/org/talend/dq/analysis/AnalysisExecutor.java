@@ -144,7 +144,7 @@ public abstract class AnalysisExecutor implements IAnalysisExecutor {
             errorMessage = Messages.getString("Evaluator.OutOfMomory", usedMemory);//$NON-NLS-1$
             resultMetadata.setMessage(errorMessage);
         } else if (ok) {
-            resultMetadata.setLastExecutionNumberOk(executionNumber);
+            resultMetadata.setLastExecutionNumberOk(resultMetadata.getLastExecutionNumberOk() + 1);
             resultMetadata.setMessage(null); // reset error message
 
         } else {
