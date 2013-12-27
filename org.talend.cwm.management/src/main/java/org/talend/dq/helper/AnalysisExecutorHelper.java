@@ -286,10 +286,10 @@ public final class AnalysisExecutorHelper {
     public static void setExecutionNumberInAnalysisResult(Analysis analysis, boolean isRunAnaResultok) {
         final ExecutionInformations resultMetadata = analysis.getResults().getResultMetadata();
         resultMetadata.setLastRunOk(isRunAnaResultok);
-        int executionNumber = resultMetadata.getExecutionNumber() + 1;
-        resultMetadata.setExecutionNumber(executionNumber);
+
+        resultMetadata.setExecutionNumber(resultMetadata.getExecutionNumber() + 1);
         if (isRunAnaResultok) {
-            resultMetadata.setLastExecutionNumberOk(executionNumber);
+            resultMetadata.setLastExecutionNumberOk(resultMetadata.getLastExecutionNumberOk() + 1);
         }
     }
 
