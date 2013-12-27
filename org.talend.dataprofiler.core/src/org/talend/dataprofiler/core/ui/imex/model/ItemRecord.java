@@ -368,8 +368,10 @@ public class ItemRecord {
                     EResourceConstant.USER_DEFINED_INDICATORS_LIB.getName());
             File libFolder = libFolderPath.toFile();
             if (libFolder.exists()) {
-                for (File udiJarFile : UDIUtils.getLibJarFileList(libFolder)) {
-                    for (String str : tv.getValue().split(CustomAttributeMatcherClassNameConvert.REGEXKEY)) {
+                List<File> libJarFileList = UDIUtils.getLibJarFileList(libFolder);
+                String[] splitTagValues = tv.getValue().split(CustomAttributeMatcherClassNameConvert.REGEXKEY);
+                for (File udiJarFile : libJarFileList) {
+                    for (String str : splitTagValues) {
                         if (udiJarFile.getName().equals(str)) {
                             dependencyMap.put(udiJarFile, null);
                         }
