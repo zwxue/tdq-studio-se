@@ -16,11 +16,10 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.ui.PlatformUI;
-import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
+import org.talend.core.model.properties.DatabaseConnectionItem;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.wizard.database.MetaDataFilterWizard;
-import org.talend.dataprofiler.core.ui.wizard.database.MetaDataFilterWizardPage.FilterType;
 import org.talend.dq.nodes.DBConnectionRepNode;
 import org.talend.repository.model.IRepositoryNode;
 
@@ -32,8 +31,6 @@ public class PackageFilterAction extends Action {
     private static final int WIDTH = 300;
 
     private static final int HEIGHT = 150;
-
-    private DatabaseConnection databaseConnection;
 
     private IRepositoryNode node;
 
@@ -50,14 +47,13 @@ public class PackageFilterAction extends Action {
         this();
         if (node instanceof DBConnectionRepNode) {
             this.node = node;
-            databaseConnection = ((DBConnectionRepNode) node).getDatabaseConnection();
-
         }
     }
 
     @Override
     public void run() {
-        MetaDataFilterWizard wizard = new MetaDataFilterWizard(this.databaseConnection, FilterType.PACKAGE_FILTER);
+        DatabaseConnectionItem databaseConnectionItem = (DatabaseConnectionItem) node.getObject().getProperty().getItem();
+        MetaDataFilterWizard wizard = new MetaDataFilterWizard(databaseConnectionItem);
         WizardDialog dialog = new WizardDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), wizard);
         dialog.setPageSize(WIDTH, HEIGHT);
         if (dialog.open() == Dialog.OK) {

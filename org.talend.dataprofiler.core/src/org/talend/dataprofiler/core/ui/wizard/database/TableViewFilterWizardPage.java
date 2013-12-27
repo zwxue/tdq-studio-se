@@ -12,27 +12,18 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.wizard.database;
 
-import org.eclipse.core.runtime.IStatus;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.ModifyEvent;
-import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
-import org.talend.dataprofiler.core.ui.wizard.AbstractWizardPage;
 
 /**
  * DOC xqliu class global comment. Detailled comment
  */
-public class TableViewFilterWizardPage extends AbstractWizardPage {
-
-    private static final String MSG_FILTER_VALID = DefaultMessagesImpl.getString("TableViewColumnFilterWizardPage.filterValid"); //$NON-NLS-1$
-
-    private static final String MSG_FILTER_INVALID = DefaultMessagesImpl
-            .getString("TableViewColumnFilterWizardPage.filterInvalid"); //$NON-NLS-1$
+public class TableViewFilterWizardPage extends MetaDataFilterWizardPage {
 
     private TableViewFilterWizard parent;
 
@@ -68,6 +59,7 @@ public class TableViewFilterWizardPage extends AbstractWizardPage {
         this.parent = parent;
     }
 
+    @Override
     public void createControl(Composite parent) {
         Composite comp = new Composite(parent, SWT.NONE);
         GridLayout grid = new GridLayout(2, false);
@@ -105,7 +97,8 @@ public class TableViewFilterWizardPage extends AbstractWizardPage {
         viewFilterText.setText(this.parent.getOldViewFilter());
         viewFilterText.setLayoutData(gd);
 
-        addFieldsListeners();
+        addFieldsListeners(tableFilterText);
+        addFieldsListeners(viewFilterText);
 
         this.setControl(comp);
     }
@@ -121,20 +114,5 @@ public class TableViewFilterWizardPage extends AbstractWizardPage {
             return false;
         }
         return true;
-    }
-
-    private void addFieldsListeners() {
-        ModifyListener modL = new ModifyListener() {
-
-            public void modifyText(ModifyEvent e) {
-                if (checkFieldsValue()) {
-                    updateStatus(IStatus.OK, MSG_FILTER_VALID);
-                } else {
-                    updateStatus(IStatus.ERROR, MSG_FILTER_INVALID);
-                }
-            }
-        };
-        tableFilterText.addModifyListener(modL);
-        viewFilterText.addModifyListener(modL);
     }
 }

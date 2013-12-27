@@ -24,7 +24,6 @@ import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.relational.TdSqlDataType;
 import org.talend.cwm.relational.TdTable;
 import org.talend.cwm.relational.TdView;
-import org.talend.dq.helper.EObjectHelper;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
 
@@ -34,8 +33,6 @@ import org.talend.repository.model.RepositoryNode;
 public class DBColumnRepNode extends DQRepositoryNode {
 
     private MetadataColumnRepositoryObject metadataColumnRepositoryObject;
-
-    private TdColumn tdColumn;
 
     /**
      * DOC klliu DBColumnRepNode constructor comment.
@@ -48,7 +45,6 @@ public class DBColumnRepNode extends DQRepositoryNode {
         super(object, parent, type);
         if (object instanceof MetadataColumnRepositoryObject) {
             metadataColumnRepositoryObject = (MetadataColumnRepositoryObject) object;
-            tdColumn = (TdColumn) metadataColumnRepositoryObject.getTdColumn();
             if (parent == null) {
                 RepositoryNode createParentNode = createParentNode();
                 this.setParent(createParentNode);
@@ -77,7 +73,7 @@ public class DBColumnRepNode extends DQRepositoryNode {
     @Override
     protected IRepositoryViewObject getParentViewObject() {
         IRepositoryViewObject returnViewObject = null;
-        MetadataTable columnOwnerAsMetadataTable = ColumnHelper.getColumnOwnerAsMetadataTable(tdColumn);
+        MetadataTable columnOwnerAsMetadataTable = ColumnHelper.getColumnOwnerAsMetadataTable(getTdColumn());
         if (columnOwnerAsMetadataTable instanceof TdTable) {
             returnViewObject = new TdTableRepositoryObject(metadataColumnRepositoryObject.getViewObject(),
                     (TdTable) columnOwnerAsMetadataTable);
@@ -93,10 +89,7 @@ public class DBColumnRepNode extends DQRepositoryNode {
     }
 
     public TdColumn getTdColumn() {
-        // MOD qiongli 20111-12-19 TDQ-4206 resolve the TdColumn if it is proxy.avoid NPE of uuid.
-        if (tdColumn != null && tdColumn.eIsProxy()) {
-            tdColumn = (TdColumn) EObjectHelper.resolveObject(tdColumn);
-        }
+        TdColumn tdColumn = (TdColumn) metadataColumnRepositoryObject.getTdColumn();
         return tdColumn;
     }
 

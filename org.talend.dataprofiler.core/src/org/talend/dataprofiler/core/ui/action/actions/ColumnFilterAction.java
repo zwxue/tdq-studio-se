@@ -17,8 +17,7 @@ import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
-import org.talend.dataprofiler.core.ui.wizard.database.MetaDataFilterWizard;
-import org.talend.dataprofiler.core.ui.wizard.database.MetaDataFilterWizardPage.FilterType;
+import org.talend.dataprofiler.core.ui.wizard.database.ColumnFilterWizard;
 import org.talend.dq.nodes.DBTableRepNode;
 import org.talend.dq.nodes.DBViewRepNode;
 import org.talend.repository.model.IRepositoryNode;
@@ -59,18 +58,11 @@ public class ColumnFilterAction extends Action {
         } else if (node instanceof DBViewRepNode) {
             this.namedColumnSet = ((DBViewRepNode) node).getTdView();
         }
-        // if (node.getObject() instanceof TdTableRepositoryObject) {
-        // TdTableRepositoryObject tableObject = (TdTableRepositoryObject) node.getObject();
-        // this.namedColumnSet = tableObject.getTdTable();
-        // } else if (node.getObject() instanceof TdViewRepositoryObject) {
-        // TdViewRepositoryObject viewObject = (TdViewRepositoryObject) node.getObject();
-        // this.namedColumnSet = viewObject.getTdView();
-        // }
     }
 
     @Override
     public void run() {
-        MetaDataFilterWizard wizard = new MetaDataFilterWizard(this.namedColumnSet, FilterType.COLUMN_FILTER);
+        ColumnFilterWizard wizard = new ColumnFilterWizard(this.namedColumnSet);
         WizardDialog dialog = new WizardDialog(null, wizard);
         dialog.setPageSize(WIDTH, HEIGHT);
         if (dialog.open() == Dialog.OK) {
