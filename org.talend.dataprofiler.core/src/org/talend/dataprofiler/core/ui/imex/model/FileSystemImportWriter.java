@@ -362,29 +362,23 @@ public class FileSystemImportWriter implements IImportWriter {
      * @throws Exception
      */
     private void update(File desFile, boolean isCovered) throws IOException, CoreException {
-
         String curProjectLabel = ResourceManager.getRootProjectName();
-
         if (desFile.exists()) {
-
+            boolean needReloadResource = false;
             IFile desIFile = ResourceService.file2IFile(desFile);
-
             String fileExt = desIFile.getFileExtension();
-            if (FactoriesUtil.isEmfFile(fileExt)) {
 
+            if (FactoriesUtil.isEmfFile(fileExt)) {
+                needReloadResource = true;
                 if (!StringUtils.equals(projectName, curProjectLabel)) {
                     String content = FileUtils.readFileToString(desFile, "utf-8");//$NON-NLS-1$
                     content = StringUtils.replace(content, "/" + projectName + "/", "/" + curProjectLabel + "/");//$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ 
                     FileUtils.writeStringToFile(desFile, content, "utf-8");//$NON-NLS-1$
                 }
-
-                if (isCovered) {
-                    URI uri = URI.createPlatformResourceURI(desIFile.getFullPath().toString(), false);
-                    EMFSharedResources.getInstance().reloadResource(uri);
-                }
             }
 
             if (fileExt.equals(FactoriesUtil.PROPERTIES_EXTENSION)) {
+                needReloadResource = true;
                 Property property = PropertyHelper.getProperty(desIFile);
 
                 if (property != null) {
@@ -401,8 +395,15 @@ public class FileSystemImportWriter implements IImportWriter {
                     log.error("Loading property error: " + desIFile.getFullPath().toString());//$NON-NLS-1$
                 }
             }
-        }
 
+            if (isCovered && needReloadResource) {
+                URI uri = URI.createPlatformResourceURI(desIFile.getFullPath().toString(), false);
+                EMFSharedResources.getInstance().reloadResource(uri);
+            }
+        } else {
+            log.error(DefaultMessagesImpl
+                    .getString("FileSystemImportWriter.destinationFileIsNotExist", desFile.getAbsolutePath())); //$NON-NLS-1$
+        }
     }
 
     /*
