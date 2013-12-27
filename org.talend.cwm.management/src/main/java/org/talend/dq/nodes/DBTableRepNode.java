@@ -34,8 +34,6 @@ public class DBTableRepNode extends DQRepositoryNode {
 
     private TdTableRepositoryObject tdTableRepositoryObject;
 
-    private TdTable tdTable;
-
     private List<IRepositoryNode> casheChildren;
 
     public TdTableRepositoryObject getTdTableRepositoryObject() {
@@ -43,7 +41,7 @@ public class DBTableRepNode extends DQRepositoryNode {
     }
 
     public TdTable getTdTable() {
-        return this.tdTable;
+        return this.tdTableRepositoryObject.getTdTable();
     }
 
     /**
@@ -57,7 +55,6 @@ public class DBTableRepNode extends DQRepositoryNode {
         super(object, parent, type);
         if (object instanceof TdTableRepositoryObject) {
             this.tdTableRepositoryObject = (TdTableRepositoryObject) object;
-            this.tdTable = this.tdTableRepositoryObject.getTdTable();
             if (parent == null) {
                 RepositoryNode createParentNode = createParentNode();
                 this.setParent(createParentNode);
@@ -87,7 +84,7 @@ public class DBTableRepNode extends DQRepositoryNode {
     @Override
     protected IRepositoryViewObject getParentViewObject() {
         IRepositoryViewObject packageViewObject = null;
-        Package parentPackage = PackageHelper.getParentPackage(tdTable);
+        Package parentPackage = PackageHelper.getParentPackage(getTdTable());
         if (parentPackage instanceof Catalog) {
             packageViewObject = new MetadataCatalogRepositoryObject(tdTableRepositoryObject.getViewObject(),
                     (Catalog) parentPackage);

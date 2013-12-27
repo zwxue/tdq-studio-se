@@ -213,6 +213,9 @@ public final class PropertyHelper {
      * @return property or null
      */
     public static Property getProperty(ModelElement element) {
+        if (element.eIsProxy()) {
+            element = (ModelElement) EObjectHelper.resolveObject(element);
+        }
         URI uri = element.eResource() == null ? null : element.eResource().getURI();
         if (uri != null) {
             if (uri.isPlatform()) {
