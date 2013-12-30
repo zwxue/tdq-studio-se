@@ -279,7 +279,7 @@ public class ValueIndicatorImpl extends IndicatorImpl implements ValueIndicator 
     private String getCorrectStringValue(Object obj, String str) {
         String result = str;
         // ADD msjian TDQ-5673 2013-12-27: when the data type oracle.sql.TIMESTAMP, format it to display
-        if (obj.getClass().getName().equals("oracle.sql.TIMESTAMP")) { //$NON-NLS-1$
+        if (obj != null && "oracle.sql.TIMESTAMP".equals(obj.getClass().getName())) { //$NON-NLS-1$
             try {
                 Class<? extends Object> clz = obj.getClass();
                 Method method = clz.getMethod("timestampValue"); //$NON-NLS-1$
