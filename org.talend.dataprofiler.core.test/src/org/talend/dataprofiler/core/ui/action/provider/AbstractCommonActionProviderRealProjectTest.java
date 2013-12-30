@@ -39,7 +39,6 @@ import org.talend.cwm.helper.SchemaHelper;
 import org.talend.cwm.relational.TdTable;
 import org.talend.cwm.relational.impl.RelationalFactoryImpl;
 import org.talend.dataprofiler.core.helper.UnitTestBuildHelper;
-import org.talend.dq.nodes.DBCatalogRepNode;
 import org.talend.dq.nodes.DBColumnFolderRepNode;
 import org.talend.dq.nodes.DBConnectionRepNode;
 import org.talend.dq.nodes.DBSchemaRepNode;
@@ -47,7 +46,9 @@ import org.talend.dq.nodes.DBTableFolderRepNode;
 import org.talend.dq.nodes.DBTableRepNode;
 import org.talend.dq.nodes.DBViewFolderRepNode;
 import org.talend.dq.nodes.DFColumnFolderRepNode;
+import org.talend.dq.nodes.factory.DQRepNodeCreateFactory;
 import org.talend.repository.model.IRepositoryNode.ENodeType;
+import org.talend.repository.model.RepositoryNode;
 import orgomg.cwm.resource.relational.Catalog;
 import orgomg.cwm.resource.relational.Schema;
 
@@ -173,7 +174,8 @@ public class AbstractCommonActionProviderRealProjectTest {
         // create DFColumnFolderRepNode
         Assert.assertFalse(lastVersion == null);
 
-        DBCatalogRepNode dbCatalogRepNode = new DBCatalogRepNode(lastVersion, null, null);
+        RepositoryNode dbCatalogRepNode = DQRepNodeCreateFactory.createDBCatalogRepNode(lastVersion, null, null);
+        // new DBCatalogRepNode(lastVersion, null, null);
         // ~DFColumnFolderRepNode
         AbstractCommonActionProvider provider = new AbstractCommonActionProvider();
         Connection connection = provider.getConnection(dbCatalogRepNode);
@@ -256,7 +258,9 @@ public class AbstractCommonActionProviderRealProjectTest {
         // ~FileConnection
         // create DFColumnFolderRepNode
         Assert.assertFalse(lastVersion == null);
-        DBCatalogRepNode dbCatalogRepNode = new DBCatalogRepNode(lastVersion, null, ENodeType.TDQ_REPOSITORY_ELEMENT);
+        RepositoryNode dbCatalogRepNode = DQRepNodeCreateFactory.createDBCatalogRepNode(lastVersion, null,
+                ENodeType.TDQ_REPOSITORY_ELEMENT);
+        // new DBCatalogRepNode(lastVersion, null, ENodeType.TDQ_REPOSITORY_ELEMENT);
         DBTableFolderRepNode dbTableFolderRepNode = new DBTableFolderRepNode(null, dbCatalogRepNode, null);
         // ~DFColumnFolderRepNode
         AbstractCommonActionProvider provider = new AbstractCommonActionProvider();
@@ -287,7 +291,9 @@ public class AbstractCommonActionProviderRealProjectTest {
         // ~FileConnection
         // create DFColumnFolderRepNode
         Assert.assertFalse(lastVersion == null);
-        DBCatalogRepNode dbCatalogRepNode = new DBCatalogRepNode(lastVersion, null, ENodeType.TDQ_REPOSITORY_ELEMENT);
+        RepositoryNode dbCatalogRepNode = DQRepNodeCreateFactory.createDBCatalogRepNode(lastVersion, null,
+                ENodeType.TDQ_REPOSITORY_ELEMENT);
+        // new DBCatalogRepNode(lastVersion, null, ENodeType.TDQ_REPOSITORY_ELEMENT);
         DBViewFolderRepNode dbViewFolderRepNode = new DBViewFolderRepNode(null, dbCatalogRepNode, null);
         // ~DFColumnFolderRepNode
         AbstractCommonActionProvider provider = new AbstractCommonActionProvider();
@@ -307,11 +313,12 @@ public class AbstractCommonActionProviderRealProjectTest {
         IRepositoryViewObject lastVersion = null;
         String propertyID = createConnectionItem(connectionName, null, null);
         TdTable createTdTable = RelationalFactoryImpl.eINSTANCE.createTdTable();
-        DBCatalogRepNode dbCatalogRepNode = null;
+        RepositoryNode dbCatalogRepNode = null;
         createTdTable.setName("table1"); //$NON-NLS-1$
         try {
             lastVersion = factory.getLastVersion(propertyID);
-            dbCatalogRepNode = new DBCatalogRepNode(lastVersion, null, ENodeType.TDQ_REPOSITORY_ELEMENT);
+            dbCatalogRepNode = DQRepNodeCreateFactory.createDBCatalogRepNode(lastVersion, null, ENodeType.TDQ_REPOSITORY_ELEMENT);
+            // new DBCatalogRepNode(lastVersion, null, ENodeType.TDQ_REPOSITORY_ELEMENT);
             lastVersion = new TdTableRepositoryObject(lastVersion, createTdTable);
         } catch (PersistenceException e) {
             log.error(e, e);

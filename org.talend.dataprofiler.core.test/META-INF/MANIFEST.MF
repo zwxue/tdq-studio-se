@@ -23,3 +23,4 @@ Export-Package: org.talend.dataprofiler.core.helper,
  org.talend.dataprofiler.core.ui.views.resources,
  org.talend.dataprofiler.core.ui.wizard.analysis,
  org.talend.dataprofiler.core.ui.wizard.database
+Import-Package: org.talend.dq.nodes.factory
