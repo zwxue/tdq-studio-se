@@ -21,7 +21,7 @@ import org.talend.core.model.metadata.builder.connection.DelimitedFileConnection
 import org.talend.core.model.metadata.builder.connection.MetadataTable;
 import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.properties.DelimitedFileConnectionItem;
-import org.talend.core.model.properties.Item;
+import org.talend.core.model.properties.Property;
 import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.core.repository.model.repositoryObject.MetadataTableRepositoryObject;
@@ -37,10 +37,11 @@ import orgomg.cwm.resource.record.RecordFile;
  */
 public class DFConnectionRepNode extends ConnectionRepNode {
 
-    private DelimitedFileConnection dfConnection;
-
     public DelimitedFileConnection getDfConnection() {
-        return this.dfConnection;
+        DelimitedFileConnection dfConnection = null;
+        Property property = getObject().getProperty();
+        dfConnection = (DelimitedFileConnection) ((DelimitedFileConnectionItem) property.getItem()).getConnection();
+        return dfConnection;
     }
 
     /**
@@ -53,12 +54,6 @@ public class DFConnectionRepNode extends ConnectionRepNode {
     public DFConnectionRepNode(IRepositoryViewObject object, RepositoryNode parent, ENodeType type) {
         super(object, parent, type);
         RepositoryNodeHelper.restoreCorruptedConn(object.getProperty());
-        if (object != null && object.getProperty() != null) {
-            Item item = object.getProperty().getItem();
-            if (item != null && item instanceof DelimitedFileConnectionItem) {
-                this.dfConnection = (DelimitedFileConnection) ((DelimitedFileConnectionItem) item).getConnection();
-            }
-        }
     }
 
     @Override

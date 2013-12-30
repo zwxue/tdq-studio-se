@@ -28,7 +28,6 @@ public class DFTableRepNode extends DQRepositoryNode {
 
     private MetadataTableRepositoryObject mdTableRepositoryObject;
 
-    private MetadataTable metadataTable;
     /**
      * DOC qiongli DFRepositoryNode constructor comment.
      * 
@@ -39,7 +38,6 @@ public class DFTableRepNode extends DQRepositoryNode {
     public DFTableRepNode(IRepositoryViewObject object, RepositoryNode parent, ENodeType type) {
         super(object, parent, type);
         this.mdTableRepositoryObject = (MetadataTableRepositoryObject) object;
-        this.metadataTable = this.mdTableRepositoryObject.getTable();
     }
 
     @Override
@@ -52,7 +50,7 @@ public class DFTableRepNode extends DQRepositoryNode {
     }
 
     public MetadataTable getMetadataTable() {
-        return this.metadataTable;
+        return this.mdTableRepositoryObject.getTable();
     }
 
     /*

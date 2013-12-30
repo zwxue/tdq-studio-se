@@ -34,10 +34,8 @@ public class DBCatalogRepNode extends DQRepositoryNode {
 
     private List<IRepositoryNode> schemaChildren;
 
-    private Catalog catalog;
-
     public Catalog getCatalog() {
-        return this.catalog;
+        return this.metadataCatalogObject.getCatalog();
     }
 
     /**
@@ -53,7 +51,6 @@ public class DBCatalogRepNode extends DQRepositoryNode {
         schemaChildren = new ArrayList<IRepositoryNode>();
         if (viewObject instanceof MetadataCatalogRepositoryObject) {
             metadataCatalogObject = (MetadataCatalogRepositoryObject) viewObject;
-            this.catalog = metadataCatalogObject.getCatalog();
             if (parent == null) {
                 RepositoryNode createParentNode = createParentNode();
                 this.setParent(createParentNode);
