@@ -255,13 +255,13 @@ public class ValueIndicatorImpl extends IndicatorImpl implements ValueIndicator 
         }
 
         if (objects.size() == 1) {
-            String med = String.valueOf(objects.get(0)[0]);
-            if (med == null) {
+            String str = String.valueOf(objects.get(0)[0]);
+            if (str == null) {
                 log.error("Value is null of " + this.getName() + " !!");
                 return false;
             }
-            med = getCorrectStringValue(objects.get(0)[0], med);
-            this.setValue(med);
+            str = getCorrectStringValue(objects.get(0)[0], str);
+            this.setValue(str);
             // set datatype here
             this.setDatatype(this.getColumnType());
             return true;
@@ -270,14 +270,14 @@ public class ValueIndicatorImpl extends IndicatorImpl implements ValueIndicator 
     }
 
     /**
-     * format the object data to correct string.
+     * format the object data to correct string value.
      * 
-     * @param obj
-     * @param med
-     * @return String
+     * @param obj: the object data
+     * @param str: the object string value
+     * @return the object correct string value
      */
-    private String getCorrectStringValue(Object obj, String med) {
-        String result = med;
+    private String getCorrectStringValue(Object obj, String str) {
+        String result = str;
         // ADD msjian TDQ-5673 2013-12-27: when the data type oracle.sql.TIMESTAMP, format it to display
         if (obj.getClass().getName().equals("oracle.sql.TIMESTAMP")) { //$NON-NLS-1$
             try {
