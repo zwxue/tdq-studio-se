@@ -34,14 +34,12 @@ public class DBViewRepNode extends DQRepositoryNode {
 
     private TdViewRepositoryObject tdViewRepositoryObject;
 
-    private TdView tdView;
-
     public TdViewRepositoryObject getTdViewRepositoryObject() {
         return this.tdViewRepositoryObject;
     }
 
     public TdView getTdView() {
-        return this.tdView;
+        return this.tdViewRepositoryObject.getTdView();
     }
 
     /**
@@ -55,7 +53,6 @@ public class DBViewRepNode extends DQRepositoryNode {
         super(object, parent, type);
         if (object instanceof TdViewRepositoryObject) {
             this.tdViewRepositoryObject = (TdViewRepositoryObject) object;
-            this.tdView = this.tdViewRepositoryObject.getTdView();
             if (parent == null) {
                 RepositoryNode createParentNode = createParentNode();
                 this.setParent(createParentNode);
@@ -85,7 +82,7 @@ public class DBViewRepNode extends DQRepositoryNode {
     @Override
     protected IRepositoryViewObject getParentViewObject() {
         IRepositoryViewObject packageViewObject = null;
-        Package parentPackage = PackageHelper.getParentPackage(tdView);
+        Package parentPackage = PackageHelper.getParentPackage(getTdView());
         if (parentPackage instanceof Catalog) {
             packageViewObject = new MetadataCatalogRepositoryObject(tdViewRepositoryObject.getViewObject(),
                     (Catalog) parentPackage);
@@ -112,6 +109,6 @@ public class DBViewRepNode extends DQRepositoryNode {
 
     @Override
     public String getLabel() {
-        return this.tdView.getName();
+        return this.getTdView().getName();
     }
 }

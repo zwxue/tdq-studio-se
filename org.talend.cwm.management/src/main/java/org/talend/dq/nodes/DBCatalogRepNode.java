@@ -37,15 +37,13 @@ public class DBCatalogRepNode extends DQRepositoryNode {
 
     private List<IRepositoryNode> schemaChildren;
 
-    private Catalog catalog;
-
     public Catalog getCatalog() {
-        return this.catalog;
+        return this.metadataCatalogObject.getCatalog();
     }
 
     /**
      * DOC klliu DBCatalogRepNode constructor comment.
-     *
+     * 
      * @param viewObject
      * @param parent if parent is null will try to create new one to insert of old parent.
      * @param type
@@ -56,7 +54,6 @@ public class DBCatalogRepNode extends DQRepositoryNode {
         schemaChildren = new ArrayList<IRepositoryNode>();
         if (viewObject instanceof MetadataCatalogRepositoryObject) {
             metadataCatalogObject = (MetadataCatalogRepositoryObject) viewObject;
-            this.catalog = metadataCatalogObject.getCatalog();
             if (parent == null) {
                 RepositoryNode createParentNode = createParentNode();
                 this.setParent(createParentNode);
@@ -66,7 +63,7 @@ public class DBCatalogRepNode extends DQRepositoryNode {
 
     /**
      * create the node of parent.
-     *
+     * 
      * @param object
      * @return
      */
@@ -78,7 +75,7 @@ public class DBCatalogRepNode extends DQRepositoryNode {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see org.talend.repository.model.RepositoryNode#getObject()
      */
     @Override
@@ -88,7 +85,7 @@ public class DBCatalogRepNode extends DQRepositoryNode {
 
     /*
      * (non-Jsdoc)
-     *
+     * 
      * @see org.talend.repository.model.RepositoryNode#getChildren()
      */
     @Override
@@ -110,7 +107,7 @@ public class DBCatalogRepNode extends DQRepositoryNode {
 
     /**
      * DOC klliu Comment method "createTableViewFolder".
-     *
+     * 
      * @param metadataCatalog
      * @return
      */
@@ -128,7 +125,7 @@ public class DBCatalogRepNode extends DQRepositoryNode {
 
     /**
      * Create SchemaRepositoryNode under CatalogRepositoryNode.
-     *
+     * 
      * @param node parent CatalogRepositoryNode
      * @param metadataCatalog parent CatalogViewObject
      * @param schema the schema should to be added under the catalog
@@ -152,7 +149,7 @@ public class DBCatalogRepNode extends DQRepositoryNode {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see org.talend.repository.model.RepositoryNode#getLabel()
      */
     @Override
@@ -165,7 +162,7 @@ public class DBCatalogRepNode extends DQRepositoryNode {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see org.talend.repository.model.RepositoryNode#getDisplayText()
      */
     @Override

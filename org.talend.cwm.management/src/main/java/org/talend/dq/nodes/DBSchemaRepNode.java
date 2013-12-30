@@ -30,12 +30,10 @@ import orgomg.cwm.resource.relational.Schema;
  */
 public class DBSchemaRepNode extends DQRepositoryNode {
 
-    private Schema schema;
-
     private MetadataSchemaRepositoryObject metadataSchemaObject = null;
 
     public Schema getSchema() {
-        return this.schema;
+        return this.metadataSchemaObject.getSchema();
     }
 
     /*
@@ -59,7 +57,6 @@ public class DBSchemaRepNode extends DQRepositoryNode {
         super(object, parent, type);
         if (object instanceof MetadataSchemaRepositoryObject) {
             metadataSchemaObject = (MetadataSchemaRepositoryObject) object;
-            this.schema = metadataSchemaObject.getSchema();
             if (parent == null) {
                 RepositoryNode createParentNode = createParentNode();
                 this.setParent(createParentNode);
@@ -75,7 +72,7 @@ public class DBSchemaRepNode extends DQRepositoryNode {
      */
     private RepositoryNode createParentNode() {
         RepositoryNode dbParentRepNode = null;
-        Package parentPackage = PackageHelper.getParentPackage(schema);
+        Package parentPackage = PackageHelper.getParentPackage(getSchema());
         if (parentPackage == null) {
             dbParentRepNode = new DBConnectionRepNode(getParentViewObject(), null, ENodeType.TDQ_REPOSITORY_ELEMENT);
         } else if (parentPackage instanceof Catalog) {
@@ -92,7 +89,7 @@ public class DBSchemaRepNode extends DQRepositoryNode {
     @Override
     protected IRepositoryViewObject getParentViewObject() {
         IRepositoryViewObject packageViewObject = null;
-        Package parentPackage = PackageHelper.getParentPackage(schema);
+        Package parentPackage = PackageHelper.getParentPackage(getSchema());
         if (parentPackage == null) {
             return metadataSchemaObject.getViewObject();
         } else if (parentPackage instanceof Catalog) {
