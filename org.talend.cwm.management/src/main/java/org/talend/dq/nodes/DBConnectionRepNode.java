@@ -25,6 +25,7 @@ import org.talend.core.repository.model.repositoryObject.MetadataCatalogReposito
 import org.talend.core.repository.model.repositoryObject.MetadataSchemaRepositoryObject;
 import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.dq.helper.RepositoryNodeHelper;
+import org.talend.dq.nodes.factory.DQRepNodeCreateFactory;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
 import orgomg.cwm.objectmodel.core.Package;
@@ -150,7 +151,8 @@ public class DBConnectionRepNode extends ConnectionRepNode {
     private void initializedCatalogRepNode(List<IRepositoryNode> nodes, Package pack) {
         if (pack instanceof Catalog) {
             MetadataCatalogRepositoryObject metadataCatalog = new MetadataCatalogRepositoryObject(getObject(), (Catalog) pack);
-            RepositoryNode catalogNode = new DBCatalogRepNode(metadataCatalog, this, ENodeType.TDQ_REPOSITORY_ELEMENT);
+            RepositoryNode catalogNode = DQRepNodeCreateFactory.createDBCatalogRepNode(metadataCatalog, this,
+                    ENodeType.TDQ_REPOSITORY_ELEMENT);
             catalogNode.setProperties(EProperties.LABEL, ERepositoryObjectType.METADATA_CON_CATALOG);
             catalogNode.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.METADATA_CON_CATALOG);
             metadataCatalog.setRepositoryNode(catalogNode);
