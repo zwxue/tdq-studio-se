@@ -25,8 +25,6 @@ public class DFColumnRepNode extends DQRepositoryNode {
 
     private MetadataColumnRepositoryObject metadataColumnRepositoryObject;
 
-    private MetadataColumn metadataColumn;
-
     /**
      * DOC qiongli DFColumnRepNode constructor comment.
      * 
@@ -37,7 +35,6 @@ public class DFColumnRepNode extends DQRepositoryNode {
     public DFColumnRepNode(IRepositoryViewObject object, RepositoryNode parent, ENodeType type) {
         super(object, parent, type);
         metadataColumnRepositoryObject = (MetadataColumnRepositoryObject) object;
-        metadataColumn = metadataColumnRepositoryObject.getTdColumn();
     }
 
     // @Override
@@ -48,7 +45,7 @@ public class DFColumnRepNode extends DQRepositoryNode {
     // }
 
     public MetadataColumn getMetadataColumn() {
-        return this.metadataColumn;
+        return this.metadataColumnRepositoryObject.getTdColumn();
     }
 
     @Override

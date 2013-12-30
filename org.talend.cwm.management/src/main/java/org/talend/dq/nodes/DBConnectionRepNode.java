@@ -19,8 +19,7 @@ import org.eclipse.emf.common.util.EList;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
 import org.talend.core.model.properties.ConnectionItem;
-import org.talend.core.model.properties.DatabaseConnectionItem;
-import org.talend.core.model.properties.Item;
+import org.talend.core.model.properties.Property;
 import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.core.repository.model.repositoryObject.MetadataCatalogRepositoryObject;
@@ -40,10 +39,12 @@ public class DBConnectionRepNode extends ConnectionRepNode {
 
     List<IRepositoryNode> afterGlobalFilter;
 
-    private DatabaseConnection databaseConnection;
-
     public DatabaseConnection getDatabaseConnection() {
-        return this.databaseConnection;
+        DatabaseConnection dbConnection = null;
+        Property property = getObject().getProperty();
+        dbConnection = (DatabaseConnection) ((ConnectionItem) property.getItem()).getConnection();
+        return dbConnection;
+
     }
 
     /**
@@ -56,15 +57,6 @@ public class DBConnectionRepNode extends ConnectionRepNode {
     public DBConnectionRepNode(IRepositoryViewObject object, RepositoryNode parent, ENodeType type) {
         super(object, parent, type);
         RepositoryNodeHelper.restoreCorruptedConn(object.getProperty());
-        if (object != null && object.getProperty() != null) {
-            Item item = object.getProperty().getItem();
-            if (item != null && item instanceof DatabaseConnectionItem) {
-                Connection connection = ((DatabaseConnectionItem) item).getConnection();
-                if (connection != null) {
-                    this.databaseConnection = (DatabaseConnection) connection;
-                }
-            }
-        }
 
     }
 
@@ -81,7 +73,7 @@ public class DBConnectionRepNode extends ConnectionRepNode {
         EList<Package> dataPackage = connection.getDataPackage();
         if (dataPackage != null && dataPackage.size() > 0) {
             Package pack = dataPackage.get(0);
-            String filterCharater = ConnectionHelper.getPackageFilter(databaseConnection);
+            String filterCharater = ConnectionHelper.getPackageFilter(connection);
             List<IRepositoryNode> afterPackageFilter = null;
             if (pack instanceof Schema) {
                 // MOD gdbu 2011-6-29 bug : 22204
