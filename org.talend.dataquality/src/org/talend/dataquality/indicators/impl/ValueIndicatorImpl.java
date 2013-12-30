@@ -5,6 +5,9 @@
  */
 package org.talend.dataquality.indicators.impl;
 
+import java.lang.reflect.Method;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -257,12 +260,37 @@ public class ValueIndicatorImpl extends IndicatorImpl implements ValueIndicator 
                 log.error("Value is null of " + this.getName() + " !!");
                 return false;
             }
+            med = getCorrectStringValue(objects.get(0)[0], med);
             this.setValue(med);
             // set datatype here
             this.setDatatype(this.getColumnType());
             return true;
         }
         return false;
+    }
+
+    /**
+     * format the object data to correct string.
+     * 
+     * @param obj
+     * @param med
+     * @return String
+     */
+    private String getCorrectStringValue(Object obj, String med) {
+        String result = med;
+        // ADD msjian TDQ-5673 2013-12-27: when the data type oracle.sql.TIMESTAMP, format it to display
+        if (obj.getClass().getName().equals("oracle.sql.TIMESTAMP")) { //$NON-NLS-1$
+            try {
+                Class<? extends Object> clz = obj.getClass();
+                Method method = clz.getMethod("timestampValue"); //$NON-NLS-1$
+                Timestamp objTimestamp = (Timestamp) method.invoke(obj);
+                SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.S"); //$NON-NLS-1$
+                result = df.format(objTimestamp);
+            } catch (Exception e) {
+                log.error(e, e);
+            }
+        }
+        return result;
     }
 
     /*
