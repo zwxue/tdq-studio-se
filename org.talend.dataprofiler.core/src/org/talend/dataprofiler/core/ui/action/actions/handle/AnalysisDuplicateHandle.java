@@ -13,31 +13,16 @@
 package org.talend.dataprofiler.core.ui.action.actions.handle;
 
 import org.eclipse.emf.common.util.EList;
-import org.talend.core.model.properties.Property;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.domain.Domain;
 import org.talend.dataquality.helpers.AnalysisHelper;
 import org.talend.dataquality.helpers.DomainHelper;
-import org.talend.repository.model.IRepositoryNode;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
- * DOC bZhou class global comment. Detailled comment
+ * duplicate an analysis model element
  */
-public class AnalysisHandle extends EMFResourceHandle {
-
-    /**
-     * DOC bZhou DuplicateAnalysisHandle constructor comment.
-     * 
-     * @param propety
-     */
-    AnalysisHandle(Property propety) {
-        super(propety);
-    }
-
-    AnalysisHandle(IRepositoryNode node) {
-        super(node);
-    }
+public class AnalysisDuplicateHandle extends ModelElementDuplicateHandle {
 
     /*
      * (non-Javadoc)
@@ -50,6 +35,8 @@ public class AnalysisHandle extends EMFResourceHandle {
     protected ModelElement update(ModelElement oldObject, ModelElement newObject) {
         ModelElement tempObject = newObject;
         tempObject = super.update(oldObject, tempObject);
+        // copy the client dependency if any
+        newObject.getClientDependency().addAll(oldObject.getClientDependency());
 
         // Added yyin 2012-10-10 TDQ-6236, create a new domain instead of using the domain in the original object
         EList<Domain> dataFilters = ((Analysis) tempObject).getParameters().getDataFilter();
@@ -83,5 +70,9 @@ public class AnalysisHandle extends EMFResourceHandle {
         // ~6236
 
         return tempObject;
+    }
+
+    protected boolean needSaveDepend() {
+        return true;
     }
 }

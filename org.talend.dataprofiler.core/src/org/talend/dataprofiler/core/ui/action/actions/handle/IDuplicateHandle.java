@@ -12,42 +12,23 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.action.actions.handle;
 
-import org.eclipse.core.resources.IFile;
 import org.talend.commons.exception.BusinessException;
-import org.talend.utils.sugars.ReturnCode;
+import org.talend.core.model.properties.Item;
 
 /**
  * DOC bZhou class global comment. Detailled comment
  */
-public interface IDuplicateHandle extends IActionHandle {
+public interface IDuplicateHandle {
 
     /**
-     * DOC bZhou Comment method "isExistedLabel".
+     * duplicate a TDQ item: For the Analysis, Report, the duplicated item will contains the client dependencies in old
+     * one. For other type, like connection, pattern, UDI, the duplicated item will not contains any dependencies in old
+     * one.
      * 
-     * @param label
-     * @return
+     * @param oldItem
+     * @param newName the new name of the duplicated one
+     * @return the duplicated item, name is the newName
      */
-    public boolean isExistedLabel(String label);
-
-    /**
-     * DOC bZhou Comment method "duplicate".
-     * 
-     * This function is to duplicate an item in tdq reponsitory.
-     * 
-     * @param newLabel
-     * 
-     * @return
-     * @throws BusinessException
-     */
-    public IFile duplicate(String newLabel) throws BusinessException;
-
-    /**
-     * DOC bZhou Comment method "validDuplicated".
-     * 
-     * This function is to sure this handle can be execute.
-     * 
-     * @return
-     */
-    public ReturnCode validDuplicated();
+    public Item duplicateItem(Item oldItem, String newName) throws BusinessException;
 
 }
