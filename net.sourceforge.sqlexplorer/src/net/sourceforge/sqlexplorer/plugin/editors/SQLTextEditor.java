@@ -235,7 +235,8 @@ public class SQLTextEditor extends TextEditor {
                     return;
                 } else {
                     IPath lseg = filePath.removeLastSegments(1);
-                    filePath = lseg.append(inputDialog.getValue());
+                    String inputFileName = inputDialog.getValue();
+                    filePath = lseg.append(inputFileName.toLowerCase().endsWith(DEFAULT_FILE_EXTENSION) ? inputFileName : inputFileName + DEFAULT_FILE_EXTENSION);
                     file = workspace.getRoot().getFile(filePath);
                 }
             }
