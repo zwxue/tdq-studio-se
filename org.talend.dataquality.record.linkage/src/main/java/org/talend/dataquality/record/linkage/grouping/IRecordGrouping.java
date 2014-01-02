@@ -119,7 +119,13 @@ public interface IRecordGrouping {
     public void setSeperateOutput(boolean isSeperateOutput);
 
     /**
+     * Set the column escapeCharacter.
      * 
+     * @param escapeCharacter
+     */
+    public void setEscapeCharacter(String escapeCharacter);
+
+    /**
      * Set the column delimiter.
      * 
      * @param columnDelimiter
@@ -127,7 +133,6 @@ public interface IRecordGrouping {
     public void setColumnDelimiter(String columnDelimiter);
 
     /**
-     * 
      * If current matching pass is based on a previous matching result.
      * 
      * @param isLinkToPrevious

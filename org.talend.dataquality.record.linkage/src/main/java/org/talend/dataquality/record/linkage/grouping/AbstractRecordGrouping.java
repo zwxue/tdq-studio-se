@@ -28,6 +28,7 @@ import org.talend.dataquality.record.linkage.record.IRecordMatcher;
 import org.talend.dataquality.record.linkage.record.RecordMatcherFactory;
 import org.talend.dataquality.record.linkage.utils.CustomAttributeMatcherClassNameConvert;
 import org.talend.utils.classloader.TalendURLClassLoader;
+import org.talend.utils.string.StringUtilities;
 
 /**
  * created by zhao on Jul 19, 2013 <br>
@@ -59,6 +60,13 @@ public abstract class AbstractRecordGrouping implements IRecordGrouping {
     private List<List<Map<String, String>>> multiMatchRules = new ArrayList<List<Map<String, String>>>();
 
     private String columnDelimiter = null;
+
+    private String escapeCharacter = null;
+
+    @Override
+    public void setEscapeCharacter(String escapeCharacter) {
+        this.escapeCharacter = escapeCharacter;
+    }
 
     private Boolean isLinkToPrevious = Boolean.FALSE;
 
@@ -119,7 +127,7 @@ public abstract class AbstractRecordGrouping implements IRecordGrouping {
         // In case of current component is linked to previous, and the record is NOT master, just put it to the output
         // and continue;
         if (isLinkToPrevious && !inputRow[inputRow.length - extSize + 2].equalsIgnoreCase("true")) { //$NON-NLS-1$
-            outputRow(StringUtils.join(inputRow, columnDelimiter));
+            outputRow(StringUtilities.join(inputRow, columnDelimiter, escapeCharacter));
             return;
         }
 
@@ -161,7 +169,8 @@ public abstract class AbstractRecordGrouping implements IRecordGrouping {
                     if (masterGRPSize == 1) {
                         inputRow[inputRow.length - extSize + 1] = String.valueOf(Integer.parseInt(inputRow[inputRow.length
                                 - extSize + 1]) + 1);
-                        updateWithExtendedColumn(masterRecord, inputRow, matchingProba, distanceDetails, columnDelimiter);
+                        updateWithExtendedColumn(masterRecord, inputRow, matchingProba, distanceDetails, columnDelimiter,
+                                escapeCharacter);
                         // Update master record from the temporary master list.
                         masterRecords.remove(masterRecord);
                         masterRecords.add(inputRow);
@@ -171,7 +180,7 @@ public abstract class AbstractRecordGrouping implements IRecordGrouping {
                 masterRecord[masterRecord.length - extSize + 1] = String.valueOf(Integer
                         .parseInt(masterRecord[masterRecord.length - extSize + 1]) + 1);
                 // Duplicated record
-                updateWithExtendedColumn(inputRow, masterRecord, matchingProba, distanceDetails, columnDelimiter);
+                updateWithExtendedColumn(inputRow, masterRecord, matchingProba, distanceDetails, columnDelimiter, escapeCharacter);
                 break;
             }
 
@@ -247,13 +256,12 @@ public abstract class AbstractRecordGrouping implements IRecordGrouping {
     public void end() throws IOException, InterruptedException {
         // output the masters
         for (String[] mst : masterRecords) {
-            outputRow(StringUtils.join(mst, columnDelimiter));
+            outputRow(StringUtilities.join(mst, columnDelimiter, escapeCharacter));
         }
-
     }
 
     private void updateWithExtendedColumn(String[] inputRow, String[] masterRecord, double matchingProba, String distanceDetails,
-            String delimiter) throws IOException, InterruptedException {
+            String delimiter, String escCharacter) throws IOException, InterruptedException {
         String[] duplicateRecord = new String[masterRecord.length];
         for (int idx = 0; idx < inputRow.length; idx++) {
             duplicateRecord[idx] = inputRow[idx];
@@ -280,8 +288,7 @@ public abstract class AbstractRecordGrouping implements IRecordGrouping {
             duplicateRecord[duplicateRecord.length - extSize + extIdx] = distanceDetails;
         }
         // output the duplicate record
-        outputRow(StringUtils.join(duplicateRecord, delimiter));
-
+        outputRow(StringUtilities.join(duplicateRecord, delimiter, escCharacter));
     }
 
     /**
