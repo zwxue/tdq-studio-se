@@ -14,6 +14,7 @@ package org.talend.dataprofiler.core.ui.action.actions.handle;
 
 import org.talend.commons.exception.BusinessException;
 import org.talend.dataprofiler.core.exception.ExceptionFactory;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.resource.EResourceConstant;
 
@@ -38,7 +39,7 @@ public final class ActionHandleFactory {
 
         if (typedConstant == null) {
             BusinessException createBusinessException = ExceptionFactory.getInstance().createBusinessException(
-                    "The current node does not support duplicate.");
+                    DefaultMessagesImpl.getString("ActionHandleFactory.duplicateFail"));
             throw createBusinessException;
         } else {
             switch (typedConstant) {
