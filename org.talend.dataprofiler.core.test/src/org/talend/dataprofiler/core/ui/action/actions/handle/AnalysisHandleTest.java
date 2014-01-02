@@ -12,8 +12,10 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.action.actions.handle;
 
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 import junit.framework.Assert;
 
 import org.eclipse.core.resources.IWorkspaceRoot;
@@ -60,7 +62,7 @@ public class AnalysisHandleTest {
 
     Analysis oldAnalysis;
 
-    AnalysisHandle handle;
+    AnalysisDuplicateHandle handle;
 
     /**
      * DOC yyin Comment method "setUp".
@@ -104,7 +106,7 @@ public class AnalysisHandleTest {
         PowerMockito.mockStatic(RepositoryNodeHelper.class);
         when(RepositoryNodeHelper.getModelElementFromRepositoryNode(node)).thenReturn(oldAnalysis);
 
-        handle = new AnalysisHandle(node);
+        handle = new AnalysisDuplicateHandle();
     }
 
     /**
@@ -127,7 +129,7 @@ public class AnalysisHandleTest {
 
     /**
      * Test method for
-     * {@link org.talend.dataprofiler.core.ui.action.actions.handle.AnalysisHandle#update(orgomg.cwm.objectmodel.core.ModelElement, orgomg.cwm.objectmodel.core.ModelElement)}
+     * {@link org.talend.dataprofiler.core.ui.action.actions.handle.AnalysisDuplicateHandle#update(orgomg.cwm.objectmodel.core.ModelElement, orgomg.cwm.objectmodel.core.ModelElement)}
      * .
      */
     @Test

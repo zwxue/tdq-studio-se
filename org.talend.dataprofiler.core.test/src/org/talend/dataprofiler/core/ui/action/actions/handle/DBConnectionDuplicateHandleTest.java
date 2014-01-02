@@ -16,7 +16,6 @@ import java.util.List;
 
 import junit.framework.Assert;
 
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
@@ -27,20 +26,18 @@ import org.junit.Test;
 import org.talend.commons.exception.BusinessException;
 import org.talend.commons.exception.PersistenceException;
 import org.talend.core.database.EDatabaseTypeName;
-import org.talend.core.model.general.Project;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.connection.ConnectionFactory;
 import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
 import org.talend.core.model.properties.DatabaseConnectionItem;
+import org.talend.core.model.properties.Item;
 import org.talend.core.model.properties.PropertiesFactory;
 import org.talend.core.model.properties.Property;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.cwm.helper.CatalogHelper;
 import org.talend.cwm.helper.ConnectionHelper;
-import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.nodes.DBConnectionRepNode;
-import org.talend.repository.localprovider.model.LocalRepositoryFactory;
 import org.talend.repository.model.IRepositoryNode.ENodeType;
 import org.talend.repository.model.RepositoryNode;
 import orgomg.cwm.resource.relational.Catalog;
@@ -49,7 +46,7 @@ import orgomg.cwm.resource.relational.Catalog;
  * created by zshen on Apr 18, 2013 Detailled comment
  * 
  */
-public class EMFResourceHandleTest {
+public class DBConnectionDuplicateHandleTest {
 
     /**
      * DOC zshen Comment method "setUpBeforeClass".
@@ -75,7 +72,8 @@ public class EMFResourceHandleTest {
 
     /**
      * Test method for
-     * {@link org.talend.dataprofiler.core.ui.action.actions.handle.EMFResourceHandle#duplicate(java.lang.String)}.
+     * {@link org.talend.dataprofiler.core.ui.action.actions.handle.ModelElementDuplicateHandle#duplicate(java.lang.String)}
+     * .
      * 
      * @throws BusinessException
      * @throws PersistenceException
@@ -91,10 +89,10 @@ public class EMFResourceHandleTest {
 
         // ~connectionNode
 
-        IDuplicateHandle createDuplicateHandle = ActionHandleFactory.createDuplicateHandle(dbParentRepNode);
+        IDuplicateHandle createDuplicateHandle = ActionHandleFactory.getInstance().createDuplicateHandle(dbParentRepNode);
 
-        IFile duplicate = createDuplicateHandle.duplicate(newConnectionName);
-        Property newProperty = PropertyHelper.getProperty(duplicate);
+        Item duplicate = createDuplicateHandle.duplicateItem(oldConnectionItem, newConnectionName);
+        Property newProperty = duplicate.getProperty();
         IRepositoryViewObject newViewObject = factory.getLastVersion(newProperty.getId());
         DatabaseConnectionItem newConnectionItem = (DatabaseConnectionItem) newViewObject.getProperty().getItem();
         compareResult(newConnectionItem, oldConnectionItem);
