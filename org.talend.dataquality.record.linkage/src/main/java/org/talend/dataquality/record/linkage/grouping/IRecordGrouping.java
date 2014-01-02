@@ -133,6 +133,7 @@ public interface IRecordGrouping {
     public void setColumnDelimiter(String columnDelimiter);
 
     /**
+     * 
      * If current matching pass is based on a previous matching result.
      * 
      * @param isLinkToPrevious
@@ -140,9 +141,10 @@ public interface IRecordGrouping {
     public void setIsLinkToPrevious(Boolean isLinkToPrevious);
 
     /**
-     * add one match rule
+     * add one match rule , the match key in the matcher should be refined with dummy matcher and order by column index
+     * when there are more than one matchers defined.
      * 
-     * @param matchRule
+     * @param matchRule the matcher to be added.
      */
     public void addMatchRule(List<Map<String, String>> matchRule);
 

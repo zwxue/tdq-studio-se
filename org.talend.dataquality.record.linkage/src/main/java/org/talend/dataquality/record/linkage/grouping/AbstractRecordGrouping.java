@@ -309,6 +309,10 @@ public abstract class AbstractRecordGrouping implements IRecordGrouping {
     public void addMatchRule(List<Map<String, String>> matchRule) {
         multiMatchRules.add(matchRule);
     }
+    
+    public List<List<Map<String, String>>> getMultiMatchRules() {
+		return multiMatchRules;
+	}
 
     /**
      * 
@@ -342,10 +346,14 @@ public abstract class AbstractRecordGrouping implements IRecordGrouping {
         double recordMatchThreshold = acceptableThreshold;// keep compatibility to older version.
         int recordIdx = 0;
         for (Map<String, String> recordMap : matchRule) {
+        	algorithmName[recordIdx][0] = recordMap.get(IRecordGrouping.MATCHING_TYPE);
+            if(AttributeMatcherType.DUMMY.name().equals(algorithmName[recordIdx][0])){
+            	recordIdx++;
+            	continue;
+            }
             arrAttrWeights[recordIdx] = Double.parseDouble(recordMap.get(IRecordGrouping.CONFIDENCE_WEIGHT));
-            attributeNames[recordIdx] = recordMap.get(IRecordGrouping.ATTRIBUTE_NAME);
-            algorithmName[recordIdx][0] = recordMap.get(IRecordGrouping.MATCHING_TYPE);
             algorithmName[recordIdx][1] = recordMap.get(IRecordGrouping.CUSTOMER_MATCH_CLASS);
+            attributeNames[recordIdx] = recordMap.get(IRecordGrouping.ATTRIBUTE_NAME);
             arrMatchHandleNull[recordIdx] = recordMap.get(IRecordGrouping.HANDLE_NULL);
             String rcdMathThresholdEach = recordMap.get(IRecordGrouping.RECORD_MATCH_THRESHOLD);
             customizedJarPath[recordIdx] = recordMap.get(IRecordGrouping.JAR_PATH);
