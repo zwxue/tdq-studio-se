@@ -12,6 +12,11 @@
 // ============================================================================
 package net.sourceforge.sqlexplorer.plugin.editors;
 
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+
+import net.sourceforge.sqlexplorer.Messages;
 import net.sourceforge.sqlexplorer.plugin.SQLExplorerPlugin;
 
 import org.eclipse.core.resources.IFolder;
@@ -23,6 +28,8 @@ import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
@@ -37,22 +44,53 @@ import org.eclipse.ui.dialogs.ElementTreeSelectionDialog;
 import org.eclipse.ui.dialogs.ISelectionStatusValidator;
 import org.eclipse.ui.views.navigator.ResourceComparator;
 import org.talend.commons.bridge.ReponsitoryContextBridge;
+import org.talend.core.utils.WorkspaceUtils;
+import org.talend.utils.io.FilesUtils;
 
 /**
  * 
  * this class PTODO qzhang fixed bug 3907.
  * 
- * $Id: talend.epf 1 2006-09-29 17:06:40Z qzhang $
- * 
  */
 public class FolderSelectionDialog extends ElementTreeSelectionDialog implements ISelectionChangedListener {
 
-    // ADD xqliu 2010-03-08 feature 10675
-    private static final String DEFAULT_FILE_NAME = "SourceFile.sql";
+    private static final String EMPTY_STR = ""; //$NON-NLS-1$
 
-    private String fileName = DEFAULT_FILE_NAME;
+    private static final String SOURCE_FILES = "Source Files"; //$NON-NLS-1$
+
+    private static final String TDQ_LIBRARIES = "TDQ_Libraries"; //$NON-NLS-1$
+
+    // ADD xqliu 2010-03-08 feature 10675
+    private static final String DEFAULT_FILE_EXTENSION = ".sql"; //$NON-NLS-1$
+
+    // TODO should use the file version property
+    private static final String DEFAULT_VERSION_STRING = "_0.1"; //$NON-NLS-1$
+
+    private static final String LABEL_TEXT = Messages.getString("FolderSelectionDialog_1"); //$NON-NLS-1$
+
+    private static final String DIALOG_MESSAGE = Messages.getString("FolderSelectionDialog_2"); //$NON-NLS-1$
+
+    private static final String DIALOG_TITLE = Messages.getString("FolderSelectionDialog_3"); //$NON-NLS-1$
+
+    private static final Status SELECT_FOLDER_ERROR_STATUS = new Status(IStatus.ERROR, SQLExplorerPlugin.PLUGIN_ID,
+            Messages.getString("FolderSelectionDialog_6")); //$NON-NLS-1$
+
+    private static final Status OK_STATUS = new Status(IStatus.OK, SQLExplorerPlugin.PLUGIN_ID, EMPTY_STR);
+
+    private static final Status FILE_EXIST_STATUS = new Status(IStatus.ERROR, SQLExplorerPlugin.PLUGIN_ID,
+            Messages.getString("FolderSelectionDialog_7")); //$NON-NLS-1$
+
+    private static final Status SPECIAL_CHAR_STATUS = new Status(IStatus.ERROR, SQLExplorerPlugin.PLUGIN_ID,
+            Messages.getString("FolderSelectionDialog_8")); //$NON-NLS-1$
+
+    private static final Status EMPTY_NAME_STATUS = new Status(IStatus.ERROR, SQLExplorerPlugin.PLUGIN_ID,
+            Messages.getString("FolderSelectionDialog_9")); //$NON-NLS-1$
+
+    private String fileName = EMPTY_STR;
 
     private IFolder selectedFolder;
+
+    private Text fileNameText;
 
     /**
      * qzhang FolderSelectionDialog constructor comment.
@@ -64,11 +102,37 @@ public class FolderSelectionDialog extends ElementTreeSelectionDialog implements
     public FolderSelectionDialog(Shell parent, ILabelProvider labelProvider, ITreeContentProvider contentProvider) {
         super(parent, labelProvider, contentProvider);
 
+        this.setTitle(DIALOG_TITLE);
+        this.setMessage(DIALOG_MESSAGE);
+
         // MOD sizhaoliu 2012-04-05 TDQ-4958 NPE when save sql script
         IProject rootProject = ReponsitoryContextBridge.getRootProject();
-        final IFolder defaultValidFolder = rootProject.getFolder("TDQ_Libraries").getFolder("Source Files");
+        this.setInput(rootProject);
+        final IFolder defaultValidFolder = rootProject.getFolder(TDQ_LIBRARIES).getFolder(SOURCE_FILES);
+        this.setInitialSelection(defaultValidFolder);
 
-        setComparator(new ResourceComparator(ResourceComparator.NAME));
+        this.addFilter(new ViewerFilter() {
+
+            /*
+             * (non-Javadoc)
+             * 
+             * @see org.eclipse.jface.viewers.ViewerFilter#select(org.eclipse.jface.viewers.Viewer, java.lang.Object,
+             * java.lang.Object)
+             */
+            @Override
+            public boolean select(Viewer viewer, Object parentElement, Object element) {
+                if (element instanceof IFolder) {
+                    IFolder folder = (IFolder) element;
+                    if (SOURCE_FILES.equals(folder.getName()) || TDQ_LIBRARIES.equals(folder.getName())) {
+                        return true;
+                    } else {
+                        return defaultValidFolder.getFullPath().isPrefixOf(folder.getFullPath())
+                                && !FilesUtils.isSVNFolder(folder.getName());
+                    }
+                }
+                return false;
+            }
+        });
         setValidator(new ISelectionStatusValidator() {
 
             public IStatus validate(Object[] selection) {
@@ -76,17 +140,17 @@ public class FolderSelectionDialog extends ElementTreeSelectionDialog implements
                     if (selection[0] instanceof IFolder) {
                         selectedFolder = (IFolder) selection[0];
                         IPath projectRelativePath = selectedFolder.getProjectRelativePath();
-                        if ("Source Files".equals(selectedFolder.getName())
+                        if (SOURCE_FILES.equals(selectedFolder.getName())
                                 || defaultValidFolder.getFullPath().isPrefixOf(selectedFolder.getFullPath())) {
-                            return Status.OK_STATUS;
+                            return checkFileName(fileNameText.getText());
                         }
                     }
                 }
-                return new Status(IStatus.ERROR, SQLExplorerPlugin.PLUGIN_ID,
-                        "select the 'Source Files' folder or a folder below this.");
+                return SELECT_FOLDER_ERROR_STATUS;
             }
 
         });
+        setComparator(new ResourceComparator(ResourceComparator.NAME));
     }
 
     /*
@@ -94,6 +158,7 @@ public class FolderSelectionDialog extends ElementTreeSelectionDialog implements
      * 
      * @see org.eclipse.jface.dialogs.Dialog#createDialogArea(org.eclipse.swt.widgets.Composite)
      */
+    @Override
     protected Control createDialogArea(Composite parent) {
         Composite result = (Composite) super.createDialogArea(parent);
 
@@ -102,31 +167,13 @@ public class FolderSelectionDialog extends ElementTreeSelectionDialog implements
         fileNameComp.setLayout(new GridLayout(2, false));
         fileNameComp.setLayoutData(new GridData(GridData.FILL_BOTH));
         Label label = new Label(fileNameComp, SWT.NULL);
-        label.setText("Name:");
-        final Text text = new Text(fileNameComp, SWT.BORDER);
-        text.setText(this.getFileName());
-        text.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-        text.addModifyListener(new ModifyListener() {
+        label.setText(LABEL_TEXT);
+        fileNameText = new Text(fileNameComp, SWT.BORDER);
+        fileNameText.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+        fileNameText.addModifyListener(new ModifyListener() {
 
             public void modifyText(ModifyEvent e) {
-                if (text.getText() == null || "".equals(text.getText().trim())) {
-                    int status = IStatus.ERROR;
-                    // MOD sizhaoliu 2012-04-05 TDQ-4958
-                    // The code here is not directly related to TDQ-4958, but may leads to other bugs.
-                    IProject rootProject = ReponsitoryContextBridge.getRootProject();
-                    final IFolder defaultValidFolder = rootProject.getFolder("TDQ_Libraries").getFolder("Source Files");
-                    if (selectedFolder != null
-                            && ("Source Files".equals(selectedFolder.getName()) || defaultValidFolder.getFullPath().isPrefixOf(
-                                    selectedFolder.getFullPath()))) {
-                        status = IStatus.INFO;
-                    }
-                    updateStatus(new Status(status, SQLExplorerPlugin.PLUGIN_ID,
-                            "Invalid file name. The file extension should be sql!"));
-                    text.setText(DEFAULT_FILE_NAME);
-                    fileName = DEFAULT_FILE_NAME;
-                } else {
-                    fileName = text.getText();
-                }
+                updateStatus(checkFileName(fileNameText.getText()));
             }
         });
         // ~10675
@@ -148,6 +195,17 @@ public class FolderSelectionDialog extends ElementTreeSelectionDialog implements
 
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.eclipse.ui.dialogs.SelectionStatusDialog#okPressed()
+     */
+    @Override
+    protected void okPressed() {
+        fileName = fileNameText.getText();
+        super.okPressed();
+    }
+
     /**
      * DOC xqliu Comment method "getFileName". ADD xqliu 2010-03-08 feature 10675
      * 
@@ -155,5 +213,74 @@ public class FolderSelectionDialog extends ElementTreeSelectionDialog implements
      */
     public String getFileName() {
         return this.fileName;
+    }
+
+    /**
+     * check File Name.
+     * 
+     * @param String: file name
+     */
+    private Status checkFileName(final String name) {
+        if (name == null || EMPTY_STR.equals(name.trim())) {
+            return EMPTY_NAME_STATUS;
+        } else {
+            if (!WorkspaceUtils.checkNameIsOK(name)) {
+                return SPECIAL_CHAR_STATUS;
+            }
+            if (fileNameExist(WorkspaceUtils.ifolderToFile(selectedFolder), name)) {
+                return FILE_EXIST_STATUS;
+            }
+        }
+        return OK_STATUS;
+    }
+
+    /**
+     * check the fileName exist in the folder (recursive).
+     * 
+     * @param folder
+     * @param fileName
+     * @return
+     */
+    private boolean fileNameExist(File folder, String fileName) {
+        boolean result = false;
+        String realFileName = getRealFileName(fileName);
+        List<File> files = new ArrayList<File>();
+        getAllSqlFiles(files, folder);
+        for (File file : files) {
+            if (realFileName.equalsIgnoreCase(file.getName())) {
+                result = true;
+                break;
+            }
+        }
+        return result;
+    }
+
+    /**
+     * get the final source file name (with the version).
+     * 
+     * @param fileName source file name (without the version)
+     * @return
+     */
+    private String getRealFileName(String fileName) {
+        return fileName + DEFAULT_VERSION_STRING + DEFAULT_FILE_EXTENSION;
+    }
+
+    /**
+     * get all sql files which under parentFile (recursive).
+     * 
+     * @param files
+     * @param parentFile
+     */
+    private void getAllSqlFiles(List<File> files, File parentFile) {
+        if (parentFile.isFile()) {
+            if (parentFile.getName().endsWith(DEFAULT_FILE_EXTENSION)) {
+                files.add(parentFile);
+            }
+        } else if (parentFile.isDirectory()) {
+            File[] listFiles = parentFile.listFiles();
+            for (File file : listFiles) {
+                getAllSqlFiles(files, file);
+            }
+        }
     }
 }

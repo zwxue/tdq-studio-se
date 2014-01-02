@@ -14,10 +14,6 @@
  */
 package net.sourceforge.sqlexplorer.plugin.editors;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-
 import net.sourceforge.sqlexplorer.IConstants;
 import net.sourceforge.sqlexplorer.dbproduct.Session;
 import net.sourceforge.sqlexplorer.plugin.SQLExplorerPlugin;
@@ -30,7 +26,6 @@ import net.sourceforge.sqlexplorer.sqleditor.actions.ExecSQLAction;
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -40,7 +35,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.action.Action;
-import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.PreferenceConverter;
@@ -51,8 +45,6 @@ import org.eclipse.jface.text.source.ISourceViewer;
 import org.eclipse.jface.text.source.IVerticalRuler;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ITreeContentProvider;
-import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.StyledText;
@@ -77,10 +69,7 @@ import org.eclipse.ui.model.WorkbenchLabelProvider;
 import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.texteditor.IDocumentProvider;
 import org.eclipse.ui.texteditor.ITextEditorActionDefinitionIds;
-import org.eclipse.ui.views.navigator.ResourceComparator;
-import org.talend.commons.bridge.ReponsitoryContextBridge;
 import org.talend.core.model.properties.Item;
-import org.talend.utils.io.FilesUtils;
 
 /**
  * TextEditor specialisation; encapsulates functionality specific to editing SQL.
@@ -114,9 +103,8 @@ public class SQLTextEditor extends TextEditor {
     // ADD xqliu 2010-03-23 feature 10675
     private static final String DEFAULT_FILE_EXTENSION = ".sql";
 
+    // TODO should use the file version property
     private static final String DEFAULT_VERSION_STRING = "_0.1";
-
-    private static final String SOURCE_FILE_FOLDER_NAME = "Source Files";
 
     public SQLTextEditor(SQLEditor editor) {
         super();
@@ -169,41 +157,9 @@ public class SQLTextEditor extends TextEditor {
             return;
         }
 
-        // PTODO qzhang fixed bug 3907
-        // MOD sizhaoliu 2012-04-05 TDQ-4958 NPE when save sql script
-        IProject rootProject = ReponsitoryContextBridge.getRootProject();
-        final IFolder defaultValidFolder = rootProject.getFolder("TDQ_Libraries").getFolder("Source Files");
-
         ILabelProvider lp = new WorkbenchLabelProvider();
         ITreeContentProvider cp = new WorkbenchContentProvider();
         FolderSelectionDialog dialog = new FolderSelectionDialog(shell, lp, cp);
-        // dialog.setValidator(validator);
-        dialog.setTitle("Select folder");
-        dialog.setMessage("Select the folder in which the item will be created");
-        dialog.setInput(rootProject);
-        dialog.addFilter(new ViewerFilter() {
-
-            /*
-             * (non-Javadoc)
-             * 
-             * @see org.eclipse.jface.viewers.ViewerFilter#select(org.eclipse.jface.viewers.Viewer, java.lang.Object,
-             * java.lang.Object)
-             */
-            @Override
-            public boolean select(Viewer viewer, Object parentElement, Object element) {
-                if (element instanceof IFolder) {
-                    IFolder folder = (IFolder) element;
-                    if ("Source Files".equals(folder.getName()) || "TDQ_Libraries".equals(folder.getName())) {
-                        return true;
-                    } else {
-                        return defaultValidFolder.getFullPath().isPrefixOf(folder.getFullPath())
-                                && !FilesUtils.isSVNFolder(folder.getName());
-                    }
-                }
-                return false;
-            }
-        });
-        dialog.setComparator(new ResourceComparator(ResourceComparator.NAME));
         if (dialog.open() == Window.CANCEL) {
             if (progressMonitor != null) {
                 progressMonitor.setCanceled(true);
@@ -213,11 +169,10 @@ public class SQLTextEditor extends TextEditor {
 
         Object elements = dialog.getResult()[0];
         // ADD xqliu 2010-03-08 feature 10675
-        String fileName = getValidFileName(dialog.getFileName());
         IResource elem = (IResource) elements;
         if (elem instanceof IFolder) {
             IPath filePath = ((IFolder) elem).getFullPath();
-            filePath = filePath.append(fileName);
+            filePath = filePath.append(dialog.getFileName() + DEFAULT_FILE_EXTENSION);
             if (filePath == null) {
                 if (progressMonitor != null) {
                     progressMonitor.setCanceled(true);
@@ -226,20 +181,6 @@ public class SQLTextEditor extends TextEditor {
             }
             IWorkspace workspace = ResourcesPlugin.getWorkspace();
             IFile file = workspace.getRoot().getFile(filePath);
-
-            File sourceFilesFolder = getSourceFilesFolder(file);
-            while (fileNameExist(sourceFilesFolder, file.getName())) {
-                InputDialog inputDialog = new InputDialog(getSite().getShell(), "New File Name",
-                        "this file exists already, please input new file name: ", filePath.lastSegment(), null);
-                if (inputDialog.open() == InputDialog.CANCEL) {
-                    return;
-                } else {
-                    IPath lseg = filePath.removeLastSegments(1);
-                    filePath = lseg.append(inputDialog.getValue());
-                    file = workspace.getRoot().getFile(filePath);
-                }
-            }
-
             newInput = new FileEditorInput(file);
             if (provider == null) {
                 // editor has programmatically been closed while the dialog was open
@@ -276,87 +217,6 @@ public class SQLTextEditor extends TextEditor {
     }
 
     /**
-     * check the fileName exist in the folder (recursive).
-     * 
-     * @param folder
-     * @param fileName
-     * @return
-     */
-    private boolean fileNameExist(File folder, String fileName) {
-        boolean result = false;
-        String realFileName = getRealFileName(fileName);
-        List<File> files = new ArrayList<File>();
-        getAllSqlFiles(files, folder);
-        for (File file : files) {
-            if (realFileName.equals(file.getName())) {
-                result = true;
-                break;
-            }
-        }
-        return result;
-    }
-
-    /**
-     * get the final source file name (with the version).
-     * 
-     * @param fileName source file name (without the version)
-     * @return
-     */
-    private String getRealFileName(String fileName) {
-        return fileName.substring(0, fileName.lastIndexOf(DEFAULT_FILE_EXTENSION)) + DEFAULT_VERSION_STRING
-                + DEFAULT_FILE_EXTENSION;
-    }
-
-    /**
-     * get the source files folder.
-     * 
-     * @param iFile source file
-     * @return
-     */
-    private File getSourceFilesFolder(IFile iFile) {
-        String path1 = ResourcesPlugin.getWorkspace().getRoot().getLocation().toOSString();
-        String path2 = iFile.getFullPath().toOSString();
-        String temp = "";
-        if (!path1.endsWith(File.separator) && !path2.startsWith(File.separator)) {
-            temp = File.separator;
-        }
-        String path = path1 + temp + path2;
-        return new File(path.substring(0, path.indexOf(SOURCE_FILE_FOLDER_NAME) + SOURCE_FILE_FOLDER_NAME.length()));
-    }
-
-    /**
-     * get all sql files which under parentFile (recursive).
-     * 
-     * @param files
-     * @param parentFile
-     */
-    private void getAllSqlFiles(List<File> files, File parentFile) {
-        if (parentFile.isFile()) {
-            if (parentFile.getName().endsWith(DEFAULT_FILE_EXTENSION)) {
-                files.add(parentFile);
-            }
-        } else if (parentFile.isDirectory()) {
-            File[] listFiles = parentFile.listFiles();
-            for (File file : listFiles) {
-                getAllSqlFiles(files, file);
-            }
-        }
-    }
-
-    /**
-     * DOC xqliu Comment method "getValidFileName". ADD xqliu 2010-03-23 feature 10675
-     * 
-     * @param fileName
-     * @return
-     */
-    private String getValidFileName(String fileName) {
-        if (!fileName.toLowerCase().endsWith(DEFAULT_FILE_EXTENSION)) {
-            return fileName + DEFAULT_FILE_EXTENSION;
-        }
-        return fileName;
-    }
-
-    /**
      * DOC qzhang Comment method "createIFile".
      * 
      * @param monitor
@@ -366,31 +226,26 @@ public class SQLTextEditor extends TextEditor {
      */
     private IFile createIFile(IFile file, String content) throws CoreException {
         // MOD qiongli 2011-4-21.bug 20205 .should create sql file and property.use extension of service mechanism.
-        try {
-            if (GlobalServiceRegister.getDefault().isServiceRegistered(ISaveAsService.class)) {
-                ISaveAsService service = (ISaveAsService) GlobalServiceRegister.getDefault().getService(ISaveAsService.class);
-                String fName = StringUtils.removeEnd(StringUtils.removeEnd(file.getName(), DEFAULT_FILE_EXTENSION),
-                        DEFAULT_VERSION_STRING);
-                IWorkspace workspace = ResourcesPlugin.getWorkspace();
-                IPath rootPath = new Path("TDQ_Libraries/Source Files");
-                Item item = service.createFile(content,
-                        file.getProjectRelativePath().removeLastSegments(1).makeRelativeTo(rootPath), fName,
-                        file.getFileExtension());
-                // get the correct path(contain version info) for newInput file in editor.
-                IPath location = file.getLocation();
-                if (item != null && item.getProperty() != null && location != null) {
+        if (GlobalServiceRegister.getDefault().isServiceRegistered(ISaveAsService.class)) {
+            ISaveAsService service = (ISaveAsService) GlobalServiceRegister.getDefault().getService(ISaveAsService.class);
+            String fName = StringUtils.removeEnd(StringUtils.removeEnd(file.getName(), DEFAULT_FILE_EXTENSION),
+                    DEFAULT_VERSION_STRING);
+            IWorkspace workspace = ResourcesPlugin.getWorkspace();
+            IPath rootPath = new Path("TDQ_Libraries/Source Files");
+            Item item = service.createFile(content, file.getProjectRelativePath().removeLastSegments(1).makeRelativeTo(rootPath),
+                    fName, file.getFileExtension());
+            // get the correct path(contain version info) for newInput file in editor.
+            IPath location = file.getLocation();
+            if (item != null && item.getProperty() != null && location != null) {
 
-                    location = location.removeLastSegments(1);
-                    StringBuffer strb = new StringBuffer();
-                    strb.append(location.toString());
-                    String version = item.getProperty().getVersion() == null ? "" : "_" + item.getProperty().getVersion();
-                    strb.append(Path.SEPARATOR).append(fName).append(version).append(DEFAULT_FILE_EXTENSION);
-                    location = Path.fromOSString(strb.toString());
-                    file = workspace.getRoot().getFileForLocation(location);
-                }
+                location = location.removeLastSegments(1);
+                StringBuffer strb = new StringBuffer();
+                strb.append(location.toString());
+                String version = item.getProperty().getVersion() == null ? "" : "_" + item.getProperty().getVersion();
+                strb.append(Path.SEPARATOR).append(fName).append(version).append(DEFAULT_FILE_EXTENSION);
+                location = Path.fromOSString(strb.toString());
+                file = workspace.getRoot().getFileForLocation(location);
             }
-        } catch (Exception e) {
-            e.printStackTrace();
         }
         return file;
     }

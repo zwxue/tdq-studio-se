@@ -39,6 +39,10 @@ public final class WorkspaceUtils {
 
     public static final String DEFAULT_VERSION = "0.1"; //$NON-NLS-1$
 
+    /**
+     * @Deprecated use {@link #org.talend.repository.model.RepositoryConstants.ITEM_FORBIDDEN_IN_LABEL}
+     */
+    @Deprecated
     public static final String[] ITEM_FORBIDDEN_IN_LABEL = { "~", "!", "`", "#", "^", "&", "*", "\\", "/", "?", ":", ";", "\"", //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$ //$NON-NLS-9$ //$NON-NLS-10$ //$NON-NLS-11$ //$NON-NLS-12$ //$NON-NLS-13$
             ".", "(", ")", "，", "。", "'", "￥", "‘", "”", "、", "《", "，", "》", "<", ">", " " }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$ //$NON-NLS-9$ //$NON-NLS-10$ //$NON-NLS-11$ //$NON-NLS-12$ //$NON-NLS-13$ //$NON-NLS-14$ //$NON-NLS-15$ //$NON-NLS-16$
 
@@ -120,7 +124,7 @@ public final class WorkspaceUtils {
     public static IFile getModelElementResource(URI uri) {
         IFile resourceFile = null;
         String scheme = uri.scheme();
-        if ("platform".equals(scheme) && uri.segmentCount() > 1 && "resource".equals(uri.segment(0))) { //$NON-NLS-1$ //$NON-NLS-2$
+        if (PLATFORM.equals(scheme) && uri.segmentCount() > 1 && RESOURCE.equals(uri.segment(0))) {
             StringBuffer platformResourcePath = new StringBuffer();
             for (int j = 1, size = uri.segmentCount(); j < size; ++j) {
                 platformResourcePath.append('/');
