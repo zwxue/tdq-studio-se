@@ -110,11 +110,9 @@ public final class ColumnAnalysisSqlParallelExecutor extends ColumnAnalysisSqlEx
             }
         } catch (SQLException e) {
             this.setException(e);
+            // Added TDQ-8468 20140103 yyin: when got exception, should change the ok status to false.
+            ok = false;
         } finally {
-            // MOD gdbu 2011-6-10 bug : 21273
-            // connPool.returnConnection(connection); // return the connection in the ExecutiveAnalysisJob.run()
-            // ~21273
-
             // return the connection after run
             if (POOLED_CONNECTION) {
                 TdqAnalysisConnectionPool.returnPooledConnection(cachedAnalysis, connection);
