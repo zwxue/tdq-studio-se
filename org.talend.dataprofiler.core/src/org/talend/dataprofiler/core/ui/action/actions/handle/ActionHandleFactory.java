@@ -39,7 +39,7 @@ public final class ActionHandleFactory {
 
         if (typedConstant == null) {
             BusinessException createBusinessException = ExceptionFactory.getInstance().createBusinessException(
-                    DefaultMessagesImpl.getString("ActionHandleFactory.duplicateFail"));
+                    DefaultMessagesImpl.getString("ActionHandleFactory.duplicateFail", node.getLabel()));//$NON-NLS-1$
             throw createBusinessException;
         } else {
             switch (typedConstant) {

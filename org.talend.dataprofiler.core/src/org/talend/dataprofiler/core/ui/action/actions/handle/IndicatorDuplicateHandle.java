@@ -19,9 +19,11 @@ import java.util.Map;
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
+import org.talend.commons.exception.BusinessException;
 import org.talend.commons.exception.PersistenceException;
 import org.talend.commons.utils.WorkspaceUtils;
 import org.talend.commons.utils.io.FilesUtils;
+import org.talend.core.model.properties.Item;
 import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
@@ -34,10 +36,10 @@ import org.talend.dataquality.helpers.IndicatorCategoryHelper;
 import org.talend.dataquality.indicators.definition.IndicatorCategory;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dataquality.indicators.definition.userdefine.UDIndicatorDefinition;
+import org.talend.dataquality.properties.TDQIndicatorDefinitionItem;
 import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.helper.UDIHelper;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
-import org.talend.dq.writer.AElementPersistance;
 import org.talend.dq.writer.impl.ElementWriterFactory;
 import org.talend.resource.ResourceManager;
 import org.talend.resource.ResourceService;
@@ -48,7 +50,9 @@ import orgomg.cwm.objectmodel.core.ModelElement;
  */
 public class IndicatorDuplicateHandle extends ModelElementDuplicateHandle {
 
-    Logger log = Logger.getLogger(IndicatorDuplicateHandle.class);
+    private Logger log = Logger.getLogger(IndicatorDuplicateHandle.class);
+
+    private boolean isUserDefCategory = Boolean.FALSE;
 
     /*
      * (non-Javadoc)
@@ -74,25 +78,29 @@ public class IndicatorDuplicateHandle extends ModelElementDuplicateHandle {
 
         // MOD klliu 2010-09-25 bug 15530 when duplicate the system indicator ,the definition must be reset the
         // category and the label name
-        boolean isUserDefCategory = IndicatorCategoryHelper.isUserDefCategory(UDIHelper.getUDICategory(definition));
+        isUserDefCategory = IndicatorCategoryHelper.isUserDefCategory(UDIHelper.getUDICategory(definition));
         if (!isUserDefCategory) {
             updateCategory(duplicateModelElement, definition);
         }
 
         TaggedValueHelper.setValidStatus(true, definition);
         definition.setLabel(definition.getName());
-        AElementPersistance writer = ElementWriterFactory.getInstance().createIndicatorDefinitionWriter();
-        writer.save(definition);
 
+        return definition;
+    }
+
+    @Override
+    public Item duplicateItem(Item oldItem, String newName) throws BusinessException {
+        Item duplicateItem = super.duplicateItem(oldItem, newName);
         // reload is needed after duplicate an indicator.
         DefinitionHandler.getInstance().reloadIndicatorsDefinitions();
 
-        // update the udi model to new model, not use the migration task
+        // update the udi model to new model, after have created the indicator definition item
         if (!isUserDefCategory) {
-            updateUDIModel(newName, duplicateModelElement);
+            updateUDIModel(newName, ((TDQIndicatorDefinitionItem) duplicateItem).getIndicatorDefinition());
         }
 
-        return definition;
+        return duplicateItem;
     }
 
     private void updateUDIModel(String newName, ModelElement duplicateModelElement) {

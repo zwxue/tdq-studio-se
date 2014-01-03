@@ -15,6 +15,7 @@ package org.talend.dataprofiler.core.ui.action.actions;
 import java.util.List;
 
 import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.IInputValidator;
 import org.eclipse.jface.dialogs.InputDialog;
@@ -42,6 +43,7 @@ import org.talend.dataprofiler.core.ui.action.actions.handle.ActionHandleFactory
 import org.talend.dataprofiler.core.ui.action.actions.handle.IDuplicateHandle;
 import org.talend.dataprofiler.core.ui.utils.RepNodeUtils;
 import org.talend.dataprofiler.core.ui.views.resources.IRepositoryObjectCRUDAction;
+import org.talend.dataquality.properties.TDQFileItem;
 import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.nodes.AnalysisRepNode;
@@ -61,6 +63,8 @@ public class DuplicateAction extends Action {
     private IRepositoryNode[] nodeArray = new IRepositoryNode[0];
 
     private IRepositoryObjectCRUDAction repositoryObjectCRUD = RepNodeUtils.getRepositoryObjectCRUD();
+
+    private Logger log = Logger.getLogger(DuplicateAction.class);
 
     /**
      * DOC bZhou DuplicateAction constructor comment.
@@ -93,32 +97,34 @@ public class DuplicateAction extends Action {
 
         try {
             String newLabel = null;
-            Item duplicateItem = null;
+            Item lastDuplicateItem = null;
             for (final IRepositoryNode node : nodeArray) {
-                if (node != null) {
-                    IRepositoryViewObject viewObject = node.getObject();
+                IRepositoryViewObject viewObject = node.getObject();
 
-                    validateOriginalObject(viewObject);
+                validateOriginalObject(viewObject);
 
-                    final IDuplicateHandle handle = ActionHandleFactory.getInstance().createDuplicateHandle(node);
+                final IDuplicateHandle handle = ActionHandleFactory.getInstance().createDuplicateHandle(node);
 
-                    if (handle != null) {
-                        // MOD msjian TDQ-4672 2012-2-17: modified the check duplicate name method
-                        String initLabel = generateInitialLabel(node);
-                        InputDialog dialog = createInputNewNameDialog(node, initLabel);
-                        // TDQ-4672~
-                        if (dialog.open() == Window.OK) {
-                            newLabel = dialog.getValue().trim();
+                if (handle != null) {
+                    // MOD msjian TDQ-4672 2012-2-17: modified the check duplicate name method
+                    String initLabel = generateInitialLabel(node);
+                    InputDialog dialog = createInputNewNameDialog(node, initLabel);
+                    // TDQ-4672~
+                    if (dialog.open() == Window.OK) {
+                        newLabel = dialog.getValue().trim();
 
-                            duplicateItem = handle.duplicateItem(viewObject.getProperty().getItem(), newLabel);
-                        }
+                        lastDuplicateItem = handle.duplicateItem(viewObject.getProperty().getItem(), newLabel);
                     }
+                } else {
+                    // if can not find the related handler for the current node, log it and continue for others
+                    log.error(DefaultMessagesImpl.getString("DuplicateAction.HandleNull", node.getLabel()));//$NON-NLS-1$
                 }
             }
             // if the user select cancel, the item will be null, then no need to refresh.
-            if (duplicateItem != null) {
+            if (lastDuplicateItem != null) {
                 CorePlugin.getDefault().refreshWorkSpace();
-                selectAndReveal(newLabel, duplicateItem);
+                // show the last new success duplicated one as selected on the repository view.
+                selectAndReveal(newLabel, lastDuplicateItem);
             }
         } catch (BusinessException e) {
             ExceptionHandler.process(e, Level.FATAL);
@@ -127,7 +133,7 @@ public class DuplicateAction extends Action {
 
     private InputDialog createInputNewNameDialog(final IRepositoryNode node, String initLabel) {
         return new InputDialog(
-                null,
+                CorePlugin.getDefault().getWorkbench().getActiveWorkbenchWindow().getShell(),
                 DefaultMessagesImpl.getString("DuplicateAction.InputDialog"), DefaultMessagesImpl.getString("DuplicateAction.InpurtDesc"), initLabel, //$NON-NLS-1$ //$NON-NLS-2$
                 new IInputValidator() {
 
@@ -226,14 +232,17 @@ public class DuplicateAction extends Action {
     private RepositoryNode getSelctionNode(String newLabel, Property property) throws BusinessException {
         RepositoryNode recursiveFind = null;
         if (property != null) {
-            recursiveFind = RepositoryNodeHelper.recursiveFind(property);
-            if (recursiveFind == null) {
-                recursiveFind = findNodeForTDQFileItem(newLabel, EResourceConstant.SOURCE_FILES);
+            if (property.getItem() instanceof TDQFileItem) {
+                // if the model element is null, means that it is a file item.
+                recursiveFind = findNodeForTDQFileItem(newLabel);
+            } else {
+                // find the related node by the model element
+                recursiveFind = RepositoryNodeHelper.recursiveFind(property);
             }
         }
         if (recursiveFind == null) {
             BusinessException createBusinessException = ExceptionFactory.getInstance().createBusinessException(
-                    DefaultMessagesImpl.getString("DuplicateAction.NodeNull", newLabel));
+                    DefaultMessagesImpl.getString("DuplicateAction.NodeNull", newLabel));//$NON-NLS-1$
             throw createBusinessException;
         }
 
@@ -246,7 +255,7 @@ public class DuplicateAction extends Action {
         return recursiveFind;
     }
 
-    private RepositoryNode findNodeForTDQFileItem(String label, EResourceConstant fileType) {
+    private RepositoryNode findNodeForTDQFileItem(String label) {
         IRepositoryNode librariesFolderNode = RepositoryNodeHelper.getLibrariesFolderNode(EResourceConstant.SOURCE_FILES);
         List<? extends RepositoryNode> childrenList = RepositoryNodeHelper.getSourceFileRepNodes(librariesFolderNode, true);
         RepositoryNode node = findNodeInList(label, childrenList);

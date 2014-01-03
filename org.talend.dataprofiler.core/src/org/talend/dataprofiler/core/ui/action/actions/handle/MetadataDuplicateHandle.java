@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 import org.talend.commons.exception.PersistenceException;
 import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
@@ -24,6 +25,8 @@ import org.talend.core.repository.model.ProxyRepositoryFactory;
  * Duplicate a metadata
  */
 public class MetadataDuplicateHandle extends ModelElementDuplicateHandle {
+
+    private Logger log = Logger.getLogger(MetadataDuplicateHandle.class);
 
     /*
      * (non-Javadoc)
@@ -35,6 +38,7 @@ public class MetadataDuplicateHandle extends ModelElementDuplicateHandle {
         try {
             allMetadataConnectionsItem = ProxyRepositoryFactory.getInstance().getMetadataConnectionsItem();
         } catch (PersistenceException e) {
+            log.error(e, e);
         }
         for (ConnectionItem connectionItem : allMetadataConnectionsItem) {
             if (StringUtils.equals(label, connectionItem.getConnection().getName())) {

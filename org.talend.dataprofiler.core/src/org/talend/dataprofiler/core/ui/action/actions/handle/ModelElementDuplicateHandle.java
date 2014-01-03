@@ -138,7 +138,7 @@ public class ModelElementDuplicateHandle implements IDuplicateHandle {
             return (Item) returnCode.getObject();
         } else {
             createBusinessException(DefaultMessagesImpl.getString("ModelElementDuplicateHandle.duplicateFail",
-                    returnCode.getMessage()));
+                    oldModelElement.getName(), returnCode.getMessage()));
         }
         return null;
     }

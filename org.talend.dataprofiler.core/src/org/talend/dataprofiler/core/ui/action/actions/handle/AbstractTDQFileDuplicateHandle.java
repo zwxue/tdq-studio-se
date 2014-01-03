@@ -72,7 +72,8 @@ public abstract class AbstractTDQFileDuplicateHandle implements IDuplicateHandle
         Item duplicate = createFileItemByDuplicateFile(newFile, fileExtension, newName);
         if (duplicate == null) {
             BusinessException createBusinessException = ExceptionFactory.getInstance().createBusinessException(
-                    DefaultMessagesImpl.getString("AbstractTDQFileDuplicateHandle.duplicateFail"));
+                    DefaultMessagesImpl.getString("AbstractTDQFileDuplicateHandle.duplicateFail", oldItem.getProperty()//$NON-NLS-1$
+                            .getDisplayName()));
             throw createBusinessException;
         }
         return duplicate;
