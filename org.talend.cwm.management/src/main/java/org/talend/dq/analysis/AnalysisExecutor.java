@@ -119,7 +119,7 @@ public abstract class AnalysisExecutor implements IAnalysisExecutor {
 
         // ADD msjian 2011-5-30 17479: Excel Odbc connection can not run well on the correlation analysis
         // note: this feature is not supported now, if support, delete this
-        if (errorMessage != null && !errorMessage.equals("")) { //$NON-NLS-1$
+        if (!StringUtils.isEmpty(errorMessage.toString())) {
             if ("EXCEL".equals(dbms().getDbmsName())) { //$NON-NLS-1$
                 return getReturnCode(true);
             }
@@ -316,7 +316,7 @@ public abstract class AnalysisExecutor implements IAnalysisExecutor {
     protected void setError(String error) {
         if (!StringUtils.isEmpty(error)) {
             errorMessage = new StringBuffer(error);
-        }else{
+        } else {
             errorMessage = new StringBuffer(PluginConstant.EMPTY_STRING);
         }
     }
@@ -329,7 +329,7 @@ public abstract class AnalysisExecutor implements IAnalysisExecutor {
      */
     protected void appendError(String error) {
         if (!StringUtils.isEmpty(errorMessage.toString())) {
-             errorMessage.append(PluginConstant.ENTER_STRING);
+            errorMessage.append(PluginConstant.ENTER_STRING);
         }
         this.errorMessage.append(error);
 
