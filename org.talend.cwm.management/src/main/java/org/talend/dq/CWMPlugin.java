@@ -30,6 +30,7 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Plugin;
 import org.eclipse.core.runtime.preferences.DefaultScope;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
+import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
 import org.osgi.framework.BundleContext;
 import org.talend.core.language.ECodeLanguage;
@@ -192,9 +193,12 @@ public class CWMPlugin extends Plugin {
         }
         SQLExplorerPlugin sqlPlugin = SQLExplorerPlugin.getDefault();
         // if the ctabItem is open,close it.
-        DatabaseStructureView view = sqlPlugin.getDatabaseStructureView();
-        if (view != null) {
-            view.closeCurrentCabItem(aliasName);
+        IWorkbenchPage page = sqlPlugin.getActivePage();
+        if (page != null) {
+            DatabaseStructureView view = (DatabaseStructureView) page.findView(DatabaseStructureView.class.getName());
+            if (view != null) {
+                view.closeCurrentCabItem(aliasName);
+            }
         }
 
         AliasManager aliasManager = sqlPlugin.getAliasManager();

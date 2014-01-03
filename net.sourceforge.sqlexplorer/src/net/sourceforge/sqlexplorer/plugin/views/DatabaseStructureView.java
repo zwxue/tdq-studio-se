@@ -448,7 +448,6 @@ public class DatabaseStructureView extends ViewPart {
 
         if (detailView != null) {
             detailView.setSelectedNode(null);
-            detailView.dispose();
         }
         // clear session
         _allSessions.clear();
@@ -580,11 +579,11 @@ public class DatabaseStructureView extends ViewPart {
             if (!item.isDisposed() && item.getText().startsWith(conName + "/")) {
                 TabData tabData = (TabData) item.getData();
                 _allSessions.remove(tabData.session);
-                item.dispose();
-                this.dispose();
                 _filterAction.setEnabled(!_allSessions.isEmpty());
                 _tabFolder.layout();
                 _tabFolder.redraw();
+                item.dispose();
+                this.dispose();
                 break;
             }
         }
