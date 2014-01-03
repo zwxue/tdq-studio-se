@@ -1919,7 +1919,7 @@ public class DbmsLanguageTest {
     }
 
     private TdTable createTdTable() {
-        Connection conn = ConnectionFactory.eINSTANCE.createConnection();
+        Connection conn = ConnectionFactory.eINSTANCE.createDatabaseConnection();
         Catalog catalog = CatalogHelper.createCatalog("myCatalog"); //$NON-NLS-1$
         ConnectionHelper.addCatalog(catalog, conn);
         List<TdTable> tables = new ArrayList<TdTable>();

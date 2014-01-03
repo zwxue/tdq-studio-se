@@ -12,7 +12,7 @@
 // ============================================================================
 package org.talend.dq.analysis;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -54,12 +54,10 @@ public class MultiColumnAnalysisExecutorTest {
         Package catalog = orgomg.cwm.resource.relational.RelationalFactory.eINSTANCE.createCatalog();// mock(Catalog.class);
         catalog.setName("tbi"); //$NON-NLS-1$
 
-        Package schema = orgomg.cwm.resource.relational.RelationalFactory.eINSTANCE.createSchema();// mock(Schema.class);
-        schema.setNamespace(catalog);
 
         TdTable tdTable = RelationalFactory.eINSTANCE.createTdTable();
         tdTable.setName("customer"); //$NON-NLS-1$
-        tdTable.setNamespace(schema);
+        tdTable.setNamespace(catalog);
 
         TdColumn tdColumn = RelationalFactory.eINSTANCE.createTdColumn();
         tdColumn.setOwner(tdTable);

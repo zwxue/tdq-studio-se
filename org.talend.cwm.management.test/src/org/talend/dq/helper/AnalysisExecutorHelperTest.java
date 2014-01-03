@@ -12,7 +12,7 @@
 // ============================================================================
 package org.talend.dq.helper;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 import org.junit.After;
 import org.junit.Before;
@@ -27,14 +27,14 @@ import org.talend.dq.dbms.DbmsLanguageFactory;
 import orgomg.cwm.objectmodel.core.Package;
 import orgomg.cwm.objectmodel.core.TaggedValue;
 
-
 /**
- * DOC yyin  class global comment. Detailled comment
+ * DOC yyin class global comment. Detailled comment
  */
 public class AnalysisExecutorHelperTest {
 
     /**
      * DOC yyin Comment method "setUp".
+     * 
      * @throws java.lang.Exception
      */
     @Before
@@ -43,6 +43,7 @@ public class AnalysisExecutorHelperTest {
 
     /**
      * DOC yyin Comment method "tearDown".
+     * 
      * @throws java.lang.Exception
      */
     @After
@@ -63,11 +64,10 @@ public class AnalysisExecutorHelperTest {
         tdColumn.setOwner(tdTable);
         tdColumn.setName("columnName"); //$NON-NLS-1$
 
-
         DbmsLanguage dbmsLanguage = DbmsLanguageFactory.createDbmsLanguage(SupportDBUrlType.MSSQLDEFAULTURL.getLanguage(), null);
 
         Package schema = orgomg.cwm.resource.relational.RelationalFactory.eINSTANCE.createSchema();// mock(Schema.class);
-        schema.setName("schemaName");
+        schema.setName("schemaName"); //$NON-NLS-1$
         tdTable.setNamespace(schema);
 
         Package catalog = orgomg.cwm.resource.relational.RelationalFactory.eINSTANCE.createCatalog();// mock(Catalog.class);
@@ -96,14 +96,10 @@ public class AnalysisExecutorHelperTest {
                 SupportDBUrlType.ORACLEWITHSIDDEFAULTURL.getLanguage(), null);
 
         Package schema = orgomg.cwm.resource.relational.RelationalFactory.eINSTANCE.createSchema();// mock(Schema.class);
-        schema.setName("schemaName");
+        schema.setName("schemaName"); //$NON-NLS-1$
         tdTable.setNamespace(schema);
 
-        Package catalog = orgomg.cwm.resource.relational.RelationalFactory.eINSTANCE.createCatalog();// mock(Catalog.class);
-        catalog.setName("catalogName"); //$NON-NLS-1$
-        schema.setNamespace(catalog);
-
-        assertEquals("\"catalogName\".\"schemaName\".\"tableName\"", AnalysisExecutorHelper.getTableName(tdColumn, dbmsLanguage)); //$NON-NLS-1$
+        assertEquals("\"schemaName\".\"tableName\"", AnalysisExecutorHelper.getTableName(tdColumn, dbmsLanguage)); //$NON-NLS-1$
 
     }
 

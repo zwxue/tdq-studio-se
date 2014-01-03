@@ -12,9 +12,13 @@
 // ============================================================================
 package org.talend.dq.analysis;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 import org.junit.Test;
+import org.talend.core.model.metadata.builder.connection.ConnectionFactory;
+import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
+import org.talend.core.model.metadata.builder.database.dburl.SupportDBUrlType;
+import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.relational.RelationalFactory;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.relational.TdTable;
@@ -54,9 +58,6 @@ public class ColumnAnalysisExecutorTest {
         analysis.setParameters(analysisPara);
         context.getAnalysedElements().add(tdColumn);
 
-        Package schema = orgomg.cwm.resource.relational.RelationalFactory.eINSTANCE.createSchema();// mock(Schema.class);
-        tdTable.setNamespace(schema);
-
         AnalysisResult analysisResult = AnalysisFactory.eINSTANCE.createAnalysisResult();
         ExecutionInformations info = AnalysisFactory.eINSTANCE.createExecutionInformations();
         analysisResult.setResultMetadata(info);
@@ -64,10 +65,15 @@ public class ColumnAnalysisExecutorTest {
 
         Package catalog = orgomg.cwm.resource.relational.RelationalFactory.eINSTANCE.createCatalog();// mock(Catalog.class);
         catalog.setName("catalogName"); //$NON-NLS-1$
-        schema.setNamespace(catalog);
+        tdTable.setNamespace(catalog);
+        DatabaseConnection createConnection = ConnectionFactory.eINSTANCE.createDatabaseConnection();
+        createConnection.getTaggedValue().add(
+                TaggedValueHelper.createTaggedValue(TaggedValueHelper.DB_PRODUCT_NAME,
+                        SupportDBUrlType.MYSQLDEFAULTURL.getLanguage()));
+        analysis.getContext().setConnection(createConnection);
 
         ColumnAnalysisExecutor columnAnalysisExecutor = new ColumnAnalysisExecutor();
-        assertEquals("SELECT columnName FROM catalogName.tableName", columnAnalysisExecutor.createSqlStatement(analysis)); //$NON-NLS-1$
+        assertEquals("SELECT `columnName` FROM `catalogName`.`tableName`", columnAnalysisExecutor.createSqlStatement(analysis)); //$NON-NLS-1$
     }
 
     /**
@@ -99,12 +105,18 @@ public class ColumnAnalysisExecutorTest {
         analysis.setResults(analysisResult);
 
         Package schema = orgomg.cwm.resource.relational.RelationalFactory.eINSTANCE.createSchema();// mock(Schema.class);
-        schema.setName("schemaName");
+        schema.setName("schemaName"); //$NON-NLS-1$
         tdTable.setNamespace(schema);
 
         Package catalog = orgomg.cwm.resource.relational.RelationalFactory.eINSTANCE.createCatalog();// mock(Catalog.class);
         catalog.setName("catalogName"); //$NON-NLS-1$
         schema.setNamespace(catalog);
+
+        DatabaseConnection createConnection = ConnectionFactory.eINSTANCE.createDatabaseConnection();
+        createConnection.getTaggedValue().add(
+                TaggedValueHelper.createTaggedValue(TaggedValueHelper.DB_PRODUCT_NAME,
+                        SupportDBUrlType.MSSQLDEFAULTURL.getLanguage()));
+        analysis.getContext().setConnection(createConnection);
 
         ColumnAnalysisExecutor columnAnalysisExecutor = new ColumnAnalysisExecutor();
         assertEquals(
