@@ -3,10 +3,11 @@ Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
 Bundle-SymbolicName: org.talend.dataquality; singleton:=true
 Bundle-Version: 1.0.0.qualifier
-Bundle-ClassPath: .
+Bundle-ClassPath: .,
+ jar/org.talend.dataquality.jar
 Bundle-Vendor: %providerName
 Bundle-Localization: plugin
-Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: org.talend.algorithms,
  org.talend.commons.emf,
  org.talend.commons.utils,
@@ -66,5 +67,5 @@ Require-Bundle: org.talend.utils;visibility:=reexport,
  org.talend.model;visibility:=reexport,
  org.talend.dataquality.matching,
  org.talend.libraries.google.libphonumber
-Bundle-ActivationPolicy: lazy
 Eclipse-RegisterBuddy: org.apache.log4j,org.talend.testutils
+Bundle-ActivationPolicy: lazy
