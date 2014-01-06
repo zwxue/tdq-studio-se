@@ -19,6 +19,8 @@ import java.util.Map;
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.runtime.Path;
+import org.eclipse.emf.common.util.URI;
 import org.talend.commons.exception.BusinessException;
 import org.talend.commons.exception.PersistenceException;
 import org.talend.commons.utils.WorkspaceUtils;
@@ -37,7 +39,6 @@ import org.talend.dataquality.indicators.definition.IndicatorCategory;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dataquality.indicators.definition.userdefine.UDIndicatorDefinition;
 import org.talend.dataquality.properties.TDQIndicatorDefinitionItem;
-import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.helper.UDIHelper;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.dq.writer.impl.ElementWriterFactory;
@@ -104,7 +105,8 @@ public class IndicatorDuplicateHandle extends ModelElementDuplicateHandle {
     }
 
     private void updateUDIModel(String newName, ModelElement duplicateModelElement) {
-        IFile file = PropertyHelper.getPropertyFile(duplicateModelElement);
+        URI uri = duplicateModelElement.eResource().getURI();
+        IFile file = ResourceManager.getRoot().getFile(new Path(uri.toPlatformString(false)));
 
         File ifileToFile = WorkspaceUtils.ifileToFile(file);
         Map<String, String> initIndicatorReplaceMap = UpdateUDIIndicatorsWithNewModelTask.initIndicatorReplaceMap();
