@@ -230,13 +230,14 @@ public class SQLTextEditor extends TextEditor {
             File sourceFilesFolder = getSourceFilesFolder(file);
             while (fileNameExist(sourceFilesFolder, file.getName())) {
                 InputDialog inputDialog = new InputDialog(getSite().getShell(), "New File Name",
-                        "this file exists already, please input new file name: ", filePath.lastSegment(), null);
+                        "this file exists already, please input new file name: ", filePath.removeFileExtension().lastSegment(),
+                        null);
                 if (inputDialog.open() == InputDialog.CANCEL) {
                     return;
                 } else {
                     IPath lseg = filePath.removeLastSegments(1);
                     String inputFileName = inputDialog.getValue();
-                    filePath = lseg.append(inputFileName.toLowerCase().endsWith(DEFAULT_FILE_EXTENSION) ? inputFileName : inputFileName + DEFAULT_FILE_EXTENSION);
+                    filePath = lseg.append(inputFileName + DEFAULT_FILE_EXTENSION);
                     file = workspace.getRoot().getFile(filePath);
                 }
             }
@@ -351,10 +352,7 @@ public class SQLTextEditor extends TextEditor {
      * @return
      */
     private String getValidFileName(String fileName) {
-        if (!fileName.toLowerCase().endsWith(DEFAULT_FILE_EXTENSION)) {
-            return fileName + DEFAULT_FILE_EXTENSION;
-        }
-        return fileName;
+        return fileName + DEFAULT_FILE_EXTENSION;
     }
 
     /**
