@@ -13,6 +13,7 @@
 package org.talend.dq.helper;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -88,7 +89,7 @@ public final class DQDeleteHelper {
      * @param isCurrentPerspectiveDQ
      * @return these list will be used to pop a dialog and display the detail nodes which are depended by others.
      */
-    public static List<IRepositoryNode> getCanNotDeletedNodes(List<IRepositoryNode> allNodes, boolean isCurrentPerspectiveDQ) {
+    public static List<IRepositoryNode> getCanNotDeletedNodes(Collection<IRepositoryNode> allNodes, boolean isCurrentPerspectiveDQ) {
         List<IRepositoryNode> canNotDeletedNodes = new ArrayList<IRepositoryNode>();
         if (allNodes == null) {
             return canNotDeletedNodes;

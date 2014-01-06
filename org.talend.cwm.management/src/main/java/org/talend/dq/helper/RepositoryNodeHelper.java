@@ -14,8 +14,11 @@ package org.talend.dq.helper;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
@@ -1408,7 +1411,7 @@ public final class RepositoryNodeHelper {
             return null;
         }
         String uuid = getUUID(modelElement);
-        RepositoryNode recyBinNode = getRecycleBinRootNode();
+        RepositoryNode recyBinNode = getRecycleBinRepNode();
         if (uuid == null || recyBinNode == null) {
             return null;
         }
@@ -1987,15 +1990,17 @@ public final class RepositoryNodeHelper {
     }
 
     /**
-     * get the RepositoryNode according to the nodeName.
+     * get the RepositoryNode according to the ERepositoryObjectType(the ERepositoryObjectType should not be
+     * RECYCLE_BIN, because there doesn't exist a physical folder, so there will return null and log an error message;
+     * use getRecycleBinRepNode() to get the RecycleBinNode).
      * 
-     * @param nodeName the node name
+     * @param nodeType the node's ERepositoryObjectType
      * @param open if the DQView is not show, show it or not
      * @return
      */
-    public static RepositoryNode getRootNode(ERepositoryObjectType nodeName, boolean open) {
+    public static RepositoryNode getRootNode(ERepositoryObjectType nodeType, boolean open) {
         FolderItem folderItem = ProxyRepositoryFactory.getInstance().getFolderItem(
-                ProjectManager.getInstance().getCurrentProject(), nodeName, Path.EMPTY);
+                ProjectManager.getInstance().getCurrentProject(), nodeType, Path.EMPTY);
         RepositoryNode node = null;
         CommonViewer commonViewer = getDQCommonViewer(open);
         if (commonViewer != null) {
@@ -2021,7 +2026,7 @@ public final class RepositoryNodeHelper {
                 }
             }
         }
-        log.error(Messages.getString("RepositoryNodeHelper.canNotFindRootNode") + nodeName.getLabel()); //$NON-NLS-1$
+        log.error(Messages.getString("RepositoryNodeHelper.canNotFindRootNode") + nodeType.getLabel()); //$NON-NLS-1$
         return node;
     }
 
@@ -2030,7 +2035,9 @@ public final class RepositoryNodeHelper {
      * get recycle bin node.
      * 
      * @return
+     * @deprecated use {@link #getRecycleBinRepNode()} instead
      */
+    @Deprecated
     public static RepositoryNode getRecycleBinRootNode() {
         RepositoryNode node = null;
         CommonViewer commonViewer = getDQCommonViewer(true);
@@ -3030,7 +3037,7 @@ public final class RepositoryNodeHelper {
         list.add(getRootNode(ERepositoryObjectType.TDQ_DATA_PROFILING, true));
         list.add(getRootNode(ERepositoryObjectType.TDQ_LIBRARIES, true));
         list.add(getRootNode(ERepositoryObjectType.METADATA, true));
-        list.add(getRootNode(ERepositoryObjectType.RECYCLE_BIN, true));
+        list.add(getRecycleBinRepNode());
         for (IRepositoryNode iRepositoryNode : list) {
             allFilteredNodeList.addAll(getTreeList(iRepositoryNode));
             if (null != monitor) {
@@ -3061,7 +3068,7 @@ public final class RepositoryNodeHelper {
      * @return
      */
     private static List<IRepositoryNode> getRecycleBinFilteredNodes() {
-        return getTreeList(getRootNode(ERepositoryObjectType.RECYCLE_BIN, true));
+        return getTreeList(getRecycleBinRepNode());
     }
 
     /**
@@ -3095,25 +3102,27 @@ public final class RepositoryNodeHelper {
      * @param recycleBinNodes
      * @return
      */
-    public static List<IRepositoryNode> findAllChildrenNodes(List<IRepositoryNode> recycleBinNodes) {
-        List<IRepositoryNode> findAllRecycleBinNode = new ArrayList<IRepositoryNode>();
-        findAllRecycleBinNode.addAll(recycleBinNodes);
+    public static Collection<IRepositoryNode> findAllChildrenNodes(Collection<IRepositoryNode> recycleBinNodes) {
+        Set<IRepositoryNode> allChindrenNode = new HashSet<IRepositoryNode>();
+        allChindrenNode.addAll(recycleBinNodes);
         for (IRepositoryNode iRepositoryNode : recycleBinNodes) {
-            findAllRecycleBinNode.addAll(findAllChildrenNodes(iRepositoryNode.getChildren()));
+            allChindrenNode.addAll(findAllChildrenNodes(iRepositoryNode.getChildren()));
         }
-        return findAllRecycleBinNode;
+        return allChindrenNode;
     }
 
     /**
-     * DOC gdbu Comment method "isEmptyRecycleBin".
+     * if there exist noeds which have been filtered out when try to delete/empty RecycleBin, show dialog to the user,
+     * let user to select going ahead or not.
      * 
      * @param needToDeleteNodes
      * @param shownNodes
      * @return
      */
-    public static boolean isEmptyRecycleBin(List<IRepositoryNode> needToDeleteNodes, List<IRepositoryNode> shownNodes) {
+    public static boolean canDeleteWhenFiltering(Collection<IRepositoryNode> needToDeleteNodes,
+            Collection<IRepositoryNode> shownNodes) {
         if (needToDeleteNodes.size() != shownNodes.size()) {
-            // If some nodes is filtered out, ask the user whether to continue to empty the Recycle Bin.
+            // If some nodes is filtered out, ask the user whether to continue to delete.
             boolean openQuestion = MessageDialog.openQuestion(null, Messages.getString("RepositoryNodeHelper.delete.title"),//$NON-NLS-1$
                     Messages.getString("RepositoryNodeHelper.ContainsFilteredNodes"));//$NON-NLS-1$
             return openQuestion;
@@ -3160,12 +3169,12 @@ public final class RepositoryNodeHelper {
             if (node instanceof DBConnectionRepNode) {
                 return ((DBConnectionRepNode) node).getDatabaseConnection().getDatabaseType();
             } else if (node instanceof MDMConnectionRepNode) {
-                return "MDM Connection";// ((MDMConnectionRepNode) node).get;
+                return "MDM Connection"; //$NON-NLS-1$
             } else if (node instanceof DFConnectionRepNode) {
-                return "File Delimited Connection";// ((DFConnectionRepNode) node).getDfConnection().;
+                return "File Delimited Connection"; //$NON-NLS-1$
             }
         }
-        return "";
+        return ""; //$NON-NLS-1$
     }
 
     public static String getConnectionType(DataManager node) {
@@ -3173,12 +3182,12 @@ public final class RepositoryNodeHelper {
             if (node instanceof DatabaseConnection) {
                 return ((DatabaseConnection) node).getDatabaseType();
             } else if (node instanceof MDMConnection) {
-                return "MDM Connection";// ((MDMConnectionRepNode) node).get;
+                return "MDM Connection"; //$NON-NLS-1$
             } else if (node instanceof DelimitedFileConnection) {
-                return "File Delimited Connection";// ((DFConnectionRepNode) node).getDfConnection().;
+                return "File Delimited Connection"; //$NON-NLS-1$
             }
         }
-        return "";
+        return ""; //$NON-NLS-1$
     }
 
     /**
