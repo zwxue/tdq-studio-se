@@ -14,6 +14,7 @@ package org.talend.dq.analysis;
 
 import java.util.Date;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.emf.common.util.EList;
@@ -62,7 +63,7 @@ public class ReportExecutor implements IReportExecutor {
                 }
                 ReturnCode executeRc = AnalysisExecutorSelector.executeAnalysis(analysis, monitor);
 
-                if (executeRc.getMessage() != null) {
+                if (executeRc.getMessage() != null && !StringUtils.EMPTY.equals(executeRc.getMessage().trim())) {
                     throw new AnalysisExecutionException(Messages.getString("ReportExecutor.failRunAnalysis", analysis.getName(),
                             executeRc.getMessage()));
                 }
