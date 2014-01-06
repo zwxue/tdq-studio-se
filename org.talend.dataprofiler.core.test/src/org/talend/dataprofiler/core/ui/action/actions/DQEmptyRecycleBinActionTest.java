@@ -18,8 +18,10 @@ import static org.powermock.api.support.membermodification.MemberMatcher.*;
 import static org.powermock.api.support.membermodification.MemberModifier.*;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.Set;
 
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
@@ -129,7 +131,7 @@ public class DQEmptyRecycleBinActionTest {
         Property prop = mock(Property.class);
         when(object1.getProperty()).thenReturn(prop);
 
-        List<IRepositoryNode> seleLs = new ArrayList<IRepositoryNode>();
+        Set<IRepositoryNode> seleLs = new HashSet<IRepositoryNode>();
         ISelection selecetion = new StructuredSelection(seleLs);
         PowerMockito.doReturn(selecetion).when(dqEmptyAction_mock).getSelection();
         seleLs.add(node2);
@@ -147,7 +149,9 @@ public class DQEmptyRecycleBinActionTest {
         PowerMockito.mockStatic(RepositoryNodeHelper.class);
         when(RepositoryNodeHelper.getRecycleBinRepNode()).thenReturn(recyBin);
         when(RepositoryNodeHelper.findAllChildrenNodes(seleLs)).thenReturn(seleLs);
-        when(recyBin.getChildren()).thenReturn(seleLs);
+        List<IRepositoryNode> repsList = new ArrayList<IRepositoryNode>();
+        repsList.addAll(seleLs);
+        when(recyBin.getChildren()).thenReturn(repsList);
 
         dqEmptyAction_mock.run();
 
@@ -165,7 +169,7 @@ public class DQEmptyRecycleBinActionTest {
     public void testRun_2() throws Exception {
         PowerMockito.doNothing().when(dqEmptyAction_mock, "doRun"); //$NON-NLS-1$
         IRepositoryNode node1 = mock(IRepositoryNode.class);
-        List<IRepositoryNode> seleLs = new ArrayList<IRepositoryNode>();
+        Set<IRepositoryNode> seleLs = new HashSet<IRepositoryNode>();
         ISelection selecetion = new StructuredSelection(seleLs);
         PowerMockito.doReturn(selecetion).when(dqEmptyAction_mock).getSelection();
         seleLs.add(node1);
@@ -178,7 +182,9 @@ public class DQEmptyRecycleBinActionTest {
         PowerMockito.mockStatic(RepositoryNodeHelper.class);
         when(RepositoryNodeHelper.getRecycleBinRepNode()).thenReturn(recyBin);
         when(RepositoryNodeHelper.findAllChildrenNodes(seleLs)).thenReturn(seleLs);
-        when(recyBin.getChildren()).thenReturn(seleLs);
+        List<IRepositoryNode> repsList = new ArrayList<IRepositoryNode>();
+        repsList.addAll(seleLs);
+        when(recyBin.getChildren()).thenReturn(repsList);
 
         dqEmptyAction_mock.run();
 
