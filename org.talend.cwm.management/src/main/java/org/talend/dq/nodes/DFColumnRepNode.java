@@ -21,7 +21,7 @@ import org.talend.utils.sql.TalendTypeConvert;
 /**
  * DOC qiongli class global comment. Detailled comment
  */
-public class DFColumnRepNode extends DQRepositoryNode {
+public class DFColumnRepNode extends ColumnRepNode {
 
     private MetadataColumnRepositoryObject metadataColumnRepositoryObject;
 

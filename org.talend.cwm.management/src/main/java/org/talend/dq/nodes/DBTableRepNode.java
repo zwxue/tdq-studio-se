@@ -30,7 +30,7 @@ import orgomg.cwm.resource.relational.Schema;
 /**
  * DOC klliu Database table repository node displayed on repository view (UI).
  */
-public class DBTableRepNode extends DQRepositoryNode {
+public class DBTableRepNode extends ColumnSetRepNode {
 
     private TdTableRepositoryObject tdTableRepositoryObject;
 
