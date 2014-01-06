@@ -12,7 +12,7 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.action.actions;
 
-import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import org.eclipse.jface.viewers.ISelection;
@@ -56,58 +56,42 @@ public class DQEmptyRecycleBinAction extends EmptyRecycleBinAction {
     public void run() {
         repositoryObjectCRUD.refreshDQViewForRemoteProject();
         // MOD gdbu 2011-11-24 TDQ-4068
-        List<IRepositoryNode> findAllRecycleBinNodes = needDeleteNodes();
+        Collection<IRepositoryNode> findAllRecycleBinNodes = needDeleteNodes();
         if (null == findAllRecycleBinNodes) {
             return;
         }
-        new DQDeleteAction(findAllRecycleBinNodes.toArray()).run();
+        DQDeleteAction dqDeleteAction = new DQDeleteAction(findAllRecycleBinNodes.toArray());
+        // if there exist filtered out nodes, there will show the warning dialog in needDeleteNodes(), so don't need to
+        // show the warning dialog again in DQDeleteAction
+        dqDeleteAction.setShowFilteredOutWarning(false);
+        dqDeleteAction.run();
     }
 
     /**
      * ADD gdbu 2011-11-24 TDQ-4068 To get all the nodes those need to be deleted when empty Recycle Bin node.
      * 
-     * DOC gdbu Comment method "findAllRecycleBinNodes".
-     * 
      * @return
      */
-    private List<IRepositoryNode> needDeleteNodes() {
-        DQRepositoryNode.setIsReturnAllNodesWhenFiltering(false);
-        // shownNodesInRecycleBin list contains only the first level shown children under the Recycle Bin node.
-        List<IRepositoryNode> shownNodesInRecycleBin = ((RepositoryNode) RepositoryNodeHelper.getRecycleBinRepNode())
+    private Collection<IRepositoryNode> needDeleteNodes() {
+        // containsFilteredOutChildren list contains all of the first level children under the Recycle Bin
+        // node.(include the filtered out nodes)
+        List<IRepositoryNode> containsFilteredOutChildren = ((RepositoryNode) RepositoryNodeHelper.getRecycleBinRepNode())
                 .getChildren();
-        DQRepositoryNode.setIsReturnAllNodesWhenFiltering(true);
-
-        // If there is no filter in the case, findAllRecycleBinNode contains of all the nodes under the Recycle Bin
-        // node.
-        // If the filter case, findAllRecycleBinNode contains all need to be deleted nodes under the Recycle Bin node.
-        List<IRepositoryNode> findAllRecycleBinNode = null;
+        Collection<IRepositoryNode> allRecycleBinNodes = RepositoryNodeHelper.findAllChildrenNodes(containsFilteredOutChildren);
 
         if (DQRepositoryNode.isOnFilterring()) {
-            // containsFilteredOutChildren list contains all of the first level children under the Recycle Bin node.
-            List<IRepositoryNode> containsFilteredOutChildren = ((RepositoryNode) RepositoryNodeHelper.getRecycleBinRepNode())
+            DQRepositoryNode.setIsReturnAllNodesWhenFiltering(false);
+            // shownNodesInRecycleBin list contains only the first level shown children under the Recycle Bin
+            // node.(don't contain the filtered out nodes)
+            List<IRepositoryNode> shownNodesInRecycleBin = ((RepositoryNode) RepositoryNodeHelper.getRecycleBinRepNode())
                     .getChildren();
+            DQRepositoryNode.setIsReturnAllNodesWhenFiltering(true);
+            Collection<IRepositoryNode> allShownNodes = RepositoryNodeHelper.findAllChildrenNodes(shownNodesInRecycleBin);
 
-            // needToEmptyNodesWhenFiltering list contains Recycle Bin's first level children which need to be
-            // delete (contains those nodes which has been filtered out).
-            List<IRepositoryNode> needToEmptyNodesWhenFiltering = new ArrayList<IRepositoryNode>();
-
-            for (IRepositoryNode iRepositoryNode : containsFilteredOutChildren) {
-                if (shownNodesInRecycleBin.contains(iRepositoryNode)) {
-                    needToEmptyNodesWhenFiltering.add(iRepositoryNode);
-                }
-            }
-
-            findAllRecycleBinNode = RepositoryNodeHelper.findAllChildrenNodes(needToEmptyNodesWhenFiltering);
-
-            if (!RepositoryNodeHelper.isEmptyRecycleBin(findAllRecycleBinNode,
-                    RepositoryNodeHelper.findAllChildrenNodes(shownNodesInRecycleBin))) {
+            if (!RepositoryNodeHelper.canDeleteWhenFiltering(allRecycleBinNodes, allShownNodes)) {
                 return null;
             }
-
-        } else {
-            findAllRecycleBinNode = RepositoryNodeHelper.findAllChildrenNodes(shownNodesInRecycleBin);
         }
-
-        return findAllRecycleBinNode;
+        return allRecycleBinNodes;
     }
 }
