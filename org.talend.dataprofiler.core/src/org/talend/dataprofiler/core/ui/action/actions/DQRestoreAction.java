@@ -12,6 +12,10 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.action.actions;
 
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+
 import org.apache.log4j.Logger;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -23,6 +27,8 @@ import org.talend.dataprofiler.core.ui.views.DQRespositoryView;
 import org.talend.dataprofiler.core.ui.views.resources.IRepositoryObjectCRUDAction;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.nodes.DQRepositoryNode;
+import org.talend.repository.model.IRepositoryNode;
+import org.talend.repository.model.RepositoryNode;
 import org.talend.repository.ui.actions.RestoreAction;
 
 /**
@@ -68,6 +74,28 @@ public class DQRestoreAction extends RestoreAction {
             RepositoryNodeHelper
                     .setFilteredNode(RepositoryNodeHelper.getRootNode(ERepositoryObjectType.TDQ_DATA_PROFILING, true));
         }
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.repository.ui.actions.RestoreAction#restoreNode(org.talend.repository.model.RepositoryNode)
+     */
+    @Override
+    protected void restoreNode(RepositoryNode node) {
+        RepositoryNode tempNode = node;
+        List<IRepositoryNode> recycleBinNodeFirstLevelChildren = ((RepositoryNode) RepositoryNodeHelper.getRecycleBinRepNode())
+                .getChildren();
+        Collection<IRepositoryNode> allRecycleBinNodes = RepositoryNodeHelper.findAllChildrenNodes(recycleBinNodeFirstLevelChildren);
+        Iterator<IRepositoryNode> iterator = allRecycleBinNodes.iterator();
+        while (iterator.hasNext()) {
+            IRepositoryNode next = iterator.next();
+            if (next.equals(node)) {
+                tempNode = (RepositoryNode) next;
+                break;
+            }
+        }
+        super.restoreNode(tempNode);
     }
 
     @Override

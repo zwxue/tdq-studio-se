@@ -15,11 +15,13 @@ package org.talend.dataprofiler.core.ui.action.actions;
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IContainer;
@@ -88,11 +90,11 @@ import orgomg.cwm.objectmodel.core.ModelElement;
  */
 public class DQDeleteAction extends DeleteAction {
 
-    private RepositoryNode currentNode = null;
+    private IRepositoryNode currentNode = null;
 
     private static Logger log = Logger.getLogger(DQDeleteAction.class);
 
-    private List<RepositoryNode> selectedNodes;
+    private List<IRepositoryNode> selectedNodes;
 
     private IRepositoryObjectCRUDAction repositoryObjectCRUD = RepNodeUtils.getRepositoryObjectCRUD();
 
@@ -101,11 +103,31 @@ public class DQDeleteAction extends DeleteAction {
 
     private Object[] deleteElements = null;
 
+    private boolean showFilteredOutWarning = true;
+
+    /**
+     * Getter for showFilteredOutWarning.
+     * 
+     * @return the showFilteredOutWarning
+     */
+    public boolean isShowFilteredOutWarning() {
+        return this.showFilteredOutWarning;
+    }
+
+    /**
+     * Sets the showFilteredOutWarning.
+     * 
+     * @param showFilteredOutWarning the showFilteredOutWarning to set
+     */
+    public void setShowFilteredOutWarning(boolean showFilteredOutWarning) {
+        this.showFilteredOutWarning = showFilteredOutWarning;
+    }
+
     public DQDeleteAction() {
         super();
         setText(DefaultMessagesImpl.getString("DQDeleteAction.delete"));//$NON-NLS-1$
         setId(ActionFactory.DELETE.getId());
-        this.selectedNodes = new ArrayList<RepositoryNode>();
+        this.selectedNodes = new ArrayList<IRepositoryNode>();
         this.deleteElements = ((IStructuredSelection) this.getSelection()).toArray();
 
     }
@@ -114,7 +136,7 @@ public class DQDeleteAction extends DeleteAction {
         super();
         setText(DefaultMessagesImpl.getString("DQDeleteAction.delete"));//$NON-NLS-1$
         setId(ActionFactory.DELETE.getId());
-        this.selectedNodes = new ArrayList<RepositoryNode>();
+        this.selectedNodes = new ArrayList<IRepositoryNode>();
         this.deleteElements = delElements;
     }
 
@@ -186,49 +208,47 @@ public class DQDeleteAction extends DeleteAction {
         // ~ TDQ-4831
 
         for (Object obj : deleteElements) {
-            if (obj instanceof RepositoryNode) {
-                RepositoryNode node = (RepositoryNode) obj;
-                selectedNodes.add(node);
-            }
+            RepositoryNode node = (RepositoryNode) obj;
+            selectedNodes.add(node);
         }
         if (DQRepositoryNode.isOnFilterring()) {
-            if (deleteElements[0] instanceof RepositoryNode) {
-                setPreviousFilteredNode((RepositoryNode) deleteElements[0]);
-            }
-            for (RepositoryNode node : selectedNodes) {
-                RepositoryNodeHelper.removeChildrenNodesWhenFiltering(node);
-            }
+            setPreviousFilteredNode(selectedNodes.get(0));
         }
 
+        Collection<IRepositoryNode> shownNodes = null;
+        Collection<IRepositoryNode> allDeleteNodes = null;
+
         // MOD gdbu 2011-11-30 TDQ-4090 : To get all Recycle Bin nodes.
-        List deleteNodes = null;
-        List<IRepositoryNode> shownNodes = null;
-        List<IRepositoryNode> findAllRecycleBinNodes = null;
         if (DQRepositoryNode.isOnFilterring()) {
-            deleteNodes = new ArrayList();
-            Collections.addAll(deleteNodes, deleteElements);
-            shownNodes = RepositoryNodeHelper.findAllChildrenNodes(deleteNodes);
-            List<IRepositoryNode> recycleBinNodeFirstLevelChildren = ((RepositoryNode) RepositoryNodeHelper
-                    .getRecycleBinRepNode()).getChildren();
-            findAllRecycleBinNodes = RepositoryNodeHelper.findAllChildrenNodes(recycleBinNodeFirstLevelChildren);
+            shownNodes = RepositoryNodeHelper.findAllChildrenNodes(selectedNodes);
+            selectedNodes = rebuildNodes(selectedNodes);
+            allDeleteNodes = RepositoryNodeHelper.findAllChildrenNodes(selectedNodes);
         }
         // ~TDQ-4090
 
         if (selectedNodes.size() > 0) {
-            RepositoryNode firstNode = selectedNodes.get(0);
+            IRepositoryNode firstNode = selectedNodes.get(0);
             boolean isStateDeleted = RepositoryNodeHelper.isStateDeleted(firstNode);
             // logical delete
             if (!isStateDeleted) {
                 logicDelete();
             } else {
+                // if the repository node is on filtering, show warning dialog when the nodes going to be deleted are
+                // different with the nodes showing
+                if (DQRepositoryNode.isOnFilterring() && isShowFilteredOutWarning()) {
+                    setShowFilteredOutWarning(false);
+                    if (!RepositoryNodeHelper.canDeleteWhenFiltering(allDeleteNodes, shownNodes)) {
+                        return;
+                    }
+                }
+
                 // show a confirm dialog to make sure the user want to proceed
                 if (showConfirmDialog()) {
                     // sort the selected nodes with special order: first report type, then (jrxml, analysis) type,
-                    // finally
-                    // (connection, DQ Rule, Pattern) type.
+                    // finally (connection, DQ Rule, Pattern) type.
                     sortNodesBeforePhysicalDelete();
 
-                    physicalDelete(deleteNodes, shownNodes, findAllRecycleBinNodes);
+                    physicalDelete();
                 }
             }
         }
@@ -239,6 +259,80 @@ public class DQDeleteAction extends DeleteAction {
 
         // the deleteReportFile() mothed have refresh the workspace and dqview
         refreshWorkspaceAndRecycleBenNode();
+    }
+
+    /**
+     * get the nodes with filtered children from the RecycleBinNode.
+     * 
+     * @param nodes
+     * @return
+     */
+    private List<IRepositoryNode> rebuildNodes(List<IRepositoryNode> nodes) {
+        List<IRepositoryNode> tempNodes = new ArrayList<IRepositoryNode>();
+
+        List<IRepositoryNode> recycleBinNodeFirstLevelChildren = ((RepositoryNode) RepositoryNodeHelper.getRecycleBinRepNode())
+                .getChildren();
+        Collection<IRepositoryNode> allRecycleBinNodes = RepositoryNodeHelper
+                .findAllChildrenNodes(recycleBinNodeFirstLevelChildren);
+        Iterator<IRepositoryNode> iterator = allRecycleBinNodes.iterator();
+        while (iterator.hasNext()) {
+            IRepositoryNode next = iterator.next();
+            for (IRepositoryNode node : nodes) {
+                if (next.equals(node)) {
+                    tempNodes.add(next);
+                }
+            }
+        }
+
+        return tempNodes;
+    }
+
+    /**
+     * find all the noeds going to be deleted.
+     * 
+     * @param deleteNodes
+     * @return
+     */
+    private Collection<IRepositoryNode> findAllDeleteNodes(List deleteNodes) {
+        Set<IRepositoryNode> allDeleteNodes = new HashSet<IRepositoryNode>();
+
+        Set<IRepositoryNode> tempNodes = new HashSet<IRepositoryNode>();
+        for (Object obj : deleteNodes) {
+            if (obj instanceof IRepositoryNode) {
+                IRepositoryNode node = (IRepositoryNode) obj;
+                tempNodes.add(node);
+            }
+        }
+
+        List<IRepositoryNode> recycleBinNodeFirstLevelChildren = ((RepositoryNode) RepositoryNodeHelper.getRecycleBinRepNode())
+                .getChildren();
+        Collection<IRepositoryNode> allRecycleBinNodes = RepositoryNodeHelper
+                .findAllChildrenNodes(recycleBinNodeFirstLevelChildren);
+        Iterator<IRepositoryNode> iterator = allRecycleBinNodes.iterator();
+        while (iterator.hasNext()) {
+            IRepositoryNode next = iterator.next();
+            for (IRepositoryNode node : tempNodes) {
+                if (next.equals(node)) {
+                    allDeleteNodes.add(next);
+                    addAllChinerenNodes(allDeleteNodes, next.getChildren());
+                }
+            }
+        }
+
+        return allDeleteNodes;
+    }
+
+    /**
+     * DOC xqliu Comment method "addAllChinerenNodes".
+     * 
+     * @param allNodes
+     * @param children
+     */
+    private void addAllChinerenNodes(Set<IRepositoryNode> allNodes, List<IRepositoryNode> children) {
+        allNodes.addAll(children);
+        for (IRepositoryNode child : children) {
+            addAllChinerenNodes(allNodes, child.getChildren());
+        }
     }
 
     /**
@@ -254,12 +348,12 @@ public class DQDeleteAction extends DeleteAction {
      * (connection, DQ Rule, Pattern) type. - finally : the type which has no dependency,
      */
     private void sortNodesBeforePhysicalDelete() {
-        List<RepositoryNode> anaOrJrxml = new ArrayList<RepositoryNode>();
+        List<IRepositoryNode> anaOrJrxml = new ArrayList<IRepositoryNode>();
         // in final level, means which need to be ordered at the end of the list
-        List<RepositoryNode> finalLevel = new ArrayList<RepositoryNode>();
-        List<RepositoryNode> reportNodes = new ArrayList<RepositoryNode>();
+        List<IRepositoryNode> finalLevel = new ArrayList<IRepositoryNode>();
+        List<IRepositoryNode> reportNodes = new ArrayList<IRepositoryNode>();
 
-        for (RepositoryNode node : selectedNodes) {
+        for (IRepositoryNode node : selectedNodes) {
             if (isReport(node)) {
                 reportNodes.add(node);
             } else if (isAna(node) || isJrxml(node)) {
@@ -281,7 +375,7 @@ public class DQDeleteAction extends DeleteAction {
      * @param node
      * @return true when the node is an analysis
      */
-    private boolean isAna(RepositoryNode node) {
+    private boolean isAna(IRepositoryNode node) {
         if (node.getObject() != null) {
             return ERepositoryObjectType.TDQ_ANALYSIS_ELEMENT.equals(node.getObject().getRepositoryObjectType());
         }
@@ -294,7 +388,7 @@ public class DQDeleteAction extends DeleteAction {
      * @param node
      * @return true when the node is a report
      */
-    private boolean isReport(RepositoryNode node) {
+    private boolean isReport(IRepositoryNode node) {
         if (node.getObject() != null) {
             return ERepositoryObjectType.TDQ_REPORT_ELEMENT.equals(node.getObject().getRepositoryObjectType());
         }
@@ -304,13 +398,8 @@ public class DQDeleteAction extends DeleteAction {
     /**
      * physical Delete all selected nodes, if the node has dependency, will popup a confirm dialog with lists of
      * dependencies
-     * 
-     * @param deleteNodes
-     * @param shownNodes
-     * @param findAllRecycleBinNodes
-     * @param isStateDeleted
      */
-    private void physicalDelete(List deleteNodes, List<IRepositoryNode> shownNodes, List<IRepositoryNode> findAllRecycleBinNodes) {
+    private void physicalDelete() {
         // when physical deleting object with dependencies, do not popup
         // confirm anymore. and after dealing with it, store back to its default value.
         confirmForDQ = true;
@@ -320,23 +409,8 @@ public class DQDeleteAction extends DeleteAction {
             if (selectedNodes.size() == 0) {
                 break;
             }
-            RepositoryNode node = selectedNodes.get(i);
-            RepositoryNode parent = node.getParent();
-
-            // MOD gdbu 2011-11-30 TDQ-4090 : Determine whether there has some nodes not been shown when filtering.
-            if (DQRepositoryNode.isOnFilterring()) {
-                for (IRepositoryNode iRepositoryNode : findAllRecycleBinNodes) {
-                    if (node.equals(iRepositoryNode)) {
-                        node = (RepositoryNode) iRepositoryNode;
-                        shownNodes = RepositoryNodeHelper.findAllChildrenNodes(deleteNodes);
-                        break;
-                    }
-                }
-                if (!RepositoryNodeHelper.isEmptyRecycleBin(findAllRecycleBinNodes, shownNodes)) {
-                    break;
-                }
-            }
-            // ~TDQ-4090
+            IRepositoryNode node = selectedNodes.get(i);
+            IRepositoryNode parent = node.getParent();
 
             // -- When the node has no depends, delete it directly
             // -- when the node has depends, add it with depends list to the nodeWithDependsMap
@@ -346,7 +420,7 @@ public class DQDeleteAction extends DeleteAction {
                 boolean haveSubNode = false;
                 for (IRepositoryNode subNode : newLs) {
                     if (!hasDependencyClients(subNode)) {
-                        excuteSuperRun((RepositoryNode) subNode, node);
+                        excuteSuperRun(subNode, node);
                     } else {
                         // if the folder has some child with depends, can not delete the folder itself here
                         haveSubNode = true;
@@ -379,7 +453,7 @@ public class DQDeleteAction extends DeleteAction {
                     IRepositoryNode node = entry.getKey();
                     List<ModelElement> dependencies = entry.getValue();
 
-                    excuteSuperRun((RepositoryNode) node, node.getParent());
+                    excuteSuperRun(node, node.getParent());
                     physicalDeleteDependencies(dependencies);
                 }
             }
@@ -390,7 +464,7 @@ public class DQDeleteAction extends DeleteAction {
         if (folderNodeWhichChildHadDepend != null && folderNodeWhichChildHadDepend.size() > 0) {
             if (forceDelete) {
                 for (IRepositoryNode folder : folderNodeWhichChildHadDepend) {
-                    excuteSuperRun((RepositoryNode) folder, folder.getParent());
+                    excuteSuperRun(folder, folder.getParent());
                 }
             }
         }
@@ -434,7 +508,7 @@ public class DQDeleteAction extends DeleteAction {
      */
     private void logicDelete() {
         for (int i = selectedNodes.size() - 1; i >= 0; i--) {
-            RepositoryNode node = selectedNodes.get(i);
+            IRepositoryNode node = selectedNodes.get(i);
             // handle generating report file.bug 18805 .
             if (node instanceof ReportFileRepNode) {
                 try {
@@ -469,7 +543,7 @@ public class DQDeleteAction extends DeleteAction {
      * 
      * @param node
      */
-    private void setPreviousFilteredNode(RepositoryNode node) {
+    private void setPreviousFilteredNode(IRepositoryNode node) {
         if (DQRepositoryNode.isOnFilterring()) {
 
             List<IRepositoryNode> allFilteredNodeList = RepositoryNodeHelper.getAllFilteredNodeList();
@@ -548,11 +622,11 @@ public class DQDeleteAction extends DeleteAction {
      * @param currentNode:null for logical delete a selected element by UI.none-null for physical delete or logical
      * delete dependecy.
      */
-    private void excuteSuperRun(RepositoryNode currentNode, RepositoryNode parent) {
-        this.currentNode = currentNode;
+    private void excuteSuperRun(IRepositoryNode repoNode, IRepositoryNode parent) {
+        this.currentNode = repoNode;
         Item item = null;
-        if (currentNode != null) {
-            Property property = currentNode.getObject().getProperty();
+        if (repoNode != null) {
+            Property property = repoNode.getObject().getProperty();
             if (property != null) {
                 item = property.getItem();
             }
@@ -562,7 +636,7 @@ public class DQDeleteAction extends DeleteAction {
         boolean isReport = item != null && item instanceof TDQReportItem;
         List<IFile> repDocLinkFiles = new ArrayList<IFile>();
         if (isReport) {
-            repDocLinkFiles = ReportUtils.getRepDocLinkFiles(RepositoryNodeHelper.getIFile(currentNode));
+            repDocLinkFiles = ReportUtils.getRepDocLinkFiles(RepositoryNodeHelper.getIFile(repoNode));
         }
 
         // MOD qiongli 2011-5-9 bug 21035,avoid to unload resource.
@@ -570,14 +644,14 @@ public class DQDeleteAction extends DeleteAction {
         super.run();
         // because reuse tos codes.remove current node from its parent(simple folder) for phisical delete or logical
         // delete dependency.
-        if (currentNode != null) {
+        if (repoNode != null) {
             // MOD qiongli 2012-4-1 TDQ-4926,after physical delete this node,should remove it from that
             // selection List.avoid to delete twice.
-            this.selectedNodes.remove(currentNode);
+            this.selectedNodes.remove(repoNode);
             if (parent != null
                     && (parent.getType() == ENodeType.SIMPLE_FOLDER || parent.getLabel().equalsIgnoreCase(
                             ERepositoryObjectType.RECYCLE_BIN.name().replaceAll("_", PluginConstant.SPACE_STRING)))) {//$NON-NLS-1$
-                parent.getChildren(true).remove(currentNode);
+                parent.getChildren(true).remove(repoNode);
             }
             // delete related output folder after physical delete a report.
             DQDeleteHelper.deleteRelations(item);
@@ -596,10 +670,10 @@ public class DQDeleteAction extends DeleteAction {
      * 
      * @param parent
      */
-    private void refreshParentNode(RepositoryNode parent) {
+    private void refreshParentNode(IRepositoryNode parent) {
         if (parent != null) {
             if (parent instanceof AnalysisSubFolderRepNode || parent instanceof ReportSubFolderRepNode) {
-                CorePlugin.getDefault().refreshDQView(RepositoryNodeHelper.findNearestSystemFolderNode(parent));
+                CorePlugin.getDefault().refreshDQView(RepositoryNodeHelper.findNearestSystemFolderNode((RepositoryNode) parent));
             } else {
                 CorePlugin.getDefault().refreshDQView(parent);
             }
@@ -680,7 +754,7 @@ public class DQDeleteAction extends DeleteAction {
                 PluginConstant.SPACE_STRING + DefaultMessagesImpl.getString("DQDeleteAction.areYouDeleteForever"));//$NON-NLS-1$
     }
 
-    public RepositoryNode getCurrentNode() {
+    public IRepositoryNode getCurrentNode() {
         return this.currentNode;
     }
 

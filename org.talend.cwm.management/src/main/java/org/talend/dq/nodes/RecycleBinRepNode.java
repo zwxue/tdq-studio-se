@@ -117,7 +117,7 @@ public class RecycleBinRepNode extends DQRepositoryNode {
         List<DQRepositoryNode> foldersList = new ArrayList<DQRepositoryNode>();
         Project newProject = ProjectManager.getInstance().getCurrentProject();
         List<FolderItem> folderItems = ProjectManager.getInstance().getFolders(newProject.getEmfProject());
-        for (FolderItem folderItem : new ArrayList<FolderItem>(folderItems)) {
+        for (FolderItem folderItem : folderItems) {
             if (isTDQOrMetadataRootFolder(folderItem)) {
                 addItemToRecycleBin(this, folderItem, foldersList);
             }
