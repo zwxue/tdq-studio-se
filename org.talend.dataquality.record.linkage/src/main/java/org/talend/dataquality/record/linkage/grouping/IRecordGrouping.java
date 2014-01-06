@@ -119,13 +119,6 @@ public interface IRecordGrouping {
     public void setSeperateOutput(boolean isSeperateOutput);
 
     /**
-     * Set the column escapeCharacter.
-     * 
-     * @param escapeCharacter
-     */
-    public void setEscapeCharacter(String escapeCharacter);
-
-    /**
      * Set the column delimiter.
      * 
      * @param columnDelimiter
