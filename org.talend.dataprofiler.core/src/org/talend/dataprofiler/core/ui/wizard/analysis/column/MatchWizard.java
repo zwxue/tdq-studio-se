@@ -12,6 +12,7 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.wizard.analysis.column;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -33,6 +34,8 @@ import org.talend.dataquality.indicators.columnset.RecordMatchingIndicator;
 import org.talend.dataquality.rules.MatchRuleDefinition;
 import org.talend.dataquality.rules.RulesFactory;
 import org.talend.dq.analysis.parameters.AnalysisParameter;
+import org.talend.dq.nodes.ColumnRepNode;
+import org.talend.dq.nodes.ColumnSetRepNode;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
 import orgomg.cwm.objectmodel.core.ModelElement;
@@ -85,7 +88,12 @@ public class MatchWizard extends ColumnWizard {
         MatchMasterDetailsPage masterPage = (MatchMasterDetailsPage) editor.getMasterPage();
         List<IRepositoryNode> nodes = selectionPage.nodes;
 
-        if (nodes != null && nodes.size() > 0) {
+        // if the selected node is not column
+        if (!(selectionPage.nodes.get(0) instanceof ColumnRepNode)) {
+            nodes = translateTableIntoColumn(selectionPage.nodes.get(0));
+        }
+
+        if (nodes.size() > 0) {
             // update analyze data label by selected nodes names(don't cotain columnRepNode).
             masterPage.updateAnalyzeDataLabel(nodes.get(0));
             // give the selected columns to the master page
@@ -93,6 +101,22 @@ public class MatchWizard extends ColumnWizard {
             masterPage.doSave(new NullProgressMonitor());
             masterPage.updateAllColumnsToKeySection();
         }
+    }
+
+    /**
+     * when the selected node is a db table, or file's metadata, should get its children and add them; for other types:
+     * just return empty list of node
+     * 
+     * @param iRepositoryNode
+     * @return
+     */
+    private List<IRepositoryNode> translateTableIntoColumn(IRepositoryNode tableNode) {
+        if (tableNode instanceof ColumnSetRepNode) {
+            // first getChildren will only return the related Folder node; second getChildren will get related columns
+            // under it
+            return tableNode.getChildren().get(0).getChildren();
+        }
+        return new ArrayList<IRepositoryNode>();
     }
 
     /*

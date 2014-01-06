@@ -24,7 +24,7 @@ import org.talend.repository.model.RepositoryNode;
 /**
  * DOC qiongli class global comment. Detailled comment
  */
-public class DFTableRepNode extends DQRepositoryNode {
+public class DFTableRepNode extends ColumnSetRepNode {
 
     private MetadataTableRepositoryObject mdTableRepositoryObject;
 

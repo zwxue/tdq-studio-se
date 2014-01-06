@@ -30,7 +30,7 @@ import org.talend.repository.model.RepositoryNode;
 /**
  * DOC klliu Database column repository node displayed on repository view (UI).
  */
-public class DBColumnRepNode extends DQRepositoryNode {
+public class DBColumnRepNode extends ColumnRepNode {
 
     private MetadataColumnRepositoryObject metadataColumnRepositoryObject;
 
