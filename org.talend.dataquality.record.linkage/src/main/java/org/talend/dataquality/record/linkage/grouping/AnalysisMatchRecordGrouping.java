@@ -34,14 +34,11 @@ public class AnalysisMatchRecordGrouping extends AbstractRecordGrouping {
 
     private static final String columnDelimiter = "|"; //$NON-NLS-1$
 
-    private static final String escapeCharacter = "\\"; //$NON-NLS-1$
-
     private MatchGroupResultConsumer matchResultConsumer = null;
 
     public AnalysisMatchRecordGrouping(MatchGroupResultConsumer matchResultConsumer) {
         this.matchResultConsumer = matchResultConsumer;
         setColumnDelimiter(columnDelimiter);
-        setEscapeCharacter(escapeCharacter);
         setIsOutputDistDetails(true);
         setSeperateOutput(Boolean.TRUE);
     }
@@ -53,7 +50,7 @@ public class AnalysisMatchRecordGrouping extends AbstractRecordGrouping {
      */
     @Override
     protected void outputRow(String row) {
-        matchResultConsumer.handle(StringUtilities.split(row, columnDelimiter, escapeCharacter));
+        matchResultConsumer.handle(StringUtilities.split(row, columnDelimiter, StringUtilities.ESCAPE_CHARACTER));
     }
 
     public void addRuleMatcher(List<Map<String, String>> ruleMatcherConvertResult) {

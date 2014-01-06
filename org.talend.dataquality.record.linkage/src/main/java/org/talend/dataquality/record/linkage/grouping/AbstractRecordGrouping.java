@@ -61,13 +61,6 @@ public abstract class AbstractRecordGrouping implements IRecordGrouping {
 
     private String columnDelimiter = null;
 
-    private String escapeCharacter = null;
-
-    @Override
-    public void setEscapeCharacter(String escapeCharacter) {
-        this.escapeCharacter = escapeCharacter;
-    }
-
     private Boolean isLinkToPrevious = Boolean.FALSE;
 
     // The exthended column size.
@@ -127,7 +120,7 @@ public abstract class AbstractRecordGrouping implements IRecordGrouping {
         // In case of current component is linked to previous, and the record is NOT master, just put it to the output
         // and continue;
         if (isLinkToPrevious && !inputRow[inputRow.length - extSize + 2].equalsIgnoreCase("true")) { //$NON-NLS-1$
-            outputRow(StringUtilities.join(inputRow, columnDelimiter, escapeCharacter));
+            outputRow(StringUtilities.join(inputRow, columnDelimiter, StringUtilities.ESCAPE_CHARACTER));
             return;
         }
 
@@ -169,8 +162,7 @@ public abstract class AbstractRecordGrouping implements IRecordGrouping {
                     if (masterGRPSize == 1) {
                         inputRow[inputRow.length - extSize + 1] = String.valueOf(Integer.parseInt(inputRow[inputRow.length
                                 - extSize + 1]) + 1);
-                        updateWithExtendedColumn(masterRecord, inputRow, matchingProba, distanceDetails, columnDelimiter,
-                                escapeCharacter);
+                        updateWithExtendedColumn(masterRecord, inputRow, matchingProba, distanceDetails, columnDelimiter);
                         // Update master record from the temporary master list.
                         masterRecords.remove(masterRecord);
                         masterRecords.add(inputRow);
@@ -180,7 +172,7 @@ public abstract class AbstractRecordGrouping implements IRecordGrouping {
                 masterRecord[masterRecord.length - extSize + 1] = String.valueOf(Integer
                         .parseInt(masterRecord[masterRecord.length - extSize + 1]) + 1);
                 // Duplicated record
-                updateWithExtendedColumn(inputRow, masterRecord, matchingProba, distanceDetails, columnDelimiter, escapeCharacter);
+                updateWithExtendedColumn(inputRow, masterRecord, matchingProba, distanceDetails, columnDelimiter);
                 break;
             }
 
@@ -256,12 +248,12 @@ public abstract class AbstractRecordGrouping implements IRecordGrouping {
     public void end() throws IOException, InterruptedException {
         // output the masters
         for (String[] mst : masterRecords) {
-            outputRow(StringUtilities.join(mst, columnDelimiter, escapeCharacter));
+            outputRow(StringUtilities.join(mst, columnDelimiter, StringUtilities.ESCAPE_CHARACTER));
         }
     }
 
     private void updateWithExtendedColumn(String[] inputRow, String[] masterRecord, double matchingProba, String distanceDetails,
-            String delimiter, String escCharacter) throws IOException, InterruptedException {
+            String delimiter) throws IOException, InterruptedException {
         String[] duplicateRecord = new String[masterRecord.length];
         for (int idx = 0; idx < inputRow.length; idx++) {
             duplicateRecord[idx] = inputRow[idx];
@@ -288,7 +280,7 @@ public abstract class AbstractRecordGrouping implements IRecordGrouping {
             duplicateRecord[duplicateRecord.length - extSize + extIdx] = distanceDetails;
         }
         // output the duplicate record
-        outputRow(StringUtilities.join(duplicateRecord, delimiter, escCharacter));
+        outputRow(StringUtilities.join(duplicateRecord, delimiter, StringUtilities.ESCAPE_CHARACTER));
     }
 
     /**
@@ -309,10 +301,10 @@ public abstract class AbstractRecordGrouping implements IRecordGrouping {
     public void addMatchRule(List<Map<String, String>> matchRule) {
         multiMatchRules.add(matchRule);
     }
-    
+
     public List<List<Map<String, String>>> getMultiMatchRules() {
-		return multiMatchRules;
-	}
+        return multiMatchRules;
+    }
 
     /**
      * 
@@ -346,10 +338,10 @@ public abstract class AbstractRecordGrouping implements IRecordGrouping {
         double recordMatchThreshold = acceptableThreshold;// keep compatibility to older version.
         int recordIdx = 0;
         for (Map<String, String> recordMap : matchRule) {
-        	algorithmName[recordIdx][0] = recordMap.get(IRecordGrouping.MATCHING_TYPE);
-            if(AttributeMatcherType.DUMMY.name().equals(algorithmName[recordIdx][0])){
-            	recordIdx++;
-            	continue;
+            algorithmName[recordIdx][0] = recordMap.get(IRecordGrouping.MATCHING_TYPE);
+            if (AttributeMatcherType.DUMMY.name().equals(algorithmName[recordIdx][0])) {
+                recordIdx++;
+                continue;
             }
             arrAttrWeights[recordIdx] = Double.parseDouble(recordMap.get(IRecordGrouping.CONFIDENCE_WEIGHT));
             algorithmName[recordIdx][1] = recordMap.get(IRecordGrouping.CUSTOMER_MATCH_CLASS);
