@@ -48,7 +48,7 @@ import org.talend.commons.bridge.ReponsitoryContextBridge;
 public class FolderSelectionDialog extends ElementTreeSelectionDialog implements ISelectionChangedListener {
 
     // ADD xqliu 2010-03-08 feature 10675
-    private static final String DEFAULT_FILE_NAME = "SourceFile.sql";
+    private static final String DEFAULT_FILE_NAME = "SourceFileName";
 
     private String fileName = DEFAULT_FILE_NAME;
 
@@ -94,6 +94,7 @@ public class FolderSelectionDialog extends ElementTreeSelectionDialog implements
      * 
      * @see org.eclipse.jface.dialogs.Dialog#createDialogArea(org.eclipse.swt.widgets.Composite)
      */
+    @Override
     protected Control createDialogArea(Composite parent) {
         Composite result = (Composite) super.createDialogArea(parent);
 
