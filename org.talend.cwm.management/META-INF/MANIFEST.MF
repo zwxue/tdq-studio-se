@@ -32,14 +32,14 @@ Require-Bundle: org.eclipse.ui,
  org.talend.core.runtime,
  org.talend.libraries.mdm,
  org.talend.metadata.managment,
- org.talend.libraries.javacsv;bundle-version="2.2.0",
+ org.talend.libraries.javacsv,
  org.talend.common.ui.runtime,
  org.talend.metadata.managment.ui,
  org.apache.log4j,
  org.talend.librariesmanager,
  org.talend.dataquality.record.linkage,
  org.talend.libraries.jboss,
- org.talend.repository.items.importexport;bundle-version="1.0.0"
+ org.talend.repository.items.importexport
 Bundle-Vendor: .Talend SA.
 Bundle-ClassPath: .,
  lib/advancedPersistentLookupLib-1.0.jar,
