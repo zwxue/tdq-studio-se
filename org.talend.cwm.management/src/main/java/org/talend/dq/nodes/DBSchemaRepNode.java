@@ -19,6 +19,7 @@ import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.core.repository.model.repositoryObject.MetadataCatalogRepositoryObject;
 import org.talend.core.repository.model.repositoryObject.MetadataSchemaRepositoryObject;
 import org.talend.cwm.helper.PackageHelper;
+import org.talend.dq.nodes.factory.DQRepNodeCreateFactory;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
 import orgomg.cwm.objectmodel.core.Package;
@@ -76,7 +77,8 @@ public class DBSchemaRepNode extends DQRepositoryNode {
         if (parentPackage == null) {
             dbParentRepNode = new DBConnectionRepNode(getParentViewObject(), null, ENodeType.TDQ_REPOSITORY_ELEMENT);
         } else if (parentPackage instanceof Catalog) {
-            dbParentRepNode = new DBCatalogRepNode(getParentViewObject(), null, ENodeType.TDQ_REPOSITORY_ELEMENT);
+            dbParentRepNode = DQRepNodeCreateFactory.createDBCatalogRepNode(getParentViewObject(), null,
+                    ENodeType.TDQ_REPOSITORY_ELEMENT);
         }
         return dbParentRepNode;
     }

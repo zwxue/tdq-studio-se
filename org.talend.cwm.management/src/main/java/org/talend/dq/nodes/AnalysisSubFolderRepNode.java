@@ -35,6 +35,7 @@ import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisContext;
 import org.talend.dataquality.properties.TDQAnalysisItem;
 import org.talend.dq.helper.PropertyHelper;
+import org.talend.dq.nodes.factory.DQRepNodeCreateFactory;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
 import orgomg.cwm.objectmodel.core.ModelElement;
@@ -48,6 +49,7 @@ import orgomg.cwm.resource.relational.Schema;
 public class AnalysisSubFolderRepNode extends AnalysisFolderRepNode {
 
     private static Logger log = Logger.getLogger(AnalysisSubFolderRepNode.class);
+
     private List<IRepositoryNode> anaElement;
 
     /**
@@ -92,7 +94,7 @@ public class AnalysisSubFolderRepNode extends AnalysisFolderRepNode {
                     anaElement.add(elementNode);
                 }
             }
-            //MOD gdbu 2011-7-1 bug : 22204
+            // MOD gdbu 2011-7-1 bug : 22204
             return filterResultsIfAny(anaElement);
         }
         return filterResultsIfAny(super.getChildren());
@@ -127,8 +129,8 @@ public class AnalysisSubFolderRepNode extends AnalysisFolderRepNode {
                 medataViewObject.setRepositoryNode(connNode);
                 return connNode;
             } else if (analyzedElement instanceof Catalog) {
-                RepositoryNode catalogNode = new DBCatalogRepNode(new MetadataCatalogRepositoryObject(medataViewObject,
-                        (Catalog) analyzedElement), this, ENodeType.TDQ_REPOSITORY_ELEMENT);
+                RepositoryNode catalogNode = DQRepNodeCreateFactory.createDBCatalogRepNode(new MetadataCatalogRepositoryObject(
+                        medataViewObject, (Catalog) analyzedElement), this, ENodeType.TDQ_REPOSITORY_ELEMENT);
                 catalogNode.setProperties(EProperties.LABEL, ERepositoryObjectType.METADATA_CON_CATALOG);
                 catalogNode.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.METADATA_CON_CATALOG);
                 medataViewObject.setRepositoryNode(catalogNode);
@@ -162,8 +164,7 @@ public class AnalysisSubFolderRepNode extends AnalysisFolderRepNode {
                 return columnNode;
             } else if (analyzedElement instanceof TdXmlElementType) {
                 MDMXmlElementRepNode mdmXmlElementNode = new MDMXmlElementRepNode(new MetadataXmlElementTypeRepositoryObject(
-                        medataViewObject, (TdXmlElementType) analyzedElement), this,
-                        ENodeType.REPOSITORY_ELEMENT);
+                        medataViewObject, (TdXmlElementType) analyzedElement), this, ENodeType.REPOSITORY_ELEMENT);
                 mdmXmlElementNode.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.MDM_ELEMENT_TYPE);
                 mdmXmlElementNode.setProperties(EProperties.LABEL, ERepositoryObjectType.MDM_ELEMENT_TYPE);
                 medataViewObject.setRepositoryNode(mdmXmlElementNode);
@@ -193,6 +194,7 @@ public class AnalysisSubFolderRepNode extends AnalysisFolderRepNode {
         return "(0)"; //$NON-NLS-1$
     }
 
+    @Override
     public boolean isVirtualFolder() {
         return this.getObject() == null;
     }

@@ -31,6 +31,7 @@ import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.helper.PackageHelper;
 import org.talend.cwm.relational.TdTable;
 import org.talend.dq.helper.RepositoryNodeHelper;
+import org.talend.dq.nodes.factory.DQRepNodeCreateFactory;
 import org.talend.dq.nodes.foldernode.IConnectionElementSubFolder;
 import org.talend.dq.writer.impl.ElementWriterFactory;
 import org.talend.repository.model.IRepositoryNode;
@@ -119,7 +120,7 @@ public class DBTableFolderRepNode extends DQDBFolderRepositoryNode implements IC
     private RepositoryNode createParentNode(IRepositoryViewObject object) {
         RepositoryNode dbParentRepNode = null;
         if (object instanceof MetadataCatalogRepositoryObject) {
-            dbParentRepNode = new DBCatalogRepNode(object, null, ENodeType.TDQ_REPOSITORY_ELEMENT);
+            dbParentRepNode = DQRepNodeCreateFactory.createDBCatalogRepNode(object, null, ENodeType.TDQ_REPOSITORY_ELEMENT);
         } else if (object instanceof MetadataSchemaRepositoryObject) {
             dbParentRepNode = new DBSchemaRepNode(object, null, ENodeType.TDQ_REPOSITORY_ELEMENT);
         }

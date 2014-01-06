@@ -1558,6 +1558,12 @@
            name="Check and Update Analysis Dependency if with more than one db dependency"
            version="5.2.3">
      </workspacetask>
+     <workspacetask
+           class="org.talend.dataprofiler.core.migration.impl.SybaseAddSchemaTask"
+           id="org.talend.dataprofiler.core.migration.impl.SybaseAddSchema"
+           name="add Schema on Sybase"
+           version="5.2.4">
+     </workspacetask>
   </extension>
   <extension
         point="org.eclipse.ui.actionSets">
