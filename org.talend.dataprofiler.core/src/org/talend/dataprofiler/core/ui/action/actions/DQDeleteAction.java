@@ -215,17 +215,6 @@ public class DQDeleteAction extends DeleteAction {
             setPreviousFilteredNode(selectedNodes.get(0));
         }
 
-        Collection<IRepositoryNode> shownNodes = null;
-        Collection<IRepositoryNode> allDeleteNodes = null;
-
-        // MOD gdbu 2011-11-30 TDQ-4090 : To get all Recycle Bin nodes.
-        if (DQRepositoryNode.isOnFilterring()) {
-            shownNodes = RepositoryNodeHelper.findAllChildrenNodes(selectedNodes);
-            selectedNodes = rebuildNodes(selectedNodes);
-            allDeleteNodes = RepositoryNodeHelper.findAllChildrenNodes(selectedNodes);
-        }
-        // ~TDQ-4090
-
         if (selectedNodes.size() > 0) {
             IRepositoryNode firstNode = selectedNodes.get(0);
             boolean isStateDeleted = RepositoryNodeHelper.isStateDeleted(firstNode);
@@ -233,6 +222,13 @@ public class DQDeleteAction extends DeleteAction {
             if (!isStateDeleted) {
                 logicDelete();
             } else {
+                Collection<IRepositoryNode> shownNodes = null;
+                Collection<IRepositoryNode> allDeleteNodes = null;
+                if (DQRepositoryNode.isOnFilterring()) {
+                    shownNodes = RepositoryNodeHelper.findAllChildrenNodes(selectedNodes);
+                    selectedNodes = rebuildNodes(selectedNodes);
+                    allDeleteNodes = RepositoryNodeHelper.findAllChildrenNodes(selectedNodes);
+                }
                 // if the repository node is on filtering, show warning dialog when the nodes going to be deleted are
                 // different with the nodes showing
                 if (DQRepositoryNode.isOnFilterring() && isShowFilteredOutWarning()) {
