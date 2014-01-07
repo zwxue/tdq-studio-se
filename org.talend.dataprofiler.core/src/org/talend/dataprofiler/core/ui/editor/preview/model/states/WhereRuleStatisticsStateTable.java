@@ -316,6 +316,10 @@ public class WhereRuleStatisticsStateTable extends AbstractChartTypeStatesTable 
      */
     private void addDataEntity2CustomerDataset(CustomerDefaultCategoryDataset customerDataset, TableIndicatorUnit unit) {
         if (IndicatorEnum.WhereRuleIndicatorEnum.equals(unit.getType())) {
+            // Added TDQ-7547 20140107 yyin: when the value is null, no need to proceed
+            if (unit.getValue() == null) {
+                return;
+            }// ~
             String columnKey = unit.getIndicatorName();
             double value = Double.parseDouble(unit.getValue().toString());
             customerDataset.addValue(unit.geIndicatorCount() - value, ROW_KEY_NOT_PASS, columnKey);
