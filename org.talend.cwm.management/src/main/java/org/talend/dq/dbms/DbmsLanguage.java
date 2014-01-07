@@ -1323,27 +1323,12 @@ public class DbmsLanguage {
             if (joinClauseStartsWithWrongTable(leftTable, getTable(colB)) && hasTableAliasA && hasTableAliasB) {
                 // we need to exchange the table names otherwise we could get "tableA join tableA" which would cause
                 // an SQL exception.
-                // MOD by zshen: change schemaName of sybase database to Table's owner.
-                if (ConnectionUtils.isSybaseeDBProducts(getDbmsName())) {
-                    // MOD by klliu bug 20926 #c82152
-                    // schemaName = ColumnSetHelper.getTableOwner(colA);
-                    ColumnSet columnOwnerAsColumnSet = ColumnHelper.getColumnOwnerAsColumnSet(colA);
-                    tempSchemaName = ColumnSetHelper.getTableOwner(columnOwnerAsColumnSet);
-                }
-                // ~11934
                 // ~MOD mzhao 2010-2-24 bug 11753. Add prefix catalog or schema in case of join tables.
                 tableA = toQualifiedName(catalogName, tempSchemaName, tableA);
                 // ~
                 buildJoinClause(builder, tableB, tableAliasB, columnBName, hasTableAliasB, tableA, tableAliasA, columnAName,
                         hasTableAliasA, operator, joinType);
             } else {
-                // MOD by zshen: change schemaName of sybase database to Table's owner.
-                if (ConnectionUtils.isSybaseeDBProducts(getDbmsName())) {
-                    // MOD by klliu bug 20926 #c82152
-                    ColumnSet columnOwnerAsColumnSet = ColumnHelper.getColumnOwnerAsColumnSet(colB);
-                    tempSchemaName = ColumnSetHelper.getTableOwner(columnOwnerAsColumnSet);
-                }
-                // ~11934
                 // ~MOD mzhao 2010-2-24 bug 11753. Add prefix catalog or schema in case of join tables.
                 tableB = toQualifiedName(catalogName, tempSchemaName, tableB);
                 // ~

@@ -28,8 +28,6 @@ import org.talend.core.model.metadata.MetadataFillFactory;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.database.DqRepositoryViewService;
 import org.talend.core.model.metadata.builder.database.JavaSqlFactory;
-import org.talend.cwm.db.connection.ConnectionUtils;
-import org.talend.cwm.helper.ColumnSetHelper;
 import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.management.i18n.Messages;
@@ -129,11 +127,6 @@ public abstract class AbstractSchemaEvaluator<T> extends Evaluator<T> {
         if (isTable) {
             long rowCount = getRowCounts(quCatalog, quSchema, quTable);
             schemaIndic.setTableRowCount(schemaIndic.getTableRowCount() + rowCount);
-            // MOD by zshen: change schemaName of sybase database to Table's owner.
-            if (ConnectionUtils.isSybaseeDBProducts(dbmsLanguage.getDbmsName())) {
-                schema = ColumnSetHelper.getTableOwner(t);
-            }
-            // ~11934
             // MOD qiongli 2012-8-13 TDQ-5907.Hive dosen't support PK/INDEX.
             boolean isPkIndexSupported = dbmsLanguage.isPkIndexSupported();
             // ---- pk----indexes
@@ -150,9 +143,6 @@ public abstract class AbstractSchemaEvaluator<T> extends Evaluator<T> {
             // TODO create tableindicator only if it's in top N or in bottom N (use an option?)
             createTableIndicator(t, schemaIndic, rowCount, pkCount, idxCount);
         } else { // is a view TODO probably need to handle system tables separately
-            if (ConnectionUtils.isSybaseeDBProducts(dbmsLanguage.getDbmsName())) {
-                schema = ColumnSetHelper.getTableOwner(t);
-            }
             long rowCount = getRowCounts(quCatalog, schema, quTable);
             schemaIndic.setViewRowCount(schemaIndic.getViewRowCount() + rowCount);
             createViewIndicator(t, schemaIndic, rowCount);

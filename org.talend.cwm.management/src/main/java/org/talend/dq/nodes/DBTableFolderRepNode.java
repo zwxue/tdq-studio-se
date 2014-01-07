@@ -31,6 +31,7 @@ import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.helper.PackageHelper;
 import org.talend.cwm.relational.TdTable;
 import org.talend.dq.helper.RepositoryNodeHelper;
+import org.talend.dq.nodes.factory.DQRepNodeCreateFactory;
 import org.talend.dq.nodes.foldernode.IConnectionElementSubFolder;
 import org.talend.dq.writer.impl.ElementWriterFactory;
 import org.talend.repository.model.IRepositoryNode;
@@ -79,7 +80,7 @@ public class DBTableFolderRepNode extends DQDBFolderRepositoryNode implements IC
 
     /**
      * DOC klliu FolderRepNode constructor comment.
-     *
+     * 
      * @param object
      * @param parent if parent is null will try to create new one to insert of old parent.
      * @param type
@@ -94,7 +95,7 @@ public class DBTableFolderRepNode extends DQDBFolderRepositoryNode implements IC
 
     /**
      * DOC talend Comment method "setConnection".
-     *
+     * 
      * @param object
      */
     private void getConnectionFromViewObject() {
@@ -113,14 +114,14 @@ public class DBTableFolderRepNode extends DQDBFolderRepositoryNode implements IC
 
     /**
      * create the node of parent.
-     *
+     * 
      * @param object
      * @return
      */
     private RepositoryNode createParentNode(IRepositoryViewObject object) {
         RepositoryNode dbParentRepNode = null;
         if (object instanceof MetadataCatalogRepositoryObject) {
-            dbParentRepNode = new DBCatalogRepNode(object, null, ENodeType.TDQ_REPOSITORY_ELEMENT);
+            dbParentRepNode = DQRepNodeCreateFactory.createDBCatalogRepNode(object, null, ENodeType.TDQ_REPOSITORY_ELEMENT);
         } else if (object instanceof MetadataSchemaRepositoryObject) {
             dbParentRepNode = new DBSchemaRepNode(object, null, ENodeType.TDQ_REPOSITORY_ELEMENT);
         }
@@ -147,7 +148,7 @@ public class DBTableFolderRepNode extends DQDBFolderRepositoryNode implements IC
 
     /**
      * Create TableFolderNodeRepositoryNode.
-     *
+     * 
      * @param nodes parent RepositoryNode
      * @param metadataObject parent CatalogViewObject or SchemaViewObject
      */
@@ -211,7 +212,7 @@ public class DBTableFolderRepNode extends DQDBFolderRepositoryNode implements IC
 
     /**
      * DOC klliu Comment method "createTableRepositoryNode".
-     *
+     * 
      * @param tables
      */
     private void createTableRepositoryNode(List<TdTable> tables, List<IRepositoryNode> node) {
@@ -233,7 +234,7 @@ public class DBTableFolderRepNode extends DQDBFolderRepositoryNode implements IC
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see org.talend.repository.model.RepositoryNode#getLabel()
      */
     @Override
@@ -323,7 +324,7 @@ public class DBTableFolderRepNode extends DQDBFolderRepositoryNode implements IC
 
     /**
      * return the Catalog or Schema, or null.
-     *
+     * 
      * @return
      */
     public Package getPackage() {

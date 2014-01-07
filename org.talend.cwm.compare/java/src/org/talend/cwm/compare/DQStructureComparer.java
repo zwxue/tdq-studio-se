@@ -397,9 +397,7 @@ public final class DQStructureComparer {
             List<TdTable> tables = PackageHelper.getTables(toReloadPackage);
             for (TdTable table : tables) {
                 // bug 11934 MOD zshen judge the tableOwner when database is sybase.
-                if (oldTable.getName().equals(table.getName())
-                        && (ColumnSetHelper.getTableOwner(oldTable) == null || ColumnSetHelper.getTableOwner(oldTable).equals(
-                                ColumnSetHelper.getTableOwner(table)))) {
+                if (oldTable.getName().equals(table.getName())) {
                     // ~11934
                     toReloadcolumnSet = table;
                     break;
@@ -410,9 +408,7 @@ public final class DQStructureComparer {
             List<TdView> views = PackageHelper.getViews(toReloadPackage);
             for (TdView view : views) {
                 // bug 11934 MOD zshen judge the viewOwner when database is sybase.
-                if (selectedColumnSet.getName().equals(view.getName())
-                        && (ColumnSetHelper.getTableOwner(selectedColumnSet) == null || ColumnSetHelper.getTableOwner(
-                                selectedColumnSet).equals(ColumnSetHelper.getTableOwner(view)))) {
+                if (selectedColumnSet.getName().equals(view.getName())) {
                     // ~11934
                     toReloadcolumnSet = view;
                     break;

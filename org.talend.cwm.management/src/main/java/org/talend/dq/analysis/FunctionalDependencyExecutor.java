@@ -20,7 +20,6 @@ import java.util.List;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.EList;
-import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.exception.AnalysisExecutionException;
 import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.helper.ColumnSetHelper;
@@ -231,11 +230,6 @@ public class FunctionalDependencyExecutor extends ColumnAnalysisSqlExecutor {
             if (SwitchHelpers.CATALOG_SWITCH.doSwitch(pack) != null) {
                 catalogName = pack.getName();
             }
-            // MOD by zshen: change schemaName of sybase database to Table's owner.
-            if (ConnectionUtils.isSybaseeDBProducts(dbms().getDbmsName())) {
-                schemaName = ColumnSetHelper.getTableOwner(columnSetOwner);
-            }
-            // ~11934
             return dbms().toQualifiedName(catalogName, schemaName, columnSetOwner.getName());
 
         }

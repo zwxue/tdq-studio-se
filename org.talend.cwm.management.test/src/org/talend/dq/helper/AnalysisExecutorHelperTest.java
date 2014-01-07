@@ -18,14 +18,12 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.talend.core.model.metadata.builder.database.dburl.SupportDBUrlType;
-import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.relational.RelationalFactory;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.relational.TdTable;
 import org.talend.dq.dbms.DbmsLanguage;
 import org.talend.dq.dbms.DbmsLanguageFactory;
 import orgomg.cwm.objectmodel.core.Package;
-import orgomg.cwm.objectmodel.core.TaggedValue;
 
 /**
  * DOC yyin class global comment. Detailled comment
@@ -126,9 +124,6 @@ public class AnalysisExecutorHelperTest {
         Package catalog = orgomg.cwm.resource.relational.RelationalFactory.eINSTANCE.createCatalog();// mock(Catalog.class);
         catalog.setName("catalogName"); //$NON-NLS-1$
         schema.setNamespace(catalog);
-
-        TaggedValue taggedValue = TaggedValueHelper.createTaggedValue(TaggedValueHelper.TABLE_OWNER, "schemaName");
-        tdTable.getTaggedValue().add(taggedValue);
 
         assertEquals("catalogName.schemaName.tableName", AnalysisExecutorHelper.getTableName(tdColumn, dbmsLanguage)); //$NON-NLS-1$
 

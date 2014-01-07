@@ -23,9 +23,6 @@ import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.properties.Item;
 import org.talend.core.model.properties.MDMConnectionItem;
 import org.talend.core.model.repository.IRepositoryViewObject;
-import org.talend.cwm.helper.ColumnSetHelper;
-import org.talend.cwm.relational.TdTable;
-import org.talend.cwm.relational.TdView;
 import org.talend.cwm.xml.TdXmlElementType;
 import org.talend.cwm.xml.TdXmlSchema;
 import org.talend.dataprofiler.core.ImageLib;
@@ -33,7 +30,6 @@ import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.ui.views.provider.DQRepositoryViewLabelProvider;
 import org.talend.dq.nodes.foldernode.IFolderNode;
 import org.talend.resource.ResourceManager;
-import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
  * @author rli
@@ -67,6 +63,7 @@ public class DBTablesViewLabelProvider extends DQRepositoryViewLabelProvider {
         return getText(object);
     }
 
+    @Override
     public Image getImage(Object element) {
         if (element instanceof IProject) {
             return ImageLib.getImage(ImageLib.PROJECT_ACTIVE);
@@ -97,11 +94,8 @@ public class DBTablesViewLabelProvider extends DQRepositoryViewLabelProvider {
         return super.getImage(element);
     }
 
+    @Override
     public String getText(Object element) {
-        String tableOwner = null;
-        if (element instanceof ModelElement) {
-            tableOwner = ColumnSetHelper.getTableOwner((ModelElement) element);
-        }
         if (element instanceof IContainer) {
             return ((IContainer) element).getName();
         } else if (element instanceof IFolderNode) {
@@ -125,8 +119,6 @@ public class DBTablesViewLabelProvider extends DQRepositoryViewLabelProvider {
                 elemLabe += " (" + elementType + ")";//$NON-NLS-1$ //$NON-NLS-2$
             }
             return elemLabe;
-        } else if ((element instanceof TdTable || element instanceof TdView) && tableOwner != null && !"".equals(tableOwner)) {
-            return super.getText(element) + "(" + tableOwner + ")";//$NON-NLS-1$ //$NON-NLS-2$
         }
 
         return super.getText(element);

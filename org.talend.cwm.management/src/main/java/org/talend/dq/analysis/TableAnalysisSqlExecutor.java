@@ -183,11 +183,6 @@ public class TableAnalysisSqlExecutor extends TableAnalysisExecutor {
             final Catalog parentCatalog = CatalogHelper.getParentCatalog(parentSchema);
             catalogName = parentCatalog != null ? parentCatalog.getName() : null;
         }
-        // MOD by zshen: change schemaName of sybase database to Table's owner.
-        if (ConnectionUtils.isSybaseeDBProducts(dbms().getDbmsName())) {
-            schemaName = ColumnSetHelper.getTableOwner(set);
-        }
-        // ~11934
 
         setName = dbms().toQualifiedName(catalogName, schemaName, setName);
 
@@ -574,11 +569,6 @@ public class TableAnalysisSqlExecutor extends TableAnalysisExecutor {
             final Catalog parentCatalog = CatalogHelper.getParentCatalog(parentSchema);
             catalogName = parentCatalog != null ? parentCatalog.getName() : null;
         }
-        // MOD by zshen: change schemaName of sybase database to Table's owner.
-        if (ConnectionUtils.isSybaseeDBProducts(dbms().getDbmsName())) {
-            schemaName = ColumnSetHelper.getTableOwner(set);
-        }
-        // ~11934
         setName = dbms().toQualifiedName(catalogName, schemaName, setName);
 
         // ### evaluate SQL Statement depending on indicators ###

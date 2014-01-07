@@ -14,7 +14,6 @@ package org.talend.dq.dbms;
 
 import java.util.regex.Matcher;
 
-import org.talend.cwm.helper.ColumnSetHelper;
 import org.talend.dataquality.PluginConstant;
 import org.talend.utils.ProductVersion;
 import orgomg.cwm.objectmodel.core.ModelElement;
@@ -164,13 +163,7 @@ public class SybaseASEDbmsLanguage extends DbmsLanguage {
     @Override
     public String getQueryColumnSetWithPrefix(ColumnSet columnset) {
         String catalogName = getCatalog(columnset).getName();
-        Schema schema = getSchema(columnset);
-        String schemaName = null;
-        if (schema != null) {
-            schemaName = schema.getName();
-        } else {
-            schemaName = ColumnSetHelper.getTableOwner(columnset);
-        }
+        String schemaName = getSchema(columnset).getName();
         return getQualifiedColumnSetName(columnset, catalogName, schemaName);
     }
 
