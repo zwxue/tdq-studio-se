@@ -14,9 +14,7 @@ package org.talend.dq.analysis;
 
 import static org.junit.Assert.*;
 
-import org.junit.Rule;
 import org.junit.Test;
-import org.powermock.modules.junit4.rule.PowerMockRule;
 import org.talend.cwm.relational.RelationalFactory;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.relational.TdTable;
@@ -32,9 +30,6 @@ import orgomg.cwm.objectmodel.core.Package;
  * DOC msjian class global comment. Detailled comment
  */
 public class ColumnAnalysisExecutorTest {
-
-    @Rule
-    public PowerMockRule powerMockRule = new PowerMockRule();
 
     /**
      * Test method for
@@ -72,7 +67,7 @@ public class ColumnAnalysisExecutorTest {
         schema.setNamespace(catalog);
 
         ColumnAnalysisExecutor columnAnalysisExecutor = new ColumnAnalysisExecutor();
-        assertEquals("SELECT columnName FROM tableName", columnAnalysisExecutor.createSqlStatement(analysis)); //$NON-NLS-1$
+        assertEquals("SELECT columnName FROM catalogName.tableName", columnAnalysisExecutor.createSqlStatement(analysis)); //$NON-NLS-1$
     }
 
 }
