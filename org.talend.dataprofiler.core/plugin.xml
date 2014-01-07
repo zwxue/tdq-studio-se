@@ -1667,6 +1667,12 @@
            id="org.talend.dataprofiler.core.migration.impl.CreateMatchRuleFolderTask"
            name="create sub folder &quot;match&quot; on the &quot;rule&quot; folder"
            version="5.4.0">
+     </workspacetask>
+     <workspacetask
+           class="org.talend.dataprofiler.core.migration.impl.SybaseAddSchemaTask"
+           id="org.talend.dataprofiler.core.migration.impl.SybaseAddSchema"
+           name="add Schema on Sybase"
+           version="5.4.0">
      </workspacetask>  
      
   </extension>

@@ -18,7 +18,6 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.talend.commons.exception.PersistenceException;
@@ -39,7 +38,6 @@ import org.talend.cwm.helper.SchemaHelper;
 import org.talend.cwm.relational.TdTable;
 import org.talend.cwm.relational.impl.RelationalFactoryImpl;
 import org.talend.dataprofiler.core.helper.UnitTestBuildHelper;
-import org.talend.dq.nodes.DBCatalogRepNode;
 import org.talend.dq.nodes.DBColumnFolderRepNode;
 import org.talend.dq.nodes.DBConnectionRepNode;
 import org.talend.dq.nodes.DBSchemaRepNode;
@@ -47,7 +45,9 @@ import org.talend.dq.nodes.DBTableFolderRepNode;
 import org.talend.dq.nodes.DBTableRepNode;
 import org.talend.dq.nodes.DBViewFolderRepNode;
 import org.talend.dq.nodes.DFColumnFolderRepNode;
+import org.talend.dq.nodes.factory.DQRepNodeCreateFactory;
 import org.talend.repository.model.IRepositoryNode.ENodeType;
+import org.talend.repository.model.RepositoryNode;
 import orgomg.cwm.resource.relational.Catalog;
 import orgomg.cwm.resource.relational.Schema;
 
@@ -55,7 +55,7 @@ import common.Logger;
 
 /**
  * created by talend on Dec 19, 2012 Detailled comment
- *
+ * 
  */
 public class AbstractCommonActionProviderRealProjectTest {
 
@@ -69,14 +69,13 @@ public class AbstractCommonActionProviderRealProjectTest {
 
     /**
      * DOC talend Comment method "setUp".
-     *
+     * 
      * @throws java.lang.Exception
      */
     @Before
     public void setUp() throws Exception {
         UnitTestBuildHelper.initProjectStructure("testForActionProviderTDQ"); //$NON-NLS-1$
     }
-
 
     /**
      * Test method for
@@ -163,7 +162,7 @@ public class AbstractCommonActionProviderRealProjectTest {
         // create DFColumnFolderRepNode
         Assert.assertFalse(lastVersion == null);
 
-        DBCatalogRepNode dbCatalogRepNode = new DBCatalogRepNode(lastVersion, null, null);
+        RepositoryNode dbCatalogRepNode = DQRepNodeCreateFactory.createDBCatalogRepNode(lastVersion, null, null);
         // ~DFColumnFolderRepNode
         AbstractCommonActionProvider provider = new AbstractCommonActionProvider();
         Connection connection = provider.getConnection(dbCatalogRepNode);
@@ -172,7 +171,7 @@ public class AbstractCommonActionProviderRealProjectTest {
 
     /**
      * DOC talend Comment method "createCatalog".
-     *
+     * 
      * @param catalogName
      */
     private Catalog createCatalog(String catalogName) {
@@ -246,7 +245,8 @@ public class AbstractCommonActionProviderRealProjectTest {
         // ~FileConnection
         // create DFColumnFolderRepNode
         Assert.assertFalse(lastVersion == null);
-        DBCatalogRepNode dbCatalogRepNode = new DBCatalogRepNode(lastVersion, null, ENodeType.TDQ_REPOSITORY_ELEMENT);
+        RepositoryNode dbCatalogRepNode = DQRepNodeCreateFactory.createDBCatalogRepNode(lastVersion, null,
+                ENodeType.TDQ_REPOSITORY_ELEMENT);
         DBTableFolderRepNode dbTableFolderRepNode = new DBTableFolderRepNode(null, dbCatalogRepNode, null);
         // ~DFColumnFolderRepNode
         AbstractCommonActionProvider provider = new AbstractCommonActionProvider();
@@ -277,7 +277,8 @@ public class AbstractCommonActionProviderRealProjectTest {
         // ~FileConnection
         // create DFColumnFolderRepNode
         Assert.assertFalse(lastVersion == null);
-        DBCatalogRepNode dbCatalogRepNode = new DBCatalogRepNode(lastVersion, null, ENodeType.TDQ_REPOSITORY_ELEMENT);
+        RepositoryNode dbCatalogRepNode = DQRepNodeCreateFactory.createDBCatalogRepNode(lastVersion, null,
+                ENodeType.TDQ_REPOSITORY_ELEMENT);
         DBViewFolderRepNode dbViewFolderRepNode = new DBViewFolderRepNode(null, dbCatalogRepNode, null);
         // ~DFColumnFolderRepNode
         AbstractCommonActionProvider provider = new AbstractCommonActionProvider();
@@ -297,11 +298,11 @@ public class AbstractCommonActionProviderRealProjectTest {
         IRepositoryViewObject lastVersion = null;
         String propertyID = createConnectionItem(connectionName, null, null);
         TdTable createTdTable = RelationalFactoryImpl.eINSTANCE.createTdTable();
-        DBCatalogRepNode dbCatalogRepNode = null;
+        RepositoryNode dbCatalogRepNode = null;
         createTdTable.setName("table1"); //$NON-NLS-1$
         try {
             lastVersion = factory.getLastVersion(propertyID);
-            dbCatalogRepNode = new DBCatalogRepNode(lastVersion, null, ENodeType.TDQ_REPOSITORY_ELEMENT);
+            dbCatalogRepNode = DQRepNodeCreateFactory.createDBCatalogRepNode(lastVersion, null, ENodeType.TDQ_REPOSITORY_ELEMENT);
             lastVersion = new TdTableRepositoryObject(lastVersion, createTdTable);
         } catch (PersistenceException e) {
             log.error(e, e);
