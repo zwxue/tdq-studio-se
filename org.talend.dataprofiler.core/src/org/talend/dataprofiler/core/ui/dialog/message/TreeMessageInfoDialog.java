@@ -34,6 +34,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
 import org.talend.core.model.metadata.builder.connection.DelimitedFileConnection;
 import org.talend.core.model.metadata.builder.connection.MDMConnection;
+import org.talend.core.model.metadata.builder.connection.MetadataTable;
 import org.talend.core.model.properties.Item;
 import org.talend.core.model.properties.Property;
 import org.talend.core.model.repository.IRepositoryViewObject;
@@ -50,6 +51,7 @@ import org.talend.dq.factory.ModelElementFileFactory;
 import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.helper.ProxyRepositoryManager;
 import orgomg.cwm.objectmodel.core.ModelElement;
+import orgomg.cwm.resource.record.RecordFile;
 
 /**
  * DOC rli class global comment. Detailled comment
@@ -163,19 +165,17 @@ public class TreeMessageInfoDialog extends MessageDialog {
                         IFile file = (IFile) obj;
                         ModelElement modelElement = ModelElementFileFactory.getModelElement(file);
                         // MOD msjian TDQ-5909: modify to displayName
-                        String name = modelElement != null ? PropertyHelper.getProperty(modelElement).getDisplayName() : file
-                                .getName();
-                        return name;
-                        //return REQUIRES + PluginConstant.SPACE_STRING + "<<" + name + ">>";//$NON-NLS-1$ //$NON-NLS-2$
-                    } else if (obj instanceof RepositoryViewObject) {// Added 20130226 TDQ-6899 show the name for Jrxml
-                                                                     // object (which has no related ModelElement)
+                        return modelElement != null ? PropertyHelper.getProperty(modelElement).getDisplayName() : file.getName();
+                    } else if (obj instanceof RepositoryViewObject) {
+                        // Added 20130226 TDQ-6899 show the name for Jrxml object (which has no related ModelElement)
                         return ((IRepositoryViewObject) obj).getLabel();
-                    }// ~
+                    } else if (((ModelElement) obj).eContainer() instanceof RecordFile) {
+                        // ADD TDQ-7146: for file connection table node
+                        return ((ModelElement) obj).getName();
+                    }
 
                     Property property = PropertyHelper.getProperty((ModelElement) obj);
                     return property == null ? ((ModelElement) obj).getName() : property.getDisplayName();
-                    //REQUIRES + PluginConstant.SPACE_STRING+ "<<" + PropertyHelper.getProperty((ModelElement) obj).getDisplayName() + ">>"; //$NON-NLS-1$ //$NON-NLS-2$
-                    // TDQ-5909~
                 }
 
                 @Override
@@ -200,29 +200,28 @@ public class TreeMessageInfoDialog extends MessageDialog {
                     }
 
                     Image modelElementImage = null;
+                    String imgName = null;
                     if (modelElement instanceof Analysis) {
-                        modelElementImage = ImageLib.getImage(ImageLib.ANALYSIS_OBJECT);
+                        imgName = ImageLib.ANALYSIS_OBJECT;
+                    } else if (modelElement instanceof TdReport) {
+                        imgName = ImageLib.REPORT_OBJECT;
+                    } else if (modelElement instanceof DatabaseConnection) {
+                        imgName = ImageLib.CONNECTION;
+                    } else if (modelElement instanceof MDMConnection) {
+                        imgName = ImageLib.MDM_CONNECTION;
+                    } else if (modelElement instanceof DelimitedFileConnection) {
+                        imgName = ImageLib.FILE_DELIMITED;
+                    } else if (modelElement instanceof Pattern) {
+                        imgName = ImageLib.PATTERN_REG;
+                    } else if (modelElement instanceof IndicatorDefinition) {
+                        imgName = ImageLib.IND_DEFINITION;
+                    } else if (modelElement instanceof DQRule) {
+                        imgName = ImageLib.DQ_RULE;
+                    } else if (modelElement instanceof MetadataTable) {
+                        imgName = ImageLib.TABLE;
                     }
-                    if (modelElement instanceof TdReport) {
-                        modelElementImage = ImageLib.getImage(ImageLib.REPORT_OBJECT);
-                    }
-                    if (modelElement instanceof DatabaseConnection) {
-                        modelElementImage = ImageLib.getImage(ImageLib.CONNECTION);
-                    }
-                    if (modelElement instanceof MDMConnection) {
-                        modelElementImage = ImageLib.getImage(ImageLib.MDM_CONNECTION);
-                    }
-                    if (modelElement instanceof DelimitedFileConnection) {
-                        modelElementImage = ImageLib.getImage(ImageLib.FILE_DELIMITED);
-                    }
-                    if (modelElement instanceof Pattern) {
-                        modelElementImage = ImageLib.getImage(ImageLib.PATTERN_REG);
-                    }
-                    if (modelElement instanceof IndicatorDefinition) {
-                        modelElementImage = ImageLib.getImage(ImageLib.IND_DEFINITION);
-                    }
-                    if (modelElement instanceof DQRule) {
-                        modelElementImage = ImageLib.getImage(ImageLib.DQ_RULE);
+                    if (imgName != null) {
+                        modelElementImage = ImageLib.getImage(imgName);
                     }
 
                     // add lock icon on the image
@@ -233,10 +232,10 @@ public class TreeMessageInfoDialog extends MessageDialog {
                                 Item item = property.getItem();
                                 if (item != null) {
                                     if (ProxyRepositoryManager.getInstance().isLockByUserOwn(item)) {
-                                        modelElementImage = ImageLib.createLockedByOwnIcon(modelElementImage).createImage();
+                                        modelElementImage = ImageLib.createLockedByOwnIcon(imgName).createImage();
                                         imagesNeedDisposedList.add(modelElementImage);
                                     } else if (ProxyRepositoryManager.getInstance().isLockByOthers(item)) {
-                                        modelElementImage = ImageLib.createLockedByOtherIcon(modelElementImage).createImage();
+                                        modelElementImage = ImageLib.createLockedByOtherIcon(imgName).createImage();
                                         imagesNeedDisposedList.add(modelElementImage);
                                     }
                                 }
