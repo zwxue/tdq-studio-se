@@ -523,6 +523,8 @@ public class FileSystemImportWriter implements IImportWriter {
                                 } else if (isPattern(modEle)) {
                                     mergePattern(record, (TDQPatternItem) object.getProperty().getItem());
                                     isDelete = false;
+                                } else {
+                                    ProxyRepositoryFactory.getInstance().deleteObjectPhysical(object);
                                 }
                             }
 
