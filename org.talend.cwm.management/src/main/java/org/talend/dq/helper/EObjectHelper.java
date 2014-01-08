@@ -32,6 +32,8 @@ import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.talend.commons.emf.EMFUtil;
 import org.talend.core.model.metadata.builder.connection.Connection;
+import org.talend.core.model.metadata.builder.connection.MetadataColumn;
+import org.talend.core.model.metadata.builder.connection.MetadataTable;
 import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.properties.Item;
 import org.talend.core.model.repository.IRepositoryViewObject;
@@ -41,9 +43,12 @@ import org.talend.cwm.dependencies.DependenciesHandler;
 import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.helper.ColumnSetHelper;
 import org.talend.cwm.helper.ConnectionHelper;
+import org.talend.cwm.helper.ModelElementHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.relational.TdTable;
+import org.talend.dataquality.analysis.Analysis;
+import org.talend.dataquality.analysis.AnalysisContext;
 import org.talend.dq.factory.ModelElementFileFactory;
 import org.talend.dq.helper.resourcehelper.ResourceFileMap;
 import org.talend.repository.model.IRepositoryNode;
@@ -212,20 +217,91 @@ public final class EObjectHelper {
         return supplierList;
     }
 
-    // public static List<ModelElement> getDependencyClients(IRepositoryViewObject repositoryObject) {
-    // ModelElement findElement = getModelElement(repositoryObject);
-    // EList<Dependency> clientDependencys = findElement.getSupplierDependency();
-    // // locate resource of each Dependency object
-    // List<ModelElement> supplierList = new ArrayList<ModelElement>();
-    // for (Dependency dependency : clientDependencys) {
-    // EList<ModelElement> client = dependency.getClient();
-    // if (client != null) {
-    // supplierList.addAll(client);
-    // }
-    // }
-    // return supplierList;
-    // }
+    /**
+     * get the first Dependency of node(only used for METADATA_CON_TABLE and METADATA_CON_VIEW).
+     * 
+     * @param node
+     * @return
+     */
+    public static List<ModelElement> getFirstDependency(IRepositoryNode node) {
+        List<ModelElement> result = new ArrayList<ModelElement>();
+        if (node == null) {
+            return result;
+        }
 
+        // use the connection supplier to get analyses, and then check them when they use the droped table
+
+        // get the connection
+        ModelElement deleteModel = RepositoryNodeHelper.getMetadataElement(node);
+        Connection connection = ModelElementHelper.getConnection(deleteModel);
+
+        // get the supplier Dependency of the connection
+        EList<Dependency> supplierDependency = connection.getSupplierDependency();
+        if (supplierDependency != null && supplierDependency.size() > 0) {
+            EList<ModelElement> clients = supplierDependency.get(0).getClient();
+            for (ModelElement client : clients) {
+                if (!(client instanceof Analysis)) {
+                    continue;
+                }
+                Analysis analysis = (Analysis) client;
+                if (analysis.eIsProxy()) {
+                    analysis = (Analysis) EObjectHelper.resolveObject(analysis);
+                }
+                AnalysisContext context = analysis.getContext();
+                EList<ModelElement> analysedElements = context.getAnalysedElements();
+                if (analysedElements != null && analysedElements.size() > 0) {
+                    ModelElement analysisModel = null;
+                    ModelElement firstAnalysisElement = analysedElements.get(0);
+                    if (firstAnalysisElement instanceof MetadataColumn) {
+                        analysisModel = ModelElementHelper.getContainer(firstAnalysisElement);
+                    } else if (firstAnalysisElement instanceof MetadataTable) {
+                        analysisModel = firstAnalysisElement;
+                    }
+                    if (compareModelElement(deleteModel, analysisModel)) {
+                        result.add(analysis);
+                        break;
+                    }
+                }
+            }
+        }
+
+        return result;
+    }
+
+    /**
+     * compare two ModelElements.
+     * 
+     * @param model1
+     * @param model2
+     * @return boolean true: when they have the same name and uuid.
+     */
+    private static boolean compareModelElement(ModelElement model1, ModelElement model2) {
+        if (model1 == null && model2 == null) {
+            return true;
+        }
+
+        if (model1 != null && model2 != null) {
+            if (model1.getName().equals(model2.getName())) {
+                if (model2.eIsProxy()) {
+                    model2 = (ModelElement) EObjectHelper.resolveObject(model2);
+                }
+                if (model1.eIsProxy()) {
+                    model1 = (ModelElement) EObjectHelper.resolveObject(model1);
+                }
+                if (ModelElementHelper.compareUUID(model1, model2)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    /**
+     * add Dependencies For File.
+     * 
+     * @param file
+     * @param modelElements
+     */
     public static void addDependenciesForFile(IFile file, List<ModelElement> modelElements) {
         ModelElement findElement = getModelElement(file);
         for (int i = 0; i < modelElements.size(); i++) {
