@@ -383,7 +383,7 @@ public class TDQResourceChangeHandler extends AbstractResourceChangesService {
     public List<IRepositoryNode> getDependentConnNodesInRecycleBin(List<IRepositoryNode> firstLevelRecyNodes) {
         List<IRepositoryNode> canBeDependedNodes = new ArrayList<IRepositoryNode>();
         for (IRepositoryNode node : firstLevelRecyNodes) {
-            canBeDependedNodes = getCanBeDependedNodes(node);
+            canBeDependedNodes.addAll(getCanBeDependedNodes(node));
         }
         return DQDeleteHelper.getCanNotDeletedNodes(canBeDependedNodes, false);
     }
