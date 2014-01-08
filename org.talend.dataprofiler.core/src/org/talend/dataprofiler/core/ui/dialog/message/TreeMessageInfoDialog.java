@@ -34,6 +34,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
 import org.talend.core.model.metadata.builder.connection.DelimitedFileConnection;
 import org.talend.core.model.metadata.builder.connection.MDMConnection;
+import org.talend.core.model.metadata.builder.connection.MetadataTable;
 import org.talend.core.model.properties.Item;
 import org.talend.core.model.properties.Property;
 import org.talend.core.model.repository.IRepositoryViewObject;
@@ -203,27 +204,22 @@ public class TreeMessageInfoDialog extends MessageDialog {
                     String imgName = null;
                     if (modelElement instanceof Analysis) {
                         imgName = ImageLib.ANALYSIS_OBJECT;
-                    }
-                    if (modelElement instanceof TdReport) {
+                    } else if (modelElement instanceof TdReport) {
                         imgName = ImageLib.REPORT_OBJECT;
-                    }
-                    if (modelElement instanceof DatabaseConnection) {
+                    } else if (modelElement instanceof DatabaseConnection) {
                         imgName = ImageLib.CONNECTION;
-                    }
-                    if (modelElement instanceof MDMConnection) {
+                    } else if (modelElement instanceof MDMConnection) {
                         imgName = ImageLib.MDM_CONNECTION;
-                    }
-                    if (modelElement instanceof DelimitedFileConnection) {
+                    } else if (modelElement instanceof DelimitedFileConnection) {
                         imgName = ImageLib.FILE_DELIMITED;
-                    }
-                    if (modelElement instanceof Pattern) {
+                    } else if (modelElement instanceof Pattern) {
                         imgName = ImageLib.PATTERN_REG;
-                    }
-                    if (modelElement instanceof IndicatorDefinition) {
+                    } else if (modelElement instanceof IndicatorDefinition) {
                         imgName = ImageLib.IND_DEFINITION;
-                    }
-                    if (modelElement instanceof DQRule) {
+                    } else if (modelElement instanceof DQRule) {
                         imgName = ImageLib.DQ_RULE;
+                    } else if (modelElement instanceof MetadataTable) {
+                        imgName = ImageLib.TABLE;
                     }
                     if (imgName != null) {
                         modelElementImage = ImageLib.getImage(imgName);

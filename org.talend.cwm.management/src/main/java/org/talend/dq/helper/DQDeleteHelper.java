@@ -98,10 +98,13 @@ public final class DQDeleteHelper {
         for (IRepositoryNode node : allNodes) {
             List<ModelElement> dependencies = EObjectHelper.getDependencyClients(node);
             // Added 20130305 check the jRxml and its folder here, because the jrxml are not modelelement type.
-            if (node.getObject() != null
-                    && ERepositoryObjectType.TDQ_JRAXML_ELEMENT.equals(node.getObject().getRepositoryObjectType())) {
+            if (ERepositoryObjectType.TDQ_JRAXML_ELEMENT.equals(node.getObjectType())) {
                 dependencies = getDependedReportOfJrxml(node);
-            }// ~
+            } else if (ERepositoryObjectType.METADATA_CON_TABLE.equals(node.getObjectType())
+                    || ERepositoryObjectType.METADATA_CON_VIEW.equals(node.getObjectType())) {
+                dependencies = EObjectHelper.getFirstDependency(node);
+            }
+
             if (dependencies == null || dependencies.isEmpty()) {
                 continue;
             }

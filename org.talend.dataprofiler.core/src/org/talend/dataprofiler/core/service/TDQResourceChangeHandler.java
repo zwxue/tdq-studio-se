@@ -29,6 +29,7 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.swt.widgets.Display;
 import org.talend.commons.exception.PersistenceException;
 import org.talend.commons.utils.WorkspaceUtils;
 import org.talend.commons.utils.io.FilesUtils;
@@ -82,7 +83,7 @@ import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwmx.analysis.informationreporting.Report;
 
 /**
- *
+ * 
  * DOC mzhao Handle resource unload events from TOS.
  */
 public class TDQResourceChangeHandler extends AbstractResourceChangesService {
@@ -293,7 +294,7 @@ public class TDQResourceChangeHandler extends AbstractResourceChangesService {
 
     /**
      * replace the oldVersion with newVersion in the file.
-     *
+     * 
      * @param name
      * @param clientFile
      * @param oldVersion
@@ -315,7 +316,7 @@ public class TDQResourceChangeHandler extends AbstractResourceChangesService {
 
     /**
      * DOC xqliu Comment method "reloadFile".
-     *
+     * 
      * @param file
      */
     private void reloadFile(File file) {
@@ -326,7 +327,7 @@ public class TDQResourceChangeHandler extends AbstractResourceChangesService {
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see
      * org.talend.core.repository.utils.AbstractResourceChangesService#saveResourceByEMFShared(org.talend.core.model
      * .properties.Item)
@@ -393,45 +394,43 @@ public class TDQResourceChangeHandler extends AbstractResourceChangesService {
      */
     @Override
     public List<IRepositoryNode> getDependentConnNodesInRecycleBin(List<IRepositoryNode> firstLevelRecyNodes) {
-        List<IRepositoryNode> allConnChildrenNodes = new ArrayList<IRepositoryNode>();
+        List<IRepositoryNode> canBeDependedNodes = new ArrayList<IRepositoryNode>();
         for (IRepositoryNode node : firstLevelRecyNodes) {
-            getConnChildrenInRecybin(node, allConnChildrenNodes);
+            canBeDependedNodes = getCanBeDependedNodes(node);
         }
-        List<IRepositoryNode> canNotDeletedNodes = DQDeleteHelper.getCanNotDeletedNodes(allConnChildrenNodes, false);
-        return canNotDeletedNodes;
+        return DQDeleteHelper.getCanNotDeletedNodes(canBeDependedNodes, false);
     }
 
     /**
-     *
-     * get all connection nodes in recycle bin.
-     *
+     * 
+     * get all nodes that can be depended in recycle bin.
+     * 
      * @param parent
-     * @param childNodes
-     * @return
+     * @return List: AllNodesCanBeDepended
      */
-    private List<IRepositoryNode> getConnChildrenInRecybin(IRepositoryNode parent, List<IRepositoryNode> childNodes) {
+    private List<IRepositoryNode> getCanBeDependedNodes(IRepositoryNode parent) {
+        List<IRepositoryNode> childrenList = new ArrayList<IRepositoryNode>();
         if (parent.getType() == ENodeType.SIMPLE_FOLDER) {
             List<IRepositoryNode> children = parent.getChildren(true);
             for (IRepositoryNode node : children) {
-                getConnChildrenInRecybin(node, childNodes);
+                childrenList.addAll(getCanBeDependedNodes(node));
             }
         } else {
             ERepositoryObjectType objectType = parent.getObjectType();
             if (objectType != null
                     && (objectType == ERepositoryObjectType.METADATA_CONNECTIONS
-                            || objectType == ERepositoryObjectType.METADATA_FILE_DELIMITED || objectType == ERepositoryObjectType.METADATA_MDMCONNECTION)) {
-                childNodes.add(parent);
+                            || objectType == ERepositoryObjectType.METADATA_FILE_DELIMITED
+                            || objectType == ERepositoryObjectType.METADATA_MDMCONNECTION
+                            || objectType == ERepositoryObjectType.METADATA_CON_TABLE || objectType == ERepositoryObjectType.METADATA_CON_VIEW)) {
+                childrenList.add(parent);
             }
         }
-        return childNodes;
+        return childrenList;
     }
 
     @Override
     public void openDependcesDialog(List<IRepositoryNode> nodes) {
-        if (nodes == null || nodes.isEmpty()) {
-            return;
-        }
-        DeleteModelElementConfirmDialog.showDialog(null, nodes,
+        DeleteModelElementConfirmDialog.showDialog(Display.getCurrent().getActiveShell(), nodes,
                 DefaultMessagesImpl.getString("DQEmptyRecycleBinAction.allDependencies")); //$NON-NLS-1$
     }
 }
