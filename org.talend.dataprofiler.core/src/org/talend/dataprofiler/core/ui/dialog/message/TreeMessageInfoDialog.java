@@ -51,6 +51,7 @@ import org.talend.dq.factory.ModelElementFileFactory;
 import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.helper.ProxyRepositoryManager;
 import orgomg.cwm.objectmodel.core.ModelElement;
+import orgomg.cwm.resource.record.RecordFile;
 
 /**
  * DOC rli class global comment. Detailled comment
@@ -164,19 +165,17 @@ public class TreeMessageInfoDialog extends MessageDialog {
                         IFile file = (IFile) obj;
                         ModelElement modelElement = ModelElementFileFactory.getModelElement(file);
                         // MOD msjian TDQ-5909: modify to displayName
-                        String name = modelElement != null ? PropertyHelper.getProperty(modelElement).getDisplayName() : file
-                                .getName();
-                        return name;
-                        //return REQUIRES + PluginConstant.SPACE_STRING + "<<" + name + ">>";//$NON-NLS-1$ //$NON-NLS-2$
-                    } else if (obj instanceof RepositoryViewObject) {// Added 20130226 TDQ-6899 show the name for Jrxml
-                                                                     // object (which has no related ModelElement)
+                        return modelElement != null ? PropertyHelper.getProperty(modelElement).getDisplayName() : file.getName();
+                    } else if (obj instanceof RepositoryViewObject) {
+                        // Added 20130226 TDQ-6899 show the name for Jrxml object (which has no related ModelElement)
                         return ((IRepositoryViewObject) obj).getLabel();
-                    }// ~
+                    } else if (((ModelElement) obj).eContainer() instanceof RecordFile) {
+                        // ADD TDQ-7146: for file connection table node
+                        return ((ModelElement) obj).getName();
+                    }
 
                     Property property = PropertyHelper.getProperty((ModelElement) obj);
                     return property == null ? ((ModelElement) obj).getName() : property.getDisplayName();
-                    //REQUIRES + PluginConstant.SPACE_STRING+ "<<" + PropertyHelper.getProperty((ModelElement) obj).getDisplayName() + ">>"; //$NON-NLS-1$ //$NON-NLS-2$
-                    // TDQ-5909~
                 }
 
                 @Override
