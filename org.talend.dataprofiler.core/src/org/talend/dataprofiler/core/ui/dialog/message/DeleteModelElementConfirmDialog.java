@@ -30,6 +30,7 @@ import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
 import org.talend.core.model.metadata.builder.connection.DelimitedFileConnection;
 import org.talend.core.model.metadata.builder.connection.MDMConnection;
 import org.talend.core.model.properties.Property;
+import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
@@ -66,10 +67,39 @@ public class DeleteModelElementConfirmDialog {
 
         List<Object> children = new ArrayList<Object>();
 
-        private final ModelElement nodeElement;
+        private ModelElement nodeElement = null;
+
+        private IRepositoryNode node = null;
+
+        /**
+         * Getter for node.
+         * 
+         * @return the node
+         */
+        public IRepositoryNode getNode() {
+            return this.node;
+        }
+
+        /**
+         * Sets the node.
+         * 
+         * @param node the node to set
+         */
+        public void setNode(IRepositoryNode node) {
+            this.node = node;
+        }
 
         public ImpactNode(ModelElement modelElement) {
             this.nodeElement = modelElement;
+        }
+
+        /**
+         * DOC yyin ImpactNode constructor comment.
+         * 
+         * @param node
+         */
+        public ImpactNode(IRepositoryNode node) {
+            this.node = node;
         }
 
         public void addRequireModelElement(Object object) {
@@ -84,7 +114,11 @@ public class DeleteModelElementConfirmDialog {
 
         @Override
         public String toString() {
-            return nodeElement.getName();
+            if (this.nodeElement != null) {
+                return nodeElement.getName();
+            } else {
+                return this.node.getObject().getLabel();
+            }
         }
 
         /**
@@ -247,7 +281,6 @@ public class DeleteModelElementConfirmDialog {
                         MessageDialog.WARNING, new String[] { IDialogConstants.OK_LABEL }, 1);
                 dialog.setNeedCheckbox(isNeedCheckbox);
                 dialog.setContentProvider(new DialogContentProvider(impactElements));
-                dialog.setLabelProvider(getLabelProvider());
                 dialog.setInput(new Object());
                 clear();
                 // MOD qiongli 2012-1-6 if don't click OK button,should return false;
@@ -304,8 +337,16 @@ public class DeleteModelElementConfirmDialog {
      */
     public static int showDialog(Shell parentShell, List<IRepositoryNode> repositoryNodes, String dialogMessage) {
         for (IRepositoryNode repNode : repositoryNodes) {
-            List<ModelElement> dependencies = EObjectHelper.getDependencyClients(repNode);
-            Object object = RepositoryNodeHelper.getModelElementFromRepositoryNode(repNode);
+            List<ModelElement> dependencies = new ArrayList<ModelElement>();
+            Object object = null;
+            if (repNode.getObjectType() == ERepositoryObjectType.METADATA_CON_TABLE
+                    || repNode.getObjectType() == ERepositoryObjectType.METADATA_CON_VIEW) {
+                dependencies = EObjectHelper.getFirstDependency(repNode);
+                object = RepositoryNodeHelper.getMetadataElement(repNode);
+            } else {
+                dependencies = EObjectHelper.getDependencyClients(repNode);
+                object = RepositoryNodeHelper.getModelElementFromRepositoryNode(repNode);
+            }
             for (ModelElement element : dependencies) {
                 ImpactNode node = new ImpactNode(element);
                 if (!impactNodes.contains(node)) {
@@ -325,7 +366,6 @@ public class DeleteModelElementConfirmDialog {
                     DefaultMessagesImpl.getString("DeleteModelElementConfirmDialog.confirmResourceDelete"), null, dialogMessage, //$NON-NLS-1$
                     MessageDialog.WARNING, new String[] { IDialogConstants.OK_LABEL }, 1);
             dialog.setContentProvider(new DialogContentProvider(impactElements));
-            dialog.setLabelProvider(getLabelProvider());
             dialog.setInput(new Object());
             clear();
             return dialog.open();
@@ -358,7 +398,6 @@ public class DeleteModelElementConfirmDialog {
             TreeMessageInfoDialog dialog = new TreeMessageInfoDialog(parentShell, dialogTitle, null, dialogMessage,
                     MessageDialog.WARNING, new String[] { IDialogConstants.OK_LABEL, IDialogConstants.CANCEL_LABEL }, 0);
             dialog.setContentProvider(new DialogContentProvider(impactElements));
-            dialog.setLabelProvider(getLabelProvider());
             dialog.setInput(new Object());
             clear();
             return dialog.open();
@@ -383,7 +422,6 @@ public class DeleteModelElementConfirmDialog {
                     DefaultMessagesImpl.getString("DeleteModelElementConfirmDialog.confirmResourceDelete"), null, dialogMessage, //$NON-NLS-1$
                     MessageDialog.WARNING, new String[] { IDialogConstants.OK_LABEL }, 1);
             dialog.setContentProvider(new DialogContentProvider(impactElements));
-            dialog.setLabelProvider(getLabelProvider());
             dialog.setInput(new Object());
             clear();
             dialog.open();
@@ -411,7 +449,6 @@ public class DeleteModelElementConfirmDialog {
             TreeMessageInfoDialog dialog = new TreeMessageInfoDialog(parentShell, dialogTitle, null, dialogMessage,
                     MessageDialog.WARNING, new String[] { IDialogConstants.OK_LABEL }, 0);
             dialog.setContentProvider(new DialogContentProvider(impactElements));
-            dialog.setLabelProvider(getLabelProvider());
             dialog.setInput(new Object());
             clear();
             int result = dialog.open();
@@ -429,7 +466,6 @@ public class DeleteModelElementConfirmDialog {
             TreeMessageInfoDialog dialog = new TreeMessageInfoDialog(parentShell, dialogTitle, null, dialogMessage,
                     MessageDialog.WARNING, new String[] { IDialogConstants.OK_LABEL, IDialogConstants.CANCEL_LABEL }, 0);
             dialog.setContentProvider(new DialogContentProvider(impactElements));
-            dialog.setLabelProvider(getLabelProvider());
             dialog.setInput(new Object());
             clear();
             int result = dialog.open();

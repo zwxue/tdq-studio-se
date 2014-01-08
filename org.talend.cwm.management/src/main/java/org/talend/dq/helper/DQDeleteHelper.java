@@ -20,6 +20,7 @@ import org.eclipse.core.resources.IFile;
 import org.talend.core.model.properties.FolderItem;
 import org.talend.core.model.properties.Item;
 import org.talend.core.model.properties.Property;
+import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.dataquality.properties.TDQReportItem;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.utils.sugars.ReturnCode;
@@ -85,6 +86,11 @@ public final class DQDeleteHelper {
 
         for (IRepositoryNode node : allNodes) {
             List<ModelElement> dependencies = EObjectHelper.getDependencyClients(node);
+            if (ERepositoryObjectType.METADATA_CON_TABLE.equals(node.getObjectType())
+                    || ERepositoryObjectType.METADATA_CON_VIEW.equals(node.getObjectType())) {
+                dependencies = EObjectHelper.getFirstDependency(node);
+            }
+
             if (dependencies == null || dependencies.isEmpty()) {
                 continue;
             }

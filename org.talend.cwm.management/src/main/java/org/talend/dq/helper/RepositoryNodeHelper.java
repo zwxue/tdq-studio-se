@@ -1918,12 +1918,12 @@ public final class RepositoryNodeHelper {
         } else if (repositoryNode.getObject() instanceof ISubRepositoryObject) {
             metadataObject = (ISubRepositoryObject) repositoryNode.getObject();
         }
+        if (metadataObject != null) {
+            return metadataObject.getModelElement();
+        }
         if (repositoryNode instanceof DBConnectionRepNode || repositoryNode instanceof DFConnectionRepNode
                 || repositoryNode instanceof MDMConnectionRepNode) {
             return ((ConnectionItem) repositoryNode.getObject().getProperty().getItem()).getConnection();
-        }
-        if (metadataObject != null) {
-            return metadataObject.getModelElement();
         }
         return null;
     }

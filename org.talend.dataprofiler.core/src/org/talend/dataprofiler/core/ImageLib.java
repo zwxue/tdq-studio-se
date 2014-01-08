@@ -498,7 +498,6 @@ public final class ImageLib {
         return originalImg != null ? createIcon(originalImg, lockImg) : null;
     }
 
-
     public static ImageDescriptor getImageDescriptorByRepositoryNode(IRepositoryNode node) {
         return getImageDescriptor(getImageNameByRepositoryNode(node));
     }
@@ -592,5 +591,48 @@ public final class ImageLib {
             }
         }
         return imageName;
+    }
+
+    public static ImageDescriptor createLockedByOwnIcon(String originalImgName) {
+        return getOverlayIcon(originalImgName, ICON_LOCK);
+    }
+
+    /**
+     * 
+     * make the original image name and overlay image name as a key, find the image from ImageLib.imageRegistry by this
+     * key. if not found,create a new Overlay image and put it into imageRegistry.
+     * 
+     * @param originalName
+     * @param overImgName
+     * @return
+     */
+    public static ImageDescriptor getOverlayIcon(String originalName, String overImgName) {
+        String orininal_over_name = originalName + PluginConstant.UNDER_LINE + overImgName;
+        if (imageRegistry == null) {
+            initialize();
+        }
+        ImageDescriptor originalOverImg = imageRegistry.getDescriptor(orininal_over_name);
+        if (originalOverImg == null) {
+            ImageDescriptor orignalImg = getImageDescriptor(originalName);
+            ImageDescriptor overImg = getImageDescriptor(overImgName);
+            if (orignalImg != null && overImg != null) {
+                originalOverImg = createIcon(orignalImg.createImage(), overImg);
+                imageRegistry.put(orininal_over_name, originalOverImg);
+            }
+
+        }
+        return originalOverImg;
+
+    }
+
+    /**
+     * DOC xqliu Comment method "createIcon".
+     * 
+     * @param originalImg
+     * @param decorateImg
+     * @return
+     */
+    public static ImageDescriptor createIcon(Image originalImg, ImageDescriptor decorateImg) {
+        return new DecorationOverlayIcon(originalImg, decorateImg, IDecoration.BOTTOM_RIGHT);
     }
 }
