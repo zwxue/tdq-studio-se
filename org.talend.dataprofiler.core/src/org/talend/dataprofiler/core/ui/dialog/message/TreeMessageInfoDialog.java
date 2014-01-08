@@ -51,7 +51,6 @@ import org.talend.dq.factory.ModelElementFileFactory;
 import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.helper.ProxyRepositoryManager;
 import orgomg.cwm.objectmodel.core.ModelElement;
-import orgomg.cwm.resource.record.RecordFile;
 
 /**
  * DOC rli class global comment. Detailled comment
@@ -169,8 +168,8 @@ public class TreeMessageInfoDialog extends MessageDialog {
                     } else if (obj instanceof RepositoryViewObject) {
                         // Added 20130226 TDQ-6899 show the name for Jrxml object (which has no related ModelElement)
                         return ((IRepositoryViewObject) obj).getLabel();
-                    } else if (((ModelElement) obj).eContainer() instanceof RecordFile) {
-                        // ADD TDQ-7146: for file connection table node
+                    } else if (obj instanceof MetadataTable) {
+                        // ADD TDQ-7146: for all type's connection table/view node
                         return ((ModelElement) obj).getName();
                     }
 
