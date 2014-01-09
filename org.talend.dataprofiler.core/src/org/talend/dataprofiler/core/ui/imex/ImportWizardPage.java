@@ -370,6 +370,7 @@ public class ImportWizardPage extends WizardPage {
 
         ItemRecord[] elements = getElements();
         for (ItemRecord record : elements) {
+            dErrors.addAll(record.getErrors());
             for (File depFile : record.getDependencyMap().keySet()) {
                 ModelElement element = record.getDependencyMap().get(depFile);
 
