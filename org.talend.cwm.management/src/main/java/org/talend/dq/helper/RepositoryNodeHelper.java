@@ -2025,8 +2025,8 @@ public final class RepositoryNodeHelper {
                     }
                 }
             }
+            log.error(Messages.getString("RepositoryNodeHelper.canNotFindRootNode") + nodeType.getLabel()); //$NON-NLS-1$
         }
-        log.error(Messages.getString("RepositoryNodeHelper.canNotFindRootNode") + nodeType.getLabel()); //$NON-NLS-1$
         return node;
     }
 
