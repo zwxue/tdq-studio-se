@@ -359,7 +359,7 @@ public class RowMatchingAnalysisExecutor extends ColumnAnalysisSqlExecutor {
 
         } finally {
             ReturnCode rc = closeConnection(analysis, connection);
-            if (rc.isOk()) {
+            if (!rc.isOk()) {
                 isSuccess = Boolean.FALSE;
             }
         }
