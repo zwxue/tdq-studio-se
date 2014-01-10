@@ -17,11 +17,10 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
+import java.util.Map.Entry;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IContainer;
@@ -237,13 +236,11 @@ public class DQDeleteAction extends DeleteAction {
                         return;
                     }
                 }
-
                 // show a confirm dialog to make sure the user want to proceed
                 if (showConfirmDialog()) {
                     // sort the selected nodes with special order: first report type, then (jrxml, analysis) type,
                     // finally (connection, DQ Rule, Pattern) type.
                     sortNodesBeforePhysicalDelete();
-
                     physicalDelete();
                 }
             }
@@ -284,54 +281,6 @@ public class DQDeleteAction extends DeleteAction {
     }
 
     /**
-     * find all the noeds going to be deleted.
-     * 
-     * @param deleteNodes
-     * @return
-     */
-    private Collection<IRepositoryNode> findAllDeleteNodes(List deleteNodes) {
-        Set<IRepositoryNode> allDeleteNodes = new HashSet<IRepositoryNode>();
-
-        Set<IRepositoryNode> tempNodes = new HashSet<IRepositoryNode>();
-        for (Object obj : deleteNodes) {
-            if (obj instanceof IRepositoryNode) {
-                IRepositoryNode node = (IRepositoryNode) obj;
-                tempNodes.add(node);
-            }
-        }
-
-        List<IRepositoryNode> recycleBinNodeFirstLevelChildren = ((RepositoryNode) RepositoryNodeHelper.getRecycleBinRepNode())
-                .getChildren();
-        Collection<IRepositoryNode> allRecycleBinNodes = RepositoryNodeHelper
-                .findAllChildrenNodes(recycleBinNodeFirstLevelChildren);
-        Iterator<IRepositoryNode> iterator = allRecycleBinNodes.iterator();
-        while (iterator.hasNext()) {
-            IRepositoryNode next = iterator.next();
-            for (IRepositoryNode node : tempNodes) {
-                if (next.equals(node)) {
-                    allDeleteNodes.add(next);
-                    addAllChinerenNodes(allDeleteNodes, next.getChildren());
-                }
-            }
-        }
-
-        return allDeleteNodes;
-    }
-
-    /**
-     * DOC xqliu Comment method "addAllChinerenNodes".
-     * 
-     * @param allNodes
-     * @param children
-     */
-    private void addAllChinerenNodes(Set<IRepositoryNode> allNodes, List<IRepositoryNode> children) {
-        allNodes.addAll(children);
-        for (IRepositoryNode child : children) {
-            addAllChinerenNodes(allNodes, child.getChildren());
-        }
-    }
-
-    /**
      * DOC zshen Comment method "refreshWorkspaceAndRecycleBenNode".
      */
     protected void refreshWorkspaceAndRecycleBenNode() {
@@ -344,25 +293,29 @@ public class DQDeleteAction extends DeleteAction {
      * (connection, DQ Rule, Pattern) type. - finally : the type which has no dependency,
      */
     private void sortNodesBeforePhysicalDelete() {
-        List<IRepositoryNode> anaOrJrxml = new ArrayList<IRepositoryNode>();
-        // in final level, means which need to be ordered at the end of the list
-        List<IRepositoryNode> finalLevel = new ArrayList<IRepositoryNode>();
         List<IRepositoryNode> reportNodes = new ArrayList<IRepositoryNode>();
+        List<IRepositoryNode> anaOrJrxml = new ArrayList<IRepositoryNode>();
+        // except report analysis and jrxml
+        List<IRepositoryNode> files = new ArrayList<IRepositoryNode>();
+        // the final level is folder
+        List<IRepositoryNode> folders = new ArrayList<IRepositoryNode>();
 
         for (IRepositoryNode node : selectedNodes) {
             if (isReport(node)) {
                 reportNodes.add(node);
             } else if (isAna(node) || isJrxml(node)) {
                 anaOrJrxml.add(node);
+            } else if (node.getType() == ENodeType.SIMPLE_FOLDER) {
+                folders.add(node);
             } else {
-                finalLevel.add(node);
+                files.add(node);
             }
         }
         selectedNodes.clear();
-        selectedNodes.addAll(finalLevel);
+        selectedNodes.addAll(folders);
+        selectedNodes.addAll(files);
         selectedNodes.addAll(anaOrJrxml);
         selectedNodes.addAll(reportNodes);
-
     }
 
     /**
@@ -396,18 +349,16 @@ public class DQDeleteAction extends DeleteAction {
      * dependencies
      */
     private void physicalDelete() {
+        List<IRepositoryNode> nodes = new ArrayList<IRepositoryNode>();
+        nodes.addAll(selectedNodes);
         // when physical deleting object with dependencies, do not popup
         // confirm anymore. and after dealing with it, store back to its default value.
         confirmForDQ = true;
         List<IRepositoryNode> folderNodeWhichChildHadDepend = null;
-
-        for (int i = selectedNodes.size() - 1; i >= 0; i--) {
-            if (selectedNodes.size() == 0) {
-                break;
-            }
-            IRepositoryNode node = selectedNodes.get(i);
+        Iterator<IRepositoryNode> iterator = nodes.iterator();
+        while (iterator.hasNext()) {
+            IRepositoryNode node = iterator.next();
             IRepositoryNode parent = node.getParent();
-
             // -- When the node has no depends, delete it directly
             // -- when the node has depends, add it with depends list to the nodeWithDependsMap
             if (node.getType() == ENodeType.SIMPLE_FOLDER || node.getType() == ENodeType.SYSTEM_FOLDER) {
@@ -423,7 +374,9 @@ public class DQDeleteAction extends DeleteAction {
                         if (folderNodeWhichChildHadDepend == null) {
                             folderNodeWhichChildHadDepend = new ArrayList<IRepositoryNode>();
                         }
-                        folderNodeWhichChildHadDepend.add(node);
+                        if (!folderNodeWhichChildHadDepend.contains(node)) {
+                            folderNodeWhichChildHadDepend.add(node);
+                        }
                     }
                 }
                 if (!haveSubNode) {
@@ -442,10 +395,9 @@ public class DQDeleteAction extends DeleteAction {
             forceDelete = DeleteModelElementConfirmDialog.showDialog(nodeWithDependsMap,
                     DefaultMessagesImpl.getString("DQDeleteAction.dependencyByOther"), true);//$NON-NLS-1$
             if (forceDelete) {
-                Iterator iter = nodeWithDependsMap.entrySet().iterator();
+                Iterator<Entry<IRepositoryNode, List<ModelElement>>> iter = nodeWithDependsMap.entrySet().iterator();
                 while (iter.hasNext()) {
-                    Map.Entry<IRepositoryNode, List<ModelElement>> entry = (Map.Entry<IRepositoryNode, List<ModelElement>>) iter
-                            .next();
+                    Map.Entry<IRepositoryNode, List<ModelElement>> entry = iter.next();
                     IRepositoryNode node = entry.getKey();
                     List<ModelElement> dependencies = entry.getValue();
 
@@ -455,7 +407,6 @@ public class DQDeleteAction extends DeleteAction {
             }
         }
         nodeWithDependsMap.clear();
-
         // if the folder has the child who has depends, can only proceeding after its child be handled
         if (folderNodeWhichChildHadDepend != null && folderNodeWhichChildHadDepend.size() > 0) {
             if (forceDelete) {
@@ -464,7 +415,6 @@ public class DQDeleteAction extends DeleteAction {
                 }
             }
         }
-
         // Added 20130227 TDQ-6901 yyin, when physical deleting object with dependencies, do not popup
         // confirm anymore. and after dealing with it, store back to its default value.
         confirmForDQ = false;
