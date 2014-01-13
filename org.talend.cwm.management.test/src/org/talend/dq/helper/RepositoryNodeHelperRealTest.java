@@ -12,10 +12,8 @@
 // ============================================================================
 package org.talend.dq.helper;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -41,6 +39,7 @@ import org.talend.core.model.metadata.MetadataColumnRepositoryObject;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.connection.ConnectionFactory;
 import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
+import org.talend.core.model.metadata.builder.database.dburl.SupportDBUrlType;
 import org.talend.core.model.properties.DatabaseConnectionItem;
 import org.talend.core.model.properties.PropertiesFactory;
 import org.talend.core.model.repository.ERepositoryObjectType;
@@ -354,6 +353,7 @@ public class RepositoryNodeHelperRealTest {
         createConnection.setUsername("UserName"); //$NON-NLS-1$
         createConnection.setPassword("Password"); //$NON-NLS-1$
         createConnection.setURL("URL"); //$NON-NLS-1$
+        createConnection.setDatabaseType(SupportDBUrlType.MYSQLDEFAULTURL.getDBKey());
         // ~connection
         DatabaseConnectionItem createDatabaseConnectionItem = PropertiesFactory.eINSTANCE.createDatabaseConnectionItem();
 

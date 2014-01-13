@@ -56,7 +56,6 @@ import org.talend.core.repository.utils.ProjectHelper;
 import org.talend.core.repository.utils.XmiResourceManager;
 import org.talend.core.runtime.CoreRuntimePlugin;
 import org.talend.repository.ProjectManager;
-import org.talend.repository.ProjectManager;
 import org.talend.repository.model.IRepositoryNode.ENodeType;
 import org.talend.repository.model.RepositoryConstants;
 import org.talend.repository.model.RepositoryNode;
@@ -450,7 +449,7 @@ public class UnitTestBuildHelper {
         Property property = PropertiesFactory.eINSTANCE.createProperty();
 
         itemState.setItemRelated(folderItem);
-
+        folderItem.setState(itemState);
         folderItem.setParent(emfProject);
         folderItem.setType(FolderType.STABLE_SYSTEM_FOLDER_LITERAL);
         folderItem.setProperty(property);
