@@ -133,7 +133,11 @@ public class UDIMasterPage extends IndicatorDefinitionMaterPage {
     public void initialize(FormEditor editor) {
         super.initialize(editor);
 
-        category = DefinitionHandler.getInstance().getUserDefinedCountIndicatorCategory();
+        if (definition != null && definition.getCategories().size() > 0) {
+            category = definition.getCategories().get(0);
+        } else {
+            category = DefinitionHandler.getInstance().getUserDefinedCountIndicatorCategory();
+        }
 
         // ADD klliu 2010-07-14 feature 13429
         initTempIndicatorDefinitionParameter(definition);
@@ -145,6 +149,7 @@ public class UDIMasterPage extends IndicatorDefinitionMaterPage {
         // no need to remove the java type from the db type list
     }
 
+    @Override
     protected boolean isPatternTextEditable() {
         return false;
     }
@@ -474,6 +479,7 @@ public class UDIMasterPage extends IndicatorDefinitionMaterPage {
 
     }
 
+    @Override
     protected void disposeExpressionChild() {
         int languageLength = javaLanguageComp == null ? 0 : javaLanguageComp.getChildren().length;
         int dataBaseLength = dataBaseComp == null ? 0 : dataBaseComp.getChildren().length;
@@ -793,6 +799,7 @@ public class UDIMasterPage extends IndicatorDefinitionMaterPage {
         return editDialog;
     }
 
+    @Override
     protected void handleSelectExpression(final CCombo combo, final ExpressionEditDialog editDialog) {
         super.handleSelectExpression(combo, editDialog);
         if (IndicatorCategoryHelper.isUserDefMatching(category)) {
@@ -894,6 +901,7 @@ public class UDIMasterPage extends IndicatorDefinitionMaterPage {
         }
     }
 
+    @Override
     public void updateLineAndOtherCombos(final CCombo combo, TdExpression expression, String oldLanguage) {
         if (combo.getText().equals(PatternLanguageType.JAVA.getName())) {
             updateLineForJava(combo);
@@ -933,6 +941,7 @@ public class UDIMasterPage extends IndicatorDefinitionMaterPage {
         }
     }
 
+    @Override
     protected ReturnCode checkBeforeSave() {
         ReturnCode rc = super.checkBeforeSave();
 
