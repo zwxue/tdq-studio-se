@@ -12,6 +12,7 @@
 // ============================================================================
 package org.talend.dq.nodes.indicator.impl;
 
+import org.hsqldb.lib.StringUtil;
 import org.talend.dq.nodes.indicator.AbstractIndicatorNode;
 import org.talend.dq.nodes.indicator.IIndicatorNode;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
@@ -24,6 +25,12 @@ public class IndicatorCategoryNode extends AbstractIndicatorNode {
 
     public IndicatorCategoryNode(IndicatorEnum indicatorEnum) {
         super(indicatorEnum);
+        createChildren(indicatorEnum);
+    }
+
+    public IndicatorCategoryNode(String label, IndicatorEnum indicatorEnum) {
+        super(indicatorEnum);
+        this.label = label;
         createChildren(indicatorEnum);
     }
 
@@ -53,9 +60,13 @@ public class IndicatorCategoryNode extends AbstractIndicatorNode {
         this.setChildren(childrenNodes);
     }
 
+    /**
+     * the label should be a Internationalized string
+     */
+    @Override
     public String getLabel() {
         String displayLabel = label;
-        if (indicatorEnum != null) {
+        if (StringUtil.isEmpty(displayLabel) && indicatorEnum != null) {
             displayLabel = this.indicatorEnum.getLabel();
         }
         return displayLabel;
