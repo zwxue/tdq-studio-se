@@ -13,7 +13,6 @@
 package org.talend.dq.nodes.indicator.type;
 
 import org.eclipse.emf.ecore.EClass;
-import org.talend.cwm.management.i18n.Messages;
 import org.talend.dataquality.indicators.IndicatorsPackage;
 import org.talend.dataquality.indicators.columnset.ColumnsetPackage;
 import org.talend.dataquality.indicators.sql.IndicatorSqlPackage;
@@ -248,13 +247,11 @@ public enum IndicatorEnum {
                                IndicatorsPackage.Literals.UPPER_QUARTILE_INDICATOR,
                                "Upper Quartile", //$NON-NLS-1$
                                null),
-    CountsIndicatorEnum(IndicatorsPackage.COUNTS_INDICATOR, IndicatorsPackage.Literals.COUNTS_INDICATOR, Messages
-            .getString("IndicatorTreeModelBuilder.SimpleStatistics"), //$NON-NLS-1$
+    CountsIndicatorEnum(IndicatorsPackage.COUNTS_INDICATOR, IndicatorsPackage.Literals.COUNTS_INDICATOR, "Simple Statistics", //$NON-NLS-1$
                         new IndicatorEnum[] { RowCountIndicatorEnum, NullCountIndicatorEnum, DistinctCountIndicatorEnum,
                                 UniqueIndicatorEnum, DuplicateCountIndicatorEnum, BlankCountIndicatorEnum,
                                 DefValueCountIndicatorEnum }),
-    TextIndicatorEnum(IndicatorsPackage.TEXT_INDICATOR, IndicatorsPackage.Literals.TEXT_INDICATOR, Messages
-            .getString("IndicatorTreeModelBuilder.TextStatistics"), //$NON-NLS-1$
+    TextIndicatorEnum(IndicatorsPackage.TEXT_INDICATOR, IndicatorsPackage.Literals.TEXT_INDICATOR, "Text Statistics", //$NON-NLS-1$
                       new IndicatorEnum[] { MinLengthIndicatorEnum, MinLengthWithNullIndicatorEnum,
                               MinLengthWithBlankIndicatorEnum, MinLengthWithBlankNullIndicatorEnum, MaxLengthIndicatorEnum,
                               MaxLengthWithNullIndicatorEnum, MaxLengthWithBlankIndicatorEnum,
@@ -265,8 +262,7 @@ public enum IndicatorEnum {
                      new IndicatorEnum[] { LowerQuartileIndicatorEnum, UpperQuartileIndicatorEnum }),
     RangeIndicatorEnum(IndicatorsPackage.RANGE_INDICATOR, IndicatorsPackage.Literals.RANGE_INDICATOR, "Range", //$NON-NLS-1$
                        new IndicatorEnum[] { MinValueIndicatorEnum, MaxValueIndicatorEnum }),
-    BoxIIndicatorEnum(IndicatorsPackage.BOX_INDICATOR, IndicatorsPackage.Literals.BOX_INDICATOR, Messages
-            .getString("IndicatorTreeModelBuilder.SummaryStatistics"), //$NON-NLS-1$
+    BoxIIndicatorEnum(IndicatorsPackage.BOX_INDICATOR, IndicatorsPackage.Literals.BOX_INDICATOR, "Summary Statistics", //$NON-NLS-1$
                       new IndicatorEnum[] { MeanIndicatorEnum, MedianIndicatorEnum, IQRIndicatorEnum, RangeIndicatorEnum }),
     WhereRuleIndicatorEnum(
                            IndicatorSqlPackage.WHERE_RULE_INDICATOR,
@@ -344,12 +340,12 @@ public enum IndicatorEnum {
     FormatFreqPieIndictorEnum(
                               IndicatorsPackage.FORMAT_FREQ_PIE_INDICATOR,
                               IndicatorsPackage.Literals.FORMAT_FREQ_PIE_INDICATOR,
-                              "Format Phone Number Frequency",
+                              "Format Phone Number Frequency", //$NON-NLS-1$
                               null),
     PhoneNumbStatisticsIndicatorEnum(
                                      IndicatorsPackage.PHONE_NUMB_STATISTICS_INDICATOR,
                                      IndicatorsPackage.Literals.PHONE_NUMB_STATISTICS_INDICATOR,
-                                     Messages.getString("IndicatorTreeModelBuilder.PhonenumberStatistics"), //$NON-NLS-1$
+                                     "Phone Number Statistics", //$NON-NLS-1$
                                      new IndicatorEnum[] { ValidPhoneCountIndicatorEnum, ValidRegCodeCountIndicatorEnum,
                                              InvalidRegCodeCountIndicatorEnum, PossiblePhoneCountIndicatorEnum,
                                              WellFormIntePhoneCountIndicatorEnum, WellFormNationalPhoneCountIndicatorEnum,

@@ -32,28 +32,31 @@ public final class IndicatorTreeModelBuilder {
             return indicatorCategoryNodes;
         }
         // build Basic Statistic categoryNode
-        IndicatorCategoryNode simpleCategoryNode = new IndicatorCategoryNode(IndicatorEnum.CountsIndicatorEnum);
-        // simpleCategoryNode.creatChildren(simpleIndicatorEnums);
+        IndicatorCategoryNode simpleCategoryNode = new IndicatorCategoryNode(
+                Messages.getString("IndicatorTreeModelBuilder.SimpleStatistics"), IndicatorEnum.CountsIndicatorEnum); //$NON-NLS-1$
 
         // build Text statistics categoryNode
-        IndicatorCategoryNode textCategoryNode = new IndicatorCategoryNode(IndicatorEnum.TextIndicatorEnum);
+        IndicatorCategoryNode textCategoryNode = new IndicatorCategoryNode(
+                Messages.getString("IndicatorTreeModelBuilder.TextStatistics"), IndicatorEnum.TextIndicatorEnum); //$NON-NLS-1$
 
         // build Summary Statistic categoryNode
-        IndicatorCategoryNode boxCategoryNode = new IndicatorCategoryNode(IndicatorEnum.BoxIIndicatorEnum);
+        IndicatorCategoryNode boxCategoryNode = new IndicatorCategoryNode(
+                Messages.getString("IndicatorTreeModelBuilder.SummaryStatistics"), IndicatorEnum.BoxIIndicatorEnum); //$NON-NLS-1$
 
         // build pattern finder categoryNode
         IndicatorEnum[] patternFinderEnums = new IndicatorEnum[] { IndicatorEnum.PatternFreqIndicatorEnum,
                 IndicatorEnum.PatternLowFreqIndicatorEnum, IndicatorEnum.DatePatternFreqIndicatorEnum };
-        IndicatorCategoryNode patternFinderCategoryNode = new IndicatorCategoryNode(Messages
-                .getString("IndicatorTreeModelBuilder.PatternStatistics"), //$NON-NLS-1$
+        IndicatorCategoryNode patternFinderCategoryNode = new IndicatorCategoryNode(
+                Messages.getString("IndicatorTreeModelBuilder.PatternStatistics"), //$NON-NLS-1$
                 patternFinderEnums);
         // MOD mzhao 2009-03-05 build Soundex Statistic categoryNode
         IndicatorEnum[] soundexIndicatorEnums = new IndicatorEnum[] { IndicatorEnum.SoundexIndicatorEnum,
                 IndicatorEnum.SoundexLowIndicatorEnum };
-        IndicatorCategoryNode soundexCategoryNode = new IndicatorCategoryNode(Messages
-                .getString("IndicatorTreeModelBuilder.SoundexStatistics"), //$NON-NLS-1$
+        IndicatorCategoryNode soundexCategoryNode = new IndicatorCategoryNode(
+                Messages.getString("IndicatorTreeModelBuilder.SoundexStatistics"), //$NON-NLS-1$
                 soundexIndicatorEnums);
-        IndicatorCategoryNode phoneCategoryNode = new IndicatorCategoryNode(IndicatorEnum.PhoneNumbStatisticsIndicatorEnum);
+        IndicatorCategoryNode phoneCategoryNode = new IndicatorCategoryNode(
+                Messages.getString("IndicatorTreeModelBuilder.PhonenumberStatistics"), IndicatorEnum.PhoneNumbStatisticsIndicatorEnum); //$NON-NLS-1$
 
         // build Nominal Statistic categoryNode
         IndicatorEnum[] advanceIndicatorEnums = new IndicatorEnum[] { IndicatorEnum.ModeIndicatorEnum,
@@ -64,13 +67,13 @@ public final class IndicatorTreeModelBuilder {
                 IndicatorEnum.DateLowFrequencyIndicatorEnum, IndicatorEnum.WeekLowFrequencyIndicatorEnum,
                 IndicatorEnum.MonthLowFrequencyIndicatorEnum, IndicatorEnum.QuarterLowFrequencyIndicatorEnum,
                 IndicatorEnum.YearLowFrequencyIndicatorEnum, IndicatorEnum.BinLowFrequencyIndicatorEnum };
-        IndicatorCategoryNode advanceCategoryNode = new IndicatorCategoryNode(Messages
-                .getString("IndicatorTreeModelBuilder.AdvancedStatistics"), advanceIndicatorEnums); //$NON-NLS-1$
+        IndicatorCategoryNode advanceCategoryNode = new IndicatorCategoryNode(
+                Messages.getString("IndicatorTreeModelBuilder.AdvancedStatistics"), advanceIndicatorEnums); //$NON-NLS-1$
 
         // Added yyin 20120827, TDQ-5076, build Fraud Detection category and SIndicator
         IndicatorEnum[] fraudIndicatorEnums = new IndicatorEnum[] { IndicatorEnum.BenfordLawFrequencyIndicatorEnum };
         IndicatorCategoryNode fraudCategoryNode = new IndicatorCategoryNode(
-                Messages.getString("IndicatorTreeModelBuilder.FraudStatistics"), fraudIndicatorEnums);
+                Messages.getString("IndicatorTreeModelBuilder.FraudStatistics"), fraudIndicatorEnums); //$NON-NLS-1$
 
         indicatorCategoryNodes = new IndicatorCategoryNode[] { simpleCategoryNode, textCategoryNode, boxCategoryNode,
                 advanceCategoryNode, patternFinderCategoryNode, soundexCategoryNode, phoneCategoryNode, fraudCategoryNode };
