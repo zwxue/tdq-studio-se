@@ -564,7 +564,7 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
      * @return
      */
     private String getDatabaseType(Properties pameterProperties) {
-        DataManager dataManager = this.analysisItem.getAnalysis().getContext().getConnection();
+        DataManager dataManager = analysis.getContext().getConnection();
         if (dataManager instanceof DatabaseConnection) {
             return ((DatabaseConnection) dataManager).getDatabaseType();
         } else {

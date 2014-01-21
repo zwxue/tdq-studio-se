@@ -79,6 +79,6 @@ public class SchemaAnalysisMasterDetailsPage extends AbstractFilterMetadataPage 
      */
     @Override
     protected int getSchamas(List<Catalog> tdCatalogs) {
-        return analysisItem.getAnalysis().getResults().getIndicators().size();
+        return analysis.getResults().getIndicators().size();
     }
 }
