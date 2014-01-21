@@ -22,6 +22,7 @@ import java.util.Properties;
 
 import net.sourceforge.sqlexplorer.Messages;
 
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.jface.action.IMenuListener;
 import org.eclipse.jface.action.IMenuManager;
@@ -63,6 +64,7 @@ import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.forms.widgets.Section;
 import org.talend.core.model.metadata.builder.connection.Connection;
+import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
 import org.talend.core.model.metadata.builder.connection.MetadataTable;
 import org.talend.core.model.metadata.builder.database.JavaSqlFactory;
 import org.talend.core.model.metadata.builder.database.dburl.SupportDBUrlStore;
@@ -476,10 +478,11 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
 
         String connectionStr = JavaSqlFactory.getURL(tdDataProvider);
         Properties pameterProperties = SupportDBUrlStore.getInstance().getDBPameterProperties(connectionStr);
-        String labelContent = pameterProperties
-                .getProperty(org.talend.core.model.metadata.builder.database.PluginConstant.DBTYPE_PROPERTY);
+        String labelContent = StringUtils.EMPTY;
         toolkit.createLabel(leftComp, DefaultMessagesImpl.getString("ConnectionMasterDetailsPage.DBMS")); //$NON-NLS-1$
-        toolkit.createLabel(leftComp, labelContent == null ? PluginConstant.EMPTY_STRING : labelContent);
+        // MOD TDQ-8539, find the db type from the connection, not from the properties file
+        toolkit.createLabel(leftComp, getDatabaseType(pameterProperties));
+
         labelContent = pameterProperties
                 .getProperty(org.talend.core.model.metadata.builder.database.PluginConstant.HOSTNAME_PROPERTY);
         toolkit.createLabel(leftComp, DefaultMessagesImpl.getString("ConnectionMasterDetailsPage.server")); //$NON-NLS-1$
@@ -496,22 +499,15 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
 
         List<Catalog> tdCatalogs = getCatalogs();
         // TDQ-6735 get the correct numbers of schema.
-        List<Schema> tdSchema = new ArrayList<Schema>();
-        if (!tdCatalogs.isEmpty()) {
-            for (Catalog catalog : tdCatalogs) {
-                tdSchema.addAll(CatalogHelper.getSchemas(catalog));
-            }
-        }
-        if (tdSchema.isEmpty()) {
-            tdSchema = ConnectionHelper.getSchema(tdDataProvider);
-        }
+        // MOD TDQ-8539 , get the schemas size
+        int schemaSize = getSchamas(tdCatalogs);
         toolkit.createLabel(leftComp,
                 DefaultMessagesImpl.getString("ConnectionMasterDetailsPage.catalogs", PluginConstant.EMPTY_STRING)); //$NON-NLS-1$
         toolkit.createLabel(leftComp, PluginConstant.EMPTY_STRING + tdCatalogs.size());
 
         toolkit.createLabel(leftComp,
                 DefaultMessagesImpl.getString("ConnectionMasterDetailsPage.schemata", PluginConstant.EMPTY_STRING)); //$NON-NLS-1$
-        toolkit.createLabel(leftComp, PluginConstant.EMPTY_STRING + tdSchema.size());
+        toolkit.createLabel(leftComp, PluginConstant.EMPTY_STRING + schemaSize);
 
         ExecutionInformations resultMetadata = analysisItem.getAnalysis().getResults().getResultMetadata();
 
@@ -556,6 +552,41 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
         }
 
         sumSectionClient.layout();
+    }
+
+    /**
+     * get the connection type from the connection, when the connection is DB. otherwise, just return the labelCOntent
+     * which get the value from the properties.
+     * 
+     * @param labelContent
+     * @return
+     */
+    private String getDatabaseType(Properties pameterProperties) {
+        DataManager dataManager = this.analysisItem.getAnalysis().getContext().getConnection();
+        if (dataManager instanceof DatabaseConnection) {
+            return ((DatabaseConnection) dataManager).getDatabaseType();
+        } else {
+            return pameterProperties.getProperty(org.talend.core.model.metadata.builder.database.PluginConstant.DBTYPE_PROPERTY);
+        }
+    }
+
+    /**
+     * find all analyzed schemas
+     * 
+     * @param tdCatalogs
+     * @return
+     */
+    protected int getSchamas(List<Catalog> tdCatalogs) {
+        List<Schema> tdSchema = new ArrayList<Schema>();
+        if (!tdCatalogs.isEmpty()) {
+            for (Catalog catalog : tdCatalogs) {
+                tdSchema.addAll(CatalogHelper.getSchemas(catalog));
+            }
+        }
+        if (tdSchema.isEmpty()) {
+            tdSchema = ConnectionHelper.getSchema(tdDataProvider);
+        }
+        return tdSchema.size();
     }
 
     /**
