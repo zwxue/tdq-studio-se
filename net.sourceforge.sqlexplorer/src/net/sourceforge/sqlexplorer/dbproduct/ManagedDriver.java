@@ -32,7 +32,7 @@ public class ManagedDriver implements Comparable<ManagedDriver> {
         }
 
         public void assignFrom(ISQLDriver rhs) throws ValidationException {
-            throw new ValidationException(Messages.getString("ManagedDriver.NotSupported"));
+            throw new ValidationException(Messages.getString("ManagedDriver.NotSupported")); //$NON-NLS-1$
         }
 
         public int compareTo(ISQLDriver rhs) {
@@ -201,22 +201,24 @@ public class ManagedDriver implements Comparable<ManagedDriver> {
      */
     public SQLConnection getConnection(User user) throws SQLException {
         Properties props = new Properties();
+        // MOD msjian TDQ-8463: for the string "user" and "password", no need to do international.bacause some
+        // jars(e.g:ojdbc14.jar) don't support international and cause to get connection error
         if (user.getUserName() != null) {
-            props.put(Messages.getString("ManagedDriver.User"), user.getUserName());
+            props.put("user", user.getUserName()); //$NON-NLS-1$
         }
         if (user.getPassword() != null) {
-            props.put(Messages.getString("ManagedDriver.Password"), user.getPassword());
+            props.put("password", user.getPassword());//$NON-NLS-1$
         }
         if (!isDriverClassLoaded()) {
             try {
                 registerSQLDriver();
             } catch (ClassNotFoundException e) {
-                throw new SQLException(Messages.getString("ManagedDriver.CannotLoadDriver1", driverClassName) + " "
-                        + Messages.getString("ManagedDriver.CannotLoadDriver2"));
+                throw new SQLException(Messages.getString("ManagedDriver.CannotLoadDriver1", driverClassName) + " "//$NON-NLS-1$ //$NON-NLS-2$
+                        + Messages.getString("ManagedDriver.CannotLoadDriver2"));//$NON-NLS-1$
             }
         }
         if (!isDriverClassLoaded()) {
-            throw new SQLException(Messages.getString("ManagedDriver.CannotLoadDriver1", driverClassName));
+            throw new SQLException(Messages.getString("ManagedDriver.CannotLoadDriver1", driverClassName));//$NON-NLS-1$
         }
 
         Connection jdbcConn = null;
