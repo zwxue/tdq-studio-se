@@ -58,6 +58,7 @@ import org.talend.core.model.metadata.builder.connection.MetadataColumn;
 import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.properties.Property;
 import org.talend.core.repository.model.repositoryObject.MetadataXmlElementTypeRepositoryObject;
+import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.db.connection.DatabaseSQLExecutor;
 import org.talend.cwm.db.connection.DelimitedFileSQLExecutor;
 import org.talend.cwm.db.connection.ISQLExecutor;
@@ -637,11 +638,16 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
 
             @Override
             public boolean handle(Object data) {
-                // need to give the new connection to the dialog to show only this new one in the dialog.
-                openColumnsSelectionDialog((DataManager) data);
+                // check if the connection is unavailable, give a warning dialog to user without opening the columns
+                // select dialog
+                DataManager dataManager = (DataManager) data;
+                if (ConnectionUtils.checkConnection(dataManager)) {
+                    // need to give the new connection to the dialog to show only this new one in the dialog.
+                    openColumnsSelectionDialog(dataManager);
 
-                // reset the select key buttons status
-                resetSelectKeyButton();
+                    // reset the select key buttons status
+                    resetSelectKeyButton();
+                }
 
                 return true;
             }
@@ -682,11 +688,11 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
         if (dataManager != null) {
             // only when "new connection" will give the new connection to this method
             dialog = new MetadataAndColumnSelectionDialog(
-                    null,
+                    Display.getCurrent().getActiveShell(),
                     DefaultMessagesImpl.getString("ColumnMasterDetailsPage.columnSelections"), dataManager, DefaultMessagesImpl.getString("ColumnMasterDetailsPage.columnSelections")); //$NON-NLS-1$ //$NON-NLS-2$
         } else {
             dialog = new MetadataAndColumnSelectionDialog(
-                    null,
+                    Display.getCurrent().getActiveShell(),
                     DefaultMessagesImpl.getString("ColumnMasterDetailsPage.columnSelections"), oldSelectedColumns, DefaultMessagesImpl.getString("ColumnMasterDetailsPage.columnSelections")); //$NON-NLS-1$ //$NON-NLS-2$
         }
         if (dialog.open() == Window.OK) {
@@ -1040,7 +1046,7 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
                     Arrays.asList(analysisHandler.getSelectedColumns()));
         } catch (SQLException e) {
             log.error(e, e);
-            return null;
+            return new ArrayList<Object[]>();
         }
     }
 
