@@ -293,19 +293,7 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
      */
     private boolean isConnectedAvailable() {
         DataManager datamanager = item.getAnalysis().getContext().getConnection();
-        Connection analysisDataProvider = ConnectionUtils.getConnectionFromDatamanager(datamanager);
-
-        ReturnCode connectionAvailable = new ReturnCode(false);
-
-        connectionAvailable = ConnectionUtils.isConnectionAvailable(analysisDataProvider);
-
-        if (!connectionAvailable.isOk()) {
-            MessageDialogWithToggle.openWarning(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
-                    DefaultMessagesImpl.getString("RunAnalysisAction.checkConnFailTitle"),//$NON-NLS-1$
-                    DefaultMessagesImpl.getString("RunAnalysisAction.checkConnFailMsg", connectionAvailable.getMessage()));//$NON-NLS-1$
-            return false;
-        }
-        return true;
+        return ConnectionUtils.checkConnection(datamanager);
     }
 
     /**

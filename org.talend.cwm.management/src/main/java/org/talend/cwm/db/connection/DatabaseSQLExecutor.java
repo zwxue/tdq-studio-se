@@ -19,9 +19,12 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.eclipse.jface.dialogs.MessageDialogWithToggle;
+import org.eclipse.swt.widgets.Display;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.database.JavaSqlFactory;
 import org.talend.cwm.helper.SwitchHelpers;
+import org.talend.cwm.management.i18n.Messages;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.dq.dbms.DbmsLanguage;
 import org.talend.dq.dbms.DbmsLanguageFactory;
@@ -56,6 +59,9 @@ public class DatabaseSQLExecutor extends SQLExecutor {
 
         TypedReturnCode<java.sql.Connection> sqlconnection = JavaSqlFactory.createConnection((Connection) connection);
         if (!sqlconnection.isOk()) {
+            MessageDialogWithToggle.openWarning(Display.getCurrent().getActiveShell(),
+                    Messages.getString("DatabaseSQLExecutor.createConnectionError"), //$NON-NLS-1$
+                    sqlconnection.getMessage());
             throw new SQLException(sqlconnection.getMessage());
         }
         Statement statement = null;
@@ -85,7 +91,7 @@ public class DatabaseSQLExecutor extends SQLExecutor {
             }
             ReturnCode closed = ConnectionUtils.closeConnection(sqlconnection.getObject());
             if (!closed.isOk()) {
-                log.warn(closed.getMessage());
+                log.error(closed.getMessage());
             }
         }
 

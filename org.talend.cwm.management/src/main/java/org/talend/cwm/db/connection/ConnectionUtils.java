@@ -44,6 +44,8 @@ import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.preferences.IPreferencesService;
 import org.eclipse.emf.common.util.EList;
+import org.eclipse.jface.dialogs.MessageDialogWithToggle;
+import org.eclipse.swt.widgets.Display;
 import org.talend.commons.exception.ExceptionHandler;
 import org.talend.commons.exception.PersistenceException;
 import org.talend.commons.utils.io.FilesUtils;
@@ -209,6 +211,25 @@ public final class ConnectionUtils {
         }
         return null;
 
+    }
+
+    /**
+     * check whether the connection is available.
+     * 
+     * @param datamanager
+     * @return boolean
+     */
+    public static boolean checkConnection(DataManager datamanager) {
+        Connection analysisDataProvider = ConnectionUtils.getConnectionFromDatamanager(datamanager);
+        ReturnCode connectionAvailable = new ReturnCode(false);
+        connectionAvailable = ConnectionUtils.isConnectionAvailable(analysisDataProvider);
+        if (!connectionAvailable.isOk()) {
+            MessageDialogWithToggle.openWarning(Display.getCurrent().getActiveShell(),
+                    Messages.getString("ConnectionUtils.checkConnFailTitle"),//$NON-NLS-1$
+                    Messages.getString("ConnectionUtils.checkConnFailMsg", connectionAvailable.getMessage()));//$NON-NLS-1$
+            return false;
+        }
+        return true;
     }
 
     /**
