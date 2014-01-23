@@ -14,7 +14,7 @@ package org.talend.dq.indicators;
 
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
@@ -308,18 +308,18 @@ public final class IndicatorCommonUtil {
             }
         } else if (IndicatorEnum.DatePatternFreqIndicatorEnum.getIndicatorType().isInstance(indicator)) {
             DatePatternFreqIndicator datePatternFrequency = (DatePatternFreqIndicator) indicator;
-            List<Object> modelMatchers = datePatternFrequency.getRealModelMatcherList();
-            frequencyExt = new FrequencyExt[modelMatchers.size()];
+            Map<String, Long> results = datePatternFrequency.getResult();
+            frequencyExt = new FrequencyExt[results.size()];
             int i = 0;
-            for (Object patternMatcher : modelMatchers) {
-
+            for (String key : results.keySet()) {
+                Long value = results.get(key);
+                Double frequency = datePatternFrequency.getFrequency(key);
                 frequencyExt[i] = new FrequencyExt();
-                frequencyExt[i].setKey(datePatternFrequency.getModel(patternMatcher));
-                frequencyExt[i].setValue(Long.valueOf(String.valueOf(datePatternFrequency.getScore(patternMatcher))));
-                frequencyExt[i].setFrequency(datePatternFrequency.getFrequency(patternMatcher));
+                frequencyExt[i].setKey(key);
+                frequencyExt[i].setValue(value);
+                frequencyExt[i].setFrequency(frequency);
                 i++;
             }
-
         } else {
             FrequencyIndicator frequency = (FrequencyIndicator) indicator;
             Set<Object> valueSet = frequency.getDistinctValues();
