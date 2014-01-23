@@ -12,6 +12,7 @@
 // ============================================================================
 package org.talend.dataquality.record.linkage.ui.section;
 
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
@@ -75,13 +76,15 @@ abstract public class AbstractMatchKeyWithChartTableSection extends AbstractMatc
 
         // change spin to combo
         final Spinner lessSpin = new Spinner(toolComp, SWT.BORDER);
+        lessSpin.setSelection(1);
         lessSpin.addModifyListener(new ModifyListener() {
 
             @Override
             public void modifyText(ModifyEvent e) {
-                int times = Integer.parseInt(lessSpin.getText());
                 if (matchRuleChartComp != null) {
                     int oldValue = matchRuleChartComp.getTimes();
+                    String text = lessSpin.getText().trim();
+                    int times = StringUtils.isEmpty(text) ? 0 : Integer.parseInt(text);
                     matchRuleChartComp.setTimes(times);
                     matchRuleChartComp.refresh();
                     listeners.firePropertyChange(MatchAnalysisConstant.NEED_REFRESH_DATA_SAMPLE_TABLE, oldValue, times);

@@ -214,21 +214,21 @@ public final class ImageLib {
 
     public static final String JAR_FILE = "jar_obj.gif"; //$NON-NLS-1$
 
-    public static final String ADD_SYN = "synonym/book_add.png";
+    public static final String ADD_SYN = "synonym/book_add.png"; //$NON-NLS-1$
 
-    public static final String DELETE_SYN = "synonym/book_delete.png";
+    public static final String DELETE_SYN = "synonym/book_delete.png"; //$NON-NLS-1$
 
-    public static final String EDIT_SYN = "synonym/book_edit.png";
+    public static final String EDIT_SYN = "synonym/book_edit.png"; //$NON-NLS-1$
 
-    public static final String FILTER_UP = "search_prev.gif";
+    public static final String FILTER_UP = "search_prev.gif"; //$NON-NLS-1$
 
-    public static final String FILTER_DOWN = "search_next.gif";
+    public static final String FILTER_DOWN = "search_next.gif"; //$NON-NLS-1$
 
-    public static final String FILTER_RUN = "searchres.gif";
+    public static final String FILTER_RUN = "searchres.gif"; //$NON-NLS-1$
 
-    public static final String FILTER_CLOSE = "search_rem.gif";
+    public static final String FILTER_CLOSE = "search_rem.gif"; //$NON-NLS-1$
 
-    public static final String RULE_TEST = "test.gif";
+    public static final String RULE_TEST = "test.gif"; //$NON-NLS-1$
 
     public static final String ICON_LOCK_BYOTHER = "locked_red_overlay.gif"; //$NON-NLS-1$
 

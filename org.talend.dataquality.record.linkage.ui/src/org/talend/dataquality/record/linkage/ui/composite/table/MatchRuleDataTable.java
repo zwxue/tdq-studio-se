@@ -305,9 +305,6 @@ public class MatchRuleDataTable extends Composite {
      */
     class DataLabelProvider extends LabelProvider implements ITableLabelProvider, ITableColorProvider {
 
-        /**
-         *
-         */
         private static final String GRP_SIZE = "GRP_SIZE"; //$NON-NLS-1$
 
         private Image masterImage = ImageLib.getImage(ImageLib.MASTER_IMAGE);
@@ -316,7 +313,7 @@ public class MatchRuleDataTable extends Composite {
         public Image getColumnImage(Object element, int columnIndex) {
             String isMaster = ((String[]) element)[masterColumn];
             if (columnIndex == 0) {
-                if (Boolean.parseBoolean(isMaster)) {//$NON-NLS-1$
+                if (Boolean.parseBoolean(isMaster)) {
                     return masterImage;
                 } else {
                     return null;
@@ -340,7 +337,7 @@ public class MatchRuleDataTable extends Composite {
         @Override
         public Color getForeground(Object element, int columnIndex) {
             String isMaster = ((String[]) element)[masterColumn];
-            if (Boolean.parseBoolean(isMaster)) {//$NON-NLS-1$
+            if (Boolean.parseBoolean(isMaster)) {
                 return GUIHelper.COLOR_BLACK;
             } else {
                 return ImageLib.COLOR_GREY;
