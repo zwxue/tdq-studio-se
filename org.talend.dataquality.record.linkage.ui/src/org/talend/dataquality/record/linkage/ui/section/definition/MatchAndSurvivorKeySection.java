@@ -122,7 +122,6 @@ public class MatchAndSurvivorKeySection extends AbstractMatchKeyWithChartTableSe
         boolean success = false;
         ISelection selectItems = tableComposite.getSelectItems();
         if (selectItems instanceof IStructuredSelection) {
-            @SuppressWarnings("unchecked")
             Iterator<MatchKeyAndSurvivorDefinition> iterator = ((IStructuredSelection) selectItems).iterator();
             while (iterator.hasNext()) {
                 MatchKeyAndSurvivorDefinition next = iterator.next();
@@ -149,7 +148,6 @@ public class MatchAndSurvivorKeySection extends AbstractMatchKeyWithChartTableSe
         redrawnSubTableContent();
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public void moveDownTableItem() {
         ISelection selectItems = tableComposite.getSelectItems();
@@ -189,7 +187,6 @@ public class MatchAndSurvivorKeySection extends AbstractMatchKeyWithChartTableSe
      * 
      * @see org.talend.dataquality.record.linkage.ui.section.AbstractMatchAnaysisTableSection#moveUpTableItem()
      */
-    @SuppressWarnings("unchecked")
     @Override
     public void moveUpTableItem() {
         ISelection selectItems = tableComposite.getSelectItems();
@@ -412,8 +409,7 @@ public class MatchAndSurvivorKeySection extends AbstractMatchKeyWithChartTableSe
      */
     @Override
     public void refreshChart() {
-        // TODO Auto-generated method stub
-
+        // until now, do nothing
     }
 
     /*
