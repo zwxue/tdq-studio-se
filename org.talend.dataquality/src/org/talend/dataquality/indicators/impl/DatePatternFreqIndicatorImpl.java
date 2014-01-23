@@ -13,7 +13,10 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.runtime.FileLocator;
@@ -159,7 +162,10 @@ public class DatePatternFreqIndicatorImpl extends FrequencyIndicatorImpl impleme
 
     /**
      * return List for ModelMatcher which Score more than 1.
+     * 
+     * @deprecated use {@link #getResult()} instead
      */
+    @Deprecated
     @Override
     public List<Object> getRealModelMatcherList() {
         List<Object> realModelMatcherList = new ArrayList<Object>();
@@ -199,6 +205,27 @@ public class DatePatternFreqIndicatorImpl extends FrequencyIndicatorImpl impleme
     @Override
     public String getRegex(String model) {
         return this.dateRetriever.getRegex(model);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataquality.indicators.DatePatternFreqIndicator#getResult()
+     */
+    @Override
+    public Map<String, Long> getResult() {
+        Map<String, Long> result = new TreeMap<String, Long>();
+        HashMap<Object, Long> values = this.getValueToFreq();
+        // add the value which greater than zero into the result
+        Iterator<Object> iterator = values.keySet().iterator();
+        while (iterator.hasNext()) {
+            Object key = iterator.next();
+            Long value = values.get(key);
+            if (value > 0) {
+                result.put(key.toString(), value);
+            }
+        }
+        return result;
     }
 
 } // DatePatternFreqIndicatorImpl
