@@ -286,7 +286,7 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
             }
 
             public void widgetDefaultSelected(SelectionEvent e) {
-
+                widgetSelected(e);
             }
         });
         // ADD msjian TDQ-5184 2012-4-8: set the connCombo background color as system set color
@@ -412,18 +412,29 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
         // ~ 15685
         // ~ 14549
 
-        int index = 0;
         if (allConnectionReposNodes.size() == 0 && !RepositoryNodeHelper.isOpenDQCommonViewer()) {
             return;
         }
+
         connCombo.getTable().removeAll();
+        int index = 0;
 
         // connCombo.defineColumns(new String[] { "Id", "Name", "Metadata Type" });// , new int[] { 5, SWT.DEFAULT,
         // MOD qiongli 2011-5-16,filter the logical delete connection except the analysis dependen on.
-        Property property = null;
         DataManager connection = analysisItem.getAnalysis().getContext().getConnection();
         for (IRepositoryNode repNode : allConnectionReposNodes) {
-            property = repNode.getObject().getProperty();
+
+            // ADD msjian TDQ-8458 2014-1-24: if the current analysis is correlation analysis, Disable to ability file
+            // and MDM connenction
+            String connectionType = RepositoryNodeHelper.getConnectionType(repNode);
+            if (this instanceof ColumnCorrelationNominalAndIntervalMasterPage) {
+                if (connectionType.equals(RepositoryNodeHelper.MDM_CONNECTION)
+                        || connectionType.equals(RepositoryNodeHelper.FILE_DELIMITED_CONNECTION)) {
+                    continue;
+                }
+            }
+            // TDQ-8458~
+
             ModelElement modelElement = RepositoryNodeHelper.getModelElementFromRepositoryNode(repNode);
             if (repNode.getObject().isDeleted()) {
                 if (connection == null || modelElement != null && !connection.equals(modelElement)) {
@@ -433,14 +444,15 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
 
             // MOD yyin 201204 TDQ-4977, change to TableCombo type to show the connection type.
             TableItem ti = new TableItem(connCombo.getTable(), SWT.NONE);
-            ti.setText(new String[] { property.getDisplayName(), RepositoryNodeHelper.getConnectionType(repNode) });
+            String displayName = repNode.getObject().getProperty().getDisplayName();
+            ti.setText(new String[] { displayName, connectionType });
             // connCombo.add(property.getDisplayName(), index);
             // String prvFileName = PrvResourceFileHelper.getInstance().findCorrespondingFile(prov).getName();
 
             // MOD sizhaoliu TDQ-6286 fix the migration problem (the table combo shows the first item in case the label
             // of imported analysis does not equal to the file name. )
             // MOD sizhaoliu TDQ-6286 revert this change to avoid the side effect for delimited file connection.
-            connCombo.setData(property.getDisplayName() + RepositoryNodeHelper.getConnectionType(repNode), index);
+            connCombo.setData(displayName + connectionType, index);
             // connCombo.setData(modelElement.getName() + RepositoryNodeHelper.getConnectionType(repNode), index);
             connCombo.setData(index + "", repNode); //$NON-NLS-1$
             index++;

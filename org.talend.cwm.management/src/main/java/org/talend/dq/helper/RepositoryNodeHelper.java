@@ -173,6 +173,10 @@ import orgomg.cwmx.analysis.informationreporting.Report;
  */
 public final class RepositoryNodeHelper {
 
+    public static final String FILE_DELIMITED_CONNECTION = "FileDelimited Connection"; //$NON-NLS-1$
+
+    public static final String MDM_CONNECTION = "MDM Connection"; //$NON-NLS-1$
+
     private static Logger log = Logger.getLogger(RepositoryNodeHelper.class);
 
     public static final String DQRESPOSITORYVIEW = "org.talend.dataprofiler.core.ui.views.DQRespositoryView"; //$NON-NLS-1$
@@ -3169,9 +3173,9 @@ public final class RepositoryNodeHelper {
             if (node instanceof DBConnectionRepNode) {
                 return ((DBConnectionRepNode) node).getDatabaseConnection().getDatabaseType();
             } else if (node instanceof MDMConnectionRepNode) {
-                return "MDM Connection"; //$NON-NLS-1$
+                return MDM_CONNECTION;
             } else if (node instanceof DFConnectionRepNode) {
-                return "File Delimited Connection"; //$NON-NLS-1$
+                return FILE_DELIMITED_CONNECTION;
             }
         }
         return ""; //$NON-NLS-1$
@@ -3182,9 +3186,9 @@ public final class RepositoryNodeHelper {
             if (node instanceof DatabaseConnection) {
                 return ((DatabaseConnection) node).getDatabaseType();
             } else if (node instanceof MDMConnection) {
-                return "MDM Connection"; //$NON-NLS-1$
+                return MDM_CONNECTION;
             } else if (node instanceof DelimitedFileConnection) {
-                return "File Delimited Connection"; //$NON-NLS-1$
+                return FILE_DELIMITED_CONNECTION;
             }
         }
         return ""; //$NON-NLS-1$
