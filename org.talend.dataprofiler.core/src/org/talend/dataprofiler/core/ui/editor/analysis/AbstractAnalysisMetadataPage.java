@@ -424,16 +424,10 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
         DataManager connection = analysisItem.getAnalysis().getContext().getConnection();
         for (IRepositoryNode repNode : allConnectionReposNodes) {
 
-            // ADD msjian TDQ-8458 2014-1-24: if the current analysis is correlation analysis, Disable to ability file
-            // and MDM connenction
-            String connectionType = RepositoryNodeHelper.getConnectionType(repNode);
-            if (this instanceof ColumnCorrelationNominalAndIntervalMasterPage) {
-                if (connectionType.equals(RepositoryNodeHelper.MDM_CONNECTION)
-                        || connectionType.equals(RepositoryNodeHelper.FILE_DELIMITED_CONNECTION)) {
-                    continue;
-                }
+            // check if this connection is supported by subtype analyses
+            if (!isConnectionSupport(repNode)) {
+                continue;
             }
-            // TDQ-8458~
 
             ModelElement modelElement = RepositoryNodeHelper.getModelElementFromRepositoryNode(repNode);
             if (repNode.getObject().isDeleted()) {
@@ -445,6 +439,7 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
             // MOD yyin 201204 TDQ-4977, change to TableCombo type to show the connection type.
             TableItem ti = new TableItem(connCombo.getTable(), SWT.NONE);
             String displayName = repNode.getObject().getProperty().getDisplayName();
+            String connectionType = RepositoryNodeHelper.getConnectionType(repNode);
             ti.setText(new String[] { displayName, connectionType });
             // connCombo.add(property.getDisplayName(), index);
             // String prvFileName = PrvResourceFileHelper.getInstance().findCorrespondingFile(prov).getName();
@@ -461,6 +456,16 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
             connCombo.select(0);
             // connCombo.setVisibleItemCount(index * 3);
         }
+    }
+
+    /**
+     * check if the connection repNode is supported.
+     * 
+     * @param repNode
+     * @return boolean true:support
+     */
+    protected boolean isConnectionSupport(IRepositoryNode repNode) {
+        return true;
     }
 
     /**

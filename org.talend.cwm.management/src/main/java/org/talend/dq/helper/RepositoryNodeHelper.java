@@ -557,7 +557,6 @@ public final class RepositoryNodeHelper {
                 node = recursiveFindIndicatorDefinition((IndicatorDefinition) modelElement);
             }
             // ADD msjian TDQ-4209 2012-02-03: find the *.jrxml and *.sql file
-
         } else if (modelElement instanceof IFile) {
             node = recursiveFindFile((IFile) modelElement);
             // TDQ-4209 ~
@@ -3168,30 +3167,18 @@ public final class RepositoryNodeHelper {
     }
 
     // ADDED yyin 201204 TDQ-4977
+    /**
+     * get Connection Type to display for the conection combo list.
+     * 
+     * @param node
+     * @return
+     */
     public static String getConnectionType(IRepositoryNode node) {
-        if (node != null) {
-            if (node instanceof DBConnectionRepNode) {
-                return ((DBConnectionRepNode) node).getDatabaseConnection().getDatabaseType();
-            } else if (node instanceof MDMConnectionRepNode) {
-                return MDM_CONNECTION;
-            } else if (node instanceof DFConnectionRepNode) {
-                return FILE_DELIMITED_CONNECTION;
-            }
-        }
-        return ""; //$NON-NLS-1$
+        return ((Connection) getModelElementFromRepositoryNode(node)).getConnectionTypeName();
     }
 
-    public static String getConnectionType(DataManager node) {
-        if (node != null) {
-            if (node instanceof DatabaseConnection) {
-                return ((DatabaseConnection) node).getDatabaseType();
-            } else if (node instanceof MDMConnection) {
-                return MDM_CONNECTION;
-            } else if (node instanceof DelimitedFileConnection) {
-                return FILE_DELIMITED_CONNECTION;
-            }
-        }
-        return ""; //$NON-NLS-1$
+    public static String getConnectionType(DataManager dataManager) {
+        return ((Connection) dataManager).getConnectionTypeName();
     }
 
     /**

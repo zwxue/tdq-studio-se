@@ -85,7 +85,9 @@ import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.dq.indicators.graph.GraphBuilder;
 import org.talend.dq.nodes.DBColumnRepNode;
+import org.talend.dq.nodes.DBConnectionRepNode;
 import org.talend.dq.writer.impl.ElementWriterFactory;
+import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.utils.sql.Java2SqlType;
 import org.talend.utils.sugars.ReturnCode;
@@ -104,9 +106,24 @@ public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnaly
 
     private ColumnSetMultiValueIndicator columnSetMultiIndicator;
 
-    protected String execLang;
-
     private String stringDataFilter;
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisMetadataPage#isConnectionSupport(org.talend.
+     * repository.model.IRepositoryNode)
+     */
+    @Override
+    protected boolean isConnectionSupport(IRepositoryNode repNode) {
+        // ADD msjian TDQ-8458 2014-1-24: if the current analysis is correlation analysis, Disable to ability file
+        // and MDM connenction
+        if (repNode instanceof DBConnectionRepNode) {
+            return true;
+        }
+        return false;
+        // TDQ-8458~
+    }
 
     private Composite chartComposite;
 
