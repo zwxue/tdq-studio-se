@@ -375,12 +375,22 @@ public class CorePlugin extends AbstractUIPlugin {
     }
 
     /**
-     * get DQ repository view if the view is opening else retru null
+     * get DQ repository view if the view is opening else return null
      * 
      * @return
      */
     public DQRespositoryView getRepositoryView() {
         IViewPart view = WorkbenchUtils.getView(DQRespositoryView.ID, false);
+        return view != null ? (DQRespositoryView) view : null;
+    }
+
+    /**
+     * get DQ repository view without bring it to top.
+     * 
+     * @return
+     */
+    public DQRespositoryView getRepositoryViewWithoutBringToTop() {
+        IViewPart view = WorkbenchUtils.getView(DQRespositoryView.ID, false, false);
         return view != null ? (DQRespositoryView) view : null;
     }
 
