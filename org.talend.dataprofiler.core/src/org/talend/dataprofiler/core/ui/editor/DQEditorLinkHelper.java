@@ -43,7 +43,8 @@ public class DQEditorLinkHelper implements ILinkHelper {
 
     public IStructuredSelection findSelection(IEditorInput editorInput) {
         // if RepositoryView is not opened we will return null
-        if (CorePlugin.getDefault().getRepositoryView() == null) {
+        // MOD msjian TDQ-8416: we don't need to bring the DQ view to top here
+        if (CorePlugin.getDefault().getRepositoryViewWithoutBringToTop() == null) {
             return null;
         }
         RepositoryNode node = null;
