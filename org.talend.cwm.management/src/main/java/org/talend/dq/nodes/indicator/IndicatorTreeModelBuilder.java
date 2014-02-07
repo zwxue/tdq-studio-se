@@ -74,7 +74,7 @@ public final class IndicatorTreeModelBuilder {
         // Added yyin 20120827, TDQ-5076, build Fraud Detection category and SIndicator
         IndicatorEnum[] fraudIndicatorEnums = new IndicatorEnum[] { IndicatorEnum.BenfordLawFrequencyIndicatorEnum };
         IndicatorCategoryNode fraudCategoryNode = new IndicatorCategoryNode(
-                Messages.getString("IndicatorTreeModelBuilder.FraudStatistics"), fraudIndicatorEnums);
+                Messages.getString("IndicatorTreeModelBuilder.FraudStatistics"), fraudIndicatorEnums); //$NON-NLS-1$
 
         indicatorCategoryNodes = new IndicatorCategoryNode[] { simpleCategoryNode, textCategoryNode, boxCategoryNode,
                 advanceCategoryNode, patternFinderCategoryNode, soundexCategoryNode, phoneCategoryNode, fraudCategoryNode };

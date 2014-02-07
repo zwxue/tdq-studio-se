@@ -93,7 +93,7 @@ public class SummaryStatisticsState extends AbstractChartTypeStates {
 
             ChartDataEntity entity = new ChartDataEntity();
             entity.setIndicator(unit.getIndicator());
-            entity.setLabel(unit.getType().getLabel());
+            entity.setLabel(unit.getIndicatorName());
             entity.setValue(String.valueOf(unit.getValue()));
 
             customerdataset.addDataEntity(entity);

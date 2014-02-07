@@ -221,6 +221,10 @@ public final class UDIHelper {
         return isCategory(indicator, DefinitionHandler.getInstance().getUserDefinedFrequencyIndicatorCategory());
     }
 
+    public static boolean isFrequency(IndicatorDefinition indicatorDefinition) {
+        return isCategory(indicatorDefinition, DefinitionHandler.getInstance().getUserDefinedFrequencyIndicatorCategory());
+    }
+
     public static boolean isMatching(Indicator indicator) {
         return isCategory(indicator, DefinitionHandler.getInstance().getUserDefinedMatchIndicatorCategory());
     }

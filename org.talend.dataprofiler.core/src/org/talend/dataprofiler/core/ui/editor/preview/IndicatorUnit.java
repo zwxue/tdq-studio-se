@@ -13,12 +13,14 @@
 package org.talend.dataprofiler.core.ui.editor.preview;
 
 import org.talend.core.model.properties.Property;
+import org.talend.cwm.management.i18n.SystemIndicatorInternationalizationUtil;
 import org.talend.dataprofiler.core.model.ColumnIndicator;
 import org.talend.dataprofiler.core.model.DelimitedFileIndicator;
 import org.talend.dataprofiler.core.model.ModelElementIndicator;
 import org.talend.dataprofiler.core.model.XmlElementIndicator;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.IndicatorParameters;
+import org.talend.dataquality.indicators.sql.UserDefIndicator;
 import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.indicators.IndicatorCommonUtil;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
@@ -102,10 +104,23 @@ public class IndicatorUnit {
     public String getIndicatorName() {
         Property property = PropertyHelper.getProperty(indicator.getIndicatorDefinition());
         if (property != null) {
-            return property.getDisplayName();
+            return getDisplayName(property);
         } else {
             return this.indicator.getName();
         }
+    }
+
+    /**
+     * only internationalization name of indicator
+     * 
+     * @return
+     */
+    private String getDisplayName(Property property) {
+        // only internationalization SystemIndicator
+        if (indicator instanceof UserDefIndicator) {
+            return property.getDisplayName();
+        }
+        return SystemIndicatorInternationalizationUtil.getDefinitionInternationalizationLabel(property.getLabel());
     }
 
     /**

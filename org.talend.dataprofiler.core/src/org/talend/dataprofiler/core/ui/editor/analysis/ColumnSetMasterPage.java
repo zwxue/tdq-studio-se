@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.regex.Pattern;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
@@ -323,7 +324,7 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
      * @param form
      */
     private void createIndicatorsSection(ScrolledForm form, Composite topComp) {
-        indicatorsSection = createSection(form, topComp, "Indicators", null); //$NON-NLS-1$
+        indicatorsSection = createSection(form, topComp, DefaultMessagesImpl.getString("IndicatorsComp.Indicators"), null); //$NON-NLS-1$
 
         Composite indicatorsComp = toolkit.createComposite(indicatorsSection, SWT.NONE);
         GridDataFactory.fillDefaults().align(SWT.FILL, SWT.FILL).grab(true, true).applyTo(indicatorsComp);
@@ -453,9 +454,9 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
         previewSection.setClient(sectionClient);
     }
 
-    public void createPreviewCharts(final ScrolledForm form, final Composite parentComp, final boolean isCreate) {
+    public void createPreviewCharts(final ScrolledForm theForm, final Composite parentComp, final boolean isCreate) {
         Section previewSimpleStatSection = createSection(
-                form,
+                theForm,
                 parentComp,
                 DefaultMessagesImpl.getString("ColumnSetResultPage.SimpleStatistics"), DefaultMessagesImpl.getString("ColumnMasterDetailsPage.space")); //$NON-NLS-1$ //$NON-NLS-2$
         previewSimpleStatSection.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
@@ -468,13 +469,13 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
         simpleComposite.setLayout(new GridLayout(1, true));
         simpleComposite.setLayoutData(new GridData(GridData.FILL_BOTH));
 
-        createSimpleStatistics(form, simpleComposite);
+        createSimpleStatistics(simpleComposite);
         previewSimpleStatSection.setClient(sectionClient);
 
         // match
         if (0 < allMatchIndicator.getCompositeRegexMatchingIndicators().size()) {
 
-            Section previewMatchSection = createSection(form, parentComp, "All Match", ""); //$NON-NLS-1$
+            Section previewMatchSection = createSection(theForm, parentComp, "All Match", StringUtils.EMPTY); //$NON-NLS-1$
             previewMatchSection.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
             Composite sectionMatchClient = toolkit.createComposite(previewMatchSection);
@@ -485,12 +486,12 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
             matchComposite.setLayout(new GridLayout(1, true));
             matchComposite.setLayoutData(new GridData(GridData.FILL_BOTH));
 
-            createAllMatch(form, matchComposite);
+            createAllMatch(matchComposite);
             previewMatchSection.setClient(sectionMatchClient);
         }
     }
 
-    private void createAllMatch(final ScrolledForm form, final Composite composite) {
+    private void createAllMatch(final Composite composite) {
         List<IndicatorUnit> units = new ArrayList<IndicatorUnit>();
         units.add(new IndicatorUnit(IndicatorEnum.AllMatchIndicatorEnum, allMatchIndicator, null));
 
@@ -509,7 +510,7 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
         }
     }
 
-    private void createSimpleStatistics(final ScrolledForm form, final Composite composite) {
+    private void createSimpleStatistics(final Composite composite) {
         List<IndicatorUnit> units = new ArrayList<IndicatorUnit>();
         units.add(new IndicatorUnit(IndicatorEnum.RowCountIndicatorEnum, simpleStatIndicator.getRowCountIndicator(), null));
         units.add(new IndicatorUnit(IndicatorEnum.DistinctCountIndicatorEnum, simpleStatIndicator.getDistinctCountIndicator(),

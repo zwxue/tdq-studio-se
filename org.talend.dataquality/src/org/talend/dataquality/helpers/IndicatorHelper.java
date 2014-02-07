@@ -286,6 +286,8 @@ public final class IndicatorHelper {
             CompositeIndicator compositeIndicator = (CompositeIndicator) indicator;
             try {
                 for (Indicator ind : compositeIndicator.getAllChildIndicators()) {
+                    // here don't need Iteration,compositeIndicator.getAllChildIndicators() will not return
+                    // CompositeIndicator again
                     leafIndicators.addAll(getIndicatorLeaves(ind));
                 }
             } catch (Exception e) {

@@ -43,7 +43,6 @@ import org.talend.dataquality.indicators.LengthIndicator;
 import org.talend.dataquality.indicators.columnset.SimpleStatIndicator;
 import org.talend.dq.indicators.preview.table.ChartDataEntity;
 import org.talend.dq.indicators.preview.table.PatternChartDataEntity;
-
 import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
@@ -172,9 +171,18 @@ public class DrillDownEditorInput implements IEditorInput {
         return this.dataEntity.getValue();
     }
 
+    /**
+     * 
+     * Judge current name of menu whether is same to menuType
+     * 
+     * @param menuStr is the name of the menu
+     * @param menuType is the type which we think it should be
+     * @return return true if menuStr is adapt to menuType, else return false
+     */
     public static boolean judgeMenuType(String menuStr, int menuType) {
-        if (menuStr == null)
+        if (menuStr == null) {
             return false;
+        }
         switch (menuType) {
         case MENU_VALUE_TYPE:
             return menuStr.toLowerCase().indexOf("values") > -1;//$NON-NLS-1$
@@ -211,8 +219,9 @@ public class DrillDownEditorInput implements IEditorInput {
             for (Object tableValue : tableRow) {
                 // added yyin 20120523 TDQ-4691: in MDM, when these two size not equal, this for will throw exception
                 if (tableValue == null) {
-                    if (newColumnElementList.get(0).length != columnElementList.size())
+                    if (newColumnElementList.get(0).length != columnElementList.size()) {
                         continue;
+                    }
                 }// ~
                 columnValue[rowIndex][columnIndex++] = tableValue == null ? "<null>" : tableValue.toString();
             }
@@ -230,7 +239,7 @@ public class DrillDownEditorInput implements IEditorInput {
         if (maxLength.size() == 0 || maxLength == null) {
             return true;
         }
-        return (Integer) Collections.max(maxLength) == Collections.min(maxLength);
+        return Collections.max(maxLength) == Collections.min(maxLength);
     }
 
     /**
@@ -384,8 +393,8 @@ public class DrillDownEditorInput implements IEditorInput {
                 }
 
             } else if (isDelimitedFile) {
-                List<MetadataColumn> columnList = ((MetadataTable) ColumnHelper.getColumnOwnerAsMetadataTable(simpInd
-                        .getAnalyzedColumns().get(0))).getColumns();
+                List<MetadataColumn> columnList = ColumnHelper.getColumnOwnerAsMetadataTable(simpInd.getAnalyzedColumns().get(0))
+                        .getColumns();
                 for (MetadataColumn mdColumn : columnList) {
                     columnElementList.add(mdColumn.getLabel());
                 }
@@ -438,8 +447,7 @@ public class DrillDownEditorInput implements IEditorInput {
                     }
                 }
             } else if (analysisElement instanceof MetadataColumn) {
-                MetadataTable mTable = (MetadataTable) ColumnHelper
-                        .getColumnOwnerAsMetadataTable((MetadataColumn) analysisElement);
+                MetadataTable mTable = ColumnHelper.getColumnOwnerAsMetadataTable((MetadataColumn) analysisElement);
                 for (MetadataColumn mColumn : mTable.getColumns()) {
                     columnElementList.add(mColumn.getLabel());
                 }

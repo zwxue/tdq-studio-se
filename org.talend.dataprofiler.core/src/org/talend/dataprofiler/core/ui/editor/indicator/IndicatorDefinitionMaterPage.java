@@ -77,8 +77,10 @@ import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.part.FileEditorInput;
 import org.jfree.util.Log;
 import org.talend.commons.utils.TalendURLClassLoader;
+import org.talend.core.model.properties.Property;
 import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.cwm.helper.TaggedValueHelper;
+import org.talend.cwm.management.i18n.SystemIndicatorInternationalizationUtil;
 import org.talend.cwm.relational.TdExpression;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
@@ -267,6 +269,30 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
      */
     public IndicatorDefinitionMaterPage(FormEditor editor, String id, String title) {
         super(editor, id, title);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataprofiler.core.ui.editor.AbstractMetadataFormPage#getIntactElemenetName()
+     */
+    @Override
+    public String getIntactElemenetName() {
+        // The title of indicatorDefinition should display an internationalzation String
+        String intactElemenetName = super.getIntactElemenetName();
+        String internationalizationLabel = StringUtils.EMPTY;
+        Property property = getProperty();
+        if (property != null && isSystemIndicator()) {
+            // system indicatorDefinition need to be internationalization
+            internationalizationLabel = SystemIndicatorInternationalizationUtil.getDefinitionInternationalizationLabel(property
+                    .getLabel());
+            if (StringUtils.EMPTY.equals(internationalizationLabel)) {
+                return intactElemenetName;
+            }
+        } else {
+            return intactElemenetName;
+        }
+        return internationalizationLabel;
     }
 
     /*

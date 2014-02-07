@@ -44,17 +44,6 @@ public abstract class AbstractChartTypeStates implements IChartTypeStates {
 
     public AbstractChartTypeStates(List<IndicatorUnit> units) {
 
-        // Iterator<IndicatorUnit> it = units.iterator();
-        // while (it.hasNext()) {
-        // IndicatorUnit unit = it.next();
-        // if (!unit.isExcuted() && unit.getType() != IndicatorEnum.RangeIndicatorEnum
-        // && unit.getType() != IndicatorEnum.IQRIndicatorEnum) {
-        // it.remove();
-        // } else {
-        // IndicatorCommonUtil.getIndicatorValue(unit);
-        // }
-        // }
-
         if (units != null) {
             this.units.addAll(check(units));
         }
@@ -66,10 +55,10 @@ public abstract class AbstractChartTypeStates implements IChartTypeStates {
      * @param units2
      * @return
      */
-    private Collection<? extends IndicatorUnit> check(List<IndicatorUnit> units) {
+    private Collection<? extends IndicatorUnit> check(List<IndicatorUnit> parameterUnits) {
         List<IndicatorUnit> validUnitList = new ArrayList<IndicatorUnit>();
 
-        for (IndicatorUnit unit : units) {
+        for (IndicatorUnit unit : parameterUnits) {
 
             IndicatorEnum type = unit.getType();
             if (type != null && !unit.isExcuted()
