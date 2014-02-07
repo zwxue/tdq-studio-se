@@ -13,7 +13,7 @@
 package org.talend.dataprofiler.core.ui.editor.preview;
 
 import org.talend.core.model.properties.Property;
-import org.talend.cwm.management.i18n.SystemIndicatorInternationalizationUtil;
+import org.talend.cwm.management.i18n.InternationalizationUtil;
 import org.talend.dataprofiler.core.model.ColumnIndicator;
 import org.talend.dataprofiler.core.model.DelimitedFileIndicator;
 import org.talend.dataprofiler.core.model.ModelElementIndicator;
@@ -120,7 +120,7 @@ public class IndicatorUnit {
         if (indicator instanceof UserDefIndicator) {
             return property.getDisplayName();
         }
-        return SystemIndicatorInternationalizationUtil.getDefinitionInternationalizationLabel(property.getLabel());
+        return InternationalizationUtil.getDefinitionInternationalizationLabel(property.getLabel());
     }
 
     /**

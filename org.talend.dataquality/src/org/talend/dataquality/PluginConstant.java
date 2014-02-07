@@ -29,6 +29,8 @@ public final class PluginConstant {
 
     public static final String DOT_STRING = "."; //$NON-NLS-1$
 
+    public static final String UNDER_LINE = "_"; //$NON-NLS-1$
+
     public static final String ENTER_STRING = "\n";//$NON-NLS-1$
 
     public static final String SINGLE_QUOTE = "\'";//$NON-NLS-1$
@@ -36,11 +38,11 @@ public final class PluginConstant {
     public static final String SPACE_STRING = " ";//$NON-NLS-1$
 
     public static final String COMMA_STRING = ",";//$NON-NLS-1$
-       
+
     public static final String JRXML_STRING = ".jrxml";//$NON-NLS-1$
-    
+
     public static final String SQL_STRING = ".sql";//$NON-NLS-1$
-    
+
     public static final String PROPERTIES_STRING = ".properties";//$NON-NLS-1$
 
     private PluginConstant() {

@@ -14,18 +14,13 @@ package org.talend.cwm.management.i18n;
 
 import org.apache.commons.lang.StringUtils;
 import org.talend.core.model.properties.Property;
+import org.talend.dataquality.PluginConstant;
 
 /**
  * internationalization System indicator definition
  * 
  */
-public class SystemIndicatorInternationalizationUtil {
-
-    public static final String MODELELEMENT_NAME_SPLITE_DELIMITER = " "; //$NON-NLS-1$
-
-    public static final String INTERNATIONALIZATION_FILE_SPLITE_DELIMITER = "."; //$NON-NLS-1$
-
-    public static final String INDICATORDEFINITION_FILE_SPLITE_DELIMITER = "_"; //$NON-NLS-1$
+public class InternationalizationUtil {
 
     /**
      * 
@@ -36,7 +31,7 @@ public class SystemIndicatorInternationalizationUtil {
      */
     public static String getDefinitionInternationalizationLabel(String originalName) {
         String getInternationalizationLabel = originalName == null ? StringUtils.EMPTY : Messages.getString(originalName.replace(
-                INDICATORDEFINITION_FILE_SPLITE_DELIMITER, INTERNATIONALIZATION_FILE_SPLITE_DELIMITER));
+                PluginConstant.UNDER_LINE, PluginConstant.DOT_STRING));
         return getInternationalizationLabel;
     }
 
@@ -49,7 +44,7 @@ public class SystemIndicatorInternationalizationUtil {
      */
     public static String getCategoryInternationalizationLabel(String originalName) {
         String getInternationalizationLabel = originalName == null ? StringUtils.EMPTY : Messages.getString(originalName.replace(
-                MODELELEMENT_NAME_SPLITE_DELIMITER, INTERNATIONALIZATION_FILE_SPLITE_DELIMITER));
+                PluginConstant.SPACE_STRING, PluginConstant.DOT_STRING));
         return getInternationalizationLabel;
     }
 

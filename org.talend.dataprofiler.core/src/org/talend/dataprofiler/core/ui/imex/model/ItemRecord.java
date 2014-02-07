@@ -38,7 +38,7 @@ import org.talend.core.model.properties.Property;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.cwm.dependencies.DependenciesHandler;
 import org.talend.cwm.helper.TaggedValueHelper;
-import org.talend.cwm.management.i18n.SystemIndicatorInternationalizationUtil;
+import org.talend.cwm.management.i18n.InternationalizationUtil;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.utils.UDIUtils;
@@ -461,7 +461,7 @@ public class ItemRecord {
     private String getDisplayName() {
         // only internationalization SystemIndicator
         if (element != null && DefinitionPackage.eINSTANCE.getIndicatorDefinition().equals(element.eClass())) {
-            return SystemIndicatorInternationalizationUtil.getDefinitionInternationalizationLabel(property.getLabel());
+            return InternationalizationUtil.getDefinitionInternationalizationLabel(property.getLabel());
         }
         return property.getDisplayName();
     }

@@ -46,7 +46,7 @@ import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.model.repository.RepositoryViewObject;
 import org.talend.cwm.constants.DevelopmentStatus;
 import org.talend.cwm.helper.TaggedValueHelper;
-import org.talend.cwm.management.i18n.SystemIndicatorInternationalizationUtil;
+import org.talend.cwm.management.i18n.InternationalizationUtil;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataquality.helpers.MetadataHelper;
@@ -329,7 +329,7 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
             // MOD sizhaoliu TDQ-7454 disallow the system indicator renaming to avoid i18n problems
             if (DefinitionPackage.eINSTANCE.getIndicatorDefinition().equals(currentModelElement.eClass())) {
                 nameText.setEditable(false);
-                nameText.setText(SystemIndicatorInternationalizationUtil.getDefinitionInternationalizationLabel(property.getLabel()));
+                nameText.setText(InternationalizationUtil.getDefinitionInternationalizationLabel(property.getLabel()));
             } else {
                 // MOD klliu 2010-04-21 bug 20204 get the init value
                 setOldDataproviderName(nameText.getText());

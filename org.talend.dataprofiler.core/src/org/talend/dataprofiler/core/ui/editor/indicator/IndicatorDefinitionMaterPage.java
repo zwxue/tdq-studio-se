@@ -80,7 +80,7 @@ import org.talend.commons.utils.TalendURLClassLoader;
 import org.talend.core.model.properties.Property;
 import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.cwm.helper.TaggedValueHelper;
-import org.talend.cwm.management.i18n.SystemIndicatorInternationalizationUtil;
+import org.talend.cwm.management.i18n.InternationalizationUtil;
 import org.talend.cwm.relational.TdExpression;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
@@ -284,7 +284,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
         Property property = getProperty();
         if (property != null && isSystemIndicator()) {
             // system indicatorDefinition need to be internationalization
-            internationalizationLabel = SystemIndicatorInternationalizationUtil.getDefinitionInternationalizationLabel(property
+            internationalizationLabel = InternationalizationUtil.getDefinitionInternationalizationLabel(property
                     .getLabel());
             if (StringUtils.EMPTY.equals(internationalizationLabel)) {
                 return intactElemenetName;
