@@ -194,7 +194,7 @@ public class MatchingKeySection extends AbstractMatchKeyWithChartTableSection {
 
         ruleFolder.setTopRight(com);
         // TDQ-8090~
-        
+
         initMatchRuleTabs();
 
         createGroupQualityThreshold(parent);
@@ -659,9 +659,9 @@ public class MatchingKeySection extends AbstractMatchKeyWithChartTableSection {
         // create the tab from the parameter:matchRule
         for (MatchRule oneMatchRule : matchRule.getMatchRules()) {
             MatchRule matchRule2 = createMatchRuleByCopy(oneMatchRule);
-            // set the name of the match rule by current rule count
-            String tabName = getMatchRuleNameByOrder();
-            matchRule2.setName(tabName);
+            // MOD msjian TDQ-8484: set the name of the match rule by the old name
+            matchRule2.setName(oneMatchRule.getName());
+            // TDQ-8484~
 
             // if the key name= some column name, set the column to this key
             for (MatchKeyDefinition key : matchRule2.getMatchKeys()) {
