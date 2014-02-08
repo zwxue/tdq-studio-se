@@ -12,20 +12,13 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.wizard.indicator.forms;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.eclipse.ui.IEditorPart;
 import org.talend.dataprofiler.core.CorePlugin;
-import org.talend.dataprofiler.core.helper.ModelElementIndicatorHelper;
-import org.talend.dataprofiler.core.model.ColumnIndicator;
-import org.talend.dataprofiler.core.model.ModelElementIndicator;
 import org.talend.dataprofiler.core.ui.editor.analysis.AnalysisEditor;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
 import org.talend.dataprofiler.core.ui.editor.preview.TableIndicatorUnit;
 import org.talend.dataprofiler.help.HelpPlugin;
 import org.talend.dataquality.analysis.ExecutionLanguage;
-import org.talend.dataquality.helpers.MetadataHelper;
 import org.talend.dataquality.indicators.DataminingType;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dq.helper.UDIHelper;
@@ -70,52 +63,84 @@ public enum FormEnum {
         return "/" + HelpPlugin.PLUGIN_ID + "/" + helpHref; //$NON-NLS-1$ //$NON-NLS-2$
     }
 
+    /**
+     * 
+     * use {@link IndicatorUnit#getHelpHref()} instead of it
+     * 
+     * @deprecated
+     * @param indicatorUnit
+     * @return
+     */
+    @Deprecated
     public static String[] getHelpHref(IndicatorUnit indicatorUnit) {
-        List<String> tempList = new ArrayList<String>();
-        for (FormEnum oneForm : getForms(indicatorUnit)) {
-            tempList.add(oneForm.getHelpHref());
-        }
 
-        return tempList.toArray(new String[tempList.size()]);
-    }
-
-    public static String[] getHelpHref(TableIndicatorUnit indicatorUnit) {
-        List<String> tempList = new ArrayList<String>();
-        for (FormEnum oneForm : getForms(indicatorUnit)) {
-            tempList.add(oneForm.getHelpHref());
-        }
-
-        return tempList.toArray(new String[tempList.size()]);
-    }
-
-    public static String getFirstFormHelpHref(IndicatorUnit indicatorUnit) {
-        return getHelpHref(indicatorUnit)[0];
-    }
-
-    public static String getFirstFormHelpHref(TableIndicatorUnit indicatorUnit) {
-        return getHelpHref(indicatorUnit)[0];
+        return indicatorUnit.getHelpHref();
     }
 
     /**
-     * DOC zqin Comment method "getForms".
      * 
+     * use {@link IndicatorUnit#getHelpHref()} instead of it
+     * 
+     * @deprecated
+     * @param indicatorUnit
+     * @return
+     */
+    @Deprecated
+    public static String[] getHelpHref(TableIndicatorUnit indicatorUnit) {
+
+        return indicatorUnit.getHelpHref();
+    }
+
+    /**
+     * 
+     * use {@link IndicatorUnit#getFirstFormHelpHref()} instead of it
+     * 
+     * @deprecated
+     * @param indicatorUnit
+     * @return
+     */
+    @Deprecated
+    public static String getFirstFormHelpHref(IndicatorUnit indicatorUnit) {
+        return indicatorUnit.getFirstFormHelpHref();
+    }
+
+    /**
+     * 
+     * use {@link IndicatorUnit#getFirstFormHelpHref()} instead of it
+     * 
+     * @deprecated
+     * @param indicatorUnit
+     * @return
+     */
+    @Deprecated
+    public static String getFirstFormHelpHref(TableIndicatorUnit indicatorUnit) {
+        return indicatorUnit.getFirstFormHelpHref();
+    }
+
+    /**
+     * use {@link IndicatorUnit#getForms()} instead of it
+     * 
+     * @deprecated
      * @param dataminingType
      * @param sqlType
      */
+    @Deprecated
     public static FormEnum[] getForms(IndicatorUnit indicatorUnit) {
-        // ColumnIndicator columnIndicator = indicatorUnit.getParentColumn();
-        ModelElementIndicator modelElementIndicator = indicatorUnit.getModelElementIndicator();
-        int sqlType = null != modelElementIndicator ? modelElementIndicator.getJavaType() : 0;
-        ColumnIndicator columnIndicator = ModelElementIndicatorHelper.switchColumnIndicator(indicatorUnit);
-        DataminingType dataminingType = columnIndicator == null ? null : MetadataHelper.getDataminingType(columnIndicator
-                .getTdColumn());
-        if (dataminingType == null) {
-            dataminingType = null != modelElementIndicator ? MetadataHelper.getDefaultDataminingType(modelElementIndicator
-                    .getJavaType()) : DataminingType.NOMINAL;
-        }
-        FormEnum[] forms = null;
+        return indicatorUnit.getForms();
+    }
 
-        IndicatorEnum indicatorType = indicatorUnit.getType();
+    /**
+     * DOC talend Comment method "getFormEnumArray".
+     * 
+     * @param indicatorUnit
+     * @param sqlType
+     * @param dataminingType
+     * @param indicatorType
+     * @return
+     */
+    public static FormEnum[] getFormEnumArray(IndicatorDefinition indicatorDefinition, int sqlType,
+            DataminingType dataminingType, IndicatorEnum indicatorType) {
+        FormEnum[] forms = null;
         switch (indicatorType) {
 
         case RowCountIndicatorEnum:
@@ -236,10 +261,9 @@ public enum FormEnum {
             break;
 
         case UserDefinedIndicatorEnum:
-            IndicatorDefinition indicatorDefinition = indicatorUnit.getIndicator().getIndicatorDefinition();
             if (indicatorDefinition != null && UDIHelper.isJUDIValid(indicatorDefinition)) {
                 forms = new FormEnum[] { JavaUDIParametersForm };
-            } else if (UDIHelper.isFrequency((indicatorUnit.getIndicator()))) {
+            } else if (UDIHelper.isFrequency((indicatorDefinition))) {
                 forms = new FormEnum[] { NumbericNominalForm };
             }
 
@@ -269,36 +293,38 @@ public enum FormEnum {
 
     /**
      * 
-     * DOC xqliu Comment method "getForms".
+     * use {@link TableIndicatorUnit#getForms()} instead of it
+     * 
+     * @deprecated
+     * @param indicatorUnit
+     * @return
+     */
+    @Deprecated
+    public static FormEnum[] getForms(TableIndicatorUnit indicatorUnit) {
+        return indicatorUnit.getForms();
+    }
+
+    /**
+     * 
+     * use {@link IndicatorUnit#isExsitingForm()} instead of it
+     * 
+     * @deprecated
+     * @param indicatorUnit
+     * @return
+     */
+    @Deprecated
+    public static boolean isExsitingForm(IndicatorUnit indicatorUnit) {
+        return indicatorUnit.isExsitingForm();
+    }
+
+    /**
+     * 
+     * use {@link IndicatorUnit#isExsitingForm()} instead of it
      * 
      * @param indicatorUnit
      * @return
      */
-    public static FormEnum[] getForms(TableIndicatorUnit indicatorUnit) {
-        FormEnum[] forms = null;
-        switch (indicatorUnit.getType()) {
-        case RowCountIndicatorEnum:
-            forms = new FormEnum[] { IndicatorThresholdsForm };
-            break;
-        case WhereRuleIndicatorEnum:
-            forms = new FormEnum[] { IndicatorThresholdsForm };
-            break;
-        default:
-        }
-        return forms;
-    }
-
-    public static boolean isExsitingForm(IndicatorUnit indicatorUnit) {
-        if (getForms(indicatorUnit) != null) {
-            return true;
-        }
-        return false;
-    }
-
     public static boolean isExsitingForm(TableIndicatorUnit indicatorUnit) {
-        if (getForms(indicatorUnit) != null) {
-            return true;
-        }
-        return false;
+        return indicatorUnit.isExsitingForm();
     }
 }

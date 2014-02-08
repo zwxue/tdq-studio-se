@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.regex.Pattern;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
@@ -83,6 +84,7 @@ import org.talend.dataprofiler.core.ui.editor.composite.AbstractColumnDropTree;
 import org.talend.dataprofiler.core.ui.editor.composite.AnalysisColumnSetTreeViewer;
 import org.talend.dataprofiler.core.ui.editor.composite.DataFilterComp;
 import org.talend.dataprofiler.core.ui.editor.composite.IndicatorsComp;
+import org.talend.dataprofiler.core.ui.editor.preview.ColumnSetIndicatorUnit;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
 import org.talend.dataprofiler.core.ui.editor.preview.model.ChartTypeStatesOperator;
 import org.talend.dataprofiler.core.ui.editor.preview.model.states.IChartTypeStates;
@@ -323,7 +325,7 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
      * @param form
      */
     private void createIndicatorsSection(ScrolledForm form, Composite topComp) {
-        indicatorsSection = createSection(form, topComp, "Indicators", null); //$NON-NLS-1$
+        indicatorsSection = createSection(form, topComp, DefaultMessagesImpl.getString("IndicatorsComp.Indicators"), null); //$NON-NLS-1$
 
         Composite indicatorsComp = toolkit.createComposite(indicatorsSection, SWT.NONE);
         GridDataFactory.fillDefaults().align(SWT.FILL, SWT.FILL).grab(true, true).applyTo(indicatorsComp);
@@ -389,9 +391,9 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
         }
     }
 
-    void createPreviewSection(final ScrolledForm form, Composite parent) {
+    void createPreviewSection(final ScrolledForm theForm, Composite parent) {
         previewSection = createSection(
-                form,
+                theForm,
                 parent,
                 DefaultMessagesImpl.getString("ColumnMasterDetailsPage.graphics"), DefaultMessagesImpl.getString("ColumnMasterDetailsPage.space")); //$NON-NLS-1$ //$NON-NLS-2$
         previewSection.setLayoutData(new GridData(GridData.FILL_BOTH));
@@ -436,16 +438,16 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
                         new RunAnalysisAction().run();
                         message.setVisible(false);
                     } else {
-                        createPreviewCharts(form, chartComposite, false);
+                        createPreviewCharts(theForm, chartComposite, false);
                         message.setText(DefaultMessagesImpl.getString("ColumnMasterDetailsPage.warning")); //$NON-NLS-1$
                         message.setVisible(true);
                     }
                 } else {
-                    createPreviewCharts(form, chartComposite, true);
+                    createPreviewCharts(theForm, chartComposite, true);
                 }
 
                 chartComposite.layout();
-                form.reflow(true);
+                theForm.reflow(true);
             }
 
         });
@@ -453,9 +455,9 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
         previewSection.setClient(sectionClient);
     }
 
-    public void createPreviewCharts(final ScrolledForm form, final Composite parentComp, final boolean isCreate) {
+    public void createPreviewCharts(final ScrolledForm theForm, final Composite parentComp, final boolean isCreate) {
         Section previewSimpleStatSection = createSection(
-                form,
+                theForm,
                 parentComp,
                 DefaultMessagesImpl.getString("ColumnSetResultPage.SimpleStatistics"), DefaultMessagesImpl.getString("ColumnMasterDetailsPage.space")); //$NON-NLS-1$ //$NON-NLS-2$
         previewSimpleStatSection.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
@@ -468,13 +470,14 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
         simpleComposite.setLayout(new GridLayout(1, true));
         simpleComposite.setLayoutData(new GridData(GridData.FILL_BOTH));
 
-        createSimpleStatistics(form, simpleComposite);
+        createSimpleStatistics(simpleComposite);
         previewSimpleStatSection.setClient(sectionClient);
 
         // match
         if (0 < allMatchIndicator.getCompositeRegexMatchingIndicators().size()) {
 
-            Section previewMatchSection = createSection(form, parentComp, "All Match", ""); //$NON-NLS-1$
+            Section previewMatchSection = createSection(theForm, parentComp,
+                    DefaultMessagesImpl.getString("ColumnSetResultPage.All_Match"), StringUtils.EMPTY); //$NON-NLS-1$
             previewMatchSection.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
             Composite sectionMatchClient = toolkit.createComposite(previewMatchSection);
@@ -485,14 +488,14 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
             matchComposite.setLayout(new GridLayout(1, true));
             matchComposite.setLayoutData(new GridData(GridData.FILL_BOTH));
 
-            createAllMatch(form, matchComposite);
+            createAllMatch(matchComposite);
             previewMatchSection.setClient(sectionMatchClient);
         }
     }
 
-    private void createAllMatch(final ScrolledForm form, final Composite composite) {
+    private void createAllMatch(final Composite composite) {
         List<IndicatorUnit> units = new ArrayList<IndicatorUnit>();
-        units.add(new IndicatorUnit(IndicatorEnum.AllMatchIndicatorEnum, allMatchIndicator, null));
+        units.add(new ColumnSetIndicatorUnit(IndicatorEnum.AllMatchIndicatorEnum, allMatchIndicator));
 
         EIndicatorChartType matchingType = EIndicatorChartType.PATTERN_MATCHING;
         IChartTypeStates chartTypeState = ChartTypeStatesOperator.getChartState(matchingType, units);
@@ -509,14 +512,14 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
         }
     }
 
-    private void createSimpleStatistics(final ScrolledForm form, final Composite composite) {
+    private void createSimpleStatistics(final Composite composite) {
         List<IndicatorUnit> units = new ArrayList<IndicatorUnit>();
-        units.add(new IndicatorUnit(IndicatorEnum.RowCountIndicatorEnum, simpleStatIndicator.getRowCountIndicator(), null));
-        units.add(new IndicatorUnit(IndicatorEnum.DistinctCountIndicatorEnum, simpleStatIndicator.getDistinctCountIndicator(),
-                null));
-        units.add(new IndicatorUnit(IndicatorEnum.DuplicateCountIndicatorEnum, simpleStatIndicator.getDuplicateCountIndicator(),
-                null));
-        units.add(new IndicatorUnit(IndicatorEnum.UniqueIndicatorEnum, simpleStatIndicator.getUniqueCountIndicator(), null));
+        units.add(new ColumnSetIndicatorUnit(IndicatorEnum.RowCountIndicatorEnum, simpleStatIndicator.getRowCountIndicator()));
+        units.add(new ColumnSetIndicatorUnit(IndicatorEnum.DistinctCountIndicatorEnum, simpleStatIndicator
+                .getDistinctCountIndicator()));
+        units.add(new ColumnSetIndicatorUnit(IndicatorEnum.DuplicateCountIndicatorEnum, simpleStatIndicator
+                .getDuplicateCountIndicator()));
+        units.add(new ColumnSetIndicatorUnit(IndicatorEnum.UniqueIndicatorEnum, simpleStatIndicator.getUniqueCountIndicator()));
 
         IChartTypeStates chartTypeState = ChartTypeStatesOperator.getChartState(EIndicatorChartType.SIMPLE_STATISTICS, units);
 

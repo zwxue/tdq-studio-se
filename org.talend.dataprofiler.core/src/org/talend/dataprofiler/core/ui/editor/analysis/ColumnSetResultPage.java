@@ -55,6 +55,7 @@ import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.ColumnSortListener;
+import org.talend.dataprofiler.core.ui.editor.preview.ColumnSetIndicatorUnit;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
 import org.talend.dataprofiler.core.ui.editor.preview.model.ChartTableFactory;
 import org.talend.dataprofiler.core.ui.editor.preview.model.ChartTypeStatesOperator;
@@ -188,7 +189,7 @@ public class ColumnSetResultPage extends AbstractAnalysisResultPage implements P
         GridDataFactory.fillDefaults().align(SWT.FILL, SWT.TOP).applyTo(sectionClient);
 
         List<IndicatorUnit> units = new ArrayList<IndicatorUnit>();
-        units.add(new IndicatorUnit(IndicatorEnum.AllMatchIndicatorEnum, allMatchIndicator, null));
+        units.add(new ColumnSetIndicatorUnit(IndicatorEnum.AllMatchIndicatorEnum, allMatchIndicator));
 
         EIndicatorChartType matchingType = EIndicatorChartType.PATTERN_MATCHING;
         IChartTypeStates chartTypeState = ChartTypeStatesOperator.getChartState(matchingType, units);
@@ -238,14 +239,14 @@ public class ColumnSetResultPage extends AbstractAnalysisResultPage implements P
             final SimpleStatIndicator simpleStatIndicator) {
 
         List<IndicatorUnit> units = new ArrayList<IndicatorUnit>();
-        units.add(new IndicatorUnit(IndicatorEnum.RowCountIndicatorEnum, masterPage.getSimpleStatIndicator()
-                .getRowCountIndicator(), null));
-        units.add(new IndicatorUnit(IndicatorEnum.DistinctCountIndicatorEnum, masterPage.getSimpleStatIndicator()
-                .getDistinctCountIndicator(), null));
-        units.add(new IndicatorUnit(IndicatorEnum.DuplicateCountIndicatorEnum, masterPage.getSimpleStatIndicator()
-                .getDuplicateCountIndicator(), null));
-        units.add(new IndicatorUnit(IndicatorEnum.UniqueIndicatorEnum, masterPage.getSimpleStatIndicator()
-                .getUniqueCountIndicator(), null));
+        units.add(new ColumnSetIndicatorUnit(IndicatorEnum.RowCountIndicatorEnum, masterPage.getSimpleStatIndicator()
+                .getRowCountIndicator()));
+        units.add(new ColumnSetIndicatorUnit(IndicatorEnum.DistinctCountIndicatorEnum, masterPage.getSimpleStatIndicator()
+                .getDistinctCountIndicator()));
+        units.add(new ColumnSetIndicatorUnit(IndicatorEnum.DuplicateCountIndicatorEnum, masterPage.getSimpleStatIndicator()
+                .getDuplicateCountIndicator()));
+        units.add(new ColumnSetIndicatorUnit(IndicatorEnum.UniqueIndicatorEnum, masterPage.getSimpleStatIndicator()
+                .getUniqueCountIndicator()));
 
         EIndicatorChartType simpleStatType = EIndicatorChartType.SIMPLE_STATISTICS;
         IChartTypeStates chartTypeState = ChartTypeStatesOperator.getChartState(simpleStatType, units);

@@ -77,8 +77,10 @@ import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.part.FileEditorInput;
 import org.jfree.util.Log;
+import org.talend.core.model.properties.Property;
 import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.cwm.helper.TaggedValueHelper;
+import org.talend.cwm.management.i18n.InternationalizationUtil;
 import org.talend.cwm.relational.TdExpression;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
@@ -93,6 +95,7 @@ import org.talend.dataquality.helpers.BooleanExpressionHelper;
 import org.talend.dataquality.helpers.IndicatorCategoryHelper;
 import org.talend.dataquality.indicators.definition.CharactersMapping;
 import org.talend.dataquality.indicators.definition.DefinitionFactory;
+import org.talend.dataquality.indicators.definition.DefinitionPackage;
 import org.talend.dataquality.indicators.definition.IndicatorCategory;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dataquality.indicators.definition.IndicatorDefinitionParameter;
@@ -153,6 +156,31 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
     private TDQIndicatorDefinitionItem definitionItem;
 
     protected SysIndicatorDefinitionRepNode indicatorDefinitionRepNode;
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataprofiler.core.ui.editor.AbstractMetadataFormPage#getIntactElemenetName()
+     */
+    @Override
+    public String getIntactElemenetName() {
+        // The title of indicatorDefinition should display an internationalzation String
+        String intactElemenetName = super.getIntactElemenetName();
+        String internationalizationLabel = StringUtils.EMPTY;
+        Property property = getProperty();
+        ModelElement tempCurrentModelElement = this.getCurrentModelElement(currentEditor);
+        if (property != null && tempCurrentModelElement != null
+                && DefinitionPackage.eINSTANCE.getIndicatorDefinition().equals(tempCurrentModelElement.eClass())) {
+            // system indicatorDefinition need to be internationalization
+            internationalizationLabel = InternationalizationUtil.getDefinitionInternationalizationLabel(property.getLabel());
+            if (StringUtils.EMPTY.equals(internationalizationLabel)) {
+                return intactElemenetName;
+            }
+        } else {
+            return intactElemenetName;
+        }
+        return internationalizationLabel;
+    }
 
     public SysIndicatorDefinitionRepNode getIndicatorDefinitionRepNode() {
         return this.indicatorDefinitionRepNode;
@@ -2474,7 +2502,8 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
             for (IFile file : UDIUtils.getContainJarFile(jarPath)) {
                 TalendURLClassLoader cl;
                 try {
-                  //Note that the 2nd parameter (classloader) is needed to load class UserDefinitionIndicator from org.talend.dataquality plugin.
+                    // Note that the 2nd parameter (classloader) is needed to load class UserDefinitionIndicator from
+                    // org.talend.dataquality plugin.
                     cl = new TalendURLClassLoader(new URL[] { file.getLocation().toFile().toURI().toURL() },
                             IndicatorDefinitionMaterPage.class.getClassLoader());
                     Class<?> theClass = cl.findClass(className);

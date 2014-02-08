@@ -28,6 +28,7 @@ import org.talend.dataprofiler.common.ui.editor.preview.ICustomerDataset;
 import org.talend.dataprofiler.common.ui.editor.preview.chart.ChartDatasetUtils;
 import org.talend.dataprofiler.common.ui.editor.preview.chart.TopChartFactory;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
+import org.talend.dataprofiler.core.ui.editor.preview.ColumnIndicatorUnit;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
 import org.talend.dataprofiler.core.ui.editor.preview.model.dataset.CustomerDefaultBAWDataset;
 import org.talend.dataprofiler.core.ui.editor.preview.model.entity.TableStructureEntity;
@@ -55,8 +56,7 @@ public class SummaryStatisticsState extends AbstractChartTypeStates {
         super(units);
 
         if (units != null && !units.isEmpty()) {
-            // sqltype = units.get(0).getParentColumn().getTdColumn().getJavaType();
-            sqltype = units.get(0).getModelElementIndicator().getJavaType();
+            sqltype = ((ColumnIndicatorUnit) units.get(0)).getModelElementIndicator().getJavaType();
         }
     }
 
@@ -93,7 +93,7 @@ public class SummaryStatisticsState extends AbstractChartTypeStates {
 
             ChartDataEntity entity = new ChartDataEntity();
             entity.setIndicator(unit.getIndicator());
-            entity.setLabel(unit.getType().getLabel());
+            entity.setLabel(unit.getIndicatorName());
             entity.setValue(String.valueOf(unit.getValue()));
 
             customerdataset.addDataEntity(entity);

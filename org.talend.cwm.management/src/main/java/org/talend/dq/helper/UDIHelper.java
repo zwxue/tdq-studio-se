@@ -222,6 +222,10 @@ public final class UDIHelper {
         return isCategory(indicator, DefinitionHandler.getInstance().getUserDefinedFrequencyIndicatorCategory());
     }
 
+    public static boolean isFrequency(IndicatorDefinition indicatorDefinition) {
+        return isCategory(indicatorDefinition, DefinitionHandler.getInstance().getUserDefinedFrequencyIndicatorCategory());
+    }
+
     public static boolean isMatching(Indicator indicator) {
         return isCategory(indicator, DefinitionHandler.getInstance().getUserDefinedMatchIndicatorCategory());
     }
@@ -362,7 +366,8 @@ public final class UDIHelper {
                     jarUrls.add(file.toURI().toURL());
                 }
                 TalendURLClassLoader cl;
-                //Note that the 2nd parameter (classloader) is needed to load class UserDefinitionIndicator from org.talend.dataquality plugin.
+                // Note that the 2nd parameter (classloader) is needed to load class UserDefinitionIndicator from
+                // org.talend.dataquality plugin.
                 cl = new TalendURLClassLoader(jarUrls.toArray(new URL[jarUrls.size()]), UDIHelper.class.getClassLoader());
 
                 Class<?> clazz = null;

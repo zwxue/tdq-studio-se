@@ -25,6 +25,7 @@ import org.talend.dataprofiler.core.model.XmlElementIndicator;
 import org.talend.dataprofiler.core.model.impl.ColumnIndicatorImpl;
 import org.talend.dataprofiler.core.model.impl.DelimitedFileIndicatorImpl;
 import org.talend.dataprofiler.core.model.impl.XmlElementIndicatorImpl;
+import org.talend.dataprofiler.core.ui.editor.preview.ColumnIndicatorUnit;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
 import org.talend.dq.nodes.DBColumnRepNode;
 import org.talend.dq.nodes.DFColumnRepNode;
@@ -65,13 +66,44 @@ public final class ModelElementIndicatorHelper {
         return new DelimitedFileIndicatorImpl(reposObj);
     }
 
+    /**
+     * 
+     * 
+     * @deprecated
+     * 
+     * use {@link #switchColumnIndicator(ColumnIndicatorUnit)} instead of it
+     * @param indicatorUnit
+     * @return
+     */
+    @Deprecated
     public static final ColumnIndicator switchColumnIndicator(IndicatorUnit indicatorUnit) {
+        if (indicatorUnit instanceof ColumnIndicatorUnit) {
+            return switchColumnIndicator((ColumnIndicatorUnit) indicatorUnit);
+        }
+        return null;
+    }
+
+    /**
+     * 
+     * get ColumnIndicator from columnIndicatorUnit
+     * 
+     * @param indicatorUnit
+     * @return
+     */
+    public static final ColumnIndicator switchColumnIndicator(ColumnIndicatorUnit indicatorUnit) {
         if (indicatorUnit.isColumn()) {
             return (ColumnIndicator) indicatorUnit.getModelElementIndicator();
         }
         return null;
     }
 
+    /**
+     * 
+     * get ColumnIndicator from ModelElementIndicator
+     * 
+     * @param indicatorUnit
+     * @return
+     */
     public static final ColumnIndicator switchColumnIndicator(ModelElementIndicator indicator) {
         if (indicator instanceof ColumnIndicator) {
             return (ColumnIndicator) indicator;
@@ -79,13 +111,43 @@ public final class ModelElementIndicatorHelper {
         return null;
     }
 
+    /**
+     * 
+     * use {@link #switchXmlElementIndicator(ColumnIndicatorUnit)} instead of it
+     * 
+     * @deprecated
+     * @param indicatorUnit
+     * @return
+     */
+    @Deprecated
     public static final XmlElementIndicator switchXmlElementIndicator(IndicatorUnit indicatorUnit) {
+        if (indicatorUnit instanceof ColumnIndicatorUnit) {
+            return switchXmlElementIndicator((ColumnIndicatorUnit) indicatorUnit);
+        }
+        return null;
+    }
+
+    /**
+     * 
+     * get XmlElementIndicator from ColumnIndicatorUnit
+     * 
+     * @param indicatorUnit
+     * @return
+     */
+    public static final XmlElementIndicator switchXmlElementIndicator(ColumnIndicatorUnit indicatorUnit) {
         if (indicatorUnit.isXmlElement()) {
             return (XmlElementIndicator) indicatorUnit.getModelElementIndicator();
         }
         return null;
     }
 
+    /**
+     * 
+     * get XmlElementIndicator from ModelElementIndicator
+     * 
+     * @param indicator
+     * @return
+     */
     public static final XmlElementIndicator switchXmlElementIndicator(ModelElementIndicator indicator) {
         if (indicator instanceof XmlElementIndicator) {
             return (XmlElementIndicator) indicator;
@@ -93,6 +155,13 @@ public final class ModelElementIndicatorHelper {
         return null;
     }
 
+    /**
+     * 
+     * get Connection from ModelElementIndicator
+     * 
+     * @param indicator
+     * @return
+     */
     public static final Connection getTdDataProvider(ModelElementIndicator indicator) {
         Property property = indicator.getModelElementRepositoryNode().getObject().getProperty();
         if (property != null && property.getItem() instanceof ConnectionItem) {

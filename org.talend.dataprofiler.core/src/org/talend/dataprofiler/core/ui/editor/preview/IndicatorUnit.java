@@ -12,13 +12,15 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.editor.preview;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.talend.core.model.properties.Property;
-import org.talend.dataprofiler.core.model.ColumnIndicator;
-import org.talend.dataprofiler.core.model.DelimitedFileIndicator;
-import org.talend.dataprofiler.core.model.ModelElementIndicator;
-import org.talend.dataprofiler.core.model.XmlElementIndicator;
+import org.talend.cwm.management.i18n.InternationalizationUtil;
+import org.talend.dataprofiler.core.ui.wizard.indicator.forms.FormEnum;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.IndicatorParameters;
+import org.talend.dataquality.indicators.sql.UserDefIndicator;
 import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.indicators.IndicatorCommonUtil;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
@@ -29,23 +31,17 @@ import org.talend.dq.nodes.indicator.type.IndicatorEnum;
  * $Id: talend.epf 1 2006-09-29 17:06:40Z zqin $
  * 
  */
-public class IndicatorUnit {
+public abstract class IndicatorUnit {
 
-    private IndicatorEnum type;
+    protected IndicatorEnum type;
 
-    private Indicator indicator;
+    protected Indicator indicator;
 
-    private ModelElementIndicator modelElementIndicator;
+    protected IndicatorUnit[] children;
 
-    // FIXME remove it.
-    private Object value;
-
-    private IndicatorUnit[] children;
-
-    public IndicatorUnit(IndicatorEnum type, Indicator indicator, ModelElementIndicator modelElementIndicator) {
+    protected IndicatorUnit(IndicatorEnum type, Indicator indicator) {
         this.type = type;
         this.indicator = indicator;
-        this.modelElementIndicator = modelElementIndicator;
 
     }
 
@@ -77,15 +73,6 @@ public class IndicatorUnit {
     }
 
     /**
-     * Getter for modelElementIndicator.
-     * 
-     * @return the modelElementIndicator
-     */
-    public ModelElementIndicator getModelElementIndicator() {
-        return this.modelElementIndicator;
-    }
-
-    /**
      * Getter for value.
      * 
      * @return the value
@@ -103,10 +90,23 @@ public class IndicatorUnit {
         if (indicator.getIndicatorDefinition() != null) {
             Property property = PropertyHelper.getProperty(indicator.getIndicatorDefinition());
             if (property != null) {
-                return property.getDisplayName();
+                return getDisplayName(property);
             }
         }
         return this.indicator.getName();
+    }
+
+    /**
+     * only internationalization name of indicator
+     * 
+     * @return
+     */
+    private String getDisplayName(Property property) {
+        // only internationalization SystemIndicator
+        if (indicator instanceof UserDefIndicator) {
+            return property.getDisplayName();
+        }
+        return InternationalizationUtil.getDefinitionInternationalizationLabel(property.getLabel());
     }
 
     /**
@@ -128,19 +128,43 @@ public class IndicatorUnit {
     }
 
     public boolean isExcuted() {
-        // return !indicator.getInstantiatedExpressions().isEmpty();
         return indicator.isComputed();
     }
 
-    public boolean isColumn() {
-        return this.modelElementIndicator instanceof ColumnIndicator;
+    /**
+     * 
+     * find out Help href of current indicator
+     * 
+     * @return
+     */
+    public String[] getHelpHref() {
+        List<String> tempList = new ArrayList<String>();
+        for (FormEnum oneForm : getForms()) {
+            tempList.add(oneForm.getHelpHref());
+        }
+        return tempList.toArray(new String[tempList.size()]);
     }
 
-    public boolean isXmlElement() {
-        return this.modelElementIndicator instanceof XmlElementIndicator;
+    public String getFirstFormHelpHref() {
+        String[] helpHrefs = getHelpHref();
+        if (helpHrefs.length > 0) {
+            return helpHrefs[0];
+        }
+        return null;
     }
 
-    public boolean isMetadataColumn() {
-        return this.modelElementIndicator instanceof DelimitedFileIndicator;
+    public boolean isExsitingForm() {
+        if (getForms().length > 0) {
+            return true;
+        }
+        return false;
     }
+
+    /**
+     * 
+     * find out current indicator is belong to which FormEnum
+     * 
+     * @return
+     */
+    public abstract FormEnum[] getForms();
 }

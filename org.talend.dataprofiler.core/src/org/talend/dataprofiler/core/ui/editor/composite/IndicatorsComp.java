@@ -36,7 +36,7 @@ import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisMetadataPage;
 import org.talend.dataprofiler.core.ui.editor.analysis.ColumnCorrelationNominalAndIntervalMasterPage;
 import org.talend.dataprofiler.core.ui.editor.analysis.ColumnSetMasterPage;
-import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
+import org.talend.dataprofiler.core.ui.editor.preview.ColumnSetIndicatorUnit;
 import org.talend.dataprofiler.core.ui.utils.OpeningHelpWizardDialog;
 import org.talend.dataprofiler.core.ui.wizard.indicator.IndicatorOptionsWizard;
 import org.talend.dataprofiler.core.ui.wizard.indicator.forms.FormEnum;
@@ -97,11 +97,11 @@ public class IndicatorsComp extends AbstractPagePart {
         newTree.setHeaderVisible(true);
         TreeColumn column1 = new TreeColumn(newTree, SWT.CENTER);
         column1.setWidth(190);
-        column1.setText("Indicators"); //$NON-NLS-1$
+        column1.setText(DefaultMessagesImpl.getString("IndicatorsComp.Indicators")); //$NON-NLS-1$
 
         TreeColumn column2 = new TreeColumn(newTree, SWT.CENTER);
         column2.setWidth(80);
-        column2.setText("Options"); //$NON-NLS-1$
+        column2.setText(DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.options")); //$NON-NLS-1$
 
         parent.layout();
         return newTree;
@@ -109,28 +109,37 @@ public class IndicatorsComp extends AbstractPagePart {
 
     // input composite indicator
     public void setInput(Object... obj) {
-        List<Indicator> indicatortList = new ArrayList<Indicator>();
+        List<ColumnSetIndicatorUnit> indicatortList = new ArrayList<ColumnSetIndicatorUnit>();
         for (Object indicatorObj : obj) {
             // for SimpleStatIndicator, CountAvgNullIndicator, MinMaxDateIndicator, WeakCorrelationIndicator
             if (indicatorObj instanceof SimpleStatIndicator || indicatorObj instanceof CountAvgNullIndicator
                     || indicatorObj instanceof MinMaxDateIndicator || indicatorObj instanceof WeakCorrelationIndicator) {
                 columnSetIndicator = (ColumnSetMultiValueIndicator) indicatorObj;
                 for (Indicator indicator : IndicatorHelper.getIndicatorLeaves(columnSetIndicator)) {
-                    indicatortList.add(indicator);
+                    IndicatorEnum indicatorEnum = IndicatorEnum.findIndicatorEnum(indicator.eClass());
+                    indicatortList.add(new ColumnSetIndicatorUnit(indicatorEnum, indicator));
                 }
             }
             // for AllMatchIndicator
             if (indicatorObj instanceof AllMatchIndicator) {
                 AllMatchIndicator allMatchIndicator = (AllMatchIndicator) indicatorObj;
                 if (0 < allMatchIndicator.getCompositeRegexMatchingIndicators().size()) {
-                    indicatortList.add(allMatchIndicator);
+                    indicatortList.add(new ColumnSetIndicatorUnit(IndicatorEnum.AllMatchIndicatorEnum, allMatchIndicator));
                 }
             }
             // ~
         }
-        setElements(indicatortList.toArray(new Indicator[indicatortList.size()]));
+        setElements(indicatortList.toArray(new ColumnSetIndicatorUnit[indicatortList.size()]));
     }
 
+    /**
+     * 
+     * DOC talend Comment method "setElements".
+     * 
+     * @deprecated user {@link #setElements(ColumnSetIndicatorUnit[])} instead of it
+     * @param indicators
+     */
+    @Deprecated
     public void setElements(Indicator[] indicators) {
         this.tree.dispose();
         this.tree = createTree(this.parentComp);
@@ -138,12 +147,49 @@ public class IndicatorsComp extends AbstractPagePart {
         createIndicatorItems(indicators);
     }
 
+    /**
+     * 
+     * init elements for the tree
+     * 
+     * @param indicatorUnits
+     */
+    public void setElements(ColumnSetIndicatorUnit[] indicatorUnits) {
+        this.tree.dispose();
+        this.tree = createTree(this.parentComp);
+        tree.setData(this);
+        createIndicatorItems(indicatorUnits);
+    }
+
+    /**
+     * 
+     * @deprecated user {@link #createIndicatorItems(ColumnSetIndicatorUnit[])} instead of it
+     * @param indicators
+     */
+    @Deprecated
     private void createIndicatorItems(Indicator[] indicators) {
         for (Indicator indicator : indicators) {
             createOneUnit(indicator);
         }
     }
 
+    /**
+     * 
+     * 
+     * 
+     * @param indicatorUnits
+     */
+    private void createIndicatorItems(ColumnSetIndicatorUnit[] indicatorUnits) {
+        for (ColumnSetIndicatorUnit indicatorUnit : indicatorUnits) {
+            createOneUnit(indicatorUnit);
+        }
+    }
+
+    /**
+     * 
+     * @deprecated use {@link #createOneUnit(ColumnSetIndicatorUnit)} instead of it
+     * @param indicator
+     */
+    @Deprecated
     public void createOneUnit(Indicator indicator) {
         final TreeItem indicatorItem = new TreeItem(this.tree, SWT.NONE);
 
@@ -183,16 +229,62 @@ public class IndicatorsComp extends AbstractPagePart {
         createIndicatorParameters(indicatorItem, indicator);
     }
 
+    /**
+     * 
+     * create element on the tree by indicatorUnit
+     * 
+     * @param indicator
+     */
+    public void createOneUnit(ColumnSetIndicatorUnit indicatorUnit) {
+        final TreeItem indicatorItem = new TreeItem(this.tree, SWT.NONE);
+
+        indicatorItem.setData(INDICATOR_KEY, indicatorUnit);
+
+        indicatorItem.setImage(0, ImageLib.getImage(ImageLib.IND_DEFINITION));
+        String indicatorName = indicatorUnit.getIndicatorName();
+        String label = indicatorName == null ? "unknown indicator" : indicatorName;//$NON-NLS-1$
+        indicatorItem.setText(0, label);
+
+        TreeEditor optionEditor;
+        optionEditor = new TreeEditor(tree);
+        Label optionLabel = new Label(tree, SWT.NONE);
+        optionLabel.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_WHITE));
+        optionLabel.setImage(ImageLib.getImage(ImageLib.INDICATOR_OPTION));
+        optionLabel.setToolTipText(DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.options")); //$NON-NLS-1$
+        optionLabel.pack();
+        optionLabel.setData(indicatorUnit);
+        optionLabel.addMouseListener(new MouseAdapter() {
+
+            /*
+             * (non-Javadoc)
+             * 
+             * @see org.eclipse.swt.events.MouseAdapter#mouseDown(org.eclipse.swt .events.MouseEvent)
+             */
+            @Override
+            public void mouseDown(MouseEvent e) {
+                openIndicatorOptionDialog(null, indicatorItem);
+            }
+
+        });
+
+        optionEditor.minimumWidth = optionLabel.getImage().getBounds().width;
+        optionEditor.horizontalAlignment = SWT.CENTER;
+        optionEditor.setEditor(optionLabel, indicatorItem, 1);
+
+        createIndicatorParameters(indicatorItem, indicatorUnit.getIndicator());
+    }
+
     public void openIndicatorOptionDialog(Shell shell, TreeItem indicatorItem) {
 
         if (isDirty()) {
             masterPage.doSave(null);
         }
         Indicator indicator = (Indicator) indicatorItem.getData(INDICATOR_KEY);
-        IndicatorUnit indicatorUnit = new IndicatorUnit(IndicatorEnum.findIndicatorEnum(indicator.eClass()), indicator, null);
+        ColumnSetIndicatorUnit indicatorUnit = new ColumnSetIndicatorUnit(IndicatorEnum.findIndicatorEnum(indicator.eClass()),
+                indicator);
         IndicatorOptionsWizard wizard = new IndicatorOptionsWizard(indicatorUnit);
 
-        if (FormEnum.isExsitingForm(indicatorUnit)) {
+        if (indicatorUnit.isExsitingForm()) {
             String href = FormEnum.getFirstFormHelpHref(indicatorUnit);
             OpeningHelpWizardDialog optionDialog = new OpeningHelpWizardDialog(shell, wizard, href);
 
@@ -202,7 +294,7 @@ public class IndicatorsComp extends AbstractPagePart {
             }
         } else {
             MessageDialogWithToggle.openInformation(null, DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.information"), //$NON-NLS-1$
-                    DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.nooption")); //$NON-NLS-1$ //$NON-NLS-2$
+                    DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.nooption")); //$NON-NLS-1$ 
         }
     }
 

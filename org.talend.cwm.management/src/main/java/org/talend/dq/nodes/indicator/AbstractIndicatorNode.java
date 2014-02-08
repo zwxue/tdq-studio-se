@@ -12,10 +12,12 @@
 // ============================================================================
 package org.talend.dq.nodes.indicator;
 
+import org.talend.cwm.management.i18n.InternationalizationUtil;
 import org.talend.dataquality.PluginConstant;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.IndicatorsFactory;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
+import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
 
@@ -69,7 +71,7 @@ public abstract class AbstractIndicatorNode implements IIndicatorNode {
             IndicatorDefinition define = getIndicatorInstance().getIndicatorDefinition();
             if (define != null) {
                 // MOD yyin 20130118 make it international
-                return org.talend.cwm.management.i18n.Messages.getString(define.getLabel().replace(' ', '.'));//$NON-NLS-1$ 
+                return InternationalizationUtil.getDefinitionInternationalizationLabel(PropertyHelper.getProperty(define));
             }
         }
 

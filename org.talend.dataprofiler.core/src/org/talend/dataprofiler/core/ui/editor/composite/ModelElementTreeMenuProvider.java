@@ -48,6 +48,7 @@ import org.talend.dataprofiler.core.ui.action.actions.predefined.CreateColumnAna
 import org.talend.dataprofiler.core.ui.action.actions.predefined.PreviewColumnAction;
 import org.talend.dataprofiler.core.ui.editor.pattern.PatternEditor;
 import org.talend.dataprofiler.core.ui.editor.pattern.PatternItemEditorInput;
+import org.talend.dataprofiler.core.ui.editor.preview.ColumnIndicatorUnit;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
 import org.talend.dataprofiler.core.ui.views.DQRespositoryView;
 import org.talend.dataquality.domain.pattern.Pattern;
@@ -506,8 +507,8 @@ public abstract class ModelElementTreeMenuProvider {
         for (TreeItem item : items) {
             Object data = item.getData(AbstractColumnDropTree.INDICATOR_UNIT_KEY);
             if (data != null) {
-                if (data instanceof IndicatorUnit) {
-                    IndicatorUnit iu = (IndicatorUnit) data;
+                if (data instanceof ColumnIndicatorUnit) {
+                    ColumnIndicatorUnit iu = (ColumnIndicatorUnit) data;
                     return iu.isXmlElement();
                 }
             }
@@ -542,8 +543,8 @@ public abstract class ModelElementTreeMenuProvider {
     private boolean isMetadataColumnIndicatorSelected(TreeItem[] items) {
         for (TreeItem item : items) {
             Object dataIndicator = item.getData(AnalysisColumnTreeViewer.INDICATOR_UNIT_KEY);
-            if (dataIndicator != null && dataIndicator instanceof IndicatorUnit) {
-                IndicatorUnit iu = (IndicatorUnit) dataIndicator;
+            if (dataIndicator != null && dataIndicator instanceof ColumnIndicatorUnit) {
+                ColumnIndicatorUnit iu = (ColumnIndicatorUnit) dataIndicator;
                 return iu.isMetadataColumn();
             }
 
