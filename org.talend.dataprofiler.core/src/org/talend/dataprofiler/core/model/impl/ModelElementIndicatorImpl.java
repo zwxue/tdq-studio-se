@@ -22,6 +22,7 @@ import java.util.Map;
 import org.apache.log4j.Logger;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.model.ModelElementIndicator;
+import org.talend.dataprofiler.core.ui.editor.preview.ColumnIndicatorUnit;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
 import org.talend.dataquality.indicators.AverageLengthIndicator;
 import org.talend.dataquality.indicators.AvgLengthWithBlankIndicator;
@@ -683,21 +684,22 @@ public abstract class ModelElementIndicatorImpl implements ModelElementIndicator
      * @return
      */
     private IndicatorUnit createPlainIndicatorUnit(IndicatorEnum indicatorEnum, Indicator indicator) {
-        if (indicator == null) {
+        Indicator tempIndicator = indicator;
+        if (tempIndicator == null) {
             IndicatorsFactory factory = IndicatorsFactory.eINSTANCE;
-            indicator = (Indicator) factory.create(indicatorEnum.getIndicatorType());
+            tempIndicator = (Indicator) factory.create(indicatorEnum.getIndicatorType());
             // MOD scorreia 2008-09-18: bug 5131 fixed: set indicator's definition when the indicator is created.
-            if (!DefinitionHandler.getInstance().setDefaultIndicatorDefinition(indicator)) {
-                log.error("Could not set the definition of the given indicator :" + indicator.getName()); //$NON-NLS-1$
+            if (!DefinitionHandler.getInstance().setDefaultIndicatorDefinition(tempIndicator)) {
+                log.error("Could not set the definition of the given indicator :" + tempIndicator.getName()); //$NON-NLS-1$
             }
 
             // for 4225, the frequency indicator need be initialized
             int sqlType = getJavaType();
-            if (indicator instanceof FrequencyIndicator && Java2SqlType.isDateInSQL(sqlType)) {
-                IndicatorParameters parameters = indicator.getParameters();
+            if (tempIndicator instanceof FrequencyIndicator && Java2SqlType.isDateInSQL(sqlType)) {
+                IndicatorParameters parameters = tempIndicator.getParameters();
                 if (parameters == null) {
                     parameters = IndicatorsFactory.eINSTANCE.createIndicatorParameters();
-                    indicator.setParameters(parameters);
+                    tempIndicator.setParameters(parameters);
                 }
                 DateParameters dateParameters = parameters.getDateParameters();
                 // MOD qiongli 2011-11-8 TDQ-3864,set DateParameters outside of patternIndicator and
@@ -718,7 +720,7 @@ public abstract class ModelElementIndicatorImpl implements ModelElementIndicator
                 // dateParameters.setDateAggregationType(DateGrain.YEAR);
             }
         }
-        IndicatorUnit indicatorUnit = new IndicatorUnit(indicatorEnum, indicator, this);
+        IndicatorUnit indicatorUnit = new ColumnIndicatorUnit(indicatorEnum, tempIndicator, this);
         this.plainIndicatorUnitMap.put(indicatorEnum, indicatorUnit);
         return indicatorUnit;
 
@@ -729,12 +731,13 @@ public abstract class ModelElementIndicatorImpl implements ModelElementIndicator
     }
 
     private IndicatorUnit createSpecialIndicatorUnit(IndicatorEnum indicatorEnum, Indicator indicator) {
-        if (indicator == null) {
+        Indicator tempIndicator = indicator;
+        if (tempIndicator == null) {
             IndicatorsFactory factory = IndicatorsFactory.eINSTANCE;
-            indicator = (Indicator) factory.create(indicatorEnum.getIndicatorType());
+            tempIndicator = (Indicator) factory.create(indicatorEnum.getIndicatorType());
             // MOD scorreia 2008-09-18: bug 5131 fixed: set indicator's definition when the indicator is created.
-            if (!DefinitionHandler.getInstance().setDefaultIndicatorDefinition(indicator)) {
-                log.error(DefaultMessagesImpl.getString("ModelElementIndicatorImpl_COULDNOTSETDEF_GIVEN_IND0") + indicator.getName()); //$NON-NLS-1$
+            if (!DefinitionHandler.getInstance().setDefaultIndicatorDefinition(tempIndicator)) {
+                log.error(DefaultMessagesImpl.getString("ModelElementIndicatorImpl_COULDNOTSETDEF_GIVEN_IND0") + tempIndicator.getName()); //$NON-NLS-1$
             }
         }
         if (!flatIndicatorEnumList.contains(indicatorEnum)) {
@@ -743,7 +746,7 @@ public abstract class ModelElementIndicatorImpl implements ModelElementIndicator
         if (this.specialIndicatorUnitList == null) {
             this.specialIndicatorUnitList = new ArrayList<IndicatorUnit>();
         }
-        IndicatorUnit indicatorUnit = new IndicatorUnit(indicatorEnum, indicator, this);
+        IndicatorUnit indicatorUnit = new ColumnIndicatorUnit(indicatorEnum, tempIndicator, this);
         specialIndicatorUnitList.add(indicatorUnit);
         return indicatorUnit;
     }

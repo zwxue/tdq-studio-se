@@ -39,6 +39,8 @@ public final class PluginConstant {
 
     public static final String COMMA_STRING = ",";//$NON-NLS-1$
 
+    public static final String UNDER_LINE = "_"; //$NON-NLS-1$
+
     public static final String JRXML_STRING = ".jrxml";//$NON-NLS-1$
 
     public static final String SQL_STRING = ".sql";//$NON-NLS-1$

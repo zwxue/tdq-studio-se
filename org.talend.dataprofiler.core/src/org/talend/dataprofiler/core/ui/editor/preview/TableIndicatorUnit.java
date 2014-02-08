@@ -13,58 +13,21 @@
 package org.talend.dataprofiler.core.ui.editor.preview;
 
 import org.talend.dataprofiler.core.model.TableIndicator;
+import org.talend.dataprofiler.core.ui.wizard.indicator.forms.FormEnum;
 import org.talend.dataquality.indicators.Indicator;
-import org.talend.dataquality.indicators.IndicatorParameters;
 import org.talend.dq.indicators.IndicatorCommonUtil;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
 
 /**
  * DOC xqliu class global comment. Detailled comment
  */
-public class TableIndicatorUnit {
-
-    private IndicatorEnum type;
-
-    private Indicator indicator;
+public class TableIndicatorUnit extends IndicatorUnit {
 
     private TableIndicator parentTable;
 
-    // FIXME remove it.
-    private Object value;
-
-    private TableIndicatorUnit[] children;
-
     public TableIndicatorUnit(IndicatorEnum type, Indicator indicator, TableIndicator parentTable) {
-        this.type = type;
-        this.indicator = indicator;
+        super(type, indicator);
         this.parentTable = parentTable;
-    }
-
-    /**
-     * Getter for parameters.
-     * 
-     * @return the parameters
-     */
-    public IndicatorParameters getParameters() {
-        return indicator.getParameters();
-    }
-
-    /**
-     * Getter for type.
-     * 
-     * @return the type
-     */
-    public IndicatorEnum getType() {
-        return this.type;
-    }
-
-    /**
-     * Getter for indicator.
-     * 
-     * @return the indicator
-     */
-    public Indicator getIndicator() {
-        return this.indicator;
     }
 
     /**
@@ -81,17 +44,9 @@ public class TableIndicatorUnit {
      * 
      * @return the value
      */
+    @Override
     public Object getValue() {
         return IndicatorCommonUtil.getIndicatorValue(indicator);
-    }
-
-    /**
-     * Getter for indicatorName.
-     * 
-     * @return the indicatorName
-     */
-    public String getIndicatorName() {
-        return this.indicator.getName();
     }
 
     /**
@@ -99,8 +54,9 @@ public class TableIndicatorUnit {
      * 
      * @return the children
      */
+    @Override
     public TableIndicatorUnit[] getChildren() {
-        return children;
+        return (TableIndicatorUnit[]) children;
     }
 
     /**
@@ -112,6 +68,7 @@ public class TableIndicatorUnit {
         this.children = children;
     }
 
+    @Override
     public boolean isExcuted() {
         return !indicator.getInstantiatedExpressions().isEmpty();
     }
@@ -127,5 +84,25 @@ public class TableIndicatorUnit {
             count = this.getIndicator().getCount();
         }
         return count;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit#getForms()
+     */
+    @Override
+    public FormEnum[] getForms() {
+        FormEnum[] forms = null;
+        switch (this.getType()) {
+        case RowCountIndicatorEnum:
+            forms = new FormEnum[] { FormEnum.IndicatorThresholdsForm };
+            break;
+        case WhereRuleIndicatorEnum:
+            forms = new FormEnum[] { FormEnum.IndicatorThresholdsForm };
+            break;
+        default:
+        }
+        return forms;
     }
 }

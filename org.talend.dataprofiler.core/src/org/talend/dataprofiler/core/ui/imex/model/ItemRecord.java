@@ -38,6 +38,7 @@ import org.talend.core.model.properties.Property;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.cwm.dependencies.DependenciesHandler;
 import org.talend.cwm.helper.TaggedValueHelper;
+import org.talend.cwm.management.i18n.InternationalizationUtil;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.utils.UDIUtils;
@@ -47,6 +48,7 @@ import org.talend.dataquality.helpers.AnalysisHelper;
 import org.talend.dataquality.helpers.ReportHelper;
 import org.talend.dataquality.helpers.ReportHelper.ReportType;
 import org.talend.dataquality.indicators.columnset.RecordMatchingIndicator;
+import org.talend.dataquality.indicators.definition.DefinitionPackage;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dataquality.indicators.definition.userdefine.UDIndicatorDefinition;
 import org.talend.dataquality.record.linkage.constant.AttributeMatcherType;
@@ -532,12 +534,25 @@ public class ItemRecord {
      */
     public String getName() {
         if (property != null) {
-            return property.getDisplayName();
+            return getDisplayName();
         } else if (element != null) {
             return element.getName();
         } else {
             return file.getName();
         }
+    }
+
+    /**
+     * only internationalization name of SystemIndicator
+     * 
+     * @return
+     */
+    private String getDisplayName() {
+        // only internationalization SystemIndicator
+        if (element != null && DefinitionPackage.eINSTANCE.getIndicatorDefinition().equals(element.eClass())) {
+            return InternationalizationUtil.getDefinitionInternationalizationLabel(property.getLabel());
+        }
+        return property.getDisplayName();
     }
 
     /**

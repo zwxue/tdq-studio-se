@@ -17,6 +17,7 @@ import java.util.List;
 import org.talend.core.model.properties.Item;
 import org.talend.core.model.properties.Property;
 import org.talend.core.model.repository.IRepositoryViewObject;
+import org.talend.cwm.management.i18n.InternationalizationUtil;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dataquality.properties.TDQIndicatorDefinitionItem;
 import org.talend.dq.helper.PropertyHelper;
@@ -72,7 +73,7 @@ public class SysIndicatorDefinitionRepNode extends DQRepositoryNode {
             if (this.isSystemIndicator) {
                 Property property = PropertyHelper.getProperty(this.getIndicatorDefinition());
                 // MOD sizhaoliu TDQ-7454 internationalize the display name here
-                return org.talend.cwm.management.i18n.Messages.getString(property.getLabel().replace("_", "."));
+                return InternationalizationUtil.getDefinitionInternationalizationLabel(property.getLabel());
             }
             if (this.getIndicatorDefinition().getName() != null) {
                 return this.getIndicatorDefinition().getName();
