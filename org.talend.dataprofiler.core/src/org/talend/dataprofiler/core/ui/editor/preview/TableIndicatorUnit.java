@@ -19,7 +19,7 @@ import org.talend.dq.indicators.IndicatorCommonUtil;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
 
 /**
- * DOC xqliu class global comment. Detailled comment
+ * It will be used for the Table Analysis
  */
 public class TableIndicatorUnit extends IndicatorUnit {
 

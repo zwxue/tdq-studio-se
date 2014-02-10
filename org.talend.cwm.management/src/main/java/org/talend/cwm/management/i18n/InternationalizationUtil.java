@@ -17,7 +17,7 @@ import org.talend.core.model.properties.Property;
 import org.talend.dataquality.PluginConstant;
 
 /**
- * internationalization System indicator definition
+ * get internationalization string util class
  * 
  */
 
@@ -25,35 +25,45 @@ public class InternationalizationUtil {
 
     /**
      * 
-     * get Internationalization Label of indicatorDefinition
+     * get Internationalization Label of SystemIndicatorDefinition
      * 
-     * @param originalName the value of parameter should be lable of property
-     * @return
+     * 
+     * @param originalName the value of parameter should be lable of property(for "Row_Count.definition"
+     * indicatorDefinition it should be "Row_Count")
+     * @return if originalName is null we will return EMPTY string else will return internationalization string
      */
     public static String getDefinitionInternationalizationLabel(String originalName) {
-        String getInternationalizationLabel = originalName == null ? StringUtils.EMPTY : Messages.getString(originalName);
-        return getInternationalizationLabel;
+        return getInternationalizationLabel(originalName);
+    }
+
+    private static String getInternationalizationLabel(String originalName) {
+        return originalName == null ? StringUtils.EMPTY : Messages.getString(originalName);
     }
 
     /**
      * 
-     * get Internationalization Label of indicatorDefinition
+     * get Internationalization Label of Category. We must do a replace operation is because of we can only get
+     * "Advanced Statistics" from frequency indicatorDefinition but we can not use it to do a interational key.So we
+     * replace it from "Advanced Statistics" to "Advanced_Statistics" then do international operation.
      * 
-     * @param originalName the value of parameter should be lable of property
-     * @return
+     * It will be used on Category of User Definition Indicator and presistence report file by now.
+     * 
+     * @param originalName the value of parameter should be lable of category(for
+     * "Bin_Low_Frequency_Table_0.1.definition" indicatorDefinition it should be "Advanced Statistics")
+     * 
+     * @return if originalName is null we will return EMPTY string else will return internationalization string
      */
     public static String getCategoryInternationalizationLabel(String originalName) {
-        String getInternationalizationLabel = originalName == null ? StringUtils.EMPTY : Messages.getString(originalName.replace(
-                PluginConstant.SPACE_STRING, PluginConstant.UNDER_LINE));
-        return getInternationalizationLabel;
+        return getInternationalizationLabel(originalName.replace(PluginConstant.SPACE_STRING, PluginConstant.UNDER_LINE));
     }
 
     /**
      * 
-     * get Internationalization Label of indicatorDefinition
+     * get Internationalization Label of SystemIndicatorDefinition
      * 
-     * @param originalName
-     * @return
+     * @param property the property of indicatorDefinition
+     * @return if property is null or label of property is null we will return EMPTY string else will return
+     * internationalization string
      */
     public static String getDefinitionInternationalizationLabel(Property property) {
         if (property == null) {

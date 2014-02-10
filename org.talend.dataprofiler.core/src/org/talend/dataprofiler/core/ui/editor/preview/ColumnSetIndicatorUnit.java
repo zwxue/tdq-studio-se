@@ -19,7 +19,7 @@ import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
 
 /**
- * created by talend on Jan 26, 2014 Detailled comment
+ * It will be used for ColumnSet analysis and column correlation analysis.
  * 
  */
 public class ColumnSetIndicatorUnit extends IndicatorUnit {

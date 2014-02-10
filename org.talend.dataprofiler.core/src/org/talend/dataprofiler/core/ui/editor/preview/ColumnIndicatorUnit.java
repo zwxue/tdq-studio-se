@@ -24,7 +24,7 @@ import org.talend.dataquality.indicators.Indicator;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
 
 /**
- * created by talend on Jan 26, 2014 Detailled comment
+ * It will be used for column analysis
  * 
  */
 public class ColumnIndicatorUnit extends IndicatorUnit {
