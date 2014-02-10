@@ -59,6 +59,7 @@ import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.forms.widgets.Section;
 import org.jfree.util.Log;
 import org.talend.cwm.helper.TaggedValueHelper;
+import org.talend.cwm.management.i18n.InternationalizationUtil;
 import org.talend.cwm.relational.TdExpression;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
@@ -71,7 +72,6 @@ import org.talend.dataquality.helpers.BooleanExpressionHelper;
 import org.talend.dataquality.helpers.IndicatorCategoryHelper;
 import org.talend.dataquality.indicators.definition.DefinitionFactory;
 import org.talend.dataquality.indicators.definition.IndicatorCategory;
-import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dataquality.indicators.definition.IndicatorDefinitionParameter;
 import org.talend.dataquality.indicators.definition.userdefine.UDIndicatorDefinition;
 import org.talend.dq.helper.ProxyRepositoryManager;
@@ -86,6 +86,29 @@ import orgomg.cwm.objectmodel.core.TaggedValue;
  * the Master Page for the user define indicator(UDI)
  */
 public class UDIMasterPage extends IndicatorDefinitionMaterPage {
+
+    private static final String REMOVE_BUTTON_TEXT = DefaultMessagesImpl.getString("PatternMasterDetailsPage.del"); //$NON-NLS-1$
+
+    private static final String DEFINITION_PARAMETER_SECTION_DESCRIPTION = DefaultMessagesImpl
+            .getString("IndicatorDefinitionMaterPage.parametersDecription"); //$NON-NLS-1$
+
+    private static final String DEFINITION_PARAMETER_SECTION_TITLE = DefaultMessagesImpl
+            .getString("IndicatorDefinitionMaterPage.parameters"); //$NON-NLS-1$
+
+    private static final String CATEGORY_SECTION_DESCRIPTION = DefaultMessagesImpl
+            .getString("UDIMasterPage.CategorySectionDescription"); //$NON-NLS-1$
+
+    private static final String CATEGORY_SECTION_TITLE = DefaultMessagesImpl.getString("UDIMasterPage.CategorySectionTitle"); //$NON-NLS-1$
+
+    private static final String JAVA_CLASS = DefaultMessagesImpl.getString("IndicatorDefinitionMaterPage.javaClass"); //$NON-NLS-1$
+
+    private static final String JARS = DefaultMessagesImpl.getString("IndicatorDefinitionMaterPage.jars"); //$NON-NLS-1$
+
+    private static final String LANGUAGE = DefaultMessagesImpl.getString("IndicatorDefinitionMaterPage.language"); //$NON-NLS-1$
+
+    private static final String PARAMETERS_VALUE = "Parameters Value"; //$NON-NLS-1$
+
+    private static final String PARAMETERS_KEY = "Parameters Key"; //$NON-NLS-1$
 
     private Combo comboCategory;
 
@@ -104,7 +127,7 @@ public class UDIMasterPage extends IndicatorDefinitionMaterPage {
 
     private IndicatorDefinitionParameter element = null;
 
-    private TableViewer parView;
+    private TableViewer parameterTableViewer;
 
     // ADD klliu 2010-06-03 bug 13451
     private String classNameForSave;
@@ -129,6 +152,13 @@ public class UDIMasterPage extends IndicatorDefinitionMaterPage {
         super(editor, id, title);
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * org.talend.dataprofiler.core.ui.editor.indicator.IndicatorDefinitionMaterPage#initialize(org.eclipse.ui.forms
+     * .editor.FormEditor)
+     */
     @Override
     public void initialize(FormEditor editor) {
         super.initialize(editor);
@@ -140,26 +170,34 @@ public class UDIMasterPage extends IndicatorDefinitionMaterPage {
         }
 
         // ADD klliu 2010-07-14 feature 13429
-        initTempIndicatorDefinitionParameter(definition);
-
+        initTempIndicatorDefinitionParameter();
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataprofiler.core.ui.editor.indicator.IndicatorDefinitionMaterPage#removeJavaType()
+     */
     @Override
     protected void removeJavaType() {
         // no need to remove the java type from the db type list
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataprofiler.core.ui.editor.indicator.IndicatorDefinitionMaterPage#isPatternTextEditable()
+     */
     @Override
     protected boolean isPatternTextEditable() {
         return false;
     }
 
     /**
-     * DOC klliu Comment method "initTempIndicatorDefinitionParameter". ADD klliu 2010-07-12 bug 13429.
+     * init Temp Indicator Definition Parameters.
      * 
-     * @param definition2
      */
-    private void initTempIndicatorDefinitionParameter(IndicatorDefinition definition2) {
+    private void initTempIndicatorDefinitionParameter() {
         if (definition != null) {
             tempParameters = cloneIndicatorDefParameter(definition.getIndicatorDefinitionParameter());
         } else {
@@ -168,7 +206,7 @@ public class UDIMasterPage extends IndicatorDefinitionMaterPage {
     }
 
     /**
-     * DOC klliu Comment method "cloneIndicatorDefParameter".ADD klliu 2010-07-12 bug 13429.
+     * clone Indicator Definition Parameters.
      * 
      * @param indicatorDefParameter
      * @return
@@ -182,45 +220,56 @@ public class UDIMasterPage extends IndicatorDefinitionMaterPage {
         return result;
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataprofiler.core.ui.editor.indicator.IndicatorDefinitionMaterPage#createIndicatorContent()
+     */
     @Override
     protected void createIndicatorContent() {
-        createCategorySection(topComp);
-        createDefinitionSection(topComp);
-        createDefinitionParametersSection(topComp);
+        createCategorySection();
+        createDefinitionSection();
+        createDefinitionParametersSection();
     }
 
-    private void createDefinitionParametersSection(Composite topComp) {
-        parametersSection = createSection(form, topComp,
-                DefaultMessagesImpl.getString("IndicatorDefinitionMaterPage.parameters"), null); //$NON-NLS-1$
-
-        Label label = new Label(parametersSection, SWT.WRAP);
-        label.setText(DefaultMessagesImpl.getString("IndicatorDefinitionMaterPage.parametersDecription")); //$NON-NLS-1$
-        parametersSection.setDescriptionControl(label);
-
-        parametersComp = createDefinitionParametersComp(parametersSection);
-
+    /**
+     * create Definition Parameters Section.
+     */
+    private void createDefinitionParametersSection() {
+        parametersSection = createSection(form, topComp, DEFINITION_PARAMETER_SECTION_TITLE,
+                DEFINITION_PARAMETER_SECTION_DESCRIPTION);
+        parametersComp = createDefinitionParametersComp();
         parametersSection.setClient(parametersComp);
     }
 
-    private Composite createDefinitionParametersComp(Section parametersSection) {
+    /**
+     * create Definition Parameters Composite.
+     * 
+     * @return
+     */
+    private Composite createDefinitionParametersComp() {
         Composite composite = toolkit.createComposite(parametersSection);
         GridData parData = new GridData(GridData.FILL_BOTH);
         composite.setLayoutData(parData);
         GridLayout layout = new GridLayout(2, false);
         composite.setLayout(layout);
 
-        parView = new TableViewer(composite);
-        createDefiniationParameterColumns(parView);
+        parameterTableViewer = new TableViewer(composite);
+        createDefiniationParameterColumns();
         IndicatorParametersContentProvider provider = new IndicatorParametersContentProvider();
-        parView.setContentProvider(provider);
-        parView.setLabelProvider(new IndicatorParametersLabelProvider());
-        parView.setInput(tempParameters);
-        createDefinitionParametersButton(composite, parView);
+        parameterTableViewer.setContentProvider(provider);
+        parameterTableViewer.setLabelProvider(new IndicatorParametersLabelProvider());
+        parameterTableViewer.setInput(tempParameters);
+        createDefinitionParametersButton(composite);
         return composite;
-
     }
 
-    private void createDefinitionParametersButton(Composite comp, final TableViewer parView) {
+    /**
+     * create Buttons for Definition Parameters.
+     * 
+     * @param comp
+     */
+    private void createDefinitionParametersButton(Composite comp) {
         Composite composite = toolkit.createComposite(comp);
         GridData gd = new GridData();
         gd.horizontalSpan = 2;
@@ -229,7 +278,7 @@ public class UDIMasterPage extends IndicatorDefinitionMaterPage {
         composite.setLayoutData(gd);
         final Button addButton = new Button(composite, SWT.NONE);
         addButton.setImage(ImageLib.getImage(ImageLib.ADD_ACTION));
-        addButton.setToolTipText(DefaultMessagesImpl.getString("PatternMasterDetailsPage.add")); //$NON-NLS-1$
+        addButton.setToolTipText(ADD_BUTTON_TEXT);
         GridData labelGd = new GridData(GridData.HORIZONTAL_ALIGN_CENTER);
         labelGd.horizontalAlignment = SWT.RIGHT;
         labelGd.widthHint = 65;
@@ -241,45 +290,53 @@ public class UDIMasterPage extends IndicatorDefinitionMaterPage {
                 ip.setKey("paraKey");//$NON-NLS-1$
                 ip.setValue("paraValue");//$NON-NLS-1$
                 tempParameters.add(ip);
-                if (parView != null) {
-                    parView.refresh(tempParameters);
+                if (parameterTableViewer != null) {
+                    parameterTableViewer.refresh(tempParameters);
                     setDirty(true);
                 }
             }
         });
-        final Button romveButton = new Button(composite, SWT.NONE);
-        romveButton.setImage(ImageLib.getImage(ImageLib.DELETE_ACTION));
-        romveButton.setToolTipText(DefaultMessagesImpl.getString("PatternMasterDetailsPage.del")); //$NON-NLS-1$
+        final Button romoveButton = new Button(composite, SWT.NONE);
+        romoveButton.setImage(DELETE_BUTTON_IMAGE);
+        romoveButton.setToolTipText(REMOVE_BUTTON_TEXT);
         GridData reGd = new GridData();
         reGd.horizontalAlignment = SWT.LEFT;
         reGd.widthHint = 65;
-        romveButton.setLayoutData(reGd);
-        romveButton.addListener(SWT.MouseDown, new Listener() {
+        romoveButton.setLayoutData(reGd);
+        romoveButton.addListener(SWT.MouseDown, new Listener() {
 
             public void handleEvent(Event event) {
-                IStructuredSelection selection = (IStructuredSelection) parView.getSelection();
+                IStructuredSelection selection = (IStructuredSelection) parameterTableViewer.getSelection();
                 Object o = selection.getFirstElement();
                 if (o instanceof IndicatorDefinitionParameter) {
                     element = (IndicatorDefinitionParameter) o;
                     tempParameters.remove(element);
-                    parView.refresh(tempParameters);
+                    parameterTableViewer.refresh(tempParameters);
                     setDirty(true);
                 }
             }
         });
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataprofiler.core.ui.editor.indicator.IndicatorDefinitionMaterPage#createDefinitionComp()
+     */
     @Override
-    protected Composite createDefinitionComp(Composite definitionSection) {
-        Composite comp = super.createDefinitionComp(definitionSection);
-        createNewLineWithJavaUDI();
+    protected Composite createDefinitionComp() {
+        Composite comp = super.createDefinitionComp();
+        createNewLineForJavaLanguage();
         return comp;
     }
 
-    private void createNewLineWithJavaUDI() {
+    /**
+     * create a New Line for Java language.
+     */
+    private void createNewLineForJavaLanguage() {
         // MOD klliu 2011-08-08 bug 22994: Headers are wrong for Java option in indicator editor.
-        if (javaLanguageComp == null && checkJavaUDIBeforeOpen()) {
-            addJavaTitleComp(expressionComp);
+        if (javaLanguageComp == null && checkContainsJavaDefinition()) {
+            createJavaTitleComp();
         }
         // ~
         EList<TaggedValue> tvs = definition.getTaggedValue();
@@ -312,6 +369,7 @@ public class UDIMasterPage extends IndicatorDefinitionMaterPage {
 
         final Text jarPathText = createJarPathText(detailComp);
         jarPathText.setText(jarPathStr);
+        jarPathText.addModifyListener(new NeedToSetDirtyListener());
 
         final Text classNameText = createClassNameText(detailComp, jarPathText);
         classNameText.setText(classNameStr);
@@ -327,7 +385,12 @@ public class UDIMasterPage extends IndicatorDefinitionMaterPage {
         GridDataFactory.fillDefaults().align(SWT.FILL, SWT.FILL).grab(true, false).applyTo(detailComp);
     }
 
-    // used for create/update java line
+    /**
+     * createJavaComboBox used for create/update java line.
+     * 
+     * @param lineComp
+     * @return
+     */
     private CCombo createJavaComboBox(final Composite lineComp) {
         final CCombo javaCombo = new CCombo(lineComp, SWT.BORDER);
         javaCombo.setLayoutData(new GridData());
@@ -338,29 +401,27 @@ public class UDIMasterPage extends IndicatorDefinitionMaterPage {
         return javaCombo;
     }
 
-    // used for create/update java line
+    /**
+     * create JarPath Text used for create/update java line.
+     * 
+     * @param detailComp
+     * @return
+     */
     private Text createJarPathText(final Composite detailComp) {
         final Text jarPathText = new Text(detailComp, SWT.BORDER);
         jarPathText.setLayoutData(new GridData(GridData.FILL_BOTH));
         ((GridData) jarPathText.getLayoutData()).widthHint = 350;
-        jarPathText.addModifyListener(new NeedToSetDirtyListener());
         return jarPathText;
     }
 
-    // used for create/update java line
-    private boolean checkJavaUDIBeforeOpen() {
-        EList<TaggedValue> tvs = definition.getTaggedValue();
-        for (TaggedValue tv : tvs) {
-            if (tv.getTag().equals(TaggedValueHelper.CLASS_NAME_TEXT) || tv.getTag().equals(TaggedValueHelper.JAR_FILE_PATH)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
+    /**
+     * update Line For Java Language.
+     * 
+     * @param combo
+     */
     private void updateLineForJava(final CCombo combo) {
         if (javaTitleComp == null || javaTitleComp.isDisposed()) {
-            addJavaTitleComp(expressionComp);
+            createJavaTitleComp();
         }
         final Composite lineComp = new Composite(javaLanguageComp, SWT.NONE);
         lineComp.setLayout(new GridLayout(2, false));
@@ -372,8 +433,10 @@ public class UDIMasterPage extends IndicatorDefinitionMaterPage {
         detailComp.setLayout(new GridLayout(5, false));
 
         final Text jarPathText = createJarPathText(detailComp);
+        jarPathText.addModifyListener(new NeedToSetDirtyListener());
 
         final Text classNameText = createClassNameText(detailComp, jarPathText);
+        classNameText.addModifyListener(new NeedToSetDirtyListener());
         classNameText.addModifyListener(new ExpressTextModListener(javaCombo));
 
         createEditButtonForJavaLine(detailComp, jarPathText, classNameText);
@@ -405,11 +468,18 @@ public class UDIMasterPage extends IndicatorDefinitionMaterPage {
         definitionSection.setExpanded(true);
     }
 
+    /**
+     * create Edit Button For Java Line .
+     * 
+     * @param detailComp
+     * @param jarPathText
+     * @param classNameText
+     */
     private void createEditButtonForJavaLine(Composite detailComp, final Text jarPathText, final Text classNameText) {
         Button button = new Button(detailComp, SWT.PUSH);
         button.setLayoutData(new GridData(GridData.FILL_BOTH));
-        button.setText(DefaultMessagesImpl.getString("IndicatorDefinitionMaterPage.editExpression")); //$NON-NLS-1$
-        button.setToolTipText(DefaultMessagesImpl.getString("IndicatorDefinitionMaterPage.editExpression")); //$NON-NLS-1$
+        button.setText(EDIT_BUTTON_TEXT);
+        button.setToolTipText(EDIT_BUTTON_TEXT);
         // ((GridData) button.getLayoutData()).widthHint = 100;
         button.addSelectionListener(new SelectionAdapter() {
 
@@ -423,10 +493,16 @@ public class UDIMasterPage extends IndicatorDefinitionMaterPage {
         });
     }
 
+    /**
+     * create ClassName Text.
+     * 
+     * @param detailComp
+     * @param jarPathText
+     * @return
+     */
     private Text createClassNameText(Composite detailComp, final Text jarPathText) {
         final Text classNameText = new Text(detailComp, SWT.BORDER);
         classNameText.setLayoutData(new GridData(GridData.FILL_BOTH));
-        classNameText.addModifyListener(new NeedToSetDirtyListener());
         ((GridData) classNameText.getLayoutData()).widthHint = 250;
         // MOD klliu 2010-05-31 13451: Class name of Java User Define Indicator must be validated
         classNameText.addListener(SWT.Modify, new Listener() {
@@ -439,6 +515,13 @@ public class UDIMasterPage extends IndicatorDefinitionMaterPage {
         return classNameText;
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * org.talend.dataprofiler.core.ui.editor.indicator.IndicatorDefinitionMaterPage#updateDatabaseLineForJava(org.eclipse
+     * .swt.custom.CCombo, org.talend.cwm.relational.TdExpression)
+     */
     @Override
     protected void updateDatabaseLineForJava(final CCombo combo, TdExpression expression) {
         Composite detailComp;
@@ -464,7 +547,12 @@ public class UDIMasterPage extends IndicatorDefinitionMaterPage {
         }
     }
 
-    // ADD msjian 2011-8-9 TDQ-3199 fixed: Make it convenient to delete the jar which is used already.
+    /**
+     * open Jar Select Dialog(TDQ-3199 fixed: Make it convenient to delete the jar which is used already).
+     * 
+     * @param jarPathText
+     * @param classNameText
+     */
     private void openJarSelectDialog(Text jarPathText, Text classNameText) {
         String jarpathStr = jarPathText.getText();
         JavaUdiJarSelectDialog selectDialog = UDIUtils.createUdiJarCheckedTreeSelectionDialog(definition,
@@ -476,15 +564,19 @@ public class UDIMasterPage extends IndicatorDefinitionMaterPage {
         // MOD klliu 2010-05-31 13451: Class name of Java User Define Indicator must be validated
         validateJavaUDI(classNameText, jarPathText);
         ProxyRepositoryManager.getInstance().save();
-
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataprofiler.core.ui.editor.indicator.IndicatorDefinitionMaterPage#disposeExpressionChild()
+     */
     @Override
     protected void disposeExpressionChild() {
         int languageLength = javaLanguageComp == null ? 0 : javaLanguageComp.getChildren().length;
         int dataBaseLength = dataBaseComp == null ? 0 : dataBaseComp.getChildren().length;
         if (languageLength == 0 && dataBaseLength == 0) {
-            addTitleComp(dataBaseComp);
+            createDatabaseTitleComp();
         }
         if (languageLength == 1) {
             Control[] children = javaLanguageComp.getChildren();
@@ -493,36 +585,39 @@ public class UDIMasterPage extends IndicatorDefinitionMaterPage {
     }
 
     /**
-     * DOC klliu Comment method "addJavaTitleComp".
+     * create Java Title Composite.
      * 
-     * @param expressionComp
      */
-    private Composite addJavaTitleComp(Composite expressionComp) {
+    private void createJavaTitleComp() {
         // MOD klliu 2011-07-09 bug 22994: Headers are wrong for Java option in indicator editor.
         javaLanguageComp = new Composite(expressionComp, SWT.NONE);
         javaLanguageComp.setLayout(new GridLayout());
         javaLanguageComp.setLayoutData(new GridData(GridData.FILL_BOTH));
+
         javaTitleComp = new Composite(javaLanguageComp, SWT.NONE);
         javaTitleComp.setLayout(new GridLayout(3, false));
+
+        // language Label
         Label languageLabel = new Label(javaTitleComp, SWT.NONE);
-        languageLabel.setText(DefaultMessagesImpl.getString("IndicatorDefinitionMaterPage.language")); //$NON-NLS-1$
+        languageLabel.setText(LANGUAGE);
         languageLabel.setLayoutData(new GridData());
-        ((GridData) languageLabel.getLayoutData()).widthHint = 250;
-        Label classLabel = new Label(javaTitleComp, SWT.NONE);
-        classLabel.setText(DefaultMessagesImpl.getString("IndicatorDefinitionMaterPage.javaClass")); //$NON-NLS-1$
-        classLabel.setLayoutData(new GridData(GridData.BEGINNING));
-        ((GridData) classLabel.getLayoutData()).widthHint = 380;
+        ((GridData) languageLabel.getLayoutData()).widthHint = 160;
+
+        // jar Label
         Label jarLabel = new Label(javaTitleComp, SWT.NONE);
-        jarLabel.setText(DefaultMessagesImpl.getString("IndicatorDefinitionMaterPage.jars")); //$NON-NLS-1$
+        jarLabel.setText(JARS);
+        jarLabel.setLayoutData(new GridData(GridData.BEGINNING));
+        ((GridData) jarLabel.getLayoutData()).widthHint = 355;
+
+        // class Label
+        Label classLabel = new Label(javaTitleComp, SWT.NONE);
+        classLabel.setText(JAVA_CLASS);
         GridDataFactory.fillDefaults().align(SWT.FILL, SWT.FILL).grab(true, false).applyTo(javaTitleComp);
-        return javaTitleComp;
     }
 
-    // MOD klliu 2010-05-31 13451: Class name of Java User Define Indicator must be validated
     /**
-     * DOC klliu Comment method "alidateJavaUDI". ADD klliu 2010-05-31 bug 13451
+     * Class name of Java User Define Indicator must be validated
      * 
-     * @param detailComp
      * @param classNameText
      * @param jarPathText
      */
@@ -533,18 +628,33 @@ public class UDIMasterPage extends IndicatorDefinitionMaterPage {
         // }
     }
 
-    private void createDefiniationParameterColumns(TableViewer viewer) {
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataprofiler.core.ui.editor.indicator.IndicatorDefinitionMaterPage#doDeleteOnlyForJava()
+     */
+    @Override
+    protected void doDeleteOnlyForJava() {
+        classNameForSave = ""; //$NON-NLS-1$
+        jarPathForSave = ""; //$NON-NLS-1$
+    }
 
-        String[] titles = { "Parameters Key", "Parameters Value" };//$NON-NLS-1$ //$NON-NLS-2$
+    /**
+     * create Definiation Parameter Columns.
+     * 
+     */
+    private void createDefiniationParameterColumns() {
+
+        String[] titles = { PARAMETERS_KEY, PARAMETERS_VALUE };
         int[] bounds = { 200, 200 };
         for (int i = 0; i < titles.length; i++) {
-            TableViewerColumn column = new TableViewerColumn(viewer, SWT.NONE);
+            TableViewerColumn column = new TableViewerColumn(parameterTableViewer, SWT.NONE);
             column.getColumn().setText(titles[i]);
             column.getColumn().setWidth(bounds[i]);
             column.getColumn().setResizable(false);
             column.getColumn().setMoveable(true);
         }
-        Table table = viewer.getTable();
+        Table table = parameterTableViewer.getTable();
         table.setLayout(new FillLayout(SWT.VERTICAL | SWT.V_SCROLL));
         GridData tableData = new GridData(GridData.FILL_VERTICAL);
         tableData.horizontalSpan = 2;
@@ -556,22 +666,24 @@ public class UDIMasterPage extends IndicatorDefinitionMaterPage {
         tl.addColumnData(new ColumnWeightData(60));
         tl.addColumnData(new ColumnWeightData(60));
         table.setLayout(tl);
-        attachDefiniationParameterCellEditors(viewer, table, titles);
+        attachDefiniationParameterCellEditors(table, titles);
     }
 
-    private void createCategorySection(Composite topComp) {
-        categorySection = createSection(form, topComp, "Indicator Category", null);//$NON-NLS-1$
-
-        Label label = new Label(categorySection, SWT.WRAP);
-        label.setText("This section is for indicator category.");//$NON-NLS-1$
-        categorySection.setDescriptionControl(label);
-
-        categoryComp = createCategoryComp(categorySection);
-
+    /**
+     * create Category Section.
+     */
+    private void createCategorySection() {
+        categorySection = createSection(form, topComp, CATEGORY_SECTION_TITLE, CATEGORY_SECTION_DESCRIPTION);
+        categoryComp = createCategoryComp();
         categorySection.setClient(categoryComp);
     }
 
-    private Composite createCategoryComp(Section categorySection) {
+    /**
+     * create Category composite.
+     * 
+     * @return
+     */
+    private Composite createCategoryComp() {
         Composite composite = toolkit.createComposite(categorySection);
         composite.setLayout(new GridLayout(2, false));
 
@@ -584,7 +696,7 @@ public class UDIMasterPage extends IndicatorDefinitionMaterPage {
         if (categories.size() > 0 && category == null) {
             category = DefinitionHandler.getInstance().getUserDefinedCountIndicatorCategory();
         }
-        comboCategory.setText(category.getLabel());
+        comboCategory.setText(InternationalizationUtil.getCategoryInternationalizationLabel(category.getLabel()));
         comboCategory.addModifyListener(new ModifyListener() {
 
             public void modifyText(ModifyEvent e) {
@@ -596,9 +708,9 @@ public class UDIMasterPage extends IndicatorDefinitionMaterPage {
                     if (openQuestion) {
                         setDirty(true);
                         category = DefinitionHandler.getInstance().getIndicatorCategoryByLabel(comboCategory.getText());
-                        updateDetailList();
-                        // clear all the temp maps
-                        initTempMaps();
+                        updateIndicatorCategoryDetail();
+                        // clear all the temp maps except the java type
+                        removeFromTempMapsExceptJava();
 
                         if (dataBaseComp != null) {
                             Control[] children = dataBaseComp.getChildren();
@@ -607,17 +719,11 @@ public class UDIMasterPage extends IndicatorDefinitionMaterPage {
                             }
 
                         }
-                        if (javaLanguageComp != null) {
-                            Control[] children = javaLanguageComp.getChildren();
-                            for (Control con : children) {
-                                con.dispose();
-                            }
-                        }
                         definitionSection.setExpanded(false);
                         definitionSection.setExpanded(true);
                     } else {
                         needConfirm = false;
-                        comboCategory.setText(category.getLabel());
+                        comboCategory.setText(InternationalizationUtil.getCategoryInternationalizationLabel(category.getLabel()));
                         needConfirm = true;
                     }
                 }
@@ -626,17 +732,15 @@ public class UDIMasterPage extends IndicatorDefinitionMaterPage {
         });
 
         // ADD yyi 2009-09-23 Feature 9059
-        createDetailList(composite);
-        updateDetailList();
+        createIndicatorCategoryDetail(composite);
+        updateIndicatorCategoryDetail();
         return composite;
     }
 
     /**
-     * yyi 2009-09-23 Feature 9059
-     * 
-     * @param composite
+     * update Indicator Category Detail(yyi 2009-09-23 Feature 9059).
      */
-    protected void updateDetailList() {
+    protected void updateIndicatorCategoryDetail() {
         String categoryLabel = comboCategory.getText();
         if (StringUtils.isNotBlank(categoryLabel)) {
             IndicatorCategory ic = DefinitionHandler.getInstance().getIndicatorCategoryByLabel(categoryLabel);
@@ -657,7 +761,12 @@ public class UDIMasterPage extends IndicatorDefinitionMaterPage {
         }
     }
 
-    private void createDetailList(Composite composite) {
+    /**
+     * create Indicator Category Detail.
+     * 
+     * @param composite
+     */
+    private void createIndicatorCategoryDetail(Composite composite) {
         Composite compoDetail = new Composite(composite, SWT.NONE);
         compoDetail.setLayout(new GridLayout(1, false));
         GridData data = new GridData(SWT.FILL, SWT.FILL, true, true);
@@ -669,17 +778,23 @@ public class UDIMasterPage extends IndicatorDefinitionMaterPage {
         labelDetail.setLayoutData(data);
     }
 
-    private void attachDefiniationParameterCellEditors(final TableViewer viewer, Composite table, String[] titles) {
-        viewer.setCellModifier(new ICellModifier() {
+    /**
+     * attach Definiation Parameter Cell Editors.
+     * 
+     * @param table
+     * @param titles
+     */
+    private void attachDefiniationParameterCellEditors(Composite table, String[] titles) {
+        parameterTableViewer.setCellModifier(new ICellModifier() {
 
             public boolean canModify(Object element, String property) {
                 return true;
             }
 
             public Object getValue(Object element, String property) {
-                if ("Parameters Key".equals(property)) {//$NON-NLS-1$
+                if (PARAMETERS_KEY.equals(property)) {
                     return ((IndicatorDefinitionParameter) element).getKey();
-                } else if ("Parameters Value".equals(property)) {//$NON-NLS-1$
+                } else if (PARAMETERS_VALUE.equals(property)) {
                     return ((IndicatorDefinitionParameter) element).getValue();
                 }
                 return null;
@@ -688,25 +803,23 @@ public class UDIMasterPage extends IndicatorDefinitionMaterPage {
             public void modify(Object element, String property, Object value) {
                 TableItem tableItem = (TableItem) element;
                 IndicatorDefinitionParameter data = (IndicatorDefinitionParameter) tableItem.getData();
-                if ("Parameters Key".equals(property)) {//$NON-NLS-1$
+                if (PARAMETERS_KEY.equals(property)) {
                     if (!data.getKey().equals(value.toString())) {
                         data.setKey(value.toString());
-                        viewer.refresh(data);
+                        parameterTableViewer.refresh(data);
                         setDirty(true);
                     }
-                } else if ("Parameters Value".equals(property)) {//$NON-NLS-1$
+                } else if (PARAMETERS_VALUE.equals(property)) {
                     if (!data.getValue().equals(value)) {
                         data.setValue((String) value);
-                        viewer.refresh(data);
+                        parameterTableViewer.refresh(data);
                         setDirty(true);
                     }
                 }
             }
         });
-        viewer.setColumnProperties(titles);
-
-        viewer.setCellEditors(new CellEditor[] { new TextCellEditor(table), new TextCellEditor(table) });
-
+        parameterTableViewer.setColumnProperties(titles);
+        parameterTableViewer.setCellEditors(new CellEditor[] { new TextCellEditor(table), new TextCellEditor(table) });
     }
 
     @Override
@@ -799,6 +912,13 @@ public class UDIMasterPage extends IndicatorDefinitionMaterPage {
         return editDialog;
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * org.talend.dataprofiler.core.ui.editor.indicator.IndicatorDefinitionMaterPage#handleSelectExpression(org.eclipse
+     * .swt.custom.CCombo, org.talend.dataprofiler.core.ui.dialog.ExpressionEditDialog)
+     */
     @Override
     protected void handleSelectExpression(final CCombo combo, final ExpressionEditDialog editDialog) {
         super.handleSelectExpression(combo, editDialog);
@@ -815,16 +935,19 @@ public class UDIMasterPage extends IndicatorDefinitionMaterPage {
     }
 
     @Override
-    protected void updateUDIValues(CCombo javaUDICombo) {
+    protected void saveUDIValues(CCombo javaUDICombo) {
         // save some other related values, current only need in UDI
         saveUDIExpression();
 
-        updateTaggedValues(javaUDICombo);
+        saveTaggedValues(javaUDICombo);
 
         // Save difinition UDI Parameters
-        saveDefinitionParameters(definition);
+        saveDefinitionParameters();
     }
 
+    /**
+     * save UDI Expressions.
+     */
     private void saveUDIExpression() {
         UDIndicatorDefinition def = (UDIndicatorDefinition) definition;
         EList<TdExpression> viewValidRowsExpression = def.getViewValidRowsExpression();
@@ -853,7 +976,12 @@ public class UDIMasterPage extends IndicatorDefinitionMaterPage {
 
     }
 
-    private void updateTaggedValues(CCombo javaUDICombo) {
+    /**
+     * save TaggedValues.
+     * 
+     * @param javaUDICombo
+     */
+    private void saveTaggedValues(CCombo javaUDICombo) {
         // Save Java UDI
         EList<TaggedValue> tvs = definition.getTaggedValue();
         if (javaUDICombo != null) {
@@ -901,6 +1029,29 @@ public class UDIMasterPage extends IndicatorDefinitionMaterPage {
         }
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataprofiler.core.ui.editor.indicator.IndicatorDefinitionMaterPage#isJavaExist(org.eclipse.swt
+     * .custom.CCombo)
+     */
+    @Override
+    protected boolean isJavaExist(CCombo combo) {
+        if (combo.getText().equals(PatternLanguageType.JAVA.getName())) {
+            if (javaLanguageComp != null && checkContainJavaInTempExpressionMap()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * org.talend.dataprofiler.core.ui.editor.indicator.IndicatorDefinitionMaterPage#updateLineAndOtherCombos(org.eclipse
+     * .swt.custom.CCombo, org.talend.cwm.relational.TdExpression, java.lang.String)
+     */
     @Override
     public void updateLineAndOtherCombos(final CCombo combo, TdExpression expression, String oldLanguage) {
         if (combo.getText().equals(PatternLanguageType.JAVA.getName())) {
@@ -913,7 +1064,11 @@ public class UDIMasterPage extends IndicatorDefinitionMaterPage {
         updateOtherCombos(combo);
     }
 
-    private void volidateNameAndPath(EList<TaggedValue> tvs) {
+    /**
+     * set ClassName And JarPath For Java.
+     */
+    private void setClassNameAndJarPathForJava() {
+        EList<TaggedValue> tvs = definition.getTaggedValue();
         if (classNameForSave == null || jarPathForSave == null) {
             for (TaggedValue tv : tvs) {
                 if (tv.getTag().equals(TaggedValueHelper.CLASS_NAME_TEXT)) {
@@ -925,22 +1080,26 @@ public class UDIMasterPage extends IndicatorDefinitionMaterPage {
                 }
             }
         }
-
     }
 
     /**
-     * DDOC klliu Comment method "saveDefinitionParameters". ADD klliu figure 13429 2010-07-12
+     * save Definition Parameters
      * 
-     * @param definitionUDI
+     * @param IndicatorDefinition
      */
-    private void saveDefinitionParameters(IndicatorDefinition definitionUDI) {
-        EList<IndicatorDefinitionParameter> params = definitionUDI.getIndicatorDefinitionParameter();
+    private void saveDefinitionParameters() {
+        EList<IndicatorDefinitionParameter> params = definition.getIndicatorDefinitionParameter();
         if (params != null) {
             params.clear();
             params.addAll(tempParameters);
         }
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataprofiler.core.ui.editor.indicator.IndicatorDefinitionMaterPage#checkBeforeSave()
+     */
     @Override
     protected ReturnCode checkBeforeSave() {
         ReturnCode rc = super.checkBeforeSave();
@@ -998,7 +1157,7 @@ public class UDIMasterPage extends IndicatorDefinitionMaterPage {
         }
 
         // ADD klliu 2010-06-01 bug 13451: Class name of Java User Define Indicator must be validated
-        if (!checkJavaUDIBeforeSave()) {
+        if (!checkJavaDefinitionBeforeSave()) {
             ((IndicatorEditor) this.getEditor()).setSaveActionButtonState(false);
             rc.setOk(false);
             rc.setMessage(DefaultMessagesImpl.getString("IndicatorDefinitionMaterPage.classPathError"));//$NON-NLS-1$
@@ -1007,16 +1166,19 @@ public class UDIMasterPage extends IndicatorDefinitionMaterPage {
         return rc;
     }
 
-    private boolean checkJavaUDIBeforeSave() {
-
-        EList<TaggedValue> tvs = definition.getTaggedValue();
+    /**
+     * check Java Definition Before Save.
+     * 
+     * @return boolean
+     */
+    private boolean checkJavaDefinitionBeforeSave() {
         boolean isHaveJavaComb = checkIsHaveJavaComb();
-        boolean isHaveJavaTag = checkContainsJavaUDI(definition);
-        boolean isHaveSqlExpr = checkIsHaveSqlExcepretion();
+        boolean isHaveJavaTag = checkContainsJavaDefinition();
+        boolean isHaveSqlExpr = checkIsHaveSqlExpression();
 
-        volidateNameAndPath(tvs);
+        setClassNameAndJarPathForJava();
 
-        boolean cj2e = checkJavaIndicatorIsEixt();
+        boolean cj2e = isClassNameExistInJars();
         if (isHaveJavaComb == true && isHaveSqlExpr == true && isHaveJavaTag == false) {
             return cj2e;
         } else if (isHaveJavaComb == false && isHaveSqlExpr == true) {
@@ -1030,30 +1192,15 @@ public class UDIMasterPage extends IndicatorDefinitionMaterPage {
 
     }
 
-    private boolean checkContainsJavaUDI(IndicatorDefinition definition2) {
+    /**
+     * check Contains Java Definition.
+     * 
+     * @return boolean
+     */
+    private boolean checkContainsJavaDefinition() {
         EList<TaggedValue> tvs = definition.getTaggedValue();
         for (TaggedValue tv : tvs) {
-            if (tv.getTag().equals(TaggedValueHelper.CLASS_NAME_TEXT)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private boolean checkIsHaveSqlExcepretion() {
-        EList<TdExpression> expression = definition.getSqlGenericExpression();
-        if (!expression.isEmpty()) {
-            return true;
-        }
-        return false;
-    }
-
-    private boolean checkIsHaveJavaComb() {
-        Iterator<CCombo> it = tempExpressionMap.keySet().iterator();
-        while (it.hasNext()) {
-            CCombo cb = it.next();
-            // MOD MOD mzhao feature 11128 Be able to add Java UDI, 2010-01-28
-            if (cb.getText().equals(PatternLanguageType.JAVA.getName())) {
+            if (tv.getTag().equals(TaggedValueHelper.CLASS_NAME_TEXT) || tv.getTag().equals(TaggedValueHelper.JAR_FILE_PATH)) {
                 return true;
             }
         }
@@ -1061,11 +1208,41 @@ public class UDIMasterPage extends IndicatorDefinitionMaterPage {
     }
 
     /**
-     * DOC klliu Comment method "checkJavaIndicatorIsEixt".
+     * check Is Have Sql expression.
      * 
-     * @return
+     * @return boolean
      */
-    private boolean checkJavaIndicatorIsEixt() {
+    private boolean checkIsHaveSqlExpression() {
+        EList<TdExpression> expression = definition.getSqlGenericExpression();
+        if (!expression.isEmpty()) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * check Is Have Java Comb.
+     * 
+     * @return boolean
+     */
+    private boolean checkIsHaveJavaComb() {
+        Iterator<CCombo> it = tempExpressionMap.keySet().iterator();
+        while (it.hasNext()) {
+            CCombo cb = it.next();
+            // MOD MOD mzhao feature 11128 Be able to add Java UDI, 2010-01-28
+            if (!cb.isDisposed() && cb.getText().equals(PatternLanguageType.JAVA.getName())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * check whether the ClassName Exist In Jars.
+     * 
+     * @return boolean
+     */
+    private boolean isClassNameExistInJars() {
         if (classNameForSave != null && jarPathForSave != null && !classNameForSave.trim().equals(PluginConstant.EMPTY_STRING)
                 && !jarPathForSave.trim().equals(PluginConstant.EMPTY_STRING)) {
             // MOD by zshen for bug 18724 2011.02.23

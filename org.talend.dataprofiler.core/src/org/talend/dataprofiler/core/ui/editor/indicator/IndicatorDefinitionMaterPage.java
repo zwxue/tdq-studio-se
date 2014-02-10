@@ -50,6 +50,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
@@ -95,6 +96,47 @@ import orgomg.cwm.objectmodel.core.ModelElement;
  * DOC bZhou class global comment. Detailled comment
  */
 public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
+
+    protected static final Image DELETE_BUTTON_IMAGE = ImageLib.getImage(ImageLib.DELETE_ACTION);
+
+    private static final String DELETE_EXPRESSION_TOOLTIP = DefaultMessagesImpl
+            .getString("IndicatorDefinitionMaterPage.deleteExpression"); //$NON-NLS-1$
+
+    private static final String NO_MORE_PATTERN_ERROR = DefaultMessagesImpl
+            .getString("PatternMasterDetailsPage.patternExpression"); //$NON-NLS-1$
+
+    private static final String WARNING = DefaultMessagesImpl.getString("PatternMasterDetailsPage.warning"); //$NON-NLS-1$
+
+    private static final String ADDITIONAL_FUNCTIONS_SECTION_TITLE = DefaultMessagesImpl
+            .getString("IndicatorDefinitionMaterPage.AdditionalFunctionsSectionTitle"); //$NON-NLS-1$
+
+    private static final Image ADD_BUTTON_IMAGE = ImageLib.getImage(ImageLib.ADD_ACTION);
+
+    protected static final String EDIT_BUTTON_TEXT = DefaultMessagesImpl.getString("IndicatorDefinitionMaterPage.editExpression"); //$NON-NLS-1$
+
+    private static final String SQL_TEMPLATE = DefaultMessagesImpl.getString("IndicatorDefinitionMaterPage.sqlTemplate"); //$NON-NLS-1$
+
+    private static final String DB_VERSION = DefaultMessagesImpl.getString("IndicatorDefinitionMaterPage.dbVersion"); //$NON-NLS-1$
+
+    private static final String DATABASE = DefaultMessagesImpl.getString("IndicatorDefinitionMaterPage.database"); //$NON-NLS-1$
+
+    protected static final String ADD_BUTTON_TEXT = DefaultMessagesImpl.getString("PatternMasterDetailsPage.add"); //$NON-NLS-1$
+
+    private static final String CHARACTER_MAPPING_SECTION_TITLE = DefaultMessagesImpl
+            .getString("IndicatorDefinitionMaterPage.CharactersMappingSectionTitle"); //$NON-NLS-1$
+
+    private static final String METADATA_SECTION_DESCRIPTION = DefaultMessagesImpl
+            .getString("IndicatorDefinitionMaterPage.formDescript"); //$NON-NLS-1$
+
+    private static final String METADATA_TITLE = DefaultMessagesImpl.getString("IndicatorDefinitionMaterPage.formMedata"); //$NON-NLS-1$
+
+    private static final String FORM_TITLE = DefaultMessagesImpl.getString("IndicatorDefinitionMaterPage.formTitle"); //$NON-NLS-1$
+
+    private static final String DEFINITION_SECTION_DESCRIPTION = DefaultMessagesImpl
+            .getString("IndicatorDefinitionMaterPage.definitionDecription"); //$NON-NLS-1$
+
+    private static final String DEFINITION_SECTION_TITLE = DefaultMessagesImpl
+            .getString("IndicatorDefinitionMaterPage.definition"); //$NON-NLS-1$
 
     private static final String ADDITIONAL_FUNCTIONS_SPLIT = PluginConstant.SEMICOLON_STRING;
 
@@ -194,8 +236,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
         if (property != null && tempCurrentModelElement != null
                 && DefinitionPackage.eINSTANCE.getIndicatorDefinition().equals(tempCurrentModelElement.eClass())) {
             // system indicatorDefinition need to be internationalization
-            internationalizationLabel = InternationalizationUtil.getDefinitionInternationalizationLabel(property
-                    .getLabel());
+            internationalizationLabel = InternationalizationUtil.getDefinitionInternationalizationLabel(property.getLabel());
             if (StringUtils.EMPTY.equals(internationalizationLabel)) {
                 return intactElemenetName;
             }
@@ -294,6 +335,25 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
     }
 
     /**
+     * when change the indicator catogroy, remove all except the old java type.
+     */
+    public void removeFromTempMapsExceptJava() {
+        Iterator<CCombo> it = tempExpressionMap.keySet().iterator();
+        while (it.hasNext()) {
+            CCombo cb = it.next();
+            if (!cb.getText().equals(PatternLanguageType.JAVA.getName())) {
+                it.remove();
+            }
+        }
+
+        tempViewValidRowsExpressionMap = initTempMap(tempViewValidRowsExpressionMap);
+        tempViewInvalidRowsExpressionMap = initTempMap(tempViewInvalidRowsExpressionMap);
+        tempViewValidValuesExpressionMap = initTempMap(tempViewValidValuesExpressionMap);
+        tempViewInvalidValuesExpressionMap = initTempMap(tempViewInvalidValuesExpressionMap);
+        tempViewRowsExpressionMap = initTempMap(tempViewRowsExpressionMap);
+    }
+
+    /**
      * init Temp Map.
      */
     private Map<CCombo, TdExpression> initTempMap(Map<CCombo, TdExpression> tmp) {
@@ -334,26 +394,22 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
      */
     @Override
     protected void createFormContent(IManagedForm managedForm) {
-        setFormTitle(DefaultMessagesImpl.getString("IndicatorDefinitionMaterPage.formTitle")); //$NON-NLS-1$
-
-        setMetadataTitle(DefaultMessagesImpl.getString("IndicatorDefinitionMaterPage.formMedata")); //$NON-NLS-1$
-
+        setFormTitle(FORM_TITLE);
+        setMetadataTitle(METADATA_TITLE);
         super.createFormContent(managedForm);
-
-        metadataSection.setDescription(DefaultMessagesImpl.getString("IndicatorDefinitionMaterPage.formDescript")); //$NON-NLS-1$
+        metadataSection.setDescription(METADATA_SECTION_DESCRIPTION);
         // MOD by zshen move CategorySection before of DefinitionSection on UDI Editor
         createIndicatorContent();
-
         form.reflow(true);
     }
 
     protected void createIndicatorContent() {
-        createDefinitionSection(topComp);
+        createDefinitionSection();
         if (IndicatorCategoryHelper.isCorrelation(category)) {
-            createAdditionalFunctionsSection(topComp);
+            createAdditionalFunctionsSection();
         }
         if (this.hasCharactersMapping) {
-            createCharactersMappingSection(topComp);
+            createCharactersMappingSection();
         }
     }
 
@@ -362,11 +418,9 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
      * 
      * @param topComp
      */
-    private void createCharactersMappingSection(Composite topComp) {
-        charactersMappingSection = createSection(form, topComp, "Character mapping", null);//$NON-NLS-1$
-
-        charactersMappingComp = createCharactersMappingComp(charactersMappingSection);
-
+    private void createCharactersMappingSection() {
+        charactersMappingSection = createSection(form, topComp, CHARACTER_MAPPING_SECTION_TITLE, null);
+        charactersMappingComp = createCharactersMappingComp();
         charactersMappingSection.setClient(charactersMappingComp);
     }
 
@@ -376,7 +430,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
      * @param charactersMappingSection
      * @return
      */
-    private Composite createCharactersMappingComp(Section charactersMappingSection) {
+    private Composite createCharactersMappingComp() {
         Composite composite = toolkit.createComposite(charactersMappingSection);
         composite.setLayout(new GridLayout());
 
@@ -386,11 +440,10 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
 
         if (definition != null) {
             EList<CharactersMapping> charactersMappings = definition.getCharactersMapping();
-            // private Map<String, CharactersMapping> charactersMappingMap, charactersMappingMapTemp;
 
             if (charactersMappings != null && charactersMappings.size() > 0) {
                 for (CharactersMapping charactersMapping : charactersMappings) {
-                    recordCharactersMapping(charactersMappingMap, charactersMapping);
+                    recordCharactersMapping(charactersMapping);
                 }
             }
 
@@ -416,8 +469,8 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
      */
     private void createCMAddButton(Composite composite) {
         final Button addButton = new Button(composite, SWT.NONE);
-        addButton.setImage(ImageLib.getImage(ImageLib.ADD_ACTION));
-        addButton.setToolTipText(DefaultMessagesImpl.getString("PatternMasterDetailsPage.add")); //$NON-NLS-1$
+        addButton.setImage(ADD_BUTTON_IMAGE);
+        addButton.setToolTipText(ADD_BUTTON_TEXT);
         GridData labelGd = new GridData();
         labelGd.horizontalAlignment = SWT.CENTER;
         labelGd.widthHint = 65;
@@ -434,9 +487,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
                     remainDBTypeListCM.remove(languageName);
                 }
                 if (remainDBTypeListCM.size() == 0) {
-                    MessageDialog.openWarning(
-                            null,
-                            DefaultMessagesImpl.getString("PatternMasterDetailsPage.warning"), DefaultMessagesImpl.getString("PatternMasterDetailsPage.patternExpression")); //$NON-NLS-1$ //$NON-NLS-2$
+                    MessageDialog.openWarning(Display.getCurrent().getActiveShell(), WARNING, NO_MORE_PATTERN_ERROR);
                     return;
                 }
 
@@ -564,7 +615,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
      * @param charactersMappingMap
      * @param charactersMapping
      */
-    private void recordCharactersMapping(Map<String, CharactersMapping> charactersMappingMap, CharactersMapping charactersMapping) {
+    private void recordCharactersMapping(CharactersMapping charactersMapping) {
         String language = null;
         if (charactersMapping != null) {
             language = charactersMapping.getLanguage();
@@ -577,23 +628,19 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
     /**
      * DOC xqliu Comment method "createAdditionalFunctionsSection".
      * 
-     * @param topComp
      */
-    private void createAdditionalFunctionsSection(Composite topComp) {
-        additionalFunctionsSection = createSection(form, topComp, "Additional Functions", null);//$NON-NLS-1$
-
-        additionalFunctionsComp = createAdditionalFunctionsComp(additionalFunctionsSection);
-
+    private void createAdditionalFunctionsSection() {
+        additionalFunctionsSection = createSection(form, topComp, ADDITIONAL_FUNCTIONS_SECTION_TITLE, null);
+        additionalFunctionsComp = createAdditionalFunctionsComp();
         additionalFunctionsSection.setClient(additionalFunctionsComp);
     }
 
     /**
      * DOC xqliu Comment method "createAdditionalFunctionsComp".
      * 
-     * @param additionalFunctionsSection
      * @return
      */
-    private Composite createAdditionalFunctionsComp(Section additionalFunctionsSection) {
+    private Composite createAdditionalFunctionsComp() {
         Composite composite = toolkit.createComposite(additionalFunctionsSection);
         composite.setLayout(new GridLayout());
 
@@ -793,8 +840,8 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
      */
     private void createAFAddButton(Composite composite) {
         final Button addButton = new Button(composite, SWT.NONE);
-        addButton.setImage(ImageLib.getImage(ImageLib.ADD_ACTION));
-        addButton.setToolTipText(DefaultMessagesImpl.getString("PatternMasterDetailsPage.add")); //$NON-NLS-1$
+        addButton.setImage(ADD_BUTTON_IMAGE);
+        addButton.setToolTipText(ADD_BUTTON_TEXT);
         GridData labelGd = new GridData();
         labelGd.horizontalAlignment = SWT.CENTER;
         labelGd.widthHint = 65;
@@ -811,9 +858,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
                     remainDBTypeListAF.remove(languageName);
                 }
                 if (remainDBTypeListAF.size() == 0) {
-                    MessageDialog.openWarning(
-                            null,
-                            DefaultMessagesImpl.getString("PatternMasterDetailsPage.warning"), DefaultMessagesImpl.getString("PatternMasterDetailsPage.patternExpression")); //$NON-NLS-1$ //$NON-NLS-2$
+                    MessageDialog.openWarning(Display.getCurrent().getActiveShell(), WARNING, NO_MORE_PATTERN_ERROR);
                     return;
                 }
 
@@ -838,16 +883,12 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
 
     }
 
-    protected void createDefinitionSection(Composite topCmp) {
-        definitionSection = createSection(form, topCmp,
-                DefaultMessagesImpl.getString("IndicatorDefinitionMaterPage.definition"), null); //$NON-NLS-1$
-
-        Label label = new Label(definitionSection, SWT.WRAP);
-        label.setText(DefaultMessagesImpl.getString("IndicatorDefinitionMaterPage.definitionDecription")); //$NON-NLS-1$
-        definitionSection.setDescriptionControl(label);
-
-        definitionComp = createDefinitionComp(definitionSection);
-
+    /**
+     * create Definition Section.
+     */
+    protected void createDefinitionSection() {
+        definitionSection = createSection(form, topComp, DEFINITION_SECTION_TITLE, DEFINITION_SECTION_DESCRIPTION);
+        definitionComp = createDefinitionComp();
         definitionSection.setClient(definitionComp);
     }
 
@@ -859,7 +900,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
      * 
      * @return
      */
-    protected Composite createDefinitionComp(Composite definitionSection) {
+    protected Composite createDefinitionComp() {
         Composite composite = toolkit.createComposite(definitionSection);
         composite.setLayout(new GridLayout());
 
@@ -873,7 +914,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
 
         // ADD xqliu 2010-02-26 bug 11201
         if (tempExpressionList.size() > 0) {// || !checkJavaUDIBeforeOpen()) {
-            addTitleComp(dataBaseComp);
+            createDatabaseTitleComp();
         }
         // ADD klliu 2010-06-02 bug 13451: Class name of Java User Define Indicator must be validated
         // MOD backport klliu2010-06-10
@@ -892,26 +933,29 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
     }
 
     /**
-     * DOC xqliu Comment method "addTitleComp". ADD xqliu 2010-02-26 bug 11201
+     * create Database Title Composite.
      * 
-     * @param expressionComp
-     * @return
      */
-    protected Composite addTitleComp(Composite parentComp) {
-        dataBaseTitleComp = new Composite(parentComp, SWT.NONE);
+    protected void createDatabaseTitleComp() {
+        dataBaseTitleComp = new Composite(dataBaseComp, SWT.NONE);
         dataBaseTitleComp.setLayout(new GridLayout(3, false));
+
+        // database Label
         Label databaseLabel = new Label(dataBaseTitleComp, SWT.NONE);
-        databaseLabel.setText(DefaultMessagesImpl.getString("IndicatorDefinitionMaterPage.database")); //$NON-NLS-1$
+        databaseLabel.setText(DATABASE);
         databaseLabel.setLayoutData(new GridData());
-        ((GridData) databaseLabel.getLayoutData()).widthHint = 150;
+        ((GridData) databaseLabel.getLayoutData()).widthHint = 160;
+
+        // dbversion Label
         Label dbversionLabel = new Label(dataBaseTitleComp, SWT.NONE);
-        dbversionLabel.setText(DefaultMessagesImpl.getString("IndicatorDefinitionMaterPage.dbVersion")); //$NON-NLS-1$
+        dbversionLabel.setText(DB_VERSION);
         dbversionLabel.setLayoutData(new GridData(GridData.BEGINNING));
-        ((GridData) dbversionLabel.getLayoutData()).widthHint = 60;
+        ((GridData) dbversionLabel.getLayoutData()).widthHint = 38;
+
+        // sqlTemplate Label
         Label sqlTemplateLabel = new Label(dataBaseTitleComp, SWT.NONE);
-        sqlTemplateLabel.setText(DefaultMessagesImpl.getString("IndicatorDefinitionMaterPage.sqlTemplate")); //$NON-NLS-1$
+        sqlTemplateLabel.setText(SQL_TEMPLATE);
         GridDataFactory.fillDefaults().align(SWT.FILL, SWT.FILL).grab(true, false).applyTo(dataBaseTitleComp);
-        return dataBaseTitleComp;
     }
 
     /**
@@ -1005,7 +1049,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
      */
     private void createNewLine() {
         if (dataBaseTitleComp == null || dataBaseTitleComp.isDisposed()) {
-            addTitleComp(dataBaseComp);
+            createDatabaseTitleComp();
         }
         final Composite lineComp = new Composite(dataBaseComp, SWT.NONE);
         lineComp.setLayout(new GridLayout(5, false));
@@ -1027,7 +1071,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
         // TDQ-6824~
         String oldLanguage = expression.getLanguage();
         expression.setModificationDate(UDIUtils.getCurrentDateTime());
-        checkCComboIsDisposed();
+        removeDisposedComboFromTempExpMap();
 
         putTdExpressToTempMap(combo, expression);
 
@@ -1121,8 +1165,8 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
     }
 
     /**
+     * Language Combo Selection Listener class
      * 
-     * DOC mzhao IndicatorDefinitionMaterPage class global comment. Detailled comment
      */
     protected class LangCombSelectionListener extends SelectionAdapter {
 
@@ -1135,7 +1179,36 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
             String oldLanguage = expression.getLanguage();
             String oldSQLTemplate = expression.getBody();
             modifyList.add(expression);
-            // update other Temp Maps
+
+            // check whether the java type exist first
+            if (isJavaExist(combo)) {
+                MessageUI.openError(DefaultMessagesImpl.getString("IndicatorDefinitionMaterPage.isRepeated", combo.getText())); //$NON-NLS-1$
+                combo.setText(PatternLanguageType.findNameByLanguage(oldLanguage));
+                return;
+            }
+
+            if (oldLanguage.equals(PatternLanguageType.JAVA.getName())) {
+                doDeleteOnlyForJava();
+            }
+
+            for (TdExpression exp : modifyList) {
+                String newLanguage = PatternLanguageType.findLanguageByName(name);
+                if (exp == null) {
+                    exp = BooleanExpressionHelper.createTdExpression(newLanguage, oldSQLTemplate);
+                    putTdExpressToTempMap(combo, exp);
+                } else {
+                    if (oldLanguage.equals(PatternLanguageType.JAVA.getName())) {
+                        exp.setBody(null);
+                    }
+                    exp.setLanguage(newLanguage);
+                }
+                exp.setModificationDate(UDIUtils.getCurrentDateTime());
+            }
+
+            // do update line and Other Combos
+            updateLineAndOtherCombos(combo, expression, oldLanguage);
+
+            // then update other Temp Maps
             if (definition instanceof UDIndicatorDefinition) {
                 if (IndicatorCategoryHelper.isUserDefMatching(category)) {
                     modifyList.add(tempViewValidRowsExpressionMap.get(combo));
@@ -1148,28 +1221,23 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
                 }
             }
 
-            for (TdExpression exp : modifyList) {
-                if (exp == null) {
-                    // MOD TDQ-6824 msjian 2013-2-8: when create expression, we should set correct language
-                    exp = BooleanExpressionHelper.createTdExpression(PatternLanguageType.findLanguageByName(name), null);
-                    exp.setBody(oldSQLTemplate);
-                    // TDQ-6824~
-                    putTdExpressToTempMap(combo, exp);
-                } else {
-                    exp.setLanguage(PatternLanguageType.findLanguageByName(name));
-                }
-                exp.setModificationDate(UDIUtils.getCurrentDateTime());
-            }
-            updateLineAndOtherCombos(combo, expression, oldLanguage);
+            removeDisposedComboFromTempExpMap();
 
             setDirty(true);
         }
     }
 
+    /**
+     * DOC msjian Comment method "updateLineForExpression".
+     * 
+     * @param combo
+     * @param expression
+     * @param oldLanguage
+     */
     protected void updateLineForExpression(final CCombo combo, TdExpression expression, String oldLanguage) {
         // MOD klliu 2011-07-09 bug 22994: Headers are wrong for Java option in indicator editor.
         if (dataBaseTitleComp == null || dataBaseTitleComp.isDisposed()) {
-            addTitleComp(dataBaseComp);
+            createDatabaseTitleComp();
         }
         Composite detailComp = widgetMap.get(combo);
         if (detailComp != null) {
@@ -1187,28 +1255,40 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
         }
         definitionSection.setExpanded(false);
         definitionSection.setExpanded(true);
-
     }
 
+    /**
+     * update DatabaseLine For Java.
+     * 
+     * @param combo
+     * @param expression
+     */
     protected void updateDatabaseLineForJava(final CCombo combo, TdExpression expression) {
         // only needed in UDI master page
     }
 
+    /**
+     * create DataBase Line Component.
+     * 
+     * @param combo
+     * @param expression
+     * @param detailComp
+     */
     protected void createDataBaseLineComponent(final CCombo combo, TdExpression expression, Composite detailComp) {
         createDbVersionText(combo, detailComp, expression.getVersion(), 30);
-        final Text patternText = new Text(detailComp, SWT.BORDER);
-        patternText.setLayoutData(new GridData(GridData.FILL_BOTH));
-        ((GridData) patternText.getLayoutData()).widthHint = 600;
+        final Text expressionText = new Text(detailComp, SWT.BORDER);
+        expressionText.setLayoutData(new GridData(GridData.FILL_BOTH));
+        ((GridData) expressionText.getLayoutData()).widthHint = 600;
         // MOD xqliu 2010-03-23 feature 11201
-        patternText.setText(expression.getBody() == null ? PluginConstant.EMPTY_STRING : expression.getBody());
+        expressionText.setText(expression.getBody() == null ? PluginConstant.EMPTY_STRING : expression.getBody());
         // ~11201
-        patternText.addModifyListener(new ExpressTextModListener(combo));
+        expressionText.addModifyListener(new ExpressTextModListener(combo));
         // ADD msjian TDQ-6841: set the pattern text can not input when the indicator is UDI
         // if (definition instanceof UDIndicatorDefinition) {
-        patternText.setEditable(isPatternTextEditable());
+        expressionText.setEditable(isPatternTextEditable());
         // }
         // TDQ-6841~
-        createExpressionEditButton(detailComp, patternText, combo, expression.getVersion());
+        createExpressionEditButton(detailComp, expressionText, combo, expression.getVersion());
         createExpressionDelButton(detailComp, combo);
         GridDataFactory.fillDefaults().align(SWT.FILL, SWT.FILL).grab(true, false).applyTo(detailComp);
         detailComp.getParent().layout();
@@ -1217,7 +1297,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
     /**
      * DOC yyin Comment method "isPatternTextEditable".
      * 
-     * @return
+     * @return boolean
      */
     protected boolean isPatternTextEditable() {
         return true;
@@ -1245,10 +1325,16 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
 
     }
 
+    /**
+     * create Expression Delete Button.
+     * 
+     * @param expressComp
+     * @param languageCombo
+     */
     protected void createExpressionDelButton(final Composite expressComp, final CCombo languageCombo) {
         Button delButton = new Button(expressComp, SWT.PUSH);
-        delButton.setImage(ImageLib.getImage(ImageLib.DELETE_ACTION));
-        delButton.setToolTipText(DefaultMessagesImpl.getString("IndicatorDefinitionMaterPage.deleteExpression"));//$NON-NLS-1$
+        delButton.setImage(DELETE_BUTTON_IMAGE);
+        delButton.setToolTipText(DELETE_EXPRESSION_TOOLTIP);
         GridData labelGd = new GridData();
         labelGd.horizontalAlignment = SWT.LEFT;
         labelGd.widthHint = 30;
@@ -1257,30 +1343,52 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
 
             @Override
             public void widgetSelected(SelectionEvent e) {
-                // remove title line comp and combo line
-                Composite lineComp = expressComp.getParent();
-                Composite parent = lineComp.getParent();
-                lineComp.dispose();
-                if (parent.getChildren().length == 1) {
-                    Control[] children = parent.getChildren();
-                    children[0].dispose();
-                }
-                disposeExpressionChild();
-                // ~
-                checkCComboIsDisposed();
-                definitionSection.setExpanded(false);
-                definitionSection.setExpanded(true);
-                setDirty(true);
+                doDelete(expressComp, languageCombo.getText());
             }
 
         });
+    }
 
+    /**
+     * the delete action for delete button.
+     * 
+     * @param expressComp
+     * @param language
+     * 
+     */
+    protected void doDelete(final Composite expressComp, String language) {
+        // remove title line comp and combo line
+        Composite lineComp = expressComp.getParent();
+        Composite parent = lineComp.getParent();
+        lineComp.dispose();
+        if (parent.getChildren().length == 1) {
+            Control[] children = parent.getChildren();
+            children[0].dispose();
+        }
+        disposeExpressionChild();
+        // ~
+        removeDisposedComboFromTempExpMap();
+
+        if (language.equals(PatternLanguageType.JAVA.getName())) {
+            doDeleteOnlyForJava();
+        }
+
+        definitionSection.setExpanded(false);
+        definitionSection.setExpanded(true);
+        setDirty(true);
+    }
+
+    /**
+     * do Delete Only For java type.
+     */
+    protected void doDeleteOnlyForJava() {
+        // do nothing here
     }
 
     protected void disposeExpressionChild() {
         int dataBaseLength = dataBaseComp == null ? 0 : dataBaseComp.getChildren().length;
         if (dataBaseLength == 0) {
-            addTitleComp(dataBaseComp);
+            createDatabaseTitleComp();
         }
     }
 
@@ -1295,8 +1403,8 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
     private void createExpressionEditButton(Composite expressComp, final Text patternText, final CCombo combo,
             final String version) {
         Button editButton = new Button(expressComp, SWT.PUSH);
-        editButton.setText(DefaultMessagesImpl.getString("IndicatorDefinitionMaterPage.editExpression")); //$NON-NLS-1$
-        editButton.setToolTipText(DefaultMessagesImpl.getString("IndicatorDefinitionMaterPage.editExpression")); //$NON-NLS-1$
+        editButton.setText(EDIT_BUTTON_TEXT);
+        editButton.setToolTipText(EDIT_BUTTON_TEXT);
         editButton.addSelectionListener(new SelectionAdapter() {
 
             @Override
@@ -1327,9 +1435,16 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
         return editDialog;
     }
 
-    // if it is dirty, get value from tempMap, else from definition
+    /**
+     * get TdExpression.
+     * 
+     * @param combo
+     * @param version
+     * @return TdExpression
+     */
     protected TdExpression getTdExpression(final CCombo combo, final String version) {
         TdExpression tdExpression = null;
+        // if it is dirty, get value from tempMap, else from definition
         if (isDirty()) {
             tdExpression = tempExpressionMap.get(combo);
         } else {
@@ -1364,10 +1479,15 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
         return createTdExpression;
     }
 
+    /**
+     * create Add Button.
+     * 
+     * @param parent Composite
+     */
     private void createAddButton(final Composite parent) {
         final Button addButton = new Button(parent, SWT.NONE);
-        addButton.setImage(ImageLib.getImage(ImageLib.ADD_ACTION));
-        addButton.setToolTipText(DefaultMessagesImpl.getString("PatternMasterDetailsPage.add")); //$NON-NLS-1$
+        addButton.setImage(ADD_BUTTON_IMAGE);
+        addButton.setToolTipText(ADD_BUTTON_TEXT);
         GridData labelGd = new GridData();
         labelGd.horizontalAlignment = SWT.CENTER;
         labelGd.widthHint = 65;
@@ -1447,7 +1567,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
         if (rc.isOk()) {
             CCombo javaUDICombo = updateExpressions();
 
-            updateUDIValues(javaUDICombo);
+            saveUDIValues(javaUDICombo);
 
             if (hasAggregateExpression) {
                 updateAggregateExpression();
@@ -1488,11 +1608,40 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
      * 
      * @param javaUDICombo
      */
-    protected void updateUDIValues(CCombo javaUDICombo) {
+    protected void saveUDIValues(CCombo javaUDICombo) {
         // save some other related values, current only need in UDI
 
     }
 
+    /**
+     * check whether the java type is exist.
+     * 
+     * @param combo
+     * @return boolean
+     */
+    protected boolean isJavaExist(CCombo combo) {
+        return false;
+    }
+
+    /**
+     * check the tempExpressionMap contains java expression.
+     * 
+     * @return boolean
+     */
+    protected boolean checkContainJavaInTempExpressionMap() {
+        for (TdExpression value : tempExpressionMap.values()) {
+            if (value.getLanguage().equals(PatternLanguageType.JAVA.getName())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * DOC msjian Comment method "updateExpressions".
+     * 
+     * @return
+     */
     private CCombo updateExpressions() {
         EList<TdExpression> expressions = definition.getSqlGenericExpression();
         expressions.clear();
@@ -1641,10 +1790,9 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
     }
 
     /**
-     * 
-     * DOC klliu Comment method "checkCComboIsDisposed". if CCombo is disposed,remove it from tempExpressionMap.
+     * if CCombo is disposed,remove it from tempExpressionMap.
      */
-    private void checkCComboIsDisposed() {
+    private void removeDisposedComboFromTempExpMap() {
         Iterator<CCombo> it = tempExpressionMap.keySet().iterator();
         List<CCombo> disposedKey = new ArrayList<CCombo>();
         while (it.hasNext()) {
@@ -1937,9 +2085,11 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
         }
 
         public void dispose() {
+            // until now. do nothing
         }
 
         public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
+            // until now. do nothing
         }
 
     }
@@ -2304,7 +2454,6 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
      * @param exp
      * @return
      */
-    @SuppressWarnings("unchecked")
     public static final TdExpression cloneExpression(TdExpression exp) {
         if (exp == null) {
             return null;
