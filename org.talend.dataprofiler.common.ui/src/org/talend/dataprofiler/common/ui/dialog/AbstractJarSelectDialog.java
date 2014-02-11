@@ -256,7 +256,6 @@ public abstract class AbstractJarSelectDialog<T> extends SelectionStatusDialog {
         if (!fIsEmpty) {
             if (fValidator != null) {
                 fCurrStatus = fValidator.validate(fViewer.getCheckedElements());
-                updateStatus(fCurrStatus);
             } else if (!fCurrStatus.isOK()) {
                 fCurrStatus = new Status(IStatus.OK, PlatformUI.PLUGIN_ID, IStatus.OK, "", //$NON-NLS-1$
                         null);

@@ -33,6 +33,7 @@ import org.talend.commons.emf.CwmResource;
 import org.talend.commons.emf.EMFUtil;
 import org.talend.commons.emf.EmfFileResourceUtil;
 import org.talend.commons.emf.FactoriesUtil;
+import org.talend.cwm.management.i18n.InternationalizationUtil;
 import org.talend.cwm.management.i18n.Messages;
 import org.talend.cwm.relational.TdExpression;
 import org.talend.dataquality.PluginConstant;
@@ -618,7 +619,8 @@ public final class DefinitionHandler {
             // categoryList.add(getUserDefinedTimeCorrelationIndicatorCategory());
 
             for (IndicatorCategory category : categoryList) {
-                userDefinedIndicatorCategoryMap.put(category.getLabel(), category);
+                userDefinedIndicatorCategoryMap.put(
+                        InternationalizationUtil.getCategoryInternationalizationLabel(category.getLabel()), category);
             }
 
             categoryList = null;

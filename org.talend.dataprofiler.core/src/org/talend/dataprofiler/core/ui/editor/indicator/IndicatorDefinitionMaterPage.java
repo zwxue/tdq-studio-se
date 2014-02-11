@@ -390,6 +390,25 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
     }
 
     /**
+     * when change the indicator catogroy, remove all except the old java type.
+     */
+    public void removeFromTempMapsExceptJava() {
+        Iterator<CCombo> it = tempExpressionMap.keySet().iterator();
+        while (it.hasNext()) {
+            CCombo cb = it.next();
+            if (!cb.getText().equals(PatternLanguageType.JAVA.getName())) {
+                it.remove();
+            }
+        }
+
+        tempViewValidRowsExpressionMap = initTempMap(tempViewValidRowsExpressionMap);
+        tempViewInvalidRowsExpressionMap = initTempMap(tempViewInvalidRowsExpressionMap);
+        tempViewValidValuesExpressionMap = initTempMap(tempViewValidValuesExpressionMap);
+        tempViewInvalidValuesExpressionMap = initTempMap(tempViewInvalidValuesExpressionMap);
+        tempViewRowsExpressionMap = initTempMap(tempViewRowsExpressionMap);
+    }
+
+    /**
      * DOC klliu Comment method "initTempIndicatorDefinitionParameter". ADD klliu 2010-07-12 bug 13429.
      * 
      * @param definition2
@@ -680,7 +699,8 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
      * @param topComp
      */
     private void createCharactersMappingSection(Composite topComp) {
-        charactersMappingSection = createSection(form, topComp, "Character mapping", null);//$NON-NLS-1$
+        charactersMappingSection = createSection(form, topComp,
+                DefaultMessagesImpl.getString("IndicatorDefinitionMaterPage.CharactersMappingSectionTitle"), null);//$NON-NLS-1$
 
         charactersMappingComp = createCharactersMappingComp(charactersMappingSection);
 
@@ -897,7 +917,8 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
      * @param topComp
      */
     private void createAdditionalFunctionsSection(Composite topComp) {
-        additionalFunctionsSection = createSection(form, topComp, "Additional Functions", null);//$NON-NLS-1$
+        additionalFunctionsSection = createSection(form, topComp,
+                DefaultMessagesImpl.getString("IndicatorDefinitionMaterPage.AdditionalFunctionsSectionTitle"), null);//$NON-NLS-1$
 
         additionalFunctionsComp = createAdditionalFunctionsComp(additionalFunctionsSection);
 
@@ -1161,10 +1182,10 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
      * @param topComp
      */
     private void createCategorySection(Composite topComp) {
-        categorySection = createSection(form, topComp, "Indicator Category", null);//$NON-NLS-1$
+        categorySection = createSection(form, topComp, DefaultMessagesImpl.getString("UDIMasterPage.CategorySectionTitle"), null);//$NON-NLS-1$
 
         Label label = new Label(categorySection, SWT.WRAP);
-        label.setText("This section is for indicator category.");//$NON-NLS-1$
+        label.setText(DefaultMessagesImpl.getString("UDIMasterPage.CategorySectionDescription"));//$NON-NLS-1$
         categorySection.setDescriptionControl(label);
 
         categoryComp = createCategoryComp(categorySection);
@@ -1191,7 +1212,7 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
         if (categories.size() > 0 && category == null) {
             category = DefinitionHandler.getInstance().getUserDefinedCountIndicatorCategory();
         }
-        comboCategory.setText(category.getLabel());
+        comboCategory.setText(InternationalizationUtil.getCategoryInternationalizationLabel(category.getLabel()));
         comboCategory.addModifyListener(new ModifyListener() {
 
             public void modifyText(ModifyEvent e) {
@@ -1204,8 +1225,8 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
                         setDirty(true);
                         category = DefinitionHandler.getInstance().getIndicatorCategoryByLabel(comboCategory.getText());
                         updateDetailList();
-                        // clear all the temp maps
-                        initTempMaps();
+                        // clear all the temp maps except java type
+                        removeFromTempMapsExceptJava();
 
                         if (dataBaseComp != null) {
                             Control[] children = dataBaseComp.getChildren();
@@ -1214,17 +1235,11 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
                             }
 
                         }
-                        if (javaLanguageComp != null) {
-                            Control[] children = javaLanguageComp.getChildren();
-                            for (Control con : children) {
-                                con.dispose();
-                            }
-                        }
                         definitionSection.setExpanded(false);
                         definitionSection.setExpanded(true);
                     } else {
                         needConfirm = false;
-                        comboCategory.setText(category.getLabel());
+                        comboCategory.setText(InternationalizationUtil.getCategoryInternationalizationLabel(category.getLabel()));
                         needConfirm = true;
                     }
                 }
@@ -1456,11 +1471,11 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
         Label languageLabel = new Label(javaTitleComp, SWT.NONE);
         languageLabel.setText(DefaultMessagesImpl.getString("IndicatorDefinitionMaterPage.language")); //$NON-NLS-1$
         languageLabel.setLayoutData(new GridData());
-        ((GridData) languageLabel.getLayoutData()).widthHint = 250;
+        ((GridData) languageLabel.getLayoutData()).widthHint = 160;
         Label classLabel = new Label(javaTitleComp, SWT.NONE);
         classLabel.setText(DefaultMessagesImpl.getString("IndicatorDefinitionMaterPage.javaClass")); //$NON-NLS-1$
         classLabel.setLayoutData(new GridData(GridData.BEGINNING));
-        ((GridData) classLabel.getLayoutData()).widthHint = 380;
+        ((GridData) classLabel.getLayoutData()).widthHint = 255;
         Label jarLabel = new Label(javaTitleComp, SWT.NONE);
         jarLabel.setText(DefaultMessagesImpl.getString("IndicatorDefinitionMaterPage.jars")); //$NON-NLS-1$
         GridDataFactory.fillDefaults().align(SWT.FILL, SWT.FILL).grab(true, false).applyTo(javaTitleComp);
@@ -1751,6 +1766,17 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
             String oldLanguage = expression.getLanguage();
             String oldSQLTemplate = expression.getBody();
             modifyList.add(expression);
+
+            // check whether the java type exist first
+            if (isJavaExist(combo)) {
+                MessageUI.openError(DefaultMessagesImpl.getString("IndicatorDefinitionMaterPage.isRepeated", combo.getText())); //$NON-NLS-1$
+                combo.setText(PatternLanguageType.findNameByLanguage(oldLanguage));
+                return;
+            }
+
+            if (oldLanguage.equals(PatternLanguageType.JAVA.getName())) {
+                doDeleteOnlyForJava();
+            }
             // update other Temp Maps
             if (definition instanceof UDIndicatorDefinition) {
                 if (IndicatorCategoryHelper.isUserDefMatching(category)) {
@@ -1777,6 +1803,8 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
                 exp.setModificationDate(UDIUtils.getCurrentDateTime());
             }
             updateLineAndOtherCombos(combo, expression, oldLanguage);
+
+            checkCComboIsDisposed();
 
             setDirty(true);
         }
@@ -2000,31 +2028,53 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
 
             @Override
             public void widgetSelected(SelectionEvent e) {
-                // remove title line comp and combo line
-                Composite lineComp = expressComp.getParent();
-                Composite parent = lineComp.getParent();
-                lineComp.dispose();
-                if (parent.getChildren().length == 1) {
-                    Control[] children = parent.getChildren();
-                    children[0].dispose();
-                }
-                int languageLength = javaLanguageComp == null ? 0 : javaLanguageComp.getChildren().length;
-                int dataBaseLength = dataBaseComp == null ? 0 : dataBaseComp.getChildren().length;
-                if (languageLength == 0 && dataBaseLength == 0) {
-                    addTitleComp(dataBaseComp);
-                }
-                if (languageLength == 1) {
-                    Control[] children = javaLanguageComp.getChildren();
-                    children[0].dispose();
-                }
-                // ~
-                checkCComboIsDisposed();
-                definitionSection.setExpanded(false);
-                definitionSection.setExpanded(true);
-                setDirty(true);
+                doDelete(expressComp, languageCombo.getText());
             }
         });
 
+    }
+
+    /**
+     * the delete action for delete button.
+     * 
+     * @param expressComp
+     * @param language
+     */
+    private void doDelete(final Composite expressComp, final String language) {
+        // remove title line comp and combo line
+        Composite lineComp = expressComp.getParent();
+        Composite parent = lineComp.getParent();
+        lineComp.dispose();
+        if (parent.getChildren().length == 1) {
+            Control[] children = parent.getChildren();
+            children[0].dispose();
+        }
+        int languageLength = javaLanguageComp == null ? 0 : javaLanguageComp.getChildren().length;
+        int dataBaseLength = dataBaseComp == null ? 0 : dataBaseComp.getChildren().length;
+        if (languageLength == 0 && dataBaseLength == 0) {
+            addTitleComp(dataBaseComp);
+        }
+        if (languageLength == 1) {
+            Control[] children = javaLanguageComp.getChildren();
+            children[0].dispose();
+        }
+        // ~
+        checkCComboIsDisposed();
+        if (language.equals(PatternLanguageType.JAVA.getName())) {
+            doDeleteOnlyForJava();
+        }
+
+        definitionSection.setExpanded(false);
+        definitionSection.setExpanded(true);
+        setDirty(true);
+    }
+
+    /**
+     * do Delete Only For java type.
+     */
+    protected void doDeleteOnlyForJava() {
+        classNameForSave = ""; //$NON-NLS-1$
+        jarPathForSave = ""; //$NON-NLS-1$
     }
 
     /**
@@ -2405,6 +2455,35 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
         } else {
             MessageUI.openError(rc.getMessage());
         }
+    }
+
+    /**
+     * check whether the java type is exist.
+     * 
+     * @param combo
+     * @return boolean
+     */
+    protected boolean isJavaExist(CCombo combo) {
+        if (combo.getText().equals(PatternLanguageType.JAVA.getName())) {
+            if (javaLanguageComp != null && checkContainJavaInTempExpressionMap()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * check the tempExpressionMap contains java expression.
+     * 
+     * @return boolean
+     */
+    protected boolean checkContainJavaInTempExpressionMap() {
+        for (TdExpression value : tempExpressionMap.values()) {
+            if (value.getLanguage().equals(PatternLanguageType.JAVA.getName())) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
@@ -3023,9 +3102,11 @@ public class IndicatorDefinitionMaterPage extends AbstractMetadataFormPage {
         }
 
         public void dispose() {
+            // until now. do nothing
         }
 
         public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
+            // until now. do nothing
         }
 
     }
