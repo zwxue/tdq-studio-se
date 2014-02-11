@@ -527,6 +527,11 @@ public class DQDeleteAction extends DeleteAction {
                 RepositoryNode tempNode = RepositoryNodeHelper.recursiveFind(mod);
                 if (tempNode == null) {
                     tempNode = RepositoryNodeHelper.recursiveFindRecycleBin(mod);
+                    // TDQ-7337 if the tempNode is physical deleted by other supplier dependency,it will be null at
+                    // here,should continue the loop.
+                    if (tempNode == null) {
+                        continue;
+                    }
                 }
                 logicDeleteDependeny(tempNode);
                 // physical delete dependcy element.
