@@ -145,6 +145,8 @@ public final class DbmsLanguageFactory {
             dbmsLanguage = new InfomixDbmsLanguage(dbmsSubtype, dbVersion);
         } else if (isHive(dbmsSubtype)) {
             dbmsLanguage = new HiveDbmsLanguage(dbmsSubtype, dbVersion);
+        } else if (isNetezza(dbmsSubtype)) {
+            dbmsLanguage = new NetezzaDbmsLanguage(dbmsSubtype, dbVersion);
         } else {
             dbmsLanguage = new DbmsLanguage(dbmsSubtype, dbVersion);
         }
@@ -266,6 +268,16 @@ public final class DbmsLanguageFactory {
         return compareDbmsLanguage(DbmsLanguage.HIVE, dbms);
     }
 
+    /**
+     * judge whether the dmbs is Netezza
+     * 
+     * @param dbmsSubtype
+     * @return
+     */
+    private static boolean isNetezza(String dbms) {
+        return compareDbmsLanguage(DbmsLanguage.NETEZZA, dbms);
+    }
+
     // ~11005
 
     public static boolean isAllDatabaseType(String dbms) {
@@ -303,6 +315,10 @@ public final class DbmsLanguageFactory {
         if (lang1.startsWith(DbmsLanguage.INFOMIX)) {
             return StringUtils.upperCase(lang1).startsWith(StringUtils.upperCase(lang2))
                     || StringUtils.upperCase(lang2).startsWith(StringUtils.upperCase(lang1));
+        }
+        // MOD 2014-02-10 for TDQ-8600 Column Analysis fails with Netezza
+        if (StringUtils.contains(lang1, DbmsLanguage.NETEZZA) && StringUtils.contains(lang2, DbmsLanguage.NETEZZA)) {
+            return true;
         }
         return StringUtils.equalsIgnoreCase(lang1, lang2);
     }
