@@ -75,4 +75,16 @@ public class SchemaAnalysisMasterDetailsPage extends AbstractFilterMetadataPage 
         }
         return cataUIEleList;
     }
+
+    /**
+     * if the current analysis is schema overview, there are no catalogs, but only schemas. so, the number of schemas
+     * here equals to the number of the indicators.
+     * 
+     * @param tdCatalogs
+     * @return
+     */
+    @Override
+    protected int getSchamas(List<Catalog> tdCatalogs) {
+        return analysis.getResults().getIndicators().size();
+    }
 }
