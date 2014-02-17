@@ -12,12 +12,16 @@
 // ============================================================================
 package org.talend.dq.nodes;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.talend.core.model.repository.IRepositoryViewObject;
+import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
 
 /**
- * The parent for: DBTableRepNode,DFTableRepNode,DBViewRepNode,and other table/view level node in the future. Which can provide a easy way to judge them , and handle
- * them together.
+ * The parent for: DBTableRepNode,DFTableRepNode,DBViewRepNode,and other table/view level node in the future. Which can
+ * provide a easy way to judge them , and handle them together.
  * 
  */
 public class ColumnSetRepNode extends DQRepositoryNode {
@@ -31,6 +35,21 @@ public class ColumnSetRepNode extends DQRepositoryNode {
      */
     public ColumnSetRepNode(IRepositoryViewObject object, RepositoryNode parent, ENodeType type) {
         super(object, parent, type);
+    }
+
+    /**
+     * get all columns of the current column set.
+     * 
+     * @return
+     */
+    public List<IRepositoryNode> getAllChildrenColumns() {
+        List<IRepositoryNode> folderList = this.getChildren();
+        // first getChildren will only return the related Folder node; second getChildren will get related columns
+        // under it
+        if (folderList != null && folderList.size() > 0) {
+            return folderList.get(0).getChildren();
+        }
+        return new ArrayList<IRepositoryNode>();
     }
 
 }

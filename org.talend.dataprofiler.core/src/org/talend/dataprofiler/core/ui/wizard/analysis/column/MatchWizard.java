@@ -88,12 +88,12 @@ public class MatchWizard extends ColumnWizard {
         MatchMasterDetailsPage masterPage = (MatchMasterDetailsPage) editor.getMasterPage();
         List<IRepositoryNode> nodes = selectionPage.nodes;
 
-        // if the selected node is not column
-        if (!(selectionPage.nodes.get(0) instanceof ColumnRepNode)) {
-            nodes = translateTableIntoColumn(selectionPage.nodes.get(0));
-        }
+        if (nodes != null && nodes.size() > 0) {
+            // if the selected node is not column
+            if (isNotColumn(nodes)) {
+                nodes = translateTableIntoColumn(nodes);
+            }
 
-        if (nodes.size() > 0) {
             // update analyze data label by selected nodes names(don't cotain columnRepNode).
             masterPage.updateAnalyzeDataLabel(nodes.get(0));
             // give the selected columns to the master page
@@ -104,17 +104,34 @@ public class MatchWizard extends ColumnWizard {
     }
 
     /**
+     * check if some columnset is selected
+     * 
+     * @param nodes
+     * @return
+     */
+    private boolean isNotColumn(List<IRepositoryNode> nodes) {
+        for (IRepositoryNode node : nodes) {
+            if (!(node instanceof ColumnRepNode)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
      * when the selected node is a db table, or file's metadata, should get its children and add them; for other types:
      * just return empty list of node
+     * 
+     * @param nodes
      * 
      * @param iRepositoryNode
      * @return
      */
-    private List<IRepositoryNode> translateTableIntoColumn(IRepositoryNode tableNode) {
-        if (tableNode instanceof ColumnSetRepNode) {
-            // first getChildren will only return the related Folder node; second getChildren will get related columns
-            // under it
-            return tableNode.getChildren().get(0).getChildren();
+    private List<IRepositoryNode> translateTableIntoColumn(List<IRepositoryNode> nodes) {
+        for (IRepositoryNode node : nodes) {
+            if (node instanceof ColumnSetRepNode) {
+                return ((ColumnSetRepNode) node).getAllChildrenColumns();
+            }
         }
         return new ArrayList<IRepositoryNode>();
     }
