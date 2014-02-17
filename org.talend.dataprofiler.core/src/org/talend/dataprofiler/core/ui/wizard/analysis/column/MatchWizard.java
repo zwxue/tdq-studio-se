@@ -95,7 +95,9 @@ public class MatchWizard extends ColumnWizard {
             }
 
             // update analyze data label by selected nodes names(don't cotain columnRepNode).
-            masterPage.updateAnalyzeDataLabel(nodes.get(0));
+            if (nodes.size() > 0) {
+                masterPage.updateAnalyzeDataLabel(nodes.get(0));
+            }
             // give the selected columns to the master page
             masterPage.setSelectedNodes(nodes.toArray(new RepositoryNode[nodes.size()]));
             masterPage.doSave(new NullProgressMonitor());
