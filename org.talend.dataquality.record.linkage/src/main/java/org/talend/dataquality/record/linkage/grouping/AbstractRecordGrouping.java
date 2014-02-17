@@ -26,9 +26,9 @@ import org.talend.dataquality.record.linkage.constant.RecordMatcherType;
 import org.talend.dataquality.record.linkage.record.CombinedRecordMatcher;
 import org.talend.dataquality.record.linkage.record.IRecordMatcher;
 import org.talend.dataquality.record.linkage.record.RecordMatcherFactory;
+import org.talend.dataquality.record.linkage.utils.AnalysisRecordGroupingUtils;
 import org.talend.dataquality.record.linkage.utils.CustomAttributeMatcherClassNameConvert;
 import org.talend.utils.classloader.TalendURLClassLoader;
-import org.talend.utils.string.StringUtilities;
 
 /**
  * created by zhao on Jul 19, 2013 <br>
@@ -120,7 +120,7 @@ public abstract class AbstractRecordGrouping implements IRecordGrouping {
         // In case of current component is linked to previous, and the record is NOT master, just put it to the output
         // and continue;
         if (isLinkToPrevious && !inputRow[inputRow.length - extSize + 2].equalsIgnoreCase("true")) { //$NON-NLS-1$
-            outputRow(StringUtilities.join(inputRow, columnDelimiter, StringUtilities.ESCAPE_CHARACTER));
+            outputRow(AnalysisRecordGroupingUtils.join(inputRow, columnDelimiter, AnalysisRecordGroupingUtils.ESCAPE_CHARACTER));
             return;
         }
 
@@ -248,7 +248,7 @@ public abstract class AbstractRecordGrouping implements IRecordGrouping {
     public void end() throws IOException, InterruptedException {
         // output the masters
         for (String[] mst : masterRecords) {
-            outputRow(StringUtilities.join(mst, columnDelimiter, StringUtilities.ESCAPE_CHARACTER));
+            outputRow(AnalysisRecordGroupingUtils.join(mst, columnDelimiter, AnalysisRecordGroupingUtils.ESCAPE_CHARACTER));
         }
     }
 
@@ -280,7 +280,7 @@ public abstract class AbstractRecordGrouping implements IRecordGrouping {
             duplicateRecord[duplicateRecord.length - extSize + extIdx] = distanceDetails;
         }
         // output the duplicate record
-        outputRow(StringUtilities.join(duplicateRecord, delimiter, StringUtilities.ESCAPE_CHARACTER));
+        outputRow(AnalysisRecordGroupingUtils.join(duplicateRecord, delimiter, AnalysisRecordGroupingUtils.ESCAPE_CHARACTER));
     }
 
     /**

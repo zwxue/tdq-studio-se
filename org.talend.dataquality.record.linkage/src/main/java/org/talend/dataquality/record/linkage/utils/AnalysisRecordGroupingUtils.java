@@ -16,7 +16,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 
+import org.apache.commons.lang.StringUtils;
 import org.talend.dataquality.record.linkage.constant.AttributeMatcherType;
 import org.talend.dataquality.record.linkage.grouping.IRecordGrouping;
 
@@ -24,6 +26,8 @@ import org.talend.dataquality.record.linkage.grouping.IRecordGrouping;
  * used for some utility functions
  */
 public class AnalysisRecordGroupingUtils {
+
+    public static final String ESCAPE_CHARACTER = "\\"; //$NON-NLS-1$
 
     /**
      * get Complete Column Schema.
@@ -132,5 +136,50 @@ public class AnalysisRecordGroupingUtils {
         blockKeyDefMap.put(MatchAnalysisConstant.POST_ALGO, postAlgo);
         blockKeyDefMap.put(MatchAnalysisConstant.POST_VALUE, postAlgoValue);
         return blockKeyDefMap;
+    }
+
+    /**
+     * join the string array to a single string, use escapeCharacter to escape the separator. MUST call
+     * {@link #split(String, String, String)} to split the joined string. (if the string end with escapeCharacter, there
+     * will join to the next column!!!)
+     * 
+     * @param array
+     * @param separator recommend to use |
+     * @param escapeCharacter recommend to use \
+     * @return
+     */
+    public static String join(String[] array, String separator, String escapeCharacter) {
+        String doubleEscapeCharacter = escapeCharacter + escapeCharacter;
+        String escapeCharacterSeparator = escapeCharacter + separator;
+        StringBuilder sr = new StringBuilder();
+        for (String str : array) {
+            String temp = StringUtils.replace(str, escapeCharacter, doubleEscapeCharacter);
+            temp = StringUtils.replace(temp, separator, escapeCharacterSeparator);
+            sr.append(temp + separator);
+        }
+        return StringUtils.removeEnd(sr.toString(), separator);
+    }
+
+    /**
+     * split the string into a string array, use escapeCharacter to escape the separator. the string MUST be generated
+     * by {@link #join(String[], String, String)}.(if the string end with escapeCharacter, there will join to the next
+     * column!!!)
+     * 
+     * @param string
+     * @param separator recommend to use |
+     * @param escapeCharacter recommend to use \
+     * @return
+     */
+    public static String[] split(String string, String separator, String escapeCharacter) {
+        String doubleEscapeCharacter = escapeCharacter + escapeCharacter;
+        String escapeCharacterSeparator = escapeCharacter + separator;
+        String regex = "(?<!" + Pattern.quote(escapeCharacter) + ")" + Pattern.quote(separator); //$NON-NLS-1$ //$NON-NLS-2$
+        ArrayList<String> strs = new ArrayList<String>();
+        for (String s : string.split(regex)) {
+            String temp = StringUtils.replace(s, escapeCharacterSeparator, separator);
+            temp = StringUtils.replace(temp, doubleEscapeCharacter, escapeCharacter);
+            strs.add(temp);
+        }
+        return strs.toArray(new String[strs.size()]);
     }
 }

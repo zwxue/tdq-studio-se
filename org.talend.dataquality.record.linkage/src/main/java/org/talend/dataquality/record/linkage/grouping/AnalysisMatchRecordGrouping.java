@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
-import org.talend.utils.string.StringUtilities;
+import org.talend.dataquality.record.linkage.utils.AnalysisRecordGroupingUtils;
 
 /**
  * created by zshen on Aug 7, 2013 Detailled comment
@@ -50,7 +50,8 @@ public class AnalysisMatchRecordGrouping extends AbstractRecordGrouping {
      */
     @Override
     protected void outputRow(String row) {
-        matchResultConsumer.handle(StringUtilities.split(row, columnDelimiter, StringUtilities.ESCAPE_CHARACTER));
+        matchResultConsumer.handle(AnalysisRecordGroupingUtils.split(row, columnDelimiter,
+                AnalysisRecordGroupingUtils.ESCAPE_CHARACTER));
     }
 
     public void addRuleMatcher(List<Map<String, String>> ruleMatcherConvertResult) {
