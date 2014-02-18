@@ -30,6 +30,7 @@ import org.talend.core.model.repository.RepositoryViewObject;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.cwm.helper.ModelElementHelper;
 import org.talend.cwm.helper.ResourceHelper;
+import org.talend.cwm.management.i18n.Messages;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.domain.pattern.Pattern;
 import org.talend.dataquality.helpers.IndicatorHelper;
@@ -43,6 +44,8 @@ import org.talend.dataquality.properties.impl.TDQIndicatorDefinitionItemImpl;
 import org.talend.dataquality.reports.TdReport;
 import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.PropertyHelper;
+import org.talend.dq.writer.impl.ElementWriterFactory;
+import org.talend.utils.sugars.ReturnCode;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.foundation.softwaredeployment.DataManager;
 import orgomg.cwm.objectmodel.core.Dependency;
@@ -553,4 +556,41 @@ public final class DependenciesHandler {
 
     }
 
+    /**
+     * 
+     * delete the dependency between analysis and connection,then save the connection and analysis.
+     * 
+     * @param analysis
+     * @return whether it has been deleted
+     * 
+     */
+    public boolean removeConnDependencyAndSave(TDQAnalysisItem analysisItem) {
+        Analysis analysis = analysisItem.getAnalysis();
+        Connection oldDataProvider = (Connection) analysis.getContext().getConnection();
+        ReturnCode rect = new TypedReturnCode<Object>(Boolean.TRUE);
+        // Remove old dependencies.
+        if (oldDataProvider != null) {
+            List<ModelElement> tempList = new ArrayList<ModelElement>();
+            tempList.add(oldDataProvider);
+            DependenciesHandler.getInstance().removeDependenciesBetweenModels(analysis, tempList);
+            Property property = PropertyHelper.getProperty(oldDataProvider);
+            if (property != null) {
+                rect = ElementWriterFactory.getInstance().createDataProviderWriter().save(property.getItem(), false);
+            } else {
+                rect.setOk(Boolean.FALSE);
+            }
+            if (!rect.isOk()) {
+                rect.setMessage(Messages.getString("DependenciesHandler.removeDependFailed")); //$NON-NLS-1$
+                log.error(rect.getMessage());
+            } else {
+                analysis.getContext().setConnection(null);
+                analysis.getClientDependency().clear();
+                rect = ElementWriterFactory.getInstance().createAnalysisWrite().save(analysisItem, false);
+            }
+        } else {
+            log.warn(Messages.getString("DependenciesHandler.removeDependFailByNull", "oldDataProvider")); //$NON-NLS-1$ //$NON-NLS-2$
+        }
+
+        return rect.isOk();
+    }
 }

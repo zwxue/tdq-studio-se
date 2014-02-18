@@ -17,11 +17,11 @@ import java.util.Collection;
 
 import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.EList;
-import org.talend.commons.emf.EMFUtil;
 import org.talend.cwm.dependencies.DependenciesHandler;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.columnset.RecordMatchingIndicator;
+import org.talend.dataquality.properties.TDQAnalysisItem;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.foundation.softwaredeployment.DataManager;
 import orgomg.cwm.objectmodel.core.Dependency;
@@ -67,21 +67,21 @@ public class MatchAnalysisHandler extends AnalysisHandler {
         return this.connection;
     }
 
-    public void saveConnection() {
-        assert analysis != null;
-        assert analysis.getContext() != null;
+    // MOD 20140218 TDQ-8430 yyin, use the item to save when connection changed
+    public void updateAnaConnRelationship(TDQAnalysisItem analysisItem) {
+        assert analysisItem.getAnalysis() != null;
         // remove the old dependencies if any
-        if (isChangeConnection && analysis.getContext().getConnection() != null) {
-            DependenciesHandler.getInstance().removeDependenciesBetweenModel(analysis.getContext().getConnection(), analysis);
-            EMFUtil.saveSingleResource(analysis.getContext().getConnection().eResource());
+        if (isChangeConnection && analysisItem.getAnalysis().getContext().getConnection() != null) {
+            DependenciesHandler.getInstance().removeConnDependencyAndSave(analysisItem);
         }// ~
-        analysis.getContext().setConnection(connection);
+        analysisItem.getAnalysis().getContext().setConnection(connection);
 
         // Added TDQ-8183 add db dependency on match analysis
-        if (connection != null) {
-            TypedReturnCode<Dependency> rc = DependenciesHandler.getInstance().setDependencyOn(analysis, connection);
+        if (isChangeConnection && connection != null) {
+            TypedReturnCode<Dependency> rc = DependenciesHandler.getInstance().setDependencyOn(analysisItem.getAnalysis(),
+                    connection);
             if (!rc.isOk()) {
-                log.info("fail to save dependency analysis:" + analysis.getFileName());//$NON-NLS-1$
+                log.info("fail to save dependency analysis:" + analysisItem.getAnalysis().getFileName());//$NON-NLS-1$
             }// ~
         }
     }

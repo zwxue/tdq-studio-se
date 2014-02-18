@@ -51,6 +51,7 @@ import org.eclipse.ui.forms.events.HyperlinkAdapter;
 import org.eclipse.ui.forms.events.HyperlinkEvent;
 import org.eclipse.ui.forms.widgets.ImageHyperlink;
 import org.eclipse.ui.forms.widgets.Section;
+import org.eclipse.ui.part.FileEditorInput;
 import org.talend.commons.utils.WorkspaceUtils;
 import org.talend.core.model.metadata.MetadataColumnRepositoryObject;
 import org.talend.core.model.metadata.builder.connection.Connection;
@@ -90,7 +91,9 @@ import org.talend.dataquality.rules.MatchRule;
 import org.talend.dataquality.rules.MatchRuleDefinition;
 import org.talend.dq.analysis.MatchAnalysisHandler;
 import org.talend.dq.helper.EObjectHelper;
+import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.helper.RepositoryNodeHelper;
+import org.talend.dq.nodes.AnalysisRepNode;
 import org.talend.dq.nodes.DBColumnRepNode;
 import org.talend.dq.writer.impl.ElementWriterFactory;
 import org.talend.repository.model.IRepositoryNode;
@@ -150,6 +153,9 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
 
     private String analyzeDataDefaultInfo;
 
+    // Added yyin TDQ-8430 20140218
+    private TDQAnalysisItem analysisItem;
+
     /**
      * MatchMasterDetailsPage constructor.
      * 
@@ -173,6 +179,29 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
         analysisHandler = new MatchAnalysisHandler();
         analysisHandler.setAnalysis((Analysis) this.currentModelElement);
 
+    }
+
+    // Added yyin TDQ-8430 20140218: because when change connection needs the item to save, so only move the refactor of
+    // this method from trunk, (override the parent's method by the method on trunk parent's same method)
+    @Override
+    protected ModelElement getCurrentModelElement(FormEditor editor) {
+        IEditorInput editorInput = editor.getEditorInput();
+        if (editorInput instanceof AnalysisItemEditorInput) {
+            AnalysisItemEditorInput fileEditorInput = (AnalysisItemEditorInput) editorInput;
+            analysisItem = fileEditorInput.getTDQAnalysisItem();
+        } else if (editorInput instanceof FileEditorInput) {
+            FileEditorInput input = (FileEditorInput) editorInput;
+            Property property = PropertyHelper.getProperty(input.getFile());
+            analysisItem = (TDQAnalysisItem) property.getItem();
+        }
+        analysis = analysisItem.getAnalysis();
+        currentModelElement = analysis;
+        // initAnalysisRepNode
+        RepositoryNode recursiveFind = RepositoryNodeHelper.recursiveFind(analysis);
+        if (recursiveFind != null && recursiveFind instanceof AnalysisRepNode) {
+            this.analysisRepNode = (AnalysisRepNode) recursiveFind;
+        }
+        return analysis;
     }
 
     @Override
@@ -1200,7 +1229,7 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
         }
 
         analysisHandler.saveSelectedAnalyzedElements();
-        analysisHandler.saveConnection();
+        analysisHandler.updateAnaConnRelationship(analysisItem);
 
         ReturnCode saved = new ReturnCode(false);
         IEditorInput editorInput = this.getEditorInput();
