@@ -35,7 +35,8 @@ Require-Bundle: org.eclipse.ui,
  org.talend.common.ui.runtime,
  org.talend.metadata.managment.ui,
  org.apache.log4j,
- org.talend.librariesmanager
+ org.talend.librariesmanager,
+ org.apache.axis
 Bundle-Vendor: .Talend SA.
  org.talend.dq.writer,
  org.talend.dq.writer.impl

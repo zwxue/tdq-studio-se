@@ -395,21 +395,54 @@ public class DbmsLanguage {
      * @return an SQL expression which can be used as pattern finder or null
      */
     public String getPatternFinderFunction(String colName, EList<CharactersMapping> charactersMapping) {
-        String resultingExpressionWithDefaultLang = null;
-        for (CharactersMapping charactersMap : charactersMapping) {
+        CharactersMapping charactersMap = adaptCharactersMapping(charactersMapping);
+
+        if (charactersMap == null) {
+            return null;
+        }
+        return this.getPatternFinderFunction(colName, charactersMap.getCharactersToReplace(),
+                charactersMap.getReplacementCharacters());
+    }
+
+    /**
+     * 
+     * Get CharactersMapping from charactersMappingList, if not found, use the default "SQL" CharactersMapping.
+     * 
+     * @param charactersMappingList all of charactersMapping
+     * @return if there is CharactersMapping return it else if there is default "SQL" CharactersMapping else return
+     * null.
+     */
+    private CharactersMapping adaptCharactersMapping(EList<CharactersMapping> charactersMappingList) {
+        CharactersMapping defaultCharactersMapping = null;
+        for (CharactersMapping charactersMap : charactersMappingList) {
             if (this.is(charactersMap.getLanguage())) {
-                final String charactersToReplace = charactersMap.getCharactersToReplace();
-                final String replacementCharacters = charactersMap.getReplacementCharacters();
-                if (StringUtils.isEmpty(charactersToReplace) || StringUtils.isEmpty(replacementCharacters)
-                        || charactersToReplace.length() != replacementCharacters.length()) {
-                    // go to next character mapping
+                if (validCharactersMapping(charactersMap)) {
+                    return charactersMap;
+                } else {
+                    // current CharactersMapping is invalid so needn't care about default language case
                     continue;
                 }
-                return this.getPatternFinderFunction(colName, charactersToReplace, replacementCharacters);
+
+            } else if (defaultCharactersMapping == null && DbmsLanguageFactory.isAllDatabaseType(charactersMap.getLanguage())) {
+                if (validCharactersMapping(charactersMap)) {
+                    defaultCharactersMapping = charactersMap;
+                }
+
+                // else go to next character mapping
             }
 
         }
-        return resultingExpressionWithDefaultLang;
+        return defaultCharactersMapping;
+    }
+
+    private boolean validCharactersMapping(CharactersMapping charactersMap) {
+        final String charactersToReplace = charactersMap.getCharactersToReplace();
+        final String replacementCharacters = charactersMap.getReplacementCharacters();
+        if (!StringUtils.isEmpty(charactersToReplace) && !StringUtils.isEmpty(replacementCharacters)
+                && charactersToReplace.length() == replacementCharacters.length()) {
+            return true;
+        }
+        return false;
     }
 
     /**
