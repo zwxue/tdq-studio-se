@@ -138,6 +138,8 @@
                   </enumeration>
                   <enumeration value="5.3.2">
                   </enumeration>
+                  <enumeration value="5.3.3">
+                  </enumeration>
                </restriction>
             </simpleType>
          </attribute>
