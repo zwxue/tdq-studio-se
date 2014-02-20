@@ -20,6 +20,7 @@ import java.util.Set;
 
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.emf.common.util.EList;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.window.Window;
@@ -30,6 +31,7 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.ui.PlatformUI;
 import org.talend.commons.utils.platform.PluginChecker;
@@ -117,6 +119,8 @@ public final class ChartTableFactory {
         final boolean isDelimitedFileAnalysis = ConnectionUtils.isDelimitedFileConnection(tdDataProvider);
         final boolean isHiveConnection = ConnectionHelper.isHive(tdDataProvider);
         final boolean isVertica = ConnectionHelper.isVertica(tdDataProvider);
+        final boolean isPatternMatchOnTeradata = isPatternMatchingIndicator(currentIndicator)
+                && ConnectionUtils.isTeradata(tdDataProvider);
 
         if (PluginChecker.isTDCPLoaded() && !(isMDMAnalysis || isDelimitedFileAnalysis || isHiveConnection)) {
             final IDatabaseJobService service = (IDatabaseJobService) GlobalServiceRegister.getDefault().getService(
@@ -125,20 +129,19 @@ public final class ChartTableFactory {
                 service.setIndicator(currentIndicator);
                 service.setAnalysis(analysis);
                 MenuItem item = null;
-                if (ChartTableFactory.isDUDIndicator(currentIndicator)
-                        && AnalysisType.COLUMN_SET != analysis.getParameters().getAnalysisType()) {
+                if (isDUDIndicator(currentIndicator) && AnalysisType.COLUMN_SET != analysis.getParameters().getAnalysisType()) {
                     item = new MenuItem(menu, SWT.PUSH);
                     item.setText(DefaultMessagesImpl.getString("ChartTableFactory.RemoveDuplicate")); //$NON-NLS-1$
-                } else if (ChartTableFactory.isPatternMatchingIndicator(currentIndicator) && !isVertica) {
+                } else if (isPatternMatchingIndicator(currentIndicator) && !isVertica) {
                     item = new MenuItem(menu, SWT.PUSH);
                     item.setText(DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.generateJob"));//$NON-NLS-1$
-                } else if (ChartTableFactory.isAllMatchIndicator(currentIndicator)) {
+                } else if (isAllMatchIndicator(currentIndicator)) {
                     item = new MenuItem(menu, SWT.PUSH);
                     item.setText(DefaultMessagesImpl.getString("ChartTableFactory.gen_etl_job_row")); //$NON-NLS-1$
-                } else if (ChartTableFactory.isPhonseNumberIndicator(currentIndicator)) {
+                } else if (isPhonseNumberIndicator(currentIndicator)) {
                     item = new MenuItem(menu, SWT.PUSH);
                     item.setText(DefaultMessagesImpl.getString("ChartTableFactory.gen_std_phone_job")); //$NON-NLS-1$
-                } else if (ChartTableFactory.isDqRule(currentIndicator)) {
+                } else if (isDqRule(currentIndicator)) {
                     item = new MenuItem(menu, SWT.PUSH);
                     item.setText(DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.generateJob"));//$NON-NLS-1$
                 }
@@ -149,6 +152,15 @@ public final class ChartTableFactory {
 
                         @Override
                         public void widgetSelected(SelectionEvent e) {
+                            // TDQ-8637 pop a message when it is teradata pattern.this is a temporary
+                            // solution.we will support drill down after TDQ-8655 and TDQ-8651 then need
+                            // to remove this code.
+                            if (isPatternMatchOnTeradata) {
+                                MessageDialog.openInformation(new Shell(),
+                                        DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.generateJob"), //$NON-NLS-1$
+                                        DefaultMessagesImpl.getString("ChartTableFactory.NoSupportPatternJobTeradata"));//$NON-NLS-1$
+                                return;
+                            }
                             service.executeJob();
                         }
                     });
@@ -203,6 +215,14 @@ public final class ChartTableFactory {
                                     public void widgetSelected(SelectionEvent e) {
                                         String query = itemEntity.getQuery();
                                         String editorName = indicator.getName();
+                                        // TDQ-8637 pop a message when it is teradata pattern.this is a temporary
+                                        // solution.we will support drill down after TDQ-8655 and TDQ-8651 then need
+                                        // to remove this code.
+                                        if (isPatternMatchingIndicator(indicator) && ConnectionUtils.isTeradata(tdDataProvider)) {
+                                            MessageDialog.openInformation(new Shell(), itemEntity.getLabel(),
+                                                    DefaultMessagesImpl.getString("ChartTableFactory.NoSupportPatternTeradata"));//$NON-NLS-1$
+                                            return;
+                                        }
                                         CorePlugin.getDefault().runInDQViewer(tdDataProvider, query, editorName);
                                     }
                                 });
@@ -371,9 +391,9 @@ public final class ChartTableFactory {
                             if (analysis.getParameters().isStoreData()) { // if allow drill down
 
                                 boolean hasData = analyDataSet != null
-                                        && (analyDataSet.getData() != null
-                                        && analyDataSet.getData().size() > 0 || analyDataSet.getFrequencyData() != null
-                                        && analyDataSet.getFrequencyData().size() > 0 || analyDataSet.getPatternData() != null
+                                        && (analyDataSet.getData() != null && analyDataSet.getData().size() > 0
+                                                || analyDataSet.getFrequencyData() != null
+                                                && analyDataSet.getFrequencyData().size() > 0 || analyDataSet.getPatternData() != null
                                                 && analyDataSet.getPatternData().size() > 0);
 
                                 if (hasData) {

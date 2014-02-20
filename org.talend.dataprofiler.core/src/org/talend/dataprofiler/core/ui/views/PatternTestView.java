@@ -472,6 +472,14 @@ public class PatternTestView extends ViewPart {
                     // ~19119
                     String selectRegexpTestString = createDbmsLanguage.getSelectRegexpTestString(testText.getText(),
                             regularText.getText());
+                    // TDQ-8637 if the 'selectRegexpTestString' is null,means doesn't implement method
+                    // DbmsLanguage.regexLike().should return.
+                    if (selectRegexpTestString == null) {
+                        MessageDialog.openInformation(new Shell(),
+                                DefaultMessagesImpl.getString("PatternTestView.NoSupportTitle"), //$NON-NLS-1$
+                                DefaultMessagesImpl.getString("PatternTestView.NoSupportPatternTest")); //$NON-NLS-1$
+                        return;
+                    }
                     TypedReturnCode<java.sql.Connection> rcConn = JavaSqlFactory.createConnection(tddataprovider);
                     try {
                         if (!rcConn.isOk()) {
