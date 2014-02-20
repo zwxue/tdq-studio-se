@@ -72,13 +72,13 @@ public class AddNetezzaExpressionInIndicatorsTask extends AbstractWorksapceUpdat
 
     private static final String SOUNDEX_LOW_FREQUENCY = "Soundex Low Frequency Table";//$NON-NLS-1$
 
-    private static final String SOUNDEX_LOW_FREQUENCY_DEFAULT = "SELECT MAX(<%=__COLUMN_NAMES__%>), SOUNDEX(<%=__COLUMN_NAMES__%>) , COUNT(*) c, COUNT(DISTINCT <%=__COLUMN_NAMES__%>) d FROM <%=__TABLE_NAME__%> t <%=__WHERE_CLAUSE__%> GROUP BY 2 ORDER BY d,c ASC";//$NON-NLS-1$
+    private static final String SOUNDEX_LOW_FREQUENCY_DEFAULT = "SELECT MAX(<%=__COLUMN_NAMES__%>), SOUNDEX(<%=__COLUMN_NAMES__%>), COUNT(*) c, COUNT(DISTINCT <%=__COLUMN_NAMES__%>) d FROM <%=__TABLE_NAME__%> t <%=__WHERE_CLAUSE__%> GROUP BY SOUNDEX(<%=__COLUMN_NAMES__%>) ORDER BY d,c ASC"; //$NON-NLS-1$;
 
     private static final String SOUNDEX_LOW_FREQUENCY_SQL = "SELECT MAX(<%=__COLUMN_NAMES__%>), NYSIIS(<%=__COLUMN_NAMES__%>), COUNT(*) c, COUNT(DISTINCT <%=__COLUMN_NAMES__%>) d FROM <%=__TABLE_NAME__%> t <%=__WHERE_CLAUSE__%> GROUP BY NYSIIS(<%=__COLUMN_NAMES__%>) ORDER BY d,c ASC";//$NON-NLS-1$
 
     private static final String SOUNDEX_FREQUENCY = "Soundex Frequency Table";//$NON-NLS-1$
 
-    private static final String SOUNDEX_FREQUENCY_DEFAULT = "SELECT MAX(<%=__COLUMN_NAMES__%>), SOUNDEX(<%=__COLUMN_NAMES__%>) , COUNT(*) c, COUNT(DISTINCT <%=__COLUMN_NAMES__%>) d FROM <%=__TABLE_NAME__%> t <%=__WHERE_CLAUSE__%> GROUP BY 2 ORDER BY d DESC,c DESC";//$NON-NLS-1$
+    private static final String SOUNDEX_FREQUENCY_DEFAULT = "SELECT MAX(<%=__COLUMN_NAMES__%>), SOUNDEX(<%=__COLUMN_NAMES__%>), COUNT(*) c, COUNT(DISTINCT <%=__COLUMN_NAMES__%>) d FROM <%=__TABLE_NAME__%> t <%=__WHERE_CLAUSE__%> GROUP BY SOUNDEX(<%=__COLUMN_NAMES__%>) ORDER BY d DESC,c DESC";//$NON-NLS-1$
 
     private static final String SOUNDEX_FREQUENCY_SQL = "SELECT MAX(<%=__COLUMN_NAMES__%>), NYSIIS(<%=__COLUMN_NAMES__%>) , COUNT(*) c, COUNT(DISTINCT <%=__COLUMN_NAMES__%>) d FROM <%=__TABLE_NAME__%> t <%=__WHERE_CLAUSE__%> GROUP BY 2 ORDER BY d DESC,c DESC";//$NON-NLS-1$
 
