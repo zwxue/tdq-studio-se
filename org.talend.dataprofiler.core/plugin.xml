@@ -1673,6 +1673,12 @@
            id="org.talend.dataprofiler.core.migration.impl.SybaseAddSchema"
            name="add Schema on Sybase"
            version="5.4.0">
+     </workspacetask>
+     <workspacetask
+           class="org.talend.dataprofiler.core.migration.impl.AddNetezzaExpressionInIndicatorsTask"
+           id="org.talend.dataprofiler.core.migration.impl.AddNetezzaExpressionInIndicatorsTask"
+           name="Add Netezza Expression In Indicators"
+           version="5.4.2">
      </workspacetask>  
      
   </extension>

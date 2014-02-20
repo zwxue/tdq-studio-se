@@ -53,7 +53,7 @@ public class NetezzaDbmsLanguage extends DbmsLanguage {
      */
     @Override
     public String getPatternFinderDefaultFunction(String expression) {
-        return StringUtils.repeat("REPLACE(", 59) + expression //$NON-NLS-1$
+        return StringUtils.repeat("TRANSLATE(", 59) + expression //$NON-NLS-1$
                 + ",'B','A'),'C','A'),'D','A'),'E','A'),'F','A'),'G','A'),'H','A')" //$NON-NLS-1$
                 + ",'I','A'),'J','A'),'K','A'),'L','A'),'M','A'),'N','A'),'O','A')" //$NON-NLS-1$
                 + ",'P','A'),'Q','A'),'R','A'),'S','A'),'T','A'),'U','A'),'V','A')" //$NON-NLS-1$
@@ -63,8 +63,6 @@ public class NetezzaDbmsLanguage extends DbmsLanguage {
                 + ",'s','a'),'t','a'),'u','a'),'v','a'),'w','a'),'x','a'),'y','a')" //$NON-NLS-1$
                 + ",'z','a'),'1','9'),'2','9'),'3','9'),'4','9'),'5','9'),'6','9')" + ",'7','9'),'8','9'),'0','9')"; //$NON-NLS-1$ //$NON-NLS-2$
     }
-
-  
 
     @Override
     protected String getPatternFinderFunction(String expression, String charsToReplace, String replacementChars) {
@@ -79,7 +77,7 @@ public class NetezzaDbmsLanguage extends DbmsLanguage {
      */
     @Override
     public String replaceNullsWithString(String colName, String replacement) {
-        return " IFNULL(" + colName + "," + replacement + ")"; //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$
+        return " ISNULL(" + colName + "," + replacement + ")"; //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$
     }
 
     /*
@@ -90,7 +88,7 @@ public class NetezzaDbmsLanguage extends DbmsLanguage {
      */
     @Override
     protected String extract(DateGrain dateGrain, String colName) {
-        return dateGrain.getName() + surroundWith('(', colName, ')');
+        return "DATE_PART" + surroundWith('(', surroundWith('\'', dateGrain.getLiteral(), '\'') + "," + colName, ')'); //$NON-NLS-1$ //$NON-NLS-2$
     }
 
     /*
