@@ -327,16 +327,18 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
                         // ~12675
                     }
                     final EList<CharactersMapping> charactersMapping = indicatorDefinition.getCharactersMapping();
-                    colName = dbms().getPatternFinderFunction(colName, charactersMapping);
-                    if (colName == null) {
-                        // no replacement found, try the default one
-                        colName = dbms().getPatternFinderDefaultFunction(colName);
-                        if (colName == null) {
+                    String colNameWithFunction = dbms().getPatternFinderFunction(colName, charactersMapping);
+                    if (colNameWithFunction == null) {
+                        colNameWithFunction = dbms().getPatternFinderDefaultFunction(colName);
+                        if (colNameWithFunction == null) {
                             traceError(Messages.getString(
                                     "ColumnAnalysisSqlExecutor.NOREPLACEMENTFOUNDFORDBTYPE", language, indicator.getName()));//$NON-NLS-1$
                             return Boolean.FALSE;
                         }
                     }
+                    // MOD for TDQ-8600 If the thread can come here mean that tempColName is not null so give the value
+                    // to colName
+                    colName = colNameWithFunction;
                     // ~
                 } else if (indicatorEclass.equals(IndicatorsPackage.eINSTANCE.getSoundexFreqIndicator())
                         || indicatorEclass.equals(IndicatorsPackage.eINSTANCE.getSoundexLowFreqIndicator())) {
