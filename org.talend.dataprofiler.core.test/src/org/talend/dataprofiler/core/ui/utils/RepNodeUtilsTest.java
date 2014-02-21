@@ -12,9 +12,10 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.utils;
 
-import static org.mockito.Mockito.*;
-import static org.powermock.api.support.membermodification.MemberMatcher.*;
-import static org.powermock.api.support.membermodification.MemberModifier.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+import static org.powermock.api.support.membermodification.MemberMatcher.method;
+import static org.powermock.api.support.membermodification.MemberModifier.stub;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,6 +44,16 @@ import org.talend.dataquality.reports.AnalysisMap;
 import org.talend.dataquality.reports.ReportsFactory;
 import org.talend.dataquality.reports.TdReport;
 import org.talend.dq.helper.RepositoryNodeHelper;
+import org.talend.dq.nodes.ColumnRepNode;
+import org.talend.dq.nodes.ConnectionRepNode;
+import org.talend.dq.nodes.DBCatalogRepNode;
+import org.talend.dq.nodes.DBConnectionFolderRepNode;
+import org.talend.dq.nodes.DBConnectionRepNode;
+import org.talend.dq.nodes.DBSchemaRepNode;
+import org.talend.dq.nodes.DBTableRepNode;
+import org.talend.dq.nodes.DBViewRepNode;
+import org.talend.dq.nodes.DFTableRepNode;
+import org.talend.dq.nodes.DQDBFolderRepositoryNode;
 import org.talend.dq.nodes.ReportRepNode;
 import org.talend.repository.ProjectManager;
 import org.talend.repository.model.IRepositoryNode;
@@ -206,4 +217,132 @@ public class RepNodeUtilsTest {
         }
     }
 
+    /**
+     * Test: 1) when the selected node is: connection, catalog,schema, folder, will not be valid; 2) when the selected
+     * nodes are: multiple table/views, multiple columns from different table/view, will not be valid; 3) when the
+     * selected node is: one single table/view/file table,will be valid; 4) when the selected nodes are: multiple
+     * columns from one same table/view, will be valid.
+     */
+    @Test
+    public void testIsValidSelectionForMatchAnalysis() {
+        // 1) when the selected node is: connection, catalog,schema, folder, will not be valid;
+        List<IRepositoryNode> nodes = new ArrayList<IRepositoryNode>();
+        ConnectionRepNode cNode = mock(ConnectionRepNode.class);
+        nodes.add(cNode);
+        Assert.assertFalse(RepNodeUtils.isValidSelectionForMatchAnalysis(nodes));
+
+        DBConnectionRepNode dbNode = mock(DBConnectionRepNode.class);
+        nodes.clear();
+        nodes.add(dbNode);
+        Assert.assertFalse(RepNodeUtils.isValidSelectionForMatchAnalysis(nodes));
+
+        DBConnectionFolderRepNode dbfNode = mock(DBConnectionFolderRepNode.class);
+        nodes.clear();
+        nodes.add(dbfNode);
+        Assert.assertFalse(RepNodeUtils.isValidSelectionForMatchAnalysis(nodes));
+
+        DQDBFolderRepositoryNode folderNode = mock(DQDBFolderRepositoryNode.class);
+        nodes.clear();
+        nodes.add(folderNode);
+        Assert.assertFalse(RepNodeUtils.isValidSelectionForMatchAnalysis(nodes));
+
+        DBCatalogRepNode catalogNode = mock(DBCatalogRepNode.class);
+        nodes.clear();
+        nodes.add(catalogNode);
+        Assert.assertFalse(RepNodeUtils.isValidSelectionForMatchAnalysis(nodes));
+
+        DBSchemaRepNode schemaNode = mock(DBSchemaRepNode.class);
+        nodes.clear();
+        nodes.add(schemaNode);
+        Assert.assertFalse(RepNodeUtils.isValidSelectionForMatchAnalysis(nodes));
+    }
+
+    /**
+     * Test: 2) when the selected nodes are: multiple table/views, multiple columns from different table/view, will not
+     * be valid;
+     */
+    @Test
+    public void testIsValidSelectionForMatchAnalysis_2() {
+        List<IRepositoryNode> nodes = new ArrayList<IRepositoryNode>();
+        DBTableRepNode table1 = mock(DBTableRepNode.class);
+        DBTableRepNode table2 = mock(DBTableRepNode.class);
+        nodes.clear();
+        nodes.add(table1);
+        nodes.add(table2);
+        Assert.assertFalse(RepNodeUtils.isValidSelectionForMatchAnalysis(nodes));
+
+        DBViewRepNode view1 = mock(DBViewRepNode.class);
+        DBViewRepNode view2 = mock(DBViewRepNode.class);
+        nodes.clear();
+        nodes.add(view1);
+        nodes.add(view2);
+        Assert.assertFalse(RepNodeUtils.isValidSelectionForMatchAnalysis(nodes));
+
+        ColumnRepNode col1 = mock(ColumnRepNode.class);
+        ColumnRepNode col2 = mock(ColumnRepNode.class);
+        when(col1.getParent()).thenReturn(table1);
+        when(col2.getParent()).thenReturn(table2);
+        nodes.clear();
+        nodes.add(col1);
+        nodes.add(col2);
+        Assert.assertFalse(RepNodeUtils.isValidSelectionForMatchAnalysis(nodes));
+    }
+
+    /**
+     * Test: 3) when the selected node is: one single table/view/file table,will be valid;
+     */
+    @Test
+    public void testIsValidSelectionForMatchAnalysis_3() {
+        List<IRepositoryNode> nodes = new ArrayList<IRepositoryNode>();
+        DBTableRepNode table1 = mock(DBTableRepNode.class);
+        DBViewRepNode view1 = mock(DBViewRepNode.class);
+
+        // 3) when the selected node is: one single table/view/file table,will be valid;
+        nodes.clear();
+        nodes.add(table1);
+        Assert.assertTrue(RepNodeUtils.isValidSelectionForMatchAnalysis(nodes));
+
+        nodes.clear();
+        nodes.add(view1);
+        Assert.assertTrue(RepNodeUtils.isValidSelectionForMatchAnalysis(nodes));
+
+        DFTableRepNode dfTable = mock(DFTableRepNode.class);
+        nodes.clear();
+        nodes.add(dfTable);
+        Assert.assertTrue(RepNodeUtils.isValidSelectionForMatchAnalysis(nodes));
+    }
+
+    /**
+     * Test:4) when the selected nodes are: multiple columns from one same table/view, will be valid.
+     */
+    @Test
+    public void testIsValidSelectionForMatchAnalysis_4() {
+        List<IRepositoryNode> nodes = new ArrayList<IRepositoryNode>();
+        DBTableRepNode table1 = mock(DBTableRepNode.class);
+        DBViewRepNode view1 = mock(DBViewRepNode.class);
+        DFTableRepNode dfTable = mock(DFTableRepNode.class);
+
+        ColumnRepNode col1 = mock(ColumnRepNode.class);
+        ColumnRepNode col2 = mock(ColumnRepNode.class);
+        when(col1.getParent()).thenReturn(table1);
+        when(col2.getParent()).thenReturn(table1);
+        nodes.clear();
+        nodes.add(col1);
+        nodes.add(col2);
+        Assert.assertTrue(RepNodeUtils.isValidSelectionForMatchAnalysis(nodes));
+
+        when(col1.getParent()).thenReturn(view1);
+        when(col2.getParent()).thenReturn(view1);
+        nodes.clear();
+        nodes.add(col1);
+        nodes.add(col2);
+        Assert.assertTrue(RepNodeUtils.isValidSelectionForMatchAnalysis(nodes));
+
+        when(col1.getParent()).thenReturn(dfTable);
+        when(col2.getParent()).thenReturn(dfTable);
+        nodes.clear();
+        nodes.add(col1);
+        nodes.add(col2);
+        Assert.assertTrue(RepNodeUtils.isValidSelectionForMatchAnalysis(nodes));
+    }
 }

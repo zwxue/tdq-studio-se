@@ -46,6 +46,8 @@ import org.talend.dataquality.reports.AnalysisMap;
 import org.talend.dataquality.reports.TdReport;
 import org.talend.dq.helper.ProxyRepositoryManager;
 import org.talend.dq.helper.RepositoryNodeHelper;
+import org.talend.dq.nodes.ColumnRepNode;
+import org.talend.dq.nodes.ColumnSetRepNode;
 import org.talend.dq.nodes.DBColumnRepNode;
 import org.talend.dq.nodes.DBTableRepNode;
 import org.talend.dq.nodes.DBViewRepNode;
@@ -386,5 +388,37 @@ public final class RepNodeUtils {
             return false;
         }
         return true;
+    }
+
+    /**
+     * Added TDQ-8647 20140220 yyin: check the selected nodes, only when the user select some columns from one same
+     * column set, or the user select one column set, the Finish button is enabled, all other selection will not enable
+     * the Finish button.
+     */
+    public static boolean isValidSelectionForMatchAnalysis(List<IRepositoryNode> nodes) {
+        if (nodes != null && nodes.size() > 0) {
+            // when the first selected node is a column set node type, then the size of the nodes list must be 1
+            if ((nodes.get(0) instanceof ColumnSetRepNode) && nodes.size() == 1) {
+                return Boolean.TRUE;
+            }
+
+            // when the first selected node is a column node type, then:
+            // all selected nodes must be in the same column set.
+            if (nodes.get(0) instanceof ColumnRepNode) {
+                if (nodes.size() == 1) {
+                    return Boolean.TRUE;
+                }
+                RepositoryNode firstParent = nodes.get(0).getParent();
+                for (int index = 1; index < nodes.size(); index++) {
+                    RepositoryNode currentParent = nodes.get(index).getParent();
+                    // if any node's parent not equals to the first one, return false
+                    if (!firstParent.equals(currentParent)) {
+                        return Boolean.FALSE;
+                    }
+                }
+                return Boolean.TRUE;
+            }
+        }
+        return Boolean.FALSE;
     }
 }
