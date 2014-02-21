@@ -4,6 +4,7 @@ import java.beans.PropertyChangeListener;
 import java.sql.Connection;
 import java.sql.Driver;
 import java.sql.SQLException;
+import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;
@@ -11,6 +12,7 @@ import java.util.Properties;
 import net.sourceforge.sqlexplorer.ExplorerException;
 import net.sourceforge.sqlexplorer.Messages;
 import net.sourceforge.sqlexplorer.SQLCannotConnectException;
+import net.sourceforge.sqlexplorer.plugin.SQLExplorerPlugin;
 import net.sourceforge.squirrel_sql.fw.id.IIdentifier;
 import net.sourceforge.squirrel_sql.fw.persist.ValidationException;
 import net.sourceforge.squirrel_sql.fw.sql.ISQLDriver;
@@ -18,6 +20,7 @@ import net.sourceforge.squirrel_sql.fw.util.beanwrapper.StringWrapper;
 
 import org.dom4j.Element;
 import org.dom4j.tree.DefaultElement;
+import org.talend.utils.sql.ConnectionUtils;
 
 /**
  * Manages a JDBC Driver
@@ -223,7 +226,9 @@ public class ManagedDriver implements Comparable<ManagedDriver> {
 
         Connection jdbcConn = null;
         try {
-            jdbcConn = jdbcDriver.connect(user.getAlias().getUrl(), props);
+            String dbUrl = user.getAlias().getUrl();
+            dbUrl = ConnectionUtils.addShutDownForHSQLUrl(dbUrl, user.getMetadataConnection().getAdditionalParams());
+            jdbcConn = jdbcDriver.connect(dbUrl, props);
         } catch (SQLException e) {
             throw new SQLCannotConnectException(user, e);
         }
@@ -295,5 +300,15 @@ public class ManagedDriver implements Comparable<ManagedDriver> {
 
     public int compareTo(ManagedDriver that) {
         return name.compareTo(that.name);
+    }
+
+    public boolean isUsedByAliases() {
+        Collection<Alias> aliases = SQLExplorerPlugin.getDefault().getAliasManager().getAliases();
+        for (Alias alias : aliases) {
+            if (alias.getDriverId().equals(this.getId())) {
+                return true;
+            }
+        }
+        return false;
     }
 }

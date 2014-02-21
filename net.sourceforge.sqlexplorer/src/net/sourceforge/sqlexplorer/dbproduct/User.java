@@ -16,6 +16,7 @@ package net.sourceforge.sqlexplorer.dbproduct;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -32,6 +33,7 @@ import org.talend.core.ITDQRepositoryService;
 import org.talend.core.database.EDatabaseTypeName;
 import org.talend.core.model.metadata.IMetadataConnection;
 import org.talend.cwm.helper.ConnectionHelper;
+import org.talend.utils.sql.ConnectionUtils;
 
 /**
  * Represents a username and password combo used to connect to an alias; contains a list of all connections made
@@ -174,7 +176,7 @@ public class User implements Comparable<User>, SessionEstablishedListener {
                 unused.add(connection);
             } else {
                 try {
-                    connection.close();
+                    closeConnection(connection);
                 } catch (SQLException e) {
                     SQLExplorerPlugin.error("Cannot close connection", e);
                 }
@@ -370,7 +372,29 @@ public class User implements Comparable<User>, SessionEstablishedListener {
         }
 
         // Close unwanted connections
-        connection.close();
+        closeConnection(connection);
+    }
+
+    /**
+     * DOC msjian Comment method "closeConnection".
+     * 
+     * @param connection
+     * @throws SQLException
+     */
+    protected void closeConnection(SQLConnection connection) throws SQLException {
+        if (!connection.getConnection().isClosed()) {
+            if (!connection.isPooled()) {
+                String url = connection.getSQLMetaData().getURL();
+                // we hold on hsql server's status when it is server mode and not In-Process mode.
+                if (url != null && url.startsWith("jdbc:hsqldb") && (!url.startsWith("jdbc:hsqldb:hsql"))) {
+                    Statement statement = connection.createStatement();
+                    statement.executeUpdate("SHUTDOWN;");//$NON-NLS-1$
+                    statement.close();
+                }
+            }
+
+            connection.close();
+        }
     }
 
     /**
@@ -382,7 +406,7 @@ public class User implements Comparable<User>, SessionEstablishedListener {
     public void disposeConnection(SQLConnection connection) {
         allocated.remove(connection);
         try {
-            connection.close();
+            closeConnection(connection);
         } catch (SQLException e) {
             // Nothing
         }
@@ -396,7 +420,7 @@ public class User implements Comparable<User>, SessionEstablishedListener {
      */
     public synchronized boolean releaseFromPool(SQLConnection connection) {
         try {
-            connection.close();
+            closeConnection(connection);
         } catch (SQLException e) {
             SQLExplorerPlugin.error(e);
         }

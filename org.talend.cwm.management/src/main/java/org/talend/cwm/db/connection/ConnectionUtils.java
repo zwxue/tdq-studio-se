@@ -1449,7 +1449,7 @@ public final class ConnectionUtils {
                                      // ParameterUtil.toMap(ConnectionUtils.createConnectionParam(dbConn));
                 IMetadataConnection metaConnection = ConvertionHelper.convert(dbConn);
                 dbConn = (DatabaseConnection) MetadataFillFactory.getDBInstance().fillUIConnParams(metaConnection, dbConn);
-                sqlConn = MetadataConnectionUtils.checkConnection(metaConnection).getObject();
+                sqlConn = MetadataConnectionUtils.createConnection(metaConnection).getObject();
 
                 if (sqlConn != null) {
                     DatabaseMetaData dm = ExtractMetaDataUtils.getInstance().getDatabaseMetaData(sqlConn, dbConn, false);

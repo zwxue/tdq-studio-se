@@ -34,9 +34,11 @@ import org.talend.utils.sugars.TypedReturnCode;
  * instead of it.
  * 
  */
+@Deprecated
 public class ConnectionService {
 
     private static Logger log = Logger.getLogger(ConnectionService.class);
+
     public static TypedReturnCode<Connection> createConnection(DBConnectionParameter parameter) {
         TypedReturnCode<Connection> tReturnCode = new TypedReturnCode<Connection>(false);
         MetadataFillFactory instance = null;
@@ -47,26 +49,26 @@ public class ConnectionService {
         }
 
         IMetadataConnection metaConnection = instance.fillUIParams(ParameterUtil.toMap(parameter));
-        ReturnCode rc = instance.checkConnection(metaConnection);
+        ReturnCode rc = instance.createConnection(metaConnection);
         if (rc.isOk()) {
             Connection dbConn = instance.fillUIConnParams(metaConnection, null);
             DatabaseMetaData dbMetadata = null;
             List<String> packageFilter = ConnectionUtils.getPackageFilter(parameter);
             java.sql.Connection sqlConn = null;
             try {
-            if (rc instanceof TypedReturnCode) {
+                if (rc instanceof TypedReturnCode) {
                     @SuppressWarnings("rawtypes")
-                Object sqlConnObject=((TypedReturnCode) rc).getObject();
-                if(sqlConnObject instanceof java.sql.Connection){
-                    sqlConn = (java.sql.Connection) sqlConnObject;
+                    Object sqlConnObject = ((TypedReturnCode) rc).getObject();
+                    if (sqlConnObject instanceof java.sql.Connection) {
+                        sqlConn = (java.sql.Connection) sqlConnObject;
                         dbMetadata = org.talend.utils.sql.ConnectionUtils.getConnectionMetadata(sqlConn);
+                    }
                 }
-            }
 
                 instance.fillCatalogs(dbConn, dbMetadata, packageFilter);
                 instance.fillSchemas(dbConn, dbMetadata, packageFilter);
-                
-            tReturnCode.setObject(dbConn);
+
+                tReturnCode.setObject(dbConn);
             } catch (SQLException e) {
                 log.error(e, e);
                 // Need to add a dialog for report the reson of error

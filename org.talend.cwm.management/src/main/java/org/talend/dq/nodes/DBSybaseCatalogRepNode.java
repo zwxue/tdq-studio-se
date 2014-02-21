@@ -104,7 +104,7 @@ public class DBSybaseCatalogRepNode extends DBCatalogRepNode {
 
         DatabaseConnection connection = (DatabaseConnection) ((DatabaseConnectionItem) databaseItem).getConnection();
 
-        TypedReturnCode<Connection> rcConn = MetadataConnectionUtils.checkConnection(connection);
+        TypedReturnCode<Connection> rcConn = MetadataConnectionUtils.createConnection(connection);
         if (!rcConn.isOk()) {
             log.error(rcConn.getMessage());
             return false;
@@ -116,11 +116,13 @@ public class DBSybaseCatalogRepNode extends DBCatalogRepNode {
                     false);
             List<Schema> schemaList = MetadataFillFactory.getDBInstance(SupportDBUrlType.SYBASEDEFAULTURL).fillSchemaToCatalog(
                     connection, dbJDBCMetadata, this.getCatalog(), null);
-            if (schemaList!=null && schemaList.size() > 0) {
+            if (schemaList != null && schemaList.size() > 0) {
                 CatalogHelper.addSchemas(schemaList, this.getCatalog());
             }
         } finally {
-            ConnectionUtils.closeConnection(sqlConnection);
+            if (sqlConnection != null) {
+                ConnectionUtils.closeConnection(sqlConnection);
+            }
         }
         return true;
     }

@@ -215,16 +215,18 @@ public class DBColumnFolderRepNode extends DQDBFolderRepositoryNode implements I
      * @param repsNodes
      */
     private void createTdcolumnsNode(List<TdColumn> tdcolumns, List<IRepositoryNode> repsNodes) {
-        for (MetadataColumn tdColumn : tdcolumns) {
-            MetadataColumnRepositoryObject metadataColumn = new MetadataColumnRepositoryObject(this.getParent().getObject(),
-                    tdColumn);
-            metadataColumn.setId(tdColumn.getName());
-            metadataColumn.setLabel(tdColumn.getName());
-            DBColumnRepNode columnNode = new DBColumnRepNode(metadataColumn, this, ENodeType.TDQ_REPOSITORY_ELEMENT);
-            columnNode.setProperties(EProperties.LABEL, ERepositoryObjectType.METADATA_CON_COLUMN);
-            columnNode.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.METADATA_CON_COLUMN);
-            metadataColumn.setRepositoryNode(columnNode);
-            repsNodes.add(columnNode);
+        if (tdcolumns != null) {
+            for (MetadataColumn tdColumn : tdcolumns) {
+                MetadataColumnRepositoryObject metadataColumn = new MetadataColumnRepositoryObject(this.getParent().getObject(),
+                        tdColumn);
+                metadataColumn.setId(tdColumn.getName());
+                metadataColumn.setLabel(tdColumn.getName());
+                DBColumnRepNode columnNode = new DBColumnRepNode(metadataColumn, this, ENodeType.TDQ_REPOSITORY_ELEMENT);
+                columnNode.setProperties(EProperties.LABEL, ERepositoryObjectType.METADATA_CON_COLUMN);
+                columnNode.setProperties(EProperties.CONTENT_TYPE, ERepositoryObjectType.METADATA_CON_COLUMN);
+                metadataColumn.setRepositoryNode(columnNode);
+                repsNodes.add(columnNode);
+            }
         }
     }
 
