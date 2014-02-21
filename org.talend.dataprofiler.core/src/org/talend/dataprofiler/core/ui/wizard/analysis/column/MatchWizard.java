@@ -90,9 +90,9 @@ public class MatchWizard extends ColumnWizard {
         List<IRepositoryNode> nodes = selectionPage.nodes;
 
         if (nodes != null && nodes.size() > 0) {
-            // if some selected node is not column type
-            if (isNotColumn(nodes)) {
-                nodes = translateTableIntoColumn(nodes);
+            // if the first selected node is not column type(there should only one column set in the selected node then)
+            if (!(nodes.get(0) instanceof ColumnRepNode)) {
+                nodes = ((ColumnSetRepNode) nodes.get(0)).getAllColumns();
             }
 
             // update analyze data label by selected nodes names(don't cotain columnRepNode).
@@ -117,23 +117,7 @@ public class MatchWizard extends ColumnWizard {
         if (selectionPage != null) {
             return RepNodeUtils.isValidSelectionForMatchAnalysis(selectionPage.nodes);
         }
-
-    /**
-     * when the selected node is a db table, or file's metadata, should get its children and add them; for other types:
-     * just return empty list of node. MOD yyin 20140218 TDQ-8481
-     * 
-     * @param nodes
-     * 
-     * @param iRepositoryNode
-     * @return
-     */
-    private List<IRepositoryNode> translateTableIntoColumn(List<IRepositoryNode> nodes) {
-        for (IRepositoryNode node : nodes) {
-            if (node instanceof ColumnSetRepNode) {
-                return ((ColumnSetRepNode) node).getAllChildrenColumns();
-            }
-        }
-        return new ArrayList<IRepositoryNode>();
+        return Boolean.FALSE;
     }
 
     /*
