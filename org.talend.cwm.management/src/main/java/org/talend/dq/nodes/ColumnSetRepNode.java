@@ -42,7 +42,7 @@ public class ColumnSetRepNode extends DQRepositoryNode {
      * 
      * @return
      */
-    public List<IRepositoryNode> getAllChildrenColumns() {
+    public List<IRepositoryNode> getAllColumns() {
         List<IRepositoryNode> folderList = this.getChildren();
         // first getChildren will only return the related Folder node; second getChildren will get related columns
         // under it

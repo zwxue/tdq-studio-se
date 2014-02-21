@@ -18,9 +18,8 @@ import org.eclipse.ui.navigator.ICommonActionExtensionSite;
 import org.eclipse.ui.navigator.ICommonViewerWorkbenchSite;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.action.actions.MatchAnalysisAction;
-import org.talend.dq.nodes.DBTableRepNode;
-import org.talend.dq.nodes.DBViewRepNode;
-import org.talend.repository.model.RepositoryNode;
+import org.talend.dataprofiler.core.ui.utils.RepNodeUtils;
+import org.talend.dq.nodes.ColumnSetRepNode;
 
 public class MatchAnalysisActionProvider extends AbstractCommonActionProvider {
 
@@ -57,52 +56,20 @@ public class MatchAnalysisActionProvider extends AbstractCommonActionProvider {
         }
 
         TreeSelection currentSelection = ((TreeSelection) this.getContext().getSelection());
+        // Added TDQ-8647 yyin 20140221 :only when the selection is valid, the menu will be added
+        if (currentSelection != null && !RepNodeUtils.isValidSelectionForMatchAnalysis(currentSelection.toList())) {
+            return;
+        }
 
         matchAnalysisAction.setColumnSelection(currentSelection);
-        if (isSelectedTableLevel(currentSelection)) {
+        // when the selection is valid, only two possible status: only one columnset is select, otherwise is some
+        // columns in the same columnset are selected; so only check the fist node in the selection is enough.
+        if (currentSelection.toList().get(0) instanceof ColumnSetRepNode) {
             matchAnalysisAction.setText(DefaultMessagesImpl.getString("MatchAnalysisAction.matchAnalysis"));
-        } else if (isSelectedColumnLevel(currentSelection)) {
+        } else {
             matchAnalysisAction.setText(DefaultMessagesImpl.getString("MatchAnalysisAction.analyzeMatches"));
         }
         menu.add(matchAnalysisAction);
-    }
-
-    /**
-     * DOC bZhou Comment method "isSelectedColumnLevel".
-     * 
-     * @param currentSelection
-     * @return
-     */
-    private boolean isSelectedTableLevel(TreeSelection currentSelection) {
-        if (currentSelection.size() == 1) {
-            for (Object obj : currentSelection.toList()) {
-                if (obj instanceof DBTableRepNode || obj instanceof DBViewRepNode) {
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-
-    /**
-     * DOC bZhou Comment method "isSelectedColumnLevel".
-     * 
-     * @param currentSelection
-     * @return
-     */
-    private boolean isSelectedColumnLevel(TreeSelection currentSelection) {
-        for (Object obj : currentSelection.toList()) {
-            if (obj instanceof RepositoryNode) {
-                RepositoryNode node = (RepositoryNode) obj;
-                if (node.hasChildren()) {
-                    return false;
-                }
-            } else {
-                return false;
-            }
-        }
-
-        return true;
     }
 
 }

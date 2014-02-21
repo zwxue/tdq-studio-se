@@ -12,7 +12,6 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.wizard.analysis.column;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -24,6 +23,7 @@ import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.ui.editor.analysis.AnalysisEditor;
 import org.talend.dataprofiler.core.ui.editor.analysis.MatchMasterDetailsPage;
+import org.talend.dataprofiler.core.ui.utils.RepNodeUtils;
 import org.talend.dataprofiler.core.ui.wizard.analysis.AnalysisMetadataWizardPage;
 import org.talend.dataprofiler.core.ui.wizard.analysis.provider.MatchAnaColumnContentProvider;
 import org.talend.dataquality.analysis.Analysis;
@@ -83,6 +83,8 @@ public class MatchWizard extends ColumnWizard {
         }
     }
 
+    // when calling this method, the validation of the selection has been approved.the nodes will only contains one
+    // column set, or some columns from one same column set.
     private void updateAnalysisBySelectedNode(AnalysisEditor editor) {
         MatchMasterDetailsPage masterPage = (MatchMasterDetailsPage) editor.getMasterPage();
         List<IRepositoryNode> nodes = selectionPage.nodes;
@@ -110,14 +112,11 @@ public class MatchWizard extends ColumnWizard {
      * @param nodes
      * @return
      */
-    private boolean isNotColumn(List<IRepositoryNode> nodes) {
-        for (IRepositoryNode node : nodes) {
-            if (!(node instanceof ColumnRepNode)) {
-                return true;
-            }
+    @Override
+    public boolean canFinish() {
+        if (selectionPage != null) {
+            return RepNodeUtils.isValidSelectionForMatchAnalysis(selectionPage.nodes);
         }
-        return false;
-    }
 
     /**
      * when the selected node is a db table, or file's metadata, should get its children and add them; for other types:
