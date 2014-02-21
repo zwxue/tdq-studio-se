@@ -75,6 +75,7 @@ public class DatabaseConnectionWizard extends AbstractWizard {
     /**
      * Adding the page to the wizard and set Title, Description and PageComplete.
      */
+    @Override
     public void addPages() {
         String winTitle = isMdmFlag() ? DefaultMessagesImpl.getString("DatabaseConnectionWizard.mdmConnection") //$NON-NLS-1$
                 : DefaultMessagesImpl.getString("DatabaseConnectionWizard.databaseConnection"); //$NON-NLS-1$
@@ -199,7 +200,7 @@ public class DatabaseConnectionWizard extends AbstractWizard {
         }
 
         IMetadataConnection metaConnection = instance.fillUIParams(ParameterUtil.toMap(connectionParam));
-        ReturnCode rc = instance.checkConnection(metaConnection);
+        ReturnCode rc = instance.createConnection(metaConnection);
         if (rc.isOk()) {
             Connection dbConn = instance.fillUIConnParams(metaConnection, null);
             DatabaseMetaData dbMetadata = null;
@@ -306,6 +307,7 @@ public class DatabaseConnectionWizard extends AbstractWizard {
     /**
      * ADD xqliu 2010-04-01 bug 12379.
      */
+    @Override
     public ReturnCode checkMetadata() {
         if (getParameter() != null) {
             String dbName = getParameter().getDbName();

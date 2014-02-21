@@ -1,20 +1,16 @@
 /*
- * Copyright (C) 2007 SQL Explorer Development Team
- * http://sourceforge.net/projects/eclipsesql
- *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation; either
- * version 2.1 of the License, or (at your option) any later version.
- *
- * This library is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * Copyright (C) 2007 SQL Explorer Development Team http://sourceforge.net/projects/eclipsesql
+ * 
+ * This program is free software; you can redistribute it and/or modify it under the terms of the GNU Lesser General
+ * Public License as published by the Free Software Foundation; either version 2.1 of the License, or (at your option)
+ * any later version.
+ * 
+ * This library is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
+ * warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License along with this library; if not, write to
+ * the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
  */
 package net.sourceforge.sqlexplorer.preferences;
 
@@ -65,12 +61,11 @@ import org.eclipse.ui.PlatformUI;
 
 /**
  * This class is used to define a preference page for JDBC drivers.
- *
- * The intention is to remove the need for the &quot;Driver&quot; view and to
- * replace this with a &quot;JDBC Drivers&quot; preference page. The UI is
- * identical to the view except for the removal of the toolbar and the addition
+ * 
+ * The intention is to remove the need for the &quot;Driver&quot; view and to replace this with a &quot;JDBC
+ * Drivers&quot; preference page. The UI is identical to the view except for the removal of the toolbar and the addition
  * of Add, Edit, Copy, Remove and Set Default buttons.
- *
+ * 
  * @author <A HREF="mailto:dbulua@progress.com">Don Bulua</A>
  * @modified Davy Vanherbergen
  */
@@ -84,7 +79,6 @@ public class DriverPreferencePage extends PreferencePage implements IWorkbenchPr
 
     private DriverManager _driverModel;
 
-
     /**
      *
      */
@@ -92,14 +86,12 @@ public class DriverPreferencePage extends PreferencePage implements IWorkbenchPr
         super();
     }
 
-
     /**
      * @param title
      */
     public DriverPreferencePage(String title) {
         super(title);
     }
-
 
     /**
      * @param title
@@ -110,15 +102,13 @@ public class DriverPreferencePage extends PreferencePage implements IWorkbenchPr
 
     }
 
-
     /*
      * (non-Javadoc)
-     *
-     * @see org.eclipse.jface.preference.PreferencePage#createContents(org.eclipse.swt.widgets.Composite)
-     *      The UI is defined in the DriverContainerGroup class. Note: The
-     *      [Restore Default] and [Apply] buttons have been removed using the
-     *      noDefaultandApplyButton method as these don't apply since all
-     *      updates are made in the corresponding dialogs.
+     * 
+     * @see org.eclipse.jface.preference.PreferencePage#createContents(org.eclipse.swt.widgets.Composite) The UI is
+     * defined in the DriverContainerGroup class. Note: The [Restore Default] and [Apply] buttons have been removed
+     * using the noDefaultandApplyButton method as these don't apply since all updates are made in the corresponding
+     * dialogs.
      */
     @Override
     protected Control createContents(Composite parent) {
@@ -244,17 +234,25 @@ public class DriverPreferencePage extends PreferencePage implements IWorkbenchPr
 
             @Override
             public void widgetSelected(SelectionEvent e) {
-
-                boolean okToDelete = MessageDialog.openConfirm(getShell(), Messages.getString("Preferences.Drivers.ConfirmDelete.Title"),
-                        Messages.getString("Preferences.Drivers.ConfirmDelete.Prefix") + _tableViewer.getTable().getSelection()[0].getText()
-                                + Messages.getString("Preferences.Drivers.ConfirmDelete.Postfix"));
-                if (okToDelete) {
-                    StructuredSelection sel = (StructuredSelection) _tableViewer.getSelection();
-                    ManagedDriver dv = (ManagedDriver) sel.getFirstElement();
-                    if (dv != null) {
-                        _driverModel.removeDriver(dv);
-                        _tableViewer.refresh();
-                        selectFirst();
+                StructuredSelection sel = (StructuredSelection) _tableViewer.getSelection();
+                ManagedDriver managedDriver = (ManagedDriver) sel.getFirstElement();
+                if (managedDriver != null) {
+                    // when the driver is used by other Aliases, give a warning to user
+                    if (managedDriver.isUsedByAliases()) {
+                        MessageDialog.openWarning(getShell(), Messages.getString("Preferences.Drivers.ConfirmDelete.Title"),
+                                Messages.getString("Preferences.Drivers.ConfirmDelete.Warning"));
+                    } else {
+                        boolean okToDelete = MessageDialog.openConfirm(
+                                getShell(),
+                                Messages.getString("Preferences.Drivers.ConfirmDelete.Title"),
+                                Messages.getString("Preferences.Drivers.ConfirmDelete.Prefix")
+                                        + _tableViewer.getTable().getSelection()[0].getText()
+                                        + Messages.getString("Preferences.Drivers.ConfirmDelete.Postfix"));
+                        if (okToDelete) {
+                            _driverModel.removeDriver(managedDriver);
+                            _tableViewer.refresh();
+                            selectFirst();
+                        }
                     }
                 }
             }
@@ -274,8 +272,8 @@ public class DriverPreferencePage extends PreferencePage implements IWorkbenchPr
 
                     _tableViewer.getTable().getItem(i).setFont(0, table.getFont());
                 }
-                _boldfont = new Font(_tableViewer.getTable().getDisplay(), table.getFont().toString(),
-                        table.getFont().getFontData()[0].getHeight(), SWT.BOLD);
+                _boldfont = new Font(_tableViewer.getTable().getDisplay(), table.getFont().toString(), table.getFont()
+                        .getFontData()[0].getHeight(), SWT.BOLD);
                 _tableViewer.getTable().getSelection()[0].setFont(0, _boldfont);
                 _prefs.setValue(IConstants.DEFAULT_DRIVER, _tableViewer.getTable().getSelection()[0].getText());
             }
@@ -288,13 +286,13 @@ public class DriverPreferencePage extends PreferencePage implements IWorkbenchPr
 
             @Override
             public void widgetSelected(SelectionEvent e) {
-            	try {
-	                _driverModel.restoreDrivers();
-	                _tableViewer.refresh();
-	                selectFirst();
-            	}catch(ExplorerException ex) {
-            		SQLExplorerPlugin.error("Cannot restore default driver configuration", ex);
-            	}
+                try {
+                    _driverModel.restoreDrivers();
+                    _tableViewer.refresh();
+                    selectFirst();
+                } catch (ExplorerException ex) {
+                    SQLExplorerPlugin.error("Cannot restore default driver configuration", ex);
+                }
             }
         });
 
@@ -305,20 +303,18 @@ public class DriverPreferencePage extends PreferencePage implements IWorkbenchPr
         return parent;
     }
 
-
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see org.eclipse.ui.IWorkbenchPreferencePage#init(org.eclipse.ui.IWorkbench)
      */
     public void init(IWorkbench workbench) {
 
     }
 
-
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see org.eclipse.jface.preference.PreferencePage#noDefaultAndApplyButton()
      */
 
@@ -328,7 +324,7 @@ public class DriverPreferencePage extends PreferencePage implements IWorkbenchPr
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @see org.eclipse.jface.preference.IPreferencePage#performOk()
      */
     @Override
@@ -336,7 +332,6 @@ public class DriverPreferencePage extends PreferencePage implements IWorkbenchPr
 
         return super.performOk();
     }
-
 
     private void changeDriver() {
         StructuredSelection sel = (StructuredSelection) _tableViewer.getSelection();
@@ -349,15 +344,13 @@ public class DriverPreferencePage extends PreferencePage implements IWorkbenchPr
         }
     }
 
-
     void selectFirst() {
-    	Iterator<ManagedDriver> iter = _driverModel.getDrivers().iterator();
+        Iterator<ManagedDriver> iter = _driverModel.getDrivers().iterator();
         if (iter.hasNext()) {
             StructuredSelection sel = new StructuredSelection(iter.next());
             _tableViewer.setSelection(sel);
         }
     }
-
 
     // Bold the default driver element
     void selectDefault(Table table) {
@@ -369,8 +362,8 @@ public class DriverPreferencePage extends PreferencePage implements IWorkbenchPr
         int index = 0;
         for (ManagedDriver driver : _driverModel.getDrivers()) {
             if (driver.getName().toLowerCase().startsWith(defaultDriver.toLowerCase())) {
-                _boldfont = new Font(_tableViewer.getTable().getDisplay(), table.getFont().toString(),
-                        table.getFont().getFontData()[0].getHeight(), SWT.BOLD);
+                _boldfont = new Font(_tableViewer.getTable().getDisplay(), table.getFont().toString(), table.getFont()
+                        .getFontData()[0].getHeight(), SWT.BOLD);
                 _tableViewer.getTable().getItem(index).setFont(0, _boldfont);
                 _tableViewer.getTable().pack(true);
                 break;
@@ -383,20 +376,19 @@ public class DriverPreferencePage extends PreferencePage implements IWorkbenchPr
 class DriverContentProvider implements IStructuredContentProvider {
 
     public Object[] getElements(Object input) {
-    	ArrayList<ManagedDriver> drivers = new ArrayList<ManagedDriver>();
-    	drivers.addAll(((DriverManager) input).getDrivers());
-    	Collections.sort(drivers, new Comparator<ManagedDriver>() {
-			public int compare(ManagedDriver left, ManagedDriver right) {
-				return left.getName().compareTo(right.getName());
-			}
-    	});
+        ArrayList<ManagedDriver> drivers = new ArrayList<ManagedDriver>();
+        drivers.addAll(((DriverManager) input).getDrivers());
+        Collections.sort(drivers, new Comparator<ManagedDriver>() {
+
+            public int compare(ManagedDriver left, ManagedDriver right) {
+                return left.getName().compareTo(right.getName());
+            }
+        });
         return drivers.toArray();
     }
 
-
     public void dispose() {
     }
-
 
     public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
     }
@@ -404,18 +396,16 @@ class DriverContentProvider implements IStructuredContentProvider {
 
 class DriverLabelProvider extends LabelProvider implements ITableLabelProvider {
 
-
     DriverLabelProvider() {
     };
-
 
     public Image getColumnImage(Object element, int i) {
         ManagedDriver dv = (ManagedDriver) element;
 
         try {
-        	dv.registerSQLDriver();
-        } catch(ClassNotFoundException e) {
-        	// Nothing
+            dv.registerSQLDriver();
+        } catch (ClassNotFoundException e) {
+            // Nothing
         }
         if (dv.isDriverClassLoaded() == true) {
             return ImageUtil.getImage("Images.OkDriver");
@@ -423,7 +413,6 @@ class DriverLabelProvider extends LabelProvider implements ITableLabelProvider {
             return ImageUtil.getImage("Images.ErrorDriver");
         }
     }
-
 
     @Override
     public void dispose() {
@@ -433,7 +422,6 @@ class DriverLabelProvider extends LabelProvider implements ITableLabelProvider {
         ImageUtil.disposeImage("Images.ErrorDriver");
 
     }
-
 
     public String getColumnText(Object element, int i) {
         ManagedDriver dv = (ManagedDriver) element;
@@ -445,7 +433,6 @@ class DriverLabelProvider extends LabelProvider implements ITableLabelProvider {
         return name;
     }
 
-
     @Override
     public boolean isLabelProperty(Object element, String property) {
         return true;
@@ -454,7 +441,6 @@ class DriverLabelProvider extends LabelProvider implements ITableLabelProvider {
     @Override
     public void removeListener(ILabelProviderListener listener) {
     }
-
 
     @Override
     public void addListener(ILabelProviderListener listener) {

@@ -302,7 +302,8 @@ public class DBTableFolderRepNode extends DQDBFolderRepositoryNode implements IC
             connection = item.getConnection();
             catalog = ((MetadataCatalogRepositoryObject) object).getCatalog();
             try {
-                hasChildrenInDB = DqRepositoryViewService.isContainsTable(connection, catalog, null);
+                hasChildrenInDB = DqRepositoryViewService.isCatalogHasChildren(connection, catalog, null,
+                        DqRepositoryViewService.TABLE_TYPES);
             } catch (Exception e) {
                 log.error(e.toString());
             }
@@ -312,7 +313,8 @@ public class DBTableFolderRepNode extends DQDBFolderRepositoryNode implements IC
             connection = item.getConnection();
             schema = ((MetadataSchemaRepositoryObject) object).getSchema();
             try {
-                hasChildrenInDB = DqRepositoryViewService.isContainsTable(connection, schema, null);
+                hasChildrenInDB = DqRepositoryViewService.isSchemaHasChildren(connection, schema, null,
+                        DqRepositoryViewService.TABLE_TYPES);
             } catch (MissingDriverException e) {
                 throw e;
             } catch (Exception e) {

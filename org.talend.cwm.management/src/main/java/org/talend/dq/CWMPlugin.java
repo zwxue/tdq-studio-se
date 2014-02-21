@@ -421,27 +421,42 @@ public class CWMPlugin extends Plugin {
         if (EDriverName.ODBCDEFAULTURL.getSqlEid().equals(id)
                 && (EDatabaseTypeName.GENERAL_JDBC.getXmlName().equalsIgnoreCase(databaseType) || EDatabaseTypeName.GODBC
                         .getXmlName().equalsIgnoreCase(databaseType))) {
-            manaDriver = new ManagedDriver(SQLExplorerPlugin.getDefault().getDriverModel().createUniqueId());
-            String dbType = dbConn.getDatabaseType();
-            // get Database type/version from TaggedValue
-            String dbTypeTagValue = TaggedValueHelper.getValueString(TaggedValueHelper.DB_PRODUCT_NAME, dbConn);
-            if (!PluginConstant.EMPTY_STRING.equals(dbTypeTagValue)) {
-                dbType = dbTypeTagValue;
-                String vesionTagValue = TaggedValueHelper.getValueString(TaggedValueHelper.DB_PRODUCT_VERSION, dbConn);
-                if (!PluginConstant.EMPTY_STRING.equals(vesionTagValue)) {
-                    dbType += org.talend.dataquality.PluginConstant.SPACE_STRING + vesionTagValue;
-
-                }
-            }
-            manaDriver.setName(dbType);
-            manaDriver.setDriverClassName(dbConn.getDriverClass());
-            manaDriver.setUrl(dbConn.getURL());
+            manaDriver = createNewManagerDriver(dbConn, SQLExplorerPlugin.getDefault().getDriverModel().createUniqueId());
             driverManager.addDriver(manaDriver);
-
         } else {
-            manaDriver = driverManager.getDriver(EDriverName.getId(JavaSqlFactory.getDriverClass(connection)));
+            manaDriver = driverManager.getDriver(id);
+            if (manaDriver == null) {
+                manaDriver = createNewManagerDriver(dbConn, id);
+                driverManager.addDriver(manaDriver);
+            }
         }
 
+        return manaDriver;
+    }
+
+    /**
+     * create a New ManagerDriver.
+     * 
+     * @param dbConn
+     * @param id
+     * @return
+     */
+    protected ManagedDriver createNewManagerDriver(DatabaseConnection dbConn, String id) {
+        ManagedDriver manaDriver;
+        manaDriver = new ManagedDriver(id);
+        String dbType = dbConn.getDatabaseType();
+        // get Database type/version from TaggedValue
+        String dbTypeTagValue = TaggedValueHelper.getValueString(TaggedValueHelper.DB_PRODUCT_NAME, dbConn);
+        if (!PluginConstant.EMPTY_STRING.equals(dbTypeTagValue)) {
+            dbType = dbTypeTagValue;
+            String vesionTagValue = TaggedValueHelper.getValueString(TaggedValueHelper.DB_PRODUCT_VERSION, dbConn);
+            if (!PluginConstant.EMPTY_STRING.equals(vesionTagValue)) {
+                dbType += org.talend.dataquality.PluginConstant.SPACE_STRING + vesionTagValue;
+            }
+        }
+        manaDriver.setName(dbType);
+        manaDriver.setDriverClassName(dbConn.getDriverClass());
+        manaDriver.setUrl(dbConn.getURL());
         return manaDriver;
     }
 
