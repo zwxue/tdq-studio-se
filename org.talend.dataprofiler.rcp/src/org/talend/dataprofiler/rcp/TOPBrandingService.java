@@ -20,14 +20,14 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.osgi.framework.Bundle;
+import org.talend.core.ui.branding.AbstractCommonBrandingService;
 import org.talend.core.ui.branding.IBrandingConfiguration;
-import org.talend.core.ui.branding.IBrandingService;
 
 /**
  * 
  * DOC zshen class global comment. Detailled comment
  */
-public class TOPBrandingService implements IBrandingService {
+public class TOPBrandingService extends AbstractCommonBrandingService {
 
     private IBrandingConfiguration brandingConfigure;
 
@@ -127,12 +127,6 @@ public class TOPBrandingService implements IBrandingService {
     @Override
     public String getFullProductName() {
         return getProductName() + " " + getOptionName(); //$NON-NLS-1$
-    }
-
-    @Override
-    public String getStartingBrowserId() {
-        // default is StartingBrowser implement in org.talend.rcp
-        return "org.talend.rcp.intro.starting.StartingBrowser"; //$NON-NLS-1$
     }
 
     /*
