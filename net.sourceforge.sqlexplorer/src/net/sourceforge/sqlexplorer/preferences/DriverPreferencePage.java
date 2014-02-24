@@ -236,17 +236,25 @@ public class DriverPreferencePage extends PreferencePage implements IWorkbenchPr
         remove.addSelectionListener(new SelectionAdapter() {
 
             public void widgetSelected(SelectionEvent e) {
-
-                boolean okToDelete = MessageDialog.openConfirm(getShell(), Messages.getString("Preferences.Drivers.ConfirmDelete.Title"),
-                        Messages.getString("Preferences.Drivers.ConfirmDelete.Prefix") + _tableViewer.getTable().getSelection()[0].getText()
-                                + Messages.getString("Preferences.Drivers.ConfirmDelete.Postfix"));
-                if (okToDelete) {
-                    StructuredSelection sel = (StructuredSelection) _tableViewer.getSelection();
-                    ManagedDriver dv = (ManagedDriver) sel.getFirstElement();
-                    if (dv != null) {
-                        _driverModel.removeDriver(dv);
-                        _tableViewer.refresh();
-                        selectFirst();
+                StructuredSelection sel = (StructuredSelection) _tableViewer.getSelection();
+                ManagedDriver managedDriver = (ManagedDriver) sel.getFirstElement();
+                if (managedDriver != null) {
+                    // when the driver is used by other Aliases, give a warning to user
+                    if (managedDriver.isUsedByAliases()) {
+                        MessageDialog.openWarning(getShell(), Messages.getString("Preferences.Drivers.ConfirmDelete.Title"),
+                                Messages.getString("Preferences.Drivers.ConfirmDelete.Warning"));
+                    } else {
+                        boolean okToDelete = MessageDialog.openConfirm(
+                                getShell(),
+                                Messages.getString("Preferences.Drivers.ConfirmDelete.Title"),
+                                Messages.getString("Preferences.Drivers.ConfirmDelete.Prefix")
+                                        + _tableViewer.getTable().getSelection()[0].getText()
+                                        + Messages.getString("Preferences.Drivers.ConfirmDelete.Postfix"));
+                        if (okToDelete) {
+                            _driverModel.removeDriver(managedDriver);
+                            _tableViewer.refresh();
+                            selectFirst();
+                        }
                     }
                 }
             }
