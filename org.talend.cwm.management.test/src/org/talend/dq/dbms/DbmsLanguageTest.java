@@ -39,6 +39,9 @@ import org.talend.dataquality.domain.pattern.PatternComponent;
 import org.talend.dataquality.domain.pattern.PatternFactory;
 import org.talend.dataquality.domain.pattern.RegularExpression;
 import org.talend.dataquality.helpers.BooleanExpressionHelper;
+import org.talend.dataquality.indicators.definition.CharactersMapping;
+import org.talend.dataquality.indicators.definition.DefinitionFactory;
+import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dataquality.indicators.definition.userdefine.UDIndicatorDefinition;
 import org.talend.dataquality.indicators.definition.userdefine.UserdefineFactory;
 import org.talend.dataquality.indicators.sql.IndicatorSqlFactory;
@@ -477,12 +480,116 @@ public class DbmsLanguageTest {
      * Test method for
      * {@link org.talend.dq.dbms.DbmsLanguage#getPatternFinderFunction(java.lang.String, org.eclipse.emf.common.util.EList)}
      * .
+     * 
+     * case 1 : netezza case
      */
     @Test
-    public void testGetPatternFinderFunctionStringEListOfCharactersMapping() {
-        // TODO need to implement this method!!!
-        // need an IndicatorDefinition object to test this method
-        // fail("Not yet implemented");
+    public void testGetPatternFinderFunctionStringEListOfCharactersMappingCase1() {
+
+        String expectedResult = "TRANSLATE(name , \'abcdefghijklmnopqrstuvwxyzçâêîôûéèùïöüABCDEFGHIJKLMNOPQRSTUVWXYZÇÂÊÎÔÛÉÈÙÏÖÜ0123456789Netezza\' , \'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA9999999999Netezza\')"; //$NON-NLS-1$
+        NetezzaDbmsLanguage netezzaDbmsLanguage = (NetezzaDbmsLanguage) DbmsLanguageFactory
+                .createDbmsLanguage(SupportDBUrlType.NETEZZADEFAULTURL);
+
+        IndicatorDefinition createIndicatorDefinition = DefinitionFactory.eINSTANCE.createIndicatorDefinition();
+        EList<CharactersMapping> charactersMapping = createIndicatorDefinition.getCharactersMapping();
+        CharactersMapping createCharactersMapping = DefinitionFactory.eINSTANCE.createCharactersMapping();
+        // mysql
+        createCharactersMapping.setLanguage(SupportDBUrlType.MYSQLDEFAULTURL.getLanguage());
+        createCharactersMapping
+                .setCharactersToReplace("abcdefghijklmnopqrstuvwxyzçâêîôûéèùïöüABCDEFGHIJKLMNOPQRSTUVWXYZÇÂÊÎÔÛÉÈÙÏÖÜ0123456789MySql"); //$NON-NLS-1$
+        createCharactersMapping
+                .setReplacementCharacters("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA9999999999MySql"); //$NON-NLS-1$
+        charactersMapping.add(createCharactersMapping);
+        // ~mysql
+
+        // default
+        createCharactersMapping.setLanguage(DbmsLanguage.SQL);
+        createCharactersMapping
+                .setCharactersToReplace("abcdefghijklmnopqrstuvwxyzçâêîôûéèùïöüABCDEFGHIJKLMNOPQRSTUVWXYZÇÂÊÎÔÛÉÈÙÏÖÜ0123456789Default"); //$NON-NLS-1$
+        createCharactersMapping
+                .setReplacementCharacters("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA9999999999Default"); //$NON-NLS-1$
+        charactersMapping.add(createCharactersMapping);
+        // ~default
+
+        // netezza
+        createCharactersMapping.setLanguage(SupportDBUrlType.NETEZZADEFAULTURL.getLanguage());
+        createCharactersMapping
+                .setCharactersToReplace("abcdefghijklmnopqrstuvwxyzçâêîôûéèùïöüABCDEFGHIJKLMNOPQRSTUVWXYZÇÂÊÎÔÛÉÈÙÏÖÜ0123456789Netezza"); //$NON-NLS-1$
+        createCharactersMapping
+                .setReplacementCharacters("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA9999999999Netezza"); //$NON-NLS-1$
+        charactersMapping.add(createCharactersMapping);
+        // ~netezza
+        String patternFinderFunction = netezzaDbmsLanguage.getPatternFinderFunction("name", charactersMapping); //$NON-NLS-1$
+        Assert.assertEquals(expectedResult, patternFinderFunction);
+    }
+
+    /**
+     * Test method for
+     * {@link org.talend.dq.dbms.DbmsLanguage#getPatternFinderFunction(java.lang.String, org.eclipse.emf.common.util.EList)}
+     * .
+     * 
+     * case 2 : default case
+     */
+    @Test
+    public void testGetPatternFinderFunctionStringEListOfCharactersMappingCase2() {
+
+        String expectedResult = "TRANSLATE(name , \'abcdefghijklmnopqrstuvwxyzçâêîôûéèùïöüABCDEFGHIJKLMNOPQRSTUVWXYZÇÂÊÎÔÛÉÈÙÏÖÜ0123456789Default\' , \'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA9999999999Default\')"; //$NON-NLS-1$
+        NetezzaDbmsLanguage netezzaDbmsLanguage = (NetezzaDbmsLanguage) DbmsLanguageFactory
+                .createDbmsLanguage(SupportDBUrlType.NETEZZADEFAULTURL);
+
+        IndicatorDefinition createIndicatorDefinition = DefinitionFactory.eINSTANCE.createIndicatorDefinition();
+        EList<CharactersMapping> charactersMapping = createIndicatorDefinition.getCharactersMapping();
+        CharactersMapping createCharactersMapping = DefinitionFactory.eINSTANCE.createCharactersMapping();
+        // mysql
+        createCharactersMapping.setLanguage(SupportDBUrlType.MYSQLDEFAULTURL.getLanguage());
+        createCharactersMapping
+                .setCharactersToReplace("abcdefghijklmnopqrstuvwxyzçâêîôûéèùïöüABCDEFGHIJKLMNOPQRSTUVWXYZÇÂÊÎÔÛÉÈÙÏÖÜ0123456789MySql"); //$NON-NLS-1$
+        createCharactersMapping
+                .setReplacementCharacters("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA9999999999MySql"); //$NON-NLS-1$
+        charactersMapping.add(createCharactersMapping);
+        // ~mysql
+
+        // default
+        createCharactersMapping.setLanguage(DbmsLanguage.SQL);
+        createCharactersMapping
+                .setCharactersToReplace("abcdefghijklmnopqrstuvwxyzçâêîôûéèùïöüABCDEFGHIJKLMNOPQRSTUVWXYZÇÂÊÎÔÛÉÈÙÏÖÜ0123456789Default"); //$NON-NLS-1$
+        createCharactersMapping
+                .setReplacementCharacters("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA9999999999Default"); //$NON-NLS-1$
+        charactersMapping.add(createCharactersMapping);
+        // ~default
+
+        String patternFinderFunction = netezzaDbmsLanguage.getPatternFinderFunction("name", charactersMapping); //$NON-NLS-1$
+        Assert.assertEquals(expectedResult, patternFinderFunction);
+    }
+
+    /**
+     * Test method for
+     * {@link org.talend.dq.dbms.DbmsLanguage#getPatternFinderFunction(java.lang.String, org.eclipse.emf.common.util.EList)}
+     * .
+     * 
+     * case 3 : no default and no netezza
+     */
+    @Test
+    public void testGetPatternFinderFunctionStringEListOfCharactersMappingCase3() {
+
+        String expectedResult = null;
+        NetezzaDbmsLanguage netezzaDbmsLanguage = (NetezzaDbmsLanguage) DbmsLanguageFactory
+                .createDbmsLanguage(SupportDBUrlType.NETEZZADEFAULTURL);
+
+        IndicatorDefinition createIndicatorDefinition = DefinitionFactory.eINSTANCE.createIndicatorDefinition();
+        EList<CharactersMapping> charactersMapping = createIndicatorDefinition.getCharactersMapping();
+        CharactersMapping createCharactersMapping = DefinitionFactory.eINSTANCE.createCharactersMapping();
+        // mysql
+        createCharactersMapping.setLanguage(SupportDBUrlType.MYSQLDEFAULTURL.getLanguage());
+        createCharactersMapping
+                .setCharactersToReplace("abcdefghijklmnopqrstuvwxyzçâêîôûéèùïöüABCDEFGHIJKLMNOPQRSTUVWXYZÇÂÊÎÔÛÉÈÙÏÖÜ0123456789MySql"); //$NON-NLS-1$
+        createCharactersMapping
+                .setReplacementCharacters("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA9999999999MySql"); //$NON-NLS-1$
+        charactersMapping.add(createCharactersMapping);
+        // ~mysql
+
+        String patternFinderFunction = netezzaDbmsLanguage.getPatternFinderFunction("name", charactersMapping); //$NON-NLS-1$
+        Assert.assertEquals(expectedResult, patternFinderFunction);
     }
 
     /**
