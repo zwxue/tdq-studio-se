@@ -1,12 +1,11 @@
 /*
  * Copyright (C) 2006-2013 Talend Inc. - www.talend.com
- *
+ * 
  * This source code is available under agreement available at
  * %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
- *
- * You should have received a copy of the agreement
- * along with this program; if not, write to Talend SA
- * 9 rue Pages 92150 Suresnes, France
+ * 
+ * You should have received a copy of the agreement along with this program; if not, write to Talend SA 9 rue Pages
+ * 92150 Suresnes, France
  */
 package org.talend.dataquality.matchmerge.mfb;
 
@@ -61,16 +60,9 @@ public class MFB implements MatchMergeAlgorithm {
         maxWeight = 0;
     }
 
-    public MFB(AttributeMatcherType[] algorithms,
-               String[] algorithmParameters,
-               float[] thresholds,
-               double minConfidenceValue,
-               SurvivorShipAlgorithmEnum[] merges,
-               String[] mergesParameters,
-               double[] weights,
-               IAttributeMatcher.NullOption[] nullOptions,
-               SubString[] subStrings,
-               String mergedRecordSource) {
+    public MFB(AttributeMatcherType[] algorithms, String[] algorithmParameters, float[] thresholds, double minConfidenceValue,
+            SurvivorShipAlgorithmEnum[] merges, String[] mergesParameters, double[] weights,
+            IAttributeMatcher.NullOption[] nullOptions, SubString[] subStrings, String mergedRecordSource) {
         this.algorithms = algorithms;
         this.algorithmParameters = algorithmParameters;
         this.thresholds = thresholds;
@@ -126,21 +118,11 @@ public class MFB implements MatchMergeAlgorithm {
             // MFB algorithm
             boolean hasCreatedNewMerge = false;
             for (Record mergedRecord : mergedRecords) {
-                MatchResult matchResult = matchRecords(mergedRecord,
-                        currentRecord,
-                        algorithms,
-                        algorithmParameters,
-                        thresholds,
-                        nullOptions,
-                        subStrings,
-                        weights,
-                        minConfidenceValue);
+                MatchResult matchResult = matchRecords(mergedRecord, currentRecord, algorithms, algorithmParameters, thresholds,
+                        nullOptions, subStrings, weights, minConfidenceValue);
                 if (matchResult.isMatch()) {
                     callback.onMatch(mergedRecord, currentRecord, matchResult);
-                    Record newMergedRecord = MatchMerge.merge(currentRecord,
-                            mergedRecord,
-                            merges,
-                            mergesParameters,
+                    Record newMergedRecord = MatchMerge.merge(currentRecord, mergedRecord, merges, mergesParameters,
                             mergedRecordSource);
                     queue.offer(newMergedRecord);
                     callback.onNewMerge(newMergedRecord);
@@ -211,19 +193,13 @@ public class MFB implements MatchMergeAlgorithm {
             throw new IllegalArgumentException("All record columns should have a threshold.");
         }
         if (currentRecord.getAttributes().size() != merges.length) {
-            throw new IllegalArgumentException("All record columns should have a threshold.");
+            throw new IllegalArgumentException("All record columns should have a merge algorithm.");
         }
     }
 
-    public static MatchResult matchRecords(Record mergedRecord,
-                                           Record currentRecord,
-                                           AttributeMatcherType[] algorithms,
-                                           String[] algorithmParameters,
-                                           float[] thresholds,
-                                           IAttributeMatcher.NullOption[] nullOptions,
-                                           SubString[] subStrings,
-                                           double[] weights,
-                                           double minConfidenceValue) {
+    public static MatchResult matchRecords(Record mergedRecord, Record currentRecord, AttributeMatcherType[] algorithms,
+            String[] algorithmParameters, float[] thresholds, IAttributeMatcher.NullOption[] nullOptions, SubString[] subStrings,
+            double[] weights, double minConfidenceValue) {
         if (mergedRecord.getAttributes().size() != currentRecord.getAttributes().size()) {
             throw new IllegalArgumentException("Records do not share same attribute count.");
         }
@@ -247,12 +223,8 @@ public class MFB implements MatchMergeAlgorithm {
         while (mergedRecordAttributes.hasNext()) {
             Attribute left = mergedRecordAttributes.next();
             Attribute right = currentRecordAttributes.next();
-            double score = MatchMerge.matchScore(left,
-                    right,
-                    algorithms[matchIndex],
-                    algorithmParameters[matchIndex],
-                    nullOptions[matchIndex],
-                    subStrings[matchIndex]);
+            double score = MatchMerge.matchScore(left, right, algorithms[matchIndex], algorithmParameters[matchIndex],
+                    nullOptions[matchIndex], subStrings[matchIndex]);
             result.setScore(matchIndex, algorithms[matchIndex], score, left.getValue(), right.getValue());
             result.setThreshold(matchIndex, thresholds[matchIndex]);
             confidence += score * weights[matchIndex];
@@ -266,9 +238,8 @@ public class MFB implements MatchMergeAlgorithm {
         result.setConfidence(normalizedConfidence, minConfidenceValue);
         if (normalizedConfidence < minConfidenceValue) {
             if (LOGGER.isDebugEnabled()) {
-                LOGGER.debug("Cannot match record: merged record has a too low confidence value ("
-                        + normalizedConfidence
-                        + " < " + minConfidenceValue + ")");
+                LOGGER.debug("Cannot match record: merged record has a too low confidence value (" + normalizedConfidence + " < "
+                        + minConfidenceValue + ")");
             }
             return NonMatchResult.wrap(result);
         }
@@ -330,6 +301,7 @@ public class MFB implements MatchMergeAlgorithm {
         final Iterator<String[]> iterator = records.iterator();
         // Performs a match&merge on these 2 records -> Only one record at the end = match.
         List<Record> list = execute(new Iterator<Record>() {
+
             @Override
             public boolean hasNext() {
                 return iterator.hasNext();
@@ -432,4 +404,3 @@ public class MFB implements MatchMergeAlgorithm {
         }
     }
 }
-
