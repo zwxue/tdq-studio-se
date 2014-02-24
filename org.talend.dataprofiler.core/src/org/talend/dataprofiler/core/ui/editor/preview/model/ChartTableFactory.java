@@ -82,6 +82,7 @@ import org.talend.dataquality.indicators.sql.WhereRuleIndicator;
 import org.talend.dataquality.indicators.util.IndicatorsSwitch;
 import org.talend.dataquality.rules.JoinElement;
 import org.talend.dq.analysis.explore.IDataExplorer;
+import org.talend.dq.analysis.explore.PatternExplorer;
 import org.talend.dq.dbms.DbmsLanguage;
 import org.talend.dq.dbms.DbmsLanguageFactory;
 import org.talend.dq.helper.RepositoryNodeHelper;
@@ -119,8 +120,6 @@ public final class ChartTableFactory {
         final boolean isDelimitedFileAnalysis = ConnectionUtils.isDelimitedFileConnection(tdDataProvider);
         final boolean isHiveConnection = ConnectionHelper.isHive(tdDataProvider);
         final boolean isVertica = ConnectionHelper.isVertica(tdDataProvider);
-        final boolean isPatternMatchOnTeradata = isPatternMatchingIndicator(currentIndicator)
-                && ConnectionUtils.isTeradata(tdDataProvider);
 
         if (PluginChecker.isTDCPLoaded() && !(isMDMAnalysis || isDelimitedFileAnalysis || isHiveConnection)) {
             final IDatabaseJobService service = (IDatabaseJobService) GlobalServiceRegister.getDefault().getService(
@@ -152,15 +151,6 @@ public final class ChartTableFactory {
 
                         @Override
                         public void widgetSelected(SelectionEvent e) {
-                            // TDQ-8637 pop a message when it is teradata pattern.this is a temporary
-                            // solution.we will support drill down after TDQ-8655 and TDQ-8651 then need
-                            // to remove this code.
-                            if (isPatternMatchOnTeradata) {
-                                MessageDialog.openInformation(new Shell(),
-                                        DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.generateJob"), //$NON-NLS-1$
-                                        DefaultMessagesImpl.getString("ChartTableFactory.NoSupportPatternJobTeradata"));//$NON-NLS-1$
-                                return;
-                            }
                             service.executeJob();
                         }
                     });
@@ -215,10 +205,10 @@ public final class ChartTableFactory {
                                     public void widgetSelected(SelectionEvent e) {
                                         String query = itemEntity.getQuery();
                                         String editorName = indicator.getName();
-                                        // TDQ-8637 pop a message when it is teradata pattern.this is a temporary
-                                        // solution.we will support drill down after TDQ-8655 and TDQ-8651 then need
-                                        // to remove this code.
-                                        if (isPatternMatchingIndicator(indicator) && ConnectionUtils.isTeradata(tdDataProvider)) {
+                                        // TDQ-8637 pop a message when it is pattern and no implemnt Regex function in
+                                        // DBMSLanguage.
+                                        if (isPatternMatchingIndicator(indicator)
+                                                && !((PatternExplorer) explorer).isImplementRegexFunction(itemEntity.getLabel())) {
                                             MessageDialog.openInformation(new Shell(), itemEntity.getLabel(),
                                                     DefaultMessagesImpl.getString("ChartTableFactory.NoSupportPatternTeradata"));//$NON-NLS-1$
                                             return;
@@ -738,4 +728,5 @@ public final class ChartTableFactory {
 
         return iSwitch.doSwitch(indicator) != null;
     }
+
 }
