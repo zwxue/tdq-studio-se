@@ -16,8 +16,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.eclipse.emf.common.util.EList;
-import org.talend.core.model.metadata.builder.connection.Connection;
-import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.relational.TdExpression;
 import org.talend.dataquality.PluginConstant;
 import org.talend.dataquality.analysis.ExecutionLanguage;
@@ -60,8 +58,7 @@ public class PatternExplorer extends DataExplorer {
         boolean isSqlEngine = ExecutionLanguage.SQL.equals(this.analysis.getParameters().getExecutionLanguage());
         // MOD gdbu 2011-12-5 TDQ-4087 get function name from sql sentence when use MSSQL
         EList<Expression> instantiatedExpressions = this.indicator.getInstantiatedExpressions();
-        if (ConnectionHelper.isMssql((Connection) this.analysis.getContext().getConnection())
-                && instantiatedExpressions.size() > 0) {
+        if (instantiatedExpressions.size() > 0) {
             Expression expression = instantiatedExpressions.get(0);
             String body = expression.getBody().toUpperCase();
             String functionName = body.split("WHEN").length > 1 ? body.split("WHEN")[1] : "";//$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
@@ -192,6 +189,21 @@ public class PatternExplorer extends DataExplorer {
             sql = sql.replace(GenericSQLHandler.GROUP_BY_ALIAS, "'" + analyzedElement.getName() + "'"); //$NON-NLS-1$ //$NON-NLS-2$
         }
         return sql;
+    }
+
+    public boolean isImplementRegexFunction(String menuLabel) {
+        String regexPatternString = dbmsLanguage.getRegexPatternString(this.indicator);
+        if (menuLabel.equals(MENU_VIEW_ROWS) || menuLabel.equals(MENU_VIEW_VALID_VALUES)) {
+            if (dbmsLanguage.regexLike(columnName, regexPatternString) != null) {
+                return true;
+            }
+        } else if (menuLabel.equals(DataExplorer.MENU_VIEW_INVALID_ROWS) || menuLabel.equals(MENU_VIEW_INVALID_VALUES)) {
+            if (dbmsLanguage.regexNotLike(columnName, regexPatternString) != null) {
+                return true;
+            }
+        }
+        return false;
+
     }
 
 }

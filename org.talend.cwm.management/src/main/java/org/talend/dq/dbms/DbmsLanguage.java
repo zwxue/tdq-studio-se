@@ -1014,11 +1014,32 @@ public class DbmsLanguage {
      * @return the regular expression according to the DBMS syntax or null if not supported.
      */
     public String regexLike(String element, String regex) {
-        return null;
+        // TDQ-8637 UDF as a default case,if the database type has regular expression function,should overide this
+        // method.
+
+        if (null == functionName || PluginConstant.EMPTY_STRING.equals(functionName)) {
+            return null;
+        }
+        String functionNameSQL = functionName + "( ";//$NON-NLS-1$  
+        if (null != element && !element.equals("")) {//$NON-NLS-1$  
+            functionNameSQL = functionNameSQL + element;
+        }
+        if (null != regex && !regex.equals("")) {//$NON-NLS-1$  
+            functionNameSQL = functionNameSQL + "," + regex;//$NON-NLS-1$ 
+        }
+        functionNameSQL = functionNameSQL + " )";//$NON-NLS-1$  
+
+        return functionNameSQL;
+
     }
 
     public String regexNotLike(String element, String regex) {
-        return null;
+        // TDQ-8637 UDF as a default case,if the database type has regular expression function,should overide this
+        // method.
+        if (null == functionName || PluginConstant.EMPTY_STRING.equals(functionName)) {
+            return null;
+        }
+        return surroundWithSpaces("not " + functionName + "(" + element + " , " + regex + " )"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$//$NON-NLS-4$
     }
 
     /**

@@ -53,7 +53,6 @@ import org.talend.commons.emf.EMFUtil;
 import org.talend.commons.ui.runtime.exception.MessageBoxExceptionHandler;
 import org.talend.commons.utils.WorkspaceUtils;
 import org.talend.core.model.metadata.builder.connection.Connection;
-import org.talend.core.model.metadata.builder.connection.impl.DatabaseConnectionImpl;
 import org.talend.core.model.metadata.builder.database.JavaSqlFactory;
 import org.talend.core.model.metadata.builder.database.dburl.SupportDBUrlType;
 import org.talend.core.model.properties.ConnectionItem;
@@ -166,14 +165,13 @@ public class PatternTestView extends ViewPart {
         // ~
         // set cobo com layout
         GridLayout layout = new GridLayout();
-        layout.numColumns = 5;
+        layout.numColumns = 3;
         coboCom.setLayout(layout);
         GridData data = new GridData(GridData.FILL_BOTH);
         // MOD qiongli feature 16799: Add java in Pattern Test View
         buttonJava = new Button(coboCom, SWT.RADIO);
         buttonJava.setText(ExecutionLanguage.JAVA.getLiteral());
-        data = new GridData(GridData.FILL_HORIZONTAL);
-        data.widthHint = 20;
+        data = new GridData(GridData.BEGINNING, GridData.BEGINNING, false, false);
         buttonJava.setLayoutData(data);
         buttonJava.addSelectionListener(new SelectionAdapter() {
 
@@ -187,8 +185,7 @@ public class PatternTestView extends ViewPart {
 
         });
         buttonSql = new Button(coboCom, SWT.RADIO);
-        data = new GridData(GridData.FILL_HORIZONTAL);
-        data.widthHint = 90;
+        data = new GridData(GridData.BEGINNING, GridData.BEGINNING, false, false);
         buttonSql.setText(DefaultMessagesImpl.getString("PatternTestView.Connections")); //$NON-NLS-1$
         buttonSql.addSelectionListener(new SelectionAdapter() {
 
@@ -206,25 +203,27 @@ public class PatternTestView extends ViewPart {
         buttonSql.setLayoutData(data);
         dbCombo = new CCombo(coboCom, SWT.DROP_DOWN | SWT.BORDER);
         dbCombo.setEditable(false);
-        data = new GridData(GridData.FILL_HORIZONTAL);
-        data.widthHint = 60;
+        data = new GridData(GridData.FILL, GridData.BEGINNING, false, false);
         dbCombo.setLayoutData(data);
 
         // MOD gdbu 2011-5-31 bug : 19119
+        Label dummyLabel = new Label(coboCom, SWT.NONE);
+        dummyLabel.setLayoutData(new GridData(GridData.BEGINNING, GridData.BEGINNING, false, false));
         functionLabel = new Label(coboCom, SWT.NONE);
         functionLabel.setText(DefaultMessagesImpl.getString("PatternTestView.FunctionName"));//$NON-NLS-1$ 
         functionNameText = new Text(coboCom, SWT.BORDER);
         functionNameText.setText(PluginConstant.EMPTY_STRING);
 
-        GridData functionNameTextGD = new GridData(SWT.LEFT, SWT.DEFAULT, false, false, 1, 1);
-        functionNameTextGD.widthHint = 0;
-        functionNameText.setLayoutData(functionNameTextGD);
+        GridData functionNameTextGD = new GridData(GridData.BEGINNING, GridData.BEGINNING, false, false);
+        data = new GridData(GridData.FILL, GridData.BEGINNING, false, false);
+
+        functionNameText.setLayoutData(data);
         functionLabel.setLayoutData(functionNameTextGD);
         functionNameText.setVisible(false);
         functionLabel.setVisible(false);
         // ~19119
         GridData comData = new GridData(GridData.FILL_HORIZONTAL);
-        comData.heightHint = 37;
+        comData.heightHint = 50;
         coboCom.setLayoutData(comData);
 
         // create image com
@@ -277,6 +276,8 @@ public class PatternTestView extends ViewPart {
         regularLabel.setText(DefaultMessagesImpl.getString("PatternTestView.regularExpression")); //$NON-NLS-1$ 
         regularLabel.setToolTipText(DefaultMessagesImpl.getString("PatternTestView.regularExpression"));//$NON-NLS-1$ 
         GridData regularLabelGD = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
+        regularLabelGD.heightHint = 40;
+        regularLabelGD.widthHint = 70;
         // regularLabelGD.widthHint = 260;
         regularLabel.setLayoutData(regularLabelGD);
         // ~19119
@@ -741,11 +742,9 @@ public class PatternTestView extends ViewPart {
      */
     private void setFunctionTextVisibleFromDBCOnn(Connection tdDataProvider) {
         if (tdDataProvider.getName().equals(dbCombo.getText())) {
-            if (SupportDBUrlType.MSSQL2008URL.getDBKey().equals(((DatabaseConnectionImpl) tdDataProvider).getDatabaseType())) {
-                setFunctionInfoVisible(true);
 
-            } else if (SupportDBUrlType.MSSQLDEFAULTURL.getDBKey().equals(
-                    ((DatabaseConnectionImpl) tdDataProvider).getDatabaseType())) {
+            DbmsLanguage dbmsLanguage = DbmsLanguageFactory.createDbmsLanguage(tdDataProvider);
+            if (dbmsLanguage.regexLike(testText.getText(), regularText.getText()) == null) {
                 setFunctionInfoVisible(true);
             } else {
                 setFunctionInfoVisible(false);
@@ -777,10 +776,7 @@ public class PatternTestView extends ViewPart {
             regularLabel.setToolTipText(DefaultMessagesImpl.getString("PatternTestView.regularExpression"));//$NON-NLS-1$
         }
         GridData formData = new GridData(GridData.FILL_HORIZONTAL);
-        formData.widthHint = 60;
         formData.widthHint = 37;
-        functionLabel.setLayoutData(formData);
-        functionNameText.setLayoutData(formData);
         functionNameText.getParent().layout();
     }
 
