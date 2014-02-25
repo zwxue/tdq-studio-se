@@ -1597,6 +1597,12 @@
            id="org.talend.dataprofiler.core.migration.impl.AddNetezzaExpressionInIndicatorsTask"
            name="Add the expressions for Netezza db in related indicators"
            version="5.3.3">
+     </workspacetask>
+     <workspacetask
+           class="org.talend.dataprofiler.core.migration.impl.UpdateLowerUpperQuartileForDB2Task"
+           id="org.talend.dataprofiler.core.migration.impl.UpdateLowerUpperQuartileForDB2Task"
+           name="update the sql expression for DB2 in lower/upper quartile indicator"
+           version="5.3.3">
      </workspacetask>  
      
   </extension>

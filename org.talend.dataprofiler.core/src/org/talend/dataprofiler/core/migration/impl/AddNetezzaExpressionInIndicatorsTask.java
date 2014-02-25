@@ -112,35 +112,32 @@ public class AddNetezzaExpressionInIndicatorsTask extends AbstractWorksapceUpdat
         boolean result = true;
 
         // the following indicator only need to add Netezza expression
-        result = result && addExpression(AVERAGE_LENGTH, AVERAGE_LENGTH_SQL, Netezza, Boolean.FALSE);
+        result = result && addExpression(AVERAGE_LENGTH, AVERAGE_LENGTH_SQL, Netezza, false);
         result = result
-                && addExpression(AVERAGE_LENGTH_WITH_BLANK_AND_NULL, AVERAGE_LENGTH_WITH_BLANK_AND_NULL_SQL, Netezza,
-                        Boolean.FALSE);
-        result = result && addExpression(AVERAGE_LENGTH_WITH_NULL, AVERAGE_LENGTH_WITH_NULL_SQL, Netezza, Boolean.FALSE);
-        result = result && addExpression(MAXIMAL_LENGTH, MAXIMAL_LENGTH_SQL, Netezza, Boolean.FALSE);
-        result = result && addExpression(MAXIMAL_LENGTH_WITH_NULL, MAXIMAL_LENGTH_WITH_NULL_SQL, Netezza, Boolean.FALSE);
+                && addExpression(AVERAGE_LENGTH_WITH_BLANK_AND_NULL, AVERAGE_LENGTH_WITH_BLANK_AND_NULL_SQL, Netezza, false);
+        result = result && addExpression(AVERAGE_LENGTH_WITH_NULL, AVERAGE_LENGTH_WITH_NULL_SQL, Netezza, false);
+        result = result && addExpression(MAXIMAL_LENGTH, MAXIMAL_LENGTH_SQL, Netezza, false);
+        result = result && addExpression(MAXIMAL_LENGTH_WITH_NULL, MAXIMAL_LENGTH_WITH_NULL_SQL, Netezza, false);
         result = result
-                && addExpression(MAXIMAL_LENGTH_WITH_BLANK_AND_NULL, MAXIMAL_LENGTH_WITH_BLANK_AND_NULL_SQL, Netezza,
-                        Boolean.FALSE);
+                && addExpression(MAXIMAL_LENGTH_WITH_BLANK_AND_NULL, MAXIMAL_LENGTH_WITH_BLANK_AND_NULL_SQL, Netezza, false);
 
-        result = result && addExpression(MINIMAL_LENGTH, MINIMAL_LENGTH_SQL, Netezza, Boolean.FALSE);
+        result = result && addExpression(MINIMAL_LENGTH, MINIMAL_LENGTH_SQL, Netezza, false);
         result = result
-                && addExpression(MINIMAL_LENGTH_WITH_BLANK_AND_NULL, MINIMAL_LENGTH_WITH_BLANK_AND_NULL_SQL, Netezza,
-                        Boolean.FALSE);
-        result = result && addExpression(MINIMAL_LENGTH_WITH_NULL, MINIMAL_LENGTH_WITH_NULL_SQL, Netezza, Boolean.FALSE);
-        result = result && addExpression(BENFORD_LAW, BENFORD_LAW_SQL, Netezza, Boolean.FALSE);
+                && addExpression(MINIMAL_LENGTH_WITH_BLANK_AND_NULL, MINIMAL_LENGTH_WITH_BLANK_AND_NULL_SQL, Netezza, false);
+        result = result && addExpression(MINIMAL_LENGTH_WITH_NULL, MINIMAL_LENGTH_WITH_NULL_SQL, Netezza, false);
+        result = result && addExpression(BENFORD_LAW, BENFORD_LAW_SQL, Netezza, false);
 
         // next: the following indicators need to add default expression, and Netezza expression
-        result = result && addExpression(SOUNDEX_LOW_FREQUENCY, SOUNDEX_LOW_FREQUENCY_DEFAULT, SQL, Boolean.FALSE);
-        result = result && addExpression(SOUNDEX_FREQUENCY, SOUNDEX_FREQUENCY_DEFAULT, SQL, Boolean.FALSE);
-        result = result && addExpression(SOUNDEX_LOW_FREQUENCY, SOUNDEX_LOW_FREQUENCY_SQL, Netezza, Boolean.FALSE);
-        result = result && addExpression(SOUNDEX_FREQUENCY, SOUNDEX_FREQUENCY_SQL, Netezza, Boolean.FALSE);
+        result = result && addExpression(SOUNDEX_LOW_FREQUENCY, SOUNDEX_LOW_FREQUENCY_DEFAULT, SQL, false);
+        result = result && addExpression(SOUNDEX_FREQUENCY, SOUNDEX_FREQUENCY_DEFAULT, SQL, false);
+        result = result && addExpression(SOUNDEX_LOW_FREQUENCY, SOUNDEX_LOW_FREQUENCY_SQL, Netezza, false);
+        result = result && addExpression(SOUNDEX_FREQUENCY, SOUNDEX_FREQUENCY_SQL, Netezza, false);
 
         // for pattern frequency, also need to add character map(default, and Netezza)
-        result = result && addExpression(PATTERN_LOW_FREQUENCY, PATTERN_LOW_FREQUENCY_DEFAULT, SQL, Boolean.TRUE);
-        result = result && addExpression(PATTERN_FREQUENCY, PATTERN_FREQUENCY_DEFAULT, SQL, Boolean.TRUE);
-        result = result && addExpression(PATTERN_LOW_FREQUENCY, PATTERN_LOW_FREQUENCY_SQL, Netezza, Boolean.TRUE);
-        result = result && addExpression(PATTERN_FREQUENCY, PATTERN_FREQUENCY_SQL, Netezza, Boolean.TRUE);
+        result = result && addExpression(PATTERN_LOW_FREQUENCY, PATTERN_LOW_FREQUENCY_DEFAULT, SQL, true);
+        result = result && addExpression(PATTERN_FREQUENCY, PATTERN_FREQUENCY_DEFAULT, SQL, true);
+        result = result && addExpression(PATTERN_LOW_FREQUENCY, PATTERN_LOW_FREQUENCY_SQL, Netezza, true);
+        result = result && addExpression(PATTERN_FREQUENCY, PATTERN_FREQUENCY_SQL, Netezza, true);
 
         DefinitionHandler.getInstance().reloadIndicatorsDefinitions();
 
@@ -158,7 +155,7 @@ public class AddNetezzaExpressionInIndicatorsTask extends AbstractWorksapceUpdat
 
             return IndicatorDefinitionFileHelper.save(indiDefinition);
         }
-        return false;
+        return true;
     }
 
     /*
