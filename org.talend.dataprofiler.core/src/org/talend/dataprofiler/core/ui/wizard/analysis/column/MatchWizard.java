@@ -47,6 +47,9 @@ public class MatchWizard extends ColumnWizard {
 
     private ColumnAnalysisDOSelectionPage selectionPage;
 
+    // Added TDQ-8647, used for judge the status of button Finish
+    private AnalysisMetadataWizardPage metadataPage;
+
     /**
      * MatchWizard constructor comment.
      * 
@@ -59,7 +62,8 @@ public class MatchWizard extends ColumnWizard {
     // make the next button available and the next page is to select columns
     @Override
     public void addPages() {
-        addPage(new AnalysisMetadataWizardPage());
+        metadataPage = new AnalysisMetadataWizardPage();
+        addPage(metadataPage);
         AnalysisParameter parameter = (AnalysisParameter) getParameter();
         if (parameter.getConnectionRepNode() == null && parameter.getAnalysisType().equals(AnalysisType.MATCH_ANALYSIS)) {
             selectionPage = new ColumnAnalysisDOSelectionPage(new MatchAnaColumnContentProvider(true));
@@ -107,17 +111,21 @@ public class MatchWizard extends ColumnWizard {
     }
 
     /**
-     * check if some columnset is selected. Added yyin TDQ-8481, 20140218
-     * 
-     * @param nodes
-     * @return
+     * Added TDQ-8647 20140220 yyin: check the selected nodes, only when the selection is allowed, enable the Finish
+     * button; else disable it. MOD 20140226: when only the name is valid, make the Finish enable, which select none
+     * nodes.
      */
     @Override
     public boolean canFinish() {
         if (selectionPage != null) {
-            return RepNodeUtils.isValidSelectionForMatchAnalysis(selectionPage.nodes);
+            List<IRepositoryNode> nodes = selectionPage.nodes;
+            if (metadataPage.isPageComplete() && (nodes == null || nodes.size() == 0)) {
+                return true;
+            }
+            return RepNodeUtils.isValidSelectionForMatchAnalysis(nodes);
         }
-        return Boolean.FALSE;
+
+        return super.canFinish();
     }
 
     /*
