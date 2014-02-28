@@ -47,6 +47,7 @@ import org.talend.dataquality.indicators.definition.userdefine.UserdefineFactory
 import org.talend.dataquality.indicators.sql.IndicatorSqlFactory;
 import org.talend.dataquality.indicators.sql.UserDefIndicator;
 import org.talend.utils.dates.DateUtils;
+import orgomg.cwm.objectmodel.core.CoreFactory;
 import orgomg.cwm.objectmodel.core.Expression;
 import orgomg.cwm.resource.relational.Catalog;
 
@@ -1374,7 +1375,7 @@ public class DbmsLanguageTest {
     @Test
     public void testIsApplicable() {
         try {
-            Expression createExpression = createExpression("Mysql");
+            Expression createExpression = createExpression("Mysql"); //$NON-NLS-1$
             DbmsLanguage dbms = getMysqlDbmsLanguage();
             Assert.assertTrue(dbms.isApplicable(createExpression));
         } catch (Exception e) {
@@ -1390,7 +1391,7 @@ public class DbmsLanguageTest {
     @Test
     public void testGetSelectRegexpTestStringStringExpression() {
         try {
-            Expression createExpression = createExpression("Mysql");
+            Expression createExpression = createExpression("Mysql"); //$NON-NLS-1$
             DbmsLanguage dbms = getMysqlDbmsLanguage();
             Assert.assertNotNull(dbms.getSelectRegexpTestString(REGEXP_STR, createExpression));
         } catch (Exception e) {
@@ -1930,13 +1931,13 @@ public class DbmsLanguageTest {
     }
 
     /**
-     * Test method for {@link org.talend.dq.dbms.DbmsLanguage#getFunctionName()}.
+     * Test method for {@link org.talend.dq.dbms.DbmsLanguage#getRegularExpressionFunction()}.
      */
     @Test
-    public void testGetFunctionName() {
+    public void testGetRegularExpressionFunction() {
         try {
             DbmsLanguage dbms = getMysqlDbmsLanguage();
-            Assert.assertTrue(EMPTY_STRING.equals(dbms.getFunctionName()));
+            Assert.assertTrue("REGEXP BINARY".equals(dbms.getRegularExpressionFunction())); //$NON-NLS-1$
         } catch (Exception e) {
             fail(e.getMessage());
         }
@@ -2191,6 +2192,108 @@ public class DbmsLanguageTest {
         columnName = dbms.castColumnNameToChar(COLUMN_A_NAME);
         Assert.assertEquals(columnName, "to_char(" + COLUMN_A_NAME + ")"); //$NON-NLS-1$ //$NON-NLS-2$
 
+    }
+
+    /**
+     * 
+     * {@link org.talend.dq.dbms.DbmsLanguage#extractRegularExpressionFunction(Expression)}.
+     * 
+     * case 1:vertica database expression
+     */
+    @Test
+    public void testExtractRegularExpressionFunctionForVertica() {
+        DbmsLanguage netezzaDbmsLanguage = DbmsLanguageFactory.createDbmsLanguage(SupportDBUrlType.VERTICA);
+        Expression createExpression = CoreFactory.eINSTANCE.createExpression();
+        // Vertica Database
+        createExpression
+                .setBody("SELECT COUNT(CASE WHEN REGEXP_LIKE(TO_CHAR(<%=__COLUMN_NAMES__%>),<%=__PATTERN_EXPR__%>) THEN 1 END), COUNT(*) FROM <%=__TABLE_NAME__%> <%=__WHERE_CLAUSE__%>"); //$NON-NLS-1$
+        String regularFunctionName = netezzaDbmsLanguage.extractRegularExpressionFunction(createExpression);
+        Assert.assertEquals("REGEXP_LIKE", regularFunctionName); //$NON-NLS-1$
+    }
+
+    /**
+     * 
+     * {@link org.talend.dq.dbms.DbmsLanguage#extractRegularExpressionFunction(Expression)}.
+     * 
+     * case 2:Hive database expression
+     */
+    @Test
+    public void testExtractRegularExpressionFunctionForHive() {
+        DbmsLanguage netezzaDbmsLanguage = DbmsLanguageFactory.createDbmsLanguage(SupportDBUrlType.HIVEDEFAULTURL);
+        Expression createExpression = CoreFactory.eINSTANCE.createExpression();
+        // Vertica Database
+        createExpression
+                .setBody("SELECT COUNT(CASE WHEN <%=__COLUMN_NAMES__%> REGEXP <%=__PATTERN_EXPR__%> THEN 1 END), COUNT(*) FROM <%=__TABLE_NAME__%> <%=__WHERE_CLAUSE__%>"); //$NON-NLS-1$
+        String regularFunctionName = netezzaDbmsLanguage.extractRegularExpressionFunction(createExpression);
+        Assert.assertEquals("REGEXP", regularFunctionName); //$NON-NLS-1$
+    }
+
+    /**
+     * 
+     * {@link org.talend.dq.dbms.DbmsLanguage#extractRegularExpressionFunction(Expression)}.
+     * 
+     * case 3:PostgreSQL database expression
+     */
+    @Test
+    public void testExtractRegularExpressionFunctionForPostgreSQL() {
+        DbmsLanguage netezzaDbmsLanguage = DbmsLanguageFactory.createDbmsLanguage(SupportDBUrlType.POSTGRESQLEFAULTURL);
+        Expression createExpression = CoreFactory.eINSTANCE.createExpression();
+        // Vertica Database
+        createExpression
+                .setBody("SELECT COUNT(CASE WHEN <%=__COLUMN_NAMES__%> ~ <%=__PATTERN_EXPR__%> THEN 1 END), COUNT(*) FROM <%=__TABLE_NAME__%> <%=__WHERE_CLAUSE__%>"); //$NON-NLS-1$
+        String regularFunctionName = netezzaDbmsLanguage.extractRegularExpressionFunction(createExpression);
+        Assert.assertEquals("~", regularFunctionName); //$NON-NLS-1$
+    }
+
+    /**
+     * 
+     * {@link org.talend.dq.dbms.DbmsLanguage#extractRegularExpressionFunction(Expression)}.
+     * 
+     * case 4:Oracle database expression
+     */
+    @Test
+    public void testExtractRegularExpressionFunctionForOracle() {
+        DbmsLanguage netezzaDbmsLanguage = DbmsLanguageFactory.createDbmsLanguage(SupportDBUrlType.ORACLEWITHSIDDEFAULTURL);
+        Expression createExpression = CoreFactory.eINSTANCE.createExpression();
+        // Vertica Database
+        createExpression
+                .setBody("SELECT COUNT(CASE WHEN REGEXP_LIKE(<%=__COLUMN_NAMES__%>,<%=__PATTERN_EXPR__%>) THEN 1 END), COUNT(*) FROM <%=__TABLE_NAME__%> <%=__WHERE_CLAUSE__%>"); //$NON-NLS-1$
+        String regularFunctionName = netezzaDbmsLanguage.extractRegularExpressionFunction(createExpression);
+        Assert.assertEquals("REGEXP_LIKE", regularFunctionName); //$NON-NLS-1$
+    }
+
+    /**
+     * 
+     * {@link org.talend.dq.dbms.DbmsLanguage#extractRegularExpressionFunction(Expression)}.
+     * 
+     * case 5:Mysql database expression
+     */
+    @Test
+    public void testExtractRegularExpressionFunctionForMysql() {
+        DbmsLanguage netezzaDbmsLanguage = DbmsLanguageFactory.createDbmsLanguage(SupportDBUrlType.MYSQLDEFAULTURL);
+        Expression createExpression = CoreFactory.eINSTANCE.createExpression();
+        // Vertica Database
+        createExpression
+                .setBody("SELECT COUNT(CASE WHEN <%=__COLUMN_NAMES__%> REGEXP BINARY <%=__PATTERN_EXPR__%> THEN 1 END), COUNT(*) FROM <%=__TABLE_NAME__%> <%=__WHERE_CLAUSE__%>"); //$NON-NLS-1$
+        String regularFunctionName = netezzaDbmsLanguage.extractRegularExpressionFunction(createExpression);
+        Assert.assertEquals("REGEXP BINARY", regularFunctionName); //$NON-NLS-1$
+    }
+
+    /**
+     * 
+     * {@link org.talend.dq.dbms.DbmsLanguage#extractRegularExpressionFunction(Expression)}.
+     * 
+     * case 6:Netezza database expression
+     */
+    @Test
+    public void testExtractRegularExpressionFunctionForNetezza() {
+        DbmsLanguage netezzaDbmsLanguage = DbmsLanguageFactory.createDbmsLanguage(SupportDBUrlType.NETEZZADEFAULTURL);
+        Expression createExpression = CoreFactory.eINSTANCE.createExpression();
+        // Vertica Database
+        createExpression
+                .setBody("SELECT COUNT(CASE WHEN REGEXP_EXTRACT(TO_CHAR(<%=__COLUMN_NAMES__%>),<%=__PATTERN_EXPR__%>) THEN 1 END), COUNT(*) FROM <%=__TABLE_NAME__%> <%=__WHERE_CLAUSE__%>"); //$NON-NLS-1$
+        String regularFunctionName = netezzaDbmsLanguage.extractRegularExpressionFunction(createExpression);
+        Assert.assertEquals("REGEXP_EXTRACT", regularFunctionName); //$NON-NLS-1$
     }
 
 }

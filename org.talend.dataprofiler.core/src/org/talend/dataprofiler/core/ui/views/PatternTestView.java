@@ -337,7 +337,7 @@ public class PatternTestView extends ViewPart {
                     DbmsLanguage dbmsLanguage = getDbmsLanguage();
                     // MOD gdbu 2011-5-13 bug : 19119
                     if (dbmsLanguage != null) {
-                        dbmsLanguage.setFunctionName(getFunctionName());
+                        dbmsLanguage.setRegularExpressionFunction(getFunctionName());
                         language = dbmsLanguage.getDbmsName();
                     } else {
                         // ADD msjian 2012-2-10 TDQ-4600: fix set the default language is "Java"
@@ -466,13 +466,14 @@ public class PatternTestView extends ViewPart {
                 Connection tddataprovider = connItem.getConnection();
                 if (tddataprovider.getName().equals(dbCombo.getText())) {
                     DbmsLanguage createDbmsLanguage = DbmsLanguageFactory.createDbmsLanguage(tddataprovider);
+                    String selectRegexpTestString = null;
                     // MOD gdbu 2011-5-31 bug : 19119
                     if (null != createDbmsLanguage) {
-                        createDbmsLanguage.setFunctionName(getFunctionName());
+                        createDbmsLanguage.setRegularExpressionFunction(getFunctionName());
+                        selectRegexpTestString = createDbmsLanguage.getSelectRegexpTestString(testText.getText(),
+                                regularText.getText());
                     }
                     // ~19119
-                    String selectRegexpTestString = createDbmsLanguage.getSelectRegexpTestString(testText.getText(),
-                            regularText.getText());
                     // TDQ-8637 if the 'selectRegexpTestString' is null,means doesn't implement method
                     // DbmsLanguage.regexLike().should return.
                     if (selectRegexpTestString == null) {
@@ -570,7 +571,7 @@ public class PatternTestView extends ViewPart {
         DbmsLanguage dbmsLanguage = this.getDbmsLanguage();
         if (dbmsLanguage != null) {
             // MOD gdbu 2011-6-13 bug : 19119
-            dbmsLanguage.setFunctionName(getFunctionName());
+            dbmsLanguage.setRegularExpressionFunction(getFunctionName());
             // ~19119
             String selectRegexpTestString = dbmsLanguage.getSelectRegexpTestString(testText.getText(), regularText.getText());
 
@@ -594,7 +595,7 @@ public class PatternTestView extends ViewPart {
             // MOD gdbu 2011-5-31 bug : 19119
             // MOD gdbu 2011-6-13 bug : 21695
             if (null != dbmsLanguage) {
-                dbmsLanguage.setFunctionName(getFunctionName());
+                dbmsLanguage.setRegularExpressionFunction(getFunctionName());
             }
             // ~21695
             // ~19119
@@ -744,7 +745,7 @@ public class PatternTestView extends ViewPart {
         if (tdDataProvider.getName().equals(dbCombo.getText())) {
 
             DbmsLanguage dbmsLanguage = DbmsLanguageFactory.createDbmsLanguage(tdDataProvider);
-            if (dbmsLanguage.regexLike(testText.getText(), regularText.getText()) == null) {
+            if (dbmsLanguage.regularFunctionBody(testText.getText(), regularText.getText()) == null) {
                 setFunctionInfoVisible(true);
             } else {
                 setFunctionInfoVisible(false);

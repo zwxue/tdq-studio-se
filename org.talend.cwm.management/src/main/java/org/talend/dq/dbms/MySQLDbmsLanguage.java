@@ -16,6 +16,7 @@ import org.apache.commons.lang.StringUtils;
 import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
 import org.talend.dataquality.indicators.DateGrain;
 import org.talend.utils.ProductVersion;
+import orgomg.cwm.objectmodel.core.Expression;
 
 /**
  * DOC scorreia class global comment. Detailled comment
@@ -104,14 +105,52 @@ public class MySQLDbmsLanguage extends DbmsLanguage {
         return "SELECT " + regexLikeExpression + " AS OK" + EOS; //$NON-NLS-1$ //$NON-NLS-2$
     }
 
+    /**
+     * @deprecated use {@link #regularFunctionBody(String, String)} instead of it
+     */
+    @Deprecated
+    @Override
+    public String regexLike(String element, String regex) {
+        return this.regularFunctionBody(element, regex);
+    }
+
+    /**
+     * @deprecated use {@link #notRegularFunctionBody(String, String)} instead of it
+     */
+    @Deprecated
+    @Override
+    public String regexNotLike(String element, String regex) {
+        return this.notRegularFunctionBody(element, regex);
+    }
+
     /*
      * (non-Javadoc)
      * 
      * @see org.talend.cwm.management.api.DbmsLanguage#regexLike(java.lang.String, java.lang.String)
      */
     @Override
-    public String regexLike(String element, String regex) {
-        return surroundWithSpaces(element + " REGEXP BINARY " + regex); //$NON-NLS-1$
+    public String regularFunctionBody(String element, String regex) {
+        return surroundWithSpaces(element + surroundWithSpaces(getRegularExpressionFunction()) + regex);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dq.dbms.DbmsLanguage#getRegularExpressionFunction()
+     */
+    @Override
+    public String getRegularExpressionFunction() {
+        return "REGEXP BINARY"; //$NON-NLS-1$
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dq.dbms.DbmsLanguage#getRegularExpressionFunction()
+     */
+    @Override
+    public String extractRegularExpressionFunction(Expression expression) {
+        return getRegularExpressionFunction();
     }
 
     /*
@@ -120,8 +159,8 @@ public class MySQLDbmsLanguage extends DbmsLanguage {
      * @see org.talend.cwm.management.api.DbmsLanguage#regexNotLike(java.lang.String, java.lang.String)
      */
     @Override
-    public String regexNotLike(String element, String regex) {
-        return surroundWithSpaces(element + " NOT REGEXP BINARY " + regex); //$NON-NLS-1$
+    public String notRegularFunctionBody(String element, String regex) {
+        return surroundWithSpaces(element + surroundWithSpaces(this.not() + " " + getRegularExpressionFunction()) + regex); //$NON-NLS-1$
     }
 
     /*

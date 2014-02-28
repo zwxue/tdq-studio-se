@@ -100,9 +100,9 @@ public class PatternExplorerTest {
         DbmsLanguage dbmsLanguage = mock(DbmsLanguage.class);
         when(dbmsLanguage.getRegexPatternString(indicator)).thenReturn(RES_VALIED_ROWS);
         when(dbmsLanguage.quote(anyString())).thenReturn("`lname`"); //$NON-NLS-1$
-        when(dbmsLanguage.regexLike(anyString(), anyString())).thenReturn(
+        when(dbmsLanguage.regularFunctionBodyWithReturnValue(anyString(), anyString())).thenReturn(
                 "((customer.lname = \"sunny\")) AND  `lname` REGEXP 'su.*'"); //$NON-NLS-1$
-        when(dbmsLanguage.regexNotLike(anyString(), anyString())).thenReturn(
+        when(dbmsLanguage.notRegularFunctionBodyWithReturnValue(anyString(), anyString())).thenReturn(
                 "((customer.lname = \"sunny\")) AND  `lname` NOT REGEXP 'su.*'"); //$NON-NLS-1$
 
         when(dbmsLanguage.where()).thenReturn(" WHERE "); //$NON-NLS-1$

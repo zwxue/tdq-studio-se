@@ -17,6 +17,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 import org.talend.utils.ProductVersion;
+import orgomg.cwm.objectmodel.core.Expression;
 
 /**
  * created by xqliu on Aug 7, 2013 Detailled comment
@@ -48,14 +49,53 @@ public class VerticaDbmsLanguage extends DbmsLanguage {
         return statement;
     }
 
+    /**
+     * @deprecated use {@link #regularFunctionBody(String, String)} instead of it
+     */
+    @Deprecated
     @Override
     public String regexLike(String element, String regex) {
-        return surroundWithSpaces("REGEXP_LIKE(TO_CHAR(" + element + ") , " + regex + " )"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+        return this.regularFunctionBody(element, regex);
+    }
+
+    /**
+     * @deprecated use {@link #notRegularFunctionBody(String, String)} instead of it
+     */
+    @Deprecated
+    @Override
+    public String regexNotLike(String element, String regex) {
+        return this.notRegularFunctionBody(element, regex);
     }
 
     @Override
-    public String regexNotLike(String element, String regex) {
-        return surroundWithSpaces("NOT REGEXP_LIKE(TO_CHAR(" + element + ") , " + regex + " )"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+    public String regularFunctionBody(String element, String regex) {
+        return surroundWithSpaces(getRegularExpressionFunction() + "(TO_CHAR(" + element + ") , " + regex + " )"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+    }
+
+    @Override
+    public String notRegularFunctionBody(String element, String regex) {
+        return surroundWithSpaces(this.not()
+                + " " + getRegularExpressionFunction() + "(TO_CHAR(" + element + ") , " + regex + " )"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dq.dbms.DbmsLanguage#getRegularExpressionFunction()
+     */
+    @Override
+    public String getRegularExpressionFunction() {
+        return "REGEXP_LIKE"; //$NON-NLS-1$
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dq.dbms.DbmsLanguage#getRegularExpressionFunction()
+     */
+    @Override
+    public String extractRegularExpressionFunction(Expression expression) {
+        return getRegularExpressionFunction();
     }
 
     @Override

@@ -15,6 +15,7 @@ package org.talend.dq.dbms;
 import org.talend.dataquality.indicators.DateGrain;
 import org.talend.utils.ProductVersion;
 import org.talend.utils.properties.PropertiesLoader;
+import orgomg.cwm.objectmodel.core.Expression;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.resource.relational.Catalog;
 import orgomg.cwm.resource.relational.Schema;
@@ -104,14 +105,52 @@ public class PostgresqlDbmsLanguage extends DbmsLanguage {
         return "SELECT " + regexLikeExpression + " AS OK" + EOS; //$NON-NLS-1$ //$NON-NLS-2$
     }
 
+    /**
+     * @deprecated use {@link #regularFunctionBody(String, String)} instead of it
+     */
+    @Deprecated
+    @Override
+    public String regexLike(String element, String regex) {
+        return this.regularFunctionBody(element, regex);
+    }
+
+    /**
+     * @deprecated use {@link #notRegularFunctionBody(String, String)} instead of it
+     */
+    @Deprecated
+    @Override
+    public String regexNotLike(String element, String regex) {
+        return this.notRegularFunctionBody(element, regex);
+    }
+
     /*
      * (non-Javadoc)
      * 
      * @see org.talend.cwm.management.api.DbmsLanguage#regexLike(java.lang.String, java.lang.String)
      */
     @Override
-    public String regexLike(String element, String regex) {
-        return surroundWithSpaces(element + " ~ " + regex); //$NON-NLS-1$
+    public String regularFunctionBody(String element, String regex) {
+        return surroundWithSpaces(element + surroundWithSpaces(getRegularExpressionFunction()) + regex);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dq.dbms.DbmsLanguage#getRegularExpressionFunction()
+     */
+    @Override
+    public String getRegularExpressionFunction() {
+        return "~"; //$NON-NLS-1$
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dq.dbms.DbmsLanguage#getRegularExpressionFunction()
+     */
+    @Override
+    public String extractRegularExpressionFunction(Expression expression) {
+        return getRegularExpressionFunction();
     }
 
     /*
@@ -120,8 +159,8 @@ public class PostgresqlDbmsLanguage extends DbmsLanguage {
      * @see org.talend.cwm.management.api.DbmsLanguage#regexNotLike(java.lang.String, java.lang.String)
      */
     @Override
-    public String regexNotLike(String element, String regex) {
-        return surroundWithSpaces(element + " !~ " + regex); //$NON-NLS-1$
+    public String notRegularFunctionBody(String element, String regex) {
+        return surroundWithSpaces(element + surroundWithSpaces("!" + getRegularExpressionFunction()) + regex); //$NON-NLS-1$
     }
 
     /*

@@ -151,13 +151,27 @@ public class DbmsLanguage {
      */
     private String dbQuoteString = ""; //$NON-NLS-1$
 
-    private String functionName = ""; //$NON-NLS-1$ 
+    private String regularExpressionFunction = ""; //$NON-NLS-1$ 
+
+    // default soundex string
+    private static final String SOUNDEX_PREFIX = "SOUNDEX";//$NON-NLS-1$
+
+    private String regularfunctionReturnValue = ""; //$NON-NLS-1$
 
     /**
      * DbmsLanguage constructor for generic ANSI SQL (independent of any DBMS).
      */
     DbmsLanguage() {
         this(SQL);
+    }
+
+    /**
+     * Getter for soundexPrefix.
+     * 
+     * @return the soundexPrefix
+     */
+    public String getSoundexPrefix() {
+        return SOUNDEX_PREFIX;
     }
 
     /**
@@ -994,7 +1008,7 @@ public class DbmsLanguage {
     public String getSelectRegexpTestString(String stringToCheck, String regex) {
         String surroundedTestString = (stringToCheck.startsWith("'") && stringToCheck.endsWith("'")) ? stringToCheck //$NON-NLS-1$ //$NON-NLS-2$
                 : surroundWith('\'', stringToCheck, '\'');
-        String regexLikeExpression = regexLike(surroundedTestString, regex);
+        String regexLikeExpression = regularFunctionBody(surroundedTestString, regex);
         // else
         if (regexLikeExpression == null) {
             return null;
@@ -1007,39 +1021,118 @@ public class DbmsLanguage {
     }
 
     /**
-     * Method "regex".
+     * get the body of regular function match
      * 
      * @param element
      * @param regex
      * @return the regular expression according to the DBMS syntax or null if not supported.
      */
-    public String regexLike(String element, String regex) {
+    public String regularFunctionBody(String element, String regex) {
         // TDQ-8637 UDF as a default case,if the database type has regular expression function,should overide this
         // method.
 
-        if (null == functionName || PluginConstant.EMPTY_STRING.equals(functionName)) {
+        if (null == regularExpressionFunction || PluginConstant.EMPTY_STRING.equals(regularExpressionFunction)) {
             return null;
         }
-        String functionNameSQL = functionName + "( ";//$NON-NLS-1$  
+        String functionNameSQL = regularExpressionFunction + "( ";//$NON-NLS-1$  
         if (null != element && !element.equals("")) {//$NON-NLS-1$  
             functionNameSQL = functionNameSQL + element;
+        } else {
+            return null;
         }
         if (null != regex && !regex.equals("")) {//$NON-NLS-1$  
             functionNameSQL = functionNameSQL + "," + regex;//$NON-NLS-1$ 
+        } else {
+            return null;
         }
         functionNameSQL = functionNameSQL + " )";//$NON-NLS-1$  
 
-        return functionNameSQL;
-
+        return surroundWithSpaces(functionNameSQL);
     }
 
+    /**
+     * get the body of regular function match with return value
+     * 
+     * @param element
+     * @param regex
+     * @return the regular expression according to the DBMS syntax or null if not supported.
+     */
+    public String regularFunctionBodyWithReturnValue(String element, String regex) {
+        // TDQ-8637 UDF as a default case,if the database type has regular expression function,should overide this
+        // method.
+
+        String functionNameSQL = regularFunctionBody(element, regex);
+        if (functionNameSQL == null) {
+            return null;
+        }
+        functionNameSQL = functionNameSQL + this.regularfunctionReturnValue;
+
+        return surroundWithSpaces(functionNameSQL);
+    }
+
+    /**
+     * Method "regex".
+     * 
+     * @param element
+     * @param regex
+     * @return the regular expression according to the DBMS syntax or null if not supported.\
+     * @deprecated use {@link #regularFunctionBody(String, String)} instead of it
+     */
+    @Deprecated
+    public String regexLike(String element, String regex) {
+        return regularFunctionBody(element, regex);
+    }
+
+    /**
+     * 
+     * get the body of not Regular function match
+     * 
+     * @param element
+     * @param regex
+     * @return
+     */
+    public String notRegularFunctionBody(String element, String regex) {
+        // TDQ-8637 UDF as a default case,if the database type has regular expression function,should overide this
+        // method.
+        String functionNameSQL = regularFunctionBody(element, regex);
+        if (functionNameSQL == null) {
+            return null;
+        }
+        return this.not() + functionNameSQL;
+    }
+
+    /**
+     * 
+     * get the body of not Regular function match with return value
+     * 
+     * @param element
+     * @param regex
+     * @return
+     */
+    public String notRegularFunctionBodyWithReturnValue(String element, String regex) {
+        // TDQ-8637 UDF as a default case,if the database type has regular expression function,should overide this
+        // method.
+        String functionNameSQL = regularFunctionBody(element, regex);
+        if (functionNameSQL == null) {
+            return null;
+        }
+        return this.not() + functionNameSQL + this.regularfunctionReturnValue;
+    }
+
+    /**
+     * 
+     * get the body of not Regular function match
+     * 
+     * @param element
+     * @param regex
+     * @return
+     * @deprecated use {@link #notRegularFunctionBody(String, String)} instead of it
+     */
+    @Deprecated
     public String regexNotLike(String element, String regex) {
         // TDQ-8637 UDF as a default case,if the database type has regular expression function,should overide this
         // method.
-        if (null == functionName || PluginConstant.EMPTY_STRING.equals(functionName)) {
-            return null;
-        }
-        return surroundWithSpaces("not " + functionName + "(" + element + " , " + regex + " )"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$//$NON-NLS-4$
+        return notRegularFunctionBody(element, regex);
     }
 
     /**
@@ -1556,12 +1649,12 @@ public class DbmsLanguage {
         return SQL.equals(getDbmsName());
     }
 
-    public String getFunctionName() {
-        return this.functionName;
+    public String getRegularExpressionFunction() {
+        return this.regularExpressionFunction;
     }
 
-    public void setFunctionName(String functionName) {
-        this.functionName = functionName;
+    public void setRegularExpressionFunction(String functionName) {
+        this.regularExpressionFunction = functionName;
     }
 
     public String trimIfBlank(String colName) {
@@ -1844,6 +1937,40 @@ public class DbmsLanguage {
             return (Catalog) pack;
         }
         return null;
+    }
+
+    /**
+     * 
+     * Extract the name of regular Expression Function If current database type need to use UDF deal regular expression,
+     * the expresssion which will definition on "Regular Expression Matching.definition" should like below:
+     * 
+     * "* + when REGULAR_FUNCTION(+ * +) + *". else this method will not return correct result which you want
+     * 
+     * @param expression
+     * @return the name of regular Expression Function or null when the expression is invalid
+     */
+    public String extractRegularExpressionFunction(Expression expression) {
+        String functionName = null;
+        try {
+            String body = expression.getBody().toUpperCase();
+            String tempString = body.split("WHEN").length > 1 ? body.split("WHEN")[1] : "";//$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
+            functionName = tempString.split("\\(").length > 1 ? tempString.split("\\(")[0] : "";//$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
+            functionName = functionName.trim();
+            this.setFunctionReturnValue(tempString);
+        } catch (NullPointerException e) {
+            log.error(e, e);
+        }
+        return functionName;
+    }
+
+    /**
+     * remember the result value for regular expression.So that we can get complete expression and Normal it should be
+     * "=1"
+     */
+    private void setFunctionReturnValue(String inputStr) {
+        String tempString = inputStr.split("\\)").length > 1 ? inputStr.split("\\)")[1] : ""; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+        regularfunctionReturnValue = tempString.split("THEN").length > 1 ? tempString.split("THEN")[0] : ""; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+
     }
 
 }
