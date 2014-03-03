@@ -12,7 +12,6 @@
 // ============================================================================
 package org.talend.dq.handler;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import org.talend.core.database.conn.ConnParameterKeys;
@@ -46,7 +45,7 @@ public class HiveYarnHandler extends HortonWorksHandler {
      */
     @Override
     protected Map<String, String> getDefaultHadoopParameters() {
-        Map<String, String> map = new HashMap<String, String>();
+        Map<String, String> map = super.getDefaultHadoopParameters();
         Map<String, String> hadoopPropertiesMap = getHadoopPropertiesMap();
         if (hadoopPropertiesMap.get(MAP_FM_NAME) == null) {
             map.put(MAP_FM_NAME, MAP_FM_NAME_VALUE);

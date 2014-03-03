@@ -160,6 +160,8 @@ public class HiveConnectionHandler {
         } else if (EHBaseDistribution4Versions.MAPR_2_1_2.getVersionValue().equals(version)
                 || EHBaseDistribution4Versions.MAPR_3_0_1.getVersionValue().equals(version)) {
             handler = new Mapr212Handler(metadataConnection);
+        } else if (EHBaseDistribution4Versions.CLOUDERA_CDH5.getVersionValue().equals(version)) {
+            handler = new ClouderaCDH5Handler(metadataConnection);
         } else {
             handler = new HiveConnectionHandler(metadataConnection);
         }

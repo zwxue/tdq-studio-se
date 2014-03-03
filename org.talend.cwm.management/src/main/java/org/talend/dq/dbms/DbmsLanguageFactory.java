@@ -329,6 +329,11 @@ public final class DbmsLanguageFactory {
         if (StringUtils.contains(lang1, DbmsLanguage.NETEZZA) && StringUtils.contains(lang2, DbmsLanguage.NETEZZA)) {
             return true;
         }
+        // MOD 2014-02-27 for TDQ-8601
+        if (StringUtils.contains(lang1, DbmsLanguage.HIVE) && StringUtils.contains(lang2, DbmsLanguage.HIVE)) {
+            return true;
+        }
+
         return StringUtils.equalsIgnoreCase(lang1, lang2);
     }
 
