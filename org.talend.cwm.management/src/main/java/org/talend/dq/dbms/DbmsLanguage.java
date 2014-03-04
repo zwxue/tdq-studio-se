@@ -1021,11 +1021,13 @@ public class DbmsLanguage {
     }
 
     /**
-     * Method "regexLike".
+     * Method "regexLike". By default, it will try to extract the function name from user defined regular expression. If
+     * the database support the regex like regular expression function , the sub-class will have to override this method
+     * in order to return the correct regex like name.
      * 
      * @param element
      * @param regex
-     * @return get the String of Regular function(for example : "regex_like(element,regex)")
+     * @return get the String of Regular function(for example : "regex_like(element,regex)").
      * 
      */
     public String regexLike(String element, String regex) {
@@ -1033,7 +1035,7 @@ public class DbmsLanguage {
         // method.
 
         if (null == regularExpressionFunction || PluginConstant.EMPTY_STRING.equals(regularExpressionFunction)
-                ||existEmptyInParameter(element, regex)) {
+                || existEmptyInParameter(element, regex)) {
             return null;
         }
         String functionNameSQL = regularExpressionFunction + "( " + element + "," + regex + " )";//$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$  
@@ -1048,7 +1050,7 @@ public class DbmsLanguage {
      * @return false if every one is not empty else return true
      */
     private boolean existEmptyInParameter(String element, String regex) {
-        return  null == element || PluginConstant.EMPTY_STRING.equals(element) || null == regex
+        return null == element || PluginConstant.EMPTY_STRING.equals(element) || null == regex
                 || PluginConstant.EMPTY_STRING.equals(regex);
     }
 
