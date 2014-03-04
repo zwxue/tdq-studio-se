@@ -49,33 +49,14 @@ public class VerticaDbmsLanguage extends DbmsLanguage {
         return statement;
     }
 
-    /**
-     * @deprecated use {@link #regularFunctionBody(String, String)} instead of it
-     */
-    @Deprecated
     @Override
     public String regexLike(String element, String regex) {
-        return this.regularFunctionBody(element, regex);
-    }
-
-    /**
-     * @deprecated use {@link #notRegularFunctionBody(String, String)} instead of it
-     */
-    @Deprecated
-    @Override
-    public String regexNotLike(String element, String regex) {
-        return this.notRegularFunctionBody(element, regex);
-    }
-
-    @Override
-    public String regularFunctionBody(String element, String regex) {
         return surroundWithSpaces(getRegularExpressionFunction() + "(TO_CHAR(" + element + ") , " + regex + " )"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
     }
 
     @Override
-    public String notRegularFunctionBody(String element, String regex) {
-        return surroundWithSpaces(this.not()
-                + " " + getRegularExpressionFunction() + "(TO_CHAR(" + element + ") , " + regex + " )"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+    public String regexNotLike(String element, String regex) {
+        return surroundWithSpaces(this.not() + getRegularExpressionFunction() + "(TO_CHAR(" + element + ") , " + regex + " )"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
     }
 
     /*

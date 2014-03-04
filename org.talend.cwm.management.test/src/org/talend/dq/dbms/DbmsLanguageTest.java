@@ -1415,12 +1415,118 @@ public class DbmsLanguageTest {
 
     /**
      * Test method for {@link org.talend.dq.dbms.DbmsLanguage#regexLike(java.lang.String, java.lang.String)}.
+     * 
+     * case 1 :database type is mysql
      */
     @Test
-    public void testRegexLike() {
+    public void testRegexLikeCase1() {
         try {
             DbmsLanguage dbms = getMysqlDbmsLanguage();
-            Assert.assertNotNull(dbms.regexLike(REGEXP_STR, REGEXP));
+            Assert.assertEquals(
+                    dbms.surroundWithSpaces(REGEXP_STR + dbms.surroundWithSpaces(dbms.getRegularExpressionFunction()) + REGEXP),
+                    dbms.regexLike(REGEXP_STR, REGEXP));
+        } catch (Exception e) {
+            fail(e.getMessage());
+        }
+    }
+
+    /**
+     * Test method for {@link org.talend.dq.dbms.DbmsLanguage#regexLike(java.lang.String, java.lang.String)}.
+     * 
+     * case 2 : database type is oracle
+     */
+    @Test
+    public void testRegexLikeCase2() {
+        try {
+            DbmsLanguage dbms = DbmsLanguageFactory.createDbmsLanguage(SupportDBUrlType.ORACLEWITHSIDDEFAULTURL);
+
+            Assert.assertEquals(
+                    dbms.surroundWithSpaces(dbms.getRegularExpressionFunction() + "(" + REGEXP_STR + " , " + REGEXP + " )"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                    dbms.regexLike(REGEXP_STR, REGEXP));
+        } catch (Exception e) {
+            fail(e.getMessage());
+        }
+    }
+
+    /**
+     * Test method for {@link org.talend.dq.dbms.DbmsLanguage#regexLike(java.lang.String, java.lang.String)}.
+     * 
+     * case 3 : database type is postgresql
+     */
+    @Test
+    public void testRegexLikeCase3() {
+        try {
+            DbmsLanguage dbms = DbmsLanguageFactory.createDbmsLanguage(SupportDBUrlType.POSTGRESQLEFAULTURL);
+
+            Assert.assertEquals(
+                    dbms.surroundWithSpaces(REGEXP_STR + dbms.surroundWithSpaces(dbms.getRegularExpressionFunction()) + REGEXP),
+                    dbms.regexLike(REGEXP_STR, REGEXP));
+        } catch (Exception e) {
+            fail(e.getMessage());
+        }
+    }
+
+    /**
+     * Test method for {@link org.talend.dq.dbms.DbmsLanguage#regexLike(java.lang.String, java.lang.String)}.
+     * 
+     * case 4 : database type is Hive
+     */
+    @Test
+    public void testRegexLikeCase4() {
+        try {
+            DbmsLanguage dbms = DbmsLanguageFactory.createDbmsLanguage(SupportDBUrlType.HIVEDEFAULTURL);
+
+            Assert.assertEquals(
+                    dbms.surroundWithSpaces(REGEXP_STR + dbms.surroundWithSpaces(dbms.getRegularExpressionFunction()) + REGEXP),
+                    dbms.regexLike(REGEXP_STR, REGEXP));
+        } catch (Exception e) {
+            fail(e.getMessage());
+        }
+    }
+
+    /**
+     * Test method for {@link org.talend.dq.dbms.DbmsLanguage#regexLike(java.lang.String, java.lang.String)}.
+     * 
+     * case 5 : database type is Vertical
+     */
+    @Test
+    public void testRegexLikeCase5() {
+        try {
+            DbmsLanguage dbms = DbmsLanguageFactory.createDbmsLanguage(SupportDBUrlType.VERTICA);
+
+            Assert.assertEquals(
+                    dbms.surroundWithSpaces(dbms.getRegularExpressionFunction()
+                            + "(TO_CHAR(" + REGEXP_STR + ") , " + REGEXP + " )"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                    dbms.regexLike(REGEXP_STR, REGEXP));
+        } catch (Exception e) {
+            fail(e.getMessage());
+        }
+    }
+
+    /**
+     * Test method for {@link org.talend.dq.dbms.DbmsLanguage#regexLike(java.lang.String, java.lang.String)}.
+     * 
+     * case 6 : database type is sql
+     */
+    @Test
+    public void testRegexLikeCase6() {
+        try {
+            DbmsLanguage dbms = DbmsLanguageFactory.createDbmsLanguage("SQL", "0.1"); //$NON-NLS-1$ //$NON-NLS-2$
+            // regularExpressionFunction is null
+            Assert.assertEquals(null, dbms.regexLike(REGEXP_STR, REGEXP));
+            dbms.setRegularExpressionFunction(StringUtils.EMPTY);
+            Assert.assertEquals(null, dbms.regexLike(REGEXP_STR, REGEXP));
+            // regularExpressionFunction is not null but element is null
+            dbms.setRegularExpressionFunction(REGEXP_STR);
+            Assert.assertEquals(null, dbms.regexLike(null, REGEXP));
+            Assert.assertEquals(null, dbms.regexLike(StringUtils.EMPTY, REGEXP));
+            // regularExpressionFunction and REGEXP_STR are not null but regex is null
+            Assert.assertEquals(null, dbms.regexLike(REGEXP_STR, null));
+            Assert.assertEquals(null, dbms.regexLike(REGEXP_STR, StringUtils.EMPTY));
+            // normal case
+            Assert.assertEquals(
+                    dbms.surroundWithSpaces(dbms.getRegularExpressionFunction() + "( " + REGEXP_STR + "," + REGEXP + " )"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                    dbms.regexLike(REGEXP_STR, REGEXP));
         } catch (Exception e) {
             fail(e.getMessage());
         }
@@ -1428,12 +1534,123 @@ public class DbmsLanguageTest {
 
     /**
      * Test method for {@link org.talend.dq.dbms.DbmsLanguage#regexNotLike(java.lang.String, java.lang.String)}.
+     * 
+     * case 1 :database type is mysql
      */
     @Test
-    public void testRegexNotLike() {
+    public void testRegexNotLikeCase1() {
         try {
             DbmsLanguage dbms = getMysqlDbmsLanguage();
-            Assert.assertNotNull(dbms.regexNotLike(REGEXP_STR, REGEXP));
+            Assert.assertEquals(
+                    dbms.surroundWithSpaces(REGEXP_STR
+                            + dbms.surroundWithSpaces(dbms.not() + dbms.getRegularExpressionFunction()) + REGEXP),
+                    dbms.regexNotLike(REGEXP_STR, REGEXP));
+        } catch (Exception e) {
+            fail(e.getMessage());
+        }
+    }
+
+    /**
+     * Test method for {@link org.talend.dq.dbms.DbmsLanguage#regexNotLike(java.lang.String, java.lang.String)}.
+     * 
+     * case 2 : database type is oracle
+     */
+    @Test
+    public void testRegexNotLikeCase2() {
+        try {
+            DbmsLanguage dbms = DbmsLanguageFactory.createDbmsLanguage(SupportDBUrlType.ORACLEWITHSIDDEFAULTURL);
+
+            Assert.assertEquals(
+                    dbms.surroundWithSpaces(dbms.not() + dbms.getRegularExpressionFunction()
+                            + "(" + REGEXP_STR + " , " + REGEXP + " )"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                    dbms.regexNotLike(REGEXP_STR, REGEXP));
+        } catch (Exception e) {
+            fail(e.getMessage());
+        }
+    }
+
+    /**
+     * Test method for {@link org.talend.dq.dbms.DbmsLanguage#regexNotLike(java.lang.String, java.lang.String)}.
+     * 
+     * case 3 : database type is postgresql
+     */
+    @Test
+    public void testRegexNotLikeCase3() {
+        try {
+            DbmsLanguage dbms = DbmsLanguageFactory.createDbmsLanguage(SupportDBUrlType.POSTGRESQLEFAULTURL);
+
+            Assert.assertEquals(
+                    dbms.surroundWithSpaces(REGEXP_STR + dbms.surroundWithSpaces("!" + dbms.getRegularExpressionFunction()) //$NON-NLS-1$
+                            + REGEXP), dbms.regexNotLike(REGEXP_STR, REGEXP));
+        } catch (Exception e) {
+            fail(e.getMessage());
+        }
+    }
+
+    /**
+     * Test method for {@link org.talend.dq.dbms.DbmsLanguage#regexNotLike(java.lang.String, java.lang.String)}.
+     * 
+     * case 4 : database type is Hive
+     */
+    @Test
+    public void testRegexNotLikeCase4() {
+        try {
+            DbmsLanguage dbms = DbmsLanguageFactory.createDbmsLanguage(SupportDBUrlType.HIVEDEFAULTURL);
+
+            Assert.assertEquals(
+                    dbms.surroundWithSpaces(REGEXP_STR
+                            + dbms.surroundWithSpaces(dbms.not() + dbms.getRegularExpressionFunction()) + REGEXP),
+                    dbms.regexNotLike(REGEXP_STR, REGEXP));
+        } catch (Exception e) {
+            fail(e.getMessage());
+        }
+    }
+
+    /**
+     * Test method for {@link org.talend.dq.dbms.DbmsLanguage#regexNotLike(java.lang.String, java.lang.String)}.
+     * 
+     * case 5 : database type is Vertical
+     */
+    @Test
+    public void testRegexNotLikeCase5() {
+        try {
+            DbmsLanguage dbms = DbmsLanguageFactory.createDbmsLanguage(SupportDBUrlType.VERTICA);
+
+            Assert.assertEquals(
+                    dbms.surroundWithSpaces(dbms.not() + dbms.getRegularExpressionFunction()
+                            + "(TO_CHAR(" + REGEXP_STR + ") , " + REGEXP + " )"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                    dbms.regexNotLike(REGEXP_STR, REGEXP));
+        } catch (Exception e) {
+            fail(e.getMessage());
+        }
+    }
+
+    /**
+     * Test method for {@link org.talend.dq.dbms.DbmsLanguage#regexNotLike(java.lang.String, java.lang.String)}.
+     * 
+     * case 6 : database type is sql
+     */
+    @Test
+    public void testRegexNotLikeCase6() {
+        try {
+            DbmsLanguage dbms = DbmsLanguageFactory.createDbmsLanguage("SQL", "0.1"); //$NON-NLS-1$ //$NON-NLS-2$
+            // regularExpressionFunction is null
+            Assert.assertEquals(null, dbms.regexNotLike(REGEXP_STR, REGEXP));
+            dbms.setRegularExpressionFunction(StringUtils.EMPTY);
+            Assert.assertEquals(null, dbms.regexNotLike(REGEXP_STR, REGEXP));
+            // regularExpressionFunction is not null but element is null
+            dbms.setRegularExpressionFunction(REGEXP_STR);
+            Assert.assertEquals(null, dbms.regexNotLike(null, REGEXP));
+            Assert.assertEquals(null, dbms.regexNotLike(StringUtils.EMPTY, REGEXP));
+            // regularExpressionFunction and REGEXP_STR are not null but regex is null
+            Assert.assertEquals(null, dbms.regexNotLike(REGEXP_STR, null));
+            Assert.assertEquals(null, dbms.regexNotLike(REGEXP_STR, StringUtils.EMPTY));
+            // normal case
+            Assert.assertEquals(
+                    dbms.not()
+                            + dbms.surroundWithSpaces(dbms.getRegularExpressionFunction()
+                                    + "( " + REGEXP_STR + "," + REGEXP + " )"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                    dbms.regexNotLike(REGEXP_STR, REGEXP));
         } catch (Exception e) {
             fail(e.getMessage());
         }
@@ -2205,8 +2422,7 @@ public class DbmsLanguageTest {
         DbmsLanguage netezzaDbmsLanguage = DbmsLanguageFactory.createDbmsLanguage(SupportDBUrlType.VERTICA);
         Expression createExpression = CoreFactory.eINSTANCE.createExpression();
         // Vertica Database
-        createExpression
-                .setBody("SELECT COUNT(CASE WHEN REGEXP_LIKE(TO_CHAR(<%=__COLUMN_NAMES__%>),<%=__PATTERN_EXPR__%>) THEN 1 END), COUNT(*) FROM <%=__TABLE_NAME__%> <%=__WHERE_CLAUSE__%>"); //$NON-NLS-1$
+        createExpression.setBody("**"); //$NON-NLS-1$
         String regularFunctionName = netezzaDbmsLanguage.extractRegularExpressionFunction(createExpression);
         Assert.assertEquals("REGEXP_LIKE", regularFunctionName); //$NON-NLS-1$
     }
@@ -2221,9 +2437,8 @@ public class DbmsLanguageTest {
     public void testExtractRegularExpressionFunctionForHive() {
         DbmsLanguage netezzaDbmsLanguage = DbmsLanguageFactory.createDbmsLanguage(SupportDBUrlType.HIVEDEFAULTURL);
         Expression createExpression = CoreFactory.eINSTANCE.createExpression();
-        // Vertica Database
-        createExpression
-                .setBody("SELECT COUNT(CASE WHEN <%=__COLUMN_NAMES__%> REGEXP <%=__PATTERN_EXPR__%> THEN 1 END), COUNT(*) FROM <%=__TABLE_NAME__%> <%=__WHERE_CLAUSE__%>"); //$NON-NLS-1$
+        // Hive Database
+        createExpression.setBody("**"); //$NON-NLS-1$
         String regularFunctionName = netezzaDbmsLanguage.extractRegularExpressionFunction(createExpression);
         Assert.assertEquals("REGEXP", regularFunctionName); //$NON-NLS-1$
     }
@@ -2238,9 +2453,8 @@ public class DbmsLanguageTest {
     public void testExtractRegularExpressionFunctionForPostgreSQL() {
         DbmsLanguage netezzaDbmsLanguage = DbmsLanguageFactory.createDbmsLanguage(SupportDBUrlType.POSTGRESQLEFAULTURL);
         Expression createExpression = CoreFactory.eINSTANCE.createExpression();
-        // Vertica Database
-        createExpression
-                .setBody("SELECT COUNT(CASE WHEN <%=__COLUMN_NAMES__%> ~ <%=__PATTERN_EXPR__%> THEN 1 END), COUNT(*) FROM <%=__TABLE_NAME__%> <%=__WHERE_CLAUSE__%>"); //$NON-NLS-1$
+        // Postgresql Database
+        createExpression.setBody("**"); //$NON-NLS-1$
         String regularFunctionName = netezzaDbmsLanguage.extractRegularExpressionFunction(createExpression);
         Assert.assertEquals("~", regularFunctionName); //$NON-NLS-1$
     }
@@ -2255,9 +2469,8 @@ public class DbmsLanguageTest {
     public void testExtractRegularExpressionFunctionForOracle() {
         DbmsLanguage netezzaDbmsLanguage = DbmsLanguageFactory.createDbmsLanguage(SupportDBUrlType.ORACLEWITHSIDDEFAULTURL);
         Expression createExpression = CoreFactory.eINSTANCE.createExpression();
-        // Vertica Database
-        createExpression
-                .setBody("SELECT COUNT(CASE WHEN REGEXP_LIKE(<%=__COLUMN_NAMES__%>,<%=__PATTERN_EXPR__%>) THEN 1 END), COUNT(*) FROM <%=__TABLE_NAME__%> <%=__WHERE_CLAUSE__%>"); //$NON-NLS-1$
+        // oracle Database
+        createExpression.setBody("**"); //$NON-NLS-1$
         String regularFunctionName = netezzaDbmsLanguage.extractRegularExpressionFunction(createExpression);
         Assert.assertEquals("REGEXP_LIKE", regularFunctionName); //$NON-NLS-1$
     }
@@ -2272,9 +2485,8 @@ public class DbmsLanguageTest {
     public void testExtractRegularExpressionFunctionForMysql() {
         DbmsLanguage netezzaDbmsLanguage = DbmsLanguageFactory.createDbmsLanguage(SupportDBUrlType.MYSQLDEFAULTURL);
         Expression createExpression = CoreFactory.eINSTANCE.createExpression();
-        // Vertica Database
-        createExpression
-                .setBody("SELECT COUNT(CASE WHEN <%=__COLUMN_NAMES__%> REGEXP BINARY <%=__PATTERN_EXPR__%> THEN 1 END), COUNT(*) FROM <%=__TABLE_NAME__%> <%=__WHERE_CLAUSE__%>"); //$NON-NLS-1$
+        // mysql Database
+        createExpression.setBody("**"); //$NON-NLS-1$
         String regularFunctionName = netezzaDbmsLanguage.extractRegularExpressionFunction(createExpression);
         Assert.assertEquals("REGEXP BINARY", regularFunctionName); //$NON-NLS-1$
     }
@@ -2289,11 +2501,123 @@ public class DbmsLanguageTest {
     public void testExtractRegularExpressionFunctionForNetezza() {
         DbmsLanguage netezzaDbmsLanguage = DbmsLanguageFactory.createDbmsLanguage(SupportDBUrlType.NETEZZADEFAULTURL);
         Expression createExpression = CoreFactory.eINSTANCE.createExpression();
-        // Vertica Database
+        // netezza Database UDP mode
         createExpression
-                .setBody("SELECT COUNT(CASE WHEN REGEXP_EXTRACT(TO_CHAR(<%=__COLUMN_NAMES__%>),<%=__PATTERN_EXPR__%>) THEN 1 END), COUNT(*) FROM <%=__TABLE_NAME__%> <%=__WHERE_CLAUSE__%>"); //$NON-NLS-1$
+                .setBody("SELECT COUNT(CASE WHEN REGEXP_EXTRACT(<%=__COLUMN_NAMES__%>,<%=__PATTERN_EXPR__%>) THEN 1 END), COUNT(*) FROM <%=__TABLE_NAME__%> <%=__WHERE_CLAUSE__%>"); //$NON-NLS-1$
         String regularFunctionName = netezzaDbmsLanguage.extractRegularExpressionFunction(createExpression);
         Assert.assertEquals("REGEXP_EXTRACT", regularFunctionName); //$NON-NLS-1$
+    }
+
+    /**
+     * 
+     * {@link org.talend.dq.dbms.DbmsLanguage#extractRegularExpressionFunction(Expression)}.
+     * 
+     * case 7:Other database expression
+     */
+    @Test
+    public void testExtractRegularExpressionFunctionForOthers() {
+        DbmsLanguage netezzaDbmsLanguage = DbmsLanguageFactory.createDbmsLanguage("SQL", "0.1"); //$NON-NLS-1$ //$NON-NLS-2$
+        Expression createExpression = CoreFactory.eINSTANCE.createExpression();
+        // default case
+        createExpression.setBody("**** WHEN RegularFunctionName(***)returnValue THEN **)****"); //$NON-NLS-1$
+        String regularFunctionName = netezzaDbmsLanguage.extractRegularExpressionFunction(createExpression);
+        Assert.assertEquals("REGULARFUNCTIONNAME", regularFunctionName); //$NON-NLS-1$
+    }
+
+    /**
+     * 
+     * {@link org.talend.dq.dbms.DbmsLanguage#getFunctionReturnValue()}.
+     * 
+     * case 1:RegularfunctionReturnValue is null
+     */
+    @Test
+    public void testGetFunctionReturnValue() {
+        DbmsLanguage dbmsLanguage = DbmsLanguageFactory.createDbmsLanguage("SQL", "1.0"); //$NON-NLS-1$ //$NON-NLS-2$
+        String regularfunctionReturnValue = dbmsLanguage.getFunctionReturnValue();
+        Assert.assertEquals(StringUtils.EMPTY, regularfunctionReturnValue);
+    }
+
+    /**
+     * 
+     * {@link org.talend.dq.dbms.DbmsLanguage#setFunctionReturnValue(Expression)}.
+     * 
+     * case 1:The body of expression is null
+     */
+    @Test
+    public void testSetFunctionReturnValueCase1() {
+        DbmsLanguage dbmsLanguage = DbmsLanguageFactory.createDbmsLanguage("SQL", "1.0"); //$NON-NLS-1$ //$NON-NLS-2$
+        Expression createExpression = CoreFactory.eINSTANCE.createExpression();
+        dbmsLanguage.setFunctionReturnValue(createExpression);
+        String regularfunctionReturnValue = dbmsLanguage.getFunctionReturnValue();
+        Assert.assertEquals(StringUtils.EMPTY, regularfunctionReturnValue);
+    }
+
+    /**
+     * 
+     * {@link org.talend.dq.dbms.DbmsLanguage#setFunctionReturnValue(Expression)}.
+     * 
+     * case 2:Can not find the keyword for "when" in the body of expression.
+     */
+    @Test
+    public void testSetFunctionReturnValueCase2() {
+        DbmsLanguage dbmsLanguage = DbmsLanguageFactory.createDbmsLanguage("SQL", "1.0"); //$NON-NLS-1$ //$NON-NLS-2$
+        Expression createExpression = CoreFactory.eINSTANCE.createExpression();
+        // default Database
+        createExpression.setBody("**** RegularFunctionName(***)returnValue THEN **)****"); //$NON-NLS-1$
+        dbmsLanguage.setFunctionReturnValue(createExpression);
+        String regularfunctionReturnValue = dbmsLanguage.getFunctionReturnValue();
+        Assert.assertEquals(StringUtils.EMPTY, regularfunctionReturnValue);
+    }
+
+    /**
+     * 
+     * {@link org.talend.dq.dbms.DbmsLanguage#setFunctionReturnValue(Expression)}.
+     * 
+     * case 3:Can not find the keyword for ")" in the body of expression.
+     */
+    @Test
+    public void testSetFunctionReturnValueCase3() {
+        DbmsLanguage dbmsLanguage = DbmsLanguageFactory.createDbmsLanguage("SQL", "1.0"); //$NON-NLS-1$ //$NON-NLS-2$
+        Expression createExpression = CoreFactory.eINSTANCE.createExpression();
+        // default Database
+        createExpression.setBody("**** WHEN RegularFunctionName(***returnValue THEN ******"); //$NON-NLS-1$
+        dbmsLanguage.setFunctionReturnValue(createExpression);
+        String regularfunctionReturnValue = dbmsLanguage.getFunctionReturnValue();
+        Assert.assertEquals(StringUtils.EMPTY, regularfunctionReturnValue);
+    }
+
+    /**
+     * 
+     * {@link org.talend.dq.dbms.DbmsLanguage#setFunctionReturnValue(Expression)}.
+     * 
+     * case 4:Can not find the keyword for "THEN" in the body of expression.
+     */
+    @Test
+    public void testSetFunctionReturnValueCase4() {
+        DbmsLanguage dbmsLanguage = DbmsLanguageFactory.createDbmsLanguage("SQL", "1.0"); //$NON-NLS-1$ //$NON-NLS-2$
+        Expression createExpression = CoreFactory.eINSTANCE.createExpression();
+        // default Database
+        createExpression.setBody("**** WHEN RegularFunctionName(***)returnValue **)****"); //$NON-NLS-1$
+        dbmsLanguage.setFunctionReturnValue(createExpression);
+        String regularfunctionReturnValue = dbmsLanguage.getFunctionReturnValue();
+        Assert.assertEquals(StringUtils.EMPTY, regularfunctionReturnValue);
+    }
+
+    /**
+     * 
+     * {@link org.talend.dq.dbms.DbmsLanguage#setFunctionReturnValue(Expression)}.
+     * 
+     * case 5:normal case
+     */
+    @Test
+    public void testSetFunctionReturnValueCase5() {
+        DbmsLanguage dbmsLanguage = DbmsLanguageFactory.createDbmsLanguage("SQL", "1.0"); //$NON-NLS-1$ //$NON-NLS-2$
+        Expression createExpression = CoreFactory.eINSTANCE.createExpression();
+        // default Database
+        createExpression.setBody("**** WHEN RegularFunctionName(***)returnValue THEN **)****"); //$NON-NLS-1$
+        dbmsLanguage.setFunctionReturnValue(createExpression);
+        String regularfunctionReturnValue = dbmsLanguage.getFunctionReturnValue();
+        Assert.assertEquals("RETURNVALUE", regularfunctionReturnValue); //$NON-NLS-1$
     }
 
 }

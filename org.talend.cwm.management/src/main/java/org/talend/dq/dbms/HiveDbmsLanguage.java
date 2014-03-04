@@ -63,24 +63,6 @@ public class HiveDbmsLanguage extends DbmsLanguage {
         return " LENGTH(" + columnName + ") "; //$NON-NLS-1$ //$NON-NLS-2$
     }
 
-    /**
-     * @deprecated use {@link #regularFunctionBody(String, String)} instead of it
-     */
-    @Deprecated
-    @Override
-    public String regexLike(String element, String regex) {
-        return this.regularFunctionBody(element, regex);
-    }
-
-    /**
-     * @deprecated use {@link #notRegularFunctionBody(String, String)} instead of it
-     */
-    @Deprecated
-    @Override
-    public String regexNotLike(String element, String regex) {
-        return this.notRegularFunctionBody(element, regex);
-    }
-
     /*
      * (non-Javadoc)
      * 
@@ -107,7 +89,7 @@ public class HiveDbmsLanguage extends DbmsLanguage {
      * @see org.talend.cwm.management.api.DbmsLanguage#regexLike(java.lang.String, java.lang.String)
      */
     @Override
-    public String regularFunctionBody(String element, String regex) {
+    public String regexLike(String element, String regex) {
         return surroundWithSpaces(element + surroundWithSpaces(getRegularExpressionFunction()) + regex);
     }
 
@@ -117,8 +99,8 @@ public class HiveDbmsLanguage extends DbmsLanguage {
      * @see org.talend.dq.dbms.DbmsLanguage#regexNotLike(java.lang.String, java.lang.String)
      */
     @Override
-    public String notRegularFunctionBody(String element, String regex) {
-        return surroundWithSpaces(element + surroundWithSpaces(this.not() + " " + getRegularExpressionFunction()) + regex); //$NON-NLS-1$
+    public String regexNotLike(String element, String regex) {
+        return surroundWithSpaces(element + surroundWithSpaces(this.not() + getRegularExpressionFunction()) + regex);
     }
 
     /*

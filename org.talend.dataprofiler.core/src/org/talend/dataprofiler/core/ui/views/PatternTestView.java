@@ -745,7 +745,7 @@ public class PatternTestView extends ViewPart {
         if (tdDataProvider.getName().equals(dbCombo.getText())) {
 
             DbmsLanguage dbmsLanguage = DbmsLanguageFactory.createDbmsLanguage(tdDataProvider);
-            if (dbmsLanguage.regularFunctionBody(testText.getText(), regularText.getText()) == null) {
+            if (dbmsLanguage.regexLike(testText.getText(), regularText.getText()) == null) {
                 setFunctionInfoVisible(true);
             } else {
                 setFunctionInfoVisible(false);

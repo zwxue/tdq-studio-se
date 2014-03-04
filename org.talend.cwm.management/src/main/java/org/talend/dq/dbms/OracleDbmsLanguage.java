@@ -166,24 +166,6 @@ public class OracleDbmsLanguage extends DbmsLanguage {
         }
     }
 
-    /**
-     * @deprecated use {@link #regularFunctionBody(String, String)} instead of it
-     */
-    @Deprecated
-    @Override
-    public String regexLike(String element, String regex) {
-        return this.regularFunctionBody(element, regex);
-    }
-
-    /**
-     * @deprecated use {@link #notRegularFunctionBody(String, String)} instead of it
-     */
-    @Deprecated
-    @Override
-    public String regexNotLike(String element, String regex) {
-        return this.notRegularFunctionBody(element, regex);
-    }
-
     /*
      * (non-Javadoc)
      * 
@@ -210,7 +192,7 @@ public class OracleDbmsLanguage extends DbmsLanguage {
      * @see org.talend.cwm.management.api.DbmsLanguage#regexLike(java.lang.String, java.lang.String)
      */
     @Override
-    public String regularFunctionBody(String element, String regex) {
+    public String regexLike(String element, String regex) {
         return surroundWithSpaces(getRegularExpressionFunction() + "(" + element + " , " + regex + " )"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
     }
 
@@ -220,8 +202,8 @@ public class OracleDbmsLanguage extends DbmsLanguage {
      * @see org.talend.cwm.management.api.DbmsLanguage#regexNotLike(java.lang.String, java.lang.String)
      */
     @Override
-    public String notRegularFunctionBody(String element, String regex) {
-        return surroundWithSpaces(this.not() + " " + getRegularExpressionFunction() + "(" + element + " , " + regex + " )"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+    public String regexNotLike(String element, String regex) {
+        return surroundWithSpaces(this.not() + getRegularExpressionFunction() + "(" + element + " , " + regex + " )"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ 
     }
 
     /*

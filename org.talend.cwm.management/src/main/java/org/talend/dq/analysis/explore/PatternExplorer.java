@@ -60,6 +60,7 @@ public class PatternExplorer extends DataExplorer {
             Expression expression = instantiatedExpressions.get(0);
             String regularExpressionFunctionName = dbmsLanguage.extractRegularExpressionFunction(expression);
             dbmsLanguage.setRegularExpressionFunction(regularExpressionFunctionName);
+            dbmsLanguage.setFunctionReturnValue(expression);
         }
         // ~TDQ-4087
 
@@ -88,7 +89,8 @@ public class PatternExplorer extends DataExplorer {
         }
 
         String regexPatternString = dbmsLanguage.getRegexPatternString(this.indicator);
-        String regexCmp = dbmsLanguage.notRegularFunctionBodyWithReturnValue(columnName, regexPatternString);
+        String regexCmp = dbmsLanguage.regexNotLike(columnName, regexPatternString)
+                + dbmsLanguage.getFunctionReturnValue();
         // add null as invalid rows
         String nullClause = dbmsLanguage.or() + columnName + dbmsLanguage.isNull();
         // mzhao TDQ-4967 add "(" and ")" for regex and null clause.
@@ -111,7 +113,7 @@ public class PatternExplorer extends DataExplorer {
         }
 
         String regexPatternString = dbmsLanguage.getRegexPatternString(this.indicator);
-        String regexCmp = dbmsLanguage.regularFunctionBodyWithReturnValue(columnName, regexPatternString);
+        String regexCmp = dbmsLanguage.regexLike(columnName, regexPatternString) + dbmsLanguage.getFunctionReturnValue();
         return getValuesStatement(columnName, regexCmp);
     }
 
@@ -129,7 +131,8 @@ public class PatternExplorer extends DataExplorer {
         }
 
         String regexPatternString = dbmsLanguage.getRegexPatternString(this.indicator);
-        String regexCmp = dbmsLanguage.notRegularFunctionBodyWithReturnValue(columnName, regexPatternString);
+        String regexCmp = dbmsLanguage.regexNotLike(columnName, regexPatternString)
+                + dbmsLanguage.getFunctionReturnValue();
         // add null as invalid rows
         String nullClause = dbmsLanguage.or() + columnName + dbmsLanguage.isNull();
         // mzhao TDQ-4967 add "(" and ")" for regex and null clause.
@@ -151,7 +154,7 @@ public class PatternExplorer extends DataExplorer {
         }
 
         String regexPatternString = dbmsLanguage.getRegexPatternString(this.indicator);
-        String regexCmp = dbmsLanguage.regularFunctionBodyWithReturnValue(columnName, regexPatternString);
+        String regexCmp = dbmsLanguage.regexLike(columnName, regexPatternString) + dbmsLanguage.getFunctionReturnValue();
         return getRowsStatement(regexCmp);
     }
 
@@ -187,11 +190,11 @@ public class PatternExplorer extends DataExplorer {
     public boolean isImplementRegexFunction(String menuLabel) {
         String regexPatternString = dbmsLanguage.getRegexPatternString(this.indicator);
         if (menuLabel.equals(MENU_VIEW_VALID_ROWS) || menuLabel.equals(MENU_VIEW_VALID_VALUES)) {
-            if (dbmsLanguage.regularFunctionBody(columnName, regexPatternString) != null) {
+            if (dbmsLanguage.regexLike(columnName, regexPatternString) != null) {
                 return true;
             }
         } else if (menuLabel.equals(DataExplorer.MENU_VIEW_INVALID_ROWS) || menuLabel.equals(MENU_VIEW_INVALID_VALUES)) {
-            if (dbmsLanguage.notRegularFunctionBody(columnName, regexPatternString) != null) {
+            if (dbmsLanguage.regexNotLike(columnName, regexPatternString) != null) {
                 return true;
             }
         }
