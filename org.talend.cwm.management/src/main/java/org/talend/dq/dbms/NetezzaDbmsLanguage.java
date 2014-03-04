@@ -26,6 +26,8 @@ public class NetezzaDbmsLanguage extends DbmsLanguage {
      */
     private static final String MYSQL_IDENTIFIER_QUOTE = "`"; //$NON-NLS-1$
 
+    private final String NYSIIS_PREFIX = "NYSIIS";//$NON-NLS-1$
+
     /**
      * DOC klliu NetezzaDbmsLanguage constructor comment.
      */
@@ -168,5 +170,15 @@ public class NetezzaDbmsLanguage extends DbmsLanguage {
         }
 
         return false;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dq.dbms.DbmsLanguage#getSoundexPrefix()
+     */
+    @Override
+    public String getSoundexPrefix() {
+        return NYSIIS_PREFIX;
     }
 }

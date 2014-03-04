@@ -466,12 +466,14 @@ public class PatternTestView extends ViewPart {
                 if (tddataprovider.getName().equals(dbCombo.getText())) {
                     DbmsLanguage createDbmsLanguage = DbmsLanguageFactory.createDbmsLanguage(tddataprovider);
                     // MOD gdbu 2011-5-31 bug : 19119
+                    String selectRegexpTestString = null;
                     if (null != createDbmsLanguage) {
                         createDbmsLanguage.setFunctionName(getFunctionName());
+                        selectRegexpTestString = createDbmsLanguage.getSelectRegexpTestString(testText.getText(),
+                                regularText.getText());
                     }
                     // ~19119
-                    String selectRegexpTestString = createDbmsLanguage.getSelectRegexpTestString(testText.getText(),
-                            regularText.getText());
+
                     TypedReturnCode<java.sql.Connection> rcConn = JavaSqlFactory.createConnection(tddataprovider);
                     try {
                         if (!rcConn.isOk()) {

@@ -147,6 +147,8 @@ public class DbmsLanguage {
 
     private String functionName = ""; //$NON-NLS-1$ 
 
+    private final String SOUNDEX_PREFIX = "SOUNDEX";//$NON-NLS-1$
+
     /**
      * DbmsLanguage constructor for generic ANSI SQL (independent of any DBMS).
      */
@@ -174,6 +176,10 @@ public class DbmsLanguage {
     DbmsLanguage(String dbmsType, ProductVersion dbVersion) {
         this.dbmsName = dbmsType;
         this.dbVersion = dbVersion;
+    }
+
+    public String getSoundexPrefix() {
+        return this.SOUNDEX_PREFIX;
     }
 
     /**
