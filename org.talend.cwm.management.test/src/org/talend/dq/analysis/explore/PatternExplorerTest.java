@@ -104,6 +104,7 @@ public class PatternExplorerTest {
                 "((customer.lname = \"sunny\")) AND  `lname` REGEXP 'su.*'"); //$NON-NLS-1$
         when(dbmsLanguage.regexNotLike(anyString(), anyString())).thenReturn(
                 "((customer.lname = \"sunny\")) AND  `lname` NOT REGEXP 'su.*'"); //$NON-NLS-1$
+        when(dbmsLanguage.getFunctionReturnValue()).thenReturn(""); //$NON-NLS-1$ 
 
         when(dbmsLanguage.where()).thenReturn(" WHERE "); //$NON-NLS-1$
         when(dbmsLanguage.and()).thenReturn(" AND "); //$NON-NLS-1$

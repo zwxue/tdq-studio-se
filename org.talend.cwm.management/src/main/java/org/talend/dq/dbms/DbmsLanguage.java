@@ -151,7 +151,12 @@ public class DbmsLanguage {
      */
     private String dbQuoteString = ""; //$NON-NLS-1$
 
-    private String functionName = ""; //$NON-NLS-1$ 
+    private String regularExpressionFunction = ""; //$NON-NLS-1$ 
+
+    // default soundex string
+    private final String SOUNDEX_PREFIX = "SOUNDEX";//$NON-NLS-1$
+
+    private String regularfunctionReturnValue = ""; //$NON-NLS-1$
 
     /**
      * DbmsLanguage constructor for generic ANSI SQL (independent of any DBMS).
@@ -1007,39 +1012,57 @@ public class DbmsLanguage {
     }
 
     /**
-     * Method "regex".
+     * Method "regexLike". By default, it will try to extract the function name from user defined regular expression. If
+     * the database support the regex like regular expression function , the sub-class will have to override this method
+     * in order to return the correct regex like name.
      * 
      * @param element
      * @param regex
-     * @return the regular expression according to the DBMS syntax or null if not supported.
+     * @return get the String of Regular function(for example : "regex_like(element,regex)").
+     * 
      */
     public String regexLike(String element, String regex) {
         // TDQ-8637 UDF as a default case,if the database type has regular expression function,should overide this
         // method.
 
-        if (null == functionName || PluginConstant.EMPTY_STRING.equals(functionName)) {
+        if (null == regularExpressionFunction || PluginConstant.EMPTY_STRING.equals(regularExpressionFunction)
+                || existEmptyInParameter(element, regex)) {
             return null;
         }
-        String functionNameSQL = functionName + "( ";//$NON-NLS-1$  
-        if (null != element && !element.equals("")) {//$NON-NLS-1$  
-            functionNameSQL = functionNameSQL + element;
-        }
-        if (null != regex && !regex.equals("")) {//$NON-NLS-1$  
-            functionNameSQL = functionNameSQL + "," + regex;//$NON-NLS-1$ 
-        }
-        functionNameSQL = functionNameSQL + " )";//$NON-NLS-1$  
+        String functionNameSQL = regularExpressionFunction + "( " + element + "," + regex + " )";//$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$  
 
-        return functionNameSQL;
-
+        return surroundWithSpaces(functionNameSQL);
     }
+
+    /**
+     * 
+     * @param element
+     * @param regex
+     * @return false if every one is not empty else return true
+     */
+    private boolean existEmptyInParameter(String element, String regex) {
+        return null == element || PluginConstant.EMPTY_STRING.equals(element) || null == regex
+                || PluginConstant.EMPTY_STRING.equals(regex);
+    }
+
+    /**
+     * 
+     * method "regexNotLike"
+     * 
+     * @param element
+     * @param regex
+     * @return get the String of Regular function which is not match(for example :"not regex_like(element,regex)")
+     * 
+     */
 
     public String regexNotLike(String element, String regex) {
         // TDQ-8637 UDF as a default case,if the database type has regular expression function,should overide this
         // method.
-        if (null == functionName || PluginConstant.EMPTY_STRING.equals(functionName)) {
+        String functionNameSQL = regexLike(element, regex);
+        if (functionNameSQL == null) {
             return null;
         }
-        return surroundWithSpaces("not " + functionName + "(" + element + " , " + regex + " )"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$//$NON-NLS-4$
+        return this.not() + functionNameSQL;
     }
 
     /**
@@ -1541,12 +1564,12 @@ public class DbmsLanguage {
         return SQL.equals(getDbmsName());
     }
 
-    public String getFunctionName() {
-        return this.functionName;
+    public String getRegularExpressionFunction() {
+        return this.regularExpressionFunction;
     }
 
-    public void setFunctionName(String functionName) {
-        this.functionName = functionName;
+    public void setRegularExpressionFunction(String functionName) {
+        this.regularExpressionFunction = functionName;
     }
 
     public String trimIfBlank(String colName) {
@@ -1829,6 +1852,80 @@ public class DbmsLanguage {
             return (Catalog) pack;
         }
         return null;
+    }
+
+    /**
+     * Getter for soundexPrefix.
+     * 
+     * @return the soundexPrefix
+     */
+    public String getSoundexPrefix() {
+        return SOUNDEX_PREFIX;
+    }
+
+    /**
+     * 
+     * Extract the name of regular Expression Function If current database type need to use UDF deal regular expression,
+     * the expresssion which will definition on "Regular Expression Matching.definition" should like below:
+     * 
+     * "* + when REGULAR_FUNCTION(+ * +) + *". else this method will not return correct result which you want
+     * 
+     * @param expression
+     * @return the name of regular Expression Function or null when the expression is invalid
+     * 
+     */
+    public String extractRegularExpressionFunction(Expression expression) {
+        String functionName = null;
+        try {
+            String tempString = splictExpression(expression);
+            functionName = tempString.split("\\(").length > 1 ? tempString.split("\\(")[0] : "";//$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
+            functionName = functionName.trim();
+        } catch (NullPointerException e) {
+            log.error(e, e);
+        }
+        return functionName;
+    }
+
+    /**
+     * DOC talend Comment method "splictExpression".
+     * 
+     * @param expression
+     * @return
+     */
+    private String splictExpression(Expression expression) {
+        String body = expression.getBody().toUpperCase();
+        String tempString = body.split("WHEN").length > 1 ? body.split("WHEN")[1] : "";//$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
+        return tempString;
+    }
+
+    /**
+     * 
+     * remember the result value for regular expression.So that we can get complete expression and Normal it should be
+     * "=1"
+     * 
+     * @param expression
+     */
+    public void setFunctionReturnValue(Expression expression) {
+        try {
+            String tempString = splictExpression(expression);
+            tempString = tempString.split("\\)").length > 1 ? tempString.split("\\)")[1] : ""; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+            tempString = tempString.split("THEN").length > 1 ? tempString.split("THEN")[0] : ""; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+            regularfunctionReturnValue = tempString.trim();
+        } catch (NullPointerException e) {
+            log.error(e, e);
+        }
+    }
+
+    /**
+     * Getter for regularfunctionReturnValue.
+     * 
+     * @return the regularfunctionReturnValue if it is null then return ""
+     */
+    public String getFunctionReturnValue() {
+        if (regularfunctionReturnValue == null) {
+            return StringUtils.EMPTY;
+        }
+        return this.regularfunctionReturnValue;
     }
 
 }

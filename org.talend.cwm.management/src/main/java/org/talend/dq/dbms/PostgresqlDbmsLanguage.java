@@ -15,6 +15,7 @@ package org.talend.dq.dbms;
 import org.talend.dataquality.indicators.DateGrain;
 import org.talend.utils.ProductVersion;
 import org.talend.utils.properties.PropertiesLoader;
+import orgomg.cwm.objectmodel.core.Expression;
 import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.resource.relational.Catalog;
 import orgomg.cwm.resource.relational.Schema;
@@ -111,7 +112,7 @@ public class PostgresqlDbmsLanguage extends DbmsLanguage {
      */
     @Override
     public String regexLike(String element, String regex) {
-        return surroundWithSpaces(element + " ~ " + regex); //$NON-NLS-1$
+        return surroundWithSpaces(element + surroundWithSpaces(getRegularExpressionFunction()) + regex);
     }
 
     /*
@@ -121,7 +122,27 @@ public class PostgresqlDbmsLanguage extends DbmsLanguage {
      */
     @Override
     public String regexNotLike(String element, String regex) {
-        return surroundWithSpaces(element + " !~ " + regex); //$NON-NLS-1$
+        return surroundWithSpaces(element + surroundWithSpaces("!" + getRegularExpressionFunction()) + regex); //$NON-NLS-1$
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dq.dbms.DbmsLanguage#getRegularExpressionFunction()
+     */
+    @Override
+    public String getRegularExpressionFunction() {
+        return "~"; //$NON-NLS-1$
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dq.dbms.DbmsLanguage#getRegularExpressionFunction()
+     */
+    @Override
+    public String extractRegularExpressionFunction(Expression expression) {
+        return getRegularExpressionFunction();
     }
 
     /*

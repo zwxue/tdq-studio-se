@@ -17,6 +17,7 @@ import java.sql.Statement;
 
 import org.talend.cwm.relational.TdColumn;
 import org.talend.utils.ProductVersion;
+import orgomg.cwm.objectmodel.core.Expression;
 
 /**
  * DOC qiongli class global comment. Detailled comment <br/>
@@ -69,7 +70,7 @@ public class HiveDbmsLanguage extends DbmsLanguage {
      */
     @Override
     public String regexLike(String element, String regex) {
-        return surroundWithSpaces(element + " REGEXP " + regex); //$NON-NLS-1$
+        return surroundWithSpaces(element + surroundWithSpaces(getRegularExpressionFunction()) + regex);
     }
 
     /*
@@ -79,7 +80,27 @@ public class HiveDbmsLanguage extends DbmsLanguage {
      */
     @Override
     public String regexNotLike(String element, String regex) {
-        return surroundWithSpaces(element + " NOT REGEXP " + regex); //$NON-NLS-1$
+        return surroundWithSpaces(element + surroundWithSpaces(this.not() + getRegularExpressionFunction()) + regex);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dq.dbms.DbmsLanguage#getRegularExpressionFunction()
+     */
+    @Override
+    public String getRegularExpressionFunction() {
+        return "REGEXP"; //$NON-NLS-1$
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dq.dbms.DbmsLanguage#extractRegularExpressionFunction(orgomg.cwm.objectmodel.core.Expression)
+     */
+    @Override
+    public String extractRegularExpressionFunction(Expression expression) {
+        return getRegularExpressionFunction();
     }
 
     /*

@@ -17,6 +17,7 @@ import org.talend.dataquality.domain.sql.SqlPredicate;
 import org.talend.dataquality.indicators.DateGrain;
 import org.talend.utils.ProductVersion;
 import org.talend.utils.properties.PropertiesLoader;
+import orgomg.cwm.objectmodel.core.Expression;
 
 /**
  * DOC scorreia class global comment. Detailled comment
@@ -168,11 +169,31 @@ public class OracleDbmsLanguage extends DbmsLanguage {
     /*
      * (non-Javadoc)
      * 
+     * @see org.talend.dq.dbms.DbmsLanguage#getRegularExpressionFunction()
+     */
+    @Override
+    public String getRegularExpressionFunction() {
+        return "REGEXP_LIKE"; //$NON-NLS-1$
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dq.dbms.DbmsLanguage#getRegularExpressionFunction()
+     */
+    @Override
+    public String extractRegularExpressionFunction(Expression expression) {
+        return getRegularExpressionFunction();
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.talend.cwm.management.api.DbmsLanguage#regexLike(java.lang.String, java.lang.String)
      */
     @Override
     public String regexLike(String element, String regex) {
-        return surroundWithSpaces("REGEXP_LIKE(" + element + " , " + regex + " )"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+        return surroundWithSpaces(getRegularExpressionFunction() + "(" + element + " , " + regex + " )"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
     }
 
     /*
@@ -182,7 +203,7 @@ public class OracleDbmsLanguage extends DbmsLanguage {
      */
     @Override
     public String regexNotLike(String element, String regex) {
-        return surroundWithSpaces("NOT REGEXP_LIKE(" + element + " , " + regex + " )"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+        return surroundWithSpaces(this.not() + getRegularExpressionFunction() + "(" + element + " , " + regex + " )"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ 
     }
 
     /*

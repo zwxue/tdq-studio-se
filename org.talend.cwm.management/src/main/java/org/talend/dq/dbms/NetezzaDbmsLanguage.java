@@ -29,6 +29,8 @@ public class NetezzaDbmsLanguage extends DbmsLanguage {
      */
     private static final String MYSQL_IDENTIFIER_QUOTE = "`"; //$NON-NLS-1$
 
+    private final String NYSIIS_PREFIX = "NYSIIS";//$NON-NLS-1$
+
     /**
      * DOC klliu NetezzaDbmsLanguage constructor comment.
      */
@@ -104,26 +106,6 @@ public class NetezzaDbmsLanguage extends DbmsLanguage {
     /*
      * (non-Javadoc)
      * 
-     * @see org.talend.cwm.management.api.DbmsLanguage#regexLike(java.lang.String, java.lang.String)
-     */
-    @Override
-    public String regexLike(String element, String regex) {
-        return surroundWithSpaces(element + " REGEXP " + regex); //$NON-NLS-1$
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.talend.cwm.management.api.DbmsLanguage#regexNotLike(java.lang.String, java.lang.String)
-     */
-    @Override
-    public String regexNotLike(String element, String regex) {
-        return surroundWithSpaces(element + " NOT REGEXP " + regex); //$NON-NLS-1$
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
      * @see org.talend.cwm.management.api.DbmsLanguage#getQuoteIdentifier()
      */
     @Override
@@ -186,4 +168,27 @@ public class NetezzaDbmsLanguage extends DbmsLanguage {
         Catalog catalog = super.getCatalog(schema);
         return catalog;
     }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dq.dbms.DbmsLanguage#getSoundexPrefix()
+     */
+    @Override
+    public String getSoundexPrefix() {
+        return this.NYSIIS_PREFIX;
+    }
+
+    /**
+     * 
+     * Get invalid clause for Benford indicator.
+     * 
+     * @param columnName
+     * @return
+     */
+    @Override
+    public String getInvalidClauseBenFord(String columnName) {
+        return columnName + " is null or cast(" + columnName + " as char(1)) not in ('0','1','2','3','4','5','6','7','8','9')";//$NON-NLS-1$ //$NON-NLS-2$
+    }
+
 }

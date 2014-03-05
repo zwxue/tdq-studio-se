@@ -16,6 +16,7 @@ import org.apache.commons.lang.StringUtils;
 import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
 import org.talend.dataquality.indicators.DateGrain;
 import org.talend.utils.ProductVersion;
+import orgomg.cwm.objectmodel.core.Expression;
 
 /**
  * DOC scorreia class global comment. Detailled comment
@@ -86,6 +87,26 @@ public class MySQLDbmsLanguage extends DbmsLanguage {
     /*
      * (non-Javadoc)
      * 
+     * @see org.talend.dq.dbms.DbmsLanguage#getRegularExpressionFunction()
+     */
+    @Override
+    public String getRegularExpressionFunction() {
+        return "REGEXP BINARY"; //$NON-NLS-1$
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dq.dbms.DbmsLanguage#getRegularExpressionFunction()
+     */
+    @Override
+    public String extractRegularExpressionFunction(Expression expression) {
+        return getRegularExpressionFunction();
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.talend.cwm.management.api.DbmsLanguage#extract(org.talend.dataquality.indicators.DateGrain,
      * java.lang.String)
      */
@@ -111,7 +132,7 @@ public class MySQLDbmsLanguage extends DbmsLanguage {
      */
     @Override
     public String regexLike(String element, String regex) {
-        return surroundWithSpaces(element + " REGEXP BINARY " + regex); //$NON-NLS-1$
+        return surroundWithSpaces(element + surroundWithSpaces(getRegularExpressionFunction()) + regex);
     }
 
     /*
@@ -121,7 +142,7 @@ public class MySQLDbmsLanguage extends DbmsLanguage {
      */
     @Override
     public String regexNotLike(String element, String regex) {
-        return surroundWithSpaces(element + " NOT REGEXP BINARY " + regex); //$NON-NLS-1$
+        return surroundWithSpaces(element + surroundWithSpaces(this.not() + getRegularExpressionFunction()) + regex);
     }
 
     /*
