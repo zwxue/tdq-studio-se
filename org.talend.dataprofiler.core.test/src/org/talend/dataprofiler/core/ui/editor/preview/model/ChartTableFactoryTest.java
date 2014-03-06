@@ -56,6 +56,7 @@ public class ChartTableFactoryTest {
      */
     @After
     public void tearDown() throws Exception {
+        // no after needs
     }
 
     /**

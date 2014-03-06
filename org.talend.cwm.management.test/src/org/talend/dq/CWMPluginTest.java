@@ -20,6 +20,7 @@ import net.sourceforge.sqlexplorer.dbproduct.AliasManager;
 import net.sourceforge.sqlexplorer.plugin.SQLExplorerPlugin;
 
 import org.junit.Before;
+import org.junit.Test;
 import org.talend.core.database.EDatabaseTypeName;
 import org.talend.core.model.metadata.builder.connection.ConnectionFactory;
 import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
@@ -50,6 +51,7 @@ public class CWMPluginTest extends TestCase {
      * Test method "addConnetionAliasToSQLPlugin" for all not supported database type on DQ side.
      * {@link org.talend.dq.CWMPlugin#addConnetionAliasToSQLPlugin(orgomg.cwm.objectmodel.core.ModelElement[])}.
      */
+    @Test
     public void testAddConnetionAliasToSQLPlugin_notSupportDB() {
         String allNoSupportedType[] = new String[] { EDatabaseTypeName.EXASOL.getXmlName(),
                 EDatabaseTypeName.FIREBIRD.getXmlName(), EDatabaseTypeName.JAVADB.getXmlName(),
@@ -71,6 +73,7 @@ public class CWMPluginTest extends TestCase {
      * 
      * test method "addConnetionAliasToSQLPlugin" for all supported database type on DQ side.
      */
+    @Test
     public void testAddConnetionAliasToSQLPlugin_supportDB() {
         List<String> tdqSupportDBType = MetadataConnectionUtils.getTDQSupportDBTemplate();
         for (String dbType : tdqSupportDBType) {

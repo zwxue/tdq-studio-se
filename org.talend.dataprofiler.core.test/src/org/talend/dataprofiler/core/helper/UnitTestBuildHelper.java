@@ -12,11 +12,13 @@
 // ============================================================================
 package org.talend.dataprofiler.core.helper;
 
-import static org.mockito.Matchers.*;
-import static org.mockito.Mockito.*;
-import static org.powermock.api.support.membermodification.MemberMatcher.*;
-import static org.powermock.api.support.membermodification.MemberModifier.*;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+import static org.powermock.api.support.membermodification.MemberMatcher.method;
+import static org.powermock.api.support.membermodification.MemberModifier.stub;
 
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -29,6 +31,7 @@ import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.emf.ecore.util.EcoreUtil;
@@ -40,6 +43,11 @@ import org.talend.core.context.Context;
 import org.talend.core.context.RepositoryContext;
 import org.talend.core.language.ECodeLanguage;
 import org.talend.core.model.general.Project;
+import org.talend.core.model.metadata.builder.connection.ConnectionFactory;
+import org.talend.core.model.metadata.builder.connection.ConnectionPackage;
+import org.talend.core.model.metadata.builder.connection.DelimitedFileConnection;
+import org.talend.core.model.metadata.builder.connection.MetadataColumn;
+import org.talend.core.model.metadata.builder.connection.MetadataTable;
 import org.talend.core.model.properties.ByteArray;
 import org.talend.core.model.properties.FolderItem;
 import org.talend.core.model.properties.Item;
@@ -63,6 +71,8 @@ import org.talend.core.repository.model.RepositoryFactoryProvider;
 import org.talend.core.repository.utils.ProjectHelper;
 import org.talend.core.repository.utils.XmiResourceManager;
 import org.talend.core.runtime.CoreRuntimePlugin;
+import org.talend.cwm.helper.ConnectionHelper;
+import org.talend.cwm.helper.PackageHelper;
 import org.talend.cwm.relational.RelationalFactory;
 import org.talend.cwm.relational.TdExpression;
 import org.talend.dataprofiler.core.CorePlugin;
@@ -92,6 +102,7 @@ import org.talend.dq.nodes.SourceFileFolderRepNode;
 import org.talend.dq.nodes.SourceFileRepNode;
 import org.talend.dq.nodes.SourceFileSubFolderNode;
 import org.talend.repository.ProjectManager;
+import org.talend.repository.model.IProxyRepositoryFactory;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.IRepositoryNode.ENodeType;
 import org.talend.repository.model.IRepositoryNode.EProperties;
@@ -99,6 +110,8 @@ import org.talend.repository.model.RepositoryConstants;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.resource.EResourceConstant;
 import org.talend.resource.ResourceManager;
+import orgomg.cwm.resource.record.RecordFactory;
+import orgomg.cwm.resource.record.RecordFile;
 import orgomg.cwmx.analysis.informationreporting.Report;
 
 import common.Logger;
@@ -173,7 +186,7 @@ public class UnitTestBuildHelper {
 
     /**
      * create project with a specified name.
-     *
+     * 
      * @param projectName specified project name
      * @return
      */
@@ -239,7 +252,7 @@ public class UnitTestBuildHelper {
 
     /**
      * DOC talend Comment method "createRealReport".
-     *
+     * 
      * @param name the name of report
      * @param folder the path which report location
      * @param isDelete the report whether is logic delate
@@ -297,7 +310,7 @@ public class UnitTestBuildHelper {
 
     /**
      * DOC zshen Comment method "createFolder". create the subfolder under the parentFolder and named for folderName
-     *
+     * 
      * @param parentFolder
      * @param folderName
      * @return
@@ -316,10 +329,10 @@ public class UnitTestBuildHelper {
 
     /**
      * DOC zshen Comment method "checkFileName".
-     *
+     * 
      * @param fileName
      * @param pattern
-     *
+     * 
      * copy the method from ProxyRepositoryFactory to avoid tos migeration.
      */
     private static void checkFileName(String fileName, String pattern) {
@@ -350,7 +363,7 @@ public class UnitTestBuildHelper {
 
     /**
      * create the real RepositoryNode for DataProfiling.
-     *
+     * 
      * @return
      */
     public static RepositoryNode createRealDataProfilingNode(IProject project) {
@@ -378,7 +391,7 @@ public class UnitTestBuildHelper {
 
     /**
      * create the real ReportFolderRepNode.
-     *
+     * 
      * @param parentNode
      * @return
      */
@@ -396,7 +409,7 @@ public class UnitTestBuildHelper {
 
     /**
      * create a real ReportSubFolderRepNode.
-     *
+     * 
      * @param parentNode the parent node
      * @param folderName the folder name
      * @return
@@ -433,7 +446,7 @@ public class UnitTestBuildHelper {
 
     /**
      * create a real ReportRepNode.
-     *
+     * 
      * @param name report name
      * @param folder report's parent folder
      * @param isDelete delete flag
@@ -471,7 +484,7 @@ public class UnitTestBuildHelper {
 
     /**
      * create the real SourceFileFolderRepNode.
-     *
+     * 
      * @param parentNode
      * @return
      */
@@ -585,7 +598,7 @@ public class UnitTestBuildHelper {
     }
 
     /**
-     *
+     * 
      * mock LocalRepositoryObjectCRUD for RepNodeUtils.getRepositoryObjectCRUD().
      */
     public static void mockLocalRepositoryObjectCRUD() {
@@ -600,5 +613,77 @@ public class UnitTestBuildHelper {
         PowerMockito.mockStatic(RepNodeUtils.class);
         LocalRepositoryObjectCRUD localRepCRUD = mock(LocalRepositoryObjectCRUD.class);
         when(RepNodeUtils.getRepositoryObjectCRUD()).thenReturn(localRepCRUD);
+    }
+
+    /**
+     * create a real file connection witl file url
+     * 
+     * @param fileUrl
+     * @param delimitedFileconnection
+     * @return
+     */
+    public static MetadataTable initFileConnection(URL fileUrl, DelimitedFileConnection delimitedFileconnection) {
+        try {
+            delimitedFileconnection.setFilePath(FileLocator.toFileURL(fileUrl).toURI().getPath().toString());
+            delimitedFileconnection.setRowSeparatorValue("\n");
+            delimitedFileconnection.setEncoding("UTF-8");
+            delimitedFileconnection.setFieldSeparatorValue(",");
+            delimitedFileconnection.setName(ERepositoryObjectType.METADATA_FILE_DELIMITED.getKey());
+
+            MetadataTable metadataTable = ConnectionFactory.eINSTANCE.createMetadataTable();
+            IProxyRepositoryFactory factory = ProxyRepositoryFactory.getInstance();
+            metadataTable.setId(factory.getNextId());
+            RecordFile record = (RecordFile) ConnectionHelper.getPackage(delimitedFileconnection.getName(),
+                    delimitedFileconnection, RecordFile.class);
+            if (record != null) { // hywang
+                PackageHelper.addMetadataTable(metadataTable, record);
+            } else {
+                RecordFile newrecord = RecordFactory.eINSTANCE.createRecordFile();
+                newrecord.setName(delimitedFileconnection.getName());
+                ConnectionHelper.addPackage(newrecord, delimitedFileconnection);
+                PackageHelper.addMetadataTable(metadataTable, newrecord);
+            }
+            return metadataTable;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    /**
+     * init the file's related metadata table with columns: name, company, city,country, comment. and add all columns as
+     * analyzed elements.
+     * 
+     * @param context
+     */
+    public static MetadataColumn initColumns(MetadataTable metadataTable) {
+        MetadataColumn name = ConnectionPackage.eINSTANCE.getConnectionFactory().createMetadataColumn();
+        name.setName("name");
+        name.setLabel("name");
+        metadataTable.getColumns().add(name);
+
+        // Company
+        MetadataColumn company = ConnectionPackage.eINSTANCE.getConnectionFactory().createMetadataColumn();
+        company.setName("company");
+        company.setLabel("company");
+        metadataTable.getColumns().add(company);
+        // City
+        MetadataColumn city = ConnectionPackage.eINSTANCE.getConnectionFactory().createMetadataColumn();
+        city.setName("city");
+        city.setLabel("city");
+        metadataTable.getColumns().add(city);
+        // Country
+        MetadataColumn country = ConnectionPackage.eINSTANCE.getConnectionFactory().createMetadataColumn();
+        country.setName("country");
+        country.setLabel("country");
+        metadataTable.getColumns().add(country);
+
+        // comment
+        MetadataColumn comment = ConnectionPackage.eINSTANCE.getConnectionFactory().createMetadataColumn();
+        comment.setName("comment");
+        comment.setLabel("comment");
+        metadataTable.getColumns().add(comment);
+
+        return name;
     }
 }

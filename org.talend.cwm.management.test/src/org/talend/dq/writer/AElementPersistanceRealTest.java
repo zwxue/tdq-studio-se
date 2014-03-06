@@ -12,12 +12,15 @@
 // ============================================================================
 package org.talend.dq.writer;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
+import junit.framework.Assert;
 
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.talend.core.model.properties.Item;
+import org.talend.core.repository.model.IRepositoryFactory;
+import org.talend.core.repository.model.ProxyRepositoryFactory;
+import org.talend.core.repository.model.RepositoryFactoryProvider;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisFactory;
 import org.talend.dataquality.domain.pattern.Pattern;
@@ -32,13 +35,13 @@ import org.talend.dataquality.properties.TDQReportItem;
 import org.talend.dataquality.rules.ParserRule;
 import org.talend.dataquality.rules.RulesFactory;
 import org.talend.dataquality.rules.WhereRule;
-import org.talend.dq.helper.UnitTestBuildHelper;
 import org.talend.dq.writer.impl.AnalysisWriter;
 import org.talend.dq.writer.impl.DQRuleWriter;
 import org.talend.dq.writer.impl.ElementWriterFactory;
 import org.talend.dq.writer.impl.IndicatorDefinitionWriter;
 import org.talend.dq.writer.impl.PatternWriter;
 import org.talend.dq.writer.impl.ReportWriter;
+import org.talend.repository.model.RepositoryConstants;
 import orgomg.cwmx.analysis.informationreporting.InformationreportingFactory;
 import orgomg.cwmx.analysis.informationreporting.Report;
 
@@ -48,26 +51,14 @@ import orgomg.cwmx.analysis.informationreporting.Report;
  */
 public class AElementPersistanceRealTest {
 
-    private static final String PROJECT_NAME = "AElementPersistanceTestProject"; //$NON-NLS-1$
-
-    /**
-     * DOC xqliu Comment method "setUp".
-     * 
-     * @throws java.lang.Exception
-     */
     @Before
     public void setUp() throws Exception {
-        UnitTestBuildHelper.createRealProject(PROJECT_NAME);
-    }
-
-    /**
-     * DOC xqliu Comment method "tearDown".
-     * 
-     * @throws java.lang.Exception
-     */
-    @After
-    public void tearDown() throws Exception {
-        UnitTestBuildHelper.deleteCurrentProject();
+        ProxyRepositoryFactory proxyRepository = ProxyRepositoryFactory.getInstance();
+        IRepositoryFactory repository = RepositoryFactoryProvider.getRepositoriyById(RepositoryConstants.REPOSITORY_LOCAL_ID);
+        if (repository == null) {
+            Assert.fail("No local Repository found! Probably due to a missing plugin in the product."); //$NON-NLS-1$
+        }
+        proxyRepository.setRepositoryFactoryFromProvider(repository);
     }
 
     /**

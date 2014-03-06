@@ -42,12 +42,10 @@ import org.talend.core.model.properties.User;
 import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.model.repository.Folder;
 import org.talend.core.model.repository.IRepositoryViewObject;
-import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.PackageHelper;
 import org.talend.dataquality.analysis.AnalysisContext;
 import org.talend.repository.ProjectManager;
-import org.talend.repository.model.IProxyRepositoryFactory;
 import org.talend.repository.model.IRepositoryNode.ENodeType;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.utils.string.StringUtilities;
@@ -389,8 +387,8 @@ public class UnitTestBuildHelper {
             delimitedFileconnection.setName(ERepositoryObjectType.METADATA_FILE_DELIMITED.getKey());
 
             MetadataTable metadataTable = ConnectionFactory.eINSTANCE.createMetadataTable();
-            IProxyRepositoryFactory factory = ProxyRepositoryFactory.getInstance();
-            metadataTable.setId(factory.getNextId());
+            // IProxyRepositoryFactory factory = ProxyRepositoryFactory.getInstance();
+            // metadataTable.setId(factory.getNextId());
             RecordFile record = (RecordFile) ConnectionHelper.getPackage(delimitedFileconnection.getName(),
                     delimitedFileconnection, RecordFile.class);
             if (record != null) { // hywang

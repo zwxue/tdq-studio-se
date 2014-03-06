@@ -22,6 +22,7 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.talend.AllDataProfilerCoreTests;
 import org.talend.core.model.metadata.IMetadataConnection;
 import org.talend.core.model.metadata.MetadataFillFactory;
 import org.talend.core.model.metadata.builder.connection.Connection;
@@ -46,7 +47,6 @@ import org.talend.dq.analysis.IAnalysisExecutor;
 import org.talend.dq.analysis.MultiColumnAnalysisExecutor;
 import org.talend.dq.analysis.parameters.DBConnectionParameter;
 import org.talend.dq.helper.ParameterUtil;
-import org.talend.dq.indicators.IndicatorEvaluator;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.dq.sql.converters.CwmZExpression;
 import org.talend.dq.writer.impl.ElementWriterFactory;
@@ -279,7 +279,7 @@ public class MultiColAnalysisCreationTest {
      * @return
      */
     public Connection getDataManager() {
-        TypedProperties connectionParams = PropertiesLoader.getProperties(IndicatorEvaluator.class, "db.properties"); //$NON-NLS-1$
+        TypedProperties connectionParams = PropertiesLoader.getProperties(AllDataProfilerCoreTests.class, "db.properties"); //$NON-NLS-1$
         String driverClassName = connectionParams.getProperty("driver"); //$NON-NLS-1$
         String dbUrl = connectionParams.getProperty("url"); //$NON-NLS-1$
         String sqlTypeName = connectionParams.getProperty("sqlTypeName"); //$NON-NLS-1$

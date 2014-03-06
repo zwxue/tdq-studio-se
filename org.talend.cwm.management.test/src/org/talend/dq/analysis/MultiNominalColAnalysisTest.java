@@ -13,17 +13,20 @@
 package org.talend.dq.analysis;
 
 import java.io.File;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.junit.Assert;
 import org.junit.Test;
+import org.talend.core.model.metadata.IMetadataConnection;
+import org.talend.core.model.metadata.MetadataFillFactory;
 import org.talend.core.model.metadata.builder.connection.Connection;
+import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
 import org.talend.core.model.metadata.builder.database.DqRepositoryViewService;
 import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.helper.CatalogHelper;
-import org.talend.cwm.management.api.ConnectionService;
 import org.talend.cwm.management.api.FolderProvider;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.relational.TdTable;
@@ -34,8 +37,10 @@ import org.talend.dataquality.indicators.DataminingType;
 import org.talend.dataquality.indicators.columnset.ColumnSetMultiValueIndicator;
 import org.talend.dataquality.indicators.columnset.ColumnsetFactory;
 import org.talend.dq.analysis.parameters.DBConnectionParameter;
+import org.talend.dq.helper.ParameterUtil;
 import org.talend.dq.indicators.IndicatorEvaluator;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
+import org.talend.repository.model.ProjectNodeHelper;
 import org.talend.utils.properties.PropertiesLoader;
 import org.talend.utils.properties.TypedProperties;
 import org.talend.utils.sql.Java2SqlType;
@@ -60,6 +65,8 @@ public class MultiNominalColAnalysisTest {
     private static final String CATALOG = "tbi"; //$NON-NLS-1$
 
     private static final String TABLE = "customer"; //$NON-NLS-1$
+
+    private static final String DATA_PROVIDER_NAME = "My_data_provider" + System.currentTimeMillis(); //$NON-NLS-1$\
 
     /**
      * DOC scorreia Comment method "run".
@@ -198,14 +205,44 @@ public class MultiNominalColAnalysisTest {
         params.setJdbcUrl(dbUrl);
         params.setSqlTypeName(sqlTypeName);
         params.setParameters(connectionParams);
-        params.getParameters();
 
         // create connection
         ConnectionUtils.setTimeout(false);
-        Connection dataProvider = ConnectionService.createConnection(params).getObject();
 
-        dataProvider.setName("My data provider"); //$NON-NLS-1$
+        MetadataFillFactory instance = MetadataFillFactory.getDBInstance();
+        IMetadataConnection metaConnection = instance.fillUIParams(ParameterUtil.toMap(params));
+
+        ReturnCode rc = null;
+        try {
+            rc = instance.checkConnection(metaConnection);
+        } catch (java.lang.RuntimeException e) {
+            Assert.fail("connect to " + dbUrl + "failed," + e.getMessage());
+        }
+        Connection dataProvider = null;
+        if (rc.isOk()) {
+            dataProvider = instance.fillUIConnParams(metaConnection, null);
+            dataProvider.setName(DATA_PROVIDER_NAME);
+
+            // because the DI side code is changed, modify the following code.
+            metaConnection.setCurrentConnection(dataProvider);
+            try {
+                ProjectNodeHelper.fillCatalogAndSchemas(metaConnection, (DatabaseConnection) dataProvider);
+            } catch (ClassNotFoundException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            } catch (InstantiationException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            } catch (IllegalAccessException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            } catch (SQLException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+
+        }
+        Assert.assertNotNull(dataProvider);
         return dataProvider;
-
     }
 }
