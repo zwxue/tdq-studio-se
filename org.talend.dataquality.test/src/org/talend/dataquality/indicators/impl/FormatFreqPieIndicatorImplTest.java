@@ -42,6 +42,10 @@ public class FormatFreqPieIndicatorImplTest {
     /**
      * Test method for
      * {@link org.talend.dataquality.indicators.impl.FormatFreqPieIndicatorImpl#handle(java.lang.Object)}.
+     * 
+     * note: in this test, assert about formatFreqPieIndicator.getWellFormNatiCount() depends on the local language, so
+     * when run on local computer maybe get a error result like expected:<1> but was:<4>. but on the test server is right.
+     * so no need to modify this test.
      */
     @Test
     public void testHandle() {
