@@ -42,6 +42,9 @@ public class WellFormNationalPhoneCountIndicatorImplTest {
     /**
      * Test method for
      * {@link org.talend.dataquality.indicators.impl.WellFormNationalPhoneCountIndicatorImpl#handle(java.lang.Object)}.
+     * 
+     * note: this test depends on the local language, so when run on local computer maybe get a error result like expected:<1>
+     * but was:<4>. but on the test server is right.so no need to modify this test.
      */
     @Test
     public void testHandle() {
