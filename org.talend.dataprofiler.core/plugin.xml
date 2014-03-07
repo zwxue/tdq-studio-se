@@ -815,6 +815,7 @@
          </enablement>
       </actionProvider>
       <actionProvider
+            appearsBefore="org.talend.dataprofiler.core.ui.action.provider.CreateUserFolderProvider"
             class="org.talend.dataprofiler.core.ui.action.provider.CreateMatcherRuleActionProvider"
             id="org.talend.dataprofiler.core.ui.action.provider.CreateMatcherRuleActionProvider">
          <enablement>
