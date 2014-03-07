@@ -65,4 +65,26 @@ public class NetezzaDbmsLanguageTest {
         Assert.assertEquals(expectedResult, extractString);
     }
 
+    /**
+     * Test method for {@link org.talend.dq.dbms.NetezzaDbmsLanguage#getInvalidClauseBenFord(java.lang.String)} .
+     * 
+     * for task TDQ-8600
+     * 
+     * Before that we use "cast(colmnName as char(1))" to get the first character of data but there is one error say
+     * that "Character width exceeded" when data type of input data is Number and it is null. So we use
+     * "Substring(colmnName,1,1)" instead of it to fixed this error.By the way, if we have two conditions and link them
+     * use "or" like that "condition1 or condition2", althougth condition1 is true the condition2 will execute too in
+     * the netezza database.
+     */
+    @Test
+    public void testGetInvalidClauseBenFord() {
+        String colmnName = "name"; //$NON-NLS-1$
+        String actualResult = colmnName
+                + " is null or Substring(" + colmnName + ",1,1) not in ('0','1','2','3','4','5','6','7','8','9')";//$NON-NLS-1$ //$NON-NLS-2$
+        NetezzaDbmsLanguage netezzaDbmsLanguage = (NetezzaDbmsLanguage) DbmsLanguageFactory
+                .createDbmsLanguage(SupportDBUrlType.NETEZZADEFAULTURL);
+        String resultString = netezzaDbmsLanguage.getInvalidClauseBenFord(colmnName);
+        Assert.assertEquals(actualResult, resultString);
+    }
+
 }

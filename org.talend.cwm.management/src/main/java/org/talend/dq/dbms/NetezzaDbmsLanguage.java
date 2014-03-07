@@ -188,7 +188,7 @@ public class NetezzaDbmsLanguage extends DbmsLanguage {
      */
     @Override
     public String getInvalidClauseBenFord(String columnName) {
-        return columnName + " is null or cast(" + columnName + " as char(1)) not in ('0','1','2','3','4','5','6','7','8','9')";//$NON-NLS-1$ //$NON-NLS-2$
+        return columnName + " is null or Substring(" + columnName + ",1,1) not in ('0','1','2','3','4','5','6','7','8','9')";//$NON-NLS-1$ //$NON-NLS-2$
     }
 
 }
