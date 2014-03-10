@@ -466,4 +466,57 @@ public class PatternExplorerTest {
         assertEquals("SELECT * FROM TDQ_CALENDAR", clause); //$NON-NLS-1$
     }
 
+    /**
+     * 
+     * Mock Test method for {@link org.talend.dq.analysis.explore.PatternExplorer#isImplementRegexFunction()}.test
+     * return true;
+     */
+    @Test
+    public void testIsImplementRegexFunction_True() {
+        String label = DataExplorer.MENU_VIEW_VALID_ROWS;
+        boolean implementRegexFunction = patternExplorer.isImplementRegexFunction(label);
+        assertTrue(implementRegexFunction);
+        label = DataExplorer.MENU_VIEW_VALID_VALUES;
+        implementRegexFunction = patternExplorer.isImplementRegexFunction(label);
+        assertTrue(implementRegexFunction);
+        label = DataExplorer.MENU_VIEW_INVALID_VALUES;
+        implementRegexFunction = patternExplorer.isImplementRegexFunction(label);
+        assertTrue(implementRegexFunction);
+        label = DataExplorer.MENU_VIEW_INVALID_ROWS;
+        assertTrue(implementRegexFunction);
+    }
+
+    /**
+     * 
+     * Mock Test method for {@link org.talend.dq.analysis.explore.PatternExplorer#isImplementRegexFunction()}.test
+     * return false;
+     */
+    @Test
+    public void testIsImplementRegexFunction_False() {
+        String label = null;
+        when(patternExplorer.dbmsLanguage.regexLike(anyString(), anyString())).thenReturn(null);
+        when(patternExplorer.dbmsLanguage.regexNotLike(anyString(), anyString())).thenReturn(null);
+
+        boolean implementRegexFunction = this.patternExplorer.isImplementRegexFunction(label);
+        assertFalse(implementRegexFunction);
+
+        label = "ab";//$NON-NLS-1$
+        implementRegexFunction = this.patternExplorer.isImplementRegexFunction(label);
+        assertFalse(implementRegexFunction);
+
+        label = DataExplorer.MENU_VIEW_VALID_ROWS;
+        implementRegexFunction = patternExplorer.isImplementRegexFunction(label);
+        assertFalse(implementRegexFunction);
+        label = DataExplorer.MENU_VIEW_VALID_VALUES;
+        implementRegexFunction = patternExplorer.isImplementRegexFunction(label);
+        assertFalse(implementRegexFunction);
+        label = DataExplorer.MENU_VIEW_INVALID_VALUES;
+        implementRegexFunction = patternExplorer.isImplementRegexFunction(label);
+        assertFalse(implementRegexFunction);
+        label = DataExplorer.MENU_VIEW_INVALID_ROWS;
+        implementRegexFunction = patternExplorer.isImplementRegexFunction(label);
+        assertFalse(implementRegexFunction);
+
+    }
+
 }

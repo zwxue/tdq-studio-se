@@ -188,6 +188,9 @@ public class PatternExplorer extends DataExplorer {
     }
 
     public boolean isImplementRegexFunction(String menuLabel) {
+        if (menuLabel == null) {
+            return false;
+        }
         String regexPatternString = dbmsLanguage.getRegexPatternString(this.indicator);
         if (menuLabel.equals(MENU_VIEW_VALID_ROWS) || menuLabel.equals(MENU_VIEW_VALID_VALUES)) {
             if (dbmsLanguage.regexLike(columnName, regexPatternString) != null) {
