@@ -42,7 +42,7 @@ public class BenfordLawFrequencyExplorer extends FrequencyStatisticsExplorer {
      * @return
      */
     private String getInvalidClause() {
-        String value = " not REGEXP '^[0-9]'";
+        String value = " not REGEXP '^[0-9]'"; //$NON-NLS-1$
         if (isSybase()) {
             return columnName
                     + " is null or left(convert(char(15)," + this.columnName + "),1) not " + dbmsLanguage.like() + "'%[0-9]%'";//$NON-NLS-1$ //$NON-NLS-2$
@@ -60,8 +60,7 @@ public class BenfordLawFrequencyExplorer extends FrequencyStatisticsExplorer {
         } else if (isInformix()) {
             return columnName + " is null or SUBSTR(" + columnName + ",0,1) not in ('0','1','2','3','4','5','6','7','8','9')";//$NON-NLS-1$ //$NON-NLS-2$
         } else if (isNetezza()) {
-            return columnName
-                    + " is null or cast(" + columnName + " as char(1)) not in ('0','1','2','3','4','5','6','7','8','9')";//$NON-NLS-1$ //$NON-NLS-2$
+            return columnName + " is null or Substring(" + columnName + ",1,1) not in ('0','1','2','3','4','5','6','7','8','9')";//$NON-NLS-1$ //$NON-NLS-2$
         }
 
         return columnName + " is null or " + columnName + value; //$NON-NLS-1$
