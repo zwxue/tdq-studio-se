@@ -61,6 +61,7 @@ import org.talend.dq.indicators.AbstractSchemaEvaluatorTest;
 import org.talend.dq.indicators.ColumnSetIndicatorEvaluatorTest;
 import org.talend.dq.indicators.DelimitedFileIndicatorEvaluatorTest;
 import org.talend.dq.indicators.SqlIndicatorHandlerTest;
+import org.talend.dq.nodes.AnalysisFolderRepNodeTest;
 import org.talend.dq.nodes.ReportSubFolderRepNodeTest;
 import org.talend.dq.sql.converters.CwmZExpressionTest;
 import org.talend.dq.writer.AElementPersistanceRealTest;
@@ -84,7 +85,7 @@ import org.talend.dq.writer.AElementPersistanceTest;
         DelimitedFileIndicatorEvaluatorTest.class, SqlIndicatorHandlerTest.class, ReportSubFolderRepNodeTest.class,
         CwmZExpressionTest.class, AElementPersistanceRealTest.class, AElementPersistanceTest.class, CWMPluginTest.class,
         MessagesTest.class, SoftwareSystemManagerTest.class, DependenciesHandlerTest.class, StoreOnDiskHandlerTest.class,
-        MdmStatementTest.class, ConnectionUtilsTest.class })
+        MdmStatementTest.class, ConnectionUtilsTest.class, AnalysisFolderRepNodeTest.class })
 public class AllCwmManagementTests {
 
 }

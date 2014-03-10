@@ -18,12 +18,18 @@ import java.net.URL;
 import java.util.Date;
 import java.util.List;
 
+import junit.framework.Assert;
+
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.FileLocator;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Path;
+import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.talend.commons.exception.PersistenceException;
 import org.talend.commons.ui.runtime.exception.ExceptionHandler;
 import org.talend.commons.utils.WorkspaceUtils;
 import org.talend.core.model.general.Project;
@@ -42,9 +48,16 @@ import org.talend.core.model.properties.User;
 import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.model.repository.Folder;
 import org.talend.core.model.repository.IRepositoryViewObject;
+import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.PackageHelper;
+import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisContext;
+import org.talend.dataquality.analysis.AnalysisFactory;
+import org.talend.dataquality.analysis.AnalysisResult;
+import org.talend.dataquality.helpers.AnalysisHelper;
+import org.talend.dataquality.properties.TDQAnalysisItem;
+import org.talend.dataquality.properties.impl.PropertiesFactoryImpl;
 import org.talend.repository.ProjectManager;
 import org.talend.repository.model.IRepositoryNode.ENodeType;
 import org.talend.repository.model.RepositoryNode;
@@ -332,13 +345,14 @@ public class UnitTestBuildHelper {
      * @param type
      * @return
      */
-    private static IRepositoryViewObject buildRepositoryViewObjectSystemFolder(
+    public static IRepositoryViewObject buildRepositoryViewObjectSystemFolder(
             org.talend.core.model.properties.Project emfProject, User author, ERepositoryObjectType type) {
         ItemState itemState = PropertiesFactory.eINSTANCE.createItemState();
         FolderItem folderItem = PropertiesFactory.eINSTANCE.createFolderItem();
         Property property = PropertiesFactory.eINSTANCE.createProperty();
 
         itemState.setItemRelated(folderItem);
+        folderItem.setState(itemState);
 
         folderItem.setParent(emfProject);
         folderItem.setType(FolderType.STABLE_SYSTEM_FOLDER_LITERAL);
@@ -449,5 +463,40 @@ public class UnitTestBuildHelper {
         metadataTable.getColumns().add(comment);
 
         return name;
+    }
+
+    /**
+     * 
+     * DOC qiongli Comment method "createRealAnalysis".
+     * 
+     * @param name
+     * @param folder
+     * @param isDelete
+     * @return
+     */
+    public static Analysis createRealAnalysis(String name, IFolder folder, Boolean isDelete) {
+        IPath createPath = Path.EMPTY;
+        if (folder != null) {
+            createPath = new Path(folder.getFullPath().lastSegment());
+        }
+        Analysis analysis1 = AnalysisHelper.createAnalysis(name);
+        TDQAnalysisItem item1 = PropertiesFactoryImpl.eINSTANCE.createTDQAnalysisItem();
+        org.talend.core.model.properties.Property property1 = PropertiesFactory.eINSTANCE.createProperty();
+        property1.setId(EcoreUtil.generateUUID());
+        property1.setItem(item1);
+        property1.setLabel(analysis1.getName());
+        item1.setProperty(property1);
+        item1.setAnalysis(analysis1);
+        ItemState itemState = org.talend.core.model.properties.PropertiesFactory.eINSTANCE.createItemState();
+        itemState.setDeleted(isDelete);
+        item1.setState(itemState);
+        AnalysisResult analysisResult1 = AnalysisFactory.eINSTANCE.createAnalysisResult();
+        analysis1.setResults(analysisResult1);
+        try {
+            ProxyRepositoryFactory.getInstance().create(item1, createPath, false);
+        } catch (PersistenceException e) {
+            Assert.fail(e.getMessage());
+        }
+        return analysis1;
     }
 }
