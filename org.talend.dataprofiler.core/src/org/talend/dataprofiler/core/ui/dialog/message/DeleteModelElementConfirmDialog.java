@@ -289,16 +289,8 @@ public class DeleteModelElementConfirmDialog {
      */
     public static int showDialog(Shell parentShell, List<IRepositoryNode> repositoryNodes, String dialogMessage) {
         for (IRepositoryNode repNode : repositoryNodes) {
-            List<ModelElement> dependencies = new ArrayList<ModelElement>();
-            Object object = null;
-            if (repNode.getObjectType() == ERepositoryObjectType.METADATA_CON_TABLE
-                    || repNode.getObjectType() == ERepositoryObjectType.METADATA_CON_VIEW) {
-                dependencies = EObjectHelper.getFirstDependency(repNode);
-                object = RepositoryNodeHelper.getMetadataElement(repNode);
-            } else {
-                dependencies = EObjectHelper.getDependencyClients(repNode);
-                object = RepositoryNodeHelper.getModelElementFromRepositoryNode(repNode);
-            }
+            List<ModelElement> dependencies = EObjectHelper.getDependencyClients(repNode);
+            Object object = RepositoryNodeHelper.getModelElementFromRepositoryNode(repNode);
             for (ModelElement element : dependencies) {
                 ImpactNode node = new ImpactNode(element);
                 if (!impactNodes.contains(node)) {

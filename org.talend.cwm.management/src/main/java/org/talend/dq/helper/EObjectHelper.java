@@ -36,6 +36,7 @@ import org.talend.core.model.metadata.builder.connection.MetadataColumn;
 import org.talend.core.model.metadata.builder.connection.MetadataTable;
 import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.properties.Item;
+import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.core.repository.utils.XmiResourceManager;
@@ -49,9 +50,15 @@ import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.relational.TdTable;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisContext;
+import org.talend.dataquality.helpers.ReportHelper;
+import org.talend.dataquality.helpers.ReportHelper.ReportType;
+import org.talend.dataquality.reports.AnalysisMap;
+import org.talend.dataquality.reports.TdReport;
 import org.talend.dq.factory.ModelElementFileFactory;
 import org.talend.dq.helper.resourcehelper.ResourceFileMap;
+import org.talend.dq.nodes.ReportRepNode;
 import org.talend.repository.model.IRepositoryNode;
+import org.talend.resource.EResourceConstant;
 import org.talend.resource.ResourceManager;
 import orgomg.cwm.objectmodel.core.Dependency;
 import orgomg.cwm.objectmodel.core.ModelElement;
@@ -192,12 +199,68 @@ public final class EObjectHelper {
      * @return
      */
     public static List<ModelElement> getDependencyClients(IRepositoryNode respositoryNode) {
-        ModelElement findElement = RepositoryNodeHelper.getResourceModelElement(respositoryNode);
+        // Added 20130305 check the jRxml and its folder here, because the jrxml are not modelelement type.
+        if (ERepositoryObjectType.TDQ_JRAXML_ELEMENT.equals(respositoryNode.getObjectType())) {
+            return getDependedReportOfJrxml(respositoryNode);
+        } else if (ERepositoryObjectType.METADATA_CON_TABLE.equals(respositoryNode.getObjectType())
+                || ERepositoryObjectType.METADATA_CON_VIEW.equals(respositoryNode.getObjectType())) {
+            return EObjectHelper.getFirstDependency(respositoryNode);
+        }
+        ModelElement findElement = RepositoryNodeHelper.getModelElementFromRepositoryNode(respositoryNode);
         return getDependencyClients(findElement);
     }
 
-    public static List<ModelElement> getDependencyClients(ModelElement modelElement) {
+    /**
+     * Go throught all reports in the project and return all which used the current jrxml.
+     * 
+     * @param node the Jrxml node
+     * @return list of reports who used this jrxml as user defined template
+     */
+    public static List<ModelElement> getDependedReportOfJrxml(IRepositoryNode node) {
+        List<ModelElement> dependedReport = new ArrayList<ModelElement>();
+        if (node.getObject().getProperty() == null) {
+            return dependedReport;
+        }
+        IPath path = PropertyHelper.getItemPath(node.getObject().getProperty());
+        // check if it has depended Report
+        // get all reports
+        List<ReportRepNode> repNodes = RepositoryNodeHelper.getReportRepNodes(
+                RepositoryNodeHelper.getDataProfilingFolderNode(EResourceConstant.REPORTS), true, true);
+        // go through every report to find if any one used current jrxml
+        for (ReportRepNode report : repNodes) {
+            EList<AnalysisMap> analysisMap = ((TdReport) report.getReport()).getAnalysisMap();
+            for (AnalysisMap anaMap : analysisMap) {
+                if (isUsedByDeletedJrxml(path, anaMap)) {
+                    dependedReport.add(report.getReport());
+                    break;
+                }
+            }
+        }
+        return dependedReport;
+    }
 
+    /**
+     * check if the anaMap comtains the Jrxml or not, by compare the jrxml's path with anaMap's jrxml source(when user
+     * mode)
+     * 
+     * @param path the path of the jrxml saved in the analysis map
+     * @param anaMap the analysis map in the report.
+     * @return the analysis map used the current jrxml or not.
+     */
+    private static boolean isUsedByDeletedJrxml(IPath path, AnalysisMap anaMap) {
+        ReportType reportType = ReportHelper.ReportType.getReportType(anaMap.getAnalysis(), anaMap.getReportType());
+        // compare the Jrxml path if the report has the user defined one.
+        if (ReportHelper.ReportType.USER_MADE.equals(reportType)) {
+            String jrxmlPath = anaMap.getJrxmlSource();
+            String deletedpath = path.removeFirstSegments(2).toString();
+            if (jrxmlPath.contains(deletedpath)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static List<ModelElement> getDependencyClients(ModelElement modelElement) {
         if (modelElement == null) {
             return new ArrayList<ModelElement>();
         }
@@ -215,6 +278,21 @@ public final class EObjectHelper {
             }
         }
         return supplierList;
+    }
+
+    /**
+     * 
+     * DOC qiongli Comment method "hasDependences".
+     * 
+     * @param node
+     * @return
+     */
+    public static boolean hasDependencyClients(IRepositoryNode node) {
+        List<ModelElement> dependencies = getDependencyClients(node);
+        if (dependencies == null || dependencies.isEmpty()) {
+            return false;
+        }
+        return true;
     }
 
     /**
