@@ -379,17 +379,7 @@ public class TDQResourceChangeHandler extends AbstractResourceChangesService {
             }
         } else {
             List<ModelElement> clientDependencys = new ArrayList<ModelElement>();
-            if (ERepositoryObjectType.TDQ_JRAXML_ELEMENT.equals(currentNode.getObjectType())) {
-                clientDependencys = DQDeleteHelper.getDependedReportOfJrxml(currentNode);
-            } else if (ERepositoryObjectType.METADATA_CON_TABLE.equals(currentNode.getObjectType())
-                    || ERepositoryObjectType.METADATA_CON_VIEW.equals(currentNode.getObjectType())) {
-                clientDependencys = EObjectHelper.getFirstDependency(currentNode);
-            } else {
-                ModelElement modelElement = RepositoryNodeHelper.getModelElementFromRepositoryNode(currentNode);
-                if (modelElement != null) {
-                    clientDependencys = EObjectHelper.getDependencyClients(modelElement);
-                }
-            }
+            clientDependencys = EObjectHelper.getDependencyClients(currentNode);
             if (!clientDependencys.isEmpty()) {
                 dependentNodes.add(currentNode);
             }

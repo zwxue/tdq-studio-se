@@ -2478,21 +2478,6 @@ public final class RepositoryNodeHelper {
 
     /**
      * 
-     * DOC qiongli Comment method "hasDependences".
-     * 
-     * @param node
-     * @return
-     */
-    public static boolean hasDependencyClients(IRepositoryNode node) {
-        List<ModelElement> dependencies = EObjectHelper.getDependencyClients(node);
-        if (dependencies == null || dependencies.isEmpty()) {
-            return false;
-        }
-        return true;
-    }
-
-    /**
-     * 
      * Add qiongli:find all REPOSITORY_ELEMENT by folderNode.
      * 
      * @param folderNode

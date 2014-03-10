@@ -430,22 +430,13 @@ public class DQDeleteAction extends DeleteAction {
      * @return
      */
     private boolean hasDependencyClients(IRepositoryNode node) {
-        if (isJrxml(node)) {
-            List<ModelElement> dependedReport = DQDeleteHelper.getDependedReportOfJrxml(node);
-            if (dependedReport.size() > 0) {
-                nodeWithDependsMap.put(node, dependedReport);
-                return true;
-            } else {
-                return false;
-            }
-        } else {
-            boolean hasDependencyClients = RepositoryNodeHelper.hasDependencyClients(node);
-            if (hasDependencyClients) {
-                List<ModelElement> dependencies = EObjectHelper.getDependencyClients(node);
-                nodeWithDependsMap.put(node, dependencies);
-            }
-            return hasDependencyClients;
+        List<ModelElement> dependencies = EObjectHelper.getDependencyClients(node);
+        if (dependencies == null || dependencies.isEmpty()) {
+            return false;
         }
+
+        nodeWithDependsMap.put(node, dependencies);
+        return true;
     }
 
     /**
