@@ -50,7 +50,7 @@ public class MySQLDbmsLanguageTest {
     public void testRegexLike() {
         String regexLike = mySQLDbmsLanguage.regexLike(REGEXP_1, REGEXP_2);
         Assert.assertNotNull(regexLike);
-        Assert.assertEquals(regexLike, SPACE + REGEXP_1 + " REGEXP BINARY " + REGEXP_2 + SPACE); //$NON-NLS-1$
+        Assert.assertEquals(SPACE + REGEXP_1 + " REGEXP BINARY " + REGEXP_2 + SPACE, regexLike); //$NON-NLS-1$
     }
 
     /**
@@ -60,7 +60,7 @@ public class MySQLDbmsLanguageTest {
     public void testRegexNotLike() {
         String regexLike = mySQLDbmsLanguage.regexNotLike(REGEXP_1, REGEXP_2);
         Assert.assertNotNull(regexLike);
-        Assert.assertEquals(regexLike, SPACE + REGEXP_1 + " NOT REGEXP BINARY " + REGEXP_2 + SPACE); //$NON-NLS-1$
+        Assert.assertEquals(SPACE + REGEXP_1 + "  NOT REGEXP BINARY " + REGEXP_2 + SPACE, regexLike); //$NON-NLS-1$
     }
 
 }
