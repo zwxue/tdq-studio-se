@@ -12,8 +12,7 @@
 // ============================================================================
 package org.talend.cwm.compare;
 
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 
 import java.io.File;
 import java.net.URI;
@@ -181,6 +180,7 @@ public class DQStructureComparerTest {
         PowerMockito.mockStatic(ExtractMetaDataUtils.class);
         Mockito.when(ExtractMetaDataUtils.getInstance()).thenReturn(extract);
         Mockito.when(extract.getConnectionMetadata(mockSqlConn)).thenReturn(mockDatabaseMetaData);
+        Mockito.when(extract.getDatabaseMetaData(mockSqlConn, dbProvider)).thenReturn(mockDatabaseMetaData);
 
         // mock ConnectionHelper
         PowerMockito.mockStatic(ConnectionHelper.class);
