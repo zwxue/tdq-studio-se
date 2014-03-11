@@ -214,7 +214,7 @@ public class FileSystemImportWriterTest {
         when(analysis.eIsProxy()).thenReturn(false);
 
         File file = new File("C://Users//msjian//Desktop//myusetest//AA//TDQ_Data Profiling//Analyses//k_0.1.ana");//$NON-NLS-1$
-        org.eclipse.emf.common.util.URI uri = URI.createURI(file.toURL().getPath().substring(1));
+        org.eclipse.emf.common.util.URI uri = URI.createFileURI(file.toURL().getPath().substring(1));
         Resource resource = mock(Resource.class);
         when(analysis.eResource()).thenReturn(resource);
         when(resource.getURI()).thenReturn(uri);

@@ -133,14 +133,8 @@ public class MatchRuleDataTable extends Composite {
             TableViewerColumn column = new TableViewerColumn(dataViewer, SWT.NONE);
             column.getColumn().setText(title);
 
-            if (title.equals(MASTER)) {
-
-                column.getColumn().setWidth(0);
-                column.getColumn().setResizable(false);
-            } else {
-                column.getColumn().setWidth(150);
-                column.getColumn().setMoveable(true);
-            }
+            column.getColumn().setWidth(150);
+            column.getColumn().setMoveable(true);
 
         }
 

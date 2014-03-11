@@ -20,6 +20,7 @@ import org.eclipse.swt.graphics.Image;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.ui.imex.model.ItemRecord;
+import org.talend.dataquality.rules.MatchRuleDefinition;
 import org.talend.resource.EResourceConstant;
 
 /**
@@ -83,7 +84,11 @@ public class FileTreeLabelProvider extends LabelProvider {
                 } else if (fileName.endsWith(FactoriesUtil.PATTERN)) {
                     image = ImageLib.getImage(ImageLib.PATTERN_REG);
                 } else if (fileName.endsWith(FactoriesUtil.DQRULE)) {
-                    image = ImageLib.getImage(ImageLib.DQ_RULE);
+                    if (record.getElement() instanceof MatchRuleDefinition) {
+                        image = ImageLib.getImage(ImageLib.MATCH_RULE_ICON);
+                    } else {
+                        image = ImageLib.getImage(ImageLib.DQ_RULE);
+                    }
                 } else if (fileName.endsWith(FactoriesUtil.ITEM_EXTENSION)) {
                     image = ImageLib.getImage(ImageLib.TD_DATAPROVIDER);
                 } else if (fileName.endsWith(FactoriesUtil.DEFINITION)) {

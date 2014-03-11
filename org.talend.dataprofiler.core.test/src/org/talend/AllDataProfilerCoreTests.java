@@ -43,6 +43,7 @@ import org.talend.dataprofiler.core.ui.editor.preview.model.ChartTableFactoryTes
 import org.talend.dataprofiler.core.ui.editor.preview.model.states.freq.BenfordLawFrequencyStateTest;
 import org.talend.dataprofiler.core.ui.editor.preview.model.states.pattern.PatternStatisticsStateTest;
 import org.talend.dataprofiler.core.ui.imex.ExportWizardPageTest;
+import org.talend.dataprofiler.core.ui.imex.FileTreeLabelProviderTest;
 import org.talend.dataprofiler.core.ui.imex.model.FileSystemImportWriterTest;
 import org.talend.dataprofiler.core.ui.utils.ComparatorsFactoryTest;
 import org.talend.dataprofiler.core.ui.utils.ModelElementIndicatorRuleTest;
@@ -68,7 +69,8 @@ import org.talend.metadata.managment.SwitchContextGroupNameImplTest;
         InidcatorUnitTest.class, FileSystemImportWriterTest.class, ExportWizardPageTest.class,
         ResourceViewLabelProviderTest.class, MultiColAnalysisCreationTest.class, CorePluginTest.class,
         AnalysisCreationTest.class, SwitchContextGroupNameImplTest.class, ComparatorsFactoryTest.class,
-        ModelElementIndicatorRuleTest.class, RepNodeUtilsTest.class, UDIUtilsTest.class, WorkbenchUtilsTest.class, })
+        ModelElementIndicatorRuleTest.class, RepNodeUtilsTest.class, UDIUtilsTest.class, WorkbenchUtilsTest.class,
+        FileTreeLabelProviderTest.class })
 public class AllDataProfilerCoreTests {
 
 }
