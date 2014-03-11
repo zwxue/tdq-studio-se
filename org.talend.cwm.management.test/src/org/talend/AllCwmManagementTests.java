@@ -48,10 +48,15 @@ import org.talend.dq.dbms.IngresDbmsLanguageTest;
 import org.talend.dq.dbms.MSSqlDbmsLanguageTest;
 import org.talend.dq.dbms.MySQLDbmsLanguageTest;
 import org.talend.dq.dbms.NetezzaDbmsLanguageTest;
+import org.talend.dq.factory.HiveConnectionHandlerFactoryTest;
+import org.talend.dq.handler.CDH4YarnHandlerTest;
+import org.talend.dq.handler.CDH5HandlerTest;
+import org.talend.dq.handler.HDP130HandlerTest;
+import org.talend.dq.handler.HDP200HandlerTest;
+import org.talend.dq.handler.Mapr212HandlerTest;
 import org.talend.dq.helper.AnalysisExecutorHelperTest;
 import org.talend.dq.helper.ContextHelperTest;
 import org.talend.dq.helper.DQDeleteHelperTest;
-import org.talend.dq.helper.EObjectHelperTest;
 import org.talend.dq.helper.ParameterUtilTest;
 import org.talend.dq.helper.PropertyHelperTest;
 import org.talend.dq.helper.ProxyRepositoryManagerTest;
@@ -88,7 +93,8 @@ import org.talend.dq.writer.AElementPersistanceTest;
         CwmZExpressionTest.class, AElementPersistanceRealTest.class, AElementPersistanceTest.class, CWMPluginTest.class,
         MessagesTest.class, SoftwareSystemManagerTest.class, DependenciesHandlerTest.class, StoreOnDiskHandlerTest.class,
         MdmStatementTest.class, ConnectionUtilsTest.class, AnalysisFolderRepNodeTest.class, ColumnAnalysisSqlExecutorTest.class,
-        EObjectHelperTest.class })
+        EObjectHelperTest.class, HiveConnectionHandlerFactoryTest.class, CDH4YarnHandlerTest.class, CDH5HandlerTest.class,
+        HDP130HandlerTest.class, HDP200HandlerTest.class, Mapr212HandlerTest.class })
 public class AllCwmManagementTests {
 
 }
