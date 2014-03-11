@@ -57,6 +57,7 @@ import org.talend.dq.handler.Mapr212HandlerTest;
 import org.talend.dq.helper.AnalysisExecutorHelperTest;
 import org.talend.dq.helper.ContextHelperTest;
 import org.talend.dq.helper.DQDeleteHelperTest;
+import org.talend.dq.helper.EObjectHelperTest;
 import org.talend.dq.helper.ParameterUtilTest;
 import org.talend.dq.helper.PropertyHelperTest;
 import org.talend.dq.helper.ProxyRepositoryManagerTest;
