@@ -30,11 +30,11 @@ public class UpdateLowerUpperQuartileForDB2Task extends AbstractWorksapceUpdateT
 
     private final String LOWER_QUARTILE = "Lower Quartile"; //$NON-NLS-1$
 
-    private final String LOWER_QUARTILE_SQL = "SELECT <%=__COLUMN_NAMES__%> FROM ( SELECT <%=__COLUMN_NAMES__%>, ROW_NUMBER() OVER(ORDER BY <%=__COLUMN_NAMES__%>) AS NUMBER FROM <%=__TABLE_NAME__%> ) T1 WHERE ( NUMBER =  INTEGER((SELECT COUNT(*) FROM <%=__TABLE_NAME__%> ) /4) +1)"; //$NON-NLS-1$
+    private final String LOWER_QUARTILE_SQL = "SELECT <%=__COLUMN_NAMES__%> FROM ( SELECT <%=__COLUMN_NAMES__%>, ROW_NUMBER() OVER(ORDER BY <%=__COLUMN_NAMES__%>) AS NUMBER FROM <%=__TABLE_NAME__%> WHERE <%=__COLUMN_NAMES__%> IS NOT NULL <%=__AND_WHERE_CLAUSE__%> ) T1 WHERE (NUMBER =  INTEGER((SELECT COUNT(*) FROM <%=__TABLE_NAME__%> WHERE <%=__COLUMN_NAMES__%> IS NOT NULL <%=__AND_WHERE_CLAUSE__%>) /4) +1) "; //$NON-NLS-1$
 
     private final String UPPER_QUARTILE = "Upper Quartile"; //$NON-NLS-1$
 
-    private final String UPPER_QUARTILE_SQL = "SELECT <%=__COLUMN_NAMES__%> FROM ( SELECT <%=__COLUMN_NAMES__%>, ROW_NUMBER() OVER(ORDER BY <%=__COLUMN_NAMES__%>) AS NUMBER FROM <%=__TABLE_NAME__%> ) T1 WHERE ( NUMBER = INTEGER((SELECT COUNT(*) FROM <%=__TABLE_NAME__%> ) * 3/4) +1)"; //$NON-NLS-1$
+    private final String UPPER_QUARTILE_SQL = "SELECT <%=__COLUMN_NAMES__%> FROM ( SELECT <%=__COLUMN_NAMES__%>, ROW_NUMBER() OVER(ORDER BY <%=__COLUMN_NAMES__%>) AS NUMBER FROM <%=__TABLE_NAME__%> WHERE <%=__COLUMN_NAMES__%> IS NOT NULL <%=__AND_WHERE_CLAUSE__%> ) T1 WHERE ( NUMBER =  INTEGER((SELECT COUNT(*) FROM <%=__TABLE_NAME__%> WHERE <%=__COLUMN_NAMES__%> IS NOT NULL <%=__AND_WHERE_CLAUSE__%>)*3 /4) +1 ) "; //$NON-NLS-1$
 
     private final String DB2 = SupportDBUrlType.DB2DEFAULTURL.getLanguage();
 
