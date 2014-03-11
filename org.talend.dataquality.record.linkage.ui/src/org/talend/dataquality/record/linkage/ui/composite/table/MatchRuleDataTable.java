@@ -46,8 +46,6 @@ import org.talend.dataquality.record.linkage.ui.i18n.internal.DefaultMessagesImp
  */
 public class MatchRuleDataTable extends Composite {
 
-    private static final String MASTER = "MASTER"; //$NON-NLS-1$
-
     private List<String[]> viewData = new ArrayList<String[]>();
 
     private List<String[]> displayViewData;
