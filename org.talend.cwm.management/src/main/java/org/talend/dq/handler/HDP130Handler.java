@@ -38,7 +38,8 @@ public class HDP130Handler extends HortonWorksHandler {
     /*
      * (non-Javadoc)
      * 
-     * @see org.talend.dq.handler.HiveConnectionHandler#getDefaultHadoopParameters()
+     * If user didn't fill the property in connection wizard,set a default value for this properties. Requried
+     * properties:"mapred.job.map.memory.mb";"mapred.job.reduce.memory.mb"
      */
     @Override
     protected Map<String, String> getDefaultHadoopParameters() {

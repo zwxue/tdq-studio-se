@@ -21,34 +21,28 @@ import org.talend.core.model.metadata.IMetadataConnection;
  * created by xqliu on 2014-2-27 Detailled comment
  * 
  */
-public class ClouderaCDH5Handler extends HiveYarnHandler {
+public class CDH5Handler extends ClouderaHandler implements IHiveYarnHandler {
 
-    private static Logger log = Logger.getLogger(ClouderaCDH5Handler.class);
+    private static Logger log = Logger.getLogger(CDH5Handler.class);
 
     private final String MAP_MB = "mapreduce.map.memory.mb"; //$NON-NLS-1$
 
     private final String REDUCE_MB = "mapreduce.reduce.memory.mb"; //$NON-NLS-1$
 
-    private final String YARN_MB = "yarn.app.mapreduce.am.resource.mb"; //$NON-NLS-1$
-
-    private final String YARN_CLASSPATH = "yarn.application.classpath"; //$NON-NLS-1$
-
     private final String MAP_MB_VALUE = "1000"; //$NON-NLS-1$
 
     private final String REDUCE_MB_VALUE = "1000"; //$NON-NLS-1$
 
-    private final String YARN_MB_VALUE = "1000"; //$NON-NLS-1$
-
-    private final String YARN_CLASSPATH_VALUE = "$HADOOP_CONF_DIR,$HADOOP_COMMON_HOME/*,$HADOOP_COMMON_HOME/lib/*,$HADOOP_HDFS_HOME/*,$HADOOP_HDFS_HOME/lib/*,$HADOOP_MAPRED_HOME/*,$HADOOP_MAPRED_HOME/lib/*,$YARN_HOME/*,$YARN_HOME/lib/*,$HADOOP_YARN_HOME/*,$HADOOP_YARN_HOME/lib/*,$HADOOP_COMMON_HOME/share/hadoop/common/*,$HADOOP_COMMON_HOME/share/hadoop/common/lib/*,$HADOOP_HDFS_HOME/share/hadoop/hdfs/*,$HADOOP_HDFS_HOME/share/hadoop/hdfs/lib/*,$HADOOP_YARN_HOME/share/hadoop/yarn/*,$HADOOP_YARN_HOME/share/hadoop/yarn/lib/*"; //$NON-NLS-1$
-
-    public ClouderaCDH5Handler(IMetadataConnection metadataConnection) {
+    public CDH5Handler(IMetadataConnection metadataConnection) {
         super(metadataConnection);
     }
 
     /*
      * (non-Javadoc)
      * 
-     * @see org.talend.dq.handler.HiveConnectionHandler#getDefaultHadoopParameters()
+     * If user didn't fill the property in connection wizard,set a default value for this properties. Requried
+     * properties:"yarn.application.classpath";"yarn.app.mapreduce.am.resource.mb";"mapreduce.map.memory.mb";
+     * "mapreduce.reduce.memory.mb"
      */
     @Override
     protected Map<String, String> getDefaultHadoopParameters() {
@@ -67,7 +61,7 @@ public class ClouderaCDH5Handler extends HiveYarnHandler {
             map.put(YARN_CLASSPATH, YARN_CLASSPATH_VALUE);
         }
         log.info("YARN_CLASSPATH=" + map.get(YARN_CLASSPATH));
-        log.info("MAP_FM_NAME=" + map.get("mapreduce.framework.name"));
+        log.info("MAP_FM_NAME=" + map.get(MAP_FM_NAME));
         return map;
     }
 }

@@ -39,7 +39,7 @@ import org.talend.dq.analysis.connpool.TdqAnalysisConnectionPool;
 import org.talend.dq.analysis.memory.AnalysisThreadMemoryChangeNotifier;
 import org.talend.dq.dbms.DbmsLanguage;
 import org.talend.dq.dbms.DbmsLanguageFactory;
-import org.talend.dq.handler.HiveConnectionHandler;
+import org.talend.dq.factory.HiveConnectionHandlerFactory;
 import org.talend.dq.helper.AnalysisExecutorHelper;
 import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.UDIHelper;
@@ -380,7 +380,7 @@ public abstract class AnalysisExecutor implements IAnalysisExecutor {
         IMetadataConnection metadataConnection = ConvertionHelper.convert(dataprovider);
         if (EDatabaseTypeName.HIVE.getXmlName().equalsIgnoreCase(metadataConnection.getDbType())) {
             try {
-                java.sql.Connection createConnection = HiveConnectionHandler.createHandler(metadataConnection)
+                java.sql.Connection createConnection = HiveConnectionHandlerFactory.createHandler(metadataConnection)
                         .createHiveConnection();
                 rc.setOk(true);
                 rc.setObject(createConnection);

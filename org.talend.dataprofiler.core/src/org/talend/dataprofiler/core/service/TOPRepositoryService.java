@@ -83,7 +83,7 @@ import org.talend.dataquality.indicators.definition.IndicatorCategory;
 import org.talend.dataquality.rules.ParserRule;
 import org.talend.dq.CWMPlugin;
 import org.talend.dq.dqrule.DqRuleBuilder;
-import org.talend.dq.handler.HiveConnectionHandler;
+import org.talend.dq.factory.HiveConnectionHandlerFactory;
 import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.helper.RepositoryNodeHelper;
@@ -573,7 +573,7 @@ public class TOPRepositoryService implements ITDQRepositoryService {
         java.sql.Connection connection = null;
         if (metadataConnection != null && EDatabaseTypeName.HIVE.getXmlName().equalsIgnoreCase(metadataConnection.getDbType())) {
             try {
-                connection = HiveConnectionHandler.createHandler(metadataConnection).createHiveConnection();
+                connection = HiveConnectionHandlerFactory.createHandler(metadataConnection).createHiveConnection();
             } catch (ClassNotFoundException e) {
                 log.error(e);
             } catch (InstantiationException e) {

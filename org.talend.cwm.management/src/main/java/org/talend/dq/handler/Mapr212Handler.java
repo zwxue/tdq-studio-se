@@ -38,7 +38,8 @@ public class Mapr212Handler extends MaprHandler {
     /*
      * (non-Javadoc)
      * 
-     * @see org.talend.dq.handler.HiveConnectionHandler#getDefaultHadoopParameters()
+     * If user didn't fill the property in connection wizard,set a default value for this properties. Requried
+     * properties:"mapred.map.child.java.opts";"mapred.reduce.child.java.opts"
      */
     @Override
     protected Map<String, String> getDefaultHadoopParameters() {

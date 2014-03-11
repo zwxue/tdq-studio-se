@@ -20,7 +20,6 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.talend.core.database.conn.ConnParameterKeys;
-import org.talend.core.database.hbase.conn.version.EHBaseDistribution4Versions;
 import org.talend.core.hadoop.repository.HadoopRepositoryUtil;
 import org.talend.core.model.metadata.IMetadataConnection;
 import org.talend.core.utils.TalendQuoteUtils;
@@ -35,9 +34,9 @@ public class HiveConnectionHandler {
 
     private static Logger log = Logger.getLogger(HiveConnectionHandler.class);
 
-    protected static final String PROPERTY = "PROPERTY"; //$NON-NLS-1$
+    protected final String PROPERTY = "PROPERTY"; //$NON-NLS-1$
 
-    protected static final String VALUE = "VALUE"; //$NON-NLS-1$
+    protected final String VALUE = "VALUE"; //$NON-NLS-1$
 
     private IMetadataConnection metadataConnection;
 
@@ -147,24 +146,5 @@ public class HiveConnectionHandler {
      */
     protected Map<String, String> getDefaultHadoopParameters() {
         return new HashMap<String, String>();
-    }
-
-    public static HiveConnectionHandler createHandler(IMetadataConnection metadataConnection) {
-        HiveConnectionHandler handler = null;
-        String version = (String) metadataConnection.getParameter(ConnParameterKeys.CONN_PARA_KEY_HIVE_VERSION);
-        if (EHBaseDistribution4Versions.HDP_1_3.getVersionValue().equals(version)) {
-            handler = new HDP130Handler(metadataConnection);
-        } else if (EHBaseDistribution4Versions.HDP_2_0.getVersionValue().equals(version)
-                || EHBaseDistribution4Versions.CLOUDERA_CDH4_YARN.getVersionValue().equals(version)) {
-            handler = new HiveYarnHandler(metadataConnection);
-        } else if (EHBaseDistribution4Versions.MAPR_2_1_2.getVersionValue().equals(version)
-                || EHBaseDistribution4Versions.MAPR_3_0_1.getVersionValue().equals(version)) {
-            handler = new Mapr212Handler(metadataConnection);
-        } else if (EHBaseDistribution4Versions.CLOUDERA_CDH5.getVersionValue().equals(version)) {
-            handler = new ClouderaCDH5Handler(metadataConnection);
-        } else {
-            handler = new HiveConnectionHandler(metadataConnection);
-        }
-        return handler;
     }
 }
