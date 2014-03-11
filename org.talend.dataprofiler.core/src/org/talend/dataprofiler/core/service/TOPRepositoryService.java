@@ -83,7 +83,6 @@ import org.talend.dataquality.indicators.definition.IndicatorCategory;
 import org.talend.dataquality.rules.ParserRule;
 import org.talend.dq.CWMPlugin;
 import org.talend.dq.dqrule.DqRuleBuilder;
-import org.talend.dq.factory.HiveConnectionHandlerFactory;
 import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.helper.RepositoryNodeHelper;
@@ -93,6 +92,8 @@ import org.talend.dq.nodes.SourceFileRepNode;
 import org.talend.dq.nodes.SourceFileSubFolderNode;
 import org.talend.dq.writer.impl.DataProviderWriter;
 import org.talend.dq.writer.impl.ElementWriterFactory;
+import org.talend.metadata.managment.connection.manager.HiveConnectionManager;
+import org.talend.metadata.managment.hive.handler.HiveConnectionHandler;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.resource.EResourceConstant;
@@ -573,7 +574,9 @@ public class TOPRepositoryService implements ITDQRepositoryService {
         java.sql.Connection connection = null;
         if (metadataConnection != null && EDatabaseTypeName.HIVE.getXmlName().equalsIgnoreCase(metadataConnection.getDbType())) {
             try {
-                connection = HiveConnectionHandlerFactory.createHandler(metadataConnection).createHiveConnection();
+
+                HiveConnectionHandler hiveConnHandler = HiveConnectionManager.getInstance().createHandler(metadataConnection);
+                connection = hiveConnHandler.createHiveConnection();
             } catch (ClassNotFoundException e) {
                 log.error(e);
             } catch (InstantiationException e) {

@@ -23,7 +23,6 @@ import org.talend.cwm.management.api.SoftwareSystemManagerTest;
 import org.talend.cwm.management.i18n.MessagesTest;
 import org.talend.dq.CWMPluginTest;
 import org.talend.dq.analysis.AnalysisExecutorTest;
-import org.talend.dq.analysis.AnalysisRealExecutorForDB2Test;
 import org.talend.dq.analysis.ColumnAnalysisExecutorTest;
 import org.talend.dq.analysis.ColumnAnalysisSqlExecutorTest;
 import org.talend.dq.analysis.ConnectionAnalysisCreationTest;
@@ -49,12 +48,6 @@ import org.talend.dq.dbms.IngresDbmsLanguageTest;
 import org.talend.dq.dbms.MSSqlDbmsLanguageTest;
 import org.talend.dq.dbms.MySQLDbmsLanguageTest;
 import org.talend.dq.dbms.NetezzaDbmsLanguageTest;
-import org.talend.dq.factory.HiveConnectionHandlerFactoryTest;
-import org.talend.dq.handler.CDH4YarnHandlerTest;
-import org.talend.dq.handler.CDH5HandlerTest;
-import org.talend.dq.handler.HDP130HandlerTest;
-import org.talend.dq.handler.HDP200HandlerTest;
-import org.talend.dq.handler.Mapr212HandlerTest;
 import org.talend.dq.helper.AnalysisExecutorHelperTest;
 import org.talend.dq.helper.ContextHelperTest;
 import org.talend.dq.helper.DQDeleteHelperTest;
@@ -70,7 +63,6 @@ import org.talend.dq.indicators.AbstractSchemaEvaluatorTest;
 import org.talend.dq.indicators.ColumnSetIndicatorEvaluatorTest;
 import org.talend.dq.indicators.DelimitedFileIndicatorEvaluatorTest;
 import org.talend.dq.indicators.SqlIndicatorHandlerTest;
-import org.talend.dq.indicators.definitions.LowerUpperQuantileForDB2Test;
 import org.talend.dq.nodes.AnalysisFolderRepNodeTest;
 import org.talend.dq.nodes.ReportSubFolderRepNodeTest;
 import org.talend.dq.sql.converters.CwmZExpressionTest;
@@ -96,9 +88,7 @@ import org.talend.dq.writer.AElementPersistanceTest;
         CwmZExpressionTest.class, AElementPersistanceRealTest.class, AElementPersistanceTest.class, CWMPluginTest.class,
         MessagesTest.class, SoftwareSystemManagerTest.class, DependenciesHandlerTest.class, StoreOnDiskHandlerTest.class,
         MdmStatementTest.class, ConnectionUtilsTest.class, AnalysisFolderRepNodeTest.class, ColumnAnalysisSqlExecutorTest.class,
-        EObjectHelperTest.class, HiveConnectionHandlerFactoryTest.class, CDH4YarnHandlerTest.class, CDH5HandlerTest.class,
-        HDP130HandlerTest.class, HDP200HandlerTest.class, Mapr212HandlerTest.class, AnalysisRealExecutorForDB2Test.class,
-        LowerUpperQuantileForDB2Test.class })
+        EObjectHelperTest.class, AnalysisRealExecutorForDB2Test.class, LowerUpperQuantileForDB2Test.class })
 public class AllCwmManagementTests {
 
 }
