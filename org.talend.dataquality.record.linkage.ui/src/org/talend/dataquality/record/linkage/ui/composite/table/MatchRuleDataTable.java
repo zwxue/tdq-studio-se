@@ -46,8 +46,6 @@ import org.talend.dataquality.record.linkage.ui.i18n.internal.DefaultMessagesImp
  */
 public class MatchRuleDataTable extends Composite {
 
-    private static final String MASTER = "MASTER"; //$NON-NLS-1$
-
     private List<String[]> viewData = new ArrayList<String[]>();
 
     private List<String[]> displayViewData;
@@ -132,16 +130,8 @@ public class MatchRuleDataTable extends Composite {
         for (String title : viewColumn) {
             TableViewerColumn column = new TableViewerColumn(dataViewer, SWT.NONE);
             column.getColumn().setText(title);
-
-            if (title.equals(MASTER)) {
-
-                column.getColumn().setWidth(0);
-                column.getColumn().setResizable(false);
-            } else {
-                column.getColumn().setWidth(150);
-                column.getColumn().setMoveable(true);
-            }
-
+            column.getColumn().setWidth(150);
+            column.getColumn().setMoveable(true);
         }
 
         dataViewer.setContentProvider(new ArrayContentProvider());
