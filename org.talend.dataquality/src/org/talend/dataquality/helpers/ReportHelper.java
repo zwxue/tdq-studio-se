@@ -588,7 +588,8 @@ public final class ReportHelper {
     public static String getOutputType(Report report) {
         TaggedValue taggedValue = TaggedValueHelper.getTaggedValue(TaggedValueHelper.OUTPUT_TYPE_TAG, report.getTaggedValue());
         if (taggedValue == null || taggedValue.getValue() == null) {
-            return "pdf";
+            // this default output type should be same with JasperReportBuilder.OUTPUT_FORMAT.pdf
+            return "pdf";//$NON-NLS-1$ 
         }
         return taggedValue.getValue();
     }
