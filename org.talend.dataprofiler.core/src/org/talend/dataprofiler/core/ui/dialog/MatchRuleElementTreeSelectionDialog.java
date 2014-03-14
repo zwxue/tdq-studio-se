@@ -54,6 +54,7 @@ import org.eclipse.ui.dialogs.ISelectionStatusValidator;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.commons.utils.platform.PluginChecker;
 import org.talend.dataprofiler.core.CorePlugin;
+import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.dialog.provider.BlockingKeysTableLabelProvider;
 import org.talend.dataprofiler.core.ui.dialog.provider.MatchRulesTableLabelProvider;
@@ -405,12 +406,17 @@ public class MatchRuleElementTreeSelectionDialog extends ElementTreeSelectionDia
 
     private void matchExistingColumnForBlockingKeys(MatchRuleDefinition matchRuleDefinition) {
         for (BlockKeyDefinition blockingKey : matchRuleDefinition.getBlockKeys()) {
+            boolean found = false;
             for (String inputColumnName : getInputColumnNames()) {
                 if (inputColumnName.equalsIgnoreCase(blockingKey.getColumn())
                         || inputColumnName.equalsIgnoreCase(blockingKey.getName())) {
                     blockingKey.setColumn(inputColumnName);
+                    found = true;
                     break;
                 }
+            }
+            if (!found) {
+                blockingKey.setColumn(PluginConstant.EMPTY_STRING);
             }
         }
     }
@@ -442,12 +448,17 @@ public class MatchRuleElementTreeSelectionDialog extends ElementTreeSelectionDia
     private void matchExistingColumnForMatchRules(MatchRuleDefinition matchRuleDefinition) {
         for (MatchRule rule : matchRuleDefinition.getMatchRules()) {
             for (MatchKeyDefinition matchKey : rule.getMatchKeys()) {
+                boolean found = false;
                 for (String inputColumnName : getInputColumnNames()) {
                     if (inputColumnName.equalsIgnoreCase(matchKey.getColumn())
                             || inputColumnName.equalsIgnoreCase(matchKey.getName())) {
                         matchKey.setColumn(inputColumnName);
+                        found = true;
                         break;
                     }
+                }
+                if (!found) {
+                    matchKey.setColumn(PluginConstant.EMPTY_STRING);
                 }
             }
         }
