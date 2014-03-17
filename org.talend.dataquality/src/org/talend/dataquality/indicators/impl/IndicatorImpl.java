@@ -921,16 +921,17 @@ public class IndicatorImpl extends ModelElementImpl implements Indicator {
      */
     protected boolean checkResults(List<Object[]> objects, final int expectedSize) {
         if (objects == null || objects.isEmpty()) {
-            log.error("Unexpected result: Result set is null or empty for the query.");
+            log.error("<" + getName() + "> Unexpected result: Result set is null or empty for the query.");
             return false;
         }
         for (Object[] array : objects) {
             if (array == null || expectedSize != array.length) {
-                log.error("Unexpected result: " + array + ". Expected " + expectedSize + " columns as a result of the query.");
+                log.error("<" + getName() + "> Unexpected result: " + array + ". Expected " + expectedSize
+                        + " columns as a result of the query.");
                 return false;
             }
             if (log.isDebugEnabled()) {
-                log.debug("Result of query: " + ArrayUtils.toString(array));
+                log.debug("<" + getName() + "> Result of query: " + ArrayUtils.toString(array));
             }
             // for (int i = 0; i < array.length; i++) {
             // Object object = array[i];

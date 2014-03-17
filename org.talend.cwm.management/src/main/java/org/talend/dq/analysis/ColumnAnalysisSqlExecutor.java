@@ -1271,7 +1271,8 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
     protected boolean executeQuery(Indicator indicator, Connection connection, String queryStmt) throws SQLException {
         String cat = getCatalogOrSchemaName(indicator.getAnalyzedElement());
         if (log.isInfoEnabled()) {
-            log.info(Messages.getString("ColumnAnalysisSqlExecutor.COMPUTINGINDICATOR", indicator.getName()));//$NON-NLS-1$  
+            log.info(Messages.getString("ColumnAnalysisSqlExecutor.COMPUTINGINDICATOR", indicator.getName()) //$NON-NLS-1$ 
+                    + "\t" + Messages.getString("ColumnAnalysisSqlExecutor.EXECUTINGQUERY", queryStmt));//$NON-NLS-1$ //$NON-NLS-2$ 
         }
         // give result to indicator so that it handles the results
         boolean ret = false;
@@ -1308,9 +1309,6 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
             // create query statement
             Statement statement = connection.createStatement();
             // statement.setFetchSize(fetchSize);
-            if (log.isInfoEnabled()) {
-                log.info(Messages.getString("ColumnAnalysisSqlExecutor.EXECUTINGQUERY", queryStmt));//$NON-NLS-1$  
-            }
 
             // MOD xqliu 2009-02-09 bug 6237
             if (continueRun()) {
