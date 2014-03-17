@@ -40,6 +40,7 @@ import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.cwm.compare.exception.ReloadCompareException;
 import org.talend.cwm.compare.factory.ComparisonLevelFactory;
 import org.talend.cwm.db.connection.ConnectionUtils;
+import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.exception.ExceptionFactory;
@@ -62,6 +63,7 @@ import org.talend.dq.nodes.AnalysisRepNode;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.foundation.softwaredeployment.DataManager;
+import orgomg.cwm.objectmodel.core.TaggedValue;
 
 /**
  * Run Analysis Action.
@@ -150,6 +152,17 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
             if (item == null || !isConnectedAvailable()) {
                 return;
             }
+
+            if (log.isInfoEnabled()) {
+                DataManager datamanager = item.getAnalysis().getContext().getConnection();
+                TaggedValue productName = TaggedValueHelper.getTaggedValue(TaggedValueHelper.DB_PRODUCT_NAME,
+                        datamanager.getTaggedValue());
+                TaggedValue productVersion = TaggedValueHelper.getTaggedValue(TaggedValueHelper.DB_PRODUCT_VERSION,
+                        datamanager.getTaggedValue());
+                log.info("DB Product Name: " + productName.getValue()); //$NON-NLS-1$
+                log.info("DB Product Version: " + productVersion.getValue()); //$NON-NLS-1$
+            }
+
             AnalysisType analysisType = item.getAnalysis().getParameters().getAnalysisType();
             if (AnalysisType.COLUMNS_COMPARISON.equals(analysisType)) {
                 // If the analysis type is column comparison, ask user to continue to run or not.
