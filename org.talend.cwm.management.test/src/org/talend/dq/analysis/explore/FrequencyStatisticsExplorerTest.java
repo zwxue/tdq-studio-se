@@ -12,19 +12,22 @@
 // ============================================================================
 package org.talend.dq.analysis.explore;
 
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
-import static org.powermock.api.support.membermodification.MemberMatcher.*;
-import static org.powermock.api.support.membermodification.MemberModifier.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+import static org.powermock.api.support.membermodification.MemberMatcher.method;
+import static org.powermock.api.support.membermodification.MemberModifier.stub;
 
 import java.sql.Types;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
+import org.powermock.modules.junit4.rule.PowerMockRule;
 import org.talend.cwm.management.i18n.Messages;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.relational.TdExpression;
@@ -52,9 +55,11 @@ import orgomg.cwm.foundation.softwaredeployment.DataManager;
 /**
  * test for class FrequencyStatisticsExplorer.
  */
-@RunWith(PowerMockRunner.class)
 @PrepareForTest({ DbmsLanguageFactory.class, Messages.class, IndicatorEnum.class })
 public class FrequencyStatisticsExplorerTest {
+
+    @Rule
+    public PowerMockRule powerMockRule = new PowerMockRule();
 
     FrequencyStatisticsExplorer freqExp;
 

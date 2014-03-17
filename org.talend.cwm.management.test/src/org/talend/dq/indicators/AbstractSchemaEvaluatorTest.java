@@ -12,19 +12,22 @@
 // ============================================================================
 package org.talend.dq.indicators;
 
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
-import static org.powermock.api.support.membermodification.MemberMatcher.*;
-import static org.powermock.api.support.membermodification.MemberModifier.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+import static org.powermock.api.support.membermodification.MemberMatcher.method;
+import static org.powermock.api.support.membermodification.MemberModifier.stub;
 
 import java.util.HashSet;
 import java.util.Set;
 
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
+import org.powermock.modules.junit4.rule.PowerMockRule;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.database.dburl.SupportDBUrlType;
 import org.talend.cwm.helper.ConnectionHelper;
@@ -39,10 +42,12 @@ import orgomg.cwm.resource.relational.Schema;
  * created by qiongli on 2013-11-20 Detailled comment
  * 
  */
-@RunWith(PowerMockRunner.class)
 @PrepareForTest({ DbmsLanguageFactory.class, ConnectionHelper.class, Catalog.class, SchemaIndicator.class, Connection.class,
         Evaluator.class, Schema.class })
 public class AbstractSchemaEvaluatorTest {
+
+    @Rule
+    public PowerMockRule powerMockRule = new PowerMockRule();
 
     private String dbVersion = "502"; //$NON-NLS-1$
 

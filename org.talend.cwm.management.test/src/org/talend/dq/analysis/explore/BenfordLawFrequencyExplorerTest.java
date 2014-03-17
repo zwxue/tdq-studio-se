@@ -12,19 +12,20 @@
 // ============================================================================
 package org.talend.dq.analysis.explore;
 
-import static org.mockito.Matchers.*;
-import static org.mockito.Mockito.*;
-import static org.powermock.api.support.membermodification.MemberMatcher.*;
-import static org.powermock.api.support.membermodification.MemberModifier.*;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+import static org.powermock.api.support.membermodification.MemberMatcher.method;
+import static org.powermock.api.support.membermodification.MemberModifier.stub;
 import junit.framework.Assert;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
+import org.powermock.modules.junit4.rule.PowerMockRule;
 import org.talend.cwm.management.i18n.Messages;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.indicators.BenfordLawFrequencyIndicator;
@@ -37,9 +38,11 @@ import orgomg.cwm.foundation.softwaredeployment.DataManager;
 /**
  * DOC yyin class global comment. Detailled comment
  */
-@RunWith(PowerMockRunner.class)
 @PrepareForTest({ DbmsLanguageFactory.class, Messages.class, IndicatorEnum.class, DataExplorer.class })
 public class BenfordLawFrequencyExplorerTest {
+
+    @Rule
+    public PowerMockRule powerMockRule = new PowerMockRule();
 
     BenfordLawFrequencyExplorer benExp;
 

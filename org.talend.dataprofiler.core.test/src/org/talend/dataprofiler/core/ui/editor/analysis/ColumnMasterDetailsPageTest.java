@@ -14,25 +14,29 @@ package org.talend.dataprofiler.core.ui.editor.analysis;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
+import org.powermock.modules.junit4.rule.PowerMockRule;
 import org.talend.dataprofiler.core.ui.pref.EditorPreferencePage;
 import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
 
 /**
- * DOC yyin  class global comment. Detailled comment
+ * DOC yyin class global comment. Detailled comment
  */
-@RunWith(PowerMockRunner.class)
 @PrepareForTest({ EditorPreferencePage.class })
 public class ColumnMasterDetailsPageTest {
+
+    @Rule
+    public PowerMockRule powerMockRule = new PowerMockRule();
 
     private ColumnMasterDetailsPage detail;
 
     private AnaResourceFileHelper helper_mock;
+
     /**
      * DOC yyin Comment method "setUp".
+     * 
      * @throws java.lang.Exception
      */
     @Before
@@ -61,12 +65,11 @@ public class ColumnMasterDetailsPageTest {
         // PowerMockito.mockStatic(AnaResourceFileHelper.class);
         // when(AnaResourceFileHelper.getInstance()).thenReturn(helper_mock);
 
-
         // 2, can not spy, because the related method is called when using new XXX
         // dparent = PowerMockito.spy(detail);
         // PowerMockito.doNothing().when(dparent, "initialize", fe);
-        
-// detail = new ColumnMasterDetailsPage(fe, "1", "file");
+
+        // detail = new ColumnMasterDetailsPage(fe, "1", "file");
 
         // stub(EditorPreferencePage.getCurrentFolding()).toReturn(1);
 
@@ -74,6 +77,7 @@ public class ColumnMasterDetailsPageTest {
 
     /**
      * DOC yyin Comment method "tearDown".
+     * 
      * @throws java.lang.Exception
      */
     @After
@@ -81,7 +85,8 @@ public class ColumnMasterDetailsPageTest {
     }
 
     /**
-     * Test method for {@link org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisMetadataPage#getConnCombo()}.
+     * Test method for
+     * {@link org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisMetadataPage#getConnCombo()}.
      */
     @Test
     public void testGetConnCombo() {

@@ -12,7 +12,10 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.editor.analysis.drilldown;
 
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,10 +24,10 @@ import junit.framework.Assert;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
+import org.powermock.modules.junit4.rule.PowerMockRule;
 import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.xml.TdXmlElementType;
 import org.talend.dataprofiler.core.ui.editor.preview.model.MenuItemEntity;
@@ -33,11 +36,13 @@ import org.talend.dataquality.indicators.Indicator;
 import org.talend.dq.indicators.preview.table.ChartDataEntity;
 
 /**
- * DOC yyin  class global comment. Detailled comment
+ * DOC yyin class global comment. Detailled comment
  */
-@RunWith(PowerMockRunner.class)
 @PrepareForTest({ ConnectionUtils.class })
 public class DrillDownEditorInputTest {
+
+    @Rule
+    public PowerMockRule powerMockRule = new PowerMockRule();
 
     private DrillDownEditorInput ddInput;
 
@@ -45,6 +50,7 @@ public class DrillDownEditorInputTest {
 
     /**
      * DOC yyin Comment method "setUp".
+     * 
      * @throws java.lang.Exception
      */
     @Before
@@ -63,6 +69,7 @@ public class DrillDownEditorInputTest {
 
     /**
      * DOC yyin Comment method "tearDown".
+     * 
      * @throws java.lang.Exception
      */
     @After
