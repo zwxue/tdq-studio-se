@@ -333,12 +333,12 @@ public class CombinedRecordMatcherTest {
         for (double d : currentAttributeMatchingWeights) {
             Assert.assertEquals(1.0, d);
         }
-        Assert.assertEquals("1.0|1.0", recordMatcher.getLabeledAttributeMatchWeights()); //$NON-NLS-1$
+        Assert.assertEquals("1.0 | 1.0", recordMatcher.getLabeledAttributeMatchWeights()); //$NON-NLS-1$
 
         attMatcher1.setAttributeName("EMAIL"); //$NON-NLS-1$
         attMatcher2.setAttributeName("NAME"); //$NON-NLS-1$
         recordMatcher.setDisplayLabels(true);
-        Assert.assertEquals("EMAIL: 1.0|NAME: 1.0", recordMatcher.getLabeledAttributeMatchWeights()); //$NON-NLS-1$
+        Assert.assertEquals("EMAIL: 1.0 | NAME: 1.0", recordMatcher.getLabeledAttributeMatchWeights()); //$NON-NLS-1$
 
         CombinedRecordMatcher combMatcher = RecordMatcherFactory.createCombinedRecordMatcher();
         IRecordMatcher recordMatcher2 = RecordMatcherFactory.createMatcher("Simple VSR Matcher"); //$NON-NLS-1$
@@ -349,9 +349,9 @@ public class CombinedRecordMatcherTest {
 
         Assert.assertEquals(1.0d, combMatcher.getMatchingWeight(record1, record1));
         combMatcher.setDisplayLabels(Boolean.FALSE);
-        Assert.assertEquals("1.0|1.0", combMatcher.getLabeledAttributeMatchWeights()); //$NON-NLS-1$
+        Assert.assertEquals("1.0 | 1.0", combMatcher.getLabeledAttributeMatchWeights()); //$NON-NLS-1$
         combMatcher.setDisplayLabels(Boolean.TRUE);
-        Assert.assertEquals("EMAIL: 1.0|NAME: 1.0", combMatcher.getLabeledAttributeMatchWeights()); //$NON-NLS-1$
+        Assert.assertEquals("EMAIL: 1.0 | NAME: 1.0", combMatcher.getLabeledAttributeMatchWeights()); //$NON-NLS-1$
 
     }
 }
