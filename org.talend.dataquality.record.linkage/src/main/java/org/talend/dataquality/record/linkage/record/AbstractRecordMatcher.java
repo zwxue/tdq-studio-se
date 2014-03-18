@@ -294,12 +294,12 @@ abstract class AbstractRecordMatcher implements IRecordMatcher {
             if (attributeMatcher instanceof DummyMatcher) {
                 continue; // Don't take dummy matcher into account.
             }
+            if (buffer.length() > 0) {
+                buffer.append(separator);
+            }
             if (displayLabels) {
                 String attributeName = attributeMatcher.getAttributeName();
                 if (attributeName != null) {
-                    if (buffer.length() > 0) {
-                        buffer.append(separator);
-                    }
                     buffer.append(attributeName).append(": "); //$NON-NLS-1$
                 }
             }
