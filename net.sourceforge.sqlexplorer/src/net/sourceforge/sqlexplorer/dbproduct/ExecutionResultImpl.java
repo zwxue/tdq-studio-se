@@ -113,6 +113,11 @@ public final class ExecutionResultImpl implements ExecutionResults {
             }
 
             // MOD qiongli TDQ-5907, HivePreparedStatement doesn't support method 'getMoreResults()'.
+            // MOD xqliu 2014-03-18
+            // if the the connectoin type is hive, when call stmt.getMoreResults() will throw exception, so need to
+            // judge the connection type first, if it is hive connection just call "updateCountState()", else call
+            // stmt.getMoreResults() to decide to execute "currentResultSet = stmt.getResultSet()" or call
+            // "updateCountState()"
             if (stmt.getClass().getName().contains(hiveStatementClassName)) {
                 updateCountState();
             } else if (stmt.getMoreResults()) {
@@ -120,6 +125,7 @@ public final class ExecutionResultImpl implements ExecutionResults {
             } else {
                 updateCountState();
             }
+            // ~ xqliu 2014-03-18
         }
 
         // Got one? Then exit
