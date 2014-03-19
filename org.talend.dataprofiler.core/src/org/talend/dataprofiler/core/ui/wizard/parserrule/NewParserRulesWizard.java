@@ -46,8 +46,6 @@ public class NewParserRulesWizard extends AbstractWizard {
 
     private NewParserRulesWizardPage1 mPage;
 
-    private NewParserRulesWizardPage2 mPage2;
-
     private DQParserRulesParameter parameter;
 
     private TdExpression expression;
@@ -65,14 +63,7 @@ public class NewParserRulesWizard extends AbstractWizard {
         mPage.setDescription(DefaultMessagesImpl.getString("NewParserRulesWizard.defineProp")); //$NON-NLS-1$
         mPage.setPageComplete(false);
 
-        mPage2 = new NewParserRulesWizardPage2();
-        mPage2.setTitle(s + PluginConstant.SPACE_STRING + DefaultMessagesImpl.getString("NewParserRulesWizard.createPage2_2")); //$NON-NLS-1$
-        mPage2.setDescription(DefaultMessagesImpl.getString("NewParserRulesWizard.defineRules")); //$NON-NLS-1$
-
         addPage(mPage);
-        if (!isComeFromTestEditor()) {
-            addPage(mPage2);
-        }
     }
 
     /**
@@ -145,12 +136,7 @@ public class NewParserRulesWizard extends AbstractWizard {
         if (isComeFromTestEditor()) {
             return true;
         }
-        if (mPage2 != null) {
-            if (getParameter().getParserRuleName() != null && !"".equals(getParameter().getParserRuleName())) { //$NON-NLS-1$
-                return mPage2.isPageComplete();
-            }
-        }
-        return false;
+        return mPage.isPageComplete();
     }
 
     @Override
