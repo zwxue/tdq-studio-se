@@ -37,6 +37,8 @@ import org.talend.commons.exception.BusinessException;
 import org.talend.commons.exception.LoginException;
 import org.talend.commons.exception.PersistenceException;
 import org.talend.core.model.metadata.builder.connection.Connection;
+import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
+import org.talend.core.model.metadata.builder.connection.DelimitedFileConnection;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.cwm.compare.exception.ReloadCompareException;
 import org.talend.cwm.compare.factory.ComparisonLevelFactory;
@@ -157,12 +159,16 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
 
             if (log.isInfoEnabled()) {
                 DataManager datamanager = item.getAnalysis().getContext().getConnection();
-                TaggedValue productName = TaggedValueHelper.getTaggedValue(TaggedValueHelper.DB_PRODUCT_NAME,
-                        datamanager.getTaggedValue());
-                TaggedValue productVersion = TaggedValueHelper.getTaggedValue(TaggedValueHelper.DB_PRODUCT_VERSION,
-                        datamanager.getTaggedValue());
-                log.info("DB Product Name: " + productName.getValue()); //$NON-NLS-1$
-                log.info("DB Product Version: " + productVersion.getValue()); //$NON-NLS-1$
+                if (datamanager instanceof DatabaseConnection) {
+                    TaggedValue productName = TaggedValueHelper.getTaggedValue(TaggedValueHelper.DB_PRODUCT_NAME,
+                            datamanager.getTaggedValue());
+                    TaggedValue productVersion = TaggedValueHelper.getTaggedValue(TaggedValueHelper.DB_PRODUCT_VERSION,
+                            datamanager.getTaggedValue());
+                    log.info("DB Product Name: " + productName.getValue()); //$NON-NLS-1$
+                    log.info("DB Product Version: " + productVersion.getValue()); //$NON-NLS-1$
+                } else if (datamanager instanceof DelimitedFileConnection) {
+                    log.info("File Connection path: " + ((DelimitedFileConnection) datamanager).getFilePath()); //$NON-NLS-1$
+                }
             }
 
             AnalysisType analysisType = item.getAnalysis().getParameters().getAnalysisType();
