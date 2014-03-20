@@ -46,7 +46,6 @@ public class MatchRuleDataChart extends Composite {
 
     private Map<Object, Long> groupSize2GroupFrequency = null;
 
-    
     /**
      * DOC yyi DataChart constructor comment.
      * 
@@ -189,4 +188,13 @@ public class MatchRuleDataChart extends Composite {
         return this.groupSize2GroupFrequency;
     }
 
+    /**
+     * 
+     * create a chart with empty dataset,so as to clear the blocking key chart.
+     */
+    public void clearChart() {
+        JFreeChart jfreechart = createChart(new DefaultCategoryDataset());
+        jfreeChartComp.setChart(jfreechart);
+        jfreeChartComp.forceRedraw();
+    }
 }

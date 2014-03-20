@@ -771,4 +771,13 @@ public class MatchingKeySection extends AbstractMatchKeyWithChartTableSection {
         return false;
     }
 
+    /**
+     * 
+     * clear match rule chart.
+     */
+    @Override
+    public void clearChart() {
+        matchRuleChartComp.clearChart();
+    }
+
 }
