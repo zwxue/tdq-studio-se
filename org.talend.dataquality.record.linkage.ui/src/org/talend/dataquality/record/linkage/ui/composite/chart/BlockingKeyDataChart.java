@@ -139,4 +139,14 @@ public class BlockingKeyDataChart extends Composite {
         jfreeChartComp = new ChartComposite(innerComp, SWT.NONE, computeChart(), true);
     }
 
+    /**
+     * 
+     * create a chart with empty dataset,so as to clear the blocking key chart.
+     */
+    public void clearChart() {
+        JFreeChart jfreechart = createBarChart("Number of rows", new HistogramDataset(), false); //$NON-NLS-1$
+        jfreeChartComp.setChart(jfreechart);
+        jfreeChartComp.forceRedraw();
+    }
+
 }

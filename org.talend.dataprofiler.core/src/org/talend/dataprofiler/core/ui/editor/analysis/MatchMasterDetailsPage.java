@@ -709,6 +709,9 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
                     analyzeDataLabel.setText(analyzeDataDefaultInfo);
                 }
                 refreshColumnAndData();
+                // TDQ-8289 clear blocking key chart and match key chart when dataset is changed.
+                matchingKeySection.clearChart();
+                blockingKeySection.clearChart();
             }
         }
     }

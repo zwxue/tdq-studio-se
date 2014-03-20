@@ -441,4 +441,13 @@ public class BlockingKeySection extends AbstractMatchAnaysisTableSection {
         return false;
     }
 
+    /**
+     * 
+     * clear blocking key chart.
+     */
+    @Override
+    public void clearChart() {
+        blockingKeyDataChart.clearChart();
+    }
+
 }

@@ -483,4 +483,8 @@ public abstract class AbstractMatchAnaysisTableSection extends AbstractSectionCo
             analysis = (Analysis) EObjectHelper.resolveObject(analysis);
         }
     }
+
+    public void clearChart() {
+        // do nothing at here.
+    }
 }
