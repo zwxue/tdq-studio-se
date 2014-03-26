@@ -17,23 +17,29 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.impl.EFactoryImpl;
 import org.eclipse.emf.ecore.plugin.EcorePlugin;
-import org.talend.dataquality.indicators.*;
+import org.talend.dataquality.helpers.IndicatorEnum;
 import org.talend.dataquality.indicators.AverageLengthIndicator;
 import org.talend.dataquality.indicators.AvgLengthWithBlankIndicator;
 import org.talend.dataquality.indicators.AvgLengthWithBlankNullIndicator;
 import org.talend.dataquality.indicators.AvgLengthWithNullIndicator;
+import org.talend.dataquality.indicators.BenfordLawFrequencyIndicator;
+import org.talend.dataquality.indicators.BinFrequencyIndicator;
+import org.talend.dataquality.indicators.BinLowFrequencyIndicator;
 import org.talend.dataquality.indicators.BlankCountIndicator;
 import org.talend.dataquality.indicators.BoxIndicator;
 import org.talend.dataquality.indicators.CompositeIndicator;
 import org.talend.dataquality.indicators.CountsIndicator;
 import org.talend.dataquality.indicators.DataminingType;
+import org.talend.dataquality.indicators.DateFrequencyIndicator;
 import org.talend.dataquality.indicators.DateGrain;
+import org.talend.dataquality.indicators.DateLowFrequencyIndicator;
 import org.talend.dataquality.indicators.DateParameters;
 import org.talend.dataquality.indicators.DatePatternFreqIndicator;
 import org.talend.dataquality.indicators.DefValueCountIndicator;
 import org.talend.dataquality.indicators.DistinctCountIndicator;
 import org.talend.dataquality.indicators.DuplicateCountIndicator;
 import org.talend.dataquality.indicators.EnumStatistics;
+import org.talend.dataquality.indicators.FormatFreqPieIndicator;
 import org.talend.dataquality.indicators.FrequencyIndicator;
 import org.talend.dataquality.indicators.IQRIndicator;
 import org.talend.dataquality.indicators.Indicator;
@@ -41,6 +47,7 @@ import org.talend.dataquality.indicators.IndicatorParameters;
 import org.talend.dataquality.indicators.IndicatorValueType;
 import org.talend.dataquality.indicators.IndicatorsFactory;
 import org.talend.dataquality.indicators.IndicatorsPackage;
+import org.talend.dataquality.indicators.InvalidRegCodeCountIndicator;
 import org.talend.dataquality.indicators.LengthIndicator;
 import org.talend.dataquality.indicators.LowFrequencyIndicator;
 import org.talend.dataquality.indicators.LowerQuartileIndicator;
@@ -58,9 +65,15 @@ import org.talend.dataquality.indicators.MinLengthWithBlankNullIndicator;
 import org.talend.dataquality.indicators.MinLengthWithNullIndicator;
 import org.talend.dataquality.indicators.MinValueIndicator;
 import org.talend.dataquality.indicators.ModeIndicator;
+import org.talend.dataquality.indicators.MonthFrequencyIndicator;
+import org.talend.dataquality.indicators.MonthLowFrequencyIndicator;
 import org.talend.dataquality.indicators.NullCountIndicator;
 import org.talend.dataquality.indicators.PatternFreqIndicator;
 import org.talend.dataquality.indicators.PatternLowFreqIndicator;
+import org.talend.dataquality.indicators.PhoneNumbStatisticsIndicator;
+import org.talend.dataquality.indicators.PossiblePhoneCountIndicator;
+import org.talend.dataquality.indicators.QuarterFrequencyIndicator;
+import org.talend.dataquality.indicators.QuarterLowFrequencyIndicator;
 import org.talend.dataquality.indicators.RangeIndicator;
 import org.talend.dataquality.indicators.RegexpMatchingIndicator;
 import org.talend.dataquality.indicators.RowCountIndicator;
@@ -72,7 +85,16 @@ import org.talend.dataquality.indicators.TextIndicator;
 import org.talend.dataquality.indicators.TextParameters;
 import org.talend.dataquality.indicators.UniqueCountIndicator;
 import org.talend.dataquality.indicators.UpperQuartileIndicator;
+import org.talend.dataquality.indicators.ValidPhoneCountIndicator;
+import org.talend.dataquality.indicators.ValidRegCodeCountIndicator;
 import org.talend.dataquality.indicators.ValueIndicator;
+import org.talend.dataquality.indicators.WeekFrequencyIndicator;
+import org.talend.dataquality.indicators.WeekLowFrequencyIndicator;
+import org.talend.dataquality.indicators.WellFormE164PhoneCountIndicator;
+import org.talend.dataquality.indicators.WellFormIntePhoneCountIndicator;
+import org.talend.dataquality.indicators.WellFormNationalPhoneCountIndicator;
+import org.talend.dataquality.indicators.YearFrequencyIndicator;
+import org.talend.dataquality.indicators.YearLowFrequencyIndicator;
 
 /**
  * <!-- begin-user-doc -->
@@ -265,6 +287,48 @@ public class IndicatorsFactoryImpl extends EFactoryImpl implements IndicatorsFac
         return indicator;
     }
 
+    /**
+     * @param indicatorName
+     * @return
+     * @generated NOT
+     */
+    public Indicator createIndicator(String indicatorName) {
+        if (indicatorName == null) {
+            return new IndicatorImpl();
+        }
+        // else
+        // add space in names
+        StringBuffer buf = new StringBuffer();
+        // indicatorName=indicatorName.substring(5);
+        for (int i = 0; i < indicatorName.length(); i++) {
+            char c = indicatorName.charAt(i);
+            if (Character.isUpperCase(c) && i != 0) {
+                buf.append(" ");
+            }
+            buf.append(c);
+        }
+        String enumValue = indicatorName + "IndicatorEnum";
+        // TODO use log4j
+        System.out.println("buf.toString() " + enumValue);
+        // if ("Regexp Matching Indicator".equals(enumValue)) {
+        // enumValue = IndicatorEnum.RegexpMatchingIndicatorEnum.name();
+        // }
+
+        IndicatorEnum indEnum = IndicatorEnum.valueOf(enumValue);
+        // FIXME handle case when indEnum is null
+        if (indEnum == null) {
+            // then test regex or other non standard types of indicators
+            // TODO
+            if ("RegexpMatchingIndicatorEnum".equals(enumValue)) {
+                indEnum = IndicatorEnum.RegexpMatchingIndicatorEnum;
+            }
+        }
+        Indicator indicator = (Indicator) this.create(indEnum
+                .getIndicatorType());
+        // indicator.setName(indicatorName);
+        return indicator;
+    }
+    
     /**
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->

@@ -35,6 +35,13 @@ public interface IndicatorsFactory extends EFactory {
     Indicator createIndicator();
 
     /**
+     * @param indicatorName
+     * @return
+     * @generated NOT
+     */
+    Indicator createIndicator(String indicatorName);
+
+    /**
      * Returns a new object of class '<em>Row Count Indicator</em>'.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->

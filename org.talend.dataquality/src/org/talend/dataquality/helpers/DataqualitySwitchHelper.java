@@ -12,6 +12,7 @@
 // ============================================================================
 package org.talend.dataquality.helpers;
 
+import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.relational.TdExpression;
 import org.talend.cwm.relational.util.RelationalSwitch;
 import org.talend.dataquality.analysis.Analysis;
@@ -107,6 +108,15 @@ public final class DataqualitySwitchHelper {
 
         @Override
         public TdExpression caseTdExpression(TdExpression object) {
+            return object;
+        }
+
+    };
+
+    public static final RelationalSwitch<TdColumn> TDCOLUMN_SWITCH = new RelationalSwitch<TdColumn>() {
+
+        @Override
+        public TdColumn caseTdColumn(TdColumn object) {
             return object;
         }
 
