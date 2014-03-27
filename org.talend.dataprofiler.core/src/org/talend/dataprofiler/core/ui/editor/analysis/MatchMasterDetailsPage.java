@@ -845,7 +845,13 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
     }
 
     private void refreshColumnAndData() {
-        this.analysisHandler.setSelectedColumns(translateSelectedNodeIntoModelElement());
+        ModelElement[] modelElements = translateSelectedNodeIntoModelElement();
+        this.analysisHandler.setSelectedColumns(modelElements);
+
+        // MOD TDQ-8483 update analysed elements after selection of data.
+        EList<ModelElement> analyzedElements = this.analysisHandler.getAnalysis().getContext().getAnalysedElements();
+        analyzedElements.clear();
+        analyzedElements.addAll(Arrays.asList(modelElements));
         updateAllColumnsToKeySection();
         refreshDataFromConnection(true);
 
