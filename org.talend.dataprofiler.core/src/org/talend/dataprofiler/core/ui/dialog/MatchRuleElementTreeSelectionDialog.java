@@ -95,6 +95,8 @@ public class MatchRuleElementTreeSelectionDialog extends ElementTreeSelectionDia
 
     public static final int MATCH_ANALYSIS_TYPE = 2;
 
+    public static final int RECORD_MATCHING_TYPE = 3;
+
     /**
      * DOC yyin DQRuleCheckedTreeSelectionDialog constructor comment.
      * 
@@ -162,7 +164,7 @@ public class MatchRuleElementTreeSelectionDialog extends ElementTreeSelectionDia
                             }
 
                             boolean needColumnWarning = false;
-                            if (dialogType != MATCHGROUP_TYPE) {
+                            if (dialogType != MATCHGROUP_TYPE && dialogType != RECORD_MATCHING_TYPE) {
                                 for (BlockKeyDefinition bkd : matchRule.getBlockKeys()) {
                                     boolean hasColumnMatch = false;
                                     for (String col : inputColumnNames) {
@@ -274,7 +276,7 @@ public class MatchRuleElementTreeSelectionDialog extends ElementTreeSelectionDia
         if (dialogType == GENKEY_TYPE) {
             createSelectBlockingKeysTable(form);
             form.setWeights(new int[] { 3, 2 });
-        } else if (dialogType == MATCHGROUP_TYPE) {
+        } else if (dialogType == MATCHGROUP_TYPE || dialogType == RECORD_MATCHING_TYPE) {
             createSelectMatchRulesTable(form);
             form.setWeights(new int[] { 3, 2 });
         } else if (dialogType == MATCH_ANALYSIS_TYPE) {
@@ -519,15 +521,15 @@ public class MatchRuleElementTreeSelectionDialog extends ElementTreeSelectionDia
                         }
                     }
 
+                    String algorithmType = matchKey.getAlgorithm().getAlgorithmType();
                     if (retrieveDisplayValue) {
-                        pr.put(MatchRulesTableLabelProvider.MATCHING_TYPE,
-                                null == matchKey.getAlgorithm().getAlgorithmType() ? StringUtils.EMPTY : AttributeMatcherType
-                                        .valueOf(matchKey.getAlgorithm().getAlgorithmType()).getLabel());
+                        pr.put(MatchRulesTableLabelProvider.MATCHING_TYPE, null == algorithmType ? StringUtils.EMPTY
+                                : AttributeMatcherType.valueOf(algorithmType).getLabel());
                     } else {
-                        pr.put(MatchRulesTableLabelProvider.MATCHING_TYPE,
-                                null == matchKey.getAlgorithm().getAlgorithmType() ? StringUtils.EMPTY : AttributeMatcherType
-                                        .valueOf(matchKey.getAlgorithm().getAlgorithmType()).getComponentValue());
+                        pr.put(MatchRulesTableLabelProvider.MATCHING_TYPE, null == algorithmType ? StringUtils.EMPTY
+                                : AttributeMatcherType.valueOf(algorithmType).getComponentValue());
                     }
+
                     pr.put(MatchRulesTableLabelProvider.CUSTOM_MATCHER,
                             null == matchKey.getAlgorithm().getAlgorithmParameters() ? StringUtils.EMPTY : matchKey
                                     .getAlgorithm().getAlgorithmParameters());
