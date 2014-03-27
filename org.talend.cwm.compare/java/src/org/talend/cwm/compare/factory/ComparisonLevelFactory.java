@@ -13,9 +13,11 @@
 package org.talend.cwm.compare.factory;
 
 import org.talend.core.model.metadata.builder.connection.Connection;
+import org.talend.core.model.metadata.builder.connection.MetadataTable;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.cwm.compare.factory.comparisonlevel.CatalogSchemaComparisonLevel;
 import org.talend.cwm.compare.factory.comparisonlevel.DataProviderComparisonLevel;
+import org.talend.cwm.compare.factory.comparisonlevel.FileMetadataTableComparisonLevel;
 import org.talend.cwm.compare.factory.comparisonlevel.RepositoryObjectComparisonLevel;
 import org.talend.cwm.compare.factory.comparisonlevel.SelectedLocalComparison;
 import org.talend.cwm.compare.factory.comparisonlevel.TableViewComparisonLevel;
@@ -61,6 +63,9 @@ public final class ComparisonLevelFactory {
         } else if (selectedObject instanceof DBColumnFolderRepNode) {
             DBColumnFolderRepNode dbFolderNode = (DBColumnFolderRepNode) selectedObject;
             comparisonLevel = new TableViewComparisonLevel(dbFolderNode);
+        } else if (selectedObject instanceof MetadataTable) {
+            MetadataTable resObject = (MetadataTable) selectedObject;
+            comparisonLevel = new FileMetadataTableComparisonLevel(resObject);
         } else if (selectedObject instanceof Connection) {
             // MOD qiongli 2011-9-5 feature TDQ-3317.
             comparisonLevel = new DataProviderComparisonLevel(selectedObject);

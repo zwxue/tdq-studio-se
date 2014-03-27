@@ -22,7 +22,8 @@ import org.talend.cwm.compare.factory.comparisonlevel.TableViewComparisonLevelTe
  * DOC yyin class global comment. Detailled comment
  */
 @RunWith(Suite.class)
-@SuiteClasses({ DQStructureComparerTest.class, TestComparisonLevelFactoryTest.class, TableViewComparisonLevelTest.class })
+@SuiteClasses({ DQStructureComparerTest.class, TestComparisonLevelFactoryTest.class, TableViewComparisonLevelTest.class,
+        ModelElementMatchEngineTest.class })
 public class AllCwmCompareTests {
 
 }

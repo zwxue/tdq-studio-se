@@ -470,7 +470,7 @@ public abstract class AbstractComparisonLevel implements IComparisonLevel {
         return res;
     }
 
-    private Connection upperCaseConnection(Connection connection) {
+    protected Connection upperCaseConnection(Connection connection) {
         if (CASE_INSENSTIVE) {
             EList<ModelElement> ownedElement = connection.getOwnedElement();
             for (ModelElement me : ownedElement) {

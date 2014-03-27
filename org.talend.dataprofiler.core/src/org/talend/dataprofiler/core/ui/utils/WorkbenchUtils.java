@@ -47,6 +47,8 @@ import org.eclipse.ui.WorkbenchException;
 import org.talend.commons.exception.ExceptionHandler;
 import org.talend.commons.exception.PersistenceException;
 import org.talend.core.model.general.Project;
+import org.talend.core.model.metadata.builder.connection.MetadataColumn;
+import org.talend.core.model.metadata.builder.connection.MetadataTable;
 import org.talend.core.model.properties.FolderItem;
 import org.talend.core.model.properties.FolderType;
 import org.talend.core.model.properties.Item;
@@ -58,6 +60,9 @@ import org.talend.core.model.repository.RepositoryViewObject;
 import org.talend.core.repository.constants.FileConstants;
 import org.talend.core.repository.model.FolderHelper;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
+import org.talend.cwm.compare.exception.ReloadCompareException;
+import org.talend.cwm.compare.factory.ComparisonLevelFactory;
+import org.talend.cwm.compare.factory.comparisonlevel.FileMetadataTableComparisonLevel;
 import org.talend.cwm.dependencies.DependenciesHandler;
 import org.talend.cwm.management.i18n.Messages;
 import org.talend.dataprofiler.core.CorePlugin;
@@ -222,8 +227,6 @@ public final class WorkbenchUtils {
 
     public static IPath getFilePath(IRepositoryNode node) {
         Item item = node.getObject().getProperty().getItem();
-        // FIXME itemType never used.
-        ERepositoryObjectType itemType = ERepositoryObjectType.getItemType(item);
         IPath folderPath = WorkbenchUtils.getPath(node);
         String name = node.getObject()
                 .getProperty()
@@ -492,7 +495,6 @@ public final class WorkbenchUtils {
         EList<Dependency> clientDependencies = oldDataProvider.getSupplierDependency();
         List<Analysis> unsynedAnalyses = new ArrayList<Analysis>();
         for (Dependency dep : clientDependencies) {
-            StringBuffer impactedAnaStr = new StringBuffer();
             for (ModelElement mod : dep.getClient()) {
                 // MOD mzhao 2009-08-24 The dependencies include "Property" and "Analysis"
                 if (!(mod instanceof Analysis)) {
@@ -500,27 +502,15 @@ public final class WorkbenchUtils {
                 }
                 Analysis ana = (Analysis) mod;
                 unsynedAnalyses.add(ana);
-                impactedAnaStr.append(ana.getName());
             }
 
             for (Analysis analysis : unsynedAnalyses) {
                 // Reload.
-                Resource eResource = analysis.eResource();
-                if (eResource == null) {
-                    continue;
-                }
-
-                EMFSharedResources.getInstance().unloadResource(eResource.getURI().toString());
-
-                IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
-                // MOD by zshen for bug 12316 to avoid null argument.
-                Path path = new Path(analysis.getFileName() == null ? eResource.getURI().toPlatformString(false)
-                        : analysis.getFileName());
-                IFile file = root.getFile(path);
+                IFile file = getTempAnalysisFile(analysis);
                 Analysis tempAnalysis = (Analysis) AnaResourceFileHelper.getInstance().getModelElement(file);
                 // MOD qiongli 2010-8-17,bug 14977
                 if (tempAnalysis != null) {
-                    eResource = tempAnalysis.eResource();
+                    Resource eResource = tempAnalysis.eResource();
 
                     Map<EObject, Collection<Setting>> referenceMaps = EcoreUtil.UnresolvedProxyCrossReferencer.find(eResource);
 
@@ -538,23 +528,7 @@ public final class WorkbenchUtils {
                         }
 
                     }
-                    Property tempAnaProperty = PropertyHelper.getProperty(file);
-
-                    // only when all elements of the data provider are removed from the analysis, the dependency between
-                    // them should be removed too. If only parts of them removed, the dependendy should not be removed.
-                    // TDQ-8267, since the dependency is removed, the connection in the analysis context should also be
-                    // removed
-                    if (tempAnaProperty == null) {
-                        log.error(Messages.getString("WorkbenchUtils.fialToSaveImapctAnalysis", tempAnalysis.getName())); //$NON-NLS-1$
-                        return;
-                    }
-                    if (tempAnalysis.getContext().getAnalysedElements().isEmpty()) {
-                        DependenciesHandler.getInstance()
-                                .removeConnDependencyAndSave((TDQAnalysisItem) tempAnaProperty.getItem());
-
-                    } else {
-                        ElementWriterFactory.getInstance().createAnalysisWrite().save(tempAnaProperty.getItem(), false);
-                    }
+                    saveTempAnalysis(file, tempAnalysis);
 
                 }
             }
@@ -562,6 +536,71 @@ public final class WorkbenchUtils {
 
         // Refresh current opened editors.
         refreshCurrentAnalysisEditor();
+    }
+
+    private static void saveTempAnalysis(IFile file, Analysis tempAnalysis) {
+        Property tempAnaProperty = PropertyHelper.getProperty(file);
+
+        // only when all elements of the data provider are removed from the analysis, the dependency between
+        // them should be removed too. If only parts of them removed, the dependendy should not be removed.
+        // TDQ-8267, since the dependency is removed, the connection in the analysis context should also be
+        // removed
+        if (tempAnaProperty == null) {
+            log.error(Messages.getString("WorkbenchUtils.fialToSaveImapctAnalysis", tempAnalysis.getName())); //$NON-NLS-1$
+            return;
+        }
+        if (tempAnalysis.getContext().getAnalysedElements().isEmpty()) {
+            DependenciesHandler.getInstance().removeConnDependencyAndSave((TDQAnalysisItem) tempAnaProperty.getItem());
+
+        } else {
+            ElementWriterFactory.getInstance().createAnalysisWrite().save(tempAnaProperty.getItem(), false);
+        }
+    }
+
+    /**
+     * DOC yyin Comment method "getTempAnalysis".
+     * 
+     * @param analysis
+     * @return
+     */
+    private static IFile getTempAnalysisFile(Analysis analysis) {
+        Resource eResource = analysis.eResource();
+        if (eResource == null) {
+            return null;
+        }
+
+        EMFSharedResources.getInstance().unloadResource(eResource.getURI().toString());
+
+        IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
+        // MOD by zshen for bug 12316 to avoid null argument.
+        Path path = new Path(analysis.getFileName() == null ? eResource.getURI().toPlatformString(false) : analysis.getFileName());
+        return root.getFile(path);
+    }
+
+    /**
+     * update the depended analysis of the current file connection, when the file connection changed schema: if the
+     * analysis 's analyzed columns are in the changed schema: compare the columns, remain the columns with same name,
+     * remove the columns not in new schema, and add the new columns in new schema. TDQ-8360 20140324 yyin
+     * 
+     * @param oldDataProvider
+     */
+    public static List<MetadataColumn> updateDependAnalysisOfDelimitedFile(MetadataTable oldMetadataTable,
+            List<MetadataColumn> newColumns) {
+        FileMetadataTableComparisonLevel creatComparisonLevel = (FileMetadataTableComparisonLevel) ComparisonLevelFactory
+                .creatComparisonLevel(oldMetadataTable);
+        creatComparisonLevel.setNewColumns(newColumns);
+
+        try {
+            creatComparisonLevel.reloadCurrentLevelElement();
+
+            // no need to update the related analyses.it will be updated when finish the guess wizard.
+            // in: FileDelimitedTableWizard.performFinish()
+
+            return creatComparisonLevel.getComparedResult();
+        } catch (ReloadCompareException e) {
+            log.error(e, e);
+        }
+        return null;
     }
 
     /**

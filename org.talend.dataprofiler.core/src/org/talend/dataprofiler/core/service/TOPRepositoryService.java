@@ -46,6 +46,8 @@ import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
 import org.talend.core.model.metadata.builder.connection.DelimitedFileConnection;
 import org.talend.core.model.metadata.builder.connection.MDMConnection;
+import org.talend.core.model.metadata.builder.connection.MetadataColumn;
+import org.talend.core.model.metadata.builder.connection.MetadataTable;
 import org.talend.core.model.metadata.builder.database.JavaSqlFactory;
 import org.talend.core.model.metadata.builder.util.MetadataConnectionUtils;
 import org.talend.core.model.properties.ConnectionItem;
@@ -376,6 +378,11 @@ public class TOPRepositoryService implements ITDQRepositoryService {
         } catch (PartInitException e) {
             log.error(e, e);
         }
+    }
+
+    public List<MetadataColumn> updateDependAnalysisOfDelimitedFile(MetadataTable oldMetadataTable,
+            List<MetadataColumn> newColumns) {
+        return WorkbenchUtils.updateDependAnalysisOfDelimitedFile(oldMetadataTable, newColumns);
     }
 
     /*

@@ -12,23 +12,52 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.utils;
 
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
+import java.io.File;
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import junit.framework.Assert;
+
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.runtime.FileLocator;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EObjectWithInverseResolvingEList;
+import org.eclipse.ui.PartInitException;
 import org.junit.Test;
 import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.talend.commons.exception.PersistenceException;
+import org.talend.commons.utils.VersionUtils;
 import org.talend.commons.utils.WorkspaceUtils;
+import org.talend.core.context.Context;
+import org.talend.core.context.RepositoryContext;
+import org.talend.core.model.metadata.builder.connection.ConnectionPackage;
 import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
+import org.talend.core.model.metadata.builder.connection.DelimitedFileConnection;
+import org.talend.core.model.metadata.builder.connection.MetadataColumn;
+import org.talend.core.model.metadata.builder.connection.MetadataTable;
+import org.talend.core.model.properties.DelimitedFileConnectionItem;
+import org.talend.core.model.properties.PropertiesFactory;
+import org.talend.core.model.properties.Property;
+import org.talend.core.repository.model.ProxyRepositoryFactory;
+import org.talend.core.runtime.CoreRuntimePlugin;
 import org.talend.cwm.dependencies.DependenciesHandler;
+import org.talend.dataprofiler.core.helper.UnitTestBuildHelper;
 import org.talend.dataquality.analysis.Analysis;
+import org.talend.dataquality.analysis.AnalysisContext;
+import org.talend.dataquality.analysis.AnalysisPackage;
 import org.talend.dq.helper.RepositoryNodeHelper;
+import org.talend.dq.writer.impl.ElementWriterFactory;
 import orgomg.cwm.foundation.softwaredeployment.DataProvider;
 import orgomg.cwm.objectmodel.core.Dependency;
 import orgomg.cwm.objectmodel.core.ModelElement;
@@ -109,5 +138,281 @@ public class WorkbenchUtilsTest {
         assertEquals("test__", WorkspaceUtils.normalize("test'\"")); //$NON-NLS-1$ //$NON-NLS-2$
         assertEquals("_test_", WorkspaceUtils.normalize("(test)")); //$NON-NLS-1$ //$NON-NLS-2$
         assertEquals("___________", WorkspaceUtils.normalize("#^&/:;\\~.! ")); //$NON-NLS-1$ //$NON-NLS-2$
+    }
+
+    // test for 2 remained columns
+    @Test
+    public void testUpdateDependAnalysisOfDelimitedFile() throws IOException, URISyntaxException, PartInitException {
+        // create a file connection
+        DelimitedFileConnection fileConnection = ConnectionPackage.eINSTANCE.getConnectionFactory()
+                .createDelimitedFileConnection();
+        URL fileUrl = this.getClass().getResource("file1"); //$NON-NLS-1$
+        MetadataTable metadataTable = UnitTestBuildHelper.initFileConnection(fileUrl, fileConnection);
+        UnitTestBuildHelper.initColumns(metadataTable);
+
+        IFile file = WorkspaceUtils.fileToIFile(new File(FileLocator.toFileURL(fileUrl).toURI()));
+        IPath itemPath = file.getFullPath();
+
+        Property connectionProperty = PropertiesFactory.eINSTANCE.createProperty();
+        connectionProperty.setAuthor(((RepositoryContext) CoreRuntimePlugin.getInstance().getContext()
+                .getProperty(Context.REPOSITORY_CONTEXT_KEY)).getUser());
+        connectionProperty.setVersion(VersionUtils.DEFAULT_VERSION);
+        connectionProperty.setStatusCode(""); //$NON-NLS-1$
+        connectionProperty.setLabel("file1");
+
+        DelimitedFileConnectionItem connectionItem = PropertiesFactory.eINSTANCE.createDelimitedFileConnectionItem();
+        connectionItem.setProperty(connectionProperty);
+        connectionItem.setConnection(fileConnection);
+        try {
+            ProxyRepositoryFactory.getInstance().create(connectionItem, itemPath.removeFirstSegments(3).removeLastSegments(1));
+        } catch (PersistenceException e) {
+            Assert.fail(e.getMessage());
+        }
+
+        // create an analysis which use the columns in the file connection
+        Analysis analysis = UnitTestBuildHelper.createRealAnalysis("Ana01", null, false);
+        AnalysisContext context = AnalysisPackage.eINSTANCE.getAnalysisFactory().createAnalysisContext();
+        context.setConnection(fileConnection);
+        analysis.setContext(context);
+        context.getAnalysedElements().addAll(metadataTable.getColumns());
+        DependenciesHandler.getInstance().setDependencyOn(analysis, fileConnection);
+        ElementWriterFactory.getInstance().createAnalysisWrite().save(analysis);
+
+        // change the file's schema
+        List<MetadataColumn> tempNewColumns = new ArrayList<MetadataColumn>();
+        MetadataColumn name = ConnectionPackage.eINSTANCE.getConnectionFactory().createMetadataColumn();
+        name.setName("name");
+        name.setLabel("name");
+        tempNewColumns.add(name);
+
+        MetadataColumn country = ConnectionPackage.eINSTANCE.getConnectionFactory().createMetadataColumn();
+        country.setName("country");
+        country.setLabel("country");
+        tempNewColumns.add(country);
+
+        MetadataColumn country1 = ConnectionPackage.eINSTANCE.getConnectionFactory().createMetadataColumn();
+        country1.setName("country1");
+        country1.setLabel("country1");
+        tempNewColumns.add(country1);
+
+        MetadataColumn company = ConnectionPackage.eINSTANCE.getConnectionFactory().createMetadataColumn();
+        company.setName("new column");
+        company.setLabel("new column");
+        tempNewColumns.add(company);
+
+        // before compare, the analysis has 5 analyzed elements
+        Assert.assertEquals(5, analysis.getContext().getAnalysedElements().size());
+
+        // call the tested method
+        List<MetadataColumn> afterCompareColumns = WorkbenchUtils.updateDependAnalysisOfDelimitedFile(metadataTable,
+                tempNewColumns);
+
+        // check the columns
+        Assert.assertEquals(4, afterCompareColumns.size());
+        Assert.assertEquals("name", afterCompareColumns.get(0).getLabel());
+        Assert.assertEquals("country", afterCompareColumns.get(1).getLabel());
+        Assert.assertEquals("country1", afterCompareColumns.get(2).getLabel());
+        Assert.assertEquals("new column", afterCompareColumns.get(3).getLabel());
+
+        metadataTable.getColumns().clear();
+        metadataTable.getColumns().addAll(afterCompareColumns);
+        WorkbenchUtils.impactExistingAnalyses(fileConnection);
+        // check the depended analysis
+        EList<Dependency> clientDependencies = fileConnection.getSupplierDependency();
+        for (Dependency dep : clientDependencies) {
+            for (ModelElement mod : dep.getClient()) {
+                if (!(mod instanceof Analysis)) {
+                    continue;
+                }
+                Analysis ana = (Analysis) mod;
+                // assert the column with same name still in the analysis
+                Assert.assertNotNull(ana.getContext().getAnalysedElements());
+                // should be: only 2 with same name remained
+                Assert.assertEquals(2, ana.getContext().getAnalysedElements().size());
+                Assert.assertEquals("name", ana.getContext().getAnalysedElements().get(0).getName());
+                Assert.assertEquals("country", ana.getContext().getAnalysedElements().get(1).getName());
+            }
+        }
+    }
+
+    // test for last column remained
+    @Test
+    public void testUpdateDependAnalysisOfDelimitedFile_2() throws IOException, URISyntaxException, PartInitException {
+        // create a file connection
+        DelimitedFileConnection fileConnection = ConnectionPackage.eINSTANCE.getConnectionFactory()
+                .createDelimitedFileConnection();
+        URL fileUrl = this.getClass().getResource("file1"); //$NON-NLS-1$
+        MetadataTable metadataTable = UnitTestBuildHelper.initFileConnection(fileUrl, fileConnection);
+        UnitTestBuildHelper.initColumns(metadataTable);
+
+        IFile file = WorkspaceUtils.fileToIFile(new File(FileLocator.toFileURL(fileUrl).toURI()));
+        IPath itemPath = file.getFullPath();
+
+        Property connectionProperty = PropertiesFactory.eINSTANCE.createProperty();
+        connectionProperty.setAuthor(((RepositoryContext) CoreRuntimePlugin.getInstance().getContext()
+                .getProperty(Context.REPOSITORY_CONTEXT_KEY)).getUser());
+        connectionProperty.setVersion(VersionUtils.DEFAULT_VERSION);
+        connectionProperty.setStatusCode(""); //$NON-NLS-1$
+        connectionProperty.setLabel("file2");
+
+        DelimitedFileConnectionItem connectionItem = PropertiesFactory.eINSTANCE.createDelimitedFileConnectionItem();
+        connectionItem.setProperty(connectionProperty);
+        connectionItem.setConnection(fileConnection);
+        try {
+            ProxyRepositoryFactory.getInstance().create(connectionItem, itemPath.removeFirstSegments(3).removeLastSegments(1));
+        } catch (PersistenceException e) {
+            Assert.fail(e.getMessage());
+        }
+
+        // create an analysis which use the columns in the file connection
+        Analysis analysis = UnitTestBuildHelper.createRealAnalysis("Ana01", null, false);
+        AnalysisContext context = AnalysisPackage.eINSTANCE.getAnalysisFactory().createAnalysisContext();
+        context.setConnection(fileConnection);
+        analysis.setContext(context);
+        context.getAnalysedElements().addAll(metadataTable.getColumns());
+        DependenciesHandler.getInstance().setDependencyOn(analysis, fileConnection);
+        ElementWriterFactory.getInstance().createAnalysisWrite().save(analysis);
+
+        // change the file's schema
+        List<MetadataColumn> tempNewColumns = new ArrayList<MetadataColumn>();
+        MetadataColumn name = ConnectionPackage.eINSTANCE.getConnectionFactory().createMetadataColumn();
+        name.setName("name2");
+        name.setLabel("name2");
+        tempNewColumns.add(name);
+
+        MetadataColumn country = ConnectionPackage.eINSTANCE.getConnectionFactory().createMetadataColumn();
+        country.setName("country2");
+        country.setLabel("country2");
+        tempNewColumns.add(country);
+
+        MetadataColumn country1 = ConnectionPackage.eINSTANCE.getConnectionFactory().createMetadataColumn();
+        country1.setName("country1");
+        country1.setLabel("country1");
+        tempNewColumns.add(country1);
+
+        MetadataColumn company = ConnectionPackage.eINSTANCE.getConnectionFactory().createMetadataColumn();
+        company.setName("name");
+        company.setLabel("name");
+        tempNewColumns.add(company);
+
+        // before compare, the analysis has 5 analyzed elements
+        Assert.assertEquals(5, analysis.getContext().getAnalysedElements().size());
+
+        // call the tested method
+        List<MetadataColumn> afterCompareColumns = WorkbenchUtils.updateDependAnalysisOfDelimitedFile(metadataTable,
+                tempNewColumns);
+
+        // check the columns
+        Assert.assertEquals(4, afterCompareColumns.size());
+        Assert.assertEquals("name", afterCompareColumns.get(0).getLabel());
+        Assert.assertEquals("country2", afterCompareColumns.get(2).getLabel());
+        Assert.assertEquals("country1", afterCompareColumns.get(3).getLabel());
+        Assert.assertEquals("name2", afterCompareColumns.get(1).getLabel());
+
+        metadataTable.getColumns().clear();
+        metadataTable.getColumns().addAll(afterCompareColumns);
+        WorkbenchUtils.impactExistingAnalyses(fileConnection);
+        // check the depended analysis
+        EList<Dependency> clientDependencies = fileConnection.getSupplierDependency();
+        for (Dependency dep : clientDependencies) {
+            for (ModelElement mod : dep.getClient()) {
+                if (!(mod instanceof Analysis)) {
+                    continue;
+                }
+                Analysis ana = (Analysis) mod;
+                // assert the column with same name still in the analysis
+                Assert.assertNotNull(ana.getContext().getAnalysedElements());
+                // should be: only 2 with same name remained
+                Assert.assertEquals(1, ana.getContext().getAnalysedElements().size());
+                Assert.assertEquals("name", ana.getContext().getAnalysedElements().get(0).getName());
+            }
+        }
+    }
+
+    // test for no column remained
+    @Test
+    public void testUpdateDependAnalysisOfDelimitedFile_3() throws IOException, URISyntaxException, PartInitException {
+        // create a file connection
+        DelimitedFileConnection fileConnection = ConnectionPackage.eINSTANCE.getConnectionFactory()
+                .createDelimitedFileConnection();
+        URL fileUrl = this.getClass().getResource("file1"); //$NON-NLS-1$
+        MetadataTable metadataTable = UnitTestBuildHelper.initFileConnection(fileUrl, fileConnection);
+        UnitTestBuildHelper.initColumns(metadataTable);
+
+        IFile file = WorkspaceUtils.fileToIFile(new File(FileLocator.toFileURL(fileUrl).toURI()));
+        IPath itemPath = file.getFullPath();
+
+        Property connectionProperty = PropertiesFactory.eINSTANCE.createProperty();
+        connectionProperty.setAuthor(((RepositoryContext) CoreRuntimePlugin.getInstance().getContext()
+                .getProperty(Context.REPOSITORY_CONTEXT_KEY)).getUser());
+        connectionProperty.setVersion(VersionUtils.DEFAULT_VERSION);
+        connectionProperty.setStatusCode(""); //$NON-NLS-1$
+        connectionProperty.setLabel("file3");
+
+        DelimitedFileConnectionItem connectionItem = PropertiesFactory.eINSTANCE.createDelimitedFileConnectionItem();
+        connectionItem.setProperty(connectionProperty);
+        connectionItem.setConnection(fileConnection);
+        try {
+            ProxyRepositoryFactory.getInstance().create(connectionItem, itemPath.removeFirstSegments(3).removeLastSegments(1));
+        } catch (PersistenceException e) {
+            Assert.fail(e.getMessage());
+        }
+
+        // create an analysis which use the columns in the file connection
+        Analysis analysis = UnitTestBuildHelper.createRealAnalysis("Ana01", null, false);
+        AnalysisContext context = AnalysisPackage.eINSTANCE.getAnalysisFactory().createAnalysisContext();
+        context.setConnection(fileConnection);
+        analysis.setContext(context);
+        context.getAnalysedElements().addAll(metadataTable.getColumns());
+        DependenciesHandler.getInstance().setDependencyOn(analysis, fileConnection);
+        ElementWriterFactory.getInstance().createAnalysisWrite().save(analysis);
+
+        // change the file's schema
+        List<MetadataColumn> tempNewColumns = new ArrayList<MetadataColumn>();
+        MetadataColumn name = ConnectionPackage.eINSTANCE.getConnectionFactory().createMetadataColumn();
+        name.setName("name2");
+        name.setLabel("name2");
+        tempNewColumns.add(name);
+
+        MetadataColumn country = ConnectionPackage.eINSTANCE.getConnectionFactory().createMetadataColumn();
+        country.setName("country2");
+        country.setLabel("country2");
+        tempNewColumns.add(country);
+
+        MetadataColumn country1 = ConnectionPackage.eINSTANCE.getConnectionFactory().createMetadataColumn();
+        country1.setName("country1");
+        country1.setLabel("country1");
+        tempNewColumns.add(country1);
+
+        // before compare, the analysis has 5 analyzed elements
+        Assert.assertEquals(5, analysis.getContext().getAnalysedElements().size());
+
+        // call the tested method
+        List<MetadataColumn> afterCompareColumns = WorkbenchUtils.updateDependAnalysisOfDelimitedFile(metadataTable,
+                tempNewColumns);
+
+        // check the columns
+        Assert.assertEquals(3, afterCompareColumns.size());
+        Assert.assertEquals("name2", afterCompareColumns.get(0).getLabel());
+        Assert.assertEquals("country2", afterCompareColumns.get(1).getLabel());
+        Assert.assertEquals("country1", afterCompareColumns.get(2).getLabel());
+
+        metadataTable.getColumns().clear();
+        metadataTable.getColumns().addAll(afterCompareColumns);
+        WorkbenchUtils.impactExistingAnalyses(fileConnection);
+        // check the depended analysis
+        EList<Dependency> clientDependencies = fileConnection.getSupplierDependency();
+        for (Dependency dep : clientDependencies) {
+            for (ModelElement mod : dep.getClient()) {
+                if (!(mod instanceof Analysis)) {
+                    continue;
+                }
+                Analysis ana = (Analysis) mod;
+                // assert the column with same name still in the analysis
+                Assert.assertNotNull(ana.getContext().getAnalysedElements());
+                // should be: only 2 with same name remained
+                Assert.assertEquals(0, ana.getContext().getAnalysedElements().size());
+            }
+        }
     }
 }
