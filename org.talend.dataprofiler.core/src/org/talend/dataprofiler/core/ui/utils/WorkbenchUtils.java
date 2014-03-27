@@ -48,6 +48,8 @@ import org.talend.commons.emf.EMFUtil;
 import org.talend.commons.exception.ExceptionHandler;
 import org.talend.commons.exception.PersistenceException;
 import org.talend.core.model.general.Project;
+import org.talend.core.model.metadata.builder.connection.MetadataColumn;
+import org.talend.core.model.metadata.builder.connection.MetadataTable;
 import org.talend.core.model.properties.FolderItem;
 import org.talend.core.model.properties.FolderType;
 import org.talend.core.model.properties.Item;
@@ -59,6 +61,9 @@ import org.talend.core.model.repository.RepositoryViewObject;
 import org.talend.core.repository.constants.FileConstants;
 import org.talend.core.repository.model.FolderHelper;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
+import org.talend.cwm.compare.exception.ReloadCompareException;
+import org.talend.cwm.compare.factory.ComparisonLevelFactory;
+import org.talend.cwm.compare.factory.comparisonlevel.FileMetadataTableComparisonLevel;
 import org.talend.cwm.dependencies.DependenciesHandler;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.PluginConstant;
@@ -628,5 +633,31 @@ public final class WorkbenchUtils {
         }
 
         return part;
+    }
+
+    /**
+     * update the depended analysis of the current file connection, when the file connection changed schema: if the
+     * analysis 's analyzed columns are in the changed schema: compare the columns, remain the columns with same name,
+     * remove the columns not in new schema, and add the new columns in new schema. TDQ-8360 20140324 yyin
+     * 
+     * @param oldDataProvider
+     */
+    public static List<MetadataColumn> updateDependAnalysisOfDelimitedFile(MetadataTable oldMetadataTable,
+            List<MetadataColumn> newColumns) {
+        FileMetadataTableComparisonLevel creatComparisonLevel = (FileMetadataTableComparisonLevel) ComparisonLevelFactory
+                .creatComparisonLevel(oldMetadataTable);
+        creatComparisonLevel.setNewColumns(newColumns);
+
+        try {
+            creatComparisonLevel.reloadCurrentLevelElement();
+
+            // no need to update the related analyses.it will be updated when finish the guess wizard.
+            // in: FileDelimitedTableWizard.performFinish()
+
+            return creatComparisonLevel.getComparedResult();
+        } catch (ReloadCompareException e) {
+            log.error(e, e);
+        }
+        return null;
     }
 }

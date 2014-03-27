@@ -17,6 +17,8 @@ import org.eclipse.emf.compare.FactoryException;
 import org.eclipse.emf.compare.match.engine.GenericMatchEngine;
 import org.eclipse.emf.ecore.EObject;
 import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
+import org.talend.core.model.metadata.builder.connection.MetadataColumn;
+import org.talend.core.model.metadata.builder.connection.MetadataTable;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.relational.TdExpression;
 import org.talend.cwm.relational.TdSqlDataType;
@@ -79,6 +81,14 @@ public class ModelElementMatchEngine extends GenericMatchEngine {
             TdSqlDataType tdExpression1 = (TdSqlDataType) obj1;
             TdSqlDataType tdExpression2 = (TdSqlDataType) obj2;
             result = StringUtils.equalsIgnoreCase(tdExpression1.getName(), tdExpression2.getName());
+        } else if (obj1 instanceof MetadataColumn && obj2 instanceof MetadataColumn) {// Added yyin TDQ-8360
+            MetadataColumn metaColumn1 = (MetadataColumn) obj1;
+            MetadataColumn metaColumn2 = (MetadataColumn) obj2;
+            return StringUtils.equalsIgnoreCase(metaColumn1.getLabel(), metaColumn2.getLabel());
+        } else if (obj1 instanceof MetadataTable && obj2 instanceof MetadataTable) {
+            MetadataTable mTable1 = (MetadataTable) obj1;
+            MetadataTable mTable2 = (MetadataTable) obj2;
+            return StringUtils.equalsIgnoreCase(mTable1.getLabel(), mTable2.getLabel());
         }
 
         if (obj1 instanceof DatabaseConnection) {
