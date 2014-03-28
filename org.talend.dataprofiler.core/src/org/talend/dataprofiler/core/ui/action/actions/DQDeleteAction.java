@@ -349,15 +349,17 @@ public class DQDeleteAction extends DeleteAction {
      * dependencies
      */
     private void physicalDelete() {
-        List<IRepositoryNode> nodes = new ArrayList<IRepositoryNode>();
-        nodes.addAll(selectedNodes);
         // when physical deleting object with dependencies, do not popup
         // confirm anymore. and after dealing with it, store back to its default value.
         confirmForDQ = true;
         List<IRepositoryNode> folderNodeWhichChildHadDepend = null;
-        Iterator<IRepositoryNode> iterator = nodes.iterator();
-        while (iterator.hasNext()) {
-            IRepositoryNode node = iterator.next();
+
+        //use this selectedNodes directly, the order also important,when the depended nodes had been deleted, no need to check them any more
+        for (int i = selectedNodes.size() - 1; i >= 0; i--) {
+            if (selectedNodes.size() == 0) {
+                break;
+            }
+            IRepositoryNode node = selectedNodes.get(i);
             IRepositoryNode parent = node.getParent();
             // -- When the node has no depends, delete it directly
             // -- when the node has depends, add it with depends list to the nodeWithDependsMap
