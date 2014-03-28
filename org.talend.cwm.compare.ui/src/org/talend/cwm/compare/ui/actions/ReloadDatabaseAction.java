@@ -176,6 +176,7 @@ public class ReloadDatabaseAction extends Action {
                             // Update software system.
                             updateSoftwareSystem(oldDataProvider);
                         } catch (ReloadCompareException e) {
+                            MessageUI.openError(Messages.getString("ReloadDatabaseAction.Error", e.getMessage())); //$NON-NLS-1$
                             log.error(e, e);
                             returnCode.setReturnCode(e.getMessage(), false);
                         } catch (PartInitException e) {
