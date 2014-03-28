@@ -66,23 +66,12 @@ public abstract class ResourceFileMap {
      * @return get null if the file is not exist.
      */
     public synchronized Resource getFileResource(IFile file) {
-        return getFileResource(file, false);
-    }
-
-    /**
-     * ADD sizhaoliu TDQ-8483
-     * 
-     * @param file
-     * @param forceReload
-     * @return get null if the file is not exist.
-     */
-    public synchronized Resource getFileResource(IFile file, boolean forceReload) {
         if (file.exists()) {
             URI uri = URI.createPlatformResourceURI(file.getFullPath().toString(), false);
 
             Resource res = EMFSharedResources.getInstance().getResource(uri, false);
 
-            if (forceReload || EMFSharedResources.getInstance().isNeedReload(res)) {
+            if (EMFSharedResources.getInstance().isNeedReload(res)) {
                 res = EMFSharedResources.getInstance().reloadResource(uri);
             }
 
@@ -123,8 +112,7 @@ public abstract class ResourceFileMap {
      * @return
      */
     public final ModelElement getModelElement(IFile file) {
-        // MOD sizhaoliu TDQ-8483 force reload while retrieving model elements from file
-        return getModelElement(getFileResource(file, true));
+        return getModelElement(getFileResource(file));
     }
 
     /**
@@ -141,6 +129,7 @@ public abstract class ResourceFileMap {
             }
             if (log.isDebugEnabled()) {
                 log.debug("Nb elements in contents " + contents.size());//$NON-NLS-1$
+                log.debug("for URI: " + resource.getURI());//$NON-NLS-1$
             }
 
             for (EObject object : contents) {

@@ -54,7 +54,6 @@ import org.eclipse.ui.dialogs.ISelectionStatusValidator;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.commons.utils.platform.PluginChecker;
 import org.talend.dataprofiler.core.CorePlugin;
-import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.dialog.provider.BlockingKeysTableLabelProvider;
 import org.talend.dataprofiler.core.ui.dialog.provider.MatchRulesTableLabelProvider;
@@ -399,28 +398,22 @@ public class MatchRuleElementTreeSelectionDialog extends ElementTreeSelectionDia
         for (Object rule : files) {
             if (rule instanceof IFile) {
                 MatchRuleDefinition matchRuleDefinition = DQRuleResourceFileHelper.getInstance().findMatchRule((IFile) rule);
-                matchExistingColumnForBlockingKeys(matchRuleDefinition);
                 ruleValues.addAll(getBlockingKeysFromRules(matchRuleDefinition, retrieveDisplayValue));
             }
         }
         return ruleValues;
     }
 
-    private void matchExistingColumnForBlockingKeys(MatchRuleDefinition matchRuleDefinition) {
-        for (BlockKeyDefinition blockingKey : matchRuleDefinition.getBlockKeys()) {
-            boolean found = false;
-            for (String inputColumnName : getInputColumnNames()) {
-                if (inputColumnName.equalsIgnoreCase(blockingKey.getColumn())
-                        || inputColumnName.equalsIgnoreCase(blockingKey.getName())) {
-                    blockingKey.setColumn(inputColumnName);
-                    found = true;
-                    break;
-                }
-            }
-            if (!found) {
-                blockingKey.setColumn(PluginConstant.EMPTY_STRING);
+    private String matchExistingColumnForBlockingKey(BlockKeyDefinition blockingKey) {
+        String matchedColumnName = StringUtils.EMPTY;
+        for (String inputColumnName : getInputColumnNames()) {
+            if (inputColumnName.equalsIgnoreCase(blockingKey.getColumn())
+                    || inputColumnName.equalsIgnoreCase(blockingKey.getName())) {
+                matchedColumnName = inputColumnName;
+                break;
             }
         }
+        return matchedColumnName;
     }
 
     public List<Map<String, String>> getMatchRulesFromFiles(Object[] files) {
@@ -440,30 +433,21 @@ public class MatchRuleElementTreeSelectionDialog extends ElementTreeSelectionDia
         for (Object rule : files) {
             if (rule instanceof IFile) {
                 MatchRuleDefinition matchRuleDefinition = DQRuleResourceFileHelper.getInstance().findMatchRule((IFile) rule);
-                matchExistingColumnForMatchRules(matchRuleDefinition);
                 ruleValues.addAll(getMatchRulesFromRules(matchRuleDefinition, retrieveDisplayValue));
             }
         }
         return ruleValues;
     }
 
-    private void matchExistingColumnForMatchRules(MatchRuleDefinition matchRuleDefinition) {
-        for (MatchRule rule : matchRuleDefinition.getMatchRules()) {
-            for (MatchKeyDefinition matchKey : rule.getMatchKeys()) {
-                boolean found = false;
-                for (String inputColumnName : getInputColumnNames()) {
-                    if (inputColumnName.equalsIgnoreCase(matchKey.getColumn())
-                            || inputColumnName.equalsIgnoreCase(matchKey.getName())) {
-                        matchKey.setColumn(inputColumnName);
-                        found = true;
-                        break;
-                    }
-                }
-                if (!found) {
-                    matchKey.setColumn(PluginConstant.EMPTY_STRING);
-                }
+    private String matchExistingColumnForMatchRule(MatchKeyDefinition matchKey) {
+        String matchedColumnName = StringUtils.EMPTY;
+        for (String inputColumnName : getInputColumnNames()) {
+            if (inputColumnName.equalsIgnoreCase(matchKey.getColumn()) || inputColumnName.equalsIgnoreCase(matchKey.getName())) {
+                matchedColumnName = inputColumnName;
+                break;
             }
         }
+        return matchedColumnName;
     }
 
     private List<Map<String, String>> getBlockingKeysFromRules(MatchRuleDefinition matchRuleDefinition,
@@ -472,11 +456,14 @@ public class MatchRuleElementTreeSelectionDialog extends ElementTreeSelectionDia
         if (matchRuleDefinition != null) {
             List<Map<String, String>> ruleValues = new ArrayList<Map<String, String>>();
             for (BlockKeyDefinition bkDefinition : matchRuleDefinition.getBlockKeys()) {
+
                 Map<String, String> pr = new HashMap<String, String>();
                 pr.put(BlockingKeysTableLabelProvider.BLOCKING_KEY_NAME, null == bkDefinition.getName() ? StringUtils.EMPTY
                         : bkDefinition.getName());
-                pr.put(BlockingKeysTableLabelProvider.PRECOLUMN, null == bkDefinition.getColumn() ? StringUtils.EMPTY
-                        : bkDefinition.getColumn());
+
+                String matchedColumnName = matchExistingColumnForBlockingKey(bkDefinition);
+                pr.put(BlockingKeysTableLabelProvider.PRECOLUMN, null == matchedColumnName ? StringUtils.EMPTY
+                        : matchedColumnName);
 
                 pr.put(BlockingKeysTableLabelProvider.PRE_ALGO, null == bkDefinition.getPreAlgorithm() ? StringUtils.EMPTY
                         : bkDefinition.getPreAlgorithm().getAlgorithmType());
@@ -508,8 +495,10 @@ public class MatchRuleElementTreeSelectionDialog extends ElementTreeSelectionDia
                     Map<String, String> pr = new HashMap<String, String>();
                     pr.put(MatchRulesTableLabelProvider.MATCH_KEY_NAME,
                             null == matchKey.getName() ? StringUtils.EMPTY : matchKey.getName());
-                    pr.put(MatchRulesTableLabelProvider.INPUT_COLUMN,
-                            null == matchKey.getColumn() ? StringUtils.EMPTY : matchKey.getColumn());
+
+                    String matchedColumnName = matchExistingColumnForMatchRule(matchKey);
+                    pr.put(MatchRulesTableLabelProvider.INPUT_COLUMN, null == matchedColumnName ? StringUtils.EMPTY
+                            : matchedColumnName);
 
                     if (getLookupColumnNames().size() > 0) {
                         for (String lookupColumnName : getLookupColumnNames()) {
