@@ -279,9 +279,8 @@ public class IndicatorsComp extends AbstractPagePart {
         if (isDirty()) {
             masterPage.doSave(null);
         }
-        Indicator indicator = (Indicator) indicatorItem.getData(INDICATOR_KEY);
-        ColumnSetIndicatorUnit indicatorUnit = new ColumnSetIndicatorUnit(IndicatorEnum.findIndicatorEnum(indicator.eClass()),
-                indicator);
+        ColumnSetIndicatorUnit indicatorUnit = (ColumnSetIndicatorUnit) indicatorItem.getData(INDICATOR_KEY);
+        
         IndicatorOptionsWizard wizard = new IndicatorOptionsWizard(indicatorUnit);
 
         if (indicatorUnit.isExsitingForm()) {
@@ -290,7 +289,7 @@ public class IndicatorsComp extends AbstractPagePart {
 
             if (Window.OK == optionDialog.open()) {
                 masterPage.setDirty(wizard.isDirty());
-                createIndicatorParameters(indicatorItem, indicator);
+                createIndicatorParameters(indicatorItem, indicatorUnit.getIndicator());
             }
         } else {
             MessageDialogWithToggle.openInformation(null, DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.information"), //$NON-NLS-1$

@@ -154,7 +154,7 @@ public abstract class IndicatorUnit {
     }
 
     public boolean isExsitingForm() {
-        if (getForms().length > 0) {
+        if (getForms() != null) {
             return true;
         }
         return false;
