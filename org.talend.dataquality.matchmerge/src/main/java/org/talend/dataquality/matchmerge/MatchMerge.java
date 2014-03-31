@@ -69,15 +69,14 @@ public class MatchMerge {
             if (r1.get(i).getValue() == null && r2.get(i).getValue() == null) {
                 mergedRecord.getAttributes().get(i).setValue(r1.get(i).getValue());
             } else {
-                if (StringUtils.equals(r1.get(i).getValue(), r2.get(i).getValue())) {
-                    if (typeMergeTable[i] == SurvivorShipAlgorithmEnum.MOST_COMMON) {
-                        mergedRecord.getAttributes().get(i).getValues().addAll(r1.get(i).getValues());
-                    }
+                SurvivorShipAlgorithmEnum survivorShipAlgorithmEnum = typeMergeTable[i];
+                if (StringUtils.equals(r1.get(i).getValue(), r2.get(i).getValue())
+                        && survivorShipAlgorithmEnum != SurvivorShipAlgorithmEnum.MOST_COMMON) {
                     mergedRecord.getAttributes().get(i).setValue(r1.get(i).getValue());
                 } else {
                     BigDecimal r1Value;
                     BigDecimal r2Value;
-                    switch (typeMergeTable[i]) {
+                    switch (survivorShipAlgorithmEnum) {
                         case CONCATENATE:
                             mergedRecord.getAttributes().get(i).setValue(r1.get(i).getValue() + r2.get(i).getValue());
                             break;
