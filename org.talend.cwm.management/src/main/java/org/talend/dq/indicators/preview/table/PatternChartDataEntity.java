@@ -46,12 +46,20 @@ public class PatternChartDataEntity extends ChartDataEntity {
 
     public String getPerMatch() {
         Double match = Double.parseDouble(getNumMatch());
-        return StringFormatUtil.format(match / getSum(), StringFormatUtil.PERCENT).toString();
+        Double percent = match / getSum();
+        if (Double.isNaN(percent) || Double.isInfinite(percent)) {
+            return PluginConstant.NA_STRING;
+        }
+        return StringFormatUtil.format(percent, StringFormatUtil.PERCENT).toString();
     }
 
     public String getPerNoMatch() {
         Double nomatch = Double.parseDouble(getNumNoMatch());
-        return StringFormatUtil.format(nomatch / getSum(), StringFormatUtil.PERCENT).toString();
+        Double percent = nomatch / getSum();
+        if (Double.isNaN(percent) || Double.isInfinite(percent)) {
+            return PluginConstant.NA_STRING;
+        }
+        return StringFormatUtil.format(percent, StringFormatUtil.PERCENT).toString();
     }
 
     private Double getSum() {
@@ -68,7 +76,7 @@ public class PatternChartDataEntity extends ChartDataEntity {
         if (isOutOfRange(getPerMatch())) {
             msg.append("This value is outside the expected indicator's thresholds in percent: " + range); //$NON-NLS-1$
         }
-        
+
         // ADD msjian TDQ-4380(TDQ-4470) 2012-1-29: set the hint message when the value is not validate
         if (indicator instanceof WhereRuleIndicator) {
             String sql = ""; //$NON-NLS-1$
@@ -86,7 +94,7 @@ public class PatternChartDataEntity extends ChartDataEntity {
             }
         }
         // TDQ-4380(TDQ-4470)~
-        
+
         // MOD xqliu 2010-03-10 feature 10834
         String result = null;
         String temp = getToolTip();

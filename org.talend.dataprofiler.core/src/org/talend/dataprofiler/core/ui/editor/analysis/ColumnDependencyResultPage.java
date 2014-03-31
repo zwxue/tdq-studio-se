@@ -52,6 +52,7 @@ import org.talend.dataprofiler.core.ui.editor.preview.model.ChartTableMenuGenera
 import org.talend.dataprofiler.core.ui.editor.preview.model.MenuItemEntity;
 import org.talend.dataprofiler.core.ui.editor.preview.model.entity.TableStructureEntity;
 import org.talend.dataprofiler.core.ui.pref.EditorPreferencePage;
+import org.talend.dataquality.PluginConstant;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.columnset.ColumnDependencyIndicator;
@@ -333,10 +334,13 @@ public class ColumnDependencyResultPage extends AbstractAnalysisResultPage {
 
                     item.setText(0, dataset.getColumnKey(i).toString());
                     item.setText(1, String.valueOf(match.intValue()));
-                    item.setText(
-                            2,
-                            StringFormatUtil.format(String.valueOf(match.doubleValue() / row.doubleValue()),
-                                    StringFormatUtil.PERCENT).toString());
+                    // TDQ-8695 display "N/A" if it is infinite or NaN
+                    double percentage = match.doubleValue() / row.doubleValue();
+                    if (Double.isNaN(percentage) || Double.isInfinite(percentage)) {
+                        item.setText(2, PluginConstant.NA_STRING);
+                    } else {
+                        item.setText(2, StringFormatUtil.format(String.valueOf(percentage), StringFormatUtil.PERCENT).toString());
+                    }
                     item.setText(3, String.valueOf(row));
 
                     item.setData(dataEntity);
