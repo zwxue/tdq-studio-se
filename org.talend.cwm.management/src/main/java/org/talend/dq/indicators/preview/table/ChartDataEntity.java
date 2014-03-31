@@ -23,6 +23,7 @@ import org.apache.log4j.Logger;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.relational.TdTable;
 import org.talend.cwm.xml.TdXmlElementType;
+import org.talend.dataquality.PluginConstant;
 import org.talend.dataquality.helpers.IndicatorHelper;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.IndicatorsPackage;
@@ -129,7 +130,7 @@ public class ChartDataEntity {
         if (percent != null) {
             // MOD qiongli 2011-4-25 bug 20670:if it is infinite,return N/A.
             if (Double.isNaN(percent) || Double.isInfinite(percent)) {
-                return "N/A"; //$NON-NLS-1$
+                return PluginConstant.NA_STRING;
             } else {
                 return StringFormatUtil.format(percent, StringFormatUtil.PERCENT).toString();
             }
@@ -167,7 +168,7 @@ public class ChartDataEntity {
      */
     public boolean isOutOfValue(String inString) {
 
-        if (inString.equals("N/A")) { // $NON-NLS-1$
+        if (inString.equals(PluginConstant.NA_STRING)) { // $NON-NLS-1$
             return true;
         }
 

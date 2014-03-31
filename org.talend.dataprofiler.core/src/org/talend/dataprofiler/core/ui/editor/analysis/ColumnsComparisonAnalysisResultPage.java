@@ -279,17 +279,22 @@ public class ColumnsComparisonAnalysisResultPage extends AbstractAnalysisResultP
 
         TableItem item1 = new TableItem(resultTable, SWT.NULL);
         item1.setText(0, DefaultMessagesImpl.getString("ColumnsComparisonAnalysisResultPage.%Match")); //$NON-NLS-1$
-        setAMatchPercent = StringFormatUtil.format(
-                (rowMatchingIndicatorA.getMatchingValueCount().doubleValue()) / columnSetARows.doubleValue(),
-                StringFormatUtil.PERCENT).toString();
+        // TDQ-8695 display "N/A" if it is infinite or NaN
+        double matchPerA = (rowMatchingIndicatorA.getMatchingValueCount().doubleValue()) / columnSetARows.doubleValue();
+        if (Double.isNaN(matchPerA) || Double.isInfinite(matchPerA)) {
+            setAMatchPercent = org.talend.dataquality.PluginConstant.NA_STRING;
+        } else {
+            setAMatchPercent = StringFormatUtil.format(matchPerA, StringFormatUtil.PERCENT).toString();
+        }
         item1.setText(1, setAMatchPercent);
         TableItem item2 = new TableItem(resultTable, SWT.NULL);
         item2.setText(0, DefaultMessagesImpl.getString("ColumnsComparisonAnalysisResultPage.%NotMatch")); //$NON-NLS-1$
-        item2.setText(
-                1,
-                StringFormatUtil.format(
-                        (rowMatchingIndicatorA.getNotMatchingValueCount().doubleValue()) / columnSetARows.doubleValue(),
-                        StringFormatUtil.PERCENT).toString());
+        double notMatchPerA = (rowMatchingIndicatorA.getNotMatchingValueCount().doubleValue()) / columnSetARows.doubleValue();
+        if (Double.isNaN(notMatchPerA) || Double.isInfinite(notMatchPerA)) {
+            item2.setText(1, org.talend.dataquality.PluginConstant.NA_STRING);
+        } else {
+            item2.setText(1, StringFormatUtil.format(notMatchPerA, StringFormatUtil.PERCENT).toString());
+        }
         TableItem item3 = new TableItem(resultTable, SWT.NULL);
         item3.setText(0, DefaultMessagesImpl.getString("ColumnsComparisonAnalysisResultPage.Match")); //$NON-NLS-1$
         item3.setText(1, rowMatchingIndicatorA.getMatchingValueCount().toString());
@@ -303,15 +308,19 @@ public class ColumnsComparisonAnalysisResultPage extends AbstractAnalysisResultP
         if (!isHasDeactivatedIndicator) {
             Long columnSetBRows = rowMatchingIndicatorB.getMatchingValueCount()
                     + rowMatchingIndicatorB.getNotMatchingValueCount();
-            setBMatchPercent = StringFormatUtil.format(
-                    (rowMatchingIndicatorB.getMatchingValueCount().doubleValue()) / columnSetBRows.doubleValue(),
-                    StringFormatUtil.PERCENT).toString();
+            double matchPerB = rowMatchingIndicatorB.getMatchingValueCount().doubleValue() / columnSetBRows.doubleValue();
+            if (Double.isNaN(matchPerB) || Double.isInfinite(matchPerB)) {
+                setBMatchPercent = org.talend.dataquality.PluginConstant.NA_STRING;
+            } else {
+                setBMatchPercent = StringFormatUtil.format(matchPerB, StringFormatUtil.PERCENT).toString();
+            }
             item1.setText(2, setBMatchPercent);
-            item2.setText(
-                    2,
-                    StringFormatUtil.format(
-                            (rowMatchingIndicatorB.getNotMatchingValueCount().doubleValue()) / columnSetBRows.doubleValue(),
-                            StringFormatUtil.PERCENT).toString());
+            double notMatchPerB = (rowMatchingIndicatorB.getNotMatchingValueCount().doubleValue()) / columnSetBRows.doubleValue();
+            if (Double.isNaN(notMatchPerB) || Double.isInfinite(notMatchPerB)) {
+                item2.setText(2, org.talend.dataquality.PluginConstant.NA_STRING);
+            } else {
+                item2.setText(2, StringFormatUtil.format(notMatchPerB, StringFormatUtil.PERCENT).toString());
+            }
             item3.setText(2, rowMatchingIndicatorB.getMatchingValueCount().toString());
             item4.setText(2, rowMatchingIndicatorB.getNotMatchingValueCount().toString());
             item5.setText(2, columnSetBRows.toString());
