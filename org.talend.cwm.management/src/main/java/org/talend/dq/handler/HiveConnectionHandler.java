@@ -23,6 +23,7 @@ import org.talend.core.database.conn.ConnParameterKeys;
 import org.talend.core.database.hbase.conn.version.EHBaseDistribution4Versions;
 import org.talend.core.hadoop.repository.HadoopRepositoryUtil;
 import org.talend.core.model.metadata.IMetadataConnection;
+import org.talend.core.model.metadata.connection.hive.HiveConnVersionInfo;
 import org.talend.core.utils.TalendQuoteUtils;
 import org.talend.metadata.managment.connection.manager.HiveConnectionManager;
 import org.talend.utils.json.JSONException;
@@ -149,19 +150,32 @@ public class HiveConnectionHandler {
         return new HashMap<String, String>();
     }
 
+    /**
+     * 
+     * create a Handler when run an analysis.embeded model need to execute parameters.if it is standalone model,return
+     * HiveConnectionHandler
+     * 
+     * @param metadataConnection
+     * @return
+     */
     public static HiveConnectionHandler createHandler(IMetadataConnection metadataConnection) {
         HiveConnectionHandler handler = null;
         String version = (String) metadataConnection.getParameter(ConnParameterKeys.CONN_PARA_KEY_HIVE_VERSION);
-        if (EHBaseDistribution4Versions.HDP_1_3.getVersionValue().equals(version)) {
-            handler = new HDP130Handler(metadataConnection);
-        } else if (EHBaseDistribution4Versions.HDP_2_0.getVersionValue().equals(version)
-                || EHBaseDistribution4Versions.CLOUDERA_CDH4_YARN.getVersionValue().equals(version)) {
-            handler = new HiveYarnHandler(metadataConnection);
-        } else if (EHBaseDistribution4Versions.MAPR_2_1_2.getVersionValue().equals(version)
-                || EHBaseDistribution4Versions.MAPR_3_0_1.getVersionValue().equals(version)) {
-            handler = new Mapr212Handler(metadataConnection);
-        } else {
+        String hiveModel = (String) metadataConnection.getParameter(ConnParameterKeys.CONN_PARA_KEY_HIVE_MODE);
+        if (HiveConnVersionInfo.MODE_STANDALONE.getKey().equalsIgnoreCase(hiveModel)) {
             handler = new HiveConnectionHandler(metadataConnection);
+        } else {
+            if (EHBaseDistribution4Versions.HDP_1_3.getVersionValue().equals(version)) {
+                handler = new HDP130Handler(metadataConnection);
+            } else if (EHBaseDistribution4Versions.HDP_2_0.getVersionValue().equals(version)
+                    || EHBaseDistribution4Versions.CLOUDERA_CDH4_YARN.getVersionValue().equals(version)) {
+                handler = new HiveYarnHandler(metadataConnection);
+            } else if (EHBaseDistribution4Versions.MAPR_2_1_2.getVersionValue().equals(version)
+                    || EHBaseDistribution4Versions.MAPR_3_0_1.getVersionValue().equals(version)) {
+                handler = new Mapr212Handler(metadataConnection);
+            } else {
+                handler = new HiveConnectionHandler(metadataConnection);
+            }
         }
         return handler;
     }
