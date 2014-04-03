@@ -1085,6 +1085,13 @@
            name="%BusinessRuleAnalysis">
      </cheatsheet>
      <cheatsheet
+           category="org.talend.dataprofiler.core.category/org.talend.dataprofiler.core.category.analysis"
+           composite="false"
+           contentFile="$nl$/cheatsheets/MatchAnalysis_cheat.xml"
+           id="org.talend.dataprofiler.core.cheatsheet.match.analysis"
+           name="%MatchAnalysisCreation">
+     </cheatsheet>
+     <cheatsheet
            category="org.talend.dataprofiler.core.category/org.talend.dataprofiler.core.category.pattern"
            composite="false"
            contentFile="$nl$/cheatsheets/PatternSql_cheat.xml"
