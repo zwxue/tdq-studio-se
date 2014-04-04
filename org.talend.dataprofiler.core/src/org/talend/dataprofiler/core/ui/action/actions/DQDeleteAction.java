@@ -354,11 +354,9 @@ public class DQDeleteAction extends DeleteAction {
         confirmForDQ = true;
         List<IRepositoryNode> folderNodeWhichChildHadDepend = null;
 
-        //use this selectedNodes directly, the order also important,when the depended nodes had been deleted, no need to check them any more
+        // use this selectedNodes directly, the order also important,when the depended nodes had been deleted, no need
+        // to check them any more
         for (int i = selectedNodes.size() - 1; i >= 0; i--) {
-            if (selectedNodes.size() == 0) {
-                break;
-            }
             IRepositoryNode node = selectedNodes.get(i);
             IRepositoryNode parent = node.getParent();
             // -- When the node has no depends, delete it directly
