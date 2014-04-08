@@ -13,7 +13,10 @@
 package org.talend.dq.helper;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Stack;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
@@ -384,5 +387,45 @@ public final class EObjectHelper {
         }
 
         return uri;
+    }
+
+    public static <T extends EObject> T deepCopy(T emfObject) {
+        EcoreUtil.Copier copier = new EcoreUtil.Copier(Boolean.TRUE, Boolean.FALSE);
+        preDeepCopy(emfObject, copier);
+        T copy = (T) copier.copy(emfObject);
+        copier.copyReferences();
+        return copy;
+    }
+
+    private static void preDeepCopy(EObject emfObject, EcoreUtil.Copier copier) {
+        Stack<EObject> work = new Stack<EObject>();
+        work.push(emfObject);
+        Collection<EObject> collection = new LinkedHashSet<EObject>();
+        while (!work.isEmpty()) {
+            EObject o = work.pop();
+            if (collection.contains(o)) {
+                continue;
+            }
+            collection.add(o);
+            List<EObject> list = o.eContents();
+            for (EObject eo : list) {
+                if (!collection.contains(eo)) {
+                    work.push(eo);
+                }
+            }
+            list = o.eCrossReferences();
+            for (EObject eo : list) {
+                if (!collection.contains(eo)) {
+                    work.push(eo);
+                }
+            }
+            EObject container = o.eContainer();
+            if (container != null && !collection.contains(container)) {
+                work.push(container);
+            }
+        }
+        collection = copier.copyAll(collection);
+        copier.copyReferences();
+
     }
 }
