@@ -14,6 +14,7 @@ package org.talend.dq.indicators;
 
 import java.sql.SQLException;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.emf.ecore.EObject;
 import org.talend.core.model.metadata.builder.connection.Connection;
@@ -90,7 +91,8 @@ public class SchemaEvaluator extends AbstractSchemaEvaluator<Schema> {
             }
             // ~
             // MOD gdbu 2011-4-21 bug : 20578
-            if (!ConnectionUtils.isOdbcProgress(connection) && !ConnectionUtils.isOdbcOracle(connection)) {
+            if (!ConnectionUtils.isOdbcProgress(connection) && !ConnectionUtils.isOdbcOracle(connection)
+                    && StringUtils.isNotEmpty(catName) && dbms().supportCatalogSelection()) {
                 connection.setCatalog(catName);
             }
             // ~20578
