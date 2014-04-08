@@ -135,6 +135,11 @@ public class LocalRepositoryObjectCRUD extends AbstractRepObjectCRUDAction {
         if (sourceCount == 1 || targetCount == 1) {
             return false;
         }
+
+        if (sourceNode.equals(targetNode)) {
+            return false;
+        }
+
         // MOD qiongli 2012-4-24 TDQ-5127
         if (isForbidNode(sourceNode)) {
             return false;
@@ -147,13 +152,33 @@ public class LocalRepositoryObjectCRUD extends AbstractRepObjectCRUDAction {
         }
         // ~
 
+        // when the source and target is not the same type, can not drag
+        if (!isSameType(sourceNode, targetNode)) {
+            return false;
+        }
+
         // can't drag an item in recycle bin
         if (ProxyRepositoryFactory.getInstance().getStatus(sourceNode.getObject()) == ERepositoryStatus.DELETED) {
             return false;
         }
-        if (sourceNode.equals(targetNode)) {
+
+        // when the sourceNode parent is targetNode, no need to do drag
+        if (sourceNode.getParent().equals(targetNode)) {
             return false;
         }
+
+        // when move the parent to child node,can not do drag
+        if (targetNode.getParent().equals(sourceNode)) {
+            return false;
+        }
+
+        // the specail check for folder
+        if (sourceNode.getType() == ENodeType.SIMPLE_FOLDER) {
+            if (!canMoveFolderNode(sourceNode, targetNode)) {
+                return false;
+            }
+        }
+
         return true;
     }
 
@@ -324,15 +349,8 @@ public class LocalRepositoryObjectCRUD extends AbstractRepObjectCRUDAction {
 
             // do some checks before moving.
             for (IRepositoryNode sourceNode : selectedRepositoryNodes) {
-                // MOD msjian 2012-10-23 TDQ-5614: when the node is locked, tell user and make it can not move.
+                // MOD msjian 2012-10-23 TDQ-5614: when the node is locked, tell user can not move.
                 if (haveLockedItems(sourceNode)) {
-                    return isHandleOK;
-                }
-                if (!isSameType(sourceNode, targetNode)) {
-                    MessageDialog
-                            .openWarning(
-                                    PlatformUI.getWorkbench().getDisplay().getActiveShell(),
-                                    DefaultMessagesImpl.getString("RepositoyNodeDropAdapterAssistant.error.moveError"), DefaultMessagesImpl.getString("RepositoyNodeDropAdapterAssistant.error.moveNotSameType")); //$NON-NLS-1$ //$NON-NLS-2$
                     return isHandleOK;
                 }
                 // TDQ-5614 ~
@@ -373,9 +391,6 @@ public class LocalRepositoryObjectCRUD extends AbstractRepObjectCRUDAction {
     private void moveRepositoryNodes(IRepositoryNode[] repositoryNodes, IRepositoryNode targetNode) throws PersistenceException {
         if (repositoryNodes != null) {
             for (IRepositoryNode sourceNode : repositoryNodes) {
-                if (targetNode == sourceNode.getParent()) {
-                    continue;
-                }
                 if (sourceNode.getType() == ENodeType.REPOSITORY_ELEMENT) {
                     if (sourceNode instanceof AnalysisRepNode || sourceNode instanceof ConnectionRepNode) {
                         moveAnaConNode(sourceNode, targetNode);
@@ -526,28 +541,21 @@ public class LocalRepositoryObjectCRUD extends AbstractRepObjectCRUDAction {
     }
 
     /**
-     * MOD bu gdbu 2011-4-2 bug : 19537
-     * 
-     * Add the restrictions when Move the folder.
+     * check can move folder node or not.
      * 
      * @param sourceNode
      * @param targetNode
      * @return
      */
-    private boolean canMoveNode(IRepositoryNode sourceNode, IRepositoryNode targetNode) {
-        String sourceNodeRelPath = RepositoryNodeHelper.getPath(sourceNode).toString().trim();
-        String targetNodeRelPath = RepositoryNodeHelper.getPath(targetNode).toString().trim();
-        // MOD gdbu 2011-4-25 bug : 19537
-        if (sourceNode.getParent().getId().equals(targetNode.getId())) {
-            return false;
-        }
-        // ~19537
+    private boolean canMoveFolderNode(IRepositoryNode sourceNode, IRepositoryNode targetNode) {
+        String sourceNodeRelPath = RepositoryNodeHelper.getPath(sourceNode).toString().trim() + IPath.SEPARATOR;
+        String targetNodeRelPath = RepositoryNodeHelper.getPath(targetNode).toString().trim() + IPath.SEPARATOR;
         if (sourceNodeRelPath.length() > targetNodeRelPath.length()) {
             // Move a child node to parent node or child node to move to other branches, allowing moving.
             return true;
         }
         if (sourceNodeRelPath.equals(targetNodeRelPath.substring(0, sourceNodeRelPath.length()))) {
-            // Move a child node to parent node is not allowed.
+            // Move a parent node to child node is not allowed.
             return false;
         }
         return true;
@@ -576,12 +584,6 @@ public class LocalRepositoryObjectCRUD extends AbstractRepObjectCRUDAction {
             jrxmlFileNames = RepNodeUtils.getListOfJrxmlNameWithPath(oldPath, jrxmlFileRepNodes);
         }
         // ~
-        // MOD bu gdbu 2011-4-2 bug : 19537
-        if (!canMoveNode(sourceNode, targetNode)) {
-            // Doesn't allow the parent node moved to the child node
-            return;
-        }
-        // ~19537
 
         moveFolder(sourceNode, targetNode);
 
@@ -613,13 +615,6 @@ public class LocalRepositoryObjectCRUD extends AbstractRepObjectCRUDAction {
      * @return
      */
     private boolean isSameType(IRepositoryNode sourceNode, IRepositoryNode targetNode) {
-        // check root node
-        IPath sourcePath = WorkbenchUtils.getPath(sourceNode);
-        IPath targetPath = WorkbenchUtils.getPath(targetNode);
-        int sourceCount = sourcePath.segmentCount();
-        int targetCount = targetPath.segmentCount();
-        String sourceString = sourcePath.removeLastSegments(sourceCount - 2).toOSString();
-        String targetString = targetPath.removeLastSegments(targetCount - 2).toOSString();
         // MOD klliu Bug TDQ-4444 2012-01-09
         // if sourceNode and targetNode have a same root node, also need to check the node's object type is same.
         // MOD qiongli TDQ-5127 avoid NPE
@@ -629,6 +624,14 @@ public class LocalRepositoryObjectCRUD extends AbstractRepObjectCRUDAction {
             return false;
         }
         // ~
+
+        // check root node
+        IPath sourcePath = WorkbenchUtils.getPath(sourceNode);
+        IPath targetPath = WorkbenchUtils.getPath(targetNode);
+        int sourceCount = sourcePath.segmentCount();
+        int targetCount = targetPath.segmentCount();
+        String sourceString = sourcePath.removeLastSegments(sourceCount - 2).toOSString();
+        String targetString = targetPath.removeLastSegments(targetCount - 2).toOSString();
         return sourceString.equals(targetString);
     }
 
