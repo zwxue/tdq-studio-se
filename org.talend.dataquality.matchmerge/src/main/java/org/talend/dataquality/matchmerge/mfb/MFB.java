@@ -223,8 +223,16 @@ public class MFB implements MatchMergeAlgorithm {
         while (mergedRecordAttributes.hasNext()) {
             Attribute left = mergedRecordAttributes.next();
             Attribute right = currentRecordAttributes.next();
-            double score = MatchMerge.matchScore(left, right, algorithms[matchIndex], algorithmParameters[matchIndex],
+            double score;
+            // First try on the merged value (less intensive)
+            score = MatchMerge.matchScore(Collections.singleton(left.getValue()).iterator(),
+                    Collections.singleton(right.getValue()).iterator(), algorithms[matchIndex], algorithmParameters[matchIndex],
                     nullOptions[matchIndex], subStrings[matchIndex]);
+            if (score < thresholds[matchIndex]) {
+                // Score wasn't high enough, try on all values
+                score = MatchMerge.matchScore(left.getValues().iterator(), right.getValues().iterator(), algorithms[matchIndex],
+                        algorithmParameters[matchIndex], nullOptions[matchIndex], subStrings[matchIndex]);
+            }
             result.setScore(matchIndex, algorithms[matchIndex], score, left.getValue(), right.getValue());
             result.setThreshold(matchIndex, thresholds[matchIndex]);
             confidence += score * weights[matchIndex];
