@@ -13,14 +13,11 @@
 package org.talend.cwm.compare.factory.comparisonlevel;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
-import org.eclipse.core.resources.IFile;
 import org.eclipse.emf.common.util.EList;
-import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.diff.metamodel.DiffElement;
 import org.eclipse.emf.compare.diff.metamodel.DiffModel;
 import org.eclipse.emf.compare.diff.metamodel.ModelElementChangeLeftTarget;
@@ -31,34 +28,31 @@ import org.eclipse.emf.compare.match.service.MatchService;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
-import org.talend.commons.utils.WorkspaceUtils;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.connection.DelimitedFileConnection;
 import org.talend.core.model.metadata.builder.connection.MetadataColumn;
 import org.talend.core.model.metadata.builder.connection.MetadataTable;
-import org.talend.cwm.compare.DQStructureComparer;
 import org.talend.cwm.compare.exception.ReloadCompareException;
-import org.talend.cwm.compare.i18n.DefaultMessagesImpl;
 import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.SwitchHelpers;
-import org.talend.dq.helper.EObjectHelper;
-import org.talend.dq.writer.EMFSharedResources;
 import orgomg.cwm.resource.relational.ColumnSet;
 
 /**
  * Added TDQ-8360 20140324 yyin. Compare the metadata of the file connection, remain the columns with same name, remove
- * the columns not in new metadata. But only use a temp list to record the compared result, will not modify the real
- * metadata table(maybe cancelled)
+ * the columns not in new metadata. Use a temp list to record the compared result, because the selected obj is the new
+ * schema, while the temp table from the remp file is the old schema, unlike the db reload(which worked contrariwise)
  */
-public class FileMetadataTableComparisonLevel extends AbstractComparisonLevel {
+public class FileMetadataTableComparisonLevel extends AbstractTableComparisonLevel {
 
     private static Logger log = Logger.getLogger(FileMetadataTableComparisonLevel.class);
-
-    private List<MetadataColumn> tempNewColumns = null;
 
     // in this compare, only operate this list, do not change the real column in metadata table
     // because it maybe cancelled.
     private List<MetadataColumn> comparedColumns = new ArrayList<MetadataColumn>();
+
+    private boolean isUpdated = false;
+
+    private MetadataTable tempMetadataTable = null;
 
     /**
      * DOC yyin FileMetadataTableComparisonLevel constructor comment.
@@ -78,51 +72,6 @@ public class FileMetadataTableComparisonLevel extends AbstractComparisonLevel {
     public FileMetadataTableComparisonLevel(MetadataTable newMetadataTable) {
         super(null);
         selectedObj = newMetadataTable;
-        comparedColumns.addAll(newMetadataTable.getColumns());
-    }
-
-    /*
-     * give the new columns of the new schema
-     */
-    public void setNewColumns(List<MetadataColumn> newColumns) {
-        tempNewColumns = newColumns;
-    }
-
-    /*
-     * find the same name metadata in the old provider, and give the new columns to it.
-     */
-    @Override
-    protected EObject getSavedReloadObject() throws ReloadCompareException {
-
-        MetadataTable[] metadataTables = ConnectionHelper.getTables((DelimitedFileConnection) tempReloadProvider).toArray(
-                new MetadataTable[0]);
-        MetadataTable tempMetadataTable = null;
-        String tableName = ((MetadataTable) selectedObj).getLabel();
-        for (MetadataTable table : metadataTables) {
-            if (table.getLabel().equals(tableName)) {
-                tempMetadataTable = table;
-                tempMetadataTable.getFeature().clear();
-                tempMetadataTable.getFeature().addAll(tempNewColumns);
-                break;
-            }
-        }
-        // util.saveResource(tempMetadataTable.eResource());
-        return tempMetadataTable;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.talend.cwm.compare.factory.comparisonlevel.AbstractComparisonLevel#getRightResource()
-     */
-    @Override
-    protected Resource getRightResource() throws ReloadCompareException {
-        // no need for reload, only for compare.
-        return null;
-    }
-
-    protected void saveReloadResult() {
-        // no need to save here
     }
 
     /*
@@ -134,50 +83,25 @@ public class FileMetadataTableComparisonLevel extends AbstractComparisonLevel {
         return ((MetadataTable) selectedObj).getConnection();
     }
 
-    @Override
-    protected IFile createTempConnectionFile() throws ReloadCompareException {
-        // MOD klliu bug 15822 201-09-30
-        if (oldDataProvider != null && oldDataProvider.eIsProxy()) {
-            oldDataProvider = (Connection) EObjectHelper.resolveObject(oldDataProvider);
-        }
-        IFile findCorrespondingFile = WorkspaceUtils.getModelElementResource(oldDataProvider);
-        if (findCorrespondingFile == null) {
-
-            throw new ReloadCompareException(DefaultMessagesImpl.getString(
-                    "TableViewComparisonLevel.NotFindFileOfDataprovider", oldDataProvider.getName())); //$NON-NLS-1$
-        }
-        IFile tempConnectionFile = DQStructureComparer.copyedToDestinationFile(findCorrespondingFile,
-                DQStructureComparer.getTempRefreshFile());
-
-        URI uri = URI.createPlatformResourceURI(tempConnectionFile.getFullPath().toString(), false);
-        Resource resource = EMFSharedResources.getInstance().getResource(uri, true);
-        if (resource == null) {
-            throw new ReloadCompareException(DefaultMessagesImpl.getString("TableViewComparisonLevel.NoFactoryFoundForURI", uri)); //$NON-NLS-1$
-        }
-        Collection<Connection> tdDataProviders = ConnectionHelper.getTdDataProviders(resource.getContents());
-
-        if (tdDataProviders.isEmpty()) {
-            throw new ReloadCompareException(DefaultMessagesImpl.getString("TableViewComparisonLevel.NoDataProviderFound", //$NON-NLS-1$
-                    tempConnectionFile.getLocation().toFile().getAbsolutePath()));
-        }
-        if (tdDataProviders.size() > 1) {
-            throw new ReloadCompareException(DefaultMessagesImpl.getString(
-                    "TableViewComparisonLevel.TooManyDataProviderInFile", tdDataProviders.size(), //$NON-NLS-1$
-                    tempConnectionFile.getLocation().toFile().getAbsolutePath()));
-        }
-        tempReloadProvider = tdDataProviders.iterator().next();
-        return tempConnectionFile;
-    }
-
     /*
-     * (non-Javadoc)
-     * 
-     * @see org.talend.cwm.compare.factory.comparisonlevel.AbstractComparisonLevel#getLeftResource()
+     * find the same name metadata in the old provider, and give the new columns to it.
      */
-    @Override
-    protected Resource getLeftResource() throws ReloadCompareException {
-        // no need for reload, only for compare.
-        return null;
+    private EObject getTempTableFromOldFile() throws ReloadCompareException {
+
+        MetadataTable[] metadataTables = ConnectionHelper.getTables((DelimitedFileConnection) tempReloadProvider).toArray(
+                new MetadataTable[0]);
+        String tableName = ((MetadataTable) selectedObj).getLabel();
+        for (MetadataTable table : metadataTables) {
+            if (table.getLabel().equals(tableName)) {
+                // the temp table is the old one in file connection before schema changed
+                tempMetadataTable = table;
+                // use this temp list to store the compared result.
+                comparedColumns.addAll(table.getColumns());
+                break;
+            }
+        }
+        util.saveResource(tempMetadataTable.eResource());
+        return tempMetadataTable;
     }
 
     @Override
@@ -188,11 +112,12 @@ public class FileMetadataTableComparisonLevel extends AbstractComparisonLevel {
             // remove the jrxml from the ResourceSet before doMatch
             Map<ResourceSet, List<Resource>> rsJrxmlMap = removeJrxmlsFromResourceSet();
 
-            MetadataTable reloadObject = (MetadataTable) getSavedReloadObject();
-            if (reloadObject == null) {
+            MetadataTable tempOldTable = (MetadataTable) getTempTableFromOldFile();
+            if (tempOldTable == null) {
                 return false;
             }
-            match = MatchService.doContentMatch((MetadataTable) selectedObj, reloadObject, options);
+            // left: the old schema, right: the new schema after modification
+            match = MatchService.doContentMatch(tempOldTable, (MetadataTable) selectedObj, options);
 
             // add the jrxml into the ResourceSet after doMatch
             addJrxmlsIntoResourceSet(rsJrxmlMap);
@@ -211,6 +136,7 @@ public class FileMetadataTableComparisonLevel extends AbstractComparisonLevel {
             log.error(e.getMessage(), e);
             return false;
         }
+        tempMetadataTable.getFeature().clear();
         return true;
     }
 
@@ -227,36 +153,40 @@ public class FileMetadataTableComparisonLevel extends AbstractComparisonLevel {
     }
 
     /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * org.talend.cwm.compare.factory.comparisonlevel.AbstractComparisonLevel#handleRemoveElement(org.eclipse.emf.compare
-     * .diff.metamodel.ModelElementChangeLeftTarget)
+     * remove the old column when there are no same name columns in new schema
      */
     @Override
     protected void handleRemoveElement(ModelElementChangeLeftTarget removeElement) {
         MetadataColumn removeColumn = SwitchHelpers.METADATA_COLUMN_SWITCH.doSwitch(removeElement.getLeftElement());
         if (removeColumn != null) {
             comparedColumns.remove(removeColumn);
+            isUpdated = true;
         }
     }
 
+    @Override
+    public Connection reloadCurrentLevelElement() throws ReloadCompareException {
+        Connection connection = super.reloadCurrentLevelElement();
+
+        // if the compare has some modification on the schema, should update the metadata too
+        if (isUpdated) {
+            ((MetadataTable) selectedObj).getFeature().clear();
+            ((MetadataTable) selectedObj).getFeature().addAll(comparedColumns);
+        }
+
+        return connection;
+    }
+
     /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * org.talend.cwm.compare.factory.comparisonlevel.AbstractComparisonLevel#handleAddElement(org.eclipse.emf.compare
-     * .diff.metamodel.ModelElementChangeRightTarget)
+     * add the column when it is not contained in the old schema
      */
     @Override
     protected void handleAddElement(ModelElementChangeRightTarget addElement) {
         MetadataColumn column = SwitchHelpers.METADATA_COLUMN_SWITCH.doSwitch(addElement.getRightElement());
         if (column != null) {
             comparedColumns.add(column);
+            isUpdated = true;
         }
     }
 
-    public List<MetadataColumn> getComparedResult() {
-        return this.comparedColumns;
-    }
 }

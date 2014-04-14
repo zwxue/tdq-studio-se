@@ -19,6 +19,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.MessageDialogWithToggle;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
@@ -39,6 +40,7 @@ import org.talend.dataprofiler.core.ui.editor.TdEditorToolBar;
 import org.talend.dataprofiler.core.ui.events.EventEnum;
 import org.talend.dataprofiler.core.ui.events.EventManager;
 import org.talend.dataprofiler.core.ui.events.EventReceiver;
+import org.talend.dataprofiler.core.ui.utils.WorkbenchUtils;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisType;
 import org.talend.dataquality.analysis.ExecutionLanguage;
@@ -85,7 +87,10 @@ public class AnalysisEditor extends CommonFormEditor {
 
     private EventReceiver checkBeforeRunReceiver = null;
 
-    // ~
+    // Added 20140411 TDQ-8360 yyin
+    private EventReceiver refreshDataProvider = null;
+
+    private EventReceiver reopenEditor = null;
 
     private boolean isRefreshResultPage = false;
 
@@ -427,6 +432,39 @@ public class AnalysisEditor extends CommonFormEditor {
             }
         };
         EventManager.getInstance().register(masterPage.getAnalysis(), EventEnum.DQ_ANALYSIS_RUN_FROM_MENU, refreshReceiver);
+
+        // register: refresh the dataprovider combobox when the name of the data provider is changed.
+        refreshDataProvider = new EventReceiver() {
+
+            @Override
+            public boolean handle(Object data) {
+                masterPage.reloadDataproviderAndFillConnCombo();
+                return true;
+            }
+        };
+        EventManager.getInstance().register(masterPage.getAnalysis(), EventEnum.DQ_ANALYSIS_REFRESH_DATAPROVIDER_LIST,
+                refreshDataProvider);
+
+        // register: reopen this editor after reload its depended connection
+        reopenEditor = new EventReceiver() {
+
+            @Override
+            public boolean handle(Object data) {
+                Display.getDefault().asyncExec(new Runnable() {
+
+                    public void run() {
+
+                        WorkbenchUtils.refreshCurrentAnalysisEditor(masterPage.getAnalysis().getName());
+                    }
+
+                });
+
+                return true;
+            }
+        };
+        EventManager.getInstance()
+                .register(masterPage.getAnalysis().getName(), EventEnum.DQ_ANALYSIS_REOPEN_EDITOR, reopenEditor);
+
     }
 
     /**
@@ -437,6 +475,10 @@ public class AnalysisEditor extends CommonFormEditor {
         EventManager.getInstance().unRegister(masterPage.getAnalysis(), EventEnum.DQ_ANALYSIS_CHECK_BEFORERUN,
                 checkBeforeRunReceiver);
         EventManager.getInstance().unRegister(masterPage.getAnalysis(), EventEnum.DQ_ANALYSIS_RUN_FROM_MENU, refreshReceiver);
+        EventManager.getInstance().unRegister(masterPage.getAnalysis(), EventEnum.DQ_ANALYSIS_REFRESH_DATAPROVIDER_LIST,
+                refreshDataProvider);
+        EventManager.getInstance().unRegister(masterPage.getAnalysis().getName(), EventEnum.DQ_ANALYSIS_REOPEN_EDITOR,
+                reopenEditor);
         super.dispose();
     }
 

@@ -26,6 +26,7 @@ import org.talend.core.model.properties.Property;
 import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.helper.ColumnSetHelper;
 import org.talend.cwm.helper.TaggedValueHelper;
+import org.talend.cwm.management.i18n.Messages;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.dataquality.PluginConstant;
 import org.talend.dataquality.analysis.Analysis;
@@ -255,10 +256,14 @@ public class AnalysisHandler {
                 // the result page
                 if (!(element instanceof TdColumn)) {
                     // MOD qiongli 2011-1-28,for delimited file
-                    MetadataTable table = ColumnHelper.getColumnOwnerAsMetadataTable((MetadataColumn) element);
-                    String tableName = table.getLabel();
-                    if (!existingTables.contains(tableName)) {
-                        existingTables.add(tableName);
+                    try {
+                        MetadataTable table = ColumnHelper.getColumnOwnerAsMetadataTable((MetadataColumn) element);
+                        String tableName = table.getLabel();
+                        if (!existingTables.contains(tableName)) {
+                            existingTables.add(tableName);
+                        }
+                    } catch (java.lang.NullPointerException e) {
+                        log.error(Messages.getString("AnalysisHandler.CanNotFindColumnParent", element.getName()), e);//$NON-NLS-1$
                     }
                 }
             }

@@ -18,6 +18,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
@@ -32,7 +33,6 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature.Setting;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorReference;
@@ -44,12 +44,12 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.WorkbenchException;
-import org.talend.commons.emf.EMFUtil;
+import org.talend.commons.exception.BusinessException;
 import org.talend.commons.exception.ExceptionHandler;
 import org.talend.commons.exception.PersistenceException;
 import org.talend.core.model.general.Project;
-import org.talend.core.model.metadata.builder.connection.MetadataColumn;
 import org.talend.core.model.metadata.builder.connection.MetadataTable;
+import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.properties.FolderItem;
 import org.talend.core.model.properties.FolderType;
 import org.talend.core.model.properties.Item;
@@ -71,8 +71,11 @@ import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.action.actions.OpenItemEditorAction;
 import org.talend.dataprofiler.core.ui.editor.AbstractItemEditorInput;
 import org.talend.dataprofiler.core.ui.editor.analysis.AnalysisEditor;
+import org.talend.dataprofiler.core.ui.editor.analysis.AnalysisItemEditorInput;
 import org.talend.dataprofiler.core.ui.editor.analysis.MatchAnalysisEditor;
 import org.talend.dataprofiler.core.ui.editor.connection.ConnectionEditor;
+import org.talend.dataprofiler.core.ui.events.EventEnum;
+import org.talend.dataprofiler.core.ui.events.EventManager;
 import org.talend.dataprofiler.core.ui.views.DQRespositoryView;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisContext;
@@ -358,20 +361,21 @@ public final class WorkbenchUtils {
      * 
      * Refresh the analysis and Connection which is openning
      */
+    @Deprecated
     public static void refreshCurrentAnalysisAndConnectionEditor() {
-        List<IEditorReference> iEditorReference = getIEditorReference(AnalysisEditor.class.getName());
-        iEditorReference.addAll(getIEditorReference(ConnectionEditor.class.getName()));
-        iEditorReference.addAll(getIEditorReference(MatchAnalysisEditor.class.getName()));
+        List<IEditorReference> iEditorReference = getIEditorReference(AnalysisEditor.class.getName(), StringUtils.EMPTY);
+        iEditorReference.addAll(getIEditorReference(ConnectionEditor.class.getName(), StringUtils.EMPTY));
+        iEditorReference.addAll(getIEditorReference(MatchAnalysisEditor.class.getName(), StringUtils.EMPTY));
         closeAndOpenEditor(iEditorReference);
     }
 
     /**
-     * 
-     * close and open the editors same method {@link CorePlugin}.getDefault().itemIsOpening()
+     * close and open the editors same method {@link CorePlugin}.getDefault().itemIsOpening() MOD TDQ-8360 20140410
+     * yyin: will only operate the analysis who is related and has opened (by its observer --added when opening)
      * 
      * @param iEditorReference
      */
-    public static void closeAndOpenEditor(List<IEditorReference> iEditorReference) {
+    private static void closeAndOpenEditor(List<IEditorReference> iEditorReference) {
         // Refresh current opened editors.
         IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
         IWorkbenchPartReference activePartReference = activePage.getActivePartReference();
@@ -381,12 +385,6 @@ public final class WorkbenchUtils {
             return;
         }
         if (iEditorReference.size() > 0) {
-            boolean isConfirm = MessageDialog.openConfirm(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
-                    DefaultMessagesImpl.getString("WorkbenchUtils.ElementChange"), //$NON-NLS-1$
-                    DefaultMessagesImpl.getString("WorkbenchUtils.RefreshCurrentEditor")); //$NON-NLS-1$
-            if (!isConfirm) {
-                return;
-            }
             try {
                 for (IEditorReference editorRef : iEditorReference) {
                     IEditorInput editorInput = editorRef.getEditorInput();
@@ -394,9 +392,11 @@ public final class WorkbenchUtils {
                         AbstractItemEditorInput anaItemEditorInput = (AbstractItemEditorInput) editorInput;
                         Item item = anaItemEditorInput.getItem();
                         Property property = item.getProperty();
+
                         if (property == null) {
-                            return;
+                            continue;
                         }
+
                         IRepositoryViewObject lastVersion = ProxyRepositoryFactory.getInstance().getLastVersion(property.getId());
                         // close the editor
                         activePage.closeEditor(editorRef.getEditor(false), false);
@@ -418,39 +418,78 @@ public final class WorkbenchUtils {
     /**
      * 
      * Refresh the analysis which is openning
+     * 
+     * @param connectionItem
      */
+
     public static void refreshCurrentAnalysisEditor() {
-        List<IEditorReference> iEditorReference = getIEditorReference(AnalysisEditor.class.getName());
+
+        List<IEditorReference> iEditorReference = getIEditorReference(AnalysisEditor.class.getName(), StringUtils.EMPTY);
         // update match analysis if any opened:TDQ-8267 added by yyin
-        iEditorReference.addAll(getIEditorReference(MatchAnalysisEditor.class.getName()));
+        iEditorReference.addAll(getIEditorReference(MatchAnalysisEditor.class.getName(), StringUtils.EMPTY));
 
         closeAndOpenEditor(iEditorReference);
     }
 
     /**
      * 
-     * Refresh the Connection which is openning
+     * Refresh the analysis which is openning
+     * 
+     * @param connectionItem
      */
-    public static void refreshCurrentConnectionEditor() {
-        List<IEditorReference> iEditorReference = getIEditorReference(ConnectionEditor.class.getName());
+    public static void refreshCurrentAnalysisEditor(String analysisName) {
+
+        List<IEditorReference> iEditorReference = getIEditorReference(AnalysisEditor.class.getName(), analysisName);
+        // update match analysis if any opened:TDQ-8267 added by yyin
+        iEditorReference.addAll(getIEditorReference(MatchAnalysisEditor.class.getName(), analysisName));
+
         closeAndOpenEditor(iEditorReference);
+    }
+
+    public static void nodifyDependedAnalysis(ConnectionItem connectionItem) {
+        // Added TDQ-8360 20140410 yyin: notify each depended analysis
+        EList<Dependency> clientDependencies = connectionItem.getConnection().getSupplierDependency();
+        for (Dependency dep : clientDependencies) {
+            for (ModelElement mod : dep.getClient()) {
+                if (!(mod instanceof Analysis)) {
+                    continue;
+                }
+                EventManager.getInstance().publish(mod, EventEnum.DQ_ANALYSIS_REFRESH_DATAPROVIDER_LIST, null);
+            }
+        }
+
     }
 
     /**
      * 
-     * Get Editors which is is same as editorID
+     * Get Editors which is is same as editorID --used for the analysis editor only
      * 
      * @param editorID
+     * @param analysisName
      * @return
      */
-    public static List<IEditorReference> getIEditorReference(String editorID) {
+    private static List<IEditorReference> getIEditorReference(String editorID, String analysisName) {
         List<IEditorReference> returnCode = new ArrayList<IEditorReference>();
         IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
         IEditorReference[] editors = activePage.getEditorReferences();
         if (editors != null) {
             for (IEditorReference editorRef : editors) {
                 if (editorRef.getId().equals(editorID)) {
-                    returnCode.add(editorRef);
+                    IEditorInput editorInput;
+                    try {
+                        editorInput = editorRef.getEditorInput();
+                        if (editorInput instanceof AbstractItemEditorInput) {
+                            AnalysisItemEditorInput anaItemEditorInput = (AnalysisItemEditorInput) editorInput;
+                            // if not pointed which analysis, add all opened ones.
+                            if (StringUtils.isEmpty(analysisName)
+                                    || StringUtils.equals(analysisName, anaItemEditorInput.getTDQAnalysisItem().getAnalysis()
+                                            .getName())) {
+                                returnCode.add(editorRef);
+                            }
+                        }
+                    } catch (PartInitException e) {
+                        log.error(e, e);
+                    }
                 }
             }
 
@@ -528,35 +567,35 @@ public final class WorkbenchUtils {
 
                     Iterator<EObject> it = referenceMaps.keySet().iterator();
                     ModelElement eobj = null;
+                    boolean isModified = false;
                     while (it.hasNext()) {
                         eobj = (ModelElement) it.next();
                         Collection<Setting> settings = referenceMaps.get(eobj);
                         for (Setting setting : settings) {
                             if (setting.getEObject() instanceof AnalysisContext) {
                                 tempAnalysis.getContext().getAnalysedElements().remove(eobj);
+                                isModified = true;
                             } else if (setting.getEObject() instanceof Indicator) {
                                 tempAnalysis.getResults().getIndicators().remove(setting.getEObject());
+                                isModified = true;
                             }
                         }
 
                     }
-                    // only when all elements of the data provider are removed from the analysis, the dependency between
-                    // them should be removed too. If only parts of them removed, the dependendy should not be removed.
-                    // TDQ-8267, since the dependency is removed, the connection in the analysis context should also be
-                    // removed
-                    if (tempAnalysis.getContext().getAnalysedElements().isEmpty()) {
-                        removeDependenciesBetweenAnaCon(oldDataProvider, tempAnalysis);
-                        tempAnalysis.getContext().setConnection(null);
+                    if (isModified) {
+                        saveTempAnalysis(file, tempAnalysis);
+
+                        // Should reopen this analyis's editor if it is opened now.
+                        EventManager.getInstance().publish(tempAnalysis.getName(), EventEnum.DQ_ANALYSIS_REOPEN_EDITOR, null);
+
                     }
-                    // ~
-                    AnaResourceFileHelper.getInstance().save(tempAnalysis);
 
                 }
             }
         }
 
-        // Refresh current opened editors.
-        refreshCurrentAnalysisEditor();
+        // Refresh current opened editors.-- should only reopen the related analysis
+        // refreshCurrentAnalysisEditor();
     }
 
     private static void removeDependenciesBetweenAnaCon(DataProvider oldDataProvider, Analysis tempAnalysis) {
@@ -573,6 +612,45 @@ public final class WorkbenchUtils {
         modified = DependenciesHandler.getInstance().removeSupplierDependenciesBetweenModels(oldDataProvider, tempList);
         for (Resource me : modified) {
             EMFUtil.saveSingleResource(me);
+        }
+    }
+
+    /**
+     * DOC yyin Comment method "getTempAnalysis".
+     * 
+     * @param analysis
+     * @return
+     */
+    private static IFile getTempAnalysisFile(Analysis analysis) {
+        Resource eResource = analysis.eResource();
+        if (eResource == null) {
+            return null;
+        }
+
+        EMFSharedResources.getInstance().unloadResource(eResource.getURI().toString());
+
+        IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
+        // MOD by zshen for bug 12316 to avoid null argument.
+        Path path = new Path(analysis.getFileName() == null ? eResource.getURI().toPlatformString(false) : analysis.getFileName());
+        return root.getFile(path);
+    }
+
+    /**
+     * Reload the metadata table of the current file connection, when the file connection changed schema: if the
+     * analysis 's analyzed columns are in the changed schema: compare the columns, remain the columns with same name,
+     * remove the columns not in new schema, and add the new columns in new schema. TDQ-8360 20140324 yyin
+     * 
+     * @param MetadataTable with new schema
+     */
+    public static void reloadMetadataOfDelimitedFile(MetadataTable metadataTable) throws BusinessException {
+        FileMetadataTableComparisonLevel creatComparisonLevel = (FileMetadataTableComparisonLevel) ComparisonLevelFactory
+                .creatComparisonLevel(metadataTable);
+        try {
+            creatComparisonLevel.reloadCurrentLevelElement();
+
+        } catch (ReloadCompareException e) {
+            log.error(e, e);
+            throw new BusinessException(Messages.getString("WorkbenchUtils.failToReloadMetadataOfDelimitedFile"), e);
         }
     }
 

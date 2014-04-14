@@ -13,14 +13,12 @@
 package org.talend.cwm.compare.factory.comparisonlevel;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
-import org.eclipse.core.resources.IFile;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.diff.metamodel.DiffElement;
@@ -33,7 +31,6 @@ import org.eclipse.emf.compare.match.service.MatchService;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
-import org.talend.commons.utils.WorkspaceUtils;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.database.DqRepositoryViewService;
 import org.talend.core.model.properties.ConnectionItem;
@@ -50,7 +47,6 @@ import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.relational.TdExpression;
 import org.talend.cwm.relational.TdTable;
 import org.talend.dataquality.helpers.DataqualitySwitchHelper;
-import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.nodes.DBColumnFolderRepNode;
 import org.talend.dq.writer.EMFSharedResources;
@@ -63,7 +59,7 @@ import orgomg.cwm.resource.relational.PrimaryKey;
 /**
  * DOC rli class global comment. Detailled comment
  */
-public class TableViewComparisonLevel extends AbstractComparisonLevel {
+public class TableViewComparisonLevel extends AbstractTableComparisonLevel {
 
     protected static Logger log = Logger.getLogger(TableViewComparisonLevel.class);
 
@@ -77,44 +73,6 @@ public class TableViewComparisonLevel extends AbstractComparisonLevel {
         super(null);
         selectedObj = columnSet;
 
-    }
-
-    @Override
-    protected IFile createTempConnectionFile() throws ReloadCompareException {
-        // MOD klliu bug 15822 201-09-30
-        if (oldDataProvider != null && oldDataProvider.eIsProxy()) {
-            oldDataProvider = (Connection) EObjectHelper.resolveObject(oldDataProvider);
-        }
-        // MOD klliu bug 16503 201-10-28 Attention,we will not use
-        // PrvResourceFileHelper and instead of WorkspaceUtils
-        // in the application,except migratory task
-        IFile findCorrespondingFile = WorkspaceUtils.getModelElementResource(oldDataProvider);
-        if (findCorrespondingFile == null) {
-
-            throw new ReloadCompareException(DefaultMessagesImpl.getString(
-                    "TableViewComparisonLevel.NotFindFileOfDataprovider", oldDataProvider.getName())); //$NON-NLS-1$
-        }
-        IFile tempConnectionFile = DQStructureComparer.copyedToDestinationFile(findCorrespondingFile,
-                DQStructureComparer.getTempRefreshFile());
-
-        URI uri = URI.createPlatformResourceURI(tempConnectionFile.getFullPath().toString(), false);
-        Resource resource = EMFSharedResources.getInstance().getResource(uri, true);
-        if (resource == null) {
-            throw new ReloadCompareException(DefaultMessagesImpl.getString("TableViewComparisonLevel.NoFactoryFoundForURI", uri)); //$NON-NLS-1$
-        }
-        Collection<Connection> tdDataProviders = ConnectionHelper.getTdDataProviders(resource.getContents());
-
-        if (tdDataProviders.isEmpty()) {
-            throw new ReloadCompareException(DefaultMessagesImpl.getString("TableViewComparisonLevel.NoDataProviderFound", //$NON-NLS-1$
-                    tempConnectionFile.getLocation().toFile().getAbsolutePath()));
-        }
-        if (tdDataProviders.size() > 1) {
-            throw new ReloadCompareException(DefaultMessagesImpl.getString(
-                    "TableViewComparisonLevel.TooManyDataProviderInFile", tdDataProviders.size(), //$NON-NLS-1$
-                    tempConnectionFile.getLocation().toFile().getAbsolutePath()));
-        }
-        tempReloadProvider = tdDataProviders.iterator().next();
-        return tempConnectionFile;
     }
 
     @Override

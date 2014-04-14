@@ -25,6 +25,9 @@ public enum EventEnum {
     // reloaded, connections checkedout from svn repository.
     DQ_SOFTWARESYSTEM_UPDATE,
     DQ_MATCH_ANALYSIS_AFTER_CREATE_CONNECTION,
-    DQ_MATCH_ANALYSIS_REFRESH_WITH_RESULT;
-
+    DQ_MATCH_ANALYSIS_REFRESH_WITH_RESULT,
+    // ONLY REFRESH the db list in combobox
+    DQ_ANALYSIS_REFRESH_DATAPROVIDER_LIST,
+    // reopen the related analysis after reload connection
+    DQ_ANALYSIS_REOPEN_EDITOR;
 }
