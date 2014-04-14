@@ -38,6 +38,7 @@ import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.navigator.CommonViewer;
+import org.talend.commons.exception.BusinessException;
 import org.talend.commons.exception.PersistenceException;
 import org.talend.core.ITDQRepositoryService;
 import org.talend.core.database.EDatabaseTypeName;
@@ -46,7 +47,6 @@ import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
 import org.talend.core.model.metadata.builder.connection.DelimitedFileConnection;
 import org.talend.core.model.metadata.builder.connection.MDMConnection;
-import org.talend.core.model.metadata.builder.connection.MetadataColumn;
 import org.talend.core.model.metadata.builder.connection.MetadataTable;
 import org.talend.core.model.metadata.builder.database.JavaSqlFactory;
 import org.talend.core.model.metadata.builder.util.MetadataConnectionUtils;
@@ -380,9 +380,8 @@ public class TOPRepositoryService implements ITDQRepositoryService {
         }
     }
 
-    public List<MetadataColumn> updateDependAnalysisOfDelimitedFile(MetadataTable oldMetadataTable,
-            List<MetadataColumn> newColumns) {
-        return WorkbenchUtils.updateDependAnalysisOfDelimitedFile(oldMetadataTable, newColumns);
+    public void reloadMetadataOfDelimitedFile(MetadataTable newMetadataTable) throws BusinessException {
+        WorkbenchUtils.reloadMetadataOfDelimitedFile(newMetadataTable);
     }
 
     /*
@@ -557,8 +556,9 @@ public class TOPRepositoryService implements ITDQRepositoryService {
      * 
      * @see org.talend.core.ITDQRepositoryService#refreshCurrentAnalysisEditor()
      */
-    public void refreshCurrentAnalysisEditor() {
-        WorkbenchUtils.refreshCurrentAnalysisEditor();
+    public void refreshCurrentAnalysisEditor(ConnectionItem connectionItem) {
+        WorkbenchUtils.nodifyDependedAnalysis(connectionItem);
+        // WorkbenchUtils.refreshCurrentAnalysisEditor();
     }
 
     /*
@@ -566,17 +566,17 @@ public class TOPRepositoryService implements ITDQRepositoryService {
      * 
      * @see org.talend.core.ITDQRepositoryService#refreshCurrentAnalysisAndConnectionEditor()
      */
+    @Deprecated
     public void refreshCurrentAnalysisAndConnectionEditor() {
         WorkbenchUtils.refreshCurrentAnalysisAndConnectionEditor();
 
-    }
+    } /*
+       * (non-Javadoc)
+       * 
+       * @see
+       * org.talend.core.ITDQRepositoryService#createHiveConnection(org.talend.core.model.metadata.IMetadataConnection)
+       */
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * org.talend.core.ITDQRepositoryService#createHiveConnection(org.talend.core.model.metadata.IMetadataConnection)
-     */
     public java.sql.Connection createHiveConnection(IMetadataConnection metadataConnection) {
         java.sql.Connection connection = null;
         if (metadataConnection != null && EDatabaseTypeName.HIVE.getXmlName().equalsIgnoreCase(metadataConnection.getDbType())) {
