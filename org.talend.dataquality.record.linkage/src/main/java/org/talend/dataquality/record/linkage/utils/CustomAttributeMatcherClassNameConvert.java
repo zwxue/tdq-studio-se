@@ -26,11 +26,11 @@ import org.apache.log4j.Logger;
  */
 public class CustomAttributeMatcherClassNameConvert {
 
-    private static Logger log = Logger.getLogger(CustomAttributeMatcherClassNameConvert.class);
-
     public static final String REGEXKEY = "\\|\\|"; //$NON-NLS-1$
 
-    public static final String QUTO = "\""; //$NON-NLS-1$
+    public static final char QUOT = '\"';
+
+    private static final Logger log = Logger.getLogger(CustomAttributeMatcherClassNameConvert.class);
 
     /**
      * DOC zshen Comment method "getClassName".
@@ -68,24 +68,24 @@ public class CustomAttributeMatcherClassNameConvert {
             return className;
         }
         String result = className;
-        if (!QUTO.equals(className.indexOf(0))) {
-            result = QUTO + className;
+        if (QUOT != className.charAt(0)) {
+            result = QUOT + className;
         }
-        if (!QUTO.equals(className.indexOf(className.lastIndexOf(0)))) {
-            result += QUTO;
+        if (QUOT != className.charAt(className.length() - 1)) {
+            result += QUOT;
         }
         return result;
     }
 
     /**
-     * A helper method to convert the concatenated pathes to URL arrays.
+     * A helper method to convert the concatenated paths to URL arrays.
      * 
-     * @param concatenatedPathes the absolute path delimited by {@link CustomAttributeMatcherClassNameConvert#REGEXKEY}
+     * @param concatenatedPaths the absolute path delimited by {@link CustomAttributeMatcherClassNameConvert#REGEXKEY}
      * @return the URL array of each jar.
      */
-    public static URL[] changeJarPathToURLArray(String concatenatedPathes) {
+    public static URL[] changeJarPathToURLArray(String concatenatedPaths) {
 
-        String[] allElements = concatenatedPathes.split(CustomAttributeMatcherClassNameConvert.REGEXKEY);
+        String[] allElements = concatenatedPaths.split(CustomAttributeMatcherClassNameConvert.REGEXKEY);
         List<URL> jarURLs = new ArrayList<URL>();
         for (String allElement : allElements) {
             try {
@@ -94,7 +94,7 @@ public class CustomAttributeMatcherClassNameConvert {
                 log.error(e, e);
             }
         }
-        return jarURLs.toArray(new URL[0]);
+        return jarURLs.toArray(new URL[jarURLs.size()]);
 
     }
 
