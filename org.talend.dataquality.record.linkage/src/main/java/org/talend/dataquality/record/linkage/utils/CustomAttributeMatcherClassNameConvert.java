@@ -28,13 +28,13 @@ public class CustomAttributeMatcherClassNameConvert {
 
     public static final String REGEXKEY = "\\|\\|"; //$NON-NLS-1$
 
-    public static final char QUOT = '\"';
+    public static final char QUOTE = '\"';
 
     private static final Logger log = Logger.getLogger(CustomAttributeMatcherClassNameConvert.class);
 
     /**
      * DOC zshen Comment method "getClassName".
-     * 
+     *
      * @param classPathParameter
      * @return
      */
@@ -49,7 +49,7 @@ public class CustomAttributeMatcherClassNameConvert {
 
     /**
      * DOC zshen Comment method "getClassName".
-     * 
+     *
      * @param classPathParameter
      * @return
      */
@@ -60,7 +60,7 @@ public class CustomAttributeMatcherClassNameConvert {
 
     /**
      * DOC zshen Comment method "addQuotationMarks".
-     * 
+     *
      * @param className
      */
     private static String addQuotationMarks(String className) {
@@ -68,11 +68,11 @@ public class CustomAttributeMatcherClassNameConvert {
             return className;
         }
         String result = className;
-        if (QUOT != className.charAt(0)) {
-            result = QUOT + className;
+        if (QUOTE != className.charAt(0)) {
+            result = QUOTE + className;
         }
-        if (QUOT != className.charAt(className.length() - 1)) {
-            result += QUOT;
+        if (QUOTE != className.charAt(className.length() - 1)) {
+            result += QUOTE;
         }
         return result;
     }
