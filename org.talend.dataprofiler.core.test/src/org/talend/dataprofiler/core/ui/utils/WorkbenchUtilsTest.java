@@ -36,6 +36,7 @@ import org.eclipse.emf.ecore.util.EObjectWithInverseResolvingEList;
 import org.eclipse.ui.PartInitException;
 import org.junit.Test;
 import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.talend.commons.exception.BusinessException;
 import org.talend.commons.exception.PersistenceException;
 import org.talend.commons.utils.VersionUtils;
 import org.talend.commons.utils.WorkspaceUtils;
@@ -142,7 +143,8 @@ public class WorkbenchUtilsTest {
 
     // test for 2 remained columns
     @Test
-    public void testUpdateDependAnalysisOfDelimitedFile() throws IOException, URISyntaxException, PartInitException {
+    public void testUpdateDependAnalysisOfDelimitedFile() throws IOException, URISyntaxException, PartInitException,
+            BusinessException {
         // create a file connection
         DelimitedFileConnection fileConnection = ConnectionPackage.eINSTANCE.getConnectionFactory()
                 .createDelimitedFileConnection();
@@ -200,12 +202,15 @@ public class WorkbenchUtilsTest {
         company.setLabel("new column");
         tempNewColumns.add(company);
 
+        metadataTable.getFeature().clear();
+        metadataTable.getFeature().addAll(tempNewColumns);
+
         // before compare, the analysis has 5 analyzed elements
         Assert.assertEquals(5, analysis.getContext().getAnalysedElements().size());
 
         // call the tested method
-        List<MetadataColumn> afterCompareColumns = WorkbenchUtils.updateDependAnalysisOfDelimitedFile(metadataTable,
-                tempNewColumns);
+        WorkbenchUtils.reloadMetadataOfDelimitedFile(metadataTable);
+        List<MetadataColumn> afterCompareColumns = metadataTable.getColumns();
 
         // check the columns
         Assert.assertEquals(4, afterCompareColumns.size());
@@ -237,7 +242,8 @@ public class WorkbenchUtilsTest {
 
     // test for last column remained
     @Test
-    public void testUpdateDependAnalysisOfDelimitedFile_2() throws IOException, URISyntaxException, PartInitException {
+    public void testUpdateDependAnalysisOfDelimitedFile_2() throws IOException, URISyntaxException, PartInitException,
+            BusinessException {
         // create a file connection
         DelimitedFileConnection fileConnection = ConnectionPackage.eINSTANCE.getConnectionFactory()
                 .createDelimitedFileConnection();
@@ -295,12 +301,15 @@ public class WorkbenchUtilsTest {
         company.setLabel("name");
         tempNewColumns.add(company);
 
+        metadataTable.getFeature().clear();
+        metadataTable.getFeature().addAll(tempNewColumns);
+
         // before compare, the analysis has 5 analyzed elements
         Assert.assertEquals(5, analysis.getContext().getAnalysedElements().size());
 
         // call the tested method
-        List<MetadataColumn> afterCompareColumns = WorkbenchUtils.updateDependAnalysisOfDelimitedFile(metadataTable,
-                tempNewColumns);
+        WorkbenchUtils.reloadMetadataOfDelimitedFile(metadataTable);
+        List<MetadataColumn> afterCompareColumns = metadataTable.getColumns();
 
         // check the columns
         Assert.assertEquals(4, afterCompareColumns.size());
@@ -331,7 +340,8 @@ public class WorkbenchUtilsTest {
 
     // test for no column remained
     @Test
-    public void testUpdateDependAnalysisOfDelimitedFile_3() throws IOException, URISyntaxException, PartInitException {
+    public void testUpdateDependAnalysisOfDelimitedFile_3() throws IOException, URISyntaxException, PartInitException,
+            BusinessException {
         // create a file connection
         DelimitedFileConnection fileConnection = ConnectionPackage.eINSTANCE.getConnectionFactory()
                 .createDelimitedFileConnection();
@@ -384,12 +394,15 @@ public class WorkbenchUtilsTest {
         country1.setLabel("country1");
         tempNewColumns.add(country1);
 
+        metadataTable.getFeature().clear();
+        metadataTable.getFeature().addAll(tempNewColumns);
+
         // before compare, the analysis has 5 analyzed elements
         Assert.assertEquals(5, analysis.getContext().getAnalysedElements().size());
 
         // call the tested method
-        List<MetadataColumn> afterCompareColumns = WorkbenchUtils.updateDependAnalysisOfDelimitedFile(metadataTable,
-                tempNewColumns);
+        WorkbenchUtils.reloadMetadataOfDelimitedFile(metadataTable);
+        List<MetadataColumn> afterCompareColumns = metadataTable.getColumns();
 
         // check the columns
         Assert.assertEquals(3, afterCompareColumns.size());
