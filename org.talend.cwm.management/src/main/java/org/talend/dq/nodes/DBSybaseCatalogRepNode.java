@@ -19,10 +19,10 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.talend.commons.exception.PersistenceException;
+import org.talend.core.database.EDatabaseTypeName;
 import org.talend.core.model.metadata.MetadataFillFactory;
 import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
 import org.talend.core.model.metadata.builder.database.ExtractMetaDataUtils;
-import org.talend.core.model.metadata.builder.database.dburl.SupportDBUrlType;
 import org.talend.core.model.metadata.builder.util.MetadataConnectionUtils;
 import org.talend.core.model.properties.DatabaseConnectionItem;
 import org.talend.core.model.properties.Item;
@@ -114,8 +114,12 @@ public class DBSybaseCatalogRepNode extends DBCatalogRepNode {
         try {
             DatabaseMetaData dbJDBCMetadata = ExtractMetaDataUtils.getInstance().getDatabaseMetaData(sqlConnection, connection,
                     false);
-            List<Schema> schemaList = MetadataFillFactory.getDBInstance(SupportDBUrlType.SYBASEDEFAULTURL).fillSchemaToCatalog(
-                    connection, dbJDBCMetadata, this.getCatalog(), null);
+            EDatabaseTypeName currentEDatabaseType = EDatabaseTypeName.getTypeFromDbType(connection.getDatabaseType());
+            List<Schema> schemaList = null;
+            if (currentEDatabaseType != null) {
+                schemaList = MetadataFillFactory.getDBInstance(currentEDatabaseType).fillSchemaToCatalog(connection,
+                        dbJDBCMetadata, this.getCatalog(), null);
+            }
             if (schemaList != null && schemaList.size() > 0) {
                 CatalogHelper.addSchemas(schemaList, this.getCatalog());
             }

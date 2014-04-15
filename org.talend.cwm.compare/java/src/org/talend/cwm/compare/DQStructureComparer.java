@@ -43,6 +43,7 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.ui.PlatformUI;
 import org.talend.commons.utils.WorkspaceUtils;
+import org.talend.core.database.EDatabaseTypeName;
 import org.talend.core.model.metadata.IMetadataConnection;
 import org.talend.core.model.metadata.MetadataFillFactory;
 import org.talend.core.model.metadata.builder.ConvertionHelper;
@@ -50,7 +51,6 @@ import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
 import org.talend.core.model.metadata.builder.database.ExtractMetaDataUtils;
 import org.talend.core.model.metadata.builder.database.PluginConstant;
-import org.talend.core.model.metadata.builder.database.dburl.SupportDBUrlType;
 import org.talend.core.model.metadata.builder.util.MetadataConnectionUtils;
 import org.talend.cwm.compare.exception.ReloadCompareException;
 import org.talend.cwm.compare.factory.IUIHandler;
@@ -313,29 +313,31 @@ public final class DQStructureComparer {
             MetadataFillFactory.getMDMInstance().fillSchemas(copyedConnection, null, null);
             // returnProvider.setObject(TalendCwmFactory.createMdmTdDataProvider(connectionParameters));
         } else {
-            SupportDBUrlType currentDBUrlType = SupportDBUrlType.getDBTypeByKey(metadataConnection.getDbType());
-            TypedReturnCode<?> trc = (TypedReturnCode<?>) MetadataFillFactory.getDBInstance(
-                    SupportDBUrlType.getDBTypeByKey(metadataConnection.getDbType())).createConnection(metadataConnection);
-            Object sqlConnObject = trc.getObject();
-            DatabaseMetaData dbJDBCMetadata = null;
-            if (trc.isOk() && sqlConnObject instanceof java.sql.Connection) {
-                java.sql.Connection sqlConn = (java.sql.Connection) sqlConnObject;
+            EDatabaseTypeName currentEDatabaseType = EDatabaseTypeName.getTypeFromDbType(metadataConnection.getDbType());
+            if (currentEDatabaseType != null) {
+                MetadataFillFactory dbInstance = MetadataFillFactory.getDBInstance(currentEDatabaseType);
+                TypedReturnCode<?> trc = (TypedReturnCode<?>) dbInstance.createConnection(metadataConnection);
+                Object sqlConnObject = trc.getObject();
+                DatabaseMetaData dbJDBCMetadata = null;
+                if (trc.isOk() && sqlConnObject instanceof java.sql.Connection) {
+                    java.sql.Connection sqlConn = (java.sql.Connection) sqlConnObject;
 
-                // MOD sizhaoliu 2012-5-21 TDQ-4884 reload structure issue
-                // dbJDBCMetadata = org.talend.utils.sql.ConnectionUtils.getConnectionMetadata(sqlConn);
-                dbJDBCMetadata = ExtractMetaDataUtils.getInstance().getDatabaseMetaData(sqlConn,
-                        (DatabaseConnection) prevDataProvider);
+                    // MOD sizhaoliu 2012-5-21 TDQ-4884 reload structure issue
+                    // dbJDBCMetadata = org.talend.utils.sql.ConnectionUtils.getConnectionMetadata(sqlConn);
+                    dbJDBCMetadata = ExtractMetaDataUtils.getInstance().getDatabaseMetaData(sqlConn,
+                            (DatabaseConnection) prevDataProvider);
 
-                copyedConnection = EObjectHelper.deepCopy(prevDataProvider);
-                copyedConnection.getDataPackage().clear();
-                // MOD zshen the parameter for packageFiler need to differnent isCatalog or not.
-                MetadataFillFactory.getDBInstance(currentDBUrlType).fillCatalogs(copyedConnection, dbJDBCMetadata,
-                        MetadataConnectionUtils.getPackageFilter(copyedConnection, dbJDBCMetadata, true));
-                MetadataFillFactory.getDBInstance(currentDBUrlType).fillSchemas(copyedConnection, dbJDBCMetadata,
-                        MetadataConnectionUtils.getPackageFilter(copyedConnection, dbJDBCMetadata, false));
+                    copyedConnection = EObjectHelper.deepCopy(prevDataProvider);
+                    copyedConnection.getDataPackage().clear();
+                    // MOD zshen the parameter for packageFiler need to differnent isCatalog or not.
+                    MetadataFillFactory.getDBInstance(currentEDatabaseType).fillCatalogs(copyedConnection, dbJDBCMetadata,
+                            MetadataConnectionUtils.getPackageFilter(copyedConnection, dbJDBCMetadata, true));
+                    MetadataFillFactory.getDBInstance(currentEDatabaseType).fillSchemas(copyedConnection, dbJDBCMetadata,
+                            MetadataConnectionUtils.getPackageFilter(copyedConnection, dbJDBCMetadata, false));
 
-                ConnectionUtils.closeConnection(sqlConn);
+                    ConnectionUtils.closeConnection(sqlConn);
 
+                }
             }
         }
         if (copyedConnection == null) {
