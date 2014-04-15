@@ -23,7 +23,7 @@ import org.talend.core.model.properties.FileItem;
 import org.talend.core.model.properties.Item;
 import org.talend.core.repository.constants.FileConstants;
 import org.talend.repository.items.importexport.handlers.imports.ImportRepTypeHandler;
-import org.talend.repository.items.importexport.handlers.model.ItemRecord;
+import org.talend.repository.items.importexport.handlers.model.ImportItem;
 import org.talend.repository.items.importexport.manager.ResourcesManager;
 
 public class TOPImportHandler extends ImportRepTypeHandler {
@@ -59,8 +59,8 @@ public class TOPImportHandler extends ImportRepTypeHandler {
      * .items.importexport.manager.ResourcesManager, org.eclipse.core.runtime.IPath)
      */
     @Override
-    public ItemRecord computeItemRecord(ResourcesManager resManager, IPath path) {
-        ItemRecord itemRecord = new ItemRecord(path);
+    public ImportItem computeImportItem(ResourcesManager resManager, IPath path) {
+        ImportItem itemRecord = new ImportItem(path);
 
         // Load the DQ specific resource such as patterns and rules.
         // Load resource only
@@ -68,7 +68,7 @@ public class TOPImportHandler extends ImportRepTypeHandler {
 
         IPath propertyPath = path.removeFileExtension().addFileExtension(FileConstants.PROPERTIES_EXTENSION);
         ResourceSet resSet = itemRecord.getResourceSet();
-        itemRecord = new ItemRecord(propertyPath);
+        itemRecord = new ImportItem(propertyPath);
         itemRecord.setResourceSet(resSet);
 
         // Load property resource.
@@ -87,10 +87,10 @@ public class TOPImportHandler extends ImportRepTypeHandler {
      * 
      * @see
      * org.talend.repository.items.importexport.handlers.imports.ImportBasicHandler#computeProperty(org.talend.repository
-     * .items.importexport.manager.ResourcesManager, org.talend.repository.items.importexport.handlers.model.ItemRecord)
+     * .items.importexport.manager.ResourcesManager, org.talend.repository.items.importexport.handlers.model.ImportItem)
      */
     @Override
-    protected void computeProperty(ResourcesManager manager, ItemRecord itemRecord) {
+    protected void computeProperty(ResourcesManager manager, ImportItem itemRecord) {
         // Empty implementation
     }
 
