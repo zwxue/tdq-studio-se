@@ -71,6 +71,7 @@ import org.talend.repository.ProjectManager;
 import org.talend.repository.model.IRepositoryNode.ENodeType;
 import org.talend.repository.model.ProjectNodeHelper;
 import org.talend.repository.model.RepositoryNode;
+import org.talend.test.utils.DBPropertiesUtils;
 import org.talend.utils.string.StringUtilities;
 import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
@@ -573,6 +574,72 @@ public class UnitTestBuildHelper {
 
         }
         Assert.assertNotNull("Can not connect to Database: " + dbUrl, dataProvider);
+        return dataProvider;
+    }
+
+    /**
+     * get a real database connection,the connection parameters load from a propery file.
+     * 
+     * @return
+     */
+    public Connection getRealOracleDatabase() {
+        Properties connectionParams = DBPropertiesUtils.getDefault().getProperties();
+        String driverClassName = connectionParams.getProperty("driver_oracle"); //$NON-NLS-1$
+        String dbUrl = connectionParams.getProperty("url_oracle"); //$NON-NLS-1$
+        String sqlTypeName = connectionParams.getProperty("sqlTypeName_oracle"); //$NON-NLS-1$
+        String dbVersion = connectionParams.getProperty("dbVersion_oracle"); //$NON-NLS-1$
+        String userName = connectionParams.getProperty("user_oracle"); //$NON-NLS-1$
+        String password = connectionParams.getProperty("password_oracle"); //$NON-NLS-1$
+
+        DBConnectionParameter params = new DBConnectionParameter();
+        params.setName("oracle_Connection"); //$NON-NLS-1$
+        params.setDriverClassName(driverClassName);
+        params.setJdbcUrl(dbUrl);
+        params.setSqlTypeName(sqlTypeName);
+
+        Properties properties = new Properties();
+        properties.setProperty(TaggedValueHelper.USER, userName);
+        properties.setProperty(TaggedValueHelper.PASSWORD, password);
+        properties.setProperty(TaggedValueHelper.DB_PRODUCT_VERSION, dbVersion);
+
+        params.setParameters(properties);
+
+        // create connection
+        ConnectionUtils.setTimeout(false);
+
+        MetadataFillFactory instance = MetadataFillFactory.getDBInstance();
+        IMetadataConnection metaConnection = instance.fillUIParams(ParameterUtil.toMap(params));
+        metaConnection.setDbVersionString(dbVersion);
+        ReturnCode rc = null;
+        try {
+            rc = instance.checkConnection(metaConnection);
+        } catch (java.lang.RuntimeException e) {
+            Assert.fail("connect to " + dbUrl + "failed," + e.getMessage()); //$NON-NLS-1$ //$NON-NLS-2$
+        }
+        Connection dataProvider = null;
+        if (rc.isOk()) {
+            dataProvider = instance.fillUIConnParams(metaConnection, null);
+            dataProvider.setName("oracleDB");
+            // because the DI side code is changed, modify the following code.
+            metaConnection.setCurrentConnection(dataProvider);
+            try {
+                ProjectNodeHelper.fillCatalogAndSchemas(metaConnection, (DatabaseConnection) dataProvider);
+            } catch (ClassNotFoundException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            } catch (InstantiationException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            } catch (IllegalAccessException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            } catch (SQLException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+
+        }
+        Assert.assertNotNull(dataProvider);
         return dataProvider;
     }
 }

@@ -12,16 +12,17 @@
 // ============================================================================
 package org.talend.dataprofiler.core.helper;
 
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-import static org.powermock.api.support.membermodification.MemberMatcher.method;
-import static org.powermock.api.support.membermodification.MemberModifier.stub;
+import static org.mockito.Matchers.*;
+import static org.mockito.Mockito.*;
+import static org.powermock.api.support.membermodification.MemberMatcher.*;
+import static org.powermock.api.support.membermodification.MemberModifier.*;
 
 import java.net.URL;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Properties;
 import java.util.ResourceBundle;
 
 import junit.framework.Assert;
@@ -43,8 +44,12 @@ import org.talend.core.context.Context;
 import org.talend.core.context.RepositoryContext;
 import org.talend.core.language.ECodeLanguage;
 import org.talend.core.model.general.Project;
+import org.talend.core.model.metadata.IMetadataConnection;
+import org.talend.core.model.metadata.MetadataFillFactory;
+import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.connection.ConnectionFactory;
 import org.talend.core.model.metadata.builder.connection.ConnectionPackage;
+import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
 import org.talend.core.model.metadata.builder.connection.DelimitedFileConnection;
 import org.talend.core.model.metadata.builder.connection.MetadataColumn;
 import org.talend.core.model.metadata.builder.connection.MetadataTable;
@@ -71,8 +76,10 @@ import org.talend.core.repository.model.RepositoryFactoryProvider;
 import org.talend.core.repository.utils.ProjectHelper;
 import org.talend.core.repository.utils.XmiResourceManager;
 import org.talend.core.runtime.CoreRuntimePlugin;
+import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.PackageHelper;
+import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.relational.RelationalFactory;
 import org.talend.cwm.relational.TdExpression;
 import org.talend.dataprofiler.core.CorePlugin;
@@ -94,6 +101,8 @@ import org.talend.dataquality.properties.TDQAnalysisItem;
 import org.talend.dataquality.properties.TDQReportItem;
 import org.talend.dataquality.properties.TDQSourceFileItem;
 import org.talend.dataquality.properties.impl.PropertiesFactoryImpl;
+import org.talend.dq.analysis.parameters.DBConnectionParameter;
+import org.talend.dq.helper.ParameterUtil;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.nodes.ReportFolderRepNode;
 import org.talend.dq.nodes.ReportRepNode;
@@ -106,10 +115,13 @@ import org.talend.repository.model.IProxyRepositoryFactory;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.IRepositoryNode.ENodeType;
 import org.talend.repository.model.IRepositoryNode.EProperties;
+import org.talend.repository.model.ProjectNodeHelper;
 import org.talend.repository.model.RepositoryConstants;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.resource.EResourceConstant;
 import org.talend.resource.ResourceManager;
+import org.talend.test.utils.DBPropertiesUtils;
+import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.resource.record.RecordFactory;
 import orgomg.cwm.resource.record.RecordFile;
 import orgomg.cwmx.analysis.informationreporting.Report;
@@ -124,6 +136,8 @@ import common.Logger;
 public class UnitTestBuildHelper {
 
     private static Logger log = Logger.getLogger(UnitTestBuildHelper.class);
+
+    private static final String DATA_PROVIDER_NAME = "My_data_provider"; //$NON-NLS-1$
 
     private static final String REGEXP = "'su.*'"; //$NON-NLS-1$
 
@@ -685,5 +699,73 @@ public class UnitTestBuildHelper {
         metadataTable.getColumns().add(comment);
 
         return name;
+    }
+
+    /**
+     * get a real database connection,the connection parameters load from a propery file.
+     * 
+     * @return
+     */
+    public static Connection getRealOracleDatabase() {
+        Properties connectionParams = DBPropertiesUtils.getDefault().getProperties();
+        String driverClassName = connectionParams.getProperty("driver_oracle"); //$NON-NLS-1$
+        String dbUrl = connectionParams.getProperty("url_oracle"); //$NON-NLS-1$
+        String sqlTypeName = connectionParams.getProperty("sqlTypeName_oracle"); //$NON-NLS-1$
+        String dbVersion = connectionParams.getProperty("dbVersion_oracle"); //$NON-NLS-1$
+        String userName = connectionParams.getProperty("user_oracle"); //$NON-NLS-1$
+        String password = connectionParams.getProperty("password_oracle"); //$NON-NLS-1$
+
+        DBConnectionParameter params = new DBConnectionParameter();
+        params.setName("My connection"); //$NON-NLS-1$
+        params.setDriverClassName(driverClassName);
+        params.setJdbcUrl(dbUrl);
+        params.setSqlTypeName(sqlTypeName);
+        params.setParameters(connectionParams);
+        params.getParameters();
+
+        Properties properties = new Properties();
+        properties.setProperty(TaggedValueHelper.USER, userName);
+        properties.setProperty(TaggedValueHelper.PASSWORD, password);
+        properties.setProperty(TaggedValueHelper.DB_PRODUCT_VERSION, dbVersion);
+
+        params.setParameters(properties);
+
+        // create connection
+        ConnectionUtils.setTimeout(false);
+
+        MetadataFillFactory instance = MetadataFillFactory.getDBInstance();
+        IMetadataConnection metaConnection = instance.fillUIParams(ParameterUtil.toMap(params));
+        metaConnection.setDbVersionString(dbVersion);
+        ReturnCode rc = null;
+        try {
+            rc = instance.checkConnection(metaConnection);
+        } catch (java.lang.RuntimeException e) {
+            Assert.fail("connect to " + dbUrl + "failed," + e.getMessage()); //$NON-NLS-1$ //$NON-NLS-2$
+        }
+        Connection dataProvider = null;
+        if (rc.isOk()) {
+            dataProvider = instance.fillUIConnParams(metaConnection, null);
+            dataProvider.setName(DATA_PROVIDER_NAME);
+            // because the DI side code is changed, modify the following code.
+            metaConnection.setCurrentConnection(dataProvider);
+            try {
+                ProjectNodeHelper.fillCatalogAndSchemas(metaConnection, (DatabaseConnection) dataProvider);
+            } catch (ClassNotFoundException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            } catch (InstantiationException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            } catch (IllegalAccessException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            } catch (SQLException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+
+        }
+        Assert.assertNotNull(dataProvider);
+        return dataProvider;
     }
 }
