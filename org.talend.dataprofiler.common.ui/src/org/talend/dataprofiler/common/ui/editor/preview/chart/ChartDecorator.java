@@ -71,6 +71,14 @@ public final class ChartDecorator {
     public static final String NEW_TOOL_TIP_FORMAT_STRING = "{0} = {2}"; //$NON-NLS-1$
 
     /**
+     * Added TDQ-8673 yyin 20140415
+     */
+    private static final String DOUBLE_FORMAT = "0.00";
+
+    // used for display double value in the chart
+    private static final String PERCENT_FORMAT = "0.00%";
+
+    /**
      * DOC bZhou ChartDecorator constructor comment.
      */
     private ChartDecorator() {
@@ -292,7 +300,7 @@ public final class ChartDecorator {
         plot.setLabelFont(font);
         plot.setNoDataMessage("No data available"); //$NON-NLS-1$
         StandardPieSectionLabelGenerator standardPieSectionLabelGenerator = new StandardPieSectionLabelGenerator(("{0}:{2}"),//$NON-NLS-1$
-                NumberFormat.getNumberInstance(), new DecimalFormat("0.00%")); //$NON-NLS-1$
+                NumberFormat.getNumberInstance(), new DecimalFormat(PERCENT_FORMAT)); //$NON-NLS-1$
         plot.setLabelGenerator(standardPieSectionLabelGenerator);
         plot.setLabelLinkPaint(Color.GRAY);
         plot.setLabelOutlinePaint(Color.WHITE);
@@ -334,10 +342,21 @@ public final class ChartDecorator {
         renderer.setShadowVisible(false);
         // TDQ-5251~
 
-        // plot.setForegroundAlpha(0.50f);
-
         // CategoryAxis domainAxis = plot.getDomainAxis();
         // domainAxis.setCategoryLabelPositions(CategoryLabelPositions.createUpRotationLabelPositions(Math.PI / 6.0));
+
+    }
+
+    /**
+     * Added TDQ-8673: set the display decimal format as: x.xx
+     * 
+     * @param chart
+     */
+    public static void setDisplayDecimalFormat(JFreeChart chart) {
+        CategoryPlot plot = chart.getCategoryPlot();
+
+        plot.getRenderer().setBaseItemLabelGenerator(
+                new StandardCategoryItemLabelGenerator("{2}", new DecimalFormat(DOUBLE_FORMAT))); //$NON-NLS-1$
 
     }
 
@@ -358,7 +377,7 @@ public final class ChartDecorator {
         barplot.setRenderer(new BenfordLawLineAndShapeRenderer());
         decorateBarChart(barChart);
         // display percentage on top of the bar
-        DecimalFormat df = new DecimalFormat("0.0%"); //$NON-NLS-1$
+        DecimalFormat df = new DecimalFormat(PERCENT_FORMAT);
         barplot.getRenderer().setBaseItemLabelGenerator(new StandardCategoryItemLabelGenerator("{2}", df)); //$NON-NLS-1$
         barplot.getRenderer().setBasePositiveItemLabelPosition(
                 new ItemLabelPosition(ItemLabelAnchor.OUTSIDE12, TextAnchor.BASELINE_CENTER));
