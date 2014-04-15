@@ -649,8 +649,4 @@ public class TOPRepositoryService implements ITDQRepositoryService {
         CWMPlugin.getDefault().updateConnetionAliasByName(connection, oldConnName);
     }
 
-    public List<MetadataColumn> updateDependAnalysisOfDelimitedFile(MetadataTable oldMetadataTable,
-            List<MetadataColumn> newColumns) {
-        return WorkbenchUtils.updateDependAnalysisOfDelimitedFile(oldMetadataTable, newColumns);
-    }
 }

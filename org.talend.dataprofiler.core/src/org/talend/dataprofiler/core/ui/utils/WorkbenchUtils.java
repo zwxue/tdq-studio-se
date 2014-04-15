@@ -65,6 +65,7 @@ import org.talend.cwm.compare.exception.ReloadCompareException;
 import org.talend.cwm.compare.factory.ComparisonLevelFactory;
 import org.talend.cwm.compare.factory.comparisonlevel.FileMetadataTableComparisonLevel;
 import org.talend.cwm.dependencies.DependenciesHandler;
+import org.talend.cwm.management.i18n.Messages;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
@@ -80,9 +81,12 @@ import org.talend.dataprofiler.core.ui.views.DQRespositoryView;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisContext;
 import org.talend.dataquality.indicators.Indicator;
+import org.talend.dataquality.properties.TDQAnalysisItem;
+import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
 import org.talend.dq.writer.EMFSharedResources;
+import org.talend.dq.writer.impl.ElementWriterFactory;
 import org.talend.repository.ProjectManager;
 import org.talend.repository.localprovider.model.LocalFolderHelper;
 import org.talend.repository.model.IRepositoryNode;
@@ -598,20 +602,22 @@ public final class WorkbenchUtils {
         // refreshCurrentAnalysisEditor();
     }
 
-    private static void removeDependenciesBetweenAnaCon(DataProvider oldDataProvider, Analysis tempAnalysis) {
-        List<ModelElement> tempList = new ArrayList<ModelElement>();
-        tempList.add(oldDataProvider);
-        // remove the cliend dependency in the analysis
-        List<Resource> modified = DependenciesHandler.getInstance().removeDependenciesBetweenModels(tempAnalysis, tempList);
-        for (Resource me : modified) {
-            EMFUtil.saveSingleResource(me);
+    private static void saveTempAnalysis(IFile file, Analysis tempAnalysis) {
+        Property tempAnaProperty = PropertyHelper.getProperty(file);
+
+        // only when all elements of the data provider are removed from the analysis, the dependency between
+        // them should be removed too. If only parts of them removed, the dependendy should not be removed.
+        // TDQ-8267, since the dependency is removed, the connection in the analysis context should also be
+        // removed
+        if (tempAnaProperty == null) {
+            log.error(Messages.getString("WorkbenchUtils.fialToSaveImapctAnalysis", tempAnalysis.getName())); //$NON-NLS-1$
+            return;
         }
-        // remove the supplier dependency in the dataprovider
-        tempList.clear();
-        tempList.add(tempAnalysis);
-        modified = DependenciesHandler.getInstance().removeSupplierDependenciesBetweenModels(oldDataProvider, tempList);
-        for (Resource me : modified) {
-            EMFUtil.saveSingleResource(me);
+        if (tempAnalysis.getContext().getAnalysedElements().isEmpty()) {
+            DependenciesHandler.getInstance().removeConnDependencyAndSave((TDQAnalysisItem) tempAnaProperty.getItem());
+
+        } else {
+            ElementWriterFactory.getInstance().createAnalysisWrite().save(tempAnaProperty.getItem(), false);
         }
     }
 
@@ -711,31 +717,6 @@ public final class WorkbenchUtils {
         }
 
         return part;
-    }
 
-    /**
-     * update the depended analysis of the current file connection, when the file connection changed schema: if the
-     * analysis 's analyzed columns are in the changed schema: compare the columns, remain the columns with same name,
-     * remove the columns not in new schema, and add the new columns in new schema. TDQ-8360 20140324 yyin
-     * 
-     * @param oldDataProvider
-     */
-    public static List<MetadataColumn> updateDependAnalysisOfDelimitedFile(MetadataTable oldMetadataTable,
-            List<MetadataColumn> newColumns) {
-        FileMetadataTableComparisonLevel creatComparisonLevel = (FileMetadataTableComparisonLevel) ComparisonLevelFactory
-                .creatComparisonLevel(oldMetadataTable);
-        creatComparisonLevel.setNewColumns(newColumns);
-
-        try {
-            creatComparisonLevel.reloadCurrentLevelElement();
-
-            // no need to update the related analyses.it will be updated when finish the guess wizard.
-            // in: FileDelimitedTableWizard.performFinish()
-
-            return creatComparisonLevel.getComparedResult();
-        } catch (ReloadCompareException e) {
-            log.error(e, e);
-        }
-        return null;
     }
 }
