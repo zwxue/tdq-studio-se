@@ -247,4 +247,26 @@ public final class IndicatorDefinitionFileHelper {
                 || datePatternFrequencyTableUuid.compareTo(uuid) == 0 || sumUuid.compareTo(uuid) == 0;
         return isTechUUID || isSubCategoryIndicator(uuid);
     }
+
+    /**
+     * 
+     * update sql expression by language.
+     * 
+     * @param definition
+     * @param language
+     * @param newBody
+     * @return
+     */
+    public static boolean updateSqlExpression(IndicatorDefinition definition, String language, String newBody) {
+        if (null == definition) {
+            return false;
+        }
+        for (TdExpression tdExp : definition.getSqlGenericExpression()) {
+            if (tdExp.getLanguage().equals(language)) {
+                tdExp.setBody(newBody);
+                break;
+            }
+        }
+        return true;
+    }
 }
