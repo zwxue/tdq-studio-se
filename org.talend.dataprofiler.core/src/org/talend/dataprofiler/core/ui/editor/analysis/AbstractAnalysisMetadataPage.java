@@ -17,6 +17,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.regex.Pattern;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -53,7 +54,6 @@ import org.talend.commons.emf.FactoriesUtil;
 import org.talend.commons.exception.ExceptionHandler;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.database.PluginConstant;
-import org.talend.core.model.properties.Property;
 import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.cwm.dependencies.DependenciesHandler;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
@@ -379,15 +379,7 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
      * This method will make connection elem become proxy, look out for use it.
      */
     public void reloadDataproviderAndFillConnCombo() {
-        // MOD yyi 2010-09-27 14549: delete or hide connections when a connection is moved to the trash bin
-        // MOD xqliu 2010-09-26 bug 15685
-        // Collection<Connection> connections = ProxyRepositoryViewObject.getAllDatabaseConnections(true);
-        // // MOD qiongli bug 14891 2010-9-20,Add MDM connections
-        // Collection<Connection> mdmConne = ProxyRepositoryViewObject.getAllMDMConnections(true);
-        // connections.addAll(mdmConne);
         List<IRepositoryNode> allConnectionReposNodes = RepositoryNodeHelper.getConnectionRepositoryNodes(true);
-        // ~ 15685
-        // ~ 14549
 
         if (allConnectionReposNodes.size() == 0 && !RepositoryNodeHelper.isOpenDQCommonViewer()) {
             return;
@@ -399,6 +391,7 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
         // connCombo.defineColumns(new String[] { "Id", "Name", "Metadata Type" });// , new int[] { 5, SWT.DEFAULT,
         // MOD qiongli 2011-5-16,filter the logical delete connection except the analysis dependen on.
         DataManager connection = analysis.getContext().getConnection();
+        int currentConnectionIndex = 0;
         for (IRepositoryNode repNode : allConnectionReposNodes) {
 
             // ADD msjian TDQ-8458 2014-1-24: if the current analysis is correlation analysis, Disable to ability file
@@ -423,20 +416,19 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
             TableItem ti = new TableItem(connCombo.getTable(), SWT.NONE);
             String displayName = repNode.getObject().getProperty().getDisplayName();
             ti.setText(new String[] { displayName, connectionType });
-            // connCombo.add(property.getDisplayName(), index);
-            // String prvFileName = PrvResourceFileHelper.getInstance().findCorrespondingFile(prov).getName();
 
+            if (StringUtils.equals(displayName, connection.getName())) {
+                currentConnectionIndex = index;
+            }
             // MOD sizhaoliu TDQ-6286 fix the migration problem (the table combo shows the first item in case the label
             // of imported analysis does not equal to the file name. )
             // MOD sizhaoliu TDQ-6286 revert this change to avoid the side effect for delimited file connection.
             connCombo.setData(displayName + connectionType, index);
-            // connCombo.setData(modelElement.getName() + RepositoryNodeHelper.getConnectionType(repNode), index);
             connCombo.setData(index + "", repNode); //$NON-NLS-1$
             index++;
         }
         if (index > 0) {
-            connCombo.select(0);
-            // connCombo.setVisibleItemCount(index * 3);
+            connCombo.select(currentConnectionIndex);
         }
     }
 
