@@ -67,7 +67,6 @@ import org.talend.dq.helper.UDIHelper;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.dq.nodes.DBColumnRepNode;
 import org.talend.dq.nodes.DFColumnRepNode;
-import org.talend.dq.nodes.MDMXmlElementRepNode;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
 import org.talend.repository.model.IRepositoryNode;
 import orgomg.cwm.objectmodel.core.ModelElement;
@@ -187,9 +186,7 @@ public abstract class AbstractColumnDropTree extends AbstractPagePart {
         String label = indicatorName == null ? "unknown indicator" : indicatorName;//$NON-NLS-1$
         indicatorItem.setText(0, label);
 
-        TreeEditor optionEditor;
-        // if (indicatorEnum.hasChildren()) {
-        optionEditor = new TreeEditor(tree);
+        TreeEditor optionEditor = new TreeEditor(tree);
         Label optionLabel = new Label(tree, SWT.NONE);
         optionLabel.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_WHITE));
         optionLabel.setImage(ImageLib.getImage(ImageLib.INDICATOR_OPTION));
@@ -205,7 +202,7 @@ public abstract class AbstractColumnDropTree extends AbstractPagePart {
              */
             @Override
             public void mouseDown(MouseEvent e) {
-                openIndicatorOptionDialog(null, indicatorItem);
+                openIndicatorOptionDialog(Display.getCurrent().getActiveShell(), indicatorItem);
             }
 
         });
@@ -317,8 +314,7 @@ public abstract class AbstractColumnDropTree extends AbstractPagePart {
     }
 
     /**
-     *  Insert all of elements into removedElements list when the
-     * editor be saved will deal with all of depandency
+     * Insert all of elements into removedElements list when the editor be saved will deal with all of depandency
      * 
      * @param analysis
      * @param unit
@@ -344,9 +340,9 @@ public abstract class AbstractColumnDropTree extends AbstractPagePart {
         }
 
         IndicatorUnit indicatorUnit = (IndicatorUnit) indicatorItem.getData(INDICATOR_UNIT_KEY);
-        IndicatorOptionsWizard wizard = new IndicatorOptionsWizard(indicatorUnit);
 
         if (FormEnum.isExsitingForm(indicatorUnit)) {
+            IndicatorOptionsWizard wizard = new IndicatorOptionsWizard(indicatorUnit);
             String href = FormEnum.getFirstFormHelpHref(indicatorUnit);
             OpeningHelpWizardDialog optionDialog = new OpeningHelpWizardDialog(shell, wizard, href);
 
@@ -646,14 +642,6 @@ public abstract class AbstractColumnDropTree extends AbstractPagePart {
             return true;
         }
         return false;
-    }
-
-    private boolean isLeaf(MDMXmlElementRepNode obj) {
-        List<IRepositoryNode> children = obj.getChildren();
-        if (children.size() > 0) {
-            return false;
-        }
-        return true;
     }
 
     protected ModelElementIndicator[] getAllTheElementIndicator() {

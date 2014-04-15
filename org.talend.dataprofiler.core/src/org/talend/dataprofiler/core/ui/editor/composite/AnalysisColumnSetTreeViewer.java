@@ -23,6 +23,7 @@ import java.util.Set;
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
@@ -40,6 +41,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
@@ -653,12 +655,15 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
      * (non-Javadoc)
      * 
      * @see
-     * org.talend.dataprofiler.core.ui.editor.composite.AbstractColumnDropTree#createOneUnit(org.eclipse.swt.widgets
-     * .TreeItem, org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit)
+     * org.talend.dataprofiler.core.ui.editor.composite.AbstractColumnDropTree#openIndicatorOptionDialog(org.eclipse
+     * .swt.widgets.Shell, org.eclipse.swt.widgets.TreeItem)
      */
     @Override
-    public void createOneUnit(TreeItem treeItem, IndicatorUnit indicatorUnit) {
-        super.createOneUnit(treeItem, indicatorUnit);
+    public void openIndicatorOptionDialog(Shell shell, TreeItem indicatorItem) {
+        // MOD msjian TDQ-8551 2014-4-15: columnset analysis can not set options for pattern types
+        MessageDialogWithToggle.openInformation(shell, DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.information"), //$NON-NLS-1$
+                DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.nooption")); //$NON-NLS-1$ 
+        // TDQ-8551~
     }
 
     /**
