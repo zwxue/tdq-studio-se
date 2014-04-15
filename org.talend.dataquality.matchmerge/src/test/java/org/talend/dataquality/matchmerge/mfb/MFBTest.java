@@ -66,10 +66,10 @@ public class MFBTest extends TestCase {
 
     public void testConstantValueRecords() throws Exception {
         for (AttributeMatcherType matchAlgorithm : TESTS_MATCH) {
-            testConstant(1, 100000, matchAlgorithm);
-            testConstant(2, 100000, matchAlgorithm);
-            testConstant(4, 100000, matchAlgorithm);
-            testConstant(8, 100000, matchAlgorithm);
+            testConstant(1, 200, matchAlgorithm);
+            testConstant(2, 200, matchAlgorithm);
+            testConstant(4, 200, matchAlgorithm);
+            testConstant(8, 200, matchAlgorithm);
         }
     }
 
@@ -98,16 +98,16 @@ public class MFBTest extends TestCase {
         List<Record> mergedRecords = algorithm.execute(iterator);
         assertEquals(constantNumber, mergedRecords.size());
         for (Record mergedRecord : mergedRecords) {
-            assertEquals(totalCount / constantNumber, mergedRecord.getRelatedIds().size());
+            assertEquals(Math.round(totalCount / constantNumber), mergedRecord.getRelatedIds().size());
         }
     }
 
     public void testMatchWeight() throws Exception {
         for (AttributeMatcherType matchAlgorithm : TESTS_MATCH) {
-            testWeight(1, 100000, matchAlgorithm);
-            testWeight(2, 100000, matchAlgorithm);
-            testWeight(4, 100000, matchAlgorithm);
-            testWeight(8, 100000, matchAlgorithm);
+            testWeight(1, 200, matchAlgorithm);
+            testWeight(2, 200, matchAlgorithm);
+            testWeight(4, 200, matchAlgorithm);
+            testWeight(8, 200, matchAlgorithm);
         }
     }
 
@@ -142,10 +142,10 @@ public class MFBTest extends TestCase {
     }
 
     public void testSimilarValueRecords() throws Exception {
-        testSimilar(1, 100000, AttributeMatcherType.LEVENSHTEIN);
-        testSimilar(2, 100000, AttributeMatcherType.LEVENSHTEIN);
-        testSimilar(4, 100000, AttributeMatcherType.LEVENSHTEIN);
-        testSimilar(8, 100000, AttributeMatcherType.LEVENSHTEIN);
+        testSimilar(1, 200, AttributeMatcherType.LEVENSHTEIN);
+        testSimilar(2, 200, AttributeMatcherType.LEVENSHTEIN);
+        testSimilar(4, 200, AttributeMatcherType.LEVENSHTEIN);
+        testSimilar(8, 200, AttributeMatcherType.LEVENSHTEIN);
     }
 
     private static void testSimilar(final int similarNumber, int totalCount, AttributeMatcherType matchAlgorithm) {
