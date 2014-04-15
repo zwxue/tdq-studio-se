@@ -668,8 +668,8 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
                             if (allSelectedIndNames.contains(indicator.getName())) {
                                 oldSelectedIndNames.add(indicator.getName());
                             } else {
-                                //remove the UDI from UI need to insert this UDI into removeList
-                                deleteIndicatorItems(meIndicator,indicatorUnit);
+                                // remove the UDI from UI need to insert this UDI into removeList
+                                deleteIndicatorItems(meIndicator, indicatorUnit);
                                 if (!isDirty()) {
                                     setDirty(true);
                                 }
@@ -948,7 +948,7 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
                         }
                     } else if (meobj != null && indicatorobj != null) {
                         // open indicator option wizard
-                        openIndicatorOptionDialog(null, item);
+                        openIndicatorOptionDialog(Display.getCurrent().getActiveShell(), item);
                     }
                 }
             }
