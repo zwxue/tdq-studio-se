@@ -379,56 +379,79 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
      * This method will make connection elem become proxy, look out for use it.
      */
     public void reloadDataproviderAndFillConnCombo() {
-        List<IRepositoryNode> allConnectionReposNodes = RepositoryNodeHelper.getConnectionRepositoryNodes(true);
+        List<IRepositoryNode> connsWithoutDeletion = RepositoryNodeHelper.getConnectionRepositoryNodes(false);
 
-        if (allConnectionReposNodes.size() == 0 && !RepositoryNodeHelper.isOpenDQCommonViewer()) {
+        if (connsWithoutDeletion.size() == 0 && !RepositoryNodeHelper.isOpenDQCommonViewer()) {
             return;
         }
 
         connCombo.getTable().removeAll();
-        int index = 0;
+        fillComb(connsWithoutDeletion);
 
-        // connCombo.defineColumns(new String[] { "Id", "Name", "Metadata Type" });// , new int[] { 5, SWT.DEFAULT,
-        // MOD qiongli 2011-5-16,filter the logical delete connection except the analysis dependen on.
         DataManager connection = analysis.getContext().getConnection();
-        int currentConnectionIndex = 0;
-        for (IRepositoryNode repNode : allConnectionReposNodes) {
-
-            // ADD msjian TDQ-8458 2014-1-24: if the current analysis is correlation analysis, Disable to ability file
-            // and MDM connenction
-            String connectionType = RepositoryNodeHelper.getConnectionType(repNode);
-            if (this instanceof ColumnCorrelationNominalAndIntervalMasterPage) {
-                if (connectionType.equals(RepositoryNodeHelper.MDM_CONNECTION)
-                        || connectionType.equals(RepositoryNodeHelper.FILE_DELIMITED_CONNECTION)) {
-                    continue;
-                }
+        if (connection == null) {
+            connCombo.select(0);
+        } else {
+            // Find the conn index first
+            int connIdx = findPositionOfCurrentConnection(connsWithoutDeletion, connection);
+            if (connIdx == -1) {
+                IRepositoryNode currentConnectionNode = getCurrentRepNodeOnUI();
+                // The current connection is logical deleted!
+                int deleteIndex = connCombo.getItemCount();
+                addItemToCombo(currentConnectionNode, deleteIndex);
+                connCombo.select(deleteIndex);
+            } else {
+                connCombo.select(connIdx);
             }
-            // TDQ-8458~
+        }
 
-            ModelElement modelElement = RepositoryNodeHelper.getModelElementFromRepositoryNode(repNode);
-            if (repNode.getObject().isDeleted()) {
-                if (connection == null || modelElement != null && !connection.equals(modelElement)) {
-                    continue;
-                }
+    }
+
+    /**
+     * findthe Position Of Current Connection.
+     * 
+     * @param connsWithoutDeletion
+     * @param connection
+     * @return
+     */
+    private int findPositionOfCurrentConnection(List<IRepositoryNode> connsWithoutDeletion, DataManager connection) {
+        int index = 0;
+        for (IRepositoryNode repNode : connsWithoutDeletion) {
+            if (StringUtils.equals(repNode.getObject().getLabel(), connection.getName())) {
+                return index;
             }
-
-            // MOD yyin 201204 TDQ-4977, change to TableCombo type to show the connection type.
-            TableItem ti = new TableItem(connCombo.getTable(), SWT.NONE);
-            String displayName = repNode.getObject().getProperty().getDisplayName();
-            ti.setText(new String[] { displayName, connectionType });
-
-            if (StringUtils.equals(displayName, connection.getName())) {
-                currentConnectionIndex = index;
-            }
-            // MOD sizhaoliu TDQ-6286 fix the migration problem (the table combo shows the first item in case the label
-            // of imported analysis does not equal to the file name. )
-            // MOD sizhaoliu TDQ-6286 revert this change to avoid the side effect for delimited file connection.
-            connCombo.setData(displayName + connectionType, index);
-            connCombo.setData(index + "", repNode); //$NON-NLS-1$
             index++;
         }
-        if (index > 0) {
-            connCombo.select(currentConnectionIndex);
+        return -1;
+    }
+
+    /**
+     * add a connection node into the combobox.
+     * 
+     * @param repNode
+     * @param index
+     */
+    protected void addItemToCombo(IRepositoryNode repNode, int index) {
+        String connectionType = RepositoryNodeHelper.getConnectionType(repNode);
+
+        TableItem ti = new TableItem(connCombo.getTable(), SWT.NONE);
+        String displayName = repNode.getObject().getProperty().getDisplayName();
+        ti.setText(new String[] { displayName, connectionType });
+
+        connCombo.setData(displayName + connectionType, index);
+        connCombo.setData(index + PluginConstant.EMPTY_STRING, repNode);
+    }
+
+    /**
+     * fill the combobox of connections
+     * 
+     * @param connsWithoutDeletion
+     */
+    private void fillComb(List<IRepositoryNode> connsWithoutDeletion) {
+        int index = 0;
+        for (IRepositoryNode repNode : connsWithoutDeletion) {
+            addItemToCombo(repNode, index);
+            index++;
         }
     }
 

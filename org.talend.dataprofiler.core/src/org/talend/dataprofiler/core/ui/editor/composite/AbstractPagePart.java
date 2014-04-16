@@ -46,7 +46,6 @@ import org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisMetadataP
 import org.talend.dataprofiler.core.ui.progress.ProgressUI;
 import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.PropertyHelper;
-import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.nodes.DBColumnRepNode;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
@@ -191,24 +190,6 @@ public abstract class AbstractPagePart {
             // MOD gdbu 2011-8-15 bug : TDQ-3213
             masterPage.reloadDataproviderAndFillConnCombo();
             fianlDataManager = newDataManager;
-
-            // MOD yyin 201204 TDQ-4977
-            Object value = null;
-
-            // use property.getLabel() instead of dataManager.getDisplayName() because of we set it use first one for
-            // TDQ-6286.
-
-            // MOD qiongli 2011-1-7 delimitedFile connection dosen't use 'dataManager.getName()'.
-
-            if (SwitchHelpers.CONNECTION_SWITCH.doSwitch(newDataManager) != null) {
-                value = masterPage.getConnCombo().getData(
-                        prop.getDisplayName() + RepositoryNodeHelper.getConnectionType(newDataManager));
-            }
-            Integer index = 0;
-            if (value != null && value instanceof Integer) {
-                index = (Integer) value;
-            }
-            masterPage.getConnCombo().select(index);
 
             // MOD qiongli 2011-5-16 bug 21453
             if (prop != null && prop.getItem() != null && prop.getItem().getState() != null

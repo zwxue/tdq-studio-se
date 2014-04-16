@@ -89,6 +89,7 @@ import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.dq.indicators.graph.GraphBuilder;
 import org.talend.dq.nodes.DBColumnRepNode;
 import org.talend.dq.writer.impl.ElementWriterFactory;
+import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.utils.sql.Java2SqlType;
 import org.talend.utils.sugars.ReturnCode;
@@ -831,5 +832,18 @@ public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnaly
         }
 
         return new ReturnCode(true);
+    }
+
+    @Override
+    protected void addItemToCombo(IRepositoryNode repNode, int index) {
+        String connectionType = RepositoryNodeHelper.getConnectionType(repNode);
+
+        // ADD msjian TDQ-8458 2014-1-24: if the current analysis is correlation analysis, Disable to ability file
+        // and MDM connenction
+        if (connectionType.equals(RepositoryNodeHelper.MDM_CONNECTION)
+                || connectionType.equals(RepositoryNodeHelper.FILE_DELIMITED_CONNECTION)) {
+            return;
+        }
+        super.addItemToCombo(repNode, index);
     }
 }
