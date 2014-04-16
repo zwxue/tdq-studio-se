@@ -25,6 +25,8 @@ import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.nebula.widgets.nattable.util.GUIHelper;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.ControlAdapter;
+import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.graphics.Color;
@@ -33,9 +35,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Listener;
 import org.jfree.util.Log;
 import org.talend.dataprofiler.common.ui.editor.preview.chart.utils.MatchRuleColorRegistry;
 import org.talend.dataquality.record.linkage.ui.composite.utils.ImageLib;
@@ -73,6 +73,8 @@ public class MatchRuleDataTable extends Composite {
     private Label index;
 
     private int disGroupSize = 0;
+
+    private final ControlAdapter matchRuleTableResizeListener = new MatchRuleTableResizeListener();
 
     /**
      * DOC yyi DataTable constructor comment.
@@ -138,18 +140,7 @@ public class MatchRuleDataTable extends Composite {
 
         dataViewer.setContentProvider(new ArrayContentProvider());
         dataViewer.setLabelProvider(new DataLabelProvider());
-        dataViewer.getTable().addListener(SWT.Resize, new Listener() {
-
-            @Override
-            public void handleEvent(Event event) {
-                reComputePageSize();
-
-                loadPage(page);
-
-                dataViewer.getTable().layout();
-            }
-
-        });
+        dataViewer.getTable().addControlListener(matchRuleTableResizeListener);
 
     }
 
@@ -270,7 +261,11 @@ public class MatchRuleDataTable extends Composite {
             itemPage.add(getDisplayViewData().get(i));
         }
         if (itemPage.size() >= 0) {
+            //remove matchRuleTableResizeListener to avoid unHandle loop when H_SCORLL will be appear or disappear
+            dataViewer.getTable().removeControlListener(matchRuleTableResizeListener);
             this.dataViewer.setInput(itemPage);
+            dataViewer.getTable().addControlListener(matchRuleTableResizeListener);
+            //~
         }
         updateButons();
     }
@@ -411,6 +406,23 @@ public class MatchRuleDataTable extends Composite {
                 break;
             }
             loadPage(page);
+        }
+    }
+
+    private class MatchRuleTableResizeListener extends ControlAdapter {
+
+        /*
+         * (non-Javadoc)
+         * 
+         * @see org.eclipse.swt.events.ControlAdapter#controlResized(org.eclipse.swt.events.ControlEvent)
+         */
+        @Override
+        public void controlResized(ControlEvent e) {
+            reComputePageSize();
+
+            loadPage(page);
+
+            dataViewer.getTable().layout();
         }
     }
 }
