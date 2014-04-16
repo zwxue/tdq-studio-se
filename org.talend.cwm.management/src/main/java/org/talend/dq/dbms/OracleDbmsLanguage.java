@@ -265,4 +265,47 @@ public class OracleDbmsLanguage extends DbmsLanguage {
     public String getCatalogNameFromContext(DatabaseConnection dbConn) {
         return null;
     }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dq.dbms.DbmsLanguage#getAverageLengthWithBlankRows()
+     */
+    @Override
+    public String getAverageLengthWithBlankRows() {
+        String whereExpression = "WHERE <%=__COLUMN_NAMES__%> IS NOT NULL "; //$NON-NLS-1$
+        return "SELECT * FROM <%=__TABLE_NAME__%> WHERE  " + lengthForSumColumn("<%=__COLUMN_NAMES__%>") + " BETWEEN (SELECT FLOOR(SUM(" + lengthForSumColumn("<%=__COLUMN_NAMES__%>") + ") / COUNT(*)) FROM <%=__TABLE_NAME__%> " + whereExpression + ") AND (SELECT CEIL(SUM(" + lengthForSumColumn("<%=__COLUMN_NAMES__%>") + " ) / COUNT(* )) FROM <%=__TABLE_NAME__%> " + whereExpression + ")"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$ //$NON-NLS-9$
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dq.dbms.DbmsLanguage#getAverageLengthWithNullBlankRows()
+     */
+    @Override
+    public String getAverageLengthWithNullBlankRows() {
+        return "SELECT * FROM <%=__TABLE_NAME__%> WHERE " + lengthForSumColumn("<%=__COLUMN_NAMES__%>") + " BETWEEN (SELECT FLOOR(SUM(" + lengthForSumColumn("<%=__COLUMN_NAMES__%>") + ") / COUNT(*)) FROM <%=__TABLE_NAME__%>) AND (SELECT CEIL(SUM(" + lengthForSumColumn("<%=__COLUMN_NAMES__%>") + " ) / COUNT(* )) FROM <%=__TABLE_NAME__%>)"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dq.dbms.DbmsLanguage#getAverageLengthWithNullRows()
+     */
+    @Override
+    public String getAverageLengthWithNullRows() {
+        String whereExpression = "WHERE(<%=__COLUMN_NAMES__%> IS NULL OR " + isNotBlank("<%=__COLUMN_NAMES__%>") + ")"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+        return "SELECT * FROM <%=__TABLE_NAME__%> " + whereExpression + "AND LENGTH(<%=__COLUMN_NAMES__%>) BETWEEN (SELECT FLOOR(SUM(LENGTH(<%=__COLUMN_NAMES__%> )) / COUNT( * )) FROM <%=__TABLE_NAME__%> " + whereExpression + ") AND (SELECT CEIL(SUM(LENGTH(<%=__COLUMN_NAMES__%> )) / COUNT(*)) FROM <%=__TABLE_NAME__%>  " + whereExpression + ")"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+    }
+
+    /**
+     * 
+     * when the column value is null or blank,the length should be 0.
+     * 
+     * @param columnName
+     * @return
+     */
+    private String lengthForSumColumn(String columnName) {
+        return "CASE WHEN " + trim(columnName) + " IS NULL THEN 0 ELSE LENGTH(" + columnName + ") END"; //$NON-NLS-1$ //$NON-NLS-2$//$NON-NLS-3$
+    }
 }
