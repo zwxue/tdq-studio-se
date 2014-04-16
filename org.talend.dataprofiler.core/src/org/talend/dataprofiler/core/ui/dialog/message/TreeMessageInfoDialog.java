@@ -47,6 +47,7 @@ import org.talend.dataquality.domain.pattern.Pattern;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dataquality.reports.TdReport;
 import org.talend.dataquality.rules.DQRule;
+import org.talend.dataquality.rules.MatchRuleDefinition;
 import org.talend.dq.factory.ModelElementFileFactory;
 import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.helper.ProxyRepositoryManager;
@@ -213,9 +214,16 @@ public class TreeMessageInfoDialog extends MessageDialog {
                     } else if (modelElement instanceof Pattern) {
                         imgName = ImageLib.PATTERN_REG;
                     } else if (modelElement instanceof IndicatorDefinition) {
-                        imgName = ImageLib.IND_DEFINITION;
-                    } else if (modelElement instanceof DQRule) {
-                        imgName = ImageLib.DQ_RULE;
+                        // MOD msjian TDQ-8550 2014-4-16: we need to take care that DQRule/MatchRuleDefinition extends
+                        // IndicatorDefinition
+                        if (modelElement instanceof DQRule) {
+                            imgName = ImageLib.DQ_RULE;
+                        } else if (modelElement instanceof MatchRuleDefinition) {
+                            imgName = ImageLib.MATCH_RULE_ICON;
+                        } else {
+                            imgName = ImageLib.IND_DEFINITION;
+                        }
+                        // TDQ-8550~
                     } else if (modelElement instanceof MetadataTable) {
                         imgName = ImageLib.TABLE;
                     }
