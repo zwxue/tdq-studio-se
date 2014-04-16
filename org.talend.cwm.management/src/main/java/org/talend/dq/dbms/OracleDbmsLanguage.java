@@ -300,6 +300,17 @@ public class OracleDbmsLanguage extends DbmsLanguage {
     /*
      * (non-Javadoc)
      * 
+     * @see org.talend.dq.dbms.DbmsLanguage#getAverageLengthWithBlankRows()
+     */
+    @Override
+    public String getAverageLengthWithBlankRows() {
+        String whereExpression = "WHERE <%=__COLUMN_NAMES__%> IS NOT NULL "; //$NON-NLS-1$
+        return "SELECT * FROM <%=__TABLE_NAME__%> WHERE  " + lengthForSumColumn("<%=__COLUMN_NAMES__%>") + " BETWEEN (SELECT FLOOR(SUM(" + lengthForSumColumn("<%=__COLUMN_NAMES__%>") + ") / COUNT(*)) FROM <%=__TABLE_NAME__%> " + whereExpression + ") AND (SELECT CEIL(SUM(" + lengthForSumColumn("<%=__COLUMN_NAMES__%>") + " ) / COUNT(* )) FROM <%=__TABLE_NAME__%> " + whereExpression + ")"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$ //$NON-NLS-8$ //$NON-NLS-9$
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.talend.dq.dbms.DbmsLanguage#getAverageLengthWithNullBlankRows()
      */
     @Override
