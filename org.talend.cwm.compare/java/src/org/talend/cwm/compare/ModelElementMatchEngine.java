@@ -91,7 +91,7 @@ public class ModelElementMatchEngine extends GenericMatchEngine {
             return true;
         }
         // MOD yyin 20130201 TDQ-6780, do not use "isURlChanged" any more.
-        return super.isSimilar(obj1, obj2);
+        return true;// Can not return: super.isSimilar(obj1, obj2); reload table list will have problems.
         // ~ 16538
     }
 
