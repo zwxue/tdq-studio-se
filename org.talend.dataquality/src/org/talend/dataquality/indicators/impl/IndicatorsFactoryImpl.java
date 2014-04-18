@@ -17,7 +17,6 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.impl.EFactoryImpl;
 import org.eclipse.emf.ecore.plugin.EcorePlugin;
-import org.talend.dataquality.helpers.IndicatorEnum;
 import org.talend.dataquality.indicators.AverageLengthIndicator;
 import org.talend.dataquality.indicators.AvgLengthWithBlankIndicator;
 import org.talend.dataquality.indicators.AvgLengthWithBlankNullIndicator;
@@ -284,48 +283,6 @@ public class IndicatorsFactoryImpl extends EFactoryImpl implements IndicatorsFac
      */
     public Indicator createIndicator() {
         IndicatorImpl indicator = new IndicatorImpl();
-        return indicator;
-    }
-
-    /**
-     * @param indicatorName
-     * @return
-     * @generated NOT
-     */
-    public Indicator createIndicator(String indicatorName) {
-        if (indicatorName == null) {
-            return new IndicatorImpl();
-        }
-        // else
-        // add space in names
-        StringBuffer buf = new StringBuffer();
-        // indicatorName=indicatorName.substring(5);
-        for (int i = 0; i < indicatorName.length(); i++) {
-            char c = indicatorName.charAt(i);
-            if (Character.isUpperCase(c) && i != 0) {
-                buf.append(" ");
-            }
-            buf.append(c);
-        }
-        String enumValue = indicatorName + "IndicatorEnum";
-        // TODO use log4j
-        System.out.println("buf.toString() " + enumValue);
-        // if ("Regexp Matching Indicator".equals(enumValue)) {
-        // enumValue = IndicatorEnum.RegexpMatchingIndicatorEnum.name();
-        // }
-
-        IndicatorEnum indEnum = IndicatorEnum.valueOf(enumValue);
-        // FIXME handle case when indEnum is null
-        if (indEnum == null) {
-            // then test regex or other non standard types of indicators
-            // TODO
-            if ("RegexpMatchingIndicatorEnum".equals(enumValue)) {
-                indEnum = IndicatorEnum.RegexpMatchingIndicatorEnum;
-            }
-        }
-        Indicator indicator = (Indicator) this.create(indEnum
-                .getIndicatorType());
-        // indicator.setName(indicatorName);
         return indicator;
     }
     
