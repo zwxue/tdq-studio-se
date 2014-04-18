@@ -3492,4 +3492,19 @@ public final class RepositoryNodeHelper {
         return strs.toString();
 
     }
+
+    /**
+     * 
+     * judge if it is system/udi indicator element node or indicator sub folder node.
+     * 
+     * @param node
+     * @return
+     */
+    public static boolean isIndicatorOrIndiSubFolderNode(IRepositoryNode node) {
+        if (ERepositoryObjectType.TDQ_INDICATOR_ELEMENT == node.getObjectType()
+                || node instanceof UserDefIndicatorSubFolderRepNode || node instanceof SysIndicatorFolderRepNode) {
+            return true;
+        }
+        return false;
+    }
 }
