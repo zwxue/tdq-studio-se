@@ -65,6 +65,7 @@ import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.helper.ReportUtils;
 import org.talend.dq.helper.RepositoryNodeHelper;
+import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.dq.nodes.AnalysisSubFolderRepNode;
 import org.talend.dq.nodes.DQRepositoryNode;
 import org.talend.dq.nodes.JrxmlTempSubFolderNode;
@@ -103,6 +104,9 @@ public class DQDeleteAction extends DeleteAction {
     private Object[] deleteElements = null;
 
     private boolean showFilteredOutWarning = true;
+
+    // if an indicator is physical deleted,need to remove the object from indicator definitions variable.
+    private boolean hasIndicatorIPhysicalDel = false;
 
     /**
      * Getter for showFilteredOutWarning.
@@ -249,6 +253,10 @@ public class DQDeleteAction extends DeleteAction {
         if (DQRepositoryNode.isOnFilterring()) {
             RepositoryNodeHelper.regainRecycleBinFilteredNode();
         }
+        // reload the public variable of indicator defnitions so that the deleted indicators are removed.
+        if (this.hasIndicatorIPhysicalDel) {
+            DefinitionHandler.getInstance().reloadIndicatorsDefinitions();
+        }
 
         // the deleteReportFile() mothed have refresh the workspace and dqview
         refreshWorkspaceAndRecycleBenNode();
@@ -378,6 +386,10 @@ public class DQDeleteAction extends DeleteAction {
                             folderNodeWhichChildHadDepend.add(node);
                         }
                     }
+                    if (RepositoryNodeHelper.isIndicatorOrIndiSubFolderNode(subNode)) {
+                        hasIndicatorIPhysicalDel = true;
+                    }
+
                 }
                 if (!haveSubNode) {
                     excuteSuperRun(node, parent);
@@ -385,6 +397,9 @@ public class DQDeleteAction extends DeleteAction {
             } else {
                 if (!hasDependencyClients(node)) {
                     excuteSuperRun(node, parent);
+                }
+                if (RepositoryNodeHelper.isIndicatorOrIndiSubFolderNode(node)) {
+                    hasIndicatorIPhysicalDel = true;
                 }
             }
         }

@@ -342,11 +342,12 @@ public final class DefinitionHandler {
     public List<IndicatorDefinition> getIndicatorsDefinitions() {
         if (indicatorDefinitions == null || indicatorDefinitions.isEmpty()) {
             initializeDefinitions();
-        }
-        // resolve the IndicatorDefinition if need
-        indicatorDefinitions = resolve(indicatorDefinitions);
-        if (indicatorDefinitions == null) {
-            throw new RuntimeException(Messages.getString("DefinitionHandler.IndicatorsDefinition")); //$NON-NLS-1$
+        } else {
+            // resolve the IndicatorDefinition if need and only when it isn't initialized.
+            indicatorDefinitions = resolve(indicatorDefinitions);
+            if (indicatorDefinitions == null) {
+                throw new RuntimeException(Messages.getString("DefinitionHandler.IndicatorsDefinition")); //$NON-NLS-1$
+            }
         }
         return indicatorDefinitions;
     }
