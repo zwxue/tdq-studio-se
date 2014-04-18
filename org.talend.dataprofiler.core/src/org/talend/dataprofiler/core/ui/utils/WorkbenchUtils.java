@@ -574,11 +574,9 @@ public final class WorkbenchUtils {
                     if (isModified) {
                         saveTempAnalysis(file, tempAnalysis);
 
-                        // Should reopen this analyis's editor if it is opened now.
-                        EventManager.getInstance().publish(tempAnalysis.getName(), EventEnum.DQ_ANALYSIS_REOPEN_EDITOR, null);
-
                     }
-
+                    // Should reopen this analyis's editor if it is opened now. what ever it is modified or not.
+                    EventManager.getInstance().publish(tempAnalysis.getName(), EventEnum.DQ_ANALYSIS_REOPEN_EDITOR, null);
                 }
             }
         }
