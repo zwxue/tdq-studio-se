@@ -205,12 +205,8 @@ public class MdmAnalysisSqlExecutor extends MdmAnalysisExecutor {
             log.error(e.getMessage(), e);
             this.errorMessage = e.getMessage();
             // FIXME remove the following information once profiling of SQL mode MDM is supported
-            String unableDirectQueryStr = "Unable to perform a direct query"; //$NON-NLS-1$
-            if (getErrorMessage().contains(unableDirectQueryStr)) {
-                String sqlModeUnsupportedStr = Messages.getString("MdmAnalysisSqlExecutor.SQLMODEUNSUPPORTED"); //$NON-NLS-1$
-                String refactoredErrorMessage = StringUtils.replace(getErrorMessage(), unableDirectQueryStr,
-                        sqlModeUnsupportedStr, -1);
-                setError(refactoredErrorMessage);
+	    if (this.errorMessage.contains("Unable to perform a direct query")) { //$NON-NLS-1$ 
+                this.errorMessage = Messages.getString("MdmAnalysisSqlExecutor.SQLMODEUNSUPPORTED"); //$NON-NLS-1$ 
             }
             ok = false;
         } catch (ServiceException e) {
