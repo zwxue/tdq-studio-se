@@ -27,6 +27,7 @@ import org.talend.dataprofiler.core.model.OverviewIndUIElement;
 import org.talend.dataquality.indicators.schema.SchemaIndicator;
 import org.talend.dq.nodes.DBCatalogRepNode;
 import org.talend.dq.nodes.DBSchemaRepNode;
+import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
  * DOC rli class global comment. Detailled comment
@@ -53,7 +54,15 @@ public abstract class AbstractStatisticalViewerProvider extends LabelProvider im
             SchemaIndicator indicator = (SchemaIndicator) ((OverviewIndUIElement) element).getOverviewIndicator();
             switch (columnIndex) {
             case 0:
-                text = indicator.getAnalyzedElement().getName();
+                // for TDQ-8833 vertica database has a catalog and the name of it is PluginConstant.EMPTY_STRING
+                ModelElement analyzedElement = indicator.getAnalyzedElement();
+                if (analyzedElement.getClass() == orgomg.cwm.resource.relational.impl.CatalogImpl.class) {
+                    if (PluginConstant.EMPTY_STRING.equals(analyzedElement.getName())) {
+                        return text = org.talend.dataquality.PluginConstant.DEFAULT_STRING;
+                    }
+                }
+                // ~
+                text = analyzedElement.getName();
                 return text;
             case 1:
                 text = PluginConstant.EMPTY_STRING + indicator.getTableRowCount();
