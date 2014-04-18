@@ -280,7 +280,7 @@ public class TableAnalysisSqlExecutor extends TableAnalysisExecutor {
         if (valid) {
             dqruleWhereClause = buf2.toString();
         } else {
-            dqruleWhereClause = dbms().not() + "(" + buf2.toString() + ")";
+            dqruleWhereClause = dbms().not() + "(" + buf2.toString() + ")"; //$NON-NLS-1$ //$NON-NLS-2$
         }
         String where = buf1.toString() + dqruleWhereClause;
 
@@ -431,7 +431,8 @@ public class TableAnalysisSqlExecutor extends TableAnalysisExecutor {
     private boolean executeQuery(Indicator indicator, Connection connection, String queryStmt) throws SQLException {
         String cat = getCatalogOrSchemaName(indicator.getAnalyzedElement());
         if (log.isInfoEnabled()) {
-            log.info(Messages.getString("ColumnAnalysisSqlExecutor.COMPUTINGINDICATOR", indicator.getName()));//$NON-NLS-1$
+            log.info(Messages.getString("ColumnAnalysisSqlExecutor.COMPUTINGINDICATOR", indicator.getName())//$NON-NLS-1$
+                    + "\t" + Messages.getString("ColumnAnalysisSqlExecutor.EXECUTINGQUERY", queryStmt));//$NON-NLS-1$ //$NON-NLS-2$
         }
         List<Object[]> myResultSet = executeQuery(cat, connection, queryStmt);
 
@@ -446,9 +447,7 @@ public class TableAnalysisSqlExecutor extends TableAnalysisExecutor {
         // create query statement
         Statement statement = connection.createStatement();
         // statement.setFetchSize(fetchSize);
-        if (log.isInfoEnabled()) {
-            log.info(Messages.getString("ColumnAnalysisSqlExecutor.EXECUTINGQUERY", queryStmt));//$NON-NLS-1$
-        }
+
         if (continueRun()) {
             statement.execute(queryStmt);
         }
