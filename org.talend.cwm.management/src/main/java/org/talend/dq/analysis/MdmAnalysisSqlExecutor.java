@@ -210,7 +210,7 @@ public class MdmAnalysisSqlExecutor extends MdmAnalysisExecutor {
             log.error(e.getMessage(), e);
             setError(e.getMessage());
             // FIXME remove the following information once profiling of SQL mode MDM is supported
-            String unableDirectQueryStr = "Unable to perform a direct query";
+            String unableDirectQueryStr = "Unable to perform a direct query"; //$NON-NLS-1$
             if (getErrorMessage().contains(unableDirectQueryStr)) {
                 String sqlModeUnsupportedStr = Messages.getString("MdmAnalysisSqlExecutor.SQLMODEUNSUPPORTED"); //$NON-NLS-1$
                 String refactoredErrorMessage = StringUtils.replace(getErrorMessage(), unableDirectQueryStr,
@@ -328,7 +328,8 @@ public class MdmAnalysisSqlExecutor extends MdmAnalysisExecutor {
         TdXmlElementType analyzedElement = (TdXmlElementType) indicator.getAnalyzedElement();
         TdXmlSchema xmlDocument = analyzedElement.getOwnedDocument();
         if (log.isInfoEnabled()) {
-            log.info(Messages.getString("ColumnAnalysisSqlExecutor.COMPUTINGINDICATOR", indicator.getName()));//$NON-NLS-1$
+            log.info(Messages.getString("ColumnAnalysisSqlExecutor.COMPUTINGINDICATOR", indicator.getName())//$NON-NLS-1$
+                    + "\t" + Messages.getString("ColumnAnalysisSqlExecutor.EXECUTINGQUERY", queryStmt));//$NON-NLS-1$ //$NON-NLS-2$
         }
         // give result to indicator so that it handles the results
         boolean ret = false;
@@ -359,9 +360,6 @@ public class MdmAnalysisSqlExecutor extends MdmAnalysisExecutor {
         // create query statement
         MdmStatement statement = connection.createStatement();
         // statement.setFetchSize(fetchSize);
-        if (log.isInfoEnabled()) {
-            log.info(Messages.getString("ColumnAnalysisSqlExecutor.EXECUTINGQUERY", queryStmt));//$NON-NLS-1$
-        }
 
         if (continueRun()) {
             // MOD xqliu 2010-04-15 bug 12568
