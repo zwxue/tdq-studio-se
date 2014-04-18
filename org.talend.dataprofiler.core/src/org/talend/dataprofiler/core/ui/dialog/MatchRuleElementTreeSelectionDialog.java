@@ -519,9 +519,15 @@ public class MatchRuleElementTreeSelectionDialog extends ElementTreeSelectionDia
                                 : AttributeMatcherType.valueOf(algorithmType).getComponentValue());
                     }
 
-                    pr.put(MatchRulesTableLabelProvider.CUSTOM_MATCHER,
-                            null == matchKey.getAlgorithm().getAlgorithmParameters() ? StringUtils.EMPTY : matchKey
-                                    .getAlgorithm().getAlgorithmParameters());
+                    // MOD sizhaoliu TDQ-8431 split the value by "||" and take the second part as custom class value
+                    String algoParams = matchKey.getAlgorithm().getAlgorithmParameters();
+                    if (algoParams != null) {
+                        int idxSeparator = algoParams.indexOf("||"); //$NON-NLS-1$
+                        if (idxSeparator > 0 && algoParams.length() > idxSeparator + 2) {
+                            algoParams = algoParams.substring(idxSeparator + 2);
+                        }
+                    }
+                    pr.put(MatchRulesTableLabelProvider.CUSTOM_MATCHER, null == algoParams ? StringUtils.EMPTY : algoParams);
                     pr.put(MatchRulesTableLabelProvider.CONFIDENCE_WEIGHT, String.valueOf(matchKey.getConfidenceWeight()));
 
                     if (retrieveDisplayValue) {
