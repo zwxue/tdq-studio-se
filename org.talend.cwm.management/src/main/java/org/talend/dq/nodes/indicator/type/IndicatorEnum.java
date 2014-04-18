@@ -19,7 +19,6 @@ import org.talend.dataquality.indicators.sql.IndicatorSqlPackage;
 
 /**
  * @author rli
- * @deprecated use {@link org.talend.dataquality.helpers.IndicatorEnum} instead
  */
 public enum IndicatorEnum {
     SqlPatternMatchingIndicatorEnum(
