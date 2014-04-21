@@ -948,7 +948,7 @@ public class AnalysisColumnTreeViewer extends AbstractColumnDropTree {
                         }
                     } else if (meobj != null && indicatorobj != null) {
                         // open indicator option wizard
-                        openIndicatorOptionDialog(null, item);
+                        openIndicatorOptionDialog(Display.getCurrent().getActiveShell(), item);
                     }
                 }
             }
