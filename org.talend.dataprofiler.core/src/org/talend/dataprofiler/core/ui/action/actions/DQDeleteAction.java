@@ -106,7 +106,7 @@ public class DQDeleteAction extends DeleteAction {
     private boolean showFilteredOutWarning = true;
 
     // if an indicator is physical deleted,need to remove the object from indicator definitions variable.
-    private boolean hasIndicatorIPhysicalDel = false;
+    private boolean hasIndicatorPhysicalDel = false;
 
     /**
      * Getter for showFilteredOutWarning.
@@ -254,7 +254,7 @@ public class DQDeleteAction extends DeleteAction {
             RepositoryNodeHelper.regainRecycleBinFilteredNode();
         }
         // reload the public variable of indicator defnitions so that the deleted indicators are removed.
-        if (this.hasIndicatorIPhysicalDel) {
+        if (this.hasIndicatorPhysicalDel) {
             DefinitionHandler.getInstance().reloadIndicatorsDefinitions();
         }
 
@@ -387,7 +387,7 @@ public class DQDeleteAction extends DeleteAction {
                         }
                     }
                     if (RepositoryNodeHelper.isIndicatorOrIndiSubFolderNode(subNode)) {
-                        hasIndicatorIPhysicalDel = true;
+                        hasIndicatorPhysicalDel = true;
                     }
 
                 }
@@ -399,7 +399,7 @@ public class DQDeleteAction extends DeleteAction {
                     excuteSuperRun(node, parent);
                 }
                 if (RepositoryNodeHelper.isIndicatorOrIndiSubFolderNode(node)) {
-                    hasIndicatorIPhysicalDel = true;
+                    hasIndicatorPhysicalDel = true;
                 }
             }
         }
