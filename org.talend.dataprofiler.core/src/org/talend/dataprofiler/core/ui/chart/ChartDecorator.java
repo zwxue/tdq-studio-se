@@ -70,6 +70,11 @@ public final class ChartDecorator {
     public static final String NEW_TOOL_TIP_FORMAT_STRING = "{0} = {2}"; //$NON-NLS-1$
 
     /**
+     * Added TDQ-8673 yyin 20140415 used for display double value in the chart
+     */
+    private static final String PERCENT_FORMAT = "0.00%";//$NON-NLS-1$
+
+    /**
      * DOC bZhou ChartDecorator constructor comment.
      */
     private ChartDecorator() {
@@ -280,8 +285,8 @@ public final class ChartDecorator {
         font = new Font("Monospaced", Font.PLAIN, 10);//$NON-NLS-1$
         plot.setLabelFont(font);
         plot.setNoDataMessage("No data available"); //$NON-NLS-1$
-        StandardPieSectionLabelGenerator standardPieSectionLabelGenerator = new StandardPieSectionLabelGenerator(("{0}:{2}"),
-                NumberFormat.getNumberInstance(), new DecimalFormat("0.00%"));
+        StandardPieSectionLabelGenerator standardPieSectionLabelGenerator = new StandardPieSectionLabelGenerator(("{0}:{2}"),//$NON-NLS-1$
+                NumberFormat.getNumberInstance(), new DecimalFormat(PERCENT_FORMAT));
         plot.setLabelGenerator(standardPieSectionLabelGenerator);
         plot.setLabelLinkPaint(Color.GRAY);
         plot.setLabelOutlinePaint(Color.WHITE);
@@ -338,13 +343,14 @@ public final class ChartDecorator {
      * @param formalValues
      * @return JFreeChart
      */
+    @SuppressWarnings("deprecation")
     public static JFreeChart decorateBenfordLawChart(CategoryDataset dataset, JFreeChart barChart, String title,
             String categoryAxisLabel, List<String> dotChartLabels, double[] formalValues) {
         CategoryPlot barplot = barChart.getCategoryPlot();
         barplot.setRenderer(new BenfordLawLineAndShapeRenderer());
         decorateBarChart(barChart);
         // display percentage on top of the bar
-        DecimalFormat df = new DecimalFormat("0.0%"); //$NON-NLS-1$
+        DecimalFormat df = new DecimalFormat(PERCENT_FORMAT);
         barplot.getRenderer().setBaseItemLabelGenerator(new StandardCategoryItemLabelGenerator("{2}", df)); //$NON-NLS-1$
         barplot.getRenderer().setBasePositiveItemLabelPosition(
                 new ItemLabelPosition(ItemLabelAnchor.OUTSIDE12, TextAnchor.BASELINE_CENTER));
