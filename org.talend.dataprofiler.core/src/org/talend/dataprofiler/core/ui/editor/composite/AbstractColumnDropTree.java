@@ -618,6 +618,14 @@ public abstract class AbstractColumnDropTree extends AbstractPagePart {
         return modelElementIndicatorList.toArray(new ModelElementIndicator[modelElementIndicatorList.size()]);
     }
 
+    private boolean isLeaf(MDMXmlElementRepNode obj) {
+        List<IRepositoryNode> children = obj.getChildren();
+        if (children.size() > 0) {
+            return false;
+        }
+        return true;
+    }
+
     public ModelElementIndicator[] filterInputData(ModelElementIndicator[] objs) {
         if (objs != null && objs.length > 0) {
             this.modelElementIndicators = objs;
