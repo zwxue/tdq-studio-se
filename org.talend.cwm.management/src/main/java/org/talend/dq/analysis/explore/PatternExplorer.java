@@ -98,7 +98,7 @@ public class PatternExplorer extends DataExplorer {
         }
 
         String regexPatternString = dbmsLanguage.getRegexPatternString(this.indicator);
-        String regexCmp = dbmsLanguage.regexNotLike(columnName, regexPatternString) + functionReturnValue;
+        String regexCmp = getRegexNotLike(regexPatternString) + functionReturnValue;
         // add null as invalid rows
         String nullClause = dbmsLanguage.or() + columnName + dbmsLanguage.isNull();
         // mzhao TDQ-4967 add "(" and ")" for regex and null clause.
@@ -108,6 +108,7 @@ public class PatternExplorer extends DataExplorer {
 
     /**
      * DOC yyin Comment method "getRegexNotLike".
+     * 
      * @param regexPatternString
      * @return
      */
@@ -130,12 +131,13 @@ public class PatternExplorer extends DataExplorer {
         }
 
         String regexPatternString = dbmsLanguage.getRegexPatternString(this.indicator);
-        String regexCmp = dbmsLanguage.regexLike(columnName, regexPatternString) + functionReturnValue;
+        String regexCmp = getRegexLike(regexPatternString) + functionReturnValue;
         return getValuesStatement(columnName, regexCmp);
     }
 
     /**
      * DOC yyin Comment method "getRegexLike".
+     * 
      * @param regexPatternString
      * @return
      */
@@ -157,7 +159,7 @@ public class PatternExplorer extends DataExplorer {
         }
 
         String regexPatternString = dbmsLanguage.getRegexPatternString(this.indicator);
-        String regexCmp = dbmsLanguage.regexNotLike(columnName, regexPatternString) + functionReturnValue;
+        String regexCmp = getRegexNotLike(regexPatternString) + functionReturnValue;
         // add null as invalid rows
         String nullClause = dbmsLanguage.or() + columnName + dbmsLanguage.isNull();
         // mzhao TDQ-4967 add "(" and ")" for regex and null clause.
@@ -179,7 +181,7 @@ public class PatternExplorer extends DataExplorer {
         }
 
         String regexPatternString = dbmsLanguage.getRegexPatternString(this.indicator);
-        String regexCmp = dbmsLanguage.regexLike(columnName, regexPatternString) + functionReturnValue;
+        String regexCmp = getRegexLike(regexPatternString) + functionReturnValue;
         return getRowsStatement(regexCmp);
     }
 
