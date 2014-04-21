@@ -73,10 +73,10 @@ public final class ChartDecorator {
     /**
      * Added TDQ-8673 yyin 20140415
      */
-    private static final String DOUBLE_FORMAT = "0.00";
+    private static final String DOUBLE_FORMAT = "0.00";//$NON-NLS-1$
 
     // used for display double value in the chart
-    private static final String PERCENT_FORMAT = "0.00%";
+    private static final String PERCENT_FORMAT = "0.00%";//$NON-NLS-1$
 
     /**
      * DOC bZhou ChartDecorator constructor comment.
@@ -300,7 +300,7 @@ public final class ChartDecorator {
         plot.setLabelFont(font);
         plot.setNoDataMessage("No data available"); //$NON-NLS-1$
         StandardPieSectionLabelGenerator standardPieSectionLabelGenerator = new StandardPieSectionLabelGenerator(("{0}:{2}"),//$NON-NLS-1$
-                NumberFormat.getNumberInstance(), new DecimalFormat(PERCENT_FORMAT)); //$NON-NLS-1$
+                NumberFormat.getNumberInstance(), new DecimalFormat(PERCENT_FORMAT));
         plot.setLabelGenerator(standardPieSectionLabelGenerator);
         plot.setLabelLinkPaint(Color.GRAY);
         plot.setLabelOutlinePaint(Color.WHITE);
@@ -371,6 +371,7 @@ public final class ChartDecorator {
      * @param formalValues
      * @return JFreeChart
      */
+    @SuppressWarnings("deprecation")
     public static JFreeChart decorateBenfordLawChart(CategoryDataset dataset, JFreeChart barChart, String title,
             String categoryAxisLabel, List<String> dotChartLabels, double[] formalValues) {
         CategoryPlot barplot = barChart.getCategoryPlot();
