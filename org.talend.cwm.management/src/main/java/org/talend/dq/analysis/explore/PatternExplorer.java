@@ -107,6 +107,15 @@ public class PatternExplorer extends DataExplorer {
     }
 
     /**
+     * DOC yyin Comment method "getRegexNotLike".
+     * @param regexPatternString
+     * @return
+     */
+    protected String getRegexNotLike(String regexPatternString) {
+        return dbmsLanguage.regexNotLike(columnName, regexPatternString);
+    }
+
+    /**
      * 
      * get the Valid Values Statement.
      * 
@@ -123,6 +132,15 @@ public class PatternExplorer extends DataExplorer {
         String regexPatternString = dbmsLanguage.getRegexPatternString(this.indicator);
         String regexCmp = dbmsLanguage.regexLike(columnName, regexPatternString) + functionReturnValue;
         return getValuesStatement(columnName, regexCmp);
+    }
+
+    /**
+     * DOC yyin Comment method "getRegexLike".
+     * @param regexPatternString
+     * @return
+     */
+    protected String getRegexLike(String regexPatternString) {
+        return dbmsLanguage.regexLike(columnName, regexPatternString);
     }
 
     /**

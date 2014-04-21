@@ -18,6 +18,7 @@ import org.talend.dq.analysis.explore.FrequencyStatisticsExplorer;
 import org.talend.dq.analysis.explore.FunctionFrequencyStatExplorer;
 import org.talend.dq.analysis.explore.IDataExplorer;
 import org.talend.dq.analysis.explore.PatternExplorer;
+import org.talend.dq.analysis.explore.SQLPatternExplorer;
 import org.talend.dq.analysis.explore.SimpleStatisticsExplorer;
 import org.talend.dq.analysis.explore.SoundexFrequencyExplorer;
 import org.talend.dq.analysis.explore.SummaryStastictisExplorer;
@@ -43,7 +44,7 @@ public enum EIndicatorChartType {
                                       Messages.getString("EIndicatorChartType.DatePatternFrequencyStatistics"), new FunctionFrequencyStatExplorer()), //$NON-NLS-1$
     SUMMARY_STATISTICS(Messages.getString("EIndicatorChartType.SummaryStatistics"), new SummaryStastictisExplorer()), //$NON-NLS-1$
     PATTERN_MATCHING(Messages.getString("EIndicatorChartType.PatternMatching"), new PatternExplorer()), //$NON-NLS-1$
-    SQL_PATTERN_MATCHING(Messages.getString("EIndicatorChartType.SQLPatternMatching"), new PatternExplorer()), //$NON-NLS-1$
+    SQL_PATTERN_MATCHING(Messages.getString("EIndicatorChartType.SQLPatternMatching"), new SQLPatternExplorer()), //$NON-NLS-1$
     MODE_INDICATOR(Messages.getString("EIndicatorChartType.ModeIndicator"), null), //$NON-NLS-1$
     WHERERULE_INDICATOR(Messages.getString("EIndicatorChartType.WhereRuleIndicator"), null), //$NON-NLS-1$
     // MOD mzhao 2009-03-23,Soundex frequency.
