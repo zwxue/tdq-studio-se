@@ -54,7 +54,6 @@ import org.talend.dq.helper.ProxyRepositoryManager;
 import org.talend.dq.helper.ReportUtils;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.helper.resourcehelper.RepResourceFileHelper;
-import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.dq.nodes.AnalysisRepNode;
 import org.talend.dq.nodes.AnalysisSubFolderRepNode;
 import org.talend.dq.nodes.ConnectionRepNode;
@@ -391,8 +390,6 @@ public class LocalRepositoryObjectCRUD extends AbstractRepObjectCRUDAction {
      */
     private void moveRepositoryNodes(IRepositoryNode[] repositoryNodes, IRepositoryNode targetNode) throws PersistenceException {
         if (repositoryNodes != null) {
-            // if an indicator is physical deleted,need to remove the object from indicator definitions variable.
-            boolean hasIndictorMoved = false;
             for (IRepositoryNode sourceNode : repositoryNodes) {
                 if (sourceNode.getType() == ENodeType.REPOSITORY_ELEMENT) {
                     if (sourceNode instanceof AnalysisRepNode || sourceNode instanceof ConnectionRepNode) {
@@ -420,17 +417,10 @@ public class LocalRepositoryObjectCRUD extends AbstractRepObjectCRUDAction {
                 } else if (sourceNode.getType() == ENodeType.SIMPLE_FOLDER) {
                     moveFolderRepNode(sourceNode, targetNode);
                 }
-                if (RepositoryNodeHelper.isIndicatorOrIndiSubFolderNode(sourceNode)) {
-                    hasIndictorMoved = true;
-                }
                 // refresh the dq repository tree view
                 CorePlugin.getDefault().refreshDQView(targetNode.getParent());
                 // MOD qiongli 2012-4-23,only refresh the parent of source node at here.
                 CorePlugin.getDefault().refreshDQView(sourceNode.getParent());
-            }
-            // reload the public variable of Indicator definitions so that update the moved indicator resources.
-            if (hasIndictorMoved) {
-                DefinitionHandler.getInstance().reloadIndicatorsDefinitions();
             }
         }
     }
