@@ -41,6 +41,8 @@ public final class IndicatorTreeModelBuilder {
     private IndicatorTreeModelBuilder() {
     }
 
+    private static IndicatorCategoryNode[] indicatorCategoryNodes;
+
     /**
      * build Indicator Category. we DO NOT use the CACHE here, because sometimes, when the indicator definitions become
      * to Proxy, we can not get its property to get Label display on the select indicator dialog(can prefer to TDQ-8857)
@@ -48,6 +50,9 @@ public final class IndicatorTreeModelBuilder {
      * @return
      */
     public static IIndicatorNode[] buildIndicatorCategory() {
+        if (indicatorCategoryNodes != null) {
+            return indicatorCategoryNodes;
+        }
         // build Basic Statistic categoryNode
         IndicatorCategoryNode simpleCategoryNode = new IndicatorCategoryNode(SIMPLE_LABEL, IndicatorEnum.CountsIndicatorEnum);
 
@@ -84,7 +89,8 @@ public final class IndicatorTreeModelBuilder {
         IndicatorEnum[] fraudIndicatorEnums = new IndicatorEnum[] { IndicatorEnum.BenfordLawFrequencyIndicatorEnum };
         IndicatorCategoryNode fraudCategoryNode = new IndicatorCategoryNode(FRAUD_LABEL, fraudIndicatorEnums);
 
-        return new IndicatorCategoryNode[] { simpleCategoryNode, textCategoryNode, boxCategoryNode, advanceCategoryNode,
-                patternFinderCategoryNode, soundexCategoryNode, phoneCategoryNode, fraudCategoryNode };
+        indicatorCategoryNodes = new IndicatorCategoryNode[] { simpleCategoryNode, textCategoryNode, boxCategoryNode,
+                advanceCategoryNode, patternFinderCategoryNode, soundexCategoryNode, phoneCategoryNode, fraudCategoryNode };
+        return indicatorCategoryNodes;
     }
 }
