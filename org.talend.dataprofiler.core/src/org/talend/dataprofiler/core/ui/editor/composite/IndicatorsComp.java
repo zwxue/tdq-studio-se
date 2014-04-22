@@ -119,13 +119,11 @@ public class IndicatorsComp extends AbstractPagePart {
                     IndicatorEnum indicatorEnum = IndicatorEnum.findIndicatorEnum(indicator.eClass());
                     indicatortList.add(new ColumnSetIndicatorUnit(indicatorEnum, indicator));
                 }
-            }
-            // for AllMatchIndicator
-            if (indicatorObj instanceof AllMatchIndicator) {
+                // MOD msjian TDQ-8860: we always show the allMatchIndicator in the Indicators section
+            } else if (indicatorObj instanceof AllMatchIndicator) { // for AllMatchIndicator
                 AllMatchIndicator allMatchIndicator = (AllMatchIndicator) indicatorObj;
-                if (0 < allMatchIndicator.getCompositeRegexMatchingIndicators().size()) {
-                    indicatortList.add(new ColumnSetIndicatorUnit(IndicatorEnum.AllMatchIndicatorEnum, allMatchIndicator));
-                }
+                indicatortList.add(new ColumnSetIndicatorUnit(IndicatorEnum.AllMatchIndicatorEnum, allMatchIndicator));
+                // TDQ-8860~
             }
             // ~
         }
