@@ -26,6 +26,7 @@ import org.jfree.data.statistics.BoxAndWhiskerItem;
 import org.talend.dataprofiler.common.ui.editor.preview.CustomerDefaultCategoryDataset;
 import org.talend.dataprofiler.common.ui.editor.preview.ICustomerDataset;
 import org.talend.dataprofiler.common.ui.editor.preview.chart.ChartDatasetUtils;
+import org.talend.dataprofiler.common.ui.editor.preview.chart.ChartDecorator;
 import org.talend.dataprofiler.common.ui.editor.preview.chart.TopChartFactory;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.editor.preview.ColumnIndicatorUnit;
@@ -69,8 +70,11 @@ public class SummaryStatisticsState extends AbstractChartTypeStates {
                 return TopChartFactory.createBoxAndWhiskerChart(
                         DefaultMessagesImpl.getString("SummaryStatisticsState.SummaryStatistics"), dataset); //$NON-NLS-1$
             } else {
-                return TopChartFactory.createBarChart(
+                JFreeChart barChart = TopChartFactory.createBarChart(
                         DefaultMessagesImpl.getString("SummaryStatisticsState.Summary_Statistics"), getDataset(), false); //$NON-NLS-1$
+                // add the decimal format :0.00,TDQ-8673 20140422 yyin
+                ChartDecorator.setDisplayDecimalFormat(barChart);
+                return barChart;
             }
         }
     }
