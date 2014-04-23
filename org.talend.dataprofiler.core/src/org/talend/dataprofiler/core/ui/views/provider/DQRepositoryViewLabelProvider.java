@@ -31,6 +31,8 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
 import org.talend.commons.utils.platform.PluginChecker;
+import org.talend.core.context.Context;
+import org.talend.core.context.RepositoryContext;
 import org.talend.core.database.EDatabaseTypeName;
 import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
 import org.talend.core.model.metadata.builder.database.JavaSqlFactory;
@@ -42,6 +44,7 @@ import org.talend.core.model.properties.Property;
 import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
+import org.talend.core.runtime.CoreRuntimePlugin;
 import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
@@ -201,6 +204,18 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider i
                 if (viewObject != null) {
                     // MOD yyi 2011-04-07 19696: "Lock element"
                     ERepositoryStatus status = ProxyRepositoryFactory.getInstance().getStatus(viewObject);
+
+                    Context ctx = CoreRuntimePlugin.getInstance().getContext();
+                    RepositoryContext rc = (RepositoryContext) ctx.getProperty(Context.REPOSITORY_CONTEXT_KEY);
+
+                    // TUP-1918:for offline mode,its item is locked by default but need show the default image. This
+                    // will be enhanced later by TDI-29265.
+                    if (rc.isEditableAsReadOnly()) {
+                        if (status == ERepositoryStatus.LOCK_BY_USER) {
+                            status = ERepositoryStatus.DEFAULT;
+                        }
+                    }
+
                     if (ERepositoryStatus.DEFAULT != status && originalImageName != null) {
                         if (ERepositoryStatus.LOCK_BY_USER == status) {
                             image = ImageLib.createLockedByOwnIcon(originalImageName).createImage();
