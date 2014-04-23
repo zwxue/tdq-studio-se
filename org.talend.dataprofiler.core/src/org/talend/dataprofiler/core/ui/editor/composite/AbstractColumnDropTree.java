@@ -227,6 +227,7 @@ public abstract class AbstractColumnDropTree extends AbstractPagePart {
              */
             @Override
             public void mouseDown(MouseEvent e) {
+                // current delLabel is behind of one indicator item.
                 ModelElementIndicator meIndicator = (ModelElementIndicator) treeItem.getData(MODELELEMENT_INDICATOR_KEY);
                 deleteIndicatorItems(meIndicator, unit);
                 if (indicatorItem.getParentItem() != null && indicatorItem.getParentItem().getData(INDICATOR_UNIT_KEY) != null) {
