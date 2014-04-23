@@ -344,16 +344,27 @@ public class UIPagination {
                     DefaultMessagesImpl.getString("UIPagination.NumNotInValidRange")); //$NON-NLS-1$
             return;
         }
-        if (goNo < 1 || goNo > totalPages) {
+
+        go(goNo);
+
+    }
+
+    /**
+     * go to special page
+     * 
+     * 
+     * @param pageNumber
+     */
+    protected void go(int pageNumber) {
+        if (pageNumber < 1 || pageNumber > totalPages) {
             MessageDialog.openError(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
                     DefaultMessagesImpl.getString("UIPagination.Errors"), //$NON-NLS-1$
                     DefaultMessagesImpl.getString("UIPagination.NotInValidRange")); //$NON-NLS-1$
             return;
         }
         pageCache.get(currentPage).dispose();
-        currentPage = goNo - 1;
+        currentPage = pageNumber - 1;
         pageCache.get(currentPage).renderContents();
-
     }
 
     /**
@@ -459,6 +470,12 @@ public class UIPagination {
         return this.bandingViewer;
     }
 
+    /**
+     * 
+     * @deprecated use {@link #goToPage(int)} instead of it
+     * @param pageNumber
+     */
+    @Deprecated
     public void setCurrentPage(int pageNumber) {
         pageGoText.setText(String.valueOf(pageNumber));
         go();
@@ -480,6 +497,33 @@ public class UIPagination {
             }
         }
         return modelElementIndicatorList.toArray(new ModelElementIndicator[modelElementIndicatorList.size()]);
+    }
+
+    /**
+     * 
+     * go to Last Page
+     */
+    public void goToLastPage() {
+        go(totalPages);
+    }
+
+    /**
+     * 
+     * Go to special page
+     * 
+     * @param pageNumber
+     */
+    public void goToPage(int pageNumber) {
+        go(pageNumber);
+    }
+
+    /**
+     * Getter for currentPage.
+     * 
+     * @return the currentPage
+     */
+    public int getCurrentPage() {
+        return this.currentPage;
     }
 
 }

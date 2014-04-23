@@ -453,7 +453,7 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
                 createIndicatorItems(treeItem, meIndicator.getIndicatorUnits());
             }
             delLabelEditor.layout();
-            treeItem.setExpanded(true);
+            treeItem.setExpanded(false);
         }
 
         tree.layout();

@@ -259,11 +259,9 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
 
             @Override
             public void linkActivated(HyperlinkEvent e) {
-                ModelElementIndicator[] result = treeViewer.openIndicatorSelectDialog(null);
-                if (result.length > 0) {
-                    refreshTheTree(result);
-                    setDirty(true);
-                }
+                ModelElementIndicator[] result = treeViewer.openIndicatorSelectDialog(ColumnMasterDetailsPage.this.getSite()
+                        .getShell());
+                refreshCurrentTreeViewer(result);
             }
 
         });
@@ -330,6 +328,13 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
         // pagination compoent
         computePagination();
         // ~
+    }
+
+    /**
+     * Go to last of the page.
+     */
+    public void goLastPage() {
+        uiPagination.goToLastPage();
     }
 
     /**
@@ -1046,6 +1051,23 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
     @Override
     protected void setLanguageToTreeViewer(ExecutionLanguage executionLanguage) {
         treeViewer.setLanguage(executionLanguage);
+
+    }
+
+    /**
+     * 
+     * refresh current Tree Viewer
+     * 
+     * @param result
+     */
+    public void refreshCurrentTreeViewer(ModelElementIndicator[] result) {
+        if (result.length > 0) {
+            int lastTimePageNumber = uiPagination.getCurrentPage();
+            refreshTheTree(result);
+            // the number of current page is from 0 to n so need to add one when we use it.
+            uiPagination.goToPage(lastTimePageNumber + 1);
+            treeViewer.setElements(treeViewer.getModelElementIndicator(), true, true);
+        }
 
     }
 
