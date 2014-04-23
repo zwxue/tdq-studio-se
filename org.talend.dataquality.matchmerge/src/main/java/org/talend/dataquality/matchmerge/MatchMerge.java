@@ -18,7 +18,6 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 
-import org.talend.dataquality.matchmerge.mfb.MFB;
 import org.talend.dataquality.record.linkage.attribute.AttributeMatcherFactory;
 import org.talend.dataquality.record.linkage.attribute.IAttributeMatcher;
 import org.talend.dataquality.record.linkage.attribute.SubstringAttributeMatcher;
@@ -31,22 +30,16 @@ public class MatchMerge {
     private static final double MAX_SCORE = 1.0;
 
     public static boolean equals(Record record1, Record record2) {
-        List<Attribute> r1 = record1.getAttributes();
-        List<Attribute> r2 = record2.getAttributes();
-        int i = 0;
-        boolean find = true;
-        while (i < r1.size() && find) {
-            find = false;
-            if ((r1.get(i).getValue() == null || r2.get(i).getValue() == null)) {
-                find = r1.get(i).getValue() == null && r2.get(i).getValue() == null;
-            } else {
-                if (r1.get(i).getValue().equals(r2.get(i).getValue())) {
-                    find = true;
-                }
+        Iterator<Attribute> r1 = record1.getAttributes().iterator();
+        Iterator<Attribute> r2 = record2.getAttributes().iterator();
+        while (r1.hasNext()) {
+            AttributeValues<String> leftAttributeValues = r1.next().getValues();
+            AttributeValues<String> rightAttributeValues = r2.next().getValues();
+            if (!leftAttributeValues.equals(rightAttributeValues)) {
+                return false;
             }
-            i++;
         }
-        return find;
+        return true;
     }
 
     public static Record merge(Record record1, Record record2, SurvivorShipAlgorithmEnum[] typeMergeTable, String[] parameters,
@@ -58,7 +51,7 @@ public class MatchMerge {
                 .getTimestamp();
         Record mergedRecord = new Record(record1.getId(), mergedRecordTimestamp, mergedRecordSource);
         for (int k = 0; k < r1.size(); k++) {
-            Attribute a = new Attribute(r1.get(k).getLabel(), null);
+            Attribute a = new Attribute(r1.get(k).getLabel());
             mergedRecord.getAttributes().add(k, a);
         }
         for (int i = 0; i < r1.size(); i++) {
@@ -67,9 +60,20 @@ public class MatchMerge {
             Attribute rightAttribute = r2.get(i);
             String leftValue = leftAttribute.getValue();
             String rightValue = rightAttribute.getValue();
-            // Keep values from original records
-            mergedAttribute.getValues().addAll(leftAttribute.getValues());
-            mergedAttribute.getValues().addAll(rightAttribute.getValues());
+            // Keep values from original records (if any)
+            AttributeValues<String> leftValues = leftAttribute.getValues();
+            if (leftValues.size() > 0) {
+                mergedAttribute.getValues().merge(leftValues);
+            } else {
+                mergedAttribute.getValues().get(leftValue).increment();
+            }
+            AttributeValues<String> rightValues = rightAttribute.getValues();
+            if (rightValues.size() > 0) {
+                mergedAttribute.getValues().merge(rightValues);
+            } else {
+                mergedAttribute.getValues().get(rightValue).increment();
+            }
+            // Merge values
             if (leftValue == null && rightValue == null) {
                 mergedAttribute.setValue(null);
             } else {
@@ -135,8 +139,7 @@ public class MatchMerge {
                     }
                     break;
                 case MOST_COMMON:
-                    String mostCommonValue = MFB.getMostCommonValue(mergedAttribute.getValues());
-                    mergedAttribute.setValue(mostCommonValue);
+                    mergedAttribute.setValue(mergedAttribute.getValues().mostCommon());
                     break;
                 case LONGEST:
                     if (leftValueLength > rightValueLength) {
@@ -181,8 +184,7 @@ public class MatchMerge {
         mergedRecord.getRelatedIds().addAll(record1.getRelatedIds());
         mergedRecord.getRelatedIds().addAll(record2.getRelatedIds());
         // Conservative strategy -> keeps the lowest confidence to avoid over-confidence in a group with many
-        // low-confidence
-        // records.
+        // low-confidence records.
         mergedRecord.setConfidence(Math.min(record1.getConfidence(), record2.getConfidence()));
         if (record1.getGroupId() != null) {
             mergedRecord.setGroupId(record1.getGroupId());

@@ -15,8 +15,10 @@
  */
 package org.talend.dataquality.matchmerge;
 
-import java.util.ArrayList;
-import java.util.List;
+import org.apache.commons.collections.iterators.IteratorChain;
+
+import java.util.Collections;
+import java.util.Iterator;
 
 /**
  * A attribute is a "column" in a {@link org.talend.dataquality.matchmerge.Record record}.
@@ -27,16 +29,10 @@ public class Attribute {
 
     private String value;
 
-    private List<String> values;
+    private AttributeValues<String> values = new AttributeValues<String>();;
 
-    /**
-     * Creates a new attribute (column name / value pair).
-     * @param label Name of the column.
-     * @param value Value associated with the column.
-     */
-    public Attribute(String label, String value) {
+    public Attribute(String label) {
         this.label = label;
-        this.value = value;
     }
 
     /**
@@ -65,13 +61,12 @@ public class Attribute {
     /**
      * @return All the values that lead to the merged value (i.e. the value returned by {@link #getValue()}).
      */
-    public List<String> getValues() {
-        if (values == null) {
-            values = new ArrayList<String>();
-            if (value != null) {
-                values.add(value);
-            }
-        }
+    public AttributeValues<String> getValues() {
         return values;
     }
+
+    public Iterator<String> allValues() {
+        return new IteratorChain(new Iterator[] { Collections.singleton(value).iterator(), values.iterator()});
+    }
+    
 }

@@ -36,8 +36,6 @@ public class MFB implements MatchMergeAlgorithm {
 
     private SubString[] subStrings;
 
-    private int maxWeight;
-
     private double recordMatchThreshold;
 
     private String mergedRecordSource;
@@ -57,7 +55,6 @@ public class MFB implements MatchMergeAlgorithm {
         this.subStrings = new SubString[0];
         this.mergedRecordSource = StringUtils.EMPTY;
         this.minConfidenceValue = 0;
-        maxWeight = 0;
     }
 
     public MFB(AttributeMatcherType[] algorithms, String[] algorithmParameters, float[] thresholds, double minConfidenceValue,
@@ -75,9 +72,6 @@ public class MFB implements MatchMergeAlgorithm {
         this.mergedRecordSource = mergedRecordSource;
         if (algorithms.length == 0 || thresholds.length == 0 || merges.length == 0 || weights.length == 0) {
             LOGGER.warn("Algorithm initialized with no matching algorithm/threshold/merge/weight information");
-        }
-        for (double weight : weights) {
-            maxWeight += weight;
         }
     }
 
@@ -147,44 +141,6 @@ public class MFB implements MatchMergeAlgorithm {
         return mergedRecords;
     }
 
-    // TODO This method does not belong here: should be in linkage (maybe?)
-    // TODO Duplicated code with org.talend.mdm.core -> bad
-    public static String getMostCommonValue(Collection<String> values) {
-        if (values.isEmpty()) {
-            return null;
-        }
-        String[] strings = values.toArray(new String[values.size()]);
-        Arrays.sort(strings); // Sorts items to ensure all similar strings are grouped together
-        int occurrenceCount = 1;
-        int maxOccurrenceCount = 0;
-        String mostCommon = strings[0];
-        String previousString = strings[0];
-        for (int i = 1; i < strings.length; i++) {
-            String current = strings[i];
-            if (!areEquals(previousString, current)) {
-                if (occurrenceCount > maxOccurrenceCount) {
-                    mostCommon = previousString;
-                    maxOccurrenceCount = occurrenceCount;
-                }
-                occurrenceCount = 1;
-            } else {
-                occurrenceCount++;
-            }
-            previousString = current;
-        }
-        if (occurrenceCount > maxOccurrenceCount) {
-            mostCommon = previousString;
-        }
-        return mostCommon;
-    }
-
-    private static boolean areEquals(String previousString, String current) {
-        if (previousString == null) {
-            return current == null;
-        }
-        return previousString.equals(current);
-    }
-
     private void performAsserts(Record currentRecord) {
         if (currentRecord.getAttributes().size() != algorithms.length) {
             throw new IllegalArgumentException("All record columns should have a matching algorithm.");
@@ -223,16 +179,9 @@ public class MFB implements MatchMergeAlgorithm {
         while (mergedRecordAttributes.hasNext()) {
             Attribute left = mergedRecordAttributes.next();
             Attribute right = currentRecordAttributes.next();
-            double score;
-            // First try on the merged value (less intensive)
-            score = MatchMerge.matchScore(Collections.singleton(left.getValue()).iterator(),
-                    Collections.singleton(right.getValue()).iterator(), algorithms[matchIndex], algorithmParameters[matchIndex],
-                    nullOptions[matchIndex], subStrings[matchIndex]);
-            if (score < thresholds[matchIndex]) {
-                // Score wasn't high enough, try on all values
-                score = MatchMerge.matchScore(left.getValues().iterator(), right.getValues().iterator(), algorithms[matchIndex],
-                        algorithmParameters[matchIndex], nullOptions[matchIndex], subStrings[matchIndex]);
-            }
+            // Try on all values
+            double score = MatchMerge.matchScore(left.allValues(), right.allValues(), algorithms[matchIndex],
+                    algorithmParameters[matchIndex], nullOptions[matchIndex], subStrings[matchIndex]);
             result.setScore(matchIndex, algorithms[matchIndex], score, left.getValue(), right.getValue());
             result.setThreshold(matchIndex, thresholds[matchIndex]);
             confidence += score * weights[matchIndex];
@@ -321,7 +270,9 @@ public class MFB implements MatchMergeAlgorithm {
                 ArrayList<Attribute> attributes = new ArrayList<Attribute>();
                 int i = 0;
                 for (String value : values) {
-                    attributes.add(new Attribute(String.valueOf(i++), value));
+                    Attribute attribute = new Attribute(String.valueOf(i++));
+                    attribute.setValue(value);
+                    attributes.add(attribute);
                 }
                 return new Record(attributes, StringUtils.EMPTY, 0, StringUtils.EMPTY);
             }

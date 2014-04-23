@@ -101,7 +101,7 @@ public class LoggerCallback implements MatchMergeAlgorithm.Callback {
             }
             messagesBuilder.append('\n');
             messagesBuilder.append("\t\tconfidence: ").append(matchResult.getNormalizedConfidence());
-            messagesBuilder.append("(min: ").append(matchResult.getMinConfidenceValue()).append(")");
+            messagesBuilder.append(" (min: ").append(matchResult.getMinConfidenceValue()).append(")");
             LOGGER.debug(messagesBuilder.toString());
         }
     }
