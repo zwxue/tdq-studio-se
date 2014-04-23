@@ -62,7 +62,6 @@ import org.talend.dataprofiler.core.ui.views.resources.IRepositoryObjectCRUDActi
 import org.talend.dataquality.properties.TDQReportItem;
 import org.talend.dq.helper.DQDeleteHelper;
 import org.talend.dq.helper.EObjectHelper;
-import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.helper.ReportUtils;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.nodes.AnalysisSubFolderRepNode;
@@ -401,8 +400,10 @@ public class DQDeleteAction extends DeleteAction {
                     IRepositoryNode node = entry.getKey();
                     List<ModelElement> dependencies = entry.getValue();
 
-                    excuteSuperRun(node, node.getParent());
-                    physicalDeleteDependencies(dependencies);
+                    // only when its dependencies deleted successfully, then delete itself
+                    if (physicalDeleteDependencies(dependencies)) {
+                        excuteSuperRun(node, node.getParent());
+                    }
                 }
             }
         }
@@ -510,9 +511,9 @@ public class DQDeleteAction extends DeleteAction {
             for (ModelElement mod : dependences) {
                 List<ModelElement> subDependences = EObjectHelper.getDependencyClients(mod);
                 if (subDependences != null && !subDependences.isEmpty()) {
-                    isSucceed = physicalDeleteDependencies(subDependences);
-                    if (!isSucceed) {
-                        return false;
+                    if (!physicalDeleteDependencies(subDependences)) {
+                        isSucceed = false;
+                        continue;
                     }
                 }
                 RepositoryNode tempNode = RepositoryNodeHelper.recursiveFind(mod);
@@ -524,14 +525,23 @@ public class DQDeleteAction extends DeleteAction {
                         continue;
                     }
                 }
+
+                // before physical delete, we must do logicDelete first, because in DI side, they didn't have dependency
+                // and didn't have force delete
                 logicDeleteDependeny(tempNode);
                 // physical delete dependcy element.
                 tempNode = RepositoryNodeHelper.recursiveFindRecycleBin(mod);
                 if (tempNode != null) {
+                    // we must get IFile before delete
+                    IFile propertyFile = RepositoryNodeHelper.getIFile(tempNode);
                     excuteSuperRun(tempNode, tempNode.getParent());
-                    IFile propertyFile = PropertyHelper.getPropertyFile(mod);
+
+                    // when delete failed, we continue to delete others
                     if (propertyFile != null && propertyFile.exists()) {
                         isSucceed = false;
+                        log.error(DefaultMessagesImpl.getString("DQDeleteAction.getErrorWhenDelete", propertyFile.getFullPath() //$NON-NLS-1$
+                                .removeFileExtension()));
+                        continue;
                     }
                 }
             }
