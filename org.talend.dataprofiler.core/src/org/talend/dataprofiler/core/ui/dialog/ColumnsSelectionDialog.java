@@ -186,7 +186,7 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
      * @param repNode
      * @return
      */
-    private IRepositoryNode getParentNode(RepositoryNode repNode) {
+    protected IRepositoryNode getParentNode(RepositoryNode repNode) {
         IRepositoryNode node = repNode.getParent();
         if (repNode instanceof DBColumnRepNode || repNode instanceof DFColumnRepNode) {
             node = repNode.getParent().getParent();
