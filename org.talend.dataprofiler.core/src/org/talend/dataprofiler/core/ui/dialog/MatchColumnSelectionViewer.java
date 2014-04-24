@@ -42,7 +42,7 @@ public class MatchColumnSelectionViewer extends ColumnSelectionViewer {
     protected void handleSelect(SelectionEvent event) {
         if (event.detail == SWT.CHECK) {
             TreeItem item = (TreeItem) event.item;
-            if (isColumnSet(item.getData()) && hasNoTableSelected(item.getData())) {
+            if (isColumnSet(item.getData())) {
                 super.handleSelect(event);
             } else {
                 item.setChecked(false);
@@ -51,26 +51,6 @@ public class MatchColumnSelectionViewer extends ColumnSelectionViewer {
             super.handleSelect(event);
         }
     }
-
-    /**
-     * check if some table already be selected
-     * 
-     * @param currentChecked
-     * 
-     * @return
-     */
-    private boolean hasNoTableSelected(Object currentChecked) {
-        Object[] checkedElements = getCheckedElements();
-        for (Object checked : checkedElements) {
-            if (currentChecked.equals(checked)) {
-                continue;
-            }
-            if (isColumnSet(checked)) {
-                return false;
-            }
-        }
-        return true;
-     }
 
     /**
      * if the element is a column set (table, view, dftable)
@@ -84,7 +64,7 @@ public class MatchColumnSelectionViewer extends ColumnSelectionViewer {
 
     @Override
     protected boolean isNotTableCase(CheckStateChangedEvent event, Object element) {
-       return isColumnSet(element);
+        return isColumnSet(element);
     }
 
 }
