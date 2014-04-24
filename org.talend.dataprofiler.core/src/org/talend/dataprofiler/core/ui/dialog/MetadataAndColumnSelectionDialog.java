@@ -13,7 +13,6 @@
 package org.talend.dataprofiler.core.ui.dialog;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.core.runtime.IStatus;
@@ -60,20 +59,26 @@ public class MetadataAndColumnSelectionDialog extends ColumnsSelectionDialog {
      */
     @Override
     protected void handleTableElementsChecked(RepositoryNode reposNode, Boolean checkedFlag) {
-        IRepositoryNode tableNode = getParentNode(reposNode);
-        if (checkedFlag) {
-            // check if the current checked table is not as same as the already selected one, do not continue
-            Iterator<?> it = modelElementCheckedMap.keySet().iterator();
-            while (it.hasNext()) {
-                IRepositoryNode selectNode = (IRepositoryNode) it.next();
-                if (!selectNode.equals(tableNode)) {
-                    // set the current reposNode as unchecked
-                    getTableViewer().setAllChecked(false);
-                    return;
-                }
-            }
-        }
         super.handleTableElementsChecked(reposNode, checkedFlag);
+        updateStatusBySelection();
+    }
+
+    private void updateStatusBySelection() {
+        Status fCurrStatus;
+        // the table node all stored in the map as key, so when the key's number >1, means there are more than one
+        // table's column selected. then make the ok status disable
+        if (super.modelElementCheckedMap.keySet().size() > 1) {
+            fCurrStatus = new Status(IStatus.ERROR, PlatformUI.PLUGIN_ID, IStatus.OK, PluginConstant.EMPTY_STRING, null);
+        } else {
+            fCurrStatus = new Status(IStatus.OK, PlatformUI.PLUGIN_ID, IStatus.OK, PluginConstant.EMPTY_STRING, null);
+        }
+        updateStatus(fCurrStatus);
+    }
+
+    @Override
+    protected void handleTreeElementsChecked(RepositoryNode repNode, Boolean checkedFlag) {
+        super.handleTreeElementsChecked(repNode, checkedFlag);
+        updateStatusBySelection();
     }
 
     // no need to create "select All " buttons
