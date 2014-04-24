@@ -69,6 +69,7 @@ import org.talend.dataquality.indicators.PatternLowFreqIndicator;
 import org.talend.dataquality.indicators.PatternMatchingIndicator;
 import org.talend.dataquality.indicators.PossiblePhoneCountIndicator;
 import org.talend.dataquality.indicators.RowCountIndicator;
+import org.talend.dataquality.indicators.SqlPatternMatchingIndicator;
 import org.talend.dataquality.indicators.UniqueCountIndicator;
 import org.talend.dataquality.indicators.ValidPhoneCountIndicator;
 import org.talend.dataquality.indicators.WellFormE164PhoneCountIndicator;
@@ -129,8 +130,11 @@ public final class ChartTableFactory {
                     item = new MenuItem(menu, SWT.PUSH);
                     item.setText(DefaultMessagesImpl.getString("ChartTableFactory.RemoveDuplicate")); //$NON-NLS-1$
                 } else if (ChartTableFactory.isPatternMatchingIndicator(currentIndicator)) {
-                    item = new MenuItem(menu, SWT.PUSH);
-                    item.setText(DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.generateJob"));//$NON-NLS-1$ 
+                    // TDQ--8864 forbidden the genarate job menu for SQL pattern, remove this after TDQ-8875 is DONE
+                    if (!ChartTableFactory.isSQLPatternMatchingIndicator(currentIndicator)) {
+                        item = new MenuItem(menu, SWT.PUSH);
+                        item.setText(DefaultMessagesImpl.getString("AnalysisColumnTreeViewer.generateJob"));//$NON-NLS-1$ 
+                    }
                 } else if (ChartTableFactory.isAllMatchIndicator(currentIndicator)) {
                     item = new MenuItem(menu, SWT.PUSH);
                     item.setText(DefaultMessagesImpl.getString("ChartTableFactory.gen_etl_job_row")); //$NON-NLS-1$
@@ -370,9 +374,9 @@ public final class ChartTableFactory {
                             if (analysis.getParameters().isStoreData()) { // if allow drill down
 
                                 boolean hasData = analyDataSet != null
-                                        && (analyDataSet.getData() != null
-                                        && analyDataSet.getData().size() > 0 || analyDataSet.getFrequencyData() != null
-                                        && analyDataSet.getFrequencyData().size() > 0 || analyDataSet.getPatternData() != null
+                                        && (analyDataSet.getData() != null && analyDataSet.getData().size() > 0
+                                                || analyDataSet.getFrequencyData() != null
+                                                && analyDataSet.getFrequencyData().size() > 0 || analyDataSet.getPatternData() != null
                                                 && analyDataSet.getPatternData().size() > 0);
 
                                 if (hasData) {
@@ -560,6 +564,18 @@ public final class ChartTableFactory {
 
             @Override
             public Indicator casePatternMatchingIndicator(PatternMatchingIndicator object) {
+                return object;
+            }
+        };
+
+        return iSwitch.doSwitch(indicator) != null;
+    }
+
+    public static boolean isSQLPatternMatchingIndicator(Indicator indicator) {
+        IndicatorsSwitch<Indicator> iSwitch = new IndicatorsSwitch<Indicator>() {
+
+            @Override
+            public Indicator caseSqlPatternMatchingIndicator(SqlPatternMatchingIndicator object) {
                 return object;
             }
         };
