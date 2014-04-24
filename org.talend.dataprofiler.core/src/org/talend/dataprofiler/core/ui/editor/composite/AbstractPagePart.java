@@ -195,14 +195,10 @@ public abstract class AbstractPagePart {
             // in many case, the connection in the analysis still null, can only make it select a connection in the
             // following way
             // MOD yyin 201204 TDQ-4977
-            Object value = null;
-            if (SwitchHelpers.CONNECTION_SWITCH.doSwitch(newDataManager) != null) {
-                value = masterPage.getConnCombo().getData(
-                        prop.getDisplayName() + RepositoryNodeHelper.getConnectionType(newDataManager));
-            }
             Integer index = 0;
-            if (value != null && value instanceof Integer) {
-                index = (Integer) value;
+            if (SwitchHelpers.CONNECTION_SWITCH.doSwitch(newDataManager) != null) {
+                index = (Integer) masterPage.getConnCombo().getData(
+                        prop.getDisplayName() + RepositoryNodeHelper.getConnectionType(newDataManager));
             }
             masterPage.getConnCombo().select(index);
 
