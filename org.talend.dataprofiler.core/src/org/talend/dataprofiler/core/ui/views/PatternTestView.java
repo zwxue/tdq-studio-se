@@ -272,9 +272,9 @@ public class PatternTestView extends ViewPart {
         // textAreaLabelGD.widthHint = 180;
         textAreaLabel.setLayoutData(textAreaLabelGD);
 
-        regularLabel = new Label(textCom, SWT.NULL);
-        regularLabel.setText(DefaultMessagesImpl.getString("PatternTestView.regularExpression")); //$NON-NLS-1$ 
-        regularLabel.setToolTipText(DefaultMessagesImpl.getString("PatternTestView.regularExpression"));//$NON-NLS-1$ 
+        regularLabel = new Label(textCom, SWT.WRAP);
+        regularLabel.setText(DefaultMessagesImpl.getString("PatternTestView.regularExpressionParameter")); //$NON-NLS-1$ 
+        regularLabel.setToolTipText(DefaultMessagesImpl.getString("PatternTestView.regularExpressionParameter"));//$NON-NLS-1$ 
         GridData regularLabelGD = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
         regularLabelGD.heightHint = 40;
         regularLabelGD.widthHint = 70;
@@ -773,8 +773,8 @@ public class PatternTestView extends ViewPart {
         } else {
             textAreaLabel.setText(DefaultMessagesImpl.getString("PatternTestView.area")); //$NON-NLS-1$ 
             textAreaLabel.setToolTipText(DefaultMessagesImpl.getString("PatternTestView.area")); //$NON-NLS-1$ 
-            regularLabel.setText(DefaultMessagesImpl.getString("PatternTestView.regularExpression")); //$NON-NLS-1$ 
-            regularLabel.setToolTipText(DefaultMessagesImpl.getString("PatternTestView.regularExpression"));//$NON-NLS-1$
+            regularLabel.setText(DefaultMessagesImpl.getString("PatternTestView.regularExpressionParameter")); //$NON-NLS-1$ 
+            regularLabel.setToolTipText(DefaultMessagesImpl.getString("PatternTestView.regularExpressionParameter"));//$NON-NLS-1$
         }
         GridData formData = new GridData(GridData.FILL_HORIZONTAL);
         formData.widthHint = 37;
