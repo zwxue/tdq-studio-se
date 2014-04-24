@@ -193,7 +193,7 @@ public abstract class AbstractPagePart {
             fianlDataManager = newDataManager;
 
             // MOD yyin 201204 TDQ-4977
-            Object value = null;
+            Integer index = 0;
 
             // use property.getLabel() instead of dataManager.getDisplayName() because of we set it use first one for
             // TDQ-6286.
@@ -201,12 +201,8 @@ public abstract class AbstractPagePart {
             // MOD qiongli 2011-1-7 delimitedFile connection dosen't use 'dataManager.getName()'.
 
             if (SwitchHelpers.CONNECTION_SWITCH.doSwitch(newDataManager) != null) {
-                value = masterPage.getConnCombo().getData(
+                index = (Integer) masterPage.getConnCombo().getData(
                         prop.getDisplayName() + RepositoryNodeHelper.getConnectionType(newDataManager));
-            }
-            Integer index = 0;
-            if (value != null && value instanceof Integer) {
-                index = (Integer) value;
             }
             masterPage.getConnCombo().select(index);
 
