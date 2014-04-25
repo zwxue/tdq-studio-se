@@ -41,6 +41,9 @@ public class ModelElementMatchEngine extends GenericMatchEngine {
      */
     @Override
     public boolean isSimilar(EObject obj1, EObject obj2) throws FactoryException {
+        if (obj1 instanceof DatabaseConnection) {
+            return true;
+        }
 
         if (obj1 instanceof Catalog && obj2 instanceof Catalog) {
             Catalog catalog1 = (Catalog) obj1;
@@ -87,9 +90,6 @@ public class ModelElementMatchEngine extends GenericMatchEngine {
             return StringUtils.equalsIgnoreCase(mTable1.getLabel(), mTable2.getLabel());
         }
 
-        if (obj1 instanceof DatabaseConnection) {
-            return true;
-        }
         // MOD yyin 20130201 TDQ-6780, do not use "isURlChanged" any more.
         return true;// Can not return: super.isSimilar(obj1, obj2); reload table list will have problems.
         // ~ 16538
