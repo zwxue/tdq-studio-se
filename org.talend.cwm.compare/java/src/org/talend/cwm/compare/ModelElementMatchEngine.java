@@ -41,10 +41,10 @@ public class ModelElementMatchEngine extends GenericMatchEngine {
      */
     @Override
     public boolean isSimilar(EObject obj1, EObject obj2) throws FactoryException {
-
-        // MOD xqliu 2011-06-03 bug:16538
-        // return changeUrl ? false : super.isSimilar(obj1, obj2);
-
+        if (obj1 instanceof DatabaseConnection) {
+            return true;
+        }
+        
         boolean result = true;
         if (obj1 instanceof Catalog && obj2 instanceof Catalog) {
             Catalog catalog1 = (Catalog) obj1;
@@ -84,20 +84,17 @@ public class ModelElementMatchEngine extends GenericMatchEngine {
         } else if (obj1 instanceof MetadataColumn && obj2 instanceof MetadataColumn) {// Added yyin TDQ-8360
             MetadataColumn metaColumn1 = (MetadataColumn) obj1;
             MetadataColumn metaColumn2 = (MetadataColumn) obj2;
-            return StringUtils.equalsIgnoreCase(metaColumn1.getLabel(), metaColumn2.getLabel());
+            result =  StringUtils.equalsIgnoreCase(metaColumn1.getLabel(), metaColumn2.getLabel());
         } else if (obj1 instanceof MetadataTable && obj2 instanceof MetadataTable) {
             MetadataTable mTable1 = (MetadataTable) obj1;
             MetadataTable mTable2 = (MetadataTable) obj2;
-            return StringUtils.equalsIgnoreCase(mTable1.getLabel(), mTable2.getLabel());
+            result =  StringUtils.equalsIgnoreCase(mTable1.getLabel(), mTable2.getLabel());
         }
 
-        if (obj1 instanceof DatabaseConnection) {
-            return true;
-        }
         // MOD yyin 20130201 TDQ-6780, do not use "isURlChanged" any more.
         // can not be: super.isSimilar(obj1, obj2); if return super.isSimilar(obj1, obj2); reload table list will remove
         // all columns in the analysis
-        return true;
+        return result;
         // ~ 16538
     }
 
