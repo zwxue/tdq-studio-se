@@ -14,6 +14,7 @@ package org.talend.dataprofiler.core.service;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -650,6 +651,26 @@ public class TOPRepositoryService implements ITDQRepositoryService {
     public void updateAliasInSQLExplorer(ConnectionItem connectionItem, String oldConnName) {
         Connection connection = connectionItem.getConnection();
         CWMPlugin.getDefault().updateConnetionAliasByName(connection, oldConnName);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.core.ITDQRepositoryService#getAllDataProviders()
+     */
+    public Collection<Connection> getAllDataProviders() {
+        return CorePlugin.getDefault().getAllDataProviders();
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * org.talend.core.ITDQRepositoryService#updateDriverIfClassNotLoad(org.talend.core.model.metadata.builder.connection
+     * .DatabaseConnection)
+     */
+    public void updateDriverIfClassNotLoad(DatabaseConnection databaseConnection) {
+        CorePlugin.getDefault().updateDriverIfClassNotLoad(databaseConnection);
     }
 
 }

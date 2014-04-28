@@ -246,19 +246,7 @@ public class CorePlugin extends AbstractUIPlugin {
         Alias alias = aliasManager.getAlias(tdDataProvider.getName());
 
         if (alias == null) {
-            Collection<Connection> allDataProviders = new ArrayList<Connection>();
-
-            List<Connection> conns = new ArrayList<Connection>();
-            try {
-                for (ConnectionItem connItem : ProxyRepositoryFactory.getInstance().getMetadataConnectionsItem()) {
-                    conns.add(connItem.getConnection());
-                }
-            } catch (PersistenceException e) {
-                Log.error(e, e);
-            }
-            allDataProviders.addAll(conns);
-
-            for (Connection dataProvider : allDataProviders) {
+            for (Connection dataProvider : getAllDataProviders()) {
                 // MOD xqliu 2010-10-13 bug 15756
                 // if (dataProvider.getId().equals(tdDataProvider.getId())) {
                 if (dataProvider.getName().equals(tdDataProvider.getName())) {
@@ -319,13 +307,31 @@ public class CorePlugin extends AbstractUIPlugin {
     }
 
     /**
+     * DOC msjian Comment method "getAllDataProviders".
+     * 
+     * @return
+     */
+    public Collection<Connection> getAllDataProviders() {
+        Collection<Connection> allDataProviders = new ArrayList<Connection>();
+
+        try {
+            for (ConnectionItem connItem : ProxyRepositoryFactory.getInstance().getMetadataConnectionsItem()) {
+                allDataProviders.add(connItem.getConnection());
+            }
+        } catch (PersistenceException e) {
+            Log.error(e, e);
+        }
+        return allDataProviders;
+    }
+
+    /**
      * if the sqlexplorer driver is unRegisted,load the driver jar by lib manage system.
      * 
      * @param sqlPlugin
      * @param connection
      * @param databaseConnection
      */
-    private void updateDriverIfClassNotLoad(DatabaseConnection databaseConnection) {
+    public void updateDriverIfClassNotLoad(DatabaseConnection databaseConnection) {
         SQLExplorerPlugin sqlPlugin = SQLExplorerPlugin.getDefault();
         DriverManager driverManager = sqlPlugin.getDriverModel();
         String driverClassName = JavaSqlFactory.getDriverClass(databaseConnection);

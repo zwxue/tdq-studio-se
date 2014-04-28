@@ -227,7 +227,9 @@ public class ManagedDriver implements Comparable<ManagedDriver> {
         Connection jdbcConn = null;
         try {
             String dbUrl = user.getAlias().getUrl();
-            dbUrl = ConnectionUtils.addShutDownForHSQLUrl(dbUrl, user.getMetadataConnection().getAdditionalParams());
+            if (ConnectionUtils.isHsql(dbUrl)) {
+                dbUrl = ConnectionUtils.addShutDownForHSQLUrl(dbUrl, user.getMetadataConnection().getAdditionalParams());
+            }
             jdbcConn = jdbcDriver.connect(dbUrl, props);
         } catch (SQLException e) {
             throw new SQLCannotConnectException(user, e);
