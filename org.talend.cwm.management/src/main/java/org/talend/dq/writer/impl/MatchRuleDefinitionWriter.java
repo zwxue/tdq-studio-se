@@ -15,13 +15,11 @@ package org.talend.dq.writer.impl;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.core.model.properties.Item;
-import org.talend.cwm.management.i18n.Messages;
 import org.talend.dataquality.properties.TDQMatchRuleItem;
 import org.talend.dataquality.rules.BlockKeyDefinition;
-import org.talend.dataquality.rules.MatchKeyDefinition;
 import org.talend.dataquality.rules.MatchRule;
 import org.talend.dataquality.rules.MatchRuleDefinition;
-import org.talend.dataquality.rules.RulesFactory;
+import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.ProxyRepositoryManager;
 import org.talend.dq.writer.AElementPersistance;
 import org.talend.utils.sugars.ReturnCode;
@@ -98,31 +96,10 @@ public class MatchRuleDefinitionWriter extends AElementPersistance {
         // copy match keys in each match rules
         ruleDefinition.getMatchRules().clear();
         if (matchRule.getMatchRules() != null && matchRule.getMatchRules().size() > 0) {
-            int index = 1;
             for (MatchRule oneMatchRule : matchRule.getMatchRules()) {
-                ruleDefinition.getMatchRules().add(createMatchRuleByCopy(oneMatchRule, index++));
+                ruleDefinition.getMatchRules().add(EObjectHelper.deepCopy(oneMatchRule));
             }
         }
-    }
-
-    /**
-     * copy a match rule to a new one.
-     * 
-     * @param oldRule
-     * @return
-     */
-    private MatchRule createMatchRuleByCopy(MatchRule oldRule, int ruleIndex) {
-        MatchRule newRule = RulesFactory.eINSTANCE.createMatchRule();
-        newRule.setName(Messages.getString("MatchRuleDefinitionWriter.matchRuleName") + ruleIndex);
-        newRule.setMatchInterval(oldRule.getMatchInterval());
-        if (oldRule.getMatchKeys() != null && oldRule.getMatchKeys().size() > 0) {
-            for (MatchKeyDefinition matchKey : oldRule.getMatchKeys()) {
-                MatchKeyDefinition copy = EcoreUtil.copy(matchKey);
-                // should not empty the column value when export it
-                newRule.getMatchKeys().add(copy);
-            }
-        }
-        return newRule;
     }
 
 }

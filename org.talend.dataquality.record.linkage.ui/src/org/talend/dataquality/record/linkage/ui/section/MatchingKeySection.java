@@ -165,14 +165,14 @@ public class MatchingKeySection extends AbstractMatchKeyWithChartTableSection {
 
             @Override
             public void widgetSelected(SelectionEvent e) {
+                List<MatchRule> matchRuleList = getMatchRuleList();
                 EditSortMatchRuleNamesDialog dialog = new EditSortMatchRuleNamesDialog(Display.getCurrent().getActiveShell(),
-                        getMatchRuleList());
+                        matchRuleList);
                 if (dialog.open() == Window.OK) {
-                    // only when something is changed, do redraw and set the dirty.
-                    if (dialog.isDirty()) {
-                        redrawnSubTableContent();
-                        listeners.firePropertyChange(MatchAnalysisConstant.ISDIRTY_PROPERTY, true, false);
-                    }
+                    matchRuleList.clear();
+                    matchRuleList.addAll(dialog.getResultMatchRuleList());
+                    redrawnSubTableContent();
+                    listeners.firePropertyChange(MatchAnalysisConstant.ISDIRTY_PROPERTY, true, false);
                 }
             }
         });
