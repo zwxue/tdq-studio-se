@@ -59,6 +59,8 @@ import org.talend.dataprofiler.core.ui.editor.AbstractMetadataFormPage;
 import org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisMetadataPage;
 import org.talend.dataprofiler.core.ui.editor.analysis.ColumnSetMasterPage;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
+import org.talend.dataprofiler.core.ui.events.EventEnum;
+import org.talend.dataprofiler.core.ui.events.EventManager;
 import org.talend.dataprofiler.core.ui.views.ColumnViewerDND;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.ExecutionLanguage;
@@ -710,6 +712,10 @@ public class AnalysisColumnSetTreeViewer extends AbstractColumnDropTree {
             meIndicator.removeIndicatorUnit(unit);
         }
         super.removeItemBranch(item);
+
+        // add msjian TDQ-8860 2014-4-30:check whether show allmatchindicator in the indicators section.
+        EventManager.getInstance().publish(this.getAnalysis(), EventEnum.DQ_COLUMNSET_SHOW_MATCH_INDICATORS, null);
+        // TDQ-8860~
         // MOD mzhao 2009-06-8, bug 5887.
         updateBindConnection(masterPage, tree);
 

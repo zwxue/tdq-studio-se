@@ -79,6 +79,8 @@ import org.talend.dataprofiler.core.ui.editor.preview.ColumnSetIndicatorUnit;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
 import org.talend.dataprofiler.core.ui.editor.preview.model.ChartTypeStatesOperator;
 import org.talend.dataprofiler.core.ui.editor.preview.model.states.IChartTypeStates;
+import org.talend.dataprofiler.core.ui.events.EventEnum;
+import org.talend.dataprofiler.core.ui.events.EventManager;
 import org.talend.dataprofiler.core.ui.pref.EditorPreferencePage;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.ExecutionLanguage;
@@ -313,7 +315,13 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
         indicatorsViewer = new IndicatorsComp(indicatorsComp, this);
         indicatorsViewer.setDirty(false);
         indicatorsViewer.addPropertyChangeListener(this);
-        indicatorsViewer.setInput(simpleStatIndicator, allMatchIndicator);
+        // MOD msjian TDQ-8860 2014-5-4: only when there have patterns, show allMatchIndicators
+        if (0 < allMatchIndicator.getCompositeRegexMatchingIndicators().size()) {
+            indicatorsViewer.setInput(simpleStatIndicator, allMatchIndicator);
+        } else {
+            indicatorsViewer.setInput(simpleStatIndicator);
+        }
+        // TDQ-8860~
         indicatorsSection.setClient(indicatorsComp);
     }
 
@@ -364,8 +372,11 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
         if (dialog.open() == Window.OK) {
             Object[] columns = dialog.getResult();
             treeViewer.setInput(columns);
-            indicatorsViewer.setInput(simpleStatIndicator, allMatchIndicator);
-            return;
+            // ADD msjian TDQ-8860 2014-4-30:only for column set analysis, when there have pattern(s) when java
+            // engine,show all match indicator in the
+            // Indicators section.
+            EventManager.getInstance().publish(getAnalysis(), EventEnum.DQ_COLUMNSET_SHOW_MATCH_INDICATORS, null);
+            // TDQ-8860~
         }
     }
 
@@ -922,5 +933,25 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
     protected void setLanguageToTreeViewer(ExecutionLanguage executionLanguage) {
         treeViewer.setLanguage(executionLanguage);
 
+    }
+
+    /**
+     * refresh the Indicators Section.
+     */
+    public void refreshIndicatorsSection() {
+        // when there have pattern, show allmatchindicator
+        ModelElementIndicator[] modelElementIndicator = treeViewer.getModelElementIndicator();
+        if (modelElementIndicator != null) {
+            for (ModelElementIndicator modelElementInd : modelElementIndicator) {
+                Indicator[] inds = modelElementInd.getPatternIndicators();
+                for (Indicator ind : inds) {
+                    if (ind instanceof RegexpMatchingIndicator) {
+                        indicatorsViewer.setInput(simpleStatIndicator, allMatchIndicator);
+                        return;
+                    }
+                }
+            }
+        }
+        indicatorsViewer.setInput(simpleStatIndicator);
     }
 }
