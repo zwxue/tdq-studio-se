@@ -322,9 +322,11 @@ public class TablesSelectionDialog extends TwoPartCheckSelectionDialog {
         if (checkedFlag) {
             getTreeViewer().setChecked(parentPackageNode, true);
         }
-        List<IRepositoryNode> repoNodeList = packageCheckedMap.get(new RepositoryNodeKey(parentPackageNode));
+        RepositoryNodeKey repositoryNodeKey = new RepositoryNodeKey(parentPackageNode);
+        List<IRepositoryNode> repoNodeList = packageCheckedMap.get(repositoryNodeKey);
         if (repoNodeList == null) {
             repoNodeList = new ArrayList<IRepositoryNode>();
+            packageCheckedMap.put(repositoryNodeKey, repoNodeList);
         }
         if (checkedFlag) {
             repoNodeList.add(columnSet);
@@ -516,9 +518,11 @@ public class TablesSelectionDialog extends TwoPartCheckSelectionDialog {
         while (it.hasNext()) {
             RepositoryNodeKey packageKey = (RepositoryNodeKey) it.next();
             List<?> checkedTableNodeList = packageCheckedMap.get(packageKey);
-            for (int i = 0; i < checkedTableNodeList.size(); i++) {
-                if (!tableList.contains(checkedTableNodeList.get(i))) {
-                    tableList.add((IRepositoryNode) checkedTableNodeList.get(i));
+            if (checkedTableNodeList != null) {
+                for (int i = 0; i < checkedTableNodeList.size(); i++) {
+                    if (!tableList.contains(checkedTableNodeList.get(i))) {
+                        tableList.add((IRepositoryNode) checkedTableNodeList.get(i));
+                    }
                 }
             }
         }
