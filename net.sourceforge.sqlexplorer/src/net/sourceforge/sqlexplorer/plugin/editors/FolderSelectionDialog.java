@@ -20,7 +20,6 @@ import net.sourceforge.sqlexplorer.Messages;
 import net.sourceforge.sqlexplorer.plugin.SQLExplorerPlugin;
 
 import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -92,6 +91,10 @@ public class FolderSelectionDialog extends ElementTreeSelectionDialog implements
 
     private Text fileNameText;
 
+    IFolder rootFolder = ReponsitoryContextBridge.getRootProject().getFolder(TDQ_LIBRARIES);
+
+    final IFolder defaultValidFolder = rootFolder.getFolder(SOURCE_FILES);
+
     /**
      * qzhang FolderSelectionDialog constructor comment.
      * 
@@ -106,9 +109,7 @@ public class FolderSelectionDialog extends ElementTreeSelectionDialog implements
         this.setMessage(DIALOG_MESSAGE);
 
         // MOD sizhaoliu 2012-04-05 TDQ-4958 NPE when save sql script
-        IProject rootProject = ReponsitoryContextBridge.getRootProject();
-        this.setInput(rootProject);
-        final IFolder defaultValidFolder = rootProject.getFolder(TDQ_LIBRARIES).getFolder(SOURCE_FILES);
+        this.setInput(rootFolder);
         this.setInitialSelection(defaultValidFolder);
 
         this.addFilter(new ViewerFilter() {
@@ -123,7 +124,7 @@ public class FolderSelectionDialog extends ElementTreeSelectionDialog implements
             public boolean select(Viewer viewer, Object parentElement, Object element) {
                 if (element instanceof IFolder) {
                     IFolder folder = (IFolder) element;
-                    if (SOURCE_FILES.equals(folder.getName()) || TDQ_LIBRARIES.equals(folder.getName())) {
+                    if (SOURCE_FILES.equals(folder.getName())) {
                         return true;
                     } else {
                         return defaultValidFolder.getFullPath().isPrefixOf(folder.getFullPath())
@@ -227,7 +228,8 @@ public class FolderSelectionDialog extends ElementTreeSelectionDialog implements
             if (!WorkspaceUtils.checkNameIsOK(name)) {
                 return SPECIAL_CHAR_STATUS;
             }
-            if (fileNameExist(WorkspaceUtils.ifolderToFile(selectedFolder), name)) {
+            // the source file can't have the same name even there under different sub folders
+            if (fileNameExist(WorkspaceUtils.ifolderToFile(defaultValidFolder), name)) {
                 return FILE_EXIST_STATUS;
             }
         }
