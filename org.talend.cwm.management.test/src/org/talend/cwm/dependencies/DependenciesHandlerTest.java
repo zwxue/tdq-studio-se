@@ -19,7 +19,8 @@ import static org.powermock.api.support.membermodification.MemberModifier.*;
 
 import java.util.List;
 
-import org.eclipse.core.runtime.Assert;
+import junit.framework.Assert;
+
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -126,6 +127,7 @@ public class DependenciesHandlerTest {
         Mockito.when(PropertyHelper.getModelElement(anaProperty)).thenReturn(createAnalysis);
         Mockito.when(PropertyHelper.getProperty(createCountsIndicator.getIndicatorDefinition())).thenReturn(
                 countIndicatorProperty);
+        Mockito.when(PropertyHelper.getProperty(createAnalysis)).thenReturn(anaProperty);
 
         // staticMock ModelElementHelper
         PowerMockito.mockStatic(ModelElementHelper.class);
@@ -133,9 +135,9 @@ public class DependenciesHandlerTest {
         Mockito.when(ModelElementHelper.compareUUID(Mockito.argThat(modelElementMatcher), Mockito.argThat(modelElementMatcher)))
                 .thenReturn(modelElementMatcher.equals(modelElementMatcher));
 
-        List<Property> clintDependency = DependenciesHandler.getInstance().getClintDependency(anaProperty);
-        assertTrue(clintDependency.size() == 1);
-        assertTrue(clintDependency.get(0).equals(countIndicatorProperty));
+        List<Property> clintDependency = DependenciesHandler.getInstance().getClintDependencyForExport(createAnalysis);
+        Assert.assertEquals(1, clintDependency.size());
+        Assert.assertEquals(countIndicatorProperty, clintDependency.get(0));
 
     }
 
@@ -181,7 +183,7 @@ public class DependenciesHandlerTest {
         assertEquals(1, supplier.size());
         assertEquals(conn, supplier.get(0));
         if (setUsageDependencyOn.isOk()) {
-            DependenciesHandler.getInstance().removeDependenciesBetweenModel(conn, ana);
+            DependenciesHandler.getInstance().removeDependenciesBetweenModel(ana, conn);
         }
         assertEquals(0, clientDependencyFirst.size());
         EList<Dependency> clientDependencyTwo = conn.getClientDependency();
@@ -228,8 +230,8 @@ public class DependenciesHandlerTest {
         analysis.setContext(analysisContext);
         analysisContext.setConnection(connection);
         DependenciesHandler.getInstance().removeConnDependencyAndSave(analysisItem);
-        Assert.isTrue(analysis.getContext().getConnection() == null);
-        Assert.isTrue(analysis.getClientDependency().isEmpty());
+        Assert.assertNull(analysis.getContext().getConnection());
+        Assert.assertEquals(true, analysis.getClientDependency().isEmpty());
 
     }
 
