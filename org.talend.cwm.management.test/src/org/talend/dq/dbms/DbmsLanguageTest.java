@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
+import org.eclipse.emf.common.util.BasicEList;
 import org.eclipse.emf.common.util.EList;
 import org.junit.Assert;
 import org.junit.Test;
@@ -46,6 +47,7 @@ import org.talend.dataquality.indicators.definition.userdefine.UDIndicatorDefini
 import org.talend.dataquality.indicators.definition.userdefine.UserdefineFactory;
 import org.talend.dataquality.indicators.sql.IndicatorSqlFactory;
 import org.talend.dataquality.indicators.sql.UserDefIndicator;
+import org.talend.utils.ProductVersion;
 import org.talend.utils.dates.DateUtils;
 import orgomg.cwm.objectmodel.core.CoreFactory;
 import orgomg.cwm.objectmodel.core.Expression;
@@ -2620,4 +2622,241 @@ public class DbmsLanguageTest {
         Assert.assertEquals("RETURNVALUE", regularfunctionReturnValue); //$NON-NLS-1$
     }
 
+    /**
+     * Test method for
+     * {@link org.talend.dq.dbms.DbmsLanguage#getSqlExpression(IndicatorDefinition, String, EList, ProductVersion)} .
+     */
+    @Test
+    public void testGetSqlExpression2_1() {
+        String sqlLang = "SQL"; //$NON-NLS-1$
+        String sqlBody = "SQL body"; //$NON-NLS-1$
+
+        String db2Lang = "DB2"; //$NON-NLS-1$
+        String db2Body = "DB2 body"; //$NON-NLS-1$
+
+        String db2NTLang = "DB2/NT"; //$NON-NLS-1$
+        String db2NTBody = "DB2/NT body"; //$NON-NLS-1$
+
+        IndicatorDefinition indicatorDefinition = DefinitionFactory.eINSTANCE.createIndicatorDefinition();
+
+        String language = db2NTLang;
+
+        EList<TdExpression> sqlGenericExpression = new BasicEList<TdExpression>();
+
+        TdExpression tdExpression1 = RelationalFactory.eINSTANCE.createTdExpression();
+        tdExpression1.setLanguage(sqlLang);
+        tdExpression1.setBody(sqlBody);
+        sqlGenericExpression.add(tdExpression1);
+
+        TdExpression tdExpression2 = RelationalFactory.eINSTANCE.createTdExpression();
+        tdExpression2.setLanguage(db2Lang);
+        tdExpression2.setBody(db2Body);
+        sqlGenericExpression.add(tdExpression2);
+
+        TdExpression tdExpression3 = RelationalFactory.eINSTANCE.createTdExpression();
+        tdExpression3.setLanguage(db2NTLang);
+        tdExpression3.setBody(db2NTBody);
+        sqlGenericExpression.add(tdExpression3);
+
+        ProductVersion dbVersion = new ProductVersion(1, 0);
+
+        TdExpression sqlExpression = DbmsLanguage
+                .getSqlExpression(indicatorDefinition, language, sqlGenericExpression, dbVersion);
+        Assert.assertEquals(tdExpression3, sqlExpression);
+    }
+
+    /**
+     * Test method for
+     * {@link org.talend.dq.dbms.DbmsLanguage#getSqlExpression(IndicatorDefinition, String, EList, ProductVersion)} .
+     */
+    @Test
+    public void testGetSqlExpression2_2() {
+        String sqlLang = "SQL"; //$NON-NLS-1$
+        String sqlBody = "SQL body"; //$NON-NLS-1$
+
+        String db2Lang = "DB2"; //$NON-NLS-1$
+        String db2Body = "DB2 body"; //$NON-NLS-1$
+
+        String db2NTLang = "DB2/NT"; //$NON-NLS-1$
+        String db2NTBody = "DB2/NT body"; //$NON-NLS-1$
+
+        IndicatorDefinition indicatorDefinition = DefinitionFactory.eINSTANCE.createIndicatorDefinition();
+
+        String language = db2Lang;
+
+        EList<TdExpression> sqlGenericExpression = new BasicEList<TdExpression>();
+
+        TdExpression tdExpression1 = RelationalFactory.eINSTANCE.createTdExpression();
+        tdExpression1.setLanguage(sqlLang);
+        tdExpression1.setBody(sqlBody);
+        sqlGenericExpression.add(tdExpression1);
+
+        TdExpression tdExpression2 = RelationalFactory.eINSTANCE.createTdExpression();
+        tdExpression2.setLanguage(db2Lang);
+        tdExpression2.setBody(db2Body);
+        sqlGenericExpression.add(tdExpression2);
+
+        TdExpression tdExpression3 = RelationalFactory.eINSTANCE.createTdExpression();
+        tdExpression3.setLanguage(db2NTLang);
+        tdExpression3.setBody(db2NTBody);
+        sqlGenericExpression.add(tdExpression3);
+
+        ProductVersion dbVersion = new ProductVersion(1, 0);
+
+        TdExpression sqlExpression = DbmsLanguage
+                .getSqlExpression(indicatorDefinition, language, sqlGenericExpression, dbVersion);
+        Assert.assertEquals(tdExpression2, sqlExpression);
+    }
+
+    /**
+     * Test method for
+     * {@link org.talend.dq.dbms.DbmsLanguage#getSqlExpression(IndicatorDefinition, String, EList, ProductVersion)} .
+     */
+    @Test
+    public void testGetSqlExpression2_3() {
+        String sqlLang = "SQL"; //$NON-NLS-1$
+        String sqlBody = "SQL body"; //$NON-NLS-1$
+
+        String db2Lang = "DB2"; //$NON-NLS-1$
+        String db2Body = "DB2 body"; //$NON-NLS-1$
+
+        String db2NTLang = "DB2/NT"; //$NON-NLS-1$
+
+        IndicatorDefinition indicatorDefinition = DefinitionFactory.eINSTANCE.createIndicatorDefinition();
+
+        String language = db2NTLang;
+
+        EList<TdExpression> sqlGenericExpression = new BasicEList<TdExpression>();
+
+        TdExpression tdExpression1 = RelationalFactory.eINSTANCE.createTdExpression();
+        tdExpression1.setLanguage(sqlLang);
+        tdExpression1.setBody(sqlBody);
+        sqlGenericExpression.add(tdExpression1);
+
+        TdExpression tdExpression2 = RelationalFactory.eINSTANCE.createTdExpression();
+        tdExpression2.setLanguage(db2Lang);
+        tdExpression2.setBody(db2Body);
+        sqlGenericExpression.add(tdExpression2);
+
+        ProductVersion dbVersion = new ProductVersion(1, 0);
+
+        TdExpression sqlExpression = DbmsLanguage
+                .getSqlExpression(indicatorDefinition, language, sqlGenericExpression, dbVersion);
+        Assert.assertEquals(tdExpression2, sqlExpression);
+    }
+
+    /**
+     * Test method for
+     * {@link org.talend.dq.dbms.DbmsLanguage#getSqlExpression(IndicatorDefinition, String, EList, ProductVersion)} .
+     */
+    @Test
+    public void testGetSqlExpression2_4() {
+        String sqlLang = "SQL"; //$NON-NLS-1$
+        String sqlBody = "SQL body"; //$NON-NLS-1$
+
+        String db2Lang = "DB2"; //$NON-NLS-1$
+
+        String db2NTLang = "DB2/NT"; //$NON-NLS-1$
+        String db2NTBody = "DB2/NT body"; //$NON-NLS-1$
+
+        IndicatorDefinition indicatorDefinition = DefinitionFactory.eINSTANCE.createIndicatorDefinition();
+
+        String language = db2Lang;
+
+        EList<TdExpression> sqlGenericExpression = new BasicEList<TdExpression>();
+
+        TdExpression tdExpression1 = RelationalFactory.eINSTANCE.createTdExpression();
+        tdExpression1.setLanguage(sqlLang);
+        tdExpression1.setBody(sqlBody);
+        sqlGenericExpression.add(tdExpression1);
+
+        TdExpression tdExpression3 = RelationalFactory.eINSTANCE.createTdExpression();
+        tdExpression3.setLanguage(db2NTLang);
+        tdExpression3.setBody(db2NTBody);
+        sqlGenericExpression.add(tdExpression3);
+
+        ProductVersion dbVersion = new ProductVersion(1, 0);
+
+        TdExpression sqlExpression = DbmsLanguage
+                .getSqlExpression(indicatorDefinition, language, sqlGenericExpression, dbVersion);
+        Assert.assertEquals(tdExpression3, sqlExpression);
+    }
+
+    /**
+     * Test method for
+     * {@link org.talend.dq.dbms.DbmsLanguage#getSqlExpression(IndicatorDefinition, String, EList, ProductVersion)} .
+     */
+    @Test
+    public void testGetSqlExpression2_5() {
+        String sqlLang = "SQL"; //$NON-NLS-1$
+        String sqlBody = "SQL body"; //$NON-NLS-1$
+
+        String db2Lang = "DB2"; //$NON-NLS-1$
+        String db2Body = "DB2 body"; //$NON-NLS-1$
+
+        String db2NTLang = "DB2/NT"; //$NON-NLS-1$
+        String db2NTBody = "DB2/NT body"; //$NON-NLS-1$
+
+        IndicatorDefinition indicatorDefinition = DefinitionFactory.eINSTANCE.createIndicatorDefinition();
+
+        String language = "unknown"; //$NON-NLS-1$
+
+        EList<TdExpression> sqlGenericExpression = new BasicEList<TdExpression>();
+
+        TdExpression tdExpression1 = RelationalFactory.eINSTANCE.createTdExpression();
+        tdExpression1.setLanguage(sqlLang);
+        tdExpression1.setBody(sqlBody);
+        sqlGenericExpression.add(tdExpression1);
+
+        TdExpression tdExpression2 = RelationalFactory.eINSTANCE.createTdExpression();
+        tdExpression2.setLanguage(db2Lang);
+        tdExpression2.setBody(db2Body);
+        sqlGenericExpression.add(tdExpression2);
+
+        TdExpression tdExpression3 = RelationalFactory.eINSTANCE.createTdExpression();
+        tdExpression3.setLanguage(db2NTLang);
+        tdExpression3.setBody(db2NTBody);
+        sqlGenericExpression.add(tdExpression3);
+
+        ProductVersion dbVersion = new ProductVersion(1, 0);
+
+        TdExpression sqlExpression = DbmsLanguage
+                .getSqlExpression(indicatorDefinition, language, sqlGenericExpression, dbVersion);
+        Assert.assertEquals(tdExpression1, sqlExpression);
+    }
+
+    /**
+     * Test method for
+     * {@link org.talend.dq.dbms.DbmsLanguage#getSqlExpression(IndicatorDefinition, String, EList, ProductVersion)} .
+     */
+    @Test
+    public void testGetSqlExpression2_6() {
+        String db2Lang = "DB2"; //$NON-NLS-1$
+        String db2Body = "DB2 body"; //$NON-NLS-1$
+
+        String db2NTLang = "DB2/NT"; //$NON-NLS-1$
+        String db2NTBody = "DB2/NT body"; //$NON-NLS-1$
+
+        IndicatorDefinition indicatorDefinition = DefinitionFactory.eINSTANCE.createIndicatorDefinition();
+
+        String language = "unknown"; //$NON-NLS-1$
+
+        EList<TdExpression> sqlGenericExpression = new BasicEList<TdExpression>();
+
+        TdExpression tdExpression2 = RelationalFactory.eINSTANCE.createTdExpression();
+        tdExpression2.setLanguage(db2Lang);
+        tdExpression2.setBody(db2Body);
+        sqlGenericExpression.add(tdExpression2);
+
+        TdExpression tdExpression3 = RelationalFactory.eINSTANCE.createTdExpression();
+        tdExpression3.setLanguage(db2NTLang);
+        tdExpression3.setBody(db2NTBody);
+        sqlGenericExpression.add(tdExpression3);
+
+        ProductVersion dbVersion = new ProductVersion(1, 0);
+
+        TdExpression sqlExpression = DbmsLanguage
+                .getSqlExpression(indicatorDefinition, language, sqlGenericExpression, dbVersion);
+        Assert.assertEquals(null, sqlExpression);
+    }
 }

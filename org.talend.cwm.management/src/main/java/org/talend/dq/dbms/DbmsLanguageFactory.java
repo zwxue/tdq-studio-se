@@ -290,6 +290,20 @@ public final class DbmsLanguageFactory {
         return compareDbmsLanguage(DbmsLanguage.SQL, dbms);
     }
 
+    /**
+     * if lang1 equals lang2 (ignore case) return true, else return false.
+     * 
+     * @param lang1
+     * @param lang2
+     * @return
+     */
+    public static boolean equalsDbmsLanguage(String lang1, String lang2) {
+        if (lang1 == null || lang2 == null) {
+            return false;
+        }
+        return StringUtils.equalsIgnoreCase(lang1, lang2);
+    }
+
     public static boolean compareDbmsLanguage(String lang1, String lang2) {
         if (lang1 == null || lang2 == null) {
             return false;
@@ -334,7 +348,8 @@ public final class DbmsLanguageFactory {
             return true;
         }
 
-        return StringUtils.equalsIgnoreCase(lang1, lang2);
+        return StringUtils.contains(StringUtils.upperCase(lang1), StringUtils.upperCase(lang2))
+                || StringUtils.contains(StringUtils.upperCase(lang2), StringUtils.upperCase(lang1));
     }
 
     /**

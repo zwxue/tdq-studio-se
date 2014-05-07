@@ -833,9 +833,20 @@ public class DbmsLanguage {
         }
 
         List<TdExpression> tempExpressions = new ArrayList<TdExpression>();
+        // exact match the language first, if don't match then use fuzzy matching
+        boolean matchingFlag = false;
         for (TdExpression sqlGenExpr : sqlGenericExpression) {
-            if (DbmsLanguageFactory.compareDbmsLanguage(language, sqlGenExpr.getLanguage())) {
+            if (DbmsLanguageFactory.equalsDbmsLanguage(language, sqlGenExpr.getLanguage())) {
                 tempExpressions.add(sqlGenExpr);
+                matchingFlag = true;
+            }
+        }
+        if (!matchingFlag) {
+            // if the language contain the key word, it is considered to be equals
+            for (TdExpression sqlGenExpr : sqlGenericExpression) {
+                if (DbmsLanguageFactory.compareDbmsLanguage(language, sqlGenExpr.getLanguage())) {
+                    tempExpressions.add(sqlGenExpr);
+                }
             }
         }
         List<TdExpression> tempExpressions2 = new ArrayList<TdExpression>();
@@ -844,6 +855,7 @@ public class DbmsLanguage {
                 defaultExpression = exp;
             } else {
                 if (dbVersion.toString().equals(exp.getVersion())) {
+                    // find the identical version
                     return exp;
                 } else {
                     tempExpressions2.add(exp);
@@ -852,12 +864,15 @@ public class DbmsLanguage {
         }
         for (TdExpression exp : tempExpressions2) {
             if (dbVersion.toString().startsWith(exp.getVersion()) || exp.getVersion().startsWith(dbVersion.toString())) {
+                // find the same major version, example: the sql expression's version is 5.1, the db version is 5.1.2 or
+                // opposite
                 return exp;
             }
         }
 
         if (defaultExpression != null) {
-            return defaultExpression; // language found
+            // return the found default version expression
+            return defaultExpression;
         }
 
         // else try with default language (ANSI SQL)
