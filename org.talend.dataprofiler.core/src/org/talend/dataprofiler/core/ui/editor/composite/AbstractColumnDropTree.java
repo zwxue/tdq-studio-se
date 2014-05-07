@@ -13,7 +13,6 @@
 package org.talend.dataprofiler.core.ui.editor.composite;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -50,18 +49,14 @@ import org.talend.dataprofiler.core.ui.utils.OpeningHelpWizardDialog;
 import org.talend.dataprofiler.core.ui.utils.RepNodeUtils;
 import org.talend.dataprofiler.core.ui.wizard.indicator.IndicatorOptionsWizard;
 import org.talend.dataprofiler.core.ui.wizard.indicator.forms.FormEnum;
-import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.domain.Domain;
 import org.talend.dataquality.domain.pattern.Pattern;
 import org.talend.dataquality.indicators.DateParameters;
 import org.talend.dataquality.indicators.FrequencyIndicator;
-import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.IndicatorParameters;
 import org.talend.dataquality.indicators.IndicatorsPackage;
-import org.talend.dataquality.indicators.PatternMatchingIndicator;
 import org.talend.dataquality.indicators.TextParameters;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
-import org.talend.dataquality.indicators.sql.UserDefIndicator;
 import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.UDIHelper;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
@@ -69,7 +64,6 @@ import org.talend.dq.nodes.DBColumnRepNode;
 import org.talend.dq.nodes.DFColumnRepNode;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
 import org.talend.repository.model.IRepositoryNode;
-import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
  * The interface class to handle the change when drop columns. MOD mzhao, refactor codes for feature:13040, 2010-05-21
@@ -162,8 +156,6 @@ public abstract class AbstractColumnDropTree extends AbstractPagePart {
     }
 
     protected String viewKey = null;
-
-    protected HashSet<ModelElement> removedElements = new HashSet<ModelElement>();
 
     /**
      * DOC qzhang Comment method "createOneUnit".
@@ -297,8 +289,6 @@ public abstract class AbstractColumnDropTree extends AbstractPagePart {
      */
     protected void deleteIndicatorItems(ModelElementIndicator meIndicator, IndicatorUnit inidicatorUnit) {
         meIndicator.removeIndicatorUnit(inidicatorUnit);
-        // update removedElements list when save editor dependency will be removed
-        removedElements(absMasterPage.getAnalysis(), inidicatorUnit);
     }
 
     /**
@@ -312,26 +302,6 @@ public abstract class AbstractColumnDropTree extends AbstractPagePart {
         for (IndicatorUnit indiUnit : meIndicator.getIndicatorUnits()) {
             deleteIndicatorItems(meIndicator, indiUnit);
         }
-    }
-
-    /**
-     * Insert all of elements into removedElements list when the editor be saved will deal with all of depandency
-     * 
-     * @param analysis
-     * @param unit
-     */
-    protected void removedElements(Analysis analysis, IndicatorUnit unit) {
-        List<ModelElement> reomveElements = new ArrayList<ModelElement>();
-        Indicator indicator = unit.getIndicator();
-        if (indicator instanceof UserDefIndicator) {
-            reomveElements.add(indicator.getIndicatorDefinition());
-            // MOD xqliu 2009-10-09 bug 9304
-        } else if (indicator instanceof PatternMatchingIndicator) {
-            reomveElements.addAll(indicator.getParameters().getDataValidDomain().getPatterns());
-        }
-        // MOD qiongli 2012-11-19 TDQ-5581 Don't save the resource of reomveElements at here.should save them after
-        // saving analysis.
-        this.removedElements.addAll(reomveElements);
     }
 
     public void openIndicatorOptionDialog(Shell shell, TreeItem indicatorItem) {
@@ -647,10 +617,6 @@ public abstract class AbstractColumnDropTree extends AbstractPagePart {
 
     protected ModelElementIndicator[] getAllTheElementIndicator() {
         return this.getModelElementIndicator();
-    }
-
-    public HashSet<ModelElement> getRemovedElements() {
-        return this.removedElements;
     }
 
     // Refactor: move some same code into this parent

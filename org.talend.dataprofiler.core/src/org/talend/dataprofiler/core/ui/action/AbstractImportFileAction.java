@@ -21,6 +21,8 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.ui.cheatsheets.ICheatSheetAction;
 import org.eclipse.ui.cheatsheets.ICheatSheetManager;
 import org.talend.commons.exception.ExceptionHandler;
+import org.talend.commons.exception.LoginException;
+import org.talend.commons.exception.PersistenceException;
 import org.talend.commons.utils.VersionUtils;
 import org.talend.core.model.properties.Item;
 import org.talend.core.model.properties.PropertiesFactory;
@@ -33,6 +35,7 @@ import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.helper.WorkspaceResourceHelper;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dq.helper.FileUtils;
+import org.talend.repository.RepositoryWorkUnit;
 import org.talend.repository.model.IProxyRepositoryFactory;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.resource.ResourceManager;
@@ -59,34 +62,46 @@ public abstract class AbstractImportFileAction extends Action implements ICheatS
      */
     @Override
     public void run() {
-        if (node != null) {
+        RepositoryWorkUnit<Object> repositoryWorkUnit = new RepositoryWorkUnit<Object>("import items") { //$NON-NLS-1$
 
-            try {
+            @Override
+            protected void run() throws LoginException, PersistenceException {
+                if (node != null) {
 
-                final Map<File, IPath> resultMap = computeFilePath();
+                    try {
 
-                if (resultMap != null && resultMap.size() != 0) {
-                    for (final File file : resultMap.keySet()) {
-                        // MOD msjian TDQ-4608 2012-3-6: when the file is *.jasper, copy it.
-                        IPath path = resultMap.get(file);
-                        if (file.getName().endsWith(PluginConstant.JASPER_STRING)) {
-                            // TDQ-7451 Replace File copy with eclipse IFile create.make svn could syn and control.
-                            IFile targetFile = ResourceManager.getJRXMLFolder().getFile(path.append(file.getName()));
-                            WorkspaceResourceHelper.createIFileFromFile(file, targetFile,
-                                    DefaultMessagesImpl.getString("AbstractImportFileAction.importJasperFile", file.getName())); //$NON-NLS-1$
-                        } else {
-                            createItem(file, path);
+                        final Map<File, IPath> resultMap = computeFilePath();
 
+                        if (resultMap != null && resultMap.size() != 0) {
+                            for (final File file : resultMap.keySet()) {
+                                // MOD msjian TDQ-4608 2012-3-6: when the file is *.jasper, copy it.
+                                IPath path = resultMap.get(file);
+                                if (file.getName().endsWith(PluginConstant.JASPER_STRING)) {
+                                    // TDQ-7451 Replace File copy with eclipse IFile create.make svn could syn and
+                                    // control.
+                                    IFile targetFile = ResourceManager.getJRXMLFolder().getFile(path.append(file.getName()));
+                                    WorkspaceResourceHelper.createIFileFromFile(
+                                            file,
+                                            targetFile,
+                                            DefaultMessagesImpl.getString(
+                                                    "AbstractImportFileAction.importJasperFile", file.getName())); //$NON-NLS-1$
+                                } else {
+                                    createItem(file, path);
+
+                                }
+                                // TDQ-4608~
+                            }
+                            saveAndRefresh();
                         }
-                        // TDQ-4608~
-                    }
-                    saveAndRefresh();
-                }
 
-            } catch (Exception e) {
-                ExceptionHandler.process(e);
+                    } catch (Exception e) {
+                        ExceptionHandler.process(e);
+                    }
+                }
             }
-        }
+        };
+        repositoryWorkUnit.setAvoidUnloadResources(true);
+        ProxyRepositoryFactory.getInstance().executeRepositoryWorkUnit(repositoryWorkUnit);
 
     }
 

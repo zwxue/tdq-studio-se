@@ -180,11 +180,17 @@ public class DataProviderWriter extends AElementPersistance {
                 IWorkspaceRunnable operation = new IWorkspaceRunnable() {
 
                     public void run(IProgressMonitor monitor) throws CoreException {
-                        ReturnCode ret = isCare ? saveWithDependencies(connItem, connItem.getConnection())
-                                : saveWithoutDependencies(connItem, connItem.getConnection());
-                        returnCode.setOk(ret.isOk());
-                        returnCode.setMessage(ret.getMessage());
-
+                        try {
+                            if (isCare) {
+                                saveWithDependencies(connItem, connItem.getConnection());
+                            } else {
+                                saveWithoutDependencies(connItem, connItem.getConnection());
+                            }
+                        } catch (PersistenceException e) {
+                            log.error(e, e);
+                            returnCode.setOk(Boolean.FALSE);
+                            returnCode.setMessage(e.getMessage());
+                        }
                     }
                 };
                 ISchedulingRule schedulingRule = workspace.getRoot();
@@ -222,40 +228,10 @@ public class DataProviderWriter extends AElementPersistance {
     /*
      * (non-Javadoc)
      * 
-     * @see org.talend.dq.writer.AElementPersistance#updateDependencies(orgomg.cwm.objectmodel.core.ModelElement)
+     * @see org.talend.dq.writer.AElementPersistance#removeDependencies(org.talend.core.model.properties.Item)
      */
-    // @Override
-    // protected void updateDependencies(ModelElement element) {
-    // Connection connection = (Connection) element;
-    // // update supplier dependency
-    // EList<Dependency> supplierDependency = connection.getSupplierDependency();
-    // try {
-    // for (Dependency sDependency : supplierDependency) {
-    // EList<ModelElement> client = sDependency.getClient();
-    // for (ModelElement me : client) {
-    // if (me instanceof Analysis) {
-    // Analysis analysis = (Analysis) me;
-    // TypedReturnCode<Dependency> dependencyReturn = DependenciesHandler.getInstance().setDependencyOn(
-    // analysis, connection);
-    // if (dependencyReturn.isOk()) {
-    // RepositoryNode repositoryNode = RepositoryNodeHelper.recursiveFind(analysis);
-    // if (repositoryNode != null) {
-    // TDQAnalysisItem analysisItem = (TDQAnalysisItem) repositoryNode.getObject().getProperty()
-    // .getItem();
-    // analysisItem.setAnalysis(analysis);
-    // ElementWriterFactory.getInstance().createAnalysisWrite().save(analysisItem);
-    // }
-    // // ProxyRepositoryFactory.getInstance().getRepositoryFactoryFromProvider().getResourceManager()
-    // // .saveResource(analysis.eResource());
-    // }
-    // }
-    // }
-    // }
-    // } catch (Exception e) {
-    // log.error(e, e);
-    // }
-    // // update client dependency
-    // // if connection have client depencency, add codes here
-    // }
-
+    @Override
+    protected ReturnCode removeDependencies(Item item) {
+        return new ReturnCode(true);
+    }
 }

@@ -17,7 +17,6 @@ import java.beans.PropertyChangeListener;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
@@ -62,7 +61,6 @@ import org.jfree.chart.ChartMouseListener;
 import org.jfree.chart.JFreeChart;
 import org.jfree.experimental.chart.swt.ChartComposite;
 import org.talend.core.model.metadata.builder.connection.Connection;
-import org.talend.cwm.dependencies.DependenciesHandler;
 import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.dataprofiler.core.ImageLib;
@@ -670,16 +668,8 @@ public class TableMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
         ReturnCode saved = new ReturnCode(false);
         this.nameText.setText(analysisHandler.getName());
         // TDQ-5581,if has removed rules,should remove dependency each other before saving.
-        HashSet<ModelElement> removedElements = treeViewer.getRemovedElements();
-        if (!removedElements.isEmpty()) {
-            DependenciesHandler.getInstance().removeDependenciesBetweenModels(analysis,
-                    new ArrayList<ModelElement>(removedElements));
-        }
         // MOD yyi 2012-02-08 TDQ-4621:Explicitly set true for updating dependencies.
         saved = ElementWriterFactory.getInstance().createAnalysisWrite().save(analysisItem, true);
-        if (saved.isOk() && !removedElements.isEmpty()) {
-            saveRemovedElements();
-        }
         // MOD yyi 2012-02-03 TDQ-3602:Avoid to rewriting all analyzes after saving, no reason to update all analyzes
         // which is depended in the referred connection.
         // Extract saving log function.

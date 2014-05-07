@@ -1002,8 +1002,6 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
         deleteIndicatorAideItems(tableIndicator, inidicatorUnit);
         tableIndicator.removeIndicatorUnit(inidicatorUnit);
         this.indicatorTreeItemMap.remove(inidicatorUnit);
-        // add the element which need to be removed from dependency when the editor save
-        removedElements(masterPage.getAnalysis(), inidicatorUnit);
     }
 
     /**
@@ -1014,8 +1012,6 @@ public class AnalysisTableTreeViewer extends AbstractTableDropTree {
             deleteIndicatorAideItems(tableIndicator, indiUnit);
             tableIndicator.removeIndicatorUnit(indiUnit);
             this.indicatorTreeItemMap.remove(indiUnit);
-            // add removed dependency
-            removedElements(masterPage.getAnalysis(), indiUnit);
         }
     }
 

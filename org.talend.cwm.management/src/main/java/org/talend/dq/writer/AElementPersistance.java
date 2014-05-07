@@ -89,7 +89,7 @@ public abstract class AElementPersistance {
 
     /**
      * Persist an element in the specified folder, the file name is created logically by the name of this element.
-     *
+     * 
      * @param element
      * @param folder
      * @return
@@ -120,7 +120,7 @@ public abstract class AElementPersistance {
 
     /**
      * DOC xqliu Comment method "getPath".
-     *
+     * 
      * @param element
      * @param itemPath
      * @return
@@ -153,7 +153,7 @@ public abstract class AElementPersistance {
 
     /**
      * DOC bZhou Comment method "createLogicalFileNmae".
-     *
+     * 
      * @param element
      * @param extension
      * @return
@@ -165,9 +165,9 @@ public abstract class AElementPersistance {
 
     /**
      * DOC bZhou Comment method "create".
-     *
+     * 
      * Persist the element into the specified file.
-     *
+     * 
      * @param element
      * @param file
      * @return
@@ -184,9 +184,9 @@ public abstract class AElementPersistance {
 
     /**
      * DOC bZhou Comment method "create".
-     *
+     * 
      * Persist the element into the specified path.
-     *
+     * 
      * @param element
      * @param file
      * @param withProperty
@@ -214,9 +214,9 @@ public abstract class AElementPersistance {
 
     /**
      * DOC bZhou Comment method "createProperty".
-     *
+     * 
      * Create and save a property from model element resource.
-     *
+     * 
      * @param modelElement
      * @return
      */
@@ -243,9 +243,9 @@ public abstract class AElementPersistance {
 
     /**
      * DOC bZhou Comment method "initProperty".
-     *
+     * 
      * Initialized a new property.
-     *
+     * 
      * @param modelElement
      * @return
      */
@@ -296,9 +296,9 @@ public abstract class AElementPersistance {
 
     /**
      * DOC bZhou Comment method "saveProperty".
-     *
+     * 
      * Save a property.
-     *
+     * 
      * @param property
      * @return
      */
@@ -320,7 +320,7 @@ public abstract class AElementPersistance {
 
     /**
      * DOC bZhou Comment method "saveProperty".
-     *
+     * 
      * @param property
      * @param uri
      * @return
@@ -338,9 +338,9 @@ public abstract class AElementPersistance {
 
     /**
      * DOC bZhou Comment method "save".
-     *
+     * 
      * Save a model element and update the related property by default.
-     *
+     * 
      * @param element
      * @return
      */
@@ -350,9 +350,9 @@ public abstract class AElementPersistance {
 
     /**
      * DOC bZhou Comment method "save".
-     *
+     * 
      * Save a model element and update the related property.
-     *
+     * 
      * @param element
      * @param withProperty
      * @return
@@ -386,9 +386,9 @@ public abstract class AElementPersistance {
 
     /**
      * DOC bZhou Comment method "updateProperty".
-     *
+     * 
      * Use model element's attribute to update the related property.
-     *
+     * 
      * @param element
      */
     public void updateProperty(ModelElement element) {
@@ -404,7 +404,7 @@ public abstract class AElementPersistance {
 
     /**
      * DOC bZhou Comment method "createItem".
-     *
+     * 
      * @param element
      * @return
      */
@@ -472,7 +472,7 @@ public abstract class AElementPersistance {
 
     /**
      * Set the TDQ item file name, this file name will be usefull when commit changes to svn for example.
-     *
+     * 
      * @param element The element of which the name might have been renamed.
      * @param item
      */
@@ -484,7 +484,7 @@ public abstract class AElementPersistance {
 
     /**
      * DOC bZhou Comment method "check".
-     *
+     * 
      * @param file
      * @return
      */
@@ -494,21 +494,21 @@ public abstract class AElementPersistance {
 
     /**
      * DOC bZhou Comment method "addDependencies".
-     *
+     * 
      * @param element
      */
     protected abstract void addDependencies(ModelElement element);
 
     /**
      * DOC bZhou Comment method "updateDependencies".
-     *
+     * 
      * @param element
      */
     // protected abstract void updateDependencies(ModelElement element);
 
     /**
      * DOC bZhou Comment method "addResourceContent".
-     *
+     * 
      * @param element
      * @return
      */
@@ -540,14 +540,14 @@ public abstract class AElementPersistance {
 
     /**
      * DOC bZhou Comment method "getFileExtension".
-     *
+     * 
      * @return
      */
     protected abstract String getFileExtension();
 
     /**
      * Save item and it's dependencies(optional).
-     *
+     * 
      * @param item
      * @param careDependency Set explicitly <B>true</B> for needs to update dependencies of item.
      * @return
@@ -556,12 +556,14 @@ public abstract class AElementPersistance {
 
     /**
      * Save item with dependencies.
-     *
+     * 
      * @param element
+     * @throws PersistenceException
      */
-    protected ReturnCode saveWithDependencies(Item item, ModelElement element) {
+    protected ReturnCode saveWithDependencies(Item item, ModelElement element) throws PersistenceException {
         ReturnCode rc = new ReturnCode();
 
+        removeDependencies(item);
         addDependencies(element);
         addResourceContent(element.eResource(), element);
 
@@ -582,14 +584,8 @@ public abstract class AElementPersistance {
         if (item instanceof TDQItem) {
             setTDQItemFileName(element, item);
         }
-        try {
-            ProxyRepositoryFactory.getInstance().save(item);
-        } catch (PersistenceException e) {
-            log.error(e, e);
-            rc.setOk(Boolean.FALSE);
-            rc.setMessage(e.getMessage());
-        }
 
+        ProxyRepositoryFactory.getInstance().save(item);
         AbstractResourceChangesService resChangeService = TDQServiceRegister.getInstance().getResourceChangeService(
                 AbstractResourceChangesService.class);
         if (resChangeService != null) {
@@ -603,10 +599,11 @@ public abstract class AElementPersistance {
 
     /**
      * Save item <B>without</B> dependencies.
-     *
+     * 
      * @param element
+     * @throws PersistenceException
      */
-    protected ReturnCode saveWithoutDependencies(Item item, ModelElement element) {
+    protected ReturnCode saveWithoutDependencies(Item item, ModelElement element) throws PersistenceException {
         ReturnCode rc = new ReturnCode();
 
         addDependencies(element);
@@ -615,14 +612,10 @@ public abstract class AElementPersistance {
         if (item instanceof TDQItem) {
             setTDQItemFileName(element, item);
         }
-        try {
-            ProxyRepositoryFactory.getInstance().save(item);
-        } catch (PersistenceException e) {
-            log.error(e, e);
-            rc.setOk(Boolean.FALSE);
-            rc.setMessage(e.getMessage());
-        }
+        ProxyRepositoryFactory.getInstance().save(item);
+
         return rc;
     }
 
+    protected abstract ReturnCode removeDependencies(Item item);
 }

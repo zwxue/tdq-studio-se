@@ -17,6 +17,7 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.EList;
 import org.talend.commons.emf.FactoriesUtil;
+import org.talend.commons.exception.LoginException;
 import org.talend.commons.exception.PersistenceException;
 import org.talend.core.model.properties.Item;
 import org.talend.core.model.properties.Property;
@@ -31,6 +32,7 @@ import org.talend.dataquality.properties.TDQIndicatorDefinitionItem;
 import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.helper.ProxyRepositoryManager;
 import org.talend.dq.writer.AElementPersistance;
+import org.talend.repository.RepositoryWorkUnit;
 import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
@@ -49,6 +51,7 @@ public class IndicatorDefinitionWriter extends AElementPersistance {
 
     @Override
     public void addDependencies(ModelElement element) {
+        return;
     }
 
     /*
@@ -62,16 +65,35 @@ public class IndicatorDefinitionWriter extends AElementPersistance {
     }
 
     @Override
-    public ReturnCode save(Item item, boolean careDependency) {
-        TDQIndicatorDefinitionItem indicatorItem = (TDQIndicatorDefinitionItem) item;
-        IndicatorDefinition indiDefinition = indicatorItem.getIndicatorDefinition();
-        // MOD yyi 2012-02-07 TDQ-4621:Update dependencies when careDependency is true.
-        ReturnCode returnCode = careDependency ? saveWithDependencies(indicatorItem, indiDefinition) : saveWithoutDependencies(
-                indicatorItem, indiDefinition);
-        if (returnCode.isOk()) {
-            this.updateDependencies(indiDefinition);
+    public ReturnCode save(final Item item, final boolean careDependency) {
+        ReturnCode rc = new ReturnCode();
+        RepositoryWorkUnit<Object> repositoryWorkUnit = new RepositoryWorkUnit<Object>("save Indicator Definition item") { //$NON-NLS-1$
+
+            @Override
+            protected void run() throws LoginException, PersistenceException {
+                TDQIndicatorDefinitionItem indicatorItem = (TDQIndicatorDefinitionItem) item;
+                IndicatorDefinition indiDefinition = indicatorItem.getIndicatorDefinition();
+                // MOD yyi 2012-02-07 TDQ-4621:Update dependencies when careDependency is true.
+                if (careDependency) {
+                    saveWithDependencies(indicatorItem, indiDefinition);
+                } else {
+                    saveWithoutDependencies(indicatorItem, indiDefinition);
+                }
+
+                updateDependencies(indiDefinition);
+            }
+        };
+        repositoryWorkUnit.setAvoidUnloadResources(true);
+        ProxyRepositoryFactory.getInstance().executeRepositoryWorkUnit(repositoryWorkUnit);
+        try {
+            repositoryWorkUnit.throwPersistenceExceptionIfAny();
+        } catch (PersistenceException e) {
+            log.error(e, e);
+            rc.setOk(Boolean.FALSE);
+            rc.setMessage(e.getMessage());
         }
-        return returnCode;
+
+        return rc;
     }
 
     @Override
@@ -109,6 +131,7 @@ public class IndicatorDefinitionWriter extends AElementPersistance {
      * Added 20130115 yyin TDQ-3249, make the system indicator display international. but for the user defined
      * indicator, no need.
      */
+    @Override
     public Property initProperty(ModelElement modelElement) {
         Property property = super.initProperty(modelElement);
 
@@ -145,7 +168,17 @@ public class IndicatorDefinitionWriter extends AElementPersistance {
             return;
         }
         if (property != null) {
-            property.setDisplayName(org.talend.cwm.management.i18n.Messages.getString(element.getName().replace(' ', '.')));//$NON-NLS-1$
+            property.setDisplayName(org.talend.cwm.management.i18n.Messages.getString(element.getName().replace(' ', '.')));
         }
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dq.writer.AElementPersistance#removeDependencies(org.talend.core.model.properties.Item)
+     */
+    @Override
+    protected ReturnCode removeDependencies(Item item) {
+        return new ReturnCode(true);
     }
 }

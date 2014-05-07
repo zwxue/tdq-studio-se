@@ -47,7 +47,7 @@ public class SoftwareSystemWriter extends AElementPersistance {
 
     @Override
     public ReturnCode save(Item item, boolean careDependency) {
-        return null;
+        return new ReturnCode(true);
     }
 
     @Override
@@ -63,7 +63,17 @@ public class SoftwareSystemWriter extends AElementPersistance {
      */
     @Override
     protected void addDependencies(ModelElement element) {
+        return;
+    }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dq.writer.AElementPersistance#removeDependencies(org.talend.core.model.properties.Item)
+     */
+    @Override
+    protected ReturnCode removeDependencies(Item item) {
+        return new ReturnCode(true);
     }
 
 }
