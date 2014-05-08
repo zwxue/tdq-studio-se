@@ -133,8 +133,6 @@ public class DBViewFolderRepNode extends DQDBFolderRepositoryNode implements ICo
 
     @Override
     public List<IRepositoryNode> getChildren() {
-        // reload the connection to make sure the connection(and all it's owned elements) is not proxy
-        reloadConnectionViewObject();
         // MOD gdbu 2011-7-1 bug : 22204
         List<IRepositoryNode> repsNodes = new ArrayList<IRepositoryNode>();
         IRepositoryViewObject object = this.getParent().getObject();
@@ -160,20 +158,28 @@ public class DBViewFolderRepNode extends DQDBFolderRepositoryNode implements ICo
         try {
             if (metadataObject instanceof MetadataCatalogRepositoryObject) {
                 viewObject = ((MetadataCatalogRepositoryObject) metadataObject).getViewObject();
+                if (((MetadataCatalogRepositoryObject) metadataObject).getCatalog().eIsProxy()) {
+                    // reload the connection to make sure the connection(and all it's owned elements) is not proxy
+                    reloadConnectionViewObject();
+                }
                 catalog = ((MetadataCatalogRepositoryObject) metadataObject).getCatalog();
                 item = (ConnectionItem) viewObject.getProperty().getItem();
                 views = PackageHelper.getViews(catalog);
                 filterCharacter = RepositoryNodeHelper.getViewFilter(catalog, schema);
+
                 // MOD gdbu 2011-6-29 bug : 22204
+                // MOD TDQ-8718 20140505 yyin --the repository view cares about if use the filter or not, the column
+                // select dialog cares about if connect to DB or not.
                 if (views.isEmpty()) {
-                    if (!isOnFilterring()) {
+                    connection = item.getConnection();
+                    if (isCallingFromColumnDialog()) {
+                        views = DqRepositoryViewService.getViews(connection, catalog, null, isLoadDBFromDialog());
+                    } else if (!isOnFilterring()) {
                         // MOD gdbu 2011-7-21 bug 23220
-                        connection = item.getConnection();
                         views = DqRepositoryViewService.getViews(connection, catalog, null, true);
-                        if (views != null && views.size() > 0) {
-                            ProxyRepositoryFactory.getInstance().save(item, false);
-                        }
-                        // ~23220
+                    }
+                    if (views != null && views.size() > 0) {
+                        ProxyRepositoryFactory.getInstance().save(item, false);
                     }
                 }
 
@@ -181,6 +187,10 @@ public class DBViewFolderRepNode extends DQDBFolderRepositoryNode implements ICo
                 // ~22204
             } else if (metadataObject instanceof MetadataSchemaRepositoryObject) {
                 viewObject = ((MetadataSchemaRepositoryObject) metadataObject).getViewObject();
+                if (((MetadataSchemaRepositoryObject) metadataObject).getSchema().eIsProxy()) {
+                    // reload the connection to make sure the connection(and all it's owned elements) is not proxy
+                    reloadConnectionViewObject();
+                }
                 schema = ((MetadataSchemaRepositoryObject) metadataObject).getSchema();
                 item = (ConnectionItem) viewObject.getProperty().getItem();
                 views = PackageHelper.getViews(schema);
@@ -193,14 +203,15 @@ public class DBViewFolderRepNode extends DQDBFolderRepositoryNode implements ICo
                 }
                 // MOD gdbu 2011-6-29 bug : 22204
                 if (views.isEmpty()) {
-                    if (!isOnFilterring()) {
-                        connection = item.getConnection();
-                        // MOD gdbu 2011-7-20 bug 23220
+                    connection = item.getConnection();
+                    if (isCallingFromColumnDialog()) {
+                        views = DqRepositoryViewService.getViews(connection, schema, null, isLoadDBFromDialog());
+                    } else if (!isOnFilterring()) {
+                        // MOD gdbu 2011-7-21 bug 23220
                         views = DqRepositoryViewService.getViews(connection, schema, null, true);
-                        if (views.size() > 0) {
-                            ProxyRepositoryFactory.getInstance().save(item);
-                        }
-                        // ~23220
+                    }
+                    if (views != null && views.size() > 0) {
+                        ProxyRepositoryFactory.getInstance().save(item, false);
                     }
                 } else {
                     ConnectionUtils.retrieveColumn(views);
