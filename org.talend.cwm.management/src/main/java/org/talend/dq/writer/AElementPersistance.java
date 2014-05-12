@@ -454,10 +454,6 @@ public abstract class AElementPersistance {
         if (eResource != null) {
             URI uri = eResource.getURI();
 
-            if (item instanceof TDQItem) {
-                ((TDQItem) item).setFilename(URI.decode(uri.lastSegment()));
-            }
-
             if (uri.isPlatform()) {
                 IPath elementPath = new Path(uri.toPlatformString(true)).removeLastSegments(1);
                 IPath typedPath = ResourceManager.getRootProject().getFullPath().append(PropertyHelper.getItemTypedPath(item));
