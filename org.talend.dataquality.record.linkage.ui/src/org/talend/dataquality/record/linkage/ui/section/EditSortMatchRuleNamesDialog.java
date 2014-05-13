@@ -13,7 +13,6 @@
 package org.talend.dataquality.record.linkage.ui.section;
 
 import java.util.ArrayList;
-import java.util.Hashtable;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
@@ -23,7 +22,9 @@ import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.ColumnPixelData;
 import org.eclipse.jface.viewers.EditingSupport;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TableLayout;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
@@ -52,14 +53,11 @@ public class EditSortMatchRuleNamesDialog extends Dialog {
 
     private TableViewer tableViewer;
 
-    // the beginning and final data
-    private List<MatchRule> matchRuleList;
+    // the temp list stored values used only for this dialog.
+    private List<OrderMatchRule> orderMatchRuleList = new ArrayList<OrderMatchRule>();
 
-    // a temp hashtable used to store data. and at last read data from it to set to matchRuleList
-    private Hashtable<Integer, MatchRule> hashtable = new Hashtable<Integer, MatchRule>();
-
-    // a tempList used to store data.
-    List<MatchRule> tempList = new ArrayList<MatchRule>();
+    // the rusult data.
+    private List<MatchRule> resultMatchRuleList = new ArrayList<MatchRule>();
 
     private Button upButton;
 
@@ -87,21 +85,29 @@ public class EditSortMatchRuleNamesDialog extends Dialog {
     }
 
     /**
+     * Getter for resultMatchRuleList.
+     * 
+     * @return the resultMatchRuleList
+     */
+    public List<MatchRule> getResultMatchRuleList() {
+        return this.resultMatchRuleList;
+    }
+
+    /**
      * EditSortMatchRuleNamesDialog constructor.
      * 
      * @param parentShell
-     * @param matchRuleList
+     * @param orderMatchRuleList
      */
     public EditSortMatchRuleNamesDialog(Shell parentShell, List<MatchRule> matchRuleList) {
         super(parentShell);
         setShellStyle(SWT.CLOSE | SWT.RESIZE);
-        this.matchRuleList = matchRuleList;
 
-        if (matchRuleList != null) {
-            int i = 0;
-            for (MatchRule matchRule : matchRuleList) {
-                hashtable.put(i++, matchRule);
-            }
+        for (MatchRule matchRule : matchRuleList) {
+            OrderMatchRule orderMatchRule = new OrderMatchRule();
+            orderMatchRule.setName(matchRule.getName());
+            orderMatchRule.setMatchRule(matchRule);
+            this.orderMatchRuleList.add(orderMatchRule);
         }
     }
 
@@ -122,6 +128,19 @@ public class EditSortMatchRuleNamesDialog extends Dialog {
         createContentComposite(container);
 
         return container;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.eclipse.jface.dialogs.Dialog#createButtonBar(org.eclipse.swt.widgets.Composite)
+     */
+    @Override
+    protected Control createButtonBar(Composite parent) {
+        Control createButtonBar = super.createButtonBar(parent);
+        // set the OK button status the same as dirty status
+        getButton(OK).setEnabled(false);
+        return createButtonBar;
     }
 
     /**
@@ -169,6 +188,7 @@ public class EditSortMatchRuleNamesDialog extends Dialog {
                 moveItemUpOrDown(true);
             }
         });
+        upButton.setEnabled(false);
 
         downButton = new Button(buttonsComposite, SWT.NONE);
         downButton.setToolTipText(DefaultMessagesImpl.getString("AbstractMatchAnaysisTableSection.MoveDown_button_tooltip")); //$NON-NLS-1$
@@ -180,7 +200,7 @@ public class EditSortMatchRuleNamesDialog extends Dialog {
                 moveItemUpOrDown(false);
             }
         });
-
+        downButton.setEnabled(false);
     }
 
     /**
@@ -206,7 +226,7 @@ public class EditSortMatchRuleNamesDialog extends Dialog {
 
             @Override
             public Object[] getElements(Object inputElement) {
-                return (MatchRule[]) inputElement;
+                return (OrderMatchRule[]) inputElement;
             }
 
             @Override
@@ -225,7 +245,16 @@ public class EditSortMatchRuleNamesDialog extends Dialog {
         table.setHeaderVisible(true);
         table.setLinesVisible(true);
 
-        tableViewer.setInput(matchRuleList.toArray(new MatchRule[matchRuleList.size()]));
+        tableViewer.setInput(orderMatchRuleList.toArray(new OrderMatchRule[orderMatchRuleList.size()]));
+        tableViewer.addSelectionChangedListener(new ISelectionChangedListener() {
+
+            @Override
+            public void selectionChanged(SelectionChangedEvent event) {
+                // when the selection changed, update the up/down buttons status
+                updateButtonsStatus();
+
+            }
+        });
     }
 
     /**
@@ -241,7 +270,7 @@ public class EditSortMatchRuleNamesDialog extends Dialog {
 
             @Override
             public String getText(Object element) {
-                return ((MatchRule) element).getName();
+                return ((OrderMatchRule) element).getName();
             }
         });
 
@@ -259,19 +288,20 @@ public class EditSortMatchRuleNamesDialog extends Dialog {
 
             @Override
             protected Object getValue(Object element) {
-                return ((MatchRule) element).getName();
+                return ((OrderMatchRule) element).getName();
             }
 
             @Override
             protected void setValue(Object element, Object value) {
                 // the modified value cant not be empty
                 if (value != null && !StringUtils.isBlank((String) value)) {
-                    if (!((MatchRule) element).getName().equals(value)) {
+                    if (!((OrderMatchRule) element).getName().equals(value)) {
                         setDirty(true);
+                        getButton(OK).setEnabled(true);
                     }
-                    ((MatchRule) element).setName((String) value);
+                    ((OrderMatchRule) element).setName((String) value);
                 } else {
-                    ((MatchRule) element).setName(((MatchRule) element).getName());
+                    ((OrderMatchRule) element).setName(((OrderMatchRule) element).getName());
                 }
                 tableViewer.refresh();
             }
@@ -322,24 +352,23 @@ public class EditSortMatchRuleNamesDialog extends Dialog {
 
         // when the first one item is selected, can not move up. also when the last item is selected, can not move down.
         if (selectIndex >= 0 && isValidatedIndex) {
-            // set the order to the hashtable
-            if (hashtable != null && hashtable.size() > 0) {
-                MatchRule oldTarget = hashtable.get(targetIndex);
-                MatchRule oldSelect = hashtable.get(selectIndex);
-                hashtable.put(selectIndex, oldTarget);
-                hashtable.put(targetIndex, oldSelect);
+
+            // set the order to the orderMatchRuleList
+            if (orderMatchRuleList != null && orderMatchRuleList.size() > 0) {
+                OrderMatchRule oldTarget = orderMatchRuleList.get(targetIndex);
+                OrderMatchRule oldSelect = orderMatchRuleList.get(selectIndex);
+                orderMatchRuleList.set(selectIndex, oldTarget);
+                orderMatchRuleList.set(targetIndex, oldSelect);
             }
 
-            tempList.clear();
-            for (int i = 0; i < hashtable.size(); i++) {
-                tempList.add(hashtable.get(i));
-            }
-            tableViewer.setInput(tempList.toArray(new MatchRule[tempList.size()]));
+            tableViewer.setInput(orderMatchRuleList.toArray(new OrderMatchRule[orderMatchRuleList.size()]));
             tableViewer.refresh();
 
             updateButtonsStatus();
 
             setDirty(true);
+
+            getButton(OK).setEnabled(true);
         }
     }
 
@@ -350,11 +379,41 @@ public class EditSortMatchRuleNamesDialog extends Dialog {
      */
     @Override
     protected void okPressed() {
-        matchRuleList.clear();
-        for (int i = 0; i < hashtable.size(); i++) {
-            matchRuleList.add(hashtable.get(i));
+        resultMatchRuleList.clear();
+        // set the modified name to Matchrule
+        for (int i = 0; i < orderMatchRuleList.size(); i++) {
+            OrderMatchRule orderMatchRule = orderMatchRuleList.get(i);
+            MatchRule matchRule = orderMatchRule.getMatchRule();
+            matchRule.setName(orderMatchRule.getName());
+            resultMatchRuleList.add(matchRule);
         }
         super.okPressed();
     }
 
+    /**
+     * the class used for the tableview in this dialog.
+     * 
+     */
+    class OrderMatchRule {
+
+        private String name;
+
+        private MatchRule matchrule;
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        public String getName() {
+            return this.name;
+        }
+
+        public void setMatchRule(MatchRule matchrule) {
+            this.matchrule = matchrule;
+        }
+
+        public MatchRule getMatchRule() {
+            return this.matchrule;
+        }
+    }
 }
