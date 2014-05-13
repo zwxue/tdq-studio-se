@@ -20,6 +20,7 @@ import java.util.Set;
 import org.apache.commons.collections.MultiMap;
 import org.apache.commons.collections.map.MultiValueMap;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.eclipse.jface.viewers.AbstractTreeViewer;
 import org.eclipse.jface.viewers.CheckStateChangedEvent;
 import org.eclipse.jface.viewers.ICheckStateListener;
@@ -33,6 +34,7 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.TreeItem;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.dialog.provider.DBTablesViewLabelProvider;
@@ -42,11 +44,14 @@ import org.talend.dataprofiler.core.ui.filters.EMFObjFilter;
 import org.talend.dataprofiler.core.ui.filters.TDQEEConnectionFolderFilter;
 import org.talend.dataprofiler.core.ui.views.provider.ResourceViewContentProvider;
 import org.talend.dq.helper.RepositoryNodeHelper;
+import org.talend.dq.nodes.DBCatalogRepNode;
 import org.talend.dq.nodes.DBColumnRepNode;
+import org.talend.dq.nodes.DBSchemaRepNode;
 import org.talend.dq.nodes.DBTableRepNode;
 import org.talend.dq.nodes.DBViewRepNode;
 import org.talend.dq.nodes.DFColumnRepNode;
 import org.talend.dq.nodes.DFTableRepNode;
+import org.talend.dq.nodes.DQDBFolderRepositoryNode;
 import org.talend.dq.nodes.MDMSchemaRepNode;
 import org.talend.dq.nodes.MDMXmlElementRepNode;
 import org.talend.repository.model.IRepositoryNode;
@@ -216,19 +221,28 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
         getTreeViewer().addCheckStateListener(new ICheckStateListener() {
 
             public void checkStateChanged(CheckStateChangedEvent event) {
-                ColumnSelectionViewer columnViewer = (ColumnSelectionViewer) event.getSource();
-                TreePath treePath = new TreePath(new Object[] { event.getElement() });
-                columnViewer.setSelection(new TreeSelection(treePath));
-                setOutput(event.getElement());
-                RepositoryNode selectedNode = (RepositoryNode) event.getElement();
-                if (selectedNode instanceof DBTableRepNode || selectedNode instanceof DBViewRepNode
-                        || selectedNode instanceof DFTableRepNode || selectedNode instanceof MDMSchemaRepNode
-                        || selectedNode instanceof MDMXmlElementRepNode) {
-                    handleTreeElementsChecked(selectedNode, event.getChecked());
-                } else {
-                    checkChildrenElements(selectedNode, event.getChecked());
+                // Added TDQ-8718 20140506 yyin: should not load from db when checking
+                DQDBFolderRepositoryNode.setCallingFromColumnDialog(true);
+                DQDBFolderRepositoryNode.setLoadDBFromDialog(false);
+                try {
+                    ColumnSelectionViewer columnViewer = (ColumnSelectionViewer) event.getSource();
+                    TreePath treePath = new TreePath(new Object[] { event.getElement() });
+                    columnViewer.setSelection(new TreeSelection(treePath));
+                    setOutput(event.getElement());
+                    RepositoryNode selectedNode = (RepositoryNode) event.getElement();
+                    if (selectedNode instanceof DBTableRepNode || selectedNode instanceof DBViewRepNode
+                            || selectedNode instanceof DFTableRepNode || selectedNode instanceof MDMSchemaRepNode
+                            || selectedNode instanceof MDMXmlElementRepNode) {
+                        handleTreeElementsChecked(selectedNode, event.getChecked());
+                    } else {
+                        checkChildrenElements(selectedNode, event.getChecked());
+                    }
+                    getTreeViewer().setSubtreeChecked(event.getElement(), event.getChecked());
+                } finally {
+                    // Added TDQ-8718 20140506 yyin
+                    DQDBFolderRepositoryNode.setCallingFromColumnDialog(false);
+                    DQDBFolderRepositoryNode.setLoadDBFromDialog(true);
                 }
-                getTreeViewer().setSubtreeChecked(event.getElement(), event.getChecked());
             }
 
             private void checkChildrenElements(RepositoryNode repNode, Boolean checkedFlag) {
@@ -312,6 +326,35 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
         getTableViewer().setAllChecked(checkedFlag);
     }
 
+    /**
+     * Added TDQ-8718 20140506 yyin: when expand the nodes in the column select dialog, should refresh the table/view
+     * folder. otherwise: if the parent catalog is checked before expanding, it may get no children(without connecting
+     * to db) If the user has checked some high level node, must refresh the table/view folder node. otherwise, it
+     * always return 0
+     */
+    @Override
+    protected void handleTreeExpanded(TreeItem item) {
+        Object node = item.getData();
+
+        if (node instanceof DBCatalogRepNode || node instanceof DBSchemaRepNode) {
+            TreeItem[] children = item.getItems();
+            if (children != null) {
+                for (TreeItem child : children) {
+                    Object data = child.getData();
+                    if (data != null) {
+                        if (!(data instanceof DQDBFolderRepositoryNode)) {
+                            break;
+                        } else {
+                            getTreeViewer().refresh(data, true);
+                        }
+                    }
+                }
+            }
+        }
+
+        super.handleTreeExpanded(item);
+    }
+
     /*
      * (non-Javadoc)
      * 
@@ -386,36 +429,43 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
     List<IRepositoryNode> allCheckedElements = new ArrayList<IRepositoryNode>();
 
     protected void getAllCheckElements() {
-        Object[] checkedNodes = this.getTreeViewer().getCheckedElements();
-        for (Object checkedNode : checkedNodes) {
-            IRepositoryNode repNode = (IRepositoryNode) checkedNode;
-            if (repNode instanceof DBColumnRepNode || repNode instanceof DFColumnRepNode) {
-                if (!allCheckedElements.contains(repNode)) {
-                    allCheckedElements.add(repNode);
-                }
-            } else if (repNode instanceof DFTableRepNode || repNode instanceof DBTableRepNode || repNode instanceof DBViewRepNode) {
-                if (!getTableviewCheckedElements(allCheckedElements, repNode)) {
-                    List<IRepositoryNode> children = repNode.getChildren().get(0).getChildren();
-                    for (IRepositoryNode node : children) {
-                        if (!allCheckedElements.contains(node)) {
-                            allCheckedElements.add(node);
+        // Added TDQ-8718 20140506 yyin: should not load from DB(connect) when get checked elements
+        DQDBFolderRepositoryNode.setCallingFromColumnDialog(true);
+        DQDBFolderRepositoryNode.setLoadDBFromDialog(false);
+        try {
+            Object[] checkedNodes = this.getTreeViewer().getCheckedElements();
+
+            for (Object checkedNode : checkedNodes) {
+                IRepositoryNode repNode = (IRepositoryNode) checkedNode;
+                if (repNode instanceof DBColumnRepNode || repNode instanceof DFColumnRepNode) {
+                    if (!allCheckedElements.contains(repNode)) {
+                        allCheckedElements.add(repNode);
+                    }
+                } else if (repNode instanceof DFTableRepNode || repNode instanceof DBTableRepNode
+                        || repNode instanceof DBViewRepNode) {
+                    if (!getTableviewCheckedElements(allCheckedElements, repNode)) {
+                        List<IRepositoryNode> children = repNode.getChildren().get(0).getChildren();
+                        for (IRepositoryNode node : children) {
+                            if (!allCheckedElements.contains(node)) {
+                                allCheckedElements.add(node);
+                            }
                         }
                     }
+                } else if (repNode instanceof MDMXmlElementRepNode) {
+                    // MOD by zshen two case need to consider which
+                    // 1 select a node on the treeview then select the parent node of the node check whether the element
+                    // will be joined twice.
+                    // 2 select a node on the tableview and which contain more than one node in the treeview check
+                    // whether
+                    // can be select after click on the ok button.
+                    // boolean isLeaf = RepositoryNodeHelper.getMdmChildren(repNode, true).length > 0;
+                    getTableviewCheckedElements(allCheckedElements, repNode);
                 }
-            } else if (repNode instanceof MDMXmlElementRepNode) {
-                // MOD by zshen two case need to consider which
-                // 1 select a node on the treeview then select the parent node of the node check whether the element
-                // will be joined twice.
-                // 2 select a node on the tableview and which contain more than one node in the treeview check whether
-                // can be select after click on the ok button.
-                // boolean isLeaf = RepositoryNodeHelper.getMdmChildren(repNode, true).length > 0;
-                // if (!isLeaf) {
-                getTableviewCheckedElements(allCheckedElements, repNode);
-                // List<IRepositoryNode> children = repNode.getChildren();
-                // allCheckedElements.addAll(children);
-
-                // }
             }
+        } finally {
+            // Added TDQ-8718 20140506 yyin
+            DQDBFolderRepositoryNode.setCallingFromColumnDialog(false);
+            DQDBFolderRepositoryNode.setLoadDBFromDialog(true);
         }
 
         // ADD msjian 2011-7-8 feature 22206: Add filters
@@ -451,6 +501,12 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
     protected void okPressed() {
         allCheckedElements.clear();
         getAllCheckElements();
+        // Added TDQ-8718 20140505 yyin: if no columns checked, warn the user
+        if (allCheckedElements.size() == 0) {
+            MessageDialogWithToggle.openWarning(this.getShell(), DefaultMessagesImpl.getString("ColumnSelectionDialog.warning"),//$NON-NLS-1$ 
+                    DefaultMessagesImpl.getString("ColumnSelectionDialog.NoColumnSelected"));//$NON-NLS-1$
+            return;
+        }// ~
         super.okPressed();
         this.modelElementCheckedMap = null;
     }
@@ -529,6 +585,7 @@ public class ColumnsSelectionDialog extends TwoPartCheckSelectionDialog {
                 }
             }
             return super.getChildren(parentElement);
+
         }
 
         @Override

@@ -148,8 +148,7 @@ public class DBColumnFolderRepNode extends DQDBFolderRepositoryNode implements I
 
     @Override
     public List<IRepositoryNode> getChildren() {
-        // reload the connection to make sure the connection(and all it's owned elements) is not proxy
-        reloadConnectionViewObject();
+
         if (!this.isReload() && !children.isEmpty()) {
             // MOD gdbu 2011-6-29 bug : 22204
             return filterResultsIfAny(children);
@@ -157,48 +156,48 @@ public class DBColumnFolderRepNode extends DQDBFolderRepositoryNode implements I
         }
         children.clear();
         String filterCharater = null;
-        List<TdColumn> tdcolumns = new ArrayList<TdColumn>();
         IRepositoryViewObject meataColumnSetObject = this.getParent().getObject();
         if (meataColumnSetObject instanceof TdTableRepositoryObject) {
             TdTableRepositoryObject tdTableRepositoryObject = (TdTableRepositoryObject) meataColumnSetObject;
-            // object = tdTableRepositoryObject.getViewObject();
+            // MOD klliu 2011-09-06 bug TDQ-3414
+            item = (ConnectionItem) tdTableRepositoryObject.getViewObject().getProperty().getItem();
+            if (tdTableRepositoryObject.getTdTable().eIsProxy()) {
+                // reload the connection to make sure the connection(and all it's owned elements) is not proxy
+                reloadConnectionViewObject();
+            }
             tdTable = tdTableRepositoryObject.getTdTable();
             columns = tdTable.getColumns();
             filterCharater = ColumnHelper.getColumnFilter(tdTable);
-            // MOD klliu 2011-09-06 bug TDQ-3414
-            item = (ConnectionItem) tdTableRepositoryObject.getViewObject().getProperty().getItem();
         } else if (meataColumnSetObject instanceof TdViewRepositoryObject) {
             TdViewRepositoryObject tdViewRepositoryObject = (TdViewRepositoryObject) meataColumnSetObject;
-            // object = tdViewRepositoryObject.getViewObject();
+            // MOD klliu 2011-09-06 bug TDQ-3414
+            item = (ConnectionItem) tdViewRepositoryObject.getViewObject().getProperty().getItem();
+            if (tdViewRepositoryObject.getTdView().eIsProxy()) {
+                // reload the connection to make sure the connection(and all it's owned elements) is not proxy
+                reloadConnectionViewObject();
+            }
             tdView = tdViewRepositoryObject.getTdView();
             columns = tdView.getColumns();
             filterCharater = ColumnHelper.getColumnFilter(tdView);
-            // MOD klliu 2011-09-06 bug TDQ-3414
-            item = (ConnectionItem) tdViewRepositoryObject.getViewObject().getProperty().getItem();
         }
         connection = item.getConnection();
-        // MOD gdbu 2011-6-28 bug : 22204
-        if (columns.size() <= 0 && !isOnFilterring()) {
-            try {
-                if (tdTable != null) {
-                    tdcolumns = DqRepositoryViewService.getColumns(connection, tdTable, null, true);
-                } else if (tdView != null) {
-                    tdcolumns = DqRepositoryViewService.getColumns(connection, tdView, null, true);
-                }
-                if (tdcolumns.size() > 0) {
-                    ElementWriterFactory.getInstance().createDataProviderWriter().save(item, false);
-                }
-            } catch (MissingDriverException e) {
-                throw e;
-            } catch (Exception e) {
-                log.error(e, e);
+        // MOD TDQ-8718 20140430 the repository view cares about if use the filter or not, the column select dialog
+        // cares about if connect to DB or not.
+        List<TdColumn> tdcolumns = null;
+        if (columns.size() <= 0) {
+            if (isCallingFromColumnDialog()) {
+                tdcolumns = loadColumns(isLoadDBFromDialog());
+            } else if (!isOnFilterring()) {
+                // MOD gdbu 2011-6-28 bug : 22204
+                tdcolumns = loadColumns(true);
             }
         } else {
+            tdcolumns = new ArrayList<TdColumn>();
             for (MetadataColumn mec : columns) {
                 tdcolumns.add((TdColumn) mec);
             }
         }
-        if (filterCharater != null && !filterCharater.equals("")) { //$NON-NLS-1$
+        if (tdcolumns != null && filterCharater != null && !filterCharater.equals("")) { //$NON-NLS-1$
             tdcolumns = RepositoryNodeHelper.filterColumns(tdcolumns, filterCharater);
         }
         createTdcolumnsNode(tdcolumns, children);
@@ -206,6 +205,25 @@ public class DBColumnFolderRepNode extends DQDBFolderRepositoryNode implements I
         // MOD gdbu 2011-6-28 bug : 22204
         return filterResultsIfAny(children);
         // return children;
+    }
+
+    private List<TdColumn> loadColumns(boolean isLoadDB) {
+        List<TdColumn> tdcolumns = null;
+        try {
+            if (tdTable != null) {
+                tdcolumns = DqRepositoryViewService.getColumns(connection, tdTable, isLoadDB);
+            } else if (tdView != null) {
+                tdcolumns = DqRepositoryViewService.getColumns(connection, tdView, isLoadDB);
+            }
+            if (tdcolumns != null && tdcolumns.size() > 0) {
+                ElementWriterFactory.getInstance().createDataProviderWriter().save(item, false);
+            }
+        } catch (MissingDriverException e) {
+            throw e;
+        } catch (Exception e) {
+            log.error(e, e);
+        }
+        return tdcolumns;
     }
 
     /**

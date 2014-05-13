@@ -12,7 +12,6 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.dialog;
 
-import org.eclipse.jface.viewers.CheckStateChangedEvent;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Composite;
@@ -60,11 +59,6 @@ public class MatchColumnSelectionViewer extends ColumnSelectionViewer {
      */
     private boolean isColumnSet(Object element) {
         return element instanceof ColumnSetRepNode;
-    }
-
-    @Override
-    protected boolean isNotTableCase(CheckStateChangedEvent event, Object element) {
-        return isColumnSet(element);
     }
 
 }
