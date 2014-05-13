@@ -90,6 +90,8 @@ public class AnalysisEditor extends CommonFormEditor {
     // Added 20140411 TDQ-8360 yyin
     private EventReceiver refreshDataProvider = null;
 
+    private EventReceiver refresh2ShowMatchIndicator = null;
+
     private EventReceiver reopenEditor = null;
 
     private boolean isRefreshResultPage = false;
@@ -465,6 +467,22 @@ public class AnalysisEditor extends CommonFormEditor {
         EventManager.getInstance()
                 .register(masterPage.getAnalysis().getName(), EventEnum.DQ_ANALYSIS_REOPEN_EDITOR, reopenEditor);
 
+        // ADD msjian TDQ-8860 2014-4-30:only for column set analysis, when there have pattern(s) when java engine,show all match indicator in the
+        // Indicators section.
+        if (analysisType.equals(AnalysisType.COLUMN_SET)) {
+            // register: refresh the dataprovider combobox when the name of the data provider is changed.
+            refresh2ShowMatchIndicator = new EventReceiver() {
+
+                @Override
+                public boolean handle(Object data) {
+                    ((ColumnSetMasterPage) masterPage).refreshIndicatorsSection();
+                    return true;
+                }
+            };
+            EventManager.getInstance().register(masterPage.getAnalysis(), EventEnum.DQ_COLUMNSET_SHOW_MATCH_INDICATORS,
+                    refresh2ShowMatchIndicator);
+        }
+        // TDQ-8860~
     }
 
     /**
@@ -479,6 +497,14 @@ public class AnalysisEditor extends CommonFormEditor {
                 refreshDataProvider);
         EventManager.getInstance().unRegister(masterPage.getAnalysis().getName(), EventEnum.DQ_ANALYSIS_REOPEN_EDITOR,
                 reopenEditor);
+
+        // ADD msjian TDQ-8860 2014-4-30:only for column set analysis, when there have pattern(s) when java engine,show all match indicator in the
+        // Indicators section.
+        if (analysisType.equals(AnalysisType.COLUMN_SET)) {
+            EventManager.getInstance().unRegister(masterPage.getAnalysis(), EventEnum.DQ_COLUMNSET_SHOW_MATCH_INDICATORS,
+                    refresh2ShowMatchIndicator);
+        }
+        // TDQ-8860~
         super.dispose();
     }
 

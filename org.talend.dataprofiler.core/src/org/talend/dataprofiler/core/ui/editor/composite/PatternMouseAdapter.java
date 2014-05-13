@@ -32,6 +32,8 @@ import org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisMetadataP
 import org.talend.dataprofiler.core.ui.editor.analysis.ColumnMasterDetailsPage;
 import org.talend.dataprofiler.core.ui.editor.analysis.ColumnSetMasterPage;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
+import org.talend.dataprofiler.core.ui.events.EventEnum;
+import org.talend.dataprofiler.core.ui.events.EventManager;
 import org.talend.dataprofiler.core.ui.utils.MessageUI;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisType;
@@ -168,6 +170,11 @@ public class PatternMouseAdapter extends MouseAdapter {
                         analysis);
                 if (trc.isOk()) {
                     createOneUnit(trc.getObject());
+                    // TDQ-8860 add msjian 2014-4-30:check whether show allmatchindicator in the indicators section
+                    if (masterPage instanceof ColumnSetMasterPage) {
+                        EventManager.getInstance().publish(analysis, EventEnum.DQ_COLUMNSET_SHOW_MATCH_INDICATORS, null);
+                    }
+                    // TDQ-8860~
                 }
             }
 
