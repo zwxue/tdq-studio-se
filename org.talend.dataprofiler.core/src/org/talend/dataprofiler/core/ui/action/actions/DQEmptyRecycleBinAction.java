@@ -77,9 +77,10 @@ public class DQEmptyRecycleBinAction extends EmptyRecycleBinAction {
         // node.(include the filtered out nodes)
         List<IRepositoryNode> containsFilteredOutChildren = ((RepositoryNode) RepositoryNodeHelper.getRecycleBinRepNode())
                 .getChildren();
-        Collection<IRepositoryNode> allRecycleBinNodes = RepositoryNodeHelper.findAllChildrenNodes(containsFilteredOutChildren);
 
         if (DQRepositoryNode.isOnFilterring()) {
+            Collection<IRepositoryNode> allRecycleBinNodes = RepositoryNodeHelper
+                    .findAllChildrenNodes(containsFilteredOutChildren);
             DQRepositoryNode.setIsReturnAllNodesWhenFiltering(false);
             // shownNodesInRecycleBin list contains only the first level shown children under the Recycle Bin
             // node.(don't contain the filtered out nodes)
