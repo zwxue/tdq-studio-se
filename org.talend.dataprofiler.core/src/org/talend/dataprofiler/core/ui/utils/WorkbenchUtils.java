@@ -80,7 +80,9 @@ import org.talend.dataprofiler.core.ui.events.EventManager;
 import org.talend.dataprofiler.core.ui.views.DQRespositoryView;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisContext;
+import org.talend.dataquality.analysis.AnalysisType;
 import org.talend.dataquality.indicators.Indicator;
+import org.talend.dataquality.indicators.columnset.SimpleStatIndicator;
 import org.talend.dataquality.properties.TDQAnalysisItem;
 import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.helper.RepositoryNodeHelper;
@@ -580,7 +582,14 @@ public final class WorkbenchUtils {
                                 tempAnalysis.getContext().getAnalysedElements().remove(eobj);
                                 isModified = true;
                             } else if (setting.getEObject() instanceof Indicator) {
-                                tempAnalysis.getResults().getIndicators().remove(setting.getEObject());
+                                // when remove a column from the column set analysis, it should only remove this column
+                                // from the simple stat indicator, but not remove the simple stat indicator, which is
+                                // the only indicator in the column set analysis. (Added TDQ-8842 20140512 yyin)
+                                if (AnalysisType.COLUMN_SET.equals(tempAnalysis.getParameters().getAnalysisType())) {
+                                    ((SimpleStatIndicator) setting.getEObject()).getAnalyzedColumns().remove(eobj);// ~
+                                } else {
+                                    tempAnalysis.getResults().getIndicators().remove(setting.getEObject());
+                                }
                                 isModified = true;
                             }
                         }
@@ -595,9 +604,6 @@ public final class WorkbenchUtils {
                 }
             }
         }
-
-        // Refresh current opened editors.-- should only reopen the related analysis
-        // refreshCurrentAnalysisEditor();
     }
 
     private static void saveTempAnalysis(IFile file, Analysis tempAnalysis) {
