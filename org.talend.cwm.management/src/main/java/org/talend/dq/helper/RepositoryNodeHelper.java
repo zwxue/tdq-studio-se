@@ -307,6 +307,8 @@ public final class RepositoryNodeHelper {
             return ERepositoryObjectType.TDQ_RULES;
         } else if (EResourceConstant.RULES_SQL.getPath().equals(path)) {
             return ERepositoryObjectType.TDQ_RULES_SQL;
+        } else if (EResourceConstant.RULES_MATCHER.getPath().equals(path)) {
+            return ERepositoryObjectType.TDQ_RULES_MATCHER;
         } else if (EResourceConstant.SOURCE_FILES.getPath().equals(path)) {
             return ERepositoryObjectType.TDQ_SOURCE_FILE_ELEMENT;
         } else if (EResourceConstant.METADATA.getPath().equals(path)) {
