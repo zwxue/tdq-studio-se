@@ -428,7 +428,7 @@ class DriverLabelProvider extends LabelProvider implements ITableLabelProvider {
         // MOD qiongli,display different name for different vertica driver version.
         String name = dv.getName();
         if ("Vertica".equalsIgnoreCase(name) && EDriverName.VERTICA2.getSqlEid().equals(dv.getId())) {//$NON-NLS-1$
-            name = "Vertica 6";//$NON-NLS-1$
+            name = "Vertica 6/7";//$NON-NLS-1$
         }
         return name;
     }
