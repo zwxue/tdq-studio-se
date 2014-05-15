@@ -13,32 +13,55 @@
 package org.talend.dq.writer;
 
 import static org.junit.Assert.*;
+import junit.framework.Assert;
 
-import org.junit.After;
+import org.eclipse.core.runtime.Path;
 import org.junit.Before;
 import org.junit.Test;
+import org.talend.commons.exception.PersistenceException;
 import org.talend.core.model.properties.Item;
+import org.talend.core.model.properties.Property;
+import org.talend.core.repository.model.IRepositoryFactory;
+import org.talend.core.repository.model.ProxyRepositoryFactory;
+import org.talend.core.repository.model.RepositoryFactoryProvider;
 import org.talend.dataquality.analysis.Analysis;
+import org.talend.dataquality.analysis.AnalysisContext;
 import org.talend.dataquality.analysis.AnalysisFactory;
+import org.talend.dataquality.analysis.AnalysisResult;
+import org.talend.dataquality.domain.Domain;
+import org.talend.dataquality.domain.DomainFactory;
 import org.talend.dataquality.domain.pattern.Pattern;
 import org.talend.dataquality.domain.pattern.PatternFactory;
+import org.talend.dataquality.indicators.IndicatorParameters;
+import org.talend.dataquality.indicators.IndicatorsFactory;
+import org.talend.dataquality.indicators.RegexpMatchingIndicator;
 import org.talend.dataquality.indicators.definition.DefinitionFactory;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
+import org.talend.dataquality.indicators.definition.userdefine.UDIndicatorDefinition;
+import org.talend.dataquality.indicators.definition.userdefine.UserdefineFactory;
+import org.talend.dataquality.indicators.sql.IndicatorSqlFactory;
+import org.talend.dataquality.indicators.sql.UserDefIndicator;
+import org.talend.dataquality.indicators.sql.WhereRuleIndicator;
+import org.talend.dataquality.properties.PropertiesFactory;
 import org.talend.dataquality.properties.TDQAnalysisItem;
 import org.talend.dataquality.properties.TDQBusinessRuleItem;
 import org.talend.dataquality.properties.TDQIndicatorDefinitionItem;
 import org.talend.dataquality.properties.TDQPatternItem;
 import org.talend.dataquality.properties.TDQReportItem;
+import org.talend.dataquality.reports.ReportsFactory;
+import org.talend.dataquality.reports.TdReport;
+import org.talend.dataquality.rules.DQRule;
 import org.talend.dataquality.rules.ParserRule;
 import org.talend.dataquality.rules.RulesFactory;
 import org.talend.dataquality.rules.WhereRule;
-import org.talend.dq.helper.UnitTestBuildHelper;
 import org.talend.dq.writer.impl.AnalysisWriter;
 import org.talend.dq.writer.impl.DQRuleWriter;
 import org.talend.dq.writer.impl.ElementWriterFactory;
 import org.talend.dq.writer.impl.IndicatorDefinitionWriter;
 import org.talend.dq.writer.impl.PatternWriter;
 import org.talend.dq.writer.impl.ReportWriter;
+import org.talend.repository.model.RepositoryConstants;
+import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwmx.analysis.informationreporting.InformationreportingFactory;
 import orgomg.cwmx.analysis.informationreporting.Report;
 
@@ -48,26 +71,14 @@ import orgomg.cwmx.analysis.informationreporting.Report;
  */
 public class AElementPersistanceRealTest {
 
-    private static final String PROJECT_NAME = "AElementPersistanceTestProject"; //$NON-NLS-1$
-
-    /**
-     * DOC xqliu Comment method "setUp".
-     * 
-     * @throws java.lang.Exception
-     */
     @Before
     public void setUp() throws Exception {
-        UnitTestBuildHelper.createRealProject(PROJECT_NAME);
-    }
-
-    /**
-     * DOC xqliu Comment method "tearDown".
-     * 
-     * @throws java.lang.Exception
-     */
-    @After
-    public void tearDown() throws Exception {
-        UnitTestBuildHelper.deleteCurrentProject();
+        ProxyRepositoryFactory proxyRepository = ProxyRepositoryFactory.getInstance();
+        IRepositoryFactory repository = RepositoryFactoryProvider.getRepositoriyById(RepositoryConstants.REPOSITORY_LOCAL_ID);
+        if (repository == null) {
+            Assert.fail("No local Repository found! Probably due to a missing plugin in the product."); //$NON-NLS-1$
+        }
+        proxyRepository.setRepositoryFactoryFromProvider(repository);
     }
 
     /**
@@ -231,5 +242,251 @@ public class AElementPersistanceRealTest {
         assertTrue(createItem2 instanceof TDQIndicatorDefinitionItem);
         TDQIndicatorDefinitionItem indDefItem2 = (TDQIndicatorDefinitionItem) createItem2;
         assertTrue(indDefItem2.getFilename().equals(exceptedFileName2));
+    }
+
+    /**
+     * Test method for {@link org.talend.dq.writer.AElementPersistance#save(Item, boolean)}.
+     * 
+     * @throws PersistenceException
+     * 
+     * case1: between UDI and analysis
+     */
+    @Test
+    public void testSaveAnalysisCase1() throws PersistenceException {
+        AnalysisWriter createAnalysisWriter = ElementWriterFactory.getInstance().createAnalysisWrite();
+        // create analysis
+        Analysis createAnalysis = AnalysisFactory.eINSTANCE.createAnalysis();
+        AnalysisResult createAnalysisResult = AnalysisFactory.eINSTANCE.createAnalysisResult();
+        AnalysisContext createAnalysisContext = AnalysisFactory.eINSTANCE.createAnalysisContext();
+        createAnalysis.setResults(createAnalysisResult);
+        createAnalysis.setContext(createAnalysisContext);
+        createAnalysis.setName("AElementPersistanceRealTestanalysis1"); //$NON-NLS-1$
+
+        // create analysis item
+        TDQAnalysisItem createTDQAnalysisItem = PropertiesFactory.eINSTANCE.createTDQAnalysisItem();
+        createTDQAnalysisItem.setAnalysis(createAnalysis);
+        Property createAnalysisProperty = org.talend.core.model.properties.PropertiesFactory.eINSTANCE.createProperty();
+        createAnalysisProperty.setLabel("AElementPersistanceRealTestanalysis1"); //$NON-NLS-1$
+        createTDQAnalysisItem.setProperty(createAnalysisProperty);
+        ProxyRepositoryFactory.getInstance().create(createTDQAnalysisItem, Path.EMPTY, false);
+
+        // create UDI
+        UserDefIndicator createUserDefIndicator = IndicatorSqlFactory.eINSTANCE.createUserDefIndicator();
+        createAnalysisResult.getIndicators().add(createUserDefIndicator);
+
+        // create definition
+        UDIndicatorDefinition createUDIndicatorDefinition = UserdefineFactory.eINSTANCE.createUDIndicatorDefinition();
+        createUserDefIndicator.setIndicatorDefinition(createUDIndicatorDefinition);
+        TDQIndicatorDefinitionItem createTDQIndicatorDefinitionItem = PropertiesFactory.eINSTANCE
+                .createTDQIndicatorDefinitionItem();
+        createTDQIndicatorDefinitionItem.setIndicatorDefinition(createUDIndicatorDefinition);
+        Property createProperty = org.talend.core.model.properties.PropertiesFactory.eINSTANCE.createProperty();
+        createProperty.setLabel("AElementPersistanceRealTestUDIIndicatorDefinition1"); //$NON-NLS-1$
+        createTDQIndicatorDefinitionItem.setProperty(createProperty);
+        ProxyRepositoryFactory.getInstance().create(createTDQIndicatorDefinitionItem, Path.EMPTY, false);
+        // case add dependency
+        ReturnCode save = createAnalysisWriter.save(createTDQAnalysisItem, true);
+        Assert.assertTrue(save.isOk());
+
+        Assert.assertEquals(1, createAnalysis.getClientDependency().size());
+        Assert.assertEquals(1, createUDIndicatorDefinition.getSupplierDependency().size());
+        Assert.assertEquals(1, createUDIndicatorDefinition.getSupplierDependency().get(0).getClient().size());
+        // case remove dependency
+        createAnalysisResult.getIndicators().remove(createUserDefIndicator);
+        save = createAnalysisWriter.save(createTDQAnalysisItem, true);
+        Assert.assertTrue(save.isOk());
+
+        Assert.assertEquals(0, createAnalysis.getClientDependency().size());
+
+        Assert.assertEquals(1, createUDIndicatorDefinition.getSupplierDependency().size());
+        Assert.assertEquals(0, createUDIndicatorDefinition.getSupplierDependency().get(0).getClient().size());
+    }
+
+    /**
+     * Test method for {@link org.talend.dq.writer.AElementPersistance#save(Item, boolean)}.
+     * 
+     * @throws PersistenceException
+     * 
+     * case2: between Pattern and analysis
+     */
+    @Test
+    public void testSaveAnalysisCase2() throws PersistenceException {
+        AnalysisWriter createAnalysisWriter = ElementWriterFactory.getInstance().createAnalysisWrite();
+        // create analysis
+        Analysis createAnalysis = AnalysisFactory.eINSTANCE.createAnalysis();
+        AnalysisResult createAnalysisResult = AnalysisFactory.eINSTANCE.createAnalysisResult();
+        AnalysisContext createAnalysisContext = AnalysisFactory.eINSTANCE.createAnalysisContext();
+        createAnalysis.setResults(createAnalysisResult);
+        createAnalysis.setContext(createAnalysisContext);
+        createAnalysis.setName("AElementPersistanceRealTestanalysis2"); //$NON-NLS-1$
+
+        // create analysis item
+        TDQAnalysisItem createTDQAnalysisItem = PropertiesFactory.eINSTANCE.createTDQAnalysisItem();
+        createTDQAnalysisItem.setAnalysis(createAnalysis);
+        Property createAnalysisProperty = org.talend.core.model.properties.PropertiesFactory.eINSTANCE.createProperty();
+        createAnalysisProperty.setLabel("AElementPersistanceRealTestanalysis2"); //$NON-NLS-1$
+        createTDQAnalysisItem.setProperty(createAnalysisProperty);
+        ProxyRepositoryFactory.getInstance().create(createTDQAnalysisItem, Path.EMPTY, false);
+
+        // create pattern match indicator
+        RegexpMatchingIndicator regexMatchingIndicator = IndicatorsFactory.eINSTANCE.createRegexpMatchingIndicator();
+
+        // create pattern parameter
+        IndicatorParameters createIndicatorParameters = IndicatorsFactory.eINSTANCE.createIndicatorParameters();
+        regexMatchingIndicator.setParameters(createIndicatorParameters);
+
+        // create definition
+        IndicatorDefinition createIndicatorDefinition = DefinitionFactory.eINSTANCE.createIndicatorDefinition();
+        regexMatchingIndicator.setIndicatorDefinition(createIndicatorDefinition);
+        TDQIndicatorDefinitionItem createTDQIndicatorDefinitionItem = PropertiesFactory.eINSTANCE
+                .createTDQIndicatorDefinitionItem();
+        createTDQIndicatorDefinitionItem.setIndicatorDefinition(createIndicatorDefinition);
+        Property createProperty = org.talend.core.model.properties.PropertiesFactory.eINSTANCE.createProperty();
+        createProperty.setLabel("AElementPersistanceRealTestUDIIndicatorDefinition2"); //$NON-NLS-1$
+        createTDQIndicatorDefinitionItem.setProperty(createProperty);
+        ProxyRepositoryFactory.getInstance().create(createTDQIndicatorDefinitionItem, Path.EMPTY, false);
+
+        // create pattern
+        Pattern pattern = PatternFactory.eINSTANCE.createPattern();
+        createAnalysisResult.getIndicators().add(regexMatchingIndicator);
+        TDQPatternItem createTDQPatternItem = PropertiesFactory.eINSTANCE.createTDQPatternItem();
+        createTDQPatternItem.setPattern(pattern);
+        Property createPatternProperty = org.talend.core.model.properties.PropertiesFactory.eINSTANCE.createProperty();
+        createPatternProperty.setLabel("AElementPersistanceRealTestpattern2"); //$NON-NLS-1$
+        createTDQPatternItem.setProperty(createPatternProperty);
+        ProxyRepositoryFactory.getInstance().create(createTDQPatternItem, Path.EMPTY, false);
+
+        // create Domain
+        Domain createDomain = DomainFactory.eINSTANCE.createDomain();
+        createIndicatorParameters.setDataValidDomain(createDomain);
+        createIndicatorParameters.getDataValidDomain().getPatterns().add(pattern);
+        // case add dependency
+        ReturnCode save = createAnalysisWriter.save(createTDQAnalysisItem, true);
+        Assert.assertTrue(save.isOk());
+        Assert.assertEquals(1, createAnalysis.getClientDependency().size());
+
+        Assert.assertEquals(1, pattern.getSupplierDependency().size());
+        Assert.assertEquals(1, pattern.getSupplierDependency().get(0).getClient().size());
+        // case remove dependency
+        createAnalysisResult.getIndicators().remove(regexMatchingIndicator);
+        save = createAnalysisWriter.save(createTDQAnalysisItem, true);
+        Assert.assertTrue(save.isOk());
+
+        Assert.assertEquals(0, createAnalysis.getClientDependency().size());
+
+        Assert.assertEquals(1, pattern.getSupplierDependency().size());
+        Assert.assertEquals(0, pattern.getSupplierDependency().get(0).getClient().size());
+    }
+
+    /**
+     * Test method for {@link org.talend.dq.writer.AElementPersistance#save(Item, boolean)}.
+     * 
+     * @throws PersistenceException
+     * 
+     * case3: between Rule and analysis
+     */
+    @Test
+    public void testSaveAnalysisCase3() throws PersistenceException {
+        AnalysisWriter createAnalysisWriter = ElementWriterFactory.getInstance().createAnalysisWrite();
+        // create analysis
+        Analysis createAnalysis = AnalysisFactory.eINSTANCE.createAnalysis();
+        AnalysisResult createAnalysisResult = AnalysisFactory.eINSTANCE.createAnalysisResult();
+        AnalysisContext createAnalysisContext = AnalysisFactory.eINSTANCE.createAnalysisContext();
+        createAnalysis.setResults(createAnalysisResult);
+        createAnalysis.setContext(createAnalysisContext);
+        createAnalysis.setName("AElementPersistanceRealTestanalysis3"); //$NON-NLS-1$
+
+        // create analysis item
+        TDQAnalysisItem createTDQAnalysisItem = PropertiesFactory.eINSTANCE.createTDQAnalysisItem();
+        createTDQAnalysisItem.setAnalysis(createAnalysis);
+        Property createAnalysisProperty = org.talend.core.model.properties.PropertiesFactory.eINSTANCE.createProperty();
+        createAnalysisProperty.setLabel("AElementPersistanceRealTestanalysis3"); //$NON-NLS-1$
+        createTDQAnalysisItem.setProperty(createAnalysisProperty);
+        ProxyRepositoryFactory.getInstance().create(createTDQAnalysisItem, Path.EMPTY, false);
+
+        // create pattern match indicator
+        WhereRuleIndicator whereRuleIndicator = IndicatorSqlFactory.eINSTANCE.createWhereRuleIndicator();
+        // create definition
+
+        createAnalysisResult.getIndicators().add(whereRuleIndicator);
+        DQRule dqRule = RulesFactory.eINSTANCE.createDQRule();
+        whereRuleIndicator.setIndicatorDefinition(dqRule);
+        TDQBusinessRuleItem createTDQBusinessRuleItem = PropertiesFactory.eINSTANCE.createTDQBusinessRuleItem();
+        createTDQBusinessRuleItem.setDqrule(dqRule);
+        Property createPatternProperty = org.talend.core.model.properties.PropertiesFactory.eINSTANCE.createProperty();
+        createPatternProperty.setLabel("AElementPersistanceRealTestDQRule3"); //$NON-NLS-1$
+        createTDQBusinessRuleItem.setProperty(createPatternProperty);
+        ProxyRepositoryFactory.getInstance().create(createTDQBusinessRuleItem, Path.EMPTY, false);
+
+        // case add dependency
+        ReturnCode save = createAnalysisWriter.save(createTDQAnalysisItem, true);
+        Assert.assertTrue(save.isOk());
+        Assert.assertEquals(1, createAnalysis.getClientDependency().size());
+
+        Assert.assertEquals(1, dqRule.getSupplierDependency().size());
+        Assert.assertEquals(1, dqRule.getSupplierDependency().get(0).getClient().size());
+        // case remove dependency
+        createAnalysisResult.getIndicators().remove(whereRuleIndicator);
+        save = createAnalysisWriter.save(createTDQAnalysisItem, true);
+        Assert.assertTrue(save.isOk());
+
+        Assert.assertEquals(0, createAnalysis.getClientDependency().size());
+
+        Assert.assertEquals(1, dqRule.getSupplierDependency().size());
+        Assert.assertEquals(0, dqRule.getSupplierDependency().get(0).getClient().size());
+
+    }
+
+    /**
+     * Test method for {@link org.talend.dq.writer.AElementPersistance#save(Item, boolean)}.
+     * 
+     * @throws PersistenceException
+     * 
+     * case1: between analysis and report
+     */
+    @Test
+    public void testSaveReportCase1() throws PersistenceException {
+        ReportWriter createReportWriter = ElementWriterFactory.getInstance().createReportWriter();
+        // create analysis
+        Analysis createAnalysis = AnalysisFactory.eINSTANCE.createAnalysis();
+        AnalysisResult createAnalysisResult = AnalysisFactory.eINSTANCE.createAnalysisResult();
+        createAnalysis.setResults(createAnalysisResult);
+        createAnalysis.setName("AElementPersistanceRealTestanalysis4"); //$NON-NLS-1$
+
+        // create analysis item
+        TDQAnalysisItem createTDQAnalysisItem = PropertiesFactory.eINSTANCE.createTDQAnalysisItem();
+        createTDQAnalysisItem.setAnalysis(createAnalysis);
+        Property createAnalysisProperty = org.talend.core.model.properties.PropertiesFactory.eINSTANCE.createProperty();
+        createAnalysisProperty.setLabel("AElementPersistanceRealTestanalysis4"); //$NON-NLS-1$
+        createTDQAnalysisItem.setProperty(createAnalysisProperty);
+        ProxyRepositoryFactory.getInstance().create(createTDQAnalysisItem, Path.EMPTY, false);
+
+        // create report
+        TdReport createTdReport = ReportsFactory.eINSTANCE.createTdReport();
+        TDQReportItem createTDQReportItem = PropertiesFactory.eINSTANCE.createTDQReportItem();
+        createTDQReportItem.setReport(createTdReport);
+        Property createReportProperty = org.talend.core.model.properties.PropertiesFactory.eINSTANCE.createProperty();
+        createReportProperty.setLabel("AElementPersistanceRealTestreport4"); //$NON-NLS-1$
+        createTDQReportItem.setProperty(createReportProperty);
+        ProxyRepositoryFactory.getInstance().create(createTDQReportItem, Path.EMPTY, false);
+        createTdReport.addAnalysis(createAnalysis);
+
+        // case add dependency
+        ReturnCode save = createReportWriter.save(createTDQReportItem, true);
+        Assert.assertTrue(save.isOk());
+        Assert.assertEquals(1, createTdReport.getClientDependency().size());
+
+        Assert.assertEquals(1, createAnalysis.getSupplierDependency().size());
+        Assert.assertEquals(1, createAnalysis.getSupplierDependency().get(0).getClient().size());
+        // case remove dependency
+        createTdReport.removeAnalysis(createAnalysis);
+        save = createReportWriter.save(createTDQReportItem, true);
+        Assert.assertTrue(save.isOk());
+
+        Assert.assertEquals(0, createTdReport.getClientDependency().size());
+
+        Assert.assertEquals(1, createAnalysis.getSupplierDependency().size());
+        Assert.assertEquals(0, createAnalysis.getSupplierDependency().get(0).getClient().size());
+
     }
 }

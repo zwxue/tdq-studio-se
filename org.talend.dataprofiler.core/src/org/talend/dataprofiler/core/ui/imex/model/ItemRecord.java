@@ -242,7 +242,7 @@ public class ItemRecord {
             }
         } else if (element != null) {
 
-            List<Property> dependencyProperty = DependenciesHandler.getInstance().getClintDependency(element);
+            List<Property> dependencyProperty = DependenciesHandler.getInstance().getClintDependencyForExport(element);
             for (Property depElement : dependencyProperty) {
                 ModelElement modelElement = PropertyHelper.getModelElement(depElement);
                 URI uri = EObjectHelper.getURI(modelElement);

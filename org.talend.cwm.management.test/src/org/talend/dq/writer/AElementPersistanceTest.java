@@ -17,15 +17,18 @@ import static org.mockito.Mockito.*;
 import static org.powermock.api.support.membermodification.MemberMatcher.*;
 import static org.powermock.api.support.membermodification.MemberModifier.*;
 
+import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.rule.PowerMockRule;
+import org.talend.commons.exception.PersistenceException;
 import org.talend.core.repository.model.IRepositoryFactory;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.core.repository.utils.XmiResourceManager;
 import org.talend.dataquality.analysis.Analysis;
+import org.talend.dataquality.analysis.AnalysisContext;
 import org.talend.dataquality.analysis.AnalysisFactory;
 import org.talend.dataquality.analysis.AnalysisResult;
 import org.talend.dataquality.properties.TDQAnalysisItem;
@@ -51,9 +54,11 @@ public class AElementPersistanceTest {
      * Test method for
      * {@link org.talend.dq.writer.AElementPersistance#saveWithDependencies(org.talend.core.model.properties.Item, orgomg.cwm.objectmodel.core.ModelElement)}
      * .
+     * 
+     * @throws PersistenceException
      */
     @Test
-    public void testSaveWithDependenciesAnalysis() {
+    public void testSaveWithDependenciesAnalysis() throws PersistenceException {
         PowerMockito.mockStatic(ProxyRepositoryFactory.class);
         ProxyRepositoryFactory mockProxyRepositoryFactory = PowerMockito.mock(ProxyRepositoryFactory.class);
         when(ProxyRepositoryFactory.getInstance()).thenReturn(mockProxyRepositoryFactory);
@@ -69,16 +74,18 @@ public class AElementPersistanceTest {
         AnalysisWriter createAnalysisWrite = ElementWriterFactory.getInstance().createAnalysisWrite();
         Analysis createAnalysis = AnalysisFactory.eINSTANCE.createAnalysis();
         AnalysisResult createAnalysisResult = AnalysisFactory.eINSTANCE.createAnalysisResult();
+        AnalysisContext createAnalysisContext = AnalysisFactory.eINSTANCE.createAnalysisContext();
         TDQAnalysisItem analysisItem = org.talend.dataquality.properties.PropertiesFactory.eINSTANCE.createTDQAnalysisItem();
-
+        analysisItem.setAnalysis(createAnalysis);
         String anaName = "ana1"; //$NON-NLS-1$
         String exceptedFileName = anaName + "_0.1.ana"; //$NON-NLS-1$
         createAnalysis.setName(anaName);
         createAnalysis.setResults(createAnalysisResult);
+        createAnalysis.setContext(createAnalysisContext);
 
         ReturnCode create = createAnalysisWrite.saveWithDependencies(analysisItem, createAnalysis);
         assertTrue(create.isOk());
-        assertTrue(analysisItem.getFilename().equals(exceptedFileName));
+        Assert.assertEquals(exceptedFileName, analysisItem.getFilename());
 
         String anaName2 = "ana2"; //$NON-NLS-1$
         String exceptedFileName2 = anaName2 + "_0.1.ana"; //$NON-NLS-1$
@@ -86,16 +93,18 @@ public class AElementPersistanceTest {
 
         create = createAnalysisWrite.saveWithDependencies(analysisItem, createAnalysis);
         assertTrue(create.isOk());
-        assertTrue(analysisItem.getFilename().equals(exceptedFileName2));
+        Assert.assertEquals(exceptedFileName2, analysisItem.getFilename());
     }
 
     /**
      * Test method for
      * {@link org.talend.dq.writer.AElementPersistance#saveWithoutDependencies(org.talend.core.model.properties.Item, orgomg.cwm.objectmodel.core.ModelElement)}
      * .
+     * 
+     * @throws PersistenceException
      */
     @Test
-    public void testSaveWithoutDependenciesReport() {
+    public void testSaveWithoutDependenciesReport() throws PersistenceException {
         PowerMockito.mockStatic(ProxyRepositoryFactory.class);
         ProxyRepositoryFactory mockProxyRepositoryFactory = PowerMockito.mock(ProxyRepositoryFactory.class);
         when(ProxyRepositoryFactory.getInstance()).thenReturn(mockProxyRepositoryFactory);
@@ -111,6 +120,7 @@ public class AElementPersistanceTest {
         ReportWriter createReportWriter = ElementWriterFactory.getInstance().createReportWriter();
         TdReport createTdReport = ReportsFactory.eINSTANCE.createTdReport();
         TDQReportItem reportItem = org.talend.dataquality.properties.PropertiesFactory.eINSTANCE.createTDQReportItem();
+        reportItem.setReport(createTdReport);
 
         String repName = "rep1"; //$NON-NLS-1$
         String exceptedFileName = repName + "_0.1.rep"; //$NON-NLS-1$
@@ -118,7 +128,7 @@ public class AElementPersistanceTest {
 
         ReturnCode create = createReportWriter.saveWithoutDependencies(reportItem, createTdReport);
         assertTrue(create.isOk());
-        assertTrue(reportItem.getFilename().equals(exceptedFileName));
+        Assert.assertEquals(exceptedFileName, reportItem.getFilename());
 
         String repName2 = "rep2"; //$NON-NLS-1$
         String exceptedFileName2 = repName2 + "_0.1.rep"; //$NON-NLS-1$
@@ -126,6 +136,6 @@ public class AElementPersistanceTest {
 
         create = createReportWriter.saveWithDependencies(reportItem, createTdReport);
         assertTrue(create.isOk());
-        assertTrue(reportItem.getFilename().equals(exceptedFileName2));
+        Assert.assertEquals(exceptedFileName2, reportItem.getFilename());
     }
 }

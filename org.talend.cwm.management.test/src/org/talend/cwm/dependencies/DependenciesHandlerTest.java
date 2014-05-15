@@ -14,10 +14,19 @@ package org.talend.cwm.dependencies;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
+import static org.powermock.api.support.membermodification.MemberMatcher.*;
+import static org.powermock.api.support.membermodification.MemberModifier.*;
 
 import java.util.List;
 
+import junit.framework.Assert;
+
 import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.util.EcoreUtil;
+import org.eclipse.emf.ecore.xmi.XMLResource;
+import org.eclipse.emf.ecore.xmi.impl.XMLResourceImpl;
 import org.junit.Rule;
 import org.junit.Test;
 import org.mockito.ArgumentMatcher;
@@ -25,10 +34,15 @@ import org.mockito.Mockito;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.rule.PowerMockRule;
+import org.talend.core.model.metadata.builder.connection.Connection;
+import org.talend.core.model.metadata.builder.connection.ConnectionFactory;
+import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.properties.Property;
 import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.ModelElementHelper;
+import org.talend.cwm.management.i18n.Messages;
 import org.talend.dataquality.analysis.Analysis;
+import org.talend.dataquality.analysis.AnalysisContext;
 import org.talend.dataquality.analysis.AnalysisFactory;
 import org.talend.dataquality.analysis.AnalysisResult;
 import org.talend.dataquality.helpers.AnalysisHelper;
@@ -42,7 +56,12 @@ import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dataquality.properties.PropertiesFactory;
 import org.talend.dataquality.properties.TDQAnalysisItem;
 import org.talend.dataquality.properties.TDQIndicatorDefinitionItem;
+import org.talend.dataquality.properties.impl.PropertiesFactoryImpl;
 import org.talend.dq.helper.PropertyHelper;
+import org.talend.dq.writer.impl.AnalysisWriter;
+import org.talend.dq.writer.impl.DataProviderWriter;
+import org.talend.dq.writer.impl.ElementWriterFactory;
+import org.talend.utils.sugars.ReturnCode;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.objectmodel.core.Dependency;
 import orgomg.cwm.objectmodel.core.ModelElement;
@@ -51,7 +70,8 @@ import orgomg.cwm.objectmodel.core.ModelElement;
  * DOC zshen class global comment. Detailled comment
  */
 
-@PrepareForTest({ PropertyHelper.class, ModelElementHelper.class, IndicatorHelper.class })
+@PrepareForTest({ PropertyHelper.class, ModelElementHelper.class, IndicatorHelper.class, Messages.class,
+        ElementWriterFactory.class })
 public class DependenciesHandlerTest {
 
     @Rule
@@ -107,6 +127,7 @@ public class DependenciesHandlerTest {
         Mockito.when(PropertyHelper.getModelElement(anaProperty)).thenReturn(createAnalysis);
         Mockito.when(PropertyHelper.getProperty(createCountsIndicator.getIndicatorDefinition())).thenReturn(
                 countIndicatorProperty);
+        Mockito.when(PropertyHelper.getProperty(createAnalysis)).thenReturn(anaProperty);
 
         // staticMock ModelElementHelper
         PowerMockito.mockStatic(ModelElementHelper.class);
@@ -114,9 +135,9 @@ public class DependenciesHandlerTest {
         Mockito.when(ModelElementHelper.compareUUID(Mockito.argThat(modelElementMatcher), Mockito.argThat(modelElementMatcher)))
                 .thenReturn(modelElementMatcher.equals(modelElementMatcher));
 
-        List<Property> clintDependency = DependenciesHandler.getInstance().getClintDependency(anaProperty);
-        assertTrue(clintDependency.size() == 1);
-        assertTrue(clintDependency.get(0).equals(countIndicatorProperty));
+        List<Property> clintDependency = DependenciesHandler.getInstance().getClintDependencyForExport(createAnalysis);
+        Assert.assertEquals(1, clintDependency.size());
+        Assert.assertEquals(countIndicatorProperty, clintDependency.get(0));
 
     }
 
@@ -162,7 +183,7 @@ public class DependenciesHandlerTest {
         assertEquals(1, supplier.size());
         assertEquals(conn, supplier.get(0));
         if (setUsageDependencyOn.isOk()) {
-            DependenciesHandler.getInstance().removeDependenciesBetweenModel(conn, ana);
+            DependenciesHandler.getInstance().removeDependenciesBetweenModel(ana, conn);
         }
         assertEquals(0, clientDependencyFirst.size());
         EList<Dependency> clientDependencyTwo = conn.getClientDependency();
@@ -176,6 +197,54 @@ public class DependenciesHandlerTest {
             DependenciesHandler.getInstance().removeDependenciesBetweenModel(ana, conn);
         }
         assertEquals(0, clientDependencyTwo.size());
+    }
+
+    @Test
+    public void testRemoveConnDependencyAndSave() {
+        TDQAnalysisItem analysisItem = PropertiesFactoryImpl.eINSTANCE.createTDQAnalysisItem();
+        Analysis analysis = AnalysisFactory.eINSTANCE.createAnalysis();
+        analysis.setName("ana"); //$NON-NLS-1$
+        analysisItem.setAnalysis(analysis);
+        AnalysisContext analysisContext = AnalysisFactory.eINSTANCE.createAnalysisContext();
+
+        ConnectionItem createConnectionItem = org.talend.core.model.properties.PropertiesFactory.eINSTANCE.createConnectionItem();
+        Property property = org.talend.core.model.properties.PropertiesFactory.eINSTANCE.createProperty();
+        property.setId(EcoreUtil.generateUUID());
+        property.setLabel("conn"); //$NON-NLS-1$
+        createConnectionItem.setProperty(property);
+        Connection connection = ConnectionFactory.eINSTANCE.createConnection();
+        connection.setName("conn"); //$NON-NLS-1$
+        setEResource(null, connection);
+        createConnectionItem.setConnection(connection);
+        stub(method(PropertyHelper.class, "getProperty", Connection.class)).toReturn(property); //$NON-NLS-1$
+        ReturnCode rc = new ReturnCode(true);
+        DataProviderWriter dp = mock(DataProviderWriter.class);
+        when(dp.save(createConnectionItem, false)).thenReturn(rc);
+        stub(method(ElementWriterFactory.class, "createDataProviderWriter")).toReturn(dp); //$NON-NLS-1$
+        AnalysisWriter aw = mock(AnalysisWriter.class);
+        when(aw.save(analysisItem, false)).thenReturn(rc);
+        stub(method(ElementWriterFactory.class, "createAnalysisWrite")).toReturn(aw); //$NON-NLS-1$
+
+        DependenciesHandler.getInstance().setUsageDependencyOn(analysis, connection);
+
+        analysis.setContext(analysisContext);
+        analysisContext.setConnection(connection);
+        DependenciesHandler.getInstance().removeConnDependencyAndSave(analysisItem);
+        Assert.assertNull(analysis.getContext().getConnection());
+        Assert.assertEquals(true, analysis.getClientDependency().isEmpty());
+
+    }
+
+    private void setEResource(EObject parent, EObject eobject) {
+        if (eobject.eResource() == null) {
+            XMLResource xmlResource = parent != null && parent.eResource() != null ? (XMLResource) parent.eResource()
+                    : new XMLResourceImpl();
+            xmlResource.getContents().add(eobject);
+        }
+        Resource res = eobject.eResource();
+        if (res instanceof XMLResource) {
+            ((XMLResource) res).setID(eobject, EcoreUtil.generateUUID());
+        }
     }
 
 }

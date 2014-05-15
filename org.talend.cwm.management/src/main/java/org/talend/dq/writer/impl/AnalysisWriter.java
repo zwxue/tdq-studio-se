@@ -12,6 +12,7 @@
 // ============================================================================
 package org.talend.dq.writer.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -20,12 +21,14 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.talend.commons.emf.FactoriesUtil;
+import org.talend.commons.exception.LoginException;
 import org.talend.commons.exception.PersistenceException;
 import org.talend.core.model.properties.Item;
 import org.talend.core.model.properties.Property;
 import org.talend.core.model.properties.TDQItem;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.cwm.dependencies.DependenciesHandler;
+import org.talend.cwm.management.i18n.Messages;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.domain.Domain;
 import org.talend.dataquality.domain.pattern.Pattern;
@@ -40,8 +43,10 @@ import org.talend.dataquality.rules.DQRule;
 import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.helper.ProxyRepositoryManager;
 import org.talend.dq.writer.AElementPersistance;
+import org.talend.repository.RepositoryWorkUnit;
 import org.talend.utils.sugars.ReturnCode;
 import org.talend.utils.sugars.TypedReturnCode;
+import orgomg.cwm.foundation.softwaredeployment.DataManager;
 import orgomg.cwm.objectmodel.core.Dependency;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
@@ -185,17 +190,93 @@ public class AnalysisWriter extends AElementPersistance {
      * @see org.talend.dq.writer.AElementPersistance#save(org.talend.core.model.properties.Item, boolean[])
      */
     @Override
-    public ReturnCode save(Item item, boolean careDependency) {
-        // MOD yyi 2012-02-07 TDQ-4621:Update dependencies(connection) when careDependency is true.
-        TDQAnalysisItem anaItem = (TDQAnalysisItem) item;
-        Analysis analysis = anaItem.getAnalysis();
-        return careDependency ? saveWithDependencies(anaItem, analysis) : saveWithoutDependencies(anaItem, analysis);
+    public ReturnCode save(final Item item, final boolean careDependency) {
+        ReturnCode rc = new ReturnCode();
+        RepositoryWorkUnit<Object> repositoryWorkUnit = new RepositoryWorkUnit<Object>("save Analysis item") { //$NON-NLS-1$
+
+            @Override
+            protected void run() throws LoginException, PersistenceException {
+                // MOD yyi 2012-02-07 TDQ-4621:Update dependencies(connection) when careDependency is true.
+                TDQAnalysisItem anaItem = (TDQAnalysisItem) item;
+                Analysis analysis = anaItem.getAnalysis();
+                if (careDependency) {
+                    saveWithDependencies(anaItem, analysis);
+                } else {
+                    saveWithoutDependencies(anaItem, analysis);
+                }
+
+            }
+        };
+        repositoryWorkUnit.setAvoidUnloadResources(true);
+        ProxyRepositoryFactory.getInstance().executeRepositoryWorkUnit(repositoryWorkUnit);
+        try {
+            repositoryWorkUnit.throwPersistenceExceptionIfAny();
+        } catch (PersistenceException e) {
+            log.error(e, e);
+            rc.setOk(Boolean.FALSE);
+            rc.setMessage(e.getMessage());
+        }
+        return rc;
     }
 
     @Override
     protected void notifyResourceChanges() {
         ProxyRepositoryManager.getInstance().save();
 
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dq.writer.AElementPersistance#removeDependencies(org.talend.core.model.properties.Item)
+     */
+    @Override
+    protected ReturnCode removeDependencies(Item item) {
+        ReturnCode rc = new ReturnCode();
+        TDQAnalysisItem anaItem = (TDQAnalysisItem) item;
+        Analysis analysis = anaItem.getAnalysis();
+        List<Property> clintDependency = DependenciesHandler.getInstance().getClintDependency(anaItem.getProperty());
+        List<ModelElement> getClientDepListByResultList = getClientDepListByResult(analysis);
+        for (Property currentClient : clintDependency) {
+            ModelElement modelElement = PropertyHelper.getModelElement(currentClient);
+            if (!getClientDepListByResultList.contains(modelElement)) {
+                boolean isSuccess = DependenciesHandler.getInstance().removeDependenciesBetweenModel(analysis, modelElement);
+                if (isSuccess) {
+                    try {
+                        ProxyRepositoryFactory.getInstance().getRepositoryFactoryFromProvider().getResourceManager()
+                                .saveResource(modelElement.eResource());
+                    } catch (PersistenceException e) {
+                        log.error(e, e);
+                        rc.setOk(false);
+                        rc.setMessage(e.getMessage());
+                    }
+
+                } else {
+                    rc.setOk(false);
+                    rc.setMessage(Messages.getString("AnalysisWriter.CanNotFindDependencyElement", analysis.getName(), //$NON-NLS-1$
+                            modelElement.getName()));
+                }
+            }
+        }
+        return rc;
+    }
+
+    /**
+     * get Client Dependency List.
+     * 
+     * @param Analysis the analysis which we want to save
+     * @return The list all of client dependency(Pattern UDI Connection DQRule)
+     */
+    private List<ModelElement> getClientDepListByResult(Analysis analysis) {
+        List<ModelElement> clientDependencyList = new ArrayList<ModelElement>();
+        DataManager connection = analysis.getContext().getConnection();
+        // DQRule or UDI
+        clientDependencyList.addAll(AnalysisHelper.getUserDefinedIndicators(analysis));
+        clientDependencyList.addAll(AnalysisHelper.getPatterns(analysis));
+        if (connection != null) {
+            clientDependencyList.add(connection);
+        }
+        return clientDependencyList;
     }
 
 }

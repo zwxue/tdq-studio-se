@@ -22,13 +22,10 @@ import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.TreePath;
 import org.eclipse.jface.viewers.TreeSelection;
-import org.talend.commons.emf.EMFUtil;
-import org.talend.cwm.dependencies.DependenciesHandler;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
@@ -37,7 +34,6 @@ import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.helpers.ReportHelper;
 import org.talend.dataquality.properties.TDQReportItem;
 import org.talend.dataquality.reports.TdReport;
-import org.talend.dq.helper.ProxyRepositoryManager;
 import org.talend.dq.nodes.ReportAnalysisRepNode;
 import org.talend.dq.writer.impl.ElementWriterFactory;
 import org.talend.resource.ResourceManager;
@@ -106,18 +102,12 @@ public class RemoveAnalysisAction extends Action {
 
                 // save now modified resources (that contain the Dependency
                 // objects)
-                List<Resource> modifiedResources = DependenciesHandler.getInstance().removeDependenciesBetweenModels(
-                        reportItem.getReport(), removeMap.get(reportItem));
-                for (int i = 0; i < modifiedResources.size(); i++) {
-                    EMFUtil.saveSingleResource(modifiedResources.get(i));
-                }
 
                 ElementWriterFactory.getInstance().createReportWriter().save(reportItem, true);
             }
 
             IFolder reportsFolder = ResourceManager.getReportsFolder();
             try {
-                ProxyRepositoryManager.getInstance().save();
                 reportsFolder.refreshLocal(IResource.DEPTH_INFINITE, null);
             } catch (CoreException e) {
                 log.error(e, e);

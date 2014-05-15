@@ -63,7 +63,17 @@ public class SoftwareSystemWriter extends AElementPersistance {
      */
     @Override
     protected void addDependencies(ModelElement element) {
+        return;
+    }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dq.writer.AElementPersistance#removeDependencies(org.talend.core.model.properties.Item)
+     */
+    @Override
+    protected ReturnCode removeDependencies(Item item) {
+        return new ReturnCode(true);
     }
 
 }

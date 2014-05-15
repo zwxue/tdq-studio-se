@@ -36,6 +36,7 @@ import org.talend.dataquality.domain.pattern.Pattern;
 import org.talend.dataquality.helpers.IndicatorHelper;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
+import org.talend.dataquality.indicators.sql.UserDefIndicator;
 import org.talend.dataquality.properties.TDQAnalysisItem;
 import org.talend.dataquality.properties.TDQFileItem;
 import org.talend.dataquality.properties.TDQSourceFileItem;
@@ -400,9 +401,6 @@ public final class DependenciesHandler {
         if (property.getItem() instanceof TDQSourceFileItem) {
             return listProperty;
         }
-        if (modelElement instanceof Analysis) {
-            listProperty.addAll(getAnaDependency(property));
-        }
         EList<Dependency> clientDependency = modelElement.getClientDependency();
         for (Dependency clienter : clientDependency) {
             for (ModelElement depencyModelElement : clienter.getSupplier()) {
@@ -421,7 +419,26 @@ public final class DependenciesHandler {
      * @param object
      * @return SupplierDependency
      * 
-     * getClintDependency
+     * getClintDependency here will contain system indicators so only will be used by export case
+     */
+    public List<Property> getClintDependencyForExport(ModelElement object) {
+        List<Property> result = new ArrayList<Property>();
+        Property property = PropertyHelper.getProperty(object);
+        if (property != null) {
+            // IRepositoryViewObject repositoryViewObject = new RepositoryViewObject(property);
+            result = iterateClientDependencies(property);
+            if (object instanceof Analysis) {
+                result.addAll(getSystemIndicaotrOfAnalysis(property));
+            }
+        }
+        return result;
+    }
+
+    /**
+     * @param object
+     * @return SupplierDependency
+     * 
+     * getClintDependency system indicators will not be contain at here.
      */
     public List<Property> getClintDependency(ModelElement object) {
         List<Property> result = new ArrayList<Property>();
@@ -516,6 +533,52 @@ public final class DependenciesHandler {
     }
 
     /**
+     * get Analysis Dependency (for indicator only).
+     * 
+     * @return get the list of indicator which in use by the analysis
+     * 
+     */
+    private List<Property> getSystemIndicaotrOfAnalysis(Property property) {
+        Item item = property.getItem();
+        List<Property> listProperty = new ArrayList<Property>();
+        if (item instanceof TDQAnalysisItemImpl) {
+            TDQAnalysisItemImpl tdqAnaItem = (TDQAnalysisItemImpl) item;
+            Analysis anaElement = tdqAnaItem.getAnalysis();
+            List<Indicator> indicators = IndicatorHelper.getIndicators(anaElement.getResults());
+            for (Indicator indicator : indicators) {
+                if (indicator instanceof UserDefIndicator) {
+                    // whereRuleIndicator or UDIIndicator
+                    continue;
+                }
+                boolean isContain = false;
+                IndicatorDefinition newIndicatorDefinition = indicator.getIndicatorDefinition();
+                // MOD qiongli 2012-5-11 TDQ-5256
+                if (newIndicatorDefinition == null) {
+                    continue;
+                }
+                for (Property containViewObject : listProperty) {
+                    Item item2 = containViewObject.getItem();
+                    if (item2 instanceof TDQIndicatorDefinitionItemImpl) {
+                        IndicatorDefinition oldIndicatorDefinition = ((TDQIndicatorDefinitionItemImpl) item2)
+                                .getIndicatorDefinition();
+                        if (ModelElementHelper.compareUUID(oldIndicatorDefinition, newIndicatorDefinition)) {
+                            isContain = true;
+                            break;
+                        }
+                    }
+                }
+                if (!isContain) {
+                    Property iniProperty = PropertyHelper.getProperty(indicator.getIndicatorDefinition());
+                    if (iniProperty != null) {
+                        listProperty.add(iniProperty);
+                    }
+                }
+            }
+        }
+        return listProperty;
+    }
+
+    /**
      * 
      * Comment method "removeDependenciesBetweenModel".
      * 
@@ -546,7 +609,7 @@ public final class DependenciesHandler {
             while (clientiterator.hasNext()) {
                 Dependency clientDep = clientiterator.next();
                 if (clientDep.getSupplier().contains(client)) {
-                    clientDep.getSupplier().remove(client);
+                    clientiterator.remove();
                     hasFind = true;
                     break;
                 }

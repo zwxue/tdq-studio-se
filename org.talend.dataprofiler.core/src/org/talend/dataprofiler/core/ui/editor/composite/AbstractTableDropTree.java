@@ -12,17 +12,11 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.editor.composite;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.resources.IFile;
 import org.talend.dataprofiler.core.model.ModelElementIndicator;
-import org.talend.dataprofiler.core.ui.editor.preview.TableIndicatorUnit;
-import org.talend.dataquality.analysis.Analysis;
-import org.talend.dataquality.indicators.Indicator;
-import org.talend.dataquality.indicators.sql.WhereRuleIndicator;
 import org.talend.repository.model.IRepositoryNode;
-import orgomg.cwm.objectmodel.core.ModelElement;
 import orgomg.cwm.resource.relational.NamedColumnSet;
 
 /**
@@ -78,18 +72,4 @@ public abstract class AbstractTableDropTree extends AbstractColumnDropTree {
 
     }
 
-    /**
-     * insert element into removeElements so that dependency can be update when save the editor
-     * 
-     * @param analysis
-     * @param unit
-     */
-    protected void removedElements(Analysis analysis, TableIndicatorUnit unit) {
-        List<ModelElement> reomveElements = new ArrayList<ModelElement>();
-        Indicator indicator = unit.getIndicator();
-        if (indicator instanceof WhereRuleIndicator) {
-            reomveElements.add(indicator.getIndicatorDefinition());
-        }
-        super.removedElements.addAll(reomveElements);
-    }
 }
