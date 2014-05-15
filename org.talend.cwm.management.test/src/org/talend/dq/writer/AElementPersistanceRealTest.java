@@ -465,10 +465,11 @@ public class AElementPersistanceRealTest {
         TdReport createTdReport = ReportsFactory.eINSTANCE.createTdReport();
         TDQReportItem createTDQReportItem = PropertiesFactory.eINSTANCE.createTDQReportItem();
         createTDQReportItem.setReport(createTdReport);
-        createTdReport.addAnalysis(createAnalysis);
         Property createReportProperty = org.talend.core.model.properties.PropertiesFactory.eINSTANCE.createProperty();
         createReportProperty.setLabel("AElementPersistanceRealTestreport4"); //$NON-NLS-1$
         createTDQReportItem.setProperty(createReportProperty);
+        ProxyRepositoryFactory.getInstance().create(createTDQReportItem, Path.EMPTY, false);
+        createTdReport.addAnalysis(createAnalysis);
 
         // case add dependency
         ReturnCode save = createReportWriter.save(createTDQReportItem, true);
