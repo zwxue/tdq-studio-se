@@ -30,9 +30,9 @@ import org.talend.core.ILibraryManagerService;
 
 /**
  * DOC qzhang class global comment. Detailled comment <br/>
- *
+ * 
  * $Id: talend.epf 1 2006-09-29 17:06:40Z qzhang $
- *
+ * 
  */
 public enum EDriverName {
     ODBCDEFAULTURL("Generic ODBC", //$NON-NLS-1$
@@ -73,7 +73,7 @@ public enum EDriverName {
     POSTGRESQLEFAULTURL("PostgreSQL", //$NON-NLS-1$
                         "org.postgresql.Driver", //$NON-NLS-1$
                         "-7",
-                        "postgresql-8.1-405.jdbc3.jar"),
+                        "postgresql-8.3-603.jdbc3.jar"),
     INTERBASEDEFAULTURL("Interbase", //$NON-NLS-1$
                         "interbase.interclient.Driver", //$NON-NLS-1$
                         "-3",
@@ -124,6 +124,7 @@ public enum EDriverName {
     private String[] jars;
 
     private static ILibraryManagerService libManagerServic = null;
+
     // MOD gdbu 2011-4-20 bug : 18975
     private static Map<String, ArrayList<String>> special_database = new HashMap<String, ArrayList<String>>();
     static {
@@ -155,7 +156,7 @@ public enum EDriverName {
 
     /**
      * Getter for dbDriver.
-     *
+     * 
      * @return the dbDriver
      */
     public String getDbDriver() {
@@ -164,7 +165,7 @@ public enum EDriverName {
 
     /**
      * Getter for sqlEid.
-     *
+     * 
      * @return the sqlEid
      */
     public String getSqlEid() {
@@ -173,7 +174,7 @@ public enum EDriverName {
 
     /**
      * DOC qzhang Comment method "getJars".
-     *
+     * 
      * @return
      */
     public LinkedList<String> getJars() {
@@ -204,7 +205,7 @@ public enum EDriverName {
 
     /**
      * DOC qzhang Comment method "getId".
-     *
+     * 
      * @param string
      */
     public static String getId(String driver) {
@@ -227,12 +228,12 @@ public enum EDriverName {
 
     /**
      * MOD gdbu 2011-4-20 bug : 18975
-     *
+     * 
      * DOC gdbu Comment method "getDriFromSpecialDB".
-     *
+     * 
      * If the above method : getId() can not return required driverclass, we can return by this method requires the
      * driverclass, but only if we have to fill specialdatabase instance
-     *
+     * 
      * @param driver
      * @return driverID
      */
@@ -260,7 +261,6 @@ public enum EDriverName {
 
         return "";
     }
-
 
     private ILibraryManagerService getLibManagerServic() {
         if (libManagerServic == null) {

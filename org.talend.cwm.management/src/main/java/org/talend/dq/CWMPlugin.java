@@ -252,6 +252,9 @@ public class CWMPlugin extends Plugin {
                     manDr.getJars().add(path);
                 }
             }
+        } else if (manDr.getJars().isEmpty()) {
+            // should add jars at here when create a connection and download jars;
+            this.loadDriverByLibManageSystem(dbConnnection);
         }
     }
 

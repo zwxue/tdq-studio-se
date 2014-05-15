@@ -14,6 +14,7 @@
  */
 package net.sourceforge.sqlexplorer.plugin;
 
+import java.io.File;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -21,6 +22,7 @@ import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
 import net.sourceforge.sqlexplorer.EDriverName;
+import net.sourceforge.sqlexplorer.ExplorerException;
 import net.sourceforge.sqlexplorer.IConstants;
 import net.sourceforge.sqlexplorer.IConstants.Confirm;
 import net.sourceforge.sqlexplorer.SQLCannotConnectException;
@@ -153,12 +155,19 @@ public class SQLExplorerPlugin extends AbstractUIPlugin {
             for (EDriverName supportDBUrlType : values) {
                 if (id2.equals(supportDBUrlType.getSqlEid())) {
                     LinkedList<String> jars = mand.getJars();
+                    // check the path exsit or not.if not,clear the jars.
+                    if (!jars.isEmpty() && !validateFilesExist(jars)) {
+                        jars.clear();
+                    }
                     if (jars.isEmpty()) {
+                        // get jars path from lib/java or index.xml
                         mand.setJars(supportDBUrlType.getJars());
                     }
                     mand.setDriverClassName(supportDBUrlType.getDbDriver());
                     try {
-                        mand.registerSQLDriver();
+                        if (!mand.getJars().isEmpty()) {
+                            mand.registerSQLDriver();
+                        }
                     } catch (Exception e) {
                         // do nothings
                     }
@@ -166,6 +175,23 @@ public class SQLExplorerPlugin extends AbstractUIPlugin {
                 }
             }
         }
+        try {
+            driverModel.saveDrivers();
+        } catch (ExplorerException e) {
+            error("Exception during initialize all drivers", e);
+        }
+    }
+
+    private boolean validateFilesExist(LinkedList<String> fileNames) {
+        boolean allFound = true;
+        for (String path : fileNames) {
+            File file = new File(path);
+            if (!file.exists()) {
+                allFound = false;
+                break;
+            }
+        }
+        return allFound;
     }
 
     /**
