@@ -16,6 +16,7 @@ import org.apache.log4j.Logger;
 import org.eclipse.equinox.app.IApplication;
 import org.eclipse.equinox.app.IApplicationContext;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
@@ -34,9 +35,7 @@ import org.talend.dataprofiler.core.license.LicenseWizard;
 import org.talend.dataprofiler.core.license.LicenseWizardDialog;
 import org.talend.dataprofiler.rcp.i18n.Messages;
 import org.talend.dataprofiler.rcp.intro.linksbar.Workbench3xImplementation4CoolBar;
-import org.talend.repository.registeruser.RegisterManagement;
-import org.talend.repository.ui.wizards.register.RegisterWizard;
-import org.talend.repository.ui.wizards.register.RegisterWizardPage1;
+import org.talend.repository.ui.wizards.register.TalendForgeDialog;
 import org.talend.utils.sugars.ReturnCode;
 
 /**
@@ -103,10 +102,14 @@ public class Application implements IApplication {
         }
 
         if (brandingService.getBrandingConfiguration().isUseProductRegistration()) {
-            if (!RegisterManagement.getInstance().isProductRegistered()) {
-                RegisterWizard registerWizard = new RegisterWizard();
-                RegisterWizardPage1 dialog = new RegisterWizardPage1(shell, registerWizard);
-                dialog.open();
+            IPreferenceStore prefStore = PlatformUI.getPreferenceStore();
+            if (brandingService.isPoweredbyTalend()) {
+                int count = prefStore.getInt(TalendForgeDialog.LOGINCOUNT);
+                if (count < 10) {
+                    TalendForgeDialog tfDialog = new TalendForgeDialog(shell, null);
+                    tfDialog.setBlockOnOpen(true);
+                    tfDialog.open();
+                }
             }
         }
         return true;

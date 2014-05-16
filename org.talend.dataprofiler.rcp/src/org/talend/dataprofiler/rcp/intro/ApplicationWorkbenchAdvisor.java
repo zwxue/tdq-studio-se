@@ -12,7 +12,9 @@
 // ============================================================================
 package org.talend.dataprofiler.rcp.intro;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.apache.log4j.Logger;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.ui.IWorkbenchPreferenceConstants;
 import org.eclipse.ui.PlatformUI;
@@ -20,6 +22,7 @@ import org.eclipse.ui.application.IWorkbenchConfigurer;
 import org.eclipse.ui.application.IWorkbenchWindowConfigurer;
 import org.eclipse.ui.application.WorkbenchWindowAdvisor;
 import org.eclipse.ui.internal.ide.application.IDEWorkbenchAdvisor;
+import org.talend.commons.utils.system.EclipseCommandLine;
 import org.talend.dataprofiler.rcp.i18n.Messages;
 import org.talend.repository.registeruser.RegisterManagement;
 
@@ -34,10 +37,12 @@ public class ApplicationWorkbenchAdvisor extends IDEWorkbenchAdvisor {
 
     private static final String PERSPECTIVE_ID = "org.talend.dataprofiler.DataProfilingPerspective"; //$NON-NLS-1$
 
+    @Override
     public WorkbenchWindowAdvisor createWorkbenchWindowAdvisor(IWorkbenchWindowConfigurer configurer) {
         return new ApplicationWorkbenchWindowAdvisor(configurer);
     }
 
+    @Override
     public void initialize(IWorkbenchConfigurer configurer) {
         super.initialize(configurer);
         configurer.setSaveAndRestore(true);
@@ -47,6 +52,7 @@ public class ApplicationWorkbenchAdvisor extends IDEWorkbenchAdvisor {
         apiStore.setValue(IWorkbenchPreferenceConstants.CLOSE_EDITORS_ON_EXIT, true);
     }
 
+    @Override
     public String getInitialWindowPerspectiveId() {
         return PERSPECTIVE_ID;
     }
@@ -59,6 +65,9 @@ public class ApplicationWorkbenchAdvisor extends IDEWorkbenchAdvisor {
     @Override
     public void postStartup() {
         super.postStartup();
+        if (!ArrayUtils.contains(Platform.getApplicationArgs(), EclipseCommandLine.TALEND_DISABLE_LOGINDIALOG_COMMAND)) {
+            RegisterManagement.getInstance().validateRegistration();
+        }
         // Start Web Service Registration
         try {
             RegisterManagement.decrementTry();
