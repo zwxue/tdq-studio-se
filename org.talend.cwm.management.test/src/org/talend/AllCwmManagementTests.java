@@ -50,6 +50,7 @@ import org.talend.dq.dbms.IngresDbmsLanguageTest;
 import org.talend.dq.dbms.MSSqlDbmsLanguageTest;
 import org.talend.dq.dbms.MySQLDbmsLanguageTest;
 import org.talend.dq.dbms.NetezzaDbmsLanguageTest;
+import org.talend.dq.dbms.TeradataDbmsLanguageTest;
 import org.talend.dq.helper.AnalysisExecutorHelperTest;
 import org.talend.dq.helper.ContextHelperTest;
 import org.talend.dq.helper.DQDeleteHelperTest;
@@ -96,7 +97,7 @@ import org.talend.dq.writer.AElementPersistanceTest;
         MdmStatementTest.class, ConnectionUtilsTest.class, AnalysisFolderRepNodeTest.class, ColumnAnalysisSqlExecutorTest.class,
         EObjectHelperTest.class, AnalysisRealExecutorForDB2Test.class, LowerUpperQuantileForDB2Test.class,
         TextIndicatorForNetezzaTest.class, PatternChartDataEntityTest.class, SchemaEvaluatorTest.class,
-        SQLPatternExplorerTest.class })
+        SQLPatternExplorerTest.class, TeradataDbmsLanguageTest.class })
 public class AllCwmManagementTests {
 
 }
