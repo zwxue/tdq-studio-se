@@ -524,7 +524,7 @@ public class MatchRuleElementTreeSelectionDialog extends ElementTreeSelectionDia
                     if (algoParams != null) {
                         int idxSeparator = algoParams.indexOf("||"); //$NON-NLS-1$
                         if (idxSeparator > 0 && algoParams.length() > idxSeparator + 2) {
-                            algoParams = algoParams.substring(idxSeparator + 2);
+                            algoParams = "\"" + algoParams.substring(idxSeparator + 2) + "\""; //$NON-NLS-1$ //$NON-NLS-2$
                         }
                     }
                     pr.put(MatchRulesTableLabelProvider.CUSTOM_MATCHER, null == algoParams ? StringUtils.EMPTY : algoParams);
