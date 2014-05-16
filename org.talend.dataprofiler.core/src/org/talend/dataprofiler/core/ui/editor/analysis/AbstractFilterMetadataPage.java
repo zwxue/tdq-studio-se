@@ -64,6 +64,7 @@ import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.forms.widgets.Section;
+import org.talend.core.database.EDatabaseTypeName;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
 import org.talend.core.model.metadata.builder.connection.MetadataTable;
@@ -984,16 +985,25 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
             cursor.addMenuDetectListener(new MenuDetectListener() {
 
                 public void menuDetected(MenuDetectEvent e) {
+                    boolean isHive = false;
+                    if (tdDataProvider instanceof DatabaseConnection) {
+                        isHive = EDatabaseTypeName.HIVE.getXmlName().equals(
+                                ((DatabaseConnection) tdDataProvider).getDatabaseType());
+                    }
                     int column = cursor.getColumn();
                     if (column == TABLE_COLUMN_INDEX) {
                         cursor.setMenu(menu2);
                         menu2.setVisible(true);
                     } else if (column == VIEW_COLUMN_INDEXES) {
-                        cursor.setMenu(menu1);
-                        menu1.setVisible(true);
+                        if (!isHive) {
+                            cursor.setMenu(menu1);
+                            menu1.setVisible(true);
+                        }
                     } else if (column == VIEW_COLUMN_INDEX) {
-                        cursor.setMenu(menu);
-                        menu.setVisible(true);
+                        if (!isHive) {
+                            cursor.setMenu(menu);
+                            menu.setVisible(true);
+                        }
                     } else {
                         cursor.setMenu(null);
                     }
