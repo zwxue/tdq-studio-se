@@ -92,6 +92,6 @@ public class DQEmptyRecycleBinAction extends EmptyRecycleBinAction {
                 return null;
             }
         }
-        return allRecycleBinNodes;
+        return containsFilteredOutChildren;
     }
 }
