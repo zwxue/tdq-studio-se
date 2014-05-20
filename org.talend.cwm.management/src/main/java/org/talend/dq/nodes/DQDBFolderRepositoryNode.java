@@ -23,6 +23,18 @@ import org.talend.repository.model.RepositoryNode;
 public class DQDBFolderRepositoryNode extends DQRepositoryNode {
 
     /**
+     * This field is used to distinguish which context calling getChildren() method: – true: calling from the column
+     * select dialog, – false: calling from the repository view
+     */
+    private static boolean isCallingFromColumnDialog = false;
+
+    /**
+     * This field is used to distinguish if connect to database or not when there are no children found: – true: will
+     * connect to database, – false: will not connect to database
+     */
+    private static boolean isLoadDBFromDialog = true;
+
+    /**
      * DOC xqliu DQConnectionRepositoryNode constructor comment.
      * 
      * @param object
@@ -34,9 +46,8 @@ public class DQDBFolderRepositoryNode extends DQRepositoryNode {
     }
 
     /**
-     * call getProperty() to reload the connection if it has been unloaded.
-     * 
-     * @param connectionViewObject
+     * call getProperty() to reload the connection if it has been unloaded. only called when the related object is
+     * eProxy.
      */
     protected void reloadConnectionViewObject() {
         IRepositoryViewObject subRepositoryObject = this.getObject() == null ? this.getParent().getObject() : this.getObject();
@@ -45,4 +56,21 @@ public class DQDBFolderRepositoryNode extends DQRepositoryNode {
             ((ISubRepositoryObject) subRepositoryObject).getProperty();
         }
     }
+
+    public static boolean isLoadDBFromDialog() {
+        return isLoadDBFromDialog;
+    }
+
+    public static void setLoadDBFromDialog(boolean isLoadDBFromDialog) {
+        DQDBFolderRepositoryNode.isLoadDBFromDialog = isLoadDBFromDialog;
+    }
+
+    public static boolean isCallingFromColumnDialog() {
+        return isCallingFromColumnDialog;
+    }
+
+    public static void setCallingFromColumnDialog(boolean isCallingFromColumnDialog) {
+        DQDBFolderRepositoryNode.isCallingFromColumnDialog = isCallingFromColumnDialog;
+    }
+
 }

@@ -352,15 +352,7 @@ public abstract class TwoPartCheckSelectionDialog extends SelectionStatusDialog 
                     @Override
                     public void treeExpanded(TreeEvent e) {
                         TreeItem item = (TreeItem) e.item;
-                        if (!item.getText().endsWith(")")) { //$NON-NLS-1$
-                            Object obj = item.getData();
-
-                            if (obj instanceof TableFolderNode || obj instanceof ViewFolderNode
-                                    || obj instanceof ColumnFolderNode) {
-                                item.setText(item.getText() + "(" + item.getItemCount() + ")"); //$NON-NLS-1$ //$NON-NLS-2$
-                                fViewer.getTree().layout();
-                            }
-                        }
+                        handleTreeExpanded(item);
                         super.treeExpanded(e);
                     }
 
@@ -369,6 +361,17 @@ public abstract class TwoPartCheckSelectionDialog extends SelectionStatusDialog 
                 updateOKStatus();
             }
         });
+    }
+
+    protected void handleTreeExpanded(TreeItem item) {
+        if (!item.getText().endsWith(")")) { //$NON-NLS-1$
+            Object obj = item.getData();
+
+            if (obj instanceof TableFolderNode || obj instanceof ViewFolderNode || obj instanceof ColumnFolderNode) {
+                item.setText(item.getText() + "(" + item.getItemCount() + ")"); //$NON-NLS-1$ //$NON-NLS-2$
+                fViewer.getTree().layout();
+            }
+        }
     }
 
     /*
@@ -417,6 +420,7 @@ public abstract class TwoPartCheckSelectionDialog extends SelectionStatusDialog 
         addCheckedListener();
         // MOD mzhao bug 9240
         unfoldToCheckedElements();
+
         return composite;
     }
 

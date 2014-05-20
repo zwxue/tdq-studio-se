@@ -131,8 +131,6 @@ public class DBTableFolderRepNode extends DQDBFolderRepositoryNode implements IC
 
     @Override
     public List<IRepositoryNode> getChildren() {
-        // reload the connection to make sure the connection(and all it's owned elements) is not proxy
-        reloadConnectionViewObject();
         // MOD gdbu 2011-7-1 bug : 22204
         List<IRepositoryNode> children = new ArrayList<IRepositoryNode>();
         IRepositoryViewObject object = this.getParent().getObject();
@@ -160,23 +158,37 @@ public class DBTableFolderRepNode extends DQDBFolderRepositoryNode implements IC
                 viewObject = ((MetadataCatalogRepositoryObject) metadataObject).getViewObject();
                 item = (ConnectionItem) viewObject.getProperty().getItem();
                 connection = item.getConnection();
+                if (((MetadataCatalogRepositoryObject) metadataObject).getCatalog().eIsProxy()) {
+                    // reload the connection to make sure the connection(and all it's owned elements) is not proxy
+                    reloadConnectionViewObject();
+                }
                 catalog = ((MetadataCatalogRepositoryObject) metadataObject).getCatalog();
+
                 tables = PackageHelper.getTables(catalog);
                 filterCharacter = RepositoryNodeHelper.getTableFilter(catalog, schema);
 
-                if (!isOnFilterring()) {
-                    // MOD mzhao 0022204 : when the tree is rendering with a filter, do not loading from db.
-                    if (tables.isEmpty()) {
+                // MOD TDQ-8718 20140505 yyin --the repository view cares about if use the filter or not, the column
+                // select dialog cares about if connect to DB or not.
+                if (tables.isEmpty()) {
+                    if (isCallingFromColumnDialog()) {
+                        tables = DqRepositoryViewService.getTables(connection, catalog, null, isLoadDBFromDialog());
+                    } else if (!isOnFilterring()) {
+                        // MOD mzhao 0022204 : when the tree is rendering with a filter, do not loading from db.
                         tables = DqRepositoryViewService.getTables(connection, catalog, null, true);
-                        if (tables.size() > 0) {
-                            ElementWriterFactory.getInstance().createDataProviderWriter().save(item, false);
-                        }
+                    }
+                    if (tables.size() > 0) {
+                        ElementWriterFactory.getInstance().createDataProviderWriter().save(item, false);
                     }
                 }
+
             } else {
                 viewObject = ((MetadataSchemaRepositoryObject) metadataObject).getViewObject();
                 item = (ConnectionItem) viewObject.getProperty().getItem();
                 connection = item.getConnection();
+                if (((MetadataSchemaRepositoryObject) metadataObject).getSchema().eIsProxy()) {
+                    // reload the connection to make sure the connection(and all it's owned elements) is not proxy
+                    reloadConnectionViewObject();
+                }
                 schema = ((MetadataSchemaRepositoryObject) metadataObject).getSchema();
                 tables = PackageHelper.getTables(schema);
                 filterCharacter = RepositoryNodeHelper.getTableFilter(catalog, schema);
@@ -187,13 +199,15 @@ public class DBTableFolderRepNode extends DQDBFolderRepositoryNode implements IC
                             ((MetadataCatalogRepositoryObject) object).getCatalog(), null);
                 }
 
-                if (!isOnFilterring()) {
-                    // MOD mzhao 0022204 : when the tree is rendering with a filter, do not loading from db.
-                    if (tables.isEmpty()) {
+                if (tables.isEmpty()) {
+                    if (isCallingFromColumnDialog()) {
+                        tables = DqRepositoryViewService.getTables(connection, schema, null, isLoadDBFromDialog());
+                    } else if (!isOnFilterring()) {
+                        // MOD mzhao 0022204 : when the tree is rendering with a filter, do not loading from db.
                         tables = DqRepositoryViewService.getTables(connection, schema, null, true);
-                        if (tables.size() > 0) {
-                            ElementWriterFactory.getInstance().createDataProviderWriter().save(item, false);
-                        }
+                    }
+                    if (tables.size() > 0) {
+                        ElementWriterFactory.getInstance().createDataProviderWriter().save(item, false);
                     }
                 }
             }
