@@ -29,5 +29,7 @@ public enum EventEnum {
     // ONLY REFRESH the db list in combobox
     DQ_ANALYSIS_REFRESH_DATAPROVIDER_LIST,
     // reopen the related analysis after reload connection
-    DQ_ANALYSIS_REOPEN_EDITOR;
+    DQ_ANALYSIS_REOPEN_EDITOR,
+    // add msjian 2014-4-30:used to check whether show allmatchindicator in the indicators section for columnset only 
+    DQ_COLUMNSET_SHOW_MATCH_INDICATORS;
 }
