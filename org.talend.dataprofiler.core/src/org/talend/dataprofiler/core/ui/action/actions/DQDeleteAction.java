@@ -528,21 +528,23 @@ public class DQDeleteAction extends DeleteAction {
 
                 // before physical delete, we must do logicDelete first, because in DI side, they didn't have dependency
                 // and didn't have force delete
-                logicDeleteDependeny(tempNode);
-                // physical delete dependcy element.
+                boolean isLogicDeletedd = logicDeleteDependeny(tempNode);
                 tempNode = RepositoryNodeHelper.recursiveFindRecycleBin(mod);
-                if (tempNode != null) {
-                    // we must get IFile before delete
-                    IFile propertyFile = RepositoryNodeHelper.getIFile(tempNode);
-                    excuteSuperRun(tempNode, tempNode.getParent());
-
-                    // when delete failed, we continue to delete others
-                    if (propertyFile != null && propertyFile.exists()) {
-                        isSucceed = false;
-                        log.error(DefaultMessagesImpl.getString("DQDeleteAction.getErrorWhenDelete", propertyFile.getFullPath() //$NON-NLS-1$
-                                .removeFileExtension()));
-                        continue;
-                    }
+                // we must get IFile before delete
+                IFile propertyFile = RepositoryNodeHelper.getIFile(tempNode);
+                // if logical delete failed,set 'isSucceed' to false and continue to logical delete other dependeces.
+                if (!isLogicDeletedd || tempNode == null) {
+                    isSucceed = false;
+                    log.error(DefaultMessagesImpl.getString("DQDeleteAction.failToLogicalDelete", mod.getName())); //$NON-NLS-1$
+                    continue;
+                }
+                excuteSuperRun(tempNode, tempNode.getParent());
+                // when physical delete failed, we continue to delete others
+                if (propertyFile != null && propertyFile.exists()) {
+                    isSucceed = false;
+                    log.error(DefaultMessagesImpl.getString("DQDeleteAction.getErrorWhenDelete", propertyFile.getFullPath() //$NON-NLS-1$
+                            .removeFileExtension()));
+                    continue;
                 }
             }
         } catch (Exception exc) {
@@ -552,12 +554,21 @@ public class DQDeleteAction extends DeleteAction {
         return isSucceed;
     }
 
-    private void logicDeleteDependeny(RepositoryNode tempNode) {
+    /**
+     * logical delete the element,return boolean to indcate if delete successfully.
+     * 
+     * @param tempNode
+     * @return
+     */
+    private boolean logicDeleteDependeny(RepositoryNode tempNode) {
         if (tempNode.getObject().getProperty() == null) {
-            return;
+            return false;
         }
         boolean isStateDel = RepositoryNodeHelper.isStateDeleted(tempNode);
-        if (tempNode != null && !isStateDel) {
+        if (isStateDel) {
+            return isStateDel;
+        }
+        if (tempNode != null) {
             // logcial delete dependcy element.
             if (tempNode.getObject() != null) {
                 CorePlugin.getDefault().closeEditorIfOpened(tempNode.getObject().getProperty().getItem());
@@ -566,6 +577,7 @@ public class DQDeleteAction extends DeleteAction {
             excuteSuperRun(tempNode, tempNode.getParent());
             CorePlugin.getDefault().refreshDQView(RepositoryNodeHelper.getRecycleBinRepNode());
         }
+        return RepositoryNodeHelper.isStateDeleted(tempNode);
     }
 
     /**
