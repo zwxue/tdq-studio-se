@@ -286,7 +286,6 @@ public class ItemRecord {
                 // MatchRule and match Analysis come from different location so that we must recompute the path of jar
                 // folder
                 if (element instanceof MatchRuleDefinition) {
-                    IPath libFolderPath = ResourceManager.getUDIJarFolder().getLocation();
                     includeCustomMatcherJarDependencies((MatchRuleDefinition) element);
                 }
 
@@ -304,12 +303,11 @@ public class ItemRecord {
      * @param element2
      */
     private void includeCustomMatcherJarDependencies(MatchRuleDefinition matchRuleDef) {
-        IPath libFolderPath = getRootFolderPath().append(EResourceConstant.USER_DEFINED_INDICATORS_LIB.getPath());
         for (MatchRule matchRule : matchRuleDef.getMatchRules()) {
             for (MatchKeyDefinition matchKeyDefinition : matchRule.getMatchKeys()) {
                 if (AttributeMatcherType.CUSTOM.getComponentValue().equalsIgnoreCase(
                         matchKeyDefinition.getAlgorithm().getAlgorithmType())) {
-                    File libFolder = libFolderPath.toFile();
+                    File libFolder = getUDILibFolderFile();
                     if (libFolder.exists()) {
                         for (File udiJarFile : UDIUtils.getLibJarFileList(libFolder)) {
                             for (String str : CustomAttributeMatcherHelper.splitJarPath(matchKeyDefinition.getAlgorithm()
@@ -327,6 +325,18 @@ public class ItemRecord {
             }
         }
 
+    }
+
+    /**
+     * Both export and import use this method to find used jar file in UDI's lib, so the lib folder path is different
+     * between export and import, should based on: getRootFolderPath(), and then appent the lib path directly.
+     * 
+     * @return the file of the UDI lib folder
+     */
+    private File getUDILibFolderFile() {
+        IPath libFolderPath = getRootFolderPath().append(EResourceConstant.USER_DEFINED_INDICATORS_LIB.getPath());
+        File libFolder = libFolderPath.toFile();
+        return libFolder;
     }
 
     /**
@@ -365,10 +375,10 @@ public class ItemRecord {
     private void includeJUDIDependencies(IndicatorDefinition definition) {
         TaggedValue tv = TaggedValueHelper.getTaggedValue(TaggedValueHelper.JAR_FILE_PATH, definition.getTaggedValue());
         if (tv != null) {
-            IPath definitionPath = Path.fromOSString(definition.eResource().getURI().toFileString());
-            IPath libFolderPath = definitionPath.removeLastSegments(1).append(
-                    EResourceConstant.USER_DEFINED_INDICATORS_LIB.getName());
-            File libFolder = libFolderPath.toFile();
+            // MOD TDQ-8926 yyin 20140513,Because there maybe some sub folders, so the lib folder path can not be
+            // computed from the path of the UDI(which caused TDQ-8926)
+            File libFolder = getUDILibFolderFile();
+
             if (libFolder.exists()) {
                 List<File> libJarFileList = UDIUtils.getLibJarFileList(libFolder);
                 String[] splitTagValues = tv.getValue().split(CustomAttributeMatcherClassNameConvert.REGEXKEY);
