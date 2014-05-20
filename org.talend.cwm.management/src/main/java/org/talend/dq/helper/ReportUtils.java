@@ -27,6 +27,7 @@ import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
@@ -35,11 +36,13 @@ import org.talend.commons.exception.LoginException;
 import org.talend.commons.exception.PersistenceException;
 import org.talend.commons.utils.WorkspaceUtils;
 import org.talend.commons.utils.io.FilesUtils;
+import org.talend.commons.utils.workbench.resources.ResourceUtils;
 import org.talend.core.model.properties.Item;
 import org.talend.core.model.properties.Property;
 import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
+import org.talend.core.repository.model.ResourceModelUtils;
 import org.talend.dataquality.PluginConstant;
 import org.talend.dataquality.helpers.ReportHelper;
 import org.talend.dataquality.properties.TDQReportItem;
@@ -823,16 +826,33 @@ public final class ReportUtils {
             IFolder reportsFolder = ResourceManager.getReportsFolder();
             IFolder tempFolder = WorkspaceUtils.fileToIFolder(folder);
             if (tempFolder != null && tempFolder.exists()) {
-                ProxyRepositoryFactory.getInstance().deleteFolder(ERepositoryObjectType.TDQ_REPORT_ELEMENT,
-                        tempFolder.getFullPath().makeRelativeTo(reportsFolder.getFullPath()));
+
+                IProject fsProject = ResourceModelUtils.getProject(ProjectManager.getInstance().getCurrentProject());
+
+                String completePath = new Path(ERepositoryObjectType.getFolderName(ERepositoryObjectType.TDQ_REPORT_ELEMENT))
+                        .append(tempFolder.getFullPath().makeRelativeTo(reportsFolder.getFullPath())).toString();
+
+                // Getting the folder :
+                IFolder deleteFolder = ResourceUtils.getFolder(fsProject, completePath, true);
+                //delete folder and files from workbench
+                for (IResource subResource : deleteFolder.members()) {
+                    if (subResource.getType() == IResource.FILE) {
+                        subResource.delete(true, null);
+                    }
+                }
+                deleteFolder.delete(true, null);
+            }
+
+            // delete folder from the disk
+            if (folder.exists()) {
+                FilesUtils.deleteFile(folder, Boolean.TRUE);
             }
         } catch (PersistenceException e) {
-            e.printStackTrace();
+            log.error(e, e);
+        } catch (CoreException e) {
+            log.error(e, e);
         }
-        // delete folder from the disk
-        if (folder.exists()) {
-            FilesUtils.deleteFile(folder, Boolean.TRUE);
-        }
+
     }
 
     /**
