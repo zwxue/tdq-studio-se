@@ -4,10 +4,6 @@
    <extension
          point="org.talend.core.runtime.service">
       <Service
-            class="org.talend.dataprofiler.rcp.TopService"
-            serviceId="ICoreService">
-      </Service>
-      <Service
             class="org.talend.dataprofiler.rcp.TOPBrandingService"
             serviceId="org.talend.core.ui.branding.IBrandingService">
       </Service>
