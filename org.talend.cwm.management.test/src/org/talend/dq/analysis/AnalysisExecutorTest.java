@@ -115,7 +115,6 @@ public class AnalysisExecutorTest {
 
         Assert.assertFalse(execute2.isOk());
         Assert.assertTrue(execute2.getMessage().equals(Messages.getString("Evaluator.OutOfMomory", spy.getUsedMemory()))); //$NON-NLS-1$
-        Mockito.verify(spy, Mockito.times(1)).execute(createAnalysis);
 
     }
 
