@@ -12,6 +12,7 @@
 // ============================================================================
 package org.talend.dataprofiler.rcp.intro;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.equinox.app.IApplication;
 import org.eclipse.equinox.app.IApplicationContext;
@@ -105,7 +106,7 @@ public class Application implements IApplication {
             IPreferenceStore prefStore = PlatformUI.getPreferenceStore();
             if (brandingService.isPoweredbyTalend()) {
                 int count = prefStore.getInt(TalendForgeDialog.LOGINCOUNT);
-                if (count < 10) {
+                if (count < 10 && StringUtils.isEmpty(prefStore.getString("test@talend.com"))) { //$NON-NLS-1$
                     TalendForgeDialog tfDialog = new TalendForgeDialog(shell, null);
                     tfDialog.setBlockOnOpen(true);
                     tfDialog.open();
