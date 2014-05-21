@@ -14,15 +14,13 @@ package org.talend.dq;
 
 import java.io.File;
 import java.net.MalformedURLException;
-import java.sql.Driver;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
-import net.sourceforge.sqlexplorer.EDriverName;
-import net.sourceforge.sqlexplorer.ExplorerException;
 import net.sourceforge.sqlexplorer.dbproduct.Alias;
 import net.sourceforge.sqlexplorer.dbproduct.AliasManager;
 import net.sourceforge.sqlexplorer.dbproduct.DriverManager;
@@ -30,10 +28,9 @@ import net.sourceforge.sqlexplorer.dbproduct.ManagedDriver;
 import net.sourceforge.sqlexplorer.dbproduct.User;
 import net.sourceforge.sqlexplorer.plugin.SQLExplorerPlugin;
 import net.sourceforge.sqlexplorer.plugin.views.DatabaseStructureView;
+import net.sourceforge.sqlexplorer.util.AliasAndManaDriverHelper;
 
 import org.apache.log4j.Logger;
-import org.eclipse.core.runtime.Path;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Plugin;
 import org.eclipse.core.runtime.preferences.DefaultScope;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
@@ -42,28 +39,21 @@ import org.eclipse.ui.PlatformUI;
 import org.osgi.framework.BundleContext;
 import org.talend.commons.utils.io.FilesUtils;
 import org.talend.core.classloader.DynamicClassLoader;
-import org.talend.core.database.EDatabaseTypeName;
 import org.talend.core.database.conn.version.EDatabaseVersion4Drivers;
 import org.talend.core.language.ECodeLanguage;
-import org.talend.core.model.general.Project;
 import org.talend.core.model.metadata.IMetadataConnection;
 import org.talend.core.model.metadata.builder.ConvertionHelper;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
-import org.talend.core.model.metadata.builder.database.ExtractMetaDataUtils;
 import org.talend.core.model.metadata.builder.database.JavaSqlFactory;
 import org.talend.core.model.metadata.builder.database.PluginConstant;
 import org.talend.core.model.metadata.builder.util.MetadataConnectionUtils;
-import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.SwitchHelpers;
-import org.talend.cwm.helper.TaggedValueHelper;
-import org.talend.cwm.management.i18n.Messages;
 import org.talend.dq.analysis.memory.AnalysisThreadMemoryChangeNotifier;
 import org.talend.dq.helper.PropertyHelper;
 import org.talend.librariesmanager.prefs.LibrariesManagerUtils;
 import org.talend.metadata.managment.hive.HiveClassLoaderFactory;
-import org.talend.repository.ProjectManager;
 import orgomg.cwm.foundation.softwaredeployment.DataProvider;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
@@ -121,7 +111,7 @@ public class CWMPlugin extends Plugin {
         List<String> tdqSupportDBType = MetadataConnectionUtils.getTDQSupportDBTemplate();
         // if all dataproviders are not supported on DQ side,don't save files SQLAliases.xml and
         // SQLDrivers.xml.Otherwise,save it.
-        Boolean isNeedSave = Boolean.FALSE;
+        AliasAndManaDriverHelper aliasManaDriverHelper = AliasAndManaDriverHelper.getInstance();
         for (ModelElement dataProvider : dataproviders) {
             try {
                 Connection connection = SwitchHelpers.CONNECTION_SWITCH.doSwitch(dataProvider);
@@ -129,7 +119,8 @@ public class CWMPlugin extends Plugin {
                 if (connection != null && connection instanceof DatabaseConnection) {
 
                     // TDQ-8379 do nothing if the database type isn't supproted on DQ side.
-                    String databaseType = ((DatabaseConnection) connection).getDatabaseType();
+                    DatabaseConnection dbConn = ((DatabaseConnection) connection);
+                    String databaseType = dbConn.getDatabaseType();
                     if (!tdqSupportDBType.contains(databaseType)) {
                         continue;
                     }
@@ -156,20 +147,24 @@ public class CWMPlugin extends Plugin {
                         String url = JavaSqlFactory.getURL(connection);
 
                         User previousUser = new User(user, password);
+                        previousUser.setDatabaseConnection(dbConn);
                         alias.setDefaultUser(previousUser);
 
                         alias.setAutoLogon(false);
                         alias.setConnectAtStartup(true);
                         alias.setUrl(url);
 
-                        ManagedDriver manDr = getManaDriverByDriverClass(connection, driverManager);
+                        ManagedDriver manDr = aliasManaDriverHelper.getManaDriverByConnection(dbConn);
+                        if (manDr == null) {
+                            manDr = aliasManaDriverHelper.createNewManagerDriver(dbConn);
+                            driverManager.addDriver(manDr);
+                        } else if (!manDr.isDriverClassLoaded()) {
+                            this.loadDriverByLibManageSystem(dbConn);
+                        }
 
                         if (manDr != null) {
-                            addJars(connection, manDr);
-
                             alias.setDriver(manDr);
                         }
-                        isNeedSave = true;
                     }
                     if (!aliasManager.contains(alias) && alias.getName() != null) {
                         aliasManager.addAlias(alias);
@@ -181,6 +176,7 @@ public class CWMPlugin extends Plugin {
                     if (sqlPlugin.getPropertyFile().get(alias) == null) {
                         sqlPlugin.getPropertyFile().put(alias, PropertyHelper.getPropertyFile(dataProvider));
                     }
+                    aliasManager.modelChanged();
 
                 }
             } catch (Exception e) { // MOD scorreia 2010-07-24 catch all exceptions
@@ -188,15 +184,6 @@ public class CWMPlugin extends Plugin {
             }
         }
 
-        if (isNeedSave) {
-            try {
-                aliasManager.saveAliases();
-                driverManager.saveDrivers();
-            } catch (Exception e) { // MOD scorreia 2010-07-24 catch all exceptions
-                log.error(e, e);
-            }
-            aliasManager.modelChanged();
-        }
     }
 
     /**
@@ -228,31 +215,15 @@ public class CWMPlugin extends Plugin {
         if (alias != null) {
             try {
                 aliasManager.removeAlias(aliasName);
-                aliasManager.saveAliases();
-                aliasManager.modelChanged();
+                // aliasManager.saveAliases();
+                // aliasManager.modelChanged();
                 addConnetionAliasToSQLPlugin(connection);
 
             } catch (Exception e) {
                 log.error(e, e);
             }
-
         }
 
-    }
-
-    private void addJars(Connection connection, ManagedDriver manDr) {
-        DatabaseConnection dbConnnection = (DatabaseConnection) connection;
-        String driverJarPath = dbConnnection.getDriverJarPath();
-
-        if (ConnectionHelper.isJDBC(dbConnnection) && driverJarPath != null) {
-            String[] pathArray = driverJarPath.split(";"); //$NON-NLS-1$
-            for (String path : pathArray) {
-                path = new Path(path).toPortableString();
-                if (!manDr.getJars().contains(path)) {
-                    manDr.getJars().add(path);
-                }
-            }
-        }
     }
 
     /**
@@ -285,41 +256,22 @@ public class CWMPlugin extends Plugin {
             return;
         }
         DriverManager driverManager = SQLExplorerPlugin.getDefault().getDriverModel();
-        ManagedDriver manDr = driverManager.getDriver(EDriverName.getId(driverClassName));
+        AliasAndManaDriverHelper aliasManaHelper = AliasAndManaDriverHelper.getInstance();
+        String manaDriverId = aliasManaHelper.joinManagedDriverId(dbType, driverClassName, dbVersion);
+        ManagedDriver manDr = driverManager.getDriver(manaDriverId);
         if (manDr != null && !manDr.isDriverClassLoaded()) {
-            // find driver jars from prefrence page or installation path.
-            String librariesPath = LibrariesManagerUtils.getLibrariesPath(ECodeLanguage.JAVA);
-
-            // get the required jar names from 'EDatabaseVersion4Drivers' accordig dbType and version.
-            List<String> jarNames = EDatabaseVersion4Drivers.getDrivers(dbType, dbVersion);
-            Set<String> allJarPath = findAllJarPath(new File(librariesPath), jarNames);
-            // if not found jars from installation path,find driver jars from workspace 'temp/dbWizard' folder.
-            if (allJarPath.isEmpty()) {
-                librariesPath = ExtractMetaDataUtils.getInstance().getJavaLibPath();
-                allJarPath = findAllJarPath(new File(librariesPath), jarNames);
-            }
-            // if not found jars from installation path and folder 'temp/dbWizard',find driver jars from workspace
-            // 'libs' folder.
-            if (allJarPath.isEmpty()) {
-                Project currentProject = ProjectManager.getInstance().getCurrentProject();
-                String projectLabel = currentProject.getTechnicalLabel();
-                librariesPath = new Path(Platform.getInstanceLocation().getURL().getPath()).toFile().getPath();
-                librariesPath = librariesPath + File.separatorChar + projectLabel + File.separatorChar
-                        + ERepositoryObjectType.getFolderName(ERepositoryObjectType.LIBS);
-                allJarPath = findAllJarPath(new File(librariesPath), jarNames);
-            }
-            if (!allJarPath.isEmpty()) {
-                manDr.getJars().clear();
-                manDr.getJars().addAll(allJarPath);
-                try {
-                    driverManager.saveDrivers();
-                } catch (ExplorerException e) {
-                    log.error(e);
-                }
-            }
+            // find driver jars from 'temp\dbWizard', prefrence page or installation path 'lib\java',
+            // "librariesIndex.xml".
             try {
-                manDr.registerSQLDriver();
-            } catch (ClassNotFoundException e) {
+                List<String> jarNames = EDatabaseVersion4Drivers.getDrivers(dbType, dbVersion);
+                LinkedList<String> driverJarRealPaths = aliasManaHelper.getDriverJarRealPaths(jarNames);
+                if (!driverJarRealPaths.isEmpty()) {
+                    manDr.getJars().clear();
+                    manDr.getJars().addAll(driverJarRealPaths);
+                }
+
+                manDr.registerSQLDriver(dbType, dbVersion);
+            } catch (Exception e) {
                 log.error(e);
             }
         }
@@ -375,7 +327,7 @@ public class CWMPlugin extends Plugin {
         try {
             Collection<Alias> aliases = aliasManager.getAliases();
             if (aliases.isEmpty()) {
-                aliasManager.loadAliases();
+                return;
             }
             for (DataProvider dataProvider : dataproviders) {
                 String aliasName = dataProvider.getName();
@@ -386,7 +338,6 @@ public class CWMPlugin extends Plugin {
                 if (alias != null) {
                     sqlPlugin.getPropertyFile().remove(alias);
                     aliasManager.removeAlias(aliasName);
-                    aliasManager.saveAliases();
                 }
                 // if the ctabItem is open,close it.
                 if (dsView != null) {
@@ -397,67 +348,6 @@ public class CWMPlugin extends Plugin {
             log.error(e, e);
         }
         aliasManager.modelChanged();
-    }
-
-    /**
-     * 
-     * find a ManaDriver based on driver class name.if not found and Type is General JDBC/ODBC ,create a new
-     * ManagedDriver.
-     * 
-     * @param connection
-     * @param driverManager
-     * @return
-     */
-    private ManagedDriver getManaDriverByDriverClass(Connection connection, DriverManager driverManager) {
-        ManagedDriver manaDriver = null;
-        DatabaseConnection dbConn = SwitchHelpers.DATABASECONNECTION_SWITCH.doSwitch(connection);
-        String driverClass = JavaSqlFactory.getDriverClass(connection);
-        if (dbConn == null || dbConn.getDatabaseType() == null || driverClass == null) {
-            log.error(Messages.getString("CWMPlugin.DBOrTypeNull")); //$NON-NLS-1$
-            return null;
-        }
-        String databaseType = dbConn.getDatabaseType();
-        String id = EDriverName.getId(driverClass);
-        if (EDriverName.ODBCDEFAULTURL.getSqlEid().equals(id)
-                && (EDatabaseTypeName.GENERAL_JDBC.getXmlName().equalsIgnoreCase(databaseType) || EDatabaseTypeName.GODBC
-                        .getXmlName().equalsIgnoreCase(databaseType))) {
-            manaDriver = createNewManagerDriver(dbConn, SQLExplorerPlugin.getDefault().getDriverModel().createUniqueId());
-            driverManager.addDriver(manaDriver);
-        } else {
-            manaDriver = driverManager.getDriver(id);
-            if (manaDriver == null) {
-                manaDriver = createNewManagerDriver(dbConn, id);
-                driverManager.addDriver(manaDriver);
-            }
-        }
-
-        return manaDriver;
-    }
-
-    /**
-     * create a New ManagerDriver.
-     * 
-     * @param dbConn
-     * @param id
-     * @return
-     */
-    protected ManagedDriver createNewManagerDriver(DatabaseConnection dbConn, String id) {
-        ManagedDriver manaDriver;
-        manaDriver = new ManagedDriver(id);
-        String dbType = dbConn.getDatabaseType();
-        // get Database type/version from TaggedValue
-        String dbTypeTagValue = TaggedValueHelper.getValueString(TaggedValueHelper.DB_PRODUCT_NAME, dbConn);
-        if (!PluginConstant.EMPTY_STRING.equals(dbTypeTagValue)) {
-            dbType = dbTypeTagValue;
-            String vesionTagValue = TaggedValueHelper.getValueString(TaggedValueHelper.DB_PRODUCT_VERSION, dbConn);
-            if (!PluginConstant.EMPTY_STRING.equals(vesionTagValue)) {
-                dbType += org.talend.dataquality.PluginConstant.SPACE_STRING + vesionTagValue;
-            }
-        }
-        manaDriver.setName(dbType);
-        manaDriver.setDriverClassName(dbConn.getDriverClass());
-        manaDriver.setUrl(dbConn.getURL());
-        return manaDriver;
     }
 
     /**
@@ -480,7 +370,8 @@ public class CWMPlugin extends Plugin {
      */
     private void loadDriverForHive(DatabaseConnection connection, String driverClassName) {
         DriverManager driverManager = SQLExplorerPlugin.getDefault().getDriverModel();
-        ManagedDriver manDr = driverManager.getDriver(EDriverName.getId(driverClassName));
+        String id = AliasAndManaDriverHelper.getInstance().joinManagedDriverId(connection);
+        ManagedDriver manDr = driverManager.getDriver(id);
         IMetadataConnection metadataConnection = ConvertionHelper.convert(connection);
         ClassLoader classLoader = HiveClassLoaderFactory.getInstance().getClassLoader(metadataConnection);
         if (classLoader != null && classLoader instanceof DynamicClassLoader) {
@@ -494,9 +385,7 @@ public class CWMPlugin extends Plugin {
                 if (!findAllJarPath.isEmpty()) {
                     manDr.getJars().addAll(findAllJarPath);
                     try {
-                        Class<?> driverClass = Class.forName(manDr.getDriverClassName(), true, classLoader);
-                        Driver driver = (Driver) driverClass.newInstance();
-                        manDr.setJdbcDriver(driver);
+                        manDr.registerHiveSQLDriver(connection);
                     } catch (ClassNotFoundException e) {
                         log.error(e);
                     } catch (InstantiationException e) {

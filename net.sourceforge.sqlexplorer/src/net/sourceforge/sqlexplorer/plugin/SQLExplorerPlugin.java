@@ -14,13 +14,10 @@
  */
 package net.sourceforge.sqlexplorer.plugin;
 
-import java.util.Collection;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
-import net.sourceforge.sqlexplorer.EDriverName;
 import net.sourceforge.sqlexplorer.IConstants;
 import net.sourceforge.sqlexplorer.IConstants.Confirm;
 import net.sourceforge.sqlexplorer.SQLCannotConnectException;
@@ -28,7 +25,6 @@ import net.sourceforge.sqlexplorer.connections.ConnectionsView;
 import net.sourceforge.sqlexplorer.dbproduct.Alias;
 import net.sourceforge.sqlexplorer.dbproduct.AliasManager;
 import net.sourceforge.sqlexplorer.dbproduct.DriverManager;
-import net.sourceforge.sqlexplorer.dbproduct.ManagedDriver;
 import net.sourceforge.sqlexplorer.history.SQLHistory;
 import net.sourceforge.sqlexplorer.plugin.editors.SQLEditor;
 import net.sourceforge.sqlexplorer.plugin.editors.SQLEditorInput;
@@ -48,6 +44,8 @@ import org.eclipse.ui.IWorkbenchSite;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
+import org.talend.core.GlobalServiceRegister;
+import org.talend.core.ITDQRepositoryService;
 
 /**
  * The main plugin class to be used in the desktop.
@@ -122,10 +120,12 @@ public class SQLExplorerPlugin extends AbstractUIPlugin {
             });
 
             driverManager = new DriverManager();
-            driverManager.loadDrivers();
+            // MOD qiongli TDQ-8893.we will don't use the xml file to maintain the ManagedDrivers later.so no need to
+            // laod or save the xml files.
+            // driverManager.loadDrivers();
 
             aliasManager = new AliasManager();
-            aliasManager.loadAliases();
+            // aliasManager.loadAliases();
 
             try {
                 resourceBundle = ResourceBundle.getBundle("net.sourceforge.sqlexplorer.test"); //$NON-NLS-1$
@@ -145,25 +145,11 @@ public class SQLExplorerPlugin extends AbstractUIPlugin {
      * DOC bZhou Comment method "initAllDrivers".
      */
     public void initAllDrivers() {
-        DriverManager driverModel = getDriverModel();
-        Collection<ManagedDriver> drivers = driverModel.getDrivers();
-        for (ManagedDriver mand : drivers) {
-            String id2 = mand.getId();
-            EDriverName[] values = EDriverName.values();
-            for (EDriverName supportDBUrlType : values) {
-                if (id2.equals(supportDBUrlType.getSqlEid())) {
-                    LinkedList<String> jars = mand.getJars();
-                    if (jars.isEmpty()) {
-                        mand.setJars(supportDBUrlType.getJars());
-                    }
-                    mand.setDriverClassName(supportDBUrlType.getDbDriver());
-                    try {
-                        mand.registerSQLDriver();
-                    } catch (Exception e) {
-                        // do nothings
-                    }
-                    break;
-                }
+        ITDQRepositoryService tdqRepService = null;
+        if (GlobalServiceRegister.getDefault().isServiceRegistered(ITDQRepositoryService.class)) {
+            tdqRepService = (ITDQRepositoryService) GlobalServiceRegister.getDefault().getService(ITDQRepositoryService.class);
+            if (tdqRepService != null) {
+                tdqRepService.initAllConnectionsToSQLExplorer();
             }
         }
     }
@@ -236,12 +222,12 @@ public class SQLExplorerPlugin extends AbstractUIPlugin {
      */
     @Override
     public void stop(BundleContext context) throws Exception {
-        driverManager.saveDrivers();
-        aliasManager.saveAliases();
+        // driverManager.saveDrivers();
+        // aliasManager.saveAliases();
         aliasManager.closeAllConnections();
 
         // save SQL History for next session
-        _history.save();
+        // _history.save();
 
         super.stop(context);
     }

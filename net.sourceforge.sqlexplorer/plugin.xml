@@ -69,10 +69,6 @@
 
    <extension
          point="org.eclipse.ui.preferencePages">
-      <page class="net.sourceforge.sqlexplorer.preferences.DriverPreferencePage" 
-      		category="net.sourceforge.sqlexplorer.preferences.GeneralPreferencePage" 
-      		name="%page.name.JDBCDrivers" 
-      		id="net.sourceforge.sqlexplorer.preferences.DriverPreferencePage"/>
       <page
             name="%page.name.SQLEditor"
             category="net.sourceforge.sqlexplorer.preferences.GeneralPreferencePage"

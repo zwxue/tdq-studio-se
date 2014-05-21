@@ -17,8 +17,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.sql.DatabaseMetaData;
 import java.sql.Driver;
 import java.sql.DriverManager;
@@ -28,16 +26,13 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Enumeration;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;
 
-import net.sourceforge.sqlexplorer.EDriverName;
 import net.sourceforge.sqlexplorer.dbproduct.ManagedDriver;
 import net.sourceforge.sqlexplorer.plugin.SQLExplorerPlugin;
-import net.sourceforge.sqlexplorer.util.MyURLClassLoader;
+import net.sourceforge.sqlexplorer.util.AliasAndManaDriverHelper;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -63,7 +58,6 @@ import org.talend.core.model.metadata.builder.connection.DelimitedFileConnection
 import org.talend.core.model.metadata.builder.connection.FileConnection;
 import org.talend.core.model.metadata.builder.connection.MDMConnection;
 import org.talend.core.model.metadata.builder.connection.MetadataTable;
-import org.talend.core.model.metadata.builder.database.DriverShim;
 import org.talend.core.model.metadata.builder.database.ExtractMetaDataFromDataBase;
 import org.talend.core.model.metadata.builder.database.ExtractMetaDataUtils;
 import org.talend.core.model.metadata.builder.database.JavaSqlFactory;
@@ -106,6 +100,7 @@ import org.talend.dq.nodes.DQRepositoryNode;
 import org.talend.dq.writer.impl.ElementWriterFactory;
 import org.talend.metadata.managment.connection.manager.HiveConnectionManager;
 import org.talend.repository.ui.utils.DBConnectionContextUtils;
+import org.talend.repository.ui.utils.ManagerConnection;
 import org.talend.utils.ProductVersion;
 import org.talend.utils.sql.metadata.constants.GetColumn;
 import org.talend.utils.sugars.ReturnCode;
@@ -172,10 +167,13 @@ public final class ConnectionUtils {
      * @throws IllegalAccessException
      * @throws ClassNotFoundException
      * @throws IOException
+     * @deprecated @{@link ExtractMetaDataUtils#connect(String, String, String, String, String, String, String, String)}
      */
+    @Deprecated
     public static java.sql.Connection createConnection(String url, String driverClassName, Properties props) throws SQLException,
             InstantiationException, IllegalAccessException, ClassNotFoundException {
-        Driver driver = getClassDriver(driverClassName, url, props);
+        Driver driver = getClassDriverFromSQLExplorer(driverClassName, props);
+
         if (driver != null) {
             DriverManager.registerDriver(driver);
             if (log.isDebugEnabled()) {
@@ -239,7 +237,9 @@ public final class ConnectionUtils {
      * @param driverClassName the driver class name to use for connection
      * @param props the properties of the connection
      * @return a return code with a message (not null when error)
+     * @deprecated use {@link ManagerConnection#check(IMetadataConnection, boolean...)} instead.
      */
+    @Deprecated
     public static ReturnCode checkConnection(String url, String driverClassName, Properties props) {
         ReturnCode rc = new ReturnCode();
 
@@ -374,20 +374,16 @@ public final class ConnectionUtils {
                 return rcJdbc;
             }
         } else if (analysisDataProvider instanceof DatabaseConnection) {
-            // MOD qiongli 2013 TDQ-7156,add dbTYpe and dbVersion into prop so as to load driver by lib manage system.
-            DatabaseConnection dbConn = (DatabaseConnection) analysisDataProvider;
-            String databaseType = dbConn.getDatabaseType();
-            String dbVersionString = dbConn.getDbVersionString();
-            if (databaseType != null) {
-                props.put(TaggedValueHelper.DBTYPE, dbConn.getDatabaseType());
-            }
-            if (dbVersionString != null) {
-                props.put(TaggedValueHelper.DB_PRODUCT_VERSION, dbVersionString);
+            // MOD qiongli 2014-5-14 in order to check and connect a dbConnection by a correct driver,replace
+            // 'ConnectionUtils.checkConnection(...)' with 'managerConn.check(metadataConnection)'.
+            ManagerConnection managerConn = new ManagerConnection();
+            boolean check = managerConn.check(metadataConnection);
+            returnCode.setOk(check);
+            if (!check) {
+                returnCode.setMessage(managerConn.getMessageException());
             }
 
         }
-
-        returnCode = ConnectionUtils.checkConnection(url, JavaSqlFactory.getDriverClass(analysisDataProvider), props);
         return returnCode;
     }
 
@@ -487,7 +483,10 @@ public final class ConnectionUtils {
      * @param props
      * @return
      * @throws SQLException
+     * @deprecated use @
+     * {@link ExtractMetaDataUtils#connect(String, String, String, String, String, String, String, String)} instead.
      */
+    @Deprecated
     public static synchronized java.sql.Connection createConnectionWithTimeout(Driver driver, String url, Properties props)
             throws SQLException {
         java.sql.Connection ret = null;
@@ -548,116 +547,36 @@ public final class ConnectionUtils {
     }
 
     /**
-     * DOC qzhang Comment method "getClassDriver".
+     * 
+     * abstract this function from getClassDriver(String driverClassName, String url, Properties props). load the jdbc
+     * driver based on ManagedDrivr.if it is registed,return the driver.else load jars from lib manage system and
+     * regist.
      * 
      * @param driverClassName
-     * @param url
      * @return
-     * @throws IllegalAccessException
      * @throws InstantiationException
+     * @throws IllegalAccessException
      * @throws ClassNotFoundException
      */
-    private static Driver getClassDriver(String driverClassName, String url, Properties props) throws InstantiationException,
-            IllegalAccessException {
-        // MOD mzhao 2009-06-05,Bug 7571 Get driver from catch first, if not
-        // exist then get a new instance.
-        Driver driver = ExtractMetaDataUtils.getInstance().getDriverCache().get(driverClassName);
-        if (driver == null) {
-            driver = MetadataConnectionUtils.getDriverCache().get(driverClassName);
-        }
-        // Driver driver = DRIVER_CACHE.get(driverClassName);
-        if (driver != null) {
-            return driver;
-        }
-        driver = getClassDriverFromSQLExplorer(driverClassName);
-        if (driver != null) {
-            return driver;
-        }
-
-        try {
-            driver = (Driver) Class.forName(driverClassName).newInstance();
-        } catch (ClassNotFoundException e) {
-            driver = findDriverByLibManageSystem(driverClassName, props);
-        }
-        return driver;
-    }
-
-    /**
-     * 
-     * find some installed jars from lib folder by driverclass name.
-     * 
-     * @param driverClassName
-     * @param props
-     * @return
-     * @throws InstantiationException
-     * @throws IllegalAccessException
-     */
-    private static Driver findDriverByLibManageSystem(String driverClassName, Properties props) throws InstantiationException,
-            IllegalAccessException {
-        Driver driver = null;
-        //
-        String dbType = props.getProperty(TaggedValueHelper.DBTYPE);
-        String dbVersion = props.getProperty(TaggedValueHelper.DB_PRODUCT_VERSION);
-        if (dbType != null) {
-            CWMPlugin.getDefault().loadDriverByLibManageSystem(dbType, dbVersion, driverClassName);
-            driver = getClassDriverFromSQLExplorer(driverClassName);
-        }
-        return driver;
-    }
-
-    /**
-     * 
-     * abstract this function from getClassDriver(String driverClassName, String url, Properties props).
-     * 
-     * @param driverClassName
-     * @return
-     * @throws InstantiationException
-     * @throws IllegalAccessException
-     */
-    private static Driver getClassDriverFromSQLExplorer(String driverClassName) throws InstantiationException,
+    private static Driver getClassDriverFromSQLExplorer(String driverClassName, Properties props) throws InstantiationException,
             IllegalAccessException {
         Driver driver = null;
         if (Platform.isRunning()) {
             SQLExplorerPlugin sqlExplorerPlugin = SQLExplorerPlugin.getDefault();
             if (sqlExplorerPlugin != null) {
                 net.sourceforge.sqlexplorer.dbproduct.DriverManager driverModel = sqlExplorerPlugin.getDriverModel();
-                try {
-                    Collection<ManagedDriver> drivers = driverModel.getDrivers();
-                    for (ManagedDriver managedDriver : drivers) {
-                        LinkedList<String> jars = managedDriver.getJars();
-                        List<URL> urls = new ArrayList<URL>();
-                        for (int i = 0; i < jars.size(); i++) {
-                            File file = new File(jars.get(i));
-                            if (file.exists()) {
-                                urls.add(file.toURI().toURL());
-                            }
-                        }
-                        if (!urls.isEmpty()) {
-                            try {
-                                Class<?> clazz = null;
-
-                                MyURLClassLoader cl;
-                                cl = new MyURLClassLoader(urls.toArray(new URL[0]));
-                                clazz = cl.findClass(driverClassName);
-                                if (clazz != null) {
-                                    driver = (Driver) clazz.newInstance();
-                                    // MOD mzhao 2009-06-05,Bug 7571 Get driver from
-                                    // catch first, if not
-                                    // exist then get a new instance.
-                                    MetadataConnectionUtils.getDriverCache().put(driverClassName, driver);
-                                    ExtractMetaDataUtils.getInstance().getDriverCache()
-                                            .put(driverClassName, new DriverShim(driver));
-                                    return driver; // driver is found
-                                }
-                            } catch (ClassNotFoundException e) {
-                                // do nothings
-                            }
-                        }
-
+                String dbType = props.getProperty(TaggedValueHelper.DBTYPE);
+                String dbVersion = props.getProperty(TaggedValueHelper.DB_PRODUCT_VERSION);
+                String managedDriverId = AliasAndManaDriverHelper.getInstance().joinManagedDriverId(dbType, driverClassName,
+                        dbVersion);
+                ManagedDriver managedDriver = driverModel.getDriver(managedDriverId);
+                if (managedDriver != null) {
+                    if (!managedDriver.isDriverClassLoaded()) {
+                        CWMPlugin.getDefault().loadDriverByLibManageSystem(dbType, dbVersion, driverClassName);
                     }
-                } catch (MalformedURLException e) {
-                    // do nothings
+                    driver = managedDriver.getJdbcDriver();
                 }
+
             }
         }
         return driver;
@@ -696,7 +615,9 @@ public final class ConnectionUtils {
      * @param tableName
      * @param schema
      * @return
+     * @deprecated
      */
+    @Deprecated
     public static boolean existTable(String url, String driver, Properties props, String tableName, String schema) {
         java.sql.Connection connection = null;
         if (tableName == null || org.talend.dataquality.PluginConstant.EMPTY_STRING.equals(tableName.trim())) {
@@ -771,7 +692,7 @@ public final class ConnectionUtils {
         if (dbConn != null) {
             String databaseType = dbConn.getDatabaseType() == null ? org.talend.dataquality.PluginConstant.EMPTY_STRING : dbConn
                     .getDatabaseType();
-            return EDriverName.TERADATADEFAULTURL.getDBKey().equalsIgnoreCase(databaseType);
+            return EDatabaseTypeName.TERADATA.getXmlName().equalsIgnoreCase(databaseType);
         }
         return false;
     }
@@ -806,7 +727,7 @@ public final class ConnectionUtils {
         if (dbConn != null) {
             String databaseType = dbConn.getDatabaseType() == null ? org.talend.dataquality.PluginConstant.EMPTY_STRING : dbConn
                     .getDatabaseType();
-            return EDriverName.INGRESDEFAULTURL.getDBKey().equalsIgnoreCase(databaseType);
+            return EDatabaseTypeName.INGRES.getXmlName().equalsIgnoreCase(databaseType);
         }
         return false;
     }
@@ -822,7 +743,7 @@ public final class ConnectionUtils {
         if (dbConn != null) {
             String databaseType = dbConn.getDatabaseType() == null ? org.talend.dataquality.PluginConstant.EMPTY_STRING : dbConn
                     .getDatabaseType();
-            return EDriverName.INFORMIXDEFAULTURL.getDBKey().equalsIgnoreCase(databaseType);
+            return EDatabaseTypeName.INFORMIX.getXmlName().equalsIgnoreCase(databaseType);
         }
         return false;
     }
@@ -839,7 +760,7 @@ public final class ConnectionUtils {
             String databaseType = dbConn.getDatabaseType() == null ? org.talend.dataquality.PluginConstant.EMPTY_STRING : dbConn
                     .getDatabaseType();
             // databaseType: IBM DB2, but DBKey is DB2
-            return databaseType.contains(EDriverName.DB2DEFAULTURL.getDBKey());
+            return databaseType.contains(EDatabaseTypeName.IBMDB2.getXmlName());
         }
         return false;
     }
@@ -870,9 +791,7 @@ public final class ConnectionUtils {
         if (dbConn != null) {
             String databaseType = dbConn.getDatabaseType() == null ? org.talend.dataquality.PluginConstant.EMPTY_STRING : dbConn
                     .getDatabaseType();
-            return EDriverName.MSSQL2008URL.getDBKey().equalsIgnoreCase(databaseType)
-                    || EDriverName.MSSQLDEFAULTURL.getDBKey().equalsIgnoreCase(databaseType)
-                    || EDatabaseTypeName.MSSQL.getDisplayName().equalsIgnoreCase(databaseType);
+            return EDatabaseTypeName.MSSQL.getXmlName().equalsIgnoreCase(databaseType);
         }
         return false;
     }
@@ -907,8 +826,7 @@ public final class ConnectionUtils {
         if (dbConn != null) {
             String databaseType = dbConn.getDatabaseType() == null ? org.talend.dataquality.PluginConstant.EMPTY_STRING : dbConn
                     .getDatabaseType();
-            return EDriverName.AS400DEFAULTURL.getDBKey().equalsIgnoreCase(databaseType)
-                    || EDatabaseTypeName.AS400.getDisplayName().equalsIgnoreCase(databaseType);
+            return EDatabaseTypeName.AS400.getDisplayName().equalsIgnoreCase(databaseType);
         }
         return false;
     }
@@ -1038,8 +956,7 @@ public final class ConnectionUtils {
         if (dbConn != null) {
             String databaseType = dbConn.getDatabaseType() == null ? org.talend.dataquality.PluginConstant.EMPTY_STRING : dbConn
                     .getDatabaseType();
-            return EDriverName.POSTGRESQLEFAULTURL.getDBKey().equalsIgnoreCase(databaseType)
-                    || EDatabaseTypeName.PSQL.getDisplayName().equalsIgnoreCase(databaseType);
+            return EDatabaseTypeName.PSQL.getXmlName().equalsIgnoreCase(databaseType);
         }
         return false;
     }
@@ -2028,30 +1945,33 @@ public final class ConnectionUtils {
         if (dbType != null) {
             props.put(TaggedValueHelper.DBTYPE, dbType);
         }
-        String url = JavaSqlFactory.getURL(conn);
-        String driverClass = JavaSqlFactory.getDriverClass(conn);
 
         java.sql.Connection createConnection = null;
         try {
-            createConnection = createConnection(url, driverClass, props);
-            if (createConnection.getMetaData() != null) {
-                String temp = createConnection.getMetaData().getDatabaseProductVersion();
-                if (temp != null) {
-                    version = ProductVersion.fromString(temp);
-                }
-
-                if (version == null) {
-                    version = ProductVersion.fromString(createConnection.getMetaData().getDatabaseMajorVersion() + "." //$NON-NLS-1$
-                            + createConnection.getMetaData().getDatabaseMinorVersion() + ".0"); //$NON-NLS-1$
+            List list = ExtractMetaDataUtils.getInstance().connect(dbType, connection.getUrl(), userName, password,
+                    connection.getDriverClass(), connection.getDriverJarPath(), connection.getDbVersionString(),
+                    connection.getAdditionalParams());
+            for (int i = 0; i < list.size(); i++) {
+                if (list.get(i) instanceof java.sql.Connection) {
+                    createConnection = (java.sql.Connection) list.get(i);
+                    break;
                 }
             }
-        } catch (SQLException e) {
-            ExceptionHandler.process(e);
-        } catch (InstantiationException e) {
-            ExceptionHandler.process(e);
-        } catch (IllegalAccessException e) {
-            ExceptionHandler.process(e);
-        } catch (ClassNotFoundException e) {
+            if (createConnection != null) {
+                if (createConnection.getMetaData() != null) {
+                    String temp = createConnection.getMetaData().getDatabaseProductVersion();
+                    if (temp != null) {
+                        version = ProductVersion.fromString(temp);
+                    }
+
+                    if (version == null) {
+                        version = ProductVersion.fromString(createConnection.getMetaData().getDatabaseMajorVersion() + "." //$NON-NLS-1$
+                                + createConnection.getMetaData().getDatabaseMinorVersion() + ".0"); //$NON-NLS-1$
+                    }
+                }
+            }
+
+        } catch (Exception e) {
             ExceptionHandler.process(e);
         } finally {
             if (createConnection != null) {

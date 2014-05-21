@@ -1334,11 +1334,6 @@
            version="4.0.0">
      </workspacetask>
      <projecttask
-           class="org.talend.dataprofiler.core.migration.impl.UpdateSQLExplorerDriversTask"
-           id="org.talend.dataprofiler.core.migration.impl.UpdateSQLExplorerDriversTask"
-           name="Update SQLExplorer Drivers">
-     </projecttask>
-     <projecttask
            class="org.talend.dataprofiler.core.migration.impl.UpdateVersionsTask"
            id="org.talend.dataprofiler.core.migration.impl.UpdateVersionsTask"
            name="Update Version And Finish Migration">

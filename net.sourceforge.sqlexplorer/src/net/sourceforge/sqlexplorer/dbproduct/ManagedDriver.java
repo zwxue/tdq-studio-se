@@ -1,6 +1,7 @@
 package net.sourceforge.sqlexplorer.dbproduct;
 
 import java.beans.PropertyChangeListener;
+import java.io.File;
 import java.sql.Connection;
 import java.sql.Driver;
 import java.sql.SQLException;
@@ -18,8 +19,17 @@ import net.sourceforge.squirrel_sql.fw.persist.ValidationException;
 import net.sourceforge.squirrel_sql.fw.sql.ISQLDriver;
 import net.sourceforge.squirrel_sql.fw.util.beanwrapper.StringWrapper;
 
+import org.apache.log4j.Logger;
 import org.dom4j.Element;
 import org.dom4j.tree.DefaultElement;
+import org.talend.core.database.EDatabaseTypeName;
+import org.talend.core.model.metadata.IMetadataConnection;
+import org.talend.core.model.metadata.builder.ConvertionHelper;
+import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
+import org.talend.core.model.metadata.builder.database.HotClassLoader;
+import org.talend.core.model.metadata.builder.database.JDBCDriverLoader;
+import org.talend.core.model.metadata.builder.database.PluginConstant;
+import org.talend.metadata.managment.hive.HiveClassLoaderFactory;
 import org.talend.utils.sql.ConnectionUtils;
 
 /**
@@ -125,6 +135,8 @@ public class ManagedDriver implements Comparable<ManagedDriver> {
 
     private Driver jdbcDriver;
 
+    private static Logger log = Logger.getLogger(ManagedDriver.class);
+
     public ManagedDriver(String id) {
         this.id = id;
     }
@@ -177,13 +189,73 @@ public class ManagedDriver implements Comparable<ManagedDriver> {
      * 
      * @throws ExplorerException
      * @throws SQLException
+     * @deprecated replace it with registerSQLDriver(String dbType, String dbVersion)
      */
+    @Deprecated
     public synchronized void registerSQLDriver() throws ClassNotFoundException {
         if (driverClassName == null || driverClassName.length() == 0) {
             return;
         }
         unregisterSQLDriver();
         jdbcDriver = DatabaseProductFactory.loadDriver(this);
+    }
+
+    /**
+     * regist jdbc driver except Hive by HotClassLoader.
+     * 
+     * @param dbConnection
+     * @return
+     * @throws ClassNotFoundException
+     * @throws IllegalAccessException
+     * @throws InstantiationException
+     */
+    public void registerSQLDriver(String dbType, String dbVersion) throws ClassNotFoundException, InstantiationException,
+            IllegalAccessException {
+        boolean isODBC = dbType.equalsIgnoreCase(EDatabaseTypeName.GODBC.getXmlName());
+        if (driverClassName != null && !dbType.equalsIgnoreCase(EDatabaseTypeName.HIVE.getXmlName())
+                && (isODBC || isValidatedJars())) {
+
+            unregisterSQLDriver();
+            JDBCDriverLoader jdbcDriverClassLoader = new JDBCDriverLoader();
+            HotClassLoader hotClassLoader = jdbcDriverClassLoader.getHotClassLoader(jars.toArray(new String[jars.size()]),
+                    dbType, dbVersion);
+            Class<?> classDriver = Class.forName(driverClassName, true, hotClassLoader);
+            if (classDriver != null) {
+                jdbcDriver = (Driver) classDriver.newInstance();
+            }
+        }
+        if (jdbcDriver == null) {
+            log.error("fail to regist jdbc driver in SQLExplorer");
+        }
+
+    }
+
+    /**
+     * 
+     * register hive jdbc driver by DatabaseConnection
+     * 
+     * @param dbConnection
+     * @throws ClassNotFoundException
+     * @throws IllegalAccessException
+     * @throws InstantiationException
+     * @throws Exception
+     */
+    public synchronized void registerHiveSQLDriver(DatabaseConnection dbConnection) throws ClassNotFoundException,
+            InstantiationException, IllegalAccessException {
+        if (dbConnection != null || driverClassName != null || driverClassName.length() != 0) {
+            String dbType = dbConnection.getDatabaseType();
+            if (dbType.equalsIgnoreCase(EDatabaseTypeName.HIVE.getXmlName())) {
+                unregisterSQLDriver();
+                IMetadataConnection metadataConn = ConvertionHelper.convert(dbConnection);
+                ClassLoader classLoader = HiveClassLoaderFactory.getInstance().getClassLoader(metadataConn);
+                Class<?> classDriver = Class.forName(driverClassName, true, classLoader);
+                jdbcDriver = (Driver) classDriver.newInstance();
+            }
+        }
+        if (jdbcDriver == null) {
+            log.error("fail to regist Hive jdbc driver in SQLExplorer");
+        }
+
     }
 
     /**
@@ -214,8 +286,11 @@ public class ManagedDriver implements Comparable<ManagedDriver> {
         }
         if (!isDriverClassLoaded()) {
             try {
-                registerSQLDriver();
-            } catch (ClassNotFoundException e) {
+                DatabaseConnection dbConn = user.getDatabaseConnection();
+                if (dbConn != null) {
+                    registerSQLDriver(dbConn.getDatabaseType(), dbConn.getDbVersionString());
+                }
+            } catch (Exception e) {
                 throw new SQLException(Messages.getString("ManagedDriver.CannotLoadDriver1", driverClassName) + " "//$NON-NLS-1$ //$NON-NLS-2$
                         + Messages.getString("ManagedDriver.CannotLoadDriver2"));//$NON-NLS-1$
             }
@@ -228,7 +303,7 @@ public class ManagedDriver implements Comparable<ManagedDriver> {
         try {
             String dbUrl = user.getAlias().getUrl();
             if (ConnectionUtils.isHsql(dbUrl)) {
-                dbUrl = ConnectionUtils.addShutDownForHSQLUrl(dbUrl, user.getMetadataConnection().getAdditionalParams());
+                dbUrl = ConnectionUtils.addShutDownForHSQLUrl(dbUrl, user.getDatabaseConnection().getAdditionalParams());
             }
             jdbcConn = jdbcDriver.connect(dbUrl, props);
         } catch (SQLException e) {
@@ -312,5 +387,20 @@ public class ManagedDriver implements Comparable<ManagedDriver> {
             }
         }
         return false;
+    }
+
+    private boolean isValidatedJars() {
+        boolean flag = false;
+        if (jars.isEmpty()) {
+            return false;
+        }
+        for (String jarPath : jars) {
+            if (jarPath == null || jarPath.equals(PluginConstant.EMPTY_STRING)) {
+                return false;
+            }
+            File jarFile = new File(jarPath);
+            flag = jarFile.exists() && jarFile.isFile();
+        }
+        return true;
     }
 }

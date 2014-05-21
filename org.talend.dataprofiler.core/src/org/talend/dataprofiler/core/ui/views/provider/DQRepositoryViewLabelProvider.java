@@ -15,10 +15,10 @@ package org.talend.dataprofiler.core.ui.views.provider;
 import java.sql.Driver;
 import java.util.List;
 
-import net.sourceforge.sqlexplorer.EDriverName;
 import net.sourceforge.sqlexplorer.dbproduct.DriverManager;
 import net.sourceforge.sqlexplorer.dbproduct.ManagedDriver;
 import net.sourceforge.sqlexplorer.plugin.SQLExplorerPlugin;
+import net.sourceforge.sqlexplorer.util.AliasAndManaDriverHelper;
 
 import org.apache.log4j.Logger;
 import org.eclipse.emf.edit.ui.provider.AdapterFactoryLabelProvider;
@@ -380,7 +380,8 @@ public class DQRepositoryViewLabelProvider extends AdapterFactoryLabelProvider i
                         return false;
                     }
                     DriverManager driverManager = SQLExplorerPlugin.getDefault().getDriverModel();
-                    ManagedDriver manDr = driverManager.getDriver(EDriverName.getId(driverClassName));
+                    String id = AliasAndManaDriverHelper.getInstance().joinManagedDriverId(dbConn);
+                    ManagedDriver manDr = driverManager.getDriver(id);
                     if (manDr == null) {
                         isNeed = true;
                     } else if (!manDr.isDriverClassLoaded()) {

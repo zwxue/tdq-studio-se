@@ -124,8 +124,8 @@ public class SQLEditorSessionSwitcher extends ControlContribution implements Con
                 if (currentUser != null) {
                     boolean isMatched = currentUser.getUserName().equals(user.getUserName())
                             && currentUser.getAlias().getUrl().equals(alias.getUrl());
-                    if (currentUser.getMetadataConnection() != null) {
-                        isMatched = isMatched && currentUser.getMetadataConnection().getLabel().equals(alias.getName());
+                    if (currentUser.getDatabaseConnection() != null) {
+                        isMatched = isMatched && currentUser.getDatabaseConnection().getName().equals(alias.getName());
                     }
                     if (isMatched) {
                         _sessionCombo.select(_sessionCombo.getItemCount() - 1);

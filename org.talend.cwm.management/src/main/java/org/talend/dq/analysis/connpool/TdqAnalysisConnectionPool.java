@@ -19,6 +19,7 @@ import java.sql.SQLException;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Vector;
 
@@ -320,14 +321,14 @@ public class TdqAnalysisConnectionPool {
     private synchronized Connection findFreeConnection() {
         Connection conn = null;
 
-        Enumeration<PooledTdqAnalysisConnection> enumerate = this.getPConnections().elements();
-        while (enumerate.hasMoreElements()) {
-            PooledTdqAnalysisConnection pConn = enumerate.nextElement();
+        Iterator<PooledTdqAnalysisConnection> enumerate = this.getPConnections().iterator();
+        while (enumerate.hasNext()) {
+            PooledTdqAnalysisConnection pConn = enumerate.next();
             try {
                 if (!pConn.isBusy()) {
                     Connection tempConn = pConn.getConnection();
                     if (tempConn.isClosed()) {
-                        removeConnection(tempConn);
+                        enumerate.remove();
                     } else {
                         conn = tempConn;
                         pConn.setBusy(true);
@@ -464,10 +465,11 @@ public class TdqAnalysisConnectionPool {
      * @param conn
      */
     public synchronized void removeConnection(Connection conn) {
-        Enumeration<PooledTdqAnalysisConnection> enumerate = this.getPConnections().elements();
 
-        while (enumerate.hasMoreElements()) {
-            PooledTdqAnalysisConnection pConn = enumerate.nextElement();
+        Iterator<PooledTdqAnalysisConnection> enumerate = this.getPConnections().iterator();
+
+        while (enumerate.hasNext()) {
+            PooledTdqAnalysisConnection pConn = enumerate.next();
             if (pConn.getConnection().equals(conn)) {
                 getPConnections().remove(pConn);
                 break;

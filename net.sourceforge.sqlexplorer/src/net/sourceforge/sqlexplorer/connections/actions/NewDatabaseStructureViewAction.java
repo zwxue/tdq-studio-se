@@ -25,8 +25,6 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.widgets.Display;
 import org.talend.core.GlobalServiceRegister;
 import org.talend.core.ITDQRepositoryService;
-import org.talend.core.model.metadata.IMetadataConnection;
-import org.talend.core.model.metadata.builder.ConvertionHelper;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
 import org.talend.cwm.helper.SwitchHelpers;
@@ -88,10 +86,7 @@ public class NewDatabaseStructureViewAction extends AbstractConnectionTreeAction
                         // IMetadataConnection to create the hive connection
                         DatabaseConnection databaseConnection = SwitchHelpers.DATABASECONNECTION_SWITCH.doSwitch(connection);
                         if (databaseConnection != null) {
-                            IMetadataConnection metadataConnection = ConvertionHelper.convert(databaseConnection);
-                            if (metadataConnection != null) {
-                                user.setMetadataConnection(metadataConnection);
-                            }
+                            user.setDatabaseConnection(databaseConnection);
                             // if ManagedDriver class is not Loaded,check if it lack jars then update the
                             // realted jar.
                             tdqRepService.updateDriverIfClassNotLoad(databaseConnection);

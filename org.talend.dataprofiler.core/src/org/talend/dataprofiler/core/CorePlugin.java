@@ -20,7 +20,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.regex.Pattern;
 
-import net.sourceforge.sqlexplorer.EDriverName;
 import net.sourceforge.sqlexplorer.dbproduct.Alias;
 import net.sourceforge.sqlexplorer.dbproduct.AliasManager;
 import net.sourceforge.sqlexplorer.dbproduct.DriverManager;
@@ -29,6 +28,7 @@ import net.sourceforge.sqlexplorer.plugin.SQLExplorerPlugin;
 import net.sourceforge.sqlexplorer.plugin.editors.SQLEditor;
 import net.sourceforge.sqlexplorer.plugin.editors.SQLEditorInput;
 import net.sourceforge.sqlexplorer.sqleditor.actions.ExecSQLAction;
+import net.sourceforge.sqlexplorer.util.AliasAndManaDriverHelper;
 
 import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
@@ -64,8 +64,6 @@ import org.talend.core.database.EDatabaseTypeName;
 import org.talend.core.language.ECodeLanguage;
 import org.talend.core.model.general.ILibrariesService;
 import org.talend.core.model.general.Project;
-import org.talend.core.model.metadata.IMetadataConnection;
-import org.talend.core.model.metadata.builder.ConvertionHelper;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
 import org.talend.core.model.metadata.builder.database.JavaSqlFactory;
@@ -284,10 +282,7 @@ public class CorePlugin extends AbstractUIPlugin {
                     // create the hive connection
                     DatabaseConnection databaseConnection = SwitchHelpers.DATABASECONNECTION_SWITCH.doSwitch(connection);
                     if (databaseConnection != null) {
-                        IMetadataConnection metadataConnection = ConvertionHelper.convert(databaseConnection);
-                        if (metadataConnection != null) {
-                            user.setMetadataConnection(metadataConnection);
-                        }
+                        user.setDatabaseConnection(databaseConnection);
                         // if ManagedDriver class is not Loaded,check if it lack jars then update the realted jar.
                         updateDriverIfClassNotLoad(databaseConnection);
                     }
@@ -336,7 +331,8 @@ public class CorePlugin extends AbstractUIPlugin {
         DriverManager driverManager = sqlPlugin.getDriverModel();
         String driverClassName = JavaSqlFactory.getDriverClass(databaseConnection);
         if (driverClassName != null) {
-            ManagedDriver manDr = driverManager.getDriver(EDriverName.getId(driverClassName));
+            String id = AliasAndManaDriverHelper.getInstance().joinManagedDriverId(databaseConnection);
+            ManagedDriver manDr = driverManager.getDriver(id);
             if (manDr != null && !manDr.isDriverClassLoaded()) {
                 CWMPlugin.getDefault().loadDriverByLibManageSystem(databaseConnection);
             }

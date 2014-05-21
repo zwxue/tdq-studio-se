@@ -32,8 +32,9 @@ import org.talend.core.GlobalServiceRegister;
 import org.talend.core.ITDQRepositoryService;
 import org.talend.core.database.EDatabaseTypeName;
 import org.talend.core.model.metadata.IMetadataConnection;
+import org.talend.core.model.metadata.builder.ConvertionHelper;
+import org.talend.core.model.metadata.builder.connection.DatabaseConnection;
 import org.talend.cwm.helper.ConnectionHelper;
-import org.talend.utils.sql.ConnectionUtils;
 
 /**
  * Represents a username and password combo used to connect to an alias; contains a list of all connections made
@@ -83,13 +84,20 @@ public class User implements Comparable<User>, SessionEstablishedListener {
 
     private boolean commitOnClose;
 
+    @Deprecated
+    // get it from databaseConnection.
     private IMetadataConnection metadataConnection;
+
+    // User relationship with DatabaseConnection is "one to one"
+    private DatabaseConnection databaseConnection = null;
 
     /**
      * Getter for metadataConnection.
      * 
      * @return the metadataConnection
+     * @deprecated use {@link #getDatabaseConnection()}
      */
+    @Deprecated
     public IMetadataConnection getMetadataConnection() {
         return this.metadataConnection;
     }
@@ -98,7 +106,9 @@ public class User implements Comparable<User>, SessionEstablishedListener {
      * Sets the metadataConnection.
      * 
      * @param metadataConnection the metadataConnection to set
+     * @deprecated use {@link #setDatabaseConnection(DatabaseConnection)}
      */
+    @Deprecated
     public void setMetadataConnection(IMetadataConnection metadataConnection) {
         this.metadataConnection = metadataConnection;
     }
@@ -498,12 +508,14 @@ public class User implements Comparable<User>, SessionEstablishedListener {
         SQLConnection connection = null;
         // if it is hive connection, should call tdqRepService.createHiveConnection() to create the connection, because
         // need use DynamicClassLoader to deal with it
-        if (metadataConnection != null && EDatabaseTypeName.HIVE.getXmlName().equalsIgnoreCase(metadataConnection.getDbType())) {
+        if (databaseConnection != null
+                && EDatabaseTypeName.HIVE.getXmlName().equalsIgnoreCase(databaseConnection.getDatabaseType())) {
             if (GlobalServiceRegister.getDefault().isServiceRegistered(ITDQRepositoryService.class)) {
                 ITDQRepositoryService tdqRepService = (ITDQRepositoryService) GlobalServiceRegister.getDefault().getService(
                         ITDQRepositoryService.class);
                 if (tdqRepService != null) {
-                    Connection hiveConnection = tdqRepService.createHiveConnection(metadataConnection);
+                    IMetadataConnection mdConn = ConvertionHelper.convert(databaseConnection);
+                    Connection hiveConnection = tdqRepService.createHiveConnection(mdConn);
                     if (hiveConnection != null) {
                         connection = new SQLConnection(this, hiveConnection, alias.getDriver(), "HiveConnection");
                     }
@@ -590,5 +602,13 @@ public class User implements Comparable<User>, SessionEstablishedListener {
     @Override
     public String toString() {
         return getDescription();
+    }
+
+    public DatabaseConnection getDatabaseConnection() {
+        return this.databaseConnection;
+    }
+
+    public void setDatabaseConnection(DatabaseConnection databaseConnection) {
+        this.databaseConnection = databaseConnection;
     }
 }
