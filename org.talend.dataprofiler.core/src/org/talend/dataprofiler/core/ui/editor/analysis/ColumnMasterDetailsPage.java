@@ -16,7 +16,6 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -65,7 +64,6 @@ import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.connection.MetadataColumn;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.core.repository.model.repositoryObject.MetadataXmlElementTypeRepositoryObject;
-import org.talend.cwm.dependencies.DependenciesHandler;
 import org.talend.cwm.helper.ModelElementHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.helper.TaggedValueHelper;
@@ -100,7 +98,6 @@ import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.helper.UDIHelper;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
-import org.talend.dq.writer.impl.ElementWriterFactory;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.utils.sugars.ReturnCode;
@@ -109,7 +106,8 @@ import orgomg.cwm.objectmodel.core.ModelElement;
 /**
  * @author rli
  */
-public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implements PropertyChangeListener {
+public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage<AnalysisColumnTreeViewer> implements
+        PropertyChangeListener {
 
     private static Logger log = Logger.getLogger(ColumnMasterDetailsPage.class);
 
@@ -124,8 +122,6 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
     private Text maxNumText;
 
     private CCombo execCombo;
-
-    AnalysisColumnTreeViewer treeViewer;
 
     DataFilterComp dataFilterComp;
 
@@ -912,17 +908,7 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
             tdqAnalysisItem.getProperty().setLabel(WorkspaceUtils.normalize(analysisHandler.getName()));
             this.nameText.setText(analysisHandler.getName());
             // ~
-            // TDQ-5581,if has removed emlements(patten/udi),should remove dependency each other before saving.
-            HashSet<ModelElement> removedElements = treeViewer.getRemovedElements();
-            if (!removedElements.isEmpty()) {
-                DependenciesHandler.getInstance().removeDependenciesBetweenModels(analysis,
-                        new ArrayList<ModelElement>(removedElements));
-            }
-            // MOD yyi 2012-02-08 TDQ-4621:Explicitly set true for updating dependencies.
-            saved = ElementWriterFactory.getInstance().createAnalysisWrite().save(tdqAnalysisItem, true);
-            if (saved.isOk() && !removedElements.isEmpty()) {
-                saveRemovedElements();
-            }
+            saved = saveDependency(tdqAnalysisItem);
         }
         // MOD yyi 2012-02-03 TDQ-3602:Avoid to rewriting all analyzes after saving, no reason to update all analyzes
         // which is depended in the referred connection.
@@ -1244,6 +1230,7 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
     public ExecutionLanguage getUIExecuteEngin() {
         return ExecutionLanguage.get(execCombo.getText());
     }
+
     /**
      * 
      * refresh current Tree Viewer

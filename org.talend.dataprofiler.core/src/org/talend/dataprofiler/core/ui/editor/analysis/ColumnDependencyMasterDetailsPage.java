@@ -42,6 +42,7 @@ import org.talend.cwm.helper.ResourceHelper;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
+import org.talend.dataprofiler.core.ui.editor.composite.AbstractColumnDropTree;
 import org.talend.dataprofiler.core.ui.editor.composite.AnalysisColumnCompareTreeViewer;
 import org.talend.dataprofiler.core.ui.editor.composite.DataFilterComp;
 import org.talend.dataquality.domain.Domain;
@@ -71,7 +72,8 @@ import orgomg.cwm.resource.relational.ColumnSet;
  * 
  * @author jet
  */
-public class ColumnDependencyMasterDetailsPage extends AbstractAnalysisMetadataPage implements PropertyChangeListener {
+public class ColumnDependencyMasterDetailsPage extends AbstractAnalysisMetadataPage<AbstractColumnDropTree> implements
+        PropertyChangeListener {
 
     private static Logger log = Logger.getLogger(ColumnDependencyMasterDetailsPage.class);
 

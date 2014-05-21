@@ -70,6 +70,7 @@ import org.talend.dataquality.rules.WhereRule;
 import org.talend.dq.helper.ListUtils;
 import org.talend.dq.helper.ModelElementIdentifier;
 import org.talend.dq.helper.PropertyHelper;
+import org.talend.repository.RepositoryWorkUnit;
 import org.talend.resource.ResourceManager;
 import org.talend.utils.sugars.ReturnCode;
 import org.talend.utils.sugars.TypedReturnCode;
@@ -89,7 +90,7 @@ public abstract class AElementPersistance {
 
     /**
      * Persist an element in the specified folder, the file name is created logically by the name of this element.
-     *
+     * 
      * @param element
      * @param folder
      * @return
@@ -120,7 +121,7 @@ public abstract class AElementPersistance {
 
     /**
      * DOC xqliu Comment method "getPath".
-     *
+     * 
      * @param element
      * @param itemPath
      * @return
@@ -153,7 +154,7 @@ public abstract class AElementPersistance {
 
     /**
      * DOC bZhou Comment method "createLogicalFileNmae".
-     *
+     * 
      * @param element
      * @param extension
      * @return
@@ -165,9 +166,9 @@ public abstract class AElementPersistance {
 
     /**
      * DOC bZhou Comment method "create".
-     *
+     * 
      * Persist the element into the specified file.
-     *
+     * 
      * @param element
      * @param file
      * @return
@@ -184,9 +185,9 @@ public abstract class AElementPersistance {
 
     /**
      * DOC bZhou Comment method "create".
-     *
+     * 
      * Persist the element into the specified path.
-     *
+     * 
      * @param element
      * @param file
      * @param withProperty
@@ -214,9 +215,9 @@ public abstract class AElementPersistance {
 
     /**
      * DOC bZhou Comment method "createProperty".
-     *
+     * 
      * Create and save a property from model element resource.
-     *
+     * 
      * @param modelElement
      * @return
      */
@@ -243,9 +244,9 @@ public abstract class AElementPersistance {
 
     /**
      * DOC bZhou Comment method "initProperty".
-     *
+     * 
      * Initialized a new property.
-     *
+     * 
      * @param modelElement
      * @return
      */
@@ -296,9 +297,9 @@ public abstract class AElementPersistance {
 
     /**
      * DOC bZhou Comment method "saveProperty".
-     *
+     * 
      * Save a property.
-     *
+     * 
      * @param property
      * @return
      */
@@ -320,7 +321,7 @@ public abstract class AElementPersistance {
 
     /**
      * DOC bZhou Comment method "saveProperty".
-     *
+     * 
      * @param property
      * @param uri
      * @return
@@ -338,9 +339,9 @@ public abstract class AElementPersistance {
 
     /**
      * DOC bZhou Comment method "save".
-     *
+     * 
      * Save a model element and update the related property by default.
-     *
+     * 
      * @param element
      * @return
      */
@@ -350,9 +351,9 @@ public abstract class AElementPersistance {
 
     /**
      * DOC bZhou Comment method "save".
-     *
+     * 
      * Save a model element and update the related property.
-     *
+     * 
      * @param element
      * @param withProperty
      * @return
@@ -386,9 +387,9 @@ public abstract class AElementPersistance {
 
     /**
      * DOC bZhou Comment method "updateProperty".
-     *
+     * 
      * Use model element's attribute to update the related property.
-     *
+     * 
      * @param element
      */
     public void updateProperty(ModelElement element) {
@@ -404,7 +405,7 @@ public abstract class AElementPersistance {
 
     /**
      * DOC bZhou Comment method "createItem".
-     *
+     * 
      * @param element
      * @return
      */
@@ -468,7 +469,7 @@ public abstract class AElementPersistance {
 
     /**
      * Set the TDQ item file name, this file name will be usefull when commit changes to svn for example.
-     *
+     * 
      * @param element The element of which the name might have been renamed.
      * @param item
      */
@@ -480,7 +481,7 @@ public abstract class AElementPersistance {
 
     /**
      * DOC bZhou Comment method "check".
-     *
+     * 
      * @param file
      * @return
      */
@@ -490,21 +491,21 @@ public abstract class AElementPersistance {
 
     /**
      * DOC bZhou Comment method "addDependencies".
-     *
+     * 
      * @param element
      */
     protected abstract void addDependencies(ModelElement element);
 
     /**
      * DOC bZhou Comment method "updateDependencies".
-     *
+     * 
      * @param element
      */
     // protected abstract void updateDependencies(ModelElement element);
 
     /**
      * DOC bZhou Comment method "addResourceContent".
-     *
+     * 
      * @param element
      * @return
      */
@@ -536,14 +537,14 @@ public abstract class AElementPersistance {
 
     /**
      * DOC bZhou Comment method "getFileExtension".
-     *
+     * 
      * @return
      */
     protected abstract String getFileExtension();
 
     /**
      * Save item and it's dependencies(optional).
-     *
+     * 
      * @param item
      * @param careDependency Set explicitly <B>true</B> for needs to update dependencies of item.
      * @return
@@ -552,46 +553,58 @@ public abstract class AElementPersistance {
 
     /**
      * Save item with dependencies.
-     *
+     * 
      * @param element
      */
-    protected ReturnCode saveWithDependencies(Item item, ModelElement element) {
+    protected ReturnCode saveWithDependencies(final Item item, final ModelElement element) {
+
         ReturnCode rc = new ReturnCode();
 
-        addDependencies(element);
-        addResourceContent(element.eResource(), element);
+       
+            RepositoryWorkUnit<Object> repositoryWorkUnit = new RepositoryWorkUnit<Object>("save dependencies") { //$NON-NLS-1$
 
-        Map<EObject, Collection<Setting>> find = EcoreUtil.ExternalCrossReferencer.find(element.eResource());
-        Set<Resource> needSaves = new HashSet<Resource>();
-        for (EObject object : find.keySet()) {
-            Resource re = object.eResource();
-            if (re == null) {
-                continue;
-            }
-            // MOD sizhaoliu TDQ-6296 the resource should be resolved before saving the item to make sure the references
-            // are updated.
-            EcoreUtil.resolveAll(re);
-            needSaves.add(re);
-        }
+                @Override
+                public void run() throws PersistenceException {
+                    addDependencies(element);
+                    addResourceContent(element.eResource(), element);
 
-        // Set the TDQ item file name.
-        if (item instanceof TDQItem) {
-            setTDQItemFileName(element, item);
-        }
+                    Map<EObject, Collection<Setting>> find = EcoreUtil.ExternalCrossReferencer.find(element.eResource());
+                    Set<Resource> needSaves = new HashSet<Resource>();
+                    for (EObject object : find.keySet()) {
+                        Resource re = object.eResource();
+                        if (re == null) {
+                            continue;
+                        }
+                        // MOD sizhaoliu TDQ-6296 the resource should be resolved before saving the item to make sure
+                        // the references
+                        // are updated.
+                        EcoreUtil.resolveAll(re);
+                        needSaves.add(re);
+                    }
+
+                    // Set the TDQ item file name.
+                    if (item instanceof TDQItem) {
+                        setTDQItemFileName(element, item);
+                    }
+                    ProxyRepositoryFactory.getInstance().save(item);
+
+                    AbstractResourceChangesService resChangeService = TDQServiceRegister.getInstance().getResourceChangeService(
+                            AbstractResourceChangesService.class);
+                    if (resChangeService != null) {
+                        for (Resource toSave : needSaves) {
+                            resChangeService.saveResourceByEMFShared(toSave);
+                        }
+                    }
+                }
+            };
+            repositoryWorkUnit.setAvoidUnloadResources(true);
+            ProxyRepositoryFactory.getInstance().executeRepositoryWorkUnit(repositoryWorkUnit);
         try {
-            ProxyRepositoryFactory.getInstance().save(item);
+            repositoryWorkUnit.throwPersistenceExceptionIfAny();
         } catch (PersistenceException e) {
             log.error(e, e);
             rc.setOk(Boolean.FALSE);
             rc.setMessage(e.getMessage());
-        }
-
-        AbstractResourceChangesService resChangeService = TDQServiceRegister.getInstance().getResourceChangeService(
-                AbstractResourceChangesService.class);
-        if (resChangeService != null) {
-            for (Resource toSave : needSaves) {
-                resChangeService.saveResourceByEMFShared(toSave);
-            }
         }
 
         return rc;
@@ -599,25 +612,36 @@ public abstract class AElementPersistance {
 
     /**
      * Save item <B>without</B> dependencies.
-     *
+     * 
      * @param element
      */
-    protected ReturnCode saveWithoutDependencies(Item item, ModelElement element) {
+    protected ReturnCode saveWithoutDependencies(final Item item, final ModelElement element) {
         ReturnCode rc = new ReturnCode();
 
-        addDependencies(element);
-        addResourceContent(element.eResource(), element);
-        // Set the TDQ item file name.
-        if (item instanceof TDQItem) {
-            setTDQItemFileName(element, item);
-        }
+        RepositoryWorkUnit<Object> repositoryWorkUnit = new RepositoryWorkUnit<Object>("save dependencies") { //$NON-NLS-1$
+
+            @Override
+            public void run() throws PersistenceException {
+                addDependencies(element);
+                addResourceContent(element.eResource(), element);
+                // Set the TDQ item file name.
+                if (item instanceof TDQItem) {
+                    setTDQItemFileName(element, item);
+                }
+                ProxyRepositoryFactory.getInstance().save(item);
+
+            }
+        };
+        repositoryWorkUnit.setAvoidUnloadResources(true);
+        ProxyRepositoryFactory.getInstance().executeRepositoryWorkUnit(repositoryWorkUnit);
         try {
-            ProxyRepositoryFactory.getInstance().save(item);
+            repositoryWorkUnit.throwPersistenceExceptionIfAny();
         } catch (PersistenceException e) {
             log.error(e, e);
             rc.setOk(Boolean.FALSE);
             rc.setMessage(e.getMessage());
         }
+
         return rc;
     }
 

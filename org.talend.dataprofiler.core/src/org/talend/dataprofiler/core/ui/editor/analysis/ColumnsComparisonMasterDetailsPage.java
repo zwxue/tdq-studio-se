@@ -43,6 +43,7 @@ import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
+import org.talend.dataprofiler.core.ui.editor.composite.AbstractColumnDropTree;
 import org.talend.dataprofiler.core.ui.editor.composite.AnalysisColumnCompareTreeViewer;
 import org.talend.dataprofiler.core.ui.editor.composite.DataFilterComp;
 import org.talend.dataquality.analysis.Analysis;
@@ -68,7 +69,8 @@ import orgomg.cwm.resource.relational.ColumnSet;
 /**
  * This page show the comparisons information of column set.
  */
-public class ColumnsComparisonMasterDetailsPage extends AbstractAnalysisMetadataPage implements PropertyChangeListener {
+public class ColumnsComparisonMasterDetailsPage extends AbstractAnalysisMetadataPage<AbstractColumnDropTree> implements
+        PropertyChangeListener {
 
     private static Logger log = Logger.getLogger(ColumnsComparisonMasterDetailsPage.class);
 

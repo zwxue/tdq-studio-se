@@ -52,9 +52,11 @@ import org.eclipse.ui.part.FileEditorInput;
 import org.talend.commons.emf.EMFUtil;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.commons.exception.ExceptionHandler;
+import org.talend.commons.exception.PersistenceException;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.database.PluginConstant;
 import org.talend.core.model.repository.ERepositoryObjectType;
+import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.cwm.dependencies.DependenciesHandler;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.IRuningStatusListener;
@@ -76,6 +78,8 @@ import org.talend.dq.nodes.AnalysisRepNode;
 import org.talend.dq.nodes.DBConnectionRepNode;
 import org.talend.dq.nodes.DFConnectionRepNode;
 import org.talend.dq.nodes.MDMConnectionRepNode;
+import org.talend.dq.writer.impl.ElementWriterFactory;
+import org.talend.repository.RepositoryWorkUnit;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.utils.sugars.ReturnCode;
@@ -86,7 +90,8 @@ import orgomg.cwm.objectmodel.core.ModelElement;
 /**
  * DOC rli class global comment. Detailled comment
  */
-public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormPage implements IRuningStatusListener {
+public abstract class AbstractAnalysisMetadataPage<T extends AbstractColumnDropTree> extends AbstractMetadataFormPage implements
+        IRuningStatusListener {
 
     private static Logger log = Logger.getLogger(AbstractAnalysisMetadataPage.class);
 
@@ -95,6 +100,8 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
     protected AnalysisRepNode analysisRepNode;
 
     protected Section analysisParamSection;
+
+    protected T treeViewer;
 
     public AnalysisRepNode getAnalysisRepNode() {
         return this.analysisRepNode;
@@ -716,5 +723,40 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
         Composite sectionClient = toolkit.createComposite(analysisParamSection);
         createAnalysisLimitComposite(sectionClient);
         analysisParamSection.setClient(sectionClient);
+    }
+
+    protected ReturnCode saveDependency(final TDQAnalysisItem tdqAnalysisItem) {
+        final ReturnCode saved = new ReturnCode(true);
+        RepositoryWorkUnit<Object> repositoryWorkUnit = new RepositoryWorkUnit<Object>("save report item") { //$NON-NLS-1$
+
+            @Override
+            protected void run() throws PersistenceException {
+                // TDQ-5581,if has removed rules,should remove dependency each other before saving.
+
+                HashSet<ModelElement> removedElements = treeViewer.getRemovedElements();
+                if (!removedElements.isEmpty()) {
+                    DependenciesHandler.getInstance().removeDependenciesBetweenModels(analysis,
+                            new ArrayList<ModelElement>(removedElements));
+                }
+                // MOD yyi 2012-02-08 TDQ-4621:Explicitly set true for updating dependencies.
+                ReturnCode saveSuccess = ElementWriterFactory.getInstance().createAnalysisWrite().save(tdqAnalysisItem, true);
+                if (!saveSuccess.isOk()) {
+                    saved.setOk(false);
+                    saved.setMessage(saveSuccess.getMessage());
+                } else if (!removedElements.isEmpty()) {
+                    saveRemovedElements();
+                }
+            }
+        };
+        repositoryWorkUnit.setAvoidUnloadResources(true);
+        ProxyRepositoryFactory.getInstance().executeRepositoryWorkUnit(repositoryWorkUnit);
+        try {
+            repositoryWorkUnit.throwPersistenceExceptionIfAny();
+        } catch (PersistenceException e) {
+            log.error(e, e);
+            saved.setOk(Boolean.FALSE);
+            saved.setMessage(e.getMessage());
+        }
+        return saved;
     }
 }

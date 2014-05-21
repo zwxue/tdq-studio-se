@@ -17,7 +17,6 @@ import java.beans.PropertyChangeListener;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
@@ -64,7 +63,6 @@ import org.jfree.chart.JFreeChart;
 import org.jfree.experimental.chart.swt.ChartComposite;
 import org.talend.commons.utils.WorkspaceUtils;
 import org.talend.core.model.metadata.builder.connection.Connection;
-import org.talend.cwm.dependencies.DependenciesHandler;
 import org.talend.cwm.helper.ConnectionHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.dataprofiler.core.ImageLib;
@@ -92,7 +90,6 @@ import org.talend.dq.analysis.TableAnalysisHandler;
 import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.indicators.preview.EIndicatorChartType;
-import org.talend.dq.writer.impl.ElementWriterFactory;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.utils.sugars.ReturnCode;
@@ -102,13 +99,12 @@ import orgomg.cwm.resource.relational.NamedColumnSet;
 /**
  * DOC xqliu class global comment. Detailled comment
  */
-public class TableMasterDetailsPage extends AbstractAnalysisMetadataPage implements PropertyChangeListener {
+public class TableMasterDetailsPage extends AbstractAnalysisMetadataPage<AnalysisTableTreeViewer> implements
+        PropertyChangeListener {
 
     private static Logger log = Logger.getLogger(TableMasterDetailsPage.class);
 
     private String execLang = ExecutionLanguage.SQL.getLiteral();
-
-    AnalysisTableTreeViewer treeViewer;
 
     DataFilterComp dataFilterComp;
 
@@ -492,7 +488,7 @@ public class TableMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
 
     public void createPreviewCharts(final ScrolledForm form, final Composite composite, final boolean isCreate) {
         previewChartList = new ArrayList<ExpandableComposite>();
-        for (final TableIndicator tableIndicator : this.treeViewer.getTableIndicator()) {
+        for (final TableIndicator tableIndicator : treeViewer.getTableIndicator()) {
             final NamedColumnSet set = tableIndicator.getColumnSet();
             ExpandableComposite exComp = toolkit.createExpandableComposite(composite, ExpandableComposite.TREE_NODE
                     | ExpandableComposite.CLIENT_INDENT);
@@ -687,17 +683,7 @@ public class TableMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
             tdqAnalysisItem.getProperty().setLabel(WorkspaceUtils.normalize(analysisHandler.getName()));
             this.nameText.setText(analysisHandler.getName());
             // ~
-            // TDQ-5581,if has removed rules,should remove dependency each other before saving.
-            HashSet<ModelElement> removedElements = treeViewer.getRemovedElements();
-            if (!removedElements.isEmpty()) {
-                DependenciesHandler.getInstance().removeDependenciesBetweenModels(analysis,
-                        new ArrayList<ModelElement>(removedElements));
-            }
-            // MOD yyi 2012-02-08 TDQ-4621:Explicitly set true for updating dependencies.
-            saved = ElementWriterFactory.getInstance().createAnalysisWrite().save(tdqAnalysisItem, true);
-            if (saved.isOk() && !removedElements.isEmpty()) {
-                saveRemovedElements();
-            }
+            saved = saveDependency(tdqAnalysisItem);
         }
         // MOD yyi 2012-02-03 TDQ-3602:Avoid to rewriting all analyzes after saving, no reason to update all analyzes
         // which is depended in the referred connection.
@@ -785,4 +771,5 @@ public class TableMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
     public AbstractColumnDropTree getTreeViewer() {
         return this.treeViewer;
     }
+
 }

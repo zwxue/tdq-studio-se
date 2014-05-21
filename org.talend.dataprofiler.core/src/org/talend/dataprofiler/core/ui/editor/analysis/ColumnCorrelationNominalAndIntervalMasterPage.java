@@ -98,11 +98,10 @@ import orgomg.cwm.objectmodel.core.ModelElement;
 /**
  * @author xzhao
  */
-public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnalysisMetadataPage implements PropertyChangeListener {
+public class ColumnCorrelationNominalAndIntervalMasterPage extends
+        AbstractAnalysisMetadataPage<AnalysisColumnNominalIntervalTreeViewer> implements PropertyChangeListener {
 
     private static Logger log = Logger.getLogger(ColumnCorrelationNominalAndIntervalMasterPage.class);
-
-    AnalysisColumnNominalIntervalTreeViewer treeViewer;
 
     DataFilterComp dataFilterComp;
 

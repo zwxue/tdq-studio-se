@@ -347,78 +347,88 @@ public class DQDeleteAction extends DeleteAction {
      * dependencies
      */
     private void physicalDelete() {
-        // when physical deleting object with dependencies, do not popup
-        // confirm anymore. and after dealing with it, store back to its default value.
-        confirmForDQ = true;
-        List<IRepositoryNode> folderNodeWhichChildHadDepend = null;
+        RepositoryWorkUnit<Object> repositoryWorkUnit = new RepositoryWorkUnit<Object>("Delete items") { //$NON-NLS-1$
 
-        // use this selectedNodes directly, the order also important,when the depended nodes had been deleted, no need
-        // to check them any more
-        for (int i = selectedNodes.size() - 1; i >= 0; i--) {
-            IRepositoryNode node = selectedNodes.get(i);
-            IRepositoryNode parent = node.getParent();
-            // -- When the node has no depends, delete it directly
-            // -- when the node has depends, add it with depends list to the nodeWithDependsMap
-            if (node.getType() == ENodeType.SIMPLE_FOLDER || node.getType() == ENodeType.SYSTEM_FOLDER) {
-                List<IRepositoryNode> newLs = RepositoryNodeHelper.getRepositoryElementFromFolder(node, true);
-                // if the folder have sub node(s) not be deleted, the folder should not be deleted also
-                boolean haveSubNode = false;
-                for (IRepositoryNode subNode : newLs) {
-                    if (!hasDependencyClients(subNode)) {
-                        excuteSuperRun(subNode, node);
+            @Override
+            protected void run() throws LoginException, PersistenceException {
+                // when physical deleting object with dependencies, do not popup
+                // confirm anymore. and after dealing with it, store back to its default value.
+                confirmForDQ = true;
+                List<IRepositoryNode> folderNodeWhichChildHadDepend = null;
+
+                // use this selectedNodes directly, the order also important,when the depended nodes had been deleted,
+                // no need
+                // to check them any more
+                for (int i = selectedNodes.size() - 1; i >= 0; i--) {
+                    IRepositoryNode node = selectedNodes.get(i);
+                    IRepositoryNode parent = node.getParent();
+                    // -- When the node has no depends, delete it directly
+                    // -- when the node has depends, add it with depends list to the nodeWithDependsMap
+                    if (node.getType() == ENodeType.SIMPLE_FOLDER || node.getType() == ENodeType.SYSTEM_FOLDER) {
+                        List<IRepositoryNode> newLs = RepositoryNodeHelper.getRepositoryElementFromFolder(node, true);
+                        // if the folder have sub node(s) not be deleted, the folder should not be deleted also
+                        boolean haveSubNode = false;
+                        for (IRepositoryNode subNode : newLs) {
+                            if (!hasDependencyClients(subNode)) {
+                                excuteSuperRun(subNode, node);
+                            } else {
+                                // if the folder has some child with depends, can not delete the folder itself here
+                                haveSubNode = true;
+                                if (folderNodeWhichChildHadDepend == null) {
+                                    folderNodeWhichChildHadDepend = new ArrayList<IRepositoryNode>();
+                                }
+                                if (!folderNodeWhichChildHadDepend.contains(node)) {
+                                    folderNodeWhichChildHadDepend.add(node);
+                                }
+                            }
+
+                        }
+                        if (!haveSubNode) {
+                            excuteSuperRun(node, parent);
+                        }
                     } else {
-                        // if the folder has some child with depends, can not delete the folder itself here
-                        haveSubNode = true;
-                        if (folderNodeWhichChildHadDepend == null) {
-                            folderNodeWhichChildHadDepend = new ArrayList<IRepositoryNode>();
-                        }
-                        if (!folderNodeWhichChildHadDepend.contains(node)) {
-                            folderNodeWhichChildHadDepend.add(node);
+                        if (!hasDependencyClients(node)) {
+                            excuteSuperRun(node, parent);
                         }
                     }
+                }
+                // show all nodes with its depends in one dialog
+                boolean forceDelete = false;
+                if (nodeWithDependsMap.size() > 0) {
+                    // show all nodes in one dialog.
+                    forceDelete = DeleteModelElementConfirmDialog.showDialog(nodeWithDependsMap,
+                            DefaultMessagesImpl.getString("DQDeleteAction.dependencyByOther"), true);//$NON-NLS-1$
+                    if (forceDelete) {
+                        Iterator<Entry<IRepositoryNode, List<ModelElement>>> iter = nodeWithDependsMap.entrySet().iterator();
+                        while (iter.hasNext()) {
+                            Map.Entry<IRepositoryNode, List<ModelElement>> entry = iter.next();
+                            IRepositoryNode node = entry.getKey();
+                            List<ModelElement> dependencies = entry.getValue();
 
-                }
-                if (!haveSubNode) {
-                    excuteSuperRun(node, parent);
-                }
-            } else {
-                if (!hasDependencyClients(node)) {
-                    excuteSuperRun(node, parent);
-                }
-            }
-        }
-        // show all nodes with its depends in one dialog
-        boolean forceDelete = false;
-        if (nodeWithDependsMap.size() > 0) {
-            // show all nodes in one dialog.
-            forceDelete = DeleteModelElementConfirmDialog.showDialog(nodeWithDependsMap,
-                    DefaultMessagesImpl.getString("DQDeleteAction.dependencyByOther"), true);//$NON-NLS-1$
-            if (forceDelete) {
-                Iterator<Entry<IRepositoryNode, List<ModelElement>>> iter = nodeWithDependsMap.entrySet().iterator();
-                while (iter.hasNext()) {
-                    Map.Entry<IRepositoryNode, List<ModelElement>> entry = iter.next();
-                    IRepositoryNode node = entry.getKey();
-                    List<ModelElement> dependencies = entry.getValue();
-
-                    // only when its dependencies deleted successfully, then delete itself
-                    if (physicalDeleteDependencies(dependencies)) {
-                        excuteSuperRun(node, node.getParent());
+                            // only when its dependencies deleted successfully, then delete itself
+                            if (physicalDeleteDependencies(dependencies)) {
+                                excuteSuperRun(node, node.getParent());
+                            }
+                        }
                     }
                 }
-            }
-        }
-        nodeWithDependsMap.clear();
-        // if the folder has the child who has depends, can only proceeding after its child be handled
-        if (folderNodeWhichChildHadDepend != null && folderNodeWhichChildHadDepend.size() > 0) {
-            if (forceDelete) {
-                for (IRepositoryNode folder : folderNodeWhichChildHadDepend) {
-                    excuteSuperRun(folder, folder.getParent());
+                nodeWithDependsMap.clear();
+                // if the folder has the child who has depends, can only proceeding after its child be handled
+                if (folderNodeWhichChildHadDepend != null && folderNodeWhichChildHadDepend.size() > 0) {
+                    if (forceDelete) {
+                        for (IRepositoryNode folder : folderNodeWhichChildHadDepend) {
+                            excuteSuperRun(folder, folder.getParent());
+                        }
+                    }
                 }
+                // Added 20130227 TDQ-6901 yyin, when physical deleting object with dependencies, do not popup
+                // confirm anymore. and after dealing with it, store back to its default value.
+                confirmForDQ = false;
+
             }
-        }
-        // Added 20130227 TDQ-6901 yyin, when physical deleting object with dependencies, do not popup
-        // confirm anymore. and after dealing with it, store back to its default value.
-        confirmForDQ = false;
+        };
+        repositoryWorkUnit.setAvoidUnloadResources(true);
+        ProxyRepositoryFactory.getInstance().executeRepositoryWorkUnit(repositoryWorkUnit);
     }
 
     /**

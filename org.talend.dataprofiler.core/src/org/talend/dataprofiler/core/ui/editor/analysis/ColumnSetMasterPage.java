@@ -67,7 +67,6 @@ import org.talend.core.model.metadata.builder.connection.MetadataColumn;
 import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.core.repository.model.repositoryObject.MetadataXmlElementTypeRepositoryObject;
-import org.talend.cwm.dependencies.DependenciesHandler;
 import org.talend.cwm.helper.ModelElementHelper;
 import org.talend.cwm.helper.SwitchHelpers;
 import org.talend.cwm.relational.TdColumn;
@@ -115,7 +114,6 @@ import org.talend.dq.indicators.preview.EIndicatorChartType;
 import org.talend.dq.nodes.DFColumnFolderRepNode;
 import org.talend.dq.nodes.MDMXmlElementRepNode;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
-import org.talend.dq.writer.impl.ElementWriterFactory;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.utils.sugars.ReturnCode;
@@ -124,11 +122,10 @@ import orgomg.cwm.objectmodel.core.ModelElement;
 /**
  * @author yyi 2009-12-16
  */
-public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements PropertyChangeListener {
+public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage<AnalysisColumnSetTreeViewer> implements
+        PropertyChangeListener {
 
     private static Logger log = Logger.getLogger(ColumnSetMasterPage.class);
-
-    AnalysisColumnSetTreeViewer treeViewer;
 
     IndicatorsComp indicatorsViewer;
 
@@ -891,17 +888,7 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
             tdqAnalysisItem.getProperty().setLabel(WorkspaceUtils.normalize(columnSetAnalysisHandler.getName()));
             this.nameText.setText(columnSetAnalysisHandler.getName());
             // ~
-            // TDQ-5581,if has removed emlements(patten),should remove dependency each other before saving.
-            HashSet<ModelElement> removedElements = treeViewer.getRemovedElements();
-            if (!removedElements.isEmpty()) {
-                DependenciesHandler.getInstance().removeDependenciesBetweenModels(analysis,
-                        new ArrayList<ModelElement>(removedElements));
-            }
-            // MOD yyi 2012-02-08 TDQ-4621:Explicitly set true for updating dependencies.
-            saved = ElementWriterFactory.getInstance().createAnalysisWrite().save(tdqAnalysisItem, true);
-            if (saved.isOk() && !removedElements.isEmpty()) {
-                saveRemovedElements();
-            }
+            saved = saveDependency(tdqAnalysisItem);
         }
         // MOD yyi 2012-02-03 TDQ-3602:Avoid to rewriting all analyzes after saving, no reason to update all analyzes
         // which is depended in the referred connection.
@@ -989,7 +976,7 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
 
         String message = null;
 
-        List<IRepositoryNode> columnSetMultiValueList = this.treeViewer.getColumnSetMultiValueList();
+        List<IRepositoryNode> columnSetMultiValueList = treeViewer.getColumnSetMultiValueList();
 
         // MOD yyi 2011-02-16 17871:delimitefile
         List<ModelElement> columnList = new ArrayList<ModelElement>();
@@ -1039,7 +1026,7 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
 
     @Override
     protected ReturnCode canRun() {
-        List<IRepositoryNode> columnSetMultiValueList = this.treeViewer.getColumnSetMultiValueList();
+        List<IRepositoryNode> columnSetMultiValueList = treeViewer.getColumnSetMultiValueList();
         if (columnSetMultiValueList.isEmpty()) {
             return new ReturnCode(DefaultMessagesImpl.getString("ColumnSetMasterPage.NoColumnsAssigned"), false); //$NON-NLS-1$
         }
@@ -1118,7 +1105,7 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
      * @param indicatorUnit
      */
     public void removeItem(IndicatorUnit indicatorUnit) {
-        this.treeViewer.removeItemByUnit(indicatorUnit);
+        treeViewer.removeItemByUnit(indicatorUnit);
 
     }
 

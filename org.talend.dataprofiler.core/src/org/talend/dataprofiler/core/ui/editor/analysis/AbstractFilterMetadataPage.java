@@ -84,6 +84,7 @@ import org.talend.dataprofiler.core.model.SqlExplorerBridge;
 import org.talend.dataprofiler.core.ui.ColumnSortListener;
 import org.talend.dataprofiler.core.ui.action.actions.AnalyzeColumnSetAction;
 import org.talend.dataprofiler.core.ui.action.actions.OverviewAnalysisAction;
+import org.talend.dataprofiler.core.ui.editor.composite.AbstractColumnDropTree;
 import org.talend.dataquality.analysis.AnalysisType;
 import org.talend.dataquality.analysis.ExecutionInformations;
 import org.talend.dataquality.domain.Domain;
@@ -111,7 +112,7 @@ import orgomg.cwm.resource.relational.Schema;
 /**
  * DOC rli class global comment. Detailled comment
  */
-public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadataPage {
+public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadataPage<AbstractColumnDropTree> {
 
     private static final String SCHEMA = DefaultMessagesImpl.getString("ConnectionMasterDetailsPage.schema"); //$NON-NLS-1$
 
