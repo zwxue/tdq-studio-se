@@ -44,7 +44,7 @@ public class ColumnSetIndicatorUnit extends IndicatorUnit {
         int sqlType = 0;
         DataminingType dataminingType = DataminingType.NOMINAL;
         IndicatorDefinition indicatorDefinition = this.getIndicator().getIndicatorDefinition();
-        return FormEnum.getFormEnumArray(indicatorDefinition, sqlType, dataminingType, type);
+        return FormEnum.getFormEnumArray(indicatorDefinition, sqlType, dataminingType, type, getExecutionLanguage());
     }
 
 }

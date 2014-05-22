@@ -15,9 +15,12 @@ package org.talend.dataprofiler.core.ui.editor.preview;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.emf.ecore.EObject;
 import org.talend.core.model.properties.Property;
 import org.talend.cwm.management.i18n.InternationalizationUtil;
 import org.talend.dataprofiler.core.ui.wizard.indicator.forms.FormEnum;
+import org.talend.dataquality.analysis.Analysis;
+import org.talend.dataquality.analysis.ExecutionLanguage;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.IndicatorParameters;
 import org.talend.dataquality.indicators.sql.UserDefIndicator;
@@ -167,4 +170,20 @@ public abstract class IndicatorUnit {
      * @return
      */
     public abstract FormEnum[] getForms();
+
+    /**
+     * get the analysis execution langugae.
+     * 
+     * @return
+     */
+    protected String getExecutionLanguage() {
+        String result = ExecutionLanguage.SQL.getLiteral();
+        if (indicator != null) {
+            EObject eContainer = indicator.eContainer().eContainer();
+            if (eContainer instanceof Analysis) {
+                result = ((Analysis) eContainer).getParameters().getExecutionLanguage().getLiteral();
+            }
+        }
+        return result;
+    }
 }

@@ -135,7 +135,9 @@ public enum FormEnum {
      * @return
      */
     public static FormEnum[] getFormEnumArray(IndicatorDefinition indicatorDefinition, int sqlType,
-            DataminingType dataminingType, IndicatorEnum indicatorType) {
+            DataminingType dataminingType, IndicatorEnum indicatorType, String executionLanguage) {
+        boolean isJavaEngine = ExecutionLanguage.JAVA.getLiteral().equals(executionLanguage);
+        boolean isSqlEngine = ExecutionLanguage.SQL.getLiteral().equals(executionLanguage);
         FormEnum[] forms = null;
         switch (indicatorType) {
 
@@ -257,9 +259,9 @@ public enum FormEnum {
             break;
 
         case UserDefinedIndicatorEnum:
-            if (indicatorDefinition != null && UDIHelper.isJUDIValid(indicatorDefinition)) {
+            if (indicatorDefinition != null && UDIHelper.isJUDIValid(indicatorDefinition) && isJavaEngine) {
                 forms = new FormEnum[] { JavaUDIParametersForm };
-            } else if (UDIHelper.isFrequency((indicatorDefinition))) {
+            } else if (UDIHelper.isFrequency((indicatorDefinition)) && isSqlEngine) {
                 forms = new FormEnum[] { NumbericNominalForm };
             }
 

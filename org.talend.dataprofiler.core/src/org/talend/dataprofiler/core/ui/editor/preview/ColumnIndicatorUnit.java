@@ -73,6 +73,7 @@ public class ColumnIndicatorUnit extends IndicatorUnit {
                     .getJavaType()) : DataminingType.NOMINAL;
         }
 
-        return FormEnum.getFormEnumArray(this.getIndicator().getIndicatorDefinition(), sqlType, dataminingType, type);
+        return FormEnum.getFormEnumArray(this.getIndicator().getIndicatorDefinition(), sqlType, dataminingType, type,
+                getExecutionLanguage());
     }
 }
