@@ -114,25 +114,18 @@ public class InfomixDbmsLanguage extends DbmsLanguage {
     }
 
     private String computeAliasesIndex(String columns, String groupByAliases) {
-        String groupByIndex = groupByAliases;
         if (null == columns || columns.equals("*") || columns.equals(PluginConstant.EMPTY_STRING)) { //$NON-NLS-1$
             return groupByAliases;
 
         } else if (columns.indexOf(groupByAliases) > -1) {
-            String[] aliasArray = groupByAliases.split(" , "); //$NON-NLS-1$
-            if (aliasArray.length != 0) {
-                groupByIndex = PluginConstant.EMPTY_STRING;
-            }
-            for (int i = 0; i < aliasArray.length; i++) {
-                if (columns.contains(aliasArray[i])) {
-                    groupByIndex += String.valueOf(i + 1);
-                    if (i != aliasArray.length - 1) {
-                        groupByIndex += PluginConstant.COMMA_STRING;
-                    }
+            String[] columnArray = columns.split(","); //$NON-NLS-1$
+            for (int i = 0; i < columnArray.length; i++) {
+                if (columnArray[i].equals(groupByAliases)) {
+                    return String.valueOf(i + 1);
                 }
             }
         }
-        return groupByIndex;
+        return groupByAliases;
 
     }
 
@@ -233,19 +226,4 @@ public class InfomixDbmsLanguage extends DbmsLanguage {
         Catalog catalog = super.getCatalog(schema);
         return catalog;
     }
-
-    @Override
-    public String extractQuarter(String colName) {
-        return "FLOOR(((" + extract(DateGrain.MONTH, colName) + "-1)/3)+1)"; //$NON-NLS-1$ //$NON-NLS-2$
-    }
-
-    @Override
-    public String extractWeek(String colName) {
-        String columnDate = "DATE(" + colName + ")"; //$NON-NLS-1$ //$NON-NLS-2$
-        String day1 = "MDY(1, 1, YEAR(" + colName + "))"; //$NON-NLS-1$ //$NON-NLS-2$
-        String nbdays = columnDate + "-" + day1; //$NON-NLS-1$
-        return "1+FLOOR((" + nbdays + "+WEEKDAY(" + day1 + "))/7)"; //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$
-
-    }
-
 }
