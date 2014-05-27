@@ -11,6 +11,10 @@
            class="org.talend.librariesmanager.model.service.JavaLibrariesService"
            serviceId="org.talend.core.ILibrariesService">
      </Service>
+     <Service
+           class="org.talend.dataprofiler.rcp.TopService"
+           serviceId="ICoreService">
+     </Service>
    </extension>
    <extension
          point="org.talend.core.runtime.librariesNeeded">
