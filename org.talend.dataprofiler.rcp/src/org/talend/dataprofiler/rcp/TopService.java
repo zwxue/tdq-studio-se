@@ -416,11 +416,6 @@ public class TopService implements ICoreService {
     }
 
     @Override
-    public void synchronizeSapLib() {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
     public IPreferenceStore getPreferenceStore() {
         // MOD qiongli 2011-4-11.bug 20115.
         return CorePlugin.getDefault().getPreferenceStore();
