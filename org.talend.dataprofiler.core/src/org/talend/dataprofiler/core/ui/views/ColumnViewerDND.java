@@ -54,6 +54,8 @@ import org.talend.dataprofiler.core.ui.editor.composite.AnalysisColumnNominalInt
 import org.talend.dataprofiler.core.ui.editor.composite.AnalysisColumnSetTreeViewer;
 import org.talend.dataprofiler.core.ui.editor.composite.AnalysisColumnTreeViewer;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
+import org.talend.dataprofiler.core.ui.events.EventEnum;
+import org.talend.dataprofiler.core.ui.events.EventManager;
 import org.talend.dataprofiler.core.ui.utils.MessageUI;
 import org.talend.dataprofiler.core.ui.utils.UDIUtils;
 import org.talend.dataprofiler.core.ui.utils.WorkbenchUtils;
@@ -303,6 +305,10 @@ public class ColumnViewerDND {
                             TypedReturnCode<IndicatorUnit> trc = PatternUtilities.createIndicatorUnit(fe, data, analysis);
                             if (trc.isOk()) {
                                 ((AnalysisColumnSetTreeViewer) viewer).createOneUnit(item, trc.getObject());
+                                // ADD msjian TDQ-8860 2014-4-30:only for column set analysis, when there have
+                                // pattern(s) when java engine,show all match indicator in the Indicators section.
+                                EventManager.getInstance().publish(analysis, EventEnum.DQ_COLUMNSET_SHOW_MATCH_INDICATORS, null);
+                                // TDQ-8860~
                             } else if (trc.getMessage() != null && !trc.getMessage().trim().equals("")) { //$NON-NLS-1$
                                 MessageUI.openError(trc.getMessage());
                             }
