@@ -888,7 +888,7 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
                 analysisHandler.setDatamingType(type.getLiteral(), modelEle);
             }
         } else {
-            deleteConnectionDependency(analysis);
+            analysis.getContext().setConnection(null);
         }
         analysisHandler.setStringDataFilter(dataFilterComp.getDataFilterString());
         // ADD xqliu 2010-07-19 bug 14014

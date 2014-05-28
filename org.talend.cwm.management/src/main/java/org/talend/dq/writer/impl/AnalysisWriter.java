@@ -236,10 +236,10 @@ public class AnalysisWriter extends AElementPersistance {
         TDQAnalysisItem anaItem = (TDQAnalysisItem) item;
         Analysis analysis = anaItem.getAnalysis();
         List<Property> clintDependency = DependenciesHandler.getInstance().getClintDependency(anaItem.getProperty());
-        List<ModelElement> getClientDepListByResultList = getClientDepListByResult(analysis);
+        List<ModelElement> clientDepListByResultList = getClientDepListByResult(analysis);
         for (Property currentClient : clintDependency) {
             ModelElement modelElement = PropertyHelper.getModelElement(currentClient);
-            if (!getClientDepListByResultList.contains(modelElement)) {
+            if (!clientDepListByResultList.contains(modelElement)) {
                 boolean isSuccess = DependenciesHandler.getInstance().removeDependenciesBetweenModel(analysis, modelElement);
                 if (isSuccess) {
                     try {
@@ -270,10 +270,13 @@ public class AnalysisWriter extends AElementPersistance {
     private List<ModelElement> getClientDepListByResult(Analysis analysis) {
         List<ModelElement> clientDependencyList = new ArrayList<ModelElement>();
         DataManager connection = analysis.getContext().getConnection();
-        // DQRule or UDI
-        clientDependencyList.addAll(AnalysisHelper.getUserDefinedIndicators(analysis));
-        clientDependencyList.addAll(AnalysisHelper.getPatterns(analysis));
+        // when connection is null mean that no any result can be keep so don't need check result again return empty
+        // list
         if (connection != null) {
+            // DQRule or UDI case
+            clientDependencyList.addAll(AnalysisHelper.getUserDefinedIndicators(analysis));
+            // pattern case
+            clientDependencyList.addAll(AnalysisHelper.getPatterns(analysis));
             clientDependencyList.add(connection);
         }
         return clientDependencyList;

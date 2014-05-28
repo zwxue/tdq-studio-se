@@ -869,7 +869,7 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
             }
             // ~
         } else {
-            deleteConnectionDependency(analysis);
+            analysis.getContext().setConnection(null);
         }
         // ADD xqliu 2010-07-19 bug 14014
         this.updateAnalysisClientDependency();

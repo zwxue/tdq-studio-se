@@ -257,7 +257,7 @@ public class ColumnsComparisonMasterDetailsPage extends AbstractAnalysisMetadata
                 log.info("fail to save dependency analysis:" + analysis.getFileName());//$NON-NLS-1$
             }
         } else {
-            deleteConnectionDependency(analysis);
+            analysis.getContext().setConnection(null);
         }
         AnalysisBuilder anaBuilder = new AnalysisBuilder();
         anaBuilder.setAnalysis(this.analysis);

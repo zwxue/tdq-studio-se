@@ -617,7 +617,7 @@ public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnaly
             columnSetMultiIndicator.getAnalyzedColumns().addAll(columnLst);
             correlationAnalysisHandler.addIndicator(columnLst, columnSetMultiIndicator);
         } else {
-            deleteConnectionDependency(analysis);
+            analysis.getContext().setConnection(null);
             // MOD by zshen for bug 12042.
             ColumnsetFactory columnsetFactory = ColumnsetFactory.eINSTANCE;
             ColumnSetMultiValueIndicator columnSetMultiValueIndicator = null;
