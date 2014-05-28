@@ -50,7 +50,8 @@ public class MatchRuleDataTable extends Composite {
 
     private List<String[]> displayViewData;
 
-    private List<Integer> disGIDList = new ArrayList<Integer>();
+    // TDQ-8774 change the type of GID from int to string
+    private List<String> disGIDList = new ArrayList<String>();
 
     private final Map<String, Integer> itemCount = new HashMap<String, Integer>();
 
@@ -176,11 +177,11 @@ public class MatchRuleDataTable extends Composite {
 
     private boolean canDisplay(String[] dataArray) {
         try {
-            if (getDisGIDList().contains(Integer.parseInt(dataArray[gidColumn]))) {
+            if (getDisGIDList().contains(String.valueOf(dataArray[gidColumn]))) {
                 return true;
             }
             if (getDisGroupSize() <= Integer.parseInt(dataArray[grpSizeColumn])) {
-                getDisGIDList().add(Integer.parseInt(dataArray[gidColumn]));
+                getDisGIDList().add(String.valueOf(dataArray[gidColumn]));
                 return true;
             }
         } catch (NumberFormatException e) {
@@ -194,7 +195,7 @@ public class MatchRuleDataTable extends Composite {
      * 
      * @return the disGIDList
      */
-    public List<Integer> getDisGIDList() {
+    public List<String> getDisGIDList() {
         return this.disGIDList;
     }
 
@@ -261,11 +262,11 @@ public class MatchRuleDataTable extends Composite {
             itemPage.add(getDisplayViewData().get(i));
         }
         if (itemPage.size() >= 0) {
-            //remove matchRuleTableResizeListener to avoid unHandle loop when H_SCORLL will be appear or disappear
+            // remove matchRuleTableResizeListener to avoid unHandle loop when H_SCORLL will be appear or disappear
             dataViewer.getTable().removeControlListener(matchRuleTableResizeListener);
             this.dataViewer.setInput(itemPage);
             dataViewer.getTable().addControlListener(matchRuleTableResizeListener);
-            //~
+            // ~
         }
         updateButons();
     }
