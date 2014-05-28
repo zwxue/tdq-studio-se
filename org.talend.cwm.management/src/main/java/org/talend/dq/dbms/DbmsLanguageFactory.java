@@ -329,7 +329,12 @@ public final class DbmsLanguageFactory {
         if (StringUtils.contains(lang1, DbmsLanguage.NETEZZA) && StringUtils.contains(lang2, DbmsLanguage.NETEZZA)) {
             return true;
         }
-        return StringUtils.equalsIgnoreCase(lang1, lang2);
+        if (StringUtils.contains(lang1, DbmsLanguage.HIVE) && StringUtils.contains(lang2, DbmsLanguage.HIVE)) {
+            return true;
+        }
+
+        return StringUtils.contains(StringUtils.upperCase(lang1), StringUtils.upperCase(lang2))
+                || StringUtils.contains(StringUtils.upperCase(lang2), StringUtils.upperCase(lang1));
     }
 
     /**
