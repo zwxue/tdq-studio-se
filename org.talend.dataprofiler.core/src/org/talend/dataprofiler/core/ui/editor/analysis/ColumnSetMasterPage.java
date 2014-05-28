@@ -705,7 +705,7 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
             }
             // ~
         } else {
-            deleteConnectionDependency(analysisItem);
+            analysis.getContext().setConnection(null);
         }
 
         // save the number of connections per analysis

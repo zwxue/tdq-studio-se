@@ -721,7 +721,7 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
                 analysisHandler.setDatamingType(type.getLiteral(), modelEle);
             }
         } else {
-            deleteConnectionDependency(analysisItem);
+            analysis.getContext().setConnection(null);
         }
         analysisHandler.setStringDataFilter(dataFilterComp.getDataFilterString());
         // 2011.1.12 MOD by zhsne to unify anlysis and connection id when saving.

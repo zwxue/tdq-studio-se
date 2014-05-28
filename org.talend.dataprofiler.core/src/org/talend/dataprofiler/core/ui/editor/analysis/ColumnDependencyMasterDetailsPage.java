@@ -267,7 +267,7 @@ public class ColumnDependencyMasterDetailsPage extends AbstractAnalysisMetadataP
                 log.info("fail to save dependency analysis:" + analysisItem.getAnalysis().getFileName());//$NON-NLS-1$
             }
         } else {
-            deleteConnectionDependency(analysisItem);
+            analysisItem.getAnalysis().getContext().setConnection(null);
         }
 
         // save the number of connections per analysis

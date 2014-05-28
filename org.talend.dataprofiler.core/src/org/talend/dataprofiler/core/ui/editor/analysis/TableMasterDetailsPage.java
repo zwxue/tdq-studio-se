@@ -657,7 +657,7 @@ public class TableMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
                 analysisHandler.addIndicator(tableIndicator.getColumnSet(), tableIndicator.getIndicators());
             }
         } else {
-            deleteConnectionDependency(analysisItem);
+            analysis.getContext().setConnection(null);
         }
         analysisHandler.setStringDataFilter(dataFilterComp.getDataFilterString());
 
