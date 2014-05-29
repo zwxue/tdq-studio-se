@@ -14,15 +14,10 @@ package org.talend.dataprofiler.core.ui.wizard.indicator;
 
 import java.util.HashMap;
 
-import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFolder;
-import org.eclipse.swt.events.ModifyEvent;
-import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Composite;
-import org.talend.commons.utils.WorkspaceUtils;
-import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.ui.wizard.MetadataWizardPage;
 import org.talend.resource.ResourceManager;
 
@@ -31,8 +26,6 @@ import org.talend.resource.ResourceManager;
  */
 public class NewUDIndicatorWizardPage1 extends MetadataWizardPage {
 
-    protected static Logger log = Logger.getLogger(NewUDIndicatorWizardPage1.class);
-
     protected HashMap<String, String> metadata;
 
     public NewUDIndicatorWizardPage1() {
@@ -40,6 +33,7 @@ public class NewUDIndicatorWizardPage1 extends MetadataWizardPage {
         setPageComplete(false);
     }
 
+    @Override
     public void createControl(Composite parent) {
 
         super.createControl(parent);
@@ -56,6 +50,7 @@ public class NewUDIndicatorWizardPage1 extends MetadataWizardPage {
 
     @Override
     protected void createExtendedControl(Composite container) {
+        return;
     }
 
     @Override
@@ -65,35 +60,4 @@ public class NewUDIndicatorWizardPage1 extends MetadataWizardPage {
 
     boolean checkName = true;
 
-    @Override
-    protected void addListeners() {
-        super.addListeners();
-        this.nameText.addModifyListener(new ModifyListener() {
-
-            public void modifyText(ModifyEvent e) {
-                // MOD gdbu 2011-4-8 bug : 19976
-                String text = nameText.getText();
-                if (checkName && (text.indexOf(":") > 0 || text.indexOf("/") > 0)) {
-                    checkName = false;
-                    int x = nameText.getSelection().x;
-                    nameText.setText(WorkspaceUtils.normalize(text) + PluginConstant.EMPTY_STRING);
-                    nameText.setSelection(x);
-                    checkName = true;
-                }
-                // ~
-                getParameter().setName(nameText.getText());
-            }
-        });
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.talend.dataprofiler.core.ui.wizard.MetadataWizardPage#fireEvent()
-     */
-    @Override
-    protected void fireEvent() {
-        // TODO Auto-generated method stub
-        super.fireEvent();
-    }
 }
