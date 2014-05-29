@@ -36,4 +36,39 @@ public class DbmsLanguageFactoryTest {
         hive = "Hadive"; //$NON-NLS-1$
         Assert.isTrue(!DbmsLanguageFactory.isHive(hive));
     }
+
+    /**
+     * Test method for
+     * {@link org.talend.dq.dbms.DbmsLanguageFactory#compareDbmsLanguage(java.lang.String, java.lang.String)}.
+     */
+    @Test
+    public void testCompareDbmsLanguage() {
+        // test the common database language, eg: mysql, mssql, oracle...
+        String dbType = "Mysql"; //$NON-NLS-1$
+        Assert.isTrue(DbmsLanguageFactory.compareDbmsLanguage(dbType, DbmsLanguage.MYSQL));
+        dbType = "MySQL"; //$NON-NLS-1$
+        Assert.isTrue(DbmsLanguageFactory.compareDbmsLanguage(dbType, DbmsLanguage.MYSQL));
+        dbType = "MySQL123"; //$NON-NLS-1$
+        Assert.isTrue(DbmsLanguageFactory.compareDbmsLanguage(dbType, DbmsLanguage.MYSQL));
+        dbType = "My12sql3"; //$NON-NLS-1$
+        Assert.isTrue(!DbmsLanguageFactory.compareDbmsLanguage(dbType, DbmsLanguage.MYSQL));
+
+        dbType = "Microsoft SQL Server"; //$NON-NLS-1$
+        Assert.isTrue(DbmsLanguageFactory.compareDbmsLanguage(dbType, DbmsLanguage.MSSQL));
+        dbType = "Microsoft sql server"; //$NON-NLS-1$
+        Assert.isTrue(DbmsLanguageFactory.compareDbmsLanguage(dbType, DbmsLanguage.MSSQL));
+        dbType = "Microsoft SQL Server Database"; //$NON-NLS-1$
+        Assert.isTrue(DbmsLanguageFactory.compareDbmsLanguage(dbType, DbmsLanguage.MSSQL));
+        dbType = "ms sql server"; //$NON-NLS-1$
+        Assert.isTrue(!DbmsLanguageFactory.compareDbmsLanguage(dbType, DbmsLanguage.MSSQL));
+
+        dbType = "Oracle"; //$NON-NLS-1$
+        Assert.isTrue(DbmsLanguageFactory.compareDbmsLanguage(dbType, DbmsLanguage.ORACLE));
+        dbType = "oracle"; //$NON-NLS-1$
+        Assert.isTrue(DbmsLanguageFactory.compareDbmsLanguage(dbType, DbmsLanguage.ORACLE));
+        dbType = "Oracle 9i"; //$NON-NLS-1$
+        Assert.isTrue(DbmsLanguageFactory.compareDbmsLanguage(dbType, DbmsLanguage.ORACLE));
+        dbType = "ora_cle 10g"; //$NON-NLS-1$
+        Assert.isTrue(!DbmsLanguageFactory.compareDbmsLanguage(dbType, DbmsLanguage.ORACLE));
+    }
 }
