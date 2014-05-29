@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
+import org.apache.log4j.Logger;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.emf.common.util.EList;
@@ -111,11 +112,9 @@ import orgomg.cwm.resource.relational.PrimaryKey;
 import orgomg.cwm.resource.relational.Schema;
 import orgomg.cwmx.analysis.informationreporting.Report;
 
-import common.Logger;
-
 /**
  * Detail view of the Data profiler.
- *
+ * 
  * @author qzhang
  */
 public class RespositoryDetailView extends ViewPart implements ISelectionListener {
@@ -236,7 +235,7 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
 
     /*
      * (non-Javadoc)
-     *
+     * 
      * @seeorg.eclipse.ui.ISelectionListener#selectionChanged(org.eclipse.ui. IWorkbenchPart,
      * org.eclipse.jface.viewers.ISelection)
      */
@@ -379,14 +378,14 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
                         DefaultMessagesImpl.getString("RespositoryDetailView.warning"), //$NON-NLS-1$
                         e.getErrorMessage());
             } else {
-                log.error(e,e);
+                log.error(e, e);
             }
         }
     }
 
     /**
      * DOC klliu Comment method "createDFconnectionName".
-     *
+     * 
      * @param label
      */
     private void createDFconnectionName(String label) {
@@ -396,7 +395,7 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
 
     /**
      * DOC bZhou Comment method "createEcosComponent".
-     *
+     * 
      * @param component
      */
     private void createEcosComponent(IEcosComponent component) {
@@ -700,7 +699,7 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
 
     /**
      * DOC xqliu Comment method "createDescription".
-     *
+     * 
      * @param dataProvider
      * @deprecated use createDescription(Property prop) instead of it
      */
@@ -712,7 +711,7 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
 
     /**
      * DOC xqliu Comment method "createPurpose".
-     *
+     * 
      * @param dataProvider
      * @deprecated use createPurpose(Property prop) instead of it
      */
@@ -724,7 +723,7 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
 
     /**
      * create the Description's Label and Text by the Property.
-     *
+     * 
      * @param prop
      */
     private void createDescription(Property prop) {
@@ -734,7 +733,7 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
 
     /**
      * create the Purpose's Label and Text by the Property.
-     *
+     * 
      * @param prop
      */
     private void createPurpose(Property prop) {
@@ -763,9 +762,9 @@ public class RespositoryDetailView extends ViewPart implements ISelectionListene
     }
 
     /**
-     *
+     * 
      * DOC qiongli Comment method "getMDMVersion".
-     *
+     * 
      * @param mdmConn
      * @return
      */

@@ -24,7 +24,6 @@ Require-Bundle: org.eclipse.nebula.widgets.tablecombo,
  org.talend.dataprofiler.help,
  org.talend.libraries.jfreechart,
  org.talend.dataquality.edit,
- org.talend.dataprofiler.libraries,
  org.talend.libraries.javacsv,
  org.talend.libraries.jung,
  org.talend.dataprofiler.ecos,
@@ -43,7 +42,8 @@ Require-Bundle: org.eclipse.nebula.widgets.tablecombo,
  org.talend.dataprofiler.common.ui,
  org.talend.dataquality.record.linkage.ui,
  org.talend.dataprofiler.migration,
- org.eclipse.help
+ org.eclipse.help,
+ org.talend.libraries.jexcel
 Bundle-ActivationPolicy: lazy
 Export-Package: org.talend.dataprofiler.core,
  org.talend.dataprofiler.core.exception,
