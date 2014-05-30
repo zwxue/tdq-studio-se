@@ -29,7 +29,7 @@ public class RegexpMatchingIndicatorImpl extends PatternMatchingIndicatorImpl im
 
     private static Logger log = Logger.getLogger(RegexpMatchingIndicatorImpl.class);
 
-    // FIXME error message should not be specific to this indicator.
+    // FIXME never use now. error message should not be specific to this indicator.
     // add klliu 2010-06-12 bug 13695
     private String javaPatternMessage;
 
@@ -79,7 +79,12 @@ public class RegexpMatchingIndicatorImpl extends PatternMatchingIndicatorImpl im
         if (regex.equals(this.getJavaPatternMessage())) {
             return false;
         }
-        pattern = java.util.regex.Pattern.compile(regex);
+        try {
+            pattern = java.util.regex.Pattern.compile(regex);
+        } catch (java.util.regex.PatternSyntaxException e) {
+            log.error(Messages.getString("Using_regular_expression", this.getName(), regex), e);
+            return false;
+        }
         if (log.isInfoEnabled()) {
             log.info(Messages.getString("Using_regular_expression", this.getName(), regex));
         }

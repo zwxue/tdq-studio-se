@@ -1099,15 +1099,7 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
             if (isSuccess) {
                 return Status.OK_STATUS;
             } else {
-                if (columnSqlParallel.getException() != null) {
-                    this.errorMessage = columnSqlParallel.getException().getMessage();
-                } else if (columnSqlParallel.getErrorMessage() != null
-                        && !StringUtils.EMPTY.equals(columnSqlParallel.getErrorMessage())) {
-                    this.errorMessage = columnSqlParallel.getErrorMessage();
-
-                } else {
-                    this.errorMessage = Messages.getString("ColumnAnalysisSqlExecutor.AnalysisExecutionFailed"); //$NON-NLS-1$
-                }
+                this.errorMessage = Messages.getString("ColumnAnalysisSqlExecutor.AnalysisExecutionFailed"); //$NON-NLS-1$
                 return Status.CANCEL_STATUS;
             }
         }
@@ -1163,6 +1155,7 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
             }
 
             int temp = 0;
+            boolean hasErrorMessage = false;
             // should call join() after schedule all the jobs
             for (int i = 0; i < jobs.size(); i++) {
                 ExecutiveAnalysisJob eaj = jobs.get(i);
@@ -1171,7 +1164,7 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
                 }
 
                 if (eaj.errorMessage != null) {
-                    ColumnAnalysisSqlExecutor.this.setError(eaj.errorMessage);
+                    hasErrorMessage = true;
                     ColumnAnalysisSqlExecutor.this.parallelExeStatus = false;
                 }
 
@@ -1182,6 +1175,10 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
                         temp = current;
                     }
                 }
+            }
+            //Added TDQ-8388 20140530 yyin: only show one message to let the user check detail in error log.
+            if (hasErrorMessage) {
+                setError(Messages.getString("ColumnAnalysisSqlExecutor.ERRORREFERTOLOG"));
             }
 
             if (monitor != null) {

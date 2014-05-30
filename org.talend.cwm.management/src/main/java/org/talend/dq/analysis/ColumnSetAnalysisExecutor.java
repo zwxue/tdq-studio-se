@@ -303,7 +303,7 @@ public class ColumnSetAnalysisExecutor extends AnalysisExecutor {
             }
         }
         if (PluginConstant.EMPTY_STRING != patternNames) {
-            setError(Messages.getString("MultiColumnAnalysisExecutor.checkAllMatchIndicatorForDbType", patternNames)); //$NON-NLS-1$
+            traceError(Messages.getString("MultiColumnAnalysisExecutor.checkAllMatchIndicatorForDbType", patternNames)); //$NON-NLS-1$
             return false;
         }
         return true;

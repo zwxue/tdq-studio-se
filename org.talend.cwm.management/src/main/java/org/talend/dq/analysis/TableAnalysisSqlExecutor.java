@@ -337,8 +337,8 @@ public class TableAnalysisSqlExecutor extends TableAnalysisExecutor {
                         continue;
                     }
                 } catch (Exception e) {
-                    log.error(e, e);
-                    setError(e.getMessage());
+                    traceError("Query not executed for indicator: \"" + indicator.getName() + "\" "//$NON-NLS-1$//$NON-NLS-2$
+                            + "SQL query: " + query.getBody() + ". Exception: " + e.getMessage());//$NON-NLS-1$
                     isSuccess = Boolean.FALSE;
                     continue;
                 }

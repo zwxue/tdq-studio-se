@@ -36,16 +36,6 @@ public final class ColumnAnalysisSqlParallelExecutor extends ColumnAnalysisSqlEx
 
     protected Indicator indicator;
 
-    private Exception exception;
-
-    public Exception getException() {
-        return exception;
-    }
-
-    public void setException(Exception exception) {
-        this.exception = exception;
-    }
-
     private ColumnAnalysisSqlParallelExecutor() {
         super();
     }
@@ -114,7 +104,6 @@ public final class ColumnAnalysisSqlParallelExecutor extends ColumnAnalysisSqlEx
                 }
             } catch (SQLException e) {
                 traceError(getErrorMessageForQuery(query));
-                this.setException(e);
                 return Boolean.FALSE;
             }
             // set computation done

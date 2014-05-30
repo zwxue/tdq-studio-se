@@ -33,11 +33,8 @@ import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.management.i18n.Messages;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.indicators.Indicator;
-import org.talend.dataquality.indicators.IndicatorsPackage;
-import org.talend.dataquality.indicators.impl.RegexpMatchingIndicatorImpl;
 import org.talend.dq.analysis.memory.AnalysisThreadMemoryChangeNotifier;
 import org.talend.dq.dbms.DbmsLanguageFactory;
-import org.talend.dq.helper.UDIHelper;
 import org.talend.utils.collections.MultiMapHelper;
 import org.talend.utils.sugars.ReturnCode;
 
@@ -185,16 +182,7 @@ public abstract class Evaluator<T> {
         boolean ok = true;
         for (Indicator indic : allIndicators) {
             if (!indic.prepare()) {
-                // FIXME scorreia 2012-11-13 why do we do something specific for the regex matching indicator?
-                // a class cast exception appears when a user defined indicator would like to return false in the
-                // prepare() method.
-                if (IndicatorsPackage.eINSTANCE.getRegexpMatchingIndicator().equals(indic.eClass())) {
-                    javaPatternMessage = ((RegexpMatchingIndicatorImpl) indic).getJavaPatternMessage();
-                } else if (UDIHelper.isUDI(indic)) {
-                    // Added yyin TDQ-6632:"Problem when preparing all indicatorsnull"--> replace the null with
-                    // indicator's name
-                    javaPatternMessage = indic.getName();
-                }
+                javaPatternMessage = indic.getName();
                 ok = false;
             }
         }

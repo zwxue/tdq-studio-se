@@ -388,7 +388,7 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
 
         }
 
-        if (!StringUtils.isEmpty(executed.getMessage())) {
+        if (!StringUtils.isBlank(executed.getMessage())) {
             Display.getDefault().asyncExec(new Runnable() {
 
                 public void run() {
@@ -401,10 +401,10 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
                     }
                     MessageDialogWithToggle.openError(
                             shell,
-                            DefaultMessagesImpl.getString("RunAnalysisAction.runAnalysis"), DefaultMessagesImpl.getString("RunAnalysisAction.failRunAnalysis", item.getAnalysis().getName(), executed.getMessage())); //$NON-NLS-1$ //$NON-NLS-2$
+                            DefaultMessagesImpl.getString("RunAnalysisAction.runAnalysis"), DefaultMessagesImpl.getString("RunAnalysisAction.failRunAnalysis",//$NON-NLS-1$ //$NON-NLS-2$ 
+                                            item.getAnalysis().getName(), executed.getMessage()));
                 }
             });
         }
     }
-
 }
