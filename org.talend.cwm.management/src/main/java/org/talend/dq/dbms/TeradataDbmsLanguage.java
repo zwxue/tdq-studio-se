@@ -157,9 +157,9 @@ public class TeradataDbmsLanguage extends DbmsLanguage {
 
 	@Override
 	public String extractWeek(String colName) {
-		return "((" + colName + "- ((" + extract(DateGrain.YEAR, colName)
-				+ "- 1900) * 10000 + 0101 (DATE))) - ((" + colName
-				+ "- DATE '0001-01-07') MOD 7)  + 13) / 7";
+		return "((CAST(" + colName + " AS DATE) - ((" + extract(DateGrain.YEAR, colName)
+				+ "- 1900) * 10000 + 0101 (DATE))) - ((CAST(" + colName
+				+ " AS DATE) - DATE '0001-01-07') MOD 7)  + 13) / 7";
 	}
 
 	@Override
