@@ -99,11 +99,12 @@ import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.nodes.DQRepositoryNode;
 import org.talend.dq.writer.impl.ElementWriterFactory;
 import org.talend.metadata.managment.connection.manager.HiveConnectionManager;
+import org.talend.metadata.managment.utils.ManagerConnection;
 import org.talend.repository.ui.utils.DBConnectionContextUtils;
-import org.talend.repository.ui.utils.ManagerConnection;
 import org.talend.utils.ProductVersion;
 import org.talend.utils.sql.metadata.constants.GetColumn;
 import org.talend.utils.sugars.ReturnCode;
+
 import orgomg.cwm.foundation.softwaredeployment.DataManager;
 import orgomg.cwm.foundation.softwaredeployment.DataProvider;
 import orgomg.cwm.foundation.softwaredeployment.ProviderConnection;
