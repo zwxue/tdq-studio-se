@@ -427,8 +427,19 @@ public final class DependenciesHandler {
         if (property != null) {
             // IRepositoryViewObject repositoryViewObject = new RepositoryViewObject(property);
             result = iterateClientDependencies(property);
+            // current object is analysis case
             if (object instanceof Analysis) {
                 result.addAll(getSystemIndicaotrOfAnalysis(property));
+            } else {
+                // if object is report, then the analyses inside reports should be considered. The system indicators of
+                // analyses should be added into the result list too.
+                List<Property> tempList = new ArrayList<Property>();
+                tempList.addAll(result);
+                for (Property pro : tempList) {
+                    if (TDQAnalysisItem.class.isInstance(pro.getItem())) {
+                        result.addAll(getSystemIndicaotrOfAnalysis(pro));
+                    }
+                }
             }
         }
         return result;
