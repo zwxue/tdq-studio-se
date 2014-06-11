@@ -308,6 +308,12 @@ public final class DbmsLanguageFactory {
         if (lang1 == null || lang2 == null) {
             return false;
         }
+        // When source language is defaule or target language is default they are must equals between lang1 and lang2,
+        // else will cause of error mapping.
+        // For example default will mapping MySQL, PostgreSQL,Microsoft SQL Server
+        if (StringUtils.equalsIgnoreCase(lang1, DbmsLanguage.SQL) || StringUtils.equalsIgnoreCase(lang2, DbmsLanguage.SQL)) {
+            return StringUtils.equalsIgnoreCase(lang1, lang2);
+        }
         // MOD xqliu 2011-12-20 TDQ-4232, FOR AS400
         if (StringUtils.contains(lang1, DbmsLanguage.AS400) && StringUtils.contains(lang2, DbmsLanguage.AS400)) {
             return true;
