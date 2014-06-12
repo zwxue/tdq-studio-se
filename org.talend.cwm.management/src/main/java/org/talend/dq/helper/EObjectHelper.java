@@ -312,6 +312,9 @@ public final class EObjectHelper {
         // get the connection
         ModelElement deleteModel = RepositoryNodeHelper.getMetadataElement(node);
         Connection connection = ModelElementHelper.getConnection(deleteModel);
+        if (connection == null) {
+            return result;
+        }
 
         // get the supplier Dependency of the connection
         EList<Dependency> supplierDependency = connection.getSupplierDependency();
