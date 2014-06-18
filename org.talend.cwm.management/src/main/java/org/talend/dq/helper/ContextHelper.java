@@ -12,6 +12,7 @@
 // ============================================================================
 package org.talend.dq.helper;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -19,7 +20,10 @@ import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.emf.common.util.EList;
+import org.talend.core.language.ECodeLanguage;
+import org.talend.core.language.LanguageManager;
 import org.talend.core.model.properties.ContextItem;
+import org.talend.core.model.utils.ContextParameterUtils;
 import org.talend.dataquality.helpers.ReportHelper;
 import org.talend.dataquality.reports.TdReport;
 import org.talend.designer.core.model.utils.emf.talendfile.ContextParameterType;
@@ -34,6 +38,8 @@ public final class ContextHelper {
     private static final String EMPTY_STRING = ""; //$NON-NLS-1$
 
     private static final String CONTEXT_PREFFIX = "context."; //$NON-NLS-1$
+
+    private static final ECodeLanguage LANGUAGE = LanguageManager.getCurrentLanguage();
 
     /**
      * if the str is context variable return true, else return false.
@@ -101,6 +107,81 @@ public final class ContextHelper {
      */
     public static String getReportContextValue(TdReport tdReport, String contextVarName) {
         return getReportContextValue(tdReport, ReportHelper.getContextGroupName(tdReport), contextVarName);
+    }
+
+    /**
+     * translate the context variable in the string to the value according to the specific context group name.
+     * 
+     * @param context
+     * @param contextGroupName
+     * @param contextString the stirng contains context variable, example:
+     * jdbc:mysql://context.TdqContext_Host:context.TdqContext_Port/context.TdqContext_DbName?characterEncoding=UTF8
+     * @return
+     */
+    public static String getUrlWithoutContext(List<ContextType> context, String contextGroupName, String contextString) {
+        // key is the context script code(start with context.), value is the context value
+        Map<String, String> contextValues = new HashMap<String, String>();
+        for (ContextType contextType : context) {
+            if (contextType.getName().equals(contextGroupName)) {
+                for (Object obj : contextType.getContextParameter()) {
+                    ContextParameterType cpt = (ContextParameterType) obj;
+                    contextValues.put(ContextParameterUtils.getNewScriptCode(cpt.getName(), LANGUAGE), cpt.getValue());
+                }
+                break;
+            }
+        }
+        return getUrlWithoutContext(contextString, contextValues);
+    }
+
+    /**
+     * translate the context variable in the string to the value according to the specific context group name.
+     * 
+     * @param tdReport
+     * @param contextGroupName
+     * @param contextualizeUrl the stirng contains context variable, example:
+     * jdbc:mysql://context.TdqContext_Host:context.TdqContext_Port/context.TdqContext_DbName?characterEncoding=UTF8
+     * @return
+     */
+    public static String getUrlWithoutContext(TdReport tdReport, String contextGroupName, String contextualizeUrl) {
+        return getUrlWithoutContext(tdReport.getContext(), contextGroupName, contextualizeUrl);
+    }
+
+    /**
+     * translate the context variable in the string to the value according to the default context group name.
+     * 
+     * @param tdReport
+     * @param contextString the stirng contains context variable, example:
+     * jdbc:mysql://context.TdqContext_Host:context.TdqContext_Port/context.TdqContext_DbName?characterEncoding=UTF8
+     * @return
+     */
+    public static String getUrlWithoutContext(TdReport tdReport, String contextString) {
+        return getUrlWithoutContext(tdReport, ReportHelper.getContextGroupName(tdReport), contextString);
+    }
+
+    /**
+     * build a Map: the key is the context script code(start with context.), the value is the context value.
+     * 
+     * @param contextType
+     * @return
+     */
+    public static Map<String, String> buildContextValuesMap(ContextType contextType) {
+        Map<String, String> contextValues = new HashMap<String, String>();
+        EList<ContextParameterType> contextParameter = contextType.getContextParameter();
+        for (ContextParameterType ctxPara : contextParameter) {
+            contextValues.put(ContextParameterUtils.getNewScriptCode(ctxPara.getName(), LANGUAGE), ctxPara.getValue());
+        }
+        return contextValues;
+    }
+
+    /**
+     * get the context script code according to the context variable name, for an example: the context variable name is
+     * "server", then the context script code is "context.server".
+     * 
+     * @param contextVarName
+     * @return
+     */
+    public static String getContextVarScriptCode(String contextVarName) {
+        return ContextParameterUtils.getNewScriptCode(contextVarName, LANGUAGE);
     }
 
     /**
@@ -173,12 +254,12 @@ public final class ContextHelper {
     /**
      * in ctxString, replace the context variable name with the value from contextValues .
      * 
-     * @param ctxString the string which contain several context variable names
+     * @param contextualizeUrl the string which contain several context variable names
      * @param contextValues the context values map, key=ContextScriptCode, value=ContextValue
-     * @return
+     * @return the final string of url which is context mode
      */
-    public static String getContextStringValue(String ctxString, Map<String, String> contextValues) {
-        String result = ctxString;
+    public static String getUrlWithoutContext(String contextualizeUrl, Map<String, String> contextValues) {
+        String result = contextualizeUrl;
         for (String key : contextValues.keySet()) {
             result = StringUtils.replace(result, key, contextValues.get(key));
         }

@@ -699,6 +699,15 @@ public final class ReportHelper {
         return taggedValue.getValue();
     }
 
+    public static String getDbVersion(Report report) {
+        TaggedValue taggedValue = TaggedValueHelper.getTaggedValue(TaggedValueHelper.REP_DBINFO_DBVERSION,
+                report.getTaggedValue());
+        if (taggedValue == null) {
+            return PluginConstant.EMPTY_STRING;
+        }
+        return taggedValue.getValue();
+    }
+
     /**
      * DOC xqliu Comment method "getDbName".
      * 
@@ -859,6 +868,17 @@ public final class ReportHelper {
     }
 
     /**
+     * DOC xqliu Comment method "dbVersion".
+     * 
+     * @param dbVersion
+     * @param report
+     * @return
+     */
+    public static boolean setDbVersion(String dbVersion, Report report) {
+        return TaggedValueHelper.setTaggedValue(report, TaggedValueHelper.REP_DBINFO_DBVERSION, dbVersion);
+    }
+
+    /**
      * DOC xqliu Comment method "setDbName".
      * 
      * @param dbName
@@ -886,7 +906,9 @@ public final class ReportHelper {
      * @param password
      * @param report
      * @return
+     * @deprecated use {@link #setPassword(String, Report, boolean)}
      */
+    @Deprecated
     public static boolean setPassword(String password, Report report) {
         return setPassword(password, report, true);
     }
