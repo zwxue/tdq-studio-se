@@ -1,9 +1,0 @@
-Manifest-Version: 1.0
-Bundle-ManifestVersion: 2
-Bundle-Name: net.sourceforge.sqlexplorer.test
-Bundle-SymbolicName: net.sourceforge.sqlexplorer.test
-Bundle-Version: 1.0.0.qualifier
-Fragment-Host: net.sourceforge.sqlexplorer;bundle-version="1.0.0"
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Bundle-Vendor: .Talend SA.
-Require-Bundle: org.junit
