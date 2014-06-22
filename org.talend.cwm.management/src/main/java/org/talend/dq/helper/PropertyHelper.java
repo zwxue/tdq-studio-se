@@ -31,6 +31,7 @@ import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.talend.commons.bridge.ReponsitoryContextBridge;
+import org.talend.commons.emf.EmfFileResourceUtil;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.commons.emf.FactoriesUtil.EElementEName;
 import org.talend.commons.exception.PersistenceException;
@@ -127,9 +128,10 @@ public final class PropertyHelper {
 
         return null;
     }
-/**
- * getItemFile from the resource of property
- */
+
+    /**
+     * getItemFile from the resource of property
+     */
     public static IFile getModelElementFile(Resource propertyResource) {
         assert propertyResource != null;
         if (propertyResource.getURI().isPlatform()) {
@@ -205,8 +207,13 @@ public final class PropertyHelper {
         } else {
             if (propertyFile.exists()) {
                 if (propertyFile.getName().endsWith(FactoriesUtil.PROPERTIES_EXTENSION)) {
-                    URI propURI = URI.createFileURI(propertyFile.getAbsolutePath());
-                    Resource resource = new ResourceSetImpl().getResource(propURI, true);
+                    Resource resource = null;
+                    if (Platform.isRunning()) {
+                        URI propURI = URI.createFileURI(propertyFile.getAbsolutePath());
+                        resource = new ResourceSetImpl().getResource(propURI, true);
+                    } else {
+                        resource = EmfFileResourceUtil.getInstance().getFileResource(propertyFile.getAbsolutePath());
+                    }
                     if (resource.getContents() != null) {
                         Object object = EcoreUtil.getObjectByType(resource.getContents(),
                                 PropertiesPackage.eINSTANCE.getProperty());

@@ -44,7 +44,9 @@ public class EmfFileResourceUtil {
         // ADD sizhaoliu TDQ-6698 used by tDqReportRun jobs, the project name and description need to be read from
         // "talend.project" file.
         Resource.Factory.Registry reg = Resource.Factory.Registry.INSTANCE;
-        reg.getExtensionToFactoryMap().put("project", new CwmResourceFactory());//$NON-NLS-1$
+        CwmResourceFactory cwmFactory = new CwmResourceFactory();
+        reg.getExtensionToFactoryMap().put("project", cwmFactory);//$NON-NLS-1$
+        reg.getExtensionToFactoryMap().put("properties", cwmFactory);//$NON-NLS-1$
     }
 
     public Resource getFileResource(String string) {
