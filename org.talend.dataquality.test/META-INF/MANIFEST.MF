@@ -1,0 +1,11 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: All tests for TQD Plug-in
+Bundle-SymbolicName: org.talend.dataquality.test
+Fragment-Host: org.talend.dataquality;bundle-version="1.0.0"
+Bundle-Version: 1.0.0.qualifier
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-Vendor: .Talend SA.
+Require-Bundle: org.mockito;bundle-version="1.0.0"
+Export-Package: org.talend.dataquality.indicators.impl
+Bundle-ClassPath: . 

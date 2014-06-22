@@ -1,0 +1,31 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>BinsDesigner</title>
+<link type="text/css" href="style.css" rel="stylesheet"></link>
+</head>
+<body>
+	<h1>Simple statistics:</h1>
+	<hr>
+	
+	&nbsp;&nbsp;Does some simple counts on your data. 
+	<p>
+	&nbsp;&nbsp;It gives an overview of the content of the column, how many null data there is, how many distinct data...
+	<p>
+	"Distinct count" counts the number of distinct values of your column (SELECT DISTINCT ...)
+	<p>
+    "Unique count" counts the number of distinct values with only one instance. It is necessarily less or equal to "distinct counts"
+    <p>
+    "Duplicate count" count the number of values appearing more than once.
+	<p>
+    These counts are related through the relation:
+    <p>
+	<code>"Duplicate count" + "Unique count" = "Distinct count"</code>
+	<p>
+	For example, a,a,a,a,b,b,c,d,e => 9 values, 5 distinct values, 3 unique values, 2 duplicate values.
+	
+	<iframe align="top" frameborder="0" scrolling="no" id="footer" src="footer.html"></iframe>
+	
+</body>
+</html>
