@@ -1,0 +1,40 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Statistiques des numéros de téléphone</title>
+<link type="text/css" href="style.css" rel="stylesheet"></link>
+</head>
+<body>
+	<h1>Statistiques des numéros de téléphone</h1>
+	<hr>
+	
+	Les indicateurs de ce groupe comptent les numéros de téléphone. Ils retournent le compte de chaque format de numéro de téléphone et valident les formats des numéros de téléphone à l'aide de la bibliothèque org.talend.libraries.google.libphonumber.
+	<p>
+	
+	<ul>
+		<li>Valid phone number count : compte le nombre de numéros de téléphone valides.</li>
+		<p>
+	    <li>Possible phone number count : compte le nombre de numéros de téléphone supposés valides.</li>
+		<p>
+	    <li>Valid region code number count : compte les numéros de téléphone ayant un code région valide.</li>
+		<p>
+	    <li>Invalid region code count : compte les numéros de téléphone ayant un code région invalide.</li>
+		<p>
+	    <li>Well formed national phone number count : compte les numéros de téléphone nationaux correctement formatés.</li>
+		<p>
+	    <li>Well formed international phone number count : compte les numéros de téléphone internationaux respectant le format international (les numéros de téléphone commençant par le code pays) .</li>
+		<p>
+	    <li>Well formed E164 phone number count : compte les numéros de téléphone internationaux respectant le format international (au maximum quinze chiffres et un préfixe + ).</li>
+		<p>
+	    <li>Format Frequency Pie : affiche les résultats du compte des numéros de téléphone dans un diagramme circulaire divisé en secteurs.</li>
+    </ul>
+    
+    <p>
+	Notez que ces indicateurs sont uniquement disponibles lorsque vous sélectionnez le moteur Java dans les paramètres de l'analyse.  
+	<p>   
+	
+	<iframe align="top" frameborder="0" scrolling="no" id="footer" src="footer.html"></iframe>
+	
+</body>
+</html>
