@@ -117,7 +117,8 @@ public class IndicatorDefinitionWriter extends AElementPersistance {
             return property;
         }
         // For system indicator, make its display name international.(means its display name is in the messages file)
-        property.setDisplayName(org.talend.cwm.management.i18n.Messages.getString(modelElement.getName().replace(' ', '.')));//$NON-NLS-1$
+        // MOD sizhaoliu TDQ-7454 do not translate here, but during the initialization of RepositoryViewObjects
+        property.setDisplayName(modelElement.getName());
         return property;
     }
 

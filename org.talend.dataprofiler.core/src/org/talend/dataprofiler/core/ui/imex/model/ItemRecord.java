@@ -47,6 +47,7 @@ import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dataquality.indicators.definition.userdefine.UDIndicatorDefinition;
 import org.talend.dataquality.reports.AnalysisMap;
 import org.talend.dataquality.reports.TdReport;
+import org.talend.dataquality.rules.DQRule;
 import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.helper.resourcehelper.RepResourceFileHelper;
@@ -441,12 +442,26 @@ public class ItemRecord {
      */
     public String getName() {
         if (property != null) {
-            return property.getDisplayName();
+            return getDisplayName();
         } else if (element != null) {
             return element.getName();
         } else {
             return file.getName();
         }
+    }
+
+    /**
+     * only internationalization name of indicator
+     *
+     * @return
+     */
+    private String getDisplayName() {
+        // only internationalization SystemIndicator
+        if (element != null && element instanceof IndicatorDefinition
+                && !(element instanceof UDIndicatorDefinition || element instanceof DQRule)) {
+            return org.talend.cwm.management.i18n.Messages.getString(property.getLabel().replace("_", ".")); //$NON-NLS-1$ //$NON-NLS-2$
+        }
+        return property.getDisplayName();
     }
 
     /**

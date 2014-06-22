@@ -93,6 +93,18 @@ public final class PropertyHelper {
     }
 
     /**
+     * get the companion property of an item file
+     *
+     * @param itemFile
+     * @return
+     */
+    public static Property getCompanionProperty(File itemFile) {
+        File propertyFile = new Path(itemFile.getAbsolutePath()).removeFileExtension()
+                .addFileExtension(FactoriesUtil.PROPERTIES_EXTENSION).toFile();
+        return getProperty(propertyFile);
+    }
+
+    /**
      * DOC bZhou Comment method "getPropertyFile".
      * 
      * @param modelElement
@@ -235,6 +247,9 @@ public final class PropertyHelper {
      * @return property or null
      */
     public static Property getProperty(ModelElement element) {
+        if (element.eIsProxy()) {
+            element = (ModelElement) EObjectHelper.resolveObject(element);
+        }
         URI uri = element.eResource() == null ? null : element.eResource().getURI();
         if (uri != null) {
             if (uri.isPlatform()) {
