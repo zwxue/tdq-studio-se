@@ -1,0 +1,148 @@
+// ============================================================================
+//
+// Copyright (C) 2006-2014 Talend Inc. - www.talend.com
+//
+// This source code is available under agreement available at
+// %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
+//
+// You should have received a copy of the agreement
+// along with this program; if not, write to Talend SA
+// 9 rue Pages 92150 Suresnes, France
+//
+// ============================================================================
+package org.talend.dq.dbms;
+
+import org.talend.dataquality.indicators.DateGrain;
+import org.talend.utils.ProductVersion;
+import org.talend.utils.properties.PropertiesLoader;
+
+/**
+ * DOC scorreia class global comment. Detailled comment
+ */
+public class PostgresqlDbmsLanguage extends DbmsLanguage {
+
+    private static final Class<PostgresqlDbmsLanguage> THAT = PostgresqlDbmsLanguage.class;
+
+    private static final String NUM = getProperties("POSTGRES_NUM", "1234567890"); //$NON-NLS-1$ //$NON-NLS-2$
+
+    private static final String LOWER = getProperties("POSTGRES_LOWER", "abcdefghijklmnopqrstuvwxyz"); //$NON-NLS-1$ //$NON-NLS-2$
+
+    private static final String UPPER = getProperties("POSTGRES_UPPER", "ABCDEFGHIJKLMNOPQRSTUVWXYZ"); //$NON-NLS-1$ //$NON-NLS-2$
+
+    private static String getProperties(String key, String defaultString) {
+        return PropertiesLoader.getProperties(THAT, "characters.properties").getProperty(key, defaultString); //$NON-NLS-1$
+    }
+
+    /**
+     * DOC scorreia PostgresqlDbmsLanguage constructor comment.
+     */
+    PostgresqlDbmsLanguage() {
+        super(DbmsLanguage.POSTGRESQL);
+    }
+
+    /**
+     * DOC scorreia PostgresqlDbmsLanguage constructor comment.
+     * 
+     * @param dbmsType
+     * @param majorVersion
+     * @param minorVersion
+     */
+    PostgresqlDbmsLanguage(String dbmsType, ProductVersion dbVersion) {
+        super(dbmsType, dbVersion);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.cwm.management.api.DbmsLanguage#toQualifiedName(java.lang.String, java.lang.String,
+     * java.lang.String)
+     */
+    @Override
+    public String toQualifiedName(String catalog, String schema, String table) {
+        // do not use Catalog (ZQL Parser does not know how to handle qualified names such as 'c.s.t'
+        return super.toQualifiedName(null, schema, table);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.cwm.management.api.DbmsLanguage#getPatternFinderDefaultFunction(java.lang.String)
+     */
+    @Override
+    public String getPatternFinderDefaultFunction(String expression) {
+        return "TRANSLATE(" + expression + " ,'" + NUM + UPPER + LOWER + "' " + ",RPAD('9'," + NUM.length() //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+                + ",'9') || RPAD('A'," + UPPER.length() + ",'A')||RPAD('a'," + LOWER.length() + ",'a'))"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+    }
+
+    @Override
+    protected String getPatternFinderFunction(String expression, String charsToReplace, String replacementChars) {
+        assert charsToReplace != null && replacementChars != null && charsToReplace.length() == replacementChars.length();
+        return translateUsingPattern(expression, charsToReplace, replacementChars);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.cwm.management.api.DbmsLanguage#extract(org.talend.dataquality.indicators.DateGrain,
+     * java.lang.String)
+     */
+    @Override
+    protected String extract(DateGrain dateGrain, String colName) {
+        return " CAST( EXTRACT(" + dateGrain + from() + colName + ") AS INTEGER )"; //$NON-NLS-1$ //$NON-NLS-2$
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.cwm.management.api.DbmsLanguage#getSelectRegexp(java.lang.String)
+     */
+    @Override
+    protected String getSelectRegexp(String regexLikeExpression) {
+        return "SELECT " + regexLikeExpression + " AS OK" + EOS; //$NON-NLS-1$ //$NON-NLS-2$
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.cwm.management.api.DbmsLanguage#regexLike(java.lang.String, java.lang.String)
+     */
+    @Override
+    public String regexLike(String element, String regex) {
+        return surroundWithSpaces(element + " ~ " + regex); //$NON-NLS-1$
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.cwm.management.api.DbmsLanguage#regexNotLike(java.lang.String, java.lang.String)
+     */
+    @Override
+    public String regexNotLike(String element, String regex) {
+        return surroundWithSpaces(element + " !~ " + regex); //$NON-NLS-1$
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.cwm.management.api.DbmsLanguage#getQuoteIdentifier()
+     */
+    @Override
+    public String getHardCodedQuoteIdentifier() {
+        return "\""; //$NON-NLS-1$
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.cwm.management.api.DbmsLanguage#supportNonIntegerConstantInGroupBy()
+     */
+    @Override
+    public boolean supportNonIntegerConstantInGroupBy() {
+        return false;
+    }
+
+    @Override
+    public boolean supportRegexp() {
+        return true;
+    }
+}
