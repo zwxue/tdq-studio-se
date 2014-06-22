@@ -262,12 +262,14 @@ public final class ConnectionUtils {
 
     public static ReturnCode isConnectionAvailable(Connection analysisDataProvider) {
         ReturnCode returnCode = new ReturnCode();
-
         // check hive connection
         IMetadataConnection metadataConnection = ConvertionHelper.convert(analysisDataProvider);
         if (metadataConnection != null) {
             if (EDatabaseTypeName.HIVE.getXmlName().equalsIgnoreCase(metadataConnection.getDbType())) {
                 try {
+                    if (isHiveEmbedded(analysisDataProvider)) {
+                        JavaSqlFactory.doHivePreSetup(analysisDataProvider);
+                    }
                     HiveConnectionManager.getInstance().checkConnection(metadataConnection);
                     returnCode.setOk(true);
                     return returnCode;
@@ -339,10 +341,6 @@ public final class ConnectionUtils {
             if (!rcJdbc.isOk()) {
                 return rcJdbc;
             }
-        }
-
-        if (isHiveEmbedded(analysisDataProvider)) {
-            JavaSqlFactory.doHivePreSetup(analysisDataProvider);
         }
 
         returnCode = ConnectionUtils.checkConnection(url, JavaSqlFactory.getDriverClass(analysisDataProvider), props);

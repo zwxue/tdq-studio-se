@@ -12,7 +12,6 @@
 // ============================================================================
 package org.talend.dataprofiler.core.ui.action.actions;
 
-import java.sql.SQLException;
 import java.text.DecimalFormat;
 
 import org.apache.log4j.Level;
@@ -38,12 +37,13 @@ import org.eclipse.ui.cheatsheets.ICheatSheetManager;
 import org.eclipse.ui.forms.editor.IFormPage;
 import org.eclipse.ui.part.FileEditorInput;
 import org.talend.commons.exception.BusinessException;
-import org.talend.core.database.EDatabaseTypeName;
 import org.talend.core.model.metadata.IMetadataConnection;
 import org.talend.core.model.metadata.builder.ConvertionHelper;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.properties.Item;
+import org.talend.core.repository.model.IRepositoryFactory;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
+import org.talend.core.repository.model.RepositoryFactoryProvider;
 import org.talend.cwm.compare.exception.ReloadCompareException;
 import org.talend.cwm.compare.factory.ComparisonLevelFactory;
 import org.talend.cwm.db.connection.ConnectionUtils;
@@ -65,8 +65,8 @@ import org.talend.dq.helper.ProxyRepositoryManager;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
 import org.talend.dq.nodes.AnalysisRepNode;
-import org.talend.metadata.managment.connection.manager.HiveConnectionManager;
 import org.talend.repository.model.ERepositoryStatus;
+import org.talend.repository.model.RepositoryConstants;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.foundation.softwaredeployment.DataManager;
@@ -171,7 +171,7 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
                         return;
                     }
                     // ~
-                    anaEditor.doSave(null);
+                    saveBeforeRun(anaEditor);
                 }
 
                 ReturnCode canRun = anaEditor.canRun();
@@ -244,27 +244,7 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
 
             ReturnCode connectionAvailable = new ReturnCode(false);
 
-            if (metadataConnection != null
-                    && EDatabaseTypeName.HIVE.getXmlName().equalsIgnoreCase(metadataConnection.getDbType())) {
-                try {
-                    HiveConnectionManager.getInstance().checkConnection(metadataConnection);
-                    connectionAvailable.setOk(true);
-                } catch (ClassNotFoundException e) {
-                    connectionAvailable.setOk(false);
-                    log.error(e);
-                } catch (InstantiationException e) {
-                    connectionAvailable.setOk(false);
-                    log.error(e);
-                } catch (IllegalAccessException e) {
-                    connectionAvailable.setOk(false);
-                    log.error(e);
-                } catch (SQLException e) {
-                    connectionAvailable.setOk(false);
-                    log.error(e);
-                }
-            } else {
-                connectionAvailable = ConnectionUtils.isConnectionAvailable(analysisDataProvider);
-            }
+            connectionAvailable = ConnectionUtils.isConnectionAvailable(analysisDataProvider);
 
             if (!connectionAvailable.isOk()) {
                 MessageDialogWithToggle.openWarning(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
@@ -373,6 +353,21 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
         listener = masterPage;
         // ~
         run();
+    }
+
+    /**
+     * Save the analysis before run the analysis.
+     *
+     * @param anaEditor
+     */
+    private void saveBeforeRun(AnalysisEditor anaEditor) {
+        IRepositoryFactory localRepository = RepositoryFactoryProvider
+                .getRepositoriyById(RepositoryConstants.REPOSITORY_LOCAL_ID);
+        IRepositoryFactory oldRepository = ProxyRepositoryFactory.getInstance().getRepositoryFactoryFromProvider();
+        ProxyRepositoryFactory.getInstance().setRepositoryFactoryFromProvider(localRepository);
+        // This save action won't invoke any remote repository action such as svn commit. TDQ-7508
+        anaEditor.doSave(null);
+        ProxyRepositoryFactory.getInstance().setRepositoryFactoryFromProvider(oldRepository);
     }
 
     private void displayResultStatus(final ReturnCode executed) {
