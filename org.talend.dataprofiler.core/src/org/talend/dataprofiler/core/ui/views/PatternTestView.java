@@ -470,8 +470,12 @@ public class PatternTestView extends ViewPart {
                         createDbmsLanguage.setFunctionName(getFunctionName());
                     }
                     // ~19119
-                    String selectRegexpTestString = createDbmsLanguage.getSelectRegexpTestString(testText.getText(),
-                            regularText.getText());
+                    String selectRegexpTestString = null;
+                    if (null != createDbmsLanguage) {
+                        createDbmsLanguage.setFunctionName(getFunctionName());
+                        selectRegexpTestString = createDbmsLanguage.getSelectRegexpTestString(testText.getText(),
+                                regularText.getText());
+                    }
                     TypedReturnCode<java.sql.Connection> rcConn = JavaSqlFactory.createConnection(tddataprovider);
                     try {
                         if (!rcConn.isOk()) {

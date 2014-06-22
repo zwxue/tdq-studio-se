@@ -24,9 +24,7 @@ import orgomg.cwm.objectmodel.core.Expression;
  */
 public class SoundexFrequencyExplorer extends FrequencyStatisticsExplorer {
 
-    private static final String REGEX = "SELECT.*\\s*MAX\\((.*)\\)\\s*, SOUNDEX\\(.*\\)\\s*, COUNT\\(\\*\\)\\s*(AS|as)?\\s*\\w*\\s*, COUNT\\(DISTINCT .*\\)\\s*(AS|as)?\\s*\\w*\\s* FROM"; //$NON-NLS-1$
-
-    private static final String SOUNDEX_PREFIX = "SOUNDEX";//$NON-NLS-1$
+    private static final String REGEX = "SELECT.*\\s*MAX\\((.*)\\)\\s*, (SOUNDEX|NYSIIS)\\(.*\\)\\s*, COUNT\\(\\*\\)\\s*(AS|as)?\\s*\\w*\\s*, COUNT\\(DISTINCT .*\\)\\s*(AS|as)?\\s*\\w*\\s* FROM"; //$NON-NLS-1$
 
     @Override
     protected String getFreqRowsStatement() {
@@ -64,8 +62,9 @@ public class SoundexFrequencyExplorer extends FrequencyStatisticsExplorer {
         // ~11005
 
         // MOD mzhao bug 9740 2009-11-10
-        String clause = entity.isLabelNull() || function == null ? columnName + dbmsLanguage.isNull() : SOUNDEX_PREFIX + "("//$NON-NLS-1$ 
-                + function + ")" + dbmsLanguage.equal() + SOUNDEX_PREFIX + "('" + entity.getKey() + "')"; //$NON-NLS-1$ //$NON-NLS-2$//$NON-NLS-3$
+        String clause = entity.isLabelNull() || function == null ? columnName + dbmsLanguage.isNull() : dbmsLanguage
+                .getSoundexPrefix() + "("//$NON-NLS-1$
+                + function + ")" + dbmsLanguage.equal() + dbmsLanguage.getSoundexPrefix() + "('" + entity.getKey() + "')"; //$NON-NLS-1$ //$NON-NLS-2$//$NON-NLS-3$         return clause;
         return clause;
     }
 

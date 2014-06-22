@@ -290,6 +290,8 @@ public class CsvFileTableViewer extends Composite {
                 return true;
             } else if (PatternToExcelEnum.MDMRegexp.getLiteral().equalsIgnoreCase(header)) {
                 return true;
+            } else if (PatternToExcelEnum.NETEZZARegexp.getLiteral().equalsIgnoreCase(header)) {
+                return true;
             } else if (PatternToExcelEnum.SQLite3Regexp.getLiteral().equalsIgnoreCase(header)) {
                 return true;
             } else if (PatternToExcelEnum.Teradata.getLiteral().equalsIgnoreCase(header)) {

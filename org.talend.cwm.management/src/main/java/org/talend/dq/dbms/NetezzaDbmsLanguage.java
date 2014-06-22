@@ -26,6 +26,8 @@ public class NetezzaDbmsLanguage extends DbmsLanguage {
      */
     private static final String MYSQL_IDENTIFIER_QUOTE = "`"; //$NON-NLS-1$
 
+    private final String NYSIIS_PREFIX = "NYSIIS";//$NON-NLS-1$
+
     /**
      * DOC klliu NetezzaDbmsLanguage constructor comment.
      */
@@ -50,7 +52,7 @@ public class NetezzaDbmsLanguage extends DbmsLanguage {
      */
     @Override
     public String getPatternFinderDefaultFunction(String expression) {
-        return StringUtils.repeat("REPLACE(", 59) + expression //$NON-NLS-1$
+        return StringUtils.repeat("TRANSLATE(", 59) + expression //$NON-NLS-1$
                 + ",'B','A'),'C','A'),'D','A'),'E','A'),'F','A'),'G','A'),'H','A')" //$NON-NLS-1$
                 + ",'I','A'),'J','A'),'K','A'),'L','A'),'M','A'),'N','A'),'O','A')" //$NON-NLS-1$
                 + ",'P','A'),'Q','A'),'R','A'),'S','A'),'T','A'),'U','A'),'V','A')" //$NON-NLS-1$
@@ -63,13 +65,7 @@ public class NetezzaDbmsLanguage extends DbmsLanguage {
 
     @Override
     protected String getPatternFinderFunction(String expression, String charsToReplace, String replacementChars) {
-        assert charsToReplace != null && replacementChars != null && charsToReplace.length() == replacementChars.length();
-        for (int i = 0; i < charsToReplace.length(); i++) {
-            final char charToReplace = charsToReplace.charAt(i);
-            final char replacement = replacementChars.charAt(i);
-            expression = replaceOneChar(expression, charToReplace, replacement);
-        }
-        return expression;
+        return translateUsingPattern(expression, charsToReplace, replacementChars);
     }
 
     /*
@@ -79,7 +75,7 @@ public class NetezzaDbmsLanguage extends DbmsLanguage {
      */
     @Override
     public String replaceNullsWithString(String colName, String replacement) {
-        return " IFNULL(" + colName + "," + replacement + ")"; //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$
+        return " ISNULL(" + colName + "," + replacement + ")"; //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$
     }
 
     /*
@@ -100,7 +96,7 @@ public class NetezzaDbmsLanguage extends DbmsLanguage {
      */
     @Override
     protected String extract(DateGrain dateGrain, String colName) {
-        return dateGrain.getName() + surroundWith('(', colName, ')');
+        return "DATE_PART" + surroundWith('(', surroundWith('\'', dateGrain.getLiteral(), '\'') + "," + colName, ')'); //$NON-NLS-1$ //$NON-NLS-2$
     }
 
     /*
@@ -156,6 +152,16 @@ public class NetezzaDbmsLanguage extends DbmsLanguage {
     /*
      * (non-Javadoc)
      * 
+     * @see org.talend.dq.dbms.DbmsLanguage#getSoundexPrefix()
+     */
+    @Override
+    public String getSoundexPrefix() {
+        return NYSIIS_PREFIX;
+    }
+
+    /*
+     * (non-Javadoc)
+     *
      * @see org.talend.cwm.management.api.DbmsLanguage#getSelectRemarkOnTable(java.lang.String)
      */
     @Override

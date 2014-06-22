@@ -14,9 +14,6 @@ package org.talend.dq.analysis.explore;
 
 import org.talend.core.model.metadata.builder.database.dburl.SupportDBUrlType;
 
-
-
-
 /**
  * return the where clause for benford law indicator, but for different DB type, the clause is different.
  */
@@ -24,7 +21,7 @@ public class BenfordLawFrequencyExplorer extends FrequencyStatisticsExplorer {
 
     @Override
     protected String getInstantiatedClause() {
-        if (entity.getKey().toString().equals("invalid")) {//$NON-NLS-1$ //$NON-NLS-2$
+        if (entity.getKey().toString().equals("invalid")) {//$NON-NLS-1$
             return getInvalidClause();
         }
         Object value = "'" + entity.getKey() + "%'"; //$NON-NLS-1$ //$NON-NLS-2$
@@ -62,6 +59,8 @@ public class BenfordLawFrequencyExplorer extends FrequencyStatisticsExplorer {
             return columnName + " is null or LEFT(" + columnName + ",1) not" + dbmsLanguage.like() + "'%[0-9]%'";//$NON-NLS-1$ //$NON-NLS-2$
         } else if (isInformix()) {
             return columnName + " is null or SUBSTR(" + columnName + ",0,1) not in ('0','1','2','3','4','5','6','7','8','9')";//$NON-NLS-1$ //$NON-NLS-2$
+        } else if (isNetezza()) {
+            return columnName + " is null or Substring(" + columnName + ",1,1) not in ('0','1','2','3','4','5','6','7','8','9')";//$NON-NLS-1$ //$NON-NLS-2$
         }
 
         return columnName + " is null or " + columnName + value;
@@ -74,6 +73,18 @@ public class BenfordLawFrequencyExplorer extends FrequencyStatisticsExplorer {
      */
     private boolean isInformix() {
         if (dbmsLanguage.getDbmsName().startsWith(SupportDBUrlType.INFORMIXDEFAULTURL.getLanguage())) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * DOC yyin Comment method "isInformix".
+     *
+     * @return
+     */
+    private boolean isNetezza() {
+        if (dbmsLanguage.getDbmsName().startsWith(SupportDBUrlType.NETEZZADEFAULTURL.getLanguage())) {
             return true;
         }
         return false;

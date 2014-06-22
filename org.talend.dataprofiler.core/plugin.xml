@@ -1581,7 +1581,13 @@
            id="org.talend.dataprofiler.core.migration.impl.UpdateMeanAggrDefinitionTask"
            name="Update Mean AggrDefinition Task"
            version="5.3.1">
-     </workspacetask>  
+    </workspacetask>
+     <workspacetask
+           class="org.talend.dataprofiler.core.migration.impl.AddNetezzaExpressionInIndicatorsTask"
+           id="org.talend.dataprofiler.core.migration.impl.AddNetezzaExpressionInIndicatorsTask"
+           name="Add the expressions for Netezza db in related indicators"
+           version="5.3.1">
+      </workspacetask>
      
   </extension>
   <extension

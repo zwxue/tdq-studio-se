@@ -10,4 +10,5 @@
   <sqlGenericExpression xmi:id="_f74TsPMdEeGbk9N0267sfg" body="SELECT cast(SUBSTR(&lt;%=__COLUMN_NAMES__%>,0,1) as char), COUNT(*) c FROM &lt;%=__TABLE_NAME__%> t &lt;%=__WHERE_CLAUSE__%> GROUP BY 1 order by 1" language="Informix"/>
   <sqlGenericExpression xmi:id="_gXeqkPMdEeGbk9N0267sfg" body="SELECT SUBSTRING(CONVERT(char(15),&lt;%=__COLUMN_NAMES__%>),1,1), COUNT(*) c FROM &lt;%=__TABLE_NAME__%> t &lt;%=__WHERE_CLAUSE__%> GROUP BY SUBSTRING(CONVERT(char(15),&lt;%=__COLUMN_NAMES__%>),1,1) order by SUBSTRING(CONVERT(char(15),&lt;%=__COLUMN_NAMES__%>),1,1)" language="Adaptive Server Enterprise | Sybase Adaptive Server IQ"/>
   <sqlGenericExpression xmi:id="_rRrscOzJEeG0fbygDv7UrQ" body="SELECT substr(&lt;%=__COLUMN_NAMES__%>,1,1), COUNT(*) c FROM &lt;%=__TABLE_NAME__%> t &lt;%=__WHERE_CLAUSE__%> GROUP BY substr(&lt;%=__COLUMN_NAMES__%>,1,1)" language="Hive"/>
+  <sqlGenericExpression xmi:id="_Mfi2sZOvEeO0QqLsthPghw" body="SELECT cast(SUBSTR(&lt;%=__COLUMN_NAMES__%>,1,1) as char), COUNT(*) c FROM &lt;%=__TABLE_NAME__%> t &lt;%=__WHERE_CLAUSE__%> GROUP BY 1 order by 1" language="Netezza"/> 
 </dataquality.indicators.definition:IndicatorDefinition>
