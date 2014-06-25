@@ -20,7 +20,7 @@ import java.util.List;
 /**
  * Interface for Match & Merge algorithms.
  */
-public interface MatchMergeAlgorithm extends IRecordMatcher {
+public interface MatchMergeAlgorithm {
 
     /**
      * Run match & merge on the <code>sourceRecords</code> and returns the result of the match & merge algorithm. This

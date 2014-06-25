@@ -16,7 +16,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.apache.commons.lang.NotImplementedException;
 import org.apache.log4j.Logger;
+import org.talend.dataquality.matchmerge.Record;
 import org.talend.dataquality.record.linkage.Messages;
 import org.talend.dataquality.record.linkage.attribute.DummyMatcher;
 import org.talend.dataquality.record.linkage.attribute.IAttributeMatcher;
@@ -79,11 +81,17 @@ abstract class AbstractRecordMatcher implements IRecordMatcher {
      */
     protected boolean displayLabels = false;
 
+    @Override
+    public org.talend.dataquality.matchmerge.mfb.MatchResult getMatchingWeight(Record record1, Record record2) {
+        // Sub classes may override this default implementation.
+        throw new NotImplementedException();
+    }
+
     /*
-     * (non-Javadoc)
-     * 
-     * @see org.talend.dataquality.record.linkage.record.IRecordMatcher#setDisplayLabels(boolean)
-     */
+         * (non-Javadoc)
+         *
+         * @see org.talend.dataquality.record.linkage.record.IRecordMatcher#setDisplayLabels(boolean)
+         */
     @Override
     public void setDisplayLabels(boolean displayLabels) {
         this.displayLabels = displayLabels;

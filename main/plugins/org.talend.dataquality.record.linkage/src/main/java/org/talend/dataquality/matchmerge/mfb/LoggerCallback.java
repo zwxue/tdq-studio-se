@@ -44,8 +44,7 @@ public class LoggerCallback implements MatchMergeAlgorithm.Callback {
                 i++;
             }
             messagesBuilder.append('\n');
-            messagesBuilder.append("\t\tconfidence: ").append(matchResult.getNormalizedConfidence());
-            messagesBuilder.append("(min: ").append(matchResult.getMinConfidenceValue()).append(")");
+            messagesBuilder.append("\t\tconfidence: ").append(matchResult.getNormalizedConfidence()).append(")");
             LOGGER.debug(messagesBuilder.toString());
         }
     }
@@ -100,8 +99,7 @@ public class LoggerCallback implements MatchMergeAlgorithm.Callback {
                 i++;
             }
             messagesBuilder.append('\n');
-            messagesBuilder.append("\t\tconfidence: ").append(matchResult.getNormalizedConfidence());
-            messagesBuilder.append(" (min: ").append(matchResult.getMinConfidenceValue()).append(")");
+            messagesBuilder.append("\t\tconfidence: ").append(matchResult.getNormalizedConfidence()).append(")");
             LOGGER.debug(messagesBuilder.toString());
         }
     }

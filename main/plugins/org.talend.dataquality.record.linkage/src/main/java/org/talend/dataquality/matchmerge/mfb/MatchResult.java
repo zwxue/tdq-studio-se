@@ -24,8 +24,6 @@ public class MatchResult {
 
     private double normalizedConfidence;
 
-    private double minConfidenceValue;
-
     public MatchResult(int size) {
         scores = new ArrayList<Score>(size + 1);
         thresholds = new ArrayList<Float>(size + 1);
@@ -37,9 +35,8 @@ public class MatchResult {
         public String[] values = new String[2];
     }
 
-    public void setConfidence(double normalizedConfidence, double minConfidenceValue) {
+    public void setConfidence(double normalizedConfidence) {
         this.normalizedConfidence = normalizedConfidence;
-        this.minConfidenceValue = minConfidenceValue;
     }
 
     public List<Score> getScores() {
@@ -52,10 +49,6 @@ public class MatchResult {
 
     public double getNormalizedConfidence() {
         return normalizedConfidence;
-    }
-
-    public double getMinConfidenceValue() {
-        return minConfidenceValue;
     }
 
     public void setScore(int index, AttributeMatcherType algorithm, double score, String value1, String value2) {

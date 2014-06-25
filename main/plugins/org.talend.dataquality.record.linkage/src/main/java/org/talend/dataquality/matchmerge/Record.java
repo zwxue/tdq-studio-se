@@ -11,10 +11,7 @@
 
 package org.talend.dataquality.matchmerge;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * A record represents input data for the match & merge. It provides the following:

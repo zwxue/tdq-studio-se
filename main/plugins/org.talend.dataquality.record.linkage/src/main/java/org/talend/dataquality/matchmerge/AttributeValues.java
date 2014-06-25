@@ -3,10 +3,7 @@ package org.talend.dataquality.matchmerge;
 import org.apache.commons.lang.ObjectUtils;
 import org.apache.commons.lang.StringUtils;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.TreeSet;
+import java.util.*;
 
 public class AttributeValues<T> implements Iterable<T> {
 
