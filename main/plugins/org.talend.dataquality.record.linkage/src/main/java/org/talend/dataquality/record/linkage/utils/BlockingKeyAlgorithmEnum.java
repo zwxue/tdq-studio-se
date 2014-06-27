@@ -151,7 +151,7 @@ public enum BlockingKeyAlgorithmEnum {
             }
         }
 
-        return null;
+        return EXACT;
     }
 
     /**

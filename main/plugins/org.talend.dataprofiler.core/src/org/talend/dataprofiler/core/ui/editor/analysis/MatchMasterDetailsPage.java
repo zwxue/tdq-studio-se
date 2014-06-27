@@ -50,9 +50,11 @@ import org.eclipse.ui.forms.events.HyperlinkAdapter;
 import org.eclipse.ui.forms.events.HyperlinkEvent;
 import org.eclipse.ui.forms.widgets.ImageHyperlink;
 import org.eclipse.ui.forms.widgets.Section;
+import org.eclipse.ui.model.WorkbenchContentProvider;
 import org.talend.core.model.metadata.MetadataColumnRepositoryObject;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.connection.MetadataColumn;
+import org.talend.core.model.metadata.builder.connection.MetadataTable;
 import org.talend.core.model.properties.ConnectionItem;
 import org.talend.core.model.properties.Property;
 import org.talend.core.repository.model.repositoryObject.MetadataXmlElementTypeRepositoryObject;
@@ -67,6 +69,8 @@ import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
+import org.talend.dataprofiler.core.ui.action.actions.ImportMatchRuleLabelProvider;
+import org.talend.dataprofiler.core.ui.dialog.MatchRuleElementTreeSelectionDialog;
 import org.talend.dataprofiler.core.ui.dialog.MetadataAndColumnSelectionDialog;
 import org.talend.dataprofiler.core.ui.events.EventEnum;
 import org.talend.dataprofiler.core.ui.events.EventManager;
@@ -77,14 +81,19 @@ import org.talend.dataprofiler.core.ui.wizard.analysis.connection.ConnectionWiza
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.exception.DataprofilerCoreException;
 import org.talend.dataquality.indicators.columnset.RecordMatchingIndicator;
+import org.talend.dataquality.record.linkage.constant.AttributeMatcherType;
 import org.talend.dataquality.record.linkage.ui.composite.table.DataSampleTable;
 import org.talend.dataquality.record.linkage.ui.composite.utils.MatchRuleAnlaysisUtils;
 import org.talend.dataquality.record.linkage.ui.section.BlockingKeySection;
 import org.talend.dataquality.record.linkage.ui.section.MatchParameterSection;
 import org.talend.dataquality.record.linkage.ui.section.MatchingKeySection;
+import org.talend.dataquality.record.linkage.utils.BlockingKeyAlgorithmEnum;
 import org.talend.dataquality.record.linkage.utils.MatchAnalysisConstant;
+import org.talend.dataquality.rules.BlockKeyDefinition;
+import org.talend.dataquality.rules.MatchKeyDefinition;
 import org.talend.dataquality.rules.MatchRule;
 import org.talend.dataquality.rules.MatchRuleDefinition;
+import org.talend.dataquality.rules.RulesFactory;
 import org.talend.dq.analysis.MatchAnalysisHandler;
 import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.RepositoryNodeHelper;
@@ -479,7 +488,7 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
 
     private void createDataSelectionButtonComp(Composite parent) {
         Composite dataSelectionComp = toolkit.createComposite(parent);
-        GridLayout dataSelectionCompLayout = new GridLayout(2, Boolean.TRUE);
+        GridLayout dataSelectionCompLayout = new GridLayout(3, Boolean.TRUE);
         dataSelectionComp.setLayout(dataSelectionCompLayout);
 
         Button createConnectionBtn = toolkit.createButton(dataSelectionComp,
@@ -488,6 +497,8 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
         Button selectDataBtn = toolkit.createButton(dataSelectionComp,
                 DefaultMessagesImpl.getString("MatchMasterDetailsPage.SelectDataButton"), SWT.NONE);//$NON-NLS-1$
         GridDataFactory.fillDefaults().align(SWT.LEFT, SWT.TOP).applyTo(selectDataBtn);
+        Button suggestBtn = toolkit.createButton(dataSelectionComp, "Suggest", SWT.NONE);//$NON-NLS-1$
+        GridDataFactory.fillDefaults().align(SWT.LEFT, SWT.TOP).applyTo(suggestBtn);
 
         createConnectionBtn.addMouseListener(new MouseListener() {
 
@@ -522,7 +533,87 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
                 // no need to implement
             }
         });
+        suggestBtn.addMouseListener(new MouseListener() {
+
+            public void mouseDoubleClick(MouseEvent e) {
+                // no need to implement
+            }
+
+            public void mouseDown(MouseEvent e) {
+                // no need to give the current connection, the called method will find the current selected nodes auto
+                suggestConfiguration();
+            }
+
+            public void mouseUp(MouseEvent e) {
+                // no need to implement
+            }
+        });
         registerEvents(dataSampleparentComposite);
+    }
+
+    private void suggestConfiguration() {
+        // TODO Auto-generated method stub
+        if (analysisHandler.getSelectedColumns() == null || analysisHandler.getSelectedColumns().length < 1) {
+            return;
+        }
+        ModelElement column = analysisHandler.getSelectedColumns()[0];
+        MetadataColumn mdColumn = (MetadataColumn) column;
+        MetadataTable mdTable = mdColumn.getTable();
+
+        MatchRuleDefinition mrDef = new SuggestionGenerator().generate(mdTable);
+
+        final List<String> columnNames = new ArrayList<String>();
+
+        for (MetadataColumn col : mdTable.getColumns()) {
+            columnNames.add(col.getLabel());
+        }
+
+        MatchRuleElementTreeSelectionDialog rulesSelectionDialog = new MatchRuleElementTreeSelectionDialog(null,
+                new ImportMatchRuleLabelProvider(), new WorkbenchContentProvider(),
+                MatchRuleElementTreeSelectionDialog.SUGGEST_TYPE);
+        rulesSelectionDialog.setInputColumnNames(columnNames);
+        rulesSelectionDialog.setMatchRuleDefinitionInput(mrDef);
+        rulesSelectionDialog.open();
+    }
+
+    class SuggestionGenerator {
+
+        public MatchRuleDefinition generate(MetadataTable mdTable) {
+
+            MatchRuleDefinition matchRuleDefinition = RulesFactory.eINSTANCE.createMatchRuleDefinition();
+
+            BlockKeyDefinition bk = RulesFactory.eINSTANCE.createBlockKeyDefinition();
+            bk.setName("BK1");
+            bk.setColumn("Zip");
+
+            bk.setAlgorithm(RulesFactory.eINSTANCE.createAlgorithmDefinition());
+            bk.getAlgorithm().setAlgorithmType(BlockingKeyAlgorithmEnum.EXACT.name());
+            matchRuleDefinition.getBlockKeys().add(bk);
+
+            MatchRule matchRule = RulesFactory.eINSTANCE.createMatchRule();
+            matchRuleDefinition.getMatchRules().add(matchRule);
+
+            matchRule.setMatchInterval(0.8);
+
+            MatchKeyDefinition mk = RulesFactory.eINSTANCE.createMatchKeyDefinition();
+            mk.setName("MK1");
+            mk.setColumn("City");
+
+            mk.setAlgorithm(RulesFactory.eINSTANCE.createAlgorithmDefinition());
+            mk.getAlgorithm().setAlgorithmType(AttributeMatcherType.LEVENSHTEIN.name());
+
+            matchRule.getMatchKeys().add(mk);
+
+            MatchRule matchRule2 = RulesFactory.eINSTANCE.createMatchRule();
+            matchRuleDefinition.getMatchRules().add(matchRule2);
+
+            matchRule.getMatchKeys().add(mk);
+            matchRule.getMatchKeys().add(mk);
+            matchRule.getMatchKeys().add(mk);
+            matchRule.getMatchKeys().add(mk);
+            matchRule.getMatchKeys().add(mk);
+            return matchRuleDefinition;
+        }
     }
 
     /**
