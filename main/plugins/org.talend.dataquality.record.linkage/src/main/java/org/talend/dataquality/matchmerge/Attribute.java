@@ -1,25 +1,22 @@
 /*
  * Copyright (C) 2006-2014 Talend Inc. - www.talend.com
- *
+ * 
  * This source code is available under agreement available at
  * %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
- *
- * You should have received a copy of the agreement
- * along with this program; if not, write to Talend SA
- * 9 rue Pages 92150 Suresnes, France
+ * 
+ * You should have received a copy of the agreement along with this program; if not, write to Talend SA 9 rue Pages
+ * 92150 Suresnes, France
  */
 
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * To change this template, choose Tools | Templates and open the template in the editor.
  */
 package org.talend.dataquality.matchmerge;
 
-import org.apache.commons.collections.iterators.IteratorChain;
-
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
+
+import org.apache.commons.collections.iterators.IteratorChain;
 
 /**
  * A attribute is a "column" in a {@link org.talend.dataquality.matchmerge.Record record}.
@@ -30,7 +27,7 @@ public class Attribute {
 
     private String value;
 
-    private AttributeValues<String> values = new AttributeValues<String>();;
+    private final AttributeValues<String> values = new AttributeValues<String>();
 
     public Attribute(String label) {
         this.label = label;
@@ -52,8 +49,9 @@ public class Attribute {
 
     /**
      * Set the merged column value.
+     * 
      * @param value A string value for the column. For custom types, provide a consistent representation of the data
-     *              since the string is used for match.
+     * since the string is used for match.
      */
     public void setValue(String value) {
         this.value = value;
@@ -67,7 +65,7 @@ public class Attribute {
     }
 
     public Iterator<String> allValues() {
-        return new IteratorChain(new Iterator[] { Collections.singleton(value).iterator(), values.iterator()});
+        return new IteratorChain(new Iterator[] { Collections.singleton(value).iterator(), values.iterator() });
     }
 
 }

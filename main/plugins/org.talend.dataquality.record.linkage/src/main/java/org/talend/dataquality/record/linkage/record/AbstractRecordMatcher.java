@@ -26,7 +26,7 @@ import org.talend.dataquality.record.linkage.attribute.IAttributeMatcher;
 /**
  * @author scorreia Abstract class for matching records.
  */
-abstract class AbstractRecordMatcher implements IRecordMatcher {
+public abstract class AbstractRecordMatcher implements IRecordMatcher {
 
     private static Logger log = Logger.getLogger(AbstractRecordMatcher.class);
 

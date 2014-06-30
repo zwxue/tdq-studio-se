@@ -10,7 +10,7 @@ import org.talend.dataquality.record.linkage.record.IRecordMatcher;
 
 public class MFBRecordMatcher implements IRecordMatcher {
 
-    protected static final Logger LOGGER = Logger.getLogger(MFBRecordMatcher.class);
+    private static final Logger LOGGER = Logger.getLogger(MFBRecordMatcher.class);
 
     private static final double MAX_SCORE = 1;
 
@@ -80,9 +80,8 @@ public class MFBRecordMatcher implements IRecordMatcher {
         while (mergedRecordAttributes.hasNext()) {
             Attribute left = mergedRecordAttributes.next();
             Attribute right = currentRecordAttributes.next();
-            // Try on all values
-            // MatchMerge.matchScore(left.allValues(), right.allValues(), algorithms[matchIndex], algorithmParameters[matchIndex], nullOptions[matchIndex], subStrings[matchIndex]);
             IAttributeMatcher matcher = attributeMatchers[matchIndex];
+            // Find the first score to exceed threshold (if any).
             double score = matchScore(left.allValues(), right.allValues(), matcher);
             result.setScore(matchIndex, matcher.getMatchType(), score, left.getValue(), right.getValue());
             result.setThreshold(matchIndex, matcher.getThreshold());

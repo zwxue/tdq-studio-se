@@ -1,7 +1,7 @@
 package org.talend.dataquality.matchmerge.mfb;
 
 import org.talend.dataquality.matchmerge.SubString;
-import org.talend.dataquality.record.linkage.attribute.*;
+import org.talend.dataquality.record.linkage.attribute.IAttributeMatcher;
 import org.talend.dataquality.record.linkage.constant.AttributeMatcherType;
 
 public class MFBAttributeMatcher implements IAttributeMatcher {
@@ -14,7 +14,7 @@ public class MFBAttributeMatcher implements IAttributeMatcher {
 
     private final double weight;
 
-    MFBAttributeMatcher(IAttributeMatcher delegate, double weight, double threshold, SubString subString) {
+    private MFBAttributeMatcher(IAttributeMatcher delegate, double weight, double threshold, SubString subString) {
         this.delegate = delegate;
         this.threshold = threshold;
         this.subString = subString;

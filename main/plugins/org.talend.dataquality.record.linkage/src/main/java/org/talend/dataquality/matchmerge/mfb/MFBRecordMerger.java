@@ -1,49 +1,31 @@
-/*
- * Copyright (C) 2006-2014 Talend Inc. - www.talend.com
- * 
- * This source code is available under agreement available at
- * %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
- * 
- * You should have received a copy of the agreement along with this program; if not, write to Talend SA 9 rue Pages
- * 92150 Suresnes, France
- */
-
-/*
- * To change this template, choose Tools | Templates and open the template in the editor.
- */
-package org.talend.dataquality.matchmerge;
+package org.talend.dataquality.matchmerge.mfb;
 
 import java.math.BigDecimal;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 
-import org.talend.dataquality.record.linkage.attribute.AttributeMatcherFactory;
-import org.talend.dataquality.record.linkage.attribute.IAttributeMatcher;
-import org.talend.dataquality.record.linkage.attribute.SubstringAttributeMatcher;
-import org.talend.dataquality.record.linkage.constant.AttributeMatcherType;
-import org.talend.dataquality.record.linkage.utils.CustomAttributeMatcherClassNameConvert;
+import org.talend.dataquality.matchmerge.Attribute;
+import org.talend.dataquality.matchmerge.AttributeValues;
+import org.talend.dataquality.matchmerge.Record;
+import org.talend.dataquality.record.linkage.record.IRecordMerger;
 import org.talend.dataquality.record.linkage.utils.SurvivorShipAlgorithmEnum;
 
-public class MatchMerge {
+class MFBRecordMerger implements IRecordMerger {
 
-    private static final double MAX_SCORE = 1.0;
+    private final SurvivorShipAlgorithmEnum[] typeMergeTable;
 
-    public static boolean equals(Record record1, Record record2) {
-        Iterator<Attribute> r1 = record1.getAttributes().iterator();
-        Iterator<Attribute> r2 = record2.getAttributes().iterator();
-        while (r1.hasNext()) {
-            AttributeValues<String> leftAttributeValues = r1.next().getValues();
-            AttributeValues<String> rightAttributeValues = r2.next().getValues();
-            if (!leftAttributeValues.equals(rightAttributeValues)) {
-                return false;
-            }
-        }
-        return true;
+    private final String[] parameters;
+
+    private final String mergedRecordSource;
+
+    public MFBRecordMerger(String mergedRecordSource, String[] parameters, SurvivorShipAlgorithmEnum[] typeMergeTable) {
+        this.mergedRecordSource = mergedRecordSource;
+        this.parameters = parameters;
+        this.typeMergeTable = typeMergeTable;
     }
 
-    public static Record merge(Record record1, Record record2, SurvivorShipAlgorithmEnum[] typeMergeTable, String[] parameters,
-            String mergedRecordSource) {
+    @Override
+    public Record merge(Record record1, Record record2) {
         List<Attribute> r1 = record1.getAttributes();
         List<Attribute> r2 = record2.getAttributes();
         // Takes most recent as timestamp for the merged record.
@@ -198,6 +180,4 @@ public class MatchMerge {
         String value = record.get(i).getValue();
         return value == null || value.isEmpty() ? BigDecimal.ZERO : new BigDecimal(value);
     }
-
-
 }

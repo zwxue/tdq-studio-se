@@ -1,12 +1,11 @@
 /*
  * Copyright (C) 2006-2014 Talend Inc. - www.talend.com
- *
+ * 
  * This source code is available under agreement available at
  * %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
- *
- * You should have received a copy of the agreement
- * along with this program; if not, write to Talend SA
- * 9 rue Pages 92150 Suresnes, France
+ * 
+ * You should have received a copy of the agreement along with this program; if not, write to Talend SA 9 rue Pages
+ * 92150 Suresnes, France
  */
 
 package org.talend.dataquality.matchmerge.mfb;
@@ -18,7 +17,7 @@ import org.talend.dataquality.matchmerge.Record;
 
 public class LoggerCallback implements MatchMergeAlgorithm.Callback {
 
-    protected static Logger LOGGER = Logger.getLogger(MatchMergeAlgorithm.class);
+    protected static final Logger LOGGER = Logger.getLogger(MatchMergeAlgorithm.class);
 
     @Override
     public void onBeginRecord(Record record) {
@@ -36,11 +35,9 @@ public class LoggerCallback implements MatchMergeAlgorithm.Callback {
             StringBuilder messagesBuilder = new StringBuilder();
             int i = 0;
             for (MatchResult.Score score : matchResult.getScores()) {
-                messagesBuilder.append("\t\t")
-                        .append(score.algorithm.getComponentValue())
-                        .append("('").append(score.values[0]).append("', '")
-                        .append(score.values[1]).append("') = ")
-                        .append(score.score).append(" (>= ").append(matchResult.getThresholds().get(i)).append(")");
+                messagesBuilder.append("\t\t").append(score.algorithm.getComponentValue()).append("('").append(score.values[0])
+                        .append("', '").append(score.values[1]).append("') = ").append(score.score).append(" (>= ")
+                        .append(matchResult.getThresholds().get(i)).append(")");
                 i++;
             }
             messagesBuilder.append('\n');
@@ -61,8 +58,7 @@ public class LoggerCallback implements MatchMergeAlgorithm.Callback {
         if (LOGGER.isDebugEnabled()) {
             StringBuilder messageBuilder = new StringBuilder();
             for (Attribute attribute : record.getAttributes()) {
-                messageBuilder.append("\t\t").append(attribute.getLabel()).append(": '")
-                        .append(attribute.getValue()).append("'");
+                messageBuilder.append("\t\t").append(attribute.getLabel()).append(": '").append(attribute.getValue()).append("'");
             }
             LOGGER.debug(messageBuilder.toString());
         }
@@ -91,11 +87,9 @@ public class LoggerCallback implements MatchMergeAlgorithm.Callback {
                 } else {
                     compareSymbol = ">="; //$NON-NLS-1$
                 }
-                messagesBuilder.append("\t\t")
-                        .append(score.algorithm.getComponentValue())
-                        .append("('").append(score.values[0]).append("', '")
-                        .append(score.values[1]).append("') = ")
-                        .append(score.score).append(" (").append(compareSymbol).append(" ").append(threshold).append(")");
+                messagesBuilder.append("\t\t").append(score.algorithm.getComponentValue()).append("('").append(score.values[0])
+                        .append("', '").append(score.values[1]).append("') = ").append(score.score).append(" (")
+                        .append(compareSymbol).append(" ").append(threshold).append(")");
                 i++;
             }
             messagesBuilder.append('\n');
@@ -130,17 +124,4 @@ public class LoggerCallback implements MatchMergeAlgorithm.Callback {
         }
     }
 
-    @Override
-    public void onBeginPostMergeProcess() {
-        if (LOGGER.isInfoEnabled()) {
-            LOGGER.info("Begin post processing for merge");
-        }
-    }
-
-    @Override
-    public void onEndPostMergeProcess() {
-        if (LOGGER.isInfoEnabled()) {
-            LOGGER.info("End post processing for merge");
-        }
-    }
 }
