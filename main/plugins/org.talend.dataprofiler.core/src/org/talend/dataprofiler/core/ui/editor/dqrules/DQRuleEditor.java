@@ -19,7 +19,6 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.PartInitException;
-import org.eclipse.ui.forms.editor.IFormPage;
 import org.eclipse.ui.part.FileEditorInput;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.commons.exception.ExceptionHandler;
@@ -40,8 +39,6 @@ import orgomg.cwm.objectmodel.core.ModelElement;
  * DOC xqliu class global comment. Detailled comment
  */
 public class DQRuleEditor extends CommonFormEditor {
-
-    private DQRuleMasterDetailsPage masterPage;
 
     private ParserRuleMasterDetailsPage parserPage;
 
@@ -123,7 +120,7 @@ public class DQRuleEditor extends CommonFormEditor {
                 masterPage.doSave(monitor);
                 setPartName(masterPage.getIntactElemenetName());
             }
-            setEditorObject(masterPage.getRuleRepNode());
+            setEditorObject(((DQRuleMasterDetailsPage) getMasterPage()).getRuleRepNode());
         } else if (parserPage != null) {
             if (parserPage.isDirty()) {
                 parserPage.doSave(monitor);
@@ -147,15 +144,6 @@ public class DQRuleEditor extends CommonFormEditor {
         setSaveActionButtonState(isDirty());
         // ~
         super.firePropertyChange(propertyId);
-    }
-
-    /**
-     * Getter for masterPage.
-     * 
-     * @return the masterPage
-     */
-    public IFormPage getMasterPage() {
-        return this.masterPage;
     }
 
     @Override

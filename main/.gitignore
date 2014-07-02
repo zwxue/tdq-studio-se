@@ -1,0 +1,4 @@
+/plugins/*/target
+/plugins/*/bin
+/plugins/*/class
+

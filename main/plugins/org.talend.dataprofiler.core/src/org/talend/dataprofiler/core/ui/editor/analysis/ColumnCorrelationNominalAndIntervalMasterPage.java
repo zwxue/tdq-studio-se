@@ -63,7 +63,6 @@ import org.talend.dataprofiler.core.ui.action.actions.RunAnalysisAction;
 import org.talend.dataprofiler.core.ui.chart.jung.JungGraphGenerator;
 import org.talend.dataprofiler.core.ui.dialog.ColumnsSelectionDialog;
 import org.talend.dataprofiler.core.ui.editor.composite.AnalysisColumnNominalIntervalTreeViewer;
-import org.talend.dataprofiler.core.ui.editor.composite.DataFilterComp;
 import org.talend.dataprofiler.core.ui.editor.composite.IndicatorsComp;
 import org.talend.dataprofiler.core.ui.editor.preview.HideSeriesChartComposite;
 import org.talend.dataprofiler.core.ui.pref.EditorPreferencePage;
@@ -105,8 +104,6 @@ public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnaly
     ColumnCorrelationAnalysisHandler correlationAnalysisHandler;
 
     private ColumnSetMultiValueIndicator columnSetMultiIndicator;
-
-    private String stringDataFilter;
 
     /*
      * (non-Javadoc)
@@ -268,8 +265,11 @@ public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnaly
         createIndicatorsSection(form, topComp);
 
         createDataFilterSection(form, topComp);
+        dataFilterComp.addPropertyChangeListener(this);
 
         createAnalysisParamSection(form, topComp);
+
+        createContextGroupSection(form, topComp);
 
         // createAnalysisParamSection(form, topComp);
         if (!EditorPreferencePage.isHideGraphics()) {
@@ -559,25 +559,6 @@ public class ColumnCorrelationNominalAndIntervalMasterPage extends AbstractAnaly
         indicatorsViewer.addPropertyChangeListener(this);
         indicatorsViewer.setInput(columnSetMultiIndicator);
         indicatorsSection.setClient(indicatorsComp);
-    }
-
-    /**
-     * @param form
-     * @param toolkit
-     * @param anasisDataComp
-     */
-    void createDataFilterSection(final ScrolledForm form, Composite anasisDataComp) {
-        dataFilterSection = createSection(
-                form,
-                anasisDataComp,
-                DefaultMessagesImpl.getString("ColumnMasterDetailsPage.dataFilter"), DefaultMessagesImpl.getString("ColumnMasterDetailsPage.editDataFilter")); //$NON-NLS-1$ //$NON-NLS-2$
-
-        Composite sectionClient = toolkit.createComposite(dataFilterSection);
-        dataFilterComp = new DataFilterComp(sectionClient, stringDataFilter);
-        dataFilterComp.addPropertyChangeListener(this);
-        // ADD yyi 2011-05-31 16158:add whitespace check for text fields.
-        addWhitespaceValidate(dataFilterComp.getDataFilterText());
-        dataFilterSection.setClient(sectionClient);
     }
 
     /**

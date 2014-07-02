@@ -53,9 +53,12 @@ import org.talend.dataprofiler.core.ui.IRuningStatusListener;
 import org.talend.dataprofiler.core.ui.editor.analysis.AbstractAnalysisMetadataPage;
 import org.talend.dataprofiler.core.ui.editor.analysis.AnalysisEditor;
 import org.talend.dataprofiler.core.ui.editor.analysis.AnalysisItemEditorInput;
+import org.talend.dataprofiler.core.ui.editor.analysis.ColumnAnalysisResultPage;
+import org.talend.dataprofiler.core.ui.editor.analysis.DynamicAnalysisMasterPage;
 import org.talend.dataprofiler.core.ui.events.EventEnum;
 import org.talend.dataprofiler.core.ui.events.EventManager;
 import org.talend.dataquality.analysis.AnalysisType;
+import org.talend.dataquality.analysis.ExecutionLanguage;
 import org.talend.dataquality.helpers.AnalysisHelper;
 import org.talend.dataquality.properties.TDQAnalysisItem;
 import org.talend.dq.analysis.AnalysisExecutorSelector;
@@ -158,17 +161,7 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
             }
 
             if (log.isInfoEnabled()) {
-                DataManager datamanager = item.getAnalysis().getContext().getConnection();
-                if (datamanager instanceof DatabaseConnection) {
-                    TaggedValue productName = TaggedValueHelper.getTaggedValue(TaggedValueHelper.DB_PRODUCT_NAME,
-                            datamanager.getTaggedValue());
-                    TaggedValue productVersion = TaggedValueHelper.getTaggedValue(TaggedValueHelper.DB_PRODUCT_VERSION,
-                            datamanager.getTaggedValue());
-                    log.info("DB Product Name: " + productName.getValue()); //$NON-NLS-1$
-                    log.info("DB Product Version: " + productVersion.getValue()); //$NON-NLS-1$
-                } else if (datamanager instanceof DelimitedFileConnection) {
-                    log.info("File Connection path: " + ((DelimitedFileConnection) datamanager).getFilePath()); //$NON-NLS-1$
-                }
+                addTaggedVaLueIntoConnection();
             }
 
             AnalysisType analysisType = item.getAnalysis().getParameters().getAnalysisType();
@@ -206,11 +199,17 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
                     monitor.beginTask(
                             DefaultMessagesImpl.getString("RunAnalysisAction.running", item.getAnalysis().getName()), IProgressMonitor.UNKNOWN); //$NON-NLS-1$ 
 
-                    Display.getDefault().asyncExec(new Runnable() {
+                    Display.getDefault().syncExec(new Runnable() {
 
                         public void run() {
+                            // TODO: dynamic chart: if the listener is null(from menu, and the ana already be opened)
                             if (listener != null) {
                                 listener.fireRuningItemChanged(false);
+                            }
+                            // register dynamic event for who supported dynamic chart
+                            if (isSupportDynamicChart()) {
+                                EventManager.getInstance().publish(item.getAnalysis(),
+                                        EventEnum.DQ_DYNAMIC_REGISTER_DYNAMIC_CHART, null);
                             }
                         }
 
@@ -233,16 +232,23 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
                         unlockAnalysis();
                     }
 
-                    Display.getDefault().asyncExec(new Runnable() {
+                    Display.getDefault().syncExec(new Runnable() {
 
                         public void run() {
-                            if (listener != null) {
-                                listener.fireRuningItemChanged(true);
+                            // Added TDQ-8787 20140616 yyin: unregister all dynamic chart events after executing
+                            // the analysis
+                            if (isSupportDynamicChart()) {
+                                EventManager.getInstance().publish(item.getAnalysis(),
+                                        EventEnum.DQ_DYNAMIC_UNREGISTER_DYNAMIC_CHART, null);
                             } else {
-                                // TODO yyin publish the event from listener.
-                                EventManager.getInstance().publish(item.getAnalysis(), EventEnum.DQ_ANALYSIS_RUN_FROM_MENU, null);
+                                if (listener != null) {
+                                    listener.fireRuningItemChanged(true);
+                                } else {
+                                    // TODO yyin publish the event from listener.
+                                    EventManager.getInstance().publish(item.getAnalysis(), EventEnum.DQ_ANALYSIS_RUN_FROM_MENU,
+                                            null);
+                                }
                             }
-
                         }
 
                     });
@@ -258,6 +264,37 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
             job.schedule();
         } catch (BusinessException e) {
             ExceptionHandler.process(e, Level.FATAL);
+        }
+    }
+
+    // only sql mode, and column, table, dependency analysis support dynamic chart now
+    private boolean isSupportDynamicChart() {
+        ExecutionLanguage executionEngine = AnalysisHelper.getExecutionEngine(this.item.getAnalysis());
+        if (ExecutionLanguage.SQL.equals(executionEngine)) {
+            if (listener == null) {// when run from context menu.
+                if (AnalysisType.MULTIPLE_COLUMN.equals(item.getAnalysis().getParameters().getAnalysisType())) {
+                    return true;
+                }
+                return false;
+            } else {
+                return listener instanceof DynamicAnalysisMasterPage || listener instanceof ColumnAnalysisResultPage;
+            }
+        } else {
+            return false;
+        }
+    }
+
+    private void addTaggedVaLueIntoConnection() {
+        DataManager datamanager = item.getAnalysis().getContext().getConnection();
+        if (datamanager instanceof DatabaseConnection) {
+            TaggedValue productName = TaggedValueHelper.getTaggedValue(TaggedValueHelper.DB_PRODUCT_NAME,
+                    datamanager.getTaggedValue());
+            TaggedValue productVersion = TaggedValueHelper.getTaggedValue(TaggedValueHelper.DB_PRODUCT_VERSION,
+                    datamanager.getTaggedValue());
+            log.info("DB Product Name: " + productName.getValue()); //$NON-NLS-1$
+            log.info("DB Product Version: " + productVersion.getValue()); //$NON-NLS-1$
+        } else if (datamanager instanceof DelimitedFileConnection) {
+            log.info("File Connection path: " + ((DelimitedFileConnection) datamanager).getFilePath()); //$NON-NLS-1$
         }
     }
 
@@ -323,9 +360,9 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
     private boolean ifLockByOthers() {
         // MOD sizhaoliu TDQ-5452 verify the lock status before running an analysis
         if (ProxyRepositoryManager.getInstance().isLockByOthers(item)) {
-            RepositoryNode node = RepositoryNodeHelper.recursiveFind(this.item.getProperty());
-            if (node != null) {
-                CorePlugin.getDefault().refreshDQView(node.getParent());
+            RepositoryNode node1 = RepositoryNodeHelper.recursiveFind(this.item.getProperty());
+            if (node1 != null) {
+                CorePlugin.getDefault().refreshDQView(node1.getParent());
             }
             MessageDialog.openError(PlatformUI.getWorkbench().getDisplay().getActiveShell(),
                     DefaultMessagesImpl.getString("RunAnalysisAction.runAnalysis"), //$NON-NLS-1$

@@ -28,13 +28,13 @@ import org.talend.cwm.management.i18n.Messages;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.dataquality.PluginConstant;
 import org.talend.dataquality.analysis.Analysis;
-import org.talend.dataquality.helpers.AnalysisHelper;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.columnset.ColumnDependencyIndicator;
 import org.talend.dataquality.indicators.columnset.ColumnsetPackage;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dq.dbms.DbmsLanguage;
 import org.talend.dq.dbms.DbmsLanguageFactory;
+import org.talend.dq.helper.ContextHelper;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.utils.sugars.ReturnCode;
 import org.talend.utils.sugars.TypedReturnCode;
@@ -198,7 +198,7 @@ public class FunctionalDependencyExecutor extends ColumnAnalysisSqlExecutor {
         // ~11005
         List<String> whereClauses = new ArrayList<String>();
 
-        String dataFilter = AnalysisHelper.getStringDataFilter(cachedAnalysis);
+        String dataFilter = ContextHelper.getDataFilterWithoutContext(cachedAnalysis);
         if (!StringUtils.isEmpty(dataFilter)) {
             whereClauses.add(dataFilter);
         }

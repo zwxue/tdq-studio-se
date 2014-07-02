@@ -44,4 +44,8 @@ public class ChartWithData {
     public JFreeChart getChart() {
         return chart;
     }
+
+    public void setEntities(ChartDataEntity[] entity) {
+        this.entity = entity;
+    }
 }

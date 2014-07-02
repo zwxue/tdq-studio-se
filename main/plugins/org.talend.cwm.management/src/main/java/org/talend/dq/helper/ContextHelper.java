@@ -24,6 +24,8 @@ import org.talend.core.language.ECodeLanguage;
 import org.talend.core.language.LanguageManager;
 import org.talend.core.model.properties.ContextItem;
 import org.talend.core.model.utils.ContextParameterUtils;
+import org.talend.dataquality.analysis.Analysis;
+import org.talend.dataquality.helpers.AnalysisHelper;
 import org.talend.dataquality.helpers.ReportHelper;
 import org.talend.dataquality.reports.TdReport;
 import org.talend.designer.core.model.utils.emf.talendfile.ContextParameterType;
@@ -107,6 +109,30 @@ public final class ContextHelper {
      */
     public static String getReportContextValue(TdReport tdReport, String contextVarName) {
         return getReportContextValue(tdReport, ReportHelper.getContextGroupName(tdReport), contextVarName);
+    }
+
+    /**
+     * get the context's value from specified context group of the analysis.
+     * 
+     * @param analysis
+     * @param contextGroupName the name of the context group which be used to get the context value
+     * @param contextVarName the context variable's name
+     * @return
+     */
+    public static String getAnalysisContextValue(Analysis analysis, String contextGroupName, String contextVarName) {
+        return getContextValue(analysis.getContextType(), contextGroupName, contextVarName);
+    }
+
+    /**
+     * get the context's value from the last run context(or default context if last run context is empty) in the
+     * analysis.
+     * 
+     * @param analysis
+     * @param contextVarName the context variable's name
+     * @return
+     */
+    public static String getAnalysisContextValue(Analysis analysis, String contextVarName) {
+        return getAnalysisContextValue(analysis, AnalysisHelper.getContextGroupName(analysis), contextVarName);
     }
 
     /**
@@ -284,5 +310,27 @@ public final class ContextHelper {
             }
         }
         return contextType;
+    }
+
+    /**
+     * get DataFilter Without Context.
+     * 
+     * @param analysis
+     * @return
+     */
+    public static String getDataFilterWithoutContext(Analysis analysis) {
+        return getDataFilterWithoutContext(analysis, 0);
+    }
+
+    /**
+     * get DataFilter Without Context.
+     * 
+     * @param analysis
+     * @param index 0 for DataFilterA, 1 for DataFilterB
+     * @return
+     */
+    public static String getDataFilterWithoutContext(Analysis analysis, int index) {
+        String dataFilter = AnalysisHelper.getStringDataFilter(analysis, index);
+        return ContextHelper.getAnalysisContextValue(analysis, dataFilter);
     }
 }
