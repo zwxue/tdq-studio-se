@@ -13,6 +13,7 @@
 package org.talend.dataprofiler.core.ui.editor.preview.model.states;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -37,6 +38,7 @@ import org.talend.dataprofiler.core.ui.editor.preview.model.states.ChartTablePro
 import org.talend.dataprofiler.core.ui.editor.preview.model.states.ChartTableProviderClassSet.SummaryLabelProvider;
 import org.talend.dq.analysis.explore.DataExplorer;
 import org.talend.dq.analysis.explore.SummaryStastictisExplorer;
+import org.talend.dq.indicators.IndicatorCommonUtil;
 import org.talend.dq.indicators.preview.table.ChartDataEntity;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
 import org.talend.utils.sql.Java2SqlType;
@@ -51,14 +53,56 @@ public class SummaryStatisticsState extends AbstractChartTypeStates {
     // when all the summary indicators is selected, include the catalog, the number should be 8
     public static final int FULL_FLAG = 8;
 
+    public static final int FULL_CHART = 6;
+
     private int sqltype;
 
+    /**
+     * Sets the sqltype.
+     * 
+     * @param sqltype the sqltype to set
+     */
+    public void setSqltype(int sqltype) {
+        this.sqltype = sqltype;
+    }
+
     public SummaryStatisticsState(List<IndicatorUnit> units) {
-        super(units);
+        if (units != null) {
+            this.units.addAll(check(units));
+        }
 
         if (units != null && !units.isEmpty() && units.get(0) instanceof ColumnIndicatorUnit) {
-            sqltype = ((ColumnIndicatorUnit) units.get(0)).getModelElementIndicator().getJavaType();
+            if (((ColumnIndicatorUnit) units.get(0)).getModelElementIndicator() != null) {
+                sqltype = ((ColumnIndicatorUnit) units.get(0)).getModelElementIndicator().getJavaType();
+            }
         }
+    }
+
+    /**
+     * DOC bZhou Comment method "check".
+     * 
+     * @param units2
+     * @return
+     */
+    private Collection<? extends IndicatorUnit> check(List<IndicatorUnit> parameterUnits) {
+        List<IndicatorUnit> validUnitList = new ArrayList<IndicatorUnit>();
+
+        for (IndicatorUnit unit : parameterUnits) {
+
+            IndicatorEnum type = unit.getType();
+            if (type != null && !unit.isExcuted()
+                    && (type == IndicatorEnum.IQRIndicatorEnum || type == IndicatorEnum.RangeIndicatorEnum)) {
+                IndicatorCommonUtil.getIndicatorValue(unit.getIndicator());
+            }
+
+            if (unit.getIndicator().getRealValue() != null && "null".equals(unit.getIndicator().getRealValue())) {//$NON-NLS-1$
+                continue;
+            } else {
+                validUnitList.add(unit);
+            }
+        }
+
+        return validUnitList;
     }
 
     public JFreeChart getChart() {
@@ -82,11 +126,10 @@ public class SummaryStatisticsState extends AbstractChartTypeStates {
     public ICustomerDataset getCustomerDataset() {
         Map<IndicatorEnum, Double> map = new HashMap<IndicatorEnum, Double>();
         CustomerDefaultCategoryDataset customerdataset = new CustomerDefaultCategoryDataset();
-
         for (IndicatorUnit unit : units) {
+            // MOD xqliu 2009-06-29 bug 7068
+            String value = unit.getValue() == null ? "0" : unit.getValue().toString();//$NON-NLS-1$
             if (Java2SqlType.isNumbericInSQL(sqltype)) {
-                // MOD xqliu 2009-06-29 bug 7068
-                String value = unit.getValue() == null ? "0" : unit.getValue().toString(); //$NON-NLS-1$
                 // ~
                 try {
                     map.put(unit.getType(), Double.parseDouble(value));
@@ -98,7 +141,7 @@ public class SummaryStatisticsState extends AbstractChartTypeStates {
             ChartDataEntity entity = new ChartDataEntity();
             entity.setIndicator(unit.getIndicator());
             entity.setLabel(unit.getIndicatorName());
-            entity.setValue(String.valueOf(unit.getValue()));
+            entity.setValue(value);
 
             customerdataset.addDataEntity(entity);
         }
@@ -112,6 +155,7 @@ public class SummaryStatisticsState extends AbstractChartTypeStates {
 
             dataset.add(item, "0", ""); //$NON-NLS-1$ //$NON-NLS-2$
 
+            @SuppressWarnings("rawtypes")
             List zerolist = new ArrayList();
             dataset.add(zerolist, "1", ""); //$NON-NLS-1$ //$NON-NLS-2$
             dataset.add(zerolist, "2", ""); //$NON-NLS-1$ //$NON-NLS-2$
@@ -128,7 +172,7 @@ public class SummaryStatisticsState extends AbstractChartTypeStates {
             map.remove(IndicatorEnum.IQRIndicatorEnum);
 
             for (IndicatorEnum indicatorEnum : map.keySet()) {
-                customerdataset.addValue(map.get(indicatorEnum), "", indicatorEnum.getLabel()); //$NON-NLS-1$
+                customerdataset.addValue(map.get(indicatorEnum), indicatorEnum.getLabel(), indicatorEnum.getLabel());
             }
             return customerdataset;
         }

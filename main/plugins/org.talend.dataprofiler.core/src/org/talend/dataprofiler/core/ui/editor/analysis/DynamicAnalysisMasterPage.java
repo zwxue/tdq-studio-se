@@ -1,0 +1,343 @@
+// ============================================================================
+//
+// Copyright (C) 2006-2014 Talend Inc. - www.talend.com
+//
+// This source code is available under agreement available at
+// %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
+//
+// You should have received a copy of the agreement
+// along with this program; if not, write to Talend SA
+// 9 rue Pages 92150 Suresnes, France
+//
+// ============================================================================
+package org.talend.dataprofiler.core.ui.editor.analysis;
+
+import java.util.IdentityHashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.SashForm;
+import org.eclipse.swt.events.ControlAdapter;
+import org.eclipse.swt.events.ControlEvent;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Label;
+import org.eclipse.ui.forms.editor.FormEditor;
+import org.eclipse.ui.forms.events.HyperlinkAdapter;
+import org.eclipse.ui.forms.events.HyperlinkEvent;
+import org.eclipse.ui.forms.widgets.ExpandableComposite;
+import org.eclipse.ui.forms.widgets.ImageHyperlink;
+import org.eclipse.ui.forms.widgets.ScrolledForm;
+import org.eclipse.ui.forms.widgets.Section;
+import org.jfree.data.category.CategoryDataset;
+import org.talend.dataprofiler.core.ImageLib;
+import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
+import org.talend.dataprofiler.core.ui.action.actions.RunAnalysisAction;
+import org.talend.dataprofiler.core.ui.chart.TalendChartComposite;
+import org.talend.dataprofiler.core.ui.editor.preview.model.dataset.CustomerDefaultBAWDataset;
+import org.talend.dataprofiler.core.ui.events.DynamicBAWChartEventReceiver;
+import org.talend.dataprofiler.core.ui.events.DynamicChartEventReceiver;
+import org.talend.dataprofiler.core.ui.events.EventEnum;
+import org.talend.dataprofiler.core.ui.events.EventManager;
+import org.talend.dataprofiler.core.ui.events.EventReceiver;
+import org.talend.dataquality.analysis.Analysis;
+import org.talend.dataquality.indicators.Indicator;
+import org.talend.dq.analysis.AnalysisHandler;
+import org.talend.dq.nodes.indicator.type.IndicatorEnum;
+
+/**
+ * DOC yyin class global comment. Detailled comment
+ */
+public abstract class DynamicAnalysisMasterPage extends AbstractAnalysisMetadataPage {
+
+    protected SashForm sForm;
+
+    protected Composite previewComp;
+
+    protected Section previewSection = null;
+
+    protected Composite chartComposite;
+
+    abstract List<ExpandableComposite> getPreviewChartList();
+
+    protected Map<Indicator, EventReceiver> eventReceivers = new IdentityHashMap<Indicator, EventReceiver>();
+
+    private EventReceiver registerDynamicRefreshEvent;
+
+    /**
+     * DOC yyin DynamicAnalysisMasterPage constructor comment.
+     * 
+     * @param editor
+     * @param id
+     * @param title
+     */
+    public DynamicAnalysisMasterPage(FormEditor editor, String id, String title) {
+        super(editor, id, title);
+        // TODO Auto-generated constructor stub
+    }
+
+    protected void createPreviewComposite() {
+        previewComp = toolkit.createComposite(sForm);
+        previewComp.setLayoutData(new GridData(GridData.FILL_BOTH));
+        previewComp.setLayout(new GridLayout());
+        // add by hcheng for 0007290: Chart cannot auto compute it's size in
+        // DQRule analsyis Editor
+        previewComp.addControlListener(new ControlAdapter() {
+
+            @Override
+            public void controlResized(ControlEvent e) {
+                super.controlResized(e);
+                sForm.redraw();
+                form.reflow(true);
+            }
+        });
+    }
+
+    void createPreviewSection(final ScrolledForm form1, Composite parent) {
+        previewSection = createSection(
+                form1,
+                parent,
+                DefaultMessagesImpl.getString("ColumnMasterDetailsPage.graphics"), DefaultMessagesImpl.getString("ColumnMasterDetailsPage.space")); //$NON-NLS-1$ //$NON-NLS-2$
+        previewSection.setLayoutData(new GridData(GridData.FILL_BOTH));
+        Composite sectionClient = toolkit.createComposite(previewSection);
+        sectionClient.setLayout(new GridLayout());
+        sectionClient.setLayoutData(new GridData(GridData.FILL_BOTH));
+
+        Composite actionBarComp = toolkit.createComposite(sectionClient);
+        GridLayout gdLayout = new GridLayout();
+        gdLayout.numColumns = 2;
+        actionBarComp.setLayout(gdLayout);
+
+        createCollapseAllLink(actionBarComp);
+
+        createExpandAllLink(actionBarComp);
+
+        ImageHyperlink refreshBtn = toolkit.createImageHyperlink(sectionClient, SWT.NONE);
+        refreshBtn.setText(DefaultMessagesImpl.getString("ColumnMasterDetailsPage.refreshGraphics")); //$NON-NLS-1$
+        refreshBtn.setImage(ImageLib.getImage(ImageLib.SECTION_PREVIEW));
+        final Label message = toolkit.createLabel(sectionClient,
+                DefaultMessagesImpl.getString("ColumnMasterDetailsPage.spaceWhite")); //$NON-NLS-1$
+        message.setForeground(Display.getDefault().getSystemColor(SWT.COLOR_RED));
+        message.setVisible(false);
+
+        GridDataFactory.fillDefaults().align(SWT.FILL, SWT.TOP).applyTo(sectionClient);
+
+        chartComposite = toolkit.createComposite(sectionClient);
+        chartComposite.setLayout(new GridLayout());
+        chartComposite.setLayoutData(new GridData(GridData.FILL_BOTH));
+
+        addListenerToRefreshBtn(form1, refreshBtn, message);
+
+        previewSection.setClient(sectionClient);
+    }
+
+    private void addListenerToRefreshBtn(final ScrolledForm form1, ImageHyperlink refreshBtn, final Label message) {
+        final Analysis analysis = getAnalysisHandler().getAnalysis();
+
+        refreshBtn.addHyperlinkListener(new HyperlinkAdapter() {
+
+            @Override
+            public void linkActivated(HyperlinkEvent e) {
+                disposeChartComposite();
+
+                boolean analysisStatue = analysis.getResults().getResultMetadata() != null
+                        && analysis.getResults().getResultMetadata().getExecutionDate() != null;
+
+                if (!analysisStatue) {
+                    boolean returnCode = MessageDialog.openConfirm(null,
+                            DefaultMessagesImpl.getString("ColumnMasterDetailsPage.ViewResult"), //$NON-NLS-1$
+                            DefaultMessagesImpl.getString("ColumnMasterDetailsPage.RunOrSeeSampleData")); //$NON-NLS-1$
+
+                    if (returnCode) {
+                        new RunAnalysisAction().run();
+                        message.setVisible(false);
+                    } else {
+                        createPreviewCharts(form1, chartComposite);
+                        message.setText(DefaultMessagesImpl.getString("ColumnMasterDetailsPage.warning")); //$NON-NLS-1$
+                        message.setVisible(true);
+                    }
+                } else {
+                    createPreviewCharts(form1, chartComposite);
+                }
+
+                chartComposite.layout();
+                form1.reflow(true);
+            }
+
+        });
+    }
+
+    private void createExpandAllLink(Composite actionBarComp) {
+        ImageHyperlink expandAllImageLink = toolkit.createImageHyperlink(actionBarComp, SWT.NONE);
+        expandAllImageLink.setToolTipText(getExpandString());
+        expandAllImageLink.setImage(ImageLib.getImage(ImageLib.EXPAND_ALL));
+        expandAllImageLink.addHyperlinkListener(new HyperlinkAdapter() {
+
+            @Override
+            public void linkActivated(HyperlinkEvent e) {
+                List<ExpandableComposite> previewChartList = getPreviewChartList();
+                if (previewChartList != null && !previewChartList.isEmpty()) {
+                    for (ExpandableComposite comp : previewChartList) {
+                        comp.setExpanded(true);
+                        comp.getParent().pack();
+                    }
+                }
+
+            }
+        });
+    }
+
+    public abstract void createPreviewCharts(final ScrolledForm form1, final Composite composite);
+
+    abstract AnalysisHandler getAnalysisHandler();
+
+    abstract String getExpandString();
+
+    abstract String getCollapseAllString();
+
+    private void createCollapseAllLink(Composite actionBarComp) {
+        ImageHyperlink collapseAllImageLink = toolkit.createImageHyperlink(actionBarComp, SWT.NONE);
+        collapseAllImageLink.setToolTipText(getCollapseAllString());
+        collapseAllImageLink.setImage(ImageLib.getImage(ImageLib.COLLAPSE_ALL));
+        collapseAllImageLink.addHyperlinkListener(new HyperlinkAdapter() {
+
+            @Override
+            public void linkActivated(HyperlinkEvent e) {
+                List<ExpandableComposite> previewChartList = getPreviewChartList();
+                if (previewChartList != null && !previewChartList.isEmpty()) {
+                    for (ExpandableComposite comp : previewChartList) {
+                        comp.setExpanded(false);
+                        comp.getParent().pack();
+                    }
+                }
+            }
+        });
+    }
+
+    /**
+     * Added TDQ-8787 20140613 yyin: create all charts before running, register each chart with its related indicator.
+     */
+    public void registerDynamicEvent() {
+        // only worked for the analysis which support dynamic chart
+        // create all charts for related indicator in current page
+        createDynamicChartsBeforeRun();
+
+        // get all indicators and datasets
+        Map<List<Indicator>, CategoryDataset> indiAndDatasets = getDynamicDatasets();
+
+        // register dynamic event,for the indicator (for each column)
+        for (List<Indicator> oneCategoryIndicators : indiAndDatasets.keySet()) {
+            CategoryDataset categoryDataset = indiAndDatasets.get(oneCategoryIndicators);
+            if (categoryDataset instanceof CustomerDefaultBAWDataset) {
+                // when all summary indicators are selected
+                DynamicBAWChartEventReceiver bawReceiver = new DynamicBAWChartEventReceiver();
+                bawReceiver.setBawDataset((CustomerDefaultBAWDataset) categoryDataset);
+                bawReceiver.setBAWparentComposite(getBAWparentComposite().get(oneCategoryIndicators));
+                bawReceiver.setChartComposite(chartComposite);
+                for (Indicator oneIndicator : oneCategoryIndicators) {
+                    DynamicChartEventReceiver eReceiver = bawReceiver.createEventReceiver(
+                            IndicatorEnum.findIndicatorEnum(oneIndicator.eClass()), oneIndicator);
+                    registerIndicatorEvent(oneIndicator, eReceiver);
+                }
+                bawReceiver.clearValue();
+                // register the parent baw receiver with one of summary indicator, no need to handle baw actually
+                registerIndicatorEvent(oneCategoryIndicators.get(0), bawReceiver);
+            } else {
+                int index = 0;
+                for (Indicator oneIndicator : oneCategoryIndicators) {
+                    DynamicChartEventReceiver eReceiver = new DynamicChartEventReceiver();
+                    eReceiver.setDataset(categoryDataset);
+                    eReceiver.setIndexInDataset(index++);
+                    eReceiver.setIndicatorName(oneIndicator.getName());
+                    eReceiver.setChartComposite(chartComposite);
+                    eReceiver.setIndicator(oneIndicator);
+                    // clear data
+                    eReceiver.clearValue();
+
+                    registerIndicatorEvent(oneIndicator, eReceiver);
+                }
+            }
+        }
+        reLayoutChartComposite();
+
+        registerRefreshDynamicChartEvent();
+    }
+
+    private void registerIndicatorEvent(Indicator oneIndicator, DynamicChartEventReceiver eReceiver) {
+        eventReceivers.put(oneIndicator, eReceiver);
+        EventManager.getInstance().register(oneIndicator, EventEnum.DQ_DYMANIC_CHART, eReceiver);
+    }
+
+    public void reLayoutChartComposite() {
+        chartComposite.getParent().layout();
+        chartComposite.layout();
+    }
+
+    /**
+     * refresh the composite of the chart, to show the changes on the chart.
+     */
+    private void registerRefreshDynamicChartEvent() {
+        registerDynamicRefreshEvent = new EventReceiver() {
+
+            @Override
+            public boolean handle(Object data) {
+                reLayoutChartComposite();
+                return true;
+            }
+        };
+        EventManager.getInstance().register(chartComposite, EventEnum.DQ_DYNAMIC_REFRESH_DYNAMIC_CHART,
+                registerDynamicRefreshEvent);
+    }
+
+    /**
+     * unregister every dynamic events which registered before executing analysis
+     * 
+     * @param eventReceivers
+     */
+    public void unRegisterDynamicEvent() {
+        for (Indicator oneIndicator : eventReceivers.keySet()) {
+            DynamicChartEventReceiver eventReceiver = (DynamicChartEventReceiver) eventReceivers.get(oneIndicator);
+            eventReceiver.clear();
+            EventManager.getInstance().unRegister(oneIndicator, EventEnum.DQ_DYMANIC_CHART, eventReceiver);
+        }
+        eventReceivers.clear();
+        EventManager.getInstance().unRegister(chartComposite, EventEnum.DQ_DYNAMIC_REFRESH_DYNAMIC_CHART,
+                registerDynamicRefreshEvent);
+
+        clearDynamicDatasets();
+    }
+
+    /**
+     * dispose ChartComposite.
+     */
+    public void disposeChartComposite() {
+        if (chartComposite != null && !chartComposite.isDisposed()) {
+            for (Control control : chartComposite.getChildren()) {
+                control.dispose();
+            }
+        }
+    }
+
+    public void createDynamicChartsBeforeRun() {
+        // call refresh to create all charts
+        refresh();
+
+    }
+
+    // should be implemented in child classes
+    abstract public Map<List<Indicator>, CategoryDataset> getDynamicDatasets();
+
+    abstract public Map<List<Indicator>, TalendChartComposite> getBAWparentComposite();
+
+    public void clearDynamicDatasets() {
+        // make the run button workable again
+        currentEditor.setRunActionButtonState(true);
+
+    }
+}

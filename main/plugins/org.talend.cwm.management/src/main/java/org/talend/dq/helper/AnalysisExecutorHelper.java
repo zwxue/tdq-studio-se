@@ -23,6 +23,8 @@ import java.util.Date;
 import org.apache.log4j.Logger;
 import org.eclipse.emf.ecore.EObject;
 import org.talend.commons.utils.StringUtils;
+import org.talend.core.GlobalServiceRegister;
+import org.talend.core.ITDQRepositoryService;
 import org.talend.core.language.LanguageManager;
 import org.talend.core.model.metadata.builder.connection.DelimitedFileConnection;
 import org.talend.core.model.metadata.builder.connection.MetadataTable;
@@ -56,6 +58,18 @@ import com.csvreader.CsvReader;
 public final class AnalysisExecutorHelper {
 
     private static Logger log = Logger.getLogger(AnalysisExecutorHelper.class);
+
+    private static ITDQRepositoryService tdqRepositoryService = null;
+
+    public static ITDQRepositoryService getTDQService() {
+        if (tdqRepositoryService == null) {
+            if (GlobalServiceRegister.getDefault().isServiceRegistered(ITDQRepositoryService.class)) {
+                tdqRepositoryService = (ITDQRepositoryService) org.talend.core.GlobalServiceRegister.getDefault().getService(
+                        ITDQRepositoryService.class);
+            }
+        }
+        return tdqRepositoryService;
+    }
 
     /**
      * get full name as: db.catalog.table, if has catalog/schema

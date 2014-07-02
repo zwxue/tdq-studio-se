@@ -94,6 +94,11 @@ public class AnalysisEditor extends CommonFormEditor {
 
     private EventReceiver reopenEditor = null;
 
+    // Added TDQ-8787 2014-06-16 yyin
+    private EventReceiver registerDynamicEvent = null;
+
+    private EventReceiver unRegisterDynamicEvent=null;
+    
     private boolean isRefreshResultPage = false;
 
     /**
@@ -349,8 +354,10 @@ public class AnalysisEditor extends CommonFormEditor {
         return this.getMasterPage().getUIExecuteEngin();
     }
 
+    IFormPage activePageInstance;
+
     private void changeListener() {
-        IFormPage activePageInstance = getActivePageInstance();
+        activePageInstance = getActivePageInstance();
         if (activePageInstance instanceof IRuningStatusListener) {
             runAction.setListener((IRuningStatusListener) activePageInstance);
         }
@@ -467,7 +474,8 @@ public class AnalysisEditor extends CommonFormEditor {
         EventManager.getInstance()
                 .register(masterPage.getAnalysis().getName(), EventEnum.DQ_ANALYSIS_REOPEN_EDITOR, reopenEditor);
 
-        // ADD msjian TDQ-8860 2014-4-30:only for column set analysis, when there have pattern(s) when java engine,show all match indicator in the
+        // ADD msjian TDQ-8860 2014-4-30:only for column set analysis, when there have pattern(s) when java engine,show
+        // all match indicator in the
         // Indicators section.
         if (analysisType.equals(AnalysisType.COLUMN_SET)) {
             // register: refresh the dataprovider combobox when the name of the data provider is changed.
@@ -483,6 +491,46 @@ public class AnalysisEditor extends CommonFormEditor {
                     refresh2ShowMatchIndicator);
         }
         // TDQ-8860~
+
+        // Added TDQ8787 2014-06-16 yyin: for dynamic chart, create all charts before execute the analysis
+        if (masterPage instanceof DynamicAnalysisMasterPage) {
+            registerDynamicEvent = new EventReceiver() {
+
+                @Override
+                public boolean handle(Object data) {
+                    if (masterPage.equals(activePageInstance)) {
+                        ((DynamicAnalysisMasterPage) masterPage).registerDynamicEvent();
+                    } else {
+                        // register result page
+                        if (resultPage != null && resultPage instanceof ColumnAnalysisResultPage) {
+                            ((ColumnAnalysisResultPage) resultPage).registerDynamicEvent();
+                        }
+                    }
+                    return true;
+                }
+            };
+            EventManager.getInstance().register(masterPage.getAnalysis(), EventEnum.DQ_DYNAMIC_REGISTER_DYNAMIC_CHART,
+                    registerDynamicEvent);
+
+            unRegisterDynamicEvent = new EventReceiver() {
+
+                @Override
+                public boolean handle(Object data) {
+                    if (masterPage.equals(activePageInstance)) {
+                        ((DynamicAnalysisMasterPage) masterPage).unRegisterDynamicEvent();
+                    } else {
+                        // register result page
+                        if (resultPage != null && resultPage instanceof ColumnAnalysisResultPage) {
+                            ((ColumnAnalysisResultPage) resultPage).unRegisterDynamicEvent();
+                        }
+                    }
+                    return true;
+                }
+            };
+            EventManager.getInstance().register(masterPage.getAnalysis(), EventEnum.DQ_DYNAMIC_UNREGISTER_DYNAMIC_CHART,
+                    unRegisterDynamicEvent);
+
+        }
     }
 
     /**
@@ -498,13 +546,21 @@ public class AnalysisEditor extends CommonFormEditor {
         EventManager.getInstance().unRegister(masterPage.getAnalysis().getName(), EventEnum.DQ_ANALYSIS_REOPEN_EDITOR,
                 reopenEditor);
 
-        // ADD msjian TDQ-8860 2014-4-30:only for column set analysis, when there have pattern(s) when java engine,show all match indicator in the
-        // Indicators section.
+        // ADD msjian TDQ-8860 2014-4-30:only for column set analysis, when there have pattern(s) when java engine,show
+        // all match indicator in the Indicators section.
         if (analysisType.equals(AnalysisType.COLUMN_SET)) {
             EventManager.getInstance().unRegister(masterPage.getAnalysis(), EventEnum.DQ_COLUMNSET_SHOW_MATCH_INDICATORS,
                     refresh2ShowMatchIndicator);
-        }
-        // TDQ-8860~
+        }// TDQ-8860~
+
+        // Added TDQ8787 2014-06-16 yyin: for dynamic chart, unregister the create all chart event
+        if (masterPage instanceof DynamicAnalysisMasterPage) {
+            EventManager.getInstance().unRegister(masterPage.getAnalysis(), EventEnum.DQ_DYNAMIC_REGISTER_DYNAMIC_CHART,
+                    registerDynamicEvent);
+            EventManager.getInstance().unRegister(masterPage.getAnalysis(), EventEnum.DQ_DYNAMIC_REGISTER_DYNAMIC_CHART,
+                    unRegisterDynamicEvent);
+        }// ~
+
         super.dispose();
     }
 
