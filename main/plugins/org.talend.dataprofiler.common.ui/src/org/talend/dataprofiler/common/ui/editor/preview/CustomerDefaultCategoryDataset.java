@@ -54,4 +54,9 @@ public class CustomerDefaultCategoryDataset extends DefaultCategoryDataset imple
         return dataEnities.toArray(new ChartDataEntity[dataEnities.size()]);
     }
 
+    // when clear the dataset, also need to clear data entities
+    public void clearAll() {
+        super.clear();
+        dataEnities.clear();
+    }
 }
