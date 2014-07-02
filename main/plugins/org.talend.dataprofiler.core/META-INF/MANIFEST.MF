@@ -43,8 +43,7 @@ Require-Bundle: org.eclipse.nebula.widgets.tablecombo,
  org.talend.dataquality.record.linkage.ui,
  org.talend.dataprofiler.migration,
  org.eclipse.help,
- org.talend.libraries.jexcel,
- org.talend.core.ui
+ org.talend.libraries.jexcel
 Bundle-ActivationPolicy: lazy
 Export-Package: org.talend.dataprofiler.core,
  org.talend.dataprofiler.core.exception,
@@ -92,8 +91,6 @@ Export-Package: org.talend.dataprofiler.core,
  org.talend.dataprofiler.core.ui.utils,
  org.talend.dataprofiler.core.ui.utils.pagination,
  org.talend.dataprofiler.core.ui.views,
- org.talend.dataprofiler.core.ui.views.context,
- org.talend.dataprofiler.core.ui.views.proposal,
  org.talend.dataprofiler.core.ui.views.provider,
  org.talend.dataprofiler.core.ui.views.resources,
  org.talend.dataprofiler.core.ui.wizard,

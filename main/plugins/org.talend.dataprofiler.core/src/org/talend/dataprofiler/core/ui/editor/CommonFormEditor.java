@@ -31,24 +31,14 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
-import org.eclipse.ui.IViewPart;
-import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.IWorkbenchWindow;
-import org.eclipse.ui.PartInitException;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.editors.text.TextFileDocumentProvider;
 import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.texteditor.IDocumentProvider;
 import org.eclipse.ui.texteditor.IDocumentProviderExtension2;
 import org.eclipse.ui.texteditor.IElementStateListener;
-import org.talend.core.model.process.IContextManager;
-import org.talend.core.model.properties.TDQItem;
-import org.talend.core.ui.context.view.AbstractContextView;
 import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.PluginConstant;
-import org.talend.dataprofiler.core.ui.views.context.TdqContextView;
-import org.talend.designer.core.ui.views.contexts.Contexts;
 import org.talend.repository.model.RepositoryNode;
 
 /**
@@ -62,49 +52,6 @@ public abstract class CommonFormEditor extends FormEditor implements IPrefersPer
 
     private Object editorObject;
 
-    protected AbstractMetadataFormPage masterPage;
-
-    protected IContextManager contextManager = null;
-
-    private String lastRunContextGroupName = null;
-
-    private static Logger log = Logger.getLogger(CommonFormEditor.class);
-
-    protected boolean isDirty = false;
-
-    private IDocumentProvider provider;
-
-    public AbstractMetadataFormPage getMasterPage() {
-        return this.masterPage;
-    }
-
-    /**
-     * Getter for lastRunContextGroupName.
-     * 
-     * @return the lastRunContextGroupName
-     */
-    public String getLastRunContextGroupName() {
-        return this.lastRunContextGroupName;
-    }
-
-    /**
-     * Sets the lastRunContextGroupName.
-     * 
-     * @param lastRunContextGroupName the lastRunContextGroupName to set
-     */
-    public void setLastRunContextGroupName(String lastRunContextGroupName) {
-        this.lastRunContextGroupName = lastRunContextGroupName;
-    }
-
-    /**
-     * Getter for contextManager.
-     * 
-     * @return the contextManager
-     */
-    public IContextManager getContextManager() {
-        return contextManager;
-    }
-
     public Object getEditorObject() {
         return this.editorObject;
     }
@@ -116,7 +63,14 @@ public abstract class CommonFormEditor extends FormEditor implements IPrefersPer
     @Override
     protected void addPages() {
         // TODO Auto-generated method stub
+
     }
+
+    private static Logger log = Logger.getLogger(CommonFormEditor.class);
+
+    protected boolean isDirty = false;
+
+    private IDocumentProvider provider;
 
     /** The editor's element state listener. */
     private IElementStateListener fElementStateListener = new ElementListener();
@@ -373,46 +327,5 @@ public abstract class CommonFormEditor extends FormEditor implements IPrefersPer
      */
     public void refreshEditor() {
         // empty at here,implement in sub-classes
-    }
-
-    /**
-     * update the tdq context view.
-     */
-    public void updateContextView() {
-        Contexts.switchToCurContextsView(PluginConstant.PERSPECTIVE_ID, AbstractContextView.CTX_ID_TDQ);
-        IWorkbenchWindow activeWorkbenchWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
-        if (activeWorkbenchWindow == null) {
-            return;
-        }
-        final IWorkbenchPage page = activeWorkbenchWindow.getActivePage();
-        if (page == null) {
-            return;
-        }
-        Display.getDefault().asyncExec(new Runnable() {
-
-            public void run() {
-                IViewPart part = page.findView(AbstractContextView.CTX_ID_TDQ);
-                if (part != null && part instanceof TdqContextView) {
-                    TdqContextView tdqContextView = (TdqContextView) part;
-                    tdqContextView.setCurrentPage(masterPage);
-                    tdqContextView.setCurrentItem((TDQItem) masterPage.getProperty().getItem());
-                }
-            }
-        });
-    }
-
-    /**
-     * show the context view for the SupportContextEditor.
-     * 
-     */
-    protected void showContextView() {
-        IViewPart ctxViewer = getSite().getPage().findView(AbstractContextView.CTX_ID_TDQ);
-        if (ctxViewer == null) {
-            try {
-                ctxViewer = getSite().getPage().showView(AbstractContextView.CTX_ID_TDQ);
-            } catch (PartInitException e) {
-                e.printStackTrace();
-            }
-        }
     }
 }

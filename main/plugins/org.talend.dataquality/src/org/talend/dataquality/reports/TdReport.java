@@ -161,24 +161,24 @@ public interface TdReport extends Report {
 	 * </p>
 	 * <!-- end-user-doc -->
      * @return the value of the '<em>Date From</em>' attribute.
-     * @see #setDateFrom(String)
+     * @see #setDateFrom(Date)
      * @see org.talend.dataquality.reports.ReportsPackage#getTdReport_DateFrom()
      * @model
      * @generated
      */
-	String getDateFrom();
+	Date getDateFrom();
 
 				/**
      * Sets the value of the '{@link org.talend.dataquality.reports.TdReport#getDateFrom <em>Date From</em>}' attribute.
      * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
      * @param value the new value of the '<em>Date From</em>' attribute.
      * @see #getDateFrom()
      * @generated
      */
-    void setDateFrom(String value);
+	void setDateFrom(Date value);
 
-                /**
+				/**
      * Returns the value of the '<em><b>Date To</b></em>' attribute.
      * <!-- begin-user-doc -->
 	 * <p>
@@ -187,24 +187,24 @@ public interface TdReport extends Report {
 	 * </p>
 	 * <!-- end-user-doc -->
      * @return the value of the '<em>Date To</em>' attribute.
-     * @see #setDateTo(String)
+     * @see #setDateTo(Date)
      * @see org.talend.dataquality.reports.ReportsPackage#getTdReport_DateTo()
      * @model
      * @generated
      */
-	String getDateTo();
+	Date getDateTo();
 
 				/**
      * Sets the value of the '{@link org.talend.dataquality.reports.TdReport#getDateTo <em>Date To</em>}' attribute.
      * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
+	 * <!-- end-user-doc -->
      * @param value the new value of the '<em>Date To</em>' attribute.
      * @see #getDateTo()
      * @generated
      */
-    void setDateTo(String value);
+	void setDateTo(Date value);
 
-                /**
+				/**
      * Returns the value of the '<em><b>Logo</b></em>' attribute.
      * The default value is <code>""</code>.
      * <!-- begin-user-doc -->

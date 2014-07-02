@@ -15,10 +15,8 @@ package org.talend.dataquality.helpers;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.lang.StringUtils;
 import org.eclipse.emf.common.util.EList;
 import org.talend.cwm.helper.TaggedValueHelper;
-import org.talend.dataquality.PluginConstant;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisFactory;
 import org.talend.dataquality.analysis.AnalysisParameters;
@@ -53,8 +51,6 @@ public final class AnalysisHelper {
     public static final int DATA_FILTER_A = 0;
 
     public static final int DATA_FILTER_B = 1;
-
-    private static final String DEFAULT = "Default"; //$NON-NLS-1$
 
     private AnalysisHelper() {
     }
@@ -454,46 +450,4 @@ public final class AnalysisHelper {
         return null;
     }
 
-    /**
-     * get Last Run Context.
-     * 
-     * @param analysis
-     * @return
-     */
-    public static String getLastRunContext(Analysis analysis) {
-        TaggedValue taggedValue = TaggedValueHelper.getTaggedValue(TaggedValueHelper.ANA_LAST_RUN_CONTEXT,
-                analysis.getTaggedValue());
-        if (taggedValue == null) {
-            return PluginConstant.EMPTY_STRING;
-        }
-        return taggedValue.getValue();
-    }
-
-    /**
-     * get the analysis last run context group name, if it is empty, return the default context group name.
-     * 
-     * @param analysis
-     * @return
-     */
-    public static String getContextGroupName(Analysis analysis) {
-        String contextGroupNameInUse = getLastRunContext(analysis);
-        if (StringUtils.isEmpty(contextGroupNameInUse)) {
-            contextGroupNameInUse = analysis.getDefaultContext();
-        }
-        if (StringUtils.isEmpty(contextGroupNameInUse)) {
-            contextGroupNameInUse = DEFAULT;
-        }
-        return contextGroupNameInUse;
-    }
-
-    /**
-     * DOC msjian Comment method "setLastRunContext".
-     * 
-     * @param lastRunContext
-     * @param analysis
-     * @return
-     */
-    public static boolean setLastRunContext(String lastRunContext, Analysis analysis) {
-        return TaggedValueHelper.setTaggedValue(analysis, TaggedValueHelper.REP_LAST_RUN_CONTEXT, lastRunContext);
-    }
 }

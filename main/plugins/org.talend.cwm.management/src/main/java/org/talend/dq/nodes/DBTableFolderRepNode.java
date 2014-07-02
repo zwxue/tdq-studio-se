@@ -204,7 +204,7 @@ public class DBTableFolderRepNode extends DQDBFolderRepositoryNode implements IC
                         tables = DqRepositoryViewService.getTables(connection, schema, null, isLoadDBFromDialog());
                     } else if (!isOnFilterring()) {
                         // MOD mzhao 0022204 : when the tree is rendering with a filter, do not loading from db.
-                        tables = DqRepositoryViewService.getTables(connection, schema, "%", true);
+                        tables = DqRepositoryViewService.getTables(connection, schema, null, true);
                     }
                     if (tables.size() > 0) {
                         ElementWriterFactory.getInstance().createDataProviderWriter().save(item, false);
@@ -327,7 +327,7 @@ public class DBTableFolderRepNode extends DQDBFolderRepositoryNode implements IC
             connection = item.getConnection();
             schema = ((MetadataSchemaRepositoryObject) object).getSchema();
             try {
-                hasChildrenInDB = DqRepositoryViewService.isSchemaHasChildren(connection, schema, "%",
+                hasChildrenInDB = DqRepositoryViewService.isSchemaHasChildren(connection, schema, null,
                         DqRepositoryViewService.TABLE_TYPES);
             } catch (MissingDriverException e) {
                 throw e;

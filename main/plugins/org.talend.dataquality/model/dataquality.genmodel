@@ -34,8 +34,6 @@
         <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference dataquality.ecore#//analysis/Analysis/results"/>
         <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference dataquality.ecore#//analysis/Analysis/parameters"/>
         <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dataquality.ecore#//analysis/Analysis/creationDate"/>
-        <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference dataquality.ecore#//analysis/Analysis/contextType"/>
-        <genFeatures createChild="false" ecoreFeature="ecore:EAttribute dataquality.ecore#//analysis/Analysis/defaultContext"/>
       </genClasses>
       <genClasses ecoreClass="dataquality.ecore#//analysis/AnalysisContext">
         <genFeatures notify="false" createChild="false" propertySortChoices="true"

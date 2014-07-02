@@ -22,6 +22,9 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.forms.IManagedForm;
 import org.eclipse.ui.forms.editor.FormEditor;
@@ -38,6 +41,7 @@ import org.talend.cwm.relational.TdColumn;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.editor.composite.AnalysisColumnCompareTreeViewer;
+import org.talend.dataprofiler.core.ui.editor.composite.DataFilterComp;
 import org.talend.dataquality.domain.Domain;
 import org.talend.dataquality.exception.DataprofilerCoreException;
 import org.talend.dataquality.helpers.AnalysisHelper;
@@ -82,6 +86,8 @@ public class ColumnDependencyMasterDetailsPage extends AbstractAnalysisMetadataP
 
     List<RepositoryNode> columnListB = null;
 
+    private String stringDataFilter;
+
     private AnalysisColumnCompareTreeViewer anaColumnCompareViewer;
 
     /*
@@ -115,17 +121,8 @@ public class ColumnDependencyMasterDetailsPage extends AbstractAnalysisMetadataP
         anaColumnCompareViewer.addPropertyChangeListener(this);
 
         createDataFilterSection(form, topComp);
-        dataFilterComp.addPropertyChangeListener(this);
-        dataFilterComp.addModifyListener(new ModifyListener() {
-
-            public void modifyText(ModifyEvent e) {
-                AnalysisHelper.setStringDataFilter(analysisItem.getAnalysis(), dataFilterComp.getDataFilterString());
-            }
-        });
 
         createAnalysisParamSection(form, topComp);
-
-        createContextGroupSection(form, topComp);
 
         columnListA = anaColumnCompareViewer.getColumnListA();
         columnListB = anaColumnCompareViewer.getColumnListB();
@@ -134,6 +131,35 @@ public class ColumnDependencyMasterDetailsPage extends AbstractAnalysisMetadataP
         anaColumnCompareViewer.addPropertyChangeListener(this);
 
         form.reflow(true);
+    }
+
+    /**
+     * DOC bZhou Comment method "createDataFilterSection".
+     * 
+     * @param form
+     * @param anasisDataComp
+     */
+    void createDataFilterSection(final ScrolledForm form, Composite anasisDataComp) {
+        dataFilterSection = createSection(
+                form,
+                anasisDataComp,
+                DefaultMessagesImpl.getString("ColumnDependencyMasterDetailsPage.DataFilter"), DefaultMessagesImpl.getString("ColumnDependencyMasterDetailsPage.EditorFilter")); //$NON-NLS-1$ //$NON-NLS-2$
+        Composite sectionClient = toolkit.createComposite(dataFilterSection);
+        sectionClient.setLayoutData(new GridData(GridData.FILL_BOTH));
+        sectionClient.setLayout(new GridLayout());
+
+        dataFilterComp = new DataFilterComp(sectionClient, stringDataFilter);
+        dataFilterComp.addPropertyChangeListener(this);
+        dataFilterComp.addModifyListener(new ModifyListener() {
+
+            public void modifyText(ModifyEvent e) {
+                AnalysisHelper.setStringDataFilter(analysisItem.getAnalysis(), dataFilterComp.getDataFilterString());
+            }
+        });
+
+        // ADD yyi 2011-05-31 16158:add whitespace check for text fields.
+        addWhitespaceValidate(dataFilterComp.getDataFilterText());
+        dataFilterSection.setClient(sectionClient);
     }
 
     @Override
@@ -269,8 +295,8 @@ public class ColumnDependencyMasterDetailsPage extends AbstractAnalysisMetadataP
      */
     public void propertyChange(PropertyChangeEvent evt) {
         if (PluginConstant.ISDIRTY_PROPERTY.equals(evt.getPropertyName())) {
-            ((AnalysisEditor) currentEditor).firePropertyChange(IEditorPart.PROP_DIRTY);
-            ((AnalysisEditor) currentEditor).setRefreshResultPage(true);
+            currentEditor.firePropertyChange(IEditorPart.PROP_DIRTY);
+            currentEditor.setRefreshResultPage(true);
         } else if (PluginConstant.DATAFILTER_PROPERTY.equals(evt.getPropertyName())) {
             this.setDirty(true);
         }

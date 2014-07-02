@@ -6,23 +6,18 @@
  */
 package org.talend.dataquality.analysis.impl;
 
-import java.util.Collection;
 import java.util.Date;
 
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.notify.NotificationChain;
-import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
-import org.eclipse.emf.ecore.util.EObjectContainmentEList;
-import org.eclipse.emf.ecore.util.InternalEList;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisContext;
 import org.talend.dataquality.analysis.AnalysisPackage;
 import org.talend.dataquality.analysis.AnalysisParameters;
 import org.talend.dataquality.analysis.AnalysisResult;
-import org.talend.designer.core.model.utils.emf.talendfile.ContextType;
 import orgomg.cwmx.analysis.informationreporting.impl.ReportGroupImpl;
 
 /**
@@ -36,8 +31,6 @@ import orgomg.cwmx.analysis.informationreporting.impl.ReportGroupImpl;
  *   <li>{@link org.talend.dataquality.analysis.impl.AnalysisImpl#getResults <em>Results</em>}</li>
  *   <li>{@link org.talend.dataquality.analysis.impl.AnalysisImpl#getParameters <em>Parameters</em>}</li>
  *   <li>{@link org.talend.dataquality.analysis.impl.AnalysisImpl#getCreationDate <em>Creation Date</em>}</li>
- *   <li>{@link org.talend.dataquality.analysis.impl.AnalysisImpl#getContextType <em>Context Type</em>}</li>
- *   <li>{@link org.talend.dataquality.analysis.impl.AnalysisImpl#getDefaultContext <em>Default Context</em>}</li>
  * </ul>
  * </p>
  *
@@ -93,36 +86,6 @@ public class AnalysisImpl extends ReportGroupImpl implements Analysis {
      * @ordered
      */
     protected Date creationDate = CREATION_DATE_EDEFAULT;
-
-    /**
-     * The cached value of the '{@link #getContextType() <em>Context Type</em>}' containment reference list.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @see #getContextType()
-     * @generated
-     * @ordered
-     */
-    protected EList<ContextType> contextType;
-
-    /**
-     * The default value of the '{@link #getDefaultContext() <em>Default Context</em>}' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @see #getDefaultContext()
-     * @generated
-     * @ordered
-     */
-    protected static final String DEFAULT_CONTEXT_EDEFAULT = null;
-
-    /**
-     * The cached value of the '{@link #getDefaultContext() <em>Default Context</em>}' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @see #getDefaultContext()
-     * @generated
-     * @ordered
-     */
-    protected String defaultContext = DEFAULT_CONTEXT_EDEFAULT;
 
     /**
      * <!-- begin-user-doc -->
@@ -298,39 +261,6 @@ public class AnalysisImpl extends ReportGroupImpl implements Analysis {
      * <!-- end-user-doc -->
      * @generated
      */
-    public EList<ContextType> getContextType() {
-        if (contextType == null) {
-            contextType = new EObjectContainmentEList<ContextType>(ContextType.class, this, AnalysisPackage.ANALYSIS__CONTEXT_TYPE);
-        }
-        return contextType;
-    }
-
-    /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    public String getDefaultContext() {
-        return defaultContext;
-    }
-
-    /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    public void setDefaultContext(String newDefaultContext) {
-        String oldDefaultContext = defaultContext;
-        defaultContext = newDefaultContext;
-        if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, AnalysisPackage.ANALYSIS__DEFAULT_CONTEXT, oldDefaultContext, defaultContext));
-    }
-
-    /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
     @Override
     public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
         switch (featureID) {
@@ -356,8 +286,6 @@ public class AnalysisImpl extends ReportGroupImpl implements Analysis {
                 return basicSetResults(null, msgs);
             case AnalysisPackage.ANALYSIS__PARAMETERS:
                 return basicSetParameters(null, msgs);
-            case AnalysisPackage.ANALYSIS__CONTEXT_TYPE:
-                return ((InternalEList<?>)getContextType()).basicRemove(otherEnd, msgs);
         }
         return super.eInverseRemove(otherEnd, featureID, msgs);
     }
@@ -378,10 +306,6 @@ public class AnalysisImpl extends ReportGroupImpl implements Analysis {
                 return getParameters();
             case AnalysisPackage.ANALYSIS__CREATION_DATE:
                 return getCreationDate();
-            case AnalysisPackage.ANALYSIS__CONTEXT_TYPE:
-                return getContextType();
-            case AnalysisPackage.ANALYSIS__DEFAULT_CONTEXT:
-                return getDefaultContext();
         }
         return super.eGet(featureID, resolve, coreType);
     }
@@ -407,13 +331,6 @@ public class AnalysisImpl extends ReportGroupImpl implements Analysis {
             case AnalysisPackage.ANALYSIS__CREATION_DATE:
                 setCreationDate((Date)newValue);
                 return;
-            case AnalysisPackage.ANALYSIS__CONTEXT_TYPE:
-                getContextType().clear();
-                getContextType().addAll((Collection<? extends ContextType>)newValue);
-                return;
-            case AnalysisPackage.ANALYSIS__DEFAULT_CONTEXT:
-                setDefaultContext((String)newValue);
-                return;
         }
         super.eSet(featureID, newValue);
     }
@@ -438,12 +355,6 @@ public class AnalysisImpl extends ReportGroupImpl implements Analysis {
             case AnalysisPackage.ANALYSIS__CREATION_DATE:
                 setCreationDate(CREATION_DATE_EDEFAULT);
                 return;
-            case AnalysisPackage.ANALYSIS__CONTEXT_TYPE:
-                getContextType().clear();
-                return;
-            case AnalysisPackage.ANALYSIS__DEFAULT_CONTEXT:
-                setDefaultContext(DEFAULT_CONTEXT_EDEFAULT);
-                return;
         }
         super.eUnset(featureID);
     }
@@ -464,10 +375,6 @@ public class AnalysisImpl extends ReportGroupImpl implements Analysis {
                 return parameters != null;
             case AnalysisPackage.ANALYSIS__CREATION_DATE:
                 return CREATION_DATE_EDEFAULT == null ? creationDate != null : !CREATION_DATE_EDEFAULT.equals(creationDate);
-            case AnalysisPackage.ANALYSIS__CONTEXT_TYPE:
-                return contextType != null && !contextType.isEmpty();
-            case AnalysisPackage.ANALYSIS__DEFAULT_CONTEXT:
-                return DEFAULT_CONTEXT_EDEFAULT == null ? defaultContext != null : !DEFAULT_CONTEXT_EDEFAULT.equals(defaultContext);
         }
         return super.eIsSet(featureID);
     }
@@ -484,8 +391,6 @@ public class AnalysisImpl extends ReportGroupImpl implements Analysis {
         StringBuffer result = new StringBuffer(super.toString());
         result.append(" (creationDate: ");
         result.append(creationDate);
-        result.append(", defaultContext: ");
-        result.append(defaultContext);
         result.append(')');
         return result.toString();
     }

@@ -1803,31 +1803,5 @@
            class="org.talend.dataprofiler.core.ui.editor.CommonEditorPartListener">
      </org.talend.dataprofiler.core.partListener>
   </extension>
-  
-      <extension
-          point="org.eclipse.ui.views">
-       <view
-             category="org.talend.dataprofiler.view.category"
-             class="org.talend.dataprofiler.core.ui.views.context.TdqContextView"
-             icon="platform:/plugin/org.talend.common.ui.runtime/icons1/context_icon.gif"
-             id="org.talend.dataprofiler.core.ui.views.context.TdqContextView"
-             name="%view.name.TdqContextView">
-       </view>
-    </extension>
-
-    <extension
-          point="org.eclipse.ui.perspectiveExtensions">
-       <perspectiveExtension
-             targetID="org.talend.dataprofiler.DataProfilingPerspective">
-          <view
-                id="org.talend.dataprofiler.core.ui.views.context.TdqContextView"
-                ratio="0.65"
-                relationship="bottom"
-                relative="org.eclipse.ui.editorss"
-                standalone="false"
-                visible="false">
-          </view>
-       </perspectiveExtension>
-    </extension>
 
 </plugin>

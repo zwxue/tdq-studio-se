@@ -339,7 +339,6 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
         this.metadataSection.setText(DefaultMessagesImpl.getString("ConnectionMasterDetailsPage.analysisMeta")); //$NON-NLS-1$
         this.metadataSection.setDescription(DefaultMessagesImpl.getString("ConnectionMasterDetailsPage.setAnalysisProp")); //$NON-NLS-1$
         createAnalysisParamSection(topComp);
-        createContextGroupSection(form, topComp);
         createAnalysisSummarySection(topComp);
         createStatisticalSection(topComp);
     }
@@ -1156,7 +1155,7 @@ public abstract class AbstractFilterMetadataPage extends AbstractAnalysisMetadat
     @Override
     public void fireRuningItemChanged(boolean status) {
 
-        ((AnalysisEditor) currentEditor).setRunActionButtonState(status);
+        currentEditor.setRunActionButtonState(status);
 
         if (status) {
             refresh();

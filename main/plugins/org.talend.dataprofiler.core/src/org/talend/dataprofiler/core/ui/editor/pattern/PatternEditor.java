@@ -15,6 +15,7 @@ package org.talend.dataprofiler.core.ui.editor.pattern;
 import org.apache.log4j.Level;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.forms.editor.IFormPage;
 import org.talend.commons.exception.ExceptionHandler;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.action.actions.DefaultSaveAction;
@@ -25,6 +26,8 @@ import org.talend.dataprofiler.core.ui.editor.TdEditorToolBar;
  * DOC rli class global comment. Detailled comment
  */
 public class PatternEditor extends CommonFormEditor {
+
+    private PatternMasterDetailsPage masterPage;
 
     // MOD xqliu 2009-07-02 bug 7687
     private DefaultSaveAction saveAction;
@@ -58,7 +61,7 @@ public class PatternEditor extends CommonFormEditor {
             masterPage.doSave(monitor);
             setPartName(masterPage.getIntactElemenetName());
         }
-        setEditorObject(((PatternMasterDetailsPage) getMasterPage()).getPatternRepNode());
+        setEditorObject(masterPage.getPatternRepNode());
         super.doSave(monitor);
 
     }
@@ -69,6 +72,15 @@ public class PatternEditor extends CommonFormEditor {
         setSaveActionButtonState(isDirty());
         // ~
         super.firePropertyChange(propertyId);
+    }
+
+    /**
+     * Getter for masterPage.
+     * 
+     * @return the masterPage
+     */
+    public IFormPage getMasterPage() {
+        return this.masterPage;
     }
 
     @Override

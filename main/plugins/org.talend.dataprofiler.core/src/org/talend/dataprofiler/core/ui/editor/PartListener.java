@@ -31,8 +31,9 @@ import org.eclipse.ui.cheatsheets.OpenCheatSheetAction;
 import org.eclipse.ui.internal.intro.IIntroConstants;
 import org.talend.commons.ui.utils.CheatSheetUtils;
 import org.talend.commons.utils.platform.PluginChecker;
+import org.talend.core.GlobalServiceRegister;
+import org.talend.core.ITdqContextService;
 import org.talend.core.ui.branding.IBrandingConfiguration;
-import org.talend.dataprofiler.core.helper.ContextViewHelper;
 import org.talend.dq.helper.PropertyHelper;
 
 /**
@@ -56,6 +57,25 @@ public class PartListener implements IPartListener {
                 return null;
             }
             IFileEditorInput fileInput = (IFileEditorInput) editor.getEditorInput();
+            // URI uri = URI.createPlatformResourceURI(fileInput.getFile().getFullPath().toString(), false);
+            // Resource resource = EMFSharedResources.getInstance().getResource(uri, true);
+            // if (resource != null) {
+            // ModelElement modelElement = null;
+            // EList<EObject> modelElements = resource.getContents();
+            // for (EObject obj : modelElements) {
+            // if (obj instanceof ModelElement) {
+            // modelElement = (ModelElement) obj;
+            // TaggedValue taggedvalue = TaggedValueHelper.getTaggedValue(TaggedValueHelper.PROPERTY_FILE, modelElement
+            // .getTaggedValue());
+            // if (taggedvalue != null) {
+            // String propertyPath = taggedvalue.getValue();
+            // propertyFile = (IFile) ResourcesPlugin.getWorkspace().getRoot().findMember(propertyPath);
+            // break;
+            // }
+            // }
+            //
+            // }
+            // }
             propertyFile = PropertyHelper.getPropertyFile(fileInput.getFile());
         }
         return propertyFile;
@@ -69,7 +89,13 @@ public class PartListener implements IPartListener {
     }
 
     public void partActivated(IWorkbenchPart part) {
-        ContextViewHelper.updateContextView(part);
+        if (GlobalServiceRegister.getDefault().isServiceRegistered(ITdqContextService.class)) {
+            ITdqContextService tdqContextViewService = (ITdqContextService) GlobalServiceRegister.getDefault().getService(
+                    ITdqContextService.class);
+            if (tdqContextViewService != null) {
+                tdqContextViewService.updateContextView(part);
+            }
+        }
     }
 
     public void partBroughtToTop(IWorkbenchPart part) {
@@ -77,11 +103,23 @@ public class PartListener implements IPartListener {
     }
 
     public void partClosed(IWorkbenchPart part) {
-        ContextViewHelper.hideContextView(part);
+        if (GlobalServiceRegister.getDefault().isServiceRegistered(ITdqContextService.class)) {
+            ITdqContextService tdqContextViewService = (ITdqContextService) GlobalServiceRegister.getDefault().getService(
+                    ITdqContextService.class);
+            if (tdqContextViewService != null) {
+                tdqContextViewService.hideContextView(part);
+            }
+        }
     }
 
     public void partDeactivated(IWorkbenchPart part) {
-        ContextViewHelper.resetContextView();
+        if (GlobalServiceRegister.getDefault().isServiceRegistered(ITdqContextService.class)) {
+            ITdqContextService tdqContextViewService = (ITdqContextService) GlobalServiceRegister.getDefault().getService(
+                    ITdqContextService.class);
+            if (tdqContextViewService != null) {
+                tdqContextViewService.resetContextView();
+            }
+        }
 
         if (part instanceof org.eclipse.ui.internal.ViewIntroAdapterPart) {
             if (PluginChecker.isOnlyTopLoaded()) {

@@ -29,6 +29,7 @@ import org.talend.dataquality.PluginConstant;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisContext;
 import org.talend.dataquality.analysis.AnalysisType;
+import org.talend.dataquality.helpers.AnalysisHelper;
 import org.talend.dataquality.helpers.BooleanExpressionHelper;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.columnset.AllMatchIndicator;
@@ -36,7 +37,6 @@ import org.talend.dataquality.indicators.columnset.ColumnSetMultiValueIndicator;
 import org.talend.dataquality.indicators.columnset.ColumnsetPackage;
 import org.talend.dataquality.indicators.columnset.SimpleStatIndicator;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
-import org.talend.dq.helper.ContextHelper;
 import org.talend.utils.sugars.ReturnCode;
 import org.talend.utils.sugars.TypedReturnCode;
 import orgomg.cwm.objectmodel.core.Expression;
@@ -150,7 +150,7 @@ public class MultiColumnAnalysisExecutor extends ColumnAnalysisSqlExecutor {
                     tableName, grpByClause);
 
             // handle data filter
-            String stringDataFilter = ContextHelper.getDataFilterWithoutContext(cachedAnalysis);
+            String stringDataFilter = AnalysisHelper.getStringDataFilter(cachedAnalysis);
             if (stringDataFilter == null) {
                 stringDataFilter = PluginConstant.EMPTY_STRING;
             }

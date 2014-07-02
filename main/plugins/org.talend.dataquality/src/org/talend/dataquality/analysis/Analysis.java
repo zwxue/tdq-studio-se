@@ -8,8 +8,6 @@ package org.talend.dataquality.analysis;
 
 import java.util.Date;
 
-import org.eclipse.emf.common.util.EList;
-import org.talend.designer.core.model.utils.emf.talendfile.ContextType;
 import orgomg.cwmx.analysis.informationreporting.ReportGroup;
 
 /**
@@ -24,8 +22,6 @@ import orgomg.cwmx.analysis.informationreporting.ReportGroup;
  *   <li>{@link org.talend.dataquality.analysis.Analysis#getResults <em>Results</em>}</li>
  *   <li>{@link org.talend.dataquality.analysis.Analysis#getParameters <em>Parameters</em>}</li>
  *   <li>{@link org.talend.dataquality.analysis.Analysis#getCreationDate <em>Creation Date</em>}</li>
- *   <li>{@link org.talend.dataquality.analysis.Analysis#getContextType <em>Context Type</em>}</li>
- *   <li>{@link org.talend.dataquality.analysis.Analysis#getDefaultContext <em>Default Context</em>}</li>
  * </ul>
  * </p>
  *
@@ -139,47 +135,5 @@ public interface Analysis extends ReportGroup {
      * @generated
      */
     void setCreationDate(Date value);
-
-    /**
-     * Returns the value of the '<em><b>Context Type</b></em>' containment reference list.
-     * The list contents are of type {@link org.talend.designer.core.model.utils.emf.talendfile.ContextType}.
-     * <!-- begin-user-doc -->
-     * <p>
-     * If the meaning of the '<em>Context Type</em>' containment reference list isn't clear,
-     * there really should be more of a description here...
-     * </p>
-     * <!-- end-user-doc -->
-     * @return the value of the '<em>Context Type</em>' containment reference list.
-     * @see org.talend.dataquality.analysis.AnalysisPackage#getAnalysis_ContextType()
-     * @model containment="true"
-     * @generated
-     */
-    EList<ContextType> getContextType();
-
-    /**
-     * Returns the value of the '<em><b>Default Context</b></em>' attribute.
-     * <!-- begin-user-doc -->
-     * <p>
-     * If the meaning of the '<em>Default Context</em>' attribute isn't clear,
-     * there really should be more of a description here...
-     * </p>
-     * <!-- end-user-doc -->
-     * @return the value of the '<em>Default Context</em>' attribute.
-     * @see #setDefaultContext(String)
-     * @see org.talend.dataquality.analysis.AnalysisPackage#getAnalysis_DefaultContext()
-     * @model dataType="org.eclipse.emf.ecore.xml.type.String"
-     * @generated
-     */
-    String getDefaultContext();
-
-    /**
-     * Sets the value of the '{@link org.talend.dataquality.analysis.Analysis#getDefaultContext <em>Default Context</em>}' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @param value the new value of the '<em>Default Context</em>' attribute.
-     * @see #getDefaultContext()
-     * @generated
-     */
-    void setDefaultContext(String value);
 
 } // Analysis

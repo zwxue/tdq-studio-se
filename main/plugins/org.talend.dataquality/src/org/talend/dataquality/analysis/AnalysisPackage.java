@@ -540,31 +540,13 @@ public interface AnalysisPackage extends EPackage {
     int ANALYSIS__CREATION_DATE = InformationreportingPackage.REPORT_GROUP_FEATURE_COUNT + 3;
 
     /**
-     * The feature id for the '<em><b>Context Type</b></em>' containment reference list.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     * @ordered
-     */
-    int ANALYSIS__CONTEXT_TYPE = InformationreportingPackage.REPORT_GROUP_FEATURE_COUNT + 4;
-
-    /**
-     * The feature id for the '<em><b>Default Context</b></em>' attribute.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     * @ordered
-     */
-    int ANALYSIS__DEFAULT_CONTEXT = InformationreportingPackage.REPORT_GROUP_FEATURE_COUNT + 5;
-
-    /**
      * The number of structural features of the '<em>Analysis</em>' class.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int ANALYSIS_FEATURE_COUNT = InformationreportingPackage.REPORT_GROUP_FEATURE_COUNT + 6;
+    int ANALYSIS_FEATURE_COUNT = InformationreportingPackage.REPORT_GROUP_FEATURE_COUNT + 4;
 
     /**
      * The meta object id for the '{@link org.talend.dataquality.analysis.impl.AnalysisContextImpl <em>Context</em>}' class.
@@ -2307,28 +2289,6 @@ public interface AnalysisPackage extends EPackage {
     EAttribute getAnalysis_CreationDate();
 
     /**
-     * Returns the meta object for the containment reference list '{@link org.talend.dataquality.analysis.Analysis#getContextType <em>Context Type</em>}'.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @return the meta object for the containment reference list '<em>Context Type</em>'.
-     * @see org.talend.dataquality.analysis.Analysis#getContextType()
-     * @see #getAnalysis()
-     * @generated
-     */
-    EReference getAnalysis_ContextType();
-
-    /**
-     * Returns the meta object for the attribute '{@link org.talend.dataquality.analysis.Analysis#getDefaultContext <em>Default Context</em>}'.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @return the meta object for the attribute '<em>Default Context</em>'.
-     * @see org.talend.dataquality.analysis.Analysis#getDefaultContext()
-     * @see #getAnalysis()
-     * @generated
-     */
-    EAttribute getAnalysis_DefaultContext();
-
-    /**
      * Returns the meta object for class '{@link org.talend.dataquality.analysis.AnalysisContext <em>Context</em>}'.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -2781,22 +2741,6 @@ public interface AnalysisPackage extends EPackage {
          * @generated
          */
         EAttribute ANALYSIS__CREATION_DATE = eINSTANCE.getAnalysis_CreationDate();
-
-        /**
-         * The meta object literal for the '<em><b>Context Type</b></em>' containment reference list feature.
-         * <!-- begin-user-doc -->
-         * <!-- end-user-doc -->
-         * @generated
-         */
-        EReference ANALYSIS__CONTEXT_TYPE = eINSTANCE.getAnalysis_ContextType();
-
-        /**
-         * The meta object literal for the '<em><b>Default Context</b></em>' attribute feature.
-         * <!-- begin-user-doc -->
-         * <!-- end-user-doc -->
-         * @generated
-         */
-        EAttribute ANALYSIS__DEFAULT_CONTEXT = eINSTANCE.getAnalysis_DefaultContext();
 
         /**
          * The meta object literal for the '{@link org.talend.dataquality.analysis.impl.AnalysisContextImpl <em>Context</em>}' class.

@@ -19,11 +19,11 @@ import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 import org.talend.cwm.relational.TdColumn;
+import org.talend.dataquality.helpers.AnalysisHelper;
 import org.talend.dataquality.indicators.columnset.ColumnDependencyIndicator;
 import org.talend.dq.dbms.GenericSQLHandler;
 import org.talend.dq.dbms.HiveDbmsLanguage;
 import org.talend.dq.helper.ColumnDependencyHelper;
-import org.talend.dq.helper.ContextHelper;
 import org.talend.dq.indicators.preview.table.ChartDataEntity;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
 
@@ -123,7 +123,7 @@ public class ColumnDependencyExplorer extends DataExplorer {
         String instantiatedSQL = sqlHandler.getSqlString();
 
         List<String> whereClauses = new ArrayList<String>();
-        String dataFilter = ContextHelper.getDataFilterWithoutContext(this.analysis);
+        String dataFilter = AnalysisHelper.getStringDataFilter(this.analysis);
         if (!StringUtils.isEmpty(dataFilter)) {
             whereClauses.add(dataFilter);
         }
@@ -133,7 +133,6 @@ public class ColumnDependencyExplorer extends DataExplorer {
         return instantiatedSQL;
     }
 
-    @Override
     public void setEnitty(ChartDataEntity entity) {
         this.entity = entity;
         this.indicator = entity.getIndicator();

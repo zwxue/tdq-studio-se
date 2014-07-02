@@ -21,14 +21,12 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorInput;
-import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.editor.IFormPage;
 import org.eclipse.ui.part.FileEditorInput;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.commons.exception.ExceptionHandler;
-import org.talend.core.model.context.JobContextManager;
 import org.talend.core.repository.model.IRepositoryFactory;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.core.repository.model.RepositoryFactoryProvider;
@@ -37,7 +35,7 @@ import org.talend.dataprofiler.core.ui.IRuningStatusListener;
 import org.talend.dataprofiler.core.ui.action.actions.DefaultSaveAction;
 import org.talend.dataprofiler.core.ui.action.actions.RefreshChartAction;
 import org.talend.dataprofiler.core.ui.action.actions.RunAnalysisAction;
-import org.talend.dataprofiler.core.ui.editor.SupportContextEditor;
+import org.talend.dataprofiler.core.ui.editor.CommonFormEditor;
 import org.talend.dataprofiler.core.ui.editor.TdEditorToolBar;
 import org.talend.dataprofiler.core.ui.events.EventEnum;
 import org.talend.dataprofiler.core.ui.events.EventManager;
@@ -46,7 +44,6 @@ import org.talend.dataprofiler.core.ui.utils.WorkbenchUtils;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisType;
 import org.talend.dataquality.analysis.ExecutionLanguage;
-import org.talend.dataquality.helpers.AnalysisHelper;
 import org.talend.dataquality.properties.TDQAnalysisItem;
 import org.talend.dq.helper.resourcehelper.AnaResourceFileHelper;
 import org.talend.repository.model.RepositoryConstants;
@@ -56,7 +53,7 @@ import org.talend.utils.sugars.ReturnCode;
  * @author rli
  * 
  */
-public class AnalysisEditor extends SupportContextEditor {
+public class AnalysisEditor extends CommonFormEditor {
 
     private static Logger log = Logger.getLogger(AnalysisEditor.class);
 
@@ -69,6 +66,8 @@ public class AnalysisEditor extends SupportContextEditor {
     private static final String ANALYSIS_SETTINGS = DefaultMessagesImpl.getString("AnalysisEditor.analysisSettings"); //$NON-NLS-1$
 
     private static final int RESULT_PAGE_INDEX = 1;
+
+    private AbstractAnalysisMetadataPage masterPage;
 
     private AbstractAnalysisResultPage resultPage;
 
@@ -107,17 +106,6 @@ public class AnalysisEditor extends SupportContextEditor {
      */
     public AnalysisEditor() {
 
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.eclipse.ui.forms.editor.FormEditor#init(org.eclipse.ui.IEditorSite, org.eclipse.ui.IEditorInput)
-     */
-    @Override
-    public void init(IEditorSite site, IEditorInput input) throws PartInitException {
-        super.init(site, input);
-        showContextView();
     }
 
     @Override
@@ -182,10 +170,9 @@ public class AnalysisEditor extends SupportContextEditor {
             if (masterPage != null) {
                 addPage(masterPage);
                 setPartName(masterPage.getIntactElemenetName());
-                initContext();
                 // Added 20130930 TDQ-8117, yyin
                 // init the run analysis action, to give it the analysis item and listener
-                TDQAnalysisItem item = (TDQAnalysisItem) getMasterPage().getAnalysisRepNode().getObject().getProperty().getItem();
+                TDQAnalysisItem item = (TDQAnalysisItem) masterPage.getAnalysisRepNode().getObject().getProperty().getItem();
                 this.runAction.setAnalysisItem(item);
             }
 
@@ -202,22 +189,13 @@ public class AnalysisEditor extends SupportContextEditor {
 
     }
 
-    /**
-     * init the context for the analysis.
-     */
-    private void initContext() {
-        Analysis analysis = getMasterPage().getAnalysis();
-        contextManager = new JobContextManager(analysis.getContextType(), analysis.getDefaultContext());
-        this.setLastRunContextGroupName(AnalysisHelper.getContextGroupName(analysis));
-    }
-
     @Override
     public void doSave(IProgressMonitor monitor) {
         if (masterPage != null && masterPage.isDirty()) {
             masterPage.doSave(monitor);
             setPartName(masterPage.getIntactElemenetName());
         }
-        setEditorObject(getMasterPage().getAnalysisRepNode());
+        setEditorObject(masterPage.getAnalysisRepNode());
         super.doSave(monitor);
 
     }
@@ -269,7 +247,7 @@ public class AnalysisEditor extends SupportContextEditor {
         }
 
         if (isRefreshResultPage) {
-            resultPage.refresh(getMasterPage());
+            resultPage.refresh(masterPage);
             isRefreshResultPage = false;
         }
     }
@@ -279,9 +257,8 @@ public class AnalysisEditor extends SupportContextEditor {
      * 
      * @return the masterPage
      */
-    @Override
     public AbstractAnalysisMetadataPage getMasterPage() {
-        return (AbstractAnalysisMetadataPage) masterPage;
+        return this.masterPage;
     }
 
     /**
@@ -363,7 +340,7 @@ public class AnalysisEditor extends SupportContextEditor {
      * @return
      */
     public ReturnCode canRun() {
-        return getMasterPage().canRun();
+        return masterPage.canRun();
     }
 
     @Override
@@ -444,7 +421,7 @@ public class AnalysisEditor extends SupportContextEditor {
                 return true;
             }
         };
-        EventManager.getInstance().register(getMasterPage().getAnalysis(), EventEnum.DQ_ANALYSIS_CHECK_BEFORERUN,
+        EventManager.getInstance().register(masterPage.getAnalysis(), EventEnum.DQ_ANALYSIS_CHECK_BEFORERUN,
                 checkBeforeRunReceiver);
 
         // register: refresh the result page after running it from menu
@@ -455,26 +432,26 @@ public class AnalysisEditor extends SupportContextEditor {
                 // MOD TDQ-7816: when the result page are not created, no need to refresh, only refresh master page is
                 // enough;TDQ-8270 resultpage is null for overview type
                 if (resultPage != null && resultPage.getManagedForm() != null) {
-                    resultPage.refresh(getMasterPage());
+                    resultPage.refresh(masterPage);
                     return true;
                 } else {
-                    getMasterPage().refresh();
+                    masterPage.refresh();
                     return true;
                 }
             }
         };
-        EventManager.getInstance().register(getMasterPage().getAnalysis(), EventEnum.DQ_ANALYSIS_RUN_FROM_MENU, refreshReceiver);
+        EventManager.getInstance().register(masterPage.getAnalysis(), EventEnum.DQ_ANALYSIS_RUN_FROM_MENU, refreshReceiver);
 
         // register: refresh the dataprovider combobox when the name of the data provider is changed.
         refreshDataProvider = new EventReceiver() {
 
             @Override
             public boolean handle(Object data) {
-                getMasterPage().reloadDataproviderAndFillConnCombo();
+                masterPage.reloadDataproviderAndFillConnCombo();
                 return true;
             }
         };
-        EventManager.getInstance().register(getMasterPage().getAnalysis(), EventEnum.DQ_ANALYSIS_REFRESH_DATAPROVIDER_LIST,
+        EventManager.getInstance().register(masterPage.getAnalysis(), EventEnum.DQ_ANALYSIS_REFRESH_DATAPROVIDER_LIST,
                 refreshDataProvider);
 
         // register: reopen this editor after reload its depended connection
@@ -486,7 +463,7 @@ public class AnalysisEditor extends SupportContextEditor {
 
                     public void run() {
 
-                        WorkbenchUtils.refreshCurrentAnalysisEditor(getMasterPage().getAnalysis().getName());
+                        WorkbenchUtils.refreshCurrentAnalysisEditor(masterPage.getAnalysis().getName());
                     }
 
                 });
@@ -494,22 +471,23 @@ public class AnalysisEditor extends SupportContextEditor {
                 return true;
             }
         };
-        EventManager.getInstance().register(getMasterPage().getAnalysis().getName(), EventEnum.DQ_ANALYSIS_REOPEN_EDITOR,
-                reopenEditor);
+        EventManager.getInstance()
+                .register(masterPage.getAnalysis().getName(), EventEnum.DQ_ANALYSIS_REOPEN_EDITOR, reopenEditor);
 
         // ADD msjian TDQ-8860 2014-4-30:only for column set analysis, when there have pattern(s) when java engine,show
-        // all match indicator in the Indicators section.
+        // all match indicator in the
+        // Indicators section.
         if (analysisType.equals(AnalysisType.COLUMN_SET)) {
             // register: refresh the dataprovider combobox when the name of the data provider is changed.
             refresh2ShowMatchIndicator = new EventReceiver() {
 
                 @Override
                 public boolean handle(Object data) {
-                    ((ColumnSetMasterPage) getMasterPage()).refreshIndicatorsSection();
+                    ((ColumnSetMasterPage) masterPage).refreshIndicatorsSection();
                     return true;
                 }
             };
-            EventManager.getInstance().register(getMasterPage().getAnalysis(), EventEnum.DQ_COLUMNSET_SHOW_MATCH_INDICATORS,
+            EventManager.getInstance().register(masterPage.getAnalysis(), EventEnum.DQ_COLUMNSET_SHOW_MATCH_INDICATORS,
                     refresh2ShowMatchIndicator);
         }
         // TDQ-8860~
@@ -531,7 +509,7 @@ public class AnalysisEditor extends SupportContextEditor {
                     return true;
                 }
             };
-            EventManager.getInstance().register(getMasterPage().getAnalysis(), EventEnum.DQ_DYNAMIC_REGISTER_DYNAMIC_CHART,
+            EventManager.getInstance().register(masterPage.getAnalysis(), EventEnum.DQ_DYNAMIC_REGISTER_DYNAMIC_CHART,
                     registerDynamicEvent);
 
             unRegisterDynamicEvent = new EventReceiver() {
@@ -549,7 +527,7 @@ public class AnalysisEditor extends SupportContextEditor {
                     return true;
                 }
             };
-            EventManager.getInstance().register(getMasterPage().getAnalysis(), EventEnum.DQ_DYNAMIC_UNREGISTER_DYNAMIC_CHART,
+            EventManager.getInstance().register(masterPage.getAnalysis(), EventEnum.DQ_DYNAMIC_UNREGISTER_DYNAMIC_CHART,
                     unRegisterDynamicEvent);
 
         }
@@ -560,27 +538,26 @@ public class AnalysisEditor extends SupportContextEditor {
      */
     @Override
     public void dispose() {
-        EventManager.getInstance().unRegister(getMasterPage().getAnalysis(), EventEnum.DQ_ANALYSIS_CHECK_BEFORERUN,
+        EventManager.getInstance().unRegister(masterPage.getAnalysis(), EventEnum.DQ_ANALYSIS_CHECK_BEFORERUN,
                 checkBeforeRunReceiver);
-        EventManager.getInstance()
-                .unRegister(getMasterPage().getAnalysis(), EventEnum.DQ_ANALYSIS_RUN_FROM_MENU, refreshReceiver);
-        EventManager.getInstance().unRegister(getMasterPage().getAnalysis(), EventEnum.DQ_ANALYSIS_REFRESH_DATAPROVIDER_LIST,
+        EventManager.getInstance().unRegister(masterPage.getAnalysis(), EventEnum.DQ_ANALYSIS_RUN_FROM_MENU, refreshReceiver);
+        EventManager.getInstance().unRegister(masterPage.getAnalysis(), EventEnum.DQ_ANALYSIS_REFRESH_DATAPROVIDER_LIST,
                 refreshDataProvider);
-        EventManager.getInstance().unRegister(getMasterPage().getAnalysis().getName(), EventEnum.DQ_ANALYSIS_REOPEN_EDITOR,
+        EventManager.getInstance().unRegister(masterPage.getAnalysis().getName(), EventEnum.DQ_ANALYSIS_REOPEN_EDITOR,
                 reopenEditor);
 
         // ADD msjian TDQ-8860 2014-4-30:only for column set analysis, when there have pattern(s) when java engine,show
         // all match indicator in the Indicators section.
         if (analysisType.equals(AnalysisType.COLUMN_SET)) {
-            EventManager.getInstance().unRegister(getMasterPage().getAnalysis(), EventEnum.DQ_COLUMNSET_SHOW_MATCH_INDICATORS,
+            EventManager.getInstance().unRegister(masterPage.getAnalysis(), EventEnum.DQ_COLUMNSET_SHOW_MATCH_INDICATORS,
                     refresh2ShowMatchIndicator);
-        }
-        // TDQ-8860~
+        }// TDQ-8860~
+
         // Added TDQ8787 2014-06-16 yyin: for dynamic chart, unregister the create all chart event
         if (masterPage instanceof DynamicAnalysisMasterPage) {
-            EventManager.getInstance().unRegister(getMasterPage().getAnalysis(), EventEnum.DQ_DYNAMIC_REGISTER_DYNAMIC_CHART,
+            EventManager.getInstance().unRegister(masterPage.getAnalysis(), EventEnum.DQ_DYNAMIC_REGISTER_DYNAMIC_CHART,
                     registerDynamicEvent);
-            EventManager.getInstance().unRegister(getMasterPage().getAnalysis(), EventEnum.DQ_DYNAMIC_REGISTER_DYNAMIC_CHART,
+            EventManager.getInstance().unRegister(masterPage.getAnalysis(), EventEnum.DQ_DYNAMIC_REGISTER_DYNAMIC_CHART,
                     unRegisterDynamicEvent);
         }// ~
 
