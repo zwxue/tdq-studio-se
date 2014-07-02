@@ -13,7 +13,6 @@
 package org.talend.dataprofiler.core.ui.editor.preview.model.states;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import org.eclipse.jface.viewers.IStructuredContentProvider;
@@ -31,9 +30,7 @@ import org.jfree.data.xy.XYDataset;
 import org.talend.dataprofiler.common.ui.editor.preview.ICustomerDataset;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
 import org.talend.dataprofiler.core.ui.editor.preview.model.entity.TableStructureEntity;
-import org.talend.dq.indicators.IndicatorCommonUtil;
 import org.talend.dq.indicators.preview.table.ChartDataEntity;
-import org.talend.dq.nodes.indicator.type.IndicatorEnum;
 
 /**
  * DOC Zqin class global comment. Detailled comment
@@ -42,35 +39,15 @@ public abstract class AbstractChartTypeStates implements IChartTypeStates {
 
     protected List<IndicatorUnit> units = new ArrayList<IndicatorUnit>();
 
+    public AbstractChartTypeStates() {
+
+    }
+
     public AbstractChartTypeStates(List<IndicatorUnit> units) {
 
         if (units != null) {
-            this.units.addAll(check(units));
+            this.units.addAll(units);
         }
-    }
-
-    /**
-     * DOC bZhou Comment method "check".
-     * 
-     * @param units2
-     * @return
-     */
-    private Collection<? extends IndicatorUnit> check(List<IndicatorUnit> parameterUnits) {
-        List<IndicatorUnit> validUnitList = new ArrayList<IndicatorUnit>();
-
-        for (IndicatorUnit unit : parameterUnits) {
-
-            IndicatorEnum type = unit.getType();
-            if (type != null && !unit.isExcuted()
-                    && (type == IndicatorEnum.IQRIndicatorEnum || type == IndicatorEnum.RangeIndicatorEnum)) {
-                IndicatorCommonUtil.getIndicatorValue(unit.getIndicator());
-            }
-            if (unit.isExcuted()) {
-                validUnitList.add(unit);
-            }
-        }
-
-        return validUnitList;
     }
 
     public List<JFreeChart> getChartList() {

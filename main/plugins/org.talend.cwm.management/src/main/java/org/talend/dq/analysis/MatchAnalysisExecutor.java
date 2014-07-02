@@ -24,7 +24,6 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.talend.core.GlobalServiceRegister;
 import org.talend.core.ITDQRepositoryService;
 import org.talend.core.model.metadata.builder.connection.MetadataColumn;
 import org.talend.cwm.db.connection.DatabaseSQLExecutor;
@@ -183,11 +182,7 @@ public class MatchAnalysisExecutor implements IAnalysisExecutor {
      * @param matchResultConsumer
      */
     private void refreshTableWithMatchFullResult(Analysis analysis) {
-        ITDQRepositoryService tdqRepService = null;
-
-        if (GlobalServiceRegister.getDefault().isServiceRegistered(ITDQRepositoryService.class)) {
-            tdqRepService = (ITDQRepositoryService) GlobalServiceRegister.getDefault().getService(ITDQRepositoryService.class);
-        }
+        ITDQRepositoryService tdqRepService = AnalysisExecutorHelper.getTDQService();
         if (tdqRepService != null) {
             tdqRepService.refreshTableWithResult(analysis, null);
         }

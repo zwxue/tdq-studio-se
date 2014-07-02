@@ -25,6 +25,7 @@ import org.talend.dataprofiler.common.ui.editor.preview.chart.ChartDecorator;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
 import org.talend.dataprofiler.core.ui.editor.preview.model.entity.TableStructureEntity;
+import org.talend.dataprofiler.core.ui.utils.AnalysisUtils;
 import org.talend.dataprofiler.core.ui.utils.ComparatorsFactory;
 import org.talend.dq.analysis.explore.BenfordLawFrequencyExplorer;
 import org.talend.dq.analysis.explore.DataExplorer;
@@ -70,15 +71,7 @@ public class BenfordLawFrequencyState extends FrequencyTypeStates {
     @Override
     protected void sortIndicator(FrequencyExt[] frequencyExt) {
         ComparatorsFactory.sort(frequencyExt, ComparatorsFactory.BENFORDLAW_FREQUENCY_COMPARATOR_ID);
-        // get the sum
-        double sum = 0d;
-        for (FrequencyExt ext : frequencyExt) {
-            sum += ext.getValue();
-        }
-        // set the values from count to percentage
-        for (FrequencyExt ext : frequencyExt) {
-            ext.setFrequency(ext.getValue() / sum);
-        }
+        AnalysisUtils.recomputerForBenfordLaw(frequencyExt);
     }
 
     /**
