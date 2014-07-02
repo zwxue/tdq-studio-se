@@ -20,7 +20,7 @@ import java.util.Map;
  * <strike> feature TDQ-1707, record comparison algorithm with blocking key for component tMatchGroupHadoop.</strike>
  * The record grouping interface handles record grouping
  */
-public interface IRecordGrouping {
+public interface IRecordGrouping<T> {
 
     /**
      * Key for retrieving the matching type.
@@ -86,7 +86,7 @@ public interface IRecordGrouping {
      * @param context the hadoop context
      * @param column delimiter
      */
-    public void doGroup(String[] inputRow) throws IOException, InterruptedException;
+    public void doGroup(T[] inputRow) throws IOException, InterruptedException;
 
     /**
      * 
