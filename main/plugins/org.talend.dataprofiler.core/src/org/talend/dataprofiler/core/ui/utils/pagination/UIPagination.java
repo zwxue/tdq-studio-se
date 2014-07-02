@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyEvent;
@@ -36,10 +37,15 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ImageHyperlink;
+import org.jfree.data.category.CategoryDataset;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.model.ModelElementIndicator;
+import org.talend.dataprofiler.core.ui.chart.TalendChartComposite;
+import org.talend.dataprofiler.core.ui.editor.analysis.IndicatorPaginationInfo;
 import org.talend.dataprofiler.core.ui.editor.analysis.MasterPaginationInfo;
+import org.talend.dataprofiler.core.ui.editor.analysis.ResultPaginationInfo;
+import org.talend.dataquality.indicators.Indicator;
 
 /**
  * DOC mzhao 2009-04-20,UI pagination.
@@ -526,4 +532,45 @@ public class UIPagination {
         return this.currentPage;
     }
 
+    /**
+     * Added TDQ-8787 20140612: get all indicators and its related dataset (for dynamic chart)
+     * 
+     * @return
+     */
+    public Map<List<Indicator>, CategoryDataset> getAllIndcatorAndDatasetOfCurrentPage() {
+        IPagination iPagination = pageCache.get(currentPage);
+        if (iPagination instanceof IndicatorPaginationInfo) {
+            return ((IndicatorPaginationInfo) iPagination).getIndicatorDatasetMap();
+        }
+        return null;
+    }
+
+    public Map<List<Indicator>, TableViewer> getAllIndicatorAndTable() {
+        IPagination iPagination = pageCache.get(currentPage);
+        if (iPagination instanceof ResultPaginationInfo) {
+            return ((ResultPaginationInfo) iPagination).getIndicatorTableMap();
+        }
+        return null;
+    }
+
+    /**
+     * Added TDQ-8787 20140612: clear all related map (for dynamic chart), after executing the analysis
+     */
+    public void clearAllDynamicMapOfCurrentPage() {
+        IPagination iPagination = pageCache.get(currentPage);
+        if (iPagination instanceof IndicatorPaginationInfo) {
+            ((IndicatorPaginationInfo) iPagination).getIndicatorDatasetMap().clear();
+        }
+        if (iPagination instanceof ResultPaginationInfo) {
+            ((ResultPaginationInfo) iPagination).getIndicatorTableMap().clear();
+        }
+    }
+
+    public Map<List<Indicator>, TalendChartComposite> getBAWparentComposite() {
+        IPagination iPagination = pageCache.get(currentPage);
+        if (iPagination instanceof IndicatorPaginationInfo) {
+            return ((IndicatorPaginationInfo) iPagination).getBAWparentComposite();
+        }
+        return null;
+    }
 }

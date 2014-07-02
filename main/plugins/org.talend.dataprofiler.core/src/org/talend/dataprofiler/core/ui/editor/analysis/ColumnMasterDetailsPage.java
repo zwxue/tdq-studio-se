@@ -17,23 +17,19 @@ import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.emf.common.util.EList;
-import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CCombo;
 import org.eclipse.swt.custom.SashForm;
-import org.eclipse.swt.events.ControlAdapter;
-import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.swt.widgets.TreeItem;
 import org.eclipse.swt.widgets.Widget;
@@ -47,6 +43,7 @@ import org.eclipse.ui.forms.widgets.Hyperlink;
 import org.eclipse.ui.forms.widgets.ImageHyperlink;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
+import org.jfree.data.category.CategoryDataset;
 import org.talend.core.model.metadata.MetadataColumnRepositoryObject;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.connection.MetadataColumn;
@@ -62,7 +59,7 @@ import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.helper.ModelElementIndicatorHelper;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.model.ModelElementIndicator;
-import org.talend.dataprofiler.core.ui.action.actions.RunAnalysisAction;
+import org.talend.dataprofiler.core.ui.chart.TalendChartComposite;
 import org.talend.dataprofiler.core.ui.dialog.ColumnsSelectionDialog;
 import org.talend.dataprofiler.core.ui.editor.composite.AbstractColumnDropTree;
 import org.talend.dataprofiler.core.ui.editor.composite.AnalysisColumnTreeViewer;
@@ -92,7 +89,7 @@ import orgomg.cwm.objectmodel.core.ModelElement;
 /**
  * @author rli
  */
-public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implements PropertyChangeListener {
+public class ColumnMasterDetailsPage extends DynamicAnalysisMasterPage implements PropertyChangeListener {
 
     private Composite tree;
 
@@ -106,21 +103,13 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
 
     private String stringDataFilter;
 
-    private Composite chartComposite;
-
     private static final int TREE_MAX_LENGTH = 400;
 
     private ExpandableComposite[] previewChartCompsites;
 
     private Section analysisColumnSection = null;
 
-    private Section previewSection = null;
-
     final private List<ExpandableComposite> previewChartList = new ArrayList<ExpandableComposite>();
-
-    private SashForm sForm;
-
-    private Composite previewComp;
 
     private UIPagination uiPagination;
 
@@ -204,25 +193,7 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
                 .getParameters());
         // ~
         if (!EditorPreferencePage.isHideGraphics()) {
-            previewComp = toolkit.createComposite(sForm);
-            previewComp.setLayoutData(new GridData(GridData.FILL_BOTH));
-            previewComp.setLayout(new GridLayout());
-            // add by hcheng for 0007290: Chart cannot auto compute it's size in
-            // DQRule analsyis Editor
-            previewComp.addControlListener(new ControlAdapter() {
-
-                /*
-                 * (non-Javadoc)
-                 * 
-                 * @see org.eclipse.swt.events.ControlAdapter#controlResized(org.eclipse .swt.events.ControlEvent)
-                 */
-                @Override
-                public void controlResized(ControlEvent e) {
-                    super.controlResized(e);
-                    sForm.redraw();
-                    form.reflow(true);
-                }
-            });
+            createPreviewComposite();
 
             createPreviewSection(form, previewComp);
         }
@@ -381,6 +352,7 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
     /**
      * dispose ChartComposite.
      */
+    @Override
     public void disposeChartComposite() {
         if (chartComposite != null && !chartComposite.isDisposed()) {
             for (Control control : chartComposite.getChildren()) {
@@ -451,105 +423,8 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
         this.computePagination();
     }
 
-    void createPreviewSection(final ScrolledForm form, Composite parent) {
-        previewSection = createSection(
-                form,
-                parent,
-                DefaultMessagesImpl.getString("ColumnMasterDetailsPage.graphics"), DefaultMessagesImpl.getString("ColumnMasterDetailsPage.space")); //$NON-NLS-1$ //$NON-NLS-2$
-        previewSection.setLayoutData(new GridData(GridData.FILL_BOTH));
-        Composite sectionClient = toolkit.createComposite(previewSection);
-        sectionClient.setLayout(new GridLayout());
-        sectionClient.setLayoutData(new GridData(GridData.FILL_BOTH));
-
-        Composite actionBarComp = toolkit.createComposite(sectionClient);
-        GridLayout gdLayout = new GridLayout();
-        gdLayout.numColumns = 2;
-        actionBarComp.setLayout(gdLayout);
-
-        ImageHyperlink collapseAllImageLink = toolkit.createImageHyperlink(actionBarComp, SWT.NONE);
-        collapseAllImageLink.setToolTipText(DefaultMessagesImpl.getString("CollapseAllColumns")); //$NON-NLS-1$
-        collapseAllImageLink.setImage(ImageLib.getImage(ImageLib.COLLAPSE_ALL));
-        collapseAllImageLink.addHyperlinkListener(new HyperlinkAdapter() {
-
-            @Override
-            public void linkActivated(HyperlinkEvent e) {
-                if (previewChartList != null && !previewChartList.isEmpty()) {
-                    for (ExpandableComposite comp : previewChartList) {
-                        comp.setExpanded(false);
-                        comp.getParent().pack();
-                    }
-                }
-            }
-        });
-
-        ImageHyperlink expandAllImageLink = toolkit.createImageHyperlink(actionBarComp, SWT.NONE);
-        expandAllImageLink.setToolTipText(DefaultMessagesImpl.getString("ExpandAllColumns")); //$NON-NLS-1$
-        expandAllImageLink.setImage(ImageLib.getImage(ImageLib.EXPAND_ALL));
-        expandAllImageLink.addHyperlinkListener(new HyperlinkAdapter() {
-
-            @Override
-            public void linkActivated(HyperlinkEvent e) {
-                if (previewChartList != null && !previewChartList.isEmpty()) {
-                    for (ExpandableComposite comp : previewChartList) {
-                        comp.setExpanded(true);
-                        comp.getParent().pack();
-                    }
-                }
-
-            }
-        });
-
-        ImageHyperlink refreshBtn = toolkit.createImageHyperlink(sectionClient, SWT.NONE);
-        refreshBtn.setText(DefaultMessagesImpl.getString("ColumnMasterDetailsPage.refreshGraphics")); //$NON-NLS-1$
-        refreshBtn.setImage(ImageLib.getImage(ImageLib.SECTION_PREVIEW));
-        final Label message = toolkit.createLabel(sectionClient,
-                DefaultMessagesImpl.getString("ColumnMasterDetailsPage.spaceWhite")); //$NON-NLS-1$
-        message.setForeground(Display.getDefault().getSystemColor(SWT.COLOR_RED));
-        message.setVisible(false);
-        GridDataFactory.fillDefaults().align(SWT.FILL, SWT.TOP).applyTo(sectionClient);
-
-        chartComposite = toolkit.createComposite(sectionClient);
-        chartComposite.setLayout(new GridLayout());
-        chartComposite.setLayoutData(new GridData(GridData.FILL_BOTH));
-
-        final Analysis analysis = analysisHandler.getAnalysis();
-
-        refreshBtn.addHyperlinkListener(new HyperlinkAdapter() {
-
-            @Override
-            public void linkActivated(HyperlinkEvent e) {
-                disposeChartComposite();
-
-                boolean analysisStatue = analysis.getResults().getResultMetadata() != null
-                        && analysis.getResults().getResultMetadata().getExecutionDate() != null;
-
-                if (!analysisStatue) {
-                    boolean returnCode = MessageDialog.openConfirm(null,
-                            DefaultMessagesImpl.getString("ColumnMasterDetailsPage.ViewResult"), //$NON-NLS-1$
-                            DefaultMessagesImpl.getString("ColumnMasterDetailsPage.RunOrSeeSampleData")); //$NON-NLS-1$
-
-                    if (returnCode) {
-                        new RunAnalysisAction().run();
-                        message.setVisible(false);
-                    } else {
-                        createPreviewCharts(form, chartComposite, false);
-                        message.setText(DefaultMessagesImpl.getString("ColumnMasterDetailsPage.warning")); //$NON-NLS-1$
-                        message.setVisible(true);
-                    }
-                } else {
-                    createPreviewCharts(form, chartComposite, true);
-                }
-
-                chartComposite.layout();
-                form.reflow(true);
-            }
-
-        });
-
-        previewSection.setClient(sectionClient);
-    }
-
-    public void createPreviewCharts(final ScrolledForm form, final Composite composite, final boolean isCreate) {
+    @Override
+    public void createPreviewCharts(final ScrolledForm form, final Composite composite) {
         uiPagination.setChartComposite(composite);
         uiPagination.init();
 
@@ -576,24 +451,12 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
         } else {
             if (chartComposite != null && !chartComposite.isDisposed()) {
                 disposeChartComposite();
-                createPreviewCharts(form, chartComposite, true);
-                chartComposite.getParent().layout();
-                chartComposite.layout();
+                createPreviewCharts(form, chartComposite);
+                reLayoutChartComposite();
             } else {
-                previewComp = toolkit.createComposite(sForm);
-                previewComp.setLayoutData(new GridData(GridData.FILL_BOTH));
-                previewComp.setLayout(new GridLayout());
-                previewComp.addControlListener(new ControlAdapter() {
-
-                    @Override
-                    public void controlResized(ControlEvent e) {
-                        super.controlResized(e);
-                        sForm.redraw();
-                        form.reflow(true);
-                    }
-                });
+                createPreviewComposite();
                 createPreviewSection(form, previewComp);
-                createPreviewCharts(form, chartComposite, false);
+                createPreviewCharts(form, chartComposite);
             }
         }
     }
@@ -616,13 +479,6 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
         addWhitespaceValidate(dataFilterComp.getDataFilterText());
         dataFilterSection.setClient(sectionClient);
     }
-
-    /**
-     * DOC hcheng Comment method "createAnalysisParamSection".
-     * 
-     * @param form
-     * @param anasisDataComp
-     */
 
     /**
      * ADD xqliu 2009-08-24 bug 8776.
@@ -834,6 +690,7 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
         return this.treeViewer;
     }
 
+    @Override
     public ModelElementAnalysisHandler getAnalysisHandler() {
         return analysisHandler;
     }
@@ -1059,6 +916,45 @@ public class ColumnMasterDetailsPage extends AbstractAnalysisMetadataPage implem
             treeViewer.setElements(treeViewer.getModelElementIndicator(), true, true);
         }
 
+    }
+
+    @Override
+    List<ExpandableComposite> getPreviewChartList() {
+        return this.previewChartList;
+    }
+
+    @Override
+    String getExpandString() {
+        return DefaultMessagesImpl.getString("ExpandAllColumns");
+    }
+
+    @Override
+    String getCollapseAllString() {
+        return DefaultMessagesImpl.getString("CollapseAllColumns");
+    }
+
+    /**
+     * return all created charts for the current running, from the current pagination. The charts which are not on the
+     * current page no need to return. TODO check if can use IndicatorUnit
+     */
+    @SuppressWarnings("unchecked")
+    @Override
+    public Map<List<Indicator>, CategoryDataset> getDynamicDatasets() {
+        return uiPagination.getAllIndcatorAndDatasetOfCurrentPage();
+    }
+
+    /**
+     * clear all related maps which store the dynamic state and charts.
+     */
+    @Override
+    public void clearDynamicDatasets() {
+        uiPagination.clearAllDynamicMapOfCurrentPage();
+        super.clearDynamicDatasets();
+    }
+
+    @Override
+    public Map<List<Indicator>, TalendChartComposite> getBAWparentComposite() {
+        return uiPagination.getBAWparentComposite();
     }
 
 }

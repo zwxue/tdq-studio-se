@@ -55,7 +55,7 @@ public class TextStatisticsState extends AbstractChartTypeStates {
 
         CustomerDefaultCategoryDataset customerdataset = new CustomerDefaultCategoryDataset();
         for (IndicatorUnit unit : units) {
-            double value = Double.parseDouble(unit.getValue().toString());
+            double value = unit.getValue() != null ? Double.parseDouble(unit.getValue().toString()) : Double.NaN;
             String label = unit.getIndicatorName();
 
             customerdataset.addValue(value, label, label);

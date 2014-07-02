@@ -52,11 +52,11 @@ public class PatternStatisticsState extends AbstractChartTypeStates {
         for (IndicatorUnit unit : units) {
             String label = unit.getIndicator().getName();
             PatternMatchingExt patternExt = (PatternMatchingExt) unit.getValue();
-            double notMathCount = patternExt.getNotMatchingValueCount();
-            double machCount = patternExt.getMatchingValueCount();
+            double notMathCount = patternExt == null ? Double.NaN : patternExt.getNotMatchingValueCount();
+            double machCount = patternExt == null ? Double.NaN : patternExt.getMatchingValueCount();
 
-            customerdataset.addValue(notMathCount, "not matching", label); //$NON-NLS-1$
-            customerdataset.addValue(machCount, "matching", label); //$NON-NLS-1$
+            customerdataset.addValue(notMathCount, DefaultMessagesImpl.getString("PatternStatisticsState.NotMatching"), label); //$NON-NLS-1$
+            customerdataset.addValue(machCount, DefaultMessagesImpl.getString("PatternStatisticsState.Matching"), label); //$NON-NLS-1$
 
             PatternChartDataEntity patternEntity = new PatternChartDataEntity();
             patternEntity.setIndicator(unit.getIndicator());
