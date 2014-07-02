@@ -32,6 +32,7 @@ import org.talend.dataquality.PluginConstant;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.ExecutionInformations;
 import org.talend.dq.analysis.connpool.TdqAnalysisConnectionPool;
+import org.talend.dq.helper.ContextHelper;
 import org.talend.dq.helper.PropertyHelper;
 import orgomg.cwm.foundation.softwaredeployment.DataManager;
 import orgomg.cwm.objectmodel.core.ModelElement;
@@ -141,7 +142,7 @@ public class AnalysisHandler {
             return PluginConstant.EMPTY_STRING;
         } else {
             Property property = PropertyHelper.getProperty(connection);
-            return property == null ? PluginConstant.EMPTY_STRING : property.getLabel(); //$NON-NLS-1$
+            return property == null ? PluginConstant.EMPTY_STRING : property.getLabel();
         }
     }
 
@@ -217,7 +218,7 @@ public class AnalysisHandler {
 
         for (ModelElement element : getAnalyzedColumns()) {
             if (element instanceof TdColumn) {
-                ColumnSet columnSet = ColumnHelper.getColumnOwnerAsColumnSet((TdColumn) element);
+                ColumnSet columnSet = ColumnHelper.getColumnOwnerAsColumnSet(element);
                 if (!existingTables.contains(columnSet)) {
                     existingTables.add(columnSet);
                 }
@@ -309,7 +310,7 @@ public class AnalysisHandler {
     }
 
     /**
-     * DOC xqliu Comment method "getNumberOfConnectionsPerAnalysis".
+     * get NumberOfConnections Per Analysis with the real value.
      * 
      * @return
      */
@@ -320,7 +321,7 @@ public class AnalysisHandler {
                     TdqAnalysisConnectionPool.NUMBER_OF_CONNECTIONS_PER_ANALYSIS, this.analysis.getTaggedValue());
             if (taggedValue != null) {
                 try {
-                    num = Integer.valueOf(taggedValue.getValue());
+                    num = Integer.valueOf(ContextHelper.getAnalysisContextValue(analysis, taggedValue.getValue()));
                 } catch (NumberFormatException e) {
                     log.debug(e);
                 }
@@ -330,18 +331,19 @@ public class AnalysisHandler {
     }
 
     /**
-     * DOC xqliu Comment method "setNumberOfConnectionsPerAnalysis".
+     * get NumberOfConnections Per Analysis with context value.
      * 
-     * @param str
+     * @return
      */
-    public void setNumberOfConnectionsPerAnalysis(String str) {
+    public String getNumberOfConnectionsPerAnalysisWithContext() {
         int num = TdqAnalysisConnectionPool.CONNECTIONS_PER_ANALYSIS_DEFAULT_LENGTH;
-        try {
-            num = Integer.valueOf(str);
-        } catch (NumberFormatException e) {
-            log.debug(e);
+        if (this.analysis != null) {
+            TaggedValue taggedValue = TaggedValueHelper.getTaggedValue(
+                    TdqAnalysisConnectionPool.NUMBER_OF_CONNECTIONS_PER_ANALYSIS, this.analysis.getTaggedValue());
+            if (taggedValue != null) {
+                return taggedValue.getValue();
+            }
         }
-        TaggedValueHelper.setTaggedValue(this.analysis, TdqAnalysisConnectionPool.NUMBER_OF_CONNECTIONS_PER_ANALYSIS,
-                String.valueOf(num));
+        return String.valueOf(num);
     }
 }

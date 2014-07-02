@@ -25,6 +25,7 @@ import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.columnset.ColumnsetPackage;
 import org.talend.dataquality.indicators.columnset.RowMatchingIndicator;
 import org.talend.dq.dbms.HiveDbmsLanguage;
+import org.talend.dq.helper.ContextHelper;
 import orgomg.cwm.resource.relational.ColumnSet;
 
 /**
@@ -233,9 +234,9 @@ public class RowMatchExplorer extends DataExplorer {
     private String andDataFilter(String tableOrViewName, Integer index) {
         String andTable = null;
         if (index == null) {
-            andTable = AnalysisHelper.getStringDataFilter(analysis, getdataFilterIndex(tableOrViewName));
+            andTable = ContextHelper.getDataFilterWithoutContext(analysis, getdataFilterIndex(tableOrViewName));
         } else {
-            andTable = AnalysisHelper.getStringDataFilter(analysis, index.intValue());
+            andTable = ContextHelper.getDataFilterWithoutContext(analysis, index.intValue());
         }
         if (null != andTable && !andTable.equals(PluginConstant.EMPTY_STRING)) {
             andTable = dbmsLanguage.and() + andTable;
@@ -258,11 +259,10 @@ public class RowMatchExplorer extends DataExplorer {
     private String whereDataFilter(Object tableOrViewName, Integer index) {
         String andTable = null;
         if (index == null) {
-            andTable = AnalysisHelper.getStringDataFilter(analysis, getdataFilterIndex(tableOrViewName));
+            andTable = ContextHelper.getDataFilterWithoutContext(analysis, getdataFilterIndex(tableOrViewName));
         } else {
-            andTable = AnalysisHelper.getStringDataFilter(analysis, index.intValue());
+            andTable = ContextHelper.getDataFilterWithoutContext(analysis, index.intValue());
         }
-        // String andTable = AnalysisHelper.getStringDataFilter(analysis, getdataFilterIndex(tableOrViewName));
         if (null != andTable && !andTable.equals(PluginConstant.EMPTY_STRING)) {
             andTable = dbmsLanguage.where() + andTable;
         }

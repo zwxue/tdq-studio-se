@@ -15,6 +15,7 @@ import org.eclipse.emf.ecore.EGenericType;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.impl.EPackageImpl;
+import org.eclipse.emf.ecore.xml.type.XMLTypePackage;
 import org.talend.core.model.properties.PropertiesPackage;
 import org.talend.core.model.metadata.builder.connection.ConnectionPackage;
 import org.talend.dataquality.analysis.Analysis;
@@ -54,6 +55,7 @@ import org.talend.dataquality.reports.ReportsPackage;
 import org.talend.dataquality.reports.impl.ReportsPackageImpl;
 import org.talend.dataquality.rules.RulesPackage;
 import org.talend.dataquality.rules.impl.RulesPackageImpl;
+import org.talend.designer.core.model.utils.emf.talendfile.TalendFilePackage;
 import orgomg.cwm.foundation.softwaredeployment.SoftwaredeploymentPackage;
 import orgomg.cwm.objectmodel.core.CorePackage;
 import orgomg.cwmx.analysis.informationreporting.InformationreportingPackage;
@@ -176,6 +178,7 @@ public class AnalysisPackageImpl extends EPackageImpl implements AnalysisPackage
 
         // Initialize simple dependencies
         PropertiesPackage.eINSTANCE.eClass();
+        XMLTypePackage.eINSTANCE.eClass();
 
         // Obtain or create and register interdependencies
         CategoryPackageImpl theCategoryPackage = (CategoryPackageImpl)(EPackage.Registry.INSTANCE.getEPackage(CategoryPackage.eNS_URI) instanceof CategoryPackageImpl ? EPackage.Registry.INSTANCE.getEPackage(CategoryPackage.eNS_URI) : CategoryPackage.eINSTANCE);
@@ -279,6 +282,24 @@ public class AnalysisPackageImpl extends EPackageImpl implements AnalysisPackage
      */
     public EAttribute getAnalysis_CreationDate() {
         return (EAttribute)analysisEClass.getEStructuralFeatures().get(3);
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public EReference getAnalysis_ContextType() {
+        return (EReference)analysisEClass.getEStructuralFeatures().get(4);
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public EAttribute getAnalysis_DefaultContext() {
+        return (EAttribute)analysisEClass.getEStructuralFeatures().get(5);
     }
 
     /**
@@ -638,6 +659,8 @@ public class AnalysisPackageImpl extends EPackageImpl implements AnalysisPackage
         createEReference(analysisEClass, ANALYSIS__RESULTS);
         createEReference(analysisEClass, ANALYSIS__PARAMETERS);
         createEAttribute(analysisEClass, ANALYSIS__CREATION_DATE);
+        createEReference(analysisEClass, ANALYSIS__CONTEXT_TYPE);
+        createEAttribute(analysisEClass, ANALYSIS__DEFAULT_CONTEXT);
 
         analysisContextEClass = createEClass(ANALYSIS_CONTEXT);
         createEReference(analysisContextEClass, ANALYSIS_CONTEXT__CONNECTION);
@@ -710,6 +733,8 @@ public class AnalysisPackageImpl extends EPackageImpl implements AnalysisPackage
         // Obtain other dependent packages
         CategoryPackage theCategoryPackage = (CategoryPackage)EPackage.Registry.INSTANCE.getEPackage(CategoryPackage.eNS_URI);
         InformationreportingPackage theInformationreportingPackage = (InformationreportingPackage)EPackage.Registry.INSTANCE.getEPackage(InformationreportingPackage.eNS_URI);
+        TalendFilePackage theTalendFilePackage = (TalendFilePackage)EPackage.Registry.INSTANCE.getEPackage(TalendFilePackage.eNS_URI);
+        XMLTypePackage theXMLTypePackage = (XMLTypePackage)EPackage.Registry.INSTANCE.getEPackage(XMLTypePackage.eNS_URI);
         SoftwaredeploymentPackage theSoftwaredeploymentPackage = (SoftwaredeploymentPackage)EPackage.Registry.INSTANCE.getEPackage(SoftwaredeploymentPackage.eNS_URI);
         CorePackage theCorePackage = (CorePackage)EPackage.Registry.INSTANCE.getEPackage(CorePackage.eNS_URI);
         DomainPackage theDomainPackage = (DomainPackage)EPackage.Registry.INSTANCE.getEPackage(DomainPackage.eNS_URI);
@@ -735,6 +760,8 @@ public class AnalysisPackageImpl extends EPackageImpl implements AnalysisPackage
         initEReference(getAnalysis_Results(), this.getAnalysisResult(), this.getAnalysisResult_Analysis(), "results", null, 0, 1, Analysis.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
         initEReference(getAnalysis_Parameters(), this.getAnalysisParameters(), null, "parameters", null, 0, 1, Analysis.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
         initEAttribute(getAnalysis_CreationDate(), ecorePackage.getEDate(), "creationDate", null, 0, 1, Analysis.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEReference(getAnalysis_ContextType(), theTalendFilePackage.getContextType(), null, "contextType", null, 0, -1, Analysis.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEAttribute(getAnalysis_DefaultContext(), theXMLTypePackage.getString(), "defaultContext", null, 0, 1, Analysis.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
         initEClass(analysisContextEClass, AnalysisContext.class, "AnalysisContext", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
         initEReference(getAnalysisContext_Connection(), theSoftwaredeploymentPackage.getDataManager(), null, "connection", null, 0, 1, AnalysisContext.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);

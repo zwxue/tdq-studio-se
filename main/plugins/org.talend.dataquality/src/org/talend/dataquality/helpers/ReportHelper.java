@@ -35,7 +35,6 @@ import org.talend.dataquality.analysis.ExecutionInformations;
 import org.talend.dataquality.reports.AnalysisMap;
 import org.talend.dataquality.reports.ReportsFactory;
 import org.talend.dataquality.reports.TdReport;
-import org.talend.utils.dates.DateUtils;
 import org.talend.utils.properties.PropertiesLoader;
 import org.talend.utils.properties.TypedProperties;
 import orgomg.cwm.objectmodel.core.TaggedValue;
@@ -500,16 +499,7 @@ public final class ReportHelper {
      * @throws ParseException
      */
     public static void setAnalysisFilterDateFrom(TdReport report, String dateText) {
-        if (dateText == null || dateText.trim().equals("")) {
-            // ADD by msjian 2011-5-25 20082: fixed the note 77437 when delete the date, the value should set to null
-            report.setDateFrom(null);
-            return;
-        }
-        try {
-            report.setDateFrom(DateUtils.parse(DateUtils.PATTERN_1, dateText));
-        } catch (ParseException e) {
-            log.error(e, e);
-        }
+        report.setDateFrom(StringUtils.isEmpty(dateText) ? null : dateText);
     }
 
     /**
@@ -523,16 +513,7 @@ public final class ReportHelper {
      * @throws ParseException
      */
     public static void setAnalysisFilterDateTo(TdReport report, String dateText) {
-        if (dateText == null || dateText.trim().equals("")) {
-            // ADD by msjian 2011-5-25 20082: fixed the note 77437 when delete the date, the value should set to null
-            report.setDateTo(null);
-            return;
-        }
-        try {
-            report.setDateTo(DateUtils.parse(DateUtils.PATTERN_1, dateText));
-        } catch (ParseException e) {
-            log.error(e, e);
-        }
+        report.setDateTo(StringUtils.isEmpty(dateText) ? null : dateText);
     }
 
     /**

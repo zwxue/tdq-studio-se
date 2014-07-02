@@ -21,6 +21,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.jface.fieldassist.IContentProposalProvider;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CCombo;
@@ -39,6 +40,7 @@ import org.eclipse.ui.forms.widgets.Section;
 import org.talend.commons.bridge.ReponsitoryContextBridge;
 import org.talend.commons.emf.EmfHelper;
 import org.talend.commons.exception.BusinessException;
+import org.talend.commons.ui.swt.proposal.ProposalUtils;
 import org.talend.commons.utils.WorkspaceUtils;
 import org.talend.core.model.metadata.builder.database.DqRepositoryViewService;
 import org.talend.core.model.properties.Property;
@@ -49,6 +51,8 @@ import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.management.i18n.InternationalizationUtil;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
+import org.talend.dataprofiler.core.ui.editor.composite.ContextComposite;
+import org.talend.dataprofiler.core.ui.views.proposal.TdqProposalProvider;
 import org.talend.dataquality.helpers.MetadataHelper;
 import org.talend.dataquality.indicators.definition.DefinitionPackage;
 import org.talend.dq.helper.PropertyHelper;
@@ -102,6 +106,8 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
     protected Section metadataSection;
 
     protected ModelElement currentModelElement;
+
+    protected Section contextGroupSection = null;
 
     /**
      * should not use this parameter because we can not make sure this parameter is synchornized with the node on the
@@ -331,8 +337,7 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
             // MOD sizhaoliu TDQ-7454 disallow the system indicator renaming to avoid i18n problems
             if (DefinitionPackage.eINSTANCE.getIndicatorDefinition().equals(currentModelElement.eClass())) {
                 nameText.setEditable(false);
-                nameText.setText(InternationalizationUtil.getDefinitionInternationalizationLabel(property
-                        .getLabel()));
+                nameText.setText(InternationalizationUtil.getDefinitionInternationalizationLabel(property.getLabel()));
             } else {
                 // MOD klliu 2010-04-21 bug 20204 get the init value
                 setOldDataproviderName(nameText.getText());
@@ -602,4 +607,47 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
     public void setModify(boolean modifyValue) {
         this.modify = modifyValue;
     }
+
+    /**
+     * install proposal on the control.
+     * 
+     * @param control
+     */
+    public void installProposals(Control control) {
+        IContentProposalProvider cpp = new TdqProposalProvider((SupportContextEditor) currentEditor);
+        ProposalUtils.getCommonProposal(control, cpp);
+    }
+
+    /**
+     * create the Context Group section.
+     * 
+     * @param form
+     * @param topComp
+     */
+    public void createContextGroupSection(ScrolledForm form, Composite topComp) {
+        contextGroupSection = createSection(
+                form,
+                topComp,
+                DefaultMessagesImpl.getString("AbstractMetadataFormPage.contextGroupSettingsSection"), DefaultMessagesImpl.getString("AbstractMetadataFormPage.contextGroupSettingsSectionDescription")); //$NON-NLS-1$ //$NON-NLS-2$
+        Composite contextGroupSectionComp = toolkit.createComposite(contextGroupSection);
+        contextGroupSectionComp.setLayout(new GridLayout());
+        @SuppressWarnings("unused")
+        ContextComposite contextComposite = new ContextComposite((SupportContextEditor) currentEditor, contextGroupSectionComp,
+                SWT.NONE);
+        contextGroupSection.setClient(contextGroupSectionComp);
+    }
+
+    protected void saveContext() {
+        // default do nothing. only for analysis and report support context now.
+    }
+
+    /**
+     * get the default context group name from the current editor.
+     * 
+     * @return
+     */
+    protected String getDefaultContextGroupName(SupportContextEditor currentEditor) {
+        return currentEditor.getContextManager().getDefaultContext().getName();
+    }
+
 }

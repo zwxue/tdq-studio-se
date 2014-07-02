@@ -55,15 +55,18 @@ import org.talend.commons.emf.FactoriesUtil;
 import org.talend.commons.exception.ExceptionHandler;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.database.PluginConstant;
+import org.talend.core.model.process.IContextManager;
 import org.talend.core.model.properties.Property;
 import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.cwm.dependencies.DependenciesHandler;
 import org.talend.cwm.helper.SwitchHelpers;
+import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.xml.TdXmlElementType;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.IRuningStatusListener;
 import org.talend.dataprofiler.core.ui.editor.AbstractMetadataFormPage;
+import org.talend.dataprofiler.core.ui.editor.SupportContextEditor;
 import org.talend.dataprofiler.core.ui.editor.composite.AbstractColumnDropTree;
 import org.talend.dataprofiler.core.ui.editor.composite.DataFilterComp;
 import org.talend.dataprofiler.core.ui.utils.MessageUI;
@@ -71,11 +74,14 @@ import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.AnalysisParameters;
 import org.talend.dataquality.analysis.ExecutionLanguage;
 import org.talend.dataquality.exception.DataprofilerCoreException;
+import org.talend.dataquality.helpers.AnalysisHelper;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dataquality.properties.TDQAnalysisItem;
 import org.talend.dataquality.rules.DQRule;
 import org.talend.dq.analysis.AnalysisHandler;
+import org.talend.dq.analysis.connpool.TdqAnalysisConnectionPool;
+import org.talend.dq.helper.ContextHelper;
 import org.talend.dq.helper.PropertyHelper;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.nodes.AnalysisRepNode;
@@ -106,6 +112,8 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
 
     protected Section dataFilterSection = null;
 
+    protected String stringDataFilter;
+
     // Used for Execute Engine section
     protected CCombo execCombo = null;
 
@@ -127,8 +135,6 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
             this.analysisRepNode = (AnalysisRepNode) recursiveFind;
         }
     }
-
-    protected AnalysisEditor currentEditor = null;
 
     // MOD yyin 201204 TDQ-4977, change to TableCombo type to show the connection type.
     protected TableCombo connCombo;
@@ -194,6 +200,9 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
         } else {
             super.doSave(monitor);
             try {
+                // SaveContext
+                saveContext();
+
                 saveAnalysis();
                 this.isDirty = false;
                 // MOD qiongli bug 0012766,2010-5-31:After change to another connection
@@ -228,8 +237,8 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
     }
 
     public void fireRuningItemChanged(boolean status) {
-        currentEditor.setRunActionButtonState(status);
-        currentEditor.setRefreshResultPage(status);
+        ((AnalysisEditor) currentEditor).setRunActionButtonState(status);
+        ((AnalysisEditor) currentEditor).setRefreshResultPage(status);
         if (status) {
             refresh();
         }
@@ -643,10 +652,11 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
         this.toolkit.createLabel(comp,
                 DefaultMessagesImpl.getString("AnalysisTuningPreferencePage.NumberOfConnectionsPerAnalysis")); //$NON-NLS-1$
 
-        this.numberOfConnectionsPerAnalysisText = this.toolkit.createText(comp,
-                String.valueOf(AnalysisHandler.createHandler(getAnalysis()).getNumberOfConnectionsPerAnalysis()), SWT.BORDER);
+        this.numberOfConnectionsPerAnalysisText = this.toolkit.createText(comp, AnalysisHandler.createHandler(getAnalysis())
+                .getNumberOfConnectionsPerAnalysisWithContext(), SWT.BORDER);
         GridDataFactory.fillDefaults().grab(false, true).applyTo(this.numberOfConnectionsPerAnalysisText);
-        ((GridData) this.numberOfConnectionsPerAnalysisText.getLayoutData()).widthHint = 60;
+        ((GridData) this.numberOfConnectionsPerAnalysisText.getLayoutData()).widthHint = 240;
+        installProposals(numberOfConnectionsPerAnalysisText);
 
         this.numberOfConnectionsPerAnalysisText.addModifyListener(new ModifyListener() {
 
@@ -660,11 +670,13 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
 
             public void verifyText(VerifyEvent e) {
                 String inputValue = e.text;
-                Pattern pattern = Pattern.compile("^[0-9]"); //$NON-NLS-1$
-                char[] charArray = inputValue.toCharArray();
-                for (char c : charArray) {
-                    if (!pattern.matcher(String.valueOf(c)).matches()) {
-                        e.doit = false;
+                if (!ContextHelper.isContextVar(inputValue)) {
+                    Pattern pattern = Pattern.compile("^[0-9]"); //$NON-NLS-1$
+                    char[] charArray = inputValue.toCharArray();
+                    for (char c : charArray) {
+                        if (!pattern.matcher(String.valueOf(c)).matches()) {
+                            e.doit = false;
+                        }
                     }
                 }
             }
@@ -677,7 +689,7 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
      * DOC xqliu Comment method "saveNumberOfConnectionsPerAnalysis".
      */
     protected void saveNumberOfConnectionsPerAnalysis() {
-        AnalysisHandler.createHandler(this.getAnalysis()).setNumberOfConnectionsPerAnalysis(
+        TaggedValueHelper.setTaggedValue(this.getAnalysis(), TdqAnalysisConnectionPool.NUMBER_OF_CONNECTIONS_PER_ANALYSIS,
                 this.numberOfConnectionsPerAnalysisText.getText());
     }
 
@@ -939,4 +951,59 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
     public TDQAnalysisItem getAnalysisItem() {
         return this.analysisItem;
     }
+
+    /**
+     * create the datafilter section.
+     * 
+     * @param form
+     * @param anasisDataComp
+     * @param needFillBoth: if true, will fill both the section.
+     */
+    void createDataFilterSection(final ScrolledForm form, Composite anasisDataComp, boolean needFillBoth) {
+        dataFilterSection = createSection(
+                form,
+                anasisDataComp,
+                DefaultMessagesImpl.getString("ColumnMasterDetailsPage.dataFilter"), DefaultMessagesImpl.getString("ColumnMasterDetailsPage.editDataFilter")); //$NON-NLS-1$ //$NON-NLS-2$
+
+        Composite sectionClient = toolkit.createComposite(dataFilterSection);
+
+        if (needFillBoth) {
+            // the text will fill both the section. can see ColumnDependencyMasterDetailsPage
+            sectionClient.setLayoutData(new GridData(GridData.FILL_BOTH));
+            sectionClient.setLayout(new GridLayout());
+        }
+
+        dataFilterComp = new DataFilterComp(sectionClient, stringDataFilter);
+        installProposals(dataFilterComp.getDataFilterText());
+        // dataFilterComp.addPropertyChangeListener(this);
+        addWhitespaceValidate(dataFilterComp.getDataFilterText());
+        dataFilterSection.setClient(sectionClient);
+    }
+
+    /**
+     * create the datafilter section without fill both the section.
+     * 
+     * @param form
+     * @param anasisDataComp
+     */
+    void createDataFilterSection(final ScrolledForm form, Composite anasisDataComp) {
+        createDataFilterSection(form, anasisDataComp, false);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataprofiler.core.ui.editor.AbstractMetadataFormPage#saveContext()
+     */
+    @Override
+    protected void saveContext() {
+        // save contexts
+        Analysis analysis = getAnalysis();
+        analysis.getContextType().clear();
+        IContextManager contextManager = currentEditor.getContextManager();
+        contextManager.saveToEmf(analysis.getContextType());
+        analysis.setDefaultContext(getDefaultContextGroupName((SupportContextEditor) currentEditor));
+        AnalysisHelper.setLastRunContext(currentEditor.getLastRunContextGroupName(), analysis);
+    }
+
 }

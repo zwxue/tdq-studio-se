@@ -72,7 +72,6 @@ import org.talend.dataprofiler.core.ui.chart.ChartUtils;
 import org.talend.dataprofiler.core.ui.editor.analysis.TablesSelectionDialog.TableSelectionType;
 import org.talend.dataprofiler.core.ui.editor.composite.AbstractColumnDropTree;
 import org.talend.dataprofiler.core.ui.editor.composite.AnalysisTableTreeViewer;
-import org.talend.dataprofiler.core.ui.editor.composite.DataFilterComp;
 import org.talend.dataprofiler.core.ui.editor.preview.CompositeIndicator;
 import org.talend.dataprofiler.core.ui.editor.preview.TableIndicatorUnit;
 import org.talend.dataprofiler.core.ui.editor.preview.model.ChartTypeStatesOperator;
@@ -112,8 +111,6 @@ public class TableMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
     }
 
     private TableIndicator[] currentTableIndicators;
-
-    private String stringDataFilter;
 
     private Composite chartComposite;
 
@@ -212,8 +209,11 @@ public class TableMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
         createAnalysisTablesSection(form, topComp);
 
         createDataFilterSection(form, topComp);
+        dataFilterComp.addPropertyChangeListener(this);
 
         createAnalysisParamSection(form, topComp);
+
+        createContextGroupSection(form, topComp);
 
         // MOD klliu Hide the setting pate graphics 2011-03-11
         if (!EditorPreferencePage.isHideGraphics()) {
@@ -360,24 +360,6 @@ public class TableMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
             treeViewer.setInput(tables);
             return;
         }
-    }
-
-    /**
-     * @param form
-     * @param toolkit
-     * @param anasisDataComp
-     */
-    void createDataFilterSection(final ScrolledForm form, Composite anasisDataComp) {
-        dataFilterSection = createSection(
-                form,
-                anasisDataComp,
-                DefaultMessagesImpl.getString("TableMasterDetailsPage.dataFilter"), DefaultMessagesImpl.getString("TableMasterDetailsPage.editDataFilter")); //$NON-NLS-1$ //$NON-NLS-2$
-
-        Composite sectionClient = toolkit.createComposite(dataFilterSection);
-        dataFilterComp = new DataFilterComp(sectionClient, stringDataFilter);
-        dataFilterComp.addPropertyChangeListener(this);
-        addWhitespaceValidate(dataFilterComp.getDataFilterText());
-        dataFilterSection.setClient(sectionClient);
     }
 
     void createPreviewSection(final ScrolledForm form, Composite parent) {
@@ -682,8 +664,8 @@ public class TableMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
 
     public void propertyChange(PropertyChangeEvent evt) {
         if (PluginConstant.ISDIRTY_PROPERTY.equals(evt.getPropertyName())) {
-            currentEditor.firePropertyChange(IEditorPart.PROP_DIRTY);
-            currentEditor.setRefreshResultPage(true);
+            ((AnalysisEditor) currentEditor).firePropertyChange(IEditorPart.PROP_DIRTY);
+            ((AnalysisEditor) currentEditor).setRefreshResultPage(true);
         } else if (PluginConstant.DATAFILTER_PROPERTY.equals(evt.getPropertyName())) {
             this.analysisHandler.setStringDataFilter((String) evt.getNewValue());
         }
