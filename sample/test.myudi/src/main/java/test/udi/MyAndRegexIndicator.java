@@ -91,3 +91,5 @@ public class MyAndRegexIndicator extends UserDefIndicatorImpl {
     }
 
 }
+---
+Fix my test/bugfix/TDQ-2 bug.
