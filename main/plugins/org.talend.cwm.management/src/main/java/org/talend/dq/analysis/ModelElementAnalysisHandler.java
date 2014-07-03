@@ -31,6 +31,7 @@ import org.talend.dataquality.indicators.CompositeIndicator;
 import org.talend.dataquality.indicators.DataminingType;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.IndicatorsFactory;
+import org.talend.dq.helper.ContextHelper;
 import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.utils.sugars.TypedReturnCode;
@@ -192,8 +193,22 @@ public class ModelElementAnalysisHandler extends AnalysisHandler {
         return AnalysisHelper.setStringDataFilter(analysis, datafilterString);
     }
 
-    public String getStringDataFilter() {
+    /**
+     * get StringDataFilter with Context.
+     * 
+     * @return
+     */
+    public String getStringDataFilterwithContext() {
         return AnalysisHelper.getStringDataFilter(analysis);
+    }
+
+    /**
+     * get StringDataFilter without Context.
+     * 
+     * @return
+     */
+    public String getStringDataFilter() {
+        return ContextHelper.getDataFilterWithoutContext(analysis);
     }
 
     /**
