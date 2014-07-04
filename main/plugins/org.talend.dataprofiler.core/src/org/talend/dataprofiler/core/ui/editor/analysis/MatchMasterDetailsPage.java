@@ -1258,7 +1258,7 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
     public void fireRuningItemChanged(boolean status) {
         if (status) {
             currentEditor.setActivePage(AnalysisEditor.RESULT_PAGE);
-            currentEditor.getResultPage().refresh(this);
+            ((AnalysisEditor) currentEditor).getResultPage().refresh(this);
             // after running the analysis, reset the select keys button
             resetSelectKeyButton();
         }

@@ -36,15 +36,11 @@ import org.talend.dq.helper.resourcehelper.IndicatorResourceFileHelper;
  */
 public class IndicatorEditor extends CommonFormEditor {
 
+    private static final String ID = "Master Page";//$NON-NLS-1$
+
     private DefaultSaveAction saveAction;
 
-    private IndicatorDefinitionMaterPage masterPage;
-
     protected IndicatorsDefinitions indicatorDefinitions;
-
-    public IndicatorEditor() {
-        super();
-    }
 
     /*
      * (non-Javadoc)
@@ -78,9 +74,9 @@ public class IndicatorEditor extends CommonFormEditor {
     protected void addPages() {
         // TDQ-8453 according to the type to use IndicatorDefinition or UDI master page
         if (isSystemIndicator()) {
-            masterPage = new IndicatorDefinitionMaterPage(this, "Master Page", "Indicator Definition");//$NON-NLS-1$//$NON-NLS-2$
+            masterPage = new IndicatorDefinitionMaterPage(this, ID, "Indicator Definition");//$NON-NLS-1$
         } else {
-            masterPage = new UDIMasterPage(this, "Master Page", "User Define Indicator Definition");//$NON-NLS-1$//$NON-NLS-2$
+            masterPage = new UDIMasterPage(this, ID, "User Define Indicator Definition");//$NON-NLS-1$
         }
         try {
             addPage(masterPage);
@@ -150,7 +146,7 @@ public class IndicatorEditor extends CommonFormEditor {
     public void doSave(IProgressMonitor monitor) {
         masterPage.doSave(monitor);
         setPartName(masterPage.getIntactElemenetName());
-        setEditorObject(masterPage.getIndicatorDefinitionRepNode());
+        setEditorObject(((IndicatorDefinitionMaterPage) getMasterPage()).getIndicatorDefinitionRepNode());
         super.doSave(monitor);
     }
 
