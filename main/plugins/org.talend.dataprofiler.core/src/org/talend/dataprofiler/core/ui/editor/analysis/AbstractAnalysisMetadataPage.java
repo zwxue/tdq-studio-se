@@ -66,7 +66,6 @@ import org.talend.cwm.xml.TdXmlElementType;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.IRuningStatusListener;
 import org.talend.dataprofiler.core.ui.editor.AbstractMetadataFormPage;
-import org.talend.dataprofiler.core.ui.editor.SupportContextEditor;
 import org.talend.dataprofiler.core.ui.editor.composite.AbstractColumnDropTree;
 import org.talend.dataprofiler.core.ui.editor.composite.DataFilterComp;
 import org.talend.dataprofiler.core.ui.utils.MessageUI;
@@ -125,16 +124,7 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
 
     // ~Execute Engine section
 
-    public AnalysisRepNode getAnalysisRepNode() {
-        return this.analysisRepNode;
-    }
-
-    private void initAnalysisRepNode(Analysis analysis) {
-        RepositoryNode recursiveFind = RepositoryNodeHelper.recursiveFind(analysis);
-        if (recursiveFind != null && recursiveFind instanceof AnalysisRepNode) {
-            this.analysisRepNode = (AnalysisRepNode) recursiveFind;
-        }
-    }
+    protected AnalysisEditor currentEditor = null;
 
     // MOD yyin 201204 TDQ-4977, change to TableCombo type to show the connection type.
     protected TableCombo connCombo;
@@ -142,14 +132,6 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
     protected Text textConnVersion;
 
     protected Label labelConnDeleted;
-
-    public TableCombo getConnCombo() {
-        return connCombo;
-    }
-
-    public Analysis getAnalysis() {
-        return analysisItem.getAnalysis();
-    }
 
     public AbstractAnalysisMetadataPage(FormEditor editor, String id, String title) {
         super(editor, id, title);
@@ -173,6 +155,17 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
         return analysis;
     }
 
+    public AnalysisRepNode getAnalysisRepNode() {
+        return this.analysisRepNode;
+    }
+
+    private void initAnalysisRepNode(Analysis analysis) {
+        RepositoryNode recursiveFind = RepositoryNodeHelper.recursiveFind(analysis);
+        if (recursiveFind != null && recursiveFind instanceof AnalysisRepNode) {
+            this.analysisRepNode = (AnalysisRepNode) recursiveFind;
+        }
+    }
+
     protected IRepositoryNode getCurrentRepNodeOnUI() {
         // MOD klliu 2010-12-10
         IRepositoryNode connectionNode = null;
@@ -182,6 +175,14 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
             connectionNode = fileEditorInput.getConnectionNode();
         }
         return connectionNode;
+    }
+
+    public TableCombo getConnCombo() {
+        return connCombo;
+    }
+
+    public Analysis getAnalysis() {
+        return analysisItem.getAnalysis();
     }
 
     @Override
@@ -237,8 +238,8 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
     }
 
     public void fireRuningItemChanged(boolean status) {
-        ((AnalysisEditor) currentEditor).setRunActionButtonState(status);
-        ((AnalysisEditor) currentEditor).setRefreshResultPage(status);
+        currentEditor.setRunActionButtonState(status);
+        currentEditor.setRefreshResultPage(status);
         if (status) {
             refresh();
         }
@@ -632,7 +633,8 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
      */
     @Deprecated
     protected Section createAnalysisLimitSection(final ScrolledForm sForm, Composite pComp) {
-        Section section = createSection(sForm, pComp, DefaultMessagesImpl.getString("AbstractMetadataFormPage.AnalysisLimit"), null); //$NON-NLS-1$
+        Section section = createSection(sForm, pComp,
+                DefaultMessagesImpl.getString("AbstractMetadataFormPage.AnalysisLimit"), null); //$NON-NLS-1$
         Composite parent = this.toolkit.createComposite(section);
         this.createAnalysisLimitComposite(parent);
         section.setClient(parent);
@@ -648,7 +650,8 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
     protected Composite createAnalysisLimitComposite(Composite pComp) {
         Composite comp = pComp;
         comp.setLayout(new GridLayout(2, false));
-        this.toolkit.createLabel(comp, DefaultMessagesImpl.getString("AnalysisTuningPreferencePage.NumberOfConnectionsPerAnalysis")); //$NON-NLS-1$
+        this.toolkit.createLabel(comp,
+                DefaultMessagesImpl.getString("AnalysisTuningPreferencePage.NumberOfConnectionsPerAnalysis")); //$NON-NLS-1$
 
         this.numberOfConnectionsPerAnalysisText = this.toolkit.createText(comp, AnalysisHandler.createHandler(getAnalysis())
                 .getNumberOfConnectionsPerAnalysisWithContext(), SWT.BORDER);
@@ -734,7 +737,8 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
      * @param pComp
      */
     protected void createAnalysisParamSection(final ScrolledForm pForm, Composite pComp) {
-        analysisParamSection = createSection(pForm, pComp, DefaultMessagesImpl.getString("ColumnMasterDetailsPage.AnalysisParameter"), null); //$NON-NLS-1$
+        analysisParamSection = createSection(pForm, pComp,
+                DefaultMessagesImpl.getString("ColumnMasterDetailsPage.AnalysisParameter"), null); //$NON-NLS-1$
         Composite sectionClient = toolkit.createComposite(analysisParamSection);
         createAnalysisLimitComposite(sectionClient);
         analysisParamSection.setClient(sectionClient);
@@ -749,8 +753,8 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
      * @param anaParameters
      * @return
      */
-    protected Composite createExecuteEngineSection(final ScrolledForm form, Composite anasisDataComp, EList<ModelElement> analyzedColumns,
-            AnalysisParameters anaParameters) {
+    protected Composite createExecuteEngineSection(final ScrolledForm form, Composite anasisDataComp,
+            EList<ModelElement> analyzedColumns, AnalysisParameters anaParameters) {
         analysisParamSection = createSection(form, anasisDataComp,
                 DefaultMessagesImpl.getString("ColumnMasterDetailsPage.AnalysisParameter"), null); //$NON-NLS-1$
         Composite sectionClient = toolkit.createComposite(analysisParamSection);
@@ -834,7 +838,8 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
             }
 
         });
-        Label maxNumLabel = toolkit.createLabel(numberSection, DefaultMessagesImpl.getString("ColumnMasterDetailsPage.maxNumberLabel")); //$NON-NLS-1$
+        Label maxNumLabel = toolkit.createLabel(numberSection,
+                DefaultMessagesImpl.getString("ColumnMasterDetailsPage.maxNumberLabel")); //$NON-NLS-1$
         maxNumText = toolkit.createText(numberSection, null, SWT.BORDER);
         maxNumText.setText(String.valueOf(anaParameters.getMaxNumberRows()));
         maxNumText.addModifyListener(new ModifyListener() {
@@ -900,7 +905,8 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
                 // "analyzed Columns",ExecutionLanguage only is Java.
                 ExecutionLanguage currentLanguage = ExecutionLanguage.get(execLang);
                 if (ExecutionLanguage.SQL.equals(currentLanguage) && includeDatePatternFreqIndicator()) {
-                    MessageUI.openWarning(DefaultMessagesImpl.getString("ColumnMasterDetailsPage.DatePatternFreqIndicatorWarning")); //$NON-NLS-1$
+                    MessageUI.openWarning(DefaultMessagesImpl
+                            .getString("ColumnMasterDetailsPage.DatePatternFreqIndicatorWarning")); //$NON-NLS-1$
                     execCombo.setText(ExecutionLanguage.JAVA.getLiteral());
                     execLang = execCombo.getText();
                     return;
@@ -1006,7 +1012,7 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
         analysis.getContextType().clear();
         IContextManager contextManager = currentEditor.getContextManager();
         contextManager.saveToEmf(analysis.getContextType());
-        analysis.setDefaultContext(getDefaultContextGroupName((SupportContextEditor) currentEditor));
+        analysis.setDefaultContext(getDefaultContextGroupName(currentEditor));
         AnalysisHelper.setLastRunContext(currentEditor.getLastRunContextGroupName(), analysis);
     }
 
