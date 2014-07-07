@@ -85,8 +85,8 @@ public class TDQResourceChangeHandlerTest {
         clientLs.add(clientDenMod);
         clientLs2.add(clientDenMod2);
         PowerMockito.mockStatic(EObjectHelper.class);
-        when(EObjectHelper.getDependencyClients(con1)).thenReturn(clientLs);
-        when(EObjectHelper.getDependencyClients(con2)).thenReturn(clientLs2);
+        when(EObjectHelper.getDependencyClients(child1)).thenReturn(clientLs);
+        when(EObjectHelper.getDependencyClients(child2)).thenReturn(clientLs2);
         when(currentNode.getType()).thenReturn(ENodeType.SIMPLE_FOLDER);
         List<IRepositoryNode> dependentNodes = tdqResourceChangeHandler.getDependentNodes(currentNode);
         assertFalse(dependentNodes.isEmpty());
@@ -110,7 +110,7 @@ public class TDQResourceChangeHandlerTest {
         List<ModelElement> clientLs = new ArrayList<ModelElement>();
         clientLs.add(clientDenMod);
         PowerMockito.mockStatic(EObjectHelper.class);
-        when(EObjectHelper.getDependencyClients(mod)).thenReturn(clientLs);
+        when(EObjectHelper.getDependencyClients(currentNode)).thenReturn(clientLs);
 
         List<IRepositoryNode> dependentNodes = tdqResourceChangeHandler.getDependentNodes(currentNode);
         assertFalse(dependentNodes.isEmpty());
