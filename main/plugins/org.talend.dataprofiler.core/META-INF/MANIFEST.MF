@@ -45,7 +45,9 @@ Require-Bundle: org.eclipse.nebula.widgets.tablecombo,
  org.talend.libraries.jexcel,
  org.talend.core.ui,
  org.eclipse.nebula.widgets.pagination,
- org.talend.libraries.mapdb
+ org.talend.libraries.mapdb,
+ org.talend.dataquality.ontology,
+ org.talend.libraries.alignapi
 Bundle-ActivationPolicy: lazy
 Export-Package: org.talend.dataprofiler.core,
  org.talend.dataprofiler.core.exception,
