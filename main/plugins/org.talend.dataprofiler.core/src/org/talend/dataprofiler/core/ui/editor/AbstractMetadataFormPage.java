@@ -19,6 +19,8 @@ import java.util.List;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.emf.common.util.BasicEList;
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.fieldassist.IContentProposalProvider;
@@ -43,6 +45,7 @@ import org.talend.commons.exception.BusinessException;
 import org.talend.commons.ui.swt.proposal.ProposalUtils;
 import org.talend.commons.utils.WorkspaceUtils;
 import org.talend.core.model.metadata.builder.database.DqRepositoryViewService;
+import org.talend.core.model.process.IContextManager;
 import org.talend.core.model.properties.Property;
 import org.talend.core.model.repository.ERepositoryObjectType;
 import org.talend.core.model.repository.RepositoryViewObject;
@@ -55,6 +58,7 @@ import org.talend.dataprofiler.core.ui.editor.composite.ContextComposite;
 import org.talend.dataprofiler.core.ui.views.proposal.TdqProposalProvider;
 import org.talend.dataquality.helpers.MetadataHelper;
 import org.talend.dataquality.indicators.definition.DefinitionPackage;
+import org.talend.designer.core.model.utils.emf.talendfile.ContextType;
 import org.talend.dq.helper.PropertyHelper;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.utils.sugars.ReturnCode;
@@ -648,6 +652,27 @@ public abstract class AbstractMetadataFormPage extends AbstractFormPage {
      */
     protected String getDefaultContextGroupName(SupportContextEditor currentEditor) {
         return currentEditor.getContextManager().getDefaultContext().getName();
+    }
+    
+    /**
+     * get the last run context group name from the report editor.
+     * 
+     * @return
+     */
+    protected String getLastRunContextGroupName() {
+        return currentEditor.getLastRunContextGroupName();
+    }
+
+    /**
+     * get the context list from the report editor.
+     * 
+     * @return
+     */
+    protected List<ContextType> getContexts() {
+        EList<ContextType> el = new BasicEList<ContextType>();
+        IContextManager contextManager = currentEditor.getContextManager();
+        contextManager.saveToEmf(el);
+        return el;
     }
 
 }

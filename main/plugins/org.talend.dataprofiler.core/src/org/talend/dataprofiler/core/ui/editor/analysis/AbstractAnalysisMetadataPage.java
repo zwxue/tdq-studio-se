@@ -79,6 +79,7 @@ import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dataquality.properties.TDQAnalysisItem;
 import org.talend.dataquality.rules.DQRule;
+import org.talend.designer.core.model.utils.emf.talendfile.ContextType;
 import org.talend.dq.analysis.AnalysisHandler;
 import org.talend.dq.analysis.connpool.TdqAnalysisConnectionPool;
 import org.talend.dq.helper.ContextHelper;
@@ -670,15 +671,21 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
 
             public void verifyText(VerifyEvent e) {
                 String inputValue = e.text;
-                if (!ContextHelper.isContextVar(inputValue)) {
-                    Pattern pattern = Pattern.compile("^[0-9]"); //$NON-NLS-1$
-                    char[] charArray = inputValue.toCharArray();
-                    for (char c : charArray) {
-                        if (!pattern.matcher(String.valueOf(c)).matches()) {
-                            e.doit = false;
-                        }
+                if (ContextHelper.isContextVar(inputValue)) {
+                	List<ContextType> contexts = getContexts();
+                	String contextGroupName = getLastRunContextGroupName() == null ? getDefaultContextGroupName((SupportContextEditor) currentEditor)
+                			: getLastRunContextGroupName();
+                	inputValue =ContextHelper.getContextValue(contexts, contextGroupName, e.text);                
+                }
+                
+                Pattern pattern = Pattern.compile("^[0-9]"); //$NON-NLS-1$
+                char[] charArray = inputValue.toCharArray();
+                for (char c : charArray) {
+                    if (!pattern.matcher(String.valueOf(c)).matches()) {
+                        e.doit = false;
                     }
                 }
+                
             }
         });
 
