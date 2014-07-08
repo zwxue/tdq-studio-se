@@ -54,6 +54,7 @@ import org.talend.dataquality.rules.JoinElement;
 import org.talend.dataquality.rules.RulesPackage;
 import org.talend.dataquality.rules.WhereRule;
 import org.talend.dq.dbms.DbmsLanguage;
+import org.talend.dq.helper.ContextHelper;
 import org.talend.utils.collections.MultiMapHelper;
 import org.talend.utils.sugars.ReturnCode;
 import org.talend.utils.sugars.TypedReturnCode;
@@ -83,9 +84,7 @@ public class TableAnalysisSqlExecutor extends TableAnalysisExecutor {
         assert results != null;
         try {
             // --- get data filter
-            TableAnalysisHandler handler = new TableAnalysisHandler();
-            handler.setAnalysis(analysis);
-            String stringDataFilter = handler.getStringDataFilter();
+            String stringDataFilter = ContextHelper.getDataFilterWithoutContext(analysis);
             // --- get all the leaf indicators used for the sql computation
             Collection<Indicator> leafIndicators = IndicatorHelper.getIndicatorLeaves(results);
             // --- create one sql statement for each leaf indicator

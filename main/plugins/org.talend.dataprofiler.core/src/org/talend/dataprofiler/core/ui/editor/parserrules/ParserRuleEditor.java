@@ -15,7 +15,6 @@ package org.talend.dataprofiler.core.ui.editor.parserrules;
 import org.apache.log4j.Level;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.ui.PartInitException;
-import org.eclipse.ui.forms.editor.IFormPage;
 import org.talend.commons.exception.ExceptionHandler;
 import org.talend.dataprofiler.core.ui.action.actions.DefaultSaveAction;
 import org.talend.dataprofiler.core.ui.editor.CommonFormEditor;
@@ -27,13 +26,9 @@ import org.talend.dataprofiler.core.ui.editor.dqrules.ParserRuleMasterDetailsPag
  */
 public class ParserRuleEditor extends CommonFormEditor {
 
-    private ParserRuleMasterDetailsPage masterPage;
-
     private static final String ID = "ParserRuleEditor.masterPage";//$NON-NLS-1$
 
     private DefaultSaveAction saveAction;
-
-    // ~
 
     @Override
     protected void addPages() {
@@ -57,7 +52,7 @@ public class ParserRuleEditor extends CommonFormEditor {
             masterPage.doSave(monitor);
             setPartName(masterPage.getIntactElemenetName());
         }
-        setEditorObject(masterPage.getRuleRepNode());
+        setEditorObject(((ParserRuleMasterDetailsPage) getMasterPage()).getRuleRepNode());
         super.doSave(monitor);
 
     }
@@ -66,10 +61,6 @@ public class ParserRuleEditor extends CommonFormEditor {
     protected void firePropertyChange(final int propertyId) {
         setSaveActionButtonState(isDirty());
         super.firePropertyChange(propertyId);
-    }
-
-    public IFormPage getMasterPage() {
-        return this.masterPage;
     }
 
     @Override

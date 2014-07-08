@@ -131,7 +131,7 @@ public class TdReportImpl extends ReportImpl implements TdReport {
      * @generated
      * @ordered
      */
-    protected static final Date DATE_FROM_EDEFAULT = null;
+    protected static final String DATE_FROM_EDEFAULT = null;
 
     /**
      * The cached value of the '{@link #getDateFrom() <em>Date From</em>}' attribute.
@@ -141,7 +141,7 @@ public class TdReportImpl extends ReportImpl implements TdReport {
      * @generated
      * @ordered
      */
-    protected Date dateFrom = DATE_FROM_EDEFAULT;
+    protected String dateFrom = DATE_FROM_EDEFAULT;
 
     /**
      * The default value of the '{@link #getDateTo() <em>Date To</em>}' attribute.
@@ -151,7 +151,7 @@ public class TdReportImpl extends ReportImpl implements TdReport {
      * @generated
      * @ordered
      */
-    protected static final Date DATE_TO_EDEFAULT = null;
+    protected static final String DATE_TO_EDEFAULT = null;
 
     /**
      * The cached value of the '{@link #getDateTo() <em>Date To</em>}' attribute.
@@ -161,7 +161,7 @@ public class TdReportImpl extends ReportImpl implements TdReport {
      * @generated
      * @ordered
      */
-    protected Date dateTo = DATE_TO_EDEFAULT;
+    protected String dateTo = DATE_TO_EDEFAULT;
 
     /**
      * The default value of the '{@link #getLogo() <em>Logo</em>}' attribute. <!-- begin-user-doc --> <!-- end-user-doc
@@ -383,17 +383,17 @@ public class TdReportImpl extends ReportImpl implements TdReport {
      * @generated
      */
     @Override
-    public Date getDateFrom() {
+    public String getDateFrom() {
         return dateFrom;
     }
 
     /**
-     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
      * @generated
      */
-    @Override
-    public void setDateFrom(Date newDateFrom) {
-        Date oldDateFrom = dateFrom;
+    public void setDateFrom(String newDateFrom) {
+        String oldDateFrom = dateFrom;
         dateFrom = newDateFrom;
         if (eNotificationRequired())
             eNotify(new ENotificationImpl(this, Notification.SET, ReportsPackage.TD_REPORT__DATE_FROM, oldDateFrom, dateFrom));
@@ -404,17 +404,17 @@ public class TdReportImpl extends ReportImpl implements TdReport {
      * @generated
      */
     @Override
-    public Date getDateTo() {
+    public String getDateTo() {
         return dateTo;
     }
 
     /**
-     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
      * @generated
      */
-    @Override
-    public void setDateTo(Date newDateTo) {
-        Date oldDateTo = dateTo;
+    public void setDateTo(String newDateTo) {
+        String oldDateTo = dateTo;
         dateTo = newDateTo;
         if (eNotificationRequired())
             eNotify(new ENotificationImpl(this, Notification.SET, ReportsPackage.TD_REPORT__DATE_TO, oldDateTo, dateTo));
@@ -745,10 +745,10 @@ public class TdReportImpl extends ReportImpl implements TdReport {
                 setExecInformations((ExecutionInformations)newValue);
                 return;
             case ReportsPackage.TD_REPORT__DATE_FROM:
-                setDateFrom((Date)newValue);
+                setDateFrom((String)newValue);
                 return;
             case ReportsPackage.TD_REPORT__DATE_TO:
-                setDateTo((Date)newValue);
+                setDateTo((String)newValue);
                 return;
             case ReportsPackage.TD_REPORT__LOGO:
                 setLogo((String)newValue);

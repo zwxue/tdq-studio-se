@@ -31,6 +31,7 @@ import org.talend.dataquality.indicators.columnset.AllMatchIndicator;
 import org.talend.dataquality.indicators.columnset.ColumnSetMultiValueIndicator;
 import org.talend.dq.dbms.DbmsLanguage;
 import org.talend.dq.dbms.DbmsLanguageFactory;
+import org.talend.dq.helper.ContextHelper;
 import org.talend.dq.indicators.preview.table.ChartDataEntity;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
 import orgomg.cwm.foundation.softwaredeployment.DataManager;
@@ -325,7 +326,7 @@ public abstract class DataExplorer implements IDataExplorer {
      * @return the data filter string which represents a where clause (without the where keyword)
      */
     protected String getDataFilterClause() {
-        String where = AnalysisHelper.getStringDataFilter(analysis);
+        String where = ContextHelper.getDataFilterWithoutContext(analysis);
         return where != null ? where : PluginConstant.EMPTY_STRING;
     }
 

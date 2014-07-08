@@ -44,6 +44,43 @@ public class AbstractRecordGroupingTest {
             String[] fields = StringUtils.splitPreserveAllTokens(line, columnDelimiter);
             inputList.add(fields);
         }
+        recordGroup = new AbstractRecordGrouping<String>() {
+
+            /*
+             * (non-Javadoc)
+             * 
+             * @see org.talend.dataquality.record.linkage.grouping.AbstractRecordGrouping#outputRow(java.lang.String)
+             */
+
+            @Override
+            protected void outputRow(String[] row) {
+                groupingRecords.add(row);
+
+            }
+
+            @Override
+            protected boolean isMaster(String col) {
+                return "true".equals(col); //$NON-NLS-1$
+            }
+
+            @Override
+            protected String modifyGroupSize(String oldGroupSize) {
+                String newGroupSize = String.valueOf(Integer.parseInt(String.valueOf(oldGroupSize)) + 1);
+                return newGroupSize;
+            }
+
+            @Override
+            protected String[] createTYPEArray(int size) {
+                String[] arrays = new String[size];
+                return arrays;
+            }
+
+            @Override
+            protected String getTYPEFromObject(Object objectValue) {
+                String column = String.valueOf(objectValue);
+                return column;
+            }
+        };
 
     }
 
@@ -51,19 +88,7 @@ public class AbstractRecordGroupingTest {
     public void testDoGroup() {
         // set the matching parameters
         // matching parameters for lname
-        recordGroup = new AbstractRecordGrouping() {
 
-            /*
-             * (non-Javadoc)
-             * 
-             * @see org.talend.dataquality.record.linkage.grouping.AbstractRecordGrouping#outputRow(java.lang.String)
-             */
-            @Override
-            protected void outputRow(String row) {
-                System.out.println(row);
-                groupingRecords.add(StringUtils.splitByWholeSeparator(row, columnDelimiter));
-            }
-        };
         recordGroup.setColumnDelimiter(columnDelimiter);
         recordGroup.setIsLinkToPrevious(Boolean.FALSE);
         List<Map<String, String>> matchingRule = new ArrayList<Map<String, String>>();
@@ -197,19 +222,6 @@ public class AbstractRecordGroupingTest {
         Map<String, String> lnameRecords;
         Map<String, String> accountRecords;
         groupingRecords.clear();
-        recordGroup = new AbstractRecordGrouping() {
-
-            /*
-             * (non-Javadoc)
-             * 
-             * @see org.talend.dataquality.record.linkage.grouping.AbstractRecordGrouping#outputRow(java.lang.String)
-             */
-            @Override
-            protected void outputRow(String row) {
-                System.out.println(row);
-                groupingRecords.add(StringUtils.splitByWholeSeparator(row, columnDelimiter));
-            }
-        };
         recordGroup.setColumnDelimiter(columnDelimiter);
         recordGroup.setIsLinkToPrevious(Boolean.FALSE);
         matchingRule = new ArrayList<Map<String, String>>();
@@ -303,19 +315,6 @@ public class AbstractRecordGroupingTest {
         Map<String, String> lnameRecords;
         Map<String, String> accountRecords;
         groupingRecords.clear();
-        recordGroup = new AbstractRecordGrouping() {
-
-            /*
-             * (non-Javadoc)
-             * 
-             * @see org.talend.dataquality.record.linkage.grouping.AbstractRecordGrouping#outputRow(java.lang.String)
-             */
-            @Override
-            protected void outputRow(String row) {
-                System.out.println(row);
-                groupingRecords.add(StringUtils.splitByWholeSeparator(row, columnDelimiter));
-            }
-        };
         recordGroup.setColumnDelimiter(columnDelimiter);
         recordGroup.setIsLinkToPrevious(Boolean.FALSE);
         matchingRule = new ArrayList<Map<String, String>>();

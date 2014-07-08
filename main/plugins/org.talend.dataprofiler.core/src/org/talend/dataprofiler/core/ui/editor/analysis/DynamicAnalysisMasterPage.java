@@ -337,7 +337,7 @@ public abstract class DynamicAnalysisMasterPage extends AbstractAnalysisMetadata
 
     public void clearDynamicDatasets() {
         // make the run button workable again
-        currentEditor.setRunActionButtonState(true);
+        ((AnalysisEditor) currentEditor).setRunActionButtonState(true);
 
     }
 }

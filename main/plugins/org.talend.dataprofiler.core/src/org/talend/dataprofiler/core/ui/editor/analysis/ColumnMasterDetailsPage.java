@@ -76,6 +76,7 @@ import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.sql.UserDefIndicator;
 import org.talend.dq.analysis.ModelElementAnalysisHandler;
 import org.talend.dq.analysis.connpool.TdqAnalysisConnectionPool;
+import org.talend.dq.helper.ContextHelper;
 import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.helper.UDIHelper;
@@ -101,7 +102,7 @@ public class ColumnMasterDetailsPage extends DynamicAnalysisMasterPage implement
 
     private ModelElementIndicator[] currentModelElementIndicators;
 
-    private String stringDataFilter;
+
 
     private static final int TREE_MAX_LENGTH = 400;
 
@@ -130,7 +131,7 @@ public class ColumnMasterDetailsPage extends DynamicAnalysisMasterPage implement
         // Handle JUDIs
         UDIHelper.updateJUDIsForAnalysis(analysisItem.getAnalysis());
 
-        stringDataFilter = analysisHandler.getStringDataFilter();
+        stringDataFilter = analysisHandler.getStringDataFilterwithContext();
         EList<ModelElement> analyzedColumns = analysisHandler.getAnalyzedColumns();
         List<ModelElementIndicator> meIndicatorList = new ArrayList<ModelElementIndicator>();
         ModelElementIndicator currentIndicator = null;
@@ -187,11 +188,15 @@ public class ColumnMasterDetailsPage extends DynamicAnalysisMasterPage implement
         createAnalysisColumnsSection(form, topComp);
 
         createDataFilterSection(form, topComp);
+        dataFilterComp.addPropertyChangeListener(this);
 
         // MOD xqliu 2009-07-01 bug 7068
         createExecuteEngineSection(form, topComp, analysisHandler.getAnalyzedColumns(), analysisHandler.getAnalysis()
                 .getParameters());
         // ~
+
+        createContextGroupSection(form, topComp);
+
         if (!EditorPreferencePage.isHideGraphics()) {
             createPreviewComposite();
 
@@ -462,25 +467,6 @@ public class ColumnMasterDetailsPage extends DynamicAnalysisMasterPage implement
     }
 
     /**
-     * @param form
-     * @param toolkit
-     * @param anasisDataComp
-     */
-    void createDataFilterSection(final ScrolledForm form, Composite anasisDataComp) {
-        dataFilterSection = createSection(
-                form,
-                anasisDataComp,
-                DefaultMessagesImpl.getString("ColumnMasterDetailsPage.dataFilter"), DefaultMessagesImpl.getString("ColumnMasterDetailsPage.editDataFilter")); //$NON-NLS-1$ //$NON-NLS-2$
-
-        Composite sectionClient = toolkit.createComposite(dataFilterSection);
-        dataFilterComp = new DataFilterComp(sectionClient, stringDataFilter);
-        dataFilterComp.addPropertyChangeListener(this);
-        // ADD yyi 2011-05-31 16158:add whitespace check for text fields.
-        addWhitespaceValidate(dataFilterComp.getDataFilterText());
-        dataFilterSection.setClient(sectionClient);
-    }
-
-    /**
      * ADD xqliu 2009-08-24 bug 8776.
      * 
      * @return
@@ -527,7 +513,8 @@ public class ColumnMasterDetailsPage extends DynamicAnalysisMasterPage implement
 
         try {
             // check whether the field has integer value
-            Integer.valueOf(numberOfConnectionsPerAnalysisText.getText());
+            Integer.valueOf(ContextHelper.getAnalysisContextValue(this.analysisItem.getAnalysis(),
+                    numberOfConnectionsPerAnalysisText.getText()));
         } catch (NumberFormatException nfe) {
             MessageDialogWithToggle.openError(null, DefaultMessagesImpl.getString("AbstractAnalysisMetadataPage.SaveAnalysis"), //$NON-NLS-1$
                     DefaultMessagesImpl.getString("ColumnMasterDetailsPage.emptyField", //$NON-NLS-1$
@@ -599,8 +586,8 @@ public class ColumnMasterDetailsPage extends DynamicAnalysisMasterPage implement
 
     public void propertyChange(PropertyChangeEvent evt) {
         if (PluginConstant.ISDIRTY_PROPERTY.equals(evt.getPropertyName())) {
-            currentEditor.firePropertyChange(IEditorPart.PROP_DIRTY);
-            currentEditor.setRefreshResultPage(true);
+            ((AnalysisEditor) currentEditor).firePropertyChange(IEditorPart.PROP_DIRTY);
+            ((AnalysisEditor) currentEditor).setRefreshResultPage(true);
             // synNagivatorStat();
         } else if (PluginConstant.DATAFILTER_PROPERTY.equals(evt.getPropertyName())) {
             this.analysisHandler.setStringDataFilter((String) evt.getNewValue());
@@ -937,7 +924,6 @@ public class ColumnMasterDetailsPage extends DynamicAnalysisMasterPage implement
      * return all created charts for the current running, from the current pagination. The charts which are not on the
      * current page no need to return. TODO check if can use IndicatorUnit
      */
-    @SuppressWarnings("unchecked")
     @Override
     public Map<List<Indicator>, CategoryDataset> getDynamicDatasets() {
         return uiPagination.getAllIndcatorAndDatasetOfCurrentPage();

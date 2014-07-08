@@ -33,8 +33,6 @@ import org.talend.dq.nodes.DBConnectionRepNode;
  */
 public class ConnectionEditor extends CommonFormEditor {
 
-    private ConnectionInfoPage masterPage;
-
     private static final String ID = "ConnectionEditor.masterPage";//$NON-NLS-1$
 
     public ConnectionEditor() {
@@ -57,7 +55,7 @@ public class ConnectionEditor extends CommonFormEditor {
             masterPage.doSave(monitor);
             setPartName(masterPage.getIntactElemenetName());
             // MOD qiongli 2012-11-29 avoid item is proxy(get item form IRepositoryViewObject).
-            ConnectionRepNode connectionRepNode = masterPage.getConnectionRepNode();
+            ConnectionRepNode connectionRepNode = ((ConnectionInfoPage) getMasterPage()).getConnectionRepNode();
             if (connectionRepNode != null && connectionRepNode instanceof DBConnectionRepNode) {
                 IRepositoryViewObject object = connectionRepNode.getObject();
                 if (object != null) {
@@ -74,7 +72,7 @@ public class ConnectionEditor extends CommonFormEditor {
                 masterPage.setModify(false);
             }
         }
-        setEditorObject(masterPage.getConnectionRepNode());
+        setEditorObject(((ConnectionInfoPage) getMasterPage()).getConnectionRepNode());
         super.doSave(monitor);
     }
 
@@ -101,7 +99,7 @@ public class ConnectionEditor extends CommonFormEditor {
     @Override
     public void refreshEditor() {
         masterPage.initialize(this);
-        masterPage.refreshTextInfo();
+        ((ConnectionInfoPage) getMasterPage()).refreshTextInfo();
         setPartName((masterPage.getIntactElemenetName()));
         firePropertyChange(org.eclipse.ui.IWorkbenchPart.PROP_TITLE);
     }

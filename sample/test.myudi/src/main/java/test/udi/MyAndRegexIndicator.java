@@ -35,6 +35,7 @@ public class MyAndRegexIndicator extends UserDefIndicatorImpl {
 
     List<Pattern> patternList = new ArrayList<Pattern>();
 
+    @Override
     public boolean prepare() {
         this.reset();
         String paramValue;
