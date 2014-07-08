@@ -49,7 +49,6 @@ public class MFB implements MatchMergeAlgorithm {
         if (merger == null) {
             throw new IllegalArgumentException("Merger cannot be null.");
         }
-        // this.matcher = MFBRecordMatcher.wrap(matcher, 1);
         this.matcher = matcher;
         this.merger = merger;
     }
