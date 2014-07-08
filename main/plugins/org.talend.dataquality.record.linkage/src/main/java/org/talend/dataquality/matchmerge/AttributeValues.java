@@ -1,9 +1,11 @@
 package org.talend.dataquality.matchmerge;
 
-import org.apache.commons.lang.ObjectUtils;
-import org.apache.commons.lang.StringUtils;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.TreeSet;
 
-import java.util.*;
+import org.apache.commons.lang.ObjectUtils;
 
 public class AttributeValues<T> implements Iterable<T> {
 
@@ -106,13 +108,13 @@ public class AttributeValues<T> implements Iterable<T> {
         return size;
     }
 
-    public class Entry<T> implements Comparable<Entry<T>> {
+    public class Entry<E> implements Comparable<Entry<E>> {
 
-        private final T value;
+        private final E value;
 
         private int occurrence = 0;
 
-        public Entry(T value) {
+        public Entry(E value) {
             this.value = value;
         }
 
@@ -130,7 +132,7 @@ public class AttributeValues<T> implements Iterable<T> {
         }
 
         @Override
-        public int compareTo(Entry<T> tEntry) {
+        public int compareTo(Entry<E> tEntry) {
             if (ObjectUtils.equals(value, tEntry.value)) {
                 return 0;
             }

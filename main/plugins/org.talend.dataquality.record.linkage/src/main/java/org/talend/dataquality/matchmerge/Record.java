@@ -1,35 +1,37 @@
 /*
  * Copyright (C) 2006-2014 Talend Inc. - www.talend.com
- *
+ * 
  * This source code is available under agreement available at
  * %InstallDIR%\features\org.talend.rcp.branding.%PRODUCTNAME%\%PRODUCTNAME%license.txt
- *
- * You should have received a copy of the agreement
- * along with this program; if not, write to Talend SA
- * 9 rue Pages 92150 Suresnes, France
+ * 
+ * You should have received a copy of the agreement along with this program; if not, write to Talend SA 9 rue Pages
+ * 92150 Suresnes, France
  */
 
 package org.talend.dataquality.matchmerge;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * A record represents input data for the match & merge. It provides the following:
  * <ul>
- *     <li>An {@link #getId() id} (a value that uniquely identifies the record in the system it was created from: it could
- *     be a database PK for example).</li>
- *     <li>A list of {@link #getRelatedIds() related} ids: a list of ids in the source system this record represents.</li>
- *     <li>A group {@link #getGroupId() id}: a optional group id (something that identifies previously grouped records
- *     in the source system).</li>
- *     <li>An optional {@link #getSource() source}: this can be used during merge (in case a source is dimmed more trustable
- *     than another).</li>
- *     <li>An optional {@link #getTimestamp() timestamp}: this can be used during merge (to select the least or most recently
- *     modified record).</li>
+ * <li>An {@link #getId() id} (a value that uniquely identifies the record in the system it was created from: it could
+ * be a database PK for example).</li>
+ * <li>A list of {@link #getRelatedIds() related} ids: a list of ids in the source system this record represents.</li>
+ * <li>A group {@link #getGroupId() id}: a optional group id (something that identifies previously grouped records in
+ * the source system).</li>
+ * <li>An optional {@link #getSource() source}: this can be used during merge (in case a source is dimmed more trustful
+ * than another).</li>
+ * <li>An optional {@link #getTimestamp() timestamp}: this can be used during merge (to select the least or most
+ * recently modified record).</li>
  * </ul>
  */
 public class Record {
 
-    public static final double MAX_CONFIDENCE = 1.0;
+    private static final double MAX_CONFIDENCE = 1.0;
 
     private final List<Attribute> attributes;
 
@@ -47,10 +49,10 @@ public class Record {
 
     /**
      * Creates a empty record (no {@link org.talend.dataquality.matchmerge.Attribute attributes}).
-     *
-     * @param id        Id of the record in the source system.
+     * 
+     * @param id Id of the record in the source system.
      * @param timestamp Last modification time (in milliseconds).
-     * @param source    A source name to indicate where the values come from.
+     * @param source A source name to indicate where the values come from.
      */
     public Record(String id, long timestamp, String source) {
         this.id = id;
@@ -61,11 +63,11 @@ public class Record {
 
     /**
      * Creates a record with {@link org.talend.dataquality.matchmerge.Attribute attributes}.
-     *
+     * 
      * @param attributes Attributes for the new record.
-     * @param id         Id of the record in the source system.
-     * @param timestamp  Last modification time (in milliseconds).
-     * @param source     A source name to indicate where the values come from.
+     * @param id Id of the record in the source system.
+     * @param timestamp Last modification time (in milliseconds).
+     * @param source A source name to indicate where the values come from.
      */
     public Record(List<Attribute> attributes, String id, long timestamp, String source) {
         this.attributes = attributes;
@@ -75,11 +77,15 @@ public class Record {
     }
 
     /**
-     * @return <p>A group id that identifies the group this record belongs to. Match & merge algorithm considers records
-     * with a group id as "already processed" and if 2 records match <b>but</b> group id differs, match is considered
-     * as incorrect: this scenario happens when 2 records matches but were split into different groups by the user (in
-     * this case, match shouldn't bring into same group the 2 similar records).</p>
-     * <p>Returns <code>null</code> if no group is set.</p>
+     * @return <p>
+     * A group id that identifies the group this record belongs to. Match & merge algorithm considers records with a
+     * group id as "already processed" and if 2 records match <b>but</b> group id differs, match is considered as
+     * incorrect: this scenario happens when 2 records matches but were split into different groups by the user (in this
+     * case, match shouldn't bring into same group the 2 similar records).
+     * </p>
+     * <p>
+     * Returns <code>null</code> if no group is set.
+     * </p>
      */
     public String getGroupId() {
         return groupId;
@@ -124,23 +130,16 @@ public class Record {
         this.relatedIds = relatedIds;
     }
 
-    /**
-     * Removes all values (only the {@link org.talend.dataquality.matchmerge.Attribute attributes}).
-     */
-    public void clear() {
-        attributes.clear();
-    }
-
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         Record record = (Record) o;
-
-        if (id != null ? !id.equals(record.id) : record.id != null) return false;
-
-        return true;
+        return !(id != null ? !id.equals(record.id) : record.id != null);
     }
 
     @Override
@@ -157,8 +156,8 @@ public class Record {
     }
 
     /**
-     * @return The "confidence" of the record. Confidence is always a double between 0 and 1. 1 indicates a high confidence
-     * (a certain match) and 0 indicates a very unreliable match.
+     * @return The "confidence" of the record. Confidence is always a double between 0 and 1. 1 indicates a high
+     * confidence (a certain match) and 0 indicates a very unreliable match.
      */
     public double getConfidence() {
         return confidence;
@@ -166,7 +165,7 @@ public class Record {
 
     /**
      * @param confidence The new confidence for this record. Confidence is always a double between 0 and 1. 1 indicates
-     *                   a high confidence (a certain match) and 0 indicates a very unreliable match.
+     * a high confidence (a certain match) and 0 indicates a very unreliable match.
      * @throws java.lang.IllegalArgumentException If confidence > {@link #MAX_CONFIDENCE}.
      */
     public void setConfidence(double confidence) {

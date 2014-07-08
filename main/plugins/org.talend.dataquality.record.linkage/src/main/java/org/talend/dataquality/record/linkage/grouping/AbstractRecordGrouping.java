@@ -63,6 +63,10 @@ public abstract class AbstractRecordGrouping implements IRecordGrouping {
 
     private Boolean isLinkToPrevious = Boolean.FALSE;
 
+    private MatchAlgoithm matchAlgo = MatchAlgoithm.TSWOOSH;
+
+    private TSwooshGrouping swooshGrouping = new TSwooshGrouping();
+
     // The exthended column size.
     int extSize;
 
@@ -135,6 +139,27 @@ public abstract class AbstractRecordGrouping implements IRecordGrouping {
         for (int idx = 0; idx < lookupDataArray.length; idx++) {
             lookupDataArray[idx] = inputRow[Integer.parseInt(matchingRule.get(idx).get(IRecordGrouping.COLUMN_IDX))];
         }
+        switch (matchAlgo) {
+        case VSR:
+            vsrMatch(inputRow, matchingRule, lookupDataArray);
+            break;
+        case TSWOOSH:
+            swooshGrouping.addToList(inputRow, matchingRule);
+
+        }
+    }
+
+    /**
+     * Record matching with VSR algorithm.
+     * 
+     * @param inputRow the input row.
+     * @param matchingRule mathcing rules.
+     * @param lookupDataArray the array data (record) to be matched with.
+     * @throws IOException
+     * @throws InterruptedException
+     */
+    private void vsrMatch(String[] inputRow, List<Map<String, String>> matchingRule, String[] lookupDataArray)
+            throws IOException, InterruptedException {
         boolean isSimilar = false;
         for (String[] masterRecord : masterRecords) {
             if (isLinkToPrevious) {
@@ -246,9 +271,16 @@ public abstract class AbstractRecordGrouping implements IRecordGrouping {
 
     @Override
     public void end() throws IOException, InterruptedException {
-        // output the masters
-        for (String[] mst : masterRecords) {
-            outputRow(AnalysisRecordGroupingUtils.join(mst, columnDelimiter, AnalysisRecordGroupingUtils.ESCAPE_CHARACTER));
+        switch (matchAlgo) {
+        case VSR:
+            // output the masters
+            for (String[] mst : masterRecords) {
+                outputRow(AnalysisRecordGroupingUtils.join(mst, columnDelimiter, AnalysisRecordGroupingUtils.ESCAPE_CHARACTER));
+            }
+            break;
+        case TSWOOSH:
+            swooshGrouping.swooshMatch(combinedRecordMatcher);
+
         }
     }
 
@@ -380,5 +412,10 @@ public abstract class AbstractRecordGrouping implements IRecordGrouping {
         simpleRecordMatcher.setAttributeMatchers(attributeMatcher);
         simpleRecordMatcher.setRecordMatchThreshold(recordMatchThreshold);
         combinedRecordMatcher.add(simpleRecordMatcher);
+    }
+
+    enum MatchAlgoithm {
+        VSR,
+        TSWOOSH
     }
 }

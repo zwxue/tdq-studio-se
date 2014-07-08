@@ -26,7 +26,7 @@ import org.talend.dataquality.record.linkage.attribute.IAttributeMatcher;
 /**
  * @author scorreia Abstract class for matching records.
  */
-abstract class AbstractRecordMatcher implements IRecordMatcher {
+public abstract class AbstractRecordMatcher implements IRecordMatcher {
 
     private static Logger log = Logger.getLogger(AbstractRecordMatcher.class);
 
@@ -88,10 +88,10 @@ abstract class AbstractRecordMatcher implements IRecordMatcher {
     }
 
     /*
-         * (non-Javadoc)
-         *
-         * @see org.talend.dataquality.record.linkage.record.IRecordMatcher#setDisplayLabels(boolean)
-         */
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataquality.record.linkage.record.IRecordMatcher#setDisplayLabels(boolean)
+     */
     @Override
     public void setDisplayLabels(boolean displayLabels) {
         this.displayLabels = displayLabels;
@@ -142,6 +142,16 @@ abstract class AbstractRecordMatcher implements IRecordMatcher {
         // else
         this.attributeMatchers = attrMatchers;
         return true;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataquality.record.linkage.record.IRecordMatcher#getAttributeMatchers()
+     */
+    @Override
+    public IAttributeMatcher[] getAttributeMatchers() {
+        return attributeMatchers;
     }
 
     /*

@@ -63,6 +63,12 @@ public interface IRecordMatcher {
     boolean setAttributeMatchers(IAttributeMatcher[] attributeMatchers);
 
     /**
+     * 
+     * @return attribute matchers of this current record matcher.
+     */
+    IAttributeMatcher[] getAttributeMatchers();
+
+    /**
      * Method "setBlockingAttributeMatchers".
      * 
      * @param attrMatcherIndices the indices of the attribute matcher to be used as blocking variables
@@ -77,7 +83,7 @@ public interface IRecordMatcher {
      * @param record1 the first record (array of string attributes)
      * @param record2 the second record to be compared to the first record.
      * @return the matching weight of the given two records
-     * @see #getMatchingWeight(org.talend.dataquality.matchmerge.Record, org.talend.dataquality.matchmerge.Record) 
+     * @see #getMatchingWeight(org.talend.dataquality.matchmerge.Record, org.talend.dataquality.matchmerge.Record)
      */
     double getMatchingWeight(String[] record1, String[] record2);
 
@@ -96,7 +102,7 @@ public interface IRecordMatcher {
      * @return the matching weight of the given two records
      */
     MatchResult getMatchingWeight(Record record1, Record record2);
-    
+
     /**
      * Method "getCurrentAttributeMatchingWeights".
      * 
@@ -140,7 +146,7 @@ public interface IRecordMatcher {
     /**
      * 
      * Set to display the distance details labels or not.
-     *
+     * 
      * @param displayLabels
      */
     public void setDisplayLabels(boolean displayLabels);
