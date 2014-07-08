@@ -81,13 +81,11 @@ import org.talend.dataprofiler.core.ui.wizard.analysis.connection.ConnectionWiza
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.exception.DataprofilerCoreException;
 import org.talend.dataquality.indicators.columnset.RecordMatchingIndicator;
-import org.talend.dataquality.record.linkage.constant.AttributeMatcherType;
 import org.talend.dataquality.record.linkage.ui.composite.table.DataSampleTable;
 import org.talend.dataquality.record.linkage.ui.composite.utils.MatchRuleAnlaysisUtils;
 import org.talend.dataquality.record.linkage.ui.section.BlockingKeySection;
 import org.talend.dataquality.record.linkage.ui.section.MatchParameterSection;
 import org.talend.dataquality.record.linkage.ui.section.MatchingKeySection;
-import org.talend.dataquality.record.linkage.utils.BlockingKeyAlgorithmEnum;
 import org.talend.dataquality.record.linkage.utils.MatchAnalysisConstant;
 import org.talend.dataquality.rules.BlockKeyDefinition;
 import org.talend.dataquality.rules.MatchKeyDefinition;
@@ -99,6 +97,7 @@ import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.nodes.DBColumnRepNode;
 import org.talend.dq.writer.impl.ElementWriterFactory;
+import org.talend.ontology.repository.enrichment.AnalysisTableGenerator;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
 import org.talend.utils.sugars.ReturnCode;
@@ -556,11 +555,26 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
         if (analysisHandler.getSelectedColumns() == null || analysisHandler.getSelectedColumns().length < 1) {
             return;
         }
+
+        // //////
+        AnalysisTableGenerator analysisTableGenerator = new AnalysisTableGenerator();
+
+        // //////////////
         ModelElement column = analysisHandler.getSelectedColumns()[0];
         MetadataColumn mdColumn = (MetadataColumn) column;
         MetadataTable mdTable = mdColumn.getTable();
 
-        MatchRuleDefinition mrDef = new SuggestionGenerator().generate(mdTable);
+        List<BlockKeyDefinition> listBlockKey = null;
+        List<MatchKeyDefinition> listMatchRules = null;
+        try {
+            listBlockKey = analysisTableGenerator.handleBlockKeyForTable(mdTable);
+            listMatchRules = analysisTableGenerator.handleMatchRuleTable(mdTable);
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        ;
+        MatchRuleDefinition mrDef = new SuggestionGenerator().generate(listBlockKey, listMatchRules);
 
         final List<String> columnNames = new ArrayList<String>();
 
@@ -578,40 +592,23 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
 
     class SuggestionGenerator {
 
-        public MatchRuleDefinition generate(MetadataTable mdTable) {
+        public MatchRuleDefinition generate(List<BlockKeyDefinition> listBlockKey, List<MatchKeyDefinition> listMatchRules) {
 
             MatchRuleDefinition matchRuleDefinition = RulesFactory.eINSTANCE.createMatchRuleDefinition();
+            // block keys
 
-            BlockKeyDefinition bk = RulesFactory.eINSTANCE.createBlockKeyDefinition();
-            bk.setName("BK1");
-            bk.setColumn("Zip");
+            for (BlockKeyDefinition bk : listBlockKey) {
+                matchRuleDefinition.getBlockKeys().add(bk);
+            }
+            // match rules
 
-            bk.setAlgorithm(RulesFactory.eINSTANCE.createAlgorithmDefinition());
-            bk.getAlgorithm().setAlgorithmType(BlockingKeyAlgorithmEnum.EXACT.name());
-            matchRuleDefinition.getBlockKeys().add(bk);
+            for (MatchKeyDefinition mk : listMatchRules) {
+                MatchRule mr = RulesFactory.eINSTANCE.createMatchRule();
+                matchRuleDefinition.getMatchRules().add(mr);
+                mr.setMatchInterval(0.8);
+                mr.getMatchKeys().add(mk);
 
-            MatchRule matchRule = RulesFactory.eINSTANCE.createMatchRule();
-            matchRuleDefinition.getMatchRules().add(matchRule);
-
-            matchRule.setMatchInterval(0.8);
-
-            MatchKeyDefinition mk = RulesFactory.eINSTANCE.createMatchKeyDefinition();
-            mk.setName("MK1");
-            mk.setColumn("City");
-
-            mk.setAlgorithm(RulesFactory.eINSTANCE.createAlgorithmDefinition());
-            mk.getAlgorithm().setAlgorithmType(AttributeMatcherType.LEVENSHTEIN.name());
-
-            matchRule.getMatchKeys().add(mk);
-
-            MatchRule matchRule2 = RulesFactory.eINSTANCE.createMatchRule();
-            matchRuleDefinition.getMatchRules().add(matchRule2);
-
-            matchRule.getMatchKeys().add(mk);
-            matchRule.getMatchKeys().add(mk);
-            matchRule.getMatchKeys().add(mk);
-            matchRule.getMatchKeys().add(mk);
-            matchRule.getMatchKeys().add(mk);
+            }
             return matchRuleDefinition;
         }
     }
