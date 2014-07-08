@@ -70,6 +70,7 @@ public class AbstractRecordGroupingTest {
 
         Map<String, String> lnameRecords = new HashMap<String, String>();
         lnameRecords.put(IRecordGrouping.COLUMN_IDX, String.valueOf(1));
+        lnameRecords.put(IRecordGrouping.ATTRIBUTE_NAME, "F_NAME");
         lnameRecords.put(IRecordGrouping.MATCHING_TYPE, "JARO_WINKLER"); //$NON-NLS-1$
         lnameRecords.put(IRecordGrouping.CONFIDENCE_WEIGHT, String.valueOf(1));
 
@@ -78,6 +79,7 @@ public class AbstractRecordGroupingTest {
         // matching parameters for state_province
         Map<String, String> accountRecords = new HashMap<String, String>();
         accountRecords.put(IRecordGrouping.COLUMN_IDX, String.valueOf(6));
+        accountRecords.put(IRecordGrouping.ATTRIBUTE_NAME, "STAT_PROVINCE");
         accountRecords.put(IRecordGrouping.MATCHING_TYPE, "LEVENSHTEIN"); //$NON-NLS-1$
         accountRecords.put(IRecordGrouping.CONFIDENCE_WEIGHT, String.valueOf(0.8));
         matchingRule.add(accountRecords);
@@ -216,6 +218,7 @@ public class AbstractRecordGroupingTest {
 
         lnameRecords = new HashMap<String, String>();
         lnameRecords.put(IRecordGrouping.COLUMN_IDX, String.valueOf(1));
+        lnameRecords.put(IRecordGrouping.ATTRIBUTE_NAME, "FNAME");
         lnameRecords.put(IRecordGrouping.MATCHING_TYPE, "JARO_WINKLER"); //$NON-NLS-1$
         lnameRecords.put(IRecordGrouping.CONFIDENCE_WEIGHT, String.valueOf(1));
         lnameRecords.put(IRecordGrouping.RECORD_MATCH_THRESHOLD, String.valueOf(0.95f));
@@ -231,6 +234,7 @@ public class AbstractRecordGroupingTest {
         // matching parameters for state_province
         accountRecords = new HashMap<String, String>();
         accountRecords.put(IRecordGrouping.COLUMN_IDX, String.valueOf(6));
+        accountRecords.put(IRecordGrouping.ATTRIBUTE_NAME, "STAT_PROVINCE");
         accountRecords.put(IRecordGrouping.MATCHING_TYPE, "LEVENSHTEIN"); //$NON-NLS-1$
         accountRecords.put(IRecordGrouping.CONFIDENCE_WEIGHT, String.valueOf(0.8));
         accountRecords.put(IRecordGrouping.RECORD_MATCH_THRESHOLD, String.valueOf(0.95f));// Duplicate set of threshold,
