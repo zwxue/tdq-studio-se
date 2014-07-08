@@ -88,51 +88,6 @@ public class MFBTest extends TestCase {
             assertEquals(totalCount, mergedRecord.getRelatedIds().size());
         }
     }
-    
-    private static void testWeight(final int constantNumber, int totalCount, AttributeMatcherType matchAlgorithm) {
-        Map<String, ValueGenerator> generators = new HashMap<String, ValueGenerator>();
-        generators.put("name", new ValueGenerator() {
-
-            int index = 0;
-
-            @Override
-            public String newValue() {
-                return CONSTANTS[index++ % constantNumber];
-            }
-        });
-        // Runs a first match with a weight 1
-        Iterator<Record> iterator = new ValuesIterator(totalCount, generators);
-        MatchMergeAlgorithm algorithm = MFB.build(new AttributeMatcherType[] { matchAlgorithm }, new String[] { "" },
-                new float[] { 1 }, 0, new SurvivorShipAlgorithmEnum[] { SurvivorShipAlgorithmEnum.LONGEST },
-                new String[] { "" },
-                new double[] { 1 }, // Mark rule with a weight of 1.
-                new IAttributeMatcher.NullOption[] { IAttributeMatcher.NullOption.nullMatchAll },
-                new SubString[] { SubString.NO_SUBSTRING }, "MFB");
-        List<Record> mergedRecords = algorithm.execute(iterator);
-        assertEquals(constantNumber, mergedRecords.size());
-        long totalConfidence1 = 0;
-        for (Record mergedRecord : mergedRecords) {
-            assertEquals(totalCount / constantNumber, mergedRecord.getRelatedIds().size());
-            totalConfidence1 += mergedRecord.getConfidence();
-        }
-        // Runs a second match with a weight 4
-        iterator = new ValuesIterator(totalCount, generators);
-        algorithm = MFB.build(new AttributeMatcherType[] { matchAlgorithm }, new String[] { "" },
-                new float[] { 1 }, 0, new SurvivorShipAlgorithmEnum[] { SurvivorShipAlgorithmEnum.LONGEST },
-                new String[] { "" },
-                new double[] { 4 }, // Mark rule with a weight of 4 -> should not affect overall score since score is normalized.
-                new IAttributeMatcher.NullOption[] { IAttributeMatcher.NullOption.nullMatchAll },
-                new SubString[] { SubString.NO_SUBSTRING }, "MFB");
-        mergedRecords = algorithm.execute(iterator);
-        assertEquals(constantNumber, mergedRecords.size());
-        long totalConfidence2 = 0;
-        for (Record mergedRecord : mergedRecords) {
-            assertEquals(totalCount / constantNumber, mergedRecord.getRelatedIds().size());
-            totalConfidence2 += mergedRecord.getConfidence();
-        }
-        // ... but this shouldn't change the overall score (because score is always between 0 and 1).
-        assertEquals(totalConfidence1, totalConfidence2);
-    }
 
     private static void testWeight(final int constantNumber, int totalCount, AttributeMatcherType matchAlgorithm) {
         Map<String, ValueGenerator> generators = new HashMap<String, ValueGenerator>();
