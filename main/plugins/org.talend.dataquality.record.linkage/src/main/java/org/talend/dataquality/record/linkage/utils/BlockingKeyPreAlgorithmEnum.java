@@ -141,7 +141,7 @@ public enum BlockingKeyPreAlgorithmEnum {
                 return element;
             }
         }
-        return BlockingKeyPreAlgorithmEnum.NON_ALGO;
+        return NON_ALGO;
     }
 
     /**

@@ -86,6 +86,8 @@ public class MatchRuleElementTreeSelectionDialog extends ElementTreeSelectionDia
 
     private int dialogType;
 
+    private MatchRuleDefinition matchRuleDefinitionInput;
+
     public static final String T_SWOOSH_ALGORITHM = "T_SwooshAlgorithm"; //$NON-NLS-1$
 
     public static final int GENKEY_TYPE = 0;
@@ -95,6 +97,8 @@ public class MatchRuleElementTreeSelectionDialog extends ElementTreeSelectionDia
     public static final int MATCH_ANALYSIS_TYPE = 2;
 
     public static final int RECORD_MATCHING_TYPE = 3;
+
+    public static final int SUGGEST_TYPE = 4;
 
     /**
      * DOC yyin DQRuleCheckedTreeSelectionDialog constructor comment.
@@ -221,7 +225,9 @@ public class MatchRuleElementTreeSelectionDialog extends ElementTreeSelectionDia
      * DOC yyin Comment method "init".
      */
     private void init() {
-        setInput(ResourceManager.getRulesMatcherFolder());
+        if (dialogType != SUGGEST_TYPE) {
+            setInput(ResourceManager.getRulesMatcherFolder());
+        }
         setTitle(DefaultMessagesImpl.getString("DQRuleCheckedTreeSelectionDialog.title")); //$NON-NLS-1$
         setMessage(DefaultMessagesImpl.getString("DQRuleCheckedTreeSelectionDialog.rule")); //$NON-NLS-1$
     }
@@ -262,12 +268,14 @@ public class MatchRuleElementTreeSelectionDialog extends ElementTreeSelectionDia
         getTreeViewer().addSelectionChangedListener(new ISelectionChangedListener() {
 
             public void selectionChanged(SelectionChangedEvent event) {
+                if (dialogType != SUGGEST_TYPE) {
                 IStructuredSelection selection = (IStructuredSelection) event.getSelection();
                 if (blockingKeysTable != null) {
                     blockingKeysTable.setInput(getBlockingKeysFromFiles(selection.toArray(), true));
                 }
                 if (matchingRulesTable != null) {
                     matchingRulesTable.setInput(getMatchRulesFromFiles(selection.toArray(), true));
+                }
                 }
             }
 
@@ -282,6 +290,16 @@ public class MatchRuleElementTreeSelectionDialog extends ElementTreeSelectionDia
             createSelectBlockingKeysTable(form);
             createSelectMatchRulesTable(form);
             form.setWeights(new int[] { 5, 2, 3 });
+        } else if(dialogType == SUGGEST_TYPE){
+            createSelectBlockingKeysTable(form);
+            createSelectMatchRulesTable(form);
+            form.setWeights(new int[] { 5, 2, 3 });
+            if (blockingKeysTable != null) {
+                blockingKeysTable.setInput(getBlockingKeysFromRules(matchRuleDefinitionInput,true));
+            }
+            if (matchingRulesTable != null) {
+                matchingRulesTable.setInput(getMatchRulesFromRules(matchRuleDefinitionInput, true));
+            }
         }
         createCheckerArea(composite);
         return composite;
@@ -565,6 +583,14 @@ public class MatchRuleElementTreeSelectionDialog extends ElementTreeSelectionDia
 
     public void setLookupColumnNames(List<String> lookupColumnNames) {
         this.lookupColumnNames = lookupColumnNames;
+    }
+
+    /**
+     * DOC sizhaoliu Comment method "setMatchRuleDefinitionInput".
+     * @param mrDef
+     */
+    public void setMatchRuleDefinitionInput(MatchRuleDefinition matchRuleDefinitionInput) {
+        this.matchRuleDefinitionInput =matchRuleDefinitionInput;
     }
 
 }
