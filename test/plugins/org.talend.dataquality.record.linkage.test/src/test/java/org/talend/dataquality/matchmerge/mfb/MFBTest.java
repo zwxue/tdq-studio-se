@@ -20,7 +20,7 @@ import junit.framework.TestCase;
 import org.talend.dataquality.matchmerge.MatchMergeAlgorithm;
 import org.talend.dataquality.matchmerge.Record;
 import org.talend.dataquality.matchmerge.SubString;
-import org.talend.dataquality.matchmerge.mfb.ValuesIterator.ValueGenerator;
+import org.talend.dataquality.matchmerge.mfb.RecordIterator.ValueGenerator;
 import org.talend.dataquality.record.linkage.attribute.IAttributeMatcher;
 import org.talend.dataquality.record.linkage.constant.AttributeMatcherType;
 import org.talend.dataquality.record.linkage.record.IRecordMatcher;
@@ -51,8 +51,9 @@ public class MFBTest extends TestCase {
                 return CONSTANTS[index++ % constantNumber];
             }
         });
-
-        Iterator<Record> iterator = new ValuesIterator(totalCount, generators);
+        RecordGenerator recordGenerator = new RecordGenerator();
+        recordGenerator.setMatchKeyMap(generators);
+        Iterator<Record> iterator = new RecordIterator(totalCount, recordGenerator);
         MatchMergeAlgorithm algorithm = MFB.build(new AttributeMatcherType[] { matchAlgorithm }, new String[] { "" },
                 new float[] { 1 }, 0, new SurvivorShipAlgorithmEnum[] { SurvivorShipAlgorithmEnum.LONGEST }, new String[] { "" },
                 new double[] { 1 }, new IAttributeMatcher.NullOption[] { IAttributeMatcher.NullOption.nullMatchAll },
@@ -75,8 +76,9 @@ public class MFBTest extends TestCase {
                 return SIMILARS[index++ % similarNumber];
             }
         });
-
-        Iterator<Record> iterator = new ValuesIterator(totalCount, generators);
+        RecordGenerator recordGenerator = new RecordGenerator();
+        recordGenerator.setMatchKeyMap(generators);
+        Iterator<Record> iterator = new RecordIterator(totalCount, recordGenerator);
         MatchMergeAlgorithm algorithm = MFB.build(new AttributeMatcherType[] { matchAlgorithm }, new String[] { "" },
                 new float[] { 0.5f }, 0, new SurvivorShipAlgorithmEnum[] { SurvivorShipAlgorithmEnum.MOST_COMMON },
                 new String[] { "" }, new double[] { 1 },
@@ -101,7 +103,9 @@ public class MFBTest extends TestCase {
             }
         });
         // Runs a first match with a weight 1
-        Iterator<Record> iterator = new ValuesIterator(totalCount, generators);
+        RecordGenerator recordGenerator = new RecordGenerator();
+        recordGenerator.setMatchKeyMap(generators);
+        Iterator<Record> iterator = new RecordIterator(totalCount, recordGenerator);
         MatchMergeAlgorithm algorithm = MFB.build(new AttributeMatcherType[] { matchAlgorithm }, new String[] { "" },
                 new float[] { 1 }, 0, new SurvivorShipAlgorithmEnum[] { SurvivorShipAlgorithmEnum.LONGEST },
                 new String[] { "" },
@@ -116,7 +120,7 @@ public class MFBTest extends TestCase {
             totalConfidence1 += mergedRecord.getConfidence();
         }
         // Runs a second match with a weight 4
-        iterator = new ValuesIterator(totalCount, generators);
+        iterator = new RecordIterator(totalCount, recordGenerator);
         algorithm = MFB.build(new AttributeMatcherType[] { matchAlgorithm }, new String[] { "" }, new float[] { 1 }, 0,
                 new SurvivorShipAlgorithmEnum[] { SurvivorShipAlgorithmEnum.LONGEST },
                 new String[] { "" },

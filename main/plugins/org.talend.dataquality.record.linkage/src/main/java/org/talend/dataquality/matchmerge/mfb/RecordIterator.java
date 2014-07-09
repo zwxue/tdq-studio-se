@@ -21,17 +21,17 @@ import java.util.Vector;
 import org.talend.dataquality.matchmerge.Attribute;
 import org.talend.dataquality.matchmerge.Record;
 
-public class ValuesIterator implements Iterator<Record> {
+public class RecordIterator implements Iterator<Record> {
 
     private final int size;
 
-    private List<Map<String, ValueGenerator>> rcdGenerators = new ArrayList<Map<String, ValueGenerator>>();
+    private List<RecordGenerator> rcdGenerators = new ArrayList<RecordGenerator>();
 
-    private int currentIndex = 0;
+    protected int currentIndex = 0;
 
-    private long timestamp = 0;
+    protected long timestamp = 0;
 
-    public ValuesIterator(int size, Map<String, ValueGenerator> generators) {
+    public RecordIterator(int size, RecordGenerator generators) {
         this.size = size;
         rcdGenerators.add(generators);
     }
@@ -43,7 +43,7 @@ public class ValuesIterator implements Iterator<Record> {
      * @param size the record count.
      * @param generators record generator.
      */
-    public ValuesIterator(int size, List<Map<String, ValueGenerator>> generators) {
+    public RecordIterator(int size, List<RecordGenerator> generators) {
         this.size = size;
         this.rcdGenerators = generators;
     }
@@ -69,14 +69,24 @@ public class ValuesIterator implements Iterator<Record> {
             rcdIdx = 0;
 
         }
-        Map<String, ValueGenerator> recordMap = rcdGenerators.get(rcdIdx);
+        Map<String, ValueGenerator> matchKeyMap = rcdGenerators.get(rcdIdx).getMatchKeyMap();
         // Attributes
-        for (Map.Entry<String, ValueGenerator> generator : recordMap.entrySet()) {
+        for (Map.Entry<String, ValueGenerator> generator : matchKeyMap.entrySet()) {
             Attribute attribute = new Attribute(generator.getKey());
             attribute.setValue(generator.getValue().newValue());
             record.add(attribute);
         }
         currentIndex++;
+        return createRecord(record, rcdGenerators.get(rcdIdx).getOriginalRow());
+    }
+
+    /**
+     * Creaet a new record.
+     * 
+     * @param record
+     * @return
+     */
+    protected Record createRecord(Vector<Attribute> record, String[] originalRow) {
         return new Record(record, String.valueOf(currentIndex - 1), timestamp++, "MFB");
     }
 

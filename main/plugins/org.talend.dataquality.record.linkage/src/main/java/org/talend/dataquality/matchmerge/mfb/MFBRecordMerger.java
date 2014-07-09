@@ -16,7 +16,7 @@ public class MFBRecordMerger implements IRecordMerger {
 
     private final String[] parameters;
 
-    private final String mergedRecordSource;
+    protected final String mergedRecordSource;
 
     public MFBRecordMerger(String mergedRecordSource, String[] parameters, SurvivorShipAlgorithmEnum[] typeMergeTable) {
         this.mergedRecordSource = mergedRecordSource;
@@ -31,7 +31,7 @@ public class MFBRecordMerger implements IRecordMerger {
         // Takes most recent as timestamp for the merged record.
         long mergedRecordTimestamp = record1.getTimestamp() > record2.getTimestamp() ? record1.getTimestamp() : record2
                 .getTimestamp();
-        Record mergedRecord = new Record(record1.getId(), mergedRecordTimestamp, mergedRecordSource);
+        Record mergedRecord = createNewRecord(record1, mergedRecordTimestamp);
         for (int k = 0; k < r1.size(); k++) {
             Attribute a = new Attribute(r1.get(k).getLabel());
             mergedRecord.getAttributes().add(k, a);
@@ -174,6 +174,17 @@ public class MFBRecordMerger implements IRecordMerger {
             mergedRecord.setGroupId(record2.getGroupId());
         }
         return mergedRecord;
+    }
+
+    /**
+     * Create a new record given record1's id and merged record's timestamp.
+     * 
+     * @param record1
+     * @param mergedRecordTimestamp
+     * @return
+     */
+    protected Record createNewRecord(Record record1, long mergedRecordTimestamp) {
+        return new Record(record1.getId(), mergedRecordTimestamp, mergedRecordSource);
     }
 
     private static BigDecimal parseNumberValue(List<Attribute> record, int i) {
