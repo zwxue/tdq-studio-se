@@ -46,6 +46,16 @@ public class MFBTest extends TestCase {
 
             int index = 0;
 
+            /*
+             * (non-Javadoc)
+             * 
+             * @see org.talend.dataquality.matchmerge.mfb.RecordIterator.ValueGenerator#getColumnIndex()
+             */
+            @Override
+            public int getColumnIndex() {
+                return index;
+            }
+
             @Override
             public String newValue() {
                 return CONSTANTS[index++ % constantNumber];
@@ -70,6 +80,16 @@ public class MFBTest extends TestCase {
         generators.put("name", new ValueGenerator() {
 
             int index = 0;
+
+            /*
+             * (non-Javadoc)
+             * 
+             * @see org.talend.dataquality.matchmerge.mfb.RecordIterator.ValueGenerator#getColumnIndex()
+             */
+            @Override
+            public int getColumnIndex() {
+                return index;
+            }
 
             @Override
             public String newValue() {
@@ -96,6 +116,16 @@ public class MFBTest extends TestCase {
         generators.put("name", new ValueGenerator() {
 
             int index = 0;
+
+            /*
+             * (non-Javadoc)
+             * 
+             * @see org.talend.dataquality.matchmerge.mfb.RecordIterator.ValueGenerator#getColumnIndex()
+             */
+            @Override
+            public int getColumnIndex() {
+                return index;
+            }
 
             @Override
             public String newValue() {

@@ -33,7 +33,7 @@ public class MFBRecordMerger implements IRecordMerger {
                 .getTimestamp();
         Record mergedRecord = createNewRecord(record1, mergedRecordTimestamp);
         for (int k = 0; k < r1.size(); k++) {
-            Attribute a = new Attribute(r1.get(k).getLabel());
+            Attribute a = new Attribute(r1.get(k).getLabel(), r1.get(k).getColumnIndex());
             mergedRecord.getAttributes().add(k, a);
         }
         for (int i = 0; i < r1.size(); i++) {

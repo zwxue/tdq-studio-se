@@ -186,7 +186,7 @@ public class CombinedRecordMatcher extends AbstractRecordMatcher {
         for (IAttributeMatcher attMatcher : attrMatchers) {
             result.setScore(matchIndex, attMatcher.getMatchType(), currentAttrWeights[matchIndex], record1Array[matchIndex],
                     record2Array[matchIndex]);
-            result.setThreshold(matchIndex, 1); // In combined matcher, DONT support threshold for attribute yet.
+            result.setThreshold(matchIndex, 0); // In combined matcher, DONT support threshold for attribute yet.
             matchIndex++;
         }
         result.setConfidence(matchingWeight);

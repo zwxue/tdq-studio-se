@@ -50,6 +50,8 @@ public class RecordIterator implements Iterator<Record> {
 
     public interface ValueGenerator {
 
+        int getColumnIndex();
+
         String newValue();
     }
 
@@ -72,7 +74,7 @@ public class RecordIterator implements Iterator<Record> {
         Map<String, ValueGenerator> matchKeyMap = rcdGenerators.get(rcdIdx).getMatchKeyMap();
         // Attributes
         for (Map.Entry<String, ValueGenerator> generator : matchKeyMap.entrySet()) {
-            Attribute attribute = new Attribute(generator.getKey());
+            Attribute attribute = new Attribute(generator.getKey(), generator.getValue().getColumnIndex());
             attribute.setValue(generator.getValue().newValue());
             record.add(attribute);
         }

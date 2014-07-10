@@ -164,10 +164,10 @@ public class MFB implements MatchMergeAlgorithm {
         }
         if (leftRecord.getGroupId() != null && rightRecord.getGroupId() != null) {
             if (!leftRecord.getGroupId().equals(rightRecord.getGroupId())) {
-                if (LOGGER.isDebugEnabled()) {
-                    LOGGER.debug("Cannot match record: already different groups.");
+                boolean isMatchDiffGroup = isMatchDiffGroups();
+                if (!isMatchDiffGroup) {
+                    return NonMatchResult.INSTANCE;
                 }
-                return NonMatchResult.INSTANCE;
             } else { // Two records of same group
                 if (LOGGER.isDebugEnabled()) {
                     LOGGER.debug("Merging already merged records (same group id).");
@@ -176,6 +176,16 @@ public class MFB implements MatchMergeAlgorithm {
         }
         // Build match result
         return matcher.getMatchingWeight(leftRecord, rightRecord);
+    }
+
+    /**
+     * whether match records in different groups.
+     */
+    protected boolean isMatchDiffGroups() {
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("Cannot match record: already different groups.");
+        }
+        return false;
     }
 
     @Override

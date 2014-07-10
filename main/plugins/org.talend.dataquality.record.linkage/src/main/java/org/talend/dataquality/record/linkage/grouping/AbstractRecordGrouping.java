@@ -23,6 +23,7 @@ import org.talend.dataquality.record.linkage.attribute.AttributeMatcherFactory;
 import org.talend.dataquality.record.linkage.attribute.IAttributeMatcher;
 import org.talend.dataquality.record.linkage.constant.AttributeMatcherType;
 import org.talend.dataquality.record.linkage.constant.RecordMatcherType;
+import org.talend.dataquality.record.linkage.grouping.swoosh.SurvivorShipAlgorithmParams;
 import org.talend.dataquality.record.linkage.record.CombinedRecordMatcher;
 import org.talend.dataquality.record.linkage.record.IRecordMatcher;
 import org.talend.dataquality.record.linkage.record.RecordMatcherFactory;
@@ -59,13 +60,16 @@ public abstract class AbstractRecordGrouping implements IRecordGrouping {
 
     private List<List<Map<String, String>>> multiMatchRules = new ArrayList<List<Map<String, String>>>();
 
+    private SurvivorShipAlgorithmParams survivorShipAlgorithmParams = null;
+
     private String columnDelimiter = null;
 
     private Boolean isLinkToPrevious = Boolean.FALSE;
 
-    private MatchAlgoithm matchAlgo = MatchAlgoithm.TSWOOSH;
+    // VSR algorithm by default.
+    private MatchAlgoithm matchAlgo = MatchAlgoithm.VSR;
 
-    private TSwooshGrouping swooshGrouping = new TSwooshGrouping();
+    private TSwooshGrouping swooshGrouping = new TSwooshGrouping(this);
 
     // The exthended column size.
     int extSize;
@@ -113,6 +117,18 @@ public abstract class AbstractRecordGrouping implements IRecordGrouping {
     @Override
     public void setSeperateOutput(boolean isSeperateOutput) {
         this.isSeperateOutput = isSeperateOutput;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * org.talend.dataquality.record.linkage.grouping.IRecordGrouping#setMatchingAlgorithm(org.talend.dataquality.record
+     * .linkage.grouping.AbstractRecordGrouping.MatchAlgoithm)
+     */
+    @Override
+    public void setRecordLinkAlgorithm(MatchAlgoithm algorithm) {
+        matchAlgo = algorithm;
     }
 
     @Override
@@ -279,7 +295,7 @@ public abstract class AbstractRecordGrouping implements IRecordGrouping {
             }
             break;
         case TSWOOSH:
-            swooshGrouping.swooshMatch(combinedRecordMatcher);
+            swooshGrouping.swooshMatch(combinedRecordMatcher, survivorShipAlgorithmParams);
 
         }
     }
@@ -332,6 +348,18 @@ public abstract class AbstractRecordGrouping implements IRecordGrouping {
     @Override
     public void addMatchRule(List<Map<String, String>> matchRule) {
         multiMatchRules.add(matchRule);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * org.talend.dataquality.record.linkage.grouping.IRecordGrouping#setSurvivorShipAlgorithmParams(org.talend.dataquality
+     * .record.linkage.grouping.swoosh.SurvivorShipAlgorithmParams)
+     */
+    @Override
+    public void setSurvivorShipAlgorithmParams(SurvivorShipAlgorithmParams survivorShipAlgorithmParams) {
+        this.survivorShipAlgorithmParams = survivorShipAlgorithmParams;
     }
 
     public List<List<Map<String, String>>> getMultiMatchRules() {

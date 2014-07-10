@@ -138,7 +138,18 @@ public class RichRecord extends Record {
         if (originRow == null) {
             return null;
         }
-        String[] row = Arrays.copyOf(originRow, originRow.length + 4);
+        int extSize = 4;
+        if (isMerged()) {
+            extSize++;
+        }
+        String[] row = Arrays.copyOf(originRow, originRow.length + extSize);
+        if (isMerged()) {
+            // Update the matching key field by the merged attributes.
+            List<Attribute> matchKeyAttrs = getAttributes();
+            for (Attribute attribute : matchKeyAttrs) {
+                row[attribute.getColumnIndex()] = attribute.getValue();
+            }
+        }
         // GID
         row[originRow.length] = getGroupId();
         // Group size
@@ -147,6 +158,10 @@ public class RichRecord extends Record {
         row[originRow.length + 2] = String.valueOf(isMaster());
         // Score
         row[originRow.length + 3] = String.valueOf(getScore());
+
+        if (isMerged()) {
+            row[originRow.length + 4] = "-MERGED-";
+        }
         return row;
 
     }
