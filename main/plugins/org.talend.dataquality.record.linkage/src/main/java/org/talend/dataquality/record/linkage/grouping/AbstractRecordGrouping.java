@@ -272,7 +272,7 @@ public abstract class AbstractRecordGrouping<TYPE> implements IRecordGrouping<TY
         if (isSeperateOutput) {
             extIdx++;
             double groupQuality = computeGroupQuality(masterRecord, matchingProba, extIdx);
-            duplicateRecord[duplicateRecord.length - extSize + extIdx] = getTYPEFromObject(groupQuality);
+            masterRecord[duplicateRecord.length - extSize + extIdx] = getTYPEFromObject(groupQuality);
         }
         if (isOutputDistDetails) {
             extIdx++;
