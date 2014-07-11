@@ -14,6 +14,7 @@ package org.talend.dataprofiler.core.ui.editor.analysis;
 
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -40,6 +41,7 @@ import org.jfree.chart.ChartMouseListener;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.entity.CategoryItemEntity;
 import org.jfree.chart.entity.ChartEntity;
+import org.jfree.data.category.CategoryDataset;
 import org.jfree.experimental.chart.swt.ChartComposite;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.cwm.helper.SwitchHelpers;
@@ -85,12 +87,8 @@ public class ResultPaginationInfo extends IndicatorPaginationInfo {
 
     private ColumnMasterDetailsPage masterPage;
 
-    // public ResultPaginationInfo(ScrolledForm form, List<ColumnIndicator> columnIndicatores, ColumnMasterDetailsPage
-    // masterPage,
-    // UIPagination uiPagination) {
-    // super(form, columnIndicatores, uiPagination);
-    // this.masterPage = masterPage;
-    // }
+    // Added TDQ-8787 20140617 yyin : store the temp indicator and its related table between one running
+    private Map<List<Indicator>, TableViewer> indicatorTableMap = new HashMap<List<Indicator>, TableViewer>();
 
     public ResultPaginationInfo(ScrolledForm form, List<? extends ModelElementIndicator> modelElementIndicators,
             ColumnMasterDetailsPage masterPage, UIPagination uiPagination) {
@@ -100,9 +98,11 @@ public class ResultPaginationInfo extends IndicatorPaginationInfo {
 
     @Override
     protected void render() {
+        clearAllMaps();
+        indicatorTableMap.clear();
         for (final ModelElementIndicator modelElementIndicator : modelElementIndicators) {
 
-            ExpandableComposite exComp = uiPagination.getToolkit().createExpandableComposite(uiPagination.getComposite(),
+            ExpandableComposite exComp = uiPagination.getToolkit().createExpandableComposite(uiPagination.getChartComposite(),
                     ExpandableComposite.TWISTIE | ExpandableComposite.CLIENT_INDENT | ExpandableComposite.EXPANDED);
             needDispostWidgets.add(exComp);
             // MOD klliu add more information about the column belongs to which table/view.
@@ -134,18 +134,18 @@ public class ResultPaginationInfo extends IndicatorPaginationInfo {
 
                 @Override
                 public void expansionStateChanged(ExpansionEvent e) {
-
+                    uiPagination.getChartComposite().layout();
                     form.reflow(true);
                 }
 
             });
-
+            uiPagination.getChartComposite().layout();
             masterPage.registerSection(exComp);
-
         }
     }
 
     private void createResultDataComposite(final Composite comp, final ModelElementIndicator modelElementIndicator) {
+
         if (modelElementIndicator.getIndicators().length != 0) {
             Map<EIndicatorChartType, List<IndicatorUnit>> indicatorComposite = CompositeIndicator.getInstance()
                     .getIndicatorComposite(modelElementIndicator);
@@ -175,7 +175,33 @@ public class ResultPaginationInfo extends IndicatorPaginationInfo {
      */
     private void createChart(final Composite comp, EIndicatorChartType chartType, List<IndicatorUnit> units) {
         IChartTypeStates chartTypeState = ChartTypeStatesOperator.getChartState(chartType, units);
-        ChartWithData chartData = new ChartWithData(chartType, chartTypeState.getChart(), chartTypeState.getDataEntity());
+
+        // MOD TDQ-8787 20140618 yyin: to let the chart and table use the same dataset
+        JFreeChart chart = null;
+        CategoryDataset dataset = null;
+        // create chart
+        if (!EditorPreferencePage.isHideGraphics()) {
+            chart = chartTypeState.getChart();
+            ChartDecorator.decorate(chart, null);
+            if (chart != null) {// chart is null for MODE
+                if (EIndicatorChartType.BENFORD_LAW_STATISTICS.equals(chartType)) {
+                    // indicatorDatasetMap.put(getIndicators(units), chart.getCategoryPlot().getDataset(0));
+                    dataset = chart.getCategoryPlot().getDataset(1);
+                } else {
+                    dataset = chart.getCategoryPlot().getDataset();
+                }
+            }
+        }
+        if (dataset == null) {
+            dataset = chartTypeState.getDataset();
+        }
+
+        // Added TDQ-8787 2014-06-18 yyin: add the current units and dataset into the map
+        List<Indicator> indicators = null;
+        if (chart != null) {
+            indicators = putDatasetMap(chartType, units, dataset);
+        }
+        ChartWithData chartData = new ChartWithData(chartType, chart, ((ICustomerDataset) dataset).getDataEntities());
 
         // create UI
         ExpandableComposite subComp = uiPagination.getToolkit().createExpandableComposite(comp,
@@ -196,24 +222,28 @@ public class ResultPaginationInfo extends IndicatorPaginationInfo {
         // create table
         TableViewer tableviewer = chartTypeState.getTableForm(composite);
         tableviewer.setInput(chartData);
+        if (EIndicatorChartType.SUMMARY_STATISTICS.equals(chartType)) {
+            // for the summary indicators, the table show 2 more than the bar chart
+            indicatorTableMap.put(getIndicatorsForTable(units, true), tableviewer);
+        } else {
+            indicatorTableMap.put(indicators, tableviewer);
+        }
+
         DataExplorer dataExplorer = chartTypeState.getDataExplorer();
         ChartTableFactory.addMenuAndTip(tableviewer, dataExplorer, analysis);
 
-        // create chart
-        if (!EditorPreferencePage.isHideGraphics()) {
-
-            JFreeChart chart = chartTypeState.getChart();
-            ChartDecorator.decorate(chart, null);
-            if (chart != null) {
-                ChartComposite cc = new TalendChartComposite(composite, SWT.NONE, chart, true);
-
-                GridData gd = new GridData();
-                gd.widthHint = PluginConstant.CHART_STANDARD_WIDHT;
-                gd.heightHint = PluginConstant.CHART_STANDARD_HEIGHT;
-                cc.setLayoutData(gd);
-
-                addMouseListenerForChart(cc, dataExplorer, analysis);
+        if (chart != null) {
+            ChartComposite cc = new TalendChartComposite(composite, SWT.NONE, chart, true);
+            if (EIndicatorChartType.SUMMARY_STATISTICS.equals(chartType)) {
+                // for summary indicators: need to record the chart composite, which is used for create BAW chart
+                this.BAWparentComposite.put(indicators, (TalendChartComposite) cc);
             }
+
+            GridData gd = new GridData();
+            gd.widthHint = PluginConstant.CHART_STANDARD_WIDHT;
+            gd.heightHint = PluginConstant.CHART_STANDARD_HEIGHT;
+            cc.setLayoutData(gd);
+            addMouseListenerForChart(cc, dataExplorer, analysis);
         }
 
         subComp.setClient(composite);
@@ -401,4 +431,9 @@ public class ResultPaginationInfo extends IndicatorPaginationInfo {
 
         });
     }
+
+    public Map<List<Indicator>, TableViewer> getIndicatorTableMap() {
+        return this.indicatorTableMap;
+    }
+
 }

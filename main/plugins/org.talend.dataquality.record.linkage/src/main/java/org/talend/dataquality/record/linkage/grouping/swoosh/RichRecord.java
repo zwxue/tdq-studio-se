@@ -23,12 +23,12 @@ import org.talend.dataquality.matchmerge.Record;
  * comment
  * 
  */
-public class RichRecord extends Record {
+public class RichRecord<TYPE> extends Record {
 
     /**
      * The original row. It is an useful information when the application want to know the original information.
      */
-    private String[] originRow = null;
+    private TYPE[] originRow = null;
 
     private boolean isMerged = false;
 
@@ -59,7 +59,7 @@ public class RichRecord extends Record {
      * 
      * @return the originRow
      */
-    public String[] getOriginRow() {
+    public TYPE[] getOriginRow() {
         return this.originRow;
     }
 
@@ -68,7 +68,7 @@ public class RichRecord extends Record {
      * 
      * @param originRow the originRow to set
      */
-    public void setOriginRow(String[] originRow) {
+    public void setOriginRow(TYPE[] originRow) {
         this.originRow = originRow;
     }
 
@@ -134,7 +134,7 @@ public class RichRecord extends Record {
         return this.score;
     }
 
-    public String[] getOutputRow() {
+    public TYPE[] getOutputRow() {
         if (originRow == null) {
             return null;
         }
@@ -142,25 +142,25 @@ public class RichRecord extends Record {
         if (isMerged()) {
             extSize++;
         }
-        String[] row = Arrays.copyOf(originRow, originRow.length + extSize);
+        TYPE[] row = Arrays.copyOf(originRow, originRow.length + extSize);
         if (isMerged()) {
             // Update the matching key field by the merged attributes.
             List<Attribute> matchKeyAttrs = getAttributes();
             for (Attribute attribute : matchKeyAttrs) {
-                row[attribute.getColumnIndex()] = attribute.getValue();
+                row[attribute.getColumnIndex()] = (TYPE) attribute.getValue();
             }
         }
         // GID
-        row[originRow.length] = getGroupId();
+        row[originRow.length] = (TYPE) getGroupId();
         // Group size
-        row[originRow.length + 1] = String.valueOf(getGrpSize());
+        row[originRow.length + 1] = (TYPE) String.valueOf(getGrpSize());
         // Master
-        row[originRow.length + 2] = String.valueOf(isMaster());
+        row[originRow.length + 2] = (TYPE) String.valueOf(isMaster());
         // Score
-        row[originRow.length + 3] = String.valueOf(getScore());
+        row[originRow.length + 3] = (TYPE) String.valueOf(getScore());
 
         if (isMerged()) {
-            row[originRow.length + 4] = "-MERGED-";
+            row[originRow.length + 4] = (TYPE) "-MERGED-";
         }
         return row;
 

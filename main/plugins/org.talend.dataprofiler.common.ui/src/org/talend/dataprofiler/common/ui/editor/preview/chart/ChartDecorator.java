@@ -46,9 +46,9 @@ import org.jfree.chart.renderer.xy.XYItemRenderer;
 import org.jfree.chart.title.LegendTitle;
 import org.jfree.chart.title.TextTitle;
 import org.jfree.data.category.CategoryDataset;
-import org.jfree.data.category.DefaultCategoryDataset;
 import org.jfree.data.general.PieDataset;
 import org.jfree.ui.TextAnchor;
+import org.talend.dataprofiler.common.ui.editor.preview.CustomerDefaultCategoryDataset;
 
 /**
  * DOC bzhou class global comment. Detailled comment
@@ -435,7 +435,7 @@ public final class ChartDecorator {
      * @return CategoryDataset
      */
     private static CategoryDataset getLineDataset(List<String> dotChartLabels, double[] formalValues) {
-        DefaultCategoryDataset linedataset = new DefaultCategoryDataset();
+        CustomerDefaultCategoryDataset linedataset = new CustomerDefaultCategoryDataset();
         for (int i = 0; i < dotChartLabels.size(); i++) {
             linedataset.addValue(formalValues[i], "Expected(%)", dotChartLabels.get(i)); //$NON-NLS-1$
         }

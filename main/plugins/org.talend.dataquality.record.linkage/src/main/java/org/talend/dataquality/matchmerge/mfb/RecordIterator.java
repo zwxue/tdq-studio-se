@@ -21,17 +21,17 @@ import java.util.Vector;
 import org.talend.dataquality.matchmerge.Attribute;
 import org.talend.dataquality.matchmerge.Record;
 
-public class RecordIterator implements Iterator<Record> {
+public class RecordIterator<TYPE> implements Iterator<Record> {
 
     private final int size;
 
-    private List<RecordGenerator> rcdGenerators = new ArrayList<RecordGenerator>();
+    private List<RecordGenerator<TYPE>> rcdGenerators = new ArrayList<RecordGenerator<TYPE>>();
 
     protected int currentIndex = 0;
 
     protected long timestamp = 0;
 
-    public RecordIterator(int size, RecordGenerator generators) {
+    public RecordIterator(int size, RecordGenerator<TYPE> generators) {
         this.size = size;
         rcdGenerators.add(generators);
     }
@@ -43,7 +43,7 @@ public class RecordIterator implements Iterator<Record> {
      * @param size the record count.
      * @param generators record generator.
      */
-    public RecordIterator(int size, List<RecordGenerator> generators) {
+    public RecordIterator(int size, List<RecordGenerator<TYPE>> generators) {
         this.size = size;
         this.rcdGenerators = generators;
     }
@@ -88,7 +88,7 @@ public class RecordIterator implements Iterator<Record> {
      * @param record
      * @return
      */
-    protected Record createRecord(Vector<Attribute> record, String[] originalRow) {
+    protected Record createRecord(Vector<Attribute> record, TYPE[] originalRow) {
         return new Record(record, String.valueOf(currentIndex - 1), timestamp++, "MFB");
     }
 

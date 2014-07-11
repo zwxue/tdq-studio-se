@@ -125,8 +125,6 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
 
     private AllMatchIndicator allMatchIndicator;
 
-    private String stringDataFilter;
-
     private Composite chartComposite;
 
     private static final int TREE_MAX_LENGTH = 300;
@@ -266,6 +264,7 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
         createIndicatorsSection(form, topComp);
 
         createDataFilterSection(form, topComp);
+        dataFilterComp.addPropertyChangeListener(this);
 
         Composite exeEngineComp = createExecuteEngineSection(form, topComp, analyzedColumns, columnSetAnalysisHandler
                 .getAnalysis().getParameters());
@@ -567,26 +566,6 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
     }
 
     /**
-     * @param form
-     * @param toolkit
-     * @param anasisDataComp
-     */
-    void createDataFilterSection(final ScrolledForm form, Composite anasisDataComp) {
-        dataFilterSection = createSection(
-                form,
-                anasisDataComp,
-                DefaultMessagesImpl.getString("ColumnMasterDetailsPage.dataFilter"), DefaultMessagesImpl.getString("ColumnMasterDetailsPage.editDataFilter")); //$NON-NLS-1$ //$NON-NLS-2$
-
-        Composite sectionClient = toolkit.createComposite(dataFilterSection);
-        dataFilterComp = new DataFilterComp(sectionClient, stringDataFilter);
-        dataFilterComp.addPropertyChangeListener(this);
-
-        // ADD yyi 2011-05-31 16158:add whitespace check for text fields.
-        addWhitespaceValidate(dataFilterComp.getDataFilterText());
-        dataFilterSection.setClient(sectionClient);
-    }
-
-    /**
      * DOC qiongli Comment method "createStoreDataCheck".
      * 
      * @param sectionClient
@@ -729,7 +708,7 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
 
     public void propertyChange(PropertyChangeEvent evt) {
         if (PluginConstant.ISDIRTY_PROPERTY.equals(evt.getPropertyName())) {
-            currentEditor.firePropertyChange(IEditorPart.PROP_DIRTY);
+            ((AnalysisEditor) currentEditor).firePropertyChange(IEditorPart.PROP_DIRTY);
         } else if (PluginConstant.DATAFILTER_PROPERTY.equals(evt.getPropertyName())) {
             this.columnSetAnalysisHandler.setStringDataFilter((String) evt.getNewValue());
         }
@@ -868,8 +847,8 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
 
     private void resetResultPageData() {
         ColumnSetResultPage theResultPage = null;
-        if (this.currentEditor.getResultPage() instanceof ColumnSetResultPage) {
-            theResultPage = (ColumnSetResultPage) this.currentEditor.getResultPage();
+        if (((AnalysisEditor) currentEditor).getResultPage() instanceof ColumnSetResultPage) {
+            theResultPage = (ColumnSetResultPage) ((AnalysisEditor) currentEditor).getResultPage();
         }
         if (theResultPage.getTableFilterResult() != null) {
             theResultPage.setTableFilterResult(null);

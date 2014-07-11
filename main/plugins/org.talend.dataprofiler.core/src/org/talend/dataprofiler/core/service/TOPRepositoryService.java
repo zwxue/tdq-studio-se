@@ -673,4 +673,8 @@ public class TOPRepositoryService implements ITDQRepositoryService {
         CorePlugin.getDefault().updateDriverIfClassNotLoad(databaseConnection);
     }
 
+    public void publishDynamicEvent(ModelElement indicator, Object value) {
+        EventManager.getInstance().publish(indicator, EventEnum.DQ_DYMANIC_CHART, value);
+    }
+
 }

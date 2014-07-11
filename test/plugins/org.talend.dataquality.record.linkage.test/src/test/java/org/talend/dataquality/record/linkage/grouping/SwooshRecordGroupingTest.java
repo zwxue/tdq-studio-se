@@ -29,7 +29,7 @@ public class SwooshRecordGroupingTest {
      */
     private List<String[]> inputList = null;
 
-    private IRecordGrouping recordGroup = null;
+    private IRecordGrouping<String> recordGroup = null;
 
     private static final String columnDelimiter = "|"; //$NON-NLS-1$
 
@@ -57,7 +57,27 @@ public class SwooshRecordGroupingTest {
 
         // set the matching parameters
         // matching parameters for lname
-        recordGroup = new AbstractRecordGrouping() {
+        recordGroup = new AbstractRecordGrouping<String>() {
+
+            /*
+             * (non-Javadoc)
+             * 
+             * @see org.talend.dataquality.record.linkage.grouping.AbstractRecordGrouping#isMaster(java.lang.Object)
+             */
+            @Override
+            protected boolean isMaster(String col) {
+                return "true".equals(col);
+            }
+
+            /*
+             * (non-Javadoc)
+             * 
+             * @see org.talend.dataquality.record.linkage.grouping.AbstractRecordGrouping#createTYPEArray(int)
+             */
+            @Override
+            protected String[] createTYPEArray(int size) {
+                return new String[size];
+            }
 
             /*
              * (non-Javadoc)
@@ -65,9 +85,18 @@ public class SwooshRecordGroupingTest {
              * @see org.talend.dataquality.record.linkage.grouping.AbstractRecordGrouping#outputRow(java.lang.String)
              */
             @Override
-            protected void outputRow(String row) {
-                System.out.println(row);
-                groupingRecords.add(StringUtils.splitByWholeSeparatorPreserveAllTokens(row, columnDelimiter));
+            protected void outputRow(String[] row) {
+                groupingRecords.add(row);
+            }
+
+            @Override
+            protected String incrementGroupSize(String oldGroupSize) {
+                return String.valueOf(Integer.parseInt(String.valueOf(oldGroupSize)) + 1);
+            }
+
+            @Override
+            protected String castAsType(Object objectValue) {
+                return String.valueOf(objectValue);
             }
         };
         recordGroup.setRecordLinkAlgorithm(MatchAlgoithm.TSWOOSH);
@@ -145,7 +174,27 @@ public class SwooshRecordGroupingTest {
             String[] fields = StringUtils.splitPreserveAllTokens(line, columnDelimiter);
             inputList.add(fields);
         }
-        recordGroup = new AbstractRecordGrouping() {
+        recordGroup = new AbstractRecordGrouping<String>() {
+
+            /*
+             * (non-Javadoc)
+             * 
+             * @see org.talend.dataquality.record.linkage.grouping.AbstractRecordGrouping#isMaster(java.lang.Object)
+             */
+            @Override
+            protected boolean isMaster(String col) {
+                return "true".equals(col);
+            }
+
+            /*
+             * (non-Javadoc)
+             * 
+             * @see org.talend.dataquality.record.linkage.grouping.AbstractRecordGrouping#createTYPEArray(int)
+             */
+            @Override
+            protected String[] createTYPEArray(int size) {
+                return new String[size];
+            }
 
             /*
              * (non-Javadoc)
@@ -153,9 +202,18 @@ public class SwooshRecordGroupingTest {
              * @see org.talend.dataquality.record.linkage.grouping.AbstractRecordGrouping#outputRow(java.lang.String)
              */
             @Override
-            protected void outputRow(String row) {
-                System.out.println(row);
-                groupingRecords.add(StringUtils.splitByWholeSeparatorPreserveAllTokens(row, columnDelimiter));
+            protected void outputRow(String[] row) {
+                groupingRecords.add(row);
+            }
+
+            @Override
+            protected String incrementGroupSize(String oldGroupSize) {
+                return String.valueOf(Integer.parseInt(String.valueOf(oldGroupSize)) + 1);
+            }
+
+            @Override
+            protected String castAsType(Object objectValue) {
+                return String.valueOf(objectValue);
             }
         };
         recordGroup.setRecordLinkAlgorithm(MatchAlgoithm.TSWOOSH);

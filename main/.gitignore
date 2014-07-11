@@ -2,4 +2,5 @@
 /plugins/*/bin
 /plugins/*/class
 /plugins/*/.settings
+/*/.settings
 

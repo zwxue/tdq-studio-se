@@ -150,8 +150,11 @@ public class ColumnsComparisonMasterDetailsPage extends AbstractAnalysisMetadata
         createDataFilterSection(form, topComp);
 
         createAnalysisParamSection(form, topComp);
+
+        createContextGroupSection(form, topComp);
     }
 
+    @Override
     void createDataFilterSection(final ScrolledForm form, Composite anasisDataComp) {
         dataFilterSection = createSection(
                 form,
@@ -168,6 +171,7 @@ public class ColumnsComparisonMasterDetailsPage extends AbstractAnalysisMetadata
         leftComp.setLayoutData(new GridData(GridData.FILL_BOTH));
         leftComp.setLayout(new GridLayout());
         dataFilterCompA = new DataFilterComp(leftComp, stringDataFilterA);
+        installProposals(dataFilterCompA.getDataFilterText());
         dataFilterCompA.addPropertyChangeListener(this);
         dataFilterCompA.addModifyListener(new ModifyListener() {
 
@@ -180,6 +184,7 @@ public class ColumnsComparisonMasterDetailsPage extends AbstractAnalysisMetadata
         rightComp.setLayoutData(new GridData(GridData.FILL_BOTH));
         rightComp.setLayout(new GridLayout());
         dataFilterCompB = new DataFilterComp(rightComp, stringDataFilterB);
+        installProposals(dataFilterCompB.getDataFilterText());
         dataFilterCompB.addPropertyChangeListener(this);
         dataFilterCompB.addModifyListener(new ModifyListener() {
 
@@ -368,8 +373,8 @@ public class ColumnsComparisonMasterDetailsPage extends AbstractAnalysisMetadata
 
     public void propertyChange(PropertyChangeEvent evt) {
         if (PluginConstant.ISDIRTY_PROPERTY.equals(evt.getPropertyName())) {
-            currentEditor.firePropertyChange(IEditorPart.PROP_DIRTY);
-            currentEditor.setRefreshResultPage(true);
+            ((AnalysisEditor) currentEditor).firePropertyChange(IEditorPart.PROP_DIRTY);
+            ((AnalysisEditor) currentEditor).setRefreshResultPage(true);
         } else if (PluginConstant.DATAFILTER_PROPERTY.equals(evt.getPropertyName())) {
             this.setDirty(true);
         }

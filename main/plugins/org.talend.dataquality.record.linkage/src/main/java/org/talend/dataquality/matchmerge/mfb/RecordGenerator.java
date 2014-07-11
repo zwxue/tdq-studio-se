@@ -21,11 +21,11 @@ import org.talend.dataquality.matchmerge.mfb.RecordIterator.ValueGenerator;
  * Record generator with original row.
  * 
  */
-public class RecordGenerator {
+public class RecordGenerator<TYPE> {
 
     private Map<String, ValueGenerator> matchKeyMap = new HashMap<String, ValueGenerator>();
 
-    private String[] originalRow = null;
+    private TYPE[] originalRow = null;
 
     /**
      * Getter for matchKeyMap.
@@ -50,7 +50,7 @@ public class RecordGenerator {
      * 
      * @return the originalRow
      */
-    public String[] getOriginalRow() {
+    public TYPE[] getOriginalRow() {
         return this.originalRow;
     }
 
@@ -59,7 +59,7 @@ public class RecordGenerator {
      * 
      * @param originalRow the originalRow to set
      */
-    public void setOriginalRow(String[] originalRow) {
+    public void setOriginalRow(TYPE[] originalRow) {
         this.originalRow = originalRow;
     }
 

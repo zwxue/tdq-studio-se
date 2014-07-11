@@ -35,6 +35,8 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
+import org.eclipse.swt.widgets.Display;
+import org.talend.core.ITDQRepositoryService;
 import org.talend.core.database.EDatabaseTypeName;
 import org.talend.core.model.metadata.IMetadataConnection;
 import org.talend.core.model.metadata.builder.ConvertionHelper;
@@ -72,8 +74,10 @@ import org.talend.dataquality.indicators.TextParameters;
 import org.talend.dataquality.indicators.definition.CharactersMapping;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dq.dbms.GenericSQLHandler;
+import org.talend.dq.helper.AnalysisExecutorHelper;
 import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.UDIHelper;
+import org.talend.dq.indicators.IndicatorCommonUtil;
 import org.talend.dq.indicators.definitions.DefinitionHandler;
 import org.talend.dq.nodes.indicator.type.IndicatorEnum;
 import org.talend.metadata.managment.hive.HiveClassLoaderFactory;
@@ -1176,9 +1180,9 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
                     }
                 }
             }
-            //Added TDQ-8388 20140530 yyin: only show one message to let the user check detail in error log.
+            // Added TDQ-8388 20140530 yyin: only show one message to let the user check detail in error log.
             if (hasErrorMessage) {
-                setError(Messages.getString("ColumnAnalysisSqlExecutor.ERRORREFERTOLOG"));
+                setError(Messages.getString("ColumnAnalysisSqlExecutor.ERRORREFERTOLOG"));//$NON-NLS-1$
             }
 
             if (monitor != null) {
@@ -1265,7 +1269,7 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
      * @return
      * @throws SQLException
      */
-    protected boolean executeQuery(Indicator indicator, Connection connection, String queryStmt) throws SQLException {
+    protected boolean executeQuery(final Indicator indicator, Connection connection, String queryStmt) throws SQLException {
         String cat = getCatalogOrSchemaName(indicator.getAnalyzedElement());
         if (log.isInfoEnabled()) {
             log.info(Messages.getString("ColumnAnalysisSqlExecutor.COMPUTINGINDICATOR", indicator.getName()) //$NON-NLS-1$ 
@@ -1277,6 +1281,19 @@ public class ColumnAnalysisSqlExecutor extends ColumnAnalysisExecutor {
         // expression in definition file.
         List<Object[]> myResultSet = executeQuery(cat, connection, queryStmt);
         ret = indicator.storeSqlResults(myResultSet);
+
+        // Added TDQ-8787 publish the related event when one indicator is finished: to refresh the chart with new result
+        // of the current indicator
+        final ITDQRepositoryService tdqRepositoryService = AnalysisExecutorHelper.getTDQService();
+        if (tdqRepositoryService != null) {
+            Display.getDefault().asyncExec(new Runnable() {
+
+                public void run() {
+                    tdqRepositoryService.publishDynamicEvent(indicator, IndicatorCommonUtil.getIndicatorValue(indicator));
+                }
+            });
+        }// ~
+
         // MOD delete the try/catch TDQ-8388
         return ret;
     }

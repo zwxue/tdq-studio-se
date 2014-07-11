@@ -34,6 +34,7 @@ import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.columnset.ColumnsetPackage;
 import org.talend.dataquality.indicators.columnset.RowMatchingIndicator;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
+import org.talend.dq.helper.ContextHelper;
 import org.talend.dq.helper.EObjectHelper;
 import org.talend.utils.sugars.ReturnCode;
 import org.talend.utils.sugars.TypedReturnCode;
@@ -139,14 +140,15 @@ public class RowMatchingAnalysisExecutor extends ColumnAnalysisSqlExecutor {
         String aliasB = "B"; //$NON-NLS-1$
 
         // MOD xqliu 2009-06-16 bug 7334
-        String dataFilterA = AnalysisHelper.getStringDataFilter(this.cachedAnalysis, AnalysisHelper.DATA_FILTER_A);
-        String dataFilterB = AnalysisHelper.getStringDataFilter(this.cachedAnalysis, AnalysisHelper.DATA_FILTER_B);
+        String dataFilterA = ContextHelper.getDataFilterWithoutContext(this.cachedAnalysis, AnalysisHelper.DATA_FILTER_A);
+        String dataFilterB = ContextHelper.getDataFilterWithoutContext(this.cachedAnalysis, AnalysisHelper.DATA_FILTER_B);
+
         // MOD qiongli 2011-12-28 TDQ-4240.get the reversion value from a Map before generating sqlExpression.
         reversion = indiReversionMap != null && indiReversionMap.get(indicator) != null ? indiReversionMap.get(indicator)
                 .booleanValue() : false;
         if (reversion) {
-            dataFilterA = AnalysisHelper.getStringDataFilter(this.cachedAnalysis, AnalysisHelper.DATA_FILTER_B);
-            dataFilterB = AnalysisHelper.getStringDataFilter(this.cachedAnalysis, AnalysisHelper.DATA_FILTER_A);
+            dataFilterA = ContextHelper.getDataFilterWithoutContext(this.cachedAnalysis, AnalysisHelper.DATA_FILTER_B);
+            dataFilterB = ContextHelper.getDataFilterWithoutContext(this.cachedAnalysis, AnalysisHelper.DATA_FILTER_A);
         }
         String tableNameA = addDataFilterWithTableName(getTableName(columnSetA), dataFilterA) + " " + aliasA; //$NON-NLS-1$
         String tableNameB = addDataFilterWithTableName(getTableName(columnSetB), dataFilterB) + " " + aliasB; //$NON-NLS-1$
@@ -384,8 +386,8 @@ public class RowMatchingAnalysisExecutor extends ColumnAnalysisSqlExecutor {
             // set data filter here
             reversion = indiReversionMap != null && indiReversionMap.get(indicator) != null ? indiReversionMap.get(indicator)
                     .booleanValue() : false;
-            final String stringDataFilter = reversion ? AnalysisHelper.getStringDataFilter(this.cachedAnalysis,
-                    AnalysisHelper.DATA_FILTER_B) : AnalysisHelper.getStringDataFilter(this.cachedAnalysis,
+            String stringDataFilter = reversion ? ContextHelper.getDataFilterWithoutContext(this.cachedAnalysis,
+                    AnalysisHelper.DATA_FILTER_B) : ContextHelper.getDataFilterWithoutContext(this.cachedAnalysis,
                     AnalysisHelper.DATA_FILTER_A);
             List<String> whereClauses = new ArrayList<String>();
             if (stringDataFilter != null && !stringDataFilter.trim().equals(PluginConstant.EMPTY_STRING)) {

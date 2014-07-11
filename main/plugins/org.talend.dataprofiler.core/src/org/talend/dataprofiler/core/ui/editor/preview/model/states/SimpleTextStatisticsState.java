@@ -54,7 +54,7 @@ public class SimpleTextStatisticsState extends TextStatisticsState {
 
         CustomerDefaultCategoryDataset customerdataset = new CustomerDefaultCategoryDataset();
         for (IndicatorUnit unit : units) {
-            double value = Double.parseDouble(unit.getValue().toString());
+            double value = unit.getValue() != null ? Double.parseDouble(unit.getValue().toString()) : Double.NaN;
             String label = unit.getIndicatorName();
             String type = "";//$NON-NLS-1$
             switch (unit.getType()) {
