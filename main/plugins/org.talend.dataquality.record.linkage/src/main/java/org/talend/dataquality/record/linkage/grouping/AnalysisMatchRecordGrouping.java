@@ -42,7 +42,6 @@ public class AnalysisMatchRecordGrouping extends AbstractRecordGrouping<String> 
         setSeperateOutput(Boolean.TRUE);
     }
 
-
     public void addRuleMatcher(List<Map<String, String>> ruleMatcherConvertResult) {
         addMatchRule(ruleMatcherConvertResult);
 
@@ -113,7 +112,7 @@ public class AnalysisMatchRecordGrouping extends AbstractRecordGrouping<String> 
      * @see org.talend.dataquality.record.linkage.grouping.AbstractRecordGrouping#modifyGroupSize(java.lang.Object)
      */
     @Override
-    protected String modifyGroupSize(String oldGroupSize) {
+    protected String incrementGroupSize(String oldGroupSize) {
         return String.valueOf(Integer.parseInt(String.valueOf(oldGroupSize)) + 1);
     }
 
@@ -133,7 +132,7 @@ public class AnalysisMatchRecordGrouping extends AbstractRecordGrouping<String> 
      * @see org.talend.dataquality.record.linkage.grouping.AbstractRecordGrouping#getCOLUMNFromObject(java.lang.Object)
      */
     @Override
-    protected String getTYPEFromObject(Object objectValue) {
+    protected String castAsType(Object objectValue) {
         return String.valueOf(objectValue);
     }
 

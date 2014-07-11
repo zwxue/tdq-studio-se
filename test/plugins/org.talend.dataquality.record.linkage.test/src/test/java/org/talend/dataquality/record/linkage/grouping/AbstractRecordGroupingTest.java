@@ -25,7 +25,7 @@ public class AbstractRecordGroupingTest {
      */
     private List<String[]> inputList = null;
 
-    private IRecordGrouping recordGroup = null;
+    private IRecordGrouping<String> recordGroup = null;
 
     private static final String columnDelimiter = "|"; //$NON-NLS-1$
 
@@ -55,7 +55,23 @@ public class AbstractRecordGroupingTest {
             @Override
             protected void outputRow(String[] row) {
                 groupingRecords.add(row);
+                for (String c : row) {
+                    System.out.print(c + ",");
+                }
+                System.out.println();
 
+            }
+
+            @Override
+            protected String incrementGroupSize(String oldGroupSize) {
+                String newGroupSize = String.valueOf(Integer.parseInt(String.valueOf(oldGroupSize)) + 1);
+                return newGroupSize;
+            }
+
+            @Override
+            protected String castAsType(Object objectValue) {
+                String column = String.valueOf(objectValue);
+                return column;
             }
 
             @Override
@@ -64,22 +80,11 @@ public class AbstractRecordGroupingTest {
             }
 
             @Override
-            protected String modifyGroupSize(String oldGroupSize) {
-                String newGroupSize = String.valueOf(Integer.parseInt(String.valueOf(oldGroupSize)) + 1);
-                return newGroupSize;
-            }
-
-            @Override
             protected String[] createTYPEArray(int size) {
                 String[] arrays = new String[size];
                 return arrays;
             }
 
-            @Override
-            protected String getTYPEFromObject(Object objectValue) {
-                String column = String.valueOf(objectValue);
-                return column;
-            }
         };
 
     }
@@ -313,7 +318,6 @@ public class AbstractRecordGroupingTest {
     private void testMatchThreshold_0() {
         List<Map<String, String>> matchingRule;
         Map<String, String> lnameRecords;
-        Map<String, String> accountRecords;
         groupingRecords.clear();
         recordGroup.setColumnDelimiter(columnDelimiter);
         recordGroup.setIsLinkToPrevious(Boolean.FALSE);
