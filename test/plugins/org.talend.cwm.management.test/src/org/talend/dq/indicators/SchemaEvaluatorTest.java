@@ -12,6 +12,7 @@
 // ============================================================================
 package org.talend.dq.indicators;
 
+import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 
 import junit.framework.Assert;
@@ -30,8 +31,6 @@ import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.resource.relational.Catalog;
 import orgomg.cwm.resource.relational.RelationalFactory;
 import orgomg.cwm.resource.relational.Schema;
-
-import com.mysql.jdbc.DatabaseMetaData;
 
 /**
  * created by talend on Apr 8, 2014 Detailled comment
