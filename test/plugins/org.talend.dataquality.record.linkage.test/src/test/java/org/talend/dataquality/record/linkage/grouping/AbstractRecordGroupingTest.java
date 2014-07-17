@@ -15,6 +15,7 @@ import org.apache.log4j.Logger;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.talend.dataquality.record.linkage.grouping.swoosh.RichRecord;
 
 public class AbstractRecordGroupingTest {
 
@@ -83,6 +84,12 @@ public class AbstractRecordGroupingTest {
             protected String[] createTYPEArray(int size) {
                 String[] arrays = new String[size];
                 return arrays;
+            }
+
+            @Override
+            protected void outputRow(RichRecord row) {
+                // TODO Auto-generated method stub
+
             }
 
         };

@@ -23,6 +23,7 @@ import org.talend.dataquality.record.linkage.attribute.AttributeMatcherFactory;
 import org.talend.dataquality.record.linkage.attribute.IAttributeMatcher;
 import org.talend.dataquality.record.linkage.constant.AttributeMatcherType;
 import org.talend.dataquality.record.linkage.constant.RecordMatcherType;
+import org.talend.dataquality.record.linkage.grouping.swoosh.RichRecord;
 import org.talend.dataquality.record.linkage.grouping.swoosh.SurvivorShipAlgorithmParams;
 import org.talend.dataquality.record.linkage.record.CombinedRecordMatcher;
 import org.talend.dataquality.record.linkage.record.IRecordMatcher;
@@ -303,6 +304,7 @@ public abstract class AbstractRecordGrouping<TYPE> implements IRecordGrouping<TY
             }
             break;
         case TSWOOSH:
+            combinedRecordMatcher.setDisplayLabels(true);
             swooshGrouping.swooshMatch(combinedRecordMatcher, survivorShipAlgorithmParams);
         }
     }
@@ -384,6 +386,8 @@ public abstract class AbstractRecordGrouping<TYPE> implements IRecordGrouping<TY
      * @param row
      */
     protected abstract void outputRow(TYPE[] row);
+
+    protected abstract void outputRow(RichRecord row);
 
     /*
      * (non-Javadoc)

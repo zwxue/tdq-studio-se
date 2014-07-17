@@ -16,6 +16,8 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.talend.dataquality.record.linkage.grouping.AbstractRecordGrouping.MatchAlgoithm;
+import org.talend.dataquality.record.linkage.grouping.swoosh.DQAttribute;
+import org.talend.dataquality.record.linkage.grouping.swoosh.RichRecord;
 import org.talend.dataquality.record.linkage.grouping.swoosh.SurvivorShipAlgorithmParams;
 import org.talend.dataquality.record.linkage.grouping.swoosh.SurvivorShipAlgorithmParams.SurvivorshipFunction;
 import org.talend.dataquality.record.linkage.utils.SurvivorShipAlgorithmEnum;
@@ -86,7 +88,31 @@ public class SwooshRecordGroupingTest {
              */
             @Override
             protected void outputRow(String[] row) {
+                for (String c : row) {
+                    System.out.print(c + ",");
+                }
+                System.out.println();
                 groupingRecords.add(row);
+            }
+
+            /*
+             * (non-Javadoc)
+             * 
+             * @see
+             * org.talend.dataquality.record.linkage.grouping.AbstractRecordGrouping#outputRow(org.talend.dataquality
+             * .record.linkage.grouping.swoosh.RichRecord)
+             */
+            @Override
+            protected void outputRow(RichRecord row) {
+                List<DQAttribute<?>> originRow = row.getOutputRow();
+                String[] strRow = new String[originRow.size()];
+                int idx = 0;
+                for (DQAttribute<?> attr : originRow) {
+                    strRow[idx] = attr.getValue();
+                    idx++;
+                }
+                outputRow(strRow);
+
             }
 
             @Override
@@ -100,12 +126,20 @@ public class SwooshRecordGroupingTest {
             }
         };
         recordGroup.setRecordLinkAlgorithm(MatchAlgoithm.TSWOOSH);
-        SurvivorShipAlgorithmParams survivorShipAlgorithmParams = new SurvivorShipAlgorithmParams();
-        SurvivorshipFunction func = survivorShipAlgorithmParams.new SurvivorshipFunction();
+        SurvivorShipAlgorithmParams survAlgParams = new SurvivorShipAlgorithmParams();
+        SurvivorshipFunction func = survAlgParams.new SurvivorshipFunction();
         func.setParameter(""); //$NON-NLS-1$
-        func.setSurvivorShipFunction(SurvivorShipAlgorithmEnum.MOST_COMMON);
-        survivorShipAlgorithmParams.setSurviorShipAlgos(new SurvivorshipFunction[] { func });
-        recordGroup.setSurvivorShipAlgorithmParams(survivorShipAlgorithmParams);
+        func.setSurvivorShipAlgoEnum(SurvivorShipAlgorithmEnum.MOST_COMMON);
+        survAlgParams.setSurviorShipAlgos(new SurvivorshipFunction[] { func });
+        // Set default survivorship functions.
+        Map<Integer, SurvivorshipFunction> defaultSurvRules = new HashMap<Integer, SurvivorshipFunction>();
+        SurvivorshipFunction survFunc = survAlgParams.new SurvivorshipFunction();
+        survFunc.setParameter(StringUtils.EMPTY);
+        survFunc.setSurvivorShipAlgoEnum(SurvivorShipAlgorithmEnum.LONGEST);
+        defaultSurvRules.put(1, survFunc);
+        survAlgParams.setDefaultSurviorshipRules(defaultSurvRules);
+
+        recordGroup.setSurvivorShipAlgorithmParams(survAlgParams);
 
         recordGroup.setColumnDelimiter(columnDelimiter);
         recordGroup.setIsLinkToPrevious(Boolean.FALSE);
@@ -152,13 +186,13 @@ public class SwooshRecordGroupingTest {
         for (String[] rds : groupingRecords) {
             if (rds[0].equals("2") && rds[11].equals("true")) { //$NON-NLS-1$ //$NON-NLS-2$
                 // The group size should be 2 for master record which id is 2
-                Assert.assertEquals(2, Integer.valueOf(rds[rds.length - 4]).intValue());
+                Assert.assertEquals(2, Integer.valueOf(rds[rds.length - 5]).intValue());
             } else if (rds[0].equals("7") && rds[11].equals("true")) { //$NON-NLS-1$ //$NON-NLS-2$
                 // The group size should be 2 for master record which id is 7
-                Assert.assertEquals(2, Integer.valueOf(rds[rds.length - 4]).intValue());
+                Assert.assertEquals(2, Integer.valueOf(rds[rds.length - 5]).intValue());
             } else if (rds[0].equals("1") && rds[11].equals("true")) { //$NON-NLS-1$ //$NON-NLS-2$
                 // The group size should be 3 for master record which id is 1
-                Assert.assertEquals(3, Integer.valueOf(rds[rds.length - 4]).intValue());
+                Assert.assertEquals(3, Integer.valueOf(rds[rds.length - 5]).intValue());
             }
         }
 
@@ -203,7 +237,24 @@ public class SwooshRecordGroupingTest {
              */
             @Override
             protected void outputRow(String[] row) {
+                for (String c : row) {
+                    System.out.print(c + ",");
+                }
+                System.out.println();
                 groupingRecords.add(row);
+            }
+
+            @Override
+            protected void outputRow(RichRecord row) {
+                List<DQAttribute<?>> originRow = row.getOutputRow();
+                String[] strRow = new String[originRow.size()];
+                int idx = 0;
+                for (DQAttribute<?> attr : originRow) {
+                    strRow[idx] = attr.getValue();
+                    idx++;
+                }
+                outputRow(strRow);
+
             }
 
             @Override
@@ -220,9 +271,43 @@ public class SwooshRecordGroupingTest {
         SurvivorShipAlgorithmParams survivorShipAlgorithmParams = new SurvivorShipAlgorithmParams();
         SurvivorshipFunction func = survivorShipAlgorithmParams.new SurvivorshipFunction();
         func.setParameter(""); //$NON-NLS-1$
-        func.setSurvivorShipFunction(SurvivorShipAlgorithmEnum.MOST_COMMON);
+        func.setSurvivorShipAlgoEnum(SurvivorShipAlgorithmEnum.MOST_COMMON);
         survivorShipAlgorithmParams.setSurviorShipAlgos(new SurvivorshipFunction[] { func });
         recordGroup.setSurvivorShipAlgorithmParams(survivorShipAlgorithmParams);
+
+        // Set default survivorship functions.
+        Map<Integer, SurvivorshipFunction> defaultSurvRules = new HashMap<Integer, SurvivorshipFunction>();
+        SurvivorshipFunction survFunc = survivorShipAlgorithmParams.new SurvivorshipFunction();
+        survFunc.setParameter(StringUtils.EMPTY);
+        survFunc.setSurvivorShipAlgoEnum(SurvivorShipAlgorithmEnum.MOST_COMMON);
+        defaultSurvRules.put(0, survFunc);
+
+        SurvivorshipFunction survFunc2 = survivorShipAlgorithmParams.new SurvivorshipFunction();
+        survFunc2.setParameter(StringUtils.EMPTY);
+        survFunc2.setSurvivorShipAlgoEnum(SurvivorShipAlgorithmEnum.LONGEST);
+        defaultSurvRules.put(2, survFunc2);
+
+        SurvivorshipFunction survFunc3 = survivorShipAlgorithmParams.new SurvivorshipFunction();
+        survFunc3.setParameter(StringUtils.EMPTY);
+        survFunc3.setSurvivorShipAlgoEnum(SurvivorShipAlgorithmEnum.MOST_COMMON);
+        defaultSurvRules.put(3, survFunc3);
+
+        SurvivorshipFunction survFunc4 = survivorShipAlgorithmParams.new SurvivorshipFunction();
+        survFunc4.setParameter(StringUtils.EMPTY);
+        survFunc4.setSurvivorShipAlgoEnum(SurvivorShipAlgorithmEnum.LARGEST);
+        defaultSurvRules.put(4, survFunc4);
+
+        SurvivorshipFunction survFunc5 = survivorShipAlgorithmParams.new SurvivorshipFunction();
+        survFunc5.setParameter(StringUtils.EMPTY);
+        survFunc5.setSurvivorShipAlgoEnum(SurvivorShipAlgorithmEnum.MOST_RECENT);
+        defaultSurvRules.put(5, survFunc5);
+
+        SurvivorshipFunction survFunc6 = survivorShipAlgorithmParams.new SurvivorshipFunction();
+        survFunc6.setParameter(StringUtils.EMPTY);
+        survFunc6.setSurvivorShipAlgoEnum(SurvivorShipAlgorithmEnum.MOST_COMMON);
+        defaultSurvRules.put(6, survFunc6);
+
+        survivorShipAlgorithmParams.setDefaultSurviorshipRules(defaultSurvRules);
 
         recordGroup.setColumnDelimiter(columnDelimiter);
         recordGroup.setIsLinkToPrevious(Boolean.FALSE);
@@ -267,11 +352,22 @@ public class SwooshRecordGroupingTest {
         // Assertions
 
         for (String[] rds : groupingRecords) {
-            if (rds[11].equals("true")) { //$NON-NLS-1$
+            if (rds[10].equals("true")) { //$NON-NLS-1$
                 // Master record's group size is 4
-                Assert.assertEquals(4, Integer.valueOf(rds[rds.length - 4]).intValue());
+                Assert.assertEquals(4, Integer.valueOf(rds[rds.length - 5]).intValue());
+                // Group quality.
+                Assert.assertEquals(0.9666666746139526, Double.valueOf(rds[rds.length - 2]).doubleValue(), 0d);
                 // Assert the merged value is the "most common" value.
                 Assert.assertEquals("Amburgay", rds[1]);
+                // Longest
+                Assert.assertEquals("Gregory", rds[2]);
+                // Most common
+                Assert.assertEquals("R.", rds[3]);
+                // Largest
+                Assert.assertEquals("4151", rds[4]);
+                // Most recent. This is the logic from MDM , shoudn't be 2015-10-1 ?
+                Assert.assertEquals("2014-10-1", rds[5]);
+
             }
         }
 

@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
+import org.talend.dataquality.record.linkage.grouping.swoosh.RichRecord;
 
 /**
  * created by zshen on Aug 7, 2013 Detailled comment
@@ -93,6 +94,19 @@ public class AnalysisMatchRecordGrouping extends AbstractRecordGrouping<String> 
     @Override
     protected void outputRow(String[] row) {
         matchResultConsumer.handle(row);
+
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * org.talend.dataquality.record.linkage.grouping.AbstractRecordGrouping#outputRow(org.talend.dataquality.record
+     * .linkage.grouping.swoosh.RichRecord)
+     */
+    @Override
+    protected void outputRow(RichRecord row) {
+        // No implementation by default.
 
     }
 

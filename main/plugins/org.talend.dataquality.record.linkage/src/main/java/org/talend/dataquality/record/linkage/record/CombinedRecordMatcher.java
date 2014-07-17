@@ -22,6 +22,7 @@ import org.talend.dataquality.matchmerge.Record;
 import org.talend.dataquality.matchmerge.mfb.MFB;
 import org.talend.dataquality.matchmerge.mfb.MatchResult;
 import org.talend.dataquality.record.linkage.attribute.IAttributeMatcher;
+import org.talend.dataquality.record.linkage.grouping.swoosh.RichRecord;
 
 /**
  * created by scorreia on Jan 9, 2013
@@ -197,7 +198,22 @@ public class CombinedRecordMatcher extends AbstractRecordMatcher {
             }
             return MFB.NonMatchResult.wrap(result);
         }
+
+        record1.setConfidence(matchingWeight);
         record2.setConfidence(matchingWeight);
+
+        if (record1 instanceof RichRecord) { // record 2 will then be instance of RichRecord class naturally.
+            // Set matching score and labeled attribute scores
+            RichRecord richRecord1 = (RichRecord) record1;
+            richRecord1.setScore(matchingWeight);
+            richRecord1.setLabeledAttributeScores(getLabeledAttributeMatchWeights());
+
+            RichRecord richRecord2 = (RichRecord) record2;
+            richRecord2.setScore(matchingWeight);
+            richRecord2.setLabeledAttributeScores(getLabeledAttributeMatchWeights());
+
+        }
+
         return result;
     }
 }

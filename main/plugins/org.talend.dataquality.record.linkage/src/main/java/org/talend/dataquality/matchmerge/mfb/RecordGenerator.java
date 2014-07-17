@@ -13,19 +13,21 @@
 package org.talend.dataquality.matchmerge.mfb;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.talend.dataquality.matchmerge.mfb.RecordIterator.ValueGenerator;
+import org.talend.dataquality.record.linkage.grouping.swoosh.DQAttribute;
 
 /**
  * Record generator with original row.
  * 
  */
-public class RecordGenerator<TYPE> {
+public class RecordGenerator {
 
     private Map<String, ValueGenerator> matchKeyMap = new HashMap<String, ValueGenerator>();
 
-    private TYPE[] originalRow = null;
+    private List<DQAttribute<?>> originalRow = null;
 
     /**
      * Getter for matchKeyMap.
@@ -50,7 +52,7 @@ public class RecordGenerator<TYPE> {
      * 
      * @return the originalRow
      */
-    public TYPE[] getOriginalRow() {
+    public List<DQAttribute<?>> getOriginalRow() {
         return this.originalRow;
     }
 
@@ -59,7 +61,7 @@ public class RecordGenerator<TYPE> {
      * 
      * @param originalRow the originalRow to set
      */
-    public void setOriginalRow(TYPE[] originalRow) {
+    public void setOriginalRow(List<DQAttribute<?>> originalRow) {
         this.originalRow = originalRow;
     }
 

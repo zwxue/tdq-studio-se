@@ -19,11 +19,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import org.apache.commons.lang.StringUtils;
 import org.talend.dataquality.matchmerge.MatchMergeAlgorithm;
 import org.talend.dataquality.matchmerge.Record;
 import org.talend.dataquality.matchmerge.mfb.MatchResult;
 import org.talend.dataquality.matchmerge.mfb.RecordGenerator;
 import org.talend.dataquality.matchmerge.mfb.RecordIterator.ValueGenerator;
+import org.talend.dataquality.record.linkage.grouping.swoosh.DQAttribute;
 import org.talend.dataquality.record.linkage.grouping.swoosh.DQMFB;
 import org.talend.dataquality.record.linkage.grouping.swoosh.DQMFBRecordMerger;
 import org.talend.dataquality.record.linkage.grouping.swoosh.DQRecordIterator;
@@ -39,7 +41,7 @@ import org.talend.dataquality.record.linkage.utils.SurvivorShipAlgorithmEnum;
  */
 public class TSwooshGrouping<TYPE> {
 
-    List<RecordGenerator<TYPE>> rcdsGenerators = new ArrayList<RecordGenerator<TYPE>>();
+    List<RecordGenerator> rcdsGenerators = new ArrayList<RecordGenerator>();
 
     int totalCount = 0;
 
@@ -82,9 +84,16 @@ public class TSwooshGrouping<TYPE> {
                 }
             });
         }
-        RecordGenerator<TYPE> rcdGen = new RecordGenerator<TYPE>();
+        RecordGenerator rcdGen = new RecordGenerator();
         rcdGen.setMatchKeyMap(rcdMap);
-        rcdGen.setOriginalRow(inputRow);
+        List<DQAttribute<?>> rowList = new ArrayList<DQAttribute<?>>();
+        int colIdx = 0;
+        for (TYPE attribute : inputRow) {
+            DQAttribute<TYPE> attri = new DQAttribute<TYPE>(StringUtils.EMPTY, colIdx, attribute);
+            rowList.add(attri);
+            colIdx++;
+        }
+        rcdGen.setOriginalRow(rowList);
         rcdsGenerators.add(rcdGen);
     }
 
@@ -93,17 +102,17 @@ public class TSwooshGrouping<TYPE> {
         String[] funcParams = new String[surviorShipAlgos.length];
         int idx = 0;
         for (SurvivorshipFunction func : survParams.getSurviorShipAlgos()) {
-            surviorShipAlgos[idx] = func.getSurvivorShipFunction();
+            surviorShipAlgos[idx] = func.getSurvivorShipAlgoEnum();
             funcParams[idx] = func.getParameter();
             idx++;
         }
-        MatchMergeAlgorithm algorithm = new DQMFB(combinedRecordMatcher, new DQMFBRecordMerger("MFB", funcParams,
-                surviorShipAlgos));
+        MatchMergeAlgorithm algorithm = new DQMFB(combinedRecordMatcher, new DQMFBRecordMerger("MFB", funcParams, //$NON-NLS-1$
+                surviorShipAlgos, survParams.getDefaultSurviorshipRules()));
 
-        Iterator<Record> iterator = new DQRecordIterator<TYPE>(totalCount, rcdsGenerators);
+        Iterator<Record> iterator = new DQRecordIterator(totalCount, rcdsGenerators);
         List<Record> mergedRecords = algorithm.execute(iterator, new GroupingCallBack());
         for (Record rcd : mergedRecords) {
-            RichRecord<TYPE> printRcd = (RichRecord<TYPE>) rcd;
+            RichRecord printRcd = (RichRecord) rcd;
             output(printRcd);
         }
         totalCount = 0;
@@ -135,8 +144,8 @@ public class TSwooshGrouping<TYPE> {
         public void onMatch(Record record1, Record record2, MatchResult matchResult) {
 
             // record1 and record2 must be RichRecord from DQ grouping implementation.
-            RichRecord<TYPE> richRecord1 = (RichRecord<TYPE>) record1;
-            RichRecord<TYPE> richRecord2 = (RichRecord<TYPE>) record2;
+            RichRecord richRecord1 = (RichRecord) record1;
+            RichRecord richRecord2 = (RichRecord) record2;
 
             String grpId1 = richRecord1.getGroupId();
             String grpId2 = richRecord2.getGroupId();
@@ -170,7 +179,6 @@ public class TSwooshGrouping<TYPE> {
                 // group size is 0 for none-master record
                 richRecord1.setGrpSize(0);
                 richRecord1.setMaster(false);
-                // TODO set score and matching distance details for record 1.
 
                 output(richRecord1);
 
@@ -181,7 +189,6 @@ public class TSwooshGrouping<TYPE> {
                 // group size is 0 for none-master record
                 richRecord2.setGrpSize(0);
                 richRecord2.setMaster(false);
-                // TODO set score and matching distance details for record 2.
 
                 output(richRecord2);
             }
@@ -198,12 +205,15 @@ public class TSwooshGrouping<TYPE> {
         public void onNewMerge(Record record) {
             // record must be RichRecord from DQ grouping implementation.
             if (record.getGroupId() != null) {
-                RichRecord<TYPE> richRecord = (RichRecord<TYPE>) record;
+                RichRecord richRecord = (RichRecord) record;
                 richRecord.setMaster(true);
                 richRecord.setMerged(true);
                 richRecord.setScore(1);
-                // TODO check if the size is the size of original records or not.
                 richRecord.setGrpSize(richRecord.getRelatedIds().size());
+                if (richRecord.getGroupQuality() == 0) {
+                    // group quality will be the confidence (score) .
+                    richRecord.setGroupQuality(record.getConfidence());
+                }
             }
 
         }
@@ -218,11 +228,13 @@ public class TSwooshGrouping<TYPE> {
         @Override
         public void onRemoveMerge(Record record) {
             // record must be RichRecord from DQ grouping implementation.
-            RichRecord<TYPE> richRecord = (RichRecord<TYPE>) record;
+            RichRecord richRecord = (RichRecord) record;
             if (richRecord.isMerged()) {
                 richRecord.setOriginRow(null); // set null original row, won't be usefull anymore after another merge.
+                richRecord.setGroupQuality(0);
             }
             richRecord.setMerged(false);
+            richRecord.setMaster(false);
         }
 
         /*
@@ -234,7 +246,7 @@ public class TSwooshGrouping<TYPE> {
          */
         @Override
         public void onDifferent(Record record1, Record record2, MatchResult matchResult) {
-            RichRecord<TYPE> currentRecord = (RichRecord<TYPE>) record2;
+            RichRecord currentRecord = (RichRecord) record2;
             // group size is 1 for unique record
             currentRecord.setGrpSize(1);
             currentRecord.setMaster(true);
@@ -259,7 +271,7 @@ public class TSwooshGrouping<TYPE> {
          */
         @Override
         public boolean isInterrupted() {
-            // TODO Auto-generated method stub
+            // Nothing todo
             return false;
         }
 
@@ -270,7 +282,7 @@ public class TSwooshGrouping<TYPE> {
          */
         @Override
         public void onBeginProcessing() {
-            // TODO Auto-generated method stub
+            // Nothing todo
 
         }
 
@@ -281,14 +293,13 @@ public class TSwooshGrouping<TYPE> {
          */
         @Override
         public void onEndProcessing() {
-            // TODO Auto-generated method stub
+            // Nothing todo
 
         }
 
     }
 
-    private void output(RichRecord<TYPE> record) {
-        TYPE[] outputs = record.getOutputRow();
-        recordGrouping.outputRow(outputs);
+    private void output(RichRecord record) {
+        recordGrouping.outputRow(record);
     }
 }

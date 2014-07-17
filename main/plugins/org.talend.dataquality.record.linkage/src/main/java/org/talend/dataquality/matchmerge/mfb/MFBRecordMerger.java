@@ -31,7 +31,7 @@ public class MFBRecordMerger implements IRecordMerger {
         // Takes most recent as timestamp for the merged record.
         long mergedRecordTimestamp = record1.getTimestamp() > record2.getTimestamp() ? record1.getTimestamp() : record2
                 .getTimestamp();
-        Record mergedRecord = createNewRecord(record1, mergedRecordTimestamp);
+        Record mergedRecord = createNewRecord(record1, record2, mergedRecordTimestamp);
         for (int k = 0; k < r1.size(); k++) {
             Attribute a = new Attribute(r1.get(k).getLabel(), r1.get(k).getColumnIndex());
             mergedRecord.getAttributes().add(k, a);
@@ -59,104 +59,11 @@ public class MFBRecordMerger implements IRecordMerger {
             if (leftValue == null && rightValue == null) {
                 mergedAttribute.setValue(null);
             } else {
-                SurvivorShipAlgorithmEnum survivorShipAlgorithmEnum = typeMergeTable[i];
-                BigDecimal leftNumberValue;
-                BigDecimal rightNumberValue;
-                int leftValueLength = leftValue == null ? 0 : leftValue.length();
-                int rightValueLength = rightValue == null ? 0 : rightValue.length();
-                switch (survivorShipAlgorithmEnum) {
-                case CONCATENATE:
-                    mergedAttribute.setValue(leftValue + rightValue);
-                    break;
-                case LARGEST:
-                    leftNumberValue = parseNumberValue(r1, i);
-                    rightNumberValue = parseNumberValue(r2, i);
-                    if (leftNumberValue.compareTo(rightNumberValue) >= 0) {
-                        mergedAttribute.setValue(rightValue);
-                    } else {
-                        mergedAttribute.setValue(leftValue);
-                    }
-                    break;
-                case SMALLEST:
-                    leftNumberValue = parseNumberValue(r1, i);
-                    rightNumberValue = parseNumberValue(r2, i);
-                    if (leftNumberValue.compareTo(rightNumberValue) <= 0) {
-                        mergedAttribute.setValue(rightValue);
-                    } else {
-                        mergedAttribute.setValue(leftValue);
-                    }
-                    break;
-                case MOST_RECENT:
-                    if (record1.getTimestamp() > record2.getTimestamp()) {
-                        mergedAttribute.setValue(leftValue);
-                    } else if (record1.getTimestamp() < record2.getTimestamp()) {
-                        mergedAttribute.setValue(rightValue);
-                    } else {
-                        // Both r1 and r2 have same timestamp, return first value
-                        mergedAttribute.setValue(leftValue);
-                    }
-                    break;
-                case MOST_ANCIENT:
-                    if (record1.getTimestamp() < record2.getTimestamp()) {
-                        mergedAttribute.setValue(leftValue);
-                    } else if (record1.getTimestamp() > record2.getTimestamp()) {
-                        mergedAttribute.setValue(rightValue);
-                    } else {
-                        // Both r1 and r2 have same timestamp, return first value
-                        mergedAttribute.setValue(leftValue);
-                    }
-                    break;
-                case PREFER_TRUE:
-                    if (!Boolean.parseBoolean(mergedAttribute.getValue()) && !Boolean.parseBoolean(mergedAttribute.getValue())) {
-                        mergedAttribute.setValue("false"); //$NON-NLS-1$
-                    } else {
-                        mergedAttribute.setValue("true"); //$NON-NLS-1$
-                    }
-                    break;
-                case PREFER_FALSE:
-                    if (Boolean.parseBoolean(mergedAttribute.getValue()) && Boolean.parseBoolean(mergedAttribute.getValue())) {
-                        mergedAttribute.setValue("true"); //$NON-NLS-1$
-                    } else {
-                        mergedAttribute.setValue("false"); //$NON-NLS-1$
-                    }
-                    break;
-                case MOST_COMMON:
-                    mergedAttribute.setValue(mergedAttribute.getValues().mostCommon());
-                    break;
-                case LONGEST:
-                    if (leftValueLength > rightValueLength) {
-                        mergedAttribute.setValue(leftValue);
-                    } else if (leftValueLength < rightValueLength) {
-                        mergedAttribute.setValue(rightValue);
-                    } else {
-                        // Same length and equals or same length
-                        mergedAttribute.setValue(leftValue);
-                    }
-                    break;
-                case SHORTEST:
-                    if (leftValueLength < rightValueLength) {
-                        mergedAttribute.setValue(leftValue);
-                    } else if (leftValueLength > rightValueLength) {
-                        mergedAttribute.setValue(rightValue);
-                    } else {
-                        // Same length and equals or same length
-                        mergedAttribute.setValue(leftValue);
-                    }
-                    break;
-                case MOST_TRUSTED_SOURCE:
-                    String mostTrustedSourceName = parameters[i];
-                    if (mostTrustedSourceName == null) {
-                        throw new IllegalStateException("Survivorship 'most trusted source' must specify a trusted source.");
-                    }
-                    if (mostTrustedSourceName.equals(record1.getSource())) {
-                        mergedAttribute.setValue(leftValue);
-                    } else if (mostTrustedSourceName.equals(record2.getSource())) {
-                        mergedAttribute.setValue(rightValue);
-                    } else {
-                        // r1 and r2 are not from a trusted source, return first value
-                        mergedAttribute.setValue(leftValue);
-                    }
-                    break;
+                String mergedValue = createMergeValue(record1.getSource(), record2.getSource(), parameters[i],
+                        record1.getTimestamp(), record2.getTimestamp(), typeMergeTable[i], leftValue, rightValue,
+                        mergedAttribute.getValue(), mergedAttribute.getValues());
+                if (mergedValue != null) {
+                    mergedAttribute.setValue(mergedValue);
                 }
             }
         }
@@ -177,18 +84,127 @@ public class MFBRecordMerger implements IRecordMerger {
     }
 
     /**
+     * 
+     * Create a merged value given the values from record 1 and record 2.
+     * 
+     * @param leftSource
+     * @param rightSource
+     * @param parameter
+     * @param leftTimeStamp
+     * @param rightTimeStamp
+     * @param survivorShipAlgorithmEnum
+     * @param leftValue
+     * @param rightValue
+     * @param mergedValue
+     * @param mergedValues
+     * @return the merged value.
+     */
+    protected String createMergeValue(String leftSource, String rightSource, String parameter, long leftTimeStamp,
+            long rightTimeStamp, SurvivorShipAlgorithmEnum survivorShipAlgorithmEnum, String leftValue, String rightValue,
+            String mergedValue, AttributeValues<String> mergedValues) {
+        BigDecimal leftNumberValue;
+        BigDecimal rightNumberValue;
+        int leftValueLength = leftValue == null ? 0 : leftValue.length();
+        int rightValueLength = rightValue == null ? 0 : rightValue.length();
+        switch (survivorShipAlgorithmEnum) {
+        case CONCATENATE:
+            return leftValue + rightValue;
+        case LARGEST:
+            leftNumberValue = parseNumberValue(leftValue);
+            rightNumberValue = parseNumberValue(rightValue);
+            if (leftNumberValue.compareTo(rightNumberValue) >= 0) {
+                return leftValue;
+            } else {
+                return rightValue;
+            }
+        case SMALLEST:
+            leftNumberValue = parseNumberValue(leftValue);
+            rightNumberValue = parseNumberValue(rightValue);
+            if (leftNumberValue.compareTo(rightNumberValue) <= 0) {
+                return leftValue;
+            } else {
+                return rightValue;
+            }
+        case MOST_RECENT:
+            if (leftTimeStamp > rightTimeStamp) {
+                return leftValue;
+            } else if (leftTimeStamp < rightTimeStamp) {
+                return rightValue;
+            } else {
+                // Both r1 and r2 have same timestamp, return first value
+                return leftValue;
+            }
+        case MOST_ANCIENT:
+            if (leftTimeStamp < rightTimeStamp) {
+                return leftValue;
+            } else if (leftTimeStamp > rightTimeStamp) {
+                return rightValue;
+            } else {
+                // Both r1 and r2 have same timestamp, return first value
+                return leftValue;
+            }
+        case PREFER_TRUE:
+            if (!Boolean.parseBoolean(mergedValue) && !Boolean.parseBoolean(mergedValue)) {
+                return "false"; //$NON-NLS-1$
+            } else {
+                return "true"; //$NON-NLS-1$
+            }
+        case PREFER_FALSE:
+            if (Boolean.parseBoolean(mergedValue) && Boolean.parseBoolean(mergedValue)) {
+                return "true"; //$NON-NLS-1$
+            } else {
+                return "false"; //$NON-NLS-1$
+            }
+        case MOST_COMMON:
+            return mergedValues.mostCommon();
+        case LONGEST:
+            if (leftValueLength > rightValueLength) {
+                return leftValue;
+            } else if (leftValueLength < rightValueLength) {
+                return rightValue;
+            } else {
+                // Same length and equals or same length
+                return leftValue;
+            }
+        case SHORTEST:
+            if (leftValueLength < rightValueLength) {
+                return leftValue;
+            } else if (leftValueLength > rightValueLength) {
+                return rightValue;
+            } else {
+                // Same length and equals or same length
+                return leftValue;
+            }
+        case MOST_TRUSTED_SOURCE:
+            String mostTrustedSourceName = parameter;
+            if (mostTrustedSourceName == null) {
+                throw new IllegalStateException("Survivorship 'most trusted source' must specify a trusted source.");
+            }
+            if (mostTrustedSourceName.equals(leftSource)) {
+                return leftValue;
+            } else if (mostTrustedSourceName.equals(rightSource)) {
+                return rightValue;
+            } else {
+                // r1 and r2 are not from a trusted source, return first value
+                return leftValue;
+            }
+        }
+        return null;
+
+    }
+
+    /**
      * Create a new record given record1's id and merged record's timestamp.
      * 
      * @param record1
      * @param mergedRecordTimestamp
      * @return
      */
-    protected Record createNewRecord(Record record1, long mergedRecordTimestamp) {
+    protected Record createNewRecord(Record record1, Record record2, long mergedRecordTimestamp) {
         return new Record(record1.getId(), mergedRecordTimestamp, mergedRecordSource);
     }
 
-    private static BigDecimal parseNumberValue(List<Attribute> record, int i) {
-        String value = record.get(i).getValue();
+    private static BigDecimal parseNumberValue(String value) {
         return value == null || value.isEmpty() ? BigDecimal.ZERO : new BigDecimal(value);
     }
 }

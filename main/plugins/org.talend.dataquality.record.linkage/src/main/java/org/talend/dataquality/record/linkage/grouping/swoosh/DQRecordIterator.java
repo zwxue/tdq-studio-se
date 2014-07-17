@@ -24,7 +24,7 @@ import org.talend.dataquality.matchmerge.mfb.RecordIterator;
  * created by zhao on Jul 9, 2014 Detailled comment
  * 
  */
-public class DQRecordIterator<TYPE> extends RecordIterator<TYPE> {
+public class DQRecordIterator extends RecordIterator {
 
     /**
      * DOC zhao DQValueIterator constructor comment.
@@ -32,7 +32,7 @@ public class DQRecordIterator<TYPE> extends RecordIterator<TYPE> {
      * @param size
      * @param generators
      */
-    public DQRecordIterator(int size, List<RecordGenerator<TYPE>> generators) {
+    public DQRecordIterator(int size, List<RecordGenerator> generators) {
         super(size, generators);
     }
 
@@ -42,8 +42,8 @@ public class DQRecordIterator<TYPE> extends RecordIterator<TYPE> {
      * @see org.talend.dataquality.matchmerge.mfb.ValuesIterator#createRecord(java.util.Vector)
      */
     @Override
-    protected Record createRecord(Vector<Attribute> attriVector, TYPE[] originalRow) {
-        RichRecord<TYPE> record = new RichRecord<TYPE>(attriVector, String.valueOf(currentIndex - 1), timestamp++, "MFB"); //$NON-NLS-1$
+    protected Record createRecord(Vector<Attribute> attriVector, List<DQAttribute<?>> originalRow) {
+        RichRecord record = new RichRecord(attriVector, String.valueOf(currentIndex - 1), timestamp++, "MFB"); //$NON-NLS-1$
         record.setOriginRow(originalRow);
         return record;
     }

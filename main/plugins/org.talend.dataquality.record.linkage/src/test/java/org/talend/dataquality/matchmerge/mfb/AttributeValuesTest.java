@@ -72,8 +72,9 @@ public class AttributeValuesTest extends TestCase {
         values1.merge(values2);
         assertEquals(2, values1.get("test1").getOccurrence());
         assertEquals(1, values1.get("test2").getOccurrence());
+
     }
-    
+
     public void testMergeInNew() throws Exception {
         AttributeValues<String> values1 = new AttributeValues<String>();
         values1.get("test1").increment();

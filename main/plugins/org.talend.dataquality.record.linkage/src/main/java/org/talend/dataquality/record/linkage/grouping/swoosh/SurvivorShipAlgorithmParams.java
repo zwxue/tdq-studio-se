@@ -26,6 +26,9 @@ public class SurvivorShipAlgorithmParams {
      */
     private SurvivorshipFunction[] surviorShipAlgos;
 
+    /**
+     * The survivorship function at specific column (the key of map is the column index)
+     */
     private Map<Integer, SurvivorshipFunction> defaultSurviorshipRules;
 
     /**
@@ -76,7 +79,7 @@ public class SurvivorShipAlgorithmParams {
          * 
          * @return the survivorShipFunction
          */
-        public SurvivorShipAlgorithmEnum getSurvivorShipFunction() {
+        public SurvivorShipAlgorithmEnum getSurvivorShipAlgoEnum() {
             return this.survivorShipFunction;
         }
 
@@ -85,7 +88,7 @@ public class SurvivorShipAlgorithmParams {
          * 
          * @param survivorShipFunction the survivorShipFunction to set
          */
-        public void setSurvivorShipFunction(SurvivorShipAlgorithmEnum survivorShipFunction) {
+        public void setSurvivorShipAlgoEnum(SurvivorShipAlgorithmEnum survivorShipFunction) {
             this.survivorShipFunction = survivorShipFunction;
         }
 
