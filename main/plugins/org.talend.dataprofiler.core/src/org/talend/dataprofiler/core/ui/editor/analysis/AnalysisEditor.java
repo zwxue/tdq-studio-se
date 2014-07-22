@@ -276,6 +276,9 @@ public class AnalysisEditor extends SupportContextEditor {
         if (isRefreshResultPage) {
             resultPage.refresh(getMasterPage());
             isRefreshResultPage = false;
+        } else {
+            EventManager.getInstance().publish(masterPage.analysisItem.getAnalysis(),
+                    EventEnum.DQ_DYNAMIC_SWITCH_MASTER_RESULT_PAGE, null);
         }
     }
 

@@ -213,48 +213,54 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
                             }
                             // register dynamic event for who supported dynamic chart
                             if (isSupportDynamicChart()) {
-                                EventManager.getInstance().publish(item.getAnalysis(), EventEnum.DQ_DYNAMIC_REGISTER_DYNAMIC_CHART, null);
+                                EventManager.getInstance().publish(item.getAnalysis(),
+                                        EventEnum.DQ_DYNAMIC_REGISTER_DYNAMIC_CHART, null);
                             }
                         }
 
                     });
 
-                    ReturnCode executed = AnalysisExecutorSelector.executeAnalysis(item, monitor);
+                    ReturnCode executed = null;
+                    try {
+                        executed = AnalysisExecutorSelector.executeAnalysis(item, monitor);
 
-                    if (monitor.isCanceled()) {
-                        TdqAnalysisConnectionPool.closeConnectionPool(item.getAnalysis());
-                        executed = new ReturnCode(DefaultMessagesImpl.getString("RunAnalysisAction.TaskCancel"), false); //$NON-NLS-1$
+                        if (monitor.isCanceled()) {
+                            TdqAnalysisConnectionPool.closeConnectionPool(item.getAnalysis());
+                            executed = new ReturnCode(DefaultMessagesImpl.getString("RunAnalysisAction.TaskCancel"), false); //$NON-NLS-1$
+                            monitor.done();
+                            if (isNeedUnlock) {
+                                unlockAnalysis();
+                            }
+                            return Status.CANCEL_STATUS;
+                        }
+
                         monitor.done();
                         if (isNeedUnlock) {
                             unlockAnalysis();
                         }
-                        return Status.CANCEL_STATUS;
-                    }
+                    } finally {// if any exception, still need to unregister dynamic events.
+                        Display.getDefault().syncExec(new Runnable() {
 
-                    monitor.done();
-                    if (isNeedUnlock) {
-                        unlockAnalysis();
-                    }
+                            public void run() {
+                                // Added TDQ-8787 20140616 yyin: unregister all dynamic chart events after executing
+                                // the analysis
+                                if (isSupportDynamicChart()) {
+                                    EventManager.getInstance().publish(item.getAnalysis(),
+                                            EventEnum.DQ_DYNAMIC_UNREGISTER_DYNAMIC_CHART, null);
+                                }
 
-                    Display.getDefault().syncExec(new Runnable() {
-
-                        public void run() {
-                            // Added TDQ-8787 20140616 yyin: unregister all dynamic chart events after executing
-                            // the analysis
-                            if (isSupportDynamicChart()) {
-                                EventManager.getInstance().publish(item.getAnalysis(), EventEnum.DQ_DYNAMIC_UNREGISTER_DYNAMIC_CHART, null);
-                            } else {
                                 if (listener != null) {
                                     listener.fireRuningItemChanged(true);
                                 } else {
                                     // TODO yyin publish the event from listener.
-                                    EventManager.getInstance().publish(item.getAnalysis(), EventEnum.DQ_ANALYSIS_RUN_FROM_MENU, null);
+                                    EventManager.getInstance().publish(item.getAnalysis(), EventEnum.DQ_ANALYSIS_RUN_FROM_MENU,
+                                            null);
                                 }
+
                             }
-                        }
 
-                    });
-
+                        });
+                    }
                     displayResultStatus(executed);
 
                     return Status.OK_STATUS;
@@ -291,7 +297,8 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
     private void addTaggedVaLueIntoConnection() {
         DataManager datamanager = item.getAnalysis().getContext().getConnection();
         if (datamanager instanceof DatabaseConnection) {
-            TaggedValue productName = TaggedValueHelper.getTaggedValue(TaggedValueHelper.DB_PRODUCT_NAME, datamanager.getTaggedValue());
+            TaggedValue productName = TaggedValueHelper.getTaggedValue(TaggedValueHelper.DB_PRODUCT_NAME,
+                    datamanager.getTaggedValue());
             TaggedValue productVersion = TaggedValueHelper.getTaggedValue(TaggedValueHelper.DB_PRODUCT_VERSION,
                     datamanager.getTaggedValue());
             log.info("DB Product Name: " + productName.getValue()); //$NON-NLS-1$
@@ -382,7 +389,8 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
      */
     private void validateAnalysis() throws BusinessException {
         if (item.getAnalysis() == null || item.getAnalysis().getParameters() == null) {
-            BusinessException createBusinessException = ExceptionFactory.getInstance().createBusinessException(item.getFilename());
+            BusinessException createBusinessException = ExceptionFactory.getInstance()
+                    .createBusinessException(item.getFilename());
             throw createBusinessException;
         }
 
@@ -401,7 +409,8 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
     /*
      * (non-Javadoc)
      * 
-     * @see org.eclipse.ui.cheatsheets.ICheatSheetAction#run(java.lang.String[], org.eclipse.ui.cheatsheets.ICheatSheetManager)
+     * @see org.eclipse.ui.cheatsheets.ICheatSheetAction#run(java.lang.String[],
+     * org.eclipse.ui.cheatsheets.ICheatSheetManager)
      */
     public void run(String[] params, ICheatSheetManager manager) {
         // ADD mzhao 2009-02-03 If there is no active editor opened, run
