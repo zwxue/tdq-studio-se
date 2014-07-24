@@ -143,6 +143,12 @@ public interface IRecordGrouping<T> {
      */
     public void addMatchRule(List<Map<String, String>> matchRule);
 
+    /**
+     * 
+     * set if display attribute labels.
+     * 
+     * @param isDisplayAttLabels
+     */
     public void setIsDisplayAttLabels(Boolean isDisplayAttLabels);
 
 }
