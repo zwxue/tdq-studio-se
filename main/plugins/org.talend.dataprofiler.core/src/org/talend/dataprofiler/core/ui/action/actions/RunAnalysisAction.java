@@ -207,7 +207,6 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
                     Display.getDefault().syncExec(new Runnable() {
 
                         public void run() {
-                            // TODO: dynamic chart: if the listener is null(from menu, and the ana already be opened)
                             if (listener != null) {
                                 listener.fireRuningItemChanged(false);
                             }
@@ -285,7 +284,7 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
                     return true;
                 }
                 return false;
-            } else {
+            } else {// run from the run button in the editor
                 return listener instanceof DynamicAnalysisMasterPage || listener instanceof ColumnAnalysisResultPage
                         || listener instanceof TableAnalysisResultPage;
             }
