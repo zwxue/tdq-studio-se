@@ -204,16 +204,18 @@ public class TSwooshGrouping<TYPE> {
         @Override
         public void onNewMerge(Record record) {
             // record must be RichRecord from DQ grouping implementation.
+            RichRecord richRecord = (RichRecord) record;
             if (record.getGroupId() != null) {
-                RichRecord richRecord = (RichRecord) record;
                 richRecord.setMaster(true);
                 richRecord.setMerged(true);
-                richRecord.setScore(1);
+                richRecord.setScore(1.0);
                 richRecord.setGrpSize(richRecord.getRelatedIds().size());
                 if (richRecord.getGroupQuality() == 0) {
                     // group quality will be the confidence (score) .
                     richRecord.setGroupQuality(record.getConfidence());
                 }
+            } else {
+                richRecord.setMaster(true);
             }
 
         }
@@ -247,9 +249,8 @@ public class TSwooshGrouping<TYPE> {
         @Override
         public void onDifferent(Record record1, Record record2, MatchResult matchResult) {
             RichRecord currentRecord = (RichRecord) record2;
-            // group size is 1 for unique record
-            currentRecord.setGrpSize(1);
             currentRecord.setMaster(true);
+            // The rest of group properties will be set in RichRecord$getOutputRow()
         }
 
         /*

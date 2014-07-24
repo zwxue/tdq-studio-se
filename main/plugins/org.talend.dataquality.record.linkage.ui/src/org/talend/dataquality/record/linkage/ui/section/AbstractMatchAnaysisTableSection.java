@@ -27,6 +27,8 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
+import org.talend.core.model.metadata.builder.connection.MetadataColumn;
+import org.talend.cwm.relational.TdColumn;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.record.linkage.ui.action.RefreshChartAction;
 import org.talend.dataquality.record.linkage.ui.composite.utils.ImageLib;
@@ -43,8 +45,8 @@ public abstract class AbstractMatchAnaysisTableSection extends AbstractSectionCo
 
     protected List<Object[]> matchRows = new ArrayList<Object[]>();
 
-    // <column name, column index>
-    protected Map<String, String> columnMap = null;
+    // <column instance, column index>
+    protected Map<MetadataColumn, String> columnMap = null;
 
     protected Analysis analysis = null;
 
@@ -299,11 +301,11 @@ public abstract class AbstractMatchAnaysisTableSection extends AbstractSectionCo
         matchRows.addAll(allData);
     }
 
-    public void setColumnNameInput(Map<String, String> newColumnMap) {
+    public void setColumnNameInput(Map<MetadataColumn, String> newColumnMap) {
         this.columnMap = newColumnMap;
     }
 
-    public void updateColumnPosition(String column, int newPosition) {
+    public void updateColumnPosition(TdColumn column, int newPosition) {
         columnMap.remove(column);
         columnMap.put(column, String.valueOf(newPosition));
     }
@@ -443,9 +445,9 @@ public abstract class AbstractMatchAnaysisTableSection extends AbstractSectionCo
         return columnMap.containsKey(keyName);
     }
 
-    public void addColumn(String column, int index) {
+    public void addColumn(MetadataColumn column, int index) {
         if (this.columnMap == null) {
-            columnMap = new HashMap<String, String>();
+            columnMap = new HashMap<MetadataColumn, String>();
         }
         columnMap.put(column, String.valueOf(index));
     }

@@ -32,12 +32,13 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
+import org.talend.core.model.metadata.builder.connection.MetadataColumn;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.record.linkage.ui.composite.MatchKeyAndSurvivorTableComposite;
 import org.talend.dataquality.record.linkage.ui.composite.tableviewer.definition.MatchKeyAndSurvivorDefinition;
 import org.talend.dataquality.record.linkage.ui.composite.tableviewer.sorter.KeyDefinitionTableViewerSorter;
 import org.talend.dataquality.record.linkage.ui.i18n.internal.DefaultMessagesImpl;
-import org.talend.dataquality.record.linkage.ui.section.AbstractMatchKeyWithChartTableSection;
+import org.talend.dataquality.record.linkage.ui.section.MatchingKeySection;
 import org.talend.dataquality.record.linkage.utils.MatchAnalysisConstant;
 import org.talend.dataquality.record.linkage.utils.SurvivorShipAlgorithmEnum;
 import org.talend.dataquality.rules.AlgorithmDefinition;
@@ -50,7 +51,7 @@ import org.talend.dataquality.rules.SurvivorshipKeyDefinition;
 /**
  * DOC yyin class global comment. Detailled comment
  */
-public class MatchAndSurvivorKeySection extends AbstractMatchKeyWithChartTableSection {
+public class MatchAndSurvivorKeySection extends MatchingKeySection {
 
     private MatchKeyAndSurvivorTableComposite tableComposite = null;
 
@@ -86,18 +87,6 @@ public class MatchAndSurvivorKeySection extends AbstractMatchKeyWithChartTableSe
     public MatchAndSurvivorKeySection(ScrolledForm form, Composite parent, FormToolkit toolkit) {
         super(form, parent, Section.TWISTIE | Section.TITLE_BAR | Section.EXPANDED, toolkit, null);
         super.setIsNeedSubChart(false);
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * org.talend.dataquality.record.linkage.ui.section.AbstractMatchAnaysisTableSection#createSubChart(org.eclipse.
-     * swt.widgets.Composite)
-     */
-    @Override
-    protected void createSubChart(Composite sectionClient) {
-        // don't need the chart so do nothing at here
     }
 
     /*
@@ -325,12 +314,16 @@ public class MatchAndSurvivorKeySection extends AbstractMatchKeyWithChartTableSe
         gridLayout.marginHeight = 0;
         ruleComp.setLayout(gridLayout);
         tableComposite = new MatchKeyAndSurvivorTableComposite(ruleComp, SWT.NO_FOCUS, matchRuleDef.getMatchRules().get(0));
+        if (isNeedSubChart()) {
+            // In case of the section in analysis editor, need to show the input column in matching key table.
+            tableComposite.setShowInputColumn(true);
+        }
         tableComposite.addPropertyChangeListener(this);
         // tableComposite.setAddColumn(isAddColumn());
         tableComposite.setLayout(gridLayout);
         tableComposite.setLayoutData(data);
         if (columnMap != null) {
-            ArrayList<String> columnList = new ArrayList<String>();
+            ArrayList<MetadataColumn> columnList = new ArrayList<MetadataColumn>();
             columnList.addAll(columnMap.keySet());
             tableComposite.setColumnList(columnList);
         }
@@ -349,6 +342,7 @@ public class MatchAndSurvivorKeySection extends AbstractMatchKeyWithChartTableSe
      * 
      * @param parent
      */
+    @Override
     protected void createGroupQualityThreshold(Composite parent) {
 
         Composite groupQualityThresholdComposite = new Composite(parent, SWT.NONE);
@@ -400,16 +394,6 @@ public class MatchAndSurvivorKeySection extends AbstractMatchKeyWithChartTableSe
     @Override
     protected String getSectionName() {
         return MatchAnalysisConstant.MATCHING_KEY_AND_SURVIVOR_DEFINITION_SECTION_NAME;
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.talend.dataquality.record.linkage.ui.section.AbstractMatchAnaysisTableSection#refreshChart()
-     */
-    @Override
-    public void refreshChart() {
-        // until now, do nothing
     }
 
     /*

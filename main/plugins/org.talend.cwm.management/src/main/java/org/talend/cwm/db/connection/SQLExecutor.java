@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
+import org.talend.core.model.metadata.builder.connection.MetadataColumn;
 import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.indicators.columnset.RecordMatchingIndicator;
@@ -46,7 +47,7 @@ public abstract class SQLExecutor implements ISQLExecutor {
     protected List<Object[]> dataFromTable = new ArrayList<Object[]>();
 
     public void initStoreOnDiskHandler(Analysis analysis, RecordMatchingIndicator recordMatchingIndicator,
-            Map<String, String> columnMap) {
+            Map<MetadataColumn, String> columnMap) {
         if (storeOnDisk) {
             try {
                 String tempDataPath = TaggedValueHelper.getValueString(TEMP_DATA_DIR, analysis);

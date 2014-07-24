@@ -19,11 +19,9 @@ import java.util.Map;
 
 import junit.framework.Assert;
 
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
+import org.talend.core.model.metadata.builder.connection.ConnectionFactory;
+import org.talend.core.model.metadata.builder.connection.MetadataColumn;
 import org.talend.dataquality.indicators.columnset.BlockKeyIndicator;
 import org.talend.dataquality.indicators.columnset.ColumnsetFactory;
 import org.talend.dataquality.indicators.columnset.RecordMatchingIndicator;
@@ -48,7 +46,6 @@ import org.talend.utils.sugars.TypedReturnCode;
  */
 public class ExecuteMatchRuleHandlerTest {
 
-
     private final String columnName0 = "id"; //$NON-NLS-1$
 
     private final String columnName1 = "name"; //$NON-NLS-1$
@@ -66,12 +63,20 @@ public class ExecuteMatchRuleHandlerTest {
      */
     @Test
     public void testExecute1() {
-        Map<String, String> columnMap = new HashMap<String, String>();
-        columnMap.put(columnName0, "0"); //$NON-NLS-1$
-        columnMap.put(columnName1, "1"); //$NON-NLS-1$
-        columnMap.put(columnName2, "2"); //$NON-NLS-1$
-        columnMap.put(columnName3, "3"); //$NON-NLS-1$
-     // create match key
+        Map<MetadataColumn, String> columnMap = new HashMap<MetadataColumn, String>();
+        MetadataColumn col0 = ConnectionFactory.eINSTANCE.createMetadataColumn();
+        col0.setName("columnName0");//$NON-NLS-1$
+        columnMap.put(col0, "0"); //$NON-NLS-1$
+        MetadataColumn col1 = ConnectionFactory.eINSTANCE.createMetadataColumn();
+        col1.setName("columnName1");//$NON-NLS-1$
+        columnMap.put(col1, "1"); //$NON-NLS-1$
+        MetadataColumn col2 = ConnectionFactory.eINSTANCE.createMetadataColumn();
+        col2.setName("columnName2");//$NON-NLS-1$
+        columnMap.put(col2, "2"); //$NON-NLS-1$
+        MetadataColumn col3 = ConnectionFactory.eINSTANCE.createMetadataColumn();
+        col3.setName("columnName3");//$NON-NLS-1$
+        columnMap.put(col3, "3"); //$NON-NLS-1$
+        // create match key
         RecordMatchingIndicator recordMatchingIndicator = ColumnsetFactory.eINSTANCE.createRecordMatchingIndicator();
         MatchRuleDefinition matchRuleDef = RulesPackage.eINSTANCE.getRulesFactory().createMatchRuleDefinition();
         recordMatchingIndicator.setBuiltInMatchRuleDefinition(matchRuleDef);
@@ -86,24 +91,25 @@ public class ExecuteMatchRuleHandlerTest {
         createAlgorithmDefinition1.setAlgorithmType(AttributeMatcherType.EXACT.name());
         createMatchKeyDefinition1.setAlgorithm(createAlgorithmDefinition1);
         matchRuleDef.getMatchRules().add(createMatchRule1);
-        //input data
+        // input data
         List<Object[]> matchRows = new ArrayList<Object[]>();
         matchRows.add(new String[] { "id1", "name1", "number1", "date1" }); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
         matchRows.add(new String[] { "id2", "name2", "number2", "date2" }); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
         matchRows.add(new String[] { "id3", "name1", "number3", "date3" });//$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
         matchRows.add(new String[] { "id4", "name4", "number2", "date1" });//$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
-        
+
         BlockKeyIndicator blockKeyIndicator = ColumnsetFactory.eINSTANCE.createBlockKeyIndicator();
-        TypedReturnCode<MatchGroupResultConsumer> executeResult = ExecuteMatchRuleHandler.execute(columnMap,
-                recordMatchingIndicator, matchRows, blockKeyIndicator);
-        
+        ExecuteMatchRuleHandler execHandler = new ExecuteMatchRuleHandler();
+        TypedReturnCode<MatchGroupResultConsumer> executeResult = execHandler.execute(columnMap, recordMatchingIndicator,
+                matchRows, blockKeyIndicator);
+
         Assert.assertTrue(executeResult.isOk());
         Assert.assertTrue(executeResult.getMessage() == null);
         Assert.assertTrue(executeResult.getObject() != null);
         MatchGroupResultConsumer ResultConsumer = executeResult.getObject();
         List<Object[]> fullMatchResult = ResultConsumer.getFullMatchResult();
         Assert.assertTrue(fullMatchResult.size() == 4);
-     // every input data is master data
+        // every input data is master data
         for (Object[] objectArray : fullMatchResult) {
             Object object = objectArray[7];
             Assert.assertTrue(Boolean.parseBoolean(object.toString()));
@@ -120,11 +126,20 @@ public class ExecuteMatchRuleHandlerTest {
      */
     @Test
     public void testExecute2() {
-        Map<String, String> columnMap = new HashMap<String, String>();
-        columnMap.put(columnName0, "0"); //$NON-NLS-1$
-        columnMap.put(columnName1, "1"); //$NON-NLS-1$
-        columnMap.put(columnName2, "2"); //$NON-NLS-1$
-        columnMap.put(columnName3, "3"); //$NON-NLS-1$
+        Map<MetadataColumn, String> columnMap = new HashMap<MetadataColumn, String>();
+        MetadataColumn col0 = ConnectionFactory.eINSTANCE.createMetadataColumn();
+        col0.setName("columnName0");//$NON-NLS-1$
+        columnMap.put(col0, "0"); //$NON-NLS-1$
+        MetadataColumn col1 = ConnectionFactory.eINSTANCE.createMetadataColumn();
+        col1.setName("columnName1");//$NON-NLS-1$
+        columnMap.put(col1, "1"); //$NON-NLS-1$
+        MetadataColumn col2 = ConnectionFactory.eINSTANCE.createMetadataColumn();
+        col2.setName("columnName2");//$NON-NLS-1$
+        columnMap.put(col2, "2"); //$NON-NLS-1$
+        MetadataColumn col3 = ConnectionFactory.eINSTANCE.createMetadataColumn();
+        col3.setName("columnName3");//$NON-NLS-1$
+        columnMap.put(col3, "3"); //$NON-NLS-1$
+
         RecordMatchingIndicator recordMatchingIndicator = ColumnsetFactory.eINSTANCE.createRecordMatchingIndicator();
         MatchRuleDefinition matchRuleDef = RulesPackage.eINSTANCE.getRulesFactory().createMatchRuleDefinition();
         recordMatchingIndicator.setBuiltInMatchRuleDefinition(matchRuleDef);
@@ -166,8 +181,9 @@ public class ExecuteMatchRuleHandlerTest {
         matchRows.add(new String[] { "id3", "name2", "number2", "date3" });//$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
         matchRows.add(new String[] { "id4", "name2", "number2", "date1" });//$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
         BlockKeyIndicator blockKeyIndicator = ColumnsetFactory.eINSTANCE.createBlockKeyIndicator();
-        TypedReturnCode<MatchGroupResultConsumer> executeResult = ExecuteMatchRuleHandler.execute(columnMap,
-                recordMatchingIndicator, matchRows, blockKeyIndicator);
+        ExecuteMatchRuleHandler execHandler = new ExecuteMatchRuleHandler();
+        TypedReturnCode<MatchGroupResultConsumer> executeResult = execHandler.execute(columnMap, recordMatchingIndicator,
+                matchRows, blockKeyIndicator);
         Assert.assertTrue(executeResult.isOk());
         Assert.assertTrue(executeResult.getMessage() == null);
         Assert.assertTrue(executeResult.getObject() != null);
@@ -197,11 +213,19 @@ public class ExecuteMatchRuleHandlerTest {
      */
     @Test
     public void testExecute3() {
-        Map<String, String> columnMap = new HashMap<String, String>();
-        columnMap.put(columnName0, "0"); //$NON-NLS-1$
-        columnMap.put(columnName1, "1"); //$NON-NLS-1$
-        columnMap.put(columnName2, "2"); //$NON-NLS-1$
-        columnMap.put(columnName3, "3"); //$NON-NLS-1$
+        Map<MetadataColumn, String> columnMap = new HashMap<MetadataColumn, String>();
+        MetadataColumn col0 = ConnectionFactory.eINSTANCE.createMetadataColumn();
+        col0.setName("columnName0");//$NON-NLS-1$
+        columnMap.put(col0, "0"); //$NON-NLS-1$
+        MetadataColumn col1 = ConnectionFactory.eINSTANCE.createMetadataColumn();
+        col1.setName("columnName1");//$NON-NLS-1$
+        columnMap.put(col1, "1"); //$NON-NLS-1$
+        MetadataColumn col2 = ConnectionFactory.eINSTANCE.createMetadataColumn();
+        col2.setName("columnName2");//$NON-NLS-1$
+        columnMap.put(col2, "2"); //$NON-NLS-1$
+        MetadataColumn col3 = ConnectionFactory.eINSTANCE.createMetadataColumn();
+        col3.setName("columnName3");//$NON-NLS-1$
+        columnMap.put(col3, "3"); //$NON-NLS-1$
         RecordMatchingIndicator recordMatchingIndicator = ColumnsetFactory.eINSTANCE.createRecordMatchingIndicator();
         MatchRuleDefinition matchRuleDef = RulesPackage.eINSTANCE.getRulesFactory().createMatchRuleDefinition();
         recordMatchingIndicator.setBuiltInMatchRuleDefinition(matchRuleDef);
@@ -255,8 +279,9 @@ public class ExecuteMatchRuleHandlerTest {
         matchRows.add(new String[] { "id3", "name2", "number2", "date3" });//$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
         matchRows.add(new String[] { "id4", "name2", "number2", "date1" });//$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
         BlockKeyIndicator blockKeyIndicator = ColumnsetFactory.eINSTANCE.createBlockKeyIndicator();
-        TypedReturnCode<MatchGroupResultConsumer> executeResult = ExecuteMatchRuleHandler.execute(columnMap,
-                recordMatchingIndicator, matchRows, blockKeyIndicator);
+        ExecuteMatchRuleHandler execHandler = new ExecuteMatchRuleHandler();
+        TypedReturnCode<MatchGroupResultConsumer> executeResult = execHandler.execute(columnMap, recordMatchingIndicator,
+                matchRows, blockKeyIndicator);
         Assert.assertTrue(executeResult.isOk());
         Assert.assertTrue(executeResult.getMessage() == null);
         Assert.assertTrue(executeResult.getObject() != null);
@@ -277,6 +302,7 @@ public class ExecuteMatchRuleHandlerTest {
         }
 
     }
+
     /**
      * Test method for
      * {@link org.talend.dq.analysis.ExecuteMatchRuleHandler#execute(java.util.Map, org.talend.dataquality.indicators.columnset.RecordMatchingIndicator, java.util.List, org.talend.dataquality.indicators.columnset.BlockKeyIndicator)}
@@ -286,15 +312,23 @@ public class ExecuteMatchRuleHandlerTest {
      */
     @Test
     public void testExecute4() {
-        Map<String, String> columnMap = new HashMap<String, String>();
-        columnMap.put(columnName0, "0"); //$NON-NLS-1$
-        columnMap.put(columnName1, "1"); //$NON-NLS-1$
-        columnMap.put(columnName2, "2"); //$NON-NLS-1$
-        columnMap.put(columnName3, "3"); //$NON-NLS-1$
+        Map<MetadataColumn, String> columnMap = new HashMap<MetadataColumn, String>();
+        MetadataColumn col0 = ConnectionFactory.eINSTANCE.createMetadataColumn();
+        col0.setName("columnName0");//$NON-NLS-1$
+        columnMap.put(col0, "0"); //$NON-NLS-1$
+        MetadataColumn col1 = ConnectionFactory.eINSTANCE.createMetadataColumn();
+        col1.setName("columnName1");//$NON-NLS-1$
+        columnMap.put(col1, "1"); //$NON-NLS-1$
+        MetadataColumn col2 = ConnectionFactory.eINSTANCE.createMetadataColumn();
+        col2.setName("columnName2");//$NON-NLS-1$
+        columnMap.put(col2, "2"); //$NON-NLS-1$
+        MetadataColumn col3 = ConnectionFactory.eINSTANCE.createMetadataColumn();
+        col3.setName("columnName3");//$NON-NLS-1$
+        columnMap.put(col3, "3"); //$NON-NLS-1$
         RecordMatchingIndicator recordMatchingIndicator = ColumnsetFactory.eINSTANCE.createRecordMatchingIndicator();
         MatchRuleDefinition matchRuleDef = RulesPackage.eINSTANCE.getRulesFactory().createMatchRuleDefinition();
         recordMatchingIndicator.setBuiltInMatchRuleDefinition(matchRuleDef);
-        
+
         // create match rule
         MatchRule matchRule2 = RulesFactory.eINSTANCE.createMatchRule();
         MatchKeyDefinition createMatchKeyDefinition2 = RulesFactory.eINSTANCE.createMatchKeyDefinition();
@@ -307,8 +341,8 @@ public class ExecuteMatchRuleHandlerTest {
         createAlgorithmDefinition2.setAlgorithmType(AttributeMatcherType.EXACT.name());
         createMatchKeyDefinition2.setAlgorithm(createAlgorithmDefinition2);
         matchRuleDef.getMatchRules().add(matchRule2);
-        
-     // create match rule
+
+        // create match rule
         MatchRule matchRule1 = RulesFactory.eINSTANCE.createMatchRule();
         MatchKeyDefinition createMatchKeyDefinition1 = RulesFactory.eINSTANCE.createMatchKeyDefinition();
         matchRule1.getMatchKeys().add(createMatchKeyDefinition1);
@@ -320,7 +354,7 @@ public class ExecuteMatchRuleHandlerTest {
         createAlgorithmDefinition1.setAlgorithmType(AttributeMatcherType.EXACT.name());
         createMatchKeyDefinition1.setAlgorithm(createAlgorithmDefinition1);
         matchRuleDef.getMatchRules().add(matchRule1);
-        
+
         // create block key
         BlockKeyDefinition createBlockKeyDefinition = RulesFactory.eINSTANCE.createBlockKeyDefinition();
         createBlockKeyDefinition.setColumn(columnName1);
@@ -337,17 +371,18 @@ public class ExecuteMatchRuleHandlerTest {
         AlgorithmDefinition blockPostAlgorithm = RulesFactory.eINSTANCE.createAlgorithmDefinition();
         blockPostAlgorithm.setAlgorithmType(BlockingKeyPostAlgorithmEnum.NON_ALGO.getValue());
         createBlockKeyDefinition.setPostAlgorithm(blockPostAlgorithm);
-        
+
         matchRuleDef.getBlockKeys().add(createBlockKeyDefinition);
-        
+
         List<Object[]> matchRows = new ArrayList<Object[]>();
         matchRows.add(new String[] { "id1", "name1", "number1", "date1" }); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
         matchRows.add(new String[] { "id2", "name1", "number2", "date1" }); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
         matchRows.add(new String[] { "id3", "name2", "number2", "date3" });//$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
         matchRows.add(new String[] { "id4", "name2", "number2", "date1" });//$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
         BlockKeyIndicator blockKeyIndicator = ColumnsetFactory.eINSTANCE.createBlockKeyIndicator();
-        TypedReturnCode<MatchGroupResultConsumer> executeResult = ExecuteMatchRuleHandler.execute(columnMap,
-                recordMatchingIndicator, matchRows, blockKeyIndicator);
+        ExecuteMatchRuleHandler execHandler = new ExecuteMatchRuleHandler();
+        TypedReturnCode<MatchGroupResultConsumer> executeResult = execHandler.execute(columnMap, recordMatchingIndicator,
+                matchRows, blockKeyIndicator);
         Assert.assertTrue(executeResult.isOk());
         Assert.assertTrue(executeResult.getMessage() == null);
         Assert.assertTrue(executeResult.getObject() != null);
@@ -366,6 +401,6 @@ public class ExecuteMatchRuleHandlerTest {
                 Assert.assertTrue(Boolean.parseBoolean(masterValue.toString()));
             }
         }
-        
+
     }
 }

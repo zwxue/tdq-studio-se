@@ -67,7 +67,7 @@ public abstract class AbstractRecordGrouping<TYPE> implements IRecordGrouping<TY
     private Boolean isLinkToPrevious = Boolean.FALSE;
 
     // VSR algorithm by default.
-    private MatchAlgoithm matchAlgo = MatchAlgoithm.VSR;
+    private RecordMatcherType matchAlgo = RecordMatcherType.simpleVSRMatcher;
 
     private TSwooshGrouping<TYPE> swooshGrouping = new TSwooshGrouping<TYPE>(this);
 
@@ -127,7 +127,7 @@ public abstract class AbstractRecordGrouping<TYPE> implements IRecordGrouping<TY
      * .linkage.grouping.AbstractRecordGrouping.MatchAlgoithm)
      */
     @Override
-    public void setRecordLinkAlgorithm(MatchAlgoithm algorithm) {
+    public void setRecordLinkAlgorithm(RecordMatcherType algorithm) {
         matchAlgo = algorithm;
     }
 
@@ -157,10 +157,10 @@ public abstract class AbstractRecordGrouping<TYPE> implements IRecordGrouping<TY
                     .parseInt(matchingRule.get(idx).get(IRecordGrouping.COLUMN_IDX))]);
         }
         switch (matchAlgo) {
-        case VSR:
+        case simpleVSRMatcher:
             vsrMatch(inputRow, matchingRule, lookupDataArray);
             break;
-        case TSWOOSH:
+        case T_SwooshAlgorithm:
             swooshGrouping.addToList(inputRow, matchingRule);
 
         }
@@ -297,13 +297,13 @@ public abstract class AbstractRecordGrouping<TYPE> implements IRecordGrouping<TY
     public void end() throws IOException, InterruptedException {
 
         switch (matchAlgo) {
-        case VSR:
+        case simpleVSRMatcher:
             // output the masters
             for (TYPE[] mst : masterRecords) {
                 outputRow(mst);
             }
             break;
-        case TSWOOSH:
+        case T_SwooshAlgorithm:
             combinedRecordMatcher.setDisplayLabels(true);
             swooshGrouping.swooshMatch(combinedRecordMatcher, survivorShipAlgorithmParams);
         }
@@ -466,8 +466,4 @@ public abstract class AbstractRecordGrouping<TYPE> implements IRecordGrouping<TY
 
     protected abstract TYPE castAsType(Object objectValue);
 
-    enum MatchAlgoithm {
-        VSR,
-        TSWOOSH
-    }
 }

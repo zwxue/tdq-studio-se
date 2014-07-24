@@ -79,15 +79,21 @@ import org.talend.dataquality.exception.DataprofilerCoreException;
 import org.talend.dataquality.indicators.columnset.RecordMatchingIndicator;
 import org.talend.dataquality.record.linkage.ui.composite.table.DataSampleTable;
 import org.talend.dataquality.record.linkage.ui.composite.utils.MatchRuleAnlaysisUtils;
+import org.talend.dataquality.record.linkage.ui.section.AnalysisSelectionAlgorithmSection;
 import org.talend.dataquality.record.linkage.ui.section.BlockingKeySection;
 import org.talend.dataquality.record.linkage.ui.section.MatchParameterSection;
 import org.talend.dataquality.record.linkage.ui.section.MatchingKeySection;
+import org.talend.dataquality.record.linkage.ui.section.SelectAlgorithmSection;
+import org.talend.dataquality.record.linkage.ui.section.definition.DefaultSurvivorshipDefinitionSection;
+import org.talend.dataquality.record.linkage.ui.section.definition.MatchAndSurvivorKeySection;
 import org.talend.dataquality.record.linkage.utils.MatchAnalysisConstant;
 import org.talend.dataquality.rules.MatchRule;
 import org.talend.dataquality.rules.MatchRuleDefinition;
 import org.talend.dq.analysis.MatchAnalysisHandler;
 import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.RepositoryNodeHelper;
+import org.talend.dq.nodes.ColumnRepNode;
+import org.talend.dq.nodes.ColumnSetRepNode;
 import org.talend.dq.nodes.DBColumnRepNode;
 import org.talend.dq.writer.impl.ElementWriterFactory;
 import org.talend.repository.model.IRepositoryNode;
@@ -118,6 +124,12 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
     private DataSampleTable sampleTable = null;
 
     private BlockingKeySection blockingKeySection = null;
+
+    private SelectAlgorithmSection selectAlgorithmSection = null;
+
+    private MatchAndSurvivorKeySection matchAndSurvivorKeySection = null;
+
+    private DefaultSurvivorshipDefinitionSection defaultSurvivorshipDefinitionSection = null;
 
     private MatchingKeySection matchingKeySection;
 
@@ -191,14 +203,67 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
 
         createDataSection();
 
+        createSelectRecordLinkageSection();
+
         createBlockingKeySection();
 
         createMatchingKeySection();
+        createMatchAndSurvivorKeySection();
+        createDefaultSurvivorshipSection();
 
         createMatchParameterSection();
 
         // TDQ-7781: we must do this, this will recompute the layout and scroll bars
         form.reflow(true);
+    }
+
+    private void createSelectRecordLinkageSection() {
+        selectAlgorithmSection = new AnalysisSelectionAlgorithmSection(form, topComp, toolkit);
+        RecordMatchingIndicator recordMatchingIndicator = MatchRuleAnlaysisUtils
+                .getRecordMatchIndicatorFromAna((Analysis) getCurrentModelElement(getEditor()));
+        selectAlgorithmSection.setMatchRuleDef(recordMatchingIndicator.getBuiltInMatchRuleDefinition());
+        selectAlgorithmSection.createChooseAlgorithmCom();
+        selectAlgorithmSection.addPropertyChangeListener(this);
+        selectAlgorithmSection.getSection().setExpanded(true);
+    }
+
+    private void createMatchAndSurvivorKeySection() {
+        matchAndSurvivorKeySection = new MatchAndSurvivorKeySection(form, topComp, Section.TWISTIE | Section.TITLE_BAR
+                | Section.EXPANDED, toolkit, analysisItem.getAnalysis());
+        RecordMatchingIndicator recordMatchingIndicator = MatchRuleAnlaysisUtils
+                .getRecordMatchIndicatorFromAna((Analysis) getCurrentModelElement(getEditor()));
+        matchAndSurvivorKeySection.setMatchRuleDef(recordMatchingIndicator.getBuiltInMatchRuleDefinition());
+        matchAndSurvivorKeySection.setAddColumn(!selectAlgorithmSection.isVSRMode());
+        matchAndSurvivorKeySection.createContent();
+        matchAndSurvivorKeySection.addPropertyChangeListener(this);
+        matchAndSurvivorKeySection.changeSectionDisStatus(!selectAlgorithmSection.isVSRMode());
+        matchAndSurvivorKeySection.getSection().setExpanded(true);
+        matchAndSurvivorKeySection.setIsNeedSubChart(true);
+        matchAndSurvivorKeySection.setColumnNameInput(getAllColumnsToKeyMap());
+        selectAlgorithmSection.setMatchAndSurvivorKeySection(matchAndSurvivorKeySection);
+        if (selectAlgorithmSection.isVSRMode()) {
+            // Hide the section in case of vsr.
+            matchAndSurvivorKeySection.changeSectionDisStatus(false);
+        } else {
+            matchAndSurvivorKeySection.redrawnContent();
+        }
+
+    }
+
+    private void createDefaultSurvivorshipSection() {
+        defaultSurvivorshipDefinitionSection = new DefaultSurvivorshipDefinitionSection(form, topComp, toolkit);
+        RecordMatchingIndicator recordMatchingIndicator = MatchRuleAnlaysisUtils
+                .getRecordMatchIndicatorFromAna((Analysis) getCurrentModelElement(getEditor()));
+        defaultSurvivorshipDefinitionSection.setMatchRuleDef(recordMatchingIndicator.getBuiltInMatchRuleDefinition());
+        defaultSurvivorshipDefinitionSection.createContent();
+        defaultSurvivorshipDefinitionSection.addPropertyChangeListener(this);
+        defaultSurvivorshipDefinitionSection.changeSectionDisStatus(!selectAlgorithmSection.isVSRMode());
+        defaultSurvivorshipDefinitionSection.getSection().setExpanded(true);
+        selectAlgorithmSection.setDefaultSurvivorshipDefinitionSection(defaultSurvivorshipDefinitionSection);
+        if (selectAlgorithmSection.isVSRMode()) {
+            // Hide the section in case of vsr.
+            defaultSurvivorshipDefinitionSection.changeSectionDisStatus(false);
+        }
     }
 
     /**
@@ -217,8 +282,17 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
      * 
      */
     private void createMatchingKeySection() {
+        matchingKeySection = new MatchingKeySection(form, topComp, Section.TWISTIE | Section.TITLE_BAR | Section.EXPANDED,
+                toolkit, analysisItem.getAnalysis());
+        matchingKeySection.addPropertyChangeListener(this);
+        matchingKeySection.setColumnNameInput(getAllColumnsToKeyMap());
         matchingKeySection.createContent();
         registerSection(matchingKeySection.getSection());
+        selectAlgorithmSection.setMatchKeySection(matchingKeySection);
+        if (!selectAlgorithmSection.isVSRMode()) {
+            // Hide the section in case of t-swoosh.
+            matchingKeySection.changeSectionDisStatus(false);
+        }
     }
 
     /**
@@ -226,8 +300,13 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
      * 
      */
     private void createBlockingKeySection() {
+        blockingKeySection = new BlockingKeySection(form, topComp, Section.TWISTIE | Section.TITLE_BAR | Section.EXPANDED,
+                toolkit, analysisItem.getAnalysis());
+        blockingKeySection.addPropertyChangeListener(this);
+        blockingKeySection.setColumnNameInput(getAllColumnsToKeyMap());
         blockingKeySection.createContent();
         registerSection(blockingKeySection.getSection());
+        selectAlgorithmSection.setBlockkeySection(blockingKeySection);
     }
 
     /**
@@ -246,14 +325,6 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
 
         // create Button composite
         createButtonComposite(dataSampleparentComposite);
-
-        blockingKeySection = new BlockingKeySection(form, topComp, Section.TWISTIE | Section.TITLE_BAR | Section.EXPANDED,
-                toolkit, analysisItem.getAnalysis());
-        blockingKeySection.addPropertyChangeListener(this);
-
-        matchingKeySection = new MatchingKeySection(form, topComp, Section.TWISTIE | Section.TITLE_BAR | Section.EXPANDED,
-                toolkit, analysisItem.getAnalysis());
-        matchingKeySection.addPropertyChangeListener(this);
 
         // create the data table
         createDataTableComposite(dataSampleparentComposite);
@@ -615,6 +686,7 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
 
         blockingKeySection.setDataInput(listOfData);
         matchingKeySection.setDataInput(listOfData);
+        matchAndSurvivorKeySection.setDataInput(listOfData);
 
         if (refreshDataSample) {
             refreshTable(listOfData);
@@ -737,8 +809,7 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
         for (IRepositoryNode oldSelectNode : oldSelectedColumns) {
             int newPosition = positionInNewSelectColumns(oldSelectNode);
             if (newPosition > -1) {// update the position of the column
-                this.matchingKeySection.updateColumnPosition(oldSelectNode.getLabel(), newPosition);
-                this.blockingKeySection.updateColumnPosition(oldSelectNode.getLabel(), newPosition);
+                addColumnGivenIndex(oldSelectNode, newPosition);
             } else { // delete all keys which used this column
                 matchingKeySection.removeKeyFromAllTab(oldSelectNode.getLabel());
                 blockingKeySection.removeBlockingKey(oldSelectNode.getLabel());
@@ -751,13 +822,33 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
             if (!oldSelectedColumns.contains(selectedOne)) {
                 // the old doesnot contain the current, it need to be added to the columnMap
                 int positionInNewSelectColumns = positionInNewSelectColumns(selectedOne);
-                matchingKeySection.addColumn(selectedOne.getLabel(), positionInNewSelectColumns);
-                blockingKeySection.addColumn(selectedOne.getLabel(), positionInNewSelectColumns);
+                if (selectedOne instanceof ColumnRepNode) {
+                    addColumnGivenIndex(selectedOne, positionInNewSelectColumns);
+                } else if (selectedOne instanceof ColumnSetRepNode) {
+                    List<IRepositoryNode> colNodes = ((ColumnSetRepNode) selectedOne).getAllColumns();
+                    for (IRepositoryNode colNode : colNodes) {
+                        addColumnGivenIndex(colNode, positionInNewSelectColumns);
+                    }
+
+                }
             }
         }
 
         this.matchingKeySection.redrawnSubTableContent();
         this.blockingKeySection.redrawnSubTableContent();
+    }
+
+    /**
+     * DOC zhao Comment method "addColumnGivenIndex".
+     * 
+     * @param selectedOne
+     * @param positionInNewSelectColumns
+     */
+    private void addColumnGivenIndex(IRepositoryNode selectedOne, int positionInNewSelectColumns) {
+        matchingKeySection.addColumn(((ColumnRepNode) selectedOne).getMetadataColumnRepositoryObject().getTdColumn(),
+                positionInNewSelectColumns);
+        blockingKeySection.addColumn(((ColumnRepNode) selectedOne).getMetadataColumnRepositoryObject().getTdColumn(),
+                positionInNewSelectColumns);
     }
 
     /**
@@ -880,7 +971,6 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
 
     // no need to fetch the data after select data, only do fetch when "refresh" or run analysis
     private void createNatTable(List<Object[]> listOfData) {
-        setAllColumnsToKeySections();
 
         ScrolledComposite panel = new ScrolledComposite(dataTableComp, SWT.NONE | SWT.V_SCROLL | SWT.H_SCROLL);
         GridDataFactory.fillDefaults().align(SWT.LEFT, SWT.TOP).applyTo(panel);
@@ -919,7 +1009,9 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
      * updateAllKeys method
      */
     public void updateAllColumnsToKeySection() {
-        setAllColumnsToKeySections();
+        Map<MetadataColumn, String> colName2IdxMap = getAllColumnsToKeyMap();
+        this.matchingKeySection.setColumnNameInput(colName2IdxMap);
+        this.blockingKeySection.setColumnNameInput(colName2IdxMap);
         this.matchingKeySection.redrawnSubTableContent();
         this.blockingKeySection.redrawnSubTableContent();
     }
@@ -927,19 +1019,18 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
     /**
      * The key sections need to know all columns as: column_index, column_name
      */
-    private void setAllColumnsToKeySections() {
+    private Map<MetadataColumn, String> getAllColumnsToKeyMap() {
         // only when open the analysis and match key is not empty
         if (analysisHandler.getSelectedColumns() == null || analysisHandler.getSelectedColumns().length < 1) {
-            return;
+            return null;
         }
 
-        Map<String, String> columnMap = new HashMap<String, String>();
+        Map<MetadataColumn, String> columnMap = new HashMap<MetadataColumn, String>();
         int index = 0;
         for (ModelElement column : analysisHandler.getSelectedColumns()) {
-            columnMap.put(column.getName(), String.valueOf(index++));
+            columnMap.put((MetadataColumn) column, String.valueOf(index++));
         }
-        matchingKeySection.setColumnNameInput(columnMap);
-        blockingKeySection.setColumnNameInput(columnMap);
+        return columnMap;
     }
 
     /**

@@ -16,7 +16,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
-import org.talend.dataquality.record.linkage.grouping.AbstractRecordGrouping.MatchAlgoithm;
+import org.talend.dataquality.record.linkage.constant.RecordMatcherType;
 import org.talend.dataquality.record.linkage.grouping.swoosh.SurvivorShipAlgorithmParams;
 
 /**
@@ -146,6 +146,6 @@ public interface IRecordGrouping<T> {
 
     public void setSurvivorShipAlgorithmParams(SurvivorShipAlgorithmParams survivorShipAlgorithmParams);
 
-    public void setRecordLinkAlgorithm(MatchAlgoithm algorithm);
+    public void setRecordLinkAlgorithm(RecordMatcherType algorithm);
 
 }

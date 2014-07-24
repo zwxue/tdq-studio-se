@@ -26,7 +26,9 @@ public class AttributeValues<T> implements Iterable<T> {
 
     public void merge(AttributeValues<T> other) {
         for (Entry<T> value : other.values) {
-            get(value.value).add(value.occurrence);
+            Entry<T> valueEntry = get(value.value);
+            valueEntry.add(value.occurrence);
+            values.add(valueEntry); // Forces reorder of occurrences in tree.
         }
     }
 
@@ -63,6 +65,7 @@ public class AttributeValues<T> implements Iterable<T> {
         return values.hashCode();
     }
 
+    @Override
     public Iterator<T> iterator() {
         final Iterator<Entry<T>> iterator = values.iterator();
         return new Iterator<T>() {

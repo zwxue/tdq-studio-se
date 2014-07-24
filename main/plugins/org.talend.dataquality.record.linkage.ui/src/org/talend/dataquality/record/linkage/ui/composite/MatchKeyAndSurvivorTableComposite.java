@@ -21,6 +21,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.talend.dataquality.record.linkage.ui.composite.tableviewer.AbstractMatchAnalysisTableViewer;
+import org.talend.dataquality.record.linkage.ui.composite.tableviewer.AnaMatchKeyAndSurvTableViewer;
 import org.talend.dataquality.record.linkage.ui.composite.tableviewer.definition.MatchKeyAndSurvivorDefinition;
 import org.talend.dataquality.record.linkage.ui.composite.tableviewer.definition.MatchKeyAndSurvivorshipTableViewer;
 import org.talend.dataquality.record.linkage.ui.i18n.internal.DefaultMessagesImpl;
@@ -36,6 +37,8 @@ public class MatchKeyAndSurvivorTableComposite extends AbsMatchAnalysisTableComp
 
     private MatchRule matchRule;
 
+    private boolean isShowInputColumn = Boolean.FALSE;
+
     /**
      * DOC yyin MatchKeyAndSurvivorTableComposite constructor comment.
      * 
@@ -50,6 +53,9 @@ public class MatchKeyAndSurvivorTableComposite extends AbsMatchAnalysisTableComp
     @Override
     protected void initHeaders() {
         headers.add(MatchAnalysisConstant.MATCH_KEY_NAME); // 14
+        if (isShowInputColumn) {
+            headers.add(MatchAnalysisConstant.INPUT_COLUMN);
+        }
         headers.add(MatchAnalysisConstant.MATCHING_TYPE); // 12
         headers.add(MatchAnalysisConstant.CUSTOM_MATCHER); // 20
         headers.add(MatchAnalysisConstant.THRESHOLD); // 14
@@ -131,6 +137,22 @@ public class MatchKeyAndSurvivorTableComposite extends AbsMatchAnalysisTableComp
      */
     @Override
     protected AbstractMatchAnalysisTableViewer<MatchKeyAndSurvivorDefinition> createTableViewer() {
-        return new MatchKeyAndSurvivorshipTableViewer(this, getTableStyle(), isAddColumn());
+        if (isShowInputColumn) {
+            // Analysis editor
+            return new AnaMatchKeyAndSurvTableViewer(this, getTableStyle(), isAddColumn());
+        } else {
+            // Definition editor
+            return new MatchKeyAndSurvivorshipTableViewer(this, getTableStyle(), isAddColumn());
+        }
     }
+
+    /**
+     * Sets the isShowInputColumn.
+     * 
+     * @param isShowInputColumn the isShowInputColumn to set
+     */
+    public void setShowInputColumn(boolean isShowInputColumn) {
+        this.isShowInputColumn = isShowInputColumn;
+    }
+
 }

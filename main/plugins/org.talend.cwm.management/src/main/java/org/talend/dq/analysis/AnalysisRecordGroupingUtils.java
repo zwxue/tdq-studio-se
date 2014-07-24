@@ -10,7 +10,7 @@
 // 9 rue Pages 92150 Suresnes, France
 //
 // ============================================================================
-package org.talend.dataquality.record.linkage.utils;
+package org.talend.dq.analysis;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -19,8 +19,11 @@ import java.util.Map;
 import java.util.regex.Pattern;
 
 import org.apache.commons.lang.StringUtils;
+import org.talend.core.model.metadata.builder.connection.ConnectionPackage;
+import org.talend.core.model.metadata.builder.connection.MetadataColumn;
 import org.talend.dataquality.record.linkage.constant.AttributeMatcherType;
 import org.talend.dataquality.record.linkage.grouping.IRecordGrouping;
+import org.talend.dataquality.record.linkage.utils.MatchAnalysisConstant;
 
 /**
  * used for some utility functions
@@ -34,22 +37,36 @@ public class AnalysisRecordGroupingUtils {
      * 
      * @return
      */
-    public static String[] getCompleteColumnSchema(Map<String, String> columnMap) {
-        List<String> columnNameList = new ArrayList<String>();
+    public static MetadataColumn[] getCompleteColumnSchema(Map<MetadataColumn, String> columnMap) {
+        List<MetadataColumn> columnNameList = new ArrayList<MetadataColumn>();
         if (columnMap == null) {
-            return new String[0];
+            return new MetadataColumn[0];
         }
-        for (String columnName : columnMap.keySet()) {
+        for (MetadataColumn columnName : columnMap.keySet()) {
             columnNameList.add(columnName);
         }
-        columnNameList.add(MatchAnalysisConstant.BLOCK_KEY);
-        columnNameList.add(MatchAnalysisConstant.GID);
-        columnNameList.add(MatchAnalysisConstant.GRP_SIZE);
-        columnNameList.add(MatchAnalysisConstant.MASTER);
-        columnNameList.add(MatchAnalysisConstant.SCORE);
-        columnNameList.add(MatchAnalysisConstant.GRP_QUALITY);
-        columnNameList.add(MatchAnalysisConstant.ATTRIBUTE_SCORES);
-        return columnNameList.toArray(new String[columnNameList.size()]);
+        MetadataColumn dummyBlockKeyColumn = ConnectionPackage.eINSTANCE.getConnectionFactory().createMetadataColumn();
+        dummyBlockKeyColumn.setName(MatchAnalysisConstant.BLOCK_KEY);
+        columnNameList.add(dummyBlockKeyColumn);
+        MetadataColumn dummyGIDColumn = ConnectionPackage.eINSTANCE.getConnectionFactory().createMetadataColumn();
+        dummyGIDColumn.setName(MatchAnalysisConstant.GID);
+        columnNameList.add(dummyGIDColumn);
+        MetadataColumn dummyGSizeColumn = ConnectionPackage.eINSTANCE.getConnectionFactory().createMetadataColumn();
+        dummyGSizeColumn.setName(MatchAnalysisConstant.GRP_SIZE);
+        columnNameList.add(dummyGSizeColumn);
+        MetadataColumn dummyMasterColumn = ConnectionPackage.eINSTANCE.getConnectionFactory().createMetadataColumn();
+        dummyMasterColumn.setName(MatchAnalysisConstant.MASTER);
+        columnNameList.add(dummyMasterColumn);
+        MetadataColumn dummyScoreColumn = ConnectionPackage.eINSTANCE.getConnectionFactory().createMetadataColumn();
+        dummyScoreColumn.setName(MatchAnalysisConstant.SCORE);
+        columnNameList.add(dummyScoreColumn);
+        MetadataColumn dummyGRPQualityColumn = ConnectionPackage.eINSTANCE.getConnectionFactory().createMetadataColumn();
+        dummyGRPQualityColumn.setName(MatchAnalysisConstant.GRP_QUALITY);
+        columnNameList.add(dummyGRPQualityColumn);
+        MetadataColumn dummyAtrrScoresColumn = ConnectionPackage.eINSTANCE.getConnectionFactory().createMetadataColumn();
+        dummyAtrrScoresColumn.setName(MatchAnalysisConstant.ATTRIBUTE_SCORES);
+        columnNameList.add(dummyAtrrScoresColumn);
+        return columnNameList.toArray(new MetadataColumn[columnNameList.size()]);
     }
 
     /**
@@ -57,21 +74,33 @@ public class AnalysisRecordGroupingUtils {
      * 
      * @return
      */
-    public static String[] getCompleteColumnSchemaWithoutBlockKey(Map<String, String> columnMap) {
-        List<String> columnNameList = new ArrayList<String>();
+    public static MetadataColumn[] getCompleteColumnSchemaWithoutBlockKey(Map<MetadataColumn, String> columnMap) {
+        List<MetadataColumn> columnNameList = new ArrayList<MetadataColumn>();
         if (columnMap == null) {
-            return new String[0];
+            return new MetadataColumn[0];
         }
-        for (String columnName : columnMap.keySet()) {
+        for (MetadataColumn columnName : columnMap.keySet()) {
             columnNameList.add(columnName);
         }
-        columnNameList.add(MatchAnalysisConstant.GID);
-        columnNameList.add(MatchAnalysisConstant.GRP_SIZE);
-        columnNameList.add(MatchAnalysisConstant.MASTER);
-        columnNameList.add(MatchAnalysisConstant.SCORE);
-        columnNameList.add(MatchAnalysisConstant.GRP_QUALITY);
-        columnNameList.add(MatchAnalysisConstant.ATTRIBUTE_SCORES);
-        return columnNameList.toArray(new String[columnNameList.size()]);
+        MetadataColumn dummyGIDColumn = ConnectionPackage.eINSTANCE.getConnectionFactory().createMetadataColumn();
+        dummyGIDColumn.setName(MatchAnalysisConstant.GID);
+        columnNameList.add(dummyGIDColumn);
+        MetadataColumn dummyGSizeColumn = ConnectionPackage.eINSTANCE.getConnectionFactory().createMetadataColumn();
+        dummyGSizeColumn.setName(MatchAnalysisConstant.GRP_SIZE);
+        columnNameList.add(dummyGSizeColumn);
+        MetadataColumn dummyMasterColumn = ConnectionPackage.eINSTANCE.getConnectionFactory().createMetadataColumn();
+        dummyMasterColumn.setName(MatchAnalysisConstant.MASTER);
+        columnNameList.add(dummyMasterColumn);
+        MetadataColumn dummyScoreColumn = ConnectionPackage.eINSTANCE.getConnectionFactory().createMetadataColumn();
+        dummyScoreColumn.setName(MatchAnalysisConstant.SCORE);
+        columnNameList.add(dummyScoreColumn);
+        MetadataColumn dummyGRPQualityColumn = ConnectionPackage.eINSTANCE.getConnectionFactory().createMetadataColumn();
+        dummyGRPQualityColumn.setName(MatchAnalysisConstant.GRP_QUALITY);
+        columnNameList.add(dummyGRPQualityColumn);
+        MetadataColumn dummyAtrrScoresColumn = ConnectionPackage.eINSTANCE.getConnectionFactory().createMetadataColumn();
+        dummyAtrrScoresColumn.setName(MatchAnalysisConstant.ATTRIBUTE_SCORES);
+        columnNameList.add(dummyAtrrScoresColumn);
+        return columnNameList.toArray(new MetadataColumn[columnNameList.size()]);
     }
 
     /**
@@ -87,7 +116,7 @@ public class AnalysisRecordGroupingUtils {
      * @return
      */
     public static Map<String, String> getMatchKeyMap(String column, String algoType, String algoParameter, int confidentWeight,
-            Map<String, String> columnIndexMap, double matchInterval, String attributeName, String handleNull) {
+            Map<MetadataColumn, String> columnIndexMap, double matchInterval, String attributeName, String handleNull) {
         return getMatchKeyMap(column, algoType, algoParameter, confidentWeight, columnIndexMap, matchInterval, attributeName,
                 handleNull, null);// The jar path is null when the matcher's algorithm is not a type of "custom"
     }
@@ -107,9 +136,15 @@ public class AnalysisRecordGroupingUtils {
      * @return
      */
     public static Map<String, String> getMatchKeyMap(String column, String algoType, String algoParameter, int confidentWeight,
-            Map<String, String> columnIndexMap, double matchInterval, String attributeName, String handleNull, String jarPath) {
+            Map<MetadataColumn, String> columnIndexMap, double matchInterval, String attributeName, String handleNull,
+            String jarPath) {
         Map<String, String> matchKeyMap = new HashMap<String, String>();
-        matchKeyMap.put(IRecordGrouping.COLUMN_IDX, columnIndexMap.get(column));
+        for (MetadataColumn metaCol : columnIndexMap.keySet()) {
+            if (metaCol.getName().equals(column)) {
+                matchKeyMap.put(IRecordGrouping.COLUMN_IDX, columnIndexMap.get(metaCol));
+                break;
+            }
+        }
         matchKeyMap.put(IRecordGrouping.MATCHING_TYPE, AttributeMatcherType.valueOf(algoType).name());
         matchKeyMap.put(IRecordGrouping.CUSTOMER_MATCH_CLASS, algoParameter);
         matchKeyMap.put(IRecordGrouping.CONFIDENCE_WEIGHT, String.valueOf(confidentWeight));

@@ -24,6 +24,7 @@ import org.talend.cwm.management.i18n.MessagesTest;
 import org.talend.dq.CWMPluginTest;
 import org.talend.dq.analysis.AnalysisExecutorTest;
 import org.talend.dq.analysis.AnalysisRealExecutorForDB2Test;
+import org.talend.dq.analysis.AnalysisRecordGroupingUtilsTest;
 import org.talend.dq.analysis.ColumnAnalysisExecutorTest;
 import org.talend.dq.analysis.ColumnAnalysisSqlExecutorTest;
 import org.talend.dq.analysis.ConnectionAnalysisCreationTest;
@@ -97,7 +98,7 @@ import org.talend.dq.writer.AElementPersistanceTest;
         MdmStatementTest.class, ConnectionUtilsTest.class, AnalysisFolderRepNodeTest.class, ColumnAnalysisSqlExecutorTest.class,
         EObjectHelperTest.class, AnalysisRealExecutorForDB2Test.class, LowerUpperQuantileForDB2Test.class,
         TextIndicatorForNetezzaTest.class, PatternChartDataEntityTest.class, SchemaEvaluatorTest.class,
-        SQLPatternExplorerTest.class, TeradataDbmsLanguageTest.class })
+        SQLPatternExplorerTest.class, TeradataDbmsLanguageTest.class, AnalysisRecordGroupingUtilsTest.class, })
 public class AllCwmManagementTests {
 
 }

@@ -20,6 +20,7 @@ import org.eclipse.jface.viewers.IBaseLabelProvider;
 import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
+import org.talend.core.model.metadata.builder.connection.MetadataColumn;
 import org.talend.dataquality.record.linkage.ui.composite.tableviewer.BlockingKeyTableViewer;
 import org.talend.dataquality.record.linkage.ui.composite.tableviewer.provider.definition.BlockingKeyTableDefinitionLabelProvider;
 import org.talend.dataquality.record.linkage.utils.BlockingKeyAlgorithmEnum;
@@ -51,7 +52,7 @@ public class BlockingKeyDefinitionTableViewer extends BlockingKeyTableViewer {
      * .List)
      */
     @Override
-    protected CellEditor[] getCellEditor(List<String> headers, List<String> columnList) {
+    protected CellEditor[] getCellEditor(List<String> headers, List<MetadataColumn> columnList) {
         CellEditor[] editors = new CellEditor[headers.size()];
         for (int i = 0; i < editors.length; ++i) {
             switch (i) {

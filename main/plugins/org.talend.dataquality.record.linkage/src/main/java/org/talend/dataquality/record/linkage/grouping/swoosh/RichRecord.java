@@ -208,7 +208,7 @@ public class RichRecord extends Record {
                 originRow.get(originRow.size() - extSize).setValue(String.valueOf(true));
                 extSize--;
                 // Score
-                originRow.get(originRow.size() - extSize).setValue(String.valueOf(1));
+                originRow.get(originRow.size() - extSize).setValue(String.valueOf(1.0));
                 extSize--;
                 // group quality
                 originRow.get(originRow.size() - extSize).setValue(String.valueOf(getGroupQuality()));
@@ -223,9 +223,9 @@ public class RichRecord extends Record {
                 // Master
                 originRow.add(new DQAttribute<Boolean>("Is master", originRow.size(), true)); //$NON-NLS-1$
                 // Score
-                originRow.add(new DQAttribute<Double>("Score", originRow.size(), 1d)); //$NON-NLS-1$
+                originRow.add(new DQAttribute<Double>("Score", originRow.size(), 1.0)); //$NON-NLS-1$
                 // Group quality
-                originRow.add(new DQAttribute<String>("Group quality", originRow.size(), String.valueOf(1))); //$NON-NLS-1$
+                originRow.add(new DQAttribute<String>("Group quality", originRow.size(), String.valueOf(1.0))); //$NON-NLS-1$
                 // destance details.
                 originRow.add(new DQAttribute<String>("Attribute scores", originRow.size(), StringUtils.EMPTY)); //$NON-NLS-1$
             }

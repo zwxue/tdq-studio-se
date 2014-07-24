@@ -23,8 +23,6 @@ import org.talend.utils.sql.TalendTypeConvert;
  */
 public class DFColumnRepNode extends ColumnRepNode {
 
-    private MetadataColumnRepositoryObject metadataColumnRepositoryObject;
-
     /**
      * DOC qiongli DFColumnRepNode constructor comment.
      * 

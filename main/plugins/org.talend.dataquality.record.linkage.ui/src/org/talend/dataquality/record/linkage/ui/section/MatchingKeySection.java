@@ -45,6 +45,7 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
+import org.talend.core.model.metadata.builder.connection.MetadataColumn;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.indicators.columnset.RecordMatchingIndicator;
 import org.talend.dataquality.record.linkage.ui.composite.MatchRuleTableComposite;
@@ -383,7 +384,7 @@ public class MatchingKeySection extends AbstractMatchKeyWithChartTableSection {
         matchRuleComposite.addPropertyChangeListener(this);
         matchRuleComposite.setAddColumn(isAddColumn());
         if (columnMap != null) {
-            ArrayList<String> columnList = new ArrayList<String>();
+            ArrayList<MetadataColumn> columnList = new ArrayList<MetadataColumn>();
             columnList.addAll(columnMap.keySet());
             matchRuleComposite.setColumnList(columnList);
         }
@@ -433,9 +434,7 @@ public class MatchingKeySection extends AbstractMatchKeyWithChartTableSection {
         GridData gridData = new GridData(GridData.FILL_BOTH);
         chartComposite.setLayoutData(gridData);
         matchRuleChartComp = new MatchRuleDataChart(chartComposite, new HashMap<Object, Long>());
-
         createHideGroupComposite(chartComposite);
-
     }
 
     @Override

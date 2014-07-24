@@ -24,10 +24,8 @@ import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 import org.talend.dataquality.record.linkage.constant.RecordMatcherType;
 import org.talend.dataquality.record.linkage.ui.i18n.internal.DefaultMessagesImpl;
-import org.talend.dataquality.record.linkage.ui.section.definition.BlockingKeyDefinitionSection;
 import org.talend.dataquality.record.linkage.ui.section.definition.DefaultSurvivorshipDefinitionSection;
 import org.talend.dataquality.record.linkage.ui.section.definition.MatchAndSurvivorKeySection;
-import org.talend.dataquality.record.linkage.ui.section.definition.MatchKeyDefinitionSection;
 import org.talend.dataquality.record.linkage.utils.MatchAnalysisConstant;
 import org.talend.dataquality.rules.MatchRuleDefinition;
 
@@ -39,13 +37,13 @@ public class SelectAlgorithmSection extends AbstractSectionComposite {
 
     private boolean isVSRMode = true;
 
-    private BlockingKeyDefinitionSection blockKeySection = null;
+    private BlockingKeySection blockKeySection = null;
 
-    private MatchKeyDefinitionSection matchKeySection = null;
+    private MatchingKeySection matchKeySection = null;
 
     // private SurvivorshipDefinitionSection survivorshipDefinitionSection = null;
 
-    private MatchAndSurvivorKeySection matchAndSurvivorKeySection = null;
+    protected MatchAndSurvivorKeySection matchAndSurvivorKeySection = null;
 
     private DefaultSurvivorshipDefinitionSection defaultSurvivorshipDefinitionSection = null;
 
@@ -95,10 +93,12 @@ public class SelectAlgorithmSection extends AbstractSectionComposite {
             public void widgetSelected(SelectionEvent e) {
                 isVSRMode = false;
                 matchKeySection.setAddColumn(true);
-                noticeOtherSection();
+                notifyOtherSections();
                 algorithmName = RecordMatcherType.T_SwooshAlgorithm.name();
                 matchRuleDef.setRecordLinkageAlgorithm(algorithmName);
-                blockKeySection.removeAllBlockingKey();
+                if (!isShowBlockingKeySection(isVSRMode)) {
+                    blockKeySection.removeAllBlockingKey();
+                }
                 listeners.firePropertyChange(MatchAnalysisConstant.ISDIRTY_PROPERTY, RecordMatcherType.simpleVSRMatcher.name(),
                         RecordMatcherType.T_SwooshAlgorithm.name());
 
@@ -113,7 +113,7 @@ public class SelectAlgorithmSection extends AbstractSectionComposite {
             public void widgetSelected(SelectionEvent e) {
                 isVSRMode = true;
                 matchKeySection.setAddColumn(false);
-                noticeOtherSection();
+                notifyOtherSections();
                 algorithmName = RecordMatcherType.simpleVSRMatcher.name();
                 matchRuleDef.setRecordLinkageAlgorithm(algorithmName);
                 matchAndSurvivorKeySection.removeAllSurvivorship();
@@ -130,22 +130,42 @@ public class SelectAlgorithmSection extends AbstractSectionComposite {
     /**
      * DOC zshen Comment method "noticeOtherSection".
      */
-    private void noticeOtherSection() {
+    private void notifyOtherSections() {
         // matchKeySection.redrawnContent();
         matchKeySection.changeSectionDisStatus(isVSRMode);
-        blockKeySection.changeSectionDisStatus(isVSRMode);
+        if (isShowBlockingKeySection(isVSRMode)) {
+            blockKeySection.changeSectionDisStatus(true);
+        } else {
+            // Hide the section.
+            blockKeySection.changeSectionDisStatus(false);
+        }
         // survivorshipDefinitionSection.changeSectionDisStatus(!isVSRMode);
         defaultSurvivorshipDefinitionSection.changeSectionDisStatus(!isVSRMode);
         matchAndSurvivorKeySection.changeSectionDisStatus(!isVSRMode);
         if (!isVSRMode) {
-            matchAndSurvivorKeySection.initTableInput(Boolean.TRUE);
+            updateMatchAndSurvivorSection();
         } else {
             matchKeySection.redrawnContent();
         }
     }
 
+    /**
+     * DOC zhao Update the match and survivorship section.
+     */
+    protected void updateMatchAndSurvivorSection() {
+        // In case of match rule definition editor.
+        matchAndSurvivorKeySection.initTableInput(Boolean.TRUE);
+    }
+
     public boolean isVSRMode() {
         return RecordMatcherType.simpleVSRMatcher.name().equals(algorithmName);
+    }
+
+    protected boolean isShowBlockingKeySection(boolean isVSRAlgo) {
+        if (isVSRAlgo) {
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -153,7 +173,7 @@ public class SelectAlgorithmSection extends AbstractSectionComposite {
      * 
      * @param blockKeySection the blockKeySection to set
      */
-    public void setBlockkeySection(BlockingKeyDefinitionSection blockKeySection) {
+    public void setBlockkeySection(BlockingKeySection blockKeySection) {
         this.blockKeySection = blockKeySection;
     }
 
@@ -162,7 +182,7 @@ public class SelectAlgorithmSection extends AbstractSectionComposite {
      * 
      * @param matchKeySection the matchKeySection to set
      */
-    public void setMatchKeySection(MatchKeyDefinitionSection matchKeySection) {
+    public void setMatchKeySection(MatchingKeySection matchKeySection) {
         this.matchKeySection = matchKeySection;
     }
 

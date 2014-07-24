@@ -100,11 +100,11 @@ public abstract class AbstractSectionComposite implements PropertyChangeListener
      * change Section Display status when we switch different algorithm
      * 
      */
-    public void changeSectionDisStatus(boolean isHide) {
+    public void changeSectionDisStatus(boolean isVisible) {
         GridData gd = (GridData) getSection().getLayoutData();
-        gd.exclude = !isHide;
+        gd.exclude = !isVisible;
         getSection().setExpanded(true);
-        getSection().setVisible(isHide);
+        getSection().setVisible(isVisible);
         getSection().getParent().layout();
     }
 }

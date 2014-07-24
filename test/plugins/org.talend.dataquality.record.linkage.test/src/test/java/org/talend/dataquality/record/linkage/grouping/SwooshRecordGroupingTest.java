@@ -15,7 +15,7 @@ import org.apache.log4j.Logger;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.talend.dataquality.record.linkage.grouping.AbstractRecordGrouping.MatchAlgoithm;
+import org.talend.dataquality.record.linkage.constant.RecordMatcherType;
 import org.talend.dataquality.record.linkage.grouping.swoosh.DQAttribute;
 import org.talend.dataquality.record.linkage.grouping.swoosh.RichRecord;
 import org.talend.dataquality.record.linkage.grouping.swoosh.SurvivorShipAlgorithmParams;
@@ -125,7 +125,7 @@ public class SwooshRecordGroupingTest {
                 return String.valueOf(objectValue);
             }
         };
-        recordGroup.setRecordLinkAlgorithm(MatchAlgoithm.TSWOOSH);
+        recordGroup.setRecordLinkAlgorithm(RecordMatcherType.T_SwooshAlgorithm);
         SurvivorShipAlgorithmParams survAlgParams = new SurvivorShipAlgorithmParams();
         SurvivorshipFunction func = survAlgParams.new SurvivorshipFunction();
         func.setParameter(""); //$NON-NLS-1$
@@ -267,7 +267,7 @@ public class SwooshRecordGroupingTest {
                 return String.valueOf(objectValue);
             }
         };
-        recordGroup.setRecordLinkAlgorithm(MatchAlgoithm.TSWOOSH);
+        recordGroup.setRecordLinkAlgorithm(RecordMatcherType.T_SwooshAlgorithm);
         SurvivorShipAlgorithmParams survivorShipAlgorithmParams = new SurvivorShipAlgorithmParams();
         SurvivorshipFunction func = survivorShipAlgorithmParams.new SurvivorshipFunction();
         func.setParameter(""); //$NON-NLS-1$

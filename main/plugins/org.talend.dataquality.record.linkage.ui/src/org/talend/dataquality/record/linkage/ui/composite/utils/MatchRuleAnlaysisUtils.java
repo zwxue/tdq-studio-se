@@ -24,6 +24,7 @@ import org.eclipse.emf.common.util.EList;
 import org.talend.core.GlobalServiceRegister;
 import org.talend.core.ITDQRepositoryService;
 import org.talend.cwm.relational.TdColumn;
+import org.talend.dataquality.PluginConstant;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.columnset.BlockKeyIndicator;
@@ -33,7 +34,6 @@ import org.talend.dataquality.record.linkage.constant.AttributeMatcherType;
 import org.talend.dataquality.record.linkage.ui.composite.table.ISortComparator;
 import org.talend.dataquality.record.linkage.ui.composite.table.SortComparator;
 import org.talend.dataquality.record.linkage.ui.composite.table.SortState;
-import org.talend.dataquality.record.linkage.utils.AnalysisRecordGroupingUtils;
 import org.talend.dataquality.record.linkage.utils.HandleNullEnum;
 import org.talend.dataquality.record.linkage.utils.MatchAnalysisConstant;
 import org.talend.dataquality.rules.AlgorithmDefinition;
@@ -42,6 +42,7 @@ import org.talend.dataquality.rules.KeyDefinition;
 import org.talend.dataquality.rules.MatchKeyDefinition;
 import org.talend.dataquality.rules.MatchRule;
 import org.talend.dataquality.rules.RulesFactory;
+import org.talend.dq.analysis.AnalysisRecordGroupingUtils;
 import orgomg.cwm.objectmodel.core.ModelElement;
 
 /**
@@ -224,7 +225,7 @@ public class MatchRuleAnlaysisUtils {
 
             @Override
             public int compare(Object[] row1, Object[] row2) {
-                if (!StringUtils.endsWithIgnoreCase((String) row1[GID_index], (String) row2[GID_index])) {
+                if (!isSameGroup((String) row1[GID_index], (String) row2[GID_index])) {
                     return ((String) row1[GID_index]).compareTo((String) row2[GID_index]);
                 } else {// false < true
                     return ((String) row2[MASTER_index]).compareTo((String) row1[MASTER_index]);
@@ -234,6 +235,29 @@ public class MatchRuleAnlaysisUtils {
         };
         java.util.Collections.sort(resultData, comparator);
         return resultData;
+    }
+
+    /**
+     * 
+     * @param group ID one
+     * @param group ID two.
+     * @return true if they are the same group considering the two merged groups (groupID contains two more UUID).
+     */
+    public static boolean isSameGroup(String groupID1, String groupID2) {
+        if (groupID1 == null || groupID1.trim().equals(StringUtils.EMPTY) || groupID2 == null
+                || groupID2.trim().equals(StringUtils.EMPTY)) {
+            return false;
+        }
+        String[] ids1 = StringUtils.splitByWholeSeparatorPreserveAllTokens(groupID1, PluginConstant.COMMA_STRING);
+        String[] ids2 = StringUtils.splitByWholeSeparatorPreserveAllTokens(groupID2, PluginConstant.COMMA_STRING);
+        for (String id1 : ids1) {
+            for (String id2 : ids2) {
+                if (id1.equalsIgnoreCase(id2)) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     public static List<Object[]> sortDataByColumn(final SortState sortState, List<Object[]> resultData,

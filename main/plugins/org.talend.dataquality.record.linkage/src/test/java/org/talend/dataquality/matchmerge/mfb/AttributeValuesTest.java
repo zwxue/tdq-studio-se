@@ -73,6 +73,20 @@ public class AttributeValuesTest extends TestCase {
         assertEquals(2, values1.get("test1").getOccurrence());
         assertEquals(1, values1.get("test2").getOccurrence());
 
+        AttributeValues<String> values3 = new AttributeValues<String>();
+        values3.get("test2").increment();
+        AttributeValues<String> values4 = new AttributeValues<String>();
+        values4.get("test2").increment();
+        values1.merge(values3);
+        values1.merge(values4);
+
+        assertEquals("test2", values1.mostCommon());
+
+        AttributeValues<String> values5 = new AttributeValues<String>();
+        values5.get("BC").increment();
+        values5.get("AC").increment();
+        values5.get("AC").increment();
+        assertEquals("AC", values5.mostCommon());
     }
 
     public void testMergeInNew() throws Exception {

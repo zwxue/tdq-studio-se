@@ -70,7 +70,7 @@ public class DQMFBRecordMerger extends MFBRecordMerger {
 
             if (!isMatchKeyIndex) {
                 SurvivorshipFunction survivorshipFunc = defaultSurvivorshipFuncs.get(colIdx);
-                if (survivorshipFunc == null) {
+                if (survivorshipFunc == null || survivorshipFunc.getSurvivorShipAlgoEnum() == null) {
                     // No default survivorship function was set.
                     continue;
                 }

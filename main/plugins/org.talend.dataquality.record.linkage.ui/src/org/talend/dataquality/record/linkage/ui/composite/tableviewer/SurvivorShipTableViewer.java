@@ -24,6 +24,7 @@ import org.eclipse.jface.viewers.IContentProvider;
 import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
+import org.talend.core.model.metadata.builder.connection.MetadataColumn;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.record.linkage.ui.action.MatchRuleActionGroup;
 import org.talend.dataquality.record.linkage.ui.composite.tableviewer.provider.MatchAnalysisTableContentProvider;
@@ -105,7 +106,7 @@ public class SurvivorShipTableViewer extends AbstractMatchAnalysisTableViewer<Su
      * (java.util.List)
      */
     @Override
-    protected CellEditor[] getCellEditor(List<String> headers, List<String> columnList) {
+    protected CellEditor[] getCellEditor(List<String> headers, List<MetadataColumn> columnList) {
         CellEditor[] editors = new CellEditor[headers.size()];
         for (int i = 0; i < editors.length; ++i) {
             if (isAddColumn() && i == 1) {
@@ -137,7 +138,7 @@ public class SurvivorShipTableViewer extends AbstractMatchAnalysisTableViewer<Su
     }
 
     /*
-     * (non-Javadoc)
+     * (non-Javadoc) columnList.toArray(new String[0])
      * 
      * @see org.talend.dataquality.record.linkage.ui.composite.tableviewer.AbstractMatchAnalysisTableViewer#
      * createNewKeyDefinition(java.lang.String)

@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
+import org.talend.dataquality.record.linkage.grouping.swoosh.DQAttribute;
 import org.talend.dataquality.record.linkage.grouping.swoosh.RichRecord;
 
 /**
@@ -106,8 +107,14 @@ public class AnalysisMatchRecordGrouping extends AbstractRecordGrouping<String> 
      */
     @Override
     protected void outputRow(RichRecord row) {
-        // No implementation by default.
-
+        List<DQAttribute<?>> originRow = row.getOutputRow();
+        String[] strRow = new String[originRow.size()];
+        int idx = 0;
+        for (DQAttribute<?> attr : originRow) {
+            strRow[idx] = attr.getValue();
+            idx++;
+        }
+        outputRow(strRow);
     }
 
     /*
