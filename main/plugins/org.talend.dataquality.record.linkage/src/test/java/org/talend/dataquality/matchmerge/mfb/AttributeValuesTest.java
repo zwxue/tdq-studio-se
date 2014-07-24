@@ -16,6 +16,22 @@ import org.talend.dataquality.matchmerge.AttributeValues;
 
 public class AttributeValuesTest extends TestCase {
 
+    public void testMostCommon1() throws Exception {
+        AttributeValues<String> values = new AttributeValues<String>();
+        values.get("BC").increment();
+        values.get("AC").increment();
+        values.get("AC").increment();
+        assertEquals("AC", values.mostCommon());
+    }
+    
+    public void testMostCommon2() throws Exception {
+        AttributeValues<Integer> values = new AttributeValues<Integer>();
+        values.get(0).increment();
+        values.get(1).increment();
+        values.get(1).increment();
+        assertEquals(1, (int) values.mostCommon());
+    }
+
     public void testArgs() throws Exception {
         AttributeValues<String> values = new AttributeValues<String>();
         values.get(null).increment();
@@ -79,16 +95,10 @@ public class AttributeValuesTest extends TestCase {
         values4.get("test2").increment();
         values1.merge(values3);
         values1.merge(values4);
-
+        
         assertEquals("test2", values1.mostCommon());
-
-        AttributeValues<String> values5 = new AttributeValues<String>();
-        values5.get("BC").increment();
-        values5.get("AC").increment();
-        values5.get("AC").increment();
-        assertEquals("AC", values5.mostCommon());
     }
-
+    
     public void testMergeInNew() throws Exception {
         AttributeValues<String> values1 = new AttributeValues<String>();
         values1.get("test1").increment();

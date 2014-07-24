@@ -25,7 +25,9 @@ public class AttributeValues<T> implements Iterable<T> {
     }
 
     public void merge(AttributeValues<T> other) {
-        for (Entry<T> value : other.values) {
+        // Prevent concurrent modifications in case of self merge.
+        TreeSet<Entry<T>> valuesToMerge = other == this ? new TreeSet<Entry<T>>(other.values) : other.values; 
+        for (Entry<T> value : valuesToMerge) {
             Entry<T> valueEntry = get(value.value);
             valueEntry.add(value.occurrence);
             values.add(valueEntry); // Forces reorder of occurrences in tree.
@@ -36,6 +38,7 @@ public class AttributeValues<T> implements Iterable<T> {
         if (values.isEmpty()) {
             return null;
         }
+        merge(this); // Merge on itself forces re-order of elements in set.
         return values.last().value;
     }
 
