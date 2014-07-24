@@ -62,6 +62,10 @@ public abstract class AbstractRecordGrouping<TYPE> implements IRecordGrouping<TY
 
     private Boolean isLinkToPrevious = Boolean.FALSE;
 
+    private int originalInputColumnSize;
+
+    private Boolean isDisplayAttLabels = Boolean.TRUE;
+
     // The exthended column size.
     int extSize;
 
@@ -101,6 +105,15 @@ public abstract class AbstractRecordGrouping<TYPE> implements IRecordGrouping<TY
     }
 
     /**
+     * Sets the prevOrginalColumnSize.
+     * 
+     * @param prevOrginalColumnSize the prevOrginalColumnSize to set
+     */
+    public void setOrginalInputColumnSize(int originalInputColumnSize) {
+        this.originalInputColumnSize = originalInputColumnSize;
+    }
+
+    /**
      * Sets the isSeperateOutput.
      * 
      * @param isSeperateOutput the isSeperateOutput to set
@@ -110,16 +123,34 @@ public abstract class AbstractRecordGrouping<TYPE> implements IRecordGrouping<TY
         this.isSeperateOutput = isSeperateOutput;
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataquality.record.linkage.grouping.IRecordGrouping#setIsDisplayAttLabels(java.lang.Boolean)
+     */
+    @Override
+    public void setIsDisplayAttLabels(Boolean isDisplayAttLabels) {
+        this.isDisplayAttLabels = isDisplayAttLabels;
+
+    }
+
     @Override
     public void doGroup(TYPE[] inputRow) throws IOException, InterruptedException {
 
         extSize = isOutputDistDetails ? 5 : 4;
         // extSize + 1 when isSeperateOutput is enabled.
         extSize = isSeperateOutput ? extSize + 1 : extSize;
+
+        // if the inputRow size less than original column size,should set 'isLinkToPrevious' to false and work on
+        // none-multi-pass.
+        if (isLinkToPrevious && inputRow.length <= originalInputColumnSize) {
+            isLinkToPrevious = false;
+        }
         // In case of current component is linked to previous, and the record is NOT master, just put it to the output
         // and continue;
-        if (isLinkToPrevious && !isMaster(inputRow[inputRow.length - extSize + 2])) {
-            outputRow(inputRow);
+        if (isLinkToPrevious && !isMaster(inputRow[originalInputColumnSize + 2])) {
+            TYPE[] inputRowWithExtColumns = createNewInputRowForMultPass(inputRow, originalInputColumnSize + extSize);
+            outputRow(inputRowWithExtColumns);
             return;
         }
 
@@ -138,8 +169,8 @@ public abstract class AbstractRecordGrouping<TYPE> implements IRecordGrouping<TY
         boolean isSimilar = false;
         for (TYPE[] masterRecord : masterRecords) {
             if (isLinkToPrevious) {
-                int masterGRPSize = Integer.valueOf(String.valueOf(masterRecord[inputRow.length - extSize + 1]));
-                int inputGRPSize = Integer.valueOf(String.valueOf(inputRow[inputRow.length - extSize + 1]));
+                int masterGRPSize = Integer.valueOf(String.valueOf(masterRecord[originalInputColumnSize + 1]));
+                int inputGRPSize = Integer.valueOf(String.valueOf(inputRow[originalInputColumnSize + 1]));
                 // Don't compare the records whose GRP_SIZE both > 1.
                 if (masterGRPSize > 1 && inputGRPSize > 1) {
                     continue;
@@ -159,13 +190,20 @@ public abstract class AbstractRecordGrouping<TYPE> implements IRecordGrouping<TY
                 isSimilar = true;
                 // Master GRP_SIZE ++
                 if (isLinkToPrevious) {
-                    int masterGRPSize = Integer.valueOf(String.valueOf(masterRecord[masterRecord.length - extSize + 1]));
+                    int masterGRPSize = Integer.valueOf(String.valueOf(masterRecord[originalInputColumnSize + 1]));
                     if (masterGRPSize == 1) {
-                        inputRow[inputRow.length - extSize + 1] = modifyGroupSize(inputRow[inputRow.length - extSize + 1]);
-                        updateWithExtendedColumn(masterRecord, inputRow, matchingProba, distanceDetails, columnDelimiter);
+                        inputRow[originalInputColumnSize + 1] = modifyGroupSize(inputRow[originalInputColumnSize + 1]);
+                        TYPE[] inputRowWithExtColumns = createNewInputRowForMultPass(inputRow, originalInputColumnSize + extSize);
+                        // since the 'masterRecord' will be output as a duplicate,need to set masterRecord GRP_QUALITY
+                        // to 'inputRow_with_extColumns'. then compare it with 'matchingProba' later.
+                        if (isSeperateOutput) {
+                            inputRowWithExtColumns[originalInputColumnSize + 4] = masterRecord[originalInputColumnSize + 4];
+                        }
+                        updateWithExtendedColumn(masterRecord, inputRowWithExtColumns, matchingProba, distanceDetails,
+                                columnDelimiter);
                         // Update master record from the temporary master list.
                         masterRecords.remove(masterRecord);
-                        masterRecords.add(inputRow);
+                        masterRecords.add(inputRowWithExtColumns);
                         break;
                     }
                 }
@@ -181,10 +219,12 @@ public abstract class AbstractRecordGrouping<TYPE> implements IRecordGrouping<TY
             // before.
 
             // Master record
-            TYPE[] masterRow = createTYPEArray(inputRow.length + (isLinkToPrevious ? 0 : extSize));
+            int inputColumnLenth = isLinkToPrevious ? originalInputColumnSize : inputRow.length;
+            TYPE[] masterRow = createTYPEArray(inputColumnLenth + extSize);
             for (int idx = 0; idx < inputRow.length; idx++) {
                 masterRow[idx] = inputRow[idx];
             }
+            int extIdx = 0;
             if (!isLinkToPrevious) {
                 // GID
                 masterRow[masterRow.length - extSize] = getTYPEFromObject(UUID.randomUUID().toString());
@@ -195,22 +235,54 @@ public abstract class AbstractRecordGrouping<TYPE> implements IRecordGrouping<TY
                 // Score
                 masterRow[masterRow.length - extSize + 3] = getTYPEFromObject(1.0);
 
-                int extIdx = 3;
-                if (isSeperateOutput) {
-                    extIdx++;
-                    // Group quality
-                    masterRow[masterRow.length - extSize + extIdx] = getTYPEFromObject(1.0);
-                }
-
-                if (isOutputDistDetails) {
-                    extIdx++;
-                    // Match distance details in master record is null
-                    masterRow[masterRow.length - extSize + extIdx] = getTYPEFromObject("");; //$NON-NLS-1$
-                }
+            }
+            if (isSeperateOutput) {
+                // Group quality for multiple pass
+                extIdx++;
+                masterRow[inputColumnLenth + 4] = getTYPEFromObject(1.0);
+            }
+            if (isOutputDistDetails) {
+                // Match distance details for multiple pass
+                masterRow[inputColumnLenth + 4 + extIdx] = getTYPEFromObject(EMPTY_STR);
             }
 
             masterRecords.add(masterRow);
         }
+    }
+
+    /**
+     * This method is for 2nd tMatchGroup in multi-pass only.add the external columns into input schema.
+     * 
+     * @param inputRow the output of 1st tMatchGroup. Then will be the input of 2nd tMatchGroup.
+     * @param extSizeWithLinkPrev
+     * @return
+     */
+    private TYPE[] createNewInputRowForMultPass(TYPE[] inputRow, int newLength) {
+        TYPE[] inputRowWithExtColumn = createTYPEArray(newLength);
+        for (int idx = 0; idx < inputRow.length; idx++) {
+            inputRowWithExtColumn[idx] = inputRow[idx];
+        }
+
+        TYPE prevDistanceTMP = null;
+        // In case of multi-pass, the value of index "originalInputColumnSize + 4" is the 1st tMatchGroup's distance
+        // details. Note no seperate output for 1st tMatchGroup in multi-pass.
+        if (extSize > 4 && inputRowWithExtColumn[originalInputColumnSize + 4] != null) {
+            prevDistanceTMP = inputRowWithExtColumn[originalInputColumnSize + 4];
+        }
+        int extInd = 0;
+        if (isSeperateOutput) {
+            inputRowWithExtColumn[originalInputColumnSize + 4] = getTYPEFromObject(0.0);
+            extInd++;
+        }
+        if (isOutputDistDetails) {
+            // propagate previous Match distance to next when the previous distance is not null.
+            if (prevDistanceTMP != null) {
+                inputRowWithExtColumn[originalInputColumnSize + 4 + extInd] = prevDistanceTMP;
+            } else {
+                inputRowWithExtColumn[originalInputColumnSize + 4 + extInd] = getTYPEFromObject(EMPTY_STR);
+            }
+        }
+        return inputRowWithExtColumn;
     }
 
     /**
@@ -237,7 +309,7 @@ public abstract class AbstractRecordGrouping<TYPE> implements IRecordGrouping<TY
     private String computeOutputDetails() {
         String distanceDetails = StringUtils.EMPTY;
         if (isOutputDistDetails) {
-            combinedRecordMatcher.setDisplayLabels(Boolean.TRUE);
+            combinedRecordMatcher.setDisplayLabels(isDisplayAttLabels);
             distanceDetails = combinedRecordMatcher.getLabeledAttributeMatchWeights();
         }
         return distanceDetails;
@@ -273,6 +345,8 @@ public abstract class AbstractRecordGrouping<TYPE> implements IRecordGrouping<TY
             extIdx++;
             double groupQuality = computeGroupQuality(masterRecord, matchingProba, extIdx);
             masterRecord[duplicateRecord.length - extSize + extIdx] = getTYPEFromObject(groupQuality);
+            // change the duplicate group quality to 0.0 .
+            duplicateRecord[duplicateRecord.length - extSize + extIdx] = getTYPEFromObject(0.0);
         }
         if (isOutputDistDetails) {
             extIdx++;

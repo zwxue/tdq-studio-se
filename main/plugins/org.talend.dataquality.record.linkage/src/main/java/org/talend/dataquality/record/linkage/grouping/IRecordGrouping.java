@@ -52,6 +52,8 @@ public interface IRecordGrouping<T> {
     // Key for the the matcher's attribute name.
     public static final String ATTRIBUTE_NAME = "ATTRIBUTE_NAME"; //$NON-NLS-1$
 
+    public static final String EMPTY_STR = ""; //$NON-NLS-1$
+
     /**
      * 
      * Prepare the parameters (key definition) of the matching algorithm.
@@ -140,5 +142,7 @@ public interface IRecordGrouping<T> {
      * @param matchRule the matcher to be added.
      */
     public void addMatchRule(List<Map<String, String>> matchRule);
+
+    public void setIsDisplayAttLabels(Boolean isDisplayAttLabels);
 
 }
