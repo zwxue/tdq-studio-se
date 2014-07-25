@@ -334,6 +334,8 @@ public final class DQStructureComparer {
 
                 ConnectionUtils.closeConnection(sqlConn);
 
+            } else {
+                returnProvider.setMessage(trc.getMessage());
             }
         }
         if (copyedConnection == null) {
