@@ -9,7 +9,7 @@
     <relativePath>../../../</relativePath>
   </parent>
   <groupId>org.talend.studio</groupId>
-  <artifactId>org.talend.libraries.windowKey</artifactId>
-  <version>1.0.0-SNAPSHOT</version>
+  <artifactId>org.talend.dataprofiler.migration</artifactId>
+  <version>5.0.0-SNAPSHOT</version>
   <packaging>eclipse-plugin</packaging>
 </project>
