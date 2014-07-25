@@ -104,7 +104,6 @@ import org.talend.repository.ui.utils.ManagerConnection;
 import org.talend.utils.ProductVersion;
 import org.talend.utils.sql.metadata.constants.GetColumn;
 import org.talend.utils.sugars.ReturnCode;
-
 import orgomg.cwm.foundation.softwaredeployment.DataManager;
 import orgomg.cwm.foundation.softwaredeployment.DataProvider;
 import orgomg.cwm.foundation.softwaredeployment.ProviderConnection;
@@ -223,9 +222,10 @@ public final class ConnectionUtils {
         ReturnCode connectionAvailable = new ReturnCode(false);
         connectionAvailable = ConnectionUtils.isConnectionAvailable(analysisDataProvider);
         if (!connectionAvailable.isOk()) {
+            log.error(connectionAvailable.getMessage());
             MessageDialogWithToggle.openWarning(Display.getCurrent().getActiveShell(),
                     Messages.getString("ConnectionUtils.checkConnFailTitle"),//$NON-NLS-1$
-                    Messages.getString("ConnectionUtils.checkConnFailMsg", connectionAvailable.getMessage()));//$NON-NLS-1$
+                    Messages.getString("ConnectionUtils.checkConnFailMsg"));//$NON-NLS-1$
             return false;
         }
         return true;
