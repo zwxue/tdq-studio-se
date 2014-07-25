@@ -62,6 +62,7 @@ import org.talend.dataquality.analysis.ExecutionLanguage;
 import org.talend.dataquality.helpers.AnalysisHelper;
 import org.talend.dataquality.properties.TDQAnalysisItem;
 import org.talend.dq.analysis.AnalysisExecutorSelector;
+import org.talend.dq.analysis.AnalysisHandler;
 import org.talend.dq.analysis.connpool.TdqAnalysisConnectionPool;
 import org.talend.dq.helper.ProxyRepositoryManager;
 import org.talend.dq.helper.RepositoryNodeHelper;
@@ -144,7 +145,7 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
                 log.error("Analysis item is null"); //$NON-NLS-1$
                 return;
             }
-            validateAnalysis();
+
             if (ifLockByOthers()) {
                 return;
             }
@@ -156,7 +157,10 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
                 return;
             }
 
-            if (item == null || !isConnectedAvailable()) {
+            // to do validate after save.
+            validateAnalysis();
+
+            if (!isConnectedAvailable()) {
                 return;
             }
 
@@ -208,8 +212,7 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
                             }
                             // register dynamic event for who supported dynamic chart
                             if (isSupportDynamicChart()) {
-                                EventManager.getInstance().publish(item.getAnalysis(),
-                                        EventEnum.DQ_DYNAMIC_REGISTER_DYNAMIC_CHART, null);
+                                EventManager.getInstance().publish(item.getAnalysis(), EventEnum.DQ_DYNAMIC_REGISTER_DYNAMIC_CHART, null);
                             }
                         }
 
@@ -238,15 +241,13 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
                             // Added TDQ-8787 20140616 yyin: unregister all dynamic chart events after executing
                             // the analysis
                             if (isSupportDynamicChart()) {
-                                EventManager.getInstance().publish(item.getAnalysis(),
-                                        EventEnum.DQ_DYNAMIC_UNREGISTER_DYNAMIC_CHART, null);
+                                EventManager.getInstance().publish(item.getAnalysis(), EventEnum.DQ_DYNAMIC_UNREGISTER_DYNAMIC_CHART, null);
                             } else {
                                 if (listener != null) {
                                     listener.fireRuningItemChanged(true);
                                 } else {
                                     // TODO yyin publish the event from listener.
-                                    EventManager.getInstance().publish(item.getAnalysis(), EventEnum.DQ_ANALYSIS_RUN_FROM_MENU,
-                                            null);
+                                    EventManager.getInstance().publish(item.getAnalysis(), EventEnum.DQ_ANALYSIS_RUN_FROM_MENU, null);
                                 }
                             }
                         }
@@ -287,8 +288,7 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
     private void addTaggedVaLueIntoConnection() {
         DataManager datamanager = item.getAnalysis().getContext().getConnection();
         if (datamanager instanceof DatabaseConnection) {
-            TaggedValue productName = TaggedValueHelper.getTaggedValue(TaggedValueHelper.DB_PRODUCT_NAME,
-                    datamanager.getTaggedValue());
+            TaggedValue productName = TaggedValueHelper.getTaggedValue(TaggedValueHelper.DB_PRODUCT_NAME, datamanager.getTaggedValue());
             TaggedValue productVersion = TaggedValueHelper.getTaggedValue(TaggedValueHelper.DB_PRODUCT_VERSION,
                     datamanager.getTaggedValue());
             log.info("DB Product Name: " + productName.getValue()); //$NON-NLS-1$
@@ -378,20 +378,27 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
      * @throws BusinessException
      */
     private void validateAnalysis() throws BusinessException {
-        if (item != null) {
-            if (item.getAnalysis() == null || item.getAnalysis().getParameters() == null) {
-                BusinessException createBusinessException = ExceptionFactory.getInstance().createBusinessException(
-                        item.getFilename());
-                throw createBusinessException;
-            }
+        if (item.getAnalysis() == null || item.getAnalysis().getParameters() == null) {
+            BusinessException createBusinessException = ExceptionFactory.getInstance().createBusinessException(item.getFilename());
+            throw createBusinessException;
         }
+
+        try {
+            // check whether the field is integer value
+            AnalysisHandler.createHandler(item.getAnalysis()).getNumberOfConnectionsPerAnalysis();
+        } catch (NumberFormatException nfe) {
+            BusinessException businessException = new BusinessException();
+            businessException.setAdditonalMessage(DefaultMessagesImpl.getString("ColumnMasterDetailsPage.mustBeNumber", //$NON-NLS-1$
+                    DefaultMessagesImpl.getString("AnalysisTuningPreferencePage.NumberOfConnectionsPerAnalysis"))); //$NON-NLS-1$
+            throw businessException;
+        }
+
     }
 
     /*
      * (non-Javadoc)
      * 
-     * @see org.eclipse.ui.cheatsheets.ICheatSheetAction#run(java.lang.String[],
-     * org.eclipse.ui.cheatsheets.ICheatSheetManager)
+     * @see org.eclipse.ui.cheatsheets.ICheatSheetAction#run(java.lang.String[], org.eclipse.ui.cheatsheets.ICheatSheetManager)
      */
     public void run(String[] params, ICheatSheetManager manager) {
         // ADD mzhao 2009-02-03 If there is no active editor opened, run

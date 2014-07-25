@@ -51,7 +51,6 @@ import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.core.repository.model.repositoryObject.MetadataXmlElementTypeRepositoryObject;
 import org.talend.cwm.helper.ModelElementHelper;
 import org.talend.cwm.helper.SwitchHelpers;
-import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.xml.TdXmlElementType;
 import org.talend.dataprofiler.core.ImageLib;
@@ -75,8 +74,6 @@ import org.talend.dataquality.indicators.DataminingType;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.sql.UserDefIndicator;
 import org.talend.dq.analysis.ModelElementAnalysisHandler;
-import org.talend.dq.analysis.connpool.TdqAnalysisConnectionPool;
-import org.talend.dq.helper.ContextHelper;
 import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.helper.UDIHelper;
@@ -101,8 +98,6 @@ public class ColumnMasterDetailsPage extends DynamicAnalysisMasterPage implement
     ModelElementAnalysisHandler analysisHandler;
 
     private ModelElementIndicator[] currentModelElementIndicators;
-
-
 
     private static final int TREE_MAX_LENGTH = 400;
 
@@ -191,8 +186,7 @@ public class ColumnMasterDetailsPage extends DynamicAnalysisMasterPage implement
         dataFilterComp.addPropertyChangeListener(this);
 
         // MOD xqliu 2009-07-01 bug 7068
-        createExecuteEngineSection(form, topComp, analysisHandler.getAnalyzedColumns(), analysisHandler.getAnalysis()
-                .getParameters());
+        createExecuteEngineSection(form, topComp, analysisHandler.getAnalyzedColumns(), analysisHandler.getAnalysis().getParameters());
         // ~
 
         createContextGroupSection(form, topComp);
@@ -233,8 +227,7 @@ public class ColumnMasterDetailsPage extends DynamicAnalysisMasterPage implement
 
             @Override
             public void linkActivated(HyperlinkEvent e) {
-                ModelElementIndicator[] result = treeViewer.openIndicatorSelectDialog(ColumnMasterDetailsPage.this.getSite()
-                        .getShell());
+                ModelElementIndicator[] result = treeViewer.openIndicatorSelectDialog(ColumnMasterDetailsPage.this.getSite().getShell());
                 refreshCurrentTreeViewer(result);
             }
 
@@ -334,8 +327,8 @@ public class ColumnMasterDetailsPage extends DynamicAnalysisMasterPage implement
             for (int idx = 0; idx < pageSize; idx++) {
                 modelElementIndicatorList.add(modelElementIndicatorArrary[index * pageSize + idx]);
             }
-            IndicatorPaginationInfo pginfo = new MasterPaginationInfo(form, previewChartList, modelElementIndicatorList,
-                    uiPagination, treeViewer);
+            IndicatorPaginationInfo pginfo = new MasterPaginationInfo(form, previewChartList, modelElementIndicatorList, uiPagination,
+                    treeViewer);
             uiPagination.addPage(pginfo);
         }
 
@@ -345,8 +338,8 @@ public class ColumnMasterDetailsPage extends DynamicAnalysisMasterPage implement
             for (int leftIdx = 0; leftIdx < left; leftIdx++) {
                 modelElementIndicatorList.add(modelElementIndicatorArrary[totalPages * pageSize + leftIdx]);
             }
-            IndicatorPaginationInfo pginfo = new MasterPaginationInfo(form, previewChartList, modelElementIndicatorList,
-                    uiPagination, treeViewer);
+            IndicatorPaginationInfo pginfo = new MasterPaginationInfo(form, previewChartList, modelElementIndicatorList, uiPagination,
+                    treeViewer);
             uiPagination.addPage(pginfo);
             // FIXME totalPages won't used anymore.
             totalPages++;
@@ -405,9 +398,7 @@ public class ColumnMasterDetailsPage extends DynamicAnalysisMasterPage implement
         for (ModelElementIndicator modelElementIndicator : modelElementIndicators) {
             reposViewObjList.add(modelElementIndicator.getModelElementRepositoryNode());
         }
-        ColumnsSelectionDialog dialog = new ColumnsSelectionDialog(
-                this,
-                null,
+        ColumnsSelectionDialog dialog = new ColumnsSelectionDialog(this, null,
                 DefaultMessagesImpl.getString("ColumnMasterDetailsPage.columnSelection"), reposViewObjList, connNode, DefaultMessagesImpl //$NON-NLS-1$
                         .getString("ColumnMasterDetailsPage.columnSelections")); //$NON-NLS-1$
         if (dialog.open() == Window.OK) {
@@ -511,19 +502,6 @@ public class ColumnMasterDetailsPage extends DynamicAnalysisMasterPage implement
 
         analysis.getParameters().setExecutionLanguage(ExecutionLanguage.get(execLang));
 
-        try {
-            // check whether the field has integer value
-            Integer.valueOf(ContextHelper.getAnalysisContextValue(this.analysisItem.getAnalysis(),
-                    numberOfConnectionsPerAnalysisText.getText()));
-        } catch (NumberFormatException nfe) {
-            MessageDialogWithToggle.openError(null, DefaultMessagesImpl.getString("AbstractAnalysisMetadataPage.SaveAnalysis"), //$NON-NLS-1$
-                    DefaultMessagesImpl.getString("ColumnMasterDetailsPage.emptyField", //$NON-NLS-1$
-                            DefaultMessagesImpl.getString("AnalysisTuningPreferencePage.NumberOfConnectionsPerAnalysis"))); //$NON-NLS-1$ 
-
-            String originalValue = TaggedValueHelper.getTaggedValue(TdqAnalysisConnectionPool.NUMBER_OF_CONNECTIONS_PER_ANALYSIS,
-                    this.analysisItem.getAnalysis().getTaggedValue()).getValue();
-            numberOfConnectionsPerAnalysisText.setText(originalValue);
-        }
         // save the number of connections per analysis
         this.saveNumberOfConnectionsPerAnalysis();
 
@@ -763,8 +741,7 @@ public class ColumnMasterDetailsPage extends DynamicAnalysisMasterPage implement
         // MOD klliu 2011-04-18 code cleaning.
         ModelElementIndicator[] modelElementIndicators = treeViewer.getModelElementIndicator();
         if (modelElementIndicators != null && modelElementIndicators.length != 0) {
-            analysisItem.getAnalysis().getContext()
-                    .setConnection(ModelElementIndicatorHelper.getTdDataProvider(modelElementIndicators[0]));
+            analysisItem.getAnalysis().getContext().setConnection(ModelElementIndicatorHelper.getTdDataProvider(modelElementIndicators[0]));
         }
         // ~
         List<ModelElement> analyzedElement = new ArrayList<ModelElement>();
@@ -791,8 +768,7 @@ public class ColumnMasterDetailsPage extends DynamicAnalysisMasterPage implement
     private ReturnCode checkMdmExecutionEngine() {
         ModelElementIndicator[] modelElementIndicators = treeViewer.getModelElementIndicator();
         if (modelElementIndicators != null && modelElementIndicators.length != 0) {
-            analysisItem.getAnalysis().getContext()
-                    .setConnection(ModelElementIndicatorHelper.getTdDataProvider(modelElementIndicators[0]));
+            analysisItem.getAnalysis().getContext().setConnection(ModelElementIndicatorHelper.getTdDataProvider(modelElementIndicators[0]));
         }
         return new ReturnCode(true);
     }
@@ -921,8 +897,8 @@ public class ColumnMasterDetailsPage extends DynamicAnalysisMasterPage implement
     }
 
     /**
-     * return all created charts for the current running, from the current pagination. The charts which are not on the
-     * current page no need to return. TODO check if can use IndicatorUnit
+     * return all created charts for the current running, from the current pagination. The charts which are not on the current page no need
+     * to return. TODO check if can use IndicatorUnit
      */
     @Override
     public Map<List<Indicator>, CategoryDataset> getDynamicDatasets() {

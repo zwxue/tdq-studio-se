@@ -79,7 +79,6 @@ import org.talend.dataquality.indicators.Indicator;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dataquality.properties.TDQAnalysisItem;
 import org.talend.dataquality.rules.DQRule;
-import org.talend.designer.core.model.utils.emf.talendfile.ContextType;
 import org.talend.dq.analysis.AnalysisHandler;
 import org.talend.dq.analysis.connpool.TdqAnalysisConnectionPool;
 import org.talend.dq.helper.ContextHelper;
@@ -633,8 +632,7 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
      */
     @Deprecated
     protected Section createAnalysisLimitSection(final ScrolledForm sForm, Composite pComp) {
-        Section section = createSection(sForm, pComp,
-                DefaultMessagesImpl.getString("AbstractMetadataFormPage.AnalysisLimit"), null); //$NON-NLS-1$
+        Section section = createSection(sForm, pComp, DefaultMessagesImpl.getString("AbstractMetadataFormPage.AnalysisLimit"), null); //$NON-NLS-1$
         Composite parent = this.toolkit.createComposite(section);
         this.createAnalysisLimitComposite(parent);
         section.setClient(parent);
@@ -650,8 +648,7 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
     protected Composite createAnalysisLimitComposite(Composite pComp) {
         Composite comp = pComp;
         comp.setLayout(new GridLayout(2, false));
-        this.toolkit.createLabel(comp,
-                DefaultMessagesImpl.getString("AnalysisTuningPreferencePage.NumberOfConnectionsPerAnalysis")); //$NON-NLS-1$
+        this.toolkit.createLabel(comp, DefaultMessagesImpl.getString("AnalysisTuningPreferencePage.NumberOfConnectionsPerAnalysis")); //$NON-NLS-1$
 
         this.numberOfConnectionsPerAnalysisText = this.toolkit.createText(comp, AnalysisHandler.createHandler(getAnalysis())
                 .getNumberOfConnectionsPerAnalysisWithContext(), SWT.BORDER);
@@ -671,21 +668,16 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
 
             public void verifyText(VerifyEvent e) {
                 String inputValue = e.text;
-                if (ContextHelper.isContextVar(inputValue)) {
-                	List<ContextType> contexts = getContexts();
-                	String contextGroupName = getLastRunContextGroupName() == null ? getDefaultContextGroupName((SupportContextEditor) currentEditor)
-                			: getLastRunContextGroupName();
-                	inputValue =ContextHelper.getContextValue(contexts, contextGroupName, e.text);                
-                }
-                
-                Pattern pattern = Pattern.compile("^[0-9]"); //$NON-NLS-1$
-                char[] charArray = inputValue.toCharArray();
-                for (char c : charArray) {
-                    if (!pattern.matcher(String.valueOf(c)).matches()) {
-                        e.doit = false;
+                // if it is context varible, do not check
+                if (!ContextHelper.isContextVar(inputValue)) {
+                    Pattern pattern = Pattern.compile("^[0-9]"); //$NON-NLS-1$
+                    char[] charArray = inputValue.toCharArray();
+                    for (char c : charArray) {
+                        if (!pattern.matcher(String.valueOf(c)).matches()) {
+                            e.doit = false;
+                        }
                     }
                 }
-                
             }
         });
 
@@ -694,8 +686,16 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
 
     /**
      * DOC xqliu Comment method "saveNumberOfConnectionsPerAnalysis".
+     * 
+     * @throws DataprofilerCoreException
      */
-    protected void saveNumberOfConnectionsPerAnalysis() {
+    protected void saveNumberOfConnectionsPerAnalysis() throws DataprofilerCoreException {
+        // check whether the field is Blank
+        if (StringUtils.isBlank(numberOfConnectionsPerAnalysisText.getText().trim())) {
+            throw new DataprofilerCoreException(DefaultMessagesImpl.getString("ColumnMasterDetailsPage.emptyField", //$NON-NLS-1$
+                    DefaultMessagesImpl.getString("AnalysisTuningPreferencePage.NumberOfConnectionsPerAnalysis"))); //$NON-NLS-1$
+
+        }
         TaggedValueHelper.setTaggedValue(this.getAnalysis(), TdqAnalysisConnectionPool.NUMBER_OF_CONNECTIONS_PER_ANALYSIS,
                 this.numberOfConnectionsPerAnalysisText.getText());
     }
@@ -734,8 +734,7 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
      * @param pComp
      */
     protected void createAnalysisParamSection(final ScrolledForm pForm, Composite pComp) {
-        analysisParamSection = createSection(pForm, pComp,
-                DefaultMessagesImpl.getString("ColumnMasterDetailsPage.AnalysisParameter"), null); //$NON-NLS-1$
+        analysisParamSection = createSection(pForm, pComp, DefaultMessagesImpl.getString("ColumnMasterDetailsPage.AnalysisParameter"), null); //$NON-NLS-1$
         Composite sectionClient = toolkit.createComposite(analysisParamSection);
         createAnalysisLimitComposite(sectionClient);
         analysisParamSection.setClient(sectionClient);
@@ -750,8 +749,8 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
      * @param anaParameters
      * @return
      */
-    protected Composite createExecuteEngineSection(final ScrolledForm form, Composite anasisDataComp,
-            EList<ModelElement> analyzedColumns, AnalysisParameters anaParameters) {
+    protected Composite createExecuteEngineSection(final ScrolledForm form, Composite anasisDataComp, EList<ModelElement> analyzedColumns,
+            AnalysisParameters anaParameters) {
         analysisParamSection = createSection(form, anasisDataComp,
                 DefaultMessagesImpl.getString("ColumnMasterDetailsPage.AnalysisParameter"), null); //$NON-NLS-1$
         Composite sectionClient = toolkit.createComposite(analysisParamSection);
@@ -835,8 +834,7 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
             }
 
         });
-        Label maxNumLabel = toolkit.createLabel(numberSection,
-                DefaultMessagesImpl.getString("ColumnMasterDetailsPage.maxNumberLabel")); //$NON-NLS-1$
+        Label maxNumLabel = toolkit.createLabel(numberSection, DefaultMessagesImpl.getString("ColumnMasterDetailsPage.maxNumberLabel")); //$NON-NLS-1$
         maxNumText = toolkit.createText(numberSection, null, SWT.BORDER);
         maxNumText.setText(String.valueOf(anaParameters.getMaxNumberRows()));
         maxNumText.addModifyListener(new ModifyListener() {
@@ -902,8 +900,7 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
                 // "analyzed Columns",ExecutionLanguage only is Java.
                 ExecutionLanguage currentLanguage = ExecutionLanguage.get(execLang);
                 if (ExecutionLanguage.SQL.equals(currentLanguage) && includeDatePatternFreqIndicator()) {
-                    MessageUI.openWarning(DefaultMessagesImpl
-                            .getString("ColumnMasterDetailsPage.DatePatternFreqIndicatorWarning")); //$NON-NLS-1$
+                    MessageUI.openWarning(DefaultMessagesImpl.getString("ColumnMasterDetailsPage.DatePatternFreqIndicatorWarning")); //$NON-NLS-1$
                     execCombo.setText(ExecutionLanguage.JAVA.getLiteral());
                     execLang = execCombo.getText();
                     return;
