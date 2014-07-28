@@ -52,6 +52,7 @@ import org.talend.dataprofiler.core.CorePlugin;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.model.ModelElementIndicator;
+import org.talend.dataprofiler.core.model.dynamic.DynamicIndicatorModel;
 import org.talend.dataprofiler.core.ui.chart.TalendChartComposite;
 import org.talend.dataprofiler.core.ui.editor.analysis.drilldown.DrillDownEditorInput;
 import org.talend.dataprofiler.core.ui.editor.preview.CompositeIndicator;
@@ -62,6 +63,10 @@ import org.talend.dataprofiler.core.ui.editor.preview.model.ChartTypeStatesOpera
 import org.talend.dataprofiler.core.ui.editor.preview.model.ChartWithData;
 import org.talend.dataprofiler.core.ui.editor.preview.model.MenuItemEntity;
 import org.talend.dataprofiler.core.ui.editor.preview.model.states.IChartTypeStates;
+import org.talend.dataprofiler.core.ui.events.DynamicChartEventReceiver;
+import org.talend.dataprofiler.core.ui.events.EventEnum;
+import org.talend.dataprofiler.core.ui.events.EventManager;
+import org.talend.dataprofiler.core.ui.events.IEventReceiver;
 import org.talend.dataprofiler.core.ui.pref.EditorPreferencePage;
 import org.talend.dataprofiler.core.ui.utils.pagination.UIPagination;
 import org.talend.dataquality.analysis.Analysis;
@@ -98,7 +103,7 @@ public class ResultPaginationInfo extends IndicatorPaginationInfo {
 
     @Override
     protected void render() {
-        clearAllMaps();
+        clearDynamicList();
         indicatorTableMap.clear();
         for (final ModelElementIndicator modelElementIndicator : modelElementIndicators) {
 
@@ -175,32 +180,58 @@ public class ResultPaginationInfo extends IndicatorPaginationInfo {
      */
     private void createChart(final Composite comp, EIndicatorChartType chartType, List<IndicatorUnit> units) {
         IChartTypeStates chartTypeState = ChartTypeStatesOperator.getChartState(chartType, units);
+        DynamicIndicatorModel dyModel = new DynamicIndicatorModel();
 
         // MOD TDQ-8787 20140618 yyin: to let the chart and table use the same dataset
         JFreeChart chart = null;
         CategoryDataset dataset = null;
+        // Added TDQ-8787 20140722 yyin:(when first switch from master to result) if there is some dynamic event for the
+        // current indicator, use its dataset directly (TDQ-9241)
+        IEventReceiver event = EventManager.getInstance().findRegisteredEvent(units.get(0).getIndicator(),
+                EventEnum.DQ_DYMANIC_CHART, 0);
+        // get the dataset from the event
+        if (event != null) {
+            dataset = ((DynamicChartEventReceiver) event).getDataset();
+        }// ~
+
         // create chart
         if (!EditorPreferencePage.isHideGraphics()) {
-            chart = chartTypeState.getChart();
-            ChartDecorator.decorate(chart, null);
-            if (chart != null) {// chart is null for MODE
-                if (EIndicatorChartType.BENFORD_LAW_STATISTICS.equals(chartType)) {
-                    // indicatorDatasetMap.put(getIndicators(units), chart.getCategoryPlot().getDataset(0));
-                    dataset = chart.getCategoryPlot().getDataset(1);
-                } else {
-                    dataset = chart.getCategoryPlot().getDataset();
+            if (event == null) {
+                chart = chartTypeState.getChart();
+                if (chart != null) {// chart is null for MODE
+                    if (EIndicatorChartType.BENFORD_LAW_STATISTICS.equals(chartType)) {
+                        // indicatorDatasetMap.put(getIndicators(units), chart.getCategoryPlot().getDataset(0));
+                        dataset = chart.getCategoryPlot().getDataset(1);
+                        dyModel.setSecondDataset(chart.getCategoryPlot().getDataset(0));
+                    } else {
+                        dataset = chart.getCategoryPlot().getDataset();
+                    }
                 }
+            } else {
+                chart = chartTypeState.getChart(((DynamicChartEventReceiver) event).getDataset());
             }
+
+            ChartDecorator.decorate(chart, null);
+
         }
         if (dataset == null) {
             dataset = chartTypeState.getDataset();
         }
 
-        // Added TDQ-8787 2014-06-18 yyin: add the current units and dataset into the map
+        // Added TDQ-8787 2014-06-18 yyin: add the current units and dataset into the list
         List<Indicator> indicators = null;
-        if (chart != null) {
-            indicators = putDatasetMap(chartType, units, dataset);
+        dyModel.setDataset(dataset);
+        dyModel.setChartType(chartType);
+        this.dynamicList.add(dyModel);
+
+        ChartDataEntity[] dataEntities = ((ICustomerDataset) dataset).getDataEntities();
+        if (dataEntities != null && dataEntities.length > 0) {
+            indicators = getIndicators(dataEntities);
+        } else {
+            indicators = getIndicators(units);
         }
+        dyModel.setIndicatorList(indicators);
+
         ChartWithData chartData = new ChartWithData(chartType, chart, ((ICustomerDataset) dataset).getDataEntities());
 
         // create UI
@@ -224,10 +255,9 @@ public class ResultPaginationInfo extends IndicatorPaginationInfo {
         tableviewer.setInput(chartData);
         if (EIndicatorChartType.SUMMARY_STATISTICS.equals(chartType)) {
             // for the summary indicators, the table show 2 more than the bar chart
-            indicatorTableMap.put(getIndicatorsForTable(units, true), tableviewer);
-        } else {
-            indicatorTableMap.put(indicators, tableviewer);
+            dyModel.setSummaryIndicators(getIndicatorsForTable(units, true));
         }
+        dyModel.setTableViewer(tableviewer);
 
         DataExplorer dataExplorer = chartTypeState.getDataExplorer();
         ChartTableFactory.addMenuAndTip(tableviewer, dataExplorer, analysis);
@@ -236,7 +266,7 @@ public class ResultPaginationInfo extends IndicatorPaginationInfo {
             ChartComposite cc = new TalendChartComposite(composite, SWT.NONE, chart, true);
             if (EIndicatorChartType.SUMMARY_STATISTICS.equals(chartType)) {
                 // for summary indicators: need to record the chart composite, which is used for create BAW chart
-                this.BAWparentComposite.put(indicators, (TalendChartComposite) cc);
+                dyModel.setBawParentChartComp((TalendChartComposite) cc);
             }
 
             GridData gd = new GridData();
@@ -257,6 +287,21 @@ public class ResultPaginationInfo extends IndicatorPaginationInfo {
         });
 
         masterPage.registerSection(subComp);
+    }
+
+    /**
+     * get the indicators from the data entities, which maybe sorted, and the order is changed.
+     * 
+     * @param dataEntities
+     * @return
+     */
+    private List<Indicator> getIndicators(ChartDataEntity[] dataEntities) {
+        List<Indicator> indicators = new ArrayList<Indicator>();
+
+        for (ChartDataEntity entity : dataEntities) {
+            indicators.add(entity.getIndicator());
+        }
+        return indicators;
     }
 
     private void addMouseListenerForChart(final ChartComposite chartComp, final IDataExplorer explorer, final Analysis analysis) {

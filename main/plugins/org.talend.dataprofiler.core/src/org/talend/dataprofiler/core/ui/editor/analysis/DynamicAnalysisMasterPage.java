@@ -38,18 +38,18 @@ import org.eclipse.ui.forms.widgets.Section;
 import org.jfree.data.category.CategoryDataset;
 import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
+import org.talend.dataprofiler.core.model.dynamic.DynamicIndicatorModel;
 import org.talend.dataprofiler.core.ui.action.actions.RunAnalysisAction;
-import org.talend.dataprofiler.core.ui.chart.TalendChartComposite;
-import org.talend.dataprofiler.core.ui.editor.preview.model.dataset.CustomerDefaultBAWDataset;
 import org.talend.dataprofiler.core.ui.events.DynamicBAWChartEventReceiver;
 import org.talend.dataprofiler.core.ui.events.DynamicChartEventReceiver;
 import org.talend.dataprofiler.core.ui.events.EventEnum;
 import org.talend.dataprofiler.core.ui.events.EventManager;
 import org.talend.dataprofiler.core.ui.events.EventReceiver;
+import org.talend.dataprofiler.core.ui.utils.AnalysisUtils;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dq.analysis.AnalysisHandler;
-import org.talend.dq.nodes.indicator.type.IndicatorEnum;
+import org.talend.dq.indicators.preview.EIndicatorChartType;
 
 /**
  * DOC yyin class global comment. Detailled comment
@@ -69,6 +69,8 @@ public abstract class DynamicAnalysisMasterPage extends AbstractAnalysisMetadata
     protected Map<Indicator, EventReceiver> eventReceivers = new IdentityHashMap<Indicator, EventReceiver>();
 
     private EventReceiver registerDynamicRefreshEvent;
+
+    private EventReceiver switchBetweenPageEvent;
 
     /**
      * DOC yyin DynamicAnalysisMasterPage constructor comment.
@@ -229,44 +231,45 @@ public abstract class DynamicAnalysisMasterPage extends AbstractAnalysisMetadata
         createDynamicChartsBeforeRun();
 
         // get all indicators and datasets
-        Map<List<Indicator>, CategoryDataset> indiAndDatasets = getDynamicDatasets();
+        List<DynamicIndicatorModel> indiAndDatasets = getDynamicDatasets();
 
         // register dynamic event,for the indicator (for each column)
-        for (List<Indicator> oneCategoryIndicators : indiAndDatasets.keySet()) {
-            CategoryDataset categoryDataset = indiAndDatasets.get(oneCategoryIndicators);
-            if (categoryDataset instanceof CustomerDefaultBAWDataset) {
+        for (DynamicIndicatorModel oneCategoryIndicatorModel : indiAndDatasets) {
+            CategoryDataset categoryDataset = oneCategoryIndicatorModel.getDataset();
+            if (EIndicatorChartType.SUMMARY_STATISTICS.equals(oneCategoryIndicatorModel.getChartType())) {
                 // when all summary indicators are selected
-                DynamicBAWChartEventReceiver bawReceiver = new DynamicBAWChartEventReceiver();
-                bawReceiver.setBawDataset((CustomerDefaultBAWDataset) categoryDataset);
-                bawReceiver.setBAWparentComposite(getBAWparentComposite().get(oneCategoryIndicators));
+                DynamicBAWChartEventReceiver bawReceiver = AnalysisUtils.createDynamicBAWChartEventReceiver(
+                        oneCategoryIndicatorModel, categoryDataset, eventReceivers);
                 bawReceiver.setChartComposite(chartComposite);
-                for (Indicator oneIndicator : oneCategoryIndicators) {
-                    DynamicChartEventReceiver eReceiver = bawReceiver.createEventReceiver(
-                            IndicatorEnum.findIndicatorEnum(oneIndicator.eClass()), oneIndicator);
-                    registerIndicatorEvent(oneIndicator, eReceiver);
-                }
-                bawReceiver.clearValue();
                 // register the parent baw receiver with one of summary indicator, no need to handle baw actually
-                registerIndicatorEvent(oneCategoryIndicators.get(0), bawReceiver);
+                registerIndicatorEvent(oneCategoryIndicatorModel.getSummaryIndicators().get(0), bawReceiver);
             } else {
                 int index = 0;
-                for (Indicator oneIndicator : oneCategoryIndicators) {
-                    DynamicChartEventReceiver eReceiver = new DynamicChartEventReceiver();
-                    eReceiver.setDataset(categoryDataset);
-                    eReceiver.setIndexInDataset(index++);
-                    eReceiver.setIndicatorName(oneIndicator.getName());
+                for (Indicator oneIndicator : oneCategoryIndicatorModel.getIndicatorList()) {
+                    // if the indicator is a frequency indicator, create a Frequency Event Receiver
+                    DynamicChartEventReceiver eReceiver = createEventReceiver(oneCategoryIndicatorModel, index++, oneIndicator);
                     eReceiver.setChartComposite(chartComposite);
-                    eReceiver.setIndicator(oneIndicator);
-                    // clear data
-                    eReceiver.clearValue();
-
                     registerIndicatorEvent(oneIndicator, eReceiver);
                 }
             }
         }
         reLayoutChartComposite();
 
-        registerRefreshDynamicChartEvent();
+        registerOtherDynamicEvent();
+    }
+
+    /**
+     * DOC yyin Comment method "createEventReceiver".
+     * 
+     * @param categoryDataset
+     * @param index
+     * @param oneIndicator
+     * @param eIndicatorChartType
+     * @return
+     */
+    protected DynamicChartEventReceiver createEventReceiver(DynamicIndicatorModel indicatorModel, int index,
+            Indicator oneIndicator) {
+        return AnalysisUtils.createDynamicChartEventReceiver(indicatorModel, index, oneIndicator);
     }
 
     private void registerIndicatorEvent(Indicator oneIndicator, DynamicChartEventReceiver eReceiver) {
@@ -282,7 +285,7 @@ public abstract class DynamicAnalysisMasterPage extends AbstractAnalysisMetadata
     /**
      * refresh the composite of the chart, to show the changes on the chart.
      */
-    private void registerRefreshDynamicChartEvent() {
+    private void registerOtherDynamicEvent() {
         registerDynamicRefreshEvent = new EventReceiver() {
 
             @Override
@@ -293,6 +296,25 @@ public abstract class DynamicAnalysisMasterPage extends AbstractAnalysisMetadata
         };
         EventManager.getInstance().register(chartComposite, EventEnum.DQ_DYNAMIC_REFRESH_DYNAMIC_CHART,
                 registerDynamicRefreshEvent);
+
+        // register a event to handle switch between master and result page
+        switchBetweenPageEvent = new EventReceiver() {
+
+            int times = 0;
+
+            @Override
+            public boolean handle(Object data) {
+                // only need to refresh for the first time switch, and must be during a running.
+                if (times == 0) {
+                    times++;
+                    currentEditor.getResultPage().refresh(currentEditor.getMasterPage());
+                }
+                return true;
+            }
+        };
+        EventManager.getInstance().register(this.getAnalysis(), EventEnum.DQ_DYNAMIC_SWITCH_MASTER_RESULT_PAGE,
+                switchBetweenPageEvent);
+
     }
 
     /**
@@ -301,6 +323,9 @@ public abstract class DynamicAnalysisMasterPage extends AbstractAnalysisMetadata
      * @param eventReceivers
      */
     public void unRegisterDynamicEvent() {
+        EventManager.getInstance().unRegister(this.getAnalysis(), EventEnum.DQ_DYNAMIC_SWITCH_MASTER_RESULT_PAGE,
+                switchBetweenPageEvent);
+
         for (Indicator oneIndicator : eventReceivers.keySet()) {
             DynamicChartEventReceiver eventReceiver = (DynamicChartEventReceiver) eventReceivers.get(oneIndicator);
             eventReceiver.clear();
@@ -331,9 +356,7 @@ public abstract class DynamicAnalysisMasterPage extends AbstractAnalysisMetadata
     }
 
     // should be implemented in child classes
-    abstract public Map<List<Indicator>, CategoryDataset> getDynamicDatasets();
-
-    abstract public Map<List<Indicator>, TalendChartComposite> getBAWparentComposite();
+    abstract public List<DynamicIndicatorModel> getDynamicDatasets();
 
     public void clearDynamicDatasets() {
         // make the run button workable again

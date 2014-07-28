@@ -14,7 +14,6 @@ package org.talend.dataprofiler.core.ui.editor.preview.model.states;
 
 import java.awt.Font;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.jface.viewers.IStructuredContentProvider;
@@ -46,13 +45,7 @@ public abstract class AbstractChartTypeStatesTable implements IChartTypeStates {
     protected List<TableIndicatorUnit> units = new ArrayList<TableIndicatorUnit>();
 
     public AbstractChartTypeStatesTable(List<TableIndicatorUnit> units) {
-        Iterator<TableIndicatorUnit> it = units.iterator();
-        while (it.hasNext()) {
-            TableIndicatorUnit unit = it.next();
-            if (!unit.isExcuted()) {
-                it.remove();
-            }
-        }
+        // remove if executed check, TDQ-8787, for dynamic chart
         if (units != null) {
             this.units.addAll(units);
         }

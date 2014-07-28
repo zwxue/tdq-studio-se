@@ -55,6 +55,7 @@ import org.talend.dataprofiler.core.ui.editor.analysis.AnalysisEditor;
 import org.talend.dataprofiler.core.ui.editor.analysis.AnalysisItemEditorInput;
 import org.talend.dataprofiler.core.ui.editor.analysis.ColumnAnalysisResultPage;
 import org.talend.dataprofiler.core.ui.editor.analysis.DynamicAnalysisMasterPage;
+import org.talend.dataprofiler.core.ui.editor.analysis.TableAnalysisResultPage;
 import org.talend.dataprofiler.core.ui.events.EventEnum;
 import org.talend.dataprofiler.core.ui.events.EventManager;
 import org.talend.dataquality.analysis.AnalysisType;
@@ -206,54 +207,59 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
                     Display.getDefault().syncExec(new Runnable() {
 
                         public void run() {
-                            // TODO: dynamic chart: if the listener is null(from menu, and the ana already be opened)
                             if (listener != null) {
                                 listener.fireRuningItemChanged(false);
                             }
                             // register dynamic event for who supported dynamic chart
                             if (isSupportDynamicChart()) {
-                                EventManager.getInstance().publish(item.getAnalysis(), EventEnum.DQ_DYNAMIC_REGISTER_DYNAMIC_CHART, null);
+                                EventManager.getInstance().publish(item.getAnalysis(),
+                                        EventEnum.DQ_DYNAMIC_REGISTER_DYNAMIC_CHART, null);
                             }
                         }
 
                     });
 
-                    ReturnCode executed = AnalysisExecutorSelector.executeAnalysis(item, monitor);
+                    ReturnCode executed = null;
+                    try {
+                        executed = AnalysisExecutorSelector.executeAnalysis(item, monitor);
 
-                    if (monitor.isCanceled()) {
-                        TdqAnalysisConnectionPool.closeConnectionPool(item.getAnalysis());
-                        executed = new ReturnCode(DefaultMessagesImpl.getString("RunAnalysisAction.TaskCancel"), false); //$NON-NLS-1$
+                        if (monitor.isCanceled()) {
+                            TdqAnalysisConnectionPool.closeConnectionPool(item.getAnalysis());
+                            executed = new ReturnCode(DefaultMessagesImpl.getString("RunAnalysisAction.TaskCancel"), false); //$NON-NLS-1$
+                            monitor.done();
+                            if (isNeedUnlock) {
+                                unlockAnalysis();
+                            }
+                            return Status.CANCEL_STATUS;
+                        }
+
                         monitor.done();
                         if (isNeedUnlock) {
                             unlockAnalysis();
                         }
-                        return Status.CANCEL_STATUS;
-                    }
+                    } finally {// if any exception, still need to unregister dynamic events.
+                        Display.getDefault().syncExec(new Runnable() {
 
-                    monitor.done();
-                    if (isNeedUnlock) {
-                        unlockAnalysis();
-                    }
+                            public void run() {
+                                // Added TDQ-8787 20140616 yyin: unregister all dynamic chart events after executing
+                                // the analysis
+                                if (isSupportDynamicChart()) {
+                                    EventManager.getInstance().publish(item.getAnalysis(),
+                                            EventEnum.DQ_DYNAMIC_UNREGISTER_DYNAMIC_CHART, null);
+                                }
 
-                    Display.getDefault().syncExec(new Runnable() {
-
-                        public void run() {
-                            // Added TDQ-8787 20140616 yyin: unregister all dynamic chart events after executing
-                            // the analysis
-                            if (isSupportDynamicChart()) {
-                                EventManager.getInstance().publish(item.getAnalysis(), EventEnum.DQ_DYNAMIC_UNREGISTER_DYNAMIC_CHART, null);
-                            } else {
                                 if (listener != null) {
                                     listener.fireRuningItemChanged(true);
                                 } else {
                                     // TODO yyin publish the event from listener.
-                                    EventManager.getInstance().publish(item.getAnalysis(), EventEnum.DQ_ANALYSIS_RUN_FROM_MENU, null);
+                                    EventManager.getInstance().publish(item.getAnalysis(), EventEnum.DQ_ANALYSIS_RUN_FROM_MENU,
+                                            null);
                                 }
+
                             }
-                        }
 
-                    });
-
+                        });
+                    }
                     displayResultStatus(executed);
 
                     return Status.OK_STATUS;
@@ -273,12 +279,14 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
         ExecutionLanguage executionEngine = AnalysisHelper.getExecutionEngine(this.item.getAnalysis());
         if (ExecutionLanguage.SQL.equals(executionEngine)) {
             if (listener == null) {// when run from context menu.
-                if (AnalysisType.MULTIPLE_COLUMN.equals(item.getAnalysis().getParameters().getAnalysisType())) {
+                if (AnalysisType.MULTIPLE_COLUMN.equals(item.getAnalysis().getParameters().getAnalysisType())
+                        || AnalysisType.BUSINESS_RULE.equals(item.getAnalysis().getParameters().getAnalysisType())) {
                     return true;
                 }
                 return false;
-            } else {
-                return listener instanceof DynamicAnalysisMasterPage || listener instanceof ColumnAnalysisResultPage;
+            } else {// run from the run button in the editor
+                return listener instanceof DynamicAnalysisMasterPage || listener instanceof ColumnAnalysisResultPage
+                        || listener instanceof TableAnalysisResultPage;
             }
         } else {
             return false;
@@ -288,7 +296,8 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
     private void addTaggedVaLueIntoConnection() {
         DataManager datamanager = item.getAnalysis().getContext().getConnection();
         if (datamanager instanceof DatabaseConnection) {
-            TaggedValue productName = TaggedValueHelper.getTaggedValue(TaggedValueHelper.DB_PRODUCT_NAME, datamanager.getTaggedValue());
+            TaggedValue productName = TaggedValueHelper.getTaggedValue(TaggedValueHelper.DB_PRODUCT_NAME,
+                    datamanager.getTaggedValue());
             TaggedValue productVersion = TaggedValueHelper.getTaggedValue(TaggedValueHelper.DB_PRODUCT_VERSION,
                     datamanager.getTaggedValue());
             log.info("DB Product Name: " + productName.getValue()); //$NON-NLS-1$
@@ -379,7 +388,8 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
      */
     private void validateAnalysis() throws BusinessException {
         if (item.getAnalysis() == null || item.getAnalysis().getParameters() == null) {
-            BusinessException createBusinessException = ExceptionFactory.getInstance().createBusinessException(item.getFilename());
+            BusinessException createBusinessException = ExceptionFactory.getInstance()
+                    .createBusinessException(item.getFilename());
             throw createBusinessException;
         }
 
@@ -398,7 +408,8 @@ public class RunAnalysisAction extends Action implements ICheatSheetAction {
     /*
      * (non-Javadoc)
      * 
-     * @see org.eclipse.ui.cheatsheets.ICheatSheetAction#run(java.lang.String[], org.eclipse.ui.cheatsheets.ICheatSheetManager)
+     * @see org.eclipse.ui.cheatsheets.ICheatSheetAction#run(java.lang.String[],
+     * org.eclipse.ui.cheatsheets.ICheatSheetManager)
      */
     public void run(String[] params, ICheatSheetManager manager) {
         // ADD mzhao 2009-02-03 If there is no active editor opened, run
