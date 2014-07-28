@@ -144,7 +144,7 @@ public final class DbmsLanguageFactory {
             // Profiler
             dbmsLanguage = new InfomixDbmsLanguage(dbmsSubtype, dbVersion);
         } else if (isHive(dbmsSubtype)) {
-            dbmsLanguage = new HiveDbmsLanguage(dbmsSubtype, dbVersion);
+            dbmsLanguage = new HiveDbmsLanguage(DbmsLanguage.HIVE, dbVersion);
         } else if (isVertica(dbmsSubtype)) {
             dbmsLanguage = new VerticaDbmsLanguage(dbmsSubtype, dbVersion);
         } else if (isNetezza(dbmsSubtype)) {
@@ -197,15 +197,14 @@ public final class DbmsLanguageFactory {
             databaseProductName = databaseProductName == null ? PluginConstant.EMPTY_STRING : databaseProductName;
             String databaseProductVersion = null;
             try {
-                databaseProductVersion = org.talend.utils.sql.ConnectionUtils.getConnectionMetadata(connection)
-                        .getDatabaseProductVersion();
+                databaseProductVersion = org.talend.utils.sql.ConnectionUtils.getConnectionMetadata(connection).getDatabaseProductVersion();
                 databaseProductVersion = databaseProductVersion == null ? "0" : databaseProductVersion; //$NON-NLS-1$
             } catch (Exception e) {
                 log.warn(Messages.getString("DbmsLanguageFactory.RetrieveVerSionException", databaseProductName), e);//$NON-NLS-1$
             }
             DbmsLanguage dbmsLanguage = createDbmsLanguage(databaseProductName, databaseProductVersion);
-            dbmsLanguage.setDbQuoteString(org.talend.utils.sql.ConnectionUtils.getConnectionMetadata(connection)
-                    .getIdentifierQuoteString());
+            dbmsLanguage
+                    .setDbQuoteString(org.talend.utils.sql.ConnectionUtils.getConnectionMetadata(connection).getIdentifierQuoteString());
             return dbmsLanguage;
         } catch (SQLException e) {
             log.warn(Messages.getString("DbmsLanguageFactory.RetrieveInfoException", e), e);//$NON-NLS-1$
