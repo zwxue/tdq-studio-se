@@ -10,7 +10,7 @@
     <groupId>org.talend.studio</groupId>
     <artifactId>parent-pom</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <relativePath>talend.studio.parent.pom/pom.xml</relativePath>
+    <relativePath>../studio-se-master/talend.studio.parent.pom/pom.xml</relativePath>
   </parent>
   <modules>
     <module>i18n/plugins/net.sourceforge.sqlexplorer.nl</module>
@@ -30,7 +30,7 @@
     <module>i18n/plugins/org.talend.dataquality.record.linkage.ui.nl</module>
     <module>i18n/plugins/org.talend.dataquality.standardization.nl</module>
     <module>i18n/plugins/org.talend.rcp.branding.top.nl</module>
-    <module>main/features/org.talend.dataquality.test-feature</module>
+    <!--<module>main/features/org.talend.dataquality.test-feature</module>-->
     <module>main/features/org.talend.rcp.branding.top-feature</module>
     <module>main/features/org.talend.top-feature</module>
     <module>main/features/org.talend.top.libraries-feature</module>
