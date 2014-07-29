@@ -278,8 +278,10 @@ public class AnalysisEditor extends SupportContextEditor {
             isRefreshResultPage = false;
         } else {
             // Added TDQ-9241
-            EventManager.getInstance().publish(resultPage.getAnalysisHandler().getAnalysis(),
-                    EventEnum.DQ_DYNAMIC_SWITCH_MASTER_RESULT_PAGE, null);
+            if (resultPage != null) {
+                EventManager.getInstance().publish(resultPage.getAnalysisHandler().getAnalysis(),
+                        EventEnum.DQ_DYNAMIC_SWITCH_MASTER_RESULT_PAGE, null);
+            }
         }
     }
 
