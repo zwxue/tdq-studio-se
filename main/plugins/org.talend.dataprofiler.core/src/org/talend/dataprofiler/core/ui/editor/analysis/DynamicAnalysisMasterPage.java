@@ -307,7 +307,7 @@ public abstract class DynamicAnalysisMasterPage extends AbstractAnalysisMetadata
                 // only need to refresh for the first time switch, and must be during a running.
                 if (times == 0) {
                     times++;
-                    currentEditor.getResultPage().refresh(currentEditor.getMasterPage());
+                    ((AnalysisEditor) currentEditor).getResultPage().refresh(((AnalysisEditor) currentEditor).getMasterPage());
                 }
                 return true;
             }

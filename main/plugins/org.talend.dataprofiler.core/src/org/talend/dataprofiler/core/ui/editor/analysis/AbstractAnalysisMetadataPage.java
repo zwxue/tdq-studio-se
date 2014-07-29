@@ -66,6 +66,7 @@ import org.talend.cwm.xml.TdXmlElementType;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.IRuningStatusListener;
 import org.talend.dataprofiler.core.ui.editor.AbstractMetadataFormPage;
+import org.talend.dataprofiler.core.ui.editor.SupportContextEditor;
 import org.talend.dataprofiler.core.ui.editor.composite.AbstractColumnDropTree;
 import org.talend.dataprofiler.core.ui.editor.composite.DataFilterComp;
 import org.talend.dataprofiler.core.ui.utils.MessageUI;
@@ -123,8 +124,6 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
     protected Text maxNumText;
 
     // ~Execute Engine section
-
-    protected AnalysisEditor currentEditor = null;
 
     // MOD yyin 201204 TDQ-4977, change to TableCombo type to show the connection type.
     protected TableCombo connCombo;
@@ -238,8 +237,8 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
     }
 
     public void fireRuningItemChanged(boolean status) {
-        currentEditor.setRunActionButtonState(status);
-        currentEditor.setRefreshResultPage(status);
+        ((AnalysisEditor) currentEditor).setRunActionButtonState(status);
+        ((AnalysisEditor) currentEditor).setRefreshResultPage(status);
         if (status) {
             refresh();
         }
@@ -747,15 +746,15 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
     /**
      * Extracted from the column and column set master page, to create the execution language selection section
      * 
-     * @param form
+     * @param form1
      * @param anasisDataComp
      * @param analyzedColumns
      * @param anaParameters
      * @return
      */
-    protected Composite createExecuteEngineSection(final ScrolledForm form, Composite anasisDataComp,
+    protected Composite createExecuteEngineSection(final ScrolledForm form1, Composite anasisDataComp,
             EList<ModelElement> analyzedColumns, AnalysisParameters anaParameters) {
-        analysisParamSection = createSection(form, anasisDataComp,
+        analysisParamSection = createSection(form1, anasisDataComp,
                 DefaultMessagesImpl.getString("ColumnMasterDetailsPage.AnalysisParameter"), null); //$NON-NLS-1$
         Composite sectionClient = toolkit.createComposite(analysisParamSection);
         sectionClient.setLayout(new GridLayout(1, false));
@@ -894,12 +893,12 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
         execCombo.setEnabled(true);
     }
 
-    private void addListenerToExecuteEngine(final CCombo execCombo, final Composite javaEnginSection) {
-        execCombo.addModifyListener(new ModifyListener() {
+    private void addListenerToExecuteEngine(final CCombo execCombo1, final Composite javaEnginSection) {
+        execCombo1.addModifyListener(new ModifyListener() {
 
             public void modifyText(ModifyEvent e) {
                 // MOD xqliu 2009-08-24 bug 8776
-                execLang = execCombo.getText();
+                execLang = execCombo1.getText();
 
                 // MOD zshen 11104 2010-01-27: when have a datePatternFreqIndicator in the
                 // "analyzed Columns",ExecutionLanguage only is Java.
@@ -907,8 +906,8 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
                 if (ExecutionLanguage.SQL.equals(currentLanguage) && includeDatePatternFreqIndicator()) {
                     MessageUI.openWarning(DefaultMessagesImpl
                             .getString("ColumnMasterDetailsPage.DatePatternFreqIndicatorWarning")); //$NON-NLS-1$
-                    execCombo.setText(ExecutionLanguage.JAVA.getLiteral());
-                    execLang = execCombo.getText();
+                    execCombo1.setText(ExecutionLanguage.JAVA.getLiteral());
+                    execLang = execCombo1.getText();
                     return;
                 }
                 // ~11104
@@ -965,13 +964,13 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
     /**
      * create the datafilter section.
      * 
-     * @param form
+     * @param form1
      * @param anasisDataComp
      * @param needFillBoth: if true, will fill both the section.
      */
-    void createDataFilterSection(final ScrolledForm form, Composite anasisDataComp, boolean needFillBoth) {
+    void createDataFilterSection(final ScrolledForm form1, Composite anasisDataComp, boolean needFillBoth) {
         dataFilterSection = createSection(
-                form,
+                form1,
                 anasisDataComp,
                 DefaultMessagesImpl.getString("ColumnMasterDetailsPage.dataFilter"), DefaultMessagesImpl.getString("ColumnMasterDetailsPage.editDataFilter")); //$NON-NLS-1$ //$NON-NLS-2$
 
@@ -993,11 +992,11 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
     /**
      * create the datafilter section without fill both the section.
      * 
-     * @param form
+     * @param form1
      * @param anasisDataComp
      */
-    void createDataFilterSection(final ScrolledForm form, Composite anasisDataComp) {
-        createDataFilterSection(form, anasisDataComp, false);
+    void createDataFilterSection(final ScrolledForm form1, Composite anasisDataComp) {
+        createDataFilterSection(form1, anasisDataComp, false);
     }
 
     /*
@@ -1012,7 +1011,7 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
         analysis.getContextType().clear();
         IContextManager contextManager = currentEditor.getContextManager();
         contextManager.saveToEmf(analysis.getContextType());
-        analysis.setDefaultContext(getDefaultContextGroupName(currentEditor));
+        analysis.setDefaultContext(getDefaultContextGroupName((SupportContextEditor) currentEditor));
         AnalysisHelper.setLastRunContext(currentEditor.getLastRunContextGroupName(), analysis);
     }
 

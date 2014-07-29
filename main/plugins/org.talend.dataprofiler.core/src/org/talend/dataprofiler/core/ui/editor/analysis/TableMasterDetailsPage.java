@@ -70,7 +70,6 @@ import org.talend.dataprofiler.core.ui.chart.ChartUtils;
 import org.talend.dataprofiler.core.ui.editor.analysis.TablesSelectionDialog.TableSelectionType;
 import org.talend.dataprofiler.core.ui.editor.composite.AbstractColumnDropTree;
 import org.talend.dataprofiler.core.ui.editor.composite.AnalysisTableTreeViewer;
-import org.talend.dataprofiler.core.ui.editor.composite.DataFilterComp;
 import org.talend.dataprofiler.core.ui.editor.preview.CompositeIndicator;
 import org.talend.dataprofiler.core.ui.editor.preview.TableIndicatorUnit;
 import org.talend.dataprofiler.core.ui.editor.preview.model.ChartTypeStatesOperator;
@@ -112,8 +111,6 @@ public class TableMasterDetailsPage extends DynamicAnalysisMasterPage implements
     TableAnalysisHandler analysisHandler;
 
     private TableIndicator[] currentTableIndicators;
-
-    private String stringDataFilter;
 
     private static final int TREE_MAX_LENGTH = 400;
 
@@ -322,25 +319,6 @@ public class TableMasterDetailsPage extends DynamicAnalysisMasterPage implements
             treeViewer.setInput(tables);
             return;
         }
-    }
-
-    /**
-     * @param form1
-     * @param toolkit
-     * @param anasisDataComp
-     */
-    @Override
-    void createDataFilterSection(final ScrolledForm form1, Composite anasisDataComp) {
-        dataFilterSection = createSection(
-                form1,
-                anasisDataComp,
-                DefaultMessagesImpl.getString("TableMasterDetailsPage.dataFilter"), DefaultMessagesImpl.getString("TableMasterDetailsPage.editDataFilter")); //$NON-NLS-1$ //$NON-NLS-2$
-
-        Composite sectionClient = toolkit.createComposite(dataFilterSection);
-        dataFilterComp = new DataFilterComp(sectionClient, stringDataFilter);
-        dataFilterComp.addPropertyChangeListener(this);
-        addWhitespaceValidate(dataFilterComp.getDataFilterText());
-        dataFilterSection.setClient(sectionClient);
     }
 
     @Override
