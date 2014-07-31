@@ -2,7 +2,7 @@
 <feature
       id="org.talend.rcp.branding.top_feature"
       label="Top_feature Feature"
-      version="1.0.0.qualifier"
+      version="5.6.0.qualifier"
       provider-name=".Talend SA.">
 
    <description>
