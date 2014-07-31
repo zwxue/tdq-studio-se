@@ -19,6 +19,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
+import org.eclipse.core.resources.IFile;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.compare.diff.metamodel.DiffElement;
@@ -38,6 +39,7 @@ import org.talend.core.model.properties.Item;
 import org.talend.cwm.compare.DQStructureComparer;
 import org.talend.cwm.compare.exception.ReloadCompareException;
 import org.talend.cwm.compare.i18n.DefaultMessagesImpl;
+import org.talend.cwm.db.connection.ConnectionUtils;
 import org.talend.cwm.helper.ColumnHelper;
 import org.talend.cwm.helper.ColumnSetHelper;
 import org.talend.cwm.helper.ConnectionHelper;
@@ -51,6 +53,7 @@ import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.nodes.DBColumnFolderRepNode;
 import org.talend.dq.writer.EMFSharedResources;
 import org.talend.repository.model.RepositoryNode;
+import org.talend.utils.sugars.ReturnCode;
 import orgomg.cwm.objectmodel.core.Package;
 import orgomg.cwm.resource.relational.ColumnSet;
 import orgomg.cwm.resource.relational.ForeignKey;
@@ -136,7 +139,23 @@ public class TableViewComparisonLevel extends AbstractTableComparisonLevel {
             Package parentCatalogOrSchema = ColumnSetHelper.getParentCatalogOrSchema(columnSet);
             provider = ConnectionHelper.getTdDataProvider(parentCatalogOrSchema);
         }
+
         return provider;
+    }
+
+    /*
+     * To add the connection check : if the connection is not available, throw exception
+     */
+    @Override
+    protected IFile createTempConnectionFile() throws ReloadCompareException {
+
+        // TDQ-9263 add the connection check
+        ReturnCode connectionAvailable = ConnectionUtils.isConnectionAvailable(oldDataProvider);
+        if (!connectionAvailable.isOk()) {
+            throw new ReloadCompareException(DefaultMessagesImpl.getString("TableViewComparisonLevel.ConnectionNotAvaiable")); //$NON-NLS-1$
+        }
+
+        return super.createTempConnectionFile();
     }
 
     @Override
@@ -163,7 +182,7 @@ public class TableViewComparisonLevel extends AbstractTableComparisonLevel {
         ColumnSetHelper.setColumns(toReloadcolumnSet, EMPTY_COLUMN_LIST);
         toReloadcolumnSet.getOwnedElement().clear();
         try {
-            DqRepositoryViewService.getColumns(tempReloadProvider, toReloadcolumnSet, null, true);
+            DqRepositoryViewService.getColumns(tempReloadProvider, toReloadcolumnSet, true);
             // MOD mzhao 2009-11-12 save to resoure after reload.
             util.saveResource(toReloadcolumnSet.eResource());
         } catch (Exception e1) {
@@ -214,7 +233,7 @@ public class TableViewComparisonLevel extends AbstractTableComparisonLevel {
         try {
             // MOD scorreia 2009-01-29 clear content of findMatchedColumnSet
             ColumnSetHelper.setColumns(findMatchedColumnSet, EMPTY_COLUMN_LIST);
-            columns = DqRepositoryViewService.getColumns(tempReloadProvider, findMatchedColumnSet, null, true);
+            columns = DqRepositoryViewService.getColumns(tempReloadProvider, findMatchedColumnSet, true);
         } catch (Exception e1) {
             throw new ReloadCompareException(e1);
         }
