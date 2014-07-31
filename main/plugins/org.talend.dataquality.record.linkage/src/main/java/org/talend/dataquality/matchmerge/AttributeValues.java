@@ -26,7 +26,10 @@ public class AttributeValues<T> implements Iterable<T> {
 
     public void merge(AttributeValues<T> other) {
         // Prevent concurrent modifications in case of self merge.
-        TreeSet<Entry<T>> valuesToMerge = other == this ? new TreeSet<Entry<T>>(other.values) : other.values; 
+        TreeSet<Entry<T>> valuesToMerge = other == this ? new TreeSet<Entry<T>>(other.values) : other.values;
+        if (other == this) {
+            values.clear(); // Prevent growth of occurrence count in case of self merge.
+        }
         for (Entry<T> value : valuesToMerge) {
             Entry<T> valueEntry = get(value.value);
             valueEntry.add(value.occurrence);
