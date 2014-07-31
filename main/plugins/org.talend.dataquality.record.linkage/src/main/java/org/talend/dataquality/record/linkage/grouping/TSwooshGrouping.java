@@ -13,8 +13,8 @@
 package org.talend.dataquality.record.linkage.grouping;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -24,6 +24,7 @@ import org.talend.dataquality.matchmerge.MatchMergeAlgorithm;
 import org.talend.dataquality.matchmerge.Record;
 import org.talend.dataquality.matchmerge.mfb.MatchResult;
 import org.talend.dataquality.matchmerge.mfb.RecordGenerator;
+import org.talend.dataquality.matchmerge.mfb.RecordIterator;
 import org.talend.dataquality.matchmerge.mfb.RecordIterator.ValueGenerator;
 import org.talend.dataquality.record.linkage.grouping.swoosh.DQAttribute;
 import org.talend.dataquality.record.linkage.grouping.swoosh.DQMFB;
@@ -60,29 +61,35 @@ public class TSwooshGrouping<TYPE> {
      * @param inputRow
      * @param matchingRule
      */
-    public void addToList(final TYPE[] inputRow, List<Map<java.lang.String, java.lang.String>> matchRule) {
+    public void addToList(final TYPE[] inputRow, List<List<Map<java.lang.String, java.lang.String>>> multiMatchRules) {
         totalCount++;
         java.lang.String attributeName = null;
-        Map<java.lang.String, ValueGenerator> rcdMap = new HashMap<String, ValueGenerator>();
-        for (final Map<java.lang.String, java.lang.String> recordMap : matchRule) {
-            attributeName = recordMap.get(IRecordGrouping.ATTRIBUTE_NAME);
-            rcdMap.put(attributeName, new ValueGenerator() {
-
-                /*
-                 * (non-Javadoc)
-                 * 
-                 * @see org.talend.dataquality.matchmerge.mfb.RecordIterator.ValueGenerator#getColumnIndex()
-                 */
-                @Override
-                public int getColumnIndex() {
-                    return Integer.valueOf(recordMap.get(IRecordGrouping.COLUMN_IDX));
+        Map<java.lang.String, ValueGenerator> rcdMap = new LinkedHashMap<String, RecordIterator.ValueGenerator>();
+        for (List<Map<java.lang.String, java.lang.String>> matchRule : multiMatchRules) {
+            for (final Map<java.lang.String, java.lang.String> recordMap : matchRule) {
+                attributeName = recordMap.get(IRecordGrouping.ATTRIBUTE_NAME);
+                if (attributeName == null) {
+                    // Dummy matcher
+                    continue;
                 }
+                rcdMap.put(attributeName, new ValueGenerator() {
 
-                @Override
-                public java.lang.String newValue() {
-                    return (java.lang.String) inputRow[Integer.valueOf(recordMap.get(IRecordGrouping.COLUMN_IDX))];
-                }
-            });
+                    /*
+                     * (non-Javadoc)
+                     * 
+                     * @see org.talend.dataquality.matchmerge.mfb.RecordIterator.ValueGenerator#getColumnIndex()
+                     */
+                    @Override
+                    public int getColumnIndex() {
+                        return Integer.valueOf(recordMap.get(IRecordGrouping.COLUMN_IDX));
+                    }
+
+                    @Override
+                    public java.lang.String newValue() {
+                        return (java.lang.String) inputRow[Integer.valueOf(recordMap.get(IRecordGrouping.COLUMN_IDX))];
+                    }
+                });
+            }
         }
         RecordGenerator rcdGen = new RecordGenerator();
         rcdGen.setMatchKeyMap(rcdMap);
@@ -107,7 +114,7 @@ public class TSwooshGrouping<TYPE> {
             idx++;
         }
         MatchMergeAlgorithm algorithm = new DQMFB(combinedRecordMatcher, new DQMFBRecordMerger("MFB", funcParams, //$NON-NLS-1$
-                surviorShipAlgos, survParams.getDefaultSurviorshipRules()));
+                surviorShipAlgos, survParams));
 
         Iterator<Record> iterator = new DQRecordIterator(totalCount, rcdsGenerators);
         List<Record> mergedRecords = algorithm.execute(iterator, new GroupingCallBack());

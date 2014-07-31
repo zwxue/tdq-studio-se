@@ -22,6 +22,8 @@ import org.eclipse.ui.forms.widgets.ScrolledForm;
  */
 public class AnalysisSelectionAlgorithmSection extends SelectAlgorithmSection {
 
+    AnaMatchSurvivorSection anaMatchSurvSection = null;
+
     /**
      * DOC zhao AnalysisSelectionAlgorithmSection constructor comment.
      * 
@@ -50,6 +52,30 @@ public class AnalysisSelectionAlgorithmSection extends SelectAlgorithmSection {
      */
     @Override
     protected void updateMatchAndSurvivorSection() {
-        matchAndSurvivorKeySection.redrawnContent();
+        this.anaMatchSurvSection.redrawnContent();
+    }
+
+    public void setAnaMatchSurvivorSection(AnaMatchSurvivorSection matchAndSurvivorKeySection) {
+        this.anaMatchSurvSection = matchAndSurvivorKeySection;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataquality.record.linkage.ui.section.SelectAlgorithmSection#notifyMatchSurvSection()
+     */
+    @Override
+    protected void changeDisplayStatus() {
+        anaMatchSurvSection.changeSectionDisStatus(!isVSRMode);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataquality.record.linkage.ui.section.SelectAlgorithmSection#removeAllSurvivorship()
+     */
+    @Override
+    protected void removeAllSurvivorship() {
+        anaMatchSurvSection.removeAllSurvivorship();
     }
 }

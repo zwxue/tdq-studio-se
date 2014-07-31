@@ -55,6 +55,8 @@ public interface IRecordGrouping<T> {
     // Key for the the matcher's attribute name.
     public static final String ATTRIBUTE_NAME = "ATTRIBUTE_NAME"; //$NON-NLS-1$
 
+    public static final String MATCH_KEY_NAME = "MATCH_KEY_NAME"; //$NON-NLS-1$
+
     /**
      * 
      * Prepare the parameters (key definition) of the matching algorithm.

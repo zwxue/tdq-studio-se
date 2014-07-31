@@ -161,7 +161,7 @@ public abstract class AbstractRecordGrouping<TYPE> implements IRecordGrouping<TY
             vsrMatch(inputRow, matchingRule, lookupDataArray);
             break;
         case T_SwooshAlgorithm:
-            swooshGrouping.addToList(inputRow, matchingRule);
+            swooshGrouping.addToList(inputRow, multiMatchRules);
 
         }
     }
@@ -307,6 +307,7 @@ public abstract class AbstractRecordGrouping<TYPE> implements IRecordGrouping<TY
             combinedRecordMatcher.setDisplayLabels(true);
             swooshGrouping.swooshMatch(combinedRecordMatcher, survivorShipAlgorithmParams);
         }
+        multiMatchRules.clear();
     }
 
     private void updateWithExtendedColumn(TYPE[] inputRow, TYPE[] masterRecord, double matchingProba, String distanceDetails,
@@ -456,6 +457,15 @@ public abstract class AbstractRecordGrouping<TYPE> implements IRecordGrouping<TY
         simpleRecordMatcher.setAttributeMatchers(attributeMatcher);
         simpleRecordMatcher.setRecordMatchThreshold(recordMatchThreshold);
         combinedRecordMatcher.add(simpleRecordMatcher);
+    }
+
+    /**
+     * Getter for combinedRecordMatcher.
+     * 
+     * @return the combinedRecordMatcher
+     */
+    public CombinedRecordMatcher getCombinedRecordMatcher() {
+        return this.combinedRecordMatcher;
     }
 
     protected abstract boolean isMaster(TYPE col);

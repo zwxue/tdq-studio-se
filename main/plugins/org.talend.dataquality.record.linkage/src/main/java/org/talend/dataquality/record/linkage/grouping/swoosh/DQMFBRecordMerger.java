@@ -23,6 +23,8 @@ import org.talend.dataquality.matchmerge.AttributeValues;
 import org.talend.dataquality.matchmerge.Record;
 import org.talend.dataquality.matchmerge.mfb.MFBRecordMerger;
 import org.talend.dataquality.record.linkage.grouping.swoosh.SurvivorShipAlgorithmParams.SurvivorshipFunction;
+import org.talend.dataquality.record.linkage.record.CombinedRecordMatcher;
+import org.talend.dataquality.record.linkage.record.IRecordMatcher;
 import org.talend.dataquality.record.linkage.utils.SurvivorShipAlgorithmEnum;
 
 /**
@@ -31,16 +33,40 @@ import org.talend.dataquality.record.linkage.utils.SurvivorShipAlgorithmEnum;
  */
 public class DQMFBRecordMerger extends MFBRecordMerger {
 
-    private Map<Integer, SurvivorshipFunction> defaultSurvivorshipFuncs = null;
+    private SurvivorShipAlgorithmParams matchMergeParam = null;
 
     public DQMFBRecordMerger(String mergedRecordSource, String[] parameters, SurvivorShipAlgorithmEnum[] typeMergeTable) {
         super(mergedRecordSource, parameters, typeMergeTable);
     }
 
     public DQMFBRecordMerger(String mergedRecordSource, String[] parameters, SurvivorShipAlgorithmEnum[] typeMergeTable,
-            Map<Integer, SurvivorshipFunction> defaultSurvivorshipFuncs) {
+            SurvivorShipAlgorithmParams matchMergeParam) {
         super(mergedRecordSource, parameters, typeMergeTable);
-        this.defaultSurvivorshipFuncs = defaultSurvivorshipFuncs;
+        this.matchMergeParam = matchMergeParam;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataquality.matchmerge.mfb.MFBRecordMerger#merge(org.talend.dataquality.matchmerge.Record,
+     * org.talend.dataquality.matchmerge.Record)
+     */
+    @Override
+    public Record merge(Record record1, Record record2) {
+        // Update the merge function given the current matcher.
+        IRecordMatcher recordMatcher = matchMergeParam.getRecordMatcher();
+        if (recordMatcher instanceof CombinedRecordMatcher) {
+            IRecordMatcher lastMatcher = ((CombinedRecordMatcher) recordMatcher).getLastPositiveMatcher();
+            // Update merge functions.
+            SurvivorshipFunction[] survFuncs = matchMergeParam.getSurvivorshipAlgosMap().get(lastMatcher);
+            int idx = 0;
+            for (SurvivorshipFunction func : survFuncs) {
+                typeMergeTable[idx] = func.getSurvivorShipAlgoEnum();
+                parameters[idx++] = func.getParameter();
+            }
+        }
+
+        return super.merge(record1, record2);
     }
 
     /*
@@ -69,6 +95,7 @@ public class DQMFBRecordMerger extends MFBRecordMerger {
             }
 
             if (!isMatchKeyIndex) {
+                Map<Integer, SurvivorshipFunction> defaultSurvivorshipFuncs = matchMergeParam.getDefaultSurviorshipRules();
                 SurvivorshipFunction survivorshipFunc = defaultSurvivorshipFuncs.get(colIdx);
                 if (survivorshipFunc == null || survivorshipFunc.getSurvivorShipAlgoEnum() == null) {
                     // No default survivorship function was set.

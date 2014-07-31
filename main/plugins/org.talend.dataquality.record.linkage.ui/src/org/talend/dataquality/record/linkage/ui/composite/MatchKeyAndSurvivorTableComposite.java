@@ -65,6 +65,7 @@ public class MatchKeyAndSurvivorTableComposite extends AbsMatchAnalysisTableComp
         headers.add(MatchAnalysisConstant.PARAMETER);
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     protected void createTable() {
         tableViewer = createTableViewer();
@@ -135,11 +136,12 @@ public class MatchKeyAndSurvivorTableComposite extends AbsMatchAnalysisTableComp
      * 
      * @see org.talend.dataquality.record.linkage.ui.composite.AbsMatchAnalysisTableComposite#createTableViewer()
      */
+    @SuppressWarnings({ "rawtypes", "unchecked" })
     @Override
-    protected AbstractMatchAnalysisTableViewer<MatchKeyAndSurvivorDefinition> createTableViewer() {
+    protected AbstractMatchAnalysisTableViewer createTableViewer() {
         if (isShowInputColumn) {
             // Analysis editor
-            return new AnaMatchKeyAndSurvTableViewer(this, getTableStyle(), isAddColumn());
+            return new AnaMatchKeyAndSurvTableViewer(this, getTableStyle(), isAddColumn(), matchRule);
         } else {
             // Definition editor
             return new MatchKeyAndSurvivorshipTableViewer(this, getTableStyle(), isAddColumn());

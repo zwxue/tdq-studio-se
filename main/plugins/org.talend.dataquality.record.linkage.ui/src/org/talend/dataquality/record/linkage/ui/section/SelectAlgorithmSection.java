@@ -35,7 +35,11 @@ import org.talend.dataquality.rules.MatchRuleDefinition;
  */
 public class SelectAlgorithmSection extends AbstractSectionComposite {
 
-    private boolean isVSRMode = true;
+    private Button vsrButton = null;
+
+    private Button tSwooshButton = null;
+
+    protected boolean isVSRMode = true;
 
     private BlockingKeySection blockKeySection = null;
 
@@ -82,7 +86,7 @@ public class SelectAlgorithmSection extends AbstractSectionComposite {
         GridDataFactory.fillDefaults().align(SWT.FILL, SWT.FILL).grab(true, true).applyTo(container);
         container.setLayout(gdLayout);
 
-        Button tSwooshButton = toolkit.createButton(container, RecordMatcherType.T_SwooshAlgorithm.getLabel(), SWT.RADIO);
+        tSwooshButton = toolkit.createButton(container, RecordMatcherType.T_SwooshAlgorithm.getLabel(), SWT.RADIO);
         if (this.algorithmName == null) {
             this.algorithmName = RecordMatcherType.simpleVSRMatcher.name();
         }
@@ -91,40 +95,71 @@ public class SelectAlgorithmSection extends AbstractSectionComposite {
 
             @Override
             public void widgetSelected(SelectionEvent e) {
-                isVSRMode = false;
-                matchKeySection.setAddColumn(true);
-                notifyOtherSections();
-                algorithmName = RecordMatcherType.T_SwooshAlgorithm.name();
-                matchRuleDef.setRecordLinkageAlgorithm(algorithmName);
-                if (!isShowBlockingKeySection(isVSRMode)) {
-                    blockKeySection.removeAllBlockingKey();
-                }
-                listeners.firePropertyChange(MatchAnalysisConstant.ISDIRTY_PROPERTY, RecordMatcherType.simpleVSRMatcher.name(),
-                        RecordMatcherType.T_SwooshAlgorithm.name());
-
+                handleTSwooshButtonSelection();
             }
 
         });
-        Button vsrButton = toolkit.createButton(container, RecordMatcherType.simpleVSRMatcher.getLabel(), SWT.RADIO);
+        vsrButton = toolkit.createButton(container, RecordMatcherType.simpleVSRMatcher.getLabel(), SWT.RADIO);
         vsrButton.setSelection(isVSRMode());
         vsrButton.addSelectionListener(new SelectionAdapter() {
 
             @Override
             public void widgetSelected(SelectionEvent e) {
-                isVSRMode = true;
-                matchKeySection.setAddColumn(false);
-                notifyOtherSections();
-                algorithmName = RecordMatcherType.simpleVSRMatcher.name();
-                matchRuleDef.setRecordLinkageAlgorithm(algorithmName);
-                matchAndSurvivorKeySection.removeAllSurvivorship();
-                // survivorshipDefinitionSection.removeAllSurvivorship();
-                listeners.firePropertyChange(MatchAnalysisConstant.ISDIRTY_PROPERTY, RecordMatcherType.T_SwooshAlgorithm.name(),
-                        RecordMatcherType.simpleVSRMatcher.name());
+                handleVSRButtonSelection();
             }
-
         });
         section.setClient(mainComp);
 
+    }
+
+    /**
+     * DOC zhao Comment method "handleVSRButtonSelection".
+     */
+    private void handleVSRButtonSelection() {
+        isVSRMode = true;
+        matchKeySection.setAddColumn(false);
+        notifyOtherSections();
+        algorithmName = RecordMatcherType.simpleVSRMatcher.name();
+        matchRuleDef.setRecordLinkageAlgorithm(algorithmName);
+        removeAllSurvivorship();
+        // survivorshipDefinitionSection.removeAllSurvivorship();
+        listeners.firePropertyChange(MatchAnalysisConstant.ISDIRTY_PROPERTY, RecordMatcherType.T_SwooshAlgorithm.name(),
+                RecordMatcherType.simpleVSRMatcher.name());
+    }
+
+    /**
+     * DOC zhao Comment method "handleTSwooshButtonSelection".
+     */
+    private void handleTSwooshButtonSelection() {
+        isVSRMode = false;
+        matchKeySection.setAddColumn(true);
+        notifyOtherSections();
+        algorithmName = RecordMatcherType.T_SwooshAlgorithm.name();
+        matchRuleDef.setRecordLinkageAlgorithm(algorithmName);
+        if (!isShowBlockingKeySection(isVSRMode)) {
+            blockKeySection.removeAllBlockingKey();
+        }
+        listeners.firePropertyChange(MatchAnalysisConstant.ISDIRTY_PROPERTY, RecordMatcherType.simpleVSRMatcher.name(),
+                RecordMatcherType.T_SwooshAlgorithm.name());
+    }
+
+    public void setSelection(boolean isVSR) {
+        if (isVSR) {
+            vsrButton.setSelection(true);
+            tSwooshButton.setSelection(false);
+            handleVSRButtonSelection();
+        } else {
+            vsrButton.setSelection(false);
+            tSwooshButton.setSelection(true);
+            handleTSwooshButtonSelection();
+        }
+    }
+
+    /**
+     * DOC zhao Comment method "removeAllSurvivorship".
+     */
+    protected void removeAllSurvivorship() {
+        matchAndSurvivorKeySection.removeAllSurvivorship();
     }
 
     /**
@@ -141,12 +176,19 @@ public class SelectAlgorithmSection extends AbstractSectionComposite {
         }
         // survivorshipDefinitionSection.changeSectionDisStatus(!isVSRMode);
         defaultSurvivorshipDefinitionSection.changeSectionDisStatus(!isVSRMode);
-        matchAndSurvivorKeySection.changeSectionDisStatus(!isVSRMode);
+        changeDisplayStatus();
         if (!isVSRMode) {
             updateMatchAndSurvivorSection();
         } else {
             matchKeySection.redrawnContent();
         }
+    }
+
+    /**
+     * DOC zhao Comment method "notifyMatchSurvSection".
+     */
+    protected void changeDisplayStatus() {
+        matchAndSurvivorKeySection.changeSectionDisStatus(!isVSRMode);
     }
 
     /**

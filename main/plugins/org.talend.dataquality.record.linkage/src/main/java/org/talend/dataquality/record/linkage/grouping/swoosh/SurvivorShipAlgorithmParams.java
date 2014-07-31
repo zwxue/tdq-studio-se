@@ -12,14 +12,20 @@
 // ============================================================================
 package org.talend.dataquality.record.linkage.grouping.swoosh;
 
+import java.util.HashMap;
 import java.util.Map;
 
+import org.talend.dataquality.record.linkage.record.IRecordMatcher;
 import org.talend.dataquality.record.linkage.utils.SurvivorShipAlgorithmEnum;
 
 /**
  * A concreate class that hold all parameters that is needed by the swoosh algorithm.
  */
 public class SurvivorShipAlgorithmParams {
+
+    private IRecordMatcher recordMatcher = null;
+
+    protected Map<IRecordMatcher, SurvivorshipFunction[]> survivorshipAlgosMap = new HashMap<IRecordMatcher, SurvivorshipFunction[]>();
 
     /**
      * The order in array is conform to the matching key order choosen.
@@ -67,7 +73,45 @@ public class SurvivorShipAlgorithmParams {
         this.defaultSurviorshipRules = defaultSurviorshipRules;
     }
 
+    /**
+     * Getter for recordMatcher.
+     * 
+     * @return the recordMatcher
+     */
+    public IRecordMatcher getRecordMatcher() {
+        return this.recordMatcher;
+    }
+
+    /**
+     * Sets the recordMatcher.
+     * 
+     * @param recordMatcher the recordMatcher to set
+     */
+    public void setRecordMatcher(IRecordMatcher recordMatcher) {
+        this.recordMatcher = recordMatcher;
+    }
+
+    /**
+     * Getter for survivorshipAlgosMap.
+     * 
+     * @return the survivorshipAlgosMap
+     */
+    public Map<IRecordMatcher, SurvivorshipFunction[]> getSurvivorshipAlgosMap() {
+        return this.survivorshipAlgosMap;
+    }
+
+    /**
+     * Sets the survivorshipAlgosMap.
+     * 
+     * @param survivorshipAlgosMap the survivorshipAlgosMap to set
+     */
+    public void setSurvivorshipAlgosMap(Map<IRecordMatcher, SurvivorshipFunction[]> survivorshipAlgosMap) {
+        this.survivorshipAlgosMap = survivorshipAlgosMap;
+    }
+
     public class SurvivorshipFunction {
+
+        String survivorShipKey;
 
         SurvivorShipAlgorithmEnum survivorShipFunction;
 
@@ -108,6 +152,24 @@ public class SurvivorShipAlgorithmParams {
          */
         public void setParameter(String parameter) {
             this.parameter = parameter;
+        }
+
+        /**
+         * Getter for survivorShipKey.
+         * 
+         * @return the survivorShipKey
+         */
+        public String getSurvivorShipKey() {
+            return this.survivorShipKey;
+        }
+
+        /**
+         * Sets the survivorShipKey.
+         * 
+         * @param survivorShipKey the survivorShipKey to set
+         */
+        public void setSurvivorShipKey(String survivorShipKey) {
+            this.survivorShipKey = survivorShipKey;
         }
 
     }

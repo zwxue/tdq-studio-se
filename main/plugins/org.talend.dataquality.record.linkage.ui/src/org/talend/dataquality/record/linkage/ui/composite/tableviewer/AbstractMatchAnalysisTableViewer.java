@@ -328,8 +328,7 @@ public abstract class AbstractMatchAnalysisTableViewer<T> extends TableViewer {
                 int indexForElement = indexForElement(tmpKeyDef);
                 if (indexForElement - 2 >= 0) {
                     // modify model
-                    keyList.remove(keyDef);
-                    keyList.add(indexForElement - 2, keyDef);
+                    moveUpFromModel(keyDef, keyList, indexForElement);
                     // modify table viewer
                     remove(keyDef);
                     insert(keyDef, indexForElement - 1);
@@ -337,6 +336,18 @@ public abstract class AbstractMatchAnalysisTableViewer<T> extends TableViewer {
                 break;
             }
         }
+    }
+
+    /**
+     * DOC zhao Comment method "moveFromModel".
+     * 
+     * @param keyDef
+     * @param keyList
+     * @param indexForElement
+     */
+    protected void moveUpFromModel(T keyDef, List<T> keyList, int indexForElement) {
+        keyList.remove(keyDef);
+        keyList.add(indexForElement - 2, keyDef);
     }
 
     /**
@@ -353,19 +364,30 @@ public abstract class AbstractMatchAnalysisTableViewer<T> extends TableViewer {
             if (keyDef.equals(tmpKeyDef)) {
                 int indexForElement = indexForElement(tmpKeyDef);
                 if (indexForElement < keyList.size()) {
-                    // modify model
-                    keyList.remove(keyDef);
-                    if (indexForElement == keyList.size()) {
-                        keyList.add(keyDef);
-                    } else {
-                        keyList.add(indexForElement, keyDef);
-                    }
+                    moveDownFromModel(keyDef, keyList, indexForElement);
                     // modify table viewer
                     remove(keyDef);
                     insert(keyDef, indexForElement + 1);
                 }
                 break;
             }
+        }
+    }
+
+    /**
+     * DOC zhao Comment method "moveDownFromModel".
+     * 
+     * @param keyDef
+     * @param keyList
+     * @param indexForElement
+     */
+    protected void moveDownFromModel(T keyDef, List<T> keyList, int indexForElement) {
+        // modify model
+        keyList.remove(keyDef);
+        if (indexForElement == keyList.size()) {
+            keyList.add(keyDef);
+        } else {
+            keyList.add(indexForElement, keyDef);
         }
     }
 

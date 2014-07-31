@@ -164,7 +164,13 @@ public class MatchAndSurvivorCellModifer extends AbstractMatchCellModifier<Match
                 mkd.getSurvivorShipKey().setName(newValue);
             } else if (MatchAnalysisConstant.INPUT_COLUMN.equalsIgnoreCase(property)) {
                 int idx = Integer.valueOf(newValue);
+                if (columnList == null || columnList.isEmpty()) {
+                    return;
+                }
                 MetadataColumn metaColumn = columnList.get(idx);
+                if (metaColumn == null) {
+                    return;
+                }
                 if (StringUtils.equals(metaColumn.getName(), newValue)) {
                     return;
                 }

@@ -79,13 +79,12 @@ import org.talend.dataquality.exception.DataprofilerCoreException;
 import org.talend.dataquality.indicators.columnset.RecordMatchingIndicator;
 import org.talend.dataquality.record.linkage.ui.composite.table.DataSampleTable;
 import org.talend.dataquality.record.linkage.ui.composite.utils.MatchRuleAnlaysisUtils;
+import org.talend.dataquality.record.linkage.ui.section.AnaMatchSurvivorSection;
 import org.talend.dataquality.record.linkage.ui.section.AnalysisSelectionAlgorithmSection;
 import org.talend.dataquality.record.linkage.ui.section.BlockingKeySection;
 import org.talend.dataquality.record.linkage.ui.section.MatchParameterSection;
 import org.talend.dataquality.record.linkage.ui.section.MatchingKeySection;
-import org.talend.dataquality.record.linkage.ui.section.SelectAlgorithmSection;
 import org.talend.dataquality.record.linkage.ui.section.definition.DefaultSurvivorshipDefinitionSection;
-import org.talend.dataquality.record.linkage.ui.section.definition.MatchAndSurvivorKeySection;
 import org.talend.dataquality.record.linkage.utils.MatchAnalysisConstant;
 import org.talend.dataquality.rules.MatchRule;
 import org.talend.dataquality.rules.MatchRuleDefinition;
@@ -125,9 +124,9 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
 
     private BlockingKeySection blockingKeySection = null;
 
-    private SelectAlgorithmSection selectAlgorithmSection = null;
+    private AnalysisSelectionAlgorithmSection selectAlgorithmSection = null;
 
-    private MatchAndSurvivorKeySection matchAndSurvivorKeySection = null;
+    private AnaMatchSurvivorSection matchAndSurvivorKeySection = null;
 
     private DefaultSurvivorshipDefinitionSection defaultSurvivorshipDefinitionSection = null;
 
@@ -228,26 +227,25 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
     }
 
     private void createMatchAndSurvivorKeySection() {
-        matchAndSurvivorKeySection = new MatchAndSurvivorKeySection(form, topComp, Section.TWISTIE | Section.TITLE_BAR
+        matchAndSurvivorKeySection = new AnaMatchSurvivorSection(form, topComp, Section.TWISTIE | Section.TITLE_BAR
                 | Section.EXPANDED, toolkit, analysisItem.getAnalysis());
         RecordMatchingIndicator recordMatchingIndicator = MatchRuleAnlaysisUtils
                 .getRecordMatchIndicatorFromAna((Analysis) getCurrentModelElement(getEditor()));
         matchAndSurvivorKeySection.setMatchRuleDef(recordMatchingIndicator.getBuiltInMatchRuleDefinition());
         matchAndSurvivorKeySection.setAddColumn(!selectAlgorithmSection.isVSRMode());
+        matchAndSurvivorKeySection.setColumnNameInput(getAllColumnsToKeyMap());
         matchAndSurvivorKeySection.createContent();
         matchAndSurvivorKeySection.addPropertyChangeListener(this);
         matchAndSurvivorKeySection.changeSectionDisStatus(!selectAlgorithmSection.isVSRMode());
         matchAndSurvivorKeySection.getSection().setExpanded(true);
         matchAndSurvivorKeySection.setIsNeedSubChart(true);
-        matchAndSurvivorKeySection.setColumnNameInput(getAllColumnsToKeyMap());
-        selectAlgorithmSection.setMatchAndSurvivorKeySection(matchAndSurvivorKeySection);
+        selectAlgorithmSection.setAnaMatchSurvivorSection(matchAndSurvivorKeySection);
         if (selectAlgorithmSection.isVSRMode()) {
             // Hide the section in case of vsr.
             matchAndSurvivorKeySection.changeSectionDisStatus(false);
         } else {
             matchAndSurvivorKeySection.redrawnContent();
         }
-
     }
 
     private void createDefaultSurvivorshipSection() {
@@ -489,7 +487,11 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
 
                 // get the current block keys, to set the correct colors on table column
                 if (isMatchingKeyButtonPushed) {
-                    changeColumnColorByCurrentKeys(matchingKeySection.getCurrentMatchKeyColumn(), true);
+                    if (selectAlgorithmSection.isVSRMode()) {
+                        changeColumnColorByCurrentKeys(matchingKeySection.getCurrentMatchKeyColumn(), true);
+                    } else {
+                        changeColumnColorByCurrentKeys(matchAndSurvivorKeySection.getCurrentMatchKeyColumn(), true);
+                    }
                 } else {
                     // when switch out of the select match key mode, should change all columns color to original black.
                     setAllColumnColorToBlack();
@@ -685,8 +687,11 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
         List<Object[]> listOfData = fetchDataForTable();
 
         blockingKeySection.setDataInput(listOfData);
-        matchingKeySection.setDataInput(listOfData);
-        matchAndSurvivorKeySection.setDataInput(listOfData);
+        if (selectAlgorithmSection.isVSRMode()) {
+            matchingKeySection.setDataInput(listOfData);
+        } else {
+            matchAndSurvivorKeySection.setDataInput(listOfData);
+        }
 
         if (refreshDataSample) {
             refreshTable(listOfData);
@@ -696,7 +701,11 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
         if (isBlockingKeyButtonPushed) {
             changeColumnColorByCurrentKeys(blockingKeySection.getSelectedColumnAsBlockKeys(), false);
         } else if (isMatchingKeyButtonPushed) {
-            changeColumnColorByCurrentKeys(matchingKeySection.getCurrentMatchKeyColumn(), true);
+            if (selectAlgorithmSection.isVSRMode()) {
+                changeColumnColorByCurrentKeys(matchingKeySection.getCurrentMatchKeyColumn(), true);
+            } else {
+                changeColumnColorByCurrentKeys(matchAndSurvivorKeySection.getCurrentMatchKeyColumn(), true);
+            }
         }
 
     }
@@ -782,7 +791,11 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
                 }
                 refreshColumnAndData();
                 // TDQ-8289 clear blocking key chart and match key chart when dataset is changed.
-                matchingKeySection.clearChart();
+                if (selectAlgorithmSection.isVSRMode()) {
+                    matchingKeySection.clearChart();
+                } else {
+                    matchAndSurvivorKeySection.clearChart();
+                }
                 blockingKeySection.clearChart();
             }
         }
@@ -793,9 +806,14 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
 
         // clear all keys if the old selection is null
         analysisHandler.clearAllKeys();
-        matchingKeySection.resolveAnalysis();
+        if (selectAlgorithmSection.isVSRMode()) {
+            matchingKeySection.resolveAnalysis();
+            this.matchingKeySection.redrawnSubTableContent();
+        } else {
+            matchAndSurvivorKeySection.resolveAnalysis();
+            matchAndSurvivorKeySection.redrawnSubTableContent();
+        }
         blockingKeySection.resolveAnalysis();
-        this.matchingKeySection.redrawnSubTableContent();
         this.blockingKeySection.redrawnSubTableContent();
     }
 
@@ -811,7 +829,11 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
             if (newPosition > -1) {// update the position of the column
                 addColumnGivenIndex(oldSelectNode, newPosition);
             } else { // delete all keys which used this column
-                matchingKeySection.removeKeyFromAllTab(oldSelectNode.getLabel());
+                if (selectAlgorithmSection.isVSRMode()) {
+                    matchingKeySection.removeKeyFromAllTab(oldSelectNode.getLabel());
+                } else {
+                    matchAndSurvivorKeySection.removeKeyFromAllTab(oldSelectNode.getLabel());
+                }
                 blockingKeySection.removeBlockingKey(oldSelectNode.getLabel());
             }
 
@@ -833,8 +855,11 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
                 }
             }
         }
-
-        this.matchingKeySection.redrawnSubTableContent();
+        if (selectAlgorithmSection.isVSRMode()) {
+            this.matchingKeySection.redrawnSubTableContent();
+        } else {
+            matchAndSurvivorKeySection.redrawnSubTableContent();
+        }
         this.blockingKeySection.redrawnSubTableContent();
     }
 
@@ -845,8 +870,13 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
      * @param positionInNewSelectColumns
      */
     private void addColumnGivenIndex(IRepositoryNode selectedOne, int positionInNewSelectColumns) {
-        matchingKeySection.addColumn(((ColumnRepNode) selectedOne).getMetadataColumnRepositoryObject().getTdColumn(),
-                positionInNewSelectColumns);
+        if (selectAlgorithmSection.isVSRMode()) {
+            matchingKeySection.addColumn(((ColumnRepNode) selectedOne).getMetadataColumnRepositoryObject().getTdColumn(),
+                    positionInNewSelectColumns);
+        } else {
+            matchAndSurvivorKeySection.addColumn(((ColumnRepNode) selectedOne).getMetadataColumnRepositoryObject().getTdColumn(),
+                    positionInNewSelectColumns);
+        }
         blockingKeySection.addColumn(((ColumnRepNode) selectedOne).getMetadataColumnRepositoryObject().getTdColumn(),
                 positionInNewSelectColumns);
     }
@@ -1010,10 +1040,15 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
      */
     public void updateAllColumnsToKeySection() {
         Map<MetadataColumn, String> colName2IdxMap = getAllColumnsToKeyMap();
-        this.matchingKeySection.setColumnNameInput(colName2IdxMap);
         this.blockingKeySection.setColumnNameInput(colName2IdxMap);
-        this.matchingKeySection.redrawnSubTableContent();
         this.blockingKeySection.redrawnSubTableContent();
+        if (selectAlgorithmSection.isVSRMode()) {
+            this.matchingKeySection.setColumnNameInput(colName2IdxMap);
+            this.matchingKeySection.redrawnSubTableContent();
+        } else {
+            this.matchAndSurvivorKeySection.setColumnNameInput(colName2IdxMap);
+            matchAndSurvivorKeySection.redrawnSubTableContent();
+        }
     }
 
     /**
@@ -1073,10 +1108,18 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
         try {
             Boolean isAdded = matchingKeySection.isKeyDefinitionAdded(columnName);
             if (isAdded) {
-                matchingKeySection.removeMatchKeyFromCurrentMatchRule(columnName);
+                if (selectAlgorithmSection.isVSRMode()) {
+                    matchingKeySection.removeMatchKeyFromCurrentMatchRule(columnName);
+                } else {
+                    matchAndSurvivorKeySection.removeMatchKeyFromCurrentMatchRule(columnName);
+                }
                 sampleTable.changeColumnHeaderLabelColor(columnName, DataSampleTable.COLOR_BLACK, DataSampleTable.MATCH_EKY);
             } else {
-                matchingKeySection.createMatchKeyFromCurrentMatchRule(columnName);
+                if (selectAlgorithmSection.isVSRMode()) {
+                    matchingKeySection.createMatchKeyFromCurrentMatchRule(columnName);
+                } else {
+                    matchAndSurvivorKeySection.createMatchKeyFromCurrentMatchRule(columnName);
+                }
                 sampleTable.changeColumnHeaderLabelColor(columnName, DataSampleTable.COLOR_RED, DataSampleTable.MATCH_EKY);
             }
         } catch (Exception e) {
@@ -1203,7 +1246,11 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
         if (MatchAnalysisConstant.MATCH_RULE_TAB_SWITCH.equals(evt.getPropertyName())) {
             // find the current rule tab, and change the color of the table column
             if (isMatchingKeyButtonPushed) {
-                changeColumnColorByCurrentKeys(matchingKeySection.getCurrentMatchKeyColumn(), true);
+                if (selectAlgorithmSection.isVSRMode()) {
+                    changeColumnColorByCurrentKeys(matchingKeySection.getCurrentMatchKeyColumn(), true);
+                } else {
+                    changeColumnColorByCurrentKeys(matchAndSurvivorKeySection.getCurrentMatchKeyColumn(), true);
+                }
             } else if (this.isBlockingKeyButtonPushed) {
                 changeColumnColorByCurrentKeys(blockingKeySection.getSelectedColumnAsBlockKeys(), false);
             }
@@ -1214,7 +1261,11 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
         } else if (MatchAnalysisConstant.NEED_REFRESH_DATA_SAMPLE_TABLE.equals(evt.getPropertyName())) {
             String minGrpSizeText = evt.getNewValue().toString();
             sampleTable.setMinGroupSize(Integer.valueOf(minGrpSizeText));
-            matchingKeySection.refreshChart();
+            if (selectAlgorithmSection.isVSRMode()) {
+                matchingKeySection.refreshChart();
+            } else {
+                matchAndSurvivorKeySection.refreshChart();
+            }
         }
     }
 
@@ -1260,7 +1311,11 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
         if (this.isDirty) {
             ReturnCode checkResultStatus = blockingKeySection.checkResultStatus();
             if (checkResultStatus.isOk()) {
-                checkResultStatus = matchingKeySection.checkResultStatus();
+                if (selectAlgorithmSection.isVSRMode()) {
+                    checkResultStatus = matchingKeySection.checkResultStatus();
+                } else {
+                    checkResultStatus = matchAndSurvivorKeySection.checkResultStatus();
+                }
             }
 
             if (!checkResultStatus.isOk()) {
@@ -1356,7 +1411,13 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
     }
 
     public void importMatchRule(MatchRuleDefinition matchRule, boolean overwrite) {
-        this.matchingKeySection.importMatchRule(matchRule, overwrite);
+        selectAlgorithmSection.setMatchRuleDef(matchRule);
+        selectAlgorithmSection.setSelection(selectAlgorithmSection.isVSRMode());
+        if (selectAlgorithmSection.isVSRMode()) {
+            this.matchingKeySection.importMatchRule(matchRule, overwrite);
+        } else {
+            this.matchAndSurvivorKeySection.importMatchRule(matchRule, overwrite);
+        }
         this.blockingKeySection.importMatchRule(matchRule, overwrite);
         this.setDirty(true);
     }

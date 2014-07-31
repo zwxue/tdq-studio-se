@@ -216,4 +216,22 @@ public class CombinedRecordMatcher extends AbstractRecordMatcher {
 
         return result;
     }
+
+    /**
+     * Getter for lastPositiveMatcher.
+     * 
+     * @return the lastPositiveMatcher
+     */
+    public IRecordMatcher getLastPositiveMatcher() {
+        return this.lastPositiveMatcher;
+    }
+
+    /**
+     * Getter for matchers.
+     * 
+     * @return the matchers
+     */
+    public List<IRecordMatcher> getMatchers() {
+        return this.matchers;
+    }
 }

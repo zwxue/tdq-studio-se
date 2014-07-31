@@ -12,9 +12,9 @@ import org.talend.dataquality.record.linkage.utils.SurvivorShipAlgorithmEnum;
 
 public class MFBRecordMerger implements IRecordMerger {
 
-    private final SurvivorShipAlgorithmEnum[] typeMergeTable;
+    protected SurvivorShipAlgorithmEnum[] typeMergeTable;
 
-    private final String[] parameters;
+    protected String[] parameters;
 
     protected final String mergedRecordSource;
 

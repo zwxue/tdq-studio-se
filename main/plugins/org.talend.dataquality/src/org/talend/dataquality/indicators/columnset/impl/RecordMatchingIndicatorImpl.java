@@ -192,7 +192,7 @@ public class RecordMatchingIndicatorImpl extends ColumnSetMultiValueIndicatorImp
             }
         }
         if (T_SWOOSH_ALG_NAME.equals(getBuiltInMatchRuleDefinition().getRecordLinkageAlgorithm())) {
-            // masters with group greater than 1 should NOT be taken into account when computer row count in case of
+            // masters with group size greater than 1 should NOT be taken into account when compute row count in case of
             // t-swoosh algorithm.
             if (!(isMaster && groupSize > 1)) {
                 count++;

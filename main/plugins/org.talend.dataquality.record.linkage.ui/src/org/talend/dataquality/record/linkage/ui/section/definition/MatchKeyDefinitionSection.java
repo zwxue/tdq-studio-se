@@ -95,7 +95,7 @@ public class MatchKeyDefinitionSection extends MatchingKeySection {
      */
     @Override
     public void createMatchKeyFromCurrentMatchRule(String column) {
-        MatchRuleTableComposite matchRuleTableComp = getCurrentMatchRuleTableComposite();
+        MatchRuleTableComposite matchRuleTableComp = (MatchRuleTableComposite) getCurrentMatchRuleTableComposite();
         matchRuleTableComp.addKeyDefinition(column, matchRuleTableComp.getMatchRule().getMatchKeys());
     }
 
@@ -117,7 +117,7 @@ public class MatchKeyDefinitionSection extends MatchingKeySection {
      */
     @Override
     public void removeMatchKeyFromCurrentMatchRule(MatchKeyDefinition columnkey) {
-        MatchRuleTableComposite matchRuleTableComp = getCurrentMatchRuleTableComposite();
+        MatchRuleTableComposite matchRuleTableComp = (MatchRuleTableComposite) getCurrentMatchRuleTableComposite();
         matchRuleTableComp.removeKeyDefinition(columnkey, matchRuleTableComp.getMatchRule().getMatchKeys());
     }
 

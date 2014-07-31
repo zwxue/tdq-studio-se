@@ -58,9 +58,16 @@ public class AnalysisMatchRecordGrouping extends AbstractRecordGrouping<String> 
         this.inputList = inputRows;
     }
 
+    /**
+     * 
+     * The initialize(); method must be called before run.
+     * 
+     * @throws InstantiationException
+     * @throws IllegalAccessException
+     * @throws ClassNotFoundException
+     */
     public void run() throws InstantiationException, IllegalAccessException, ClassNotFoundException {
 
-        initialize();
         try {
             for (Object[] inputRow : inputList) {
                 String[] inputStrRow = new String[inputRow.length];
