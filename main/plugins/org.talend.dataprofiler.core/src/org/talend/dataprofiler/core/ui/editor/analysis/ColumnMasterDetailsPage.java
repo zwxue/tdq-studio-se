@@ -184,8 +184,7 @@ public class ColumnMasterDetailsPage extends DynamicAnalysisMasterPage implement
         dataFilterComp.addPropertyChangeListener(this);
 
         // MOD xqliu 2009-07-01 bug 7068
-        createExecuteEngineSection(form, topComp, analysisHandler.getAnalyzedColumns(), analysisHandler.getAnalysis()
-                .getParameters());
+        createExecuteEngineSection(form, topComp, analysisHandler.getAnalyzedColumns(), analysisHandler.getAnalysis().getParameters());
         // ~
 
         createContextGroupSection(form, topComp);
@@ -226,8 +225,7 @@ public class ColumnMasterDetailsPage extends DynamicAnalysisMasterPage implement
 
             @Override
             public void linkActivated(HyperlinkEvent e) {
-                ModelElementIndicator[] result = treeViewer.openIndicatorSelectDialog(ColumnMasterDetailsPage.this.getSite()
-                        .getShell());
+                ModelElementIndicator[] result = treeViewer.openIndicatorSelectDialog(ColumnMasterDetailsPage.this.getSite().getShell());
                 refreshCurrentTreeViewer(result);
             }
 
@@ -327,8 +325,8 @@ public class ColumnMasterDetailsPage extends DynamicAnalysisMasterPage implement
             for (int idx = 0; idx < pageSize; idx++) {
                 modelElementIndicatorList.add(modelElementIndicatorArrary[index * pageSize + idx]);
             }
-            IndicatorPaginationInfo pginfo = new MasterPaginationInfo(form, previewChartList, modelElementIndicatorList,
-                    uiPagination, treeViewer);
+            IndicatorPaginationInfo pginfo = new MasterPaginationInfo(form, previewChartList, modelElementIndicatorList, uiPagination,
+                    treeViewer);
             uiPagination.addPage(pginfo);
         }
 
@@ -338,8 +336,8 @@ public class ColumnMasterDetailsPage extends DynamicAnalysisMasterPage implement
             for (int leftIdx = 0; leftIdx < left; leftIdx++) {
                 modelElementIndicatorList.add(modelElementIndicatorArrary[totalPages * pageSize + leftIdx]);
             }
-            IndicatorPaginationInfo pginfo = new MasterPaginationInfo(form, previewChartList, modelElementIndicatorList,
-                    uiPagination, treeViewer);
+            IndicatorPaginationInfo pginfo = new MasterPaginationInfo(form, previewChartList, modelElementIndicatorList, uiPagination,
+                    treeViewer);
             uiPagination.addPage(pginfo);
             // FIXME totalPages won't used anymore.
             totalPages++;
@@ -398,9 +396,7 @@ public class ColumnMasterDetailsPage extends DynamicAnalysisMasterPage implement
         for (ModelElementIndicator modelElementIndicator : modelElementIndicators) {
             reposViewObjList.add(modelElementIndicator.getModelElementRepositoryNode());
         }
-        ColumnsSelectionDialog dialog = new ColumnsSelectionDialog(
-                this,
-                null,
+        ColumnsSelectionDialog dialog = new ColumnsSelectionDialog(this, null,
                 DefaultMessagesImpl.getString("ColumnMasterDetailsPage.columnSelection"), reposViewObjList, connNode, DefaultMessagesImpl //$NON-NLS-1$
                         .getString("ColumnMasterDetailsPage.columnSelections")); //$NON-NLS-1$
         if (dialog.open() == Window.OK) {
@@ -457,26 +453,6 @@ public class ColumnMasterDetailsPage extends DynamicAnalysisMasterPage implement
                 createPreviewCharts(form, chartComposite);
             }
         }
-    }
-
-    /**
-     * @param form1
-     * @param toolkit
-     * @param anasisDataComp
-     */
-    @Override
-    void createDataFilterSection(final ScrolledForm form1, Composite anasisDataComp) {
-        dataFilterSection = createSection(
-                form1,
-                anasisDataComp,
-                DefaultMessagesImpl.getString("ColumnMasterDetailsPage.dataFilter"), DefaultMessagesImpl.getString("ColumnMasterDetailsPage.editDataFilter")); //$NON-NLS-1$ //$NON-NLS-2$
-
-        Composite sectionClient = toolkit.createComposite(dataFilterSection);
-        dataFilterComp = new DataFilterComp(sectionClient, stringDataFilter);
-        dataFilterComp.addPropertyChangeListener(this);
-        // ADD yyi 2011-05-31 16158:add whitespace check for text fields.
-        addWhitespaceValidate(dataFilterComp.getDataFilterText());
-        dataFilterSection.setClient(sectionClient);
     }
 
     /**
@@ -763,8 +739,7 @@ public class ColumnMasterDetailsPage extends DynamicAnalysisMasterPage implement
         // MOD klliu 2011-04-18 code cleaning.
         ModelElementIndicator[] modelElementIndicators = treeViewer.getModelElementIndicator();
         if (modelElementIndicators != null && modelElementIndicators.length != 0) {
-            analysisItem.getAnalysis().getContext()
-                    .setConnection(ModelElementIndicatorHelper.getTdDataProvider(modelElementIndicators[0]));
+            analysisItem.getAnalysis().getContext().setConnection(ModelElementIndicatorHelper.getTdDataProvider(modelElementIndicators[0]));
         }
         // ~
         List<ModelElement> analyzedElement = new ArrayList<ModelElement>();
@@ -791,8 +766,7 @@ public class ColumnMasterDetailsPage extends DynamicAnalysisMasterPage implement
     private ReturnCode checkMdmExecutionEngine() {
         ModelElementIndicator[] modelElementIndicators = treeViewer.getModelElementIndicator();
         if (modelElementIndicators != null && modelElementIndicators.length != 0) {
-            analysisItem.getAnalysis().getContext()
-                    .setConnection(ModelElementIndicatorHelper.getTdDataProvider(modelElementIndicators[0]));
+            analysisItem.getAnalysis().getContext().setConnection(ModelElementIndicatorHelper.getTdDataProvider(modelElementIndicators[0]));
         }
         return new ReturnCode(true);
     }
@@ -921,8 +895,8 @@ public class ColumnMasterDetailsPage extends DynamicAnalysisMasterPage implement
     }
 
     /**
-     * return all created charts for the current running, from the current pagination. The charts which are not on the
-     * current page no need to return. TODO check if can use IndicatorUnit
+     * return all created charts for the current running, from the current pagination. The charts which are not on the current page no need
+     * to return. TODO check if can use IndicatorUnit
      */
     @Override
     public List<DynamicIndicatorModel> getDynamicDatasets() {
