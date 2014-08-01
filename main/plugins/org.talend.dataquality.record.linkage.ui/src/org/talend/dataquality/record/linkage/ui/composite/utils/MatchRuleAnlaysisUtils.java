@@ -218,23 +218,35 @@ public class MatchRuleAnlaysisUtils {
                 masterIndex = i;
             }
         }
-        final int GID_index = gidIndex;
-        final int MASTER_index = masterIndex;
-
+        // Sort by master first
+        final int masterIdx = masterIndex;
         Comparator<Object[]> comparator = new Comparator<Object[]>() {
 
             @Override
             public int compare(Object[] row1, Object[] row2) {
-                if (!isSameGroup((String) row1[GID_index], (String) row2[GID_index])) {
-                    return ((String) row1[GID_index]).compareTo((String) row2[GID_index]);
-                } else {// false < true
-                    return ((String) row2[MASTER_index]).compareTo((String) row1[MASTER_index]);
-                }
+                return ((String) row2[masterIdx]).compareTo((String) row1[masterIdx]);
             }
 
         };
         java.util.Collections.sort(resultData, comparator);
+
+        insertionSort(resultData, gidIndex);
         return resultData;
+    }
+
+    public static void insertionSort(List<Object[]> data, int gidIdx) {
+        int in, out;
+
+        for (out = 1; out < data.size(); out++) {
+            Object[] temp = data.get(out);
+            in = out;
+
+            while (in > 0 && !isSameGroup(data.get(in - 1)[gidIdx].toString(), (temp[gidIdx]).toString())) {
+                data.set(in, data.get(in - 1));
+                --in;
+            }
+            data.set(in, temp);
+        }
     }
 
     /**

@@ -167,7 +167,6 @@ public class TSwooshGrouping<TYPE> {
 
                 richRecord1.setMaster(false);
                 richRecord2.setMaster(false);
-                // TODO set score and matching distance details.
 
                 output(richRecord1);
                 output(richRecord2);

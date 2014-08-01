@@ -68,6 +68,16 @@ public class AnaMatchSurvivorSection extends MatchingKeySection {
     /*
      * (non-Javadoc)
      * 
+     * @see org.talend.dataquality.record.linkage.ui.section.MatchingKeySection#getSectionName()
+     */
+    @Override
+    protected String getSectionName() {
+        return MatchAnalysisConstant.MATCHING_KEY_AND_SURVIVOR_DEFINITION_SECTION_NAME;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
      * @see
      * org.talend.dataquality.record.linkage.ui.section.MatchingKeySection#createTableComposite(org.eclipse.swt.widgets
      * .Composite, org.talend.dataquality.rules.MatchRule)

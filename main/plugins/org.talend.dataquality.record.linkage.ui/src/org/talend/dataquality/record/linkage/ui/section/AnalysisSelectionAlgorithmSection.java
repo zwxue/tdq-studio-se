@@ -78,4 +78,5 @@ public class AnalysisSelectionAlgorithmSection extends SelectAlgorithmSection {
     protected void removeAllSurvivorship() {
         anaMatchSurvSection.removeAllSurvivorship();
     }
+
 }

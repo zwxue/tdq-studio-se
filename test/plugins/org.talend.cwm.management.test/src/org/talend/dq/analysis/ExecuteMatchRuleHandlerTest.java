@@ -65,16 +65,16 @@ public class ExecuteMatchRuleHandlerTest {
     public void testExecute1() {
         Map<MetadataColumn, String> columnMap = new HashMap<MetadataColumn, String>();
         MetadataColumn col0 = ConnectionFactory.eINSTANCE.createMetadataColumn();
-        col0.setName("columnName0");//$NON-NLS-1$
+        col0.setName(columnName0);
         columnMap.put(col0, "0"); //$NON-NLS-1$
         MetadataColumn col1 = ConnectionFactory.eINSTANCE.createMetadataColumn();
-        col1.setName("columnName1");//$NON-NLS-1$
+        col1.setName(columnName1);
         columnMap.put(col1, "1"); //$NON-NLS-1$
         MetadataColumn col2 = ConnectionFactory.eINSTANCE.createMetadataColumn();
-        col2.setName("columnName2");//$NON-NLS-1$
+        col2.setName(columnName2);
         columnMap.put(col2, "2"); //$NON-NLS-1$
         MetadataColumn col3 = ConnectionFactory.eINSTANCE.createMetadataColumn();
-        col3.setName("columnName3");//$NON-NLS-1$
+        col3.setName(columnName3);
         columnMap.put(col3, "3"); //$NON-NLS-1$
         // create match key
         RecordMatchingIndicator recordMatchingIndicator = ColumnsetFactory.eINSTANCE.createRecordMatchingIndicator();
@@ -128,16 +128,16 @@ public class ExecuteMatchRuleHandlerTest {
     public void testExecute2() {
         Map<MetadataColumn, String> columnMap = new HashMap<MetadataColumn, String>();
         MetadataColumn col0 = ConnectionFactory.eINSTANCE.createMetadataColumn();
-        col0.setName("columnName0");//$NON-NLS-1$
+        col0.setName(columnName0);
         columnMap.put(col0, "0"); //$NON-NLS-1$
         MetadataColumn col1 = ConnectionFactory.eINSTANCE.createMetadataColumn();
-        col1.setName("columnName1");//$NON-NLS-1$
+        col1.setName(columnName1);
         columnMap.put(col1, "1"); //$NON-NLS-1$
         MetadataColumn col2 = ConnectionFactory.eINSTANCE.createMetadataColumn();
-        col2.setName("columnName2");//$NON-NLS-1$
+        col2.setName(columnName2);
         columnMap.put(col2, "2"); //$NON-NLS-1$
         MetadataColumn col3 = ConnectionFactory.eINSTANCE.createMetadataColumn();
-        col3.setName("columnName3");//$NON-NLS-1$
+        col3.setName(columnName3);
         columnMap.put(col3, "3"); //$NON-NLS-1$
 
         RecordMatchingIndicator recordMatchingIndicator = ColumnsetFactory.eINSTANCE.createRecordMatchingIndicator();
@@ -215,16 +215,16 @@ public class ExecuteMatchRuleHandlerTest {
     public void testExecute3() {
         Map<MetadataColumn, String> columnMap = new HashMap<MetadataColumn, String>();
         MetadataColumn col0 = ConnectionFactory.eINSTANCE.createMetadataColumn();
-        col0.setName("columnName0");//$NON-NLS-1$
+        col0.setName(columnName0);
         columnMap.put(col0, "0"); //$NON-NLS-1$
         MetadataColumn col1 = ConnectionFactory.eINSTANCE.createMetadataColumn();
-        col1.setName("columnName1");//$NON-NLS-1$
+        col1.setName(columnName1);
         columnMap.put(col1, "1"); //$NON-NLS-1$
         MetadataColumn col2 = ConnectionFactory.eINSTANCE.createMetadataColumn();
-        col2.setName("columnName2");//$NON-NLS-1$
+        col2.setName(columnName2);
         columnMap.put(col2, "2"); //$NON-NLS-1$
         MetadataColumn col3 = ConnectionFactory.eINSTANCE.createMetadataColumn();
-        col3.setName("columnName3");//$NON-NLS-1$
+        col3.setName(columnName3);
         columnMap.put(col3, "3"); //$NON-NLS-1$
         RecordMatchingIndicator recordMatchingIndicator = ColumnsetFactory.eINSTANCE.createRecordMatchingIndicator();
         MatchRuleDefinition matchRuleDef = RulesPackage.eINSTANCE.getRulesFactory().createMatchRuleDefinition();
@@ -314,16 +314,16 @@ public class ExecuteMatchRuleHandlerTest {
     public void testExecute4() {
         Map<MetadataColumn, String> columnMap = new HashMap<MetadataColumn, String>();
         MetadataColumn col0 = ConnectionFactory.eINSTANCE.createMetadataColumn();
-        col0.setName("columnName0");//$NON-NLS-1$
+        col0.setName(columnName0);
         columnMap.put(col0, "0"); //$NON-NLS-1$
         MetadataColumn col1 = ConnectionFactory.eINSTANCE.createMetadataColumn();
-        col1.setName("columnName1");//$NON-NLS-1$
+        col1.setName(columnName1);
         columnMap.put(col1, "1"); //$NON-NLS-1$
         MetadataColumn col2 = ConnectionFactory.eINSTANCE.createMetadataColumn();
-        col2.setName("columnName2");//$NON-NLS-1$
+        col2.setName(columnName2);
         columnMap.put(col2, "2"); //$NON-NLS-1$
         MetadataColumn col3 = ConnectionFactory.eINSTANCE.createMetadataColumn();
-        col3.setName("columnName3");//$NON-NLS-1$
+        col3.setName(columnName3);
         columnMap.put(col3, "3"); //$NON-NLS-1$
         RecordMatchingIndicator recordMatchingIndicator = ColumnsetFactory.eINSTANCE.createRecordMatchingIndicator();
         MatchRuleDefinition matchRuleDef = RulesPackage.eINSTANCE.getRulesFactory().createMatchRuleDefinition();

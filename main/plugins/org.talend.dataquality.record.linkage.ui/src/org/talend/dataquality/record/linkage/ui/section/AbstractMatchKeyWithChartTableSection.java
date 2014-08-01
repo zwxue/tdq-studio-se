@@ -12,6 +12,8 @@
 // ============================================================================
 package org.talend.dataquality.record.linkage.ui.section;
 
+import java.util.List;
+
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.swt.SWT;
@@ -115,9 +117,9 @@ abstract public class AbstractMatchKeyWithChartTableSection extends AbstractMatc
                 return rc;
             }
             // sort the result before refresh
-            MatchRuleAnlaysisUtils.sortResultByGID(recordMatchingIndicator.getMatchRowSchema(), execute.getObject()
-                    .getFullMatchResult());
-            MatchRuleAnlaysisUtils.refreshDataTable(analysis, execute.getObject().getFullMatchResult());
+            List<Object[]> results = MatchRuleAnlaysisUtils.sortResultByGID(recordMatchingIndicator.getMatchRowSchema(), execute
+                    .getObject().getFullMatchResult());
+            MatchRuleAnlaysisUtils.refreshDataTable(analysis, results);
         }
         rc.setOk(true);
         rc.setObject(recordMatchingIndicator);
