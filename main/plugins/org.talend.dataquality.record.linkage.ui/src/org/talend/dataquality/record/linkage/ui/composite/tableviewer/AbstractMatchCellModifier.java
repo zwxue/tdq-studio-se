@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.jface.viewers.ICellModifier;
+import org.talend.core.model.metadata.builder.connection.MetadataColumn;
 
 /**
  * created by zshen on Sep 13, 2013 Detailled comment
@@ -26,14 +27,14 @@ public abstract class AbstractMatchCellModifier<T> implements ICellModifier {
 
     protected AbstractMatchAnalysisTableViewer<T> tableViewer = null;
 
-    protected List<String> columnList = new ArrayList<String>();
+    protected List<MetadataColumn> columnList = new ArrayList<MetadataColumn>();
 
     /**
      * Getter for columnList.
      * 
      * @return the columnList
      */
-    public List<String> getColumnList() {
+    public List<MetadataColumn> getColumnList() {
         return this.columnList;
     }
 
@@ -42,7 +43,7 @@ public abstract class AbstractMatchCellModifier<T> implements ICellModifier {
      * 
      * @param columnList the columnList to set
      */
-    public void setColumnMap(List<String> columnList) {
+    public void setColumnMap(List<MetadataColumn> columnList) {
         if (columnList != null) {
             this.columnList.addAll(columnList);
         }

@@ -16,7 +16,6 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.ComboBoxCellEditor;
@@ -25,12 +24,12 @@ import org.eclipse.jface.viewers.IContentProvider;
 import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
+import org.talend.core.model.metadata.builder.connection.MetadataColumn;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.record.linkage.constant.AttributeMatcherType;
 import org.talend.dataquality.record.linkage.ui.action.MatchRuleActionGroup;
 import org.talend.dataquality.record.linkage.ui.composite.tableviewer.AbstractMatchAnalysisTableViewer;
 import org.talend.dataquality.record.linkage.ui.composite.tableviewer.AbstractMatchCellModifier;
-import org.talend.dataquality.record.linkage.ui.composite.tableviewer.MatchRuleTableViewer;
 import org.talend.dataquality.record.linkage.ui.composite.tableviewer.cellEditor.jarFileCellEditor;
 import org.talend.dataquality.record.linkage.ui.composite.tableviewer.provider.MatchAnalysisTableContentProvider;
 import org.talend.dataquality.record.linkage.ui.composite.tableviewer.provider.MatchAndSurvivorCellModifer;
@@ -49,10 +48,6 @@ import org.talend.dataquality.rules.SurvivorshipKeyDefinition;
  * DOC yyin class global comment. Detailled comment
  */
 public class MatchKeyAndSurvivorshipTableViewer extends AbstractMatchAnalysisTableViewer<MatchKeyAndSurvivorDefinition> {
-
-    private static Logger log = Logger.getLogger(MatchRuleTableViewer.class);
-
-    private MatchRule matchRule = null;
 
     @Override
     protected IContentProvider getTableContentProvider() {
@@ -98,7 +93,7 @@ public class MatchKeyAndSurvivorshipTableViewer extends AbstractMatchAnalysisTab
                 // survivorkey list;
                 SurvivorshipKeyDefinition survivorShipKey = msDedefinition.getSurvivorShipKey();
                 MatchRuleDefinition matchRuleDef = (MatchRuleDefinition) survivorShipKey.eContainer();
-                matchRuleDef.getMatchRules().get(0).getMatchKeys().remove(msDedefinition.getMatchKey());
+                ((MatchRule) msDedefinition.getMatchKey().eContainer()).getMatchKeys().remove(msDedefinition.getMatchKey());
                 matchRuleDef.getSurvivorshipKeys().remove(survivorShipKey);
                 break;
             }
@@ -113,10 +108,6 @@ public class MatchKeyAndSurvivorshipTableViewer extends AbstractMatchAnalysisTab
     @Override
     protected int getHeaderDisplayWeight() {
         return 10;
-    }
-
-    public void setMatchRule(MatchRule matchRule) {
-        this.matchRule = matchRule;
     }
 
     @Override
@@ -164,7 +155,7 @@ public class MatchKeyAndSurvivorshipTableViewer extends AbstractMatchAnalysisTab
      * org.talend.dataquality.record.linkage.ui.composite.tableviewer.MatchRuleTableViewer#getCellEditor(java.util.List)
      */
     @Override
-    protected CellEditor[] getCellEditor(List<String> headers, List<String> columnList) {
+    protected CellEditor[] getCellEditor(List<String> headers, List<MetadataColumn> columnList) {
         CellEditor[] editors = new CellEditor[headers.size()];
         for (int i = 0; i < editors.length; ++i) {
             // used for MDM T-swoosh

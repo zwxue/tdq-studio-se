@@ -21,7 +21,12 @@ import org.talend.dataquality.record.linkage.Messages;
  */
 public enum RecordMatcherType {
     simpleVSRMatcher(Messages.getString("RecordMatcherType.simpleVSRMatcher")), //$NON-NLS-1$
-    T_SwooshAlgorithm(Messages.getString("RecordMatcherType.T_SwooshAlgorithm")); //$NON-NLS-1$
+
+    /**
+     * The rename of T_SwooshAlgorithm name should be propagate to value of {
+     * {@link RecordMatchingIndicatorImpl#T_SWOOSH_ALG_NAME}
+     */
+    T_SwooshAlgorithm(Messages.getString("RecordMatcherType.T_SwooshAlgorithm")); //$NON-NLS-1$ 
 
     private final String label;
 

@@ -18,6 +18,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
+import org.talend.dataquality.record.linkage.grouping.swoosh.DQAttribute;
+import org.talend.dataquality.record.linkage.grouping.swoosh.RichRecord;
 
 /**
  * created by zshen on Aug 7, 2013 Detailled comment
@@ -42,7 +44,6 @@ public class AnalysisMatchRecordGrouping extends AbstractRecordGrouping<String> 
         setSeperateOutput(Boolean.TRUE);
     }
 
-
     public void addRuleMatcher(List<Map<String, String>> ruleMatcherConvertResult) {
         addMatchRule(ruleMatcherConvertResult);
 
@@ -57,9 +58,16 @@ public class AnalysisMatchRecordGrouping extends AbstractRecordGrouping<String> 
         this.inputList = inputRows;
     }
 
+    /**
+     * 
+     * The initialize(); method must be called before run.
+     * 
+     * @throws InstantiationException
+     * @throws IllegalAccessException
+     * @throws ClassNotFoundException
+     */
     public void run() throws InstantiationException, IllegalAccessException, ClassNotFoundException {
 
-        initialize();
         try {
             for (Object[] inputRow : inputList) {
                 String[] inputStrRow = new String[inputRow.length];
@@ -100,6 +108,25 @@ public class AnalysisMatchRecordGrouping extends AbstractRecordGrouping<String> 
     /*
      * (non-Javadoc)
      * 
+     * @see
+     * org.talend.dataquality.record.linkage.grouping.AbstractRecordGrouping#outputRow(org.talend.dataquality.record
+     * .linkage.grouping.swoosh.RichRecord)
+     */
+    @Override
+    protected void outputRow(RichRecord row) {
+        List<DQAttribute<?>> originRow = row.getOutputRow();
+        String[] strRow = new String[originRow.size()];
+        int idx = 0;
+        for (DQAttribute<?> attr : originRow) {
+            strRow[idx] = attr.getValue();
+            idx++;
+        }
+        outputRow(strRow);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.talend.dataquality.record.linkage.grouping.AbstractRecordGrouping#isMaster(java.lang.Object)
      */
     @Override
@@ -113,7 +140,7 @@ public class AnalysisMatchRecordGrouping extends AbstractRecordGrouping<String> 
      * @see org.talend.dataquality.record.linkage.grouping.AbstractRecordGrouping#modifyGroupSize(java.lang.Object)
      */
     @Override
-    protected String modifyGroupSize(String oldGroupSize) {
+    protected String incrementGroupSize(String oldGroupSize) {
         return String.valueOf(Integer.parseInt(String.valueOf(oldGroupSize)) + 1);
     }
 
@@ -133,7 +160,7 @@ public class AnalysisMatchRecordGrouping extends AbstractRecordGrouping<String> 
      * @see org.talend.dataquality.record.linkage.grouping.AbstractRecordGrouping#getCOLUMNFromObject(java.lang.Object)
      */
     @Override
-    protected String getTYPEFromObject(Object objectValue) {
+    protected String castAsType(Object objectValue) {
         return String.valueOf(objectValue);
     }
 

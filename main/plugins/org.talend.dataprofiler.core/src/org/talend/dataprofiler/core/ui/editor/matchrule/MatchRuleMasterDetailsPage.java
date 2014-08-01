@@ -281,7 +281,6 @@ public class MatchRuleMasterDetailsPage extends AbstractMetadataFormPage impleme
         selectAlgorithmSection.addPropertyChangeListener(this);
         // Added TDQ-8163: In TOS DQ, hide the "record linkage" section.
         selectAlgorithmSection.changeSectionDisStatus(!PluginChecker.isOnlyTopLoaded());
-
         selectAlgorithmSection.getSection().setExpanded(true);
     }
 
@@ -300,7 +299,7 @@ public class MatchRuleMasterDetailsPage extends AbstractMetadataFormPage impleme
                     DefaultMessagesImpl.getString("AbstractAnalysisMetadataPage.SaveAnalysis"), rc.getMessage()); //$NON-NLS-1$
             return;
         }
-        //handle rename before saving it
+        // handle rename before saving it
         if (!handleRenameEvent()) {
             return;
         }

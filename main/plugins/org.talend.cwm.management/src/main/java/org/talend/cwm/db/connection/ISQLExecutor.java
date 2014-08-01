@@ -16,6 +16,7 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 
+import org.talend.core.model.metadata.builder.connection.MetadataColumn;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.indicators.columnset.RecordMatchingIndicator;
 import orgomg.cwm.foundation.softwaredeployment.DataManager;
@@ -33,7 +34,7 @@ public interface ISQLExecutor {
     public void setStoreOnDisk(Boolean storeOnDisk);
 
     public void initStoreOnDiskHandler(Analysis analysis, RecordMatchingIndicator recordMatchingIndicator,
-            Map<String, String> columnMap);
+            Map<MetadataColumn, String> columnMap);
 
     public Boolean getStoreOnDisk();
 

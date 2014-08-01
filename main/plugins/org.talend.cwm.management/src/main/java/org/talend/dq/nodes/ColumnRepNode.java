@@ -12,6 +12,7 @@
 // ============================================================================
 package org.talend.dq.nodes;
 
+import org.talend.core.model.metadata.MetadataColumnRepositoryObject;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.repository.model.RepositoryNode;
 
@@ -19,6 +20,8 @@ import org.talend.repository.model.RepositoryNode;
  * The parent for the current DBColumnRepNode, and DFColumnRepNode, and other possible column type in the future.
  */
 public class ColumnRepNode extends DQRepositoryNode {
+
+    protected MetadataColumnRepositoryObject metadataColumnRepositoryObject;
 
     /**
      * ColumnRepNode constructor
@@ -29,6 +32,10 @@ public class ColumnRepNode extends DQRepositoryNode {
      */
     public ColumnRepNode(IRepositoryViewObject object, RepositoryNode parent, ENodeType type) {
         super(object, parent, type);
+    }
+
+    public MetadataColumnRepositoryObject getMetadataColumnRepositoryObject() {
+        return this.metadataColumnRepositoryObject;
     }
 
 }

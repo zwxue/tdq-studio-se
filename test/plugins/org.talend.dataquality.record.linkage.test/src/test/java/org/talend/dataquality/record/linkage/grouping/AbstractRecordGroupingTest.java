@@ -15,6 +15,7 @@ import org.apache.log4j.Logger;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.talend.dataquality.record.linkage.grouping.swoosh.RichRecord;
 
 public class AbstractRecordGroupingTest {
 
@@ -25,7 +26,7 @@ public class AbstractRecordGroupingTest {
      */
     private List<String[]> inputList = null;
 
-    private IRecordGrouping recordGroup = null;
+    private IRecordGrouping<String> recordGroup = null;
 
     private static final String columnDelimiter = "|"; //$NON-NLS-1$
 
@@ -63,18 +64,28 @@ public class AbstractRecordGroupingTest {
             @Override
             protected void outputRow(String[] row) {
                 groupingRecords.add(row);
+                for (String c : row) {
+                    System.out.print(c + ",");
+                }
+                System.out.println();
 
+            }
+
+            @Override
+            protected String incrementGroupSize(String oldGroupSize) {
+                String newGroupSize = String.valueOf(Integer.parseInt(String.valueOf(oldGroupSize)) + 1);
+                return newGroupSize;
+            }
+
+            @Override
+            protected String castAsType(Object objectValue) {
+                String column = String.valueOf(objectValue);
+                return column;
             }
 
             @Override
             protected boolean isMaster(String col) {
                 return "true".equals(col); //$NON-NLS-1$
-            }
-
-            @Override
-            protected String modifyGroupSize(String oldGroupSize) {
-                String newGroupSize = String.valueOf(Integer.parseInt(String.valueOf(oldGroupSize)) + 1);
-                return newGroupSize;
             }
 
             @Override
@@ -84,10 +95,11 @@ public class AbstractRecordGroupingTest {
             }
 
             @Override
-            protected String getTYPEFromObject(Object objectValue) {
-                String column = String.valueOf(objectValue);
-                return column;
+            protected void outputRow(RichRecord row) {
+                // TODO Auto-generated method stub
+
             }
+
         };
         recordGroup.setColumnDelimiter(columnDelimiter);
         recordGroup.setIsLinkToPrevious(Boolean.FALSE);
@@ -242,7 +254,7 @@ public class AbstractRecordGroupingTest {
             }
 
             @Override
-            protected String modifyGroupSize(String oldGroupSize) {
+            protected String incrementGroupSize(String oldGroupSize) {
                 String newGroupSize = String.valueOf(Integer.parseInt(String.valueOf(oldGroupSize)) + 1);
                 return newGroupSize;
             }
@@ -254,10 +266,16 @@ public class AbstractRecordGroupingTest {
             }
 
             @Override
-            protected String getTYPEFromObject(Object objectValue) {
+            protected String castAsType(Object objectValue) {
                 String column = String.valueOf(objectValue);
                 return column;
             }
+
+            @Override
+            protected void outputRow(RichRecord row) {
+                // Empty implementation for vsr
+            }
+
         };
         recordGroup.setColumnDelimiter(columnDelimiter);
         recordGroup.setIsLinkToPrevious(Boolean.FALSE);
@@ -350,7 +368,6 @@ public class AbstractRecordGroupingTest {
     private void testMatchThreshold_0() {
         List<Map<String, String>> matchingRule;
         Map<String, String> lnameRecords;
-        Map<String, String> accountRecords;
         groupingRecords.clear();
         recordGroup = new AbstractRecordGrouping<String>() {
 
@@ -372,7 +389,7 @@ public class AbstractRecordGroupingTest {
             }
 
             @Override
-            protected String modifyGroupSize(String oldGroupSize) {
+            protected String incrementGroupSize(String oldGroupSize) {
                 String newGroupSize = String.valueOf(Integer.parseInt(String.valueOf(oldGroupSize)) + 1);
                 return newGroupSize;
             }
@@ -384,10 +401,16 @@ public class AbstractRecordGroupingTest {
             }
 
             @Override
-            protected String getTYPEFromObject(Object objectValue) {
+            protected String castAsType(Object objectValue) {
                 String column = String.valueOf(objectValue);
                 return column;
             }
+
+            @Override
+            protected void outputRow(RichRecord row) {
+                // Empty implementation.
+            }
+
         };
         recordGroup.setColumnDelimiter(columnDelimiter);
         recordGroup.setIsLinkToPrevious(Boolean.FALSE);

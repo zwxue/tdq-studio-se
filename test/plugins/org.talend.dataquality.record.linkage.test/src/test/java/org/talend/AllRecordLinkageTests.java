@@ -22,10 +22,10 @@ import org.talend.dataquality.record.linkage.attribute.MetaphoneMatcherTest;
 import org.talend.dataquality.record.linkage.attribute.SoundexMatcherTest;
 import org.talend.dataquality.record.linkage.constant.AttributeMatcherTypeTest;
 import org.talend.dataquality.record.linkage.grouping.AbstractRecordGroupingTest;
+import org.talend.dataquality.record.linkage.grouping.SwooshRecordGroupingTest;
 import org.talend.dataquality.record.linkage.record.CombinedRecordMatcherTest;
 import org.talend.dataquality.record.linkage.record.SimpleVSRRecordMatcherTest;
 import org.talend.dataquality.record.linkage.utils.AlgorithmSwitchTest;
-import org.talend.dataquality.record.linkage.utils.AnalysisRecordGroupingUtilsTest;
 import org.talend.dataquality.record.linkage.utils.QGramTokenizerTest;
 import org.talend.windowkey.AlgoBoxTest;
 import org.talend.windowkey.FingerprintKeyerTest;
@@ -37,9 +37,8 @@ import org.talend.windowkey.NGramFingerprintKeyerTest;
 @RunWith(Suite.class)
 @SuiteClasses({ AbstractAttributeMatcherTest.class, DoubleMetaphoneMatcherTest.class, LevenshteinMatcherTest.class,
         MetaphoneMatcherTest.class, SoundexMatcherTest.class, AttributeMatcherTypeTest.class, AbstractRecordGroupingTest.class,
-        CombinedRecordMatcherTest.class, SimpleVSRRecordMatcherTest.class, AlgorithmSwitchTest.class,
-        AnalysisRecordGroupingUtilsTest.class, QGramTokenizerTest.class, AlgoBoxTest.class, FingerprintKeyerTest.class,
-        NGramFingerprintKeyerTest.class })
+        CombinedRecordMatcherTest.class, SimpleVSRRecordMatcherTest.class, AlgorithmSwitchTest.class, QGramTokenizerTest.class,
+        AlgoBoxTest.class, FingerprintKeyerTest.class, NGramFingerprintKeyerTest.class, SwooshRecordGroupingTest.class })
 public class AllRecordLinkageTests {
 
 }

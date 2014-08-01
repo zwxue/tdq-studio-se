@@ -56,4 +56,7 @@ public class MatchKeyAndSurvivorDefinition {
         this.survivorShipKey = survivorShipKey;
     }
 
+    public String getColumn() {
+        return matchKey.getColumn();
+    }
 }
