@@ -143,7 +143,7 @@ public final class DbmsLanguageFactory {
             // MOD zshen fixed bug 11005: SQL syntax error for all analysis on Informix databases in Talend Open
             // Profiler
             dbmsLanguage = new InfomixDbmsLanguage(dbmsSubtype, dbVersion);
-        } else if (isHive(dbmsSubtype)) {
+        } else if (isHive(dbmsSubtype) || DbmsLanguage.IMPALA.equalsIgnoreCase(dbmsSubtype)) {
             dbmsLanguage = new HiveDbmsLanguage(DbmsLanguage.HIVE, dbVersion);
         } else if (isVertica(dbmsSubtype)) {
             dbmsLanguage = new VerticaDbmsLanguage(dbmsSubtype, dbVersion);
