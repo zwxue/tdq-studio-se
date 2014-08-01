@@ -2,7 +2,7 @@
 <feature
       id="org.talend.dataquality.test_feature"
       label="org.talend.dataquality.test_feature Feature"
-      version="1.0.0.qualifier"
+      version="5.6.0.qualifier"
       provider-name=".Talend SA."
       plugin="org.talend.dataquality.test">
 

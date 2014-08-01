@@ -4,7 +4,7 @@ Bundle-Name: org.talend.dataprofiler.ecos.test
 Bundle-SymbolicName: org.talend.dataprofiler.ecos.test
 Bundle-Version: 5.6.0.qualifier
 Bundle-Vendor: .Talend SA.
-Fragment-Host: org.talend.dataprofiler.ecos;bundle-version="1.0.0.qualifier"
+Fragment-Host: org.talend.dataprofiler.ecos;bundle-version="5.6.0.qualifier"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Require-Bundle: org.talend.testutils;bundle-version="1.0.0"
 Bundle-ClassPath: .
