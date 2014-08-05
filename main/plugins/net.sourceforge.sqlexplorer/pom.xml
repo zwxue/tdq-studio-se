@@ -10,6 +10,5 @@
   </parent>
   <groupId>org.talend.studio</groupId>
   <artifactId>net.sourceforge.sqlexplorer</artifactId>
-  <version>3.5.0-SNAPSHOT</version>
   <packaging>eclipse-plugin</packaging>
 </project>
