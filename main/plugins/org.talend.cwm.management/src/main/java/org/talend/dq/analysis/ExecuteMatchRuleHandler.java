@@ -124,6 +124,11 @@ public class ExecuteMatchRuleHandler {
                 matchRow.hashCodeDirty = true;
             }
             AnalysisMatchRecordGrouping analysisMatchRecordGrouping = new AnalysisMatchRecordGrouping(matchResultConsumer);
+            // Set rule matcher for record grouping API.
+            setRuleMatcher(columnMap, recordMatchingIndicator, analysisMatchRecordGrouping);
+            analysisMatchRecordGrouping.initialize();
+            persistentLookupManager.lookup(matchRow);
+
             if (recordMatchingIndicator.getBuiltInMatchRuleDefinition().getRecordLinkageAlgorithm()
                     .equals(RecordMatcherType.simpleVSRMatcher.name())) {
                 analysisMatchRecordGrouping.setRecordLinkAlgorithm(RecordMatcherType.simpleVSRMatcher);
@@ -132,11 +137,6 @@ public class ExecuteMatchRuleHandler {
                 analysisMatchRecordGrouping.setSurvivorShipAlgorithmParams(createSurvivorShipAlgorithmParams(
                         analysisMatchRecordGrouping, recordMatchingIndicator, columnMap));
             }
-            // Set rule matcher for record grouping API.
-            setRuleMatcher(columnMap, recordMatchingIndicator, analysisMatchRecordGrouping);
-            analysisMatchRecordGrouping.initialize();
-
-            persistentLookupManager.lookup(matchRow);
             Integer blockSize = 0;
             while (persistentLookupManager.hasNext()) {
                 // Match within one block
