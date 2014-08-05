@@ -48,7 +48,6 @@ import org.talend.core.IRepositoryContextService;
 import org.talend.core.database.EDatabase4DriverClassName;
 import org.talend.core.database.EDatabaseTypeName;
 import org.talend.core.database.conn.version.EDatabaseVersion4Drivers;
-import org.talend.core.model.context.ContextUtils;
 import org.talend.core.model.metadata.IMetadataConnection;
 import org.talend.core.model.metadata.MetadataFillFactory;
 import org.talend.core.model.metadata.builder.ConvertionHelper;
@@ -67,13 +66,11 @@ import org.talend.core.model.metadata.builder.database.dburl.SupportDBUrlType;
 import org.talend.core.model.metadata.builder.util.DatabaseConstant;
 import org.talend.core.model.metadata.builder.util.MetadataConnectionUtils;
 import org.talend.core.model.metadata.connection.hive.HiveConnVersionInfo;
-import org.talend.core.model.properties.ContextItem;
 import org.talend.core.model.properties.Item;
 import org.talend.core.model.properties.MDMConnectionItem;
 import org.talend.core.model.properties.Property;
 import org.talend.core.model.repository.IRepositoryViewObject;
 import org.talend.core.model.utils.CloneConnectionUtils;
-import org.talend.core.model.utils.ContextParameterUtils;
 import org.talend.core.repository.model.ProxyRepositoryFactory;
 import org.talend.core.runtime.CoreRuntimePlugin;
 import org.talend.cwm.constants.DevelopmentStatus;
@@ -91,7 +88,6 @@ import org.talend.cwm.xml.TdXmlContent;
 import org.talend.cwm.xml.TdXmlElementType;
 import org.talend.cwm.xml.TdXmlSchema;
 import org.talend.dataquality.helpers.MetadataHelper;
-import org.talend.designer.core.model.utils.emf.talendfile.ContextType;
 import org.talend.dq.CWMPlugin;
 import org.talend.dq.analysis.parameters.DBConnectionParameter;
 import org.talend.dq.helper.EObjectHelper;
@@ -452,6 +448,10 @@ public final class ConnectionUtils {
         ReturnCode returnCode = new ReturnCode();
         String driverClass = dbConn.getDriverClass();
         String driverJarPath = dbConn.getDriverJarPath();
+        if (dbConn.isContextMode()) {
+            driverClass = getOriginalConntextValue(dbConn, driverClass);
+            driverJarPath = getOriginalConntextValue(dbConn, driverJarPath);
+        }
         if (driverClass == null || driverClass.trim().equals("")) { //$NON-NLS-1$
             returnCode.setOk(false);
             returnCode.setMessage(Messages.getString("ConnectionUtils.DriverClassEmpty")); //$NON-NLS-1$
@@ -1816,22 +1816,7 @@ public final class ConnectionUtils {
      * @return
      */
     public static String getOriginalConntextValue(Connection connection, String rawValue) {
-        if (rawValue == null) {
-            return PluginConstant.EMPTY_STRING;
-        }
-        String origValu = null;
-        if (connection != null && connection.isContextMode()) {
-            String contextName = connection.getContextName();
-            ContextType contextType = null;
-            ContextItem contextItem = ContextUtils.getContextItemById2(connection.getContextId());
-            if (contextName == null) {
-                contextName = contextItem.getDefaultContext();
-            }
-            contextType = ContextUtils.getContextTypeByName(contextItem, contextName, true);
-
-            origValu = ContextParameterUtils.getOriginalValue(contextType, rawValue);
-        }
-        return origValu == null ? rawValue : origValu;
+        return JavaSqlFactory.getOriginalConntextValue(connection, rawValue);
     }
 
     /**
