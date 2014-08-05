@@ -135,7 +135,7 @@ public class MatchKeyAndSurvivorshipTableViewer extends AbstractMatchAnalysisTab
 
     private SurvivorshipKeyDefinition createNewSurvivorshipKeyDefinition(String columnName) {
         SurvivorshipKeyDefinition skd = RulesFactory.eINSTANCE.createSurvivorshipKeyDefinition();
-        skd.setName(StringUtils.EMPTY);
+        skd.setName(columnName);
         AlgorithmDefinition createAlgorithmDefinition = RulesFactory.eINSTANCE.createAlgorithmDefinition();
         createAlgorithmDefinition.setAlgorithmType(SurvivorShipAlgorithmEnum.getTypeByIndex(0).getValue());
         createAlgorithmDefinition.setAlgorithmParameters(StringUtils.EMPTY);
