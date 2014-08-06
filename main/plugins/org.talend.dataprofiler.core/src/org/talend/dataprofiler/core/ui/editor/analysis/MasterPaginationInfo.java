@@ -42,8 +42,10 @@ import org.talend.dataprofiler.core.ui.events.DynamicChartEventReceiver;
 import org.talend.dataprofiler.core.ui.events.EventEnum;
 import org.talend.dataprofiler.core.ui.events.EventManager;
 import org.talend.dataprofiler.core.ui.events.IEventReceiver;
+import org.talend.dataprofiler.core.ui.pref.EditorPreferencePage;
 import org.talend.dataprofiler.core.ui.utils.AnalysisUtils;
 import org.talend.dataprofiler.core.ui.utils.pagination.UIPagination;
+import org.talend.dataquality.analysis.ExecutionLanguage;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dq.indicators.preview.EIndicatorChartType;
 
@@ -55,6 +57,9 @@ public class MasterPaginationInfo extends IndicatorPaginationInfo {
     private List<ExpandableComposite> previewChartList;
 
     private AnalysisColumnTreeViewer treeViewer;
+
+    // Added TDQ-9272 20140806, use the Dynamic model for SQL mode only, Java mode will not use it.
+    private boolean isSQLMode = true;
 
     public MasterPaginationInfo(ScrolledForm form, List<ExpandableComposite> previewChartList,
             List<? extends ModelElementIndicator> modelElementIndicators, UIPagination uiPagination) {
@@ -68,6 +73,9 @@ public class MasterPaginationInfo extends IndicatorPaginationInfo {
         this.previewChartList = previewChartList;
         if (treeViewer != null) {
             this.treeViewer = treeViewer;
+            if (ExecutionLanguage.JAVA.equals(treeViewer.getLanguage())) {
+                isSQLMode = false;
+            }
         }
     }
 
@@ -84,6 +92,10 @@ public class MasterPaginationInfo extends IndicatorPaginationInfo {
         }
         previewChartList.clear();
         clearDynamicList();
+
+        if (EditorPreferencePage.isHideGraphics()) {
+            return;
+        }
         for (final ModelElementIndicator modelElementIndicator : modelElementIndicators) {
             ExpandableComposite exComp = uiPagination.getToolkit().createExpandableComposite(uiPagination.getChartComposite(),
                     ExpandableComposite.TREE_NODE | ExpandableComposite.CLIENT_INDENT);
@@ -155,20 +167,22 @@ public class MasterPaginationInfo extends IndicatorPaginationInfo {
         }
         ChartDecorator.decorate(chart, null);
 
+        final ChartComposite chartComp = new TalendChartComposite(comp, SWT.NONE, chart, true);
+
         List<Indicator> indicators = getIndicators(units);
-        DynamicIndicatorModel dyModel = AnalysisUtils.createDynamicModel(chartType, indicators, chart);
-        if (EIndicatorChartType.SUMMARY_STATISTICS.equals(chartType)) {
-            if (indicators.size() == SummaryStatisticsState.FULL_FLAG) {
-                indicators = getIndicatorsForTable(units, false);
+        if (isSQLMode) {// use the dynamic model for SQL mode only.
+            DynamicIndicatorModel dyModel = AnalysisUtils.createDynamicModel(chartType, indicators, chart);
+            if (EIndicatorChartType.SUMMARY_STATISTICS.equals(chartType)) {
+                if (indicators.size() == SummaryStatisticsState.FULL_FLAG) {
+                    indicators = getIndicatorsForTable(units, false);
+                }
                 dyModel.setSummaryIndicators(indicators);
             }
-        }
-        this.dynamicList.add(dyModel);
-
-        final ChartComposite chartComp = new TalendChartComposite(comp, SWT.NONE, chart, true);
-        if (EIndicatorChartType.SUMMARY_STATISTICS.equals(chartType)) {
-            // for summary indicators: need to record the chart composite, which is used for create BAW chart
-            dyModel.setBawParentChartComp((TalendChartComposite) chartComp);
+            this.dynamicList.add(dyModel);
+            if (EIndicatorChartType.SUMMARY_STATISTICS.equals(chartType)) {
+                // for summary indicators: need to record the chart composite, which is used for create BAW chart
+                dyModel.setBawParentChartComp((TalendChartComposite) chartComp);
+            }
         }
         GridData gd = new GridData();
         gd.widthHint = PluginConstant.CHART_STANDARD_WIDHT;

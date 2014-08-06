@@ -278,8 +278,10 @@ public abstract class DynamicAnalysisMasterPage extends AbstractAnalysisMetadata
     }
 
     public void reLayoutChartComposite() {
-        chartComposite.getParent().layout();
-        chartComposite.layout();
+        if (chartComposite != null) {
+            chartComposite.getParent().layout();
+            chartComposite.layout();
+        }
     }
 
     /**

@@ -135,12 +135,16 @@ public class DynamicBAWChartEventReceiver extends DynamicChartEventReceiver {
      */
     private void updateValueOfIRQAndRange() {
         if (this.getTableViewer() != null) {
-            Object indicatorValue = IndicatorCommonUtil.getIndicatorValue(IRQIndicator);
-            String str = indicatorValue == null ? String.valueOf(Double.NaN) : String.valueOf(indicatorValue);
-            IRQIndicatorEvent.refreshTable(str);
-            indicatorValue = IndicatorCommonUtil.getIndicatorValue(rangeIndicator);
-            str = indicatorValue == null ? String.valueOf(Double.NaN) : String.valueOf(indicatorValue);
-            rangeIndicatorEvent.refreshTable(str);
+            if (IRQIndicator != null) {
+                Object indicatorValue = IndicatorCommonUtil.getIndicatorValue(IRQIndicator);
+                String str = indicatorValue == null ? String.valueOf(Double.NaN) : String.valueOf(indicatorValue);
+                IRQIndicatorEvent.refreshTable(str);
+            }
+            if (rangeIndicator != null) {
+                Object indicatorValue = IndicatorCommonUtil.getIndicatorValue(rangeIndicator);
+                String str = indicatorValue == null ? String.valueOf(Double.NaN) : String.valueOf(indicatorValue);
+                rangeIndicatorEvent.refreshTable(str);
+            }
         }
     }
 

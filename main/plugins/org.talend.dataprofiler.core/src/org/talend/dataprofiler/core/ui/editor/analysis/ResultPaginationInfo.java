@@ -55,6 +55,7 @@ import org.talend.dataprofiler.core.model.ModelElementIndicator;
 import org.talend.dataprofiler.core.model.dynamic.DynamicIndicatorModel;
 import org.talend.dataprofiler.core.ui.chart.TalendChartComposite;
 import org.talend.dataprofiler.core.ui.editor.analysis.drilldown.DrillDownEditorInput;
+import org.talend.dataprofiler.core.ui.editor.composite.AnalysisColumnTreeViewer;
 import org.talend.dataprofiler.core.ui.editor.preview.CompositeIndicator;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
 import org.talend.dataprofiler.core.ui.editor.preview.model.ChartTableFactory;
@@ -95,10 +96,19 @@ public class ResultPaginationInfo extends IndicatorPaginationInfo {
     // Added TDQ-8787 20140617 yyin : store the temp indicator and its related table between one running
     private Map<List<Indicator>, TableViewer> indicatorTableMap = new HashMap<List<Indicator>, TableViewer>();
 
+    // Added TDQ-9272 20140806, only use the Dynamic model for SQL mode.
+    private boolean isSQLMode = true;
+
     public ResultPaginationInfo(ScrolledForm form, List<? extends ModelElementIndicator> modelElementIndicators,
             ColumnMasterDetailsPage masterPage, UIPagination uiPagination) {
         super(form, modelElementIndicators, uiPagination);
         this.masterPage = masterPage;
+        if (masterPage.getTreeViewer() != null) {
+            ExecutionLanguage language = ((AnalysisColumnTreeViewer) masterPage.getTreeViewer()).getLanguage();
+            if (ExecutionLanguage.JAVA.equals(language)) {
+                isSQLMode = false;
+            }
+        }
     }
 
     @Override
@@ -198,7 +208,8 @@ public class ResultPaginationInfo extends IndicatorPaginationInfo {
         if (!EditorPreferencePage.isHideGraphics()) {
             if (event == null) {
                 chart = chartTypeState.getChart();
-                if (chart != null) {// chart is null for MODE
+                if (chart != null && isSQLMode) {// chart is null for MODE. Get the dataset by this way for SQL mode
+                                                 // only.
                     if (EIndicatorChartType.BENFORD_LAW_STATISTICS.equals(chartType)) {
                         // indicatorDatasetMap.put(getIndicators(units), chart.getCategoryPlot().getDataset(0));
                         dataset = chart.getCategoryPlot().getDataset(1);
