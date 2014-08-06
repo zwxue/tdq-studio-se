@@ -400,7 +400,7 @@ public class ExecuteMatchRuleHandler {
                 if (dataTypeName.equals(defSurvDef.getDataType())) {
                     putNewSurvFunc(columnMap, survivorShipAlgorithmParams, defaultSurvRules, metaColumn, defSurvDef);
                     break;
-                } else if (defSurvDef.getDataType().equals("Number") || isNumber(dataTypeName)) { //$NON-NLS-1$
+                } else if (defSurvDef.getDataType().equals("Number") && isNumber(dataTypeName)) { //$NON-NLS-1$
                     putNewSurvFunc(columnMap, survivorShipAlgorithmParams, defaultSurvRules, metaColumn, defSurvDef);
                     break;
 
