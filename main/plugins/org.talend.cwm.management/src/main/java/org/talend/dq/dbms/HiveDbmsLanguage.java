@@ -158,10 +158,21 @@ public class HiveDbmsLanguage extends DbmsLanguage {
         if (indicator instanceof BenfordLawFrequencyIndicator) {
             int javaType = tdColumn.getSqlDataType().getJavaDataType();
             if (Java2SqlType.isNumbericInSQL(javaType)) {
-                return "CAST(" + colName + " AS string)"; //$NON-NLS-1$ //$NON-NLS-2$
+                return castColumnNameToChar(colName);
             }
         }
         return super.castColumn4ColumnAnalysisSqlExecutor(indicator, tdColumn, colName);
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dq.dbms.DbmsLanguage#castColumnNameToChar(java.lang.String)
+     */
+    @Override
+    public String castColumnNameToChar(String columnName) {
+        // for impala, int type can not be used for string method,
+        return "CAST(" + columnName + " AS String)";//$NON-NLS-1$ //$NON-NLS-2$
     }
 
 }
