@@ -28,7 +28,7 @@ import org.talend.dataquality.record.linkage.record.IRecordMatcher;
 import org.talend.dataquality.record.linkage.utils.SurvivorShipAlgorithmEnum;
 
 /**
- * created by zhao on Jul 9, 2014 the merger which adapt to incorporate DQ specific grouing information.
+ * created by zhao on Jul 9, 2014 the merger which adapt to incorporate DQ specific grouping information.
  * 
  */
 public class DQMFBRecordMerger extends MFBRecordMerger {

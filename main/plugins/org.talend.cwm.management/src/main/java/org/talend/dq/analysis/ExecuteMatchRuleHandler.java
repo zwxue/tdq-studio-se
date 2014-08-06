@@ -24,7 +24,6 @@ import org.apache.commons.lang.StringUtils;
 import org.talend.commons.exception.BusinessException;
 import org.talend.core.model.metadata.builder.connection.MetadataColumn;
 import org.talend.cwm.management.i18n.Messages;
-import org.talend.cwm.relational.TdColumn;
 import org.talend.dataquality.PluginConstant;
 import org.talend.dataquality.indicators.columnset.BlockKeyIndicator;
 import org.talend.dataquality.indicators.columnset.RecordMatchingIndicator;
@@ -396,18 +395,12 @@ public class ExecuteMatchRuleHandler {
         Map<Integer, SurvivorshipFunction> defaultSurvRules = new HashMap<Integer, SurvivorshipFunction>();
 
         for (MetadataColumn metaColumn : columnMap.keySet()) {
-            String dataTypeName = null;
-            if (metaColumn instanceof TdColumn) {
-                dataTypeName = ((TdColumn) metaColumn).getSqlDataType().getName();
-            } else {
-                // No data type, use string by default.
-                dataTypeName = TalendTypeConvert.convertToJavaType(metaColumn.getTalendType());
-            }
+            String dataTypeName = TalendTypeConvert.convertToJavaType(metaColumn.getTalendType());
             for (DefaultSurvivorshipDefinition defSurvDef : defSurvDefs) {
                 if (dataTypeName.equals(defSurvDef.getDataType())) {
                     putNewSurvFunc(columnMap, survivorShipAlgorithmParams, defaultSurvRules, metaColumn, defSurvDef);
                     break;
-                } else if (defSurvDef.getDataType().equals("Number") && isNumber(dataTypeName)) { //$NON-NLS-1$
+                } else if (defSurvDef.getDataType().equals("Number") || isNumber(dataTypeName)) { //$NON-NLS-1$
                     putNewSurvFunc(columnMap, survivorShipAlgorithmParams, defaultSurvRules, metaColumn, defSurvDef);
                     break;
 
