@@ -216,8 +216,8 @@ public class ColumnAnalysisResultPage extends AbstractAnalysisResultPage impleme
                         oneCategoryIndicatorModel, categoryDataset, eventReceivers);
                 bawReceiver.setChartComposite(chartComposite);
                 bawReceiver.setTableViewer(tableViewer);
-                // register the parent baw receiver with one of summary indicator, no need to handle baw actually
-                registerIndicatorEvent(oneCategoryIndicatorModel.getIndicatorList().get(0), bawReceiver);
+                // no need to register the parent baw receiver with one of summary indicator, no need to handle baw
+                // actually
             } else {
                 int index = 0;
                 for (Indicator oneIndicator : oneCategoryIndicatorModel.getIndicatorList()) {

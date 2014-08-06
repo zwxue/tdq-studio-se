@@ -173,7 +173,7 @@ public class MasterPaginationInfo extends IndicatorPaginationInfo {
         if (isSQLMode) {// use the dynamic model for SQL mode only.
             DynamicIndicatorModel dyModel = AnalysisUtils.createDynamicModel(chartType, indicators, chart);
             if (EIndicatorChartType.SUMMARY_STATISTICS.equals(chartType)) {
-                if (indicators.size() == SummaryStatisticsState.FULL_FLAG) {
+                if (units.size() == SummaryStatisticsState.FULL_FLAG) {
                     indicators = getIndicatorsForTable(units, false);
                 }
                 dyModel.setSummaryIndicators(indicators);

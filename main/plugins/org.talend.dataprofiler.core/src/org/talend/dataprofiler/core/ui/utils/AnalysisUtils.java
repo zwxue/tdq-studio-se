@@ -28,6 +28,7 @@ import org.jfree.data.category.CategoryDataset;
 import org.talend.commons.emf.FactoriesUtil;
 import org.talend.dataprofiler.core.model.dynamic.DynamicIndicatorModel;
 import org.talend.dataprofiler.core.ui.editor.preview.model.dataset.CustomerDefaultBAWDataset;
+import org.talend.dataprofiler.core.ui.editor.preview.model.states.SummaryStatisticsState;
 import org.talend.dataprofiler.core.ui.events.BenfordFrequencyDynamicChartEventReceiver;
 import org.talend.dataprofiler.core.ui.events.DynamicBAWChartEventReceiver;
 import org.talend.dataprofiler.core.ui.events.DynamicChartEventReceiver;
@@ -237,11 +238,15 @@ public class AnalysisUtils {
         bawReceiver.setBAWparentComposite(oneCategoryIndicatorModel.getBawParentChartComp());
         bawReceiver.setTableViewer(oneCategoryIndicatorModel.getTableViewer());
         int index = 0;
+        int length = oneCategoryIndicatorModel.getSummaryIndicators().size();
         for (Indicator oneIndicator : oneCategoryIndicatorModel.getSummaryIndicators()) {
             DynamicChartEventReceiver eReceiver = bawReceiver.createEventReceiver(
                     IndicatorEnum.findIndicatorEnum(oneIndicator.eClass()), oneIndicator);
             eReceiver.setTableViewer(oneCategoryIndicatorModel.getTableViewer());
             eReceiver.setEntityIndex(index++);
+            if (SummaryStatisticsState.FULL_FLAG != length) {
+                eReceiver.setDataset(categoryDataset);
+            }
             eReceiver.clearValue();
             eventReceivers.put(oneIndicator, eReceiver);
             EventManager.getInstance().register(oneIndicator, EventEnum.DQ_DYMANIC_CHART, eReceiver);
