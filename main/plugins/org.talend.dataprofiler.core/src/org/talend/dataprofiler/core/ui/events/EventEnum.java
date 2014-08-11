@@ -26,6 +26,8 @@ public enum EventEnum {
     DQ_SOFTWARESYSTEM_UPDATE,
     DQ_MATCH_ANALYSIS_AFTER_CREATE_CONNECTION,
     DQ_MATCH_ANALYSIS_REFRESH_WITH_RESULT,
+    // REFRESH db connection label in match analysis.
+    DQ_MATCH_ANALYSIS_REFRESH_DATAPROVIDER_LABEL,
     // ONLY REFRESH the db list in combobox
     DQ_ANALYSIS_REFRESH_DATAPROVIDER_LIST,
     // reopen the related analysis after reload connection

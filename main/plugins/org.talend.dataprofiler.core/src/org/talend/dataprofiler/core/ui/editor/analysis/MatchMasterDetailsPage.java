@@ -158,6 +158,8 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
 
     private String analyzeDataDefaultInfo;
 
+    private EventReceiver refreshDataProiverLabel = null;
+
     /**
      * MatchMasterDetailsPage constructor.
      * 
@@ -368,9 +370,23 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
         GridLayout layout = new GridLayout(2, Boolean.TRUE);
         titleComposite.setLayout(layout);
         analyzeDataLabel = new Label(titleComposite, SWT.NONE);
-        if (analysisHandler.getAnalyzedColumns().size() > 0) {
-            RepositoryNode node = RepositoryNodeHelper.recursiveFind(analysisHandler.getAnalyzedColumns().get(0));
-            updateAnalyzeDataLabel(node);
+        final RepositoryNode firstColumnNode = analysisHandler.getAnalyzedColumns().size() > 0 ? RepositoryNodeHelper
+                .recursiveFind(analysisHandler.getAnalyzedColumns().get(0)) : null;
+        // register: refresh the dataprovider combobox when the name of the data provider is changed.
+        refreshDataProiverLabel = new EventReceiver() {
+
+            @Override
+            public boolean handle(Object data) {
+                if (firstColumnNode != null) {
+                    updateAnalyzeDataLabel(firstColumnNode);
+                }
+                return true;
+            }
+        };
+        EventManager.getInstance().register(getAnalysis(), EventEnum.DQ_MATCH_ANALYSIS_REFRESH_DATAPROVIDER_LABEL,
+                refreshDataProiverLabel);
+        if (firstColumnNode != null) {
+            updateAnalyzeDataLabel(firstColumnNode);
         } else {
             analyzeDataLabel.setText(analyzeDataDefaultInfo);
         }
@@ -1389,6 +1405,8 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
                 EventEnum.DQ_MATCH_ANALYSIS_AFTER_CREATE_CONNECTION, afterCreateConnectionReceiver);
         EventManager.getInstance().unRegister(analysisHandler.getAnalysis(), EventEnum.DQ_MATCH_ANALYSIS_REFRESH_WITH_RESULT,
                 refreshTableDataReceiver);
+        EventManager.getInstance().unRegister(analysisHandler.getAnalysis(),
+                EventEnum.DQ_MATCH_ANALYSIS_REFRESH_DATAPROVIDER_LABEL, refreshDataProiverLabel);
 
         this.getCurrentModelElement(this.getEditor()).eResource().unload();
         super.dispose();

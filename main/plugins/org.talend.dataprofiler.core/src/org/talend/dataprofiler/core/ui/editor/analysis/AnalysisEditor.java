@@ -476,18 +476,6 @@ public class AnalysisEditor extends SupportContextEditor {
         };
         EventManager.getInstance().register(getMasterPage().getAnalysis(), EventEnum.DQ_ANALYSIS_RUN_FROM_MENU, refreshReceiver);
 
-        // register: refresh the dataprovider combobox when the name of the data provider is changed.
-        refreshDataProvider = new EventReceiver() {
-
-            @Override
-            public boolean handle(Object data) {
-                getMasterPage().reloadDataproviderAndFillConnCombo();
-                return true;
-            }
-        };
-        EventManager.getInstance().register(getMasterPage().getAnalysis(), EventEnum.DQ_ANALYSIS_REFRESH_DATAPROVIDER_LIST,
-                refreshDataProvider);
-
         // register: reopen this editor after reload its depended connection
         reopenEditor = new EventReceiver() {
 
@@ -583,8 +571,6 @@ public class AnalysisEditor extends SupportContextEditor {
                 checkBeforeRunReceiver);
         EventManager.getInstance()
                 .unRegister(getMasterPage().getAnalysis(), EventEnum.DQ_ANALYSIS_RUN_FROM_MENU, refreshReceiver);
-        EventManager.getInstance().unRegister(getMasterPage().getAnalysis(), EventEnum.DQ_ANALYSIS_REFRESH_DATAPROVIDER_LIST,
-                refreshDataProvider);
         EventManager.getInstance().unRegister(getMasterPage().getAnalysis().getName(), EventEnum.DQ_ANALYSIS_REOPEN_EDITOR,
                 reopenEditor);
 
