@@ -26,10 +26,12 @@ public enum EventEnum {
     DQ_SOFTWARESYSTEM_UPDATE,
     DQ_MATCH_ANALYSIS_AFTER_CREATE_CONNECTION,
     DQ_MATCH_ANALYSIS_REFRESH_WITH_RESULT,
+    // REFRESH db connection label in match analysis.
+    DQ_MATCH_ANALYSIS_REFRESH_DATAPROVIDER_LABEL,
     // ONLY REFRESH the db list in combobox
     DQ_ANALYSIS_REFRESH_DATAPROVIDER_LIST,
     // reopen the related analysis after reload connection
     DQ_ANALYSIS_REOPEN_EDITOR,
-    // add msjian 2014-4-30:used to check whether show allmatchindicator in the indicators section for columnset only 
+    // add msjian 2014-4-30:used to check whether show allmatchindicator in the indicators section for columnset only
     DQ_COLUMNSET_SHOW_MATCH_INDICATORS;
 }

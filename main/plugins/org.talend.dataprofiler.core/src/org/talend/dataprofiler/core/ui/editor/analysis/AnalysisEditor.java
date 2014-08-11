@@ -87,9 +87,6 @@ public class AnalysisEditor extends CommonFormEditor {
 
     private EventReceiver checkBeforeRunReceiver = null;
 
-    // Added 20140411 TDQ-8360 yyin
-    private EventReceiver refreshDataProvider = null;
-
     private EventReceiver refresh2ShowMatchIndicator = null;
 
     private EventReceiver reopenEditor = null;
@@ -435,18 +432,6 @@ public class AnalysisEditor extends CommonFormEditor {
         };
         EventManager.getInstance().register(masterPage.getAnalysis(), EventEnum.DQ_ANALYSIS_RUN_FROM_MENU, refreshReceiver);
 
-        // register: refresh the dataprovider combobox when the name of the data provider is changed.
-        refreshDataProvider = new EventReceiver() {
-
-            @Override
-            public boolean handle(Object data) {
-                masterPage.reloadDataproviderAndFillConnCombo();
-                return true;
-            }
-        };
-        EventManager.getInstance().register(masterPage.getAnalysis(), EventEnum.DQ_ANALYSIS_REFRESH_DATAPROVIDER_LIST,
-                refreshDataProvider);
-
         // register: reopen this editor after reload its depended connection
         reopenEditor = new EventReceiver() {
 
@@ -493,8 +478,6 @@ public class AnalysisEditor extends CommonFormEditor {
         EventManager.getInstance().unRegister(masterPage.getAnalysis(), EventEnum.DQ_ANALYSIS_CHECK_BEFORERUN,
                 checkBeforeRunReceiver);
         EventManager.getInstance().unRegister(masterPage.getAnalysis(), EventEnum.DQ_ANALYSIS_RUN_FROM_MENU, refreshReceiver);
-        EventManager.getInstance().unRegister(masterPage.getAnalysis(), EventEnum.DQ_ANALYSIS_REFRESH_DATAPROVIDER_LIST,
-                refreshDataProvider);
         EventManager.getInstance().unRegister(masterPage.getAnalysis().getName(), EventEnum.DQ_ANALYSIS_REOPEN_EDITOR,
                 reopenEditor);
 

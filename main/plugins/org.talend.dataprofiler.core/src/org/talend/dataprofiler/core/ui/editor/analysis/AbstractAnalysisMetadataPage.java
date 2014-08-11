@@ -27,6 +27,8 @@ import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.nebula.widgets.tablecombo.TableCombo;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.DisposeEvent;
+import org.eclipse.swt.events.DisposeListener;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionEvent;
@@ -58,6 +60,9 @@ import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.ui.IRuningStatusListener;
 import org.talend.dataprofiler.core.ui.editor.AbstractMetadataFormPage;
 import org.talend.dataprofiler.core.ui.editor.composite.AbstractColumnDropTree;
+import org.talend.dataprofiler.core.ui.events.EventEnum;
+import org.talend.dataprofiler.core.ui.events.EventManager;
+import org.talend.dataprofiler.core.ui.events.EventReceiver;
 import org.talend.dataprofiler.core.ui.utils.AnalysisUtils;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.ExecutionLanguage;
@@ -92,6 +97,8 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
     protected AnalysisRepNode analysisRepNode;
 
     protected Section analysisParamSection;
+
+    private EventReceiver refreshDataProvider = null;
 
     public AnalysisRepNode getAnalysisRepNode() {
         return this.analysisRepNode;
@@ -267,6 +274,25 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
         connCombo.setBackground(Display.getDefault().getSystemColor(SWT.COLOR_LIST_BACKGROUND));
         // TDQ-5184~
         GridDataFactory.fillDefaults().align(SWT.FILL, SWT.TOP).applyTo(labelButtonClient);
+        // register: refresh the dataprovider combobox when the name of the data provider is changed.
+        refreshDataProvider = new EventReceiver() {
+
+            @Override
+            public boolean handle(Object data) {
+                reloadDataproviderAndFillConnCombo();
+                return true;
+            }
+        };
+        EventManager.getInstance().register(getAnalysis(), EventEnum.DQ_ANALYSIS_REFRESH_DATAPROVIDER_LIST, refreshDataProvider);
+
+        connCombo.addDisposeListener(new DisposeListener() {
+
+            public void widgetDisposed(DisposeEvent e) {
+                EventManager.getInstance().unRegister(getAnalysis(), EventEnum.DQ_ANALYSIS_REFRESH_DATAPROVIDER_LIST,
+                        refreshDataProvider);
+
+            }
+        });
         reloadDataproviderAndFillConnCombo();
         // ~
         createConnVersionText(labelButtonClient);
