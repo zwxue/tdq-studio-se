@@ -175,4 +175,15 @@ public class HiveDbmsLanguage extends DbmsLanguage {
         return "CAST(" + columnName + " AS String)";//$NON-NLS-1$ //$NON-NLS-2$
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dq.dbms.DbmsLanguage#getInvalidClauseBenFord(java.lang.String)
+     */
+    @Override
+    public String getInvalidClauseBenFord(String columnName) {
+        // for impala, int type can not be used for REGEXP method
+        return super.getInvalidClauseBenFord(castColumnNameToChar(columnName));
+    }
+
 }
