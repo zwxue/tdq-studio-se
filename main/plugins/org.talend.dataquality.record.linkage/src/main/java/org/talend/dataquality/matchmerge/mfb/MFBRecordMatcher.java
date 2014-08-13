@@ -92,7 +92,7 @@ public class MFBRecordMatcher implements IRecordMatcher {
             Attribute right = currentRecordAttributes.next();
             IAttributeMatcher matcher = attributeMatchers[matchIndex];
             // Find the first score to exceed threshold (if any).
-            double score = matchScore(left.allValues(), right.allValues(), matcher);
+            double score = matchScore(left, right, matcher);
             result.setScore(matchIndex, matcher.getMatchType(), score, left.getValue(), right.getValue());
             result.setThreshold(matchIndex, matcher.getThreshold());
             confidence += score * matcher.getWeight();
@@ -112,14 +112,25 @@ public class MFBRecordMatcher implements IRecordMatcher {
         return result;
     }
 
-    private static double matchScore(Iterator<String> leftValues, Iterator<String> rightValues, IAttributeMatcher matcher) {
+    private static double matchScore(Attribute leftAttribute, Attribute rightAttribute, IAttributeMatcher matcher) {
         // Find the best score in values
+        // 1- Try first values
+        String left = leftAttribute.getValue();
+        String right = rightAttribute.getValue();
+        double score = matcher.getMatchingWeight(left, right);
+        if (score >= matcher.getThreshold()) {
+            return score;
+        }
+        // 2- Compare using values that build attribute value (if any)
+        Iterator<String> leftValues = leftAttribute.getValues().iterator();
+        Iterator<String> rightValues = rightAttribute.getValues().iterator();
         double maxScore = 0;
+        String leftValue = left;
         while (leftValues.hasNext()) {
-            String leftValue = leftValues.next();
+            leftValue = leftValues.next();
             while (rightValues.hasNext()) {
                 String rightValue = rightValues.next();
-                double score = matcher.getMatchingWeight(leftValue, rightValue);
+                score = matcher.getMatchingWeight(leftValue, rightValue);
                 if (score > maxScore) {
                     maxScore = score;
                 }
@@ -127,6 +138,18 @@ public class MFBRecordMatcher implements IRecordMatcher {
                     // Can't go higher, no need to perform other checks.
                     return maxScore;
                 }
+            }
+        }
+        // Process remaining values in right (if any).
+        while (rightValues.hasNext()) {
+            String rightValue = rightValues.next();
+            score = matcher.getMatchingWeight(leftValue, rightValue);
+            if (score > maxScore) {
+                maxScore = score;
+            }
+            if (maxScore == MAX_SCORE) {
+                // Can't go higher, no need to perform other checks.
+                return maxScore;
             }
         }
         return maxScore;

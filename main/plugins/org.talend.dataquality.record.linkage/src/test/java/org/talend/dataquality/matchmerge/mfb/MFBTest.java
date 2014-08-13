@@ -17,6 +17,7 @@ import java.util.Map;
 
 import junit.framework.TestCase;
 
+import org.talend.dataquality.matchmerge.Attribute;
 import org.talend.dataquality.matchmerge.MatchMergeAlgorithm;
 import org.talend.dataquality.matchmerge.Record;
 import org.talend.dataquality.matchmerge.SubString;
@@ -46,11 +47,6 @@ public class MFBTest extends TestCase {
 
             int index = 0;
 
-            /*
-             * (non-Javadoc)
-             * 
-             * @see org.talend.dataquality.matchmerge.mfb.RecordIterator.ValueGenerator#getColumnIndex()
-             */
             @Override
             public int getColumnIndex() {
                 return index;
@@ -74,6 +70,47 @@ public class MFBTest extends TestCase {
             assertEquals(Math.round(totalCount / constantNumber), mergedRecord.getRelatedIds().size());
         }
     }
+    
+    private static void testConcatenateParameter(final int constantNumber, int totalCount, AttributeMatcherType matchAlgorithm,
+            String separator) {
+        Map<String, ValueGenerator> generators = new HashMap<String, ValueGenerator>();
+        generators.put("name", new ValueGenerator() {
+
+            int index = 0;
+
+            @Override
+            public int getColumnIndex() {
+                return index;
+            }
+
+            @Override
+            public String newValue() {
+                return CONSTANTS[index++ % constantNumber];
+            }
+        });
+        RecordGenerator recordGenerator = new RecordGenerator();
+        recordGenerator.setMatchKeyMap(generators);
+        Iterator<Record> iterator = new RecordIterator(totalCount, recordGenerator);
+        MatchMergeAlgorithm algorithm = MFB.build(new AttributeMatcherType[] { matchAlgorithm }, new String[] { "" },
+                new float[] { 1 }, 0, new SurvivorShipAlgorithmEnum[] { SurvivorShipAlgorithmEnum.CONCATENATE },
+                new String[] { separator }, new double[] { 1 },
+                new IAttributeMatcher.NullOption[] { IAttributeMatcher.NullOption.nullMatchAll },
+                new SubString[] { SubString.NO_SUBSTRING }, "MFB");
+        List<Record> mergedRecords = algorithm.execute(iterator);
+        assertEquals(constantNumber, mergedRecords.size());
+        int i = 0;
+        for (Record mergedRecord : mergedRecords) {
+            int relatedIdCount = mergedRecord.getRelatedIds().size();
+            int length = separator == null ? 0 : separator.length();
+            int spaceCount = ((relatedIdCount - 1) * length);
+            List<Attribute> attributes = mergedRecord.getAttributes();
+            assertEquals(Math.round(totalCount / constantNumber), relatedIdCount);
+            assertEquals(1, attributes.size());
+            Attribute attribute = attributes.get(0);
+            assertEquals((CONSTANTS[i].length() * relatedIdCount) + spaceCount, attribute.getValue().length());
+            i++;
+        }
+    }
 
     private static void testSimilar(final int similarNumber, int totalCount, AttributeMatcherType matchAlgorithm) {
         Map<String, ValueGenerator> generators = new HashMap<String, ValueGenerator>();
@@ -81,11 +118,6 @@ public class MFBTest extends TestCase {
 
             int index = 0;
 
-            /*
-             * (non-Javadoc)
-             * 
-             * @see org.talend.dataquality.matchmerge.mfb.RecordIterator.ValueGenerator#getColumnIndex()
-             */
             @Override
             public int getColumnIndex() {
                 return index;
@@ -117,11 +149,6 @@ public class MFBTest extends TestCase {
 
             int index = 0;
 
-            /*
-             * (non-Javadoc)
-             * 
-             * @see org.talend.dataquality.matchmerge.mfb.RecordIterator.ValueGenerator#getColumnIndex()
-             */
             @Override
             public int getColumnIndex() {
                 return index;
@@ -206,6 +233,24 @@ public class MFBTest extends TestCase {
             testConstant(2, COUNT, matchAlgorithm);
             testConstant(4, COUNT, matchAlgorithm);
             testConstant(8, COUNT, matchAlgorithm);
+        }
+    }
+    
+    public void testConcatenateParameter() throws Exception {
+        for (AttributeMatcherType matchAlgorithm : TESTS_MATCH) {
+            testConcatenateParameter(1, COUNT, matchAlgorithm, null); // Argument test
+        }
+        for (AttributeMatcherType matchAlgorithm : TESTS_MATCH) {
+            testConcatenateParameter(1, COUNT, matchAlgorithm, "");
+            testConcatenateParameter(2, COUNT, matchAlgorithm, "");
+            testConcatenateParameter(4, COUNT, matchAlgorithm, "");
+            testConcatenateParameter(8, COUNT, matchAlgorithm, "");
+        }
+        for (AttributeMatcherType matchAlgorithm : TESTS_MATCH) {
+            testConcatenateParameter(1, COUNT, matchAlgorithm, " / ");
+            testConcatenateParameter(2, COUNT, matchAlgorithm, " / ");
+            testConcatenateParameter(4, COUNT, matchAlgorithm, " / ");
+            testConcatenateParameter(8, COUNT, matchAlgorithm, " / ");
         }
     }
 
