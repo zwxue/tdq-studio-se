@@ -26,6 +26,8 @@ import java.util.Map;
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.runtime.FileLocator;
 import org.junit.Test;
+import org.talend.core.model.metadata.builder.connection.ConnectionFactory;
+import org.talend.core.model.metadata.builder.connection.MetadataColumn;
 import org.talend.dataquality.indicators.columnset.ColumnsetPackage;
 import org.talend.dataquality.indicators.columnset.RecordMatchingIndicator;
 import org.talend.dataquality.rules.AppliedBlockKey;
@@ -49,13 +51,23 @@ public class StoreOnDiskHandlerTest {
             { "yyin", "Talend BJ", "yyin@talend.com", "China", "Jianguomen wai Avenue" },
             { "sizhaoliu", "Talend FR", "sizhaoliu@talend.com", "France", "freedom street" } };
 
-    private static Map<String, String> columnMap = new HashMap<String, String>();
+    private static Map<MetadataColumn, String> columnMap = new HashMap<MetadataColumn, String>();
     static {
-        columnMap.put("name", "0");
-        columnMap.put("company", "1");
-        columnMap.put("email", "2");
-        columnMap.put("country", "3");
-        columnMap.put("address", "4");
+        MetadataColumn col1 = ConnectionFactory.eINSTANCE.createMetadataColumn();
+        col1.setName("name");
+        columnMap.put(col1, "0");
+        MetadataColumn col2 = ConnectionFactory.eINSTANCE.createMetadataColumn();
+        col2.setName("company");
+        columnMap.put(col2, "1");
+        MetadataColumn col3 = ConnectionFactory.eINSTANCE.createMetadataColumn();
+        col3.setName("email");
+        columnMap.put(col3, "2");
+        MetadataColumn col4 = ConnectionFactory.eINSTANCE.createMetadataColumn();
+        col4.setName("country");
+        columnMap.put(col4, "3");
+        MetadataColumn col5 = ConnectionFactory.eINSTANCE.createMetadataColumn();
+        col5.setName("address");
+        columnMap.put(col5, "4");
     }
 
     /**

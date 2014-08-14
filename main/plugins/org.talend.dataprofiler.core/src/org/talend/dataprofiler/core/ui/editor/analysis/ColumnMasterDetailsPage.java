@@ -17,7 +17,6 @@ import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.jface.dialogs.MessageDialogWithToggle;
@@ -43,7 +42,6 @@ import org.eclipse.ui.forms.widgets.Hyperlink;
 import org.eclipse.ui.forms.widgets.ImageHyperlink;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
-import org.jfree.data.category.CategoryDataset;
 import org.talend.core.model.metadata.MetadataColumnRepositoryObject;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.core.model.metadata.builder.connection.MetadataColumn;
@@ -58,7 +56,7 @@ import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.helper.ModelElementIndicatorHelper;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.model.ModelElementIndicator;
-import org.talend.dataprofiler.core.ui.chart.TalendChartComposite;
+import org.talend.dataprofiler.core.model.dynamic.DynamicIndicatorModel;
 import org.talend.dataprofiler.core.ui.dialog.ColumnsSelectionDialog;
 import org.talend.dataprofiler.core.ui.editor.composite.AbstractColumnDropTree;
 import org.talend.dataprofiler.core.ui.editor.composite.AnalysisColumnTreeViewer;
@@ -198,17 +196,17 @@ public class ColumnMasterDetailsPage extends DynamicAnalysisMasterPage implement
         }
     }
 
-    void createAnalysisColumnsSection(final ScrolledForm form, Composite anasisDataComp) {
-        analysisColumnSection = createSection(form, anasisDataComp,
+    void createAnalysisColumnsSection(final ScrolledForm form1, Composite anasisDataComp) {
+        analysisColumnSection = createSection(form1, anasisDataComp,
                 DefaultMessagesImpl.getString("ColumnMasterDetailsPage.analyzeColumn"), null); //$NON-NLS-1$
 
-        Composite topComp = toolkit.createComposite(analysisColumnSection, SWT.NONE);
-        topComp.setLayout(new GridLayout());
+        Composite topComp1 = toolkit.createComposite(analysisColumnSection, SWT.NONE);
+        topComp1.setLayout(new GridLayout());
         // ~ MOD mzhao 2009-05-05,Bug 6587.
-        createConnBindWidget(topComp);
+        createConnBindWidget(topComp1);
         // ~
 
-        Hyperlink clmnBtn = toolkit.createHyperlink(topComp,
+        Hyperlink clmnBtn = toolkit.createHyperlink(topComp1,
                 DefaultMessagesImpl.getString("ColumnMasterDetailsPage.selectColumn"), SWT.NONE); //$NON-NLS-1$
         GridDataFactory.fillDefaults().align(SWT.FILL, SWT.TOP).applyTo(clmnBtn);
         clmnBtn.addHyperlinkListener(new HyperlinkAdapter() {
@@ -220,7 +218,7 @@ public class ColumnMasterDetailsPage extends DynamicAnalysisMasterPage implement
 
         });
 
-        Hyperlink indcBtn = toolkit.createHyperlink(topComp,
+        Hyperlink indcBtn = toolkit.createHyperlink(topComp1,
                 DefaultMessagesImpl.getString("ColumnMasterDetailsPage.selectIndicator"), SWT.NONE); //$NON-NLS-1$
         GridDataFactory.fillDefaults().align(SWT.FILL, SWT.TOP).applyTo(indcBtn);
         indcBtn.addHyperlinkListener(new HyperlinkAdapter() {
@@ -233,7 +231,7 @@ public class ColumnMasterDetailsPage extends DynamicAnalysisMasterPage implement
 
         });
 
-        Composite actionBarComp = toolkit.createComposite(topComp, SWT.NONE);
+        Composite actionBarComp = toolkit.createComposite(topComp1, SWT.NONE);
         GridLayout gdLayout = new GridLayout();
         gdLayout.numColumns = 3;
         GridData data = new GridData();
@@ -272,17 +270,17 @@ public class ColumnMasterDetailsPage extends DynamicAnalysisMasterPage implement
         navigationComposite.setLayoutData(data);
         navigationComposite.setLayout(new GridLayout());
 
-        createPaginationTree(topComp);
-        analysisColumnSection.setClient(topComp);
+        createPaginationTree(topComp1);
+        analysisColumnSection.setClient(topComp1);
     }
 
     /**
      * DOC zshen Comment method "createPaginationTree".
      * 
-     * @param topComp
+     * @param topComp1
      */
-    private void createPaginationTree(Composite topComp) {
-        tree = toolkit.createComposite(topComp, SWT.NONE);
+    private void createPaginationTree(Composite topComp1) {
+        tree = toolkit.createComposite(topComp1, SWT.NONE);
 
         GridDataFactory.fillDefaults().align(SWT.FILL, SWT.FILL).grab(true, true).applyTo(tree);
         tree.setLayout(new GridLayout());
@@ -420,7 +418,7 @@ public class ColumnMasterDetailsPage extends DynamicAnalysisMasterPage implement
     }
 
     @Override
-    public void createPreviewCharts(final ScrolledForm form, final Composite composite) {
+    public void createPreviewCharts(final ScrolledForm form1, final Composite composite) {
         uiPagination.setChartComposite(composite);
         uiPagination.init();
 
@@ -430,7 +428,7 @@ public class ColumnMasterDetailsPage extends DynamicAnalysisMasterPage implement
 
         composite.layout();
         composite.pack();
-        form.reflow(true);
+        form1.reflow(true);
     }
 
     @Override
@@ -888,12 +886,12 @@ public class ColumnMasterDetailsPage extends DynamicAnalysisMasterPage implement
 
     @Override
     String getExpandString() {
-        return DefaultMessagesImpl.getString("ExpandAllColumns");
+        return DefaultMessagesImpl.getString("ExpandAllColumns"); //$NON-NLS-1$
     }
 
     @Override
     String getCollapseAllString() {
-        return DefaultMessagesImpl.getString("CollapseAllColumns");
+        return DefaultMessagesImpl.getString("CollapseAllColumns"); //$NON-NLS-1$
     }
 
     /**
@@ -901,7 +899,7 @@ public class ColumnMasterDetailsPage extends DynamicAnalysisMasterPage implement
      * to return. TODO check if can use IndicatorUnit
      */
     @Override
-    public Map<List<Indicator>, CategoryDataset> getDynamicDatasets() {
+    public List<DynamicIndicatorModel> getDynamicDatasets() {
         return uiPagination.getAllIndcatorAndDatasetOfCurrentPage();
     }
 
@@ -912,11 +910,6 @@ public class ColumnMasterDetailsPage extends DynamicAnalysisMasterPage implement
     public void clearDynamicDatasets() {
         uiPagination.clearAllDynamicMapOfCurrentPage();
         super.clearDynamicDatasets();
-    }
-
-    @Override
-    public Map<List<Indicator>, TalendChartComposite> getBAWparentComposite() {
-        return uiPagination.getBAWparentComposite();
     }
 
 }

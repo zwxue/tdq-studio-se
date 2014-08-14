@@ -31,6 +31,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
+import org.talend.core.model.metadata.builder.connection.MetadataColumn;
 import org.talend.dataquality.PluginConstant;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.indicators.columnset.RecordMatchingIndicator;
@@ -95,7 +96,7 @@ public class BlockingKeySection extends AbstractMatchAnaysisTableSection {
         tableComposite.setLayout(gridLayout);
         tableComposite.setLayoutData(data);
         if (columnMap != null) {
-            ArrayList<String> columnList = new ArrayList<String>();
+            ArrayList<MetadataColumn> columnList = new ArrayList<MetadataColumn>();
             columnList.addAll(columnMap.keySet());
             tableComposite.setColumnList(columnList);
         }
@@ -184,7 +185,12 @@ public class BlockingKeySection extends AbstractMatchAnaysisTableSection {
     protected BlockingKeyHandler computeResult() {
         List<Map<String, String>> blockingKeyData = MatchRuleAnlaysisUtils
                 .blockingKeyDataConvert((List<KeyDefinition>) tableComposite.getInput());
-        BlockingKeyHandler executeGenerateBlockingAction = new BlockingKeyHandler(blockingKeyData, columnMap);
+        Map<String, String> colName2IndexMap = new HashMap<String, String>();
+        for (MetadataColumn metaCol : columnMap.keySet()) {
+            colName2IndexMap.put(metaCol.getName(), columnMap.get(metaCol));
+        }
+
+        BlockingKeyHandler executeGenerateBlockingAction = new BlockingKeyHandler(blockingKeyData, colName2IndexMap);
         if (hasBlockingKey()) {
             executeGenerateBlockingAction.setInputData(matchRows);
             executeGenerateBlockingAction.run();

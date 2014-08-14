@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -24,18 +25,27 @@ import org.eclipse.ui.forms.events.ExpansionEvent;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.jfree.chart.JFreeChart;
-import org.jfree.chart.plot.CategoryPlot;
-import org.jfree.data.category.CategoryDataset;
 import org.jfree.experimental.chart.swt.ChartComposite;
 import org.talend.dataprofiler.common.ui.editor.preview.chart.ChartDecorator;
+import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.model.ModelElementIndicator;
+import org.talend.dataprofiler.core.model.dynamic.DynamicIndicatorModel;
+import org.talend.dataprofiler.core.ui.chart.TalendChartComposite;
 import org.talend.dataprofiler.core.ui.editor.composite.AnalysisColumnTreeViewer;
 import org.talend.dataprofiler.core.ui.editor.preview.CompositeIndicator;
 import org.talend.dataprofiler.core.ui.editor.preview.IndicatorUnit;
 import org.talend.dataprofiler.core.ui.editor.preview.model.ChartTypeStatesOperator;
 import org.talend.dataprofiler.core.ui.editor.preview.model.states.IChartTypeStates;
+import org.talend.dataprofiler.core.ui.editor.preview.model.states.SummaryStatisticsState;
+import org.talend.dataprofiler.core.ui.events.DynamicChartEventReceiver;
+import org.talend.dataprofiler.core.ui.events.EventEnum;
+import org.talend.dataprofiler.core.ui.events.EventManager;
+import org.talend.dataprofiler.core.ui.events.IEventReceiver;
+import org.talend.dataprofiler.core.ui.pref.EditorPreferencePage;
+import org.talend.dataprofiler.core.ui.utils.AnalysisUtils;
 import org.talend.dataprofiler.core.ui.utils.pagination.UIPagination;
+import org.talend.dataquality.analysis.ExecutionLanguage;
 import org.talend.dataquality.indicators.Indicator;
 import org.talend.dq.indicators.preview.EIndicatorChartType;
 
@@ -47,6 +57,9 @@ public class MasterPaginationInfo extends IndicatorPaginationInfo {
     private List<ExpandableComposite> previewChartList;
 
     private AnalysisColumnTreeViewer treeViewer;
+
+    // Added TDQ-9272 20140806, use the Dynamic model for SQL mode only, Java mode will not use it.
+    private boolean isSQLMode = true;
 
     public MasterPaginationInfo(ScrolledForm form, List<ExpandableComposite> previewChartList,
             List<? extends ModelElementIndicator> modelElementIndicators, UIPagination uiPagination) {
@@ -60,6 +73,9 @@ public class MasterPaginationInfo extends IndicatorPaginationInfo {
         this.previewChartList = previewChartList;
         if (treeViewer != null) {
             this.treeViewer = treeViewer;
+            if (ExecutionLanguage.JAVA.equals(treeViewer.getLanguage())) {
+                isSQLMode = false;
+            }
         }
     }
 
@@ -75,7 +91,11 @@ public class MasterPaginationInfo extends IndicatorPaginationInfo {
             return;
         }
         previewChartList.clear();
-        clearAllMaps();
+        clearDynamicList();
+
+        if (EditorPreferencePage.isHideGraphics()) {
+            return;
+        }
         for (final ModelElementIndicator modelElementIndicator : modelElementIndicators) {
             ExpandableComposite exComp = uiPagination.getToolkit().createExpandableComposite(uiPagination.getChartComposite(),
                     ExpandableComposite.TREE_NODE | ExpandableComposite.CLIENT_INDENT);
@@ -131,24 +151,44 @@ public class MasterPaginationInfo extends IndicatorPaginationInfo {
      */
     private void createChart(Composite comp, EIndicatorChartType chartType, List<IndicatorUnit> units) {
         final IChartTypeStates chartTypeState = ChartTypeStatesOperator.getChartState(chartType, units);
-        JFreeChart chart = chartTypeState.getChart();
+        JFreeChart chart = null;
+        // MOD TDQ-8787 20140722 yyin:(when first switch from master to result) if there is some dynamic event for the
+        // current indicator, use its dataset directly (TDQ-9241)
+        IEventReceiver event = EventManager.getInstance().findRegisteredEvent(units.get(0).getIndicator(),
+                EventEnum.DQ_DYMANIC_CHART, 0);
+        if (event == null) {
+            chart = chartTypeState.getChart();
+        } else {
+            chart = chartTypeState.getChart(((DynamicChartEventReceiver) event).getDataset());
+        }// ~
+
         if (chart == null) {
             return;
         }
         ChartDecorator.decorate(chart, null);
 
-        // one dataset <--> several indicators in same category
-        CategoryPlot plot = chart.getCategoryPlot();
-        CategoryDataset dataset = plot.getDataset();
-        // Added TDQ-8787 20140612 : store the dataset, and the index of the current indicator
-        if (EIndicatorChartType.BENFORD_LAW_STATISTICS.equals(chartType)) {
-            dataset = plot.getDataset(1);
+        final ChartComposite chartComp = new TalendChartComposite(comp, SWT.NONE, chart, true);
+
+        List<Indicator> indicators = getIndicators(units);
+        if (isSQLMode) {// use the dynamic model for SQL mode only.
+            DynamicIndicatorModel dyModel = AnalysisUtils.createDynamicModel(chartType, indicators, chart);
+            if (EIndicatorChartType.SUMMARY_STATISTICS.equals(chartType)) {
+                if (units.size() == SummaryStatisticsState.FULL_FLAG) {
+                    indicators = getIndicatorsForTable(units, false);
+                }
+                dyModel.setSummaryIndicators(indicators);
+            }
+            this.dynamicList.add(dyModel);
+            if (EIndicatorChartType.SUMMARY_STATISTICS.equals(chartType)) {
+                // for summary indicators: need to record the chart composite, which is used for create BAW chart
+                dyModel.setBawParentChartComp((TalendChartComposite) chartComp);
+            }
         }
-        List<Indicator> indicators = putDatasetMap(chartType, units, dataset);
-
-            final ChartComposite chartComp = createTalendChartComposite(comp, chartType, chart, indicators);
-
-            addListenerToChartComp(chartComp, chartTypeState);
+        GridData gd = new GridData();
+        gd.widthHint = PluginConstant.CHART_STANDARD_WIDHT;
+        gd.heightHint = PluginConstant.CHART_STANDARD_HEIGHT;
+        chartComp.setLayoutData(gd);
+        addListenerToChartComp(chartComp, chartTypeState);
 
     }
 

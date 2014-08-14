@@ -4,6 +4,7 @@ Bundle-Name: Linkage Plug-in
 Bundle-SymbolicName: org.talend.dataquality.record.linkage
 Bundle-Version: 5.6.0.qualifier
 Require-Bundle: org.apache.log4j,
+ org.apache.commons.collections,
  org.apache.commons.lang,
  org.talend.utils
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
@@ -12,6 +13,7 @@ Export-Package: org.talend.dataquality.record.linkage.attribute,
  org.talend.dataquality.record.linkage.constant,
  org.talend.dataquality.record.linkage.genkey,
  org.talend.dataquality.record.linkage.grouping,
+ org.talend.dataquality.record.linkage.grouping.swoosh,
  org.talend.dataquality.record.linkage.record,
  org.talend.dataquality.record.linkage.utils,
  org.talend.utils.classloader

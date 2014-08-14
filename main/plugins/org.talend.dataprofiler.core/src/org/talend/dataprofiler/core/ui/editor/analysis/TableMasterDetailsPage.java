@@ -30,8 +30,6 @@ import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
-import org.eclipse.swt.events.ControlAdapter;
-import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
@@ -39,7 +37,6 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.TreeColumn;
@@ -59,6 +56,7 @@ import org.eclipse.ui.forms.widgets.Section;
 import org.jfree.chart.ChartMouseEvent;
 import org.jfree.chart.ChartMouseListener;
 import org.jfree.chart.JFreeChart;
+import org.jfree.data.category.DefaultCategoryDataset;
 import org.jfree.experimental.chart.swt.ChartComposite;
 import org.talend.core.model.metadata.builder.connection.Connection;
 import org.talend.cwm.helper.ConnectionHelper;
@@ -67,7 +65,7 @@ import org.talend.dataprofiler.core.ImageLib;
 import org.talend.dataprofiler.core.PluginConstant;
 import org.talend.dataprofiler.core.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataprofiler.core.model.TableIndicator;
-import org.talend.dataprofiler.core.ui.action.actions.RunAnalysisAction;
+import org.talend.dataprofiler.core.model.dynamic.DynamicIndicatorModel;
 import org.talend.dataprofiler.core.ui.chart.ChartUtils;
 import org.talend.dataprofiler.core.ui.editor.analysis.TablesSelectionDialog.TableSelectionType;
 import org.talend.dataprofiler.core.ui.editor.composite.AbstractColumnDropTree;
@@ -76,7 +74,14 @@ import org.talend.dataprofiler.core.ui.editor.preview.CompositeIndicator;
 import org.talend.dataprofiler.core.ui.editor.preview.TableIndicatorUnit;
 import org.talend.dataprofiler.core.ui.editor.preview.model.ChartTypeStatesOperator;
 import org.talend.dataprofiler.core.ui.editor.preview.model.states.IChartTypeStates;
+import org.talend.dataprofiler.core.ui.editor.preview.model.states.WhereRuleStatisticsStateTable;
+import org.talend.dataprofiler.core.ui.events.DynamicChartEventReceiver;
+import org.talend.dataprofiler.core.ui.events.EventEnum;
+import org.talend.dataprofiler.core.ui.events.EventManager;
+import org.talend.dataprofiler.core.ui.events.IEventReceiver;
+import org.talend.dataprofiler.core.ui.events.TableDynamicChartEventReceiver;
 import org.talend.dataprofiler.core.ui.pref.EditorPreferencePage;
+import org.talend.dataprofiler.core.ui.utils.AnalysisUtils;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.analysis.ExecutionLanguage;
 import org.talend.dataquality.domain.Domain;
@@ -86,6 +91,7 @@ import org.talend.dq.analysis.TableAnalysisHandler;
 import org.talend.dq.helper.EObjectHelper;
 import org.talend.dq.helper.RepositoryNodeHelper;
 import org.talend.dq.indicators.preview.EIndicatorChartType;
+import org.talend.dq.nodes.indicator.type.IndicatorEnum;
 import org.talend.dq.writer.impl.ElementWriterFactory;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.RepositoryNode;
@@ -96,56 +102,26 @@ import orgomg.cwm.resource.relational.NamedColumnSet;
 /**
  * DOC xqliu class global comment. Detailled comment
  */
-public class TableMasterDetailsPage extends AbstractAnalysisMetadataPage implements PropertyChangeListener {
+public class TableMasterDetailsPage extends DynamicAnalysisMasterPage implements PropertyChangeListener {
 
     private static Logger log = Logger.getLogger(TableMasterDetailsPage.class);
-
-    private String execLang = ExecutionLanguage.SQL.getLiteral();
 
     AnalysisTableTreeViewer treeViewer;
 
     TableAnalysisHandler analysisHandler;
 
-    public TableAnalysisHandler getAnalysisHandler() {
-        return analysisHandler;
-    }
-
     private TableIndicator[] currentTableIndicators;
-
-    private Composite chartComposite;
 
     private static final int TREE_MAX_LENGTH = 400;
 
     private Composite[] previewChartCompsites;
 
-    public Composite[] getPreviewChartCompsites() {
-        // ADD msjian TDQ-6213 2012-12-18: filter the disposed composite
-        if (previewChartList != null && !previewChartList.isEmpty()) {
-            List<ExpandableComposite> withOutDisposed = new ArrayList<ExpandableComposite>();
-            for (ExpandableComposite com : previewChartList) {
-                if (!com.isDisposed()) {
-                    withOutDisposed.add(com);
-                }
-            }
-            this.previewChartCompsites = withOutDisposed.toArray(new ExpandableComposite[withOutDisposed.size()]);
-        }
-        // TDQ-6213~
-        return previewChartCompsites;
-    }
-
-    public void setPreviewChartCompsites(Composite[] previewChartCompsites) {
-        this.previewChartCompsites = previewChartCompsites;
-    }
-
     private Section analysisTableSection = null;
-
-    private Section previewSection = null;
 
     private List<ExpandableComposite> previewChartList = null;
 
-    private SashForm sForm;
-
-    private Composite previewComp;
+    // Added TDQ-8787 20140617 yyin : store the temp indicator and its related dataset between one running
+    private List<DynamicIndicatorModel> dynamicList = new ArrayList<DynamicIndicatorModel>();
 
     /**
      * DOC xqliu TableMasterDetailsPage constructor comment.
@@ -157,6 +133,7 @@ public class TableMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
     public TableMasterDetailsPage(FormEditor editor, String id, String title) {
         super(editor, id, title);
         currentEditor = (AnalysisEditor) editor;
+        execLang = ExecutionLanguage.SQL.getLiteral();
     }
 
     public TableIndicator[] getCurrentTableIndicators() {
@@ -217,40 +194,22 @@ public class TableMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
 
         // MOD klliu Hide the setting pate graphics 2011-03-11
         if (!EditorPreferencePage.isHideGraphics()) {
-            previewComp = toolkit.createComposite(sForm);
-            previewComp.setLayoutData(new GridData(GridData.FILL_BOTH));
-            previewComp.setLayout(new GridLayout());
-            // add by hcheng for 0007290: Chart cannot auto compute it's size in
-            // DQRule analsyis Editor
-            previewComp.addControlListener(new ControlAdapter() {
-
-                /*
-                 * (non-Javadoc)
-                 * 
-                 * @see org.eclipse.swt.events.ControlAdapter#controlResized(org.eclipse .swt.events.ControlEvent)
-                 */
-                @Override
-                public void controlResized(ControlEvent e) {
-                    super.controlResized(e);
-                    sForm.redraw();
-                    form.reflow(true);
-                }
-            });
+            createPreviewComposite();
 
             createPreviewSection(form, previewComp);
         }
     }
 
-    void createAnalysisTablesSection(final ScrolledForm form, Composite anasisDataComp) {
-        analysisTableSection = createSection(form, anasisDataComp,
+    void createAnalysisTablesSection(final ScrolledForm form1, Composite anasisDataComp) {
+        analysisTableSection = createSection(form1, anasisDataComp,
                 DefaultMessagesImpl.getString("TableMasterDetailsPage.analyzeTable"), null); //$NON-NLS-1$
 
-        Composite topComp = toolkit.createComposite(analysisTableSection);
-        topComp.setLayout(new GridLayout());
+        Composite topComp1 = toolkit.createComposite(analysisTableSection);
+        topComp1.setLayout(new GridLayout());
         // ~ MOD mzhao 2009-05-05,Bug 6587.
-        createConnBindWidget(topComp);
+        createConnBindWidget(topComp1);
         // ~
-        Hyperlink tblBtn = toolkit.createHyperlink(topComp,
+        Hyperlink tblBtn = toolkit.createHyperlink(topComp1,
                 DefaultMessagesImpl.getString("TableMasterDetailsPage.selectTable"), SWT.NONE); //$NON-NLS-1$
         GridDataFactory.fillDefaults().align(SWT.FILL, SWT.TOP).applyTo(tblBtn);
         tblBtn.addHyperlinkListener(new HyperlinkAdapter() {
@@ -262,7 +221,7 @@ public class TableMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
 
         });
 
-        Composite actionBarComp = toolkit.createComposite(topComp);
+        Composite actionBarComp = toolkit.createComposite(topComp1);
         GridLayout gdLayout = new GridLayout();
         gdLayout.numColumns = 2;
         actionBarComp.setLayout(gdLayout);
@@ -294,7 +253,7 @@ public class TableMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
             }
         });
 
-        Composite treeComp = toolkit.createComposite(topComp, SWT.NONE);
+        Composite treeComp = toolkit.createComposite(topComp1, SWT.NONE);
         GridDataFactory.fillDefaults().align(SWT.FILL, SWT.FILL).grab(true, true).applyTo(treeComp);
         treeComp.setLayout(new GridLayout());
         ((GridData) treeComp.getLayoutData()).heightHint = TREE_MAX_LENGTH;
@@ -302,7 +261,7 @@ public class TableMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
         treeViewer = new AnalysisTableTreeViewer(treeComp, this);
         treeViewer.setDirty(false);
         treeViewer.addPropertyChangeListener(this);
-        analysisTableSection.setClient(topComp);
+        analysisTableSection.setClient(topComp1);
 
     }
 
@@ -362,109 +321,10 @@ public class TableMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
         }
     }
 
-    void createPreviewSection(final ScrolledForm form, Composite parent) {
-        previewSection = createSection(
-                form,
-                parent,
-                DefaultMessagesImpl.getString("TableMasterDetailsPage.graphics"), DefaultMessagesImpl.getString("TableMasterDetailsPage.space")); //$NON-NLS-1$ //$NON-NLS-2$
-        previewSection.setLayoutData(new GridData(GridData.FILL_BOTH));
-        Composite sectionClient = toolkit.createComposite(previewSection);
-        sectionClient.setLayout(new GridLayout());
-        sectionClient.setLayoutData(new GridData(GridData.FILL_BOTH));
-
-        Composite actionBarComp = toolkit.createComposite(sectionClient);
-        GridLayout gdLayout = new GridLayout();
-        gdLayout.numColumns = 2;
-        actionBarComp.setLayout(gdLayout);
-
-        ImageHyperlink collapseAllImageLink = toolkit.createImageHyperlink(actionBarComp, SWT.NONE);
-        collapseAllImageLink.setToolTipText(DefaultMessagesImpl.getString("TableMasterDetailsPage.collapseAllTables")); //$NON-NLS-1$
-        collapseAllImageLink.setImage(ImageLib.getImage(ImageLib.COLLAPSE_ALL));
-        collapseAllImageLink.addHyperlinkListener(new HyperlinkAdapter() {
-
-            @Override
-            public void linkActivated(HyperlinkEvent e) {
-                if (previewChartList != null && !previewChartList.isEmpty()) {
-                    for (ExpandableComposite comp : previewChartList) {
-                        comp.setExpanded(false);
-                        comp.getParent().pack();
-                    }
-                }
-            }
-        });
-
-        ImageHyperlink expandAllImageLink = toolkit.createImageHyperlink(actionBarComp, SWT.NONE);
-        expandAllImageLink.setToolTipText(DefaultMessagesImpl.getString("TableMasterDetailsPage.expandAllTables")); //$NON-NLS-1$
-        expandAllImageLink.setImage(ImageLib.getImage(ImageLib.EXPAND_ALL));
-        expandAllImageLink.addHyperlinkListener(new HyperlinkAdapter() {
-
-            @Override
-            public void linkActivated(HyperlinkEvent e) {
-                if (previewChartList != null && !previewChartList.isEmpty()) {
-                    for (ExpandableComposite comp : previewChartList) {
-                        comp.setExpanded(true);
-                        comp.getParent().pack();
-                    }
-                }
-
-            }
-        });
-
-        ImageHyperlink refreshBtn = toolkit.createImageHyperlink(sectionClient, SWT.NONE);
-        refreshBtn.setText(DefaultMessagesImpl.getString("TableMasterDetailsPage.refreshGraphics")); //$NON-NLS-1$
-        refreshBtn.setImage(ImageLib.getImage(ImageLib.SECTION_PREVIEW));
-        final Label message = toolkit.createLabel(sectionClient,
-                DefaultMessagesImpl.getString("TableMasterDetailsPage.spaceWhite")); //$NON-NLS-1$
-        message.setForeground(Display.getDefault().getSystemColor(SWT.COLOR_RED));
-        message.setVisible(false);
-        GridDataFactory.fillDefaults().align(SWT.FILL, SWT.TOP).applyTo(sectionClient);
-
-        chartComposite = toolkit.createComposite(sectionClient);
-        chartComposite.setLayout(new GridLayout());
-        chartComposite.setLayoutData(new GridData(GridData.FILL_BOTH));
-
-        final Analysis analysis = analysisHandler.getAnalysis();
-
-        refreshBtn.addHyperlinkListener(new HyperlinkAdapter() {
-
-            @Override
-            public void linkActivated(HyperlinkEvent e) {
-
-                for (Control control : chartComposite.getChildren()) {
-                    control.dispose();
-                }
-
-                boolean analysisStatue = analysis.getResults().getResultMetadata() != null
-                        && analysis.getResults().getResultMetadata().getExecutionDate() != null;
-
-                if (!analysisStatue) {
-                    boolean returnCode = MessageDialog.openConfirm(null,
-                            DefaultMessagesImpl.getString("TableMasterDetailsPage.string0"), //$NON-NLS-1$
-                            DefaultMessagesImpl.getString("TableMasterDetailsPage.string1")); //$NON-NLS-1$
-
-                    if (returnCode) {
-                        new RunAnalysisAction().run();
-                        message.setVisible(false);
-                    } else {
-                        createPreviewCharts(form, chartComposite, false);
-                        message.setText(DefaultMessagesImpl.getString("TableMasterDetailsPage.warning")); //$NON-NLS-1$
-                        message.setVisible(true);
-                    }
-                } else {
-                    createPreviewCharts(form, chartComposite, true);
-                }
-
-                chartComposite.layout();
-                form.reflow(true);
-            }
-
-        });
-
-        previewSection.setClient(sectionClient);
-    }
-
-    public void createPreviewCharts(final ScrolledForm form, final Composite composite, final boolean isCreate) {
+    @Override
+    public void createPreviewCharts(final ScrolledForm form1, final Composite composite) {
         previewChartList = new ArrayList<ExpandableComposite>();
+        dynamicList.clear();
         for (final TableIndicator tableIndicator : this.treeViewer.getTableIndicator()) {
             final NamedColumnSet set = tableIndicator.getColumnSet();
             ExpandableComposite exComp = toolkit.createExpandableComposite(composite, ExpandableComposite.TREE_NODE
@@ -484,6 +344,9 @@ public class TableMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
             comp.setLayout(new GridLayout());
             comp.setLayoutData(new GridData(GridData.FILL_BOTH));
 
+            exComp.setExpanded(true);
+            exComp.setClient(comp);
+
             if (tableIndicator.getIndicators().length != 0) {
                 IRunnableWithProgress rwp = new IRunnableWithProgress() {
 
@@ -500,11 +363,46 @@ public class TableMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
                                     if (!units.isEmpty()) {
                                         final IChartTypeStates chartTypeState = ChartTypeStatesOperator.getChartStateTable(
                                                 chartType, units, tableIndicator);
+                                        // get all indicator lists separated by chart, and only
+                                        // WhereRuleStatisticsStateTable can get not-null charts
+                                        List<List<Indicator>> pagedIndicators = ((WhereRuleStatisticsStateTable) chartTypeState)
+                                                .getPagedIndicators();
+                                        // Added TDQ-9241: for each list(for each chart), check if the current
+                                        // list has been registered dynamic event
+                                        List<DefaultCategoryDataset> datasets = new ArrayList<DefaultCategoryDataset>();
+                                        for (List<Indicator> oneChart : pagedIndicators) {
+                                            IEventReceiver event = EventManager.getInstance().findRegisteredEvent(
+                                                    oneChart.get(0), EventEnum.DQ_DYMANIC_CHART, 0);
+                                            if (event != null) {
+                                                // get the dataset from the event
+                                                DefaultCategoryDataset dataset = ((TableDynamicChartEventReceiver) event)
+                                                        .getDataset();
+                                                // if there has the dataset for the current rule, use it to replace,
+                                                // (only happen when first switch from master to result page, during
+                                                // one running)
+                                                if (dataset != null) {
+                                                    datasets.add(dataset);
+                                                }
 
-                                        List<JFreeChart> charts = chartTypeState.getChartList();
+                                            }// ~
+                                        }
+                                        // create chart
+                                        List<JFreeChart> charts = null;
+                                        if (datasets.size() > 0) {
+                                            charts = chartTypeState.getChartList(datasets);
+                                        } else {
+                                            charts = chartTypeState.getChartList();
+                                        }
+                                        int index = 0;
+
                                         if (charts != null) {
                                             for (JFreeChart chart : charts) {
                                                 final ChartComposite chartComp = new ChartComposite(comp, SWT.NONE, chart, true);
+                                                // Added TDQ-8787 20140707 yyin: create and store the dynamic model
+                                                DynamicIndicatorModel dyModel = AnalysisUtils.createDynamicModel(chartType,
+                                                        pagedIndicators.get(index++), chart);
+                                                dynamicList.add(dyModel);
+                                                // ~
 
                                                 GridData gd = new GridData();
                                                 gd.widthHint = 550;
@@ -536,16 +434,13 @@ public class TableMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
                 @Override
                 public void expansionStateChanged(ExpansionEvent e) {
                     getChartComposite().layout();
-                    form.reflow(true);
+                    form1.reflow(true);
                     composite.pack();
                 }
 
             });
 
-            exComp.setExpanded(true);
-            exComp.setClient(comp);
-
-            form.reflow(true);
+            form1.reflow(true);
         }
         if (!previewChartList.isEmpty()) {
             this.previewChartCompsites = previewChartList.toArray(new Composite[previewChartList.size()]);
@@ -576,7 +471,7 @@ public class TableMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
             }
 
             public void chartMouseMoved(ChartMouseEvent event) {
-
+                // no implements
             }
 
         });
@@ -585,6 +480,25 @@ public class TableMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
     @Override
     public Composite getChartComposite() {
         return chartComposite;
+    }
+
+    public Composite[] getPreviewChartCompsites() {
+        // ADD msjian TDQ-6213 2012-12-18: filter the disposed composite
+        if (previewChartList != null && !previewChartList.isEmpty()) {
+            List<ExpandableComposite> withOutDisposed = new ArrayList<ExpandableComposite>();
+            for (ExpandableComposite com : previewChartList) {
+                if (!com.isDisposed()) {
+                    withOutDisposed.add(com);
+                }
+            }
+            this.previewChartCompsites = withOutDisposed.toArray(new ExpandableComposite[withOutDisposed.size()]);
+        }
+        // TDQ-6213~
+        return previewChartCompsites;
+    }
+
+    public void setPreviewChartCompsites(Composite[] previewChartCompsites) {
+        this.previewChartCompsites = previewChartCompsites;
     }
 
     @Override
@@ -687,27 +601,16 @@ public class TableMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
                     for (Control control : chartComposite.getChildren()) {
                         control.dispose();
                     }
-                    createPreviewCharts(form, chartComposite, true);
+                    createPreviewCharts(form, chartComposite);
                     chartComposite.getParent().layout();
                     chartComposite.layout();
                 } catch (Exception ex) {
                     log.error(ex, ex);
                 }
             } else {
-                previewComp = toolkit.createComposite(sForm);
-                previewComp.setLayoutData(new GridData(GridData.FILL_BOTH));
-                previewComp.setLayout(new GridLayout());
-                previewComp.addControlListener(new ControlAdapter() {
-
-                    @Override
-                    public void controlResized(ControlEvent e) {
-                        super.controlResized(e);
-                        sForm.redraw();
-                        form.reflow(true);
-                    }
-                });
+                createPreviewComposite();
                 createPreviewSection(form, previewComp);
-                createPreviewCharts(form, chartComposite, true);
+                createPreviewCharts(form, chartComposite);
             }
         }
     }
@@ -729,6 +632,11 @@ public class TableMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
         }
     }
 
+    @Override
+    public TableAnalysisHandler getAnalysisHandler() {
+        return analysisHandler;
+    }
+
     /*
      * (non-Javadoc)
      * 
@@ -738,4 +646,50 @@ public class TableMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
     public AbstractColumnDropTree getTreeViewer() {
         return this.treeViewer;
     }
+
+    @Override
+    List<ExpandableComposite> getPreviewChartList() {
+        return this.previewChartList;
+    }
+
+    @Override
+    String getExpandString() {
+        return DefaultMessagesImpl.getString("TableMasterDetailsPage.expandAllTables"); //$NON-NLS-1$
+    }
+
+    @Override
+    String getCollapseAllString() {
+        return DefaultMessagesImpl.getString("TableMasterDetailsPage.collapseAllTables");//$NON-NLS-1$
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataprofiler.core.ui.editor.analysis.DynamicAnalysisMasterPage#getDynamicDatasets()
+     */
+    @Override
+    public List<DynamicIndicatorModel> getDynamicDatasets() {
+
+        return dynamicList;
+    }
+
+    @Override
+    public void clearDynamicDatasets() {
+        super.clearDynamicDatasets();
+        this.dynamicList.clear();
+    }
+
+    @Override
+    protected DynamicChartEventReceiver createEventReceiver(DynamicIndicatorModel indModel, int index, Indicator oneIndicator) {
+        TableDynamicChartEventReceiver eReceiver = new TableDynamicChartEventReceiver();
+        eReceiver.setDataset(indModel.getDataset());
+        eReceiver.setIndexInDataset(index);
+        eReceiver.setIndicatorName(oneIndicator.getName());
+        eReceiver.setIndicator(oneIndicator);
+        eReceiver.setIndicatorType(IndicatorEnum.findIndicatorEnum(oneIndicator.eClass()));
+        // clear data
+        eReceiver.clearValue();
+        return eReceiver;
+    }
+
 }

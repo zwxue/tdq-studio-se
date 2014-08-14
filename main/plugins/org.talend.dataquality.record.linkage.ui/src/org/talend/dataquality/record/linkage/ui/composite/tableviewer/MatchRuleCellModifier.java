@@ -119,7 +119,7 @@ public class MatchRuleCellModifier extends AbstractMatchCellModifier<MatchKeyDef
                 if (Integer.parseInt(newValue) == -1) {
                     return;
                 }
-                String columnName = columnList.get(Integer.parseInt(newValue));
+                String columnName = columnList.get(Integer.parseInt(newValue)).getName();
                 if (StringUtils.equals(mkd.getColumn(), columnName)) {
                     return;
                 }

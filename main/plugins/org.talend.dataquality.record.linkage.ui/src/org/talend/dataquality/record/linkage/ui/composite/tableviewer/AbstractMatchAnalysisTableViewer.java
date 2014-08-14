@@ -30,6 +30,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
+import org.talend.core.model.metadata.builder.connection.MetadataColumn;
 import org.talend.dataquality.PluginConstant;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.record.linkage.ui.action.RemoveMatchKeyDefinitionAction;
@@ -100,7 +101,7 @@ public abstract class AbstractMatchAnalysisTableViewer<T> extends TableViewer {
      * @param columnMap all of columns which can be used by current Table
      * @param pixelDataOfHeaders the width of the column
      */
-    public void initTable(List<String> headers, List<String> columnMap) {
+    public void initTable(List<String> headers, List<MetadataColumn> columnMap) {
         TableLayout tLayout = new TableLayout();
         innerTable.setLayout(tLayout);
         innerTable.setHeaderVisible(true);
@@ -240,7 +241,7 @@ public abstract class AbstractMatchAnalysisTableViewer<T> extends TableViewer {
      * @param headers
      * @return
      */
-    abstract protected CellEditor[] getCellEditor(List<String> headers, List<String> columnMap);
+    abstract protected CellEditor[] getCellEditor(List<String> headers, List<MetadataColumn> columnMap);
 
     /**
      * 
@@ -327,8 +328,7 @@ public abstract class AbstractMatchAnalysisTableViewer<T> extends TableViewer {
                 int indexForElement = indexForElement(tmpKeyDef);
                 if (indexForElement - 2 >= 0) {
                     // modify model
-                    keyList.remove(keyDef);
-                    keyList.add(indexForElement - 2, keyDef);
+                    moveUpFromModel(keyDef, keyList, indexForElement);
                     // modify table viewer
                     remove(keyDef);
                     insert(keyDef, indexForElement - 1);
@@ -336,6 +336,18 @@ public abstract class AbstractMatchAnalysisTableViewer<T> extends TableViewer {
                 break;
             }
         }
+    }
+
+    /**
+     * DOC zhao Comment method "moveFromModel".
+     * 
+     * @param keyDef
+     * @param keyList
+     * @param indexForElement
+     */
+    protected void moveUpFromModel(T keyDef, List<T> keyList, int indexForElement) {
+        keyList.remove(keyDef);
+        keyList.add(indexForElement - 2, keyDef);
     }
 
     /**
@@ -352,19 +364,30 @@ public abstract class AbstractMatchAnalysisTableViewer<T> extends TableViewer {
             if (keyDef.equals(tmpKeyDef)) {
                 int indexForElement = indexForElement(tmpKeyDef);
                 if (indexForElement < keyList.size()) {
-                    // modify model
-                    keyList.remove(keyDef);
-                    if (indexForElement == keyList.size()) {
-                        keyList.add(keyDef);
-                    } else {
-                        keyList.add(indexForElement, keyDef);
-                    }
+                    moveDownFromModel(keyDef, keyList, indexForElement);
                     // modify table viewer
                     remove(keyDef);
                     insert(keyDef, indexForElement + 1);
                 }
                 break;
             }
+        }
+    }
+
+    /**
+     * DOC zhao Comment method "moveDownFromModel".
+     * 
+     * @param keyDef
+     * @param keyList
+     * @param indexForElement
+     */
+    protected void moveDownFromModel(T keyDef, List<T> keyList, int indexForElement) {
+        // modify model
+        keyList.remove(keyDef);
+        if (indexForElement == keyList.size()) {
+            keyList.add(keyDef);
+        } else {
+            keyList.add(indexForElement, keyDef);
         }
     }
 

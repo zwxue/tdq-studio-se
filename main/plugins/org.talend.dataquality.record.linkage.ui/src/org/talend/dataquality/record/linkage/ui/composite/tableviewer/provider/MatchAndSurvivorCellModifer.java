@@ -13,8 +13,8 @@
 package org.talend.dataquality.record.linkage.ui.composite.tableviewer.provider;
 
 import org.apache.commons.lang.StringUtils;
-import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.swt.widgets.TableItem;
+import org.talend.core.model.metadata.builder.connection.MetadataColumn;
 import org.talend.dataquality.record.linkage.constant.AttributeMatcherType;
 import org.talend.dataquality.record.linkage.ui.composite.tableviewer.AbstractMatchAnalysisTableViewer;
 import org.talend.dataquality.record.linkage.ui.composite.tableviewer.AbstractMatchCellModifier;
@@ -86,7 +86,14 @@ public class MatchAndSurvivorCellModifer extends AbstractMatchCellModifier<Match
         } else if (MatchAnalysisConstant.CUSTOM_MATCHER.equalsIgnoreCase(property)) {
             return mkd.getMatchKey().getAlgorithm().getAlgorithmParameters();
         } else if (MatchAnalysisConstant.INPUT_COLUMN.equalsIgnoreCase(property)) {
-            return columnList.indexOf(mkd.getMatchKey().getColumn());
+            int colIdx = 0;
+            for (MetadataColumn metaColumn : columnList) {
+                if (metaColumn.getName().equals(mkd.getMatchKey().getColumn())) {
+                    break;
+                }
+                colIdx++;
+            }
+            return colIdx;
         } else if (MatchAnalysisConstant.CONFIDENCE_WEIGHT.equalsIgnoreCase(property)) {
             return String.valueOf(mkd.getMatchKey().getConfidenceWeight());
         } else if (MatchAnalysisConstant.MATCH_KEY_NAME.equalsIgnoreCase(property)) {
@@ -155,6 +162,20 @@ public class MatchAndSurvivorCellModifer extends AbstractMatchCellModifier<Match
                 }
                 matchKey.setName(newValue);
                 mkd.getSurvivorShipKey().setName(newValue);
+            } else if (MatchAnalysisConstant.INPUT_COLUMN.equalsIgnoreCase(property)) {
+                int idx = Integer.valueOf(newValue);
+                if (columnList == null || columnList.isEmpty()) {
+                    return;
+                }
+                MetadataColumn metaColumn = columnList.get(idx);
+                if (metaColumn == null) {
+                    return;
+                }
+                if (StringUtils.equals(metaColumn.getName(), newValue)) {
+                    return;
+                }
+                matchKey.setColumn(metaColumn.getName());
+                mkd.getSurvivorShipKey().setColumn(metaColumn.getName());
             } else if (MatchAnalysisConstant.THRESHOLD.equalsIgnoreCase(property)) {
                 if (!org.apache.commons.lang.math.NumberUtils.isNumber(newValue)) {
                     return;
@@ -177,10 +198,12 @@ public class MatchAndSurvivorCellModifer extends AbstractMatchCellModifier<Match
                 mkd.getSurvivorShipKey().getFunction().setAlgorithmType(valueByIndex.getComponentValueName());
                 if (!isSurvivorShipAlgorithm(mkd, SurvivorShipAlgorithmEnum.MOST_TRUSTED_SOURCE)) {
                     mkd.getSurvivorShipKey().getFunction().setAlgorithmParameters(StringUtils.EMPTY);
-                    CellEditor[] cellEditors = tableViewer.getCellEditors();
-                    if (cellEditors.length == 9) {
-                        cellEditors[7].setValue(StringUtils.EMPTY);
-                    }
+                    // MOD mzhao 2014-7-22 there will be an exception here, when switching the surv functions. Confirmed
+                    // with haibo (MDM team), removed this code.
+                    // CellEditor[] cellEditors = tableViewer.getCellEditors();
+                    // if (cellEditors.length == 9) {
+                    // cellEditors[7].setValue(StringUtils.EMPTY);
+                    // }
                 }
             } else if (MatchAnalysisConstant.PARAMETER.equalsIgnoreCase(property)) {
                 mkd.getSurvivorShipKey().getFunction().setAlgorithmParameters(newValue);

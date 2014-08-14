@@ -166,8 +166,7 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
         columnSetAnalysisHandler.setAnalysis((Analysis) this.currentModelElement);
         stringDataFilter = columnSetAnalysisHandler.getStringDataFilter();
         analyzedColumns = columnSetAnalysisHandler.getAnalyzedColumns();
-        if (columnSetAnalysisHandler.getSimpleStatIndicator() == null
-                || columnSetAnalysisHandler.getSimpleStatIndicator().eIsProxy()) {
+        if (columnSetAnalysisHandler.getSimpleStatIndicator() == null || columnSetAnalysisHandler.getSimpleStatIndicator().eIsProxy()) {
             ColumnsetFactory columnsetFactory = ColumnsetFactory.eINSTANCE;
             simpleStatIndicator = columnsetFactory.createSimpleStatIndicator();
             simpleStatIndicator.setRowCountIndicator(IndicatorsFactory.eINSTANCE.createRowCountIndicator());
@@ -200,8 +199,7 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
             }
 
             if (tdColumn == null && mdColumn != null) {
-                currentIndicator = ModelElementIndicatorHelper.createDFColumnIndicator(RepositoryNodeHelper
-                        .recursiveFind(mdColumn));
+                currentIndicator = ModelElementIndicatorHelper.createDFColumnIndicator(RepositoryNodeHelper.recursiveFind(mdColumn));
             } else if (tdColumn != null) {
                 RepositoryNode recursiveFind = RepositoryNodeHelper.recursiveFind(tdColumn);
                 if (recursiveFind == null) {
@@ -209,8 +207,7 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
                 }
                 currentIndicator = ModelElementIndicatorHelper.createModelElementIndicator(recursiveFind);
             } else if (xmlElement != null) {
-                currentIndicator = ModelElementIndicatorHelper.createXmlElementIndicator(RepositoryNodeHelper
-                        .recursiveFind(xmlElement));
+                currentIndicator = ModelElementIndicatorHelper.createXmlElementIndicator(RepositoryNodeHelper.recursiveFind(xmlElement));
             }
 
             DataminingType dataminingType = MetadataHelper.getDataminingType(element);
@@ -266,10 +263,12 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
         createDataFilterSection(form, topComp);
         dataFilterComp.addPropertyChangeListener(this);
 
-        Composite exeEngineComp = createExecuteEngineSection(form, topComp, analyzedColumns, columnSetAnalysisHandler
-                .getAnalysis().getParameters());
+        Composite exeEngineComp = createExecuteEngineSection(form, topComp, analyzedColumns, columnSetAnalysisHandler.getAnalysis()
+                .getParameters());
 
         createStoreDataCheck(exeEngineComp);
+
+        createContextGroupSection(form, topComp);
 
         if (!EditorPreferencePage.isHideGraphics()) {
             previewComp = toolkit.createComposite(sForm);
@@ -392,8 +391,7 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
         ImageHyperlink refreshBtn = toolkit.createImageHyperlink(sectionClient, SWT.NONE);
         refreshBtn.setText(DefaultMessagesImpl.getString("ColumnMasterDetailsPage.refreshGraphics")); //$NON-NLS-1$
         refreshBtn.setImage(ImageLib.getImage(ImageLib.SECTION_PREVIEW));
-        final Label message = toolkit.createLabel(sectionClient,
-                DefaultMessagesImpl.getString("ColumnMasterDetailsPage.spaceWhite")); //$NON-NLS-1$
+        final Label message = toolkit.createLabel(sectionClient, DefaultMessagesImpl.getString("ColumnMasterDetailsPage.spaceWhite")); //$NON-NLS-1$
         message.setForeground(Display.getDefault().getSystemColor(SWT.COLOR_RED));
         message.setVisible(false);
         GridDataFactory.fillDefaults().align(SWT.FILL, SWT.TOP).applyTo(sectionClient);
@@ -502,10 +500,8 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
     private void createSimpleStatistics(final Composite composite) {
         List<IndicatorUnit> units = new ArrayList<IndicatorUnit>();
         units.add(new ColumnSetIndicatorUnit(IndicatorEnum.RowCountIndicatorEnum, simpleStatIndicator.getRowCountIndicator()));
-        units.add(new ColumnSetIndicatorUnit(IndicatorEnum.DistinctCountIndicatorEnum, simpleStatIndicator
-                .getDistinctCountIndicator()));
-        units.add(new ColumnSetIndicatorUnit(IndicatorEnum.DuplicateCountIndicatorEnum, simpleStatIndicator
-                .getDuplicateCountIndicator()));
+        units.add(new ColumnSetIndicatorUnit(IndicatorEnum.DistinctCountIndicatorEnum, simpleStatIndicator.getDistinctCountIndicator()));
+        units.add(new ColumnSetIndicatorUnit(IndicatorEnum.DuplicateCountIndicatorEnum, simpleStatIndicator.getDuplicateCountIndicator()));
         units.add(new ColumnSetIndicatorUnit(IndicatorEnum.UniqueIndicatorEnum, simpleStatIndicator.getUniqueCountIndicator()));
 
         IChartTypeStates chartTypeState = ChartTypeStatesOperator.getChartState(EIndicatorChartType.SIMPLE_STATISTICS, units);
@@ -717,8 +713,7 @@ public class ColumnSetMasterPage extends AbstractAnalysisMetadataPage implements
 
     @Override
     public boolean isDirty() {
-        return super.isDirty() || (treeViewer != null && treeViewer.isDirty())
-                || (dataFilterComp != null && dataFilterComp.isDirty())
+        return super.isDirty() || (treeViewer != null && treeViewer.isDirty()) || (dataFilterComp != null && dataFilterComp.isDirty())
                 || (indicatorsViewer != null && indicatorsViewer.isDirty());
     }
 

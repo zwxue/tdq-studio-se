@@ -110,7 +110,7 @@ public class MatchAnalysisExecutor implements IAnalysisExecutor {
             return rc;
         }
 
-        Map<String, String> columnMap = getColumn2IndexMap(anlayzedElements);
+        Map<MetadataColumn, String> columnMap = getColumn2IndexMap(anlayzedElements);
 
         ISQLExecutor sqlExecutor = null;
         sqlExecutor = getSQLExectutor(analysis, recordMatchingIndicator, columnMap);
@@ -134,18 +134,19 @@ public class MatchAnalysisExecutor implements IAnalysisExecutor {
         monitor.worked(20);
 
         TypedReturnCode<MatchGroupResultConsumer> returnCode = new TypedReturnCode<MatchGroupResultConsumer>();
+        ExecuteMatchRuleHandler execHandler = new ExecuteMatchRuleHandler();
         if (sqlExecutor.getStoreOnDisk()) {
             Map<BlockKey, String> blockKeys = sqlExecutor.getStoreOnDiskHandler().getBlockKeys();
             @SuppressWarnings("rawtypes")
             IPersistentLookupManager persistentLookupManager = (sqlExecutor.getStoreOnDiskHandler()).getPersistentLookupManager();
             try {
-                returnCode = ExecuteMatchRuleHandler.executeWithStoreOnDisk(columnMap, recordMatchingIndicator,
-                        blockKeyIndicator, persistentLookupManager, blockKeys);
+                returnCode = execHandler.executeWithStoreOnDisk(columnMap, recordMatchingIndicator, blockKeyIndicator,
+                        persistentLookupManager, blockKeys);
             } catch (Exception e) {
                 log.error(e.getMessage(), e);
             }
         } else {
-            returnCode = ExecuteMatchRuleHandler.execute(columnMap, recordMatchingIndicator, matchRows, blockKeyIndicator);
+            returnCode = execHandler.execute(columnMap, recordMatchingIndicator, matchRows, blockKeyIndicator);
         }
 
         if (!returnCode.isOk()) {
@@ -195,11 +196,11 @@ public class MatchAnalysisExecutor implements IAnalysisExecutor {
      * @param anlayzedElements
      * @return
      */
-    private Map<String, String> getColumn2IndexMap(List<ModelElement> anlayzedElements) {
-        Map<String, String> columnMap = new HashMap<String, String>();
+    private Map<MetadataColumn, String> getColumn2IndexMap(List<ModelElement> anlayzedElements) {
+        Map<MetadataColumn, String> columnMap = new HashMap<MetadataColumn, String>();
         int index = 0;
         for (ModelElement column : anlayzedElements) {
-            columnMap.put(column.getName(), String.valueOf(index++));
+            columnMap.put((MetadataColumn) column, String.valueOf(index++));
         }
         return columnMap;
     }
@@ -211,7 +212,7 @@ public class MatchAnalysisExecutor implements IAnalysisExecutor {
      * @return
      */
     private ISQLExecutor getSQLExectutor(Analysis analysis, RecordMatchingIndicator recordMatchingIndicator,
-            Map<String, String> columnMap) {
+            Map<MetadataColumn, String> columnMap) {
         ModelElement modelElement = analysis.getContext().getAnalysedElements().get(0);
         ISQLExecutor sqlExecutor = null;
         if (modelElement instanceof TdColumn) {

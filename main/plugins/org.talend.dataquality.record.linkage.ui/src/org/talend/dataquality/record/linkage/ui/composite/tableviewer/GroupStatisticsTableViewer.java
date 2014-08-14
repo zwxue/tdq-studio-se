@@ -19,6 +19,7 @@ import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.IBaseLabelProvider;
 import org.eclipse.jface.viewers.IContentProvider;
 import org.eclipse.swt.widgets.Composite;
+import org.talend.core.model.metadata.builder.connection.MetadataColumn;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.record.linkage.ui.composite.tableviewer.provider.GroupStatisticsTableLabelProvider;
 import org.talend.dataquality.record.linkage.ui.composite.tableviewer.provider.MatchAnalysisTableContentProvider;
@@ -42,7 +43,7 @@ public class GroupStatisticsTableViewer extends AbstractMatchAnalysisTableViewer
     public GroupStatisticsTableViewer(Composite parent, int style) {
         super(parent, style, Boolean.TRUE);
         initHeaders();
-        initTable(tableHeaders, new ArrayList<String>());
+        initTable(tableHeaders, new ArrayList<MetadataColumn>());
     }
 
     /**
@@ -133,7 +134,7 @@ public class GroupStatisticsTableViewer extends AbstractMatchAnalysisTableViewer
      * (java.util.List)
      */
     @Override
-    protected CellEditor[] getCellEditor(List<String> headers, List<String> columnMap) {
+    protected CellEditor[] getCellEditor(List<String> headers, List<MetadataColumn> columnMap) {
         return null;
     }
 

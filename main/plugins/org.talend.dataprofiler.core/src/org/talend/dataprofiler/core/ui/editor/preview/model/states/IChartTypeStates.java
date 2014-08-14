@@ -18,6 +18,7 @@ import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.widgets.Composite;
 import org.jfree.chart.JFreeChart;
 import org.jfree.data.category.CategoryDataset;
+import org.jfree.data.category.DefaultCategoryDataset;
 import org.jfree.data.xy.XYDataset;
 import org.talend.dataprofiler.common.ui.editor.preview.ICustomerDataset;
 import org.talend.dq.analysis.explore.DataExplorer;
@@ -105,4 +106,14 @@ public interface IChartTypeStates {
      * @return
      */
     public List<JFreeChart> getChartList();
+
+    /**
+     * use an existed dataset to create a chart
+     * 
+     * @param dataset
+     * @return
+     */
+    public JFreeChart getChart(CategoryDataset dataset);
+
+    public List<JFreeChart> getChartList(List<DefaultCategoryDataset> datasets);
 }

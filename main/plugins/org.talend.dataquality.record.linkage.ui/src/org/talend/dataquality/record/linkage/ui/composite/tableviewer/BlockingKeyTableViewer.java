@@ -25,6 +25,7 @@ import org.eclipse.jface.viewers.IContentProvider;
 import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
+import org.talend.core.model.metadata.builder.connection.MetadataColumn;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.indicators.columnset.RecordMatchingIndicator;
 import org.talend.dataquality.record.linkage.ui.action.MatchRuleActionGroup;
@@ -182,12 +183,18 @@ public class BlockingKeyTableViewer extends AbstractMatchAnalysisTableViewer<Blo
      * org.talend.dataquality.record.linkage.ui.composite.tableviewer.MatchRuleTableViewer#getCellEditor(java.util.List)
      */
     @Override
-    protected CellEditor[] getCellEditor(List<String> headers, List<String> columnList) {
+    protected CellEditor[] getCellEditor(List<String> headers, List<MetadataColumn> columnList) {
         CellEditor[] editors = new CellEditor[headers.size()];
         for (int i = 0; i < editors.length; ++i) {
             switch (i) {
+
             case 1:
-                editors[i] = new ComboBoxCellEditor(innerTable, columnList.toArray(new String[0]), SWT.READ_ONLY);
+                String[] cols = new String[columnList.size()];
+                int idx = 0;
+                for (MetadataColumn metaCol : columnList) {
+                    cols[idx++] = metaCol.getName();
+                }
+                editors[i] = new ComboBoxCellEditor(innerTable, cols, SWT.READ_ONLY);
                 break;
             case 2:
                 editors[i] = new ComboBoxCellEditor(innerTable, BlockingKeyPreAlgorithmEnum.getAllTypes(), SWT.READ_ONLY);

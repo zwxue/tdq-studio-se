@@ -12,6 +12,8 @@
 // ============================================================================
 package org.talend.dataquality.record.linkage.ui.section;
 
+import java.util.List;
+
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.swt.SWT;
@@ -103,8 +105,9 @@ abstract public class AbstractMatchKeyWithChartTableSection extends AbstractMatc
         final Object[] IndicatorList = MatchRuleAnlaysisUtils.getNeedIndicatorFromAna(analysis);
         final RecordMatchingIndicator recordMatchingIndicator = EcoreUtil.copy((RecordMatchingIndicator) IndicatorList[0]);
         BlockKeyIndicator blockKeyIndicator = EcoreUtil.copy((BlockKeyIndicator) IndicatorList[1]);
-        TypedReturnCode<MatchGroupResultConsumer> execute = ExecuteMatchRuleHandler.execute(columnMap, recordMatchingIndicator,
-                matchRows, blockKeyIndicator);
+        ExecuteMatchRuleHandler execHandler = new ExecuteMatchRuleHandler();
+        TypedReturnCode<MatchGroupResultConsumer> execute = execHandler.execute(columnMap, recordMatchingIndicator, matchRows,
+                blockKeyIndicator);
         if (!execute.isOk()) {
             rc.setMessage(DefaultMessagesImpl.getString(
                     "RunAnalysisAction.failRunAnalysis", analysis.getName(), execute.getMessage())); //$NON-NLS-1$ 
@@ -114,9 +117,9 @@ abstract public class AbstractMatchKeyWithChartTableSection extends AbstractMatc
                 return rc;
             }
             // sort the result before refresh
-            MatchRuleAnlaysisUtils.sortResultByGID(recordMatchingIndicator.getMatchRowSchema(), execute.getObject()
-                    .getFullMatchResult());
-            MatchRuleAnlaysisUtils.refreshDataTable(analysis, execute.getObject().getFullMatchResult());
+            List<Object[]> results = MatchRuleAnlaysisUtils.sortResultByGID(recordMatchingIndicator.getMatchRowSchema(), execute
+                    .getObject().getFullMatchResult());
+            MatchRuleAnlaysisUtils.refreshDataTable(analysis, results);
         }
         rc.setOk(true);
         rc.setObject(recordMatchingIndicator);
