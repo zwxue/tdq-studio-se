@@ -120,7 +120,9 @@ public interface IRecordGrouping<T> {
      * Sets the isSeperateOutput.
      * 
      * @param isSeperateOutput the isSeperateOutput to set
+     * @deprecated {@link #setIsComputeGrpQuality(Boolean)}
      */
+    @Deprecated
     public void setSeperateOutput(boolean isSeperateOutput);
 
     /**
@@ -157,5 +159,13 @@ public interface IRecordGrouping<T> {
     public void setSurvivorShipAlgorithmParams(SurvivorShipAlgorithmParams survivorShipAlgorithmParams);
 
     public void setRecordLinkAlgorithm(RecordMatcherType algorithm);
+
+    /**
+     * 
+     * set if compute group quality.
+     * 
+     * @param isComputeGrpQuality.if true,it will compute group quality and output value as column "GRP_QUALITY".
+     */
+    public void setIsComputeGrpQuality(Boolean isComputeGrpQuality);
 
 }

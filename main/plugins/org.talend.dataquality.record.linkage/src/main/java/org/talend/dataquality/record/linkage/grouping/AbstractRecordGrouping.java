@@ -48,9 +48,6 @@ public abstract class AbstractRecordGrouping<TYPE> implements IRecordGrouping<TY
     // Output distance details or not.
     private boolean isOutputDistDetails = Boolean.FALSE;
 
-    // Allow seperate output give group score and the confidence threshold.
-    private boolean isSeperateOutput = Boolean.FALSE;
-
     private CombinedRecordMatcher combinedRecordMatcher = RecordMatcherFactory.createCombinedRecordMatcher();
 
     /**
@@ -83,6 +80,9 @@ public abstract class AbstractRecordGrouping<TYPE> implements IRecordGrouping<TY
 
     // The exthended column size.
     int extSize;
+
+    // Allow compute Group Quality.
+    private Boolean isComputeGrpQuality = Boolean.FALSE;
 
     /*
      * (non-Javadoc)
@@ -132,10 +132,12 @@ public abstract class AbstractRecordGrouping<TYPE> implements IRecordGrouping<TY
      * Sets the isSeperateOutput.
      * 
      * @param isSeperateOutput the isSeperateOutput to set
+     * @deprecated {@link #setIsComputeGrpQuality(Boolean)}
      */
+    @Deprecated
     @Override
     public void setSeperateOutput(boolean isSeperateOutput) {
-        this.isSeperateOutput = isSeperateOutput;
+        this.setIsComputeGrpQuality(isSeperateOutput);
     }
 
     /*
@@ -159,6 +161,15 @@ public abstract class AbstractRecordGrouping<TYPE> implements IRecordGrouping<TY
     }
 
     /*
+     * set if need to compute group quality.
+     */
+    @Override
+    public void setIsComputeGrpQuality(Boolean isComputeGrpQuality) {
+        this.isComputeGrpQuality = isComputeGrpQuality;
+
+    }
+
+    /*
      * (non-Javadoc)
      * 
      * @see
@@ -175,7 +186,7 @@ public abstract class AbstractRecordGrouping<TYPE> implements IRecordGrouping<TY
 
         extSize = isOutputDistDetails ? 5 : 4;
         // extSize + 1 when isSeperateOutput is enabled.
-        extSize = isSeperateOutput ? extSize + 1 : extSize;
+        extSize = isComputeGrpQuality ? extSize + 1 : extSize;
 
         // if the inputRow size less than original column size,should set 'isLinkToPrevious' to false and work on
         // none-multi-pass.
@@ -199,8 +210,8 @@ public abstract class AbstractRecordGrouping<TYPE> implements IRecordGrouping<TY
         String[] lookupDataArray = new String[matchingRule.size()];
 
         for (int idx = 0; idx < lookupDataArray.length; idx++) {
-            lookupDataArray[idx] = String.valueOf(inputRow[Integer
-                    .parseInt(matchingRule.get(idx).get(IRecordGrouping.COLUMN_IDX))]);
+            Object inputObj = inputRow[Integer.parseInt(matchingRule.get(idx).get(IRecordGrouping.COLUMN_IDX))];
+            lookupDataArray[idx] = inputObj == null ? null : String.valueOf(inputObj);
         }
         switch (matchAlgo) {
         case simpleVSRMatcher:
@@ -237,8 +248,8 @@ public abstract class AbstractRecordGrouping<TYPE> implements IRecordGrouping<TY
             String[] masterMatchRecord = new String[lookupDataArray.length];
             // Find the match record from master record.
             for (int idx = 0; idx < lookupDataArray.length; idx++) {
-                masterMatchRecord[idx] = String.valueOf(masterRecord[Integer.parseInt(matchingRule.get(idx).get(
-                        IRecordGrouping.COLUMN_IDX))]);
+                Object masterObj = masterRecord[Integer.parseInt(matchingRule.get(idx).get(IRecordGrouping.COLUMN_IDX))];
+                masterMatchRecord[idx] = masterObj == null ? null : String.valueOf(masterObj);
             }
             double matchingProba = combinedRecordMatcher.getMatchingWeight(masterMatchRecord, lookupDataArray);
             // Similar
@@ -251,10 +262,14 @@ public abstract class AbstractRecordGrouping<TYPE> implements IRecordGrouping<TY
                     if (masterGRPSize == 1) {
                         inputRow[originalInputColumnSize + 1] = incrementGroupSize(inputRow[originalInputColumnSize + 1]);
                         TYPE[] inputRowWithExtColumns = createNewInputRowForMultPass(inputRow, originalInputColumnSize + extSize);
-                        // since the 'masterRecord' will be output as a duplicate,need to set masterRecord GRP_QUALITY
-                        // to 'inputRow_with_extColumns'. then compare it with 'matchingProba' later.
-                        if (isSeperateOutput) {
-                            inputRowWithExtColumns[originalInputColumnSize + 4] = masterRecord[originalInputColumnSize + 4];
+                        // since the 'masterRecord' will be output as a duplicate,if the masterRecord Gneed GRP_QUALITY
+                        // is less than Input,should set masterRecord GRP_QUALITY to 'inputRow_with_extColumns' at here.
+                        if (isComputeGrpQuality) {
+                            double inputGRP = Double.valueOf(String.valueOf(inputRowWithExtColumns[originalInputColumnSize + 4]));
+                            double masterGRP = Double.valueOf(String.valueOf(masterRecord[originalInputColumnSize + 4]));
+                            if (masterGRP < inputGRP) {
+                                inputRowWithExtColumns[originalInputColumnSize + 4] = masterRecord[originalInputColumnSize + 4];
+                            }
                         }
                         updateWithExtendedColumn(masterRecord, inputRowWithExtColumns, matchingProba, distanceDetails,
                                 columnDelimiter);
@@ -300,10 +315,12 @@ public abstract class AbstractRecordGrouping<TYPE> implements IRecordGrouping<TY
                 masterRow[masterRow.length - extSize + 3] = castAsType(1.0);
 
             }
-            if (isSeperateOutput) {
+            if (isComputeGrpQuality) {
                 // Group quality for multiple pass
                 extIdx++;
-                masterRow[inputColumnLenth + 4] = castAsType(1.0);
+                if (!isLinkToPrevious) {
+                    masterRow[inputColumnLenth + 4] = castAsType(1.0);
+                }
             }
             if (isOutputDistDetails) {
                 // Match distance details for multiple pass
@@ -327,22 +344,22 @@ public abstract class AbstractRecordGrouping<TYPE> implements IRecordGrouping<TY
             inputRowWithExtColumn[idx] = inputRow[idx];
         }
 
-        TYPE prevDistanceTMP = null;
-        // In case of multi-pass, the value of index "originalInputColumnSize + 4" is the 1st tMatchGroup's distance
-        // details. Note no seperate output for 1st tMatchGroup in multi-pass.
-        if (extSize > 4 && inputRowWithExtColumn[originalInputColumnSize + 4] != null) {
-            prevDistanceTMP = inputRowWithExtColumn[originalInputColumnSize + 4];
-        }
         int extInd = 0;
-        if (isSeperateOutput) {
-            inputRowWithExtColumn[originalInputColumnSize + 4] = castAsType(0.0);
+        if (isComputeGrpQuality) {
+            // In case of multi-pass, the value of index "originalInputColumnSize + 4" is the 1st tMatchGroup's
+            // group quality. should propagate it to next tMatchGroup.or else set default value 0.0.
+            TYPE inputGRP = inputRowWithExtColumn[originalInputColumnSize + 4];
+            if (inputGRP == null) {
+                inputRowWithExtColumn[originalInputColumnSize + 4] = castAsType(0.0);
+            }
             extInd++;
         }
+
         if (isOutputDistDetails) {
-            // propagate previous Match distance to next when the previous distance is not null.
-            if (prevDistanceTMP != null) {
-                inputRowWithExtColumn[originalInputColumnSize + 4 + extInd] = prevDistanceTMP;
-            } else {
+            // In case of multi-pass, the value of index "originalInputColumnSize + 4+ extInd" is the 1st tMatchGroup's
+            // distance details. should propagate it to next tMatchGroup.or else set the Empty to Match distance.
+            TYPE inputDistance = inputRowWithExtColumn[originalInputColumnSize + 4 + extInd];
+            if (inputDistance == null) {
                 inputRowWithExtColumn[originalInputColumnSize + 4 + extInd] = castAsType(StringUtils.EMPTY);
             }
         }
@@ -415,7 +432,7 @@ public abstract class AbstractRecordGrouping<TYPE> implements IRecordGrouping<TY
 
         int extIdx = 3;
         // Group quality
-        if (isSeperateOutput) {
+        if (isComputeGrpQuality) {
             extIdx++;
             double groupQuality = computeGroupQuality(masterRecord, matchingProba, extIdx);
             masterRecord[duplicateRecord.length - extSize + extIdx] = castAsType(groupQuality);
