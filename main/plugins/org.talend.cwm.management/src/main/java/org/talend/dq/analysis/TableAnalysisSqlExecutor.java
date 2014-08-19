@@ -49,6 +49,7 @@ import org.talend.dataquality.helpers.BooleanExpressionHelper;
 import org.talend.dataquality.helpers.IndicatorHelper;
 import org.talend.dataquality.indicators.CompositeIndicator;
 import org.talend.dataquality.indicators.Indicator;
+import org.talend.dataquality.indicators.RowCountIndicator;
 import org.talend.dataquality.indicators.definition.IndicatorDefinition;
 import org.talend.dataquality.indicators.sql.WhereRuleAideIndicator;
 import org.talend.dataquality.indicators.sql.WhereRuleIndicator;
@@ -56,8 +57,8 @@ import org.talend.dataquality.rules.JoinElement;
 import org.talend.dataquality.rules.RulesPackage;
 import org.talend.dataquality.rules.WhereRule;
 import org.talend.dq.dbms.DbmsLanguage;
-import org.talend.dq.helper.ContextHelper;
 import org.talend.dq.helper.AnalysisExecutorHelper;
+import org.talend.dq.helper.ContextHelper;
 import org.talend.dq.indicators.IndicatorCommonUtil;
 import org.talend.utils.collections.MultiMapHelper;
 import org.talend.utils.sugars.ReturnCode;
@@ -390,10 +391,18 @@ public class TableAnalysisSqlExecutor extends TableAnalysisExecutor {
         for (ModelElement modelElement : analyzedElements) {
             List<Indicator> list = elementToIndicator.get(modelElement);
             for (Indicator ind : list) {
-                if (ind instanceof WhereRuleIndicator) {
-                    Indicator aideInd = getAideIndicator(list, ind);
-                    if (aideInd != null) {
-                        ind.setCount(((WhereRuleAideIndicator) aideInd).getUserCount());
+                if (ind instanceof WhereRuleIndicator && !(ind instanceof WhereRuleAideIndicator)) {
+                    Indicator tempInd = getAideIndicator(list, ind);
+                    if (tempInd != null) {
+                        WhereRuleAideIndicator aideInd = (WhereRuleAideIndicator) tempInd;
+                        if (!aideInd.getJoinConditions().isEmpty()) {
+                            ind.setCount(aideInd.getUserCount());
+                        } else {
+                            Indicator rowInd = getRowCountIndicator(list, ind);
+                            if (rowInd != null) {
+                                ind.setCount(rowInd.getCount());
+                            }
+                        }
                     }
                 }
             }
@@ -417,6 +426,25 @@ public class TableAnalysisSqlExecutor extends TableAnalysisExecutor {
             }
         }
         return aideInd;
+    }
+
+    /**
+     * DOC xqliu Comment method "getRowCountIndicator".
+     * 
+     * @param list
+     * @param indicator
+     * @return
+     */
+    private Indicator getRowCountIndicator(List<Indicator> list, Indicator indicator) {
+        Indicator rowInd = null;
+        ModelElement analyzedElement = indicator.getAnalyzedElement();
+        for (Indicator ind : list) {
+            if (ind instanceof RowCountIndicator && analyzedElement.equals(ind.getAnalyzedElement())) {
+                rowInd = ind;
+                break;
+            }
+        }
+        return rowInd;
     }
 
     private String getCatalogOrSchemaName(ModelElement analyzedElement) {
@@ -453,6 +481,12 @@ public class TableAnalysisSqlExecutor extends TableAnalysisExecutor {
     }
 
     private boolean executeQuery(Indicator indicator, Connection connection, String queryStmt) throws SQLException {
+        // TDQ-9294 if the WhereRuleAideIndicator don't contain any join condictions, it result is same with row count,
+        // so just return true and get the row count from RowCount indicator
+        if (indicator instanceof WhereRuleAideIndicator && indicator.getJoinConditions().isEmpty()) {
+            return true;
+        }
+        // ~ TDQ-9294
         String cat = getCatalogOrSchemaName(indicator.getAnalyzedElement());
         if (log.isInfoEnabled()) {
             log.info(Messages.getString("ColumnAnalysisSqlExecutor.COMPUTINGINDICATOR", indicator.getName())//$NON-NLS-1$
