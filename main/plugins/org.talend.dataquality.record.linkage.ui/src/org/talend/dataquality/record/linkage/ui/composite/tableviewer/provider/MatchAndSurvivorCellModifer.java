@@ -47,7 +47,8 @@ public class MatchAndSurvivorCellModifer extends AbstractMatchCellModifier<Match
                     return false;
                 }
             } else if (MatchAnalysisConstant.PARAMETER.equalsIgnoreCase(property)) {
-                return isSurvivorShipAlgorithm(mkd, SurvivorShipAlgorithmEnum.MOST_TRUSTED_SOURCE);
+                return isSurvivorShipAlgorithm(mkd, SurvivorShipAlgorithmEnum.MOST_TRUSTED_SOURCE)
+                        | isSurvivorShipAlgorithm(mkd, SurvivorShipAlgorithmEnum.CONCATENATE);
             } else if (MatchAnalysisConstant.THRESHOLD.equalsIgnoreCase(property)) {
                 return !isMatcherType(mkd, AttributeMatcherType.EXACT);
             }
@@ -196,7 +197,8 @@ public class MatchAndSurvivorCellModifer extends AbstractMatchCellModifier<Match
                     return;
                 }
                 mkd.getSurvivorShipKey().getFunction().setAlgorithmType(valueByIndex.getComponentValueName());
-                if (!isSurvivorShipAlgorithm(mkd, SurvivorShipAlgorithmEnum.MOST_TRUSTED_SOURCE)) {
+                if (!(isSurvivorShipAlgorithm(mkd, SurvivorShipAlgorithmEnum.MOST_TRUSTED_SOURCE) | (isSurvivorShipAlgorithm(mkd,
+                        SurvivorShipAlgorithmEnum.CONCATENATE)))) {
                     mkd.getSurvivorShipKey().getFunction().setAlgorithmParameters(StringUtils.EMPTY);
                     // MOD mzhao 2014-7-22 there will be an exception here, when switching the surv functions. Confirmed
                     // with haibo (MDM team), removed this code.
