@@ -2,6 +2,7 @@ package org.talend.dataquality.matchmerge.mfb;
 
 import java.util.Iterator;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.talend.dataquality.matchmerge.Attribute;
 import org.talend.dataquality.matchmerge.Record;
@@ -18,6 +19,22 @@ public class MFBRecordMatcher extends AbstractRecordMatcher {
 
     public MFBRecordMatcher(double minConfidenceValue) {
         this.minConfidenceValue = minConfidenceValue;
+    }
+
+    @Override
+    public double getMatchingWeight(String[] record1, String[] record2) {
+        return getMatchingWeight(buildRecord(record1), buildRecord(record2)).getNormalizedConfidence();
+    }
+
+    private static Record buildRecord(String[] values) {
+        Record record = new Record(null, 0, StringUtils.EMPTY);
+        int i = 0;
+        for (String value : values) {
+            Attribute attribute = new Attribute(String.valueOf(i++));
+            attribute.setValue(value);
+            record.getAttributes().add(attribute);
+        }
+        return record;
     }
 
     @Override

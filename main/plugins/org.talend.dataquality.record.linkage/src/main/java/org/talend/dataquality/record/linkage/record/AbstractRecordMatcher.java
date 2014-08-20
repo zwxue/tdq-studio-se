@@ -16,9 +16,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.apache.commons.lang.NotImplementedException;
 import org.apache.log4j.Logger;
-import org.talend.dataquality.matchmerge.Record;
 import org.talend.dataquality.record.linkage.Messages;
 import org.talend.dataquality.record.linkage.attribute.DummyMatcher;
 import org.talend.dataquality.record.linkage.attribute.IAttributeMatcher;
@@ -80,24 +78,6 @@ public abstract class AbstractRecordMatcher implements IRecordMatcher {
      * hide the label when there is only one matcher.
      */
     protected boolean displayLabels = false;
-
-    @Override
-    public org.talend.dataquality.matchmerge.mfb.MatchResult getMatchingWeight(Record record1, Record record2) {
-        // Sub classes may override this default implementation.
-        throw new NotImplementedException();
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.talend.dataquality.record.linkage.record.IRecordMatcher#getMatchingWeight(java.lang.String[],
-     * java.lang.String[])
-     */
-    @Override
-    public double getMatchingWeight(String[] record1, String[] record2) {
-        // Sub classes may override this default implementation.
-        throw new NotImplementedException();
-    }
 
     /*
      * (non-Javadoc)
@@ -229,22 +209,6 @@ public abstract class AbstractRecordMatcher implements IRecordMatcher {
         this.attributeMatchingWeights = new double[recordSize];
     }
 
-    /**
-     * Method "internalScalarProduct" computes the scalar product of elements listed in usedIndices array.
-     * 
-     * @param v1
-     * @param v2
-     * @return
-     */
-    protected double internalScalarProduct(double[] v1, double[] v2) {
-        assert usedIndices != null;
-        double result = 0;
-        for (int idx : usedIndices) {
-            result += v1[idx] * v2[idx];
-        }
-        return result;
-    }
-
     /*
      * (non-Javadoc)
      * 
@@ -263,7 +227,6 @@ public abstract class AbstractRecordMatcher implements IRecordMatcher {
     }
 
     protected int[] getUsedIndicesNotblocked() {
-
         if (usedIndicesNotblocked == null && usedIndices != null) {
             List<Integer> indices = new ArrayList<Integer>();
             for (int usedIdx : usedIndices) {

@@ -12,6 +12,9 @@
 // ============================================================================
 package org.talend.dataquality.record.linkage.record;
 
+import org.talend.dataquality.matchmerge.Attribute;
+import org.talend.dataquality.matchmerge.Record;
+import org.talend.dataquality.matchmerge.mfb.MatchResult;
 import org.talend.dataquality.record.linkage.attribute.IAttributeMatcher;
 
 /**
@@ -52,6 +55,23 @@ public class SimpleVSRRecordMatcher extends AbstractRecordMatcher {
         }
 
         return result;
+    }
+
+    @Override
+    public MatchResult getMatchingWeight(Record record1, Record record2) {
+        MatchResult result = new MatchResult(record1.getAttributes().size());
+        double confidence = getMatchingWeight(buildValues(record1), buildValues(record2));
+        result.setConfidence(confidence);
+        return result;
+    }
+
+    private static String[] buildValues(Record record1) {
+        String[] values = new String[record1.getAttributes().size()];
+        int i = 0;
+        for (Attribute attribute : record1.getAttributes()) {
+            values[i++] = attribute.getValue();
+        }
+        return values;
     }
 
     private double computeMatchingWeight(int blockedIdx, String[] record1, String[] record2) {
