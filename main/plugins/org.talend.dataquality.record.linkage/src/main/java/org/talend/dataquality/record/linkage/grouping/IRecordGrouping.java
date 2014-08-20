@@ -120,7 +120,7 @@ public interface IRecordGrouping<T> {
      * Sets the isSeperateOutput.
      * 
      * @param isSeperateOutput the isSeperateOutput to set
-     * @deprecated {@link #setIsComputeGrpQuality(Boolean)}
+     * @deprecated Use {@link #setIsComputeGrpQuality(Boolean)} instead.
      */
     @Deprecated
     public void setSeperateOutput(boolean isSeperateOutput);
