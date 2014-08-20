@@ -35,6 +35,7 @@ public class MFBRecordMatcher extends AbstractRecordMatcher {
             // Find the first score to exceed threshold (if any).
             double score = matchScore(left, right, matcher);
             attributeMatchingWeights[matchIndex] = score;
+
             result.setScore(matchIndex, matcher.getMatchType(), score, left.getValue(), right.getValue());
             result.setThreshold(matchIndex, matcher.getThreshold());
             confidence += score * matcher.getWeight();
