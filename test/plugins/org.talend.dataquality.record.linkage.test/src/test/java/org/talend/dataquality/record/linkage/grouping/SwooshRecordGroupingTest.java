@@ -150,6 +150,7 @@ public class SwooshRecordGroupingTest {
         lnameRecords.put(IRecordGrouping.ATTRIBUTE_NAME, "ID");
         lnameRecords.put(IRecordGrouping.MATCHING_TYPE, "JARO_WINKLER"); //$NON-NLS-1$
         lnameRecords.put(IRecordGrouping.CONFIDENCE_WEIGHT, String.valueOf(1));
+        lnameRecords.put(IRecordGrouping.ATTRIBUTE_THRESHOLD, String.valueOf(1));
 
         matchingRule.add(lnameRecords);
 
@@ -318,6 +319,7 @@ public class SwooshRecordGroupingTest {
         lnameRecords.put(IRecordGrouping.ATTRIBUTE_NAME, "NAME");
         lnameRecords.put(IRecordGrouping.MATCHING_TYPE, "JARO_WINKLER"); //$NON-NLS-1$
         lnameRecords.put(IRecordGrouping.CONFIDENCE_WEIGHT, String.valueOf(1));
+        lnameRecords.put(IRecordGrouping.ATTRIBUTE_THRESHOLD, String.valueOf(0.9));
 
         matchingRule.add(lnameRecords);
 
