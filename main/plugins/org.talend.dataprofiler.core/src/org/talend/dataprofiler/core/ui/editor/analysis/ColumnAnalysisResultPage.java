@@ -225,6 +225,8 @@ public class ColumnAnalysisResultPage extends AbstractAnalysisResultPage impleme
                             oneCategoryIndicatorModel, index++, oneIndicator);
                     eReceiver.setChartComposite(chartComposite);
                     eReceiver.setTableViewer(tableViewer);
+                    // clear data
+                    eReceiver.clearValue();
                     registerIndicatorEvent(oneIndicator, eReceiver);
                 }
             }
@@ -289,7 +291,7 @@ public class ColumnAnalysisResultPage extends AbstractAnalysisResultPage impleme
         for (Indicator oneIndicator : eventReceivers.keySet()) {
             DynamicChartEventReceiver eventReceiver = (DynamicChartEventReceiver) eventReceivers.get(oneIndicator);
             eventReceiver.clear();
-            EventManager.getInstance().unRegister(oneIndicator, EventEnum.DQ_DYMANIC_CHART, eventReceiver);
+            EventManager.getInstance().clearEvent(oneIndicator, EventEnum.DQ_DYMANIC_CHART);
         }
         eventReceivers.clear();
         EventManager.getInstance().unRegister(chartComposite, EventEnum.DQ_DYNAMIC_REFRESH_DYNAMIC_CHART,
