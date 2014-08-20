@@ -38,12 +38,6 @@ public class FrequencyDynamicChartEventReceiver extends DynamicChartEventReceive
             indValue = 0;
         }
         if (dataset != null) {
-            // clear old data
-            if (dataset instanceof CustomerDefaultCategoryDataset) {
-                ((CustomerDefaultCategoryDataset) dataset).clearAll();
-            } else {
-                dataset.clear();
-            }
             // no sort needed here
             if (indValue instanceof FrequencyExt[]) {
                 FrequencyExt[] frequencyExt = (FrequencyExt[]) indValue;
@@ -51,7 +45,6 @@ public class FrequencyDynamicChartEventReceiver extends DynamicChartEventReceive
             }
         }
         if (tableViewer != null) {
-            // if (indValue instanceof FrequencyExt[]) {
             ChartWithData input = (ChartWithData) tableViewer.getInput();
             if (input != null) {
                 if (this.indicator instanceof ModeIndicator) {
@@ -68,7 +61,6 @@ public class FrequencyDynamicChartEventReceiver extends DynamicChartEventReceive
                 tableViewer.getTable().clearAll();
                 tableViewer.setInput(input);
             }
-            // }
         }
 
         // need to refresh the parent composite of the chart to show the changes
@@ -105,6 +97,22 @@ public class FrequencyDynamicChartEventReceiver extends DynamicChartEventReceive
             ChartDataEntity entity = AnalysisUtils.createChartEntity(indicator, freqExt, keyLabel, withRowCountIndicator);
 
             ((CustomerDefaultCategoryDataset) customerdataset).addDataEntity(entity);
+        }
+    }
+
+    @Override
+    public void clearValue() {
+        if (dataset != null) {// clear old data
+            if (dataset instanceof CustomerDefaultCategoryDataset) {
+                ((CustomerDefaultCategoryDataset) dataset).clearAll();
+            } else {
+                dataset.clear();
+            }
+        }
+        if (tableViewer != null) {
+            ChartWithData input = (ChartWithData) tableViewer.getInput();
+            input.setEntities(null);
+            tableViewer.getTable().clearAll();
         }
     }
 

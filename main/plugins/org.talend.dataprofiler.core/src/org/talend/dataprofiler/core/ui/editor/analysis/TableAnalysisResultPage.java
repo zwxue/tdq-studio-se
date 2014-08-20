@@ -586,7 +586,7 @@ public class TableAnalysisResultPage extends AbstractAnalysisResultPage implemen
         for (Indicator oneIndicator : eventReceivers.keySet()) {
             DynamicChartEventReceiver eventReceiver = (DynamicChartEventReceiver) eventReceivers.get(oneIndicator);
             eventReceiver.clear();
-            EventManager.getInstance().unRegister(oneIndicator, EventEnum.DQ_DYMANIC_CHART, eventReceiver);
+            EventManager.getInstance().clearEvent(oneIndicator, EventEnum.DQ_DYMANIC_CHART);
         }
         eventReceivers.clear();
         EventManager.getInstance().unRegister(sectionClient, EventEnum.DQ_DYNAMIC_REFRESH_DYNAMIC_CHART,

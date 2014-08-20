@@ -30,9 +30,6 @@ public class BenfordFrequencyDynamicChartEventReceiver extends FrequencyDynamicC
 
     @Override
     public boolean handle(Object value) {
-        if (secondDataset != null) {// when the graph is hiden, the secondDataset is null
-            ((DefaultCategoryDataset) secondDataset).clear();
-        }
         return super.handle(value);
     }
 
@@ -78,4 +75,11 @@ public class BenfordFrequencyDynamicChartEventReceiver extends FrequencyDynamicC
         this.secondDataset = secondDataset;
     }
 
+    @Override
+    public void clearValue() {
+        if (secondDataset != null) {// when the graph is hiden, the secondDataset is null
+            ((DefaultCategoryDataset) secondDataset).clear();
+        }
+        super.clearValue();
+    }
 }
