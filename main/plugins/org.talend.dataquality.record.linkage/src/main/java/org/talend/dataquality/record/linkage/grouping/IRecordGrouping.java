@@ -41,6 +41,11 @@ public interface IRecordGrouping<T> {
     public static final String CONFIDENCE_WEIGHT = "CONFIDENCE_WEIGHT"; //$NON-NLS-1$
 
     /**
+     * Attribute threshold
+     */
+    public static final String ATTRIBUTE_THRESHOLD = "ATTRIBUTE_THRESHOLD"; //$NON-NLS-1$
+
+    /**
      * Key for Record match threshold (match interval).
      */
     public static final String RECORD_MATCH_THRESHOLD = "RECORD_MATCH_THRESHOLD"; //$NON-NLS-1$
@@ -120,7 +125,9 @@ public interface IRecordGrouping<T> {
      * Sets the isSeperateOutput.
      * 
      * @param isSeperateOutput the isSeperateOutput to set
+     * @deprecated Use {@link #setIsComputeGrpQuality(Boolean)} instead.
      */
+    @Deprecated
     public void setSeperateOutput(boolean isSeperateOutput);
 
     /**
@@ -157,5 +164,13 @@ public interface IRecordGrouping<T> {
     public void setSurvivorShipAlgorithmParams(SurvivorShipAlgorithmParams survivorShipAlgorithmParams);
 
     public void setRecordLinkAlgorithm(RecordMatcherType algorithm);
+
+    /**
+     * 
+     * set if compute group quality.
+     * 
+     * @param isComputeGrpQuality.if true,it will compute group quality and output value as column "GRP_QUALITY".
+     */
+    public void setIsComputeGrpQuality(Boolean isComputeGrpQuality);
 
 }

@@ -45,6 +45,7 @@ public class DQRecordIterator extends RecordIterator {
     protected Record createRecord(Vector<Attribute> attriVector, List<DQAttribute<?>> originalRow) {
         RichRecord record = new RichRecord(attriVector, String.valueOf(currentIndex - 1), timestamp++, "MFB"); //$NON-NLS-1$
         record.setOriginRow(originalRow);
+        record.setRecordSize(originalRow.size());
         return record;
     }
 

@@ -104,7 +104,7 @@ public class SwooshRecordGroupingTest {
              */
             @Override
             protected void outputRow(RichRecord row) {
-                List<DQAttribute<?>> originRow = row.getOutputRow();
+                List<DQAttribute<?>> originRow = row.getOutputRow(swooshGrouping.getOldGID2New());
                 String[] strRow = new String[originRow.size()];
                 int idx = 0;
                 for (DQAttribute<?> attr : originRow) {
@@ -246,7 +246,7 @@ public class SwooshRecordGroupingTest {
 
             @Override
             protected void outputRow(RichRecord row) {
-                List<DQAttribute<?>> originRow = row.getOutputRow();
+                List<DQAttribute<?>> originRow = row.getOutputRow(swooshGrouping.getOldGID2New());
                 String[] strRow = new String[originRow.size()];
                 int idx = 0;
                 for (DQAttribute<?> attr : originRow) {

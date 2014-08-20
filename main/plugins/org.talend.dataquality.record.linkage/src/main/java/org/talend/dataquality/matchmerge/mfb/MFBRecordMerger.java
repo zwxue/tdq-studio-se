@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.talend.dataquality.matchmerge.Attribute;
 import org.talend.dataquality.matchmerge.AttributeValues;
 import org.talend.dataquality.matchmerge.Record;
@@ -84,19 +85,8 @@ public class MFBRecordMerger implements IRecordMerger {
     }
 
     /**
-     * 
      * Create a merged value given the values from record 1 and record 2.
      * 
-     * @param leftSource
-     * @param rightSource
-     * @param parameter
-     * @param leftTimeStamp
-     * @param rightTimeStamp
-     * @param survivorShipAlgorithmEnum
-     * @param leftValue
-     * @param rightValue
-     * @param mergedValue
-     * @param mergedValues
      * @return the merged value.
      */
     protected String createMergeValue(String leftSource, String rightSource, String parameter, long leftTimeStamp,
@@ -108,7 +98,11 @@ public class MFBRecordMerger implements IRecordMerger {
         int rightValueLength = rightValue == null ? 0 : rightValue.length();
         switch (survivorShipAlgorithmEnum) {
         case CONCATENATE:
-            return leftValue + rightValue;
+            if (StringUtils.isEmpty(parameter)) {
+                return leftValue + rightValue;
+            } else {
+                return leftValue + parameter + rightValue;
+            }
         case LARGEST:
             leftNumberValue = parseNumberValue(leftValue);
             rightNumberValue = parseNumberValue(rightValue);

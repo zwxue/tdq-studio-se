@@ -90,6 +90,18 @@ public abstract class AbstractRecordMatcher implements IRecordMatcher {
     /*
      * (non-Javadoc)
      * 
+     * @see org.talend.dataquality.record.linkage.record.IRecordMatcher#getMatchingWeight(java.lang.String[],
+     * java.lang.String[])
+     */
+    @Override
+    public double getMatchingWeight(String[] record1, String[] record2) {
+        // Sub classes may override this default implementation.
+        throw new NotImplementedException();
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
      * @see org.talend.dataquality.record.linkage.record.IRecordMatcher#setDisplayLabels(boolean)
      */
     @Override
