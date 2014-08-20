@@ -132,7 +132,7 @@ public abstract class AbstractRecordGrouping<TYPE> implements IRecordGrouping<TY
      * Sets the isSeperateOutput.
      * 
      * @param isSeperateOutput the isSeperateOutput to set
-     * @deprecated {@link #setIsComputeGrpQuality(Boolean)}
+     * @deprecated Use {@link #setIsComputeGrpQuality(Boolean)} instead.
      */
     @Deprecated
     @Override
