@@ -108,6 +108,12 @@ public class TableAnalysisSqlExecutor extends TableAnalysisExecutor {
 
     private boolean createSqlQuery(String dataFilterAsString, Indicator indicator) throws ParseException,
             AnalysisExecutionException {
+        // TDQ-9294 if the WhereRuleAideIndicator don't contain any join condictions, it result is same with row count,
+        // so just return true and get the row count from RowCount indicator
+        if (indicator instanceof WhereRuleAideIndicator && indicator.getJoinConditions().isEmpty()) {
+            return true;
+        }
+        // ~ TDQ-9294
         ModelElement analyzedElement = indicator.getAnalyzedElement();
         if (analyzedElement == null) {
             return traceError("Analyzed element is null for indicator " + indicator.getName());//$NON-NLS-1$
