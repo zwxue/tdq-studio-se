@@ -179,9 +179,12 @@ public abstract class IndicatorUnit {
     protected String getExecutionLanguage() {
         String result = ExecutionLanguage.SQL.getLiteral();
         if (indicator != null) {
-            EObject eContainer = indicator.eContainer().eContainer();
-            if (eContainer instanceof Analysis) {
-                result = ((Analysis) eContainer).getParameters().getExecutionLanguage().getLiteral();
+            EObject ec1 = indicator.eContainer();
+            if (ec1 != null) {
+                EObject eContainer = ec1.eContainer();
+                if (eContainer != null && eContainer instanceof Analysis) {
+                    result = ((Analysis) eContainer).getParameters().getExecutionLanguage().getLiteral();
+                }
             }
         }
         return result;
