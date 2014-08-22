@@ -35,7 +35,8 @@ public class DefaultSurvivorShipCellModifier extends AbstractMatchCellModifier<D
         if (element != null && element instanceof DefaultSurvivorshipDefinition) {
             if (MatchAnalysisConstant.PARAMETER.equalsIgnoreCase(property)) {
                 DefaultSurvivorshipDefinition dsd = (DefaultSurvivorshipDefinition) element;
-                return isMostTrustedSourceAlgorithm(dsd);
+                return isSurvivorShipAlgorithm(dsd, SurvivorShipAlgorithmEnum.MOST_TRUSTED_SOURCE)
+                        | isSurvivorShipAlgorithm(dsd, SurvivorShipAlgorithmEnum.CONCATENATE);
             } else {
                 return true;
             }
@@ -43,8 +44,8 @@ public class DefaultSurvivorShipCellModifier extends AbstractMatchCellModifier<D
         return false;
     }
 
-    private boolean isMostTrustedSourceAlgorithm(DefaultSurvivorshipDefinition dsd) {
-        return dsd.getFunction().getAlgorithmType().equals(SurvivorShipAlgorithmEnum.MOST_TRUSTED_SOURCE.getComponentValueName());
+    private boolean isSurvivorShipAlgorithm(DefaultSurvivorshipDefinition dsd, SurvivorShipAlgorithmEnum algorithm) {
+        return dsd.getFunction().getAlgorithmType().equals(algorithm.getComponentValueName());
     }
 
     /*
@@ -89,7 +90,8 @@ public class DefaultSurvivorShipCellModifier extends AbstractMatchCellModifier<D
                     return;
                 }
                 skd.getFunction().setAlgorithmType(valueByIndex.getComponentValueName());
-                if (!isMostTrustedSourceAlgorithm(skd)) {
+                if (!(isSurvivorShipAlgorithm(skd, SurvivorShipAlgorithmEnum.MOST_TRUSTED_SOURCE) | isSurvivorShipAlgorithm(skd,
+                        SurvivorShipAlgorithmEnum.CONCATENATE))) {
                     skd.getFunction().setAlgorithmParameters(StringUtils.EMPTY);
                     CellEditor[] cellEditors = tableViewer.getCellEditors();
                     if (cellEditors.length == 3) {
