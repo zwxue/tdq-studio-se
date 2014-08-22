@@ -63,7 +63,6 @@ public class UpdateMsSqlToJdbcTaskTest {
         UnitTestBuildHelper.initProjectStructure("testForDeleteActionTDQ"); //$NON-NLS-1$
     }
 
-
     @AfterClass
     public static void afterAllTests() {
         repositoryFactory = null;
@@ -93,7 +92,7 @@ public class UpdateMsSqlToJdbcTaskTest {
         DatabaseConnection createConnection = ConnectionFactory.eINSTANCE.createDatabaseConnection();
         createConnection.setName(name);
         createConnection.setUsername("UserName"); //$NON-NLS-1$
-        createConnection.setPassword("Password"); //$NON-NLS-1$
+        createConnection.setRawPassword("Password"); //$NON-NLS-1$
         createConnection.setURL("URL"); //$NON-NLS-1$
         createConnection.setDatabaseType("Microsoft SQL Server 2005/2008"); //$NON-NLS-1$
         createConnection.setContextMode(true);

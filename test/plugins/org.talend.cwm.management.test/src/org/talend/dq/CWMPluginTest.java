@@ -41,7 +41,7 @@ public class CWMPluginTest extends TestCase {
         dbConn.setURL(""); //$NON-NLS-1$
         dbConn.setName(dbName);
         dbConn.setUsername("root"); //$NON-NLS-1$
-        dbConn.setPassword("root"); //$NON-NLS-1$
+        dbConn.setRawPassword("root"); //$NON-NLS-1$
         dbConn.setContextMode(false);
     }
 
