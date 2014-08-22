@@ -570,5 +570,5 @@ public class ExecuteMatchRuleHandler {
         return matchKeyMap;
     }
 
-    private final static String[] NUMBERS = new String[] { "Integer", "Float", "Double", "Number", "Long" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$//$NON-NLS-4$//$NON-NLS-5$
+    private final static String[] NUMBERS = new String[] { "Integer", "Float", "Double", "Number", "Long", "Short", "Byte" }; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$//$NON-NLS-4$//$NON-NLS-5$ //$NON-NLS-6$ //$NON-NLS-7$
 }
