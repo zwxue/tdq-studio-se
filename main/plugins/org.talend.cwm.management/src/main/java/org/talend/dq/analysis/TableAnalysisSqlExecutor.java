@@ -111,6 +111,12 @@ public class TableAnalysisSqlExecutor extends TableAnalysisExecutor {
 
     private boolean createSqlQuery(String dataFilterAsString, Indicator indicator) throws ParseException,
             AnalysisExecutionException {
+        // TDQ-9294 if the WhereRuleAideIndicator don't contain any join condictions, it result is same with row count,
+        // so just return true and get the row count from RowCount indicator
+        if (indicator instanceof WhereRuleAideIndicator && indicator.getJoinConditions().isEmpty()) {
+            return true;
+        }
+        // ~ TDQ-9294
         ModelElement analyzedElement = indicator.getAnalyzedElement();
         if (analyzedElement == null) {
             traceError("Analyzed element is null for indicator " + indicator.getName());//$NON-NLS-1$
@@ -327,24 +333,31 @@ public class TableAnalysisSqlExecutor extends TableAnalysisExecutor {
 
                 Expression query = dbms().getInstantiatedExpression(indicator);
                 if (query == null) {
-                    traceError("Query not executed for indicator: \"" + indicator.getName() + "\" "//$NON-NLS-1$//$NON-NLS-2$
-                            + "query is null");//$NON-NLS-1$
-                    isSuccess = Boolean.FALSE;
-                    continue;
-                }
-                try {
-                    Boolean isExecSuccess = executeQuery(indicator, connection, query.getBody());
-                    if (!isExecSuccess) {
+                    // TDQ-9294 if the WhereRuleAideIndicator don't contain any join condictions, it result is same with
+                    // row count, so will not generate query for it
+                    if (!(indicator instanceof WhereRuleAideIndicator && indicator.getJoinConditions().isEmpty())) {
                         traceError("Query not executed for indicator: \"" + indicator.getName() + "\" "//$NON-NLS-1$//$NON-NLS-2$
-                                + "SQL query: " + query.getBody());//$NON-NLS-1$
+                                + "query is null");//$NON-NLS-1$
                         isSuccess = Boolean.FALSE;
                         continue;
                     }
-                } catch (Exception e) {
-                    traceError("Query not executed for indicator: \"" + indicator.getName() + "\" "//$NON-NLS-1$//$NON-NLS-2$
-                            + "SQL query: " + query.getBody() + ". Exception: " + e.getMessage());//$NON-NLS-1$
-                    isSuccess = Boolean.FALSE;
-                    continue;
+                    // TDQ-9294
+                }
+                if (query != null) {
+                    try {
+                        Boolean isExecSuccess = executeQuery(indicator, connection, query.getBody());
+                        if (!isExecSuccess) {
+                            traceError("Query not executed for indicator: \"" + indicator.getName() + "\" "//$NON-NLS-1$//$NON-NLS-2$
+                                    + "SQL query: " + query.getBody());//$NON-NLS-1$
+                            isSuccess = Boolean.FALSE;
+                            continue;
+                        }
+                    } catch (Exception e) {
+                        traceError("Query not executed for indicator: \"" + indicator.getName() + "\" "//$NON-NLS-1$//$NON-NLS-2$
+                                + "SQL query: " + query.getBody() + ". Exception: " + e.getMessage());//$NON-NLS-1$ //$NON-NLS-2$
+                        isSuccess = Boolean.FALSE;
+                        continue;
+                    }
                 }
                 indicator.setComputed(true);
 
@@ -481,12 +494,6 @@ public class TableAnalysisSqlExecutor extends TableAnalysisExecutor {
     }
 
     private boolean executeQuery(Indicator indicator, Connection connection, String queryStmt) throws SQLException {
-        // TDQ-9294 if the WhereRuleAideIndicator don't contain any join condictions, it result is same with row count,
-        // so just return true and get the row count from RowCount indicator
-        if (indicator instanceof WhereRuleAideIndicator && indicator.getJoinConditions().isEmpty()) {
-            return true;
-        }
-        // ~ TDQ-9294
         String cat = getCatalogOrSchemaName(indicator.getAnalyzedElement());
         if (log.isInfoEnabled()) {
             log.info(Messages.getString("ColumnAnalysisSqlExecutor.COMPUTINGINDICATOR", indicator.getName())//$NON-NLS-1$

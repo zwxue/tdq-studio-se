@@ -44,6 +44,7 @@ import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.actions.ActionFactory;
+import org.talend.commons.exception.BusinessException;
 import org.talend.commons.exception.ExceptionHandler;
 import org.talend.commons.exception.LoginException;
 import org.talend.commons.exception.PersistenceException;
@@ -74,6 +75,7 @@ import org.talend.dq.nodes.SourceFileRepNode;
 import org.talend.dq.nodes.SourceFileSubFolderNode;
 import org.talend.repository.ProjectManager;
 import org.talend.repository.RepositoryWorkUnit;
+import org.talend.repository.model.IProxyRepositoryFactory;
 import org.talend.repository.model.IRepositoryNode;
 import org.talend.repository.model.IRepositoryNode.ENodeType;
 import org.talend.repository.model.RepositoryNode;
@@ -163,14 +165,17 @@ public class DQDeleteAction extends DeleteAction {
 
     @Override
     public void init(TreeViewer viewer, IStructuredSelection selection) {
+        // no implementation
     }
 
     ISelectionProvider deletionSelProv = new ISelectionProvider() {
 
         public void setSelection(ISelection arg0) {
+            // no implementation
         }
 
         public void removeSelectionChangedListener(ISelectionChangedListener arg0) {
+            // no implementation
         }
 
         public ISelection getSelection() {
@@ -182,6 +187,7 @@ public class DQDeleteAction extends DeleteAction {
         }
 
         public void addSelectionChangedListener(ISelectionChangedListener arg0) {
+            // no implementation
         }
     };
 
@@ -351,9 +357,6 @@ public class DQDeleteAction extends DeleteAction {
 
             @Override
             protected void run() throws LoginException, PersistenceException {
-                // when physical deleting object with dependencies, do not popup
-                // confirm anymore. and after dealing with it, store back to its default value.
-                confirmForDQ = true;
                 List<IRepositoryNode> folderNodeWhichChildHadDepend = null;
 
                 // use this selectedNodes directly, the order also important,when the depended nodes had been deleted,
@@ -421,9 +424,6 @@ public class DQDeleteAction extends DeleteAction {
                         }
                     }
                 }
-                // Added 20130227 TDQ-6901 yyin, when physical deleting object with dependencies, do not popup
-                // confirm anymore. and after dealing with it, store back to its default value.
-                confirmForDQ = false;
             }
         };
         repositoryWorkUnit.setAvoidUnloadResources(true);
@@ -661,6 +661,7 @@ public class DQDeleteAction extends DeleteAction {
      * @throws PersistenceException
      */
     private void deleteReportFile(final ReportFileRepNode repFileNode) throws PersistenceException {
+        @SuppressWarnings("rawtypes")
         RepositoryWorkUnit repositoryWorkUnit = new RepositoryWorkUnit(ProjectManager.getInstance().getCurrentProject(),
                 "deleteReportFile") { //$NON-NLS-1$
 
@@ -742,6 +743,7 @@ public class DQDeleteAction extends DeleteAction {
      * @param deleteElements
      * @return
      */
+    @SuppressWarnings({ "hiding", "rawtypes", "unchecked" })
     private Object[] checkSourceFilesEditorOpening(Object[] deleteElements) {
         List list = new ArrayList();
         boolean opened = false;
@@ -781,6 +783,15 @@ public class DQDeleteAction extends DeleteAction {
     @Override
     protected void synchUI(DeleteActionCache deleteActionCache) {
         super.synchUI(deleteActionCache);
+    }
+
+    /**
+     * make the confirm dialog not popup.
+     */
+    @Override
+    protected boolean deleteElements(IProxyRepositoryFactory factory, DeleteActionCache deleteActionCache,
+            RepositoryNode currentJobNode) throws PersistenceException, BusinessException {
+        return deleteElements(factory, deleteActionCache, currentJobNode, true);
     }
 
 }

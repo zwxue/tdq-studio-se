@@ -86,6 +86,22 @@ public class EventManager {
     }
 
     /**
+     * clear all eventReceivers for the current event, for the current context
+     * 
+     * @param context
+     * @param event
+     * @return
+     */
+    public boolean clearEvent(Object context, EventEnum event) {
+        MultiMap receverQueryMap = ctxToReceiverQueueMap.get(context);
+        if (receverQueryMap == null) {
+            return false;
+        }
+        receverQueryMap.remove(event);
+        return true;
+    }
+
+    /**
      * call the registered event's related receiver to handle
      * 
      * @param context

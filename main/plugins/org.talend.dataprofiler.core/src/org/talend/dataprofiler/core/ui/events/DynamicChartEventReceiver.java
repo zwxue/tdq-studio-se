@@ -33,6 +33,8 @@ import org.talend.utils.format.StringFormatUtil;
  */
 public class DynamicChartEventReceiver extends EventReceiver {
 
+    protected static final String NAN_STRING = String.valueOf(Double.NaN);
+
     protected DefaultCategoryDataset dataset;
 
     protected Indicator indicator;
@@ -138,7 +140,7 @@ public class DynamicChartEventReceiver extends EventReceiver {
             }
         }
         if (tableViewer != null) {
-            refreshTable(value == null ? String.valueOf(Double.NaN) : String.valueOf(indValue));
+            refreshTable(value == null ? NAN_STRING : String.valueOf(indValue));
         }
 
         // need to refresh the parent composite of the chart to show the changes
@@ -152,7 +154,7 @@ public class DynamicChartEventReceiver extends EventReceiver {
             dataset.setValue(0.0, indicatorName, indicatorName);
         }
         if (tableViewer != null) {
-            refreshTable(String.valueOf(Double.NaN));
+            refreshTable(NAN_STRING);
         }
     }
 
@@ -162,6 +164,7 @@ public class DynamicChartEventReceiver extends EventReceiver {
             ChartDataEntity[] dataEntities = input.getEnity();
             if (dataEntities != null && dataEntities.length > entityIndex) {
                 dataEntities[entityIndex].setValue(value);
+                dataEntities[entityIndex].setPercent(Double.NaN);
                 tableViewer.getTable().clearAll();
                 tableViewer.setInput(input);
             }
