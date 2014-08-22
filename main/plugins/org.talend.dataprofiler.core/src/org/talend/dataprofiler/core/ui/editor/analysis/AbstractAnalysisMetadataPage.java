@@ -315,6 +315,8 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
             @Override
             public boolean handle(Object data) {
                 reloadDataproviderAndFillConnCombo();
+                // TDQ-9345,avoid to get an old column RepositoryNode when click "selecet columns..."
+                updateAnalysisTree();
                 return true;
             }
         };
@@ -1044,6 +1046,22 @@ public abstract class AbstractAnalysisMetadataPage extends AbstractMetadataFormP
         contextManager.saveToEmf(analysis.getContextType());
         analysis.setDefaultContext(getDefaultContextGroupName((SupportContextEditor) currentEditor));
         AnalysisHelper.setLastRunContext(currentEditor.getLastRunContextGroupName(), analysis);
+    }
+
+    /**
+     * 
+     * when rename the related connection ,it will reload connection combo,also need to update TreeViewer,so that avoid
+     * some old column RepositoryNode instance .if it is not dirty before updating,should keep the not dirty satus.
+     */
+    protected void updateAnalysisTree() {
+        AbstractColumnDropTree treeViewer = getTreeViewer();
+        if (treeViewer != null) {
+            boolean beforeUpdateDirty = treeViewer.isDirty();
+            treeViewer.updateModelViewer();
+            if (!beforeUpdateDirty) {
+                treeViewer.setDirty(false);
+            }
+        }
     }
 
 }
