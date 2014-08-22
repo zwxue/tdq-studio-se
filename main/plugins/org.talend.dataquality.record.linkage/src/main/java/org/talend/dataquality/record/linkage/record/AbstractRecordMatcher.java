@@ -18,7 +18,6 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.talend.dataquality.record.linkage.Messages;
-import org.talend.dataquality.record.linkage.attribute.DummyMatcher;
 import org.talend.dataquality.record.linkage.attribute.IAttributeMatcher;
 
 /**
@@ -284,7 +283,7 @@ public abstract class AbstractRecordMatcher implements IRecordMatcher {
         double[] currentAttributeMatchingWeights = this.getCurrentAttributeMatchingWeights();
         for (int i = 0; i < currentAttributeMatchingWeights.length; i++) {
             IAttributeMatcher attributeMatcher = this.attributeMatchers[i];
-            if (attributeMatcher instanceof DummyMatcher) {
+            if (attributeMatcher.isDummyMatcher()) {
                 continue; // Don't take dummy matcher into account.
             }
             if (buffer.length() > 0) {

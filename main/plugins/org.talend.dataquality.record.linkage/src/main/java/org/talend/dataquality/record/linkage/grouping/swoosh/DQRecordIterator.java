@@ -12,6 +12,8 @@
 // ============================================================================
 package org.talend.dataquality.record.linkage.grouping.swoosh;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Vector;
 
@@ -43,6 +45,15 @@ public class DQRecordIterator extends RecordIterator {
      */
     @Override
     protected Record createRecord(Vector<Attribute> attriVector, List<DQAttribute<?>> originalRow) {
+        // Sort the attributes in the vector by column index.
+        Collections.sort(attriVector, new Comparator<Attribute>() {
+
+            @Override
+            public int compare(Attribute o1, Attribute o2) {
+                return o1.getColumnIndex() - o2.getColumnIndex();
+            }
+
+        });
         RichRecord record = new RichRecord(attriVector, String.valueOf(currentIndex - 1), timestamp++, "MFB"); //$NON-NLS-1$
         record.setOriginRow(originalRow);
         record.setRecordSize(originalRow.size());

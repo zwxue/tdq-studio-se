@@ -90,4 +90,6 @@ public interface IAttributeMatcher {
      * importance in the final score of a 2-record match).
      */
     double getWeight();
+
+    boolean isDummyMatcher();
 }
