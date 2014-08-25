@@ -383,7 +383,7 @@ public class TableAnalysisSqlExecutor extends TableAnalysisExecutor {
                     Indicator tempInd = getAideIndicator(list, ind);
                     if (tempInd != null) {
                         WhereRuleAideIndicator aideInd = (WhereRuleAideIndicator) tempInd;
-                        if (!aideInd.getJoinConditions().isEmpty()) {
+                        if (!((WhereRule) aideInd.getIndicatorDefinition()).getJoins().isEmpty()) {
                             ind.setCount(aideInd.getUserCount());
                         } else {
                             Indicator rowInd = getRowCountIndicator(list, ind);
