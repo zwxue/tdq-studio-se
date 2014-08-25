@@ -113,7 +113,7 @@ public class TableAnalysisSqlExecutor extends TableAnalysisExecutor {
             AnalysisExecutionException {
         // TDQ-9294 if the WhereRuleAideIndicator don't contain any join condictions, it result is same with row count,
         // so just return true and get the row count from RowCount indicator
-        if (indicator instanceof WhereRuleAideIndicator && indicator.getJoinConditions().isEmpty()) {
+        if (indicator instanceof WhereRuleAideIndicator && ((WhereRule) indicator.getIndicatorDefinition()).getJoins().isEmpty()) {
             return true;
         }
         // ~ TDQ-9294
@@ -335,7 +335,7 @@ public class TableAnalysisSqlExecutor extends TableAnalysisExecutor {
                 if (query == null) {
                     // TDQ-9294 if the WhereRuleAideIndicator don't contain any join condictions, it result is same with
                     // row count, so will not generate query for it
-                    if (!(indicator instanceof WhereRuleAideIndicator && indicator.getJoinConditions().isEmpty())) {
+                    if (!(indicator instanceof WhereRuleAideIndicator && ((WhereRule) indicator.getIndicatorDefinition()).getJoins().isEmpty())) {
                         traceError("Query not executed for indicator: \"" + indicator.getName() + "\" "//$NON-NLS-1$//$NON-NLS-2$
                                 + "query is null");//$NON-NLS-1$
                         isSuccess = Boolean.FALSE;
@@ -408,7 +408,7 @@ public class TableAnalysisSqlExecutor extends TableAnalysisExecutor {
                     Indicator tempInd = getAideIndicator(list, ind);
                     if (tempInd != null) {
                         WhereRuleAideIndicator aideInd = (WhereRuleAideIndicator) tempInd;
-                        if (!aideInd.getJoinConditions().isEmpty()) {
+                        if (!((WhereRule) aideInd.getIndicatorDefinition()).getJoins().isEmpty()) {
                             ind.setCount(aideInd.getUserCount());
                         } else {
                             Indicator rowInd = getRowCountIndicator(list, ind);
