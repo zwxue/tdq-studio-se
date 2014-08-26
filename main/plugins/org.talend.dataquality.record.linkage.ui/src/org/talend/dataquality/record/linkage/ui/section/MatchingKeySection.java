@@ -777,12 +777,12 @@ public class MatchingKeySection extends AbstractMatchKeyWithChartTableSection {
                 String currentName = mdk.getName();
                 if (currentName.equals(StringUtils.EMPTY)) {
                     returnCode.setMessage(DefaultMessagesImpl.getString(
-                            "BlockingKeySection.emptyKeys.message", getSectionName() + " , " + CurrentRule.getName())); //$NON-NLS-1$ //$NON-NLS-2$
+                            "BlockingKeySection.emptyKeys.message", getSectionName() + " , " + currentRule.getName())); //$NON-NLS-1$ //$NON-NLS-2$
                     return returnCode;
                 }
                 if (checkColumnNameIsEmpty(mdk)) {
                     returnCode.setMessage(DefaultMessagesImpl.getString(
-                            "BlockingKeySection.emptyColumn.message", getSectionName() + " , " + CurrentRule.getName())); //$NON-NLS-1$ //$NON-NLS-2$
+                            "BlockingKeySection.emptyColumn.message", getSectionName() + " , " + currentRule.getName())); //$NON-NLS-1$ //$NON-NLS-2$
                     return returnCode;
                 }
                 if (mdk.getConfidenceWeight() <= 0) {
