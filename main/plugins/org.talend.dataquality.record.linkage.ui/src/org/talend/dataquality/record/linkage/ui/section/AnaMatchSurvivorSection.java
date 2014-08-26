@@ -20,11 +20,13 @@ import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.emf.common.util.EList;
+import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabItem;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.talend.dataquality.analysis.Analysis;
@@ -271,11 +273,13 @@ public class AnaMatchSurvivorSection extends MatchingKeySection {
      */
     @Override
     protected void deleteMatchRuleTab(CTabItem tabItem) {
-        List<MatchKeyAndSurvivorDefinition> matchAndSurvDefList = matchRuleWithSurvMap.get(getMatchRule(tabItem));
+        MatchRule matchRule = getMatchRule(tabItem);
+        List<MatchKeyAndSurvivorDefinition> matchAndSurvDefList = matchRuleWithSurvMap.get(matchRule);
         MatchRuleDefinition matchRuleDefinition = getMatchRuleDefinition();
         for (MatchKeyAndSurvivorDefinition matchAndSurvDef : matchAndSurvDefList) {
             matchRuleDefinition.getSurvivorshipKeys().remove(matchAndSurvDef.getSurvivorShipKey());
         }
+        matchRuleWithSurvMap.remove(matchRule);
         super.deleteMatchRuleTab(tabItem);
     }
 
@@ -370,4 +374,21 @@ public class AnaMatchSurvivorSection extends MatchingKeySection {
         return new KeyDefinitionTableViewerSorter<MatchKeyAndSurvivorDefinition>(matchAndSurvDefList);
     }
 
+    /**
+     * When the user has selected t-swoosh and clicks on the "plus" button, there should be a warning pop-up Added
+     * TDQ-9318
+     */
+    @Override
+    protected void addNewMatchRule() {
+        if (matchRuleWithSurvMap.keySet().size() > 0) {
+            boolean isOk = MessageDialogWithToggle
+                    .openConfirm(
+                            PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(),
+                            DefaultMessagesImpl.getString("AnaMatchSurvivorSection.Tswoosh"), DefaultMessagesImpl.getString("AnaMatchSurvivorSection.MultiRule")); //$NON-NLS-1$ //$NON-NLS-2$ 
+            if (!isOk) {
+                return;
+            }
+        }
+        super.addNewMatchRule();
+    }
 }

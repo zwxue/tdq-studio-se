@@ -186,10 +186,7 @@ public class MatchingKeySection extends AbstractMatchKeyWithChartTableSection {
 
             @Override
             public void widgetSelected(SelectionEvent e) {
-                MatchRule newMatchRule = getNewMatchRule();
-                addRuleTab(true, newMatchRule);
-                addMatchRuleToAnalysis(newMatchRule);
-                listeners.firePropertyChange(MatchAnalysisConstant.ISDIRTY_PROPERTY, true, false);
+                addNewMatchRule();
             }
 
         });
@@ -202,6 +199,16 @@ public class MatchingKeySection extends AbstractMatchKeyWithChartTableSection {
         createGroupQualityThreshold(parent);
 
         return parent;
+    }
+
+    /**
+     * add a new match rule when the user click "+" button.
+     */
+    protected void addNewMatchRule() {
+        MatchRule newMatchRule = getNewMatchRule();
+        addRuleTab(true, newMatchRule);
+        addMatchRuleToAnalysis(newMatchRule);
+        listeners.firePropertyChange(MatchAnalysisConstant.ISDIRTY_PROPERTY, true, false);
     }
 
     /*
@@ -764,12 +771,12 @@ public class MatchingKeySection extends AbstractMatchKeyWithChartTableSection {
                 String currentName = mdk.getName();
                 if (currentName.equals(StringUtils.EMPTY)) {
                     returnCode.setMessage(DefaultMessagesImpl.getString(
-                            "BlockingKeySection.emptyKeys.message", getSectionName() + " , " + CurrentRule.getName())); //$NON-NLS-1$
+                            "BlockingKeySection.emptyKeys.message", getSectionName() + " , " + CurrentRule.getName())); //$NON-NLS-1$ //$NON-NLS-2$
                     return returnCode;
                 }
                 if (checkColumnNameIsEmpty(mdk)) {
                     returnCode.setMessage(DefaultMessagesImpl.getString(
-                            "BlockingKeySection.emptyColumn.message", getSectionName() + " , " + CurrentRule.getName())); //$NON-NLS-1$
+                            "BlockingKeySection.emptyColumn.message", getSectionName() + " , " + CurrentRule.getName())); //$NON-NLS-1$ //$NON-NLS-2$
                     return returnCode;
                 }
                 boolean currentNameIsDuplicate = false;
