@@ -526,7 +526,7 @@ public class MatchingKeySection extends AbstractMatchKeyWithChartTableSection {
         return isAddded;
     }
 
-    private MatchRule getCurrentMatchRule() throws Exception {
+    protected MatchRule getCurrentMatchRule() throws Exception {
         CTabItem currentTabItem = ruleFolder.getSelection();
         if (currentTabItem == null) {
             throw new Exception(DefaultMessagesImpl.getString("MatchingKeySection.ONE_MATCH_RULE_REQUIRED")); //$NON-NLS-1$
@@ -763,13 +763,13 @@ public class MatchingKeySection extends AbstractMatchKeyWithChartTableSection {
             for (MatchKeyDefinition mdk : matchKeys) {
                 String currentName = mdk.getName();
                 if (currentName.equals(StringUtils.EMPTY)) {
-                    returnCode
-                            .setMessage(DefaultMessagesImpl.getString("BlockingKeySection.emptyKeys.message", getSectionName())); //$NON-NLS-1$
+                    returnCode.setMessage(DefaultMessagesImpl.getString(
+                            "BlockingKeySection.emptyKeys.message", getSectionName() + " , " + CurrentRule.getName())); //$NON-NLS-1$
                     return returnCode;
                 }
                 if (checkColumnNameIsEmpty(mdk)) {
                     returnCode.setMessage(DefaultMessagesImpl.getString(
-                            "BlockingKeySection.emptyColumn.message", getSectionName())); //$NON-NLS-1$
+                            "BlockingKeySection.emptyColumn.message", getSectionName() + " , " + CurrentRule.getName())); //$NON-NLS-1$
                     return returnCode;
                 }
                 boolean currentNameIsDuplicate = false;
@@ -785,7 +785,8 @@ public class MatchingKeySection extends AbstractMatchKeyWithChartTableSection {
             }
         }
         if (duplicateNameList.size() > 0) {
-            returnCode.setMessage(DefaultMessagesImpl.getString("BlockingKeySection.duplicateKeys.message", getSectionName())); //$NON-NLS-1$
+            returnCode.setMessage(DefaultMessagesImpl.getString(
+                    "BlockingKeySection.duplicateKeys.message", getSectionName() + "--" + duplicateNameList.get(0))); //$NON-NLS-1$
             return returnCode;
         } else {
             returnCode.setOk(true);

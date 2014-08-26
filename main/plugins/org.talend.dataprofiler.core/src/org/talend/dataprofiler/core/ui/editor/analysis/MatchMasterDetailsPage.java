@@ -1116,33 +1116,67 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
     }
 
     /**
-     * handle the add/delete column for the Match Key Selection.
+     * handle the add/remove column for the Match Key Selection.
      * 
      * @param columnName
      */
     private void handleMatchKeySelection(String columnName) {
         try {
-            Boolean isAdded = matchingKeySection.isKeyDefinitionAdded(columnName);
+            Boolean isAdded = isKeyAlreadyAdded(columnName);
             if (isAdded) {
-                if (selectAlgorithmSection.isVSRMode()) {
-                    matchingKeySection.removeMatchKeyFromCurrentMatchRule(columnName);
-                } else {
-                    matchAndSurvivorKeySection.removeMatchKeyFromCurrentMatchRule(columnName);
-                }
+                removeCurrentKeyFromCurrentMatchRule(columnName);
                 sampleTable.changeColumnHeaderLabelColor(columnName, DataSampleTable.COLOR_BLACK, DataSampleTable.MATCH_EKY);
             } else {
-                if (selectAlgorithmSection.isVSRMode()) {
-                    matchingKeySection.createMatchKeyFromCurrentMatchRule(columnName);
-                } else {
-                    matchAndSurvivorKeySection.createMatchKeyFromCurrentMatchRule(columnName);
-                }
+                addCurrentKeyFromCurrentMatchRule(columnName);
                 sampleTable.changeColumnHeaderLabelColor(columnName, DataSampleTable.COLOR_RED, DataSampleTable.MATCH_EKY);
             }
         } catch (Exception e) {
+            log.error(e, e);
             // popup to notify user that at least one match rule tab is needed.
             MessageDialog.openWarning(null, DefaultMessagesImpl.getString("MatchMasterDetailsPage.warning"), //$NON-NLS-1$
                     DefaultMessagesImpl.getString("MatchMasterDetailsPage.NoMatchRuleTabError")); //$NON-NLS-1$
 
+        }
+    }
+
+    /**
+     * create a match key for the selected column and add to current match rule tab.
+     * 
+     * @param columnName
+     */
+    private void addCurrentKeyFromCurrentMatchRule(String columnName) {
+        if (selectAlgorithmSection.isVSRMode()) {
+            matchingKeySection.createMatchKeyFromCurrentMatchRule(columnName);
+        } else {
+            matchAndSurvivorKeySection.createMatchKeyFromCurrentMatchRule(columnName);
+        }
+    }
+
+    /**
+     * remove the current key from the current Match Rule tab.
+     * 
+     * @param columnName
+     */
+    private void removeCurrentKeyFromCurrentMatchRule(String columnName) {
+        if (selectAlgorithmSection.isVSRMode()) {
+            matchingKeySection.removeMatchKeyFromCurrentMatchRule(columnName);
+        } else {
+            matchAndSurvivorKeySection.removeMatchKeyFromCurrentMatchRule(columnName);
+        }
+    }
+
+    /**
+     * DOC yyin Comment method "isKeyAlreadyAdded".
+     * 
+     * @param columnName
+     * @return
+     * @throws Exception
+     */
+    private Boolean isKeyAlreadyAdded(String columnName) throws Exception {
+        if (selectAlgorithmSection.isVSRMode()) {
+            return matchingKeySection.isKeyDefinitionAdded(columnName);
+        } else {
+            return matchAndSurvivorKeySection.isKeyDefinitionAdded(columnName);
         }
     }
 

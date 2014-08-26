@@ -70,7 +70,7 @@ public class MatchKeyAndSurvivorshipTableViewer extends AbstractMatchAnalysisTab
     public boolean addElement(String columnName, Analysis analysis) {
         return false;
         // if (matchRule == null) {
-        //                log.error(DefaultMessagesImpl.getString("MatchRuleTableViewer.NULL_MATCH_RULE_INSTANCE") + analysis.getName()); //$NON-NLS-1$
+        //            log.error(DefaultMessagesImpl.getString("MatchRuleTableViewer.NULL_MATCH_RULE_INSTANCE") + analysis.getName()); //$NON-NLS-1$
         // return false;
         // }
         // return addElement(columnName, matchRule.getMatchKeys());
@@ -78,7 +78,14 @@ public class MatchKeyAndSurvivorshipTableViewer extends AbstractMatchAnalysisTab
 
     @Override
     public void removeElement(String columnName, List<MatchKeyAndSurvivorDefinition> keyList) {
-        // no need to implement
+        Iterator<MatchKeyAndSurvivorDefinition> matchKeyIterator = keyList.iterator();
+        while (matchKeyIterator.hasNext()) {
+            MatchKeyAndSurvivorDefinition keyDef = matchKeyIterator.next();
+            if (StringUtils.equals(keyDef.getColumn(), columnName)) {
+                this.removeElement(keyDef, keyList);
+                break;
+            }
+        }
     }
 
     @Override

@@ -176,6 +176,8 @@ public class MatchAndSurvivorCellModifer extends AbstractMatchCellModifier<Match
                 }
                 matchKey.setColumn(metaColumn.getName());
                 mkd.getSurvivorShipKey().setColumn(metaColumn.getName());
+                // added TDQ-9296, nodify the change to let the upper layer know this
+                tableViewer.noticeColumnSelectChange();
             } else if (MatchAnalysisConstant.THRESHOLD.equalsIgnoreCase(property)) {
                 if (!org.apache.commons.lang.math.NumberUtils.isNumber(newValue)) {
                     return;
