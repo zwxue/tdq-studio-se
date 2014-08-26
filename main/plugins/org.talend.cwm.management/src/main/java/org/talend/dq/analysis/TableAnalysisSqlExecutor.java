@@ -467,6 +467,12 @@ public class TableAnalysisSqlExecutor extends TableAnalysisExecutor {
     }
 
     private boolean executeQuery(Indicator indicator, Connection connection, String queryStmt) throws SQLException {
+        // TDQ-9294 if the WhereRuleAideIndicator don't contain any join condictions, it result is same with
+        // row count, so needn't to execute query for it
+        if (indicator instanceof WhereRuleAideIndicator && ((WhereRule) indicator.getIndicatorDefinition()).getJoins().isEmpty()) {
+            return true;
+        }
+        // ~ TDQ-9294
         String cat = getCatalogOrSchemaName(indicator.getAnalyzedElement());
         if (log.isInfoEnabled()) {
             log.info(Messages.getString("ColumnAnalysisSqlExecutor.COMPUTINGINDICATOR", indicator.getName())//$NON-NLS-1$
