@@ -43,6 +43,11 @@ import org.talend.dataquality.rules.RulesFactory;
 public class DefaultSurvivorShipTableViewer extends AbstractMatchAnalysisTableViewer<DefaultSurvivorshipDefinition> {
 
     /**
+     * the weight for eache column in this TableViewer.
+     */
+    int[] weights = { 12, 10, 30 };
+
+    /**
      * DOC HHB SurvivorShipTableViewer constructor comment.
      * 
      * @param parent
@@ -162,6 +167,20 @@ public class DefaultSurvivorShipTableViewer extends AbstractMatchAnalysisTableVi
     @Override
     protected int getHeaderDisplayWeight() {
         return 12;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.talend.dataquality.record.linkage.ui.composite.tableviewer.AbstractMatchAnalysisTableViewer#
+     * getHeaderDisplayWeight(int)
+     */
+    @Override
+    protected int getHeaderDisplayWeight(int index) {
+        if (index < weights.length) {
+            return weights[index];
+        }
+        return super.getHeaderDisplayWeight(index);
     }
 
     /*

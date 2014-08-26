@@ -14,12 +14,15 @@ package org.talend.dataquality.record.linkage.ui.section;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.eclipse.jface.viewers.ISelection;
@@ -46,6 +49,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.talend.core.model.metadata.builder.connection.MetadataColumn;
+import org.talend.core.model.metadata.types.JavaTypesManager;
 import org.talend.dataquality.analysis.Analysis;
 import org.talend.dataquality.indicators.columnset.RecordMatchingIndicator;
 import org.talend.dataquality.record.linkage.ui.composite.AbsMatchAnalysisTableComposite;
@@ -56,11 +60,13 @@ import org.talend.dataquality.record.linkage.ui.composite.utils.ImageLib;
 import org.talend.dataquality.record.linkage.ui.composite.utils.MatchRuleAnlaysisUtils;
 import org.talend.dataquality.record.linkage.ui.i18n.internal.DefaultMessagesImpl;
 import org.talend.dataquality.record.linkage.utils.MatchAnalysisConstant;
+import org.talend.dataquality.record.linkage.utils.SurvivorShipAlgorithmEnum;
 import org.talend.dataquality.rules.KeyDefinition;
 import org.talend.dataquality.rules.MatchKeyDefinition;
 import org.talend.dataquality.rules.MatchRule;
 import org.talend.dataquality.rules.MatchRuleDefinition;
 import org.talend.dataquality.rules.RulesFactory;
+import org.talend.dataquality.rules.SurvivorshipKeyDefinition;
 import org.talend.utils.sugars.ReturnCode;
 import org.talend.utils.sugars.TypedReturnCode;
 
@@ -765,8 +771,8 @@ public class MatchingKeySection extends AbstractMatchKeyWithChartTableSection {
             returnCode.setMessage(DefaultMessagesImpl.getString("MatchMasterDetailsPage.NoMatchKey")); //$NON-NLS-1$
             return returnCode;
         }
-        for (MatchRule CurrentRule : getMatchRuleList()) {
-            EList<MatchKeyDefinition> matchKeys = CurrentRule.getMatchKeys();
+        for (MatchRule currentRule : getMatchRuleList()) {
+            EList<MatchKeyDefinition> matchKeys = currentRule.getMatchKeys();
             for (MatchKeyDefinition mdk : matchKeys) {
                 String currentName = mdk.getName();
                 if (currentName.equals(StringUtils.EMPTY)) {
@@ -777,6 +783,16 @@ public class MatchingKeySection extends AbstractMatchKeyWithChartTableSection {
                 if (checkColumnNameIsEmpty(mdk)) {
                     returnCode.setMessage(DefaultMessagesImpl.getString(
                             "BlockingKeySection.emptyColumn.message", getSectionName() + " , " + CurrentRule.getName())); //$NON-NLS-1$ //$NON-NLS-2$
+                    return returnCode;
+                }
+                if (mdk.getConfidenceWeight() <= 0) {
+                    returnCode.setMessage(DefaultMessagesImpl.getString(
+                            "BlockingKeySection.invalidConfidenceWeight.message", getSectionName())); //$NON-NLS-1$
+                    return returnCode;
+                }
+                if (!checkSurvivorshipFunction(mdk)) {
+                    returnCode.setMessage(DefaultMessagesImpl.getString(
+                            "BlockingKeySection.invalidSurvivorshipFunction.message", getSectionName())); //$NON-NLS-1$
                     return returnCode;
                 }
                 boolean currentNameIsDuplicate = false;
@@ -799,6 +815,79 @@ public class MatchingKeySection extends AbstractMatchKeyWithChartTableSection {
             returnCode.setOk(true);
             return returnCode;
         }
+    }
+
+    /**
+     * check the survivorship function fit the column or not.
+     * 
+     * @param mdk
+     * @return
+     */
+    private boolean checkSurvivorshipFunction(MatchKeyDefinition mdk) {
+        EObject eContainer = mdk.eContainer();
+        if (eContainer != null && eContainer instanceof MatchRule) {
+            EObject eContainer2 = ((MatchRule) eContainer).eContainer();
+            if (eContainer2 != null && eContainer2 instanceof MatchRuleDefinition) {
+                MatchRuleDefinition mrDef = (MatchRuleDefinition) eContainer2;
+                EList<SurvivorshipKeyDefinition> survivorshipKeys = mrDef.getSurvivorshipKeys();
+                for (SurvivorshipKeyDefinition skDef : survivorshipKeys) {
+                    String columnName = skDef.getColumn();
+                    if (columnName != null) {
+                        MetadataColumn metadataColumn = getMetadataColumnByName(columnName);
+                        if (metadataColumn != null) {
+                            SurvivorShipAlgorithmEnum survivorShipAlgorithm = SurvivorShipAlgorithmEnum.getTypeBySavedValue(skDef
+                                    .getFunction().getAlgorithmType());
+                            switch (survivorShipAlgorithm) {
+                            case LARGEST:
+                            case SMALLEST:
+                                Set<String> numericalType = new HashSet<String>();
+                                numericalType.add(JavaTypesManager.DOUBLE.getId());
+                                numericalType.add(JavaTypesManager.FLOAT.getId());
+                                numericalType.add(JavaTypesManager.INTEGER.getId());
+                                numericalType.add(JavaTypesManager.LONG.getId());
+                                numericalType.add(JavaTypesManager.SHORT.getId());
+                                numericalType.add(JavaTypesManager.BIGDECIMAL.getId());
+                                if (!numericalType.contains(metadataColumn.getTalendType())) {
+                                    return false;
+                                }
+                                break;
+                            case LONGEST:
+                            case SHORTEST:
+                                Set<String> stringType = new HashSet<String>();
+                                stringType.add(JavaTypesManager.STRING.getId());
+                                if (!stringType.contains(metadataColumn.getTalendType())) {
+                                    return false;
+                                }
+                                break;
+                            case PREFER_TRUE:
+                            case PREFER_FALSE:
+                                Set<String> booleanType = new HashSet<String>();
+                                booleanType.add(JavaTypesManager.BOOLEAN.getId());
+                                if (!booleanType.contains(metadataColumn.getTalendType())) {
+                                    return false;
+                                }
+                                break;
+                            default:
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return true;
+    }
+
+    private MetadataColumn getMetadataColumnByName(String columnName) {
+        if (columnMap != null) {
+            Set<MetadataColumn> keySet = columnMap.keySet();
+            for (MetadataColumn col : keySet) {
+                if (col != null && columnName.equals(col.getName())) {
+                    return col;
+                }
+            }
+        }
+        return null;
     }
 
     protected boolean hasMatchKey(boolean isCareAboutFirstMatchRuleCase) {

@@ -147,7 +147,7 @@ public class MatchParameterSection extends AbstractSectionComposite {
         });
 
         toolkit.createLabel(contentComp, "Max buffer size", SWT.NONE); //$NON-NLS-1$
-        final Text createText = toolkit.createText(contentComp, MaxSize);
+        final Text createText = toolkit.createText(contentComp, MaxSize, SWT.BORDER);
         createText.setLayoutData(gd);
         createText.addModifyListener(new ModifyListener() {
 

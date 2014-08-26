@@ -61,6 +61,8 @@ import org.talend.cwm.db.connection.DatabaseSQLExecutor;
 import org.talend.cwm.db.connection.DelimitedFileSQLExecutor;
 import org.talend.cwm.db.connection.ISQLExecutor;
 import org.talend.cwm.db.connection.MDMSQLExecutor;
+import org.talend.cwm.db.connection.SQLExecutor;
+import org.talend.cwm.helper.TaggedValueHelper;
 import org.talend.cwm.relational.TdColumn;
 import org.talend.cwm.xml.TdXmlElementType;
 import org.talend.dataprofiler.core.CorePlugin;
@@ -203,15 +205,11 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
         metadataSection.setDescription(DefaultMessagesImpl.getString("TableMasterDetailsPage.setPropOfAnalysis")); //$NON-NLS-1$
 
         createDataSection();
-
         createSelectRecordLinkageSection();
-
         createBlockingKeySection();
-
         createMatchingKeySection();
         createMatchAndSurvivorKeySection();
         createDefaultSurvivorshipSection();
-
         createMatchParameterSection();
 
         // TDQ-7781: we must do this, this will recompute the layout and scroll bars
@@ -225,7 +223,7 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
         selectAlgorithmSection.setMatchRuleDef(recordMatchingIndicator.getBuiltInMatchRuleDefinition());
         selectAlgorithmSection.createChooseAlgorithmCom();
         selectAlgorithmSection.addPropertyChangeListener(this);
-        selectAlgorithmSection.getSection().setExpanded(true);
+        selectAlgorithmSection.getSection().setExpanded(foldingState == null ? false : foldingState);
     }
 
     private void createMatchAndSurvivorKeySection() {
@@ -239,7 +237,7 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
         matchAndSurvivorKeySection.createContent();
         matchAndSurvivorKeySection.addPropertyChangeListener(this);
         matchAndSurvivorKeySection.changeSectionDisStatus(!selectAlgorithmSection.isVSRMode());
-        matchAndSurvivorKeySection.getSection().setExpanded(true);
+        matchAndSurvivorKeySection.getSection().setExpanded(foldingState == null ? false : foldingState);
         matchAndSurvivorKeySection.setIsNeedSubChart(true);
         selectAlgorithmSection.setAnaMatchSurvivorSection(matchAndSurvivorKeySection);
         if (selectAlgorithmSection.isVSRMode()) {
@@ -258,7 +256,7 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
         defaultSurvivorshipDefinitionSection.createContent();
         defaultSurvivorshipDefinitionSection.addPropertyChangeListener(this);
         defaultSurvivorshipDefinitionSection.changeSectionDisStatus(!selectAlgorithmSection.isVSRMode());
-        defaultSurvivorshipDefinitionSection.getSection().setExpanded(true);
+        defaultSurvivorshipDefinitionSection.getSection().setExpanded(foldingState == null ? false : foldingState);
         selectAlgorithmSection.setDefaultSurvivorshipDefinitionSection(defaultSurvivorshipDefinitionSection);
         if (selectAlgorithmSection.isVSRMode()) {
             // Hide the section in case of vsr.
@@ -275,6 +273,7 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
         matchParameterSection.addPropertyChangeListener(this);
         matchParameterSection.createParameterCom();
         registerSection(matchParameterSection.getSection());
+        matchParameterSection.getSection().setExpanded(foldingState == null ? false : foldingState);
     }
 
     /**
@@ -307,6 +306,7 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
         blockingKeySection.createContent();
         registerSection(blockingKeySection.getSection());
         selectAlgorithmSection.setBlockkeySection(blockingKeySection);
+        blockingKeySection.getSection().setExpanded(foldingState == null ? false : foldingState);
     }
 
     /**
@@ -1365,6 +1365,19 @@ public class MatchMasterDetailsPage extends AbstractAnalysisMetadataPage impleme
                     checkResultStatus = matchingKeySection.checkResultStatus();
                 } else {
                     checkResultStatus = matchAndSurvivorKeySection.checkResultStatus();
+                }
+            }
+
+            if (checkResultStatus.isOk()) {
+                if (TaggedValueHelper.getValueBoolean(SQLExecutor.STORE_ON_DISK_KEY, this.getAnalysis())) {
+                    String tempDataPath = TaggedValueHelper.getValueString(SQLExecutor.TEMP_DATA_DIR, this.getAnalysis());
+                    if (tempDataPath != null && (tempDataPath.endsWith("\\") || tempDataPath.endsWith("/"))) { //$NON-NLS-1$ //$NON-NLS-2$
+                        tempDataPath = tempDataPath.substring(0, tempDataPath.length() - 1);
+                    }
+                    if (StringUtils.isBlank(tempDataPath)) {
+                        checkResultStatus.setOk(false);
+                        checkResultStatus.setMessage(DefaultMessagesImpl.getString("MatchMasterDetailsPage.invalidTempFolder")); //$NON-NLS-1$
+                    }
                 }
             }
 
