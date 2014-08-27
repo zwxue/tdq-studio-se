@@ -27,9 +27,6 @@
    <includes
          id="org.talend.model.migration_feature"
          version="0.0.0"/>
-   <includes
-         id="org.talend.updates_feature"
-         version="0.0.0"/>
 
    <requires>
       <import plugin="org.eclipse.ui" version="3.5.0" match="compatible"/>
@@ -681,4 +678,12 @@
          fragment="true"
          unpack="false"/>
 
+   <plugin
+         id="org.talend.updates.runtime"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+      
 </feature>
