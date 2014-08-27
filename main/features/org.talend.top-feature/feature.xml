@@ -21,14 +21,14 @@
          id="org.talend.top.libraries_feature"
          version="0.0.0"/>
    <includes
-         id="org.talend.updates_feature"
-         version="0.0.0"/>
-   <includes
          id="org.eclipse.rcp"
          version="0.0.0"/>
 
    <includes
          id="org.talend.model.migration_feature"
+         version="0.0.0"/>
+   <includes
+         id="org.talend.updates_feature"
          version="0.0.0"/>
 
    <requires>
